@@ -1,5 +1,6 @@
-import React from 'react'
-import {type AppBskyFeedThreadgate} from '@atproto/api'
+import {createContext, useCallback, useContext, useMemo, useState} from 'react'
+
+import {type app} from '#/lexicons'
 
 type StateContext = {
   uris: Set<string>
@@ -10,23 +11,25 @@ type ApiContext = {
   removeHiddenReplyUri: (uri: string) => void
 }
 
-const StateContext = React.createContext<StateContext>({
+const StateContext = createContext<StateContext>({
   uris: new Set(),
   recentlyUnhiddenUris: new Set(),
 })
+StateContext.displayName = 'ThreadgateHiddenRepliesStateContext'
 
-const ApiContext = React.createContext<ApiContext>({
+const ApiContext = createContext<ApiContext>({
   addHiddenReplyUri: () => {},
   removeHiddenReplyUri: () => {},
 })
+ApiContext.displayName = 'ThreadgateHiddenRepliesApiContext'
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [uris, setHiddenReplyUris] = React.useState<Set<string>>(new Set())
-  const [recentlyUnhiddenUris, setRecentlyUnhiddenUris] = React.useState<
-    Set<string>
-  >(new Set())
+  const [uris, setHiddenReplyUris] = useState<Set<string>>(new Set())
+  const [recentlyUnhiddenUris, setRecentlyUnhiddenUris] = useState<Set<string>>(
+    new Set(),
+  )
 
-  const stateCtx = React.useMemo(
+  const stateCtx = useMemo(
     () => ({
       uris,
       recentlyUnhiddenUris,
@@ -34,7 +37,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     [uris, recentlyUnhiddenUris],
   )
 
-  const apiCtx = React.useMemo(
+  const apiCtx = useMemo(
     () => ({
       addHiddenReplyUri(uri: string) {
         setHiddenReplyUris(prev => new Set(prev.add(uri)))
@@ -62,20 +65,20 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 export function useThreadgateHiddenReplyUris() {
-  return React.useContext(StateContext)
+  return useContext(StateContext)
 }
 
 export function useThreadgateHiddenReplyUrisAPI() {
-  return React.useContext(ApiContext)
+  return useContext(ApiContext)
 }
 
 export function useMergedThreadgateHiddenReplies({
   threadgateRecord,
 }: {
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }) {
   const {uris, recentlyUnhiddenUris} = useThreadgateHiddenReplyUris()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const set = new Set([...(threadgateRecord?.hiddenReplies || []), ...uris])
     for (const uri of recentlyUnhiddenUris) {
       set.delete(uri)
@@ -86,8 +89,8 @@ export function useMergedThreadgateHiddenReplies({
 
 export function useMergeThreadgateHiddenReplies() {
   const {uris, recentlyUnhiddenUris} = useThreadgateHiddenReplyUris()
-  return React.useCallback(
-    (threadgate?: AppBskyFeedThreadgate.Record) => {
+  return useCallback(
+    (threadgate?: app.bsky.feed.threadgate.Main) => {
       const set = new Set([...(threadgate?.hiddenReplies || []), ...uris])
       for (const uri of recentlyUnhiddenUris) {
         set.delete(uri)

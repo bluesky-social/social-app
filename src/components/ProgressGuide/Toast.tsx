@@ -1,20 +1,27 @@
-import React, {useImperativeHandle} from 'react'
+import {
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {Pressable, useWindowDimensions, View} from 'react-native'
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/macro'
+import {scheduleOnRN} from 'react-native-worklets'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {isWeb} from '#/platform/detection'
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
-import {AnimatedCheck, AnimatedCheckRef} from '../anim/AnimatedCheck'
+import {IS_WEB} from '#/env'
+import {AnimatedCheck, type AnimatedCheckRef} from '../anim/AnimatedCheck'
 import {Text} from '../Typography'
 
 export interface ProgressGuideToastRef {
@@ -28,25 +35,25 @@ export interface ProgressGuideToastProps {
   visibleDuration?: number // default 5s
 }
 
-export const ProgressGuideToast = React.forwardRef<
+export const ProgressGuideToast = forwardRef<
   ProgressGuideToastRef,
   ProgressGuideToastProps
 >(function ProgressGuideToast({title, subtitle, visibleDuration}, ref) {
   const t = useTheme()
   const {_} = useLingui()
   const insets = useSafeAreaInsets()
-  const [isOpen, setIsOpen] = React.useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const translateY = useSharedValue(0)
   const opacity = useSharedValue(0)
-  const animatedCheckRef = React.useRef<AnimatedCheckRef | null>(null)
-  const timeoutRef = React.useRef<NodeJS.Timeout | undefined>()
+  const animatedCheckRef = useRef<AnimatedCheckRef | null>(null)
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
   const winDim = useWindowDimensions()
 
   /**
    * Methods
    */
 
-  const close = React.useCallback(() => {
+  const close = useCallback(() => {
     // clear the timeout, in case this was called imperatively
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
@@ -55,37 +62,37 @@ export const ProgressGuideToast = React.forwardRef<
 
     // animate the opacity then set isOpen to false when done
     const setIsntOpen = () => setIsOpen(false)
-    opacity.set(() =>
+    opacity.set(
       withTiming(
         0,
         {
           duration: 400,
           easing: Easing.out(Easing.cubic),
         },
-        () => runOnJS(setIsntOpen)(),
+        () => scheduleOnRN(setIsntOpen),
       ),
     )
   }, [setIsOpen, opacity])
 
-  const open = React.useCallback(() => {
+  const open = useCallback(() => {
     // set isOpen=true to render
     setIsOpen(true)
 
     // animate the vertical translation, the opacity, and the checkmark
     const playCheckmark = () => animatedCheckRef.current?.play()
     opacity.set(0)
-    opacity.set(() =>
+    opacity.set(
       withTiming(
         1,
         {
           duration: 100,
           easing: Easing.out(Easing.cubic),
         },
-        () => runOnJS(playCheckmark)(),
+        () => scheduleOnRN(playCheckmark),
       ),
     )
     translateY.set(0)
-    translateY.set(() =>
+    translateY.set(
       withTiming(insets.top + 10, {
         duration: 500,
         easing: Easing.out(Easing.cubic),
@@ -105,14 +112,15 @@ export const ProgressGuideToast = React.forwardRef<
     [open, close],
   )
 
-  const containerStyle = React.useMemo(() => {
+  const containerStyle = useMemo(() => {
     let left = 10
     let right = 10
-    if (isWeb && winDim.width > 400) {
+    if (IS_WEB && winDim.width > 400) {
       left = right = (winDim.width - 380) / 2
     }
     return {
-      position: isWeb ? 'fixed' : 'absolute',
+      // position: fixed is web only
+      position: (IS_WEB ? 'fixed' : 'absolute') as 'absolute',
       top: 0,
       left,
       right,
@@ -127,12 +135,7 @@ export const ProgressGuideToast = React.forwardRef<
   return (
     isOpen && (
       <Portal>
-        <Animated.View
-          style={[
-            // @ts-ignore position: fixed is web only
-            containerStyle,
-            animatedStyle,
-          ]}>
+        <Animated.View style={[containerStyle, animatedStyle]}>
           <Pressable
             style={[
               t.atoms.bg,
@@ -160,7 +163,7 @@ export const ProgressGuideToast = React.forwardRef<
               ref={animatedCheckRef}
             />
             <View>
-              <Text style={[a.text_md, a.font_bold]}>{title}</Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{title}</Text>
               {subtitle && (
                 <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                   {subtitle}

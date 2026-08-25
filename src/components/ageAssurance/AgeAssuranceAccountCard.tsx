@@ -1,53 +1,78 @@
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {useAgeAssurance} from '#/state/ageAssurance/useAgeAssurance'
-import {logger} from '#/state/ageAssurance/util'
 import {atoms as a, useBreakpoints, useTheme, type ViewStyleProp} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {AgeAssuranceAppealDialog} from '#/components/ageAssurance/AgeAssuranceAppealDialog'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
+import {AgeAssuranceConfigUnavailableError} from '#/components/ageAssurance/AgeAssuranceErrors'
 import {
   AgeAssuranceInitDialog,
   useDialogControl,
 } from '#/components/ageAssurance/AgeAssuranceInitDialog'
 import {useAgeAssuranceCopy} from '#/components/ageAssurance/useAgeAssuranceCopy'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {DeviceLocationRequestDialog} from '#/components/dialogs/DeviceLocationRequestDialog'
 import {Divider} from '#/components/Divider'
+import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/icons/Shield'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAgeAssurance} from '#/ageAssurance'
+import {DeviceSignalsNotice} from '#/ageAssurance/components/DeviceSignalsNotice'
+import {useComputeAgeAssuranceRegionAccess} from '#/ageAssurance/useComputeAgeAssuranceRegionAccess'
+import {useAgeAssuranceVerificationFlow} from '#/ageAssurance/useVerificationFlow'
+import {createGeolocationString} from '#/ageAssurance/util'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
+import {useDeviceGeolocationApi, useGeolocation} from '#/geolocation'
 
 export function AgeAssuranceAccountCard({style}: ViewStyleProp & {}) {
-  const {isReady, isAgeRestricted, isDeclaredUnderage} = useAgeAssurance()
-
-  if (!isReady) return null
-  if (isDeclaredUnderage) return null
-  if (!isAgeRestricted) return null
-
+  const aa = useAgeAssurance()
+  if (aa.state.access === aa.Access.Full) return null
+  if (aa.state.error === 'config') {
+    return (
+      <View style={style}>
+        <AgeAssuranceConfigUnavailableError />
+      </View>
+    )
+  }
   return <Inner style={style} />
 }
 
 function Inner({style}: ViewStyleProp & {}) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
+  const ax = useAnalytics()
   const control = useDialogControl()
   const appealControl = Dialog.useDialogControl()
   const getTimeAgo = useGetTimeAgo()
   const {gtPhone} = useBreakpoints()
 
   const copy = useAgeAssuranceCopy()
-  const {status, lastInitiatedAt} = useAgeAssurance()
-  const isBlocked = status === 'blocked'
+  const aa = useAgeAssurance()
+  const {status, lastInitiatedAt} = aa.state
+  const isBlocked = status === aa.Status.Blocked
   const hasInitiated = !!lastInitiatedAt
+  const hasCompletedFlow = status === aa.Status.Assured
   const timeAgo = lastInitiatedAt
     ? getTimeAgo(lastInitiatedAt, new Date())
     : null
   const diff = lastInitiatedAt
     ? dateDiff(lastInitiatedAt, new Date(), 'down')
     : null
+  const {
+    onPressVerify,
+    openInitDialog,
+    isVerifying,
+    verifyCta,
+    deviceSignalsFailed,
+  } = useAgeAssuranceVerificationFlow({initDialogControl: control})
+  const useDeviceSignals =
+    aa.flags.allowsDeviceVerification && !deviceSignalsFailed
 
   return (
     <>
@@ -71,8 +96,27 @@ function Inner({style}: ViewStyleProp & {}) {
             </View>
           </View>
 
-          <View style={[a.pb_md]}>
+          <View style={[a.pb_md, a.gap_sm]}>
             <Text style={[a.text_sm, a.leading_snug]}>{copy.notice}</Text>
+            {hasCompletedFlow && (
+              <Text style={[a.text_sm, a.leading_snug]}>
+                <Trans>
+                  If you are 18 years of age or older and want to try again,
+                  click the button below and use a different verification method
+                  if one is available in your region. If you have questions or
+                  concerns,{' '}
+                  <InlineLinkText
+                    label={l`Contact our support team`}
+                    {...createStaticClick(() => {
+                      appealControl.open()
+                    })}>
+                    our support team can help.
+                  </InlineLinkText>
+                </Trans>
+              </Text>
+            )}
+
+            <RegionNotice />
           </View>
 
           {isBlocked ? (
@@ -81,10 +125,10 @@ function Inner({style}: ViewStyleProp & {}) {
                 You are currently unable to access Bluesky's Age Assurance flow.
                 Please{' '}
                 <InlineLinkText
-                  label={_(msg`Contact our moderation team`)}
+                  label={l`Contact our moderation team`}
                   {...createStaticClick(() => {
                     appealControl.open()
-                    logger.metric('ageAssurance:appealDialogOpen', {})
+                    ax.metric('ageAssurance:appealDialogOpen', {})
                   })}>
                   contact our moderation team
                 </InlineLinkText>{' '}
@@ -107,26 +151,22 @@ function Inner({style}: ViewStyleProp & {}) {
                     : [a.gap_md],
                 ]}>
                 <Button
-                  label={_(msg`Verify now`)}
+                  label={verifyCta}
                   size="small"
-                  variant="solid"
-                  color={hasInitiated ? 'secondary' : 'primary'}
-                  onPress={() => {
-                    control.open()
-                    logger.metric('ageAssurance:initDialogOpen', {
-                      hasInitiatedPreviously: hasInitiated,
-                    })
-                  }}>
-                  <ButtonText>
-                    {hasInitiated ? (
-                      <Trans>Verify again</Trans>
-                    ) : (
-                      <Trans>Verify now</Trans>
-                    )}
-                  </ButtonText>
+                  color={
+                    hasInitiated || aa.flags.hasSharedDeviceSignals
+                      ? 'secondary'
+                      : 'primary'
+                  }
+                  disabled={isVerifying}
+                  onPress={() => void onPressVerify()}>
+                  <ButtonIcon icon={isVerifying ? Loader : ShieldIcon} />
+                  <ButtonText>{verifyCta}</ButtonText>
                 </Button>
 
-                {lastInitiatedAt && timeAgo && diff ? (
+                {useDeviceSignals ? (
+                  <DeviceSignalsNotice onPressKws={openInitDialog} />
+                ) : lastInitiatedAt && timeAgo && diff ? (
                   <Text
                     style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
                     title={i18n.date(lastInitiatedAt, {
@@ -150,6 +190,76 @@ function Inner({style}: ViewStyleProp & {}) {
           )}
         </View>
       </View>
+    </>
+  )
+}
+
+function RegionNotice() {
+  const {t: l, i18n} = useLingui()
+  const aa = useAgeAssurance()
+  const geolocation = useGeolocation()
+  const {setDeviceGeolocation} = useDeviceGeolocationApi()
+  const computeAgeAssuranceRegionAccess = useComputeAgeAssuranceRegionAccess()
+  const locationControl = Dialog.useDialogControl()
+
+  const region = createGeolocationString(geolocation, i18n.locale)
+  const isGPS = !!geolocation.deviceGeolocation?.countryCode && IS_NATIVE
+
+  return (
+    <>
+      {IS_NATIVE && (
+        <DeviceLocationRequestDialog
+          control={locationControl}
+          onLocationAcquired={props => {
+            const access = computeAgeAssuranceRegionAccess(props.geolocation)
+            if (access !== aa.Access.Full) {
+              props.disableDialogAction()
+              props.setDialogError(
+                l`We're sorry, but based on your device's location, you are currently located in a region that requires age assurance.`,
+              )
+            } else {
+              props.closeDialog(() => {
+                // set this after close!
+                setDeviceGeolocation(props.geolocation)
+                Toast.show(l`Thanks! You're all set.`, {
+                  type: 'success',
+                })
+              })
+            }
+          }}
+        />
+      )}
+
+      {region && (
+        <Text style={[a.text_sm, a.leading_snug]}>
+          {isGPS ? (
+            <Trans>
+              Based on your device's location, we think you're in{' '}
+              <Text style={[a.text_sm, a.font_bold]}>{region}</Text>.
+            </Trans>
+          ) : (
+            <Trans>
+              Based on your network, we think you're in{' '}
+              <Text style={[a.text_sm, a.font_bold]}>{region}</Text>. This
+              estimate may be inaccurate if you're using a VPN.
+            </Trans>
+          )}
+          {IS_NATIVE && (
+            <Text style={[a.text_sm, a.leading_snug]}>
+              {' '}
+              <Trans>
+                <InlineLinkText
+                  label={l`Update your location`}
+                  {...createStaticClick(() => {
+                    locationControl.open()
+                  })}>
+                  Tap here to update your location with GPS.
+                </InlineLinkText>
+              </Trans>
+            </Text>
+          )}
+        </Text>
+      )}
     </>
   )
 }

@@ -1,22 +1,25 @@
-import React, {memo} from 'react'
-import {RefreshControl, type ViewToken} from 'react-native'
+import {forwardRef, memo, useDeferredValue, useMemo} from 'react'
+import {type ListViewToken as ViewToken, RefreshControl} from 'react-native'
 import {
   type FlatListPropsWithLayout,
-  runOnJS,
+  useAnimatedScrollHandler,
   useSharedValue,
 } from 'react-native-reanimated'
-import {updateActiveVideoViewAsync} from '@haileyok/bluesky-video'
+import {scheduleOnRN} from 'react-native-worklets'
+import {updateActiveVideoViewAsync} from '@bsky.app/video'
 
-import {useAnimatedScrollHandler} from '#/lib/hooks/useAnimatedScrollHandler_FIXED'
 import {useDedupe} from '#/lib/hooks/useDedupe'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
-import {isIOS} from '#/platform/detection'
-import {useLightbox} from '#/state/lightbox'
 import {useTheme} from '#/alf'
+import {useLightbox} from '#/components/Lightbox/state'
+import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
+// This is a generic type; we could update ~30 call sites but this approach is consistent with RN internals. -dsb
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ListProps<ItemT = any> = Omit<
   FlatListPropsWithLayout<ItemT>,
   | 'onMomentumScrollBegin' // Use ScrollContext instead.
@@ -39,11 +42,11 @@ export type ListProps<ItemT = any> = Omit<
   sideBorders?: boolean
   progressViewOffset?: number
 }
-export type ListRef = React.MutableRefObject<FlatList_INTERNAL | null>
+export type ListRef = React.RefObject<FlatList_INTERNAL | null>
 
 const SCROLLED_DOWN_LIMIT = 200
 
-let List = React.forwardRef<ListMethods, ListProps>(
+let List = forwardRef<ListMethods, ListProps>(
   (
     {
       onScrolledDownChange,
@@ -61,11 +64,13 @@ let List = React.forwardRef<ListMethods, ListProps>(
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
-    const {activeLightbox} = useLightbox()
+    const scrollsToTop = useAllowScrollToTop()
 
-    function handleScrolledDownChange(didScrollDown: boolean) {
-      onScrolledDownChange?.(didScrollDown)
-    }
+    const handleScrolledDownChange = useNonReactiveCallback(
+      (didScrollDown: boolean) => {
+        onScrolledDownChange?.(didScrollDown)
+      },
+    )
 
     // Intentionally destructured outside the main thread closure.
     // See https://github.com/bluesky-social/social-app/pull/4108.
@@ -80,7 +85,7 @@ let List = React.forwardRef<ListMethods, ListProps>(
         onBeginDragFromContext?.(e, ctx)
       },
       onEndDrag(e, ctx) {
-        runOnJS(updateActiveVideoViewAsync)()
+        scheduleOnRN(updateActiveVideoViewAsync)
         onEndDragFromContext?.(e, ctx)
       },
       onScroll(e, ctx) {
@@ -90,23 +95,23 @@ let List = React.forwardRef<ListMethods, ListProps>(
         if (isScrolledDown.get() !== didScrollDown) {
           isScrolledDown.set(didScrollDown)
           if (onScrolledDownChange != null) {
-            runOnJS(handleScrolledDownChange)(didScrollDown)
+            scheduleOnRN(handleScrolledDownChange, didScrollDown)
           }
         }
 
-        if (isIOS) {
-          runOnJS(dedupe)(updateActiveVideoViewAsync)
+        if (IS_IOS) {
+          scheduleOnRN(dedupe, updateActiveVideoViewAsync)
         }
       },
       // Note: adding onMomentumBegin here makes simulator scroll
       // lag on Android. So either don't add it, or figure out why.
       onMomentumEnd(e, ctx) {
-        runOnJS(updateActiveVideoViewAsync)()
+        scheduleOnRN(updateActiveVideoViewAsync)
         onMomentumEndFromContext?.(e, ctx)
       },
     })
 
-    const [onViewableItemsChanged, viewabilityConfig] = React.useMemo(() => {
+    const [onViewableItemsChanged, viewabilityConfig] = useMemo(() => {
       if (!onItemSeen) {
         return [undefined, undefined]
       }
@@ -142,12 +147,10 @@ let List = React.forwardRef<ListMethods, ListProps>(
       )
     }
 
-    let contentOffset
     if (headerOffset != null) {
       style = addStyle(style, {
         paddingTop: headerOffset,
       })
-      contentOffset = {x: 0, y: headerOffset * -1}
     }
 
     return (
@@ -165,13 +168,11 @@ let List = React.forwardRef<ListMethods, ListProps>(
           ...props.scrollIndicatorInsets,
         }}
         indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
-        contentOffset={contentOffset}
         refreshControl={refreshControl}
         onScroll={scrollHandler}
-        scrollsToTop={!activeLightbox}
+        scrollsToTop={scrollsToTop}
         scrollEventThrottle={1}
         style={style}
-        // @ts-expect-error FlatList_INTERNAL ref type is wrong -sfn
         ref={ref}
       />
     )
@@ -181,3 +182,11 @@ List.displayName = 'List'
 
 List = memo(List)
 export {List}
+
+// We only want to use this context value on iOS because the `scrollsToTop` prop is iOS-only
+// removing it saves us a re-render on Android
+const useAllowScrollToTop = IS_IOS ? useAllowScrollToTopIOS : () => undefined
+function useAllowScrollToTopIOS() {
+  const {activeLightbox} = useLightbox()
+  return useDeferredValue(!activeLightbox)
+}

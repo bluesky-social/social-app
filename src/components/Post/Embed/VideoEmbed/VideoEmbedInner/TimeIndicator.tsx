@@ -1,6 +1,6 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
 import {View} from 'react-native'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -54,7 +54,7 @@ export function TimeIndicator({
       <Text
         style={[
           {color: t.palette.white, fontSize: 12, fontVariant: ['tabular-nums']},
-          a.font_bold,
+          a.font_semi_bold,
           {lineHeight: 1.25},
         ]}>
         {`${minutes}:${seconds}`}

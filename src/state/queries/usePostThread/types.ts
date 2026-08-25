@@ -1,16 +1,10 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AppBskyFeedThreadgate,
-  type AppBskyUnspeccedDefs,
-  type AppBskyUnspeccedGetPostThreadOtherV2,
-  type AppBskyUnspeccedGetPostThreadV2,
-  type ModerationDecision,
-} from '@atproto/api'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
+
+import {type app} from '#/lexicons'
 
 export type ApiThreadItem =
-  | AppBskyUnspeccedGetPostThreadV2.ThreadItem
-  | AppBskyUnspeccedGetPostThreadOtherV2.ThreadItem
+  | app.bsky.unspecced.getPostThreadV2.ThreadItem
+  | app.bsky.unspecced.getPostThreadOtherV2.ThreadItem
 
 export const postThreadQueryKeyRoot = 'post-thread-v2' as const
 
@@ -18,14 +12,14 @@ export const createPostThreadQueryKey = (props: PostThreadParams) =>
   [postThreadQueryKeyRoot, props] as const
 
 export const createPostThreadOtherQueryKey = (
-  props: Omit<AppBskyUnspeccedGetPostThreadOtherV2.QueryParams, 'anchor'> & {
+  props: Omit<app.bsky.unspecced.getPostThreadOtherV2.$Params, 'anchor'> & {
     anchor?: string
   },
 ) => [postThreadQueryKeyRoot, 'other', props] as const
 
 export type PostThreadParams = Pick<
-  AppBskyUnspeccedGetPostThreadV2.QueryParams,
-  'sort' | 'prioritizeFollowedUsers'
+  app.bsky.unspecced.getPostThreadV2.$Params,
+  'sort'
 > & {
   anchor?: string
   view: 'tree' | 'linear'
@@ -33,9 +27,9 @@ export type PostThreadParams = Pick<
 
 export type UsePostThreadQueryResult = {
   hasOtherReplies: boolean
-  thread: AppBskyUnspeccedGetPostThreadV2.ThreadItem[]
-  threadgate?: Omit<AppBskyFeedDefs.ThreadgateView, 'record'> & {
-    record: AppBskyFeedThreadgate.Record
+  thread: app.bsky.unspecced.getPostThreadV2.ThreadItem[]
+  threadgate?: Omit<app.bsky.feed.defs.ThreadgateView, 'record'> & {
+    record: app.bsky.feed.threadgate.Main
   }
 }
 
@@ -45,9 +39,9 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: Omit<AppBskyUnspeccedDefs.ThreadItemPost, 'post'> & {
-        post: Omit<AppBskyFeedDefs.PostView, 'record'> & {
-          record: AppBskyFeedPost.Record
+      value: Omit<app.bsky.unspecced.defs.ThreadItemPost, 'post'> & {
+        post: Omit<app.bsky.feed.defs.PostView, 'record'> & {
+          record: app.bsky.feed.post.Main
         }
       }
       isBlurred: boolean
@@ -67,7 +61,7 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemNoUnauthenticated
+      value: app.bsky.unspecced.defs.ThreadItemNoUnauthenticated
       ui: {
         showParentReplyLine: boolean
         showChildReplyLine: boolean
@@ -78,14 +72,14 @@ export type ThreadItem =
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemNotFound
+      value: app.bsky.unspecced.defs.ThreadItemNotFound
     }
   | {
       type: 'threadPostBlocked'
       key: string
       uri: string
       depth: number
-      value: AppBskyUnspeccedDefs.ThreadItemBlocked
+      value: app.bsky.unspecced.defs.ThreadItemBlocked
     }
   | {
       type: 'replyComposer'
@@ -151,8 +145,8 @@ export type TraversalMetadata = {
    */
   isLastChild: boolean
   /**
-   * Indicates if the post is the left/lower-most branch of the reply tree.
-   * Value corresponds to the depth at which this branch started.
+   * Indicates if the post is the left-most AND lower-most branch of the reply
+   * tree. Value corresponds to the depth at which this branch started.
    */
   isPartOfLastBranchFromDepth?: number
   /**
@@ -193,23 +187,24 @@ export type TraversalMetadata = {
    */
   repliesUnhydrated: number
   /**
-   * The number of replies that have been seen so far in the traversal.
-   * Excludes replies that are moderated in some way, since those are not
-   * "seen" on first load. Use `repliesIndexCounter` for the total number of
-   * replies that were hydrated in the response.
+   * The number of replies that have been "seen" (actually able to be rendered)
+   * so far in the traversal. Excludes replies that are moderated in some way,
+   * since those are not "seen" on first load.
    *
-   * After traversal, we can use this to calculate if we actually got all the
-   * replies we expected, or if some were blocked, etc.
+   * We use this to compute the `replyIndex` values of the children of this
+   * parent. E.g. if a reply is not hydrated on the response, or is moderated
+   * in some way (including by the user), this value is not incremented. So
+   * this represents the _actual_ index of the reply in the rendered view.
+   *
+   * Note: this is a "counter", not an "index". Because this value is
+   * incremented starting from 0, it is 1-indexed. So to when comparing to the
+   * `replyIndex`, you'll need to subtract 1 from this value.
    */
   repliesSeenCounter: number
   /**
-   * The total number of replies to this post hydrated in this response. Used
-   * for populating the `replyIndex` of the post by referencing this value on
-   * the parent.
-   */
-  repliesIndexCounter: number
-  /**
-   * The index-0-based index of this reply in the parent post's replies.
+   * The index-0-based index of this reply in the parent post's replies. This
+   * is computed from the `repliesSeenCounter` of the parent post, prior to it
+   * being incremented for this reply.
    */
   replyIndex: number
   /**

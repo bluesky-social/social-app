@@ -1,40 +1,44 @@
 import {memo} from 'react'
-import {ActivityIndicator, View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {TouchableOpacity, View, type ViewStyle} from 'react-native'
+import {useLingui} from '@lingui/react/macro'
 
-import {isNative} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {SearchLinkCard} from '#/view/shell/desktop/Search'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
-import {atoms as a, native} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
+import {type AutocompleteItem} from '#/components/Autocomplete'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
+import type * as bsky from '#/types/bsky'
 
 let AutocompleteResults = ({
-  isAutocompleteFetching,
-  autocompleteData,
+  items,
+  isFetching,
   searchText,
   onSubmit,
   onResultPress,
   onProfileClick,
 }: {
-  isAutocompleteFetching: boolean
-  autocompleteData: AppBskyActorDefs.ProfileViewBasic[] | undefined
+  items: AutocompleteItem[]
+  isFetching: boolean
   searchText: string
   onSubmit: () => void
   onResultPress: () => void
-  onProfileClick: (profile: AppBskyActorDefs.ProfileViewBasic) => void
+  onProfileClick: (profile: bsky.profile.AnyProfileView) => void
 }): React.ReactNode => {
-  const {_} = useLingui()
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
+
   return (
     <>
-      {(isAutocompleteFetching && !autocompleteData?.length) ||
-      !moderationOpts ? (
+      {(isFetching && !items.length) || !moderationOpts ? (
         <Layout.Content>
-          <View style={[a.py_xl]}>
-            <ActivityIndicator />
+          <View style={[a.py_xl, a.align_center]}>
+            <Loader size="xl" />
           </View>
         </Layout.Content>
       ) : (
@@ -42,26 +46,33 @@ let AutocompleteResults = ({
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag">
           <SearchLinkCard
-            label={_(msg`Search for "${searchText}"`)}
+            label={l`Search for “${searchText}”`}
             onPress={native(onSubmit)}
             to={
-              isNative
+              IS_NATIVE
                 ? undefined
                 : `/search?q=${encodeURIComponent(searchText)}`
             }
             style={a.border_b}
           />
-          {autocompleteData?.map(item => (
-            <SearchProfileCard
-              key={item.did}
-              profile={item}
-              moderationOpts={moderationOpts}
-              onPress={() => {
-                onProfileClick(item)
-                onResultPress()
-              }}
-            />
-          ))}
+          {items.map((item, index) => {
+            if (item.type !== 'profile') return null
+            return (
+              <SearchProfileCard
+                key={item.key}
+                profile={item.profile}
+                moderationOpts={moderationOpts}
+                onPress={() => {
+                  ax.metric('search:autocomplete:press', {
+                    profileDid: item.profile.did,
+                    position: index,
+                  })
+                  onProfileClick(item.profile)
+                  onResultPress()
+                }}
+              />
+            )
+          })}
           <View style={{height: 200}} />
         </Layout.Content>
       )}
@@ -70,3 +81,47 @@ let AutocompleteResults = ({
 }
 AutocompleteResults = memo(AutocompleteResults)
 export {AutocompleteResults}
+
+let SearchLinkCard = ({
+  label,
+  to,
+  onPress,
+  style,
+}: {
+  label: string
+  to?: string
+  onPress?: () => void
+  style?: ViewStyle
+}): React.ReactNode => {
+  const t = useTheme()
+
+  const inner = (
+    <View
+      style={[a.flex_1, a.py_lg, a.px_md, t.atoms.border_contrast_low, style]}>
+      <Text emoji style={[a.text_md, t.atoms.text]}>
+        {label}
+      </Text>
+    </View>
+  )
+
+  if (onPress) {
+    return (
+      <TouchableOpacity
+        onPress={onPress}
+        accessibilityLabel={label}
+        accessibilityHint="">
+        {inner}
+      </TouchableOpacity>
+    )
+  }
+
+  if (to) {
+    return (
+      <Link label={label} to={to}>
+        {inner}
+      </Link>
+    )
+  }
+
+  return inner
+}

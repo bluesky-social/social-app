@@ -1,5 +1,4 @@
-/* eslint-disable no-labels */
-import {AppBskyUnspeccedDefs, type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {
   type ApiThreadItem,
@@ -15,6 +14,8 @@ import {
   storeTraversalMetadata,
 } from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export function sortAndAnnotateThreadItems(
   thread: ApiThreadItem[],
@@ -46,7 +47,7 @@ export function sortAndAnnotateThreadItems(
     let parentMetadata: TraversalMetadata | undefined
     let metadata: TraversalMetadata | undefined
 
-    if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+    if (bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value)) {
       parentMetadata = metadatas.get(
         getPostRecord(item.value.post).reply?.parent?.uri || '',
       )
@@ -65,13 +66,24 @@ export function sortAndAnnotateThreadItems(
        * _up_ from there.
        */
     } else if (item.depth === 0) {
-      if (AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item.value)) {
+      if (
+        bsky.isType(
+          app.bsky.unspecced.defs.threadItemNoUnauthenticated,
+          item.value,
+        )
+      ) {
         threadItems.push(views.threadPostNoUnauthenticated(item))
-      } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(item.value)) {
+      } else if (
+        bsky.isType(app.bsky.unspecced.defs.threadItemNotFound, item.value)
+      ) {
         threadItems.push(views.threadPostNotFound(item))
-      } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)) {
+      } else if (
+        bsky.isType(app.bsky.unspecced.defs.threadItemBlocked, item.value)
+      ) {
         threadItems.push(views.threadPostBlocked(item))
-      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+      } else if (
+        bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value)
+      ) {
         const post = views.threadPost({
           uri: item.uri,
           depth: item.depth,
@@ -85,7 +97,10 @@ export function sortAndAnnotateThreadItems(
           const parent = thread[pi]
 
           if (
-            AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(parent.value)
+            bsky.isType(
+              app.bsky.unspecced.defs.threadItemNoUnauthenticated,
+              parent.value,
+            )
           ) {
             const post = views.threadPostNoUnauthenticated(parent)
             post.ui = getThreadPostNoUnauthenticatedUI({
@@ -97,13 +112,22 @@ export function sortAndAnnotateThreadItems(
             threadItems.unshift(post)
             // for now, break parent traversal at first no-unauthed
             break parentTraversal
-          } else if (AppBskyUnspeccedDefs.isThreadItemNotFound(parent.value)) {
+          } else if (
+            bsky.isType(
+              app.bsky.unspecced.defs.threadItemNotFound,
+              parent.value,
+            )
+          ) {
             threadItems.unshift(views.threadPostNotFound(parent))
             break parentTraversal
-          } else if (AppBskyUnspeccedDefs.isThreadItemBlocked(parent.value)) {
+          } else if (
+            bsky.isType(app.bsky.unspecced.defs.threadItemBlocked, parent.value)
+          ) {
             threadItems.unshift(views.threadPostBlocked(parent))
             break parentTraversal
-          } else if (AppBskyUnspeccedDefs.isThreadItemPost(parent.value)) {
+          } else if (
+            bsky.isType(app.bsky.unspecced.defs.threadItemPost, parent.value)
+          ) {
             threadItems.unshift(
               views.threadPost({
                 uri: parent.uri,
@@ -123,23 +147,28 @@ export function sortAndAnnotateThreadItems(
        * we could.
        */
       const shouldBreak =
-        AppBskyUnspeccedDefs.isThreadItemNoUnauthenticated(item.value) ||
-        AppBskyUnspeccedDefs.isThreadItemNotFound(item.value) ||
-        AppBskyUnspeccedDefs.isThreadItemBlocked(item.value)
+        bsky.isType(
+          app.bsky.unspecced.defs.threadItemNoUnauthenticated,
+          item.value,
+        ) ||
+        bsky.isType(app.bsky.unspecced.defs.threadItemNotFound, item.value) ||
+        bsky.isType(app.bsky.unspecced.defs.threadItemBlocked, item.value)
 
       if (shouldBreak) {
         const branch = getBranch(thread, i, item.depth)
         // could insert tombstone
         i = branch.end
         continue traversal
-      } else if (AppBskyUnspeccedDefs.isThreadItemPost(item.value)) {
+      } else if (
+        bsky.isType(app.bsky.unspecced.defs.threadItemPost, item.value)
+      ) {
         if (parentMetadata) {
           /*
-           * Set this value before incrementing the parent's repliesSeenCounter
+           * Set this value before incrementing the `repliesSeenCounter` later
+           * on, since `repliesSeenCounter` is 1-indexed and `replyIndex` is
+           * 0-indexed.
            */
-          metadata!.replyIndex = parentMetadata.repliesIndexCounter
-          // Increment the parent's repliesIndexCounter
-          parentMetadata.repliesIndexCounter += 1
+          metadata!.replyIndex = parentMetadata.repliesSeenCounter
         }
 
         const post = views.threadPost({
@@ -180,7 +209,9 @@ export function sortAndAnnotateThreadItems(
             for (let ci = startIndex; ci <= branch.end; ci++) {
               const child = thread[ci]
 
-              if (AppBskyUnspeccedDefs.isThreadItemPost(child.value)) {
+              if (
+                bsky.isType(app.bsky.unspecced.defs.threadItemPost, child.value)
+              ) {
                 const childParentMetadata = metadatas.get(
                   getPostRecord(child.value.post).reply?.parent?.uri || '',
                 )
@@ -193,11 +224,12 @@ export function sortAndAnnotateThreadItems(
                 storeTraversalMetadata(metadatas, childMetadata)
                 if (childParentMetadata) {
                   /*
-                   * Set this value before incrementing the parent's repliesIndexCounter
+                   * Set this value before incrementing the
+                   * `repliesSeenCounter` later on, since `repliesSeenCounter`
+                   * is 1-indexed and `replyIndex` is 0-indexed.
                    */
-                  childMetadata!.replyIndex =
-                    childParentMetadata.repliesIndexCounter
-                  childParentMetadata.repliesIndexCounter += 1
+                  childMetadata.replyIndex =
+                    childParentMetadata.repliesSeenCounter
                 }
 
                 const childPost = views.threadPost({
@@ -264,14 +296,13 @@ export function sortAndAnnotateThreadItems(
             if (nextItem?.type === 'threadPost')
               metadata.nextItemDepth = nextItem?.depth
 
-            /*
-             * Item is the last "sibling" if we know for sure we're out of
-             * replies on the parent (even though this item itself may have its
-             * own reply branches).
+            /**
+             * Item is also the last "sibling" if its index matches the total
+             * number of replies we're actually able to render to the page.
              */
-            const isLastSiblingByCounts =
+            const isLastSiblingDueToMissingReplies =
               metadata.replyIndex ===
-              metadata.parentMetadata.repliesIndexCounter - 1
+              metadata.parentMetadata.repliesSeenCounter - 1
 
             /*
              * Item can also be the last "sibling" if we know we don't have a
@@ -287,7 +318,7 @@ export function sortAndAnnotateThreadItems(
              * Ok now we can set the last sibling state.
              */
             metadata.isLastSibling =
-              isLastSiblingByCounts || isImplicitlyLastSibling
+              isImplicitlyLastSibling || isLastSiblingDueToMissingReplies
 
             /*
              * Item is the last "child" in a branch if there is no next item,
@@ -307,9 +338,16 @@ export function sortAndAnnotateThreadItems(
               metadata.isPartOfLastBranchFromDepth = metadata.depth
 
               /**
-               * If the parent is part of the last branch of the sub-tree, so is the child.
+               * If the parent is part of the last branch of the sub-tree, so
+               * is the child. However, if the child is also a last sibling,
+               * then we need to start tracking `isPartOfLastBranchFromDepth`
+               * from this point onwards, always updating it to the depth of
+               * the last sibling as we go down.
                */
-              if (metadata.parentMetadata.isPartOfLastBranchFromDepth) {
+              if (
+                !metadata.isLastSibling &&
+                metadata.parentMetadata.isPartOfLastBranchFromDepth
+              ) {
                 metadata.isPartOfLastBranchFromDepth =
                   metadata.parentMetadata.isPartOfLastBranchFromDepth
               }

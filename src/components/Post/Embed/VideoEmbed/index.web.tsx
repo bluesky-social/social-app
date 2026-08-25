@@ -7,64 +7,91 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import type React from 'react'
 
-import {isFirefox} from '#/lib/browser'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
-import {ConstrainedImage} from '#/view/com/util/images/AutoSizedImage'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
+import {ConstrainedImage} from '#/components/images/AutoSizedImage'
+import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {
+  HLSFatalError,
   HLSUnsupportedError,
   VideoEmbedInnerWeb,
   VideoNotFoundError,
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB_FIREFOX} from '#/env'
+import {type app} from '#/lexicons'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
-export function VideoEmbed({
-  embed,
-  crop,
-}: {
-  embed: AppBskyEmbedVideo.View
-  crop?: 'none' | 'square' | 'constrained'
-}) {
+const noop = () => {}
+
+/**
+ * Minimum card width for the overlay controls (play, time, CC, volume,
+ * fullscreen) to fit without crowding. Narrower cards fall back to the
+ * full-width pillarbox.
+ */
+const MIN_CARD_WIDTH = 280
+
+export function VideoEmbed({embed}: {embed: app.bsky.embed.video.View}) {
+  const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
-  const {active, setActive, sendPosition, currentActiveView} =
-    useActiveVideoWeb()
+  const {
+    active: activeFromContext,
+    setActive,
+    sendPosition,
+    currentActiveView,
+  } = useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
   const [isFullscreen] = useFullscreen()
-  const lastKnownTime = useRef<number | undefined>()
+  const lastKnownTime = useRef<number | undefined>(undefined)
+
+  const isGif = embed.presentation === 'gif'
+  // GIFs don't participate in the "one video at a time" system
+  const active = isGif || activeFromContext
 
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !isFirefox) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
         if (!entry) return
         setOnScreen(entry.isIntersecting)
-        sendPosition(
-          entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
-        )
+        // GIFs don't send position - they don't compete to be the active video
+        if (!isGif) {
+          sendPosition(
+            entry.boundingClientRect.y + entry.boundingClientRect.height / 2,
+          )
+        }
       },
       {threshold: 0.5},
     )
     observer.observe(ref.current)
     return () => observer.disconnect()
-  }, [sendPosition, isFullscreen])
+  }, [sendPosition, isFullscreen, isGif])
 
   const [key, setKey] = useState(0)
   const renderError = useCallback(
     (error: unknown) => (
-      <VideoError error={error} retry={() => setKey(key + 1)} />
+      <VideoError embed={embed} error={error} retry={() => setKey(key + 1)} />
     ),
-    [key],
+    [key, embed],
   )
+  const getErrorMetadata = useCallback((error: Error) => {
+    if (!(error instanceof HLSFatalError)) return {}
+    return {
+      tags: {
+        hls_error_detail: error.detail,
+        hls_error_type: error.type,
+      },
+      hls: error.diagnostics,
+    }
+  }, [])
 
   let aspectRatio: number | undefined
   const dims = embed.aspectRatio
@@ -76,20 +103,75 @@ export function VideoEmbed({
   }
 
   let constrained: number | undefined
-  let max: number | undefined
   if (aspectRatio !== undefined) {
     const ratio = 1 / 2 // max of 1:2 ratio in feeds
     constrained = Math.max(aspectRatio, ratio)
-    max = Math.max(aspectRatio, 0.25) // max of 1:4 in thread
   }
-  const cropDisabled = crop === 'none'
+
+  const [containerWidth, setContainerWidth] = useState(0)
+
+  /*
+   * Portrait videos render at their own ratio instead of pillarboxed, but
+   * only when the resulting card fits the overlay controls. Videos taller
+   * than 1:2 would still show bars inside a ratio-fit card, and an unknown
+   * ratio can't be fit, so both keep the full-width pillarbox - a narrow
+   * card with black slices down the sides looks broken (see #9371).
+   */
+  const cardWidth = containerWidth * Math.min(aspectRatio ?? 1, 1)
+  const fullBleed =
+    aspectRatio === undefined ||
+    aspectRatio < 1 / 2 ||
+    (containerWidth > 0 && cardWidth < MIN_CARD_WIDTH)
 
   const contents = (
     <div
       ref={ref}
-      style={{display: 'flex', flex: 1, cursor: 'default'}}
+      style={{
+        display: 'flex',
+        flex: 1,
+        cursor: 'default',
+        position: 'relative',
+        backgroundColor: t.palette.black,
+        backgroundImage: `url(${embed.thumbnail})`,
+        backgroundSize: 'contain',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
       onClick={evt => evt.stopPropagation()}>
-      <ErrorBoundary renderError={renderError} key={key}>
+      {fullBleed && embed.thumbnail && (
+        <>
+          {/* blurred backdrop fills the bars when the video is boxed */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${embed.thumbnail})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              filter: 'blur(32px)',
+              // hide the transparent fade the blur creates at the edges
+              transform: 'scale(1.2)',
+            }}
+          />
+          {/* redraw the sharp thumbnail above the blur */}
+          <div
+            aria-hidden
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: `url(${embed.thumbnail})`,
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
+          />
+        </>
+      )}
+      <ErrorBoundary
+        renderError={renderError}
+        getErrorMetadata={getErrorMetadata}
+        key={key}>
         <OnlyNearScreen>
           <VideoEmbedInnerWeb
             embed={embed}
@@ -104,27 +186,28 @@ export function VideoEmbed({
   )
 
   return (
-    <View style={[a.pt_xs]}>
+    <View
+      style={[a.pt_xs]}
+      onLayout={e => setContainerWidth(e.nativeEvent.layout.width)}>
       <ViewportObserver
-        sendPosition={sendPosition}
+        sendPosition={isGif ? noop : sendPosition}
         isAnyViewActive={currentActiveView !== null}>
-        {cropDisabled ? (
-          <View style={[a.w_full, a.overflow_hidden, {aspectRatio: max ?? 1}]}>
-            {contents}
-          </View>
-        ) : (
-          <ConstrainedImage
-            fullBleed={crop === 'square'}
-            aspectRatio={constrained || 1}>
-            {contents}
-          </ConstrainedImage>
-        )}
+        <ConstrainedImage
+          fullBleed={fullBleed}
+          aspectRatio={constrained || 1}
+          // slightly smaller max height than images
+          // images use 16 / 9, for reference
+          minMobileAspectRatio={14 / 9}>
+          {contents}
+          <MediaInsetBorder />
+        </ConstrainedImage>
       </ViewportObserver>
     </View>
   )
 }
 
 const NearScreenContext = createContext(false)
+NearScreenContext.displayName = 'VideoNearScreenContext'
 
 /**
  * Renders a 100vh tall div and watches it with an IntersectionObserver to
@@ -150,7 +233,7 @@ function ViewportObserver({
   // observing a div of 100vh height
   useEffect(() => {
     if (!ref.current) return
-    if (isFullscreen && !isFirefox) return
+    if (isFullscreen && !IS_WEB_FIREFOX) return
     const observer = new IntersectionObserver(
       entries => {
         const entry = entries[0]
@@ -209,22 +292,62 @@ export const OnlyNearScreen = ({children}: {children: React.ReactNode}) => {
   return nearScreen ? children : null
 }
 
-function VideoError({error, retry}: {error: unknown; retry: () => void}) {
+function VideoError({
+  embed,
+  error,
+  retry,
+}: {
+  embed: app.bsky.embed.video.View
+  error: unknown
+  retry: () => void
+}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   let showRetryButton = true
   let text = null
+  let errorClass: string
 
   if (error instanceof VideoNotFoundError) {
     text = _(msg`Video not found.`)
+    errorClass = 'VideoNotFoundError'
   } else if (error instanceof HLSUnsupportedError) {
     showRetryButton = false
     text = _(
-      msg`Your browser does not support the video format. Please try a different browser.`,
+      msg`This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC).`,
     )
+    errorClass = 'HLSUnsupportedError'
   } else {
     text = _(msg`An error occurred while loading the video. Please try again.`)
+    if (error instanceof HLSFatalError) {
+      errorClass = error.detail
+    } else if (error instanceof Error) {
+      errorClass = error.name || 'Error'
+    } else {
+      errorClass = 'Unknown'
+    }
   }
+
+  const errorMessage = error instanceof Error ? error.message : String(error)
+  const presentation = embed.presentation === 'gif' ? 'gif' : 'video'
+  const playlist = embed.playlist
+  /*
+   * Fire exactly once per failure - the analytics context identity can change
+   * (session/geolocation updates) while this fallback stays mounted, which
+   * would otherwise re-run the effect and double-count.
+   */
+  const fired = useRef(false)
+  useEffect(() => {
+    if (fired.current) return
+    fired.current = true
+    ax.metric('video:playback:failed', {
+      surface: 'feed',
+      presentation,
+      errorClass,
+      errorMessage: errorMessage.slice(0, 256),
+      playlist,
+    })
+  }, [ax, presentation, playlist, errorClass, errorMessage])
 
   return (
     <VideoFallback.Container>

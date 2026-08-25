@@ -45,7 +45,29 @@ describe('general functionality', () => {
 
     logger.addTransport(mockTransport)
 
-    const extra = {foo: true}
+    const extra = {foo: true, __metadata__: {}}
+    logger.warn('message', extra)
+
+    expect(mockTransport).toHaveBeenCalledWith(
+      LogLevel.Warn,
+      undefined,
+      'message',
+      extra,
+      timestamp,
+    )
+  })
+
+  test('supports inherited metadata', () => {
+    const timestamp = Date.now()
+    const logger = new Logger({
+      metadata: {bar: true},
+    })
+
+    const mockTransport = jest.fn()
+
+    logger.addTransport(mockTransport)
+
+    const extra = {foo: true, __metadata__: {bar: true}}
     logger.warn('message', extra)
 
     expect(mockTransport).toHaveBeenCalledWith(
@@ -71,7 +93,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'a',
-      {},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -81,7 +103,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'b',
-      {},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -91,7 +113,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'c',
-      {},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -160,11 +182,7 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
-    expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'log',
-      tags: {category: 'logger'},
-      extra: {__context__: 'logger'},
-    })
+    expect(Sentry.captureMessage).not.toHaveBeenCalled()
 
     sentryTransport(
       LogLevel.Warn,
@@ -182,8 +200,18 @@ describe('general functionality', () => {
       timestamp: sentryTimestamp,
     })
     jest.runAllTimers()
+    expect(Sentry.captureMessage).not.toHaveBeenCalled()
+
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      message,
+      {},
+      timestamp,
+    )
+    jest.runAllTimers()
     expect(Sentry.captureMessage).toHaveBeenCalledWith(message, {
-      level: 'warning',
+      level: 'error',
       tags: {category: 'logger'},
       extra: {__context__: 'logger'},
     })
@@ -214,6 +242,20 @@ describe('general functionality', () => {
         __context__: 'logger',
       },
     })
+
+    const fingerprint = ['{{ default }}', 'report-dialog:upstream-fetch']
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.ReportDialog,
+      e,
+      {fingerprint},
+      timestamp,
+    )
+    expect(Sentry.captureException).toHaveBeenLastCalledWith(e, {
+      tags: {category: 'report-dialog'},
+      extra: {__context__: 'report-dialog'},
+      fingerprint,
+    })
   })
 
   test('sentryTransport serializes errors', () => {
@@ -237,6 +279,42 @@ describe('general functionality', () => {
     })
   })
 
+  test('sentryTransport filters network errors', () => {
+    jest.clearAllMocks()
+    const timestamp = Date.now()
+
+    // network error in the message itself
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'Network request failed',
+      {},
+      timestamp,
+    )
+
+    // network error in metadata, message is something else
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'poll failed',
+      {safeMessage: new Error('Network request failed')},
+      timestamp,
+    )
+
+    jest.runAllTimers()
+    expect(Sentry.captureMessage).not.toHaveBeenCalled()
+
+    // network Error object
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      new Error('Network request failed'),
+      {},
+      timestamp,
+    )
+    expect(Sentry.captureException).not.toHaveBeenCalled()
+  })
+
   test('add/remove transport', () => {
     const timestamp = Date.now()
     const logger = new Logger({})
@@ -256,7 +334,7 @@ describe('general functionality', () => {
       LogLevel.Warn,
       undefined,
       'warn',
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -276,7 +354,7 @@ describe('create', () => {
       LogLevel.Info,
       Logger.Context.Default,
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -288,7 +366,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'specific',
       level: LogLevel.Debug,
     })
@@ -300,7 +378,7 @@ describe('debug contexts', () => {
       LogLevel.Debug,
       'specific',
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -310,7 +388,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'namespace:foo',
       contextFilter: 'namespace:*',
       level: LogLevel.Debug,
@@ -323,7 +401,7 @@ describe('debug contexts', () => {
       LogLevel.Debug,
       'namespace:foo',
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -333,7 +411,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'namespace:bar:baz',
       contextFilter: 'namespace:foo:*',
     })
@@ -345,7 +423,7 @@ describe('debug contexts', () => {
       LogLevel.Debug,
       'namespace:bar:baz',
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -367,7 +445,7 @@ describe('supports levels', () => {
       LogLevel.Debug,
       undefined,
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -376,7 +454,7 @@ describe('supports levels', () => {
       LogLevel.Info,
       undefined,
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -385,7 +463,7 @@ describe('supports levels', () => {
       LogLevel.Warn,
       undefined,
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
 
@@ -395,7 +473,7 @@ describe('supports levels', () => {
       LogLevel.Error,
       undefined,
       e,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -418,7 +496,7 @@ describe('supports levels', () => {
       LogLevel.Info,
       undefined,
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -444,7 +522,7 @@ describe('supports levels', () => {
       LogLevel.Warn,
       undefined,
       message,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })
@@ -474,7 +552,7 @@ describe('supports levels', () => {
       LogLevel.Error,
       undefined,
       e,
-      {},
+      {__metadata__: {}},
       timestamp,
     )
   })

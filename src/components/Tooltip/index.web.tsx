@@ -1,41 +1,52 @@
-import {Children, createContext, useContext, useMemo} from 'react'
+import {createContext, useContext, useMemo} from 'react'
 import {View} from 'react-native'
+import {utils} from '@bsky.app/alf'
 import {Popover} from 'radix-ui'
 
-import {atoms as a, flatten, select, useTheme} from '#/alf'
-import {transparentifyColor} from '#/alf/util/colorGeneration'
+import {atoms as a, flattenToCSS, useTheme} from '#/alf'
 import {
   ARROW_SIZE,
   BUBBLE_MAX_WIDTH,
+  getTooltipStyle,
   MIN_EDGE_SPACE,
+  type TooltipColor,
 } from '#/components/Tooltip/const'
 import {Text} from '#/components/Typography'
 
+// Portal Provider on native, but we actually don't need to do anything here
+export function Provider({children}: {children: React.ReactNode}) {
+  return <>{children}</>
+}
+Provider.displayName = 'TooltipProvider'
+
 type TooltipContextType = {
   position: 'top' | 'bottom'
+  color: TooltipColor
   onVisibleChange: (open: boolean) => void
 }
 
-const TooltipContext = createContext<TooltipContextType>({
+const TooltipContext = createContext<
+  Pick<TooltipContextType, 'position' | 'color'>
+>({
   position: 'bottom',
-  onVisibleChange: () => {},
+  color: 'default',
 })
+TooltipContext.displayName = 'TooltipContext'
 
 export function Outer({
   children,
   position = 'bottom',
+  color = 'default',
   visible,
   onVisibleChange,
 }: {
   children: React.ReactNode
   position?: 'top' | 'bottom'
+  color?: TooltipColor
   visible: boolean
   onVisibleChange: (visible: boolean) => void
 }) {
-  const ctx = useMemo(
-    () => ({position, onVisibleChange}),
-    [position, onVisibleChange],
-  )
+  const ctx = useMemo(() => ({position, color}), [position, color])
   return (
     <Popover.Root open={visible} onOpenChange={onVisibleChange}>
       <TooltipContext.Provider value={ctx}>{children}</TooltipContext.Provider>
@@ -59,7 +70,8 @@ export function Content({
   label: string
 }) {
   const t = useTheme()
-  const {position, onVisibleChange} = useContext(TooltipContext)
+  const {position, color} = useContext(TooltipContext)
+  const style = getTooltipStyle(t, color)
   return (
     <Popover.Portal>
       <Popover.Content
@@ -68,31 +80,26 @@ export function Content({
         side={position}
         sideOffset={4}
         collisionPadding={MIN_EDGE_SPACE}
-        onInteractOutside={() => onVisibleChange(false)}
-        style={flatten([
+        onInteractOutside={evt => {
+          if (evt.type === 'dismissableLayer.focusOutside') {
+            evt.preventDefault()
+          }
+        }}
+        style={flattenToCSS([
           a.rounded_sm,
-          select(t.name, {
-            light: t.atoms.bg,
-            dark: t.atoms.bg_contrast_100,
-            dim: t.atoms.bg_contrast_100,
-          }),
           {
+            backgroundColor: style.surface,
+            borderColor: style.border.color,
+            borderWidth: style.border.width,
+            borderStyle: 'solid',
             minWidth: 'max-content',
-            boxShadow: select(t.name, {
-              light: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
-              dark: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
-              dim: `0 0 24px ${transparentifyColor(t.palette.black, 0.2)}`,
-            }),
+            boxShadow: `0 0 24px ${utils.alpha(t.palette.black, 0.2)}`,
           },
         ])}>
         <Popover.Arrow
           width={ARROW_SIZE}
           height={ARROW_SIZE / 2}
-          fill={select(t.name, {
-            light: t.atoms.bg.backgroundColor,
-            dark: t.atoms.bg_contrast_100.backgroundColor,
-            dim: t.atoms.bg_contrast_100.backgroundColor,
-          })}
+          fill={style.surface}
         />
         <View style={[a.px_md, a.py_sm, {maxWidth: BUBBLE_MAX_WIDTH}]}>
           {children}
@@ -102,16 +109,23 @@ export function Content({
   )
 }
 
-export function TextBubble({children}: {children: React.ReactNode}) {
-  const c = Children.toArray(children)
+export function BubbleText({
+  children,
+  label,
+}: {
+  children: React.ReactNode
+  label: string
+}) {
+  const t = useTheme()
+  const {color} = useContext(TooltipContext)
+  const style = getTooltipStyle(t, color)
+  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
   return (
-    <Content label={c.join(' ')}>
+    <Content label={label}>
       <View style={[a.gap_xs]}>
-        {c.map((child, i) => (
-          <Text key={i} style={[a.text_sm, a.leading_snug]}>
-            {child}
-          </Text>
-        ))}
+        <Text style={[a.text_sm, a.leading_snug, {color: style.text}]}>
+          {children}
+        </Text>
       </View>
     </Content>
   )

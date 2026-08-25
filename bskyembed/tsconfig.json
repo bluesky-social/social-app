@@ -1,23 +1,21 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "types": ["vite/client"],
+    "target": "ES2015",
+    "lib": ["DOM", "ESNext"],
+    "types": ["node", "vite/client"],
     "allowJs": false,
     "skipLibCheck": true,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
     "jsxFactory": "h",
     "jsxFragmentFactory": "Fragment",
-    "downlevelIteration": true
   },
-  "include": ["src", "snippet", "vite.config.ts"]
+  "include": ["src", "snippet", "vite.config.ts", "*.config.cjs", "eslint.config.mjs"]
 }

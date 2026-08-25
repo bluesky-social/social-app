@@ -1,27 +1,35 @@
-import React, {memo, useState} from 'react'
-import {LayoutChangeEvent, StyleSheet, View} from 'react-native'
+import {memo, useMemo, useState} from 'react'
+import {type LayoutChangeEvent, StyleSheet, View} from 'react-native'
 import Animated, {
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {
-  AppBskyActorDefs,
-  AppBskyLabelerDefs,
-  ModerationOpts,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {scheduleOnRN} from 'react-native-worklets'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {useIsFocused} from '@react-navigation/native'
 
-import {isNative} from '#/platform/detection'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
-import {ProfileHeaderLabeler} from './ProfileHeaderLabeler'
-import {ProfileHeaderStandard} from './ProfileHeaderStandard'
+import {Header} from '#/components/Layout'
+import * as ProfileCard from '#/components/ProfileCard'
+import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
+import {
+  HeaderLabelerButtons,
+  ProfileHeaderLabeler,
+} from './ProfileHeaderLabeler'
+import {
+  HeaderStandardButtons,
+  ProfileHeaderStandard,
+} from './ProfileHeaderStandard'
 
 let ProfileHeaderLoading = (_props: {}): React.ReactNode => {
   const t = useTheme()
@@ -48,8 +56,8 @@ ProfileHeaderLoading = memo(ProfileHeaderLoading)
 export {ProfileHeaderLoading}
 
 interface Props {
-  profile: AppBskyActorDefs.ProfileViewDetailed
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed | undefined
   descriptionRT: RichTextAPI | null
   moderationOpts: ModerationOpts
   hideBackButton?: boolean
@@ -71,10 +79,11 @@ let ProfileHeader = ({setMinimumHeight, ...props}: Props): React.ReactNode => {
 
   return (
     <>
-      {isNative && (
+      {IS_NATIVE && (
         <MinimalHeader
           onLayout={evt => setMinimumHeight(evt.nativeEvent.layout.height)}
           profile={props.profile}
+          labeler={props.labeler}
           hideBackButton={props.hideBackButton}
         />
       )}
@@ -85,18 +94,28 @@ let ProfileHeader = ({setMinimumHeight, ...props}: Props): React.ReactNode => {
 ProfileHeader = memo(ProfileHeader)
 export {ProfileHeader}
 
-const MinimalHeader = React.memo(function MinimalHeader({
+const MinimalHeader = memo(function MinimalHeader({
   onLayout,
+  profile: profileUnshadowed,
+  labeler,
+  hideBackButton = false,
 }: {
   onLayout: (e: LayoutChangeEvent) => void
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
+  labeler?: app.bsky.labeler.defs.LabelerViewDetailed
   hideBackButton?: boolean
 }) {
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const ctx = usePagerHeaderContext()
+  const profile = useProfileShadow(profileUnshadowed)
+  const moderationOpts = useModerationOpts()
+  const moderation = useMemo(
+    () => (moderationOpts ? moderateProfile(profile, moderationOpts) : null),
+    [moderationOpts, profile],
+  )
   const [visible, setVisible] = useState(false)
-  const [minimalHeaderHeight, setMinimalHeaderHeight] = React.useState(0)
+  const [minimalHeaderHeight, setMinimalHeaderHeight] = useState(insets.top)
   const isScreenFocused = useIsFocused()
   if (!ctx) throw new Error('MinimalHeader cannot be used on web')
   const {scrollY, headerHeight} = ctx
@@ -128,7 +147,7 @@ const MinimalHeader = React.memo(function MinimalHeader({
     () => scrollY.get() > 100,
     (value, prev) => {
       if (prev !== value) {
-        runOnJS(setVisible)(value)
+        scheduleOnRN(setVisible, value)
       }
     },
   )
@@ -156,8 +175,42 @@ const MinimalHeader = React.memo(function MinimalHeader({
           paddingTop: insets.top,
         },
         animatedStyle,
-      ]}
-    />
+      ]}>
+      <Header.Outer noBottomBorder>
+        {hideBackButton ? <Header.MenuButton /> : <Header.BackButton />}
+        <Header.Content align="left">
+          {moderationOpts ? (
+            <ProfileCard.Name
+              profile={profile}
+              moderationOpts={moderationOpts}
+              textStyle={[a.font_bold]}
+            />
+          ) : (
+            <ProfileCard.NamePlaceholder />
+          )}
+          <Header.SubtitleText>
+            {sanitizeHandle(profile.handle, '@')}
+          </Header.SubtitleText>
+        </Header.Content>
+        {!profile.associated?.labeler
+          ? moderationOpts &&
+            moderation && (
+              <View style={[a.flex_row, a.justify_end, a.gap_xs]}>
+                <HeaderStandardButtons
+                  profile={profile}
+                  moderation={moderation}
+                  moderationOpts={moderationOpts}
+                  minimal
+                />
+              </View>
+            )
+          : labeler && (
+              <View style={[a.flex_row, a.justify_end, a.gap_xs]}>
+                <HeaderLabelerButtons profile={profile} minimal />
+              </View>
+            )}
+      </Header.Outer>
+    </Animated.View>
   )
 })
 MinimalHeader.displayName = 'MinimalHeader'

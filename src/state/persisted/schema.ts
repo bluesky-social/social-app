@@ -1,3 +1,4 @@
+import {isDidString} from '@atproto/lex'
 import {z} from 'zod'
 
 import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
@@ -13,7 +14,17 @@ const externalEmbedOptions = ['show', 'hide'] as const
  */
 const accountSchema = z.object({
   service: z.string(),
-  did: z.string(),
+  /**
+   * Genuinely validated, not just branded: the refinement rejects malformed
+   * values at runtime and narrows the inferred type to `DidString`.
+   *
+   * Weigh any further tightening of this field carefully. One failing field
+   * fails the whole root schema, and {@link tryParse} then discards the ENTIRE
+   * persisted state - every account and every preference - so the app boots
+   * logged out with defaults. Persisted dids come from com.atproto.server
+   * responses and are always canonical, so this particular check is safe.
+   */
+  did: z.string().refine(isDidString),
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),
@@ -71,15 +82,15 @@ const schema = z.object({
     contentLanguages: z.array(z.string()),
     /**
      * The language(s) the user is currently posting in, configured within the
-     * composer. Multiple languages are psearate by commas.
+     * composer. Multiple languages are separated by commas.
      *
      * BCP-47 2-letter language code without region.
      */
     postLanguage: z.string(),
     /**
      * The user's post language history, used to pre-populate the post language
-     * selector in the composer. Within each value, multiple languages are
-     * separated by values.
+     * selector in the composer. Within each value, multiple languages are separated
+     * by commas.
      *
      * BCP-47 2-letter language codes without region.
      */
@@ -98,6 +109,7 @@ const schema = z.object({
     .object({
       giphy: z.enum(externalEmbedOptions).optional(),
       tenor: z.enum(externalEmbedOptions).optional(),
+      klipy: z.enum(externalEmbedOptions).optional(),
       youtube: z.enum(externalEmbedOptions).optional(),
       youtubeShorts: z.enum(externalEmbedOptions).optional(),
       twitch: z.enum(externalEmbedOptions).optional(),
@@ -106,6 +118,7 @@ const schema = z.object({
       appleMusic: z.enum(externalEmbedOptions).optional(),
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
+      bandcamp: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({
@@ -116,6 +129,7 @@ const schema = z.object({
   }),
   hiddenPosts: z.array(z.string()).optional(), // should move to server
   useInAppBrowser: z.boolean().optional(),
+  /** @deprecated */
   lastSelectedHomeFeed: z.string().optional(),
   pdsAddressHistory: z.array(z.string()).optional(),
   disableHaptics: z.boolean().optional(),
@@ -195,7 +209,7 @@ export function tryParse(rawData: string): Schema | undefined {
     const errors =
       parsed.error?.errors?.map(e => ({
         code: e.code,
-        // @ts-ignore exists on some types
+        // @ts-expect-error exists on some types
         expected: e?.expected,
         path: e.path?.join('.'),
       })) || []

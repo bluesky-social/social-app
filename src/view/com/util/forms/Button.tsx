@@ -1,11 +1,9 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {
   ActivityIndicator,
   type GestureResponderEvent,
   type NativeSyntheticEvent,
   type NativeTouchEvent,
-  Pressable,
-  type PressableStateCallbackType,
   type StyleProp,
   StyleSheet,
   type TextStyle,
@@ -15,6 +13,10 @@ import {
 
 import {choose} from '#/lib/functions'
 import {useTheme} from '#/lib/ThemeContext'
+import {
+  Pressable,
+  type PressableStateCallbackType,
+} from '#/components/Pressable'
 import {Text} from '../text/Text'
 
 export type ButtonType =
@@ -27,15 +29,6 @@ export type ButtonType =
   | 'primary-light'
   | 'secondary-light'
   | 'default-light'
-
-// Augment type for react-native-web (see https://github.com/necolas/react-native-web/issues/1684#issuecomment-766451866)
-declare module 'react-native' {
-  interface PressableStateCallbackType {
-    // @ts-ignore web only
-    hovered?: boolean
-    focused?: boolean
-  }
-}
 
 /**
  * @deprecated use Button from `#/components/Button.tsx` instead
@@ -148,19 +141,19 @@ export function Button({
     },
   )
 
-  const [isLoading, setIsLoading] = React.useState(false)
-  const onPressWrapped = React.useCallback(
+  const [isLoading, setIsLoading] = useState(false)
+  const onPressWrapped = useCallback(
     async (event: GestureResponderEvent) => {
       event.stopPropagation()
       event.preventDefault()
-      withLoading && setIsLoading(true)
+      if (withLoading) setIsLoading(true)
       await onPress?.(event)
-      withLoading && setIsLoading(false)
+      if (withLoading) setIsLoading(false)
     },
     [onPress, withLoading],
   )
 
-  const getStyle = React.useCallback(
+  const getStyle = useCallback(
     (state: PressableStateCallbackType) => {
       const arr = [typeOuterStyle, styles.outer, style]
       if (state.pressed) {
@@ -173,7 +166,7 @@ export function Button({
     [typeOuterStyle, style],
   )
 
-  const renderChildern = React.useCallback(() => {
+  const renderChildern = useCallback(() => {
     if (!label) {
       return children
     }

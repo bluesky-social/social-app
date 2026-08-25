@@ -1,1 +1,1 @@
-export {HighlighterProvider} from '#/lib/shiki/HighlighterProvider.native'
+export {default} from '#/lib/shiki/HighlighterProvider.native'

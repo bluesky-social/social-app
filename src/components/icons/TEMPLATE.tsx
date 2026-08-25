@@ -1,9 +1,21 @@
-import React from 'react'
+import {
+  forwardRef,
+  type ForwardRefExoticComponent,
+  type RefAttributes,
+} from 'react'
 import Svg, {Path} from 'react-native-svg'
 
-import {Props, useCommonSVGProps} from '#/components/icons/common'
+import {type Props, useCommonSVGProps} from '#/components/icons/common'
 
-export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
+export type IconWithSvgMeta = ForwardRefExoticComponent<
+  Props & RefAttributes<Svg>
+> & {
+  svgPaths: string[]
+  svgViewBox: string
+  svgStrokeWidth: number
+}
+
+export const IconTemplate_Stroke2_Corner0_Rounded = forwardRef(
   function LogoImpl(props: Props, ref) {
     const {fill, size, style, ...rest} = useCommonSVGProps(props)
 
@@ -11,7 +23,7 @@ export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
       <Svg
         fill="none"
         {...rest}
-        // @ts-ignore it's fiiiiine
+        // @ts-expect-error it's fiiiiine
         ref={ref}
         viewBox="0 0 24 24"
         width={size}
@@ -28,28 +40,61 @@ export const IconTemplate_Stroke2_Corner0_Rounded = React.forwardRef(
   },
 )
 
-export function createSinglePathSVG({path}: {path: string}) {
-  return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
+export function createSinglePathSVG({
+  path,
+  viewBox,
+  strokeWidth = 0,
+  strokeLinecap = 'butt',
+  strokeLinejoin = 'miter',
+}: {
+  path: string
+  viewBox?: string
+  strokeWidth?: number
+  strokeLinecap?: 'butt' | 'round' | 'square'
+  strokeLinejoin?: 'miter' | 'round' | 'bevel'
+}) {
+  const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+
+    const hasStroke = strokeWidth > 0
 
     return (
       <Svg
         fill="none"
         {...rest}
         ref={ref}
-        viewBox="0 0 24 24"
+        viewBox={viewBox ?? '0 0 24 24'}
         width={size}
         height={size}
         style={[style]}>
         {gradient}
-        <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
+        <Path
+          fill={hasStroke ? 'none' : fill}
+          stroke={hasStroke ? fill : 'none'}
+          strokeWidth={strokeWidth}
+          strokeLinecap={strokeLinecap}
+          strokeLinejoin={strokeLinejoin}
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d={path}
+        />
       </Svg>
     )
-  })
+  }) as IconWithSvgMeta
+  Icon.svgPaths = [path]
+  Icon.svgViewBox = viewBox || '0 0 24 24'
+  Icon.svgStrokeWidth = strokeWidth
+  return Icon
 }
 
-export function createMultiPathSVG({paths}: {paths: string[]}) {
-  return React.forwardRef<Svg, Props>(function LogoImpl(props, ref) {
+export function createMultiPathSVG({
+  paths,
+  viewBox,
+}: {
+  paths: string[]
+  viewBox?: string
+}) {
+  const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
 
     return (
@@ -57,7 +102,7 @@ export function createMultiPathSVG({paths}: {paths: string[]}) {
         fill="none"
         {...rest}
         ref={ref}
-        viewBox="0 0 24 24"
+        viewBox={viewBox ?? '0 0 24 24'}
         width={size}
         height={size}
         style={[style]}>
@@ -73,5 +118,9 @@ export function createMultiPathSVG({paths}: {paths: string[]}) {
         ))}
       </Svg>
     )
-  })
+  }) as IconWithSvgMeta
+  Icon.svgPaths = paths
+  Icon.svgViewBox = viewBox || '0 0 24 24'
+  Icon.svgStrokeWidth = 0
+  return Icon
 }

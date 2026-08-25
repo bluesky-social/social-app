@@ -1,15 +1,17 @@
-import {type AppBskyLabelerDefs} from '@atproto/api'
+import {type DidString} from '@atproto/syntax'
+import {addLabeler, removeLabeler} from '@bsky/sdk'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
 import {MAX_LABELERS} from '#/lib/constants'
-import {labelersDetailedInfoQueryKeyRoot} from '#/lib/react-query'
-import {STALE} from '#/state/queries'
+import {GCTIME, STALE} from '#/state/queries'
 import {
   preferencesQueryKey,
   usePreferencesQuery,
 } from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {createQueryKey} from '#/state/queries/util'
+import {useAppviewClient, usePdsClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 const labelerInfoQueryKeyRoot = 'labeler-info'
 export const labelerInfoQueryKey = (did: string) => [
@@ -23,10 +25,8 @@ export const labelersInfoQueryKey = (dids: string[]) => [
   dids.slice().sort(),
 ]
 
-export const labelersDetailedInfoQueryKey = (dids: string[]) => [
-  labelersDetailedInfoQueryKeyRoot,
-  dids,
-]
+const createLabelersDetailedInfoQueryKey = (dids: string[]) =>
+  createQueryKey('labelers-detailed-info', {dids}, {persistedVersion: 1})
 
 export function useLabelerInfoQuery({
   did,
@@ -35,52 +35,73 @@ export function useLabelerInfoQuery({
   did?: string
   enabled?: boolean
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     enabled: !!did && enabled !== false,
     queryKey: labelerInfoQueryKey(did as string),
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({
-        dids: [did!],
+      const res = await client.call(app.bsky.labeler.getServices, {
+        dids: [did! as DidString],
         detailed: true,
       })
-      return res.data.views[0] as AppBskyLabelerDefs.LabelerViewDetailed
+      return res.views[0] as app.bsky.labeler.defs.LabelerViewDetailed
     },
   })
 }
 
 export function useLabelersInfoQuery({dids}: {dids: string[]}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     enabled: !!dids.length,
     queryKey: labelersInfoQueryKey(dids),
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({dids})
-      return res.data.views as AppBskyLabelerDefs.LabelerView[]
+      const res = await client.call(app.bsky.labeler.getServices, {
+        dids: dids as DidString[],
+      })
+      return res.views as app.bsky.labeler.defs.LabelerView[]
     },
   })
 }
 
 export function useLabelersDetailedInfoQuery({dids}: {dids: string[]}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useQuery({
     enabled: !!dids.length,
-    queryKey: labelersDetailedInfoQueryKey(dids),
-    gcTime: 1000 * 60 * 60 * 6, // 6 hours
+    queryKey: createLabelersDetailedInfoQueryKey(dids),
+    gcTime: GCTIME.INFINITY,
     staleTime: STALE.MINUTES.ONE,
     queryFn: async () => {
-      const res = await agent.app.bsky.labeler.getServices({
-        dids,
+      const res = await client.call(app.bsky.labeler.getServices, {
+        dids: dids as DidString[],
         detailed: true,
       })
-      return res.data.views as AppBskyLabelerDefs.LabelerViewDetailed[]
+      return res.views as app.bsky.labeler.defs.LabelerViewDetailed[]
+    },
+  })
+}
+
+export function useRemoveLabelersMutation() {
+  const queryClient = useQueryClient()
+  const client = usePdsClient()
+
+  return useMutation({
+    async mutationFn({dids}: {dids: string[]}) {
+      await Promise.all(
+        dids.map(did => client.call(removeLabeler, did as DidString)),
+      )
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({
+        queryKey: preferencesQueryKey,
+      })
     },
   })
 }
 
 export function useLabelerSubscriptionMutation() {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const preferences = usePreferencesQuery()
 
   return useMutation({
@@ -103,26 +124,32 @@ export function useLabelerSubscriptionMutation() {
       const labelerDids = (
         preferences.data?.moderationPrefs?.labelers ?? []
       ).map(l => l.did)
-      const invalidLabelers: string[] = []
+      const invalidLabelers: DidString[] = []
       if (labelerDids.length) {
-        const profiles = await agent.getProfiles({actors: labelerDids})
-        if (profiles.data) {
-          for (const did of labelerDids) {
-            const exists = profiles.data.profiles.find(p => p.did === did)
+        const profiles = await appviewClient.call(app.bsky.actor.getProfiles, {
+          actors: labelerDids,
+        })
+        if (profiles) {
+          for (const labelerDid of labelerDids) {
+            const exists = profiles.profiles.find(p => p.did === labelerDid)
             if (exists) {
               // profile came back but it's not a valid labeler
               if (exists.associated && !exists.associated.labeler) {
-                invalidLabelers.push(did)
+                invalidLabelers.push(labelerDid)
               }
             } else {
               // no response came back, might be deactivated or takendown
-              invalidLabelers.push(did)
+              invalidLabelers.push(labelerDid)
             }
           }
         }
       }
       if (invalidLabelers.length) {
-        await Promise.all(invalidLabelers.map(did => agent.removeLabeler(did)))
+        await Promise.all(
+          invalidLabelers.map(labelerDid =>
+            pdsClient.call(removeLabeler, labelerDid),
+          ),
+        )
       }
 
       if (subscribe) {
@@ -130,9 +157,9 @@ export function useLabelerSubscriptionMutation() {
         if (labelerCount >= MAX_LABELERS) {
           throw new Error('MAX_LABELERS')
         }
-        await agent.addLabeler(did)
+        await pdsClient.call(addLabeler, did as DidString)
       } else {
-        await agent.removeLabeler(did)
+        await pdsClient.call(removeLabeler, did as DidString)
       }
     },
     async onSuccess() {

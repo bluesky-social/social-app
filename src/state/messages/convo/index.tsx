@@ -1,9 +1,15 @@
-import React, {useContext, useState, useSyncExternalStore} from 'react'
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+  useSyncExternalStore,
+} from 'react'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/hooks/useAppState'
+import {useAppState} from '#/lib/appState'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   type ConvoParams,
@@ -21,11 +27,24 @@ import {
 } from '#/state/queries/messages/conversation'
 import {RQKEY_ROOT as ListConvosQueryKeyRoot} from '#/state/queries/messages/list-conversations'
 import {RQKEY as createProfileQueryKey} from '#/state/queries/profile'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {type GroupConvoMember} from '#/components/dms/util'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export * from '#/state/messages/convo/util'
 
-const ChatContext = React.createContext<ConvoState | null>(null)
+function membersChanged(
+  a: chat.bsky.convo.defs.ConvoView['members'],
+  b: chat.bsky.convo.defs.ConvoView['members'],
+) {
+  if (a.length !== b.length) return true
+  const aDids = new Set(a.map(m => m.did))
+  return b.some(m => !aDids.has(m.did))
+}
+
+const ChatContext = createContext<ConvoState | null>(null)
+ChatContext.displayName = 'ChatContext'
 
 export function useConvo() {
   const ctx = useContext(ChatContext)
@@ -62,15 +81,16 @@ export function ConvoProvider({
   convoId,
 }: Pick<ConvoParams, 'convoId'> & {children: React.ReactNode}) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const chatClient = useChatClient()
   const events = useMessagesEventBus()
   const [convo] = useState(() => {
-    const placeholder = queryClient.getQueryData<ChatBskyConvoDefs.ConvoView>(
-      getConvoKey(convoId),
-    )
+    const placeholder =
+      queryClient.getQueryData<chat.bsky.convo.defs.ConvoView>(
+        getConvoKey(convoId),
+      )
     return new Convo({
       convoId,
-      agent,
+      chatClient,
       events,
       placeholderData: placeholder ? {convo: placeholder} : undefined,
     })
@@ -78,10 +98,20 @@ export function ConvoProvider({
   const service = useSyncExternalStore(convo.subscribe, convo.getSnapshot)
   const {mutate: markAsRead} = useMarkAsReadMutation()
 
+  /*
+   * The convo outlives the client it was constructed with: replacing the
+   * session bundle builds fresh clients over the new session and disposes the
+   * old ones, so a convo still holding the previous client would send through a
+   * dead session.
+   */
+  useEffect(() => {
+    convo.updateClient(chatClient)
+  }, [convo, chatClient])
+
   const appState = useAppState()
   const isActive = appState === 'active'
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       if (isActive) {
         convo.resume()
         markAsRead({convoId})
@@ -94,22 +124,76 @@ export function ConvoProvider({
     }, [isActive, convo, convoId, markAsRead]),
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     return convo.on(event => {
       switch (event.type) {
         case 'invalidate-block-state': {
           for (const did of event.accountDids) {
-            queryClient.invalidateQueries({
+            void queryClient.invalidateQueries({
               queryKey: createProfileQueryKey(did),
             })
           }
-          queryClient.invalidateQueries({
+          void queryClient.invalidateQueries({
             queryKey: [ListConvosQueryKeyRoot],
           })
         }
       }
     })
   }, [convo, queryClient])
+
+  useEffect(() => {
+    const [root, id] = getConvoKey(convoId)
+    return queryClient.getQueryCache().subscribe(event => {
+      // Only react to data updates. Other event types (e.g. `added`) can be
+      // emitted synchronously while another component reads this same query
+      // during its render (React Query builds the query in `getOptimisticResult`),
+      // and committing to the convo store then would set state on this provider
+      // mid-render of that component.
+      if (event.type !== 'updated') return
+      const queryKey = event.query.queryKey as string[]
+      if (queryKey[0] === root && queryKey[1] === id) {
+        const data = event.query.state.data as
+          chat.bsky.convo.defs.ConvoView | undefined
+        if (data && convo.convo && data.muted !== convo.convo.view.muted) {
+          convo.updateMuted(data.muted)
+        }
+        if (
+          data &&
+          bsky.isType(chat.bsky.convo.defs.groupConvo, data.kind) &&
+          convo.convo?.kind === 'group'
+        ) {
+          if (data.kind.name !== convo.convo.details.name) {
+            convo.updateGroupName(data.kind.name)
+          }
+          if (data.kind.joinLink !== convo.convo.details.joinLink) {
+            convo.updateJoinLink(data.kind.joinLink)
+          }
+          if (
+            data.kind.lockStatus !== convo.convo.details.lockStatus ||
+            data.kind.lockStatusModerationOverride !==
+              convo.convo.details.lockStatusModerationOverride
+          ) {
+            convo.updateLockStatus(
+              data.kind.lockStatus,
+              data.kind.lockStatusModerationOverride,
+            )
+          }
+        }
+        if (
+          data &&
+          bsky.isType(chat.bsky.convo.defs.groupConvo, data.kind) &&
+          convo.convo?.kind === 'group' &&
+          (membersChanged(data.members, convo.convo.members) ||
+            data.kind.memberCount !== convo.convo.details.memberCount)
+        ) {
+          convo.updateGroupMembers(
+            data.members as GroupConvoMember[],
+            data.kind.memberCount,
+          )
+        }
+      }
+    })
+  }, [convo, convoId, queryClient])
 
   return <ChatContext.Provider value={service}>{children}</ChatContext.Provider>
 }

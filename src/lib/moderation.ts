@@ -1,22 +1,25 @@
-import React from 'react'
+import {useMemo} from 'react'
+import {Client} from '@atproto/lex'
+import {type DidString} from '@atproto/syntax'
 import {
-  type AppBskyLabelerDefs,
-  BskyAgent,
-  type ComAtprotoLabelDefs,
   type InterpretedLabelValueDefinition,
   LABELS,
   type ModerationCause,
   type ModerationOpts,
   type ModerationUI,
-} from '@atproto/api'
+} from '@bsky/sdk/moderation'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {type AppModerationCause} from '#/components/Pills'
+import {type app, type com} from '#/lexicons'
 
-export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn']
-export const OTHER_SELF_LABELS = ['graphic-media']
-export const SELF_LABELS = [...ADULT_CONTENT_LABELS, ...OTHER_SELF_LABELS]
+export const ADULT_CONTENT_LABELS = ['sexual', 'nudity', 'porn'] as const
+export const OTHER_SELF_LABELS = ['graphic-media'] as const
+export const SELF_LABELS = [
+  ...ADULT_CONTENT_LABELS,
+  ...OTHER_SELF_LABELS,
+] as const
 
 export type AdultSelfLabel = (typeof ADULT_CONTENT_LABELS)[number]
 export type OtherSelfLabel = (typeof OTHER_SELF_LABELS)[number]
@@ -50,9 +53,24 @@ export function moduiContainsHideableOffense(modui: ModerationUI): boolean {
 }
 
 export function labelIsHideableOffense(
-  label: ComAtprotoLabelDefs.Label,
+  label: com.atproto.label.defs.Label,
 ): boolean {
   return ['!hide', '!takedown'].includes(label.val)
+}
+
+/**
+ * Filters out labels that are not user-facing: system labels (val prefixed
+ * with `!`) and the user's own "bot" self-label.
+ */
+export function filterUserFacingLabels(
+  labels: com.atproto.label.defs.Label[],
+  currentAccountDid: string | undefined,
+): com.atproto.label.defs.Label[] {
+  return labels.filter(
+    label =>
+      !label.val.startsWith('!') &&
+      !(label.val === 'bot' && label.src === currentAccountDid),
+  )
 }
 
 export function getLabelingServiceTitle({
@@ -84,20 +102,20 @@ export function lookupLabelValueDefinition(
 export function isAppLabeler(
   labeler:
     | string
-    | AppBskyLabelerDefs.LabelerView
-    | AppBskyLabelerDefs.LabelerViewDetailed,
+    | app.bsky.labeler.defs.LabelerView
+    | app.bsky.labeler.defs.LabelerViewDetailed,
 ): boolean {
   if (typeof labeler === 'string') {
-    return BskyAgent.appLabelers.includes(labeler)
+    return Client.appLabelers.includes(labeler as DidString)
   }
-  return BskyAgent.appLabelers.includes(labeler.creator.did)
+  return Client.appLabelers.includes(labeler.creator.did)
 }
 
 export function isLabelerSubscribed(
   labeler:
     | string
-    | AppBskyLabelerDefs.LabelerView
-    | AppBskyLabelerDefs.LabelerViewDetailed,
+    | app.bsky.labeler.defs.LabelerView
+    | app.bsky.labeler.defs.LabelerViewDetailed,
   modOpts: ModerationOpts,
 ) {
   labeler = typeof labeler === 'string' ? labeler : labeler.creator.did
@@ -116,10 +134,14 @@ export type Subject =
       did: string
     }
 
-export function useLabelSubject({label}: {label: ComAtprotoLabelDefs.Label}): {
+export function useLabelSubject({
+  label,
+}: {
+  label: com.atproto.label.defs.Label
+}): {
   subject: Subject
 } {
-  return React.useMemo(() => {
+  return useMemo(() => {
     const {cid, uri} = label
     if (cid) {
       return {

@@ -1,34 +1,20 @@
 import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {
-  ScrollView,
-  type StyleProp,
-  TextInput,
-  useWindowDimensions,
-  View,
-  type ViewStyle,
-} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {type ListViewToken as ViewToken, TextInput, View} from 'react-native'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {logEvent} from '#/lib/statsig/statsig'
-import {isWeb} from '#/platform/detection'
+import {popularInterests, useInterestsDisplayNames} from '#/lib/interests'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useActorSearchPaginated} from '#/state/queries/actor-search'
+import {useActorSearch} from '#/state/queries/actor-search'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useGetSuggestedUsersQuery} from '#/state/queries/trending/useGetSuggestedUsersQuery'
+import {useGetSuggestedUsersForSeeMoreQuery} from '#/state/queries/trending/useGetSuggestedUsersForSeeMoreQuery'
 import {useSession} from '#/state/session'
 import {type Follow10ProgressGuide} from '#/state/shell/progress-guide'
 import {type ListMethods} from '#/view/com/util/List'
 import {
-  popularInterests,
-  useInterestsDisplayNames,
-} from '#/screens/Onboarding/state'
-import {
   atoms as a,
   native,
-  tokens,
   useBreakpoints,
   useTheme,
   type ViewStyleProp,
@@ -37,11 +23,14 @@ import {
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {MagnifyingGlass2_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass2'
-import {PersonGroup_Stroke2_Corner2_Rounded as PersonGroupIcon} from '#/components/icons/Person'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
+import {MagnifyingGlass_Stroke2_Corner0_Rounded as SearchIcon} from '#/components/icons/MagnifyingGlass'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {boostInterests, InterestTabs} from '#/components/InterestTabs'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import type * as bsky from '#/types/bsky'
 import {ProgressGuideTask} from './Task'
 
@@ -65,29 +54,34 @@ type Item =
       key: string
     }
 
-export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
-  const {_} = useLingui()
+export function FollowDialog({
+  guide,
+  showArrow,
+}: {
+  guide: Follow10ProgressGuide
+  showArrow?: boolean
+}) {
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
   const control = Dialog.useDialogControl()
-  const {gtMobile} = useBreakpoints()
-  const {height: minHeight} = useWindowDimensions()
+  const {gtPhone} = useBreakpoints()
 
   return (
     <>
       <Button
-        label={_(msg`Find people to follow`)}
+        label={l`Find people to follow`}
         onPress={() => {
           control.open()
-          logEvent('progressGuide:followDialog:open', {})
+          ax.metric('progressGuide:followDialog:open', {})
         }}
-        size={gtMobile ? 'small' : 'large'}
-        color="primary"
-        variant="solid">
-        <ButtonIcon icon={PersonGroupIcon} />
+        size={gtPhone ? 'small' : 'large'}
+        color="primary">
         <ButtonText>
           <Trans>Find people to follow</Trans>
         </ButtonText>
+        {showArrow && <ButtonIcon icon={ArrowRightIcon} />}
       </Button>
-      <Dialog.Outer control={control} nativeOptions={{minHeight}}>
+      <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
         <DialogInner guide={guide} />
       </Dialog.Outer>
@@ -95,29 +89,57 @@ export function FollowDialog({guide}: {guide: Follow10ProgressGuide}) {
   )
 }
 
+/**
+ * Same as {@link FollowDialog} but without a progress guide.
+ */
+export function FollowDialogWithoutGuide({
+  control,
+}: {
+  control: Dialog.DialogOuterProps['control']
+}) {
+  return (
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
+      <Dialog.Handle />
+      <DialogInner />
+    </Dialog.Outer>
+  )
+}
+
 // Fine to keep this top-level.
 let lastSelectedInterest = ''
 let lastSearchText = ''
 
-function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
-  const {_} = useLingui()
-  const interestsDisplayNames = useInterestsDisplayNames()
+const FOR_YOU_TAB = 'all'
+
+function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
+  const rawInterestsDisplayNames = useInterestsDisplayNames()
   const {data: preferences} = usePreferencesQuery()
   const personalizedInterests = preferences?.interests?.tags
-  const interests = Object.keys(interestsDisplayNames)
-    .sort(boostInterests(popularInterests))
-    .sort(boostInterests(personalizedInterests))
+  const interests = useMemo(
+    () => [
+      FOR_YOU_TAB,
+      ...Object.keys(rawInterestsDisplayNames)
+        .sort(boostInterests(popularInterests))
+        .sort(boostInterests(personalizedInterests)),
+    ],
+    [rawInterestsDisplayNames, personalizedInterests],
+  )
+  const interestsDisplayNames = useMemo(
+    () => ({
+      [FOR_YOU_TAB]: l`For You`,
+      ...rawInterestsDisplayNames,
+    }),
+    [l, rawInterestsDisplayNames],
+  )
   const [selectedInterest, setSelectedInterest] = useState(
-    () =>
-      lastSelectedInterest ||
-      (personalizedInterests && interests.includes(personalizedInterests[0])
-        ? personalizedInterests[0]
-        : interests[0]),
+    () => lastSelectedInterest || FOR_YOU_TAB,
   )
   const [searchText, setSearchText] = useState(lastSearchText)
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
 
@@ -126,20 +148,21 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     lastSelectedInterest = selectedInterest
   }, [searchText, selectedInterest])
 
-  const {
-    data: suggestions,
-    isFetching: isFetchingSuggestions,
-    error: suggestionsError,
-  } = useGetSuggestedUsersQuery({
-    category: selectedInterest,
+  const isForYou = selectedInterest === FOR_YOU_TAB
+
+  const seeMoreQuery = useGetSuggestedUsersForSeeMoreQuery({
+    category: isForYou ? undefined : selectedInterest,
     limit: 50,
   })
+  const suggestions = seeMoreQuery.data
+  const isFetchingSuggestions = seeMoreQuery.isFetching
+  const suggestionsError = seeMoreQuery.error
   const {
     data: searchResults,
     isFetching: isFetchingSearchResults,
     error: searchResultsError,
     isError: isSearchResultsError,
-  } = useActorSearchPaginated({
+  } = useActorSearch({
     enabled: !!searchText,
     query: searchText,
   })
@@ -169,7 +192,7 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
       _items.push({
         type: 'empty',
         key: 'empty',
-        message: _(msg`We're having network issues, try again`),
+        message: l`We're having network issues, try again`,
       })
     } else {
       const seen = new Set<string>()
@@ -189,9 +212,18 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
       }
     }
 
+    if (
+      hasSearchText &&
+      !isFetchingSearchResults &&
+      !_items.length &&
+      !isSearchResultsError
+    ) {
+      _items.push({type: 'empty', key: 'empty', message: l`No results`})
+    }
+
     return _items
   }, [
-    _,
+    l,
     suggestions,
     suggestionsError,
     isFetchingSuggestions,
@@ -201,16 +233,11 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
     currentAccount?.did,
     hasSearchText,
     resultsKey,
+    isSearchResultsError,
   ])
 
-  if (
-    searchText &&
-    !isFetchingSearchResults &&
-    !items.length &&
-    !isSearchResultsError
-  ) {
-    items.push({type: 'empty', key: 'empty', message: _(msg`No results`)})
-  }
+  const isGuide = Boolean(guide)
+  const recIdForLogging = hasSearchText ? undefined : suggestions?.recId
 
   const renderItems = useCallback(
     ({item, index}: {item: Item; index: number}) => {
@@ -221,6 +248,10 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
               profile={item.profile}
               moderationOpts={moderationOpts!}
               noBorder={index === 0}
+              position={index}
+              recSource={hasSearchText ? 'Search' : undefined}
+              recId={recIdForLogging}
+              isGuide={isGuide}
             />
           )
         }
@@ -234,7 +265,47 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
           return null
       }
     },
-    [moderationOpts],
+    [moderationOpts, hasSearchText, recIdForLogging, isGuide],
+  )
+
+  // Track seen profiles
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  const itemsRef = useRef(items)
+  itemsRef.current = items
+  const selectedInterestRef = useRef(selectedInterest)
+  selectedInterestRef.current = selectedInterest
+
+  const onViewableItemsChanged = useNonReactiveCallback(
+    ({viewableItems}: {viewableItems: ViewToken[]}) => {
+      for (const viewableItem of viewableItems) {
+        const item = viewableItem.item as Item
+        if (item.type === 'profile') {
+          if (!seenProfilesRef.current.has(item.profile.did)) {
+            seenProfilesRef.current.add(item.profile.did)
+            const position = itemsRef.current.findIndex(
+              i => i.type === 'profile' && i.profile.did === item.profile.did,
+            )
+            ax.metric('suggestedUser:seen', {
+              logContext: isGuide ? 'ProgressGuide' : 'SeeMoreSuggestedUsers',
+              recSource: hasSearchText ? 'Search' : undefined,
+              recId: recIdForLogging,
+              position: position !== -1 ? position : 0,
+              suggestedDid: item.profile.did,
+              category:
+                selectedInterestRef.current === FOR_YOU_TAB
+                  ? null
+                  : selectedInterestRef.current,
+            })
+          }
+        }
+      }
+    },
+  )
+  const viewabilityConfig = useMemo(
+    () => ({
+      itemVisiblePercentThreshold: 50,
+    }),
+    [],
   )
 
   const onSelectTab = useCallback(
@@ -284,6 +355,8 @@ function DialogInner({guide}: {guide: Follow10ProgressGuide}) {
       scrollIndicatorInsets={{top: headerHeight}}
       initialNumToRender={8}
       maxToRenderPerBatch={8}
+      onViewableItemsChanged={onViewableItemsChanged}
+      viewabilityConfig={viewabilityConfig}
     />
   )
 }
@@ -300,9 +373,9 @@ let Header = ({
   selectedInterest,
   interestsDisplayNames,
 }: {
-  guide: Follow10ProgressGuide
-  inputRef: React.RefObject<TextInput>
-  listRef: React.RefObject<ListMethods>
+  guide?: Follow10ProgressGuide
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
+  listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
   searchText: string
   setHeaderHeight: (v: number) => void
@@ -337,12 +410,13 @@ let Header = ({
           }}
           onEscape={control.close}
         />
-        <Tabs
+        <InterestTabs
           onSelectTab={onSelectTab}
           interests={interests}
           selectedInterest={selectedInterest}
-          hasSearchText={!!searchText}
+          disabled={!!searchText}
           interestsDisplayNames={interestsDisplayNames}
+          TabComponent={Tab}
         />
       </View>
     </View>
@@ -350,8 +424,8 @@ let Header = ({
 }
 Header = memo(Header)
 
-function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
-  const {_} = useLingui()
+function HeaderTop({guide}: {guide?: Follow10ProgressGuide}) {
+  const {t: l} = useLingui()
   const t = useTheme()
   const control = Dialog.useDialogContext()
   return (
@@ -367,31 +441,33 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
         style={[
           a.z_10,
           a.text_lg,
-          a.font_heavy,
+          a.font_bold,
           a.leading_tight,
           t.atoms.text_contrast_high,
         ]}>
         <Trans>Find people to follow</Trans>
       </Text>
-      <View style={isWeb && {paddingRight: 36}}>
-        <ProgressGuideTask
-          current={guide.numFollows + 1}
-          total={10 + 1}
-          title={`${guide.numFollows} / 10`}
-          tabularNumsTitle
-        />
-      </View>
-      {isWeb ? (
+      {guide && (
+        <View style={IS_WEB && {paddingRight: 36}}>
+          <ProgressGuideTask
+            current={guide.numFollows + 1}
+            total={10 + 1}
+            title={`${guide.numFollows} / 10`}
+            tabularNumsTitle
+          />
+        </View>
+      )}
+      {IS_WEB ? (
         <Button
-          label={_(msg`Close`)}
+          label={l`Close`}
           size="small"
           shape="round"
-          variant={isWeb ? 'ghost' : 'solid'}
+          variant={IS_WEB ? 'ghost' : 'solid'}
           color="secondary"
           style={[
             a.absolute,
             a.z_20,
-            web({right: -4}),
+            web({right: 8}),
             native({right: 0}),
             native({height: 32, width: 32, borderRadius: 16}),
           ]}
@@ -402,99 +478,6 @@ function HeaderTop({guide}: {guide: Follow10ProgressGuide}) {
     </View>
   )
 }
-
-let Tabs = ({
-  onSelectTab,
-  interests,
-  selectedInterest,
-  hasSearchText,
-  interestsDisplayNames,
-  TabComponent = Tab,
-  contentContainerStyle,
-}: {
-  onSelectTab: (tab: string) => void
-  interests: string[]
-  selectedInterest: string
-  hasSearchText: boolean
-  interestsDisplayNames: Record<string, string>
-  TabComponent?: React.ComponentType<React.ComponentProps<typeof Tab>>
-  contentContainerStyle?: StyleProp<ViewStyle>
-}): React.ReactNode => {
-  const listRef = useRef<ScrollView>(null)
-  const [totalWidth, setTotalWidth] = useState(0)
-  const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
-  const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
-
-  const onInitialLayout = useNonReactiveCallback(() => {
-    const index = interests.indexOf(selectedInterest)
-    scrollIntoViewIfNeeded(index)
-  })
-
-  useEffect(() => {
-    if (tabOffsets) {
-      onInitialLayout()
-    }
-  }, [tabOffsets, onInitialLayout])
-
-  function scrollIntoViewIfNeeded(index: number) {
-    const btnLayout = tabOffsets[index]
-    if (!btnLayout) return
-    listRef.current?.scrollTo({
-      // centered
-      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
-      animated: true,
-    })
-  }
-
-  function handleSelectTab(index: number) {
-    const tab = interests[index]
-    onSelectTab(tab)
-    scrollIntoViewIfNeeded(index)
-  }
-
-  function handleTabLayout(index: number, x: number, width: number) {
-    if (!tabOffsets.length) {
-      pendingTabOffsets.current[index] = {x, width}
-      if (pendingTabOffsets.current.length === interests.length) {
-        setTabOffsets(pendingTabOffsets.current)
-      }
-    }
-  }
-
-  return (
-    <ScrollView
-      ref={listRef}
-      horizontal
-      contentContainerStyle={[a.gap_sm, a.px_lg, contentContainerStyle]}
-      showsHorizontalScrollIndicator={false}
-      decelerationRate="fast"
-      snapToOffsets={
-        tabOffsets.length === interests.length
-          ? tabOffsets.map(o => o.x - tokens.space.xl)
-          : undefined
-      }
-      onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
-      scrollEventThrottle={200} // big throttle
-    >
-      {interests.map((interest, i) => {
-        const active = interest === selectedInterest && !hasSearchText
-        return (
-          <TabComponent
-            key={interest}
-            onSelectTab={handleSelectTab}
-            active={active}
-            index={i}
-            interest={interest}
-            interestsDisplayName={interestsDisplayNames[interest]}
-            onLayout={handleTabLayout}
-          />
-        )
-      })}
-    </ScrollView>
-  )
-}
-Tabs = memo(Tabs)
-export {Tabs}
 
 let Tab = ({
   onSelectTab,
@@ -512,25 +495,33 @@ let Tab = ({
   onLayout: (index: number, x: number, width: number) => void
 }): React.ReactNode => {
   const t = useTheme()
-  const {_} = useLingui()
-  const activeText = active ? _(msg` (active)`) : ''
+  const {t: l} = useLingui()
+  const label = active
+    ? l({
+        message: `Search for "${interestsDisplayName}" (active)`,
+        comment:
+          'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.',
+      })
+    : l({
+        message: `Search for "${interestsDisplayName}"`,
+        comment:
+          'Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is not currently active and can be selected.',
+      })
   return (
     <View
       key={interest}
       onLayout={e =>
         onLayout(index, e.nativeEvent.layout.x, e.nativeEvent.layout.width)
       }>
-      <Button
-        label={_(msg`Search for "${interestsDisplayName}"${activeText}`)}
-        onPress={() => onSelectTab(index)}>
-        {({hovered, pressed, focused}) => (
+      <Button label={label} onPress={() => onSelectTab(index)}>
+        {({hovered, pressed}) => (
           <View
             style={[
               a.rounded_full,
               a.px_lg,
               a.py_sm,
               a.border,
-              active || hovered || pressed || focused
+              active || hovered || pressed
                 ? [
                     t.atoms.bg_contrast_25,
                     {borderColor: t.atoms.bg_contrast_25.backgroundColor},
@@ -539,8 +530,8 @@ let Tab = ({
             ]}>
             <Text
               style={[
-                /* TODO: medium weight */
-                active || hovered || pressed || focused
+                a.font_medium,
+                active || hovered || pressed
                   ? t.atoms.text
                   : t.atoms.text_contrast_medium,
               ]}>
@@ -558,16 +549,28 @@ let FollowProfileCard = ({
   profile,
   moderationOpts,
   noBorder,
+  position,
+  recSource,
+  recId,
+  isGuide,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   noBorder?: boolean
+  position: number
+  recSource?: 'Search'
+  recId?: string
+  isGuide: boolean
 }): React.ReactNode => {
   return (
     <FollowProfileCardInner
       profile={profile}
       moderationOpts={moderationOpts}
       noBorder={noBorder}
+      position={position}
+      recSource={recSource}
+      recId={recId}
+      isGuide={isGuide}
     />
   )
 }
@@ -578,14 +581,23 @@ function FollowProfileCardInner({
   moderationOpts,
   onFollow,
   noBorder,
+  position,
+  recSource,
+  recId,
+  isGuide,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   onFollow?: () => void
   noBorder?: boolean
+  position: number
+  recSource?: 'Search'
+  recId?: string
+  isGuide: boolean
 }) {
   const control = Dialog.useDialogContext()
   const t = useTheme()
+  const ax = useAnalytics()
   return (
     <ProfileCard.Link
       profile={profile}
@@ -601,6 +613,7 @@ function FollowProfileCardInner({
           <ProfileCard.Outer>
             <ProfileCard.Header>
               <ProfileCard.Avatar
+                disabledPreview={!IS_WEB}
                 profile={profile}
                 moderationOpts={moderationOpts}
               />
@@ -613,7 +626,20 @@ function FollowProfileCardInner({
                 moderationOpts={moderationOpts}
                 logContext="PostOnboardingFindFollows"
                 shape="round"
-                onPress={onFollow}
+                onPress={() => {
+                  ax.metric('suggestedUser:follow', {
+                    logContext: isGuide
+                      ? 'ProgressGuide'
+                      : 'SeeMoreSuggestedUsers',
+                    location: 'Card',
+                    recSource,
+                    recId,
+                    position,
+                    suggestedDid: profile.did,
+                    category: null,
+                  })
+                  onFollow?.()
+                }}
                 colorInverted
               />
             </ProfileCard.Header>
@@ -653,11 +679,11 @@ function SearchInput({
 }: {
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput>
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
   defaultValue: string
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {
     state: hovered,
     onIn: onMouseEnter,
@@ -677,10 +703,9 @@ function SearchInput({
         size="md"
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
-
       <TextInput
         ref={inputRef}
-        placeholder={_(msg`Search by name or interest`)}
+        placeholder={l`Search by name or interest`}
         defaultValue={defaultValue}
         onChangeText={onChangeText}
         onFocus={onFocus}
@@ -699,8 +724,8 @@ function SearchInput({
         autoCorrect={false}
         autoComplete="off"
         autoCapitalize="none"
-        accessibilityLabel={_(msg`Search profiles`)}
-        accessibilityHint={_(msg`Searches for profiles`)}
+        accessibilityLabel={l`Search profiles`}
+        accessibilityHint={l`Searches for profiles`}
       />
     </View>
   )
@@ -758,14 +783,4 @@ function Empty({message}: {message: string}) {
       <Text style={[a.text_xs, t.atoms.text_contrast_low]}>(╯°□°)╯︵ ┻━┻</Text>
     </View>
   )
-}
-
-export function boostInterests(boosts?: string[]) {
-  return (_a: string, _b: string) => {
-    const indexA = boosts?.indexOf(_a) ?? -1
-    const indexB = boosts?.indexOf(_b) ?? -1
-    const rankA = indexA === -1 ? Infinity : indexA
-    const rankB = indexB === -1 ? Infinity : indexB
-    return rankA - rankB
-  }
 }

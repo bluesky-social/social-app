@@ -52,6 +52,8 @@ class DialogRootViewGroup(
     if (ReactFeatureFlags.dispatchPointerEvents) {
       jSPointerDispatcher = JSPointerDispatcher(this)
     }
+
+    fitsSystemWindows = false
   }
 
   override fun onSizeChanged(
@@ -139,7 +141,10 @@ class DialogRootViewGroup(
     return super.onHoverEvent(event)
   }
 
-  override fun onChildStartedNativeGesture(childView: View?, ev: MotionEvent) {
+  override fun onChildStartedNativeGesture(
+    childView: View?,
+    ev: MotionEvent,
+  ) {
     eventDispatcher?.let { jSTouchDispatcher.onChildStartedNativeGesture(ev, it) }
     jSPointerDispatcher?.onChildStartedNativeGesture(childView, ev, eventDispatcher)
   }

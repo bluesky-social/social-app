@@ -1,5 +1,4 @@
 import {View, type ViewStyle} from 'react-native'
-import type React from 'react'
 
 /**
  * This utility function captures events and stops
@@ -23,7 +22,6 @@ export function EventStopper({
     <View
       onStartShouldSetResponder={_ => true}
       onTouchEnd={stop}
-      // @ts-ignore web only -prf
       onClick={stop}
       onKeyDown={onKeyDown ? stop : undefined}
       style={style}>

@@ -1,7 +1,6 @@
-const {withAndroidManifest} = require('@expo/config-plugins')
+const {withAndroidManifest} = require('expo/config-plugins')
 
 const withIntentFilters = config => {
-  // eslint-disable-next-line no-shadow
   return withAndroidManifest(config, config => {
     const intents = [
       {

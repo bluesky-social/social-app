@@ -1,12 +1,11 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {urls} from '#/lib/constants'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -15,10 +14,13 @@ import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
 import {Link} from '#/components/Link'
 import {Span, Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
 export function InitialVerificationAnnouncement() {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const nuxDialogs = useNuxDialogContext()
   const control = Dialog.useDialogControl()
@@ -55,7 +57,7 @@ export function InitialVerificationAnnouncement() {
             <SparkleIcon fill={t.palette.primary_700} size="sm" />
             <Text
               style={[
-                a.font_bold,
+                a.font_semi_bold,
                 {
                   color: t.palette.primary_700,
                 },
@@ -83,11 +85,12 @@ export function InitialVerificationAnnouncement() {
               alt={_(
                 msg`An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts.`,
               )}
+              useAppleWebpCodec
             />
           </View>
 
           <View style={[a.gap_xs]}>
-            <Text style={[a.text_2xl, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_2xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>A new form of verification</Trans>
             </Text>
             <Text style={[a.leading_snug, a.text_md]}>
@@ -117,13 +120,14 @@ export function InitialVerificationAnnouncement() {
               alt={_(
                 msg`An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name.`,
               )}
+              useAppleWebpCodec
             />
           </View>
 
           <View style={[a.gap_sm]}>
             <View style={[a.flex_row, a.align_center, a.gap_xs]}>
               <VerifierCheck width={14} />
-              <Text style={[a.text_lg, a.font_bold, a.leading_snug]}>
+              <Text style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
                 <Trans>Who can verify?</Trans>
               </Text>
             </View>
@@ -138,7 +142,7 @@ export function InitialVerificationAnnouncement() {
                 <Trans>
                   Trust emerges from relationships, communities, and shared
                   context, so we’re also enabling{' '}
-                  <Span style={[a.font_bold]}>trusted verifiers</Span>:
+                  <Span style={[a.font_semi_bold]}>trusted verifiers</Span>:
                   organizations that can directly issue verification.
                 </Trans>
               </Text>
@@ -161,19 +165,15 @@ export function InitialVerificationAnnouncement() {
               color="primary"
               style={[a.justify_center, a.w_full]}
               onPress={() => {
-                logger.metric(
-                  'verification:learn-more',
-                  {
-                    location: 'initialAnnouncementeNux',
-                  },
-                  {statsig: false},
-                )
+                ax.metric('verification:learn-more', {
+                  location: 'initialAnnouncementeNux',
+                })
               }}>
               <ButtonText>
                 <Trans>Read blog post</Trans>
               </ButtonText>
             </Link>
-            {isNative && (
+            {IS_NATIVE && (
               <Button
                 label={_(msg`Close`)}
                 size="small"

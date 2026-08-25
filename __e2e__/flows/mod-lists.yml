@@ -3,11 +3,14 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users&follows&labels"
+      SERVER_PATH: "?users&follows&labels"
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 
 # create a modlist
 - tapOn:
@@ -16,32 +19,25 @@ appId: xyz.blueskyweb.app
     id: "moderationlistsBtn"
 - tapOn: "New list"
 - tapOn:
-    id: "editNameInput"
+    id: "editListNameInput"
 - inputText: "Muted Users"
 - tapOn:
-    id: "editDescriptionInput"
+    id: "editListDescriptionInput"
 - inputText: "Shhh"
-- tapOn: "Save"
 - tapOn: "Save"
 
 # view modlist
 - assertVisible: "Muted Users"
 - assertVisible: "Shhh"
 
-- tapOn:
-    label: "Dropdown"
-    point: "71%,9%"
-
+- tapOn: "Subscribe to this list"
 - tapOn: "Mute accounts"
 - tapOn: "Mute list"
 - tapOn: "Unmute"
 
-- tapOn:
-      label: "Dropdown"
-      point: "71%,9%"
-
+- tapOn: "Subscribe to this list"
 - tapOn: "Block accounts"
 - tapOn: "Block list"
 - tapOn: "Unblock"
 
- # the rest of the behaviors are tested in curate-lists.yml
+  # the rest of the behaviors are tested in curate-lists.yml

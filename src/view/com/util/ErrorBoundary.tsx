@@ -1,15 +1,17 @@
-import {Component, ErrorInfo, ReactNode} from 'react'
-import {StyleProp, ViewStyle} from 'react-native'
-import {msg} from '@lingui/macro'
+import {Component, type ErrorInfo, type ReactNode} from 'react'
+import {type StyleProp, type ViewStyle} from 'react-native'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {logger} from '#/logger'
+import {type Metadata} from '#/logger/types'
 import {ErrorScreen} from './error/ErrorScreen'
 import {CenteredView} from './Views'
 
 interface Props {
   children?: ReactNode
   renderError?: (error: any) => ReactNode
+  getErrorMetadata?: (error: Error) => Metadata
   style?: StyleProp<ViewStyle>
 }
 
@@ -29,7 +31,10 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    logger.error(error, {errorInfo})
+    logger.error(error, {
+      errorInfo,
+      ...this.props.getErrorMetadata?.(error),
+    })
   }
 
   public render() {

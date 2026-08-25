@@ -1,26 +1,27 @@
-import React, {useEffect, useState} from 'react'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {ActivityIndicator, Platform, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid, isIOS, isNative, isWeb} from '#/platform/detection'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
 import {atoms as a, useTheme} from '#/alf'
-import {FormError} from '#/components/forms/FormError'
-import {GCP_PROJECT_ID} from '#/env'
+import {Admonition} from '#/components/Admonition'
+import {useAnalytics} from '#/analytics'
+import {GCP_PROJECT_ID, IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 
 const CAPTCHA_PATH =
-  isWeb || GCP_PROJECT_ID === 0 ? '/gate/signup' : '/gate/signup/attempt-attest'
+  IS_WEB || GCP_PROJECT_ID === 0
+    ? '/gate/signup'
+    : '/gate/signup/attempt-attest'
 
 export function StepCaptcha() {
-  if (isWeb) {
+  if (IS_WEB) {
     return <StepCaptchaInner />
   } else {
     return <StepCaptchaNative />
@@ -33,10 +34,10 @@ export function StepCaptchaNative() {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    ;(async () => {
+    void (async () => {
       logger.debug('trying to generate attestation token...')
       try {
-        if (isIOS) {
+        if (IS_IOS) {
           logger.debug('starting to generate devicecheck token...')
           const token = await ReactNativeDeviceAttest.getDeviceCheckToken()
           setToken(token)
@@ -47,7 +48,8 @@ export function StepCaptchaNative() {
           setToken(token)
           setPayload(base64UrlEncode(payload))
         }
-      } catch (e: any) {
+      } catch (err) {
+        const e = err as Error
         logger.error(e)
       } finally {
         setReady(true)
@@ -70,13 +72,14 @@ function StepCaptchaInner({
   payload?: string
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
 
-  const [completed, setCompleted] = React.useState(false)
+  const [completed, setCompleted] = useState(false)
 
-  const stateParam = React.useMemo(() => nanoid(15), [])
-  const url = React.useMemo(() => {
+  const stateParam = useMemo(() => nanoid(15), [])
+  const url = useMemo(() => {
     const newUrl = new URL(state.serviceUrl)
     newUrl.pathname = CAPTCHA_PATH
     newUrl.searchParams.set(
@@ -86,10 +89,10 @@ function StepCaptchaInner({
     newUrl.searchParams.set('state', stateParam)
     newUrl.searchParams.set('colorScheme', theme.name)
 
-    if (isNative && token) {
+    if (IS_NATIVE && token) {
       newUrl.searchParams.set('platform', Platform.OS)
       newUrl.searchParams.set('token', token)
-      if (isAndroid && payload) {
+      if (IS_ANDROID && payload) {
         newUrl.searchParams.set('payload', payload)
       }
     }
@@ -105,45 +108,39 @@ function StepCaptchaInner({
     payload,
   ])
 
-  const onSuccess = React.useCallback(
+  const onSuccess = useCallback(
     (code: string) => {
       setCompleted(true)
-      logger.metric('signup:captchaSuccess', {}, {statsig: true})
+      ax.metric('signup:captchaSuccess', {})
       dispatch({
         type: 'submit',
         task: {verificationCode: code, mutableProcessed: false},
       })
     },
-    [dispatch],
+    [ax, dispatch],
   )
 
-  const onError = React.useCallback(
+  const onError = useCallback(
     (error?: unknown) => {
       dispatch({
         type: 'setError',
         value: _(msg`Error receiving captcha response.`),
       })
-      logger.metric('signup:captchaFailure', {}, {statsig: true})
-      logger.error('Signup Flow Error', {
-        registrationHandle: state.handle,
-        error,
+      ax.metric('signup:captchaFailure', {})
+      logger.error('Signup: captcha response error', {
+        safeMessage: error,
       })
     },
-    [_, dispatch, state.handle],
+    [_, ax, dispatch],
   )
 
-  const onBackPress = React.useCallback(() => {
-    logger.error('Signup Flow Error', {
-      errorMessage:
-        'User went back from captcha step. Possibly encountered an error.',
-      registrationHandle: state.handle,
-    })
-
+  const onBackPress = useCallback(() => {
+    ax.metric('signup:captchaBackPress', {})
     dispatch({type: 'prev'})
-  }, [dispatch, state.handle])
+  }, [ax, dispatch])
 
   return (
-    <ScreenTransition>
+    <>
       <View style={[a.gap_lg, a.pt_lg]}>
         <View
           style={[
@@ -157,6 +154,7 @@ function StepCaptchaInner({
               url={url}
               stateParam={stateParam}
               state={state}
+              onComplete={() => setCompleted(true)}
               onSuccess={onSuccess}
               onError={onError}
             />
@@ -164,14 +162,14 @@ function StepCaptchaInner({
             <ActivityIndicator size="large" />
           )}
         </View>
-        <FormError error={state.error} />
+        {state.error && <Admonition type="error">{state.error}</Admonition>}
       </View>
       <BackNextButtons
         hideNext
         isLoading={state.isLoading}
         onBackPress={onBackPress}
       />
-    </ScreenTransition>
+    </>
   )
 }
 

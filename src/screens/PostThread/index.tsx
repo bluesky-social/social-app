@@ -1,20 +1,37 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {useWindowDimensions, View} from 'react-native'
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {useFeedFeedback} from '#/state/feed-feedback'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+import {
+  FeedFeedbackProvider,
+  type StateContext as FeedFeedbackStateContext,
+  useFeedFeedback,
+} from '#/state/feed-feedback'
 import {type ThreadViewOption} from '#/state/queries/preferences/useThreadPreferences'
-import {type ThreadItem, usePostThread} from '#/state/queries/usePostThread'
+import {
+  PostThreadContextProvider,
+  type ThreadItem,
+  usePostThread,
+} from '#/state/queries/usePostThread'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnstablePostSource} from '#/state/unstable-post-source'
-import {PostThreadComposePrompt} from '#/view/com/post-thread/PostThreadComposePrompt'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
+import {ThreadComposePrompt} from '#/screens/PostThread/components/ThreadComposePrompt'
 import {ThreadError} from '#/screens/PostThread/components/ThreadError'
 import {
   ThreadItemAnchor,
@@ -38,24 +55,32 @@ import {
 import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
-const PARENT_CHUNK_SIZE = 5
+const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
+const analyticsOnlyOnItemSeen: FeedFeedbackStateContext['onItemSeen'] = () => {}
+const analyticsOnlySendInteraction: FeedFeedbackStateContext['sendInteraction'] =
+  () => {}
 
 export function PostThread({uri}: {uri: string}) {
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
   const {height: windowHeight} = useWindowDimensions()
   const anchorPostSource = useUnstablePostSource(uri)
-  const feedFeedback = useFeedFeedback(anchorPostSource?.feed, hasSession)
+  const feedFeedback = useFeedFeedback(
+    anchorPostSource?.feedSourceInfo,
+    hasSession,
+  )
 
   /*
    * One query to rule them all
    */
   const thread = usePostThread({anchor: uri})
   const {anchor, hasParents} = useMemo(() => {
-    // eslint-disable-next-line @typescript-eslint/no-shadow
     let hasParents = false
     for (const item of thread.data.items) {
       if (item.type === 'threadPost' && item.depth === 0) {
@@ -66,8 +91,30 @@ export function PostThread({uri}: {uri: string}) {
     return {hasParents}
   }, [thread.data.items])
 
+  // Track post:view event when anchor post is viewed
+  const seenPostUriRef = useRef<string | null>(null)
+  useEffect(() => {
+    if (
+      anchor?.type === 'threadPost' &&
+      anchor.value.post.uri !== seenPostUriRef.current
+    ) {
+      const post = anchor.value.post
+      seenPostUriRef.current = post.uri
+
+      ax.metric('post:view', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext: 'Post',
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    }
+  }, [ax, anchor, feedFeedback.feedDescriptor])
+
+  // Track post:view events for parent posts and replies (non-anchor posts)
+  const trackThreadItemView = usePostViewTracking('PostThreadItem')
+
   const {openComposer} = useOpenComposer()
-  const optimisticOnPostReply = useCallback(
+  const optimisticOnPostReply = useNonReactiveCallback(
     (payload: OnPostSuccessData) => {
       if (payload) {
         const {replyToUri, posts} = payload
@@ -76,9 +123,8 @@ export function PostThread({uri}: {uri: string}) {
         }
       }
     },
-    [thread],
   )
-  const onReplyToAnchor = useCallback(() => {
+  const onReplyToAnchor = useNonReactiveCallback(() => {
     if (anchor?.type !== 'threadPost') {
       return
     }
@@ -91,8 +137,10 @@ export function PostThread({uri}: {uri: string}) {
         author: post.author,
         embed: post.embed,
         moderation: anchor.moderation,
+        langs: post.record.langs,
       },
       onPostSuccess: optimisticOnPostReply,
+      logContext: 'PostReply',
     })
 
     if (anchorPostSource) {
@@ -103,13 +151,7 @@ export function PostThread({uri}: {uri: string}) {
         reqId: anchorPostSource.post.reqId,
       })
     }
-  }, [
-    anchor,
-    openComposer,
-    optimisticOnPostReply,
-    anchorPostSource,
-    feedFeedback,
-  ])
+  })
 
   const isRoot = !!anchor && anchor.value.post.record.reply === undefined
   const canReply = !anchor?.value.post?.viewer?.replyDisabled
@@ -118,8 +160,8 @@ export function PostThread({uri}: {uri: string}) {
   const totalParentCount = useRef(0) // recomputed below
   const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
   const listRef = useRef<ListMethods>(null)
-  const anchorRef = useRef<View | null>(null)
-  const headerRef = useRef<View | null>(null)
+  const anchorRef = useRef<React.ComponentRef<typeof View> | null>(null)
+  const headerRef = useRef<React.ComponentRef<typeof View> | null>(null)
 
   /*
    * On a cold load, parents are not prepended until the anchor post has
@@ -143,7 +185,9 @@ export function PostThread({uri}: {uri: string}) {
    */
   const shouldHandleScroll = useRef(true)
   /**
-   * Called any time the content size of the list changes, _just_ before paint.
+   * Called any time the content size of the list changes. Could be a fresh
+   * render, items being added to the list, or any resize that changes the
+   * scrollable size of the content.
    *
    * We want this to fire every time we change params (which will reset
    * `deferParents` via `onLayout` on the anchor post, due to the key change),
@@ -188,24 +232,23 @@ export function PostThread({uri}: {uri: string}) {
        * will give us a _positive_ offset, which will scroll the anchor post
        * back _up_ to the top of the screen.
        */
-      list.scrollToOffset({
-        offset: anchorOffsetTop - headerHeight,
-      })
+      const offset = anchorOffsetTop - headerHeight
+      list.scrollToOffset({offset})
 
       /*
-       * After the second pass, `deferParents` will be `false`, and we need
-       * to ensure this doesn't run again until scroll handling is requested
-       * again via `shouldHandleScroll.current === true` and a params
-       * change via `prepareForParamsUpdate`.
+       * After we manage to do a positive adjustment, we need to ensure this
+       * doesn't run again until scroll handling is requested again via
+       * `shouldHandleScroll.current === true` and a params change via
+       * `prepareForParamsUpdate`.
        *
        * The `isRoot` here is needed because if we're looking at the anchor
        * post, this handler will not fire after `deferParents` is set to
        * `false`, since there are no parents to render above it. In this case,
-       * we want to make sure `shouldHandleScroll` is set to `false` so that
-       * subsequent size changes unrelated to a params change (like pagination)
-       * do not affect scroll.
+       * we want to make sure `shouldHandleScroll` is set to `false` right away
+       * so that subsequent size changes unrelated to a params change (like
+       * pagination) do not affect scroll.
        */
-      if (!deferParents || isRoot) shouldHandleScroll.current = false
+      if (offset > 0 || isRoot) shouldHandleScroll.current = false
     }
   })
 
@@ -355,12 +398,34 @@ export function PostThread({uri}: {uri: string}) {
     return results
   }, [thread, deferParents, maxParentCount, maxChildrenCount])
 
+  /**
+   * Defer rendering reply skeletons so that the anchor post (from cache)
+   * can paint without being blocked by skeleton layout work. On mount,
+   * skeletons are filtered out. After the first render, they're added
+   * back via a low-priority transition.
+   */
+  const [showReplySkeletons, setShowReplySkeletons] = useState(false)
+  useEffect(() => {
+    if (thread.state.isPlaceholderData && !showReplySkeletons) {
+      startTransition(() => {
+        setShowReplySkeletons(true)
+      })
+    }
+  }, [thread.state.isPlaceholderData, showReplySkeletons])
+
+  const deferredSlices = useMemo(() => {
+    if (showReplySkeletons) return slices
+    return slices.filter(
+      item => !(item.type === 'skeleton' && item.item === 'reply'),
+    )
+  }, [slices, showReplySkeletons])
+
   const isTombstoneView = useMemo(() => {
-    if (slices.length > 1) return false
-    return slices.every(
+    if (deferredSlices.length > 1) return false
+    return deferredSlices.every(
       s => s.type === 'threadPostBlocked' || s.type === 'threadPostNotFound',
     )
-  }, [slices])
+  }, [deferredSlices])
 
   const renderItem = useCallback(
     ({item, index}: {item: ThreadItem; index: number}) => {
@@ -454,7 +519,7 @@ export function PostThread({uri}: {uri: string}) {
         return (
           <View>
             {gtMobile && (
-              <PostThreadComposePrompt onPressCompose={onReplyToAnchor} />
+              <ThreadComposePrompt onPressCompose={onReplyToAnchor} />
             )}
           </View>
         )
@@ -487,7 +552,7 @@ export function PostThread({uri}: {uri: string}) {
   const defaultListFooterHeight = hasParents ? windowHeight - 200 : undefined
 
   return (
-    <>
+    <PostThreadContextProvider context={thread.context}>
       <Layout.Header.Outer headerRef={headerRef}>
         <Layout.Header.BackButton />
         <Layout.Header.Content>
@@ -511,67 +576,108 @@ export function PostThread({uri}: {uri: string}) {
           onRetry={thread.actions.refetch}
         />
       ) : (
-        <List
-          ref={listRef}
-          data={slices}
-          renderItem={renderItem}
-          keyExtractor={keyExtractor}
-          onContentSizeChange={platform({
-            web: onContentSizeChangeWebOnly,
-            default: onContentSizeChangeNativeOnly,
-          })}
-          onStartReached={onStartReached}
-          onEndReached={onEndReached}
-          onEndReachedThreshold={4}
-          onStartReachedThreshold={1}
-          /**
-           * NATIVE ONLY
-           * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
-           */
-          maintainVisibleContentPosition={{minIndexForVisible: 0}}
-          desktopFixedHeight
-          sideBorders={false}
-          ListFooterComponent={
-            <ListFooter
-              /*
-               * On native, if `deferParents` is true, we need some extra buffer to
-               * account for the `on*ReachedThreshold` values.
-               *
-               * Otherwise, and on web, this value needs to be the height of
-               * the viewport _minus_ a sensible min-post height e.g. 200, so
-               * that there's enough scroll remaining to get the anchor post
-               * back to the top of the screen when handling scroll.
-               */
-              height={platform({
-                web: defaultListFooterHeight,
-                default: deferParents
-                  ? windowHeight * 2
-                  : defaultListFooterHeight,
-              })}
-              style={isTombstoneView ? {borderTopWidth: 0} : undefined}
-            />
-          }
-          initialNumToRender={initialNumToRender}
-          /**
-           * Default: 21
-           */
-          windowSize={7}
-          /**
-           * Default: 10
-           */
-          maxToRenderPerBatch={5}
-          /**
-           * Default: 50
-           */
-          updateCellsBatchingPeriod={100}
-        />
+        <AnalyticsOnlyFeedFeedbackProvider
+          feedDescriptor={feedFeedback.feedDescriptor}>
+          <List
+            ref={listRef}
+            data={deferredSlices}
+            renderItem={renderItem}
+            keyExtractor={keyExtractor}
+            onContentSizeChange={platform({
+              web: onContentSizeChangeWebOnly,
+              default: onContentSizeChangeNativeOnly,
+            })}
+            onStartReached={onStartReached}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={4}
+            onStartReachedThreshold={1}
+            onItemSeen={item => {
+              // Track post:view for parent posts and replies (non-anchor posts)
+              if (item.type === 'threadPost' && item.depth !== 0) {
+                trackThreadItemView(item.value.post)
+              }
+            }}
+            /**
+             * NATIVE ONLY
+             * {@link https://reactnative.dev/docs/scrollview#maintainvisiblecontentposition}
+             */
+            maintainVisibleContentPosition={{minIndexForVisible: 0}}
+            desktopFixedHeight
+            sideBorders={false}
+            ListFooterComponent={
+              <ListFooter
+                /*
+                 * On native, if `deferParents` is true, we need some extra buffer to
+                 * account for the `on*ReachedThreshold` values.
+                 *
+                 * Otherwise, and on web, this value needs to be the height of
+                 * the viewport _minus_ a sensible min-post height e.g. 200, so
+                 * that there's enough scroll remaining to get the anchor post
+                 * back to the top of the screen when handling scroll.
+                 */
+                height={platform({
+                  web: defaultListFooterHeight,
+                  default: deferParents
+                    ? windowHeight * 2
+                    : defaultListFooterHeight,
+                })}
+                style={isTombstoneView ? {borderTopWidth: 0} : undefined}
+              />
+            }
+            initialNumToRender={initialNumToRender}
+            /**
+             * Default: 21
+             *
+             * Smaller for placeholder data so we don't waste time rendering skeletons
+             */
+            windowSize={thread.state.isPlaceholderData ? 1 : 7}
+            /**
+             * Default: 10
+             */
+            maxToRenderPerBatch={5}
+            /**
+             * Default: 50
+             */
+            updateCellsBatchingPeriod={100}
+          />
+        </AnalyticsOnlyFeedFeedbackProvider>
       )}
 
       {!gtMobile && canReply && hasSession && (
         <MobileComposePrompt onPressReply={onReplyToAnchor} />
       )}
-    </>
+    </PostThreadContextProvider>
   )
+}
+
+function AnalyticsOnlyFeedFeedbackProvider({
+  children,
+  feedDescriptor,
+}: React.PropsWithChildren<{
+  feedDescriptor: FeedFeedbackStateContext['feedDescriptor']
+}>) {
+  /*
+   * Non-anchor posts (parents and replies) are not the post the user tapped
+   * from a feed, so they should not report feed interactions. But they should
+   * still carry the originating feedDescriptor for analytics, so events like
+   * post:clickQuotePost can be attributed to the feed the thread was opened
+   * from. This inert context value provides feedDescriptor while keeping
+   * interaction reporting disabled (enabled: false makes sendInteraction and
+   * onItemSeen no-ops). The anchor renders its own full provider that nests
+   * inside and overrides this for its subtree.
+   */
+  const value = useMemo<FeedFeedbackStateContext>(
+    () => ({
+      enabled: false,
+      onItemSeen: analyticsOnlyOnItemSeen,
+      sendInteraction: analyticsOnlySendInteraction,
+      feedDescriptor,
+      feedSourceInfo: undefined,
+    }),
+    [feedDescriptor],
+  )
+
+  return <FeedFeedbackProvider value={value}>{children}</FeedFeedbackProvider>
 }
 
 function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
@@ -585,7 +691,7 @@ function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
 
   return (
     <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
-      <PostThreadComposePrompt onPressCompose={onPressReply} />
+      <ThreadComposePrompt onPressCompose={onPressReply} />
     </Animated.View>
   )
 }

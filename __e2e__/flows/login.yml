@@ -11,11 +11,18 @@ appId: xyz.blueskyweb.app
 - tapOn: "Sign in"
 - tapOn:
     id: "selectServiceButton"
-- tapOn: "Custom"
+- tapOn:
+    id: "manualSelectBtn"
 - tapOn:
     id: "customServerTextInput"
 - inputText: "http://localhost:3000"
-- tapOn: "Done"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - hideKeyboard
+- tapOn:
+    id: "doneBtn"
 - tapOn:
     id: "loginUsernameInput"
 - inputText: "Alice"

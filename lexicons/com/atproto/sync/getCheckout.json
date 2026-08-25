@@ -1,0 +1,27 @@
+{
+  "id": "com.atproto.sync.getCheckout",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "encoding": "application/vnd.ipld.car"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "did"
+        ],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "The DID of the repo."
+          }
+        }
+      },
+      "description": "DEPRECATED - please use com.atproto.sync.getRepo instead"
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

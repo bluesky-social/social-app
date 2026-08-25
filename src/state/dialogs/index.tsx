@@ -1,8 +1,16 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
-import {isWeb} from '#/platform/detection'
-import {DialogControlRefProps} from '#/components/Dialog'
+import {useHotkeysContext} from '#/lib/hotkeys'
+import {type DialogControlRefProps} from '#/components/Dialog'
 import {Provider as GlobalDialogsProvider} from '#/components/dialogs/Context'
+import {IS_WEB} from '#/env'
 import {BottomSheetNativeComponent} from '../../../modules/bottom-sheet'
 
 interface IDialogContext {
@@ -22,38 +30,48 @@ interface IDialogContext {
 interface IDialogControlContext {
   closeAllDialogs(): boolean
   setDialogIsOpen(id: string, isOpen: boolean): void
-  /**
-   * The number of dialogs that are fully expanded. This is used to determine the backgground color of the status bar
-   * on iOS.
-   */
-  fullyExpandedCount: number
   setFullyExpandedCount: React.Dispatch<React.SetStateAction<number>>
 }
 
-const DialogContext = React.createContext<IDialogContext>({} as IDialogContext)
+const DialogContext = createContext<IDialogContext>({} as IDialogContext)
+DialogContext.displayName = 'DialogContext'
 
-const DialogControlContext = React.createContext<IDialogControlContext>(
+const DialogControlContext = createContext<IDialogControlContext>(
   {} as IDialogControlContext,
 )
+DialogControlContext.displayName = 'DialogControlContext'
+
+/**
+ * The number of dialogs that are fully expanded. This is used to determine the background color of the status bar
+ * on iOS.
+ */
+const DialogFullyExpandedCountContext = createContext<number>(0)
+DialogFullyExpandedCountContext.displayName = 'DialogFullyExpandedCountContext'
 
 export function useDialogStateContext() {
-  return React.useContext(DialogContext)
+  return useContext(DialogContext)
 }
 
 export function useDialogStateControlContext() {
-  return React.useContext(DialogControlContext)
+  return useContext(DialogControlContext)
+}
+
+/** The number of dialogs that are fully expanded */
+export function useDialogFullyExpandedCountContext() {
+  return useContext(DialogFullyExpandedCountContext)
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const [fullyExpandedCount, setFullyExpandedCount] = React.useState(0)
+  const [fullyExpandedCount, setFullyExpandedCount] = useState(0)
+  const {disableScope, enableScope} = useHotkeysContext()
 
-  const activeDialogs = React.useRef<
+  const activeDialogs = useRef<
     Map<string, React.MutableRefObject<DialogControlRefProps>>
   >(new Map())
-  const openDialogs = React.useRef<Set<string>>(new Set())
+  const openDialogs = useRef<Set<string>>(new Set())
 
-  const closeAllDialogs = React.useCallback(() => {
-    if (isWeb) {
+  const closeAllDialogs = useCallback(() => {
+    if (IS_WEB) {
       openDialogs.current.forEach(id => {
         const dialog = activeDialogs.current.get(id)
         if (dialog) dialog.current.close()
@@ -61,46 +79,51 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
       return openDialogs.current.size > 0
     } else {
-      BottomSheetNativeComponent.dismissAll()
+      void BottomSheetNativeComponent.dismissAll()
       return false
     }
   }, [])
 
-  const setDialogIsOpen = React.useCallback((id: string, isOpen: boolean) => {
-    if (isOpen) {
-      openDialogs.current.add(id)
-    } else {
-      openDialogs.current.delete(id)
-    }
-  }, [])
+  const setDialogIsOpen = useCallback(
+    (id: string, isOpen: boolean) => {
+      if (isOpen) {
+        openDialogs.current.add(id)
+      } else {
+        openDialogs.current.delete(id)
+      }
+      if (openDialogs.current.size > 0) {
+        disableScope('global')
+      } else {
+        enableScope('global')
+      }
+    },
+    [disableScope, enableScope],
+  )
 
-  const context = React.useMemo<IDialogContext>(
+  const context = useMemo<IDialogContext>(
     () => ({
       activeDialogs,
       openDialogs,
     }),
     [activeDialogs, openDialogs],
   )
-  const controls = React.useMemo(
+  const controls = useMemo(
     () => ({
       closeAllDialogs,
       setDialogIsOpen,
-      fullyExpandedCount,
       setFullyExpandedCount,
     }),
-    [
-      closeAllDialogs,
-      setDialogIsOpen,
-      fullyExpandedCount,
-      setFullyExpandedCount,
-    ],
+    [closeAllDialogs, setDialogIsOpen, setFullyExpandedCount],
   )
 
   return (
     <DialogContext.Provider value={context}>
       <DialogControlContext.Provider value={controls}>
-        <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
+        <DialogFullyExpandedCountContext.Provider value={fullyExpandedCount}>
+          <GlobalDialogsProvider>{children}</GlobalDialogsProvider>
+        </DialogFullyExpandedCountContext.Provider>
       </DialogControlContext.Provider>
     </DialogContext.Provider>
   )
 }
+Provider.displayName = 'DialogsProvider'

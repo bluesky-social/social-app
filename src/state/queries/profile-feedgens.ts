@@ -1,7 +1,13 @@
-import {AppBskyFeedGetActorFeeds, moderateFeedGenerator} from '@atproto/api'
-import {InfiniteData, QueryKey, useInfiniteQuery} from '@tanstack/react-query'
+import {type DidString} from '@atproto/syntax'
+import {moderateFeedGenerator} from '@bsky/sdk/moderation'
+import {
+  type InfiniteData,
+  type QueryKey,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 import {useModerationOpts} from '../preferences/moderation-opts'
 
 const PAGE_SIZE = 50
@@ -17,25 +23,25 @@ export function useProfileFeedgensQuery(
 ) {
   const moderationOpts = useModerationOpts()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyFeedGetActorFeeds.OutputSchema,
+    app.bsky.feed.getActorFeeds.$OutputBody,
     Error,
-    InfiniteData<AppBskyFeedGetActorFeeds.OutputSchema>,
+    InfiniteData<app.bsky.feed.getActorFeeds.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(did),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.app.bsky.feed.getActorFeeds({
-        actor: did,
+      const data = await client.call(app.bsky.feed.getActorFeeds, {
+        actor: did as DidString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      res.data.feeds.sort((a, b) => {
+      data.feeds.sort((a, b) => {
         return (b.likeCount || 0) - (a.likeCount || 0)
       })
-      return res.data
+      return data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -50,7 +56,9 @@ export function useProfileFeedgensQuery(
               // filter by labels
               .filter(list => {
                 const decision = moderateFeedGenerator(list, moderationOpts!)
-                return !decision.ui('contentList').filter
+                return !decision
+                  .ui('contentList')
+                  .filters.some(cause => cause.type !== 'muted')
               }),
           }
         }),

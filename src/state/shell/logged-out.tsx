@@ -1,8 +1,8 @@
-import React from 'react'
+import {createContext, useContext, useMemo, useState} from 'react'
 
-import {isWeb} from '#/platform/detection'
 import {useSession} from '#/state/session'
-import {useActiveStarterPack} from '#/state/shell/starter-pack'
+import {useActiveLanding} from '#/state/shell/landing'
+import {IS_WEB} from '#/env'
 
 type State = {
   showLoggedOut: boolean
@@ -26,7 +26,8 @@ type Controls = {
     /**
      * The did of the account to populate the login form with.
      */
-    requestedAccount?: string | 'none' | 'new' | 'starterpack'
+    requestedAccount?:
+      (string & {}) | 'none' | 'new' | 'starterpack' | 'groupchat'
   }) => void
   /**
    * Clears the requested account so that next time the logged out view is
@@ -35,31 +36,50 @@ type Controls = {
   clearRequestedAccount: () => void
 }
 
-const StateContext = React.createContext<State>({
+const StateContext = createContext<State>({
   showLoggedOut: false,
   requestedAccountSwitchTo: undefined,
 })
+StateContext.displayName = 'LoggedOutStateContext'
 
-const ControlsContext = React.createContext<Controls>({
+const ControlsContext = createContext<Controls>({
   setShowLoggedOut: () => {},
   requestSwitchToAccount: () => {},
   clearRequestedAccount: () => {},
 })
+ControlsContext.displayName = 'LoggedOutControlsContext'
+
+function getRequestedAccountFromLanding(
+  landing: ReturnType<typeof useActiveLanding>,
+  hasSession: boolean,
+): string | undefined {
+  if (hasSession || !landing) return undefined
+
+  switch (landing.type) {
+    case 'starterpack':
+      return IS_WEB ? 'starterpack' : 'new'
+    case 'groupchat':
+      return 'groupchat'
+    default:
+      return undefined
+  }
+}
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const activeStarterPack = useActiveStarterPack()
+  const activeLanding = useActiveLanding()
   const {hasSession} = useSession()
-  const shouldShowStarterPack = Boolean(activeStarterPack?.uri) && !hasSession
-  const [state, setState] = React.useState<State>({
-    showLoggedOut: shouldShowStarterPack,
-    requestedAccountSwitchTo: shouldShowStarterPack
-      ? isWeb
-        ? 'starterpack'
-        : 'new'
-      : undefined,
+
+  const requestedAccount = getRequestedAccountFromLanding(
+    activeLanding,
+    hasSession,
+  )
+
+  const [state, setState] = useState<State>({
+    showLoggedOut: Boolean(requestedAccount),
+    requestedAccountSwitchTo: requestedAccount,
   })
 
-  const controls = React.useMemo<Controls>(
+  const controls = useMemo<Controls>(
     () => ({
       setShowLoggedOut(show) {
         setState(s => ({
@@ -94,9 +114,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useLoggedOutView() {
-  return React.useContext(StateContext)
+  return useContext(StateContext)
 }
 
 export function useLoggedOutViewControls() {
-  return React.useContext(ControlsContext)
+  return useContext(ControlsContext)
 }

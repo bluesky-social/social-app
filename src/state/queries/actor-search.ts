@@ -1,51 +1,23 @@
 import {
-  type AppBskyActorDefs,
-  type AppBskyActorSearchActors,
-} from '@atproto/api'
-import {
   type InfiniteData,
   keepPreviousData,
   type QueryClient,
   type QueryKey,
   useInfiniteQuery,
-  useQuery,
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
-const RQKEY_ROOT = 'actor-search'
-export const RQKEY = (query: string) => [RQKEY_ROOT, query]
-
-export const RQKEY_ROOT_PAGINATED = `${RQKEY_ROOT}_paginated`
-export const RQKEY_PAGINATED = (query: string, limit?: number) => [
-  RQKEY_ROOT_PAGINATED,
+export const RQKEY_ROOT = 'actor-search'
+export const RQKEY = (query: string, limit?: number) => [
+  RQKEY_ROOT,
   query,
   limit,
 ]
 
 export function useActorSearch({
-  query,
-  enabled,
-}: {
-  query: string
-  enabled?: boolean
-}) {
-  const agent = useAgent()
-  return useQuery<AppBskyActorDefs.ProfileView[]>({
-    staleTime: STALE.MINUTES.ONE,
-    queryKey: RQKEY(query || ''),
-    async queryFn() {
-      const res = await agent.searchActors({
-        q: query,
-      })
-      return res.data.actors
-    },
-    enabled: enabled && !!query,
-  })
-}
-
-export function useActorSearchPaginated({
   query,
   enabled,
   maintainData,
@@ -56,57 +28,59 @@ export function useActorSearchPaginated({
   maintainData?: boolean
   limit?: number
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyActorSearchActors.OutputSchema,
+    app.bsky.actor.searchActors.$OutputBody,
     Error,
-    InfiniteData<AppBskyActorSearchActors.OutputSchema>,
+    InfiniteData<app.bsky.actor.searchActors.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     staleTime: STALE.MINUTES.FIVE,
-    queryKey: RQKEY_PAGINATED(query, limit),
+    queryKey: RQKEY(query, limit),
     queryFn: async ({pageParam}) => {
-      const res = await agent.searchActors({
+      return await client.call(app.bsky.actor.searchActors, {
         q: query,
         limit,
         cursor: pageParam,
       })
-      return res.data
     },
     enabled: enabled && !!query,
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     placeholderData: maintainData ? keepPreviousData : undefined,
+    select,
   })
+}
+
+function select(data: InfiniteData<app.bsky.actor.searchActors.$OutputBody>) {
+  // enforce uniqueness
+  const dids = new Set()
+
+  return {
+    ...data,
+    pages: data.pages.map(page => ({
+      actors: page.actors.filter(actor => {
+        if (dids.has(actor.did)) {
+          return false
+        }
+        dids.add(actor.did)
+        return true
+      }),
+    })),
+  }
 }
 
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
 ) {
-  const queryDatas = queryClient.getQueriesData<AppBskyActorDefs.ProfileView[]>(
-    {
-      queryKey: [RQKEY_ROOT],
-    },
-  )
-  for (const [_queryKey, queryData] of queryDatas) {
-    if (!queryData) {
-      continue
-    }
-    for (const actor of queryData) {
-      if (actor.did === did) {
-        yield actor
-      }
-    }
-  }
-
-  const queryDatasPaginated = queryClient.getQueriesData<
-    InfiniteData<AppBskyActorSearchActors.OutputSchema>
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<app.bsky.actor.searchActors.$OutputBody>
   >({
-    queryKey: [RQKEY_ROOT_PAGINATED],
+    queryKey: [RQKEY_ROOT],
   })
-  for (const [_queryKey, queryData] of queryDatasPaginated) {
+  for (const [_queryKey, queryData] of queryDatas) {
     if (!queryData) {
       continue
     }

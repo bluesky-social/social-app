@@ -1,24 +1,23 @@
-import React, {useCallback} from 'react'
+import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
-import {
-  ComAtprotoServerCreateAccount,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
 import {DEFAULT_SERVICE} from '#/lib/constants'
-import {cleanError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
-import {logger} from '#/logger'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
+import {type AnalyticsContextType, useAnalytics} from '#/analytics'
+import {com} from '#/lexicons'
 
-export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+export type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
-const DEFAULT_DATE = new Date(Date.now() - 60e3 * 60 * 24 * 365 * 20) // default to 20 years ago
+const date = new Date()
+date.setFullYear(date.getFullYear() - 20) // default to 20 years ago
+const DEFAULT_DATE = date
 
 export enum SignupStep {
   INFO,
@@ -32,15 +31,14 @@ type SubmitTask = {
 }
 
 type ErrorField =
-  | 'invite-code'
-  | 'email'
-  | 'handle'
-  | 'password'
-  | 'date-of-birth'
+  'invite-code' | 'email' | 'handle' | 'password' | 'date-of-birth'
 
 export type SignupState = {
+  analytics?: AnalyticsContextType
+
   hasPrev: boolean
   activeStep: SignupStep
+  screenTransitionDirection: 'Forward' | 'Backward'
 
   serviceUrl: string
   serviceDescription?: ServiceDescription
@@ -64,6 +62,7 @@ export type SignupState = {
 }
 
 export type SignupAction =
+  | {type: 'setAnalytics'; value: AnalyticsContextType}
   | {type: 'prev'}
   | {type: 'next'}
   | {type: 'finish'}
@@ -82,8 +81,11 @@ export type SignupAction =
   | {type: 'incrementBackgroundCount'}
 
 export const initialState: SignupState = {
+  analytics: undefined,
+
   hasPrev: false,
   activeStep: SignupStep.INFO,
+  screenTransitionDirection: 'Forward',
 
   serviceUrl: DEFAULT_SERVICE,
   serviceDescription: undefined,
@@ -124,9 +126,13 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
   let next = {...s}
 
   switch (a.type) {
+    case 'setAnalytics': {
+      next.analytics = a.value
+      break
+    }
     case 'prev': {
       if (s.activeStep !== SignupStep.INFO) {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        next.screenTransitionDirection = 'Backward'
         next.activeStep--
         next.error = ''
         next.errorField = undefined
@@ -135,7 +141,7 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
     }
     case 'next': {
       if (s.activeStep !== SignupStep.CAPTCHA) {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+        next.screenTransitionDirection = 'Forward'
         next.activeStep++
         next.error = ''
         next.errorField = undefined
@@ -192,16 +198,12 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
         next.fieldErrors[a.field] = (next.fieldErrors[a.field] || 0) + 1
 
         // Log the field error
-        logger.metric(
-          'signup:fieldError',
-          {
-            field: a.field,
-            errorCount: next.fieldErrors[a.field],
-            errorMessage: a.value,
-            activeStep: next.activeStep,
-          },
-          {statsig: true},
-        )
+        s.analytics?.metric('signup:fieldError', {
+          field: a.field,
+          errorCount: next.fieldErrors[a.field],
+          errorMessage: a.value,
+          activeStep: next.activeStep,
+        })
       }
       break
     }
@@ -218,24 +220,22 @@ export function reducer(s: SignupState, a: SignupAction): SignupState {
       next.backgroundCount = s.backgroundCount + 1
 
       // Log background/foreground event during signup
-      logger.metric(
-        'signup:backgrounded',
-        {
-          activeStep: next.activeStep,
-          backgroundCount: next.backgroundCount,
-        },
-        {statsig: true},
-      )
+      s.analytics?.metric('signup:backgrounded', {
+        activeStep: next.activeStep,
+        backgroundCount: next.backgroundCount,
+      })
       break
     }
   }
 
   next.hasPrev = next.activeStep !== SignupStep.INFO
 
-  logger.debug('signup', next)
+  s.analytics?.logger.debug('signup', next)
 
   if (s.activeStep !== next.activeStep) {
-    logger.debug('signup: step changed', {activeStep: next.activeStep})
+    s.analytics?.logger.debug('signup: step changed', {
+      activeStep: next.activeStep,
+    })
   }
 
   return next
@@ -245,11 +245,32 @@ interface IContext {
   state: SignupState
   dispatch: React.Dispatch<SignupAction>
 }
-export const SignupContext = React.createContext<IContext>({} as IContext)
-export const useSignupContext = () => React.useContext(SignupContext)
+export const SignupContext = createContext<IContext>({} as IContext)
+SignupContext.displayName = 'SignupContext'
+export const useSignupContext = () => useContext(SignupContext)
+
+/**
+ * Returns a PII-free name for expected signup failures, or undefined if the
+ * failure is unexpected and should be reported to Sentry.
+ */
+function classifyExpectedSignupError(e: unknown): string | undefined {
+  const code = matchXrpcError(e, com.atproto.server.createAccount)
+  switch (code) {
+    case 'InvalidHandle':
+    case 'HandleNotAvailable':
+    case 'InvalidPassword':
+    case 'UnsupportedDomain':
+      return code
+  }
+  /* the server sends no typed error for this case */
+  if (String(e).includes('Email already taken')) return 'EmailTaken'
+  if (isNetworkError(e)) return 'NetworkError'
+  return undefined
+}
 
 export function useSubmitSignup() {
-  const {_} = useLingui()
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
   const {createAccount} = useSessionApi()
   const onboardingDispatch = useOnboardingDispatch()
 
@@ -259,7 +280,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
           type: 'setError',
-          value: _(msg`Please enter your email.`),
+          value: l`Please enter your email.`,
           field: 'email',
         })
       }
@@ -267,7 +288,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
           type: 'setError',
-          value: _(msg`Your email appears to be invalid.`),
+          value: l`Your email appears to be invalid.`,
           field: 'email',
         })
       }
@@ -275,7 +296,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.INFO})
         return dispatch({
           type: 'setError',
-          value: _(msg`Please choose your password.`),
+          value: l`Please choose your password.`,
           field: 'password',
         })
       }
@@ -283,7 +304,7 @@ export function useSubmitSignup() {
         dispatch({type: 'setStep', value: SignupStep.HANDLE})
         return dispatch({
           type: 'setError',
-          value: _(msg`Please choose your handle.`),
+          value: l`Please choose your handle.`,
           field: 'handle',
         })
       }
@@ -292,13 +313,10 @@ export function useSubmitSignup() {
         !state.pendingSubmit?.verificationCode
       ) {
         dispatch({type: 'setStep', value: SignupStep.CAPTCHA})
-        logger.error('Signup Flow Error', {
-          errorMessage: 'Verification captcha code was not set.',
-          registrationHandle: state.handle,
-        })
+        ax.logger.error('Signup: captcha code missing at submit', {})
         return dispatch({
           type: 'setError',
-          value: _(msg`Please complete the verification captcha.`),
+          value: l`Please complete the verification captcha.`,
         })
       }
       dispatch({type: 'setError', value: ''})
@@ -330,21 +348,24 @@ export function useSubmitSignup() {
          * createAccount fails, one tab is not stuck in onboarding — Eric
          */
         onboardingDispatch({type: 'start'})
-      } catch (e: any) {
-        let errMsg = e.toString()
-        if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
+      } catch (err) {
+        const e = err as Error
+        if (
+          matchXrpcError(e, com.atproto.server.createAccount) ===
+          'InvalidInviteCode'
+        ) {
           dispatch({
             type: 'setError',
-            value: _(
-              msg`Invite code not accepted. Check that you input it correctly and try again.`,
-            ),
+            value: l`Invite code not accepted. Check that you input it correctly and try again.`,
             field: 'invite-code',
           })
           dispatch({type: 'setStep', value: SignupStep.INFO})
           return
         }
 
-        const error = cleanError(errMsg)
+        /* the error object, not its stringification: cleanError only extracts
+         * the clean server message from a live LexError */
+        const error = cleanError(e)
         const isHandleError = error.toLowerCase().includes('handle')
 
         dispatch({type: 'setIsLoading', value: false})
@@ -355,14 +376,18 @@ export function useSubmitSignup() {
         })
         dispatch({type: 'setStep', value: isHandleError ? 2 : 1})
 
-        logger.error('Signup Flow Error', {
-          errorMessage: error,
-          registrationHandle: state.handle,
-        })
+        const expected = classifyExpectedSignupError(e)
+        if (expected) {
+          ax.metric('signup:createAccountFailure', {reason: expected})
+        } else {
+          ax.logger.error('Signup: unexpected createAccount failure', {
+            safeMessage: e,
+          })
+        }
       } finally {
         dispatch({type: 'setIsLoading', value: false})
       }
     },
-    [_, onboardingDispatch, createAccount],
+    [l, ax, createAccount, onboardingDispatch],
   )
 }

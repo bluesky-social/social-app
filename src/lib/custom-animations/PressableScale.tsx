@@ -1,4 +1,9 @@
-import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
+import {
+  Pressable,
+  type PressableProps,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native'
 import Animated, {
   cancelAnimation,
   useAnimatedStyle,
@@ -7,10 +12,9 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 
-import {isTouchDevice} from '#/lib/browser'
-import {isNative} from '#/platform/detection'
+import {IS_NATIVE, IS_WEB_TOUCH_DEVICE} from '#/env'
 
-const DEFAULT_TARGET_SCALE = isNative || isTouchDevice ? 0.98 : 1
+const DEFAULT_TARGET_SCALE = IS_NATIVE || IS_WEB_TOUCH_DEVICE ? 0.98 : 1
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
 
@@ -41,14 +45,14 @@ export function PressableScale({
           onPressIn(e)
         }
         cancelAnimation(scale)
-        scale.set(() => withTiming(targetScale, {duration: 100}))
+        scale.set(withTiming(targetScale, {duration: 100}))
       }}
       onPressOut={e => {
         if (onPressOut) {
           onPressOut(e)
         }
         cancelAnimation(scale)
-        scale.set(() => withTiming(1, {duration: 100}))
+        scale.set(withTiming(1, {duration: 100}))
       }}
       style={[!reducedMotion && animatedStyle, style]}
       {...rest}>

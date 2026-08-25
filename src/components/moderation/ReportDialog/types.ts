@@ -1,22 +1,30 @@
-import {
-  $Typed,
-  AppBskyActorDefs,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  ChatBskyConvoDefs,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 
-import * as Dialog from '#/components/Dialog'
+import type * as Dialog from '#/components/Dialog'
+import {type app, type chat} from '#/lexicons'
+
+export type ReportSubjectConvoMessage = {
+  view: 'convo' | 'message'
+  convoId: string
+  message: chat.bsky.convo.defs.MessageView
+}
+
+export type ReportSubjectConvo = {
+  convoId: string
+  did: string
+}
 
 export type ReportSubject =
-  | $Typed<AppBskyActorDefs.ProfileViewBasic>
-  | $Typed<AppBskyActorDefs.ProfileView>
-  | $Typed<AppBskyActorDefs.ProfileViewDetailed>
-  | $Typed<AppBskyGraphDefs.ListView>
-  | $Typed<AppBskyFeedDefs.GeneratorView>
-  | $Typed<AppBskyGraphDefs.StarterPackView>
-  | $Typed<AppBskyFeedDefs.PostView>
-  | {convoId: string; message: ChatBskyConvoDefs.MessageView}
+  | $Typed<app.bsky.actor.defs.ProfileViewBasic>
+  | $Typed<app.bsky.actor.defs.ProfileView>
+  | $Typed<app.bsky.actor.defs.ProfileViewDetailed>
+  | $Typed<app.bsky.actor.defs.StatusView>
+  | $Typed<app.bsky.graph.defs.ListView>
+  | $Typed<app.bsky.feed.defs.GeneratorView>
+  | $Typed<app.bsky.graph.defs.StarterPackView>
+  | $Typed<app.bsky.feed.defs.PostView>
+  | ReportSubjectConvoMessage
+  | ReportSubjectConvo
 
 export type ParsedReportSubject =
   | {
@@ -31,6 +39,12 @@ export type ParsedReportSubject =
         link: boolean
         quote: boolean
       }
+    }
+  | {
+      type: 'status'
+      uri: string
+      cid: string
+      nsid: string
     }
   | {
       type: 'list'
@@ -55,13 +69,22 @@ export type ParsedReportSubject =
       did: string
       nsid: string
     }
-  | {
-      type: 'chatMessage'
-      convoId: string
-      message: ChatBskyConvoDefs.MessageView
-    }
+  | ({
+      type: 'convoMessage'
+    } & ReportSubjectConvoMessage)
+  | ({
+      type: 'convo'
+    } & ReportSubjectConvo)
 
 export type ReportDialogProps = {
   control: Dialog.DialogOuterProps['control']
   subject: ParsedReportSubject
+  /**
+   * Called if the report was successfully submitted.
+   */
+  onAfterSubmit?: () => void
+  /**
+   * Called after the dialog finishes closing.
+   */
+  onClose?: () => void
 }

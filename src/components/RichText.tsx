@@ -1,17 +1,22 @@
-import React from 'react'
-import {type TextStyle} from 'react-native'
-import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
+import {useMemo} from 'react'
+import {type StyleProp, type TextStyle} from 'react-native'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {atoms as a, flatten, type TextStyleProp} from '#/alf'
+import {android, atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {CodeBlockText} from '#/components/CodeBlock'
 import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const WORD_WRAP = {wordWrap: 1}
+// lifted from facet detection in `RichText` impl, _without_ `gm` flags
+const URL_REGEX =
+  /(^|\s|\()((https?:\/\/[\S]+)|((?<domain>[a-z][a-z0-9]*(\.[a-z0-9]+)+)[\S]*))/i
 
 export type RichTextProps = TextStyleProp &
   Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
@@ -22,9 +27,31 @@ export type RichTextProps = TextStyleProp &
     enableTags?: boolean
     authorHandle?: string
     onLinkPress?: LinkProps['onPress']
-    interactiveStyle?: TextStyle
+    interactiveStyle?: StyleProp<TextStyle>
     emojiMultiplier?: number
     shouldProxyLinks?: boolean
+    suffix?: React.ReactNode
+    /**
+     * How far below the text baseline `suffix` extends, in px.
+     *
+     * Android clips inline views that are translated below the measured text
+     * bounds. Reserve matching room there and cancel it with a negative margin
+     * so content following the text does not move. iOS allows inline attachment
+     * overflow through `RNUITextView` and does not need this compensation.
+     *
+     * Overrides any `paddingBottom`/`marginBottom` set via `style` on Android.
+     */
+    suffixOffset?: number
+    /**
+     * DANGEROUS: Disable facet lexicon validation
+     *
+     * `detectFacetsWithoutResolution()` generates technically invalid facets,
+     * with a handle in place of the DID. This means that RichText that uses it
+     * won't be able to render links.
+     *
+     * Use with care - only use if you're rendering facets you're generating yourself.
+     */
+    disableMentionFacetValidation?: true
   }
 
 export function RichText({
@@ -42,25 +69,32 @@ export function RichText({
   onLayout,
   onTextLayout,
   shouldProxyLinks,
+  suffix,
+  suffixOffset = 0,
+  disableMentionFacetValidation,
 }: RichTextProps) {
-  const richText = React.useMemo(
-    () =>
-      value instanceof RichTextAPI ? value : new RichTextAPI({text: value}),
-    [value],
-  )
+  const richText = useMemo(() => {
+    if (value instanceof RichTextAPI) {
+      return value
+    } else {
+      const rt = new RichTextAPI({text: value})
+      rt.detectFacetsWithoutResolution()
+      return rt
+    }
+  }, [value])
 
-  const flattenedStyle = flatten(style)
-  const plainStyles = [a.leading_snug, flattenedStyle]
-  const interactiveStyles = [
-    a.leading_snug,
-    flatten(interactiveStyle),
-    flattenedStyle,
-  ]
+  const plainStyles = style
+  const suffixStyles =
+    suffix && suffixOffset
+      ? android({paddingBottom: suffixOffset, marginBottom: -suffixOffset})
+      : null
+  const interactiveStyles = [plainStyles, interactiveStyle]
 
   const {text, facets} = richText
 
   if (!facets?.length) {
-    const fencedRegex = /```([a-zA-Z0-9_-]+)?\n([\s\S]*?)```/g
+    const fencedRegex =
+      /```(?:([\p{XID_Continue}+#*!-]+)[ \t]*)?\n([\s\S]*?)```/gu
     const matches = [...text.matchAll(fencedRegex)]
     if (matches.length > 0) {
       const els = [] as React.ReactNode[]
@@ -96,6 +130,7 @@ export function RichText({
       )
     }
     if (isOnlyEmoji(text)) {
+      const flattenedStyle = flatten(style)
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
@@ -103,12 +138,13 @@ export function RichText({
           emoji
           selectable={selectable}
           testID={testID}
-          style={[plainStyles, {fontSize}]}
+          style={[plainStyles, {fontSize}, suffixStyles]}
           onLayout={onLayout}
           onTextLayout={onTextLayout}
-          // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
+          {suffix ? ' ' : null}
+          {suffix}
         </Text>
       )
     }
@@ -117,13 +153,14 @@ export function RichText({
         emoji
         selectable={selectable}
         testID={testID}
-        style={plainStyles}
+        style={[plainStyles, suffixStyles]}
         numberOfLines={numberOfLines}
         onLayout={onLayout}
         onTextLayout={onTextLayout}
-        // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
+        {suffix ? ' ' : null}
+        {suffix}
       </Text>
     )
   }
@@ -135,9 +172,11 @@ export function RichText({
     const link = segment.link
     const mention = segment.mention
     const tag = segment.tag
+
     if (
       mention &&
-      AppBskyRichtextFacet.validateMention(mention).success &&
+      (disableMentionFacetValidation ||
+        bsky.matches(app.bsky.richtext.facet.mention, mention)) &&
       !disableLinks
     ) {
       els.push(
@@ -146,7 +185,7 @@ export function RichText({
             selectable={selectable}
             to={`/profile/${mention.did}`}
             style={interactiveStyles}
-            // @ts-ignore TODO
+            // @ts-expect-error TODO
             dataSet={WORD_WRAP}
             shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}>
@@ -154,8 +193,9 @@ export function RichText({
           </InlineLinkText>
         </ProfileHoverCard>,
       )
-    } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
-      if (disableLinks) {
+    } else if (link && bsky.matches(app.bsky.richtext.facet.link, link)) {
+      const isValidLink = URL_REGEX.test(link.uri)
+      if (!isValidLink || disableLinks) {
         els.push(toShortUrl(segment.text))
       } else {
         els.push(
@@ -164,7 +204,7 @@ export function RichText({
             key={key}
             to={link.uri}
             style={interactiveStyles}
-            // @ts-ignore TODO
+            // @ts-expect-error TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
             shouldProxy={shouldProxyLinks}
@@ -178,7 +218,7 @@ export function RichText({
       !disableLinks &&
       enableTags &&
       tag &&
-      AppBskyRichtextFacet.validateTag(tag).success
+      bsky.matches(app.bsky.richtext.facet.tag, tag)
     ) {
       els.push(
         <RichTextTag
@@ -200,13 +240,14 @@ export function RichText({
       emoji
       selectable={selectable}
       testID={testID}
-      style={plainStyles}
+      style={[plainStyles, suffixStyles]}
       numberOfLines={numberOfLines}
       onLayout={onLayout}
       onTextLayout={onTextLayout}
-      // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
       {els}
+      {suffix ? ' ' : null}
+      {suffix}
     </Text>
   )
 }

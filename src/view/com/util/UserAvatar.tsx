@@ -1,21 +1,23 @@
-import React, {memo, useCallback, useMemo, useState} from 'react'
+import {memo, useCallback, useMemo, useState} from 'react'
 import {
-  Image,
+  Image as RNImage,
+  type ImageStyle,
   Pressable,
   type StyleProp,
   StyleSheet,
+  Text as RNText,
   View,
   type ViewStyle,
 } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
-import {type ModerationUI} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {Image as ExpoImage} from 'expo-image'
+import {type ModerationUI} from '@bsky/sdk/moderation'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {isTouchDevice} from '#/lib/browser'
+import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {
   useCameraPermission,
@@ -24,11 +26,12 @@ import {
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCamera, openCropper, openPicker} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
+import {convertCdnPreset} from '#/lib/media/util'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
+import {isCancelledError} from '#/lib/strings/errors'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
-import {isAndroid, isNative, isWeb} from '#/platform/detection'
 import {
   type ComposerImage,
   compressImage,
@@ -36,7 +39,6 @@ import {
 } from '#/state/gallery'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {EditImageDialog} from '#/view/com/composer/photos/EditImageDialog'
-import {HighPriorityImage} from '#/view/com/util/images/Image'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
@@ -48,11 +50,14 @@ import {
 import {StreamingLive_Stroke2_Corner0_Rounded as LibraryIcon} from '#/components/icons/StreamingLive'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import {Link} from '#/components/Link'
-import {LiveIndicator} from '#/components/live/LiveIndicator'
-import {LiveStatusDialog} from '#/components/live/LiveStatusDialog'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Menu from '#/components/Menu'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {useAnalytics} from '#/analytics'
+import {IS_ANDROID, IS_NATIVE, IS_WEB, IS_WEB_TOUCH_DEVICE} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
+import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
 import type * as bsky from '#/types/bsky'
 
 export type UserAvatarType = 'user' | 'algo' | 'list' | 'labeler'
@@ -73,6 +78,7 @@ interface UserAvatarProps extends BaseUserAvatarProps {
   noBorder?: boolean
   onLoad?: () => void
   style?: StyleProp<ViewStyle>
+  extraAviStyle?: ImageStyle
 }
 
 interface EditableUserAvatarProps extends BaseUserAvatarProps {
@@ -87,7 +93,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   onBeforePress?: () => void
 }
 
-const BLUR_AMOUNT = isWeb ? 5 : 100
+const BLUR_AMOUNT = IS_WEB ? 5 : 100
 
 let DefaultAvatar = ({
   type,
@@ -221,6 +227,7 @@ let UserAvatar = ({
   live,
   hideLiveBadge,
   noBorder,
+  extraAviStyle,
 }: UserAvatarProps): React.ReactNode => {
   const t = useTheme()
   const finalShape = overrideShape ?? (type === 'user' ? 'circle' : 'square')
@@ -238,8 +245,9 @@ let UserAvatar = ({
       height: size,
       borderRadius,
       backgroundColor: t.palette.contrast_25,
+      ...extraAviStyle,
     }
-  }, [finalShape, size, t])
+  }, [finalShape, size, t, extraAviStyle])
 
   const borderStyle = useMemo(() => {
     return [
@@ -263,13 +271,27 @@ let UserAvatar = ({
           a.right_0,
           a.bottom_0,
           a.rounded_full,
-          {backgroundColor: t.palette.white},
+          {width: 16, height: 16},
+          a.align_center,
+          a.justify_center,
+          {backgroundColor: t.palette.pink},
+          {transform: [{scale: size / 42}]},
         ]}>
-        <FontAwesomeIcon
-          icon="exclamation-circle"
-          style={{color: t.palette.negative_400}}
-          size={Math.floor(size / 3)}
-        />
+        <RNText
+          style={[
+            a.text_sm,
+            a.font_bold,
+            a.text_center,
+            {
+              color: t.palette.white,
+              includeFontPadding: false,
+              textAlignVertical: 'center',
+            },
+          ]}
+          minimumFontScale={1}
+          maxFontSizeMultiplier={1}>
+          !
+        </RNText>
       </View>
     )
   }, [moderation?.alert, size, t])
@@ -285,10 +307,10 @@ let UserAvatar = ({
   }, [size, style])
 
   return avatar &&
-    !((moderation?.blur && isAndroid) /* android crashes with blur */) ? (
+    !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
     <View style={containerStyle}>
       {usePlainRNImage ? (
-        <Image
+        <RNImage
           accessibilityIgnoresInvertColors
           testID="userAvatarImage"
           style={aviStyle}
@@ -300,7 +322,7 @@ let UserAvatar = ({
           onLoad={onLoad}
         />
       ) : (
-        <HighPriorityImage
+        <ExpoImage
           testID="userAvatarImage"
           style={aviStyle}
           contentFit="cover"
@@ -309,6 +331,7 @@ let UserAvatar = ({
           }}
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
           onLoad={onLoad}
+          useAppleWebpCodec
         />
       )}
       {!noBorder && <MediaInsetBorder style={borderStyle} />}
@@ -363,21 +386,22 @@ let EditableUserAvatar = ({
     }
   }, [circular, size])
 
-  const onOpenCamera = React.useCallback(async () => {
+  const onOpenCamera = useCallback(async () => {
     if (!(await requestCameraAccessIfNeeded())) {
       return
     }
 
-    onSelectNewAvatar(
-      await compressIfNeeded(
-        await openCamera({
-          aspect: [1, 1],
-        }),
-      ),
-    )
+    const image = await openCamera({
+      aspect: [1, 1],
+    })
+    if (!image) {
+      return
+    }
+
+    onSelectNewAvatar(await compressIfNeeded(image, IMAGE_SIZE_CONFIG_2K_1MB))
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
-  const onOpenLibrary = React.useCallback(async () => {
+  const onOpenLibrary = useCallback(async () => {
     if (!(await requestPhotoAccessIfNeeded())) {
       return
     }
@@ -393,7 +417,7 @@ let EditableUserAvatar = ({
     }
 
     try {
-      if (isNative) {
+      if (IS_NATIVE) {
         onSelectNewAvatar(
           await compressIfNeeded(
             await openCropper({
@@ -401,16 +425,17 @@ let EditableUserAvatar = ({
               shape: circular ? 'circle' : 'rectangle',
               aspectRatio: 1,
             }),
+            IMAGE_SIZE_CONFIG_2K_1MB,
           ),
         )
       } else {
         setRawImage(await createComposerImage(item))
         editImageDialogControl.open()
       }
-    } catch (e: any) {
+    } catch (e) {
       // Don't log errors for cancelling selection to sentry on ios or android
-      if (!String(e).toLowerCase().includes('cancel')) {
-        logger.error('Failed to crop banner', {error: e})
+      if (!isCancelledError(e)) {
+        logger.error('Failed to crop avatar', {error: e})
       }
     }
   }, [
@@ -421,13 +446,13 @@ let EditableUserAvatar = ({
     circular,
   ])
 
-  const onRemoveAvatar = React.useCallback(() => {
+  const onRemoveAvatar = useCallback(() => {
     onSelectNewAvatar(null)
   }, [onSelectNewAvatar])
 
   const onChangeEditImage = useCallback(
     async (image: ComposerImage) => {
-      const compressed = await compressImage(image)
+      const compressed = await compressImage(image, IMAGE_SIZE_CONFIG_2K_1MB)
       onSelectNewAvatar(compressed)
     },
     [onSelectNewAvatar],
@@ -440,7 +465,7 @@ let EditableUserAvatar = ({
           {({props}) => (
             <Pressable {...props} testID="changeAvatarBtn">
               {avatar ? (
-                <HighPriorityImage
+                <ExpoImage
                   testID="userAvatarImage"
                   style={aviStyle}
                   source={{uri: avatar}}
@@ -463,7 +488,7 @@ let EditableUserAvatar = ({
         </Menu.Trigger>
         <Menu.Outer showCancel>
           <Menu.Group>
-            {isNative && (
+            {IS_NATIVE && (
               <Menu.Item
                 testID="changeAvatarCameraBtn"
                 label={_(msg`Upload from Camera`)}
@@ -480,7 +505,7 @@ let EditableUserAvatar = ({
               label={_(msg`Upload from Library`)}
               onPress={onOpenLibrary}>
               <Menu.ItemText>
-                {isNative ? (
+                {IS_NATIVE ? (
                   <Trans>Upload from Library</Trans>
                 ) : (
                   <Trans>Upload from Files</Trans>
@@ -528,8 +553,9 @@ let PreviewableUserAvatar = ({
   disableNavigation,
   onBeforePress,
   live,
-  ...rest
+  ...props
 }: PreviewableUserAvatarProps): React.ReactNode => {
+  const ax = useAnalytics()
   const {_} = useLingui()
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
@@ -543,11 +569,7 @@ let PreviewableUserAvatar = ({
 
   const onOpenLiveStatus = useCallback(() => {
     playHaptic('Light')
-    logger.metric(
-      'live:card:open',
-      {subject: profile.did, from: 'post'},
-      {statsig: true},
-    )
+    ax.metric('live:card:open', {subject: profile.did, from: 'post'})
     liveControl.open()
   }, [liveControl, playHaptic, profile.did])
 
@@ -557,15 +579,20 @@ let PreviewableUserAvatar = ({
       moderation={moderation}
       type={profile.associated?.labeler ? 'labeler' : 'user'}
       live={status.isActive || live}
-      {...rest}
+      {...props}
     />
   )
+
+  const linkStyle =
+    props.type !== 'algo' && props.type !== 'list'
+      ? a.rounded_full
+      : {borderRadius: props.size > 32 ? 8 : 3}
 
   return (
     <ProfileHoverCard did={profile.did} disable={disableHoverCard}>
       {disableNavigation ? (
         avatarEl
-      ) : status.isActive && (isNative || isTouchDevice) ? (
+      ) : status.isActive && (IS_NATIVE || IS_WEB_TOUCH_DEVICE) ? (
         <>
           <Button
             label={_(
@@ -596,7 +623,8 @@ let PreviewableUserAvatar = ({
             did: profile.did,
             handle: profile.handle,
           })}
-          onPress={onPress}>
+          onPress={onPress}
+          style={linkStyle}>
           {avatarEl}
         </Link>
       )}
@@ -611,9 +639,7 @@ export {PreviewableUserAvatar}
 // manually string-replace to use the smaller ones
 // -prf
 function hackModifyThumbnailPath(uri: string, isEnabled: boolean): string {
-  return isEnabled
-    ? uri.replace('/img/avatar/plain/', '/img/avatar_thumbnail/plain/')
-    : uri
+  return isEnabled ? convertCdnPreset(uri, 'avatar_thumbnail') : uri
 }
 
 const styles = StyleSheet.create({

@@ -6,10 +6,11 @@ import Animated, {
   LayoutAnimationConfig,
   LinearTransition,
 } from 'react-native-reanimated'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {useSift} from '@bsky.app/sift'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
-import {useGate} from '#/lib/statsig/statsig'
 import {
   createFullHandle,
   MAX_SERVICE_HANDLE_LENGTH,
@@ -20,7 +21,6 @@ import {
   checkHandleAvailability,
   useHandleAvailabilityQuery,
 } from '#/state/queries/handle-availability'
-import {ScreenTransition} from '#/screens/Login/ScreenTransition'
 import {useSignupContext} from '#/screens/Signup/state'
 import {atoms as a, native, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
@@ -28,17 +28,25 @@ import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {At_Stroke2_Corner0_Rounded as AtIcon} from '#/components/icons/At'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {Text} from '#/components/Typography'
-import {IS_INTERNAL} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
 import {BackNextButtons} from '../BackNextButtons'
 import {HandleSuggestions} from './HandleSuggestions'
 
 export function StepHandle() {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
-  const gate = useGate()
   const {state, dispatch} = useSignupContext()
   const [draftValue, setDraftValue] = useState(state.handle)
   const isNextLoading = useThrottledValue(state.isLoading, 500)
+
+  /*
+   * Web anchors a floating Sift dropdown of suggestions to the input; native
+   * renders them inline and ignores this. `offset` leaves a small gap below the
+   * anchor, matching the inline `mt_xs` spacing.
+   */
+  const sift = useSift({offset: a.p_xs.padding, placement: 'bottom-start'})
 
   const validCheck = validateServiceHandle(draftValue, state.userDomain)
 
@@ -72,16 +80,19 @@ export function StepHandle() {
       const {available: handleAvailable} = await checkHandleAvailability(
         createFullHandle(handle, state.userDomain),
         state.serviceDescription?.did ?? 'UNKNOWN',
-        {typeahead: false},
+        {},
       )
 
       if (!handleAvailable) {
+        ax.metric('signup:handleTaken', {typeahead: false})
         dispatch({
           type: 'setError',
           value: _(msg`That username is already taken`),
           field: 'handle',
         })
         return
+      } else {
+        ax.metric('signup:handleAvailable', {typeahead: false})
       }
     } catch (error) {
       logger.error('Failed to check handle availability on next press', {
@@ -92,15 +103,11 @@ export function StepHandle() {
       dispatch({type: 'setIsLoading', value: false})
     }
 
-    logger.metric(
-      'signup:nextPressed',
-      {
-        activeStep: state.activeStep,
-        phoneVerificationRequired:
-          state.serviceDescription?.phoneVerificationRequired,
-      },
-      {statsig: true},
-    )
+    ax.metric('signup:nextPressed', {
+      activeStep: state.activeStep,
+      phoneVerificationRequired:
+        state.serviceDescription?.phoneVerificationRequired,
+    })
     // phoneVerificationRequired is actually whether a captcha is required
     if (!state.serviceDescription?.phoneVerificationRequired) {
       dispatch({
@@ -119,11 +126,7 @@ export function StepHandle() {
       value: handle,
     })
     dispatch({type: 'prev'})
-    logger.metric(
-      'signup:backPressed',
-      {activeStep: state.activeStep},
-      {statsig: true},
-    )
+    ax.metric('signup:backPressed', {activeStep: state.activeStep})
   }
 
   const hasDebounceSettled = draftValue === debouncedDraftValue
@@ -143,13 +146,28 @@ export function StepHandle() {
     !validCheck.hyphenStartOrEnd ||
     !validCheck.totalLength
 
+  /*
+   * Web-only Sift wiring. The anchor is the input section, whose bottom edge in
+   * the taken-and-valid state sits right below the availability error, so the
+   * floating dropdown lands beneath it. The input ref feeds Sift's keyboard
+   * handling and the combobox a11y props describe the typeahead relationship.
+   * Native ignores all of this and renders suggestions inline.
+   */
+  const {ref: inputAnchorRef, ...comboboxProps} = sift.targetProps
+
   return (
-    <ScreenTransition>
-      <View style={[a.gap_sm, a.pt_lg, a.z_10]}>
+    <>
+      <View
+        collapsable={false}
+        ref={IS_WEB ? sift.refs.setAnchor : undefined}
+        onLayout={IS_WEB ? () => void sift.updatePosition() : undefined}
+        style={[a.gap_sm, a.pt_lg, a.z_10]}>
         <View>
           <TextField.Root isInvalid={textFieldInvalid}>
             <TextField.Icon icon={AtIcon} />
             <TextField.Input
+              {...(IS_WEB ? comboboxProps : {})}
+              inputRef={IS_WEB ? inputAnchorRef : undefined}
               testID="handleInput"
               onChangeText={val => {
                 if (state.error) {
@@ -171,12 +189,16 @@ export function StepHandle() {
               </TextField.GhostText>
             )}
             {isHandleAvailable?.available && (
-              <CheckIcon style={[{color: t.palette.positive_600}, a.z_20]} />
+              <CheckIcon
+                testID="handleAvailableCheck"
+                style={[{color: t.palette.positive_500}, a.z_20]}
+              />
             )}
           </TextField.Root>
         </View>
         <LayoutAnimationConfig skipEntering skipExiting>
-          <View style={[a.gap_xs]}>
+          {/* Reserve space for one line of text to avoid layout shift. */}
+          <View style={[a.gap_xs, {minHeight: 21}]}>
             {state.error && (
               <Requirement>
                 <RequirementText>{state.error}</RequirementText>
@@ -193,9 +215,9 @@ export function StepHandle() {
                   </RequirementText>
                 </Requirement>
                 {isHandleAvailable.suggestions &&
-                  isHandleAvailable.suggestions.length > 0 &&
-                  (gate('handle_suggestions') || IS_INTERNAL) && (
+                  isHandleAvailable.suggestions.length > 0 && (
                     <HandleSuggestions
+                      sift={sift}
                       suggestions={isHandleAvailable.suggestions}
                       onSelect={suggestion => {
                         setDraftValue(
@@ -204,7 +226,7 @@ export function StepHandle() {
                             state.userDomain.length * -1,
                           ),
                         )
-                        logger.metric('signup:handleSuggestionSelected', {
+                        ax.metric('signup:handleSuggestionSelected', {
                           method: suggestion.method,
                         })
                       }}
@@ -250,10 +272,10 @@ export function StepHandle() {
           isLoading={isNextLoading}
           isNextDisabled={isNextDisabled}
           onBackPress={onBackPress}
-          onNextPress={onNextPress}
+          onNextPress={() => void onNextPress()}
         />
       </Animated.View>
-    </ScreenTransition>
+    </>
   )
 }
 

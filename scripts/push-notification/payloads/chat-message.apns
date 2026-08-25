@@ -1,0 +1,15 @@
+{
+  "aps": {
+    "alert": {
+      "title": "Ian",
+      "body": "Beep beep mfer"
+    },
+    "mutable-content": 1
+  },
+  "reason": "chat-message",
+  "convoId": "3mkb6y3tjzu2r",
+  "messageId": "3mkdjhe6sd227",
+  "recipientDid": "did:plc:3jpt2mvvsumj2r7eqk4gzzjz",
+  "senderDisplayName": "Ian",
+  "senderHandle": "iwsmith.bsky.social"
+}

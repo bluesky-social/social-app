@@ -1,16 +1,17 @@
 import {useMemo} from 'react'
-import {type GestureResponderEvent, View} from 'react-native'
 import {
-  moderateProfile,
-  type ModerationOpts,
-  RichText as RichTextApi,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+  type GestureResponderEvent,
+  type StyleProp,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky/sdk/richtext'
+import {useLingui} from '@lingui/react/macro'
 
-import {useActorStatus} from '#/lib/actor-status'
 import {getModerationCauseKey} from '#/lib/moderation'
-import {type LogEvents} from '#/lib/statsig/statsig'
+import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -18,7 +19,6 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useProfileFollowMutationQueue} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
 import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {
   atoms as a,
@@ -26,6 +26,7 @@ import {
   type TextStyleProp,
   useTheme,
   type ViewStyleProp,
+  web,
 } from '#/alf'
 import {
   Button,
@@ -37,10 +38,12 @@ import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Pills from '#/components/Pills'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {type Metrics} from '#/analytics'
+import {useActorStatus} from '#/features/liveNow'
 import type * as bsky from '#/types/bsky'
 
 export function Default({
@@ -48,18 +51,26 @@ export function Default({
   moderationOpts,
   logContext = 'ProfileCard',
   testID,
+  position,
+  contextProfileDid,
+  onPress,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
   testID?: string
+  position?: number
+  contextProfileDid?: string
+  onPress?: (e: GestureResponderEvent) => void
 }) {
   return (
-    <Link testID={testID} profile={profile}>
+    <Link testID={testID} profile={profile} onPress={onPress}>
       <Card
         profile={profile}
         moderationOpts={moderationOpts}
         logContext={logContext}
+        position={position}
+        contextProfileDid={contextProfileDid}
       />
     </Link>
   )
@@ -69,10 +80,14 @@ export function Card({
   profile,
   moderationOpts,
   logContext = 'ProfileCard',
+  position,
+  contextProfileDid,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
   logContext?: 'ProfileCard' | 'StarterPackProfilesList'
+  position?: number
+  contextProfileDid?: string
 }) {
   return (
     <Outer>
@@ -83,6 +98,8 @@ export function Card({
           profile={profile}
           moderationOpts={moderationOpts}
           logContext={logContext}
+          position={position}
+          contextProfileDid={contextProfileDid}
         />
       </Header>
 
@@ -117,18 +134,20 @@ export function Link({
 }: {
   profile: bsky.profile.AnyProfileView
 } & Omit<LinkProps, 'to' | 'label'>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+
+  const profileURL = makeProfileLink({
+    did: profile.did,
+    handle: profile.handle,
+  })
+
   return (
     <InternalLink
-      label={_(
-        msg`View ${
-          profile.displayName || sanitizeHandle(profile.handle)
-        }'s profile`,
-      )}
-      to={{
-        screen: 'Profile',
-        params: {name: profile.did},
-      }}
+      testID={`profileCard-${profile.handle}-link`}
+      label={l`View ${
+        profile.displayName || sanitizeHandle(profile.handle)
+      }’s profile`}
+      to={profileURL}
       style={[a.flex_col, style]}
       {...rest}>
       {children}
@@ -180,7 +199,7 @@ export function AvatarPlaceholder({size = 40}: {size?: number}) {
     <View
       style={[
         a.rounded_full,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         {
           width: size,
           height: size,
@@ -221,7 +240,6 @@ function InlineNameAndHandle({
   moderationOpts: ModerationOpts
 }) {
   const t = useTheme()
-  const verification = useSimpleVerificationState({profile})
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
@@ -233,27 +251,24 @@ function InlineNameAndHandle({
       <Text
         emoji
         style={[
-          a.font_bold,
+          a.font_semi_bold,
           a.leading_tight,
           a.flex_shrink_0,
           {maxWidth: '70%'},
+          web({direction: 'ltr', unicodeBidi: 'isolate'}),
         ]}
         numberOfLines={1}>
         {forceLTR(name)}
       </Text>
-      {verification.showBadge && (
-        <View
-          style={[
-            a.pl_2xs,
-            a.self_center,
-            {marginTop: platform({default: 0, android: -1})},
-          ]}>
-          <VerificationCheck
-            width={platform({android: 13, default: 12})}
-            verifier={verification.role === 'verifier'}
-          />
-        </View>
-      )}
+      <ProfileBadges
+        profile={profile}
+        size="md"
+        style={[
+          a.pl_2xs,
+          a.self_center,
+          {marginTop: platform({default: 0, android: -1})},
+        ]}
+      />
       <Text
         emoji
         style={[
@@ -271,50 +286,53 @@ function InlineNameAndHandle({
 export function Name({
   profile,
   moderationOpts,
+  style,
+  textStyle,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  style?: StyleProp<ViewStyle>
+  textStyle?: StyleProp<TextStyle>
 }) {
   const moderation = moderateProfile(profile, moderationOpts)
   const name = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
     moderation.ui('displayName'),
   )
-  const verification = useSimpleVerificationState({profile})
   return (
-    <View style={[a.flex_row, a.align_center, a.max_w_full]}>
+    <View style={[a.flex_row, a.align_center, a.max_w_full, style]}>
       <Text
         emoji
         style={[
           a.text_md,
-          a.font_bold,
+          a.font_semi_bold,
           a.leading_snug,
           a.self_start,
           a.flex_shrink,
+          textStyle,
         ]}
         numberOfLines={1}>
         {name}
       </Text>
-      {verification.showBadge && (
-        <View style={[a.pl_xs]}>
-          <VerificationCheck
-            width={14}
-            verifier={verification.role === 'verifier'}
-          />
-        </View>
-      )}
+      <ProfileBadges profile={profile} size="md" style={[a.pl_xs]} />
     </View>
   )
 }
 
-export function Handle({profile}: {profile: bsky.profile.AnyProfileView}) {
+export function Handle({
+  profile,
+  textStyle,
+}: {
+  profile: bsky.profile.AnyProfileView
+  textStyle?: StyleProp<TextStyle>
+}) {
   const t = useTheme()
   const handle = sanitizeHandle(profile.handle, '@')
 
   return (
     <Text
       emoji
-      style={[a.leading_snug, t.atoms.text_contrast_medium]}
+      style={[a.leading_snug, t.atoms.text_contrast_medium, textStyle]}
       numberOfLines={1}>
       {handle}
     </Text>
@@ -329,7 +347,7 @@ export function NameAndHandlePlaceholder() {
       <View
         style={[
           a.rounded_xs,
-          t.atoms.bg_contrast_25,
+          t.atoms.bg_contrast_50,
           {
             width: '60%',
             height: 14,
@@ -340,7 +358,7 @@ export function NameAndHandlePlaceholder() {
       <View
         style={[
           a.rounded_xs,
-          t.atoms.bg_contrast_25,
+          t.atoms.bg_contrast_50,
           {
             width: '40%',
             height: 10,
@@ -358,7 +376,7 @@ export function NamePlaceholder({style}: ViewStyleProp) {
     <View
       style={[
         a.rounded_xs,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         {
           width: '60%',
           height: 14,
@@ -396,7 +414,7 @@ export function Description({
     <View style={[a.pt_xs]}>
       <RichText
         value={rt}
-        style={[a.leading_snug, style]}
+        style={style}
         numberOfLines={numberOfLines}
         disableLinks
       />
@@ -420,7 +438,7 @@ export function DescriptionPlaceholder({
             style={[
               a.rounded_xs,
               a.w_full,
-              t.atoms.bg_contrast_25,
+              t.atoms.bg_contrast_50,
               {height: 12, width: i + 1 === numberOfLines ? '60%' : '100%'},
             ]}
           />
@@ -432,11 +450,13 @@ export function DescriptionPlaceholder({
 export type FollowButtonProps = {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  logContext: LogEvents['profile:follow']['logContext'] &
-    LogEvents['profile:unfollow']['logContext']
+  logContext: Metrics['profile:follow']['logContext'] &
+    Metrics['profile:unfollow']['logContext']
   colorInverted?: boolean
   onFollow?: () => void
   withIcon?: boolean
+  position?: number
+  contextProfileDid?: string
 } & Partial<ButtonProps>
 
 export function FollowButton(props: FollowButtonProps) {
@@ -453,14 +473,18 @@ export function FollowButtonInner({
   onFollow,
   colorInverted,
   withIcon = true,
+  position,
+  contextProfileDid,
   ...rest
 }: FollowButtonProps) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const profile = useProfileShadow(profileUnshadowed)
   const moderation = moderateProfile(profile, moderationOpts)
   const [queueFollow, queueUnfollow] = useProfileFollowMutationQueue(
     profile,
     logContext,
+    position,
+    contextProfileDid,
   )
   const isRound = Boolean(rest.shape && rest.shape === 'round')
 
@@ -470,18 +494,19 @@ export function FollowButtonInner({
     try {
       await queueFollow()
       Toast.show(
-        _(
-          msg`Following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-            moderation.ui('displayName'),
-          )}`,
-        ),
+        l`Following ${sanitizeDisplayName(
+          profile.displayName || profile.handle,
+          moderation.ui('displayName'),
+        )}`,
       )
       onPressProp?.(e)
       onFollow?.()
-    } catch (err: any) {
+    } catch (e) {
+      const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, {
+          type: 'error',
+        })
       }
     }
   }
@@ -492,33 +517,35 @@ export function FollowButtonInner({
     try {
       await queueUnfollow()
       Toast.show(
-        _(
-          msg`No longer following ${sanitizeDisplayName(
-            profile.displayName || profile.handle,
-            moderation.ui('displayName'),
-          )}`,
-        ),
+        l`No longer following ${sanitizeDisplayName(
+          profile.displayName || profile.handle,
+          moderation.ui('displayName'),
+        )}`,
       )
       onPressProp?.(e)
-    } catch (err: any) {
+    } catch (e) {
+      const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(_(msg`An issue occurred, please try again.`), 'xmark')
+        Toast.show(l`An issue occurred, please try again.`, {
+          type: 'error',
+        })
       }
     }
   }
 
-  const unfollowLabel = _(
-    msg({
-      message: 'Following',
-      comment: 'User is following this account, click to unfollow',
-    }),
-  )
-  const followLabel = _(
-    msg({
-      message: 'Follow',
-      comment: 'User is not following this account, click to follow',
-    }),
-  )
+  const unfollowLabel = l({
+    message: 'Following',
+    comment: 'User is following this account, click to unfollow',
+  })
+  const followLabel = profile.viewer?.followedBy
+    ? l({
+        message: 'Follow back',
+        comment: 'User is not following this account, click to follow back',
+      })
+    : l({
+        message: 'Follow',
+        comment: 'User is not following this account, click to follow',
+      })
 
   if (!profile.viewer) return null
   if (
@@ -537,7 +564,9 @@ export function FollowButtonInner({
           variant="solid"
           color="secondary"
           {...rest}
-          onPress={onPressUnfollow}>
+          onPress={(e: GestureResponderEvent) => {
+            void onPressUnfollow(e)
+          }}>
           {withIcon && (
             <ButtonIcon icon={Check} position={isRound ? undefined : 'left'} />
           )}
@@ -550,7 +579,9 @@ export function FollowButtonInner({
           variant="solid"
           color={colorInverted ? 'secondary_inverted' : 'primary'}
           {...rest}
-          onPress={onPressFollow}>
+          onPress={(e: GestureResponderEvent) => {
+            void onPressFollow(e)
+          }}>
           {withIcon && (
             <ButtonIcon icon={Plus} position={isRound ? undefined : 'left'} />
           )}
@@ -558,6 +589,24 @@ export function FollowButtonInner({
         </Button>
       )}
     </View>
+  )
+}
+
+export function FollowButtonPlaceholder({style}: ViewStyleProp) {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.rounded_full,
+        t.atoms.bg_contrast_50,
+        a.w_full,
+        {
+          height: 33,
+        },
+        style,
+      ]}
+    />
   )
 }
 
@@ -571,8 +620,9 @@ export function Labels({
   const moderation = moderateProfile(profile, moderationOpts)
   const modui = moderation.ui('profileList')
   const followedBy = profile.viewer?.followedBy
+  const mutedOnlyReposts = profile.viewer?.mutedOnlyReposts
 
-  if (!followedBy && !modui.inform && !modui.alert) {
+  if (!followedBy && !mutedOnlyReposts && !modui.inform && !modui.alert) {
     return null
   }
 
@@ -585,6 +635,7 @@ export function Labels({
       {modui.informs.map(inform => (
         <Pills.Label key={getModerationCauseKey(inform)} cause={inform} />
       ))}
+      {mutedOnlyReposts && <Pills.MutedOnlyReposts />}
     </Pills.Row>
   )
 }

@@ -1,5 +1,6 @@
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -44,7 +45,7 @@ export function FollowingFeedPreferencesScreen({}: Props) {
 
   const mergeFeedEnabled = Boolean(
     variables?.lab_mergeFeedEnabled ??
-      preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
+    preferences?.feedViewPrefs?.lab_mergeFeedEnabled,
   )
 
   return (

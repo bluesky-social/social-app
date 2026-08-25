@@ -1,27 +1,28 @@
-import React from 'react'
-import {AppBskyActorDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {useMemo, useState} from 'react'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {CommonNavigatorParams, NativeStackScreenProps} from '#/lib/routes/types'
+import {
+  type CommonNavigatorParams,
+  type NativeStackScreenProps,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useProfileKnownFollowersQuery} from '#/state/queries/known-followers'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ViewHeader} from '#/view/com/util/ViewHeader'
 import * as Layout from '#/components/Layout'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {type app} from '#/lexicons'
 
 function renderItem({
   item,
   index,
 }: {
-  item: AppBskyActorDefs.ProfileView
+  item: app.bsky.actor.defs.ProfileView
   index: number
 }) {
   return (
@@ -33,7 +34,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic) {
+function keyExtractor(item: app.bsky.actor.defs.ProfileView) {
   return item.did
 }
 
@@ -43,12 +44,11 @@ type Props = NativeStackScreenProps<
 >
 export const ProfileKnownFollowersScreen = ({route}: Props) => {
   const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
   const initialNumToRender = useInitialNumToRender()
 
   const {name} = route.params
 
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {
     data: resolvedDid,
     isLoading: isDidLoading,
@@ -64,7 +64,7 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
     refetch,
   } = useProfileKnownFollowersQuery(resolvedDid)
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -72,18 +72,18 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
       logger.error('Failed to refresh followers', {message: err})
     }
     setIsPTRing(false)
-  }, [refetch, setIsPTRing])
+  }
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = async () => {
     if (isFetchingNextPage || !hasNextPage || !!error) return
     try {
       await fetchNextPage()
     } catch (err) {
       logger.error('Failed to load more followers', {message: err})
     }
-  }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
+  }
 
-  const followers = React.useMemo(() => {
+  const followers = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.followers)
     }
@@ -91,12 +91,6 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
   }, [data])
 
   const isError = Boolean(resolveError || error)
-
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   if (followers.length < 1) {
     return (
@@ -134,7 +128,6 @@ export const ProfileKnownFollowersScreen = ({route}: Props) => {
             onRetry={fetchNextPage}
           />
         }
-        // @ts-ignore our .web version only -prf
         desktopFixedHeight
         initialNumToRender={initialNumToRender}
         windowSize={11}

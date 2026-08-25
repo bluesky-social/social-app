@@ -1,6 +1,8 @@
+/**
+ * @param {import("@babel/core").ConfigAPI} api
+ * @returns {import("@babel/core").InputOptions}
+ */
 module.exports = function (api) {
-  api.cache(true)
-  const isTestEnv = process.env.NODE_ENV === 'test'
   return {
     presets: [
       [
@@ -10,27 +12,15 @@ module.exports = function (api) {
           native: {
             // Disable ESM -> CJS compilation because Metro takes care of it.
             // However, we need it in Jest tests since those run without Metro.
-            disableImportExportTransform: !isTestEnv,
+            disableImportExportTransform: !api.env('test'),
           },
         },
       ],
     ],
     plugins: [
-      'macros',
+      '@lingui/babel-plugin-lingui-macro',
       ['babel-plugin-react-compiler', {target: '19'}],
-      [
-        'module:react-native-dotenv',
-        {
-          envName: 'APP_ENV',
-          moduleName: '@env',
-          path: '.env',
-          blocklist: null,
-          allowlist: null,
-          safe: false,
-          allowUndefined: true,
-          verbose: false,
-        },
-      ],
+      'module:react-native-dotenv', // used by web build! can remove when we drop webpack
       [
         'module-resolver',
         {
@@ -41,12 +31,21 @@ module.exports = function (api) {
           },
         },
       ],
-      'react-native-reanimated/plugin', // NOTE: this plugin MUST be last
+
+      // cannot use `env` field because it will put them after
+      // the `react-native-worklets/plugin` plugin
+      ...(api.env('test')
+        ? [
+            '@babel/plugin-transform-class-static-block',
+            // Compile `import()` to require so jest (which runs without
+            // `--experimental-vm-modules`) can execute lazily-loaded modules
+            // like `@ipld/dag-cbor` via its moduleNameMapper.
+            '@babel/plugin-transform-dynamic-import',
+          ]
+        : []),
+      ...(api.env('production') ? ['transform-remove-console'] : []),
+
+      'react-native-worklets/plugin', // NOTE: this plugin MUST be last
     ],
-    env: {
-      production: {
-        plugins: ['transform-remove-console'],
-      },
-    },
   }
 }

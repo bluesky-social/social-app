@@ -1,28 +1,30 @@
-import React from 'react'
+import {useEffect} from 'react'
 import {Modal, View} from 'react-native'
+import {SystemBars} from 'react-native-edge-to-edge'
 
-import {useDialogStateControlContext} from '#/state/dialogs'
 import {useComposerState} from '#/state/shell/composer'
+import {ComposePost, useComposerCancelRef} from '#/view/com/composer/Composer'
 import {atoms as a, useTheme} from '#/alf'
-import {ComposePost, useComposerCancelRef} from '../com/composer/Composer'
+import {SheetCompatProvider as TooltipSheetCompatProvider} from '#/components/Tooltip'
+import {IS_LIQUID_GLASS} from '#/env'
 
-export function Composer({}: {winHeight: number}) {
-  const {setFullyExpandedCount} = useDialogStateControlContext()
+export function Composer() {
   const t = useTheme()
   const state = useComposerState()
   const ref = useComposerCancelRef()
 
   const open = !!state
-  const prevOpen = React.useRef(open)
 
-  React.useEffect(() => {
-    if (open && !prevOpen.current) {
-      setFullyExpandedCount(c => c + 1)
-    } else if (!open && prevOpen.current) {
-      setFullyExpandedCount(c => c - 1)
+  useEffect(() => {
+    if (open && !IS_LIQUID_GLASS) {
+      const entry = SystemBars.pushStackEntry({
+        style: {
+          statusBar: 'light',
+        },
+      })
+      return () => SystemBars.popStackEntry(entry)
     }
-    prevOpen.current = open
-  }, [open, setFullyExpandedCount])
+  }, [open])
 
   return (
     <Modal
@@ -31,19 +33,22 @@ export function Composer({}: {winHeight: number}) {
       visible={open}
       presentationStyle="pageSheet"
       animationType="slide"
-      onRequestClose={() => ref.current?.onPressCancel()}>
-      <View style={[t.atoms.bg, a.flex_1]}>
-        <ComposePost
-          cancelRef={ref}
-          replyTo={state?.replyTo}
-          onPost={state?.onPost}
-          onPostSuccess={state?.onPostSuccess}
-          quote={state?.quote}
-          mention={state?.mention}
-          text={state?.text}
-          imageUris={state?.imageUris}
-          videoUri={state?.videoUri}
-        />
+      onRequestClose={() => ref.current?.onPressCancel()}
+      backdropColor="transparent">
+      <View style={[a.flex_1, t.atoms.bg]}>
+        <TooltipSheetCompatProvider>
+          <ComposePost
+            cancelRef={ref}
+            replyTo={state?.replyTo}
+            onPost={state?.onPost}
+            onPostSuccess={state?.onPostSuccess}
+            quote={state?.quote}
+            mention={state?.mention}
+            text={state?.text}
+            imageUris={state?.imageUris}
+            videoUri={state?.videoUri}
+          />
+        </TooltipSheetCompatProvider>
       </View>
     </Modal>
   )

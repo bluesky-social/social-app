@@ -1,5 +1,10 @@
-import React from 'react'
-import {AccessibilityProps, TextStyle, View, ViewStyle} from 'react-native'
+import {useMemo} from 'react'
+import {
+  type AccessibilityProps,
+  type TextStyle,
+  View,
+  type ViewStyle,
+} from 'react-native'
 
 import {atoms as a, native, useTheme} from '#/alf'
 import * as Toggle from '#/components/forms/Toggle'
@@ -7,7 +12,7 @@ import {Text} from '#/components/Typography'
 
 type ItemProps = Omit<Toggle.ItemProps, 'style' | 'role' | 'children'> &
   AccessibilityProps & {
-    children: React.ReactElement
+    children: React.ReactElement<any>
     testID?: string
   }
 
@@ -15,6 +20,9 @@ export type GroupProps = Omit<Toggle.GroupProps, 'style' | 'type'> & {
   multiple?: boolean
 }
 
+/**
+ * @deprecated - use SegmentedControl
+ */
 export function Group({children, multiple, ...props}: GroupProps) {
   const t = useTheme()
   return (
@@ -34,6 +42,9 @@ export function Group({children, multiple, ...props}: GroupProps) {
   )
 }
 
+/**
+ * @deprecated - use SegmentedControl
+ */
 export function Button({children, ...props}: ItemProps) {
   return (
     <Toggle.Item {...props} style={[a.flex_grow, a.flex_1]}>
@@ -46,7 +57,7 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
   const t = useTheme()
   const state = Toggle.useItemContext()
 
-  const {baseStyles, hoverStyles, activeStyles} = React.useMemo(() => {
+  const {baseStyles, hoverStyles, activeStyles} = useMemo(() => {
     const base: ViewStyle[] = []
     const hover: ViewStyle[] = []
     const active: ViewStyle[] = []
@@ -107,11 +118,14 @@ function ButtonInner({children}: React.PropsWithChildren<{}>) {
   )
 }
 
+/**
+ * @deprecated - use SegmentedControl
+ */
 export function ButtonText({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const state = Toggle.useItemContext()
 
-  const textStyles = React.useMemo(() => {
+  const textStyles = useMemo(() => {
     const text: TextStyle[] = []
     if (state.selected) {
       text.push(t.atoms.text_inverted)
@@ -128,7 +142,7 @@ export function ButtonText({children}: {children: React.ReactNode}) {
     <Text
       style={[
         a.text_center,
-        a.font_bold,
+        a.font_semi_bold,
         t.atoms.text_contrast_medium,
         textStyles,
       ]}>

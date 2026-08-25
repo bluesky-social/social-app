@@ -1,21 +1,19 @@
-import {forwardRef, PropsWithChildren} from 'react'
-import {Pressable, PressableProps, StyleProp, ViewStyle} from 'react-native'
-import {View} from 'react-native'
+import {Pressable, type StyleProp, type ViewStyle} from 'react-native'
 
 import {addStyle} from '#/lib/styles'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 
-interface PressableWithHover extends PressableProps {
+interface PressableWithHoverProps extends React.ComponentPropsWithRef<Pressable> {
   hoverStyle: StyleProp<ViewStyle>
 }
 
-export const PressableWithHover = forwardRef<
-  View,
-  PropsWithChildren<PressableWithHover>
->(function PressableWithHoverImpl(
-  {children, style, hoverStyle, ...props},
+export function PressableWithHover({
   ref,
-) {
+  children,
+  style,
+  hoverStyle,
+  ...props
+}: PressableWithHoverProps) {
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -36,4 +34,4 @@ export const PressableWithHover = forwardRef<
       {children}
     </Pressable>
   )
-})
+}

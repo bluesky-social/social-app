@@ -1,17 +1,17 @@
 import {useCallback, useEffect, useImperativeHandle, useMemo} from 'react'
-import {findNodeHandle, type ListRenderItemInfo, View} from 'react-native'
+import {type ListRenderItemInfo, View} from 'react-native'
 import {
-  type AppBskyLabelerDefs,
   type InterpretedLabelValueDefinition,
   interpretLabelValueDefinitions,
   type ModerationOpts,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+} from '@bsky/sdk/moderation'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {isLabelerSubscribed, lookupLabelValueDefinition} from '#/lib/moderation'
-import {isIOS, isNative} from '#/platform/detection'
 import {List, type ListRef} from '#/view/com/util/List'
+import {findListNativeTag} from '#/view/com/util/listNativeTag'
 import {atoms as a, ios, tokens, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
@@ -19,13 +19,15 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {LabelerLabelPreference} from '#/components/moderation/LabelPreference'
 import {Text} from '#/components/Typography'
+import {IS_IOS, IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {ErrorState} from '../ErrorState'
 import {type SectionRef} from './types'
 
 interface LabelsSectionProps {
   ref: React.Ref<SectionRef>
   isLabelerLoading: boolean
-  labelerInfo: AppBskyLabelerDefs.LabelerViewDetailed | undefined
+  labelerInfo: app.bsky.labeler.defs.LabelerViewDetailed | undefined
   labelerError: Error | null
   moderationOpts: ModerationOpts
   scrollElRef: ListRef
@@ -33,6 +35,7 @@ interface LabelsSectionProps {
   isFocused: boolean
   setScrollViewTag: (tag: number | null) => void
 }
+
 export function ProfileLabelsSection({
   ref,
   isLabelerLoading,
@@ -47,11 +50,9 @@ export function ProfileLabelsSection({
   const t = useTheme()
 
   const onScrollToTop = useCallback(() => {
-    // @ts-expect-error TODO fix this
-    scrollElRef.current?.scrollTo({
-      animated: isNative,
-      x: 0,
-      y: -headerHeight,
+    scrollElRef.current?.scrollToOffset({
+      animated: IS_NATIVE,
+      offset: -headerHeight,
     })
   }, [scrollElRef, headerHeight])
 
@@ -60,8 +61,8 @@ export function ProfileLabelsSection({
   }))
 
   useEffect(() => {
-    if (isIOS && isFocused && scrollElRef.current) {
-      const nativeTag = findNodeHandle(scrollElRef.current)
+    if (IS_IOS && isFocused && scrollElRef.current) {
+      const nativeTag = findListNativeTag(scrollElRef.current)
       setScrollViewTag(nativeTag)
     }
   }, [isFocused, scrollElRef, setScrollViewTag])
@@ -160,7 +161,7 @@ export function LabelerListHeader({
 }: {
   isLabelerLoading: boolean
   labelerError?: Error | null
-  labelerInfo?: AppBskyLabelerDefs.LabelerViewDetailed
+  labelerInfo?: app.bsky.labeler.defs.LabelerViewDetailed
   hasValues: boolean
   isSubscribed: boolean
 }) {

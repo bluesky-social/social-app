@@ -1,21 +1,20 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
+import {isErrorMaybeAppPasswordPermissions} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {
   type SessionAccount,
-  useAgent,
+  usePdsClient,
   useSession,
   useSessionApi,
 } from '#/state/session'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -26,6 +25,8 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/ico
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 
 const COL_WIDTH = 400
 
@@ -37,20 +38,13 @@ export function Deactivated() {
   const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const hasOtherAccounts = accounts.length > 1
-  const setMinimalShellMode = useSetMinimalShellMode()
-  const {logoutCurrentAccount} = useSessionApi()
-  const agent = useAgent()
-  const [pending, setPending] = React.useState(false)
-  const [error, setError] = React.useState<string | undefined>()
+  const {logoutCurrentAccount, refreshSession} = useSessionApi()
+  const pdsClient = usePdsClient()
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState<string | undefined>()
   const queryClient = useQueryClient()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setMinimalShellMode(true)
-    }, [setMinimalShellMode]),
-  )
-
-  const onSelectAccount = React.useCallback(
+  const onSelectAccount = useCallback(
     (account: SessionAccount) => {
       if (account.did !== currentAccount?.did) {
         onPressSwitchAccount(account, 'SwitchAccount')
@@ -59,12 +53,12 @@ export function Deactivated() {
     [currentAccount, onPressSwitchAccount],
   )
 
-  const onPressAddAccount = React.useCallback(() => {
+  const onPressAddAccount = useCallback(() => {
     setShowLoggedOut(true)
   }, [setShowLoggedOut])
 
-  const onPressLogout = React.useCallback(() => {
-    if (isWeb) {
+  const onPressLogout = useCallback(() => {
+    if (IS_WEB) {
       // We're switching accounts, which remounts the entire app.
       // On mobile, this gets us Home, but on the web we also need reset the URL.
       // We can't change the URL via a navigate() call because the navigator
@@ -75,24 +69,27 @@ export function Deactivated() {
     logoutCurrentAccount('Deactivated')
   }, [logoutCurrentAccount])
 
-  const handleActivate = React.useCallback(async () => {
+  const handleActivate = useCallback(async () => {
     try {
       setPending(true)
-      await agent.com.atproto.server.activateAccount()
+      await pdsClient.call(com.atproto.server.activateAccount)
       await queryClient.resetQueries()
-      await agent.resumeSession(agent.session!)
+      await refreshSession()
     } catch (e: any) {
-      switch (e.message) {
-        case 'Bad token scope':
-          setError(
-            _(
-              msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
-            ),
-          )
-          break
-        default:
-          setError(_(msg`Something went wrong, please try again`))
-          break
+      /*
+       * `activateAccount` declares no lexicon errors, so the app-password case
+       * arrives as an undeclared code plus a message. The shared helper matches
+       * both that and the plain-string form the old exact `e.message` switch
+       * relied on.
+       */
+      if (isErrorMaybeAppPasswordPermissions(e)) {
+        setError(
+          _(
+            msg`You're signed in with an App Password. Please sign in with your main password to continue deactivating your account.`,
+          ),
+        )
+      } else {
+        setError(_(msg`Something went wrong, please try again`))
       }
 
       logger.error(e, {
@@ -101,7 +98,7 @@ export function Deactivated() {
     } finally {
       setPending(false)
     }
-  }, [_, agent, setPending, setError, queryClient])
+  }, [_, pdsClient, refreshSession, setPending, setError, queryClient])
 
   return (
     <View style={[a.util_screen_outer, a.flex_1]}>
@@ -110,18 +107,18 @@ export function Deactivated() {
         contentContainerStyle={[
           a.px_2xl,
           {
-            paddingTop: isWeb ? 64 : insets.top + 16,
-            paddingBottom: isWeb ? 64 : insets.bottom,
+            paddingTop: IS_WEB ? 64 : insets.top + 16,
+            paddingBottom: IS_WEB ? 64 : insets.bottom,
           },
         ]}>
         <View
           style={[a.w_full, {marginHorizontal: 'auto', maxWidth: COL_WIDTH}]}>
           <View style={[a.w_full, a.justify_center, a.align_center, a.pb_5xl]}>
-            <Logo width={40} />
+            <Logo allowVariants={false} width={40} />
           </View>
 
           <View style={[a.gap_xs, a.pb_3xl]}>
-            <Text style={[a.text_xl, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_xl, a.font_semi_bold, a.leading_snug]}>
               <Trans>Welcome back!</Trans>
             </Text>
             <Text style={[a.text_sm, a.leading_snug]}>

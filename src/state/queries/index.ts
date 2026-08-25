@@ -11,10 +11,15 @@ export const STALE = {
     ONE: MINUTE,
     THREE: 3 * MINUTE,
     FIVE: 5 * MINUTE,
+    FIFTEEN: 15 * MINUTE,
     THIRTY: 30 * MINUTE,
   },
   HOURS: {
     ONE: HOUR,
   },
+  INFINITY: Infinity,
+}
+
+export const GCTIME = {
   INFINITY: Infinity,
 }

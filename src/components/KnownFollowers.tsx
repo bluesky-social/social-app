@@ -1,12 +1,7 @@
-import React from 'react'
+import {useRef} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -14,6 +9,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Link, type LinkProps} from '#/components/Link'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 const AVI_SIZE = 30
@@ -27,7 +23,7 @@ const AVI_BORDER = 1
  * `count` includes blocked users and `followers` does not.
  */
 export function shouldShowKnownFollowers(
-  knownFollowers?: AppBskyActorDefs.KnownFollowers,
+  knownFollowers?: app.bsky.actor.defs.KnownFollowers,
 ) {
   return knownFollowers && knownFollowers.followers.length > 0
 }
@@ -45,7 +41,7 @@ export function KnownFollowers({
   minimal?: boolean
   showIfEmpty?: boolean
 }) {
-  const cache = React.useRef<Map<string, AppBskyActorDefs.KnownFollowers>>(
+  const cache = useRef<Map<string, app.bsky.actor.defs.KnownFollowers>>(
     new Map(),
   )
 
@@ -88,13 +84,13 @@ function KnownFollowersInner({
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
-  cachedKnownFollowers: AppBskyActorDefs.KnownFollowers
+  cachedKnownFollowers: app.bsky.actor.defs.KnownFollowers
   onLinkPress?: LinkProps['onPress']
   minimal?: boolean
   showIfEmpty?: boolean
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const textStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
 
@@ -125,9 +121,7 @@ function KnownFollowersInner({
 
   return (
     <Link
-      label={_(
-        msg`Press to view followers of this account that you also follow`,
-      )}
+      label={l`Press to view followers of this account that you also follow`}
       onPress={onLinkPress}
       to={makeProfileLink(profile, 'known-followers')}
       style={[
@@ -189,6 +183,7 @@ function KnownFollowersInner({
             numberOfLines={2}>
             {slice.length >= 2 ? (
               // 2-n followers, including blocks
+              // only 2
               serverCount > 2 ? (
                 <Trans>
                   Followed by{' '}
@@ -207,7 +202,6 @@ function KnownFollowersInner({
                   />
                 </Trans>
               ) : (
-                // only 2
                 <Trans>
                   Followed by{' '}
                   <Text emoji key={slice[0].profile.did} style={textStyle}>
@@ -256,7 +250,7 @@ function EmptyFallback({show}: {show?: boolean}) {
 
   return (
     <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
-      <Trans>Not followed by anyone you're following</Trans>
+      <Trans>Not followed by anyone you’re following</Trans>
     </Text>
   )
 }

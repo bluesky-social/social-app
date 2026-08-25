@@ -1,7 +1,8 @@
 import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {shareUrl} from '#/lib/sharing'
@@ -22,12 +23,27 @@ export function LinkWarningDialog() {
       webOptions={{alignCenter: true}}
       onClose={linkWarningDialogControl.clear}>
       <Dialog.Handle />
-      <InAppBrowserConsentInner link={linkWarningDialogControl.value} />
+      <LinkWarningDialogInner link={linkWarningDialogControl.value} />
     </Dialog.Outer>
   )
 }
 
-function InAppBrowserConsentInner({
+export function CustomLinkWarningDialog({
+  control,
+  link,
+}: {
+  control: Dialog.DialogControlProps
+  link?: {href: string; displayText: string; share?: boolean}
+}) {
+  return (
+    <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
+      <Dialog.Handle />
+      <LinkWarningDialogInner link={link} />
+    </Dialog.Outer>
+  )
+}
+
+function LinkWarningDialogInner({
   link,
 }: {
   link?: {href: string; displayText: string; share?: boolean}
@@ -68,7 +84,7 @@ function InAppBrowserConsentInner({
       }>
       <View style={[a.gap_2xl]}>
         <View style={[a.gap_sm]}>
-          <Text style={[a.font_heavy, a.text_2xl]}>
+          <Text style={[a.font_bold, a.text_2xl]}>
             {potentiallyMisleading ? (
               <Trans>Potentially misleading link</Trans>
             ) : (
@@ -151,7 +167,8 @@ function LinkBox({href}: {href: string}) {
       ]}>
       <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {scheme}
-        <Text style={[a.text_md, a.leading_snug, t.atoms.text, a.font_bold]}>
+        <Text
+          style={[a.text_md, a.leading_snug, t.atoms.text, a.font_semi_bold]}>
           {hostname}
         </Text>
         {rest}

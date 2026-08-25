@@ -1,18 +1,17 @@
-import React from 'react'
+import {useState} from 'react'
 import {
-  StyleProp,
+  type StyleProp,
   TouchableWithoutFeedback,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {ModerationUI} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {type ModerationUI} from '@bsky/sdk/moderation'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {useModerationCauseDescription} from '#/lib/moderation/useModerationCauseDescription'
-import {NavigationProp} from '#/lib/routes/types'
+import {type NavigationProp} from '#/lib/routes/types'
 import {CenteredView} from '#/view/com/util/Views'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -37,8 +36,8 @@ export function ScreenHider({
   containerStyle?: StyleProp<ViewStyle>
 }>) {
   const t = useTheme()
-  const {_} = useLingui()
-  const [override, setOverride] = React.useState(false)
+  const {t: l} = useLingui()
+  const [override, setOverride] = useState(false)
   const navigation = useNavigation<NavigationProp>()
   const {isMobile} = useWebMediaQueries()
   const control = useModerationDetailsDialogControl()
@@ -86,7 +85,13 @@ export function ScreenHider({
         </View>
       </View>
       <Text
-        style={[a.text_4xl, a.font_bold, a.text_center, a.mb_md, t.atoms.text]}>
+        style={[
+          a.text_4xl,
+          a.font_semi_bold,
+          a.text_center,
+          a.mb_md,
+          t.atoms.text,
+        ]}>
         {isNoPwi ? (
           <Trans>Sign-in Required</Trans>
         ) : (
@@ -112,7 +117,7 @@ export function ScreenHider({
             <Text
               style={[
                 a.text_lg,
-                a.font_bold,
+                a.font_semi_bold,
                 a.leading_snug,
                 t.atoms.text,
                 a.ml_xs,
@@ -124,15 +129,13 @@ export function ScreenHider({
                 control.open()
               }}
               accessibilityRole="button"
-              accessibilityLabel={_(msg`Learn more about this warning`)}
+              accessibilityLabel={l`Learn more about this warning`}
               accessibilityHint="">
               <Text
                 style={[
                   a.text_lg,
                   a.leading_snug,
-                  {
-                    color: t.palette.primary_500,
-                  },
+                  t.atoms.text_link,
                   web({
                     cursor: 'pointer',
                   }),
@@ -151,7 +154,7 @@ export function ScreenHider({
           color="primary"
           size="large"
           style={[a.rounded_full]}
-          label={_(msg`Go back`)}
+          label={l`Go back`}
           onPress={() => {
             if (navigation.canGoBack()) {
               navigation.goBack()
@@ -169,7 +172,7 @@ export function ScreenHider({
             color="secondary"
             size="large"
             style={[a.rounded_full]}
-            label={_(msg`Show anyway`)}
+            label={l`Show anyway`}
             onPress={() => setOverride(v => !v)}>
             <ButtonText>
               <Trans>Show anyway</Trans>

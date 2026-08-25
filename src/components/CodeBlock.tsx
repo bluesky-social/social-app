@@ -1,13 +1,11 @@
-import React from 'react'
+import {useMemo, useState} from 'react'
 import {type StyleProp, type TextStyle, View} from 'react-native'
 import * as Clipboard from 'expo-clipboard'
 
-import {DEFAULT_THEME_NAME} from '#/lib/shiki/highlighter'
 import {useHighlighter} from '#/lib/shiki/HighlighterContext'
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {DEFAULT_THEME_NAME} from '#/lib/shiki/themes'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function CodeBlockText({
@@ -21,8 +19,8 @@ export function CodeBlockText({
 }) {
   const {initialize, tokenize, isReady} = useHighlighter()
   const t = useTheme()
-  const [expanded, setExpanded] = React.useState(false)
-  const shouldCollapse = React.useMemo(() => {
+  const [expanded, setExpanded] = useState(false)
+  const shouldCollapse = useMemo(() => {
     const approxLines = code.split('\n').length
     return approxLines > 20 || code.length > 8000
   }, [code])
@@ -33,7 +31,7 @@ export function CodeBlockText({
         style={[
           a.rounded_sm,
           a.p_sm,
-          a.bg_contrast_25,
+          t.atoms.bg_contrast_25,
           {fontFamily: 'Courier New'},
           textStyle,
         ]}>
@@ -53,7 +51,7 @@ export function CodeBlockText({
     t.atoms.bg_contrast_25,
     {
       maxHeight: !expanded && shouldCollapse ? 240 : undefined,
-      overflow: 'hidden',
+      overflow: 'hidden' as const,
     },
   ]
 
@@ -65,7 +63,7 @@ export function CodeBlockText({
             style={[
               a.flex_row,
               a.justify_between,
-              a.items_center,
+              a.align_center,
               a.px_sm,
               a.py_xs,
               {
@@ -109,15 +107,14 @@ export function CodeBlockText({
         </View>
         {shouldCollapse ? (
           <View style={[a.mt_sm, a.self_end]}>
-            <InlineLinkText
-              to="#"
-              onPress={e => {
-                e.preventDefault?.()
-                setExpanded(v => !v)
-                return false
-              }}>
-              {expanded ? 'Show less' : 'Show more'}
-            </InlineLinkText>
+            <Button
+              label={expanded ? 'Show less' : 'Show more'}
+              size="tiny"
+              color="secondary"
+              onPress={() => setExpanded(v => !v)}
+              style={[a.px_sm, a.py_2xs, {borderRadius: 6}]}>
+              <ButtonText>{expanded ? 'Show less' : 'Show more'}</ButtonText>
+            </Button>
           </View>
         ) : null}
       </View>

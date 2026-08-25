@@ -1,0 +1,51 @@
+name: Lockfile
+
+on:
+  pull_request:
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify-pnpm-lock:
+    name: No manual pnpm-lock.yaml edits
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Check out PR HEAD
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: ⬇️ Fetch base branch
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git fetch origin $BASE_REF --depth=1
+
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+
+      - name: 🔧 Install node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: package.json
+
+      - name: ⏪ Reset pnpm-lock.yaml to base
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: git show "origin/$BASE_REF:pnpm-lock.yaml" > pnpm-lock.yaml
+
+      - name: 📦 pnpm install
+        # Fine to skip scripts since we don't run any code
+        run: pnpm clean && pnpm install --ignore-scripts --no-frozen-lockfile
+
+      - name: 🔍 Verify pnpm-lock.yaml
+        run: |
+          git diff --quiet --exit-code || {
+            echo '::error::`pnpm-lock.yaml` does not match what pnpm would generate given the base `pnpm-lock.yaml` and the head `package.json`.'
+            echo '::error:: - If this is intentional, you can ignore this check.'
+            echo '::error:: - If this is unintentional, apply the following diff:'
+            git --no-pager diff
+            exit 1
+          }

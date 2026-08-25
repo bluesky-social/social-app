@@ -1,21 +1,22 @@
 import {useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
-import {BskyAgent} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {View} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
 
-import {logEvent} from '#/lib/statsig/statsig'
-import {isNetworkError} from '#/lib/strings/errors'
-import {cleanError} from '#/lib/strings/errors'
+import {createServiceClient} from '#/lib/lexClient'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {checkAndFormatResetCode} from '#/lib/strings/password'
 import {logger} from '#/logger'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {FormError} from '#/components/forms/FormError'
+import {atoms as a, web} from '#/alf'
+import {Admonition} from '#/components/Admonition'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
 import {Lock_Stroke2_Corner0_Rounded as Lock} from '#/components/icons/Lock'
 import {Ticket_Stroke2_Corner0_Rounded as Ticket} from '#/components/icons/Ticket'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 import {FormContainer} from './FormContainer'
 
 export const SetNewPasswordForm = ({
@@ -31,8 +32,8 @@ export const SetNewPasswordForm = ({
   onPressBack: () => void
   onPasswordSet: () => void
 }) => {
-  const {_} = useLingui()
-  const t = useTheme()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false)
   const [resetCode, setResetCode] = useState<string>('')
@@ -45,17 +46,15 @@ export const SetNewPasswordForm = ({
 
     if (!formattedCode) {
       setError(
-        _(
-          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
-        ),
+        l`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
       )
-      logEvent('signin:passwordResetFailure', {})
+      ax.metric('signin:passwordResetFailure', {})
       return
     }
 
     // TODO Better password strength check
     if (!password) {
-      setError(_(msg`Please enter a password.`))
+      setError(l`Please enter a password.`)
       return
     }
 
@@ -63,26 +62,27 @@ export const SetNewPasswordForm = ({
     setIsProcessing(true)
 
     try {
-      const agent = new BskyAgent({service: serviceUrl})
-      await agent.com.atproto.server.resetPassword({
+      /*
+       * Pre-auth request against a user-chosen host, so it goes through a
+       * one-off service client rather than a session-scoped one.
+       */
+      const client = createServiceClient(serviceUrl)
+      await client.call(com.atproto.server.resetPassword, {
         token: formattedCode,
         password,
       })
       onPasswordSet()
-      logEvent('signin:passwordResetSuccess', {})
-    } catch (e: any) {
-      const errMsg = e.toString()
-      logger.warn('Failed to set new password', {error: e})
-      logEvent('signin:passwordResetFailure', {})
+      ax.metric('signin:passwordResetSuccess', {})
+    } catch (err) {
+      logger.warn('Failed to set new password', {error: err})
+      ax.metric('signin:passwordResetFailure', {})
       setIsProcessing(false)
-      if (isNetworkError(e)) {
+      if (isNetworkError(err)) {
         setError(
-          _(
-            msg`Unable to contact your service. Please check your Internet connection.`,
-          ),
+          l`Unable to contact your service. Please check your Internet connection.`,
         )
       } else {
-        setError(cleanError(errMsg))
+        setError(cleanError(err))
       }
     }
   }
@@ -91,9 +91,7 @@ export const SetNewPasswordForm = ({
     const formattedCode = checkAndFormatResetCode(resetCode)
     if (!formattedCode) {
       setError(
-        _(
-          msg`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
-        ),
+        l`You have entered an invalid code. It should look like XXXXX-XXXXX.`,
       )
       return
     }
@@ -110,7 +108,6 @@ export const SetNewPasswordForm = ({
           then enter your new password.
         </Trans>
       </Text>
-
       <View>
         <TextField.LabelText>
           <Trans>Reset code</Trans>
@@ -119,7 +116,7 @@ export const SetNewPasswordForm = ({
           <TextField.Icon icon={Ticket} />
           <TextField.Input
             testID="resetCodeInput"
-            label={_(msg`Looks like XXXXX-XXXXX`)}
+            label={l`Looks like XXXXX-XXXXX`}
             autoCapitalize="none"
             autoFocus={true}
             autoCorrect={false}
@@ -129,13 +126,10 @@ export const SetNewPasswordForm = ({
             onFocus={() => setError('')}
             onBlur={onBlur}
             editable={!isProcessing}
-            accessibilityHint={_(
-              msg`Input code sent to your email for password reset`,
-            )}
+            accessibilityHint={l`Input code sent to your email for password reset`}
           />
         </TextField.Root>
       </View>
-
       <View>
         <TextField.LabelText>
           <Trans>New password</Trans>
@@ -144,56 +138,51 @@ export const SetNewPasswordForm = ({
           <TextField.Icon icon={Lock} />
           <TextField.Input
             testID="newPasswordInput"
-            label={_(msg`Enter a password`)}
+            label={l`Enter a password`}
             autoCapitalize="none"
             autoCorrect={false}
-            autoComplete="password"
             returnKeyType="done"
             secureTextEntry={true}
-            textContentType="password"
+            autoComplete="new-password"
+            passwordRules="minlength: 8;"
             clearButtonMode="while-editing"
             value={password}
             onChangeText={setPassword}
-            onSubmitEditing={onPressNext}
+            onSubmitEditing={() => void onPressNext()}
             editable={!isProcessing}
-            accessibilityHint={_(msg`Input new password`)}
+            accessibilityHint={l`Input new password`}
           />
         </TextField.Root>
       </View>
-
-      <FormError error={error} />
-
-      <View style={[a.flex_row, a.align_center, a.pt_lg]}>
-        <Button
-          label={_(msg`Back`)}
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}>
-          <ButtonText>
-            <Trans>Back</Trans>
-          </ButtonText>
-        </Button>
-        <View style={a.flex_1} />
-        {isProcessing ? (
-          <ActivityIndicator />
-        ) : (
-          <Button
-            label={_(msg`Next`)}
-            variant="solid"
-            color="primary"
-            size="large"
-            onPress={onPressNext}>
-            <ButtonText>
-              <Trans>Next</Trans>
-            </ButtonText>
-          </Button>
+      {error && <Admonition type="error">{error}</Admonition>}
+      <View style={[web([a.flex_row, a.align_center]), a.pt_lg]}>
+        {IS_WEB && (
+          <>
+            <Button
+              label={l`Back`}
+              variant="solid"
+              color="secondary"
+              size="large"
+              onPress={onPressBack}>
+              <ButtonText>
+                <Trans>Back</Trans>
+              </ButtonText>
+            </Button>
+            <View style={a.flex_1} />
+          </>
         )}
-        {isProcessing ? (
-          <Text style={[t.atoms.text_contrast_high, a.pl_md]}>
-            <Trans>Updating...</Trans>
-          </Text>
-        ) : undefined}
+
+        <Button
+          label={l`Next`}
+          color="primary"
+          size="large"
+          onPress={() => void onPressNext()}
+          disabled={isProcessing}>
+          <ButtonText>
+            <Trans>Next</Trans>
+          </ButtonText>
+          {isProcessing && <ButtonIcon icon={Loader} />}
+        </Button>
       </View>
     </FormContainer>
   )

@@ -5,10 +5,10 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import type React from 'react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {IS_LIQUID_GLASS} from '#/env'
 
 export function Header({
   renderLeft,
@@ -28,13 +28,15 @@ export function Header({
     <View
       onLayout={onLayout}
       style={[
+        a.sticky,
+        a.top_0,
         a.relative,
         a.w_full,
         a.py_sm,
         a.flex_row,
         a.justify_center,
         a.align_center,
-        {minHeight: 50},
+        {minHeight: IS_LIQUID_GLASS ? 64 : 50},
         a.border_b,
         t.atoms.border_contrast_medium,
         t.atoms.bg,
@@ -43,11 +45,15 @@ export function Header({
         style,
       ]}>
       {renderLeft && (
-        <View style={[a.absolute, {left: 6}]}>{renderLeft()}</View>
+        <View style={[a.absolute, {left: IS_LIQUID_GLASS ? 12 : 6}]}>
+          {renderLeft()}
+        </View>
       )}
       {children}
       {renderRight && (
-        <View style={[a.absolute, {right: 6}]}>{renderRight()}</View>
+        <View style={[a.absolute, {right: IS_LIQUID_GLASS ? 12 : 6}]}>
+          {renderRight()}
+        </View>
       )}
     </View>
   )
@@ -61,7 +67,9 @@ export function HeaderText({
   style?: StyleProp<TextStyle>
 }) {
   return (
-    <Text style={[a.text_lg, a.text_center, a.font_bold, style]}>
+    <Text
+      style={[a.text_lg, a.text_center, a.font_semi_bold, style]}
+      maxFontSizeMultiplier={2}>
       {children}
     </Text>
   )

@@ -1,7 +1,8 @@
 import {memo} from 'react'
 import {View} from 'react-native'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {
   type PostThreadParams,
@@ -90,10 +91,10 @@ export const ThreadItemReadMore = memo(function ThreadItemReadMore({
                   interacted && a.underline,
                 ]}>
                 <Trans>
-                  Read {item.moreReplies} more{' '}
+                  Read{' '}
                   <Plural
-                    one="reply"
-                    other="replies"
+                    one="# more reply"
+                    other="# more replies"
                     value={item.moreReplies}
                   />
                 </Trans>

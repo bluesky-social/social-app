@@ -1,8 +1,7 @@
 import {useCallback, useMemo} from 'react'
 import {type ListRenderItemInfo, Text as RNText, View} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
@@ -21,8 +20,10 @@ import {SubscribeProfileDialog} from '#/components/activity-notifications/Subscr
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
-import {BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon} from '#/components/icons/BellRinging'
-import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
+import {
+  BellRinging_Filled_Corner0_Rounded as BellRingingFilledIcon,
+  BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon,
+} from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
@@ -38,16 +39,18 @@ type Props = NativeStackScreenProps<
   AllNavigatorParams,
   'ActivityNotificationSettings'
 >
+
 export function ActivityNotificationSettingsScreen({}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
-  const {data: preferences, isError} = useNotificationSettingsQuery()
-
+  const {t: l} = useLingui()
+  const {data: preferences, isError: isPreferencesError} =
+    useNotificationSettingsQuery()
   const moderationOpts = useModerationOpts()
 
   const {
     data: subscriptions,
     isPending,
+    isError: isSubscriptionsError,
     error,
     isFetchingNextPage,
     fetchNextPage,
@@ -56,7 +59,7 @@ export function ActivityNotificationSettingsScreen({}: Props) {
 
   const items = useMemo(() => {
     if (!subscriptions) return []
-    return subscriptions?.pages.flatMap(page => page.subscriptions)
+    return subscriptions.pages.flatMap(page => page.subscriptions)
   }, [subscriptions])
 
   const renderItem = useCallback(
@@ -72,14 +75,14 @@ export function ActivityNotificationSettingsScreen({}: Props) {
     [moderationOpts],
   )
 
-  const onEndReached = useCallback(async () => {
-    if (isFetchingNextPage || !hasNextPage || isError) return
-    try {
-      await fetchNextPage()
-    } catch (err) {
-      logger.error('Failed to load more likes', {message: err})
-    }
-  }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
+  const onEndReached = useCallback(() => {
+    if (isFetchingNextPage || !hasNextPage || isSubscriptionsError) return
+    void fetchNextPage().catch(err => {
+      logger.error('Failed to load more activity subscriptions', {
+        message: err,
+      })
+    })
+  }, [isFetchingNextPage, hasNextPage, isSubscriptionsError, fetchNextPage])
 
   return (
     <Layout.Screen>
@@ -99,26 +102,23 @@ export function ActivityNotificationSettingsScreen({}: Props) {
               <SettingsList.ItemIcon icon={BellRingingIcon} />
               <ItemTextWithSubtitle
                 bold
-                titleText={<Trans>Activity from others</Trans>}
-                subtitleText={
-                  <Trans>
-                    Get notified about posts and replies from accounts you
-                    choose.
-                  </Trans>
-                }
+                titleText={l`Activity from others`}
+                subtitleText={l`Get notified about posts and replies from accounts you choose.`}
               />
             </SettingsList.Item>
-            {isError ? (
-              <View style={[a.px_lg, a.pt_md]}>
+            {isPreferencesError ? (
+              <View style={[a.px_xl, a.pt_md]}>
                 <Admonition.Admonition type="error">
                   <Trans>Failed to load notification settings.</Trans>
                 </Admonition.Admonition>
               </View>
             ) : (
-              <PreferenceControls
-                name="subscribedPost"
-                preference={preferences?.subscribedPost}
-              />
+              <View style={[a.px_xl]}>
+                <PreferenceControls
+                  name="subscribedPost"
+                  preference={preferences?.subscribedPost}
+                />
+              </View>
             )}
           </SettingsList.Container>
         }
@@ -128,19 +128,22 @@ export function ActivityNotificationSettingsScreen({}: Props) {
         onEndReached={onEndReached}
         onEndReachedThreshold={4}
         ListEmptyComponent={
-          error ? null : (
+          error ? undefined : (
             <View style={[a.px_xl, a.py_md]}>
               {!isPending ? (
                 <Admonition.Outer type="tip">
                   <Admonition.Row>
                     <Admonition.Icon />
-                    <View style={[a.flex_1, a.gap_sm]}>
+                    <Admonition.Content>
                       <Admonition.Text>
                         <Trans>
                           Enable notifications for an account by visiting their
                           profile and pressing the{' '}
                           <RNText
-                            style={[a.font_bold, t.atoms.text_contrast_high]}>
+                            style={[
+                              a.font_semi_bold,
+                              t.atoms.text_contrast_high,
+                            ]}>
                             bell icon
                           </RNText>{' '}
                           <BellRingingFilledIcon
@@ -155,15 +158,15 @@ export function ActivityNotificationSettingsScreen({}: Props) {
                           If you want to restrict who can receive notifications
                           for your account's activity, you can change this in{' '}
                           <InlineLinkText
-                            label={_(msg`Privacy and Security settings`)}
+                            label={l`Privacy and Security settings`}
                             to={{screen: 'ActivityPrivacySettings'}}
-                            style={[a.font_bold]}>
+                            style={[a.font_semi_bold]}>
                             Settings &rarr; Privacy and Security
                           </InlineLinkText>
                           .
                         </Trans>
                       </Admonition.Text>
-                    </View>
+                    </Admonition.Content>
                   </Admonition.Row>
                 </Admonition.Outer>
               ) : (
@@ -202,20 +205,20 @@ function ActivitySubscriptionCard({
 }) {
   const profile = useProfileShadow(profileUnshadowed)
   const control = useDialogControl()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   const preview = useMemo(() => {
     const actSub = profile.viewer?.activitySubscription
     if (actSub?.post && actSub?.reply) {
-      return _(msg`Posts, Replies`)
+      return l`Posts, Replies`
     } else if (actSub?.post) {
-      return _(msg`Posts`)
+      return l`Posts`
     } else if (actSub?.reply) {
-      return _(msg`Replies`)
+      return l`Replies`
     }
-    return _(msg`None`)
-  }, [_, profile.viewer?.activitySubscription])
+    return l`None`
+  }, [l, profile.viewer?.activitySubscription])
 
   return (
     <View style={[a.py_md, a.px_xl, a.border_t, t.atoms.border_contrast_low]}>
@@ -236,11 +239,9 @@ function ActivitySubscriptionCard({
             </Text>
           </View>
           <Button
-            label={_(
-              msg`Edit notifications from ${createSanitizedDisplayName(
-                profile,
-              )}`,
-            )}
+            label={l`Edit notifications from ${createSanitizedDisplayName(
+              profile,
+            )}`}
             size="small"
             color="primary"
             variant="solid"
@@ -251,7 +252,6 @@ function ActivitySubscriptionCard({
           </Button>
         </ProfileCard.Header>
       </ProfileCard.Outer>
-
       <SubscribeProfileDialog
         control={control}
         profile={profile}

@@ -1,14 +1,14 @@
 import {useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
-import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {AtUri} from '@atproto/syntax'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {VIDEO_FEED_URI} from '#/lib/constants'
 import {makeCustomFeedLink} from '#/lib/routes/links'
-import {logger} from '#/logger'
 import {RQKEY, usePostFeedQuery} from '#/state/queries/post-feed'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
@@ -20,6 +20,9 @@ import {
   CompactVideoPostCard,
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
+import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const CARD_WIDTH = 100
 
@@ -31,7 +34,6 @@ const FEED_PARAMS: {
 }
 
 export function ExploreTrendingVideos() {
-  const {_} = useLingui()
   const gutters = useGutters([0, 'base'])
   const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
 
@@ -152,12 +154,13 @@ function VideoCards({
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const items = useMemo(() => {
     return data.pages
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
       .filter(Boolean)
-      .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
+      .filter(item => bsky.isType(app.bsky.embed.video.view, item.post.embed))
       .slice(0, 8)
   }, [data])
   const href = useMemo(() => {
@@ -178,11 +181,7 @@ function VideoCards({
               sourceInterstitial: 'explore',
             }}
             onInteract={() => {
-              logger.metric(
-                'videoCard:click',
-                {context: 'interstitial:explore'},
-                {statsig: true},
-              )
+              ax.metric('videoCard:click', {context: 'interstitial:explore'})
             }}
           />
         </View>

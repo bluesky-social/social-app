@@ -1,14 +1,14 @@
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 import BroadcastChannel from '#/lib/broadcast'
 import {logger} from '#/logger'
 import {
   defaults,
-  Schema,
+  type Schema,
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
-import {PersistedApi} from './types'
+import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -22,6 +22,8 @@ const UPDATE_EVENT = 'BSKY_UPDATE'
 let _state: Schema = defaults
 const _emitter = new EventEmitter()
 
+// async, to match native implementation
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function init() {
   broadcast.onmessage = onBroadcastMessage
   window.onstorage = onStorage
@@ -37,6 +39,30 @@ export function get<K extends keyof Schema>(key: K): Schema[K] {
 }
 get satisfies PersistedApi['get']
 
+/**
+ * Force a fresh synchronous re-read of localStorage and return the requested
+ * key from it, WITHOUT adopting it as `_state`.
+ *
+ * This exists for the cross-tab expiry-rescue path. A frozen tab may not have
+ * processed a queued broadcast yet, so {@link get} (and persisted's in-memory
+ * `_state`) can be stale even though another tab already wrote healthy tokens
+ * to storage. Reading through storage directly here is the only way to see the
+ * true cross-tab-latest tokens on web.
+ *
+ * Crucially we do NOT adopt into `_state`. {@link readFromStorage} memoizes by
+ * raw string and returns the same object reference for unchanged data, so
+ * adopting here would make the later queued broadcast/storage event for that
+ * same write see `next === _state` and suppress its listener notification -
+ * leaving non-current-account changes (removals, other tokens, metadata) stale
+ * indefinitely. Leaving `_state` alone lets that queued event still fire.
+ */
+export function readLatest<K extends keyof Schema>(key: K): Schema[K] {
+  const next = readFromStorage()
+  return next?.[key] ?? _state[key]
+}
+readLatest satisfies PersistedApi['readLatest']
+
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
@@ -82,6 +108,7 @@ export function onUpdate<K extends keyof Schema>(
 }
 onUpdate satisfies PersistedApi['onUpdate']
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function clearStorage() {
   try {
     localStorage.removeItem(BSKY_STORAGE)
@@ -102,6 +129,7 @@ function onStorage() {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 async function onBroadcastMessage({data}: MessageEvent) {
   if (
     typeof data === 'object' &&

@@ -1,9 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
-import {useFocusEffect} from '@react-navigation/native'
+import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
@@ -11,7 +8,6 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useMyMutedAccountsQuery} from '#/state/queries/my-muted-accounts'
-import {useSetMinimalShellMode} from '#/state/shell'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme} from '#/alf'
@@ -19,6 +15,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -27,8 +24,6 @@ type Props = NativeStackScreenProps<
 export function ModerationMutedAccounts({}: Props) {
   const t = useTheme()
   const moderationOpts = useModerationOpts()
-  const {_} = useLingui()
-  const setMinimalShellMode = useSetMinimalShellMode()
 
   const [isPTRing, setIsPTRing] = useState(false)
   const {
@@ -48,12 +43,6 @@ export function ModerationMutedAccounts({}: Props) {
     }
     return []
   }, [data])
-
-  useFocusEffect(
-    useCallback(() => {
-      setMinimalShellMode(false)
-    }, [setMinimalShellMode]),
-  )
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -79,7 +68,7 @@ export function ModerationMutedAccounts({}: Props) {
     item,
     index,
   }: {
-    item: ActorDefs.ProfileView
+    item: app.bsky.actor.defs.ProfileView
     index: number
   }) => {
     if (!moderationOpts) return null

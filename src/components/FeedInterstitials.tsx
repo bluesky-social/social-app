@@ -1,41 +1,52 @@
-import React from 'react'
-import {View} from 'react-native'
-import {ScrollView} from 'react-native-gesture-handler'
-import {type AppBskyFeedDefs, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {ScrollView, View} from 'react-native'
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  LayoutAnimationConfig,
+  LinearTransition,
+} from 'react-native-reanimated'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
-import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {useProfilesQuery} from '#/state/queries/profile'
-import {useSuggestedFollowsByActorQuery} from '#/state/queries/suggested-follows'
+import {useSuggestedFollowsByActorWithDismiss} from '#/state/queries/suggested-follows'
+import {useGetSuggestedUsersForDiscoverQuery} from '#/state/queries/trending/useGetSuggestedUsersForDiscoverQuery'
 import {useSession} from '#/state/session'
-import * as userActionHistory from '#/state/userActionHistory'
-import {type SeenPost} from '#/state/userActionHistory'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {
   atoms as a,
+  native,
   useBreakpoints,
+  useGutters,
   useTheme,
   type ViewStyleProp,
   web,
 } from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
-import {ArrowRight_Stroke2_Corner0_Rounded as Arrow} from '#/components/icons/Arrow'
+import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRight} from '#/components/icons/Arrow'
 import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
+import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {InlineLinkText} from '#/components/Link'
 import * as ProfileCard from '#/components/ProfileCard'
+import {ProgressGuideList} from '#/components/ProgressGuide/List'
 import {Text} from '#/components/Typography'
+import {type Metrics, useAnalytics} from '#/analytics'
+import {IS_IOS} from '#/env'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
-import {ProgressGuideList} from './ProgressGuide/List'
+import {FollowDialogWithoutGuide} from './ProgressGuide/FollowDialog'
+
+const DISMISS_ANIMATION_DURATION = 200
 
 const MOBILE_CARD_WIDTH = 165
+const FINAL_CARD_WIDTH = 120
 
 function CardOuter({
   children,
@@ -45,12 +56,15 @@ function CardOuter({
   const {gtMobile} = useBreakpoints()
   return (
     <View
+      testID="CardOuter"
       style={[
+        a.flex_1,
         a.w_full,
         a.p_md,
-        a.rounded_lg,
+        a.rounded_xl,
         a.border,
         t.atoms.bg,
+        t.atoms.shadow_md,
         t.atoms.border_contrast_low,
         !gtMobile && {
           width: MOBILE_CARD_WIDTH,
@@ -63,11 +77,8 @@ function CardOuter({
 }
 
 export function SuggestedFollowPlaceholder() {
-  const t = useTheme()
-
   return (
-    <CardOuter
-      style={[a.gap_md, t.atoms.border_contrast_low, t.atoms.shadow_sm]}>
+    <CardOuter>
       <ProfileCard.Outer>
         <View
           style={[a.flex_col, a.align_center, a.gap_sm, a.pb_sm, a.mb_auto]}>
@@ -78,24 +89,15 @@ export function SuggestedFollowPlaceholder() {
           </View>
         </View>
 
-        <Button
-          label=""
-          size="small"
-          variant="solid"
-          color="secondary"
-          disabled
-          style={[a.w_full, a.rounded_sm]}>
-          <ButtonText>Follow</ButtonText>
-        </Button>
+        <ProfileCard.FollowButtonPlaceholder />
       </ProfileCard.Outer>
     </CardOuter>
   )
 }
 
 export function SuggestedFeedsCardPlaceholder() {
-  const t = useTheme()
   return (
-    <CardOuter style={[a.gap_sm, t.atoms.border_contrast_low]}>
+    <CardOuter style={[a.gap_sm]}>
       <FeedCard.Header>
         <FeedCard.AvatarPlaceholder />
         <FeedCard.TitleAndBylinePlaceholder creator />
@@ -104,93 +106,6 @@ export function SuggestedFeedsCardPlaceholder() {
       <FeedCard.DescriptionPlaceholder />
     </CardOuter>
   )
-}
-
-function getRank(seenPost: SeenPost): string {
-  let tier: string
-  if (seenPost.feedContext === 'popfriends') {
-    tier = 'a'
-  } else if (seenPost.feedContext?.startsWith('cluster')) {
-    tier = 'b'
-  } else if (seenPost.feedContext === 'popcluster') {
-    tier = 'c'
-  } else if (seenPost.feedContext?.startsWith('ntpc')) {
-    tier = 'd'
-  } else if (seenPost.feedContext?.startsWith('t-')) {
-    tier = 'e'
-  } else if (seenPost.feedContext === 'nettop') {
-    tier = 'f'
-  } else {
-    tier = 'g'
-  }
-  let score = Math.round(
-    Math.log(
-      1 + seenPost.likeCount + seenPost.repostCount + seenPost.replyCount,
-    ),
-  )
-  if (seenPost.isFollowedBy || Math.random() > 0.9) {
-    score *= 2
-  }
-  const rank = 100 - score
-  return `${tier}-${rank}`
-}
-
-function sortSeenPosts(postA: SeenPost, postB: SeenPost): 0 | 1 | -1 {
-  const rankA = getRank(postA)
-  const rankB = getRank(postB)
-  // Yes, we're comparing strings here.
-  // The "larger" string means a worse rank.
-  if (rankA > rankB) {
-    return 1
-  } else if (rankA < rankB) {
-    return -1
-  } else {
-    return 0
-  }
-}
-
-function useExperimentalSuggestedUsersQuery() {
-  const {currentAccount} = useSession()
-  const userActionSnapshot = userActionHistory.useActionHistorySnapshot()
-  const dids = React.useMemo(() => {
-    const {likes, follows, followSuggestions, seen} = userActionSnapshot
-    const likeDids = likes
-      .map(l => new AtUri(l))
-      .map(uri => uri.host)
-      .filter(did => !follows.includes(did))
-    let suggestedDids: string[] = []
-    if (followSuggestions.length > 0) {
-      suggestedDids = [
-        // It's ok if these will pick the same item (weighed by its frequency)
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-        followSuggestions[Math.floor(Math.random() * followSuggestions.length)],
-      ]
-    }
-    const seenDids = seen
-      .sort(sortSeenPosts)
-      .map(l => new AtUri(l.uri))
-      .map(uri => uri.host)
-    return [...new Set([...suggestedDids, ...likeDids, ...seenDids])].filter(
-      did => did !== currentAccount?.did,
-    )
-  }, [userActionSnapshot, currentAccount])
-  const {data, isLoading, error} = useProfilesQuery({
-    handles: dids.slice(0, 16),
-  })
-
-  const profiles = data
-    ? data.profiles.filter(profile => {
-        return !profile.viewer?.following
-      })
-    : []
-
-  return {
-    isLoading,
-    error,
-    profiles: profiles.slice(0, 6),
-  }
 }
 
 export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
@@ -208,36 +123,58 @@ export function SuggestedFollows({feed}: {feed: FeedDescriptor}) {
 }
 
 export function SuggestedFollowsProfile({did}: {did: string}) {
-  const {
-    isLoading: isSuggestionsLoading,
-    data,
-    error,
-  } = useSuggestedFollowsByActorQuery({
-    did,
-  })
+  const {profiles, recId, onDismiss, isLoading, error} =
+    useSuggestedFollowsByActorWithDismiss({did})
+
   return (
     <ProfileGrid
-      isSuggestionsLoading={isSuggestionsLoading}
-      profiles={data?.suggestions ?? []}
-      recId={data?.recId}
+      isSuggestionsLoading={isLoading}
+      profiles={profiles}
+      recId={recId}
       error={error}
       viewContext="profile"
+      onDismiss={onDismiss}
     />
   )
 }
 
 export function SuggestedFollowsHome() {
-  const {
-    isLoading: isSuggestionsLoading,
-    profiles,
-    error,
-  } = useExperimentalSuggestedUsersQuery()
+  const {isLoading, data, error} = useGetSuggestedUsersForDiscoverQuery()
+
+  const profiles = data?.actors
+
+  const [dismissedDids, setDismissedDids] = useState<Set<string>>(new Set())
+
+  const onDismiss = useCallback((did: string) => {
+    setDismissedDids(prev => new Set(prev).add(did))
+  }, [])
+
+  const allProfiles = useMemo(() => {
+    const result: Array<{
+      actor: bsky.profile.AnyProfileView
+      recId?: string
+    }> = []
+
+    for (const profile of profiles ?? []) {
+      result.push({actor: profile, recId: data?.recId})
+    }
+
+    return result
+  }, [data?.recId, profiles])
+
+  const filteredProfiles = useMemo(() => {
+    return allProfiles.filter(p => !dismissedDids.has(p.actor.did))
+  }, [allProfiles, dismissedDids])
+
   return (
     <ProfileGrid
-      isSuggestionsLoading={isSuggestionsLoading}
-      profiles={profiles}
+      recId={data?.recId}
+      isSuggestionsLoading={isLoading}
+      profiles={filteredProfiles}
+      totalProfileCount={allProfiles.length}
       error={error}
       viewContext="feed"
+      onDismiss={onDismiss}
     />
   )
 }
@@ -247,223 +184,392 @@ export function ProfileGrid({
   error,
   profiles,
   recId,
+  totalProfileCount,
   viewContext = 'feed',
+  onDismiss,
+  isVisible = true,
+  onRequestHide,
 }: {
   isSuggestionsLoading: boolean
-  profiles: bsky.profile.AnyProfileView[]
-  recId?: number
+  profiles: {actor: bsky.profile.AnyProfileView; recId?: string}[]
+  recId?: string
+  totalProfileCount?: number
   error: Error | null
-  viewContext: 'profile' | 'feed'
+  viewContext: 'profile' | 'profileHeader' | 'feed'
+  onDismiss?: (did: string) => void
+  isVisible?: boolean
+  onRequestHide?: () => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
   const moderationOpts = useModerationOpts()
   const {gtMobile} = useBreakpoints()
+  const gutters = useGutters([0, 'base'])
+  const followDialogControl = useDialogControl()
+
   const isLoading = isSuggestionsLoading || !moderationOpts
-  const maxLength = gtMobile ? 3 : 6
+  const isProfileHeaderContext = viewContext === 'profileHeader'
+  const isFeedContext = viewContext === 'feed'
 
-  const content = isLoading ? (
-    Array(maxLength)
-      .fill(0)
-      .map((_, i) => (
-        <View
-          key={i}
-          style={[
-            gtMobile &&
-              web([
-                a.flex_0,
-                a.flex_grow,
-                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-              ]),
-          ]}>
-          <SuggestedFollowPlaceholder />
-        </View>
-      ))
-  ) : error || !profiles.length ? null : (
-    <>
-      {profiles.slice(0, maxLength).map((profile, index) => (
-        <ProfileCard.Link
-          key={profile.did}
-          profile={profile}
-          onPress={() => {
-            logEvent('suggestedUser:press', {
-              logContext:
-                viewContext === 'feed'
-                  ? 'InterstitialDiscover'
-                  : 'InterstitialProfile',
-              recId,
-              position: index,
-            })
-          }}
-          style={[
-            a.flex_1,
-            gtMobile &&
-              web([
-                a.flex_0,
-                a.flex_grow,
-                {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
-              ]),
-          ]}>
-          {({hovered, pressed}) => (
-            <CardOuter
-              style={[
-                a.flex_1,
-                t.atoms.shadow_sm,
-                (hovered || pressed) && t.atoms.border_contrast_high,
-              ]}>
-              <ProfileCard.Outer>
-                <View
+  const maxLength = gtMobile ? 3 : isProfileHeaderContext ? 12 : 6
+  const minLength = gtMobile ? 3 : 4
+
+  // Track seen profiles
+  const seenProfilesRef = useRef<Set<string>>(new Set())
+  const containerRef = useRef<React.ComponentRef<typeof View>>(null)
+  const hasTrackedRef = useRef(false)
+  const logContext: Metrics['suggestedUser:seen']['logContext'] = isFeedContext
+    ? 'DiscoverInterstitial'
+    : isProfileHeaderContext
+      ? 'ProfileHeader'
+      : 'ProfileInterstitial'
+
+  // Callback to fire seen events
+  const fireSeen = useCallback(() => {
+    if (isLoading || error || !profiles.length) return
+    if (hasTrackedRef.current) return
+    hasTrackedRef.current = true
+
+    const profilesToShow = profiles.slice(0, maxLength)
+    profilesToShow.forEach((profile, index) => {
+      if (!seenProfilesRef.current.has(profile.actor.did)) {
+        seenProfilesRef.current.add(profile.actor.did)
+        ax.metric('suggestedUser:seen', {
+          logContext,
+          recId: profile.recId,
+          position: index,
+          suggestedDid: profile.actor.did,
+          category: null,
+        })
+      }
+    })
+  }, [isLoading, error, profiles, maxLength, ax, logContext])
+
+  // For profile header, fire when isVisible becomes true
+  useEffect(() => {
+    if (isProfileHeaderContext) {
+      if (!isVisible) {
+        hasTrackedRef.current = false
+        return
+      }
+      fireSeen()
+    }
+  }, [isVisible, isProfileHeaderContext, fireSeen])
+
+  // For feed interstitials, use IntersectionObserver to detect actual visibility
+  useEffect(() => {
+    if (isProfileHeaderContext) return // handled above
+    if (isLoading || error || !profiles.length) return
+
+    const node = containerRef.current
+    if (!node) return
+
+    // Use IntersectionObserver on web to detect when actually visible
+    if (typeof IntersectionObserver !== 'undefined') {
+      const observer = new IntersectionObserver(
+        entries => {
+          if (entries[0]?.isIntersecting) {
+            fireSeen()
+            observer.disconnect()
+          }
+        },
+        {threshold: 0.5},
+      )
+      // @ts-expect-error - web only
+      observer.observe(node)
+      return () => observer.disconnect()
+    } else {
+      // On native, delay slightly to account for layout shifts during hydration
+      const timeout = setTimeout(() => {
+        fireSeen()
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [isProfileHeaderContext, isLoading, error, profiles.length, fireSeen])
+
+  const content = isLoading
+    ? Array(maxLength)
+        .fill(0)
+        .map((_, i) => (
+          <View
+            key={i}
+            style={[
+              a.flex_1,
+              gtMobile &&
+                web([
+                  a.flex_0,
+                  a.flex_grow,
+                  {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+                ]),
+            ]}>
+            <SuggestedFollowPlaceholder />
+          </View>
+        ))
+    : error || !profiles.length
+      ? null
+      : profiles.slice(0, maxLength).map((profile, index) => (
+          <Animated.View
+            key={profile.actor.did}
+            layout={native(
+              LinearTransition.delay(DISMISS_ANIMATION_DURATION).easing(
+                Easing.out(Easing.exp),
+              ),
+            )}
+            exiting={FadeOut.duration(DISMISS_ANIMATION_DURATION)}
+            // for web, as the cards are static, not in a list
+            entering={web(FadeIn.delay(DISMISS_ANIMATION_DURATION * 2))}
+            style={[
+              a.flex_1,
+              gtMobile &&
+                web([
+                  a.flex_0,
+                  a.flex_grow,
+                  {width: `calc(30% - ${a.gap_md.gap / 2}px)`},
+                ]),
+            ]}>
+            <ProfileCard.Link
+              profile={profile.actor}
+              onPress={() => {
+                ax.metric('suggestedUser:press', {
+                  logContext,
+                  recId: profile.recId,
+                  position: index,
+                  suggestedDid: profile.actor.did,
+                  category: null,
+                })
+              }}
+              style={[a.flex_1]}>
+              {({hovered, pressed}) => (
+                <CardOuter
                   style={[
-                    a.flex_col,
-                    a.align_center,
-                    a.gap_sm,
-                    a.pb_sm,
-                    a.mb_auto,
+                    (hovered || pressed) && t.atoms.border_contrast_high,
                   ]}>
-                  <ProfileCard.Avatar
-                    profile={profile}
-                    moderationOpts={moderationOpts}
-                    size={88}
-                  />
-                  <View style={[a.flex_col, a.align_center, a.max_w_full]}>
-                    <ProfileCard.Name
-                      profile={profile}
-                      moderationOpts={moderationOpts}
-                    />
-                    <ProfileCard.Description
-                      profile={profile}
-                      numberOfLines={2}
+                  <ProfileCard.Outer>
+                    {onDismiss && (
+                      <Button
+                        label={l`Dismiss this suggestion`}
+                        onPress={e => {
+                          e.preventDefault()
+                          onDismiss(profile.actor.did)
+                          ax.metric('suggestedUser:dismiss', {
+                            logContext,
+                            position: index,
+                            suggestedDid: profile.actor.did,
+                            recId: profile.recId,
+                          })
+                        }}
+                        style={[
+                          a.absolute,
+                          a.z_10,
+                          a.p_xs,
+                          {top: -4, right: -4},
+                        ]}>
+                        {({
+                          hovered: dismissHovered,
+                          pressed: dismissPressed,
+                        }) => (
+                          <X
+                            size="xs"
+                            fill={
+                              dismissHovered || dismissPressed
+                                ? t.atoms.text.color
+                                : t.atoms.text_contrast_medium.color
+                            }
+                          />
+                        )}
+                      </Button>
+                    )}
+                    <View
                       style={[
-                        t.atoms.text_contrast_medium,
-                        a.text_center,
-                        a.text_xs,
-                      ]}
+                        a.flex_col,
+                        a.align_center,
+                        a.gap_sm,
+                        a.pb_sm,
+                        a.mb_auto,
+                      ]}>
+                      <ProfileCard.Avatar
+                        profile={profile.actor}
+                        moderationOpts={moderationOpts}
+                        disabledPreview
+                        size={88}
+                      />
+                      <View style={[a.flex_col, a.align_center, a.max_w_full]}>
+                        <ProfileCard.Name
+                          profile={profile.actor}
+                          moderationOpts={moderationOpts}
+                        />
+                        <ProfileCard.Description
+                          profile={profile.actor}
+                          numberOfLines={2}
+                          style={[
+                            t.atoms.text_contrast_medium,
+                            a.text_center,
+                            a.text_xs,
+                          ]}
+                        />
+                      </View>
+                    </View>
+
+                    <ProfileCard.FollowButton
+                      profile={profile.actor}
+                      moderationOpts={moderationOpts}
+                      logContext="FeedInterstitial"
+                      withIcon={false}
+                      style={[a.rounded_full]}
+                      onFollow={() => {
+                        ax.metric('suggestedUser:follow', {
+                          logContext,
+                          location: 'Profile',
+                          recId: profile.recId,
+                          position: index,
+                          suggestedDid: profile.actor.did,
+                          category: null,
+                        })
+                      }}
                     />
-                  </View>
-                </View>
+                  </ProfileCard.Outer>
+                </CardOuter>
+              )}
+            </ProfileCard.Link>
+          </Animated.View>
+        ))
 
-                <ProfileCard.FollowButton
-                  profile={profile}
-                  moderationOpts={moderationOpts}
-                  logContext="FeedInterstitial"
-                  withIcon={false}
-                  style={[a.rounded_sm]}
-                  onFollow={() => {
-                    logEvent('suggestedUser:follow', {
-                      logContext:
-                        viewContext === 'feed'
-                          ? 'InterstitialDiscover'
-                          : 'InterstitialProfile',
-                      location: 'Card',
-                      recId,
-                      position: index,
-                    })
-                  }}
-                />
-              </ProfileCard.Outer>
-            </CardOuter>
-          )}
-        </ProfileCard.Link>
-      ))}
-    </>
-  )
+  // Use totalProfileCount (before dismissals) for minLength check on initial render.
+  const profileCountForMinCheck = totalProfileCount ?? profiles.length
 
-  if (error || (!isLoading && profiles.length < 4)) {
-    logger.debug(`Not enough profiles to show suggested follows`)
+  useEffect(() => {
+    if (error || (!isLoading && profileCountForMinCheck < minLength)) {
+      onRequestHide?.()
+    }
+  }, [error, isLoading, onRequestHide, profileCountForMinCheck, minLength])
+
+  if (error || (!isLoading && profileCountForMinCheck < minLength)) {
+    ax.logger.debug(`Not enough profiles to show suggested follows`)
     return null
   }
 
   return (
     <View
-      style={[a.border_t, t.atoms.border_contrast_low, t.atoms.bg_contrast_25]}>
+      ref={containerRef}
+      style={[
+        !isProfileHeaderContext && a.border_t,
+        t.atoms.border_contrast_low,
+        t.atoms.bg_contrast_25,
+      ]}
+      pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
       <View
         style={[
-          a.px_lg,
+          gutters,
           a.pt_md,
           a.flex_row,
           a.align_center,
           a.justify_between,
-        ]}>
-        <Text style={[a.text_sm, a.font_bold, t.atoms.text]}>
-          {viewContext === 'profile' ? (
-            <Trans>Similar accounts</Trans>
-          ) : (
+        ]}
+        pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
+        <View style={[a.w_full, a.pl_xs, a.flex_row, a.align_center]}>
+          <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
             <Trans>Suggested for you</Trans>
-          )}
-        </Text>
-        <InlineLinkText
-          label={_(msg`See more suggested profiles on the Explore page`)}
-          to="/search">
-          <Trans>See more</Trans>
-        </InlineLinkText>
-      </View>
-
-      {gtMobile ? (
-        <View style={[a.p_lg, a.pt_md]}>
-          <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
-            {content}
-          </View>
+          </Text>
+          <Button
+            label={l`See more suggested profiles`}
+            onPress={() => {
+              followDialogControl.open()
+              ax.metric('suggestedUser:seeMore', {
+                logContext,
+                recId,
+              })
+            }}>
+            {({hovered, pressed}) => (
+              <Text
+                style={[
+                  a.text_sm,
+                  a.font_medium,
+                  {
+                    color:
+                      hovered || pressed
+                        ? t.palette.contrast_800
+                        : t.palette.contrast_500,
+                  },
+                ]}>
+                <Trans>See more</Trans>
+              </Text>
+            )}
+          </Button>
         </View>
-      ) : (
-        <BlockDrawerGesture>
-          <View>
+      </View>
+      <FollowDialogWithoutGuide control={followDialogControl} />
+      <LayoutAnimationConfig skipExiting skipEntering>
+        {gtMobile ? (
+          <View style={[a.p_lg, a.pt_md]}>
+            <View style={[a.flex_1, a.flex_row, a.flex_wrap, a.gap_md]}>
+              {content}
+            </View>
+          </View>
+        ) : (
+          <BlockDrawerGesture>
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
+              contentContainerStyle={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}
               snapToInterval={MOBILE_CARD_WIDTH + a.gap_md.gap}
               decelerationRate="fast">
-              <View style={[a.p_lg, a.pt_md, a.flex_row, a.gap_md]}>
-                {content}
+              {content}
 
-                <SeeMoreSuggestedProfilesCard />
-              </View>
+              <SeeMoreSuggestedProfilesCard
+                onPress={() => {
+                  followDialogControl.open()
+                  ax.metric('suggestedUser:seeMore', {
+                    logContext,
+                  })
+                }}
+              />
             </ScrollView>
-          </View>
-        </BlockDrawerGesture>
-      )}
+          </BlockDrawerGesture>
+        )}
+      </LayoutAnimationConfig>
     </View>
   )
 }
 
-function SeeMoreSuggestedProfilesCard() {
-  const navigation = useNavigation<NavigationProp>()
-  const t = useTheme()
-  const {_} = useLingui()
+function SeeMoreSuggestedProfilesCard({onPress}: {onPress: () => void}) {
+  const {t: l} = useLingui()
 
   return (
     <Button
-      label={_(msg`Browse more accounts on the Explore page`)}
-      style={[a.flex_col]}
-      onPress={() => {
-        navigation.navigate('SearchTab')
-      }}>
-      <CardOuter style={[a.flex_1, t.atoms.shadow_sm]}>
-        <View style={[a.flex_1, a.justify_center]}>
-          <View style={[a.flex_col, a.align_center, a.gap_md]}>
-            <Text style={[a.leading_snug, a.text_center]}>
-              <Trans>See more accounts you might like</Trans>
-            </Text>
-
-            <Arrow size="xl" />
-          </View>
-        </View>
-      </CardOuter>
+      label={l`Browse more accounts`}
+      onPress={onPress}
+      style={[
+        a.flex_col,
+        a.align_center,
+        a.justify_center,
+        a.gap_sm,
+        a.p_md,
+        a.rounded_xl,
+        {width: FINAL_CARD_WIDTH},
+      ]}>
+      <ButtonIcon icon={ArrowRight} size="lg" />
+      <ButtonText
+        style={[a.text_md, a.font_medium, a.leading_snug, a.text_center]}>
+        <Trans>See more</Trans>
+      </ButtonText>
     </Button>
   )
 }
 
+const numFeedsToDisplay = 3
 export function SuggestedFeeds() {
-  const numFeedsToDisplay = 3
   const t = useTheme()
-  const {_} = useLingui()
+  const ax = useAnalytics()
+  const {t: l} = useLingui()
   const {data, isLoading, error} = useGetPopularFeedsQuery({
     limit: numFeedsToDisplay,
   })
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
 
-  const feeds = React.useMemo(() => {
-    const items: AppBskyFeedDefs.GeneratorView[] = []
+  const feeds = useMemo(() => {
+    const items: app.bsky.feed.defs.GeneratorView[] = []
 
     if (!data) return items
 
@@ -487,20 +593,18 @@ export function SuggestedFeeds() {
           key={feed.uri}
           view={feed}
           onPress={() => {
-            logEvent('feed:interstitial:feedCard:press', {})
+            ax.metric('feed:interstitial:feedCard:press', {})
           }}>
           {({hovered, pressed}) => (
             <CardOuter
-              style={[
-                a.flex_1,
-                (hovered || pressed) && t.atoms.border_contrast_high,
-              ]}>
+              style={[(hovered || pressed) && t.atoms.border_contrast_high]}>
               <FeedCard.Outer>
                 <FeedCard.Header>
                   <FeedCard.Avatar src={feed.avatar} />
                   <FeedCard.TitleAndByline
                     title={feed.displayName}
                     creator={feed.creator}
+                    uri={feed.uri}
                   />
                 </FeedCard.Header>
                 <FeedCard.Description
@@ -523,7 +627,7 @@ export function SuggestedFeeds() {
           style={[
             a.flex_1,
             a.text_lg,
-            a.font_bold,
+            a.font_semi_bold,
             t.atoms.text_contrast_medium,
           ]}>
           <Trans>Some other feeds you might like</Trans>
@@ -544,12 +648,12 @@ export function SuggestedFeeds() {
               a.gap_md,
             ]}>
             <InlineLinkText
-              label={_(msg`Browse more suggestions`)}
+              label={l`Browse more suggestions`}
               to="/search"
               style={[t.atoms.text_contrast_medium]}>
               <Trans>Browse more suggestions</Trans>
             </InlineLinkText>
-            <Arrow size="sm" fill={t.atoms.text_contrast_medium.color} />
+            <ArrowRight size="sm" fill={t.atoms.text_contrast_medium.color} />
           </View>
         </View>
       ) : (
@@ -563,12 +667,12 @@ export function SuggestedFeeds() {
               {content}
 
               <Button
-                label={_(msg`Browse more feeds on the Explore page`)}
+                label={l`Browse more feeds on the Explore page`}
                 onPress={() => {
                   navigation.navigate('SearchTab')
                 }}
                 style={[a.flex_col]}>
-                <CardOuter style={[a.flex_1]}>
+                <CardOuter>
                   <View style={[a.flex_1, a.justify_center]}>
                     <View style={[a.flex_row, a.px_lg]}>
                       <Text style={[a.pr_xl, a.flex_1, a.leading_snug]}>
@@ -577,7 +681,7 @@ export function SuggestedFeeds() {
                         </Trans>
                       </Text>
 
-                      <Arrow size="xl" />
+                      <ArrowRight size="xl" />
                     </View>
                   </View>
                 </CardOuter>
@@ -592,8 +696,15 @@ export function SuggestedFeeds() {
 
 export function ProgressGuide() {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   return (
-    <View style={[t.atoms.border_contrast_low, a.px_lg, a.py_lg, a.pb_lg]}>
+    <View
+      style={[
+        t.atoms.border_contrast_low,
+        a.px_lg,
+        a.py_lg,
+        !gtMobile && {marginTop: 4},
+      ]}>
       <ProgressGuideList />
     </View>
   )

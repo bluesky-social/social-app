@@ -1,7 +1,23 @@
-import {type ChatBskyConvoDefs} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {EMOJI_REACTION_LIMIT} from '#/lib/constants'
-import type * as bsky from '#/types/bsky'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
+import {logger} from '#/logger'
+import {type Shadow} from '#/state/cache/profile-shadow'
+import {type ConvoState, ConvoStatus} from '#/state/messages/convo/types'
+import {platform} from '#/alf'
+import {type ReportSubject} from '#/components/moderation/ReportDialog/types'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+
+export const MESSAGE_GAP_THRESHOLD_MS = 60 * 60 * 1000
+export const CLUSTERED_MESSAGE_THRESHOLD_MS = 5 * 60 * 1000
+
+export const MESSAGE_BUBBLE_MAX_WIDTH = platform({
+  web: '80%' as const,
+  default: '85%' as const,
+})
 
 export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   switch (profile.associated?.chat?.allowIncoming) {
@@ -20,6 +36,35 @@ export function canBeMessaged(profile: bsky.profile.AnyProfileView) {
   }
 }
 
+export function canBeAddedToGroup(profile: bsky.profile.AnyProfileView) {
+  switch (profile.associated?.chat?.allowGroupInvites) {
+    case 'none':
+      return false
+    case 'all':
+      return true
+    case 'following':
+      return Boolean(profile.viewer?.followedBy)
+    case undefined:
+      return canBeMessaged(profile)
+    default:
+      return false
+  }
+}
+
+/**
+ * Resolves the effective `allowGroupInvites` value for a chat declaration.
+ * When unset, group invites follow the general DM preference
+ * (`allowIncoming`), which itself defaults to `following`. This mirrors the
+ * `undefined` fallthrough in canBeAddedToGroup, and is the single source of
+ * truth for both displaying and persisting the setting.
+ */
+export function resolveAllowGroupInvites(
+  chat: {allowIncoming?: string; allowGroupInvites?: string} | undefined,
+): 'all' | 'none' | 'following' {
+  return (chat?.allowGroupInvites ?? chat?.allowIncoming ?? 'following') as
+    'all' | 'none' | 'following'
+}
+
 export function localDateString(date: Date) {
   // can't use toISOString because it should be in local time
   const mm = date.getMonth()
@@ -30,7 +75,7 @@ export function localDateString(date: Date) {
 }
 
 export function hasAlreadyReacted(
-  message: ChatBskyConvoDefs.MessageView,
+  message: chat.bsky.convo.defs.MessageView,
   myDid: string | undefined,
   emoji: string,
 ): boolean {
@@ -42,8 +87,27 @@ export function hasAlreadyReacted(
   )
 }
 
+/**
+ * Drops reactions from accounts the viewer is blocking or blocked by, so a
+ * blocked reactor's identity is never surfaced via the reaction pills or the
+ * reactions dialog. `relatedProfiles` is shadow-synced by the convo agent, so
+ * this reflects optimistic blocks. Reactions whose sender isn't in
+ * `relatedProfiles` are kept - we can't determine their block status, and they
+ * already render anonymously ("Someone reacted").
+ */
+export function filterBlockedReactions(
+  reactions: chat.bsky.convo.defs.ReactionView[] | undefined,
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>,
+): chat.bsky.convo.defs.ReactionView[] {
+  if (!reactions) return []
+  return reactions.filter(reaction => {
+    const profile = relatedProfiles.get(reaction.sender.did)
+    return !profile || !isBlockedOrBlocking(profile)
+  })
+}
+
 export function hasReachedReactionLimit(
-  message: ChatBskyConvoDefs.MessageView,
+  message: chat.bsky.convo.defs.MessageView,
   myDid: string | undefined,
 ): boolean {
   if (!message.reactions) {
@@ -53,4 +117,170 @@ export function hasReachedReactionLimit(
     reaction => reaction.sender.did === myDid,
   )
   return myReactions.length >= EMOJI_REACTION_LIMIT
+}
+
+/**
+ * Whether the active conversation accepts emoji reactions. Reactions are
+ * unavailable when:
+ * - the convo is in the disabled state
+ * - a group convo is locked or permanently locked
+ * - 1-1: the other user is blocked or is blocking us
+ * - group: we are blocking the primary member (the owner)
+ */
+export function canReact({
+  convoState,
+  primaryMember,
+  moderationOpts,
+}: {
+  convoState: ConvoState
+  primaryMember: Shadow<bsky.profile.AnyProfileView> | undefined
+  moderationOpts: ModerationOpts | undefined
+}): boolean {
+  if (convoState.status === ConvoStatus.Disabled) {
+    return false
+  }
+
+  if (!convoState.convo) {
+    return true
+  }
+
+  if (convoState.convo.kind === 'group') {
+    const {lockStatus} = convoState.convo.details
+    if (lockStatus === 'locked' || lockStatus === 'locked-permanently') {
+      return false
+    }
+  }
+
+  if (primaryMember && moderationOpts) {
+    const moderation = moderateProfile(primaryMember, moderationOpts)
+    if (convoState.convo.kind === 'direct') {
+      // Either direction (blocking or blocked-by) hides reactions in 1-1s
+      if (moderation.blocked) return false
+    } else {
+      // In groups, only "we are blocking" the owner hides reactions
+      const isBlockingPrimary = moderation
+        .ui('profileView')
+        .alerts.some(alert => alert.type === 'blocking')
+      if (isBlockingPrimary) return false
+    }
+  }
+
+  return true
+}
+
+export type GroupConvoMember = chat.bsky.actor.defs.ProfileViewBasic & {
+  // can be missing if account deleted
+  kind?: $Typed<chat.bsky.actor.defs.GroupConvoMember>
+}
+
+export type DirectConvoMember = chat.bsky.actor.defs.ProfileViewBasic & {
+  kind: $Typed<chat.bsky.actor.defs.DirectConvoMember>
+}
+
+export type ConvoWithDetails = {view: chat.bsky.convo.defs.ConvoView} & (
+  | {
+      kind: 'group'
+      details: $Typed<chat.bsky.convo.defs.GroupConvo>
+      primaryMember?: GroupConvoMember // the owner - may have left, thus optional
+      members: Array<GroupConvoMember>
+    }
+  | {
+      kind: 'direct'
+      details: $Typed<chat.bsky.convo.defs.DirectConvo>
+      primaryMember: DirectConvoMember // the other user
+      members: Array<DirectConvoMember>
+    }
+)
+
+/**
+ * Converts a raw convoView into something easier to use (i.e. extracts chat owner)
+ * and enforces the correct type for convo members.
+ */
+export function parseConvoView(
+  convoView: chat.bsky.convo.defs.ConvoView,
+  ownDid: string | undefined,
+): ConvoWithDetails | null {
+  if (bsky.isType(chat.bsky.convo.defs.groupConvo, convoView.kind)) {
+    let owner: GroupConvoMember | undefined = undefined
+
+    for (const member of convoView.members) {
+      if (bsky.isType(chat.bsky.actor.defs.groupConvoMember, member.kind)) {
+        if (member.kind.role === 'owner') {
+          // have to do a type assertion here
+          // this works: {...member, kind: member.kind}
+          // however that's creating a new object for no good reason
+          owner = member as GroupConvoMember
+        }
+      } else {
+        logger.warn(
+          'Expected a GroupConvoMember, got an unknown kind of member',
+        )
+        return null
+      }
+    }
+
+    return {
+      view: convoView,
+      kind: 'group',
+      details: convoView.kind,
+      primaryMember: owner,
+      members: convoView.members as Array<GroupConvoMember>,
+    }
+  } else if (bsky.isType(chat.bsky.convo.defs.directConvo, convoView.kind)) {
+    const otherUser = convoView.members.find(m => m.did !== ownDid)
+
+    if (!otherUser) {
+      logger.warn('No other user found in direct convo')
+      return null
+    }
+
+    return {
+      view: convoView,
+      kind: 'direct',
+      details: convoView.kind,
+      primaryMember: otherUser as DirectConvoMember,
+      members: convoView.members as Array<DirectConvoMember>,
+    }
+  } else {
+    logger.warn('Unknown convo kind: ' + JSON.stringify(convoView.kind))
+    return null
+  }
+}
+
+/**
+ * Resolves the report subject for a conversation-level "Report conversation"
+ * action (as opposed to reporting an individual message, which always reports
+ * that message + its sender).
+ *
+ * - group: always report the whole convo, targeting the owner. Returns null if
+ *   the owner has left, in which case there is nothing to report against.
+ * - direct: report the last reportable message if there is one (i.e. the last
+ *   message exists and wasn't sent by us), otherwise report the whole convo
+ *   targeting the other user.
+ */
+export function getConvoReportSubject(
+  convo: ConvoWithDetails,
+  ownDid: string | undefined,
+): ReportSubject | null {
+  if (convo.kind === 'group') {
+    if (!convo.primaryMember) return null
+    return {convoId: convo.view.id, did: convo.primaryMember.did}
+  }
+
+  const lastMessage = convo.view.lastMessage
+  const reportableMessage =
+    bsky.isType(chat.bsky.convo.defs.messageView, lastMessage) &&
+    lastMessage.sender?.did !== ownDid
+      ? lastMessage
+      : null
+
+  if (reportableMessage) {
+    return {
+      view: 'convo',
+      convoId: convo.view.id,
+      message: reportableMessage,
+    }
+  }
+
+  return {convoId: convo.view.id, did: convo.primaryMember.did}
 }

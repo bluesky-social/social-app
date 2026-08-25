@@ -1,40 +1,33 @@
-import React, {useCallback} from 'react'
-import {ListRenderItemInfo, View} from 'react-native'
-import {
-  AppBskyActorDefs,
-  AppBskyGraphGetList,
-  AtUri,
-  ModerationOpts,
-} from '@atproto/api'
-import {InfiniteData, UseInfiniteQueryResult} from '@tanstack/react-query'
+import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
+import {type ListRenderItemInfo, View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
-import {isNative, isWeb} from '#/platform/detection'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
 import {useSession} from '#/state/session'
-import {List, ListRef} from '#/view/com/util/List'
-import {SectionRef} from '#/screens/Profile/Sections/types'
+import {List, type ListRef} from '#/view/com/util/List'
+import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
+import {IS_NATIVE, IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileViewBasic, index: number) {
+function keyExtractor(item: app.bsky.actor.defs.ProfileView, index: number) {
   return `${item.did}-${index}`
 }
 
 interface ProfilesListProps {
   listUri: string
-  listMembersQuery: UseInfiniteQueryResult<
-    InfiniteData<AppBskyGraphGetList.OutputSchema>
-  >
   moderationOpts: ModerationOpts
   headerHeight: number
   scrollElRef: ListRef
 }
 
-export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
+export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
   function ProfilesListImpl(
     {listUri, moderationOpts, headerHeight, scrollElRef},
     ref,
@@ -45,7 +38,7 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     const {currentAccount} = useSession()
     const {data, refetch, isError} = useAllListMembersQuery(listUri)
 
-    const [isPTRing, setIsPTRing] = React.useState(false)
+    const [isPTRing, setIsPTRing] = useState(false)
 
     // The server returns these sorted by descending creation date, so we want to invert
 
@@ -72,25 +65,25 @@ export const ProfilesList = React.forwardRef<SectionRef, ProfilesListProps>(
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
-        animated: isNative,
+        animated: IS_NATIVE,
         offset: -headerHeight,
       })
     }, [scrollElRef, headerHeight])
 
-    React.useImperativeHandle(ref, () => ({
+    useImperativeHandle(ref, () => ({
       scrollToTop: onScrollToTop,
     }))
 
     const renderItem = ({
       item,
       index,
-    }: ListRenderItemInfo<AppBskyActorDefs.ProfileViewBasic>) => {
+    }: ListRenderItemInfo<app.bsky.actor.defs.ProfileView>) => {
       return (
         <View
           style={[
             a.p_lg,
             t.atoms.border_contrast_low,
-            (isWeb || index !== 0) && a.border_t,
+            (IS_WEB || index !== 0) && a.border_t,
           ]}>
           <ProfileCard
             profile={item}

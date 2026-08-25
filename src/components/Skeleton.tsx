@@ -32,7 +32,7 @@ export function Text({blend, style}: TextStyleProp & SkeletonProps) {
       <View
         style={[
           a.rounded_md,
-          t.atoms.bg_contrast_25,
+          t.atoms.bg_contrast_50,
           {
             height: lineHeight * 0.7,
             opacity: blend ? 0.6 : 1,
@@ -57,7 +57,7 @@ export function Circle({
         a.justify_center,
         a.align_center,
         a.rounded_full,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         {
           width: size,
           height: size,
@@ -80,7 +80,7 @@ export function Pill({
     <View
       style={[
         a.rounded_full,
-        t.atoms.bg_contrast_25,
+        t.atoms.bg_contrast_50,
         {
           width: size * 1.618,
           height: size,

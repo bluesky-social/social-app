@@ -1,22 +1,22 @@
-import React from 'react'
 import {View} from 'react-native'
-import {AppBskyLabelerDefs} from '@atproto/api'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme, ViewStyleProp} from '#/alf'
+import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
 import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '../icons/Chevron'
 
 type LabelingServiceProps = {
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed
 }
 
 export function Outer({
@@ -45,7 +45,7 @@ export function Avatar({avatar}: {avatar?: string}) {
 
 export function Title({value}: {value: string}) {
   return (
-    <Text emoji style={[a.text_md, a.font_bold, a.leading_tight]}>
+    <Text emoji style={[a.text_md, a.font_semi_bold, a.leading_tight]}>
       {value}
     </Text>
   )
@@ -55,7 +55,7 @@ export function Description({value, handle}: {value?: string; handle: string}) {
   const {_} = useLingui()
   return value ? (
     <Text numberOfLines={2}>
-      <RichText value={value} style={[a.leading_snug]} />
+      <RichText value={value} />
     </Text>
   ) : (
     <Text emoji style={[a.leading_snug]}>
@@ -157,7 +157,7 @@ export function Link({
       to={{
         screen: 'Profile',
         params: {
-          name: labeler.creator.handle,
+          name: labeler.creator.did,
         },
       }}
       label={_(
@@ -187,7 +187,7 @@ export function Loader({
   loading?: React.ComponentType<{}>
   error?: React.ComponentType<{error: string}>
   component: React.ComponentType<{
-    labeler: AppBskyLabelerDefs.LabelerViewDetailed
+    labeler: app.bsky.labeler.defs.LabelerViewDetailed
   }>
 }) {
   const {isLoading, data, error} = useLabelerInfoQuery({did})

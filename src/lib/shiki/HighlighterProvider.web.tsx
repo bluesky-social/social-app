@@ -1,8 +1,7 @@
-import React from 'react'
+import {type ReactNode, useMemo, useState} from 'react'
 import {type HighlighterCore} from '@shikijs/core'
 import {createHighlighterCore} from '@shikijs/core'
-import {createOnigurumaEngine, loadWasm} from '@shikijs/engine-oniguruma'
-import wasm from '@shikijs/engine-oniguruma/wasm-inlined'
+import {createOnigurumaEngine} from '@shikijs/engine-oniguruma'
 
 import {
   HighlighterContext,
@@ -14,20 +13,20 @@ import {shikiThemes} from '#/lib/shiki/themes'
 let highlighterInstance: HighlighterCore | null = null
 let initializationPromise: Promise<void> | null = null
 
-export function HighlighterProvider({children}: {children: React.ReactNode}) {
-  const [isReady, setIsReady] = React.useState(false)
+export default function HighlighterProvider({children}: {children: ReactNode}) {
+  const [isReady, setIsReady] = useState(false)
 
-  const value = React.useMemo<HighlighterContextType>(
+  const value = useMemo<HighlighterContextType>(
     () => ({
       initialize: async () => {
         if (!initializationPromise) {
           initializationPromise = (async () => {
-            await loadWasm(wasm)
-            const engine = await createOnigurumaEngine()
             highlighterInstance = await createHighlighterCore({
               langs: shikiLangs,
               themes: shikiThemes,
-              engine,
+              engine: createOnigurumaEngine(
+                import('@shikijs/engine-oniguruma/wasm-inlined'),
+              ),
             })
             setIsReady(true)
           })()
@@ -35,11 +34,10 @@ export function HighlighterProvider({children}: {children: React.ReactNode}) {
         await initializationPromise
       },
       tokenize: (code, options) => {
-        if (!highlighterInstance) {
+        if (!highlighterInstance)
           throw new Error(
             'Highlighter not initialized. Call initialize() first.',
           )
-        }
         return highlighterInstance.codeToTokensBase(code, options)
       },
       dispose: () => {
@@ -59,5 +57,3 @@ export function HighlighterProvider({children}: {children: React.ReactNode}) {
     </HighlighterContext.Provider>
   )
 }
-
-export default HighlighterProvider

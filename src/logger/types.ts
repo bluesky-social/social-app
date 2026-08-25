@@ -14,6 +14,9 @@ export enum LogContext {
   PostSource = 'post-source',
   AgeAssurance = 'age-assurance',
   PolicyUpdate = 'policy-update',
+  Geolocation = 'geolocation',
+  Drafts = 'drafts',
+  Growthbook = 'growthbook',
 
   /**
    * METRIC IS FOR INTERNAL USE ONLY, don't create any other loggers using this
@@ -49,6 +52,11 @@ export type Metadata = {
   __context__?: undefined
 
   /**
+   * Reserved for inherited metadata gathered in ambient context
+   */
+  __metadata__?: Record<string, unknown>
+
+  /**
    * Applied as Sentry breadcrumb types. Defaults to `default`.
    *
    * @see https://develop.sentry.dev/sdk/event-payloads/breadcrumbs/#breadcrumb-types
@@ -73,6 +81,12 @@ export type Metadata = {
   tags?: {
     [key: string]: number | string | boolean | null | undefined
   }
+
+  /**
+   * Passed through to Sentry as a custom fingerprint. Include
+   * `{{ default }}` to preserve Sentry's default grouping and add dimensions.
+   */
+  fingerprint?: string[]
 
   /**
    * Any additional data, passed through to Sentry as `extra` param on

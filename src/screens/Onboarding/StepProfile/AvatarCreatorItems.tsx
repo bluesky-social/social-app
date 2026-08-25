@@ -1,14 +1,14 @@
-import React from 'react'
+import {useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
+import {Trans} from '@lingui/react/macro'
 
-import {Avatar} from '#/screens/Onboarding/StepProfile/index'
+import {type Avatar} from '#/screens/Onboarding/StepProfile/index'
 import {
-  AvatarColor,
+  type AvatarColor,
   avatarColors,
   emojiItems,
-  EmojiName,
+  type EmojiName,
   emojiNames,
 } from '#/screens/Onboarding/StepProfile/types'
 import {atoms as a, useTheme} from '#/alf'
@@ -34,11 +34,11 @@ export function AvatarCreatorItems({
   avatar: Avatar
   setAvatar: React.Dispatch<React.SetStateAction<Avatar>>
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const isEmojis = type === 'emojis'
 
-  const onSelectEmoji = React.useCallback(
+  const onSelectEmoji = useCallback(
     (emoji: EmojiName) => {
       setAvatar(prev => ({
         ...prev,
@@ -48,7 +48,7 @@ export function AvatarCreatorItems({
     [setAvatar],
   )
 
-  const onSelectColor = React.useCallback(
+  const onSelectColor = useCallback(
     (color: AvatarColor) => {
       setAvatar(prev => ({
         ...prev,
@@ -67,7 +67,6 @@ export function AvatarCreatorItems({
           <Trans>Select a color</Trans>
         )}
       </Text>
-
       <View
         style={[
           a.flex_row,
@@ -80,7 +79,7 @@ export function AvatarCreatorItems({
           ? emojiNames.map(emojiName => (
               <Button
                 key={emojiName}
-                label={_(msg`Select the ${emojiName} emoji as your avatar`)}
+                label={l`Select the ${emojiName} emoji as your avatar`}
                 size="small"
                 shape="round"
                 variant="solid"
@@ -104,7 +103,7 @@ export function AvatarCreatorItems({
           : avatarColors.map(color => (
               <Button
                 key={color}
-                label={_(msg`Choose this color as your avatar`)}
+                label={l`Choose this color as your avatar`}
                 size="small"
                 shape="round"
                 variant="solid"

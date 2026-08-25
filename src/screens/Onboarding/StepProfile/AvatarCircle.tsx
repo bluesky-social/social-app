@@ -1,8 +1,7 @@
-import React from 'react'
+import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 
 import {AvatarCreatorCircle} from '#/screens/Onboarding/StepProfile/AvatarCreatorCircle'
 import {useAvatar} from '#/screens/Onboarding/StepProfile/index'
@@ -18,11 +17,11 @@ export function AvatarCircle({
   openLibrary: () => unknown
   openCreator: () => unknown
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {avatar} = useAvatar()
 
-  const styles = React.useMemo(
+  const styles = useMemo(
     () => ({
       imageContainer: [
         a.rounded_full,
@@ -63,7 +62,7 @@ export function AvatarCircle({
       )}
       <View style={[a.absolute, {bottom: 2, right: 2}]}>
         <Button
-          label={_(msg`Select an avatar`)}
+          label={l`Select an avatar`}
           size="large"
           shape="round"
           variant="solid"

@@ -1,14 +1,17 @@
-import {type AppBskyActorGetProfile} from '@atproto/api'
+import {toDatetimeString} from '@atproto/syntax'
 import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
-import {logger} from '#/logger'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function useVerificationCreateMutation() {
-  const agent = useAgent()
+  const ax = useAnalytics()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
   const updateProfileVerificationCache = useUpdateProfileVerificationCache()
 
@@ -18,20 +21,17 @@ export function useVerificationCreateMutation() {
         throw new Error('User not logged in')
       }
 
-      const {uri} = await agent.app.bsky.graph.verification.create(
-        {repo: currentAccount.did},
-        {
-          subject: profile.did,
-          createdAt: new Date().toISOString(),
-          handle: profile.handle,
-          displayName: profile.displayName || '',
-        },
-      )
+      const {uri} = await pdsClient.create(app.bsky.graph.verification, {
+        subject: profile.did,
+        createdAt: toDatetimeString(new Date()),
+        handle: profile.handle,
+        displayName: profile.displayName || '',
+      })
 
       await until(
         5,
         1e3,
-        ({data: profile}: AppBskyActorGetProfile.Response) => {
+        (profile: app.bsky.actor.getProfile.$OutputBody) => {
           if (
             profile.verification &&
             profile.verification.verifications.find(v => v.uri === uri)
@@ -41,12 +41,14 @@ export function useVerificationCreateMutation() {
           return false
         },
         () => {
-          return agent.getProfile({actor: profile.did ?? ''})
+          return appviewClient.call(app.bsky.actor.getProfile, {
+            actor: profile.did ?? '',
+          })
         },
       )
     },
     async onSuccess(_, {profile}) {
-      logger.metric('verification:create', {}, {statsig: true})
+      ax.metric('verification:create', {})
       await updateProfileVerificationCache({profile})
     },
   })

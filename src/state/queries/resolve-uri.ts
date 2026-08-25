@@ -1,32 +1,21 @@
-import {AtUri} from '@atproto/api'
-import {QueryClient, useQuery, UseQueryResult} from '@tanstack/react-query'
+import {type Client} from '@atproto/lex'
+import {AtUri, type HandleString} from '@atproto/syntax'
+import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {com} from '#/lexicons'
 import {useUnstableProfileViewCache} from './profile'
 
 const RQKEY_ROOT = 'resolved-did'
 export const RQKEY = (didOrHandle: string) => [RQKEY_ROOT, didOrHandle]
 
-type UriUseQueryResult = UseQueryResult<{did: string; uri: string}, Error>
-export function useResolveUriQuery(uri: string | undefined): UriUseQueryResult {
-  const urip = new AtUri(uri || '')
-  const res = useResolveDidQuery(urip.host)
-  if (res.data) {
-    urip.host = res.data
-    return {
-      ...res,
-      data: {did: urip.host, uri: urip.toString()},
-    } as UriUseQueryResult
-  }
-  return res as UriUseQueryResult
-}
-
-export function useResolveDidQuery(didOrHandle: string | undefined) {
-  const agent = useAgent()
-  const {getUnstableProfile} = useUnstableProfileViewCache()
-
-  return useQuery<string, Error>({
+const resolvedDidQueryOptions = (
+  client: Client,
+  getUnstableProfile: (did: string) => {did: string} | undefined,
+  didOrHandle: string | undefined,
+) =>
+  queryOptions({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY(didOrHandle ?? ''),
     queryFn: async () => {
@@ -34,8 +23,15 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
       // Just return the did if it's already one
       if (didOrHandle.startsWith('did:')) return didOrHandle
 
-      const res = await agent.resolveHandle({handle: didOrHandle})
-      return res.data.did
+      /*
+       * Resolution stays on the appview client: the old agent call was proxied
+       * to the appview, and the PDS implementation is not equivalent for
+       * handles hosted elsewhere.
+       */
+      const data = await client.call(com.atproto.identity.resolveHandle, {
+        handle: didOrHandle as HandleString,
+      })
+      return data.did
     },
     initialData: () => {
       // Return undefined if no did or handle
@@ -45,6 +41,30 @@ export function useResolveDidQuery(didOrHandle: string | undefined) {
     },
     enabled: !!didOrHandle,
   })
+
+export function useResolveUriQuery(uri: string | undefined) {
+  const urip = new AtUri(uri || '')
+  const host = urip.host
+
+  const client = useAppviewClient()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
+
+  return useQuery({
+    ...resolvedDidQueryOptions(client, getUnstableProfile, host),
+    select: did => ({
+      did,
+      uri: AtUri.make(did, urip.collection, urip.rkey).toString(),
+    }),
+  })
+}
+
+export function useResolveDidQuery(didOrHandle: string | undefined) {
+  const client = useAppviewClient()
+  const {getUnstableProfile} = useUnstableProfileViewCache()
+
+  return useQuery(
+    resolvedDidQueryOptions(client, getUnstableProfile, didOrHandle),
+  )
 }
 
 export function precacheResolvedUri(

@@ -1,5 +1,9 @@
 import {type Insets, Platform} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
+import {type Service} from '@atproto/lex'
+import {api} from '@bsky/sdk'
+
+import {BLUESKY_PROXY_DID, CHAT_PROXY_DID, IS_DEV} from '#/env'
+import {type app} from '#/lexicons'
 
 export const LOCAL_DEV_SERVICE =
   Platform.OS === 'android' ? 'http://10.0.2.2:2583' : 'http://localhost:2583'
@@ -10,10 +14,12 @@ export const PUBLIC_BSKY_SERVICE = 'https://public.api.bsky.app'
 export const DEFAULT_SERVICE = BSKY_SERVICE
 const HELP_DESK_LANG = 'en-us'
 export const HELP_DESK_URL = `https://blueskyweb.zendesk.com/hc/${HELP_DESK_LANG}`
+export const CHAT_SERVICE = 'https://api.bsky.chat'
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
 export const STARTER_PACK_MAX_SIZE = 150
+export const CARD_ASPECT_RATIO = 1200 / 630
 
 // HACK
 // Yes, this is exactly what it looks like. It's a hard-coded constant
@@ -58,7 +64,11 @@ export const MAX_DESCRIPTION = 256
 
 export const MAX_GRAPHEME_LENGTH = 300
 
+export const MAX_DRAFT_GRAPHEME_LENGTH = 1000
+
 export const MAX_DM_GRAPHEME_LENGTH = 1000
+
+export const MAX_GROUP_NAME_GRAPHEME_LENGTH = 50
 
 // Recommended is 100 per: https://www.w3.org/WAI/GL/WCAG20/tests/test3.html
 // but increasing limit per user feedback
@@ -90,12 +100,14 @@ export const STAGING_FEEDS = [
   `feedgen|${STAGING_DEFAULT_FEED('thevids')}`,
 ]
 
-export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
+export const IMAGE_SIZE_CONFIG_POSTS = {
+  maxDimension: 4000,
+  maxSize: 2000000,
+}
 
-export const POST_IMG_MAX = {
-  width: 2000,
-  height: 2000,
-  size: 1000000,
+export const IMAGE_SIZE_CONFIG_2K_1MB = {
+  maxDimension: 2000,
+  maxSize: 1000000,
 }
 
 export const STAGING_LINK_META_PROXY =
@@ -103,12 +115,12 @@ export const STAGING_LINK_META_PROXY =
 
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
-export function LINK_META_PROXY(serviceUrl: string) {
-  if (IS_PROD_SERVICE(serviceUrl)) {
-    return PROD_LINK_META_PROXY
+export function LINK_META_PROXY(_serviceUrl: string) {
+  if (IS_DEV) {
+    return STAGING_LINK_META_PROXY
   }
 
-  return STAGING_LINK_META_PROXY
+  return PROD_LINK_META_PROXY
 }
 
 export const STATUS_PAGE_URL = 'https://status.bsky.app/'
@@ -123,7 +135,6 @@ export const createHitslop = (size: number): Insets => ({
 export const HITSLOP_10 = createHitslop(10)
 export const HITSLOP_20 = createHitslop(20)
 export const HITSLOP_30 = createHitslop(30)
-export const POST_CTRL_HITSLOP = {top: 5, bottom: 10, left: 10, right: 10}
 export const LANG_DROPDOWN_HITSLOP = {top: 10, bottom: 10, left: 4, right: 4}
 export const BACK_HITSLOP = HITSLOP_30
 export const MAX_POST_LINES = 25
@@ -135,6 +146,9 @@ export const BSKY_FEED_OWNER_DIDS = [
   'did:plc:vpkhqolt662uhesyj6nxm7ys',
   'did:plc:q6gjnaw2blty4crticxkmujt',
 ]
+
+export const TRENDING_DID = 'did:plc:qrz3lhbyuxbeilrc6nekdqme'
+export const TRENDING_HANDLE = 'trending.bsky.app'
 
 export const DISCOVER_FEED_URI =
   'at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.feed.generator/whats-hot'
@@ -160,7 +174,7 @@ export const VIDEO_SAVED_FEED = {
 }
 
 export const RECOMMENDED_SAVED_FEEDS: Pick<
-  AppBskyActorDefs.SavedFeed,
+  app.bsky.actor.defs.SavedFeed,
   'type' | 'value' | 'pinned'
 >[] = [DISCOVER_SAVED_FEED, TIMELINE_SAVED_FEED]
 
@@ -170,10 +184,10 @@ export const KNOWN_SHUTDOWN_FEEDS = [
 
 export const GIF_SERVICE = 'https://gifs.bsky.app'
 
-export const GIF_SEARCH = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/search?${params}`
-export const GIF_FEATURED = (params: string) =>
-  `${GIF_SERVICE}/tenor/v2/featured?${params}`
+export const GIF_KLIPY_SEARCH = (params: string) =>
+  `${GIF_SERVICE}/klipy/v2/search?${params}`
+export const GIF_KLIPY_FEATURED = (params: string) =>
+  `${GIF_SERVICE}/klipy/v2/featured?${params}`
 
 export const MAX_LABELERS = 20
 
@@ -181,7 +195,13 @@ export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
 export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
-export const VIDEO_MAX_SIZE = 1000 * 1000 * 100 // 100mb
+export const VIDEO_10_MINUTE_MAX_DURATION_MS = 10 * 60 * 1000
+/**
+ * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
+ * ISO megabytes.
+ */
+export const VIDEO_MAX_SIZE_MB = 300
+export const VIDEO_MAX_SIZE = VIDEO_MAX_SIZE_MB * 1000 * 1000 // 300mb
 
 export const SUPPORTED_MIME_TYPES = [
   'video/mp4',
@@ -198,7 +218,14 @@ export const EMOJI_REACTION_LIMIT = 5
 export const urls = {
   website: {
     blog: {
+      findFriendsAnnouncement:
+        'https://bsky.social/about/blog/12-16-2025-find-friends',
       initialVerificationAnnouncement: `https://bsky.social/about/blog/04-21-2025-verification`,
+      searchTipsAndTricks: 'https://bsky.social/about/blog/05-31-2024-search',
+    },
+    support: {
+      findFriendsPrivacyPolicy:
+        'https://bsky.social/about/support/find-friends-privacy-policy',
     },
   },
 }
@@ -208,6 +235,51 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always the same
+
+// temp hack for e2e - esb
+export const BLUESKY_PROXY_HEADER = {
+  value: `${BLUESKY_PROXY_DID}#bsky_appview`,
+  get() {
+    return this.value as Service
+  },
+  set(value: string) {
+    this.value = value
+  },
+}
+
+/**
+ * The chat service's proxy target, in the `did#service_id` form a lex client's
+ * `service` option takes. A client constructed with it emits `atproto-proxy:
+ * <this value>` on every request, which is what routes `chat.bsky.*` calls to
+ * the chat service.
+ *
+ * The DID comes from the env-configurable `CHAT_PROXY_DID` (via
+ * `EXPO_PUBLIC_CHAT_PROXY_DID`) rather than a hard-coded constant, so the
+ * target can be retargeted per environment.
+ */
+export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
+
+/**
+ * Bluesky's own moderation service, in the `did#service_id` form a lex client's
+ * per-call `service` option takes. Passing it emits `atproto-proxy: <this
+ * value>` on that one request, routing a `com.atproto.moderation.*` call to
+ * Bluesky's labeler.
+ *
+ * Reports and appeals aimed at a DIFFERENT labeler build their own value from
+ * that labeler's creator did instead, so this is a per-call option rather than a
+ * client-level one like {@link CHAT_PROXY_SERVICE}.
+ */
+export const MOD_PROXY_SERVICE: Service = `${api.moderation.did}#atproto_labeler`
+
+/**
+ * The notification service's proxy target, in the `did#service_id` form a lex
+ * client's per-call `service` option takes. Passing it emits `atproto-proxy:
+ * <this value>` on that one request, which is what routes push registration to
+ * the notification service (replaces the old
+ * `BLUESKY_NOTIF_SERVICE_HEADERS`).
+ */
+export const NOTIF_SERVICE: Service = `${BLUESKY_PROXY_DID}#bsky_notif`
 
 export const webLinks = {
   tos: `https://bsky.social/about/support/tos`,

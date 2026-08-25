@@ -1,5 +1,6 @@
 import {useCallback, useEffect, useRef} from 'react'
 import {type ScrollView, StyleSheet, View} from 'react-native'
+import {type SharedValue} from 'react-native-reanimated'
 
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Text} from '#/components/Typography'
@@ -15,6 +16,14 @@ export interface TabBarProps {
 
   onSelect?: (index: number) => void
   onPressSelected?: (index: number) => void
+
+  /**
+   * The drag-following indicator and transparent background only exist in
+   * the native tab bar - accepted here so shared callers typecheck.
+   */
+  dragProgress?: SharedValue<number> // Ignored on web.
+  dragState?: SharedValue<'idle' | 'dragging' | 'settling'> // Ignored on web.
+  transparent?: boolean // Ignored on web.
 }
 
 // How much of the previous/next item we're showing
@@ -29,7 +38,7 @@ export function TabBar({
   onPressSelected,
 }: TabBarProps) {
   const t = useTheme()
-  const scrollElRef = useRef<ScrollView>(null)
+  const scrollElRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const itemRefs = useRef<Array<Element>>([])
   const {gtMobile} = useBreakpoints()
   const styles = gtMobile ? desktopStyles : mobileStyles
@@ -38,7 +47,8 @@ export function TabBar({
     // On the web, the primary interaction is tapping.
     // Scrolling under tap feels disorienting so only adjust the scroll offset
     // when tapping on an item out of view--and we adjust by almost an entire page.
-    const parent = scrollElRef?.current?.getScrollableNode?.()
+    const parent = scrollElRef.current?.getScrollableNode?.() as unknown as
+      HTMLElement | undefined
     if (!parent) {
       return
     }
@@ -106,7 +116,9 @@ export function TabBar({
             <PressableWithHover
               testID={`${testID}-selector-${i}`}
               key={`${item}-${i}`}
-              ref={node => (itemRefs.current[i] = node as any)}
+              ref={node => {
+                itemRefs.current[i] = node as any
+              }}
               style={styles.item}
               hoverStyle={t.atoms.bg_contrast_25}
               onPress={() => onPressItem(i)}
@@ -119,7 +131,7 @@ export function TabBar({
                     styles.itemText,
                     selected ? t.atoms.text : t.atoms.text_contrast_medium,
                     a.text_md,
-                    a.font_bold,
+                    a.font_semi_bold,
                     {lineHeight: 20},
                   ]}>
                   {item}

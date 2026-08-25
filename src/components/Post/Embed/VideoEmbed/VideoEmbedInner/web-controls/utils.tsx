@@ -1,10 +1,10 @@
 import {type RefObject, useCallback, useEffect, useRef, useState} from 'react'
 
-import {isSafari} from '#/lib/browser'
 import {logger} from '#/logger'
 import {useVideoVolumeState} from '#/components/Post/Embed/VideoEmbed/VideoVolumeContext'
+import {IS_WEB_SAFARI} from '#/env'
 
-export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
+export function useVideoElement(ref: RefObject<HTMLVideoElement | null>) {
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
   const [currentTime, setCurrentTime] = useState(0)
@@ -41,7 +41,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
       setCurrentTime(round(ref.current.currentTime) || 0)
       // HACK: Safari randomly fires `stalled` events when changing between segments
       // let's just clear the buffering state if the video is still progressing -sfn
-      if (isSafari) {
+      if (IS_WEB_SAFARI) {
         if (bufferingTimeout) clearTimeout(bufferingTimeout)
         setBuffering(false)
       }
@@ -189,7 +189,7 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
               `The play() request was interrupted by a call to pause()`,
             )
           ) {
-            logger.error('Error playing video:', {message: err})
+            logger.warn('Error playing video:', {message: err})
           }
         })
       }
@@ -237,17 +237,4 @@ export function useVideoElement(ref: RefObject<HTMLVideoElement>) {
     error,
     canPlay,
   }
-}
-
-export function formatTime(time: number) {
-  if (isNaN(time)) {
-    return '--'
-  }
-
-  time = Math.round(time)
-
-  const minutes = Math.floor(time / 60)
-  const seconds = String(time % 60).padStart(2, '0')
-
-  return `${minutes}:${seconds}`
 }

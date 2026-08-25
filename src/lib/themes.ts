@@ -4,7 +4,7 @@ import {tokens} from '#/alf'
 import {darkPalette, dimPalette, lightPalette} from '#/alf/themes'
 import {fontWeight} from '#/alf/tokens'
 import {colors} from './styles'
-import type {Theme} from './ThemeContext'
+import {type Theme} from './ThemeContext'
 
 export const defaultTheme: Theme = {
   colorScheme: 'light',
@@ -17,19 +17,6 @@ export const defaultTheme: Theme = {
       textInverted: lightPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
-      borderDark: lightPalette.contrast_200,
-      icon: lightPalette.contrast_500,
-
-      // non-standard
-      textVeryLight: lightPalette.contrast_400,
-      replyLine: lightPalette.contrast_100,
-      replyLineDot: lightPalette.contrast_200,
-      unreadNotifBg: lightPalette.primary_25,
-      unreadNotifBorder: lightPalette.primary_100,
-      postCtrl: lightPalette.contrast_500,
-      brandText: lightPalette.primary_500,
-      emptyStateIcon: lightPalette.contrast_300,
-      borderLinkHover: lightPalette.contrast_300,
     },
     primary: {
       background: colors.blue3,
@@ -39,8 +26,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.blue3,
       link: colors.blue0,
       border: colors.blue4,
-      borderDark: colors.blue5,
-      icon: colors.blue4,
     },
     secondary: {
       background: colors.green3,
@@ -50,8 +35,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.green4,
       link: colors.green1,
       border: colors.green4,
-      borderDark: colors.green5,
-      icon: colors.green4,
     },
     inverted: {
       background: darkPalette.black,
@@ -61,8 +44,6 @@ export const defaultTheme: Theme = {
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,
-      borderDark: darkPalette.contrast_200,
-      icon: darkPalette.contrast_500,
     },
     error: {
       background: colors.red3,
@@ -72,8 +53,6 @@ export const defaultTheme: Theme = {
       textInverted: colors.red3,
       link: colors.red1,
       border: colors.red4,
-      borderDark: colors.red5,
-      icon: colors.red4,
     },
   },
   shapes: {
@@ -101,17 +80,17 @@ export const defaultTheme: Theme = {
     '2xl-medium': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     '2xl-bold': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     '2xl-heavy': {
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.heavy,
+      fontWeight: fontWeight.bold,
     },
     'xl-thin': {
       fontSize: 17,
@@ -126,17 +105,17 @@ export const defaultTheme: Theme = {
     'xl-medium': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'xl-bold': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'xl-heavy': {
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.heavy,
+      fontWeight: fontWeight.bold,
     },
     'lg-thin': {
       fontSize: 16,
@@ -151,17 +130,17 @@ export const defaultTheme: Theme = {
     'lg-medium': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'lg-bold': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'lg-heavy': {
       fontSize: 16,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.heavy,
+      fontWeight: fontWeight.bold,
     },
     'md-thin': {
       fontSize: 15,
@@ -176,17 +155,17 @@ export const defaultTheme: Theme = {
     'md-medium': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'md-bold': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'md-heavy': {
       fontSize: 15,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.heavy,
+      fontWeight: fontWeight.bold,
     },
     'sm-thin': {
       fontSize: 14,
@@ -201,17 +180,17 @@ export const defaultTheme: Theme = {
     'sm-medium': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'sm-bold': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'sm-heavy': {
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.heavy,
+      fontWeight: fontWeight.bold,
     },
     'xs-thin': {
       fontSize: 13,
@@ -226,40 +205,40 @@ export const defaultTheme: Theme = {
     'xs-medium': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'xs-bold': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'xs-heavy': {
       fontSize: 13,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.heavy,
+      fontWeight: fontWeight.bold,
     },
 
     'title-2xl': {
       fontSize: 34,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'title-xl': {
       fontSize: 28,
       letterSpacing: tokens.TRACKING,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     'title-lg': {
       fontSize: 22,
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
     },
     title: {
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
       fontSize: 20,
       letterSpacing: tokens.TRACKING,
     },
     'title-sm': {
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
       fontSize: 17,
       letterSpacing: tokens.TRACKING,
     },
@@ -274,12 +253,12 @@ export const defaultTheme: Theme = {
       fontWeight: fontWeight.normal,
     },
     'button-lg': {
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
       fontSize: 18,
       letterSpacing: tokens.TRACKING,
     },
     button: {
-      fontWeight: fontWeight.bold,
+      fontWeight: fontWeight.semiBold,
       fontSize: 14,
       letterSpacing: tokens.TRACKING,
     },
@@ -296,26 +275,13 @@ export const darkTheme: Theme = {
   palette: {
     ...defaultTheme.palette,
     default: {
-      background: darkPalette.black,
+      background: darkPalette.contrast_0,
       backgroundLight: darkPalette.contrast_25,
       text: darkPalette.white,
       textLight: darkPalette.contrast_600,
       textInverted: darkPalette.black,
       link: darkPalette.primary_500,
       border: darkPalette.contrast_100,
-      borderDark: darkPalette.contrast_200,
-      icon: darkPalette.contrast_500,
-
-      // non-standard
-      textVeryLight: darkPalette.contrast_400,
-      replyLine: darkPalette.contrast_200,
-      replyLineDot: darkPalette.contrast_200,
-      unreadNotifBg: darkPalette.primary_25,
-      unreadNotifBorder: darkPalette.primary_100,
-      postCtrl: darkPalette.contrast_500,
-      brandText: darkPalette.primary_500,
-      emptyStateIcon: darkPalette.contrast_300,
-      borderLinkHover: darkPalette.contrast_300,
     },
     primary: {
       ...defaultTheme.palette.primary,
@@ -333,8 +299,6 @@ export const darkTheme: Theme = {
       textInverted: darkPalette.white,
       link: lightPalette.primary_500,
       border: lightPalette.contrast_100,
-      borderDark: lightPalette.contrast_200,
-      icon: lightPalette.contrast_500,
     },
   },
 }
@@ -345,26 +309,13 @@ export const dimTheme: Theme = {
     ...darkTheme.palette,
     default: {
       ...darkTheme.palette.default,
-      background: dimPalette.black,
+      background: dimPalette.contrast_0,
       backgroundLight: dimPalette.contrast_25,
       text: dimPalette.white,
       textLight: dimPalette.contrast_700,
       textInverted: dimPalette.black,
       link: dimPalette.primary_500,
       border: dimPalette.contrast_100,
-      borderDark: dimPalette.contrast_200,
-      icon: dimPalette.contrast_500,
-
-      // non-standard
-      textVeryLight: dimPalette.contrast_400,
-      replyLine: dimPalette.contrast_200,
-      replyLineDot: dimPalette.contrast_200,
-      unreadNotifBg: dimPalette.primary_25,
-      unreadNotifBorder: dimPalette.primary_100,
-      postCtrl: dimPalette.contrast_500,
-      brandText: dimPalette.primary_500,
-      emptyStateIcon: dimPalette.contrast_300,
-      borderLinkHover: dimPalette.contrast_300,
     },
   },
 }

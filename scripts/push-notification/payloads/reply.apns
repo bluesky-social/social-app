@@ -1,0 +1,14 @@
+{
+  "aps": {
+    "alert": {
+      "title": "alice.test",
+      "body": "replied to your post"
+    },
+    "mutable-content": 1,
+    "sound": "default"
+  },
+  "reason": "reply",
+  "uri": "at://did:plc:senderdummy00000000000000/app.bsky.feed.post/3kfakereply0001",
+  "subject": "at://__RECIPIENT_DID__/app.bsky.feed.post/3kfakepost0001",
+  "recipientDid": "__RECIPIENT_DID__"
+}

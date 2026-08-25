@@ -1,0 +1,31 @@
+diff --git a/ios/RNDatePicker.h b/ios/RNDatePicker.h
+index 480746eb7acfbe86f67547d9e1de7a5be4d5faf2..13d30cb547195993dfcb4005cc0d248de9ac391a 100644
+--- a/ios/RNDatePicker.h
++++ b/ios/RNDatePicker.h
+@@ -15,6 +15,7 @@ NS_ASSUME_NONNULL_END
+ #else
+ #import "DatePicker.h"
+ #import <UIKit/UIKit.h>
++#include <string>
+ 
+ @interface RNDatePicker : DatePicker
+ 
+@@ -22,4 +23,3 @@ NS_ASSUME_NONNULL_END
+ @end
+ 
+ #endif
+-
+diff --git a/package.json b/package.json
+index 469386dc2e81ded8994818dd4340409da1396488..36460e4e303ae56534c4d389471fc827433c7028 100644
+--- a/package.json
++++ b/package.json
+@@ -70,9 +70,6 @@
+     "ios": {
+       "componentProvider": {
+         "RNDatePicker": "RNDatePicker"
+-      },
+-      "modulesProvider": {
+-        "RNDatePicker": "RNDatePickerManager"
+       }
+     }
+   }

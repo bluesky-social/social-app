@@ -1,4 +1,4 @@
-import {toast} from '#/components/Toast'
+import * as toast from '#/components/Toast'
 import {type ToastType} from '#/components/Toast/types'
 
 /**
@@ -46,9 +46,5 @@ export function show(
   type: ToastType | LegacyToastType = 'default',
 ): void {
   const convertedType = convertLegacyToastType(type)
-  toast.show({
-    type: convertedType,
-    content: message,
-    a11yLabel: message,
-  })
+  toast.show(message, {type: convertedType})
 }

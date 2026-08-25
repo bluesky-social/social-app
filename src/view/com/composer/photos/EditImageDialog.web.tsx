@@ -2,8 +2,9 @@ import 'react-image-crop/dist/ReactCrop.css'
 
 import {useCallback, useImperativeHandle, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import ReactCrop, {type PercentCrop} from 'react-image-crop'
 
 import {
@@ -15,11 +16,11 @@ import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
-import {type EditImageDialogProps} from './EditImageDialog'
+import {type EditImageDialogProps} from './EditImageDialog.shared'
 
 export function EditImageDialog(props: EditImageDialogProps) {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer control={props.control} webOptions={{alignCenter: true}}>
       <Dialog.Handle />
       <DialogInner {...props} />
     </Dialog.Outer>
@@ -112,11 +113,10 @@ function EditImageInner({
   aspectRatio,
 }: Required<Pick<EditImageDialogProps, 'image'>> &
   Omit<EditImageDialogProps, 'control' | 'image'> & {
-    saveRef: React.RefObject<{save: () => Promise<void>}>
+    saveRef: React.RefObject<{save: () => Promise<void>} | null>
   }) {
   const t = useTheme()
   const [isDragging, setIsDragging] = useState(false)
-  const {_} = useLingui()
   const control = Dialog.useDialogContext()
 
   const source = image.source

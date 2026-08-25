@@ -1,6 +1,6 @@
 import {expect, test} from '@jest/globals'
 
-import {add, ConsoleTransportEntry, getEntries} from '#/logger/logDump'
+import {add, type ConsoleTransportEntry, getEntries} from '#/logger/logDump'
 import {LogContext, LogLevel} from '#/logger/types'
 
 test('works', () => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import {createContext, useContext} from 'react'
 import {type ThemedToken} from '@shikijs/core'
 
 export interface HighlighterContextType {
@@ -12,12 +12,11 @@ export interface HighlighterContextType {
 }
 
 export const HighlighterContext =
-  React.createContext<HighlighterContextType | null>(null)
+  createContext<HighlighterContextType | null>(null)
 
 export function useHighlighter(): HighlighterContextType {
-  const ctx = React.useContext(HighlighterContext)
-  if (!ctx) {
+  const ctx = useContext(HighlighterContext)
+  if (!ctx)
     throw new Error('HighlighterProvider missing in component tree')
-  }
   return ctx
 }

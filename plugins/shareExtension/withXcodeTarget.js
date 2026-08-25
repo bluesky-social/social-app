@@ -1,7 +1,6 @@
-const {withXcodeProject} = require('@expo/config-plugins')
+const {withXcodeProject} = require('expo/config-plugins')
 
 const withXcodeTarget = (config, {extensionName, controllerName}) => {
-  // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
     const pbxProject = config.modResults
 

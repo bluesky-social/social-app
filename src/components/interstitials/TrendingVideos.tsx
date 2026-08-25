@@ -1,21 +1,18 @@
-import React, {useEffect} from 'react'
+import {useCallback, useEffect, useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
-import {AppBskyEmbedVideo, AtUri} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {AtUri} from '@atproto/syntax'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {VIDEO_FEED_URI} from '#/lib/constants'
 import {makeCustomFeedLink} from '#/lib/routes/links'
-import {logEvent} from '#/lib/statsig/statsig'
 import {useTrendingSettingsApi} from '#/state/preferences/trending'
-import {usePostFeedQuery} from '#/state/queries/post-feed'
-import {RQKEY} from '#/state/queries/post-feed'
+import {RQKEY, usePostFeedQuery} from '#/state/queries/post-feed'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, useGutters, useTheme} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRight} from '#/components/icons/Chevron'
-import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as EllipsisIcon} from '#/components/icons/DotGrid'
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -23,6 +20,9 @@ import {
   CompactVideoPostCard,
   CompactVideoPostCardPlaceholder,
 } from '#/components/VideoPostCard'
+import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const CARD_WIDTH = 108
 
@@ -35,7 +35,8 @@ const FEED_PARAMS: {
 
 export function TrendingVideos() {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
   const gutters = useGutters([0, 'base'])
   const {data, isLoading, error} = usePostFeedQuery(FEED_DESC, FEED_PARAMS)
 
@@ -47,7 +48,7 @@ export function TrendingVideos() {
         .getQueryCache()
         .find({queryKey: RQKEY(FEED_DESC, FEED_PARAMS)})
       if (query && query.getObserversCount() <= 1) {
-        query.fetch()
+        void query.fetch()
       }
     }
   }, [queryClient])
@@ -55,10 +56,10 @@ export function TrendingVideos() {
   const {setTrendingVideoDisabled} = useTrendingSettingsApi()
   const trendingPrompt = Prompt.usePromptControl()
 
-  const onConfirmHide = React.useCallback(() => {
+  const onConfirmHide = useCallback(() => {
     setTrendingVideoDisabled(true)
-    logEvent('trendingVideos:hide', {context: 'interstitial:discover'})
-  }, [setTrendingVideoDisabled])
+    ax.metric('trendingVideos:hide', {context: 'interstitial:discover'})
+  }, [ax, setTrendingVideoDisabled])
 
   if (error) {
     return null
@@ -82,20 +83,22 @@ export function TrendingVideos() {
           a.align_center,
           a.justify_between,
         ]}>
-        <Text style={[a.text_sm, a.font_bold, a.leading_snug]}>
-          <Trans>Trending Videos</Trans>
-        </Text>
-        <Button
-          label={_(msg`Dismiss this section`)}
-          size="tiny"
-          variant="solid"
-          color="secondary"
-          shape="square"
-          onPress={() => trendingPrompt.open()}>
-          <ButtonIcon icon={X} size="sm" />
-        </Button>
+        <View style={[a.pl_xs, a.flex_row, a.align_center]}>
+          <Text style={[a.flex_1, a.text_md, a.font_semi_bold]}>
+            <Trans>Trending videos</Trans>
+          </Text>
+          <Button
+            label={l`Dismiss this section`}
+            size="small"
+            variant="ghost"
+            color="secondary"
+            shape="round"
+            style={[a.bg_transparent]}
+            onPress={() => trendingPrompt.open()}>
+            <ButtonIcon icon={EllipsisIcon} size="md" />
+          </Button>
+        </View>
       </View>
-
       <BlockDrawerGesture>
         <ScrollView
           horizontal
@@ -130,12 +133,11 @@ export function TrendingVideos() {
           </View>
         </ScrollView>
       </BlockDrawerGesture>
-
       <Prompt.Basic
         control={trendingPrompt}
-        title={_(msg`Hide trending videos?`)}
-        description={_(msg`You can update this later from your settings.`)}
-        confirmButtonCta={_(msg`Hide`)}
+        title={l`Hide trending videos?`}
+        description={l`You can update this later from your settings.`}
+        confirmButtonCta={l`Hide`}
         onConfirm={onConfirmHide}
       />
     </View>
@@ -147,20 +149,15 @@ function VideoCards({
 }: {
   data: Exclude<ReturnType<typeof usePostFeedQuery>['data'], undefined>
 }) {
-  const t = useTheme()
-  const {_} = useLingui()
-  const items = React.useMemo(() => {
+  const ax = useAnalytics()
+  const items = useMemo(() => {
     return data.pages
       .flatMap(page => page.slices)
       .map(slice => slice.items[0])
       .filter(Boolean)
-      .filter(item => AppBskyEmbedVideo.isView(item.post.embed))
+      .filter(item => bsky.isType(app.bsky.embed.video.view, item.post.embed))
       .slice(0, 8)
   }, [data])
-  const href = React.useMemo(() => {
-    const urip = new AtUri(VIDEO_FEED_URI)
-    return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'discover')
-  }, [])
 
   return (
     <>
@@ -175,7 +172,7 @@ function VideoCards({
               sourceInterstitial: 'discover',
             }}
             onInteract={() => {
-              logEvent('videoCard:click', {
+              ax.metric('videoCard:click', {
                 context: 'interstitial:discover',
               })
             }}
@@ -183,50 +180,58 @@ function VideoCards({
         </View>
       ))}
 
-      <View style={[{width: CARD_WIDTH * 2}]}>
-        <Link
-          to={href}
-          label={_(msg`View more`)}
-          style={[
-            a.justify_center,
-            a.align_center,
-            a.flex_1,
-            a.rounded_lg,
-            a.border,
-            t.atoms.border_contrast_low,
-            t.atoms.bg,
-            t.atoms.shadow_sm,
-          ]}>
-          {({pressed}) => (
-            <View
-              style={[
-                a.flex_row,
-                a.align_center,
-                a.gap_md,
-                {
-                  opacity: pressed ? 0.6 : 1,
-                },
-              ]}>
-              <Text style={[a.text_md]}>
-                <Trans>View more</Trans>
-              </Text>
-              <View
-                style={[
-                  a.align_center,
-                  a.justify_center,
-                  a.rounded_full,
-                  {
-                    width: 34,
-                    height: 34,
-                    backgroundColor: t.palette.primary_500,
-                  },
-                ]}>
-                <ButtonIcon icon={ChevronRight} />
-              </View>
-            </View>
-          )}
-        </Link>
-      </View>
+      <ViewMoreCard />
     </>
+  )
+}
+
+function ViewMoreCard() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  const href = useMemo(() => {
+    const urip = new AtUri(VIDEO_FEED_URI)
+    return makeCustomFeedLink(urip.host, urip.rkey, undefined, 'discover')
+  }, [])
+
+  return (
+    <View style={[{width: CARD_WIDTH * 2}]}>
+      <Link
+        to={href}
+        label={l`View more`}
+        style={[
+          a.justify_center,
+          a.align_center,
+          a.flex_1,
+          a.rounded_xl,
+          a.border,
+          t.atoms.border_contrast_low,
+          t.atoms.bg,
+          t.atoms.shadow_md,
+        ]}>
+        {({pressed}) => (
+          <View
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.gap_md,
+              {
+                opacity: pressed ? 0.6 : 1,
+              },
+            ]}>
+            <Text style={[a.text_md]}>
+              <Trans>View more</Trans>
+            </Text>
+            <Button
+              color="primary"
+              size="small"
+              shape="round"
+              label={l`View more trending videos`}>
+              <ButtonIcon icon={ChevronRight} />
+            </Button>
+          </View>
+        )}
+      </Link>
+    </View>
   )
 }

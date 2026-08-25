@@ -1,4 +1,4 @@
-import React from 'react'
+import {type ReactNode, useMemo, useState} from 'react'
 import {
   createNativeEngine,
   isNativeEngineAvailable,
@@ -16,17 +16,16 @@ import {shikiThemes} from '#/lib/shiki/themes'
 let highlighterInstance: HighlighterCore | null = null
 let initializationPromise: Promise<void> | null = null
 
-export function HighlighterProvider({children}: {children: React.ReactNode}) {
-  const [isReady, setIsReady] = React.useState(false)
+export default function HighlighterProvider({children}: {children: ReactNode}) {
+  const [isReady, setIsReady] = useState(false)
 
-  const value = React.useMemo<HighlighterContextType>(
+  const value = useMemo<HighlighterContextType>(
     () => ({
       initialize: async () => {
         if (!initializationPromise) {
           initializationPromise = (async () => {
-            if (!isNativeEngineAvailable()) {
+            if (!isNativeEngineAvailable())
               throw new Error('Native engine not available.')
-            }
             highlighterInstance = await createHighlighterCore({
               langs: shikiLangs,
               themes: shikiThemes,
@@ -38,11 +37,10 @@ export function HighlighterProvider({children}: {children: React.ReactNode}) {
         await initializationPromise
       },
       tokenize: (code, options) => {
-        if (!highlighterInstance) {
+        if (!highlighterInstance)
           throw new Error(
             'Highlighter not initialized. Call initialize() first.',
           )
-        }
         return highlighterInstance.codeToTokensBase(code, options)
       },
       dispose: () => {
@@ -62,5 +60,3 @@ export function HighlighterProvider({children}: {children: React.ReactNode}) {
     </HighlighterContext.Provider>
   )
 }
-
-export default HighlighterProvider

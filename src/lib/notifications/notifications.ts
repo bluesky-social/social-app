@@ -2,27 +2,47 @@ import {useCallback, useEffect} from 'react'
 import {Platform} from 'react-native'
 import * as Notifications from 'expo-notifications'
 import {getBadgeCountAsync, setBadgeCountAsync} from 'expo-notifications'
-import {type AppBskyNotificationRegisterPush, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 import debounce from 'lodash.debounce'
 
-import {PUBLIC_APPVIEW_DID, PUBLIC_STAGING_APPVIEW_DID} from '#/lib/constants'
+import {
+  NOTIF_SERVICE,
+  PUBLIC_APPVIEW_DID,
+  PUBLIC_STAGING_APPVIEW_DID,
+} from '#/lib/constants'
 import {logger as notyLogger} from '#/lib/notifications/util'
-import {isNative} from '#/platform/detection'
-import {useAgeAssuranceContext} from '#/state/ageAssurance'
-import {type SessionAccount, useAgent, useSession} from '#/state/session'
+import {isNetworkError} from '#/lib/strings/errors'
+import {type SessionAccount, usePdsClient, useSession} from '#/state/session'
 import BackgroundNotificationHandler from '#/../modules/expo-background-notification-handler'
+import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {IS_DEV, IS_NATIVE} from '#/env'
+import {app} from '#/lexicons'
+
+/**
+ * A resumed single-use account client paired with the account's service origin
+ * and handle. Produced by `createTemporaryClientsAndResume` (session util) and
+ * consumed by {@link unregisterPushToken}, which needs the service host to pick
+ * the appview DID and the handle for a debug log line without reaching into the
+ * session internals.
+ */
+export type TemporaryPushClient = {
+  client: Client
+  service: string
+  handle: string
+}
 
 /**
  * @private
  * Registers the device's push notification token with the Bluesky server.
  */
 async function _registerPushToken({
-  agent,
+  client,
   currentAccount,
   token,
   extra = {},
 }: {
-  agent: AtpAgent
+  client: Client
   currentAccount: SessionAccount
   token: Notifications.DevicePushToken
   extra?: {
@@ -30,7 +50,7 @@ async function _registerPushToken({
   }
 }) {
   try {
-    const payload: AppBskyNotificationRegisterPush.InputSchema = {
+    const payload: app.bsky.notification.registerPush.$InputBody = {
       serviceDid: currentAccount.service?.includes('staging')
         ? PUBLIC_STAGING_APPVIEW_DID
         : PUBLIC_APPVIEW_DID,
@@ -42,11 +62,15 @@ async function _registerPushToken({
 
     notyLogger.debug(`registerPushToken: registering`, {...payload})
 
-    await agent.app.bsky.notification.registerPush(payload)
+    await client.call(app.bsky.notification.registerPush, payload, {
+      service: NOTIF_SERVICE,
+    })
 
     notyLogger.debug(`registerPushToken: success`)
   } catch (error) {
-    notyLogger.error(`registerPushToken: failed`, {safeMessage: error})
+    if (!isNetworkError(error)) {
+      notyLogger.warn(`registerPushToken: failed`, {safeMessage: error})
+    }
   }
 }
 
@@ -64,7 +88,7 @@ const _registerPushTokenDebounced = debounce(_registerPushToken, 100)
  * `_registerPushTokenDebounced` directly.
  */
 export function useRegisterPushToken() {
-  const agent = useAgent()
+  const client = usePdsClient()
   const {currentAccount} = useSession()
 
   return useCallback(
@@ -77,7 +101,7 @@ export function useRegisterPushToken() {
     }) => {
       if (!currentAccount) return
       return _registerPushTokenDebounced({
-        agent,
+        client,
         currentAccount,
         token,
         extra: {
@@ -85,7 +109,7 @@ export function useRegisterPushToken() {
         },
       })
     },
-    [agent, currentAccount],
+    [client, currentAccount],
   )
 }
 
@@ -121,7 +145,7 @@ async function getPushToken() {
  * @see https://github.com/bluesky-social/social-app/pull/4467
  */
 export function useGetAndRegisterPushToken() {
-  const {isAgeRestricted} = useAgeAssuranceContext()
+  const aa = useAgeAssurance()
   const registerPushToken = useRegisterPushToken()
   return useCallback(
     async ({
@@ -129,7 +153,7 @@ export function useGetAndRegisterPushToken() {
     }: {
       isAgeRestricted?: boolean
     } = {}) => {
-      if (!isNative) return
+      if (!IS_NATIVE || IS_DEV) return
 
       /**
        * This will also fire the listener added via `addPushTokenListener`. That
@@ -148,13 +172,14 @@ export function useGetAndRegisterPushToken() {
          */
         registerPushToken({
           token,
-          isAgeRestricted: isAgeRestrictedOverride ?? isAgeRestricted,
+          isAgeRestricted:
+            isAgeRestrictedOverride ?? aa.state.access !== aa.Access.Full,
         })
       }
 
       return token
     },
-    [registerPushToken, isAgeRestricted],
+    [registerPushToken, aa],
   )
 }
 
@@ -169,15 +194,14 @@ export function useNotificationsRegistration() {
   const {currentAccount} = useSession()
   const registerPushToken = useRegisterPushToken()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
-  const {isReady: isAgeRestrictionReady, isAgeRestricted} =
-    useAgeAssuranceContext()
+  const aa = useAgeAssurance()
 
   useEffect(() => {
     /**
      * We want this to init right away _after_ we have a logged in user, and
      * _after_ we've loaded their age assurance state.
      */
-    if (!currentAccount || !isAgeRestrictionReady) return
+    if (!currentAccount) return
 
     notyLogger.debug(`useNotificationsRegistration`)
 
@@ -202,23 +226,29 @@ export function useNotificationsRegistration() {
      * @see https://docs.expo.dev/versions/latest/sdk/notifications/#addpushtokenlistenerlistener
      */
     const subscription = Notifications.addPushTokenListener(async token => {
-      registerPushToken({token, isAgeRestricted: isAgeRestricted})
+      registerPushToken({
+        token,
+        isAgeRestricted: aa.state.access !== aa.Access.Full,
+      })
       notyLogger.debug(`addPushTokenListener callback`, {token})
     })
 
     return () => {
       subscription.remove()
     }
-  }, [
-    currentAccount,
-    getAndRegisterPushToken,
-    registerPushToken,
-    isAgeRestrictionReady,
-    isAgeRestricted,
-  ])
+  }, [currentAccount, getAndRegisterPushToken, registerPushToken, aa])
 }
 
+/**
+ * Tracks whether we have already shown the OS notification permission prompt
+ * during this app session. On Android `canAskAgain` stays true after a single
+ * in-app denial, so without this guard a later call site (e.g. Home after
+ * Login) would surface a second prompt. Resets on app restart.
+ */
+let hasRequestedPermissionsThisSession = false
+
 export function useRequestNotificationsPermission() {
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const getAndRegisterPushToken = useGetAndRegisterPushToken()
 
@@ -228,7 +258,7 @@ export function useRequestNotificationsPermission() {
     const permissions = await Notifications.getPermissionsAsync()
 
     if (
-      !isNative ||
+      !IS_NATIVE ||
       permissions?.status === 'granted' ||
       (permissions?.status === 'denied' && !permissions.canAskAgain)
     ) {
@@ -241,9 +271,33 @@ export function useRequestNotificationsPermission() {
       return
     }
 
-    const res = await Notifications.requestPermissionsAsync()
+    if (hasRequestedPermissionsThisSession) {
+      return
+    }
+    hasRequestedPermissionsThisSession = true
 
-    notyLogger.metric(`notifications:request`, {
+    const res = await Notifications.requestPermissionsAsync({
+      ios: {
+        /*
+         * These three default to true when no argument is passed to
+         * `requestPermissionsAsync`, but passing an options object opts out of
+         * that default, so we have to set them explicitly to preserve the
+         * existing behavior.
+         */
+        allowAlert: true,
+        allowBadge: true,
+        allowSound: true,
+        /*
+         * Adds an in-app notification settings button to the system Settings
+         * screen for Bluesky. When tapped, iOS calls back into the app, which
+         * we route to the in-app notification settings (see the
+         * NotificationSettings module in expo-bluesky-swiss-army).
+         */
+        provideAppNotificationSettings: true,
+      },
+    })
+
+    ax.metric(`notifications:request`, {
       context: context,
       status: res.status,
     })
@@ -269,7 +323,7 @@ export function useRequestNotificationsPermission() {
 }
 
 export async function decrementBadgeCount(by: number) {
-  if (!isNative) return
+  if (!IS_NATIVE) return
 
   let count = await getBadgeCountAsync()
   count -= by
@@ -284,4 +338,35 @@ export async function decrementBadgeCount(by: number) {
 export async function resetBadgeCount() {
   await BackgroundNotificationHandler.setBadgeCountAsync(0)
   await setBadgeCountAsync(0)
+}
+
+export async function unregisterPushToken(clients: TemporaryPushClient[]) {
+  if (!IS_NATIVE) return
+
+  try {
+    const token = await getPushToken()
+    if (token) {
+      for (const {client, service, handle} of clients) {
+        await client.call(
+          app.bsky.notification.unregisterPush,
+          {
+            serviceDid: service.includes('staging')
+              ? PUBLIC_STAGING_APPVIEW_DID
+              : PUBLIC_APPVIEW_DID,
+            platform: Platform.OS,
+            token: token.data,
+            appId: 'xyz.blueskyweb.app',
+          },
+          {
+            service: NOTIF_SERVICE,
+          },
+        )
+        notyLogger.debug(`Push token unregistered for ${handle}`)
+      }
+    } else {
+      notyLogger.debug('Tried to unregister push token, but could not find one')
+    }
+  } catch (error) {
+    notyLogger.debug('Failed to unregister push token', {message: error})
+  }
 }

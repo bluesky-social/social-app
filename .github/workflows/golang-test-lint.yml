@@ -7,37 +7,42 @@ on:
       - main
 
 concurrency:
-  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Git Checkout
-        uses: actions/checkout@v3
-      - name: Set up Go tooling
-        uses: actions/setup-go@v3
+      - name: ⬇️ Git Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 🔧 Set up Go tooling
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: '1.23'
-      - name: Dummy Static Files
+          go-version-file: bskyweb/go.mod
+          cache-dependency-path: bskyweb/go.sum
+      - name: 📄 Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
-      - name: Check
+      - name: 🔍 Check
         run: cd bskyweb/ && make check
-      - name: Build (binary)
+      - name: 🏗️ Build (binary)
         run: cd bskyweb/ && make build
-      - name: Test
+      - name: 🧪 Test
         run: cd bskyweb/ && make test
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Git Checkout
-        uses: actions/checkout@v3
-      - name: Set up Go tooling
-        uses: actions/setup-go@v3
+      - name: ⬇️ Git Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 🔧 Set up Go tooling
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
-          go-version: '1.23'
-      - name: Dummy Static Files
+          go-version-file: bskyweb/go.mod
+          cache-dependency-path: bskyweb/go.sum
+      - name: 📄 Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
-      - name: Lint
+      - name: 🧹 Lint
         run: cd bskyweb/ &&  make lint

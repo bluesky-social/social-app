@@ -1,12 +1,8 @@
 import {memo, useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyFeedDefs,
-  type AppBskyFeedThreadgate,
-  AtUri,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {AtUri} from '@atproto/syntax'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
+import {Trans} from '@lingui/react/macro'
 
 import {MAX_POST_LINES} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -23,25 +19,34 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {PostMeta} from '#/view/com/util/PostMeta'
 import {
+  POST_NUMBER_INLINE_OFFSET,
+  ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
   OUTER_SPACE,
   REPLY_LINE_WIDTH,
   TREE_AVI_WIDTH,
   TREE_INDENT,
 } from '#/screens/PostThread/const'
 import {atoms as a, useTheme} from '#/alf'
+import {DebugFieldDisplay} from '#/components/DebugFieldDisplay'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
-import {LabelsOnMyPost} from '#/components/moderation/LabelsOnMe'
+import {GalleryBleed} from '#/components/images/Gallery'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {PostHider} from '#/components/moderation/PostHider'
+import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
-import {PostControls} from '#/components/PostControls'
+import {TranslatedPost} from '#/components/Post/Translated'
+import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
-import {SubtleWebHover} from '#/components/SubtleWebHover'
+import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 /**
  * Mimic the space in PostMeta
@@ -60,7 +65,7 @@ export function ThreadItemTreePost({
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }) {
   const postShadow = usePostShadow(item.value.post)
 
@@ -69,15 +74,15 @@ export function ThreadItemTreePost({
   }
 
   return (
-    <ThreadItemTreePostInner
-      // Safeguard from clobbering per-post state below:
-      key={postShadow.uri}
-      item={item}
-      postShadow={postShadow}
-      threadgateRecord={threadgateRecord}
-      overrides={overrides}
-      onPostSuccess={onPostSuccess}
-    />
+    <ReportDialogMetadataContext.Provider key={postShadow.uri}>
+      <ThreadItemTreePostInner
+        item={item}
+        postShadow={postShadow}
+        threadgateRecord={threadgateRecord}
+        overrides={overrides}
+        onPostSuccess={onPostSuccess}
+      />
+    </ReportDialogMetadataContext.Provider>
   )
 }
 
@@ -127,33 +132,35 @@ const ThreadItemTreePostOuterWrapper = memo(
     const indents = Math.max(0, item.ui.indent - 1)
 
     return (
-      <View
-        style={[
-          a.flex_row,
-          item.ui.indent === 1 &&
-            !item.ui.showParentReplyLine && [
-              a.border_t,
-              t.atoms.border_contrast_low,
-            ],
-        ]}>
-        {Array.from(Array(indents)).map((_, n: number) => {
-          const isSkipped = item.ui.skippedIndentIndices.has(n)
-          return (
-            <View
-              key={`${item.value.post.uri}-padding-${n}`}
-              style={[
+      <GalleryBleed>
+        <View
+          style={[
+            a.flex_row,
+            item.ui.indent === 1 &&
+              !item.ui.showParentReplyLine && [
+                a.border_t,
                 t.atoms.border_contrast_low,
-                {
-                  borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
-                  width: TREE_INDENT + TREE_AVI_WIDTH / 2,
-                  left: 1,
-                },
-              ]}
-            />
-          )
-        })}
-        {children}
-      </View>
+              ],
+          ]}>
+          {Array.from(Array(indents)).map((_, n: number) => {
+            const isSkipped = item.ui.skippedIndentIndices.has(n)
+            return (
+              <View
+                key={`${item.value.post.uri}-padding-${n}`}
+                style={[
+                  t.atoms.border_contrast_low,
+                  {
+                    borderRightWidth: isSkipped ? 0 : REPLY_LINE_WIDTH,
+                    width: TREE_INDENT + TREE_AVI_WIDTH / 2,
+                    left: 1,
+                  },
+                ]}
+              />
+            )
+          })}
+          {children}
+        </View>
+      </GalleryBleed>
     )
   },
 )
@@ -176,7 +183,7 @@ const ThreadItemTreePostInnerWrapper = memo(
             paddingTop: OUTER_SPACE / 2,
           },
           item.ui.indent === 1 && [
-            !item.ui.showParentReplyLine && a.pt_lg,
+            !item.ui.showParentReplyLine && {paddingTop: OUTER_SPACE / 1.5},
             !item.ui.showChildReplyLine && a.pb_sm,
           ],
           item.ui.isLastChild &&
@@ -241,19 +248,21 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
   threadgateRecord,
 }: {
   item: Extract<ThreadItem, {type: 'threadPost'}>
-  postShadow: Shadow<AppBskyFeedDefs.PostView>
+  postShadow: Shadow<app.bsky.feed.defs.PostView>
   overrides?: {
     moderation?: boolean
     topBorder?: boolean
   }
   onPostSuccess?: (data: OnPostSuccessData) => void
-  threadgateRecord?: AppBskyFeedThreadgate.Record
+  threadgateRecord?: app.bsky.feed.threadgate.Main
 }): React.ReactNode {
   const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
 
   const post = item.value.post
   const record = item.value.post.record
+  const postNumbering = item.value
+  const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
   const richText = useMemo(
     () =>
@@ -298,8 +307,10 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
         author: post.author,
         embed: post.embed,
         moderation,
+        langs: post.record.langs,
       },
       onPostSuccess: onPostSuccess,
+      logContext: 'PostReply',
     })
   }, [openComposer, post, record, onPostSuccess, moderation])
 
@@ -309,7 +320,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
 
   return (
     <ThreadItemTreePostOuterWrapper item={item}>
-      <SubtleHover>
+      <SubtleHoverWrapper>
         <PostHider
           testID={`postThreadItem-by-${post.author.handle}`}
           href={postHref}
@@ -333,14 +344,14 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
               <View style={[a.flex_row]}>
                 <ThreadItemTreeReplyChildReplyLine item={item} />
                 <View style={[a.flex_1, a.pl_2xs]}>
-                  <LabelsOnMyPost post={post} style={[a.pb_2xs]} />
                   <PostAlerts
+                    post={post}
                     modui={moderation.ui('contentList')}
                     style={[a.pb_2xs]}
                     additionalCauses={additionalPostAlerts}
                   />
                   {richText?.text ? (
-                    <>
+                    <View style={[a.mb_2xs]}>
                       <RichText
                         enableTags
                         value={richText}
@@ -348,25 +359,45 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                         numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                         authorHandle={post.author.handle}
                         shouldProxyLinks={true}
+                        suffixOffset={POST_NUMBER_INLINE_OFFSET}
+                        suffix={
+                          !limitLines && showPostNumber ? (
+                            <ThreadItemPostNumber value={postNumbering} />
+                          ) : undefined
+                        }
                       />
                       {limitLines && (
-                        <ShowMoreTextButton
-                          style={[a.text_md]}
-                          onPress={onPressShowMore}
-                        />
+                        <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+                          <ShowMoreTextButton
+                            style={[a.text_md]}
+                            onPress={onPressShowMore}
+                          />
+                          <ThreadItemPostNumber
+                            inline={false}
+                            value={postNumbering}
+                          />
+                        </View>
                       )}
-                    </>
-                  ) : null}
+                    </View>
+                  ) : (
+                    <ThreadItemPostNumber
+                      inline={false}
+                      value={postNumbering}
+                    />
+                  )}
+                  <TranslatedPost hideTranslateLink post={post} />
                   {post.embed && (
                     <View style={[a.pb_xs]}>
                       <Embed
                         embed={post.embed}
                         moderation={moderation}
                         viewContext={PostEmbedViewContext.Feed}
+                        post={post}
                       />
                     </View>
                   )}
                   <PostControls
+                    variant="compact"
                     post={postShadow}
                     record={record}
                     richText={richText}
@@ -374,17 +405,18 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                     logContext="PostThreadItem"
                     threadgateRecord={threadgateRecord}
                   />
+                  <DebugFieldDisplay subject={post} />
                 </View>
               </View>
             </View>
           </ThreadItemTreePostInnerWrapper>
         </PostHider>
-      </SubtleHover>
+      </SubtleHoverWrapper>
     </ThreadItemTreePostOuterWrapper>
   )
 })
 
-function SubtleHover({children}: {children: React.ReactNode}) {
+function SubtleHoverWrapper({children}: {children: React.ReactNode}) {
   const {
     state: hover,
     onIn: onHoverIn,
@@ -395,7 +427,7 @@ function SubtleHover({children}: {children: React.ReactNode}) {
       onPointerEnter={onHoverIn}
       onPointerLeave={onHoverOut}
       style={[a.flex_1, a.pointer]}>
-      <SubtleWebHover hover={hover} />
+      <SubtleHover hover={hover} />
       {children}
     </View>
   )
@@ -408,11 +440,10 @@ export function ThreadItemTreePostSkeleton({index}: {index: number}) {
     <View
       style={[
         {paddingHorizontal: OUTER_SPACE, paddingVertical: OUTER_SPACE / 1.5},
-        a.gap_md,
         a.border_t,
         t.atoms.border_contrast_low,
       ]}>
-      <Skele.Row style={[a.align_start, a.gap_md]}>
+      <Skele.Row style={[a.align_start, a.gap_xs]}>
         <Skele.Circle size={TREE_AVI_WIDTH} />
 
         <Skele.Col style={[a.gap_xs]}>
@@ -432,13 +463,7 @@ export function ThreadItemTreePostSkeleton({index}: {index: number}) {
             )}
           </Skele.Col>
 
-          <Skele.Row style={[a.justify_between, a.pt_xs]}>
-            <Skele.Pill blend size={16} />
-            <Skele.Pill blend size={16} />
-            <Skele.Pill blend size={16} />
-            <Skele.Circle blend size={16} />
-            <View />
-          </Skele.Row>
+          <PostControlsSkeleton />
         </Skele.Col>
       </Skele.Row>
     </View>

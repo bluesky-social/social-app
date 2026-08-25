@@ -1,18 +1,17 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyActorGetProfile,
-  AtUri,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {useMutation} from '@tanstack/react-query'
 
 import {until} from '#/lib/async/until'
-import {logger} from '#/logger'
 import {useUpdateProfileVerificationCache} from '#/state/queries/verification/useUpdateProfileVerificationCache'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export function useVerificationsRemoveMutation() {
-  const agent = useAgent()
+  const ax = useAnalytics()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
   const updateProfileVerificationCache = useUpdateProfileVerificationCache()
 
@@ -22,7 +21,7 @@ export function useVerificationsRemoveMutation() {
       verifications,
     }: {
       profile: bsky.profile.AnyProfileView
-      verifications: AppBskyActorDefs.VerificationView[]
+      verifications: app.bsky.actor.defs.VerificationView[]
     }) {
       if (!currentAccount) {
         throw new Error('User not logged in')
@@ -32,9 +31,8 @@ export function useVerificationsRemoveMutation() {
 
       await Promise.all(
         uris.map(uri => {
-          return agent.app.bsky.graph.verification.delete({
-            repo: currentAccount.did,
-            rkey: new AtUri(uri).rkey,
+          return pdsClient.delete(app.bsky.graph.verification, {
+            rkey: new AtUri(uri).rkeySafe,
           })
         }),
       )
@@ -42,7 +40,7 @@ export function useVerificationsRemoveMutation() {
       await until(
         5,
         1e3,
-        ({data: profile}: AppBskyActorGetProfile.Response) => {
+        (profile: app.bsky.actor.getProfile.$OutputBody) => {
           if (
             !profile.verification?.verifications.some(v => uris.includes(v.uri))
           ) {
@@ -51,12 +49,14 @@ export function useVerificationsRemoveMutation() {
           return false
         },
         () => {
-          return agent.getProfile({actor: profile.did ?? ''})
+          return appviewClient.call(app.bsky.actor.getProfile, {
+            actor: profile.did ?? '',
+          })
         },
       )
     },
     async onSuccess(_, {profile}) {
-      logger.metric('verification:revoke', {}, {statsig: true})
+      ax.metric('verification:revoke', {})
       await updateProfileVerificationCache({profile})
     },
   })

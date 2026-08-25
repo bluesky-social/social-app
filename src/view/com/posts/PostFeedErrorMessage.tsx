@@ -1,21 +1,21 @@
-import React from 'react'
+import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyFeedGetAuthorFeed,
-  AtUri,
-} from '@atproto/api'
-import {msg as msgLingui, Trans} from '@lingui/macro'
+import {AtUri} from '@atproto/syntax'
+import {msg as msgLingui} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
 import {type NavigationProp} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {getErrorName, getErrorStatus} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {useRemoveFeedMutation} from '#/state/queries/preferences'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import * as Prompt from '#/components/Prompt'
+import {type app} from '#/lexicons'
 import {EmptyState} from '../util/EmptyState'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {Button} from '../util/forms/Button'
@@ -43,13 +43,14 @@ export function PostFeedErrorMessage({
   feedDesc: FeedDescriptor
   error?: Error
   onPressTryAgain: () => void
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
   const {_: _l} = useLingui()
-  const knownError = React.useMemo(
+  const knownError = useMemo(
     () => detectKnownError(feedDesc, error),
     [feedDesc, error],
   )
+
   if (
     typeof knownError !== 'undefined' &&
     knownError !== KnownError.Unknown &&
@@ -68,7 +69,8 @@ export function PostFeedErrorMessage({
   if (knownError === KnownError.Block) {
     return (
       <EmptyState
-        icon="ban"
+        icon={WarningIcon}
+        iconSize="2xl"
         message={_l(msgLingui`Posts hidden`)}
         style={{paddingVertical: 40}}
       />
@@ -92,12 +94,12 @@ function FeedgenErrorMessage({
   feedDesc: FeedDescriptor
   knownError: KnownError
   rawError?: Error
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
   const pal = usePalette('default')
   const {_: _l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
-  const msg = React.useMemo(
+  const msg = useMemo(
     () =>
       ({
         [KnownError.Unknown]: '',
@@ -126,20 +128,20 @@ function FeedgenErrorMessage({
       })[knownError],
     [_l, knownError],
   )
-  const [_, uri] = feedDesc.split('|')
+  const [__, uri] = feedDesc.split('|')
   const [ownerDid] = safeParseFeedgenUri(uri)
   const removePromptControl = Prompt.usePromptControl()
   const {mutateAsync: removeFeed} = useRemoveFeedMutation()
 
-  const onViewProfile = React.useCallback(() => {
+  const onViewProfile = useCallback(() => {
     navigation.navigate('Profile', {name: ownerDid})
   }, [navigation, ownerDid])
 
-  const onPressRemoveFeed = React.useCallback(() => {
+  const onPressRemoveFeed = useCallback(() => {
     removePromptControl.open()
   }, [removePromptControl])
 
-  const onRemoveFeed = React.useCallback(async () => {
+  const onRemoveFeed = useCallback(async () => {
     try {
       if (!savedFeedConfig) return
       await removeFeed(savedFeedConfig)
@@ -154,7 +156,7 @@ function FeedgenErrorMessage({
     }
   }, [removeFeed, _l, savedFeedConfig])
 
-  const cta = React.useMemo(() => {
+  const cta = useMemo(() => {
     switch (knownError) {
       case KnownError.FeedSignedInOnly: {
         return null
@@ -237,15 +239,21 @@ function detectKnownError(
   if (!error) {
     return undefined
   }
+  /*
+   * Both names are declared by `app.bsky.feed.getAuthorFeed` AND
+   * `.getActorLikes`, and this helper takes an error from an arbitrary feed
+   * descriptor, so the source method is ambiguous - hence the untyped
+   * `getErrorName` check rather than `matchXrpcError`.
+   */
   if (
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedActorError ||
-    error instanceof AppBskyFeedGetAuthorFeed.BlockedByActorError
+    getErrorName(error) === 'BlockedActor' ||
+    getErrorName(error) === 'BlockedByActor'
   ) {
     return KnownError.Block
   }
 
   // check status codes
-  if (error?.status === 429) {
+  if (getErrorStatus(error) === 429) {
     return KnownError.FeedTooManyRequests
   }
 

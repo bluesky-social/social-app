@@ -1,4 +1,3 @@
-import React from 'react'
 import {Platform} from 'react-native'
 
 const onMouseUp = (e: React.MouseEvent & {target: HTMLElement}) => {
@@ -22,7 +21,7 @@ export function WebAuxClickWrapper({children}: React.PropsWithChildren<{}>) {
   if (Platform.OS !== 'web') return children
 
   return (
-    // @ts-ignore web only
+    // @ts-expect-error web only
     <div onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
       {children}
     </div>

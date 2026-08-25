@@ -1,144 +1,78 @@
-import React from 'react'
-import {View} from 'react-native'
-import {AtUri} from '@atproto/api'
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useEffect, useMemo} from 'react'
+import {type AtUri} from '@atproto/syntax'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
+import {useCallOnce} from '#/lib/once'
 // import {makeProfileLink} from '#/lib/routes/links'
 // import {feedUriToHref} from '#/lib/strings/url-helpers'
-// import {Hashtag_Stroke2_Corner0_Rounded as Hashtag} from '#/components/icons/Hashtag'
-// import {CloseQuote_Filled_Stroke2_Corner0_Rounded as Quote} from '#/components/icons/Quote'
-// import {UserAvatar} from '#/view/com/util/UserAvatar'
-import type {TrendingTopic} from '#/state/queries/trending/useTrendingTopics'
-import {atoms as a, native, useTheme, ViewStyleProp} from '#/alf'
-import {StarterPack as StarterPackIcon} from '#/components/icons/StarterPack'
-import {Link as InternalLink, LinkProps} from '#/components/Link'
+import {atoms as a, native, useTheme} from '#/alf'
+import {Link as InternalLink, type LinkProps} from '#/components/Link'
+import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {type Metrics, useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
-export function TrendingTopic({
-  topic: raw,
-  size,
-  style,
-}: {topic: TrendingTopic; size?: 'large' | 'small'} & ViewStyleProp) {
-  const t = useTheme()
-  const topic = useTopic(raw)
-
-  const isSmall = size === 'small'
-  const hasIcon = topic.type === 'starter-pack' && !isSmall
-  const iconSize = 20
-
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_center,
-        a.rounded_full,
-        a.border,
-        t.atoms.border_contrast_medium,
-        t.atoms.bg,
-        isSmall
-          ? [
-              {
-                paddingVertical: 5,
-                paddingHorizontal: 10,
-              },
-            ]
-          : [a.py_sm, a.px_md],
-        hasIcon && {gap: 6},
-        style,
-      ]}>
-      {hasIcon && topic.type === 'starter-pack' && (
-        <StarterPackIcon
-          gradient="sky"
-          width={iconSize}
-          style={{marginLeft: -3, marginVertical: -1}}
-        />
-      )}
-
-      {/*
-        <View
-          style={[
-            a.align_center,
-            a.justify_center,
-            a.rounded_full,
-            a.overflow_hidden,
-            {
-              width: iconSize,
-              height: iconSize,
-            },
-          ]}>
-          {topic.type === 'tag' ? (
-            <Hashtag width={iconSize} />
-          ) : topic.type === 'topic' ? (
-            <Quote width={iconSize - 2} />
-          ) : topic.type === 'feed' ? (
-            <UserAvatar
-              type="user"
-              size={aviSize}
-              avatar=""
-            />
-          ) : (
-            <UserAvatar
-              type="user"
-              size={aviSize}
-              avatar=""
-            />
-          )}
-        </View>
-        */}
-
-      <Text
-        style={[
-          a.font_bold,
-          a.leading_tight,
-          isSmall ? [a.text_sm] : [a.text_md, {paddingBottom: 1}],
-        ]}
-        numberOfLines={1}>
-        {topic.displayName}
-      </Text>
-    </View>
-  )
-}
-
-export function TrendingTopicSkeleton({
-  size = 'large',
-  index = 0,
+export function TrendingTopicsPrompt({
+  control,
+  onConfirm,
 }: {
-  size?: 'large' | 'small'
-  index?: number
+  control: Prompt.PromptControlProps
+  onConfirm: () => void
 }) {
   const t = useTheme()
-  const isSmall = size === 'small'
+  const {t: l} = useLingui()
+
   return (
-    <View
-      style={[
-        a.rounded_full,
-        a.border,
-        t.atoms.border_contrast_medium,
-        t.atoms.bg_contrast_25,
-        isSmall
-          ? {
-              width: index % 2 === 0 ? 75 : 90,
-              height: 27,
-            }
-          : {
-              width: index % 2 === 0 ? 90 : 110,
-              height: 36,
-            },
-      ]}
-    />
+    <Prompt.Outer control={control} testID="trendingTopicsPrompt">
+      <Prompt.Content>
+        <Prompt.TitleText>
+          <Trans>Trending topics</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            Trending topics are based on what people are talking about on the
+            network. Topic titles and descriptions are generated with AI.
+          </Trans>
+        </Prompt.DescriptionText>
+      </Prompt.Content>
+      <Prompt.Actions>
+        <Prompt.Action
+          cta={l`Hide trending topics`}
+          color="secondary"
+          onPress={onConfirm}
+        />
+        <Text
+          style={[
+            a.text_sm,
+            IS_WEB ? a.text_left : a.text_center,
+            t.atoms.text_contrast_medium,
+            a.py_xs,
+          ]}>
+          <Trans>You can update this later from your settings.</Trans>
+        </Text>
+        <Prompt.Cancel cta={l`Close`} />
+      </Prompt.Actions>
+    </Prompt.Outer>
   )
 }
 
 export function TrendingTopicLink({
   topic: raw,
+  metricContext,
+  rank,
+  recId,
   children,
   ...rest
 }: {
-  topic: TrendingTopic
+  topic: app.bsky.unspecced.defs.TrendView
+  metricContext: Metrics['trendingTopic:seen']['context']
+  rank: number
+  recId?: string
 } & Omit<LinkProps, 'to' | 'label'>) {
   const topic = useTopic(raw)
+  useTrendingTopicSeen(metricContext, rank, recId)
 
   return (
     <InternalLink
@@ -149,6 +83,27 @@ export function TrendingTopicLink({
       {children}
     </InternalLink>
   )
+}
+
+export function useTrendingTopicSeen(
+  context: Metrics['trendingTopic:seen']['context'],
+  rank: number,
+  recId?: string,
+  feedSliceIndex?: number,
+) {
+  const ax = useAnalytics()
+  const trackSeen = useCallOnce(() => {
+    ax.metric('trendingTopic:seen', {
+      context,
+      rank,
+      feedSliceIndex,
+      recId,
+    })
+  })
+
+  useEffect(() => {
+    trackSeen()
+  }, [trackSeen])
 }
 
 type ParsedTrendingTopic =
@@ -167,15 +122,17 @@ type ParsedTrendingTopic =
       uri: AtUri
     }
 
-export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
-  const {_} = useLingui()
-  return React.useMemo(() => {
+export function useTopic(
+  raw: app.bsky.unspecced.defs.TrendView,
+): ParsedTrendingTopic {
+  const {t: l} = useLingui()
+  return useMemo(() => {
     const {topic: displayName, link} = raw
 
     if (link.startsWith('/search')) {
       return {
         type: 'topic',
-        label: _(msg`Browse posts about ${displayName}`),
+        label: l`Browse posts about ${displayName}`,
         displayName,
         uri: undefined,
         url: link,
@@ -183,7 +140,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     } else if (link.startsWith('/hashtag')) {
       return {
         type: 'tag',
-        label: _(msg`Browse posts tagged with ${displayName}`),
+        label: l`Browse posts tagged with ${displayName}`,
         displayName,
         // displayName: displayName.replace(/^#/, ''),
         uri: undefined,
@@ -192,7 +149,7 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
     } else if (link.startsWith('/starter-pack')) {
       return {
         type: 'starter-pack',
-        label: _(msg`Browse starter pack ${displayName}`),
+        label: l`Browse starter pack ${displayName}`,
         displayName,
         uri: undefined,
         url: link,
@@ -229,10 +186,10 @@ export function useTopic(raw: TrendingTopic): ParsedTrendingTopic {
 
     return {
       type: 'unknown',
-      label: _(msg`Browse topic ${displayName}`),
+      label: l`Browse topic ${displayName}`,
       displayName,
       uri: undefined,
       url: link,
     }
-  }, [_, raw])
+  }, [l, raw])
 }

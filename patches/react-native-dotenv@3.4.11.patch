@@ -1,0 +1,20 @@
+diff --git a/index.js b/index.js
+index 49b3650..a690ec8 100644
+--- a/index.js
++++ b/index.js
+@@ -153,6 +153,15 @@ module.exports = function(api, options = {}) {
+           const key = path.toComputedKey()
+           if (t.isStringLiteral(key)) {
+             const importedId = key.value
++            // Metro uses Jest workers to transform application code. Do not
++            // leak the build worker's ID into the application runtime, where
++            // libraries can mistake it for an actual test environment.
++            if (
++              importedId === 'JEST_WORKER_ID' ||
++              importedId === 'VITEST_WORKER_ID'
++            ) {
++              return
++            }
+             const value = (env && importedId in env) ? env[importedId] : process.env[importedId]
+             if (value !== undefined) {
+               path.replaceWith(t.valueToNode(value))

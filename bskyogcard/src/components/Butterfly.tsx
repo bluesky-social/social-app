@@ -1,5 +1,3 @@
-import React from 'react'
-
 export function Butterfly(props: React.SVGAttributes<SVGSVGElement>) {
   return (
     <svg

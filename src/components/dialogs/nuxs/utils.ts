@@ -1,3 +1,23 @@
+import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
+import {type SessionAccount} from '#/state/session'
+import {type AnalyticsContextType} from '#/analytics'
+import {type Geolocation} from '#/geolocation'
+import {type app} from '#/lexicons'
+
+export type EnabledCheckProps = {
+  features: AnalyticsContextType['features']
+  currentAccount: SessionAccount
+  currentProfile: app.bsky.actor.defs.ProfileViewDetailed
+  preferences: UsePreferencesQueryResponse
+  geolocation: Geolocation
+}
+
+export function createIsEnabledCheck(
+  cb: (props: EnabledCheckProps) => boolean,
+) {
+  return cb
+}
+
 const ONE_DAY = 1000 * 60 * 60 * 24
 
 export function isDaysOld(days: number, createdAt?: string) {

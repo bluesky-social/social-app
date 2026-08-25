@@ -1,14 +1,12 @@
 import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {retry} from '#/lib/async/retry'
 import {wait} from '#/lib/async/wait'
-import {isNative} from '#/platform/detection'
-import {useAgeAssuranceAPIContext} from '#/state/ageAssurance'
-import {logger} from '#/state/ageAssurance/util'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonText} from '#/components/Button'
@@ -18,6 +16,9 @@ import {CheckThick_Stroke2_Corner0_Rounded as SuccessIcon} from '#/components/ic
 import {CircleInfo_Stroke2_Corner0_Rounded as ErrorIcon} from '#/components/icons/CircleInfo'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {refetchAgeAssuranceServerState} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 
 export type AgeAssuranceRedirectDialogState = {
   result: 'success' | 'unknown'
@@ -63,7 +64,7 @@ export function AgeAssuranceRedirectDialog() {
   const {_} = useLingui()
   const control = useAgeAssuranceRedirectDialogControl()
 
-  // TODO for testing
+  // for testing
   // Dialog.useAutoOpen(control.control, 3e3)
 
   return (
@@ -81,21 +82,21 @@ export function AgeAssuranceRedirectDialog() {
 
 export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {_} = useLingui()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
   const polling = useRef(false)
   const unmounted = useRef(false)
   const control = useAgeAssuranceRedirectDialogControl()
   const [error, setError] = useState(false)
   const [success, setSuccess] = useState(false)
-  const {refetch: refreshAgeAssuranceState} = useAgeAssuranceAPIContext()
 
   useEffect(() => {
     if (polling.current) return
 
     polling.current = true
 
-    logger.metric('ageAssurance:redirectDialogOpen', {})
+    ax.metric('ageAssurance:redirectDialogOpen', {})
 
     wait(
       3e3,
@@ -103,12 +104,12 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
         5,
         () => true,
         async () => {
-          if (!agent.session) return
+          if (!appviewClient.did) return
           if (unmounted.current) return
 
-          const {data} = await agent.app.bsky.unspecced.getAgeAssuranceState()
+          const data = await refetchAgeAssuranceServerState({appviewClient})
 
-          if (data.status !== 'assured') {
+          if (data?.state.status !== 'assured') {
             throw new Error(
               `Polling for age assurance state did not receive assured status`,
             )
@@ -121,28 +122,23 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
     )
       .then(async data => {
         if (!data) return
-        if (!agent.session) return
+        if (!appviewClient.did) return
         if (unmounted.current) return
-
-        // success! update state
-        await refreshAgeAssuranceState()
 
         setSuccess(true)
 
-        logger.metric('ageAssurance:redirectDialogSuccess', {})
+        ax.metric('ageAssurance:redirectDialogSuccess', {})
       })
       .catch(() => {
         if (unmounted.current) return
         setError(true)
-        // try a refetch anyway
-        refreshAgeAssuranceState()
-        logger.metric('ageAssurance:redirectDialogFail', {})
+        ax.metric('ageAssurance:redirectDialogFail', {})
       })
 
     return () => {
       unmounted.current = true
     }
-  }, [agent, control, refreshAgeAssuranceState])
+  }, [ax, appviewClient, control])
 
   if (success) {
     return (
@@ -159,8 +155,8 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
               a.pt_lg,
               a.pb_md,
             ]}>
-            <SuccessIcon size="sm" fill={t.palette.positive_600} />
-            <Text style={[a.text_xl, a.font_heavy]}>
+            <SuccessIcon size="sm" fill={t.palette.positive_500} />
+            <Text style={[a.text_xl, a.font_bold]}>
               <Trans>Success</Trans>
             </Text>
           </View>
@@ -172,7 +168,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
             </Trans>
           </Text>
 
-          {isNative && (
+          {IS_NATIVE && (
             <View style={[a.w_full, a.pt_lg]}>
               <Button
                 label={_(msg`Close`)}
@@ -209,7 +205,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           ]}>
           {error && <ErrorIcon size="md" fill={t.palette.negative_500} />}
 
-          <Text style={[a.text_xl, a.font_heavy]}>
+          <Text style={[a.text_xl, a.font_bold]}>
             {error ? <Trans>Connection issue</Trans> : <Trans>Verifying</Trans>}
           </Text>
 
@@ -231,7 +227,7 @@ export function Inner({}: {optimisticState?: AgeAssuranceRedirectDialogState}) {
           )}
         </Text>
 
-        {error && isNative && (
+        {error && IS_NATIVE && (
           <View style={[a.w_full, a.pt_lg]}>
             <Button
               label={_(msg`Close`)}

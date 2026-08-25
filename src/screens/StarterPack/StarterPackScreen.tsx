@@ -1,16 +1,12 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-  AtUri,
-  type ModerationOpts,
-  RichText as RichTextAPI,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Plural, Trans} from '@lingui/macro'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
@@ -23,39 +19,42 @@ import {
   type CommonNavigatorParams,
   type NavigationProp,
 } from '#/lib/routes/types'
-import {logEvent} from '#/lib/statsig/statsig'
 import {cleanError} from '#/lib/strings/errors'
 import {getStarterPackOgCard} from '#/lib/strings/starter-pack'
 import {logger} from '#/logger'
-import {isWeb} from '#/platform/detection'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useResolvedStarterPackShortLink} from '#/state/queries/resolve-short-link'
 import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useShortenLink} from '#/state/queries/shorten-link'
-import {useDeleteStarterPackMutation} from '#/state/queries/starter-packs'
-import {useStarterPackQuery} from '#/state/queries/starter-packs'
-import {useAgent, useSession} from '#/state/session'
+import {
+  useDeleteStarterPackMutation,
+  useStarterPackQuery,
+} from '#/state/queries/starter-packs'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {useSetActiveStarterPack} from '#/state/shell/landing'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {
   ProgressGuideAction,
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
-import {useSetActiveStarterPack} from '#/state/shell/starter-pack'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
-import * as Toast from '#/view/com/util/Toast'
+import {type ListRef} from '#/view/com/util/List'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {CreateListFromStarterPackDialog} from '#/components/dialogs/lists/CreateListFromStarterPackDialog'
 import {ArrowOutOfBoxModified_Stroke2_Corner2_Rounded as ArrowOutOfBoxIcon} from '#/components/icons/ArrowOutOfBox'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
-import {DotGrid_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as Ellipsis} from '#/components/icons/DotGrid'
+import {ListSparkle_Stroke2_Corner0_Rounded as ListSparkle} from '#/components/icons/ListSparkle'
 import {Pencil_Stroke2_Corner0_Rounded as Pencil} from '#/components/icons/Pencil'
 import {Trash_Stroke2_Corner0_Rounded as Trash} from '#/components/icons/Trash'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import * as Layout from '#/components/Layout'
 import {ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -71,7 +70,11 @@ import {PostsList} from '#/components/StarterPack/Main/PostsList'
 import {ProfilesList} from '#/components/StarterPack/Main/ProfilesList'
 import {QrCodeDialog} from '#/components/StarterPack/QrCodeDialog'
 import {ShareDialog} from '#/components/StarterPack/ShareDialog'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 type StarterPackScreeProps = NativeStackScreenProps<
@@ -144,8 +147,11 @@ export function StarterPackScreenInner({
   const isValid =
     starterPack &&
     (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    // Cards may precache a synthetic full view while navigating. Its list CID
+    // is intentionally empty until the server response replaces it, so use
+    // the trusted app-view discriminator here instead of strict validation.
+    bsky.isType(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
   if (!did || !starterPack || !isValid || !moderationOpts) {
     return (
@@ -176,7 +182,7 @@ function StarterPackScreenLoaded({
   routeParams,
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   moderationOpts: ModerationOpts
 }) {
@@ -184,6 +190,7 @@ function StarterPackScreenLoaded({
   const showFeedsTab = Boolean(starterPack.feeds?.length)
   const showPostsTab = Boolean(starterPack.list)
   const {_} = useLingui()
+  const ax = useAnalytics()
 
   const tabs = [
     ...(showPeopleTab ? [_(msg`People`)] : []),
@@ -195,16 +202,16 @@ function StarterPackScreenLoaded({
   const shareDialogControl = useDialogControl()
 
   const shortenLink = useShortenLink()
-  const [link, setLink] = React.useState<string>()
-  const [imageLoaded, setImageLoaded] = React.useState(false)
+  const [link, setLink] = useState<string>()
+  const [imageLoaded, setImageLoaded] = useState(false)
 
-  React.useEffect(() => {
-    logEvent('starterPack:opened', {
+  useEffect(() => {
+    ax.metric('starterPack:opened', {
       starterPack: starterPack.uri,
     })
-  }, [starterPack.uri])
+  }, [ax, starterPack.uri])
 
-  const onOpenShareDialog = React.useCallback(() => {
+  const onOpenShareDialog = useCallback(() => {
     const rkey = new AtUri(starterPack.uri).rkey
     shortenLink(makeStarterPackLink(starterPack.creator.did, rkey)).then(
       res => {
@@ -221,7 +228,7 @@ function StarterPackScreenLoaded({
     shareDialogControl.open()
   }, [shareDialogControl, shortenLink, starterPack])
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (routeParams.new) {
       onOpenShareDialog()
     }
@@ -243,10 +250,9 @@ function StarterPackScreenLoaded({
           ? ({headerHeight, scrollElRef}) => (
               <ProfilesList
                 // Validated above
-                listUri={starterPack!.list!.uri}
+                listUri={starterPack.list!.uri}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
+                scrollElRef={scrollElRef as ListRef}
                 moderationOpts={moderationOpts}
               />
             )
@@ -254,11 +260,9 @@ function StarterPackScreenLoaded({
         {showFeedsTab
           ? ({headerHeight, scrollElRef}) => (
               <FeedsList
-                // @ts-expect-error ?
-                feeds={starterPack?.feeds}
+                feeds={starterPack.feeds!}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
+                scrollElRef={scrollElRef as ListRef}
               />
             )
           : null}
@@ -266,11 +270,9 @@ function StarterPackScreenLoaded({
           ? ({headerHeight, scrollElRef}) => (
               <PostsList
                 // Validated above
-                listUri={starterPack!.list!.uri}
+                listUri={starterPack.list!.uri}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
-                moderationOpts={moderationOpts}
+                scrollElRef={scrollElRef as ListRef}
               />
             )
           : null}
@@ -297,28 +299,30 @@ function Header({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount, hasSession} = useSession()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
   const setActiveStarterPack = useSetActiveStarterPack()
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const {captureAction} = useProgressGuideControls()
 
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const {record, creator} = starterPack
   const isOwn = creator?.did === currentAccount?.did
   const joinedAllTimeCount = starterPack.joinedAllTimeCount ?? 0
+  const ax = useAnalytics()
 
   const navigation = useNavigation<NavigationProp>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     const onFocus = () => {
       if (hasSession) return
       setActiveStarterPack({
@@ -344,12 +348,14 @@ function Header({
 
     setIsProcessing(true)
 
-    let listItems: AppBskyGraphDefs.ListItemView[] = []
+    let listItems: app.bsky.graph.defs.ListItemView[] = []
     try {
-      listItems = await getAllListMembers(agent, starterPack.list.uri)
+      listItems = await getAllListMembers(appviewClient, starterPack.list.uri)
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      Toast.show(_(msg`An error occurred while trying to follow all`), {
+        type: 'error',
+      })
       logger.error('Failed to get list members for starter pack', {
         safeMessage: e,
       })
@@ -368,10 +374,15 @@ function Header({
 
     let followUris: Map<string, string>
     try {
-      followUris = await bulkWriteFollows(agent, dids)
+      followUris = await bulkWriteFollows(pdsClient, appviewClient, dids, {
+        uri: starterPack.uri,
+        cid: starterPack.cid,
+      })
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), 'xmark')
+      Toast.show(_(msg`An error occurred while trying to follow all`), {
+        type: 'error',
+      })
       logger.error('Failed to follow all accounts', {safeMessage: e})
     }
 
@@ -385,19 +396,14 @@ function Header({
     })
     Toast.show(_(msg`All accounts have been followed!`))
     captureAction(ProgressGuideAction.Follow, dids.length)
-    logEvent('starterPack:followAll', {
+    ax.metric('starterPack:followAll', {
       logContext: 'StarterPackProfilesList',
       starterPack: starterPack.uri,
       count: dids.length,
     })
   }
 
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
   }
 
@@ -445,7 +451,7 @@ function Header({
                 <ButtonText>
                   <Trans>Follow all</Trans>
                 </ButtonText>
-                {isProcessing && <Loader size="xs" />}
+                {isProcessing && <ButtonIcon icon={Loader} />}
               </Button>
             )}
             <OverflowMenu
@@ -458,9 +464,7 @@ function Header({
       </ProfileSubpageHeader>
       {!hasSession || richText || joinedAllTimeCount >= 25 ? (
         <View style={[a.px_lg, a.pt_md, a.pb_sm, a.gap_md]}>
-          {richText ? (
-            <RichText value={richText} style={[a.text_md, a.leading_snug]} />
-          ) : null}
+          {richText ? <RichText value={richText} style={[a.text_md]} /> : null}
           {!hasSession ? (
             <Button
               label={_(msg`Join Bluesky`)}
@@ -470,7 +474,6 @@ function Header({
                 })
                 requestSwitchToAccount({requestedAccount: 'new'})
               }}
-              variant="solid"
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
@@ -479,20 +482,23 @@ function Header({
             </Button>
           ) : null}
           {joinedAllTimeCount >= 25 ? (
-            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <FontAwesomeIcon
-                icon="arrow-trend-up"
-                size={12}
-                color={t.atoms.text_contrast_medium.color}
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <TrendingIcon
+                width={16}
+                style={{color: t.atoms.text_contrast_medium.color}}
               />
               <Text
-                style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}>
+                style={[
+                  a.font_semi_bold,
+                  a.text_sm,
+                  t.atoms.text_contrast_medium,
+                ]}>
                 <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
                   <Plural
                     value={starterPack.joinedAllTimeCount || 0}
                     other="# people have"
                   />{' '}
-                  used this starter pack!
+                  joined Bluesky via this starter pack!
                 </Trans>
               </Text>
             </View>
@@ -508,16 +514,18 @@ function OverflowMenu({
   routeParams,
   onOpenShareDialog,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
+  starterPack: app.bsky.graph.defs.StarterPackView
   routeParams: StarterPackScreeProps['route']['params']
   onOpenShareDialog: () => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const reportDialogControl = useReportDialogControl()
   const deleteDialogControl = useDialogControl()
+  const convertToListDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
 
   const {
@@ -526,7 +534,7 @@ function OverflowMenu({
     error: deleteError,
   } = useDeleteStarterPackMutation({
     onSuccess: () => {
-      logEvent('starterPack:delete', {})
+      ax.metric('starterPack:delete', {})
       deleteDialogControl.close(() => {
         if (navigation.canGoBack()) {
           navigation.popToTop()
@@ -552,7 +560,7 @@ function OverflowMenu({
       rkey: routeParams.rkey,
       listUri: starterPack.list.uri,
     })
-    logEvent('starterPack:delete', {})
+    ax.metric('starterPack:delete', {})
   }
 
   return (
@@ -600,27 +608,38 @@ function OverflowMenu({
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={Trash} position="right" />
               </Menu.Item>
+              <Menu.Item
+                label={_(msg`Create a list from this starter pack`)}
+                testID="convertToListBtn"
+                onPress={() => {
+                  convertToListDialogControl.open()
+                }}>
+                <Menu.ItemText>
+                  <Trans>Create list from members</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ListSparkle} position="right" />
+              </Menu.Item>
             </>
           ) : (
             <>
               <Menu.Group>
                 <Menu.Item
                   label={
-                    isWeb
+                    IS_WEB
                       ? _(msg`Copy link to starter pack`)
                       : _(msg`Share via...`)
                   }
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
                   <Menu.ItemText>
-                    {isWeb ? (
+                    {IS_WEB ? (
                       <Trans>Copy link</Trans>
                     ) : (
                       <Trans>Share via...</Trans>
                     )}
                   </Menu.ItemText>
                   <Menu.ItemIcon
-                    icon={isWeb ? ChainLinkIcon : ArrowOutOfBoxIcon}
+                    icon={IS_WEB ? ChainLinkIcon : ArrowOutOfBoxIcon}
                     position="right"
                   />
                 </Menu.Item>
@@ -669,7 +688,7 @@ function OverflowMenu({
               t.atoms.bg_contrast_25,
             ]}>
             <View style={[a.flex_1, a.gap_2xs]}>
-              <Text style={[a.font_bold]}>
+              <Text style={[a.font_semi_bold]}>
                 <Trans>Unable to delete</Trans>
               </Text>
               <Text style={[a.leading_snug]}>{cleanError(deleteError)}</Text>
@@ -692,6 +711,11 @@ function OverflowMenu({
           <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
+
+      <CreateListFromStarterPackDialog
+        control={convertToListDialogControl}
+        starterPack={starterPack}
+      />
     </>
   )
 }
@@ -701,7 +725,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
   const {gtMobile} = useBreakpoints()
-  const [isProcessing, setIsProcessing] = React.useState(false)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   const goBack = () => {
     if (navigation.canGoBack()) {
@@ -719,7 +743,9 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     onError: e => {
       setIsProcessing(false)
       logger.error('Failed to delete invalid starter pack', {safeMessage: e})
-      Toast.show(_(msg`Failed to delete starter pack`), 'xmark')
+      Toast.show(_(msg`Failed to delete starter pack`), {
+        type: 'error',
+      })
     },
   })
 
@@ -727,7 +753,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     <Layout.Content centerContent>
       <View style={[a.py_4xl, a.px_xl, a.align_center, a.gap_5xl]}>
         <View style={[a.w_full, a.align_center, a.gap_lg]}>
-          <Text style={[a.font_bold, a.text_3xl]}>
+          <Text style={[a.font_semi_bold, a.text_3xl]}>
             <Trans>Starter pack is invalid</Trans>
           </Text>
           <Text

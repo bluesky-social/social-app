@@ -1,14 +1,11 @@
-import {
-  ChatBskyConvoDefs,
-  ChatBskyConvoListConvos,
-  ChatBskyConvoMuteConvo,
-} from '@atproto/api'
-import {InfiniteData, useMutation, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
-import {useAgent} from '#/state/session'
-import {RQKEY as CONVO_KEY} from './conversation'
-import {RQKEY_ROOT as CONVO_LIST_KEY} from './list-conversations'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
+import {
+  rollbackConvoOptimistic,
+  updateConvoOptimistic,
+} from './utils/convo-cache'
 
 export function useMuteConvo(
   convoId: string | undefined,
@@ -16,63 +13,36 @@ export function useMuteConvo(
     onSuccess,
     onError,
   }: {
-    onSuccess?: (data: ChatBskyConvoMuteConvo.OutputSchema) => void
+    onSuccess?: (data: chat.bsky.convo.muteConvo.$OutputBody) => void
     onError?: (error: Error) => void
   },
 ) {
   const queryClient = useQueryClient()
-  const agent = useAgent()
+  const client = useChatClient()
 
   return useMutation({
     mutationFn: async ({mute}: {mute: boolean}) => {
       if (!convoId) throw new Error('No convoId provided')
       if (mute) {
-        const {data} = await agent.api.chat.bsky.convo.muteConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-        )
-        return data
+        return await client.call(chat.bsky.convo.muteConvo, {convoId})
       } else {
-        const {data} = await agent.api.chat.bsky.convo.unmuteConvo(
-          {convoId},
-          {headers: DM_SERVICE_HEADERS, encoding: 'application/json'},
-        )
-        return data
+        return await client.call(chat.bsky.convo.unmuteConvo, {convoId})
       }
     },
-    onSuccess: (data, params) => {
-      queryClient.setQueryData<ChatBskyConvoDefs.ConvoView>(
-        CONVO_KEY(data.convo.id),
-        prev => {
-          if (!prev) return
-          return {
-            ...prev,
-            muted: params.mute,
-          }
-        },
-      )
-      queryClient.setQueryData<
-        InfiniteData<ChatBskyConvoListConvos.OutputSchema>
-      >([CONVO_LIST_KEY], prev => {
-        if (!prev?.pages) return
-        return {
-          ...prev,
-          pages: prev.pages.map(page => ({
-            ...page,
-            convos: page.convos.map(convo => {
-              if (convo.id !== data.convo.id) return convo
-              return {
-                ...convo,
-                muted: params.mute,
-              }
-            }),
-          })),
-        }
-      })
-
+    onMutate: ({mute}) => {
+      if (!convoId) return
+      return updateConvoOptimistic(queryClient, convoId, prev => ({
+        ...prev,
+        muted: mute,
+      }))
+    },
+    onSuccess: data => {
       onSuccess?.(data)
     },
-    onError: e => {
+    onError: (e, _variables, context) => {
+      if (convoId && context) {
+        rollbackConvoOptimistic(queryClient, convoId, context)
+      }
       onError?.(e)
     },
   })

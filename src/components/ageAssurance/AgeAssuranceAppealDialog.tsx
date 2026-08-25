@@ -1,19 +1,22 @@
-import React from 'react'
+import {useState} from 'react'
 import {View} from 'react-native'
-import {BSKY_LABELER_DID, ComAtprotoModerationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
 
-import {logger} from '#/state/ageAssurance/util'
-import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
+import {MOD_PROXY_SERVICE} from '#/lib/constants'
+import {useAppviewClient, useSession} from '#/state/session'
 import {atoms as a, useBreakpoints, web} from '#/alf'
 import {AgeAssuranceBadge} from '#/components/ageAssurance/AgeAssuranceBadge'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {logger} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
+import {com, tools} from '#/lexicons'
 
 export function AgeAssuranceAppealDialog({
   control,
@@ -36,39 +39,42 @@ export function AgeAssuranceAppealDialog({
 
 function Inner({control}: {control: Dialog.DialogControlProps}) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
-  const agent = useAgent()
+  const client = useAppviewClient()
 
-  const [details, setDetails] = React.useState('')
+  const [details, setDetails] = useState('')
   const isInvalid = details.length > 1000
 
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
-      logger.metric('ageAssurance:appealDialogSubmit', {})
+      ax.metric('ageAssurance:appealDialogSubmit', {})
 
-      await agent.createModerationReport(
+      if (!currentAccount) {
+        throw new Error('No current account, should be unreachable')
+      }
+
+      await client.call(
+        com.atproto.moderation.createReport,
         {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
+          reasonType: tools.ozone.report.defs.reasonAppeal.value,
           subject: {
             $type: 'com.atproto.admin.defs#repoRef',
-            did: currentAccount?.did,
+            did: currentAccount.did,
           },
           reason: `AGE_ASSURANCE_INQUIRY: ` + details,
         },
-        {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${BSKY_LABELER_DID}#atproto_labeler`,
-          },
-        },
+        {service: MOD_PROXY_SERVICE},
       )
     },
     onError: err => {
       logger.error('AgeAssuranceAppealDialog failed', {safeMessage: err})
       Toast.show(
         _(msg`Age assurance inquiry failed to send, please try again.`),
-        'xmark',
+        {
+          type: 'error',
+        },
       )
     },
     onSuccess: () => {
@@ -90,7 +96,7 @@ function Inner({control}: {control: Dialog.DialogControlProps}) {
         <AgeAssuranceBadge />
       </View>
 
-      <Text style={[a.text_2xl, a.font_heavy, a.pt_md, a.leading_tight]}>
+      <Text style={[a.text_2xl, a.font_bold, a.pt_md, a.leading_tight]}>
         <Trans>Contact us</Trans>
       </Text>
 

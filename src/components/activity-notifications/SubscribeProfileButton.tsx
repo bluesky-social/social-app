@@ -1,7 +1,6 @@
-import {useCallback} from 'react'
-import {type ModerationOpts} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useCallback, useEffect, useState} from 'react'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -10,7 +9,6 @@ import {useDialogControl} from '#/components/Dialog'
 import {BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon} from '#/components/icons/BellPlus'
 import {BellRinging_Filled_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Tooltip from '#/components/Tooltip'
-import {Text} from '#/components/Typography'
 import {useActivitySubscriptionsNudged} from '#/storage/hooks/activity-subscriptions-nudged'
 import type * as bsky from '#/types/bsky'
 import {SubscribeProfileDialog} from './SubscribeProfileDialog'
@@ -18,17 +16,32 @@ import {SubscribeProfileDialog} from './SubscribeProfileDialog'
 export function SubscribeProfileButton({
   profile,
   moderationOpts,
+  disableHint,
 }: {
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  disableHint?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const requireEmailVerification = useRequireEmailVerification()
   const subscribeDialogControl = useDialogControl()
   const [activitySubscriptionsNudged, setActivitySubscriptionsNudged] =
     useActivitySubscriptionsNudged()
+  const [showTooltip, setShowTooltip] = useState(false)
 
-  const onDismissTooltip = () => {
+  useEffect(() => {
+    if (!activitySubscriptionsNudged) {
+      const timeout = setTimeout(() => {
+        setShowTooltip(true)
+      }, 500)
+      return () => clearTimeout(timeout)
+    }
+  }, [activitySubscriptionsNudged])
+
+  const onDismissTooltip = (visible: boolean) => {
+    if (visible) return
+
+    setShowTooltip(false)
     setActivitySubscriptionsNudged(true)
   }
 
@@ -53,10 +66,12 @@ export function SubscribeProfileButton({
 
   const Icon = isSubscribed ? BellRingingIcon : BellPlusIcon
 
+  const tooltipVisible = showTooltip && !disableHint
+
   return (
     <>
       <Tooltip.Outer
-        visible={!activitySubscriptionsNudged}
+        visible={tooltipVisible}
         onVisibleChange={onDismissTooltip}
         position="bottom">
         <Tooltip.Target>
@@ -64,21 +79,17 @@ export function SubscribeProfileButton({
             accessibilityRole="button"
             testID="dmBtn"
             size="small"
-            color="secondary"
-            variant="solid"
+            color={tooltipVisible ? 'primary_subtle' : 'secondary'}
             shape="round"
-            label={_(msg`Get notified when ${name} posts`)}
+            label={l`Get notified when ${name} posts`}
             onPress={wrappedOnPress}>
             <ButtonIcon icon={Icon} size="md" />
           </Button>
         </Tooltip.Target>
-        <Tooltip.TextBubble>
-          <Text>
-            <Trans>Get notified about new posts</Trans>
-          </Text>
-        </Tooltip.TextBubble>
+        <Tooltip.BubbleText label={l`Get notified about new posts`}>
+          <Trans>Get notified about new posts</Trans>
+        </Tooltip.BubbleText>
       </Tooltip.Outer>
-
       <SubscribeProfileDialog
         control={subscribeDialogControl}
         profile={profile}

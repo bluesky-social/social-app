@@ -1,11 +1,10 @@
-import React from 'react'
-import {type ColorValue, Dimensions, StyleSheet, View} from 'react-native'
+import {useMemo, useState} from 'react'
+import {type ColorValue, Dimensions, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
   interpolateColor,
-  runOnJS,
   useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
@@ -14,22 +13,11 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 
 import {useHaptics} from '#/lib/haptics'
-
-interface GestureAction {
-  color: ColorValue
-  action: () => void
-  threshold: number
-  icon: React.ElementType
-}
-
-interface GestureActions {
-  leftFirst?: GestureAction
-  leftSecond?: GestureAction
-  rightFirst?: GestureAction
-  rightSecond?: GestureAction
-}
+import {atoms as a} from '#/alf'
+import {type GestureActions} from './GestureActionView.shared'
 
 const MAX_WIDTH = Dimensions.get('screen').width
 const ICON_SIZE = 32
@@ -50,7 +38,7 @@ export function GestureActionView({
     )
   }
 
-  const [activeAction, setActiveAction] = React.useState<
+  const [activeAction, setActiveAction] = useState<
     'leftFirst' | 'leftSecond' | 'rightFirst' | 'rightSecond' | null
   >(null)
 
@@ -75,7 +63,7 @@ export function GestureActionView({
       return
     }
 
-    iconScale.set(() =>
+    iconScale.set(
       withSequence(
         withTiming(1.2, {duration: 175}),
         withTiming(1, {duration: 100}),
@@ -87,17 +75,17 @@ export function GestureActionView({
     () => transX,
     () => {
       if (transX.get() === 0) {
-        runOnJS(setActiveAction)(null)
+        scheduleOnRN(setActiveAction, null)
       } else if (transX.get() < 0) {
         if (
           actions.leftSecond &&
           transX.get() <= -actions.leftSecond.threshold
         ) {
           if (activeAction !== 'leftSecond') {
-            runOnJS(setActiveAction)('leftSecond')
+            scheduleOnRN(setActiveAction, 'leftSecond')
           }
         } else if (activeAction !== 'leftFirst') {
-          runOnJS(setActiveAction)('leftFirst')
+          scheduleOnRN(setActiveAction, 'leftFirst')
         }
       } else if (transX.get() > 0) {
         if (
@@ -105,10 +93,10 @@ export function GestureActionView({
           transX.get() > actions.rightSecond.threshold
         ) {
           if (activeAction !== 'rightSecond') {
-            runOnJS(setActiveAction)('rightSecond')
+            scheduleOnRN(setActiveAction, 'rightSecond')
           }
         } else if (activeAction !== 'rightFirst') {
-          runOnJS(setActiveAction)('rightFirst')
+          scheduleOnRN(setActiveAction, 'rightFirst')
         }
       }
     },
@@ -140,7 +128,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -157,7 +145,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&
@@ -174,7 +162,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -191,7 +179,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            runOnJS(haptic)()
+            scheduleOnRN(haptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&
@@ -206,18 +194,18 @@ export function GestureActionView({
       'worklet'
       if (e.translationX < 0) {
         if (hitSecond.get() && actions.leftSecond) {
-          runOnJS(actions.leftSecond.action)()
+          scheduleOnRN(actions.leftSecond.action)
         } else if (hitFirst.get() && actions.leftFirst) {
-          runOnJS(actions.leftFirst.action)()
+          scheduleOnRN(actions.leftFirst.action)
         }
       } else if (e.translationX > 0) {
         if (hitSecond.get() && actions.rightSecond) {
-          runOnJS(actions.rightSecond.action)()
+          scheduleOnRN(actions.rightSecond.action)
         } else if (hitSecond.get() && actions.rightFirst) {
-          runOnJS(actions.rightFirst.action)()
+          scheduleOnRN(actions.rightFirst.action)
         }
       }
-      transX.set(() => withTiming(0, {duration: 200}))
+      transX.set(withTiming(0, {duration: 200}))
       hitFirst.set(false)
       hitSecond.set(false)
       isActive.set(false)
@@ -231,7 +219,7 @@ export function GestureActionView({
     }
   })
 
-  const leftSideInterpolation = React.useMemo(() => {
+  const leftSideInterpolation = useMemo(() => {
     return createInterpolation({
       firstColor: actions.leftFirst?.color,
       secondColor: actions.leftSecond?.color,
@@ -241,7 +229,7 @@ export function GestureActionView({
     })
   }, [actions.leftFirst, actions.leftSecond])
 
-  const rightSideInterpolation = React.useMemo(() => {
+  const rightSideInterpolation = useMemo(() => {
     return createInterpolation({
       firstColor: actions.rightFirst?.color,
       secondColor: actions.rightSecond?.color,
@@ -251,14 +239,14 @@ export function GestureActionView({
     })
   }, [actions.rightFirst, actions.rightSecond])
 
-  const interpolation = React.useMemo<{
+  const interpolation = useMemo<{
     inputRange: number[]
     outputRange: ColorValue[]
   }>(() => {
     if (!actions.leftFirst) {
-      return rightSideInterpolation!
+      return rightSideInterpolation
     } else if (!actions.rightFirst) {
-      return leftSideInterpolation!
+      return leftSideInterpolation
     } else {
       return {
         inputRange: [
@@ -300,8 +288,7 @@ export function GestureActionView({
   return (
     <GestureDetector gesture={composedGesture}>
       <View>
-        <Animated.View
-          style={[StyleSheet.absoluteFill, animatedBackgroundStyle]}>
+        <Animated.View style={[a.absolute, a.inset_0, animatedBackgroundStyle]}>
           <View
             style={{
               flex: 1,

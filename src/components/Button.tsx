@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  forwardRef,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react'
 import {
   type AccessibilityProps,
   type GestureResponderEvent,
@@ -7,7 +14,6 @@ import {
   Pressable,
   type PressableProps,
   type StyleProp,
-  StyleSheet,
   type TargetedEvent,
   type TextProps,
   type TextStyle,
@@ -39,8 +45,8 @@ export type ButtonColor =
   | 'negative'
   | 'primary_subtle'
   | 'negative_subtle'
-export type ButtonSize = 'tiny' | 'small' | 'large'
-export type ButtonShape = 'round' | 'square' | 'default'
+export type ButtonSize = 'tiny' | 'small' | 'medium' | 'large'
+export type ButtonShape = 'round' | 'square' | 'rectangular' | 'default'
 export type VariantProps = {
   /**
    * The style variation of the button
@@ -57,6 +63,11 @@ export type VariantProps = {
   size?: ButtonSize
   /**
    * The shape of the button
+   *
+   * - `default`: Pill shaped. Most buttons should use this shape.
+   * - `round`: Circular. For icon-only buttons.
+   * - `square`: Square. For icon-only buttons.
+   * - `rectangular`: Rectangular. Matches previous style, use when adjacent to form fields.
    */
   shape?: ButtonShape
 }
@@ -66,13 +77,16 @@ export type ButtonState = {
   focused: boolean
   pressed: boolean
   disabled: boolean
+  /**
+   * Alias for hovered || focused || pressed
+   */
+  interacting: boolean
 }
 
 export type ButtonContext = VariantProps & ButtonState
 
 type NonTextElements =
-  | React.ReactElement
-  | Iterable<React.ReactElement | null | undefined | boolean>
+  React.ReactElement | Iterable<React.ReactElement | null | undefined | boolean>
 
 export type ButtonProps = Pick<
   PressableProps,
@@ -87,6 +101,8 @@ export type ButtonProps = Pick<
   | 'onPressOut'
   | 'onFocus'
   | 'onBlur'
+  | 'onAccessibilityAction'
+  | 'onAccessibilityEscape'
 > &
   AccessibilityProps &
   VariantProps & {
@@ -101,24 +117,27 @@ export type ButtonProps = Pick<
     PressableComponent?: React.ComponentType<PressableProps>
   }
 
-export type ButtonTextProps = TextProps & VariantProps & {disabled?: boolean}
+export type ButtonTextProps = TextProps &
+  VariantProps & {disabled?: boolean; emoji?: boolean}
 
-const Context = React.createContext<VariantProps & ButtonState>({
+const Context = createContext<VariantProps & ButtonState>({
   hovered: false,
   focused: false,
   pressed: false,
   disabled: false,
+  interacting: false,
 })
+Context.displayName = 'ButtonContext'
 
 export function useButtonContext() {
-  return React.useContext(Context)
+  return useContext(Context)
 }
 
-export const Button = React.forwardRef<View, ButtonProps>(
+export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
   (
     {
       children,
-      variant,
+      variant: variantProp,
       color,
       size,
       shape = 'default',
@@ -142,18 +161,19 @@ export const Button = React.forwardRef<View, ButtonProps>(
      * If a `color` is set, then we want to use the existing codepaths for
      * "solid" buttons. This is to maintain backwards compatibility.
      */
-    if (!variant && color) {
+    let variant: VariantProps['variant'] = variantProp
+    if (!variantProp && color) {
       variant = 'solid'
     }
 
     const t = useTheme()
-    const [state, setState] = React.useState({
+    const [state, setState] = useState({
       pressed: false,
       hovered: false,
       focused: false,
     })
 
-    const onPressIn = React.useCallback(
+    const onPressIn = useCallback(
       (e: GestureResponderEvent) => {
         setState(s => ({
           ...s,
@@ -163,7 +183,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onPressInOuter],
     )
-    const onPressOut = React.useCallback(
+    const onPressOut = useCallback(
       (e: GestureResponderEvent) => {
         setState(s => ({
           ...s,
@@ -173,7 +193,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onPressOutOuter],
     )
-    const onHoverIn = React.useCallback(
+    const onHoverIn = useCallback(
       (e: MouseEvent) => {
         setState(s => ({
           ...s,
@@ -183,7 +203,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onHoverInOuter],
     )
-    const onHoverOut = React.useCallback(
+    const onHoverOut = useCallback(
       (e: MouseEvent) => {
         setState(s => ({
           ...s,
@@ -193,7 +213,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onHoverOutOuter],
     )
-    const onFocus = React.useCallback(
+    const onFocus = useCallback(
       (e: NativeSyntheticEvent<TargetedEvent>) => {
         setState(s => ({
           ...s,
@@ -203,7 +223,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       },
       [setState, onFocusOuter],
     )
-    const onBlur = React.useCallback(
+    const onBlur = useCallback(
       (e: NativeSyntheticEvent<TargetedEvent>) => {
         setState(s => ({
           ...s,
@@ -214,7 +234,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
       [setState, onBlurOuter],
     )
 
-    const {baseStyles, hoverStyles} = React.useMemo(() => {
+    const {baseStyles, hoverStyles} = useMemo(() => {
       const baseStyles: ViewStyle[] = []
       const hoverStyles: ViewStyle[] = []
 
@@ -239,7 +259,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
           }
         } else if (color === 'secondary') {
           if (!disabled) {
-            baseStyles.push(t.atoms.bg_contrast_25)
+            baseStyles.push(t.atoms.bg_contrast_50)
             hoverStyles.push(t.atoms.bg_contrast_100)
           } else {
             baseStyles.push(t.atoms.bg_contrast_50)
@@ -273,51 +293,27 @@ export const Button = React.forwardRef<View, ButtonProps>(
         } else if (color === 'primary_subtle') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_50,
-                dim: t.palette.primary_100,
-                dark: t.palette.primary_100,
-              }),
+              backgroundColor: t.palette.primary_50,
             })
             hoverStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_100,
-                dim: t.palette.primary_200,
-                dark: t.palette.primary_200,
-              }),
+              backgroundColor: t.palette.primary_100,
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.primary_25,
-                dim: t.palette.primary_50,
-                dark: t.palette.primary_50,
-              }),
+              backgroundColor: t.palette.primary_50,
             })
           }
         } else if (color === 'negative_subtle') {
           if (!disabled) {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_50,
-                dim: t.palette.negative_100,
-                dark: t.palette.negative_100,
-              }),
+              backgroundColor: t.palette.negative_50,
             })
             hoverStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_100,
-                dim: t.palette.negative_200,
-                dark: t.palette.negative_200,
-              }),
+              backgroundColor: t.palette.negative_100,
             })
           } else {
             baseStyles.push({
-              backgroundColor: select(t.name, {
-                light: t.palette.negative_25,
-                dim: t.palette.negative_50,
-                dark: t.palette.negative_50,
-              }),
+              backgroundColor: t.palette.negative_50,
             })
           }
         }
@@ -371,7 +367,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             if (!disabled) {
               baseStyles.push(t.atoms.bg)
               hoverStyles.push({
-                backgroundColor: t.palette.contrast_25,
+                backgroundColor: t.palette.contrast_50,
               })
             }
           }
@@ -395,7 +391,7 @@ export const Button = React.forwardRef<View, ButtonProps>(
             if (!disabled) {
               baseStyles.push(t.atoms.bg)
               hoverStyles.push({
-                backgroundColor: t.palette.contrast_25,
+                backgroundColor: t.palette.contrast_50,
               })
             }
           }
@@ -459,10 +455,43 @@ export const Button = React.forwardRef<View, ButtonProps>(
 
       if (shape === 'default') {
         if (size === 'large') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 12,
+            paddingHorizontal: 24,
+            gap: 6,
+          })
+        } else if (size === 'medium') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 9,
+            paddingHorizontal: 28,
+            gap: 5,
+          })
+        } else if (size === 'small') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 8,
+            paddingHorizontal: 14,
+            gap: 5,
+          })
+        } else if (size === 'tiny') {
+          baseStyles.push(a.rounded_full, {
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+            gap: 3,
+          })
+        }
+      } else if (shape === 'rectangular') {
+        if (size === 'large') {
           baseStyles.push({
             paddingVertical: 12,
             paddingHorizontal: 25,
             borderRadius: 10,
+            gap: 3,
+          })
+        } else if (size === 'medium') {
+          baseStyles.push({
+            paddingVertical: 9,
+            paddingHorizontal: 16,
+            borderRadius: 8,
             gap: 3,
           })
         } else if (size === 'small') {
@@ -490,6 +519,12 @@ export const Button = React.forwardRef<View, ButtonProps>(
             baseStyles.push({height: 44, width: 44})
           } else {
             baseStyles.push({height: 44, width: 44})
+          }
+        } else if (size === 'medium') {
+          if (shape === 'round') {
+            baseStyles.push({height: 33, width: 33})
+          } else {
+            baseStyles.push({height: 33, width: 33})
           }
         } else if (size === 'small') {
           if (shape === 'round') {
@@ -524,25 +559,24 @@ export const Button = React.forwardRef<View, ButtonProps>(
       }
     }, [t, variant, color, size, shape, disabled])
 
-    const context = React.useMemo<ButtonContext>(
+    const context = useMemo<ButtonContext>(
       () => ({
         ...state,
+        interacting: state.hovered || state.focused || state.pressed,
         variant,
         color,
         size,
+        shape,
         disabled: disabled || false,
       }),
-      [state, variant, color, size, disabled],
+      [state, variant, color, size, shape, disabled],
     )
-
-    const flattenedBaseStyles = flatten([baseStyles, style])
 
     return (
       <PressableComponent
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
-        // @ts-ignore - this will always be a pressable
         ref={ref}
         aria-label={label}
         aria-pressed={state.pressed}
@@ -556,9 +590,10 @@ export const Button = React.forwardRef<View, ButtonProps>(
           a.align_center,
           a.justify_center,
           a.curve_continuous,
-          flattenedBaseStyles,
+          baseStyles,
+          style,
           ...(state.hovered || state.pressed
-            ? [hoverStyles, flatten(hoverStyleProp)]
+            ? [hoverStyles, hoverStyleProp]
             : []),
         ]}
         onPressIn={onPressIn}
@@ -579,7 +614,7 @@ Button.displayName = 'Button'
 export function useSharedButtonTextStyles() {
   const t = useTheme()
   const {color, variant, disabled, size} = useButtonContext()
-  return React.useMemo(() => {
+  return useMemo(() => {
     const baseStyles: TextStyle[] = []
 
     /*
@@ -625,37 +660,21 @@ export function useSharedButtonTextStyles() {
       } else if (color === 'primary_subtle') {
         if (!disabled) {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.primary_600,
-              dim: t.palette.primary_800,
-              dark: t.palette.primary_800,
-            }),
+            color: t.palette.primary_600,
           })
         } else {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.primary_200,
-              dim: t.palette.primary_200,
-              dark: t.palette.primary_200,
-            }),
+            color: t.palette.primary_200,
           })
         }
       } else if (color === 'negative_subtle') {
         if (!disabled) {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.negative_600,
-              dim: t.palette.negative_800,
-              dark: t.palette.negative_800,
-            }),
+            color: t.palette.negative_600,
           })
         } else {
           baseStyles.push({
-            color: select(t.name, {
-              light: t.palette.negative_200,
-              dim: t.palette.negative_200,
-              dark: t.palette.negative_200,
-            }),
+            color: t.palette.negative_200,
           })
         }
       }
@@ -758,14 +777,16 @@ export function useSharedButtonTextStyles() {
     }
 
     if (size === 'large') {
-      baseStyles.push(a.text_md, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_md, a.font_medium)
+    } else if (size === 'medium') {
+      baseStyles.push(a.text_sm, a.font_medium)
     } else if (size === 'small') {
-      baseStyles.push(a.text_sm, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_sm, a.font_medium)
     } else if (size === 'tiny') {
-      baseStyles.push(a.text_xs, a.leading_snug, a.font_medium)
+      baseStyles.push(a.text_xs, a.font_semi_bold)
     }
 
-    return StyleSheet.flatten(baseStyles)
+    return flatten(baseStyles)
   }, [t, variant, color, size, disabled])
 }
 
@@ -790,9 +811,9 @@ export function ButtonIcon({
   position?: 'left' | 'right'
   size?: SVGIconProps['size']
 }) {
-  const {size: buttonSize} = useButtonContext()
+  const {size: buttonSize, shape: buttonShape} = useButtonContext()
   const textStyles = useSharedButtonTextStyles()
-  const {iconSize, iconContainerSize} = React.useMemo(() => {
+  const {iconSize, iconContainerSize, iconNegativeMargin} = useMemo(() => {
     /**
      * Pre-set icon sizes for different button sizes
      */
@@ -800,6 +821,7 @@ export function ButtonIcon({
       size ??
       (({
         large: 'md',
+        medium: 'sm',
         small: 'sm',
         tiny: 'xs',
       }[buttonSize || 'small'] || 'sm') as Exclude<
@@ -812,12 +834,15 @@ export function ButtonIcon({
      * also so that we can calculate transforms.
      */
     const iconSize = {
+      '2xs': 8,
       xs: 12,
       sm: 16,
       md: 18,
       lg: 24,
       xl: 28,
       '2xl': 32,
+      '3xl': 40,
+      '4xl': 48,
     }[iconSizeShorthand]
 
     /*
@@ -826,23 +851,42 @@ export function ButtonIcon({
      */
     const iconContainerSize = {
       large: 20,
+      medium: 17,
       small: 17,
       tiny: 15,
     }[buttonSize || 'small']
 
+    /*
+     * The icon needs to be closer to the edge of the button than the text. Therefore
+     * we make the gap slightly too large, and then pull in the sides using negative margins.
+     */
+    let iconNegativeMargin = 0
+
+    if (buttonShape === 'default') {
+      iconNegativeMargin = {
+        large: -2,
+        medium: -2,
+        small: -2,
+        tiny: -1,
+      }[buttonSize || 'small']
+    }
+
     return {
       iconSize,
       iconContainerSize,
+      iconNegativeMargin,
     }
-  }, [buttonSize, size])
+  }, [buttonSize, buttonShape, size])
 
   return (
     <View
       style={[
         a.z_20,
         {
-          width: iconContainerSize,
+          width: size === '2xs' ? 10 : iconContainerSize,
           height: iconContainerSize,
+          marginLeft: iconNegativeMargin,
+          marginRight: iconNegativeMargin,
         },
       ]}>
       <View
@@ -874,5 +918,49 @@ export function ButtonIcon({
         />
       </View>
     </View>
+  )
+}
+
+export type StackedButtonProps = Omit<
+  ButtonProps,
+  keyof VariantProps | 'children'
+> &
+  Pick<VariantProps, 'color'> & {
+    children: React.ReactNode
+    icon: React.ComponentType<SVGIconProps>
+  }
+
+export function StackedButton({children, ...props}: StackedButtonProps) {
+  return (
+    <Button
+      {...props}
+      size="tiny"
+      style={[
+        a.flex_col,
+        {
+          height: 72,
+          paddingHorizontal: 16,
+          borderRadius: 20,
+          gap: 4,
+        },
+        props.style,
+      ]}>
+      <StackedButtonInnerText icon={props.icon}>
+        {children}
+      </StackedButtonInnerText>
+    </Button>
+  )
+}
+
+function StackedButtonInnerText({
+  children,
+  icon: Icon,
+}: Pick<StackedButtonProps, 'icon' | 'children'>) {
+  const textStyles = useSharedButtonTextStyles()
+  return (
+    <>
+      <Icon width={24} fill={textStyles.color} />
+      <ButtonText>{children}</ButtonText>
+    </>
   )
 }

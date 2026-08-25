@@ -1,7 +1,8 @@
-import {LogBox, Pressable, View} from 'react-native'
+import {useState} from 'react'
+import {LogBox, Pressable, TextInput, View} from 'react-native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useModalControls} from '#/state/modals'
+import {BLUESKY_PROXY_HEADER} from '#/lib/constants'
 import {useSessionApi} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useOnboardingDispatch} from '#/state/shell/onboarding'
@@ -17,13 +18,26 @@ LogBox.ignoreAllLogs()
 
 const BTN = {height: 1, width: 1, backgroundColor: 'red'}
 
+/*
+ * This component is mounted inside <Fragment key={currentAccount?.did}> in
+ * App.tsx, so it fully remounts whenever the account changes (sign-in /
+ * sign-out). If the "proxy configured" flag lived only in React state it would
+ * reset to false on every remount, hiding the sign-in buttons. Keeping it at
+ * module level lets it survive remounts so the sign-in buttons stay visible
+ * across sign-out during multi-account flows. Module state still resets when
+ * the app relaunches with cleared state at the start of each flow, which is the
+ * desired gating behavior.
+ */
+let hasConfiguredProxy = false
+
 export function TestCtrls() {
   const queryClient = useQueryClient()
   const {logoutEveryAccount, login} = useSessionApi()
-  const {openModal} = useModalControls()
   const onboardingDispatch = useOnboardingDispatch()
   const {setShowLoggedOut} = useLoggedOutViewControls()
+  const [isProxyConfigured, setIsProxyConfigured] = useState(hasConfiguredProxy)
   const onPressSignInAlice = async () => {
+    console.info('[E2E] Signing in as Alice')
     await login(
       {
         service: 'http://localhost:3000',
@@ -35,6 +49,7 @@ export function TestCtrls() {
     setShowLoggedOut(false)
   }
   const onPressSignInBob = async () => {
+    console.info('[E2E] Signing in as Bob')
     await login(
       {
         service: 'http://localhost:3000',
@@ -45,20 +60,47 @@ export function TestCtrls() {
     )
     setShowLoggedOut(false)
   }
+  const [proxyHeader, setProxyHeader] = useState('')
   return (
     <View style={{position: 'absolute', top: 100, right: 0, zIndex: 100}}>
-      <Pressable
-        testID="e2eSignInAlice"
-        onPress={onPressSignInAlice}
-        accessibilityRole="button"
+      <TextInput
+        accessibilityLabel="Text input field"
+        accessibilityHint="Enter proxy header"
+        testID="e2eProxyHeaderInput"
+        onChangeText={val => setProxyHeader(val)}
+        autoComplete="off"
+        autoCorrect={false}
+        autoCapitalize="none"
+        onSubmitEditing={() => {
+          const header = `${proxyHeader}#bsky_appview`
+          /*
+           * The appview client reads `BLUESKY_PROXY_HEADER.get()` when the
+           * bundle builds it (see clients.ts), so setting the mutable constant
+           * retargets the proxy for the sign-ins below without reconfiguring
+           * anything: the gate above means no bundle exists yet.
+           */
+          BLUESKY_PROXY_HEADER.set(header)
+          hasConfiguredProxy = true
+          setIsProxyConfigured(true)
+        }}
         style={BTN}
       />
-      <Pressable
-        testID="e2eSignInBob"
-        onPress={onPressSignInBob}
-        accessibilityRole="button"
-        style={BTN}
-      />
+      {isProxyConfigured && (
+        <>
+          <Pressable
+            testID="e2eSignInAlice"
+            onPress={onPressSignInAlice}
+            accessibilityRole="button"
+            style={BTN}
+          />
+          <Pressable
+            testID="e2eSignInBob"
+            onPress={onPressSignInBob}
+            accessibilityRole="button"
+            style={BTN}
+          />
+        </>
+      )}
       <Pressable
         testID="e2eSignOut"
         onPress={() => logoutEveryAccount('Settings')}
@@ -108,12 +150,6 @@ export function TestCtrls() {
         style={BTN}
       />
       <Pressable
-        testID="e2eOpenInviteCodesModal"
-        onPress={() => openModal({name: 'invite-codes'})}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      <Pressable
         testID="e2eOpenLoggedOutView"
         onPress={() => setShowLoggedOut(true)}
         accessibilityRole="button"
@@ -121,15 +157,6 @@ export function TestCtrls() {
       />
       <Pressable
         testID="e2eStartOnboarding"
-        onPress={() => {
-          onboardingDispatch({type: 'start'})
-        }}
-        accessibilityRole="button"
-        style={BTN}
-      />
-      {/* TODO remove this entire control when experiment is over */}
-      <Pressable
-        testID="e2eStartLongboarding"
         onPress={() => {
           onboardingDispatch({type: 'start'})
         }}

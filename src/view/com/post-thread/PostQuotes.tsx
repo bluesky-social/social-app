@@ -1,14 +1,10 @@
 import {useCallback, useState} from 'react'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  moderatePost,
-  ModerationDecision,
-} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -16,6 +12,8 @@ import {usePostQuotesQuery} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {Post} from '#/view/com/post/Post'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {List} from '../util/List'
 
 function renderItem({
@@ -23,9 +21,9 @@ function renderItem({
   index,
 }: {
   item: {
-    post: AppBskyFeedDefs.PostView
+    post: app.bsky.feed.defs.PostView
     moderation: ModerationDecision
-    record: AppBskyFeedPost.Record
+    record: app.bsky.feed.post.Main
   }
   index: number
 }) {
@@ -33,9 +31,9 @@ function renderItem({
 }
 
 function keyExtractor(item: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   moderation: ModerationDecision
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
 }) {
   return item.post.uri
 }
@@ -44,6 +42,7 @@ export function PostQuotes({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
+  const trackPostView = usePostViewTracking('PostQuotes')
 
   const {
     data: resolvedUri,
@@ -68,7 +67,10 @@ export function PostQuotes({uri}: {uri: string}) {
     data?.pages
       .flatMap(page =>
         page.posts.map(post => {
-          if (!AppBskyFeedPost.isRecord(post.record) || !moderationOpts) {
+          if (
+            !bsky.isType(app.bsky.feed.post, post.record) ||
+            !moderationOpts
+          ) {
             return null
           }
           const moderation = moderatePost(post, moderationOpts)
@@ -123,6 +125,7 @@ export function PostQuotes({uri}: {uri: string}) {
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
+      onItemSeen={item => trackPostView(item.post)}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}
@@ -132,7 +135,6 @@ export function PostQuotes({uri}: {uri: string}) {
           endMessageText={_(msg`That's all, folks!`)}
         />
       }
-      // @ts-ignore our .web version only -prf
       desktopFixedHeight
       initialNumToRender={initialNumToRender}
       windowSize={11}

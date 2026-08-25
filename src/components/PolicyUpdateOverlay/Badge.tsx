@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -22,10 +22,10 @@ export function Badge() {
             backgroundColor: t.palette.primary_25,
           },
         ]}>
-        <Logo fill={t.palette.primary_600} width={14} />
+        <Logo allowVariants={false} fill={t.palette.primary_600} width={14} />
         <Text
           style={[
-            a.font_bold,
+            a.font_semi_bold,
             {
               color: t.palette.primary_600,
             },

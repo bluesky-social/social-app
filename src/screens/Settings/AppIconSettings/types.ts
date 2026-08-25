@@ -1,8 +1,9 @@
-import {ImageSourcePropType} from 'react-native'
+import {type ImageSource} from 'expo-image'
+import type * as DynamicAppIcon from '@bsky.app/expo-dynamic-app-icon'
 
 export type AppIconSet = {
-  id: string
+  id: DynamicAppIcon.IconName
   name: string
-  iosImage: () => ImageSourcePropType
-  androidImage: () => ImageSourcePropType
+  iosImage: () => ImageSource
+  androidImage: () => ImageSource
 }

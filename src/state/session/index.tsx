@@ -1,241 +1,567 @@
-import React from 'react'
-import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useInsertionEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from 'react'
+import {type Client} from '@atproto/lex'
+import {type SessionData} from '@atproto/lex-password-session'
 
-import {isWeb} from '#/platform/detection'
 import * as persisted from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
+import {IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 import {emitSessionDropped} from '../events'
+import {getPublicAppviewClient} from './clients'
+import {createSessionBundleAndCreateAccount} from './create-account'
+import {pickExpiryRescueCandidate} from './expiry-rescue'
+import {type Action, getInitialState, reducer, type State} from './reducer'
 import {
-  agentToSessionAccount,
-  type BskyAppAgent,
-  createAgentAndCreateAccount,
-  createAgentAndLogin,
-  createAgentAndResume,
-  sessionAccountToSession,
-} from './agent'
-import {getInitialState, reducer} from './reducer'
-
-export {isSignupQueued} from './util'
-import {addSessionDebugLog} from './logging'
+  type AtpSessionEvent,
+  createSessionBundleAndLogin,
+  createSessionBundleAndResume,
+  createSessionBundleFromStoredAccount,
+  disposeBundle,
+  type PublicSessionBundle,
+  type SessionBundle,
+  sessionDataToSessionAccount,
+} from './session-core'
+export {isSignupQueued} from './session-data'
+import {
+  addSessionDebugLog,
+  getBundleId,
+  redactAccount,
+  redactPersistedSession,
+  redactSessionData,
+  redactState,
+} from './logging'
 export type {SessionAccount} from '#/state/session/types'
-import {logger} from '#/logger'
+
+import {clearPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {
   type SessionApiContext,
   type SessionStateContext,
 } from '#/state/session/types'
+import {useOnboardingDispatch} from '#/state/shell/onboarding'
+import {
+  clearAgeAssuranceServerDataForAll,
+  clearAgeAssuranceServerDataForDid,
+} from '#/ageAssurance/data'
 
-const StateContext = React.createContext<SessionStateContext>({
+const StateContext = createContext<SessionStateContext>({
   accounts: [],
   currentAccount: undefined,
   hasSession: false,
 })
+StateContext.displayName = 'SessionStateContext'
 
-const AgentContext = React.createContext<BskyAgent | null>(null)
+/** Active account bundle, or the public bundle when logged out. */
+const BundleContext = createContext<SessionBundle | PublicSessionBundle | null>(
+  null,
+)
+BundleContext.displayName = 'SessionBundleContext'
 
-const ApiContext = React.createContext<SessionApiContext>({
+const ApiContext = createContext<SessionApiContext>({
   createAccount: async () => {},
   login: async () => {},
-  logoutCurrentAccount: async () => {},
-  logoutEveryAccount: async () => {},
+  logoutCurrentAccount: () => {},
+  logoutEveryAccount: () => {},
   resumeSession: async () => {},
   removeAccount: () => {},
   partialRefreshSession: async () => {},
+  refreshSession: () => Promise.resolve(undefined),
 })
+ApiContext.displayName = 'SessionApiContext'
+
+class SessionStore {
+  private state: State
+  private listeners = new Set<() => void>()
+
+  constructor() {
+    // Careful: By the time this runs, `persisted` needs to already be filled.
+    const initialState = getInitialState(persisted.get('session').accounts)
+    addSessionDebugLog({type: 'reducer:init', state: redactState(initialState)})
+    this.state = initialState
+  }
+
+  getState = (): State => {
+    return this.state
+  }
+
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener)
+    return () => {
+      this.listeners.delete(listener)
+    }
+  }
+
+  dispatch = (action: Action) => {
+    const nextState = reducer(this.state, action)
+    this.state = nextState
+    // Persist synchronously without waiting for the React render cycle.
+    if (nextState.needsPersist) {
+      nextState.needsPersist = false
+      const persistedData = {
+        accounts: nextState.accounts,
+        currentAccount: nextState.accounts.find(
+          a => a.did === nextState.currentBundleState.did,
+        ),
+      }
+      addSessionDebugLog({
+        type: 'persisted:broadcast',
+        data: redactPersistedSession(persistedData),
+      })
+      void persisted.write('session', persistedData)
+    }
+    this.listeners.forEach(listener => listener())
+  }
+}
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const ax = useAnalyticsBase()
   const cancelPendingTask = useOneTaskAtATime()
-  const [state, dispatch] = React.useReducer(reducer, null, () => {
-    const initialState = getInitialState(persisted.get('session').accounts)
-    addSessionDebugLog({type: 'reducer:init', state: initialState})
-    return initialState
-  })
+  // eslint-disable-next-line react/hook-use-state
+  const [store] = useState(() => new SessionStore())
+  const state = useSyncExternalStore(store.subscribe, store.getState)
+  const onboardingDispatch = useOnboardingDispatch()
 
-  const onAgentSessionChange = React.useCallback(
-    (agent: BskyAgent, accountDid: string, sessionEvent: AtpSessionEvent) => {
-      const refreshedAccount = agentToSessionAccount(agent) // Mutable, so snapshot it right away.
-      if (sessionEvent === 'expired' || sessionEvent === 'create-failed') {
+  // Refresh-token generations that have already failed during expiry rescue.
+  const failedExpiryTokensRef = useRef<Map<string, Set<string>>>(new Map())
+  /*
+   * Rescued bundles need this callback for their own events. A ref avoids a
+   * self-reference in the callback's dependency list. It is filled by the
+   * insertion effect below, which commits well before any session hook can
+   * fire: hooks are armed only after an asynchronous session factory resolves.
+   */
+  const onSessionChangeRef = useRef<
+    | ((
+        bundle: SessionBundle,
+        accountDid: string,
+        sessionEvent: AtpSessionEvent,
+        sessionData?: SessionData,
+      ) => void)
+    | null
+  >(null)
+
+  const onSessionChange = useCallback(
+    (
+      bundle: SessionBundle,
+      accountDid: string,
+      sessionEvent: AtpSessionEvent,
+      sessionData?: SessionData,
+    ) => {
+      /*
+       * Only the live bundle may reset the expiry-rescue bookkeeping: a stale
+       * bundle's late update would otherwise clear the failed-generation set
+       * that bounds the rescue loop. (Its dispatch below is separately dropped
+       * by the reducer's identity guard.)
+       */
+      if (
+        sessionEvent === 'update' &&
+        sessionData &&
+        (store.getState().currentBundleState.bundle as unknown as
+          SessionBundle | PublicSessionBundle) === bundle
+      ) {
+        failedExpiryTokensRef.current.get(accountDid)?.clear()
+      }
+
+      /*
+       * PasswordSession invokes its hooks before updating its live getter. Use
+       * the delivered payload so a refresh persists the newly rotated tokens.
+       *
+       * A refresh payload carries no didDoc unless the server sends one, so the
+       * stored account's `pdsUrl` is threaded in as the fallback. Without it the
+       * refresh would persist `pdsUrl: undefined` and the next cold start would
+       * route pre-refresh requests to the entryway instead of the PDS.
+       */
+      const refreshedAccount =
+        sessionEvent === 'update' && sessionData
+          ? sessionDataToSessionAccount(
+              sessionData,
+              sessionData.service,
+              store.getState().accounts.find(a => a.did === accountDid)?.pdsUrl,
+            )
+          : undefined
+
+      /*
+       * A stale tab may expire a token after another tab has already rotated it.
+       * Prefer a newer persisted or reducer generation over logging every tab
+       * out. Failed generations are recorded and bounded to guarantee that a
+       * repeatedly expiring session eventually falls through to logout.
+       */
+      if (sessionEvent === 'expired') {
+        const current = store.getState()
+        const currentBundle = current.currentBundleState.bundle as unknown as
+          SessionBundle | PublicSessionBundle
+        const dyingRefreshJwt = sessionData?.refreshJwt
+        // Stale bundle events are handled by the reducer's identity guard.
+        if (
+          currentBundle === bundle &&
+          current.currentBundleState.did === accountDid &&
+          dyingRefreshJwt
+        ) {
+          let failedSet = failedExpiryTokensRef.current.get(accountDid)
+          if (!failedSet) {
+            failedSet = new Set()
+            failedExpiryTokensRef.current.set(accountDid, failedSet)
+          }
+          failedSet.add(dyingRefreshJwt)
+
+          const persistedCandidate = persisted
+            .readLatest('session')
+            .accounts.find(a => a.did === accountDid)
+          const reducerCandidate = current.accounts.find(
+            a => a.did === accountDid,
+          )
+          const candidate = pickExpiryRescueCandidate({
+            dyingRefreshJwt,
+            candidates: [persistedCandidate, reducerCandidate],
+            failedRefreshJwts: failedSet,
+          })
+
+          if (candidate) {
+            const rebuilt = createSessionBundleFromStoredAccount(
+              candidate,
+              onSessionChangeRef.current!,
+            )
+            if (rebuilt) {
+              store.dispatch({
+                type: 'replaced-current-bundle',
+                newBundle: rebuilt.bundle,
+                newAccount: rebuilt.account,
+              })
+              return
+            }
+          }
+        }
+      }
+
+      // Only the current bundle may report that its session was dropped.
+      if (
+        sessionEvent === 'expired' &&
+        store.getState().currentBundleState.bundle === bundle
+      ) {
         emitSessionDropped()
       }
-      dispatch({
-        type: 'received-agent-event',
-        agent,
+      // Bundle identity prevents stale sessions from changing the active account.
+      store.dispatch({
+        type: 'received-session-event',
+        bundle,
         refreshedAccount,
         accountDid,
         sessionEvent,
       })
     },
-    [],
+    [store],
   )
+  /*
+   * Writing the ref during render is forbidden under React Compiler. An
+   * insertion effect is the earliest commit-time slot, and the only reader
+   * (`onSessionChange`'s expiry-rescue path) runs from armed session hooks,
+   * which cannot fire before the first commit.
+   */
+  useInsertionEffect(() => {
+    onSessionChangeRef.current = onSessionChange
+  }, [onSessionChange])
 
-  const createAccount = React.useCallback<SessionApiContext['createAccount']>(
+  const createAccount = useCallback<SessionApiContext['createAccount']>(
     async (params, metrics) => {
       addSessionDebugLog({type: 'method:start', method: 'createAccount'})
       const signal = cancelPendingTask()
-      logger.metric('account:create:begin', {}, {statsig: true})
-      const {agent, account} = await createAgentAndCreateAccount(
+      ax.metric('account:create:begin', {})
+      const {bundle, account} = await createSessionBundleAndCreateAccount(
         params,
-        onAgentSessionChange,
+        onSessionChange,
       )
 
       if (signal.aborted) {
+        // The factory returns an armed bundle, so a superseded signup must dispose it.
+        disposeBundle(bundle)
         return
       }
-      dispatch({
+      store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newBundle: bundle,
         newAccount: account,
       })
-      logger.metric('account:create:success', metrics, {statsig: true})
-      addSessionDebugLog({type: 'method:end', method: 'createAccount', account})
+      ax.metric('account:create:success', metrics, {
+        session: utils.accountToSessionMetadata(account),
+      })
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'createAccount',
+        account: redactAccount(account),
+      })
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [ax, store, onSessionChange, cancelPendingTask],
   )
 
-  const login = React.useCallback<SessionApiContext['login']>(
+  const login = useCallback<SessionApiContext['login']>(
     async (params, logContext) => {
       addSessionDebugLog({type: 'method:start', method: 'login'})
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndLogin(
+      const {bundle, account} = await createSessionBundleAndLogin(
         params,
-        onAgentSessionChange,
+        onSessionChange,
       )
 
       if (signal.aborted) {
+        // The factory returns an armed bundle, so a superseded login must dispose it.
+        disposeBundle(bundle)
         return
       }
-      dispatch({
+      store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newBundle: bundle,
         newAccount: account,
       })
-      logger.metric(
+      ax.metric(
         'account:loggedIn',
         {logContext, withPassword: true},
-        {statsig: true},
+        {session: utils.accountToSessionMetadata(account)},
       )
-      addSessionDebugLog({type: 'method:end', method: 'login', account})
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'login',
+        account: redactAccount(account),
+      })
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [ax, store, onSessionChange, cancelPendingTask],
   )
 
-  const logoutCurrentAccount = React.useCallback<
+  const logoutCurrentAccount = useCallback<
     SessionApiContext['logoutCurrentAccount']
   >(
     logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
-      dispatch({
+      const prevState = store.getState()
+      store.dispatch({
         type: 'logged-out-current-account',
       })
-      logger.metric(
+      ax.metric(
         'account:loggedOut',
         {logContext, scope: 'current'},
-        {statsig: true},
+        {
+          session: utils.accountToSessionMetadata(
+            prevState.accounts.find(
+              a => a.did === prevState.currentBundleState.did,
+            ),
+          ),
+        },
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
+      if (prevState.currentBundleState.did) {
+        clearAgeAssuranceServerDataForDid({
+          did: prevState.currentBundleState.did,
+        })
+        void clearPersistedQueryStorage(prevState.currentBundleState.did)
+      }
+      // reset onboarding flow on logout
+      onboardingDispatch({type: 'skip'})
     },
-    [cancelPendingTask],
+    [ax, store, cancelPendingTask, onboardingDispatch],
   )
 
-  const logoutEveryAccount = React.useCallback<
+  const logoutEveryAccount = useCallback<
     SessionApiContext['logoutEveryAccount']
   >(
     logContext => {
       addSessionDebugLog({type: 'method:start', method: 'logout'})
       cancelPendingTask()
-      dispatch({
+      const prevState = store.getState()
+      store.dispatch({
         type: 'logged-out-every-account',
       })
-      logger.metric(
+      ax.metric(
         'account:loggedOut',
         {logContext, scope: 'every'},
-        {statsig: true},
+        {
+          session: utils.accountToSessionMetadata(
+            prevState.accounts.find(
+              a => a.did === prevState.currentBundleState.did,
+            ),
+          ),
+        },
       )
       addSessionDebugLog({type: 'method:end', method: 'logout'})
+      clearAgeAssuranceServerDataForAll()
+      for (const account of prevState.accounts) {
+        void clearPersistedQueryStorage(account.did)
+      }
+      // reset onboarding flow on logout
+      onboardingDispatch({type: 'skip'})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask, onboardingDispatch, ax],
   )
 
-  const resumeSession = React.useCallback<SessionApiContext['resumeSession']>(
-    async storedAccount => {
+  const resumeSession = useCallback<SessionApiContext['resumeSession']>(
+    async (storedAccount, isSwitchingAccounts = false) => {
       addSessionDebugLog({
         type: 'method:start',
         method: 'resumeSession',
-        account: storedAccount,
+        account: redactAccount(storedAccount),
       })
       const signal = cancelPendingTask()
-      const {agent, account} = await createAgentAndResume(
+      const {bundle, account} = await createSessionBundleAndResume(
         storedAccount,
-        onAgentSessionChange,
+        onSessionChange,
       )
 
       if (signal.aborted) {
+        // The factory returns an armed bundle, so a superseded resume must dispose it.
+        disposeBundle(bundle)
         return
       }
-      dispatch({
+      /*
+       * A cross-tab logout may clear or remove the account while resume is in
+       * flight. Check the account entry rather than the current did so ordinary
+       * account switching remains valid.
+       */
+      const latest = store.getState()
+      const latestEntry = latest.accounts.find(a => a.did === account.did)
+      if (!latestEntry || !latestEntry.refreshJwt) {
+        disposeBundle(bundle)
+        return
+      }
+      store.dispatch({
         type: 'switched-to-account',
-        newAgent: agent,
+        newBundle: bundle,
         newAccount: account,
       })
-      addSessionDebugLog({type: 'method:end', method: 'resumeSession', account})
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'resumeSession',
+        account: redactAccount(account),
+      })
+      if (isSwitchingAccounts) {
+        // reset onboarding flow on switch account
+        onboardingDispatch({type: 'skip'})
+      }
     },
-    [onAgentSessionChange, cancelPendingTask],
+    [store, onSessionChange, cancelPendingTask, onboardingDispatch],
   )
 
-  const partialRefreshSession = React.useCallback<
+  const partialRefreshSession = useCallback<
     SessionApiContext['partialRefreshSession']
   >(async () => {
-    const agent = state.currentAgentState.agent as BskyAppAgent
+    /*
+     * Read the live bundle rather than the one captured by this render: a
+     * dispatch that lands before the next render would otherwise leave this
+     * holding a disposed bundle, whose clients dispatch through a disabled
+     * fetch.
+     */
+    const bundle = store.getState().currentBundleState
+      .bundle as unknown as SessionBundle
     const signal = cancelPendingTask()
-    const {data} = await agent.com.atproto.server.getSession()
+    /* getSession targets the PDS; only the persisted account fields are patched. */
+    const data = await bundle.pdsClient.call(com.atproto.server.getSession, {})
     if (signal.aborted) return
-    dispatch({
+    store.dispatch({
       type: 'partial-refresh-session',
-      accountDid: agent.session!.did,
+      /*
+       * Read the did off the response rather than the session: the bundle may
+       * have been disposed while the request was in flight, and the live
+       * getters throw in that state.
+       */
+      accountDid: data.did,
       patch: {
         emailConfirmed: data.emailConfirmed,
         emailAuthFactor: data.emailAuthFactor,
       },
     })
-  }, [state, cancelPendingTask])
+  }, [store, cancelPendingTask])
 
-  const removeAccount = React.useCallback<SessionApiContext['removeAccount']>(
+  /**
+   * Rotate the session's tokens and hand back the resulting account snapshot.
+   *
+   * Rejects when the rotation was a no-op, restoring the contract the
+   * `agent.resumeSession(agent.session!)` call sites were written against.
+   * `PasswordSession.refresh()` resolves with the
+   * unchanged `SessionData` on a transient failure - a 500 or a network error
+   * reported through `onUpdateFailure` - and reserves rejection for a
+   * definitively dead session. Callers here all read resolution as "tokens
+   * rotated": the verification dialogs close, `Deactivated` clears its error
+   * state, and `SignupQueued` re-checks the token scope, so a resolved no-op
+   * would report success or loop silently. Identity, not a field comparison, is
+   * the signal: `PasswordSession` allocates a new object per successful
+   * rotation and returns the existing one untouched otherwise. Capturing the
+   * data immediately before the call also handles concurrent refreshes, since a
+   * rotation another caller's queued refresh performed still differs from what
+   * we captured.
+   *
+   * Like {@link partialRefreshSession}, the bundle comes from
+   * `store.getState()` rather than the render's `state`: a dispatch landing
+   * before the next render would otherwise leave this holding a disposed
+   * bundle, and reading live also keeps the callback's identity stable across
+   * unrelated state updates.
+   */
+  const refreshSession = useCallback<
+    SessionApiContext['refreshSession']
+  >(async () => {
+    const bundle = store.getState().currentBundleState.bundle as unknown as
+      SessionBundle | PublicSessionBundle
+    if (!bundle.session) return undefined // logged out: nothing to refresh
+    const before = bundle.session.session
+    const after = await bundle.session.refresh()
+    if (after === before) {
+      throw new Error('Failed to refresh session')
+    }
+    /*
+     * The user may have logged out or switched accounts while the refresh was
+     * in flight. Reporting success then would run the caller's success path
+     * (dialogs closing, success toasts, SignupQueued advancing) against an
+     * account that is no longer active, so a stale bundle rejects instead.
+     */
+    if (
+      (store.getState().currentBundleState.bundle as unknown) !==
+      (bundle as unknown)
+    ) {
+      throw new Error('The session changed while it was being refreshed')
+    }
+    /*
+     * The session's `onUpdated` hook dispatches the new tokens into the store,
+     * but that lands a render away; this snapshot exposes them immediately.
+     */
+    return sessionDataToSessionAccount(after, after.service)
+  }, [store])
+
+  const removeAccount = useCallback<SessionApiContext['removeAccount']>(
     account => {
       addSessionDebugLog({
         type: 'method:start',
         method: 'removeAccount',
-        account,
+        account: redactAccount(account),
       })
       cancelPendingTask()
-      dispatch({
+      store.dispatch({
         type: 'removed-account',
         accountDid: account.did,
       })
-      addSessionDebugLog({type: 'method:end', method: 'removeAccount', account})
+      addSessionDebugLog({
+        type: 'method:end',
+        method: 'removeAccount',
+        account: redactAccount(account),
+      })
+      clearAgeAssuranceServerDataForDid({did: account.did})
     },
-    [cancelPendingTask],
+    [store, cancelPendingTask],
   )
-
-  React.useEffect(() => {
-    if (state.needsPersist) {
-      state.needsPersist = false
-      const persistedData = {
-        accounts: state.accounts,
-        currentAccount: state.accounts.find(
-          a => a.did === state.currentAgentState.did,
-        ),
-      }
-      addSessionDebugLog({type: 'persisted:broadcast', data: persistedData})
-      persisted.write('session', persistedData)
-    }
-  }, [state])
-
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate('session', nextSession => {
       const synced = nextSession
-      addSessionDebugLog({type: 'persisted:receive', data: synced})
-      dispatch({
+      addSessionDebugLog({
+        type: 'persisted:receive',
+        data: redactPersistedSession(synced),
+      })
+      store.dispatch({
         type: 'synced-accounts',
         syncedAccounts: synced.accounts,
         syncedCurrentDid: synced.currentAccount?.did,
@@ -243,36 +569,95 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const syncedAccount = synced.accounts.find(
         a => a.did === synced.currentAccount?.did,
       )
+      /*
+       * Cancel pending work when another tab logs out the account this tab
+       * considers current. Do not cancel unrelated work between logged-out tabs.
+       */
+      const syncedDid = syncedAccount?.refreshJwt
+        ? syncedAccount.did
+        : undefined
+      if (
+        syncedDid === undefined &&
+        state.currentBundleState.did !== undefined
+      ) {
+        cancelPendingTask()
+      }
       if (syncedAccount && syncedAccount.refreshJwt) {
-        if (syncedAccount.did !== state.currentAgentState.did) {
-          resumeSession(syncedAccount)
+        if (syncedAccount.did !== state.currentBundleState.did) {
+          // The leader refreshes before broadcasting, so followers receive fresh tokens.
+          void resumeSession(syncedAccount)
         } else {
-          const agent = state.currentAgentState.agent as BskyAgent
-          const prevSession = agent.session
-          agent.sessionManager.session = sessionAccountToSession(syncedAccount)
-          addSessionDebugLog({
-            type: 'agent:patch',
-            agent,
-            prevSession,
-            nextSession: agent.session,
+          /*
+           * PasswordSession cannot be patched in place. Rebuild from the tokens
+           * the leader already refreshed, then dispose the previous bundle.
+           */
+          const prevBundle = state.currentBundleState.bundle as unknown as
+            SessionBundle | PublicSessionBundle
+          // Avoid replacing the live bundle for an unrelated account update.
+          const live =
+            prevBundle.session && !prevBundle.session.destroyed
+              ? prevBundle.session.session
+              : undefined
+          if (
+            live &&
+            live.accessJwt === syncedAccount.accessJwt &&
+            live.refreshJwt === syncedAccount.refreshJwt
+          ) {
+            return
+          }
+          const rebuilt = createSessionBundleFromStoredAccount(
+            syncedAccount,
+            onSessionChange,
+            newBundle => {
+              const current = store.getState()
+              const latestAccount = current.accounts.find(
+                account => account.did === syncedAccount.did,
+              )
+              const isCurrent =
+                current.currentBundleState.bundle === prevBundle &&
+                latestAccount?.accessJwt === syncedAccount.accessJwt &&
+                latestAccount?.refreshJwt === syncedAccount.refreshJwt
+              if (isCurrent) {
+                addSessionDebugLog({
+                  type: 'bundle:patch',
+                  bundleId: getBundleId(newBundle),
+                  prevSession: redactSessionData(
+                    prevBundle.session && !prevBundle.session.destroyed
+                      ? prevBundle.session.session
+                      : undefined,
+                  ),
+                  nextSession: redactSessionData(newBundle.session.session),
+                })
+              }
+              return isCurrent
+            },
+          )
+          if (!rebuilt) {
+            return
+          }
+          const {bundle: newBundle, account: newAccount} = rebuilt
+          store.dispatch({
+            type: 'replaced-current-bundle',
+            newBundle,
+            newAccount,
           })
         }
       }
     })
-  }, [state, resumeSession])
+  }, [store, state, resumeSession, onSessionChange, cancelPendingTask])
 
-  const stateContext = React.useMemo(
+  const stateContext = useMemo(
     () => ({
       accounts: state.accounts,
       currentAccount: state.accounts.find(
-        a => a.did === state.currentAgentState.did,
+        a => a.did === state.currentBundleState.did,
       ),
-      hasSession: !!state.currentAgentState.did,
+      hasSession: !!state.currentBundleState.did,
     }),
     [state],
   )
 
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({
       createAccount,
       login,
@@ -281,6 +666,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     }),
     [
       createAccount,
@@ -290,38 +676,60 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       resumeSession,
       removeAccount,
       partialRefreshSession,
+      refreshSession,
     ],
   )
 
-  // @ts-expect-error window type is not declared, debug only
-  if (__DEV__ && isWeb) window.agent = state.currentAgentState.agent
+  const bundle = state.currentBundleState.bundle as unknown as
+    SessionBundle | PublicSessionBundle
 
-  const agent = state.currentAgentState.agent as BskyAppAgent
-  const currentAgentRef = React.useRef(agent)
-  React.useEffect(() => {
-    if (currentAgentRef.current !== agent) {
-      // Read the previous value and immediately advance the pointer.
-      const prevAgent = currentAgentRef.current
-      currentAgentRef.current = agent
-      addSessionDebugLog({type: 'agent:switch', prevAgent, nextAgent: agent})
-      // We never reuse agents so let's fully neutralize the previous one.
-      // This ensures it won't try to consume any refresh tokens.
-      prevAgent.dispose()
+  // @ts-expect-error window type is not declared, debug only
+  // eslint-disable-next-line react-hooks/immutability
+  if (__DEV__ && IS_WEB) window.bundle = bundle
+
+  const currentBundleRef = useRef(bundle)
+  /*
+   * Disposal is deferred to this post-commit effect deliberately: components may
+   * still render against the outgoing bundle during the commit that swaps it, so
+   * disabling its session inline would pull the transport out from under them.
+   * The reducer's bundle-identity guard drops any events the not-yet-disposed
+   * session emits in that window.
+   */
+  useEffect(() => {
+    if (currentBundleRef.current !== bundle) {
+      const prevBundle = currentBundleRef.current
+      currentBundleRef.current = bundle
+      addSessionDebugLog({
+        type: 'bundle:switch',
+        prevBundleId: getBundleId(prevBundle),
+        nextBundleId: getBundleId(bundle),
+      })
+      // Replaced bundles must never consume another refresh token.
+      disposeBundle(prevBundle)
     }
-  }, [agent])
+  }, [bundle])
 
   return (
-    <AgentContext.Provider value={agent}>
+    <BundleContext.Provider value={bundle}>
       <StateContext.Provider value={stateContext}>
-        <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
+        <ApiContext.Provider value={api}>
+          <AnalyticsContext
+            metadata={utils.useMeta({
+              session: utils.accountToSessionMetadata(
+                stateContext.currentAccount,
+              ),
+            })}>
+            {children}
+          </AnalyticsContext>
+        </ApiContext.Provider>
       </StateContext.Provider>
-    </AgentContext.Provider>
+    </BundleContext.Provider>
   )
 }
 
 function useOneTaskAtATime() {
-  const abortController = React.useRef<AbortController | null>(null)
-  const cancelPendingTask = React.useCallback(() => {
+  const abortController = useRef<AbortController | null>(null)
+  const cancelPendingTask = useCallback(() => {
     if (abortController.current) {
       abortController.current.abort()
     }
@@ -332,11 +740,11 @@ function useOneTaskAtATime() {
 }
 
 export function useSession() {
-  return React.useContext(StateContext)
+  return useContext(StateContext)
 }
 
 export function useSessionApi() {
-  return React.useContext(ApiContext)
+  return useContext(ApiContext)
 }
 
 export function useRequireAuth() {
@@ -344,8 +752,8 @@ export function useRequireAuth() {
   const closeAll = useCloseAllActiveElements()
   const {signinDialogControl} = useGlobalDialogsControlContext()
 
-  return React.useCallback(
-    (fn: () => void) => {
+  return useCallback(
+    (fn: () => unknown) => {
       if (hasSession) {
         fn()
       } else {
@@ -357,10 +765,63 @@ export function useRequireAuth() {
   )
 }
 
-export function useAgent(): BskyAgent {
-  const agent = React.useContext(AgentContext)
-  if (!agent) {
-    throw Error('useAgent() must be below <SessionProvider>.')
+/**
+ * Client for appview reads. Logged out, this is the bundle's public client,
+ * which dispatches unauthenticated against the public appview.
+ */
+export function useAppviewClient(): Client {
+  const bundle = useContext(BundleContext)
+  if (!bundle) {
+    throw Error('useAppviewClient() must be below <SessionProvider>.')
   }
-  return agent
+  return bundle.appviewClient
+}
+
+/**
+ * Client for account-host requests. It shares the active session's auth
+ * lifecycle but sets no proxy or labeler headers, so calls target the PDS.
+ * Logged out, calls throw `NotAuthenticatedError` before network I/O. Use
+ * {@link useMaybePdsClient} when the caller must branch on authentication.
+ */
+export function usePdsClient(): Client {
+  const bundle = useContext(BundleContext)
+  if (!bundle) {
+    throw Error('usePdsClient() must be below <SessionProvider>.')
+  }
+  return bundle.pdsClient
+}
+
+/**
+ * Client for `chat.bsky.*` calls. Logged-out calls throw
+ * `NotAuthenticatedError`; use {@link useMaybeChatClient} to branch on auth.
+ */
+export function useChatClient(): Client {
+  const bundle = useContext(BundleContext)
+  if (!bundle) {
+    throw Error('useChatClient() must be below <SessionProvider>.')
+  }
+  return bundle.chatClient
+}
+
+/**
+ * Account-host client for the active session, or `null` when logged out.
+ */
+export function useMaybePdsClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.pdsClient : null
+}
+
+/**
+ * Chat client for the active session, or `null` when logged out.
+ */
+export function useMaybeChatClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.chatClient : null
+}
+
+/**
+ * The unauthenticated client for public appview reads.
+ */
+export function usePublicAppviewClient(): Client {
+  return getPublicAppviewClient()
 }

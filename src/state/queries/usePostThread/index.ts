@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
+import {type AtUriString} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useThreadPreferences} from '#/state/queries/preferences/useThreadPreferences'
 import {
@@ -11,6 +11,7 @@ import {
   TREE_VIEW_BELOW_DESKTOP,
   TREE_VIEW_BF,
 } from '#/state/queries/usePostThread/const'
+import {type PostThreadContextType} from '#/state/queries/usePostThread/context'
 import {
   createCacheMutator,
   getThreadPlaceholder,
@@ -27,15 +28,19 @@ import {
 } from '#/state/queries/usePostThread/types'
 import {getThreadgateRecord} from '#/state/queries/usePostThread/utils'
 import * as views from '#/state/queries/usePostThread/views'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {useBreakpoints} from '#/alf'
+import {IS_WEB} from '#/env'
+import {app} from '#/lexicons'
 
+export * from '#/state/queries/usePostThread/context'
+export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
 export * from '#/state/queries/usePostThread/types'
 
 export function usePostThread({anchor}: {anchor?: string}) {
   const qc = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {hasSession} = useSession()
   const {gtPhone} = useBreakpoints()
   const moderationOpts = useModerationOpts()
@@ -46,12 +51,11 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setSort: baseSetSort,
     view,
     setView: baseSetView,
-    prioritizeFollowedUsers,
   } = useThreadPreferences()
   const below = useMemo(() => {
     return view === 'linear'
       ? LINEAR_VIEW_BELOW
-      : isWeb && gtPhone
+      : IS_WEB && gtPhone
         ? TREE_VIEW_BELOW_DESKTOP
         : TREE_VIEW_BELOW
   }, [view, gtPhone])
@@ -60,23 +64,20 @@ export function usePostThread({anchor}: {anchor?: string}) {
     anchor,
     sort,
     view,
-    prioritizeFollowedUsers,
   })
   const postThreadOtherQueryKey = createPostThreadOtherQueryKey({
     anchor,
-    prioritizeFollowedUsers,
   })
 
   const query = useQuery<UsePostThreadQueryResult>({
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadV2({
-        anchor: anchor!,
+      const data = await client.call(app.bsky.unspecced.getPostThreadV2, {
+        anchor: anchor! as AtUriString,
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
-        prioritizeFollowedUsers: prioritizeFollowedUsers,
       })
 
       /*
@@ -94,18 +95,24 @@ export function usePostThread({anchor}: {anchor?: string}) {
         ctx.meta.hasOtherReplies = true
       }
 
+      /*
+       * The generated views type `threadgate.record` as an opaque lex map and
+       * brand at-uris, so the response is asserted to the exported result type
+       * here; the record swap-in below and every downstream consumer of the
+       * thread read that narrower contract.
+       */
       const result = {
         thread: data.thread || [],
         threadgate: data.threadgate,
         hasOtherReplies: !!ctx.meta.hasOtherReplies,
-      }
+      } as UsePostThreadQueryResult
 
       const record = getThreadgateRecord(result.threadgate)
       if (result.threadgate && record) {
         result.threadgate.record = record
       }
 
-      return result as UsePostThreadQueryResult
+      return result
     },
     placeholderData() {
       if (!anchor) return
@@ -162,11 +169,9 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: additionalQueryEnabled,
     queryKey: postThreadOtherQueryKey,
     async queryFn() {
-      const {data} = await agent.app.bsky.unspecced.getPostThreadOtherV2({
-        anchor: anchor!,
-        prioritizeFollowedUsers,
+      return await client.call(app.bsky.unspecced.getPostThreadOtherV2, {
+        anchor: anchor! as AtUriString,
       })
-      return data
     },
   })
   const serverOtherThreadItems: ThreadItem[] = useMemo(() => {
@@ -277,8 +282,13 @@ export function usePostThread({anchor}: {anchor?: string}) {
     setOtherItemsVisible,
   ])
 
-  return useMemo(
-    () => ({
+  return useMemo(() => {
+    const context: PostThreadContextType = {
+      postThreadQueryKey,
+      postThreadOtherQueryKey,
+    }
+    return {
+      context,
       state: {
         /*
          * Copy in any query state that is useful
@@ -309,17 +319,18 @@ export function usePostThread({anchor}: {anchor?: string}) {
         setSort,
         setView,
       },
-    }),
-    [
-      query,
-      mutator.insertReplies,
-      otherItemsVisible,
-      sort,
-      view,
-      setSort,
-      setView,
-      threadgate,
-      items,
-    ],
-  )
+    }
+  }, [
+    query,
+    mutator.insertReplies,
+    otherItemsVisible,
+    sort,
+    view,
+    setSort,
+    setView,
+    threadgate,
+    items,
+    postThreadQueryKey,
+    postThreadOtherQueryKey,
+  ])
 }

@@ -1,27 +1,74 @@
-import React from 'react'
+import {memo} from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import {type $Typed, type AppBskyEmbedRecord} from '@atproto/api'
+import Animated, {
+  interpolateColor,
+  type SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
+import {type $Typed} from '@atproto/lex'
 
-import {atoms as a, native, tokens, useTheme, web} from '#/alf'
-import {PostEmbedViewContext} from '#/components/Post/Embed'
-import {Embed} from '#/components/Post/Embed'
+import {atoms as a, native, useTheme, web} from '#/alf'
+import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {type app} from '#/lexicons'
 import {MessageContextProvider} from './MessageContext'
+
+const BORDER_RADIUS = 20
+const SQUARED_BORDER_RADIUS = 4
 
 let MessageItemEmbed = ({
   embed,
+  isFromSelf,
+  isGroupChat,
+  squaredTopCorner,
+  squaredBottomCorner,
+  highlightSV,
 }: {
-  embed: $Typed<AppBskyEmbedRecord.View>
+  embed: $Typed<app.bsky.embed.record.View>
+  isFromSelf: boolean
+  isGroupChat: boolean
+  squaredTopCorner: boolean
+  squaredBottomCorner: boolean
+  highlightSV: SharedValue<number>
 }): React.ReactNode => {
   const t = useTheme()
   const screen = useWindowDimensions()
+
+  const restingColor = isFromSelf ? t.palette.primary_50 : t.palette.contrast_50
+  const highlightColor = isFromSelf
+    ? t.palette.primary_300
+    : t.palette.primary_100
+  const highlightStyle = useAnimatedStyle(() => ({
+    backgroundColor: interpolateColor(
+      highlightSV.get(),
+      [0, 1],
+      [restingColor, highlightColor],
+    ),
+  }))
+
+  const radiiStyle = isFromSelf
+    ? {
+        borderBottomRightRadius: squaredBottomCorner
+          ? SQUARED_BORDER_RADIUS
+          : BORDER_RADIUS,
+        borderTopRightRadius: squaredTopCorner
+          ? SQUARED_BORDER_RADIUS
+          : BORDER_RADIUS,
+      }
+    : {
+        borderBottomLeftRadius: squaredBottomCorner
+          ? SQUARED_BORDER_RADIUS
+          : BORDER_RADIUS,
+        borderTopLeftRadius: squaredTopCorner
+          ? SQUARED_BORDER_RADIUS
+          : BORDER_RADIUS,
+      }
 
   return (
     <MessageContextProvider>
       <View
         style={[
-          a.my_xs,
-          t.atoms.bg,
-          a.rounded_md,
+          isFromSelf ? a.self_end : a.self_start,
+          !isFromSelf && isGroupChat && a.ml_sm,
           native({
             flexBasis: 0,
             width: Math.min(screen.width, 600) / 1.4,
@@ -32,16 +79,18 @@ let MessageItemEmbed = ({
             maxWidth: 360,
           }),
         ]}>
-        <View style={{marginTop: tokens.space.sm * -1}}>
+        <Animated.View
+          style={[a.rounded_xl, a.overflow_hidden, radiiStyle, highlightStyle]}>
           <Embed
             embed={embed}
             allowNestedQuotes
-            viewContext={PostEmbedViewContext.Feed}
+            viewContext={PostEmbedViewContext.ChatMessage}
+            style={[a.rounded_xl, a.overflow_hidden, a.border_0, radiiStyle]}
           />
-        </View>
+        </Animated.View>
       </View>
     </MessageContextProvider>
   )
 }
-MessageItemEmbed = React.memo(MessageItemEmbed)
+MessageItemEmbed = memo(MessageItemEmbed)
 export {MessageItemEmbed}

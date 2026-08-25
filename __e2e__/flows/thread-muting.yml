@@ -3,13 +3,16 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: "?users&follows"
+      SERVER_PATH: "?users&follows"
 - runFlow:
     file: ../setupApp.yml
 
 # Login, create a thread, and log out
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - assertVisible:
     id: "composeFAB"
 - tapOn:
@@ -17,67 +20,166 @@ appId: xyz.blueskyweb.app
 - inputText: "Test thread"
 - tapOn:
     id: "composerPublishBtn"
+# Wait for the composer to close and the home feed to settle before signing
+# out. Without a settle guard the next action can race the closing composer.
+- extendedWaitUntil:
+    visible:
+      id: "composeFAB"
+    timeout: 10000
 
 # Login, reply to the thread, and log out
 - tapOn:
+    id: "e2eSignOut"
+- tapOn:
     id: "e2eSignInBob"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "replyBtn"
+# Wait for the composer to fully open before typing.
+- extendedWaitUntil:
+    visible:
+      id: "composerPublishBtn"
+    timeout: 10000
 - inputText: "Reply 1"
 - tapOn:
     id: "composerPublishBtn"
+# Wait for the composer to close before signing out.
+- extendedWaitUntil:
+    visible:
+      id: "composeFAB"
+    timeout: 10000
 
 # Login, confirm notification exists, mute thread, and log out
 - tapOn:
+    id: "e2eSignOut"
+- tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "bottomBarNotificationsBtn"
-- assertVisible:
-    id: "feedItem-by-bob.test"
-- tapOn:
-    id: "feedItem-by-bob.test"
+- assertVisible: ".*Reply 1.*"
+- tapOn: ".*Reply 1.*"
 - tapOn:
     id: "postDropdownBtn"
     childOf:
-        id: "postThreadItem-by-bob.test"
+      id: "postThreadItem-by-bob.test"
 - tapOn: "Mute thread"
 
 # Login, reply to the thread twice, and log out
 - tapOn:
+    id: "e2eSignOut"
+- tapOn:
     id: "e2eSignInBob"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "bottomBarProfileBtn"
 - tapOn:
     id: "profilePager-selector-1"
-- tapOn:
-    id: "replyBtn"
+# Both replies target the thread root ("Test thread" by alice), which sits at
+# the top of bob's Replies tab. That tab renders each post in the thread with
+# its own replyBtn, so scope the tap to the root post's card
+# (feedItem-by-alice.test) rather than relying on which replyBtn Maestro picks
+# first. This keeps both reply taps deterministic regardless of list order or
+# how many posts have rendered.
+#
+# Even with the close-gating below, the replyBtn tap can land on a recycled list
+# row while the author feed re-renders after a publish, and be swallowed so the
+# composer never opens. Wrapping the tap + open-wait in retry makes opening the
+# composer idempotent: a swallowed tap just re-taps until the publish button
+# appears. A first-try success does not retry.
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: "replyBtn"
+          childOf:
+            id: "feedItem-by-alice.test"
+      # Wait for the composer to fully open before typing.
+      - extendedWaitUntil:
+          visible:
+            id: "composerPublishBtn"
+          timeout: 10000
 - inputText: "Reply 2"
 - tapOn:
     id: "composerPublishBtn"
-- tapOn:
-    id: "replyBtn"
+# Wait for the composer to actually close before opening it again. replyBtn
+# stays in the accessibility tree behind the open composer sheet, so waiting on
+# its visibility returns immediately and does not gate on the close animation or
+# the author-feed re-render that follows a post - the next replyBtn tap then
+# fires mid-transition and is swallowed, so the composer never opens. Gate on
+# the publish button disappearing (the composer is gone), then confirm the
+# reply button underneath is back and let animations settle.
+- extendedWaitUntil:
+    notVisible:
+      id: "composerPublishBtn"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "replyBtn"
+    timeout: 10000
+- waitForAnimationToEnd
+# As with Reply 2: even after gating on the composer close, this tap can hit a
+# recycled row during the post-publish feed re-render and be swallowed, so wrap
+# the open in retry to make it idempotent.
+- retry:
+    maxRetries: 3
+    commands:
+      - tapOn:
+          id: "replyBtn"
+          childOf:
+            id: "feedItem-by-alice.test"
+      # Wait for the composer to fully open before typing.
+      - extendedWaitUntil:
+          visible:
+            id: "composerPublishBtn"
+          timeout: 10000
 - inputText: "Reply 3"
 - tapOn:
     id: "composerPublishBtn"
+# Wait for the composer to actually close before signing out. As above,
+# replyBtn stays visible behind the sheet, so gate on the publish button
+# disappearing first, then confirm the reply button underneath has returned.
+- extendedWaitUntil:
+    notVisible:
+      id: "composerPublishBtn"
+    timeout: 15000
+- extendedWaitUntil:
+    visible:
+      id: "replyBtn"
+    timeout: 10000
 
-
-# Login, confirm notifications dont exist, unmute the thread, confirm notifications exist
+# Login, confirm notifications dont exist, unmute the thread, ~~confirm notifications exist~~
+# Mute thread behaviour no longer change old notifications after muting/unmuting a thread -sfn
+- tapOn:
+    id: "e2eSignOut"
 - tapOn:
     id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "viewHeaderHomeFeedPrefsBtn"
 - tapOn:
     id: "bottomBarNotificationsBtn"
-- assertNotVisible:
-    id: "feedItem-by-bob.test"
-- tapOn:
-    id: "bottomBarHomeBtn"
+- assertVisible: ".*Reply 1.*"
+- assertNotVisible: ".*Reply 2.*"
+- assertNotVisible: ".*Reply 3.*"
+- tapOn: ".*Reply 1.*"
 - tapOn:
     id: "postDropdownBtn"
+    childOf:
+      id: "postThreadItem-by-bob.test"
 - tapOn: "Unmute thread"
 - tapOn:
     id: "bottomBarNotificationsBtn"
 - swipe:
     from:
-        id: "notifsFeed"
+      id: "notifsFeed"
     direction: DOWN
-- assertVisible:
-    id: "feedItem-by-bob.test"
+- assertVisible: ".*Reply 1.*"
+- assertNotVisible: ".*Reply 2.*"
+- assertNotVisible: ".*Reply 3.*"

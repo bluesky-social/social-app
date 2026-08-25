@@ -1,17 +1,19 @@
-import React from 'react'
+import {useCallback, useEffect} from 'react'
 import {Alert} from 'react-native'
 import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
+import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
+import {usePrefetchJoinLinkPreviews} from '#/state/queries/join-links'
 import {useSession} from '#/state/session'
+import {useSetActiveLanding} from '#/state/shell/landing'
+import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {useCloseAllActiveElements} from '#/state/util'
-import {
-  parseAgeAssuranceRedirectDialogState,
-  useAgeAssuranceRedirectDialogControl,
-} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {useIntentDialogs} from '#/components/intents/IntentDialogs'
+import {useAnalytics} from '#/analytics'
+import {IS_IOS, IS_NATIVE} from '#/env'
 import {Referrer} from '../../../modules/expo-bluesky-swiss-army'
 import {useApplyPullRequestOTAUpdate} from './useOTAUpdates'
 
@@ -23,35 +25,36 @@ const VALID_IMAGE_REGEX = /^[\w.:\-_/]+\|\d+(\.\d+)?\|\d+(\.\d+)?$/
 let previousIntentUrl = ''
 
 export function useIntentHandler() {
-  const incomingUrl = Linking.useURL()
+  const incomingUrl = Linking.useLinkingURL()
+  const ax = useAnalytics()
   const composeIntent = useComposeIntent()
   const verifyEmailIntent = useVerifyEmailIntent()
-  const ageAssuranceRedirectDialogControl =
-    useAgeAssuranceRedirectDialogControl()
+  const groupChatJoinIntent = useGroupChatJoinIntent()
   const {currentAccount} = useSession()
   const {tryApplyUpdate} = useApplyPullRequestOTAUpdate()
 
-  React.useEffect(() => {
-    const handleIncomingURL = (url: string) => {
-      const referrerInfo = Referrer.getReferrerInfo()
+  useEffect(() => {
+    const handleIncomingURL = async (url: string) => {
+      if (IS_IOS) {
+        // Close in-app browser if it's open (iOS only)
+        await WebBrowser.dismissBrowser().catch(() => {})
+      }
+
+      const referrerInfo = await Referrer.getReferrerInfo()
       if (referrerInfo && referrerInfo.hostname !== 'bsky.app') {
-        logger.metric('deepLink:referrerReceived', {
+        ax.metric('deepLink:referrerReceived', {
           to: url,
           referrer: referrerInfo?.referrer,
           hostname: referrerInfo?.hostname,
         })
       }
-
-      // We want to be able to support bluesky:// deeplinks. It's unnatural for someone to use a deeplink with three
-      // slashes, like bluesky:///intent/follow. However, supporting just two slashes causes us to have to take care
-      // of two cases when parsing the url. If we ensure there is a third slash, we can always ensure the first
-      // path parameter is in pathname rather than in hostname.
-      if (url.startsWith('bluesky://') && !url.startsWith('bluesky:///')) {
-        url = url.replace('bluesky://', 'bluesky:///')
+      const urlp = parseLinkingUrl(url)
+      const chatInviteMatch = urlp.pathname.match(CHAT_INVITE_CODE_REGEX)
+      if (chatInviteMatch) {
+        groupChatJoinIntent(chatInviteMatch[1], url)
+        return
       }
-
-      const urlp = new URL(url)
-      const [_, intent, intentType] = urlp.pathname.split('/')
+      const [, intent, intentType] = urlp.pathname.split('/')
 
       // On native, our links look like bluesky://intent/SomeIntent, so we have to check the hostname for the
       // intent check. On web, we have to check the first part of the path since we have an actual hostname
@@ -76,32 +79,25 @@ export function useIntentHandler() {
           return
         }
         case 'age-assurance': {
-          const state = parseAgeAssuranceRedirectDialogState({
-            result: params.get('result') ?? undefined,
-            actorDid: params.get('actorDid') ?? undefined,
-          })
-
-          /*
-           * If we don't have an account or the account doesn't match, do
-           * nothing. By the time the user switches to their other account, AA
-           * state should be ready for them.
-           */
-          if (
-            state &&
-            currentAccount &&
-            state.actorDid === currentAccount.did
-          ) {
-            ageAssuranceRedirectDialogControl.open(state)
-          }
+          // Handled in `#/ageAssurance/components/RedirectOverlay.tsx`
           return
         }
         case 'apply-ota': {
           const channel = params.get('channel')
+          const releaseVersion = params.get('releaseVersion')
+          const buildNumber = params.get(
+            IS_IOS ? 'iosBuildNumber' : 'androidBuildNumber',
+          )
+          const appVersion =
+            releaseVersion && buildNumber
+              ? `${releaseVersion}.${buildNumber}`
+              : null
           if (!channel) {
             Alert.alert('Error', 'No channel provided to look for.')
-          } else {
-            tryApplyUpdate(channel)
+            return
           }
+          tryApplyUpdate(channel, appVersion)
+          return
         }
         default: {
           return
@@ -113,14 +109,26 @@ export function useIntentHandler() {
       if (previousIntentUrl === incomingUrl) {
         return
       }
-      handleIncomingURL(incomingUrl)
+      handleIncomingURL(incomingUrl).finally(() => {
+        /*
+         * expo-linking caches the URL that launched the app and replays it to
+         * every new `useLinkingURL`/`getLinkingURL` caller, so an account
+         * switch (which remounts the tree, see `key={currentAccount?.did}` in
+         * `App.native.tsx`) or a runtime reload would hand us the same link
+         * again. Drop it now that it's been handled - this hook is the last
+         * consumer of the launch URL, everything else reads it while
+         * rendering, before this effect runs. No-op on web.
+         */
+        Linking.clearInitialURL()
+      })
       previousIntentUrl = incomingUrl
     }
   }, [
     incomingUrl,
+    ax,
     composeIntent,
     verifyEmailIntent,
-    ageAssuranceRedirectDialogControl,
+    groupChatJoinIntent,
     currentAccount,
     tryApplyUpdate,
   ])
@@ -131,7 +139,7 @@ export function useComposeIntent() {
   const {openComposer} = useOpenComposer()
   const {hasSession} = useSession()
 
-  return React.useCallback(
+  return useCallback(
     ({
       text,
       imageUrisStr,
@@ -150,6 +158,7 @@ export function useComposeIntent() {
         openComposer({
           text: text ?? undefined,
           videoUri: {uri, width: Number(width), height: Number(height)},
+          logContext: 'Deeplink',
         })
         return
       }
@@ -174,7 +183,8 @@ export function useComposeIntent() {
       setTimeout(() => {
         openComposer({
           text: text ?? undefined,
-          imageUris: isNative ? imageUris : undefined,
+          imageUris: IS_NATIVE ? imageUris : undefined,
+          logContext: 'Deeplink',
         })
       }, 500)
     },
@@ -182,11 +192,51 @@ export function useComposeIntent() {
   )
 }
 
+export function useGroupChatJoinIntent() {
+  const closeAllActiveElements = useCloseAllActiveElements()
+  const {hasSession} = useSession()
+  const {groupChatJoinDialogControl: control, setGroupChatJoinState: setState} =
+    useIntentDialogs()
+  const {requestSwitchToAccount} = useLoggedOutViewControls()
+  const setActiveLanding = useSetActiveLanding()
+  const prefetchJoinLinkPreviews = usePrefetchJoinLinkPreviews()
+  return useCallback(
+    (code: string, uri?: string) => {
+      closeAllActiveElements()
+      if (hasSession) {
+        setState({code})
+        const prefetch = prefetchJoinLinkPreviews({
+          codes: [code],
+          hasSession: true,
+        })
+        void Promise.race([
+          prefetch,
+          new Promise(res => setTimeout(res, 200)),
+        ]).finally(() => {
+          control.open()
+        })
+      } else {
+        setActiveLanding({type: 'groupchat', uri: uri ?? '', code})
+        requestSwitchToAccount({requestedAccount: 'groupchat'})
+      }
+    },
+    [
+      closeAllActiveElements,
+      hasSession,
+      control,
+      setState,
+      prefetchJoinLinkPreviews,
+      requestSwitchToAccount,
+      setActiveLanding,
+    ],
+  )
+}
+
 function useVerifyEmailIntent() {
   const closeAllActiveElements = useCloseAllActiveElements()
   const {verifyEmailDialogControl: control, setVerifyEmailState: setState} =
     useIntentDialogs()
-  return React.useCallback(
+  return useCallback(
     (code: string) => {
       closeAllActiveElements()
       setState({

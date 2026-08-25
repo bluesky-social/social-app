@@ -1,38 +1,42 @@
-import React from 'react'
+import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {ComAtprotoLabelDefs, ComAtprotoModerationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useMutation} from '@tanstack/react-query'
+import {Trans} from '@lingui/react/macro'
 
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
-import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {logger} from '#/logger'
-import {isAndroid} from '#/platform/detection'
-import {useAgent, useSession} from '#/state/session'
-import * as Toast from '#/view/com/util/Toast'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {useSession} from '#/state/session'
+import {atoms as a, useTheme} from '#/alf'
+import {Admonition} from '#/components/Admonition'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {InlineLinkText} from '#/components/Link'
+import {AppealForm} from '#/components/moderation/AppealForm'
 import {Text} from '#/components/Typography'
+import {type com} from '#/lexicons'
 import {Divider} from '../Divider'
-import {Loader} from '../Loader'
 
 export {useDialogControl as useLabelsOnMeDialogControl} from '#/components/Dialog'
 
 export interface LabelsOnMeDialogProps {
   control: Dialog.DialogOuterProps['control']
-  labels: ComAtprotoLabelDefs.Label[]
+  labels: com.atproto.label.defs.Label[]
+  /**
+   * Whether the labels are being shown on the user's account or on a post.
+   * With `content`, the list may include account-level labels, which get a
+   * per-label callout.
+   */
   type: 'account' | 'content'
 }
 
 export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
   return (
-    <Dialog.Outer control={props.control}>
+    <Dialog.Outer
+      control={props.control}
+      nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <LabelsOnMeDialogInner {...props} />
     </Dialog.Outer>
@@ -42,12 +46,12 @@ export function LabelsOnMeDialog(props: LabelsOnMeDialogProps) {
 function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
   const {_} = useLingui()
   const {currentAccount} = useSession()
-  const [appealingLabel, setAppealingLabel] = React.useState<
-    ComAtprotoLabelDefs.Label | undefined
+  const [appealingLabel, setAppealingLabel] = useState<
+    com.atproto.label.defs.Label | undefined
   >(undefined)
   const {labels} = props
   const isAccount = props.type === 'account'
-  const containsSelfLabel = React.useMemo(
+  const containsSelfLabel = useMemo(
     () => labels.some(l => l.src === currentAccount?.did),
     [currentAccount?.did, labels],
   )
@@ -57,7 +61,7 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
       label={
         isAccount
           ? _(msg`The following labels were applied to your account.`)
-          : _(msg`The following labels were applied to your content.`)
+          : _(msg`The following labels were applied to this post.`)
       }>
       {appealingLabel ? (
         <AppealForm
@@ -67,11 +71,11 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
         />
       ) : (
         <>
-          <Text style={[a.text_2xl, a.font_heavy, a.pb_xs, a.leading_tight]}>
+          <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
             {isAccount ? (
               <Trans>Labels on your account</Trans>
             ) : (
-              <Trans>Labels on your content</Trans>
+              <Trans>Labels applied to this post</Trans>
             )}
           </Text>
           <Text style={[a.text_md, a.leading_snug]}>
@@ -91,9 +95,10 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
           <View style={[a.py_lg, a.gap_md]}>
             {labels.map(label => (
               <Label
-                key={`${label.val}-${label.src}`}
+                key={`${label.val}-${label.src}-${label.uri}`}
                 label={label}
                 isSelfLabel={label.src === currentAccount?.did}
+                showAccountCallout={!isAccount && label.uri.startsWith('did:')}
                 control={props.control}
                 onPressAppeal={setAppealingLabel}
               />
@@ -109,13 +114,19 @@ function LabelsOnMeDialogInner(props: LabelsOnMeDialogProps) {
 function Label({
   label,
   isSelfLabel,
+  showAccountCallout,
   control,
   onPressAppeal,
 }: {
-  label: ComAtprotoLabelDefs.Label
+  label: com.atproto.label.defs.Label
   isSelfLabel: boolean
+  /**
+   * Call out that the label applies to the whole account, for contexts that
+   * mix account and content labels.
+   */
+  showAccountCallout?: boolean
   control: Dialog.DialogOuterProps['control']
-  onPressAppeal: (label: ComAtprotoLabelDefs.Label) => void
+  onPressAppeal: (label: com.atproto.label.defs.Label) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -134,18 +145,26 @@ function Label({
       ]}>
       <View style={[a.p_md, a.gap_sm, a.flex_row]}>
         <View style={[a.flex_1, a.gap_xs]}>
-          <Text emoji style={[a.font_bold, a.text_md]}>
+          <Text emoji style={[a.font_semi_bold, a.text_md]}>
             {strings.name}
           </Text>
           <Text emoji style={[t.atoms.text_contrast_medium, a.leading_snug]}>
             {strings.description}
           </Text>
+          {showAccountCallout && (
+            <Admonition type="info" style={[a.mt_sm]}>
+              <Trans>
+                This label was applied to the entire user account and will
+                appear on all posts.
+              </Trans>
+            </Admonition>
+          )}
         </View>
         {!isSelfLabel && (
           <View>
             <Button
               variant="solid"
-              color="secondary"
+              color="primary_subtle"
               size="small"
               label={_(msg`Appeal`)}
               onPress={() => onPressAppeal(label)}>
@@ -204,129 +223,5 @@ function Label({
         )}
       </View>
     </View>
-  )
-}
-
-function AppealForm({
-  label,
-  control,
-  onPressBack,
-}: {
-  label: ComAtprotoLabelDefs.Label
-  control: Dialog.DialogOuterProps['control']
-  onPressBack: () => void
-}) {
-  const {_} = useLingui()
-  const {labeler, strings} = useLabelInfo(label)
-  const {gtMobile} = useBreakpoints()
-  const [details, setDetails] = React.useState('')
-  const {subject} = useLabelSubject({label})
-  const isAccountReport = 'did' in subject
-  const agent = useAgent()
-  const sourceName = labeler
-    ? sanitizeHandle(labeler.creator.handle, '@')
-    : label.src
-
-  const {mutate, isPending} = useMutation({
-    mutationFn: async () => {
-      const $type = !isAccountReport
-        ? 'com.atproto.repo.strongRef'
-        : 'com.atproto.admin.defs#repoRef'
-      await agent.createModerationReport(
-        {
-          reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-          subject: {
-            $type,
-            ...subject,
-          },
-          reason: details,
-        },
-        {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${label.src}#atproto_labeler`,
-          },
-        },
-      )
-    },
-    onError: err => {
-      logger.error('Failed to submit label appeal', {message: err})
-      Toast.show(_(msg`Failed to submit appeal, please try again.`), 'xmark')
-    },
-    onSuccess: () => {
-      control.close()
-      Toast.show(_(msg({message: 'Appeal submitted', context: 'toast'})))
-    },
-  })
-
-  const onSubmit = React.useCallback(() => mutate(), [mutate])
-
-  return (
-    <>
-      <View>
-        <Text style={[a.text_2xl, a.font_bold, a.pb_xs, a.leading_tight]}>
-          <Trans>Appeal "{strings.name}" label</Trans>
-        </Text>
-        <Text style={[a.text_md, a.leading_snug]}>
-          <Trans>
-            This appeal will be sent to{' '}
-            <InlineLinkText
-              label={sourceName}
-              to={makeProfileLink(
-                labeler ? labeler.creator : {did: label.src, handle: ''},
-              )}
-              onPress={() => control.close()}
-              style={[a.text_md, a.leading_snug]}>
-              {sourceName}
-            </InlineLinkText>
-            .
-          </Trans>
-        </Text>
-      </View>
-      <View style={[a.my_md]}>
-        <Dialog.Input
-          label={_(msg`Text input field`)}
-          placeholder={_(
-            msg`Please explain why you think this label was incorrectly applied by ${
-              labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
-            }`,
-          )}
-          value={details}
-          onChangeText={setDetails}
-          autoFocus={true}
-          numberOfLines={3}
-          multiline
-          maxLength={300}
-        />
-      </View>
-
-      <View
-        style={
-          gtMobile
-            ? [a.flex_row, a.justify_between]
-            : [{flexDirection: 'column-reverse'}, a.gap_sm]
-        }>
-        <Button
-          testID="backBtn"
-          variant="solid"
-          color="secondary"
-          size="large"
-          onPress={onPressBack}
-          label={_(msg`Back`)}>
-          <ButtonText>{_(msg`Back`)}</ButtonText>
-        </Button>
-        <Button
-          testID="submitBtn"
-          variant="solid"
-          color="primary"
-          size="large"
-          onPress={onSubmit}
-          label={_(msg`Submit`)}>
-          <ButtonText>{_(msg`Submit`)}</ButtonText>
-          {isPending && <ButtonIcon icon={Loader} />}
-        </Button>
-      </View>
-      {isAndroid && <View style={{height: 300}} />}
-    </>
   )
 }

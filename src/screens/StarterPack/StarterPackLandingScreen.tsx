@@ -1,28 +1,21 @@
-import React from 'react'
+import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import Animated, {FadeIn, FadeOut} from 'react-native-reanimated'
-import {
-  AppBskyGraphDefs,
-  AppBskyGraphStarterpack,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome'
-import {msg, Trans} from '@lingui/macro'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
-import {isAndroidWeb} from '#/lib/browser'
 import {JOINED_THIS_WEEK} from '#/lib/constants'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {logEvent} from '#/lib/statsig/statsig'
 import {createStarterPackGooglePlayUri} from '#/lib/strings/starter-pack'
-import {isWeb} from '#/platform/detection'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
 import {
   useActiveStarterPack,
   useSetActiveStarterPack,
-} from '#/state/shell/starter-pack'
+} from '#/state/shell/landing'
 import {LoggedOutScreenState} from '#/view/com/auth/LoggedOut'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {Logo} from '#/view/icons/Logo'
@@ -31,6 +24,7 @@ import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import * as FeedCard from '#/components/FeedCard'
 import {useRichText} from '#/components/hooks/useRichText'
+import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import * as Layout from '#/components/Layout'
 import {LinearGradientBackground} from '#/components/LinearGradientBackground'
 import {ListMaybePlaceholder} from '#/components/Lists'
@@ -38,6 +32,9 @@ import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_WEB, IS_WEB_MOBILE_ANDROID} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
@@ -72,10 +69,10 @@ export function LandingScreen({
   const isValid =
     starterPack &&
     starterPack.list &&
-    AppBskyGraphDefs.validateStarterPackView(starterPack) &&
-    AppBskyGraphStarterpack.validateRecord(starterPack.record)
+    bsky.matches(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isErrorStarterPack || (starterPack && !isValid)) {
       setScreenState(LoggedOutScreenState.S_LoginOrCreateAccount)
     }
@@ -86,12 +83,7 @@ export function LandingScreen({
   }
 
   // Just for types, this cannot be hit
-  if (
-    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
-      starterPack.record,
-      AppBskyGraphStarterpack.isRecord,
-    )
-  ) {
+  if (!bsky.isType(app.bsky.graph.starterpack, starterPack.record)) {
     return null
   }
 
@@ -113,13 +105,14 @@ function LandingScreenLoaded({
 
   moderationOpts,
 }: {
-  starterPack: AppBskyGraphDefs.StarterPackView
-  starterPackRecord: AppBskyGraphStarterpack.Record
+  starterPack: app.bsky.graph.defs.StarterPackView
+  starterPackRecord: app.bsky.graph.starterpack.Main
   setScreenState: (state: LoggedOutScreenState) => void
   moderationOpts: ModerationOpts
 }) {
   const {creator, listItemsSample, feeds} = starterPack
   const {_, i18n} = useLingui()
+  const ax = useAnalytics()
   const t = useTheme()
   const activeStarterPack = useActiveStarterPack()
   const setActiveStarterPack = useSetActiveStarterPack()
@@ -127,8 +120,7 @@ function LandingScreenLoaded({
   const androidDialogControl = useDialogControl()
   const [descriptionRt] = useRichText(record.description || '')
 
-  const [appClipOverlayVisible, setAppClipOverlayVisible] =
-    React.useState(false)
+  const [appClipOverlayVisible, setAppClipOverlayVisible] = useState(false)
 
   const listItemsCount = starterPack.list?.listItemCount ?? 0
 
@@ -142,12 +134,12 @@ function LandingScreenLoaded({
       postAppClipMessage({
         action: 'present',
       })
-    } else if (isAndroidWeb) {
+    } else if (IS_WEB_MOBILE_ANDROID) {
       androidDialogControl.open()
     } else {
       onContinue()
     }
-    logEvent('starterPack:ctaPress', {
+    ax.metric('starterPack:ctaPress', {
       starterPack: starterPack.uri,
     })
   }
@@ -179,11 +171,11 @@ function LandingScreenLoaded({
             },
           ]}>
           <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
-            <Logo width={76} fill="white" />
+            <Logo allowVariants={false} width={76} fill="white" />
           </View>
           <Text
             style={[
-              a.font_bold,
+              a.font_semi_bold,
               a.text_4xl,
               a.text_center,
               a.leading_tight,
@@ -192,7 +184,12 @@ function LandingScreenLoaded({
             {record.name}
           </Text>
           <Text
-            style={[a.text_center, a.font_bold, a.text_md, {color: 'white'}]}>
+            style={[
+              a.text_center,
+              a.font_semi_bold,
+              a.text_md,
+              {color: 'white'},
+            ]}>
             Starter pack by {`@${creator.handle}`}
           </Text>
         </LinearGradientBackground>
@@ -204,21 +201,23 @@ function LandingScreenLoaded({
             <Button
               label={_(msg`Join Bluesky`)}
               onPress={onJoinPress}
-              variant="solid"
               color="primary"
               size="large">
               <ButtonText style={[a.text_lg]}>
                 <Trans>Join Bluesky</Trans>
               </ButtonText>
             </Button>
-            <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-              <FontAwesomeIcon
-                icon="arrow-trend-up"
-                size={12}
-                color={t.atoms.text_contrast_medium.color}
+            <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+              <TrendingIcon
+                width={16}
+                style={{color: t.atoms.text_contrast_medium.color}}
               />
               <Text
-                style={[a.font_bold, a.text_sm, t.atoms.text_contrast_medium]}
+                style={[
+                  a.font_semi_bold,
+                  a.text_sm,
+                  t.atoms.text_contrast_medium,
+                ]}
                 numberOfLines={1}>
                 <Trans>
                   {formatCount(i18n, JOINED_THIS_WEEK)} joined this week
@@ -229,7 +228,7 @@ function LandingScreenLoaded({
           <View style={[a.gap_3xl]}>
             {Boolean(listItemsSample?.length) && (
               <View style={[a.gap_md]}>
-                <Text style={[a.font_heavy, a.text_lg]}>
+                <Text style={[a.font_bold, a.text_lg]}>
                   {listItemsCount <= 8 ? (
                     <Trans>You'll follow these people right away</Trans>
                   ) : (
@@ -270,7 +269,7 @@ function LandingScreenLoaded({
             )}
             {feeds?.length ? (
               <View style={[a.gap_md]}>
-                <Text style={[a.font_heavy, a.text_lg]}>
+                <Text style={[a.font_bold, a.text_lg]}>
                   <Trans>You'll stay updated with these feeds</Trans>
                 </Text>
 
@@ -317,15 +316,17 @@ function LandingScreenLoaded({
         setIsVisible={setAppClipOverlayVisible}
       />
       <Prompt.Outer control={androidDialogControl}>
-        <Prompt.TitleText>
-          <Trans>Download Bluesky</Trans>
-        </Prompt.TitleText>
-        <Prompt.DescriptionText>
-          <Trans>
-            The experience is better in the app. Download Bluesky now and we'll
-            pick back up where you left off.
-          </Trans>
-        </Prompt.DescriptionText>
+        <Prompt.Content>
+          <Prompt.TitleText>
+            <Trans>Download Bluesky</Trans>
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            <Trans>
+              The experience is better in the app. Download Bluesky now and
+              we'll pick back up where you left off.
+            </Trans>
+          </Prompt.DescriptionText>
+        </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action
             cta="Download on Google Play"
@@ -350,7 +351,7 @@ function LandingScreenLoaded({
           />
         </Prompt.Actions>
       </Prompt.Outer>
-      {isWeb && (
+      {IS_WEB && (
         <meta
           name="apple-itunes-app"
           content="app-id=xyz.blueskyweb.app, app-clip-bundle-id=xyz.blueskyweb.app.AppClip, app-clip-display=card"
@@ -387,7 +388,11 @@ export function AppClipOverlay({
         {/* Webkit needs this to have a zindex of 2? */}
         <View style={[a.gap_md, {zIndex: 2}]}>
           <Text
-            style={[a.font_bold, a.text_4xl, {lineHeight: 40, color: 'white'}]}>
+            style={[
+              a.font_semi_bold,
+              a.text_4xl,
+              {lineHeight: 40, color: 'white'},
+            ]}>
             Download Bluesky to get started!
           </Text>
           <Text style={[a.text_lg, {color: 'white'}]}>

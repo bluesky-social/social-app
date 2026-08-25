@@ -1,7 +1,6 @@
 import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -9,9 +8,9 @@ import {sanitizeHandle} from '#/lib/strings/handles'
 import {useActorAutocompleteQuery} from '#/state/queries/actor-autocomplete'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {type app} from '#/lexicons'
 
 export function Autocomplete({
   prefix,
@@ -71,13 +70,12 @@ function AutocompleteProfileCard({
   totalItems,
   onPress,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   itemIndex: number
   totalItems: number
   onPress: () => void
 }) {
   const t = useTheme()
-  const state = useSimpleVerificationState({profile})
   const displayName = sanitizeDisplayName(
     profile.displayName || sanitizeHandle(profile.handle),
   )
@@ -110,24 +108,20 @@ function AutocompleteProfileCard({
               platform({ios: a.flex_1}),
             ]}>
             <Text
-              style={[a.text_md, a.font_bold, a.leading_snug]}
+              style={[a.text_md, a.font_semi_bold, a.leading_snug]}
               emoji
               numberOfLines={1}>
               {displayName}
             </Text>
-            {state.isVerified && (
-              <View
-                style={[
-                  {
-                    marginTop: platform({android: -2}),
-                  },
-                ]}>
-                <VerificationCheck
-                  width={12}
-                  verifier={state.role === 'verifier'}
-                />
-              </View>
-            )}
+            <ProfileBadges
+              profile={profile}
+              size="sm"
+              style={[
+                {
+                  marginTop: platform({android: -2}),
+                },
+              ]}
+            />
           </View>
         </View>
         <Text

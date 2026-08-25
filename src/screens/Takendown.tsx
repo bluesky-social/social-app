@@ -1,27 +1,29 @@
-import {useMemo, useState} from 'react'
-import {Modal, View} from 'react-native'
-import {SystemBars} from 'react-native-edge-to-edge'
+import {useState} from 'react'
+import {View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {type ComAtprotoAdminDefs, ComAtprotoModerationDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation} from '@tanstack/react-query'
-import Graphemer from 'graphemer'
+import {countGraphemes} from 'unicode-segmenter/grapheme'
 
-import {MAX_REPORT_REASON_GRAPHEME_LENGTH} from '#/lib/constants'
-import {useEnableKeyboardController} from '#/lib/hooks/useEnableKeyboardController'
+import {
+  MAX_REPORT_REASON_GRAPHEME_LENGTH,
+  MOD_PROXY_SERVICE,
+} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {isIOS, isWeb} from '#/platform/detection'
-import {useAgent, useSession, useSessionApi} from '#/state/session'
+import {useAppviewClient, useSession, useSessionApi} from '#/state/session'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {Logo} from '#/view/icons/Logo'
-import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as TextField from '#/components/forms/TextField'
-import {InlineLinkText} from '#/components/Link'
+import {SimpleInlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
+import {com, tools} from '#/lexicons'
 
 const COL_WIDTH = 400
 
@@ -32,14 +34,13 @@ export function Takendown() {
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
   const {logoutCurrentAccount} = useSessionApi()
-  const agent = useAgent()
+  const client = useAppviewClient()
   const [isAppealling, setIsAppealling] = useState(false)
   const [reason, setReason] = useState('')
-  const graphemer = useMemo(() => new Graphemer(), [])
 
-  const reasonGraphemeLength = useMemo(() => {
-    return graphemer.countGraphemes(reason)
-  }, [graphemer, reason])
+  const reasonGraphemeLength = countGraphemes(reason)
+  const isOverMaxLength =
+    reasonGraphemeLength > MAX_REPORT_REASON_GRAPHEME_LENGTH
 
   const {
     mutate: submitAppeal,
@@ -49,14 +50,18 @@ export function Takendown() {
   } = useMutation({
     mutationFn: async (appealText: string) => {
       if (!currentAccount) throw new Error('No session')
-      await agent.com.atproto.moderation.createReport({
-        reasonType: ComAtprotoModerationDefs.REASONAPPEAL,
-        subject: {
-          $type: 'com.atproto.admin.defs#repoRef',
-          did: currentAccount.did,
-        } satisfies ComAtprotoAdminDefs.RepoRef,
-        reason: appealText,
-      })
+      await client.call(
+        com.atproto.moderation.createReport,
+        {
+          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          subject: {
+            $type: 'com.atproto.admin.defs#repoRef',
+            did: currentAccount.did,
+          },
+          reason: appealText,
+        },
+        {service: MOD_PROXY_SERVICE},
+      )
     },
     onSuccess: () => setReason(''),
   })
@@ -64,14 +69,11 @@ export function Takendown() {
   const primaryBtn =
     isAppealling && !isSuccess ? (
       <Button
-        variant="solid"
         color="primary"
         size="large"
         label={_(msg`Submit appeal`)}
         onPress={() => submitAppeal(reason)}
-        disabled={
-          isPending || reasonGraphemeLength > MAX_REPORT_REASON_GRAPHEME_LENGTH
-        }>
+        disabled={isPending || isOverMaxLength}>
         <ButtonText>
           <Trans>Submit Appeal</Trans>
         </ButtonText>
@@ -79,7 +81,6 @@ export function Takendown() {
       </Button>
     ) : (
       <Button
-        variant="solid"
         size="large"
         color="secondary_inverted"
         label={_(msg`Sign out`)}
@@ -116,17 +117,10 @@ export function Takendown() {
     </Button>
   )
 
-  const webLayout = isWeb && gtMobile
-
-  useEnableKeyboardController(true)
+  const webLayout = IS_WEB && gtMobile
 
   return (
-    <Modal
-      visible
-      animationType={native('slide')}
-      presentationStyle="formSheet"
-      style={[web(a.util_screen_outer)]}>
-      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
+    <View style={[a.util_screen_outer, a.flex_1]}>
       <KeyboardAwareScrollView style={[a.flex_1, t.atoms.bg]} centerContent>
         <View
           style={[
@@ -136,10 +130,10 @@ export function Takendown() {
           ]}>
           <View style={[a.flex_1, {maxWidth: COL_WIDTH, minHeight: COL_WIDTH}]}>
             <View style={[a.pb_xl]}>
-              <Logo width={64} />
+              <Logo allowVariants={false} width={64} />
             </View>
 
-            <Text style={[a.text_4xl, a.font_heavy, a.pb_md]}>
+            <Text style={[a.text_4xl, a.font_bold, a.pb_md]}>
               {isAppealling ? (
                 <Trans>Appeal suspension</Trans>
               ) : (
@@ -201,7 +195,7 @@ export function Takendown() {
                   <Text
                     style={[
                       a.text_md,
-                      a.leading_normal,
+                      a.leading_snug,
                       {color: t.palette.negative_500},
                       a.mt_lg,
                     ]}>
@@ -210,16 +204,15 @@ export function Takendown() {
                 )}
               </View>
             ) : (
-              <P style={[t.atoms.text_contrast_medium]}>
+              <P style={[t.atoms.text_contrast_medium, a.leading_snug]}>
                 <Trans>
                   Your account was found to be in violation of the{' '}
-                  <InlineLinkText
+                  <SimpleInlineLinkText
                     label={_(msg`Bluesky Social Terms of Service`)}
                     to="https://bsky.social/about/support/tos"
-                    style={[a.text_md, a.leading_normal]}
-                    overridePresentation>
+                    style={[a.text_md, a.leading_snug]}>
                     Bluesky Social Terms of Service
-                  </InlineLinkText>
+                  </SimpleInlineLinkText>
                   . You have been sent an email outlining the specific violation
                   and suspension period, if applicable. You can appeal this
                   decision if you believe it was made in error.
@@ -258,6 +251,6 @@ export function Takendown() {
           </View>
         </View>
       )}
-    </Modal>
+    </View>
   )
 }

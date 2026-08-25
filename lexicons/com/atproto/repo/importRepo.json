@@ -1,0 +1,14 @@
+{
+  "id": "com.atproto.repo.importRepo",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "encoding": "application/vnd.ipld.car"
+      },
+      "description": "Import a repo in the form of a CAR file. Requires Content-Length HTTP header to be set."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

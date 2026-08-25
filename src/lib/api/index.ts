@@ -1,27 +1,16 @@
-import {
-  type $Typed,
-  type AppBskyEmbedExternal,
-  type AppBskyEmbedImages,
-  type AppBskyEmbedRecord,
-  type AppBskyEmbedRecordWithMedia,
-  type AppBskyEmbedVideo,
-  type AppBskyFeedPost,
-  AtUri,
-  BlobRef,
-  type BskyAgent,
-  type ComAtprotoLabelDefs,
-  type ComAtprotoRepoApplyWrites,
-  type ComAtprotoRepoStrongRef,
-  RichText,
-} from '@atproto/api'
 import {TID} from '@atproto/common-web'
-import * as dcbor from '@ipld/dag-cbor'
-import {t} from '@lingui/macro'
+import {type $Typed, type Client} from '@atproto/lex'
+import {
+  type AtUriString,
+  toDatetimeString,
+  type UriString,
+} from '@atproto/syntax'
+import {RichText} from '@bsky/sdk/richtext'
+import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
-import {sha256} from 'js-sha256'
-import {CID} from 'multiformats/cid'
-import * as Hasher from 'multiformats/hashes/hasher'
 
+import {type LinkResolvers} from '#/lib/api/resolve'
+import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
@@ -39,7 +28,10 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from '#/view/com/composer/state/composer'
+import {app, chat, com} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
+import {computeCid} from './computeCid'
 import {uploadBlob} from './upload-blob'
 
 export {uploadBlob}
@@ -49,23 +41,36 @@ interface PostOpts {
   replyTo?: string
   onStateChange?: (state: string) => void
   langs?: string[]
+  /*
+   * Facet/mention resolution and reply-root lookup are appview jobs - they
+   * resolve handles and read posts through the appview, and the public
+   * fallback keeps facet detection working when logged out.
+   */
+  appviewClient: Client
+  /*
+   * A quoted chat invite link resolves its preview through the chat service, so
+   * the embed resolver needs the chat client alongside the appview one.
+   */
+  chatClient: Client
+  /*
+   * The repo write itself (applyWrites) plus every record blob (images,
+   * gallery items, link thumbnails, video captions) goes to the account's own
+   * PDS, never the appview.
+   */
+  pdsClient: Client
 }
 
-export async function post(
-  agent: BskyAgent,
-  queryClient: QueryClient,
-  opts: PostOpts,
-) {
+export async function post(queryClient: QueryClient, opts: PostOpts) {
   const thread = opts.thread
   opts.onStateChange?.(t`Processing...`)
 
   let replyPromise:
-    | Promise<AppBskyFeedPost.Record['reply']>
-    | AppBskyFeedPost.Record['reply']
+    | Promise<app.bsky.feed.post.Main['reply']>
+    | app.bsky.feed.post.Main['reply']
     | undefined
   if (opts.replyTo) {
     // Not awaited to avoid waterfalls.
-    replyPromise = resolveReply(agent, opts.replyTo)
+    replyPromise = resolveReply(opts.appviewClient, opts.replyTo)
   }
 
   // add top 3 languages from user preferences if langs is provided
@@ -74,8 +79,8 @@ export async function post(
     langs = opts.langs.slice(0, 3)
   }
 
-  const did = agent.assertDid
-  const writes: $Typed<ComAtprotoRepoApplyWrites.Create>[] = []
+  const did = opts.pdsClient.assertDid
+  const writes: com.atproto.repo.applyWrites.$InputBody['writes'] = []
   const uris: string[] = []
 
   let now = new Date()
@@ -85,14 +90,16 @@ export async function post(
     const draft = thread.posts[i]
 
     // Not awaited to avoid waterfalls.
-    const rtPromise = resolveRT(agent, draft.richtext)
+    const rtPromise = resolveRT(opts.appviewClient, draft.richtext)
     const embedPromise = resolveEmbed(
-      agent,
+      opts.appviewClient,
+      opts.chatClient,
+      opts.pdsClient,
       queryClient,
       draft,
       opts.onStateChange,
     )
-    let labels: $Typed<ComAtprotoLabelDefs.SelfLabels> | undefined
+    let labels: $Typed<com.atproto.label.defs.SelfLabels> | undefined
     if (draft.labels.length) {
       labels = {
         $type: 'com.atproto.label.defs#selfLabels',
@@ -105,17 +112,17 @@ export async function post(
     now.setMilliseconds(now.getMilliseconds() + 1)
     tid = TID.next(tid)
     const rkey = tid.toString()
-    const uri = `at://${did}/app.bsky.feed.post/${rkey}`
+    const uri = `at://${did}/app.bsky.feed.post/${rkey}` as AtUriString
     uris.push(uri)
 
     const rt = await rtPromise
     const embed = await embedPromise
     const reply = await replyPromise
-    const record: AppBskyFeedPost.Record = {
+    const record: app.bsky.feed.post.Main = {
       // IMPORTANT: $type has to exist, CID is calculated with the `$type` field
       // present and will produce the wrong CID if you omit it.
       $type: 'app.bsky.feed.post',
-      createdAt: now.toISOString(),
+      createdAt: toDatetimeString(now),
       text: rt.text,
       facets: rt.facets,
       reply,
@@ -136,7 +143,7 @@ export async function post(
         collection: 'app.bsky.feed.threadgate',
         rkey: rkey,
         value: createThreadgateRecord({
-          createdAt: now.toISOString(),
+          createdAt: toDatetimeString(now),
           post: uri,
           allow: threadgateAllowUISettingToAllowRecordValue(thread.threadgate),
         }),
@@ -154,7 +161,7 @@ export async function post(
         value: {
           ...thread.postgate,
           $type: 'app.bsky.feed.postgate',
-          createdAt: now.toISOString(),
+          createdAt: toDatetimeString(now),
           post: uri,
         },
       })
@@ -172,12 +179,13 @@ export async function post(
   }
 
   try {
-    await agent.com.atproto.repo.applyWrites({
-      repo: agent.assertDid,
+    await opts.pdsClient.call(com.atproto.repo.applyWrites, {
+      repo: did,
       writes: writes,
       validate: true,
     })
-  } catch (e: any) {
+  } catch (err) {
+    const e = err as Error
     logger.error(`Failed to create post`, {
       safeMessage: e.message,
     })
@@ -193,55 +201,76 @@ export async function post(
   return {uris}
 }
 
-async function resolveRT(agent: BskyAgent, richtext: RichText) {
+async function resolveRT(appviewClient: Client, richtext: RichText) {
   const trimmedText = richtext.text
     // Trim leading whitespace-only lines (but don't break ASCII art).
     .replace(/^(\s*\n)+/, '')
     // Trim any trailing whitespace.
     .trimEnd()
   let rt = new RichText({text: trimmedText}, {cleanNewlines: true})
-  await rt.detectFacets(agent)
+  await rt.detectFacets(appviewClient)
 
   rt = shortenLinks(rt)
   rt = stripInvalidMentions(rt)
   return rt
 }
 
-async function resolveReply(agent: BskyAgent, replyTo: string) {
-  const replyToUrip = new AtUri(replyTo)
-  const parentPost = await agent.getPost({
-    repo: replyToUrip.host,
-    rkey: replyToUrip.rkey,
+export class ReplyDeletedError extends Error {
+  constructor() {
+    super('Could not resolve reply')
+  }
+}
+
+async function resolveReply(appviewClient: Client, replyTo: string) {
+  const data = await appviewClient.call(app.bsky.feed.getPosts, {
+    uris: [replyTo as AtUriString],
   })
-  if (parentPost) {
-    const parentRef = {
-      uri: parentPost.uri,
-      cid: parentPost.cid,
+  const parentPost = data.posts[0]
+  if (!parentPost) {
+    throw new ReplyDeletedError()
+  }
+
+  const parentRef = {
+    uri: parentPost.uri,
+    cid: parentPost.cid,
+  }
+  let rootRef: com.atproto.repo.strongRef.Main = parentRef
+
+  if (bsky.isType(app.bsky.feed.post, parentPost.record)) {
+    if (parentPost.record.reply) {
+      rootRef = parentPost.record.reply.root
     }
-    return {
-      root: parentPost.value.reply?.root || parentRef,
-      parent: parentRef,
-    }
+  }
+
+  return {
+    root: rootRef,
+    parent: parentRef,
   }
 }
 
 async function resolveEmbed(
-  agent: BskyAgent,
+  appviewClient: Client,
+  chatClient: Client,
+  pdsClient: Client,
   queryClient: QueryClient,
   draft: PostDraft,
   onStateChange: ((state: string) => void) | undefined,
-): Promise<
-  | $Typed<AppBskyEmbedImages.Main>
-  | $Typed<AppBskyEmbedVideo.Main>
-  | $Typed<AppBskyEmbedExternal.Main>
-  | $Typed<AppBskyEmbedRecord.Main>
-  | $Typed<AppBskyEmbedRecordWithMedia.Main>
-  | undefined
-> {
+): Promise<app.bsky.feed.post.Main['embed']> {
   if (draft.embed.quote) {
     const [resolvedMedia, resolvedQuote] = await Promise.all([
-      resolveMedia(agent, queryClient, draft.embed, onStateChange),
-      resolveRecord(agent, queryClient, draft.embed.quote.uri),
+      resolveMedia(
+        appviewClient,
+        chatClient,
+        pdsClient,
+        queryClient,
+        draft.embed,
+        onStateChange,
+      ),
+      resolveRecord(
+        {appviewClient, chatClient},
+        queryClient,
+        draft.embed.quote.uri,
+      ),
     ])
     if (resolvedMedia) {
       return {
@@ -259,7 +288,9 @@ async function resolveEmbed(
     }
   }
   const resolvedMedia = await resolveMedia(
-    agent,
+    appviewClient,
+    chatClient,
+    pdsClient,
     queryClient,
     draft.embed,
     onStateChange,
@@ -270,7 +301,7 @@ async function resolveEmbed(
   if (draft.embed.link) {
     const resolvedLink = await fetchResolveLinkQuery(
       queryClient,
-      agent,
+      {appviewClient, chatClient},
       draft.embed.link.uri,
     )
     if (resolvedLink.type === 'record') {
@@ -284,14 +315,17 @@ async function resolveEmbed(
 }
 
 async function resolveMedia(
-  agent: BskyAgent,
+  appviewClient: Client,
+  chatClient: Client,
+  pdsClient: Client,
   queryClient: QueryClient,
   embedDraft: EmbedDraft,
   onStateChange: ((state: string) => void) | undefined,
 ): Promise<
-  | $Typed<AppBskyEmbedExternal.Main>
-  | $Typed<AppBskyEmbedImages.Main>
-  | $Typed<AppBskyEmbedVideo.Main>
+  | $Typed<app.bsky.embed.external.Main>
+  | $Typed<app.bsky.embed.images.Main>
+  | $Typed<app.bsky.embed.gallery.Main>
+  | $Typed<app.bsky.embed.video.Main>
   | undefined
 > {
   if (embedDraft.media?.type === 'images') {
@@ -300,14 +334,17 @@ async function resolveMedia(
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
-    const images: AppBskyEmbedImages.Image[] = await Promise.all(
+    const images: app.bsky.embed.images.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(image)
+        const {path, width, height, mime} = await compressImage(
+          image,
+          IMAGE_SIZE_CONFIG_POSTS,
+        )
         logger.debug(`Uploading image #${i}`)
-        const res = await uploadBlob(agent, path, mime)
+        const res = await uploadBlob(pdsClient, path, mime)
         return {
-          image: res.data.blob,
+          image: res.blob,
           alt: image.alt,
           aspectRatio: {width, height},
         }
@@ -316,6 +353,34 @@ async function resolveMedia(
     return {
       $type: 'app.bsky.embed.images',
       images,
+    }
+  }
+  if (embedDraft.media?.type === 'gallery') {
+    const imagesDraft = embedDraft.media.images
+    logger.debug(`Uploading images`, {
+      count: imagesDraft.length,
+    })
+    onStateChange?.(t`Uploading images...`)
+    const items: $Typed<app.bsky.embed.gallery.Image>[] = await Promise.all(
+      imagesDraft.map(async (image, i) => {
+        logger.debug(`Compressing image #${i}`)
+        const {path, width, height, mime} = await compressImage(
+          image,
+          IMAGE_SIZE_CONFIG_POSTS,
+        )
+        logger.debug(`Uploading image #${i}`)
+        const res = await uploadBlob(pdsClient, path, mime)
+        return {
+          $type: 'app.bsky.embed.gallery#image' as const,
+          image: res.blob,
+          alt: image.alt,
+          aspectRatio: {width, height},
+        }
+      }),
+    )
+    return {
+      $type: 'app.bsky.embed.gallery',
+      items,
     }
   }
   if (
@@ -327,10 +392,10 @@ async function resolveMedia(
       videoDraft.captions
         .filter(caption => caption.lang !== '')
         .map(async caption => {
-          const {data} = await agent.uploadBlob(caption.file, {
+          const res = await pdsClient.uploadBlob(caption.file, {
             encoding: 'text/vtt',
           })
-          return {lang: caption.lang, file: data.blob}
+          return {lang: caption.lang, file: res.body.blob}
         }),
     )
 
@@ -350,30 +415,33 @@ async function resolveMedia(
 
     return {
       $type: 'app.bsky.embed.video',
+      /*
+       * The video blob is a plain lex blob from the video pipeline
+       * (getJobStatus, in composer state/video). Its structural shape matches
+       * the lexicon blob field and the CID hasher (see computeCid).
+       */
       video: videoDraft.pendingPublish.blobRef,
       alt: videoDraft.altText || undefined,
       captions: captions.length === 0 ? undefined : captions,
       aspectRatio,
+      presentation:
+        videoDraft.video.mimeType === 'image/gif' ? 'gif' : 'default',
     }
   }
   if (embedDraft.media?.type === 'gif') {
     const gifDraft = embedDraft.media
-    const resolvedGif = await fetchResolveGifQuery(
-      queryClient,
-      agent,
-      gifDraft.gif,
-    )
-    let blob: BlobRef | undefined
+    const resolvedGif = await fetchResolveGifQuery(queryClient, gifDraft.gif)
+    let blob: app.bsky.embed.external.External['thumb']
     if (resolvedGif.thumb) {
       onStateChange?.(t`Uploading link thumbnail...`)
       const {path, mime} = resolvedGif.thumb.source
-      const response = await uploadBlob(agent, path, mime)
-      blob = response.data.blob
+      const response = await uploadBlob(pdsClient, path, mime)
+      blob = response.blob
     }
     return {
       $type: 'app.bsky.embed.external',
       external: {
-        uri: resolvedGif.uri,
+        uri: resolvedGif.uri as UriString,
         title: resolvedGif.title,
         description: createGIFDescription(resolvedGif.title, gifDraft.alt),
         thumb: blob,
@@ -383,24 +451,38 @@ async function resolveMedia(
   if (embedDraft.link) {
     const resolvedLink = await fetchResolveLinkQuery(
       queryClient,
-      agent,
+      {appviewClient, chatClient},
       embedDraft.link.uri,
     )
     if (resolvedLink.type === 'external') {
-      let blob: BlobRef | undefined
+      let blob: app.bsky.embed.external.External['thumb']
       if (resolvedLink.thumb) {
         onStateChange?.(t`Uploading link thumbnail...`)
         const {path, mime} = resolvedLink.thumb.source
-        const response = await uploadBlob(agent, path, mime)
-        blob = response.data.blob
+        const response = await uploadBlob(pdsClient, path, mime)
+        blob = response.blob
       }
       return {
         $type: 'app.bsky.embed.external',
         external: {
-          uri: resolvedLink.uri,
+          uri: resolvedLink.uri as UriString,
           title: resolvedLink.title,
           description: resolvedLink.description,
           thumb: blob,
+          associatedRefs: resolvedLink.associatedRefs,
+        },
+      }
+    }
+    if (
+      resolvedLink.type === 'chat-invite' &&
+      bsky.isType(chat.bsky.group.defs.joinLinkPreviewView, resolvedLink.view)
+    ) {
+      return {
+        $type: 'app.bsky.embed.external',
+        external: {
+          uri: resolvedLink.uri as UriString,
+          title: resolvedLink.view.name,
+          description: `${resolvedLink.view.memberCount}/${resolvedLink.view.memberLimit}`,
         },
       }
     }
@@ -409,91 +491,13 @@ async function resolveMedia(
 }
 
 async function resolveRecord(
-  agent: BskyAgent,
+  clients: LinkResolvers,
   queryClient: QueryClient,
   uri: string,
-): Promise<ComAtprotoRepoStrongRef.Main> {
-  const resolvedLink = await fetchResolveLinkQuery(queryClient, agent, uri)
+): Promise<com.atproto.repo.strongRef.Main> {
+  const resolvedLink = await fetchResolveLinkQuery(queryClient, clients, uri)
   if (resolvedLink.type !== 'record') {
     throw Error(t`Expected uri to resolve to a record`)
   }
   return resolvedLink.record
-}
-
-// The built-in hashing functions from multiformats (`multiformats/hashes/sha2`)
-// are meant for Node.js, this is the cross-platform equivalent.
-const mf_sha256 = Hasher.from({
-  name: 'sha2-256',
-  code: 0x12,
-  encode: input => {
-    const digest = sha256.arrayBuffer(input)
-    return new Uint8Array(digest)
-  },
-})
-
-async function computeCid(record: AppBskyFeedPost.Record): Promise<string> {
-  // IMPORTANT: `prepareObject` prepares the record to be hashed by removing
-  // fields with undefined value, and converting BlobRef instances to the
-  // right IPLD representation.
-  const prepared = prepareForHashing(record)
-  // 1. Encode the record into DAG-CBOR format
-  const encoded = dcbor.encode(prepared)
-  // 2. Hash the record in SHA-256 (code 0x12)
-  const digest = await mf_sha256.digest(encoded)
-  // 3. Create a CIDv1, specifying DAG-CBOR as content (code 0x71)
-  const cid = CID.createV1(0x71, digest)
-  // 4. Get the Base32 representation of the CID (`b` prefix)
-  return cid.toString()
-}
-
-// Returns a transformed version of the object for use in DAG-CBOR.
-function prepareForHashing(v: any): any {
-  // IMPORTANT: BlobRef#ipld() returns the correct object we need for hashing,
-  // the API client will convert this for you but we're hashing in the client,
-  // so we need it *now*.
-  if (v instanceof BlobRef) {
-    return v.ipld()
-  }
-
-  // Walk through arrays
-  if (Array.isArray(v)) {
-    let pure = true
-    const mapped = v.map(value => {
-      if (value !== (value = prepareForHashing(value))) {
-        pure = false
-      }
-      return value
-    })
-    return pure ? v : mapped
-  }
-
-  // Walk through plain objects
-  if (isPlainObject(v)) {
-    const obj: any = {}
-    let pure = true
-    for (const key in v) {
-      let value = v[key]
-      // `value` is undefined
-      if (value === undefined) {
-        pure = false
-        continue
-      }
-      // `prepareObject` returned a value that's different from what we had before
-      if (value !== (value = prepareForHashing(value))) {
-        pure = false
-      }
-      obj[key] = value
-    }
-    // Return as is if we haven't needed to tamper with anything
-    return pure ? v : obj
-  }
-  return v
-}
-
-function isPlainObject(v: any): boolean {
-  if (typeof v !== 'object' || v === null) {
-    return false
-  }
-  const proto = Object.getPrototypeOf(v)
-  return proto === Object.prototype || proto === null
 }

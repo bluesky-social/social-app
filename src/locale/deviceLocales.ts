@@ -1,4 +1,4 @@
-import {getLocales as defaultGetLocales, Locale} from 'expo-localization'
+import {getLocales as defaultGetLocales, type Locale} from 'expo-localization'
 
 import {dedupArray} from '#/lib/functions'
 
@@ -57,7 +57,7 @@ export function getLocales() {
       }
     }
 
-    // @ts-ignore checked above
+    // @ts-expect-error checked above
     output.push(locale)
   }
 

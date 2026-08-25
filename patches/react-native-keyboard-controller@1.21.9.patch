@@ -1,0 +1,80 @@
+diff --git a/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts b/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts
+index 48178d9246ab94d701983ac20473983eb746d1a6..451d38e6e20646c32795db3be28fbea57de1d12f 100644
+--- a/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts
++++ b/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts
+@@ -172,6 +172,18 @@ function useChatKeyboard(
+ 
+         currentHeight.value = e.height;
+ 
++        if (scrollViewRef() == null) {
++          // The scroll view can be detached or not yet attached while a
++          // keyboard animation is running (e.g. the chat list re-creating its
++          // scroll component mid-animation). Every branch below eventually
++          // calls scrollTo (directly or via clampScrollIfNeeded); on Paper
++          // reanimated's scrollTo would hand the null ref to the native
++          // _scrollToPaper HostFunction, which throws "Value is null, expected
++          // a number" and crashes in release builds. currentHeight is kept up
++          // to date above so the animated style keeps committing.
++          return;
++        }
++
+         if (inverted) {
+           // Skip post-interactive snap-back (duration === -1)
+           if (e.duration === -1) {
+diff --git a/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts b/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
+index 0f6d7c67a307885310ab184fdf9e7a5c7b296825..1a01093e7909973cef5268f999158df389e77634 100644
+--- a/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
++++ b/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
+@@ -1,8 +1,6 @@
+ import { useCallback } from "react";
+-import { Platform } from "react-native";
+ import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
+ 
+-import { IS_FABRIC } from "../../../architecture";
+ import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
+ 
+ import type { KeyboardLiftBehavior } from "../useChatKeyboard/types";
+@@ -52,7 +50,6 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
+     scroll,
+     layout,
+     size,
+-    contentOffsetY,
+     inverted,
+     keyboardLiftBehavior,
+     freeze,
+@@ -62,20 +59,23 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
+     (target: number) => {
+       "worklet";
+ 
+-      if (contentOffsetY && IS_FABRIC) {
+-        // eslint-disable-next-line react-compiler/react-compiler
+-        contentOffsetY.value = target;
+-      } else if (Platform.OS === "android") {
+-        // Defer scrollTo so the animatedProps inset commit lands first;
+-        // otherwise the native ScrollView clamps to the old range.
+-        requestAnimationFrame(() => {
+-          scrollTo(scrollViewRef, 0, target, false);
+-        });
+-      } else {
++      // Always defer scrollTo so the animatedProps inset commit lands first;
++      // otherwise the native ScrollView clamps contentOffset to the old
++      // contentInset range (iOS Fabric) or the old contentInsetBottom (Android).
++      requestAnimationFrame(() => {
++        // The ScrollView can detach between scheduling this frame and now (e.g.
++        // navigating away from the screen, or the list re-creating its scroll
++        // component). Once detached, scrollViewRef() resolves to null, and on
++        // Paper reanimated's scrollTo hands that null to the native
++        // _scrollToPaper HostFunction, which throws "Value is null, expected a
++        // number". Re-check the ref now that the frame has arrived.
++        if (scrollViewRef() == null) {
++          return;
++        }
+         scrollTo(scrollViewRef, 0, target, false);
+-      }
++      });
+     },
+-    [scrollViewRef, contentOffsetY],
++    [scrollViewRef],
+   );
+ 
+   useAnimatedReaction(

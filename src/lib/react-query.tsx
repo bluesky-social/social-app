@@ -1,19 +1,28 @@
-import React, {useRef, useState} from 'react'
-import {AppState, AppStateStatus} from 'react-native'
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import {useEffect, useRef, useState} from 'react'
+import {AppState, type AppStateStatus} from 'react-native'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
-import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
 import {
+  type DehydrateOptions,
+  focusManager,
+  onlineManager,
+  QueryClient,
+} from '@tanstack/react-query'
+import {
+  type PersistQueryClientOptions,
   PersistQueryClientProvider,
-  PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client'
 
-import {isNative} from '#/platform/detection'
+import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {isQueryPersisted} from '#/state/queries/util'
+import * as env from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
-// any query keys in this array will be persisted to AsyncStorage
-export const labelersDetailedInfoQueryKeyRoot = 'labelers-detailed-info'
-const STORED_CACHE_QUERY_KEY_ROOTS = [labelersDetailedInfoQueryKeyRoot]
+declare global {
+  interface Window {
+    __TANSTACK_QUERY_CLIENT__: QueryClient
+  }
+}
 
 async function checkIsOnline(): Promise<boolean> {
   try {
@@ -80,7 +89,7 @@ setInterval(() => {
 }, 2000)
 
 focusManager.setEventListener(onFocus => {
-  if (isNative) {
+  if (IS_NATIVE) {
     const subscription = AppState.addEventListener(
       'change',
       (status: AppStateStatus) => {
@@ -127,13 +136,12 @@ const createQueryClient = () =>
     },
   })
 
-const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
-  {
-    shouldDehydrateMutation: (_: any) => false,
-    shouldDehydrateQuery: query => {
-      return STORED_CACHE_QUERY_KEY_ROOTS.includes(String(query.queryKey[0]))
-    },
-  }
+const dehydrateOptions: DehydrateOptions = {
+  shouldDehydrateMutation: (_: any) => false,
+  shouldDehydrateQuery: query => {
+    return isQueryPersisted(query.queryKey) && query.state.status === 'success'
+  },
+}
 
 export function QueryProvider({
   children,
@@ -170,15 +178,25 @@ function QueryProviderInner({
   // Do not move the query client creation outside of this component.
   const [queryClient, _setQueryClient] = useState(() => createQueryClient())
   const [persistOptions, _setPersistOptions] = useState(() => {
+    const storage = createPersistedQueryStorage(currentDid ?? 'logged-out')
     const asyncPersister = createAsyncStoragePersister({
-      storage: AsyncStorage,
+      storage,
       key: 'queryClient-' + (currentDid ?? 'logged-out'),
     })
     return {
       persister: asyncPersister,
       dehydrateOptions,
-    }
+      buster: env.APP_VERSION,
+    } satisfies Omit<PersistQueryClientOptions, 'queryClient'>
   })
+  useEffect(() => {
+    if (IS_WEB) {
+      // WARNING, BROKEN
+      // something since v5.32.0 causes OOMs. not important
+      // so disable for now
+      // window.__TANSTACK_QUERY_CLIENT__ = queryClient
+    }
+  }, [queryClient])
   return (
     <PersistQueryClientProvider
       client={queryClient}

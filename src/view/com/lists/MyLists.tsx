@@ -1,14 +1,13 @@
-import React from 'react'
+import {type JSX, useCallback, useMemo, useState} from 'react'
 import {
   ActivityIndicator,
   FlatList as RNFlatList,
   RefreshControl,
-  StyleProp,
+  type StyleProp,
   View,
-  ViewStyle,
+  type ViewStyle,
 } from 'react-native'
-import {AppBskyGraphDefs as GraphDefs} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {usePalette} from '#/lib/hooks/usePalette'
@@ -16,11 +15,12 @@ import {cleanError} from '#/lib/strings/errors'
 import {s} from '#/lib/styles'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
+import {type MyListsFilter, useMyListsQuery} from '#/state/queries/my-lists'
 import {atoms as a, useTheme} from '#/alf'
-import {BulletList_Stroke2_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
+import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
 import * as ListCard from '#/components/ListCard'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 import {ErrorMessage} from '../util/error/ErrorMessage'
 import {List} from '../util/List'
 
@@ -38,19 +38,22 @@ export function MyLists({
   filter: MyListsFilter
   inline?: boolean
   style?: StyleProp<ViewStyle>
-  renderItem?: (list: GraphDefs.ListView, index: number) => JSX.Element
+  renderItem?: (
+    list: app.bsky.graph.defs.ListView,
+    index: number,
+  ) => JSX.Element
   testID?: string
 }) {
   const pal = usePalette('default')
   const t = useTheme()
   const {_} = useLingui()
   const moderationOpts = useModerationOpts()
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
   const {data, isFetching, isFetched, isError, error, refetch} =
     useMyListsQuery(filter)
   const isEmpty = !isFetching && !data?.length
 
-  const items = React.useMemo(() => {
+  const items = useMemo(() => {
     let items: any[] = []
     if (isError && isEmpty) {
       items = items.concat([ERROR_ITEM])
@@ -69,7 +72,7 @@ export function MyLists({
   switch (filter) {
     case 'curate':
       emptyText = _(
-        msg`Public, sharable lists which can be used to drive feeds.`,
+        msg`Lists allow you to see content from your favorite people.`,
       )
       break
     case 'mod':
@@ -85,7 +88,7 @@ export function MyLists({
   // events
   // =
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -98,23 +101,22 @@ export function MyLists({
   // rendering
   // =
 
-  const renderItemInner = React.useCallback(
+  const renderItemInner = useCallback(
     ({item, index}: {item: any; index: number}) => {
       if (item === EMPTY) {
         return (
-          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_xl]}>
+          <View style={[a.flex_1, a.align_center, a.gap_sm, a.px_xl, a.pt_3xl]}>
             <View
               style={[
                 a.align_center,
                 a.justify_center,
                 a.rounded_full,
-                t.atoms.bg_contrast_25,
                 {
-                  width: 32,
-                  height: 32,
+                  width: 64,
+                  height: 64,
                 },
               ]}>
-              <ListIcon size="md" fill={t.atoms.text_contrast_low.color} />
+              <ListIcon size="2xl" fill={t.atoms.text_contrast_medium.color} />
             </View>
             <Text
               style={[

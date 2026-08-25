@@ -1,6 +1,5 @@
-import React from 'react'
-import {AppBskyFeedGetLikes as GetLikes} from '@atproto/api'
-import {msg} from '@lingui/macro'
+import {useCallback, useMemo, useState} from 'react'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -11,8 +10,15 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {ProfileCardWithFollowBtn} from '#/view/com/profile/ProfileCard'
 import {List} from '#/view/com/util/List'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {type app} from '#/lexicons'
 
-function renderItem({item, index}: {item: GetLikes.Like; index: number}) {
+function renderItem({
+  item,
+  index,
+}: {
+  item: app.bsky.feed.getLikes.Like
+  index: number
+}) {
   return (
     <ProfileCardWithFollowBtn
       key={item.actor.did}
@@ -22,14 +28,14 @@ function renderItem({item, index}: {item: GetLikes.Like; index: number}) {
   )
 }
 
-function keyExtractor(item: GetLikes.Like) {
+function keyExtractor(item: app.bsky.feed.getLikes.Like) {
   return item.actor.did
 }
 
 export function LikedByList({uri}: {uri: string}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
-  const [isPTRing, setIsPTRing] = React.useState(false)
+  const [isPTRing, setIsPTRing] = useState(false)
 
   const {
     data: resolvedUri,
@@ -49,14 +55,14 @@ export function LikedByList({uri}: {uri: string}) {
   const error = resolveError || likedByError
   const isError = !!resolveError || !!likedByError
 
-  const likes = React.useMemo(() => {
+  const likes = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.likes)
     }
     return []
   }, [data])
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setIsPTRing(true)
     try {
       await refetch()
@@ -66,7 +72,7 @@ export function LikedByList({uri}: {uri: string}) {
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
 
-  const onEndReached = React.useCallback(async () => {
+  const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
       await fetchNextPage()

@@ -1,5 +1,6 @@
 import {
   AppBskyEmbedExternal,
+  AppBskyEmbedGallery,
   AppBskyEmbedImages,
   AppBskyEmbedRecord,
   AppBskyEmbedRecordWithMedia,
@@ -14,11 +15,15 @@ import {ComponentChildren, h} from 'preact'
 import {useMemo} from 'preact/hooks'
 
 import infoIcon from '../../assets/circleInfo_stroke2_corner0_rounded.svg'
-import playIcon from '../../assets/play_filled_corner2_rounded.svg'
+import playIcon from '../../assets/play_filled_corner0_rounded.svg'
 import starterPackIcon from '../../assets/starterPack.svg'
+import {Globe} from '../icons/Globe'
 import {CONTENT_LABELS, labelsToInfo} from '../labels'
-import {getRkey} from '../utils'
+import * as bsky from '../types/bsky'
+import {getRkey} from '../util/rkey'
+import {getVerificationState} from '../util/verification-state'
 import {Link} from './link'
+import {VerificationCheck} from './verification-check'
 
 export function Embed({
   content,
@@ -37,6 +42,11 @@ export function Embed({
     // Case 1: Image
     if (AppBskyEmbedImages.isView(content)) {
       return <ImageEmbed content={content} labelInfo={labelInfo} />
+    }
+
+    // Case 1b: Gallery (Photos v2)
+    if (AppBskyEmbedGallery.isView(content)) {
+      return <GalleryEmbed content={content} labelInfo={labelInfo} />
     }
 
     // Case 2: External link
@@ -75,23 +85,35 @@ export function Embed({
           CONTENT_LABELS.includes(label.val),
         )
 
+        const verification = getVerificationState({profile: record.author})
+
         return (
           <Link
             href={`/profile/${record.author.did}/post/${getRkey(record)}`}
-            className="transition-colors hover:bg-neutral-100 dark:hover:bg-slate-700 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
+            className="transition-colors hover:bg-blue-50 dark:hover:bg-slate-900 border dark:border-slate-600 rounded-xl p-2 gap-1.5 w-full flex flex-col">
             <div className="flex gap-1.5 items-center">
-              <div className="w-4 h-4 overflow-hidden rounded-full bg-neutral-300 dark:bg-slate-700 shrink-0">
+              <div className="w-4 h-4 rounded-full bg-neutral-300 dark:bg-slate-900 shrink-0">
                 <img
+                  className="rounded-full"
                   src={record.author.avatar}
                   style={isAuthorLabeled ? {filter: 'blur(1.5px)'} : undefined}
                 />
               </div>
-              <p className="line-clamp-1 text-sm">
-                <span className="font-bold">{record.author.displayName}</span>
-                <span className="text-textLight dark:text-textDimmed ml-1">
+              <div className="flex flex-1 items-center shrink min-w-0 min-h-0">
+                <p className="text-sm shrink-0 font-semibold max-w-[70%] truncate">
+                  {record.author.displayName?.trim() || record.author.handle}
+                </p>
+                {verification.isVerified && (
+                  <VerificationCheck
+                    className="ml-[3px] mt-px shrink-0 self-center"
+                    verifier={verification.role === 'verifier'}
+                    size={12}
+                  />
+                )}
+                <p className="text-sm text-textLight dark:text-textDimmed min-w-0 truncate ml-1">
                   @{record.author.handle}
-                </span>
-              </p>
+                </p>
+              </div>
             </div>
             {text && <p className="text-sm">{text}</p>}
             {record.embeds?.map(embed => (
@@ -207,12 +229,14 @@ export function Embed({
 
 function Info({children}: {children: ComponentChildren}) {
   return (
-    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 bg-neutral-50">
+    <div className="w-full rounded-xl border py-2 px-2.5 flex-row flex gap-2 hover:bg-blue-50 dark:border-slate-600 dark:hover:bg-slate-900">
       <img src={infoIcon} className="w-4 h-4 shrink-0 mt-0.5" />
       <p className="text-sm text-textLight dark:text-textDimmed">{children}</p>
     </div>
   )
 }
+
+type GridImage = {thumb: string; alt: string}
 
 function ImageEmbed({
   content,
@@ -224,20 +248,45 @@ function ImageEmbed({
   if (labelInfo) {
     return <Info>{labelInfo}</Info>
   }
+  return (
+    <ImageGrid
+      images={content.images.map(i => ({thumb: i.thumb, alt: i.alt}))}
+    />
+  )
+}
 
-  switch (content.images.length) {
+function GalleryEmbed({
+  content,
+  labelInfo,
+}: {
+  content: AppBskyEmbedGallery.View
+  labelInfo?: string
+}) {
+  if (labelInfo) {
+    return <Info>{labelInfo}</Info>
+  }
+  const images = content.items
+    .filter(AppBskyEmbedGallery.isViewImage)
+    .map(i => ({thumb: i.thumbnail, alt: i.alt}))
+  return <ImageGrid images={images} />
+}
+
+function ImageGrid({images}: {images: GridImage[]}) {
+  switch (images.length) {
+    case 0:
+      return null
     case 1:
       return (
         <img
-          src={content.images[0].thumb}
-          alt={content.images[0].alt}
+          src={images[0].thumb}
+          alt={images[0].alt}
           className="w-full rounded-xl overflow-hidden object-cover h-auto max-h-[1000px]"
         />
       )
     case 2:
       return (
         <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
-          {content.images.map((image, i) => (
+          {images.map((image, i) => (
             <img
               key={i}
               src={image.thumb}
@@ -252,13 +301,13 @@ function ImageEmbed({
         <div className="flex gap-1 rounded-xl overflow-hidden w-full aspect-[2/1]">
           <div className="flex-1 aspect-square">
             <img
-              src={content.images[0].thumb}
-              alt={content.images[0].alt}
+              src={images[0].thumb}
+              alt={images[0].alt}
               className="w-full h-full object-cover rounded-sm"
             />
           </div>
           <div className="flex flex-col gap-1 flex-1">
-            {content.images.slice(1).map((image, i) => (
+            {images.slice(1).map((image, i) => (
               <img
                 key={i}
                 src={image.thumb}
@@ -269,21 +318,36 @@ function ImageEmbed({
           </div>
         </div>
       )
-    case 4:
+    default: {
+      const remaining = images.length - 4
       return (
         <div className="grid grid-cols-2 gap-1 rounded-xl overflow-hidden">
-          {content.images.map((image, i) => (
-            <img
-              key={i}
-              src={image.thumb}
-              alt={image.alt}
-              className="aspect-[3/2] w-full object-cover rounded-sm"
-            />
-          ))}
+          {images.slice(0, 4).map((image, i) => {
+            const isOverflowCell = i === 3 && remaining > 0
+            return (
+              <div
+                key={i}
+                className="relative aspect-[3/2] rounded-sm overflow-hidden">
+                <img
+                  src={image.thumb}
+                  alt={image.alt}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                {isOverflowCell && (
+                  <div
+                    aria-label={`+${remaining} more image${remaining === 1 ? '' : 's'}, view post to see all`}
+                    className="absolute inset-0 flex items-center justify-center bg-black/50">
+                    <span className="text-white text-2xl font-semibold">
+                      +{remaining}
+                    </span>
+                  </div>
+                )}
+              </div>
+            )
+          })}
         </div>
       )
-    default:
-      return null
+    }
   }
 }
 
@@ -315,17 +379,22 @@ function ExternalEmbed({
       {content.external.thumb && (
         <img
           src={content.external.thumb}
-          className="aspect-[1.91/1] object-cover"
+          className="aspect-[1200/630] object-cover"
         />
       )}
       <div className="py-3 px-4">
-        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-1">
-          {toNiceDomain(content.external.uri)}
+        <p className="font-semibold leading-tight line-clamp-3">
+          {content.external.title}
         </p>
-        <p className="font-semibold line-clamp-3">{content.external.title}</p>
-        <p className="text-sm text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
+        <p className="text-sm leading-snug text-textLight dark:text-textDimmed line-clamp-2 mt-0.5">
           {content.external.description}
         </p>
+        <div className="flex flex-row items-center gap-1 border-t dark:border-slate-600 mt-1 pt-1.5">
+          <Globe size={12} className="text-textLight dark:text-textDimmed" />
+          <p className="text-sm leading-none text-textLight dark:text-textDimmed line-clamp-1">
+            {toNiceDomain(content.external.uri)}
+          </p>
+        </div>
       </div>
     </Link>
   )
@@ -359,7 +428,7 @@ function GenericWithImageEmbed({
           <div className="w-8 h-8 rounded-md bg-brand shrink-0" />
         )}
         <div className="flex-1">
-          <p className="font-bold text-sm">{title}</p>
+          <p className="font-semibold text-sm">{title}</p>
           <p className="text-textLight dark:text-textDimmed text-sm">
             {subtitle}
           </p>
@@ -374,13 +443,36 @@ function GenericWithImageEmbed({
   )
 }
 
-// just the thumbnail and a play button
 function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
   let aspectRatio = 1
 
   if (content.aspectRatio) {
     const {width, height} = content.aspectRatio
     aspectRatio = clamp(width / height, 1 / 1, 3 / 1)
+  }
+
+  const supportsHls = useMemo(() => {
+    const video = document.createElement('video')
+    return video.canPlayType('application/vnd.apple.mpegurl') !== ''
+  }, [])
+
+  if (supportsHls) {
+    return (
+      <video
+        src={content.playlist}
+        poster={content.thumbnail}
+        controls
+        playsinline
+        preload="metadata"
+        // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video#loading
+        loading="lazy"
+        crossorigin="anonymous"
+        aria-label={content.alt || undefined}
+        onClickCapture={evt => evt.stopPropagation()}
+        className="w-full rounded-xl bg-black"
+        style={{aspectRatio: `${aspectRatio} / 1`}}
+      />
+    )
   }
 
   return (
@@ -404,7 +496,12 @@ function StarterPackEmbed({
 }: {
   content: AppBskyGraphDefs.StarterPackViewBasic
 }) {
-  if (!AppBskyGraphStarterpack.isRecord(content.record)) {
+  if (
+    !bsky.dangerousIsType<AppBskyGraphStarterpack.Record>(
+      content.record,
+      AppBskyGraphStarterpack.isRecord,
+    )
+  ) {
     return null
   }
 
@@ -415,7 +512,7 @@ function StarterPackEmbed({
     <Link
       href={starterPackHref}
       className="w-full rounded-xl overflow-hidden border dark:border-slate-600 flex flex-col items-stretch">
-      <img src={imageUri} className="aspect-[1.91/1] object-cover" />
+      <img src={imageUri} className="aspect-[1200/630] object-cover" />
       <div className="py-3 px-4">
         <div className="flex space-x-2 items-center">
           <img src={starterPackIcon} className="w-10 h-10" />
@@ -443,7 +540,9 @@ function StarterPackEmbed({
 }
 
 // from #/lib/strings/starter-pack.ts
-function getStarterPackImage(starterPack: AppBskyGraphDefs.StarterPackView) {
+function getStarterPackImage(
+  starterPack: AppBskyGraphDefs.StarterPackViewBasic,
+) {
   const rkey = getRkey({uri: starterPack.uri})
   return `https://ogcard.cdn.bsky.app/start/${starterPack.creator.did}/${rkey}`
 }

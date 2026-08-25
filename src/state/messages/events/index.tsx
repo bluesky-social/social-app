@@ -1,15 +1,14 @@
-import React from 'react'
+import {createContext, useContext, useEffect, useState} from 'react'
 import {AppState} from 'react-native'
 
 import {MessagesEventBus} from '#/state/messages/events/agent'
-import {useAgent, useSession} from '#/state/session'
+import {useChatClient, useSession} from '#/state/session'
 
-const MessagesEventBusContext = React.createContext<MessagesEventBus | null>(
-  null,
-)
+const MessagesEventBusContext = createContext<MessagesEventBus | null>(null)
+MessagesEventBusContext.displayName = 'MessagesEventBusContext'
 
 export function useMessagesEventBus() {
-  const ctx = React.useContext(MessagesEventBusContext)
+  const ctx = useContext(MessagesEventBusContext)
   if (!ctx) {
     throw new Error(
       'useMessagesEventBus must be used within a MessagesEventBusProvider',
@@ -43,15 +42,25 @@ export function MessagesEventBusProviderInner({
 }: {
   children: React.ReactNode
 }) {
-  const agent = useAgent()
-  const [bus] = React.useState(
+  const chatClient = useChatClient()
+  const [bus] = useState(
     () =>
       new MessagesEventBus({
-        agent,
+        chatClient,
       }),
   )
 
-  React.useEffect(() => {
+  /*
+   * The bus outlives the client it was constructed with: replacing the session
+   * bundle (account switch, cross-tab token sync, expiry rescue) builds fresh
+   * clients over the new session and disposes the old ones, so a bus still
+   * holding the previous client would poll through a dead session.
+   */
+  useEffect(() => {
+    bus.updateClient(chatClient)
+  }, [bus, chatClient])
+
+  useEffect(() => {
     bus.resume()
 
     return () => {
@@ -59,7 +68,7 @@ export function MessagesEventBusProviderInner({
     }
   }, [bus])
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleAppStateChange = (nextAppState: string) => {
       if (nextAppState === 'active') {
         bus.resume()

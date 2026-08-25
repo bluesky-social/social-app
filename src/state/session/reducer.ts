@@ -1,40 +1,43 @@
-import {type AtpSessionEvent, type BskyAgent} from '@atproto/api'
-
-import {createPublicAgent} from './agent'
+import {unregisterPushToken} from '#/lib/notifications/notifications'
+import {logger} from '#/lib/notifications/util'
 import {wrapSessionReducerForLogging} from './logging'
-import {type SessionAccount} from './types'
+import {createPublicSessionBundle} from './session-core'
+import {type AtpSessionEvent, type SessionAccount} from './types'
+import {createTemporaryClientsAndResume} from './util'
 
-// A hack so that the reducer can't read anything from the agent.
-// From the reducer's point of view, it should be a completely opaque object.
-type OpaqueBskyAgent = {
+// Keep session internals outside the reducer's static view of a bundle.
+type OpaqueSessionBundle = {
   readonly service: URL
-  readonly api: unknown
-  readonly app: unknown
-  readonly com: unknown
 }
 
-type AgentState = {
-  readonly agent: OpaqueBskyAgent
+type BundleState = {
+  readonly bundle: OpaqueSessionBundle
   readonly did: string | undefined
 }
 
 export type State = {
   readonly accounts: SessionAccount[]
-  readonly currentAgentState: AgentState
-  needsPersist: boolean // Mutated in an effect.
+  readonly currentBundleState: BundleState
+  needsPersist: boolean // Cleared after persistence is scheduled.
 }
 
 export type Action =
   | {
-      type: 'received-agent-event'
-      agent: OpaqueBskyAgent
+      type: 'received-session-event'
+      bundle: OpaqueSessionBundle
       accountDid: string
       refreshedAccount: SessionAccount | undefined
       sessionEvent: AtpSessionEvent
     }
   | {
       type: 'switched-to-account'
-      newAgent: OpaqueBskyAgent
+      newBundle: OpaqueSessionBundle
+      newAccount: SessionAccount
+    }
+  | {
+      // Replace an immutable session from synced or rescued tokens without rebroadcasting.
+      type: 'replaced-current-bundle'
+      newBundle: OpaqueSessionBundle
       newAccount: SessionAccount
     }
   | {
@@ -58,9 +61,9 @@ export type Action =
       patch: Pick<SessionAccount, 'emailConfirmed' | 'emailAuthFactor'>
     }
 
-function createPublicAgentState(): AgentState {
+function createPublicBundleState(): BundleState {
   return {
-    agent: createPublicAgent(),
+    bundle: createPublicSessionBundle(),
     did: undefined,
   }
 }
@@ -68,22 +71,20 @@ function createPublicAgentState(): AgentState {
 export function getInitialState(persistedAccounts: SessionAccount[]): State {
   return {
     accounts: persistedAccounts,
-    currentAgentState: createPublicAgentState(),
+    currentBundleState: createPublicBundleState(),
     needsPersist: false,
   }
 }
 
 let reducer = (state: State, action: Action): State => {
   switch (action.type) {
-    case 'received-agent-event': {
-      const {agent, accountDid, refreshedAccount, sessionEvent} = action
-      if (
-        refreshedAccount === undefined &&
-        agent !== state.currentAgentState.agent
-      ) {
-        // If the session got cleared out (e.g. due to expiry or network error) but
-        // this account isn't the active one, don't clear it out at this time.
-        // This way, if the problem is transient, it'll work on next resume.
+    case 'received-session-event': {
+      const {bundle, accountDid, refreshedAccount, sessionEvent} = action
+      if (bundle !== state.currentBundleState.bundle) {
+        /*
+         * Stale bundles must neither log out the current account nor restore
+         * tokens after logout or an account switch.
+         */
         return state
       }
       if (sessionEvent === 'network-error') {
@@ -95,7 +96,6 @@ let reducer = (state: State, action: Action): State => {
         !existingAccount ||
         JSON.stringify(existingAccount) === JSON.stringify(refreshedAccount)
       ) {
-        // Fast path without a state update.
         return state
       }
       return {
@@ -115,42 +115,90 @@ let reducer = (state: State, action: Action): State => {
             return a
           }
         }),
-        currentAgentState: refreshedAccount
-          ? state.currentAgentState
-          : createPublicAgentState(), // Log out if expired.
+        currentBundleState: refreshedAccount
+          ? state.currentBundleState
+          : createPublicBundleState(), // Log out if expired.
         needsPersist: true,
       }
     }
     case 'switched-to-account': {
-      const {newAccount, newAgent} = action
+      const {newAccount, newBundle} = action
       return {
         accounts: [
           newAccount,
           ...state.accounts.filter(a => a.did !== newAccount.did),
         ],
-        currentAgentState: {
+        currentBundleState: {
           did: newAccount.did,
-          agent: newAgent,
+          bundle: newBundle,
         },
         needsPersist: true,
       }
     }
+    case 'replaced-current-bundle': {
+      const {newBundle, newAccount} = action
+      return {
+        ...state,
+        currentBundleState: {
+          did: state.currentBundleState.did,
+          bundle: newBundle,
+        },
+        accounts: state.accounts.map(a =>
+          a.did === newAccount.did ? newAccount : a,
+        ),
+        needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
+      }
+    }
     case 'removed-account': {
       const {accountDid} = action
+
+      // side effect
+      const account = state.accounts.find(a => a.did === accountDid)
+      if (account) {
+        createTemporaryClientsAndResume([account])
+          .then(clients => unregisterPushToken(clients))
+          .then(() =>
+            logger.debug('Push token unregistered', {did: accountDid}),
+          )
+          .catch(err => {
+            logger.error('Failed to unregister push token', {
+              did: accountDid,
+              error: err,
+            })
+          })
+      }
+
       return {
         accounts: state.accounts.filter(a => a.did !== accountDid),
-        currentAgentState:
-          state.currentAgentState.did === accountDid
-            ? createPublicAgentState() // Log out if removing the current one.
-            : state.currentAgentState,
+        currentBundleState:
+          state.currentBundleState.did === accountDid
+            ? createPublicBundleState() // Log out if removing the current one.
+            : state.currentBundleState,
         needsPersist: true,
       }
     }
     case 'logged-out-current-account': {
-      const {currentAgentState} = state
+      const {currentBundleState} = state
+      const accountDid = currentBundleState.did
+      // side effect
+      const account = state.accounts.find(a => a.did === accountDid)
+      if (account && accountDid) {
+        createTemporaryClientsAndResume([account])
+          .then(clients => unregisterPushToken(clients))
+          .then(() =>
+            logger.debug('Push token unregistered', {did: accountDid}),
+          )
+          .catch(err => {
+            logger.error('Failed to unregister push token', {
+              did: accountDid,
+              error: err,
+            })
+          })
+      }
+
       return {
         accounts: state.accounts.map(a =>
-          a.did === currentAgentState.did
+          a.did === accountDid
             ? {
                 ...a,
                 refreshJwt: undefined,
@@ -158,11 +206,20 @@ let reducer = (state: State, action: Action): State => {
               }
             : a,
         ),
-        currentAgentState: createPublicAgentState(),
+        currentBundleState: createPublicBundleState(),
         needsPersist: true,
       }
     }
     case 'logged-out-every-account': {
+      createTemporaryClientsAndResume(state.accounts)
+        .then(clients => unregisterPushToken(clients))
+        .then(() => logger.debug('Push token unregistered'))
+        .catch(err => {
+          logger.error('Failed to unregister push token', {
+            error: err,
+          })
+        })
+
       return {
         accounts: state.accounts.map(a => ({
           ...a,
@@ -170,7 +227,7 @@ let reducer = (state: State, action: Action): State => {
           refreshJwt: undefined,
           accessJwt: undefined,
         })),
-        currentAgentState: createPublicAgentState(),
+        currentBundleState: createPublicBundleState(),
         needsPersist: true,
       }
     }
@@ -178,33 +235,19 @@ let reducer = (state: State, action: Action): State => {
       const {syncedAccounts, syncedCurrentDid} = action
       return {
         accounts: syncedAccounts,
-        currentAgentState:
-          syncedCurrentDid === state.currentAgentState.did
-            ? state.currentAgentState
-            : createPublicAgentState(), // Log out if different user.
+        currentBundleState:
+          syncedCurrentDid === state.currentBundleState.did
+            ? state.currentBundleState
+            : createPublicBundleState(), // Log out if different user.
         needsPersist: false, // Synced from another tab. Don't persist to avoid cycles.
       }
     }
     case 'partial-refresh-session': {
       const {accountDid, patch} = action
-      const agent = state.currentAgentState.agent as BskyAgent
 
-      /*
-       * Only mutating values that are safe. Be very careful with this.
-       */
-      if (agent.session) {
-        agent.session.emailConfirmed =
-          patch.emailConfirmed ?? agent.session.emailConfirmed
-        agent.session.emailAuthFactor =
-          patch.emailAuthFactor ?? agent.session.emailAuthFactor
-      }
-
+      // PasswordSession has no setter; consumers read these fields from the account.
       return {
         ...state,
-        currentAgentState: {
-          ...state.currentAgentState,
-          agent,
-        },
         accounts: state.accounts.map(a => {
           if (a.did === accountDid) {
             return {

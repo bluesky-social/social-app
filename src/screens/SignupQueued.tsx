@@ -1,19 +1,21 @@
-import React from 'react'
+import {useCallback, useEffect, useState} from 'react'
 import {Modal, ScrollView, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
-import {isIOS, isWeb} from '#/platform/detection'
-import {isSignupQueued, useAgent, useSessionApi} from '#/state/session'
+import {isSignupQueued, usePdsClient, useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, native, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Loader} from '#/components/Loader'
 import {P, Text} from '#/components/Typography'
+import {IS_IOS, IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {com} from '#/lexicons'
 
 const COL_WIDTH = 400
 
@@ -23,32 +25,37 @@ export function SignupQueued() {
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const onboardingDispatch = useOnboardingDispatch()
-  const {logoutCurrentAccount} = useSessionApi()
-  const agent = useAgent()
+  const {logoutCurrentAccount, refreshSession} = useSessionApi()
+  const pdsClient = usePdsClient()
 
-  const [isProcessing, setProcessing] = React.useState(false)
-  const [estimatedTime, setEstimatedTime] = React.useState<string | undefined>(
+  const [isProcessing, setProcessing] = useState(false)
+  const [estimatedTime, setEstimatedTime] = useState<string | undefined>(
     undefined,
   )
-  const [placeInQueue, setPlaceInQueue] = React.useState<number | undefined>(
+  const [placeInQueue, setPlaceInQueue] = useState<number | undefined>(
     undefined,
   )
 
-  const checkStatus = React.useCallback(async () => {
+  const checkStatus = useCallback(async () => {
     setProcessing(true)
     try {
-      const res = await agent.com.atproto.temp.checkSignupQueue()
-      if (res.data.activated) {
-        // ready to go, exchange the access token for a usable one and kick off onboarding
-        await agent.sessionManager.refreshSession()
-        if (!isSignupQueued(agent.session?.accessJwt)) {
+      const res = await pdsClient.call(com.atproto.temp.checkSignupQueue)
+      if (res.activated) {
+        /*
+         * Ready to go, exchange the access token for a usable one and kick off
+         * onboarding. The refreshed snapshot carries the new scope; reading
+         * `currentAccount` here would still see the pre-refresh token, since the
+         * session's update hook dispatches a render away.
+         */
+        const refreshed = await refreshSession()
+        if (!isSignupQueued(refreshed?.accessJwt)) {
           onboardingDispatch({type: 'start'})
         }
       } else {
         // not ready, update UI
-        setEstimatedTime(msToString(res.data.estimatedTimeMs))
-        if (typeof res.data.placeInQueue !== 'undefined') {
-          setPlaceInQueue(Math.max(res.data.placeInQueue, 1))
+        setEstimatedTime(msToString(res.estimatedTimeMs))
+        if (typeof res.placeInQueue !== 'undefined') {
+          setPlaceInQueue(Math.max(res.placeInQueue, 1))
         }
       }
     } catch (e: any) {
@@ -61,10 +68,11 @@ export function SignupQueued() {
     setEstimatedTime,
     setPlaceInQueue,
     onboardingDispatch,
-    agent,
+    pdsClient,
+    refreshSession,
   ])
 
-  React.useEffect(() => {
+  useEffect(() => {
     checkStatus()
     const interval = setInterval(checkStatus, 60e3)
     return () => clearInterval(interval)
@@ -98,7 +106,7 @@ export function SignupQueued() {
     </Button>
   )
 
-  const webLayout = isWeb && gtMobile
+  const webLayout = IS_WEB && gtMobile
 
   return (
     <Modal
@@ -106,7 +114,9 @@ export function SignupQueued() {
       animationType={native('slide')}
       presentationStyle="formSheet"
       style={[web(a.util_screen_outer)]}>
-      {isIOS && <SystemBars style={{statusBar: 'light'}} />}
+      {IS_IOS && !IS_LIQUID_GLASS && (
+        <SystemBars style={{statusBar: 'light'}} />
+      )}
       <ScrollView
         style={[a.flex_1, t.atoms.bg]}
         contentContainerStyle={{borderWidth: 0}}
@@ -120,10 +130,10 @@ export function SignupQueued() {
           <View style={[a.flex_1, {maxWidth: COL_WIDTH}]}>
             <View
               style={[a.w_full, a.justify_center, a.align_center, a.my_4xl]}>
-              <Logo width={120} />
+              <Logo allowVariants={false} width={120} />
             </View>
 
-            <Text style={[a.text_4xl, a.font_heavy, a.pb_sm]}>
+            <Text style={[a.text_4xl, a.font_bold, a.pb_sm]}>
               <Trans>You're in line</Trans>
             </Text>
             <P style={[t.atoms.text_contrast_medium]}>
@@ -146,7 +156,7 @@ export function SignupQueued() {
               ]}>
               {typeof placeInQueue === 'number' && (
                 <Text
-                  style={[a.text_5xl, a.text_center, a.font_heavy, a.mb_2xl]}>
+                  style={[a.text_5xl, a.text_center, a.font_bold, a.mb_2xl]}>
                   {placeInQueue}
                 </Text>
               )}

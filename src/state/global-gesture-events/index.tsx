@@ -1,5 +1,5 @@
 import {createContext, useContext, useMemo, useRef, useState} from 'react'
-import {View} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
   Gesture,
   GestureDetector,
@@ -7,7 +7,7 @@ import {
   type GestureUpdateEvent,
   type PanGestureHandlerEventPayload,
 } from 'react-native-gesture-handler'
-import EventEmitter from 'eventemitter3'
+import {EventEmitter} from 'eventemitter3'
 
 export type GlobalGestureEvents = {
   begin: GestureStateChangeEvent<PanGestureHandlerEventPayload>
@@ -25,11 +25,14 @@ const Context = createContext<{
   register: () => {},
   unregister: () => {},
 })
+Context.displayName = 'GlobalGestureEventsContext'
 
 export function GlobalGestureEventsProvider({
   children,
+  style,
 }: {
   children: React.ReactNode
+  style?: StyleProp<ViewStyle>
 }) {
   const refCount = useRef(0)
   const events = useMemo(() => new EventEmitter<GlobalGestureEvents>(), [])
@@ -72,7 +75,9 @@ export function GlobalGestureEventsProvider({
   return (
     <Context.Provider value={ctx}>
       <GestureDetector gesture={gesture}>
-        <View collapsable={false}>{children}</View>
+        <View collapsable={false} style={style}>
+          {children}
+        </View>
       </GestureDetector>
     </Context.Provider>
   )

@@ -1,13 +1,13 @@
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
-import {useModalControls} from '#/state/modals'
+import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
 import {AgeAssuranceAccountCard} from '#/components/ageAssurance/AgeAssuranceAccountCard'
+import {isBotAccount} from '#/components/BotBadge'
 import {useDialogControl} from '#/components/Dialog'
 import {BirthDateSettingsDialog} from '#/components/dialogs/BirthDateSettings'
 import {
@@ -16,6 +16,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {At_Stroke2_Corner2_Rounded as AtIcon} from '#/components/icons/At'
 import {BirthdayCake_Stroke2_Corner2_Rounded as BirthdayCakeIcon} from '#/components/icons/BirthdayCake'
+import {Bot_Stroke as RobotIcon} from '#/components/icons/Bot'
 import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
 import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {Freeze_Stroke2_Corner2_Rounded as FreezeIcon} from '#/components/icons/Freeze'
@@ -25,20 +26,24 @@ import {ShieldCheck_Stroke2_Corner0_Rounded as ShieldIcon} from '#/components/ic
 import {Trash_Stroke2_Corner2_Rounded} from '#/components/icons/Trash'
 import * as Layout from '#/components/Layout'
 import {ChangeHandleDialog} from './components/ChangeHandleDialog'
+import {ChangePasswordDialog} from './components/ChangePasswordDialog'
 import {DeactivateAccountDialog} from './components/DeactivateAccountDialog'
+import {DeleteAccountDialog} from './components/DeleteAccountDialog'
 import {ExportCarDialog} from './components/ExportCarDialog'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'AccountSettings'>
 export function AccountSettingsScreen({}: Props) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
-  const {openModal} = useModalControls()
+  const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const emailDialogControl = useEmailDialogControl()
   const birthdayControl = useDialogControl()
   const changeHandleControl = useDialogControl()
+  const changePasswordControl = useDialogControl()
   const exportCarControl = useDialogControl()
   const deactivateAccountControl = useDialogControl()
+  const deleteAccountControl = useDialogControl()
 
   return (
     <Layout.Screen>
@@ -76,7 +81,7 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.Item>
           {currentAccount && !currentAccount.emailConfirmed && (
             <SettingsList.PressableItem
-              label={_(msg`Verify your email`)}
+              label={l`Verify your email`}
               onPress={() =>
                 emailDialogControl.open({
                   id: EmailDialogScreenID.Verify,
@@ -95,14 +100,14 @@ export function AccountSettingsScreen({}: Props) {
                 color={t.palette.primary_500}
               />
               <SettingsList.ItemText
-                style={[{color: t.palette.primary_500}, a.font_bold]}>
+                style={[{color: t.palette.primary_500}, a.font_semi_bold]}>
                 <Trans>Verify your email</Trans>
               </SettingsList.ItemText>
               <SettingsList.Chevron color={t.palette.primary_500} />
             </SettingsList.PressableItem>
           )}
           <SettingsList.PressableItem
-            label={_(msg`Update email`)}
+            label={l`Update email`}
             onPress={() =>
               emailDialogControl.open({
                 id: EmailDialogScreenID.Update,
@@ -116,8 +121,8 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
           <SettingsList.Divider />
           <SettingsList.PressableItem
-            label={_(msg`Password`)}
-            onPress={() => openModal({name: 'change-password'})}>
+            label={l`Password`}
+            onPress={() => changePasswordControl.open()}>
             <SettingsList.ItemIcon icon={LockIcon} />
             <SettingsList.ItemText>
               <Trans>Password</Trans>
@@ -125,8 +130,8 @@ export function AccountSettingsScreen({}: Props) {
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
-            label={_(msg`Handle`)}
-            accessibilityHint={_(msg`Opens change handle dialog`)}
+            label={l`Handle`}
+            accessibilityHint={l`Opens change handle dialog`}
             onPress={() => changeHandleControl.open()}>
             <SettingsList.ItemIcon icon={AtIcon} />
             <SettingsList.ItemText>
@@ -140,14 +145,27 @@ export function AccountSettingsScreen({}: Props) {
               <Trans>Birthday</Trans>
             </SettingsList.ItemText>
             <SettingsList.BadgeButton
-              label={_(msg`Edit`)}
+              label={l`Edit`}
               onPress={() => birthdayControl.open()}
             />
           </SettingsList.Item>
           <AgeAssuranceAccountCard style={[a.px_xl, a.pt_xs, a.pb_md]} />
+          <SettingsList.LinkItem
+            to="/settings/automation-label"
+            label={l`Automation label`}>
+            <SettingsList.ItemIcon icon={RobotIcon} />
+            <SettingsList.ItemText>
+              <Trans>Automation label</Trans>
+            </SettingsList.ItemText>
+            {profile && (
+              <SettingsList.BadgeText>
+                {isBotAccount(profile) ? l`On` : l`Off`}
+              </SettingsList.BadgeText>
+            )}
+          </SettingsList.LinkItem>
           <SettingsList.Divider />
           <SettingsList.PressableItem
-            label={_(msg`Export my data`)}
+            label={l`Export my data`}
             onPress={() => exportCarControl.open()}>
             <SettingsList.ItemIcon icon={CarIcon} />
             <SettingsList.ItemText>
@@ -156,7 +174,7 @@ export function AccountSettingsScreen({}: Props) {
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
-            label={_(msg`Deactivate account`)}
+            label={l`Deactivate account`}
             onPress={() => deactivateAccountControl.open()}
             destructive>
             <SettingsList.ItemIcon icon={FreezeIcon} />
@@ -166,8 +184,8 @@ export function AccountSettingsScreen({}: Props) {
             <SettingsList.Chevron />
           </SettingsList.PressableItem>
           <SettingsList.PressableItem
-            label={_(msg`Delete account`)}
-            onPress={() => openModal({name: 'delete-account'})}
+            label={l`Delete account`}
+            onPress={() => deleteAccountControl.open()}
             destructive>
             <SettingsList.ItemIcon icon={Trash_Stroke2_Corner2_Rounded} />
             <SettingsList.ItemText>
@@ -177,11 +195,15 @@ export function AccountSettingsScreen({}: Props) {
           </SettingsList.PressableItem>
         </SettingsList.Container>
       </Layout.Content>
-
       <BirthDateSettingsDialog control={birthdayControl} />
       <ChangeHandleDialog control={changeHandleControl} />
+      <ChangePasswordDialog control={changePasswordControl} />
       <ExportCarDialog control={exportCarControl} />
       <DeactivateAccountDialog control={deactivateAccountControl} />
+      <DeleteAccountDialog
+        control={deleteAccountControl}
+        deactivateDialogControl={deactivateAccountControl}
+      />
     </Layout.Screen>
   )
 }

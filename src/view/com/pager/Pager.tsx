@@ -1,7 +1,10 @@
 import {
+  type JSX,
+  memo,
   useCallback,
   useContext,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from 'react'
@@ -15,12 +18,12 @@ import PagerView, {
   type PageScrollStateChangedNativeEventData,
 } from 'react-native-pager-view'
 import Animated, {
-  runOnJS,
   type SharedValue,
   useEvent,
   useHandler,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
@@ -56,6 +59,7 @@ interface Props {
 }
 
 const AnimatedPagerView = Animated.createAnimatedComponent(PagerView)
+const MemoizedAnimatedPagerView = memo(AnimatedPagerView)
 
 export function Pager({
   ref,
@@ -121,7 +125,7 @@ export function Pager({
       },
       onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
         'worklet'
-        runOnJS(setIsIdle)(e.pageScrollState === 'idle')
+        scheduleOnRN(setIsIdle, e.pageScrollState === 'idle')
         if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
           // This is a programmatic scroll on Android.
           // Stay "idle" to match iOS and avoid confusing downstream code.
@@ -133,15 +137,11 @@ export function Pager({
       onPageSelected(e: PagerViewOnPageSelectedEventData) {
         'worklet'
         didInit.set(true)
-        runOnJS(onPageSelectedJSThread)(e.position)
+        scheduleOnRN(onPageSelectedJSThread, e.position)
       },
     },
     [parentOnPageScrollStateChanged],
   )
-
-  const drawerGesture = useContext(DrawerGestureContext) ?? Gesture.Native() // noop for web
-  const nativeGesture =
-    Gesture.Native().requireExternalGestureToFail(drawerGesture)
 
   return (
     <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
@@ -151,17 +151,31 @@ export function Pager({
         dragProgress,
         dragState,
       })}
-      <GestureDetector gesture={nativeGesture}>
-        <AnimatedPagerView
+      <DrawerGestureRequireFail>
+        <MemoizedAnimatedPagerView
           ref={pagerView}
-          style={[a.flex_1]}
+          style={a.flex_1}
           initialPage={initialPage}
           onPageScroll={handlePageScroll}>
           {children}
-        </AnimatedPagerView>
-      </GestureDetector>
+        </MemoizedAnimatedPagerView>
+      </DrawerGestureRequireFail>
     </View>
   )
+}
+
+function DrawerGestureRequireFail({children}: {children: React.ReactNode}) {
+  const drawerGesture = useContext(DrawerGestureContext)
+
+  const nativeGesture = useMemo(() => {
+    const gesture = Gesture.Native()
+    if (drawerGesture) {
+      gesture.requireExternalGestureToFail(drawerGesture)
+    }
+    return gesture
+  }, [drawerGesture])
+
+  return <GestureDetector gesture={nativeGesture}>{children}</GestureDetector>
 }
 
 function usePagerHandlers(

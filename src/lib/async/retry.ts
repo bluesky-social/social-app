@@ -29,6 +29,7 @@ export async function retry<P>(
 export async function networkRetry<P>(
   retries: number,
   fn: () => Promise<P>,
+  delay?: number,
 ): Promise<P> {
-  return retry(retries, isNetworkError, fn)
+  return retry(retries, isNetworkError, fn, delay)
 }

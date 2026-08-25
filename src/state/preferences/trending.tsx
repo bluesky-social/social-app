@@ -1,4 +1,11 @@
-import React from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react'
 
 import * as persisted from '#/state/persisted'
 
@@ -18,20 +25,22 @@ type ApiContext = {
   ): void
 }
 
-const StateContext = React.createContext<StateContext>({
+const StateContext = createContext<StateContext>({
   trendingDisabled: Boolean(persisted.defaults.trendingDisabled),
   trendingVideoDisabled: Boolean(persisted.defaults.trendingVideoDisabled),
 })
-const ApiContext = React.createContext<ApiContext>({
+StateContext.displayName = 'TrendingStateContext'
+const ApiContext = createContext<ApiContext>({
   setTrendingDisabled() {},
   setTrendingVideoDisabled() {},
 })
+ApiContext.displayName = 'TrendingApiContext'
 
 function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
-  const [value, _set] = React.useState(() => {
+  const [value, _set] = useState(() => {
     return Boolean(persisted.get(key))
   })
-  const set = React.useCallback<
+  const set = useCallback<
     (value: Exclude<persisted.Schema[T], undefined>) => void
   >(
     hidden => {
@@ -40,7 +49,7 @@ function usePersistedBooleanValue<T extends keyof persisted.Schema>(key: T) {
     },
     [key, _set],
   )
-  React.useEffect(() => {
+  useEffect(() => {
     return persisted.onUpdate(key, hidden => {
       _set(Boolean(hidden))
     })
@@ -58,11 +67,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   /*
    * Context
    */
-  const state = React.useMemo(
+  const state = useMemo(
     () => ({trendingDisabled, trendingVideoDisabled}),
     [trendingDisabled, trendingVideoDisabled],
   )
-  const api = React.useMemo(
+  const api = useMemo(
     () => ({setTrendingDisabled, setTrendingVideoDisabled}),
     [setTrendingDisabled, setTrendingVideoDisabled],
   )
@@ -75,9 +84,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 }
 
 export function useTrendingSettings() {
-  return React.useContext(StateContext)
+  return useContext(StateContext)
 }
 
 export function useTrendingSettingsApi() {
-  return React.useContext(ApiContext)
+  return useContext(ApiContext)
 }

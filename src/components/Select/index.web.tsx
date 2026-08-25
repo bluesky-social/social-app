@@ -1,9 +1,9 @@
-import {createContext, forwardRef, useContext, useMemo} from 'react'
+import {createContext, forwardRef, Fragment, useContext, useMemo} from 'react'
 import {View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
-import {flatten, useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {useA11y} from '#/state/a11y'
+import {atoms as a, flatten, flattenToCSS, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
@@ -16,6 +16,7 @@ import {
   type IconProps,
   type ItemIndicatorProps,
   type ItemProps,
+  type ItemTextProps,
   type RadixPassThroughTriggerProps,
   type RootProps,
   type TriggerProps,
@@ -23,6 +24,7 @@ import {
 } from './types'
 
 const SelectedValueContext = createContext<string | undefined | null>(null)
+SelectedValueContext.displayName = 'SelectSelectedValueContext'
 
 export function Root(props: RootProps) {
   return (
@@ -65,7 +67,7 @@ export function Trigger({children, label}: TriggerProps) {
         <RadixTriggerPassThrough>
           {props =>
             children({
-              isNative: false,
+              IS_NATIVE: false,
               state: {
                 hovered,
                 focused,
@@ -92,12 +94,10 @@ export function Trigger({children, label}: TriggerProps) {
         onBlur={onBlur}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        style={flatten([
+        style={flattenToCSS([
           a.flex,
           a.relative,
-          t.atoms.bg_contrast_25,
-          a.rounded_sm,
-          a.w_full,
+          t.atoms.bg_contrast_50,
           a.align_center,
           a.gap_sm,
           a.justify_between,
@@ -105,15 +105,14 @@ export function Trigger({children, label}: TriggerProps) {
           a.px_md,
           a.pointer,
           {
+            borderRadius: 10,
             maxWidth: 400,
             outline: 0,
-            borderWidth: 2,
+            borderWidth: 1,
             borderStyle: 'solid',
             borderColor: focused
               ? t.palette.primary_500
-              : hovered
-                ? t.palette.contrast_100
-                : t.palette.contrast_25,
+              : t.palette.contrast_50,
           },
         ])}>
         {children}
@@ -122,10 +121,21 @@ export function Trigger({children, label}: TriggerProps) {
   }
 }
 
-export function ValueText({children: _, style, ...props}: ValueProps) {
+export function ValueText({
+  children,
+  webOverrideValue,
+  style,
+  ...props
+}: ValueProps) {
+  let content
+
+  if (webOverrideValue && children) {
+    content = children(webOverrideValue)
+  }
+
   return (
     <Text style={style}>
-      <RadixSelect.Value {...props} />
+      <RadixSelect.Value {...props}>{content}</RadixSelect.Value>
     </Text>
   )
 }
@@ -139,9 +149,14 @@ export function Icon({style}: IconProps) {
   )
 }
 
-export function Content<T>({items, renderItem}: ContentProps<T>) {
+export function Content<T>({
+  items,
+  renderItem,
+  valueExtractor = defaultItemValueExtractor,
+}: ContentProps<T>) {
   const t = useTheme()
   const selectedValue = useContext(SelectedValueContext)
+  const {reduceMotionEnabled} = useA11y()
 
   const scrollBtnStyles: React.CSSProperties[] = [
     a.absolute,
@@ -181,10 +196,13 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
   return (
     <RadixSelect.Portal>
       <RadixSelect.Content
-        style={flatten([t.atoms.bg, a.rounded_sm, a.overflow_hidden])}
+        style={flattenToCSS([t.atoms.bg, a.rounded_sm, a.overflow_hidden])}
         position="popper"
+        align="center"
         sideOffset={5}
-        className="radix-select-content">
+        className="radix-select-content"
+        // prevent the keyboard shortcut for opening the composer
+        onKeyDown={evt => evt.stopPropagation()}>
         <View
           style={[
             a.flex_1,
@@ -192,20 +210,29 @@ export function Content<T>({items, renderItem}: ContentProps<T>) {
             t.atoms.border_contrast_low,
             a.rounded_sm,
             a.overflow_hidden,
+            !reduceMotionEnabled && a.zoom_fade_in,
           ]}>
-          <RadixSelect.ScrollUpButton style={flatten(up)}>
+          <RadixSelect.ScrollUpButton style={flattenToCSS(up)}>
             <ChevronUpIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollUpButton>
-          <RadixSelect.Viewport style={flatten([a.p_xs])}>
-            {items.map((item, index) => renderItem(item, index, selectedValue))}
+          <RadixSelect.Viewport style={flattenToCSS([a.p_xs])}>
+            {items.map((item, index) => (
+              <Fragment key={valueExtractor(item)}>
+                {renderItem(item, index, selectedValue)}
+              </Fragment>
+            ))}
           </RadixSelect.Viewport>
-          <RadixSelect.ScrollDownButton style={flatten(down)}>
+          <RadixSelect.ScrollDownButton style={flattenToCSS(down)}>
             <ChevronDownIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollDownButton>
         </View>
       </RadixSelect.Content>
     </RadixSelect.Portal>
   )
+}
+
+function defaultItemValueExtractor(item: any) {
+  return item.value
 }
 
 const ItemContext = createContext<{
@@ -219,6 +246,7 @@ const ItemContext = createContext<{
   pressed: false,
   selected: false,
 })
+ItemContext.displayName = 'SelectItemContext'
 
 export function useItemContext() {
   return useContext(ItemContext)
@@ -245,11 +273,11 @@ export function Item({ref, value, style, children}: ItemProps) {
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
       onBlur={onBlur}
-      style={flatten([
+      style={flattenToCSS([
         t.atoms.text,
         a.relative,
         a.flex,
-        {minHeight: 25, paddingLeft: 30, paddingRight: 35},
+        {minHeight: 25, paddingLeft: 30, paddingRight: 8},
         a.user_select_none,
         a.align_center,
         a.rounded_xs,
@@ -257,7 +285,7 @@ export function Item({ref, value, style, children}: ItemProps) {
         a.text_sm,
         {outline: 0},
         (hovered || focused) && {backgroundColor: t.palette.primary_50},
-        selected && [a.font_bold],
+        selected && [a.font_semi_bold],
         a.transition_color,
         style,
       ])}>
@@ -266,12 +294,20 @@ export function Item({ref, value, style, children}: ItemProps) {
   )
 }
 
-export const ItemText = RadixSelect.ItemText
+export const ItemText = function ItemText({children, style}: ItemTextProps) {
+  return (
+    <RadixSelect.ItemText asChild>
+      <Text style={flatten([style, web({pointerEvents: 'inherit'})])}>
+        {children}
+      </Text>
+    </RadixSelect.ItemText>
+  )
+}
 
 export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
   return (
     <RadixSelect.ItemIndicator
-      style={flatten([
+      style={flattenToCSS([
         a.absolute,
         {left: 0, width: 30},
         a.flex,
@@ -280,5 +316,22 @@ export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
       ])}>
       <Icon size="sm" />
     </RadixSelect.ItemIndicator>
+  )
+}
+
+export function Separator() {
+  const t = useTheme()
+
+  return (
+    <RadixSelect.Separator
+      style={flattenToCSS([
+        {
+          height: 1,
+          backgroundColor: t.atoms.border_contrast_low.borderColor,
+        },
+        a.my_xs,
+        a.w_full,
+      ])}
+    />
   )
 }

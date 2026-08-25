@@ -1,21 +1,10 @@
-import React from 'react'
-import {
-  BskyAgent,
-  DEFAULT_LABEL_SETTINGS,
-  interpretLabelValueDefinitions,
-} from '@atproto/api'
+import {useMemo} from 'react'
+import {Client} from '@atproto/lex'
+import {interpretLabelValueDefinitions} from '@bsky/sdk/moderation'
 
 import {isNonConfigurableModerationAuthority} from '#/state/session/additional-moderation-authorities'
 import {useLabelersDetailedInfoQuery} from '../labeler'
 import {usePreferencesQuery} from './index'
-
-/**
- * More strict than our default settings for logged in users.
- */
-export const DEFAULT_LOGGED_OUT_LABEL_PREFERENCES: typeof DEFAULT_LABEL_SETTINGS =
-  Object.fromEntries(
-    Object.entries(DEFAULT_LABEL_SETTINGS).map(([key, _pref]) => [key, 'hide']),
-  )
 
 export function useMyLabelersQuery({
   excludeNonConfigurableLabelers = false,
@@ -25,7 +14,7 @@ export function useMyLabelersQuery({
   const prefs = usePreferencesQuery()
   let dids = Array.from(
     new Set(
-      BskyAgent.appLabelers.concat(
+      (Client.appLabelers as readonly string[]).concat(
         prefs.data?.moderationPrefs.labelers.map(l => l.did) || [],
       ),
     ),
@@ -36,7 +25,7 @@ export function useMyLabelersQuery({
   const labelers = useLabelersDetailedInfoQuery({dids})
   const isLoading = prefs.isLoading || labelers.isLoading
   const error = prefs.error || labelers.error
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       isLoading,
       error,
@@ -48,7 +37,7 @@ export function useMyLabelersQuery({
 
 export function useLabelDefinitionsQuery() {
   const labelers = useMyLabelersQuery()
-  return React.useMemo(() => {
+  return useMemo(() => {
     return {
       labelDefs: Object.fromEntries(
         (labelers.data || []).map(labeler => [

@@ -1,7 +1,7 @@
 import {View} from 'react-native'
-import {type AppBskyNotificationDeclaration} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {
   type AllNavigatorParams,
@@ -17,6 +17,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import {BellRinging_Stroke2_Corner0_Rounded as BellRingingIcon} from '#/components/icons/BellRinging'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
+import {type app} from '#/lexicons'
 import * as SettingsList from './components/SettingsList'
 import {ItemTextWithSubtitle} from './NotificationSettings/components/ItemTextWithSubtitle'
 
@@ -84,7 +85,7 @@ export function Inner({
   notificationDeclaration: {
     uri?: string
     cid?: string
-    value: AppBskyNotificationDeclaration.Record
+    value: app.bsky.notification.declaration.Main
   }
 }) {
   const t = useTheme()
@@ -126,12 +127,12 @@ export function Inner({
           </Toggle.LabelText>
         </Toggle.Item>
         <Toggle.Item
-          label={_(msg`No one`)}
+          label={_(msg({context: 'enable for', message: `No one`}))}
           name="none"
           style={[a.flex_row, a.py_xs, a.gap_sm]}>
           <Toggle.Radio />
           <Toggle.LabelText style={[t.atoms.text, a.font_normal, a.text_md]}>
-            <Trans>No one</Trans>
+            <Trans context="enable for">No one</Trans>
           </Toggle.LabelText>
         </Toggle.Item>
       </View>

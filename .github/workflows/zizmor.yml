@@ -1,0 +1,37 @@
+name: Workflow security
+
+on:
+  push:
+    branches: [main]
+    paths: [".github/**"]
+  pull_request:
+    paths: [".github/**"]
+
+concurrency:
+  group: "${{ github.workflow }}-${{ github.head_ref || github.ref }}"
+  cancel-in-progress: true
+
+# The github.token is only used by zizmor's online audits (read-only API calls)
+permissions:
+  contents: read
+
+jobs:
+  zizmor:
+    name: Audit workflows with zizmor
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: 🛡️ Run zizmor
+        uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
+        with:
+          # Annotate the PR directly instead of uploading SARIF to the
+          # security tab, and fail the check on any finding
+          advanced-security: false
+          annotations: true
+          # Low-confidence findings (e.g. artipacked on workflows that never
+          # push) are too noisy to gate CI on
+          min-confidence: medium

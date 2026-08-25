@@ -1,15 +1,20 @@
-import React from 'react'
-import {Pressable, View} from 'react-native'
-import {type ScrollView} from 'react-native-gesture-handler'
-import {type AppBskyLabelerDefs} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useRef,
+  useState,
+} from 'react'
+import {Pressable, type ScrollView, View} from 'react-native'
+import {api} from '@bsky/sdk'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
+import {formatTime} from '#/lib/media/video/formatTime'
 import {getLabelingServiceTitle} from '#/lib/moderation'
+import {useCallOnce} from '#/lib/once'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {Logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -17,8 +22,10 @@ import {atoms as a, useGutters, useTheme} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import * as Toggle from '#/components/forms/Toggle'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
   Check_Stroke2_Corner0_Rounded as CheckThin,
   CheckThick_Stroke2_Corner0_Rounded as Check,
@@ -29,34 +36,94 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {createStaticClick, InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {useSubmitReportMutation} from './action'
-import {SUPPORT_PAGE} from './const'
+import {
+  BSKY_LABELER_ONLY_REPORT_REASONS,
+  BSKY_LABELER_ONLY_SUBJECT_TYPES,
+  NCII_FORM,
+  NEW_TO_OLD_REASONS_MAP,
+  SUPPORT_PAGE,
+} from './const'
 import {useCopyForSubject} from './copy'
-import {initialState, reducer} from './state'
+import {classifyReportError} from './errors'
+import {useReportDialogMetadataContext} from './ReportDialogMetadataContext'
+import {
+  getNciiQualificationOutcome,
+  initialState,
+  type NciiQualification as NciiQualificationState,
+  reducer,
+  type ReportAction,
+} from './state'
 import {type ReportDialogProps, type ReportSubject} from './types'
 import {parseReportSubject} from './utils/parseReportSubject'
-import {type ReportOption, useReportOptions} from './utils/useReportOptions'
+import {
+  type ReportCategoryConfig,
+  type ReportOption,
+  useReportOptions,
+} from './utils/useReportOptions'
 
+export {type ReportSubject} from './types'
 export {useDialogControl as useReportDialogControl} from '#/components/Dialog'
 
-const logger = Logger.create(Logger.Context.ReportDialog)
+export function useGlobalReportDialogControl() {
+  return useGlobalDialogsControlContext().reportDialogControl
+}
+
+export function GlobalReportDialog() {
+  const {value, control} = useGlobalReportDialogControl()
+  return <ReportDialog control={control} subject={value?.subject} />
+}
 
 export function ReportDialog(
   props: Omit<ReportDialogProps, 'subject'> & {
-    subject: ReportSubject
+    subject?: ReportSubject
   },
 ) {
-  const subject = React.useMemo(
-    () => parseReportSubject(props.subject),
+  const ax = useAnalytics()
+  const reportDialogMetadata = useReportDialogMetadataContext()
+  const subject = useMemo(
+    () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
-  const onClose = React.useCallback(() => {
-    logger.metric('reportDialog:close', {}, {statsig: false})
-  }, [])
+  const [presentation, setPresentation] = useState<{
+    openCount: number
+    videoTimestampSeconds?: number
+  }>({openCount: 0})
+  const onOpen = useCallback(() => {
+    const seconds =
+      subject?.type === 'post' && subject.attributes.video
+        ? reportDialogMetadata?.current.videoTimestampSeconds
+        : undefined
+
+    setPresentation(current => ({
+      openCount: current.openCount + 1,
+      // Values below one second indicate that the video was never meaningfully
+      // played, so avoid offering to attach a noisy "0:00" timestamp.
+      videoTimestampSeconds:
+        seconds !== undefined && seconds >= 1 ? Math.floor(seconds) : undefined,
+    }))
+  }, [reportDialogMetadata, subject])
+  const propsOnClose = props.onClose
+  const onClose = useCallback(() => {
+    ax.metric('reportDialog:close', {})
+    propsOnClose?.()
+  }, [ax, propsOnClose])
   return (
-    <Dialog.Outer control={props.control} onClose={onClose}>
+    <Dialog.Outer control={props.control} onOpen={onOpen} onClose={onClose}>
       <Dialog.Handle />
-      {subject ? <Inner {...props} subject={subject} /> : <Invalid />}
+      {subject ? (
+        <Inner
+          key={presentation.openCount}
+          {...props}
+          subject={subject}
+          videoTimestampSeconds={presentation.videoTimestampSeconds}
+        />
+      ) : (
+        <Invalid />
+      )}
     </Dialog.Outer>
   )
 }
@@ -66,10 +133,10 @@ export function ReportDialog(
  * developer, but nevertheless we should have a graceful fallback.
  */
 function Invalid() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   return (
-    <Dialog.ScrollableInner label={_(msg`Report dialog`)}>
-      <Text style={[a.font_heavy, a.text_xl, a.leading_snug, a.pb_xs]}>
+    <Dialog.ScrollableInner label={l`Report dialog`}>
+      <Text style={[a.font_bold, a.text_xl, a.leading_snug, a.pb_xs]}>
         <Trans>Invalid report subject</Trans>
       </Text>
       <Text style={[a.text_md, a.leading_snug]}>
@@ -83,10 +150,16 @@ function Invalid() {
   )
 }
 
-function Inner(props: ReportDialogProps) {
+function Inner(
+  props: ReportDialogProps & {
+    videoTimestampSeconds?: number
+  },
+) {
+  const ax = useAnalytics()
+  const logger = ax.logger.useChild(ax.logger.Context.ReportDialog)
   const t = useTheme()
-  const {_} = useLingui()
-  const ref = React.useRef<ScrollView>(null)
+  const {t: l} = useLingui()
+  const ref = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const {
     data: allLabelers,
     isLoading: isLabelerLoading,
@@ -95,20 +168,31 @@ function Inner(props: ReportDialogProps) {
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
   const copy = useCopyForSubject(props.subject)
-  const reportOptions = useReportOptions()
-  const [state, dispatch] = React.useReducer(reducer, initialState)
+  const {categories, getCategory} = useReportOptions()
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   /**
    * Submission handling
    */
   const {mutateAsync: submitReport} = useSubmitReportMutation()
-  const [isPending, setPending] = React.useState(false)
-  const [isSuccess, setSuccess] = React.useState(false)
+  const [isPending, setIsPending] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  const {videoTimestampSeconds} = props
+
+  // some reasons ONLY go to Bluesky
+  const isBskyOnlyReason = state?.selectedOption?.reason
+    ? BSKY_LABELER_ONLY_REPORT_REASONS.has(state.selectedOption.reason)
+    : false
+  // some subjects ONLY go to Bluesky
+  const isBskyOnlySubject = BSKY_LABELER_ONLY_SUBJECT_TYPES.has(
+    props.subject.type,
+  )
 
   /**
    * Labelers that support this `subject` and its NSID collection
    */
-  const supportedLabelers = React.useMemo(() => {
+  const supportedLabelers = useMemo(() => {
     if (!allLabelers) return []
     return allLabelers
       .filter(l => {
@@ -116,7 +200,10 @@ function Inner(props: ReportDialogProps) {
         if (subjectTypes === undefined) return true
         if (props.subject.type === 'account') {
           return subjectTypes.includes('account')
-        } else if (props.subject.type === 'chatMessage') {
+        } else if (
+          props.subject.type === 'convoMessage' ||
+          props.subject.type === 'convo'
+        ) {
           return subjectTypes.includes('chat')
         } else {
           return subjectTypes.includes('record')
@@ -126,79 +213,130 @@ function Inner(props: ReportDialogProps) {
         const collections: string[] | undefined = l.subjectCollections
         if (collections === undefined) return true
         // all chat collections accepted, since only Bluesky handles chats
-        if (props.subject.type === 'chatMessage') return true
+        if (
+          props.subject.type === 'convoMessage' ||
+          props.subject.type === 'convo'
+        )
+          return true
         return collections.includes(props.subject.nsid)
       })
       .filter(l => {
-        if (!state.selectedOption) return true
-        const reasonTypes: string[] | undefined = l.reasonTypes
-        if (reasonTypes === undefined) return true
-        return reasonTypes.includes(state.selectedOption.reason)
+        if (!state.selectedOption) return false
+        if (isBskyOnlyReason || isBskyOnlySubject) {
+          return l.creator.did === api.moderation.did
+        }
+        const supportedReasonTypes: string[] | undefined = l.reasonTypes
+        if (supportedReasonTypes === undefined) return true
+        return (
+          // supports new reason type
+          // supports old reason type (backwards compat)
+          supportedReasonTypes.includes(state.selectedOption.reason) ||
+          supportedReasonTypes.includes(
+            NEW_TO_OLD_REASONS_MAP[state.selectedOption.reason],
+          )
+        )
       })
-  }, [props, allLabelers, state.selectedOption])
+  }, [
+    props.subject,
+    allLabelers,
+    state.selectedOption,
+    isBskyOnlyReason,
+    isBskyOnlySubject,
+  ])
   const hasSupportedLabelers = !!supportedLabelers.length
   const hasSingleSupportedLabeler = supportedLabelers.length === 1
 
-  const onSubmit = React.useCallback(async () => {
+  /**
+   * We skip the select labeler step if there's only one possible labeler, and
+   * that labeler is Bluesky (which is the case for chat reports and certain
+   * reason types). We'll use this below to adjust the indexing and skip the
+   * step in the UI.
+   */
+  const isAlwaysBskyLabeler =
+    hasSingleSupportedLabeler && (isBskyOnlyReason || isBskyOnlySubject)
+
+  const onSubmit = useCallback(async () => {
     dispatch({type: 'clearError'})
 
     logger.info('submitting')
 
     try {
-      setPending(true)
+      setIsPending(true)
       // wait at least 1s, make it feel substantial
       await wait(
         1e3,
         submitReport({
           subject: props.subject,
           state,
+          videoTimestampSeconds,
         }),
       )
-      setSuccess(true)
-      logger.metric(
-        'reportDialog:success',
-        {
-          reason: state.selectedOption?.reason!,
-          labeler: state.selectedLabeler?.creator.handle!,
-          details: !!state.details,
-        },
-        {statsig: false},
-      )
+      setIsSuccess(true)
+      ax.metric('reportDialog:success', {
+        reason: state.selectedOption?.reason ?? '',
+        labeler: state.selectedLabeler?.creator.handle ?? '',
+        details: !!state.details,
+        videoTimestamp: state.includeVideoTimestamp,
+      })
       // give time for user feedback
       setTimeout(() => {
-        props.control.close()
+        props.control.close(() => {
+          props.onAfterSubmit?.()
+        })
       }, 1e3)
-    } catch (e: any) {
-      logger.metric('reportDialog:failure', {}, {statsig: false})
-      logger.error(e, {
-        source: 'ReportDialog',
-      })
+    } catch (err) {
+      const e = err instanceof Error ? err : new Error(String(err))
+      const classification = classifyReportError(e)
+      const tags = {
+        ...classification.tags,
+        report_subject_type: props.subject.type,
+        report_labeler: state.selectedLabeler?.creator.did,
+        report_reason: state.selectedOption?.reason,
+      }
+
+      ax.metric('reportDialog:failure', {})
+
+      if (classification.shouldReport) {
+        logger.error(e, {
+          source: 'ReportDialog',
+          fingerprint: classification.fingerprint,
+          tags,
+        })
+      } else {
+        logger.warn('Report rejected for taken down account', {tags})
+      }
+
+      let error = l`Something went wrong. Please try again.`
+      if (classification.kind === 'account-takedown') {
+        error = l`Your account cannot submit reports while it is suspended.`
+      } else if (classification.kind === 'invalid-reason-type') {
+        error = l`This moderation service does not support that report reason. Please choose a different reason or moderation service.`
+      } else if (classification.kind === 'service-unavailable') {
+        error = l`The moderation service is temporarily unavailable. Please try again later.`
+      }
+
       dispatch({
         type: 'setError',
-        error: _(msg`Something went wrong. Please try again.`),
+        error,
       })
     } finally {
-      setPending(false)
+      setIsPending(false)
     }
-  }, [_, submitReport, state, dispatch, props, setPending, setSuccess])
+  }, [logger, submitReport, props, state, ax, l, videoTimestampSeconds])
 
-  React.useEffect(() => {
-    logger.metric(
-      'reportDialog:open',
-      {
-        subjectType: props.subject.type,
-      },
-      {statsig: false},
-    )
-  }, [props.subject])
+  useCallOnce(() => {
+    ax.metric('reportDialog:open', {
+      subjectType: props.subject.type,
+    })
+  })()
 
   return (
     <Dialog.ScrollableInner
       testID="report:dialog"
-      label={_(msg`Report dialog`)}
+      label={l`Report dialog`}
       ref={ref}
       style={[a.w_full, {maxWidth: 500}]}>
-      <View style={[a.gap_2xl, isNative && a.pt_md]}>
+      <View style={[a.gap_2xl, IS_NATIVE && a.pt_md]}>
         <StepOuter>
           <StepTitle
             index={1}
@@ -219,12 +357,15 @@ function Inner(props: ReportDialogProps) {
             <Admonition.Outer type="error">
               <Admonition.Row>
                 <Admonition.Icon />
-                <Admonition.Text>
-                  <Trans>Something went wrong, please try again</Trans>
-                </Admonition.Text>
+                <Admonition.Content>
+                  <Admonition.Text>
+                    <Trans>Something went wrong, please try again</Trans>
+                  </Admonition.Text>
+                </Admonition.Content>
                 <Admonition.Button
-                  label={_(msg`Retry loading report options`)}
-                  onPress={() => refetchLabelers()}>
+                  color="negative_subtle"
+                  label={l`Retry loading report options`}
+                  onPress={() => void refetchLabelers()}>
                   <ButtonText>
                     <Trans>Retry</Trans>
                   </ButtonText>
@@ -234,32 +375,36 @@ function Inner(props: ReportDialogProps) {
             </Admonition.Outer>
           ) : (
             <>
-              {state.selectedOption ? (
+              {state.selectedCategory ? (
                 <View style={[a.flex_row, a.align_center, a.gap_md]}>
                   <View style={[a.flex_1]}>
-                    <OptionCard option={state.selectedOption} />
+                    <CategoryCard option={state.selectedCategory} />
                   </View>
                   <Button
-                    testID="report:clearOption"
-                    label={_(msg`Change report reason`)}
+                    testID="report:clearCategory"
+                    label={l`Change report category`}
                     size="tiny"
                     variant="solid"
                     color="secondary"
                     shape="round"
                     onPress={() => {
-                      dispatch({type: 'clearOption'})
+                      dispatch({type: 'clearCategory'})
                     }}>
                     <ButtonIcon icon={X} />
                   </Button>
                 </View>
               ) : (
                 <View style={[a.gap_sm]}>
-                  {reportOptions[props.subject.type].map(o => (
-                    <OptionCard
-                      key={o.reason}
+                  {categories.map(o => (
+                    <CategoryCard
+                      key={o.key}
                       option={o}
                       onSelect={() => {
-                        dispatch({type: 'selectOption', option: o})
+                        dispatch({
+                          type: 'selectCategory',
+                          option: o,
+                          otherOption: getCategory('other').options[0],
+                        })
                       }}
                     />
                   ))}
@@ -267,9 +412,7 @@ function Inner(props: ReportDialogProps) {
                   {['post', 'account'].includes(props.subject.type) && (
                     <Link
                       to={SUPPORT_PAGE}
-                      label={_(
-                        msg`Need to report a copyright violation, legal request, or regulatory compliance issue?`,
-                      )}>
+                      label={l`Need to report a copyright violation, legal request, or regulatory compliance issue?`}>
                       {({hovered, pressed}) => (
                         <View
                           style={[
@@ -307,100 +450,160 @@ function Inner(props: ReportDialogProps) {
         <StepOuter>
           <StepTitle
             index={2}
-            title={_(msg`Select moderation service`)}
+            title={l`Select a reason`}
             activeIndex1={state.activeStepIndex1}
           />
-          {state.activeStepIndex1 >= 2 && (
+          {state.selectedOption ? (
             <>
-              {state.selectedLabeler ? (
-                <>
-                  {hasSingleSupportedLabeler ? (
-                    <LabelerCard labeler={state.selectedLabeler} />
-                  ) : (
-                    <View style={[a.flex_row, a.align_center, a.gap_md]}>
-                      <View style={[a.flex_1]}>
-                        <LabelerCard labeler={state.selectedLabeler} />
-                      </View>
-                      <Button
-                        label={_(msg`Change moderation service`)}
-                        size="tiny"
-                        variant="solid"
-                        color="secondary"
-                        shape="round"
-                        onPress={() => {
-                          dispatch({type: 'clearLabeler'})
-                        }}>
-                        <ButtonIcon icon={X} />
-                      </Button>
-                    </View>
-                  )}
-                </>
-              ) : (
-                <>
-                  {hasSupportedLabelers ? (
-                    <View style={[a.gap_sm]}>
-                      {hasSingleSupportedLabeler ? (
-                        <>
-                          <LabelerCard labeler={supportedLabelers[0]} />
-                          <ActionOnce
-                            check={() => !state.selectedLabeler}
-                            callback={() => {
-                              dispatch({
-                                type: 'selectLabeler',
-                                labeler: supportedLabelers[0],
-                              })
-                            }}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          {supportedLabelers.map(l => (
-                            <LabelerCard
-                              key={l.creator.did}
-                              labeler={l}
-                              onSelect={() => {
-                                dispatch({type: 'selectLabeler', labeler: l})
-                              }}
-                            />
-                          ))}
-                        </>
-                      )}
-                    </View>
-                  ) : (
-                    // should never happen in our app
-                    <Admonition.Admonition type="warning">
-                      <Trans>
-                        Unfortunately, none of your subscribed labelers supports
-                        this report type.
-                      </Trans>
-                    </Admonition.Admonition>
-                  )}
-                </>
+              <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                <View style={[a.flex_1]}>
+                  <OptionCard option={state.selectedOption} />
+                </View>
+                <Button
+                  testID="report:clearReportOption"
+                  label={l`Change report reason`}
+                  size="tiny"
+                  variant="solid"
+                  color="secondary"
+                  shape="round"
+                  onPress={() => {
+                    dispatch({type: 'clearOption'})
+                  }}>
+                  <ButtonIcon icon={X} />
+                </Button>
+              </View>
+              {state.ncii && (
+                <NciiQualification ncii={state.ncii} dispatch={dispatch} />
               )}
             </>
-          )}
+          ) : state.selectedCategory ? (
+            <View style={[a.gap_sm]}>
+              {getCategory(state.selectedCategory.key).options.map(o => (
+                <OptionCard
+                  key={o.reason}
+                  option={o}
+                  onSelect={() => {
+                    dispatch({type: 'selectOption', option: o})
+                  }}
+                />
+              ))}
+            </View>
+          ) : null}
         </StepOuter>
+
+        {isAlwaysBskyLabeler ? (
+          <ActionOnce
+            check={() => !state.selectedLabeler}
+            callback={() => {
+              dispatch({
+                type: 'selectLabeler',
+                labeler: supportedLabelers[0],
+              })
+            }}
+          />
+        ) : (
+          <StepOuter>
+            <StepTitle
+              index={3}
+              title={l`Select moderation service`}
+              activeIndex1={state.activeStepIndex1}
+            />
+            {state.activeStepIndex1 >= 3 && (
+              <>
+                {state.selectedLabeler ? (
+                  <>
+                    {hasSingleSupportedLabeler ? (
+                      <LabelerCard labeler={state.selectedLabeler} />
+                    ) : (
+                      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+                        <View style={[a.flex_1]}>
+                          <LabelerCard labeler={state.selectedLabeler} />
+                        </View>
+                        <Button
+                          label={l`Change moderation service`}
+                          size="tiny"
+                          variant="solid"
+                          color="secondary"
+                          shape="round"
+                          onPress={() => {
+                            dispatch({type: 'clearLabeler'})
+                          }}>
+                          <ButtonIcon icon={X} />
+                        </Button>
+                      </View>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {hasSupportedLabelers ? (
+                      <View style={[a.gap_sm]}>
+                        {hasSingleSupportedLabeler ? (
+                          <>
+                            <LabelerCard labeler={supportedLabelers[0]} />
+                            <ActionOnce
+                              check={() => !state.selectedLabeler}
+                              callback={() => {
+                                dispatch({
+                                  type: 'selectLabeler',
+                                  labeler: supportedLabelers[0],
+                                })
+                              }}
+                            />
+                          </>
+                        ) : (
+                          <>
+                            {supportedLabelers.map(l => (
+                              <LabelerCard
+                                key={l.creator.did}
+                                labeler={l}
+                                onSelect={() => {
+                                  dispatch({type: 'selectLabeler', labeler: l})
+                                }}
+                              />
+                            ))}
+                          </>
+                        )}
+                      </View>
+                    ) : (
+                      // should never happen in our app
+                      <Admonition.Admonition type="warning">
+                        <Trans>
+                          Unfortunately, none of your subscribed labelers
+                          supports this report type.
+                        </Trans>
+                      </Admonition.Admonition>
+                    )}
+                  </>
+                )}
+              </>
+            )}
+          </StepOuter>
+        )}
 
         <StepOuter>
           <StepTitle
-            index={3}
-            title={_(msg`Submit report`)}
-            activeIndex1={state.activeStepIndex1}
+            index={isAlwaysBskyLabeler ? 3 : 4}
+            title={l`Submit report`}
+            activeIndex1={
+              isAlwaysBskyLabeler
+                ? state.activeStepIndex1 - 1
+                : state.activeStepIndex1
+            }
           />
-          {state.activeStepIndex1 === 3 && (
+          {state.activeStepIndex1 === 4 && (
             <>
               <View style={[a.pb_xs, a.gap_xs]}>
                 <Text style={[a.leading_snug, a.pb_xs]}>
                   <Trans>
                     Your report will be sent to{' '}
-                    <Text style={[a.font_bold, a.leading_snug]}>
+                    <Text style={[a.font_semi_bold, a.leading_snug]}>
                       {state.selectedLabeler?.creator.displayName}
                     </Text>
                     .
                   </Trans>{' '}
                   {!state.detailsOpen ? (
                     <InlineLinkText
-                      label={_(msg`Add more details (optional)`)}
+                      label={l`Add more details (optional)`}
                       {...createStaticClick(() => {
                         dispatch({type: 'showDetails'})
                       })}>
@@ -418,7 +621,7 @@ function Inner(props: ReportDialogProps) {
                       onChangeText={details => {
                         dispatch({type: 'setDetails', details})
                       }}
-                      label={_(msg`Additional details (limit 300 characters)`)}
+                      label={l`Additional details (limit 300 characters)`}
                       style={{paddingRight: 60}}
                       numberOfLines={4}
                     />
@@ -439,14 +642,26 @@ function Inner(props: ReportDialogProps) {
                   </View>
                 )}
               </View>
+
+              {videoTimestampSeconds !== undefined &&
+                state.selectedLabeler?.creator.did === api.moderation.did && (
+                  <IncludeVideoTimestampToggle
+                    seconds={videoTimestampSeconds}
+                    selected={state.includeVideoTimestamp}
+                    onChange={include => {
+                      dispatch({type: 'setIncludeVideoTimestamp', include})
+                    }}
+                  />
+                )}
+
               <Button
                 testID="report:submit"
-                label={_(msg`Submit report`)}
+                label={l`Submit report`}
                 size="large"
                 variant="solid"
                 color="primary"
                 disabled={isPending || isSuccess}
-                onPress={onSubmit}>
+                onPress={() => void onSubmit()}>
                 <ButtonText>
                   <Trans>Submit report</Trans>
                 </ButtonText>
@@ -464,9 +679,44 @@ function Inner(props: ReportDialogProps) {
           )}
         </StepOuter>
       </View>
-
       <Dialog.Close />
     </Dialog.ScrollableInner>
+  )
+}
+
+/**
+ * Opt-in for attaching how far the viewer had watched to a video report. Only
+ * rendered once we have a position and the report is going to Bluesky.
+ */
+function IncludeVideoTimestampToggle({
+  seconds,
+  selected,
+  onChange,
+}: {
+  seconds: number
+  selected: boolean
+  onChange: (selected: boolean) => void
+}) {
+  const {t: l} = useLingui()
+  const videoTimestamp = formatTime(seconds)
+  const label = l({
+    message: `Include video timestamp (${videoTimestamp})`,
+    comment:
+      'Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.',
+  })
+  return (
+    <Toggle.Item
+      testID="report:includeVideoTimestamp"
+      name="includeVideoTimestamp"
+      type="checkbox"
+      label={label}
+      value={selected}
+      onChange={onChange}>
+      <Toggle.Checkbox />
+      <Toggle.LabelText style={[a.flex_1, a.font_normal, a.leading_snug]}>
+        {label}
+      </Toggle.LabelText>
+    </Toggle.Item>
   )
 }
 
@@ -477,7 +727,7 @@ function ActionOnce({
   check: () => boolean
   callback: () => void
 }) {
-  React.useEffect(() => {
+  useEffect(() => {
     if (check()) {
       callback()
     }
@@ -529,7 +779,7 @@ function StepTitle({
         ) : (
           <Text
             style={[
-              a.font_heavy,
+              a.font_bold,
               a.text_center,
               t.atoms.text,
               {
@@ -552,7 +802,7 @@ function StepTitle({
       <Text
         style={[
           a.flex_1,
-          a.font_heavy,
+          a.font_bold,
           a.text_lg,
           a.leading_snug,
           active ? t.atoms.text : t.atoms.text_contrast_medium,
@@ -566,23 +816,23 @@ function StepTitle({
   )
 }
 
-function OptionCard({
+function CategoryCard({
   option,
   onSelect,
 }: {
-  option: ReportOption
-  onSelect?: (option: ReportOption) => void
+  option: ReportCategoryConfig
+  onSelect?: (option: ReportCategoryConfig) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const gutters = useGutters(['compact'])
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     onSelect?.(option)
   }, [onSelect, option])
   return (
     <Button
-      testID={`report:option:${option.reason}`}
-      label={_(msg`Create report for ${option.title}`)}
+      testID={`report:category:${option.title}`}
+      label={l`Create report for ${option.title}`}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
@@ -598,7 +848,7 @@ function OptionCard({
               ? [t.atoms.border_contrast_high]
               : [t.atoms.border_contrast_low],
           ]}>
-          <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+          <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
             {option.title}
           </Text>
           <Text
@@ -608,6 +858,171 @@ function OptionCard({
         </View>
       )}
     </Button>
+  )
+}
+
+function OptionCard({
+  option,
+  onSelect,
+}: {
+  option: ReportOption
+  onSelect?: (option: ReportOption) => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const gutters = useGutters(['compact'])
+  const onPress = useCallback(() => {
+    onSelect?.(option)
+  }, [onSelect, option])
+  return (
+    <Button
+      testID={`report:option:${option.title}`}
+      label={l({
+        message: `Create report for ${option.title}`,
+        comment:
+          'Accessibility label for button to create a moderation report for the selected option',
+      })}
+      onPress={onPress}
+      disabled={!onSelect}>
+      {({hovered, pressed}) => (
+        <View
+          style={[
+            a.w_full,
+            gutters,
+            a.py_sm,
+            a.rounded_sm,
+            a.border,
+            t.atoms.bg_contrast_25,
+            hovered || pressed
+              ? [t.atoms.border_contrast_high]
+              : [t.atoms.border_contrast_low],
+          ]}>
+          <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
+            {option.title}
+          </Text>
+        </View>
+      )}
+    </Button>
+  )
+}
+
+/**
+ * Qualifying question shown when the NCII reason is selected. The depicted
+ * person (or their authorized representative) is directed to the external
+ * NCII report form; everyone else continues with the normal in-app
+ * submission.
+ */
+function NciiQualification({
+  ncii,
+  dispatch,
+}: {
+  ncii: NciiQualificationState
+  dispatch: React.Dispatch<ReportAction>
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const outcome = getNciiQualificationOutcome(ncii)
+  return (
+    <View style={[a.gap_md]}>
+      <YesNoQuestion
+        testID="report:ncii:isDepicted"
+        question={l`Are you the person depicted, or an authorized representative acting on behalf of the person depicted?`}
+        value={ncii.isDepicted}
+        onAnswer={answer => {
+          dispatch({
+            type: 'answerNciiQuestion',
+            question: 'isDepicted',
+            answer,
+          })
+        }}
+      />
+      {outcome === 'externalForm' && (
+        <Link
+          to={NCII_FORM}
+          label={l({
+            message:
+              'Submit your report through the Report non-consensual intimate imagery (NCII) form',
+            context: 'english-only-resource',
+          })}>
+          {({hovered, pressed}) => (
+            <View
+              style={[
+                a.flex_row,
+                a.align_center,
+                a.w_full,
+                a.px_md,
+                a.py_sm,
+                a.rounded_sm,
+                a.border,
+                hovered || pressed
+                  ? [t.atoms.border_contrast_high]
+                  : [t.atoms.border_contrast_low],
+              ]}>
+              <Text style={[a.flex_1, a.italic, a.leading_snug]}>
+                <Trans context="english-only-resource">
+                  Please submit your report through the Report non-consensual
+                  intimate imagery (NCII) form.
+                </Trans>
+              </Text>
+              <SquareArrowTopRight size="sm" fill={t.atoms.text.color} />
+            </View>
+          )}
+        </Link>
+      )}
+    </View>
+  )
+}
+
+function YesNoQuestion({
+  question,
+  value,
+  onAnswer,
+  testID,
+}: {
+  question: string
+  value?: boolean
+  onAnswer: (answer: boolean) => void
+  testID?: string
+}) {
+  const {t: l} = useLingui()
+  return (
+    <View style={[a.gap_sm]}>
+      <Text style={[a.text_sm, a.leading_snug]}>{question}</Text>
+      <View style={[a.flex_row, a.gap_sm]}>
+        <View style={[a.flex_1]}>
+          <Button
+            testID={testID ? `${testID}:yes` : undefined}
+            label={l({
+              message: 'Yes',
+              context: 'Answer to a yes/no question',
+            })}
+            accessibilityHint={question}
+            size="small"
+            color={value === true ? 'primary' : 'secondary'}
+            onPress={() => onAnswer(true)}>
+            <ButtonText>
+              <Trans context="Answer to a yes/no question">Yes</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+        <View style={[a.flex_1]}>
+          <Button
+            testID={testID ? `${testID}:no` : undefined}
+            label={l({
+              message: 'No',
+              context: 'Answer to a yes/no question',
+            })}
+            accessibilityHint={question}
+            size="small"
+            color={value === false ? 'primary' : 'secondary'}
+            onPress={() => onAnswer(false)}>
+            <ButtonText>
+              <Trans context="Answer to a yes/no question">No</Trans>
+            </ButtonText>
+          </Button>
+        </View>
+      </View>
+    </View>
   )
 }
 
@@ -631,12 +1046,12 @@ function LabelerCard({
   labeler,
   onSelect,
 }: {
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
-  onSelect?: (option: AppBskyLabelerDefs.LabelerViewDetailed) => void
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed
+  onSelect?: (option: app.bsky.labeler.defs.LabelerViewDetailed) => void
 }) {
   const t = useTheme()
-  const {_} = useLingui()
-  const onPress = React.useCallback(() => {
+  const {t: l} = useLingui()
+  const onPress = useCallback(() => {
     onSelect?.(labeler)
   }, [onSelect, labeler])
   const title = getLabelingServiceTitle({
@@ -646,7 +1061,7 @@ function LabelerCard({
   return (
     <Button
       testID={`report:labeler:${labeler.creator.handle}`}
-      label={_(msg`Send report to ${title}`)}
+      label={l`Send report to ${title}`}
       onPress={onPress}
       disabled={!onSelect}>
       {({hovered, pressed}) => (
@@ -670,16 +1085,11 @@ function LabelerCard({
             avatar={labeler.creator.avatar}
           />
           <View style={[a.flex_1]}>
-            <Text style={[a.text_md, a.font_bold, a.leading_snug]}>
+            <Text style={[a.text_md, a.font_semi_bold, a.leading_snug]}>
               {title}
             </Text>
             <Text
-              style={[
-                a.text_sm,
-                ,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
+              style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
               <Trans>By {sanitizeHandle(labeler.creator.handle, '@')}</Trans>
             </Text>
           </View>

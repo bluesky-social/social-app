@@ -1,18 +1,20 @@
-import {
-  type AtpAgent,
-  type ChatBskyActorDefs,
-  ChatBskyConvoDefs,
-  type ChatBskyConvoGetLog,
-  type ChatBskyConvoSendMessage,
-} from '@atproto/api'
-import {XRPCError} from '@atproto/xrpc'
-import EventEmitter from 'eventemitter3'
+import {type $Typed, type Client, XrpcResponseError} from '@atproto/lex'
+import {type DidString, toDatetimeString} from '@atproto/syntax'
+import {EventEmitter} from 'eventemitter3'
 import {nanoid} from 'nanoid/non-secure'
 
 import {networkRetry} from '#/lib/async/retry'
-import {isNetworkError} from '#/lib/strings/errors'
+import {
+  isErrorMaybeAppPasswordPermissions,
+  isNetworkError,
+} from '#/lib/strings/errors'
 import {Logger} from '#/logger'
-import {isNative} from '#/platform/detection'
+import {
+  isProfileShadowApplied,
+  listenProfileShadowUpdate,
+  mergeShadow,
+  type ProfileShadow,
+} from '#/state/cache/profile-shadow'
 import {
   ACTIVE_POLL_INTERVAL,
   BACKGROUND_POLL_INTERVAL,
@@ -33,7 +35,14 @@ import {
 } from '#/state/messages/convo/types'
 import {type MessagesEventBus} from '#/state/messages/events/agent'
 import {type MessagesEventBusError} from '#/state/messages/events/types'
-import {DM_SERVICE_HEADERS} from '#/state/queries/messages/const'
+import {
+  type ConvoWithDetails,
+  type GroupConvoMember,
+  parseConvoView,
+} from '#/components/dms/util'
+import {IS_NATIVE} from '#/env'
+import {type app, chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const logger = Logger.create(Logger.Context.ConversationAgent)
 
@@ -48,12 +57,48 @@ export function isConvoItemMessage(
   )
 }
 
+function toSystemMessageView(
+  ev: chat.bsky.convo.getLog.$OutputBody['logs'][number],
+): chat.bsky.convo.defs.SystemMessageView | null {
+  const isSystem =
+    bsky.isType(chat.bsky.convo.defs.logAddMember, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logRemoveMember, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logMemberJoin, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logMemberLeave, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logLockConvo, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logUnlockConvo, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logLockConvoPermanently, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logEditGroup, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logCreateJoinLink, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logEditJoinLink, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logEnableJoinLink, ev) ||
+    bsky.isType(chat.bsky.convo.defs.logDisableJoinLink, ev)
+  if (!isSystem) return null
+  return ev.message
+}
+
+/**
+ * Derive a deleted-message tombstone from a (now-deleted) message, preserving
+ * the fields the deleted view carries so a reply can render it as deleted.
+ */
+function toDeletedMessageView(
+  m: chat.bsky.convo.defs.MessageView,
+): $Typed<chat.bsky.convo.defs.DeletedMessageView> {
+  return {
+    $type: 'chat.bsky.convo.defs#deletedMessageView',
+    id: m.id,
+    rev: m.rev,
+    sender: m.sender,
+    sentAt: m.sentAt,
+  }
+}
+
 export class Convo {
   private id: string
 
-  private agent: AtpAgent
+  private chatClient: Client
   private events: MessagesEventBus
-  private senderUserDid: string
+  private senderUserDid: DidString
 
   private status: ConvoStatus = ConvoStatus.Uninitialized
   private error: ConvoError | undefined
@@ -63,17 +108,39 @@ export class Convo {
 
   private pastMessages: Map<
     string,
-    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+    | chat.bsky.convo.defs.MessageView
+    | chat.bsky.convo.defs.DeletedMessageView
+    | chat.bsky.convo.defs.SystemMessageView
   > = new Map()
   private newMessages: Map<
     string,
-    ChatBskyConvoDefs.MessageView | ChatBskyConvoDefs.DeletedMessageView
+    | chat.bsky.convo.defs.MessageView
+    | chat.bsky.convo.defs.DeletedMessageView
+    | chat.bsky.convo.defs.SystemMessageView
   > = new Map()
   private pendingMessages: Map<
     string,
-    {id: string; message: ChatBskyConvoSendMessage.InputSchema['message']}
+    {
+      id: string
+      message: chat.bsky.convo.defs.MessageInput
+      optimisticEmbedView?:
+        | $Typed<app.bsky.embed.record.View>
+        | $Typed<chat.bsky.embed.joinLink.View>
+      optimisticReplyTo?: $Typed<chat.bsky.convo.defs.MessageView>
+    }
   > = new Map()
   private deletedMessages: Set<string> = new Set()
+  private relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic> =
+    new Map()
+  /**
+   * Accumulated profile shadow state, keyed by did. The profiles this agent
+   * holds come from direct service fetches, so they are invisible to the
+   * shadow cache's react-query scan. We keep our own overlay and re-apply it
+   * whenever server data overwrites `relatedProfiles` or `convo.members`,
+   * otherwise refreshes would revert optimistic state (e.g. a block) until
+   * the server catches up.
+   */
+  private profileShadows: Map<string, Partial<ProfileShadow>> = new Map()
 
   private isProcessingPendingMessages = false
 
@@ -82,22 +149,23 @@ export class Convo {
   private emitter = new EventEmitter<{event: [ConvoEvent]}>()
 
   convoId: string
-  convo: ChatBskyConvoDefs.ConvoView | undefined
-  sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-  recipients: ChatBskyActorDefs.ProfileViewBasic[] | undefined
+  convo: ConvoWithDetails | undefined
+  sender: chat.bsky.actor.defs.ProfileViewBasic | undefined
+  recipients: chat.bsky.actor.defs.ProfileViewBasic[] | undefined
   snapshot: ConvoState | undefined
 
   constructor(params: ConvoParams) {
     this.id = nanoid(3)
     this.convoId = params.convoId
-    this.agent = params.agent
+    this.chatClient = params.chatClient
     this.events = params.events
-    this.senderUserDid = params.agent.session?.did!
+    this.senderUserDid = params.chatClient.assertDid
 
     if (params.placeholderData) {
       this.setupPlaceholderData(params.placeholderData)
     }
 
+    this.setConvo = this.setConvo.bind(this)
     this.subscribe = this.subscribe.bind(this)
     this.getSnapshot = this.getSnapshot.bind(this)
     this.sendMessage = this.sendMessage.bind(this)
@@ -109,6 +177,10 @@ export class Convo {
     this.markConvoAccepted = this.markConvoAccepted.bind(this)
     this.addReaction = this.addReaction.bind(this)
     this.removeReaction = this.removeReaction.bind(this)
+    this.updateGroupName = this.updateGroupName.bind(this)
+    this.updateGroupMembers = this.updateGroupMembers.bind(this)
+    this.updateJoinLink = this.updateJoinLink.bind(this)
+    this.updateLockStatus = this.updateLockStatus.bind(this)
   }
 
   private commit() {
@@ -116,18 +188,40 @@ export class Convo {
     this.subscribers.forEach(subscriber => subscriber())
   }
 
+  /**
+   * Point the convo at a new chat client, for when the session bundle is
+   * replaced underneath it. Conversation state is unaffected: the same account
+   * is being served over a fresh session.
+   */
+  updateClient(chatClient: Client) {
+    this.chatClient = chatClient
+  }
+
   private subscribers: (() => void)[] = []
 
   subscribe(subscriber: () => void) {
-    if (this.subscribers.length === 0) this.init()
+    if (this.subscribers.length === 0) {
+      this.cleanupProfileShadowListener = listenProfileShadowUpdate(
+        ({did, shadow}) => {
+          this.mergeProfileShadow(did, shadow)
+        },
+      )
+      this.init()
+    }
 
     this.subscribers.push(subscriber)
 
     return () => {
       this.subscribers = this.subscribers.filter(s => s !== subscriber)
-      if (this.subscribers.length === 0) this.suspend()
+      if (this.subscribers.length === 0) {
+        this.cleanupProfileShadowListener?.()
+        this.cleanupProfileShadowListener = undefined
+        this.suspend()
+      }
     }
   }
+
+  private cleanupProfileShadowListener: (() => void) | undefined
 
   getSnapshot(): ConvoState {
     if (!this.snapshot) this.snapshot = this.generateSnapshot()
@@ -136,42 +230,104 @@ export class Convo {
   }
 
   private generateSnapshot(): ConvoState {
+    const shared = {
+      isFetchingHistory: this.isFetchingHistory,
+      // Explicit null check since the value is initially undefined.
+      hasAllHistory: this.oldestRev === null,
+    }
+
+    const methods = {
+      deleteMessage: this.deleteMessage,
+      sendMessage: this.sendMessage,
+      fetchMessageHistory: this.fetchMessageHistory,
+      markConvoAccepted: this.markConvoAccepted,
+      addReaction: this.addReaction,
+      removeReaction: this.removeReaction,
+    }
+
+    const emptyMethods = {
+      deleteMessage: undefined,
+      sendMessage: undefined,
+      fetchMessageHistory: undefined,
+      markConvoAccepted: undefined,
+      addReaction: undefined,
+      removeReaction: undefined,
+    }
+
+    /*
+     * Captured as a local so the `if (convo)` narrowing below survives the
+     * `this.getItems()` call - TS discards narrowing on mutable `this` members
+     * after a method call, but not on a const.
+     */
+    const convo = this.convo
+
+    /*
+     * A lifecycle event (e.g. `Background` or `Suspend`) can move us into an
+     * active status before `setup()` has resolved and populated `convo`. The
+     * active states declare `convo` as non-optional, so we can't build one
+     * without it - fall back to reporting `Initializing` until the convo lands.
+     * This keeps the snapshot's type and runtime in agreement, so consumers can
+     * trust that an active status always has a `convo`.
+     */
+    const stillInitializing = (): ConvoState => ({
+      status: ConvoStatus.Initializing,
+      items: [],
+      convo,
+      error: undefined,
+      ...shared,
+      ...emptyMethods,
+    })
+
     switch (this.status) {
       case ConvoStatus.Initializing: {
+        return stillInitializing()
+      }
+      case ConvoStatus.Disabled: {
+        if (!convo) return stillInitializing()
         return {
-          status: ConvoStatus.Initializing,
-          items: [],
-          convo: this.convo,
+          status: ConvoStatus.Disabled,
+          items: this.getItems(),
+          convo,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
-          isFetchingHistory: this.isFetchingHistory,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
+          ...shared,
+          ...methods,
         }
       }
-      case ConvoStatus.Disabled:
-      case ConvoStatus.Suspended:
-      case ConvoStatus.Backgrounded:
-      case ConvoStatus.Ready: {
+      case ConvoStatus.Suspended: {
+        if (!convo) return stillInitializing()
         return {
-          status: this.status,
+          status: ConvoStatus.Suspended,
           items: this.getItems(),
-          convo: this.convo!,
+          convo,
+          relatedProfiles: this.relatedProfiles,
           error: undefined,
-          sender: this.sender!,
-          recipients: this.recipients!,
-          isFetchingHistory: this.isFetchingHistory,
-          deleteMessage: this.deleteMessage,
-          sendMessage: this.sendMessage,
-          fetchMessageHistory: this.fetchMessageHistory,
-          markConvoAccepted: this.markConvoAccepted,
-          addReaction: this.addReaction,
-          removeReaction: this.removeReaction,
+          ...shared,
+          ...methods,
+        }
+      }
+      case ConvoStatus.Backgrounded: {
+        if (!convo) return stillInitializing()
+        return {
+          status: ConvoStatus.Backgrounded,
+          items: this.getItems(),
+          convo,
+          relatedProfiles: this.relatedProfiles,
+          error: undefined,
+          ...shared,
+          ...methods,
+        }
+      }
+      case ConvoStatus.Ready: {
+        if (!convo) return stillInitializing()
+        return {
+          status: ConvoStatus.Ready,
+          items: this.getItems(),
+          convo,
+          relatedProfiles: this.relatedProfiles,
+          error: undefined,
+          ...shared,
+          ...methods,
         }
       }
       case ConvoStatus.Error: {
@@ -180,15 +336,9 @@ export class Convo {
           items: [],
           convo: undefined,
           error: this.error!,
-          sender: undefined,
-          recipients: undefined,
           isFetchingHistory: false,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
+          hasAllHistory: false,
+          ...emptyMethods,
         }
       }
       default: {
@@ -197,15 +347,10 @@ export class Convo {
           items: [],
           convo: this.convo,
           error: undefined,
-          sender: this.sender,
-          recipients: this.recipients,
           isFetchingHistory: false,
-          deleteMessage: undefined,
-          sendMessage: undefined,
-          fetchMessageHistory: undefined,
-          markConvoAccepted: undefined,
-          addReaction: undefined,
-          removeReaction: undefined,
+          // Explicit null check since the value is initially undefined.
+          hasAllHistory: this.oldestRev === null,
+          ...emptyMethods,
         }
       }
     }
@@ -219,7 +364,7 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Init: {
             this.status = ConvoStatus.Initializing
-            this.setup()
+            void this.setup()
             this.setupFirehose()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
@@ -231,12 +376,12 @@ export class Convo {
         switch (action.event) {
           case ConvoDispatchEvent.Ready: {
             this.status = ConvoStatus.Ready
-            this.fetchMessageHistory()
+            void this.fetchMessageHistory()
             break
           }
           case ConvoDispatchEvent.Background: {
             this.status = ConvoStatus.Backgrounded
-            this.fetchMessageHistory()
+            void this.fetchMessageHistory()
             this.requestPollInterval(BACKGROUND_POLL_INTERVAL)
             break
           }
@@ -255,7 +400,7 @@ export class Convo {
           }
           case ConvoDispatchEvent.Disable: {
             this.status = ConvoStatus.Disabled
-            this.fetchMessageHistory() // finish init
+            void this.fetchMessageHistory() // finish init
             this.cleanupFirehoseConnection?.()
             this.withdrawRequestedPollInterval()
             break
@@ -266,7 +411,7 @@ export class Convo {
       case ConvoStatus.Ready: {
         switch (action.event) {
           case ConvoDispatchEvent.Resume: {
-            this.refreshConvo()
+            void this.refreshConvo()
             this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             break
           }
@@ -305,11 +450,11 @@ export class Convo {
             } else {
               if (this.convo) {
                 this.status = ConvoStatus.Ready
-                this.refreshConvo()
+                void this.refreshConvo()
                 this.maybeRecoverFromNetworkError()
               } else {
                 this.status = ConvoStatus.Initializing
-                this.setup()
+                void this.setup()
               }
               this.requestPollInterval(ACTIVE_POLL_INTERVAL)
             }
@@ -405,8 +550,6 @@ export class Convo {
 
   private reset() {
     this.convo = undefined
-    this.sender = undefined
-    this.recipients = undefined
     this.snapshot = undefined
 
     this.status = ConvoStatus.Uninitialized
@@ -418,6 +561,10 @@ export class Convo {
     this.newMessages = new Map()
     this.pendingMessages = new Map()
     this.deletedMessages = new Set()
+    this.relatedProfiles = new Map()
+    // Shadow updates fired while suspended are missed, so the overlay may be
+    // stale - drop it and trust the from-scratch refetch.
+    this.profileShadows = new Map()
 
     this.pendingMessageFailure = null
     this.fetchMessageHistoryError = undefined
@@ -432,13 +579,35 @@ export class Convo {
       this.firehoseError = undefined
       this.commit()
     } else {
-      this.batchRetryPendingMessages()
+      void this.batchRetryPendingMessages()
     }
 
     if (this.fetchMessageHistoryError) {
       this.fetchMessageHistoryError.retry()
       this.fetchMessageHistoryError = undefined
       this.commit()
+    }
+  }
+
+  private setConvo(convo: chat.bsky.convo.defs.ConvoView) {
+    this.convo = parseConvoView(convo, this.senderUserDid) ?? this.convo
+    if (this.convo) {
+      for (const member of this.convo.members) {
+        this.relatedProfiles.set(member.did, member)
+      }
+    }
+    this.applyProfileShadows()
+  }
+
+  private updateConvo(convo: Partial<chat.bsky.convo.defs.ConvoView>) {
+    if (this.convo) {
+      this.convo =
+        parseConvoView({...this.convo.view, ...convo}, this.senderUserDid) ??
+        this.convo
+      for (const member of this.convo.members) {
+        this.relatedProfiles.set(member.did, member)
+      }
+      this.applyProfileShadows()
     }
   }
 
@@ -449,20 +618,14 @@ export class Convo {
   private setupPlaceholderData(
     data: NonNullable<ConvoParams['placeholderData']>,
   ) {
-    this.convo = data.convo
-    this.sender = data.convo.members.find(m => m.did === this.senderUserDid)
-    this.recipients = data.convo.members.filter(
-      m => m.did !== this.senderUserDid,
-    )
+    this.setConvo(data.convo)
   }
 
   private async setup() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      const {convo} = await this.fetchConvo()
 
-      this.convo = convo
-      this.sender = sender
-      this.recipients = recipients
+      this.setConvo(convo)
 
       /*
        * Some validation prior to `Ready` status
@@ -470,22 +633,23 @@ export class Convo {
       if (!this.convo) {
         throw new Error('could not find convo')
       }
-      if (!this.sender) {
-        throw new Error('could not find sender in convo')
-      }
-      if (!this.recipients) {
-        throw new Error('could not find recipients in convo')
+
+      const self = this.convo.members.find(m => m.did === this.senderUserDid)
+
+      if (!self) {
+        throw new Error('could not find self in convo')
       }
 
-      const userIsDisabled = Boolean(this.sender.chatDisabled)
+      const userIsDisabled = Boolean(self.chatDisabled)
 
       if (userIsDisabled) {
         this.dispatch({event: ConvoDispatchEvent.Disable})
       } else {
         this.dispatch({event: ConvoDispatchEvent.Ready})
       }
-    } catch (e: any) {
-      if (!isNetworkError(e)) {
+    } catch (err) {
+      const e = err as Error
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error('setup failed', {
           safeMessage: e.message,
         })
@@ -545,56 +709,43 @@ export class Convo {
   }
 
   private pendingFetchConvo:
-    | Promise<{
-        convo: ChatBskyConvoDefs.ConvoView
-        sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-        recipients: ChatBskyActorDefs.ProfileViewBasic[]
-      }>
-    | undefined
+    Promise<{convo: chat.bsky.convo.defs.ConvoView}> | undefined
   async fetchConvo() {
     if (this.pendingFetchConvo) return this.pendingFetchConvo
 
-    this.pendingFetchConvo = new Promise<{
-      convo: ChatBskyConvoDefs.ConvoView
-      sender: ChatBskyActorDefs.ProfileViewBasic | undefined
-      recipients: ChatBskyActorDefs.ProfileViewBasic[]
-    }>(async (resolve, reject) => {
+    // non-blocking
+    void this.fetchMemberList()
+
+    this.pendingFetchConvo = (async () => {
       try {
         const response = await networkRetry(2, () => {
-          return this.agent.api.chat.bsky.convo.getConvo(
-            {
-              convoId: this.convoId,
-            },
-            {headers: DM_SERVICE_HEADERS},
-          )
+          return this.chatClient.call(chat.bsky.convo.getConvo, {
+            convoId: this.convoId,
+          })
         })
 
-        const convo = response.data.convo
+        const convo = response.convo
 
-        resolve({
+        return {
           convo,
-          sender: convo.members.find(m => m.did === this.senderUserDid),
-          recipients: convo.members.filter(m => m.did !== this.senderUserDid),
-        })
-      } catch (e) {
-        reject(e)
+        }
       } finally {
         this.pendingFetchConvo = undefined
       }
-    })
+    })()
 
     return this.pendingFetchConvo
   }
 
   async refreshConvo() {
     try {
-      const {convo, sender, recipients} = await this.fetchConvo()
+      void this.fetchMemberList()
+      const {convo} = await this.fetchConvo()
       // throw new Error('UNCOMMENT TO TEST REFRESH FAILURE')
-      this.convo = convo || this.convo
-      this.sender = sender || this.sender
-      this.recipients = recipients || this.recipients
-    } catch (e: any) {
-      if (!isNetworkError(e)) {
+      this.setConvo(convo)
+    } catch (err) {
+      const e = err as Error
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`failed to refresh convo`, {
           safeMessage: e.message,
         })
@@ -602,16 +753,36 @@ export class Convo {
     }
   }
 
-  private fetchMessageHistoryError:
-    | {
-        retry: () => void
+  // purely for populating `this.relatedProfiles` - we do not pipe it
+  // into the ConvoWithDetails. If you want to drive UI based on the member list,
+  // use `useListConvoMembersQuery`
+  // we shouldn't also block loading off of this - the UI should be resilient
+  async fetchMemberList() {
+    let cursor: string | undefined
+    do {
+      const result = await networkRetry(2, () => {
+        return this.chatClient.call(chat.bsky.convo.getConvoMembers, {
+          convoId: this.convoId,
+          limit: 50,
+          cursor,
+        })
+      })
+      cursor = result.cursor
+
+      for (const member of result.members) {
+        this.relatedProfiles.set(member.did, member)
       }
-    | undefined
+    } while (cursor)
+    this.applyProfileShadows()
+  }
+
+  private fetchMessageHistoryError: {retry: () => void} | undefined
   async fetchMessageHistory() {
     logger.debug('fetch message history', {})
 
     /*
      * If oldestRev is null, we've fetched all history.
+     * Needs to explicitly check for `null` since this is initially `undefined`.
      */
     if (this.oldestRev === null) return
 
@@ -632,23 +803,34 @@ export class Convo {
 
       const nextCursor = this.oldestRev // for TS
       const response = await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.getMessages(
-          {
-            cursor: nextCursor,
-            convoId: this.convoId,
-            limit: isNative ? 30 : 60,
-          },
-          {headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.getMessages, {
+          cursor: nextCursor,
+          convoId: this.convoId,
+          limit: IS_NATIVE ? 30 : 60,
+        })
       })
-      const {cursor, messages} = response.data
+      const {cursor, messages, relatedProfiles} = response
 
+      // Trust the cursor for pagination. We can't infer "no more pages" from a
+      // short page: the server pages by raw rows but strips deleted messages
+      // from the response, so a full page containing a deleted message (e.g.
+      // from a deleted account) comes back short *with* a valid cursor. Using a
+      // count heuristic here would stop history fetching early and hide
+      // messages. The tradeoff is one extra empty fetch at the true top.
       this.oldestRev = cursor ?? null
+
+      if (relatedProfiles) {
+        for (const profile of relatedProfiles) {
+          this.relatedProfiles.set(profile.did, profile)
+        }
+        this.applyProfileShadows()
+      }
 
       for (const message of messages) {
         if (
-          ChatBskyConvoDefs.isMessageView(message) ||
-          ChatBskyConvoDefs.isDeletedMessageView(message)
+          bsky.isType(chat.bsky.convo.defs.messageView, message) ||
+          bsky.isType(chat.bsky.convo.defs.deletedMessageView, message) ||
+          bsky.isType(chat.bsky.convo.defs.systemMessageView, message)
         ) {
           /*
            * If this message is already in new messages, it was added by the
@@ -661,8 +843,9 @@ export class Convo {
           this.pastMessages.set(message.id, message)
         }
       }
-    } catch (e: any) {
-      if (!isNetworkError(e)) {
+    } catch (err) {
+      const e = err as Error
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error('failed to fetch message history', {
           safeMessage: e.message,
         })
@@ -670,7 +853,7 @@ export class Convo {
 
       this.fetchMessageHistoryError = {
         retry: () => {
-          this.fetchMessageHistory()
+          void this.fetchMessageHistory()
         },
       }
     } finally {
@@ -713,7 +896,7 @@ export class Convo {
 
   onFirehoseConnect() {
     this.firehoseError = undefined
-    this.batchRetryPendingMessages()
+    void this.batchRetryPendingMessages()
     this.commit()
   }
 
@@ -722,7 +905,7 @@ export class Convo {
     this.commit()
   }
 
-  ingestFirehose(events: ChatBskyConvoGetLog.OutputSchema['logs']) {
+  ingestFirehose(events: chat.bsky.convo.getLog.$OutputBody['logs']) {
     let needsCommit = false
 
     for (const ev of events) {
@@ -751,42 +934,59 @@ export class Convo {
            */
           this.latestRev = ev.rev
 
-          if (
-            ChatBskyConvoDefs.isLogCreateMessage(ev) &&
-            ChatBskyConvoDefs.isMessageView(ev.message)
-          ) {
-            /**
-             * If this message is already in new messages, it was added by our
-             * sending logic, and is based on client-ordering. When we receive
-             * the "commited" event from the log, we should replace this
-             * reference and re-insert in order to respect the order we receied
-             * from the log.
-             */
-            if (this.newMessages.has(ev.message.id)) {
-              this.newMessages.delete(ev.message.id)
+          if ('relatedProfiles' in ev && Array.isArray(ev.relatedProfiles)) {
+            for (const profile of ev.relatedProfiles) {
+              this.relatedProfiles.set(profile.did, profile)
             }
-            this.newMessages.set(ev.message.id, ev.message)
-            needsCommit = true
-          } else if (
-            ChatBskyConvoDefs.isLogDeleteMessage(ev) &&
-            ChatBskyConvoDefs.isDeletedMessageView(ev.message)
+            this.applyProfileShadows()
+          }
+
+          if (
+            bsky.isType(chat.bsky.convo.defs.logCreateMessage, ev) &&
+            bsky.isType(chat.bsky.convo.defs.messageView, ev.message)
           ) {
             /*
-             * Update if we have this in state. If we don't, don't worry about it.
+             * If this message is already in past messages, the initial
+             * history fetch raced this log event and already returned it.
+             * Update in place rather than inserting a duplicate into new
+             * messages.
              */
-            if (
-              this.pastMessages.has(ev.message.id) ||
-              this.newMessages.has(ev.message.id)
-            ) {
-              this.pastMessages.delete(ev.message.id)
-              this.newMessages.delete(ev.message.id)
-              this.deletedMessages.delete(ev.message.id)
-              needsCommit = true
+            if (this.pastMessages.has(ev.message.id)) {
+              this.pastMessages.set(ev.message.id, ev.message)
+            } else {
+              /**
+               * If this message is already in new messages, it was added by our
+               * sending logic, and is based on client-ordering. When we receive
+               * the "committed" event from the log, we should replace this
+               * reference and re-insert in order to respect the order we received
+               * from the log.
+               */
+              if (this.newMessages.has(ev.message.id)) {
+                this.newMessages.delete(ev.message.id)
+              }
+              this.newMessages.set(ev.message.id, ev.message)
             }
+            needsCommit = true
           } else if (
-            (ChatBskyConvoDefs.isLogAddReaction(ev) ||
-              ChatBskyConvoDefs.isLogRemoveReaction(ev)) &&
-            ChatBskyConvoDefs.isMessageView(ev.message)
+            bsky.isType(chat.bsky.convo.defs.logDeleteMessage, ev) &&
+            bsky.isType(chat.bsky.convo.defs.deletedMessageView, ev.message)
+          ) {
+            /*
+             * Remove the message itself, and keep its id in `deletedMessages`
+             * so any message that quotes it keeps rendering a deleted-message
+             * tombstone (see `tombstoneDeletedReplyTo`) rather than reverting
+             * to the original hydrated text. We add here rather than relying on
+             * the optimistic entry so deletes from elsewhere (e.g. another
+             * device) are covered too.
+             */
+            this.pastMessages.delete(ev.message.id)
+            this.newMessages.delete(ev.message.id)
+            this.deletedMessages.add(ev.message.id)
+            needsCommit = true
+          } else if (
+            (bsky.isType(chat.bsky.convo.defs.logAddReaction, ev) ||
+              bsky.isType(chat.bsky.convo.defs.logRemoveReaction, ev)) &&
+            bsky.isType(chat.bsky.convo.defs.messageView, ev.message)
           ) {
             /*
              * Update if we have this in state - replace message wholesale. If we don't, don't worry about it.
@@ -797,6 +997,17 @@ export class Convo {
             }
             if (this.newMessages.has(ev.message.id)) {
               this.newMessages.set(ev.message.id, ev.message)
+              needsCommit = true
+            }
+          } else {
+            const systemView = toSystemMessageView(ev)
+            if (systemView) {
+              // same as above: avoid duplicating if history fetch won the race
+              if (this.pastMessages.has(systemView.id)) {
+                this.pastMessages.set(systemView.id, systemView)
+              } else {
+                this.newMessages.set(systemView.id, systemView)
+              }
               needsCommit = true
             }
           }
@@ -811,7 +1022,13 @@ export class Convo {
 
   private pendingMessageFailure: 'recoverable' | 'unrecoverable' | null = null
 
-  sendMessage(message: ChatBskyConvoSendMessage.InputSchema['message']) {
+  sendMessage(
+    message: chat.bsky.convo.defs.MessageInput,
+    optimisticEmbedView?:
+      | $Typed<app.bsky.embed.record.View>
+      | $Typed<chat.bsky.embed.joinLink.View>,
+    optimisticReplyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
+  ) {
     // Ignore empty messages for now since they have no other purpose atm
     if (!message.text.trim() && !message.embed) return
 
@@ -823,27 +1040,99 @@ export class Convo {
     this.pendingMessages.set(tempId, {
       id: tempId,
       message,
+      optimisticEmbedView,
+      optimisticReplyTo,
     })
-    if (this.convo?.status === 'request') {
-      this.convo = {
-        ...this.convo,
+    if (this.convo?.view.status === 'request') {
+      this.updateConvo({
         status: 'accepted',
-      }
+      })
     }
     this.commit()
 
     if (!this.isProcessingPendingMessages && !this.pendingMessageFailure) {
-      this.processPendingMessages()
+      void this.processPendingMessages()
     }
   }
 
   markConvoAccepted() {
-    if (this.convo) {
-      this.convo = {
-        ...this.convo,
-        status: 'accepted',
-      }
+    this.updateConvo({
+      status: 'accepted',
+    })
+
+    this.commit()
+  }
+
+  updateMuted(muted: boolean) {
+    this.updateConvo({
+      muted,
+    })
+
+    this.commit()
+  }
+
+  updateGroupName(name: string) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateGroupName can only be called on group convo')
     }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        name,
+      },
+    })
+
+    this.commit()
+  }
+
+  updateGroupMembers(members: GroupConvoMember[], memberCount: number) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateGroupMembers can only be called on group convo')
+    }
+
+    this.updateConvo({
+      members,
+      kind: {
+        ...this.convo.details,
+        memberCount,
+      },
+    })
+
+    this.commit()
+  }
+
+  updateJoinLink(joinLink: chat.bsky.group.defs.JoinLinkView | undefined) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateJoinLink can only be called on group convo')
+    }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        joinLink,
+      },
+    })
+
+    this.commit()
+  }
+
+  updateLockStatus(
+    lockStatus: chat.bsky.convo.defs.ConvoLockStatus,
+    lockStatusModerationOverride: boolean,
+  ) {
+    if (this.convo?.kind !== 'group') {
+      throw new Error('updateLockStatus can only be called on group convo')
+    }
+
+    this.updateConvo({
+      kind: {
+        ...this.convo.details,
+        lockStatus,
+        lockStatusModerationOverride,
+      },
+    })
+
     this.commit()
   }
 
@@ -868,14 +1157,10 @@ export class Convo {
 
       const {id, message} = pendingMessage
 
-      const response = await this.agent.api.chat.bsky.convo.sendMessage(
-        {
-          convoId: this.convoId,
-          message,
-        },
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-      )
-      const res = response.data
+      const res = await this.chatClient.call(chat.bsky.convo.sendMessage, {
+        convoId: this.convoId,
+        message,
+      })
 
       // remove from queue
       this.pendingMessages.delete(id)
@@ -893,14 +1178,22 @@ export class Convo {
 
       // continue queue processing
       await this.processPendingMessages()
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       this.handleSendMessageFailure(e)
       this.isProcessingPendingMessages = false
     }
   }
 
-  private handleSendMessageFailure(e: any) {
-    if (e instanceof XRPCError) {
+  /*
+   * The lex client throws `XrpcResponseError`, so the status/message branch
+   * narrows on that class. Only
+   * a genuine server response carries a status: transport and internal lex
+   * failures are `XrpcInternalError`s and fall through to the generic arm,
+   * where `isNetworkError` keeps them out of the logs.
+   */
+  private handleSendMessageFailure(e: Error | XrpcResponseError) {
+    if (e instanceof XrpcResponseError) {
       if (NETWORK_FAILURE_STATUSES.includes(e.status)) {
         this.pendingMessageFailure = 'recoverable'
       } else {
@@ -911,7 +1204,7 @@ export class Convo {
             this.emitter.emit('event', {
               type: 'invalidate-block-state',
               accountDids: [
-                this.sender!.did,
+                this.senderUserDid,
                 ...this.recipients!.map(r => r.did),
               ],
             })
@@ -938,7 +1231,7 @@ export class Convo {
     } else {
       this.pendingMessageFailure = 'unrecoverable'
 
-      if (!isNetworkError(e)) {
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`handleSendMessageFailure received unknown error`, {
           safeMessage: e.message,
         })
@@ -963,16 +1256,15 @@ export class Convo {
     )
 
     try {
-      const {data} = await this.agent.api.chat.bsky.convo.sendMessageBatch(
+      const {items} = await this.chatClient.call(
+        chat.bsky.convo.sendMessageBatch,
         {
           items: messageArray.map(({message}) => ({
             convoId: this.convoId,
             message,
           })),
         },
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
       )
-      const {items} = data
 
       /*
        * Insert into `newMessages` as soon as we have a real ID. That way, when
@@ -992,7 +1284,8 @@ export class Convo {
       this.commit()
 
       logger.debug(`sent ${this.pendingMessages.size} pending messages`, {})
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as Error
       this.handleSendMessageFailure(e)
     }
   }
@@ -1005,16 +1298,14 @@ export class Convo {
 
     try {
       await networkRetry(2, () => {
-        return this.agent.api.chat.bsky.convo.deleteMessageForSelf(
-          {
-            convoId: this.convoId,
-            messageId,
-          },
-          {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-        )
+        return this.chatClient.call(chat.bsky.convo.deleteMessageForSelf, {
+          convoId: this.convoId,
+          messageId,
+        })
       })
-    } catch (e: any) {
-      if (!isNetworkError(e)) {
+    } catch (err) {
+      const e = err as Error
+      if (!isNetworkError(e) && !isErrorMaybeAppPasswordPermissions(e)) {
         logger.error(`failed to delete message`, {
           safeMessage: e.message,
         })
@@ -1033,6 +1324,26 @@ export class Convo {
     }
   }
 
+  /**
+   * When a message is deleted locally, it's removed from the list, but other
+   * messages that reply to it still carry a hydrated `replyTo` with the
+   * original text until the server re-sends them. Swap that `replyTo` for a
+   * deleted-message tombstone so the quote reflects the deletion immediately,
+   * matching what the server returns on refresh.
+   */
+  private tombstoneDeletedReplyTo(
+    m: chat.bsky.convo.defs.MessageView,
+  ): chat.bsky.convo.defs.MessageView {
+    const {replyTo} = m
+    if (
+      !bsky.isType(chat.bsky.convo.defs.messageView, replyTo) ||
+      !this.deletedMessages.has(replyTo.id)
+    ) {
+      return m
+    }
+    return {...m, replyTo: toDeletedMessageView(replyTo)}
+  }
+
   /*
    * Items in reverse order, since FlatList inverts
    */
@@ -1040,21 +1351,23 @@ export class Convo {
     const items: ConvoItem[] = []
 
     this.pastMessages.forEach(m => {
-      if (ChatBskyConvoDefs.isMessageView(m)) {
+      if (bsky.isType(chat.bsky.convo.defs.messageView, m)) {
         items.unshift({
           type: 'message',
           key: m.id,
-          message: m,
-          nextMessage: null,
-          prevMessage: null,
+          message: this.tombstoneDeletedReplyTo(m),
         })
-      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
+      } else if (bsky.isType(chat.bsky.convo.defs.deletedMessageView, m)) {
         items.unshift({
           type: 'deleted-message',
           key: m.id,
           message: m,
-          nextMessage: null,
-          prevMessage: null,
+        })
+      } else if (bsky.isType(chat.bsky.convo.defs.systemMessageView, m)) {
+        items.unshift({
+          type: 'system-message',
+          key: m.id,
+          message: m,
         })
       }
     })
@@ -1071,47 +1384,48 @@ export class Convo {
     }
 
     this.newMessages.forEach(m => {
-      if (ChatBskyConvoDefs.isMessageView(m)) {
+      if (bsky.isType(chat.bsky.convo.defs.messageView, m)) {
         items.push({
           type: 'message',
           key: m.id,
-          message: m,
-          nextMessage: null,
-          prevMessage: null,
+          message: this.tombstoneDeletedReplyTo(m),
         })
-      } else if (ChatBskyConvoDefs.isDeletedMessageView(m)) {
+      } else if (bsky.isType(chat.bsky.convo.defs.deletedMessageView, m)) {
         items.push({
           type: 'deleted-message',
           key: m.id,
           message: m,
-          nextMessage: null,
-          prevMessage: null,
+        })
+      } else if (bsky.isType(chat.bsky.convo.defs.systemMessageView, m)) {
+        items.push({
+          type: 'system-message',
+          key: m.id,
+          message: m,
         })
       }
     })
 
     this.pendingMessages.forEach(m => {
+      const optimisticReplyTo =
+        m.optimisticReplyTo && this.deletedMessages.has(m.optimisticReplyTo.id)
+          ? toDeletedMessageView(m.optimisticReplyTo)
+          : m.optimisticReplyTo
       items.push({
         type: 'pending-message',
         key: m.id,
         message: {
           ...m.message,
-          embed: undefined,
+          embed: m.optimisticEmbedView,
+          replyTo: optimisticReplyTo,
           $type: 'chat.bsky.convo.defs#messageView',
           id: nanoid(),
           rev: '__fake__',
-          sentAt: new Date().toISOString(),
-          /*
-           * `getItems` is only run in "active" status states, where
-           * `this.sender` is defined
-           */
+          sentAt: toDatetimeString(new Date()),
           sender: {
             $type: 'chat.bsky.convo.defs#messageViewSender',
-            did: this.sender!.did,
+            did: this.senderUserDid,
           },
         },
-        nextMessage: null,
-        prevMessage: null,
         failed: this.pendingMessageFailure !== null,
         retry:
           this.pendingMessageFailure === 'recoverable'
@@ -1133,53 +1447,12 @@ export class Convo {
       })
     }
 
-    return items
-      .filter(item => {
-        if (isConvoItemMessage(item)) {
-          return !this.deletedMessages.has(item.message.id)
-        }
-        return true
-      })
-      .map((item, i, arr) => {
-        let nextMessage = null
-        let prevMessage = null
-        const isMessage = isConvoItemMessage(item)
-
-        if (isMessage) {
-          if (
-            ChatBskyConvoDefs.isMessageView(item.message) ||
-            ChatBskyConvoDefs.isDeletedMessageView(item.message)
-          ) {
-            const next = arr[i + 1]
-
-            if (
-              isConvoItemMessage(next) &&
-              (ChatBskyConvoDefs.isMessageView(next.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(next.message))
-            ) {
-              nextMessage = next.message
-            }
-
-            const prev = arr[i - 1]
-
-            if (
-              isConvoItemMessage(prev) &&
-              (ChatBskyConvoDefs.isMessageView(prev.message) ||
-                ChatBskyConvoDefs.isDeletedMessageView(prev.message))
-            ) {
-              prevMessage = prev.message
-            }
-          }
-
-          return {
-            ...item,
-            nextMessage,
-            prevMessage,
-          }
-        }
-
-        return item
-      })
+    return items.filter(item => {
+      if (isConvoItemMessage(item)) {
+        return !this.deletedMessages.has(item.message.id)
+      }
+      return true
+    })
   }
 
   /**
@@ -1189,16 +1462,16 @@ export class Convo {
    * @param emoji - must be one grapheme
    */
   async addReaction(messageId: string, emoji: string) {
-    const optimisticReaction = {
+    const optimisticReaction: chat.bsky.convo.defs.ReactionView = {
       value: emoji,
       sender: {did: this.senderUserDid},
-      createdAt: new Date().toISOString(),
+      createdAt: toDatetimeString(new Date()),
     }
     let restore: null | (() => void) = null
     if (this.pastMessages.has(messageId)) {
       const prevMessage = this.pastMessages.get(messageId)
       if (
-        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        bsky.isType(chat.bsky.convo.defs.messageView, prevMessage) &&
         // skip optimistic update if reaction already exists
         !prevMessage.reactions?.find(
           reaction =>
@@ -1228,7 +1501,7 @@ export class Convo {
     } else if (this.newMessages.has(messageId)) {
       const prevMessage = this.newMessages.get(messageId)
       if (
-        ChatBskyConvoDefs.isMessageView(prevMessage) &&
+        bsky.isType(chat.bsky.convo.defs.messageView, prevMessage) &&
         !prevMessage.reactions?.find(reaction => reaction.value === emoji)
       ) {
         if (prevMessage.reactions && prevMessage.reactions.length >= 5)
@@ -1247,11 +1520,12 @@ export class Convo {
 
     try {
       logger.debug(`Adding reaction ${emoji} to message ${messageId}`)
-      const {data} = await this.agent.chat.bsky.convo.addReaction(
-        {messageId, value: emoji, convoId: this.convoId},
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-      )
-      if (ChatBskyConvoDefs.isMessageView(data.message)) {
+      const data = await this.chatClient.call(chat.bsky.convo.addReaction, {
+        messageId,
+        value: emoji,
+        convoId: this.convoId,
+      })
+      if (bsky.isType(chat.bsky.convo.defs.messageView, data.message)) {
         if (this.pastMessages.has(messageId)) {
           this.pastMessages.set(messageId, data.message)
           this.commit()
@@ -1276,7 +1550,7 @@ export class Convo {
     let restore: null | (() => void) = null
     if (this.pastMessages.has(messageId)) {
       const prevMessage = this.pastMessages.get(messageId)
-      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+      if (bsky.isType(chat.bsky.convo.defs.messageView, prevMessage)) {
         this.pastMessages.set(messageId, {
           ...prevMessage,
           reactions: prevMessage.reactions?.filter(
@@ -1293,7 +1567,7 @@ export class Convo {
       }
     } else if (this.newMessages.has(messageId)) {
       const prevMessage = this.newMessages.get(messageId)
-      if (ChatBskyConvoDefs.isMessageView(prevMessage)) {
+      if (bsky.isType(chat.bsky.convo.defs.messageView, prevMessage)) {
         this.newMessages.set(messageId, {
           ...prevMessage,
           reactions: prevMessage.reactions?.filter(
@@ -1312,13 +1586,96 @@ export class Convo {
 
     try {
       logger.debug(`Removing reaction ${emoji} from message ${messageId}`)
-      await this.agent.chat.bsky.convo.removeReaction(
-        {messageId, value: emoji, convoId: this.convoId},
-        {encoding: 'application/json', headers: DM_SERVICE_HEADERS},
-      )
+      await this.chatClient.call(chat.bsky.convo.removeReaction, {
+        messageId,
+        value: emoji,
+        convoId: this.convoId,
+      })
     } catch (error) {
       if (restore) restore()
       throw error
+    }
+  }
+
+  mergeProfileShadow(did: string, shadow: Partial<ProfileShadow>) {
+    // Accumulate even if the did isn't held yet - the profile may arrive
+    // later via message history or the member list, and must get the shadow.
+    this.profileShadows.set(did, {
+      ...this.profileShadows.get(did),
+      ...shadow,
+    })
+    if (this.applyProfileShadow(did, shadow)) {
+      this.commit()
+    }
+  }
+
+  /**
+   * Re-applies all accumulated shadows. Must be called after any server data
+   * lands in `relatedProfiles` or `this.convo`, since raw server profiles
+   * would otherwise clobber optimistic state.
+   */
+  private applyProfileShadows() {
+    for (const [did, shadow] of this.profileShadows) {
+      this.applyProfileShadow(did, shadow)
+    }
+  }
+
+  private applyProfileShadow(
+    did: string,
+    shadow: Partial<ProfileShadow>,
+  ): boolean {
+    let changed = false
+
+    const related = this.relatedProfiles.get(did)
+    if (related && !isProfileShadowApplied(related, shadow)) {
+      this.relatedProfiles.set(did, mergeShadow(related, shadow))
+      changed = true
+    }
+
+    if (this.convo) {
+      const next = applyShadowToConvo(this.convo, did, shadow)
+      if (next) {
+        this.convo = next
+        changed = true
+      }
+    }
+
+    return changed
+  }
+}
+
+/**
+ * Returns a new convo with the shadow merged into the matching member (and
+ * `primaryMember`, if it's the same profile), or null if nothing changed.
+ */
+function applyShadowToConvo(
+  convo: ConvoWithDetails,
+  did: string,
+  shadow: Partial<ProfileShadow>,
+): ConvoWithDetails | null {
+  const i = convo.members.findIndex(m => m.did === did)
+  if (i === -1) return null
+  if (isProfileShadowApplied(convo.members[i], shadow)) return null
+
+  // The branches are identical, but narrowing the union is what lets the
+  // member arrays keep their per-kind types.
+  if (convo.kind === 'group') {
+    const members = convo.members.slice()
+    members[i] = mergeShadow(members[i], shadow)
+    return {
+      ...convo,
+      members,
+      primaryMember:
+        convo.primaryMember?.did === did ? members[i] : convo.primaryMember,
+    }
+  } else {
+    const members = convo.members.slice()
+    members[i] = mergeShadow(members[i], shadow)
+    return {
+      ...convo,
+      members,
+      primaryMember:
+        convo.primaryMember.did === did ? members[i] : convo.primaryMember,
     }
   }
 }

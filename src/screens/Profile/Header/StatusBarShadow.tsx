@@ -1,10 +1,13 @@
-import Animated, {SharedValue, useAnimatedStyle} from 'react-native-reanimated'
+import Animated, {
+  type SharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 
-import {isIOS} from '#/platform/detection'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
+import {IS_IOS} from '#/env'
 
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient)
 
@@ -12,7 +15,7 @@ export function StatusBarShadow() {
   const {top: topInset} = useSafeAreaInsets()
   const pagerContext = usePagerHeaderContext()
 
-  if (isIOS && pagerContext) {
+  if (IS_IOS && pagerContext) {
     const {scrollY} = pagerContext
     return <StatusBarShadowInnner scrollY={scrollY} />
   }

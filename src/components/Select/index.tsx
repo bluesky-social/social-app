@@ -7,17 +7,16 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
-import {useTheme} from '#/alf'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
-import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {ChevronTopBottom_Stroke2_Corner0_Rounded as ChevronUpDownIcon} from '#/components/icons/Chevron'
 import {Text} from '#/components/Typography'
+import {BaseRadio} from '../forms/Toggle'
 import {
   type ContentProps,
   type IconProps,
@@ -34,10 +33,12 @@ type ContextType = {
 } & Pick<RootProps, 'value' | 'onValueChange' | 'disabled'>
 
 const Context = createContext<ContextType | null>(null)
+Context.displayName = 'SelectContext'
 
 const ValueTextContext = createContext<
   [any, React.Dispatch<React.SetStateAction<any>>]
 >([undefined, () => {}])
+ValueTextContext.displayName = 'ValueTextContext'
 
 function useSelectContext() {
   const ctx = useContext(Context)
@@ -69,7 +70,7 @@ export function Root({children, value, onValueChange, disabled}: RootProps) {
   )
 }
 
-export function Trigger({children, label}: TriggerProps) {
+export function Trigger({children, hitSlop, label}: TriggerProps) {
   const {control} = useSelectContext()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
@@ -80,7 +81,7 @@ export function Trigger({children, label}: TriggerProps) {
 
   if (typeof children === 'function') {
     return children({
-      isNative: true,
+      IS_NATIVE: true,
       control,
       state: {
         hovered: false,
@@ -99,12 +100,22 @@ export function Trigger({children, label}: TriggerProps) {
   } else {
     return (
       <Button
+        hitSlop={
+          typeof hitSlop === 'number'
+            ? {
+                top: hitSlop,
+                right: hitSlop,
+                bottom: hitSlop,
+                left: hitSlop,
+              }
+            : (hitSlop ?? undefined)
+        }
         label={label}
         onPress={control.open}
-        style={[a.flex_1, a.justify_between]}
+        style={[a.flex_1, a.justify_between, a.pl_lg, a.pr_md]}
         color="secondary"
-        size="small"
-        variant="solid">
+        size="large"
+        shape="rectangular">
         <>{children}</>
       </Button>
     )
@@ -120,10 +131,12 @@ export function ValueText({
   const t = useTheme()
 
   let text = value && children(value)
-  if (typeof text !== 'string') text = placeholder
+  if (!text) text = placeholder
 
   return (
-    <ButtonText style={[t.atoms.text, a.font_normal, style]}>{text}</ButtonText>
+    <ButtonText style={[t.atoms.text, a.font_normal, style]} emoji>
+      {text}
+    </ButtonText>
   )
 }
 
@@ -147,7 +160,7 @@ export function Content<T>({
   }, [items, context.value, valueExtractor, setValue])
 
   return (
-    <Dialog.Outer control={control}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <ContentInner
         control={control}
         items={items}
@@ -160,15 +173,14 @@ export function Content<T>({
 }
 
 function ContentInner<T>({
+  label,
   items,
   renderItem,
   valueExtractor,
   ...context
 }: ContentProps<T> & ContextType) {
-  const control = Dialog.useDialogContext()
-
   const {_} = useLingui()
-  const [headerHeight, setHeaderHeight] = useState(50)
+  const [headerHeight, setHeaderHeight] = useState(61)
 
   const render = useCallback(
     ({item, index}: {item: T; index: number}) => {
@@ -177,33 +189,26 @@ function ContentInner<T>({
     [renderItem, context.value],
   )
 
-  const doneButton = useCallback(
-    () => (
-      <Button
-        label={_(msg`Done`)}
-        onPress={() => control.close()}
-        size="small"
-        color="primary"
-        variant="ghost"
-        style={[a.rounded_full]}>
-        <ButtonText style={[a.text_md]}>
-          <Trans>Done</Trans>
-        </ButtonText>
-      </Button>
-    ),
-    [control, _],
-  )
-
   return (
     <Context.Provider value={context}>
       <Dialog.Header
-        renderRight={doneButton}
         onLayout={evt => setHeaderHeight(evt.nativeEvent.layout.height)}
-        style={[a.absolute, a.top_0, a.left_0, a.right_0, a.z_10]}>
-        <Dialog.HeaderText>
-          <Trans>Select an option</Trans>
+        style={[
+          a.absolute,
+          a.top_0,
+          a.left_0,
+          a.right_0,
+          a.z_10,
+          a.pt_3xl,
+          a.pb_sm,
+          a.border_b_0,
+        ]}>
+        <Dialog.HeaderText
+          style={[a.flex_1, a.px_xl, a.text_left, a.font_bold, a.text_2xl]}>
+          {label ?? _(msg`Select an option`)}
         </Dialog.HeaderText>
       </Dialog.Header>
+      <Dialog.Handle />
       <Dialog.InnerFlatList
         headerOffset={headerHeight}
         data={items}
@@ -229,6 +234,7 @@ const ItemContext = createContext<{
   focused: false,
   pressed: false,
 })
+ItemContext.displayName = 'SelectItemContext'
 
 export function useItemContext() {
   return useContext(ItemContext)
@@ -255,11 +261,12 @@ export function Item({children, value, label, style}: ItemProps) {
           <View
             style={[
               a.flex_1,
-              a.pl_md,
+              a.px_xl,
               (focused || pressed) && t.atoms.bg_contrast_25,
               a.flex_row,
               a.align_center,
               a.gap_sm,
+              a.py_md,
               style,
             ]}>
             {children}
@@ -270,20 +277,48 @@ export function Item({children, value, label, style}: ItemProps) {
   )
 }
 
-export function ItemText({children}: ItemTextProps) {
+export function ItemText({children, style, emoji}: ItemTextProps) {
   const {selected} = useItemContext()
-  const t = useTheme()
 
-  // eslint-disable-next-line bsky-internal/avoid-unwrapped-text
   return (
-    <View style={[a.flex_1, a.py_md, a.border_b, t.atoms.border_contrast_low]}>
-      <Text style={[a.text_md, selected && a.font_bold]}>{children}</Text>
-    </View>
+    <Text
+      style={[a.text_md, selected && a.font_semi_bold, style]}
+      emoji={emoji}>
+      {children}
+    </Text>
   )
 }
 
-export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
-  const {selected} = useItemContext()
+export function ItemIndicator({icon: Icon}: ItemIndicatorProps) {
+  const {selected, focused, hovered} = useItemContext()
 
-  return <View style={{width: 24}}>{selected && <Icon size="md" />}</View>
+  if (Icon) {
+    return <View style={{width: 24}}>{selected && <Icon size="md" />}</View>
+  }
+
+  return (
+    <BaseRadio
+      selected={selected}
+      focused={focused}
+      hovered={hovered}
+      isInvalid={false}
+      disabled={false}
+    />
+  )
+}
+
+export function Separator() {
+  const t = useTheme()
+
+  return (
+    <View
+      style={[
+        a.flex_1,
+        a.border_b,
+        t.atoms.border_contrast_low,
+        a.mx_xl,
+        a.my_xs,
+      ]}
+    />
+  )
 }

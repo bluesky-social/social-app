@@ -12,10 +12,10 @@ import {
 import {HITSLOP_20} from '#/lib/constants'
 import {mergeRefs} from '#/lib/merge-refs'
 import {
-  android,
   applyFonts,
   atoms as a,
-  ios,
+  flatten,
+  type MutableTextStyle,
   platform,
   type TextStyleProp,
   tokens,
@@ -28,7 +28,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = createContext<{
-  inputRef: React.RefObject<TextInput> | null
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -46,11 +46,18 @@ const Context = createContext<{
   onFocus: () => {},
   onBlur: () => {},
 })
+Context.displayName = 'TextFieldContext'
 
-export type RootProps = React.PropsWithChildren<{isInvalid?: boolean}>
+export function useTextFieldContext() {
+  return useContext(Context)
+}
 
-export function Root({children, isInvalid = false}: RootProps) {
-  const inputRef = useRef<TextInput>(null)
+export type RootProps = React.PropsWithChildren<
+  {isInvalid?: boolean} & TextStyleProp
+>
+
+export function Root({children, isInvalid = false, style}: RootProps) {
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -84,7 +91,16 @@ export function Root({children, isInvalid = false}: RootProps) {
   return (
     <Context.Provider value={context}>
       <View
-        style={[a.flex_row, a.align_center, a.relative, a.w_full, a.px_md]}
+        style={[
+          a.flex_row,
+          a.align_center,
+          a.relative,
+          a.w_full,
+          a.px_md,
+          // Contain the input's z-index so it cannot paint over nearby overlays.
+          {zIndex: 0},
+          style,
+        ]}
         {...web({
           onClick: () => inputRef.current?.focus(),
           onMouseOver: onHoverIn,
@@ -106,7 +122,7 @@ export function useSharedInputStyles() {
     ]
     const focus: ViewStyle[] = [
       {
-        backgroundColor: t.palette.contrast_50,
+        backgroundColor: t.palette.primary_25,
         borderColor: t.palette.primary_500,
       },
     ]
@@ -132,17 +148,30 @@ export function useSharedInputStyles() {
   }, [t])
 }
 
-export type InputProps = Omit<TextInputProps, 'value' | 'onChangeText'> & {
+export type InputProps = Omit<
+  TextInputProps,
+  'value' | 'onChangeText' | 'placeholder'
+> & {
   label: string
   /**
    * @deprecated Controlled inputs are *strongly* discouraged. Use `defaultValue` instead where possible.
    *
    * See https://github.com/facebook/react-native-website/pull/4247
+   *
+   * Note: This guidance no longer applies once we migrate to the New Architecture!
    */
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput> | React.ForwardedRef<TextInput>
+  inputRef?:
+    | React.RefObject<React.ComponentRef<typeof TextInput> | null>
+    | React.ForwardedRef<React.ComponentRef<typeof TextInput>>
+  /**
+   * Note: this currently falls back to the label if not specified. However,
+   * most new designs have no placeholder. We should eventually remove this fallback
+   * behaviour, but for now just pass `null` if you want no placeholder -sfn
+   */
+  placeholder?: string | null | undefined
 }
 
 export function createInput(Component: typeof TextInput) {
@@ -183,41 +212,41 @@ export function createInput(Component: typeof TextInput) {
 
     const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
 
-    const flattened = StyleSheet.flatten([
-      a.relative,
-      a.z_20,
-      a.flex_1,
-      a.text_md,
-      t.atoms.text,
-      a.px_xs,
-      {
-        // paddingVertical doesn't work w/multiline - esb
-        lineHeight: a.text_md.fontSize * 1.1875,
-        textAlignVertical: rest.multiline ? 'top' : undefined,
-        minHeight: rest.multiline ? 80 : undefined,
-        minWidth: 0,
-      },
-      ios({paddingTop: 12, paddingBottom: 13}),
-      // Needs to be sm on Paper, md on Fabric for some godforsaken reason -sfn
-      android(a.py_sm),
-      // fix for autofill styles covering border
-      web({
-        paddingTop: 10,
-        paddingBottom: 11,
-        marginTop: 2,
-        marginBottom: 2,
-      }),
-      style,
-    ])
+    const flattened: MutableTextStyle = {
+      ...flatten([
+        a.relative,
+        a.z_20,
+        a.flex_1,
+        a.text_md,
+        t.atoms.text,
+        a.px_xs,
+        {
+          // paddingVertical doesn't work w/multiline - esb
+          lineHeight: a.text_md.fontSize * 1.2,
+          textAlignVertical: rest.multiline ? 'top' : undefined,
+          minHeight: rest.multiline ? 80 : undefined,
+          minWidth: 0,
+          paddingTop: 13,
+          paddingBottom: 13,
+        },
+        /*
+         * Margins are needed here to avoid autofill background overlapping the
+         * top and bottom borders - esb
+         */
+        web({
+          paddingTop: 11,
+          paddingBottom: 11,
+          marginTop: 2,
+          marginBottom: 2,
+        }),
+        style,
+      ]),
+    }
 
     applyFonts(flattened, fonts.family)
 
-    // should always be defined on `typography`
-    // @ts-ignore
     if (flattened.fontSize) {
-      // @ts-ignore
       flattened.fontSize = Math.round(
-        // @ts-ignore
         flattened.fontSize * fonts.scaleMultiplier,
       )
     }
@@ -240,7 +269,16 @@ export function createInput(Component: typeof TextInput) {
             ctx.onBlur()
             onBlur?.(e)
           }}
-          placeholder={placeholder || label}
+          /*
+           * Android sizes an empty input from the font's bounding box instead
+           * of `lineHeight`, so a field with no placeholder shrinks on the
+           * first keystroke.
+           */
+          placeholder={
+            placeholder === null
+              ? platform({android: ' '})
+              : placeholder || label
+          }
           placeholderTextColor={t.palette.contrast_500}
           keyboardAppearance={t.name === 'light' ? 'light' : 'dark'}
           style={flattened}
@@ -251,9 +289,9 @@ export function createInput(Component: typeof TextInput) {
             a.z_10,
             a.absolute,
             a.inset_0,
-            a.rounded_sm,
-            t.atoms.bg_contrast_25,
-            {borderColor: 'transparent', borderWidth: 2},
+            {borderRadius: 10},
+            t.atoms.bg_contrast_50,
+            {borderColor: 'transparent', borderWidth: 1},
             ctx.hovered ? chromeHover : {},
             ctx.focused ? chromeFocus : {},
             ctx.isInvalid || isInvalid ? chromeError : {},
@@ -277,7 +315,7 @@ export function LabelText({
   return (
     <Text
       nativeID={nativeID}
-      style={[a.text_sm, a.font_bold, t.atoms.text_contrast_medium, a.mb_sm]}>
+      style={[a.text_sm, a.font_medium, t.atoms.text_contrast_medium, a.mb_sm]}>
       {children}
     </Text>
   )

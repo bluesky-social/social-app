@@ -1,11 +1,15 @@
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
+  UIImagePickerPreferredAssetRepresentationMode,
+  VideoExportPreset,
 } from 'expo-image-picker'
-import {t} from '@lingui/macro'
+import {t} from '@lingui/core/macro'
 
 import {type ImageMeta} from '#/state/gallery'
-import * as Toast from '#/view/com/util/Toast'
+import * as Toast from '#/components/Toast'
+import {IS_IOS} from '#/env'
+import {VIDEO_MAX_DURATION_MS} from '../constants'
 import {getDataUriSize} from './util'
 
 export type PickerImage = ImageMeta & {
@@ -17,19 +21,20 @@ export async function openPicker(opts?: ImagePickerOptions) {
     exif: false,
     mediaTypes: ['images'],
     quality: 1,
+    selectionLimit: 1,
     ...opts,
+    shouldDownloadFromNetwork: true,
     legacy: true,
+    preferredAssetRepresentationMode:
+      UIImagePickerPreferredAssetRepresentationMode.Automatic,
   })
 
-  if (response.assets && response.assets.length > 4) {
-    Toast.show(t`You may only select up to 4 images`, 'exclamation-circle')
-  }
-
   return (response.assets ?? [])
-    .slice(0, 4)
     .filter(asset => {
       if (asset.mimeType?.startsWith('image/')) return true
-      Toast.show(t`Only image files are supported`, 'exclamation-circle')
+      Toast.show(t`Only image files are supported`, {
+        type: 'warning',
+      })
       return false
     })
     .map(image => ({
@@ -39,4 +44,30 @@ export async function openPicker(opts?: ImagePickerOptions) {
       path: image.uri,
       size: getDataUriSize(image.uri),
     }))
+}
+
+export async function openUnifiedPicker({
+  selectionCountRemaining,
+  videoMaxDurationMs = VIDEO_MAX_DURATION_MS,
+}: {
+  selectionCountRemaining: number
+  videoMaxDurationMs?: number
+}) {
+  return await launchImageLibraryAsync({
+    exif: false,
+    mediaTypes: ['images', 'videos'],
+    quality: 1,
+    allowsMultipleSelection: true,
+    legacy: true,
+    // Reading videos as base64 can fail in the browser before callers have a
+    // chance to validate the file size. Web callers can read image files from
+    // the `file` returned on each asset after validation instead.
+    base64: false,
+    selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
+    shouldDownloadFromNetwork: true,
+    preferredAssetRepresentationMode:
+      UIImagePickerPreferredAssetRepresentationMode.Automatic,
+    videoExportPreset: VideoExportPreset.Passthrough,
+    videoMaxDuration: videoMaxDurationMs / 1000,
+  })
 }

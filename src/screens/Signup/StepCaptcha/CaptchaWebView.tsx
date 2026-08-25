@@ -2,7 +2,7 @@ import {useEffect, useMemo, useRef} from 'react'
 import {WebView, type WebViewNavigation} from 'react-native-webview'
 import {type ShouldStartLoadRequest} from 'react-native-webview/lib/WebViewTypes'
 
-import {type SignupState} from '#/screens/Signup/state'
+import {type CaptchaWebViewProps} from './CaptchaWebView.shared'
 
 const ALLOWED_HOSTS = [
   'bsky.social',
@@ -21,17 +21,12 @@ export function CaptchaWebView({
   url,
   stateParam,
   state,
+  onComplete,
   onSuccess,
   onError,
-}: {
-  url: string
-  stateParam: string
-  state?: SignupState
-  onSuccess: (code: string) => void
-  onError: (error: unknown) => void
-}) {
+}: CaptchaWebViewProps) {
   const startedAt = useRef(Date.now())
-  const successTo = useRef<NodeJS.Timeout>()
+  const successTo = useRef<NodeJS.Timeout>(undefined)
 
   useEffect(() => {
     return () => {
@@ -71,6 +66,7 @@ export function CaptchaWebView({
 
     // We want to delay the completion of this screen ever so slightly so that it doesn't appear to be a glitch if it completes too fast
     wasSuccessful.current = true
+    onComplete()
     const now = Date.now()
     const timeTaken = now - startedAt.current
     if (timeTaken < MIN_DELAY) {

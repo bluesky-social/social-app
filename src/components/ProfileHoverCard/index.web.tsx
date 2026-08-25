@@ -1,17 +1,11 @@
-import React, {useCallback} from 'react'
+import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
-import {msg, plural} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
 
-import {useActorStatus} from '#/lib/actor-status'
-import {isTouchDevice} from '#/lib/browser'
 import {getModerationCauseKey} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
@@ -35,14 +29,16 @@ import {
   shouldShowKnownFollowers,
 } from '#/components/KnownFollowers'
 import {InlineLinkText, Link} from '#/components/Link'
-import {LiveStatus} from '#/components/live/LiveStatusDialog'
 import {Loader} from '#/components/Loader'
 import * as Pills from '#/components/Pills'
 import {Portal} from '#/components/Portal'
+import {ProfileBadges} from '#/components/ProfileBadges'
 import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
-import {useSimpleVerificationState} from '#/components/verification'
-import {VerificationCheck} from '#/components/verification/VerificationCheck'
+import {IS_WEB_TOUCH_DEVICE} from '#/env'
+import {useActorStatus} from '#/features/liveNow'
+import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
+import {type app} from '#/lexicons'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -62,7 +58,7 @@ const floatingMiddlewares = [
 
 export function ProfileHoverCard(props: ProfileHoverCardProps) {
   const prefetchProfileQuery = usePrefetchProfileQuery()
-  const prefetchedProfile = React.useRef(false)
+  const prefetchedProfile = useRef(false)
   const onPointerMove = () => {
     if (!prefetchedProfile.current) {
       prefetchedProfile.current = true
@@ -70,7 +66,7 @@ export function ProfileHoverCard(props: ProfileHoverCardProps) {
     }
   }
 
-  if (props.disable || isTouchDevice) {
+  if (props.disable || IS_WEB_TOUCH_DEVICE) {
     return props.children
   } else {
     return (
@@ -117,7 +113,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     middleware: floatingMiddlewares,
   })
 
-  const [currentState, dispatch] = React.useReducer(
+  const [currentState, dispatch] = useReducer(
     // Tip: console.log(state, action) when debugging.
     (state: State, action: Action): State => {
       // Pressing within a card should always hide it.
@@ -263,7 +259,7 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     {stage: 'hidden'},
   )
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentState.effect) {
       const effect = currentState.effect
       return effect()
@@ -271,16 +267,16 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   }, [currentState])
 
   const prefetchProfileQuery = usePrefetchProfileQuery()
-  const prefetchedProfile = React.useRef(false)
-  const prefetchIfNeeded = React.useCallback(async () => {
+  const prefetchedProfile = useRef(false)
+  const prefetchIfNeeded = useCallback(async () => {
     if (!prefetchedProfile.current) {
       prefetchedProfile.current = true
       prefetchProfileQuery(props.did)
     }
   }, [prefetchProfileQuery, props.did])
 
-  const didFireHover = React.useRef(false)
-  const onPointerMoveTarget = React.useCallback(() => {
+  const didFireHover = useRef(false)
+  const onPointerMoveTarget = useCallback(() => {
     prefetchIfNeeded()
     // Conceptually we want something like onPointerEnter,
     // but we want to ignore entering only due to scrolling.
@@ -289,24 +285,24 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
       didFireHover.current = true
       dispatch('hovered-target')
     }
-  }, [prefetchIfNeeded])
+  }, [prefetchIfNeeded, dispatch])
 
-  const onPointerLeaveTarget = React.useCallback(() => {
+  const onPointerLeaveTarget = useCallback(() => {
     didFireHover.current = false
     dispatch('unhovered-target')
-  }, [])
+  }, [dispatch])
 
-  const onPointerEnterCard = React.useCallback(() => {
+  const onPointerEnterCard = useCallback(() => {
     dispatch('hovered-card')
-  }, [])
+  }, [dispatch])
 
-  const onPointerLeaveCard = React.useCallback(() => {
+  const onPointerLeaveCard = useCallback(() => {
     dispatch('unhovered-card')
-  }, [])
+  }, [dispatch])
 
-  const onPress = React.useCallback(() => {
+  const onPress = useCallback(() => {
     dispatch('pressed')
-  }, [])
+  }, [dispatch])
 
   const isVisible =
     currentState.stage === 'showing' ||
@@ -322,11 +318,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
   return (
     <View
-      // @ts-ignore View is being used as div
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
-      // @ts-ignore web only prop
+      // @ts-expect-error web only prop
       onMouseUp={onPress}
       style={[a.flex_shrink, props.inline && a.inline]}>
       {props.children}
@@ -389,6 +384,7 @@ let Card = ({
       {data && moderationOpts ? (
         status.isActive ? (
           <LiveStatus
+            status={status}
             profile={data}
             embed={status.embed}
             padding="lg"
@@ -411,21 +407,21 @@ let Card = ({
     </View>
   )
 }
-Card = React.memo(Card)
+Card = memo(Card)
 
 function Inner({
   profile,
   moderationOpts,
   hide,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
 }) {
   const t = useTheme()
   const {_, i18n} = useLingui()
   const {currentAccount} = useSession()
-  const moderation = React.useMemo(
+  const moderation = useMemo(
     () => moderateProfile(profile, moderationOpts),
     [profile, moderationOpts],
   )
@@ -453,12 +449,11 @@ function Inner({
     did: profile.did,
     handle: profile.handle,
   })
-  const isMe = React.useMemo(
+  const isMe = useMemo(
     () => currentAccount?.did === profile.did,
     [currentAccount, profile],
   )
   const isLabeler = profile.associated?.labeler
-  const verification = useSimpleVerificationState({profile})
 
   return (
     <View>
@@ -515,26 +510,27 @@ function Inner({
           <View style={[a.flex_row, a.align_center, a.pt_md, a.pb_xs]}>
             <Text
               numberOfLines={1}
-              style={[a.text_lg, a.font_bold, a.self_start]}>
+              style={[
+                a.text_lg,
+                a.leading_snug,
+                a.font_semi_bold,
+                a.self_start,
+              ]}>
               {sanitizeDisplayName(
                 profile.displayName || sanitizeHandle(profile.handle),
                 moderation.ui('displayName'),
               )}
             </Text>
-            {verification.showBadge && (
-              <View
-                style={[
-                  a.pl_xs,
-                  {
-                    marginTop: -2,
-                  },
-                ]}>
-                <VerificationCheck
-                  width={16}
-                  verifier={verification.role === 'verifier'}
-                />
-              </View>
-            )}
+            <ProfileBadges
+              profile={profile}
+              size="md"
+              style={[
+                a.pl_xs,
+                {
+                  marginTop: -1,
+                },
+              ]}
+            />
           </View>
 
           <ProfileHeaderHandle profile={profileShadow} disableTaps />
@@ -562,7 +558,7 @@ function Inner({
               label={`${followers} ${pluralizedFollowers}`}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Text style={[a.text_md, a.font_bold]}>{followers} </Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{followers} </Text>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {pluralizedFollowers}
               </Text>
@@ -572,7 +568,7 @@ function Inner({
               label={_(msg`${following} following`)}
               style={[t.atoms.text]}
               onPress={hide}>
-              <Text style={[a.text_md, a.font_bold]}>{following} </Text>
+              <Text style={[a.text_md, a.font_semi_bold]}>{following} </Text>
               <Text style={[t.atoms.text_contrast_medium]}>
                 {pluralizedFollowings}
               </Text>

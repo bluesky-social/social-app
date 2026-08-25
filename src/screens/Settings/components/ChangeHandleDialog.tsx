@@ -1,5 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {
   FadeIn,
   FadeOut,
@@ -10,27 +10,30 @@ import Animated, {
   SlideOutLeft,
   SlideOutRight,
 } from 'react-native-reanimated'
-import {type ComAtprotoServerDescribeServer} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10, urls} from '#/lib/constants'
 import {cleanError} from '#/lib/strings/errors'
-import {createFullHandle, validateServiceHandle} from '#/lib/strings/handles'
-import {sanitizeHandle} from '#/lib/strings/handles'
+import {
+  createFullHandle,
+  sanitizeHandle,
+  validateServiceHandle,
+} from '#/lib/strings/handles'
 import {useFetchDid, useUpdateHandleMutation} from '#/state/queries/handle'
 import {RQKEY as RQKEY_PROFILE} from '#/state/queries/profile'
 import {useServiceQuery} from '#/state/queries/service'
 import {useCurrentAccountProfile} from '#/state/queries/useCurrentAccountProfile'
-import {useAgent, useSession} from '#/state/session'
+import {useSession, useSessionApi} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {atoms as a, native, useBreakpoints, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
+import * as SegmentedControl from '#/components/forms/SegmentedControl'
 import * as TextField from '#/components/forms/TextField'
-import * as ToggleButton from '#/components/forms/ToggleButton'
 import {
   ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon,
   ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon,
@@ -42,6 +45,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
+import {type com} from '#/lexicons'
 import {CopyButton} from './CopyButton'
 
 export function ChangeHandleDialog({
@@ -49,10 +53,8 @@ export function ChangeHandleDialog({
 }: {
   control: Dialog.DialogControlProps
 }) {
-  const {height} = useWindowDimensions()
-
   return (
-    <Dialog.Outer control={control} nativeOptions={{minHeight: height}}>
+    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
       <ChangeHandleDialogInner />
     </Dialog.Outer>
   )
@@ -61,12 +63,12 @@ export function ChangeHandleDialog({
 function ChangeHandleDialogInner() {
   const control = Dialog.useDialogContext()
   const {_} = useLingui()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
   const {
     data: serviceInfo,
     error: serviceInfoError,
     refetch,
-  } = useServiceQuery(agent.serviceUrl.toString())
+  } = useServiceQuery(currentAccount?.service ?? '')
 
   const [page, setPage] = useState<'provided-handle' | 'own-handle'>(
     'provided-handle',
@@ -145,12 +147,12 @@ function ProvidedHandlePage({
   serviceInfo,
   goToOwnHandle,
 }: {
-  serviceInfo: ComAtprotoServerDescribeServer.OutputSchema
+  serviceInfo: com.atproto.server.describeServer.$OutputBody
   goToOwnHandle: () => void
 }) {
   const {_} = useLingui()
   const [subdomain, setSubdomain] = useState('')
-  const agent = useAgent()
+  const {refreshSession} = useSessionApi()
   const control = Dialog.useDialogContext()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -171,7 +173,7 @@ function ProvidedHandlePage({
           queryKey: RQKEY_PROFILE(currentAccount.did),
         })
       }
-      agent.resumeSession(agent.session!).then(() => control.close())
+      refreshSession().then(() => control.close())
     },
   })
 
@@ -209,9 +211,14 @@ function ProvidedHandlePage({
                 You are verified. You will lose your verification status if you
                 change your handle.{' '}
                 <InlineLinkText
-                  label={_(msg`Learn more`)}
+                  label={_(
+                    msg({
+                      message: `Learn more`,
+                      context: `english-only-resource`,
+                    }),
+                  )}
                   to={urls.website.blog.initialVerificationAnnouncement}>
-                  <Trans>Learn more.</Trans>
+                  <Trans context="english-only-resource">Learn more.</Trans>
                 </InlineLinkText>
               </Trans>
             </Admonition>
@@ -239,7 +246,7 @@ function ProvidedHandlePage({
           <Text>
             <Trans>
               Your full handle will be{' '}
-              <Text style={[a.font_bold]}>
+              <Text style={[a.font_semi_bold]}>
                 @{createFullHandle(subdomain, host)}
               </Text>
             </Trans>
@@ -268,9 +275,14 @@ function ProvidedHandlePage({
               If you have your own domain, you can use that as your handle. This
               lets you self-verify your identity.{' '}
               <InlineLinkText
-                label={_(msg`learn more`)}
+                label={_(
+                  msg({
+                    message: `Learn more`,
+                    context: `english-only-resource`,
+                  }),
+                )}
                 to="https://bsky.social/about/blog/4-28-2023-domain-handle-tutorial"
-                style={[a.font_bold]}
+                style={[a.font_semi_bold]}
                 disableMismatchWarning>
                 Learn more here.
               </InlineLinkText>
@@ -299,7 +311,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
   const {currentAccount} = useSession()
   const [dnsPanel, setDNSPanel] = useState(true)
   const [domain, setDomain] = useState('')
-  const agent = useAgent()
+  const {refreshSession} = useSessionApi()
   const control = Dialog.useDialogContext()
   const fetchDid = useFetchDid()
   const queryClient = useQueryClient()
@@ -316,7 +328,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           queryKey: RQKEY_PROFILE(currentAccount.did),
         })
       }
-      agent.resumeSession(agent.session!).then(() => control.close())
+      refreshSession().then(() => control.close())
     },
   })
 
@@ -385,21 +397,22 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
             />
           </TextField.Root>
         </View>
-        <ToggleButton.Group
+        <SegmentedControl.Root
           label={_(msg`Choose domain verification method`)}
-          values={[dnsPanel ? 'dns' : 'file']}
-          onChange={values => setDNSPanel(values[0] === 'dns')}>
-          <ToggleButton.Button name="dns" label={_(msg`DNS Panel`)}>
-            <ToggleButton.ButtonText>
+          type="tabs"
+          value={dnsPanel ? 'dns' : 'file'}
+          onChange={values => setDNSPanel(values === 'dns')}>
+          <SegmentedControl.Item value="dns" label={_(msg`DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-          <ToggleButton.Button name="file" label={_(msg`No DNS Panel`)}>
-            <ToggleButton.ButtonText>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+          <SegmentedControl.Item value="file" label={_(msg`No DNS Panel`)}>
+            <SegmentedControl.ItemText>
               <Trans>No DNS Panel</Trans>
-            </ToggleButton.ButtonText>
-          </ToggleButton.Button>
-        </ToggleButton.Group>
+            </SegmentedControl.ItemText>
+          </SegmentedControl.Item>
+        </SegmentedControl.Root>
         {dnsPanel ? (
           <>
             <Text>
@@ -418,10 +431,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               </Text>
               <View style={[a.py_xs]}>
                 <CopyButton
-                  variant="solid"
                   color="secondary"
                   value="_atproto"
                   label={_(msg`Copy host`)}
+                  style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
                   <Text style={[a.text_md, a.flex_1]}>_atproto</Text>
@@ -439,10 +452,10 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               </Text>
               <View style={[a.py_xs]}>
                 <CopyButton
-                  variant="solid"
                   color="secondary"
                   value={'did=' + currentAccount?.did}
                   label={_(msg`Copy TXT record value`)}
+                  style={[a.bg_transparent]}
                   hoverStyle={[a.bg_transparent]}
                   hitSlop={HITSLOP_10}>
                   <Text style={[a.text_md, a.flex_1]}>
@@ -490,9 +503,14 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
               value={currentAccount?.did ?? ''}
               label={_(msg`Copy DID`)}
               size="large"
-              variant="solid"
+              shape="rectangular"
               color="secondary"
-              style={[a.px_md, a.border, t.atoms.border_contrast_low]}>
+              style={[
+                a.px_md,
+                a.border,
+                t.atoms.border_contrast_low,
+                t.atoms.bg_contrast_25,
+              ]}>
               <Text style={[a.text_md, a.flex_1]}>{currentAccount?.did}</Text>
               <ButtonIcon icon={CopyIcon} />
             </CopyButton>
@@ -512,7 +530,7 @@ function OwnHandlePage({goToServiceHandle}: {goToServiceHandle: () => void}) {
           <Admonition type="info" style={[a.mb_md]}>
             <Trans>
               Your current handle{' '}
-              <Text style={[a.font_bold]}>
+              <Text style={[a.font_semi_bold]}>
                 {sanitizeHandle(currentAccount?.handle || '', '@')}
               </Text>{' '}
               will automatically remain reserved for you. You can switch back to
@@ -626,7 +644,7 @@ function SuccessMessage({text}: {text: string}) {
           a.rounded_full,
           a.align_center,
           a.justify_center,
-          {backgroundColor: t.palette.positive_600},
+          {backgroundColor: t.palette.positive_500},
         ]}>
         <CheckIcon fill={t.palette.white} size="xs" />
       </View>

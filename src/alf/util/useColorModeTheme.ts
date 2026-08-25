@@ -1,15 +1,15 @@
-import React from 'react'
-import {ColorSchemeName, useColorScheme} from 'react-native'
+import {useLayoutEffect} from 'react'
+import {type ColorSchemeName, useColorScheme} from 'react-native'
+import {type ThemeName} from '@bsky.app/alf'
 
-import {isWeb} from '#/platform/detection'
 import {useThemePrefs} from '#/state/shell'
 import {dark, dim, light} from '#/alf/themes'
-import {ThemeName} from '#/alf/types'
+import {IS_WEB} from '#/env'
 
 export function useColorModeTheme(): ThemeName {
   const theme = useThemeName()
 
-  React.useLayoutEffect(() => {
+  useLayoutEffect(() => {
     updateDocument(theme)
   }, [theme])
 
@@ -24,7 +24,7 @@ export function useThemeName(): ThemeName {
 }
 
 function getThemeName(
-  colorScheme: ColorSchemeName,
+  colorScheme: ColorSchemeName | null | undefined,
   colorMode: 'system' | 'light' | 'dark',
   darkTheme?: ThemeName,
 ) {
@@ -39,11 +39,8 @@ function getThemeName(
 }
 
 function updateDocument(theme: ThemeName) {
-  // @ts-ignore web only
-  if (isWeb && typeof window !== 'undefined') {
-    // @ts-ignore web only
+  if (IS_WEB && typeof window !== 'undefined') {
     const html = window.document.documentElement
-    // @ts-ignore web only
     const meta = window.document.querySelector('meta[name="theme-color"]')
 
     // remove any other color mode classes
@@ -51,6 +48,7 @@ function updateDocument(theme: ThemeName) {
     html.classList.add(`theme--${theme}`)
     // set color to 'theme-color' meta tag
     meta?.setAttribute('content', getBackgroundColor(theme))
+    window.localStorage.setItem('ALF_THEME', theme)
   }
 }
 

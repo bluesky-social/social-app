@@ -1,17 +1,21 @@
 import * as Updates from 'expo-updates'
-import {msg, Trans} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
-import * as Toast from '#/view/com/util/Toast'
+import {splash} from '#/lib/hooks/useOTAUpdates'
+import {useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
-import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotateCounterClockwise'
+import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
 import {Shapes_Stroke2_Corner0_Rounded as ShapesIcon} from '#/components/icons/Shapes'
 import {Loader} from '#/components/Loader'
+import * as Toast from '#/components/Toast'
 import * as SettingsList from '../components/SettingsList'
 
 export function OTAInfo() {
   const {_} = useLingui()
+  const t = useTheme()
   const {
     data: isAvailable,
     isPending: isPendingInfo,
@@ -30,10 +34,14 @@ export function OTAInfo() {
     useMutation({
       mutationFn: async () => {
         await Updates.fetchUpdateAsync()
-        await Updates.reloadAsync()
+        await Updates.reloadAsync({
+          reloadScreenOptions: splash(t.scheme),
+        })
       },
       onError: error =>
-        Toast.show(`Failed to update: ${error.message}`, 'xmark'),
+        Toast.show(`Failed to update: ${error.message}`, {
+          type: 'error',
+        }),
     })
 
   if (!Updates.isEnabled || __DEV__) {

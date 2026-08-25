@@ -1,14 +1,13 @@
-import React from 'react'
 import {
-  AccessibilityProps,
-  AccessibilityRole,
-  GestureResponderEvent,
-  PressableProps,
+  type AccessibilityProps,
+  type AccessibilityRole,
+  type GestureResponderEvent,
+  type PressableProps,
 } from 'react-native'
 
-import {TextStyleProp, ViewStyleProp} from '#/alf'
-import * as Dialog from '#/components/Dialog'
-import {Props as SVGIconProps} from '#/components/icons/common'
+import {type TextStyleProp, type ViewStyleProp} from '#/alf'
+import type * as Dialog from '#/components/Dialog'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
@@ -16,6 +15,7 @@ export type ContextType = {
 
 export type ItemContextType = {
   disabled: boolean
+  destructive: boolean
 }
 
 export type RadixPassThroughTriggerProps = {
@@ -28,7 +28,7 @@ export type RadixPassThroughTriggerProps = {
   ['aria-controls']?: string
   ['aria-haspopup']?: boolean
   ['aria-expanded']?: AccessibilityProps['aria-expanded']
-  onKeyDown: (e: React.KeyboardEvent) => void
+  onKeyDown: PressableProps['onKeyDown']
   /**
    * Radix provides this, but we override on web to use `onPress` instead,
    * which is less sensitive while scrolling.
@@ -43,7 +43,7 @@ export type TriggerProps = {
 }
 export type TriggerChildProps =
   | {
-      isNative: true
+      IS_NATIVE: true
       control: Dialog.DialogOuterProps['control']
       state: {
         /**
@@ -73,7 +73,7 @@ export type TriggerChildProps =
       }
     }
   | {
-      isNative: false
+      IS_NATIVE: false
       control: Dialog.DialogOuterProps['control']
       state: {
         hovered: boolean
@@ -100,6 +100,7 @@ export type ItemProps = React.PropsWithChildren<
     ViewStyleProp & {
       label: string
       onPress: (e: GestureResponderEvent) => void
+      destructive?: boolean
     }
 >
 
@@ -107,6 +108,7 @@ export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>
 export type ItemIconProps = React.PropsWithChildren<{
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'
+  fill?: (props: {disabled: boolean}) => string
 }>
 
 export type GroupProps = React.PropsWithChildren<ViewStyleProp & {}>

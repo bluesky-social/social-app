@@ -1,9 +1,8 @@
-const {withXcodeProject} = require('@expo/config-plugins')
+const {withXcodeProject} = require('expo/config-plugins')
 
 const BUILD_PHASE_FILES = ['AppDelegate.swift', 'ViewController.swift']
 
 const withXcodeTarget = (config, {targetName}) => {
-  // eslint-disable-next-line no-shadow
   return withXcodeProject(config, config => {
     const pbxProject = config.modResults
 
@@ -57,7 +56,7 @@ const withXcodeTarget = (config, {targetName}) => {
           buildSettingsObj.SWIFT_VERSION = '5.0'
           buildSettingsObj.TARGETED_DEVICE_FAMILY = `"1"`
           buildSettingsObj.DEVELOPMENT_TEAM = 'B3LX46C5HS'
-          buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = '15.1'
+          buildSettingsObj.IPHONEOS_DEPLOYMENT_TARGET = '16.4'
           buildSettingsObj.ASSETCATALOG_COMPILER_APPICON_NAME = 'AppIcon'
         }
       }

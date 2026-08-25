@@ -3,7 +3,7 @@ appId: xyz.blueskyweb.app
 - runScript:
     file: ../setupServer.js
     env:
-        SERVER_PATH: ?users&follows&posts&feeds
+      SERVER_PATH: ?users&follows&posts&feeds
 - runFlow:
     file: ../setupApp.yml
 - tapOn:
@@ -11,7 +11,7 @@ appId: xyz.blueskyweb.app
 
 - extendedWaitUntil:
     visible:
-        text: "Feeds ✨"
+      text: "Feeds ✨"
 - tapOn:
     label: "Can go to feeds page using feeds button in tab bar"
     text: "Feeds ✨"
@@ -50,6 +50,6 @@ appId: xyz.blueskyweb.app
     label: "Can delete posts"
     id: "postDropdownBtn"
     childOf:
-        id: "feedItem-by-alice.test"
+      id: "feedItem-by-alice.test"
 - tapOn: "Delete post"
 - tapOn: "Delete"

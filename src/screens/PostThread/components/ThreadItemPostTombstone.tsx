@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/macro'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {LINEAR_AVI_WIDTH, OUTER_SPACE} from '#/screens/PostThread/const'
@@ -46,7 +46,8 @@ export function ThreadItemPostTombstone({type}: ThreadItemPostTombstoneProps) {
         <View style={[a.flex_row, a.justify_center, {width: LINEAR_AVI_WIDTH}]}>
           <Icon style={[t.atoms.text_contrast_medium]} />
         </View>
-        <Text style={[a.text_md, a.font_bold, t.atoms.text_contrast_medium]}>
+        <Text
+          style={[a.text_md, a.font_semi_bold, t.atoms.text_contrast_medium]}>
           {copy}
         </Text>
       </View>

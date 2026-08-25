@@ -3,14 +3,27 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "module": "esnext",
+    "moduleSuffixes": [".ios", ".android", ".native", ""],
+    "lib": ["dom", "esnext"],
     "types": ["node", "jest"],
-    "baseUrl": ".",
     "paths": {
       "#/*": ["./src/*"],
       "crypto": ["./src/platform/crypto.ts"],
-      "multiformats/cid": ["node_modules/multiformats/types/src/cid.d.ts"],
-      "multiformats/hashes/hasher": ["node_modules/multiformats/types/src/hashes/hasher.d.ts"]
-    }
+      /*
+       * expo-file-system 57 ships an `exports` map without `./build/*`, which
+       * blocks the deep type imports in src/platform/misc.web-check.d.ts
+       * under `moduleResolution: "bundler"`. Type-check-only escape hatch.
+       */
+      "expo-file-system/build/*": ["./node_modules/expo-file-system/build/*"],
+    },
+    "plugins": [
+      {
+        "name": "ts-plugin-sort-import-suggestions",
+        "moveUpPatterns": ["#/", "@lingui/react/macro"],
+        "moveDownPatterns": ["react-native-reanimated/lib"],
+      }
+    ],
+    "customConditions": ["react-native-strict-api"]
   },
   "exclude": ["bskyweb", "bskyembed", "web-build"]
 }

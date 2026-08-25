@@ -1,13 +1,15 @@
-import {msg} from '@lingui/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
-import {NavigationProp} from '#/lib/routes/types'
-import {isNative} from '#/platform/detection'
+import {type NavigationProp} from '#/lib/routes/types'
+import {isNetworkError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
-import * as Toast from '#/view/com/util/Toast'
-import {DialogOuterProps} from '#/components/Dialog'
+import {type DialogOuterProps} from '#/components/Dialog'
 import * as Prompt from '#/components/Prompt'
+import * as Toast from '#/components/Toast'
+import {IS_NATIVE} from '#/env'
+import {chat} from '#/lexicons'
 
 export function LeaveConvoPrompt({
   control,
@@ -20,32 +22,45 @@ export function LeaveConvoPrompt({
   currentScreen: 'list' | 'conversation'
   hasMessages?: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   const {mutate: leaveConvo} = useLeaveConvo(convoId, {
     onMutate: () => {
       if (currentScreen === 'conversation') {
         navigation.dispatch(
-          StackActions.replace('Messages', isNative ? {animation: 'pop'} : {}),
+          StackActions.replace('Messages', IS_NATIVE ? {animation: 'pop'} : {}),
         )
       }
     },
-    onError: () => {
-      Toast.show(_(msg`Could not leave chat`), 'xmark')
+    onError: error => {
+      let errorMessage = l`Could not leave chat`
+      if (isNetworkError(error)) {
+        errorMessage = l`A network error occurred. Please check your internet connection.`
+      } else {
+        switch (matchXrpcError(error, chat.bsky.convo.leaveConvo)) {
+          case 'InvalidConvo':
+            errorMessage = l`Conversation not found.`
+            break
+          case 'OwnerCannotLeave':
+            errorMessage = l`Owner must lock the group before leaving.`
+            break
+        }
+      }
+      Toast.show(errorMessage, {type: 'error'})
     },
   })
 
   return (
     <Prompt.Basic
       control={control}
-      title={_(msg`Leave conversation`)}
-      description={_(
+      title={l`Leave conversation`}
+      description={
         hasMessages
-          ? msg`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participant.`
-          : msg`Are you sure you want to leave this conversation?`,
-      )}
-      confirmButtonCta={_(msg`Leave`)}
+          ? l`Are you sure you want to leave this conversation? Your messages will be deleted for you, but not for the other participants.`
+          : l`Are you sure you want to leave this conversation?`
+      }
+      confirmButtonCta={l`Leave`}
       confirmButtonColor="negative"
       onConfirm={() => leaveConvo()}
     />

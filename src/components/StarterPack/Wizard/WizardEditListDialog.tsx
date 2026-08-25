@@ -1,17 +1,12 @@
 import {useRef} from 'react'
 import {type ListRenderItemInfo} from 'react-native'
 import {View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type ModerationOpts,
-} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {isWeb} from '#/platform/detection'
-import {useSession} from '#/state/session'
 import {type ListMethods} from '#/view/com/util/List'
 import {
   type WizardAction,
@@ -25,9 +20,11 @@ import {
   WizardProfileCard,
 } from '#/components/StarterPack/Wizard/WizardListCard'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
 function keyExtractor(
-  item: AppBskyActorDefs.ProfileViewBasic | AppBskyFeedDefs.GeneratorView,
+  item: app.bsky.actor.defs.ProfileViewBasic | app.bsky.feed.defs.GeneratorView,
   index: number,
 ) {
   return `${item.did}-${index}`
@@ -44,11 +41,10 @@ export function WizardEditListDialog({
   state: WizardState
   dispatch: (action: WizardAction) => void
   moderationOpts: ModerationOpts
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
 }) {
   const {_} = useLingui()
   const t = useTheme()
-  const {currentAccount} = useSession()
   const initialNumToRender = useInitialNumToRender()
 
   const listRef = useRef<ListMethods>(null)
@@ -56,10 +52,7 @@ export function WizardEditListDialog({
   const getData = () => {
     if (state.currentStep === 'Feeds') return state.feeds
 
-    return [
-      profile,
-      ...state.profiles.filter(p => p.did !== currentAccount?.did),
-    ]
+    return [profile, ...state.profiles.filter(p => p.did !== profile.did)]
   }
 
   const renderItem = ({item}: ListRenderItemInfo<any>) =>
@@ -82,7 +75,10 @@ export function WizardEditListDialog({
     )
 
   return (
-    <Dialog.Outer control={control} testID="newChatDialog">
+    <Dialog.Outer
+      control={control}
+      testID="newChatDialog"
+      nativeOptions={{fullHeight: true}}>
       <Dialog.Handle />
       <Dialog.InnerFlatList
         ref={listRef}
@@ -100,7 +96,7 @@ export function WizardEditListDialog({
               a.mb_sm,
               t.atoms.bg,
               t.atoms.border_contrast_medium,
-              isWeb
+              IS_WEB
                 ? [
                     a.align_center,
                     {
@@ -110,7 +106,7 @@ export function WizardEditListDialog({
                 : [a.pb_sm, a.align_end],
             ]}>
             <View style={{width: 60}} />
-            <Text style={[a.font_bold, a.text_xl]}>
+            <Text style={[a.font_semi_bold, a.text_xl]}>
               {state.currentStep === 'Profiles' ? (
                 <Trans>Edit People</Trans>
               ) : (
@@ -118,7 +114,7 @@ export function WizardEditListDialog({
               )}
             </Text>
             <View style={{width: 60}}>
-              {isWeb && (
+              {IS_WEB && (
                 <Button
                   label={_(msg`Close`)}
                   variant="ghost"

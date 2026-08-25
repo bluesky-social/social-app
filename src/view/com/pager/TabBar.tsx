@@ -7,8 +7,6 @@ import {
 } from 'react-native'
 import Animated, {
   interpolate,
-  runOnJS,
-  runOnUI,
   scrollTo,
   type SharedValue,
   useAnimatedReaction,
@@ -16,6 +14,7 @@ import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 
 import {PressableWithHover} from '#/view/com/util/PressableWithHover'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
@@ -30,6 +29,7 @@ export interface TabBarProps {
   onPressSelected?: (index: number) => void
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
+  transparent?: boolean
 }
 
 const ITEM_PADDING = 10
@@ -46,6 +46,7 @@ export function TabBar({
   onPressSelected,
   dragProgress,
   dragState,
+  transparent,
 }: TabBarProps) {
   const t = useTheme()
   const scrollElRef = useAnimatedRef<ScrollView>()
@@ -124,7 +125,7 @@ export function TabBar({
           const progress = dragProgress.get()
           const offset = progressToOffset(progress)
           // It's unclear why we need to go back to JS here. It seems iOS-specific.
-          runOnJS(scrollToOffsetJS)(offset)
+          scheduleOnRN(scrollToOffsetJS, offset)
         }
       }
     },
@@ -301,7 +302,7 @@ export function TabBar({
 
   const onPressItem = useCallback(
     (index: number) => {
-      runOnUI(onPressUIThread)(index)
+      scheduleOnUI(onPressUIThread, index)
       onSelect?.(index)
       if (index === selectedPage) {
         onPressSelected?.(index)
@@ -313,7 +314,7 @@ export function TabBar({
   return (
     <View
       testID={testID}
-      style={[t.atoms.bg, a.flex_row]}
+      style={[!transparent && t.atoms.bg, a.flex_row]}
       accessibilityRole="tablist">
       <BlockDrawerGesture>
         <ScrollView
@@ -368,7 +369,7 @@ export function TabBar({
           </Animated.View>
         </ScrollView>
       </BlockDrawerGesture>
-      <View style={[t.atoms.border_contrast_low, styles.outerBottomBorder]} />
+      <View style={[t.atoms.bg_contrast_100, styles.outerBottomBorder]} />
     </View>
   )
 }
@@ -407,14 +408,14 @@ function TabBarItem({
 
   const handleLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      runOnUI(onItemLayout)(index, e.nativeEvent.layout)
+      scheduleOnUI(onItemLayout, index, e.nativeEvent.layout)
     },
     [index, onItemLayout],
   )
 
   const handleTextLayout = useCallback(
     (e: LayoutChangeEvent) => {
-      runOnUI(onTextLayout)(index, e.nativeEvent.layout)
+      scheduleOnUI(onTextLayout, index, e.nativeEvent.layout)
     },
     [index, onTextLayout],
   )
@@ -431,7 +432,7 @@ function TabBarItem({
           <Text
             emoji
             testID={testID ? `${testID}-${item}` : undefined}
-            style={[styles.itemText, t.atoms.text, a.text_md, a.font_bold]}
+            style={[styles.itemText, t.atoms.text, a.text_md, a.font_semi_bold]}
             onLayout={handleTextLayout}>
             {item}
           </Text>
@@ -469,6 +470,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: '100%',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    height: StyleSheet.hairlineWidth,
   },
 })

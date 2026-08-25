@@ -14,12 +14,14 @@ import {Text} from '#/components/Typography'
 export function DateFieldButton({
   label,
   value,
+  placeholder,
   onPress,
   isInvalid,
   accessibilityHint,
 }: {
   label: string
   value: string | Date
+  placeholder?: string
   onPress: () => void
   isInvalid?: boolean
   accessibilityHint?: string
@@ -63,7 +65,7 @@ export function DateFieldButton({
             paddingLeft: 14,
             paddingRight: 14,
             borderColor: 'transparent',
-            borderWidth: 2,
+            borderWidth: 1,
           },
           native({
             paddingTop: 10,
@@ -73,25 +75,23 @@ export function DateFieldButton({
           a.flex_row,
           a.flex_1,
           a.w_full,
-          a.rounded_sm,
-          t.atoms.bg_contrast_25,
+          {borderRadius: 10},
+          t.atoms.bg_contrast_50,
           a.align_center,
           hovered ? chromeHover : {},
           focused || pressed ? chromeFocus : {},
-          isInvalid || isInvalid ? chromeError : {},
-          (isInvalid || isInvalid) && (hovered || focused)
-            ? chromeErrorHover
-            : {},
+          isInvalid ? chromeError : {},
+          isInvalid && (hovered || focused) ? chromeErrorHover : {},
         ]}>
         <TextField.Icon icon={CalendarDays} />
         <Text
           style={[
             a.text_md,
             a.pl_xs,
-            t.atoms.text,
+            value === '' ? t.atoms.text_contrast_low : t.atoms.text,
             {lineHeight: a.text_md.fontSize * 1.1875},
           ]}>
-          {i18n.date(value, {timeZone: 'UTC'})}
+          {value === '' ? placeholder : i18n.date(value, {timeZone: 'UTC'})}
         </Text>
       </Pressable>
     </View>

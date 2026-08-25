@@ -1,16 +1,17 @@
 import {memo, useCallback} from 'react'
 import {View} from 'react-native'
-import {msg, plural, Trans} from '@lingui/macro'
+import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {useRequireAuth} from '#/state/session'
-import {formatCount} from '#/view/com/util/numeric/format'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
-import {CloseQuote_Stroke2_Corner1_Rounded as Quote} from '#/components/icons/Quote'
-import {Repost_Stroke2_Corner2_Rounded as Repost} from '#/components/icons/Repost'
+import {CloseQuote_Stroke2_Corner1_Rounded as QuoteIcon} from '#/components/icons/Quote'
+import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
+import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {Text} from '#/components/Typography'
 import {
   PostControlButton,
@@ -36,9 +37,10 @@ let RepostButton = ({
   embeddingDisabled,
 }: Props): React.ReactNode => {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {_} = useLingui()
   const requireAuth = useRequireAuth()
   const dialogControl = Dialog.useDialogControl()
+  const formatPostStatCount = useFormatPostStatCount()
 
   const onPress = () => requireAuth(() => dialogControl.open())
 
@@ -56,7 +58,7 @@ let RepostButton = ({
       <PostControlButton
         testID="repostBtn"
         active={isReposted}
-        activeColor={t.palette.positive_600}
+        activeColor={t.palette.positive_500}
         big={big}
         onPress={onPress}
         onLongPress={onLongPress}
@@ -83,10 +85,10 @@ let RepostButton = ({
                 }),
               )
         }>
-        <PostControlButtonIcon icon={Repost} />
+        <PostControlButtonIcon icon={RepostIcon} />
         {typeof repostCount !== 'undefined' && repostCount > 0 && (
           <PostControlButtonText testID="repostCount">
-            {formatCount(i18n, repostCount)}
+            {formatPostStatCount(repostCount)}
           </PostControlButtonText>
         )}
       </PostControlButton>
@@ -155,8 +157,8 @@ let RepostButtonDialogInner = ({
             size="large"
             variant="ghost"
             color="primary">
-            <Repost size="lg" fill={t.palette.primary_500} />
-            <Text style={[a.font_bold, a.text_xl]}>
+            <RepostIcon size="lg" fill={t.palette.primary_500} />
+            <Text style={[a.font_semi_bold, a.text_xl]}>
               {isReposted ? (
                 <Trans>Remove repost</Trans>
               ) : (
@@ -177,7 +179,7 @@ let RepostButtonDialogInner = ({
             size="large"
             variant="ghost"
             color="primary">
-            <Quote
+            <QuoteIcon
               size="lg"
               fill={
                 embeddingDisabled
@@ -187,7 +189,7 @@ let RepostButtonDialogInner = ({
             />
             <Text
               style={[
-                a.font_bold,
+                a.font_semi_bold,
                 a.text_xl,
                 embeddingDisabled && t.atoms.text_contrast_low,
               ]}>
@@ -203,8 +205,7 @@ let RepostButtonDialogInner = ({
           label={_(msg`Cancel quote post`)}
           onPress={onPressClose}
           size="large"
-          variant="outline"
-          color="primary">
+          color="secondary">
           <ButtonText>
             <Trans>Cancel</Trans>
           </ButtonText>

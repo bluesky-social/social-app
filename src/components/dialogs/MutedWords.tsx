@@ -1,14 +1,16 @@
-import React from 'react'
+import {useCallback, useState} from 'react'
 import {View} from 'react-native'
-import {AppBskyActorDefs, sanitizeMutedWordValue} from '@atproto/api'
-import {msg, Trans} from '@lingui/macro'
+import {type DatetimeString, toDatetimeString} from '@atproto/syntax'
+import {sanitizeMutedWordValue} from '@bsky/sdk/utils'
+import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {logger} from '#/logger'
-import {isNative} from '#/platform/detection'
 import {
   usePreferencesQuery,
   useRemoveMutedWordMutation,
+  useUpdateMutedWordMutation,
   useUpsertMutedWordsMutation,
 } from '#/state/queries/preferences'
 import {
@@ -16,7 +18,7 @@ import {
   native,
   useBreakpoints,
   useTheme,
-  ViewStyleProp,
+  type ViewStyleProp,
   web,
 } from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -30,8 +32,11 @@ import {PageText_Stroke2_Corner0_Rounded as PageText} from '#/components/icons/P
 import {PlusLarge_Stroke2_Corner0_Rounded as Plus} from '#/components/icons/Plus'
 import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 import {Loader} from '#/components/Loader'
+import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 
 const ONE_DAY = 24 * 60 * 60 * 1000
 
@@ -55,30 +60,30 @@ function MutedWordsInner() {
     error: preferencesError,
   } = usePreferencesQuery()
   const {isPending, mutateAsync: addMutedWord} = useUpsertMutedWordsMutation()
-  const [field, setField] = React.useState('')
-  const [targets, setTargets] = React.useState(['content'])
-  const [error, setError] = React.useState('')
-  const [durations, setDurations] = React.useState(['forever'])
-  const [excludeFollowing, setExcludeFollowing] = React.useState(false)
+  const [field, setField] = useState('')
+  const [targets, setTargets] = useState(['content'])
+  const [error, setError] = useState('')
+  const [durations, setDurations] = useState(['forever'])
+  const [excludeFollowing, setExcludeFollowing] = useState(false)
 
-  const submit = React.useCallback(async () => {
+  const submit = useCallback(async () => {
     const sanitizedValue = sanitizeMutedWordValue(field)
     const surfaces = ['tag', targets.includes('content') && 'content'].filter(
       Boolean,
-    ) as AppBskyActorDefs.MutedWord['targets']
+    ) as app.bsky.actor.defs.MutedWord['targets']
     const actorTarget = excludeFollowing ? 'exclude-following' : 'all'
 
     const now = Date.now()
     const rawDuration = durations.at(0)
     // undefined evaluates to 'forever'
-    let duration: string | undefined
+    let duration: DatetimeString | undefined
 
     if (rawDuration === '24_hours') {
-      duration = new Date(now + ONE_DAY).toISOString()
+      duration = toDatetimeString(new Date(now + ONE_DAY))
     } else if (rawDuration === '7_days') {
-      duration = new Date(now + 7 * ONE_DAY).toISOString()
+      duration = toDatetimeString(new Date(now + 7 * ONE_DAY))
     } else if (rawDuration === '30_days') {
-      duration = new Date(now + 30 * ONE_DAY).toISOString()
+      duration = toDatetimeString(new Date(now + 30 * ONE_DAY))
     }
 
     if (!sanitizedValue || !surfaces.length) {
@@ -108,7 +113,12 @@ function MutedWordsInner() {
     <Dialog.ScrollableInner label={_(msg`Manage your muted words and tags`)}>
       <View>
         <Text
-          style={[a.text_md, a.font_bold, a.pb_sm, t.atoms.text_contrast_high]}>
+          style={[
+            a.text_md,
+            a.font_semi_bold,
+            a.pb_sm,
+            t.atoms.text_contrast_high,
+          ]}>
           <Trans>Add muted words and tags</Trans>
         </Text>
         <Text style={[a.pb_lg, a.leading_snug, t.atoms.text_contrast_medium]}>
@@ -124,6 +134,7 @@ function MutedWordsInner() {
             autoCorrect={false}
             autoCapitalize="none"
             autoComplete="off"
+            returnKeyType="done"
             label={_(msg`Enter a word or tag`)}
             placeholder={_(msg`Enter a word or tag`)}
             value={field}
@@ -147,7 +158,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Duration:</Trans>
@@ -247,7 +258,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Mute in:</Trans>
@@ -293,7 +304,7 @@ function MutedWordsInner() {
               style={[
                 a.pb_xs,
                 a.text_sm,
-                a.font_bold,
+                a.font_semi_bold,
                 t.atoms.text_contrast_medium,
               ]}>
               <Trans>Options:</Trans>
@@ -362,7 +373,7 @@ function MutedWordsInner() {
           <Text
             style={[
               a.text_md,
-              a.font_bold,
+              a.font_semi_bold,
               a.pb_md,
               t.atoms.text_contrast_high,
             ]}>
@@ -401,7 +412,7 @@ function MutedWordsInner() {
           )}
         </View>
 
-        {isNative && <View style={{height: 20}} />}
+        {IS_NATIVE && <View style={{height: 20}} />}
       </View>
 
       <Dialog.Close />
@@ -412,19 +423,29 @@ function MutedWordsInner() {
 function MutedWordRow({
   style,
   word,
-}: ViewStyleProp & {word: AppBskyActorDefs.MutedWord}) {
+}: ViewStyleProp & {word: app.bsky.actor.defs.MutedWord}) {
   const t = useTheme()
   const {_} = useLingui()
   const {isPending, mutateAsync: removeMutedWord} = useRemoveMutedWordMutation()
+  const {mutateAsync: updateMutedWord} = useUpdateMutedWordMutation()
   const control = Prompt.usePromptControl()
   const expiryDate = word.expiresAt ? new Date(word.expiresAt) : undefined
   const isExpired = expiryDate && expiryDate < new Date()
   const formatDistance = useFormatDistance()
 
-  const remove = React.useCallback(async () => {
+  const remove = useCallback(async () => {
     control.close()
     removeMutedWord(word)
   }, [removeMutedWord, word, control])
+
+  const renew = (days?: number) => {
+    updateMutedWord({
+      ...word,
+      expiresAt: days
+        ? toDatetimeString(new Date(Date.now() + days * ONE_DAY))
+        : undefined,
+    })
+  }
 
   return (
     <>
@@ -455,7 +476,7 @@ function MutedWordRow({
               style={[
                 a.flex_1,
                 a.leading_snug,
-                a.font_bold,
+                a.font_semi_bold,
                 web({
                   overflowWrap: 'break-word',
                   wordBreak: 'break-word',
@@ -466,7 +487,8 @@ function MutedWordRow({
                   {word.value}{' '}
                   <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
                     in{' '}
-                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                    <Text
+                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                       text & tags
                     </Text>
                   </Text>
@@ -476,7 +498,8 @@ function MutedWordRow({
                   {word.value}{' '}
                   <Text style={[a.font_normal, t.atoms.text_contrast_medium]}>
                     in{' '}
-                    <Text style={[a.font_bold, t.atoms.text_contrast_medium]}>
+                    <Text
+                      style={[a.font_semi_bold, t.atoms.text_contrast_medium]}>
                       tags
                     </Text>
                   </Text>
@@ -486,35 +509,104 @@ function MutedWordRow({
           </View>
 
           {(expiryDate || word.actorTarget === 'exclude-following') && (
-            <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
-              <Text
-                style={[
-                  a.flex_1,
-                  a.text_xs,
-                  a.leading_snug,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                {expiryDate && (
+            <View style={[a.flex_1, a.flex_row, a.align_center, a.flex_wrap]}>
+              {expiryDate &&
+                (isExpired ? (
                   <>
-                    {isExpired ? (
+                    <Text
+                      style={[
+                        a.text_xs,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
                       <Trans>Expired</Trans>
-                    ) : (
-                      <Trans>
-                        Expires{' '}
-                        {formatDistance(expiryDate, new Date(), {
-                          addSuffix: true,
-                        })}
-                      </Trans>
-                    )}
+                    </Text>
+                    <Text
+                      style={[
+                        a.text_xs,
+                        a.leading_snug,
+                        t.atoms.text_contrast_medium,
+                      ]}>
+                      {' · '}
+                    </Text>
+                    <Menu.Root>
+                      <Menu.Trigger label={_(msg`Renew mute word`)}>
+                        {({props}) => (
+                          <Text
+                            {...props}
+                            style={[
+                              a.text_xs,
+                              a.leading_snug,
+                              a.font_semi_bold,
+                              {color: t.palette.primary_500},
+                            ]}>
+                            <Trans>Renew</Trans>
+                          </Text>
+                        )}
+                      </Menu.Trigger>
+                      <Menu.Outer>
+                        <Menu.LabelText>
+                          <Trans>Renew duration</Trans>
+                        </Menu.LabelText>
+                        <Menu.Group>
+                          <Menu.Item
+                            label={_(msg`24 hours`)}
+                            onPress={() => renew(1)}>
+                            <Menu.ItemText>
+                              <Trans>24 hours</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                          <Menu.Item
+                            label={_(msg`7 days`)}
+                            onPress={() => renew(7)}>
+                            <Menu.ItemText>
+                              <Trans>7 days</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                          <Menu.Item
+                            label={_(msg`30 days`)}
+                            onPress={() => renew(30)}>
+                            <Menu.ItemText>
+                              <Trans>30 days</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                          <Menu.Item
+                            label={_(msg`Forever`)}
+                            onPress={() => renew()}>
+                            <Menu.ItemText>
+                              <Trans>Forever</Trans>
+                            </Menu.ItemText>
+                          </Menu.Item>
+                        </Menu.Group>
+                      </Menu.Outer>
+                    </Menu.Root>
                   </>
-                )}
-                {word.actorTarget === 'exclude-following' && (
-                  <>
-                    {' • '}
-                    <Trans>Excludes users you follow</Trans>
-                  </>
-                )}
-              </Text>
+                ) : (
+                  <Text
+                    style={[
+                      a.text_xs,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    <Trans>
+                      Expires{' '}
+                      {formatDistance(expiryDate, new Date(), {
+                        addSuffix: true,
+                      })}
+                    </Trans>
+                  </Text>
+                ))}
+              {word.actorTarget === 'exclude-following' && (
+                <Text
+                  style={[
+                    a.text_xs,
+                    a.leading_snug,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  {expiryDate ? ' · ' : ''}
+                  <Trans>Excludes users you follow</Trans>
+                </Text>
+              )}
             </View>
           )}
         </View>
