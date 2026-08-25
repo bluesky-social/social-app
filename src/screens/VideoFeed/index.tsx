@@ -5,8 +5,6 @@ import {
   Pressable,
   ScrollView,
   View,
-  type ViewabilityConfig,
-  type ViewToken,
 } from 'react-native'
 import {
   Gesture,
@@ -29,6 +27,10 @@ import {AtUri} from '@atproto/syntax'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {
+  type ListViewToken as ViewToken,
+  type ViewabilityConfig,
+} from '@react-native/virtualized-lists'
 import {
   type RouteProp,
   useFocusEffect,
@@ -413,7 +415,7 @@ function Feed() {
 
   const onViewableItemsChanged = useCallback(
     ({viewableItems}: {viewableItems: ViewToken[]; changed: ViewToken[]}) => {
-      if (viewableItems[0] && viewableItems[0].index !== null) {
+      if (viewableItems[0]?.index != null) {
         const newIndex = viewableItems[0].index
         setCurrentIndex(newIndex)
         updateVideoState(newIndex)

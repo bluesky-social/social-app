@@ -90,7 +90,7 @@ export function getTraversalMetadata({
   }
 
   if (isDevMode()) {
-    // @ts-ignore dev only for debugging
+    // @ts-expect-error dev only for debugging
     metadata.postData.text = getPostRecord(item.value.post).text
   }
 
@@ -104,9 +104,9 @@ export function storeTraversalMetadata(
   metadatas.set(metadata.postData.uri, metadata)
 
   if (isDevMode()) {
-    // @ts-ignore dev only for debugging
+    // @ts-expect-error dev only for debugging
     metadatas.set(metadata.postData.text, metadata)
-    // @ts-ignore
+    // @ts-expect-error
     window.__thread = metadatas
   }
 }

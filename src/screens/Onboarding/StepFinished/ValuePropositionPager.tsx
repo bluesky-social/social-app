@@ -1,6 +1,7 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import PagerView from 'react-native-pager-view'
+import {type PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -36,7 +37,7 @@ export function ValuePropositionPager({
         ref={ref}
         style={[a.flex_1]}
         initialPage={step}
-        onPageSelected={evt => {
+        onPageSelected={(evt: PagerViewOnPageSelectedEvent) => {
           const page = evt.nativeEvent.position as 0 | 1 | 2
           if (step !== page) {
             setActivePage(page)

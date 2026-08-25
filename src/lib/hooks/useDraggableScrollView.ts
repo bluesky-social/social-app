@@ -1,18 +1,18 @@
 import {type ForwardedRef, useEffect, useMemo, useRef} from 'react'
-import {type ScrollView} from 'react-native'
-import {Platform} from 'react-native'
+import {Platform, type ScrollView} from 'react-native'
 
 import {mergeRefs} from '#/lib/merge-refs'
 
-type Props<Scrollable extends ScrollView = ScrollView> = {
+type ScrollViewInstance = React.ComponentRef<typeof ScrollView>
+
+type Props<Scrollable extends ScrollViewInstance = ScrollViewInstance> = {
   cursor?: string
   outerRef?: ForwardedRef<Scrollable>
 }
 
-export function useDraggableScroll<Scrollable extends ScrollView = ScrollView>({
-  outerRef,
-  cursor = 'grab',
-}: Props<Scrollable> = {}) {
+export function useDraggableScroll<
+  Scrollable extends ScrollViewInstance = ScrollViewInstance,
+>({outerRef, cursor = 'grab'}: Props<Scrollable> = {}) {
   const ref = useRef<Scrollable>(null)
 
   useEffect(() => {

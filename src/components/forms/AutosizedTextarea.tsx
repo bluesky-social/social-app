@@ -11,7 +11,7 @@ import {normalizeTextStyles} from '#/alf/typography'
 import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 
 export type AutosizedTextareaProps = Omit<TextInputProps, 'multiline'> & {
-  ref?: React.Ref<TextInput>
+  ref?: React.Ref<React.ComponentRef<typeof TextInput>>
   label: string
   minRows?: number
   maxRows?: number
@@ -44,7 +44,7 @@ export function AutosizedTextarea({
   ...rest
 }: AutosizedTextareaProps) {
   const {theme: t, fonts} = useAlf()
-  const internalRef = useRef<TextInput>(null)
+  const internalRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {style, minInputHeight, maxInputHeight, verticalContentPadding} =
     useMemo(() => {
       const normalizedStyles = normalizeTextStyles(
@@ -181,7 +181,7 @@ export function AutosizedTextarea({
       ]}
       {...rest}
       ref={mergeRefs([
-        (node: TextInput | null) => {
+        (node: React.ComponentRef<typeof TextInput> | null) => {
           internalRef.current = node
           // bop resize on first render
           if (IS_WEB && node) handleResizeWeb()
