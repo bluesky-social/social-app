@@ -4,7 +4,54 @@ import {isPostInLanguage} from '../../locale/helpers'
 import {FALLBACK_MARKER_POST} from './feed/home'
 import {type ReasonFeedSource} from './feed/types'
 
-type FeedViewPost = app.bsky.feed.defs.FeedViewPost
+export type FeedPostNumbering = Pick<
+  app.bsky.unspecced.defs.ThreadItemPost,
+  'opThreadPostIndex' | 'opThreadPostCount'
+>
+
+type ValidFeedPostNumbering = Required<FeedPostNumbering>
+
+// AppView adds these fields to feed responses ahead of their feed lexicon.
+type FeedViewPost = app.bsky.feed.defs.FeedViewPost & FeedPostNumbering
+
+function getPostNumbering(
+  value: FeedPostNumbering,
+): ValidFeedPostNumbering | undefined {
+  const {opThreadPostIndex: index, opThreadPostCount: count} = value
+
+  if (
+    index === undefined ||
+    count === undefined ||
+    index < 1 ||
+    count < 1 ||
+    index > count
+  ) {
+    return undefined
+  }
+
+  return {
+    opThreadPostIndex: index,
+    opThreadPostCount: count,
+  }
+}
+
+function inferPostNumbering(
+  feedPost: FeedViewPost,
+  position: 'parent' | 'root',
+): ValidFeedPostNumbering | undefined {
+  const postNumbering = getPostNumbering(feedPost)
+  if (!postNumbering) {
+    return undefined
+  }
+
+  // Feed responses number only the selected post, so derive the hydrated
+  // context that the feed renders alongside it.
+  return getPostNumbering({
+    opThreadPostIndex:
+      position === 'root' ? 1 : postNumbering.opThreadPostIndex - 1,
+    opThreadPostCount: postNumbering.opThreadPostCount,
+  })
+}
 
 export type FeedTunerFn = (
   tuner: FeedTuner,
@@ -15,6 +62,7 @@ export type FeedTunerFn = (
 type FeedSliceItem = {
   post: app.bsky.feed.defs.PostView
   record: app.bsky.feed.post.Main
+  postNumbering: FeedPostNumbering | undefined
   parentAuthor: app.bsky.actor.defs.ProfileViewBasic | undefined
   isParentBlocked: boolean
   isParentNotFound: boolean
@@ -38,7 +86,10 @@ export class FeedViewPostsSlice {
   rootUri: string
   feedPostUri: string
 
-  constructor(feedPost: FeedViewPost) {
+  constructor(
+    feedPost: FeedViewPost,
+    postNumberingByUri: Map<string, FeedPostNumbering>,
+  ) {
     const {post, reply, reason} = feedPost
     this.items = []
     this.isIncompleteThread = false
@@ -80,6 +131,7 @@ export class FeedViewPostsSlice {
     this.items.push({
       post,
       record: post.record,
+      postNumbering: postNumberingByUri.get(post.uri),
       parentAuthor,
       isParentBlocked,
       isParentNotFound,
@@ -128,6 +180,9 @@ export class FeedViewPostsSlice {
     this.items.unshift({
       post: parent,
       record: parent.record,
+      postNumbering:
+        postNumberingByUri.get(parent.uri) ??
+        inferPostNumbering(feedPost, 'parent'),
       parentAuthor: grandparentAuthor,
       isParentBlocked: isGrandparentBlocked,
       isParentNotFound: isGrandparentNotFound,
@@ -151,6 +206,9 @@ export class FeedViewPostsSlice {
     this.items.unshift({
       post: root,
       record: root.record,
+      postNumbering:
+        postNumberingByUri.get(root.uri) ??
+        inferPostNumbering(feedPost, 'root'),
       isParentBlocked: false,
       isParentNotFound: false,
       parentAuthor: undefined,
@@ -241,8 +299,16 @@ export class FeedTuner {
       dryRun: false,
     },
   ): FeedViewPostsSlice[] {
+    const postNumberingByUri = new Map<string, FeedPostNumbering>()
+    for (const item of feed) {
+      const postNumbering = getPostNumbering(item)
+      if (postNumbering) {
+        postNumberingByUri.set(item.post.uri, postNumbering)
+      }
+    }
+
     let slices: FeedViewPostsSlice[] = feed
-      .map(item => new FeedViewPostsSlice(item))
+      .map(item => new FeedViewPostsSlice(item, postNumberingByUri))
       .filter(s => s.items.length > 0 || s.isFallbackMarker)
 
     // run the custom tuners
