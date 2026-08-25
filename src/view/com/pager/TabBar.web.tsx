@@ -48,8 +48,7 @@ export function TabBar({
     // Scrolling under tap feels disorienting so only adjust the scroll offset
     // when tapping on an item out of view--and we adjust by almost an entire page.
     const parent = scrollElRef.current?.getScrollableNode?.() as unknown as
-      | HTMLElement
-      | undefined
+      HTMLElement | undefined
     if (!parent) {
       return
     }

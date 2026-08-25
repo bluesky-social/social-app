@@ -17,8 +17,7 @@ export type PressableProps = Omit<
   'children' | 'style'
 > & {
   children?:
-    | React.ReactNode
-    | ((state: PressableStateCallbackType) => React.ReactNode)
+    React.ReactNode | ((state: PressableStateCallbackType) => React.ReactNode)
   style?:
     | StyleProp<ViewStyle>
     | ((state: PressableStateCallbackType) => StyleProp<ViewStyle>)
