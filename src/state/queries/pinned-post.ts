@@ -11,6 +11,15 @@ import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
 
 /**
+ * Out of the hook because React Compiler cannot lower a `throw` inside a `try`.
+ * Keeping the check in place - rather than hoisting it above the `try` - means
+ * the catch below still shows its toast and reverts the optimistic update.
+ */
+function assertSignedIn(account: unknown): asserts account {
+  if (!account) throw new Error('Not signed in')
+}
+
+/**
  * Out of the hook because React Compiler cannot lower an optional chain inside a
  * `try` block, and `profile` only exists once the request inside it resolves.
  */
@@ -37,21 +46,22 @@ export function usePinnedPostMutation() {
       postCid: string
       action: 'pin' | 'unpin'
     }) => {
-      if (!currentAccount) throw new Error('Not signed in')
-
       const pinCurrentPost = action === 'pin'
       let prevPinnedPost: string | undefined
       try {
         updatePostShadow(queryClient, postUri, {pinned: pinCurrentPost})
 
         // get the currently pinned post so we can optimistically remove the pin from it
+        assertSignedIn(currentAccount)
         const profile = await client.call(app.bsky.actor.getProfile, {
           actor: currentAccount.did,
         })
         prevPinnedPost = getPinnedPostUri(profile)
         if (prevPinnedPost) {
-          // Nested rather than `&&`: React Compiler cannot lower a logical
-          // expression in a test position inside a `try`.
+          /*
+           * Nested rather than `&&`: React Compiler cannot lower a logical
+           * expression in a test position inside a `try`.
+           */
           if (prevPinnedPost !== postUri) {
             updatePostShadow(queryClient, prevPinnedPost, {pinned: false})
           }
