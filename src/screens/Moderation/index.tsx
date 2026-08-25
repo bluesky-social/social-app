@@ -285,7 +285,7 @@ export function ModerationScreenInner({
         <Link
           label={l`View your moderation inbox`}
           testID="moderationInboxBtn"
-          to="/moderation-inbox"
+          to="/moderation/inbox"
           style={[a.mb_2xl, a.rounded_md, a.overflow_hidden]}>
           {state => (
             <SubItem
