@@ -35,6 +35,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {EditBig_Stroke2_Corner2_Rounded as EditBig} from '#/components/icons/EditBig'
 import {Filter_Stroke2_Corner0_Rounded as Filter} from '#/components/icons/Filter'
 import {Group3_Stroke2_Corner0_Rounded as Group} from '#/components/icons/Group'
+import {Inbox_Stroke2_Corner2_Rounded as Inbox} from '#/components/icons/Inbox'
 import {Person_Stroke2_Corner0_Rounded as Person} from '#/components/icons/Person'
 import * as LabelingService from '#/components/LabelingServiceCard'
 import * as Layout from '#/components/Layout'
@@ -45,6 +46,7 @@ import {GlobalLabelPreference} from '#/components/moderation/LabelPreference'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
 function ErrorState({error}: {error: string}) {
@@ -123,10 +125,12 @@ export function ModerationScreen(
 function SubItem({
   title,
   icon: Icon,
+  badge,
   style,
 }: ViewStyleProp & {
   title: string
   icon: React.ComponentType<SVGIconProps>
+  badge?: string
 }) {
   const t = useTheme()
   return (
@@ -144,10 +148,32 @@ function SubItem({
         <Icon size="md" style={[t.atoms.text_contrast_medium]} />
         <Text style={[a.text_sm, a.font_semi_bold]}>{title}</Text>
       </View>
-      <ChevronRight
-        size="sm"
-        style={[t.atoms.text_contrast_low, a.self_end, {paddingBottom: 2}]}
-      />
+      <View style={[a.flex_row, a.align_center, a.gap_md]}>
+        {badge ? (
+          <View
+            style={[
+              a.rounded_lg,
+              a.align_center,
+              a.justify_center,
+              a.px_sm,
+              {
+                minWidth: 24,
+                height: 24,
+                backgroundColor: t.palette.primary_500,
+              },
+            ]}>
+            <Text
+              style={[
+                a.text_xs,
+                a.font_semi_bold,
+                {color: t.palette.white, fontVariant: ['tabular-nums']},
+              ]}>
+              {badge}
+            </Text>
+          </View>
+        ) : null}
+        <ChevronRight size="sm" style={[t.atoms.text_contrast_low]} />
+      </View>
     </View>
   )
 }
@@ -161,6 +187,10 @@ export function ModerationScreenInner({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {mutedWordsDialogControl} = useGlobalDialogsControlContext()
+  const ax = useAnalytics()
+  const isModerationInboxEnabled = ax.features.enabled(
+    ax.features.ModerationInboxEnable,
+  )
   const {
     isLoading: isLabelersLoading,
     data: labelers,
@@ -187,7 +217,8 @@ export function ModerationScreenInner({
       Toast.show(_(msg`Removed unavailable services`), {
         type: 'success',
       })
-    } catch (e: any) {
+    } catch (error) {
+      const e = error as Error
       logger.error('Failed to remove unavailable labelers', {
         safeMessage: e.message,
       })
@@ -214,7 +245,8 @@ export function ModerationScreenInner({
         await setAdultContentPref({
           enabled: selected,
         })
-      } catch (e: any) {
+      } catch (error) {
+        const e = error as Error
         logger.error(`Failed to set adult content pref`, {
           message: e.message,
         })
@@ -241,6 +273,26 @@ export function ModerationScreenInner({
             </Trans>
           </Admonition.Admonition>
         </View>
+      )}
+
+      {isModerationInboxEnabled && (
+        <Link
+          label={_(msg`View your moderation inbox`)}
+          testID="moderationInboxBtn"
+          to="/moderation-inbox"
+          style={[a.mb_2xl, a.rounded_md, a.overflow_hidden]}>
+          {state => (
+            <SubItem
+              title={_(msg`Moderation inbox`)}
+              icon={Inbox}
+              badge="3"
+              style={[
+                t.atoms.bg_contrast_25,
+                (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
+              ]}
+            />
+          )}
+        </Link>
       )}
 
       <Text
@@ -393,7 +445,9 @@ export function ModerationScreenInner({
                   disabled={adultContentUIDisabled}
                   name="adultContent"
                   value={adultContentEnabled}
-                  onChange={onToggleAdultContentEnabled}>
+                  onChange={(selected: boolean) =>
+                    void onToggleAdultContentEnabled(selected)
+                  }>
                   <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                     <Text style={[t.atoms.text_contrast_medium]}>
                       {adultContentEnabled ? (
@@ -416,7 +470,7 @@ export function ModerationScreenInner({
                         to=""
                         onPress={evt => {
                           evt.preventDefault()
-                          Linking.openURL('https://bsky.app/')
+                          void Linking.openURL('https://bsky.app/')
                           return false
                         }}>
                         bsky.app

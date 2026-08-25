@@ -60,11 +60,6 @@
       "count": 1
     }
   },
-  "src/Navigation.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/Splash.android.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -787,20 +782,6 @@
   },
   "src/screens/Log.tsx": {
     "typescript/no-unsafe-enum-comparison": {
-      "count": 2
-    }
-  },
-  "src/screens/Moderation/index.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
       "count": 2
     }
   },

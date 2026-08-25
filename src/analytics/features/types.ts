@@ -25,6 +25,7 @@ export enum Features {
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   CanonicalPostNumberingEnable = 'canonical_post_numbering:enable',
   ContentVisibilitySettingsEnable = 'content_visibility_settings:enable',
+  ModerationInboxEnable = 'moderation_inbox:enable',
 
   // values
   TrendingDiscoverValues = 'trending_discover:values',
