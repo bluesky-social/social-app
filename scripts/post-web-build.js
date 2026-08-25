@@ -175,6 +175,18 @@ if (
   const release =
     process.env.SENTRY_RELEASE ||
     require(path.join(projectRoot, 'package.json')).version
+  /*
+   * The runtime reports EXPO_PUBLIC_RELEASE_VERSION || package.json version
+   * (src/env/common.ts), so maps uploaded under a bogus release never match
+   * incoming events. "null"/"undefined" catch `jq -r '.version'` stringifying
+   * a missing package.json version field.
+   */
+  if (!release || release === 'null' || release === 'undefined') {
+    throw new Error(
+      `Refusing to upload source maps under invalid Sentry release ${JSON.stringify(release)}. ` +
+        'Set SENTRY_RELEASE or restore the "version" field in package.json.',
+    )
+  }
   const dist = process.env.SENTRY_DIST || undefined
   const sourceMapDir = path.join(distDir, '_expo', 'static')
 
