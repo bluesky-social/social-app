@@ -10,8 +10,9 @@
  * the throw path too. Keeping the `try`/`finally` here, out of the compiled
  * function, preserves the semantics exactly.
  *
- * Note that `return` inside `fn` returns from `fn`, not from the caller. Only
- * use this where the `try` is the whole body of its function.
+ * Note that `return` inside `fn` returns from `fn`, not from the caller, so
+ * only use this where the `try` contains no `return` that was meant to exit the
+ * enclosing function. Statements before or after the `try` are fine.
  */
 export async function withCleanup<T>(
   fn: () => Promise<T>,
