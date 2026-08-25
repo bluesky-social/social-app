@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-19 23:51\n"
+"PO-Revision-Date: 2026-08-25 22:01\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -21,7 +21,7 @@ msgstr ""
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is currently selected.
 #: src/components/InterestTabs.tsx:333
 msgid "\"{interestsDisplayName}\" category (active)"
-msgstr "\"{interestsDisplayName}\" カテゴリー（アクティブ）"
+msgstr "「{interestsDisplayName}」カテゴリー（アクティブ）"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -203,7 +203,7 @@ msgstr "{0, plural, other {投稿}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:497
+#: src/screens/StarterPack/StarterPackScreen.tsx:500
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr "{0, plural, other {#人が}} このスターターパックでBlueskyに参加しました！"
 
@@ -502,7 +502,7 @@ msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:488
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your repost"
-msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural,  other {他{formattedAuthorsCount}人}}</0>があなたのリポストをいいねしました"
+msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}</0>があなたのリポストをいいねしました"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:463
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> removed their verifications from your account"
@@ -514,7 +514,7 @@ msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:510
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> reposted your repost"
-msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural,  other {他{formattedAuthorsCount}人}}</0>があなたのリポストをリポストしました"
+msgstr "{firstAuthorLink}および<0>{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}</0>があなたのリポストをリポストしました"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
@@ -582,7 +582,7 @@ msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{fo
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:482
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
-msgstr "{firstAuthorName}および{additionalAuthorsCount, plural,  other {他{formattedAuthorsCount}人}}があなたのリポストをいいねしました"
+msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人}}があなたのリポストをいいねしました"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:457
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
@@ -594,7 +594,7 @@ msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{fo
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:504
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
-msgstr "{firstAuthorName}および{additionalAuthorsCount, plural,  other {他{formattedAuthorsCount}人が}}あなたのリポストをリポストしました"
+msgstr "{firstAuthorName}および{additionalAuthorsCount, plural, other {他{formattedAuthorsCount}人が}}あなたのリポストをリポストしました"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, other {#時間}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:89
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:95
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -984,7 +984,7 @@ msgstr "参加する前に送られたメッセージへの返信"
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
 msgid "A screenshot of a post from @esb.lol, showing the user is currently livestreaming content on Twitch. The post reads: \"Hello! I'm live on Twitch, and I'm testing Bluesky's latest feature too!\""
-msgstr "@esb.lol からの投稿のスクリーンショット。ユーザーがTwitchで配信中のコンテンツを表示しています。 「こんにちは！Twitchでライブ中で、Blueskyの最新機能もテストしています！」"
+msgstr "@esb.lol からの投稿のスクリーンショット。ユーザーがTwitchで配信中のコンテンツを表示しています。「こんにちは！Twitchでライブ中で、Blueskyの最新機能もテストしています！」"
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:121
@@ -1201,11 +1201,11 @@ msgstr "ALTテキストを追加（オプション）"
 msgid "Add another account"
 msgstr "他のアカウントを追加"
 
-#: src/view/com/composer/Composer.tsx:1659
+#: src/view/com/composer/Composer.tsx:1625
 msgid "Add another post"
 msgstr "他の投稿を追加"
 
-#: src/view/com/composer/Composer.tsx:2328
+#: src/view/com/composer/Composer.tsx:2294
 msgid "Add another post to thread"
 msgstr "スレッドに他の投稿を追加"
 
@@ -1244,7 +1244,7 @@ msgid "Add image"
 msgstr "画像を追加"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:534
+#: src/view/com/composer/SelectMediaButton.tsx:520
 msgid "Add media to post"
 msgstr "投稿にメディアを追加する"
 
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr "全{0}"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:398
+#: src/screens/StarterPack/StarterPackScreen.tsx:401
 msgid "All accounts have been followed!"
 msgstr "すべてのアカウントをフォローしました！"
 
@@ -1587,7 +1587,7 @@ msgstr "エラーが発生しました"
 msgid "An error occurred"
 msgstr "エラーが発生しました"
 
-#: src/view/com/composer/state/video.ts:509
+#: src/view/com/composer/state/video.ts:503
 msgid "An error occurred while compressing the video."
 msgstr "ビデオの圧縮中にエラーが発生しました。"
 
@@ -1628,16 +1628,16 @@ msgstr "QRコードの保存中にエラーが発生しました！"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:357
-#: src/screens/StarterPack/StarterPackScreen.tsx:384
+#: src/screens/StarterPack/StarterPackScreen.tsx:360
+#: src/screens/StarterPack/StarterPackScreen.tsx:387
 msgid "An error occurred while trying to follow all"
 msgstr "すべてフォローしようとしたらエラーが発生しました"
 
-#: src/view/com/composer/state/video.ts:561
+#: src/view/com/composer/state/video.ts:555
 msgid "An error occurred while uploading the video. {message}"
 msgstr "ビデオのアップロード中にエラーが発生しました。 {message}"
 
-#: src/view/com/composer/state/video.ts:553
+#: src/view/com/composer/state/video.ts:547
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "ビデオのアップロード中にエラーが発生しました。インターネット接続を確認して、もう一度お試しください。"
 
@@ -1914,7 +1914,7 @@ msgstr "アプリパスワード「{0}」を本当に削除しますか？"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "このメッセージを本当に削除しますか？このメッセージはあなたからは削除したように見えますが、他の参加者にとっては削除されません。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:680
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "本当にこのスターターパックを削除したいですか？"
 
@@ -1945,7 +1945,7 @@ msgstr "本当にこのフィードをあなたのフィードから削除した
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "本当に{0}に参加するリクエストを取り消しますか？"
 
-#: src/view/com/composer/Composer.tsx:1795
+#: src/view/com/composer/Composer.tsx:1761
 msgid "Are you sure you'd like to discard this post?"
 msgstr "本当にこの投稿を削除しますか？"
 
@@ -2319,7 +2319,7 @@ msgstr "Blueskyは、「ハッシュ」と呼ばれるエンコードされた�
 #: src/components/dialogs/ServerInput.tsx:214
 #: src/screens/Login/components/HostingProviderDialog.tsx:236
 msgid "Bluesky is an open network where you can choose your hosting provider. If you're a developer, you can host your own server."
-msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。 あなたが開発者であれば、自分のサーバーをホストできます。"
+msgstr "Bluesky は、ホスティング プロバイダーを選択できるオープン ネットワークです。あなたが開発者であれば、自分のサーバーをホストできます。"
 
 #: src/components/dialogs/ServerInput.tsx:162
 msgid "Bluesky is an open network where you can choose your own provider. If you're new here, we recommend sticking with the default Bluesky Social option."
@@ -2565,8 +2565,8 @@ msgstr "カメラへのアクセスが必要です"
 #: src/screens/Settings/Settings.tsx:312
 #: src/screens/Takendown.tsx:100
 #: src/screens/Takendown.tsx:103
-#: src/view/com/composer/Composer.tsx:1873
-#: src/view/com/composer/Composer.tsx:1883
+#: src/view/com/composer/Composer.tsx:1839
+#: src/view/com/composer/Composer.tsx:1849
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -3118,7 +3118,7 @@ msgstr "ウェルカムモーダルを閉じる"
 msgid "Closes password update alert"
 msgstr "パスワード更新アラートを閉じる"
 
-#: src/view/com/composer/Composer.tsx:1881
+#: src/view/com/composer/Composer.tsx:1847
 msgid "Closes post composer and discards post draft"
 msgstr "投稿の編集画面を閉じて下書きを破棄"
 
@@ -3172,7 +3172,7 @@ msgid "Compose new post"
 msgstr "新しい投稿を作成"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1757
+#: src/view/com/composer/Composer.tsx:1723
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "最大{0, plural, other {#文字}}まで投稿を編集"
 
@@ -3180,11 +3180,11 @@ msgstr "最大{0, plural, other {#文字}}まで投稿を編集"
 msgid "Compose reply"
 msgstr "返信を作成"
 
-#: src/view/com/composer/Composer.tsx:2711
+#: src/view/com/composer/Composer.tsx:2677
 msgid "Compressing GIF..."
 msgstr "GIFを圧縮中…"
 
-#: src/view/com/composer/Composer.tsx:2713
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing video..."
 msgstr "ビデオを圧縮中…"
 
@@ -3452,7 +3452,7 @@ msgstr "招待リンクをコピー"
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
+#: src/screens/StarterPack/StarterPackScreen.tsx:640
 msgid "Copy link"
 msgstr "リンクをコピー"
 
@@ -3477,7 +3477,7 @@ msgstr "投稿へのリンクをコピー"
 msgid "Copy link to profile"
 msgstr "プロフィールへのリンクをコピー"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:630
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Copy link to starter pack"
 msgstr "スターターパックへのリンクをコピー"
 
@@ -3598,7 +3598,7 @@ msgstr "通知の設定を更新できませんでした"
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/GetContacts.tsx:173
 msgid "Could not upload contacts. {0}"
-msgstr "連絡先をアップロードできませんでした。 {0}"
+msgstr "連絡先をアップロードできませんでした。{0}"
 
 #: src/components/contacts/screens/GetContacts.tsx:166
 msgid "Could not upload contacts. You need to re-verify your phone number to proceed"
@@ -3632,7 +3632,7 @@ msgstr "作成"
 msgid "Create a list"
 msgstr "リストを作成"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:616
 msgid "Create a list from this starter pack"
 msgstr "このスターターパックからリストを作成する"
 
@@ -3692,14 +3692,14 @@ msgstr "別のものを作成"
 
 #: src/components/dms/InitiateChatFlow.tsx:606
 msgid "Create group chat"
-msgstr "グループ チャットを作成"
+msgstr "グループチャットを作成"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:179
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:187
 msgid "Create list"
 msgstr "リストを作成"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:619
+#: src/screens/StarterPack/StarterPackScreen.tsx:622
 msgid "Create list from members"
 msgstr "メンバーからリストを作成"
 
@@ -3842,9 +3842,9 @@ msgstr "デフォルトアイコン"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:608
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
-#: src/screens/StarterPack/StarterPackScreen.tsx:787
+#: src/screens/StarterPack/StarterPackScreen.tsx:611
+#: src/screens/StarterPack/StarterPackScreen.tsx:711
+#: src/screens/StarterPack/StarterPackScreen.tsx:790
 msgid "Delete"
 msgstr "削除"
 
@@ -3911,16 +3911,16 @@ msgstr "アカウントを削除"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:808
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:810
-#: src/view/com/composer/Composer.tsx:1769
+#: src/view/com/composer/Composer.tsx:1735
 msgid "Delete post"
 msgstr "投稿を削除"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:602
-#: src/screens/StarterPack/StarterPackScreen.tsx:778
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:781
 msgid "Delete starter pack"
 msgstr "スターターパックを削除"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:674
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Delete starter pack?"
 msgstr "スターターパックを削除しますか？"
 
@@ -4062,9 +4062,9 @@ msgstr "無効"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1549
-#: src/view/com/composer/Composer.tsx:1593
-#: src/view/com/composer/Composer.tsx:1802
+#: src/view/com/composer/Composer.tsx:1515
+#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1768
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -4075,14 +4075,14 @@ msgstr "破棄"
 msgid "Discard changes?"
 msgstr "変更を破棄しますか？"
 
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "下書きを削除しますか？"
 
-#: src/view/com/composer/Composer.tsx:1564
-#: src/view/com/composer/Composer.tsx:1794
+#: src/view/com/composer/Composer.tsx:1530
+#: src/view/com/composer/Composer.tsx:1760
 msgid "Discard post?"
 msgstr "投稿を削除しますか？"
 
@@ -4115,7 +4115,7 @@ msgstr "消す"
 msgid "Dismiss banner"
 msgstr "バナーを閉じる"
 
-#: src/view/com/composer/Composer.tsx:2653
+#: src/view/com/composer/Composer.tsx:2619
 msgid "Dismiss error"
 msgstr "エラーを消す"
 
@@ -4341,7 +4341,7 @@ msgstr "摂食障害"
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:600
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4445,7 @@ msgstr "プロフィールを編集"
 msgid "Edit Profile"
 msgstr "プロフィールを編集"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:589
+#: src/screens/StarterPack/StarterPackScreen.tsx:592
 msgid "Edit starter pack"
 msgstr "スターターパックを編集"
 
@@ -4541,11 +4541,6 @@ msgstr "有効にする"
 #: src/components/dialogs/EmbedConsent.tsx:96
 msgid "Enable {0} only"
 msgstr "{0}のみ有効にする"
-
-#. Description of a feature flag (10-minute video uploads)
-#: src/analytics/features/index.ts:90
-msgid "Enable 10-minute video uploads."
-msgstr "10分のビデオのアップロードを有効にする。"
 
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
@@ -4678,7 +4673,7 @@ msgstr "フルスクリーンで表示"
 msgid "Entertainment"
 msgstr "エンターテインメント"
 
-#: src/view/com/composer/Composer.tsx:2731
+#: src/view/com/composer/Composer.tsx:2697
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "エラー"
@@ -4946,7 +4941,7 @@ msgstr "メッセージの削除に失敗しました"
 msgid "Failed to delete post, please try again"
 msgstr "投稿の削除に失敗しました。もう一度お試しください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:747
+#: src/screens/StarterPack/StarterPackScreen.tsx:750
 msgid "Failed to delete starter pack"
 msgstr "スターターパックの削除に失敗しました"
 
@@ -5087,7 +5082,7 @@ msgstr "ネットワークエラーのためデータの削除に失敗しまし
 #. placeholder {0}: cleanError(err)
 #: src/screens/Settings/FindContactsSettings.tsx:519
 msgid "Failed to remove data. {0}"
-msgstr "データの削除に失敗しました。 {0}"
+msgstr "データの削除に失敗しました。{0}"
 
 #: src/components/dms/ActionsWrapper.web.tsx:78
 #: src/components/dms/MessageContextMenu.tsx:123
@@ -5121,7 +5116,7 @@ msgstr "リクエストを取り消すことができませんでした。もう
 msgid "Failed to resolve location. Please try again."
 msgstr "位置情報の調査に失敗しました。もう一度試してください。"
 
-#: src/view/com/composer/Composer.tsx:775
+#: src/view/com/composer/Composer.tsx:741
 msgid "Failed to save draft"
 msgstr "下書きの保存に失敗しました"
 
@@ -5197,13 +5192,6 @@ msgstr "通知受信制限の更新に失敗しました"
 msgid "Failed to update settings"
 msgstr "設定の更新に失敗しました"
 
-#: src/lib/media/video/upload.ts:104
-#: src/lib/media/video/upload.web.ts:104
-#: src/lib/media/video/upload.web.ts:108
-#: src/lib/media/video/upload.web.ts:118
-msgid "Failed to upload video"
-msgstr "ビデオのアップロードに失敗しました"
-
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:169
 msgid "Failed to verify email, please try again."
 msgstr "メールの確認に失敗しました。後でもう一度お試しください。"
@@ -5269,7 +5257,7 @@ msgstr "フィードの運営者にフィードバックを送りました"
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:193
+#: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
@@ -5486,8 +5474,8 @@ msgstr "アカウントをフォロー"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
-#: src/screens/StarterPack/StarterPackScreen.tsx:453
+#: src/screens/StarterPack/StarterPackScreen.tsx:448
+#: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "Follow all"
 msgstr "すべてフォロー"
 
@@ -5812,7 +5800,7 @@ msgstr "開始"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2736
+#: src/view/com/composer/Composer.tsx:2702
 msgid "GIF uploaded"
 msgstr "GIFをアップロードしました"
 
@@ -5850,7 +5838,7 @@ msgstr "戻る"
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:800
+#: src/screens/StarterPack/StarterPackScreen.tsx:803
 msgid "Go Back"
 msgstr "戻る"
 
@@ -5927,7 +5915,7 @@ msgstr "プロフィールへ"
 
 #: src/screens/Messages/components/ChatListItem.tsx:211
 msgid "Go to the group chat named \"{chatName}\""
-msgstr "\"{chatName} \"という名前のグループチャットに移動"
+msgstr "「{chatName}」という名前のグループチャットに移動"
 
 #: src/components/dms/ConvoMenu.tsx:258
 msgid "Go to user's profile"
@@ -6252,7 +6240,7 @@ msgstr "トレンド・トピックを非表示にする"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:102
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:171
 msgid "Hide trending topics?"
-msgstr "トレンド・トピックを非表示にしますか？"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
@@ -6278,7 +6266,7 @@ msgstr "友達招待のプロモーションバナーを非表示にする"
 
 #: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
-msgstr "うーん、<0>アプリパスワード</0>でサインインしているようです。 生年月日を設定するには、メインのアカウントのパスワードでサインインするか、このアカウントを管理している人に尋ねる必要があります。"
+msgstr "うーん、<0>アプリパスワード</0>でサインインしているようです。生年月日を設定するには、メインのアカウントのパスワードでサインインするか、このアカウントを管理している人に尋ねる必要があります。"
 
 #: src/ageAssurance/useVerificationFlow.ts:122
 msgid "Hmm, it seems we weren't able to compute your level of access. Please try again."
@@ -6316,7 +6304,7 @@ msgstr "このデータの読み込みに問題があるようです。詳細は
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "そのモデレーションサービスを読み込めませんでした。"
 
-#: src/view/com/composer/state/video.ts:523
+#: src/view/com/composer/state/video.ts:517
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "待って！徐々にビデオへのアクセスを許可していますが、あなたの順番はまだです。しばらくしてもう一度確認を！"
 
@@ -6398,7 +6386,7 @@ msgstr "何も選択されていない場合、すべての言語がフィード
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:103
 msgid "If you are 18 years of age or older and want to try again, click the button below and use a different verification method if one is available in your region. If you have questions or concerns, <0>our support team can help.</0>"
-msgstr "あなたが18歳以上で再び試してみたい場合。 下のボタンをクリックし、お住まいの地域で利用可能な場合は別の確認方法を使用してください。 ご質問やご不明な点がございましたら、<0>サポートチームがお手伝いします。</0>"
+msgstr "あなたが18歳以上で再び試してみたい場合は、下のボタンをクリックし、お住まいの地域で利用可能な場合は別の確認方法を使用してください。ご質問やご不明な点がございましたら、<0>サポートチームがお手伝いします。</0>"
 
 #: src/screens/Signup/StepInfo/index.tsx:339
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
@@ -6784,7 +6772,7 @@ msgstr "招待、ただし個人的なもの"
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
-msgstr "連絡先の一部の方はまだあなたを見つけようとしていないようです。 私たちが提供するメッセージの下書きをカスタマイズして、個人的に招待することができます。"
+msgstr "連絡先の一部の方はまだあなたを見つけようとしていないようです。私たちが提供するメッセージの下書きをカスタマイズして、個人的に招待することができます。"
 
 #: src/screens/Signup/StepInfo/index.tsx:372
 msgid "It's correct"
@@ -6800,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "今はあなただけ！上で検索してスターターパックにより多くのユーザーを追加してください。"
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2672
+#: src/view/com/composer/Composer.tsx:2638
 msgid "Job ID: {0}"
 msgstr "ジョブID：{0}"
 
@@ -6816,8 +6804,8 @@ msgstr "参加"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:471
-#: src/screens/StarterPack/StarterPackScreen.tsx:481
+#: src/screens/StarterPack/StarterPackScreen.tsx:474
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
 msgid "Join Bluesky"
 msgstr "Blueskyに参加"
 
@@ -6840,8 +6828,8 @@ msgstr "会話に参加"
 msgid "Journalism"
 msgstr "報道"
 
-#: src/view/com/composer/Composer.tsx:1597
-#: src/view/com/composer/Composer.tsx:1607
+#: src/view/com/composer/Composer.tsx:1563
+#: src/view/com/composer/Composer.tsx:1573
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "編集を続ける"
@@ -7405,11 +7393,6 @@ msgstr "<0>@sawaratsuki.bsky.social</0>によるロゴ"
 msgid "Long press to open tag menu for {0}"
 msgstr "長押しで {0} のタグメニューを開く"
 
-#. Name for a feature flag (longer videos)
-#: src/analytics/features/index.ts:84
-msgid "Longer videos"
-msgstr "より長いビデオ"
-
 #: src/screens/Login/SetNewPasswordForm.tsx:119
 msgid "Looks like XXXXX-XXXXX"
 msgstr "XXXXX-XXXXXみたいなもの"
@@ -7652,7 +7635,7 @@ msgstr "モデレーション"
 #: src/screens/Settings/Settings.tsx:193
 #: src/screens/Settings/Settings.tsx:196
 msgid "Moderation and content filters"
-msgstr "モデレーションとコンテンツ フィルター"
+msgstr "モデレーションとコンテンツフィルター"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:175
 msgid "Moderation details"
@@ -8523,27 +8506,27 @@ msgstr "選択した受信者のいずれかがグループチャットを許可
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "選択した受信者のいずれかがあなたをブロックしていてメッセージを送れません。"
 
-#: src/view/com/composer/Composer.tsx:983
+#: src/view/com/composer/Composer.tsx:949
 msgid "One or more GIFs is missing alt text."
 msgstr "1つもしくは複数のGIFにALTテキストがありません。"
 
-#: src/view/com/composer/Composer.tsx:980
+#: src/view/com/composer/Composer.tsx:946
 msgid "One or more images is missing alt text."
 msgstr "1つもしくは複数の画像にALTテキストがありません。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:438
+#: src/view/com/composer/SelectMediaButton.tsx:429
 msgid "One or more of your selected files are not supported."
 msgstr "選択したファイルの 1つ以上がサポートされていません。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:461
+#: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "選択したファイルの1つ以上が大きすぎます。最大サイズは {VIDEO_MAX_SIZE_MB}MBです。"
 
-#: src/view/com/composer/Composer.tsx:786
+#: src/view/com/composer/Composer.tsx:752
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "一つ以上の投稿が下書きとしては長すぎます。{MAX_DRAFT_GRAPHEME_LENGTH, plural,other {最大で#文字です。}}"
 
-#: src/view/com/composer/Composer.tsx:990
+#: src/view/com/composer/Composer.tsx:956
 msgid "One or more videos is missing alt text."
 msgstr "1つもしくは複数のビデオにALTテキストがありません。"
 
@@ -8556,7 +8539,7 @@ msgstr "{0}のみ返信可能。"
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:237
+#: src/view/com/composer/Composer.tsx:236
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "{1}枚の{2, plural, other {画像}}中{0}枚のみを追加しました。最大で{MAX_GALLERY_IMAGES}枚です"
 
@@ -8664,7 +8647,7 @@ msgid "Open drawer menu"
 msgstr "引き出しメニューを開く"
 
 #: src/screens/Messages/components/MessageComposer.tsx:214
-#: src/view/com/composer/Composer.tsx:2305
+#: src/view/com/composer/Composer.tsx:2271
 msgid "Open emoji picker"
 msgstr "絵文字を入力"
 
@@ -8743,7 +8726,7 @@ msgstr "設定を開く"
 msgid "Open share menu"
 msgstr "共有メニューを開く"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:575
+#: src/screens/StarterPack/StarterPackScreen.tsx:578
 msgid "Open starter pack menu"
 msgstr "スターターパックのメニューを開く"
 
@@ -8809,7 +8792,7 @@ msgid "Opens device camera"
 msgstr "デバイスのカメラを起動"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:540
+#: src/view/com/composer/SelectMediaButton.tsx:526
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "デバイスのギャラリーを開いて最大{MAX_GALLERY_IMAGES, plural, other {#枚の画像}}、あるいは動画またはGIFを1つを選択します。"
 
@@ -9020,7 +9003,7 @@ msgstr "ビデオを一時停止"
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:192
+#: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr "ユーザー"
 
@@ -9213,13 +9196,13 @@ msgstr "パスワードを選択してください。"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:286
 msgid "Please click on the link in the email we just sent you to verify your new email address. This is an important step to allow you to continue enjoying all the features of Bluesky."
-msgstr "新しいメールアドレスを確認するために送信したメールのリンクをクリックしてください。 これは、Blueskyのすべての機能を楽しみ続けるための重要なステップです。"
+msgstr "新しいメールアドレスを確認するために送信したメールのリンクをクリックしてください。これは、Blueskyのすべての機能を楽しみ続けるための重要なステップです。"
 
 #: src/screens/Signup/state.ts:319
 msgid "Please complete the verification captcha."
 msgstr "CAPTCHA認証を完了してください。"
 
-#: src/view/com/composer/state/video.ts:547
+#: src/view/com/composer/state/video.ts:541
 msgid "Please confirm your email address to upload videos."
 msgstr "動画をアップロードするにはメールアドレスの確認をしてください。"
 
@@ -9367,7 +9350,7 @@ msgstr "政治"
 msgid "Porn"
 msgstr "ポルノ"
 
-#: src/view/com/composer/Composer.tsx:1947
+#: src/view/com/composer/Composer.tsx:1913
 msgctxt "action"
 msgid "Post"
 msgstr "投稿"
@@ -9378,7 +9361,7 @@ msgid "Post"
 msgstr "投稿"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:74
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:80
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "{count}件中の{index}番目の投稿"
@@ -9393,12 +9376,12 @@ msgstr "写真を投稿"
 msgid "Post a video"
 msgstr "ビデオを投稿"
 
-#: src/view/com/composer/Composer.tsx:1945
+#: src/view/com/composer/Composer.tsx:1911
 msgctxt "action"
 msgid "Post All"
 msgstr "すべてポスト"
 
-#: src/view/com/composer/Composer.tsx:1606
+#: src/view/com/composer/Composer.tsx:1572
 msgid "Post anyway"
 msgstr "とにかく投稿する"
 
@@ -9487,7 +9470,7 @@ msgstr "投稿の固定を解除しました"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:194
+#: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr "投稿"
@@ -9582,11 +9565,11 @@ msgstr "プライバシーポリシー"
 msgid "Privacy violation of a minor"
 msgstr "未成年者のプライバシー侵害"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2691
 msgid "Processing GIF..."
 msgstr "GIFを処理しています…"
 
-#: src/view/com/composer/Composer.tsx:2727
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing video..."
 msgstr "ビデオを処理中…"
 
@@ -9633,22 +9616,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "ユーザーを一括でミュートまたはブロックする、公開された共有可能なリスト。"
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1931
+#: src/view/com/composer/Composer.tsx:1897
 msgid "Publish post"
 msgstr "投稿を公開"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1926
+#: src/view/com/composer/Composer.tsx:1892
 msgid "Publish posts"
 msgstr "投稿を公開"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1915
+#: src/view/com/composer/Composer.tsx:1881
 msgid "Publish replies"
 msgstr "返信を公開"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1920
+#: src/view/com/composer/Composer.tsx:1886
 msgid "Publish reply"
 msgstr "返信を公開"
 
@@ -9876,7 +9859,7 @@ msgstr "削除"
 
 #: src/components/dms/ChatProfileTabs.tsx:153
 msgid "Remove {displayName} from group chat"
-msgstr "グループ チャットから{displayName}を削除"
+msgstr "グループチャットから{displayName}を削除"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:61
 msgid "Remove {displayName} from starter pack"
@@ -9885,7 +9868,7 @@ msgstr "{displayName}をスターターパックから削除"
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
 msgid "Remove {displayName} from this group chat"
-msgstr "このグループ チャットから{displayName}を削除"
+msgstr "このグループチャットから{displayName}を削除"
 
 #: src/screens/Messages/ConversationSettings/prompts.tsx:176
 msgid "Remove {displayName}?"
@@ -10141,7 +10124,7 @@ msgstr "この投稿への返信は無効化されています。"
 msgid "Reply"
 msgstr "返信"
 
-#: src/view/com/composer/Composer.tsx:1943
+#: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
 msgid "Reply"
 msgstr "返信"
@@ -10225,8 +10208,8 @@ msgstr "投稿を報告"
 msgid "Report sent"
 msgstr "レポートが送信されました"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr "スターターパックを報告"
 
@@ -10292,7 +10275,7 @@ msgstr "リポストする（{0, plural, other {#件のリポスト}}）"
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:570
+#: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Repost or quote post"
 msgstr "リポストまたは引用"
 
@@ -10511,7 +10494,7 @@ msgstr "報告オプションの読み込みを再試行する"
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:794
+#: src/screens/StarterPack/StarterPackScreen.tsx:797
 msgid "Return to previous page"
 msgstr "前のページに戻る"
 
@@ -10572,22 +10555,22 @@ msgstr "生年月日を保存"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "変更を保存"
 
-#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1525
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "変更を保存しますか？"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "下書きを保存"
 
-#: src/view/com/composer/Composer.tsx:1561
+#: src/view/com/composer/Composer.tsx:1527
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "下書きを保存しますか？"
@@ -10724,7 +10707,7 @@ msgstr "「{interestsDisplayName}」を検索"
 #. Accessibility label for a tab that searches for accounts in a category (e.g. Art, Video Games, Sports, etc.) that are suggested for the user to follow. The tab is currently selected.
 #: src/components/ProgressGuide/FollowDialog.tsx:500
 msgid "Search for \"{interestsDisplayName}\" (active)"
-msgstr "\"{interestsDisplayName}\" を検索（アクティブ）"
+msgstr "「{interestsDisplayName}」を検索（アクティブ）"
 
 #: src/screens/Search/components/AutocompleteResults.tsx:49
 msgid "Search for “{searchText}”"
@@ -10850,7 +10833,7 @@ msgid "See more trending topics"
 msgstr "トレンド・トピックをもっと見る"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:107
+#: src/analytics/features/index.ts:91
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "同じ投稿者によるスレッド内の投稿に番号付きバッジ（1/3、2/3など）を表示します。"
 
@@ -10871,7 +10854,7 @@ msgstr "シークバー。矢印キーで早送りや早戻し、スペースで
 #. Accessibility label for a category (e.g. Art, Video Games, Sports, etc.) that shows suggested accounts for the user to follow. The tab is not currently active and can be selected.
 #: src/components/InterestTabs.tsx:340
 msgid "Select \"{interestsDisplayName}\" category"
-msgstr "\"{interestsDisplayName}\" カテゴリーを選択"
+msgstr "「{interestsDisplayName}」カテゴリーを選択"
 
 #. Accessibility label for a username suggestion in the account creation flow
 #. Accessibility label for a username suggestion in the account creation flow
@@ -10926,7 +10909,7 @@ msgstr "キャプションファイルを選択（.vtt）"
 #: src/components/dialogs/SearchablePeopleList.tsx:497
 #: src/components/dms/InitiateChatFlow.tsx:984
 msgid "Select chat \"{name}\""
-msgstr "チャット\"{name}\"を選択"
+msgstr "チャット「{name}」を選択"
 
 #: src/screens/Settings/LanguageSettings.tsx:195
 #: src/screens/Settings/LanguageSettings.tsx:233
@@ -11045,7 +11028,7 @@ msgstr "フィード内の翻訳に使用する言語を選択します。"
 msgid "Select your preferred notification channels"
 msgstr "お好みの通知チャンネルを選択してください"
 
-#: src/view/com/composer/SelectMediaButton.tsx:441
+#: src/view/com/composer/SelectMediaButton.tsx:432
 msgid "Selecting multiple media types is not supported."
 msgstr "複数のメディアタイプの選択はサポートされていません。"
 
@@ -11242,7 +11225,7 @@ msgstr "性的にきわどい"
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:440
+#: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr "共有"
@@ -11318,7 +11301,7 @@ msgstr "このフィードを共有"
 msgid "Share this search"
 msgstr "この検索を共有"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:433
+#: src/screens/StarterPack/StarterPackScreen.tsx:436
 msgid "Share this starter pack"
 msgstr "このスターターパックを共有"
 
@@ -11330,8 +11313,8 @@ msgstr "このスターターパックを共有して、他のユーザーがBlu
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:631
-#: src/screens/StarterPack/StarterPackScreen.tsx:639
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
+#: src/screens/StarterPack/StarterPackScreen.tsx:642
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11614,7 +11597,7 @@ msgstr "スキップ"
 msgid "Skip contact sharing and continue to the app"
 msgstr "連絡先の共有をスキップしてアプリに進む"
 
-#: src/view/com/composer/Composer.tsx:1604
+#: src/view/com/composer/Composer.tsx:1570
 msgid "Skip empty posts?"
 msgstr "空の投稿をスキップしますか？"
 
@@ -11846,7 +11829,7 @@ msgstr "<0/>によるスターターパック"
 msgid "Starter pack by you"
 msgstr "自分のスターターパック"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
+#: src/screens/StarterPack/StarterPackScreen.tsx:761
 msgid "Starter pack is invalid"
 msgstr "スターターパックが無効です"
 
@@ -12089,7 +12072,7 @@ msgstr "会話をプライベートに。"
 
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:110
 msgid "Tap below to allow Bluesky to access your GPS location. We will then use that data to more accurately determine the content and features available in your region."
-msgstr "下をタップするとBlueskyがGPSの位置情報にアクセスできるようになります。 その後、そのデータを使用して、お住まいの地域で利用可能なコンテンツと機能をより正確に決定します。"
+msgstr "下をタップするとBlueskyがGPSの位置情報にアクセスできるようになります。その後、そのデータを使用して、お住まいの地域で利用可能なコンテンツと機能をより正確に決定します。"
 
 #: src/components/dms/MessageItem.tsx:697
 msgid "Tap for details"
@@ -12248,8 +12231,8 @@ msgstr "その内容は以下の通りです："
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:157
-#: src/screens/StarterPack/StarterPackScreen.tsx:158
+#: src/screens/StarterPack/StarterPackScreen.tsx:160
+#: src/screens/StarterPack/StarterPackScreen.tsx:161
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12352,32 +12335,32 @@ msgstr "返信した投稿は、作成者によって {suggestedLanguageName}で
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "プライバシーポリシーは<0/>に移動しました"
 
-#: src/view/com/composer/state/video.ts:494
+#: src/view/com/composer/state/video.ts:488
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "処理されたビデオが大きすぎます。小さいファイルでもう一度やり直してください。"
 
-#: src/view/com/composer/state/video.ts:469
+#: src/view/com/composer/state/video.ts:463
 msgid "The selected video could not be encoded."
 msgstr "選択したビデオをエンコードできませんでした。"
 
-#: src/view/com/composer/state/video.ts:459
+#: src/view/com/composer/state/video.ts:453
 msgid "The selected video could not be processed."
 msgstr "選択された動画を処理できませんでした。"
 
-#: src/view/com/composer/state/video.ts:489
+#: src/view/com/composer/state/video.ts:483
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "選択したビデオのアスペクト比はサポートされていません。"
 
-#: src/view/com/composer/state/video.ts:505
-#: src/view/com/composer/state/video.ts:544
+#: src/view/com/composer/state/video.ts:499
+#: src/view/com/composer/state/video.ts:538
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "選択したビデオが{VIDEO_MAX_SIZE_MB} MBより大きいです。小さいファイルでもう一度やり直してください。"
 
-#: src/view/com/composer/state/video.ts:487
+#: src/view/com/composer/state/video.ts:481
 msgid "The selected video is too long."
 msgstr "選択したビデオは長すぎます。"
 
-#: src/view/com/composer/state/video.ts:491
+#: src/view/com/composer/state/video.ts:485
 msgid "The selected video uses an unsupported format."
 msgstr "選択されたビデオはサポートされていない形式です。"
 
@@ -12386,7 +12369,7 @@ msgstr "選択されたビデオはサポートされていない形式です。
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "サーバーで問題が発生しているようです。少し間をおいて再度試してください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:768
+#: src/screens/StarterPack/StarterPackScreen.tsx:771
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "見ようとしたスターターパックが無効です。代わりにスターターパックを削除してください。"
 
@@ -12412,7 +12395,7 @@ msgstr "入力された確認コードが正しくありません。正しいリ
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "認証プロバイダがあなたの電話番号にコードを送信できませんでした。電話番号を確認して、もう一度お試しください。"
 
-#: src/view/com/composer/state/video.ts:472
+#: src/view/com/composer/state/video.ts:466
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "ビデオをホスティングプロバイダーへアップロードできませんでした。もう一度お試しください。"
 
@@ -12461,7 +12444,7 @@ msgstr "サーバーへの問い合わせ中に問題が発生したので、イ
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "通知の取得中に問題が発生しました。もう一度試すにはこちらをタップしてください。"
 
-#: src/screens/Search/Explore.tsx:1011
+#: src/screens/Search/Explore.tsx:1012
 #: src/view/com/posts/PostFeed.tsx:830
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "投稿の取得中に問題が発生しました。もう一度試すにはこちらをタップしてください。"
@@ -12620,7 +12603,7 @@ msgstr "この投稿者は、サインインしている人にのみ投稿を表
 
 #: src/screens/Profile/components/GermButton.tsx:245
 msgid "This button lets others open the Germ DM app to send you a message. You can manage its visibility from the Germ DM app, or you can disconnect your Bluesky account from Germ DM altogether by clicking the button below."
-msgstr "このボタンを他のユーザーがクリックすると、Germ DMアプリを開いてあなたにメッセージを送信できます。 Germ DMアプリから見えるかどうかを管理できます。 また、下のボタンをクリックすることでBlueskyアカウントをGerm DMから完全に切断することもできます。"
+msgstr "このボタンを他のユーザーがクリックすると、Germ DMアプリを開いてあなたにメッセージを送信できます。Germ DMアプリから見えるかどうかを管理できます。また、下のボタンをクリックすることでBlueskyアカウントをGerm DMから完全に切断することもできます。"
 
 #: src/screens/Messages/components/ChatEnded.tsx:48
 msgid "This chat has ended"
@@ -12849,7 +12832,7 @@ msgstr "この投稿は投稿者によって削除されました"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "この投稿はフィードとスレッドから非表示になります。元に戻すことはできません。"
 
-#: src/view/com/composer/Composer.tsx:1177
+#: src/view/com/composer/Composer.tsx:1143
 msgid "This post's author has disabled quote posts."
 msgstr "この投稿の投稿者は引用投稿を無効にしています。"
 
@@ -12946,7 +12929,7 @@ msgstr "ミュートしたワードから「{0}」が削除されます。あと
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:336
 msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
-msgstr "あなたのBlueskyアカウント <0>{currentHandle}</0>と関連するすべてのデータは削除され、元に戻せません。 このアカウントで使用する他の<1>ATプロトコル</1>サービスに影響を与えることに注意してください。"
+msgstr "あなたのBlueskyアカウント <0>{currentHandle}</0>と関連するすべてのデータは削除され、元に戻せません。このアカウントで使用する他の<1>ATプロトコル</1>サービスに影響を与えることに注意してください。"
 
 #. placeholder {0}: account.handle
 #: src/screens/Settings/Settings.tsx:690
@@ -12958,7 +12941,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "これによってあなたの投稿が全員に見える引用投稿からは削除され、プレースホルダーに置き換えられます。"
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:100
+#: src/analytics/features/index.ts:84
 msgid "Thread numbering"
 msgstr "スレッド番号"
 
@@ -13187,7 +13170,7 @@ msgstr "サービスに接続できません。インターネットの接続を
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "あなたのサービスに接続できません。インターネットの接続を確認してください。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:693
+#: src/screens/StarterPack/StarterPackScreen.tsx:696
 msgid "Unable to delete"
 msgstr "削除できません"
 
@@ -13463,7 +13446,7 @@ msgstr "リストの登録を解除しました"
 msgid "Unsupported clipboard content"
 msgstr "サポートされていなクリップボードのコンテンツ"
 
-#: src/view/com/composer/Composer.tsx:1696
+#: src/view/com/composer/Composer.tsx:1662
 msgid "Unsupported video type: {mimeType}"
 msgstr "サポートしていないビデオ形式：{mimeType}"
 
@@ -13556,7 +13539,7 @@ msgstr "ファイルからアップロード"
 msgid "Upload from Library"
 msgstr "ライブラリーからアップロード"
 
-#: src/view/com/composer/Composer.tsx:2718
+#: src/view/com/composer/Composer.tsx:2684
 msgid "Uploading GIF..."
 msgstr "GIFをアップロード中…"
 
@@ -13570,7 +13553,7 @@ msgstr "画像をアップロード中…"
 msgid "Uploading link thumbnail..."
 msgstr "リンクのサムネイルをアップロード中…"
 
-#: src/view/com/composer/Composer.tsx:2720
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading video..."
 msgstr "ビデオをアップロード中…"
 
@@ -13820,7 +13803,7 @@ msgstr "スターターパック<0/><1>{starterPackName}</1>経由"
 msgid "Video"
 msgstr "ビデオ"
 
-#: src/view/com/composer/state/video.ts:480
+#: src/view/com/composer/state/video.ts:474
 msgid "Video failed to process"
 msgstr "ビデオの処理に失敗"
 
@@ -13859,7 +13842,7 @@ msgstr "ビデオが見つかりません。"
 msgid "Video settings"
 msgstr "ビデオの設定"
 
-#: src/view/com/composer/Composer.tsx:2738
+#: src/view/com/composer/Composer.tsx:2704
 msgid "Video uploaded"
 msgstr "ビデオをアップロードしました"
 
@@ -13872,19 +13855,13 @@ msgstr "ビデオ：{0}"
 msgid "Videos"
 msgstr "ビデオ"
 
-#: src/view/com/composer/Composer.tsx:463
-#: src/view/com/composer/Composer.tsx:608
-#: src/view/com/composer/SelectMediaButton.tsx:455
+#: src/view/com/composer/Composer.tsx:454
+#: src/view/com/composer/Composer.tsx:586
+#: src/view/com/composer/SelectMediaButton.tsx:446
 msgid "Videos must be 10 minutes or less."
 msgstr "ビデオは10分以下でなければなりません。"
 
-#: src/view/com/composer/Composer.tsx:464
-#: src/view/com/composer/Composer.tsx:609
-#: src/view/com/composer/SelectMediaButton.tsx:456
-msgid "Videos must be less than 3 minutes long."
-msgstr "ビデオは3分未満でなければなりません。"
-
-#: src/view/com/composer/Composer.tsx:1284
+#: src/view/com/composer/Composer.tsx:1250
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "表示"
@@ -13977,7 +13954,7 @@ msgstr "もっと表示"
 msgid "View more trending videos"
 msgstr "話題のビデオをもっと見る"
 
-#: src/view/com/composer/Composer.tsx:1279
+#: src/view/com/composer/Composer.tsx:1245
 msgid "View post"
 msgstr "投稿を表示"
 
@@ -14154,7 +14131,7 @@ msgstr "あなたのアカウントが準備できるまで{estimatedTime}ほど
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:206
 msgid "We have partnered with <0>KWS</0> to handle age verification. When you click \"Begin\" below, KWS will email you instructions to complete the verification process. If your email address has already been used to verify your age for another game or service that uses KWS, you won’t need to do it again. When you’re done, you'll be brought back to continue using Bluesky."
-msgstr "私たちは年齢確認のために<0>KWS</0>と提携しています。以下の「開始」をクリックすると、KWSは確認プロセスを完了するための指示をメールで送信します。 KWSを使っている別のゲームやサービスで年齢確認のためにあなたのメールアドレスをすでに使用している場合、再度確認をする必要はありません。確認を完了したら、戻ってきてBlueskyの使用を続けることができます。"
+msgstr "私たちは年齢確認のために<0>KWS</0>と提携しています。以下の「開始」をクリックすると、KWSは確認プロセスを完了するための指示をメールで送信します。KWSを使っている別のゲームやサービスで年齢確認のためにあなたのメールアドレスをすでに使用している場合、再度確認をする必要はありません。確認を完了したら、戻ってきてBlueskyの使用を続けることができます。"
 
 #. placeholder {0}: currentAccount?.email
 #: src/components/intents/VerifyEmailIntentDialog.tsx:103
@@ -14186,13 +14163,13 @@ msgstr "すくなくとも2つの「気になること」を選択するのを�
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "<0>{0}</0>にリンクが含まれているメールを送信しました。メールアドレスの確認プロセスを完了するために、そのリンクをクリックしてください。"
 
-#: src/view/com/composer/state/video.ts:527
+#: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "あなたがビデオのアップロードを許可されているかどうか判断できません。もう一度お試しください。"
 
 #: src/components/ageAssurance/AgeAssuranceErrors.tsx:19
 msgid "We were unable to load the age assurance configuration for your region, probably due to a network error. Some content and features may be unavailable temporarily. Please try again later."
-msgstr "お住まいの地域での年齢保証の設定をロードできませんでした。おそらくネットワークエラーが原因です。 一部のコンテンツや機能が一時的に利用できない場合があります。後でもう一度お試しください。"
+msgstr "お住まいの地域での年齢保証の設定をロードできませんでした。おそらくネットワークエラーが原因です。一部のコンテンツや機能が一時的に利用できない場合があります。後でもう一度お試しください。"
 
 #: src/components/dialogs/BirthDateSettings.tsx:41
 msgid "We were unable to load your birthdate preferences. Please try again."
@@ -14296,7 +14273,7 @@ msgstr "大変申し訳ありませんが、検索を完了できませんでし
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "申し訳ありませんが、現時点ではこの画面にアクセスできません。"
 
-#: src/view/com/composer/Composer.tsx:1175
+#: src/view/com/composer/Composer.tsx:1141
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "大変申し訳ありません！返信しようとしている投稿は削除されました。"
 
@@ -14311,7 +14288,7 @@ msgstr "大変申し訳ありません！ラベラーは20までしか登録で�
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:123
 msgid "We’re updating our <0>Terms of Service</0>, <1>Privacy Policy</1>, and <2>Copyright Policy</2>, effective September 15th, 2025."
-msgstr "2025 年 9 月 15 日をもって、<0>利用規約</0>、<1>プライバシー ポリシー</1>、<2>著作権ポリシー</2> を更新いたします。"
+msgstr "2025年9月15日をもって、<0>利用規約</0>、<1>プライバシーポリシー</1>、<2>著作権ポリシー</2> を更新いたします。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:64
 msgid "We're updating our policies"
@@ -14319,7 +14296,7 @@ msgstr "ポリシーを更新しています"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:77
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025."
-msgstr "2025 年 9 月 15 日より、利用規約、プライバシー ポリシー、著作権ポリシーを更新します。"
+msgstr "2025 年9月15日より、利用規約、プライバシーポリシー、著作権ポリシーを更新します。"
 
 #: src/components/PolicyUpdateOverlay/updates/202508/index.tsx:62
 msgid "We’re updating our Terms of Service, Privacy Policy, and Copyright Policy, effective September 15th, 2025. We're also updating our Community Guidelines, and we want your input! These new guidelines will take effect on October 15th, 2025. Learn more about these changes and how to share your thoughts with us by reading our blog post."
@@ -14352,7 +14329,7 @@ msgid "what’s up"
 msgstr "what's up"
 
 #: src/view/com/auth/SplashScreen.web.tsx:100
-#: src/view/com/composer/Composer.tsx:1660
+#: src/view/com/composer/Composer.tsx:1626
 #: src/view/com/feeds/ComposerPrompt.tsx:195
 msgid "What's up?"
 msgstr "最近どう？"
@@ -14387,7 +14364,7 @@ msgstr "おっと！"
 #: src/components/interstitials/TrendingVideos.tsx:128
 #: src/screens/Search/modules/ExploreTrendingVideos.tsx:110
 msgid "Whoops! Trending videos failed to load."
-msgstr "おっと！トレンドビデオの読み込みに失敗しました。"
+msgstr "おっと！トレンド・ビデオの読み込みに失敗しました。"
 
 #: src/screens/Takendown.tsx:167
 msgid "Why are you appealing?"
@@ -14438,7 +14415,7 @@ msgstr "ユーザーをブロックするかこの会話を削除しますか（
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "保存されている下書きを表示する前にこれを下書きとして保存しますか？"
 
-#: src/view/com/composer/Composer.tsx:1575
+#: src/view/com/composer/Composer.tsx:1541
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "後で編集するためにこれを下書きとして保存しますか？"
 
@@ -14447,12 +14424,12 @@ msgstr "後で編集するためにこれを下書きとして保存しますか
 msgid "Write a post"
 msgstr "投稿を書く"
 
-#: src/view/com/composer/Composer.tsx:1756
+#: src/view/com/composer/Composer.tsx:1722
 msgid "Write post"
 msgstr "投稿を書く"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1624
 msgid "Write your reply"
 msgstr "返信を書く"
 
@@ -14495,7 +14472,7 @@ msgstr "はい、無効化します"
 msgid "Yes, delete my account"
 msgstr "はい、アカウントを削除します"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:705
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Yes, delete this starter pack"
 msgstr "はい、このスターターパックを削除します"
 
@@ -14562,7 +14539,7 @@ msgstr "ライブ中"
 msgid "You are no longer live"
 msgstr "もうライブ中ではありません"
 
-#: src/view/com/composer/state/video.ts:520
+#: src/view/com/composer/state/video.ts:514
 msgid "You are not allowed to upload videos."
 msgstr "あなたはビデオのアップロードを許可されていません。"
 
@@ -14592,7 +14569,7 @@ msgstr "「気になること」は「コンテンツとメディアの設定」
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:217
 msgid "You can also <0>temporarily deactivate</0> your account instead. Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
-msgstr "代わりに、<0>一時的にアカウントを無効にする</0>こともできます。 プロフィール、投稿、フィード、リストは他のBlueskyユーザーには表示されなくなります。 ログインするといつでもアカウントを再開できます。"
+msgstr "代わりに、<0>一時的にアカウントを無効にする</0>こともできます。プロフィール、投稿、フィード、リストは他のBlueskyユーザーには表示されなくなります。ログインするといつでもアカウントを再開できます。"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:60
 #: src/view/com/posts/FollowingEndOfFeed.tsx:61
@@ -14601,7 +14578,7 @@ msgstr "また、あなたはフォローすべき新しいカスタムフィー
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:145
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
-msgstr "また、チャットデータを \"JSONL\" ファイルとしてダウンロードすることもできます。 このファイルには、送信したチャットメッセージのみが含まれており、受信したチャットメッセージは含まれていません。"
+msgstr "また、チャットデータを \"JSONL\" ファイルとしてダウンロードすることもできます。このファイルには、送信したチャットメッセージのみが含まれており、受信したチャットメッセージは含まれていません。"
 
 #: src/components/contacts/screens/GetContacts.tsx:252
 msgid "You can always opt out and delete your data"
@@ -14630,11 +14607,11 @@ msgid "You can now sign in with your new password."
 msgstr "新しいパスワードでサインインできるようになりました。"
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:224
+#: src/view/com/composer/Composer.tsx:223
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "投稿ひとつあたり{MAX_GALLERY_IMAGES, plural, other {画像#枚}}までしか添付できません"
 
-#: src/view/com/composer/Composer.tsx:1580
+#: src/view/com/composer/Composer.tsx:1546
 msgid "You can only save drafts up to 1000 characters."
 msgstr "下書きは最大で1000文字です。"
 
@@ -14642,11 +14619,11 @@ msgstr "下書きは最大で1000文字です。"
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr "下書きは最大で1000文字です。下書きを表示する前にこの投稿を履きしますか？"
 
-#: src/view/com/composer/SelectMediaButton.tsx:458
+#: src/view/com/composer/SelectMediaButton.tsx:449
 msgid "You can only select one GIF at a time."
 msgstr "一度に1つのGIFしか選択できません。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:452
+#: src/view/com/composer/SelectMediaButton.tsx:443
 msgid "You can only select one video at a time."
 msgstr "一度に1つのビデオしか選択できません。"
 
@@ -14659,7 +14636,7 @@ msgid "You can read chat history but can’t send new messages."
 msgstr "チャットの履歴は読めますが、新しいメッセージは送れません。"
 
 #. Error message for maximum number of images that can be selected to add to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:444
+#: src/view/com/composer/SelectMediaButton.tsx:435
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "合計で{MAX_GALLERY_IMAGES, plural, other {#枚の画像}}まで選択できます。"
 
@@ -14720,7 +14697,7 @@ msgstr "あなたはこのユーザーをブロックしているため、コン
 
 #: src/components/ageAssurance/useAgeAssuranceCopy.ts:17
 msgid "You have completed the Age Assurance process, but based on the results, we cannot be sure that you are 18 years of age or older. Due to laws in your region, certain features on Bluesky must remain restricted until you're able to verify you're an adult."
-msgstr "あなたは年齢保証プロセスを完了しましたが、その結果によれば、私たちはあなたが18歳以上であることを確認することはできません。 お住まいの地域の法律により、Blueskyの特定の機能はあなたが成人であることを確認できるまで制限されたままにする必要があります。"
+msgstr "あなたは年齢保証プロセスを完了しましたが、その結果によれば、私たちはあなたが18歳以上であることを確認することはできません。お住まいの地域の法律により、Blueskyの特定の機能はあなたが成人であることを確認できるまで制限されたままにする必要があります。"
 
 #: src/view/screens/Notifications.tsx:291
 msgid "You have completely disabled reply, quote, and mention notifications, so this tab will no longer update. To adjust this, visit your <0>notification settings</0>."
@@ -14778,11 +14755,11 @@ msgstr "最後まで到達しました"
 msgid "You have successfully verified your email address. You can close this dialog."
 msgstr "メールアドレスの確認に成功しました。このダイアログを閉じても大丈夫です。"
 
-#: src/lib/media/video/upload.shared.ts:74
+#: src/lib/media/video/upload.shared.ts:110
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "ビデオのアップロードの制限に一時的に到達しました。時間をおいてもう一度お試しください。"
 
-#: src/view/com/composer/Composer.tsx:1570
+#: src/view/com/composer/Composer.tsx:1536
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "この下書きに未保存の変更があります。保存しますか？"
 
@@ -14814,7 +14791,7 @@ msgstr "あなたがこの返信を非表示にしました。"
 #. placeholder {0}: getTimeAgo(lastInitiatedAt, new Date(), {format: 'long'})
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:249
 msgid "You initiated this flow already, {0} ago. It may take up to 5 minutes for emails to reach your inbox. Please consider waiting a few minutes before trying again."
-msgstr "{0} 前にこのフローを開始しました。メールが受信トレイに届くまでに最大 5 分かかる場合があります。 再試行する前に数分お待ちください。"
+msgstr "{0} 前にこのフローを開始しました。メールが受信トレイに届くまでに最大 5 分かかる場合があります。再試行する前に数分お待ちください。"
 
 #: src/components/NewskieDialog.tsx:108
 msgid "You joined Bluesky {timeAgoString} ago"
@@ -14858,7 +14835,7 @@ msgstr "スターターパックを作成するには、少なくとも7人を�
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "QRコードを保存するには写真ライブラリへのアクセスを許可する必要があります"
 
-#: src/view/com/composer/SelectMediaButton.tsx:494
+#: src/view/com/composer/SelectMediaButton.tsx:478
 msgid "You need to allow access to your media library."
 msgstr "メディアライブラリへのアクセスを許可する必要があります。"
 
@@ -15018,7 +14995,7 @@ msgstr "アクティブなコンテンツの最後に到達しました。"
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "フィードはここまでです！もっとフォローするアカウントを見つけましょう。"
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:739
 msgid "You've reached the maximum number of drafts"
 msgstr "下書きの数の上限に達しました"
 
@@ -15034,11 +15011,11 @@ msgstr "フィルターの上限である{MAX_FILTERS, plural, other {#個}}に�
 msgid "You've reached the start of the active content."
 msgstr "アクティブなコンテンツの先頭に移動しました。"
 
-#: src/view/com/composer/state/video.ts:531
+#: src/view/com/composer/state/video.ts:525
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "ビデオのアップロードの一日の上限に到達しました（容量が大きすぎます）"
 
-#: src/view/com/composer/state/video.ts:535
+#: src/view/com/composer/state/video.ts:529
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "ビデオのアップロードの一日の上限に到達しました（ビデオの数が多すぎます）"
 
@@ -15062,7 +15039,7 @@ msgstr "あなたのアカウントは削除されました。またね！ ✌�
 msgid "Your account has been suspended"
 msgstr "あなたのアカウントは停止されています"
 
-#: src/view/com/composer/state/video.ts:539
+#: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "あなたのアカウントは作成して間もないため動画をアップロードできません。もう一度お試しください。"
 
@@ -15080,7 +15057,7 @@ msgstr "あなたのアカウントの公開データの全記録を含むリポ
 
 #: src/screens/Takendown.tsx:208
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
-msgstr "あなたのアカウントは<0>Bluesky Social利用規約</0>に違反していることが判明しました。該当している場合、違反している具体的内容と停止期間を説明したメールが贈られています。この決定が誤りであると思うのであれば異議申し立てを行うことができます。"
+msgstr "あなたのアカウントは<0>Bluesky Social利用規約</0>に違反していることが判明しました。該当している場合、違反している具体的内容と停止期間を説明したメールが送られています。この決定が誤りであると思うのであれば異議申し立てを行うことができます。"
 
 #: src/screens/Takendown.tsx:148
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
@@ -15157,7 +15134,7 @@ msgstr "フルハンドルは<0>@{0}</0>になります"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "メールアドレスからホスティングプロバイダーを検出できないため、デフォルトのBlueskyサービスが使用されます。代わりにユーザー名を入力するか、プロバイダーを手動で設定してください。"
 
-#: src/view/com/composer/state/video.ts:476
+#: src/view/com/composer/state/video.ts:470
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "お使いのホスティングプロバイダーはこの大きさのビデオをサポートしていません。より小さいファイルで再度お試しください。"
 
@@ -15202,11 +15179,11 @@ msgstr "パスワードが正常に変更されました！これからBluesky�
 msgid "Your password must be at least 8 characters long."
 msgstr "パスワードは 8 文字以上である必要があります。"
 
-#: src/view/com/composer/Composer.tsx:1275
+#: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
 msgstr "投稿が送信されました"
 
-#: src/view/com/composer/Composer.tsx:1272
+#: src/view/com/composer/Composer.tsx:1238
 msgid "Your posts were sent"
 msgstr "投稿が送信されました"
 
@@ -15227,7 +15204,7 @@ msgstr "あなたのプロフィール写真のまわりを、他のユーザー
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "あなたのプロフィール、投稿、フィード、そしてリストは他のBlueskyユーザーに見えなくなります。ログインすることでいつでもアカウントを再有効化できます。"
 
-#: src/view/com/composer/Composer.tsx:1274
+#: src/view/com/composer/Composer.tsx:1240
 msgid "Your reply was sent"
 msgstr "返信が送信されました"
 
@@ -15240,7 +15217,7 @@ msgstr "報告は <0>{0}</0>に送信されます。"
 msgid "Your selected interests help us serve you content you care about."
 msgstr "「気になること」は興味を引くコンテンツを提供するために役立てます。"
 
-#: src/view/com/composer/Composer.tsx:1605
+#: src/view/com/composer/Composer.tsx:1571
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "あなたのスレッドには空の投稿がありますが、それらはスキップされます。他の残りの投稿はスレッドとして公開されます。"
 

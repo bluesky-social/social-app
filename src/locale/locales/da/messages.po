@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-19 23:50\n"
+"PO-Revision-Date: 2026-08-25 22:01\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -203,7 +203,7 @@ msgstr "{0, plural, one {opslag} other {opslag}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:497
+#: src/screens/StarterPack/StarterPackScreen.tsx:500
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr "{0, plural, one {}other {# brugere}} har oprettet sig på Bluesky via denne startpakke!"
 
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# time} other {# timer}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:89
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:95
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -979,7 +979,7 @@ msgstr "En ny form for verifikation"
 
 #: src/components/dms/MessageItem.tsx:836
 msgid "A reply to a message sent before you joined"
-msgstr ""
+msgstr "Et svar til en besked sendt, før du meldte dig ind"
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:147
@@ -1201,11 +1201,11 @@ msgstr "Tilføj alt-tekst (valgfrit)"
 msgid "Add another account"
 msgstr "Tilføj endnu en konto"
 
-#: src/view/com/composer/Composer.tsx:1659
+#: src/view/com/composer/Composer.tsx:1625
 msgid "Add another post"
 msgstr "Tilføj endnu et opslag"
 
-#: src/view/com/composer/Composer.tsx:2328
+#: src/view/com/composer/Composer.tsx:2294
 msgid "Add another post to thread"
 msgstr "Tilføj endnu et opslag til tråd"
 
@@ -1244,7 +1244,7 @@ msgid "Add image"
 msgstr "Tilføj billede"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:534
+#: src/view/com/composer/SelectMediaButton.tsx:520
 msgid "Add media to post"
 msgstr "Føj medier til opslag"
 
@@ -1425,7 +1425,7 @@ msgstr "Alderstjek tager kun et øjeblik"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:449
 msgid "Age assurance only takes a few minutes."
-msgstr ""
+msgstr "Alderstjek tager kun et øjeblik."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:220
 msgid "alice@example.com"
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr "Alle {0}"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:398
+#: src/screens/StarterPack/StarterPackScreen.tsx:401
 msgid "All accounts have been followed!"
 msgstr "Alle konti blev fulgt!"
 
@@ -1587,7 +1587,7 @@ msgstr "Der opstod en fejl"
 msgid "An error occurred"
 msgstr "Der opstod en fejl"
 
-#: src/view/com/composer/state/video.ts:509
+#: src/view/com/composer/state/video.ts:503
 msgid "An error occurred while compressing the video."
 msgstr "Der opstod en fejl under komprimering af videoen."
 
@@ -1628,16 +1628,16 @@ msgstr "Der opstod en fejl under lagring af QR-koden!"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:357
-#: src/screens/StarterPack/StarterPackScreen.tsx:384
+#: src/screens/StarterPack/StarterPackScreen.tsx:360
+#: src/screens/StarterPack/StarterPackScreen.tsx:387
 msgid "An error occurred while trying to follow all"
 msgstr "Der opstod en fejl, da du forsøgte at følge alle"
 
-#: src/view/com/composer/state/video.ts:561
+#: src/view/com/composer/state/video.ts:555
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Der opstod en fejl under upload af videoen. {message}"
 
-#: src/view/com/composer/state/video.ts:553
+#: src/view/com/composer/state/video.ts:547
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Der opstod en fejl under upload af videoen. Tjek din internetforbindelse og prøv igen."
 
@@ -1682,7 +1682,7 @@ msgstr "Der opstod en fejl ved start af chat, prøv igen."
 #: src/components/dms/dialogs/NewChatDialog.tsx:87
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:103
 msgid "An issue occurred starting the group chat, please try again."
-msgstr ""
+msgstr "Der opstod en fejl ved start af gruppechat, prøv igen."
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
@@ -1733,7 +1733,7 @@ msgstr "Bluesky introducerer verificerede konti"
 #. Placeholder text for a date picker
 #: src/screens/Search/components/AdvancedSearchDialog/ClearableDateField.tsx:43
 msgid "Any date"
-msgstr ""
+msgstr "Enhver dato"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:454
 msgid "Anyone"
@@ -1794,7 +1794,7 @@ msgstr "Appadgangskodens navn skal være unikt"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:62
 msgid "App password names can only contain letters, numbers, spaces, hyphens, and underscores"
-msgstr ""
+msgstr "Navne på appadgangskoder kan kun indeholde bogstaver, tal, mellemrum, bindestreger og underscores"
 
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:80
 msgid "App password names must be at least 4 characters long"
@@ -1823,7 +1823,7 @@ msgstr "Klag over mærkatet \"{0}\""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
-msgstr ""
+msgstr "Klag over mærkat"
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:92
 msgid "Appeal livestream suspension"
@@ -1854,7 +1854,7 @@ msgstr "Klag over afgørelse"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:219
 msgid "Appeal this label"
-msgstr ""
+msgstr "Klag over denne mærkat"
 
 #: src/Navigation.tsx:398
 #: src/screens/Settings/AppearanceSettings.tsx:71
@@ -1914,7 +1914,7 @@ msgstr "Er du sikker på, du vil slette appadgangskoden \"{0}\"?"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "Er du sikker på, du vil slette denne besked? Beskeden vil blive slettet hos dig men ikke hos de andre deltagere."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:680
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "Er du sikker på, du vil slette denne startpakke"
 
@@ -1945,7 +1945,7 @@ msgstr "Er du sikker på, du vil fjerne dette feed fra dine feeds?"
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "Er du sikker på, at du vil trække din anmodning om at deltage i {0} tilbage?"
 
-#: src/view/com/composer/Composer.tsx:1795
+#: src/view/com/composer/Composer.tsx:1761
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Er du sikker på, du vil kassere dette opslag?"
 
@@ -1972,12 +1972,12 @@ msgstr "Kunstnerisk og ikkeerotisk nøgenhed."
 #: src/screens/Settings/components/PwiOptOut.tsx:89
 #: src/screens/Settings/components/PwiOptOut.tsx:93
 msgid "Ask apps and sites not to show my account to logged-out users"
-msgstr ""
+msgstr "Anmod apps og websites om ikke at vise min konto til udloggede brugere"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:32
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:35
 msgid "Ask apps to hide my posts from algorithmic recommendations"
-msgstr ""
+msgstr "Anmod apps om at udelade mine opslag af algoritmedrevne anbefalinger"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:619
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
@@ -2036,7 +2036,7 @@ msgstr "Tilgængelig"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:327
 msgid "Avatar creator"
-msgstr ""
+msgstr "Avatarbygger"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2083,15 +2083,15 @@ msgstr "Blokeret bruger er vendt tilbage"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:184
 msgid "Based on your device's location, we think you're in <0>{geolocationString}</0>."
-msgstr ""
+msgstr "Baseret på din enheds placering tror vi, at du er i <0>{geolocationString}</0>."
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:236
 msgid "Based on your device's location, we think you're in <0>{region}</0>."
-msgstr ""
+msgstr "Baseret på din enheds placering tror vi, at du er i <0>{region}</0>."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:194
 msgid "Based on your network, we think you're in <0>{geolocationString}</0>. This estimate may be inaccurate if you're using a VPN."
-msgstr ""
+msgstr "Baseret på dit netværk tror vi, at du er i <0>{geolocationString}</0>. Det kan være forkert, hvis du benytter VPN."
 
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:241
 msgid "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
@@ -2295,7 +2295,7 @@ msgstr "Blog"
 #. Advanced search: Examples of hashtags
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:17
 msgid "bloomscrolling booksky"
-msgstr ""
+msgstr "bloomscrolling booksky"
 
 #: src/components/dialogs/ServerInput.tsx:144
 #: src/components/dialogs/ServerInput.tsx:146
@@ -2359,11 +2359,11 @@ msgstr "Bluesky vil vælge et antal anbefalede konti fra personer i dit netværk
 
 #: src/screens/Settings/components/PwiOptOut.tsx:101
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
-msgstr ""
+msgstr "Bluesky vil ikke vise din konto til udloggede brugere og vil anmode andre apps om at gøre det samme. Andre apps respekterer ikke nødvendigvis denne anmodning. Din konto bliver ikke konto privat."
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
 msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
+msgstr "Bluesky vil ikke vise dine opslag i Discover-feedet (udover til dine følgere) og vil anmode andre apps om ikke at vise dine opslag i deres algoritmedrevne anbefalinger."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
@@ -2565,8 +2565,8 @@ msgstr "Kameraadgang krævet"
 #: src/screens/Settings/Settings.tsx:312
 #: src/screens/Takendown.tsx:100
 #: src/screens/Takendown.tsx:103
-#: src/view/com/composer/Composer.tsx:1873
-#: src/view/com/composer/Composer.tsx:1883
+#: src/view/com/composer/Composer.tsx:1839
+#: src/view/com/composer/Composer.tsx:1849
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -2591,7 +2591,7 @@ msgstr "Annuller søgning"
 
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:161
 msgid "Cancels signing in so you can check your username"
-msgstr ""
+msgstr "Annullerer login, så du kan tjekke dit brugernavn"
 
 #: src/components/PostControls/index.tsx:104
 #: src/components/PostControls/index.tsx:134
@@ -2811,7 +2811,7 @@ msgstr "Tjek <0>{currentEmail}</0> for en e-mail med en bekræftelseskode, du sk
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:190
 msgid "Check back later!"
-msgstr ""
+msgstr "Kig forbi senere!"
 
 #: src/screens/SignupQueued.tsx:86
 #: src/screens/SignupQueued.tsx:90
@@ -2838,7 +2838,7 @@ msgstr "Vælg en interesse"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:140
 msgid "Choose at least one interest to continue"
-msgstr ""
+msgstr "Vælg mindst én interesse for at fortsætte"
 
 #: src/screens/Onboarding/StepInterests/index.tsx:150
 #: src/screens/Onboarding/StepInterests/index.tsx:151
@@ -2847,7 +2847,7 @@ msgstr "Vælg mindst én interesse."
 
 #: src/screens/Onboarding/StepInterests/index.tsx:102
 msgid "Choose at least one. We'll use this to customize your experience. You can change these anytime."
-msgstr ""
+msgstr "Vælg mindst én. Vi bruger dette til at tilpasse din oplevelse. Du kan ændre disse når som helst."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:401
 msgid "Choose domain verification method"
@@ -3118,7 +3118,7 @@ msgstr "Luk velkomstdialog"
 msgid "Closes password update alert"
 msgstr "Lukker besked om opdatering af adganskode"
 
-#: src/view/com/composer/Composer.tsx:1881
+#: src/view/com/composer/Composer.tsx:1847
 msgid "Closes post composer and discards post draft"
 msgstr "Lukker skrivefelt og kasserer udkast til opslag"
 
@@ -3172,7 +3172,7 @@ msgid "Compose new post"
 msgstr "Skriv nyt opslag"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1757
+#: src/view/com/composer/Composer.tsx:1723
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Skriv opslag på op til {0, plural, one {}other {# tegn}}"
 
@@ -3180,11 +3180,11 @@ msgstr "Skriv opslag på op til {0, plural, one {}other {# tegn}}"
 msgid "Compose reply"
 msgstr "Skriv svar"
 
-#: src/view/com/composer/Composer.tsx:2711
+#: src/view/com/composer/Composer.tsx:2677
 msgid "Compressing GIF..."
 msgstr "Komprimerer GIF ..."
 
-#: src/view/com/composer/Composer.tsx:2713
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing video..."
 msgstr "Komprimerer video..."
 
@@ -3429,7 +3429,7 @@ msgstr "Kopier at://-URI"
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:152
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:155
 msgid "Copy author DID"
-msgstr ""
+msgstr "Kopier konto-DID"
 
 #: src/components/dialogs/Embed.tsx:187
 #: src/components/dialogs/Embed.tsx:203
@@ -3452,7 +3452,7 @@ msgstr "Kopier invitationslink"
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
+#: src/screens/StarterPack/StarterPackScreen.tsx:640
 msgid "Copy link"
 msgstr "Kopier link"
 
@@ -3477,7 +3477,7 @@ msgstr "Kopier link til opslag"
 msgid "Copy link to profile"
 msgstr "Kopier link til profil"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:630
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Copy link to starter pack"
 msgstr "Kopier link til startpakke"
 
@@ -3632,7 +3632,7 @@ msgstr "Opret"
 msgid "Create a list"
 msgstr "Opret en liste"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:616
 msgid "Create a list from this starter pack"
 msgstr "Opret en liste ud fra denne startpakke"
 
@@ -3699,7 +3699,7 @@ msgstr "Opret gruppechat"
 msgid "Create list"
 msgstr "Opret liste"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:619
+#: src/screens/StarterPack/StarterPackScreen.tsx:622
 msgid "Create list from members"
 msgstr "Opret liste ud fra medlemmer"
 
@@ -3842,9 +3842,9 @@ msgstr "Standardikoner"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:608
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
-#: src/screens/StarterPack/StarterPackScreen.tsx:787
+#: src/screens/StarterPack/StarterPackScreen.tsx:611
+#: src/screens/StarterPack/StarterPackScreen.tsx:711
+#: src/screens/StarterPack/StarterPackScreen.tsx:790
 msgid "Delete"
 msgstr "Slet"
 
@@ -3911,16 +3911,16 @@ msgstr "Slet min konto"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:808
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:810
-#: src/view/com/composer/Composer.tsx:1769
+#: src/view/com/composer/Composer.tsx:1735
 msgid "Delete post"
 msgstr "Slet opslag"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:602
-#: src/screens/StarterPack/StarterPackScreen.tsx:778
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:781
 msgid "Delete starter pack"
 msgstr "Slet startpakke"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:674
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Delete starter pack?"
 msgstr "Slet startpakke?"
 
@@ -4003,7 +4003,7 @@ msgstr "Dialog: Tilpas, hvem der kan interagere med dette opslag."
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:233
 msgid "Dialog: Set search filters"
-msgstr ""
+msgstr "Dialog: Angiv søgefiltre"
 
 #: src/screens/Settings/AppearanceSettings.tsx:108
 msgid "Dim"
@@ -4062,9 +4062,9 @@ msgstr "Deaktiveret"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1549
-#: src/view/com/composer/Composer.tsx:1593
-#: src/view/com/composer/Composer.tsx:1802
+#: src/view/com/composer/Composer.tsx:1515
+#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1768
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -4075,14 +4075,14 @@ msgstr "Kasser"
 msgid "Discard changes?"
 msgstr "Deaktiver ændringer?"
 
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Kasser udkast?"
 
-#: src/view/com/composer/Composer.tsx:1564
-#: src/view/com/composer/Composer.tsx:1794
+#: src/view/com/composer/Composer.tsx:1530
+#: src/view/com/composer/Composer.tsx:1760
 msgid "Discard post?"
 msgstr "Kasser opslag?"
 
@@ -4093,7 +4093,7 @@ msgstr "Frakobl Germ DM"
 
 #: src/screens/Search/Explore.tsx:444
 msgid "Discover feeds"
-msgstr ""
+msgstr "Opdag feeds"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:64
 #: src/view/com/posts/FollowingEmptyState.tsx:69
@@ -4115,7 +4115,7 @@ msgstr "Luk"
 msgid "Dismiss banner"
 msgstr "Fjern banner"
 
-#: src/view/com/composer/Composer.tsx:2653
+#: src/view/com/composer/Composer.tsx:2619
 msgid "Dismiss error"
 msgstr "Luk fejlbesked"
 
@@ -4341,7 +4341,7 @@ msgstr "Spiseforstyrrelser"
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:600
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4445,7 @@ msgstr "Rediger profil"
 msgid "Edit Profile"
 msgstr "Rediger profil"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:589
+#: src/screens/StarterPack/StarterPackScreen.tsx:592
 msgid "Edit starter pack"
 msgstr "Rediger startpakke"
 
@@ -4541,11 +4541,6 @@ msgstr "Aktiver"
 #: src/components/dialogs/EmbedConsent.tsx:96
 msgid "Enable {0} only"
 msgstr "Aktiver kun {0}"
-
-#. Description of a feature flag (10-minute video uploads)
-#: src/analytics/features/index.ts:90
-msgid "Enable 10-minute video uploads."
-msgstr "Tillad upload af videoer på op til 10 minutter."
 
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
@@ -4678,7 +4673,7 @@ msgstr "Åbner i fuld skærm"
 msgid "Entertainment"
 msgstr "Underholdning"
 
-#: src/view/com/composer/Composer.tsx:2731
+#: src/view/com/composer/Composer.tsx:2697
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Fejl"
@@ -4946,7 +4941,7 @@ msgstr "Sletning af besked fejlede"
 msgid "Failed to delete post, please try again"
 msgstr "Sletning af opslag fejlede, prøv igen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:747
+#: src/screens/StarterPack/StarterPackScreen.tsx:750
 msgid "Failed to delete starter pack"
 msgstr "Sletning af startpakke fejlede"
 
@@ -5078,7 +5073,7 @@ msgstr "Kunne ikke genforbinde Germ DM. Fejl: {0}"
 
 #: src/screens/Messages/JoinRequests.tsx:219
 msgid "Failed to reject join request"
-msgstr ""
+msgstr "Kunne ikke afvise anmodning om deltagelse"
 
 #: src/screens/Settings/FindContactsSettings.tsx:513
 msgid "Failed to remove data due to a network error, please check your internet connection."
@@ -5121,7 +5116,7 @@ msgstr "Kunne ikke trække din anmodning tilbage. Prøv igen."
 msgid "Failed to resolve location. Please try again."
 msgstr "Kunne ikke bestemme din lokalitet. Prøv igen senere."
 
-#: src/view/com/composer/Composer.tsx:775
+#: src/view/com/composer/Composer.tsx:741
 msgid "Failed to save draft"
 msgstr "Kunne ikke gemme kladde"
 
@@ -5174,7 +5169,7 @@ msgstr "Kunne ikke frigøre liste"
 
 #: src/state/queries/content-visibility.ts:83
 msgid "Failed to update content visibility"
-msgstr ""
+msgstr "Kunne ikke opdatere indholdssynlighed"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:148
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:82
@@ -5196,13 +5191,6 @@ msgstr "Kunne ikke opdatere notifikationsbeskrivelse"
 #: src/screens/Messages/Settings.tsx:110
 msgid "Failed to update settings"
 msgstr "Opdatering af indstillinger fejlede"
-
-#: src/lib/media/video/upload.ts:104
-#: src/lib/media/video/upload.web.ts:104
-#: src/lib/media/video/upload.web.ts:108
-#: src/lib/media/video/upload.web.ts:118
-msgid "Failed to upload video"
-msgstr "Upload af video fejlede"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:169
 msgid "Failed to verify email, please try again."
@@ -5269,7 +5257,7 @@ msgstr "Feedback blev sendt feedets ejer"
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:193
+#: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
@@ -5300,7 +5288,7 @@ msgstr "Fil blev gemt!"
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:34
 msgid "Filter by author (currently: {currentLabel})"
-msgstr ""
+msgstr "Filtrer efter konto (pt. {currentLabel})"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:69
 msgid "Filter from feeds"
@@ -5312,12 +5300,12 @@ msgstr "Filtrer efter sprog (pt. {currentLanguageLabel})"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:32
 msgid "Filter search by media (currently: {currentLabel})"
-msgstr ""
+msgstr "Filtrer søgning efter medie (pt. {currentLabel})"
 
 #. placeholder {0}: lang.name
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:88
 msgid "Filter this search by {0}"
-msgstr ""
+msgstr "Filtrer denne søgning efter {0}"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:106
 msgid "Filter who can opt to receive notifications for your activity"
@@ -5486,8 +5474,8 @@ msgstr "Følg konto"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
-#: src/screens/StarterPack/StarterPackScreen.tsx:453
+#: src/screens/StarterPack/StarterPackScreen.tsx:448
+#: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "Follow all"
 msgstr "Følg alle"
 
@@ -5812,7 +5800,7 @@ msgstr "Kom i gang"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2736
+#: src/view/com/composer/Composer.tsx:2702
 msgid "GIF uploaded"
 msgstr "GIF uploadet"
 
@@ -5850,7 +5838,7 @@ msgstr "Gå tilbage"
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:800
+#: src/screens/StarterPack/StarterPackScreen.tsx:803
 msgid "Go Back"
 msgstr "Gå tilbage"
 
@@ -6040,7 +6028,7 @@ msgstr "Gruppenavnet er for langt. {MAX_GROUP_NAME_GRAPHEME_LENGTH, plural, one 
 
 #: src/screens/Settings/Settings.tsx:469
 msgid "GrowthBook"
-msgstr ""
+msgstr "GrowthBook"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:221
 msgid "Hacking or system attacks"
@@ -6221,7 +6209,7 @@ msgstr "Skjul svar for mig"
 #: src/view/com/profile/ProfileMenu.tsx:488
 #: src/view/com/profile/ProfileMenu.tsx:495
 msgid "Hide reposts in feeds"
-msgstr ""
+msgstr "Skjul videredelinger i feeds"
 
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:105
 msgid "Hide this card"
@@ -6252,7 +6240,7 @@ msgstr "Skjul populære emner"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:102
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:171
 msgid "Hide trending topics?"
-msgstr "Skjul populære emner?"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
@@ -6282,11 +6270,11 @@ msgstr "Hmm, det ser ud til, at du er logget ind med en <0>appadgangskode</0>. F
 
 #: src/ageAssurance/useVerificationFlow.ts:122
 msgid "Hmm, it seems we weren't able to compute your level of access. Please try again."
-msgstr ""
+msgstr "Hmm, det ser ud til, at vi ikke kunne beregne dit adgangsniveau. Prøv igen."
 
 #: src/ageAssurance/useVerificationFlow.ts:141
 msgid "Hmm, it seems your device was unable to share age information with us."
-msgstr ""
+msgstr "Hmm, det ser ud til, at din enhed ikke kunne dele aldersoplysninger med os."
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:123
 msgid "Hmm, some kind of issue occurred when contacting the feed server. Please let the feed owner know about this issue."
@@ -6316,7 +6304,7 @@ msgstr "Hmm, vi oplever problemer med at indlæse denne data. Se yderligere oply
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmm, vi kunne ikke indlæse moderationstjenesten."
 
-#: src/view/com/composer/state/video.ts:523
+#: src/view/com/composer/state/video.ts:517
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Vent lidt! Vi udruller gradvist adgang til video, og du er stadig i kø. Prøv igen senere!"
 
@@ -6594,7 +6582,7 @@ msgstr "Inkluder"
 #. placeholder {0}: filter.mode === 'exclude' ? l({message: 'Exclude', comment: 'Advanced search filter'}) : l({message: 'Include', comment: 'Advanced search filter'})
 #: src/screens/Search/components/AdvancedSearchDialog/FilterBlock.tsx:44
 msgid "Include or exclude matching posts (currently: {0})"
-msgstr ""
+msgstr "Inkluder eller ekskluder matchende opslag (pt. {0})"
 
 #: src/screens/Search/components/AdvancedSearchDialog/RepliesDropdown.tsx:32
 msgid "Include posts and/or replies (currently: {currentLabel})"
@@ -6613,7 +6601,7 @@ msgstr "Inkluder opslag oprettet indtil denne dato"
 #. Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.
 #: src/components/moderation/ReportDialog/index.tsx:702
 msgid "Include video timestamp ({videoTimestamp})"
-msgstr ""
+msgstr "Inkluder videotidsstempel ({videoTimestamp})"
 
 #: src/screens/Login/LoginForm.tsx:164
 msgid "Incorrect username or password"
@@ -6800,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Lige nu er der kun dig! Føj flere personer til din startpakke ved at søge herover."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2672
+#: src/view/com/composer/Composer.tsx:2638
 msgid "Job ID: {0}"
 msgstr "Job-ID: {0}"
 
@@ -6816,8 +6804,8 @@ msgstr "Deltag"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:471
-#: src/screens/StarterPack/StarterPackScreen.tsx:481
+#: src/screens/StarterPack/StarterPackScreen.tsx:474
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
 msgid "Join Bluesky"
 msgstr "Opret dig på Bluesky"
 
@@ -6840,8 +6828,8 @@ msgstr "Deltag i samtalen"
 msgid "Journalism"
 msgstr "Journalistik"
 
-#: src/view/com/composer/Composer.tsx:1597
-#: src/view/com/composer/Composer.tsx:1607
+#: src/view/com/composer/Composer.tsx:1563
+#: src/view/com/composer/Composer.tsx:1573
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "Fortsæt med at redigere"
@@ -6857,7 +6845,7 @@ msgstr "KWS hjemmeside"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:627
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:629
 msgid "Label reply for algo"
-msgstr ""
+msgstr "Marker svar for algo"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
 #: src/components/moderation/ContentHider.tsx:245
@@ -6879,7 +6867,7 @@ msgstr "Mærkater tilføjet"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:78
 msgid "Labels applied to this post"
-msgstr ""
+msgstr "Mærkater tilføjet dette opslag"
 
 #: src/screens/Profile/Sections/Labels.tsx:195
 msgid "Labels are annotations on users and content. They can be used to hide, warn, and categorize the network."
@@ -6940,7 +6928,7 @@ msgstr "Læs mere"
 #: src/screens/Search/SearchResults.tsx:273
 msgctxt "english-only-resource"
 msgid "Learn more about <0>how to use advanced search</0>."
-msgstr ""
+msgstr "Læs mere om <0>hvordan du bruger avanceret søgning</0>."
 
 #: src/components/ageAssurance/AgeAssuranceDismissibleFeedBanner.tsx:66
 msgid "Learn more about age assurance"
@@ -7404,11 +7392,6 @@ msgstr "Logo af <0>@sawaratsuki.bsky.social</0>"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "Langt tryk for at åbne tagmenu for {0}"
-
-#. Name for a feature flag (longer videos)
-#: src/analytics/features/index.ts:84
-msgid "Longer videos"
-msgstr "Længere videoer"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:119
 msgid "Looks like XXXXX-XXXXX"
@@ -8125,7 +8108,7 @@ msgstr "Ingen appadgangskoder endnu"
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:30
 msgid "No author filter"
-msgstr ""
+msgstr "Intet kontofilter"
 
 #: src/screens/Settings/BetaFeaturesSettings.tsx:185
 msgid "No beta features at the moment."
@@ -8312,7 +8295,7 @@ msgstr "Ingen resultater fundet for \"{query}\""
 
 #: src/screens/Search/SearchResults.tsx:233
 msgid "No results found for “<0>{query}</0>” with advanced search filters applied."
-msgstr ""
+msgstr "Ingen resultater fundet for “<0>{query}</0>” med anvendelse af avancerede søgefiltre."
 
 #: src/screens/Search/SearchResults.tsx:245
 msgid "No results found for “<0>{query}</0>”."
@@ -8320,7 +8303,7 @@ msgstr "Ingen resultater fundet for “<0>{query}</0>”."
 
 #: src/screens/Search/SearchResults.tsx:239
 msgid "No results found for your query with advanced search filters applied."
-msgstr ""
+msgstr "Ingen resultater fundet for din søgning med anvendelse af avancerede søgefiltre."
 
 #: src/screens/Search/Explore.tsx:817
 msgid "No results."
@@ -8413,7 +8396,7 @@ msgstr "Note vedr. deling"
 
 #: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
-msgstr ""
+msgstr "OBS: Bluesky er en del af Atmosfæren, et åbent offentligt netværk. Disse indstillinger anmoder apps og websites om at begrænse din synlighed, men de kan vælge ikke at gøre dette. Dit offentlige indhold kan stadig dukke op andre steder."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:133
 msgid "Note: This post is only visible to logged-in users."
@@ -8523,27 +8506,27 @@ msgstr "En af de valgte modtagere tillader ikke gruppechats."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "En af de valgte modtagere har blokeret dig og kan ikke kontaktes."
 
-#: src/view/com/composer/Composer.tsx:983
+#: src/view/com/composer/Composer.tsx:949
 msgid "One or more GIFs is missing alt text."
 msgstr "En eller flere GIF'er mangler alt-tekst."
 
-#: src/view/com/composer/Composer.tsx:980
+#: src/view/com/composer/Composer.tsx:946
 msgid "One or more images is missing alt text."
 msgstr "En eller flere billeder mangler alt-tekst."
 
-#: src/view/com/composer/SelectMediaButton.tsx:438
+#: src/view/com/composer/SelectMediaButton.tsx:429
 msgid "One or more of your selected files are not supported."
 msgstr "En eller flere af de valgte filer er ikke understøttet."
 
-#: src/view/com/composer/SelectMediaButton.tsx:461
+#: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "En eller flere af dine valgte filer er for stor. Den maksimale størrelse er {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:786
+#: src/view/com/composer/Composer.tsx:752
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "Et eller flere opslag er for lange til at blive gemt som kladde. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {Kladder må være på højst # tegn.} other {Kladder må være på højst # tegn.}}"
 
-#: src/view/com/composer/Composer.tsx:990
+#: src/view/com/composer/Composer.tsx:956
 msgid "One or more videos is missing alt text."
 msgstr "Et eller flere videoer mangler alt-tekst."
 
@@ -8556,7 +8539,7 @@ msgstr "Kun {0} kan svare."
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:237
+#: src/view/com/composer/Composer.tsx:236
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "Kun {0} af {1} {2, plural, one {billede} other {billeder}} tilføjet; grænsen er {MAX_GALLERY_IMAGES}"
 
@@ -8566,7 +8549,7 @@ msgstr "Kun administratorer kan acceptere anmodninger om deltagelse."
 
 #: src/screens/Messages/JoinRequests.tsx:228
 msgid "Only admins can reject join requests."
-msgstr ""
+msgstr "Kun administratorer kan afvise anmodninger om deltagelse."
 
 #: src/components/intents/GroupChatJoinDialog.tsx:154
 msgid "Only followers can join this group chat."
@@ -8631,7 +8614,7 @@ msgstr "Ups!"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:66
 msgid "Open advanced search options"
-msgstr ""
+msgstr "Åbn avancerede søgeindstillinger"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:309
 msgid "Open avatar creator"
@@ -8664,7 +8647,7 @@ msgid "Open drawer menu"
 msgstr "Åbn navigation"
 
 #: src/screens/Messages/components/MessageComposer.tsx:214
-#: src/view/com/composer/Composer.tsx:2305
+#: src/view/com/composer/Composer.tsx:2271
 msgid "Open emoji picker"
 msgstr "Åbn emojivælger"
 
@@ -8743,7 +8726,7 @@ msgstr "Åbn indstillinger"
 msgid "Open share menu"
 msgstr "Åbn delemenu"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:575
+#: src/screens/StarterPack/StarterPackScreen.tsx:578
 msgid "Open starter pack menu"
 msgstr "Åbn startpakkemenu"
 
@@ -8770,7 +8753,7 @@ msgstr "Åbner en dialog, hvor du kan tilføje en indholdsadvarsel til dit opsla
 
 #: src/screens/Login/LoginForm.tsx:651
 msgid "Opens a dialog to change the hosting provider you sign in to"
-msgstr ""
+msgstr "Åbner en dialog for at ændre den udbyder, du logger ind i"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:152
 msgid "Opens a dialog to choose who can interact with this post"
@@ -8809,7 +8792,7 @@ msgid "Opens device camera"
 msgstr "Åbner enhedens kamera"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:540
+#: src/view/com/composer/SelectMediaButton.tsx:526
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Åbner enhedens kamerarulle for at vælge op til {MAX_GALLERY_IMAGES, plural, one {}other {# billeder}} eller en enkelt video eller GIF."
 
@@ -9020,7 +9003,7 @@ msgstr "Stop afspilning"
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:192
+#: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr "Personer"
 
@@ -9219,7 +9202,7 @@ msgstr "Klik på linket i den e-mail, vi lige har sendt dig, for at bekræfte di
 msgid "Please complete the verification captcha."
 msgstr "Løs verifikationsopgaven"
 
-#: src/view/com/composer/state/video.ts:547
+#: src/view/com/composer/state/video.ts:541
 msgid "Please confirm your email address to upload videos."
 msgstr "Bekræft din e-mailadresse for at uploade videoer."
 
@@ -9336,7 +9319,7 @@ msgstr "Log ind som @{0}"
 #: src/components/moderation/ReportDialog/index.tsx:962
 msgctxt "english-only-resource"
 msgid "Please submit your report through the Report non-consensual intimate imagery (NCII) form."
-msgstr ""
+msgstr "Indsend din klage gennem formuleren for intime billeder uden samtykke (NCII)."
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:40
 msgid "Please use the Bluesky mobile app to scan a QR code."
@@ -9367,7 +9350,7 @@ msgstr "Politik"
 msgid "Porn"
 msgstr "Porno"
 
-#: src/view/com/composer/Composer.tsx:1947
+#: src/view/com/composer/Composer.tsx:1913
 msgctxt "action"
 msgid "Post"
 msgstr "Slå op"
@@ -9378,10 +9361,10 @@ msgid "Post"
 msgstr "Opslag"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:74
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:80
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
-msgstr ""
+msgstr "Opslag {index} af {count}"
 
 #: src/view/screens/Profile.tsx:488
 #: src/view/screens/Profile.tsx:489
@@ -9393,12 +9376,12 @@ msgstr "Lav et fotoopslag"
 msgid "Post a video"
 msgstr "Lav et videoopslag"
 
-#: src/view/com/composer/Composer.tsx:1945
+#: src/view/com/composer/Composer.tsx:1911
 msgctxt "action"
 msgid "Post All"
 msgstr "Slå alle op"
 
-#: src/view/com/composer/Composer.tsx:1606
+#: src/view/com/composer/Composer.tsx:1572
 msgid "Post anyway"
 msgstr "Opret alligevel"
 
@@ -9487,7 +9470,7 @@ msgstr "Opslag blev frigjort"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:194
+#: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr "Opslag"
@@ -9582,11 +9565,11 @@ msgstr "Privatlivspolitik"
 msgid "Privacy violation of a minor"
 msgstr "Privatlivskrænkelse af en mindreårig"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2691
 msgid "Processing GIF..."
 msgstr "Behandler GIF ..."
 
-#: src/view/com/composer/Composer.tsx:2727
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing video..."
 msgstr "Behandler video..."
 
@@ -9633,22 +9616,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Offentlige lister over brugere, der kan skjules eller blokeres på én gang."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1931
+#: src/view/com/composer/Composer.tsx:1897
 msgid "Publish post"
 msgstr "Udgiv opslag"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1926
+#: src/view/com/composer/Composer.tsx:1892
 msgid "Publish posts"
 msgstr "Udgiv opslag"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1915
+#: src/view/com/composer/Composer.tsx:1881
 msgid "Publish replies"
 msgstr "Udgiv svar"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1920
+#: src/view/com/composer/Composer.tsx:1886
 msgid "Publish reply"
 msgstr "Udgiv svar"
 
@@ -9757,7 +9740,7 @@ msgstr "Læs {0, plural, one {yderligere # svar} other {yderligere # svar}}"
 #: src/screens/Search/SearchResults.tsx:276
 msgctxt "english-only-resource"
 msgid "Read about how to use advanced search filters"
-msgstr ""
+msgstr "Læs om, hvordan du bruger avancerede søgefiltre"
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:162
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
@@ -10141,7 +10124,7 @@ msgstr "Svar til dette opslag er ikke tilladt."
 msgid "Reply"
 msgstr "Besvar"
 
-#: src/view/com/composer/Composer.tsx:1943
+#: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
 msgid "Reply"
 msgstr "Besvar"
@@ -10225,8 +10208,8 @@ msgstr "Anmeld opslag"
 msgid "Report sent"
 msgstr "Fejlmeddelelse afsendt"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr "Anmeld startpakke"
 
@@ -10292,7 +10275,7 @@ msgstr "Videredel ({0, plural, one {# deling} other {# delinger}})"
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:570
+#: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Repost or quote post"
 msgstr "Videredel eller citer"
 
@@ -10318,7 +10301,7 @@ msgstr "Videredelinger"
 
 #: src/components/Pills.tsx:230
 msgid "Reposts Hidden"
-msgstr ""
+msgstr "Videredelinger skjult"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:460
 msgid "Reposts of this post"
@@ -10333,12 +10316,12 @@ msgstr "Videredeling af dine videredelinger"
 #: src/view/com/profile/ProfileMenu.tsx:192
 msgctxt "toast"
 msgid "Reposts will be hidden in feeds"
-msgstr ""
+msgstr "Videredelinger vil være skjult i feeds"
 
 #: src/view/com/profile/ProfileMenu.tsx:177
 msgctxt "toast"
 msgid "Reposts will be shown in feeds"
-msgstr ""
+msgstr "Videredelinger vil blive vist i feeds"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:468
 msgid "Request access to group chat"
@@ -10511,7 +10494,7 @@ msgstr "Prøv at genindlæse mulige årsager"
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:794
+#: src/screens/StarterPack/StarterPackScreen.tsx:797
 msgid "Return to previous page"
 msgstr "Gå til forrige side"
 
@@ -10572,22 +10555,22 @@ msgstr "Gem fødselsdato"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Gem ændringer"
 
-#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1525
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "Gem ændringer?"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "Gem kladde"
 
-#: src/view/com/composer/Composer.tsx:1561
+#: src/view/com/composer/Composer.tsx:1527
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "Gem kladde?"
@@ -10787,7 +10770,7 @@ msgstr "Søg efter profiler"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:248
 msgid "Search query"
-msgstr ""
+msgstr "Søgeord"
 
 #: src/screens/Profile/ProfileSearch.tsx:38
 msgid "Search..."
@@ -10850,7 +10833,7 @@ msgid "See more trending topics"
 msgstr "Se flere populære emner"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:107
+#: src/analytics/features/index.ts:91
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "Se nummererede etiketter (1/3, 2/3 osv.) på opslag i en tråd af den samme forfatter."
 
@@ -11045,7 +11028,7 @@ msgstr "Vælg dit foretrukne sprog for oversættelser i dit feed"
 msgid "Select your preferred notification channels"
 msgstr "Vælg dine foretrukne notifikationskanaler"
 
-#: src/view/com/composer/SelectMediaButton.tsx:441
+#: src/view/com/composer/SelectMediaButton.tsx:432
 msgid "Selecting multiple media types is not supported."
 msgstr "Valg af flere medietyper er ikke understøttet."
 
@@ -11242,7 +11225,7 @@ msgstr "Erotik"
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:440
+#: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr "Del"
@@ -11318,7 +11301,7 @@ msgstr "Del dette feed"
 msgid "Share this search"
 msgstr "Del denne søgning"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:433
+#: src/screens/StarterPack/StarterPackScreen.tsx:436
 msgid "Share this starter pack"
 msgstr "Del denne startpakke"
 
@@ -11330,8 +11313,8 @@ msgstr "Del denne startpakke og hjælp andre med at blive en del af fællesskabe
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:631
-#: src/screens/StarterPack/StarterPackScreen.tsx:639
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
+#: src/screens/StarterPack/StarterPackScreen.tsx:642
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11352,7 +11335,7 @@ msgstr "Test af delte indstillinger"
 #. Shown next to the 'Share age range' button when on-device age verification is available. KWS is the name of a third-party verification partner.
 #: src/ageAssurance/components/DeviceSignalsNotice.tsx:25
 msgid "Sharing your age range reveals only the range associated with your Apple Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
-msgstr ""
+msgstr "Deling af din aldersgruppe afslører kun aldersgruppen angivet for din Apple-konto – fx at du er mindst 18 år. <0>Din præcise alder og fødselsdato bliver ikke delt</0>, og disse oplysninger forlader aldrig denne enhed. Derfor giver de kun adgang på denne enhed. Alternativt <1>kan du benytte vores samarbejdspartner, KWS</1>, til at gennemføre alderstjek og give adgang på alle platforme."
 
 #. Shown next to the 'Share age range' button when on-device age verification is available. KWS is the name of a third-party verification partner.
 #: src/ageAssurance/components/DeviceSignalsNotice.tsx:43
@@ -11614,7 +11597,7 @@ msgstr "Spring over"
 msgid "Skip contact sharing and continue to the app"
 msgstr "Spring kontaktdeling over og fortsæt til appen"
 
-#: src/view/com/composer/Composer.tsx:1604
+#: src/view/com/composer/Composer.tsx:1570
 msgid "Skip empty posts?"
 msgstr "Spring tomme opslag over?"
 
@@ -11846,7 +11829,7 @@ msgstr "Startpakke af <0/>"
 msgid "Starter pack by you"
 msgstr "Startpakke af dig"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
+#: src/screens/StarterPack/StarterPackScreen.tsx:761
 msgid "Starter pack is invalid"
 msgstr "Startpakke er ugyldig"
 
@@ -11937,7 +11920,7 @@ msgstr "Send anmeldelse"
 #: src/components/moderation/ReportDialog/index.tsx:942
 msgctxt "english-only-resource"
 msgid "Submit your report through the Report non-consensual intimate imagery (NCII) form"
-msgstr ""
+msgstr "Indsend din klage gennem formuleren for intime billeder uden samtykke (NCII)"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:75
 msgid "Subscribe"
@@ -12248,8 +12231,8 @@ msgstr "Som indeholder følgende:"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:157
-#: src/screens/StarterPack/StarterPackScreen.tsx:158
+#: src/screens/StarterPack/StarterPackScreen.tsx:160
+#: src/screens/StarterPack/StarterPackScreen.tsx:161
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12317,7 +12300,7 @@ msgstr "Feedet er erstattet af Discover."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to this post."
-msgstr ""
+msgstr "Følgende mærkater er blevet føjet til dette indlæg."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:63
 msgid "The following labels were applied to your account."
@@ -12342,7 +12325,7 @@ msgstr "Medlemsgrænsen er nået."
 
 #: src/components/moderation/ReportDialog/index.tsx:315
 msgid "The moderation service is temporarily unavailable. Please try again later."
-msgstr ""
+msgstr "Modereringstjenesten er midlertidigt utilgængelig. Prøv igen senere."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:400
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12352,32 +12335,32 @@ msgstr "Det opslag du svarer på, er anført som skrevet på {suggestedLanguageN
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Privatlivspolitikken er flyttet til <0/>"
 
-#: src/view/com/composer/state/video.ts:494
+#: src/view/com/composer/state/video.ts:488
 msgid "The processed video is too large. Please try again with a smaller file."
-msgstr ""
+msgstr "Den behandlede video er for stor. Prøv igen med en mindre fil."
 
-#: src/view/com/composer/state/video.ts:469
+#: src/view/com/composer/state/video.ts:463
 msgid "The selected video could not be encoded."
-msgstr ""
+msgstr "Den valgte video kunne ikke konverteres."
 
-#: src/view/com/composer/state/video.ts:459
+#: src/view/com/composer/state/video.ts:453
 msgid "The selected video could not be processed."
 msgstr "Den valgte video kunne ikke behandles."
 
-#: src/view/com/composer/state/video.ts:489
+#: src/view/com/composer/state/video.ts:483
 msgid "The selected video has an unsupported aspect ratio."
-msgstr ""
+msgstr "Den valgte video har et ikkeunderstøttet billedformat."
 
-#: src/view/com/composer/state/video.ts:505
-#: src/view/com/composer/state/video.ts:544
+#: src/view/com/composer/state/video.ts:499
+#: src/view/com/composer/state/video.ts:538
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "Den valgte video er større end {VIDEO_MAX_SIZE_MB} MB. Prøv igen med en mindre fil."
 
-#: src/view/com/composer/state/video.ts:487
+#: src/view/com/composer/state/video.ts:481
 msgid "The selected video is too long."
 msgstr "Den valgte video er for lang."
 
-#: src/view/com/composer/state/video.ts:491
+#: src/view/com/composer/state/video.ts:485
 msgid "The selected video uses an unsupported format."
 msgstr "Den valgte video er i et ikkeunderstøttet format."
 
@@ -12386,7 +12369,7 @@ msgstr "Den valgte video er i et ikkeunderstøttet format."
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "Der ser ud til at være problemer med serveren. Prøv igen om lidt."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:768
+#: src/screens/StarterPack/StarterPackScreen.tsx:771
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "Startpakken, du prøver at åbne, er ugyldig. Du kan i stedet slette denne startpakke."
 
@@ -12412,9 +12395,9 @@ msgstr "Bekræftelseskoden, du har oplyst, er ugyldig. Tjek, at du har brugt den
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "Godkendelsestjenesten kunne ikke sende en kode til dit telefonnummer. Tjek dit telefonnummer og prøv igen·."
 
-#: src/view/com/composer/state/video.ts:472
+#: src/view/com/composer/state/video.ts:466
 msgid "The video could not be uploaded to your hosting provider. Please try again."
-msgstr ""
+msgstr "Videoen kunne ikke uploades til din udbyder. Prøv igen."
 
 #: src/screens/Settings/AppearanceSettings.tsx:137
 msgid "Theme"
@@ -12461,7 +12444,7 @@ msgstr "Der kunne ikke skabes forbindelse til serveren. Tjek din internetforbind
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Notifikationer kunne ikke indlæses. Tryk her for at prøve igen."
 
-#: src/screens/Search/Explore.tsx:1011
+#: src/screens/Search/Explore.tsx:1012
 #: src/view/com/posts/PostFeed.tsx:830
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Opslag kunne ikke indlæses. Tryk her for at prøve igen."
@@ -12694,7 +12677,7 @@ msgstr "Denne e-mail er allerede tilknyttet din konto."
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:280
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:283
 msgid "This exact phrase"
-msgstr ""
+msgstr "Præcis denne sætning"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:56
 msgid "This feature allows users to receive notifications for your new posts and replies. Who do you want to enable this for?"
@@ -12756,7 +12739,7 @@ msgstr "Dette invitationslink er ugyldigt"
 
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:139
 msgid "This is just a one-time security check, since we haven't seen this account on this device before."
-msgstr ""
+msgstr "Dette er blot et enkeltstående sikkerhedstjek, da vi ikke har set denne konto på denne enhed før."
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:173
 #: src/features/liveNow/components/GoLiveDialog.tsx:161
@@ -12778,7 +12761,7 @@ msgstr "Denne mærkat blev sat på dig."
 #: src/components/moderation/LabelsOnMeDialog.tsx:156
 #: src/components/moderation/ModerationDetailsDialog.tsx:231
 msgid "This label was applied to the entire user account and will appear on all posts."
-msgstr ""
+msgstr "Denne etiket blev tilføjet til hele brugerkontoen og vil fremgå af alle opslag."
 
 #: src/screens/Profile/Sections/Labels.tsx:219
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -12817,7 +12800,7 @@ msgstr "Denne besked er skjult, fordi du blokerer denne bruger."
 
 #: src/components/moderation/ReportDialog/index.tsx:313
 msgid "This moderation service does not support that report reason. Please choose a different reason or moderation service."
-msgstr ""
+msgstr "Denne modereringstjeneste understøtter ikke den anmeldelsesårsag. Vælg en anden årsag eller modereringstjeneste."
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -12849,7 +12832,7 @@ msgstr "Dette opslag er blevet slettet af dets forfatter"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Dette opslag vil blive skjult fra feeds og tråde. Denne handling kan ikke fortrydes."
 
-#: src/view/com/composer/Composer.tsx:1177
+#: src/view/com/composer/Composer.tsx:1143
 msgid "This post's author has disabled quote posts."
 msgstr "Dette opslags forfatter har ikke tilladt citatopslag."
 
@@ -12958,7 +12941,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Dette vil fjerne dit opslag fra dette citatopslag for alle brugere og erstatte det med en pladsholder."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:100
+#: src/analytics/features/index.ts:84
 msgid "Thread numbering"
 msgstr "Trådnummerering"
 
@@ -13187,7 +13170,7 @@ msgstr "Kunne ikke kontakte din udbyder. Tjek din internetforbindelse og prøv i
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Kan ikke kontakte din udbyder. Tjek din internetforbindelse."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:693
+#: src/screens/StarterPack/StarterPackScreen.tsx:696
 msgid "Unable to delete"
 msgstr "Kan ikke slette"
 
@@ -13463,7 +13446,7 @@ msgstr "Abonnement på liste afmeldt"
 msgid "Unsupported clipboard content"
 msgstr "Ikkeunderstøttet indhold i udklipsholder"
 
-#: src/view/com/composer/Composer.tsx:1696
+#: src/view/com/composer/Composer.tsx:1662
 msgid "Unsupported video type: {mimeType}"
 msgstr "Ikkeunderstøttet videotype: {mimeType}"
 
@@ -13556,7 +13539,7 @@ msgstr "Upload fra filer"
 msgid "Upload from Library"
 msgstr "Upload fra bibliotek"
 
-#: src/view/com/composer/Composer.tsx:2718
+#: src/view/com/composer/Composer.tsx:2684
 msgid "Uploading GIF..."
 msgstr "Uploader GIF ..."
 
@@ -13570,7 +13553,7 @@ msgstr "Uploader billeder..."
 msgid "Uploading link thumbnail..."
 msgstr "Uploader forhåndsvisning af link..."
 
-#: src/view/com/composer/Composer.tsx:2720
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading video..."
 msgstr "Uploader video..."
 
@@ -13820,7 +13803,7 @@ msgstr "via startpakken <0/><1>{starterPackName}</1>"
 msgid "Video"
 msgstr "Video"
 
-#: src/view/com/composer/state/video.ts:480
+#: src/view/com/composer/state/video.ts:474
 msgid "Video failed to process"
 msgstr "Videobehandling fejlede"
 
@@ -13859,7 +13842,7 @@ msgstr "Video ikke fundet."
 msgid "Video settings"
 msgstr "Videoindstillinger"
 
-#: src/view/com/composer/Composer.tsx:2738
+#: src/view/com/composer/Composer.tsx:2704
 msgid "Video uploaded"
 msgstr "Video uploadet"
 
@@ -13872,19 +13855,13 @@ msgstr "Video: {0}"
 msgid "Videos"
 msgstr "Videoer"
 
-#: src/view/com/composer/Composer.tsx:463
-#: src/view/com/composer/Composer.tsx:608
-#: src/view/com/composer/SelectMediaButton.tsx:455
+#: src/view/com/composer/Composer.tsx:454
+#: src/view/com/composer/Composer.tsx:586
+#: src/view/com/composer/SelectMediaButton.tsx:446
 msgid "Videos must be 10 minutes or less."
 msgstr "Videoer må være højst 10 minutter lange."
 
-#: src/view/com/composer/Composer.tsx:464
-#: src/view/com/composer/Composer.tsx:609
-#: src/view/com/composer/SelectMediaButton.tsx:456
-msgid "Videos must be less than 3 minutes long."
-msgstr "Videoer må være højst 3 minutter lange."
-
-#: src/view/com/composer/Composer.tsx:1284
+#: src/view/com/composer/Composer.tsx:1250
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Vis"
@@ -13948,7 +13925,7 @@ msgstr "Vis hele tråden"
 
 #: src/screens/Settings/Settings.tsx:467
 msgid "View GrowthBook information"
-msgstr ""
+msgstr "Vis GrowthBook-oplysninger"
 
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:48
 msgid "View incoming group chat requests"
@@ -13977,7 +13954,7 @@ msgstr "Se flere"
 msgid "View more trending videos"
 msgstr "Se flere populære videoer"
 
-#: src/view/com/composer/Composer.tsx:1279
+#: src/view/com/composer/Composer.tsx:1245
 msgid "View post"
 msgstr "Vis opslag"
 
@@ -14138,7 +14115,7 @@ msgstr "Vi kunne ikke indlæse indstillingerne for denne samtale"
 
 #: src/screens/Login/LoginForm.tsx:483
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
-msgstr ""
+msgstr "Vi kunne ikke bekræfte din udbyder. Tjek din internetforbindelse, eller <0>angiv din udbyder manuelt</0>."
 
 #: src/components/contacts/screens/GetContacts.tsx:246
 msgid "We delete hashes after matches are made"
@@ -14186,7 +14163,7 @@ msgstr "Vi anbefaler at vælge mindst to interesser."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Vi har sendt en e-mail til <0>{0}</0> med et link. Klik på det for at afslutte bekræftelsesforløbet."
 
-#: src/view/com/composer/state/video.ts:527
+#: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Vi kunne ikke afgøre, om du har lov til at uploade videoer. Prøv igen."
 
@@ -14265,7 +14242,7 @@ msgstr "Vi er så glade for at have dig med!"
 
 #: src/ageAssurance/useVerificationFlow.ts:117
 msgid "We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky."
-msgstr ""
+msgstr "Vi beklager, men baseret på de data, som din enhed har delt, er du ikke gammel nok til at bruge Bluesky."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:227
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:218
@@ -14296,7 +14273,7 @@ msgstr "Beklager, men din søgning kunne ikke gennemføres. Prøv igen om lidt."
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "Beklager, men du kan ikke tilgå dette skærmbillede i øjeblikket."
 
-#: src/view/com/composer/Composer.tsx:1175
+#: src/view/com/composer/Composer.tsx:1141
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Beklager! Det opslag, du svarer på, er blevet slettet."
 
@@ -14352,7 +14329,7 @@ msgid "what’s up"
 msgstr "hva’ så"
 
 #: src/view/com/auth/SplashScreen.web.tsx:100
-#: src/view/com/composer/Composer.tsx:1660
+#: src/view/com/composer/Composer.tsx:1626
 #: src/view/com/feeds/ComposerPrompt.tsx:195
 msgid "What's up?"
 msgstr "Hvad sker der?"
@@ -14438,7 +14415,7 @@ msgstr "Vil du blokere denne bruger og/eller forlade samtalen?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "Vil du gemme dette opslag som kladde, før du ser dine kladder?"
 
-#: src/view/com/composer/Composer.tsx:1575
+#: src/view/com/composer/Composer.tsx:1541
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "Vil du gemme dette opslag som kladde, du kan redigere senere?"
 
@@ -14447,12 +14424,12 @@ msgstr "Vil du gemme dette opslag som kladde, du kan redigere senere?"
 msgid "Write a post"
 msgstr "Skriv et opslag"
 
-#: src/view/com/composer/Composer.tsx:1756
+#: src/view/com/composer/Composer.tsx:1722
 msgid "Write post"
 msgstr "Skriv dit opslag"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1624
 msgid "Write your reply"
 msgstr "Skriv dit svar"
 
@@ -14495,7 +14472,7 @@ msgstr "Ja, deaktiveret"
 msgid "Yes, delete my account"
 msgstr "Ja, slet min konto"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:705
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Yes, delete this starter pack"
 msgstr "Ja, slet denne startpakke"
 
@@ -14562,7 +14539,7 @@ msgstr "Du er live"
 msgid "You are no longer live"
 msgstr "Du er ikke længere live"
 
-#: src/view/com/composer/state/video.ts:520
+#: src/view/com/composer/state/video.ts:514
 msgid "You are not allowed to upload videos."
 msgstr "Du har ikke adgang til at uploade videoer."
 
@@ -14630,11 +14607,11 @@ msgid "You can now sign in with your new password."
 msgstr "Du kan nu logge ind med din nye adgangskode."
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:224
+#: src/view/com/composer/Composer.tsx:223
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "Du kan tilføje maks. {MAX_GALLERY_IMAGES, plural, one {}other {# billeder}} pr. opslag"
 
-#: src/view/com/composer/Composer.tsx:1580
+#: src/view/com/composer/Composer.tsx:1546
 msgid "You can only save drafts up to 1000 characters."
 msgstr "Du kan kun gemme kladder på maks. 1000 tegn."
 
@@ -14642,11 +14619,11 @@ msgstr "Du kan kun gemme kladder på maks. 1000 tegn."
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr "Du kan kun gemme kladder på maks. 1000 tegn. Vil du kassere dette opslag, før du ser dine kladder?"
 
-#: src/view/com/composer/SelectMediaButton.tsx:458
+#: src/view/com/composer/SelectMediaButton.tsx:449
 msgid "You can only select one GIF at a time."
 msgstr "Du kan kun vælge én GIF ad gangen."
 
-#: src/view/com/composer/SelectMediaButton.tsx:452
+#: src/view/com/composer/SelectMediaButton.tsx:443
 msgid "You can only select one video at a time."
 msgstr "Du kan kun vælge én video ad gangen."
 
@@ -14659,7 +14636,7 @@ msgid "You can read chat history but can’t send new messages."
 msgstr "Du kan læse chathistorikken men ikke sende nye beskeder."
 
 #. Error message for maximum number of images that can be selected to add to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:444
+#: src/view/com/composer/SelectMediaButton.tsx:435
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Du kan vælge op til {MAX_GALLERY_IMAGES, plural, one {}other {# billeder}} i alt."
 
@@ -14778,11 +14755,11 @@ msgstr "Du er nået til slutningen"
 msgid "You have successfully verified your email address. You can close this dialog."
 msgstr "Du har nu bekræftet din e-mailadresse. Du kan lukke denne dialog."
 
-#: src/lib/media/video/upload.shared.ts:74
+#: src/lib/media/video/upload.shared.ts:110
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Du har midlertidigt nået grænsen for videouploads. Prøv igen senere."
 
-#: src/view/com/composer/Composer.tsx:1570
+#: src/view/com/composer/Composer.tsx:1536
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "Du har ikke-gemte ændringer til denne kladde. Vil du gemme dem?"
 
@@ -14858,7 +14835,7 @@ msgstr "Du skal følge mindst syv andre konti for at oprette en startpakke."
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Du skal give adgang til dit fotobibliotek for at gemme en QR-kode"
 
-#: src/view/com/composer/SelectMediaButton.tsx:494
+#: src/view/com/composer/SelectMediaButton.tsx:478
 msgid "You need to allow access to your media library."
 msgstr "Du skal give adgang til dit mediebibliotek."
 
@@ -14974,11 +14951,11 @@ msgstr "Du vil holde dig ajour med disse feeds"
 
 #: src/ageAssurance/useVerificationFlow.ts:133
 msgid "You're all set!"
-msgstr ""
+msgstr "Nu er der styr på det hele!"
 
 #: src/ageAssurance/useVerificationFlow.ts:127
 msgid "You're all set! However, certain features may still be restricted until you're able to verify you're an adult."
-msgstr ""
+msgstr "Nu er der styr på det hele! Visse funktioner er dog begrænset, indtil du er i stand til at bekræfte, at du er voksen."
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:205
 msgid "You’re in control"
@@ -15018,7 +14995,7 @@ msgstr "Du er nået slutningen af det aktive indhold."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "Du er nået enden af dit feed! Find flere konti, du kan føge."
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:739
 msgid "You've reached the maximum number of drafts"
 msgstr "Du har nået det maksimale antal kladder"
 
@@ -15034,11 +15011,11 @@ msgstr "Du har nået maksimum på {MAX_FILTERS, plural, one {# filter} other {# 
 msgid "You've reached the start of the active content."
 msgstr "Du er nået begyndelsen af det aktive indhold."
 
-#: src/view/com/composer/state/video.ts:531
+#: src/view/com/composer/state/video.ts:525
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Du har nået din daglige grænse for videouploads (for mange bytes)"
 
-#: src/view/com/composer/state/video.ts:535
+#: src/view/com/composer/state/video.ts:529
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Du har nået din daglige grænse for videouploads (for mange videoer)"
 
@@ -15062,7 +15039,7 @@ msgstr "Din konto blev slettet. Vi ses! ✌️"
 msgid "Your account has been suspended"
 msgstr "Din konto er suspenderet"
 
-#: src/view/com/composer/state/video.ts:539
+#: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Din konto er ikke gammel nok til videoupload. Prøv igen senere."
 
@@ -15157,7 +15134,7 @@ msgstr "Dit fulde handle bliver <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Din udbyder kan ikke detekteres ud fra en e-mailadresse, så standardudbyderen vil blive anvendt. Indtast i stedet dit brugernavn, eller vælg din udbyder manuelt."
 
-#: src/view/com/composer/state/video.ts:476
+#: src/view/com/composer/state/video.ts:470
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "Din udbyder tillader ikke videoer så store som denne. Prøv igen med en mindre fil."
 
@@ -15202,11 +15179,11 @@ msgstr "Din adgangskode er nu ændret! Fremover skal du bruge din nye adgangskod
 msgid "Your password must be at least 8 characters long."
 msgstr "Din adgangskode skal bestå af mindst 8 tegn."
 
-#: src/view/com/composer/Composer.tsx:1275
+#: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
 msgstr "Dit opslag blev sendt"
 
-#: src/view/com/composer/Composer.tsx:1272
+#: src/view/com/composer/Composer.tsx:1238
 msgid "Your posts were sent"
 msgstr "Dine opslag blev sendt"
 
@@ -15227,7 +15204,7 @@ msgstr "Dit profilbillede omgivet af koncentriske cirkler af andre brugeres prof
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Din profil, dine opslag, feeds og lister vil ikke længere kunne ses af andre Bluesky-brugere. Du kan genaktivere din konto når som helst ved at logge ind."
 
-#: src/view/com/composer/Composer.tsx:1274
+#: src/view/com/composer/Composer.tsx:1240
 msgid "Your reply was sent"
 msgstr "Dit svar blev sendt"
 
@@ -15240,7 +15217,7 @@ msgstr "Din anmeldelse vil blive sendt til <0>{0}</0>."
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Dine valgte interesser hjælper os med at vise dig relevant indhold."
 
-#: src/view/com/composer/Composer.tsx:1605
+#: src/view/com/composer/Composer.tsx:1571
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Din tråd har tomme opslag, som vil blive sprunget over. De resterende opslag vil blive oprettet som en tråd."
 

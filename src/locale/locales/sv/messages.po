@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-19 23:51\n"
+"PO-Revision-Date: 2026-08-25 22:01\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -203,7 +203,7 @@ msgstr "{0, plural, one {inlägg} other {inlägg}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:497
+#: src/screens/StarterPack/StarterPackScreen.tsx:500
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr "{0, plural, other {# personer}} har gått med i Bluesky med hjälp av det här startpaketet!"
 
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# timme} other {# timmar}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:89
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:95
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -1201,11 +1201,11 @@ msgstr "Lägg till alternativtext (valfritt)"
 msgid "Add another account"
 msgstr "Lägg till ett annat konto"
 
-#: src/view/com/composer/Composer.tsx:1659
+#: src/view/com/composer/Composer.tsx:1625
 msgid "Add another post"
 msgstr "Lägg till ett ytterligare inlägg"
 
-#: src/view/com/composer/Composer.tsx:2328
+#: src/view/com/composer/Composer.tsx:2294
 msgid "Add another post to thread"
 msgstr "Lägg till ytterligare ett inlägg i tråden"
 
@@ -1244,7 +1244,7 @@ msgid "Add image"
 msgstr "Lägg till bild"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:534
+#: src/view/com/composer/SelectMediaButton.tsx:520
 msgid "Add media to post"
 msgstr "Lägg till media i inlägg"
 
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr "Alla {0}"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:398
+#: src/screens/StarterPack/StarterPackScreen.tsx:401
 msgid "All accounts have been followed!"
 msgstr "Alla konton har följts!"
 
@@ -1587,7 +1587,7 @@ msgstr "Ett fel har uppstått"
 msgid "An error occurred"
 msgstr "Ett fel uppstod"
 
-#: src/view/com/composer/state/video.ts:509
+#: src/view/com/composer/state/video.ts:503
 msgid "An error occurred while compressing the video."
 msgstr "Ett fel uppstod under komprimeringen av videoklippet."
 
@@ -1628,16 +1628,16 @@ msgstr "Ett fel uppstod när QR-koden skulle sparas!"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:357
-#: src/screens/StarterPack/StarterPackScreen.tsx:384
+#: src/screens/StarterPack/StarterPackScreen.tsx:360
+#: src/screens/StarterPack/StarterPackScreen.tsx:387
 msgid "An error occurred while trying to follow all"
 msgstr "Ett fel uppstod när du försökte följa alla"
 
-#: src/view/com/composer/state/video.ts:561
+#: src/view/com/composer/state/video.ts:555
 msgid "An error occurred while uploading the video. {message}"
 msgstr "Ett fel uppstod under uppladdningen av videoklippet. {message}"
 
-#: src/view/com/composer/state/video.ts:553
+#: src/view/com/composer/state/video.ts:547
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "Ett fel uppstod under uppladdningen av videoklippet. Kontrollera din internetanslutning och försök igen."
 
@@ -1914,7 +1914,7 @@ msgstr "Är du säker på att du vill radera applösenordet ”{0}”?"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "Är du säker på att du vill radera det här meddelandet? Meddelandet kommer att raderas för dig, men inte för de andra deltagarna."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:680
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "Är du säker på att du vill radera det här startpaketet?"
 
@@ -1945,7 +1945,7 @@ msgstr "Är du säker på att du vill ta bort det här från dina flöden?"
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "Är du säker på att du vill återkalla din förfrågan om att gå med i {0}?"
 
-#: src/view/com/composer/Composer.tsx:1795
+#: src/view/com/composer/Composer.tsx:1761
 msgid "Are you sure you'd like to discard this post?"
 msgstr "Är du säker på att du vill slänga det här inlägget?"
 
@@ -2565,8 +2565,8 @@ msgstr "Kameraåtkomst krävs"
 #: src/screens/Settings/Settings.tsx:312
 #: src/screens/Takendown.tsx:100
 #: src/screens/Takendown.tsx:103
-#: src/view/com/composer/Composer.tsx:1873
-#: src/view/com/composer/Composer.tsx:1883
+#: src/view/com/composer/Composer.tsx:1839
+#: src/view/com/composer/Composer.tsx:1849
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -3118,7 +3118,7 @@ msgstr "Stäng välkomstfönster"
 msgid "Closes password update alert"
 msgstr "Stänger avisering om uppdatering av lösenord"
 
-#: src/view/com/composer/Composer.tsx:1881
+#: src/view/com/composer/Composer.tsx:1847
 msgid "Closes post composer and discards post draft"
 msgstr "Stänger inläggsverktyget och slänger utkastet"
 
@@ -3172,7 +3172,7 @@ msgid "Compose new post"
 msgstr "Skriv ett nytt inlägg"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1757
+#: src/view/com/composer/Composer.tsx:1723
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "Skriv inlägg som är upp till {0, plural, other {# tecken}} långa"
 
@@ -3180,11 +3180,11 @@ msgstr "Skriv inlägg som är upp till {0, plural, other {# tecken}} långa"
 msgid "Compose reply"
 msgstr "Skriv svar"
 
-#: src/view/com/composer/Composer.tsx:2711
+#: src/view/com/composer/Composer.tsx:2677
 msgid "Compressing GIF..."
 msgstr "Komprimerar gif-bild…"
 
-#: src/view/com/composer/Composer.tsx:2713
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing video..."
 msgstr "Komprimerar videoklipp…"
 
@@ -3452,7 +3452,7 @@ msgstr "Kopiera inbjudningslänk"
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
+#: src/screens/StarterPack/StarterPackScreen.tsx:640
 msgid "Copy link"
 msgstr "Kopiera länk"
 
@@ -3477,7 +3477,7 @@ msgstr "Kopiera länk till inlägg"
 msgid "Copy link to profile"
 msgstr "Kopiera länk till profil"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:630
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Copy link to starter pack"
 msgstr "Kopiera länk till startpaket"
 
@@ -3632,7 +3632,7 @@ msgstr "Skapa"
 msgid "Create a list"
 msgstr "Skapa en lista"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:616
 msgid "Create a list from this starter pack"
 msgstr "Skapa en lista baserad på det här startpaketet"
 
@@ -3699,7 +3699,7 @@ msgstr "Skapa gruppchatt"
 msgid "Create list"
 msgstr "Skapa lista"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:619
+#: src/screens/StarterPack/StarterPackScreen.tsx:622
 msgid "Create list from members"
 msgstr "Skapa lista baserad på medlemmar"
 
@@ -3842,9 +3842,9 @@ msgstr "Förvalda ikoner"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:608
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
-#: src/screens/StarterPack/StarterPackScreen.tsx:787
+#: src/screens/StarterPack/StarterPackScreen.tsx:611
+#: src/screens/StarterPack/StarterPackScreen.tsx:711
+#: src/screens/StarterPack/StarterPackScreen.tsx:790
 msgid "Delete"
 msgstr "Radera"
 
@@ -3911,16 +3911,16 @@ msgstr "Radera mitt konto"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:808
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:810
-#: src/view/com/composer/Composer.tsx:1769
+#: src/view/com/composer/Composer.tsx:1735
 msgid "Delete post"
 msgstr "Radera inlägg"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:602
-#: src/screens/StarterPack/StarterPackScreen.tsx:778
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:781
 msgid "Delete starter pack"
 msgstr "Radera startpaket"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:674
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Delete starter pack?"
 msgstr "Radera startpaket?"
 
@@ -4062,9 +4062,9 @@ msgstr "Inaktiverat"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1549
-#: src/view/com/composer/Composer.tsx:1593
-#: src/view/com/composer/Composer.tsx:1802
+#: src/view/com/composer/Composer.tsx:1515
+#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1768
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -4075,14 +4075,14 @@ msgstr "Släng"
 msgid "Discard changes?"
 msgstr "Vill du slänga ändringarna?"
 
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "Vill du slänga utkastet?"
 
-#: src/view/com/composer/Composer.tsx:1564
-#: src/view/com/composer/Composer.tsx:1794
+#: src/view/com/composer/Composer.tsx:1530
+#: src/view/com/composer/Composer.tsx:1760
 msgid "Discard post?"
 msgstr "Vill du slänga inlägget?"
 
@@ -4115,7 +4115,7 @@ msgstr "Avvisa"
 msgid "Dismiss banner"
 msgstr "Avvisa banderoll"
 
-#: src/view/com/composer/Composer.tsx:2653
+#: src/view/com/composer/Composer.tsx:2619
 msgid "Dismiss error"
 msgstr "Avvisa fel"
 
@@ -4341,7 +4341,7 @@ msgstr "Ätstörningar"
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:600
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4445,7 @@ msgstr "Redigera profil"
 msgid "Edit Profile"
 msgstr "Redigera profil"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:589
+#: src/screens/StarterPack/StarterPackScreen.tsx:592
 msgid "Edit starter pack"
 msgstr "Redigera startpaket"
 
@@ -4541,11 +4541,6 @@ msgstr "Aktivera"
 #: src/components/dialogs/EmbedConsent.tsx:96
 msgid "Enable {0} only"
 msgstr "Aktivera endast {0}"
-
-#. Description of a feature flag (10-minute video uploads)
-#: src/analytics/features/index.ts:90
-msgid "Enable 10-minute video uploads."
-msgstr "Aktivera uppladdning av 10 minuter långa videoklipp."
 
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
@@ -4678,7 +4673,7 @@ msgstr "Öppnar helskärm"
 msgid "Entertainment"
 msgstr "Underhållning"
 
-#: src/view/com/composer/Composer.tsx:2731
+#: src/view/com/composer/Composer.tsx:2697
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Fel"
@@ -4946,7 +4941,7 @@ msgstr "Det gick inte att radera inlägget"
 msgid "Failed to delete post, please try again"
 msgstr "Det gick inte att radera inlägget. Försök igen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:747
+#: src/screens/StarterPack/StarterPackScreen.tsx:750
 msgid "Failed to delete starter pack"
 msgstr "Det gick inte att radera startpaketet"
 
@@ -5121,7 +5116,7 @@ msgstr "Det gick inte att återkalla din förfrågan. Försök igen."
 msgid "Failed to resolve location. Please try again."
 msgstr "Det gick inte att fastställa din plats. Försök igen."
 
-#: src/view/com/composer/Composer.tsx:775
+#: src/view/com/composer/Composer.tsx:741
 msgid "Failed to save draft"
 msgstr "Det gick inte att spara utkast"
 
@@ -5197,13 +5192,6 @@ msgstr "Det gick inte att uppdatera notisdeklaration"
 msgid "Failed to update settings"
 msgstr "Det gick inte att uppdatera inställningarna"
 
-#: src/lib/media/video/upload.ts:104
-#: src/lib/media/video/upload.web.ts:104
-#: src/lib/media/video/upload.web.ts:108
-#: src/lib/media/video/upload.web.ts:118
-msgid "Failed to upload video"
-msgstr "Det gick inte att ladda upp videoklippet"
-
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:169
 msgid "Failed to verify email, please try again."
 msgstr "Det gick inte att verifiera e-post. Försök igen."
@@ -5269,7 +5257,7 @@ msgstr "Feedback skickad till flödesoperatör"
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:193
+#: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
@@ -5486,8 +5474,8 @@ msgstr "Följ konto"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
-#: src/screens/StarterPack/StarterPackScreen.tsx:453
+#: src/screens/StarterPack/StarterPackScreen.tsx:448
+#: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "Follow all"
 msgstr "Följ alla"
 
@@ -5812,7 +5800,7 @@ msgstr "Kom igång"
 msgid "GIF"
 msgstr "Gif-bild"
 
-#: src/view/com/composer/Composer.tsx:2736
+#: src/view/com/composer/Composer.tsx:2702
 msgid "GIF uploaded"
 msgstr "Gif-bild uppladdad"
 
@@ -5850,7 +5838,7 @@ msgstr "Gå tillbaka"
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:800
+#: src/screens/StarterPack/StarterPackScreen.tsx:803
 msgid "Go Back"
 msgstr "Gå tillbaka"
 
@@ -6252,7 +6240,7 @@ msgstr "Dölj trendande ämnen"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:102
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:171
 msgid "Hide trending topics?"
-msgstr "Dölj trendande ämnen?"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
@@ -6316,7 +6304,7 @@ msgstr "Hmmmm, det verkar som om vi har problem med att läsa in den här datan.
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "Hmmmm, vi kunde inte ladda den modereringstjänsten."
 
-#: src/view/com/composer/state/video.ts:523
+#: src/view/com/composer/state/video.ts:517
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "Vänta lite! Vi ger gradvis tillgång till videoklipp till fler användare, och du står fortfarande i kön. Försök igen senare!"
 
@@ -6800,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Just nu är det bara du! Lägg till fler personer i ditt startpaket genom att söka ovan."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2672
+#: src/view/com/composer/Composer.tsx:2638
 msgid "Job ID: {0}"
 msgstr "Jobb-ID: {0}"
 
@@ -6816,8 +6804,8 @@ msgstr "Gå med"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:471
-#: src/screens/StarterPack/StarterPackScreen.tsx:481
+#: src/screens/StarterPack/StarterPackScreen.tsx:474
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
 msgid "Join Bluesky"
 msgstr "Gå med i Bluesky"
 
@@ -6840,8 +6828,8 @@ msgstr "Delta i samtalen"
 msgid "Journalism"
 msgstr "Journalistik"
 
-#: src/view/com/composer/Composer.tsx:1597
-#: src/view/com/composer/Composer.tsx:1607
+#: src/view/com/composer/Composer.tsx:1563
+#: src/view/com/composer/Composer.tsx:1573
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "Fortsätt redigera"
@@ -7404,11 +7392,6 @@ msgstr "Logotyp av <0>@sawaratsuki.bsky.social</0>"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "Tryck och håll nere för att öppna taggmenyn för {0}"
-
-#. Name for a feature flag (longer videos)
-#: src/analytics/features/index.ts:84
-msgid "Longer videos"
-msgstr "Längre videoklipp"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:119
 msgid "Looks like XXXXX-XXXXX"
@@ -8523,27 +8506,27 @@ msgstr "En av de valda mottagarna tillåter inte gruppchattar."
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "En av de valda mottagarna har blockerat dig och kan inte nås via meddelanden."
 
-#: src/view/com/composer/Composer.tsx:983
+#: src/view/com/composer/Composer.tsx:949
 msgid "One or more GIFs is missing alt text."
 msgstr "En eller flera gif-bilder saknar alternativtext."
 
-#: src/view/com/composer/Composer.tsx:980
+#: src/view/com/composer/Composer.tsx:946
 msgid "One or more images is missing alt text."
 msgstr "En eller flera bilder saknar alternativtext."
 
-#: src/view/com/composer/SelectMediaButton.tsx:438
+#: src/view/com/composer/SelectMediaButton.tsx:429
 msgid "One or more of your selected files are not supported."
 msgstr "En eller flera av de filer du valt stöds inte."
 
-#: src/view/com/composer/SelectMediaButton.tsx:461
+#: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "En eller flera av de filer du valt är för stora. Maxstorlek är {VIDEO_MAX_SIZE_MB} MB."
 
-#: src/view/com/composer/Composer.tsx:786
+#: src/view/com/composer/Composer.tsx:752
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "Ett eller flera inlägg är för långa för att sparas som utkast. {MAX_DRAFT_GRAPHEME_LENGTH, plural, other {Maximalt antal tecken är #.}}"
 
-#: src/view/com/composer/Composer.tsx:990
+#: src/view/com/composer/Composer.tsx:956
 msgid "One or more videos is missing alt text."
 msgstr "Ett eller flera videoklipp saknar alternativtext."
 
@@ -8556,7 +8539,7 @@ msgstr "Endast {0} får svara."
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:237
+#: src/view/com/composer/Composer.tsx:236
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "Endast {0} av {1} {2, plural, one {bild} other {bilder}} lades till. Gränsen är {MAX_GALLERY_IMAGES} bilder"
 
@@ -8664,7 +8647,7 @@ msgid "Open drawer menu"
 msgstr "Öppna sidpanel"
 
 #: src/screens/Messages/components/MessageComposer.tsx:214
-#: src/view/com/composer/Composer.tsx:2305
+#: src/view/com/composer/Composer.tsx:2271
 msgid "Open emoji picker"
 msgstr "Öppna emoji-väljaren"
 
@@ -8743,7 +8726,7 @@ msgstr "Öppna inställningar"
 msgid "Open share menu"
 msgstr "Öppna delningsmeny"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:575
+#: src/screens/StarterPack/StarterPackScreen.tsx:578
 msgid "Open starter pack menu"
 msgstr "Öppna startpaketsmeny"
 
@@ -8809,7 +8792,7 @@ msgid "Opens device camera"
 msgstr "Öppnar enhetens kamera"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:540
+#: src/view/com/composer/SelectMediaButton.tsx:526
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "Öppnar enhetens galleri där du kan välja upp till {MAX_GALLERY_IMAGES, plural, other {# bilder}}, ett enskilt videoklipp eller en enskild gif-bild."
 
@@ -9020,7 +9003,7 @@ msgstr "Pausa video"
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:192
+#: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr "Personer"
 
@@ -9219,7 +9202,7 @@ msgstr "Klicka på länken i e-postmeddelandet vi just skickade till dig för at
 msgid "Please complete the verification captcha."
 msgstr "Slutför captcha-verifieringen."
 
-#: src/view/com/composer/state/video.ts:547
+#: src/view/com/composer/state/video.ts:541
 msgid "Please confirm your email address to upload videos."
 msgstr "Bekräfta din e-postadress för att ladda upp videoklipp."
 
@@ -9367,7 +9350,7 @@ msgstr "Politik"
 msgid "Porn"
 msgstr "Porr"
 
-#: src/view/com/composer/Composer.tsx:1947
+#: src/view/com/composer/Composer.tsx:1913
 msgctxt "action"
 msgid "Post"
 msgstr "Publicera"
@@ -9378,7 +9361,7 @@ msgid "Post"
 msgstr "Inlägg"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:74
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:80
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Inlägg {index} av {count}"
@@ -9393,12 +9376,12 @@ msgstr "Publicera ett foto"
 msgid "Post a video"
 msgstr "Publicera ett videoklipp"
 
-#: src/view/com/composer/Composer.tsx:1945
+#: src/view/com/composer/Composer.tsx:1911
 msgctxt "action"
 msgid "Post All"
 msgstr "Publicera alla"
 
-#: src/view/com/composer/Composer.tsx:1606
+#: src/view/com/composer/Composer.tsx:1572
 msgid "Post anyway"
 msgstr "Publicera ändå"
 
@@ -9487,7 +9470,7 @@ msgstr "Inlägget lossades"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:194
+#: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr "Inlägg"
@@ -9582,11 +9565,11 @@ msgstr "Integritetspolicy"
 msgid "Privacy violation of a minor"
 msgstr "Kränkning av minderårigs integritet"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2691
 msgid "Processing GIF..."
 msgstr "Bearbetar gif-bild…"
 
-#: src/view/com/composer/Composer.tsx:2727
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing video..."
 msgstr "Bearbetar videoklipp…"
 
@@ -9633,22 +9616,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "Publika, delningsbara listor över användare som kan ignoreras eller blockeras i grupp."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1931
+#: src/view/com/composer/Composer.tsx:1897
 msgid "Publish post"
 msgstr "Publicera inlägg"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1926
+#: src/view/com/composer/Composer.tsx:1892
 msgid "Publish posts"
 msgstr "Publicera samtliga inlägg"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1915
+#: src/view/com/composer/Composer.tsx:1881
 msgid "Publish replies"
 msgstr "Publicera samtliga svar"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1920
+#: src/view/com/composer/Composer.tsx:1886
 msgid "Publish reply"
 msgstr "Publicera samtliga svar"
 
@@ -10141,7 +10124,7 @@ msgstr "Svar är inaktiverat för det här inlägget."
 msgid "Reply"
 msgstr "Svara"
 
-#: src/view/com/composer/Composer.tsx:1943
+#: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
 msgid "Reply"
 msgstr "Svara"
@@ -10225,8 +10208,8 @@ msgstr "Anmäl inlägg"
 msgid "Report sent"
 msgstr "Rapport skickad"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr "Anmäl startpaket"
 
@@ -10292,7 +10275,7 @@ msgstr "Återpublicera ({0, plural, one {# återpublicering} other {# återpubli
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:570
+#: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Repost or quote post"
 msgstr "Återpublicera eller citera inlägg"
 
@@ -10511,7 +10494,7 @@ msgstr "Försök läsa in alternativ för anmälan på nytt"
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:794
+#: src/screens/StarterPack/StarterPackScreen.tsx:797
 msgid "Return to previous page"
 msgstr "Gå tillbaka till föregående sida"
 
@@ -10572,22 +10555,22 @@ msgstr "Spara födelsedatum"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "Spara ändringar"
 
-#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1525
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "Spara ändringar?"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "Spara utkast"
 
-#: src/view/com/composer/Composer.tsx:1561
+#: src/view/com/composer/Composer.tsx:1527
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "Spara utkast?"
@@ -10850,7 +10833,7 @@ msgid "See more trending topics"
 msgstr "Se fler trendande ämnen"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:107
+#: src/analytics/features/index.ts:91
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "Se nummerbrickor (1/3, 2/3 osv.) på inlägg av samma författare."
 
@@ -11045,7 +11028,7 @@ msgstr "Välj önskat språk för översättningar i ditt flöde."
 msgid "Select your preferred notification channels"
 msgstr "Välj önskade notiskanaler"
 
-#: src/view/com/composer/SelectMediaButton.tsx:441
+#: src/view/com/composer/SelectMediaButton.tsx:432
 msgid "Selecting multiple media types is not supported."
 msgstr "Val av flera medietyper stöds inte."
 
@@ -11242,7 +11225,7 @@ msgstr "Sexuellt suggestivt"
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:440
+#: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr "Dela"
@@ -11318,7 +11301,7 @@ msgstr "Dela det här flödet"
 msgid "Share this search"
 msgstr "Dela den här sökningen"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:433
+#: src/screens/StarterPack/StarterPackScreen.tsx:436
 msgid "Share this starter pack"
 msgstr "Dela det här startpaketet"
 
@@ -11330,8 +11313,8 @@ msgstr "Dela det här startpaketet och hjälp andra att gå med i din gemenskap 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:631
-#: src/screens/StarterPack/StarterPackScreen.tsx:639
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
+#: src/screens/StarterPack/StarterPackScreen.tsx:642
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11614,7 +11597,7 @@ msgstr "Hoppa över"
 msgid "Skip contact sharing and continue to the app"
 msgstr "Hoppa över kontaktdelning och fortsätt till appen"
 
-#: src/view/com/composer/Composer.tsx:1604
+#: src/view/com/composer/Composer.tsx:1570
 msgid "Skip empty posts?"
 msgstr "Hoppa över tomma inlägg?"
 
@@ -11846,7 +11829,7 @@ msgstr "Startpaket av <0/>"
 msgid "Starter pack by you"
 msgstr "Startpaket av dig"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
+#: src/screens/StarterPack/StarterPackScreen.tsx:761
 msgid "Starter pack is invalid"
 msgstr "Startpaketet är ogiltigt"
 
@@ -12248,8 +12231,8 @@ msgstr "Som innehåller följande:"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:157
-#: src/screens/StarterPack/StarterPackScreen.tsx:158
+#: src/screens/StarterPack/StarterPackScreen.tsx:160
+#: src/screens/StarterPack/StarterPackScreen.tsx:161
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12352,32 +12335,32 @@ msgstr "Författaren till inlägget du svarar på har angett att det är skrivet
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "Integritetspolicyn har flyttats till <0/>"
 
-#: src/view/com/composer/state/video.ts:494
+#: src/view/com/composer/state/video.ts:488
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "Det bearbetade videoklippet är för stort. Försök igen med en mindre fil."
 
-#: src/view/com/composer/state/video.ts:469
+#: src/view/com/composer/state/video.ts:463
 msgid "The selected video could not be encoded."
 msgstr "Det valda videoklippet kunde inte kodas."
 
-#: src/view/com/composer/state/video.ts:459
+#: src/view/com/composer/state/video.ts:453
 msgid "The selected video could not be processed."
 msgstr "Det valda videoklippet kunde inte bearbetas."
 
-#: src/view/com/composer/state/video.ts:489
+#: src/view/com/composer/state/video.ts:483
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "Det valda videoklippets bildförhållande stöds inte."
 
-#: src/view/com/composer/state/video.ts:505
-#: src/view/com/composer/state/video.ts:544
+#: src/view/com/composer/state/video.ts:499
+#: src/view/com/composer/state/video.ts:538
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "Det valda videoklippet är större än {VIDEO_MAX_SIZE_MB} MB. Försök igen med en mindre fil."
 
-#: src/view/com/composer/state/video.ts:487
+#: src/view/com/composer/state/video.ts:481
 msgid "The selected video is too long."
 msgstr "Det valda videoklippet är för långt."
 
-#: src/view/com/composer/state/video.ts:491
+#: src/view/com/composer/state/video.ts:485
 msgid "The selected video uses an unsupported format."
 msgstr "Det valda videoklippets filformat stöds inte."
 
@@ -12386,7 +12369,7 @@ msgstr "Det valda videoklippets filformat stöds inte."
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "Det verkar som att servern har problem. Försök igen om en liten stund."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:768
+#: src/screens/StarterPack/StarterPackScreen.tsx:771
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "Startpaketet som du försöker visa är ogiltigt. Du kan radera det här startpaketet istället."
 
@@ -12412,7 +12395,7 @@ msgstr "Den verifieringskod du har angett är ogiltig. Kontrollera att du har an
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "Vår verifieringsleverantör kunde inte skicka en kod till ditt telefonnummer. Kontrollera ditt telefonnummer och försök igen."
 
-#: src/view/com/composer/state/video.ts:472
+#: src/view/com/composer/state/video.ts:466
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "Videoklippet kunde inte laddas upp till din kontoleverantör. Försök igen."
 
@@ -12461,7 +12444,7 @@ msgstr "Ett problem uppstod med anslutningen till servern. Kontrollera din inter
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "Ett problem uppstod med att hämta notiser. Tryck här för att försöka igen."
 
-#: src/screens/Search/Explore.tsx:1011
+#: src/screens/Search/Explore.tsx:1012
 #: src/view/com/posts/PostFeed.tsx:830
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "Ett problem uppstod med att hämta inlägg. Tryck här för att försöka igen."
@@ -12849,7 +12832,7 @@ msgstr "Det här inlägget har raderats av författaren"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "Det här inlägget kommer att hållas dolt från flöden och trådar. Det här kan inte ångras."
 
-#: src/view/com/composer/Composer.tsx:1177
+#: src/view/com/composer/Composer.tsx:1143
 msgid "This post's author has disabled quote posts."
 msgstr "Författaren till det här inlägget har inaktiverat citatinlägg."
 
@@ -12958,7 +12941,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "Det här tar bort ditt inlägg från citatinlägget för alla användare, och ersätter det med en platshållare."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:100
+#: src/analytics/features/index.ts:84
 msgid "Thread numbering"
 msgstr "Inläggsnummer i trådar"
 
@@ -13187,7 +13170,7 @@ msgstr "Det gick inte att ansluta till din tjänst. Kontrollera din internetansl
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Det gick inte att ansluta till din tjänst. Kontrollera din internetanslutning."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:693
+#: src/screens/StarterPack/StarterPackScreen.tsx:696
 msgid "Unable to delete"
 msgstr "Det gick inte att radera"
 
@@ -13463,7 +13446,7 @@ msgstr "Avslutade prenumeration på lista"
 msgid "Unsupported clipboard content"
 msgstr "Urklippsinnehåll stöds inte"
 
-#: src/view/com/composer/Composer.tsx:1696
+#: src/view/com/composer/Composer.tsx:1662
 msgid "Unsupported video type: {mimeType}"
 msgstr "Videotypen stöds inte: {mimeType}"
 
@@ -13556,7 +13539,7 @@ msgstr "Ladda upp från Filer"
 msgid "Upload from Library"
 msgstr "Ladda upp från Bibliotek"
 
-#: src/view/com/composer/Composer.tsx:2718
+#: src/view/com/composer/Composer.tsx:2684
 msgid "Uploading GIF..."
 msgstr "Laddar upp  gif-bild…"
 
@@ -13570,7 +13553,7 @@ msgstr "Laddar upp bilder…"
 msgid "Uploading link thumbnail..."
 msgstr "Laddar upp miniatyrbild av länk…"
 
-#: src/view/com/composer/Composer.tsx:2720
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading video..."
 msgstr "Laddar upp video…"
 
@@ -13820,7 +13803,7 @@ msgstr "via startpaketet <0/><1>{starterPackName}</1>"
 msgid "Video"
 msgstr "Videoklipp"
 
-#: src/view/com/composer/state/video.ts:480
+#: src/view/com/composer/state/video.ts:474
 msgid "Video failed to process"
 msgstr "Bearbetning av videoklipp misslyckades"
 
@@ -13859,7 +13842,7 @@ msgstr "Videoklippet hittades inte."
 msgid "Video settings"
 msgstr "Inställningar för videoklipp"
 
-#: src/view/com/composer/Composer.tsx:2738
+#: src/view/com/composer/Composer.tsx:2704
 msgid "Video uploaded"
 msgstr "Videoklipp uppladdat"
 
@@ -13872,19 +13855,13 @@ msgstr "Videoklipp: {0}"
 msgid "Videos"
 msgstr "Videoklipp"
 
-#: src/view/com/composer/Composer.tsx:463
-#: src/view/com/composer/Composer.tsx:608
-#: src/view/com/composer/SelectMediaButton.tsx:455
+#: src/view/com/composer/Composer.tsx:454
+#: src/view/com/composer/Composer.tsx:586
+#: src/view/com/composer/SelectMediaButton.tsx:446
 msgid "Videos must be 10 minutes or less."
 msgstr "Videoklipp får vara högst 10 minuter."
 
-#: src/view/com/composer/Composer.tsx:464
-#: src/view/com/composer/Composer.tsx:609
-#: src/view/com/composer/SelectMediaButton.tsx:456
-msgid "Videos must be less than 3 minutes long."
-msgstr "Videoklipp får inte vara längre än 3 minuter."
-
-#: src/view/com/composer/Composer.tsx:1284
+#: src/view/com/composer/Composer.tsx:1250
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "Visa"
@@ -13977,7 +13954,7 @@ msgstr "Visa mer"
 msgid "View more trending videos"
 msgstr "Visa fler trendande videoklipp"
 
-#: src/view/com/composer/Composer.tsx:1279
+#: src/view/com/composer/Composer.tsx:1245
 msgid "View post"
 msgstr "Visa inlägg"
 
@@ -14186,7 +14163,7 @@ msgstr "Vi rekommenderar att du väljer minst två intressen."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "Vi har skickat ett e-postmeddelande till <0>{0}</0> med en länk. Klicka på den för att slutföra verifieringsprocessen."
 
-#: src/view/com/composer/state/video.ts:527
+#: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "Vi kunde inte avgöra om du har behörighet att ladda upp videoklipp. Försök igen."
 
@@ -14296,7 +14273,7 @@ msgstr "Tyvärr kunde inte din sökning slutföras. Försök igen om några minu
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "Tyvärr kan du inte komma åt den här vyn just nu."
 
-#: src/view/com/composer/Composer.tsx:1175
+#: src/view/com/composer/Composer.tsx:1141
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "Beklagar! Inlägget du svarar på har raderats."
 
@@ -14352,7 +14329,7 @@ msgid "what’s up"
 msgstr "hur är läget"
 
 #: src/view/com/auth/SplashScreen.web.tsx:100
-#: src/view/com/composer/Composer.tsx:1660
+#: src/view/com/composer/Composer.tsx:1626
 #: src/view/com/feeds/ComposerPrompt.tsx:195
 msgid "What's up?"
 msgstr "Vad händer?"
@@ -14438,7 +14415,7 @@ msgstr "Vill du blockera den här användaren och/eller lämna den här konversa
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "Vill du spara det här som ett utkast innan du går till dina utkast?"
 
-#: src/view/com/composer/Composer.tsx:1575
+#: src/view/com/composer/Composer.tsx:1541
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "Vill du spara det här som ett utkast så att du kan fortsätta på det senare?"
 
@@ -14447,12 +14424,12 @@ msgstr "Vill du spara det här som ett utkast så att du kan fortsätta på det 
 msgid "Write a post"
 msgstr "Skriv ett inlägg"
 
-#: src/view/com/composer/Composer.tsx:1756
+#: src/view/com/composer/Composer.tsx:1722
 msgid "Write post"
 msgstr "Skriv inlägg"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1624
 msgid "Write your reply"
 msgstr "Skriv ditt svar"
 
@@ -14495,7 +14472,7 @@ msgstr "Ja, inaktivera"
 msgid "Yes, delete my account"
 msgstr "Ja, radera mitt konto"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:705
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Yes, delete this starter pack"
 msgstr "Ja, radera det här startpaketet"
 
@@ -14562,7 +14539,7 @@ msgstr "Du sänder live"
 msgid "You are no longer live"
 msgstr "Du sänder inte längre live"
 
-#: src/view/com/composer/state/video.ts:520
+#: src/view/com/composer/state/video.ts:514
 msgid "You are not allowed to upload videos."
 msgstr "Du har inte behörighet att ladda upp videoklipp."
 
@@ -14630,11 +14607,11 @@ msgid "You can now sign in with your new password."
 msgstr "Du kan nu logga in med ditt nya lösenord."
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:224
+#: src/view/com/composer/Composer.tsx:223
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "Du kan lägga till max {MAX_GALLERY_IMAGES, plural, other {# bilder}} per inlägg"
 
-#: src/view/com/composer/Composer.tsx:1580
+#: src/view/com/composer/Composer.tsx:1546
 msgid "You can only save drafts up to 1000 characters."
 msgstr "Du kan bara spara utkast med upp till 1000 tecken."
 
@@ -14642,11 +14619,11 @@ msgstr "Du kan bara spara utkast med upp till 1000 tecken."
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr "Du kan bara spara utkast med upp till 1000 tecken. Vill du slänga det här inlägget innan du går till dina utkast?"
 
-#: src/view/com/composer/SelectMediaButton.tsx:458
+#: src/view/com/composer/SelectMediaButton.tsx:449
 msgid "You can only select one GIF at a time."
 msgstr "Du kan endast välja en gif-bild åt gången."
 
-#: src/view/com/composer/SelectMediaButton.tsx:452
+#: src/view/com/composer/SelectMediaButton.tsx:443
 msgid "You can only select one video at a time."
 msgstr "Du kan endast välja ett videoklipp åt gången."
 
@@ -14659,7 +14636,7 @@ msgid "You can read chat history but can’t send new messages."
 msgstr "Du kan läsa chatthistoriken men inte skicka nya meddelanden."
 
 #. Error message for maximum number of images that can be selected to add to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:444
+#: src/view/com/composer/SelectMediaButton.tsx:435
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "Du kan välja upp till {MAX_GALLERY_IMAGES, plural, other {# bilder}} totalt."
 
@@ -14778,11 +14755,11 @@ msgstr "Du har nått slutet"
 msgid "You have successfully verified your email address. You can close this dialog."
 msgstr "Din e-postadress har verifierats utan problem. Du kan stänga den här dialogrutan."
 
-#: src/lib/media/video/upload.shared.ts:74
+#: src/lib/media/video/upload.shared.ts:110
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "Du har för tillfället nått gränsen för videouppladdningar. Försök igen senare."
 
-#: src/view/com/composer/Composer.tsx:1570
+#: src/view/com/composer/Composer.tsx:1536
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "Du har osparade ändringar i det här utkastet. Vill du spara dem?"
 
@@ -14858,7 +14835,7 @@ msgstr "Du måste följa minst sju andra personer för att generera ett startpak
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "Du måste ge åtkomst till ditt fotobibliotek för att spara en QR-kod"
 
-#: src/view/com/composer/SelectMediaButton.tsx:494
+#: src/view/com/composer/SelectMediaButton.tsx:478
 msgid "You need to allow access to your media library."
 msgstr "Du måste tillåta åtkomst till ditt mediebibliotek."
 
@@ -15018,7 +14995,7 @@ msgstr "Du har nått slutet av det aktiva innehållet."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "Du har nått slutet av ditt flöde! Hitta några fler konton att följa."
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:739
 msgid "You've reached the maximum number of drafts"
 msgstr "Du har nått det maximala antalet utkast"
 
@@ -15034,11 +15011,11 @@ msgstr "Du har nått gränsen på maximalt {MAX_FILTERS, plural, one {# filter} 
 msgid "You've reached the start of the active content."
 msgstr "Du har nått början av det aktiva innehållet."
 
-#: src/view/com/composer/state/video.ts:531
+#: src/view/com/composer/state/video.ts:525
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "Du har nått din dagliga gräns för videouppladdningar (för många byte)"
 
-#: src/view/com/composer/state/video.ts:535
+#: src/view/com/composer/state/video.ts:529
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "Du har nått din dagliga gräns för videouppladdningar (för många videoklipp)"
 
@@ -15062,7 +15039,7 @@ msgstr "Ditt konto har raderats. Ha det! ✌️"
 msgid "Your account has been suspended"
 msgstr "Ditt konto har stängts av"
 
-#: src/view/com/composer/state/video.ts:539
+#: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "Ditt konto är ännu inte tillräckligt gammalt för att ladda upp videoklipp. Försök igen senare."
 
@@ -15157,7 +15134,7 @@ msgstr "Ditt fullständiga användarnamn blir <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "Din kontoleverantör kan inte identifieras genom en e-postadress, så den förvalda Bluesky-tjänsten kommer att användas. Ange ditt användarnamn istället, eller ställ in din kontoleverantör manuellt."
 
-#: src/view/com/composer/state/video.ts:476
+#: src/view/com/composer/state/video.ts:470
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "Din kontoleverantör stöder inte videoklipp av den här storleken. Försök igen med en mindre fil."
 
@@ -15202,11 +15179,11 @@ msgstr "Din ändring av lösenordet lyckades! Använd ditt nya lösenord när du
 msgid "Your password must be at least 8 characters long."
 msgstr "Ditt lösenord måste vara minst 8 tecken långt."
 
-#: src/view/com/composer/Composer.tsx:1275
+#: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
 msgstr "Ditt inlägg har skickats"
 
-#: src/view/com/composer/Composer.tsx:1272
+#: src/view/com/composer/Composer.tsx:1238
 msgid "Your posts were sent"
 msgstr "Dina inlägg har skickats"
 
@@ -15227,7 +15204,7 @@ msgstr "Din profilbild i mitten, omgiven av andra användares profilbilder i rin
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "Din profil samt dina inlägg, flöden och listor kommer inte längre att vara synliga för andra Bluesky-användare. Du kan återaktivera ditt konto när som helst genom att logga in."
 
-#: src/view/com/composer/Composer.tsx:1274
+#: src/view/com/composer/Composer.tsx:1240
 msgid "Your reply was sent"
 msgstr "Ditt svar har skickats"
 
@@ -15240,7 +15217,7 @@ msgstr "Din anmälan kommer att skickas till <0>{0}</0>."
 msgid "Your selected interests help us serve you content you care about."
 msgstr "Dina valda intressen hjälper oss att visa dig innehåll som du bryr dig om."
 
-#: src/view/com/composer/Composer.tsx:1605
+#: src/view/com/composer/Composer.tsx:1571
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "Din tråd innehåller tomma inlägg som kommer att hoppas över. De återstående inläggen publiceras som en tråd."
 
