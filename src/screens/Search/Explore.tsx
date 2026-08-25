@@ -984,6 +984,7 @@ export function Explore({
             <PostFeedItem
               post={subItem.post}
               record={subItem.record}
+              postNumbering={subItem.postNumbering}
               reason={indexInSlice === 0 ? slice.reason : undefined}
               feedContext={slice.feedContext}
               reqId={slice.reqId}
