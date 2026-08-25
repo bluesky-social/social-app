@@ -22,9 +22,11 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
   const mediaGranted = mediaPermissionRes?.granted
   const mediaCanAskAgain = mediaPermissionRes?.canAskAgain
 
-  // No useCallback: with the diagnostics above resolved this component compiles,
-  // so React Compiler memoizes it, and the hand-written deps were what it could
-  // not preserve.
+  /*
+   * No useCallback: with the diagnostics above resolved this component compiles,
+   * so React Compiler memoizes it, and the hand-written deps were what it could
+   * not preserve.
+   */
   const onPressTakePicture = async () => {
     try {
       if (!(await requestCameraAccessIfNeeded())) {

@@ -221,8 +221,10 @@ function DialogInner({
   const onPressSave = useCallback(async () => {
     setImageError('')
     setDisplayNameTooShort(false)
-    // Hoisted above the `try`: React Compiler cannot lower a conditional
-    // expression inside one.
+    /*
+     * Hoisted above the `try`: React Compiler cannot lower a conditional
+     * expression inside one.
+     */
     const updatedMessage = isCurateList
       ? _(msg({message: 'User list updated', context: 'toast'}))
       : _(msg({message: 'Moderation list updated', context: 'toast'}))

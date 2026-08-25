@@ -94,8 +94,10 @@ export function StepFinished() {
       }
     }
 
-    // Hoisted above the `try`: React Compiler cannot lower these inside one, and
-    // `listItems` is already settled by the earlier try/catch.
+    /*
+     * Hoisted above the `try`: React Compiler cannot lower these inside one, and
+     * `listItems` is already settled by the earlier try/catch.
+     */
     const followDids = [
       BSKY_APP_ACCOUNT_DID,
       ...(listItems?.map(i => i.subject.did) ?? []),

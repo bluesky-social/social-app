@@ -73,8 +73,10 @@ export function Outer({
       setIsOpen(false)
 
       try {
-        // Nested rather than `&&`: React Compiler cannot lower a logical
-        // expression in a test position inside a `try`.
+        /*
+         * Nested rather than `&&`: React Compiler cannot lower a logical
+         * expression in a test position inside a `try`.
+         */
         if (cb) {
           if (typeof cb === 'function') {
             // This timeout ensures that the callback runs at the same time as it would on native. I.e.

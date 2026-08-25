@@ -131,8 +131,10 @@ export function ComposerPrompt() {
         },
       ]
 
-      // Statement form rather than a ternary: React Compiler cannot lower a
-      // conditional expression inside a `try`, and `imageUris` is built here.
+      /*
+       * Statement form rather than a ternary: React Compiler cannot lower a
+       * conditional expression inside a `try`, and `imageUris` is built here.
+       */
       let nativeImageUris
       if (IS_NATIVE) {
         nativeImageUris = imageUris
