@@ -173,7 +173,7 @@ function SubItem({
                 ? l({
                     message: `${i18n.number(UNREAD_NOTIFICATION_CAP - 1)}+`,
                     comment:
-                      'Displayed when the number of notifications exceeds the cap – for example, 99+ requests',
+                      'Displayed when the number of notifications exceeds the cap – for example, 99+ notifications',
                   })
                 : i18n.number(badge)}
             </Text>
