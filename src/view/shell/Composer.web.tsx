@@ -88,14 +88,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 0,
     borderWidth: 1,
-    // @ts-expect-error web only
     maxHeight: 'calc(100% - (40px * 2))',
     overflow: 'hidden',
   },
   containerMobile: {
     borderRadius: 0,
     marginBottom: BOTTOM_BAR_HEIGHT,
-    // @ts-expect-error web only
     maxHeight: `calc(100% - ${BOTTOM_BAR_HEIGHT}px)`,
   },
 })

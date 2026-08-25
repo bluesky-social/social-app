@@ -6,6 +6,7 @@ import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {
+  VIDEO_10_MINUTE_MAX_DURATION_MS,
   VIDEO_MAX_DURATION_MS,
   VIDEO_MAX_SIZE,
   VIDEO_MAX_SIZE_MB,
@@ -15,13 +16,14 @@ import {
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
 import {openUnifiedPicker} from '#/lib/media/picker'
-import {extractDataUriMime} from '#/lib/media/util'
+import {blobToDataUri, extractDataUriMime} from '#/lib/media/util'
 import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
 import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
-import {Image_Stroke2_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
+import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {isAnimatedGif} from './videos/isAnimatedGif'
 import {hasWebCodecs} from './videos/metadata'
@@ -236,9 +238,11 @@ async function processImagePickerAssets(
   {
     selectionCountRemaining,
     allowedAssetTypes,
+    videoMaxDurationMs,
   }: {
     selectionCountRemaining: number
     allowedAssetTypes: AssetType | undefined
+    videoMaxDurationMs: number
   },
 ) {
   /*
@@ -327,18 +331,21 @@ async function processImagePickerAssets(
     /*
      * All validations passed, we have an asset!
      */
+    let uri = asset.uri
+    if (IS_WEB && type === 'image' && asset.file) {
+      uri = await blobToDataUri(asset.file)
+    }
+
     supportedAssets.push({
       mimeType,
       ...asset,
       /*
        * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
        * data-uri. Our handling elsewhere in the app (for web) relies on the
-       * base64 data-uri, so we construct it here for web only.
+       * data-uri, so read images only after their type has been validated.
+       * Videos retain their File/blob URL and avoid an expensive base64 read.
        */
-      uri:
-        IS_WEB && asset.base64
-          ? `data:${mimeType};base64,${asset.base64}`
-          : asset.uri,
+      uri,
     })
   }
 
@@ -362,7 +369,7 @@ async function processImagePickerAssets(
           supportedAssets[0].duration = supportedAssets[0].duration * 1000
         }
 
-        if (supportedAssets[0].duration > VIDEO_MAX_DURATION_MS) {
+        if (supportedAssets[0].duration > videoMaxDurationMs) {
           errors.add(SelectedAssetError.VideoTooLong)
           supportedAssets = []
         }
@@ -393,6 +400,13 @@ export function SelectMediaButton({
   autoOpen,
 }: SelectMediaButtonProps) {
   const {_} = useLingui()
+  const ax = useAnalytics()
+  const allow10MinuteVideos = ax.features.enabled(
+    ax.features.VideoAllow10MinuteEnable,
+  )
+  const videoMaxDurationMs = allow10MinuteVideos
+    ? VIDEO_10_MINUTE_MAX_DURATION_MS
+    : VIDEO_MAX_DURATION_MS
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
@@ -412,6 +426,7 @@ export function SelectMediaButton({
       } = await processImagePickerAssets(rawAssets, {
         selectionCountRemaining,
         allowedAssetTypes,
+        videoMaxDurationMs,
       })
 
       /*
@@ -436,9 +451,9 @@ export function SelectMediaButton({
           [SelectedAssetError.MaxVideos]: _(
             msg`You can only select one video at a time.`,
           ),
-          [SelectedAssetError.VideoTooLong]: _(
-            msg`Videos must be less than 3 minutes long.`,
-          ),
+          [SelectedAssetError.VideoTooLong]: allow10MinuteVideos
+            ? _(msg`Videos must be 10 minutes or less.`)
+            : _(msg`Videos must be less than 3 minutes long.`),
           [SelectedAssetError.MaxGIFs]: _(
             msg`You can only select one GIF at a time.`,
           ),
@@ -458,7 +473,14 @@ export function SelectMediaButton({
         errors,
       })
     },
-    [_, onSelectAssets, selectionCountRemaining, allowedAssetTypes],
+    [
+      _,
+      onSelectAssets,
+      selectionCountRemaining,
+      allowedAssetTypes,
+      videoMaxDurationMs,
+      allow10MinuteVideos,
+    ],
   )
 
   const onPressSelectMedia = useCallback(async () => {
@@ -481,7 +503,7 @@ export function SelectMediaButton({
     }
 
     const {assets, canceled} = await sheetWrapper(
-      openUnifiedPicker({selectionCountRemaining}),
+      openUnifiedPicker({selectionCountRemaining, videoMaxDurationMs}),
     )
 
     if (canceled) return
@@ -494,6 +516,7 @@ export function SelectMediaButton({
     sheetWrapper,
     processSelectedAssets,
     selectionCountRemaining,
+    videoMaxDurationMs,
   ])
 
   useEffect(() => {

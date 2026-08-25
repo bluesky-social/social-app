@@ -1,0 +1,97 @@
+diff --git a/build/winter/runtime.native.d.ts b/build/winter/runtime.native.d.ts
+index 85c4227e4e37003dd3769a590e73a69874de5fac..e389ca8edd2310df9ce29684991465c275e804c5 100644
+--- a/build/winter/runtime.native.d.ts
++++ b/build/winter/runtime.native.d.ts
+@@ -1,3 +1,2 @@
+ import 'react-native/Libraries/Core/InitializeCore';
+-import '../../types';
+ //# sourceMappingURL=runtime.native.d.ts.map
+\ No newline at end of file
+diff --git a/src/winter/fetch/RequestUtils.ts b/src/winter/fetch/RequestUtils.ts
+index a93473fd2beaf2ab0f3880951d292e58e7288d10..c27911bd5cb56ba6051fb8ebf4194cced43bc0fd 100644
+--- a/src/winter/fetch/RequestUtils.ts
++++ b/src/winter/fetch/RequestUtils.ts
+@@ -50,7 +50,11 @@ function isBlob(obj: any): obj is Blob {
+  */
+ export async function normalizeBodyInitAsync(
+   body: BodyInit | null | undefined
+-): Promise<{ body: Uint8Array | null; overriddenHeaders?: NativeHeadersType }> {
++): Promise<{
++  body: Uint8Array | null;
++  overriddenHeaders?: NativeHeadersType;
++  fallbackHeaders?: NativeHeadersType;
++}> {
+   if (body == null) {
+     return { body: null };
+   }
+@@ -71,7 +75,12 @@ export async function normalizeBodyInitAsync(
+   if (body instanceof Blob || isBlob(body)) {
+     return {
+       body: new Uint8Array(await blobToArrayBufferAsync(body)),
+-      overriddenHeaders: [['Content-Type', body.type]],
++      /*
++       * Per the fetch spec, a blob's type is only a default for Content-Type:
++       * it must not replace a header the caller set explicitly, and an empty
++       * type contributes no header at all.
++       */
++      fallbackHeaders: body.type ? [['Content-Type', body.type]] : undefined,
+     };
+   }
+ 
+@@ -137,6 +146,25 @@ export function overrideHeaders(
+   return result;
+ }
+ 
++/**
++ * Create a new header array by adding new headers only for keys not already
++ * present (by case-insensitive header key). Used for body-derived defaults
++ * that must not replace caller-provided headers.
++ */
++export function fillMissingHeaders(
++  headers: NativeHeadersType,
++  newHeaders: NativeHeadersType
++): NativeHeadersType {
++  const existingKeySet = new Set(headers.map(([key]) => key.toLocaleLowerCase()));
++  const result: NativeHeadersType = [...headers];
++  for (const [key, value] of newHeaders) {
++    if (!existingKeySet.has(key.toLocaleLowerCase())) {
++      result.push([key, value]);
++    }
++  }
++  return result;
++}
++
+ /** Normalizes known HTTP methods to uppercase */
+ export function normalizeMethod(method: string): string {
+   const normalized = method.toUpperCase();
+diff --git a/src/winter/fetch/fetch.ts b/src/winter/fetch/fetch.ts
+index ac789c024c96379e239bf44903c47e6a8e540d63..4f953b845c145de02976e8162ba2f63f8bd4dfd5 100644
+--- a/src/winter/fetch/fetch.ts
++++ b/src/winter/fetch/fetch.ts
+@@ -3,6 +3,7 @@ import { FetchError } from './FetchErrors';
+ import { FetchResponse, type AbortSubscriptionCleanupFunction } from './FetchResponse';
+ import type { NativeRequest, NativeRequestInit } from './NativeRequest';
+ import {
++  fillMissingHeaders,
+   normalizeBodyInitAsync,
+   normalizeHeadersInit,
+   overrideHeaders,
+@@ -62,10 +63,17 @@ export async function fetch(
+ 
+   const request = new ExpoFetchModule.NativeRequest(response) as NativeRequest;
+ 
+-  const { body: requestBody, overriddenHeaders } = await normalizeBodyInitAsync(body);
++  const {
++    body: requestBody,
++    overriddenHeaders,
++    fallbackHeaders,
++  } = await normalizeBodyInitAsync(body);
+   if (overriddenHeaders) {
+     headers = overrideHeaders(headers, overriddenHeaders);
+   }
++  if (fallbackHeaders) {
++    headers = fillMissingHeaders(headers, fallbackHeaders);
++  }
+ 
+   const nativeRequestInit: NativeRequestInit = {
+     credentials: credentials ?? 'include',

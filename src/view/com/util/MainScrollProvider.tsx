@@ -3,6 +3,7 @@ import {type NativeScrollEvent} from 'react-native'
 import {
   clamp,
   interpolate,
+  Reanimated3DefaultSpringConfig,
   type SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -103,8 +104,9 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = useCallback(
     (v: boolean) => {
       'worklet'
-      headerMode.set(() =>
+      headerMode.set(
         withSpring(v ? 1 : 0, {
+          ...Reanimated3DefaultSpringConfig,
           overshootClamping: true,
         }),
       )

@@ -16,9 +16,7 @@ export type SystemMessageDateDividerItem = {
 }
 
 export type RenderItem =
-  | ConvoItem
-  | SystemMessageGroupItem
-  | SystemMessageDateDividerItem
+  ConvoItem | SystemMessageGroupItem | SystemMessageDateDividerItem
 
 function getSentAt(item: ConvoItem): string | null {
   if (

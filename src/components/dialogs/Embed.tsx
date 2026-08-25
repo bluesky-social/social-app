@@ -1,6 +1,6 @@
 import {memo, useEffect, useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, type AppBskyFeedPost, AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -20,15 +20,16 @@ import {
 } from '#/components/icons/Chevron'
 import {CodeBrackets_Stroke2_Corner0_Rounded as CodeBracketsIcon} from '#/components/icons/CodeBrackets'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 export type ColorModeValues = 'system' | 'light' | 'dark'
 
 type EmbedDialogProps = {
   control: Dialog.DialogControlProps
-  postAuthor: AppBskyActorDefs.ProfileViewBasic
+  postAuthor: app.bsky.actor.defs.ProfileViewBasic
   postCid: string
   postUri: string
-  record: AppBskyFeedPost.Record
+  record: app.bsky.feed.post.Main
   timestamp: string
 }
 

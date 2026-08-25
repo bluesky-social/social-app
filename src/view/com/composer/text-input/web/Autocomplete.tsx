@@ -1,6 +1,6 @@
 import {forwardRef, useEffect, useImperativeHandle, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 import {ReactRenderer} from '@tiptap/react'
 import {
@@ -65,7 +65,7 @@ export function createSuggestion({
             return
           }
 
-          // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
+          // @ts-expect-error getReferenceClientRect doesnt like that clientRect can return null -prf
           popup = tippy('body', {
             getReferenceClientRect: props.clientRect,
             appendTo: () => document.body,
@@ -85,7 +85,7 @@ export function createSuggestion({
           }
 
           popup?.[0]?.setProps({
-            // @ts-ignore getReferenceClientRect doesnt like that clientRect can return null -prf
+            // @ts-expect-error getReferenceClientRect doesnt like that clientRect can return null -prf
             getReferenceClientRect: props.clientRect,
           })
         },

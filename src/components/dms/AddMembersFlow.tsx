@@ -135,7 +135,7 @@ export function AddMembersFlow({
   const [footerHeight, setFooterHeight] = useState(0)
 
   const listRef = useRef<ListMethods>(null)
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
 
   const [{groupChatDids, groupChatProfiles, searchText}, dispatch] = useReducer(
     reducer,
@@ -512,7 +512,7 @@ export function AddMembersFlow({
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
               <Loader size="xl" />
             </View>
-          ) : null
+          ) : undefined
         }
         keyExtractor={(item: Item) => item.key}
         style={[

@@ -52,6 +52,7 @@ const preventDefault = (e: any) => e.preventDefault()
 export function Outer({
   children,
   control,
+  onOpen,
   onClose,
   webOptions,
 }: React.PropsWithChildren<DialogOuterProps>) {
@@ -61,9 +62,10 @@ export function Outer({
   const {setDialogIsOpen} = useDialogStateControlContext()
 
   const open = useCallback(() => {
+    onOpen?.()
     setDialogIsOpen(control.id, true)
     setIsOpen(true)
-  }, [setIsOpen, setDialogIsOpen, control.id])
+  }, [setIsOpen, setDialogIsOpen, control.id, onOpen])
 
   const close = useCallback<DialogControlProps['close']>(
     cb => {
@@ -165,6 +167,9 @@ export function Outer({
   )
 }
 
+/**
+ * @deprecated use `Dialog.ScrollableInner` instead
+ */
 export function Inner({
   children,
   style,
@@ -188,7 +193,6 @@ export function Inner({
         aria-label={label}
         aria-labelledby={accessibilityLabelledBy}
         aria-describedby={accessibilityDescribedBy}
-        // @ts-expect-error web only -prf
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
@@ -234,7 +238,9 @@ export function Inner({
 export function ScrollableInner({
   ref: _ref,
   ...props
-}: DialogInnerProps & {ref?: React.Ref<ScrollView>}) {
+}: DialogInnerProps & {
+  ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
+}) {
   return <Inner {...props} />
 }
 

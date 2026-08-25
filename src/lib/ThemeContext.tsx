@@ -8,11 +8,7 @@ import {darkTheme, defaultTheme, dimTheme} from './themes'
 export type ColorScheme = 'light' | 'dark'
 
 export type PaletteColorName =
-  | 'default'
-  | 'primary'
-  | 'secondary'
-  | 'inverted'
-  | 'error'
+  'default' | 'primary' | 'secondary' | 'inverted' | 'error'
 export type PaletteColor = {
   background: string
   backgroundLight: string

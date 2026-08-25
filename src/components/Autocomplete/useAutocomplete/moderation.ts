@@ -1,4 +1,4 @@
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {isJustAMute, moduiContainsHideableOffense} from '#/lib/moderation'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences'

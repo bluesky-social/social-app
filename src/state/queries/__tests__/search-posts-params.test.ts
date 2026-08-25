@@ -1,7 +1,9 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {
+  appendFromMe,
   buildSearchPostsV2Filters,
+  extractFromMe,
   extractSearchPostsParams,
 } from '#/state/queries/search-posts-params'
 
@@ -136,6 +138,39 @@ describe(`extractSearchPostsParams`, () => {
 
   it.each(tests)(`$name`, ({input, output}) => {
     expect(extractSearchPostsParams(input)).toEqual(output)
+  })
+})
+
+describe(`extractFromMe / appendFromMe`, () => {
+  it(`strips a bare from:me token and reports it`, () => {
+    expect(extractFromMe(`cats from:me`)).toEqual({q: `cats`, fromMe: true})
+    expect(extractFromMe(`from:me`)).toEqual({q: ``, fromMe: true})
+  })
+
+  it(`reports fromMe false when the token is absent`, () => {
+    expect(extractFromMe(`cats from:alice`)).toEqual({
+      q: `cats from:alice`,
+      fromMe: false,
+    })
+  })
+
+  it(`leaves a quoted from:me in the query text`, () => {
+    expect(extractFromMe(`"from:me"`)).toEqual({q: `"from:me"`, fromMe: false})
+  })
+
+  it(`re-appends the token only when the filter is active`, () => {
+    expect(appendFromMe(`cats`, true)).toBe(`cats from:me`)
+    expect(appendFromMe(`cats`, false)).toBe(`cats`)
+    expect(appendFromMe(``, true)).toBe(`from:me`)
+  })
+
+  it(`does not duplicate an existing from:me token`, () => {
+    expect(appendFromMe(`cats from:me`, true)).toBe(`cats from:me`)
+  })
+
+  it(`round-trips through extract and append`, () => {
+    const {q, fromMe} = extractFromMe(`cats from:me`)
+    expect(appendFromMe(q, fromMe)).toBe(`cats from:me`)
   })
 })
 

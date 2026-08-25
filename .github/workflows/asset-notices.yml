@@ -1,0 +1,41 @@
+name: Asset notices
+
+# Verifies that every path named in ASSETS.md and NOTICE.md still exists.
+#
+# Those files tell forkers which assets our MIT license does not cover, and carry the third-party
+# attribution notices we are required to pass along. If an asset moves and the notice is not
+# updated, the notice silently stops meaning anything. This job makes that visible in review
+# rather than a year later.
+#
+# No paths filter: the notices also reference files under src/ (e.g. the inline logo components),
+# so any rename anywhere in the tree can rot a notice. The check runs in under a second.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check asset licensing notices
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: ⚙️ Set up Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: package.json
+
+      - name: 📜 Verify asset notices
+        run: node scripts/check-asset-notices.mjs

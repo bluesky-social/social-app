@@ -1,0 +1,15 @@
+---
+name: Compile translations
+description: Compile i18n translations and fail on compilation errors.
+
+runs:
+  using: composite
+  steps:
+    - name: 🔤 Compile translations
+      shell: bash
+      run: pnpm intl:build 2>&1 | tee i18n.log
+
+    - name: Check for i18n compilation errors
+      shell: bash
+      run: if grep -q "invalid syntax" "i18n.log"; then echo "\n\nFound compilation
+        errors!\n\n" && exit 1; else echo "\n\nNo compilation errors!\n\n"; fi

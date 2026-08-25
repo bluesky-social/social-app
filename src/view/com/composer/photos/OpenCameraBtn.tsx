@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import * as MediaLibrary from 'expo-media-library'
+import * as MediaLibrary from 'expo-media-library/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -32,6 +32,9 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
       const img = await openCamera({
         aspect: [1, 1],
       })
+      if (!img) {
+        return
+      }
 
       // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
       // the image even without these permissions

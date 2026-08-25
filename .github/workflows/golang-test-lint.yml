@@ -17,32 +17,32 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Git Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - name: Set up Go tooling
-        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+      - name: ⬇️ Git Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 🔧 Set up Go tooling
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: bskyweb/go.mod
           cache-dependency-path: bskyweb/go.sum
-      - name: Dummy Static Files
+      - name: 📄 Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
-      - name: Check
+      - name: 🔍 Check
         run: cd bskyweb/ && make check
-      - name: Build (binary)
+      - name: 🏗️ Build (binary)
         run: cd bskyweb/ && make build
-      - name: Test
+      - name: 🧪 Test
         run: cd bskyweb/ && make test
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Git Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - name: Set up Go tooling
-        uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+      - name: ⬇️ Git Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: 🔧 Set up Go tooling
+        uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: bskyweb/go.mod
           cache-dependency-path: bskyweb/go.sum
-      - name: Dummy Static Files
+      - name: 📄 Dummy Static Files
         run: touch bskyweb/static/js/blah.js && touch bskyweb/static/css/blah.txt && touch bskyweb/static/media/blah.txt
-      - name: Lint
+      - name: 🧹 Lint
         run: cd bskyweb/ &&  make lint

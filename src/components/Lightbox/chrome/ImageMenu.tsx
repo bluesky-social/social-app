@@ -2,12 +2,12 @@ import {useRef, useState} from 'react'
 import {Modal, Pressable, StyleSheet, View} from 'react-native'
 import Animated, {
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a} from '#/alf'
@@ -35,7 +35,7 @@ const TIMING_OUT = {duration: 150}
 
 export function ImageMenu({onPressShare, onPressSave}: Props) {
   const {t: l} = useLingui()
-  const triggerRef = useRef<View>(null)
+  const triggerRef = useRef<React.ComponentRef<typeof View>>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [anchor, setAnchor] = useState<Anchor | null>(null)
   const progress = useSharedValue(0)
@@ -52,7 +52,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
     progress.set(
       withTiming(0, TIMING_OUT, finished => {
         if (finished) {
-          runOnJS(setIsMounted)(false)
+          scheduleOnRN(setIsMounted, false)
         }
       }),
     )
@@ -78,6 +78,7 @@ export function ImageMenu({onPressShare, onPressSave}: Props) {
         visible={isMounted}
         animationType="none"
         onRequestClose={close}
+        supportedOrientations={['portrait', 'landscape']}
         statusBarTranslucent>
         <Pressable
           accessibilityRole="button"

@@ -67,13 +67,14 @@ import {NotificationsScreen} from '#/view/screens/Notifications'
 import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
-import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
 import {StorybookScreen} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {BookmarksScreen} from '#/screens/Bookmarks'
+import {CustomFeedScreen} from '#/screens/CustomFeed'
+import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import {FindContactsFlowScreen} from '#/screens/FindContactsFlowScreen'
 import HashtagScreen from '#/screens/Hashtag'
@@ -92,7 +93,6 @@ import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
-import {ProfileFeedScreen} from '#/screens/Profile/ProfileFeed'
 import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
 import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
@@ -117,6 +117,7 @@ import {InterestsSettingsScreen} from '#/screens/Settings/InterestsSettings'
 import {LanguageSettingsScreen} from '#/screens/Settings/LanguageSettings'
 import {LegacyNotificationSettingsScreen} from '#/screens/Settings/LegacyNotificationSettings'
 import {NotificationSettingsScreen} from '#/screens/Settings/NotificationSettings'
+import {ActivityNotificationSettingsScreen} from '#/screens/Settings/NotificationSettings/ActivityNotificationSettings'
 import {PrivacyAndSecuritySettingsScreen} from '#/screens/Settings/PrivacyAndSecuritySettings'
 import {SettingsScreen} from '#/screens/Settings/Settings'
 import {ThreadPreferencesScreen} from '#/screens/Settings/ThreadPreferences'
@@ -287,13 +288,13 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         })}
       />
       <Stack.Screen
-        name="ProfileFeed"
-        getComponent={() => ProfileFeedScreen}
+        name="CustomFeed"
+        getComponent={() => CustomFeedScreen}
         options={{title: title(msg`Feed`)}}
       />
       <Stack.Screen
-        name="ProfileFeedLikedBy"
-        getComponent={() => ProfileFeedLikedByScreen}
+        name="CustomFeedLikedBy"
+        getComponent={() => CustomFeedLikedByScreen}
         options={{title: title(msg`Liked by`)}}
       />
       <Stack.Screen
@@ -450,6 +451,14 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NotificationSettings"
         getComponent={() => NotificationSettingsScreen}
         options={{title: title(msg`Notification settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ActivityNotificationSettings"
+        getComponent={() => ActivityNotificationSettingsScreen}
+        options={{
+          title: title(msg`Activity notifications`),
+          requireAuth: true,
+        }}
       />
       <Stack.Screen
         name="ContentAndMediaSettings"
@@ -997,7 +1006,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     ax.metric('init', {
       initMs: Math.round(
-        // @ts-ignore Emitted by Metro in the bundle prelude
+        // @ts-expect-error Emitted by Metro in the bundle prelude
         performance.now() - global.__BUNDLE_START_TIME__,
       ),
     })
@@ -1072,7 +1081,7 @@ function navigate<K extends keyof AllNavigatorParams>(
         }
         navigationRef.addListener('state', handler)
 
-        // @ts-ignore I don't know what would make typescript happy but I have a life -prf
+        // @ts-expect-error I don't know what would make typescript happy but I have a life -prf
         navigationRef.navigate(name, params)
       }),
       timeout(1e3),

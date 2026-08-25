@@ -7,8 +7,8 @@ import {
 import {mergeAutocompleteResults} from '../mergeAutocompleteResults'
 
 function profileItem(
-  did: string,
-  handle: string,
+  did: AutocompleteProfile['profile']['did'],
+  handle: AutocompleteProfile['profile']['handle'],
   displayName?: string,
 ): AutocompleteProfile {
   return {
@@ -23,9 +23,9 @@ function searchItem(q: string): AutocompleteSearch {
   return {key: `recent-${q}`, type: 'search', value: q}
 }
 
-const alice = profileItem('did:1', 'alice.test', 'Alice')
-const bob = profileItem('did:2', 'bob.test', 'Bob')
-const carol = profileItem('did:3', 'carol.test', 'Carol')
+const alice = profileItem('did:plc:1', 'alice.test', 'Alice')
+const bob = profileItem('did:plc:2', 'bob.test', 'Bob')
+const carol = profileItem('did:plc:3', 'carol.test', 'Carol')
 
 describe('mergeAutocompleteResults', () => {
   it('returns remote items untouched when no sources', () => {
@@ -61,7 +61,7 @@ describe('mergeAutocompleteResults', () => {
 
   it('pins at most 3 local matches', () => {
     const many = Array.from({length: 6}, (_, i) =>
-      profileItem(`did:m${i}`, `alice${i}.test`, `Alice ${i}`),
+      profileItem(`did:plc:m${i}`, `alice${i}.test`, `Alice ${i}`),
     )
     const result = mergeAutocompleteResults({
       query: 'alice',
@@ -73,7 +73,11 @@ describe('mergeAutocompleteResults', () => {
   })
 
   it('dedupes by key, keeping local position with remote profile data', () => {
-    const remoteAlice = profileItem('did:1', 'alice.test', 'Alice (new name)')
+    const remoteAlice = profileItem(
+      'did:plc:1',
+      'alice.test',
+      'Alice (new name)',
+    )
     const result = mergeAutocompleteResults({
       query: 'alice',
       sources: [{key: 'recents', items: [alice]}],

@@ -415,7 +415,7 @@ function LinkPeek({
           // dialog can show.
           useInAppBrowser: useInAppBrowserPref === true,
           browserToolbarColor: t.atoms.bg.backgroundColor,
-          browserControlsColor: t.palette.primary_500,
+          browserControlsColor: t.atoms.text_link.color,
         }}
         borderRadius={borderRadius}
         // Fires only when not morphing natively (in-app browser off/unset).
@@ -478,7 +478,7 @@ export function InlineLinkText({
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
-  const flattenedStyle = flatten(style) || {}
+  const flattenedStyle = flatten(style)
 
   return (
     <Text
@@ -487,14 +487,14 @@ export function InlineLinkText({
       accessibilityLabel={label}
       {...rest}
       style={[
-        {color: t.palette.primary_500},
+        t.atoms.text_link,
         interacted &&
           !disableUnderline && {
             ...web({
               outline: 0,
               textDecorationLine: 'underline',
               textDecorationColor:
-                flattenedStyle.color ?? t.palette.primary_500,
+                flattenedStyle.color ?? t.atoms.text_link.color,
             }),
           },
         flattenedStyle,
@@ -570,7 +570,7 @@ export function SimpleInlineLinkText({
     onIn: onInteract,
     onOut: onInteractOut,
   } = useInteractionState()
-  const flattenedStyle = flatten(style) || {}
+  const flattenedStyle = flatten(style)
   const isExternal = isExternalUrl(to)
 
   let href = to
@@ -591,14 +591,14 @@ export function SimpleInlineLinkText({
       accessibilityLabel={label}
       {...rest}
       style={[
-        {color: t.palette.primary_500},
+        t.atoms.text_link,
         interacted &&
           !disableUnderline && {
             ...web({
               outline: 0,
               textDecorationLine: 'underline',
               textDecorationColor:
-                flattenedStyle.color ?? t.palette.primary_500,
+                flattenedStyle.color ?? t.atoms.text_link.color,
             }),
           },
         flattenedStyle,

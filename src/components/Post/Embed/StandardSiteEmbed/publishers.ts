@@ -1,8 +1,7 @@
-import {type AppBskyEmbedExternal} from '@atproto/api'
-
 import {Leaflet} from '#/components/icons/community/Leaflet'
 import {Offprint} from '#/components/icons/community/Offprint'
 import {Pckt} from '#/components/icons/community/Pckt'
+import {type app} from '#/lexicons'
 
 export type StandardSitePublisher = {
   host: string
@@ -25,7 +24,7 @@ function hostFromUri(uri: string | undefined): string | null {
 }
 
 export function getStandardSitePublisherHost(
-  view: AppBskyEmbedExternal.ViewExternal,
+  view: app.bsky.embed.external.ViewExternal,
 ): string | null {
   return hostFromUri(view.source?.uri)
 }
@@ -40,7 +39,7 @@ function matchByHost(host: string | null): StandardSitePublisher | null {
 }
 
 export function matchStandardSitePublisher(
-  view: AppBskyEmbedExternal.ViewExternal,
+  view: app.bsky.embed.external.ViewExternal,
 ): StandardSitePublisher | null {
   return matchByHost(getStandardSitePublisherHost(view))
 }

@@ -3,13 +3,14 @@ import {keepPreviousData, useQuery} from '@tanstack/react-query'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {
   type AutocompleteApi,
   type AutocompleteItem,
   type AutocompleteItemType,
   type LocalSource,
 } from '#/components/Autocomplete/types'
+import {app} from '#/lexicons'
 import {mergeAutocompleteResults} from './mergeAutocompleteResults'
 import {DEFAULT_MOD_OPTS, moderateProfileItem} from './moderation'
 import {useEmojiSearch} from './useEmojiSearch'
@@ -27,7 +28,7 @@ export function useAutocomplete({
   showSearchFallback?: boolean
   sources?: LocalSource[]
 }): AutocompleteApi {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const moderationOpts = useModerationOpts()
   const emojiSearch = useEmojiSearch()
 
@@ -47,12 +48,12 @@ export function useAutocomplete({
       if (type === 'profile') {
         if (!q) return []
 
-        const res = await agent.searchActorsTypeahead({
+        const data = await client.call(app.bsky.actor.searchActorsTypeahead, {
           q: nq,
           limit: limit || 8,
         })
 
-        return (res?.data.actors || []).map(profile => ({
+        return (data?.actors || []).map(profile => ({
           key: profile.did,
           type: 'profile' as const,
           value: '@' + profile.handle,

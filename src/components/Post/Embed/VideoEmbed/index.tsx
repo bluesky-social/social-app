@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
-import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -16,12 +15,14 @@ import {Button} from '#/components/Button'
 import {useThrottledValue} from '#/components/hooks/useThrottledValue'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
+import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import {GifPresentationControls} from './GifPresentationControls'
 import {VideoEmbedInnerNative} from './VideoEmbedInner/VideoEmbedInnerNative'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
 }
 
 export function VideoEmbed({embed}: Props) {
@@ -70,6 +71,7 @@ export function VideoEmbed({embed}: Props) {
 
 function InnerWrapper({embed}: Props) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const ref = useRef<{togglePlayback: () => void}>(null)
 
   const [status, setStatus] = useState<'playing' | 'paused' | 'pending'>(
@@ -130,6 +132,13 @@ function InnerWrapper({embed}: Props) {
         }}
         onError={error => {
           telemetryRef.current?.error(error)
+          ax.metric('video:playback:failed', {
+            surface: 'feed',
+            presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+            errorClass: 'PlayerError',
+            errorMessage: error.slice(0, 256),
+            playlist: embed.playlist,
+          })
         }}
         ref={ref}
       />

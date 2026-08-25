@@ -1,0 +1,68 @@
+{
+  "id": "app.bsky.feed.getRepostedBy",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "uri",
+            "repostedBy"
+          ],
+          "properties": {
+            "cid": {
+              "type": "string",
+              "format": "cid"
+            },
+            "uri": {
+              "type": "string",
+              "format": "at-uri"
+            },
+            "cursor": {
+              "type": "string"
+            },
+            "repostedBy": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.actor.defs#profileView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "uri"
+        ],
+        "properties": {
+          "cid": {
+            "type": "string",
+            "format": "cid",
+            "description": "If supplied, filters to reposts of specific version (by CID) of the post record."
+          },
+          "uri": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) of post record"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get a list of reposts for a given post."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

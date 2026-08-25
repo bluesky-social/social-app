@@ -1,15 +1,7 @@
 import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import {
-  type AppBskyActorDefs,
-  type AppBskyGraphGetList,
-  AtUri,
-  type ModerationOpts,
-} from '@atproto/api'
-import {
-  type InfiniteData,
-  type UseInfiniteQueryResult,
-} from '@tanstack/react-query'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -22,16 +14,14 @@ import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
-function keyExtractor(item: AppBskyActorDefs.ProfileView, index: number) {
+function keyExtractor(item: app.bsky.actor.defs.ProfileView, index: number) {
   return `${item.did}-${index}`
 }
 
 interface ProfilesListProps {
   listUri: string
-  listMembersQuery: UseInfiniteQueryResult<
-    InfiniteData<AppBskyGraphGetList.OutputSchema>
-  >
   moderationOpts: ModerationOpts
   headerHeight: number
   scrollElRef: ListRef
@@ -87,7 +77,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
     const renderItem = ({
       item,
       index,
-    }: ListRenderItemInfo<AppBskyActorDefs.ProfileView>) => {
+    }: ListRenderItemInfo<app.bsky.actor.defs.ProfileView>) => {
       return (
         <View
           style={[

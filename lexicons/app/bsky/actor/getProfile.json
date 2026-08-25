@@ -1,0 +1,31 @@
+{
+  "id": "app.bsky.actor.getProfile",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "ref": "app.bsky.actor.defs#profileViewDetailed",
+          "type": "ref"
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "actor"
+        ],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "Handle or DID of account to fetch profile of."
+          }
+        }
+      },
+      "description": "Get detailed profile view of an actor. Does not require auth, but contains relevant metadata with auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

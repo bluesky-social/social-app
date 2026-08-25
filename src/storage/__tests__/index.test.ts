@@ -2,7 +2,7 @@ import {beforeEach, expect, jest, test} from '@jest/globals'
 
 import {Storage} from '#/storage'
 
-jest.mock('@bsky.app/react-native-mmkv', () => ({
+jest.mock('react-native-mmkv', () => ({
   MMKV: class MMKVMock {
     _store = new Map()
 
@@ -63,7 +63,7 @@ test(`removes multiple keys at once`, () => {
 test(`concatenates keys`, () => {
   store.remove([scope, 'str'])
   store.set([scope, 'str'], 'concat')
-  // @ts-ignore accessing these properties for testing purposes only
+  // @ts-expect-error accessing these properties for testing purposes only
   expect(store.store.getString(`${scope}${store.sep}str`)).toBeTruthy()
 })
 

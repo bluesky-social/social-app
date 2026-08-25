@@ -3,13 +3,11 @@
  * a free-text query. Kept free of React Native imports so it can be unit
  * tested in isolation (the search-posts query hook re-exports these).
  */
-
-import {type AppBskyFeedSearchPostsV2} from '@atproto/api'
-
 import {
   filtersToApiParams,
   type SearchFilters,
 } from '#/screens/Search/searchParams'
+import {type app} from '#/lexicons'
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}/
 
@@ -81,6 +79,30 @@ export function tokenizeQuery(raw: string): string[] {
     if (buf) tokens.push(buf)
   }
   return tokens
+}
+
+/**
+ * Splits a bare `from:me` token out of a query. The "Me" author filter always
+ * travels inside `q` as a `from:me` token (the backend resolves `me` to the
+ * viewer), but the UI never shows it as text: the search input strips it for
+ * display and the advanced-search dialog represents it in the From dropdown.
+ * Tokenization keeps quoted phrases intact, so a `from:me` inside quotes stays
+ * in the query text.
+ */
+export function extractFromMe(query: string): {q: string; fromMe: boolean} {
+  const tokens = tokenizeQuery(query)
+  const kept = tokens.filter(token => token !== 'from:me')
+  return {q: kept.join(' '), fromMe: kept.length !== tokens.length}
+}
+
+/**
+ * Re-appends the `from:me` token when the "Me" author filter is active.
+ * Idempotent: a query that already carries a bare `from:me` is returned as-is.
+ */
+export function appendFromMe(query: string, fromMe: boolean): string {
+  if (!fromMe) return query
+  if (tokenizeQuery(query).includes('from:me')) return query
+  return query ? `${query} from:me` : 'from:me'
 }
 
 /**
@@ -177,12 +199,32 @@ function mergeList(a?: string[], b?: string[]): string[] | undefined {
  * operator. v2 renames v1's singular operators to plural arrays, and `lang` to
  * `language`.
  */
+/**
+ * The filter subset of the `searchPostsV2` params, with the format-constrained
+ * strings (uri, at-identifier, language, datetime) left unbranded: every value
+ * here is parsed from user input, so the brand is asserted by the caller rather
+ * than re-validated here. `q`, `limit`, `cursor` and `sort` are the caller's.
+ */
+type SearchPostsV2FilterParams = {
+  [
+    K in Exclude<
+      keyof app.bsky.feed.searchPostsV2.$Params,
+      'query' | 'limit' | 'cursor' | 'sort'
+    >
+  ]?: app.bsky.feed.searchPostsV2.$Params[K] extends
+    readonly (infer _E)[] | undefined
+    ? string[]
+    : app.bsky.feed.searchPostsV2.$Params[K] extends string | undefined
+      ? string
+      : app.bsky.feed.searchPostsV2.$Params[K]
+}
+
 export function buildSearchPostsV2Filters(
   embedded: Omit<ExtractedSearchParams, 'q'>,
   filters?: SearchFilters,
-): AppBskyFeedSearchPostsV2.QueryParams {
+): SearchPostsV2FilterParams {
   const apiFilters = filters ? filtersToApiParams(filters) : {}
-  const params: AppBskyFeedSearchPostsV2.QueryParams = {}
+  const params: SearchPostsV2FilterParams = {}
 
   const authors = mergeList(
     embedded.author ? [embedded.author] : undefined,
@@ -245,7 +287,7 @@ export function buildSearchPostsV2Filters(
 }
 
 /**
- * Consistent with timestamp parsing in @atproto/api. Only the date is used; the
+ * Only the date is used; the
  * time is appended here since the lexicon expects a datetime value.
  */
 const parseTimestamp = (value: string | undefined): string | undefined => {

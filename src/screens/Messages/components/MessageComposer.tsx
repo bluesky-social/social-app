@@ -7,13 +7,13 @@ import {
 import Animated, {
   Extrapolation,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {GlassContainer} from 'expo-glass-effect'
 import {LinearGradient} from 'expo-linear-gradient'
-import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
@@ -39,6 +39,7 @@ import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {useConvoMembersSource} from '#/features/autocomplete/useConvoMembersSource'
 import {useFollowsSource} from '#/features/autocomplete/useFollowsSource'
+import {type chat} from '#/lexicons'
 import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40
@@ -55,7 +56,7 @@ export function MessageComposer({
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
-    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+    replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
   ) => void
   messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
@@ -99,7 +100,7 @@ export function MessageComposer({
     onEnd: evt => {
       'worklet'
       if (IS_ANDROID && evt.progress === 0) {
-        runOnJS(blur)()
+        scheduleOnRN(blur)
       }
     },
   })
@@ -110,7 +111,7 @@ export function MessageComposer({
   const onSubmit = (
     message: string,
     embed: MessageEmbedState | undefined,
-    replyTo: ChatBskyConvoDefs.MessageView | null,
+    replyTo: chat.bsky.convo.defs.MessageView | null,
   ) => {
     if (!editable) return
     if (!embed && message.trim() === '') return
@@ -192,7 +193,7 @@ export function MessageComposer({
       <View
         collapsable={false}
         ref={native(
-          (node: View) =>
+          (node: React.ComponentRef<typeof View>) =>
             void composerInternalApiRef.current?.setAutocompleteAnchor(node),
         )}>
         <GlassContainer
@@ -212,7 +213,9 @@ export function MessageComposer({
                     composerInternalApiRef.current?.insert(emoji.native)
                   }
                   nextFocusRef={() =>
-                    composerInternalApiRef.current?.input?.element
+                    composerInternalApiRef.current?.input
+                      ?.element as unknown as
+                      {focus: () => void} | null | undefined
                   }>
                   <EmojiPicker.Trigger label={l`Open emoji picker`}>
                     {({props, state, control}) => (

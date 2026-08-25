@@ -2,6 +2,7 @@ import {createContext, useContext, useMemo} from 'react'
 import {
   type GestureResponderEvent,
   type StyleProp,
+  StyleSheet,
   View,
   type ViewStyle,
 } from 'react-native'
@@ -254,10 +255,10 @@ export function Divider({style}: ViewStyleProp) {
   return (
     <View
       style={[
-        a.border_t,
-        t.atoms.border_contrast_low,
         a.w_full,
         a.my_sm,
+        {height: StyleSheet.hairlineWidth},
+        t.atoms.bg_contrast_100,
         style,
       ]}
     />
@@ -311,7 +312,7 @@ export function BadgeButton({
             a.text_md,
             a.font_normal,
             a.text_right,
-            {color: pressed ? t.palette.contrast_300 : t.palette.primary_500},
+            {color: pressed ? t.palette.contrast_300 : t.atoms.text_link.color},
           ]}>
           {label}
         </Button.ButtonText>

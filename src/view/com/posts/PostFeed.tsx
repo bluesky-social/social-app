@@ -1,4 +1,12 @@
-import {memo, useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   ActivityIndicator,
   AppState,
@@ -10,14 +18,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyEmbedExternal,
-  AppBskyEmbedGallery,
-  AppBskyEmbedImages,
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-} from '@atproto/api'
+import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -50,7 +51,7 @@ import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {useBreakpoints, useLayoutBreakpoints} from '#/alf'
+import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
 import {
   AgeAssuranceDismissibleFeedBanner,
   useInternalState as useAgeAssuranceBannerState,
@@ -60,9 +61,10 @@ import {
   PostFeedVideoGridRow,
   PostFeedVideoGridRowPlaceholder,
 } from '#/components/feeds/PostFeedVideoGridRow'
-import {TrendingInterstitial} from '#/components/interstitials/Trending'
+import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
@@ -71,6 +73,8 @@ import {
   isStatusValidForViewers,
   useLiveNowConfig,
 } from '#/features/liveNow'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -105,6 +109,11 @@ type FeedRow =
       key: string
     }
   | {
+      type: 'description'
+      key: string
+      value: RichTextType
+    }
+  | {
       type: 'sliceItem'
       key: string
       slice: FeedPostSlice
@@ -137,8 +146,9 @@ type FeedRow =
       key: string
     }
   | {
-      type: 'interstitialTrending'
+      type: 'interstitialFeedTrendingTopics'
       key: string
+      feedSliceIndex: number
     }
   | {
       type: 'interstitialTrendingVideos'
@@ -183,12 +193,17 @@ export function getItemsForFeedback(feedRow: FeedRow): {
   }
 }
 
+export type PostFeedRef = {
+  refreshFeed: () => Promise<void>
+}
+
 // DISABLED need to check if this is causing random feed refreshes -prf
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
 let PostFeed = ({
   feed,
+  description,
   feedParams,
   ignoreFilterFor,
   style,
@@ -209,8 +224,10 @@ let PostFeed = ({
   savedFeedConfig,
   initialNumToRender: initialNumToRenderOverride,
   isVideoFeed = false,
+  ref,
 }: {
   feed: FeedDescriptor
+  description?: RichTextType
   feedParams?: FeedParams
   ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
@@ -227,13 +244,15 @@ let PostFeed = ({
   progressViewOffset?: number
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => React.ReactElement
-  extraData?: any
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  extraData?: Record<string, unknown>
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
   lastFetchDate?: () => number
+  ref?: React.Ref<PostFeedRef>
 }): React.ReactNode => {
   const ax = useAnalytics()
+  const t = useTheme()
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
   const {currentAccount, hasSession} = useSession()
@@ -247,11 +266,20 @@ let PostFeed = ({
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = IS_NATIVE
 
+  const trendingIndices = ax.features.getValue(
+    ax.features.TrendingDiscoverValues,
+    {
+      topics: 5,
+      accounts: 15,
+      videos: 30,
+    },
+  )
+
   const [hasPressedShowLessUris, setHasPressedShowLessUris] = useState(
     () => new Set<string>(),
   )
   const onPressShowLess = useCallback(
-    (interaction: AppBskyFeedDefs.Interaction) => {
+    (interaction: app.bsky.feed.defs.Interaction) => {
       if (interaction.item) {
         const uri = interaction.item
         setHasPressedShowLessUris(prev => new Set([...prev, uri]))
@@ -384,6 +412,7 @@ let PostFeed = ({
    * Cached value of whether the current feed was selected at startup. We don't
    * want this to update when user swipes.
    */
+  // oxlint-disable-next-line react/hook-use-state
   const [isCurrentFeedAtStartupSelected] = useState(selectedFeed === feed)
 
   const blockedOrMutedAuthors = usePostAuthorShadowFilter(
@@ -452,7 +481,7 @@ let PostFeed = ({
               )
               if (
                 item &&
-                AppBskyEmbedVideo.isView(item.post.embed) &&
+                bsky.isType(app.bsky.embed.video.view, item.post.embed) &&
                 !blockedOrMutedAuthors.includes(item.post.author.did)
               ) {
                 videos.push({
@@ -540,14 +569,20 @@ let PostFeed = ({
                         key: 'composerPrompt-' + sliceIndex,
                       })
                     }
-                  } else if (sliceIndex === 15) {
+                  } else if (sliceIndex === trendingIndices.topics) {
+                    arr.push({
+                      type: 'interstitialFeedTrendingTopics',
+                      key: 'interstitialFeedTrendingTopics-' + sliceIndex,
+                      feedSliceIndex: sliceIndex,
+                    })
+                  } else if (sliceIndex === trendingIndices.videos) {
                     if (areVideoFeedsEnabled && !trendingVideoDisabled) {
                       arr.push({
                         type: 'interstitialTrendingVideos',
                         key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                       })
                     }
-                  } else if (sliceIndex === 30) {
+                  } else if (sliceIndex === trendingIndices.accounts) {
                     arr.push({
                       type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
@@ -670,8 +705,17 @@ let PostFeed = ({
       }
     }
 
+    if (description?.text) {
+      arr.unshift({
+        key: 'description',
+        type: 'description',
+        value: description,
+      })
+    }
+
     return arr
   }, [
+    description,
     isFetched,
     isError,
     isEmpty,
@@ -691,12 +735,14 @@ let PostFeed = ({
     ageAssuranceBannerState,
     isCurrentFeedAtStartupSelected,
     blockedOrMutedAuthors,
+    trendingIndices,
   ])
 
   // events
   // =
+  //
 
-  const onRefresh = useCallback(async () => {
+  const refreshFeed = async () => {
     if (!enabled) return
 
     ax.metric('feed:refresh', {
@@ -704,24 +750,25 @@ let PostFeed = ({
       feedUrl: feed,
       reason: 'pull-to-refresh',
     })
-    setIsPTRing(true)
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
-      onHasNew?.(false)
+      if (onHasNew) {
+        onHasNew(false)
+      }
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
+  }
+
+  const onRefresh = async () => {
+    setIsPTRing(true)
+    await refreshFeed()
     setIsPTRing(false)
-  }, [
-    ax,
-    queryClient,
-    setIsPTRing,
-    onHasNew,
-    feed,
-    feedParams,
-    feedType,
-    enabled,
-  ])
+  }
+
+  useImperativeHandle(ref, () => ({
+    refreshFeed,
+  }))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -783,14 +830,28 @@ let PostFeed = ({
         return <PostFeedLoadingPlaceholder />
       } else if (row.type === 'feedShutdownMsg') {
         return <FeedShutdownMsg feedUri={feedUriOrActorDid} />
+      } else if (row.type === 'description') {
+        return (
+          <RichText
+            value={row.value}
+            style={[
+              a.m_md,
+              a.text_md,
+              a.leading_snug,
+              t.atoms.text_contrast_high,
+            ]}
+          />
+        )
       } else if (row.type === 'interstitialFollows') {
         return <SuggestedFollows feed={feed} />
       } else if (row.type === 'interstitialProgressGuide') {
         return <ProgressGuide />
       } else if (row.type === 'ageAssuranceBanner') {
         return <AgeAssuranceDismissibleFeedBanner />
-      } else if (row.type === 'interstitialTrending') {
-        return <TrendingInterstitial />
+      } else if (row.type === 'interstitialFeedTrendingTopics') {
+        return (
+          <FeedTrendingTopicsInterstitial feedSliceIndex={row.feedSliceIndex} />
+        )
       } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
         return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
       } else if (row.type === 'composerPrompt') {
@@ -881,6 +942,7 @@ let PostFeed = ({
       feedTab,
       feedCacheKey,
       onPressShowLess,
+      t,
     ],
   )
 
@@ -957,13 +1019,13 @@ let PostFeed = ({
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
-      const onPostSeen = (post: AppBskyFeedDefs.PostView) => {
+      const onPostSeen = (post: app.bsky.feed.defs.PostView) => {
         if (seenPerPostUrisRef.current.has(post.uri)) return
         seenPerPostUrisRef.current.add(post.uri)
 
         // Standard site embed view tracking
         if (
-          AppBskyEmbedExternal.isView(post.embed) &&
+          bsky.isType(app.bsky.embed.external.view, post.embed) &&
           isStandardSiteEmbed(post.embed.external)
         ) {
           ax.metric('embed:standardSite:view', {url: post.embed.external.uri})
@@ -971,13 +1033,21 @@ let PostFeed = ({
 
         // Photo embed impression tracking
         if (
-          AppBskyEmbedImages.isView(post.embed) ||
-          AppBskyEmbedGallery.isView(post.embed)
+          bsky.isType(app.bsky.embed.images.view, post.embed) ||
+          bsky.isType(app.bsky.embed.gallery.view, post.embed)
         ) {
-          const totalImages = AppBskyEmbedGallery.isView(post.embed)
-            ? post.embed.items.filter(AppBskyEmbedGallery.isViewImage).length
+          const totalImages = bsky.isType(
+            app.bsky.embed.gallery.view,
+            post.embed,
+          )
+            ? post.embed.items.filter(item =>
+                bsky.isType(app.bsky.embed.gallery.viewImage, item),
+              ).length
             : post.embed.images.length
-          const useExpandedLayout = AppBskyEmbedGallery.isView(post.embed)
+          const useExpandedLayout = bsky.isType(
+            app.bsky.embed.gallery.view,
+            post.embed,
+          )
             ? totalImages > 4
             : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
           const layout =
