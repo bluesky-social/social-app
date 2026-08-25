@@ -106,17 +106,16 @@ function DeleteAccountDialogInner({
       logger.error(raw || e, {
         message: 'Failed to send account deletion verification email',
       })
-    } finally {
-      setEmailState(EmailState.DEFAULT)
     }
+    setEmailState(EmailState.DEFAULT)
   }, [client, cleanError, emailState, setEmailState])
 
   const confirmDeletion = useCallback(async () => {
+    if (!currentAccount?.did) {
+      throw new Error('Invalid did')
+    }
     try {
       setError('')
-      if (!currentAccount?.did) {
-        throw new Error('Invalid did')
-      }
       const token = confirmCode.replace(WHITESPACE_RE, '')
       /*
        * Inform chat service of intent to delete account. A non-2xx response
