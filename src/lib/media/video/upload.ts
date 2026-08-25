@@ -13,7 +13,11 @@ import {
 import {Features, features} from '#/analytics/features'
 import {type app} from '#/lexicons'
 import {MultipartFallbackError, uploadVideoMultipart} from './multipart/upload'
-import {getServiceAuthToken, getVideoUploadLimits} from './upload.shared'
+import {
+  getServiceAuthToken,
+  getVideoUploadLimits,
+  serviceAuthExp,
+} from './upload.shared'
 import {createVideoEndpointUrl, mimeToExt} from './util'
 
 export async function uploadVideo({
@@ -72,7 +76,7 @@ export async function uploadVideo({
     client,
     dispatchUrl,
     lxm: 'com.atproto.repo.uploadBlob',
-    exp: Date.now() / 1000 + 60 * 30, // 30 minutes
+    exp: serviceAuthExp(),
   })
   const uploadTask = createUploadTask(
     uri,

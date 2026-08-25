@@ -27,6 +27,11 @@ export async function getServiceAuthToken({
   dispatchUrl?: string | URL
   aud?: string
   lxm: NsidString
+  /**
+   * Unix timestamp in *seconds* at which the token expires. Fractional values
+   * are floored - see {@link toIntegerExp}. Defaults to the server's own
+   * short expiry when omitted.
+   */
   exp?: number
 }) {
   let resolvedAud = aud
@@ -43,9 +48,40 @@ export async function getServiceAuthToken({
   const {token} = await client.call(com.atproto.server.getServiceAuth, {
     aud: resolvedAud as DidString,
     lxm,
-    exp,
+    exp: exp === undefined ? undefined : toIntegerExp(exp),
   })
   return token
+}
+
+/**
+ * Default lifetime for the video upload service auth token. Long enough to
+ * cover a slow upload of a large file, short enough to limit the damage if the
+ * token leaks.
+ */
+export const SERVICE_AUTH_TTL_SEC = 60 * 30
+
+/**
+ * Build a service auth `exp` claim `ttlSec` seconds from now.
+ *
+ * Always use this instead of hand-rolling the arithmetic: `Date.now()` is in
+ * milliseconds, and dividing by 1000 without flooring yields a fractional
+ * timestamp that the endpoint rejects.
+ */
+export function serviceAuthExp(ttlSec: number = SERVICE_AUTH_TTL_SEC) {
+  return Math.floor(Date.now() / 1000) + Math.floor(ttlSec)
+}
+
+/**
+ * The lexicon types `exp` as an integer and it is serialized straight into the
+ * query string, so a fractional value fails validation and the upload dies
+ * before it starts. Floor here, at the single chokepoint every caller goes
+ * through, so a call site that forgets to cannot reintroduce the bug.
+ */
+function toIntegerExp(exp: number) {
+  if (!Number.isFinite(exp)) {
+    throw new Error(`Invalid service auth exp: ${exp}`)
+  }
+  return Math.floor(exp)
 }
 
 export async function getVideoUploadLimits(client: Client, i18n: I18n) {
