@@ -25,7 +25,11 @@ import {MergeFeedAPI} from '#/lib/api/feed/merge'
 import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
-import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
+import {
+  type FeedPostNumbering,
+  FeedTuner,
+  type FeedTunerFn,
+} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
@@ -81,6 +85,7 @@ export interface FeedPostSliceItem {
   uri: AtUriString
   post: app.bsky.feed.defs.PostView
   record: app.bsky.feed.post.Main
+  postNumbering?: FeedPostNumbering
   moderation: ModerationDecision
   parentAuthor?: app.bsky.actor.defs.ProfileViewBasic
   isParentBlocked?: boolean
@@ -340,6 +345,7 @@ export function usePostFeedQuery(
                         uri: item.post.uri,
                         post: item.post,
                         record: item.record,
+                        postNumbering: item.postNumbering,
                         moderation: moderations[i],
                         parentAuthor: item.parentAuthor,
                         isParentBlocked: item.isParentBlocked,

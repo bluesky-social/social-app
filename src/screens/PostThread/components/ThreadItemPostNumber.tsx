@@ -11,12 +11,17 @@ import {type app} from '#/lexicons'
  */
 export const POST_NUMBER_INLINE_OFFSET = 6
 
+export type ThreadItemPostNumbering = Pick<
+  app.bsky.unspecced.defs.ThreadItemPost,
+  'opThreadPostIndex' | 'opThreadPostCount'
+>
+
 export function useHasThreadItemPostNumber(
-  value: app.bsky.unspecced.defs.ThreadItemPost,
+  value: ThreadItemPostNumbering | undefined,
 ) {
   const ax = useAnalytics()
-  const index = value.opThreadPostIndex
-  const count = value.opThreadPostCount
+  const index = value?.opThreadPostIndex
+  const count = value?.opThreadPostCount
 
   return (
     ax.features.enabled(ax.features.CanonicalPostNumberingEnable) &&
@@ -32,14 +37,14 @@ export function ThreadItemPostNumber({
   value,
   inline = true,
 }: {
-  value: app.bsky.unspecced.defs.ThreadItemPost
+  value: ThreadItemPostNumbering | undefined
   inline?: boolean
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const shouldRender = useHasThreadItemPostNumber(value)
-  const index = value.opThreadPostIndex
-  const count = value.opThreadPostCount
+  const index = value?.opThreadPostIndex
+  const count = value?.opThreadPostCount
 
   if (!shouldRender) {
     return null
@@ -59,7 +64,8 @@ export function ThreadItemPostNumber({
         },
         inline
           ? platform({
-              native: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
+              android: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
+              ios: {transform: [{translateY: a.py_2xs.paddingBottom}]},
               web: {
                 top: -2,
                 marginBottom: -2,
