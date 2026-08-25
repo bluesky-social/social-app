@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useEffectEvent, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import * as Contacts from 'expo-contacts'
 import {type DidString} from '@atproto/syntax'
@@ -61,12 +61,17 @@ export function FindContactsSettingsScreen({}: Props) {
   const {data, error, refetch} = useContactsSyncStatusQuery()
 
   const isFocused = useIsFocused()
+
+  const logPresented = useEffectEvent(() => {
+    ax.metric('contacts:settings:presented', {
+      hasPreviouslySynced: !!data?.syncStatus,
+      matchCount: data?.syncStatus?.matchesCount,
+    })
+  })
+
   useEffect(() => {
     if (data && isFocused) {
-      ax.metric('contacts:settings:presented', {
-        hasPreviouslySynced: !!data.syncStatus,
-        matchCount: data.syncStatus?.matchesCount,
-      })
+      logPresented()
     }
   }, [data, isFocused])
 

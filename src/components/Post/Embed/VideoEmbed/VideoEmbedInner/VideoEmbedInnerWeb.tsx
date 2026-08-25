@@ -1,4 +1,11 @@
-import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import type * as HlsTypes from 'hls.js'
@@ -264,6 +271,14 @@ function useHLS({
     },
   )
 
+  /*
+   * The hls handler below must call the latest `updateCuePositions` without the
+   * effect tearing down and re-attaching every time its identity changes.
+   */
+  const onSubtitleFragProcessed = useEffectEvent(() => {
+    updateCuePositions()
+  })
+
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
@@ -302,7 +317,7 @@ function useHLS({
     })
 
     hls.on(Hls.Events.SUBTITLE_FRAG_PROCESSED, () => {
-      updateCuePositions()
+      onSubtitleFragProcessed()
     })
 
     hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {
