@@ -202,9 +202,36 @@
         },
         "embeddingDisabled": {
           "type": "boolean"
+        },
+        "knownLikers": {
+          "description": "This property is present only in selected cases, as an optimization.",
+          "type": "ref",
+          "ref": "#knownLikers"
         }
       },
       "description": "Metadata about the requesting account's relationship with the subject content. Only has meaningful content for authed requests."
+    },
+    "knownLikers": {
+      "type": "object",
+      "description": "The post's likers whom you also follow",
+      "required": [
+        "count",
+        "actors"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer"
+        },
+        "actors": {
+          "type": "array",
+          "minLength": 0,
+          "maxLength": 5,
+          "items": {
+            "type": "ref",
+            "ref": "app.bsky.actor.defs#profileViewBasic"
+          }
+        }
+      }
     },
     "feedViewPost": {
       "type": "object",
