@@ -47,7 +47,7 @@ import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
 
-const UNREAD_REQUEST_CAP = 100
+const UNREAD_NOTIFICATION_CAP = 100
 
 function ErrorState({error}: {error: string}) {
   const t = useTheme()
@@ -169,9 +169,9 @@ function SubItem({
                 a.font_semi_bold,
                 {color: t.palette.white, fontVariant: ['tabular-nums']},
               ]}>
-              {badge >= UNREAD_REQUEST_CAP
+              {badge >= UNREAD_NOTIFICATION_CAP
                 ? l({
-                    message: `${i18n.number(UNREAD_REQUEST_CAP - 1)}+`,
+                    message: `${i18n.number(UNREAD_NOTIFICATION_CAP - 1)}+`,
                     comment:
                       'Displayed when the number of notifications exceeds the cap – for example, 99+ requests',
                   })
