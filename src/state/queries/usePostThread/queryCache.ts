@@ -325,6 +325,12 @@ export function* findAllProfilesInQueryData(
           yield item.value.post.author
         }
 
+        for (const actor of item.value.post.viewer?.knownLikers?.actors ?? []) {
+          if (actor.did === did) {
+            yield actor
+          }
+        }
+
         const qp = getEmbeddedPost(item.value.post.embed)
         if (qp && qp.author.did === did) {
           yield qp.author
