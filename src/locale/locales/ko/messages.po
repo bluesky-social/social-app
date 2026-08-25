@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-19 23:51\n"
+"PO-Revision-Date: 2026-08-25 22:01\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -203,7 +203,7 @@ msgstr "{0, plural, other {게시물}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:497
+#: src/screens/StarterPack/StarterPackScreen.tsx:500
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr "{0, plural, other {#명}}이 이 스타터 팩을 통해 Bluesky에 가입했습니다!"
 
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, other {#시간}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:89
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:95
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -1201,11 +1201,11 @@ msgstr "대체 텍스트 추가 (선택 사항)"
 msgid "Add another account"
 msgstr "다른 계정 추가"
 
-#: src/view/com/composer/Composer.tsx:1659
+#: src/view/com/composer/Composer.tsx:1625
 msgid "Add another post"
 msgstr "다른 게시물 추가하기"
 
-#: src/view/com/composer/Composer.tsx:2328
+#: src/view/com/composer/Composer.tsx:2294
 msgid "Add another post to thread"
 msgstr "스레드에 다른 게시물 추가"
 
@@ -1244,7 +1244,7 @@ msgid "Add image"
 msgstr "이미지 추가"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:534
+#: src/view/com/composer/SelectMediaButton.tsx:520
 msgid "Add media to post"
 msgstr "게시물에 미디어 추가"
 
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr "전체 {0}"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:398
+#: src/screens/StarterPack/StarterPackScreen.tsx:401
 msgid "All accounts have been followed!"
 msgstr "모든 계정을 팔로우했습니다"
 
@@ -1587,7 +1587,7 @@ msgstr "오류 발생"
 msgid "An error occurred"
 msgstr "오류 발생"
 
-#: src/view/com/composer/state/video.ts:509
+#: src/view/com/composer/state/video.ts:503
 msgid "An error occurred while compressing the video."
 msgstr "동영상을 압축하는 동안 오류가 발생했습니다."
 
@@ -1628,16 +1628,16 @@ msgstr "QR 코드를 저장하는 동안 오류가 발생했습니다"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:357
-#: src/screens/StarterPack/StarterPackScreen.tsx:384
+#: src/screens/StarterPack/StarterPackScreen.tsx:360
+#: src/screens/StarterPack/StarterPackScreen.tsx:387
 msgid "An error occurred while trying to follow all"
 msgstr "모두 팔로우하려고 하는 동안 오류가 발생했습니다"
 
-#: src/view/com/composer/state/video.ts:561
+#: src/view/com/composer/state/video.ts:555
 msgid "An error occurred while uploading the video. {message}"
 msgstr "동영상을 업로드하는 동안 오류가 발생했습니다. {message}"
 
-#: src/view/com/composer/state/video.ts:553
+#: src/view/com/composer/state/video.ts:547
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "동영상을 업로드하는 동안 오류가 발생했습니다. 인터넷 연결 상태를 확인하고 다시 시도해 주세요."
 
@@ -1914,7 +1914,7 @@ msgstr "앱 비밀번호 ‘{0}’(을)를 삭제하시겠습니까?"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "이 메시지를 정말 삭제하시겠습니까? 삭제하더라도 다른 참여자에게는 메시지가 그대로 표시됩니다."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:680
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "이 스타터 팩을 삭제하시겠습니까?"
 
@@ -1945,7 +1945,7 @@ msgstr "내 피드에서 이 피드를 삭제하시겠습니까?"
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "{0}에 대한 참여 요청을 취소하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:1795
+#: src/view/com/composer/Composer.tsx:1761
 msgid "Are you sure you'd like to discard this post?"
 msgstr "이 게시물을 삭제하시겠습니까?"
 
@@ -2565,8 +2565,8 @@ msgstr "카메라 접근 권한이 필요합니다"
 #: src/screens/Settings/Settings.tsx:312
 #: src/screens/Takendown.tsx:100
 #: src/screens/Takendown.tsx:103
-#: src/view/com/composer/Composer.tsx:1873
-#: src/view/com/composer/Composer.tsx:1883
+#: src/view/com/composer/Composer.tsx:1839
+#: src/view/com/composer/Composer.tsx:1849
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -3118,7 +3118,7 @@ msgstr "환영 대화 상자 닫기"
 msgid "Closes password update alert"
 msgstr "비밀번호 변경 알림을 닫습니다"
 
-#: src/view/com/composer/Composer.tsx:1881
+#: src/view/com/composer/Composer.tsx:1847
 msgid "Closes post composer and discards post draft"
 msgstr "게시물 작성기를 닫고 게시물 초안을 삭제합니다"
 
@@ -3172,7 +3172,7 @@ msgid "Compose new post"
 msgstr "새 게시물 작성하기"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1757
+#: src/view/com/composer/Composer.tsx:1723
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "게시물을 최대 {0, plural, other {#자}}까지 작성할 수 있습니다"
 
@@ -3180,11 +3180,11 @@ msgstr "게시물을 최대 {0, plural, other {#자}}까지 작성할 수 있습
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
-#: src/view/com/composer/Composer.tsx:2711
+#: src/view/com/composer/Composer.tsx:2677
 msgid "Compressing GIF..."
 msgstr "GIF 압축 중…"
 
-#: src/view/com/composer/Composer.tsx:2713
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing video..."
 msgstr "동영상 압축 중…"
 
@@ -3452,7 +3452,7 @@ msgstr "초대 링크 복사하기"
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
+#: src/screens/StarterPack/StarterPackScreen.tsx:640
 msgid "Copy link"
 msgstr "링크 복사"
 
@@ -3477,7 +3477,7 @@ msgstr "게시물 링크 복사"
 msgid "Copy link to profile"
 msgstr "프로필 링크 복사"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:630
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Copy link to starter pack"
 msgstr "스타터 팩 링크 복사"
 
@@ -3632,7 +3632,7 @@ msgstr "만들기"
 msgid "Create a list"
 msgstr "리스트 만들기"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:616
 msgid "Create a list from this starter pack"
 msgstr "스타터 팩에서 리스트 만들기"
 
@@ -3699,7 +3699,7 @@ msgstr "그룹 대화 만들기"
 msgid "Create list"
 msgstr "리스트 만들기"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:619
+#: src/screens/StarterPack/StarterPackScreen.tsx:622
 msgid "Create list from members"
 msgstr "멤버에서 리스트 만들기"
 
@@ -3842,9 +3842,9 @@ msgstr "기본 아이콘"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:608
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
-#: src/screens/StarterPack/StarterPackScreen.tsx:787
+#: src/screens/StarterPack/StarterPackScreen.tsx:611
+#: src/screens/StarterPack/StarterPackScreen.tsx:711
+#: src/screens/StarterPack/StarterPackScreen.tsx:790
 msgid "Delete"
 msgstr "삭제"
 
@@ -3911,16 +3911,16 @@ msgstr "내 계정 삭제"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:808
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:810
-#: src/view/com/composer/Composer.tsx:1769
+#: src/view/com/composer/Composer.tsx:1735
 msgid "Delete post"
 msgstr "게시물 삭제"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:602
-#: src/screens/StarterPack/StarterPackScreen.tsx:778
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:781
 msgid "Delete starter pack"
 msgstr "스타터 팩 삭제"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:674
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Delete starter pack?"
 msgstr "스타터 팩 삭제"
 
@@ -4062,9 +4062,9 @@ msgstr "사용 안 함"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1549
-#: src/view/com/composer/Composer.tsx:1593
-#: src/view/com/composer/Composer.tsx:1802
+#: src/view/com/composer/Composer.tsx:1515
+#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1768
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -4075,14 +4075,14 @@ msgstr "삭제"
 msgid "Discard changes?"
 msgstr "변경 사항 삭제"
 
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "임시 저장을 삭제하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:1564
-#: src/view/com/composer/Composer.tsx:1794
+#: src/view/com/composer/Composer.tsx:1530
+#: src/view/com/composer/Composer.tsx:1760
 msgid "Discard post?"
 msgstr "게시물 삭제"
 
@@ -4115,7 +4115,7 @@ msgstr "닫기"
 msgid "Dismiss banner"
 msgstr "배너 닫기"
 
-#: src/view/com/composer/Composer.tsx:2653
+#: src/view/com/composer/Composer.tsx:2619
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -4341,7 +4341,7 @@ msgstr "섭식 장애"
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:600
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4445,7 @@ msgstr "프로필 편집"
 msgid "Edit Profile"
 msgstr "프로필 편집"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:589
+#: src/screens/StarterPack/StarterPackScreen.tsx:592
 msgid "Edit starter pack"
 msgstr "스타터 팩 편집"
 
@@ -4541,11 +4541,6 @@ msgstr "활성화"
 #: src/components/dialogs/EmbedConsent.tsx:96
 msgid "Enable {0} only"
 msgstr "{0}에서만 사용"
-
-#. Description of a feature flag (10-minute video uploads)
-#: src/analytics/features/index.ts:90
-msgid "Enable 10-minute video uploads."
-msgstr "10분 길이의 동영상 업로드를 활성화합니다."
 
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
@@ -4678,7 +4673,7 @@ msgstr "전체화면으로 봅니다"
 msgid "Entertainment"
 msgstr "엔터테인먼트"
 
-#: src/view/com/composer/Composer.tsx:2731
+#: src/view/com/composer/Composer.tsx:2697
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "오류"
@@ -4946,7 +4941,7 @@ msgstr "메시지를 삭제하지 못했습니다"
 msgid "Failed to delete post, please try again"
 msgstr "게시물을 삭제하지 못했습니다. 다시 시도해 주세요"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:747
+#: src/screens/StarterPack/StarterPackScreen.tsx:750
 msgid "Failed to delete starter pack"
 msgstr "스타터 팩을 삭제하지 못했습니다"
 
@@ -5121,7 +5116,7 @@ msgstr "요청을 취소하지 못했습니다. 다시 시도해 주세요."
 msgid "Failed to resolve location. Please try again."
 msgstr "위치를 확인하지 못했습니다. 다시 시도해 주세요."
 
-#: src/view/com/composer/Composer.tsx:775
+#: src/view/com/composer/Composer.tsx:741
 msgid "Failed to save draft"
 msgstr "임시 저장하지 못했습니다"
 
@@ -5197,13 +5192,6 @@ msgstr "알림 선언을 업데이트하지 못했습니다"
 msgid "Failed to update settings"
 msgstr "설정을 업데이트하지 못했습니다"
 
-#: src/lib/media/video/upload.ts:104
-#: src/lib/media/video/upload.web.ts:104
-#: src/lib/media/video/upload.web.ts:108
-#: src/lib/media/video/upload.web.ts:118
-msgid "Failed to upload video"
-msgstr "동영상을 업로드하지 못했습니다"
-
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:169
 msgid "Failed to verify email, please try again."
 msgstr "이메일을 인증하지 못했습니다. 다시 시도해 주세요."
@@ -5269,7 +5257,7 @@ msgstr "피드 운영자에게 피드백을 전송했습니다"
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:193
+#: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
@@ -5486,8 +5474,8 @@ msgstr "계정 팔로우"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
-#: src/screens/StarterPack/StarterPackScreen.tsx:453
+#: src/screens/StarterPack/StarterPackScreen.tsx:448
+#: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "Follow all"
 msgstr "모두 팔로우"
 
@@ -5812,7 +5800,7 @@ msgstr "시작하기"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2736
+#: src/view/com/composer/Composer.tsx:2702
 msgid "GIF uploaded"
 msgstr "GIF를 업로드했습니다"
 
@@ -5850,7 +5838,7 @@ msgstr "뒤로"
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:800
+#: src/screens/StarterPack/StarterPackScreen.tsx:803
 msgid "Go Back"
 msgstr "뒤로"
 
@@ -6252,7 +6240,7 @@ msgstr "인기 주제 숨기기"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:102
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:171
 msgid "Hide trending topics?"
-msgstr "인기 주제를 숨기시겠습니까?"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
@@ -6316,7 +6304,7 @@ msgstr "이 데이터를 불러오는 데 문제가 있는 것 같습니다. 자
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "검토 서비스를 불러올 수 없습니다."
 
-#: src/view/com/composer/state/video.ts:523
+#: src/view/com/composer/state/video.ts:517
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "잠깐! 동영상에 대한 접근 권한이 점차적으로 제공되고 있지만 아직은 기다려야 합니다. 나중에 다시 확인해 주세요!"
 
@@ -6800,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "아직은 나밖에 없습니다! 위에서 검색하여 스타터 팩에 더 많은 사용자를 추가해 보세요."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2672
+#: src/view/com/composer/Composer.tsx:2638
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -6816,8 +6804,8 @@ msgstr "참여"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:471
-#: src/screens/StarterPack/StarterPackScreen.tsx:481
+#: src/screens/StarterPack/StarterPackScreen.tsx:474
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
 msgid "Join Bluesky"
 msgstr "Bluesky 가입하기"
 
@@ -6840,8 +6828,8 @@ msgstr "대화에 참여하기"
 msgid "Journalism"
 msgstr "저널리즘"
 
-#: src/view/com/composer/Composer.tsx:1597
-#: src/view/com/composer/Composer.tsx:1607
+#: src/view/com/composer/Composer.tsx:1563
+#: src/view/com/composer/Composer.tsx:1573
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "계속 작성하기"
@@ -7404,11 +7392,6 @@ msgstr "<0>@sawaratsuki.bsky.social</0> 님의 로고"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "길게 눌러 {0}에 대한 태그 메뉴를 엽니다"
-
-#. Name for a feature flag (longer videos)
-#: src/analytics/features/index.ts:84
-msgid "Longer videos"
-msgstr "긴 동영상"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:119
 msgid "Looks like XXXXX-XXXXX"
@@ -8523,27 +8506,27 @@ msgstr "선택한 수신자 중 한 명이 그룹 대화를 허용하지 않습�
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "선택한 수신자 중 한 명이 당신을 차단했으므로 메시지를 보낼 수 없습니다."
 
-#: src/view/com/composer/Composer.tsx:983
+#: src/view/com/composer/Composer.tsx:949
 msgid "One or more GIFs is missing alt text."
 msgstr "하나 이상의 GIF에 대체 텍스트가 누락되었습니다."
 
-#: src/view/com/composer/Composer.tsx:980
+#: src/view/com/composer/Composer.tsx:946
 msgid "One or more images is missing alt text."
 msgstr "하나 이상의 이미지에 대체 텍스트가 누락되었습니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:438
+#: src/view/com/composer/SelectMediaButton.tsx:429
 msgid "One or more of your selected files are not supported."
 msgstr "선택한 파일 중 지원되지 않는 파일이 있습니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:461
+#: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "선택한 파일 중 크기가 너무 큰 파일이 있습니다. 최대 크기는 {VIDEO_MAX_SIZE_MB} MB입니다."
 
-#: src/view/com/composer/Composer.tsx:786
+#: src/view/com/composer/Composer.tsx:752
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "하나 이상의 게시물이 너무 길어서 임시 저장할 수 없습니다. 최대 글자 수는 {MAX_DRAFT_GRAPHEME_LENGTH, plural, other {#자}}입니다."
 
-#: src/view/com/composer/Composer.tsx:990
+#: src/view/com/composer/Composer.tsx:956
 msgid "One or more videos is missing alt text."
 msgstr "하나 이상의 동영상에 대체 텍스트가 누락되었습니다."
 
@@ -8556,7 +8539,7 @@ msgstr "{0}만 답글을 달 수 있습니다."
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:237
+#: src/view/com/composer/Composer.tsx:236
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "선택한 {1}{2, plural, other {개}}의 이미지 중 {0}개만 추가되었습니다 (최대 {MAX_GALLERY_IMAGES}개)"
 
@@ -8664,7 +8647,7 @@ msgid "Open drawer menu"
 msgstr "서랍 메뉴 열기"
 
 #: src/screens/Messages/components/MessageComposer.tsx:214
-#: src/view/com/composer/Composer.tsx:2305
+#: src/view/com/composer/Composer.tsx:2271
 msgid "Open emoji picker"
 msgstr "이모티콘 선택기 열기"
 
@@ -8743,7 +8726,7 @@ msgstr "설정 열기"
 msgid "Open share menu"
 msgstr "공유 메뉴 열기"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:575
+#: src/screens/StarterPack/StarterPackScreen.tsx:578
 msgid "Open starter pack menu"
 msgstr "스타터 팩 메뉴 열기"
 
@@ -8809,7 +8792,7 @@ msgid "Opens device camera"
 msgstr "기기 카메라를 엽니다"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:540
+#: src/view/com/composer/SelectMediaButton.tsx:526
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "최대 {MAX_GALLERY_IMAGES, plural, other {#개}}의 이미지 또는 단일 동영상 및 GIF를 선택하기 위해 기기 갤러리를 엽니다"
 
@@ -9020,7 +9003,7 @@ msgstr "동영상 일시 정지"
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:192
+#: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr "사용자"
 
@@ -9219,7 +9202,7 @@ msgstr "방금 보낸 이메일에 있는 링크를 클릭하여 새 이메일 �
 msgid "Please complete the verification captcha."
 msgstr "인증 캡차를 완료해 주세요."
 
-#: src/view/com/composer/state/video.ts:547
+#: src/view/com/composer/state/video.ts:541
 msgid "Please confirm your email address to upload videos."
 msgstr "동영상을 업로드하려면 이메일 주소를 인증해 주세요."
 
@@ -9367,7 +9350,7 @@ msgstr "정치"
 msgid "Porn"
 msgstr "음란물"
 
-#: src/view/com/composer/Composer.tsx:1947
+#: src/view/com/composer/Composer.tsx:1913
 msgctxt "action"
 msgid "Post"
 msgstr "게시하기"
@@ -9378,7 +9361,7 @@ msgid "Post"
 msgstr "게시물"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:74
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:80
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "{count}개 중 {index}번째 게시물"
@@ -9393,12 +9376,12 @@ msgstr "사진 게시하기"
 msgid "Post a video"
 msgstr "동영상 게시하기"
 
-#: src/view/com/composer/Composer.tsx:1945
+#: src/view/com/composer/Composer.tsx:1911
 msgctxt "action"
 msgid "Post All"
 msgstr "모두 게시하기"
 
-#: src/view/com/composer/Composer.tsx:1606
+#: src/view/com/composer/Composer.tsx:1572
 msgid "Post anyway"
 msgstr "무시하고 게시"
 
@@ -9487,7 +9470,7 @@ msgstr "게시물을 고정 해제했습니다"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:194
+#: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr "게시물"
@@ -9582,11 +9565,11 @@ msgstr "개인정보 처리방침"
 msgid "Privacy violation of a minor"
 msgstr "미성년자 사생활 침해"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2691
 msgid "Processing GIF..."
 msgstr "GIF 처리 중…"
 
-#: src/view/com/composer/Composer.tsx:2727
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing video..."
 msgstr "동영상 처리 중…"
 
@@ -9633,22 +9616,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "일괄 뮤트하거나 차단할 수 있는 공개적이고 공유 가능한 사용자 목록입니다."
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1931
+#: src/view/com/composer/Composer.tsx:1897
 msgid "Publish post"
 msgstr "게시물 등록하기"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1926
+#: src/view/com/composer/Composer.tsx:1892
 msgid "Publish posts"
 msgstr "게시물 등록하기"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1915
+#: src/view/com/composer/Composer.tsx:1881
 msgid "Publish replies"
 msgstr "답글 등록하기"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1920
+#: src/view/com/composer/Composer.tsx:1886
 msgid "Publish reply"
 msgstr "답글 등록하기"
 
@@ -10141,7 +10124,7 @@ msgstr "이 게시물에 대한 답글은 비활성화되어 있습니다."
 msgid "Reply"
 msgstr "답글 보내기"
 
-#: src/view/com/composer/Composer.tsx:1943
+#: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
 msgid "Reply"
 msgstr "답글 보내기"
@@ -10225,8 +10208,8 @@ msgstr "게시물 신고"
 msgid "Report sent"
 msgstr "신고를 보냈습니다"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr "스타터 팩 신고"
 
@@ -10292,7 +10275,7 @@ msgstr "재게시 ({0, plural, other {#개}})"
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:570
+#: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Repost or quote post"
 msgstr "재게시 또는 게시물 인용"
 
@@ -10511,7 +10494,7 @@ msgstr "신고 옵션 불러오기 다시 시도"
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:794
+#: src/screens/StarterPack/StarterPackScreen.tsx:797
 msgid "Return to previous page"
 msgstr "이전 페이지로 돌아갑니다"
 
@@ -10572,22 +10555,22 @@ msgstr "생년월일 저장"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "변경 사항 저장"
 
-#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1525
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "변경 사항을 저장하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "임시 저장"
 
-#: src/view/com/composer/Composer.tsx:1561
+#: src/view/com/composer/Composer.tsx:1527
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "임시 저장하시겠습니까?"
@@ -10850,7 +10833,7 @@ msgid "See more trending topics"
 msgstr "인기 주제 더 보기"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:107
+#: src/analytics/features/index.ts:91
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "동일한 작성자의 스레드 내 게시물에 번호 배지(1/3, 2/3 등)를 표시합니다."
 
@@ -11045,7 +11028,7 @@ msgstr "피드에서 번역을 위해 선호하는 언어를 선택합니다."
 msgid "Select your preferred notification channels"
 msgstr "선호하는 알림 채널 선택"
 
-#: src/view/com/composer/SelectMediaButton.tsx:441
+#: src/view/com/composer/SelectMediaButton.tsx:432
 msgid "Selecting multiple media types is not supported."
 msgstr "여러 유형의 미디어를 함께 선택할 수 없습니다."
 
@@ -11242,7 +11225,7 @@ msgstr "외설적"
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:440
+#: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr "공유"
@@ -11318,7 +11301,7 @@ msgstr "이 피드 공유하기"
 msgid "Share this search"
 msgstr "이 검색 공유하기"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:433
+#: src/screens/StarterPack/StarterPackScreen.tsx:436
 msgid "Share this starter pack"
 msgstr "이 스타터 팩 공유하기"
 
@@ -11330,8 +11313,8 @@ msgstr "이 스타터 팩을 공유하여 사람들이 Bluesky에서 커뮤니�
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:631
-#: src/screens/StarterPack/StarterPackScreen.tsx:639
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
+#: src/screens/StarterPack/StarterPackScreen.tsx:642
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11614,7 +11597,7 @@ msgstr "건너뛰기"
 msgid "Skip contact sharing and continue to the app"
 msgstr "연락처 공유를 건너뛰고 앱으로 바로 이동하기"
 
-#: src/view/com/composer/Composer.tsx:1604
+#: src/view/com/composer/Composer.tsx:1570
 msgid "Skip empty posts?"
 msgstr "빈 게시물을 제외하시겠습니까?"
 
@@ -11846,7 +11829,7 @@ msgstr "<0/> 님의 스타터 팩"
 msgid "Starter pack by you"
 msgstr "내 스타터 팩"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
+#: src/screens/StarterPack/StarterPackScreen.tsx:761
 msgid "Starter pack is invalid"
 msgstr "스타터 팩이 유효하지 않음"
 
@@ -12248,8 +12231,8 @@ msgstr "텍스트 파일 내용:"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:157
-#: src/screens/StarterPack/StarterPackScreen.tsx:158
+#: src/screens/StarterPack/StarterPackScreen.tsx:160
+#: src/screens/StarterPack/StarterPackScreen.tsx:161
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12352,32 +12335,32 @@ msgstr "답글을 보내려는 게시물은 작성자가 언어를 {suggestedLan
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "개인정보 처리방침을 <0/>(으)로 이동했습니다"
 
-#: src/view/com/composer/state/video.ts:494
+#: src/view/com/composer/state/video.ts:488
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "처리된 동영상이 너무 큽니다. 더 작은 파일로 다시 시도해 주세요."
 
-#: src/view/com/composer/state/video.ts:469
+#: src/view/com/composer/state/video.ts:463
 msgid "The selected video could not be encoded."
 msgstr "선택한 동영상을 인코딩할 수 없습니다."
 
-#: src/view/com/composer/state/video.ts:459
+#: src/view/com/composer/state/video.ts:453
 msgid "The selected video could not be processed."
 msgstr "선택한 동영상을 처리할 수 없습니다."
 
-#: src/view/com/composer/state/video.ts:489
+#: src/view/com/composer/state/video.ts:483
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "선택한 동영상의 화면 비율이 지원되지 않습니다."
 
-#: src/view/com/composer/state/video.ts:505
-#: src/view/com/composer/state/video.ts:544
+#: src/view/com/composer/state/video.ts:499
+#: src/view/com/composer/state/video.ts:538
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "선택한 동영상이 {VIDEO_MAX_SIZE_MB} MB보다 큽니다. 더 작은 파일로 다시 시도해 주세요."
 
-#: src/view/com/composer/state/video.ts:487
+#: src/view/com/composer/state/video.ts:481
 msgid "The selected video is too long."
 msgstr "선택한 동영상이 너무 깁니다."
 
-#: src/view/com/composer/state/video.ts:491
+#: src/view/com/composer/state/video.ts:485
 msgid "The selected video uses an unsupported format."
 msgstr "선택한 동영상이 지원되지 않는 형식을 사용합니다."
 
@@ -12386,7 +12369,7 @@ msgstr "선택한 동영상이 지원되지 않는 형식을 사용합니다."
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "서버에 문제가 있는 것 같습니다. 잠시 후 다시 시도해 주세요."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:768
+#: src/screens/StarterPack/StarterPackScreen.tsx:771
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "이 스타터 팩은 유효하지 않습니다. 대신 이 스타터 팩을 삭제할 수 있습니다."
 
@@ -12412,7 +12395,7 @@ msgstr "입력한 인증 코드가 올바르지 않습니다. 올바른 인증 �
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "인증 서비스 제공업체에서 회원님의 전화번호로 인증 코드를 보낼 수 없습니다. 전화번호를 확인한 후 다시 시도해 주세요."
 
-#: src/view/com/composer/state/video.ts:472
+#: src/view/com/composer/state/video.ts:466
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "동영상을 호스팅 제공자에 업로드할 수 없습니다. 다시 시도해 주세요."
 
@@ -12461,7 +12444,7 @@ msgstr "서버에 연결하는 동안 문제가 발생했습니다. 인터넷 �
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "알림을 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
 
-#: src/screens/Search/Explore.tsx:1011
+#: src/screens/Search/Explore.tsx:1012
 #: src/view/com/posts/PostFeed.tsx:830
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "게시물을 가져오는 동안 문제가 발생했습니다. 다시 시도하려면 이곳을 탭하세요."
@@ -12849,7 +12832,7 @@ msgstr "작성자가 삭제한 게시물입니다"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "이 게시물을 피드와 스레드에서 숨깁니다. 이 작업은 되돌릴 수 없습니다."
 
-#: src/view/com/composer/Composer.tsx:1177
+#: src/view/com/composer/Composer.tsx:1143
 msgid "This post's author has disabled quote posts."
 msgstr "이 게시물의 작성자가 인용 게시물을 비활성화했습니다."
 
@@ -12958,7 +12941,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "모든 사용자의 인용 게시물에서 해당 게시물이 삭제되고 자리 표시자로 대체됩니다."
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:100
+#: src/analytics/features/index.ts:84
 msgid "Thread numbering"
 msgstr "스레드 번호 표시"
 
@@ -13187,7 +13170,7 @@ msgstr "서비스에 연결할 수 없습니다. 인터넷 연결 상태를 확�
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "서비스에 연결할 수 없습니다. 인터넷 연결 상태를 확인해 주세요."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:693
+#: src/screens/StarterPack/StarterPackScreen.tsx:696
 msgid "Unable to delete"
 msgstr "삭제할 수 없음"
 
@@ -13463,7 +13446,7 @@ msgstr "리스트를 구독 취소했습니다"
 msgid "Unsupported clipboard content"
 msgstr "지원되지 않는 클립보드 콘텐츠"
 
-#: src/view/com/composer/Composer.tsx:1696
+#: src/view/com/composer/Composer.tsx:1662
 msgid "Unsupported video type: {mimeType}"
 msgstr "지원되지 않는 동영상 유형: {mimeType}"
 
@@ -13556,7 +13539,7 @@ msgstr "파일에서 업로드"
 msgid "Upload from Library"
 msgstr "보관함에서 업로드"
 
-#: src/view/com/composer/Composer.tsx:2718
+#: src/view/com/composer/Composer.tsx:2684
 msgid "Uploading GIF..."
 msgstr "GIF 업로드 중…"
 
@@ -13570,7 +13553,7 @@ msgstr "이미지 업로드 중…"
 msgid "Uploading link thumbnail..."
 msgstr "링크 미리보기 업로드 중…"
 
-#: src/view/com/composer/Composer.tsx:2720
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading video..."
 msgstr "동영상 업로드 중…"
 
@@ -13820,7 +13803,7 @@ msgstr "스타터 팩 <0/><1>{starterPackName}</1>(을)를 통해"
 msgid "Video"
 msgstr "동영상"
 
-#: src/view/com/composer/state/video.ts:480
+#: src/view/com/composer/state/video.ts:474
 msgid "Video failed to process"
 msgstr "동영상을 처리하지 못했습니다"
 
@@ -13859,7 +13842,7 @@ msgstr "동영상을 찾을 수 없습니다."
 msgid "Video settings"
 msgstr "동영상 설정"
 
-#: src/view/com/composer/Composer.tsx:2738
+#: src/view/com/composer/Composer.tsx:2704
 msgid "Video uploaded"
 msgstr "동영상을 업로드했습니다"
 
@@ -13872,19 +13855,13 @@ msgstr "동영상: {0}"
 msgid "Videos"
 msgstr "동영상"
 
-#: src/view/com/composer/Composer.tsx:463
-#: src/view/com/composer/Composer.tsx:608
-#: src/view/com/composer/SelectMediaButton.tsx:455
+#: src/view/com/composer/Composer.tsx:454
+#: src/view/com/composer/Composer.tsx:586
+#: src/view/com/composer/SelectMediaButton.tsx:446
 msgid "Videos must be 10 minutes or less."
 msgstr "동영상은 10분 이하여야 합니다."
 
-#: src/view/com/composer/Composer.tsx:464
-#: src/view/com/composer/Composer.tsx:609
-#: src/view/com/composer/SelectMediaButton.tsx:456
-msgid "Videos must be less than 3 minutes long."
-msgstr "동영상 길이는 3분 미만이어야 합니다."
-
-#: src/view/com/composer/Composer.tsx:1284
+#: src/view/com/composer/Composer.tsx:1250
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "보기"
@@ -13977,7 +13954,7 @@ msgstr "더 보기"
 msgid "View more trending videos"
 msgstr "인기 동영상 더 보기"
 
-#: src/view/com/composer/Composer.tsx:1279
+#: src/view/com/composer/Composer.tsx:1245
 msgid "View post"
 msgstr "게시물 보기"
 
@@ -14186,7 +14163,7 @@ msgstr "관심 주제를 2개 이상 선택하는 것을 권장합니다."
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "링크가 포함된 이메일을 <0>{0}</0>(으)로 보냈습니다. 이메일 인증 절차를 완료하려면 해당 링크를 클릭하세요."
 
-#: src/view/com/composer/state/video.ts:527
+#: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "동영상을 업로드할 수 있는지 확인할 수 없습니다. 다시 시도해 주세요."
 
@@ -14296,7 +14273,7 @@ msgstr "죄송하지만 검색을 완료할 수 없습니다. 몇 분 후에 다
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "죄송합니다. 현재 이 화면에 접근할 수 없습니다."
 
-#: src/view/com/composer/Composer.tsx:1175
+#: src/view/com/composer/Composer.tsx:1141
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "죄송하지만 답글을 달려는 게시물이 삭제되었습니다."
 
@@ -14352,7 +14329,7 @@ msgid "what’s up"
 msgstr "요즘 어때?"
 
 #: src/view/com/auth/SplashScreen.web.tsx:100
-#: src/view/com/composer/Composer.tsx:1660
+#: src/view/com/composer/Composer.tsx:1626
 #: src/view/com/feeds/ComposerPrompt.tsx:195
 msgid "What's up?"
 msgstr "무슨 일이 일어나고 있나요?"
@@ -14438,7 +14415,7 @@ msgstr "이 사용자를 차단하거나 대화를 종료하시겠습니까?"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "임시 저장 목록으로 이동하기 전에 작성 중인 내용을 저장하시겠습니까?"
 
-#: src/view/com/composer/Composer.tsx:1575
+#: src/view/com/composer/Composer.tsx:1541
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "나중에 다시 작성할 수 있도록 임시 저장하시겠습니까?"
 
@@ -14447,12 +14424,12 @@ msgstr "나중에 다시 작성할 수 있도록 임시 저장하시겠습니까
 msgid "Write a post"
 msgstr "게시물 작성하기"
 
-#: src/view/com/composer/Composer.tsx:1756
+#: src/view/com/composer/Composer.tsx:1722
 msgid "Write post"
 msgstr "게시물 작성"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1624
 msgid "Write your reply"
 msgstr "답글 작성하기"
 
@@ -14495,7 +14472,7 @@ msgstr "비활성화"
 msgid "Yes, delete my account"
 msgstr "내 계정을 삭제하겠습니다"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:705
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Yes, delete this starter pack"
 msgstr "이 스타터 팩 삭제하기"
 
@@ -14562,7 +14539,7 @@ msgstr "라이브 중"
 msgid "You are no longer live"
 msgstr "더 이상 라이브 중이 아닙니다"
 
-#: src/view/com/composer/state/video.ts:520
+#: src/view/com/composer/state/video.ts:514
 msgid "You are not allowed to upload videos."
 msgstr "동영상을 업로드할 수 없습니다."
 
@@ -14630,11 +14607,11 @@ msgid "You can now sign in with your new password."
 msgstr "이제 새 비밀번호로 로그인할 수 있습니다."
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:224
+#: src/view/com/composer/Composer.tsx:223
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "게시물당 최대 {MAX_GALLERY_IMAGES, plural, other {#개}}의 이미지만 추가할 수 있습니다"
 
-#: src/view/com/composer/Composer.tsx:1580
+#: src/view/com/composer/Composer.tsx:1546
 msgid "You can only save drafts up to 1000 characters."
 msgstr "최대 1000자까지만 임시 저장할 수 있습니다."
 
@@ -14642,11 +14619,11 @@ msgstr "최대 1000자까지만 임시 저장할 수 있습니다."
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr "최대 1000자까지만 임시 저장할 수 있습니다. 임시 저장 목록을 확인하기 전에 이 게시물을 삭제하시겠습니까?"
 
-#: src/view/com/composer/SelectMediaButton.tsx:458
+#: src/view/com/composer/SelectMediaButton.tsx:449
 msgid "You can only select one GIF at a time."
 msgstr "GIF는 한 번에 하나만 선택할 수 있습니다."
 
-#: src/view/com/composer/SelectMediaButton.tsx:452
+#: src/view/com/composer/SelectMediaButton.tsx:443
 msgid "You can only select one video at a time."
 msgstr "동영상은 한 번에 하나만 선택할 수 있습니다."
 
@@ -14659,7 +14636,7 @@ msgid "You can read chat history but can’t send new messages."
 msgstr "대화 기록은 읽을 수 있지만 새 메시지는 보낼 수 없습니다."
 
 #. Error message for maximum number of images that can be selected to add to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:444
+#: src/view/com/composer/SelectMediaButton.tsx:435
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "총 {MAX_GALLERY_IMAGES, plural, other {#개}}까지 선택할 수 있습니다."
 
@@ -14778,11 +14755,11 @@ msgstr "끝에 도달했습니다"
 msgid "You have successfully verified your email address. You can close this dialog."
 msgstr "이메일 주소를 성공적으로 인증했습니다. 이 대화 상자를 닫아도 됩니다."
 
-#: src/lib/media/video/upload.shared.ts:74
+#: src/lib/media/video/upload.shared.ts:110
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "일시적으로 동영상 업로드 한도에 도달했습니다. 나중에 다시 시도해 주세요."
 
-#: src/view/com/composer/Composer.tsx:1570
+#: src/view/com/composer/Composer.tsx:1536
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "이 초안에 저장되지 않은 변경 사항이 있습니다. 저장하시겠습니까?"
 
@@ -14858,7 +14835,7 @@ msgstr "스타터 팩을 만들려면 다른 사용자를 최소 7명 이상 팔
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "QR 코드를 저장하려면 사진 보관함에 대한 접근 권한을 부여해야 합니다"
 
-#: src/view/com/composer/SelectMediaButton.tsx:494
+#: src/view/com/composer/SelectMediaButton.tsx:478
 msgid "You need to allow access to your media library."
 msgstr "미디어 라이브러리에 대한 접근 권한을 허용해야 합니다."
 
@@ -15018,7 +14995,7 @@ msgstr "활성 콘텐츠의 끝에 도달했습니다."
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "피드 끝에 도달했습니다! 팔로우할 계정을 더 찾아보세요."
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:739
 msgid "You've reached the maximum number of drafts"
 msgstr "임시 저장 수가 최대치에 도달했습니다"
 
@@ -15034,11 +15011,11 @@ msgstr "필터의 최대 수인 {MAX_FILTERS, plural, other {#개}}에 도달했
 msgid "You've reached the start of the active content."
 msgstr "활성 콘텐츠의 시작 부분에 도달했습니다."
 
-#: src/view/com/composer/state/video.ts:531
+#: src/view/com/composer/state/video.ts:525
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "동영상 업로드 일일 한도에 도달했습니다 (용량이 너무 큼)"
 
-#: src/view/com/composer/state/video.ts:535
+#: src/view/com/composer/state/video.ts:529
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "동영상 업로드 일일 한도에 도달했습니다 (동영상 수가 너무 많음)"
 
@@ -15062,7 +15039,7 @@ msgstr "계정을 삭제했습니다. 또 봐요! ✌️"
 msgid "Your account has been suspended"
 msgstr "계정이 일시 정지되었습니다"
 
-#: src/view/com/composer/state/video.ts:539
+#: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "내 계정은 아직 동영상을 업로드할 수 없습니다. 나중에 다시 시도해 주세요."
 
@@ -15157,7 +15134,7 @@ msgstr "내 전체 핸들: <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "이메일 주소에서 호스팅 제공자를 감지할 수 없어 기본 Bluesky 서비스가 사용됩니다. 대신 핸들을 입력하거나 제공자를 수동으로 설정하세요."
 
-#: src/view/com/composer/state/video.ts:476
+#: src/view/com/composer/state/video.ts:470
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "호스팅 제공자가 이렇게 큰 동영상을 지원하지 않습니다. 더 작은 파일로 다시 시도해 주세요."
 
@@ -15202,11 +15179,11 @@ msgstr "비밀번호를 성공적으로 변경했습니다! 앞으로 Bluesky에
 msgid "Your password must be at least 8 characters long."
 msgstr "비밀번호는 8자 이상이어야 합니다."
 
-#: src/view/com/composer/Composer.tsx:1275
+#: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
 msgstr "게시물을 보냈습니다"
 
-#: src/view/com/composer/Composer.tsx:1272
+#: src/view/com/composer/Composer.tsx:1238
 msgid "Your posts were sent"
 msgstr "게시물을 보냈습니다"
 
@@ -15227,7 +15204,7 @@ msgstr "여러 사용자들의 프로필 사진이 동심원 형태로 내 프�
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "내 프로필, 게시물, 피드, 리스트가 더 이상 다른 Bluesky 사용자에게 표시되지 않습니다. 언제든지 로그인하여 계정을 재활성화할 수 있습니다."
 
-#: src/view/com/composer/Composer.tsx:1274
+#: src/view/com/composer/Composer.tsx:1240
 msgid "Your reply was sent"
 msgstr "답글을 보냈습니다"
 
@@ -15240,7 +15217,7 @@ msgstr "신고를 <0>{0}</0>에게 전송합니다."
 msgid "Your selected interests help us serve you content you care about."
 msgstr "선택한 관심 주제는 사용자가 관심 있는 콘텐츠를 제공하는 데 도움을 줍니다."
 
-#: src/view/com/composer/Composer.tsx:1605
+#: src/view/com/composer/Composer.tsx:1571
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "스레드에 내용이 없는 게시물이 포함되어 있어 해당 게시물은 제외됩니다. 나머지 게시물은 스레드 형식으로 게시됩니다."
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: haw\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-19 23:51\n"
+"PO-Revision-Date: 2026-08-25 22:01\n"
 "Last-Translator: \n"
 "Language-Team: Hawaiian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -203,7 +203,7 @@ msgstr ""
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:497
+#: src/screens/StarterPack/StarterPackScreen.tsx:500
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr ""
 
@@ -659,7 +659,7 @@ msgstr ""
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:190
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
 
@@ -767,7 +767,7 @@ msgstr ""
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:165
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
 msgid "{rank}."
 msgstr ""
 
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:398
+#: src/screens/StarterPack/StarterPackScreen.tsx:401
 msgid "All accounts have been followed!"
 msgstr ""
 
@@ -1628,8 +1628,8 @@ msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:357
-#: src/screens/StarterPack/StarterPackScreen.tsx:384
+#: src/screens/StarterPack/StarterPackScreen.tsx:360
+#: src/screens/StarterPack/StarterPackScreen.tsx:387
 msgid "An error occurred while trying to follow all"
 msgstr ""
 
@@ -1914,7 +1914,7 @@ msgstr ""
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:680
 msgid "Are you sure you want to delete this starter pack?"
 msgstr ""
 
@@ -2109,7 +2109,7 @@ msgstr ""
 #: src/components/dialogs/StarterPackDialog.tsx:69
 #: src/components/StarterPack/ProfileStarterPacks.tsx:267
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
-#: src/view/screens/Profile.tsx:349
+#: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
 msgstr ""
 
@@ -2424,25 +2424,25 @@ msgstr ""
 msgid "Browse other feeds"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:88
+#: src/components/TrendingTopics.tsx:135
 msgid "Browse posts about {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:96
+#: src/components/TrendingTopics.tsx:143
 msgid "Browse posts tagged with {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:105
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse starter pack {displayName}"
 msgstr ""
 
 #. placeholder {0}: trend.displayName
 #: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:147
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
 msgid "Browse topic {0}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:142
+#: src/components/TrendingTopics.tsx:189
 msgid "Browse topic {displayName}"
 msgstr ""
 
@@ -2647,7 +2647,7 @@ msgstr ""
 msgid "Change Handle"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:645
+#: src/screens/Login/LoginForm.tsx:650
 msgid "Change hosting provider"
 msgstr ""
 
@@ -3031,6 +3031,7 @@ msgstr ""
 #: src/components/ProgressGuide/FollowDialog.tsx:462
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:119
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:125
+#: src/components/TrendingTopics.tsx:55
 #: src/components/verification/VerificationsDialog.tsx:146
 #: src/components/verification/VerifierDialog.tsx:147
 #: src/components/WhoCanReply.tsx:229
@@ -3452,7 +3453,7 @@ msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
+#: src/screens/StarterPack/StarterPackScreen.tsx:640
 msgid "Copy link"
 msgstr ""
 
@@ -3477,7 +3478,7 @@ msgstr ""
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:630
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Copy link to starter pack"
 msgstr ""
 
@@ -3632,7 +3633,7 @@ msgstr ""
 msgid "Create a list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:616
 msgid "Create a list from this starter pack"
 msgstr ""
 
@@ -3646,8 +3647,8 @@ msgstr ""
 msgid "Create a starter pack"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:573
-#: src/view/screens/Profile.tsx:574
+#: src/view/screens/Profile.tsx:575
+#: src/view/screens/Profile.tsx:576
 msgid "Create a Starter Pack"
 msgstr ""
 
@@ -3699,7 +3700,7 @@ msgstr ""
 msgid "Create list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:619
+#: src/screens/StarterPack/StarterPackScreen.tsx:622
 msgid "Create list from members"
 msgstr ""
 
@@ -3842,9 +3843,9 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:608
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
-#: src/screens/StarterPack/StarterPackScreen.tsx:787
+#: src/screens/StarterPack/StarterPackScreen.tsx:611
+#: src/screens/StarterPack/StarterPackScreen.tsx:711
+#: src/screens/StarterPack/StarterPackScreen.tsx:790
 msgid "Delete"
 msgstr ""
 
@@ -3915,12 +3916,12 @@ msgstr ""
 msgid "Delete post"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:602
-#: src/screens/StarterPack/StarterPackScreen.tsx:778
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:781
 msgid "Delete starter pack"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:674
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Delete starter pack?"
 msgstr ""
 
@@ -4341,7 +4342,7 @@ msgstr ""
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:600
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4446,7 @@ msgstr ""
 msgid "Edit Profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:589
+#: src/screens/StarterPack/StarterPackScreen.tsx:592
 msgid "Edit starter pack"
 msgstr ""
 
@@ -4674,7 +4675,7 @@ msgstr ""
 msgid "Enters full screen"
 msgstr ""
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Entertainment"
 msgstr ""
 
@@ -4946,7 +4947,7 @@ msgstr ""
 msgid "Failed to delete post, please try again"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:747
+#: src/screens/StarterPack/StarterPackScreen.tsx:750
 msgid "Failed to delete starter pack"
 msgstr ""
 
@@ -5197,10 +5198,10 @@ msgstr ""
 msgid "Failed to update settings"
 msgstr ""
 
-#: src/lib/media/video/upload.ts:104
-#: src/lib/media/video/upload.web.ts:104
+#: src/lib/media/video/upload.ts:108
 #: src/lib/media/video/upload.web.ts:108
-#: src/lib/media/video/upload.web.ts:118
+#: src/lib/media/video/upload.web.ts:112
+#: src/lib/media/video/upload.web.ts:122
 msgid "Failed to upload video"
 msgstr ""
 
@@ -5269,9 +5270,9 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:193
+#: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
-#: src/view/screens/Profile.tsx:238
+#: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
 #: src/view/shell/Drawer.tsx:592
 msgid "Feeds"
@@ -5486,8 +5487,8 @@ msgstr ""
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
-#: src/screens/StarterPack/StarterPackScreen.tsx:453
+#: src/screens/StarterPack/StarterPackScreen.tsx:448
+#: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "Follow all"
 msgstr ""
 
@@ -5850,7 +5851,7 @@ msgstr ""
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:800
+#: src/screens/StarterPack/StarterPackScreen.tsx:803
 msgid "Go Back"
 msgstr ""
 
@@ -6166,8 +6167,6 @@ msgstr ""
 msgid "Hidden list"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:169
-#: src/components/interstitials/Trending.tsx:149
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:141
@@ -6177,8 +6176,6 @@ msgstr ""
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
 #: src/lib/moderation/useLabelBehaviorDescription.ts:33
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:104
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:173
 msgid "Hide"
 msgstr ""
 
@@ -6199,7 +6196,7 @@ msgstr ""
 msgid "Hide lists"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:614
+#: src/screens/Login/LoginForm.tsx:619
 msgid "Hide password"
 msgstr ""
 
@@ -6243,15 +6240,8 @@ msgstr ""
 msgid "Hide translation"
 msgstr ""
 
-#: src/components/interstitials/Trending.tsx:131
+#: src/components/TrendingTopics.tsx:42
 msgid "Hide trending topics"
-msgstr ""
-
-#: src/components/interstitials/FeedTrendingTopics.tsx:167
-#: src/components/interstitials/Trending.tsx:147
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:171
-msgid "Hide trending topics?"
 msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:138
@@ -6335,16 +6325,16 @@ msgstr ""
 #: src/components/dialogs/ServerInput.tsx:138
 #: src/screens/Login/components/HostingProviderDialog.tsx:159
 #: src/screens/Login/ForgotPasswordForm.tsx:84
-#: src/screens/Login/LoginForm.tsx:660
+#: src/screens/Login/LoginForm.tsx:665
 msgid "Hosting provider"
 msgstr ""
 
 #. placeholder {0}: toNiceHostingUrl(state.pdsUrl)
-#: src/screens/Login/LoginForm.tsx:656
+#: src/screens/Login/LoginForm.tsx:661
 msgid "Hosting provider: {0}"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:658
+#: src/screens/Login/LoginForm.tsx:663
 msgid "Hosting provider: Bluesky"
 msgstr ""
 
@@ -6816,8 +6806,8 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:471
-#: src/screens/StarterPack/StarterPackScreen.tsx:481
+#: src/screens/StarterPack/StarterPackScreen.tsx:474
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
 msgid "Join Bluesky"
 msgstr ""
 
@@ -6869,7 +6859,7 @@ msgid "Labeled by the author."
 msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:70
-#: src/view/screens/Profile.tsx:231
+#: src/view/screens/Profile.tsx:233
 msgid "Labels"
 msgstr ""
 
@@ -7168,7 +7158,7 @@ msgstr ""
 #: src/lib/hooks/useNotificationHandler.ts:158
 #: src/screens/Settings/NotificationSettings/index.tsx:159
 #: src/screens/Settings/NotificationSettings/index.tsx:314
-#: src/view/screens/Profile.tsx:237
+#: src/view/screens/Profile.tsx:239
 msgid "Likes"
 msgstr ""
 
@@ -7279,8 +7269,8 @@ msgstr ""
 
 #: src/Navigation.tsx:174
 #: src/view/screens/Lists.tsx:60
-#: src/view/screens/Profile.tsx:232
-#: src/view/screens/Profile.tsx:240
+#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:242
 #: src/view/shell/desktop/LeftNav.tsx:722
 #: src/view/shell/Drawer.tsx:607
 msgid "Lists"
@@ -7509,7 +7499,7 @@ msgid "Me"
 msgstr ""
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:375
-#: src/view/screens/Profile.tsx:235
+#: src/view/screens/Profile.tsx:237
 msgid "Media"
 msgstr ""
 
@@ -8038,7 +8028,7 @@ msgstr ""
 #: src/screens/ProfileList/index.tsx:277
 #: src/view/screens/Feeds.tsx:545
 #: src/view/screens/Notifications.tsx:165
-#: src/view/screens/Profile.tsx:604
+#: src/view/screens/Profile.tsx:606
 msgid "New post"
 msgstr ""
 
@@ -8076,7 +8066,7 @@ msgid "Newest replies first"
 msgstr ""
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "News"
 msgstr ""
 
@@ -8186,7 +8176,7 @@ msgstr ""
 
 #: src/components/LikedByList.tsx:90
 #: src/view/com/post-thread/PostLikedBy.tsx:90
-#: src/view/screens/Profile.tsx:536
+#: src/view/screens/Profile.tsx:538
 msgid "No likes yet"
 msgstr ""
 
@@ -8208,7 +8198,7 @@ msgstr ""
 msgid "No media filter"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:482
+#: src/view/screens/Profile.tsx:484
 msgid "No media yet"
 msgstr ""
 
@@ -8263,7 +8253,7 @@ msgid "No posts here"
 msgstr ""
 
 #: src/screens/Profile/Sections/Feed.tsx:84
-#: src/view/screens/Profile.tsx:440
+#: src/view/screens/Profile.tsx:442
 msgid "No posts yet"
 msgstr ""
 
@@ -8276,7 +8266,7 @@ msgstr ""
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:467
+#: src/view/screens/Profile.tsx:469
 msgid "No replies yet"
 msgstr ""
 
@@ -8326,7 +8316,7 @@ msgstr ""
 msgid "No results."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:568
+#: src/view/screens/Profile.tsx:570
 msgid "No Starter Packs yet"
 msgstr ""
 
@@ -8339,7 +8329,7 @@ msgstr ""
 msgid "No translation received from your device."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:509
+#: src/view/screens/Profile.tsx:511
 msgid "No video posts yet"
 msgstr ""
 
@@ -8399,7 +8389,7 @@ msgid "Not followed by anyone you’re following"
 msgstr ""
 
 #: src/Navigation.tsx:169
-#: src/view/screens/Profile.tsx:130
+#: src/view/screens/Profile.tsx:132
 msgid "Not Found"
 msgstr ""
 
@@ -8625,7 +8615,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:375
 #: src/screens/Settings/AppPasswords.tsx:59
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:108
-#: src/view/screens/Profile.tsx:130
+#: src/view/screens/Profile.tsx:132
 msgid "Oops!"
 msgstr ""
 
@@ -8743,7 +8733,7 @@ msgstr ""
 msgid "Open share menu"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:575
+#: src/screens/StarterPack/StarterPackScreen.tsx:578
 msgid "Open starter pack menu"
 msgstr ""
 
@@ -8768,7 +8758,7 @@ msgstr ""
 msgid "Opens a dialog to add a content warning to your post"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:646
+#: src/screens/Login/LoginForm.tsx:651
 msgid "Opens a dialog to change the hosting provider you sign in to"
 msgstr ""
 
@@ -9020,7 +9010,7 @@ msgstr ""
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:192
+#: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr ""
 
@@ -9359,7 +9349,7 @@ msgid "Please write your message below:"
 msgstr ""
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:240
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Politics"
 msgstr ""
 
@@ -9383,13 +9373,13 @@ msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:486
-#: src/view/screens/Profile.tsx:487
+#: src/view/screens/Profile.tsx:488
+#: src/view/screens/Profile.tsx:489
 msgid "Post a photo"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:513
-#: src/view/screens/Profile.tsx:514
+#: src/view/screens/Profile.tsx:515
+#: src/view/screens/Profile.tsx:516
 msgid "Post a video"
 msgstr ""
 
@@ -9487,8 +9477,8 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:194
-#: src/view/screens/Profile.tsx:233
+#: src/screens/StarterPack/StarterPackScreen.tsx:197
+#: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr ""
 
@@ -9874,7 +9864,7 @@ msgstr ""
 msgid "Remove"
 msgstr ""
 
-#: src/components/dms/ChatProfileTabs.tsx:153
+#: src/components/dms/ChatProfileTabs.tsx:155
 msgid "Remove {displayName} from group chat"
 msgstr ""
 
@@ -10124,7 +10114,7 @@ msgstr ""
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/index.tsx:330
-#: src/view/screens/Profile.tsx:234
+#: src/view/screens/Profile.tsx:236
 msgid "Replies"
 msgstr ""
 
@@ -10225,8 +10215,8 @@ msgstr ""
 msgid "Report sent"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr ""
 
@@ -10292,7 +10282,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:570
+#: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Repost or quote post"
 msgstr ""
 
@@ -10511,7 +10501,7 @@ msgstr ""
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:794
+#: src/screens/StarterPack/StarterPackScreen.tsx:797
 msgid "Return to previous page"
 msgstr ""
 
@@ -10530,7 +10520,7 @@ msgstr ""
 msgid "Returns to the previous step"
 msgstr ""
 
-#: src/screens/Login/LoginForm.tsx:614
+#: src/screens/Login/LoginForm.tsx:619
 msgid "Reveal password"
 msgstr ""
 
@@ -10835,8 +10825,8 @@ msgstr ""
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:113
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:80
+#: src/components/interstitials/FeedTrendingTopics.tsx:116
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
 msgid "See more"
 msgstr ""
 
@@ -10844,8 +10834,8 @@ msgstr ""
 msgid "See more suggested profiles"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:99
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
+#: src/components/interstitials/FeedTrendingTopics.tsx:102
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
 msgid "See more trending topics"
 msgstr ""
 
@@ -11242,7 +11232,7 @@ msgstr ""
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:440
+#: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr ""
@@ -11318,7 +11308,7 @@ msgstr ""
 msgid "Share this search"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:433
+#: src/screens/StarterPack/StarterPackScreen.tsx:436
 msgid "Share this starter pack"
 msgstr ""
 
@@ -11330,8 +11320,8 @@ msgstr ""
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:631
-#: src/screens/StarterPack/StarterPackScreen.tsx:639
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
+#: src/screens/StarterPack/StarterPackScreen.tsx:642
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11790,7 +11780,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr ""
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:238
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
 msgid "Sports"
 msgstr ""
 
@@ -11846,7 +11836,7 @@ msgstr ""
 msgid "Starter pack by you"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
+#: src/screens/StarterPack/StarterPackScreen.tsx:761
 msgid "Starter pack is invalid"
 msgstr ""
 
@@ -11855,7 +11845,7 @@ msgid "Starter packs"
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:657
-#: src/view/screens/Profile.tsx:239
+#: src/view/screens/Profile.tsx:241
 msgid "Starter Packs"
 msgstr ""
 
@@ -11867,7 +11857,7 @@ msgstr ""
 msgid "Starter packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:566
+#: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
 msgstr ""
 
@@ -12248,8 +12238,8 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:157
-#: src/screens/StarterPack/StarterPackScreen.tsx:158
+#: src/screens/StarterPack/StarterPackScreen.tsx:160
+#: src/screens/StarterPack/StarterPackScreen.tsx:161
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12386,7 +12376,7 @@ msgstr ""
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:768
+#: src/screens/StarterPack/StarterPackScreen.tsx:771
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr ""
 
@@ -12462,7 +12452,7 @@ msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
 #: src/screens/Search/Explore.tsx:1011
-#: src/view/com/posts/PostFeed.tsx:828
+#: src/view/com/posts/PostFeed.tsx:825
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
 
@@ -13088,9 +13078,9 @@ msgstr ""
 msgid "Tree view"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:95
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:69
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:63
+#: src/components/interstitials/FeedTrendingTopics.tsx:98
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
 msgid "Trending"
 msgstr ""
 
@@ -13099,10 +13089,18 @@ msgstr ""
 msgid "Trending GIFs"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:122
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:72
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:90
+#: src/components/interstitials/FeedTrendingTopics.tsx:125
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
 msgid "Trending options"
+msgstr ""
+
+#: src/components/TrendingTopics.tsx:31
+msgid "Trending topics"
+msgstr ""
+
+#: src/components/TrendingTopics.tsx:34
+msgid "Trending topics are based on what people are talking about on the network. Topic titles and descriptions are generated with AI."
 msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:88
@@ -13187,7 +13185,7 @@ msgstr ""
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:693
+#: src/screens/StarterPack/StarterPackScreen.tsx:696
 msgid "Unable to delete"
 msgstr ""
 
@@ -13609,7 +13607,7 @@ msgstr ""
 msgid "Use your account email address, or another real email address you control, in case KWS or Bluesky needs to contact you."
 msgstr ""
 
-#: src/view/screens/Profile.tsx:393
+#: src/view/screens/Profile.tsx:395
 msgid "user"
 msgstr ""
 
@@ -13839,7 +13837,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr ""
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Video Games"
 msgstr ""
 
@@ -13868,7 +13866,7 @@ msgstr ""
 msgid "Video: {0}"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:236
+#: src/view/screens/Profile.tsx:238
 msgid "Videos"
 msgstr ""
 
@@ -14442,8 +14440,8 @@ msgstr ""
 msgid "Would you like to save this as a draft to edit later?"
 msgstr ""
 
-#: src/view/screens/Profile.tsx:444
-#: src/view/screens/Profile.tsx:445
+#: src/view/screens/Profile.tsx:446
+#: src/view/screens/Profile.tsx:447
 msgid "Write a post"
 msgstr ""
 
@@ -14495,7 +14493,7 @@ msgstr ""
 msgid "Yes, delete my account"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:705
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Yes, delete this starter pack"
 msgstr ""
 
@@ -14663,11 +14661,8 @@ msgstr ""
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:168
-#: src/components/interstitials/Trending.tsx:148
 #: src/components/interstitials/TrendingVideos.tsx:139
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:103
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:172
+#: src/components/TrendingTopics.tsx:53
 msgid "You can update this later from your settings."
 msgstr ""
 
@@ -14778,7 +14773,7 @@ msgstr ""
 msgid "You have successfully verified your email address. You can close this dialog."
 msgstr ""
 
-#: src/lib/media/video/upload.shared.ts:74
+#: src/lib/media/video/upload.shared.ts:110
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr ""
 

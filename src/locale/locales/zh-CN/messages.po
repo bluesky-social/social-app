@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-19 23:50\n"
+"PO-Revision-Date: 2026-08-25 22:01\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -203,7 +203,7 @@ msgstr "{0, plural, one {帖文} other {帖文}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:497
+#: src/screens/StarterPack/StarterPackScreen.tsx:500
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr "{0, plural,other {# 个人}}使用此新手包加入了 Bluesky！"
 
@@ -685,7 +685,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# 小时} other {# 小时}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:89
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:95
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -1201,11 +1201,11 @@ msgstr "添加替代文本（可选）"
 msgid "Add another account"
 msgstr "添加其他账户"
 
-#: src/view/com/composer/Composer.tsx:1659
+#: src/view/com/composer/Composer.tsx:1625
 msgid "Add another post"
 msgstr "添加另一则帖文"
 
-#: src/view/com/composer/Composer.tsx:2328
+#: src/view/com/composer/Composer.tsx:2294
 msgid "Add another post to thread"
 msgstr "添加另一则帖文至帖文串"
 
@@ -1244,7 +1244,7 @@ msgid "Add image"
 msgstr "添加图片"
 
 #. Accessibility label for button in composer to add images, a video, or a GIF to a post
-#: src/view/com/composer/SelectMediaButton.tsx:534
+#: src/view/com/composer/SelectMediaButton.tsx:520
 msgid "Add media to post"
 msgstr "添加媒体内容至帖文"
 
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr "一共 {0} 个"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:398
+#: src/screens/StarterPack/StarterPackScreen.tsx:401
 msgid "All accounts have been followed!"
 msgstr "已关注所有账户！"
 
@@ -1587,7 +1587,7 @@ msgstr "发生错误"
 msgid "An error occurred"
 msgstr "发生错误"
 
-#: src/view/com/composer/state/video.ts:509
+#: src/view/com/composer/state/video.ts:503
 msgid "An error occurred while compressing the video."
 msgstr "压缩视频时发生错误。"
 
@@ -1628,16 +1628,16 @@ msgstr "保存二维码时发生错误！"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:357
-#: src/screens/StarterPack/StarterPackScreen.tsx:384
+#: src/screens/StarterPack/StarterPackScreen.tsx:360
+#: src/screens/StarterPack/StarterPackScreen.tsx:387
 msgid "An error occurred while trying to follow all"
 msgstr "关注全部账户时发生错误"
 
-#: src/view/com/composer/state/video.ts:561
+#: src/view/com/composer/state/video.ts:555
 msgid "An error occurred while uploading the video. {message}"
 msgstr "上传视频时发生错误。{message}"
 
-#: src/view/com/composer/state/video.ts:553
+#: src/view/com/composer/state/video.ts:547
 msgid "An error occurred while uploading the video. Please check your internet connection and try again."
 msgstr "上传视频时发生错误。请检查网络连接并重试。"
 
@@ -1914,7 +1914,7 @@ msgstr "你确定要删除此应用密码“{0}”吗？"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr "你确定要删除这条信息吗？此操作将仅为你删除信息，而不会为其他参与者删除。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:680
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "你确定要删除此新手包吗？"
 
@@ -1945,7 +1945,7 @@ msgstr "你确定要将此从你的动态源中删除吗？"
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "你确定要撤销加入 {0} 的申请吗？"
 
-#: src/view/com/composer/Composer.tsx:1795
+#: src/view/com/composer/Composer.tsx:1761
 msgid "Are you sure you'd like to discard this post?"
 msgstr "你确定要放弃发布这则帖文吗？"
 
@@ -2565,8 +2565,8 @@ msgstr "需要相机权限"
 #: src/screens/Settings/Settings.tsx:312
 #: src/screens/Takendown.tsx:100
 #: src/screens/Takendown.tsx:103
-#: src/view/com/composer/Composer.tsx:1873
-#: src/view/com/composer/Composer.tsx:1883
+#: src/view/com/composer/Composer.tsx:1839
+#: src/view/com/composer/Composer.tsx:1849
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -3118,7 +3118,7 @@ msgstr "关闭欢迎界面"
 msgid "Closes password update alert"
 msgstr "关闭密码更新警告"
 
-#: src/view/com/composer/Composer.tsx:1881
+#: src/view/com/composer/Composer.tsx:1847
 msgid "Closes post composer and discards post draft"
 msgstr "关闭编辑器并舍弃草稿"
 
@@ -3172,7 +3172,7 @@ msgid "Compose new post"
 msgstr "撰写新帖文"
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1757
+#: src/view/com/composer/Composer.tsx:1723
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr "撰写最多 {0, plural,other {# 个字符}} 的帖文"
 
@@ -3180,11 +3180,11 @@ msgstr "撰写最多 {0, plural,other {# 个字符}} 的帖文"
 msgid "Compose reply"
 msgstr "撰写回复"
 
-#: src/view/com/composer/Composer.tsx:2711
+#: src/view/com/composer/Composer.tsx:2677
 msgid "Compressing GIF..."
 msgstr "正在压缩 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2713
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing video..."
 msgstr "正在压缩视频……"
 
@@ -3452,7 +3452,7 @@ msgstr "复制邀请链接"
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:637
+#: src/screens/StarterPack/StarterPackScreen.tsx:640
 msgid "Copy link"
 msgstr "复制链接"
 
@@ -3477,7 +3477,7 @@ msgstr "复制帖文链接"
 msgid "Copy link to profile"
 msgstr "复制个人资料链接"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:630
+#: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Copy link to starter pack"
 msgstr "复制新手包链接"
 
@@ -3632,7 +3632,7 @@ msgstr "创建"
 msgid "Create a list"
 msgstr "创建列表"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:613
+#: src/screens/StarterPack/StarterPackScreen.tsx:616
 msgid "Create a list from this starter pack"
 msgstr "从新手包创建列表"
 
@@ -3699,7 +3699,7 @@ msgstr "创建群组对话"
 msgid "Create list"
 msgstr "创建列表"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:619
+#: src/screens/StarterPack/StarterPackScreen.tsx:622
 msgid "Create list from members"
 msgstr "从成员创建列表"
 
@@ -3842,9 +3842,9 @@ msgstr "默认图标"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:608
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
-#: src/screens/StarterPack/StarterPackScreen.tsx:787
+#: src/screens/StarterPack/StarterPackScreen.tsx:611
+#: src/screens/StarterPack/StarterPackScreen.tsx:711
+#: src/screens/StarterPack/StarterPackScreen.tsx:790
 msgid "Delete"
 msgstr "删除"
 
@@ -3911,16 +3911,16 @@ msgstr "删除我的账户"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:808
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:810
-#: src/view/com/composer/Composer.tsx:1769
+#: src/view/com/composer/Composer.tsx:1735
 msgid "Delete post"
 msgstr "删除帖文"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:602
-#: src/screens/StarterPack/StarterPackScreen.tsx:778
+#: src/screens/StarterPack/StarterPackScreen.tsx:605
+#: src/screens/StarterPack/StarterPackScreen.tsx:781
 msgid "Delete starter pack"
 msgstr "删除新手包"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:674
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Delete starter pack?"
 msgstr "要删除新手包吗？"
 
@@ -4062,9 +4062,9 @@ msgstr "停用"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:102
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
-#: src/view/com/composer/Composer.tsx:1549
-#: src/view/com/composer/Composer.tsx:1593
-#: src/view/com/composer/Composer.tsx:1802
+#: src/view/com/composer/Composer.tsx:1515
+#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1768
 #: src/view/com/composer/drafts/DraftItem.tsx:242
 #: src/view/com/composer/drafts/DraftsButton.tsx:131
 msgid "Discard"
@@ -4075,14 +4075,14 @@ msgstr "舍弃"
 msgid "Discard changes?"
 msgstr "要放弃更改吗？"
 
-#: src/view/com/composer/Composer.tsx:1547
+#: src/view/com/composer/Composer.tsx:1513
 #: src/view/com/composer/drafts/DraftItem.tsx:239
 #: src/view/com/composer/drafts/DraftsButton.tsx:98
 msgid "Discard draft?"
 msgstr "要舍弃草稿吗？"
 
-#: src/view/com/composer/Composer.tsx:1564
-#: src/view/com/composer/Composer.tsx:1794
+#: src/view/com/composer/Composer.tsx:1530
+#: src/view/com/composer/Composer.tsx:1760
 msgid "Discard post?"
 msgstr "要放弃发布吗？"
 
@@ -4115,7 +4115,7 @@ msgstr "跳过"
 msgid "Dismiss banner"
 msgstr "忽略横幅提示"
 
-#: src/view/com/composer/Composer.tsx:2653
+#: src/view/com/composer/Composer.tsx:2619
 msgid "Dismiss error"
 msgstr "忽略错误"
 
@@ -4341,7 +4341,7 @@ msgstr "进食障碍"
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:597
+#: src/screens/StarterPack/StarterPackScreen.tsx:600
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4445,7 @@ msgstr "编辑个人资料"
 msgid "Edit Profile"
 msgstr "编辑个人资料"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:589
+#: src/screens/StarterPack/StarterPackScreen.tsx:592
 msgid "Edit starter pack"
 msgstr "编辑新手包"
 
@@ -4541,11 +4541,6 @@ msgstr "启用"
 #: src/components/dialogs/EmbedConsent.tsx:96
 msgid "Enable {0} only"
 msgstr "仅启用 {0}"
-
-#. Description of a feature flag (10-minute video uploads)
-#: src/analytics/features/index.ts:90
-msgid "Enable 10-minute video uploads."
-msgstr "启用 10 分钟视频上传。"
 
 #: src/screens/Moderation/index.tsx:389
 msgid "Enable adult content"
@@ -4678,7 +4673,7 @@ msgstr "进入全屏模式"
 msgid "Entertainment"
 msgstr "娱乐"
 
-#: src/view/com/composer/Composer.tsx:2731
+#: src/view/com/composer/Composer.tsx:2697
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "错误"
@@ -4946,7 +4941,7 @@ msgstr "无法删除信息"
 msgid "Failed to delete post, please try again"
 msgstr "无法删除帖文，请重试"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:747
+#: src/screens/StarterPack/StarterPackScreen.tsx:750
 msgid "Failed to delete starter pack"
 msgstr "无法删除新手包"
 
@@ -5121,7 +5116,7 @@ msgstr "无法撤销你的申请，请重试。"
 msgid "Failed to resolve location. Please try again."
 msgstr "无法获取位置信息，请重试。"
 
-#: src/view/com/composer/Composer.tsx:775
+#: src/view/com/composer/Composer.tsx:741
 msgid "Failed to save draft"
 msgstr "无法保存草稿"
 
@@ -5197,13 +5192,6 @@ msgstr "无法更新动态提醒范围"
 msgid "Failed to update settings"
 msgstr "无法更新设置"
 
-#: src/lib/media/video/upload.ts:104
-#: src/lib/media/video/upload.web.ts:104
-#: src/lib/media/video/upload.web.ts:108
-#: src/lib/media/video/upload.web.ts:118
-msgid "Failed to upload video"
-msgstr "无法上传视频"
-
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:169
 msgid "Failed to verify email, please try again."
 msgstr "无法验证电子邮箱，请重试。"
@@ -5269,7 +5257,7 @@ msgstr "已提交反馈给动态源维护者"
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:193
+#: src/screens/StarterPack/StarterPackScreen.tsx:196
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
@@ -5486,8 +5474,8 @@ msgstr "关注账户"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:445
-#: src/screens/StarterPack/StarterPackScreen.tsx:453
+#: src/screens/StarterPack/StarterPackScreen.tsx:448
+#: src/screens/StarterPack/StarterPackScreen.tsx:456
 msgid "Follow all"
 msgstr "全部关注"
 
@@ -5812,7 +5800,7 @@ msgstr "开始吧"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2736
+#: src/view/com/composer/Composer.tsx:2702
 msgid "GIF uploaded"
 msgstr "已上传 GIF"
 
@@ -5850,7 +5838,7 @@ msgstr "返回"
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:800
+#: src/screens/StarterPack/StarterPackScreen.tsx:803
 msgid "Go Back"
 msgstr "返回"
 
@@ -6252,7 +6240,7 @@ msgstr "隐藏热门话题"
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:102
 #: src/view/shell/desktop/SidebarTrendingTopics.tsx:171
 msgid "Hide trending topics?"
-msgstr "要隐藏热门话题吗？"
+msgstr ""
 
 #: src/components/interstitials/TrendingVideos.tsx:138
 msgid "Hide trending videos?"
@@ -6316,7 +6304,7 @@ msgstr "抱歉，看起来在加载数据时遇到了问题。请查看下方获
 msgid "Hmmmm, we couldn't load that moderation service."
 msgstr "抱歉，我们无法加载该内容审核提供服务方。"
 
-#: src/view/com/composer/state/video.ts:523
+#: src/view/com/composer/state/video.ts:517
 msgid "Hold up! We’re gradually giving access to video, and you’re still waiting in line. Check back soon!"
 msgstr "请稍等！我们正在逐步开放上传视频的权限。你目前仍在等待队伍中，请稍后再回来查看！"
 
@@ -6800,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "现在只有你一个！通过上面的列表将更多人添加到你的新手包里面。"
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2672
+#: src/view/com/composer/Composer.tsx:2638
 msgid "Job ID: {0}"
 msgstr "作业 ID：{0}"
 
@@ -6816,8 +6804,8 @@ msgstr "加入"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:471
-#: src/screens/StarterPack/StarterPackScreen.tsx:481
+#: src/screens/StarterPack/StarterPackScreen.tsx:474
+#: src/screens/StarterPack/StarterPackScreen.tsx:484
 msgid "Join Bluesky"
 msgstr "加入 Bluesky"
 
@@ -6840,8 +6828,8 @@ msgstr "加入对话"
 msgid "Journalism"
 msgstr "新闻学"
 
-#: src/view/com/composer/Composer.tsx:1597
-#: src/view/com/composer/Composer.tsx:1607
+#: src/view/com/composer/Composer.tsx:1563
+#: src/view/com/composer/Composer.tsx:1573
 #: src/view/com/composer/drafts/DraftsButton.tsx:135
 msgid "Keep editing"
 msgstr "保留编辑内容"
@@ -7404,11 +7392,6 @@ msgstr "网站标志由 <0>@sawaratsuki.bsky.social</0> 绘制"
 #: src/components/RichTextTag.tsx:55
 msgid "Long press to open tag menu for {0}"
 msgstr "长按以开启 {0} 的标签菜单"
-
-#. Name for a feature flag (longer videos)
-#: src/analytics/features/index.ts:84
-msgid "Longer videos"
-msgstr "更长的视频"
 
 #: src/screens/Login/SetNewPasswordForm.tsx:119
 msgid "Looks like XXXXX-XXXXX"
@@ -8523,27 +8506,27 @@ msgstr "选择的收信人中有人不允许群组对话。"
 msgid "One of the selected recipients has blocked you and cannot be messaged."
 msgstr "选择的收信人中有人屏蔽了你，无法发送信息。"
 
-#: src/view/com/composer/Composer.tsx:983
+#: src/view/com/composer/Composer.tsx:949
 msgid "One or more GIFs is missing alt text."
 msgstr "至少有一张 GIF 缺失了替代文本。"
 
-#: src/view/com/composer/Composer.tsx:980
+#: src/view/com/composer/Composer.tsx:946
 msgid "One or more images is missing alt text."
 msgstr "至少有一张图片缺失了替代文本。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:438
+#: src/view/com/composer/SelectMediaButton.tsx:429
 msgid "One or more of your selected files are not supported."
 msgstr "你所选中的部分文件格式不被支持。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:461
+#: src/view/com/composer/SelectMediaButton.tsx:452
 msgid "One or more of your selected files are too large. Maximum size is {VIDEO_MAX_SIZE_MB} MB."
 msgstr "你选中的部分文件太大，最大的文件大小为 {VIDEO_MAX_SIZE_MB} MB。"
 
-#: src/view/com/composer/Composer.tsx:786
+#: src/view/com/composer/Composer.tsx:752
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
 msgstr "一则或多则帖文内容过长，无法保存为草稿{MAX_DRAFT_GRAPHEME_LENGTH, plural,one {最大字数限制为 # 个字符。}other {最大字数限制为 # 个字符。}}"
 
-#: src/view/com/composer/Composer.tsx:990
+#: src/view/com/composer/Composer.tsx:956
 msgid "One or more videos is missing alt text."
 msgstr "至少有一段视频缺失了替代文本。"
 
@@ -8556,7 +8539,7 @@ msgstr "仅限{0}可以回复。"
 #. placeholder {0}: result.accepted.length
 #. placeholder {1}: next.length
 #. placeholder {2}: next.length
-#: src/view/com/composer/Composer.tsx:237
+#: src/view/com/composer/Composer.tsx:236
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
 msgstr "你共上传了 {1} 张图片，我们仅会保留前 {0} {2, plural,one {张} other {张}}；上限为 {MAX_GALLERY_IMAGES}"
 
@@ -8664,7 +8647,7 @@ msgid "Open drawer menu"
 msgstr "开启抽屉菜单"
 
 #: src/screens/Messages/components/MessageComposer.tsx:214
-#: src/view/com/composer/Composer.tsx:2305
+#: src/view/com/composer/Composer.tsx:2271
 msgid "Open emoji picker"
 msgstr "开启表情符号选择器"
 
@@ -8743,7 +8726,7 @@ msgstr "开启设置"
 msgid "Open share menu"
 msgstr "开启分享菜单"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:575
+#: src/screens/StarterPack/StarterPackScreen.tsx:578
 msgid "Open starter pack menu"
 msgstr "开启新手包菜单"
 
@@ -8809,7 +8792,7 @@ msgid "Opens device camera"
 msgstr "开启设备相机"
 
 #. Accessibility hint for button in composer to add images, a video, or a GIF to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:540
+#: src/view/com/composer/SelectMediaButton.tsx:526
 msgid "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other {# images}}, or a single video or GIF."
 msgstr "开启设备相册以选择最多 {MAX_GALLERY_IMAGES, plural, other {# 张图片}}、一段视频或一张 GIF。"
 
@@ -9020,7 +9003,7 @@ msgstr "暂停视频"
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:192
+#: src/screens/StarterPack/StarterPackScreen.tsx:195
 msgid "People"
 msgstr "用户"
 
@@ -9219,7 +9202,7 @@ msgstr "请点击我们发送给你电子邮件中的链接来验证你的新电
 msgid "Please complete the verification captcha."
 msgstr "请完成 CAPTCHA（人机验证）。"
 
-#: src/view/com/composer/state/video.ts:547
+#: src/view/com/composer/state/video.ts:541
 msgid "Please confirm your email address to upload videos."
 msgstr "请先验证你的电子邮箱地址以上传视频。"
 
@@ -9367,7 +9350,7 @@ msgstr "政治"
 msgid "Porn"
 msgstr "色情"
 
-#: src/view/com/composer/Composer.tsx:1947
+#: src/view/com/composer/Composer.tsx:1913
 msgctxt "action"
 msgid "Post"
 msgstr "发布"
@@ -9378,7 +9361,7 @@ msgid "Post"
 msgstr "帖文"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:74
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:80
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "第 {index} 则帖文，共 {count} 则"
@@ -9393,12 +9376,12 @@ msgstr "发布一张图片"
 msgid "Post a video"
 msgstr "发布一段视频"
 
-#: src/view/com/composer/Composer.tsx:1945
+#: src/view/com/composer/Composer.tsx:1911
 msgctxt "action"
 msgid "Post All"
 msgstr "全部发布"
 
-#: src/view/com/composer/Composer.tsx:1606
+#: src/view/com/composer/Composer.tsx:1572
 msgid "Post anyway"
 msgstr "仍然发布"
 
@@ -9487,7 +9470,7 @@ msgstr "已取消固定帖文"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:194
+#: src/screens/StarterPack/StarterPackScreen.tsx:197
 #: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr "帖文"
@@ -9582,11 +9565,11 @@ msgstr "隐私政策"
 msgid "Privacy violation of a minor"
 msgstr "侵犯未成年隐私"
 
-#: src/view/com/composer/Composer.tsx:2725
+#: src/view/com/composer/Composer.tsx:2691
 msgid "Processing GIF..."
 msgstr "正在处理 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2727
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing video..."
 msgstr "正在处理视频……"
 
@@ -9633,22 +9616,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr "公开且可对外分享的列表，可用来批量隐藏或屏蔽账户。"
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1931
+#: src/view/com/composer/Composer.tsx:1897
 msgid "Publish post"
 msgstr "发布帖文"
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1926
+#: src/view/com/composer/Composer.tsx:1892
 msgid "Publish posts"
 msgstr "发布帖文"
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1915
+#: src/view/com/composer/Composer.tsx:1881
 msgid "Publish replies"
 msgstr "发布回复"
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1920
+#: src/view/com/composer/Composer.tsx:1886
 msgid "Publish reply"
 msgstr "发布回复"
 
@@ -10141,7 +10124,7 @@ msgstr "这则帖文的回复已被停用。"
 msgid "Reply"
 msgstr "回复"
 
-#: src/view/com/composer/Composer.tsx:1943
+#: src/view/com/composer/Composer.tsx:1909
 msgctxt "action"
 msgid "Reply"
 msgstr "回复"
@@ -10225,8 +10208,8 @@ msgstr "举报帖文"
 msgid "Report sent"
 msgstr "已提交报告"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
+#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr "举报新手包"
 
@@ -10292,7 +10275,7 @@ msgstr "转发（{0, plural, one {# 次转发} other {# 次转发}}）"
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:570
+#: src/screens/StarterPack/StarterPackScreen.tsx:573
 msgid "Repost or quote post"
 msgstr "转发或引用帖文"
 
@@ -10511,7 +10494,7 @@ msgstr "重新加载举报选项"
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:794
+#: src/screens/StarterPack/StarterPackScreen.tsx:797
 msgid "Return to previous page"
 msgstr "返回上一页"
 
@@ -10572,22 +10555,22 @@ msgstr "保存出生日期"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:311
 #: src/screens/SavedFeeds.tsx:315
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save changes"
 msgstr "保存更改"
 
-#: src/view/com/composer/Composer.tsx:1559
+#: src/view/com/composer/Composer.tsx:1525
 #: src/view/com/composer/drafts/DraftsButton.tsx:93
 msgid "Save changes?"
 msgstr "保存更改？"
 
-#: src/view/com/composer/Composer.tsx:1587
+#: src/view/com/composer/Composer.tsx:1553
 #: src/view/com/composer/drafts/DraftsButton.tsx:125
 msgid "Save draft"
 msgstr "保存草稿"
 
-#: src/view/com/composer/Composer.tsx:1561
+#: src/view/com/composer/Composer.tsx:1527
 #: src/view/com/composer/drafts/DraftsButton.tsx:95
 msgid "Save draft?"
 msgstr "保存草稿？"
@@ -10850,7 +10833,7 @@ msgid "See more trending topics"
 msgstr "查看更多热门话题"
 
 #. Description of a feature flag (Thread numbering)
-#: src/analytics/features/index.ts:107
+#: src/analytics/features/index.ts:91
 msgid "See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author."
 msgstr "在同一作者的讨论串帖文上显示编号标签（1/3、2/3 等）。"
 
@@ -11045,7 +11028,7 @@ msgstr "选择动态源内容的翻译目标语言。"
 msgid "Select your preferred notification channels"
 msgstr "自定义你的通知推送选项"
 
-#: src/view/com/composer/SelectMediaButton.tsx:441
+#: src/view/com/composer/SelectMediaButton.tsx:432
 msgid "Selecting multiple media types is not supported."
 msgstr "不支持选择多种媒体类型。"
 
@@ -11242,7 +11225,7 @@ msgstr "性暗示"
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:440
+#: src/screens/StarterPack/StarterPackScreen.tsx:443
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr "分享"
@@ -11318,7 +11301,7 @@ msgstr "分享此动态源"
 msgid "Share this search"
 msgstr "分享此搜索结果"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:433
+#: src/screens/StarterPack/StarterPackScreen.tsx:436
 msgid "Share this starter pack"
 msgstr "分享此新手包"
 
@@ -11330,8 +11313,8 @@ msgstr "分享此新手包，以帮助其他人更快融入你在 Bluesky 上的
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:631
-#: src/screens/StarterPack/StarterPackScreen.tsx:639
+#: src/screens/StarterPack/StarterPackScreen.tsx:634
+#: src/screens/StarterPack/StarterPackScreen.tsx:642
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11614,7 +11597,7 @@ msgstr "跳过"
 msgid "Skip contact sharing and continue to the app"
 msgstr "跳过分享通讯录并继续使用应用程序"
 
-#: src/view/com/composer/Composer.tsx:1604
+#: src/view/com/composer/Composer.tsx:1570
 msgid "Skip empty posts?"
 msgstr "跳过空白帖文？"
 
@@ -11846,7 +11829,7 @@ msgstr "由 <0/> 创建的新手包"
 msgid "Starter pack by you"
 msgstr "你创建的新手包"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:758
+#: src/screens/StarterPack/StarterPackScreen.tsx:761
 msgid "Starter pack is invalid"
 msgstr "无效的新手包"
 
@@ -12248,8 +12231,8 @@ msgstr "其中包含以下内容："
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:157
-#: src/screens/StarterPack/StarterPackScreen.tsx:158
+#: src/screens/StarterPack/StarterPackScreen.tsx:160
+#: src/screens/StarterPack/StarterPackScreen.tsx:161
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12352,32 +12335,32 @@ msgstr "你正在回复的帖文已被发布者标记为使用 {suggestedLanguag
 msgid "The Privacy Policy has been moved to <0/>"
 msgstr "隐私政策已移动到 <0/>"
 
-#: src/view/com/composer/state/video.ts:494
+#: src/view/com/composer/state/video.ts:488
 msgid "The processed video is too large. Please try again with a smaller file."
 msgstr "处理后的视频过大，请尝试使用较小的文件。"
 
-#: src/view/com/composer/state/video.ts:469
+#: src/view/com/composer/state/video.ts:463
 msgid "The selected video could not be encoded."
 msgstr "所选视频无法编码。"
 
-#: src/view/com/composer/state/video.ts:459
+#: src/view/com/composer/state/video.ts:453
 msgid "The selected video could not be processed."
 msgstr "无法处理所选视频。"
 
-#: src/view/com/composer/state/video.ts:489
+#: src/view/com/composer/state/video.ts:483
 msgid "The selected video has an unsupported aspect ratio."
 msgstr "所选视频的宽高比不受支持。"
 
-#: src/view/com/composer/state/video.ts:505
-#: src/view/com/composer/state/video.ts:544
+#: src/view/com/composer/state/video.ts:499
+#: src/view/com/composer/state/video.ts:538
 msgid "The selected video is larger than {VIDEO_MAX_SIZE_MB} MB. Please try again with a smaller file."
 msgstr "你所选择的视频大小大于 {VIDEO_MAX_SIZE_MB} MB，请选择其他较小的视频文件。"
 
-#: src/view/com/composer/state/video.ts:487
+#: src/view/com/composer/state/video.ts:481
 msgid "The selected video is too long."
 msgstr "所选视频时长过长。"
 
-#: src/view/com/composer/state/video.ts:491
+#: src/view/com/composer/state/video.ts:485
 msgid "The selected video uses an unsupported format."
 msgstr "所选视频使用了不受支持的格式。"
 
@@ -12386,7 +12369,7 @@ msgstr "所选视频使用了不受支持的格式。"
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "服务器似乎遇到了问题，请稍后重试。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:768
+#: src/screens/StarterPack/StarterPackScreen.tsx:771
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "你尝试查看的新手包无效。你可以考虑删除此新手包。"
 
@@ -12412,7 +12395,7 @@ msgstr "你提供的验证码无效。请检查你使用的验证链接是否正
 msgid "The verification provider was unable to send a code to your phone number. Please check your phone number and try again."
 msgstr "验证服务提供商无法向你的电话号码发送代码，请检查你的电话号码并重试。"
 
-#: src/view/com/composer/state/video.ts:472
+#: src/view/com/composer/state/video.ts:466
 msgid "The video could not be uploaded to your hosting provider. Please try again."
 msgstr "视频无法上传到你的托管服务提供商，请重试。"
 
@@ -12461,7 +12444,7 @@ msgstr "连接至服务器时出现问题。请检查网络连接并重试。"
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr "刷新通知时出现问题，点击重试。"
 
-#: src/screens/Search/Explore.tsx:1011
+#: src/screens/Search/Explore.tsx:1012
 #: src/view/com/posts/PostFeed.tsx:830
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr "刷新帖文时出现问题，点击重试。"
@@ -12849,7 +12832,7 @@ msgstr "这则帖文已被发布者删除"
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr "这则帖文将从动态源和讨论串中隐藏。注意：此操作无法撤消。"
 
-#: src/view/com/composer/Composer.tsx:1177
+#: src/view/com/composer/Composer.tsx:1143
 msgid "This post's author has disabled quote posts."
 msgstr "这则帖文的发布者已停用引用帖文。"
 
@@ -12958,7 +12941,7 @@ msgid "This will remove your post from this quote post for all users, and replac
 msgstr "你的帖文将从这则引用中删除，并替换为一个占位符。"
 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
-#: src/analytics/features/index.ts:100
+#: src/analytics/features/index.ts:84
 msgid "Thread numbering"
 msgstr "讨论串编号"
 
@@ -13187,7 +13170,7 @@ msgstr "无法连接到你的服务，请检查网络连接并重试。"
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "无法连接到服务，请检查网络连接。"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:693
+#: src/screens/StarterPack/StarterPackScreen.tsx:696
 msgid "Unable to delete"
 msgstr "无法删除"
 
@@ -13463,7 +13446,7 @@ msgstr "已从列表中取消订阅"
 msgid "Unsupported clipboard content"
 msgstr "不支持的剪贴板内容"
 
-#: src/view/com/composer/Composer.tsx:1696
+#: src/view/com/composer/Composer.tsx:1662
 msgid "Unsupported video type: {mimeType}"
 msgstr "不支持的视频类型：{mimeType}"
 
@@ -13556,7 +13539,7 @@ msgstr "从文件上传"
 msgid "Upload from Library"
 msgstr "从照片图库上传"
 
-#: src/view/com/composer/Composer.tsx:2718
+#: src/view/com/composer/Composer.tsx:2684
 msgid "Uploading GIF..."
 msgstr "正在上传 GIF……"
 
@@ -13570,7 +13553,7 @@ msgstr "正在上传图片……"
 msgid "Uploading link thumbnail..."
 msgstr "正在上传链接缩略图……"
 
-#: src/view/com/composer/Composer.tsx:2720
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading video..."
 msgstr "正在上传视频……"
 
@@ -13820,7 +13803,7 @@ msgstr "通过新手包 <0/><1>{starterPackName}</1>"
 msgid "Video"
 msgstr "视频"
 
-#: src/view/com/composer/state/video.ts:480
+#: src/view/com/composer/state/video.ts:474
 msgid "Video failed to process"
 msgstr "视频处理失败"
 
@@ -13859,7 +13842,7 @@ msgstr "无法找到视频。"
 msgid "Video settings"
 msgstr "视频设置"
 
-#: src/view/com/composer/Composer.tsx:2738
+#: src/view/com/composer/Composer.tsx:2704
 msgid "Video uploaded"
 msgstr "已上传视频"
 
@@ -13872,19 +13855,13 @@ msgstr "视频：{0}"
 msgid "Videos"
 msgstr "视频"
 
-#: src/view/com/composer/Composer.tsx:463
-#: src/view/com/composer/Composer.tsx:608
-#: src/view/com/composer/SelectMediaButton.tsx:455
+#: src/view/com/composer/Composer.tsx:454
+#: src/view/com/composer/Composer.tsx:586
+#: src/view/com/composer/SelectMediaButton.tsx:446
 msgid "Videos must be 10 minutes or less."
 msgstr "视频时长必须不超过 10 分钟。"
 
-#: src/view/com/composer/Composer.tsx:464
-#: src/view/com/composer/Composer.tsx:609
-#: src/view/com/composer/SelectMediaButton.tsx:456
-msgid "Videos must be less than 3 minutes long."
-msgstr "视频长度不得超过 3 分钟。"
-
-#: src/view/com/composer/Composer.tsx:1284
+#: src/view/com/composer/Composer.tsx:1250
 msgctxt "Action to view the post the user just created"
 msgid "View"
 msgstr "查看"
@@ -13977,7 +13954,7 @@ msgstr "查看更多"
 msgid "View more trending videos"
 msgstr "浏览更多热门视频"
 
-#: src/view/com/composer/Composer.tsx:1279
+#: src/view/com/composer/Composer.tsx:1245
 msgid "View post"
 msgstr "查看帖文"
 
@@ -14186,7 +14163,7 @@ msgstr "我们建议至少选择两个感兴趣的主题。"
 msgid "We sent an email to <0>{0}</0> containing a link. Please click on it to complete the email verification process."
 msgstr "我们将向 <0>{0}</0> 发送一封含有链接的电子邮件，请点击邮件内容来完成电子邮箱的验证流程。"
 
-#: src/view/com/composer/state/video.ts:527
+#: src/view/com/composer/state/video.ts:521
 msgid "We were unable to determine if you are allowed to upload videos. Please try again."
 msgstr "我们无法确定你是否有权上传视频，请重试。"
 
@@ -14296,7 +14273,7 @@ msgstr "很抱歉，无法完成你的搜索。请几分钟后重试。"
 msgid "We're sorry, you cannot access this screen at this time."
 msgstr "很抱歉，你目前无法访问此页面。"
 
-#: src/view/com/composer/Composer.tsx:1175
+#: src/view/com/composer/Composer.tsx:1141
 msgid "We're sorry! The post you are replying to has been deleted."
 msgstr "很抱歉！你回复的帖文已被删除。"
 
@@ -14352,7 +14329,7 @@ msgid "what’s up"
 msgstr "有什么新鲜事"
 
 #: src/view/com/auth/SplashScreen.web.tsx:100
-#: src/view/com/composer/Composer.tsx:1660
+#: src/view/com/composer/Composer.tsx:1626
 #: src/view/com/feeds/ComposerPrompt.tsx:195
 msgid "What's up?"
 msgstr "发生了什么新鲜事？"
@@ -14438,7 +14415,7 @@ msgstr "需要屏蔽该用户、离开对话，或两者一并执行吗？"
 msgid "Would you like to save this as a draft before viewing your drafts?"
 msgstr "在查看其他草稿之前，需要先保存现有内容吗？"
 
-#: src/view/com/composer/Composer.tsx:1575
+#: src/view/com/composer/Composer.tsx:1541
 msgid "Would you like to save this as a draft to edit later?"
 msgstr "需要把现有内容保存为草稿，以便日后编辑吗？"
 
@@ -14447,12 +14424,12 @@ msgstr "需要把现有内容保存为草稿，以便日后编辑吗？"
 msgid "Write a post"
 msgstr "撰写一篇帖文"
 
-#: src/view/com/composer/Composer.tsx:1756
+#: src/view/com/composer/Composer.tsx:1722
 msgid "Write post"
 msgstr "撰写帖文"
 
 #: src/screens/PostThread/components/ThreadComposePrompt.tsx:91
-#: src/view/com/composer/Composer.tsx:1658
+#: src/view/com/composer/Composer.tsx:1624
 msgid "Write your reply"
 msgstr "撰写你的回复"
 
@@ -14495,7 +14472,7 @@ msgstr "确定停用"
 msgid "Yes, delete my account"
 msgstr "是，删除我的账户"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:705
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Yes, delete this starter pack"
 msgstr "确定删除此新手包"
 
@@ -14562,7 +14539,7 @@ msgstr "你已开始直播"
 msgid "You are no longer live"
 msgstr "你已停止直播"
 
-#: src/view/com/composer/state/video.ts:520
+#: src/view/com/composer/state/video.ts:514
 msgid "You are not allowed to upload videos."
 msgstr "你目前无法上传视频。"
 
@@ -14630,11 +14607,11 @@ msgid "You can now sign in with your new password."
 msgstr "你现在可以使用新密码登录。"
 
 #. Toast shown when the user tries to add more images but the post gallery is already at the cap
-#: src/view/com/composer/Composer.tsx:224
+#: src/view/com/composer/Composer.tsx:223
 msgid "You can only add up to {MAX_GALLERY_IMAGES, plural, other {# images}} per post"
 msgstr "帖文最多只能添加 {MAX_GALLERY_IMAGES, plural,other {# 张图片}}"
 
-#: src/view/com/composer/Composer.tsx:1580
+#: src/view/com/composer/Composer.tsx:1546
 msgid "You can only save drafts up to 1000 characters."
 msgstr "你目前只能保存最多 1000 个字符的草稿。"
 
@@ -14642,11 +14619,11 @@ msgstr "你目前只能保存最多 1000 个字符的草稿。"
 msgid "You can only save drafts up to 1000 characters. Would you like to discard this post before viewing your drafts?"
 msgstr "你目前只能保存最多 1000 个字符的草稿，你想在查看其他草稿之前放弃这则帖文内容吗？"
 
-#: src/view/com/composer/SelectMediaButton.tsx:458
+#: src/view/com/composer/SelectMediaButton.tsx:449
 msgid "You can only select one GIF at a time."
 msgstr "你一次只能选择一个 GIF。"
 
-#: src/view/com/composer/SelectMediaButton.tsx:452
+#: src/view/com/composer/SelectMediaButton.tsx:443
 msgid "You can only select one video at a time."
 msgstr "你一次只能选择一个视频。"
 
@@ -14659,7 +14636,7 @@ msgid "You can read chat history but can’t send new messages."
 msgstr "你仍然可以查看对话记录，但无法发送新信息。"
 
 #. Error message for maximum number of images that can be selected to add to a post.
-#: src/view/com/composer/SelectMediaButton.tsx:444
+#: src/view/com/composer/SelectMediaButton.tsx:435
 msgid "You can select up to {MAX_GALLERY_IMAGES, plural, other {# images}} in total."
 msgstr "你最多可以选择 {MAX_GALLERY_IMAGES, plural,other {# 张图片}}。"
 
@@ -14778,11 +14755,11 @@ msgstr "你已经浏览到末尾了"
 msgid "You have successfully verified your email address. You can close this dialog."
 msgstr "你已成功验证电子邮箱地址，现在你可以关闭此对话框。"
 
-#: src/lib/media/video/upload.shared.ts:74
+#: src/lib/media/video/upload.shared.ts:110
 msgid "You have temporarily reached the limit for video uploads. Please try again later."
 msgstr "你已暂时达到视频上传的限制。请稍后再试。"
 
-#: src/view/com/composer/Composer.tsx:1570
+#: src/view/com/composer/Composer.tsx:1536
 msgid "You have unsaved changes to this draft, would you like to save them?"
 msgstr "你有未保存的更改，需要保存吗？"
 
@@ -14858,7 +14835,7 @@ msgstr "你必须至少关注 7 个人以创建新手包。"
 msgid "You must grant access to your photo library to save a QR code"
 msgstr "你必须授权访问照片图库以保存二维码"
 
-#: src/view/com/composer/SelectMediaButton.tsx:494
+#: src/view/com/composer/SelectMediaButton.tsx:478
 msgid "You need to allow access to your media library."
 msgstr "你必须授予权限以访问媒体内容。"
 
@@ -15018,7 +14995,7 @@ msgstr "你已到达内容的结尾。"
 msgid "You've reached the end of your feed! Find some more accounts to follow."
 msgstr "你已经浏览完动态源的所有帖文啦！寻找一些更多的账户关注吧。"
 
-#: src/view/com/composer/Composer.tsx:773
+#: src/view/com/composer/Composer.tsx:739
 msgid "You've reached the maximum number of drafts"
 msgstr "你已达到最大草稿保存数量"
 
@@ -15034,11 +15011,11 @@ msgstr "你已达到 {MAX_FILTERS, plural,one {# 个筛选条件}other {# 个筛
 msgid "You've reached the start of the active content."
 msgstr "你已到达内容的开头。"
 
-#: src/view/com/composer/state/video.ts:531
+#: src/view/com/composer/state/video.ts:525
 msgid "You've reached your daily limit for video uploads (too many bytes)"
 msgstr "你已达到每日上传视频上限（文件太大）"
 
-#: src/view/com/composer/state/video.ts:535
+#: src/view/com/composer/state/video.ts:529
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr "你已达到每日上传视频上限（数量太多）"
 
@@ -15062,7 +15039,7 @@ msgstr "你的账户已删除，有缘再会! ✌️"
 msgid "Your account has been suspended"
 msgstr "你的账户已被冻结"
 
-#: src/view/com/composer/state/video.ts:539
+#: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
 msgstr "你的账户注册时间过短，暂时无法上传视频。请稍后再试。"
 
@@ -15157,7 +15134,7 @@ msgstr "你的完整账户代码将修改为 <0>@{0}</0>"
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
 msgstr "无法通过电子邮件地址检测你的托管服务提供商，因此将使用默认的 Bluesky 服务。请改为输入你的用户名，或手动设置您的托管服务提供商。"
 
-#: src/view/com/composer/state/video.ts:476
+#: src/view/com/composer/state/video.ts:470
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
 msgstr "你的托管服务提供商不支持这么大的视频，请尝试使用较小的文件重试。"
 
@@ -15202,11 +15179,11 @@ msgstr "已成功更改你的密码！请你今后使用你的新密码登录 Bl
 msgid "Your password must be at least 8 characters long."
 msgstr "你输入的密码至少应包含 8 个字符。"
 
-#: src/view/com/composer/Composer.tsx:1275
+#: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
 msgstr "已发布你的帖文"
 
-#: src/view/com/composer/Composer.tsx:1272
+#: src/view/com/composer/Composer.tsx:1238
 msgid "Your posts were sent"
 msgstr "已发布你的帖文"
 
@@ -15227,7 +15204,7 @@ msgstr "你的头像周围环绕着许多其他人的头像"
 msgid "Your profile, posts, feeds, and lists will no longer be visible to other Bluesky users. You can reactivate your account at any time by logging in."
 msgstr "其他 Bluesky 用户将无法看到你的个人资料、帖文、列表与其他相关个人信息。你可以随时登录以重新启用你的账户。"
 
-#: src/view/com/composer/Composer.tsx:1274
+#: src/view/com/composer/Composer.tsx:1240
 msgid "Your reply was sent"
 msgstr "已发布你的回复"
 
@@ -15240,7 +15217,7 @@ msgstr "你的举报信息将提交给 <0>{0}</0>。"
 msgid "Your selected interests help us serve you content you care about."
 msgstr "你选择的兴趣主题将帮助我们提供更多你想看到的内容。"
 
-#: src/view/com/composer/Composer.tsx:1605
+#: src/view/com/composer/Composer.tsx:1571
 msgid "Your thread has empty posts that will be skipped. The remaining posts will be published as a thread."
 msgstr "你的帖文串中包含空白帖文，继续发布将会跳过这些内容，其余帖文会重新组合成完整的帖文串发布。"
 
