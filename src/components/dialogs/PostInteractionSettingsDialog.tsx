@@ -241,9 +241,8 @@ export function PostInteractionSettingsDialogControlledInner(
           type: 'error',
         },
       )
-    } finally {
-      setIsSaving(false)
     }
+    setIsSaving(false)
   }, [
     _,
     ax,
