@@ -10,6 +10,16 @@ import {updatePostShadow} from '../cache/post-shadow'
 import {useAppviewClient, useSession} from '../session'
 import {useProfileUpdateMutation} from './profile'
 
+/**
+ * Out of the hook because React Compiler cannot lower an optional chain inside a
+ * `try` block, and `profile` only exists once the request inside it resolves.
+ */
+function getPinnedPostUri(profile: {
+  pinnedPost?: {uri: string}
+}): string | undefined {
+  return profile.pinnedPost?.uri
+}
+
 export function usePinnedPostMutation() {
   const {_} = useLingui()
   const {currentAccount} = useSession()
@@ -27,19 +37,24 @@ export function usePinnedPostMutation() {
       postCid: string
       action: 'pin' | 'unpin'
     }) => {
+      if (!currentAccount) throw new Error('Not signed in')
+
       const pinCurrentPost = action === 'pin'
       let prevPinnedPost: string | undefined
       try {
         updatePostShadow(queryClient, postUri, {pinned: pinCurrentPost})
 
         // get the currently pinned post so we can optimistically remove the pin from it
-        if (!currentAccount) throw new Error('Not signed in')
         const profile = await client.call(app.bsky.actor.getProfile, {
           actor: currentAccount.did,
         })
-        prevPinnedPost = profile.pinnedPost?.uri
-        if (prevPinnedPost && prevPinnedPost !== postUri) {
-          updatePostShadow(queryClient, prevPinnedPost, {pinned: false})
+        prevPinnedPost = getPinnedPostUri(profile)
+        if (prevPinnedPost) {
+          // Nested rather than `&&`: React Compiler cannot lower a logical
+          // expression in a test position inside a `try`.
+          if (prevPinnedPost !== postUri) {
+            updatePostShadow(queryClient, prevPinnedPost, {pinned: false})
+          }
         }
 
         await profileUpdateMutate({
