@@ -1,0 +1,75 @@
+{
+  "id": "app.bsky.actor.profile",
+  "defs": {
+    "main": {
+      "key": "literal:self",
+      "type": "record",
+      "record": {
+        "type": "object",
+        "properties": {
+          "avatar": {
+            "type": "blob",
+            "accept": [
+              "image/png",
+              "image/jpeg"
+            ],
+            "maxSize": 1000000,
+            "description": "Small image to be displayed next to posts from account. AKA, 'profile picture'"
+          },
+          "banner": {
+            "type": "blob",
+            "accept": [
+              "image/png",
+              "image/jpeg"
+            ],
+            "maxSize": 1000000,
+            "description": "Larger horizontal image to display behind profile view."
+          },
+          "labels": {
+            "refs": [
+              "com.atproto.label.defs#selfLabels"
+            ],
+            "type": "union",
+            "description": "Self-label values, specific to the Bluesky application, on the overall account."
+          },
+          "website": {
+            "type": "string",
+            "format": "uri"
+          },
+          "pronouns": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Free-form pronouns text.",
+            "maxGraphemes": 20
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "datetime"
+          },
+          "pinnedPost": {
+            "ref": "com.atproto.repo.strongRef",
+            "type": "ref"
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2560,
+            "description": "Free-form profile description text.",
+            "maxGraphemes": 256
+          },
+          "displayName": {
+            "type": "string",
+            "maxLength": 640,
+            "maxGraphemes": 64
+          },
+          "joinedViaStarterPack": {
+            "ref": "com.atproto.repo.strongRef",
+            "type": "ref"
+          }
+        }
+      },
+      "description": "A declaration of a Bluesky account profile."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

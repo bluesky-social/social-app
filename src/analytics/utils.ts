@@ -14,7 +14,7 @@ import {
 export function useMeta(metadata?: MergeableMetadata) {
   const m = useMemo(() => metadata, [metadata])
   if (!m) return
-  // @ts-ignore
+  // @ts-expect-error
   m.__meta = true
   return m
 }

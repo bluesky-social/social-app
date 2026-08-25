@@ -1,14 +1,62 @@
 import {useEffect, useMemo} from 'react'
-import {type AppBskyUnspeccedDefs, type AtUri} from '@atproto/api'
-import {useLingui} from '@lingui/react/macro'
+import {type AtUri} from '@atproto/syntax'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useCallOnce} from '#/lib/once'
 // import {makeProfileLink} from '#/lib/routes/links'
 // import {feedUriToHref} from '#/lib/strings/url-helpers'
-import {native} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
+import * as Prompt from '#/components/Prompt'
+import {Text} from '#/components/Typography'
 import {type Metrics, useAnalytics} from '#/analytics'
+import {IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
+
+export function TrendingTopicsPrompt({
+  control,
+  onConfirm,
+}: {
+  control: Prompt.PromptControlProps
+  onConfirm: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <Prompt.Outer control={control} testID="trendingTopicsPrompt">
+      <Prompt.Content>
+        <Prompt.TitleText>
+          <Trans>Trending topics</Trans>
+        </Prompt.TitleText>
+        <Prompt.DescriptionText>
+          <Trans>
+            Trending topics are based on what people are talking about on the
+            network. Topic titles and descriptions are generated with AI.
+          </Trans>
+        </Prompt.DescriptionText>
+      </Prompt.Content>
+      <Prompt.Actions>
+        <Prompt.Action
+          cta={l`Hide trending topics`}
+          color="secondary"
+          onPress={onConfirm}
+        />
+        <Text
+          style={[
+            a.text_sm,
+            IS_WEB ? a.text_left : a.text_center,
+            t.atoms.text_contrast_medium,
+            a.py_xs,
+          ]}>
+          <Trans>You can update this later from your settings.</Trans>
+        </Text>
+        <Prompt.Cancel cta={l`Close`} />
+      </Prompt.Actions>
+    </Prompt.Outer>
+  )
+}
 
 export function TrendingTopicLink({
   topic: raw,
@@ -18,7 +66,7 @@ export function TrendingTopicLink({
   children,
   ...rest
 }: {
-  topic: AppBskyUnspeccedDefs.TrendView
+  topic: app.bsky.unspecced.defs.TrendView
   metricContext: Metrics['trendingTopic:seen']['context']
   rank: number
   recId?: string
@@ -75,7 +123,7 @@ type ParsedTrendingTopic =
     }
 
 export function useTopic(
-  raw: AppBskyUnspeccedDefs.TrendView,
+  raw: app.bsky.unspecced.defs.TrendView,
 ): ParsedTrendingTopic {
   const {t: l} = useLingui()
   return useMemo(() => {

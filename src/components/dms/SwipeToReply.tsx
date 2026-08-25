@@ -78,7 +78,7 @@ export function SwipeToReply({
     const runPop = () => {
       'worklet'
       if (isReducedMotion) return
-      iconScale.set(() =>
+      iconScale.set(
         withSequence(
           withTiming(1.2, {duration: 175}),
           withTiming(1, {duration: 100}),

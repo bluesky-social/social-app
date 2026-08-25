@@ -1,4 +1,4 @@
-import {XRPCError} from '@atproto/api'
+import {XrpcResponseError} from '@atproto/lex'
 
 import {isRetryableHttpStatus, shouldRetryError} from '#/lib/strings/errors'
 
@@ -16,7 +16,7 @@ export type ReportErrorClassification = {
 }
 
 export function classifyReportError(error: unknown): ReportErrorClassification {
-  if (!(error instanceof XRPCError)) {
+  if (!(error instanceof XrpcResponseError)) {
     return classification('unexpected', 'unexpected', true)
   }
 

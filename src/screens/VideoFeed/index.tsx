@@ -5,8 +5,6 @@ import {
   Pressable,
   ScrollView,
   View,
-  type ViewabilityConfig,
-  type ViewToken,
 } from 'react-native'
 import {
   Gesture,
@@ -25,15 +23,14 @@ import {useEvent, useEventListener} from 'expo'
 import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
-import {
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  type ModerationDecision,
-  RichText as RichTextAPI,
-} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {
+  type ListViewToken as ViewToken,
+  type ViewabilityConfig,
+} from '@react-native/virtualized-lists'
 import {
   type RouteProp,
   useFocusEffect,
@@ -103,6 +100,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID} from '#/env'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
 
@@ -176,8 +174,8 @@ type CurrentSource = {
 
 type VideoItem = {
   moderation: ModerationDecision
-  post: AppBskyFeedDefs.PostView
-  video: AppBskyEmbedVideo.View
+  post: app.bsky.feed.defs.PostView
+  video: app.bsky.embed.video.View
   feedContext: string | undefined
   reqId: string | undefined
 }
@@ -215,8 +213,8 @@ function Feed() {
         const items: {
           _reactKey: string
           moderation: ModerationDecision
-          post: AppBskyFeedDefs.PostView
-          video: AppBskyEmbedVideo.View
+          post: app.bsky.feed.defs.PostView
+          video: app.bsky.embed.video.View
           feedContext: string | undefined
           reqId: string | undefined
         }[] = []
@@ -224,7 +222,10 @@ function Feed() {
           const feedPost = slice.items.find(
             item => item.uri === slice.feedPostUri,
           )
-          if (feedPost && AppBskyEmbedVideo.isView(feedPost.post.embed)) {
+          if (
+            feedPost &&
+            bsky.isType(app.bsky.embed.video.view, feedPost.post.embed)
+          ) {
             items.push({
               _reactKey: feedPost._reactKey,
               moderation: feedPost.moderation,
@@ -293,14 +294,14 @@ function Feed() {
       const prevPost = prevSlice?.post
       const prevEmbed = prevPost?.embed
       const prevVideo =
-        prevEmbed && AppBskyEmbedVideo.isView(prevEmbed)
+        prevEmbed && bsky.isType(app.bsky.embed.video.view, prevEmbed)
           ? prevEmbed.playlist
           : null
       const currSlice = videos.at(index)
       const currPost = currSlice?.post
       const currEmbed = currPost?.embed
       const currVideo =
-        currEmbed && AppBskyEmbedVideo.isView(currEmbed)
+        currEmbed && bsky.isType(app.bsky.embed.video.view, currEmbed)
           ? currEmbed.playlist
           : null
       const currVideoModeration = currSlice?.moderation
@@ -308,7 +309,7 @@ function Feed() {
       const nextPost = nextSlice?.post
       const nextEmbed = nextPost?.embed
       const nextVideo =
-        nextEmbed && AppBskyEmbedVideo.isView(nextEmbed)
+        nextEmbed && bsky.isType(app.bsky.embed.video.view, nextEmbed)
           ? nextEmbed.playlist
           : null
 
@@ -414,7 +415,7 @@ function Feed() {
 
   const onViewableItemsChanged = useCallback(
     ({viewableItems}: {viewableItems: ViewToken[]; changed: ViewToken[]}) => {
-      if (viewableItems[0] && viewableItems[0].index !== null) {
+      if (viewableItems[0]?.index != null) {
         const newIndex = viewableItems[0].index
         setCurrentIndex(newIndex)
         updateVideoState(newIndex)
@@ -478,8 +479,8 @@ let VideoItem = ({
   reqId,
 }: {
   player?: VideoPlayer
-  post: AppBskyFeedDefs.PostView
-  embed: AppBskyEmbedVideo.View
+  post: app.bsky.feed.defs.PostView
+  embed: app.bsky.embed.video.View
   active: boolean
   adjacent: boolean
   scrollGesture: NativeGesture
@@ -589,7 +590,7 @@ function VideoItemInner({
   active,
 }: {
   player: VideoPlayer
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   active: boolean
 }) {
   const {bottom} = useSafeAreaInsets()
@@ -706,7 +707,7 @@ function ModerationOverlay({
   embed,
   onPressShow,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   onPressShow: () => void
 }) {
   const {t: l} = useLingui()
@@ -804,8 +805,8 @@ function Overlay({
   reqId,
 }: {
   player?: VideoPlayer
-  post: Shadow<AppBskyFeedDefs.PostView>
-  embed: AppBskyEmbedVideo.View
+  post: Shadow<app.bsky.feed.defs.PostView>
+  embed: app.bsky.embed.video.View
   active: boolean
   scrollGesture: NativeGesture
   moderation: ModerationDecision
@@ -826,10 +827,7 @@ function Overlay({
   )
 
   const rkey = new AtUri(post.uri).rkey
-  const record = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-    post.record,
-    AppBskyFeedPost.isRecord,
-  )
+  const record = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record
     : undefined
   const richText = new RichTextAPI({
@@ -1089,7 +1087,7 @@ function VideoItemPlaceholder({
   style,
   blur,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   style?: ImageStyle
   blur?: boolean
 }) {
@@ -1130,7 +1128,7 @@ function PlayPauseTapArea({
   reqId,
 }: {
   player: VideoPlayer
-  post: Shadow<AppBskyFeedDefs.PostView>
+  post: Shadow<app.bsky.feed.defs.PostView>
   feedContext: string | undefined
   reqId: string | undefined
 }) {
@@ -1272,7 +1270,9 @@ function EndMessage() {
 /*
  * If the video is taller than 9:16
  */
-function isTallAspectRatio(aspectRatio: AppBskyEmbedVideo.View['aspectRatio']) {
+function isTallAspectRatio(
+  aspectRatio: app.bsky.embed.video.View['aspectRatio'],
+) {
   const videoAspectRatio =
     (aspectRatio?.width ?? 1) / (aspectRatio?.height ?? 1)
   return videoAspectRatio <= 9 / 16

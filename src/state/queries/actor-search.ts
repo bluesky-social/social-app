@@ -1,4 +1,3 @@
-import {type AppBskyActorSearchActors} from '@atproto/api'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -9,7 +8,8 @@ import {
 
 import {STALE} from '#/state/queries'
 import {useAutoPagination} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const RQKEY_ROOT = 'actor-search'
 export const RQKEY = (query: string, limit?: number) => [
@@ -29,23 +29,22 @@ export function useActorSearch({
   maintainData?: boolean
   limit?: number
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const result = useInfiniteQuery<
-    AppBskyActorSearchActors.OutputSchema,
+    app.bsky.actor.searchActors.$OutputBody,
     Error,
-    InfiniteData<AppBskyActorSearchActors.OutputSchema>,
+    InfiniteData<app.bsky.actor.searchActors.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(query, limit),
     queryFn: async ({pageParam}) => {
-      const res = await agent.searchActors({
+      return await client.call(app.bsky.actor.searchActors, {
         q: query,
         limit,
         cursor: pageParam,
       })
-      return res.data
     },
     enabled: enabled && !!query,
     initialPageParam: undefined,
@@ -60,7 +59,7 @@ export function useActorSearch({
   return result
 }
 
-function select(data: InfiniteData<AppBskyActorSearchActors.OutputSchema>) {
+function select(data: InfiniteData<app.bsky.actor.searchActors.$OutputBody>) {
   // enforce uniqueness
   const dids = new Set()
 
@@ -83,7 +82,7 @@ export function* findAllProfilesInQueryData(
   did: string,
 ) {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyActorSearchActors.OutputSchema>
+    InfiniteData<app.bsky.actor.searchActors.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

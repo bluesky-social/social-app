@@ -35,7 +35,7 @@ const TIMING_OUT = {duration: 150}
 
 export function ImageMenu({onPressShare, onPressSave}: Props) {
   const {t: l} = useLingui()
-  const triggerRef = useRef<View>(null)
+  const triggerRef = useRef<React.ComponentRef<typeof View>>(null)
   const [isMounted, setIsMounted] = useState(false)
   const [anchor, setAnchor] = useState<Anchor | null>(null)
   const progress = useSharedValue(0)

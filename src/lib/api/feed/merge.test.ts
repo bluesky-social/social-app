@@ -1,13 +1,14 @@
-import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
+import {app} from '#/lexicons'
 import {MergeFeedAPI} from './merge'
 
-const post = {} as AppBskyFeedDefs.FeedViewPost
+const post = {} as app.bsky.feed.defs.FeedViewPost
 
 describe('MergeFeedAPI', () => {
   it('drains a terminal following queue without restarting the source', async () => {
     const api = new MergeFeedAPI({
-      agent: {} as AtpAgent,
+      client: {} as Client,
       feedParams: {},
       feedTuners: [],
     })
@@ -25,20 +26,12 @@ describe('MergeFeedAPI', () => {
   })
 
   it('stops when the following source repeats its cursor', async () => {
-    const getTimeline = jest
+    const call = jest
       .fn()
-      .mockResolvedValueOnce({
-        success: true,
-        headers: {},
-        data: {feed: [], cursor: 'a'},
-      })
-      .mockResolvedValueOnce({
-        success: true,
-        headers: {},
-        data: {feed: [], cursor: 'a'},
-      })
+      .mockResolvedValueOnce({feed: [], cursor: 'a'})
+      .mockResolvedValueOnce({feed: [], cursor: 'a'})
     const api = new MergeFeedAPI({
-      agent: {getTimeline} as unknown as AtpAgent,
+      client: {call} as unknown as Client,
       feedParams: {},
       feedTuners: [],
     })
@@ -48,17 +41,13 @@ describe('MergeFeedAPI', () => {
 
     expect(first.cursor).toBeDefined()
     expect(second.cursor).toBeUndefined()
-    expect(getTimeline).toHaveBeenCalledTimes(2)
+    expect(call).toHaveBeenCalledTimes(2)
   })
 
   it('stops when the following source returns an empty cursor', async () => {
-    const getTimeline = jest.fn().mockResolvedValue({
-      success: true,
-      headers: {},
-      data: {feed: [], cursor: ''},
-    })
+    const call = jest.fn().mockResolvedValue({feed: [], cursor: ''})
     const api = new MergeFeedAPI({
-      agent: {getTimeline} as unknown as AtpAgent,
+      client: {call} as unknown as Client,
       feedParams: {},
       feedTuners: [],
     })
@@ -66,29 +55,17 @@ describe('MergeFeedAPI', () => {
     const result = await api.fetch({cursor: undefined, limit: 1})
 
     expect(result.cursor).toBeUndefined()
-    expect(getTimeline).toHaveBeenCalledTimes(1)
+    expect(call).toHaveBeenCalledTimes(1)
   })
 
   it('stops when the following source cycles to an earlier cursor', async () => {
-    const getTimeline = jest
+    const call = jest
       .fn()
-      .mockResolvedValueOnce({
-        success: true,
-        headers: {},
-        data: {feed: [], cursor: 'a'},
-      })
-      .mockResolvedValueOnce({
-        success: true,
-        headers: {},
-        data: {feed: [], cursor: 'b'},
-      })
-      .mockResolvedValueOnce({
-        success: true,
-        headers: {},
-        data: {feed: [], cursor: 'a'},
-      })
+      .mockResolvedValueOnce({feed: [], cursor: 'a'})
+      .mockResolvedValueOnce({feed: [], cursor: 'b'})
+      .mockResolvedValueOnce({feed: [], cursor: 'a'})
     const api = new MergeFeedAPI({
-      agent: {getTimeline} as unknown as AtpAgent,
+      client: {call} as unknown as Client,
       feedParams: {},
       feedTuners: [],
     })
@@ -98,15 +75,13 @@ describe('MergeFeedAPI', () => {
     const third = await api.fetch({cursor: second.cursor, limit: 1})
 
     expect(third.cursor).toBeUndefined()
-    expect(getTimeline).toHaveBeenCalledTimes(3)
+    expect(call).toHaveBeenCalledTimes(3)
   })
 
   it('drains a terminal custom-feed queue without restarting the source', async () => {
-    const getFeed = jest.fn()
+    const call = jest.fn()
     const api = new MergeFeedAPI({
-      agent: {
-        app: {bsky: {feed: {getFeed}}},
-      } as unknown as AtpAgent,
+      client: {call} as unknown as Client,
       feedParams: {
         mergeFeedEnabled: true,
         mergeFeedSources: [
@@ -126,6 +101,6 @@ describe('MergeFeedAPI', () => {
     expect(first.feed).toHaveLength(2)
     expect(second.feed).toHaveLength(1)
     expect(second.cursor).toBeUndefined()
-    expect(getFeed).not.toHaveBeenCalled()
+    expect(call).not.toHaveBeenCalled()
   })
 })

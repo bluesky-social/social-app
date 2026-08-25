@@ -1,10 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {
-  ChatBskyGroupApproveJoinRequest,
-  type ChatBskyGroupListJoinRequests,
-  ChatBskyGroupRejectJoinRequest,
-} from '@atproto/api'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type InfiniteData, useQueryClient} from '@tanstack/react-query'
@@ -16,6 +11,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {ConvoProvider, useConvo} from '#/state/messages/convo'
 import {ConvoStatus} from '#/state/messages/convo/types'
@@ -43,6 +39,7 @@ import * as ProfileCard from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from './components/InviteLinkDialog'
 
@@ -142,7 +139,7 @@ function JoinRequestsList({
 
   const getRemainingRequestCount = () => {
     const data = queryClient.getQueryData<
-      InfiniteData<ChatBskyGroupListJoinRequests.OutputSchema>
+      InfiniteData<chat.bsky.group.listJoinRequests.$OutputBody>
     >(createListJoinRequestsQueryKey({convoId}))
     return data?.pages.reduce((sum, page) => sum + page.requests.length, 0) ?? 0
   }
@@ -190,19 +187,18 @@ function JoinRequestsList({
         let errorMessage = l`Failed to accept join request`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InvalidConvoError
-        ) {
-          errorMessage = l`Conversation not found.`
-        } else if (
-          error instanceof ChatBskyGroupApproveJoinRequest.InsufficientRoleError
-        ) {
-          errorMessage = l`Only admins can accept join requests.`
-        } else if (
-          error instanceof
-          ChatBskyGroupApproveJoinRequest.MemberLimitReachedError
-        ) {
-          errorMessage = l`The member limit has been reached.`
+        } else {
+          switch (matchXrpcError(error, chat.bsky.group.approveJoinRequest)) {
+            case 'InvalidConvo':
+              errorMessage = l`Conversation not found.`
+              break
+            case 'InsufficientRole':
+              errorMessage = l`Only admins can accept join requests.`
+              break
+            case 'MemberLimitReached':
+              errorMessage = l`The member limit has been reached.`
+              break
+          }
         }
         Toast.show(errorMessage, {type: 'error'})
       },
@@ -223,14 +219,15 @@ function JoinRequestsList({
         let errorMessage = l`Failed to reject join request`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InvalidConvoError
-        ) {
-          errorMessage = l`Conversation not found.`
-        } else if (
-          error instanceof ChatBskyGroupRejectJoinRequest.InsufficientRoleError
-        ) {
-          errorMessage = l`Only admins can reject join requests.`
+        } else {
+          switch (matchXrpcError(error, chat.bsky.group.rejectJoinRequest)) {
+            case 'InvalidConvo':
+              errorMessage = l`Conversation not found.`
+              break
+            case 'InsufficientRole':
+              errorMessage = l`Only admins can reject join requests.`
+              break
+          }
         }
         Toast.show(errorMessage, {type: 'error'})
       },
@@ -382,7 +379,7 @@ function JoinRequestsList({
               style={[a.flex_1, a.align_center, a.justify_center, a.py_4xl]}>
               <Loader size="xl" />
             </View>
-          ) : null
+          ) : undefined
         }
         contentContainerStyle={
           showFooter ? {paddingBottom: footerHeight} : undefined

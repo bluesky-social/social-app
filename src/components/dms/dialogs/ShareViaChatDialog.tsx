@@ -1,11 +1,8 @@
 import {useCallback, useState} from 'react'
-import {
-  ChatBskyConvoGetConvoForMembers,
-  ChatBskyGroupCreateGroup,
-} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 
 import {isNetworkError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useCreateGroupChat} from '#/state/queries/messages/create-group-chat'
 import {useGetConvoForMembers} from '#/state/queries/messages/get-convo-for-members'
@@ -14,6 +11,7 @@ import {SearchablePeopleList} from '#/components/dialogs/SearchablePeopleList'
 import {InitiateChatFlow} from '#/components/dms/InitiateChatFlow'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {chat} from '#/lexicons'
 
 export function SendViaChatDialog({
   control,
@@ -69,27 +67,24 @@ function SendViaChatDialogInner({
       let errorMessage = l`An issue occurred starting the chat, please try again.`
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.AccountSuspendedError
-      ) {
-        errorMessage = l`Suspended accounts cannot participate in chat.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.BlockedActorError
-      ) {
-        errorMessage = l`This user has blocked you and cannot be messaged.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.MessagesDisabledError
-      ) {
-        errorMessage = l`This user has disabled chat and cannot be messaged.`
-      } else if (
-        error instanceof
-        ChatBskyConvoGetConvoForMembers.NotFollowedBySenderError
-      ) {
-        errorMessage = l`Chat recipient is not followed by the sender.`
-      } else if (
-        error instanceof ChatBskyConvoGetConvoForMembers.RecipientNotFoundError
-      ) {
-        errorMessage = l`Unable to find the selected recipient.`
+      } else {
+        switch (matchXrpcError(error, chat.bsky.convo.getConvoForMembers)) {
+          case 'AccountSuspended':
+            errorMessage = l`Suspended accounts cannot participate in chat.`
+            break
+          case 'BlockedActor':
+            errorMessage = l`This user has blocked you and cannot be messaged.`
+            break
+          case 'MessagesDisabled':
+            errorMessage = l`This user has disabled chat and cannot be messaged.`
+            break
+          case 'NotFollowedBySender':
+            errorMessage = l`Chat recipient is not followed by the sender.`
+            break
+          case 'RecipientNotFound':
+            errorMessage = l`Unable to find the selected recipient.`
+            break
+        }
       }
       Toast.show(errorMessage, {
         type: 'error',
@@ -108,29 +103,27 @@ function SendViaChatDialogInner({
       let errorMessage = l`An issue occurred starting the group chat, please try again.`
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
-      } else if (
-        error instanceof ChatBskyGroupCreateGroup.AccountSuspendedError
-      ) {
-        errorMessage = l`Suspended accounts cannot participate in a group chat.`
-      } else if (error instanceof ChatBskyGroupCreateGroup.BlockedActorError) {
-        errorMessage = l`One of the selected recipients has blocked you and cannot be messaged.`
-      } else if (
-        error instanceof
-        ChatBskyGroupCreateGroup.NewAccountCannotCreateGroupError
-      ) {
-        errorMessage = l`You cannot create a group chat yet.`
-      } else if (
-        error instanceof ChatBskyGroupCreateGroup.NotFollowedBySenderError
-      ) {
-        errorMessage = l`A selected recipient is not followed by the sender.`
-      } else if (
-        error instanceof ChatBskyGroupCreateGroup.RecipientNotFoundError
-      ) {
-        errorMessage = l`Unable to find a selected recipient.`
-      } else if (
-        error instanceof ChatBskyGroupCreateGroup.UserForbidsGroupsError
-      ) {
-        errorMessage = l`One of the selected recipients does not allow group chats.`
+      } else {
+        switch (matchXrpcError(error, chat.bsky.group.createGroup)) {
+          case 'AccountSuspended':
+            errorMessage = l`Suspended accounts cannot participate in a group chat.`
+            break
+          case 'BlockedActor':
+            errorMessage = l`One of the selected recipients has blocked you and cannot be messaged.`
+            break
+          case 'NewAccountCannotCreateGroup':
+            errorMessage = l`You cannot create a group chat yet.`
+            break
+          case 'NotFollowedBySender':
+            errorMessage = l`A selected recipient is not followed by the sender.`
+            break
+          case 'RecipientNotFound':
+            errorMessage = l`Unable to find a selected recipient.`
+            break
+          case 'UserForbidsGroups':
+            errorMessage = l`One of the selected recipients does not allow group chats.`
+            break
+        }
       }
       Toast.show(errorMessage, {
         type: 'error',

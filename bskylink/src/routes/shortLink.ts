@@ -4,23 +4,25 @@ import {DAY, SECOND} from '@atproto/common'
 import {Express} from 'express'
 
 import {AppContext} from '../context.js'
-import {handler} from './util.js'
+import {observedHandler} from './util.js'
 
 export default function (ctx: AppContext, app: Express) {
   return app.get(
     '/:linkId',
-    handler(async (req, res) => {
+    observedHandler('short_link', async (req, res) => {
       const linkId = req.params.linkId
       const contentType = req.accepts(['html', 'json'])
       assert(
         typeof linkId === 'string',
         'express guarantees id parameter is a string',
       )
-      const found = await ctx.db.db
-        .selectFrom('link')
-        .selectAll()
-        .where('id', '=', linkId)
-        .executeTakeFirst()
+      const found = await ctx.db.observeQuery('resolve_short_link', () =>
+        ctx.db.db
+          .selectFrom('link')
+          .selectAll()
+          .where('id', '=', linkId)
+          .executeTakeFirst(),
+      )
       if (!found) {
         // potentially broken or mistyped link
         res.setHeader('Cache-Control', 'no-store')

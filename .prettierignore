@@ -18,6 +18,7 @@
 android
 ios
 src/locale/locales
+src/lexicons
 lib/react-compiler-runtime
 bskyweb/static
 coverage

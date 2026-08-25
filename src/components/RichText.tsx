@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
-import {AppBskyRichtextFacet, RichText as RichTextAPI} from '@atproto/api'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
 import {toShortUrl} from '#/lib/strings/url-helpers'
 import {android, atoms as a, flatten, type TextStyleProp} from '#/alf'
@@ -9,6 +9,8 @@ import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 const WORD_WRAP = {wordWrap: 1}
 // lifted from facet detection in `RichText` impl, _without_ `gm` flags
@@ -91,7 +93,7 @@ export function RichText({
 
   if (!facets?.length) {
     if (isOnlyEmoji(text)) {
-      const flattenedStyle = flatten(style) ?? {}
+      const flattenedStyle = flatten(style)
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
@@ -102,7 +104,6 @@ export function RichText({
           style={[plainStyles, {fontSize}, suffixStyles]}
           onLayout={onLayout}
           onTextLayout={onTextLayout}
-          // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
           {suffix ? ' ' : null}
@@ -119,7 +120,6 @@ export function RichText({
         numberOfLines={numberOfLines}
         onLayout={onLayout}
         onTextLayout={onTextLayout}
-        // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
         {suffix ? ' ' : null}
@@ -139,7 +139,7 @@ export function RichText({
     if (
       mention &&
       (disableMentionFacetValidation ||
-        AppBskyRichtextFacet.validateMention(mention).success) &&
+        bsky.matches(app.bsky.richtext.facet.mention, mention)) &&
       !disableLinks
     ) {
       els.push(
@@ -148,7 +148,7 @@ export function RichText({
             selectable={selectable}
             to={`/profile/${mention.did}`}
             style={interactiveStyles}
-            // @ts-ignore TODO
+            // @ts-expect-error TODO
             dataSet={WORD_WRAP}
             shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}>
@@ -156,7 +156,7 @@ export function RichText({
           </InlineLinkText>
         </ProfileHoverCard>,
       )
-    } else if (link && AppBskyRichtextFacet.validateLink(link).success) {
+    } else if (link && bsky.matches(app.bsky.richtext.facet.link, link)) {
       const isValidLink = URL_REGEX.test(link.uri)
       if (!isValidLink || disableLinks) {
         els.push(toShortUrl(segment.text))
@@ -167,7 +167,7 @@ export function RichText({
             key={key}
             to={link.uri}
             style={interactiveStyles}
-            // @ts-ignore TODO
+            // @ts-expect-error TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
             shouldProxy={shouldProxyLinks}
@@ -181,7 +181,7 @@ export function RichText({
       !disableLinks &&
       enableTags &&
       tag &&
-      AppBskyRichtextFacet.validateTag(tag).success
+      bsky.matches(app.bsky.richtext.facet.tag, tag)
     ) {
       els.push(
         <RichTextTag
@@ -207,7 +207,6 @@ export function RichText({
       numberOfLines={numberOfLines}
       onLayout={onLayout}
       onTextLayout={onTextLayout}
-      // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
       {els}
       {suffix ? ' ' : null}

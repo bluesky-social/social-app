@@ -1,11 +1,24 @@
-import {XRPCError} from '@atproto/api'
+import {XrpcResponseError} from '@atproto/lex'
 
+import {com} from '#/lexicons'
 import {classifyReportError} from './errors'
+
+/**
+ * An error as the lex client builds one from a JSON error response body. The
+ * classifier only reads `error`, `message` and `status` back off it.
+ */
+function xrpcError(status: number, error: string, message: string) {
+  return new XrpcResponseError(
+    com.atproto.moderation.createReport.main,
+    new Response(null, {status}),
+    {encoding: 'application/json', body: {error, message}},
+  )
+}
 
 describe('classifyReportError', () => {
   it('treats account takedown as an expected rejection', () => {
     const result = classifyReportError(
-      new XRPCError(
+      xrpcError(
         403,
         'AccountTakedown',
         'Report not accepted from takendown account',
@@ -27,7 +40,7 @@ describe('classifyReportError', () => {
 
   it.each([
     {
-      error: new XRPCError(
+      error: xrpcError(
         502,
         'InternalServerError',
         'Failed to perform upstream request',
@@ -35,11 +48,11 @@ describe('classifyReportError', () => {
       bucket: 'upstream-fetch',
     },
     {
-      error: new XRPCError(502, 'UpstreamFailure', 'Internal Server Error'),
+      error: xrpcError(502, 'UpstreamFailure', 'Internal Server Error'),
       bucket: 'upstream-internal',
     },
     {
-      error: new XRPCError(
+      error: xrpcError(
         502,
         'UpstreamFailure',
         'Upstream server responded with a 502 error',
@@ -47,7 +60,7 @@ describe('classifyReportError', () => {
       bucket: 'upstream-http-502',
     },
     {
-      error: new XRPCError(
+      error: xrpcError(
         504,
         'UpstreamTimeout',
         'Upstream server responded with a 504 error',
@@ -64,7 +77,7 @@ describe('classifyReportError', () => {
 
   it('classifies an invalid reason type separately', () => {
     const result = classifyReportError(
-      new XRPCError(
+      xrpcError(
         400,
         'InvalidRequest',
         'Invalid reason type: tools.ozone.report.defs#reasonOther',
@@ -82,7 +95,7 @@ describe('classifyReportError', () => {
     'separates a non-retryable upstream %i without calling it temporary',
     status => {
       const result = classifyReportError(
-        new XRPCError(
+        xrpcError(
           502,
           'UpstreamFailure',
           `Upstream server responded with a ${status} error`,

@@ -1,11 +1,12 @@
 import {useState} from 'react'
-import {type Insets, Pressable, View} from 'react-native'
+import {type Insets, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Beaker_Stroke2_Corner2_Rounded as BeakerIcon} from '#/components/icons/Beaker'
+import {Pressable} from '#/components/Pressable'
 import * as Tooltip from '#/components/Tooltip'
 import type * as bsky from '#/types/bsky'
 

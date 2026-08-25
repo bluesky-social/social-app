@@ -8,7 +8,7 @@ import {t} from '@lingui/core/macro'
 
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/components/Toast'
-import {IS_IOS, IS_WEB} from '#/env'
+import {IS_IOS} from '#/env'
 import {VIDEO_MAX_DURATION_MS} from '../constants'
 import {getDataUriSize} from './util'
 
@@ -23,6 +23,7 @@ export async function openPicker(opts?: ImagePickerOptions) {
     quality: 1,
     selectionLimit: 1,
     ...opts,
+    shouldDownloadFromNetwork: true,
     legacy: true,
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Automatic,
@@ -58,8 +59,12 @@ export async function openUnifiedPicker({
     quality: 1,
     allowsMultipleSelection: true,
     legacy: true,
-    base64: IS_WEB,
+    // Reading videos as base64 can fail in the browser before callers have a
+    // chance to validate the file size. Web callers can read image files from
+    // the `file` returned on each asset after validation instead.
+    base64: false,
     selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
+    shouldDownloadFromNetwork: true,
     preferredAssetRepresentationMode:
       UIImagePickerPreferredAssetRepresentationMode.Automatic,
     videoExportPreset: VideoExportPreset.Passthrough,

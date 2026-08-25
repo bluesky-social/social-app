@@ -1,7 +1,4 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyFeedGetRepostedBy,
-} from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {
   type InfiniteData,
   type QueryClient,
@@ -9,7 +6,8 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 import {useAutoPagination} from './util'
 
 const PAGE_SIZE = 30
@@ -20,22 +18,22 @@ const RQKEY_ROOT = 'post-reposted-by'
 export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostRepostedByQuery(resolvedUri: string | undefined) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const query = useInfiniteQuery<
-    AppBskyFeedGetRepostedBy.OutputSchema,
+    app.bsky.feed.getRepostedBy.$OutputBody,
     Error,
-    InfiniteData<AppBskyFeedGetRepostedBy.OutputSchema>,
+    InfiniteData<app.bsky.feed.getRepostedBy.$OutputBody>,
     QueryKey,
     RQPageParam
   >({
     queryKey: RQKEY(resolvedUri || ''),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      const res = await agent.getRepostedBy({
-        uri: resolvedUri || '',
+      return await client.call(app.bsky.feed.getRepostedBy, {
+        // the enabled flag prevents this from running until resolvedUri is set
+        uri: (resolvedUri || '') as AtUriString,
         limit: PAGE_SIZE,
         cursor: pageParam,
       })
-      return res.data
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -53,9 +51,9 @@ export function usePostRepostedByQuery(resolvedUri: string | undefined) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const queryDatas = queryClient.getQueriesData<
-    InfiniteData<AppBskyFeedGetRepostedBy.OutputSchema>
+    InfiniteData<app.bsky.feed.getRepostedBy.$OutputBody>
   >({
     queryKey: [RQKEY_ROOT],
   })

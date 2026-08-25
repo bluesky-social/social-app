@@ -60,8 +60,7 @@ function getRunningChannel(
    * entirely from embedded manifests, so narrow it ourselves.
    */
   const manifest = currentlyRunning?.manifest as
-    | {metadata?: {channel?: unknown}}
-    | undefined
+    {metadata?: {channel?: unknown}} | undefined
   const channel = manifest?.metadata?.channel
   if (typeof channel === 'string' && channel) {
     return channel
@@ -178,12 +177,6 @@ export function useApplyPullRequestOTAUpdate() {
             updateId: fetchedUpdate.manifest.id,
           })
           try {
-            /*
-             * TODO: once expo-linking is upgraded to >= 57, enable this so the
-             * re-delivered initial URL doesn't trigger a redundant silent check
-             * after the reload.
-             */
-            // Linking.clearInitialURL()
             await reloadAsync({
               reloadScreenOptions: splash(t.scheme),
             })
@@ -459,7 +452,7 @@ export const splash = (scheme: 'light' | 'dark') => {
       : require('../../../assets/splash/splash-dark.png')
 
   return {
-    image: RNImage.resolveAssetSource(source).uri,
+    image: RNImage.resolveAssetSource(source)!.uri,
     imageFullScreen: true,
     imageResizeMode: 'cover',
     backgroundColor: scheme === 'light' ? '#006AFF' : '#002861',

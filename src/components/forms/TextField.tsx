@@ -14,6 +14,8 @@ import {mergeRefs} from '#/lib/merge-refs'
 import {
   applyFonts,
   atoms as a,
+  flatten,
+  type MutableTextStyle,
   platform,
   type TextStyleProp,
   tokens,
@@ -26,7 +28,7 @@ import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
 
 const Context = createContext<{
-  inputRef: React.RefObject<TextInput | null> | null
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null> | null
   isInvalid: boolean
   hovered: boolean
   onHoverIn: () => void
@@ -55,7 +57,7 @@ export type RootProps = React.PropsWithChildren<
 >
 
 export function Root({children, isInvalid = false, style}: RootProps) {
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -161,7 +163,9 @@ export type InputProps = Omit<
   value?: string
   onChangeText?: (value: string) => void
   isInvalid?: boolean
-  inputRef?: React.RefObject<TextInput | null> | React.ForwardedRef<TextInput>
+  inputRef?:
+    | React.RefObject<React.ComponentRef<typeof TextInput> | null>
+    | React.ForwardedRef<React.ComponentRef<typeof TextInput>>
   /**
    * Note: this currently falls back to the label if not specified. However,
    * most new designs have no placeholder. We should eventually remove this fallback
@@ -208,43 +212,41 @@ export function createInput(Component: typeof TextInput) {
 
     const refs = mergeRefs([ctx.inputRef, inputRef!].filter(Boolean))
 
-    const flattened = StyleSheet.flatten<TextStyle>([
-      a.relative,
-      a.z_20,
-      a.flex_1,
-      a.text_md,
-      t.atoms.text,
-      a.px_xs,
-      {
-        // paddingVertical doesn't work w/multiline - esb
-        lineHeight: a.text_md.fontSize * 1.2,
-        textAlignVertical: rest.multiline ? 'top' : undefined,
-        minHeight: rest.multiline ? 80 : undefined,
-        minWidth: 0,
-        paddingTop: 13,
-        paddingBottom: 13,
-      },
-      /*
-       * Margins are needed here to avoid autofill background overlapping the
-       * top and bottom borders - esb
-       */
-      web({
-        paddingTop: 11,
-        paddingBottom: 11,
-        marginTop: 2,
-        marginBottom: 2,
-      }),
-      style,
-    ])
+    const flattened: MutableTextStyle = {
+      ...flatten([
+        a.relative,
+        a.z_20,
+        a.flex_1,
+        a.text_md,
+        t.atoms.text,
+        a.px_xs,
+        {
+          // paddingVertical doesn't work w/multiline - esb
+          lineHeight: a.text_md.fontSize * 1.2,
+          textAlignVertical: rest.multiline ? 'top' : undefined,
+          minHeight: rest.multiline ? 80 : undefined,
+          minWidth: 0,
+          paddingTop: 13,
+          paddingBottom: 13,
+        },
+        /*
+         * Margins are needed here to avoid autofill background overlapping the
+         * top and bottom borders - esb
+         */
+        web({
+          paddingTop: 11,
+          paddingBottom: 11,
+          marginTop: 2,
+          marginBottom: 2,
+        }),
+        style,
+      ]),
+    }
 
     applyFonts(flattened, fonts.family)
 
-    // should always be defined on `typography`
-    // @ts-ignore
     if (flattened.fontSize) {
-      // @ts-ignore
       flattened.fontSize = Math.round(
-        // @ts-ignore
         flattened.fontSize * fonts.scaleMultiplier,
       )
     }

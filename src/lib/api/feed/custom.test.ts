@@ -1,11 +1,6 @@
-import {type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
 import {CustomFeedAPI} from './custom'
-
-jest.mock('@atproto/api', () => ({
-  AtpAgent: {appLabelers: []},
-  jsonStringToLex: (value: string) => JSON.parse(value),
-}))
 
 jest.mock('#/state/preferences/languages', () => ({
   getAppLanguageAsContentLanguage: () => '',
@@ -22,14 +17,14 @@ describe('CustomFeedAPI', () => {
     const originalFetch = global.fetch
     const fetchMock: jest.MockedFunction<typeof fetch> = jest
       .fn()
-      .mockResolvedValueOnce(new Response(JSON.stringify({feed: []})))
-      .mockResolvedValueOnce(
-        new Response(JSON.stringify({feed: [], cursor: 'next'})),
-      )
+      .mockResolvedValueOnce(Response.json({feed: []}))
+      .mockResolvedValueOnce(Response.json({feed: [], cursor: 'next'}))
     global.fetch = fetchMock
     const api = new CustomFeedAPI({
-      agent: {did: undefined} as unknown as AtpAgent,
-      feedParams: {feed: 'at://did:example:feed/app.bsky.feed.generator/test'},
+      client: {did: undefined} as unknown as Client,
+      feedParams: {
+        feed: 'at://did:example:feed/app.bsky.feed.generator/test',
+      },
     })
 
     try {
