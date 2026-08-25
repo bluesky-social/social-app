@@ -259,6 +259,9 @@ export function HeaderLabelerButtons({
     requireAuth(async (): Promise<void> => {
       playHaptic()
       const subscribe = !isSubscribed
+      const subscribeMetric = subscribe
+        ? 'moderation:subscribedToLabeler'
+        : 'moderation:unsubscribedFromLabeler'
 
       try {
         await toggleSubscription({
@@ -266,12 +269,7 @@ export function HeaderLabelerButtons({
           subscribe,
         })
 
-        ax.metric(
-          subscribe
-            ? 'moderation:subscribedToLabeler'
-            : 'moderation:unsubscribedFromLabeler',
-          {},
-        )
+        ax.metric(subscribeMetric, {})
       } catch (e: any) {
         reset()
         if (e.message === 'MAX_LABELERS') {
