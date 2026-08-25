@@ -18,8 +18,6 @@ export enum Features {
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
-  VideoAllow10MinuteEnable = 'video:allow-10-minute:enable',
-  VideoMultipartUploadEnable = 'video:multipart_upload:enable',
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
