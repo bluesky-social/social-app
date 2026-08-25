@@ -1,5 +1,10 @@
-import {useState} from 'react'
-import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {useLayoutEffect, useRef, useState} from 'react'
+import {
+  type StyleProp,
+  useWindowDimensions,
+  View,
+  type ViewStyle,
+} from 'react-native'
 import {type ModerationCause, type ModerationUI} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
@@ -10,7 +15,7 @@ import {
   unique,
 } from '#/lib/moderation'
 import {useSession} from '#/state/session'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useAlf, useTheme} from '#/alf'
 import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfo} from '#/components/icons/CircleInfo'
 import {
   LabelsOnMeDialog,
@@ -26,14 +31,6 @@ import {
 } from '#/components/moderation/PostLabelsDialog'
 import * as Pills from '#/components/Pills'
 import {type app, type com} from '#/lexicons'
-
-/**
- * Labels past this many collapse into a chip that opens the full list, so a
- * heavily labeled account cannot push the post off the screen. Hiding a single
- * label is not worth it - the chip is no smaller than the pill it replaces -
- * so the row only collapses once two or more would be hidden.
- */
-const MAX_VISIBLE_LABELS = 2
 
 export function PostAlerts({
   post,
@@ -55,6 +52,9 @@ export function PostAlerts({
   additionalCauses?: ModerationCause[] | Pills.AppModerationCause[]
 }) {
   const {currentAccount} = useSession()
+  const {t: l, i18n} = useLingui()
+  const {fontScale} = useWindowDimensions()
+  const alf = useAlf()
   const size: Pills.CommonProps['size'] = view === 'expanded' ? 'lg' : 'sm'
 
   const alerts = modui.alerts.filter(unique)
@@ -97,15 +97,6 @@ export function PostAlerts({
     ),
   )
 
-  if (
-    !modui.alert &&
-    !modui.inform &&
-    !additionalCauses?.length &&
-    !additionalLabels.length
-  ) {
-    return null
-  }
-
   const causes: Pills.AppModerationCause[] = [
     ...alerts,
     ...informs,
@@ -118,26 +109,127 @@ export function PostAlerts({
    */
   const labelCauses = causes.filter(cause => cause.type === 'label')
   const otherCauses = causes.filter(cause => cause.type !== 'label')
-  const hiddenLabelCount = labelCauses.length - MAX_VISIBLE_LABELS
-  const collapse = hiddenLabelCount > 1
-  const visibleLabels = collapse
-    ? labelCauses.slice(0, MAX_VISIBLE_LABELS)
-    : labelCauses
+
+  /*
+   * The row keeps only the label pills that fit on its first line, with the
+   * rest collapsed behind a "+n more" chip. Pill widths vary too much across
+   * labels, locales and font scales for a count cap to bound the row's
+   * height, so the fit is measured: the row commits uncollapsed with a hidden
+   * copy of the chip, a layout effect reads the laid-out widths, and the
+   * collapsed row replaces it before the frame is painted. A single label
+   * never collapses - the chip would take about as much space as the pill it
+   * hides - so measurement is skipped below two labels.
+   */
+  const isCollapsible = labelCauses.length >= 2
+  const measureKey = [
+    size,
+    i18n.locale,
+    fontScale,
+    alf.fonts.scale,
+    ...labelCauses.map(getModerationCauseKey),
+  ].join('|')
+  const [measured, setMeasured] = useState<{
+    key: string
+    rowWidth: number
+    visibleCount: number
+  } | null>(null)
+  const rowRef = useRef<View>(null)
+  const chipRef = useRef<View>(null)
+  const pillRefs = useRef<Array<View | null>>([])
+  const isMeasuring = isCollapsible && measured?.key !== measureKey
+
+  useLayoutEffect(() => {
+    if (!isMeasuring) return
+    const row = measureNode(rowRef.current)
+    const chip = measureNode(chipRef.current)
+    const pills = labelCauses.map((_, i) => measureNode(pillRefs.current[i]))
+    if (!row || !chip || pills.some(rect => rect === null)) {
+      return
+    }
+    const rects = pills as MeasuredRect[]
+    const gap = Pills.ROW_GAP[size]
+    let visibleCount: number
+    const firstTop = rects[0].top
+    if (rects.every(rect => Math.abs(rect.top - firstTop) < 1)) {
+      visibleCount = labelCauses.length
+    } else {
+      let used = chip.width
+      let count = 0
+      for (const rect of rects) {
+        if (used + gap + rect.width > row.width + 0.5) break
+        used += gap + rect.width
+        count++
+      }
+      visibleCount = count
+    }
+    setMeasured({key: measureKey, rowWidth: row.width, visibleCount})
+  }, [isMeasuring, measureKey, labelCauses, size])
+
+  if (
+    !modui.alert &&
+    !modui.inform &&
+    !additionalCauses?.length &&
+    !additionalLabels.length
+  ) {
+    return null
+  }
+
+  const visibleLabels =
+    !isMeasuring && measured?.key === measureKey
+      ? labelCauses.slice(0, measured.visibleCount)
+      : labelCauses
+  const hiddenCount = labelCauses.length - visibleLabels.length
 
   return (
-    <Pills.Row size={size} style={[size === 'sm' && {marginLeft: -3}, style]}>
-      {visibleLabels.map(cause => (
-        <Pills.Label
+    <Pills.Row
+      ref={rowRef}
+      size={size}
+      style={[size === 'sm' && {marginLeft: -3}, style]}
+      onLayout={e => {
+        const width = e.nativeEvent.layout.width
+        if (measured && Math.abs(measured.rowWidth - width) > 1) {
+          setMeasured(null)
+        }
+      }}>
+      {visibleLabels.map((cause, i) => (
+        <View
           key={getModerationCauseKey(cause)}
-          cause={cause}
-          size={size}
-          noBg={size === 'sm'}
-        />
+          ref={el => {
+            pillRefs.current[i] = el
+          }}
+          style={[a.flex_row]}>
+          <Pills.Label
+            cause={cause}
+            size={size}
+            noBg={size === 'sm'}
+            disableDetailsDialog={isMeasuring}
+          />
+        </View>
       ))}
-      {collapse ? (
+      {isMeasuring ? (
+        /*
+         * Hidden copy of the chip, rendered at its widest possible text so the
+         * measured fit holds for whatever count the real chip ends up showing.
+         */
+        <View
+          ref={chipRef}
+          style={[a.absolute, {opacity: 0}]}
+          pointerEvents="none"
+          accessible={false}>
+          <CollapsedLabelsChip
+            label={l`${plural(labelCauses.length, {
+              one: '# more label',
+              other: '# more labels',
+            })}`}
+            size={size}
+            disabled
+            onPress={() => {}}
+          />
+        </View>
+      ) : hiddenCount > 0 ? (
         <CollapsedLabels
           causes={labelCauses}
-          hiddenCount={hiddenLabelCount}
+          hiddenCount={hiddenCount}
           size={size}
         />
       ) : null}
@@ -170,7 +262,6 @@ function CollapsedLabels({
   hiddenCount: number
   size?: Pills.CommonProps['size']
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
   const listControl = usePostLabelsDialogControl()
   const detailsControl = useModerationDetailsDialogControl()
@@ -193,28 +284,61 @@ function CollapsedLabels({
         modcause={selectedCause}
       />
 
-      <Pills.LabelBase
+      <CollapsedLabelsChip
         label={l`${plural(causes.length, {
           one: '# label on this post',
           other: '# labels on this post',
         })}`}
-        cta={l`${plural(hiddenCount, {
-          one: '# more label',
-          other: '# more labels',
-        })}`}
-        size={size}
-        noBg={size === 'sm'}
-        icon={
-          <CircleInfo
-            width={size === 'lg' ? 16 : 12}
-            fill={t.atoms.text_contrast_medium.color}
-          />
+        cta={
+          hiddenCount === causes.length
+            ? l`${plural(hiddenCount, {
+                one: '# label',
+                other: '# labels',
+              })}`
+            : l`${plural(hiddenCount, {
+                one: '# more label',
+                other: '# more labels',
+              })}`
         }
+        size={size}
         onPress={() => {
           listControl.open()
         }}
       />
     </View>
+  )
+}
+
+function CollapsedLabelsChip({
+  label,
+  cta,
+  size,
+  disabled,
+  onPress,
+}: {
+  label: string
+  cta?: string
+  size?: Pills.CommonProps['size']
+  disabled?: boolean
+  onPress: () => void
+}) {
+  const t = useTheme()
+
+  return (
+    <Pills.LabelBase
+      label={label}
+      cta={cta}
+      size={size}
+      noBg={size === 'sm'}
+      disabled={disabled}
+      icon={
+        <CircleInfo
+          width={size === 'lg' ? 16 : 12}
+          fill={t.atoms.text_contrast_medium.color}
+        />
+      }
+      onPress={onPress}
+    />
   )
 }
 
@@ -259,4 +383,19 @@ function AdditionalLabels({
       />
     </View>
   )
+}
+
+type MeasuredRect = {top: number; width: number}
+
+/**
+ * Synchronous layout read. `getBoundingClientRect` is available on web
+ * elements and, on native, on Fabric host components via React Native's DOM
+ * node APIs. Returns null when the node is unmounted or the API is missing,
+ * in which case the row simply stays uncollapsed.
+ */
+function measureNode(node: View | null): MeasuredRect | null {
+  const el = node as null | {getBoundingClientRect?: () => MeasuredRect}
+  if (!el?.getBoundingClientRect) return null
+  const rect = el.getBoundingClientRect()
+  return {top: rect.top, width: rect.width}
 }
