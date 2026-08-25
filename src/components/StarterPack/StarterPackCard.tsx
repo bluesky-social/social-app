@@ -62,6 +62,7 @@ export function Card({
   const {_} = useLingui()
   const t = useTheme()
   const {currentAccount} = useSession()
+  const isOwnStarterPack = creator?.did === currentAccount?.did
 
   if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
@@ -82,7 +83,7 @@ export function Card({
             emoji
             style={[a.leading_snug, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
-            {creator?.did === currentAccount?.did
+            {isOwnStarterPack
               ? _(msg`Starter pack by you`)
               : _(msg`Starter pack by ${sanitizeHandle(creator.handle, '@')}`)}
           </Text>
