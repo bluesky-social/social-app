@@ -283,7 +283,7 @@ export function ModerationScreenInner({
             <SubItem
               title={l`Moderation inbox`}
               icon={Inbox}
-              badge={3}
+              badge={3} // TODO This is a placeholder value. -dsb
               style={[
                 t.atoms.bg_contrast_25,
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
