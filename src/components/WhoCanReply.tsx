@@ -1,11 +1,5 @@
 import {Fragment, useMemo, useRef} from 'react'
-import {
-  Keyboard,
-  Platform,
-  type StyleProp,
-  View,
-  type ViewStyle,
-} from 'react-native'
+import {Keyboard, type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -32,7 +26,7 @@ import {Group3_Stroke2_Corner0_Rounded as GroupIcon} from '#/components/icons/Gr
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_NATIVE, IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -110,14 +104,9 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
         }
         onPress={onPressOpen}
         {...(isThreadAuthor
-          ? Platform.select({
-              web: {
-                onHoverIn: prefetch,
-              },
-              native: {
-                onPressIn: prefetch,
-              },
-            })
+          ? IS_WEB
+            ? {onHoverIn: prefetch}
+            : {onPressIn: prefetch}
           : {})}
         hitSlop={HITSLOP_10}>
         {({hovered, focused, pressed}) => (

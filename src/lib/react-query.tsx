@@ -1,4 +1,4 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {
@@ -168,8 +168,8 @@ function QueryProviderInner({
   children: React.ReactNode
   currentDid: string | undefined
 }) {
-  const initialDid = useRef(currentDid)
-  if (currentDid !== initialDid.current) {
+  const [initialDid] = useState(currentDid)
+  if (currentDid !== initialDid) {
     throw Error(
       'Something is very wrong. Expected did to be stable due to key above.',
     )
