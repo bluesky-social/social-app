@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {type LayoutChangeEvent, View} from 'react-native'
+import {View} from 'react-native'
 import {api} from '@bsky/sdk'
 import {type ModerationCause} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -42,11 +42,9 @@ export function Row({
   style,
   size = 'sm',
   ref,
-  onLayout,
 }: {
   children: React.ReactNode | React.ReactNode[]
   ref?: React.Ref<View>
-  onLayout?: (event: LayoutChangeEvent) => void
 } & CommonProps &
   ViewStyleProp) {
   const styles = useMemo(() => {
@@ -59,10 +57,7 @@ export function Row({
     }
   }, [size])
   return (
-    <View
-      ref={ref}
-      onLayout={onLayout}
-      style={[a.flex_row, a.flex_wrap, a.gap_xs, styles, style]}>
+    <View ref={ref} style={[a.flex_row, a.flex_wrap, a.gap_xs, styles, style]}>
       {children}
     </View>
   )

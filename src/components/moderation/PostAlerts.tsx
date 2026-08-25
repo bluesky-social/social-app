@@ -53,7 +53,7 @@ export function PostAlerts({
 }) {
   const {currentAccount} = useSession()
   const {t: l, i18n} = useLingui()
-  const {fontScale} = useWindowDimensions()
+  const {fontScale, width: windowWidth} = useWindowDimensions()
   const alf = useAlf()
   const size: Pills.CommonProps['size'] = view === 'expanded' ? 'lg' : 'sm'
 
@@ -121,16 +121,20 @@ export function PostAlerts({
    * hides - so measurement is skipped below two labels.
    */
   const isCollapsible = labelCauses.length >= 2
+  /*
+   * The window width stands in for the row's width: a resize or rotation
+   * changes the key, which throws away the measurement and re-measures.
+   */
   const measureKey = [
     size,
     i18n.locale,
     fontScale,
     alf.fonts.scale,
+    windowWidth,
     ...labelCauses.map(getModerationCauseKey),
   ].join('|')
   const [measured, setMeasured] = useState<{
     key: string
-    rowWidth: number
     visibleCount: number
   } | null>(null)
   const rowRef = useRef<View>(null)
@@ -162,7 +166,7 @@ export function PostAlerts({
       }
       visibleCount = count
     }
-    setMeasured({key: measureKey, rowWidth: row.width, visibleCount})
+    setMeasured({key: measureKey, visibleCount})
   }, [isMeasuring, measureKey, labelCauses, size])
 
   if (
@@ -184,13 +188,7 @@ export function PostAlerts({
     <Pills.Row
       ref={rowRef}
       size={size}
-      style={[size === 'sm' && {marginLeft: -3}, style]}
-      onLayout={e => {
-        const width = e.nativeEvent.layout.width
-        if (measured && Math.abs(measured.rowWidth - width) > 1) {
-          setMeasured(null)
-        }
-      }}>
+      style={[size === 'sm' && {marginLeft: -3}, style]}>
       {visibleLabels.map((cause, i) => (
         <View
           key={getModerationCauseKey(cause)}
