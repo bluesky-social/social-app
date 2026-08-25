@@ -171,7 +171,7 @@ function SubItem({
               ]}>
               {badge >= UNREAD_REQUEST_CAP
                 ? l({
-                    message: `${UNREAD_REQUEST_CAP - 1}+`,
+                    message: `${i18n.number(UNREAD_REQUEST_CAP - 1)}+`,
                     comment:
                       'Displayed when the number of notifications exceeds the cap – for example, 99+ requests',
                   })
