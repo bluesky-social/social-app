@@ -128,9 +128,10 @@ function SubItem({
 }: ViewStyleProp & {
   title: string
   icon: React.ComponentType<SVGIconProps>
-  badge?: string
+  badge?: number
 }) {
   const t = useTheme()
+  const {i18n} = useLingui()
   return (
     <View
       style={[
@@ -166,7 +167,7 @@ function SubItem({
                 a.font_semi_bold,
                 {color: t.palette.white, fontVariant: ['tabular-nums']},
               ]}>
-              {badge}
+              {i18n.number(badge)}
             </Text>
           </View>
         ) : null}
@@ -282,7 +283,7 @@ export function ModerationScreenInner({
             <SubItem
               title={l`Moderation inbox`}
               icon={Inbox}
-              badge="3"
+              badge={3}
               style={[
                 t.atoms.bg_contrast_25,
                 (state.hovered || state.pressed) && [t.atoms.bg_contrast_50],
