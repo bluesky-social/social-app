@@ -683,9 +683,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const bundle = state.currentBundleState.bundle as unknown as
     SessionBundle | PublicSessionBundle
 
-  // @ts-expect-error window type is not declared, debug only
-  // eslint-disable-next-line react-hooks/immutability
-  if (__DEV__ && IS_WEB) window.bundle = bundle
+  useEffect(() => {
+    if (!__DEV__ || !IS_WEB) return
+    // @ts-expect-error window type is not declared, debug only
+    window.bundle = bundle
+  }, [bundle])
 
   const currentBundleRef = useRef(bundle)
   /*

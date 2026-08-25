@@ -101,35 +101,33 @@ function ContentHiderActive({
       }
     }
 
+    /*
+     * A plain loop rather than `.filter()`: the running flag has to be mutated
+     * from the enclosing scope, which React Compiler cannot lower inside a
+     * callback. Keeps only the first adult-content label, as before.
+     */
+    const selfBlurCauses = []
     let hasAdultContentLabel = false
-    const selfBlurNames = modui.blurs
-      .filter(cause => {
-        if (cause.type !== 'label') {
-          return false
-        }
-        if (cause.source.type !== 'user') {
-          return false
-        }
-        if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
-          if (hasAdultContentLabel) {
-            return false
-          }
-          hasAdultContentLabel = true
-        }
-        return true
-      })
-      .slice(0, 2)
-      .map(cause => {
-        if (cause.type !== 'label') {
-          return
-        }
+    for (const cause of modui.blurs) {
+      if (cause.type !== 'label') continue
+      if (cause.source.type !== 'user') continue
+      if (ADULT_CONTENT_LABELS.includes(cause.label.val as AdultSelfLabel)) {
+        if (hasAdultContentLabel) continue
+        hasAdultContentLabel = true
+      }
+      selfBlurCauses.push(cause)
+    }
+    const selfBlurNames = selfBlurCauses.slice(0, 2).map(cause => {
+      if (cause.type !== 'label') {
+        return
+      }
 
-        const def = cause.labelDef || getDefinition(labelDefs, cause.label)
-        if (def.identifier === 'porn' || def.identifier === 'sexual') {
-          return l`Adult Content`
-        }
-        return getLabelStrings(i18n.locale, globalLabelStrings, def).name
-      })
+      const def = cause.labelDef || getDefinition(labelDefs, cause.label)
+      if (def.identifier === 'porn' || def.identifier === 'sexual') {
+        return l`Adult Content`
+      }
+      return getLabelStrings(i18n.locale, globalLabelStrings, def).name
+    })
 
     if (selfBlurNames.length === 0) {
       return desc.name
