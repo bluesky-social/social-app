@@ -1,0 +1,144 @@
+---
+name: Deploy Production OTA
+
+on:
+  push:
+    tags:
+      - 'ota-*'
+
+permissions:
+  contents: read
+
+env:
+  DENIS_RELEASE_TAG: denis-v0.1.1
+
+jobs:
+  validate:
+    if: github.repository == 'bluesky-social/social-app'
+    name: Validate production OTA
+    runs-on: ubuntu-latest
+    outputs:
+      runtime-version: ${{ steps.target.outputs.runtime-version }}
+      ios-build-number: ${{ steps.target.outputs.ios-build-number }}
+      android-version-code: ${{ steps.target.outputs.android-version-code }}
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: 🧐 Resolve and validate OTA target
+        id: target
+        run: bash scripts/resolveOtaTarget.sh
+
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - name: 📷 Check native fingerprint and install dependencies
+        id: fingerprint
+        uses: bluesky-social/github-actions/fingerprint-native@abc6a46eb4badf243f55bfd7d6cec42722456300 # v0.3.0
+        with:
+          profile: production
+          previous-commit-tag: ${{ steps.target.outputs.runtime-version }}
+
+      - name: 🛑 Reject native changes
+        if: ${{ steps.fingerprint.outputs.includes-changes }}
+        run: |
+          echo "::error::Production OTA contains native changes and requires a full app release."
+          exit 1
+
+      - name: 🔤 Compile translations
+        uses: ./.github/actions/compile-i18n
+
+      - name: 🧹 Lint check
+        run: pnpm lint
+
+      - name: 💅 Prettier check
+        run: pnpm prettier --check .
+
+      - name: 🔎 Type check
+        run: pnpm typecheck
+
+  publish:
+    name: Publish production OTA
+    needs: [validate]
+    runs-on: ubuntu-latest
+    environment: production-ota
+    permissions:
+      id-token: write
+      contents: read
+    concurrency:
+      group: production-ota-deploy
+      cancel-in-progress: false
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+
+      - name: 🔧 Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - name: 🔑 Check for EXPO_TOKEN
+        run: >
+          if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
+            echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets."
+            exit 1
+          fi
+
+      - name: 🔨 Setup EAS
+        uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
+        with:
+          eas-version: '19.0.5'
+          packager: 'pnpm --allow-build=dtrace-provider'
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🪛 Setup jq
+        uses: dcarbone/install-jq-action@4fcb5062d7ce9bc4382d1a352d19ba3ba2c317c1 # v4.0.1
+
+      - name: ✏️ Write environment variables
+        id: env
+        uses: ./.github/actions/write-env
+        with:
+          env-token: ${{ secrets.ENV_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          bitdrift-api-key: ${{ secrets.BITDRIFT_API_KEY }}
+          gcp-project-id: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+          google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+          expo-public-env: production
+
+      - name: 🏗️ Create Bundle
+        run: >
+          SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE=${{ steps.env.outputs.release-version }}
+          SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
+          pnpm export
+
+      - name: ☁️ Configure AWS credentials (denis)
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          role-to-assume: arn:aws:iam::007404326489:role/denis-ci-publish
+          aws-region: us-east-2
+
+      - name: ⬇️ Setup denis CLI
+        uses: ./.github/actions/setup-denis
+        with:
+          release-tag: ${{ env.DENIS_RELEASE_TAG }}
+          app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
+          private-key: ${{ secrets.SYNC_INTERNAL_PK }}
+
+      - name: 🚀 Publish OTA to denis (S3)
+        run: pnpm use-build-number bash scripts/denisPublish.sh
+        env:
+          RUNTIME_VERSION: ${{ needs.validate.outputs.runtime-version }}
+          CHANNEL_NAME: production
+          BSKY_IOS_BUILD_NUMBER: ${{ needs.validate.outputs.ios-build-number }}
+          BSKY_ANDROID_VERSION_CODE: ${{ needs.validate.outputs.android-version-code }}

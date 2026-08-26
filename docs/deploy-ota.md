@@ -86,17 +86,14 @@ git push origin ota-1.131.1-1
 The sequence in the filename and tag must match. See [`.ota/README.md`](../.ota/README.md)
 for the complete contract.
 
-### 7. Run the GitHub actions
-You'll need to run two separate actions: one to deploy the iOS/Android OTA
-itself, and one to build the web Docker container.
+Pushing the tag automatically starts the **Deploy Production OTA** workflow.
+It validates and prepares the exact tagged bundle, then waits at the protected
+`production-ota` environment before publishing.
 
-**For the iOS/Android OTA,** head to [Actions > Bundle and Deploy EAS
-Update](https://github.com/bluesky-social/social-app/actions/workflows/bundle-deploy-eas-update.yml)
-and run the action.
+### 7. Build web
 
-| Steps |     |
-| ----- | --- |
-| Select your immutable tag `ota-1.x.0-x`, select `production` in the dropdown, and click "Run workflow". Runtime and build numbers are read from the reviewed OTA intent. | ![workflow](./img/ota_action.png) |
+The production OTA and TestFlight OTA workflows are separate. Production never
+uses the automatic TestFlight build-number or native-rebuild behavior.
 
 > [!NOTE]
 > Production OTAs are bound to the specific native build they target. The

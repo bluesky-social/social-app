@@ -23,11 +23,11 @@ git tag ota-1.131.1-1 <commit-sha>
 git push origin ota-1.131.1-1
 ```
 
-Run **Bundle and Deploy EAS Update** from that tag and select `production`. The
-workflow rejects branches, mismatched versions, missing native release tags,
-and OTA commits that are not descended from the native release. Runtime and
-build numbers are read from the intent; production values typed into the
-workflow form are ignored.
+Pushing the tag starts **Deploy Production OTA** automatically. The workflow
+rejects mismatched versions, missing native release tags, native changes, and
+OTA commits that are not descended from the native release. Runtime and build
+numbers are read from the intent. Publishing waits at the protected
+`production-ota` environment.
 
 Use `ota-1.131.1-2` and `.ota/1.131.1-2.json` for the next OTA. Base it on the
 previous OTA so that each update contains all earlier fixes.

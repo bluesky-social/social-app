@@ -16,18 +16,8 @@ is_build_number() {
   [[ "$1" =~ ^[1-9][0-9]*$ ]]
 }
 
-if [ "${CHANNEL:-testflight}" != "production" ]; then
-  if [ -n "${INPUT_RUNTIME_VERSION:-}" ] && ! is_version "$INPUT_RUNTIME_VERSION"; then
-    error "runtimeVersion must use x.y.z format"
-  fi
-  echo "runtime-version=${INPUT_RUNTIME_VERSION:-}" >> "$GITHUB_OUTPUT"
-  echo "ios-build-number=" >> "$GITHUB_OUTPUT"
-  echo "android-version-code=" >> "$GITHUB_OUTPUT"
-  exit 0
-fi
-
 [ "${GITHUB_REF_TYPE:-}" = "tag" ] ||
-  error "Production OTAs must be dispatched from an immutable OTA tag, not '${GITHUB_REF_NAME:-unknown}'."
+  error "Production OTAs must run from an immutable OTA tag, not '${GITHUB_REF_NAME:-unknown}'."
 
 if [[ ! "${GITHUB_REF_NAME:-}" =~ ^ota-([0-9]+\.[0-9]+\.[0-9]+)-([1-9][0-9]*)$ ]]; then
   error "Production OTA tag must use ota-<version>-<sequence>, for example ota-1.131.1-1."
