@@ -3,12 +3,13 @@ import {type DidDocument, getPdsEndpoint} from '@atproto/common-web'
 import {type HandleString} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {DEFAULT_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
+import {DEFAULT_SERVICE} from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
-import {createServiceClient} from '#/lib/lexClient'
 import {isNetworkError} from '#/lib/strings/errors'
+import {getErrorStatus} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
+import {getPublicAppviewClient} from '#/state/session/clients'
 import {com} from '#/lexicons'
 
 const RQKEY_ROOT = 'pds-detection'
@@ -149,14 +150,7 @@ export async function resolvePdsForIdentifier(
   identifier: string,
 ): Promise<{did: string; pdsUrl: string | null} | null> {
   const norm = normalizeIdentifier(identifier)
-  /*
-   * This is a pre-auth request. Use an isolated service client rather than the
-   * shared public appview client, whose global moderation configuration is
-   * intended for appview content reads and can change independently of this
-   * login flow. This also matches the pre-auth handle resolution used during
-   * signup.
-   */
-  const client = createServiceClient(PUBLIC_BSKY_SERVICE)
+  const client = getPublicAppviewClient()
   try {
     let did: string
     if (norm.startsWith('did:')) {
@@ -194,6 +188,13 @@ export async function resolvePdsForIdentifier(
       isNetworkError: isNetworkError(err),
     })
     if (isNetworkError(err)) throw err
+    const status = getErrorStatus(err)
+    if (status !== undefined && isTransientHttpStatus(status)) {
+      throw new Error(
+        `Network request failed: resolveHandle returned ${status}`,
+        {cause: err},
+      )
+    }
     return null
   }
 }
