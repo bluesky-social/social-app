@@ -63,7 +63,30 @@ Run this and commit the result as the last commit on the OTA branch.
 pnpm intl:release
 ```
 
-### 6. Run the GitHub actions
+### 6. Declare and tag the OTA
+
+Add a reviewed OTA intent at `.ota/<version>-<sequence>.json`. For example,
+`.ota/1.131.1-1.json`:
+
+```json
+{
+  "runtimeVersion": "1.131.1",
+  "iosBuildNumber": 12345,
+  "androidVersionCode": 67890
+}
+```
+
+Commit the intent, then tag the exact commit that should be deployed:
+
+```sh
+git tag ota-1.131.1-1 <commit-sha>
+git push origin ota-1.131.1-1
+```
+
+The sequence in the filename and tag must match. See [`.ota/README.md`](../.ota/README.md)
+for the complete contract.
+
+### 7. Run the GitHub actions
 You'll need to run two separate actions: one to deploy the iOS/Android OTA
 itself, and one to build the web Docker container.
 
@@ -73,20 +96,12 @@ and run the action.
 
 | Steps |     |
 | ----- | --- |
-| Select your OTA branch `1.x.0-ota-x`, select `production` in the dropdown, enter the git tag of the latest release `1.x.0`, enter the iOS build number and Android version code you found in **Step 1**, and click "Run workflow"  | ![workflow](./img/ota_action.png) |
+| Select your immutable tag `ota-1.x.0-x`, select `production` in the dropdown, and click "Run workflow". Runtime and build numbers are read from the reviewed OTA intent. | ![workflow](./img/ota_action.png) |
 
 > [!NOTE]
-> Production OTAs are bound to the specific native build they target, so the
-> workflow requires the build numbers to be entered manually. There is no need
-> to change the global EAS build counters (and doing so is no longer necessary
-> for OTAs - they are only used when producing new native builds).
-
-> [!NOTE]
-> If you do enter an incorrect version here, the deployment will either:
-> - Fail, because the action cannot find a commit with your misentered version
-> - Succeed, but with no users receiving the update. This is because the
->   version and build numbers you entered will not match any clients in the
->   wild, so none will be able to receive the update.
+> Production OTAs are bound to the specific native build they target. The
+> workflow rejects branches and validates that the tag, intent, package
+> version, native release ancestry, and build numbers agree before publishing.
 
 **For web,** head to [Actions >
 build-and-push-bskyweb-aws](https://github.com/bluesky-social/social-app/actions/workflows/build-and-push-bskyweb-aws.yaml)
@@ -96,13 +111,13 @@ and run the action.
 | ----- | --- |
 | Select your OTA branch `1.x.0-ota-x` and click "Run workflow" | ![workflow](./img/web_action.png) |
 
-### 7. Deploy web
+### 8. Deploy web
 
 Once the web Docker container build finishes, go to your `1.x.0-ota-x` branch,
 copy the most recent commit hash. Post this hash in `#ops-deploys` and request
 someone with web deploy access deploy the built container.
 
-### 8. Confirm successful deployment
+### 9. Confirm successful deployment
 
 In about five minutes, the new deployment should be deployed and devices will
 begin downloading and installing in the background.

@@ -15,16 +15,8 @@ on:
           - production
       runtimeVersion:
         type: string
-        description: Runtime version (in x.x.x format) that this update is for
-        required: true
-      iosBuildNumber:
-        type: string
-        description: iOS build number of the native build this update targets
-          (required for production)
-      androidVersionCode:
-        type: string
-        description: Android version code of the native build this update
-          targets (required for production)
+        description: Runtime version for non-production manual updates (production derives this from the OTA manifest)
+        required: false
 
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
@@ -54,42 +46,32 @@ jobs:
       # A version bump forces a native build even if the fingerprint is unchanged
       changes-detected: ${{ steps.fingerprint.outputs.includes-changes ||
         steps.version.outputs.version-changed }}
+      runtime-version: ${{ steps.target.outputs.runtime-version }}
+      ios-build-number: ${{ steps.target.outputs.ios-build-number }}
+      android-version-code: ${{ steps.target.outputs.android-version-code }}
 
     steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      # A production OTA is an immutable, reviewed release artifact. The tag
+      # pins the bundle source SHA and its committed manifest pins the native
+      # builds that are allowed to receive it.
+      - name: 🧐 Resolve and validate OTA target
+        id: target
+        env:
+          CHANNEL: ${{ inputs.channel || 'testflight' }}
+          INPUT_RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
+        run: bash scripts/resolveOtaTarget.sh
+
       - name: 🔑 Check for EXPO_TOKEN
         run: >
           if [ -z "${{ secrets.EXPO_TOKEN }}" ]; then
             echo "You must provide an EXPO_TOKEN secret linked to this project's Expo account in this repo's secrets. Learn more: https://docs.expo.dev/eas-update/github-actions"
             exit 1
           fi
-
-      # Validate the version if one is supplied. This should generally happen if the update is for a production client
-      - name: 🧐 Validate version
-        env:
-          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
-        if: ${{ inputs.runtimeVersion }}
-        run: |
-          [[ "$RUNTIME_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && echo "Version is valid" || exit 1
-
-      # Production OTAs are bound to the specific native build they target, so
-      # the build numbers must be entered manually rather than read from the
-      # global EAS counters, which advance with every testflight build and so
-      # point past older production releases
-      - name: 🧐 Validate build numbers
-        if: ${{ inputs.channel == 'production' }}
-        env:
-          IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
-          ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
-        run: |
-          [[ "$IOS_BUILD_NUMBER" =~ ^[0-9]+$ ]] ||
-            (echo "A numeric iosBuildNumber is required for production updates" && exit 1)
-          [[ "$ANDROID_VERSION_CODE" =~ ^[0-9]+$ ]] ||
-            (echo "A numeric androidVersionCode is required for production updates" && exit 1)
-
-      - name: ⬇️ Checkout
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
 
       - name: ⬇️ Fetch commits from base branch
         if: ${{ github.ref != 'refs/heads/main' }}
@@ -160,7 +142,7 @@ jobs:
         uses: bluesky-social/github-actions/fingerprint-native@abc6a46eb4badf243f55bfd7d6cec42722456300 # v0.3.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
-          previous-commit-tag: ${{ inputs.runtimeVersion }}
+          previous-commit-tag: ${{ steps.target.outputs.runtime-version }}
           # The recordBaseline job uploads this marker after a successful deploy;
           # on the native path, that requires both builds to succeed. A missing
           # marker forces native builds so they can seed the baseline safely.
@@ -247,12 +229,12 @@ jobs:
           !steps.version.outputs.version-changed }}
         run: pnpm use-build-number bash scripts/denisPublish.sh
         env:
-          RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
+          RUNTIME_VERSION: ${{ steps.target.outputs.runtime-version }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
-          # When set (required for production), these take precedence over the
-          # global EAS counters inside the use-build-number wrapper
-          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
-          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
+          # Production values come from the reviewed manifest. On automatic
+          # testflight runs these remain empty and the wrapper reads EAS.
+          BSKY_IOS_BUILD_NUMBER: ${{ steps.target.outputs.ios-build-number }}
+          BSKY_ANDROID_VERSION_CODE: ${{ steps.target.outputs.android-version-code }}
 
   buildIfNecessaryIOS:
     name: Build and Submit iOS
