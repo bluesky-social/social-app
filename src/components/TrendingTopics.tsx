@@ -88,7 +88,7 @@ export function TrendingTopicLink({
 
 export function useTrendingTopicSeen(
   context: Metrics['trendingTopic:seen']['context'],
-  feedUri: string,
+  feedUri: string | undefined,
   rank: number,
   recId?: string,
   feedSliceIndex?: number,
@@ -111,10 +111,10 @@ export function useTrendingTopicSeen(
 
 export function getTrendingTopicFeedUri(
   topic: app.bsky.unspecced.defs.TrendView,
-) {
+): string | undefined {
   const match = topic.link.match(/^\/profile\/([^/]+)\/feed\/([^/?#]+)/)
 
-  if (!match) return topic.link
+  if (!match) return undefined
 
   return makeRecordUri(
     decodeURIComponent(match[1]),
