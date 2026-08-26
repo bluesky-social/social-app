@@ -27,6 +27,7 @@ import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {SubtleHover} from '#/components/SubtleHover'
 import {
+  getTrendingTopicFeedUri,
   TrendingTopicsPrompt,
   useTrendingTopicSeen,
 } from '#/components/TrendingTopics'
@@ -154,6 +155,7 @@ function Inner({feedSliceIndex}: {feedSliceIndex: number}) {
                       onPress={() => {
                         ax.metric('trendingTopic:click', {
                           context: 'interstitial',
+                          feedUri: getTrendingTopicFeedUri(trend),
                           rank,
                           feedSliceIndex,
                           recId: trending.recId,
@@ -195,7 +197,13 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('interstitial', rank, recId, feedSliceIndex)
+  useTrendingTopicSeen(
+    'interstitial',
+    getTrendingTopicFeedUri(trend),
+    rank,
+    recId,
+    feedSliceIndex,
+  )
 
   return (
     <Link
