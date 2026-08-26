@@ -24,11 +24,11 @@ import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/N
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
-import {atoms as a, useTheme, utils} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
-import {IS_LIQUID_GLASS} from '#/env'
+import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -99,10 +99,11 @@ function NewNotificationsScreenInner() {
       }}>
       <NotificationsHeader onHeightChange={setHeaderOffset}>
         <Pager.TabBar>
-          {({selectedPage, selectPage}) => (
+          {({selectedPage, selectPage, dragProgress}) => (
             <TabPills
               tabs={tabs}
               selectedTab={tabs[selectedPage].key}
+              dragProgress={dragProgress}
               onSelectTab={tab =>
                 selectPage(tabs.findIndex(candidate => candidate.key === tab))
               }
@@ -134,6 +135,7 @@ function NotificationsHeader({
   const t = useTheme()
   const headerMode = useHomeHeaderMode()
   const {headerHeight} = useShellLayout()
+  const {gtMobile} = useBreakpoints()
   const insets = useSafeAreaInsets()
   const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
 
@@ -181,6 +183,18 @@ function NotificationsHeader({
         <View
           pointerEvents="none"
           style={[a.absolute, a.inset_0, t.atoms.bg]}
+        />
+      )}
+      {IS_WEB && gtMobile && (
+        <Layout.Center
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.border_x,
+            t.atoms.border_contrast_low,
+            {maxWidth: Layout.CENTER_COLUMN_WIDTH + 2},
+          ]}
         />
       )}
       <Animated.View
