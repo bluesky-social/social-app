@@ -6,7 +6,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
@@ -19,7 +18,7 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function useLikedByQuery(resolvedUri: string | undefined) {
   const client = useAppviewClient()
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.feed.getLikes.$OutputBody,
     Error,
     InfiniteData<app.bsky.feed.getLikes.$OutputBody>,
@@ -39,10 +38,6 @@ export function useLikedByQuery(resolvedUri: string | undefined) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!resolvedUri,
   })
-  const itemCount =
-    query.data?.pages.reduce((count, page) => count + page.likes.length, 0) ?? 0
-  useAutoPagination(query, itemCount, PAGE_SIZE)
-  return query
 }
 
 export function* findAllProfilesInQueryData(

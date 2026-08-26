@@ -13,7 +13,6 @@ import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
-  useAutoPagination,
 } from './util'
 
 const PAGE_SIZE = 30
@@ -24,7 +23,7 @@ export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
 
 export function usePostQuotesQuery(resolvedUri: string | undefined) {
   const client = useAppviewClient()
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.feed.getQuotes.$OutputBody,
     Error,
     InfiniteData<app.bsky.feed.getQuotes.$OutputBody>,
@@ -70,10 +69,6 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
       }
     },
   })
-  const itemCount =
-    query.data?.pages.reduce((count, page) => count + page.posts.length, 0) ?? 0
-  useAutoPagination(query, itemCount, PAGE_SIZE)
-  return query
 }
 
 export function* findAllProfilesInQueryData(

@@ -5,7 +5,6 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
-import {useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {type Match} from '#/components/contacts/state'
 import {app} from '#/lexicons'
@@ -32,7 +31,7 @@ export const findContactsGetMatchesQueryKey = [RQ_KEY_ROOT, 'matches']
 export function useContactsMatchesQuery() {
   const client = useAppviewClient()
 
-  const query = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: findContactsGetMatchesQueryKey,
     queryFn: async ({pageParam}) => {
       return await client.call(app.bsky.contact.getMatches, {
@@ -43,11 +42,6 @@ export function useContactsMatchesQuery() {
     getNextPageParam: lastPage => lastPage.cursor,
     staleTime: STALE.MINUTES.ONE,
   })
-  const itemCount =
-    query.data?.pages.reduce((count, page) => count + page.matches.length, 0) ??
-    0
-  useAutoPagination(query, itemCount, 50)
-  return query
 }
 
 export function optimisticRemoveMatch(queryClient: QueryClient, did: string) {

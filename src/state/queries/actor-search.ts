@@ -7,7 +7,6 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
@@ -30,7 +29,7 @@ export function useActorSearch({
   limit?: number
 }) {
   const client = useAppviewClient()
-  const result = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.actor.searchActors.$OutputBody,
     Error,
     InfiniteData<app.bsky.actor.searchActors.$OutputBody>,
@@ -52,11 +51,6 @@ export function useActorSearch({
     placeholderData: maintainData ? keepPreviousData : undefined,
     select,
   })
-  const itemCount =
-    result.data?.pages.reduce((count, page) => count + page.actors.length, 0) ??
-    0
-  useAutoPagination(result, itemCount, limit)
-  return result
 }
 
 function select(data: InfiniteData<app.bsky.actor.searchActors.$OutputBody>) {

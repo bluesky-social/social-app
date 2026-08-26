@@ -6,7 +6,7 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {createQueryKey, useAutoPagination} from '#/state/queries/util'
+import {createQueryKey} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
@@ -26,7 +26,7 @@ export function useListsWithMembershipQuery({
 }) {
   const client = useAppviewClient()
 
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.graph.getListsWithMembership.$OutputBody,
     Error,
     InfiniteData<app.bsky.graph.getListsWithMembership.$OutputBody>,
@@ -46,13 +46,6 @@ export function useListsWithMembershipQuery({
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
-  const itemCount =
-    query.data?.pages.reduce(
-      (count, page) => count + page.listsWithMembership.length,
-      0,
-    ) ?? 0
-  useAutoPagination(query, itemCount, 50)
-  return query
 }
 
 export function updateListMembershipOptimistically({

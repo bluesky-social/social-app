@@ -9,7 +9,6 @@ import {
 } from '@tanstack/react-query'
 
 import {isRecordNotFoundError} from '#/lib/xrpc-error'
-import {useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import * as Toast from '#/components/Toast'
 import {app} from '#/lexicons'
@@ -20,7 +19,7 @@ export const RQKEY_getNotificationDeclaration = ['notification-declaration']
 export function useActivitySubscriptionsQuery() {
   const client = useAppviewClient()
 
-  const query = useInfiniteQuery({
+  return useInfiniteQuery({
     queryKey: RQKEY_getActivitySubscriptions,
     queryFn: async ({pageParam}) => {
       return await client.call(
@@ -31,13 +30,6 @@ export function useActivitySubscriptionsQuery() {
     initialPageParam: undefined as string | undefined,
     getNextPageParam: prev => prev.cursor,
   })
-  const itemCount =
-    query.data?.pages.reduce(
-      (count, page) => count + page.subscriptions.length,
-      0,
-    ) ?? 0
-  useAutoPagination(query, itemCount, 50)
-  return query
 }
 
 export function useNotificationDeclarationQuery() {

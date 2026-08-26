@@ -6,7 +6,6 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
@@ -29,7 +28,7 @@ export function useStarterPackSearch({
   limit?: number
 }) {
   const client = useAppviewClient()
-  const result = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.graph.searchStarterPacksV2.$OutputBody,
     Error,
     InfiniteData<app.bsky.graph.searchStarterPacksV2.$OutputBody>,
@@ -51,13 +50,6 @@ export function useStarterPackSearch({
     placeholderData: maintainData ? keepPreviousData : undefined,
     select,
   })
-  const itemCount =
-    result.data?.pages.reduce(
-      (count, page) => count + page.starterPacks.length,
-      0,
-    ) ?? 0
-  useAutoPagination(result, itemCount, limit)
-  return result
 }
 
 function select(

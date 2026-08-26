@@ -9,7 +9,6 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 
@@ -23,7 +22,7 @@ export const RQKEY_ALL = (uri: string) => [RQKEY_ROOT_ALL, uri]
 
 export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
   const client = useAppviewClient()
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.graph.getList.$OutputBody,
     Error,
     InfiniteData<app.bsky.graph.getList.$OutputBody>,
@@ -44,10 +43,6 @@ export function useListMembersQuery(uri?: string, limit: number = PAGE_SIZE) {
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: Boolean(uri),
   })
-  const itemCount =
-    query.data?.pages.reduce((count, page) => count + page.items.length, 0) ?? 0
-  useAutoPagination(query, itemCount, limit)
-  return query
 }
 
 export function useAllListMembersQuery(uri?: string) {

@@ -6,7 +6,6 @@ import {
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {useAutoPagination} from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
 import {useModerationOpts} from '../preferences/moderation-opts'
@@ -21,7 +20,7 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
   const moderationOpts = useModerationOpts()
   const enabled = opts?.enabled !== false && Boolean(moderationOpts)
   const client = useAppviewClient()
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.graph.getLists.$OutputBody,
     Error,
     InfiniteData<app.bsky.graph.getLists.$OutputBody>,
@@ -56,8 +55,4 @@ export function useProfileListsQuery(did: string, opts?: {enabled?: boolean}) {
       }
     },
   })
-  const itemCount =
-    query.data?.pages.reduce((count, page) => count + page.lists.length, 0) ?? 0
-  useAutoPagination(query, itemCount, PAGE_SIZE)
-  return query
 }

@@ -11,7 +11,6 @@ import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
-  useAutoPagination,
 } from '#/state/queries/util'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
@@ -23,7 +22,7 @@ export const createBookmarksQueryKey = () => [bookmarksQueryKeyRoot]
 export function useBookmarksQuery() {
   const client = useAppviewClient()
 
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.bookmark.getBookmarks.$OutputBody,
     Error,
     InfiniteData<app.bsky.bookmark.getBookmarks.$OutputBody>,
@@ -39,13 +38,6 @@ export function useBookmarksQuery() {
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
-  const itemCount =
-    query.data?.pages.reduce(
-      (count, page) => count + page.bookmarks.length,
-      0,
-    ) ?? 0
-  useAutoPagination(query, itemCount, 50)
-  return query
 }
 
 export async function truncateAndInvalidate(qc: QueryClient) {

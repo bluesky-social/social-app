@@ -7,16 +7,14 @@ import {
 
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
-import {useAutoPagination} from './util'
 
 const RQKEY_ROOT = 'my-muted-accounts'
-const PAGE_SIZE = 30
 export const RQKEY = () => [RQKEY_ROOT]
 type RQPageParam = string | undefined
 
 export function useMyMutedAccountsQuery() {
   const client = useAppviewClient()
-  const query = useInfiniteQuery<
+  return useInfiniteQuery<
     app.bsky.graph.getMutes.$OutputBody,
     Error,
     InfiniteData<app.bsky.graph.getMutes.$OutputBody>,
@@ -26,17 +24,13 @@ export function useMyMutedAccountsQuery() {
     queryKey: RQKEY(),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       return await client.call(app.bsky.graph.getMutes, {
-        limit: PAGE_SIZE,
+        limit: 30,
         cursor: pageParam,
       })
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
   })
-  const itemCount =
-    query.data?.pages.reduce((count, page) => count + page.mutes.length, 0) ?? 0
-  useAutoPagination(query, itemCount, PAGE_SIZE)
-  return query
 }
 
 export function* findAllProfilesInQueryData(
