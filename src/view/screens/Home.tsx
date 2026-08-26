@@ -6,7 +6,7 @@ import {
 } from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
-import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {DISCOVER_FEED_URI, PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -223,8 +223,10 @@ function HomeScreenReady({
             {...props}
             testID="homeScreenFeedTabs"
             onPressSelected={onPressSelected}
-            // @ts-expect-error
-            feeds={[{displayName: 'Following'}, {displayName: 'Discover'}]}
+            feeds={[
+              {displayName: 'Following', uri: 'following'},
+              {displayName: 'Discover', uri: DISCOVER_FEED_URI},
+            ]}
           />
         )
       }
