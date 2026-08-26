@@ -26,6 +26,19 @@ export function isView(v: unknown): v is app.bsky.graph.defs.StarterPackView {
 }
 
 /**
+ * Accepts both forms of a full starter pack view used by the app:
+ *
+ * - direct lexicon refs returned by the app view, where `$type` may be omitted
+ * - trusted synthetic cache entries, which carry `$type` but may contain
+ *   placeholder fields that do not yet pass full schema validation
+ */
+export function isTrustedView(
+  v: unknown,
+): v is app.bsky.graph.defs.StarterPackView {
+  return isView(v) || app.bsky.graph.defs.starterPackView.matches(v)
+}
+
+/**
  * Matches any starter pack view exported by our SDK.
  */
 export type AnyStarterPackView =
