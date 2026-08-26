@@ -147,10 +147,7 @@ export function StarterPackScreenInner({
   const isValid =
     starterPack &&
     (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-    // Cards may precache a synthetic full view while navigating. Its list CID
-    // is intentionally empty until the server response replaces it, so use
-    // the trusted app-view discriminator here instead of strict validation.
-    bsky.isType(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.starterPack.isTrustedView(starterPack) &&
     bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
   if (!did || !starterPack || !isValid || !moderationOpts) {
