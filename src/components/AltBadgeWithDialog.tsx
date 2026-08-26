@@ -1,9 +1,9 @@
-import {Pressable} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useLargeAltBadgeEnabled} from '#/state/preferences/large-alt-badge'
 import {atoms as a, useTheme} from '#/alf'
+import {Pressable} from '#/components/Pressable'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 
@@ -49,7 +49,7 @@ export function AltBadgeWithDialog({
         accessibilityHint=""
         hitSlop={HITSLOP_20}
         onPress={control.open}
-        style={s => [
+        style={({pressed, hovered}) => [
           a.justify_center,
           a.rounded_sm,
           a.p_xs,
@@ -62,7 +62,7 @@ export function AltBadgeWithDialog({
             opacity: 0.8,
           },
           pos,
-          s.hovered || s.pressed
+          hovered || pressed
             ? [
                 {
                   opacity: 1,

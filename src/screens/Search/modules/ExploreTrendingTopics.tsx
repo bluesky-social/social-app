@@ -11,6 +11,7 @@ import {
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
 import {
+  DEFAULT_FETCH_LIMIT,
   DEFAULT_LIMIT,
   useGetTrendsQuery,
 } from '#/state/queries/trending/useGetTrendsQuery'
@@ -24,7 +25,10 @@ import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
-import {useTrendingTopicSeen} from '#/components/TrendingTopics'
+import {
+  TrendingTopicsPrompt,
+  useTrendingTopicSeen,
+} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
@@ -54,7 +58,10 @@ function Inner() {
     error,
     isLoading,
     isRefetching,
-  } = useGetTrendsQuery({limit: topicCount})
+  } = useGetTrendsQuery({
+    fetchLimit: Math.min(topicCount * 2, DEFAULT_FETCH_LIMIT),
+    limit: topicCount,
+  })
   const noTopics = !isLoading && !error && !trending?.trends?.length
   const showLoading = isLoading || isRefetching
 
@@ -97,11 +104,8 @@ function Inner() {
             })}
       </View>
 
-      <Prompt.Basic
+      <TrendingTopicsPrompt
         control={trendingPrompt}
-        title={l`Hide trending topics?`}
-        description={l`You can update this later from your settings.`}
-        confirmButtonCta={l`Hide`}
         onConfirm={() => {
           ax.metric('trendingTopics:hide', {context: 'explore:trending'})
           setTrendingDisabled(true)

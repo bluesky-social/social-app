@@ -149,7 +149,7 @@ function canPlayBskyVideoCodecs(): boolean {
 
 type CachedPromise<T> = Promise<T> & {value: undefined | T}
 const promiseForHls = import(
-  // @ts-ignore
+  // @ts-expect-error
   'hls.js/dist/hls.min'
   // oxlint-disable-next-line typescript/no-unsafe-member-access
 ).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>

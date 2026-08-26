@@ -117,7 +117,7 @@ function Inner({
   }, [activeNux, setActiveNux])
 
   if (__DEV__ && typeof window !== 'undefined') {
-    // @ts-ignore
+    // @ts-expect-error
     window.clearNuxDialog = (id: Nux) => {
       if (!__DEV__ || !id) return
       resetNuxs([id])

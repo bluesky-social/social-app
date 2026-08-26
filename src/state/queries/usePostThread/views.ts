@@ -21,7 +21,7 @@ export function threadPostNoUnauthenticated({
     uri,
     depth,
     value: value as app.bsky.unspecced.defs.ThreadItemNoUnauthenticated,
-    // @ts-ignore populated by the traversal
+    // @ts-expect-error populated by the traversal
     ui: {},
   }
 }
@@ -91,7 +91,7 @@ export function threadPost({
     },
     isBlurred,
     moderation,
-    // @ts-ignore populated by the traversal
+    // @ts-expect-error populated by the traversal
     ui: {},
   }
 }

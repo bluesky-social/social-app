@@ -43,7 +43,7 @@ function useWebOnlyDebugLiveEventPreferences() {
 
   useEffect(() => {
     if (env.IS_DEV && IS_WEB && typeof window !== 'undefined') {
-      // @ts-ignore
+      // @ts-expect-error
       window.__updateLiveEventPreferences = async (
         action: LiveEventPreferencesAction,
       ) => {

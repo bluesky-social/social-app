@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {Select as RadixSelect} from 'radix-ui'
 
 import {useA11y} from '#/state/a11y'
-import {atoms as a, flatten, useTheme, web} from '#/alf'
+import {atoms as a, flatten, flattenToCSS, useTheme, web} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Check_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {
@@ -94,7 +94,7 @@ export function Trigger({children, label}: TriggerProps) {
         onBlur={onBlur}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-        style={flatten([
+        style={flattenToCSS([
           a.flex,
           a.relative,
           t.atoms.bg_contrast_50,
@@ -196,7 +196,7 @@ export function Content<T>({
   return (
     <RadixSelect.Portal>
       <RadixSelect.Content
-        style={flatten([t.atoms.bg, a.rounded_sm, a.overflow_hidden])}
+        style={flattenToCSS([t.atoms.bg, a.rounded_sm, a.overflow_hidden])}
         position="popper"
         align="center"
         sideOffset={5}
@@ -212,17 +212,17 @@ export function Content<T>({
             a.overflow_hidden,
             !reduceMotionEnabled && a.zoom_fade_in,
           ]}>
-          <RadixSelect.ScrollUpButton style={flatten(up)}>
+          <RadixSelect.ScrollUpButton style={flattenToCSS(up)}>
             <ChevronUpIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollUpButton>
-          <RadixSelect.Viewport style={flatten([a.p_xs])}>
+          <RadixSelect.Viewport style={flattenToCSS([a.p_xs])}>
             {items.map((item, index) => (
               <Fragment key={valueExtractor(item)}>
                 {renderItem(item, index, selectedValue)}
               </Fragment>
             ))}
           </RadixSelect.Viewport>
-          <RadixSelect.ScrollDownButton style={flatten(down)}>
+          <RadixSelect.ScrollDownButton style={flattenToCSS(down)}>
             <ChevronDownIcon style={[t.atoms.text]} size="xs" />
           </RadixSelect.ScrollDownButton>
         </View>
@@ -273,7 +273,7 @@ export function Item({ref, value, style, children}: ItemProps) {
       onMouseLeave={onMouseLeave}
       onFocus={onFocus}
       onBlur={onBlur}
-      style={flatten([
+      style={flattenToCSS([
         t.atoms.text,
         a.relative,
         a.flex,
@@ -307,7 +307,7 @@ export const ItemText = function ItemText({children, style}: ItemTextProps) {
 export function ItemIndicator({icon: Icon = CheckIcon}: ItemIndicatorProps) {
   return (
     <RadixSelect.ItemIndicator
-      style={flatten([
+      style={flattenToCSS([
         a.absolute,
         {left: 0, width: 30},
         a.flex,
@@ -324,7 +324,7 @@ export function Separator() {
 
   return (
     <RadixSelect.Separator
-      style={flatten([
+      style={flattenToCSS([
         {
           height: 1,
           backgroundColor: t.atoms.border_contrast_low.borderColor,

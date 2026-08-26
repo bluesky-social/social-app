@@ -233,6 +233,7 @@ export function useFeedPreviews(
                       uri: subItem.post.uri,
                       post: subItem.post,
                       record: subItem.record,
+                      postNumbering: subItem.postNumbering,
                       moderation: moderations[i],
                       parentAuthor: subItem.parentAuthor,
                       isParentBlocked: subItem.isParentBlocked,

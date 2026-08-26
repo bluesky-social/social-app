@@ -62,7 +62,7 @@ export function DateField({
       <TextField.Icon icon={CalendarDays} />
       <Input
         value={value === '' ? '' : toSimpleDateString(value)}
-        inputRef={inputRef as React.Ref<TextInput>}
+        inputRef={inputRef as React.Ref<React.ComponentRef<typeof TextInput>>}
         label={label}
         onChange={handleOnChange}
         testID={testID}

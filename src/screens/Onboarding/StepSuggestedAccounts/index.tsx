@@ -378,7 +378,7 @@ function SuggestedProfileCard({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const cardRef = useRef<View>(null)
+  const cardRef = useRef<React.ComponentRef<typeof View>>(null)
   const hasTrackedRef = useRef(false)
 
   useEffect(() => {
@@ -396,7 +396,7 @@ function SuggestedProfileCard({
         },
         {threshold: 0.5},
       )
-      // @ts-ignore - web only
+      // @ts-expect-error - web only
       observer.observe(node)
       return () => observer.disconnect()
     } else {

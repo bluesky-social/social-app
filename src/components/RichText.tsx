@@ -93,7 +93,7 @@ export function RichText({
 
   if (!facets?.length) {
     if (isOnlyEmoji(text)) {
-      const flattenedStyle = flatten(style) ?? {}
+      const flattenedStyle = flatten(style)
       const fontSize =
         (flattenedStyle.fontSize ?? a.text_sm.fontSize) * emojiMultiplier
       return (
@@ -104,7 +104,6 @@ export function RichText({
           style={[plainStyles, {fontSize}, suffixStyles]}
           onLayout={onLayout}
           onTextLayout={onTextLayout}
-          // @ts-ignore web only -prf
           dataSet={WORD_WRAP}>
           {text}
           {suffix ? ' ' : null}
@@ -121,7 +120,6 @@ export function RichText({
         numberOfLines={numberOfLines}
         onLayout={onLayout}
         onTextLayout={onTextLayout}
-        // @ts-ignore web only -prf
         dataSet={WORD_WRAP}>
         {text}
         {suffix ? ' ' : null}
@@ -150,7 +148,7 @@ export function RichText({
             selectable={selectable}
             to={`/profile/${mention.did}`}
             style={interactiveStyles}
-            // @ts-ignore TODO
+            // @ts-expect-error TODO
             dataSet={WORD_WRAP}
             shouldProxy={shouldProxyLinks}
             onPress={onLinkPress}>
@@ -169,7 +167,7 @@ export function RichText({
             key={key}
             to={link.uri}
             style={interactiveStyles}
-            // @ts-ignore TODO
+            // @ts-expect-error TODO
             dataSet={WORD_WRAP}
             shareOnLongPress
             shouldProxy={shouldProxyLinks}
@@ -209,7 +207,6 @@ export function RichText({
       numberOfLines={numberOfLines}
       onLayout={onLayout}
       onTextLayout={onTextLayout}
-      // @ts-ignore web only -prf
       dataSet={WORD_WRAP}>
       {els}
       {suffix ? ' ' : null}

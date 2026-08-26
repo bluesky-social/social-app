@@ -119,7 +119,7 @@ function ListImpl<ItemT>(
     if (isValidElement(ListHeaderComponent)) {
       headerComponent = ListHeaderComponent
     } else {
-      // @ts-ignore Nah it's fine.
+      // @ts-expect-error Nah it's fine.
       headerComponent = <ListHeaderComponent />
     }
   }
@@ -129,7 +129,7 @@ function ListImpl<ItemT>(
     if (isValidElement(ListFooterComponent)) {
       footerComponent = ListFooterComponent
     } else {
-      // @ts-ignore Nah it's fine.
+      // @ts-expect-error Nah it's fine.
       footerComponent = <ListFooterComponent />
     }
   }
@@ -139,7 +139,7 @@ function ListImpl<ItemT>(
     if (isValidElement(ListEmptyComponent)) {
       emptyComponent = ListEmptyComponent
     } else {
-      // @ts-ignore Nah it's fine.
+      // @ts-expect-error Nah it's fine.
       emptyComponent = <ListEmptyComponent />
     }
   }
@@ -407,7 +407,7 @@ function ListImpl<ItemT>(
           overflowY: isWithinSplitView ? 'auto' : 'scroll',
         },
       ]}
-      ref={nativeRef as unknown as React.RefObject<View>}>
+      ref={nativeRef as unknown as React.Ref<React.ComponentRef<typeof View>>}>
       <Visibility
         onVisibleChange={setIsInsideVisibleTree}
         style={
@@ -793,11 +793,10 @@ export const List = memo(forwardRef(ListImpl)) as <ItemT>(
 
 const styles = StyleSheet.create({
   minHeightViewport: {
-    // @ts-ignore web only
     minHeight: '100vh',
   },
   parentTreeVisibilityDetector: {
-    // @ts-ignore web only
+    // @ts-expect-error web only
     position: 'fixed',
     top: 0,
     left: 0,
