@@ -22,7 +22,6 @@ export enum Features {
   FollowSortEnable = 'follow_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   CanonicalPostNumberingEnable = 'canonical_post_numbering:enable',
-  ContentVisibilitySettingsEnable = 'content_visibility_settings:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
 
   // values
