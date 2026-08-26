@@ -1,5 +1,6 @@
 import {Activity, Children, useEffect, useId, useRef, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {ReduceMotion, withTiming} from 'react-native-reanimated'
 
 import {atoms as a} from '#/alf'
 import {usePagerContext} from './context'
@@ -15,7 +16,8 @@ export function Content({
   style?: StyleProp<ViewStyle>
   testID?: string
 }) {
-  const {selectedPage, onPageSelected} = usePagerContext()
+  const {selectedPage, dragProgress, dragState, onPageSelected} =
+    usePagerContext()
   const pages = Children.toArray(children)
   const activityName = useId()
   const previousPage = useRef(selectedPage)
@@ -26,6 +28,17 @@ export function Content({
   useEffect(() => {
     if (selectedPage !== previousPage.current) {
       previousPage.current = selectedPage
+      dragState.set('settling')
+      dragProgress.set(
+        withTiming(
+          selectedPage,
+          {duration: 200, reduceMotion: ReduceMotion.System},
+          finished => {
+            'worklet'
+            if (finished) dragState.set('idle')
+          },
+        ),
+      )
       onPageSelected(selectedPage)
     }
 
@@ -33,7 +46,7 @@ export function Content({
       if (current.has(selectedPage)) return current
       return new Set([...current, selectedPage])
     })
-  }, [selectedPage, onPageSelected])
+  }, [selectedPage, dragProgress, dragState, onPageSelected])
 
   return (
     <View testID={testID} style={[a.flex_1, style]}>
