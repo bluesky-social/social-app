@@ -246,11 +246,11 @@ importers:
         specifier: 0.5.10
         version: 0.5.10
       '@atproto/lex':
-        specifier: 0.3.7
-        version: 0.3.7
+        specifier: 0.3.8
+        version: 0.3.8
       '@atproto/lex-password-session':
-        specifier: 0.2.1
-        version: 0.2.1
+        specifier: 0.2.2
+        version: 0.2.2
       '@atproto/syntax':
         specifier: 0.7.5
         version: 0.7.5
@@ -298,7 +298,7 @@ importers:
         version: 0.2.0(expo@57.0.8)(react-native@0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       '@bsky/sdk':
         specifier: 1.0.1
-        version: 1.0.1(@atproto/lex@0.3.7)
+        version: 1.0.1(@atproto/lex@0.3.8)
       '@emoji-mart/data':
         specifier: ^1.2.1
         version: 1.2.1
@@ -921,8 +921,8 @@ packages:
     resolution: {integrity: sha512-PxLQy7jzV8u9zTGURNF8ZczLPk+ZH+WNx/2z/z7RacJbu7sWNpx26U2pC7cIkWtt4jyDaruaLhssw3w3atLotA==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-client@0.3.4':
-    resolution: {integrity: sha512-0U0SsgrpJaKsRRoKU0TelWnP3f8OSj+a1+RdYaSf92mhxCMPmsz0CfURltpNbgIDR1yYHoh8tfFvAbMIyKw8jw==}
+  '@atproto/lex-client@0.3.5':
+    resolution: {integrity: sha512-IOYjgQ2H+pw8QhV0vMMG9PTRg+oh5In9APbGBvotNZlbF4SCZNDVd7dONFY4rU2Dg6BHSkiqbqoNUHNgTC+ITA==}
     engines: {node: '>=22'}
 
   '@atproto/lex-data@0.1.7':
@@ -933,28 +933,28 @@ packages:
     resolution: {integrity: sha512-7ivrxWttSxInDksR2rtM24xGdntY/3Ew5j08W5SiG45B+T2nyARL5EOk2xMXEm3MLjPrpNYAybA21ZEDYhGG0Q==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-installer@0.1.16':
-    resolution: {integrity: sha512-ascVCVvGMZtEErZ/2sNXU5f2InOHRTPNv1f01ovon5LP6J3bwXadrC78wci1kz/KNs3Y6c27Ymu1IaCddRCn2g==}
+  '@atproto/lex-installer@0.1.17':
+    resolution: {integrity: sha512-XSXiFLoDT7YEe+GuUdwczKQmhuLrA2CHVVlL8s5U8FLtWC5Cr3ELmz1t1b/Y8dV+R31hWyvdsk/t992B6+WW3Q==}
     engines: {node: '>=22'}
 
   '@atproto/lex-json@0.1.6':
     resolution: {integrity: sha512-mvrAd0lbyuecIHjyld8QN6MN6CBf4j0GCxLzegsvLh0SvDf+GbYWklkcQqmITL44yFQOwmA/QNIQj0Uvh7+R/g==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-password-session@0.2.1':
-    resolution: {integrity: sha512-6f2+y5D+Vmw+bfjWip8QhallBqdP6ZKpdM6B2txqFbgOcwr2eaxK5sO+wLiyw4wlltudwOTaOvVoiMIeIRF1Cg==}
+  '@atproto/lex-password-session@0.2.2':
+    resolution: {integrity: sha512-lifxp9sMdOGP1AfPhjNUMson6yzqEbS0PS8Q7UCVQucXbBlM89r5ff9DMBJF2sTiH5Qt8yXXsthI543OT9FXgg==}
     engines: {node: '>=22'}
 
-  '@atproto/lex-resolver@0.2.9':
-    resolution: {integrity: sha512-W2tu6KuaSo796/K7O3ueNjMg/RvKjPf4eJMAIucyAcQXymNmnw+uk/qUt7BQTUPTFlw0CVgyq1cCAg8AP7HFuA==}
+  '@atproto/lex-resolver@0.2.10':
+    resolution: {integrity: sha512-0Ml37emPqi6zr7hBAVR8fi7XDgG6xWsksBotoMU4Doh/PNFNt/H79Zopt/jnmDRcl8DGj9PNqZOZjzcAr2IuFw==}
     engines: {node: '>=22'}
 
   '@atproto/lex-schema@0.2.6':
     resolution: {integrity: sha512-8fe/gmhjMImBsy073jMANkbHHQLe/w4s9XLATpAz+Qd6WrR9RYTqc2DU8uZDL13F5bfdGTj8KECt/Xs4CoPXdQ==}
     engines: {node: '>=22'}
 
-  '@atproto/lex@0.3.7':
-    resolution: {integrity: sha512-k/+snIDoefYbjRdv+hDioo9wPVLzbS5bwhSU80qY2rgsyuN74tNwHGQslnQekCCKv85QHm9O/sD7qJDnhllySQ==}
+  '@atproto/lex@0.3.8':
+    resolution: {integrity: sha512-8X7f6wxVDm4IVNR80Yg3BV3IXb89sKo/KIZeYb4or/EHP7ljazVU4qU+RPXmlELnWiIcw+PiJE+hPSkGLnMPOA==}
     engines: {node: '>=22'}
     hasBin: true
 
@@ -9725,7 +9725,7 @@ snapshots:
       cborg: 4.5.8
       tslib: 2.8.1
 
-  '@atproto/lex-client@0.3.4':
+  '@atproto/lex-client@0.3.5':
     dependencies:
       '@atproto/lex-data': 0.1.7
       '@atproto/lex-json': 0.1.6
@@ -9744,13 +9744,13 @@ snapshots:
       core-js: 3.50.0
       tslib: 2.8.1
 
-  '@atproto/lex-installer@0.1.16':
+  '@atproto/lex-installer@0.1.17':
     dependencies:
       '@atproto/lex-builder': 0.1.13
       '@atproto/lex-cbor': 0.1.6
       '@atproto/lex-data': 0.1.7
       '@atproto/lex-document': 0.1.10
-      '@atproto/lex-resolver': 0.2.9
+      '@atproto/lex-resolver': 0.2.10
       '@atproto/lex-schema': 0.2.6
       '@atproto/syntax': 0.7.5
       tslib: 2.8.1
@@ -9760,17 +9760,17 @@ snapshots:
       '@atproto/lex-data': 0.1.7
       tslib: 2.8.1
 
-  '@atproto/lex-password-session@0.2.1':
+  '@atproto/lex-password-session@0.2.2':
     dependencies:
-      '@atproto/lex-client': 0.3.4
+      '@atproto/lex-client': 0.3.5
       '@atproto/lex-schema': 0.2.6
       tslib: 2.8.1
 
-  '@atproto/lex-resolver@0.2.9':
+  '@atproto/lex-resolver@0.2.10':
     dependencies:
       '@atproto-labs/did-resolver': 0.3.7
       '@atproto/crypto': 0.5.4
-      '@atproto/lex-client': 0.3.4
+      '@atproto/lex-client': 0.3.5
       '@atproto/lex-data': 0.1.7
       '@atproto/lex-document': 0.1.10
       '@atproto/lex-schema': 0.2.6
@@ -9785,12 +9785,12 @@ snapshots:
       '@standard-schema/spec': 1.1.0
       tslib: 2.8.1
 
-  '@atproto/lex@0.3.7':
+  '@atproto/lex@0.3.8':
     dependencies:
       '@atproto/lex-builder': 0.1.13
-      '@atproto/lex-client': 0.3.4
+      '@atproto/lex-client': 0.3.5
       '@atproto/lex-data': 0.1.7
-      '@atproto/lex-installer': 0.1.16
+      '@atproto/lex-installer': 0.1.17
       '@atproto/lex-json': 0.1.6
       '@atproto/lex-schema': 0.2.6
       tslib: 2.8.1
@@ -10770,10 +10770,10 @@ snapshots:
       react: 19.2.3
       react-native: 0.86.0(patch_hash=dd549527bb84c88acc7b0b1d521c9f4b666fda484c75cd0b282f8e9838524909)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
-  '@bsky/sdk@1.0.1(@atproto/lex@0.3.7)':
+  '@bsky/sdk@1.0.1(@atproto/lex@0.3.8)':
     dependencies:
       '@atproto-labs/handle-resolver': 0.4.8
-      '@atproto/lex': 0.3.7
+      '@atproto/lex': 0.3.8
       '@atproto/syntax': 0.7.5
       tlds: 1.261.0
 
