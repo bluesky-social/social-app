@@ -3,12 +3,12 @@ import {type DidDocument, getPdsEndpoint} from '@atproto/common-web'
 import {type HandleString} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {DEFAULT_SERVICE} from '#/lib/constants'
+import {DEFAULT_SERVICE, PUBLIC_BSKY_SERVICE} from '#/lib/constants'
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
+import {createServiceClient} from '#/lib/lexClient'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
-import {getPublicAppviewClient} from '#/state/session/clients'
 import {com} from '#/lexicons'
 
 const RQKEY_ROOT = 'pds-detection'
@@ -150,11 +150,13 @@ export async function resolvePdsForIdentifier(
 ): Promise<{did: string; pdsUrl: string | null} | null> {
   const norm = normalizeIdentifier(identifier)
   /*
-   * Resolution runs without a session, so this uses the public appview client
-   * rather than a session-scoped one. It matches the unauthenticated,
-   * unproxied public agent this previously constructed by hand.
+   * This is a pre-auth request. Use an isolated service client rather than the
+   * shared public appview client, whose global moderation configuration is
+   * intended for appview content reads and can change independently of this
+   * login flow. This also matches the pre-auth handle resolution used during
+   * signup.
    */
-  const client = getPublicAppviewClient()
+  const client = createServiceClient(PUBLIC_BSKY_SERVICE)
   try {
     let did: string
     if (norm.startsWith('did:')) {
