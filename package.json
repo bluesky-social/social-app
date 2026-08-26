@@ -99,10 +99,10 @@
     "prettier": "prettier --check ."
   },
   "dependencies": {
-    "@atproto/common-web": "0.5.9",
-    "@atproto/lex": "0.3.6",
-    "@atproto/lex-password-session": "0.2.0",
-    "@atproto/syntax": "0.7.4",
+    "@atproto/common-web": "0.5.10",
+    "@atproto/lex": "0.3.7",
+    "@atproto/lex-password-session": "0.2.1",
+    "@atproto/syntax": "0.7.5",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
     "@bsky.app/alf": "^0.1.15",
