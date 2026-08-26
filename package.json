@@ -100,8 +100,8 @@
   },
   "dependencies": {
     "@atproto/common-web": "0.5.10",
-    "@atproto/lex": "0.3.7",
-    "@atproto/lex-password-session": "0.2.1",
+    "@atproto/lex": "0.3.8",
+    "@atproto/lex-password-session": "0.2.2",
     "@atproto/syntax": "0.7.5",
     "@bitdrift/react-native": "^0.6.8",
     "@braintree/sanitize-url": "^6.0.2",
