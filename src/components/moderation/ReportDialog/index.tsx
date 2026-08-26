@@ -568,8 +568,8 @@ function Inner(
                       // should never happen in our app
                       <Admonition.Admonition type="warning">
                         <Trans>
-                          Unfortunately, none of your subscribed labelers
-                          supports this report type.
+                          None of your subscribed labelers support this report
+                          type.
                         </Trans>
                       </Admonition.Admonition>
                     )}
