@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import {type SharedValue, useSharedValue} from 'react-native-reanimated'
 
 import {atoms as a} from '#/alf'
 
@@ -16,6 +17,8 @@ export type PagerScrollState = 'idle' | 'dragging' | 'settling'
 export type PagerRenderProps = {
   selectedPage: number
   selectPage: (page: number) => void
+  dragProgress: SharedValue<number>
+  dragState: SharedValue<PagerScrollState>
 }
 
 type PagerContextValue = PagerRenderProps & {
@@ -45,6 +48,8 @@ export function Root({
 }) {
   const [selectedPage, setSelectedPage] = useState(initialPage)
   const selectedPageRef = useRef(initialPage)
+  const dragProgress = useSharedValue(initialPage)
+  const dragState = useSharedValue<PagerScrollState>('idle')
 
   const handlePageSelected = useCallback(
     (page: number) => {
@@ -73,6 +78,8 @@ export function Root({
       initialPage,
       selectedPage,
       selectPage,
+      dragProgress,
+      dragState,
       onPageSelected: handlePageSelected,
       onPageScrollStateChanged: (state: PagerScrollState) =>
         onPageScrollStateChanged?.(state),
@@ -81,6 +88,8 @@ export function Root({
       initialPage,
       selectedPage,
       selectPage,
+      dragProgress,
+      dragState,
       handlePageSelected,
       onPageScrollStateChanged,
     ],
@@ -100,13 +109,12 @@ export function TabBar({
 }: {
   children: (props: PagerRenderProps) => ReactNode
 }) {
-  const {selectedPage, selectPage} = usePager()
-  return children({selectedPage, selectPage})
+  return children(usePager())
 }
 
 export function usePager(): PagerRenderProps {
-  const {selectedPage, selectPage} = usePagerContext()
-  return {selectedPage, selectPage}
+  const {selectedPage, selectPage, dragProgress, dragState} = usePagerContext()
+  return {selectedPage, selectPage, dragProgress, dragState}
 }
 
 export function usePagerContext() {

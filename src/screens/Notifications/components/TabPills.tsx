@@ -1,13 +1,21 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {
+  Pressable,
+  type ReactNativeElement,
   type ScrollView,
   type StyleProp,
+  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
+import Animated, {
+  interpolate,
+  type SharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {DraggableScrollView} from '#/view/com/pager/DraggableScrollView'
 import {BlockDrawerGesture} from '#/view/shell/BlockDrawerGesture'
 import {atoms as a, tokens, useTheme, utils, web} from '#/alf'
@@ -27,60 +35,75 @@ export type TabPillItem = {
 export function TabPills({
   tabs,
   selectedTab,
+  dragProgress,
   onSelectTab,
   contentContainerStyle,
   gutterWidth = tokens.space.lg,
 }: {
   tabs: TabPillItem[]
   selectedTab: string
+  dragProgress: SharedValue<number>
   onSelectTab: (tab: string) => void
   contentContainerStyle?: StyleProp<ViewStyle>
   gutterWidth?: number
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const listRef = useRef<ScrollView>(null)
+  const {width: windowWidth} = useWindowDimensions()
+  const listRef = useRef<ScrollView & ReactNativeElement>(null)
   const [totalWidth, setTotalWidth] = useState(0)
   const [scrollX, setScrollX] = useState(0)
   const [contentWidth, setContentWidth] = useState(0)
-  const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
-  const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
+  const [tabOffsets, setTabOffsets] = useState<PillLayout[]>([])
+  const contentRef = useRef<View>(null)
+  const tabRefs = useRef<Array<View | null>>([])
+  const didMeasure = useRef(false)
+  const tabLayoutKey = tabs.map(tab => `${tab.key}:${tab.label}`).join('|')
+  const tabCount = tabs.length
 
-  const onInitialLayout = useNonReactiveCallback(() => {
-    scrollIntoViewIfNeeded(tabs.findIndex(tab => tab.key === selectedTab))
-  })
+  useLayoutEffect(() => {
+    const viewportRect = listRef.current?.getBoundingClientRect()
+    const contentRect = contentRef.current?.getBoundingClientRect()
+    if (!viewportRect || !contentRect) return
 
-  useEffect(() => {
-    if (tabOffsets) {
-      onInitialLayout()
-    }
-  }, [tabOffsets, onInitialLayout])
-
-  function scrollIntoViewIfNeeded(index: number) {
-    const btnLayout = tabOffsets[index]
-    if (!btnLayout) return
-    listRef.current?.scrollTo({
-      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
-      animated: true,
+    const layouts = Array.from({length: tabCount}, (_, index) => {
+      const rect = tabRefs.current[index]?.getBoundingClientRect()
+      if (!rect) return null
+      return {
+        x: rect.left - contentRect.left,
+        y: rect.top - contentRect.top,
+        width: rect.width,
+        height: rect.height,
+      }
     })
-  }
+    if (layouts.some(layout => layout === null)) return
+
+    const nextLayouts = layouts as PillLayout[]
+    setTabOffsets(current =>
+      areLayoutsEqual(current, nextLayouts) ? current : nextLayouts,
+    )
+    if (IS_WEB) {
+      setTotalWidth(viewportRect.width)
+      setContentWidth(contentRect.width)
+    }
+
+    const selectedIndex = tabs.findIndex(tab => tab.key === selectedTab)
+    const selectedLayout = nextLayouts[selectedIndex]
+    if (selectedLayout) {
+      const centeredOffset =
+        selectedLayout.x - (viewportRect.width / 2 - selectedLayout.width / 2)
+      const maxOffset = Math.max(0, contentRect.width - viewportRect.width)
+      listRef.current?.scrollTo({
+        x: Math.min(maxOffset, Math.max(0, centeredOffset)),
+        animated: didMeasure.current,
+      })
+    }
+    didMeasure.current = true
+  }, [selectedTab, tabLayoutKey, tabCount, tabs, windowWidth])
 
   function handleSelectTab(index: number) {
     const tab = tabs[index]
     onSelectTab(tab.key)
-    scrollIntoViewIfNeeded(index)
-  }
-
-  function handleTabLayout(index: number, x: number, width: number) {
-    if (!tabOffsets.length) {
-      pendingTabOffsets.current[index] = {x, width}
-      if (
-        pendingTabOffsets.current.filter(offset => !!offset).length ===
-        tabs.length
-      ) {
-        setTabOffsets(pendingTabOffsets.current)
-      }
-    }
   }
 
   const canScrollLeft = scrollX > 0
@@ -170,15 +193,10 @@ export function TabPills({
   }, [])
 
   return (
-    <View style={[a.relative, a.flex_row]}>
+    <View style={[a.relative, a.flex_row]} accessibilityRole="tablist">
       <BlockDrawerGesture>
         <DraggableScrollView
           ref={listRef}
-          contentContainerStyle={[
-            a.gap_sm,
-            {paddingHorizontal: gutterWidth},
-            contentContainerStyle,
-          ]}
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToOffsets={
@@ -186,22 +204,93 @@ export function TabPills({
               ? tabOffsets.map(offset => offset.x - tokens.space.xl)
               : undefined
           }
-          onLayout={event => setTotalWidth(event.nativeEvent.layout.width)}
-          onContentSizeChange={width => setContentWidth(width)}
-          onScroll={event => {
-            setScrollX(event.nativeEvent.contentOffset.x)
-          }}
-          scrollEventThrottle={16}>
-          {tabs.map((tab, index) => (
-            <TabPill
-              key={tab.key}
-              tab={tab}
-              index={index}
-              active={tab.key === selectedTab}
-              onSelectTab={handleSelectTab}
-              onLayout={handleTabLayout}
-            />
-          ))}
+          onScroll={
+            IS_WEB
+              ? event => setScrollX(event.nativeEvent.contentOffset.x)
+              : undefined
+          }
+          scrollEventThrottle={IS_WEB ? 16 : undefined}>
+          <View
+            ref={contentRef}
+            style={[
+              a.flex_row,
+              a.gap_sm,
+              {paddingHorizontal: gutterWidth},
+              contentContainerStyle,
+            ]}>
+            {tabs.map((tab, index) => (
+              <TabPill
+                key={tab.key}
+                elementRef={element => {
+                  tabRefs.current[index] = element
+                }}
+                tab={tab}
+                index={index}
+                active={tab.key === selectedTab}
+                onSelectTab={handleSelectTab}
+              />
+            ))}
+            {tabOffsets.map((layout, index) => (
+              <View
+                key={`border-${tabs[index].key}`}
+                accessible={false}
+                pointerEvents="none"
+                style={[
+                  a.absolute,
+                  a.rounded_full,
+                  a.curve_continuous,
+                  t.atoms.bg,
+                  t.atoms.border_contrast_low,
+                  {
+                    zIndex: 1,
+                    borderWidth: 1,
+                    left: layout.x,
+                    top: layout.y,
+                    width: layout.width,
+                    height: layout.height,
+                  },
+                ]}></View>
+            ))}
+            {tabOffsets.length === tabs.length && (
+              <PillIndicator
+                layouts={tabOffsets}
+                dragProgress={dragProgress}
+                backgroundColor={t.atoms.bg_contrast_50.backgroundColor}
+                borderColor={t.palette.contrast_50}
+              />
+            )}
+            {tabOffsets.map((layout, index) => (
+              <View
+                key={`label-${tabs[index].key}`}
+                aria-hidden
+                accessible={false}
+                accessibilityElementsHidden
+                importantForAccessibility="no-hide-descendants"
+                pointerEvents="none"
+                style={[
+                  a.absolute,
+                  a.align_center,
+                  a.justify_center,
+                  {
+                    zIndex: 3,
+                    left: layout.x,
+                    top: layout.y,
+                    width: layout.width,
+                    height: layout.height,
+                  },
+                ]}>
+                <Text
+                  style={[
+                    a.font_medium,
+                    tabs[index].key === selectedTab
+                      ? t.atoms.text
+                      : t.atoms.text_contrast_high,
+                  ]}>
+                  {tabs[index].label}
+                </Text>
+              </View>
+            ))}
+          </View>
         </DraggableScrollView>
       </BlockDrawerGesture>
 
@@ -234,6 +323,7 @@ export function TabPills({
               a.h_full,
               a.aspect_square,
               a.rounded_full,
+              a.curve_continuous,
             ]}>
             <ButtonIcon icon={ArrowLeft} />
           </Button>
@@ -269,6 +359,7 @@ export function TabPills({
               a.h_full,
               a.aspect_square,
               a.rounded_full,
+              a.curve_continuous,
             ]}>
             <ButtonIcon icon={ArrowRight} />
           </Button>
@@ -279,56 +370,177 @@ export function TabPills({
 }
 
 function TabPill({
+  elementRef,
   tab,
   active,
   index,
   onSelectTab,
-  onLayout,
 }: {
+  elementRef: React.Ref<View>
   tab: TabPillItem
   active: boolean
   index: number
   onSelectTab: (index: number) => void
-  onLayout: (index: number, x: number, width: number) => void
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
 
   return (
-    <View
-      onLayout={event =>
-        onLayout(
-          index,
-          event.nativeEvent.layout.x,
-          event.nativeEvent.layout.width,
-        )
-      }>
-      <Button
-        label={
+    <View ref={elementRef}>
+      <Pressable
+        accessibilityLabel={
           active ? l`${tab.label} tab, selected` : l`Select ${tab.label} tab`
         }
+        accessibilityHint={l`Shows ${tab.label} notifications`}
         accessibilityRole="tab"
         accessibilityState={{selected: active}}
-        onPress={() => onSelectTab(index)}>
+        onPress={() => onSelectTab(index)}
+        style={[a.rounded_full, a.curve_continuous]}>
         <View
           style={[
             a.rounded_full,
+            a.curve_continuous,
             a.px_lg,
             a.py_sm,
-            {borderWidth: 1},
-            active
-              ? [t.atoms.bg_contrast_50, {borderColor: t.palette.contrast_50}]
-              : [a.bg_transparent, t.atoms.border_contrast_low],
+            a.bg_transparent,
+            {borderWidth: 1, borderColor: 'transparent'},
           ]}>
-          <Text
-            style={[
-              a.font_medium,
-              active ? t.atoms.text : t.atoms.text_contrast_high,
-            ]}>
+          <Text accessible={false} style={[a.font_medium, {opacity: 0}]}>
             {tab.label}
           </Text>
         </View>
-      </Button>
+      </Pressable>
     </View>
+  )
+}
+
+type PillLayout = {
+  x: number
+  y: number
+  width: number
+  height: number
+}
+
+function areLayoutsEqual(a: PillLayout[], b: PillLayout[]) {
+  return (
+    a.length === b.length &&
+    a.every(
+      (layout, index) =>
+        layout.x === b[index].x &&
+        layout.y === b[index].y &&
+        layout.width === b[index].width &&
+        layout.height === b[index].height,
+    )
+  )
+}
+
+function PillIndicator({
+  layouts,
+  dragProgress,
+  backgroundColor,
+  borderColor,
+}: {
+  layouts: PillLayout[]
+  dragProgress: SharedValue<number>
+  backgroundColor: string
+  borderColor: string
+}) {
+  const height = layouts[0].height
+  const radius = height / 2
+  const inputRange = layouts.map((_, index) => index)
+  const xOutputRange = layouts.map(layout => layout.x)
+  const widthOutputRange = layouts.map(layout => layout.width)
+
+  const geometry = useDerivedValue(() => {
+    const progress = dragProgress.get()
+    return {
+      x: interpolate(progress, inputRange, xOutputRange, 'clamp'),
+      width: interpolate(progress, inputRange, widthOutputRange, 'clamp'),
+    }
+  })
+
+  const containerStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: geometry.get().x}],
+  }))
+  const middleStyle = useAnimatedStyle(() => ({
+    transform: [{scaleX: Math.max(0.01, geometry.get().width - height)}],
+  }))
+  const rightCapStyle = useAnimatedStyle(() => ({
+    transform: [{translateX: geometry.get().width - radius - 1}],
+  }))
+
+  return (
+    <Animated.View
+      accessible={false}
+      pointerEvents="none"
+      style={[
+        a.absolute,
+        a.curve_continuous,
+        {
+          zIndex: 1,
+          top: layouts[0].y,
+          left: 0,
+          width: radius + 1,
+          height,
+        },
+        containerStyle,
+      ]}>
+      <View
+        style={[
+          a.curve_continuous,
+          a.absolute,
+          a.top_0,
+          a.left_0,
+          {
+            width: radius + 1,
+            height,
+            backgroundColor,
+            borderColor,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderLeftWidth: 1,
+            borderTopLeftRadius: radius,
+            borderBottomLeftRadius: radius,
+          },
+        ]}
+      />
+      <Animated.View
+        style={[
+          a.curve_continuous,
+          a.absolute,
+          a.top_0,
+          {
+            left: radius,
+            width: 1,
+            height,
+            transformOrigin: 'left center',
+            backgroundColor,
+            borderColor,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+          },
+          middleStyle,
+        ]}
+      />
+      <Animated.View
+        style={[
+          a.curve_continuous,
+          a.absolute,
+          a.top_0,
+          a.left_0,
+          {
+            width: radius + 1,
+            height,
+            backgroundColor,
+            borderColor,
+            borderTopWidth: 1,
+            borderRightWidth: 1,
+            borderBottomWidth: 1,
+            borderTopRightRadius: radius,
+            borderBottomRightRadius: radius,
+          },
+          rightCapStyle,
+        ]}
+      />
+    </Animated.View>
   )
 }
