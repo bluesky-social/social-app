@@ -8,7 +8,7 @@ msgstr ""
 "Language: ia\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-25 22:01\n"
+"PO-Revision-Date: 2026-08-26 18:54\n"
 "Last-Translator: \n"
 "Language-Team: Interlingua\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -203,7 +203,7 @@ msgstr "{0, plural, one {publication} other {publicationes}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:500
+#: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr ""
 
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:401
+#: src/screens/StarterPack/StarterPackScreen.tsx:398
 msgid "All accounts have been followed!"
 msgstr "Tote le contos ha essite sequite!"
 
@@ -1628,8 +1628,8 @@ msgstr "Un error ha occurrite durante le salvamento del codice QR!"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:360
-#: src/screens/StarterPack/StarterPackScreen.tsx:387
+#: src/screens/StarterPack/StarterPackScreen.tsx:357
+#: src/screens/StarterPack/StarterPackScreen.tsx:384
 msgid "An error occurred while trying to follow all"
 msgstr "Un error ha occurrite durante le tentativa de sequer totes"
 
@@ -1914,7 +1914,7 @@ msgstr "Es tu secur de voler deler le contrasigno del application “{0}”?"
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:680
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "Es tu secur de voler deler iste pacchetto de initio?"
 
@@ -3452,7 +3452,7 @@ msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:640
+#: src/screens/StarterPack/StarterPackScreen.tsx:637
 msgid "Copy link"
 msgstr "Copiar ligamine"
 
@@ -3477,7 +3477,7 @@ msgstr "Copiar ligamine al publication"
 msgid "Copy link to profile"
 msgstr "Copiar ligamine al profilo"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:633
+#: src/screens/StarterPack/StarterPackScreen.tsx:630
 msgid "Copy link to starter pack"
 msgstr "Copiar ligamine al pacchetto de initio"
 
@@ -3632,7 +3632,7 @@ msgstr "Crear"
 msgid "Create a list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:616
+#: src/screens/StarterPack/StarterPackScreen.tsx:613
 msgid "Create a list from this starter pack"
 msgstr ""
 
@@ -3699,7 +3699,7 @@ msgstr ""
 msgid "Create list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:619
 msgid "Create list from members"
 msgstr ""
 
@@ -3842,9 +3842,9 @@ msgstr "Icones predefinite"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:611
-#: src/screens/StarterPack/StarterPackScreen.tsx:711
-#: src/screens/StarterPack/StarterPackScreen.tsx:790
+#: src/screens/StarterPack/StarterPackScreen.tsx:608
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
+#: src/screens/StarterPack/StarterPackScreen.tsx:787
 msgid "Delete"
 msgstr "Deler"
 
@@ -3915,12 +3915,12 @@ msgstr "Deler mi conto"
 msgid "Delete post"
 msgstr "Deler publication"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:605
-#: src/screens/StarterPack/StarterPackScreen.tsx:781
+#: src/screens/StarterPack/StarterPackScreen.tsx:602
+#: src/screens/StarterPack/StarterPackScreen.tsx:778
 msgid "Delete starter pack"
 msgstr "Deler pacchetto de initio"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:674
 msgid "Delete starter pack?"
 msgstr "Deler pacchetto de initio?"
 
@@ -4341,7 +4341,7 @@ msgstr ""
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:600
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4445,7 @@ msgstr "Modificar profilo"
 msgid "Edit Profile"
 msgstr "Modificar profilo"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:592
+#: src/screens/StarterPack/StarterPackScreen.tsx:589
 msgid "Edit starter pack"
 msgstr "Modificar pacchetto de initio"
 
@@ -4941,7 +4941,7 @@ msgstr "Non ha essite possibile deler le message"
 msgid "Failed to delete post, please try again"
 msgstr "Non ha essite possibile deler le publication, tenta de novo"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:750
+#: src/screens/StarterPack/StarterPackScreen.tsx:747
 msgid "Failed to delete starter pack"
 msgstr "Non ha essite possibile deler le pacchetto de initio"
 
@@ -5257,7 +5257,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:196
+#: src/screens/StarterPack/StarterPackScreen.tsx:193
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
@@ -5474,8 +5474,8 @@ msgstr "Sequer conto"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:448
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
+#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:453
 msgid "Follow all"
 msgstr "Sequer totes"
 
@@ -5838,7 +5838,7 @@ msgstr "Retornar"
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:803
+#: src/screens/StarterPack/StarterPackScreen.tsx:800
 msgid "Go Back"
 msgstr "Retornar"
 
@@ -6804,8 +6804,8 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:474
-#: src/screens/StarterPack/StarterPackScreen.tsx:484
+#: src/screens/StarterPack/StarterPackScreen.tsx:471
+#: src/screens/StarterPack/StarterPackScreen.tsx:481
 msgid "Join Bluesky"
 msgstr "Inscribe te a Bluesky"
 
@@ -8726,7 +8726,7 @@ msgstr ""
 msgid "Open share menu"
 msgstr "Aperir menu de compartimento"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:578
+#: src/screens/StarterPack/StarterPackScreen.tsx:575
 msgid "Open starter pack menu"
 msgstr "Aperir menu de pacchetto de initio"
 
@@ -9003,7 +9003,7 @@ msgstr "Pausar video"
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:195
+#: src/screens/StarterPack/StarterPackScreen.tsx:192
 msgid "People"
 msgstr "Personas"
 
@@ -9470,7 +9470,7 @@ msgstr "Publication disfixate"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:197
+#: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr "Publicationes"
@@ -10208,8 +10208,8 @@ msgstr "Signalar publication"
 msgid "Report sent"
 msgstr ""
 
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
-#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr "Signalar pacchetto de initio"
 
@@ -10275,7 +10275,7 @@ msgstr "Republication ({0, plural, one {# republication} other {# republicatione
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:573
+#: src/screens/StarterPack/StarterPackScreen.tsx:570
 msgid "Repost or quote post"
 msgstr "Republication o citation"
 
@@ -10494,7 +10494,7 @@ msgstr "Tenta de novo cargar le optiones de signalamento"
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:797
+#: src/screens/StarterPack/StarterPackScreen.tsx:794
 msgid "Return to previous page"
 msgstr "Retornar al pagina precedente"
 
@@ -11225,7 +11225,7 @@ msgstr "Sexualmente suggestive"
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:443
+#: src/screens/StarterPack/StarterPackScreen.tsx:440
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr "Compartir"
@@ -11301,7 +11301,7 @@ msgstr "Compartir iste canal"
 msgid "Share this search"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:436
+#: src/screens/StarterPack/StarterPackScreen.tsx:433
 msgid "Share this starter pack"
 msgstr "Compartir iste pacchetto de initio"
 
@@ -11313,8 +11313,8 @@ msgstr "Comparti iste pacchetto de initio e adjuta le gente a unir se a tu commu
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:634
-#: src/screens/StarterPack/StarterPackScreen.tsx:642
+#: src/screens/StarterPack/StarterPackScreen.tsx:631
+#: src/screens/StarterPack/StarterPackScreen.tsx:639
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11829,7 +11829,7 @@ msgstr "Pacchetto de initio de <0/>"
 msgid "Starter pack by you"
 msgstr "Pacchetto de initio tue"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:761
+#: src/screens/StarterPack/StarterPackScreen.tsx:758
 msgid "Starter pack is invalid"
 msgstr "Le pacchetto de initio es invalide"
 
@@ -12231,8 +12231,8 @@ msgstr "Illo contine le sequente:"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:160
-#: src/screens/StarterPack/StarterPackScreen.tsx:161
+#: src/screens/StarterPack/StarterPackScreen.tsx:157
+#: src/screens/StarterPack/StarterPackScreen.tsx:158
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12369,7 +12369,7 @@ msgstr ""
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "Le servitor pare haber problemas. Tenta de novo post alcun instantes."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:771
+#: src/screens/StarterPack/StarterPackScreen.tsx:768
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "Le pacchetto de initio que tu tenta vider es invalide. In vice, tu pote deler iste pacchetto de initio."
 
@@ -13170,7 +13170,7 @@ msgstr ""
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "Non ha essite possibile contactar tu servicio. Per favor verifica tu connexion al Internet."
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:696
+#: src/screens/StarterPack/StarterPackScreen.tsx:693
 msgid "Unable to delete"
 msgstr "Non ha essite possibile deler"
 
@@ -14472,7 +14472,7 @@ msgstr "Si, disactivar"
 msgid "Yes, delete my account"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
+#: src/screens/StarterPack/StarterPackScreen.tsx:705
 msgid "Yes, delete this starter pack"
 msgstr "Si, deler iste pacchetto de initio"
 

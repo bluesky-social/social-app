@@ -8,7 +8,7 @@ msgstr ""
 "Language: ne\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-25 22:01\n"
+"PO-Revision-Date: 2026-08-26 18:54\n"
 "Last-Translator: \n"
 "Language-Team: Nepali\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -203,7 +203,7 @@ msgstr "{0, plural, one {पोष्ट} other {पोष्टहरू}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
-#: src/screens/StarterPack/StarterPackScreen.tsx:500
+#: src/screens/StarterPack/StarterPackScreen.tsx:497
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
 msgstr ""
 
@@ -1445,7 +1445,7 @@ msgid "All {0}"
 msgstr ""
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
-#: src/screens/StarterPack/StarterPackScreen.tsx:401
+#: src/screens/StarterPack/StarterPackScreen.tsx:398
 msgid "All accounts have been followed!"
 msgstr "सबै खाताहरू पछ्याइएका छन्!"
 
@@ -1628,8 +1628,8 @@ msgstr "QR कोड बचत गर्दा त्रुटि भयो!"
 
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:55
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:83
-#: src/screens/StarterPack/StarterPackScreen.tsx:360
-#: src/screens/StarterPack/StarterPackScreen.tsx:387
+#: src/screens/StarterPack/StarterPackScreen.tsx:357
+#: src/screens/StarterPack/StarterPackScreen.tsx:384
 msgid "An error occurred while trying to follow all"
 msgstr "सबैलाई पछ्याउने प्रयास गर्दा त्रुटि भयो"
 
@@ -1914,7 +1914,7 @@ msgstr "के तपाईं \"{0}\" एप पासवर्ड मेटा
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:680
+#: src/screens/StarterPack/StarterPackScreen.tsx:677
 msgid "Are you sure you want to delete this starter pack?"
 msgstr "के तपाईं यो स्टार्टर प्याक मेटाउन निश्चित हुनुहुन्छ?"
 
@@ -3452,7 +3452,7 @@ msgstr ""
 
 #: src/components/dms/ChatInvite/Root.tsx:92
 #: src/components/StarterPack/ShareDialog.tsx:115
-#: src/screens/StarterPack/StarterPackScreen.tsx:640
+#: src/screens/StarterPack/StarterPackScreen.tsx:637
 msgid "Copy link"
 msgstr "लिंक प्रतिलिपि गर्नुहोस्"
 
@@ -3477,7 +3477,7 @@ msgstr "पोस्टको लिंक प्रतिलिपि गर्
 msgid "Copy link to profile"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:633
+#: src/screens/StarterPack/StarterPackScreen.tsx:630
 msgid "Copy link to starter pack"
 msgstr ""
 
@@ -3632,7 +3632,7 @@ msgstr "सिर्जना गर्नुहोस्"
 msgid "Create a list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:616
+#: src/screens/StarterPack/StarterPackScreen.tsx:613
 msgid "Create a list from this starter pack"
 msgstr ""
 
@@ -3699,7 +3699,7 @@ msgstr ""
 msgid "Create list"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:622
+#: src/screens/StarterPack/StarterPackScreen.tsx:619
 msgid "Create list from members"
 msgstr ""
 
@@ -3842,9 +3842,9 @@ msgstr ""
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:824
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:276
 #: src/screens/Settings/AppPasswords.tsx:213
-#: src/screens/StarterPack/StarterPackScreen.tsx:611
-#: src/screens/StarterPack/StarterPackScreen.tsx:711
-#: src/screens/StarterPack/StarterPackScreen.tsx:790
+#: src/screens/StarterPack/StarterPackScreen.tsx:608
+#: src/screens/StarterPack/StarterPackScreen.tsx:708
+#: src/screens/StarterPack/StarterPackScreen.tsx:787
 msgid "Delete"
 msgstr "मेटाउनुहोस्"
 
@@ -3915,12 +3915,12 @@ msgstr "मेरो खाता मेटाउनुहोस्"
 msgid "Delete post"
 msgstr "पोस्ट मेटाउनुहोस्"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:605
-#: src/screens/StarterPack/StarterPackScreen.tsx:781
+#: src/screens/StarterPack/StarterPackScreen.tsx:602
+#: src/screens/StarterPack/StarterPackScreen.tsx:778
 msgid "Delete starter pack"
 msgstr "स्टार्टर प्याक मेटाउनुहोस्"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:677
+#: src/screens/StarterPack/StarterPackScreen.tsx:674
 msgid "Delete starter pack?"
 msgstr "स्टार्टर प्याक मेटाउनुहोस्?"
 
@@ -4341,7 +4341,7 @@ msgstr ""
 #: src/screens/Messages/components/EditTextButton.tsx:52
 #: src/screens/Settings/AccountSettings.tsx:148
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:250
-#: src/screens/StarterPack/StarterPackScreen.tsx:600
+#: src/screens/StarterPack/StarterPackScreen.tsx:597
 #: src/screens/StarterPack/Wizard/index.tsx:327
 #: src/screens/StarterPack/Wizard/index.tsx:332
 msgid "Edit"
@@ -4445,7 +4445,7 @@ msgstr "प्रोफाइल सम्पादन गर्नुहोस�
 msgid "Edit Profile"
 msgstr "प्रोफाइल सम्पादन गर्नुहोस्"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:592
+#: src/screens/StarterPack/StarterPackScreen.tsx:589
 msgid "Edit starter pack"
 msgstr "स्टार्टर प्याक सम्पादन गर्नुहोस्"
 
@@ -4941,7 +4941,7 @@ msgstr "सन्देश मेटाउन असफल"
 msgid "Failed to delete post, please try again"
 msgstr "पोस्ट मेटाउन असफल। कृपया पुन: प्रयास गर्नुहोस्।"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:750
+#: src/screens/StarterPack/StarterPackScreen.tsx:747
 msgid "Failed to delete starter pack"
 msgstr "स्टार्टर प्याक मेटाउन असफल"
 
@@ -5257,7 +5257,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:112
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:196
+#: src/screens/StarterPack/StarterPackScreen.tsx:193
 #: src/view/screens/Feeds.tsx:504
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:712
@@ -5474,8 +5474,8 @@ msgstr "खाता अनुसरण गर्नुहोस्"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:165
 #: src/screens/Settings/FindContactsSettings.tsx:469
 #: src/screens/Settings/FindContactsSettings.tsx:479
-#: src/screens/StarterPack/StarterPackScreen.tsx:448
-#: src/screens/StarterPack/StarterPackScreen.tsx:456
+#: src/screens/StarterPack/StarterPackScreen.tsx:445
+#: src/screens/StarterPack/StarterPackScreen.tsx:453
 msgid "Follow all"
 msgstr "सबैलाई अनुसरण गर्नुहोस्"
 
@@ -5838,7 +5838,7 @@ msgstr "फर्कनुहोस्"
 #: src/screens/List/ListHiddenScreen.tsx:228
 #: src/screens/Profile/ErrorState.tsx:63
 #: src/screens/Profile/ErrorState.tsx:67
-#: src/screens/StarterPack/StarterPackScreen.tsx:803
+#: src/screens/StarterPack/StarterPackScreen.tsx:800
 msgid "Go Back"
 msgstr "फर्कनुहोस्"
 
@@ -6804,8 +6804,8 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:202
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:207
-#: src/screens/StarterPack/StarterPackScreen.tsx:474
-#: src/screens/StarterPack/StarterPackScreen.tsx:484
+#: src/screens/StarterPack/StarterPackScreen.tsx:471
+#: src/screens/StarterPack/StarterPackScreen.tsx:481
 msgid "Join Bluesky"
 msgstr "ब्लूस्काईमा सामेल हुनुहोस्"
 
@@ -8726,7 +8726,7 @@ msgstr ""
 msgid "Open share menu"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:578
+#: src/screens/StarterPack/StarterPackScreen.tsx:575
 msgid "Open starter pack menu"
 msgstr "स्टार्टर प्याक मेनु खोल्नुहोस्"
 
@@ -9003,7 +9003,7 @@ msgstr "भिडियो रोक्नुहोस्"
 
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Search/SearchResults.tsx:107
-#: src/screens/StarterPack/StarterPackScreen.tsx:195
+#: src/screens/StarterPack/StarterPackScreen.tsx:192
 msgid "People"
 msgstr "व्यक्ति"
 
@@ -9470,7 +9470,7 @@ msgstr "पोस्ट अनपिन गरियो"
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
 #: src/screens/ProfileList/index.tsx:164
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:216
-#: src/screens/StarterPack/StarterPackScreen.tsx:197
+#: src/screens/StarterPack/StarterPackScreen.tsx:194
 #: src/view/screens/Profile.tsx:235
 msgid "Posts"
 msgstr "पोस्टहरू"
@@ -10208,8 +10208,8 @@ msgstr "पोस्ट रिपोर्ट गर्नुहोस्"
 msgid "Report sent"
 msgstr ""
 
+#: src/screens/StarterPack/StarterPackScreen.tsx:650
 #: src/screens/StarterPack/StarterPackScreen.tsx:653
-#: src/screens/StarterPack/StarterPackScreen.tsx:656
 msgid "Report starter pack"
 msgstr "स्टार्टर प्याक रिपोर्ट गर्नुहोस्"
 
@@ -10275,7 +10275,7 @@ msgstr ""
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
 #: src/components/PostControls/RepostButton.web.tsx:103
-#: src/screens/StarterPack/StarterPackScreen.tsx:573
+#: src/screens/StarterPack/StarterPackScreen.tsx:570
 msgid "Repost or quote post"
 msgstr "पुनः पोस्ट गर्नुहोस् वा पोस्टलाई उद्धृत गर्नुहोस्"
 
@@ -10494,7 +10494,7 @@ msgstr ""
 
 #: src/components/Error.tsx:68
 #: src/screens/List/ListHiddenScreen.tsx:223
-#: src/screens/StarterPack/StarterPackScreen.tsx:797
+#: src/screens/StarterPack/StarterPackScreen.tsx:794
 msgid "Return to previous page"
 msgstr "अघिल्लो पृष्ठमा फर्कनुहोस्"
 
@@ -11225,7 +11225,7 @@ msgstr "यौन रूपले प्रस्तावनात्मक"
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:412
 #: src/screens/Messages/components/InviteLinkDialog.tsx:423
-#: src/screens/StarterPack/StarterPackScreen.tsx:443
+#: src/screens/StarterPack/StarterPackScreen.tsx:440
 #: src/screens/Topic.tsx:91
 msgid "Share"
 msgstr "साझा गर्नुहोस्"
@@ -11301,7 +11301,7 @@ msgstr ""
 msgid "Share this search"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:436
+#: src/screens/StarterPack/StarterPackScreen.tsx:433
 msgid "Share this starter pack"
 msgstr "यस स्टार्टर प्याकलाई साझा गर्नुहोस्"
 
@@ -11313,8 +11313,8 @@ msgstr "यस स्टार्टर प्याकलाई साझा �
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:161
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:167
-#: src/screens/StarterPack/StarterPackScreen.tsx:634
-#: src/screens/StarterPack/StarterPackScreen.tsx:642
+#: src/screens/StarterPack/StarterPackScreen.tsx:631
+#: src/screens/StarterPack/StarterPackScreen.tsx:639
 #: src/view/com/profile/ProfileMenu.tsx:321
 #: src/view/com/profile/ProfileMenu.tsx:333
 msgid "Share via..."
@@ -11829,7 +11829,7 @@ msgstr ""
 msgid "Starter pack by you"
 msgstr "तपाईंको द्वारा स्टार्टर प्याक"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:761
+#: src/screens/StarterPack/StarterPackScreen.tsx:758
 msgid "Starter pack is invalid"
 msgstr "स्टार्टर प्याक अवैध छ"
 
@@ -12231,8 +12231,8 @@ msgstr "यसमा तलका सामग्रीहरू छन्:"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:112
 #: src/screens/StarterPack/StarterPackScreen.tsx:113
-#: src/screens/StarterPack/StarterPackScreen.tsx:160
-#: src/screens/StarterPack/StarterPackScreen.tsx:161
+#: src/screens/StarterPack/StarterPackScreen.tsx:157
+#: src/screens/StarterPack/StarterPackScreen.tsx:158
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
@@ -12369,7 +12369,7 @@ msgstr ""
 msgid "The server appears to be experiencing issues. Please try again in a few moments."
 msgstr "सर्भर समस्यामा देखिनु भएको छ। कृपया केही समय पछि पुन: प्रयास गर्नुहोस्।"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:771
+#: src/screens/StarterPack/StarterPackScreen.tsx:768
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
 msgstr "तपाईं जसलाई हेर्न चाहनुहुन्छ त्यो स्टार्टर प्याक अमान्य छ। तपाईं यस स्टार्टर प्याकलाई मेट्न सक्नुहुन्छ।"
 
@@ -13170,7 +13170,7 @@ msgstr ""
 msgid "Unable to contact your service. Please check your Internet connection."
 msgstr "तपाईंको सेवा सम्पर्क गर्न असमर्थ। कृपया आफ्नो इन्टरनेट जडान जाँच गर्नुहोस्।"
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:696
+#: src/screens/StarterPack/StarterPackScreen.tsx:693
 msgid "Unable to delete"
 msgstr "हटाउन असमर्थ"
 
@@ -14472,7 +14472,7 @@ msgstr "हो, निष्क्रिय गर्नुहोस्"
 msgid "Yes, delete my account"
 msgstr ""
 
-#: src/screens/StarterPack/StarterPackScreen.tsx:708
+#: src/screens/StarterPack/StarterPackScreen.tsx:705
 msgid "Yes, delete this starter pack"
 msgstr "हो, यो स्टार्टर प्याक मेटाउनुहोस्"
 
