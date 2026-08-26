@@ -426,7 +426,7 @@
     },
     "app.bsky.embed.video": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.embed.video",
-      "cid": "bafyreie3nug4ezpwodl6yrpgv5edkazzn22t7ea4yaeuun4rctyekkngai"
+      "cid": "bafyreiaqos23yv3t4ptrxily6s6qea5fcxfjzjlm42zq46xweby2mkgr4m"
     },
     "app.bsky.feed.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.feed.defs",
