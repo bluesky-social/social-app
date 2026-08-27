@@ -1,7 +1,13 @@
 import {type SessionData} from '@atproto/lex-password-session'
 import {describe, expect, it, jest} from '@jest/globals'
 
-import {type Action, getInitialState, reducer, type State} from '../reducer'
+import {
+  type Action,
+  getInitialState,
+  rebasePersistedSession,
+  reducer,
+  type State,
+} from '../reducer'
 import {sessionDataToSessionAccount} from '../session-core'
 import {type SessionAccount} from '../types'
 
@@ -1777,7 +1783,232 @@ describe('session', () => {
     expect(state.currentBundleState.did).toBe('alice-did')
     expect(state.needsPersist).toBe(true)
   })
+
+  describe('rebasePersistedSession', () => {
+    it('keeps a newer token generation when a stale metadata update is persisted', () => {
+      const stale = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-1',
+        refreshJwt: 'alice-refresh-jwt-1',
+        emailConfirmed: false,
+        emailAuthFactor: false,
+      })
+      const fresh = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+        emailConfirmed: false,
+        emailAuthFactor: false,
+      })
+      const bob = makeAccount('https://bob.com', {
+        active: true,
+        did: 'bob-did',
+        handle: 'bob.test',
+        accessJwt: 'bob-access-jwt-1',
+        refreshJwt: 'bob-refresh-jwt-1',
+      })
+      const desired = snapshot([{...stale, emailConfirmed: true}], 'alice-did')
+      const latest = snapshot([fresh, bob], 'alice-did')
+
+      const rebased = rebasePersistedSession(latest, desired, {
+        type: 'partial-refresh-session',
+        accountDid: 'alice-did',
+        patch: {emailConfirmed: true, emailAuthFactor: false},
+      })
+
+      expect(rebased.accounts).toEqual([{...fresh, emailConfirmed: true}, bob])
+      expect(rebased.currentAccount?.did).toBe('alice-did')
+    })
+
+    it('accepts a fresh token pair delivered by the active session', () => {
+      const stale = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-1',
+        refreshJwt: 'alice-refresh-jwt-1',
+      })
+      const fresh = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+      })
+
+      const rebased = rebasePersistedSession(
+        snapshot([stale], 'alice-did'),
+        snapshot([fresh], 'alice-did'),
+        {
+          type: 'received-session-event',
+          bundle: makeBundle('https://alice.com'),
+          accountDid: 'alice-did',
+          refreshedAccount: fresh,
+          sessionEvent: 'update',
+        },
+      )
+
+      expect(rebased.accounts).toEqual([fresh])
+    })
+
+    it('preserves a concurrent newer generation instead of clearing it on expiry', () => {
+      const dying = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-1',
+        refreshJwt: 'alice-refresh-jwt-1',
+      })
+      const fresh = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+      })
+      const expired = {...dying, accessJwt: undefined, refreshJwt: undefined}
+
+      const rebased = rebasePersistedSession(
+        snapshot([fresh], 'alice-did'),
+        snapshot([expired]),
+        {
+          type: 'received-session-event',
+          bundle: makeBundle('https://alice.com'),
+          accountDid: 'alice-did',
+          refreshedAccount: undefined,
+          sessionEvent: 'expired',
+          expiredRefreshJwt: dying.refreshJwt,
+        },
+      )
+
+      expect(rebased.accounts).toEqual([fresh])
+      expect(rebased.currentAccount?.did).toBe('alice-did')
+    })
+
+    it('keeps explicit logout authoritative over a newer stored token', () => {
+      const fresh = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+      })
+      const loggedOut = {...fresh, accessJwt: undefined, refreshJwt: undefined}
+
+      const rebased = rebasePersistedSession(
+        snapshot([fresh], 'alice-did'),
+        snapshot([loggedOut]),
+        {type: 'logged-out-current-account'},
+      )
+
+      expect(rebased.accounts).toEqual([loggedOut])
+      expect(rebased.currentAccount).toBeUndefined()
+    })
+
+    it('clears only the explicitly logged-out account', () => {
+      const alice = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+      })
+      const bobStale = makeAccount('https://bob.com', {
+        active: true,
+        did: 'bob-did',
+        handle: 'bob.test',
+        accessJwt: 'bob-access-jwt-1',
+        refreshJwt: 'bob-refresh-jwt-1',
+      })
+      const bobFresh = {
+        ...bobStale,
+        accessJwt: 'bob-access-jwt-2',
+        refreshJwt: 'bob-refresh-jwt-2',
+      }
+      const loggedOutAlice = {
+        ...alice,
+        accessJwt: undefined,
+        refreshJwt: undefined,
+      }
+
+      const rebased = rebasePersistedSession(
+        snapshot([alice, bobFresh], 'alice-did'),
+        snapshot([loggedOutAlice, bobStale]),
+        {type: 'logged-out-current-account', accountDid: 'alice-did'},
+      )
+
+      expect(rebased.accounts).toEqual([loggedOutAlice, bobFresh])
+    })
+
+    it('does not restore an account another tab removed', () => {
+      const stale = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-1',
+        refreshJwt: 'alice-refresh-jwt-1',
+      })
+
+      const rebased = rebasePersistedSession(
+        snapshot([]),
+        snapshot([{...stale, emailConfirmed: true}], 'alice-did'),
+        {
+          type: 'partial-refresh-session',
+          accountDid: 'alice-did',
+          patch: {emailConfirmed: true, emailAuthFactor: false},
+        },
+      )
+
+      expect(rebased.accounts).toEqual([])
+      expect(rebased.currentAccount).toBeUndefined()
+    })
+
+    it('clears credentials for accounts added before an all-account logout', () => {
+      const alice = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+      })
+      const bob = makeAccount('https://bob.com', {
+        active: true,
+        did: 'bob-did',
+        handle: 'bob.test',
+        accessJwt: 'bob-access-jwt-2',
+        refreshJwt: 'bob-refresh-jwt-2',
+      })
+      const loggedOutAlice = {
+        ...alice,
+        accessJwt: undefined,
+        refreshJwt: undefined,
+      }
+
+      const rebased = rebasePersistedSession(
+        snapshot([alice, bob], 'alice-did'),
+        snapshot([loggedOutAlice]),
+        {type: 'logged-out-every-account'},
+      )
+
+      expect(rebased.accounts).toEqual([
+        loggedOutAlice,
+        {...bob, accessJwt: undefined, refreshJwt: undefined},
+      ])
+      expect(rebased.currentAccount).toBeUndefined()
+    })
+  })
 })
+
+function snapshot(accounts: SessionAccount[], currentDid?: string) {
+  return {
+    accounts,
+    currentAccount: accounts.find(account => account.did === currentDid),
+  }
+}
 
 function run(initialState: State, actions: Action[]): State {
   let state = initialState
