@@ -1213,7 +1213,7 @@ export const ComposePost = ({
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
       void whenAppViewReady(client, initQuote.uri, res => {
-        const anchor = res.thread.at(0)
+        const anchor = res?.thread.at(0)
         if (
           bsky.isType(app.bsky.unspecced.defs.threadItemPost, anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
@@ -2478,7 +2478,9 @@ function useKeyboardVerticalOffset() {
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res: app.bsky.unspecced.getPostThreadV2.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.unspecced.getPostThreadV2.$OutputBody | undefined,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries
