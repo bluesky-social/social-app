@@ -188,13 +188,13 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:441
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {អ្នកតាម} other {អ្នកតាម}}"
+msgstr "{0, plural, other {អ្នកតាម}}"
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {អ្នកកំពុងតាម} other {អ្នកកំពុងតាម}}"
+msgstr "{0, plural, other {អ្នកកំពុងតាម}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
@@ -2636,7 +2636,7 @@ msgstr ""
 #: src/screens/Settings/AppIconSettings/index.tsx:36
 #: src/screens/Settings/AppIconSettings/index.tsx:224
 msgid "Change app icon to \"{0}\""
-msgstr "ផ្លាស់ប្តូររូបតំណាងកម្មវិធីទៅជា"
+msgstr "ផ្លាស់ប្តូររូបតំណាងកម្មវិធីទៅជា \"{0}\""
 
 #: src/components/AppLanguageDropdown.tsx:41
 msgid "Change app language"
@@ -14688,7 +14688,7 @@ msgstr ""
 
 #: src/screens/Profile/KnownFollowers.tsx:103
 msgid "You don't follow any users who follow @{name}."
-msgstr "អ្នកមិនធ្វើតាមអ្នកប្រើប្រាស់ណាដែលតាមដានទេ"
+msgstr "អ្នកមិនធ្វើតាមអ្នកប្រើប្រាស់ណាដែលតាមដាន @{name} ទេ"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:586
 msgid "You don't have any lists yet."

@@ -7213,7 +7213,7 @@ msgstr "Lista por {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:145
 msgid "List by <0/>"
-msgstr "Lista de {0}"
+msgstr "Lista de <0/>"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:143
 msgid "List by you"
@@ -7393,7 +7393,7 @@ msgstr "Sesión cerrada"
 
 #: src/view/shell/desktop/RightNav.tsx:142
 msgid "Logo by @sawaratsuki.bsky.social"
-msgstr "Logo de @sawaratsuki.bsky.social</0>"
+msgstr "Logo de @sawaratsuki.bsky.social"
 
 #: src/view/shell/desktop/RightNav.tsx:139
 #: src/view/shell/Drawer.tsx:771
@@ -7667,7 +7667,7 @@ msgstr "Lista de moderación por {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:158
 msgid "Moderation list by <0/>"
-msgstr "Lista de moderación por {0}"
+msgstr "Lista de moderación por <0/>"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:309
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156

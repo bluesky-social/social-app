@@ -80,7 +80,7 @@ msgstr "{0, plural, other {# 個帳號標記}}"
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {# 天} other {# 天}}"
+msgstr "{0, plural, other {# 天}}"
 
 #. placeholder {0}: profile.followersCount ?? 0
 #: src/screens/Profile/ProfileFollowers.tsx:33
@@ -90,7 +90,7 @@ msgstr "{0, plural, other {# 位跟隨者}}"
 #. placeholder {0}: profile.followsCount ?? 0
 #: src/screens/Profile/ProfileFollows.tsx:33
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, one {# 個跟隨中} other {# 個跟隨中}}"
+msgstr "{0, plural, other {# 個跟隨中}}"
 
 #. placeholder {0}: item.count
 #: src/components/contacts/screens/ViewMatches.tsx:276
@@ -100,7 +100,7 @@ msgstr "{0, plural, other {找到了 # 個朋友！}}"
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:159
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {# 小時} other {# 小時}}"
+msgstr "{0, plural, other {# 小時}}"
 
 #. placeholder {0}: labels.length
 #: src/components/moderation/PostAlerts.tsx:153
@@ -115,7 +115,7 @@ msgstr "{0, plural, other {已套用 # 個標記}}"
 #. placeholder {0}: likeCount ?? 0
 #: src/screens/Post/PostLikedBy.tsx:34
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, one {# 個喜歡} other {# 個喜歡}}"
+msgstr "{0, plural, other {# 個喜歡}}"
 
 #. placeholder {0}: convo.details.memberCount
 #: src/components/dialogs/SearchablePeopleList.tsx:551
@@ -126,12 +126,12 @@ msgstr "{0, plural, other {# 個成員}}"
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:149
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# 分鐘} other {# 分鐘}}"
+msgstr "{0, plural, other {# 分鐘}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:180
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# 個月} other {# 個月}}"
+msgstr "{0, plural, other {# 個月}}"
 
 #. placeholder {0}: convo.details.unreadJoinRequestCount
 #: src/screens/Messages/components/ChatListItem.tsx:224
@@ -147,17 +147,17 @@ msgstr "{0, plural, other {# 個人}}對此做出了 {1} 反應"
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostQuotes.tsx:34
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr "{0, plural, one {# 次引用} other {# 次引用}}"
+msgstr "{0, plural, other {# 次引用}}"
 
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostRepostedBy.tsx:34
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# 則轉發} other {# 則轉發}}"
+msgstr "{0, plural, other {# 則轉發}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:139
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {# 秒} other {# 秒}}"
+msgstr "{0, plural, other {# 秒}}"
 
 #. placeholder {0}: numUnreadMessages.numUnread ?? 0
 #. placeholder {0}: numUnreadNotifications ?? 0
@@ -165,7 +165,7 @@ msgstr "{0, plural, one {# 秒} other {# 秒}}"
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
 #: src/view/shell/Drawer.tsx:560
 msgid "{0, plural, one {# unread item} other {# unread items}}"
-msgstr "{0, plural, one {# 則未讀} other {# 則未讀}}"
+msgstr "{0, plural, other {# 則未讀}}"
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
@@ -177,7 +177,7 @@ msgstr "{0, plural, other {約 # 分鐘}}"
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:182
 msgid "{0, plural, one {#mo} other {#mo}}"
-msgstr "{0, plural, one {# 個月前} other {# 個月前}}"
+msgstr "{0, plural, other {# 個月前}}"
 
 #. placeholder {0}: draft.meta.replyCount
 #: src/view/com/composer/drafts/DraftItem.tsx:143
@@ -188,18 +188,18 @@ msgstr "{0, plural, other {還有 # 則貼文}}"
 #: src/components/ProfileHoverCard/index.web.tsx:441
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {個跟隨者} other {個跟隨者}}"
+msgstr "{0, plural, other {個跟隨者}}"
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
+msgstr "{0, plural, other {個跟隨中}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {則貼文} other {則貼文}}"
+msgstr "{0, plural, other {則貼文}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
@@ -460,7 +460,7 @@ msgstr "{count, plural, other {# 個邀請}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:484
 msgid "{count, plural, one {# unread item} other {# unread items}}"
-msgstr "{count, plural, one {# 則未讀} other {# 則未讀}}"
+msgstr "{count, plural, other {# 則未讀}}"
 
 #. Displayed when there are more requests to join a group chat than have been loaded
 #: src/screens/Messages/JoinRequests.tsx:424
@@ -478,11 +478,11 @@ msgstr "「{displayName}」的新手包"
 
 #: src/screens/SignupQueued.tsx:226
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs, plural, one {時} other {時}}"
+msgstr "{estimatedTimeHrs, plural, other {時}}"
 
 #: src/screens/SignupQueued.tsx:232
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
+msgstr "{estimatedTimeMins, plural, other {分}}"
 
 #: src/screens/Search/components/SearchHistory.tsx:170
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
@@ -566,7 +566,7 @@ msgstr "{firstAuthorLink} 對您授予了驗證"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:353
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}跟隨了您"
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}跟隨了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
@@ -574,11 +574,11 @@ msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {for
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}對您的自訂動態源表示喜歡"
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}對您的自訂動態源表示喜歡"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:291
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}對您的貼文表示喜歡"
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}對您的貼文表示喜歡"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:482
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
@@ -590,7 +590,7 @@ msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {for
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:313
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}轉發了您的貼文"
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}轉發了您的貼文"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:504
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
@@ -598,7 +598,7 @@ msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {for
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}}使用了您的新手包註冊"
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}使用了您的新手包註冊"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -750,7 +750,7 @@ msgstr "{name} 的新手包"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
-msgstr "{notificationCount, plural, one {# 則未讀通知} other {# 則未讀通知}}"
+msgstr "{notificationCount, plural, other {# 則未讀通知}}"
 
 #: src/screens/Settings/FindContactsSettings.tsx:461
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
@@ -7138,7 +7138,7 @@ msgstr "表示喜歡的使用者"
 #: src/components/FeedCard.tsx:246
 #: src/view/com/feeds/FeedSourceCard.tsx:171
 msgid "Liked by {0, plural, one {# user} other {# users}}"
-msgstr "{0, plural, one {# 個使用者} other {# 個使用者}}表示喜歡"
+msgstr "{0, plural, other {# 個使用者}}表示喜歡"
 
 #. Social proof below the post stats; the bolded name is a person the viewer follows who liked the post
 #. placeholder {0}: nameLink(names[0])
@@ -7163,7 +7163,7 @@ msgstr "由 {0} 和 {1} 表示喜歡"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:165
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
-msgstr "{likeCount, plural, one {# 個使用者} other {# 個使用者}}表示喜歡"
+msgstr "{likeCount, plural, other {# 個使用者}}表示喜歡"
 
 #: src/lib/hooks/useNotificationHandler.ts:158
 #: src/screens/Settings/NotificationSettings/index.tsx:159
@@ -12992,7 +12992,7 @@ msgstr "威脅或煽動暴力"
 #. placeholder {0}: Number(time) || 0
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
-msgstr "剩餘時間：{0, plural, one {# 秒} other {# 秒}}"
+msgstr "剩餘時間：{0, plural, other {# 秒}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
 msgid "Title"

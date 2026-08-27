@@ -126,12 +126,12 @@ msgstr ""
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:149
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# นาที} other {# นาที}}"
+msgstr "{0, plural, other {# นาที}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:180
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# เดือน} other {# เดือน}}"
+msgstr "{0, plural, other {# เดือน}}"
 
 #. placeholder {0}: convo.details.unreadJoinRequestCount
 #: src/screens/Messages/components/ChatListItem.tsx:224
@@ -152,7 +152,7 @@ msgstr ""
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostRepostedBy.tsx:34
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# รีโพสต์} other {# รีโพสต์}}"
+msgstr "{0, plural, other {# รีโพสต์}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:139
@@ -478,11 +478,11 @@ msgstr "ชุดเริ่มต้นของ {displayName}"
 
 #: src/screens/SignupQueued.tsx:226
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs, plural, one {ชั่วโมง} other {ชั่วโมง}}"
+msgstr "{estimatedTimeHrs, plural, other {ชั่วโมง}}"
 
 #: src/screens/SignupQueued.tsx:232
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins, plural, one {นาที} other {นาที}}"
+msgstr "{estimatedTimeMins, plural, other {นาที}}"
 
 #: src/screens/Search/components/SearchHistory.tsx:170
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
@@ -7667,7 +7667,7 @@ msgstr "กรองโดย {0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:158
 msgid "Moderation list by <0/>"
-msgstr "กรองโดย {0}"
+msgstr "กรองโดย <0/>"
 
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:309
 #: src/view/com/profile/ProfileSubpageHeader.tsx:156

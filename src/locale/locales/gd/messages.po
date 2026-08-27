@@ -7263,7 +7263,7 @@ msgstr "Ainm na liosta"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:438
 msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
-msgstr "Tha ainm na liosta ro fhada. {DISPLAY_NAME_MAX_GRAPHEMES, plural, one {{0} charactar air a’ char as motha.} two {{0} charactar air a’ char as motha.} few {{0} charactaran air a’ char as motha.} other {{0} caractar air a’ char as motha.}}"
+msgstr "Tha ainm na liosta ro fhada. {DISPLAY_NAME_MAX_GRAPHEMES, plural, one {# charactar air a’ char as motha.} two {# charactar air a’ char as motha.} few {# charactaran air a’ char as motha.} other {# caractar air a’ char as motha.}}"
 
 #: src/screens/ProfileList/components/Header.tsx:116
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:131

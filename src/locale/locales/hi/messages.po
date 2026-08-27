@@ -606,7 +606,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:357
 msgid "{firstAuthorName} followed you"
-msgstr "ने आपको फ़ॉलो किया"
+msgstr "{firstAuthorName} ने आपको फ़ॉलो किया"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:342
 msgid "{firstAuthorName} followed you back"
