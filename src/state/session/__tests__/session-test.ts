@@ -1902,10 +1902,34 @@ describe('session', () => {
       const rebased = rebasePersistedSession(
         snapshot([fresh], 'alice-did'),
         snapshot([loggedOut]),
-        {type: 'logged-out-current-account'},
+        {type: 'logged-out-current-account', accountDid: 'alice-did'},
       )
 
       expect(rebased.accounts).toEqual([loggedOut])
+      expect(rebased.currentAccount).toBeUndefined()
+    })
+
+    it('keeps latest tokens when no current account is available to log out', () => {
+      const stale = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-1',
+        refreshJwt: 'alice-refresh-jwt-1',
+      })
+      const fresh = {
+        ...stale,
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+      }
+
+      const rebased = rebasePersistedSession(
+        snapshot([fresh], 'alice-did'),
+        snapshot([stale]),
+        {type: 'logged-out-current-account'},
+      )
+
+      expect(rebased.accounts).toEqual([fresh])
       expect(rebased.currentAccount).toBeUndefined()
     })
 

@@ -164,9 +164,7 @@ function getTokenWriteMode(
 ): 'replace' | 'clear' | 'keep-latest' {
   switch (action.type) {
     case 'logged-out-current-account':
-      return action.accountDid === undefined || action.accountDid === did
-        ? 'clear'
-        : 'keep-latest'
+      return action.accountDid === did ? 'clear' : 'keep-latest'
     case 'logged-out-every-account':
       return 'clear'
     case 'received-session-event':
@@ -175,8 +173,8 @@ function getTokenWriteMode(
         return latestAccount.refreshJwt ? 'replace' : 'keep-latest'
       }
       if (action.sessionEvent === 'expired') {
-        return latestAccount.refreshJwt &&
-          latestAccount.refreshJwt !== action.expiredRefreshJwt
+        if (!action.expiredRefreshJwt) return 'clear'
+        return latestAccount.refreshJwt !== action.expiredRefreshJwt
           ? 'keep-latest'
           : 'clear'
       }
