@@ -3242,8 +3242,8 @@ msgid "Contact our support team"
 msgstr "Kontaktiere unser Support-Team"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:160
-#: src/screens/Signup/index.tsx:240
-#: src/screens/Signup/index.tsx:243
+#: src/screens/Signup/index.tsx:241
+#: src/screens/Signup/index.tsx:244
 msgid "Contact support"
 msgstr "Support kontaktieren"
 
@@ -6104,7 +6104,7 @@ msgstr "Du hast einen Code? <0>Hier klicken.</0>"
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 msgstr "Haben wir deinen Standort falsch erkannt? <0>Tippe hier, um deinen Standort mit GPS zu aktualisieren.</0>"
 
-#: src/screens/Signup/index.tsx:238
+#: src/screens/Signup/index.tsx:239
 msgid "Having trouble?"
 msgstr "Hast du Probleme?"
 

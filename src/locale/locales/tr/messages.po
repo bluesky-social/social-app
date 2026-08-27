@@ -3242,8 +3242,8 @@ msgid "Contact our support team"
 msgstr "Destek ekibimize ulaşın"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:160
-#: src/screens/Signup/index.tsx:240
-#: src/screens/Signup/index.tsx:243
+#: src/screens/Signup/index.tsx:241
+#: src/screens/Signup/index.tsx:244
 msgid "Contact support"
 msgstr "Destek ile iletişime geçin"
 
@@ -6104,7 +6104,7 @@ msgstr "Kodunuz var mı? <0>Buraya tıklayın.</0>"
 msgid "Have we got your location wrong? <0>Tap here to update your location with GPS.</0>"
 msgstr "Konumunuzu tutturamadık mı? <0>Konumunuzu GPS'le güncellemek için buraya dokunun.</0>"
 
-#: src/screens/Signup/index.tsx:238
+#: src/screens/Signup/index.tsx:239
 msgid "Having trouble?"
 msgstr "Sorun mu yaşıyorsunuz?"
 
