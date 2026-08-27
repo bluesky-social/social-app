@@ -22,7 +22,7 @@ import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
-import {getDataUriSize} from '#/lib/media/util'
+import {getUriSize} from '#/lib/media/uriSize'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -133,7 +133,7 @@ export function StepProfile() {
             height: rendered.height,
             width: rendered.width,
             path: result.uri,
-            size: getDataUriSize(result.uri),
+            size: await getUriSize(result.uri),
           },
         ]
       } catch {
