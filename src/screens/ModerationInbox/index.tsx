@@ -15,7 +15,6 @@ import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {StatusTag} from './components/StatusTag'
 
 type ReportFilter = 'all' | 'pending' | 'resolved' | 'unread'
 
@@ -139,20 +138,14 @@ function YourReports() {
           </SimpleInlineLinkText>
         ) : undefined}
       </View>
-      <ReportRow status="resolved" unread />
+      <ReportRow unread />
       <ReportRow unread />
       <ReportRow />
     </Layout.Center>
   )
 }
 
-function ReportRow({
-  status,
-  unread,
-}: {
-  status?: 'resolved' | 'pending'
-  unread?: boolean
-}) {
+function ReportRow({unread}: {unread?: boolean}) {
   const t = useTheme()
   const {i18n} = useLingui()
 
@@ -174,12 +167,11 @@ function ReportRow({
         <Text style={[a.text_md, a.font_semi_bold]}>
           Post by @deleteme01.bsky.social
         </Text>
-        <Text style={[a.text_sm, {color: t.palette.primary_900}]}>
-          Post removed
-        </Text>
         <View style={[a.mt_2xs, a.flex_row, a.align_center, a.gap_sm]}>
-          <StatusTag status={status} />
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
+            Post removed
+          </Text>
+          <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
             {i18n.date(new Date(), {
               month: 'short',
               day: 'numeric',
