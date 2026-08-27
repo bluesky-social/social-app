@@ -344,7 +344,7 @@ export function TextInput({
   return (
     <>
       <View style={[styles.container, hasRightPadding && styles.rightPadding]}>
-        {/* @ts-ignore inputStyle is fine */}
+        {/* @ts-expect-error inputStyle is fine */}
         <EditorContent editor={editor} style={inputStyle} />
       </View>
 
@@ -479,7 +479,7 @@ const styles = StyleSheet.create({
     pointerEvents: 'none',
     alignItems: 'center',
     justifyContent: 'center',
-    // @ts-ignore web only -prf
+    // @ts-expect-error web only -prf
     position: 'fixed',
     padding: 16,
     top: 0,
@@ -488,7 +488,6 @@ const styles = StyleSheet.create({
     right: 0,
   },
   dropModal: {
-    // @ts-ignore web only
     boxShadow: 'rgba(0, 0, 0, 0.3) 0px 5px 20px',
     padding: 8,
     borderWidth: 1,

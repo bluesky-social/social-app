@@ -47,7 +47,7 @@ export function InterestTabs({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const listRef = useRef<ScrollView>(null)
+  const listRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const [totalWidth, setTotalWidth] = useState(0)
   const [scrollX, setScrollX] = useState(0)
   const [contentWidth, setContentWidth] = useState(0)

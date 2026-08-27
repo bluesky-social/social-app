@@ -41,6 +41,7 @@ import {
 } from '#/state/shell/progress-guide'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {ProfileSubpageHeader} from '#/view/com/profile/ProfileSubpageHeader'
+import {type ListRef} from '#/view/com/util/List'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -146,10 +147,7 @@ export function StarterPackScreenInner({
   const isValid =
     starterPack &&
     (starterPack.list || starterPack?.creator?.did === currentAccount?.did) &&
-    // Cards may precache a synthetic full view while navigating. Its list CID
-    // is intentionally empty until the server response replaces it, so use
-    // the trusted app-view discriminator here instead of strict validation.
-    bsky.isType(app.bsky.graph.defs.starterPackView, starterPack) &&
+    bsky.starterPack.isTrustedView(starterPack) &&
     bsky.matches(app.bsky.graph.starterpack, starterPack.record)
 
   if (!did || !starterPack || !isValid || !moderationOpts) {
@@ -251,8 +249,7 @@ function StarterPackScreenLoaded({
                 // Validated above
                 listUri={starterPack.list!.uri}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
+                scrollElRef={scrollElRef as ListRef}
                 moderationOpts={moderationOpts}
               />
             )
@@ -260,11 +257,9 @@ function StarterPackScreenLoaded({
         {showFeedsTab
           ? ({headerHeight, scrollElRef}) => (
               <FeedsList
-                // @ts-expect-error ?
-                feeds={starterPack?.feeds}
+                feeds={starterPack.feeds!}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
+                scrollElRef={scrollElRef as ListRef}
               />
             )
           : null}
@@ -274,9 +269,7 @@ function StarterPackScreenLoaded({
                 // Validated above
                 listUri={starterPack.list!.uri}
                 headerHeight={headerHeight}
-                // @ts-expect-error
-                scrollElRef={scrollElRef}
-                moderationOpts={moderationOpts}
+                scrollElRef={scrollElRef as ListRef}
               />
             )
           : null}

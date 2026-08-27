@@ -6,8 +6,6 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useLikedBySampleQuery} from '#/state/queries/post-liked-by'
-import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {InlineLinkText, Link} from '#/components/Link'
@@ -59,29 +57,16 @@ export function LikesStat({post}: {post: app.bsky.feed.defs.PostView}) {
  * the post's recent likers, renders a face pile plus "Liked by A and B" on
  * its own row below the interaction stats line. Renders nothing otherwise.
  *
- * Known likers are sourced client-side from a single `getLikes` request (100
- * likes, the API max per page), so they are a sample of the most recent
- * likers, not an exhaustive list.
+ * Known likers are included in the post viewer state so this can render with
+ * the rest of the thread, without a separate request or layout shift.
  */
 export function KnownLikers({post}: {post: app.bsky.feed.defs.PostView}) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {hasSession, currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
   const ax = useAnalytics()
 
   const likeCount = post.likeCount ?? 0
-  /*
-   * Kill switch for the getLikes sample request itself, separate from the
-   * display gate below.
-   */
-  const fetchEnabled = ax.features.enabled(
-    ax.features.PostThreadKnownLikersFetchEnable,
-  )
-  const {data} = useLikedBySampleQuery({
-    uri: fetchEnabled && hasSession && likeCount > 0 ? post.uri : undefined,
-  })
-
   if (likeCount === 0) return null
 
   const urip = new AtUri(post.uri)
@@ -89,17 +74,14 @@ export function KnownLikers({post}: {post: app.bsky.feed.defs.PostView}) {
   const onPressLikedBy = () => ax.metric('post:likedBy:click', {})
 
   const knownLikersAndModeration = moderationOpts
-    ? (data?.likes ?? [])
-        .map(like => like.actor)
+    ? (post.viewer?.knownLikers?.actors ?? [])
         .map(actor => ({
           actor,
           moderation: moderateProfile(actor, moderationOpts),
         }))
-        .filter(({actor, moderation}) => {
+        .filter(({moderation}) => {
           const modui = moderation.ui('profileList')
-          const isMe = actor.did === currentAccount?.did
-          const following = actor.viewer?.following
-          return !isMe && following && !modui.filter
+          return !modui.filter
         })
     : []
 

@@ -52,7 +52,6 @@ export const PlaceholderCanvas = forwardRef<PlaceholderCanvasRef, {}>(
       <View style={styles.container}>
         <Suspense fallback={null}>
           <LazyViewShot
-            // @ts-ignore this library doesn't have types
             ref={viewshotRef}
             options={{
               fileName: 'placeholderAvatar',

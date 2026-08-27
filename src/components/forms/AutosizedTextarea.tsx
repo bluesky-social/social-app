@@ -8,23 +8,24 @@ import {
 import {mergeRefs} from '#/lib/merge-refs'
 import {atoms as a, extractPadding, useAlf, web} from '#/alf'
 import {normalizeTextStyles} from '#/alf/typography'
-import {IS_ANDROID, IS_IOS, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 
 export type AutosizedTextareaProps = Omit<TextInputProps, 'multiline'> & {
-  ref?: React.Ref<TextInput>
+  ref?: React.Ref<React.ComponentRef<typeof TextInput>>
   label: string
   minRows?: number
   maxRows?: number
   onUpdateHeight?: (height: number) => void
   /**
    * In some cases, like on native, we may not pass in an actual `value` prop.
-   * This prop allows Android to know if the field was cleared and thereby
-   * reset its height. This is a small hack required because we need to
-   * explicitly set the `{height: nativeHeight}` on Android.
+   * This prop allows native platforms to know if the field was cleared and
+   * thereby reset its height. This is a small hack required because Android's
+   * height is driven by state, while iOS needs an explicit minimum height when
+   * cleared programmatically.
    *
-   * If you notice height calcuation issues after clearing the field on
-   * Android, check if this value is being populated and cleared properly in
-   * the parent component.
+   * If you notice height calculation issues after clearing the field on a
+   * native platform, check if this value is being populated and cleared
+   * properly in the parent component.
    */
   rawValue?: string
 }
@@ -43,7 +44,7 @@ export function AutosizedTextarea({
   ...rest
 }: AutosizedTextareaProps) {
   const {theme: t, fonts} = useAlf()
-  const internalRef = useRef<TextInput>(null)
+  const internalRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {style, minInputHeight, maxInputHeight, verticalContentPadding} =
     useMemo(() => {
       const normalizedStyles = normalizeTextStyles(
@@ -137,13 +138,12 @@ export function AutosizedTextarea({
   }
 
   /*
-   * Manual height clearing required for Android because we're forced to set
-   * `{height: nativeHeight}` on Android, and even though `onContentSizeChange`
-   * fires, the height matches the existing height and we aren't able to reset.
+   * Reset native height state after a programmatic clear. Android uses it as
+   * the explicit input height, while iOS uses it to decide when to scroll.
    */
   const prevRawValue = useRef(rawValue || '')
   useEffect(() => {
-    if (!IS_ANDROID) return // everything else is fine
+    if (!IS_NATIVE) return
     if (rawValue === undefined) return // uncontrolled
     if (prevRawValue.current?.length && rawValue === '') {
       setNativeHeight(minInputHeight)
@@ -176,11 +176,12 @@ export function AutosizedTextarea({
           wordBreak: 'break-word',
         }),
         style,
-        IS_ANDROID ? {height: nativeHeight} : {},
+        IS_ANDROID && {height: nativeHeight},
+        IS_IOS && rawValue === '' && {height: minInputHeight},
       ]}
       {...rest}
       ref={mergeRefs([
-        (node: TextInput | null) => {
+        (node: React.ComponentRef<typeof TextInput> | null) => {
           internalRef.current = node
           // bop resize on first render
           if (IS_WEB && node) handleResizeWeb()

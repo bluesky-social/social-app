@@ -649,7 +649,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     height: '100%',
-    // @ts-ignore Web-only.
+    // @ts-expect-error Web-only.
     overflowAnchor: 'none', // Fixes jumps when switching tabs while scrolled down.
   },
   loading: {

@@ -60,7 +60,7 @@ function GifPickerBody({
   control: Dialog.DialogControlProps
   onSelectGif: (gif: Gif) => void
 }) {
-  const textInputRef = useRef<TextInput>(null)
+  const textInputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const listRef = useRef<ListMethods>(null)
   const [rawSearch, setRawSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('trending')

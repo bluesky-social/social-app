@@ -209,7 +209,7 @@ export function tryParse(rawData: string): Schema | undefined {
     const errors =
       parsed.error?.errors?.map(e => ({
         code: e.code,
-        // @ts-ignore exists on some types
+        // @ts-expect-error exists on some types
         expected: e?.expected,
         path: e.path?.join('.'),
       })) || []

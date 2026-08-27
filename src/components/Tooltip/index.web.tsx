@@ -3,7 +3,7 @@ import {View} from 'react-native'
 import {utils} from '@bsky.app/alf'
 import {Popover} from 'radix-ui'
 
-import {atoms as a, flatten, useTheme} from '#/alf'
+import {atoms as a, flattenToCSS, useTheme} from '#/alf'
 import {
   ARROW_SIZE,
   BUBBLE_MAX_WIDTH,
@@ -85,7 +85,7 @@ export function Content({
             evt.preventDefault()
           }
         }}
-        style={flatten([
+        style={flattenToCSS([
           a.rounded_sm,
           {
             backgroundColor: style.surface,

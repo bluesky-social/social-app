@@ -1,6 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {View, type ViewabilityConfig} from 'react-native'
+import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {type ViewabilityConfig} from '@react-native/virtualized-lists'
 import {useQueryClient} from '@tanstack/react-query'
 import * as bcp47Match from 'bcp-47-match'
 
@@ -983,6 +984,7 @@ export function Explore({
             <PostFeedItem
               post={subItem.post}
               record={subItem.record}
+              postNumbering={subItem.postNumbering}
               reason={indexInSlice === 0 ? slice.reason : undefined}
               feedContext={slice.feedContext}
               reqId={slice.reqId}

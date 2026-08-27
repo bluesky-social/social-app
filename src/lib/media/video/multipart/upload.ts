@@ -5,7 +5,7 @@ import {AbortError} from '#/lib/async/cancelable'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {shouldRetryError} from '#/lib/strings/errors'
 import {type app} from '#/lexicons'
-import {getServiceAuthToken} from '../upload.shared'
+import {getServiceAuthToken, serviceAuthExp} from '../upload.shared'
 import {mimeToExt} from '../util'
 import {
   abortUpload,
@@ -26,15 +26,12 @@ import {createUploadPart} from './uploadPart'
 import {uploadParts} from './uploadParts'
 import {delay, isRetryableMultipartError, retryDelayMs} from './utils'
 
-export class MultipartFallbackError extends Error {}
-
 export async function uploadVideoMultipart({
   video,
   client,
   dispatchUrl,
   setProgress,
   signal,
-  onStarted,
 }: {
   video: CompressedVideo
   client: Client
@@ -42,25 +39,12 @@ export async function uploadVideoMultipart({
   dispatchUrl: string | URL
   setProgress: (progress: number) => void
   signal: AbortSignal
-  onStarted?: () => void
 }): Promise<app.bsky.video.defs.JobStatus> {
   throwIfAborted(signal)
   const tokenProvider = createTokenProvider(client, dispatchUrl, signal)
   const token = await tokenProvider.get()
   const name = `${nanoid(12)}.${mimeToExt(video.mimeType)}`
-  let session
-  try {
-    session = await startUpload({token, video, name, signal})
-  } catch (err) {
-    if (signal.aborted) throw new AbortError()
-    // A server without multipart support, or one with the kill switch active,
-    // leaves no reservation behind. The legacy path remains authoritative.
-    throw new MultipartFallbackError(
-      err instanceof Error ? err.message : 'Multipart upload unavailable',
-    )
-  }
-  onStarted?.()
-
+  const session = await startUpload({token, video, name, signal})
   const {jobId} = session
   const abortOnCancel = () => {
     void tokenProvider
@@ -89,7 +73,7 @@ export async function uploadVideoMultipart({
       })
     } catch (err) {
       if (signal.aborted) throw new AbortError()
-      return await abortThenFallbackOrResolve(
+      return await abortThenRethrowOrResolve(
         jobId,
         await tokenProvider.get(),
         err,
@@ -166,14 +150,14 @@ async function finishAndRecover({
             }
           } catch (err) {
             throwIfAborted(signal)
-            return await abortThenFallbackOrResolve(jobId, token, err)
+            return await abortThenRethrowOrResolve(jobId, token, err)
           }
           createdFailures++
           if (createdFailures < MULTIPART_FINISH_ATTEMPTS) {
             await delay(500 * 2 ** (createdFailures - 1), signal)
             continue
           }
-          return await abortThenFallbackOrResolve(jobId, token, finishError)
+          return await abortThenRethrowOrResolve(jobId, token, finishError)
         case 'finishing':
           // The service may have assembled the upload even though the finish
           // request failed. Poll and retry instead of starting a second upload.
@@ -224,16 +208,21 @@ async function getUploadStatusWithRetry(
   throw lastError
 }
 
-async function abortThenFallbackOrResolve(
+/**
+ * Releases the reservation for an upload we can no longer finish, then surfaces
+ * the failure that got us here. The abort can race a service-side completion,
+ * so a `completed` result is resolved as a success instead.
+ */
+async function abortThenRethrowOrResolve(
   jobId: string,
   token: string,
   cause: unknown,
 ): Promise<app.bsky.video.defs.JobStatus> {
   const result = await abortUploadWithRetry(jobId, token)
   if (result.state === 'aborted') {
-    throw new MultipartFallbackError(
-      cause instanceof Error ? cause.message : 'Multipart upload failed',
-    )
+    throw cause instanceof Error
+      ? cause
+      : new MultipartUploadError('Multipart upload failed')
   }
   if (result.state === 'completed' && result.completedJobId) {
     const status = await getUploadStatus(jobId, token)
@@ -280,7 +269,7 @@ function createTokenProvider(
   async function get(forceRefresh = false) {
     if (!forceRefresh && token && Date.now() < expiresAt - 60_000) return token
     if (!refresh) {
-      const exp = Math.floor(Date.now() / 1000) + 60 * 30
+      const exp = serviceAuthExp()
       refresh = getServiceAuthTokenWithRetry(client, dispatchUrl, exp, signal)
         .then(nextToken => {
           token = nextToken

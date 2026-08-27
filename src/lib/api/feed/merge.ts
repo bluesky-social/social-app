@@ -334,7 +334,7 @@ class MergeFeedSource_Custom extends MergeFeedSource {
       feed = feed.filter(post => new Date(post.post.indexedAt) > this.minDate)
       // attach source info
       for (const post of feed) {
-        // @ts-ignore
+        // @ts-expect-error
         post.__source = this.sourceInfo
       }
       return {

@@ -31,7 +31,9 @@ import {TabBar} from './TabBar'
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
+  scrollElRef: React.MutableRefObject<
+    ListMethods | React.ComponentRef<typeof ScrollView> | null
+  >
 }
 
 export interface PagerWithHeaderProps {
@@ -269,7 +271,7 @@ let PagerTabBar = ({
       ],
     }
   })
-  const headerRef = useRef<View>(null)
+  const headerRef = useRef<React.ComponentRef<typeof View>>(null)
   const fallbackHeaderOnlyHeight = useRef(0)
   return (
     <Animated.View
@@ -378,7 +380,7 @@ function PagerItem({
         headerHeight,
         isFocused,
         scrollElRef: scrollElRef as React.MutableRefObject<
-          ListMethods | ScrollView | null
+          ListMethods | React.ComponentRef<typeof ScrollView> | null
         >,
       })}
     </ScrollProvider>

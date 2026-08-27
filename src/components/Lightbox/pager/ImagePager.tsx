@@ -11,7 +11,10 @@ import {useCallback, useEffect, useMemo, useState} from 'react'
 import {PixelRatio, StyleSheet, useWindowDimensions, View} from 'react-native'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
-import PagerView from 'react-native-pager-view'
+import PagerView, {
+  type PagerViewOnPageSelectedEvent,
+  type PageScrollStateChangedNativeEvent,
+} from 'react-native-pager-view'
 import Animated, {
   type AnimatableValue,
   type AnimatedRef,
@@ -383,7 +386,7 @@ function ImageView({
       <PagerView
         scrollEnabled={!isScaled}
         initialPage={initialImageIndex}
-        onPageSelected={e => {
+        onPageSelected={(e: PagerViewOnPageSelectedEvent) => {
           const next = e.nativeEvent.position
           setImageIndex(prev => {
             if (metricsContext && prev !== next) {
@@ -401,7 +404,7 @@ function ImageView({
           })
           setIsScaled(false)
         }}
-        onPageScrollStateChanged={e => {
+        onPageScrollStateChanged={(e: PageScrollStateChangedNativeEvent) => {
           setIsDragging(e.nativeEvent.pageScrollState !== 'idle')
         }}
         overdrag={true}

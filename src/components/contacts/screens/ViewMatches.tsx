@@ -383,7 +383,7 @@ export function ViewMatches({
         ref={listRef}
         data={items}
         renderItem={renderItem}
-        ListFooterComponent={!isEmpty ? <ListFooter height={20} /> : null}
+        ListFooterComponent={!isEmpty ? <ListFooter height={20} /> : undefined}
         keyExtractor={keyExtractor}
         keyboardDismissMode="interactive"
         automaticallyAdjustKeyboardInsets

@@ -56,6 +56,16 @@ jest.mock('expo-media-library', () => ({
   __esModule: true, // this property makes it work
   default: jest.fn(),
   usePermissions: jest.fn(() => [true]),
+  requestPermissionsAsync: jest.fn().mockResolvedValue({granted: true}),
+  saveToLibraryAsync: jest.fn().mockResolvedValue(undefined),
+}))
+
+jest.mock('expo-media-library/legacy', () => ({
+  __esModule: true,
+  default: jest.fn(),
+  usePermissions: jest.fn(() => [true]),
+  requestPermissionsAsync: jest.fn().mockResolvedValue({granted: true}),
+  saveToLibraryAsync: jest.fn().mockResolvedValue(undefined),
 }))
 
 jest.mock('@bsky.app/expo-guess-language', () => ({

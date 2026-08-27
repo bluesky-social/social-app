@@ -145,7 +145,6 @@ export function ComposerPrompt() {
   return (
     <Pressable
       onPress={onPress}
-      android_ripple={null}
       accessibilityRole="button"
       accessibilityLabel={_(msg`Compose new post`)}
       accessibilityHint={_(msg`Opens the post composer`)}

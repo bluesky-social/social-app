@@ -221,7 +221,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
     )
 
     const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
-    act(() => buttons?.[1].onPress?.())
+    void act(() => buttons?.[1].onPress?.())
 
     await waitFor(() => expect(reloadAsync).toHaveBeenCalled())
     expect(device.set).toHaveBeenCalledWith(['pendingOTAUpdate'], {
@@ -256,7 +256,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
     await act(() => result.current.tryApplyUpdate('pull-request-123'))
     const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
 
-    act(() => buttons?.[1].onPress?.())
+    void act(() => buttons?.[1].onPress?.())
 
     await waitFor(() =>
       expect(Alert.alert).toHaveBeenLastCalledWith(
@@ -283,7 +283,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
     await act(() => result.current.tryApplyUpdate('pull-request-123'))
     const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
 
-    act(() => buttons?.[1].onPress?.())
+    void act(() => buttons?.[1].onPress?.())
 
     await waitFor(() =>
       expect(Alert.alert).toHaveBeenLastCalledWith(

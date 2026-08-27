@@ -38,7 +38,7 @@ export function TabBar({
   onPressSelected,
 }: TabBarProps) {
   const t = useTheme()
-  const scrollElRef = useRef<ScrollView>(null)
+  const scrollElRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const itemRefs = useRef<Array<Element>>([])
   const {gtMobile} = useBreakpoints()
   const styles = gtMobile ? desktopStyles : mobileStyles
@@ -47,7 +47,8 @@ export function TabBar({
     // On the web, the primary interaction is tapping.
     // Scrolling under tap feels disorienting so only adjust the scroll offset
     // when tapping on an item out of view--and we adjust by almost an entire page.
-    const parent = scrollElRef?.current?.getScrollableNode?.()
+    const parent = scrollElRef.current?.getScrollableNode?.() as unknown as
+      HTMLElement | undefined
     if (!parent) {
       return
     }

@@ -35,7 +35,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
   const {gtMobile} = useBreakpoints()
   const onboardDispatch = useOnboardingDispatch()
   const {state, dispatch} = useOnboardingInternalState()
-  const scrollview = useRef<ScrollView>(null)
+  const scrollview = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const prevActiveStep = useRef<string>(state.activeStep)
 
   useEffect(() => {
