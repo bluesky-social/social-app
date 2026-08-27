@@ -8,7 +8,7 @@ msgstr ""
 "Language: de\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: German\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Standortzugriff erlauben"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Anderen erlauben, über meine Posts Mitteilungen zu erhalten"
 
@@ -1759,7 +1759,7 @@ msgstr "Jeder kann eine Beitrittsanfrage stellen"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Jeden, der mir folgt"
 
@@ -1800,8 +1800,8 @@ msgstr "App-Passwort-Namen dürfen nur Buchstaben, Zahlen, Leerzeichen, Bindestr
 msgid "App password names must be at least 4 characters long"
 msgstr "Namen von App-Passwörtern müssen mindestens 4 Zeichen enthalten"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "App-Passwörter"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "2FA per E-Mail deaktiviert"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "2FA per E-Mail aktiviert"
 
@@ -4686,7 +4686,7 @@ msgstr "Fehler beim Abrufen der neuesten Daten."
 msgid "Error loading post"
 msgstr "Fehler beim Laden des Posts"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Fehler beim Laden der Einstellung"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Mehr über die Verifizierung auf Bluesky erfahren (auf Englisch)"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Erfahre mehr darüber, was auf Bluesky öffentlich ist (auf Englisch)."
 
@@ -8223,7 +8223,7 @@ msgstr "Niemandem"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Niemanden"
@@ -8394,7 +8394,7 @@ msgstr "Noch nicht bereit zum Posten? Bewahre deine besten Ideen in den Entwürf
 msgid "Note about sharing"
 msgstr "Hinweis über das Teilen"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "Hinweis: Bluesky ist Teil der Atmosphere, eines offenen öffentlichen Netzwerks. Mit diesen Einstellungen werden andere Apps und Websites gebeten, deine Sichtbarkeit einzuschränken, sie können sich jedoch dagegen entscheiden. Deine öffentlichen Inhalte können weiterhin an anderer Stelle erscheinen."
 
@@ -8557,7 +8557,7 @@ msgstr "Nur Follower können diesem Gruppenchat beitreten."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Nur Follower, denen ich folge"
 
@@ -9541,7 +9541,7 @@ msgstr "Datenschutz und Sicherheit"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Datenschutz und Sicherheit"
 
@@ -11155,7 +11155,7 @@ msgstr "Einstellungen"
 msgid "Settings for activity from others"
 msgstr "Einstellungen für Aktivitäten von anderen"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Einstellungen, um anderen zu erlauben, Mitteilungen über deine Posts zu erhalten"
 
@@ -13140,7 +13140,7 @@ msgstr "TV"
 msgid "Twilight"
 msgstr "Dämmerung"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Zwei-Faktor-Authentisierung (2FA)"
 

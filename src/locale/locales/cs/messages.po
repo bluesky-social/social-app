@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 15:32\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Povolit přístup k poloze"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Umožnit ostatním dostávat upozornění na vaše příspěvky"
 
@@ -1759,7 +1759,7 @@ msgstr "Kdokoli může požádat o připojení"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Kdokoli, kdo mě sleduje"
 
@@ -1800,8 +1800,8 @@ msgstr "Názvy hesel aplikací mohou obsahovat pouze písmena, číslice, mezery
 msgid "App password names must be at least 4 characters long"
 msgstr "Názvy hesel aplikace musí mít nejméně 4 znaky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Hesla aplikace"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "E-mailové 2FA zakázáno"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "E-mailové 2FA povoleno"
 
@@ -4686,7 +4686,7 @@ msgstr "Chyba při získávání nejnovějších dat."
 msgid "Error loading post"
 msgstr "Chyba při načítání příspěvku"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Chyba při načítání předvolby"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Zjistěte více o ověření na Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Zjistěte více o tom, co je na Bluesky veřejné."
 
@@ -8223,7 +8223,7 @@ msgstr "Nikdo"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Nikdo"
@@ -8394,7 +8394,7 @@ msgstr "Nejste připraveni příspěvek publikovat? Své nejlepší nápady si u
 msgid "Note about sharing"
 msgstr "Poznámka o sdílení"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "Poznámka: Bluesky je součástí Atmosphere, otevřené veřejné sítě. Tato nastavení žádají ostatní aplikace a webové stránky, aby omezily vaši viditelnost, ale ty tak nemusí učinit. Váš veřejný obsah se stále může objevit jinde."
 
@@ -8557,7 +8557,7 @@ msgstr "Do tohoto skupinového chatu se mohou připojit pouze sledující."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Pouze sledující, které sleduji"
 
@@ -9541,7 +9541,7 @@ msgstr "Soukromí a zabezpečení"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Soukromí a zabezpečení"
 
@@ -11155,7 +11155,7 @@ msgstr "Nastavení"
 msgid "Settings for activity from others"
 msgstr "Nastavení pro aktivitu od ostatních"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Nastavení pro umožnění ostatním dostávat upozornění na vaše příspěvky"
 
@@ -13140,7 +13140,7 @@ msgstr "TV"
 msgid "Twilight"
 msgstr "Soumrak"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Dvoufaktorové ověření (2FA)"
 

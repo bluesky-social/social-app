@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 15:32\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Tillad adgang til lokalitet"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Tillad andre at blive notificeret om dine opslag"
 
@@ -1759,7 +1759,7 @@ msgstr "Alle kan anmode om at blive medlem"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Alle som følger mig"
 
@@ -1800,8 +1800,8 @@ msgstr "Navne på appadgangskoder kan kun indeholde bogstaver, tal, mellemrum, b
 msgid "App password names must be at least 4 characters long"
 msgstr "Navne på appadgangskoder skal bestå af mindst 4 tegn"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Appadgangskoder"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "2FA via e-mail deaktiveret"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "2FA via e-mail aktiveret"
 
@@ -4686,7 +4686,7 @@ msgstr "Kunne ikke hente seneste data."
 msgid "Error loading post"
 msgstr "Fejl ved indlæsning af opslag"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Kunne ikke indlæse indstilling"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Læs mere om verifikation på Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Læs mere om, hvad der er offentligt på Bluesky."
 
@@ -8223,7 +8223,7 @@ msgstr "Ingen"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Ingen"
@@ -8357,7 +8357,7 @@ msgstr "Ikkeseksuel nøgenhed"
 
 #: src/components/OTAChannelNotice.tsx:37
 msgid "Non-standard OTA channel"
-msgstr ""
+msgstr "Ikke-standard OTA-kanal"
 
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:220
 msgid "None"
@@ -8394,7 +8394,7 @@ msgstr "Ikke klar til at trykke Slå op? Gem dine bedste idéer i Kladder indtil
 msgid "Note about sharing"
 msgstr "Note vedr. deling"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "OBS: Bluesky er en del af Atmosfæren, et åbent offentligt netværk. Disse indstillinger anmoder apps og websites om at begrænse din synlighed, men de kan vælge ikke at gøre dette. Dit offentlige indhold kan stadig dukke op andre steder."
 
@@ -8557,7 +8557,7 @@ msgstr "Kun følgere kan deltage i denne gruppechat."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Kun følgere, jeg følger"
 
@@ -9541,7 +9541,7 @@ msgstr "Privatliv og sikkerhed"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Privatliv og sikkerhed"
 
@@ -10442,7 +10442,7 @@ msgstr "Gendan standard"
 
 #: src/components/OTAChannelNotice.tsx:54
 msgid "Restore the {defaultChannel} deployment"
-msgstr ""
+msgstr "Gendan {defaultChannel}-udrulningen"
 
 #: src/screens/Settings/FindContactsSettings.tsx:548
 #: src/screens/Settings/FindContactsSettings.tsx:564
@@ -11155,7 +11155,7 @@ msgstr "Indstillinger"
 msgid "Settings for activity from others"
 msgstr "Indstillinger for aktivitet fra andre"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Indstillinger for at tillade andre at blive notificeret om dine opslag"
 
@@ -11340,7 +11340,7 @@ msgstr "Deling af din aldersgruppe afslører kun aldersgruppen angivet for din A
 #. Shown next to the 'Share age range' button when on-device age verification is available. KWS is the name of a third-party verification partner.
 #: src/ageAssurance/components/DeviceSignalsNotice.tsx:43
 msgid "Sharing your age range reveals only the range associated with your Google Account – for example, that you’re at least 18. <0>Your exact age and birthday are never shared,</0> and this data never leaves this device. Therefore, it only enables access on this device. Alternatively, <1>you can use our trusted partner, KWS</1>, to complete your verification and enable access on all platforms."
-msgstr ""
+msgstr "Deling af din aldersgruppe afslører kun aldersgruppen angivet for din Google-konto – fx at du er mindst 18 år. <0>Din præcise alder og fødselsdato bliver ikke delt</0>, og disse oplysninger forlader aldrig denne enhed. Derfor giver de kun adgang på denne enhed. Alternativt <1>kan du benytte vores samarbejdspartner, KWS</1>, til at gennemføre alderstjek og give adgang på alle platforme."
 
 #: src/components/moderation/ContentHider.tsx:217
 #: src/components/moderation/LabelPreference.tsx:143
@@ -12585,7 +12585,7 @@ msgstr "Denne handling kan omgøres når som helst."
 
 #: src/components/OTAChannelNotice.tsx:40
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
-msgstr ""
+msgstr "Denne app kører en udrulning af <0>{currentChannel}</0>. Gendan {defaultChannel}-udrulningen for at komme tilbage til et standard-build."
 
 #: src/components/moderation/AppealForm.tsx:107
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -13140,7 +13140,7 @@ msgstr "Tv"
 msgid "Twilight"
 msgstr "Tusmørke"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Tofaktorgodkendelse (2FA)"
 

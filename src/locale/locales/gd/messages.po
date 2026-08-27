@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Thoir seachad cead air an ionad"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Ceadaich gum faigh daoine eile brathan mu phuist a dh’fhoillsicheas tu"
 
@@ -1759,7 +1759,7 @@ msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Duine sam bith a tha gam leantainn"
 
@@ -1800,8 +1800,8 @@ msgstr ""
 msgid "App password names must be at least 4 characters long"
 msgstr "Feumaidh co-dhiù 4 caractaran bhith ann am facal-faire na h-aplacaid"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Faclan-faire nan aplacaidean"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "Tha 2FA air a’ phost-d à comas"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "Tha 2FA air a’ phost-d an comas"
 
@@ -4686,7 +4686,7 @@ msgstr "Dh’èirich mearachd nuair a bha sinn a’ faighinn an dàta as ùire."
 msgid "Error loading post"
 msgstr "Dh’èirich mearachd rè luchdadh a’ phuist"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Dh’èirich mearachd rè luchdadh na roghainn"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Barrachd fiosrachaidh mun dearbhadh air Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Barrachd fiosrachaidh mu na rudan a tha poblach air Bluesky."
 
@@ -8223,7 +8223,7 @@ msgstr "Chan eil gin"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Chan eil gin"
@@ -8394,7 +8394,7 @@ msgstr "Ro thràth airson a phostadh? Cùm rudan mar seo mar dhreachdan gus am b
 msgid "Note about sharing"
 msgstr "Fiosrachadh mu cho-roinneadh"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr ""
 
@@ -8557,7 +8557,7 @@ msgstr ""
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Dìreach luchd-leantainn a tha mise gan leantainn cuideachd"
 
@@ -9541,7 +9541,7 @@ msgstr "Prìobhaideachd ⁊ tèarainteachd"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Prìobhaideachd ⁊ tèarainteachd"
 
@@ -11155,7 +11155,7 @@ msgstr "Roghainnean"
 msgid "Settings for activity from others"
 msgstr "Roghainnean a thaobh gnìomhachd dhaoine eile"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Na roghainnean a bheir cead do dhaoine eile brathan fhaighinn mu na puist agad"
 
@@ -13140,7 +13140,7 @@ msgstr "Tbh"
 msgid "Twilight"
 msgstr ""
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Dearbhadh dà-cheumnach (2FA)"
 

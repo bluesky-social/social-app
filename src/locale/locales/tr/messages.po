@@ -8,7 +8,7 @@ msgstr ""
 "Language: tr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: Turkish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Konum erişimine izin ver"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Başkalarına gönderilerinizden bildirim alma izni verin"
 
@@ -1759,7 +1759,7 @@ msgstr "Herkes katılmayı talep edebilir"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Beni takip eden herkes"
 
@@ -1800,8 +1800,8 @@ msgstr "Uygulama şifresi isimleri yalnızca harf, rakam, boşluk, tire ve alt �
 msgid "App password names must be at least 4 characters long"
 msgstr "Uygulama şifresi isimleri en az 4 karakter uzunluğunda olmalıdır"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Uygulama şifreleri"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "E-posta ile iki adımlı doğrulama devre dışı"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "E-posta ile iki adımlı doğrulama devrede"
 
@@ -4686,7 +4686,7 @@ msgstr "En son veriyi alırken hata oldu."
 msgid "Error loading post"
 msgstr "Gönderi yüklenirken bir hata oluştu"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Tercih yüklenirken hata oluştu"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Bluesky'da doğrulama ile ilgili daha fazla bilgi edinin"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky'da neyin herkese açık olduğu hakkında daha fazla bilgi edinin."
 
@@ -8223,7 +8223,7 @@ msgstr "Hiç kimse"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Hiç kimse"
@@ -8394,7 +8394,7 @@ msgstr "Gönder'e basmaya hazır değil misiniz? En iyi fikirlerinizi doğru zam
 msgid "Note about sharing"
 msgstr "Paylaşıma dair dikkatinize"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr ""
 
@@ -8557,7 +8557,7 @@ msgstr "Sadece takipçiler bu grup sohbetine katılabilir."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Sadece benim takip ettiğim takipçiler"
 
@@ -9541,7 +9541,7 @@ msgstr "Gizlilik ve güvenlik"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Gizlilik ve Güvenlik"
 
@@ -11155,7 +11155,7 @@ msgstr "Ayarlar"
 msgid "Settings for activity from others"
 msgstr "Başkalarının etkinliklerine dair ayarlar"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Gönderilerinizden başkalarının bildirim almasına izin verme ayarları"
 
@@ -13140,7 +13140,7 @@ msgstr "TV"
 msgid "Twilight"
 msgstr "Alacakaranlık"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "İki adımlı doğrulama (2FA)"
 

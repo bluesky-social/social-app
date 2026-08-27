@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -90,7 +90,7 @@ msgstr "{0, plural, one {# compte abonné} other {# comptes abonnés}}"
 #. placeholder {0}: profile.followsCount ?? 0
 #: src/screens/Profile/ProfileFollows.tsx:33
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, one {# compte suivi} other {# comptes suivis}}"
+msgstr "{0, plural, one {# abonnement} other {# abonnements}}"
 
 #. placeholder {0}: item.count
 #: src/components/contacts/screens/ViewMatches.tsx:276
@@ -490,7 +490,7 @@ msgstr "{filterCount, plural, one {+ # filtre} other {+ # filtres}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:359
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> vous ont suivi"
+msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> se sont abonné·e·s à votre compte"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:391
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> liked your custom feed"
@@ -526,11 +526,11 @@ msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:371
 msgid "{firstAuthorLink} followed you"
-msgstr "{firstAuthorLink} vous a suivi·e"
+msgstr "{firstAuthorLink} s’est abonné·e à votre compte"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:343
 msgid "{firstAuthorLink} followed you back"
-msgstr "{firstAuthorLink} vous a suivi·e en retour"
+msgstr "{firstAuthorLink} s’est abonné·e en retour à votre compte"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:403
 msgid "{firstAuthorLink} liked your custom feed"
@@ -566,11 +566,11 @@ msgstr "{firstAuthorLink} a vérifié votre compte"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:353
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} vous ont suivi"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} se sont abonné·e·s à votre compte"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} vous ont suivi via le kit de démarrage {starterPackName}"
+msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} se sont abonné·e·s à votre compte via le kit de démarrage {starterPackName}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -606,19 +606,19 @@ msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:357
 msgid "{firstAuthorName} followed you"
-msgstr "{firstAuthorName} a suivi votre compte"
+msgstr "{firstAuthorName} s’est abonné·e à votre compte"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:342
 msgid "{firstAuthorName} followed you back"
-msgstr "{firstAuthorName} a suivi votre compte en retour"
+msgstr "{firstAuthorName} s’est abonné·e à votre compte en retour"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr "{firstAuthorName} vous a suivi en retour via le kit de démarrage {starterPackName}"
+msgstr "{firstAuthorName} s’est abonné·e à votre compte en retour via le kit de démarrage {starterPackName}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} vous a suivi via le kit de démarrage {starterPackName}"
+msgstr "{firstAuthorName} s’est abonné·e à votre compte via le kit de démarrage {starterPackName}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -993,7 +993,7 @@ msgstr "Une capture d’écran d’un post avec un nouveau bouton à côté de c
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:114
 msgid "A screenshot of a profile page with a bell icon next to the follow button, indicating the new activity notifications feature."
-msgstr "Une capture d’écran d’une page de profil avec une icône de cloche à côté du bouton de suivi, indiquant la nouvelle fonctionnalité de notification d’activité."
+msgstr "Une capture d’écran d’une page de profil avec une icône de cloche à côté du bouton d’abonnement, indiquant la nouvelle fonctionnalité de notification d’activité."
 
 #. Contains a post that originally appeared in English. Consider translating the post text if it makes sense in your language, and noting that the post was translated from English.
 #: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:98
@@ -1003,7 +1003,7 @@ msgstr "Une capture d’écran d’une fenêtre de rédaction avec un nouveau bo
 #: src/components/dms/dialogs/NewChatDialog.tsx:102
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:118
 msgid "A selected recipient is not followed by the sender."
-msgstr "Un des comptes destinataires n’est pas suivi par le compte expéditeur."
+msgstr "Un des comptes destinataires ne fait pas partie des abonnements du compte expéditeur."
 
 #: src/Navigation.tsx:483
 #: src/screens/Settings/AboutSettings.tsx:85
@@ -1076,7 +1076,7 @@ msgstr "Compte bloqué"
 #: src/view/com/profile/ProfileMenu.tsx:239
 msgctxt "toast"
 msgid "Account followed"
-msgstr "Compte suivi"
+msgstr "Abonné·e au compte"
 
 #: src/lib/strings/errors.ts:68
 msgid "Account has been suspended"
@@ -1301,7 +1301,7 @@ msgstr "Ajoutez des fils d’actu à votre kit de démarrage !"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
-msgstr "Ajouter le fil d’actu par défaut avec seulement les comptes que vous suivez"
+msgstr "Ajouter le fil d’actu par défaut avec seulement les comptes auxquels vous êtes abonné·e"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:419
 msgid "Add the following DNS record to your domain:"
@@ -1447,11 +1447,11 @@ msgstr "Tous les {0}"
 #: src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx:98
 #: src/screens/StarterPack/StarterPackScreen.tsx:398
 msgid "All accounts have been followed!"
-msgstr "Tous les comptes ont été suivis !"
+msgstr "Abonné·e à tous les comptes !"
 
 #: src/components/contacts/screens/ViewMatches.tsx:150
 msgid "All friends followed!"
-msgstr "Tous les amis ont été suivis avec succès !"
+msgstr "Abonné·e à tous les amis !"
 
 #: src/components/dialogs/LanguageSelectDialog.tsx:255
 msgid "All languages"
@@ -1494,13 +1494,13 @@ msgid "Allow location access"
 msgstr "Autoriser la géolocalisation"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Autoriser les autres à être notifiés de vos posts"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:501
 msgid "Allow people you follow to reply"
-msgstr "Autoriser qui vous suivez à répondre"
+msgstr "Autoriser vos abonnements à répondre"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:515
 msgid "Allow people you mention to reply"
@@ -1517,7 +1517,7 @@ msgstr "Autoriser les membres de {0} à répondre"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:487
 msgid "Allow your followers to reply"
-msgstr "Autoriser quiconque vous suit à répondre"
+msgstr "Autoriser vos abonné·e·s à répondre"
 
 #: src/screens/Settings/AppPasswords.tsx:201
 msgid "Allows access to direct messages"
@@ -1631,7 +1631,7 @@ msgstr "Une erreur s’est produite lors de l’enregistrement du code QR !"
 #: src/screens/StarterPack/StarterPackScreen.tsx:357
 #: src/screens/StarterPack/StarterPackScreen.tsx:384
 msgid "An error occurred while trying to follow all"
-msgstr "Une erreur s’est produite en essayant de suivre tous les comptes"
+msgstr "Une erreur s’est produite en essayant de s’abonner à tous les comptes"
 
 #: src/view/com/composer/state/video.ts:555
 msgid "An error occurred while uploading the video. {message}"
@@ -1759,7 +1759,7 @@ msgstr "N’importe qui peut demander à rejoindre"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Quiconque me suit"
 
@@ -1800,8 +1800,8 @@ msgstr "Les noms de mots de passe d’application peuvent seulement contenir des
 msgid "App password names must be at least 4 characters long"
 msgstr "Les noms de mots de passe d’application doivent comporter au moins 4 caractères."
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Mots de passe d’application"
 
@@ -2756,7 +2756,7 @@ msgstr "Les propriétaires d’une discussion ne peuvent pas en partir."
 #: src/components/dms/dialogs/NewChatDialog.tsx:67
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:82
 msgid "Chat recipient is not followed by the sender."
-msgstr "Le compte destinataire de la discussion n’est pas suivi par le compte expéditeur."
+msgstr "Le compte destinataire de la discussion ne fait pas partie des abonnements du compte expéditeur."
 
 #: src/Navigation.tsx:529
 msgid "Chat request inbox"
@@ -3542,13 +3542,13 @@ msgstr "Impossible de retrouver le profil"
 #: src/screens/Settings/FindContactsSettings.tsx:233
 #: src/screens/Settings/FindContactsSettings.tsx:428
 msgid "Could not follow all matches - please check your network connection."
-msgstr "Échec du suivi de tous les contacts trouvés — veuillez vérifier votre connexion au réseau."
+msgstr "Échec de l’abonnement à tous les contacts trouvés — veuillez vérifier votre connexion au réseau."
 
 #. placeholder {0}: cleanError(err)
 #: src/screens/Settings/FindContactsSettings.tsx:239
 #: src/screens/Settings/FindContactsSettings.tsx:434
 msgid "Could not follow all matches. {0}"
-msgstr "Échec du suivi de tous les contacts trouvés. {0}"
+msgstr "Échec de l’abonnement à tous les contacts trouvés. {0}"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:158
 #: src/components/dms/AfterReportDialog.tsx:139
@@ -4165,7 +4165,7 @@ msgstr "Panneau DNS"
 
 #: src/components/dialogs/MutedWords.tsx:313
 msgid "Do not apply this mute word to users you follow"
-msgstr "Ne pas appliquer ce mot masqué aux comptes que vous suivez"
+msgstr "Ne pas appliquer ce mot masqué à vos abonnements"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:39
 msgid "Does not include nudity."
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "2FA par e-mail désactivé"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "Auth. à deux facteurs par e-mail activé"
 
@@ -4686,7 +4686,7 @@ msgstr "Échec de la récupération des dernières données."
 msgid "Error loading post"
 msgstr "Échec du chargement du post"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Erreur lors du chargement des préférences"
 
@@ -4751,11 +4751,11 @@ msgstr "Exclure"
 
 #: src/components/dialogs/MutedWords.tsx:322
 msgid "Exclude users you follow"
-msgstr "Exclure les comptes que vous suivez"
+msgstr "Exclure vos abonnements"
 
 #: src/components/dialogs/MutedWords.tsx:607
 msgid "Excludes users you follow"
-msgstr "Exclut les comptes que vous suivez"
+msgstr "Exclut vos abonnements"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/web-controls/VideoControls.tsx:419
 msgid "Exit fullscreen"
@@ -4968,11 +4968,11 @@ msgstr "Échec de l’activation du lien d’invitation"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:147
 msgid "Failed to follow all suggested accounts, please try again"
-msgstr "Échec du suivi de tous les comptes suggérés, veuillez réessayer"
+msgstr "Échec de l’abonnement à tous les comptes suggérés, veuillez réessayer"
 
 #: src/components/contacts/screens/ViewMatches.tsx:154
 msgid "Failed to follow all your friends, please try again"
-msgstr "Échec du suivi de tous vos amis, veuillez réessayer"
+msgstr "Échec de l’abonnement à tous vos amis, veuillez réessayer"
 
 #: src/components/contacts/screens/ViewMatches.tsx:244
 msgid "Failed to hide suggestion, please check your internet connection"
@@ -5041,7 +5041,7 @@ msgstr "Échec du chargement des fils d’actu suggerés"
 
 #: src/screens/Search/Explore.tsx:382
 msgid "Failed to load suggested follows"
-msgstr "Échec du chargement des suivis suggérés"
+msgstr "Échec du chargement des abonnements suggérés"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:425
 msgid "Failed to lock group chat"
@@ -5344,7 +5344,7 @@ msgstr "Finance"
 #: src/view/com/posts/FollowingEndOfFeed.tsx:49
 #: src/view/com/posts/FollowingEndOfFeed.tsx:54
 msgid "Find accounts to follow"
-msgstr "Trouver des comptes à suivre"
+msgstr "Trouver des abonnements"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:49
 #: src/screens/Settings/FindContactsSettings.tsx:79
@@ -5369,7 +5369,7 @@ msgstr "Retrouver mes amis"
 #: src/components/ProgressGuide/FollowDialog.tsx:448
 #: src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx:43
 msgid "Find people to follow"
-msgstr "Trouver des comptes à suivre"
+msgstr "Trouver des abonnements"
 
 #: src/screens/Settings/FindContactsSettings.tsx:128
 msgid "Find people you know"
@@ -5434,13 +5434,13 @@ msgstr "Mettre en focus le champ de recherche"
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
 #: src/view/com/notifications/NotificationFeedItem.tsx:897
 msgid "Follow"
-msgstr "Suivre"
+msgstr "S’abonner"
 
 #. placeholder {0}: profile.handle
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:144
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:397
 msgid "Follow {0}"
-msgstr "Suivre {0}"
+msgstr "S’abonner à {0}"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:167
 msgid "Follow {displayName}"
@@ -5448,24 +5448,24 @@ msgstr "S’abonner à {displayName}"
 
 #: src/screens/VideoFeed/index.tsx:934
 msgid "Follow {handle}"
-msgstr "Suivre {handle}"
+msgstr "S’abonner à {handle}"
 
 #: src/state/shell/progress-guide.tsx:230
 msgid "Follow 10 accounts"
-msgstr "Suivre 10 comptes"
+msgstr "S’abonner à 10 comptes"
 
 #: src/components/ProgressGuide/List.tsx:73
 msgid "Follow 10 people to get started"
-msgstr "Suivez 10 personnes pour commencer"
+msgstr "Abonnez-vous à 10 personnes pour commencer"
 
 #: src/components/ProgressGuide/List.tsx:114
 msgid "Follow 7 accounts"
-msgstr "Suivre 7 comptes"
+msgstr "S’abonner à 7 comptes"
 
 #: src/view/com/profile/ProfileMenu.tsx:361
 #: src/view/com/profile/ProfileMenu.tsx:372
 msgid "Follow account"
-msgstr "Suivre le compte"
+msgstr "S’abonner au compte"
 
 #: src/components/contacts/screens/ViewMatches.tsx:284
 #: src/components/contacts/screens/ViewMatches.tsx:299
@@ -5477,11 +5477,11 @@ msgstr "Suivre le compte"
 #: src/screens/StarterPack/StarterPackScreen.tsx:445
 #: src/screens/StarterPack/StarterPackScreen.tsx:453
 msgid "Follow all"
-msgstr "Suivre tous"
+msgstr "S’abonner à tous"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:295
 msgid "Follow all accounts"
-msgstr "Suivre tous les comptes"
+msgstr "S’abonner à tous les comptes"
 
 #. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:541
@@ -5490,39 +5490,39 @@ msgstr "Suivre tous les comptes"
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
 #: src/view/com/notifications/NotificationFeedItem.tsx:897
 msgid "Follow back"
-msgstr "Suivre en retour"
+msgstr "S’abonner en retour"
 
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:136
 msgid "Followed all accounts!"
-msgstr "Comptes suivis avec succès !"
+msgstr "Abonné aux comptes avec succès !"
 
 #: src/screens/Settings/FindContactsSettings.tsx:422
 msgid "Followed all matches"
-msgstr "Comptes trouvés suivis avec succès"
+msgstr "Abonné aux comptes trouvés avec succès"
 
 #. placeholder {0}: slice[0].profile.displayName
 #: src/components/KnownFollowers.tsx:232
 msgid "Followed by <0>{0}</0>"
-msgstr "Suivi par <0>{0}</0>"
+msgstr "<0>{0}</0> y est abonné·e"
 
 #. placeholder {0}: slice[0].profile.displayName
 #. placeholder {1}: serverCount - 1
 #: src/components/KnownFollowers.tsx:218
 msgid "Followed by <0>{0}</0> and {1, plural, one {# other} other {# others}}"
-msgstr "Suivi par <0>{0}</0> et {1, plural, one {# autre} other {# autres}}"
+msgstr "<0>{0}</0> et {1, plural, one {# autre} other {# autres}} y sont abonné·e·s"
 
 #. placeholder {0}: slice[0].profile.displayName
 #. placeholder {1}: slice[1].profile.displayName
 #: src/components/KnownFollowers.tsx:205
 msgid "Followed by <0>{0}</0> and <1>{1}</1>"
-msgstr "Suivi par <0>{0}</0> et <1>{1}</1>"
+msgstr "<0>{0}</0> et <1>{1}</1> y sont abonné·e·s"
 
 #. placeholder {0}: slice[0].profile.displayName
 #. placeholder {1}: slice[1].profile.displayName
 #. placeholder {2}: serverCount - 2
 #: src/components/KnownFollowers.tsx:188
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
-msgstr "Suivi par <0>{0}</0>, <1>{1}</1> et {2, plural, one {# autre} other {# autres}}"
+msgstr "<0>{0}</0>, <1>{1}</1> et {2, plural, one {# autre} other {# autres}} y sont abonné·e·s"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:360
 msgid "Followers can join"
@@ -5549,13 +5549,13 @@ msgstr "Abonné·e·s que vous connaissez"
 #: src/view/com/notifications/NotificationFeedItem.tsx:869
 #: src/view/com/notifications/NotificationFeedItem.tsx:885
 msgid "Following"
-msgstr "Suivi"
+msgstr "Abonné·e"
 
 #: src/screens/SavedFeeds.tsx:618
 #: src/view/screens/Feeds.tsx:596
 msgctxt "feed-name"
 msgid "Following"
-msgstr "Suivis"
+msgstr "Abonnements"
 
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, moderation.ui('displayName'), )
@@ -5564,7 +5564,7 @@ msgstr "Suivis"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:247
 #: src/view/com/notifications/NotificationFeedItem.tsx:820
 msgid "Following {0}"
-msgstr "Suit {0}"
+msgstr "Abonné·e à {0}"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:66
 msgid "Following {displayName}"
@@ -5572,17 +5572,17 @@ msgstr "Abonné·e à {displayName}"
 
 #: src/screens/VideoFeed/index.tsx:933
 msgid "Following {handle}"
-msgstr "Suit {handle}"
+msgstr "Abonné·e à {handle}"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:78
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Following feed preferences"
-msgstr "Préférences du fil des abonnements"
+msgstr "Préférences du fil Abonnements"
 
 #: src/Navigation.tsx:369
 #: src/screens/Settings/FollowingFeedPreferences.tsx:57
 msgid "Following Feed Preferences"
-msgstr "Préférences du fil des abonnements"
+msgstr "Préférences du fil Abonnements"
 
 #: src/components/Pills.tsx:215
 #: src/screens/Profile/Header/Handle.tsx:33
@@ -5725,7 +5725,7 @@ msgstr "Notifier quand quelqu’un s’inscrit avec un de vos kits de démarrage
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
-msgstr "Notifier quand des comptes vous suivent."
+msgstr "Notifier quand des comptes s’abonnent."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:316
 msgid "Get notifications when people like your posts."
@@ -6546,7 +6546,7 @@ msgstr "Dans l’app., de tout le monde"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:25
 msgid "In-app, people you follow"
-msgstr "Dans l’app., des comptes suivis"
+msgstr "Dans l’app., des abonnements"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:29
 msgid "In-app, push"
@@ -6558,7 +6558,7 @@ msgstr "Dans l’app., alertes, de tout le monde"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:24
 msgid "In-app, push, people you follow"
-msgstr "Dans l’app., alertes, des comptes suivis"
+msgstr "Dans l’app., alertes, des abonnements"
 
 #: src/screens/Messages/ChatList.tsx:437
 msgid "Inbox empty"
@@ -6760,7 +6760,7 @@ msgstr "Invitez vos amis"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:37
 msgid "Invite your friends to follow your favorite feeds and people"
-msgstr "Invitez vos ami·e·s à suivre vos fils d’actu et vos personnes préférées"
+msgstr "Invitez vos ami·e·s à s’abonner à vos fils d’actu et vos personnes préférées"
 
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:155
 msgid "Invited"
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "En savoir plus sur la vérification sur Bluesky (en anglais)"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "En savoir plus sur ce qui est public sur Bluesky (en anglais)."
 
@@ -7276,7 +7276,7 @@ msgstr "Listes"
 
 #: src/view/com/lists/MyLists.tsx:75
 msgid "Lists allow you to see content from your favorite people."
-msgstr "Les listes vous permettent de suivre le contenu de vos personnes préférées."
+msgstr "Les listes vous permettent de vous abonner au contenu de vos personnes préférées."
 
 #: src/components/dms/BlockedByListDialog.tsx:38
 msgid "Lists blocking this user:"
@@ -7407,7 +7407,7 @@ msgstr "On dirait que vous avez désépinglé tous vos fils d’actu. Mais pas d
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:36
 msgid "Looks like you're missing a following feed. <0>Click here to add one.</0>"
-msgstr "On dirait que vous n’avez plus de fil des abonnements. <0>Cliquez ici pour en rajouter un.</0>"
+msgstr "On dirait que vous n’avez plus de fil Abonnements. <0>Cliquez ici pour en rajouter un.</0>"
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to GIFs about love/affection.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:55
@@ -8184,7 +8184,7 @@ msgstr "Aucune liste"
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:273
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
 msgid "No longer following {0}"
-msgstr "Ne suit plus {0}"
+msgstr "Plus abonné·e à {0}"
 
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
@@ -8223,7 +8223,7 @@ msgstr "Personne"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Personne"
@@ -8379,7 +8379,7 @@ msgstr "Indisponible sur cette plateforme."
 
 #: src/components/KnownFollowers.tsx:253
 msgid "Not followed by anyone you’re following"
-msgstr "Pas suivi par quiconque que vous suivez"
+msgstr "N’a aucun abonné·e auquel vous êtes abonné·e"
 
 #: src/Navigation.tsx:169
 #: src/view/screens/Profile.tsx:132
@@ -8394,7 +8394,7 @@ msgstr "Pas encore prêt·e à appuyer sur Poster ? Gardez vos meilleures idée
 msgid "Note about sharing"
 msgstr "Note sur le partage"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "Note : Bluesky fait partie de l’Atmosphère, un réseau public et ouvert. Ces paramètres demandent aux autres applis et sites de limiter votre visibilité, mais ils peuvent choisir de ne pas le faire. Votre contenu public peut quand même apparaître ailleurs."
 
@@ -8557,7 +8557,7 @@ msgstr "Seuls les comptes abonnés peuvent rejoindre cette discussion."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Seulement des abonné·e·s que je suis"
 
@@ -9009,53 +9009,53 @@ msgstr "Personnes"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:161
 msgid "People {ownerName} follows can join instantly"
-msgstr "Les personnes que {ownerName} suit peuvent rejoindre directement"
+msgstr "Les personnes à qui {ownerName} est abonné·e peuvent rejoindre directement"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:166
 msgid "People {ownerName} follows can request to join"
-msgstr "Les personnes que {ownerName} peuvent demander à rejoindre"
+msgstr "Les personnes à qui {ownerName} est abonné·e peuvent demander à rejoindre"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:240
 msgid "People followed by @{0}"
-msgstr "Personnes suivies par @{0}"
+msgstr "Abonnements de @{0}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:233
 msgid "People following @{0}"
-msgstr "Personnes qui suivent @{0}"
+msgstr "Personnes abonnées à @{0}"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:180
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:184
 msgid "People I follow"
-msgstr "Comptes suivis"
+msgstr "Mes abonnements"
 
 #: src/screens/Messages/Settings.tsx:97
 msgctxt "allow group chat invites from"
 msgid "People I follow"
-msgstr "Comptes suivis"
+msgstr "Mes abonnements"
 
 #: src/screens/Messages/Settings.tsx:82
 msgctxt "allow messages from"
 msgid "People I follow"
-msgstr "Comptes suivis"
+msgstr "Mes abonnements"
 
 #: src/screens/Search/components/AdvancedSearchDialog/FromDropdown.tsx:25
 msgctxt "display posts made by"
 msgid "People I follow"
-msgstr "Comptes suivis"
+msgstr "Mes abonnements"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:160
 msgid "People I follow can join instantly"
-msgstr "Les personnes que je suis peuvent rejoindre directement"
+msgstr "Les personnes auxquelles je suis abonné·e peuvent rejoindre directement"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:165
 msgid "People I follow can request to join"
-msgstr "Les personnes que je suis peuvent demander à rejoindre"
+msgstr "Les personnes auxquelles je suis abonné·e peuvent demander à rejoindre"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:507
 msgid "People you follow"
-msgstr "Comptes que vous suivez"
+msgstr "Vos abonnements"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:521
 msgid "People you mention"
@@ -9513,7 +9513,7 @@ msgstr "Appuyer pour réessayer"
 
 #: src/components/KnownFollowers.tsx:124
 msgid "Press to view followers of this account that you also follow"
-msgstr "Appuyer pour voir les personnes qui suivent ce compte et que vous suivez également"
+msgstr "Appuyer pour voir vos abonnements qui sont également abonnés à ce compte"
 
 #: src/features/liveEvents/components/LiveEventFeedCardWide.tsx:121
 msgid "Preview"
@@ -9541,7 +9541,7 @@ msgstr "Confidentialité et sécurité"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Confidentialité et sécurité"
 
@@ -9649,7 +9649,7 @@ msgstr "Alertes, de tout le monde"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:26
 msgid "Push, people you follow"
-msgstr "Alertes, des comptes suivis"
+msgstr "Alertes, mes abonnements"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:141
 msgid "QR code copied to your clipboard!"
@@ -11009,7 +11009,7 @@ msgstr "Choisissez la langue à utiliser pour l’interface de l’application."
 
 #: src/screens/Settings/LanguageSettings.tsx:181
 msgid "Select which languages you want your subscribed feeds to include. If none are selected, all languages will be shown."
-msgstr "Sélectionnez les langues que vous souhaitez voir figurer dans les fils d’actu que vous suivez. Si aucune langue n’est sélectionnée, toutes les langues seront affichées."
+msgstr "Sélectionnez les langues que vous souhaitez voir figurer dans vos fils d’actu. Si aucune langue n’est sélectionnée, toutes les langues seront affichées."
 
 #: src/screens/Signup/StepInfo/index.tsx:299
 msgid "Select your date of birth"
@@ -11155,7 +11155,7 @@ msgstr "Paramètres"
 msgid "Settings for activity from others"
 msgstr "Paramètres des notifications d’activité d’autres comptes"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Paramètres autorisant les autres à être notifiés de vos posts"
 
@@ -11446,7 +11446,7 @@ msgstr "Réafficher ses reposts dans les fils d’actu"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:133
 #: src/screens/Settings/FollowingFeedPreferences.tsx:143
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Afficher des extraits de vos fils d’actu enregistrés dans votre fil d’abonnements"
+msgstr "Afficher des extraits de vos fils d’actu enregistrés dans votre fil Abonnements"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show warning"
@@ -12540,7 +12540,7 @@ msgstr "Ces mot-clés"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:66
 msgid "These settings only apply to the Following feed."
-msgstr "Ces paramètres s’appliquent seulement pour votre fil d’abonnements."
+msgstr "Ces paramètres s’appliquent seulement pour votre fil Abonnements."
 
 #. Advanced search filter
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:58
@@ -12701,7 +12701,7 @@ msgstr "Ce fil d’actu reçoit actuellement un trafic important, il est tempora
 
 #: src/view/com/posts/CustomFeedEmptyState.tsx:60
 msgid "This feed is empty! You may need to follow more users or tune your language settings."
-msgstr "Ce fil d’actu est vide ! Vous devriez peut-être suivre plus de comptes ou ajuster vos paramètres de langue."
+msgstr "Ce fil d’actu est vide ! Vous devriez peut-être vous abonner à plus de comptes ou ajuster vos paramètres de langue."
 
 #: src/components/StarterPack/Main/PostsList.tsx:41
 #: src/screens/CustomFeed/index.tsx:170
@@ -12908,7 +12908,7 @@ msgstr "Ce compte est nouveau ici. Appuyez pour obtenir plus d’informations su
 
 #: src/view/com/profile/ProfileFollows.tsx:196
 msgid "This user isn't following anyone."
-msgstr "Ce compte ne suit personne."
+msgstr "Ce compte n’est abonné à personne."
 
 #: src/components/Post/Embed/VideoEmbed/index.web.tsx:317
 msgid "This video can’t be played on your device. Your browser or system may be missing the required video codecs (H.264/AAC)."
@@ -13140,7 +13140,7 @@ msgstr "TV"
 msgid "Twilight"
 msgstr "Lunaire"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Auth. à deux facteurs (2FA)"
 
@@ -13675,7 +13675,7 @@ msgstr "Pseudo ou e-mail"
 #. placeholder {0}: post.author.handle
 #: src/components/WhoCanReply.tsx:330
 msgid "users followed by <0>@{0}</0>"
-msgstr "comptes suivis par <0>@{0}</0>"
+msgstr "abonnements de <0>@{0}</0>"
 
 #. placeholder {0}: post.author.handle
 #: src/components/WhoCanReply.tsx:317
@@ -14152,7 +14152,7 @@ msgstr "Nous ne suggérons les comptes que si les deux l’acceptent"
 
 #: src/view/com/posts/DiscoverFallbackHeader.tsx:29
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
-msgstr "Nous n’avons plus de posts provenant des comptes que vous suivez. Voici le dernier de <0/>."
+msgstr "Nous n’avons plus de posts provenant de vos abonnements. Voici le dernier de <0/>."
 
 #: src/screens/Settings/InterestsSettings.tsx:172
 msgid "We recommend selecting at least two interests."
@@ -14545,7 +14545,7 @@ msgstr "Vous n’êtes pas autorisé à envoyer des vidéos."
 
 #: src/view/com/profile/ProfileFollows.tsx:195
 msgid "You are not following anyone yet"
-msgstr "Vous ne suivez personne pour l’instant"
+msgstr "Vous n’êtes abonné·e à personne pour l’instant"
 
 #: src/features/liveNow/index.tsx:325
 msgid "You are now live!"
@@ -14574,7 +14574,7 @@ msgstr "Vous pouvez sinon <0>désactiver temporairement</0> votre compte, et vot
 #: src/view/com/posts/FollowingEmptyState.tsx:60
 #: src/view/com/posts/FollowingEndOfFeed.tsx:61
 msgid "You can also discover new Custom Feeds to follow."
-msgstr "Vous pouvez aussi découvrir de nouveaux fils d’actu personnalisés à suivre."
+msgstr "Vous pouvez aussi découvrir et vous abonner à de nouveaux fils d’actu personnalisés."
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:145
 msgid "You can also download your chat data as a \"JSONL\" file. This file only includes chat messages that you have sent and does not include chat messages that you have received."
@@ -14595,7 +14595,7 @@ msgstr "Vous pouvez poursuivre les conversations en cours quel que soit le param
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:150
 msgid "You can now choose to be notified when specific people post. If there’s someone you want timely updates from, go to their profile and find the new bell icon near the follow button."
-msgstr "Vous pouvez désormais choisir de recevoir une notification quand certains comptes spécifiques postent. S’il y a quelqu’un dont vous souhaitez avoir des nouvelles au plus vite, rendez-vous sur son profil et cherchez la nouvelle icône de cloche à côté du bouton de suivi."
+msgstr "Vous pouvez désormais choisir de recevoir une notification quand certains comptes spécifiques postent. S’il y a quelqu’un dont vous souhaitez avoir des nouvelles au plus vite, rendez-vous sur son profil et cherchez la nouvelle icône de cloche à côté du bouton d’abonnement."
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:154
 msgid "You can now invite friends with a link or QR code. Share the link anywhere, or let them scan the code to join you on Bluesky."
@@ -14665,7 +14665,7 @@ msgstr "Vous ne pouvez pas modifier votre date de naissance si vous êtes connec
 
 #: src/screens/Profile/KnownFollowers.tsx:103
 msgid "You don't follow any users who follow @{name}."
-msgstr "Vous ne suivez aucun des comptes qui suivent @{name}."
+msgstr "Vous n’êtes abonné·e à aucun des comptes abonnés à @{name}."
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:586
 msgid "You don't have any lists yet."
@@ -14828,7 +14828,7 @@ msgstr "Vous devez avoir au moins 13 ans pour utiliser Bluesky. Lisez nos <0>Con
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Vous devez suivre au moins sept autres personnes pour générer un kit de démarrage."
+msgstr "Vous devez être abonné·e à au moins sept autres personnes pour générer un kit de démarrage."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
@@ -14921,20 +14921,20 @@ msgstr "Vous : {message}"
 
 #: src/screens/Signup/index.tsx:155
 msgid "You'll follow the suggested users and feeds once you finish creating your account!"
-msgstr "Vous suivrez les comptes et fils d’actu suggérés une fois que vous aurez créé votre compte !"
+msgstr "Vous vous abonnerez aux comptes et fils d’actu suggérés une fois que vous aurez créé votre compte !"
 
 #: src/screens/Signup/index.tsx:160
 msgid "You'll follow the suggested users once you finish creating your account!"
-msgstr "Vous suivrez les comptes suggérés une fois que vous aurez créé votre compte !"
+msgstr "Vous vous abonnerez aux comptes suggérés une fois que vous aurez créé votre compte !"
 
 #. placeholder {0}: listItemsCount - 8
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:235
 msgid "You'll follow these people and {0} others"
-msgstr "Vous suivrez ces personnes et {0} autres"
+msgstr "Vous serez abonné·e à ces personnes et {0} autres"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:233
 msgid "You'll follow these people right away"
-msgstr "Vous suivrez ces personnes immédiatement"
+msgstr "Vous serez abonné·e à ces personnes immédiatement"
 
 #: src/components/contacts/screens/GetContacts.tsx:316
 msgid "You'll need to go to the System Settings for Bluesky and give permission if you want to use this feature."
@@ -14985,7 +14985,7 @@ msgstr "Vous avez refusé l’accès à vos contacts"
 
 #: src/state/shell/progress-guide.tsx:235
 msgid "You've found some people to follow"
-msgstr "Vous avez trouvé des personnes à suivre"
+msgstr "Vous avez trouvé des personnes à qui vous abonner"
 
 #: src/components/FocusScope/index.tsx:112
 msgid "You've reached the end of the active content."
@@ -14993,7 +14993,7 @@ msgstr "Vous êtes arrivé à la fin du contenu actuel."
 
 #: src/view/com/posts/FollowingEndOfFeed.tsx:42
 msgid "You've reached the end of your feed! Find some more accounts to follow."
-msgstr "Vous avez atteint la fin de votre fil d’actu ! Trouvez d’autres comptes à suivre."
+msgstr "Vous avez atteint la fin de votre fil d’actu ! Trouvez d’autres comptes à qui vous abonner."
 
 #: src/view/com/composer/Composer.tsx:739
 msgid "You've reached the maximum number of drafts"
@@ -15119,11 +15119,11 @@ msgstr "Votre première mention « j’aime » !"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:493
 msgid "Your followers"
-msgstr "Comptes qui vous suivent"
+msgstr "Comptes abonnés"
 
 #: src/view/com/posts/FollowingEmptyState.tsx:41
 msgid "Your following feed is empty! Follow more users to see what's happening."
-msgstr "Votre fil d’actu des comptes suivis est vide ! Suivez plus de comptes pour voir ce qui se passe."
+msgstr "Votre fil d’actu Abonnements est vide ! Abonnez-vous à plus de comptes pour voir ce qui se passe."
 
 #. placeholder {0}: createFullHandle(subdomain, host)
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:247

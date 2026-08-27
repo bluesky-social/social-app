@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Kokapenerako sarbidea baimendu"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Utzi besteei zure posten berri izaten"
 
@@ -1759,7 +1759,7 @@ msgstr "Edonork eska dezake bat egiteko"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Niri jarraitzen didan edonor"
 
@@ -1800,8 +1800,8 @@ msgstr "Aplikazioaren pasahitzaren izenek letrak, zenbakiak, zuriuneak, marratxo
 msgid "App password names must be at least 4 characters long"
 msgstr "Aplikazioaren pasahitzaren izenek 4 karaktere izan behar dituzte gutxienez"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Aplikazio pasahitzak"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "E-posta bidezko 2FA desgaituta"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "2FA posta elektronikoa gaituta"
 
@@ -4686,7 +4686,7 @@ msgstr "Errorea azken datuak lortzean."
 msgid "Error loading post"
 msgstr "Errorea posta kargatzean"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Errorea hobespena kargatzean"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Ikasi gehiago Bluesky-n egiaztapenari buruz (ingelesez)"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Gehiago ikasi Bluesky-n publikoa denari buruz."
 
@@ -8223,7 +8223,7 @@ msgstr "Inor ez"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Inor ez"
@@ -8394,7 +8394,7 @@ msgstr "Ez zaude posta argitaratzeko prest? Gorde zure ideiarik onenak Zirriborr
 msgid "Note about sharing"
 msgstr "Partekatzeari buruzko oharra"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "Oharra: Bluesky Atmosphere-ren parte da, sare publiko ireki batena. Ezarpen hauek beste aplikazio eta webguneei zure ikusgarritasuna mugatzeko eskatzen diete, baina baliteke ez egitea. Zure eduki publikoa beste lekuetan agertzen jarraitu dezake."
 
@@ -8557,7 +8557,7 @@ msgstr "Jarraitzaileak soilik sartu daitezke txat talde honetan."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Jarraitzen ditudan jarraitzaileak bakarrik"
 
@@ -9541,7 +9541,7 @@ msgstr "Pribatutasuna eta segurtasuna"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Pribatutasuna eta Segurtasuna"
 
@@ -11155,7 +11155,7 @@ msgstr "Ezarpenak"
 msgid "Settings for activity from others"
 msgstr "Besteen jardueraren ezarpenak"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Zure posten berri beste batzuei emateko ezarpenak"
 
@@ -13140,7 +13140,7 @@ msgstr "Telebista"
 msgid "Twilight"
 msgstr "Ilunabarra"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Bi faktoreko autentifikazioa (2FA)"
 

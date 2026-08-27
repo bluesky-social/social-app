@@ -8,7 +8,7 @@ msgstr ""
 "Language: en_GB\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 15:32\n"
 "Last-Translator: \n"
 "Language-Team: English, United Kingdom\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -350,7 +350,7 @@ msgstr "{0} was removed from the group"
 #. placeholder {0}: link(lang)
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:113
 msgid "{0}, "
-msgstr ""
+msgstr "{0}, "
 
 #. placeholder {0}: createSanitizedDisplayName(members[0])
 #. placeholder {1}: createSanitizedDisplayName(members[1])
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Allow location access"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Allow others to be notified of your posts"
 
@@ -1759,7 +1759,7 @@ msgstr "Anyone can request to join"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Anyone who follows me"
 
@@ -1800,8 +1800,8 @@ msgstr "App password names can only contain letters, numbers, spaces, hyphens, a
 msgid "App password names must be at least 4 characters long"
 msgstr "App password names must be at least 4 characters long"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "App passwords"
 
@@ -1903,7 +1903,7 @@ msgstr "Are you searching for posts in {0}?"
 #. placeholder {1}: link(last)
 #: src/screens/Search/components/DetectedLanguagesAdmonition.tsx:110
 msgid "Are you searching for posts in {0}or {1}?"
-msgstr ""
+msgstr "Are you searching for posts in {0}or {1}?"
 
 #. placeholder {0}: appPassword.name
 #: src/screens/Settings/AppPasswords.tsx:210
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "Email 2FA disabled"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "Email 2FA enabled"
 
@@ -4686,7 +4686,7 @@ msgstr "Error getting the latest data."
 msgid "Error loading post"
 msgstr "Error loading post"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Error loading preference"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Learn more about verification on Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Learn more about what is public on Bluesky."
 
@@ -8223,7 +8223,7 @@ msgstr "No one"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "No one"
@@ -8394,7 +8394,7 @@ msgstr "Not ready to hit post? Keep your best ideas in Drafts until the timing i
 msgid "Note about sharing"
 msgstr "Note about sharing"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 
@@ -8557,7 +8557,7 @@ msgstr "Only followers can join this group chat."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Only followers who I follow"
 
@@ -9541,7 +9541,7 @@ msgstr "Privacy and security"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Privacy and Security"
 
@@ -11155,7 +11155,7 @@ msgstr "Settings"
 msgid "Settings for activity from others"
 msgstr "Settings for activity from others"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Settings for allowing others to be notified of your posts"
 
@@ -13140,7 +13140,7 @@ msgstr "TV"
 msgid "Twilight"
 msgstr "Twilight"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Two-factor authentication (2FA)"
 

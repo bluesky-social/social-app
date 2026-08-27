@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Caniatáu mynediad lleoliad"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Caniatáu i eraill gael clywed am eich postiadau"
 
@@ -1759,7 +1759,7 @@ msgstr "Gall unrhyw un ofyn i gael ymuno"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Unrhyw un sy'n fy nilyn"
 
@@ -1800,8 +1800,8 @@ msgstr "Dim ond llythrennau, rhifau, bylchau, cysylltnodau a thanlinellau y gall
 msgid "App password names must be at least 4 characters long"
 msgstr "Rhaid i enwau cyfrinair ap fod o leiaf 4 nod"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Cyfrineiriau apiau"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "E-bost 2FA wedi'i analluogi"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "E-bost 2FA wedi'i alluogi"
 
@@ -4686,7 +4686,7 @@ msgstr "Gwall wrth gael y data diweddaraf."
 msgid "Error loading post"
 msgstr "Gwall wrth lwytho'r postiad"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Gwall wrth lwytho dewis"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Dysgu rhagor am ddilysu ar Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Dysgu rhagor am yr hyn sy'n gyhoeddus ar Bluesky."
 
@@ -8223,7 +8223,7 @@ msgstr "Neb"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Neb"
@@ -8394,7 +8394,7 @@ msgstr "Dim yn barod i bostio eto? Cadwch eich syniadau gorau yn y Drafftiau nes
 msgid "Note about sharing"
 msgstr "Nodyn am rannu"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "Sylwer: Mae Bluesky yn rhan o'r Atmosphere, rhwydwaith gyhoeddus agored. Mae'r gosodiadau hyn yn gofyn i apiau a gwefannau eraill gyfyngu ar eich gwelededd, ond gallan nhw ddewis peidio. Efallai y bydd eich cynnwys cyhoeddus yn dal i ymddangos mewn mannau eraill."
 
@@ -8557,7 +8557,7 @@ msgstr "Dim ond dilynwyr sy'n gallu ymuno â'r sgwrs grŵp hon."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Dim ond dilynwyr rwy'n eu dilyn"
 
@@ -9541,7 +9541,7 @@ msgstr "Preifatrwydd a diogelwch"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Preifatrwydd a Diogelwch"
 
@@ -11155,7 +11155,7 @@ msgstr "Gosodiadau"
 msgid "Settings for activity from others"
 msgstr "Gosodiadau gweithgareddau gan eraill"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Gosodiadau ar gyfer caniatáu i eraill gael gwybod am eich postiadau"
 
@@ -13140,7 +13140,7 @@ msgstr "Teledu"
 msgid "Twilight"
 msgstr "Cyfnos"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Dilysu dau ffactor (2FA)"
 

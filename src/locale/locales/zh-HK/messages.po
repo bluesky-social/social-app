@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 15:32\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional, Hong Kong\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "允許取用位置"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "允許其他人喺你出新帖嗰陣收到通知"
 
@@ -1759,7 +1759,7 @@ msgstr "任何人都可以申請加入"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "跟我嘅人"
 
@@ -1800,8 +1800,8 @@ msgstr "應用程式密碼名稱淨係用得字母、數字、空格、連字號
 msgid "App password names must be at least 4 characters long"
 msgstr "密碼名稱必須至少有 4 個字元"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "應用程式專用密碼"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "已停用電郵雙重驗證"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "已啓用電郵雙重驗證"
 
@@ -4686,7 +4686,7 @@ msgstr "攞緊最新資料嗰陣發生錯誤。"
 msgid "Error loading post"
 msgstr "撈緊帖文嗰陣出錯"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "撈緊偏好設定嗰陣出咗錯"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "想知多啲 Bluesky 嘅驗證機制"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "想知多啲 Bluesky 上面公開嘅內容。"
 
@@ -8223,7 +8223,7 @@ msgstr "冇人"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "冇人"
@@ -8394,7 +8394,7 @@ msgstr "未諗過發布住？將你啲好橋擺入草稿先，等啱時機至出
 msgid "Note about sharing"
 msgstr "關於分享嘅注意事項"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "註：Bluesky 係 Atmosphere（一個開放公共網絡）嘅一部分。呢啲設定會要求其他應用程式同網站限制你嘅可見度，但佢哋亦都可能唔會遵從呢個要求。你嘅公開內容仍然可能會出現喺其他地方。"
 
@@ -8557,7 +8557,7 @@ msgstr "只有擁躉先可以加入呢度羣組傾偈。"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "僅限我跟返嘅人"
 
@@ -9541,7 +9541,7 @@ msgstr "私隱同保安"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "私隱同保安"
 
@@ -11155,7 +11155,7 @@ msgstr "設定"
 msgid "Settings for activity from others"
 msgstr "嚟自其他人嘅動態通知設定"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "允許其他人接收你出新貼通知設定"
 
@@ -13140,7 +13140,7 @@ msgstr "電視節目"
 msgid "Twilight"
 msgstr "暮光"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "雙重驗證（2FA）"
 

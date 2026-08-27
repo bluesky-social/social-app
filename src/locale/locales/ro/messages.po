@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "Permiteți accesul la locație"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "Permiteți celorlalți să fie notificați despre postările dvs."
 
@@ -1759,7 +1759,7 @@ msgstr "Oricine poate solicita să se alăture"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "Oricine mă urmărește"
 
@@ -1800,8 +1800,8 @@ msgstr "Numele parolelor de aplicație pot conține numai litere, cifre, spații
 msgid "App password names must be at least 4 characters long"
 msgstr "Numele parolelor de aplicație trebuie să aibă cel puțin 4 caractere"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "Parole de aplicații"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "A2F prin e-mail dezactivată"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "A2F prin e-mail activată"
 
@@ -4686,7 +4686,7 @@ msgstr "Eroare la obținerea celor mai recente date."
 msgid "Error loading post"
 msgstr "Eroare la încărcarea postării"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "Eroare la încărcarea preferinței"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Aflați mai multe despre verificarea pe Bluesky"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Aflați mai multe despre ce este public pe Bluesky."
 
@@ -8223,7 +8223,7 @@ msgstr "Nimeni"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "Nimeni"
@@ -8394,7 +8394,7 @@ msgstr "Nu sunteți gata să postați? Păstrați-vă cele mai bune idei în sch
 msgid "Note about sharing"
 msgstr "Notă despre partajare"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "Notă: Bluesky face parte din Atmosferă, o rețea publică deschisă. Aceste setări cer altor aplicații și site-uri web să vă limiteze vizibilitatea, dar acestea pot alege să nu o facă. Conținutul dvs. public poate apărea în continuare în altă parte."
 
@@ -8557,7 +8557,7 @@ msgstr "Doar urmăritorii se pot alătura acestei conversații de grup."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "Doar urmăritorii pe care îi urmăresc"
 
@@ -9541,7 +9541,7 @@ msgstr "Confidențialitate și securitate"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "Confidențialitate și securitate"
 
@@ -11155,7 +11155,7 @@ msgstr "Setări"
 msgid "Settings for activity from others"
 msgstr "Setări pentru activitate de la alții"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "Setări pentru a permite celorlalți să fie notificați despre postările dvs."
 
@@ -13140,7 +13140,7 @@ msgstr "TV"
 msgid "Twilight"
 msgstr "Crepuscul"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "Autentificare cu doi factori (A2F)"
 

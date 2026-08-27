@@ -8,7 +8,7 @@ msgstr ""
 "Language: ko\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-26 18:54\n"
+"PO-Revision-Date: 2026-08-27 14:06\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -1494,7 +1494,7 @@ msgid "Allow location access"
 msgstr "위치 접근 허용"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:53
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:99
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:94
 msgid "Allow others to be notified of your posts"
 msgstr "다른 사용자에게 내 게시물 알림 허용"
 
@@ -1759,7 +1759,7 @@ msgstr "누구나 참여 요청할 수 있음"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:112
 #: src/screens/Settings/ActivityPrivacySettings.tsx:117
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:172
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:165
 msgid "Anyone who follows me"
 msgstr "나를 팔로우하는 모든 사용자"
 
@@ -1800,8 +1800,8 @@ msgstr "앱 비밀번호 이름에는 문자, 숫자, 공백, 하이픈, 밑줄�
 msgid "App password names must be at least 4 characters long"
 msgstr "앱 비밀번호 이름은 4자 이상이어야 합니다"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:79
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:82
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:74
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:77
 msgid "App passwords"
 msgstr "앱 비밀번호"
 
@@ -4484,7 +4484,7 @@ msgctxt "toast"
 msgid "Email 2FA disabled"
 msgstr "이메일 2단계 인증을 비활성화했습니다"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:70
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:65
 msgid "Email 2FA enabled"
 msgstr "이메일 2단계 인증 활성화됨"
 
@@ -4686,7 +4686,7 @@ msgstr "최신 데이터를 불러오는 중 오류가 발생했습니다."
 msgid "Error loading post"
 msgstr "게시물 불러오기 오류"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:163
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:156
 msgid "Error loading preference"
 msgstr "환경설정 불러오기 오류"
 
@@ -6978,8 +6978,8 @@ msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr "Bluesky의 인증에 대해 자세히 알아보기 (영어)"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:137
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:140
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:130
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:133
 msgid "Learn more about what is public on Bluesky."
 msgstr "Bluesky에서 공개되는 항목에 대해 자세히 알아보세요."
 
@@ -8223,7 +8223,7 @@ msgstr "없음"
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:130
 #: src/screens/Settings/ActivityPrivacySettings.tsx:135
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:169
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:162
 msgctxt "enable for"
 msgid "No one"
 msgstr "없음"
@@ -8394,7 +8394,7 @@ msgstr "아직 게시할 준비가 안 되었나요? 가장 좋은 아이디어�
 msgid "Note about sharing"
 msgstr "공유 관련 참고 사항"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:127
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:120
 msgid "Note: Bluesky is part of the Atmosphere, an open public network. These settings ask other apps and websites to limit your visibility, but they can choose not to. Your public content may still appear elsewhere."
 msgstr "참고: Bluesky는 개방형 공개 네트워크인 Atmosphere의 일부입니다. 이 설정은 다른 앱과 웹사이트에 내 노출을 제한하도록 요청하지만 이를 따르지 않을 수도 있습니다. 내 공개 콘텐츠는 여전히 다른 곳에 표시될 수 있습니다."
 
@@ -8557,7 +8557,7 @@ msgstr "팔로워만 이 그룹 대화에 참여할 수 있습니다."
 
 #: src/screens/Settings/ActivityPrivacySettings.tsx:121
 #: src/screens/Settings/ActivityPrivacySettings.tsx:126
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:167
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:160
 msgid "Only followers who I follow"
 msgstr "내가 팔로우하는 팔로워만"
 
@@ -9541,7 +9541,7 @@ msgstr "개인정보 및 보안"
 #: src/Navigation.tsx:430
 #: src/Navigation.tsx:438
 #: src/screens/Settings/ActivityPrivacySettings.tsx:41
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:52
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:47
 msgid "Privacy and Security"
 msgstr "개인정보 및 보안"
 
@@ -11155,7 +11155,7 @@ msgstr "설정"
 msgid "Settings for activity from others"
 msgstr "다른 사용자의 활동 알림 설정"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:92
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:87
 msgid "Settings for allowing others to be notified of your posts"
 msgstr "다른 사용자에게 내 게시물 알림을 허용할지에 대한 설정"
 
@@ -13140,7 +13140,7 @@ msgstr "TV"
 msgid "Twilight"
 msgstr "박명"
 
-#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:72
+#: src/screens/Settings/PrivacyAndSecuritySettings.tsx:67
 msgid "Two-factor authentication (2FA)"
 msgstr "2단계 인증"
 
