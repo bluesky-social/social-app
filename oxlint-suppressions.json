@@ -1191,7 +1191,7 @@
       "count": 2
     },
     "typescript/no-floating-promises": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unsafe-member-access": {
       "count": 2
@@ -1226,7 +1226,7 @@
       "count": 3
     },
     "typescript/no-floating-promises": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-unsafe-member-access": {
       "count": 3
