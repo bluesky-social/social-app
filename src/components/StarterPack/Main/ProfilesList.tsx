@@ -2,6 +2,7 @@ import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {Trans} from '@lingui/react/macro'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -13,11 +14,12 @@ import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Default as ProfileCard} from '#/components/ProfileCard'
+import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
 
-function keyExtractor(item: app.bsky.actor.defs.ProfileView, index: number) {
-  return `${item.did}-${index}`
+function keyExtractor(item: app.bsky.graph.defs.ListItemView) {
+  return item.uri
 }
 
 interface ProfilesListProps {
@@ -42,26 +44,27 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
 
     // The server returns these sorted by descending creation date, so we want to invert
 
-    const profiles = data
+    const listItems = data
       ?.filter(
         p => !isBlockedOrBlocking(p.subject) && !p.subject.associated?.labeler,
       )
-      .map(p => p.subject)
       .reverse()
     const isOwn = new AtUri(listUri).host === currentAccount?.did
 
     const getSortedProfiles = () => {
-      if (!profiles) return
-      if (!isOwn) return profiles
+      if (!listItems) return
+      if (!isOwn) return listItems
 
-      const myIndex = profiles.findIndex(p => p.did === currentAccount?.did)
+      const myIndex = listItems.findIndex(
+        item => item.subject.did === currentAccount?.did,
+      )
       return myIndex !== -1
         ? [
-            profiles[myIndex],
-            ...profiles.slice(0, myIndex),
-            ...profiles.slice(myIndex + 1),
+            listItems[myIndex],
+            ...listItems.slice(0, myIndex),
+            ...listItems.slice(myIndex + 1),
           ]
-        : profiles
+        : listItems
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -77,7 +80,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
     const renderItem = ({
       item,
       index,
-    }: ListRenderItemInfo<app.bsky.actor.defs.ProfileView>) => {
+    }: ListRenderItemInfo<app.bsky.graph.defs.ListItemView>) => {
       return (
         <View
           style={[
@@ -86,10 +89,15 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
             (IS_WEB || index !== 0) && a.border_t,
           ]}>
           <ProfileCard
-            profile={item}
+            profile={item.subject}
             moderationOpts={moderationOpts}
             logContext="StarterPackProfilesList"
           />
+          {item.subjectOptedOut ? (
+            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Trans>Opted out of this starter pack</Trans>
+            </Text>
+          ) : null}
         </View>
       )
     }

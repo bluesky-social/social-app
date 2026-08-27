@@ -71,6 +71,116 @@ export function useStarterPackQuery({
   })
 }
 
+export function useReferenceListOptOutMutation({
+  starterPack,
+  onError,
+}: {
+  starterPack: app.bsky.graph.defs.StarterPackView
+  onError: (error: Error) => void
+}) {
+  const queryClient = useQueryClient()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
+  const parsed = parseStarterPackUri(starterPack.uri)!
+  const queryKey = RQKEY({did: parsed.name, rkey: parsed.rkey})
+
+  return useMutation<
+    AtUriString | undefined,
+    Error,
+    {referenceListOptOut?: string},
+    {previous?: app.bsky.graph.defs.StarterPackView}
+  >({
+    mutationFn: async ({referenceListOptOut}) => {
+      if (!starterPack.list) {
+        throw new Error('Starter pack does not have a reference list')
+      }
+
+      let nextOptOut: AtUriString | undefined
+      if (referenceListOptOut) {
+        const {rkeySafe: rkey} = new AtUri(referenceListOptOut)
+        await pdsClient.delete(app.bsky.graph.referencelistoptout, {
+          repo: pdsClient.assertDid,
+          rkey,
+        })
+      } else {
+        const result = await pdsClient.create(
+          app.bsky.graph.referencelistoptout,
+          {
+            subject: starterPack.list.uri,
+            createdAt: toDatetimeString(new Date()),
+          },
+        )
+        nextOptOut = result.uri
+      }
+
+      await until(
+        5,
+        1e3,
+        (value, error) =>
+          !error &&
+          value.starterPack.list?.viewer?.referenceListOptOut === nextOptOut,
+        async () =>
+          await appviewClient.call(app.bsky.graph.getStarterPack, {
+            starterPack: starterPack.uri,
+          }),
+      )
+      return nextOptOut
+    },
+    onMutate: async ({referenceListOptOut}) => {
+      await queryClient.cancelQueries({queryKey})
+      const previous =
+        queryClient.getQueryData<app.bsky.graph.defs.StarterPackView>(queryKey)
+      queryClient.setQueryData<app.bsky.graph.defs.StarterPackView>(
+        queryKey,
+        current =>
+          current?.list
+            ? {
+                ...current,
+                list: {
+                  ...current.list,
+                  viewer: {
+                    ...current.list.viewer,
+                    referenceListOptOut: referenceListOptOut
+                      ? undefined
+                      : `at://${pdsClient.assertDid}/app.bsky.graph.referencelistoptout/pending`,
+                  },
+                },
+              }
+            : current,
+      )
+      return {previous}
+    },
+    onSuccess: referenceListOptOut => {
+      queryClient.setQueryData<app.bsky.graph.defs.StarterPackView>(
+        queryKey,
+        current =>
+          current?.list
+            ? {
+                ...current,
+                list: {
+                  ...current.list,
+                  viewer: {
+                    ...current.list.viewer,
+                    referenceListOptOut,
+                  },
+                },
+              }
+            : current,
+      )
+      void invalidateListMembersQuery({
+        queryClient,
+        uri: starterPack.list!.uri,
+      })
+    },
+    onError: (error, _, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous)
+      }
+      onError(error)
+    },
+  })
+}
+
 export async function invalidateStarterPack({
   queryClient,
   did,
