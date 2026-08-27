@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {Sentry} from '#/logger/sentry/lib'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
@@ -13,7 +14,6 @@ import {
   useDeviceGeolocationApi,
   useRequestDeviceGeolocation,
 } from '#/geolocation'
-import {Sentry} from '#/logger/sentry/lib'
 import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
