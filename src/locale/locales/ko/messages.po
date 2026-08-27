@@ -2361,10 +2361,6 @@ msgstr "Bluesky가 네트워크에 있는 사용자 중에서 임의로 추천 �
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "Bluesky는 로그아웃한 사용자에게 내 계정을 표시하지 않으며 다른 앱에도 동일하게 요청합니다. 다른 앱에서는 이 요청을 따르지 않을 수 있습니다. 이 설정이 계정을 비공개로 전환하지는 않습니다."
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr "Bluesky는 주목할 만하고 신뢰할 수 있는 계정을 우선적으로 인증합니다."
@@ -8487,6 +8483,10 @@ msgstr "오래된 순"
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
 msgstr "켜기"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
+msgstr "이 설정은 Bluesky에서 내 게시물이 나를 팔로우하는 사람들에게만 Discover 피드에 표시되도록 합니다. 다른 앱은 자체 알고리즘 추천에 이 설정을 적용할지 선택할 수 있습니다."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"

@@ -2361,10 +2361,6 @@ msgstr "A Bluesky egy javasolt felhasználócsoportot fog kijelölni a hálózat
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "A Bluesky nem fogja megjeleníteni a fiókod tartalmat kijelentkezett felhasználók számára és más alkalmazásokat is megkér erre, de lehetséges, hogy ezt azok nem fogják tiszteletben tartani. Ettől a fiókod nem lesz privát."
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr "A Bluesky mostantól hitelesíti a jelentős és megbízható fiókokat."
@@ -8487,6 +8483,10 @@ msgstr "A legrégebbi válaszok elöl"
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
 msgstr "Be"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
+msgstr "A lehetőség engedélyezésével a Bluesky csak a Téged követő személyeknek fogja megjeleníteni a bejegyzéseidet a Felfedezés hírfolyamban. Lehetséges, hogy ezt a beállítást más alkalmazások is figyelembe veszik a saját algoritmusalapú ajánlórendszereikben."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"

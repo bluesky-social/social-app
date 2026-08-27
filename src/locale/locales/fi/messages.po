@@ -2361,10 +2361,6 @@ msgstr "Bluesky valitsee joukon suositeltuja tilejä verkostosi käyttäjistä."
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr ""
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr ""
@@ -8486,6 +8482,10 @@ msgstr "Vanhimmat vastaukset ensin"
 
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
+msgstr ""
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
 msgstr ""
 
 #: src/components/StarterPack/QrCode.tsx:78

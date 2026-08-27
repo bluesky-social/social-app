@@ -2361,10 +2361,6 @@ msgstr "Blueskyはあなたのつながっているユーザーからおすす�
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "Blueskyはログアウトしたユーザーにあなたのアカウントを表示しません。他のアプリにも同様の対応を求めます。この設定はあなたのアカウントを非公開にするものではありません。"
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr "Blueskyは著名な本物のアカウントを積極的に認証します。"
@@ -8487,6 +8483,10 @@ msgstr "古い順に返信を表示"
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
 msgstr "有効"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
+msgstr "Blueskyでは、これはあなたの投稿があなたをフォローしている人にのみDiscoverフィードに表示されることを意味します。他のアプリは、独自の推薦アルゴリズムでこの設定を使用するかもしれません。"
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"

@@ -2361,10 +2361,6 @@ msgstr "Bluesky va alege un set de conturi recomandate de la persoanele din reț
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "Bluesky nu va afișa contul dvs. pentru utilizatorii deconectați și va cere altor aplicații să facă la fel. Este posibil ca alte aplicații să nu onoreze această cerere. Acest lucru nu face contul dvs. privat."
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr "Bluesky va verifica proactiv conturile notabile și autentice."
@@ -8487,6 +8483,10 @@ msgstr "Cele mai vechi răspunsuri primele"
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
 msgstr "Activată"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
+msgstr "Pe Bluesky, acest lucru înseamnă că postările dvs. vor apărea în fluxul „Descoperă” doar pentru persoanele care vă urmăresc. Alte aplicații pot alege să țină cont de această preferință în propriile sisteme de recomandare bazate pe algoritmi."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"

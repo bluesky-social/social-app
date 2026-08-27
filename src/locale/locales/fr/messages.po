@@ -2361,10 +2361,6 @@ msgstr "Bluesky choisira un ensemble de comptes recommandés parmi les personnes
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "Bluesky n’affichera pas votre compte aux personnes non connectées et demandera aux autres applis de faire de même. Les autres applis peuvent ne pas respecter cette demande. Cela ne rends pas votre compte privé."
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr "Bluesky va vérifier de manière proactive les comptes connus et authentiques."
@@ -8487,6 +8483,10 @@ msgstr "Plus anciennes réponses en premier"
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
 msgstr "Activé"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
+msgstr "Sur Bluesky, cela signifie que vos posts n’apparaîtront que sur le fil d’actu Discover des personnes qui sont abonnées à votre compte. Les autres applis peuvent également choisir de respecter cette préférence dans leurs propres algorithmes de recommandations."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"

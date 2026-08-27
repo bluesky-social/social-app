@@ -2361,10 +2361,6 @@ msgstr "Bluesky vybere sadu doporučených účtů od lidí ve vaší síti."
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "Bluesky nebude zobrazovat váš účet odhlášeným uživatelům a požádá ostatní aplikace, aby udělaly totéž. Ostatní aplikace nemusí tento požadavek respektovat. Váš účet tím nebude soukromý."
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr "Bluesky proaktivně ověří pozoruhodné a autentické účty."
@@ -8487,6 +8483,10 @@ msgstr "Nejstarší odpovědi jako první"
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
 msgstr "Zapnuto"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
+msgstr "Na Bluesky to znamená, že vaše příspěvky se budou zobrazovat ve feedu Objevit pouze lidem, kteří vás sledují. Ostatní aplikace se mohou rozhodnout použít tuto předvolbu ve svých vlastních algoritmických doporučeních."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"

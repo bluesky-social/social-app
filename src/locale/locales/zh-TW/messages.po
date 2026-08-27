@@ -2361,10 +2361,6 @@ msgstr "Bluesky 將從您的個人社群網路中選擇一組推薦的帳號。"
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "Bluesky 將不會向未登入的使用者顯示您的帳號，並會要求其他應用程式也這麼做。其他應用程式未必會遵循此要求。這不會使您的帳號轉為非公開狀態。"
 
-#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
-msgid "Bluesky will not show your posts in the Discover feed (except to your followers) and will ask other apps not to show your posts in their own algorithmic recommendations."
-msgstr ""
-
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr "Bluesky 官方會主動確認部分知名帳號的真實性並授予驗證。"
@@ -8487,6 +8483,10 @@ msgstr "最舊回覆優先"
 #: src/screens/Settings/AccountSettings.tsx:162
 msgid "On"
 msgstr "開"
+
+#: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
+msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
+msgstr "在 Bluesky 上，這代表您的貼文只會在探索資訊流中顯示給跟隨您的用戶。其他應用程式可以選擇在其演算法推薦中採用此偏好設定。"
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
