@@ -13,6 +13,7 @@ import {
   useDeviceGeolocationApi,
   useRequestDeviceGeolocation,
 } from '#/geolocation'
+import {Sentry} from '#/logger/sentry/lib'
 import {Admonitions} from './Admonitions'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
@@ -97,8 +98,16 @@ export default function Storybook() {
                   }
                 })
               }}
-              label="crash">
+              label="Get GPS location">
               <ButtonText>Get GPS Location</ButtonText>
+            </Button>
+
+            <Button
+              color="negative"
+              size="large"
+              onPress={() => Sentry.nativeCrash()}
+              label="Crash the app to test Sentry">
+              <ButtonText>Crash the app</ButtonText>
             </Button>
 
             <Button
