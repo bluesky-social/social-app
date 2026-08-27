@@ -1091,32 +1091,12 @@
       "count": 1
     }
   },
-  "src/state/preferences/alt-text-required.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/state/preferences/autoplay.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/state/preferences/disable-haptics.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/state/preferences/external-embeds-prefs.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
     }
   },
   "src/state/preferences/hidden-posts.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/state/preferences/in-app-browser.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
     }
@@ -1131,22 +1111,7 @@
       "count": 1
     }
   },
-  "src/state/preferences/large-alt-badge.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/state/preferences/subtitles.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/state/preferences/trending.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/state/preferences/used-starter-packs.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
     }
