@@ -1855,6 +1855,41 @@ describe('session', () => {
       expect(rebased.accounts).toEqual([fresh])
     })
 
+    it('honors a remote logout over a concurrent local refresh', () => {
+      const stale = makeAccount('https://alice.com', {
+        active: true,
+        did: 'alice-did',
+        handle: 'alice.test',
+        accessJwt: 'alice-access-jwt-1',
+        refreshJwt: 'alice-refresh-jwt-1',
+      })
+      const refreshed = {
+        ...stale,
+        accessJwt: 'alice-access-jwt-2',
+        refreshJwt: 'alice-refresh-jwt-2',
+      }
+      const loggedOut = {
+        ...stale,
+        accessJwt: undefined,
+        refreshJwt: undefined,
+      }
+
+      const rebased = rebasePersistedSession(
+        snapshot([loggedOut]),
+        snapshot([refreshed], 'alice-did'),
+        {
+          type: 'received-session-event',
+          bundle: makeBundle('https://alice.com'),
+          accountDid: 'alice-did',
+          refreshedAccount: refreshed,
+          sessionEvent: 'update',
+        },
+      )
+
+      expect(rebased.accounts).toEqual([loggedOut])
+      expect(rebased.currentAccount).toBeUndefined()
+    })
+
     it('preserves a concurrent newer generation instead of clearing it on expiry', () => {
       const dying = makeAccount('https://alice.com', {
         active: true,

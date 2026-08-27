@@ -210,10 +210,10 @@ function selectCurrentDid({
       return desiredCurrentDid
     case 'received-session-event':
       if (
-        action.sessionEvent === 'expired' &&
         action.accountDid !== undefined &&
         preservedNewerTokenDids.has(action.accountDid)
       ) {
+        /* The latest tokens also own account selection after a conflict. */
         return latestCurrentDid
       }
       return action.sessionEvent === 'expired'
