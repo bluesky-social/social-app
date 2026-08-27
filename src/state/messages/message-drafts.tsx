@@ -2,9 +2,9 @@ import {
   createContext,
   useContext,
   useEffect,
+  useEffectEvent,
   useMemo,
   useReducer,
-  useRef,
 } from 'react'
 
 import {useCurrentConvoId} from './current-convo-id'
@@ -44,8 +44,7 @@ export function useMessageDraft() {
 export function useSaveMessageDraft(message: string) {
   const {currentConvoId} = useCurrentConvoId()
   const {dispatch} = useMessageDraftsContext()
-  const messageRef = useRef(message)
-  messageRef.current = message
+  const getMessage = useEffectEvent(() => message)
 
   useEffect(() => {
     return () => {
@@ -53,7 +52,7 @@ export function useSaveMessageDraft(message: string) {
         dispatch({
           type: 'set',
           convoId: currentConvoId,
-          draft: messageRef.current,
+          draft: getMessage(),
         })
       }
     }
