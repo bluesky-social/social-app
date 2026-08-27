@@ -3180,11 +3180,11 @@ msgstr "Compor publicações com até {0, plural, other {# caracteres}} de compr
 msgid "Compose reply"
 msgstr "Escrever resposta"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "A comprimir GIF..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "A comprimir vídeo..."
 
@@ -4115,7 +4115,7 @@ msgstr "Ignorar"
 msgid "Dismiss banner"
 msgstr "Ignorar banner"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Ignorar falha"
 
@@ -4673,7 +4673,7 @@ msgstr "Entra em ecrã cheio"
 msgid "Entertainment"
 msgstr "Entretenimento"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Erro"
@@ -5800,7 +5800,7 @@ msgstr "Vamos começar"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF carregado"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "De momento é só você! Adicione mais pessoas ao seu pacote de iniciante pesquisando acima."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID do trabalho: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Política de Privacidade"
 msgid "Privacy violation of a minor"
 msgstr "Violação da privacidade de um menor"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "A processar GIF..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "A processar o vídeo..."
 
@@ -13539,7 +13539,7 @@ msgstr "Carregar de Ficheiros"
 msgid "Upload from Library"
 msgstr "Carregar da Biblioteca"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "A carregar GIF..."
 
@@ -13553,7 +13553,7 @@ msgstr "A carregar imagens..."
 msgid "Uploading link thumbnail..."
 msgstr "A carregar miniatura do link..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "A carregar vídeo..."
 
@@ -13842,7 +13842,7 @@ msgstr "Vídeo não encontrado."
 msgid "Video settings"
 msgstr "Definições de vídeo"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Vídeo carregado"
 

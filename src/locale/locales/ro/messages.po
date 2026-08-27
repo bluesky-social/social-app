@@ -3180,11 +3180,11 @@ msgstr "Compuneți postări de până la {0, plural, one {} few {# caractere}oth
 msgid "Compose reply"
 msgstr "Compunere răspuns"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "Se comprimă GIF-ul..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Se comprimă videoclipul..."
 
@@ -4115,7 +4115,7 @@ msgstr "Închidere"
 msgid "Dismiss banner"
 msgstr "Închideți bannerul"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Închidere eroare"
 
@@ -4673,7 +4673,7 @@ msgstr "Intrați în modul Ecran complet"
 msgid "Entertainment"
 msgstr "Divertisment"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Eroare"
@@ -5800,7 +5800,7 @@ msgstr "Începeți"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF încărcat"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Sunteți doar dvs. acum! Adăugați mai multe persoane la pachetul dvs. de pornire căutând mai sus."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID loc de muncă: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Politica de Confidențialitate"
 msgid "Privacy violation of a minor"
 msgstr "Încălcarea confidențialității unui minor"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "Se procesează GIF-ul..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Se procesează videoclipul..."
 
@@ -13539,7 +13539,7 @@ msgstr "Încărcați din fișiere"
 msgid "Upload from Library"
 msgstr "Încărcați din bibliotecă"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "Se încarcă GIF-ul..."
 
@@ -13553,7 +13553,7 @@ msgstr "Se încarcă imaginile..."
 msgid "Uploading link thumbnail..."
 msgstr "Se încarcă miniatura link-ului..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Se încarcă videoclipul..."
 
@@ -13842,7 +13842,7 @@ msgstr "Videoclipul nu a fost găsit."
 msgid "Video settings"
 msgstr "Setări videoclip"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Videoclip încărcat"
 

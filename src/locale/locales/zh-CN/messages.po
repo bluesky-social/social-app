@@ -3180,11 +3180,11 @@ msgstr "撰写最多 {0, plural,other {# 个字符}} 的帖文"
 msgid "Compose reply"
 msgstr "撰写回复"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "正在压缩 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "正在压缩视频……"
 
@@ -4115,7 +4115,7 @@ msgstr "跳过"
 msgid "Dismiss banner"
 msgstr "忽略横幅提示"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "忽略错误"
 
@@ -4673,7 +4673,7 @@ msgstr "进入全屏模式"
 msgid "Entertainment"
 msgstr "娱乐"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "错误"
@@ -5800,7 +5800,7 @@ msgstr "开始吧"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "已上传 GIF"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "现在只有你一个！通过上面的列表将更多人添加到你的新手包里面。"
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "作业 ID：{0}"
 
@@ -9565,11 +9565,11 @@ msgstr "隐私政策"
 msgid "Privacy violation of a minor"
 msgstr "侵犯未成年隐私"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "正在处理 GIF……"
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "正在处理视频……"
 
@@ -13539,7 +13539,7 @@ msgstr "从文件上传"
 msgid "Upload from Library"
 msgstr "从照片图库上传"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "正在上传 GIF……"
 
@@ -13553,7 +13553,7 @@ msgstr "正在上传图片……"
 msgid "Uploading link thumbnail..."
 msgstr "正在上传链接缩略图……"
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "正在上传视频……"
 
@@ -13842,7 +13842,7 @@ msgstr "无法找到视频。"
 msgid "Video settings"
 msgstr "视频设置"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "已上传视频"
 

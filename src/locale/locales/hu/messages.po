@@ -3180,11 +3180,11 @@ msgstr "Egy bejegyzés legfeljebb {0, plural, other{#}} karakter hosszú lehet"
 msgid "Compose reply"
 msgstr "Válaszírás"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "GIF tömörítése folyamatban…"
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Videó tömörítése folyamatban…"
 
@@ -4115,7 +4115,7 @@ msgstr "Bezárás"
 msgid "Dismiss banner"
 msgstr "Reklámcsík bezárása"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Hiba bezárása"
 
@@ -4673,7 +4673,7 @@ msgstr "Teljes képernyős mód"
 msgid "Entertainment"
 msgstr "Szórakozás"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Hiba"
@@ -5800,7 +5800,7 @@ msgstr "Rendben"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF sikeresen feltöltve"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Még csak Te szerepelsz a kezdőcsomagban. A fenti keresővel másokat is hozzáadhatsz."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "Állásazonosító: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Adatvédelmi irányelvek"
 msgid "Privacy violation of a minor"
 msgstr "Kiskorúak személyes jogainak megsértése"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "GIF feldolgozása folyamatban…"
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Videó feldolgozása folyamatban…"
 
@@ -13541,7 +13541,7 @@ msgstr "Feltöltés a fájlkezelőből"
 msgid "Upload from Library"
 msgstr "Feltöltés a galériából"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "GIF feltöltése folyamatban…"
 
@@ -13555,7 +13555,7 @@ msgstr "Képek feltöltése folyamatban…"
 msgid "Uploading link thumbnail..."
 msgstr "Hivatkozás indexképének feltöltése folyamatban…"
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Videó feltöltése folyamatban…"
 
@@ -13844,7 +13844,7 @@ msgstr "A videó nem található."
 msgid "Video settings"
 msgstr "Videóbeállítások"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "A videó feltöltése sikeresen befejeződött"
 

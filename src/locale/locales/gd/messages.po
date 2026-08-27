@@ -3180,11 +3180,11 @@ msgstr "Sgrìobh puist a bhios suas ri {0, plural, one {# charactar} two {# char
 msgid "Compose reply"
 msgstr "Sgrìobh freagairt"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "A’ co-dhlùthachadh an GIF…"
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "A’ dùmhlachadh a’ video…"
 
@@ -4115,7 +4115,7 @@ msgstr "Leig seachad"
 msgid "Dismiss banner"
 msgstr "Leig seachad a’ bhratach"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Leig seachad a’ mhearachd"
 
@@ -4673,7 +4673,7 @@ msgstr "Fosglaidh seo an làn-sgrìn"
 msgid "Entertainment"
 msgstr "Dibhearsan"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Mearachd"
@@ -5800,7 +5800,7 @@ msgstr "Dèan toiseach-tòiseachaidh"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "Chaidh an GIF a luchdadh suas"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Chan eil ann ach thu fhèin an-dràsta fhèin! Cuir barrachd dhaoine ris a’ phacaid tòiseachaidh agad le bhith a’ dèanamh lorg gu h-àrd."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID na h-obrach: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Am poileasaidh prìobhaideachd"
 msgid "Privacy violation of a minor"
 msgstr "Briseadh a-steach air prìobhaideachd mion-aoisich"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "A’ pròiseasadh an GIF…"
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "A’ pròiseasadh a’ video…"
 
@@ -13539,7 +13539,7 @@ msgstr "Luchdaich suas o na faidhlichean"
 msgid "Upload from Library"
 msgstr "Luchdaich suas on leabhar-lann"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "A’ luchdadh suas an GIF…"
 
@@ -13553,7 +13553,7 @@ msgstr "A’ luchdadh suas nan dealbhan…"
 msgid "Uploading link thumbnail..."
 msgstr "A’ luchdadh suas dealbhag a’ cheangail…"
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "A’ luchdadh suas a’ video…"
 
@@ -13842,7 +13842,7 @@ msgstr "Cha deach a’ video a lorg."
 msgid "Video settings"
 msgstr "Roghainnean a’ video"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Chaidh a’ video a luchdadh suas"
 

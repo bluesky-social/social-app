@@ -3180,11 +3180,11 @@ msgstr "{0, plural, other {# karakter}} uzunluğuna kadar gönderiler oluşturun
 msgid "Compose reply"
 msgstr "Yanıt oluştur"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "GIF sıkıştırılıyor..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Video sıkıştırılıyor..."
 
@@ -4115,7 +4115,7 @@ msgstr "Yok say"
 msgid "Dismiss banner"
 msgstr "Bildirimi gizle"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Hatayı yok say"
 
@@ -4673,7 +4673,7 @@ msgstr "Tam ekrana geçer"
 msgid "Entertainment"
 msgstr "Eğlence"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Hata"
@@ -5800,7 +5800,7 @@ msgstr "Başla"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF yüklendi"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Şu anda yalnızca siz varsınız! Yukarıdan arama yaparak başlangıç ​​paketinize daha çok kişi ekleyin."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "İş ID: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Gizlilik Politikası"
 msgid "Privacy violation of a minor"
 msgstr "Bir küçüğün gizliliğini ihlal"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "GIF işleniyor..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Video işleniyor..."
 
@@ -13539,7 +13539,7 @@ msgstr "Dosyalardan Yükle"
 msgid "Upload from Library"
 msgstr "Kütüphaneden Yükle"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "GIF yükleniyor..."
 
@@ -13553,7 +13553,7 @@ msgstr "Görseller yükleniyor..."
 msgid "Uploading link thumbnail..."
 msgstr "Web bağlantısının görseli gönderiliyor..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Video yükleniyor..."
 
@@ -13842,7 +13842,7 @@ msgstr "Video bulunamadı."
 msgid "Video settings"
 msgstr "Video ayarları"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Video yüklendi"
 

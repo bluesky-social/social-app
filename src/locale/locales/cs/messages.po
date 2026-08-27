@@ -3180,11 +3180,11 @@ msgstr "Napiš příspěvky dlouhé až {0, plural, one {# znak} few {# znaky} m
 msgid "Compose reply"
 msgstr "Napište odpověď"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "Komprese GIF..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Komprese videa..."
 
@@ -4115,7 +4115,7 @@ msgstr "Odmítnout"
 msgid "Dismiss banner"
 msgstr "Odmítnout banner"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Odmítnout chybu"
 
@@ -4673,7 +4673,7 @@ msgstr "Přejde do režimu celé obrazovky"
 msgid "Entertainment"
 msgstr "Zábava"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Chyba"
@@ -5800,7 +5800,7 @@ msgstr "Začínáme"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF nahrán"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Zatím jste tu jen vy! Přidejte do svého startovacího balíčku další lidi pomocí vyhledávání výše."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID úlohy: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Zásady ochrany osobních údajů"
 msgid "Privacy violation of a minor"
 msgstr "Porušení soukromí nezletilé osoby"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "Zpracovávání GIF..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Zpracovávání videa..."
 
@@ -13539,7 +13539,7 @@ msgstr "Nahrát ze souboru"
 msgid "Upload from Library"
 msgstr "Nahrát z knihovny"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "Nahrávání GIF..."
 
@@ -13553,7 +13553,7 @@ msgstr "Nahrávání obrázků..."
 msgid "Uploading link thumbnail..."
 msgstr "Nahrávání náhledu odkazu..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Nahrávání videa..."
 
@@ -13842,7 +13842,7 @@ msgstr "Video nenalezeno."
 msgid "Video settings"
 msgstr "Nastavení videa"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Video nahráno"
 

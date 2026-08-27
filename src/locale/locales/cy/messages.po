@@ -3180,11 +3180,11 @@ msgstr "Cyfansoddwch bostiadau hyd at {0, plural, zero {} one {# nod} two {# nod
 msgid "Compose reply"
 msgstr "Ysgrifennu ateb"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "Yn cywasgu GIF..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Yn cywasgu fideo..."
 
@@ -4115,7 +4115,7 @@ msgstr "Cau"
 msgid "Dismiss banner"
 msgstr "Cau'r faner"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Cau'r gwall"
 
@@ -4673,7 +4673,7 @@ msgstr "Yn mynd i'r sgrin lawn"
 msgid "Entertainment"
 msgstr "Adloniant"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Gwall"
@@ -5800,7 +5800,7 @@ msgstr "Cychwyn arni"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF wedi'i lwytho i fyny"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Dim ond chi ar hyn o bryd! Ychwanegwch fwy o bobl at eich pecyn cychwyn trwy chwilio uchod."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID gwaith: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Polisi Preifatwydd"
 msgid "Privacy violation of a minor"
 msgstr "Torri ar breifatrwydd plentyn dan oed"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "Yn prosesu GIF..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Yn prosesu fideo..."
 
@@ -13539,7 +13539,7 @@ msgstr "Llwytho i fyny o'r Ffeiliau"
 msgid "Upload from Library"
 msgstr "Llwytho i fyny o'r Llyfrgell"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "Yn llwytho'r GIF..."
 
@@ -13553,7 +13553,7 @@ msgstr "Wrthi'n lwytho lluniau i fyny..."
 msgid "Uploading link thumbnail..."
 msgstr "Wrthi'n lwytho dolen llun bach i fyny..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Wrthi'n llwytho fideo i fyny..."
 
@@ -13842,7 +13842,7 @@ msgstr "Fideo heb ei ganfod."
 msgid "Video settings"
 msgstr "Gosodiadau fideo"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Fideo wedi'i lwytho i fyny"
 

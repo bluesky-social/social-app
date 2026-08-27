@@ -3180,11 +3180,11 @@ msgstr "Compose posts up to {0, plural, other {# characters}} in length"
 msgid "Compose reply"
 msgstr "Compose reply"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "Compressing GIF..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Compressing video..."
 
@@ -4115,7 +4115,7 @@ msgstr "Dismiss"
 msgid "Dismiss banner"
 msgstr "Dismiss banner"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Dismiss error"
 
@@ -4673,7 +4673,7 @@ msgstr "Enters fullscreen"
 msgid "Entertainment"
 msgstr "Entertainment"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Error"
@@ -5800,7 +5800,7 @@ msgstr "Get started"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF uploaded"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "It's just you right now! Add more people to your starter pack by searching above."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "Job ID: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Privacy Policy"
 msgid "Privacy violation of a minor"
 msgstr "Privacy violation of a minor"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "Processing GIF..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Processing video..."
 
@@ -13539,7 +13539,7 @@ msgstr "Upload from Files"
 msgid "Upload from Library"
 msgstr "Upload from Library"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "Uploading GIF..."
 
@@ -13553,7 +13553,7 @@ msgstr "Uploading images..."
 msgid "Uploading link thumbnail..."
 msgstr "Uploading link thumbnail..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Uploading video..."
 
@@ -13842,7 +13842,7 @@ msgstr "Video not found."
 msgid "Video settings"
 msgstr "Video settings"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Video uploaded"
 

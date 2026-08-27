@@ -3180,11 +3180,11 @@ msgstr "Soạn bài đăng với độ dài tối đa {0, plural, other {# kí t
 msgid "Compose reply"
 msgstr "Soạn trả lời"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Đang nén video..."
 
@@ -4115,7 +4115,7 @@ msgstr "Bỏ qua"
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Bỏ qua lỗi "
 
@@ -4673,7 +4673,7 @@ msgstr "Mở toàn màn hình"
 msgid "Entertainment"
 msgstr "Giải trí"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Lỗi"
@@ -5800,7 +5800,7 @@ msgstr "Bắt đầu"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr ""
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Chỉ mới có bạn thôi! Thêm người khác vào gói khởi đầu của bạn bằng cách tìm kiếm ở trên."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID công việc: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Chính sách bảo mật"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Đang xử lý video..."
 
@@ -13539,7 +13539,7 @@ msgstr "Tải lên từ Files"
 msgid "Upload from Library"
 msgstr "Tải lên từ Thư viện"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -13553,7 +13553,7 @@ msgstr "Đang tải lên hình..."
 msgid "Uploading link thumbnail..."
 msgstr "Đang tải lên hình cho liên kết..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Đang tải lên video..."
 
@@ -13842,7 +13842,7 @@ msgstr "Không tìm thấy video."
 msgid "Video settings"
 msgstr "Cài đặt video"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Đã tải lên video"
 

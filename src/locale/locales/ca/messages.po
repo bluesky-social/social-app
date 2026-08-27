@@ -3180,11 +3180,11 @@ msgstr "Crear publicacions de fins a {0, plural, one {}other {# caràcters}} de 
 msgid "Compose reply"
 msgstr "Redacta una resposta"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "Comprimint el GIF..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Comprimint el vídeo..."
 
@@ -4115,7 +4115,7 @@ msgstr "Descarta"
 msgid "Dismiss banner"
 msgstr "Ignora el bàner"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Descarta l'error"
 
@@ -4673,7 +4673,7 @@ msgstr "Canvia a pantalla completa"
 msgid "Entertainment"
 msgstr "Entreteniment"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Error"
@@ -5800,7 +5800,7 @@ msgstr "Comença"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "S'ha penjat el GIF"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Ara només ets tu! Afegeix més persones al teu starter pack cercant a dalt."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "Identificador de la tasca: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Política de privacitat"
 msgid "Privacy violation of a minor"
 msgstr "Violació de la privadesa d'un menor"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "Processant el GIF..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Processant el vídeo..."
 
@@ -13539,7 +13539,7 @@ msgstr "Puja dels Fitxers"
 msgid "Upload from Library"
 msgstr "Puja de la biblioteca"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "S'està penjant el GIF..."
 
@@ -13553,7 +13553,7 @@ msgstr "S'estan penjant imatges..."
 msgid "Uploading link thumbnail..."
 msgstr "S'està penjant la miniatura de l'enllaç..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "S'està penjant el vídeo..."
 
@@ -13842,7 +13842,7 @@ msgstr "No s'ha trobat el vídeo."
 msgid "Video settings"
 msgstr "Configuració de vídeo"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Vídeo penjat"
 

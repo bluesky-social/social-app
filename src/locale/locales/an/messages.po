@@ -3180,11 +3180,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr "Redactar la respuesta"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Comprimindo video..."
 
@@ -4115,7 +4115,7 @@ msgstr "Descartar"
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Descartar error"
 
@@ -4673,7 +4673,7 @@ msgstr "Cambia a pantalla completa"
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Error"
@@ -5800,7 +5800,7 @@ msgstr ""
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr ""
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Nomás yes tu per agora! Anyade mas personas a lo tuyo paquet d'inicio buscando alto."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID de fayena: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Politica de privacidat"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Procesando video..."
 
@@ -13539,7 +13539,7 @@ msgstr "Puyar dende los tuyos fichers"
 msgid "Upload from Library"
 msgstr "Puyar dende la biblioteca"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -13553,7 +13553,7 @@ msgstr "Cargando imáchens..."
 msgid "Uploading link thumbnail..."
 msgstr "Cargando thumbnail d'o vinclo..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Cargando video..."
 
@@ -13842,7 +13842,7 @@ msgstr "Video no trobau."
 msgid "Video settings"
 msgstr "Configuración d'o video"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Video cargau"
 

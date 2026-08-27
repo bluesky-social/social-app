@@ -3180,11 +3180,11 @@ msgstr "Пишите посты длиной до {0, plural, one {# симво�
 msgid "Compose reply"
 msgstr "Составить ответ"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Сжатие видео..."
 
@@ -4115,7 +4115,7 @@ msgstr "Пропустить"
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Пропустить ошибку"
 
@@ -4673,7 +4673,7 @@ msgstr "Переходит в полноэкранный режим"
 msgid "Entertainment"
 msgstr "Развлечения"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Ошибка"
@@ -5800,7 +5800,7 @@ msgstr "Приступить"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr ""
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Сейчас здесь только вы! Добавьте больше людей в свой стартовый набор, воспользовавшись поиском выше."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "ID вакансии: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Политика конфиденциальности"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Обработка видео..."
 
@@ -13539,7 +13539,7 @@ msgstr "Загрузить из файлов"
 msgid "Upload from Library"
 msgstr "Загрузить из библиотеки"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -13553,7 +13553,7 @@ msgstr "Загрузка изображений..."
 msgid "Uploading link thumbnail..."
 msgstr "Загрузка миниатюры ссылки..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Загрузка видео..."
 
@@ -13842,7 +13842,7 @@ msgstr "Видео не найдено."
 msgid "Video settings"
 msgstr "Настройки видео"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Видео загружено"
 

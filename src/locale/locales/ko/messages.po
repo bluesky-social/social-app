@@ -3180,11 +3180,11 @@ msgstr "게시물을 최대 {0, plural, other {#자}}까지 작성할 수 있습
 msgid "Compose reply"
 msgstr "답글 작성하기"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "GIF 압축 중…"
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "동영상 압축 중…"
 
@@ -4115,7 +4115,7 @@ msgstr "닫기"
 msgid "Dismiss banner"
 msgstr "배너 닫기"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "오류 무시"
 
@@ -4673,7 +4673,7 @@ msgstr "전체화면으로 봅니다"
 msgid "Entertainment"
 msgstr "엔터테인먼트"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "오류"
@@ -5800,7 +5800,7 @@ msgstr "시작하기"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIF를 업로드했습니다"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "아직은 나밖에 없습니다! 위에서 검색하여 스타터 팩에 더 많은 사용자를 추가해 보세요."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "작업 ID: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "개인정보 처리방침"
 msgid "Privacy violation of a minor"
 msgstr "미성년자 사생활 침해"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "GIF 처리 중…"
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "동영상 처리 중…"
 
@@ -13539,7 +13539,7 @@ msgstr "파일에서 업로드"
 msgid "Upload from Library"
 msgstr "보관함에서 업로드"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "GIF 업로드 중…"
 
@@ -13553,7 +13553,7 @@ msgstr "이미지 업로드 중…"
 msgid "Uploading link thumbnail..."
 msgstr "링크 미리보기 업로드 중…"
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "동영상 업로드 중…"
 
@@ -13842,7 +13842,7 @@ msgstr "동영상을 찾을 수 없습니다."
 msgid "Video settings"
 msgstr "동영상 설정"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "동영상을 업로드했습니다"
 

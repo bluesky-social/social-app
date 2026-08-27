@@ -3180,11 +3180,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr "जवाफ तयार गर्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "भिडियो कम्प्रेस गर्दै..."
 
@@ -4115,7 +4115,7 @@ msgstr "रद्द गर्नुहोस्"
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "त्रुटि रद्द गर्नुहोस्"
 
@@ -4673,7 +4673,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "त्रुटि"
@@ -5800,7 +5800,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr ""
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "अहिले मात्र तपाईं हुनुहुन्छ! माथि खोजेर आफ्नो स्टार्टर प्याकमा थप मानिसहरू थप्नुहोस्।"
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "जॉब आईडी: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "गोपनीयता नीति"
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "भिडियो प्रशोधन हुँदैछ।"
 
@@ -13539,7 +13539,7 @@ msgstr "फाइल बाट अपलोड गर्नुहोस्"
 msgid "Upload from Library"
 msgstr "लाइब्रेरी बाट अपलोड गर्नुहोस्"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -13553,7 +13553,7 @@ msgstr "तस्विरहरू अपलोड गर्दै..."
 msgid "Uploading link thumbnail..."
 msgstr "लिंक थम्बनेल अपलोड गर्दै..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "भिडियो अपलोड गर्दै..."
 
@@ -13842,7 +13842,7 @@ msgstr "भिडियो फेला पारिएन।"
 msgid "Video settings"
 msgstr "भिडियो सेटिङ्गहरू"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "भिडियो अपलोड गरियो"
 

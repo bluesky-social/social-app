@@ -3180,11 +3180,11 @@ msgstr "Idatzi {0, plural, other {# karaktere}} gehienezko postak"
 msgid "Compose reply"
 msgstr "Idatzi erantzuna"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "GIFa konprimitzen..."
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Bideoa konprimitzen..."
 
@@ -4115,7 +4115,7 @@ msgstr "Baztertu"
 msgid "Dismiss banner"
 msgstr "Baztertu bannerra"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Baztertu errorea"
 
@@ -4673,7 +4673,7 @@ msgstr "Pantaila osora sartzen da"
 msgid "Entertainment"
 msgstr "Entretenimendua"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Errorea"
@@ -5800,7 +5800,7 @@ msgstr "Hasi"
 msgid "GIF"
 msgstr "GIF"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "GIFa igo da"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Oraintxe bakarrik zaude! Gehitu jende gehiago zure abio multzoari goiko bilaketan."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "Lan ID: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Pribatutasun Politika"
 msgid "Privacy violation of a minor"
 msgstr "Adingabe baten pribatutasun urraketa"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "GIFa prozesatzen..."
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Bideoa prozesatzen..."
 
@@ -13539,7 +13539,7 @@ msgstr "Kargatu Fitxategietatik"
 msgid "Upload from Library"
 msgstr "Kargatu Liburutegitik"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "GIFa kargatzen..."
 
@@ -13553,7 +13553,7 @@ msgstr "Irudiak kargatzen..."
 msgid "Uploading link thumbnail..."
 msgstr "Estekaren miniatura kargatzen..."
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Bideoa kargatzen..."
 
@@ -13842,7 +13842,7 @@ msgstr "Ez da bideoa aurkitu."
 msgid "Video settings"
 msgstr "Bideo ezarpenak"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Bideoa kargatuta"
 

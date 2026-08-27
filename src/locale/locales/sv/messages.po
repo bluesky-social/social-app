@@ -3180,11 +3180,11 @@ msgstr "Skriv inlägg som är upp till {0, plural, other {# tecken}} långa"
 msgid "Compose reply"
 msgstr "Skriv svar"
 
-#: src/view/com/composer/Composer.tsx:2677
+#: src/view/com/composer/Composer.tsx:2679
 msgid "Compressing GIF..."
 msgstr "Komprimerar gif-bild…"
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing video..."
 msgstr "Komprimerar videoklipp…"
 
@@ -4115,7 +4115,7 @@ msgstr "Avvisa"
 msgid "Dismiss banner"
 msgstr "Avvisa banderoll"
 
-#: src/view/com/composer/Composer.tsx:2619
+#: src/view/com/composer/Composer.tsx:2621
 msgid "Dismiss error"
 msgstr "Avvisa fel"
 
@@ -4673,7 +4673,7 @@ msgstr "Öppnar helskärm"
 msgid "Entertainment"
 msgstr "Underhållning"
 
-#: src/view/com/composer/Composer.tsx:2697
+#: src/view/com/composer/Composer.tsx:2699
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr "Fel"
@@ -5800,7 +5800,7 @@ msgstr "Kom igång"
 msgid "GIF"
 msgstr "Gif-bild"
 
-#: src/view/com/composer/Composer.tsx:2702
+#: src/view/com/composer/Composer.tsx:2704
 msgid "GIF uploaded"
 msgstr "Gif-bild uppladdad"
 
@@ -6788,7 +6788,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr "Just nu är det bara du! Lägg till fler personer i ditt startpaket genom att söka ovan."
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2638
+#: src/view/com/composer/Composer.tsx:2640
 msgid "Job ID: {0}"
 msgstr "Jobb-ID: {0}"
 
@@ -9565,11 +9565,11 @@ msgstr "Integritetspolicy"
 msgid "Privacy violation of a minor"
 msgstr "Kränkning av minderårigs integritet"
 
-#: src/view/com/composer/Composer.tsx:2691
+#: src/view/com/composer/Composer.tsx:2693
 msgid "Processing GIF..."
 msgstr "Bearbetar gif-bild…"
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing video..."
 msgstr "Bearbetar videoklipp…"
 
@@ -13539,7 +13539,7 @@ msgstr "Ladda upp från Filer"
 msgid "Upload from Library"
 msgstr "Ladda upp från Bibliotek"
 
-#: src/view/com/composer/Composer.tsx:2684
+#: src/view/com/composer/Composer.tsx:2686
 msgid "Uploading GIF..."
 msgstr "Laddar upp  gif-bild…"
 
@@ -13553,7 +13553,7 @@ msgstr "Laddar upp bilder…"
 msgid "Uploading link thumbnail..."
 msgstr "Laddar upp miniatyrbild av länk…"
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading video..."
 msgstr "Laddar upp video…"
 
@@ -13842,7 +13842,7 @@ msgstr "Videoklippet hittades inte."
 msgid "Video settings"
 msgstr "Inställningar för videoklipp"
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "Video uploaded"
 msgstr "Videoklipp uppladdat"
 
