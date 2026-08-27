@@ -99,7 +99,7 @@ msgstr "{0, plural, other {# フォロー中}}"
 #. placeholder {0}: item.count
 #: src/components/contacts/screens/ViewMatches.tsx:276
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
-msgstr "{0, plural, one {友達が#人見つかりました！} other {友達が#人見つかりました！}}"
+msgstr "{0, plural, other {友達が#人見つかりました！}}"
 
 #. placeholder {0}: 72
 #. placeholder {0}: diff.value
