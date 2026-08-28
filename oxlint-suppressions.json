@@ -549,11 +549,6 @@
       "count": 2
     }
   },
-  "src/lib/async/until.ts": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/lib/broadcast/stub.ts": {
     "typescript/no-explicit-any": {
       "count": 1
