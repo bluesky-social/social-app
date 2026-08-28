@@ -117,6 +117,7 @@ const Context = createContext<AnalyticsBaseContextType>({
     geolocation: device.get(['geolocationServiceResponse']) || {
       countryCode: '',
       regionCode: '',
+      city: '',
     },
   },
 })
