@@ -408,7 +408,7 @@ export const ComposePost = ({
         asset.mimeType !== 'image/gif'
       ) {
         try {
-          const probed = await getVideoMetadata(asset.uri)
+          const probed = await getVideoMetadata(asset.uri, asset.mimeType)
           asset = {
             ...asset,
             mimeType: probed.mimeType ?? asset.mimeType,
@@ -538,8 +538,8 @@ export const ComposePost = ({
           let uri = videoInfo.uri
           if (IS_ANDROID) {
             // Android: expo-file-system double-encodes filenames with special chars.
-            // The file exists, but react-native-compressor's MediaMetadataRetriever
-            // can't handle the double-encoded URI. Copy to a temp file with a simple name.
+            // The native metadata probe can't handle the double-encoded URI, so
+            // copy it to a temp file with a simple name.
             const sourceFile = new FileSystem.File(videoInfo.uri)
             const tempFileName = `draft-video-${Date.now()}.${mimeToExt(videoInfo.mimeType)}`
             const tempFile = new FileSystem.File(
@@ -553,7 +553,7 @@ export const ComposePost = ({
             })
             uri = tempFile.uri
           }
-          asset = await getVideoMetadata(uri)
+          asset = await getVideoMetadata(uri, videoInfo.mimeType)
         }
 
         // Start video processing using existing flow
