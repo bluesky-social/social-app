@@ -453,14 +453,13 @@ let PostMenuItems = ({
           type: 'error',
         })
       }
-    } finally {
-      ax.metric('postMenu:blockAccount', {
-        uri: postUri,
-        authorDid: postAuthor.did,
-        logContext,
-        feedDescriptor: feedFeedback.feedDescriptor,
-      })
     }
+    ax.metric('postMenu:blockAccount', {
+      uri: postUri,
+      authorDid: postAuthor.did,
+      logContext,
+      feedDescriptor: feedFeedback.feedDescriptor,
+    })
   }
 
   const onMuteAuthor = async () => {
@@ -476,14 +475,13 @@ let PostMenuItems = ({
             type: 'error',
           })
         }
-      } finally {
-        ax.metric('postMenu:unmuteAccount', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
-        })
       }
+      ax.metric('postMenu:unmuteAccount', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
     } else {
       try {
         await queueMute()
@@ -496,14 +494,13 @@ let PostMenuItems = ({
             type: 'error',
           })
         }
-      } finally {
-        ax.metric('postMenu:muteAccount', {
-          uri: postUri,
-          authorDid: postAuthor.did,
-          logContext,
-          feedDescriptor: feedFeedback.feedDescriptor,
-        })
       }
+      ax.metric('postMenu:muteAccount', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
     }
   }
 

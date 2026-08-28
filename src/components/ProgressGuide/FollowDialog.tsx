@@ -270,10 +270,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
 
   // Track seen profiles
   const seenProfilesRef = useRef<Set<string>>(new Set())
-  const itemsRef = useRef(items)
-  itemsRef.current = items
-  const selectedInterestRef = useRef(selectedInterest)
-  selectedInterestRef.current = selectedInterest
 
   const onViewableItemsChanged = useNonReactiveCallback(
     ({viewableItems}: {viewableItems: ViewToken[]}) => {
@@ -282,7 +278,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
         if (item.type === 'profile') {
           if (!seenProfilesRef.current.has(item.profile.did)) {
             seenProfilesRef.current.add(item.profile.did)
-            const position = itemsRef.current.findIndex(
+            const position = items.findIndex(
               i => i.type === 'profile' && i.profile.did === item.profile.did,
             )
             ax.metric('suggestedUser:seen', {
@@ -292,9 +288,7 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
               position: position !== -1 ? position : 0,
               suggestedDid: item.profile.did,
               category:
-                selectedInterestRef.current === FOR_YOU_TAB
-                  ? null
-                  : selectedInterestRef.current,
+                selectedInterest === FOR_YOU_TAB ? null : selectedInterest,
             })
           }
         }

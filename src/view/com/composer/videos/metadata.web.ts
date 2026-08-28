@@ -11,6 +11,7 @@ export function hasWebCodecs(): boolean {
 
 export async function getVideoMetadata(
   file: File | string,
+  _fallbackMimeType?: string,
 ): Promise<ImagePickerAsset> {
   if (typeof file === 'string')
     throw new Error(
