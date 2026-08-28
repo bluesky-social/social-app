@@ -1,7 +1,7 @@
 import {View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {moderateProfile} from '@bsky/sdk/moderation'
-import {Plural, Trans, useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -33,9 +33,6 @@ export function KnownLikers({
   const moderationOpts = useModerationOpts()
   const ax = useAnalytics()
 
-  const likeCount = post.likeCount ?? 0
-  if (likeCount === 0) return null
-
   const knownLikersAndModeration = moderationOpts
     ? (post.viewer?.knownLikers?.actors ?? [])
         .map(actor => ({
@@ -64,19 +61,13 @@ export function KnownLikers({
         moderation.ui('displayName'),
       ),
     }))
+  const isFeed = variant === 'feed'
   const rowLabel =
-    variant === 'feed'
-      ? likeCount > 1
-        ? l`${names[0].displayName} and ${likeCount - 1} others liked this`
-        : l`${names[0].displayName} liked this`
-      : names.length >= 2
-        ? l`Liked by ${names[0].displayName} and ${names[1].displayName}`
-        : l`Liked by ${names[0].displayName}`
-  const textStyle = [
-    variant === 'feed' ? a.text_xs : a.text_sm,
-    t.atoms.text_contrast_medium,
-  ]
-  const nameStyle = [a.text_sm, a.font_semi_bold, t.atoms.text]
+    names.length >= 2
+      ? l`Liked by ${names[0].displayName} and ${names[1].displayName}`
+      : l`Liked by ${names[0].displayName}`
+  const textStyle = [a.text_sm, t.atoms.text_contrast_medium]
+  const nameStyle = [a.text_sm, a.font_medium, t.atoms.text_contrast_medium]
 
   const nameLink = (name: (typeof names)[number]) => (
     <ProfileHoverCard key={name.did} did={name.did} inline>
@@ -92,35 +83,21 @@ export function KnownLikers({
   )
 
   return (
-    <View style={[a.w_full, a.flex_row]}>
+    <View style={[a.w_full, a.flex_row, isFeed && a.mt_sm]}>
       <Link
         to={likesHref}
         label={rowLabel}
-        style={[
-          a.flex_row,
-          a.align_center,
-          variant === 'feed' ? a.gap_xs : a.gap_sm,
-          a.flex_shrink,
-        ]}
+        style={[a.flex_row, a.align_center, a.gap_xs, a.flex_shrink]}
         onPress={() => ax.metric('post:likedBy:click', {})}>
         <AvatarStack
           profiles={aviStackProfiles}
-          size={variant === 'feed' ? 16 : 20}
+          size={16}
+          overlap={4}
+          borderWidth={0.5}
+          backgroundColor={t.atoms.bg_contrast_25.backgroundColor}
         />
         <Text testID="knownLikersStat" style={[a.flex_shrink, textStyle]}>
-          {variant === 'feed' ? (
-            likeCount > 1 ? (
-              <Trans comment="Social proof below a feed post; a person the viewer follows and the number of other people who liked the post">
-                {names[0].displayName} and{' '}
-                <Plural value={likeCount - 1} one="1 other" other="# others" />{' '}
-                liked this
-              </Trans>
-            ) : (
-              <Trans comment="Social proof below a feed post; a person the viewer follows who liked the post">
-                {names[0].displayName} liked this
-              </Trans>
-            )
-          ) : names.length >= 2 ? (
+          {names.length >= 2 ? (
             <Trans comment="Social proof below a post; the bolded names are people the viewer follows who liked the post">
               Liked by {nameLink(names[0])} and {nameLink(names[1])}
             </Trans>

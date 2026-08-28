@@ -445,11 +445,6 @@ let FeedItemInner = ({
               additionalPostAlerts={additionalPostAlerts}
               feedDescriptor={feedDescriptor}
             />
-            <KnownLikers
-              post={rootPost}
-              feature={Features.PostFeedKnownLikersEnable}
-              variant="feed"
-            />
             <PostControls
               post={post}
               record={record}
@@ -461,6 +456,11 @@ let FeedItemInner = ({
               threadgateRecord={threadgateRecord}
               onShowLess={onShowLess}
               viaRepost={viaRepost}
+            />
+            <KnownLikers
+              post={post}
+              feature={Features.PostFeedKnownLikersEnable}
+              variant="feed"
             />
           </View>
 
