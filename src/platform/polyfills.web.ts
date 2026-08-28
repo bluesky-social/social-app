@@ -1,6 +1,16 @@
 import 'array.prototype.findlast/auto'
 import 'setimmediate'
 
+export const structuredCloneReady: Promise<void> =
+  typeof globalThis.structuredClone === 'function'
+    ? Promise.resolve()
+    : import('@ungap/structured-clone').then(({default: structuredClone}) => {
+        if (typeof globalThis.structuredClone !== 'function') {
+          globalThis.structuredClone =
+            structuredClone as typeof globalThis.structuredClone
+        }
+      })
+
 if (process.env.NODE_ENV !== 'production') {
   // In development, react-native-web's <View> tries to validate that
   // text is wrapped into <Text>. It doesn't catch all cases but is useful.
@@ -30,5 +40,3 @@ if (process.env.NODE_ENV !== 'production') {
     }
   }
 }
-
-export {}
