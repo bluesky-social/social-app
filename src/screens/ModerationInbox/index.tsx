@@ -237,6 +237,7 @@ function ReportRow({
     <View
       style={[
         a.flex_row,
+        a.w_full,
         a.align_center,
         a.justify_between,
         a.gap_sm,
@@ -245,22 +246,29 @@ function ReportRow({
           backgroundColor: unread ? t.palette.primary_25 : undefined,
         },
       ]}>
-      <View style={[a.gap_2xs]}>
-        <Text style={[a.text_md, unread ? a.font_semi_bold : a.font_medium]}>
+      <View style={[a.flex_1, a.gap_2xs, {minWidth: 0}]}>
+        <Text
+          numberOfLines={2}
+          style={[a.text_md, unread ? a.font_semi_bold : a.font_medium]}>
           {subject}
         </Text>
-        <View style={[a.mt_2xs, a.flex_row, a.align_center, a.gap_sm]}>
-          <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
-          <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
-            {i18n.date(date, {
-              month: 'short',
-              day: 'numeric',
-              year: shouldShowYear ? 'numeric' : undefined,
-            })}
-          </Text>
-        </View>
+        <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+          {i18n.date(date, {
+            month: 'short',
+            day: 'numeric',
+            year: shouldShowYear ? 'numeric' : undefined,
+          })}
+        </Text>
       </View>
-      <View style={[a.flex_row, a.align_center, a.justify_center, a.gap_sm]}>
+      <View
+        style={[
+          a.flex_row,
+          a.flex_shrink_0,
+          a.align_center,
+          a.justify_center,
+          a.gap_sm,
+        ]}>
         {unread ? (
           <View
             style={[
