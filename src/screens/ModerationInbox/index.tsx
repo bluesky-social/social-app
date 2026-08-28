@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {Pressable, View} from 'react-native'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {Pager} from '#/view/com/pager/Pager'
@@ -182,7 +183,10 @@ function ActionsOnYou() {
     context: 'moderation-report-label',
     message: 'Graphic media',
   })
-  const duration = l`${72} hours`
+  const duration = plural(72, {
+    one: '# hour',
+    other: '# hours',
+  })
 
   return (
     <Layout.Center>
