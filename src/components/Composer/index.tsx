@@ -1,4 +1,6 @@
 import {useEffect, useImperativeHandle, useMemo, useRef, useState} from 'react'
+
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type TextInput,
   type TextInputSubmitEditingEvent,
@@ -142,11 +144,6 @@ export function Composer({
     placement: autocompletePlacement,
     dynamicWidth: IS_WEB,
   })
-  const inputRef = mergeRefs<TextInputInstance>([
-    ref,
-    tapper.inputProps.ref as React.Ref<TextInputInstance>,
-    sift.targetProps.ref as React.Ref<TextInputInstance>,
-  ])
 
   /*
    * Active facet state for controlling the visibility of the Autocomplete.
@@ -157,6 +154,63 @@ export function Composer({
    * Reanimated shared value for syncing scroll on all platforms.
    */
   const inputScrollSharedValue = useSharedValue(0)
+
+  /*
+   * Web overlay sync: the visible text layer must wrap at the same width as the
+   * transparent textarea. When the textarea scrolls, its scrollbar reduces the
+   * content box; mirror that extra inset on the overlay padding.
+   */
+  const webTextareaRef = useRef<HTMLTextAreaElement | null>(null)
+  const [webTextareaScrollbarWidth, setWebTextareaScrollbarWidth] = useState(0)
+
+  const syncWebTextareaScrollbarWidth = useNonReactiveCallback(() => {
+    if (!IS_WEB) return
+    const el = webTextareaRef.current
+    if (!el) return
+    const scrollbarWidth =
+      el.scrollHeight > el.clientHeight
+        ? Math.max(0, el.offsetWidth - el.clientWidth)
+        : 0
+    setWebTextareaScrollbarWidth(current =>
+      current === scrollbarWidth ? current : scrollbarWidth,
+    )
+  })
+
+  useEffect(() => {
+    if (!IS_WEB) return
+    syncWebTextareaScrollbarWidth()
+  }, [tapper.state.text, syncWebTextareaScrollbarWidth])
+
+  useEffect(() => {
+    if (!IS_WEB) return
+    const onResize = () => syncWebTextareaScrollbarWidth()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [syncWebTextareaScrollbarWidth])
+
+  const webTextOverlayPaddingStyle = useMemo(() => {
+    if (!IS_WEB || webTextareaScrollbarWidth <= 0) {
+      return contentPaddingStyle
+    }
+    return {
+      ...contentPaddingStyle,
+      paddingRight:
+        (contentPaddingStyle?.paddingRight ?? 0) + webTextareaScrollbarWidth,
+    }
+  }, [contentPaddingStyle, webTextareaScrollbarWidth])
+
+  const inputRef = mergeRefs<TextInputInstance>([
+    ref,
+    tapper.inputProps.ref as React.Ref<TextInputInstance>,
+    sift.targetProps.ref as React.Ref<TextInputInstance>,
+    (node: TextInputInstance | null) => {
+      if (!IS_WEB) return
+      webTextareaRef.current = node as unknown as HTMLTextAreaElement | null
+      if (node) {
+        requestAnimationFrame(() => syncWebTextareaScrollbarWidth())
+      }
+    },
+  ])
 
   /*
    * Expose imperative internal API
@@ -278,10 +332,21 @@ export function Composer({
    */
   const updateAutocompletePosition = () => {
     sift.updatePosition()
+    if (IS_WEB) {
+      requestAnimationFrame(() => syncWebTextareaScrollbarWidth())
+    }
   }
 
   const textContent = (
-    <Text style={[textStyle, web({whiteSpace: 'pre-wrap'})]}>
+    <Text
+      style={[
+        textStyle,
+        web({
+          whiteSpace: 'pre-wrap',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word',
+        }),
+      ]}>
       {tapper.state.nodes.map((node, i) => {
         switch (node.type) {
           case 'text':
@@ -320,7 +385,7 @@ export function Composer({
             }}>
             <Animated.View
               style={[
-                contentPaddingStyle,
+                webTextOverlayPaddingStyle,
                 {position: 'absolute', left: 0, right: 0},
                 previewScrollStyle,
               ]}>
@@ -362,7 +427,10 @@ export function Composer({
           onKeyPress={IS_WEB ? onKeyPressWeb : undefined}
           onScroll={e => {
             if (IS_WEB) {
-              inputScrollSharedValue.value = (e.target as any).scrollTop
+              inputScrollSharedValue.value = (
+                e.target as HTMLTextAreaElement
+              ).scrollTop
+              syncWebTextareaScrollbarWidth()
             } else {
               inputScrollSharedValue.value = e.nativeEvent.contentOffset.y
             }
