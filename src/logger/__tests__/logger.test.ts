@@ -301,6 +301,15 @@ describe('general functionality', () => {
       timestamp,
     )
 
+    // call sites do not consistently use the same metadata key
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'request failed',
+      {underlyingError: new Error('fetch failed: connection closed')},
+      timestamp,
+    )
+
     jest.runAllTimers()
     expect(Sentry.captureMessage).not.toHaveBeenCalled()
 
@@ -310,6 +319,15 @@ describe('general functionality', () => {
       Logger.Context.Default,
       new Error('Network request failed'),
       {},
+      timestamp,
+    )
+
+    // network error in metadata with an Error object message
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      new Error('request failed'),
+      {underlyingError: new Error('fetch failed: connection closed')},
       timestamp,
     )
     expect(Sentry.captureException).not.toHaveBeenCalled()

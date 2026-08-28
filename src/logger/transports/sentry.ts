@@ -1,5 +1,5 @@
-import {isNetworkError} from '#/lib/strings/errors'
 import {Sentry} from '#/logger/sentry/lib'
+import {isExpectedSentryNetworkError} from '#/logger/sentry/network-errors'
 import {LogLevel, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
@@ -47,14 +47,14 @@ export const sentryTransport: Transport = (
       timestamp: timestamp / 1000, // Sentry expects seconds
     })
 
-    // We don't want to send any network errors to sentry. The underlying
-    // cause is often passed via metadata rather than the message itself, so
-    // check the common metadata keys too.
+    /*
+     * Keep the breadcrumb, but don't send expected network failures as events.
+     * The underlying cause is often passed in metadata rather than the message
+     * itself, and call sites do not consistently use the same metadata key.
+     */
     if (
-      isNetworkError(message) ||
-      isNetworkError(metadata.safeMessage) ||
-      isNetworkError(metadata.message) ||
-      isNetworkError(metadata.error)
+      isExpectedSentryNetworkError(message) ||
+      Object.values(metadata).some(isExpectedSentryNetworkError)
     ) {
       return
     }
@@ -74,8 +74,10 @@ export const sentryTransport: Transport = (
       })
     }
   } else {
-    // We don't want to send any network errors to sentry
-    if (isNetworkError(message)) {
+    if (
+      isExpectedSentryNetworkError(message) ||
+      Object.values(metadata).some(isExpectedSentryNetworkError)
+    ) {
       return
     }
 
