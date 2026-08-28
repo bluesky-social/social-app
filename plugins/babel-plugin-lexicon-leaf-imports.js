@@ -29,9 +29,21 @@
  * (or `.js`) and a `<seg>/` directory is a barrel, a segment with only the file
  * is a leaf. This keeps the plugin independent of nesting depth (most NSIDs are
  * four segments, but e.g. com.germnetwork.declaration is three).
+ *
+ * The filesystem walk assumes barrel re-export names mirror file names 1:1,
+ * which holds for codegen output but is not enforced by anything. So before
+ * rewriting, each chain is verified against the actual barrel sources: starting
+ * at the barrel's index file, follow the `export * as <segment> from '...'`
+ * statement for every segment and require that walk to land on the same leaf
+ * file the filesystem walk picked. `export * as X` yields the same module
+ * namespace object as importing the target directly, so file identity is
+ * sufficient proof that the rewrite preserves semantics. Any divergence
+ * (renamed re-export, unexpected barrel shape) is a hard build error: a
+ * rewrite that points at the wrong module must never ship silently.
  */
 const fs = require('node:fs')
 const path = require('node:path')
+const parser = require('@babel/parser')
 
 const EXTS = ['.ts', '.js']
 const statCache = new Map()
@@ -67,6 +79,88 @@ function leafFileFor(dir, segment) {
     if (fs.existsSync(key + ext)) return key + ext
   }
   return null
+}
+
+/** Absolute barrel file -> Map(exported name -> source specifier), or null. */
+const barrelExportCache = new Map()
+
+/**
+ * Parse a barrel file into its namespace re-export map. Returns null if the
+ * file contains anything other than `export * as X from '...'` statements
+ * (plus type-only exports) - chains through such a file cannot be proven, so
+ * lookups fail and the caller bails.
+ */
+function barrelExports(file) {
+  let map = barrelExportCache.get(file)
+  if (map !== undefined) return map
+  map = new Map()
+  try {
+    const ast = parser.parse(fs.readFileSync(file, 'utf8'), {
+      sourceType: 'module',
+      plugins: ['typescript'],
+    })
+    for (const stmt of ast.program.body) {
+      if (stmt.exportKind === 'type') continue
+      if (
+        stmt.type !== 'ExportNamedDeclaration' ||
+        !stmt.source ||
+        stmt.declaration ||
+        stmt.specifiers.length === 0 ||
+        !stmt.specifiers.every(s => s.type === 'ExportNamespaceSpecifier')
+      ) {
+        map = null
+        break
+      }
+      for (const s of stmt.specifiers) {
+        const name =
+          s.exported.type === 'Identifier' ? s.exported.name : s.exported.value
+        map.set(name, stmt.source.value)
+      }
+    }
+  } catch {
+    map = null
+  }
+  barrelExportCache.set(file, map)
+  return map
+}
+
+function resolveBarrelTarget(fromFile, spec) {
+  const abs = path.resolve(path.dirname(fromFile), spec)
+  if (/\.(ts|js)$/.test(abs) && fs.existsSync(abs)) return abs
+  for (const ext of EXTS) {
+    if (fs.existsSync(abs + ext)) return abs + ext
+  }
+  return null
+}
+
+/** `rootDir\0segments` -> boolean */
+const chainCache = new Map()
+
+/**
+ * Prove a planned rewrite correct by following the real export graph: parse
+ * each barrel on the way down and require the `export * as` chain to resolve
+ * to the exact leaf file the filesystem walk picked. Returns false on any
+ * divergence; the caller turns that into a hard build error.
+ */
+function verifyChain(rootDir, segments, leafFile) {
+  const key = rootDir + '\0' + segments.join('.')
+  let ok = chainCache.get(key)
+  if (ok !== undefined) return ok
+  let cur = leafFileFor(rootDir, 'index')
+  ok = cur !== null
+  if (ok) {
+    for (const segment of segments) {
+      const spec = barrelExports(cur)?.get(segment)
+      cur = spec ? resolveBarrelTarget(cur, spec) : null
+      if (!cur) {
+        ok = false
+        break
+      }
+    }
+  }
+  if (ok) ok = cur === leafFile
+  chainCache.set(key, ok)
+  return ok
 }
 
 const SDK_SEGMENT = `${path.sep}@bsky${path.sep}sdk${path.sep}`
@@ -107,10 +201,11 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
     let dir = rootDir
     let segment = rootSegment
     let cur = refPath
+    const segments = [rootSegment]
     for (;;) {
       const kind = classify(dir, segment)
       if (kind === 'file') {
-        return {memberPath: cur, leafFile: leafFileFor(dir, segment)}
+        return {memberPath: cur, leafFile: leafFileFor(dir, segment), segments}
       }
       if (kind !== 'dir') return null
       const parent = cur.parentPath
@@ -125,6 +220,7 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
       }
       dir = path.join(dir, segment)
       segment = parent.node.property.name
+      segments.push(segment)
       cur = parent
     }
   }
@@ -205,6 +301,11 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
               let ok = true
               for (const ref of binding.referencePaths) {
                 const r = planRewrite(ref, dir, rootSegment)
+                if (r && !verifyChain(dir, r.segments, r.leafFile)) {
+                  throw ref.buildCodeFrameError(
+                    `[lexicon-leaf-imports] filesystem walk resolved '${r.segments.join('.')}' to ${path.relative(process.cwd(), r.leafFile)}, but following the barrel's own 'export * as' chain does not reach that file. The barrel layout no longer matches the plugin's assumptions; fix the barrels or the plugin.`,
+                  )
+                }
                 if (!r) {
                   ok = false
                   if (debug) {
