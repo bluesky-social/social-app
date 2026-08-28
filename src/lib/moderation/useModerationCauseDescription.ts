@@ -142,12 +142,6 @@ export function useModerationCauseDescription(
           source = _(msg`an unknown labeler`)
         }
       }
-      if (def.identifier === 'porn') {
-        strings.name = _(msg`Adult Content`)
-      }
-      if (def.identifier === 'sexual') {
-        strings.name = _(msg`Sexually Suggestive`)
-      }
 
       return {
         icon:
