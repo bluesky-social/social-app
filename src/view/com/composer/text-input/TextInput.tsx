@@ -229,7 +229,7 @@ export function TextInput({
           style={[
             inputTextStyle,
             a.w_full,
-            !autocompletePrefix && a.h_full,
+            !autocompletePrefix && a.flex_grow,
             {
               textAlignVertical: 'top',
               minHeight: 60,
