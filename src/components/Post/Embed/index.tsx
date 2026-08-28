@@ -326,6 +326,11 @@ export function QuoteEmbed({
       {richText ? (
         <RichText
           value={richText}
+          language={
+            bsky.isType(app.bsky.feed.post, quote.record)
+              ? quote.record.langs?.[0]
+              : undefined
+          }
           style={a.text_md}
           numberOfLines={20}
           disableLinks

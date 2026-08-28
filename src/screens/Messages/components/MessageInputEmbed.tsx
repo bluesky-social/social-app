@@ -239,6 +239,7 @@ function MessageInputPostEmbed({
                 enableTags
                 testID="postText"
                 value={rt}
+                language={record.langs?.[0]}
                 style={[a.text_sm, t.atoms.text_contrast_high]}
                 authorHandle={post.author.handle}
                 numberOfLines={3}

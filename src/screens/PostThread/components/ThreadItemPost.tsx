@@ -327,6 +327,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
                   <RichText
                     enableTags
                     value={richText}
+                    language={record.langs?.[0]}
                     style={[a.flex_1, a.text_md]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     authorHandle={post.author.handle}

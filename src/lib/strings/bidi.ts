@@ -17,3 +17,17 @@ export function forceLTR(str: string) {
   if (IS_WEB) return str
   return LEFT_TO_RIGHT_EMBEDDING + str + POP_DIRECTIONAL_FORMATTING
 }
+
+/**
+ * Determines whether a BCP 47 language tag uses a right-to-left script.
+ */
+export function isRTL(language: string | undefined) {
+  if (!language) return false
+
+  try {
+    return new Intl.Locale(language).getTextInfo().direction === 'rtl'
+  } catch (error) {
+    if (error instanceof RangeError) return false
+    throw error
+  }
+}

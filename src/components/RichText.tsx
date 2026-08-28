@@ -2,8 +2,9 @@ import {useMemo} from 'react'
 import {type StyleProp, type TextStyle} from 'react-native'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
+import {isRTL} from '#/lib/strings/bidi'
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {android, atoms as a, flatten, type TextStyleProp} from '#/alf'
+import {android, atoms as a, flatten, native, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -20,6 +21,7 @@ const URL_REGEX =
 export type RichTextProps = TextStyleProp &
   Pick<TextProps, 'selectable' | 'onLayout' | 'onTextLayout'> & {
     value: RichTextAPI | string
+    language?: string
     testID?: string
     numberOfLines?: number
     disableLinks?: boolean
@@ -56,6 +58,7 @@ export type RichTextProps = TextStyleProp &
 export function RichText({
   testID,
   value,
+  language,
   style,
   numberOfLines,
   disableLinks,
@@ -82,7 +85,10 @@ export function RichText({
     }
   }, [value])
 
-  const plainStyles = style
+  const plainStyles = [
+    style,
+    isRTL(language) ? native({textAlign: 'right'}) : null,
+  ]
   const suffixStyles =
     suffix && suffixOffset
       ? android({paddingBottom: suffixOffset, marginBottom: -suffixOffset})

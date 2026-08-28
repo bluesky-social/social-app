@@ -405,6 +405,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   enableTags
                   selectable
                   value={richText}
+                  language={record.langs?.[0]}
                   style={[a.flex_1, a.text_lg]}
                   authorHandle={post.author.handle}
                   shouldProxyLinks={true}

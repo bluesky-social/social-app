@@ -11,7 +11,7 @@ jest.mock('#/env', () => ({
   },
 }))
 
-import {forceLTR} from '../bidi'
+import {forceLTR, isRTL} from '../bidi'
 
 const LEFT_TO_RIGHT_EMBEDDING = '\u202A'
 const POP_DIRECTIONAL_FORMATTING = '\u202C'
@@ -29,5 +29,23 @@ describe('forceLTR', () => {
   it('returns the string unchanged on web so copied text stays clean (#8451)', () => {
     mockIsWeb = true
     expect(forceLTR('@alice.bsky.social')).toBe('@alice.bsky.social')
+  })
+})
+
+describe('isRTL', () => {
+  it('recognizes right-to-left languages and scripts', () => {
+    expect(isRTL('he')).toBe(true)
+    expect(isRTL('ar')).toBe(true)
+    expect(isRTL('az-Arab')).toBe(true)
+  })
+
+  it('recognizes left-to-right languages and scripts', () => {
+    expect(isRTL('en')).toBe(false)
+    expect(isRTL('az-Latn')).toBe(false)
+  })
+
+  it('handles missing and invalid language tags', () => {
+    expect(isRTL(undefined)).toBe(false)
+    expect(isRTL('not_a_language')).toBe(false)
   })
 })

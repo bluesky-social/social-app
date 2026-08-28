@@ -226,6 +226,7 @@ function PostInner({
                     enableTags
                     testID="postText"
                     value={richText}
+                    language={record?.langs?.[0]}
                     numberOfLines={limitLines ? MAX_POST_LINES : undefined}
                     style={[a.flex_1, a.text_md]}
                     authorHandle={post.author.handle}

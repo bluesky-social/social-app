@@ -963,6 +963,7 @@ function Overlay({
               {record?.text?.trim() && (
                 <ExpandableRichTextView
                   value={richText}
+                  language={record.langs?.[0]}
                   authorHandle={post.author.handle}
                 />
               )}
@@ -1020,9 +1021,11 @@ function Overlay({
 
 function ExpandableRichTextView({
   value,
+  language,
   authorHandle,
 }: {
   value: RichTextAPI
+  language?: string
   authorHandle?: string
 }) {
   const {height: screenHeight} = useSafeAreaFrame()
@@ -1057,6 +1060,7 @@ function ExpandableRichTextView({
       ]}>
       <RichText
         value={value}
+        language={language}
         style={[a.text_sm, a.flex_1, a.leading_relaxed]}
         authorHandle={authorHandle}
         enableTags
