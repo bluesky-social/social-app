@@ -36,9 +36,7 @@ export function ReportRow({
         },
       ]}>
       <View style={[a.flex_1, a.gap_2xs, {minWidth: 0}]}>
-        <Text
-          numberOfLines={2}
-          style={[a.text_md, unread ? a.font_semi_bold : a.font_medium]}>
+        <Text style={[a.text_md, unread ? a.font_semi_bold : a.font_medium]}>
           {subject}
         </Text>
         <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
@@ -65,7 +63,7 @@ export function ReportRow({
               {height: 8, width: 8, backgroundColor: t.palette.primary_500},
             ]}
           />
-        ) : null}
+        ) : undefined}
         <ChevronRightIcon size="md" style={[t.atoms.text_contrast_medium]} />
       </View>
     </View>
