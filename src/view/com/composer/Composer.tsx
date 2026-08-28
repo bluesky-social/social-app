@@ -1555,12 +1555,12 @@ export const ComposePost = ({
                   color="primary"
                 />
               )}
+              <Prompt.Cancel cta={l`Keep editing`} />
               <Prompt.Action
                 cta={l`Discard`}
                 onPress={handleDiscard}
                 color="negative_subtle"
               />
-              <Prompt.Cancel cta={l`Keep editing`} />
             </Prompt.Actions>
           </Prompt.Outer>
         )}
