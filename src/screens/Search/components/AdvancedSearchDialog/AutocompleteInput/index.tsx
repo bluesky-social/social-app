@@ -14,6 +14,7 @@ import {Button, ButtonIcon} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/Times'
+import {useRecentSearchesSource} from '#/features/searchHistory/useRecentSearchesSource'
 import {
   appendSelection,
   type AutocompleteInputProps,
@@ -54,7 +55,12 @@ export function AutocompleteInput({
   })
 
   const lastToken = lastTokenOf(value)
-  const {items} = useAutocomplete({type: 'profile', query: lastToken})
+  const recents = useRecentSearchesSource({profilesOnly: true})
+  const {items} = useAutocomplete({
+    type: 'profile',
+    query: lastToken,
+    sources: [recents],
+  })
 
   const showDropdown =
     focused && !dismissedByScroll && lastToken.length > 0 && items.length > 0

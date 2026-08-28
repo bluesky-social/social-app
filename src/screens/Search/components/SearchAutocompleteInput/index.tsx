@@ -10,6 +10,7 @@ import {
   useAutocomplete,
 } from '#/components/Autocomplete'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {useRecentSearchesSource} from '#/features/searchHistory/useRecentSearchesSource'
 import {type SearchAutocompleteInputProps} from './shared'
 
 /**
@@ -46,6 +47,8 @@ export function SearchAutocompleteInput({
 
   const active = focused && !dismissed
 
+  const recents = useRecentSearchesSource()
+
   const {items} = useAutocomplete({
     type: 'profile',
     // The dropdown only shows while active, so don't fetch otherwise. This
@@ -53,10 +56,10 @@ export function SearchAutocompleteInput({
     // present (e.g. /search?q=foo).
     query: active ? value : '',
     showSearchFallback: true,
+    sources: [recents],
   })
 
-  const showDropdown =
-    active && !fixedParams && value.length > 0 && items.length > 0
+  const showDropdown = active && !fixedParams && items.length > 0
 
   function onSelect(item: AutocompleteItem) {
     if (item.type === 'profile') {
