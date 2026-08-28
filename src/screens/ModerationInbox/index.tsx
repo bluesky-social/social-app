@@ -1,21 +1,18 @@
 import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {isBefore, subYears} from 'date-fns'
 
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import {atoms as a, useTheme} from '#/alf'
-import {
-  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
-  ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon,
-} from '#/components/icons/Chevron'
+import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import * as Menu from '#/components/Menu'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {ReportRow} from './components/ReportRow'
 
 type ReportFilter = 'all' | 'pending' | 'resolved' | 'unread'
 
@@ -215,71 +212,5 @@ function ActionsOnYou() {
         date={new Date()}
       />
     </Layout.Center>
-  )
-}
-
-function ReportRow({
-  subject,
-  action,
-  date,
-  unread,
-}: {
-  subject: string
-  action: string
-  date: Date
-  unread?: boolean
-}) {
-  const t = useTheme()
-  const {i18n} = useLingui()
-
-  const shouldShowYear = isBefore(date, subYears(new Date(), 1))
-
-  return (
-    <View
-      style={[
-        a.flex_row,
-        a.w_full,
-        a.align_center,
-        a.justify_between,
-        a.gap_sm,
-        a.p_lg,
-        {
-          backgroundColor: unread ? t.palette.primary_25 : undefined,
-        },
-      ]}>
-      <View style={[a.flex_1, a.gap_2xs, {minWidth: 0}]}>
-        <Text
-          numberOfLines={2}
-          style={[a.text_md, unread ? a.font_semi_bold : a.font_medium]}>
-          {subject}
-        </Text>
-        <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          {i18n.date(date, {
-            month: 'short',
-            day: 'numeric',
-            year: shouldShowYear ? 'numeric' : undefined,
-          })}
-        </Text>
-      </View>
-      <View
-        style={[
-          a.flex_row,
-          a.flex_shrink_0,
-          a.align_center,
-          a.justify_center,
-          a.gap_sm,
-        ]}>
-        {unread ? (
-          <View
-            style={[
-              a.rounded_full,
-              {height: 8, width: 8, backgroundColor: t.palette.primary_500},
-            ]}
-          />
-        ) : null}
-        <ChevronRightIcon size="md" style={[t.atoms.text_contrast_medium]} />
-      </View>
-    </View>
   )
 }
