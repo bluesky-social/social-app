@@ -203,9 +203,24 @@ Tab A stale write:   based on (8, B) -> preserve version 9 tombstone
 Tab B fresh login:   version 9 tombstone -> (10, C, active)
 ```
 
-## 6. Use broadcasts only as invalidations
+## 6. Use broadcasts only for committed invalidations
 
-After synchronously writing localStorage, notify other tabs:
+A localStorage write must report success or throw. Never update the persisted in-memory cache or broadcast an invalidation when the durable write failed.
+
+```text
+Tab A memory:        (8, B)
+Tab A write:         fails
+Shared localStorage: (7, A)
+Tab A action:        report or retry; do not broadcast
+
+Tab A retry:         succeeds
+Shared localStorage: (8, B)
+Tab A action:        broadcast invalidation
+```
+
+Broadcasting after a failed write would tell Tab B to reread localStorage while it still contains `(7, A)`, spreading the stale generation instead of the new one.
+
+After successfully writing and verifying localStorage, notify other tabs:
 
 ```ts
 broadcast.postMessage({
@@ -276,7 +291,9 @@ Operate against captured (version, jti)
 Reread and conditionally commit
    |
    v
-Write localStorage synchronously
+Write and verify localStorage
+   |
+   +-- failure -> report or retry; do not broadcast
    |
    v
 Broadcast invalidation
