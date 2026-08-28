@@ -1,3 +1,5 @@
+import '@formatjs/intl-locale/polyfill-force.js'
+
 import {describe, expect, it, jest} from '@jest/globals'
 
 /*
@@ -33,6 +35,11 @@ describe('forceLTR', () => {
 })
 
 describe('isRTL', () => {
+  it('uses the Intl.Locale implementation forced in production', () => {
+    expect(Intl.Locale).toHaveProperty('polyfilled', true)
+    expect(Intl.Locale.prototype).toHaveProperty('getTextInfo')
+  })
+
   it('recognizes right-to-left languages and scripts', () => {
     expect(isRTL('he')).toBe(true)
     expect(isRTL('ar')).toBe(true)

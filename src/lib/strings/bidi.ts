@@ -2,6 +2,7 @@ import {IS_WEB} from '#/env'
 
 const LEFT_TO_RIGHT_EMBEDDING = '\u202A'
 const POP_DIRECTIONAL_FORMATTING = '\u202C'
+const languageDirectionCache = new Map<string, boolean>()
 
 /*
  * Force LTR directionality in a string.
@@ -24,10 +25,16 @@ export function forceLTR(str: string) {
 export function isRTL(language: string | undefined) {
   if (!language) return false
 
+  const cached = languageDirectionCache.get(language)
+  if (cached !== undefined) return cached
+
   try {
-    return new Intl.Locale(language).getTextInfo().direction === 'rtl'
-  } catch (error) {
-    if (error instanceof RangeError) return false
-    throw error
+    const isRightToLeft =
+      new Intl.Locale(language).getTextInfo().direction === 'rtl'
+    languageDirectionCache.set(language, isRightToLeft)
+    return isRightToLeft
+  } catch {
+    languageDirectionCache.set(language, false)
+    return false
   }
 }
