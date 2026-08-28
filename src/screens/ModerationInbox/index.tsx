@@ -1,6 +1,7 @@
 import {useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {isBefore, subYears} from 'date-fns'
 
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
@@ -231,7 +232,7 @@ function ReportRow({
   const t = useTheme()
   const {i18n} = useLingui()
 
-  const shouldShowYear = false // TODO Check for within last year. -dsb
+  const shouldShowYear = isBefore(date, subYears(new Date(), 1))
 
   return (
     <View
