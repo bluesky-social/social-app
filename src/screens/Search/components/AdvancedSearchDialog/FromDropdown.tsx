@@ -20,7 +20,10 @@ export function FromDropdown({
 
   const options: {value: FromFilter; label: string}[] = [
     {value: 'anyone', label: l`No author filter`},
-    {value: 'following', label: l`People I follow`},
+    {
+      value: 'following',
+      label: l({context: 'display posts made by', message: 'People I follow'}),
+    },
     {value: 'me', label: l`Me`},
   ]
   const currentLabel =

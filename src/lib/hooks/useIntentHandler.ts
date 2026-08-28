@@ -84,11 +84,19 @@ export function useIntentHandler() {
         }
         case 'apply-ota': {
           const channel = params.get('channel')
+          const releaseVersion = params.get('releaseVersion')
+          const buildNumber = params.get(
+            IS_IOS ? 'iosBuildNumber' : 'androidBuildNumber',
+          )
+          const appVersion =
+            releaseVersion && buildNumber
+              ? `${releaseVersion}.${buildNumber}`
+              : null
           if (!channel) {
             Alert.alert('Error', 'No channel provided to look for.')
-          } else {
-            tryApplyUpdate(channel)
+            return
           }
+          tryApplyUpdate(channel, appVersion)
           return
         }
         default: {
@@ -101,7 +109,18 @@ export function useIntentHandler() {
       if (previousIntentUrl === incomingUrl) {
         return
       }
-      handleIncomingURL(incomingUrl)
+      handleIncomingURL(incomingUrl).finally(() => {
+        /*
+         * expo-linking caches the URL that launched the app and replays it to
+         * every new `useLinkingURL`/`getLinkingURL` caller, so an account
+         * switch (which remounts the tree, see `key={currentAccount?.did}` in
+         * `App.native.tsx`) or a runtime reload would hand us the same link
+         * again. Drop it now that it's been handled - this hook is the last
+         * consumer of the launch URL, everything else reads it while
+         * rendering, before this effect runs. No-op on web.
+         */
+        Linking.clearInitialURL()
+      })
       previousIntentUrl = incomingUrl
     }
   }, [

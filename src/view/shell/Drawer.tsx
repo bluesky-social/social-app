@@ -62,6 +62,7 @@ import {
   UserCircle_Stroke2_Corner0_Rounded as UserCircle,
 } from '#/components/icons/UserCircle'
 import {InlineLinkText} from '#/components/Link'
+import {OTAChannelNotice} from '#/components/OTAChannelNotice'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -342,6 +343,8 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               <NavSignupCard />
             </View>
           )}
+
+          <OTAChannelNotice style={[a.mt_lg]} />
 
           <Divider style={[a.mt_xl, a.mb_sm]} />
         </View>

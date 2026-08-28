@@ -2,15 +2,8 @@ import {useMemo} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
-import {
-  type AppBskyActorDefs,
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-  AppBskyFeedPost,
-  type ModerationDecision,
-} from '@atproto/api'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {type ModerationDecision} from '@bsky/sdk/moderation'
+import {useLingui} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -27,6 +20,7 @@ import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import * as Hider from '#/components/moderation/Hider'
 import {Text} from '#/components/Typography'
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 function getBlackColor(t: ReturnType<typeof useTheme>) {
@@ -43,7 +37,7 @@ export function VideoPostCard({
   moderation,
   onInteract,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
@@ -52,7 +46,7 @@ export function VideoPostCard({
   onInteract?: () => void
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const embed = post.embed
   const {
     state: pressed,
@@ -76,13 +70,10 @@ export function VideoPostCard({
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
    */
-  if (!AppBskyEmbedVideo.isView(embed)) return null
+  if (!bsky.isType(app.bsky.embed.video.view, embed)) return null
 
   const author = post.author
-  const text = bsky.dangerousIsType<AppBskyFeedPost.Record>(
-    post.record,
-    AppBskyFeedPost.isRecord,
-  )
+  const text = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record?.text
     : ''
   const likeCount = post?.likeCount ?? 0
@@ -118,8 +109,8 @@ export function VideoPostCard({
 
   return (
     <Link
-      accessibilityHint={_(msg`Views video in immersive mode`)}
-      label={_(msg`Video from ${author.handle}: ${text}`)}
+      accessibilityHint={l`Views video in immersive mode`}
+      label={l`Video from ${author.handle}: ${text}`}
       to={{
         screen: 'VideoFeed',
         params: {
@@ -174,9 +165,7 @@ export function VideoPostCard({
               />
               <View style={[a.align_center, a.gap_xs]}>
                 <Eye size="lg" fill="white" />
-                <Text style={[a.text_sm, {color: 'white'}]}>
-                  {_(msg`Hidden`)}
-                </Text>
+                <Text style={[a.text_sm, {color: 'white'}]}>{l`Hidden`}</Text>
               </View>
             </View>
           </View>
@@ -278,7 +267,7 @@ export function VideoPostCardPlaceholder() {
 export function VideoPostCardTextPlaceholder({
   author,
 }: {
-  author?: AppBskyActorDefs.ProfileViewBasic
+  author?: app.bsky.actor.defs.ProfileViewBasic
 }) {
   const t = useTheme()
 
@@ -358,7 +347,7 @@ export function CompactVideoPostCard({
   moderation,
   onInteract,
 }: {
-  post: AppBskyFeedDefs.PostView
+  post: app.bsky.feed.defs.PostView
   sourceContext: VideoFeedSourceContext
   moderation: ModerationDecision
   /**
@@ -367,7 +356,7 @@ export function CompactVideoPostCard({
   onInteract?: () => void
 }) {
   const t = useTheme()
-  const {_, i18n} = useLingui()
+  const {t: l, i18n} = useLingui()
   const embed = post.embed
   const {
     state: pressed,
@@ -389,7 +378,7 @@ export function CompactVideoPostCard({
    * Filtering should be done at a higher level, such as `PostFeed` or
    * `PostFeedVideoGridRow`, but we need to protect here as well.
    */
-  if (!AppBskyEmbedVideo.isView(embed)) return null
+  if (!bsky.isType(app.bsky.embed.video.view, embed)) return null
 
   const likeCount = post?.likeCount ?? 0
   const showLikeCount = false
@@ -398,7 +387,7 @@ export function CompactVideoPostCard({
 
   return (
     <Link
-      label={_(msg`View video`)}
+      label={l`View video`}
       to={{
         screen: 'VideoFeed',
         params: {
@@ -413,7 +402,8 @@ export function CompactVideoPostCard({
       onPressOut={onPressOut}
       style={[
         a.flex_col,
-        t.atoms.shadow_sm,
+        a.rounded_xl,
+        t.atoms.shadow_md,
         {
           alignItems: undefined,
           justifyContent: undefined,
@@ -424,7 +414,7 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_lg,
+              a.rounded_xl,
               a.overflow_hidden,
               a.border,
               t.atoms.border_contrast_low,
@@ -458,9 +448,7 @@ export function CompactVideoPostCard({
               />
               <View style={[a.align_center, a.gap_xs]}>
                 <Eye size="lg" fill="white" />
-                <Text style={[a.text_sm, {color: 'white'}]}>
-                  {_(msg`Hidden`)}
-                </Text>
+                <Text style={[a.text_sm, {color: 'white'}]}>{l`Hidden`}</Text>
               </View>
             </View>
           </View>
@@ -469,7 +457,7 @@ export function CompactVideoPostCard({
           <View
             style={[
               a.justify_center,
-              a.rounded_lg,
+              a.rounded_xl,
               a.overflow_hidden,
               a.border,
               t.atoms.border_contrast_low,
@@ -485,10 +473,17 @@ export function CompactVideoPostCard({
             />
             <MediaInsetBorder />
 
-            <View style={[a.absolute, a.inset_0, t.atoms.shadow_sm]}>
+            <View style={[a.absolute, a.inset_0, t.atoms.shadow_md]}>
               <View style={[a.absolute, a.inset_0, a.p_sm, {bottom: 'auto'}]}>
                 <View
-                  style={[a.relative, a.rounded_full, {width: 24, height: 24}]}>
+                  style={[
+                    a.relative,
+                    a.rounded_full,
+                    {
+                      width: 24,
+                      height: 24,
+                    },
+                  ]}>
                   <UserAvatar
                     type="user"
                     size={24}
@@ -547,10 +542,10 @@ export function CompactVideoPostCardPlaceholder() {
   const black = getBlackColor(t)
 
   return (
-    <View style={[a.flex_1, t.atoms.shadow_sm]}>
+    <View style={[a.flex_1, t.atoms.shadow_md]}>
       <View
         style={[
-          a.rounded_lg,
+          a.rounded_xl,
           a.overflow_hidden,
           a.border,
           t.atoms.border_contrast_low,

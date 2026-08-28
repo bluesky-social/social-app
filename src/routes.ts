@@ -17,6 +17,7 @@ export const router = new Router<AllNavigatableRoutes>({
   Lists: '/lists',
   // moderation
   Moderation: '/moderation',
+  ModerationInbox: '/moderation/inbox',
   ModerationModlists: '/moderation/modlists',
   ModerationMutedAccounts: '/moderation/muted-accounts',
   ModerationBlockedAccounts: '/moderation/blocked-accounts',
@@ -33,8 +34,8 @@ export const router = new Router<AllNavigatableRoutes>({
   PostLikedBy: '/profile/:name/post/:rkey/liked-by',
   PostRepostedBy: '/profile/:name/post/:rkey/reposted-by',
   PostQuotes: '/profile/:name/post/:rkey/quotes',
-  ProfileFeed: '/profile/:name/feed/:rkey',
-  ProfileFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
+  CustomFeed: '/profile/:name/feed/:rkey',
+  CustomFeedLikedBy: '/profile/:name/feed/:rkey/liked-by',
   ProfileLabelerLikedBy: '/profile/:name/labeler/liked-by',
   // debug
   Debug: '/sys/debug',

@@ -30,7 +30,6 @@ import {KeyboardEvents} from 'react-native-keyboard-controller'
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
@@ -44,6 +43,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context'
 import {captureRef} from 'react-native-view-shot'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image, type ImageErrorEventData} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -166,7 +166,7 @@ export function Root({children}: {children: React.ReactNode}) {
                 // note: return location has to be reset on open,
                 // rather than on close, otherwise there's a flicker
                 // where the reanimated update is faster than the react render
-                runOnJS(onCompletedClose)()
+                scheduleOnRN(onCompletedClose)
               }
             }),
           )
@@ -244,7 +244,7 @@ export function Trigger({
   const context = useContextMenuContext()
   const playHaptic = useHaptics()
   const insets = useSafeAreaInsets()
-  const ref = useRef<View>(null)
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
   const isFocused = useIsFocused()
   const [image, setImage] = useState<string | null>(null)
   const [pendingMeasurement, setPendingMeasurement] = useState<{
@@ -331,7 +331,7 @@ export function Trigger({
     () => hoveredItemSV.get(),
     (hovered, prev) => {
       if (hovered !== prev) {
-        runOnJS(setHoveredMenuItem)(hovered)
+        scheduleOnRN(setHoveredMenuItem, hovered)
       }
     },
   )
@@ -343,7 +343,7 @@ export function Trigger({
       .averageTouches(true)
       .onStart(() => {
         'worklet'
-        runOnJS(open)('full')
+        scheduleOnRN(open, 'full')
       })
       .onUpdate(evt => {
         'worklet'
@@ -357,7 +357,7 @@ export function Trigger({
         // as the menu may have slid into place beneath their finger
         const item = hoveredItemSV.get()
         if (item) {
-          runOnJS(onTouchUpMenuItem)(item)
+          scheduleOnRN(onTouchUpMenuItem, item)
         }
       })
   }, [open, hoverablesSV, onTouchUpMenuItem, hoveredItemSV, translationSV])
@@ -530,7 +530,7 @@ export function AuxiliaryView({
       transform: [
         {
           translateY:
-            (ensureOnScreenTranslationSV.get() || translationSV.get()) *
+            Math.max(ensureOnScreenTranslationSV.get(), translationSV.get()) *
             animationSV.get(),
         },
         {scale: interpolate(animationSV.get(), [0, 1], [0.2, 1])},
@@ -544,21 +544,17 @@ export function AuxiliaryView({
   const onLayout = useCallback(() => {
     if (!measurement) return
 
-    let translation = 0
-
     // vibes based, just assuming it'll fit within this space. revisit if we use
     // AuxiliaryView for something tall
     const TOP_INSET = topInset + 80
 
     const distanceMessageFromTop = measurement.y - TOP_INSET
-    if (distanceMessageFromTop < 0) {
-      translation = -distanceMessageFromTop
-    }
+    const minimumTranslation = -distanceMessageFromTop
 
     // normally, the context menu is responsible for measuring itself and moving everything into the right place
     // however, in auxiliary-only mode, that doesn't happen, so we need to do it ourselves here
     if (mode === 'auxiliary-only') {
-      translationSV.set(translation)
+      translationSV.set(Math.max(minimumTranslation, 0))
       ensureOnScreenTranslationSV.set(0)
     }
     // however, we also need to make sure that for super tall triggers, we don't go off the screen
@@ -567,7 +563,7 @@ export function AuxiliaryView({
     // we'll just have to live with it for now, fixing it would be possible but be a large complexity
     // increase for an edge case
     else {
-      ensureOnScreenTranslationSV.set(translation)
+      ensureOnScreenTranslationSV.set(minimumTranslation)
     }
   }, [mode, measurement, translationSV, topInset, ensureOnScreenTranslationSV])
 
@@ -971,7 +967,10 @@ export function Divider() {
   )
 }
 
-function measureView(view: View | null, insets: EdgeInsets) {
+function measureView(
+  view: React.ComponentRef<typeof View> | null,
+  insets: EdgeInsets,
+) {
   if (!view) return Promise.resolve(null)
   return new Promise<Measurement>(resolve => {
     view?.measureInWindow((x, y, width, height) =>

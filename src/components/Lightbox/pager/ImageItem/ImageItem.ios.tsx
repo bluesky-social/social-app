@@ -14,7 +14,6 @@ import {
   type PanGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
-  runOnJS,
   type SharedValue,
   useAnimatedProps,
   useAnimatedReaction,
@@ -24,6 +23,7 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaFrame} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 
 import {
@@ -82,9 +82,9 @@ const ImageItem = ({
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       'worklet'
-      const nextIsScaled = e.zoomScale > 1
+      const nextIsScaled = (e.zoomScale ?? 1) > 1
       if (scaled !== nextIsScaled) {
-        runOnJS(handleZoom)(nextIsScaled)
+        scheduleOnRN(handleZoom, nextIsScaled)
       }
     },
     onBeginDrag() {
@@ -109,7 +109,6 @@ const ImageItem = ({
     height: number
   }) {
     const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
-    // @ts-ignore
     scrollResponderRef?.scrollResponderZoomTo({
       ...nextZoomRect, // This rect is in screen coordinates
       animated: true,
@@ -118,7 +117,7 @@ const ImageItem = ({
 
   const singleTap = Gesture.Tap().onEnd(() => {
     'worklet'
-    runOnJS(onTap)()
+    scheduleOnRN(onTap)
   })
 
   const doubleTap = Gesture.Tap()
@@ -142,7 +141,7 @@ const ImageItem = ({
           screenSize,
         )
       }
-      runOnJS(zoomTo)(nextZoomRect)
+      scheduleOnRN(zoomTo, nextZoomRect)
     })
 
   const composedGesture = Gesture.Exclusive(
@@ -199,9 +198,9 @@ const ImageItem = ({
     },
     (show, prevShow) => {
       if (!prevShow && show) {
-        runOnJS(setShowLoader)(true)
+        scheduleOnRN(setShowLoader, true)
       } else if (prevShow && !show) {
-        runOnJS(setShowLoader)(false)
+        scheduleOnRN(setShowLoader, false)
       }
     },
   )
@@ -218,7 +217,6 @@ const ImageItem = ({
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
-        // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}

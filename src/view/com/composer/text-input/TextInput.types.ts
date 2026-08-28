@@ -1,5 +1,5 @@
 import {type TextInput} from 'react-native'
-import {type RichText} from '@atproto/api'
+import {type RichText} from '@bsky/sdk/richtext'
 
 export type TextInputRef = {
   focus: () => void
@@ -8,8 +8,7 @@ export type TextInputRef = {
    * @platform web
    */
   getCursorPosition: () =>
-    | {left: number; right: number; top: number; bottom: number}
-    | undefined
+    {left: number; right: number; top: number; bottom: number} | undefined
   /**
    * Closes the autocomplete popup if it is open.
    * Returns `true` if the popup was closed, `false` otherwise.

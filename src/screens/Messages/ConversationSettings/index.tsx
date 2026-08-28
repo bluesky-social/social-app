@@ -1,11 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
-import {
-  ChatBskyActorDefs,
-  ChatBskyConvoDefs,
-  ChatBskyConvoUnlockConvo,
-  type ModerationOpts,
-} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -19,6 +14,7 @@ import {
   type NativeStackScreenProps,
   type NavigationProp,
 } from '#/lib/routes/types'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useConvoQuery} from '#/state/queries/messages/conversation'
@@ -59,6 +55,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {chat} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {InviteLinkDialog} from '../components/InviteLinkDialog'
 import {AddMembersLink} from './AddMembersLink'
@@ -173,15 +170,12 @@ function keyExtractor(item: Item) {
 }
 
 function isGroupMember(
-  member: ChatBskyActorDefs.ProfileViewBasic,
+  member: chat.bsky.actor.defs.ProfileViewBasic,
 ): member is GroupConvoMember {
   // Kind is missing when the account has been deleted.
   return (
     member.kind === undefined ||
-    bsky.dangerousIsType<ChatBskyActorDefs.GroupConvoMember>(
-      member.kind,
-      ChatBskyActorDefs.isGroupConvoMember,
-    )
+    bsky.isType(chat.bsky.actor.defs.groupConvoMember, member.kind)
   )
 }
 
@@ -244,14 +238,12 @@ function GroupSettings({
       : []),
   ]
   items.push(
-    ...groupMembers.map(
-      (profile): Item => ({
-        type: 'CHAT_MEMBER',
-        key: profile.did,
-        profile,
-        status: primaryMember?.did === profile.did ? 'owner' : 'standard',
-      }),
-    ),
+    ...groupMembers.map((profile): Item => ({
+      type: 'CHAT_MEMBER',
+      key: profile.did,
+      profile,
+      status: primaryMember?.did === profile.did ? 'owner' : 'standard',
+    })),
   )
   const placeholderCount = Math.max(
     0,
@@ -417,7 +409,7 @@ function SettingsHeader({
     isPending: isLocking,
   } = useLockConvo(convoId, {
     onSuccess: (data, {silent}) => {
-      if (!ChatBskyConvoDefs.isGroupConvo(data.convo.kind)) return
+      if (!bsky.isType(chat.bsky.convo.defs.groupConvo, data.convo.kind)) return
       if (silent) return
       if (data.convo.kind.lockStatus === 'locked') {
         ax.metric('groupchat:owner:lock', {convoId})
@@ -432,7 +424,8 @@ function SettingsHeader({
         logger.error('Failed to lock group chat', {message: e})
         Toast.show(l`Failed to lock group chat`, {type: 'error'})
       } else if (
-        e instanceof ChatBskyConvoUnlockConvo.ConvoLockedByModerationError
+        matchXrpcError(e, chat.bsky.convo.unlockConvo) ===
+        'ConvoLockedByModeration'
       ) {
         Toast.show(l`This chat is locked by a moderation action`, {
           type: 'error',

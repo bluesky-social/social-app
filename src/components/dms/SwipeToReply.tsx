@@ -4,13 +4,13 @@ import {Gesture, type GestureType} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
   withSequence,
   withTiming,
 } from 'react-native-reanimated'
+import {scheduleOnRN} from 'react-native-worklets'
 
 import {useHaptics} from '#/lib/haptics'
 import {atoms as a, tokens, useTheme} from '#/alf'
@@ -78,7 +78,7 @@ export function SwipeToReply({
     const runPop = () => {
       'worklet'
       if (isReducedMotion) return
-      iconScale.set(() =>
+      iconScale.set(
         withSequence(
           withTiming(1.2, {duration: 175}),
           withTiming(1, {duration: 100}),
@@ -111,7 +111,7 @@ export function SwipeToReply({
           if (pastThreshold && !hit.get()) {
             hit.set(true)
             runPop()
-            runOnJS(playHaptic)('Medium')
+            scheduleOnRN(playHaptic, 'Medium')
           } else if (!pastThreshold && hit.get()) {
             hit.set(false)
           }
@@ -120,7 +120,7 @@ export function SwipeToReply({
           'worklet'
           // Only a clean end (finger lifted past threshold) triggers the reply.
           if (hit.get()) {
-            runOnJS(onReply)()
+            scheduleOnRN(onReply)
           }
         })
         .onFinalize(() => {

@@ -16,13 +16,9 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
-import {useCallback, useEffect, useMemo, useRef} from 'react'
-import {
-  AppBskyFeedDefs,
-  AppBskyFeedPost,
-  AtUri,
-  moderatePost,
-} from '@atproto/api'
+import {useCallback, useMemo, useRef} from 'react'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -33,13 +29,15 @@ import {
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
-import type * as bsky from '#/types/bsky'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
+  useAutoPagination,
 } from '../util'
 import {type FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
@@ -60,7 +58,7 @@ export function useNotificationFeedQuery(opts: {
   enabled?: boolean
   filter: 'all' | 'mentions'
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const queryClient = useQueryClient()
   const moderationOpts = useModerationOpts()
   const unreads = useUnreadNotificationsApi()
@@ -106,7 +104,7 @@ export function useNotificationFeedQuery(opts: {
           ]
         }
         const {page: fetchedPage} = await fetchPage({
-          agent,
+          client,
           limit: PAGE_SIZE,
           cursor: pageParam,
           queryClient,
@@ -199,7 +197,9 @@ export function useNotificationFeedQuery(opts: {
                        * a `$type` field on the `subject`. But if the nested
                        * `record` is a post, we know it's a post view.
                        */
-                      if (AppBskyFeedPost.isRecord(item.subject?.record)) {
+                      if (
+                        bsky.isType(app.bsky.feed.post, item.subject?.record)
+                      ) {
                         const mod = moderatePost(item.subject, moderationOpts!)
                         if (mod.ui('contentList').filter) {
                           return false
@@ -221,54 +221,9 @@ export function useNotificationFeedQuery(opts: {
     ),
   })
 
-  // The server may end up returning an empty page, a page with too few items,
-  // or a page with items that end up getting filtered out. When we fetch pages,
-  // we'll keep track of how many items we actually hope to see. If the server
-  // doesn't return enough items, we're going to continue asking for more items.
-  const lastItemCount = useRef(0)
-  const wantedItemCount = useRef(0)
-  const autoPaginationAttemptCount = useRef(0)
-  useEffect(() => {
-    const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
-      query
-    // Count the items that we already have.
-    let itemCount = 0
-    for (const page of data?.pages || []) {
-      itemCount += page.items.length
-    }
-
-    // If items got truncated, reset the state we're tracking below.
-    if (itemCount !== lastItemCount.current) {
-      if (itemCount < lastItemCount.current) {
-        wantedItemCount.current = itemCount
-      }
-      lastItemCount.current = itemCount
-    }
-
-    // Now track how many items we really want, and fetch more if needed.
-    if (isLoading || isRefetching) {
-      // During the initial fetch, we want to get an entire page's worth of items.
-      wantedItemCount.current = PAGE_SIZE
-    } else if (isFetchingNextPage) {
-      if (itemCount > wantedItemCount.current) {
-        // We have more items than wantedItemCount, so wantedItemCount must be out of date.
-        // Some other code must have called fetchNextPage(), for example, from onEndReached.
-        // Adjust the wantedItemCount to reflect that we want one more full page of items.
-        wantedItemCount.current = itemCount + PAGE_SIZE
-      }
-    } else if (hasNextPage) {
-      // At this point we're not fetching anymore, so it's time to make a decision.
-      // If we didn't receive enough items from the server, paginate again until we do.
-      if (itemCount < wantedItemCount.current) {
-        autoPaginationAttemptCount.current++
-        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
-          query.fetchNextPage()
-        }
-      } else {
-        autoPaginationAttemptCount.current = 0
-      }
-    }
-  }, [query])
+  const itemCount =
+    query.data?.pages.reduce((count, page) => count + page.items.length, 0) ?? 0
+  useAutoPagination(query, itemCount, PAGE_SIZE)
 
   return query
 }
@@ -276,7 +231,7 @@ export function useNotificationFeedQuery(opts: {
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, void> {
+): Generator<app.bsky.feed.defs.PostView, void> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<InfiniteData<FeedPage>>({
@@ -295,7 +250,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.subject)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost && didOrHandleUriMatches(atUri, quotedPost)) {
             yield embedViewRecordToPostView(quotedPost)
@@ -333,7 +288,7 @@ export function* findAllProfilesInQueryData(
         ) {
           yield item.subject.author
         }
-        if (AppBskyFeedDefs.isPostView(item.subject)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.subject)) {
           const quotedPost = getEmbeddedPost(item.subject?.embed)
           if (quotedPost?.author.did === did) {
             yield quotedPost.author

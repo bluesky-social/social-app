@@ -7,7 +7,6 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {type AppBskyEmbedVideo} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -25,6 +24,7 @@ import {
 } from '#/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB_FIREFOX} from '#/env'
+import {type app} from '#/lexicons'
 import {useActiveVideoWeb} from './ActiveVideoWebContext'
 import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
@@ -37,7 +37,7 @@ const noop = () => {}
  */
 const MIN_CARD_WIDTH = 280
 
-export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
+export function VideoEmbed({embed}: {embed: app.bsky.embed.video.View}) {
   const t = useTheme()
   const ref = useRef<HTMLDivElement>(null)
   const {
@@ -82,6 +82,16 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
     ),
     [key, embed],
   )
+  const getErrorMetadata = useCallback((error: Error) => {
+    if (!(error instanceof HLSFatalError)) return {}
+    return {
+      tags: {
+        hls_error_detail: error.detail,
+        hls_error_type: error.type,
+      },
+      hls: error.diagnostics,
+    }
+  }, [])
 
   let aspectRatio: number | undefined
   const dims = embed.aspectRatio
@@ -158,7 +168,10 @@ export function VideoEmbed({embed}: {embed: AppBskyEmbedVideo.View}) {
           />
         </>
       )}
-      <ErrorBoundary renderError={renderError} key={key}>
+      <ErrorBoundary
+        renderError={renderError}
+        getErrorMetadata={getErrorMetadata}
+        key={key}>
         <OnlyNearScreen>
           <VideoEmbedInnerWeb
             embed={embed}
@@ -284,7 +297,7 @@ function VideoError({
   error,
   retry,
 }: {
-  embed: AppBskyEmbedVideo.View
+  embed: app.bsky.embed.video.View
   error: unknown
   retry: () => void
 }) {

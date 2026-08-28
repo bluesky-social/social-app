@@ -1,16 +1,20 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type AppBskyUnspeccedDefs,
-  moderateProfile,
-  RichText as RichTextApi,
-} from '@atproto/api'
+import {moderateProfile} from '@bsky/sdk/moderation'
+import {RichText as RichTextApi} from '@bsky/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useTrendingSettings} from '#/state/preferences/trending'
-import {useGetTrendsQuery} from '#/state/queries/trending/useGetTrendsQuery'
+import {
+  useTrendingSettings,
+  useTrendingSettingsApi,
+} from '#/state/preferences/trending'
+import {
+  DEFAULT_FETCH_LIMIT,
+  DEFAULT_LIMIT,
+  useGetTrendsQuery,
+} from '#/state/queries/trending/useGetTrendsQuery'
 import {useTrendingConfig} from '#/state/service-config'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {formatCount} from '#/view/com/util/numeric/format'
@@ -18,13 +22,17 @@ import {atoms as a, useGutters, useTheme, type ViewStyleProp} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/icons/Trending'
 import {Link} from '#/components/Link'
+import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import {
+  TrendingTopicsPrompt,
+  useTrendingTopicSeen,
+} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import * as ModuleHeader from '../components/ModuleHeader'
-
-const TOPIC_COUNT = 5
 
 const IMAGE_SIZE = 56
 
@@ -36,49 +44,87 @@ export function ExploreTrendingTopics() {
 
 function Inner() {
   const ax = useAnalytics()
-  const {data: trending, error, isLoading, isRefetching} = useGetTrendsQuery()
+  const {t: l} = useLingui()
+
+  const topicCount = ax.features.getValue(
+    ax.features.TrendingExploreTopicsCountValue,
+    DEFAULT_LIMIT,
+  )
+
+  const trendingPrompt = Prompt.usePromptControl()
+  const {setTrendingDisabled} = useTrendingSettingsApi()
+  const {
+    data: trending,
+    error,
+    isLoading,
+    isRefetching,
+  } = useGetTrendsQuery({
+    fetchLimit: Math.min(topicCount * 2, DEFAULT_FETCH_LIMIT),
+    limit: topicCount,
+  })
   const noTopics = !isLoading && !error && !trending?.trends?.length
   const showLoading = isLoading || isRefetching
 
   if (!showLoading && (error || !trending?.trends || noTopics)) return null
 
   return (
-    <View style={[a.pb_md]}>
-      <ModuleHeader.Container bottomBorder>
-        <ModuleHeader.Icon icon={TrendingIcon} size="md" />
-        <ModuleHeader.TitleText>
-          <Trans>Trending</Trans>
-        </ModuleHeader.TitleText>
-      </ModuleHeader.Container>
-      {showLoading
-        ? Array.from({length: TOPIC_COUNT}).map((__, i) => (
-            <TrendingTopicRowSkeleton key={i} />
-          ))
-        : trending?.trends.map((trend, index) => (
-            <TrendRow
-              key={trend.link}
-              trend={trend}
-              rank={index + 1}
-              onPress={() => {
-                ax.metric('trendingTopic:click', {
-                  context: 'explore',
-                  recId: trending.recId,
-                })
-              }}
-            />
-          ))}
-    </View>
+    <>
+      <View style={[a.pb_md]}>
+        <ModuleHeader.Container bottomBorder>
+          <ModuleHeader.Icon icon={TrendingIcon} size="md" />
+          <ModuleHeader.TitleText>
+            <Trans>Trending</Trans>
+          </ModuleHeader.TitleText>
+          <ModuleHeader.EllipsisButton
+            label={l`Trending options`}
+            onPress={() => trendingPrompt.open()}
+          />
+        </ModuleHeader.Container>
+        {showLoading
+          ? Array.from({length: topicCount}).map((__, i) => (
+              <TrendingTopicRowSkeleton key={i} />
+            ))
+          : trending?.trends.map((trend, index) => {
+              const rank = index + 1
+              return (
+                <TrendRow
+                  key={trend.link}
+                  trend={trend}
+                  rank={rank}
+                  recId={trending.recId}
+                  onPress={() => {
+                    ax.metric('trendingTopic:click', {
+                      context: 'explore',
+                      rank,
+                      recId: trending.recId,
+                    })
+                  }}
+                />
+              )
+            })}
+      </View>
+
+      <TrendingTopicsPrompt
+        control={trendingPrompt}
+        onConfirm={() => {
+          ax.metric('trendingTopics:hide', {context: 'explore:trending'})
+          setTrendingDisabled(true)
+        }}
+      />
+    </>
   )
 }
 
 export function TrendRow({
   trend,
   rank,
+  recId,
   children,
   onPress,
 }: ViewStyleProp & {
-  trend: AppBskyUnspeccedDefs.TrendView
+  trend: app.bsky.unspecced.defs.TrendView
   rank: number
+  recId?: string
   children?: React.ReactNode
   onPress?: () => void
 }) {
@@ -88,6 +134,7 @@ export function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
+  useTrendingTopicSeen('explore', rank, recId)
 
   const description = useMemo(() => {
     if (!trend.description) return
@@ -112,9 +159,8 @@ export function TrendRow({
           <View style={[gutters, a.w_full, a.flex_row, a.py_md, a.gap_sm]}>
             <Text
               style={[
-                a.text_sm,
+                a.text_md,
                 a.font_medium,
-
                 t.atoms.text_contrast_low,
                 {
                   fontVariant: ['tabular-nums'],
@@ -126,8 +172,8 @@ export function TrendRow({
             </Text>
             <View style={[a.flex_1, a.gap_2xs]}>
               <Text
-                style={[a.text_sm, a.font_semi_bold, a.leading_snug]}
-                numberOfLines={1}>
+                style={[a.text_md, a.font_semi_bold, a.leading_snug]}
+                numberOfLines={2}>
                 {trend.displayName}
               </Text>
               {description ? (
@@ -187,7 +233,7 @@ export function TrendRow({
 
 // Unused atm, but leaving here so we don't lose localization. -dsb
 export function useCategoryDisplayName(
-  category: AppBskyUnspeccedDefs.TrendView['category'],
+  category: app.bsky.unspecced.defs.TrendView['category'],
 ) {
   const {t: l} = useLingui()
 
@@ -255,7 +301,7 @@ export function TrendingTopicRowSkeleton() {
 }
 
 function useModerateTrendingActors(
-  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+  actors: app.bsky.unspecced.defs.TrendView['actors'],
 ) {
   const moderationOpts = useModerationOpts()
 

@@ -1,4 +1,11 @@
-import {Database, envToCfg, httpLogger, LinkService, readEnv} from './index.js'
+import {
+  Database,
+  envToCfg,
+  FORCE_SHUTDOWN_TIMEOUT_MS,
+  httpLogger,
+  LinkService,
+  readEnv,
+} from './index.js'
 
 async function main() {
   try {
@@ -10,6 +17,7 @@ async function main() {
     httpLogger.info(
       {
         port: cfg.service.port,
+        metricsPort: cfg.service.metricsPort,
         safelinkEnabled: cfg.service.safelinkEnabled,
         hasDbUrl: !!cfg.db.url,
         hasDbMigrationUrl: !!cfg.db.migrationUrl,
@@ -33,17 +41,36 @@ async function main() {
 
     if (link.ctx.cfg.service.safelinkEnabled) {
       httpLogger.info('Starting Safelink client')
-      link.ctx.safelinkClient.runFetchEvents()
+      void link.ctx.safelinkClient.runFetchEvents()
     }
 
     await link.start()
     httpLogger.info('Link service is running')
 
-    process.on('SIGTERM', async () => {
-      httpLogger.info('Link service is stopping')
-      await link.destroy()
-      httpLogger.info('Link service is stopped')
-    })
+    const shutdown = (signal: NodeJS.Signals) => {
+      const forceExitTimer = setTimeout(() => {
+        httpLogger.error(
+          {signal},
+          'Link service exceeded its shutdown deadline; forcing exit',
+        )
+        process.exit(1)
+      }, FORCE_SHUTDOWN_TIMEOUT_MS)
+      forceExitTimer.unref()
+
+      void (async () => {
+        httpLogger.info({signal}, 'Link service is stopping')
+        try {
+          await link.destroy()
+          httpLogger.info({signal}, 'Link service is stopped')
+        } catch (err) {
+          process.exitCode = 1
+          httpLogger.error({err, signal}, 'Failed to stop link service cleanly')
+        }
+      })()
+    }
+
+    process.once('SIGTERM', shutdown)
+    process.once('SIGINT', shutdown)
   } catch (error) {
     httpLogger.error(
       {

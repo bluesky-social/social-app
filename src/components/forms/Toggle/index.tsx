@@ -82,6 +82,7 @@ export type ItemProps = ViewStyleProp & {
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
   hitSlop?: PressableProps['hitSlop']
   highlightRow?: boolean
+  testID?: string
 }
 
 export function useItemContext() {

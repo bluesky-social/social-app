@@ -8,13 +8,13 @@ import {
 } from 'react-native'
 import Animated, {
   type AnimatedRef,
-  runOnUI,
   scrollTo,
   type SharedValue,
   useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import {scheduleOnUI} from 'react-native-worklets'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {
@@ -31,7 +31,9 @@ import {TabBar} from './TabBar'
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
+  scrollElRef: React.MutableRefObject<
+    ListMethods | React.ComponentRef<typeof ScrollView> | null
+  >
 }
 
 export interface PagerWithHeaderProps {
@@ -181,7 +183,7 @@ export function PagerWithHeader({
   )
 
   const onTabPressed = useCallback(() => {
-    runOnUI(adjustScrollForOtherPages)('dragging')
+    scheduleOnUI(adjustScrollForOtherPages, 'dragging')
   }, [adjustScrollForOtherPages])
 
   return (
@@ -269,7 +271,7 @@ let PagerTabBar = ({
       ],
     }
   })
-  const headerRef = useRef<View>(null)
+  const headerRef = useRef<React.ComponentRef<typeof View>>(null)
   const fallbackHeaderOnlyHeight = useRef(0)
   return (
     <Animated.View
@@ -378,7 +380,7 @@ function PagerItem({
         headerHeight,
         isFocused,
         scrollElRef: scrollElRef as React.MutableRefObject<
-          ListMethods | ScrollView | null
+          ListMethods | React.ComponentRef<typeof ScrollView> | null
         >,
       })}
     </ScrollProvider>

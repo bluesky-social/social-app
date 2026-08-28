@@ -2,32 +2,33 @@ import {forwardRef, useCallback, useEffect, useState} from 'react'
 import {
   AccessibilityInfo,
   Image as RNImage,
-  StyleSheet,
   useColorScheme,
   View,
 } from 'react-native'
 import Animated, {
   Easing,
   interpolate,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path, type SvgProps} from 'react-native-svg'
+import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 import * as SplashScreen from 'expo-splash-screen'
 
 import {Logotype} from '#/view/icons/Logotype'
-// @ts-ignore
+import {atoms as a} from '#/alf'
+// @ts-expect-error
 import splashImagePointer from '../assets/splash/splash.png'
-// @ts-ignore
+// @ts-expect-error
 import darkSplashImagePointer from '../assets/splash/splash-dark.png'
-const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
+
+const splashImageUri = RNImage.resolveAssetSource(splashImagePointer)!.uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
-).uri
+)!.uri
 
 export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
   const width = 1000
@@ -35,7 +36,7 @@ export const Logo = forwardRef(function LogoImpl(props: SvgProps, ref) {
   return (
     <Svg
       fill="none"
-      // @ts-ignore it's fiiiiine
+      // @ts-expect-error it's fiiiiine
       ref={ref}
       viewBox="0 0 64 66"
       style={[{width, height}, props.style]}>
@@ -124,29 +125,29 @@ export function Splash(props: React.PropsWithChildren<Props>) {
     if (isReady) {
       SplashScreen.hideAsync()
         .then(() => {
-          intro.set(() =>
+          intro.set(
             withTiming(
               1,
               {duration: 400, easing: Easing.out(Easing.cubic)},
               () => {
                 'worklet'
                 // set these values to check animation at specific point
-                outroLogo.set(() =>
+                outroLogo.set(
                   withTiming(
                     1,
                     {duration: 1200, easing: Easing.in(Easing.cubic)},
                     () => {
-                      runOnJS(onFinish)()
+                      scheduleOnRN(onFinish)
                     },
                   ),
                 )
-                outroApp.set(() =>
+                outroApp.set(
                   withTiming(1, {
                     duration: 1200,
                     easing: Easing.inOut(Easing.cubic),
                   }),
                 )
-                outroAppOpacity.set(() =>
+                outroAppOpacity.set(
                   withTiming(1, {
                     duration: 1200,
                     easing: Easing.in(Easing.cubic),
@@ -170,12 +171,12 @@ export function Splash(props: React.PropsWithChildren<Props>) {
   return (
     <View style={{flex: 1}} onLayout={onLayout}>
       {!isAnimationComplete && (
-        <View style={StyleSheet.absoluteFillObject}>
+        <View style={[a.absolute, a.inset_0]}>
           <Image
             accessibilityIgnoresInvertColors
             onLoadEnd={onLoadEnd}
             source={{uri: isDarkMode ? darkSplashImageUri : splashImageUri}}
-            style={StyleSheet.absoluteFillObject}
+            style={[a.absolute, a.inset_0]}
           />
 
           <Animated.View
@@ -205,7 +206,8 @@ export function Splash(props: React.PropsWithChildren<Props>) {
           {!isAnimationComplete && (
             <Animated.View
               style={[
-                StyleSheet.absoluteFillObject,
+                a.absolute,
+                a.inset_0,
                 logoAnimation,
                 {
                   flex: 1,

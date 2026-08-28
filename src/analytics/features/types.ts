@@ -17,10 +17,17 @@ export enum Features {
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
-  PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
   SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
+  OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
+  CanonicalPostNumberingEnable = 'canonical_post_numbering:enable',
+  ContentVisibilitySettingsEnable = 'content_visibility_settings:enable',
+  ModerationInboxEnable = 'moderation_inbox:enable',
+
+  // values
+  TrendingDiscoverValues = 'trending_discover:values',
+  TrendingExploreTopicsCountValue = 'trending_explore_topics_count:value',
 
   AATest = 'aa-test',
 }

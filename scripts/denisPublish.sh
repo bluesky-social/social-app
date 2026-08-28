@@ -4,8 +4,7 @@ set -o pipefail
 set -o nounset
 
 # Publishes the just-exported Expo bundle to the denis OTA service (S3) via the
-# `denis publish` CLI. Mirrors bundleUpdate.sh's inputs (runtime version, bundle
-# version, build numbers) but targets denis instead of the legacy ota1 upload.
+# `denis publish` CLI.
 # Expects: the `denis` binary on PATH (setup-denis action), ambient AWS creds
 # (configure-aws-credentials OIDC), and BSKY_IOS_BUILD_NUMBER /
 # BSKY_ANDROID_VERSION_CODE from the use-build-number wrapper.

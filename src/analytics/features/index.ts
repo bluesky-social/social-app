@@ -40,6 +40,7 @@ const TIMEOUT_PREFER_FRESH_GATES = 1500
 export const features = new GrowthBook({
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
+  enableDevMode: env.IS_INTERNAL,
 })
 
 /**
@@ -59,8 +60,7 @@ export const init = features.init({timeout: TIMEOUT_INIT}).then(res => {
 })
 
 /**
- * Refresh feature gates from GrowthBook. Updates attributes based on the
- * provided account, if any.
+ * Refresh feature gates from GrowthBook.
  */
 export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
   await features.refreshFeatures({
@@ -77,19 +77,21 @@ export function getFeatures() {
 
 export function getFeatureDescription(feature: Features, i18n: I18n) {
   switch (feature) {
-    case Features.PostThreadKnownLikersEnable:
+    case Features.CanonicalPostNumberingEnable:
       return {
         key: feature,
         name: i18n._(
           msg({
-            message: 'Social proofing on posts',
-            comment: 'Name for a feature flag',
+            message: 'Thread numbering',
+            comment:
+              'Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)',
           }),
         ),
         description: i18n._(
           msg({
-            message: 'Spot posts your friends and follows have liked.',
-            comment: 'Description of a feature flag (Social proofing on posts)',
+            message:
+              'See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.',
+            comment: 'Description of a feature flag (Thread numbering)',
           }),
         ),
       }

@@ -115,7 +115,7 @@ export function SearchScreenShell({
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const route = useRoute()
-  const textInput = useRef<TextInput>(null)
+  const textInput = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()

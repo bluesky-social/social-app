@@ -8,8 +8,8 @@ Bluesky Social is a cross-platform social media application built with React Nat
 
 **Tech Stack:**
 
-- React 19.1
-- React Native 0.81 with Expo 54
+- React 19.2
+- React Native 0.86 with Expo 57
 - TypeScript 7
 - React Navigation 7 for routing
 - TanStack Query (React Query) for data fetching
@@ -224,6 +224,7 @@ return conditional styles inline in a style array: `web({cursor: 'pointer'})`,
 - Prefer prop destructuring via parameters over a const within the component.
 - Prefer inline types over `Props` types or interfaces.
 - Set reasonable defaults for optional props.
+- Prefer the implicit global `React` for types over `type` imports.
 
 ```tsx
 import {Fragment} from 'react'
@@ -232,7 +233,13 @@ import {Trans} from '@lingui/react/macro'
 
 import {Text} from '#/components/Typography'
 
-function MyComponent({items = []}: {items?: string[]}) {
+function MyComponent({
+  items = [],
+  children,
+}: {
+  items?: string[]
+  children: React.ReactNode
+}) {
   return (
     <>
       <View>
@@ -247,6 +254,7 @@ function MyComponent({items = []}: {items?: string[]}) {
             <Text>{item}</Text>
           </Fragment>
         ))}
+        {children}
       </View>
     </>
   )
@@ -553,7 +561,7 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 
 1. **Accessibility**: Always provide `label` prop for interactive elements, use `accessibilityHint` where helpful
 
-2. **Translations**: Wrap ALL user-facing strings with ` `l` `` or `<Trans>`
+2. **Translations**: Wrap ALL user-facing strings with the `` l`…` `` macro or the `<Trans>` component
 
 3. **Styling**: Combine static atoms with theme atoms, use platform utilities for platform-specific styles
 

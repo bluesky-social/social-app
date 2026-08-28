@@ -137,8 +137,8 @@ function DialogInner({
   const [dateUntilActive, setDateUntilActive] = useState(!!parsed.until)
 
   const [filters, setFilters] = useState<AdvancedFilter[]>(parsed.filters)
-  const scrollRef = useRef<ScrollView>(null)
-  const filtersSectionRef = useRef<View>(null)
+  const scrollRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
+  const filtersSectionRef = useRef<React.ComponentRef<typeof View>>(null)
 
   function addFilter() {
     if (filters.length >= MAX_FILTERS) return

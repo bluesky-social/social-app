@@ -1,15 +1,12 @@
-import {useCallback, useEffect, useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
+import {type Client} from '@atproto/lex'
+import {type AtIdentifierString, AtUri, type AtUriString} from '@atproto/syntax'
 import {
-  type AppBskyActorDefs,
-  AppBskyFeedDefs,
-  type AppBskyFeedPost,
-  type AtpAgent,
-  AtUri,
   moderatePost,
   type ModerationDecision,
   type ModerationPrefs,
-} from '@atproto/api'
+} from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
   type QueryClient,
@@ -28,14 +25,20 @@ import {MergeFeedAPI} from '#/lib/api/feed/merge'
 import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
-import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
+import {
+  type FeedPostNumbering,
+  FeedTuner,
+  type FeedTunerFn,
+} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
-import {useAgent} from '#/state/session'
+import {useAppviewClient, useSession} from '#/state/session'
 import * as userActionHistory from '#/state/userActionHistory'
 import {KnownError} from '#/view/com/posts/PostFeedErrorMessage'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {usePreferencesQuery} from './preferences'
@@ -43,6 +46,7 @@ import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
+  useAutoPagination,
 } from './util'
 
 type ActorDid = string
@@ -79,11 +83,12 @@ export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
 
 export interface FeedPostSliceItem {
   _reactKey: string
-  uri: string
-  post: AppBskyFeedDefs.PostView
-  record: AppBskyFeedPost.Record
+  uri: AtUriString
+  post: app.bsky.feed.defs.PostView
+  record: app.bsky.feed.post.Main
+  postNumbering?: FeedPostNumbering
   moderation: ModerationDecision
-  parentAuthor?: AppBskyActorDefs.ProfileViewBasic
+  parentAuthor?: app.bsky.actor.defs.ProfileViewBasic
   isParentBlocked?: boolean
   isParentNotFound?: boolean
 }
@@ -98,8 +103,8 @@ export interface FeedPostSlice {
   reqId: string | undefined
   feedPostUri: string
   reason?:
-    | AppBskyFeedDefs.ReasonRepost
-    | AppBskyFeedDefs.ReasonPin
+    | app.bsky.feed.defs.ReasonRepost
+    | app.bsky.feed.defs.ReasonPin
     | ReasonFeedSource
     | {[k: string]: unknown; $type: string}
 }
@@ -107,7 +112,7 @@ export interface FeedPostSlice {
 export interface FeedPageUnselected {
   api: FeedAPI
   cursor: string | undefined
-  feed: AppBskyFeedDefs.FeedViewPost[]
+  feed: app.bsky.feed.defs.FeedViewPost[]
   fetchedAt: number
 }
 
@@ -148,7 +153,8 @@ export function usePostFeedQuery(
       f => f.pinned && f.value === 'following',
     ) ?? -1
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
-  const agent = useAgent()
+  const {hasSession} = useSession()
+  const client = useAppviewClient()
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -193,7 +199,7 @@ export function usePostFeedQuery(
               feedDesc,
               feedParams: params || {},
               feedTuners,
-              agent,
+              client,
               // Not in the query key because they don't change:
               userInterests,
               // Not in the query key. Reacting to it switching isn't important:
@@ -210,7 +216,7 @@ export function usePostFeedQuery(
        * moderations happen later, which results in some posts being shown and
        * some not.
        */
-      if (!agent.session) {
+      if (!hasSession) {
         assertSomePostsPassModeration(
           res.feed,
           preferences?.moderationPrefs ||
@@ -340,6 +346,7 @@ export function usePostFeedQuery(
                         uri: item.post.uri,
                         post: item.post,
                         record: item.record,
+                        postNumbering: item.postNumbering,
                         moderation: moderations[i],
                         parentAuthor: item.parentAuthor,
                         isParentBlocked: item.isParentBlocked,
@@ -362,56 +369,13 @@ export function usePostFeedQuery(
     ),
   })
 
-  // The server may end up returning an empty page, a page with too few items,
-  // or a page with items that end up getting filtered out. When we fetch pages,
-  // we'll keep track of how many items we actually hope to see. If the server
-  // doesn't return enough items, we're going to continue asking for more items.
-  const lastItemCount = useRef(0)
-  const wantedItemCount = useRef(0)
-  const autoPaginationAttemptCount = useRef(0)
-  useEffect(() => {
-    const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
-      query
-    // Count the items that we already have.
-    let itemCount = 0
-    for (const page of data?.pages || []) {
-      for (const slice of page.slices) {
-        itemCount += slice.items.length
-      }
+  let itemCount = 0
+  for (const page of query.data?.pages || []) {
+    for (const slice of page.slices) {
+      itemCount += slice.items.length
     }
-
-    // If items got truncated, reset the state we're tracking below.
-    if (itemCount !== lastItemCount.current) {
-      if (itemCount < lastItemCount.current) {
-        wantedItemCount.current = itemCount
-      }
-      lastItemCount.current = itemCount
-    }
-
-    // Now track how many items we really want, and fetch more if needed.
-    if (isLoading || isRefetching) {
-      // During the initial fetch, we want to get an entire page's worth of items.
-      wantedItemCount.current = MIN_POSTS
-    } else if (isFetchingNextPage) {
-      if (itemCount > wantedItemCount.current) {
-        // We have more items than wantedItemCount, so wantedItemCount must be out of date.
-        // Some other code must have called fetchNextPage(), for example, from onEndReached.
-        // Adjust the wantedItemCount to reflect that we want one more full page of items.
-        wantedItemCount.current = itemCount + MIN_POSTS
-      }
-    } else if (hasNextPage) {
-      // At this point we're not fetching anymore, so it's time to make a decision.
-      // If we didn't receive enough items from the server, paginate again until we do.
-      if (itemCount < wantedItemCount.current) {
-        autoPaginationAttemptCount.current++
-        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
-          query.fetchNextPage()
-        }
-      } else {
-        autoPaginationAttemptCount.current = 0
-      }
-    }
-  }, [query])
+  }
+  useAutoPagination(query, itemCount, MIN_POSTS)
 
   return query
 }
@@ -443,62 +407,75 @@ function createApi({
   feedParams,
   feedTuners,
   userInterests,
-  agent,
+  client,
   enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
   feedParams: FeedParams
   feedTuners: FeedTunerFn[]
   userInterests?: string
-  agent: AtpAgent
+  client: Client
   enableFollowingToDiscoverFallback: boolean
 }) {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
-        agent,
+        client,
         feedParams,
         feedTuners,
         userInterests,
       })
     } else {
       if (enableFollowingToDiscoverFallback) {
-        return new HomeFeedAPI({agent, userInterests})
+        return new HomeFeedAPI({client, userInterests})
       } else {
-        return new FollowingFeedAPI({agent})
+        return new FollowingFeedAPI({client})
       }
     }
   } else if (feedDesc.startsWith('author')) {
     const [__, actor, filter] = feedDesc.split('|')
-    return new AuthorFeedAPI({agent, feedParams: {actor, filter}})
+    /*
+     * The descriptor is split out of an internally-built string, so neither the
+     * actor identifier nor the filter token is narrowed by the compiler here.
+     */
+    return new AuthorFeedAPI({
+      client,
+      feedParams: {actor: actor as AtIdentifierString, filter},
+    })
   } else if (feedDesc.startsWith('likes')) {
     const [__, actor] = feedDesc.split('|')
-    return new LikesFeedAPI({agent, feedParams: {actor}})
+    return new LikesFeedAPI({
+      client,
+      feedParams: {actor: actor as AtIdentifierString},
+    })
   } else if (feedDesc.startsWith('feedgen')) {
     const [__, feed] = feedDesc.split('|')
     return new CustomFeedAPI({
-      agent,
-      feedParams: {feed},
+      client,
+      feedParams: {feed: feed as AtUriString},
       userInterests,
     })
   } else if (feedDesc.startsWith('list')) {
     const [__, list] = feedDesc.split('|')
-    return new ListFeedAPI({agent, feedParams: {list}})
+    return new ListFeedAPI({client, feedParams: {list: list as AtUriString}})
   } else if (feedDesc.startsWith('posts')) {
     const [__, uriList] = feedDesc.split('|')
-    return new PostListFeedAPI({agent, feedParams: {uris: uriList.split(',')}})
+    return new PostListFeedAPI({
+      client,
+      feedParams: {uris: uriList.split(',') as AtUriString[]},
+    })
   } else if (feedDesc === 'demo') {
-    return new DemoFeedAPI({agent})
+    return new DemoFeedAPI({client})
   } else {
     // shouldnt happen
-    return new FollowingFeedAPI({agent})
+    return new FollowingFeedAPI({client})
   }
 }
 
 export function* findAllPostsInQueryData(
   queryClient: QueryClient,
   uri: string,
-): Generator<AppBskyFeedDefs.PostView, undefined> {
+): Generator<app.bsky.feed.defs.PostView, undefined> {
   const atUri = new AtUri(uri)
 
   const queryDatas = queryClient.getQueriesData<
@@ -521,7 +498,7 @@ export function* findAllPostsInQueryData(
           yield embedViewRecordToPostView(quotedPost)
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.parent)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent)) {
           if (didOrHandleUriMatches(atUri, item.reply.parent)) {
             yield item.reply.parent
           }
@@ -535,7 +512,7 @@ export function* findAllPostsInQueryData(
           }
         }
 
-        if (AppBskyFeedDefs.isPostView(item.reply?.root)) {
+        if (bsky.isType(app.bsky.feed.defs.postView, item.reply?.root)) {
           if (didOrHandleUriMatches(atUri, item.reply.root)) {
             yield item.reply.root
           }
@@ -553,7 +530,7 @@ export function* findAllPostsInQueryData(
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileViewBasic, undefined> {
+): Generator<app.bsky.actor.defs.ProfileViewBasic, undefined> {
   const queryDatas = queryClient.getQueriesData<
     InfiniteData<FeedPageUnselected>
   >({
@@ -573,13 +550,13 @@ export function* findAllProfilesInQueryData(
           yield quotedPost.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.parent) &&
+          bsky.isType(app.bsky.feed.defs.postView, item.reply?.parent) &&
           item.reply?.parent?.author.did === did
         ) {
           yield item.reply.parent.author
         }
         if (
-          AppBskyFeedDefs.isPostView(item.reply?.root) &&
+          bsky.isType(app.bsky.feed.defs.postView, item.reply?.root) &&
           item.reply?.root?.author.did === did
         ) {
           yield item.reply.root.author
@@ -590,7 +567,7 @@ export function* findAllProfilesInQueryData(
 }
 
 function assertSomePostsPassModeration(
-  feed: AppBskyFeedDefs.FeedViewPost[],
+  feed: app.bsky.feed.defs.FeedViewPost[],
   moderationPrefs: ModerationPrefs,
 ) {
   // no posts in this feed

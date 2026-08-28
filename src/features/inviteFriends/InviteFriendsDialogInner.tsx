@@ -1,8 +1,11 @@
 import {Suspense, useRef} from 'react'
 import {Pressable, View} from 'react-native'
-import type ViewShot from 'react-native-view-shot'
+import {type ViewShotRef} from 'react-native-view-shot'
 import {setStringAsync} from 'expo-clipboard'
-import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
+import {
+  requestPermissionsAsync,
+  saveToLibraryAsync,
+} from 'expo-media-library/legacy'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -41,7 +44,7 @@ export function InviteFriendsDialogInner({
   const {currentAccount} = useSession()
   const profileQuery = useProfileQuery({did: currentAccount?.did})
   const [themeKey, setThemeKey] = useInviteThemeKey()
-  const captureRef = useRef<ViewShot>(null)
+  const captureRef = useRef<ViewShotRef>(null)
 
   const theme = getInviteTheme(themeKey)
   const variant = t.name === 'light' ? theme.light : theme.dark

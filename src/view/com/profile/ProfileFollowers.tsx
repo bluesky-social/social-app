@@ -1,5 +1,4 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -19,6 +18,7 @@ import {
   FollowersPromoBanner,
   useFollowersPromoDismissed,
 } from '#/features/inviteFriends'
+import {type app} from '#/lexicons'
 import {List} from '../util/List'
 import {ProfileCardWithFollowBtn} from './ProfileCard'
 
@@ -27,7 +27,7 @@ function renderItem({
   index,
   contextProfileDid,
 }: {
-  item: ActorDefs.ProfileView
+  item: app.bsky.actor.defs.ProfileView
   index: number
   contextProfileDid: string | undefined
 }) {
@@ -42,7 +42,7 @@ function renderItem({
   )
 }
 
-function keyExtractor(item: ActorDefs.ProfileView) {
+function keyExtractor(item: app.bsky.actor.defs.ProfileView) {
   return item.did
 }
 
@@ -138,7 +138,7 @@ export function ProfileFollowers({name}: {name: string}) {
   }, [isFetchingNextPage, hasNextPage, error, fetchNextPage])
 
   const renderItemWithContext = useCallback(
-    ({item, index}: {item: ActorDefs.ProfileView; index: number}) =>
+    ({item, index}: {item: app.bsky.actor.defs.ProfileView; index: number}) =>
       renderItem({item, index, contextProfileDid: resolvedDid}),
     [resolvedDid],
   )
@@ -160,7 +160,7 @@ export function ProfileFollowers({name}: {name: string}) {
     seenItemsRef.current.clear()
   }, [resolvedDid])
   const onItemSeen = useCallback(
-    (item: ActorDefs.ProfileView) => {
+    (item: app.bsky.actor.defs.ProfileView) => {
       if (seenItemsRef.current.has(item.did)) {
         return
       }
@@ -246,7 +246,6 @@ export function ProfileFollowers({name}: {name: string}) {
               onRetry={fetchNextPage}
             />
           }
-          // @ts-ignore our .web version only -prf
           desktopFixedHeight
           initialNumToRender={initialNumToRender}
           windowSize={11}

@@ -7,7 +7,7 @@ import {
   useState,
 } from 'react'
 import {LayoutAnimation, type TextInput, View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_GROUP_NAME_GRAPHEME_LENGTH} from '#/lib/constants'
@@ -249,7 +249,7 @@ export function InitiateChatFlow({
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
   const aa = useAgeAssurance()
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const accountTooNewPromptControl = Dialog.useDialogControl()
 
   const {data: convos} = useListConvosQuery({

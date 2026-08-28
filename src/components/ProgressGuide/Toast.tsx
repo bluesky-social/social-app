@@ -9,12 +9,12 @@ import {
 import {Pressable, useWindowDimensions, View} from 'react-native'
 import Animated, {
   Easing,
-  runOnJS,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {scheduleOnRN} from 'react-native-worklets'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -62,14 +62,14 @@ export const ProgressGuideToast = forwardRef<
 
     // animate the opacity then set isOpen to false when done
     const setIsntOpen = () => setIsOpen(false)
-    opacity.set(() =>
+    opacity.set(
       withTiming(
         0,
         {
           duration: 400,
           easing: Easing.out(Easing.cubic),
         },
-        () => runOnJS(setIsntOpen)(),
+        () => scheduleOnRN(setIsntOpen),
       ),
     )
   }, [setIsOpen, opacity])
@@ -81,18 +81,18 @@ export const ProgressGuideToast = forwardRef<
     // animate the vertical translation, the opacity, and the checkmark
     const playCheckmark = () => animatedCheckRef.current?.play()
     opacity.set(0)
-    opacity.set(() =>
+    opacity.set(
       withTiming(
         1,
         {
           duration: 100,
           easing: Easing.out(Easing.cubic),
         },
-        () => runOnJS(playCheckmark)(),
+        () => scheduleOnRN(playCheckmark),
       ),
     )
     translateY.set(0)
-    translateY.set(() =>
+    translateY.set(
       withTiming(insets.top + 10, {
         duration: 500,
         easing: Easing.out(Easing.cubic),

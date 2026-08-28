@@ -8,7 +8,7 @@ import {linkRedirectContents} from '../html/linkRedirectContents.js'
 import {linkWarningContents} from '../html/linkWarningContents.js'
 import {linkWarningLayout} from '../html/linkWarningLayout.js'
 import {redirectLogger} from '../logger.js'
-import {handler} from './util.js'
+import {observedHandler} from './util.js'
 
 const INTERNAL_IP_REGEX = new RegExp(
   '(^127.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^10.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.1[6-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.2[0-9]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^172.3[0-1]{1}[0-9]{0,1}.[0-9]{1,3}.[0-9]{1,3}$)|(^192.168.[0-9]{1,3}.[0-9]{1,3}$)|^localhost',
@@ -18,7 +18,7 @@ const INTERNAL_IP_REGEX = new RegExp(
 export default function (ctx: AppContext, app: Express) {
   return app.get(
     '/redirect',
-    handler(async (req, res) => {
+    observedHandler('redirect', async (req, res) => {
       let link = req.query.u
       assert(
         typeof link === 'string',

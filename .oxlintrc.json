@@ -60,8 +60,10 @@
     "bskyweb/**",
     "bskyembed/**",
     "bskyogcard/**",
+    "lint-rules/**",
     "src/locale/locales/_build/**",
     "src/locale/locales/**/*.js",
+    "src/lexicons/**",
     "*.e2e.ts",
     "*.e2e.tsx",
     "eslint.config.mjs",
@@ -238,7 +240,6 @@
             }
           }
         ],
-        "bsky-internal/use-exact-imports": "error",
         "bsky-internal/use-prefixed-imports": "error",
         "bsky-internal/lingui-msg-rule": "error",
         "react/display-name": "error",
@@ -259,7 +260,6 @@
         "react/no-unsafe": "off",
         "react/react-in-jsx-scope": "off",
         "react/hook-use-state": "warn",
-        "react-native/no-inline-styles": "off",
         "react-native-a11y/has-accessibility-hint": "error",
         "react-native-a11y/has-accessibility-props": "error",
         "react-native-a11y/has-valid-accessibility-actions": "error",
@@ -274,7 +274,7 @@
         "react-native-a11y/has-valid-accessibility-ignores-invert-colors": "error",
         "react-native-a11y/has-valid-accessibility-live-region": "error",
         "react-native-a11y/has-valid-important-for-accessibility": "error",
-        "react-compiler/react-compiler": "warn",
+        "react/react-compiler": "warn",
         "simple-import-sort/imports": [
           "error",
           {
@@ -374,9 +374,7 @@
       },
       "jsPlugins": [
         "eslint-plugin-bsky-internal",
-        "eslint-plugin-react-native",
         "eslint-plugin-react-native-a11y",
-        "eslint-plugin-react-compiler",
         "eslint-plugin-simple-import-sort"
       ],
       "env": {
@@ -387,6 +385,7 @@
     },
     {
       "files": [
+        "bskylink/**/*.{js,jsx,ts,tsx}",
         "bskyogcard/**/*.{js,jsx,ts,tsx}",
         "dev-env/**/*.{js,jsx,ts,tsx}"
       ],

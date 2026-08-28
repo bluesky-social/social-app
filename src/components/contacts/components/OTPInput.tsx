@@ -9,7 +9,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {mergeRefs} from '#/lib/merge-refs'
-import {atoms as a, ios, platform, useTheme} from '#/alf'
+import {atoms as a, platform, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID, IS_IOS} from '#/env'
@@ -25,13 +25,13 @@ export function OTPInput({
   label: string
   value: string
   onChange: (text: string) => void
-  ref?: React.Ref<TextInput>
+  ref?: React.Ref<React.ComponentRef<typeof TextInput>>
   numberOfDigits?: number
   onComplete?: (code: string) => void
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const innerRef = useRef<TextInput>(null)
+  const innerRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const [selection, setSelection] = useState({start: 0, end: 0})
 
@@ -94,7 +94,11 @@ export function OTPInput({
       </View>
       <TextInput
         // SMS autofill is borked on iOS if you open the keyboard immediately -sfn
-        onLayout={ios(() => setTimeout(() => innerRef.current?.focus(), 100))}
+        onLayout={
+          IS_IOS
+            ? () => setTimeout(() => innerRef.current?.focus(), 100)
+            : undefined
+        }
         autoFocus={IS_ANDROID}
         accessible
         accessibilityLabel={label}

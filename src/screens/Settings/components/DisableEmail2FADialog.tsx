@@ -5,7 +5,8 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {cleanError} from '#/lib/strings/errors'
-import {useAgent, useSession} from '#/state/session'
+import {matchXrpcError} from '#/lib/xrpc-error'
+import {usePdsClient, useSession, useSessionApi} from '#/state/session'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -16,6 +17,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {P, Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
+import {com} from '#/lexicons'
 
 enum Stages {
   Email,
@@ -31,7 +33,8 @@ export function DisableEmail2FADialog({
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const {currentAccount} = useSession()
-  const agent = useAgent()
+  const pdsClient = usePdsClient()
+  const {refreshSession} = useSessionApi()
 
   const [stage, setStage] = useState<Stages>(Stages.Email)
   const [confirmationCode, setConfirmationCode] = useState<string>('')
@@ -42,13 +45,12 @@ export function DisableEmail2FADialog({
     setError('')
     setIsProcessing(true)
     try {
-      await agent.com.atproto.server.requestEmailUpdate()
+      await pdsClient.call(com.atproto.server.requestEmailUpdate)
       setStage(Stages.ConfirmCode)
     } catch (e) {
       setError(cleanError(String(e)))
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   const onConfirmDisable = async () => {
@@ -56,25 +58,29 @@ export function DisableEmail2FADialog({
     setIsProcessing(true)
     try {
       if (currentAccount?.email) {
-        await agent.com.atproto.server.updateEmail({
+        await pdsClient.call(com.atproto.server.updateEmail, {
           email: currentAccount.email,
           token: confirmationCode.trim(),
           emailAuthFactor: false,
         })
-        await agent.resumeSession(agent.session!)
+        await refreshSession()
         Toast.show(_(msg({message: 'Email 2FA disabled', context: 'toast'})))
       }
       control.close()
     } catch (e) {
-      const errMsg = String(e)
-      if (errMsg.includes('Token is invalid')) {
+      /*
+       * The old check matched the PDS message "Token is invalid"; the lexicon
+       * declares that case as `InvalidToken`, so match the code instead.
+       */
+      if (
+        matchXrpcError(e, com.atproto.server.updateEmail) === 'InvalidToken'
+      ) {
         setError(_(msg`Invalid 2FA confirmation code.`))
       } else {
-        setError(cleanError(errMsg))
+        setError(cleanError(e))
       }
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   return (

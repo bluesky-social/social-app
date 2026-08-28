@@ -242,6 +242,20 @@ describe('general functionality', () => {
         __context__: 'logger',
       },
     })
+
+    const fingerprint = ['{{ default }}', 'report-dialog:upstream-fetch']
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.ReportDialog,
+      e,
+      {fingerprint},
+      timestamp,
+    )
+    expect(Sentry.captureException).toHaveBeenLastCalledWith(e, {
+      tags: {category: 'report-dialog'},
+      extra: {__context__: 'report-dialog'},
+      fingerprint,
+    })
   })
 
   test('sentryTransport serializes errors', () => {
@@ -352,7 +366,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'specific',
       level: LogLevel.Debug,
     })
@@ -374,7 +388,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'namespace:foo',
       contextFilter: 'namespace:*',
       level: LogLevel.Debug,
@@ -397,7 +411,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'namespace:bar:baz',
       contextFilter: 'namespace:foo:*',
     })
