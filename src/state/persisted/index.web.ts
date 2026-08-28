@@ -8,9 +8,17 @@ import {
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
+import {
+  applySessionUpdate,
+  getCredentialState,
+  type SessionCredentialMutation,
+} from './session'
+import {runWithSessionCredentialLock} from './session-lock'
 import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
+export type {SessionCredentialMutation} from './session'
+export {runWithSessionCredentialLock} from './session-lock'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -62,37 +70,72 @@ export function readLatest<K extends keyof Schema>(key: K): Schema[K] {
 }
 readLatest satisfies PersistedApi['readLatest']
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function write<K extends keyof Schema>(
+export function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  const next = readFromStorage()
-  if (next) {
-    // The storage could have been updated by a different tab before this tab is notified.
-    // Make sure this write is applied on top of the latest data in the storage as long as it's valid.
-    _state = next
-    // Don't fire the update listeners yet to avoid a loop.
-    // If there was a change, we'll receive the broadcast event soon enough which will do that.
-  }
-  try {
-    if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: value})) {
-      // Fast path for updates that are guaranteed to be noops.
-      // This is good mostly because it avoids useless broadcasts to other tabs.
-      return
-    }
-  } catch (e) {
-    // Ignore and go through the normal path.
-  }
-  _state = normalizeData({
-    ..._state,
-    [key]: value,
+  return runWithSessionCredentialLock({
+    accountDids: [],
+    operation: () => {
+      const next = readFromStorage()
+      if (next) {
+        // The storage could have been updated by a different tab before this tab is notified.
+        // Make sure this write is applied on top of the latest data in the storage as long as it's valid.
+        _state = next
+        // Don't fire the update listeners yet to avoid a loop.
+        // If there was a change, we'll receive the broadcast event soon enough which will do that.
+      }
+      try {
+        if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: value})) {
+          // Fast path for updates that are guaranteed to be noops.
+          // This is good mostly because it avoids useless broadcasts to other tabs.
+          return
+        }
+      } catch (e) {
+        // Ignore and go through the normal path.
+      }
+      const updated = normalizeData({
+        ..._state,
+        [key]: value,
+      })
+      writeToStorage(updated)
+      _state = updated
+      broadcastUpdate({key})
+    },
   })
-  writeToStorage(_state)
-  broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
-  broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
 }
 write satisfies PersistedApi['write']
+
+// eslint-disable-next-line @typescript-eslint/require-await
+export async function updateSession({
+  nextSession,
+  credentialMutations,
+}: {
+  nextSession: Schema['session']
+  credentialMutations: SessionCredentialMutation[]
+}): Promise<Schema['session']> {
+  const stored = readFromStorage() ?? _state
+  const session = applySessionUpdate({
+    storedSession: stored.session,
+    nextSession,
+    credentialMutations,
+  })
+  const updated = normalizeData({...stored, session})
+  writeToStorage(updated)
+  _state = updated
+
+  const invalidations = credentialMutations.map(mutation => ({
+    accountDid: mutation.accountDid,
+    credentialVersion: getCredentialState({
+      session,
+      accountDid: mutation.accountDid,
+    }).credentialVersion,
+  }))
+  broadcastUpdate({key: 'session', invalidations})
+  return session
+}
+updateSession satisfies PersistedApi['updateSession']
+runWithSessionCredentialLock satisfies PersistedApi['runWithSessionCredentialLock']
 
 export function onUpdate<K extends keyof Schema>(
   key: K,
@@ -108,13 +151,17 @@ export function onUpdate<K extends keyof Schema>(
 }
 onUpdate satisfies PersistedApi['onUpdate']
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function clearStorage() {
-  try {
-    localStorage.removeItem(BSKY_STORAGE)
-  } catch (e: any) {
-    // Expected on the web in private mode.
-  }
+export function clearStorage(): Promise<void> {
+  return runWithSessionCredentialLock({
+    accountDids: [],
+    operation: () => {
+      try {
+        localStorage.removeItem(BSKY_STORAGE)
+      } catch (e: any) {
+        // Expected on the web in private mode.
+      }
+    },
+  })
 }
 clearStorage satisfies PersistedApi['clearStorage']
 
@@ -156,14 +203,40 @@ async function onBroadcastMessage({data}: MessageEvent) {
   }
 }
 
+function broadcastUpdate({
+  key,
+  invalidations = [],
+}: {
+  key: keyof Schema
+  invalidations?: {accountDid: string; credentialVersion: number}[]
+}) {
+  if (invalidations.length > 0) {
+    for (const invalidation of invalidations) {
+      broadcast.postMessage({
+        event: {type: UPDATE_EVENT, key, ...invalidation},
+      })
+    }
+  } else {
+    broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
+  }
+  broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
+}
+
 function writeToStorage(value: Schema) {
   const rawData = tryStringify(value)
-  if (rawData) {
-    try {
-      localStorage.setItem(BSKY_STORAGE, rawData)
-    } catch (e) {
-      // Expected on the web in private mode.
+  if (!rawData) {
+    throw new Error('Failed to serialize persisted state')
+  }
+  try {
+    localStorage.setItem(BSKY_STORAGE, rawData)
+    if (localStorage.getItem(BSKY_STORAGE) !== rawData) {
+      throw new Error('Failed to verify persisted state')
     }
+  } catch (error) {
+    logger.error('persisted state: failed writing root state to storage', {
+      message: error,
+    })
+    throw error
   }
 }
 

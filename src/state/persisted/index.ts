@@ -8,15 +8,20 @@ import {
   tryStringify,
 } from '#/state/persisted/schema'
 import {device} from '#/storage'
+import {applySessionUpdate} from './session'
+import {runWithSessionCredentialLock} from './session-lock'
 import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
+export type {SessionCredentialMutation} from './session'
+export {runWithSessionCredentialLock} from './session-lock'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
 const BSKY_STORAGE = 'BSKY_STORAGE'
 
 let _state: Schema = defaults
+let pendingWrite: Promise<unknown> = Promise.resolve()
 
 export async function init() {
   const stored = await readFromStorage()
@@ -43,17 +48,42 @@ export function readLatest<K extends keyof Schema>(key: K): Schema[K] {
 }
 readLatest satisfies PersistedApi['readLatest']
 
-export async function write<K extends keyof Schema>(
+export function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
-  _state = normalizeData({
-    ..._state,
-    [key]: value,
+  return enqueueWrite(async () => {
+    const next = normalizeData({
+      ..._state,
+      [key]: value,
+    })
+    await persistWithRetry(next)
+    _state = next
   })
-  await writeToStorage(_state)
 }
 write satisfies PersistedApi['write']
+
+export function updateSession({
+  nextSession,
+  credentialMutations,
+}: {
+  nextSession: Schema['session']
+  credentialMutations: import('./session').SessionCredentialMutation[]
+}): Promise<Schema['session']> {
+  return enqueueWrite(async () => {
+    const session = applySessionUpdate({
+      storedSession: _state.session,
+      nextSession,
+      credentialMutations,
+    })
+    const next = normalizeData({..._state, session})
+    await persistWithRetry(next)
+    _state = next
+    return session
+  })
+}
+updateSession satisfies PersistedApi['updateSession']
+runWithSessionCredentialLock satisfies PersistedApi['runWithSessionCredentialLock']
 
 export function onUpdate<K extends keyof Schema>(
   _key: K,
@@ -73,16 +103,36 @@ export async function clearStorage() {
 }
 clearStorage satisfies PersistedApi['clearStorage']
 
+function enqueueWrite<T>(operation: () => Promise<T>): Promise<T> {
+  const result = pendingWrite.then(operation, operation)
+  pendingWrite = result.then(
+    () => undefined,
+    () => undefined,
+  )
+  return result
+}
+
+async function persistWithRetry(value: Schema) {
+  try {
+    await writeToStorage(value)
+  } catch {
+    /* Retry the latest complete snapshot while the process still owns it. */
+    await writeToStorage(value)
+  }
+}
+
 async function writeToStorage(value: Schema) {
   const rawData = tryStringify(value)
-  if (rawData) {
-    try {
-      await AsyncStorage.setItem(BSKY_STORAGE, rawData)
-    } catch (e) {
-      logger.error(`persisted state: failed writing root state to storage`, {
-        message: e,
-      })
-    }
+  if (!rawData) {
+    throw new Error('Failed to serialize persisted state')
+  }
+  try {
+    await AsyncStorage.setItem(BSKY_STORAGE, rawData)
+  } catch (e) {
+    logger.error(`persisted state: failed writing root state to storage`, {
+      message: e,
+    })
+    throw e
   }
 }
 

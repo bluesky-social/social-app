@@ -39,6 +39,27 @@ jest.mock('#/state/persisted', () => {
         ? mockPersisted.latest
         : defaults[key as keyof typeof defaults],
     write: () => Promise.resolve(),
+    updateSession: ({
+      nextSession,
+      credentialMutations,
+    }: {
+      nextSession: Schema['session']
+      credentialMutations: import('#/state/persisted/session').SessionCredentialMutation[]
+    }) => {
+      const {
+        applySessionUpdate,
+      }: typeof import('#/state/persisted/session') = require('#/state/persisted/session')
+      const committed = applySessionUpdate({
+        storedSession: mockPersisted.latest,
+        nextSession,
+        credentialMutations,
+      })
+      mockPersisted.session = committed
+      mockPersisted.latest = committed
+      return Promise.resolve(committed)
+    },
+    runWithSessionCredentialLock: ({operation}: {operation: () => unknown}) =>
+      Promise.resolve(operation()),
     onUpdate: (_key: string, cb: (value: Schema['session']) => void) => {
       mockPersistedListeners.push(cb)
       return () => {}
@@ -308,7 +329,7 @@ describe('expiry rescue', () => {
     mockPersisted.latest = {accounts: [fresher], currentAccount: fresher}
 
     act(() => {
-      onSessionChange(
+      void onSessionChange(
         bundle as unknown as SessionBundle,
         DID,
         'expired',
@@ -337,7 +358,7 @@ describe('expiry rescue', () => {
     mockPersisted.latest = {accounts: [account], currentAccount: account}
 
     act(() => {
-      onSessionChange(
+      void onSessionChange(
         bundle as unknown as SessionBundle,
         DID,
         'expired',
@@ -365,7 +386,7 @@ describe('expiry rescue', () => {
 
     /* generation 1 dies and is rescued onto generation 2 */
     act(() => {
-      onSessionChange(
+      void onSessionChange(
         bundle as unknown as SessionBundle,
         DID,
         'expired',
@@ -382,7 +403,7 @@ describe('expiry rescue', () => {
      */
     mockPersisted.latest = {accounts: [account], currentAccount: account}
     act(() => {
-      onSessionChange(
+      void onSessionChange(
         rescued as unknown as SessionBundle,
         DID,
         'expired',
@@ -416,7 +437,7 @@ describe('refresh persistence', () => {
     )
 
     act(() => {
-      onSessionChange(
+      void onSessionChange(
         bundle as unknown as SessionBundle,
         DID,
         'update',
@@ -437,7 +458,7 @@ describe('refresh persistence', () => {
     )
 
     act(() => {
-      onSessionChange(
+      void onSessionChange(
         bundle as unknown as SessionBundle,
         DID,
         'update',
@@ -447,10 +468,81 @@ describe('refresh persistence', () => {
 
     expect(currentAccount()?.pdsUrl).toBe(`${DIDDOC_PDS_HOST}/`)
   })
+
+  it('adopts the committed generation when a stale refresh succeeds', async () => {
+    const account = makeAccount()
+    const bundle = makeBundle(account)
+    const {onSessionChange, currentAccount} = await renderLoggedIn(
+      account,
+      bundle,
+    )
+    const committed = makeAccount({
+      accessJwt: 'access-jwt-2',
+      refreshJwt: 'refresh-jwt-2',
+    })
+    mockPersisted.latest = mockPersisted.session = {
+      accounts: [committed],
+      currentAccount: committed,
+      credentialStates: {
+        [DID]: {
+          credentialVersion: 8,
+          refreshJti: 'refresh-jwt-2',
+          status: 'active',
+        },
+      },
+    }
+
+    await act(async () => {
+      await onSessionChange(
+        bundle as unknown as SessionBundle,
+        DID,
+        'update',
+        refreshedData('refresh-jwt-3'),
+      )
+    })
+
+    expect(mockRebuilds.at(-1)?.account.refreshJwt).toBe('refresh-jwt-2')
+    expect(currentAccount()?.refreshJwt).toBe('refresh-jwt-2')
+  })
+
+  it('preserves a logout tombstone against a delayed successful refresh', async () => {
+    const account = makeAccount()
+    const bundle = makeBundle(account)
+    const {onSessionChange, currentAccount, hasSession} = await renderLoggedIn(
+      account,
+      bundle,
+    )
+    const loggedOut = makeAccount({
+      accessJwt: undefined,
+      refreshJwt: undefined,
+    })
+    mockPersisted.latest = mockPersisted.session = {
+      accounts: [loggedOut],
+      currentAccount: undefined,
+      credentialStates: {
+        [DID]: {credentialVersion: 8, status: 'logged-out'},
+      },
+    }
+
+    await act(async () => {
+      await onSessionChange(
+        bundle as unknown as SessionBundle,
+        DID,
+        'update',
+        refreshedData('refresh-jwt-2'),
+      )
+    })
+
+    expect(hasSession()).toBe(false)
+    expect(currentAccount()).toBeUndefined()
+    expect(mockPersisted.latest.accounts[0].refreshJwt).toBeUndefined()
+  })
 })
 
 /** Deliver a cross-tab `persisted` update to the provider's newest listener. */
 function emitSynced(session: Schema['session']) {
+  mockPersisted.session = session
+  mockPersisted.latest = session
   mockPersistedListeners[mockPersistedListeners.length - 1](session)
 }
 

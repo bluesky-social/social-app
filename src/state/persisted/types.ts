@@ -1,4 +1,5 @@
 import {type Schema} from './schema'
+import {type SessionCredentialMutation} from './session'
 
 export type PersistedApi = {
   init(): Promise<void>
@@ -13,6 +14,14 @@ export type PersistedApi = {
    */
   readLatest<K extends keyof Schema>(key: K): Schema[K]
   write<K extends keyof Schema>(key: K, value: Schema[K]): Promise<void>
+  updateSession(params: {
+    nextSession: Schema['session']
+    credentialMutations: SessionCredentialMutation[]
+  }): Promise<Schema['session']>
+  runWithSessionCredentialLock<T>(params: {
+    accountDids: string[]
+    operation: () => T | Promise<T>
+  }): Promise<T>
   onUpdate<K extends keyof Schema>(
     key: K,
     cb: (v: Schema[K]) => void,
