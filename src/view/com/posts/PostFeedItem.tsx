@@ -448,6 +448,7 @@ let FeedItemInner = ({
             <KnownLikers
               post={rootPost}
               feature={Features.PostFeedKnownLikersEnable}
+              variant="feed"
             />
             <PostControls
               post={post}
