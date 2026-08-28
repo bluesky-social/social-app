@@ -2,7 +2,6 @@ import {IS_WEB} from '#/env'
 
 const LEFT_TO_RIGHT_EMBEDDING = '\u202A'
 const POP_DIRECTIONAL_FORMATTING = '\u202C'
-const languageDirectionCache = new Map<string, boolean>()
 
 /*
  * Force LTR directionality in a string.
@@ -17,24 +16,4 @@ const languageDirectionCache = new Map<string, boolean>()
 export function forceLTR(str: string) {
   if (IS_WEB) return str
   return LEFT_TO_RIGHT_EMBEDDING + str + POP_DIRECTIONAL_FORMATTING
-}
-
-/**
- * Determines whether a BCP 47 language tag uses a right-to-left script.
- */
-export function isRTL(language: string | undefined) {
-  if (!language) return false
-
-  const cached = languageDirectionCache.get(language)
-  if (cached !== undefined) return cached
-
-  try {
-    const isRightToLeft =
-      new Intl.Locale(language).getTextInfo().direction === 'rtl'
-    languageDirectionCache.set(language, isRightToLeft)
-    return isRightToLeft
-  } catch {
-    languageDirectionCache.set(language, false)
-    return false
-  }
 }
