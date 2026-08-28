@@ -40,7 +40,8 @@ export function useVerificationsRemoveMutation() {
       await until(
         5,
         1e3,
-        (profile: app.bsky.actor.getProfile.$OutputBody) => {
+        profile => {
+          if (!profile) return false
           if (
             !profile.verification?.verifications.some(v => uris.includes(v.uri))
           ) {
