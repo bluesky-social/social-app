@@ -298,3 +298,27 @@ t1 + 3h:  Client relaunches with A, which the server rejects
 ```
 
 If the client returns within the grace period, reusing `A` converges on generation `B` and recovers. After the grace period, there is no newer client-side generation to adopt. This is a narrow crash-between-server-commit-and-client-persistence window, distinct from the stale-tab problem addressed by this plan.
+
+## Native
+
+Native does not have the web's multiple-session-holder race. The iOS notification service and share extensions do not load session state or refresh credentials, and Android has no equivalent authenticated background process. Native session data has a single in-memory owner and lives in the main app's private AsyncStorage.
+
+Native does retain the unavoidable persistence window described above:
+
+```text
+Main app refreshes:  (7, A) -> (8, B)
+Server commits:      B
+App dies before:     AsyncStorage persists B
+Next launch reads:   (7, A)
+```
+
+No client can make the server rotation and local AsyncStorage write atomic. The PDS's two-hour grace period is the primary recovery mechanism: reopening within it lets A converge on B; reopening after it may require the user to log in again.
+
+Partial client-side mitigations can narrow the window and handle ordinary storage failures:
+
+- Schedule persistence as the first action after receiving B, before unrelated work.
+- Track the persistence promise for B and await it before an explicit refresh operation reports success.
+- Propagate AsyncStorage failures instead of swallowing them.
+- Retry a failed write with the latest in-memory session snapshot while the process is still alive.
+
+These measures improve durability during normal execution but cannot protect the interval in which the OS terminates the process after the server commits B and before the storage write completes.
