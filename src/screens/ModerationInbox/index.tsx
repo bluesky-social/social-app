@@ -82,6 +82,10 @@ function YourReports() {
   ]
   const currentLabel = labels[filter]
 
+  // TODO Placeholders. - dsb
+  const account = '@deleteme01.bsky.social'
+  const list = 'The Worst Posters'
+
   return (
     <Layout.Center>
       <View
@@ -138,14 +142,92 @@ function YourReports() {
           </SimpleInlineLinkText>
         ) : undefined}
       </View>
-      <ReportRow unread />
-      <ReportRow unread />
-      <ReportRow />
+      <ReportRow
+        subject={l({
+          context: 'moderation-report-subject',
+          message: `Post by ${account}`,
+        })}
+        action={l`Awaiting review`}
+        date={new Date()}
+        unread
+      />
+      <ReportRow
+        subject={l({
+          context: 'moderation-report-subject',
+          message: `List “${list}”`,
+        })}
+        action={l`No action taken`}
+        date={new Date()}
+        unread
+      />
+      <ReportRow
+        subject={l({
+          context: 'moderation-report-subject',
+          message: `Direct message from ${account}`,
+        })}
+        action={l`Message deleted`}
+        date={new Date()}
+      />
     </Layout.Center>
   )
 }
 
-function ReportRow({unread}: {unread?: boolean}) {
+function ActionsOnYou() {
+  const {t: l} = useLingui()
+
+  // TODO Placeholders. - dsb
+  const guideline = l({
+    context: 'moderation-report-guideline',
+    message: 'Harassment',
+  })
+  const label = l({
+    context: 'moderation-report-label',
+    message: 'Graphic media',
+  })
+  const duration = l`${72} hours`
+
+  return (
+    <Layout.Center>
+      <ReportRow
+        subject={l({
+          context: 'moderation-report-action',
+          message: `Your post was removed`,
+        })}
+        action={l`Violates community guideline: ${guideline}`}
+        date={new Date()}
+        unread
+      />
+      <ReportRow
+        subject={l({
+          context: 'moderation-report-action',
+          message: `A label was added to your post`,
+        })}
+        action={l`“${label}” – shown behind a warning`}
+        date={new Date()}
+      />
+      <ReportRow
+        subject={l({
+          context: 'moderation-report-action',
+          message: `A label was added to your post`,
+        })}
+        action={l`Ban evasion – ${duration}, now expired`}
+        date={new Date()}
+      />
+    </Layout.Center>
+  )
+}
+
+function ReportRow({
+  subject,
+  action,
+  date,
+  unread,
+}: {
+  subject: string
+  action: string
+  date: Date
+  unread?: boolean
+}) {
   const t = useTheme()
   const {i18n} = useLingui()
 
@@ -164,15 +246,13 @@ function ReportRow({unread}: {unread?: boolean}) {
         },
       ]}>
       <View style={[a.gap_2xs]}>
-        <Text style={[a.text_md, a.font_semi_bold]}>
-          Post by @deleteme01.bsky.social
+        <Text style={[a.text_md, unread ? a.font_semi_bold : a.font_medium]}>
+          {subject}
         </Text>
         <View style={[a.mt_2xs, a.flex_row, a.align_center, a.gap_sm]}>
+          <Text style={[a.text_sm, t.atoms.text_contrast_high]}>{action}</Text>
           <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
-            Post removed
-          </Text>
-          <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
-            {i18n.date(new Date(), {
+            {i18n.date(date, {
               month: 'short',
               day: 'numeric',
               year: shouldShowYear ? 'numeric' : undefined,
@@ -192,13 +272,5 @@ function ReportRow({unread}: {unread?: boolean}) {
         <ChevronRightIcon size="md" style={[t.atoms.text_contrast_medium]} />
       </View>
     </View>
-  )
-}
-
-function ActionsOnYou() {
-  return (
-    <Layout.Center style={[a.flex_1, a.align_center, a.justify_center]}>
-      <Text>TODO</Text>
-    </Layout.Center>
   )
 }
