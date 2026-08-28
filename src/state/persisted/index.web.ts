@@ -8,17 +8,15 @@ import {
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
+import {runWithSessionCredentialLock} from './session-lock'
 import {
   applySessionUpdate,
   getCredentialState,
   type SessionCredentialMutation,
-} from './session'
-import {runWithSessionCredentialLock} from './session-lock'
+} from './session-merge'
 import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
-export type {SessionCredentialMutation} from './session'
-export {runWithSessionCredentialLock} from './session-lock'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -74,6 +72,11 @@ export function write<K extends keyof Schema>(
   key: K,
   value: Schema[K],
 ): Promise<void> {
+  if (key === 'session') {
+    throw new Error(
+      "Session state must be written through '#/state/persisted/session'",
+    )
+  }
   return runWithSessionCredentialLock({
     accountDids: [],
     operation: () => {
@@ -106,8 +109,9 @@ export function write<K extends keyof Schema>(
 }
 write satisfies PersistedApi['write']
 
+/** @internal Use `#/state/persisted/session` instead. */
 // eslint-disable-next-line @typescript-eslint/require-await
-export async function updateSession({
+export async function writeSessionInternal({
   nextSession,
   credentialMutations,
 }: {
@@ -134,9 +138,6 @@ export async function updateSession({
   broadcastUpdate({key: 'session', invalidations})
   return session
 }
-updateSession satisfies PersistedApi['updateSession']
-runWithSessionCredentialLock satisfies PersistedApi['runWithSessionCredentialLock']
-
 export function onUpdate<K extends keyof Schema>(
   key: K,
   cb: (v: Schema[K]) => void,

@@ -5,7 +5,7 @@ import {
   applySessionUpdate,
   getCredentialState,
   type SessionCredentialMutation,
-} from '../session'
+} from '../session-merge'
 
 const DID = 'did:plc:example123'
 

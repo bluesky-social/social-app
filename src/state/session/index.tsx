@@ -12,8 +12,9 @@ import {
 import {type Client} from '@atproto/lex'
 import {type SessionData} from '@atproto/lex-password-session'
 
-import * as persisted from '#/state/persisted'
-import {type Schema, type SessionCredentialMutation} from '#/state/persisted'
+import {type Schema} from '#/state/persisted'
+import * as persistedSession from '#/state/persisted/session'
+import {type SessionCredentialMutation} from '#/state/persisted/session'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
@@ -88,8 +89,8 @@ class SessionStore {
   private listeners = new Set<() => void>()
 
   constructor() {
-    // Careful: By the time this runs, `persisted` needs to already be filled.
-    const initialState = getInitialState(persisted.get('session').accounts)
+    // Careful: By the time this runs, persisted state must already be initialized.
+    const initialState = getInitialState(persistedSession.read().accounts)
     addSessionDebugLog({type: 'reducer:init', state: redactState(initialState)})
     this.state = initialState
   }
@@ -126,7 +127,7 @@ class SessionStore {
         type: 'persisted:broadcast',
         data: redactPersistedSession(persistedData),
       })
-      persistence = persisted.updateSession({
+      persistence = persistedSession.write({
         nextSession: persistedData,
         credentialMutations,
       })
@@ -166,7 +167,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ? bundle.session.session.refreshJwt
           : sessionData?.refreshJwt
 
-      return persisted.runWithSessionCredentialLock({
+      return persistedSession.runWithCredentialLock({
         accountDids: [accountDid],
         operation: async () => {
           /*
@@ -227,8 +228,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               }
               failedSet.add(dyingRefreshJwt)
 
-              const persistedCandidate = persisted
-                .readLatest('session')
+              const persistedCandidate = persistedSession
+                .readLatest()
                 .accounts.find(a => a.did === accountDid)
               const reducerCandidate = current.accounts.find(
                 a => a.did === accountDid,
@@ -353,7 +354,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      await persisted.runWithSessionCredentialLock({
+      await persistedSession.runWithCredentialLock({
         accountDids: [account.did],
         operation: () =>
           store.dispatch(
@@ -397,7 +398,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      await persisted.runWithSessionCredentialLock({
+      await persistedSession.runWithCredentialLock({
         accountDids: [account.did],
         operation: () =>
           store.dispatch(
@@ -438,8 +439,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const prevState = store.getState()
       const accountDid = prevState.currentBundleState.did
       if (accountDid) {
-        void persisted
-          .runWithSessionCredentialLock({
+        void persistedSession
+          .runWithCredentialLock({
             accountDids: [accountDid],
             operation: () =>
               store.dispatch({type: 'logged-out-current-account', accountDid}, [
@@ -482,13 +483,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const accountDids = [
         ...new Set([
           ...prevState.accounts.map(account => account.did),
-          ...persisted
-            .readLatest('session')
-            .accounts.map(account => account.did),
+          ...persistedSession.readLatest().accounts.map(account => account.did),
         ]),
       ]
-      void persisted
-        .runWithSessionCredentialLock({
+      void persistedSession
+        .runWithCredentialLock({
           accountDids,
           operation: () =>
             store.dispatch(
@@ -530,8 +529,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: redactAccount(storedAccount),
       })
       const signal = cancelPendingTask()
-      const latestStoredAccount = persisted
-        .readLatest('session')
+      const latestStoredAccount = persistedSession
+        .readLatest()
         .accounts.find(account => account.did === storedAccount.did)
       if (!latestStoredAccount?.refreshJwt) return
       const {bundle, account} = await createSessionBundleAndResume(
@@ -555,7 +554,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      const committedSession = await persisted.runWithSessionCredentialLock({
+      const committedSession = await persistedSession.runWithCredentialLock({
         accountDids: [account.did],
         operation: () =>
           store.dispatch(
@@ -625,7 +624,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     /* getSession targets the PDS; only the persisted account fields are patched. */
     const data = await bundle.pdsClient.call(com.atproto.server.getSession, {})
     if (signal.aborted) return
-    await persisted.runWithSessionCredentialLock({
+    await persistedSession.runWithCredentialLock({
       accountDids: [data.did],
       operation: () =>
         store.dispatch({
@@ -712,8 +711,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: redactAccount(account),
       })
       cancelPendingTask()
-      void persisted
-        .runWithSessionCredentialLock({
+      void persistedSession
+        .runWithCredentialLock({
           accountDids: [account.did],
           operation: () =>
             store.dispatch(
@@ -735,7 +734,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [store, cancelPendingTask],
   )
   useEffect(() => {
-    return persisted.onUpdate('session', nextSession => {
+    return persistedSession.onUpdate(nextSession => {
       const synced = nextSession
       addSessionDebugLog({
         type: 'persisted:receive',

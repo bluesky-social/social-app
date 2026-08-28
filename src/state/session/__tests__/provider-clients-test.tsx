@@ -10,19 +10,17 @@ import {type SessionAccount} from '../types'
  * account factories. These mocks cut the tree back to the session lifecycle
  * itself, mirroring provider-abort-test.tsx.
  */
-jest.mock('#/state/persisted', () => {
+jest.mock('#/state/persisted/session', () => {
   const {
     defaults,
   }: typeof import('#/state/persisted/schema') = require('#/state/persisted/schema')
   return {
-    defaults,
-    get: (key: keyof typeof defaults) => defaults[key],
-    write: () => Promise.resolve(),
-    updateSession: ({nextSession}: {nextSession: typeof defaults.session}) =>
+    read: () => defaults.session,
+    readLatest: () => defaults.session,
+    write: ({nextSession}: {nextSession: typeof defaults.session}) =>
       Promise.resolve(nextSession),
-    runWithSessionCredentialLock: ({operation}: {operation: () => unknown}) =>
+    runWithCredentialLock: ({operation}: {operation: () => unknown}) =>
       Promise.resolve(operation()),
-    readLatest: (key: keyof typeof defaults) => defaults[key],
     onUpdate: () => () => {},
   }
 })

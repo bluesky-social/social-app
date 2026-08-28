@@ -24,48 +24,35 @@ const mockPersisted: {session: Schema['session']; latest: Schema['session']} = {
  * exists to catch.
  */
 const mockPersistedListeners: ((value: Schema['session']) => void)[] = []
-jest.mock('#/state/persisted', () => {
-  const {
-    defaults,
-  }: typeof import('#/state/persisted/schema') = require('#/state/persisted/schema')
-  return {
-    defaults,
-    get: (key: string) =>
-      key === 'session'
-        ? mockPersisted.session
-        : defaults[key as keyof typeof defaults],
-    readLatest: (key: string) =>
-      key === 'session'
-        ? mockPersisted.latest
-        : defaults[key as keyof typeof defaults],
-    write: () => Promise.resolve(),
-    updateSession: ({
+jest.mock('#/state/persisted/session', () => ({
+  read: () => mockPersisted.session,
+  readLatest: () => mockPersisted.latest,
+  write: ({
+    nextSession,
+    credentialMutations,
+  }: {
+    nextSession: Schema['session']
+    credentialMutations: import('#/state/persisted/session').SessionCredentialMutation[]
+  }) => {
+    const {
+      applySessionUpdate,
+    }: typeof import('#/state/persisted/session-merge') = require('#/state/persisted/session-merge')
+    const committed = applySessionUpdate({
+      storedSession: mockPersisted.latest,
       nextSession,
       credentialMutations,
-    }: {
-      nextSession: Schema['session']
-      credentialMutations: import('#/state/persisted/session').SessionCredentialMutation[]
-    }) => {
-      const {
-        applySessionUpdate,
-      }: typeof import('#/state/persisted/session') = require('#/state/persisted/session')
-      const committed = applySessionUpdate({
-        storedSession: mockPersisted.latest,
-        nextSession,
-        credentialMutations,
-      })
-      mockPersisted.session = committed
-      mockPersisted.latest = committed
-      return Promise.resolve(committed)
-    },
-    runWithSessionCredentialLock: ({operation}: {operation: () => unknown}) =>
-      Promise.resolve(operation()),
-    onUpdate: (_key: string, cb: (value: Schema['session']) => void) => {
-      mockPersistedListeners.push(cb)
-      return () => {}
-    },
-  }
-})
+    })
+    mockPersisted.session = committed
+    mockPersisted.latest = committed
+    return Promise.resolve(committed)
+  },
+  runWithCredentialLock: ({operation}: {operation: () => unknown}) =>
+    Promise.resolve(operation()),
+  onUpdate: (callback: (value: Schema['session']) => void) => {
+    mockPersistedListeners.push(callback)
+    return () => {}
+  },
+}))
 jest.mock('#/state/util', () => ({useCloseAllActiveElements: () => () => {}}))
 jest.mock('#/components/dialogs/Context', () => ({
   useGlobalDialogsControlContext: () => ({signinDialogControl: {open() {}}}),
