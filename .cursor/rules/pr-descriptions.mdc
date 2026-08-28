@@ -1,0 +1,13 @@
+---
+description: Keep pull request descriptions limited to a concise summary of the changes
+alwaysApply: true
+---
+
+# Pull Request Descriptions
+
+When creating or editing a pull request description:
+
+- Include only a concise summary of the changes.
+- Do not mention Linear tickets or issue identifiers.
+- Do not include validation, testing, or verification steps.
+- Do not add boilerplate sections that duplicate information available elsewhere.
