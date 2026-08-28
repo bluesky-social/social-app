@@ -285,7 +285,6 @@ module.exports = function (_config) {
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
           },
         ],
-        'react-native-compressor',
         [
           '@bitdrift/react-native',
           {
