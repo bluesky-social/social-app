@@ -15,5 +15,13 @@ export default defineConfig({
       // are routine mid-cycle.
       'superfluous-key': 'warn',
     },
+    overrides: [
+      {
+        // The {name} argument is omitted on purpose
+        keys: "Before you can get notifications for {name}'s posts, you must first verify your email.",
+        locales: ['hu'],
+        rules: {'inconsistent-args': 'off'},
+      },
+    ],
   },
 })

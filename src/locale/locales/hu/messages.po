@@ -2119,7 +2119,7 @@ msgstr "Az üzenetfogadás előtt ellenőriznünk kell az e-mail-címedet."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:56
 msgid "Before you can get notifications for {name}'s posts, you must first verify your email."
-msgstr "Ahhoz, hogy értesítéseket kapj {name} bejegyzéseiről, előbb meg kell erősítened az e-mail-címedet."
+msgstr "A feliratkozás előtt vissza kell igazolnod az e-mail-címedet."
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:148
 #: src/components/dms/MessageProfileButton.tsx:60
