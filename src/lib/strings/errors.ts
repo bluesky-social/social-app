@@ -79,9 +79,10 @@ export function cleanError(e: unknown): string {
   return toDisplayString(e, str)
 }
 
-const NETWORK_ERRORS = [
+export const NETWORK_ERRORS = [
   'Abort',
   'Network request failed',
+  'Network request timed out',
   'Failed to fetch',
   'Load failed',
   'Upstream service unreachable',
