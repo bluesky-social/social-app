@@ -33,6 +33,7 @@ export class AuthorFeedAPI implements FeedAPI {
     const data = await this.client.call(app.bsky.feed.getAuthorFeed, {
       ...this.params,
       limit: 1,
+      includePins: false,
     })
     return data.feed[0]
   }
