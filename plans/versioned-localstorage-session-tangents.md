@@ -58,13 +58,24 @@ Result:              Tab A can overwrite the tombstone with active X
 
 This is not introduced by the single-root-lock simplification; the previous lock wrapper had the same fallback. It is currently an explicit compatibility tradeoff for browsers without Web Locks.
 
-### Possible direction
+### Assessment
 
-Before changing the implementation:
+The fallback is reachable within the production Browserslist target. `package.json` currently resolves as far back as iOS Safari 11.0-11.2, while MDN browser compatibility data records Web Locks support beginning in Chrome 69, Firefox 96, and Safari/iOS Safari 15.4.
 
-1. Confirm which supported browsers can actually reach this fallback.
-2. Decide whether using the app without cross-tab serialization is acceptable there.
-3. If it is not acceptable, evaluate a different storage layout or coordinator. A read-after-write check does not make a localStorage read-modify-write atomic, and a hand-rolled localStorage mutex would add its own stale-lock and crash-recovery failure modes.
+The vulnerable window is narrow. Network refreshes happen before lock acquisition, and the fallback's authoritative read, merge, serialization, and localStorage write contain no `await`. A lost update therefore requires separate browser processes to execute overlapping synchronous commit sequences. It is still a real race: localStorage makes each individual operation atomic, not the complete read-modify-write sequence.
+
+No simple fallback provides the same guarantee:
+
+- a read-after-write check does not make the sequence atomic;
+- a hand-rolled localStorage mutex introduces stale-owner and crash-recovery problems;
+- failing closed would make otherwise usable single-tab sessions unable to persist token rotation; and
+- an IndexedDB transaction coordinator or storage migration would be a substantially larger design.
+
+### Decision
+
+No action. This whole-root localStorage read-modify-write race predates the versioned-session work. The new Web Lock removes it for supporting browsers; the fallback preserves the pre-existing behavior for older browsers rather than making otherwise usable single-tab sessions fail. Eliminating the residual risk cleanly would require either raising the supported browser baseline to Web Locks or moving the shared root state to a transactional store.
+
+Compatibility reference: [MDN `Navigator.locks`](https://developer.mozilla.org/docs/Web/API/Navigator/locks).
 
 ## 3. Enforce the session lock invariant
 
