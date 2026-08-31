@@ -13,3 +13,21 @@ The patch transitions a RecyclerView as a single unit without recursively transi
 Related issues:
 - https://github.com/callstack/react-native-pager-view/issues/1005
 - https://github.com/software-mansion/react-native-screens/issues/2461
+
+## Android 8.1: ignore detached legacy-animation draws
+
+Fixes a framework `NullPointerException` in `View.applyLegacyAnimation` when opening a post on Android 8.1.
+
+`ScreenStack` defers child drawing so it can reorder disappearing screens. A child can be detached between the original `drawChild()` call and the deferred draw. Android 8.1 can then dereference cleared attachment state while applying that child's legacy animation.
+
+The patch ignores only the known framework crash when all of these conditions hold:
+
+- the device is running Android 8.1;
+- the child is no longer attached to a window; and
+- the top exception frame is `android.view.View.applyLegacyAnimation`.
+
+All other `NullPointerException`s are rethrown.
+
+Related issues:
+- APP-2982
+- https://blueskyweb.sentry.io/issues/APP-T4Z8

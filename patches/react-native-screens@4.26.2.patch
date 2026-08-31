@@ -31,3 +31,32 @@ index 76bb694854b29d7f779f38244cd48113b429ea1f..fd402ac938862e8d39c5467c1b5c86c4
                      startTransitionRecursive(child)
                  }
              }
+diff --git a/android/src/main/java/com/swmansion/rnscreens/ScreenStack.kt b/android/src/main/java/com/swmansion/rnscreens/ScreenStack.kt
+index 9f9f8647a50a537d9eec0643db5be69d05089688..09390fc732652ec63b78dbaf2e877b5063886706 100644
+--- a/android/src/main/java/com/swmansion/rnscreens/ScreenStack.kt
++++ b/android/src/main/java/com/swmansion/rnscreens/ScreenStack.kt
+@@ -419,7 +419,23 @@ class ScreenStack(
+     private fun performDraw(op: DrawingOp) {
+         // Canvas parameter can not be null here https://developer.android.com/reference/android/view/ViewGroup#drawChild(android.graphics.Canvas,%20android.view.View,%20long)
+         // So if we are passing null here, we would crash anyway
+-        super.drawChild(op.canvas!!, op.child, op.drawingTime)
++        val child = op.child!!
++        try {
++            super.drawChild(op.canvas!!, child, op.drawingTime)
++        } catch (exception: NullPointerException) {
++            // Deferred draws can outlive a child's attachment. Android 8.1 can then dereference
++            // cleared attachment state while applying the child's legacy animation.
++            val topFrame = exception.stackTrace.firstOrNull()
++            val isDetachedViewLegacyAnimationCrash =
++                Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1 &&
++                    !child.isAttachedToWindow &&
++                    topFrame?.className == View::class.java.name &&
++                    topFrame.methodName == "applyLegacyAnimation"
++
++            if (!isDetachedViewLegacyAnimationCrash) {
++                throw exception
++            }
++        }
+     }
+ 
+     // Can't use `drawingOpPool.removeLast` here due to issues with static name resolution in Android SDK 35+.
