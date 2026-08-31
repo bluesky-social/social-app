@@ -46,9 +46,11 @@ export function Error({
         t.atoms.border_contrast_low,
         {paddingTop: 175, paddingBottom: 110},
       ]}>
-      <View style={[a.w_full, a.align_center, a.gap_lg]}>
+      <View style={[a.w_full, a.align_center, a.gap_lg, a.px_md]}>
         {Icon && <Icon size="4xl" fill={t.atoms.text_contrast_medium.color} />}
-        <Text style={[a.font_semi_bold, a.text_3xl]}>{title}</Text>
+        <Text style={[a.font_semi_bold, a.text_3xl, a.text_center]}>
+          {title}
+        </Text>
         <Text
           style={[
             a.text_md,
@@ -63,7 +65,6 @@ export function Error({
       <View style={[a.gap_md, gtMobile ? {width: 350} : [a.w_full, a.px_lg]]}>
         {onRetry && (
           <Button
-            variant="solid"
             color="primary"
             label={l`Press to retry`}
             onPress={onRetry}
@@ -77,7 +78,6 @@ export function Error({
         )}
         {!hideBackButton && secondaryAction ? (
           <Button
-            variant="solid"
             color={onRetry ? 'secondary' : 'primary'}
             label={secondaryAction.accessibilityLabel ?? secondaryAction.label}
             onPress={secondaryAction.onPress}
