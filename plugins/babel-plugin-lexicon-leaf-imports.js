@@ -320,6 +320,7 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
            */
           programPath.scope.crawl()
           const leafImports = new Map()
+          let pendingDecls = []
           let touched = false
 
           function namespaceIdFor(leafFile) {
@@ -335,10 +336,17 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
                 .replace(/[^A-Za-z0-9_]/g, '_')
             id = programPath.scope.generateUidIdentifier(hint)
             leafImports.set(leafFile, id)
+            pendingDecls.push(
+              t.importDeclaration(
+                [t.importNamespaceSpecifier(t.cloneNode(id))],
+                t.stringLiteral(toSpecifier(filename, leafFile)),
+              ),
+            )
             return id
           }
 
           for (const {imp, dir} of targets) {
+            pendingDecls = []
             const keep = []
             for (const spec of imp.get('specifiers')) {
               if (
@@ -389,6 +397,15 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
               }
               touched = true
             }
+            /*
+             * Insert the leaf imports at the barrel import's own position so
+             * they evaluate exactly when the barrel would have - hoisting them
+             * to the top of the file would run the lexicon modules ahead of
+             * ordering-sensitive side-effect imports (polyfills, sentry setup).
+             */
+            if (pendingDecls.length > 0) {
+              imp.insertBefore(pendingDecls)
+            }
             if (keep.length === 0) {
               imp.remove()
             } else if (keep.length !== imp.node.specifiers.length) {
@@ -396,18 +413,6 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
             }
           }
 
-          if (leafImports.size > 0) {
-            const decls = []
-            for (const [leafFile, id] of leafImports) {
-              decls.push(
-                t.importDeclaration(
-                  [t.importNamespaceSpecifier(t.cloneNode(id))],
-                  t.stringLiteral(toSpecifier(filename, leafFile)),
-                ),
-              )
-            }
-            programPath.unshiftContainer('body', decls)
-          }
           if (touched) stats.files++
           if (debug && touched) {
             console.warn(
