@@ -3,8 +3,9 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
+import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export function Error({
@@ -13,12 +14,20 @@ export function Error({
   onRetry,
   onGoBack,
   hideBackButton,
+  secondaryAction,
+  isRetrying,
 }: {
   title?: string
   message?: string
   onRetry?: () => unknown
   onGoBack?: () => unknown
   hideBackButton?: boolean
+  isRetrying?: boolean
+  secondaryAction?: {
+    label: string
+    accessibilityLabel?: string
+    onPress: () => unknown
+  }
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -55,21 +64,28 @@ export function Error({
             color="primary"
             label={l`Press to retry`}
             onPress={onRetry}
+            disabled={isRetrying}
             size="large">
             <ButtonText>
               <Trans>Retry</Trans>
             </ButtonText>
+            {isRetrying && <ButtonIcon icon={Loader} />}
           </Button>
         )}
         {!hideBackButton && (
           <Button
             variant="solid"
             color={onRetry ? 'secondary' : 'primary'}
-            label={l`Return to previous page`}
-            onPress={goBack}
+            label={
+              secondaryAction?.accessibilityLabel ??
+              secondaryAction?.label ??
+              l`Return to previous page`
+            }
+            onPress={secondaryAction?.onPress ?? goBack}
+            disabled={isRetrying}
             size="large">
             <ButtonText>
-              <Trans>Go Back</Trans>
+              {secondaryAction?.label ?? <Trans>Go Back</Trans>}
             </ButtonText>
           </Button>
         )}

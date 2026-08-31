@@ -24,6 +24,7 @@ import {
 import {type LabelPreference} from '@bsky/sdk/moderation'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 
+import {requestRetry} from '#/lib/async/retry'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {replaceEqualDeep} from '#/lib/functions'
 import {getAge} from '#/lib/strings/time'
@@ -71,7 +72,7 @@ export function usePreferencesQuery() {
       if (!client.did) {
         return DEFAULT_LOGGED_OUT_PREFERENCES
       } else {
-        const res = await client.call(getPreferences)
+        const res = await requestRetry(3, () => client.call(getPreferences))
 
         const labelerDids = res.moderationPrefs.labelers.map(l => l.did)
 

@@ -7,7 +7,7 @@ import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
 import debounce from 'lodash.debounce'
 
-import {networkRetry} from '#/lib/async/retry'
+import {networkRetry, requestRetry} from '#/lib/async/retry'
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
 import {
@@ -359,7 +359,7 @@ async function getOtherRequiredData({
   if (debug.enabled) return debug.resolve(debug.otherRequiredData)
   const did = accountClient.did
   const [prefs, actorDeclaration] = await Promise.all([
-    accountClient.call(getPreferences),
+    requestRetry(3, () => accountClient.call(getPreferences)),
     fetchActorDeclarationRecord({did, client: accountClient}),
   ])
   const data: OtherRequiredData = {
@@ -456,10 +456,10 @@ export async function prefetchOtherRequiredData({
 
   try {
     logger.debug(`prefetchOtherRequiredData: resolving...`)
-    const res = await networkRetry(3, () =>
-      getOtherRequiredData({accountClient}),
-    )
-    qc.setQueryData<OtherRequiredData>(qk, res)
+    await qc.fetchQuery({
+      queryKey: qk,
+      queryFn: () => getOtherRequiredData({accountClient}),
+    })
   } catch (err) {
     const e = err as Error
     logger.warn(`prefetchOtherRequiredData: failed`, {
@@ -486,6 +486,20 @@ export function usePatchOtherRequiredData() {
     [currentAccount],
   )
 }
+export async function refetchOtherRequiredData({
+  accountClient,
+}: {
+  accountClient: Client
+}) {
+  const did = accountClient.did
+  if (!did) return
+  const data = await getOtherRequiredData({accountClient})
+  qc.setQueryData<OtherRequiredData>(
+    createOtherRequiredDataQueryKey({did}),
+    data,
+  )
+  return data
+}
 export function useOtherRequiredDataQuery() {
   const accountClient = usePdsClient()
   const did = accountClient.did
@@ -497,6 +511,8 @@ export function useOtherRequiredDataQuery() {
         return getOtherRequiredDataFromCache({did})
       },
       queryKey: createOtherRequiredDataQueryKey({did: did!}),
+      retry: false,
+      retryOnMount: false,
       async queryFn() {
         return getOtherRequiredData({accountClient})
       },
