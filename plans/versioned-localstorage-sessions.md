@@ -259,6 +259,8 @@ The committed reconciliation then rebuilds the live session from persisted gener
 
 This is a deliberate safety tradeoff. The conditional merge cannot prove that the missing `A -> B` write belonged to this process; the in-memory `B` could instead be stale credentials from another tab or an older login lineage. Accepting `B -> C` without a persisted `B` would weaken the central invariant and could overwrite a different authoritative session. The implementation therefore prefers the persisted generation even though an isolated failed write can turn a healthy in-memory session into a later logout.
 
+A rejected refresh result emits a diagnostic log when its result generation also differs from the persisted generation. Expected convergent aliases, where the rejected result already matches persisted storage, do not log. The diagnostic includes only the persisted credential version and status, never JWTs or token `jti` values.
+
 A retry of the original `A -> B` write before another refresh closes the gap. Native retries the same queued root snapshot once. Web reports the storage failure without updating its persisted cache or broadcasting; automatic refresh paths log the failure, while explicit refresh operations report it to their caller.
 
 * * *

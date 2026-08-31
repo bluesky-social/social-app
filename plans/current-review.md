@@ -54,7 +54,7 @@ If a replacement bundle has already been built before bailing, dispose it. This 
 
 **Severity: Medium-Low**
 
-**Status: Accepted and documented.** The missing-lineage-link failure mode and its recovery limits are now explicit in the main plan under “Edge case: a failed write leaves a missing lineage link.” Conditional persistence continues to prefer the authoritative stored generation.
+**Status: Accepted, documented, and instrumented.** The missing-lineage-link failure mode and its recovery limits are now explicit in the main plan under “Edge case: a failed write leaves a missing lineage link.” Conditional persistence continues to prefer the authoritative stored generation, and logs when a rejected refresh result differs from that stored generation without recording token material.
 
 On `main`, a failed session write left storage stale, but the next dispatch rewrote the complete session unconditionally. Storage therefore healed on the next refresh. On this branch, the `jti`-chained merge (`session-merge.ts:171-200`) cannot distinguish another tab advancing the chain from this tab losing its own previous chain-link write.
 
@@ -67,12 +67,9 @@ Concrete sequence:
 
 This is not a lock race; it is a false positive in the deliberate conditional merge. The trigger is narrow: a storage-write failure while the app remains alive, followed by enough idle time for the old generation to leave the server grace window.
 
-**Recommendation:** Accept and document this as a tradeoff unless a reliable distinction can be made. Add a distinctive log when a refresh mutation is dropped and its result `jti` differs from the stored one, since that identifies credentials being discarded.
+**Decision:** Accept this as a documented tradeoff unless a reliable distinction can be made. A distinctive warning log now records when a refresh result is rejected and differs from the persisted generation; same-generation convergent aliases remain silent. The log includes only credential version and status.
 
-**Tests:**
-
-- Unit-test `applySessionUpdate` for a missing intermediate chain-link.
-- Provider-test the committed-generation mismatch path that rebuilds onto the older generation, so the downgrade remains explicit and visible.
+**Coverage:** `applySessionUpdate` now has a focused missing-lineage-link test, and the provider suite pins committed-generation mismatch reconciliation.
 
 ### B3 - Cross-tab listener's `void resumeSession(...)` has new unhandled-rejection paths
 
@@ -155,19 +152,14 @@ Add a `refreshSession` test with a rejecting `writeSession` to pin the intended 
 - Cross-tab metadata clobbering and the no-Web-Locks lost-update fallback are already documented in `plans/versioned-localstorage-session-tangents.md`.
 - `createTemporaryClientsAndResume` may rotate a token before logout without persistence hooks; this matches `main`.
 
-## Recommended order
+## Remaining recommended order
 
-1. Fix B1 by rechecking abort and bundle identity after the awaited resume commit.
-2. Fix B3 by catching and logging the cross-tab listener's `resumeSession` rejection.
-3. Decide and document the B4 persistence-failure policy for login-shaped methods.
-4. Add tests for:
-   - resume versus logout while persistence is pending;
-   - `refreshSession` with rejecting `writeSession`;
-   - a dropped refresh mutation followed by committed-generation regression.
-5. Accept and document B2 unless a safe distinction between cross-tab advancement and a missing local chain-link emerges; add a distinctive dropped-generation log.
+1. Fix B3 by catching and logging the cross-tab listener's `resumeSession` rejection.
+2. Decide and document the B4 persistence-failure policy for login-shaped methods.
+3. Add a `refreshSession` test with rejecting `writeSession`.
 
 ## Verdict
 
 The core async design is sound. Serialization through `PasswordSession.#sessionPromise`, the per-bundle error channel, arm/kill lifecycle, reducer identity guards, and internally owned persistence lock compose correctly in the reviewed interleavings.
 
-The one genuine state-corruption hole is B1: `resumeSession` performs unguarded asynchronous continuations after persistence. B2 is a knowable conditional-merge tradeoff; B3 and B4 are lower-severity error-policy issues.
+The genuine state-corruption hole from B1 is now closed. B2 is accepted, documented, instrumented, and covered as a conditional-merge tradeoff. B3 and B4 remain lower-severity error-policy issues.

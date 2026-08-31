@@ -1,4 +1,11 @@
-import {describe, expect, it} from '@jest/globals'
+import {beforeEach, describe, expect, it, jest} from '@jest/globals'
+
+const mockLoggerWarn = jest.fn()
+jest.mock('#/logger', () => ({
+  logger: {
+    warn: (...args: unknown[]) => mockLoggerWarn(...args),
+  },
+}))
 
 import {type PersistedAccount, type Schema} from '../schema'
 import {
@@ -73,6 +80,10 @@ describe('versioned persisted sessions', () => {
   const refreshBAlias = jwt({jti: 'B', issuedAt: 3})
   const refreshC = jwt({jti: 'C', issuedAt: 4})
 
+  beforeEach(() => {
+    mockLoggerWarn.mockClear()
+  })
+
   it('advances the credential version when refresh moves to a new jti', () => {
     const storedSession = session({account: account({refreshJwt: refreshA})})
     const next = account({refreshJwt: refreshB})
@@ -123,6 +134,7 @@ describe('versioned persisted sessions', () => {
     expect(
       getCredentialState({session: result, accountDid: DID}).credentialVersion,
     ).toBe(1)
+    expect(mockLoggerWarn).not.toHaveBeenCalled()
   })
 
   it('does not let a stale refresh overwrite a newer generation', () => {
@@ -148,6 +160,29 @@ describe('versioned persisted sessions', () => {
     expect(
       getCredentialState({session: result, accountDid: DID}).credentialVersion,
     ).toBe(8)
+  })
+
+  it('logs when a missing lineage link rejects a newer refresh result', () => {
+    const storedSession = session({
+      account: account({refreshJwt: refreshA}),
+    })
+
+    const result = update({
+      storedSession,
+      nextAccount: account({refreshJwt: refreshC}),
+      mutation: {
+        type: 'refresh',
+        accountDid: DID,
+        baseRefreshJwt: refreshB,
+        resultRefreshJwt: refreshC,
+      },
+    })
+
+    expect(result.accounts[0].refreshJwt).toBe(refreshA)
+    expect(mockLoggerWarn).toHaveBeenCalledWith(
+      'persisted session: rejected refresh result from a non-authoritative generation',
+      {credentialVersion: 0, status: 'active'},
+    )
   })
 
   it('patches metadata without replacing authoritative credentials', () => {

@@ -1,5 +1,6 @@
 import {jwtDecode} from 'jwt-decode'
 
+import {logger} from '#/logger'
 import {
   type PersistedAccount,
   type PersistedCredentialState,
@@ -189,6 +190,15 @@ function applyCredentialMutation({
         previousState.refreshJti !== baseRefreshJti
       ) {
         /* The stored generation already advanced or became a tombstone. */
+        if (resultRefreshJti && previousState.refreshJti !== resultRefreshJti) {
+          logger.warn(
+            'persisted session: rejected refresh result from a non-authoritative generation',
+            {
+              credentialVersion: previousState.credentialVersion,
+              status: previousState.status,
+            },
+          )
+        }
         return
       }
       if (!nextAccount || !resultRefreshJti) return
