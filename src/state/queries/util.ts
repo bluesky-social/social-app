@@ -1,3 +1,4 @@
+import {useEffect, useRef} from 'react'
 import {type AtUri} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -7,6 +8,82 @@ import {
 
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+
+type AutoPaginationQuery = {
+  data?: {pageParams: unknown[]}
+  isLoading: boolean
+  isRefetching: boolean
+  isFetchingNextPage: boolean
+  hasNextPage: boolean
+  fetchNextPage: () => Promise<unknown>
+}
+
+export function useAutoPagination(
+  query: AutoPaginationQuery,
+  itemCount: number,
+  pageSize: number,
+) {
+  const lastItemCount = useRef(0)
+  const lastPageParams = useRef(query.data?.pageParams)
+  const wantedItemCount = useRef(pageSize)
+  const attemptCount = useRef(0)
+
+  useEffect(() => {
+    const cursorOf = (param: unknown) =>
+      param && typeof param === 'object' && 'cursor' in param
+        ? param.cursor
+        : param
+    const pageParams = query.data?.pageParams
+    const previousPageParams = lastPageParams.current
+    const continuedPagination =
+      pageParams &&
+      previousPageParams &&
+      pageParams.length > previousPageParams.length &&
+      previousPageParams.every((param, index) =>
+        Object.is(cursorOf(param), cursorOf(pageParams[index])),
+      )
+    if (
+      pageParams !== previousPageParams &&
+      previousPageParams &&
+      !continuedPagination
+    ) {
+      wantedItemCount.current = pageSize
+      attemptCount.current = 0
+    }
+    lastPageParams.current = pageParams
+
+    if (itemCount !== lastItemCount.current) {
+      attemptCount.current = 0
+      if (itemCount < lastItemCount.current) {
+        wantedItemCount.current = Math.max(itemCount, pageSize)
+      }
+      lastItemCount.current = itemCount
+    }
+
+    if (query.isLoading || query.isRefetching) {
+      wantedItemCount.current = pageSize
+      attemptCount.current = 0
+    } else if (query.isFetchingNextPage) {
+      if (itemCount > wantedItemCount.current) {
+        wantedItemCount.current = itemCount + pageSize
+      }
+    } else if (query.hasNextPage) {
+      if (itemCount < wantedItemCount.current) {
+        const currentCursor = cursorOf(pageParams?.at(-1))
+        const repeatedCursor = pageParams
+          ?.slice(0, -1)
+          .some(param => Object.is(cursorOf(param), currentCursor))
+        if (repeatedCursor) return
+        attemptCount.current++
+        if (attemptCount.current < 50) {
+          void query.fetchNextPage()
+        }
+      } else {
+        attemptCount.current = 0
+      }
+    }
+  }, [itemCount, pageSize, query])
+}
 
 export type StructuredQueryKey<T extends Record<string, unknown>> = readonly [
   string,

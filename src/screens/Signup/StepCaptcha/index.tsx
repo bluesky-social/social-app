@@ -51,9 +51,8 @@ export function StepCaptchaNative() {
       } catch (err) {
         const e = err as Error
         logger.error(e)
-      } finally {
-        setReady(true)
       }
+      setReady(true)
     })()
   }, [])
 

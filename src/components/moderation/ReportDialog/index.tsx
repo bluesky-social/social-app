@@ -319,9 +319,8 @@ function Inner(
         type: 'setError',
         error,
       })
-    } finally {
-      setIsPending(false)
     }
+    setIsPending(false)
   }, [logger, submitReport, props, state, ax, l, videoTimestampSeconds])
 
   useCallOnce(() => {

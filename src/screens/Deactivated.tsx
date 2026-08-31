@@ -95,9 +95,8 @@ export function Deactivated() {
       logger.error(e, {
         message: 'Failed to activate account',
       })
-    } finally {
-      setPending(false)
     }
+    setPending(false)
   }, [_, pdsClient, refreshSession, setPending, setError, queryClient])
 
   return (
