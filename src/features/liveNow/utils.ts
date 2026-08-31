@@ -97,3 +97,16 @@ export function getLiveNowHost(url: string) {
   const {hostname} = new URL(url)
   return sanitizeLiveNowHost(hostname)
 }
+
+/**
+ * Whether a live status has not yet expired.
+ *
+ * Called per post, per render while scrolling, so this stays on primitives -
+ * `parseISO` plus two `Date` objects showed up in the scroll profile.
+ * `Date.parse` returns `NaN` for an unparseable value and `NaN > n` is `false`,
+ * which is the same "not active" answer the date-fns version gave.
+ */
+export function isStatusStillActive(timeStr: string | undefined) {
+  if (!timeStr) return false
+  return Date.parse(timeStr) > Date.now()
+}
