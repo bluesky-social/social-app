@@ -93,6 +93,78 @@ describe('transform', () => {
   })
 })
 
+/*
+ * The plugin memoizes filesystem stats, barrel export maps, and verified
+ * chains in module-level caches that outlive individual transforms. A lexicon
+ * regen inside a long-lived worker (Metro dev server, jest --watch) must
+ * invalidate them - the plugin uses the root index mtime as the epoch.
+ */
+describe('cache invalidation across a lexicon regen', () => {
+  let tmp
+  let lexRoot
+
+  function write(rel, content) {
+    const file = path.join(tmp, rel)
+    fs.mkdirSync(path.dirname(file), {recursive: true})
+    fs.writeFileSync(file, content)
+  }
+
+  beforeAll(() => {
+    tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'lexicon-regen-'))
+    lexRoot = path.join(tmp, 'lexicons')
+    write('lexicons/index.ts', `export * as app from './app'\n`)
+    write('lexicons/app.ts', `export * as bsky from './app/bsky'\n`)
+    write('lexicons/app/bsky.ts', `export * as feed from './bsky/feed'\n`)
+    write('lexicons/app/bsky/feed.ts', `export * as like from './feed/like'\n`)
+    write('lexicons/app/bsky/feed/like.ts', `export const $type = 'test'\n`)
+  })
+
+  afterAll(() => {
+    fs.rmSync(tmp, {recursive: true, force: true})
+  })
+
+  function transform() {
+    return transformSync(
+      `import {app} from './lexicons'\nvoid app.bsky.feed.like\n`,
+      {
+        filename: path.join(tmp, 'consumer.ts'),
+        configFile: false,
+        babelrc: false,
+        parserOpts: {plugins: ['typescript']},
+        plugins: [[plugin, {roots: [lexRoot]}]],
+      },
+    ).code
+  }
+
+  test('a layout change is picked up without a process restart', () => {
+    expect(transform()).toContain(
+      `import * as _lex_app_bsky_feed_like from "./lexicons/app/bsky/feed/like"`,
+    )
+
+    /*
+     * Simulate `lex build --clear` deepening the leaf into a barrel. Codegen
+     * rewrites the whole tree, so the root index mtime always moves; force it
+     * forward explicitly since same-millisecond writes would hide the change.
+     */
+    write(
+      'lexicons/app/bsky/feed/like.ts',
+      `export * as main from './like/main'\n`,
+    )
+    write('lexicons/app/bsky/feed/like/main.ts', `export const $type = 'test'\n`)
+    const bumped = new Date(Date.now() + 10_000)
+    fs.utimesSync(path.join(lexRoot, 'index.ts'), bumped, bumped)
+
+    /*
+     * The chain now stops at a barrel, so the correct result is a bail that
+     * keeps the barrel import. Stale caches would instead replay the rewrite
+     * against the old layout.
+     */
+    const out = transform()
+    expect(out).toContain(`from './lexicons'`)
+    expect(out).not.toContain('import *')
+  })
+})
+
 /**
  * Enumerate every leaf chain by following `export * as <name> from '...'`
  * through the barrel graph, mirroring the plugin's own leaf/barrel rule: a
