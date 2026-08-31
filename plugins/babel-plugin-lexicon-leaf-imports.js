@@ -25,6 +25,15 @@
  * binding is left on the barrel import. The result is always correct, merely
  * unshaken for that file. Set BSKY_LEXICON_IMPORTS_DEBUG=1 to log such bails.
  *
+ * Caveat: the rewrite bakes leaf file paths into each consumer's transform
+ * output, but Metro's and babel-jest's persistent caches key only on the
+ * consumer's own content, so a regen that MOVES leaf files (or a @bsky/sdk
+ * upgrade that reshuffles dist) can leave unchanged consumers replaying stale
+ * leaf imports from a warm cache. Symptoms are a module-not-found error in a
+ * file you did not touch or, if the old path still resolves, a runtime
+ * undefined-member error. Restart with `expo start -c` (or clear the Jest
+ * cache) after such a regen.
+ *
  * Leaf vs barrel is decided from the filesystem: a segment with both `<seg>.ts`
  * (or `.js`) and a `<seg>/` directory is a barrel, a segment with only the file
  * is a leaf. This keeps the plugin independent of nesting depth (most NSIDs are
