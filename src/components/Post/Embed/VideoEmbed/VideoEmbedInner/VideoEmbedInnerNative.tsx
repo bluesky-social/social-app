@@ -8,10 +8,12 @@ import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
-import {Mute_Stroke2_Corner0_Rounded as MuteIcon} from '#/components/icons/Mute'
-import {Pause_Filled_Corner0_Rounded as PauseIcon} from '#/components/icons/Pause'
-import {Play_Filled_Corner0_Rounded as PlayIcon} from '#/components/icons/Play'
-import {SpeakerVolumeFull_Stroke2_Corner0_Rounded as UnmuteIcon} from '#/components/icons/Speaker'
+import {
+  MuteIcon,
+  PauseIcon,
+  PlayIcon,
+  UnmuteIcon,
+} from '#/components/icons/nano'
 import {KeepAwake} from '#/components/KeepAwake'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {useReportDialogMetadataContext} from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'

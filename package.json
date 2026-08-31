@@ -236,6 +236,7 @@
     "react-native-gesture-handler": "~2.32.0",
     "react-native-keyboard-controller": "1.21.9",
     "react-native-mmkv": "^3.3.3",
+    "react-native-nano-icons": "^0.2.1",
     "react-native-pager-view": "6.8.0",
     "react-native-progress": "^5.0.1",
     "react-native-qrcode-styled": "^0.3.3",

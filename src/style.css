@@ -12,6 +12,22 @@
  * HTML & BODY STYLES IN `web/index.html` and `bskyweb/templates/base.html`
  */
 
+/*
+ * Nano Icons font, used by the icons in `#/components/icons/nano`.
+ *
+ * On native the Expo config plugin links the TTF into the app bundle, but on
+ * web the library reads the family straight off CSS and never registers it at
+ * runtime - without this the icons render as tofu.
+ */
+@font-face {
+  font-family: 'app-icons';
+  src: url('../assets/nano-icons/nanoicons/app-icons.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  /* Icon glyphs have no sensible fallback, so never swap in one. */
+  font-display: block;
+}
+
 /* Buttons and inputs have a font set by UA, so we'll have to reset that */
 button,
 input,

@@ -34,23 +34,17 @@ import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
-  Bell_Filled_Corner0_Rounded as BellFilled,
-  Bell_Stroke2_Corner0_Rounded as Bell,
-} from '#/components/icons/Bell'
-import {CircleCheck_Stroke2_Corner0_Rounded as CircleCheckIcon} from '#/components/icons/CircleCheck'
-import {
-  HomeOpen_Filled_Corner0_Rounded as HomeFilled,
-  HomeOpen_Stoke2_Corner0_Rounded as Home,
-} from '#/components/icons/HomeOpen'
-import {Inbox_Stroke2_Corner2_Rounded as InboxIcon} from '#/components/icons/Inbox'
-import {
-  MagnifyingGlass_Filled_Stroke2_Corner0_Rounded as MagnifyingGlassFilled,
-  MagnifyingGlass_Stroke2_Corner0_Rounded as MagnifyingGlass,
-} from '#/components/icons/MagnifyingGlass'
-import {
-  Message_Stroke2_Corner0_Rounded as Message,
-  Message_Stroke2_Corner0_Rounded_Filled as MessageFilled,
-} from '#/components/icons/Message'
+  BellFilledIcon as BellFilled,
+  BellIcon as Bell,
+  CircleCheckIcon,
+  HomeFilledIcon as HomeFilled,
+  HomeIcon as Home,
+  InboxIcon,
+  MessageFilledIcon as MessageFilled,
+  MessageIcon as Message,
+  SearchFilledIcon as MagnifyingGlassFilled,
+  SearchIcon as MagnifyingGlass,
+} from '#/components/icons/nano'
 import * as Menu from '#/components/Menu'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'

@@ -7,9 +7,9 @@ import Animated, {
 
 import {useTheme} from '#/alf'
 import {
-  Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
-  Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
-} from '#/components/icons/Heart2'
+  HeartFilledIcon as HeartIconFilled,
+  HeartIcon as HeartIconOutline,
+} from '#/components/icons/nano'
 
 const keyframe = new Keyframe({
   0: {
