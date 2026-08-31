@@ -134,7 +134,7 @@ Tab A sends refresh token A to the PDS
 Tab A receives successor generation B
 ```
 
-Before committing the response, Tab A acquires the credential lock and synchronously rereads localStorage. The source of truth may have changed while its network request was in flight.
+Before committing the response, `writeSession()` acquires the persisted-storage lock and synchronously rereads localStorage. The source of truth may have changed while the network request was in flight.
 
 ### Case 1: nothing else changed
 
@@ -276,16 +276,14 @@ Tab A plans:  write version 9
 Tab B plans:  write version 9
 ```
 
-Network refreshes do not run while holding a Web Lock. A refresh captures the generation it uses, performs the network request, and acquires the lock only to reconcile and commit its result:
+Network refreshes do not run while holding a Web Lock. A refresh captures the generation it uses and performs the network request first. The resulting session mutation is then passed to `writeSession()`, which owns the lock around reconciliation and persistence:
 
-```ts
-const baseRefreshJti = getRefreshJti(session.refreshJwt)
-const refreshed = await refreshSession()
-
-await navigator.locks.request('bsky-persisted-storage', async () => {
-  const latest = readAccountFromLocalStorage(did)
-  // Commit only if latest is active and still has baseRefreshJti.
-})
+```text
+Capture refresh generation A
+Perform network refresh A -> B
+Call writeSession with base A and result B
+writeSession acquires the persisted-storage lock
+writeSession rereads, conditionally merges, and persists
 ```
 
 This avoids holding a cross-tab lock over network I/O. Multiple refresh requests may be in flight concurrently; server-side convergence and the generation-specific conditional commit make their results safe.

@@ -1,5 +1,3 @@
-import {type PersistedApi} from './types'
-
 export function runWithPersistedStorageLock<T>({
   operation,
 }: {
@@ -15,4 +13,3 @@ export function runWithPersistedStorageLock<T>({
     )
   }
 }
-runWithPersistedStorageLock satisfies PersistedApi['runWithPersistedStorageLock']

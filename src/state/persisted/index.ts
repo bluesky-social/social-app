@@ -16,10 +16,6 @@ import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
 export type {SessionCredentialMutation} from './session-merge'
-export {
-  runWithPersistedStorageLock as runWithCredentialLock,
-  runWithPersistedStorageLock,
-} from './storage-lock'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -78,6 +74,7 @@ export function write<K extends keyof Schema>(
 }
 write satisfies PersistedApi['write']
 
+/** Queue a conditional session merge with other root storage writes. */
 export function writeSession({
   nextSession,
   credentialMutations,

@@ -77,31 +77,21 @@ No action. This whole-root localStorage read-modify-write race predates the vers
 
 Compatibility reference: [MDN `Navigator.locks`](https://developer.mozilla.org/docs/Web/API/Navigator/locks).
 
-## 3. Enforce the session lock invariant
+## 3. Keep lock ownership inside persistence
 
 ### Problem
 
-`writeSession()` performs the conditional session read-modify-write but does not acquire the persisted-storage lock itself. Current session persistence callsites run it inside `runWithCredentialLock()`, which aliases the root storage lock, but this is a convention rather than an enforced API invariant.
+`writeSession()` previously relied on every caller to enter the persisted-storage lock before dispatching a session action. The lock ownership was transitive and invisible at the write API, so a future direct caller could silently bypass serialization.
 
-The lock cannot simply be added inside `writeSession()` while callers retain the outer lock because Web Locks are not reentrant. A nested request for the same exclusive lock would deadlock.
+### Resolution
 
-A future caller could accidentally do this:
+`writeSession()` now owns the persisted-storage lock on web. Its lock callback contains exactly the shared-state commit:
 
-```ts
-await persisted.writeSession({
-  nextSession,
-  credentialMutations,
-})
-```
+1. read the authoritative root from localStorage;
+2. conditionally merge the session mutation;
+3. write the updated root; and
+4. broadcast the committed update.
 
-without first entering the root lock.
+Session callsites no longer acquire the lock. Network requests, reducer work, expiry rescue, and local bundle reconciliation remain outside it. Native retains its existing serialized AsyncStorage queue inside `writeSession()`.
 
-### Possible direction
-
-Potential enforcement options include:
-
-1. Add a development assertion tracking whether the current realm is inside `runWithPersistedStorageLock()`.
-2. Expose the unlocked commit only through a capability passed to the lock callback.
-3. Move lock ownership into a higher-level session transaction API that performs the authoritative read, reconciliation, and write together.
-
-Any enforcement should preserve the existing requirement that network refreshes happen outside the lock.
+This makes every call to `writeSession()` safe by construction, avoids non-reentrant nested Web Locks, and keeps the lock scoped to the operation that actually needs cross-tab exclusion.

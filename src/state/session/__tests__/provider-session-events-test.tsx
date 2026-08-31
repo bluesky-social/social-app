@@ -49,8 +49,6 @@ jest.mock('#/state/persisted', () => ({
     mockPersisted.latest = committed
     return Promise.resolve(committed)
   },
-  runWithCredentialLock: ({operation}: {operation: () => unknown}) =>
-    Promise.resolve(operation()),
   onUpdate: (_key: 'session', callback: (value: Schema['session']) => void) => {
     mockPersistedListeners.push(callback)
     return () => {}

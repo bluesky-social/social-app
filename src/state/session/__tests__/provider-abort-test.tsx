@@ -17,8 +17,6 @@ jest.mock('#/state/persisted', () => {
     readLatest: () => defaults.session,
     writeSession: ({nextSession}: {nextSession: typeof defaults.session}) =>
       Promise.resolve(nextSession),
-    runWithCredentialLock: ({operation}: {operation: () => unknown}) =>
-      Promise.resolve(operation()),
     onUpdate: () => () => {},
   }
 })

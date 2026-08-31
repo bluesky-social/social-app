@@ -161,7 +161,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const onSessionChangeRef = useRef<OnSessionChange | null>(null)
 
   const onSessionChange = useCallback(
-    (
+    async (
       bundle: SessionBundle,
       accountDid: string,
       sessionEvent: AtpSessionEvent,
@@ -172,164 +172,159 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           ? bundle.session.session.refreshJwt
           : sessionData?.refreshJwt
 
-      return persistedSession.runWithCredentialLock({
-        operation: async () => {
-          /*
-           * Only the live bundle may reset the expiry-rescue bookkeeping: a stale
-           * bundle's late update would otherwise clear the failed-generation set
-           * that bounds the rescue loop. (Its dispatch below is separately dropped
-           * by the reducer's identity guard.)
-           */
-          if (
-            sessionEvent === 'update' &&
-            sessionData &&
-            (store.getState().currentBundleState.bundle as unknown as
-              SessionBundle | PublicSessionBundle) === bundle
-          ) {
-            failedExpiryTokensRef.current.get(accountDid)?.clear()
-          }
+      /*
+       * Only the live bundle may reset the expiry-rescue bookkeeping: a stale
+       * bundle's late update would otherwise clear the failed-generation set
+       * that bounds the rescue loop. (Its dispatch below is separately dropped
+       * by the reducer's identity guard.)
+       */
+      if (
+        sessionEvent === 'update' &&
+        sessionData &&
+        (store.getState().currentBundleState.bundle as unknown as
+          SessionBundle | PublicSessionBundle) === bundle
+      ) {
+        failedExpiryTokensRef.current.get(accountDid)?.clear()
+      }
 
-          /*
-           * PasswordSession invokes its hooks before updating its live getter. Use
-           * the delivered payload so a refresh persists the newly rotated tokens.
-           *
-           * A refresh payload carries no didDoc unless the server sends one, so the
-           * stored account's `pdsUrl` is threaded in as the fallback. Without it the
-           * refresh would persist `pdsUrl: undefined` and the next cold start would
-           * route pre-refresh requests to the entryway instead of the PDS.
-           */
-          const refreshedAccount =
-            sessionEvent === 'update' && sessionData
-              ? sessionDataToSessionAccount(
-                  sessionData,
-                  sessionData.service,
-                  store.getState().accounts.find(a => a.did === accountDid)
-                    ?.pdsUrl,
-                )
-              : undefined
-
-          /*
-           * A stale tab may expire a token after another tab has already rotated it.
-           * Prefer a newer persisted or reducer generation over logging every tab
-           * out. Failed generations are recorded and bounded to guarantee that a
-           * repeatedly expiring session eventually falls through to logout.
-           */
-          if (sessionEvent === 'expired') {
-            const current = store.getState()
-            const currentBundle = current.currentBundleState
-              .bundle as unknown as SessionBundle | PublicSessionBundle
-            const dyingRefreshJwt = sessionData?.refreshJwt
-            // Stale bundle events are handled by the reducer's identity guard.
-            if (
-              currentBundle === bundle &&
-              current.currentBundleState.did === accountDid &&
-              dyingRefreshJwt
-            ) {
-              let failedSet = failedExpiryTokensRef.current.get(accountDid)
-              if (!failedSet) {
-                failedSet = new Set()
-                failedExpiryTokensRef.current.set(accountDid, failedSet)
-              }
-              failedSet.add(dyingRefreshJwt)
-
-              const persistedCandidate = persistedSession
-                .readLatest('session')
-                .accounts.find(a => a.did === accountDid)
-              const reducerCandidate = current.accounts.find(
-                a => a.did === accountDid,
-              )
-              const candidate = pickExpiryRescueCandidate({
-                dyingRefreshJwt,
-                candidates: [persistedCandidate, reducerCandidate],
-                failedRefreshJwts: failedSet,
-              })
-
-              if (candidate) {
-                const rebuilt = createSessionBundleFromStoredAccount(
-                  candidate,
-                  onSessionChangeRef.current!,
-                )
-                if (rebuilt) {
-                  await store.dispatch({
-                    type: 'replaced-current-bundle',
-                    newBundle: rebuilt.bundle,
-                    newAccount: rebuilt.account,
-                  })
-                  return
-                }
-              }
-            }
-          }
-
-          // Only the current bundle may report that its session was dropped.
-          if (
-            sessionEvent === 'expired' &&
-            store.getState().currentBundleState.bundle === bundle
-          ) {
-            emitSessionDropped()
-          }
-
-          const credentialMutations: SessionCredentialMutation[] = []
-          if (sessionEvent === 'update' && refreshedAccount) {
-            credentialMutations.push({
-              type: 'refresh',
-              accountDid,
-              baseRefreshJwt,
-              resultRefreshJwt: refreshedAccount.refreshJwt,
-            })
-          } else if (sessionEvent === 'expired') {
-            credentialMutations.push({
-              type: 'expire',
-              accountDid,
-              baseRefreshJwt,
-            })
-          }
-
-          // Bundle identity prevents stale sessions from changing the active account.
-          const committedSession = await store.dispatch(
-            {
-              type: 'received-session-event',
-              bundle,
-              refreshedAccount,
-              accountDid,
-              sessionEvent,
-            },
-            credentialMutations,
-          )
-
-          if (sessionEvent === 'update' && committedSession) {
-            const committedAccount = committedSession.accounts.find(
-              account => account.did === accountDid,
+      /*
+       * PasswordSession invokes its hooks before updating its live getter. Use
+       * the delivered payload so a refresh persists the newly rotated tokens.
+       *
+       * A refresh payload carries no didDoc unless the server sends one, so the
+       * stored account's `pdsUrl` is threaded in as the fallback. Without it the
+       * refresh would persist `pdsUrl: undefined` and the next cold start would
+       * route pre-refresh requests to the entryway instead of the PDS.
+       */
+      const refreshedAccount =
+        sessionEvent === 'update' && sessionData
+          ? sessionDataToSessionAccount(
+              sessionData,
+              sessionData.service,
+              store.getState().accounts.find(a => a.did === accountDid)?.pdsUrl,
             )
-            if (
-              committedAccount?.refreshJwt &&
-              committedAccount.refreshJwt !== refreshedAccount?.refreshJwt &&
-              store.getState().currentBundleState.bundle === bundle
-            ) {
-              const rebuilt = createSessionBundleFromStoredAccount(
-                committedAccount,
-                onSessionChangeRef.current!,
-              )
-              if (rebuilt) {
-                await store.dispatch({
-                  type: 'replaced-current-bundle',
-                  newBundle: rebuilt.bundle,
-                  newAccount: rebuilt.account,
-                })
-              }
-            } else if (
-              !committedAccount?.refreshJwt &&
-              store.getState().currentBundleState.bundle === bundle
-            ) {
+          : undefined
+
+      /*
+       * A stale tab may expire a token after another tab has already rotated it.
+       * Prefer a newer persisted or reducer generation over logging every tab
+       * out. Failed generations are recorded and bounded to guarantee that a
+       * repeatedly expiring session eventually falls through to logout.
+       */
+      if (sessionEvent === 'expired') {
+        const current = store.getState()
+        const currentBundle = current.currentBundleState.bundle as unknown as
+          SessionBundle | PublicSessionBundle
+        const dyingRefreshJwt = sessionData?.refreshJwt
+        // Stale bundle events are handled by the reducer's identity guard.
+        if (
+          currentBundle === bundle &&
+          current.currentBundleState.did === accountDid &&
+          dyingRefreshJwt
+        ) {
+          let failedSet = failedExpiryTokensRef.current.get(accountDid)
+          if (!failedSet) {
+            failedSet = new Set()
+            failedExpiryTokensRef.current.set(accountDid, failedSet)
+          }
+          failedSet.add(dyingRefreshJwt)
+
+          const persistedCandidate = persistedSession
+            .readLatest('session')
+            .accounts.find(a => a.did === accountDid)
+          const reducerCandidate = current.accounts.find(
+            a => a.did === accountDid,
+          )
+          const candidate = pickExpiryRescueCandidate({
+            dyingRefreshJwt,
+            candidates: [persistedCandidate, reducerCandidate],
+            failedRefreshJwts: failedSet,
+          })
+
+          if (candidate) {
+            const rebuilt = createSessionBundleFromStoredAccount(
+              candidate,
+              onSessionChangeRef.current!,
+            )
+            if (rebuilt) {
               await store.dispatch({
-                type: 'synced-accounts',
-                syncedAccounts: committedSession.accounts,
-                syncedCurrentDid: committedSession.currentAccount?.did,
+                type: 'replaced-current-bundle',
+                newBundle: rebuilt.bundle,
+                newAccount: rebuilt.account,
               })
+              return
             }
           }
+        }
+      }
+
+      // Only the current bundle may report that its session was dropped.
+      if (
+        sessionEvent === 'expired' &&
+        store.getState().currentBundleState.bundle === bundle
+      ) {
+        emitSessionDropped()
+      }
+
+      const credentialMutations: SessionCredentialMutation[] = []
+      if (sessionEvent === 'update' && refreshedAccount) {
+        credentialMutations.push({
+          type: 'refresh',
+          accountDid,
+          baseRefreshJwt,
+          resultRefreshJwt: refreshedAccount.refreshJwt,
+        })
+      } else if (sessionEvent === 'expired') {
+        credentialMutations.push({
+          type: 'expire',
+          accountDid,
+          baseRefreshJwt,
+        })
+      }
+
+      // Bundle identity prevents stale sessions from changing the active account.
+      const committedSession = await store.dispatch(
+        {
+          type: 'received-session-event',
+          bundle,
+          refreshedAccount,
+          accountDid,
+          sessionEvent,
         },
-      })
+        credentialMutations,
+      )
+
+      if (sessionEvent === 'update' && committedSession) {
+        const committedAccount = committedSession.accounts.find(
+          account => account.did === accountDid,
+        )
+        if (
+          committedAccount?.refreshJwt &&
+          committedAccount.refreshJwt !== refreshedAccount?.refreshJwt &&
+          store.getState().currentBundleState.bundle === bundle
+        ) {
+          const rebuilt = createSessionBundleFromStoredAccount(
+            committedAccount,
+            onSessionChangeRef.current!,
+          )
+          if (rebuilt) {
+            await store.dispatch({
+              type: 'replaced-current-bundle',
+              newBundle: rebuilt.bundle,
+              newAccount: rebuilt.account,
+            })
+          }
+        } else if (
+          !committedAccount?.refreshJwt &&
+          store.getState().currentBundleState.bundle === bundle
+        ) {
+          await store.dispatch({
+            type: 'synced-accounts',
+            syncedAccounts: committedSession.accounts,
+            syncedCurrentDid: committedSession.currentAccount?.did,
+          })
+        }
+      }
     },
     [store],
   )
@@ -358,23 +353,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      await persistedSession.runWithCredentialLock({
-        operation: () =>
-          store.dispatch(
-            {
-              type: 'switched-to-account',
-              newBundle: bundle,
-              newAccount: account,
-            },
-            [
-              {
-                type: 'login',
-                accountDid: account.did,
-                resultRefreshJwt: account.refreshJwt,
-              },
-            ],
-          ),
-      })
+      await store.dispatch(
+        {
+          type: 'switched-to-account',
+          newBundle: bundle,
+          newAccount: account,
+        },
+        [
+          {
+            type: 'login',
+            accountDid: account.did,
+            resultRefreshJwt: account.refreshJwt,
+          },
+        ],
+      )
       ax.metric('account:create:success', metrics, {
         session: utils.accountToSessionMetadata(account),
       })
@@ -401,23 +393,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      await persistedSession.runWithCredentialLock({
-        operation: () =>
-          store.dispatch(
-            {
-              type: 'switched-to-account',
-              newBundle: bundle,
-              newAccount: account,
-            },
-            [
-              {
-                type: 'login',
-                accountDid: account.did,
-                resultRefreshJwt: account.refreshJwt,
-              },
-            ],
-          ),
-      })
+      await store.dispatch(
+        {
+          type: 'switched-to-account',
+          newBundle: bundle,
+          newAccount: account,
+        },
+        [
+          {
+            type: 'login',
+            accountDid: account.did,
+            resultRefreshJwt: account.refreshJwt,
+          },
+        ],
+      )
       ax.metric(
         'account:loggedIn',
         {logContext, withPassword: true},
@@ -441,13 +430,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const prevState = store.getState()
       const accountDid = prevState.currentBundleState.did
       if (accountDid) {
-        void persistedSession
-          .runWithCredentialLock({
-            operation: () =>
-              store.dispatch({type: 'logged-out-current-account', accountDid}, [
-                {type: 'logout', accountDid},
-              ]),
-          })
+        void store
+          .dispatch({type: 'logged-out-current-account', accountDid}, [
+            {type: 'logout', accountDid},
+          ])
           .catch(() => {})
       }
       ax.metric(
@@ -489,17 +475,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             .accounts.map(account => account.did),
         ]),
       ]
-      void persistedSession
-        .runWithCredentialLock({
-          operation: () =>
-            store.dispatch(
-              {type: 'logged-out-every-account'},
-              accountDids.map(accountDid => ({
-                type: 'logout' as const,
-                accountDid,
-              })),
-            ),
-        })
+      void store
+        .dispatch(
+          {type: 'logged-out-every-account'},
+          accountDids.map(accountDid => ({
+            type: 'logout' as const,
+            accountDid,
+          })),
+        )
         .catch(() => {})
       ax.metric(
         'account:loggedOut',
@@ -556,24 +539,21 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      const committedSession = await persistedSession.runWithCredentialLock({
-        operation: () =>
-          store.dispatch(
-            {
-              type: 'switched-to-account',
-              newBundle: bundle,
-              newAccount: account,
-            },
-            [
-              {
-                type: 'refresh',
-                accountDid: account.did,
-                baseRefreshJwt: latestStoredAccount.refreshJwt,
-                resultRefreshJwt: account.refreshJwt,
-              },
-            ],
-          ),
-      })
+      const committedSession = await store.dispatch(
+        {
+          type: 'switched-to-account',
+          newBundle: bundle,
+          newAccount: account,
+        },
+        [
+          {
+            type: 'refresh',
+            accountDid: account.did,
+            baseRefreshJwt: latestStoredAccount.refreshJwt,
+            resultRefreshJwt: account.refreshJwt,
+          },
+        ],
+      )
       const committedAccount = committedSession?.accounts.find(
         candidate => candidate.did === account.did,
       )
@@ -625,21 +605,18 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     /* getSession targets the PDS; only the persisted account fields are patched. */
     const data = await bundle.pdsClient.call(com.atproto.server.getSession, {})
     if (signal.aborted) return
-    await persistedSession.runWithCredentialLock({
-      operation: () =>
-        store.dispatch({
-          type: 'partial-refresh-session',
-          /*
-           * Read the did off the response rather than the session: the bundle may
-           * have been disposed while the request was in flight, and the live
-           * getters throw in that state.
-           */
-          accountDid: data.did,
-          patch: {
-            emailConfirmed: data.emailConfirmed,
-            emailAuthFactor: data.emailAuthFactor,
-          },
-        }),
+    await store.dispatch({
+      type: 'partial-refresh-session',
+      /*
+       * Read the did off the response rather than the session: the bundle may
+       * have been disposed while the request was in flight, and the live
+       * getters throw in that state.
+       */
+      accountDid: data.did,
+      patch: {
+        emailConfirmed: data.emailConfirmed,
+        emailAuthFactor: data.emailAuthFactor,
+      },
     })
   }, [store, cancelPendingTask])
 
@@ -711,17 +688,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         account: redactAccount(account),
       })
       cancelPendingTask()
-      void persistedSession
-        .runWithCredentialLock({
-          operation: () =>
-            store.dispatch(
-              {
-                type: 'removed-account',
-                accountDid: account.did,
-              },
-              [{type: 'remove', accountDid: account.did}],
-            ),
-        })
+      void store
+        .dispatch(
+          {
+            type: 'removed-account',
+            accountDid: account.did,
+          },
+          [{type: 'remove', accountDid: account.did}],
+        )
         .catch(() => {})
       addSessionDebugLog({
         type: 'method:end',

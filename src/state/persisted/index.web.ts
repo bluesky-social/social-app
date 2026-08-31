@@ -17,10 +17,6 @@ import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
 export type {SessionCredentialMutation} from './session-merge'
-export {
-  runWithPersistedStorageLock as runWithCredentialLock,
-  runWithPersistedStorageLock,
-} from './storage-lock'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -112,8 +108,8 @@ export function write<K extends keyof Schema>(
 }
 write satisfies PersistedApi['write']
 
-// eslint-disable-next-line @typescript-eslint/require-await
-export async function writeSession({
+/** Commit a conditional session merge while holding the root storage lock. */
+export function writeSession({
   nextSession,
   credentialMutations,
   currentAccountDid,
@@ -122,19 +118,23 @@ export async function writeSession({
   credentialMutations: SessionCredentialMutation[]
   currentAccountDid?: string
 }): Promise<Schema['session']> {
-  const stored = readFromStorage() ?? _state
-  const session = applySessionUpdate({
-    storedSession: stored.session,
-    nextSession,
-    credentialMutations,
-    currentAccountDid,
-  })
-  const updated = normalizeData({...stored, session})
-  writeToStorage(updated)
-  _state = updated
+  return runWithPersistedStorageLock({
+    operation: () => {
+      const stored = readFromStorage() ?? _state
+      const session = applySessionUpdate({
+        storedSession: stored.session,
+        nextSession,
+        credentialMutations,
+        currentAccountDid,
+      })
+      const updated = normalizeData({...stored, session})
+      writeToStorage(updated)
+      _state = updated
 
-  broadcastUpdate({key: 'session'})
-  return session
+      broadcastUpdate({key: 'session'})
+      return session
+    },
+  })
 }
 writeSession satisfies PersistedApi['writeSession']
 

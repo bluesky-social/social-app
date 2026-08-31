@@ -21,9 +21,6 @@ export type PersistedApi = {
     /** Omit to preserve the current account read from persisted storage. */
     currentAccountDid?: string
   }): Promise<Schema['session']>
-  runWithPersistedStorageLock<T>(args: {
-    operation: () => T | Promise<T>
-  }): Promise<T>
   onUpdate<K extends keyof Schema>(
     key: K,
     cb: (v: Schema[K]) => void,
