@@ -8,7 +8,7 @@ export function runWithSessionCredentialLock<T>({
   accountDids: string[]
   operation: () => T | Promise<T>
 }): Promise<T> {
-  const lockManager = navigator.locks
+  const lockManager = getLockManager()
   if (!lockManager) {
     try {
       return Promise.resolve(operation())
@@ -34,4 +34,12 @@ export function runWithSessionCredentialLock<T>({
   }
 
   return run(0)
+}
+
+function getLockManager(): LockManager | undefined {
+  if (typeof navigator === 'undefined' || !('locks' in navigator)) {
+    return undefined
+  }
+  const lockManager = navigator.locks
+  return typeof lockManager?.request === 'function' ? lockManager : undefined
 }

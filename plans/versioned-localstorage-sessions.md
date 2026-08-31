@@ -287,6 +287,8 @@ All credential-changing commits use the same per-account lock:
 
 Because all persisted values share one localStorage blob, every write also takes a root persisted-storage lock. The root lock prevents an unrelated preference write from racing the session read-modify-write; the per-account lock expresses credential ownership and gives account operations a consistent order.
 
+Feature-detect the Web Locks API. If `navigator.locks.request` is unavailable, run the operation without a lock rather than failing startup or session operations. Generation-specific conditional commits still reject stale work in this fallback mode, but localStorage read-modify-write is not fully serialized across tabs.
+
 If Tab A holds the locks, Tab B waits. Once Tab A writes and releases them, Tab B acquires them and rereads Tab A's new localStorage state before deciding what to commit.
 
 The complete refresh flow is:
