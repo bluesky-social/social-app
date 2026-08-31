@@ -205,7 +205,6 @@ async function onBroadcastMessage({data}: MessageEvent) {
 
 function broadcastUpdate({key}: {key: keyof Schema}) {
   broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
-  broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
 }
 
 function writeToStorage(value: Schema) {
