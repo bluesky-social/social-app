@@ -226,7 +226,7 @@ Tab A action:        broadcast update notification
 
 Broadcasting after a failed write would tell Tab B to reread localStorage while it still contains `(7, A)`, spreading the stale generation instead of the new one.
 
-After successfully writing and verifying localStorage, notify other tabs:
+After successfully writing localStorage, notify other tabs:
 
 ```ts
 broadcast.postMessage({
@@ -310,7 +310,7 @@ Read authoritative localStorage state
 Conditionally commit against active base jti
    |
    v
-Write and verify localStorage
+Write localStorage
    |
    +-- failure -> report or retry; do not broadcast
    |

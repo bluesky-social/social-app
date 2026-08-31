@@ -208,9 +208,6 @@ function writeToStorage(value: Schema) {
   }
   try {
     localStorage.setItem(BSKY_STORAGE, rawData)
-    if (localStorage.getItem(BSKY_STORAGE) !== rawData) {
-      throw new Error('Failed to verify persisted state')
-    }
   } catch (error) {
     logger.error('persisted state: failed writing root state to storage', {
       message: error,
