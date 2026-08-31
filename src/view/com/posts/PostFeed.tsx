@@ -1077,23 +1077,22 @@ let PostFeed = ({
 
         onPostSeen(post)
 
-        // Track one view per slice, attributed to the post selected by the feed.
-        const feedPostItem = slice.items.find(
-          item => item.uri === slice.feedPostUri,
-        )
+        // Track the post selected by the feed once it is actually visible.
         if (
-          indexInSlice === 0 &&
-          feedPostItem &&
-          !seenPostUrisRef.current.has(feedPostItem.uri)
+          post.uri === slice.feedPostUri &&
+          !seenPostUrisRef.current.has(post.uri)
         ) {
-          seenPostUrisRef.current.add(feedPostItem.uri)
+          seenPostUrisRef.current.add(post.uri)
 
-          const position = getPostPosition('sliceItem', item.key)
+          const position = getPostPosition(
+            'sliceItem',
+            slice.items[0]._reactKey,
+          )
 
           ax.metric('post:view', {
-            uri: feedPostItem.uri,
-            authorDid: feedPostItem.post.author.did,
-            isReply: !!feedPostItem.record.reply,
+            uri: post.uri,
+            authorDid: post.author.did,
+            isReply: !!postItem.record.reply,
             logContext: 'FeedItem',
             feedDescriptor: feedFeedback.feedDescriptor || feed,
             position,
