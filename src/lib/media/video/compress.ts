@@ -44,8 +44,6 @@ export async function compressVideo(
   }
 
   // Pre-check the threshold ourselves so we can label the skip in telemetry.
-  // rnc would do the same skip internally via minimumFileSizeForCompress, but
-  // that path is invisible to us.
   const isAcceptableFormat = SUPPORTED_MIME_TYPES.includes(
     file.mimeType as SupportedMimeTypes,
   )
