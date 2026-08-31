@@ -172,9 +172,18 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
    * Absolute paths of barrel directories (e.g. <root>/src/lexicons). Matched
    * against the import specifier after resolving it relative to the importing
    * file, because babel-plugin-module-resolver has already turned '#/lexicons'
-   * into a relative path by the time this plugin runs.
+   * into a relative path by the time this plugin runs. Relative entries are
+   * resolved against Babel's root, not process.cwd(): cwd depends on how the
+   * host process (Metro worker, Jest, an IDE runner) was launched, and a wrong
+   * base would silently disable every rewrite.
    */
-  const roots = new Set((options.roots ?? []).map(r => path.resolve(r)))
+  let roots = null
+  function resolveRoots(state) {
+    if (!roots) {
+      const base = state.file.opts.root ?? state.cwd
+      roots = new Set((options.roots ?? []).map(r => path.resolve(base, r)))
+    }
+  }
   const debug = !!process.env.BSKY_LEXICON_IMPORTS_DEBUG
   const stats = {files: 0, rewrites: 0, bails: 0}
 
@@ -244,6 +253,7 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
         exit(programPath, state) {
           const filename = state.filename
           if (!filename) return
+          resolveRoots(state)
           const targets = []
           for (const stmt of programPath.get('body')) {
             if (!stmt.isImportDeclaration()) continue

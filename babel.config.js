@@ -58,7 +58,8 @@ module.exports = function (api) {
        */
       [
         './plugins/babel-plugin-lexicon-leaf-imports',
-        {roots: ['./src/lexicons']},
+        // Absolute path: the plugin must not depend on the host process's cwd.
+        {roots: [require('path').join(__dirname, 'src/lexicons')]},
       ],
 
       // cannot use `env` field because it will put them after
