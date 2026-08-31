@@ -62,8 +62,10 @@ Tab B: (7, A) -> (8, B')
 Therefore:
 
 - Use the refresh JWT's `jti` for generation identity.
-- Use a locally persisted monotonic version for generation ordering.
+- Use a locally persisted monotonic version for sequencing, invalidations, and tombstone ordering.
 - Do not use JWT `iat` as the generation.
+
+The persisted `(credentialVersion, refreshJti)` pair describes the credential state, but conditional commits do not compare both fields as a CAS key. They establish eligibility from the current status and the `jti` of the refresh token the operation actually used. If that generation is still active, the accepted mutation writes the next local version.
 
 A persisted credential could look like:
 
@@ -77,7 +79,7 @@ type PersistedCredential = {
 }
 ```
 
-`credentialVersion` should advance only when credential state changes. Metadata changes, account ordering, and current-account selection are not credential generations.
+`credentialVersion` advances when an accepted mutation establishes a new credential-ordering boundary: a new refresh `jti`, login, expiration, logout, or removal. Repeating an explicit logout advances the tombstone even if the account is already logged out. Concurrent refresh responses with the same successor `jti` keep the existing version. Metadata changes, account ordering, and current-account selection do not advance it.
 
 ## 2. Make localStorage authoritative
 
@@ -89,14 +91,16 @@ Tab B memory:       (7, A)  <- stale
 Shared localStorage: (8, B)  <- authoritative
 ```
 
-Before Tab B uses its in-memory token, it must read localStorage and adopt `(8, B)`.
+The app does not preflight localStorage before every authenticated request. A request already queued by a frozen tab may leave with a stale access token and trigger an automatic refresh before queued invalidations are processed. That is acceptable as long as the refresh result or expiration cannot mutate shared state without reconciliation.
 
 Every tab must synchronously read localStorage:
 
-- before using a refresh token;
-- before writing refreshed credentials;
+- before explicitly resuming a persisted session;
+- before committing refreshed credentials;
 - before treating `ExpiredToken` as a logout; and
 - when notified that another tab updated the session.
+
+If a queued stale refresh succeeds, its result is conditionally committed against the generation it used. If it expires, the expiration handler reads localStorage and adopts a healthy newer generation. The original queued request may fail, but subsequent requests use the rebuilt latest session. Correctness does not depend on processing a broadcast before the queued request.
 
 Tabs must not publish complete in-memory session snapshots as authoritative state. Metadata updates should patch metadata onto a fresh localStorage read without touching credential fields.
 
@@ -110,15 +114,15 @@ Tab B memory:        (7, A)
 Shared localStorage: (7, A)
 ```
 
-Tab A synchronously reads `(7, A)` from localStorage and captures it as the base generation for its refresh:
+Tab A captures refresh generation `A` from the session performing the request. An explicit resume first rereads localStorage; an automatic refresh may begin from the live in-memory bundle before a queued invalidation is processed:
 
 ```text
-Tab A base: (7, A)
+Tab A base: generation A
 Tab A sends refresh token A to the PDS
 Tab A receives successor generation B
 ```
 
-Before committing the response, Tab A synchronously rereads localStorage. The source of truth may have changed while its network request was in flight.
+Before committing the response, Tab A acquires the credential lock and synchronously rereads localStorage. The source of truth may have changed while its network request was in flight.
 
 ### Case 1: nothing else changed
 
@@ -151,6 +155,8 @@ Tab A result:        based on stale generation A
 
 Tab A action:        do not overwrite localStorage
 ```
+
+Commit eligibility is generation-specific: the current persisted credential must still be `active` and its `refreshJti` must match the base refresh token's `jti`. `credentialVersion` records the accepted ordering but is not itself part of this comparison.
 
 This makes concurrent refreshes harmless while preventing a suspended Tab A from rolling back state already advanced by Tab B.
 
@@ -193,7 +199,7 @@ Tab A receives a refresh result based on (8, B)
 Tab A rereads localStorage and preserves Tab B's version 9 tombstone
 ```
 
-That prevents Tab A's delayed refresh from resurrecting credentials after Tab B's explicit logout.
+That prevents Tab A's delayed refresh from resurrecting credentials after Tab B's explicit logout. Each accepted explicit logout advances the tombstone, including a repeated logout of an already logged-out account.
 
 Account removal must create a versioned removal tombstone. Stale tabs preserve that tombstone rather than restoring the removed account. An explicit fresh login is the one operation allowed to resurrect it: the login advances the version and replaces the removal tombstone with active credentials.
 
@@ -257,38 +263,48 @@ Tab A plans:  write version 9
 Tab B plans:  write version 9
 ```
 
-Use a per-account Web Lock to serialize credential operations across cooperating tabs:
+Network refreshes do not run while holding a Web Lock. A refresh captures the generation it uses, performs the network request, and acquires the lock only to reconcile and commit its result:
 
 ```ts
+const baseRefreshJti = getRefreshJti(session.refreshJwt)
+const refreshed = await refreshSession()
+
 await navigator.locks.request(`bsky-session:${did}`, async () => {
   const latest = readAccountFromLocalStorage(did)
-  // Adopt latest, refresh or mutate it, then synchronously persist the result.
+  // Commit only if latest is active and still has baseRefreshJti.
 })
 ```
 
-If Tab A holds the lock, Tab B waits. Once Tab A writes and releases it, Tab B acquires the lock and rereads Tab A's new localStorage state before deciding what to do.
+This avoids holding a cross-tab lock over network I/O. Multiple refresh requests may be in flight concurrently; server-side convergence and the generation-specific conditional commit make their results safe.
 
-All credential-changing operations should use the same lock:
+All credential-changing commits use the same per-account lock:
 
-- refresh;
+- successful refresh reconciliation;
 - expiration;
 - logout;
 - account removal; and
 - login replacing an existing account.
 
-The complete flow is:
+Because all persisted values share one localStorage blob, every write also takes a root persisted-storage lock. The root lock prevents an unrelated preference write from racing the session read-modify-write; the per-account lock expresses credential ownership and gives account operations a consistent order.
+
+If Tab A holds the locks, Tab B waits. Once Tab A writes and releases them, Tab B acquires them and rereads Tab A's new localStorage state before deciding what to commit.
+
+The complete refresh flow is:
 
 ```text
-Web Lock
+Capture base refresh jti
+   |
+   v
+Perform network refresh without a lock
+   |
+   v
+Acquire root + per-account Web Locks
    |
    v
 Read authoritative localStorage state
    |
    v
-Operate against captured (version, jti)
-   |
-   v
-Reread and conditionally commit
+Conditionally commit against active base jti
    |
    v
 Write and verify localStorage
@@ -336,6 +352,6 @@ Partial client-side mitigations can narrow the window and handle ordinary storag
 - Schedule persistence as the first action after receiving B, before unrelated work.
 - Track the persistence promise for B and await it before an explicit refresh operation reports success.
 - Propagate AsyncStorage failures instead of swallowing them.
-- Retry a failed write with the latest in-memory session snapshot while the process is still alive.
+- Retry the same enqueued root-state snapshot once before propagating the storage failure.
 
 These measures improve durability during normal execution but cannot protect the interval in which the OS terminates the process after the server commits B and before the storage write completes.
