@@ -294,6 +294,37 @@ export function PostInteractionSettingsDialogControlledInner(
   )
 }
 
+/**
+ * Lives outside the component because the early `return []` inside a `useMemo`
+ * is memoization React Compiler cannot preserve.
+ */
+function getToggleGroupValues(settings: ThreadgateAllowUISetting[]): string[] {
+  const values: string[] = []
+  for (const setting of settings) {
+    switch (setting.type) {
+      case 'everybody':
+      case 'nobody':
+        // no granularity, early return with nothing
+        return []
+      case 'followers':
+        values.push('followers')
+        break
+      case 'following':
+        values.push('following')
+        break
+      case 'mention':
+        values.push('mention')
+        break
+      case 'list':
+        values.push(`list:${setting.list}`)
+        break
+      default:
+        break
+    }
+  }
+  return values
+}
+
 export function PostInteractionSettingsForm({
   canSave = true,
   onSave,
@@ -348,32 +379,7 @@ export function PostInteractionSettingsForm({
     v => v.type === 'list',
   ).length
 
-  const toggleGroupValues = useMemo(() => {
-    const values: string[] = []
-    for (const setting of threadgateAllowUISettings) {
-      switch (setting.type) {
-        case 'everybody':
-        case 'nobody':
-          // no granularity, early return with nothing
-          return []
-        case 'followers':
-          values.push('followers')
-          break
-        case 'following':
-          values.push('following')
-          break
-        case 'mention':
-          values.push('mention')
-          break
-        case 'list':
-          values.push(`list:${setting.list}`)
-          break
-        default:
-          break
-      }
-    }
-    return values
-  }, [threadgateAllowUISettings])
+  const toggleGroupValues = getToggleGroupValues(threadgateAllowUISettings)
 
   const toggleGroupOnChange = (values: string[]) => {
     const settings: ThreadgateAllowUISetting[] = []

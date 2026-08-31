@@ -382,11 +382,10 @@ function Feed() {
         }
       }
 
-      if (
-        updatedSources[0]?.source !== currentSources[0]?.source ||
-        updatedSources[1]?.source !== currentSources[1]?.source ||
-        updatedSources[2]?.source !== currentSources[2]?.source
-      ) {
+      const sourcesChanged = [0, 1, 2].some(
+        i => updatedSources[i]?.source !== currentSources[i]?.source,
+      )
+      if (sourcesChanged) {
         setCurrentSources(updatedSources)
       }
     },
@@ -659,10 +658,12 @@ function usePlaybackTelemetry({
 
   useEffect(() => {
     if (!active) return
-    telemetryRef.current ??= createPlaybackTelemetry({
-      surface: 'immersiveFeed',
-      presentation: 'video',
-    })
+    if (telemetryRef.current == null) {
+      telemetryRef.current = createPlaybackTelemetry({
+        surface: 'immersiveFeed',
+        presentation: 'video',
+      })
+    }
     const telemetry = telemetryRef.current
     const preloaded = player.status === 'readyToPlay'
     telemetry.activated({preloaded})

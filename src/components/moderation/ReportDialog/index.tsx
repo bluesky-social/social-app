@@ -92,7 +92,7 @@ export function ReportDialog(
     openCount: number
     videoTimestampSeconds?: number
   }>({openCount: 0})
-  const onOpen = useCallback(() => {
+  const onOpen = () => {
     const seconds =
       subject?.type === 'post' && subject.attributes.video
         ? reportDialogMetadata?.current.videoTimestampSeconds
@@ -105,7 +105,7 @@ export function ReportDialog(
       videoTimestampSeconds:
         seconds !== undefined && seconds >= 1 ? Math.floor(seconds) : undefined,
     }))
-  }, [reportDialogMetadata, subject])
+  }
   const propsOnClose = props.onClose
   const onClose = useCallback(() => {
     ax.metric('reportDialog:close', {})

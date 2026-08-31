@@ -30,6 +30,16 @@ const E_EMPTY_RESULT = 'Translation result is empty.'
 const E_INVALID_SOURCE_LANGUAGE = 'Invalid source language'
 
 /**
+ * Returns a copy of `obj` without `key`. A computed property in a destructuring
+ * pattern is syntax React Compiler cannot lower, so this stays out of the hook.
+ */
+function omitKey<T extends Record<string, unknown>>(obj: T, key: string): T {
+  const next = {...obj}
+  delete next[key]
+  return next
+}
+
+/**
  * Attempts on-device translation via @bsky.app/expo-translate-text.
  * Uses a lazy import to avoid crashing if the native module isn't linked into
  * the current build.
@@ -199,8 +209,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       setRefCounts(prev => {
         const newCount = (prev[key] ?? 1) - 1
         if (newCount <= 0) {
-          const {[key]: _, ...rest} = prev
-          return rest
+          return omitKey(prev, key)
         }
         return {...prev, [key]: newCount}
       })
