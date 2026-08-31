@@ -225,9 +225,7 @@ function broadcastUpdate({
 
 function writeToStorage(value: Schema) {
   const rawData = tryStringify(value)
-  if (!rawData) {
-    throw new Error('Failed to serialize persisted state')
-  }
+  if (!rawData) return
   try {
     localStorage.setItem(BSKY_STORAGE, rawData)
     if (localStorage.getItem(BSKY_STORAGE) !== rawData) {
