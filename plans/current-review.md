@@ -17,7 +17,9 @@ What changed relative to `main`:
 
 **Severity: Medium**
 
-`resumeSession` (`index.tsx:509-591`) checks `signal.aborted` and the account entry before dispatching `switched-to-account`. After `await store.dispatch(...)` at line 542, however, it performs follow-up dispatches without rechecking either:
+**Status: Resolved.** `resumeSession` now rechecks both its abort signal and bundle identity after the awaited persistence commit. Focused tests cover logout and same-account cross-tab bundle replacement while that write is pending.
+
+`resumeSession` (`index.tsx:509-591`) originally checked `signal.aborted` and the account entry before dispatching `switched-to-account`. After `await store.dispatch(...)` at line 542, however, it performed follow-up dispatches without rechecking either:
 
 - `index.tsx:560-566`: `synced-accounts` with the potentially stale `committedSession`.
 - `index.tsx:568-579`: `replaced-current-bundle` with a newly built, armed bundle.

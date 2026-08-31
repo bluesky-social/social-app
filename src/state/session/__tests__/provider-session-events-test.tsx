@@ -24,10 +24,12 @@ const mockPersisted: {session: Schema['session']; latest: Schema['session']} = {
  * exists to catch.
  */
 const mockPersistedListeners: ((value: Schema['session']) => void)[] = []
+let mockWriteSessionGate: Promise<void> | undefined
+let mockWriteSessionStarted: (() => void) | undefined
 jest.mock('#/state/persisted', () => ({
   get: () => mockPersisted.session,
   readLatest: () => mockPersisted.latest,
-  writeSession: ({
+  writeSession: async ({
     nextSession,
     credentialMutations,
     currentAccountDid,
@@ -36,6 +38,10 @@ jest.mock('#/state/persisted', () => ({
     credentialMutations: import('#/state/persisted').SessionCredentialMutation[]
     currentAccountDid?: string
   }) => {
+    const started = mockWriteSessionStarted
+    mockWriteSessionStarted = undefined
+    started?.()
+    await mockWriteSessionGate
     const {
       applySessionUpdate,
     }: typeof import('#/state/persisted/session-merge') = require('#/state/persisted/session-merge')
@@ -47,7 +53,7 @@ jest.mock('#/state/persisted', () => ({
     })
     mockPersisted.session = committed
     mockPersisted.latest = committed
-    return Promise.resolve(committed)
+    return committed
   },
   onUpdate: (_key: 'session', callback: (value: Schema['session']) => void) => {
     mockPersistedListeners.push(callback)
@@ -285,6 +291,8 @@ beforeEach(() => {
   mockPersisted.session = {accounts: [], currentAccount: undefined}
   mockPersisted.latest = {accounts: [], currentAccount: undefined}
   mockPersistedListeners.length = 0
+  mockWriteSessionGate = undefined
+  mockWriteSessionStarted = undefined
   mockRebuilds.length = 0
   mockLogin.mockReset()
   mockResume.mockReset()
@@ -635,5 +643,98 @@ describe('cross-tab sync', () => {
     /* the superseded resume disposed its bundle rather than signing back in */
     expect(mockDisposeBundle).toHaveBeenCalledWith(resumedBundle)
     expect(mockRebuilds.length).toBe(0)
+  })
+
+  it('does not reconcile a resume after logout while its write is pending', async () => {
+    const account = makeAccount()
+    const bundle = makeBundle(account)
+    const {api, currentAccount, hasSession} = await renderLoggedIn(
+      account,
+      bundle,
+    )
+    const resumedBundle = makeBundle(account)
+    mockResume.mockResolvedValueOnce({bundle: resumedBundle, account})
+
+    let releaseWrite!: () => void
+    mockWriteSessionGate = new Promise(resolve => {
+      releaseWrite = resolve
+    })
+    const writeStarted = new Promise<void>(resolve => {
+      mockWriteSessionStarted = resolve
+    })
+    const pending = api.resumeSession(account)
+    await act(async () => {
+      await writeStarted
+    })
+
+    /*
+     * A newer persisted generation makes the pending resume want to rebuild
+     * after its write, while logout supersedes the bundle in reducer state.
+     */
+    const rotated = makeAccount({
+      accessJwt: 'access-jwt-2',
+      refreshJwt: 'refresh-jwt-2',
+    })
+    mockPersisted.session = mockPersisted.latest = {
+      accounts: [rotated],
+      currentAccount: rotated,
+      credentialStates: {
+        [DID]: {
+          credentialVersion: 2,
+          refreshJti: 'refresh-jwt-2',
+          status: 'active',
+        },
+      },
+    }
+    act(() => {
+      api.logoutCurrentAccount({} as never)
+    })
+
+    await act(async () => {
+      releaseWrite()
+      await pending
+    })
+
+    expect(hasSession()).toBe(false)
+    expect(currentAccount()).toBeUndefined()
+    expect(mockRebuilds.length).toBe(0)
+  })
+
+  it('does not reconcile a resume after a synced bundle supersedes it', async () => {
+    const account = makeAccount()
+    const bundle = makeBundle(account)
+    const {api, currentAccount} = await renderLoggedIn(account, bundle)
+    const resumedBundle = makeBundle(account)
+    mockResume.mockResolvedValueOnce({bundle: resumedBundle, account})
+
+    let releaseWrite!: () => void
+    mockWriteSessionGate = new Promise(resolve => {
+      releaseWrite = resolve
+    })
+    const writeStarted = new Promise<void>(resolve => {
+      mockWriteSessionStarted = resolve
+    })
+    const pending = api.resumeSession(account)
+    await act(async () => {
+      await writeStarted
+    })
+
+    const rotated = makeAccount({
+      accessJwt: 'access-jwt-2',
+      refreshJwt: 'refresh-jwt-2',
+    })
+    act(() => {
+      emitSynced({accounts: [rotated], currentAccount: rotated})
+    })
+    expect(mockRebuilds.length).toBe(1)
+
+    await act(async () => {
+      releaseWrite()
+      await pending
+    })
+
+    expect(currentAccount()?.refreshJwt).toBe('refresh-jwt-2')
+    /* The stale resume must not replace the bundle selected by the sync. */
+    expect(mockRebuilds.length).toBe(1)
   })
 })

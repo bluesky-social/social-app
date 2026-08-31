@@ -554,6 +554,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           },
         ],
       )
+      /*
+       * Persistence may have waited behind another operation. Do not reconcile
+       * its result after logout or a newer session task has replaced this bundle.
+       */
+      if (
+        signal.aborted ||
+        store.getState().currentBundleState.bundle !== bundle
+      ) {
+        return
+      }
       const committedAccount = committedSession?.accounts.find(
         candidate => candidate.did === account.did,
       )
