@@ -75,7 +75,9 @@ This is not a lock race; it is a false positive in the deliberate conditional me
 
 **Severity: Low**
 
-At `index.tsx:740`, the cross-tab listener calls:
+**Status: Resolved.** The detached cross-tab resume now catches and logs failures with `safeMessage`; a focused provider test covers a rejected session factory.
+
+At `index.tsx:740`, the cross-tab listener originally called:
 
 ```ts
 void resumeSession(syncedAccount)
@@ -83,7 +85,7 @@ void resumeSession(syncedAccount)
 
 The pattern existed on `main`, where the resume factory was its main rejection source. This branch adds persistence rejection because `resumeSession` now awaits `store.dispatch`, which awaits `writeSession`. A storage failure can therefore become an unhandled promise rejection.
 
-**Minimal fix:** Attach `.catch(...)` and log the failure.
+**Resolution:** Attach `.catch(...)` and log the failure.
 
 ### B4 - Login-shaped methods reject after committing reducer state
 
@@ -154,12 +156,11 @@ Add a `refreshSession` test with a rejecting `writeSession` to pin the intended 
 
 ## Remaining recommended order
 
-1. Fix B3 by catching and logging the cross-tab listener's `resumeSession` rejection.
-2. Decide and document the B4 persistence-failure policy for login-shaped methods.
-3. Add a `refreshSession` test with rejecting `writeSession`.
+1. Decide and document the B4 persistence-failure policy for login-shaped methods.
+2. Add a `refreshSession` test with rejecting `writeSession`.
 
 ## Verdict
 
 The core async design is sound. Serialization through `PasswordSession.#sessionPromise`, the per-bundle error channel, arm/kill lifecycle, reducer identity guards, and internally owned persistence lock compose correctly in the reviewed interleavings.
 
-The genuine state-corruption hole from B1 is now closed. B2 is accepted, documented, instrumented, and covered as a conditional-merge tradeoff. B3 and B4 remain lower-severity error-policy issues.
+The genuine state-corruption hole from B1 is now closed. B2 is accepted, documented, instrumented, and covered as a conditional-merge tradeoff. B3 is closed; B4 remains as the final lower-severity error-policy issue.

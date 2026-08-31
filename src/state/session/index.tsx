@@ -747,7 +747,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (syncedAccount && syncedAccount.refreshJwt) {
         if (syncedAccount.did !== state.currentBundleState.did) {
           // The leader refreshes before broadcasting, so followers receive fresh tokens.
-          void resumeSession(syncedAccount)
+          void resumeSession(syncedAccount).catch(error => {
+            ax.logger.error('Failed to resume session from persisted update', {
+              safeMessage: error,
+            })
+          })
         } else {
           /*
            * PasswordSession cannot be patched in place. Rebuild from the tokens
@@ -806,7 +810,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       }
     })
-  }, [store, state, resumeSession, onSessionChange, cancelPendingTask])
+  }, [store, state, resumeSession, onSessionChange, cancelPendingTask, ax])
 
   const stateContext = useMemo(
     () => ({

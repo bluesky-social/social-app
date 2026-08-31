@@ -64,9 +64,16 @@ jest.mock('#/state/util', () => ({useCloseAllActiveElements: () => () => {}}))
 jest.mock('#/components/dialogs/Context', () => ({
   useGlobalDialogsControlContext: () => ({signinDialogControl: {open() {}}}),
 }))
+const mockAnalyticsLoggerError = jest.fn()
 jest.mock('#/analytics', () => ({
   AnalyticsContext: ({children}: {children: React.ReactNode}) => children,
-  useAnalyticsBase: () => ({metric() {}, logger: {debug() {}, error() {}}}),
+  useAnalyticsBase: () => ({
+    metric() {},
+    logger: {
+      debug() {},
+      error: (...args: unknown[]) => mockAnalyticsLoggerError(...args),
+    },
+  }),
   utils: {accountToSessionMetadata: () => ({}), useMeta: () => undefined},
 }))
 jest.mock('#/state/shell/onboarding', () => ({
@@ -145,6 +152,7 @@ import {
 import {type SessionApiContext} from '#/state/session/types'
 
 const DID = 'did:plc:example123'
+const OTHER_DID = 'did:plc:other456'
 const SERVICE = 'https://bsky.social/'
 
 function makeAccount(overrides: Partial<SessionAccount> = {}): SessionAccount {
@@ -299,6 +307,7 @@ beforeEach(() => {
   mockRebuild.mockClear()
   mockDisposeBundle.mockReset()
   mockEmitSessionDropped.mockReset()
+  mockAnalyticsLoggerError.mockReset()
 })
 
 /*
@@ -550,6 +559,29 @@ function emitSynced(session: Schema['session']) {
  * against the store having advanced underneath it.
  */
 describe('cross-tab sync', () => {
+  it('logs a failed resume for an account selected by another tab', async () => {
+    const account = makeAccount()
+    const bundle = makeBundle(account)
+    await renderLoggedIn(account, bundle)
+    const otherAccount = makeAccount({
+      did: OTHER_DID,
+      handle: 'bob.test',
+    })
+    const error = new Error('resume failed')
+    mockResume.mockRejectedValueOnce(error)
+
+    await act(async () => {
+      emitSynced({accounts: [otherAccount], currentAccount: otherAccount})
+      await Promise.resolve()
+      await Promise.resolve()
+    })
+
+    expect(mockAnalyticsLoggerError).toHaveBeenCalledWith(
+      'Failed to resume session from persisted update',
+      {safeMessage: error},
+    )
+  })
+
   it('short-circuits an update carrying the tokens the live session already has', async () => {
     const account = makeAccount()
     const bundle = makeBundle(account)
