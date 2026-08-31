@@ -78,6 +78,34 @@ describe('transform', () => {
     expect(out).not.toContain('import *')
   })
 
+  test('bails when the chain is a write target', () => {
+    const writes = [
+      'app.bsky.feed.like = 1',
+      'app.bsky.feed.like++',
+      'delete app.bsky.feed.like',
+      'for (app.bsky.feed.like of []) {}',
+      ';[app.bsky.feed.like] = []',
+      ';({x: app.bsky.feed.like} = {})',
+    ]
+    for (const stmt of writes) {
+      const out = applyPlugin(
+        `import {app} from './lexicons'\n${stmt}\n`,
+        PROBE_FILE,
+      )
+      expect(out).toContain(`from './lexicons'`)
+      expect(out).not.toContain('import *')
+    }
+  })
+
+  test('rewrites a read of a leaf even when a sibling member is written', () => {
+    const out = applyPlugin(
+      `import {app} from './lexicons'\ndelete app.bsky.feed.like.$cached\n`,
+      PROBE_FILE,
+    )
+    expect(out).toContain('delete _lex_app_bsky_feed_like.$cached')
+    expect(out).not.toContain(`from './lexicons'`)
+  })
+
   test('leaves type-only imports untouched', () => {
     const src = `import type {app} from './lexicons'\nexport type T = typeof app\n`
     const out = applyPlugin(src, PROBE_FILE)
