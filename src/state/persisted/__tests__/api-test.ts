@@ -6,7 +6,7 @@ import {defaults} from '../schema'
 describe('generic persisted API', () => {
   it('rejects session writes', () => {
     expect(() => persisted.write('session', defaults.session)).toThrow(
-      "Session state must be written through '#/state/persisted/session'",
+      'Session state must be written through persisted.writeSession()',
     )
   })
 })

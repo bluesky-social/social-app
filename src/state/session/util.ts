@@ -2,7 +2,7 @@ import {PasswordSession} from '@atproto/lex-password-session'
 
 import {createLexClient} from '#/lib/lexClient'
 import {type TemporaryPushClient} from '#/lib/notifications/notifications'
-import * as persistedSession from '#/state/persisted/session'
+import * as persistedSession from '#/state/persisted'
 import {networkAwareFetch} from './network'
 import {sessionAccountToSessionData} from './session-data'
 import {type SessionAccount} from './types'
@@ -10,7 +10,7 @@ import {type SessionAccount} from './types'
 export {isSessionExpired, isSignupQueued} from './session-data'
 
 export function readLastActiveAccount() {
-  const {currentAccount, accounts} = persistedSession.read()
+  const {currentAccount, accounts} = persistedSession.get('session')
   return accounts.find(a => a.did === currentAccount?.did)
 }
 

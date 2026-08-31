@@ -1,3 +1,5 @@
+import {type PersistedApi} from './types'
+
 const PERSISTED_STORAGE_LOCK = 'bsky-persisted-storage'
 
 export function runWithPersistedStorageLock<T>({
@@ -20,6 +22,7 @@ export function runWithPersistedStorageLock<T>({
 
   return lockManager.request(PERSISTED_STORAGE_LOCK, operation)
 }
+runWithPersistedStorageLock satisfies PersistedApi['runWithPersistedStorageLock']
 
 function getLockManager(): LockManager | undefined {
   if (typeof navigator === 'undefined' || !('locks' in navigator)) {

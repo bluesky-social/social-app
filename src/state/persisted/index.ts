@@ -15,6 +15,11 @@ import {
 import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
+export type {SessionCredentialMutation} from './session-merge'
+export {
+  runWithPersistedStorageLock as runWithCredentialLock,
+  runWithPersistedStorageLock,
+} from './storage-lock'
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
 export {defaults} from '#/state/persisted/schema'
 
@@ -59,7 +64,7 @@ export function write<K extends keyof Schema>(
 ): Promise<void> {
   if (key === 'session') {
     throw new Error(
-      "Session state must be written through '#/state/persisted/session'",
+      'Session state must be written through persisted.writeSession()',
     )
   }
   return enqueueWrite(async () => {
@@ -73,8 +78,7 @@ export function write<K extends keyof Schema>(
 }
 write satisfies PersistedApi['write']
 
-/** @internal Use `#/state/persisted/session` instead. */
-export function writeSessionInternal({
+export function writeSession({
   nextSession,
   credentialMutations,
 }: {
@@ -93,6 +97,8 @@ export function writeSessionInternal({
     return session
   })
 }
+writeSession satisfies PersistedApi['writeSession']
+
 export function onUpdate<K extends keyof Schema>(
   _key: K,
   _cb: (v: Schema[K]) => void,

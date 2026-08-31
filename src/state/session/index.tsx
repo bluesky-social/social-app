@@ -12,9 +12,8 @@ import {
 import {type Client} from '@atproto/lex'
 import {type SessionData} from '@atproto/lex-password-session'
 
-import {type Schema} from '#/state/persisted'
-import * as persistedSession from '#/state/persisted/session'
-import {type SessionCredentialMutation} from '#/state/persisted/session'
+import * as persistedSession from '#/state/persisted'
+import {type Schema, type SessionCredentialMutation} from '#/state/persisted'
 import {useCloseAllActiveElements} from '#/state/util'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
 import {AnalyticsContext, useAnalyticsBase, utils} from '#/analytics'
@@ -90,7 +89,9 @@ class SessionStore {
 
   constructor() {
     // Careful: By the time this runs, persisted state must already be initialized.
-    const initialState = getInitialState(persistedSession.read().accounts)
+    const initialState = getInitialState(
+      persistedSession.get('session').accounts,
+    )
     addSessionDebugLog({type: 'reducer:init', state: redactState(initialState)})
     this.state = initialState
   }
@@ -127,7 +128,7 @@ class SessionStore {
         type: 'persisted:broadcast',
         data: redactPersistedSession(persistedData),
       })
-      persistence = persistedSession.write({
+      persistence = persistedSession.writeSession({
         nextSession: persistedData,
         credentialMutations,
       })
@@ -228,7 +229,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
               failedSet.add(dyingRefreshJwt)
 
               const persistedCandidate = persistedSession
-                .readLatest()
+                .readLatest('session')
                 .accounts.find(a => a.did === accountDid)
               const reducerCandidate = current.accounts.find(
                 a => a.did === accountDid,
@@ -479,7 +480,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const accountDids = [
         ...new Set([
           ...prevState.accounts.map(account => account.did),
-          ...persistedSession.readLatest().accounts.map(account => account.did),
+          ...persistedSession
+            .readLatest('session')
+            .accounts.map(account => account.did),
         ]),
       ]
       void persistedSession
@@ -525,7 +528,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       })
       const signal = cancelPendingTask()
       const latestStoredAccount = persistedSession
-        .readLatest()
+        .readLatest('session')
         .accounts.find(account => account.did === storedAccount.did)
       if (!latestStoredAccount?.refreshJwt) return
       const {bundle, account} = await createSessionBundleAndResume(
@@ -726,7 +729,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     [store, cancelPendingTask],
   )
   useEffect(() => {
-    return persistedSession.onUpdate(nextSession => {
+    return persistedSession.onUpdate('session', nextSession => {
       const synced = nextSession
       addSessionDebugLog({
         type: 'persisted:receive',

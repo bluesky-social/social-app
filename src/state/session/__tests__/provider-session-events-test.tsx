@@ -24,15 +24,15 @@ const mockPersisted: {session: Schema['session']; latest: Schema['session']} = {
  * exists to catch.
  */
 const mockPersistedListeners: ((value: Schema['session']) => void)[] = []
-jest.mock('#/state/persisted/session', () => ({
-  read: () => mockPersisted.session,
+jest.mock('#/state/persisted', () => ({
+  get: () => mockPersisted.session,
   readLatest: () => mockPersisted.latest,
-  write: ({
+  writeSession: ({
     nextSession,
     credentialMutations,
   }: {
     nextSession: Schema['session']
-    credentialMutations: import('#/state/persisted/session').SessionCredentialMutation[]
+    credentialMutations: import('#/state/persisted').SessionCredentialMutation[]
   }) => {
     const {
       applySessionUpdate,
@@ -48,7 +48,7 @@ jest.mock('#/state/persisted/session', () => ({
   },
   runWithCredentialLock: ({operation}: {operation: () => unknown}) =>
     Promise.resolve(operation()),
-  onUpdate: (callback: (value: Schema['session']) => void) => {
+  onUpdate: (_key: 'session', callback: (value: Schema['session']) => void) => {
     mockPersistedListeners.push(callback)
     return () => {}
   },

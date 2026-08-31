@@ -6,14 +6,16 @@ import {act, render} from '@testing-library/react-native'
  * account factories. These mocks cut the tree back to the session lifecycle
  * itself, which is all these tests drive.
  */
-jest.mock('#/state/persisted/session', () => {
+jest.mock('#/state/persisted', () => {
+  const actual = jest.requireActual<object>('#/state/persisted')
   const {
     defaults,
   }: typeof import('#/state/persisted/schema') = require('#/state/persisted/schema')
   return {
-    read: () => defaults.session,
+    ...actual,
+    get: () => defaults.session,
     readLatest: () => defaults.session,
-    write: ({nextSession}: {nextSession: typeof defaults.session}) =>
+    writeSession: ({nextSession}: {nextSession: typeof defaults.session}) =>
       Promise.resolve(nextSession),
     runWithCredentialLock: ({operation}: {operation: () => unknown}) =>
       Promise.resolve(operation()),
