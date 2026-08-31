@@ -4,11 +4,13 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {useGoBack} from '#/lib/hooks/useGoBack'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import {type Props as SVGIconProps} from '#/components/icons/common'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 
 export function Error({
+  icon: Icon,
   title,
   message,
   onRetry,
@@ -17,6 +19,7 @@ export function Error({
   secondaryAction,
   isRetrying,
 }: {
+  icon?: React.ComponentType<SVGIconProps>
   title?: string
   message?: string
   onRetry?: () => unknown
@@ -44,6 +47,7 @@ export function Error({
         {paddingTop: 175, paddingBottom: 110},
       ]}>
       <View style={[a.w_full, a.align_center, a.gap_lg]}>
+        {Icon && <Icon size="4xl" fill={t.atoms.text_contrast_medium.color} />}
         <Text style={[a.font_semi_bold, a.text_3xl]}>{title}</Text>
         <Text
           style={[
