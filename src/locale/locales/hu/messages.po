@@ -661,7 +661,7 @@ msgstr "{following} követett"
 #: src/components/interstitials/FeedTrendingTopics.tsx:246
 #: src/screens/Search/modules/ExploreTrendingTopics.tsx:190
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
-msgstr "{formattedPostCount} bejegyzés"
+msgstr "{formattedPostCount} {postCount, plural, one {bejegyzés} other {bejegyzés}}"
 
 #: src/components/dms/components/GroupChatProfileCard.tsx:62
 #: src/components/dms/InitiateChatFlow.tsx:1158
@@ -8558,7 +8558,7 @@ msgstr "Csak {0} válaszolhatnak."
 #. placeholder {2}: next.length
 #: src/view/com/composer/Composer.tsx:237
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
-msgstr "{1, selectordinal, one {Az #} other {A #}} kiválasztottból csak az első {0} fényképet lehetett csatolni. A korlát {MAX_GALLERY_IMAGES} melléklet."
+msgstr "{1, selectordinal, one {Az #} other {A #}} kiválasztottból csak az első {0} {2, plural, one {fényképet} other {fényképet}} lehetett csatolni. A korlát {MAX_GALLERY_IMAGES} melléklet."
 
 #: src/screens/Messages/JoinRequests.tsx:196
 msgid "Only admins can accept join requests."

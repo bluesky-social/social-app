@@ -3190,7 +3190,7 @@ msgstr "Сжатие видео..."
 
 #: src/components/moderation/LabelPreference.tsx:88
 msgid "Configure content filtering setting for category: {name}"
-msgstr "Настроить фильтрацию содержимого для категории: {имя}"
+msgstr "Настроить фильтрацию содержимого для категории: {name}"
 
 #: src/components/moderation/LabelPreference.tsx:254
 msgid "Configured in <0>moderation settings</0>."

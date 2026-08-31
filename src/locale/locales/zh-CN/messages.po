@@ -75,89 +75,89 @@ msgstr "（引用帖文）"
 #. placeholder {0}: labels.length
 #: src/components/moderation/LabelsOnMe.tsx:57
 msgid "{0, plural, one {# account label} other {# account labels}}"
-msgstr "{0, plural,one {# 个账户标记}other {# 个账户标记}}"
+msgstr "{0, plural,other {# 个账户标记}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:169
 msgid "{0, plural, one {# day} other {# days}}"
-msgstr "{0, plural, one {# 天} other {# 天}}"
+msgstr "{0, plural, other {# 天}}"
 
 #. placeholder {0}: profile.followersCount ?? 0
 #: src/screens/Profile/ProfileFollowers.tsx:33
 msgid "{0, plural, one {# follower} other {# followers}}"
-msgstr "{0, plural, one {# 位关注者} other {# 位关注者}}"
+msgstr "{0, plural, other {# 位关注者}}"
 
 #. placeholder {0}: profile.followsCount ?? 0
 #: src/screens/Profile/ProfileFollows.tsx:33
 msgid "{0, plural, one {# following} other {# following}}"
-msgstr "{0, plural, one {# 位正在关注} other {# 位正在关注}}"
+msgstr "{0, plural, other {# 位正在关注}}"
 
 #. placeholder {0}: item.count
 #: src/components/contacts/screens/ViewMatches.tsx:276
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
-msgstr "{0, plural, one {找到了 # 位朋友！} other {找到了 # 位朋友！}}"
+msgstr "{0, plural, other {找到了 # 位朋友！}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:159
 msgid "{0, plural, one {# hour} other {# hours}}"
-msgstr "{0, plural, one {# 小时} other {# 小时}}"
+msgstr "{0, plural, other {# 小时}}"
 
 #. placeholder {0}: labels.length
 #: src/components/moderation/PostAlerts.tsx:153
 msgid "{0, plural, one {# label applied to your post} other {# labels applied to your post}}"
-msgstr "{0, plural,one {你的帖文应用了 # 个标记}other {你的帖文应用了 # 个标记}}"
+msgstr "{0, plural,other {你的帖文应用了 # 个标记}}"
 
 #. placeholder {0}: labels.length
 #: src/components/moderation/PostAlerts.tsx:160
 msgid "{0, plural, one {# label applied} other {# labels applied}}"
-msgstr "{0, plural,one {已应用 # 个标记} other {已应用 # 个标记}}"
+msgstr "{0, plural, other {已应用 # 个标记}}"
 
 #. placeholder {0}: likeCount ?? 0
 #: src/screens/Post/PostLikedBy.tsx:34
 msgid "{0, plural, one {# like} other {# likes}}"
-msgstr "{0, plural, one {# 次喜欢} other {# 次喜欢}}"
+msgstr "{0, plural, other {# 次喜欢}}"
 
 #. placeholder {0}: convo.details.memberCount
 #: src/components/dialogs/SearchablePeopleList.tsx:551
 #: src/components/dms/InitiateChatFlow.tsx:1038
 msgid "{0, plural, one {# member} other {# members}}"
-msgstr "{0, plural,one {# 个成员}other {# 个成员}}"
+msgstr "{0, plural,other {# 个成员}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:149
 msgid "{0, plural, one {# minute} other {# minutes}}"
-msgstr "{0, plural, one {# 分钟} other {# 分钟}}"
+msgstr "{0, plural, other {# 分钟}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:180
 msgid "{0, plural, one {# month} other {# months}}"
-msgstr "{0, plural, one {# 个月} other {# 个月}}"
+msgstr "{0, plural, other {# 个月}}"
 
 #. placeholder {0}: convo.details.unreadJoinRequestCount
 #: src/screens/Messages/components/ChatListItem.tsx:224
 msgid "{0, plural, one {# new join request} other {# new join requests}}"
-msgstr "{0, plural, one {# 条新的加入申请} other {# 条新的加入申请}}"
+msgstr "{0, plural, other {# 条新的加入申请}}"
 
 #. placeholder {0}: reactions.length
 #. placeholder {1}: groupedReactions.map(g => g.value).join(' ')
 #: src/components/dms/MessageItem.tsx:383
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
-msgstr "{0, plural,one {# 个人} other {# 个人}} 对此做出了 {1} 反应"
+msgstr "{0, plural, other {# 个人}} 对此做出了 {1} 反应"
 
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostQuotes.tsx:34
 msgid "{0, plural, one {# quote} other {# quotes}}"
-msgstr "{0, plural, one {# 次引用} other {# 次引用}}"
+msgstr "{0, plural, other {# 次引用}}"
 
 #. placeholder {0}: quoteCount ?? 0
 #: src/screens/Post/PostRepostedBy.tsx:34
 msgid "{0, plural, one {# repost} other {# reposts}}"
-msgstr "{0, plural, one {# 次转发} other {# 次转发}}"
+msgstr "{0, plural, other {# 次转发}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:139
 msgid "{0, plural, one {# second} other {# seconds}}"
-msgstr "{0, plural, one {# 秒} other {# 秒}}"
+msgstr "{0, plural, other {# 秒}}"
 
 #. placeholder {0}: numUnreadMessages.numUnread ?? 0
 #. placeholder {0}: numUnreadNotifications ?? 0
@@ -165,41 +165,41 @@ msgstr "{0, plural, one {# 秒} other {# 秒}}"
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
 #: src/view/shell/Drawer.tsx:560
 msgid "{0, plural, one {# unread item} other {# unread items}}"
-msgstr "{0, plural, one {# 条未读} other {# 条未读}}"
+msgstr "{0, plural, other {# 条未读}}"
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
 #: src/components/Post/Embed/StandardSiteEmbed/index.tsx:250
 msgid "{0, plural, one {#m} other {#m}}"
-msgstr "{0, plural, one {#分} other {#分}}"
+msgstr "{0, plural, other {#分}}"
 
 #. How many months have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:182
 msgid "{0, plural, one {#mo} other {#mo}}"
-msgstr "{0, plural, one {#个月} other {#个月}}"
+msgstr "{0, plural, other {#个月}}"
 
 #. placeholder {0}: draft.meta.replyCount
 #: src/view/com/composer/drafts/DraftItem.tsx:143
 msgid "{0, plural, one {1 more post} other {# more posts}}"
-msgstr "{0, plural,one {还有 1 则帖文} other {还有 # 则帖文}}"
+msgstr "{0, plural, other {还有 # 则帖文}}"
 
 #. placeholder {0}: profile.followersCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:441
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
-msgstr "{0, plural, one {关注者} other {关注者}}"
+msgstr "{0, plural, other {关注者}}"
 
 #. placeholder {0}: profile.followsCount || 0
 #: src/components/ProfileHoverCard/index.web.tsx:445
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
-msgstr "{0, plural, one {正在关注} other {正在关注}}"
+msgstr "{0, plural, other {正在关注}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
 msgid "{0, plural, one {post} other {posts}}"
-msgstr "{0, plural, one {帖文} other {帖文}}"
+msgstr "{0, plural, other {帖文}}"
 
 #. Number of users (always at least 25) who have joined Bluesky using a specific starter pack
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
@@ -356,7 +356,7 @@ msgstr "{0}、"
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/ConversationSettings/AddMembersLink.tsx:49
 msgid "{0}, {1} and {memberCount, plural, one {# other} other {# others}} added to chat"
-msgstr "{0}、{1} 以及{memberCount, plural,one {其他 # 人}other {其他 # 人}}已受邀加入对话"
+msgstr "{0}、{1} 以及{memberCount, plural,other {其他 # 人}}已受邀加入对话"
 
 #. placeholder {0}: feed.displayName
 #. placeholder {1}: sanitizeHandle(feed.creatorHandle, '@')
@@ -397,7 +397,7 @@ msgstr "{0}/{1}"
 #: src/components/dms/ChatInvite/Card.tsx:64
 #: src/components/intents/GroupChatJoinDialog.tsx:346
 msgid "{0}/{1} {2, plural, one {member} other {members}}"
-msgstr "{0}/{1}{2, plural,one {个成员}other {个成员}}"
+msgstr "{0}/{1}{2, plural,other {个成员}}"
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
@@ -444,23 +444,23 @@ msgstr "{0} 秒前"
 
 #: src/screens/Messages/JoinRequests.tsx:430
 msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
-msgstr "{count, plural,=0 {暂无加入申请} one {# 条加入请求}other {# 条加入申请}}"
+msgstr "{count, plural,=0 {暂无加入申请}other {# 条加入申请}}"
 
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
-msgstr "{count, plural, one {# 条对话更新} other {# 条对话更新}}"
+msgstr "{count, plural, other {# 条对话更新}}"
 
 #: src/screens/Messages/components/RequestStatus.tsx:74
 msgid "{count, plural, one {# new join request} other {# new join requests}}"
-msgstr "{count, plural,one {# 条新的加入申请}other {# 条新的加入申请}}"
+msgstr "{count, plural,other {# 条新的加入申请}}"
 
 #: src/screens/Messages/components/InboxRequests.tsx:34
 msgid "{count, plural, one {# request} other {# requests}}"
-msgstr "{count, plural, one {# 条邀请} other {# 条邀请}}"
+msgstr "{count, plural, other {# 条邀请}}"
 
 #: src/view/shell/desktop/LeftNav.tsx:484
 msgid "{count, plural, one {# unread item} other {# unread items}}"
-msgstr "{count, plural, one {# 条未读} other {# 条未读}}"
+msgstr "{count, plural, other {# 条未读}}"
 
 #. Displayed when there are more requests to join a group chat than have been loaded
 #: src/screens/Messages/JoinRequests.tsx:424
@@ -478,15 +478,15 @@ msgstr "{displayName}的新手包"
 
 #: src/screens/SignupQueued.tsx:226
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
-msgstr "{estimatedTimeHrs, plural, one {时} other {时}}"
+msgstr "{estimatedTimeHrs, plural, other {时}}"
 
 #: src/screens/SignupQueued.tsx:232
 msgid "{estimatedTimeMins, plural, one {minute} other {minutes}}"
-msgstr "{estimatedTimeMins, plural, one {分} other {分}}"
+msgstr "{estimatedTimeMins, plural, other {分}}"
 
 #: src/screens/Search/components/SearchHistory.tsx:170
 msgid "{filterCount, plural, one {+# filter} other {+# filters}}"
-msgstr "{filterCount, plural,one {+# 个筛选条件}other {+# 个筛选条件}}"
+msgstr "{filterCount, plural,other {+# 个筛选条件}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:359
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> followed you"
@@ -566,7 +566,7 @@ msgstr "{firstAuthorLink} 对你授予了认证"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:353
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you"
-msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 关注了你"
+msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 关注了你"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
@@ -574,35 +574,35 @@ msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {for
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
-msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 喜欢了你的自定义动态源"
+msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 喜欢了你的自定义动态源"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:291
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your post"
-msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 喜欢了你的帖文"
+msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 喜欢了你的帖文"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:482
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your repost"
-msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 喜欢了你转发的帖文"
+msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 喜欢了你转发的帖文"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:457
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} removed their verifications from your account"
-msgstr "{firstAuthorName} 及 {additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 撤回了对你账户的认证"
+msgstr "{firstAuthorName} 及 {additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 撤回了对你账户的认证"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:313
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your post"
-msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 转发了你的帖文"
+msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 转发了你的帖文"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:504
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} reposted your repost"
-msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 转发了你转发的帖文"
+msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 转发了你转发的帖文"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 使用了你的新手包注册"
+msgstr "{firstAuthorName} 及{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 使用了你的新手包注册"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
-msgstr "{firstAuthorName} 及 {additionalAuthorsCount, plural, one {其他 {formattedAuthorsCount} 人} other {其他 {formattedAuthorsCount} 人}} 对你授予了认证"
+msgstr "{firstAuthorName} 及 {additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}} 对你授予了认证"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:357
 msgid "{firstAuthorName} followed you"
@@ -678,11 +678,11 @@ msgstr "目前无法向 {handle} 发送信息"
 
 #: src/features/liveNow/utils.ts:40
 msgid "{hours, plural, one {# hour {minutesString}} other {# hours {minutesString}}}"
-msgstr "{hours, plural, one {# 小时 {minutesString}} other {# 小时 {minutesString}}}"
+msgstr "{hours, plural, other {# 小时 {minutesString}}}"
 
 #: src/features/liveNow/utils.ts:44
 msgid "{hours, plural, one {# hour} other {# hours}}"
-msgstr "{hours, plural, one {# 小时} other {# 小时}}"
+msgstr "{hours, plural, other {# 小时}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
 #: src/screens/PostThread/components/ThreadItemPostNumber.tsx:89
@@ -728,7 +728,7 @@ msgstr "{memberCount}/{memberLimit}"
 
 #: src/features/liveNow/utils.ts:35
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
-msgstr "{minutes, plural, one {# 分钟} other {# 分钟}}"
+msgstr "{minutes, plural, other {# 分钟}}"
 
 #. placeholder {0}: reaction.value
 #: src/components/dms/getReactionInfo.ts:70
@@ -750,11 +750,11 @@ msgstr "{name}的新手包"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
-msgstr "{notificationCount, plural, one {# 条未读通知} other {# 条未读通知}}"
+msgstr "{notificationCount, plural, other {# 条未读通知}}"
 
 #: src/screens/Settings/FindContactsSettings.tsx:461
 msgid "{numMatches, plural, one {# contact found} other {# contacts found}}"
-msgstr "{numMatches, plural, one {找到了 # 位联系人} other {找到了 # 位联系人}}"
+msgstr "{numMatches, plural, other {找到了 # 位联系人}}"
 
 #: src/components/NewskieDialog.tsx:116
 msgid "{profileName} joined Bluesky {timeAgoString} ago"
@@ -790,7 +790,7 @@ msgstr "{replierDisplayName} 回复了你"
 #. The number of requests to join a group chat.
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:61
 msgid "{requestCount, plural, one {# request} other {# requests}}"
-msgstr "{requestCount, plural, one {# 条邀请} other {# 条邀请}}"
+msgstr "{requestCount, plural, other {# 条邀请}}"
 
 #. Displayed when there are more than 20 requests to join a group chat
 #: src/screens/Messages/ConversationSettings/MembersAndRequests.tsx:56
@@ -7103,7 +7103,7 @@ msgstr "喜欢"
 #. placeholder {0}: post.likeCount || 0
 #: src/components/PostControls/index.tsx:280
 msgid "Like ({0, plural, one {# like} other {# likes}})"
-msgstr "喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
+msgstr "喜欢（{0, plural, other {# 次喜欢}}）"
 
 #: src/components/ProgressGuide/List.tsx:108
 msgid "Like 10 posts"
@@ -7138,7 +7138,7 @@ msgstr "喜欢的用户"
 #: src/components/FeedCard.tsx:246
 #: src/view/com/feeds/FeedSourceCard.tsx:171
 msgid "Liked by {0, plural, one {# user} other {# users}}"
-msgstr "{0, plural, one {# 位用户} other {# 位用户}}喜欢"
+msgstr "{0, plural, other {# 位用户}}喜欢"
 
 #. Social proof below the post stats; the bolded name is a person the viewer follows who liked the post
 #. placeholder {0}: nameLink(names[0])
@@ -7163,7 +7163,7 @@ msgstr "被 {0} 及 {1} 喜欢"
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:165
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
-msgstr "{likeCount, plural, one {# 位用户} other {# 位用户}}喜欢"
+msgstr "{likeCount, plural, other {# 位用户}}喜欢"
 
 #: src/lib/hooks/useNotificationHandler.ts:158
 #: src/screens/Settings/NotificationSettings/index.tsx:159
@@ -7936,11 +7936,11 @@ msgstr "新建"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:551
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
-msgstr "来自 {firstAuthorLink} 的新{postsCount, plural, one {帖文} other {帖文}}"
+msgstr "来自 {firstAuthorLink} 的新{postsCount, plural, other {帖文}}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:535
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorName}"
-msgstr "来自 {firstAuthorName} 的新{postsCount, plural, one {帖文} other {帖文}}"
+msgstr "来自 {firstAuthorName} 的新{postsCount, plural, other {帖文}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:162
 #: src/components/dms/dialogs/NewChatDialog.tsx:177
@@ -7967,7 +7967,7 @@ msgstr "与 {0} 和 {1} 的新对话"
 #. placeholder {1}: createSanitizedDisplayName(members[1])
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:73
 msgid "New chat with {0}, {1}, and {memberCount, plural, one {{memberCount} more} other {{memberCount} more}}."
-msgstr "与 {0}、{1} 及{memberCount, plural, one {其他 {memberCount} 人} other {其他 {memberCount} 人}}的新对话。"
+msgstr "与 {0}、{1} 及{memberCount, plural, other {其他 {memberCount} 人}}的新对话。"
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:219
 msgid "New email address"
@@ -8054,7 +8054,7 @@ msgstr "来自 {firstAuthorLink} 及<0>其他 {additionalAuthorsCount, plural, o
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:528
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
-msgstr "来自 {firstAuthorName} 及其他 {additionalAuthorsCount, plural,one {{formattedAuthorsCount} 人} other {{formattedAuthorsCount} 人}}的新帖文"
+msgstr "来自 {firstAuthorName} 及其他 {additionalAuthorsCount, plural, other {{formattedAuthorsCount} 人}}的新帖文"
 
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "New starter pack"
@@ -8541,7 +8541,7 @@ msgstr "你选中的部分文件太大，最大的文件大小为 {VIDEO_MAX_SIZ
 
 #: src/view/com/composer/Composer.tsx:786
 msgid "One or more posts are too long to save as a draft. {MAX_DRAFT_GRAPHEME_LENGTH, plural, one {The maximum number of characters is # character.} other {The maximum number of characters is # characters.}}"
-msgstr "一则或多则帖文内容过长，无法保存为草稿{MAX_DRAFT_GRAPHEME_LENGTH, plural,one {最大字数限制为 # 个字符。}other {最大字数限制为 # 个字符。}}"
+msgstr "一则或多则帖文内容过长，无法保存为草稿{MAX_DRAFT_GRAPHEME_LENGTH, plural,other {最大字数限制为 # 个字符。}}"
 
 #: src/view/com/composer/Composer.tsx:990
 msgid "One or more videos is missing alt text."
@@ -8558,7 +8558,7 @@ msgstr "仅限{0}可以回复。"
 #. placeholder {2}: next.length
 #: src/view/com/composer/Composer.tsx:237
 msgid "Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}"
-msgstr "你共上传了 {1} 张图片，我们仅会保留前 {0} {2, plural,one {张} other {张}}；上限为 {MAX_GALLERY_IMAGES}"
+msgstr "你共上传了 {1} 张图片，我们仅会保留前 {0} {2, plural, other {张}}；上限为 {MAX_GALLERY_IMAGES}"
 
 #: src/screens/Messages/JoinRequests.tsx:196
 msgid "Only admins can accept join requests."
@@ -9752,7 +9752,7 @@ msgstr "重新启用你的账户"
 #. placeholder {0}: item.moreReplies
 #: src/screens/PostThread/components/ThreadItemReadMore.tsx:93
 msgid "Read {0, plural, one {# more reply} other {# more replies}}"
-msgstr "继续阅读 {0, plural, one {# 则回复} other {# 则回复}}"
+msgstr "继续阅读 {0, plural, other {# 则回复}}"
 
 #: src/screens/Search/SearchResults.tsx:276
 msgctxt "english-only-resource"
@@ -10150,7 +10150,7 @@ msgstr "回复"
 #. placeholder {0}: post.replyCount || 0
 #: src/components/PostControls/index.tsx:236
 msgid "Reply ({0, plural, one {# reply} other {# replies}})"
-msgstr "回复（{0, plural, one {# 则回复} other {# 则回复}}）"
+msgstr "回复（{0, plural, other {# 则回复}}）"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:136
 #: src/lib/moderation/useModerationCauseDescription.ts:123
@@ -10287,7 +10287,7 @@ msgstr "转发"
 #. placeholder {0}: repostCount || 0
 #: src/components/PostControls/RepostButton.tsx:78
 msgid "Repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "转发（{0, plural, one {# 次转发} other {# 次转发}}）"
+msgstr "转发（{0, plural, other {# 次转发}}）"
 
 #: src/components/PostControls/RepostButton.tsx:146
 #: src/components/PostControls/RepostButton.web.tsx:43
@@ -12992,7 +12992,7 @@ msgstr "威胁或煽动行为"
 #. placeholder {0}: Number(time) || 0
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/TimeIndicator.tsx:34
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
-msgstr "剩余时间：{0, plural, one {# 秒} other {# 秒}}"
+msgstr "剩余时间：{0, plural, other {# 秒}}"
 
 #: src/components/SendErrorReportDialog.tsx:68
 msgid "Title"
@@ -13293,7 +13293,7 @@ msgstr "取消转发"
 #. placeholder {0}: repostCount || 0
 #: src/components/PostControls/RepostButton.tsx:68
 msgid "Undo repost ({0, plural, one {# repost} other {# reposts}})"
-msgstr "取消转发（{0, plural, one {# 次转发} other {# 次转发}}）"
+msgstr "取消转发（{0, plural, other {# 次转发}}）"
 
 #. placeholder {0}: profile.handle
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:396
@@ -13341,7 +13341,7 @@ msgstr "取消喜欢"
 #. placeholder {0}: post.likeCount || 0
 #: src/components/PostControls/index.tsx:272
 msgid "Unlike ({0, plural, one {# like} other {# likes}})"
-msgstr "取消喜欢（{0, plural, one {# 次喜欢} other {# 次喜欢}}）"
+msgstr "取消喜欢（{0, plural, other {# 次喜欢}}）"
 
 #: src/screens/Messages/components/ChatLocked.tsx:95
 msgid "Unlock chat"
@@ -14674,7 +14674,7 @@ msgstr "你可以随时在设置里重新更改。"
 #: src/components/dms/ActionsWrapper.web.tsx:82
 #: src/components/dms/MessageContextMenu.tsx:127
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
-msgstr "你不能添加超过 {EMOJI_REACTION_LIMIT, plural,one {# 个表情符号反应}other {# 个表情符号反应}}"
+msgstr "你不能添加超过 {EMOJI_REACTION_LIMIT, plural,other {# 个表情符号反应}}"
 
 #: src/components/dms/dialogs/NewChatDialog.tsx:99
 #: src/components/dms/dialogs/ShareViaChatDialog.tsx:115
@@ -15028,7 +15028,7 @@ msgstr "你已达到请求上限，请稍后再试。"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:430
 msgid "You’ve reached the maximum of {MAX_FILTERS, plural, one {# filter} other {# filters}}. Add more values to an existing filter instead of creating new ones."
-msgstr "你已达到 {MAX_FILTERS, plural,one {# 个筛选条件}other {# 个筛选条件}}的上限，试试修改或替换部分筛选条件以继续。"
+msgstr "你已达到 {MAX_FILTERS, plural,other {# 个筛选条件}}的上限，试试修改或替换部分筛选条件以继续。"
 
 #: src/components/FocusScope/index.tsx:88
 msgid "You've reached the start of the active content."

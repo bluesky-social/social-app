@@ -95,7 +95,7 @@ msgstr "{0, plural, other {# フォロー中}}"
 #. placeholder {0}: item.count
 #: src/components/contacts/screens/ViewMatches.tsx:276
 msgid "{0, plural, one {# friend found!} other {# friends found!}}"
-msgstr "{0, plural, one {友達が#人見つかりました！} other {友達が#人見つかりました！}}"
+msgstr "{0, plural, other {友達が#人見つかりました！}}"
 
 #. placeholder {0}: diff.value
 #: src/lib/hooks/useTimeAgo.ts:159
@@ -13648,7 +13648,7 @@ msgstr "あなたをブロックしているユーザー"
 #. placeholder {0}: sanitizeHandle(list.creator.handle, '@')
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:303
 msgid "User list by {0}"
-msgstr "<0/>の作成したユーザーリスト"
+msgstr "{0}の作成したユーザーリスト"
 
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
 #: src/state/queries/feed.ts:168
