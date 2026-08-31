@@ -168,7 +168,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           : sessionData?.refreshJwt
 
       return persistedSession.runWithCredentialLock({
-        accountDids: [accountDid],
         operation: async () => {
           /*
            * Only the live bundle may reset the expiry-rescue bookkeeping: a stale
@@ -355,7 +354,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
       await persistedSession.runWithCredentialLock({
-        accountDids: [account.did],
         operation: () =>
           store.dispatch(
             {
@@ -399,7 +397,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
       await persistedSession.runWithCredentialLock({
-        accountDids: [account.did],
         operation: () =>
           store.dispatch(
             {
@@ -441,7 +438,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       if (accountDid) {
         void persistedSession
           .runWithCredentialLock({
-            accountDids: [accountDid],
             operation: () =>
               store.dispatch({type: 'logged-out-current-account', accountDid}, [
                 {type: 'logout', accountDid},
@@ -488,7 +484,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       ]
       void persistedSession
         .runWithCredentialLock({
-          accountDids,
           operation: () =>
             store.dispatch(
               {type: 'logged-out-every-account'},
@@ -555,7 +550,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         return
       }
       const committedSession = await persistedSession.runWithCredentialLock({
-        accountDids: [account.did],
         operation: () =>
           store.dispatch(
             {
@@ -625,7 +619,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     const data = await bundle.pdsClient.call(com.atproto.server.getSession, {})
     if (signal.aborted) return
     await persistedSession.runWithCredentialLock({
-      accountDids: [data.did],
       operation: () =>
         store.dispatch({
           type: 'partial-refresh-session',
@@ -713,7 +706,6 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       cancelPendingTask()
       void persistedSession
         .runWithCredentialLock({
-          accountDids: [account.did],
           operation: () =>
             store.dispatch(
               {

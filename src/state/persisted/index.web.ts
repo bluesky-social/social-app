@@ -8,11 +8,11 @@ import {
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
-import {runWithSessionCredentialLock} from './session-lock'
 import {
   applySessionUpdate,
   type SessionCredentialMutation,
 } from './session-merge'
+import {runWithPersistedStorageLock} from './storage-lock'
 import {type PersistedApi} from './types'
 import {normalizeData} from './util'
 
@@ -76,8 +76,7 @@ export function write<K extends keyof Schema>(
       "Session state must be written through '#/state/persisted/session'",
     )
   }
-  return runWithSessionCredentialLock({
-    accountDids: [],
+  return runWithPersistedStorageLock({
     operation: () => {
       const next = readFromStorage()
       if (next) {
@@ -145,8 +144,7 @@ export function onUpdate<K extends keyof Schema>(
 onUpdate satisfies PersistedApi['onUpdate']
 
 export function clearStorage(): Promise<void> {
-  return runWithSessionCredentialLock({
-    accountDids: [],
+  return runWithPersistedStorageLock({
     operation: () => {
       try {
         localStorage.removeItem(BSKY_STORAGE)

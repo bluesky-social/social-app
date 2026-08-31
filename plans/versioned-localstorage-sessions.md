@@ -270,7 +270,7 @@ Network refreshes do not run while holding a Web Lock. A refresh captures the ge
 const baseRefreshJti = getRefreshJti(session.refreshJwt)
 const refreshed = await refreshSession()
 
-await navigator.locks.request(`bsky-session:${did}`, async () => {
+await navigator.locks.request('bsky-persisted-storage', async () => {
   const latest = readAccountFromLocalStorage(did)
   // Commit only if latest is active and still has baseRefreshJti.
 })
@@ -278,19 +278,11 @@ await navigator.locks.request(`bsky-session:${did}`, async () => {
 
 This avoids holding a cross-tab lock over network I/O. Multiple refresh requests may be in flight concurrently; server-side convergence and the generation-specific conditional commit make their results safe.
 
-All credential-changing commits use the same per-account lock:
-
-- successful refresh reconciliation;
-- expiration;
-- logout;
-- account removal; and
-- login replacing an existing account.
-
-Because all persisted values share one localStorage blob, every write also takes a root persisted-storage lock. The root lock prevents an unrelated preference write from racing the session read-modify-write; the per-account lock expresses credential ownership and gives account operations a consistent order.
+All persisted values share one localStorage blob, so every write uses the same persisted-storage lock. This includes successful refresh reconciliation, expiration, logout, account removal, login replacement, and unrelated preference writes. One root lock is sufficient: it serializes the complete read-modify-write operation, so nesting per-account locks would add no coordination.
 
 Feature-detect the Web Locks API. If `navigator.locks.request` is unavailable, run the operation without a lock rather than failing startup or session operations. Generation-specific conditional commits still reject stale work in this fallback mode, but localStorage read-modify-write is not fully serialized across tabs.
 
-If Tab A holds the locks, Tab B waits. Once Tab A writes and releases them, Tab B acquires them and rereads Tab A's new localStorage state before deciding what to commit.
+If Tab A holds the lock, Tab B waits. Once Tab A writes and releases it, Tab B acquires it and rereads Tab A's new localStorage state before deciding what to commit.
 
 The complete refresh flow is:
 
@@ -301,7 +293,7 @@ Capture base refresh jti
 Perform network refresh without a lock
    |
    v
-Acquire root + per-account Web Locks
+Acquire persisted-storage Web Lock
    |
    v
 Read authoritative localStorage state

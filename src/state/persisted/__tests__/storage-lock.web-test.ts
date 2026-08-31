@@ -1,6 +1,6 @@
 import {afterEach, describe, expect, it, jest} from '@jest/globals'
 
-import {runWithSessionCredentialLock} from '../session-lock.web'
+import {runWithPersistedStorageLock} from '../storage-lock.web'
 
 const originalNavigatorDescriptor = Object.getOwnPropertyDescriptor(
   globalThis,
@@ -22,7 +22,7 @@ afterEach(() => {
   }
 })
 
-describe('session credential locks on unsupported browsers', () => {
+describe('persisted storage lock on unsupported browsers', () => {
   it.each([
     ['navigator is unavailable', undefined],
     ['navigator.locks is unavailable', {}],
@@ -31,12 +31,23 @@ describe('session credential locks on unsupported browsers', () => {
     setNavigator(navigatorValue)
     const operation = jest.fn(() => 'result')
 
-    await expect(
-      runWithSessionCredentialLock({
-        accountDids: ['did:plc:example'],
-        operation,
-      }),
-    ).resolves.toBe('result')
+    await expect(runWithPersistedStorageLock({operation})).resolves.toBe(
+      'result',
+    )
     expect(operation).toHaveBeenCalledTimes(1)
+  })
+
+  it('uses one root lock when Web Locks are available', async () => {
+    const request = jest.fn(
+      (_name: string, operation: () => string | Promise<string>) =>
+        Promise.resolve(operation()),
+    )
+    setNavigator({locks: {request}})
+
+    await expect(
+      runWithPersistedStorageLock({operation: () => 'result'}),
+    ).resolves.toBe('result')
+    expect(request).toHaveBeenCalledTimes(1)
+    expect(request.mock.calls[0]?.[0]).toBe('bsky-persisted-storage')
   })
 })

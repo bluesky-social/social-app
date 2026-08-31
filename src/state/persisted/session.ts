@@ -1,9 +1,9 @@
 import * as persisted from './index'
 import {type Schema} from './schema'
-import {runWithSessionCredentialLock} from './session-lock'
 import {type SessionCredentialMutation} from './session-merge'
 
 export type {SessionCredentialMutation} from './session-merge'
+export {runWithPersistedStorageLock as runWithCredentialLock} from './storage-lock'
 
 export function read(): Schema['session'] {
   return persisted.get('session')
@@ -26,16 +26,6 @@ export function write({
     nextSession,
     credentialMutations,
   })
-}
-
-export function runWithCredentialLock<T>({
-  accountDids,
-  operation,
-}: {
-  accountDids: string[]
-  operation: () => T | Promise<T>
-}): Promise<T> {
-  return runWithSessionCredentialLock({accountDids, operation})
 }
 
 export function onUpdate(
