@@ -4,6 +4,26 @@ import {act, render} from '@testing-library/react-native'
 
 import {type SessionAccount} from '../types'
 
+let mockWriteSessionError: Error | undefined
+const mockLoggerError = jest.fn()
+jest.mock('#/logger', () => {
+  const logger = {
+    debug() {},
+    info() {},
+    log() {},
+    warn() {},
+    error: (...args: unknown[]) => mockLoggerError(...args),
+  }
+  return {
+    logger,
+    Logger: {
+      create: () => logger,
+      Context: new Proxy({}, {get: (_target, key) => String(key)}),
+      Level: {},
+    },
+  }
+})
+
 /*
  * The provider pulls the whole app shell in through `#/state/util` and the
  * account factories. These mocks cut the tree back to the session lifecycle
@@ -19,7 +39,9 @@ jest.mock('#/state/persisted', () => {
     get: () => defaults.session,
     readLatest: () => defaults.session,
     writeSession: ({nextSession}: {nextSession: typeof defaults.session}) =>
-      Promise.resolve(nextSession),
+      mockWriteSessionError
+        ? Promise.reject(mockWriteSessionError)
+        : Promise.resolve(nextSession),
     onUpdate: () => () => {},
   }
 })
@@ -66,7 +88,11 @@ jest.mock('../create-account', () => ({
 import {Provider, useSession, useSessionApi} from '#/state/session'
 import {type SessionApiContext} from '#/state/session/types'
 import {buildAppviewClient, buildChatClient, buildPdsClient} from '../clients'
-import {type SessionBundle} from '../session-core'
+import {
+  makeSessionHooks,
+  type OnSessionChange,
+  type SessionBundle,
+} from '../session-core'
 import {sessionAccountToSessionData} from '../session-data'
 import {
   asFetch,
@@ -85,17 +111,27 @@ import {
 function makeBundle(
   account: SessionAccount,
   fetchMock: MockFetch,
+  onSessionChange: OnSessionChange,
 ): SessionBundle {
+  let bundle!: SessionBundle
+  const hooks = makeSessionHooks({
+    onSessionChange,
+    getBundle: () => bundle,
+    getDid: () => account.did,
+  })
   const session = new PasswordSession(sessionAccountToSessionData(account), {
+    ...hooks,
     fetch: asFetch(fetchMock),
   })
-  return {
+  bundle = {
     session,
     appviewClient: buildAppviewClient(session),
     pdsClient: buildPdsClient(session),
     chatClient: buildChatClient(session),
     service: new URL(account.service),
   }
+  hooks.arm()
+  return bundle
 }
 
 type Harness = {
@@ -124,9 +160,12 @@ async function renderLoggedIn(
   account: SessionAccount,
   fetchMock: MockFetch,
 ): Promise<Harness> {
-  const bundle = makeBundle(account, fetchMock)
   const harness = renderProvider()
-  mockLogin.mockResolvedValueOnce({bundle, account})
+  mockLogin.mockImplementationOnce((...args: unknown[]) => {
+    const onSessionChange = args[1] as OnSessionChange
+    const bundle = makeBundle(account, fetchMock, onSessionChange)
+    return Promise.resolve({bundle, account})
+  })
   await act(async () => {
     await harness.api.login({} as never, 'LoginForm')
   })
@@ -135,6 +174,8 @@ async function renderLoggedIn(
 
 beforeEach(() => {
   mockLogin.mockReset()
+  mockLoggerError.mockReset()
+  mockWriteSessionError = undefined
 })
 
 describe('refreshSession', () => {
@@ -154,14 +195,14 @@ describe('refreshSession', () => {
     expect(refreshed?.handle).toBe(HANDLE)
   })
 
-  it('exposes the fresh tokens before the store has caught up', async () => {
+  it("returns fresh tokens instead of relying on the caller's account snapshot", async () => {
     const fetchMock = makeMockFetch()
     const {api, currentAccount} = await renderLoggedIn(makeAccount(), fetchMock)
 
     /*
      * The point of the return value: `SignupQueued` branches on the fresh
-     * accessJwt synchronously, without waiting for `onUpdated` -> dispatch ->
-     * re-render.
+     * accessJwt rather than the account snapshot its callback captured before
+     * awaiting the refresh.
      */
     let refreshed: SessionAccount | undefined
     const before = currentAccount()?.accessJwt
@@ -170,6 +211,44 @@ describe('refreshSession', () => {
     })
     expect(before).toBe('access-jwt')
     expect(refreshed?.accessJwt).toBe('access-jwt-2')
+  })
+
+  it('reports persistence failure without poisoning PasswordSession', async () => {
+    const fetchMock = makeMockFetch()
+    const {api} = await renderLoggedIn(makeAccount(), fetchMock)
+    const persistenceError = new Error('storage failed')
+    mockWriteSessionError = persistenceError
+
+    /*
+     * PasswordSession awaits onUpdated inside its shared session promise. The
+     * hook must catch this rejection or every later refresh and request would
+     * inherit the rejected promise. The provider retrieves the caught error
+     * through takeSessionChangeError so this explicit operation still fails.
+     */
+    let refreshError: unknown
+    await act(async () => {
+      try {
+        await api.refreshSession()
+      } catch (error) {
+        refreshError = error
+      }
+    })
+    expect(refreshError).toBe(persistenceError)
+    expect(mockLoggerError).toHaveBeenCalledWith(persistenceError, {
+      message: "session: onSessionChange threw for a 'update' event",
+    })
+
+    /*
+     * A second network refresh proves the hook rejection did not poison that
+     * shared promise. Clearing the simulated failure lets the path complete.
+     */
+    mockWriteSessionError = undefined
+    let refreshed: SessionAccount | undefined
+    await act(async () => {
+      refreshed = await api.refreshSession()
+    })
+    expect(refreshed?.refreshJwt).toBe('refresh-jwt-2')
+    expect(fetchMock).toHaveBeenCalledTimes(2)
   })
 
   it('resolves with undefined when logged out', async () => {

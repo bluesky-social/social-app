@@ -166,12 +166,13 @@ export function makeSessionHooks({
       return
     }
     /*
-     * A hook must never throw. PasswordSession awaits its hooks inside the
-     * assignment to its internal session promise, so a synchronous throw here
-     * leaves that promise permanently rejected: every later request fails, and
-     * because the session is never marked destroyed, disposeBundle cannot even
-     * see that the bundle is dead. The dispatch path reaches reducer side
-     * effects and event emitters, so treat it as capable of throwing.
+     * A hook must never reject. PasswordSession awaits its hooks inside the
+     * assignment to its internal session promise, so a thrown or asynchronously
+     * rejected error here leaves that promise permanently rejected: every later
+     * request fails, and because the session is never marked destroyed,
+     * disposeBundle cannot even see that the bundle is dead. The dispatch path
+     * reaches persistence, reducer side effects, and event emitters, so isolate
+     * all of their failures from PasswordSession.
      */
     try {
       const bundle = getBundle()

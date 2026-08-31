@@ -680,6 +680,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     if (!bundle.session) return undefined // logged out: nothing to refresh
     const before = bundle.session.session
     const after = await bundle.session.refresh()
+    /*
+     * Session hooks catch persistence and reducer failures so they cannot leave
+     * PasswordSession's shared promise permanently rejected. Recover that error
+     * out-of-band so an explicit refresh still reports its durability failure.
+     */
     const sessionChangeError = takeSessionChangeError({bundle})
     if (sessionChangeError) {
       throw sessionChangeError instanceof Error
