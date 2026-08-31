@@ -920,9 +920,8 @@ function SayHelloBtn({profile}: {profile: app.bsky.actor.defs.ProfileView}) {
       })
     } catch (e) {
       logger.error('Failed to get conversation', {safeMessage: e})
-    } finally {
-      setIsLoading(false)
     }
+    setIsLoading(false)
   }
 
   if (

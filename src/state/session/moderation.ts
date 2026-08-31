@@ -12,7 +12,7 @@ import {
 import {type SessionAccount} from './types'
 
 /** The moderation surface of a session bundle. */
-type ModerationSession = {appviewClient: Client}
+type ModerationSession = {appviewClient: Client; chatClient: Client}
 
 /**
  * Cache an account's subscribed labeler DIDs. Called on every preferences
@@ -45,8 +45,8 @@ export function readLabelers(did: string): string[] | undefined {
  * lex collects the two lists into a `Set` keyed on the suffixed string, so
  * neither dedupes against the other.
  *
- * Only the appview client takes subscriptions - the PDS and chat clients suppress
- * labelers entirely (see clients.ts).
+ * Appview and chat both take subscriptions. The PDS suppresses labelers because
+ * repo and identity requests do not hydrate moderated content (see clients.ts).
  */
 export function applyLabelersToClient(
   client: Client,
@@ -85,6 +85,7 @@ export function configureModerationForAccount(
   const labelerDids = readLabelers(account.did)
   if (labelerDids) {
     applyLabelersToClient(bundle.appviewClient, labelerDids)
+    applyLabelersToClient(bundle.chatClient, labelerDids)
   } else {
     // If there are no headers in the storage, we'll not send them on the initial requests.
     // If we wanted to fix this, we could block on the preferences query here.
