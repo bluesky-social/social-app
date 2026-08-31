@@ -9,6 +9,12 @@ import {
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
+/**
+ * The appview does its own `fillPage`, and defaults to 10 pages. Previously
+ * the frontend tried up to 50 pages, thus the MAX_ATTEMPTS of 5 is a
+ * reasonable compromise to match pre-existing behavior and without blowing up
+ * our backend.
+ */
 const MAX_ATTEMPTS = 5
 
 type AutoPaginationQuery = {
