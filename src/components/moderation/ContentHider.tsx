@@ -101,11 +101,6 @@ function ContentHiderActive({
       }
     }
 
-    /*
-     * A plain loop rather than `.filter()`: the running flag has to be mutated
-     * from the enclosing scope, which React Compiler cannot lower inside a
-     * callback. Keeps only the first adult-content label, as before.
-     */
     const selfBlurCauses = []
     let hasAdultContentLabel = false
     for (const cause of modui.blurs) {
