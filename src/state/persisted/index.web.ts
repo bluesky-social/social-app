@@ -116,15 +116,18 @@ write satisfies PersistedApi['write']
 export async function writeSession({
   nextSession,
   credentialMutations,
+  currentAccountDid,
 }: {
   nextSession: Schema['session']
   credentialMutations: SessionCredentialMutation[]
+  currentAccountDid?: string
 }): Promise<Schema['session']> {
   const stored = readFromStorage() ?? _state
   const session = applySessionUpdate({
     storedSession: stored.session,
     nextSession,
     credentialMutations,
+    currentAccountDid,
   })
   const updated = normalizeData({...stored, session})
   writeToStorage(updated)

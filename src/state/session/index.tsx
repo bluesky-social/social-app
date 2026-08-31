@@ -131,6 +131,10 @@ class SessionStore {
       persistence = persistedSession.writeSession({
         nextSession: persistedData,
         credentialMutations,
+        currentAccountDid:
+          action.type === 'switched-to-account'
+            ? action.newAccount.did
+            : undefined,
       })
     }
     this.listeners.forEach(listener => listener())

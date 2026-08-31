@@ -104,6 +104,18 @@ If a queued stale refresh succeeds, its result is conditionally committed agains
 
 Tabs must not publish complete in-memory session snapshots as authoritative state. Metadata updates should patch metadata onto a fresh localStorage read without touching credential fields.
 
+Current-account selection is also explicit mutation intent, not a field inferred from an otherwise stale session snapshot. A commit preserves the current account read from localStorage unless the operation explicitly switches accounts. Login, account creation, and explicit resume/switch operations may select their target DID. Refreshes and metadata updates do not change the persisted selection. Logout, removal, and expiration begin from the persisted selection; the final credential-state validation clears it only if that selected account is no longer active.
+
+For example:
+
+```text
+Tab A commits:       current account Y
+Tab B stale memory:  current account X
+Tab B updates:       metadata or refreshed credentials for X
+Tab B rereads:       current account Y
+Tab B commits:       preserve current account Y
+```
+
 ## 3. Commit refreshes conditionally
 
 Start with both tabs and shared storage at the same credential generation:

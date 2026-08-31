@@ -18,6 +18,8 @@ export type PersistedApi = {
   writeSession(args: {
     nextSession: Schema['session']
     credentialMutations: SessionCredentialMutation[]
+    /** Omit to preserve the current account read from persisted storage. */
+    currentAccountDid?: string
   }): Promise<Schema['session']>
   runWithPersistedStorageLock<T>(args: {
     operation: () => T | Promise<T>

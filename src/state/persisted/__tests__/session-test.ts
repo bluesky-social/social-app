@@ -8,6 +8,7 @@ import {
 } from '../session-merge'
 
 const DID = 'did:plc:example123'
+const OTHER_DID = 'did:plc:other456'
 
 function jwt({jti, issuedAt}: {jti: string; issuedAt: number}) {
   const encode = (value: object) =>
@@ -16,15 +17,17 @@ function jwt({jti, issuedAt}: {jti: string; issuedAt: number}) {
 }
 
 function account({
+  did = DID,
   refreshJwt,
   accessJwt = `access-${refreshJwt}`,
 }: {
+  did?: PersistedAccount['did']
   refreshJwt?: string
   accessJwt?: string
 }): PersistedAccount {
   return {
     service: 'https://bsky.social/',
-    did: DID,
+    did,
     handle: 'alice.test',
     refreshJwt,
     accessJwt,
@@ -166,6 +169,49 @@ describe('versioned persisted sessions', () => {
     expect(result.accounts[0].accessJwt).toBe(`access-${refreshB}`)
   })
 
+  it('preserves the persisted current account for ordinary updates', () => {
+    const alice = account({refreshJwt: refreshA})
+    const bob = {
+      ...account({did: OTHER_DID, refreshJwt: refreshB}),
+      handle: 'bob.test',
+    }
+    const result = applySessionUpdate({
+      storedSession: {
+        accounts: [alice, bob],
+        currentAccount: bob,
+      },
+      nextSession: {
+        accounts: [{...alice, handle: 'alice-renamed.test'}, bob],
+        currentAccount: alice,
+      },
+      credentialMutations: [],
+    })
+
+    expect(result.currentAccount?.did).toBe(OTHER_DID)
+  })
+
+  it('changes the persisted current account for an explicit selection', () => {
+    const alice = account({refreshJwt: refreshA})
+    const bob = {
+      ...account({did: OTHER_DID, refreshJwt: refreshB}),
+      handle: 'bob.test',
+    }
+    const result = applySessionUpdate({
+      storedSession: {
+        accounts: [alice, bob],
+        currentAccount: bob,
+      },
+      nextSession: {
+        accounts: [alice, bob],
+        currentAccount: alice,
+      },
+      credentialMutations: [],
+      currentAccountDid: DID,
+    })
+
+    expect(result.currentAccount?.did).toBe(DID)
+  })
+
   it('does not let a stale expiry clear a newer generation', () => {
     const storedSession = session({
       account: account({refreshJwt: refreshB}),
@@ -202,6 +248,8 @@ describe('versioned persisted sessions', () => {
       nextAccount: account({refreshJwt: undefined, accessJwt: undefined}),
       mutation: {type: 'logout', accountDid: DID},
     })
+
+    expect(loggedOut.currentAccount).toBeUndefined()
 
     const staleRefresh = update({
       storedSession: loggedOut,

@@ -30,9 +30,11 @@ jest.mock('#/state/persisted', () => ({
   writeSession: ({
     nextSession,
     credentialMutations,
+    currentAccountDid,
   }: {
     nextSession: Schema['session']
     credentialMutations: import('#/state/persisted').SessionCredentialMutation[]
+    currentAccountDid?: string
   }) => {
     const {
       applySessionUpdate,
@@ -41,6 +43,7 @@ jest.mock('#/state/persisted', () => ({
       storedSession: mockPersisted.latest,
       nextSession,
       credentialMutations,
+      currentAccountDid,
     })
     mockPersisted.session = committed
     mockPersisted.latest = committed

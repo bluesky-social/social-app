@@ -81,15 +81,18 @@ write satisfies PersistedApi['write']
 export function writeSession({
   nextSession,
   credentialMutations,
+  currentAccountDid,
 }: {
   nextSession: Schema['session']
   credentialMutations: SessionCredentialMutation[]
+  currentAccountDid?: string
 }): Promise<Schema['session']> {
   return enqueueWrite(async () => {
     const session = applySessionUpdate({
       storedSession: _state.session,
       nextSession,
       credentialMutations,
+      currentAccountDid,
     })
     const next = normalizeData({..._state, session})
     await persistWithRetry(next)

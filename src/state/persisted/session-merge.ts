@@ -79,10 +79,12 @@ export function applySessionUpdate({
   storedSession,
   nextSession,
   credentialMutations,
+  currentAccountDid,
 }: {
   storedSession: Schema['session']
   nextSession: Schema['session']
   credentialMutations: SessionCredentialMutation[]
+  currentAccountDid?: string
 }): Schema['session'] {
   const incomingByDid = new Map(
     nextSession.accounts.map(account => [account.did, account]),
@@ -112,9 +114,13 @@ export function applySessionUpdate({
     })
   }
 
+  const persistedCurrentDid = storedSession.currentAccount?.did
+  const selectedCurrentDid = currentAccountDid ?? persistedCurrentDid
   const result: Schema['session'] = {
     accounts,
-    currentAccount: nextSession.currentAccount,
+    currentAccount: selectedCurrentDid
+      ? accounts.find(account => account.did === selectedCurrentDid)
+      : undefined,
     credentialStates,
   }
 
