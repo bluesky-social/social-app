@@ -21,8 +21,8 @@
  * which imports its own copy of the barrel via '../lexicons/index.js'.
  *
  * Correctness fallback: if any reference to a barrel binding cannot be rewritten
- * (namespace used as a value, computed access, chain ending at a non-leaf), that
- * binding is left on the barrel import. The result is always correct, merely
+ * (namespace used as a value, computed access, chain ending at a non-leaf,
+ * chain in a write position), that binding is left on the barrel import. The result is always correct, merely
  * unshaken for that file. Set BSKY_LEXICON_IMPORTS_DEBUG=1 to log such bails.
  *
  * Caveat: the rewrite bakes leaf file paths into each consumer's transform
@@ -94,6 +94,28 @@ function leafFileFor(dir, segment) {
     if (fs.existsSync(key + ext)) return key + ext
   }
   return null
+}
+
+/**
+ * True when the member chain is written to rather than read. Such a chain
+ * cannot be collapsed into a bare identifier: imports are read-only bindings
+ * (assignment/++ would throw where the original property write may not) and
+ * `delete <identifier>` is a strict-mode SyntaxError in the emitted code.
+ */
+function isWriteTarget(memberPath) {
+  const parent = memberPath.parentPath
+  if (!parent) return false
+  if (parent.isAssignmentExpression()) {
+    return parent.node.left === memberPath.node
+  }
+  if (parent.isUpdateExpression()) return true
+  if (parent.isUnaryExpression({operator: 'delete'})) return true
+  if (parent.isForXStatement()) return parent.node.left === memberPath.node
+  if (parent.isArrayPattern() || parent.isRestElement()) return true
+  if (parent.isObjectProperty() && parent.parentPath.isObjectPattern()) {
+    return parent.node.value === memberPath.node
+  }
+  return false
 }
 
 /** `rootDir\0segments\0leafFile` -> boolean */
@@ -208,6 +230,7 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
     for (;;) {
       const kind = classify(dir, segment)
       if (kind === 'file') {
+        if (isWriteTarget(cur)) return null
         return {memberPath: cur, leafFile: leafFileFor(dir, segment), segments}
       }
       if (kind !== 'dir') return null
