@@ -11,7 +11,6 @@ import {
 import {runWithSessionCredentialLock} from './session-lock'
 import {
   applySessionUpdate,
-  getCredentialState,
   type SessionCredentialMutation,
 } from './session-merge'
 import {type PersistedApi} from './types'
@@ -128,14 +127,7 @@ export async function writeSessionInternal({
   writeToStorage(updated)
   _state = updated
 
-  const invalidations = credentialMutations.map(mutation => ({
-    accountDid: mutation.accountDid,
-    credentialVersion: getCredentialState({
-      session,
-      accountDid: mutation.accountDid,
-    }).credentialVersion,
-  }))
-  broadcastUpdate({key: 'session', invalidations})
+  broadcastUpdate({key: 'session'})
   return session
 }
 export function onUpdate<K extends keyof Schema>(
@@ -204,22 +196,8 @@ async function onBroadcastMessage({data}: MessageEvent) {
   }
 }
 
-function broadcastUpdate({
-  key,
-  invalidations = [],
-}: {
-  key: keyof Schema
-  invalidations?: {accountDid: string; credentialVersion: number}[]
-}) {
-  if (invalidations.length > 0) {
-    for (const invalidation of invalidations) {
-      broadcast.postMessage({
-        event: {type: UPDATE_EVENT, key, ...invalidation},
-      })
-    }
-  } else {
-    broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
-  }
+function broadcastUpdate({key}: {key: keyof Schema}) {
+  broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
   broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
 }
 

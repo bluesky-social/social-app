@@ -62,7 +62,7 @@ Tab B: (7, A) -> (8, B')
 Therefore:
 
 - Use the refresh JWT's `jti` for generation identity.
-- Use a locally persisted monotonic version for sequencing, invalidations, and tombstone ordering.
+- Use a locally persisted monotonic version for sequencing and tombstone ordering.
 - Do not use JWT `iat` as the generation.
 
 The persisted `(credentialVersion, refreshJti)` pair describes the credential state, but conditional commits do not compare both fields as a CAS key. They establish eligibility from the current status and the `jti` of the refresh token the operation actually used. If that generation is still active, the accepted mutation writes the next local version.
@@ -91,7 +91,7 @@ Tab B memory:       (7, A)  <- stale
 Shared localStorage: (8, B)  <- authoritative
 ```
 
-The app does not preflight localStorage before every authenticated request. A request already queued by a frozen tab may leave with a stale access token and trigger an automatic refresh before queued invalidations are processed. That is acceptable as long as the refresh result or expiration cannot mutate shared state without reconciliation.
+The app does not preflight localStorage before every authenticated request. A request already queued by a frozen tab may leave with a stale access token and trigger an automatic refresh before queued update notifications are processed. That is acceptable as long as the refresh result or expiration cannot mutate shared state without reconciliation.
 
 Every tab must synchronously read localStorage:
 
@@ -114,7 +114,7 @@ Tab B memory:        (7, A)
 Shared localStorage: (7, A)
 ```
 
-Tab A captures refresh generation `A` from the session performing the request. An explicit resume first rereads localStorage; an automatic refresh may begin from the live in-memory bundle before a queued invalidation is processed:
+Tab A captures refresh generation `A` from the session performing the request. An explicit resume first rereads localStorage; an automatic refresh may begin from the live in-memory bundle before a queued update notification is processed:
 
 ```text
 Tab A base: generation A
@@ -209,9 +209,9 @@ Tab A stale write:   based on (8, B) -> preserve version 9 tombstone
 Tab B fresh login:   version 9 tombstone -> (10, C, active)
 ```
 
-## 6. Use broadcasts only for committed invalidations
+## 6. Broadcast only after committed writes
 
-A localStorage write must report success or throw. Never update the persisted in-memory cache or broadcast an invalidation when the durable write failed.
+A localStorage write must report success or throw. Never update the persisted in-memory cache or broadcast an update notification when the durable write failed.
 
 ```text
 Tab A memory:        (8, B)
@@ -221,7 +221,7 @@ Tab A action:        report or retry; do not broadcast
 
 Tab A retry:         succeeds
 Shared localStorage: (8, B)
-Tab A action:        broadcast invalidation
+Tab A action:        broadcast update notification
 ```
 
 Broadcasting after a failed write would tell Tab B to reread localStorage while it still contains `(7, A)`, spreading the stale generation instead of the new one.
@@ -230,9 +230,10 @@ After successfully writing and verifying localStorage, notify other tabs:
 
 ```ts
 broadcast.postMessage({
-  type: 'session-updated',
-  did,
-  credentialVersion: 8,
+  event: {
+    type: 'BSKY_UPDATE',
+    key: 'session',
+  },
 })
 ```
 
@@ -240,15 +241,15 @@ The message is a hint, not state. For example:
 
 ```text
 Tab A writes:        (8, B) to shared localStorage
-Tab A broadcasts:    "session updated for this account"
-Tab B receives:      the invalidation hint
+Tab A broadcasts:    "persisted session state updated"
+Tab B receives:      the update notification
 Tab B reads:         (8, B) from shared localStorage
 Tab B adopts:        (8, B)
 ```
 
 Tab B must not adopt credentials carried by the message itself. If Tab B misses or receives the broadcast late, its next credential operation still rereads localStorage before acting.
 
-Use the app's existing `BroadcastChannel` as the primary invalidation mechanism. It is an explicit, named channel with a typed message that clearly expresses which account changed, and the app already has the necessary wiring. Write localStorage before posting the message so every receiver can immediately read the committed state.
+Use the app's existing `BroadcastChannel` to notify other tabs after a committed update. It is an explicit, named channel with a typed message identifying the persisted key that changed, and the app already has the necessary wiring. Write localStorage before posting the message so every receiver can immediately read the committed state.
 
 The notification is not authoritative; localStorage remains the source of truth.
 
@@ -314,7 +315,7 @@ Write and verify localStorage
    +-- failure -> report or retry; do not broadcast
    |
    v
-Broadcast invalidation
+Broadcast update notification
    |
    v
 Other tabs reread localStorage
