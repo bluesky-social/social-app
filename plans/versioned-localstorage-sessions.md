@@ -238,6 +238,31 @@ Tab A action:        broadcast update notification
 
 Broadcasting after a failed write would tell Tab B to reread localStorage while it still contains `(7, A)`, spreading the stale generation instead of the new one.
 
+### Edge case: a failed write leaves a missing lineage link
+
+If the process survives a failed write, its live `PasswordSession` may advance while authoritative storage remains behind:
+
+```text
+t0 memory/storage:   generation A
+t1 server refresh:   A -> B
+t1 reducer/session:  generation B
+t1 storage write:    fails; localStorage remains A
+
+t2 server refresh:   B -> C
+t2 conditional write:
+  base generation:   B
+  localStorage:      A
+  action:            reject C because the persisted base is not B
+```
+
+The committed reconciliation then rebuilds the live session from persisted generation `A`, discarding the valid in-memory generation `C`. If `A` is still inside the PDS reuse window, subsequent refreshes can walk back through the server lineage and recover, potentially requiring extra round trips. If `A`'s fixed grace period has expired, the account may be logged out.
+
+This is a deliberate safety tradeoff. The conditional merge cannot prove that the missing `A -> B` write belonged to this process; the in-memory `B` could instead be stale credentials from another tab or an older login lineage. Accepting `B -> C` without a persisted `B` would weaken the central invariant and could overwrite a different authoritative session. The implementation therefore prefers the persisted generation even though an isolated failed write can turn a healthy in-memory session into a later logout.
+
+A retry of the original `A -> B` write before another refresh closes the gap. Native retries the same queued root snapshot once. Web reports the storage failure without updating its persisted cache or broadcasting; automatic refresh paths log the failure, while explicit refresh operations report it to their caller.
+
+* * *
+
 After successfully writing localStorage, notify other tabs:
 
 ```ts

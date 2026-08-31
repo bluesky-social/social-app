@@ -54,6 +54,8 @@ If a replacement bundle has already been built before bailing, dispose it. This 
 
 **Severity: Medium-Low**
 
+**Status: Accepted and documented.** The missing-lineage-link failure mode and its recovery limits are now explicit in the main plan under “Edge case: a failed write leaves a missing lineage link.” Conditional persistence continues to prefer the authoritative stored generation.
+
 On `main`, a failed session write left storage stale, but the next dispatch rewrote the complete session unconditionally. Storage therefore healed on the next refresh. On this branch, the `jti`-chained merge (`session-merge.ts:171-200`) cannot distinguish another tab advancing the chain from this tab losing its own previous chain-link write.
 
 Concrete sequence:
