@@ -52,9 +52,15 @@
  */
 const fs = require('node:fs')
 const path = require('node:path')
-const parser = require('@babel/parser')
 
-const EXTS = ['.ts', '.js']
+const {
+  EXTS,
+  SDK_BARREL_RE,
+  resolveModuleFile,
+  barrelExports,
+  clearBarrelExportCache,
+} = require('./lexiconBarrels')
+
 const statCache = new Map()
 
 /** @returns {'dir' | 'file' | null} */
@@ -90,58 +96,6 @@ function leafFileFor(dir, segment) {
   return null
 }
 
-/** Absolute barrel file -> Map(exported name -> source specifier), or null. */
-const barrelExportCache = new Map()
-
-/**
- * Parse a barrel file into its namespace re-export map. Returns null if the
- * file contains anything other than `export * as X from '...'` statements
- * (plus type-only exports) - chains through such a file cannot be proven, so
- * lookups fail and the caller bails.
- */
-function barrelExports(file) {
-  let map = barrelExportCache.get(file)
-  if (map !== undefined) return map
-  map = new Map()
-  try {
-    const ast = parser.parse(fs.readFileSync(file, 'utf8'), {
-      sourceType: 'module',
-      plugins: ['typescript'],
-    })
-    for (const stmt of ast.program.body) {
-      if (stmt.exportKind === 'type') continue
-      if (
-        stmt.type !== 'ExportNamedDeclaration' ||
-        !stmt.source ||
-        stmt.declaration ||
-        stmt.specifiers.length === 0 ||
-        !stmt.specifiers.every(s => s.type === 'ExportNamespaceSpecifier')
-      ) {
-        map = null
-        break
-      }
-      for (const s of stmt.specifiers) {
-        const name =
-          s.exported.type === 'Identifier' ? s.exported.name : s.exported.value
-        map.set(name, stmt.source.value)
-      }
-    }
-  } catch {
-    map = null
-  }
-  barrelExportCache.set(file, map)
-  return map
-}
-
-function resolveBarrelTarget(fromFile, spec) {
-  const abs = path.resolve(path.dirname(fromFile), spec)
-  if (/\.(ts|js)$/.test(abs) && fs.existsSync(abs)) return abs
-  for (const ext of EXTS) {
-    if (fs.existsSync(abs + ext)) return abs + ext
-  }
-  return null
-}
-
 /** `rootDir\0segments\0leafFile` -> boolean */
 const chainCache = new Map()
 
@@ -164,7 +118,7 @@ function verifyChain(rootDir, segments, leafFile) {
   if (ok) {
     for (const segment of segments) {
       const spec = barrelExports(cur)?.get(segment)
-      cur = spec ? resolveBarrelTarget(cur, spec) : null
+      cur = spec ? resolveModuleFile(cur, spec) : null
       if (!cur) {
         ok = false
         break
@@ -198,14 +152,13 @@ function invalidateStaleCaches(rootDir) {
   const prev = rootEpochs.get(rootDir)
   if (prev !== undefined && prev !== mtime) {
     statCache.clear()
-    barrelExportCache.clear()
+    clearBarrelExportCache()
     chainCache.clear()
   }
   rootEpochs.set(rootDir, mtime)
 }
 
 const SDK_SEGMENT = `${path.sep}@bsky${path.sep}sdk${path.sep}`
-const SDK_BARREL_RE = /(^|\/)lexicons\/index\.js$/
 
 module.exports = function lexiconLeafImports(babel, options = {}) {
   const {types: t} = babel
