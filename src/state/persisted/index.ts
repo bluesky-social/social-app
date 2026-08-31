@@ -139,7 +139,9 @@ async function persistWithRetry(value: Schema) {
 
 async function writeToStorage(value: Schema) {
   const rawData = tryStringify(value)
-  if (!rawData) return
+  if (!rawData) {
+    throw new Error('Failed to serialize persisted state')
+  }
   try {
     await AsyncStorage.setItem(BSKY_STORAGE, rawData)
   } catch (e) {
