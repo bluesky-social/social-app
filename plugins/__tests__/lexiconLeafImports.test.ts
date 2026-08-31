@@ -12,6 +12,11 @@
  * Chains the oracle cannot follow statically (computed access, namespace used
  * as a value) must bail in the plugin too: the barrel import has to survive in
  * the output exactly when the oracle predicts a bail.
+ *
+ * The mechanical layer (specifier resolution, barrel parsing) is shared with
+ * the plugin via lexiconBarrels.js so the copies cannot drift; the oracle's
+ * independence lies in walking the export graph itself instead of trusting
+ * the plugin's filesystem-name heuristic.
  */
 import crypto from 'node:crypto'
 import fs from 'node:fs'
@@ -20,6 +25,12 @@ import path from 'node:path'
 import * as babel from '@babel/core'
 import {parse} from '@babel/parser'
 
+import {
+  barrelExports,
+  resolveModuleFile,
+  SDK_BARREL_RE,
+} from '../lexiconBarrels'
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const traverse = require('@babel/traverse').default
 
@@ -27,7 +38,6 @@ const ROOT = path.resolve(__dirname, '../..')
 const PLUGIN = path.join(ROOT, 'plugins/babel-plugin-lexicon-leaf-imports.js')
 const APP_BARREL_ENTRY = path.join(ROOT, 'src/lexicons/index.ts')
 const SDK_DIST = path.join(ROOT, 'node_modules/@bsky/sdk/dist')
-const SDK_BARREL_RE = /(^|\/)lexicons\/index\.js$/
 
 function listFiles(dir: string, exts: string[]): string[] {
   const out: string[] = []
@@ -42,15 +52,6 @@ function listFiles(dir: string, exts: string[]): string[] {
   return out
 }
 
-function resolveSpec(fromFile: string, spec: string): string | null {
-  const abs = path.resolve(path.dirname(fromFile), spec)
-  if (/\.(ts|tsx|js)$/.test(abs) && fs.existsSync(abs)) return abs
-  for (const ext of ['.ts', '.tsx', '.js']) {
-    if (fs.existsSync(abs + ext)) return abs + ext
-  }
-  return null
-}
-
 const hashCache = new Map<string, string>()
 function contentHash(file: string): string {
   let h = hashCache.get(file)
@@ -59,48 +60,6 @@ function contentHash(file: string): string {
     hashCache.set(file, h)
   }
   return h
-}
-
-/**
- * The oracle's own barrel parser (written independently of the plugin's):
- * Map of exported name -> source specifier for a file consisting purely of
- * `export * as X from '...'` statements, or null for any other file shape -
- * which is exactly what distinguishes a leaf from a barrel.
- */
-const barrelCache = new Map<string, Map<string, string> | null>()
-function barrelExports(file: string): Map<string, string> | null {
-  let map = barrelCache.get(file)
-  if (map !== undefined) return map
-  map = new Map()
-  try {
-    const ast = parse(fs.readFileSync(file, 'utf8'), {
-      sourceType: 'module',
-      plugins: ['typescript'],
-    })
-    for (const stmt of ast.program.body) {
-      if (stmt.type === 'ExportNamedDeclaration' && stmt.exportKind === 'type')
-        continue
-      if (
-        stmt.type !== 'ExportNamedDeclaration' ||
-        !stmt.source ||
-        stmt.declaration ||
-        stmt.specifiers.length === 0 ||
-        !stmt.specifiers.every(s => s.type === 'ExportNamespaceSpecifier')
-      ) {
-        map = null
-        break
-      }
-      for (const s of stmt.specifiers) {
-        if (s.type === 'ExportNamespaceSpecifier') {
-          map.set(s.exported.name, stmt.source.value)
-        }
-      }
-    }
-  } catch {
-    map = null
-  }
-  barrelCache.set(file, map)
-  return map
 }
 
 type ChainResult =
@@ -127,7 +86,7 @@ function walkChain(
     if (!exports) return {error: `${curFile} is not a pure namespace barrel`}
     const spec = exports.get(segment)
     if (!spec) return {error: `'${chain.join('.')}' not exported by ${curFile}`}
-    const next = resolveSpec(curFile, spec)
+    const next = resolveModuleFile(curFile, spec)
     if (!next) return {error: `cannot resolve '${spec}' from ${curFile}`}
     if (barrelExports(next) === null) return {leaf: next, chain}
     const parent = cur.parentPath
@@ -184,7 +143,7 @@ function computeExpectation(file: string, code: string): Expectation {
         if (!isSdk && source === '#/lexicons') {
           entryBarrel = APP_BARREL_ENTRY
         } else if (isSdk && SDK_BARREL_RE.test(source)) {
-          entryBarrel = resolveSpec(file, source)
+          entryBarrel = resolveModuleFile(file, source)
         }
         if (!entryBarrel) continue
 
@@ -283,11 +242,11 @@ function collectActual(file: string, output: string): Actual {
       s => s.type === 'ImportNamespaceSpecifier' && /^_lex_/.test(s.local.name),
     )
     if (ns) {
-      const resolved = resolveSpec(file, source)
+      const resolved = resolveModuleFile(file, source)
       leaves.set(source, resolved ?? `<unresolvable: ${source}>`)
       continue
     }
-    const resolved = source.startsWith('.') ? resolveSpec(file, source) : null
+    const resolved = source.startsWith('.') ? resolveModuleFile(file, source) : null
     if (
       resolved === APP_BARREL_ENTRY ||
       (isSdk && SDK_BARREL_RE.test(source) && resolved)

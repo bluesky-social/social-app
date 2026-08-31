@@ -30,6 +30,7 @@ const path = require('node:path')
 const ts = require('typescript')
 
 const plugin = require('../babel-plugin-lexicon-leaf-imports')
+const {barrelExports, resolveModuleFile} = require('../lexiconBarrels')
 
 const ROOT = path.resolve(__dirname, '../..')
 const LEXICONS_ROOT = path.join(ROOT, 'src', 'lexicons')
@@ -187,35 +188,23 @@ function collectLeafChains(rootDir) {
   const chains = []
 
   function resolveTarget(fromFile, spec) {
-    const abs = path.resolve(path.dirname(fromFile), spec)
-    if (/\.(ts|js)$/.test(abs) && fs.existsSync(abs)) return abs
-    for (const ext of ['.ts', '.js']) {
-      if (fs.existsSync(abs + ext)) return abs + ext
-    }
-    throw new Error(`cannot resolve '${spec}' from ${fromFile}`)
+    const abs = resolveModuleFile(fromFile, spec)
+    if (!abs) throw new Error(`cannot resolve '${spec}' from ${fromFile}`)
+    return abs
   }
 
   function walk(barrelFile, segments) {
-    const ast = parse(fs.readFileSync(barrelFile, 'utf8'), {
-      sourceType: 'module',
-      plugins: ['typescript'],
-    })
-    for (const stmt of ast.program.body) {
-      if (stmt.type !== 'ExportNamedDeclaration' || !stmt.source) continue
-      if (stmt.exportKind === 'type') continue
-      for (const spec of stmt.specifiers) {
-        if (spec.type !== 'ExportNamespaceSpecifier') continue
-        const name =
-          spec.exported.type === 'Identifier'
-            ? spec.exported.name
-            : spec.exported.value
-        const target = resolveTarget(barrelFile, stmt.source.value)
-        const asDir = target.replace(/\.(ts|js)$/, '')
-        if (fs.existsSync(asDir) && fs.statSync(asDir).isDirectory()) {
-          walk(target, [...segments, name])
-        } else {
-          chains.push([...segments, name])
-        }
+    const exports = barrelExports(barrelFile)
+    if (!exports) {
+      throw new Error(`${barrelFile} is not a pure namespace barrel`)
+    }
+    for (const [name, spec] of exports) {
+      const target = resolveTarget(barrelFile, spec)
+      const asDir = target.replace(/\.(ts|js)$/, '')
+      if (fs.existsSync(asDir) && fs.statSync(asDir).isDirectory()) {
+        walk(target, [...segments, name])
+      } else {
+        chains.push([...segments, name])
       }
     }
   }
