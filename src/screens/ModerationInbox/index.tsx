@@ -44,14 +44,14 @@ export function ModerationInboxScreen() {
             </Layout.Header.Outer>
             <TabBar
               testID="moderationInboxTabs"
-              items={[l`Your reports`, l`Actions on you`]}
+              items={[l`Your reports`, l`Your account`]}
               align="left"
               {...props}
             />
           </Layout.Center>
         )}>
         <YourReports />
-        <ActionsOnYou />
+        <YourAccount />
       </Pager>
     </Layout.Screen>
   )
@@ -171,7 +171,7 @@ function YourReports() {
   )
 }
 
-function ActionsOnYou() {
+function YourAccount() {
   const {t: l} = useLingui()
 
   // TODO Placeholders. - dsb
