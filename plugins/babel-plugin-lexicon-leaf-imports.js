@@ -142,7 +142,7 @@ function resolveBarrelTarget(fromFile, spec) {
   return null
 }
 
-/** `rootDir\0segments` -> boolean */
+/** `rootDir\0segments\0leafFile` -> boolean */
 const chainCache = new Map()
 
 /**
@@ -152,7 +152,11 @@ const chainCache = new Map()
  * divergence; the caller turns that into a hard build error.
  */
 function verifyChain(rootDir, segments, leafFile) {
-  const key = rootDir + '\0' + segments.join('.')
+  /*
+   * leafFile is part of the key: the cached boolean encodes `walk === leafFile`,
+   * so a hit for the same chain but a different planned leaf must not be reused.
+   */
+  const key = rootDir + '\0' + segments.join('.') + '\0' + leafFile
   let ok = chainCache.get(key)
   if (ok !== undefined) return ok
   let cur = leafFileFor(rootDir, 'index')
@@ -170,6 +174,34 @@ function verifyChain(rootDir, segments, leafFile) {
   if (ok) ok = cur === leafFile
   chainCache.set(key, ok)
   return ok
+}
+
+/** Barrel root dir -> mtimeMs of its index file when the caches were filled. */
+const rootEpochs = new Map()
+
+/*
+ * The caches above are module-level and would otherwise outlive a lexicon
+ * regen inside a long-lived Metro or Jest watch worker, serving stale stats,
+ * export maps, and verified chains until the process restarts. Codegen
+ * (`lex build --clear`) rewrites the whole tree including the root index, so
+ * the index mtime works as an epoch: when it moves, drop all three caches.
+ * Costs one statSync per file that actually imports a barrel.
+ */
+function invalidateStaleCaches(rootDir) {
+  let mtime = -1
+  for (const ext of EXTS) {
+    try {
+      mtime = fs.statSync(path.join(rootDir, 'index' + ext)).mtimeMs
+      break
+    } catch {}
+  }
+  const prev = rootEpochs.get(rootDir)
+  if (prev !== undefined && prev !== mtime) {
+    statCache.clear()
+    barrelExportCache.clear()
+    chainCache.clear()
+  }
+  rootEpochs.set(rootDir, mtime)
 }
 
 const SDK_SEGMENT = `${path.sep}@bsky${path.sep}sdk${path.sep}`
@@ -271,6 +303,9 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
             if (dir) targets.push({imp: stmt, dir})
           }
           if (targets.length === 0) return
+          for (const {dir} of targets) {
+            invalidateStaleCaches(dir)
+          }
 
           /*
            * Type-only references were stripped by the TypeScript transform
