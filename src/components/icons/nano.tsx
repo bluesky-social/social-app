@@ -46,7 +46,7 @@ export function createNanoIcon(name: IconName) {
         name={name}
         size={resolvedSize}
         color={color}
-        style={flattened}
+        style={flattened ?? undefined}
         testID={testID}
         /*
          * The SVG icons these replace are sized in raw points and never scaled
