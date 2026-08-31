@@ -32,7 +32,6 @@ export function Error({
   const {t: l} = useLingui()
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
-  const goBack = useGoBack(onGoBack)
 
   return (
     <Layout.Center
@@ -72,24 +71,51 @@ export function Error({
             {isRetrying && <ButtonIcon icon={Loader} />}
           </Button>
         )}
-        {!hideBackButton && (
+        {!hideBackButton && secondaryAction ? (
           <Button
             variant="solid"
             color={onRetry ? 'secondary' : 'primary'}
-            label={
-              secondaryAction?.accessibilityLabel ??
-              secondaryAction?.label ??
-              l`Return to previous page`
-            }
-            onPress={secondaryAction?.onPress ?? goBack}
+            label={secondaryAction.accessibilityLabel ?? secondaryAction.label}
+            onPress={secondaryAction.onPress}
             disabled={isRetrying}
             size="large">
-            <ButtonText>
-              {secondaryAction?.label ?? <Trans>Go Back</Trans>}
-            </ButtonText>
+            <ButtonText>{secondaryAction.label}</ButtonText>
           </Button>
-        )}
+        ) : !hideBackButton ? (
+          <GoBackButton
+            hasRetry={Boolean(onRetry)}
+            isRetrying={isRetrying}
+            onGoBack={onGoBack}
+          />
+        ) : null}
       </View>
     </Layout.Center>
+  )
+}
+
+function GoBackButton({
+  hasRetry,
+  isRetrying,
+  onGoBack,
+}: {
+  hasRetry: boolean
+  isRetrying?: boolean
+  onGoBack?: () => unknown
+}) {
+  const {t: l} = useLingui()
+  const goBack = useGoBack(onGoBack)
+
+  return (
+    <Button
+      variant="solid"
+      color={hasRetry ? 'secondary' : 'primary'}
+      label={l`Return to previous page`}
+      onPress={goBack}
+      disabled={isRetrying}
+      size="large">
+      <ButtonText>
+        <Trans>Go Back</Trans>
+      </ButtonText>
+    </Button>
   )
 }
