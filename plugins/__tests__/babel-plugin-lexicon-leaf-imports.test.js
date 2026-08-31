@@ -84,6 +84,18 @@ describe('transform', () => {
     expect(out).not.toContain('import *')
   })
 
+  test('inserts leaf imports at the barrel import position, not the top', () => {
+    const out = applyPlugin(
+      `import './setup'\nimport {app} from './lexicons'\nvoid app.bsky.feed.like\n`,
+      PROBE_FILE,
+    )
+    const setupAt = out.indexOf(`'./setup'`)
+    const leafAt = out.indexOf('import * as _lex_app_bsky_feed_like')
+    expect(setupAt).toBeGreaterThanOrEqual(0)
+    expect(leafAt).toBeGreaterThan(setupAt)
+    expect(out).not.toContain(`from './lexicons'`)
+  })
+
   test('ignores imports that are not lexicon barrels', () => {
     const src = `import {app} from './other'\nvoid app.bsky.feed.like\n`
     const out = applyPlugin(src, PROBE_FILE)
