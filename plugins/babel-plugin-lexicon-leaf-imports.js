@@ -299,6 +299,12 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
           for (const stmt of programPath.get('body')) {
             if (!stmt.isImportDeclaration()) continue
             if (stmt.node.importKind === 'type') continue
+            /*
+            * A specifier-less import exists only for module evaluation; there is
+            * nothing to rewrite, so leave it untouched.
+            */
+            if (stmt.node.specifiers.length === 0) continue
+
             const dir = barrelDirFor(stmt.node.source.value, filename)
             if (dir) targets.push({imp: stmt, dir})
           }
