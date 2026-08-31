@@ -1,6 +1,15 @@
 import {computeAgeAssuranceState} from '#/ageAssurance/state'
 import {AgeAssuranceAccess, AgeAssuranceStatus} from '#/ageAssurance/types'
 
+jest.mock('#/ageAssurance/data', () => ({}))
+jest.mock('#/ageAssurance/logger', () => ({
+  logger: {
+    debug: jest.fn(),
+    warn: jest.fn(),
+  },
+}))
+jest.mock('#/state/session', () => ({}))
+
 const geolocation = {
   countryCode: undefined,
   regionCode: undefined,

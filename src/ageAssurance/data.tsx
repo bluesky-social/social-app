@@ -760,7 +760,8 @@ export function AgeAssuranceServerDataProvider({
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
   const {data, status} = useOtherRequiredDataQuery()
-  const otherRequiredDataStatus = data === undefined ? status : 'success'
+  const otherRequiredDataStatus: OtherRequiredDataStatus =
+    data === undefined ? status : 'success'
   // `select` resolves the cached region-keyed map to the current region.
   const {data: deviceSignals} = useDeviceSignalsQuery()
   const ctx = useMemo(
