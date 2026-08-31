@@ -353,20 +353,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      await store.dispatch(
-        {
-          type: 'switched-to-account',
-          newBundle: bundle,
-          newAccount: account,
-        },
-        [
+      await store
+        .dispatch(
           {
-            type: 'login',
-            accountDid: account.did,
-            resultRefreshJwt: account.refreshJwt,
+            type: 'switched-to-account',
+            newBundle: bundle,
+            newAccount: account,
           },
-        ],
-      )
+          [
+            {
+              type: 'login',
+              accountDid: account.did,
+              resultRefreshJwt: account.refreshJwt,
+            },
+          ],
+        )
+        .catch(error => {
+          ax.logger.warn('Account created but session persistence failed', {
+            safeMessage: error,
+          })
+        })
       ax.metric('account:create:success', metrics, {
         session: utils.accountToSessionMetadata(account),
       })
@@ -393,20 +399,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         disposeBundle(bundle)
         return
       }
-      await store.dispatch(
-        {
-          type: 'switched-to-account',
-          newBundle: bundle,
-          newAccount: account,
-        },
-        [
+      await store
+        .dispatch(
           {
-            type: 'login',
-            accountDid: account.did,
-            resultRefreshJwt: account.refreshJwt,
+            type: 'switched-to-account',
+            newBundle: bundle,
+            newAccount: account,
           },
-        ],
-      )
+          [
+            {
+              type: 'login',
+              accountDid: account.did,
+              resultRefreshJwt: account.refreshJwt,
+            },
+          ],
+        )
+        .catch(error => {
+          ax.logger.warn('Logged in but session persistence failed', {
+            safeMessage: error,
+          })
+        })
       ax.metric(
         'account:loggedIn',
         {logContext, withPassword: true},
@@ -615,20 +627,26 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     /* getSession targets the PDS; only the persisted account fields are patched. */
     const data = await bundle.pdsClient.call(com.atproto.server.getSession, {})
     if (signal.aborted) return
-    await store.dispatch({
-      type: 'partial-refresh-session',
-      /*
-       * Read the did off the response rather than the session: the bundle may
-       * have been disposed while the request was in flight, and the live
-       * getters throw in that state.
-       */
-      accountDid: data.did,
-      patch: {
-        emailConfirmed: data.emailConfirmed,
-        emailAuthFactor: data.emailAuthFactor,
-      },
-    })
-  }, [store, cancelPendingTask])
+    await store
+      .dispatch({
+        type: 'partial-refresh-session',
+        /*
+         * Read the did off the response rather than the session: the bundle may
+         * have been disposed while the request was in flight, and the live
+         * getters throw in that state.
+         */
+        accountDid: data.did,
+        patch: {
+          emailConfirmed: data.emailConfirmed,
+          emailAuthFactor: data.emailAuthFactor,
+        },
+      })
+      .catch(error => {
+        ax.logger.warn('Session metadata updated but persistence failed', {
+          safeMessage: error,
+        })
+      })
+  }, [store, cancelPendingTask, ax])
 
   /**
    * Rotate the session's tokens and hand back the resulting account snapshot.

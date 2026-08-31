@@ -91,6 +91,8 @@ The pattern existed on `main`, where the resume factory was its main rejection s
 
 **Severity: Low**
 
+**Status: Resolved.** Login, account creation, and partial session metadata refresh now use a success-with-warning policy after reducer commit. Persistence rejection is converted into a `logger.warn` with `safeMessage`, while the method resolves and continues its success path. Focused tests cover all three operations.
+
 `login`, `createAccount`, and `partialRefreshSession` synchronously commit reducer state and then await persistence:
 
 - `index.tsx:353-370`: login.
@@ -103,10 +105,7 @@ On `main`, persistence was fire-and-forget. Logout and removal currently make th
 
 This requires genuinely broken storage, such as quota exhaustion or a browser security error.
 
-**Recommendation:** Choose and document one policy:
-
-1. swallow and log, matching logout/removal; or
-2. deliberately reject, with callers treating "session established but durability failed" as success with a warning rather than a failed login.
+**Resolution:** Swallow and warn after the reducer commit. This preserves the successful in-memory operation without misreporting a completed login or account creation as failed; the warning records that durability was lost.
 
 ## Intended but consequential behavior
 
@@ -156,11 +155,10 @@ Add a `refreshSession` test with a rejecting `writeSession` to pin the intended 
 
 ## Remaining recommended order
 
-1. Decide and document the B4 persistence-failure policy for login-shaped methods.
-2. Add a `refreshSession` test with rejecting `writeSession`.
+1. Add a `refreshSession` test with rejecting `writeSession`.
 
 ## Verdict
 
 The core async design is sound. Serialization through `PasswordSession.#sessionPromise`, the per-bundle error channel, arm/kill lifecycle, reducer identity guards, and internally owned persistence lock compose correctly in the reviewed interleavings.
 
-The genuine state-corruption hole from B1 is now closed. B2 is accepted, documented, instrumented, and covered as a conditional-merge tradeoff. B3 is closed; B4 remains as the final lower-severity error-policy issue.
+The genuine state-corruption hole from B1 is now closed. B2 is accepted, documented, instrumented, and covered as a conditional-merge tradeoff. B3 and B4 are closed. The remaining work is a focused test pinning explicit refresh behavior when `writeSession` rejects.

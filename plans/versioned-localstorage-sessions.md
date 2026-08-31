@@ -238,6 +238,8 @@ Tab A action:        broadcast update notification
 
 Broadcasting after a failed write would tell Tab B to reread localStorage while it still contains `(7, A)`, spreading the stale generation instead of the new one.
 
+Login, account creation, and partial session metadata refresh use a success-with-warning policy once their reducer state has committed. If persistence then fails, the method logs a warning with the error and resolves successfully instead of reporting that the already-completed login or account creation failed. The in-memory session remains usable, but may not survive a reload. The underlying write still throws, and the persisted cache and other tabs are not updated.
+
 ### Edge case: a failed write leaves a missing lineage link
 
 If the process survives a failed write, its live `PasswordSession` may advance while authoritative storage remains behind:
