@@ -9,6 +9,8 @@ import {
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
+const MAX_ATTEMPTS = 5
+
 type AutoPaginationQuery = {
   data?: {pageParams: unknown[]}
   isLoading: boolean
@@ -75,7 +77,7 @@ export function useAutoPagination(
           .some(param => Object.is(cursorOf(param), currentCursor))
         if (repeatedCursor) return
         attemptCount.current++
-        if (attemptCount.current < 50) {
+        if (attemptCount.current < MAX_ATTEMPTS) {
           void query.fetchNextPage()
         }
       } else {
