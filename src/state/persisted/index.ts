@@ -21,7 +21,12 @@ export {defaults} from '#/state/persisted/schema'
 const BSKY_STORAGE = 'BSKY_STORAGE'
 
 let _state: Schema = defaults
-let pendingWrite: Promise<unknown> = Promise.resolve()
+/**
+ * AsyncStorage persists the entire root state as one asynchronous write. This
+ * queue ensures each mutation computes from `_state` after the previous write
+ * commits instead of racing another whole-root snapshot.
+ */
+let enqueuedWrite: Promise<unknown> = Promise.resolve()
 
 export async function init() {
   const stored = await readFromStorage()
@@ -106,12 +111,20 @@ export async function clearStorage() {
 }
 clearStorage satisfies PersistedApi['clearStorage']
 
+/**
+ * Queues native root-state mutations while preserving their results for the
+ * caller. The queued operations run after the previous writes settle even when
+ * those writes failed.
+ */
 function enqueueWrite<T>(operation: () => Promise<T>): Promise<T> {
-  const result = pendingWrite.then(operation, operation)
-  pendingWrite = result.then(
-    () => undefined,
-    () => undefined,
-  )
+  const result = enqueuedWrite.then(operation)
+  enqueuedWrite = (async () => {
+    try {
+      await result
+    } catch {
+      // The caller receives `result`; only the queue tail ignores its rejection.
+    }
+  })()
   return result
 }
 
