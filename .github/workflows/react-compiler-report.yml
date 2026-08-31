@@ -1,0 +1,43 @@
+name: React Compiler report
+
+on:
+  pull_request:
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+# Permissions are granted per-job below; anything unlisted defaults to none.
+permissions: {}
+
+jobs:
+  report:
+    name: React Compiler report
+    runs-on: ubuntu-latest
+    # Fork guard: posting the sticky comment needs pull-requests: write, which
+    # the GITHUB_TOKEN of a fork-originated run never gets.
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    permissions:
+      contents: read
+      # Needed by sticky-pull-request-comment to post the report.
+      pull-requests: write
+    steps:
+      - name: ⬇️ Check out Git repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - name: 🔧 Install node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+      - name: 📦 pnpm install
+        run: pnpm install --frozen-lockfile
+      - name: ⚛️ Generate React Compiler report
+        env:
+          REACT_COMPILER_REPORT_PATH: ${{ runner.temp }}/react-compiler-report.md
+        run: pnpm react-compiler:report
+      - name: 💬 Drop a comment
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: react-compiler-report
+          path: ${{ runner.temp }}/react-compiler-report.md

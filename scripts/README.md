@@ -4,7 +4,8 @@
 
 Reports which components and hooks React Compiler skipped optimizing, grouped by
 the compiler's own diagnostic category. Run with `pnpm react-compiler:report`;
-also runs in the Lint workflow, where it writes the report to the job summary.
+the React Compiler report workflow also runs it on every pull request and posts
+the report as a sticky PR comment.
 
 ## updateExtensions.sh
 

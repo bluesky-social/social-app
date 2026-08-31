@@ -21,11 +21,19 @@
  * Runs under Node's type stripping, so keep the syntax erasable - no enums, no
  * namespaces, and type-only imports must say `import type`.
  *
- * Prints the same report to stdout and, under GitHub Actions, to the job
- * summary. Always exits 0 - this is a metric, not a gate.
+ * Prints the report to stdout, and writes a markdown version to the job
+ * summary under GitHub Actions and to REACT_COMPILER_REPORT_PATH when set
+ * (the React Compiler report workflow posts that file as a sticky PR
+ * comment). Always exits 0 - this is a metric, not a gate.
  */
 
-import {appendFileSync, readdirSync, readFileSync, statSync} from 'node:fs'
+import {
+  appendFileSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs'
 import {dirname, join, relative, resolve} from 'node:path'
 import {fileURLToPath} from 'node:url'
 
@@ -179,40 +187,44 @@ for (const [file, message] of unreadable) {
   )
 }
 
+/*
+ * The markdown report goes to the job summary when running under GitHub
+ * Actions, and to REACT_COMPILER_REPORT_PATH when set - the React Compiler
+ * report workflow posts that file as a sticky PR comment.
+ */
 const summaryPath = process.env.GITHUB_STEP_SUMMARY
-if (summaryPath) {
-  appendFileSync(
-    summaryPath,
-    [
-      `## React Compiler`,
-      ``,
-      `**${headline}** ${subhead}`,
-      ``,
-      `| category | severity | components and hooks |`,
-      `| --- | --- | --- |`,
-      ...ranked.map(
-        ([category, {severity, count}]) =>
-          `| ${category} | ${severity} | ${count} |`,
+const reportPath = process.env.REACT_COMPILER_REPORT_PATH
+if (summaryPath || reportPath) {
+  const markdown = [
+    `## React Compiler`,
+    ``,
+    `**${headline}** ${subhead}`,
+    ``,
+    `| category | severity | components and hooks |`,
+    `| --- | --- | --- |`,
+    ...ranked.map(
+      ([category, {severity, count}]) =>
+        `| ${category} | ${severity} | ${count} |`,
+    ),
+    ``,
+    `\`Hint\` is a \`Todo\`: syntax React Compiler does not support yet.`,
+    `\`Error\` is code the compiler cannot safely optimize.`,
+    ``,
+    `<details><summary>All ${rows.length + optedOut.size} skipped components and hooks</summary>`,
+    ``,
+    ...rows.map(
+      ([key, diagnostics]) =>
+        `- \`${key}\` - ${diagnostics.map(d => `${d.category}: ${d.reason}`).join('; ')}`,
+    ),
+    ...[...optedOut]
+      .sort()
+      .map(
+        key => `- \`${key}\` - CompileSkip: opted out via ${OPT_OUT_DIRECTIVE}`,
       ),
-      ``,
-      `\`Hint\` is a \`Todo\`: syntax React Compiler does not support yet.`,
-      `\`Error\` is code the compiler cannot safely optimize.`,
-      ``,
-      `<details><summary>All ${rows.length + optedOut.size} skipped components and hooks</summary>`,
-      ``,
-      ...rows.map(
-        ([key, diagnostics]) =>
-          `- \`${key}\` - ${diagnostics.map(d => `${d.category}: ${d.reason}`).join('; ')}`,
-      ),
-      ...[...optedOut]
-        .sort()
-        .map(
-          key =>
-            `- \`${key}\` - CompileSkip: opted out via ${OPT_OUT_DIRECTIVE}`,
-        ),
-      ``,
-      `</details>`,
-      ``,
-    ].join('\n'),
-  )
+    ``,
+    `</details>`,
+    ``,
+  ].join('\n')
+  if (summaryPath) appendFileSync(summaryPath, markdown)
+  if (reportPath) writeFileSync(reportPath, markdown)
 }

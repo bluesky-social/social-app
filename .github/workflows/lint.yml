@@ -29,7 +29,6 @@ jobs:
             'typecheck:ios',
             'typecheck:android',
             'typecheck:web',
-            'react-compiler:report',
           ]
     steps:
       - name: ⬇️ Check out Git repository
