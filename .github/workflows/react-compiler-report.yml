@@ -32,9 +32,24 @@ jobs:
           cache: pnpm
       - name: 📦 pnpm install
         run: pnpm install --frozen-lockfile
+      - name: ⬇️ Check out base commit for comparison
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          git fetch --depth=1 origin "$BASE_SHA"
+          git worktree add --detach "$RUNNER_TEMP/base" "$BASE_SHA"
+      - name: ⚛️ Snapshot React Compiler results on base
+        env:
+          REACT_COMPILER_SRC_ROOT: ${{ runner.temp }}/base
+          REACT_COMPILER_SNAPSHOT_PATH: ${{ runner.temp }}/base-snapshot.json
+          # The base run is only for the snapshot - keep its report out of the
+          # job summary, which the PR run below writes.
+          GITHUB_STEP_SUMMARY: ''
+        run: pnpm react-compiler:report > /dev/null
       - name: ⚛️ Generate React Compiler report
         env:
           REACT_COMPILER_REPORT_PATH: ${{ runner.temp }}/react-compiler-report.md
+          REACT_COMPILER_BASE_SNAPSHOT_PATH: ${{ runner.temp }}/base-snapshot.json
         run: pnpm react-compiler:report
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
