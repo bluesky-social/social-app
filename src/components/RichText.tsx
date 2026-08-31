@@ -4,12 +4,13 @@ import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 
 import {isRTLText} from '#/lib/strings/text-direction'
 import {toShortUrl} from '#/lib/strings/url-helpers'
-import {android, atoms as a, flatten, native, type TextStyleProp} from '#/alf'
+import {android, atoms as a, flatten, type TextStyleProp} from '#/alf'
 import {isOnlyEmoji} from '#/alf/typography'
 import {InlineLinkText, type LinkProps} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichTextTag} from '#/components/RichTextTag'
 import {Text, type TextProps} from '#/components/Typography'
+import {IS_NATIVE} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -84,9 +85,9 @@ export function RichText({
   }, [value])
 
   const {text, facets} = richText
-  const plainStyles = [
+  const plainStyles: StyleProp<TextStyle> = [
     style,
-    isRTLText(text) ? native({textAlign: 'right'}) : null,
+    IS_NATIVE && isRTLText(text) ? {textAlign: 'right'} : null,
   ]
   const suffixStyles =
     suffix && suffixOffset
