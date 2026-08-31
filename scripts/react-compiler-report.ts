@@ -256,14 +256,30 @@ if (snapshotPath) {
       [...status].sort(([a], [b]) => a.localeCompare(b)),
     ),
   }
-  writeFileSync(snapshotPath, JSON.stringify(snapshot))
+  try {
+    writeFileSync(snapshotPath, JSON.stringify(snapshot))
+  } catch (err) {
+    console.log(
+      `::warning::Could not write the snapshot: ${(err as Error).message}`,
+    )
+  }
 }
 
+/*
+ * A metric must never fail the build, so an unreadable snapshot just means no
+ * diff and a warning rather than a non-zero exit.
+ */
 const baseSnapshotPath = process.env.REACT_COMPILER_BASE_SNAPSHOT_PATH
-const base: Snapshot | null =
-  baseSnapshotPath && existsSync(baseSnapshotPath)
-    ? JSON.parse(readFileSync(baseSnapshotPath, 'utf8'))
-    : null
+let base: Snapshot | null = null
+if (baseSnapshotPath && existsSync(baseSnapshotPath)) {
+  try {
+    base = JSON.parse(readFileSync(baseSnapshotPath, 'utf8'))
+  } catch (err) {
+    console.log(
+      `::warning::Ignoring unreadable base snapshot: ${(err as Error).message}`,
+    )
+  }
+}
 
 const lost: StableKey[] = []
 const regained: StableKey[] = []
@@ -377,6 +393,12 @@ if (summaryPath || reportPath) {
     `</details>`,
     ``,
   ].join('\n')
-  if (summaryPath) appendFileSync(summaryPath, markdown)
-  if (reportPath) writeFileSync(reportPath, markdown)
+  try {
+    if (summaryPath) appendFileSync(summaryPath, markdown)
+    if (reportPath) writeFileSync(reportPath, markdown)
+  } catch (err) {
+    console.log(
+      `::warning::Could not write the markdown report: ${(err as Error).message}`,
+    )
+  }
 }
