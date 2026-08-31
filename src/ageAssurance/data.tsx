@@ -347,6 +347,7 @@ export type OtherRequiredData = {
   birthdate: string | undefined
   actorDeclaration?: chat.bsky.actor.declaration.Main
 }
+export type OtherRequiredDataStatus = 'pending' | 'error' | 'success'
 export function createOtherRequiredDataQueryKey({did}: {did: string}) {
   return ['otherRequiredData', did]
 }
@@ -723,6 +724,11 @@ export type AgeAssuranceServerData = {
   state: app.bsky.ageassurance.defs.State | undefined
   metadata: AgeAssuranceMetadata | undefined
   /**
+   * Whether the account data needed to compute age assurance is available.
+   * A successful response without a birthdate is still `success`.
+   */
+  otherRequiredDataStatus: OtherRequiredDataStatus
+  /**
    * The native on-device age signals for the region the user is currently in,
    * if they've granted access there. Already resolved from the region-keyed
    * cache (see `getDeviceSignalsFromCacheForRegion`), so a grant from
@@ -739,6 +745,7 @@ const AgeAssuranceServerDataContext = createContext<AgeAssuranceServerData>({
     declaredAge: undefined,
     birthdate: undefined,
   },
+  otherRequiredDataStatus: 'pending',
   deviceSignals: undefined,
 })
 export function useAgeAssuranceServerDataContext() {
@@ -752,7 +759,8 @@ export function AgeAssuranceServerDataProvider({
   const {data: config} = useConfigQuery()
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
-  const {data} = useOtherRequiredDataQuery()
+  const {data, status} = useOtherRequiredDataQuery()
+  const otherRequiredDataStatus = data === undefined ? status : 'success'
   // `select` resolves the cached region-keyed map to the current region.
   const {data: deviceSignals} = useDeviceSignalsQuery()
   const ctx = useMemo(
@@ -767,9 +775,10 @@ export function AgeAssuranceServerDataProvider({
           : undefined,
         birthdate: data?.birthdate,
       },
+      otherRequiredDataStatus,
       deviceSignals,
     }),
-    [config, state, data, metadata, deviceSignals],
+    [config, state, data, metadata, otherRequiredDataStatus, deviceSignals],
   )
   return (
     <AgeAssuranceServerDataContext.Provider value={ctx}>
