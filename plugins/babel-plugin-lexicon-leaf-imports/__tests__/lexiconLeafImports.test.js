@@ -192,7 +192,10 @@ describe('cache invalidation across a lexicon regen', () => {
       'lexicons/app/bsky/feed/like.ts',
       `export * as main from './like/main'\n`,
     )
-    write('lexicons/app/bsky/feed/like/main.ts', `export const $type = 'test'\n`)
+    write(
+      'lexicons/app/bsky/feed/like/main.ts',
+      `export const $type = 'test'\n`,
+    )
     const bumped = new Date(Date.now() + 10_000)
     fs.utimesSync(path.join(lexRoot, 'index.ts'), bumped, bumped)
 
