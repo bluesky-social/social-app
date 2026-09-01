@@ -1,6 +1,6 @@
 /*
  * Worker thread for the "app callsites" test in
- * __tests__/babel-plugin-lexicon-leaf-imports.test.js: typechecks the
+ * __tests__/lexiconLeafImports.test.js: typechecks the
  * consumer files with the given overlay contents and reports error
  * diagnostics. The baseline and shadow typechecks are independent CPU-bound
  * programs, so the test runs one worker for each in parallel.

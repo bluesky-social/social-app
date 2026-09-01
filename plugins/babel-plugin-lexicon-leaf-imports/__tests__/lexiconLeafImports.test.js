@@ -30,10 +30,10 @@ const path = require('node:path')
 const {Worker} = require('node:worker_threads')
 const ts = require('typescript')
 
-const plugin = require('../babel-plugin-lexicon-leaf-imports')
+const plugin = require('..')
 const {barrelExports, resolveModuleFile} = require('../lexiconBarrels')
 
-const ROOT = path.resolve(__dirname, '../..')
+const ROOT = path.resolve(__dirname, '../../..')
 const LEXICONS_ROOT = path.join(ROOT, 'src', 'lexicons')
 const SDK_DIST = path.join(ROOT, 'node_modules', '@bsky', 'sdk', 'dist')
 
