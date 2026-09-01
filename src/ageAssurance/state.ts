@@ -96,18 +96,10 @@ export function computeAgeAssuranceState({
     }
   }
 
-  if (otherRequiredDataStatus === 'pending') {
-    return {
-      status: AgeAssuranceStatus.Unknown,
-      access: AgeAssuranceAccess.Safe,
-      isLoading: true,
-    }
-  }
-
   if (otherRequiredDataStatus === 'error') {
     return {
       status: AgeAssuranceStatus.Unknown,
-      access: AgeAssuranceAccess.Safe,
+      access: AgeAssuranceAccess.None,
       error: 'account-data' as const,
     }
   }
