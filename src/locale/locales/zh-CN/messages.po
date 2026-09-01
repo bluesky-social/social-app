@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-27 15:32\n"
+"PO-Revision-Date: 2026-09-01 23:34\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -444,7 +444,7 @@ msgstr "{0} 秒前"
 
 #: src/screens/Messages/JoinRequests.tsx:430
 msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
-msgstr "{count, plural,=0 {暂无加入申请} one {# 条加入请求}other {# 条加入申请}}"
+msgstr "{count, plural,=0 {暂无加入申请} one {# 条加入申请}other {# 条加入申请}}"
 
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
@@ -7900,7 +7900,7 @@ msgstr "不用了，请帮我创建一个账户代码"
 
 #: src/view/com/profile/ProfileMenu.tsx:441
 msgid "New"
-msgstr "最新"
+msgstr ""
 
 #: src/view/screens/Lists.tsx:71
 #: src/view/screens/ModerationModlists.tsx:72

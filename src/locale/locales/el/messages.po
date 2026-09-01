@@ -8,7 +8,7 @@ msgstr ""
 "Language: el\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-27 14:06\n"
+"PO-Revision-Date: 2026-09-01 23:34\n"
 "Last-Translator: \n"
 "Language-Team: Greek\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1819,7 +1819,7 @@ msgstr "Έφεση"
 #. placeholder {0}: strings.name
 #: src/components/moderation/AppealForm.tsx:104
 msgid "Appeal \"{0}\" label"
-msgstr "Ένσταση ετικέτας"
+msgstr "Ένσταση ετικέτας \"{0}\""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
@@ -1908,7 +1908,7 @@ msgstr ""
 #. placeholder {0}: appPassword.name
 #: src/screens/Settings/AppPasswords.tsx:210
 msgid "Are you sure you want to delete the app password \"{0}\"?"
-msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε τον κωδικό πρόσβασης εφαρμογής;"
+msgstr "Είστε σίγουροι ότι θέλετε να διαγράψετε τον κωδικό πρόσβασης εφαρμογής \"{0}\";"
 
 #: src/components/dms/MessageOverlays.tsx:183
 msgid "Are you sure you want to delete this message? The message will be deleted for you, but not for the other participants."
@@ -7900,7 +7900,7 @@ msgstr "Δεν πειράζει, δημιουργήστε ένα όνομα χρ
 
 #: src/view/com/profile/ProfileMenu.tsx:441
 msgid "New"
-msgstr "Νέο"
+msgstr ""
 
 #: src/view/screens/Lists.tsx:71
 #: src/view/screens/ModerationModlists.tsx:72

@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-27 14:06\n"
+"PO-Revision-Date: 2026-09-01 23:34\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -7247,7 +7247,7 @@ msgstr "Ainm na liosta"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:438
 msgid "List name is too long. {DISPLAY_NAME_MAX_GRAPHEMES, plural, other {The maximum number of characters is #.}}"
-msgstr "Tha ainm na liosta ro fhada. {DISPLAY_NAME_MAX_GRAPHEMES, plural, one {{0} charactar air a’ char as motha.} two {{0} charactar air a’ char as motha.} few {{0} charactaran air a’ char as motha.} other {{0} caractar air a’ char as motha.}}"
+msgstr "Tha ainm na liosta ro fhada. {DISPLAY_NAME_MAX_GRAPHEMES, plural, one {# charactar air a’ char as motha.} two {# charactar air a’ char as motha.} few {# charactaran air a’ char as motha.} other {# caractar air a’ char as motha.}}"
 
 #: src/screens/ProfileList/components/Header.tsx:116
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:131
@@ -7900,7 +7900,7 @@ msgstr "Coma, cruthaichibh làmhrachan dhomh"
 
 #: src/view/com/profile/ProfileMenu.tsx:441
 msgid "New"
-msgstr "Ùr"
+msgstr ""
 
 #: src/view/screens/Lists.tsx:71
 #: src/view/screens/ModerationModlists.tsx:72

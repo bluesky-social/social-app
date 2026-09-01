@@ -8,7 +8,7 @@ msgstr ""
 "Language: ga\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-27 14:06\n"
+"PO-Revision-Date: 2026-09-01 23:34\n"
 "Last-Translator: \n"
 "Language-Team: Irish\n"
 "Plural-Forms: nplurals=5; plural=(n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n<11 ? 3 : 4);\n"
@@ -7900,7 +7900,7 @@ msgstr "Is cuma, cruthaigh leasainm dom"
 
 #: src/view/com/profile/ProfileMenu.tsx:441
 msgid "New"
-msgstr "Nua"
+msgstr ""
 
 #: src/view/screens/Lists.tsx:71
 #: src/view/screens/ModerationModlists.tsx:72

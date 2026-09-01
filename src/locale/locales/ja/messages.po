@@ -8,7 +8,7 @@ msgstr ""
 "Language: ja\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-27 14:06\n"
+"PO-Revision-Date: 2026-09-01 23:34\n"
 "Last-Translator: \n"
 "Language-Team: Japanese\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -7900,7 +7900,7 @@ msgstr "気にせずにハンドルを作成"
 
 #: src/view/com/profile/ProfileMenu.tsx:441
 msgid "New"
-msgstr "新規"
+msgstr ""
 
 #: src/view/screens/Lists.tsx:71
 #: src/view/screens/ModerationModlists.tsx:72
@@ -13631,7 +13631,7 @@ msgstr "あなたをブロックしているユーザー"
 #. placeholder {0}: sanitizeHandle(list.creator.handle, '@')
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:303
 msgid "User list by {0}"
-msgstr "<0/>の作成したユーザーリスト"
+msgstr "{0}の作成したユーザーリスト"
 
 #. placeholder {0}: sanitizeHandle(view.creator.handle, '@')
 #: src/state/queries/feed.ts:168

@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-08-27 14:06\n"
+"PO-Revision-Date: 2026-09-01 23:34\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1425,7 +1425,7 @@ msgstr "Garantio pri aĝo daŭros nur kelkajn minutojn"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:449
 msgid "Age assurance only takes a few minutes."
-msgstr ""
+msgstr "Garantio pri aĝo daŭros nur kelkajn minutojn."
 
 #: src/components/dialogs/EmailDialog/screens/Update.tsx:220
 msgid "alice@example.com"
@@ -1972,12 +1972,12 @@ msgstr "Arta aŭ ne-erotika nudeco."
 #: src/screens/Settings/components/PwiOptOut.tsx:89
 #: src/screens/Settings/components/PwiOptOut.tsx:93
 msgid "Ask apps and sites not to show my account to logged-out users"
-msgstr ""
+msgstr "Peti apojn kaj retejojn ne montri mian konton al elsalutintaj uzantoj"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:32
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:35
 msgid "Ask apps to hide my posts from algorithmic recommendations"
-msgstr ""
+msgstr "Peti apojn kaŝi miajn afiŝojn el algoritmaj rekomendoj"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:619
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:621
@@ -2359,7 +2359,7 @@ msgstr "Bluesky elektos aron de rekomenditaj kontoj de homoj en via reto."
 
 #: src/screens/Settings/components/PwiOptOut.tsx:101
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
-msgstr ""
+msgstr "Bluesky ne montros vian konton al elsalutintaj uzantoj kaj petos aliajn apojn fari la samon. Aliaj apoj eble ne respektos ĉi tiun peton. Ĝi ne igas vian konton privata."
 
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
 msgid "Bluesky will proactively verify notable and authentic accounts."
@@ -5165,7 +5165,7 @@ msgstr "Malsukcesis depingli la liston"
 
 #: src/state/queries/content-visibility.ts:83
 msgid "Failed to update content visibility"
-msgstr ""
+msgstr "Malsukcesis ĝisdatigi enhavan videblecon"
 
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx:148
 #: src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx:82
@@ -5599,7 +5599,7 @@ msgstr "Manĝaĵo"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:106
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
-msgstr ""
+msgstr "Por kontoj de organizoj, uzu la naskiĝdaton de la homo, kiu respondecas pri la konto."
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:192
 msgid "For security reasons, we’ll need to send a confirmation code to your email address <0>{currentEmail}</0>."
@@ -5950,7 +5950,7 @@ msgstr "Enhavo eksplicite perforta"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:171
 msgid "Grooming or predatory behavior"
-msgstr ""
+msgstr "Fi-kaĵolo al neplenaĝuloj aŭ deloga konduto"
 
 #: src/components/dms/ChatInvite/Card.tsx:53
 #: src/components/intents/GroupChatJoinDialog.tsx:338
@@ -6106,7 +6106,7 @@ msgstr "Ĉu vi havas problemon?"
 
 #: src/components/contacts/screens/PhoneInput.tsx:290
 msgid "Held by Bluesky for 7 days to prevent abuse, then deleted"
-msgstr ""
+msgstr "Retenita de Bluesky dum 7 tagoj por malhelpi misuzon, poste forigita"
 
 #: src/screens/Settings/Settings.tsx:259
 #: src/screens/Settings/Settings.tsx:263
@@ -6390,7 +6390,7 @@ msgstr "Se vi ankoraŭ ne estas plenkreskulo laŭ la leĝaro de via lando, via p
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:116
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
-msgstr ""
+msgstr "Se vi kredas, ke via naskiĝdato estas malĝusta, vi povas ĝisdatigi ĝin <0>klakante ĉi tie</0>."
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:273
 msgid "If you delete this list, you won't be able to recover it."
@@ -6526,7 +6526,7 @@ msgstr "Importita je {0}"
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:279
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
-msgstr ""
+msgstr "Por provizi sperton taŭgan por via aĝo, ni bezonas ekscii vian naskiĝdaton. Ĉi tio okazas nur unufoje, kaj viaj datumoj restos privataj."
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
 msgid "In-app"
@@ -6768,7 +6768,7 @@ msgstr "Invitoj sed personaj"
 
 #: src/components/contacts/components/InviteInfo.tsx:47
 msgid "It looks like some of your contacts have not tried to find you here yet. You can personally invite them by customizing a draft message we will provide."
-msgstr ""
+msgstr "Ŝajnas, ke kelkaj el viaj kontaktoj ankoraŭ ne provis trovi vin en Bluesky. Vi povas persone inviti ilin per adaptita mesaĝo, kiun ni provizos."
 
 #: src/screens/Signup/StepInfo/index.tsx:372
 msgid "It's correct"
@@ -6841,7 +6841,7 @@ msgstr "Retejo de KWS"
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:627
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:629
 msgid "Label reply for algo"
-msgstr ""
+msgstr "Etikedi respondon por algoritmo"
 
 #. placeholder {0}: sanitizeDisplayName(desc.source!)
 #: src/components/moderation/ContentHider.tsx:245
@@ -7900,7 +7900,7 @@ msgstr "Ne gravas, krei identigilon por mi"
 
 #: src/view/com/profile/ProfileMenu.tsx:441
 msgid "New"
-msgstr "Nova"
+msgstr ""
 
 #: src/view/screens/Lists.tsx:71
 #: src/view/screens/ModerationModlists.tsx:72
@@ -8291,7 +8291,7 @@ msgstr "Neniu rezulto trovita por \"{query}\""
 
 #: src/screens/Search/SearchResults.tsx:233
 msgid "No results found for “<0>{query}</0>” with advanced search filters applied."
-msgstr ""
+msgstr "Neniuj rezultoj trovitaj por \"<0>{query}</0>\" kun aplikitaj altnivelaj serĉfiltriloj."
 
 #: src/screens/Search/SearchResults.tsx:245
 msgid "No results found for “<0>{query}</0>”."
@@ -8299,7 +8299,7 @@ msgstr "Neniu rezulto trovita por \"<0>{query}</0>\"."
 
 #: src/screens/Search/SearchResults.tsx:239
 msgid "No results found for your query with advanced search filters applied."
-msgstr ""
+msgstr "Neniuj rezultoj trovitaj por via serĉo kun aplikitaj altnivelaj serĉfiltriloj."
 
 #: src/screens/Search/Explore.tsx:817
 msgid "No results."
@@ -8614,7 +8614,7 @@ msgstr "Ups!"
 
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:66
 msgid "Open advanced search options"
-msgstr ""
+msgstr "Malfermi altnivelajn serĉajn opciojn"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:309
 msgid "Open avatar creator"
@@ -8753,7 +8753,7 @@ msgstr "Malfermas dialogujon por aldoni averton pri enhavo al via afiŝo"
 
 #: src/screens/Login/LoginForm.tsx:651
 msgid "Opens a dialog to change the hosting provider you sign in to"
-msgstr ""
+msgstr "Malfermas dialogujon por ŝanĝi la gastigan provizanton, al kiu vi ensalutos"
 
 #: src/view/com/composer/threadgate/ThreadgateBtn.tsx:152
 msgid "Opens a dialog to choose who can interact with this post"
@@ -8918,7 +8918,7 @@ msgstr "Alia miskonkludiga enhavo"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:233
 msgid "Other network rule-breaking"
-msgstr ""
+msgstr "Alia malobservo de Bluesky-reguloj"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:93
 msgid "Other sexual violence content"
@@ -9331,7 +9331,7 @@ msgstr "Bonvolu uzi la indiĝenan aplikaĵon por importi viajn kontaktojn."
 
 #: src/screens/FindContactsFlowScreen.tsx:63
 msgid "Please use the native app to sync your contacts."
-msgstr ""
+msgstr "Bonvolu uzi la indiĝenan aplikaĵon por sinkronigi viajn kontaktojn."
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:59
 msgid "Please verify your email"
@@ -10438,7 +10438,7 @@ msgstr ""
 
 #: src/components/OTAChannelNotice.tsx:58
 msgid "Restore default"
-msgstr ""
+msgstr "Restarigi defaŭlton"
 
 #: src/components/OTAChannelNotice.tsx:54
 msgid "Restore the {defaultChannel} deployment"
@@ -11182,12 +11182,12 @@ msgstr "Agordoj por sciigoj pri ŝatoj de viaj reafiŝoj"
 #: src/screens/Messages/Settings.tsx:280
 #: src/screens/Settings/NotificationSettings/index.tsx:276
 msgid "Settings for notifications for new message requests"
-msgstr ""
+msgstr "Agordoj por sciigoj pri novaj mesaĝpetoj"
 
 #: src/screens/Messages/Settings.tsx:259
 #: src/screens/Settings/NotificationSettings/index.tsx:259
 msgid "Settings for notifications for new messages"
-msgstr ""
+msgstr "Agordoj por sciigoj pri novaj mesaĝoj"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:246
 msgid "Settings for notifications for reposts of your reposts"
@@ -12362,7 +12362,7 @@ msgstr "La elektita videaĵo estas tro longa."
 
 #: src/view/com/composer/state/video.ts:485
 msgid "The selected video uses an unsupported format."
-msgstr ""
+msgstr "La elektita videaĵo uzas nesubtenatan formon."
 
 #: src/lib/hooks/useCleanError.ts:41
 #: src/lib/strings/errors.ts:53
@@ -12397,7 +12397,7 @@ msgstr "La kontrola provizanto ne povis sendi kodon al via telefonnumero. Bonvol
 
 #: src/view/com/composer/state/video.ts:466
 msgid "The video could not be uploaded to your hosting provider. Please try again."
-msgstr ""
+msgstr "La elektita videaĵo ne povis esti alŝutita al via gastiga provizanto. Bonvolu reprovi."
 
 #: src/screens/Settings/AppearanceSettings.tsx:137
 msgid "Theme"
@@ -12545,7 +12545,7 @@ msgstr "Ĉi tiuj agordoj nur aplikas al la Following-fluo."
 #. Advanced search filter
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:58
 msgid "These URLs"
-msgstr ""
+msgstr "Ĉi tiuj URL-oj"
 
 #: src/components/moderation/BlockDialog.tsx:354
 msgid "They own this chat"
@@ -12622,7 +12622,7 @@ msgstr "Ĉi tiu babilejo estas ŝlosita"
 #: src/screens/Messages/components/ChatLocked.tsx:49
 #: src/screens/Messages/ConversationSettings/index.tsx:430
 msgid "This chat is locked by a moderation action"
-msgstr ""
+msgstr "Kontrolistoj ŝlosis ĉi tiun babilejon"
 
 #: src/screens/Messages/components/MessageListError.tsx:17
 msgid "This chat was disconnected"
@@ -12943,7 +12943,7 @@ msgstr "Ĉi tio forigos vian afiŝon el ĉi tiu citafiŝo por ĉiuj uzantoj kaj 
 #. Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)
 #: src/analytics/features/index.ts:84
 msgid "Thread numbering"
-msgstr ""
+msgstr "Numerado de fadenoj"
 
 #: src/screens/PostThread/components/HeaderDropdown.tsx:25
 #: src/screens/PostThread/components/HeaderDropdown.tsx:28
@@ -13298,11 +13298,11 @@ msgstr "Bedaŭrinde, neniu el viaj abonitaj etikediloj subtenas ĉi tiun tipon d
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:263
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
-msgstr ""
+msgstr "Bedaŭrinde, la naskiĝdato en via profilo igas vin tro juna por aliri Bluesky."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:247
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
-msgstr ""
+msgstr "Bedaŭrinde, via deklarita aĝo indikas, ke vi ne estas sufiĉe aĝa por aliri Bluesky en via regiono."
 
 #: src/components/verification/VerificationsDialog.tsx:209
 msgid "Unknown verifier"
@@ -14955,7 +14955,7 @@ msgstr "Ĉio pretas!"
 
 #: src/ageAssurance/useVerificationFlow.ts:127
 msgid "You're all set! However, certain features may still be restricted until you're able to verify you're an adult."
-msgstr ""
+msgstr "Ĉio pretas! Tamen, certaj funkcioj eble ankoraŭ estos limigitaj ĝis vi povos konfirmi ke vi estas plenkreskulo."
 
 #: src/components/dialogs/nuxs/GroupChatsAnnouncement.tsx:205
 msgid "You’re in control"
