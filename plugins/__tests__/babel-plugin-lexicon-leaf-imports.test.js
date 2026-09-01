@@ -27,6 +27,7 @@ const {parse} = require('@babel/parser')
 const fs = require('node:fs')
 const os = require('node:os')
 const path = require('node:path')
+const {Worker} = require('node:worker_threads')
 const ts = require('typescript')
 
 const plugin = require('../babel-plugin-lexicon-leaf-imports')
@@ -526,7 +527,7 @@ describe('app callsites: transformed sources typecheck', () => {
    */
   test(
     'every file importing the barrel',
-    () => {
+    async () => {
       const consumers = []
       ;(function walk(dir) {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -605,23 +606,36 @@ describe('app callsites: transformed sources typecheck', () => {
 
       const options = loadAppCompilerOptions()
 
+      /*
+       * The baseline and shadow typechecks are independent CPU-bound
+       * programs, so each runs in its own worker thread and the two proceed
+       * in parallel. The worker returns diagnostics as plain records (see
+       * lexiconTypecheckWorker.js).
+       */
       function diagnose(overlays) {
-        const host = createOverlayHost(options, overlays)
-        const program = ts.createProgram(consumers, options, host)
-        const byFile = new Map()
-        for (const file of consumers) {
-          const sf = program.getSourceFile(file)
-          if (!sf) throw new Error(`${file} missing from program`)
-          byFile.set(file, fileDiagnostics(program, sf))
-        }
-        return byFile
+        return new Promise((resolve, reject) => {
+          const worker = new Worker(
+            path.join(__dirname, '..', 'lexiconTypecheckWorker.js'),
+            {workerData: {consumers, overlays, options}},
+          )
+          worker.once('message', byFile =>
+            resolve(new Map(Object.entries(byFile))),
+          )
+          worker.once('error', reject)
+          worker.once('exit', code => {
+            if (code !== 0) {
+              reject(new Error(`typecheck worker exited with code ${code}`))
+            }
+          })
+        })
       }
 
-      const baseline = diagnose(baselineOverlays)
-      const shadow = diagnose(shadowOverlays)
+      const [baseline, shadow] = await Promise.all([
+        diagnose(baselineOverlays),
+        diagnose(shadowOverlays),
+      ])
 
-      const diagKey = d =>
-        `TS${d.code}: ${ts.flattenDiagnosticMessageText(d.messageText, ' ')}`
+      const diagKey = d => `TS${d.code}: ${d.message}`
       const regressions = []
       for (const file of consumers) {
         const known = new Set(baseline.get(file).map(diagKey))
@@ -630,8 +644,16 @@ describe('app callsites: transformed sources typecheck', () => {
         }
       }
       if (regressions.length > 0) {
+        const details = regressions
+          .slice(0, 20)
+          .map(d =>
+            d.fileName
+              ? `${d.fileName}:${d.line} TS${d.code}: ${d.message}`
+              : `TS${d.code}: ${d.message}`,
+          )
+          .join('\n')
         throw new Error(
-          `plugin introduced diagnostics in app sources:\n${formatDiagnostics(regressions)}`,
+          `plugin introduced diagnostics in app sources:\n${details}`,
         )
       }
     },
