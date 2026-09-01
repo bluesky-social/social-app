@@ -53,6 +53,7 @@ export function VideoEmbed({
     currentActiveView,
   } = useActiveVideoWeb()
   const [onScreen, setOnScreen] = useState(false)
+  const [meaningfullyVisible, setMeaningfullyVisible] = useState(false)
   const [isFullscreen] = useFullscreen()
   const lastKnownTime = useRef<number | undefined>(undefined)
   const impressionTrackedRef = useRef(false)
@@ -64,7 +65,7 @@ export function VideoEmbed({
   const active = isGif || activeFromContext
 
   useEffect(() => {
-    if (!onScreen || impressionTrackedRef.current) return
+    if (!meaningfullyVisible || impressionTrackedRef.current) return
     impressionTrackedRef.current = true
     ax.metric('video:impression', {
       postUri: post?.uri,
@@ -72,7 +73,7 @@ export function VideoEmbed({
       context: 'embed',
       presentation: isGif ? 'gif' : 'video',
     })
-  }, [ax, isGif, onScreen, post?.author.did, post?.uri])
+  }, [ax, isGif, meaningfullyVisible, post?.author.did, post?.uri])
 
   useEffect(() => {
     if (!ref.current) return
@@ -81,7 +82,10 @@ export function VideoEmbed({
       entries => {
         const entry = entries[0]
         if (!entry) return
-        setOnScreen(entry.isIntersecting && entry.intersectionRatio >= 0.5)
+        setOnScreen(entry.isIntersecting)
+        setMeaningfullyVisible(
+          entry.isIntersecting && entry.intersectionRatio >= 0.5,
+        )
         // GIFs don't send position - they don't compete to be the active video
         if (!isGif) {
           sendPosition(

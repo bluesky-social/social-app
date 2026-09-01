@@ -26,7 +26,7 @@ interface Props {
   post?: app.bsky.feed.defs.PostView
 }
 
-export function VideoEmbed({embed}: Props) {
+export function VideoEmbed({embed, post}: Props) {
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -53,7 +53,7 @@ export function VideoEmbed({embed}: Props) {
 
   const contents = (
     <ErrorBoundary renderError={renderError} key={key}>
-      <InnerWrapper embed={embed} />
+      <InnerWrapper embed={embed} post={post} />
     </ErrorBoundary>
   )
 
