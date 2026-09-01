@@ -7,7 +7,7 @@ import {focusManager, QueryClient, useQuery} from '@tanstack/react-query'
 import {persistQueryClient} from '@tanstack/react-query-persist-client'
 import debounce from 'lodash.debounce'
 
-import {networkRetry} from '#/lib/async/retry'
+import {isRetryableRequestError, networkRetry} from '#/lib/async/retry'
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {getAge} from '#/lib/strings/time'
 import {
@@ -348,9 +348,14 @@ export type OtherRequiredData = {
   actorDeclaration?: chat.bsky.actor.declaration.Main
 }
 export type OtherRequiredDataStatus = 'pending' | 'error' | 'success'
+const otherRequiredDataRetryOptions = {
+  retry: (failureCount: number, error: unknown) =>
+    failureCount < 2 && isRetryableRequestError(error),
+}
 export function createOtherRequiredDataQueryKey({did}: {did: string}) {
   return ['otherRequiredData', did]
 }
+
 async function getOtherRequiredData({
   accountClient,
 }: {
@@ -456,10 +461,11 @@ export async function prefetchOtherRequiredData({
 
   try {
     logger.debug(`prefetchOtherRequiredData: resolving...`)
-    const res = await networkRetry(3, () =>
-      getOtherRequiredData({accountClient}),
-    )
-    qc.setQueryData<OtherRequiredData>(qk, res)
+    await qc.fetchQuery({
+      ...otherRequiredDataRetryOptions,
+      queryKey: qk,
+      queryFn: () => getOtherRequiredData({accountClient}),
+    })
   } catch (err) {
     const e = err as Error
     logger.warn(`prefetchOtherRequiredData: failed`, {
@@ -491,12 +497,14 @@ export function useOtherRequiredDataQuery() {
   const did = accountClient.did
   return useQuery(
     {
+      ...otherRequiredDataRetryOptions,
       enabled: !!did,
       initialData: () => {
         if (!did) return
         return getOtherRequiredDataFromCache({did})
       },
       queryKey: createOtherRequiredDataQueryKey({did: did!}),
+      retryOnMount: false,
       async queryFn() {
         return getOtherRequiredData({accountClient})
       },
@@ -759,9 +767,18 @@ export function AgeAssuranceServerDataProvider({
   const {data: config} = useConfigQuery()
   const serverState = useServerStateQuery()
   const {state, metadata} = serverState.data || {}
-  const {data, status} = useOtherRequiredDataQuery()
+  const {data, errorUpdatedAt, status} = useOtherRequiredDataQuery()
+  /*
+   * A data-less query returns to `pending` and clears `error` while refetching,
+   * but retains `errorUpdatedAt`. Keep the error screen mounted until data
+   * loads successfully.
+   */
   const otherRequiredDataStatus: OtherRequiredDataStatus =
-    data === undefined ? status : 'success'
+    data !== undefined
+      ? 'success'
+      : status === 'error' || errorUpdatedAt > 0
+        ? 'error'
+        : 'pending'
   // `select` resolves the cached region-keyed map to the current region.
   const {data: deviceSignals} = useDeviceSignalsQuery()
   const ctx = useMemo(
