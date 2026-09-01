@@ -113,14 +113,12 @@ export function useReferenceListOptOutMutation({
         nextOptOut = result.uri
       }
 
-      let didReadViewerState = false
-      await until(
+      const didObserveRequestedState = await until(
         5,
         1e3,
         (value, error) => {
           if (error) return false
 
-          didReadViewerState = true
           nextOptOut = value.starterPack.list?.viewer?.referenceListOptOut
 
           // AppView ignores duplicate records and continues to expose the URI
@@ -134,8 +132,8 @@ export function useReferenceListOptOutMutation({
           }),
       )
 
-      if (!didReadViewerState) {
-        throw new Error('Unable to read starter pack opt-out state')
+      if (!didObserveRequestedState) {
+        throw new Error('Timed out waiting for starter pack opt-out state')
       }
       return nextOptOut
     },
@@ -190,6 +188,9 @@ export function useReferenceListOptOutMutation({
         queryClient.setQueryData(queryKey, context.previous)
       }
       onError(error)
+    },
+    onSettled: () => {
+      void queryClient.invalidateQueries({queryKey})
     },
   })
 }
