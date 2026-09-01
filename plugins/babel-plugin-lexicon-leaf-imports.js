@@ -201,6 +201,12 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
     }
   }
   const debug = !!process.env.BSKY_LEXICON_IMPORTS_DEBUG
+  /*
+   * Test hook: when set, every performed rewrite is reported on the Babel file
+   * metadata as `metadata.lexiconLeafImports[chain] = emitted specifier`, so a
+   * caller of transformSync can compare each rewrite against the real barrel.
+   */
+  const collectRewrites = !!options.collectRewrites
   const stats = {files: 0, rewrites: 0, bails: 0}
 
   function barrelDirFor(source, filename) {
@@ -367,7 +373,11 @@ module.exports = function lexiconLeafImports(babel, options = {}) {
                 keep.push(spec.node)
                 continue
               }
-              for (const {memberPath, leafFile} of plan) {
+              for (const {memberPath, leafFile, segments} of plan) {
+                if (collectRewrites) {
+                  const map = (state.file.metadata.lexiconLeafImports ??= {})
+                  map[segments.join('.')] = toSpecifier(filename, leafFile)
+                }
                 memberPath.replaceWith(t.cloneNode(namespaceIdFor(leafFile)))
                 stats.rewrites++
               }
