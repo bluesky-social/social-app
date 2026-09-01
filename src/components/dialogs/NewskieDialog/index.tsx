@@ -7,7 +7,6 @@ import {Trans} from '@lingui/react/macro'
 import {differenceInSeconds} from 'date-fns'
 
 import {HITSLOP_10} from '#/lib/constants'
-import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSession} from '#/state/session'
@@ -20,6 +19,7 @@ import * as StarterPackCard from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+import {getJoinMessage} from './utils'
 
 export function NewskieDialog({
   profile,
@@ -80,11 +80,10 @@ function DialogInner({
   now: number
 }) {
   const control = Dialog.useDialogContext()
-  const {_} = useLingui()
+  const {_, i18n} = useLingui()
   const t = useTheme()
   const moderationOpts = useModerationOpts()
   const {currentAccount} = useSession()
-  const timeAgo = useGetTimeAgo()
   const isMe = profile.did === currentAccount?.did
 
   const profileName = useMemo(() => {
@@ -95,28 +94,6 @@ function DialogInner({
       moderation.ui('displayName'),
     )
   }, [moderationOpts, profile])
-
-  const getJoinMessage = () => {
-    const timeAgoString = timeAgo(createdAt, now, {format: 'long'})
-
-    if (isMe) {
-      if (profile.joinedViaStarterPack) {
-        return _(
-          msg`You joined Bluesky using a starter pack ${timeAgoString} ago`,
-        )
-      } else {
-        return _(msg`You joined Bluesky ${timeAgoString} ago`)
-      }
-    } else {
-      if (profile.joinedViaStarterPack) {
-        return _(
-          msg`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`,
-        )
-      } else {
-        return _(msg`${profileName} joined Bluesky ${timeAgoString} ago`)
-      }
-    }
-  }
 
   return (
     <Dialog.ScrollableInner
@@ -143,7 +120,14 @@ function DialogInner({
           </Text>
         </View>
         <Text style={[a.text_md, a.text_center, a.leading_snug]}>
-          {getJoinMessage()}
+          {getJoinMessage({
+            i18n,
+            profileName,
+            isMe,
+            joinedViaStarterPack: Boolean(profile.joinedViaStarterPack),
+            createdAt,
+            now,
+          })}
         </Text>
         {profile.joinedViaStarterPack ? (
           <StarterPackCard.Link
