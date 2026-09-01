@@ -113,17 +113,30 @@ export function useReferenceListOptOutMutation({
         nextOptOut = result.uri
       }
 
+      let didReadViewerState = false
       await until(
         5,
         1e3,
-        (value, error) =>
-          !error &&
-          value.starterPack.list?.viewer?.referenceListOptOut === nextOptOut,
+        (value, error) => {
+          if (error) return false
+
+          didReadViewerState = true
+          nextOptOut = value.starterPack.list?.viewer?.referenceListOptOut
+
+          // AppView ignores duplicate records and continues to expose the URI
+          // of the record it indexed first. Treat that viewer state as the
+          // source of truth instead of waiting for the newly-created URI.
+          return referenceListOptOut ? !nextOptOut : Boolean(nextOptOut)
+        },
         async () =>
           await appviewClient.call(app.bsky.graph.getStarterPack, {
             starterPack: starterPack.uri,
           }),
       )
+
+      if (!didReadViewerState) {
+        throw new Error('Unable to read starter pack opt-out state')
+      }
       return nextOptOut
     },
     onMutate: async ({referenceListOptOut}) => {
