@@ -753,7 +753,9 @@ function OverflowMenu({
           </Prompt.TitleText>
           <Prompt.DescriptionText>
             {referenceListOptOut ? (
-              <Trans>You will appear in this starter pack again.</Trans>
+              <Trans>
+                You will be eligible to appear in this starter pack again.
+              </Trans>
             ) : (
               <Trans>
                 You will no longer appear in this starter pack. The creator can

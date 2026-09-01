@@ -85,7 +85,10 @@ export function useReferenceListOptOutMutation({
   const queryKey = RQKEY({did: parsed.name, rkey: parsed.rkey})
 
   return useMutation<
-    AtUriString | undefined,
+    {
+      referenceListOptOut: AtUriString | undefined
+      didObserveRequestedState: boolean
+    },
     Error,
     {referenceListOptOut?: string},
     {previous?: app.bsky.graph.defs.StarterPackView}
@@ -119,12 +122,19 @@ export function useReferenceListOptOutMutation({
         (value, error) => {
           if (error) return false
 
-          nextOptOut = value.starterPack.list?.viewer?.referenceListOptOut
+          const observedOptOut =
+            value.starterPack.list?.viewer?.referenceListOptOut
 
           // AppView ignores duplicate records and continues to expose the URI
           // of the record it indexed first. Treat that viewer state as the
           // source of truth instead of waiting for the newly-created URI.
-          return referenceListOptOut ? !nextOptOut : Boolean(nextOptOut)
+          const didObserveRequestedState = referenceListOptOut
+            ? !observedOptOut
+            : Boolean(observedOptOut)
+          if (didObserveRequestedState) {
+            nextOptOut = observedOptOut
+          }
+          return didObserveRequestedState
         },
         async () =>
           await appviewClient.call(app.bsky.graph.getStarterPack, {
@@ -132,10 +142,10 @@ export function useReferenceListOptOutMutation({
           }),
       )
 
-      if (!didObserveRequestedState) {
-        throw new Error('Timed out waiting for starter pack opt-out state')
+      return {
+        referenceListOptOut: nextOptOut,
+        didObserveRequestedState,
       }
-      return nextOptOut
     },
     onMutate: async ({referenceListOptOut}) => {
       await queryClient.cancelQueries({queryKey})
@@ -161,7 +171,7 @@ export function useReferenceListOptOutMutation({
       )
       return {previous}
     },
-    onSuccess: referenceListOptOut => {
+    onSuccess: ({referenceListOptOut}) => {
       queryClient.setQueryData<app.bsky.graph.defs.StarterPackView>(
         queryKey,
         current =>
@@ -189,8 +199,15 @@ export function useReferenceListOptOutMutation({
       }
       onError(error)
     },
-    onSettled: () => {
-      void queryClient.invalidateQueries({queryKey})
+    onSettled: data => {
+      void queryClient.invalidateQueries({
+        queryKey,
+        // If AppView has not indexed the PDS write yet, keep the committed
+        // optimistic state visible. Mark it stale so a later mount/focus can
+        // refetch once AppView has caught up without replacing it immediately
+        // with the known-outdated value.
+        refetchType: data && !data.didObserveRequestedState ? 'none' : 'active',
+      })
     },
   })
 }
