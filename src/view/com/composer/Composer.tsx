@@ -1681,6 +1681,8 @@ let ComposerPost = memo(function ComposerPost({
 
   return (
     <View
+      // Keep focused inputs attached while active-state opacity changes.
+      collapsable={false}
       style={[
         a.mx_lg,
         a.mb_sm,
