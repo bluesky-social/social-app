@@ -508,6 +508,7 @@ let VideoItem = ({
         ax.metric('post:view', {
           uri: post.uri,
           authorDid: post.author.did,
+          isReply: !!post.record.reply,
           logContext: 'ImmersiveVideo',
           feedDescriptor,
         })
