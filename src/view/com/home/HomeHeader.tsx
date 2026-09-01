@@ -2,8 +2,8 @@ import {useCallback, useMemo} from 'react'
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
-import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {type NavigationProp} from '#/lib/routes/types'
+import {getLocalizedFeedName} from '#/lib/strings/feed-names'
 import {type FeedSourceInfo} from '#/state/queries/feed'
 import {useSession} from '#/state/session'
 import {type RenderTabBarFnProps} from '#/view/com/pager/Pager'
@@ -19,7 +19,7 @@ export function HomeHeader(
 ) {
   const {feeds, onSelect: onSelectProp} = props
   const {hasSession} = useSession()
-  const {t: l} = useLingui()
+  const {i18n} = useLingui()
   const navigation = useNavigation<NavigationProp>()
 
   const hasPinnedCustom = useMemo<boolean>(() => {
@@ -31,20 +31,12 @@ export function HomeHeader(
   }, [feeds, hasSession])
 
   const items = useMemo(() => {
-    const pinnedNames = feeds.map(f => {
-      if (f.uri === 'following') {
-        return l({message: 'Following', context: 'feed-name'})
-      }
-      if (f.uri === DISCOVER_FEED_URI) {
-        return l({message: 'Discover', context: 'feed-name'})
-      }
-      return f.displayName
-    })
+    const pinnedNames = feeds.map(f => getLocalizedFeedName(f, i18n))
     if (!hasPinnedCustom) {
       return pinnedNames.concat('Feeds ✨')
     }
     return pinnedNames
-  }, [l, hasPinnedCustom, feeds])
+  }, [i18n, hasPinnedCustom, feeds])
 
   const onPressFeedsLink = useCallback(() => {
     navigation.navigate('Feeds')
