@@ -23,6 +23,7 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
   embed: app.bsky.embed.video.View
+  post?: app.bsky.feed.defs.PostView
 }
 
 export function VideoEmbed({embed}: Props) {
@@ -69,7 +70,7 @@ export function VideoEmbed({embed}: Props) {
   )
 }
 
-function InnerWrapper({embed}: Props) {
+function InnerWrapper({embed, post}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
   const ref = useRef<{togglePlayback: () => void}>(null)
@@ -86,6 +87,8 @@ function InnerWrapper({embed}: Props) {
    * the active position cost nothing.
    */
   const telemetryRef = useRef<PlaybackTelemetry | null>(null)
+  const impressionTrackedRef = useRef(false)
+  const playbackStartTrackedRef = useRef(false)
   useEffect(() => {
     return () => {
       telemetryRef.current?.deactivated()
@@ -121,6 +124,15 @@ function InnerWrapper({embed}: Props) {
         setIsActive={active => {
           setIsActive(active)
           if (active) {
+            if (!impressionTrackedRef.current) {
+              impressionTrackedRef.current = true
+              ax.metric('video:impression', {
+                postUri: post?.uri,
+                postAuthorDid: post?.author.did,
+                context: 'embed',
+                presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+              })
+            }
             if (telemetryRef.current == null) {
               telemetryRef.current = createPlaybackTelemetry({
                 surface: 'feed',
@@ -131,6 +143,17 @@ function InnerWrapper({embed}: Props) {
           } else {
             telemetryRef.current?.deactivated()
           }
+        }}
+        onPlaybackStart={autoplay => {
+          if (playbackStartTrackedRef.current) return
+          playbackStartTrackedRef.current = true
+          ax.metric('video:playback:start', {
+            postUri: post?.uri,
+            postAuthorDid: post?.author.did,
+            context: 'embed',
+            presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+            autoplay,
+          })
         }}
         onError={error => {
           telemetryRef.current?.error(error)
