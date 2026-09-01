@@ -329,6 +329,7 @@ export function StepProfile() {
             {
               width: 'auto',
               maxWidth: 410,
+              marginHorizontal: 'auto',
             },
           ]}>
           <View style={[a.align_center, {paddingTop: 20}]}>
