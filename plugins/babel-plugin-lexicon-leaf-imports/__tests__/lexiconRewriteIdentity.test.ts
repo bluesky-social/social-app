@@ -19,8 +19,11 @@ import path from 'node:path'
 
 import * as babel from '@babel/core'
 
-const ROOT = path.resolve(__dirname, '../..')
-const PLUGIN = path.join(ROOT, 'plugins/babel-plugin-lexicon-leaf-imports.js')
+const ROOT = path.resolve(__dirname, '../../..')
+const PLUGIN = path.join(
+  ROOT,
+  'plugins/babel-plugin-lexicon-leaf-imports/index.js',
+)
 
 function listFiles(dir: string, exts: string[]): string[] {
   const out: string[] = []
