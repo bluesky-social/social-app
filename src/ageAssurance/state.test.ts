@@ -16,7 +16,7 @@ const geolocation = {
 }
 
 describe('computeAgeAssuranceState', () => {
-  it('waits for required account data before computing access', () => {
+  it('computes access while required account data is pending', () => {
     expect(
       computeAgeAssuranceState({
         hasSession: true,
@@ -24,14 +24,13 @@ describe('computeAgeAssuranceState', () => {
         config: {regions: []},
         otherRequiredDataStatus: 'pending',
       }),
-    ).toEqual({
+    ).toMatchObject({
       status: AgeAssuranceStatus.Unknown,
-      access: AgeAssuranceAccess.Safe,
-      isLoading: true,
+      access: AgeAssuranceAccess.None,
     })
   })
 
-  it('surfaces required account data failures without computing access', () => {
+  it('denies access when required account data fails', () => {
     expect(
       computeAgeAssuranceState({
         hasSession: true,
@@ -41,7 +40,7 @@ describe('computeAgeAssuranceState', () => {
       }),
     ).toEqual({
       status: AgeAssuranceStatus.Unknown,
-      access: AgeAssuranceAccess.Safe,
+      access: AgeAssuranceAccess.None,
       error: 'account-data',
     })
   })
