@@ -5,7 +5,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {logger} from '#/logger'
-import {useAutoplayDisabled} from '#/state/preferences'
+import {useAutoplayDisabledPref} from '#/state/preferences'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a} from '#/alf'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
@@ -24,7 +24,7 @@ export function VideoPreview({
 }) {
   // TODO: figure out how to pause a GIF for reduced motion
   // it's not possible using an img tag -sfn
-  const autoplayDisabled = useAutoplayDisabled()
+  const {videoAutoplayDisabled} = useAutoplayDisabledPref()
   const [previewFailed, setPreviewFailed] = useState(false)
 
   let aspectRatio: number | undefined
@@ -73,7 +73,7 @@ export function VideoPreview({
               <video
                 src={video.uri}
                 style={{width: '100%', height: '100%', objectFit: 'contain'}}
-                autoPlay={!autoplayDisabled}
+                autoPlay={!videoAutoplayDisabled}
                 loop
                 muted
                 playsInline
@@ -92,7 +92,7 @@ export function VideoPreview({
                   setPreviewFailed(true)
                 }}
               />
-              {autoplayDisabled && (
+              {videoAutoplayDisabled && (
                 <View
                   style={[
                     a.absolute,
