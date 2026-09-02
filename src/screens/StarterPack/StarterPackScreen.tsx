@@ -773,7 +773,7 @@ function OverflowMenu({
             <Button
               variant="solid"
               color={referenceListOptOut ? 'primary' : 'negative'}
-              size={gtMobile ? 'small' : 'large'}
+              size="large"
               label={
                 referenceListOptOut
                   ? _(msg`Undo opt-out`)
