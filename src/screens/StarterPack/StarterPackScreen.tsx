@@ -764,8 +764,9 @@ function OverflowMenu({
               </Trans>
             ) : (
               <Trans>
-                You will no longer appear in this starter pack. The creator can
-                still remove you from its member list.
+                You will no longer appear in this starter pack. The creator will
+                be able to see that you've opted out and remove you if they
+                wish.
               </Trans>
             )}
           </Prompt.DescriptionText>
