@@ -17,8 +17,8 @@ overrides:
   '@react-native/normalize-colors': '0.86.0'
   '@expo/image-utils': '0.8.12'
   '@types/estree': '1.0.6'
-  'react-native-reanimated': '4.5.3'
-  'react-native-worklets': '0.11.3'
+  'react-native-reanimated': '4.6.0'
+  'react-native-worklets': '0.12.1'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
   'react-native-screens': '4.26.2'
@@ -43,10 +43,8 @@ patchedDependencies:
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
   'react-native-keyboard-controller@1.21.9': patches/react-native-keyboard-controller@1.21.9.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
-  'react-native-reanimated@4.5.3': patches/react-native-reanimated@4.5.3.patch
   'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
-  react-native-worklets@0.11.3: patches/react-native-worklets@0.11.3.patch
   'react-native@0.86.0': patches/react-native@0.86.0.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'
