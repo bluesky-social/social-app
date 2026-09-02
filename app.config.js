@@ -296,6 +296,10 @@ module.exports = function (_config) {
         './plugins/withAndroidManifestLargeHeapPlugin.js',
         './plugins/withAndroidManifestFCMIconPlugin.js',
         './plugins/withAndroidManifestIntentQueriesPlugin.js',
+        // Foldable continuity workaround for Expo SDK 54 defaults: include
+        // smallestScreenSize in MainActivity configChanges on Android.
+        // Revisit/remove after Expo SDK upgrade if generated defaults already include it.
+        './plugins/withAndroidManifestMainActivityConfigChangesPlugin.js',
         './plugins/withAndroidStylesAccentColorPlugin.js',
         './plugins/withAndroidNoJitpackPlugin.js',
         './plugins/shareExtension/withShareExtensions.js',
