@@ -16,12 +16,12 @@ import {useSession} from '#/state/session'
 import {List, type ListRef} from '#/view/com/util/List'
 import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonIcon, ButtonText} from '#/components/Button'
+import * as Admonition from '#/components/Admonition'
+import {ButtonIcon, ButtonText} from '#/components/Button'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
-import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
 
@@ -159,7 +159,6 @@ function OptedOutControls({
   canRemove: boolean
 }) {
   const {_} = useLingui()
-  const t = useTheme()
   const {mutate: removeMembership, isPending} = useListMembershipRemoveMutation(
     {
       onSuccess: () => Toast.show(_(msg`Removed from starter pack`)),
@@ -171,33 +170,36 @@ function OptedOutControls({
   )
 
   return (
-    <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_md]}>
-      <Text style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium]}>
-        <Trans>Opted out of this starter pack</Trans>
-      </Text>
-      {canRemove ? (
-        <Button
-          label={_(msg`Remove user from starter pack`)}
-          size="small"
-          variant="solid"
-          color="secondary"
-          disabled={isPending}
-          onPress={() =>
-            removeMembership({
-              listUri,
-              actorDid: item.subject.did,
-              membershipUri: item.uri,
-            })
-          }>
-          {isPending ? (
-            <ButtonIcon icon={Loader} />
-          ) : (
-            <ButtonText>
-              <Trans>Remove</Trans>
-            </ButtonText>
-          )}
-        </Button>
-      ) : null}
-    </View>
+    <Admonition.Outer type="info" style={[a.mt_sm]}>
+      <Admonition.Row style={[a.align_center]}>
+        <Admonition.Icon />
+        <Admonition.Content>
+          <Admonition.Text>
+            <Trans>Opted out of this starter pack</Trans>
+          </Admonition.Text>
+        </Admonition.Content>
+        {canRemove ? (
+          <Admonition.Button
+            label={_(msg`Remove user from starter pack`)}
+            color="secondary"
+            disabled={isPending}
+            onPress={() =>
+              removeMembership({
+                listUri,
+                actorDid: item.subject.did,
+                membershipUri: item.uri,
+              })
+            }>
+            {isPending ? (
+              <ButtonIcon icon={Loader} />
+            ) : (
+              <ButtonText>
+                <Trans>Remove</Trans>
+              </ButtonText>
+            )}
+          </Admonition.Button>
+        ) : null}
+      </Admonition.Row>
+    </Admonition.Outer>
   )
 }
