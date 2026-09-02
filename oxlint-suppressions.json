@@ -1318,11 +1318,6 @@
       "count": 1
     }
   },
-  "src/view/com/composer/drafts/DraftsButton.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/view/com/composer/drafts/state/queries.ts": {
     "typescript/no-explicit-any": {
       "count": 2

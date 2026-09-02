@@ -121,10 +121,12 @@ function InnerWrapper({embed}: Props) {
         setIsActive={active => {
           setIsActive(active)
           if (active) {
-            telemetryRef.current ??= createPlaybackTelemetry({
-              surface: 'feed',
-              presentation: embed.presentation === 'gif' ? 'gif' : 'video',
-            })
+            if (telemetryRef.current == null) {
+              telemetryRef.current = createPlaybackTelemetry({
+                surface: 'feed',
+                presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+              })
+            }
             telemetryRef.current.activated()
           } else {
             telemetryRef.current?.deactivated()

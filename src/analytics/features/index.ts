@@ -77,6 +77,22 @@ export function getFeatures() {
 
 export function getFeatureDescription(feature: Features, i18n: I18n) {
   switch (feature) {
+    case Features.PostFeedKnownLikersEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Social proofing on posts',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message: 'Spot posts your friends and follows have liked.',
+            comment: 'Description of a feature flag (Social proofing on posts)',
+          }),
+        ),
+      }
     case Features.CanonicalPostNumberingEnable:
       return {
         key: feature,

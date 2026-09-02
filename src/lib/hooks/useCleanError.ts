@@ -86,6 +86,7 @@ const NETWORK_ERRORS = [
   'Abort',
   'Network request failed',
   'Failed to fetch',
+  'fetch failed',
   'Load failed',
   'Upstream service unreachable',
 ]

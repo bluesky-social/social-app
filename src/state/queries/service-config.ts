@@ -13,6 +13,22 @@ type ServiceConfig = {
   }[]
 }
 
+/**
+ * Module scope because React Compiler cannot lower a `??` inside a `try`, and
+ * `data` only exists once the request in that `try` resolves.
+ */
+function toServiceConfig(data: {
+  checkEmailConfirmed?: boolean
+  liveNow?: ServiceConfig['liveNow']
+}): ServiceConfig {
+  return {
+    checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
+    // @ts-expect-error not included in the lexicon atm
+    topicsEnabled: Boolean(data.topicsEnabled),
+    liveNow: data.liveNow ?? [],
+  }
+}
+
 export function useServiceConfigQuery() {
   const client = useAppviewClient()
   return useQuery<ServiceConfig>({
@@ -22,12 +38,7 @@ export function useServiceConfigQuery() {
     queryFn: async () => {
       try {
         const data = await client.call(app.bsky.unspecced.getConfig)
-        return {
-          checkEmailConfirmed: Boolean(data.checkEmailConfirmed),
-          // @ts-expect-error not included in the lexicon atm
-          topicsEnabled: Boolean(data.topicsEnabled),
-          liveNow: data.liveNow ?? [],
-        }
+        return toServiceConfig(data)
       } catch (e) {
         return {
           checkEmailConfirmed: false,

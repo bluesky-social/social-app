@@ -86,17 +86,20 @@ export function ProfileBadges({
 
   const gap = isOnTheSmallSide ? a.gap_2xs : a.gap_xs
   const padding = gap.gap / 2
+  const hitSlops = []
   let visibleBadgeIndex = 0
-  const hitSlops = badgeVisibility.map(isVisible => {
-    if (!isVisible) return HITSLOP_20
-
+  for (const isVisible of badgeVisibility) {
+    if (!isVisible) {
+      hitSlops.push(HITSLOP_20)
+      continue
+    }
     const index = visibleBadgeIndex++
-    return {
+    hitSlops.push({
       ...HITSLOP_20,
       left: index === 0 ? HITSLOP_20.left : padding,
       right: index === badgeCount - 1 ? HITSLOP_20.right : padding,
-    }
-  })
+    })
+  }
 
   return (
     <View style={[a.flex_row, a.align_center, gap, style]}>

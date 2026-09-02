@@ -6,7 +6,9 @@ let emojis: Awaited<ReturnType<typeof getEmojis>> | null = null
 
 export function useGetEmojis() {
   return useCallback(async () => {
-    emojis ??= await getEmojis()
+    if (emojis == null) {
+      emojis = await getEmojis()
+    }
     return emojis
   }, [])
 }

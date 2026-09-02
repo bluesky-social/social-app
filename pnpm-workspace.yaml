@@ -29,6 +29,7 @@ allowBuilds:
   'esbuild': false
   'unrs-resolver': true
 patchedDependencies:
+  '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.18.0': patches/@sentry__expo-upload-sourcemaps@8.18.0.patch
   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
   'expo-haptics@57.0.1': patches/expo-haptics@57.0.1.patch

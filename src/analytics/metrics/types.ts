@@ -450,6 +450,7 @@ export type Events = {
   'post:view': {
     uri: string
     authorDid: string
+    isReply: boolean
     logContext:
       | 'FeedItem'
       | 'PostThreadItem'
