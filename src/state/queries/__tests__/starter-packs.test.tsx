@@ -26,7 +26,7 @@ const starterPack = {
     uri: 'at://did:plc:creator/app.bsky.graph.list/list',
     viewer: {},
   },
-} as app.bsky.graph.defs.StarterPackView
+} as unknown as app.bsky.graph.defs.StarterPackView
 
 const queryKey = ['starter-pack', 'did:plc:creator', 'pack']
 const createdOptOut =
