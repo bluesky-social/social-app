@@ -27,7 +27,6 @@ const {parse} = require('@babel/parser')
 const fs = require('node:fs')
 const os = require('node:os')
 const path = require('node:path')
-const {Worker} = require('node:worker_threads')
 const ts = require('typescript')
 
 const plugin = require('..')
@@ -530,7 +529,7 @@ describe('app callsites: transformed sources typecheck', () => {
    */
   test(
     'every file importing the barrel',
-    async () => {
+    () => {
       const consumers = []
       ;(function walk(dir) {
         for (const entry of fs.readdirSync(dir, {withFileTypes: true})) {
@@ -598,8 +597,7 @@ describe('app callsites: transformed sources typecheck', () => {
       /*
        * Files whose shadow output is byte-identical to the baseline output
        * cannot produce a diagnostics diff, so only changed files are overlaid,
-       * typechecked, and compared - a bit under half of the consumers, which
-       * roughly halves the cost of the two programs below.
+       * typechecked, and compared - a bit under half of the consumers.
        */
       const shadowOverlays = new Map()
       const baselineOverlays = new Map()
@@ -620,53 +618,50 @@ describe('app callsites: transformed sources typecheck', () => {
       const options = loadAppCompilerOptions()
 
       /*
-       * The baseline and shadow typechecks are independent CPU-bound
-       * programs, so each runs in its own worker thread and the two proceed
-       * in parallel. The worker returns diagnostics as plain records (see
-       * lexiconTypecheckWorker.js).
+       * One program holds both versions of every changed consumer: the
+       * baseline at the file's real path and the shadow at a virtual
+       * `.__shadow__.` sibling path - same directory and extension, so every
+       * relative/aliased import and platform-extension resolution behaves as
+       * it would from the real file. The two versions differ only in these
+       * consumer files; everything they import resolves to the same modules.
+       * A single program therefore parses and binds the shared app +
+       * node_modules closure once, where separate baseline and shadow
+       * programs would each redo it - that closure, not checking the roots,
+       * dominates the cost.
        */
-      function diagnose(overlays) {
-        return new Promise((resolve, reject) => {
-          const worker = new Worker(
-            path.join(__dirname, '..', 'lexiconTypecheckWorker.js'),
-            {workerData: {consumers: changed, overlays, options}},
-          )
-          worker.once('message', byFile =>
-            resolve(new Map(Object.entries(byFile))),
-          )
-          worker.once('error', reject)
-          worker.once('exit', code => {
-            if (code !== 0) {
-              reject(new Error(`typecheck worker exited with code ${code}`))
-            }
-          })
-        })
+      const shadowPath = f => f.replace(/\.(tsx?)$/, '.__shadow__.$1')
+      const overlays = new Map()
+      for (const file of changed) {
+        overlays.set(file, baselineOverlays.get(file))
+        overlays.set(shadowPath(file), shadowOverlays.get(file))
       }
+      const host = createOverlayHost(options, overlays)
+      const program = ts.createProgram([...overlays.keys()], options, host)
 
-      const [baseline, shadow] = await Promise.all([
-        diagnose(baselineOverlays),
-        diagnose(shadowOverlays),
-      ])
-
-      const diagKey = d => `TS${d.code}: ${d.message}`
+      /*
+       * Shadow-file diagnostics may spell the virtual path inside messages;
+       * normalize it away so a diagnostic differing only in that spelling
+       * does not count as a regression.
+       */
+      const diagKey = d =>
+        `TS${d.code}: ${ts
+          .flattenDiagnosticMessageText(d.messageText, ' ')
+          .replaceAll('.__shadow__.', '.')}`
       const regressions = []
       for (const file of changed) {
-        const known = new Set(baseline.get(file).map(diagKey))
-        for (const d of shadow.get(file)) {
+        const baselineSf = program.getSourceFile(file)
+        const shadowSf = program.getSourceFile(shadowPath(file))
+        if (!baselineSf || !shadowSf) {
+          throw new Error(`${file} missing from program`)
+        }
+        const known = new Set(fileDiagnostics(program, baselineSf).map(diagKey))
+        for (const d of fileDiagnostics(program, shadowSf)) {
           if (!known.has(diagKey(d))) regressions.push(d)
         }
       }
       if (regressions.length > 0) {
-        const details = regressions
-          .slice(0, 20)
-          .map(d =>
-            d.fileName
-              ? `${d.fileName}:${d.line} TS${d.code}: ${d.message}`
-              : `TS${d.code}: ${d.message}`,
-          )
-          .join('\n')
         throw new Error(
-          `plugin introduced diagnostics in app sources:\n${details}`,
+          `plugin introduced diagnostics in app sources:\n${formatDiagnostics(regressions)}`,
         )
       }
     },
