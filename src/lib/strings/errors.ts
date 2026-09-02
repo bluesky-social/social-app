@@ -39,7 +39,12 @@ export function cleanError(e: unknown): string {
    */
   // oxlint-disable-next-line typescript/no-base-to-string
   const str = typeof e === 'string' ? e : e.toString()
-  if (isNetworkError(str)) {
+  /*
+   * Passed the original value, not `str`, so the wrapped-cause walk is
+   * reachable: the XRPC clients report the platform fetch failure as the
+   * `cause` of a generic message.
+   */
+  if (isNetworkError(e)) {
     return t`Unable to connect. Please check your internet connection and try again.`
   }
   /*
