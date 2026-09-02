@@ -781,8 +781,9 @@ function OverflowMenu({
               }
               disabled={isOptOutPending}
               onPress={() => {
-                optOutDialogControl.close()
-                setReferenceListOptOut({referenceListOptOut})
+                optOutDialogControl.close(() => {
+                  setReferenceListOptOut({referenceListOptOut})
+                })
               }}>
               <ButtonText>
                 {referenceListOptOut ? (
