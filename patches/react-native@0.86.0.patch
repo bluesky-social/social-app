@@ -336,6 +336,18 @@ index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad
  RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/internal/featureflags/ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android.kt b/ReactAndroid/src/main/java/com/facebook/react/internal/featureflags/ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android.kt
+index e4405f3badf2bda93db0be54716f8323627ce020..514674cea3084fe8f8b9bbf845843e3b8bbabc20 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/internal/featureflags/ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/internal/featureflags/ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android.kt
+@@ -8,4 +8,6 @@
+ package com.facebook.react.internal.featureflags
+ 
+ public class ReactNativeFeatureFlagsOverrides_RNOSS_Stable_Android() :
+-    ReactNativeNewArchitectureFeatureFlagsDefaults()
++    ReactNativeNewArchitectureFeatureFlagsDefaults() {
++  override fun fixFindShadowNodeByTagRaceCondition(): Boolean = true
++}
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
@@ -409,40 +421,3 @@ index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce
  
    NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
  
-diff --git a/ReactCommon/react/renderer/uimanager/UIManager.cpp b/ReactCommon/react/renderer/uimanager/UIManager.cpp
-index 3e48dabc6fffc246fd0517ef5f3f2b7721115511..ea4ba5fdf359c513a5ca4f0e94492facf4ead221 100644
---- a/ReactCommon/react/renderer/uimanager/UIManager.cpp
-+++ b/ReactCommon/react/renderer/uimanager/UIManager.cpp
-@@ -530,30 +530,8 @@ std::shared_ptr<const ShadowNode> UIManager::findShadowNodeByTag_DEPRECATED(
-   auto shadowNode = std::shared_ptr<const ShadowNode>{};
- 
-   shadowTreeRegistry_.enumerate([&](const ShadowTree& shadowTree, bool& stop) {
--    // Obtain a pointer to the root node. The flag-gated path uses
--    // getCurrentRevision() which keeps the root alive via shared_ptr for
--    // the entire traversal, fixing a use-after-free race condition.
--    RootShadowNode::Shared rootShadowNodeHolder;
--    const RootShadowNode* rootShadowNode = nullptr;
--    if (ReactNativeFeatureFlags::fixFindShadowNodeByTagRaceCondition()) {
--      rootShadowNodeHolder = shadowTree.getCurrentRevision().rootShadowNode;
--      rootShadowNode = rootShadowNodeHolder.get();
--    } else {
--      // TODO(T257154369): Remove after flag rollout.
--      // The public interface of `ShadowTree` discourages accessing a stored
--      // pointer to a root node because of the possible data race.
--      // To work around this, we ask for a commit and immediately cancel it
--      // returning `nullptr` instead of a new shadow tree.
--      // We don't want to add a way to access a stored pointer to a root
--      // node because this `findShadowNodeByTag` is deprecated. It is only
--      // added to make migration to the new architecture easier.
--      shadowTree.tryCommit(
--          [&](const RootShadowNode& oldRootShadowNode) {
--            rootShadowNode = &oldRootShadowNode;
--            return nullptr;
--          },
--          {/* default commit options */});
--    }
-+    auto rootShadowNodeHolder = shadowTree.getCurrentRevision().rootShadowNode;
-+    const auto* rootShadowNode = rootShadowNodeHolder.get();
- 
-     if (rootShadowNode != nullptr) {
-       const auto& children = rootShadowNode->getChildren();
