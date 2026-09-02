@@ -125,7 +125,7 @@ export function useReferenceListOptOutMutation({
           if (error) return false
 
           const observedOptOut =
-            value.starterPack.list?.viewer?.referenceListOptOut
+            value?.starterPack.list?.viewer?.referenceListOptOut
 
           // AppView ignores duplicate records and continues to expose the URI
           // of the record it indexed first. Treat that viewer state as the
