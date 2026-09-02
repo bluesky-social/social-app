@@ -29,6 +29,7 @@ allowBuilds:
   'esbuild': false
   'unrs-resolver': true
 patchedDependencies:
+  '@expo/cli@57.0.16': patches/@expo__cli@57.0.16.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.18.0': patches/@sentry__expo-upload-sourcemaps@8.18.0.patch
   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
@@ -39,7 +40,6 @@ patchedDependencies:
   'expo-updates@57.0.10': patches/expo-updates@57.0.10.patch
   expo@57.0.8: patches/expo@57.0.8.patch
   'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
-  'react-native-dotenv@3.4.11': patches/react-native-dotenv@3.4.11.patch
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
   'react-native-keyboard-controller@1.21.9': patches/react-native-keyboard-controller@1.21.9.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
