@@ -161,7 +161,7 @@ function AltTextInner({
                   label={_(msg`Alt text`)}
                   placeholder={vendorAltText}
                   onChangeText={onChange}
-                  defaultValue={altText}
+                  value={altText}
                   multiline
                   autoFocus
                   onKeyPress={({nativeEvent}) => {

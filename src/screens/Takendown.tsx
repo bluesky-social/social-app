@@ -162,7 +162,7 @@ export function Takendown() {
                       }>
                       <TextField.Input
                         label={_(msg`Reason for appeal`)}
-                        defaultValue={reason}
+                        value={reason}
                         onChangeText={setReason}
                         placeholder={_(msg`Why are you appealing?`)}
                         multiline

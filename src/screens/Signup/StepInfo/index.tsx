@@ -76,10 +76,11 @@ export function StepInfo({
   const preemptivelyCompleteActivePolicyUpdate =
     usePreemptivelyCompleteActivePolicyUpdate()
 
-  const inviteCodeValueRef = useRef<string>(state.inviteCode)
-  const emailValueRef = useRef<string>(state.email)
+  /**
+   * The last email we ran the "did you really mean this?" check against, so
+   * the warning is only shown once per distinct address.
+   */
   const prevEmailValueRef = useRef<string>(state.email)
-  const passwordValueRef = useRef<string>(state.password)
 
   const emailInputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const passwordInputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
@@ -111,10 +112,8 @@ export function StepInfo({
   }, [])
 
   const onNextPress = () => {
-    const inviteCode = inviteCodeValueRef.current
-    const email = emailValueRef.current
+    const {inviteCode, email, password} = state
     const emailChanged = prevEmailValueRef.current !== email
-    const password = passwordValueRef.current
 
     if (!isOverRegionMinAccessAge) {
       return
@@ -170,9 +169,6 @@ export function StepInfo({
     }
 
     preemptivelyCompleteActivePolicyUpdate()
-    dispatch({type: 'setInviteCode', value: inviteCode})
-    dispatch({type: 'setEmail', value: email})
-    dispatch({type: 'setPassword', value: password})
     dispatch({type: 'next'})
     ax.metric('signup:nextPressed', {
       activeStep: state.activeStep,
@@ -207,7 +203,7 @@ export function StepInfo({
                   <TextField.Icon icon={Ticket} />
                   <TextField.Input
                     onChangeText={value => {
-                      inviteCodeValueRef.current = value.trim()
+                      dispatch({type: 'setInviteCode', value: value.trim()})
                       if (
                         state.errorField === 'invite-code' &&
                         value.trim().length > 0
@@ -216,7 +212,7 @@ export function StepInfo({
                       }
                     }}
                     label={l`Required for this provider`}
-                    defaultValue={state.inviteCode}
+                    value={state.inviteCode}
                     autoCapitalize="none"
                     autoComplete="email"
                     keyboardType="email-address"
@@ -239,7 +235,7 @@ export function StepInfo({
                   testID="emailInput"
                   inputRef={emailInputRef}
                   onChangeText={value => {
-                    emailValueRef.current = value.trim()
+                    dispatch({type: 'setEmail', value: value.trim()})
                     if (hasWarnedEmail) {
                       setHasWarnedEmail(false)
                     }
@@ -252,7 +248,7 @@ export function StepInfo({
                     }
                   }}
                   label={l`Enter your email address`}
-                  defaultValue={state.email}
+                  value={state.email}
                   autoCapitalize="none"
                   autoComplete="email"
                   keyboardType="email-address"
@@ -274,13 +270,13 @@ export function StepInfo({
                   testID="passwordInput"
                   inputRef={passwordInputRef}
                   onChangeText={value => {
-                    passwordValueRef.current = value
+                    dispatch({type: 'setPassword', value})
                     if (state.errorField === 'password' && value.length >= 8) {
                       dispatch({type: 'clearError'})
                     }
                   }}
                   label={l`Choose your password`}
-                  defaultValue={state.password}
+                  value={state.password}
                   secureTextEntry
                   autoComplete="new-password"
                   autoCapitalize="none"

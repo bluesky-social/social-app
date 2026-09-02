@@ -288,8 +288,11 @@ existing usages across the app for a canonical example.
 ### TextField
 
 Compound component at `#/components/forms/TextField` (`TextField.LabelText`,
-`TextField.Root`, `TextField.Icon`, `TextField.Input`). Prefer `defaultValue` over
-`value` (see Footguns).
+`TextField.Root`, `TextField.Icon`, `TextField.Input`). Controlled inputs
+(`value` + `onChangeText`) are fine and are usually what you want - the old
+advice to reach for `defaultValue` was a New Architecture migration concern and
+no longer applies. Reach for `defaultValue` only when nothing outside the input
+needs to read the text.
 
 ### Typography
 
@@ -506,24 +509,6 @@ This applies to:
 - Callbacks passed from parent components
 
 The Menu component on iOS specifically uses this pattern – see `src/components/Menu/index.tsx:151`.
-
-### Controlled vs Uncontrolled Inputs
-
-Prefer `defaultValue` over `value` for TextInput on the old architecture:
-
-```tsx
-// Preferred - uncontrolled
-<TextField.Input
-  defaultValue={initialEmail}
-  onChangeText={setEmail}
-/>
-
-// Avoid when possible - controlled (can cause performance issues)
-<TextField.Input
-  value={email}
-  onChangeText={setEmail}
-/>
-```
 
 ### Platform-Specific Behavior
 
