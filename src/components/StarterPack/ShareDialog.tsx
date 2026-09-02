@@ -53,14 +53,15 @@ function ShareDialogInner({
 
   const imageUrl = getStarterPackOgCard(starterPack)
 
-  const onShareLink = async () => {
+  const onShareLink = () => {
     if (!link) return
-    shareUrl(link)
     ax.metric('starterPack:share', {
       starterPack: starterPack.uri,
       shareType: 'link',
     })
-    control.close()
+    control.close(() => {
+      void shareUrl(link)
+    })
   }
 
   const saveImageToAlbum = useSaveImageToMediaLibrary()
