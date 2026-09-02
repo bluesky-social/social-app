@@ -9,7 +9,9 @@
       "properties": {
         "alt": {
           "type": "string",
-          "description": "Alt text description of the video, for accessibility."
+          "maxLength": 10000,
+          "description": "Alt text description of the video, for accessibility.",
+          "maxGraphemes": 1000
         },
         "video": {
           "type": "blob",
@@ -49,7 +51,9 @@
       ],
       "properties": {
         "alt": {
-          "type": "string"
+          "type": "string",
+          "maxLength": 10000,
+          "maxGraphemes": 1000
         },
         "cid": {
           "type": "string",
