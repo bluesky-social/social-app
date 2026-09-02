@@ -2,7 +2,6 @@ import {Text, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, ios, platform, useTheme} from '#/alf'
-import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 
 /**
@@ -19,12 +18,10 @@ export type ThreadItemPostNumbering = Pick<
 export function useHasThreadItemPostNumber(
   value: ThreadItemPostNumbering | undefined,
 ) {
-  const ax = useAnalytics()
   const index = value?.opThreadPostIndex
   const count = value?.opThreadPostCount
 
   return (
-    ax.features.enabled(ax.features.CanonicalPostNumberingEnable) &&
     index !== undefined &&
     count !== undefined &&
     index >= 1 &&
