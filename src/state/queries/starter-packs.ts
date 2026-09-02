@@ -74,9 +74,11 @@ export function useStarterPackQuery({
 export function useReferenceListOptOutMutation({
   starterPack,
   onError,
+  onSuccess,
 }: {
   starterPack: app.bsky.graph.defs.StarterPackView
   onError: (error: Error) => void
+  onSuccess?: (action: 'optOut' | 'undo') => void
 }) {
   const queryClient = useQueryClient()
   const appviewClient = useAppviewClient()
@@ -171,7 +173,7 @@ export function useReferenceListOptOutMutation({
       )
       return {previous}
     },
-    onSuccess: ({referenceListOptOut}) => {
+    onSuccess: ({referenceListOptOut}, variables) => {
       queryClient.setQueryData<app.bsky.graph.defs.StarterPackView>(
         queryKey,
         current =>
@@ -192,6 +194,7 @@ export function useReferenceListOptOutMutation({
         queryClient,
         uri: starterPack.list!.uri,
       })
+      onSuccess?.(variables.referenceListOptOut ? 'undo' : 'optOut')
     },
     onError: (error, _, context) => {
       if (context?.previous) {

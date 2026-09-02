@@ -552,6 +552,12 @@ function OverflowMenu({
   const {mutate: setReferenceListOptOut, isPending: isOptOutPending} =
     useReferenceListOptOutMutation({
       starterPack,
+      onSuccess: action => {
+        ax.metric('starterPack:optOut', {
+          starterPack: starterPack.uri,
+          action,
+        })
+      },
       onError: error => {
         logger.error('Failed to update starter pack opt-out', {
           safeMessage: error,

@@ -715,6 +715,10 @@ export type Events = {
     count: number
   }
   'starterPack:delete': {}
+  'starterPack:optOut': {
+    starterPack: string
+    action: 'optOut' | 'undo'
+  }
   'starterPack:create': {
     setName: boolean
     setDescription: boolean

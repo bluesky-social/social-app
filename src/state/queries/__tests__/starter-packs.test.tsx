@@ -34,7 +34,7 @@ const createdOptOut =
 const indexedOptOut =
   'at://did:plc:viewer/app.bsky.graph.referencelistoptout/indexed'
 
-function setup() {
+function setup({onSuccess = jest.fn()} = {}) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {gcTime: Infinity, retry: false},
@@ -57,11 +57,11 @@ function setup() {
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )
   const hook = renderHook(
-    () => useReferenceListOptOutMutation({starterPack, onError}),
+    () => useReferenceListOptOutMutation({starterPack, onError, onSuccess}),
     {wrapper},
   )
 
-  return {appviewClient, hook, onError, pdsClient, queryClient}
+  return {appviewClient, hook, onError, onSuccess, pdsClient, queryClient}
 }
 
 beforeEach(() => {
@@ -76,7 +76,7 @@ beforeAll(() => {
 
 describe('useReferenceListOptOutMutation', () => {
   it('keeps the successful PDS write optimistic when AppView has not caught up', async () => {
-    const {hook, pdsClient, queryClient} = setup()
+    const {hook, onSuccess, pdsClient, queryClient} = setup()
     pdsClient.create.mockResolvedValue({uri: createdOptOut})
     jest.mocked(until).mockResolvedValue(false)
 
@@ -92,6 +92,7 @@ describe('useReferenceListOptOutMutation', () => {
       queryClient.getQueryData<app.bsky.graph.defs.StarterPackView>(queryKey)
         ?.list?.viewer?.referenceListOptOut,
     ).toBe(createdOptOut)
+    expect(onSuccess).toHaveBeenCalledWith('optOut')
   })
 
   it('uses the indexed viewer-state URI when AppView reports a duplicate', async () => {
@@ -121,7 +122,7 @@ describe('useReferenceListOptOutMutation', () => {
   })
 
   it('deletes the viewer-state record URI when undoing', async () => {
-    const {hook, pdsClient, queryClient} = setup()
+    const {hook, onSuccess, pdsClient, queryClient} = setup()
     queryClient.setQueryData(queryKey, {
       ...starterPack,
       list: {
@@ -148,10 +149,11 @@ describe('useReferenceListOptOutMutation', () => {
       queryClient.getQueryData<app.bsky.graph.defs.StarterPackView>(queryKey)
         ?.list?.viewer?.referenceListOptOut,
     ).toBeUndefined()
+    expect(onSuccess).toHaveBeenCalledWith('undo')
   })
 
   it('restores viewer state and surfaces PDS write failures', async () => {
-    const {hook, onError, pdsClient, queryClient} = setup()
+    const {hook, onError, onSuccess, pdsClient, queryClient} = setup()
     const error = new Error('write failed')
     pdsClient.create.mockRejectedValue(error)
 
@@ -162,6 +164,7 @@ describe('useReferenceListOptOutMutation', () => {
     })
 
     await waitFor(() => expect(onError).toHaveBeenCalledWith(error))
+    expect(onSuccess).not.toHaveBeenCalled()
     expect(
       queryClient.getQueryData<app.bsky.graph.defs.StarterPackView>(queryKey)
         ?.list?.viewer?.referenceListOptOut,
