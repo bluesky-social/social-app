@@ -10,6 +10,7 @@ import {atoms as a, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {createStaticClick, SimpleInlineLinkText} from '#/components/Link'
 import {useAnalytics} from '#/analytics'
+import {AccountStatus} from './components/AccountStatus'
 import {FilterMenu} from './components/FilterMenu'
 import {ReportRow} from './components/ReportRow'
 
@@ -171,6 +172,7 @@ function YourAccount() {
           </SimpleInlineLinkText>
         ) : undefined}
       </View>
+      <AccountStatus status="warning" />
       <ReportRow
         subject={l({
           context: 'moderation-report-action',
