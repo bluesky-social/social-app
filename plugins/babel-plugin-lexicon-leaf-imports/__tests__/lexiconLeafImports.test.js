@@ -595,15 +595,25 @@ describe('app callsites: transformed sources typecheck', () => {
         return out
       }
 
+      /*
+       * Files whose shadow output is byte-identical to the baseline output
+       * cannot produce a diagnostics diff, so only changed files are overlaid,
+       * typechecked, and compared - a bit under half of the consumers, which
+       * roughly halves the cost of the two programs below.
+       */
       const shadowOverlays = new Map()
       const baselineOverlays = new Map()
+      const changed = []
       let rewritten = 0
       for (const file of consumers) {
         const code = fs.readFileSync(file, 'utf8')
-        const out = transformConsumer(code, file, true)
-        shadowOverlays.set(file, out)
-        baselineOverlays.set(file, transformConsumer(code, file, false))
-        if (out.includes('_lex_')) rewritten++
+        const shadow = transformConsumer(code, file, true)
+        const baseline = transformConsumer(code, file, false)
+        if (shadow === baseline) continue
+        changed.push(file)
+        shadowOverlays.set(file, shadow)
+        baselineOverlays.set(file, baseline)
+        if (shadow.includes('_lex_')) rewritten++
       }
       expect(rewritten).toBeGreaterThan(100)
 
@@ -619,7 +629,7 @@ describe('app callsites: transformed sources typecheck', () => {
         return new Promise((resolve, reject) => {
           const worker = new Worker(
             path.join(__dirname, '..', 'lexiconTypecheckWorker.js'),
-            {workerData: {consumers, overlays, options}},
+            {workerData: {consumers: changed, overlays, options}},
           )
           worker.once('message', byFile =>
             resolve(new Map(Object.entries(byFile))),
@@ -640,7 +650,7 @@ describe('app callsites: transformed sources typecheck', () => {
 
       const diagKey = d => `TS${d.code}: ${d.message}`
       const regressions = []
-      for (const file of consumers) {
+      for (const file of changed) {
         const known = new Set(baseline.get(file).map(diagKey))
         for (const d of shadow.get(file)) {
           if (!known.has(diagKey(d))) regressions.push(d)
