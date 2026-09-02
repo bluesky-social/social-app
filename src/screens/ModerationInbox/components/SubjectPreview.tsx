@@ -1,10 +1,8 @@
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {NotFoundScreen} from '#/view/screens/NotFound'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
-import {useAnalytics} from '#/analytics'
 
 // TODO These are placeholder values. -dsb
 const POSTED_AT = new Date(2026, 7, 8)
@@ -12,13 +10,6 @@ const POSTED_AT = new Date(2026, 7, 8)
 export function SubjectPreview() {
   const t = useTheme()
   const {i18n} = useLingui()
-  const ax = useAnalytics()
-
-  const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
-
-  if (!isEnabled) {
-    return <NotFoundScreen />
-  }
 
   // TODO These are placeholder values. -dsb
   const handle = '@deleteme01.bsky.social'

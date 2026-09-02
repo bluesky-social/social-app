@@ -172,7 +172,7 @@ function SubItem({
               ]}>
               {badge >= UNREAD_NOTIFICATION_CAP
                 ? l({
-                    message: `${i18n.number(UNREAD_NOTIFICATION_CAP - 1)}+`,
+                    message: `${i18n.number(UNREAD_NOTIFICATION_CAP - 1)}+ updates`,
                     comment:
                       'Displayed when the number of notifications exceeds the cap – for example, 99+ notifications',
                   })
