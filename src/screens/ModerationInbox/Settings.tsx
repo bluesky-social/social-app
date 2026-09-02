@@ -46,16 +46,10 @@ export function ModerationInboxSettingsScreen() {
               context: 'moderation-inbox-setting',
               message: 'Your reports notifications',
             })}
-            titleText={
-              <Trans context="moderation-inbox-setting">
-                Your reports notifications
-              </Trans>
-            }
-            descriptionText={
-              <Trans context="moderation-inbox-setting">
-                Get notified about your report outcomes.
-              </Trans>
-            }
+            description={l({
+              context: 'moderation-inbox-setting',
+              message: 'Get notified about your report outcomes.',
+            })}
             value={reportNotifications}
             onChange={setReportNotifications}
           />
@@ -65,16 +59,10 @@ export function ModerationInboxSettingsScreen() {
               context: 'moderation-inbox-setting',
               message: 'Your account notifications',
             })}
-            titleText={
-              <Trans context="moderation-inbox-setting">
-                Your account notifications
-              </Trans>
-            }
-            descriptionText={
-              <Trans context="moderation-inbox-setting">
-                Get notified about actions taken against you.
-              </Trans>
-            }
+            description={l({
+              context: 'moderation-inbox-setting',
+              message: 'Get notified about actions taken against you.',
+            })}
             value={accountNotifications}
             onChange={setAccountNotifications}
           />
@@ -84,16 +72,11 @@ export function ModerationInboxSettingsScreen() {
               context: 'moderation-inbox-setting',
               message: 'Account labeling notifications',
             })}
-            titleText={
-              <Trans context="moderation-inbox-setting">
-                Account labeling notifications
-              </Trans>
-            }
-            descriptionText={
-              <Trans context="moderation-inbox-setting">
-                Get notified when a label is added to your account and posts.
-              </Trans>
-            }
+            description={l({
+              context: 'moderation-inbox-setting',
+              message:
+                'Get notified when a label is added to your account and posts.',
+            })}
             disabled
             value={labelingNotifications}
             onChange={setLabelingNotifications}
@@ -107,16 +90,14 @@ export function ModerationInboxSettingsScreen() {
 function NotificationToggle({
   name,
   label,
-  titleText,
-  descriptionText,
+  description,
   disabled = false,
   value,
   onChange,
 }: {
   name: string
   label: string
-  titleText: React.ReactNode
-  descriptionText: React.ReactNode
+  description: React.ReactNode
   disabled?: boolean
   value: boolean
   onChange: (value: boolean) => void
@@ -139,7 +120,7 @@ function NotificationToggle({
               a.font_medium,
               disabled ? t.atoms.text_contrast_low : undefined,
             ]}>
-            {titleText}
+            {label}
           </Text>
           <Text
             style={[
@@ -149,7 +130,7 @@ function NotificationToggle({
                 ? t.atoms.text_contrast_low
                 : t.atoms.text_contrast_medium,
             ]}>
-            {descriptionText}
+            {description}
           </Text>
         </View>
         <Toggle.Platform />
