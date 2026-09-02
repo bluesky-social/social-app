@@ -44,6 +44,7 @@ export type Events = {
       | 'SignupQueued'
       | 'Deactivated'
       | 'Takendown'
+      | 'AgeAssuranceDataUnavailableScreen'
       | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
