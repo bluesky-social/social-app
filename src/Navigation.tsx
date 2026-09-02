@@ -88,6 +88,7 @@ import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {ModerationInboxScreen} from '#/screens/ModerationInbox'
+import {ModerationInboxSettingsScreen} from '#/screens/ModerationInbox/Settings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
 import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
@@ -183,6 +184,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="ModerationInbox"
         getComponent={() => ModerationInboxScreen}
         options={{title: title(msg`Moderation inbox`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ModerationInboxSettings"
+        getComponent={() => ModerationInboxSettingsScreen}
+        options={{title: title(msg`Mod inbox settings`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationModlists"
