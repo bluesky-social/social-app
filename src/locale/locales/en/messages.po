@@ -971,7 +971,7 @@ msgstr ""
 msgid "A new code has been sent"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:94
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:95
 msgid "A new form of verification"
 msgstr ""
 
@@ -1126,7 +1126,7 @@ msgctxt "toast"
 msgid "Account unmuted"
 msgstr ""
 
-#: src/components/verification/VerifierDialog.tsx:100
+#: src/components/verification/VerifierDialog.tsx:101
 msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. These trusted verifiers are selected by Bluesky."
 msgstr ""
 
@@ -1203,7 +1203,7 @@ msgstr ""
 msgid "Add another post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2294
+#: src/view/com/composer/Composer.tsx:2296
 msgid "Add another post to thread"
 msgstr ""
 
@@ -1659,8 +1659,8 @@ msgstr ""
 msgid "An illustration of the Bluesky app with a paper airplane flying out of it, representing inviting friends"
 msgstr "An illustration of the Bluesky app with a paper airplane flying out of it, representing inviting friends"
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:86
-#: src/components/verification/VerifierDialog.tsx:88
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:87
+#: src/components/verification/VerifierDialog.tsx:89
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
@@ -1691,7 +1691,7 @@ msgstr "An issue occurred starting the group chat, please try again."
 msgid "An issue occurred, please try again."
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:121
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:122
 msgid "An mockup of a iPhone showing the Bluesky app open to the profile of a verified user with a blue checkmark next to their display name."
 msgstr ""
 
@@ -1943,7 +1943,7 @@ msgstr ""
 msgid "Are you sure you want to rescind your request to join {0}?"
 msgstr "Are you sure you want to rescind your request to join {0}?"
 
-#: src/view/com/composer/Composer.tsx:1761
+#: src/view/com/composer/Composer.tsx:1763
 msgid "Are you sure you'd like to discard this post?"
 msgstr ""
 
@@ -2297,7 +2297,7 @@ msgstr "bloomscrolling booksky"
 
 #: src/components/dialogs/ServerInput.tsx:144
 #: src/components/dialogs/ServerInput.tsx:146
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:520
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:522
 msgid "Bluesky"
 msgstr ""
 
@@ -2359,7 +2359,7 @@ msgstr ""
 msgid "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 msgstr "Bluesky will not show your account to logged-out users and will ask other apps to do the same. Other apps may not honor this request. It doesn't make your account private."
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:136
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:137
 msgid "Bluesky will proactively verify notable and authentic accounts."
 msgstr ""
 
@@ -2469,7 +2469,7 @@ msgstr "by @{0}"
 #. placeholder {0}: createSanitizedDisplayName( joinLinkPreview.owner, true, moderateProfile(joinLinkPreview.owner, moderationOpts).ui( 'displayName', ), )
 #. placeholder {0}: info.creatorHandle === TRENDING_HANDLE ? l`Bluesky` : sanitizeHandle(info.creatorHandle, '@')
 #: src/components/intents/GroupChatJoinDialog.tsx:384
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:508
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:510
 msgid "By <0>{0}</0>"
 msgstr ""
 
@@ -2559,8 +2559,8 @@ msgstr "Camera access needed"
 #: src/screens/Settings/Settings.tsx:312
 #: src/screens/Takendown.tsx:100
 #: src/screens/Takendown.tsx:103
-#: src/view/com/composer/Composer.tsx:1839
-#: src/view/com/composer/Composer.tsx:1849
+#: src/view/com/composer/Composer.tsx:1841
+#: src/view/com/composer/Composer.tsx:1851
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
 #: src/view/shell/desktop/LeftNav.tsx:228
@@ -3001,8 +3001,8 @@ msgstr ""
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:165
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:173
 #: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:140
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:178
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:187
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:179
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:188
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:192
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:200
 #: src/components/dialogs/SearchablePeopleList.tsx:336
@@ -3026,8 +3026,8 @@ msgstr ""
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:119
 #: src/components/StarterPack/Wizard/WizardEditListDialog.tsx:125
 #: src/components/TrendingTopics.tsx:55
-#: src/components/verification/VerificationsDialog.tsx:146
-#: src/components/verification/VerifierDialog.tsx:147
+#: src/components/verification/VerificationsDialog.tsx:147
+#: src/components/verification/VerifierDialog.tsx:148
 #: src/components/WhoCanReply.tsx:218
 #: src/components/WhoCanReply.tsx:225
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:45
@@ -3063,8 +3063,8 @@ msgstr "Close banner"
 #: src/components/dialogs/LanguageSelectDialog.tsx:354
 #: src/components/dialogs/NotificationSettingsDialog.tsx:102
 #: src/components/moderation/BlockDialog.tsx:198
-#: src/components/verification/VerificationsDialog.tsx:138
-#: src/components/verification/VerifierDialog.tsx:140
+#: src/components/verification/VerificationsDialog.tsx:139
+#: src/components/verification/VerifierDialog.tsx:141
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:36
 msgid "Close dialog"
 msgstr ""
@@ -3113,7 +3113,7 @@ msgstr ""
 msgid "Closes password update alert"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1847
+#: src/view/com/composer/Composer.tsx:1849
 msgid "Closes post composer and discards post draft"
 msgstr ""
 
@@ -3167,7 +3167,7 @@ msgid "Compose new post"
 msgstr ""
 
 #. placeholder {0}: MAX_GRAPHEME_LENGTH || 0
-#: src/view/com/composer/Composer.tsx:1723
+#: src/view/com/composer/Composer.tsx:1725
 msgid "Compose posts up to {0, plural, other {# characters}} in length"
 msgstr ""
 
@@ -3175,11 +3175,11 @@ msgstr ""
 msgid "Compose reply"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2679
+#: src/view/com/composer/Composer.tsx:2681
 msgid "Compressing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2681
+#: src/view/com/composer/Composer.tsx:2683
 msgid "Compressing video..."
 msgstr ""
 
@@ -3906,7 +3906,7 @@ msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:805
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:807
-#: src/view/com/composer/Composer.tsx:1735
+#: src/view/com/composer/Composer.tsx:1737
 msgid "Delete post"
 msgstr ""
 
@@ -4059,7 +4059,7 @@ msgstr ""
 #: src/screens/Profile/Header/EditProfileDialog.tsx:79
 #: src/view/com/composer/Composer.tsx:1515
 #: src/view/com/composer/Composer.tsx:1560
-#: src/view/com/composer/Composer.tsx:1768
+#: src/view/com/composer/Composer.tsx:1770
 #: src/view/com/composer/drafts/DraftItem.tsx:243
 #: src/view/com/composer/drafts/DraftsButton.tsx:128
 msgid "Discard"
@@ -4077,7 +4077,7 @@ msgid "Discard draft?"
 msgstr ""
 
 #: src/view/com/composer/Composer.tsx:1530
-#: src/view/com/composer/Composer.tsx:1760
+#: src/view/com/composer/Composer.tsx:1762
 msgid "Discard post?"
 msgstr ""
 
@@ -4110,7 +4110,7 @@ msgstr ""
 msgid "Dismiss banner"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2621
+#: src/view/com/composer/Composer.tsx:2623
 msgid "Dismiss error"
 msgstr ""
 
@@ -4212,8 +4212,8 @@ msgstr ""
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
-#: src/screens/Onboarding/StepProfile/index.tsx:354
-#: src/screens/Onboarding/StepProfile/index.tsx:357
+#: src/screens/Onboarding/StepProfile/index.tsx:355
+#: src/screens/Onboarding/StepProfile/index.tsx:358
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:214
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:221
 #: src/view/com/composer/labels/LabelsBtn.tsx:219
@@ -4231,7 +4231,7 @@ msgstr ""
 msgid "Double tap to close the dialog"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1199
+#: src/screens/VideoFeed/index.tsx:1200
 msgid "Double tap to like"
 msgstr ""
 
@@ -4487,7 +4487,7 @@ msgstr ""
 msgid "Email address"
 msgstr ""
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:100
+#: src/components/intents/VerifyEmailIntentDialog.tsx:101
 msgid "Email Resent"
 msgstr ""
 
@@ -4503,7 +4503,7 @@ msgstr ""
 msgid "Email verification complete!"
 msgstr ""
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:75
+#: src/components/intents/VerifyEmailIntentDialog.tsx:76
 msgid "Email Verified"
 msgstr ""
 
@@ -4668,7 +4668,7 @@ msgstr ""
 msgid "Entertainment"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2699
+#: src/view/com/composer/Composer.tsx:2701
 #: src/view/com/util/error/ErrorScreen.tsx:40
 msgid "Error"
 msgstr ""
@@ -4773,7 +4773,7 @@ msgstr ""
 msgid "Expand post text"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1075
+#: src/screens/VideoFeed/index.tsx:1076
 msgid "Expands or collapses post text"
 msgstr ""
 
@@ -5224,7 +5224,7 @@ msgstr ""
 msgid "Feed identifier"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:401
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:403
 msgid "Feed menu"
 msgstr ""
 
@@ -5425,7 +5425,7 @@ msgstr "Focus the search field"
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:415
-#: src/screens/VideoFeed/index.tsx:958
+#: src/screens/VideoFeed/index.tsx:959
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
 #: src/view/com/notifications/NotificationFeedItem.tsx:897
 msgid "Follow"
@@ -5441,7 +5441,7 @@ msgstr ""
 msgid "Follow {displayName}"
 msgstr "Follow {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:937
+#: src/screens/VideoFeed/index.tsx:938
 msgid "Follow {handle}"
 msgstr ""
 
@@ -5540,7 +5540,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:501
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:411
-#: src/screens/VideoFeed/index.tsx:956
+#: src/screens/VideoFeed/index.tsx:957
 #: src/view/com/notifications/NotificationFeedItem.tsx:869
 #: src/view/com/notifications/NotificationFeedItem.tsx:885
 msgid "Following"
@@ -5565,7 +5565,7 @@ msgstr ""
 msgid "Following {displayName}"
 msgstr "Following {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:936
+#: src/screens/VideoFeed/index.tsx:937
 msgid "Following {handle}"
 msgstr ""
 
@@ -5795,7 +5795,7 @@ msgstr ""
 msgid "GIF"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2704
+#: src/view/com/composer/Composer.tsx:2706
 msgid "GIF uploaded"
 msgstr ""
 
@@ -5818,8 +5818,8 @@ msgstr ""
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
 #: src/screens/ProfileList/components/ErrorScreen.tsx:41
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1260
-#: src/screens/VideoFeed/index.tsx:1264
+#: src/screens/VideoFeed/index.tsx:1261
+#: src/screens/VideoFeed/index.tsx:1265
 #: src/view/com/auth/LoggedOut.tsx:127
 #: src/view/com/profile/ProfileFollowers.tsx:225
 #: src/view/com/profile/ProfileFollowers.tsx:226
@@ -6141,7 +6141,7 @@ msgstr ""
 msgid "Hidden"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:738
+#: src/screens/VideoFeed/index.tsx:739
 msgid "Hidden by your moderation settings."
 msgstr ""
 
@@ -6663,7 +6663,7 @@ msgstr ""
 msgid "Invalid rescind request."
 msgstr "Invalid rescind request."
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:87
+#: src/components/intents/VerifyEmailIntentDialog.tsx:88
 msgid "Invalid Verification Code"
 msgstr ""
 
@@ -6772,7 +6772,7 @@ msgid "It's just you right now! Add more people to your starter pack by searchin
 msgstr ""
 
 #. placeholder {0}: videoState.jobId
-#: src/view/com/composer/Composer.tsx:2640
+#: src/view/com/composer/Composer.tsx:2642
 msgid "Job ID: {0}"
 msgstr ""
 
@@ -6895,8 +6895,8 @@ msgstr ""
 msgid "Latest"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:168
-#: src/components/verification/VerifierDialog.tsx:136
+#: src/components/verification/VerificationsDialog.tsx:169
+#: src/components/verification/VerifierDialog.tsx:137
 #: src/screens/Moderation/VerificationSettings.tsx:50
 #: src/screens/Profile/Header/EditProfileDialog.tsx:346
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:215
@@ -6956,8 +6956,8 @@ msgstr ""
 msgid "Learn more about this warning"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:153
-#: src/components/verification/VerifierDialog.tsx:122
+#: src/components/verification/VerificationsDialog.tsx:154
+#: src/components/verification/VerifierDialog.tsx:123
 msgctxt "english-only-resource"
 msgid "Learn more about verification on Bluesky"
 msgstr ""
@@ -7067,7 +7067,7 @@ msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:570
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:572
 msgid "Like"
 msgstr ""
 
@@ -7086,7 +7086,7 @@ msgstr ""
 msgid "Like 10 posts to train the Discover feed"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:558
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:560
 msgid "Like this feed"
 msgstr ""
 
@@ -7131,7 +7131,7 @@ msgid "Liked by {0} and {1}"
 msgstr "Liked by {0} and {1}"
 
 #: src/components/LabelingServiceCard/index.tsx:96
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:546
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:548
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:165
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:179
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
@@ -7945,7 +7945,7 @@ msgstr ""
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:75
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:74
 #: src/components/dialogs/nuxs/DraftsAnnouncement.tsx:85
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:65
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:66
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:129
 msgid "New Feature"
 msgstr ""
@@ -8637,7 +8637,7 @@ msgid "Open drawer menu"
 msgstr ""
 
 #: src/screens/Messages/components/MessageComposer.tsx:216
-#: src/view/com/composer/Composer.tsx:2271
+#: src/view/com/composer/Composer.tsx:2273
 msgid "Open emoji picker"
 msgstr ""
 
@@ -9089,8 +9089,8 @@ msgid "Pictures meant for adults."
 msgstr ""
 
 #: src/components/FeedCard.tsx:363
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:575
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:584
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:577
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:586
 #: src/screens/SavedFeeds.tsx:559
 msgid "Pin feed"
 msgstr ""
@@ -9340,12 +9340,12 @@ msgstr ""
 msgid "Porn"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1913
+#: src/view/com/composer/Composer.tsx:1915
 msgctxt "action"
 msgid "Post"
 msgstr ""
 
-#: src/screens/PostThread/index.tsx:560
+#: src/screens/PostThread/index.tsx:561
 msgctxt "description"
 msgid "Post"
 msgstr ""
@@ -9366,7 +9366,7 @@ msgstr ""
 msgid "Post a video"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1911
+#: src/view/com/composer/Composer.tsx:1913
 msgctxt "action"
 msgid "Post All"
 msgstr ""
@@ -9399,7 +9399,7 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:135
 #: src/screens/PostThread/components/ThreadItemPost.tsx:121
 #: src/screens/PostThread/components/ThreadItemTreePost.tsx:112
-#: src/screens/VideoFeed/index.tsx:552
+#: src/screens/VideoFeed/index.tsx:553
 msgid "Post has been deleted"
 msgstr ""
 
@@ -9555,11 +9555,11 @@ msgstr ""
 msgid "Privacy violation of a minor"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2693
+#: src/view/com/composer/Composer.tsx:2695
 msgid "Processing GIF..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2695
+#: src/view/com/composer/Composer.tsx:2697
 msgid "Processing video..."
 msgstr ""
 
@@ -9606,22 +9606,22 @@ msgid "Public, sharable lists of users to mute or block in bulk."
 msgstr ""
 
 #. Accessibility label for button to publish a single post
-#: src/view/com/composer/Composer.tsx:1897
+#: src/view/com/composer/Composer.tsx:1899
 msgid "Publish post"
 msgstr ""
 
 #. Accessibility label for button to publish multiple posts in a thread
-#: src/view/com/composer/Composer.tsx:1892
+#: src/view/com/composer/Composer.tsx:1894
 msgid "Publish posts"
 msgstr ""
 
 #. Accessibility label for button to publish multiple replies in a thread
-#: src/view/com/composer/Composer.tsx:1881
+#: src/view/com/composer/Composer.tsx:1883
 msgid "Publish replies"
 msgstr ""
 
 #. Accessibility label for button to publish a single reply
-#: src/view/com/composer/Composer.tsx:1886
+#: src/view/com/composer/Composer.tsx:1888
 msgid "Publish reply"
 msgstr ""
 
@@ -9732,16 +9732,16 @@ msgctxt "english-only-resource"
 msgid "Read about how to use advanced search filters"
 msgstr "Read about how to use advanced search filters"
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:162
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:173
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:163
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:174
 msgid "Read blog post"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1076
+#: src/screens/VideoFeed/index.tsx:1077
 msgid "Read less"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1076
+#: src/screens/VideoFeed/index.tsx:1077
 msgid "Read more"
 msgstr ""
 
@@ -9992,7 +9992,7 @@ msgid "Remove user from list"
 msgstr ""
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
-#: src/components/verification/VerificationsDialog.tsx:250
+#: src/components/verification/VerificationsDialog.tsx:251
 #: src/view/com/profile/ProfileMenu.tsx:418
 #: src/view/com/profile/ProfileMenu.tsx:421
 msgid "Remove verification"
@@ -10114,7 +10114,7 @@ msgstr ""
 msgid "Reply"
 msgstr "Reply"
 
-#: src/view/com/composer/Composer.tsx:1909
+#: src/view/com/composer/Composer.tsx:1911
 msgctxt "action"
 msgid "Reply"
 msgstr ""
@@ -10175,8 +10175,8 @@ msgstr ""
 msgid "Report dialog"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:602
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:608
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:604
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:610
 msgid "Report feed"
 msgstr ""
 
@@ -10396,11 +10396,11 @@ msgstr ""
 msgid "Resend email"
 msgstr ""
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:125
+#: src/components/intents/VerifyEmailIntentDialog.tsx:126
 msgid "Resend Email"
 msgstr ""
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:118
+#: src/components/intents/VerifyEmailIntentDialog.tsx:119
 msgid "Resend Verification Email"
 msgstr ""
 
@@ -10494,7 +10494,7 @@ msgstr ""
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:36
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:577
-#: src/screens/VideoFeed/index.tsx:1261
+#: src/screens/VideoFeed/index.tsx:1262
 #: src/view/screens/NotFound.tsx:54
 msgid "Returns to previous page"
 msgstr ""
@@ -11282,7 +11282,7 @@ msgstr "Share Profile"
 msgid "Share QR code"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:528
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:530
 msgid "Share this feed"
 msgstr ""
 
@@ -11347,8 +11347,8 @@ msgstr ""
 #: src/features/liveNow/components/LiveStatusDialog.tsx:315
 #: src/features/liveNow/components/LiveStatusDialog.tsx:319
 #: src/screens/List/ListHiddenScreen.tsx:193
-#: src/screens/VideoFeed/index.tsx:741
-#: src/screens/VideoFeed/index.tsx:747
+#: src/screens/VideoFeed/index.tsx:742
+#: src/screens/VideoFeed/index.tsx:748
 msgid "Show anyway"
 msgstr ""
 
@@ -11634,7 +11634,7 @@ msgstr ""
 msgid "Some moderation services in your list are no longer available."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:122
+#: src/components/verification/VerificationsDialog.tsx:123
 msgid "Some of your verifications are invalid."
 msgstr ""
 
@@ -11729,7 +11729,7 @@ msgstr ""
 msgid "Something went wrong. Please try again."
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:598
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:600
 msgid "Something wrong? Let us know."
 msgstr ""
 
@@ -12216,7 +12216,7 @@ msgstr ""
 msgid "Thanks for your feedback!"
 msgstr "Thanks for your feedback!"
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:78
+#: src/components/intents/VerifyEmailIntentDialog.tsx:79
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr ""
 
@@ -12246,7 +12246,7 @@ msgstr ""
 msgid "That's all, folks!"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1233
+#: src/screens/VideoFeed/index.tsx:1234
 msgid "That's everything!"
 msgstr ""
 
@@ -12385,7 +12385,7 @@ msgstr ""
 msgid "The Terms of Service have been moved to"
 msgstr ""
 
-#: src/components/intents/VerifyEmailIntentDialog.tsx:90
+#: src/components/intents/VerifyEmailIntentDialog.tsx:91
 msgid "The verification code you have provided is invalid. Please make sure that you have used the correct verification link or request a new one."
 msgstr ""
 
@@ -12435,7 +12435,7 @@ msgstr ""
 msgid "There was an issue contacting the server"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:473
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:475
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:97
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
@@ -12559,7 +12559,7 @@ msgstr "They won’t be able to rejoin unless you invite them again."
 msgid "This {screenDescription} has been flagged:"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:89
+#: src/components/verification/VerificationsDialog.tsx:90
 msgid "This account has a checkmark because it's been verified by trusted sources."
 msgstr ""
 
@@ -12567,7 +12567,7 @@ msgstr ""
 msgid "This account has been marked as automated by its owner."
 msgstr "This account has been marked as automated by its owner."
 
-#: src/components/verification/VerificationsDialog.tsx:94
+#: src/components/verification/VerificationsDialog.tsx:95
 msgid "This account has one or more attempted verifications, but it is not currently verified."
 msgstr ""
 
@@ -13104,7 +13104,7 @@ msgstr "Trending videos"
 msgid "Trolling"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:142
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:143
 msgid "Trust emerges from relationships, communities, and shared context, so we’re also enabling <0>trusted verifiers</0>: organizations that can directly issue verification."
 msgstr ""
 
@@ -13296,7 +13296,7 @@ msgstr ""
 msgid "Unfollow account"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:940
+#: src/screens/VideoFeed/index.tsx:941
 msgid "Unfollows the user"
 msgstr ""
 
@@ -13312,7 +13312,7 @@ msgstr ""
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:209
+#: src/components/verification/VerificationsDialog.tsx:210
 msgid "Unknown verifier"
 msgstr ""
 
@@ -13324,7 +13324,7 @@ msgstr ""
 msgid "Unlabeled, abusive, or non-consensual adult content"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:570
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:572
 msgid "Unlike"
 msgstr ""
 
@@ -13394,8 +13394,8 @@ msgid "Unpin"
 msgstr ""
 
 #: src/components/FeedCard.tsx:354
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:575
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:582
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:577
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:584
 #: src/screens/SavedFeeds.tsx:467
 msgid "Unpin feed"
 msgstr ""
@@ -13547,7 +13547,7 @@ msgstr ""
 msgid "Upload from Library"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2686
+#: src/view/com/composer/Composer.tsx:2688
 msgid "Uploading GIF..."
 msgstr ""
 
@@ -13561,7 +13561,7 @@ msgstr ""
 msgid "Uploading link thumbnail..."
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2688
+#: src/view/com/composer/Composer.tsx:2690
 msgid "Uploading video..."
 msgstr ""
 
@@ -13711,7 +13711,7 @@ msgstr ""
 msgid "Verifications on Bluesky work differently than on other platforms. <0>Learn more here.</0>"
 msgstr ""
 
-#: src/components/verification/VerificationsDialog.tsx:105
+#: src/components/verification/VerificationsDialog.tsx:106
 msgid "Verified by:"
 msgstr ""
 
@@ -13825,7 +13825,7 @@ msgid "Video from {0}: {text}"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle( post.author.handle, '@', )
-#: src/screens/VideoFeed/index.tsx:1195
+#: src/screens/VideoFeed/index.tsx:1196
 msgid "Video from {0}. Tap to play or pause the video"
 msgstr ""
 
@@ -13834,11 +13834,11 @@ msgstr ""
 msgid "Video Games"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1194
+#: src/screens/VideoFeed/index.tsx:1195
 msgid "Video is paused"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1194
+#: src/screens/VideoFeed/index.tsx:1195
 msgid "Video is playing"
 msgstr ""
 
@@ -13850,7 +13850,7 @@ msgstr ""
 msgid "Video settings"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:2706
+#: src/view/com/composer/Composer.tsx:2708
 msgid "Video uploaded"
 msgstr ""
 
@@ -13888,9 +13888,9 @@ msgstr ""
 #. placeholder {0}: authors[0].profile.displayName || authors[0].profile.handle
 #. placeholder {0}: info.creatorHandle
 #. placeholder {0}: profile.handle
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:511
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:513
 #: src/screens/Search/components/SearchProfileCard.tsx:37
-#: src/screens/VideoFeed/index.tsx:901
+#: src/screens/VideoFeed/index.tsx:902
 #: src/view/com/notifications/NotificationFeedItem.tsx:600
 msgid "View {0}'s profile"
 msgstr ""
@@ -13921,8 +13921,8 @@ msgstr ""
 msgid "View debug entry"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:769
-#: src/screens/VideoFeed/index.tsx:787
+#: src/screens/VideoFeed/index.tsx:770
+#: src/screens/VideoFeed/index.tsx:788
 msgid "View details"
 msgstr ""
 
@@ -14003,7 +14003,7 @@ msgstr ""
 msgid "View this user's verifications"
 msgstr ""
 
-#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:542
+#: src/screens/CustomFeed/components/CustomFeedHeader.tsx:544
 msgid "View users who like this feed"
 msgstr ""
 
@@ -14146,7 +14146,7 @@ msgid "We have partnered with <0>KWS</0> to handle age verification. When you cl
 msgstr ""
 
 #. placeholder {0}: currentAccount?.email
-#: src/components/intents/VerifyEmailIntentDialog.tsx:103
+#: src/components/intents/VerifyEmailIntentDialog.tsx:104
 msgid "We have sent another verification email to <0>{0}</0>."
 msgstr ""
 
@@ -14244,7 +14244,7 @@ msgstr ""
 msgid "We’re having network issues, try again"
 msgstr "We’re having network issues, try again"
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:97
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:98
 msgid "We’re introducing a new layer of verification on Bluesky — an easy-to-see checkmark."
 msgstr ""
 
@@ -14346,7 +14346,7 @@ msgstr "what’s up"
 msgid "What's up?"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:150
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:151
 msgid "When you tap on a check, you’ll see which organizations have granted verification."
 msgstr ""
 
@@ -14363,7 +14363,7 @@ msgstr "Who can join this group chat and how"
 msgid "Who can reply"
 msgstr ""
 
-#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:131
+#: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:132
 msgid "Who can verify?"
 msgstr ""
 
@@ -14436,7 +14436,7 @@ msgstr ""
 msgid "Write a post"
 msgstr ""
 
-#: src/view/com/composer/Composer.tsx:1722
+#: src/view/com/composer/Composer.tsx:1724
 msgid "Write post"
 msgstr ""
 
@@ -15028,7 +15028,7 @@ msgstr ""
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1242
+#: src/screens/VideoFeed/index.tsx:1243
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
