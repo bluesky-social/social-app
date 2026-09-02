@@ -2,18 +2,25 @@ import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
+import {msg} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
+import {cleanError} from '#/lib/strings/errors'
 import {useAllListMembersQuery} from '#/state/queries/list-members'
+import {useListMembershipRemoveMutation} from '#/state/queries/list-memberships'
 import {useSession} from '#/state/session'
 import {List, type ListRef} from '#/view/com/util/List'
 import {type SectionRef} from '#/screens/Profile/Sections/types'
 import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
+import {Loader} from '#/components/Loader'
 import {Default as ProfileCard} from '#/components/ProfileCard'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
@@ -53,18 +60,17 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
 
     const getSortedProfiles = () => {
       if (!listItems) return
-      if (!isOwn) return listItems
 
-      const myIndex = listItems.findIndex(
-        item => item.subject.did === currentAccount?.did,
-      )
-      return myIndex !== -1
-        ? [
-            listItems[myIndex],
-            ...listItems.slice(0, myIndex),
-            ...listItems.slice(myIndex + 1),
-          ]
-        : listItems
+      return [...listItems].sort((a, b) => {
+        if (a.subjectOptedOut !== b.subjectOptedOut) {
+          return a.subjectOptedOut ? 1 : -1
+        }
+        if (isOwn) {
+          if (a.subject.did === currentAccount?.did) return -1
+          if (b.subject.did === currentAccount?.did) return 1
+        }
+        return 0
+      })
     }
     const onScrollToTop = useCallback(() => {
       scrollElRef.current?.scrollToOffset({
@@ -94,9 +100,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
             logContext="StarterPackProfilesList"
           />
           {item.subjectOptedOut ? (
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              <Trans>Opted out of this starter pack</Trans>
-            </Text>
+            <OptedOutControls item={item} listUri={listUri} canRemove={isOwn} />
           ) : null}
         </View>
       )
@@ -144,3 +148,56 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
       )
   },
 )
+
+function OptedOutControls({
+  item,
+  listUri,
+  canRemove,
+}: {
+  item: app.bsky.graph.defs.ListItemView
+  listUri: string
+  canRemove: boolean
+}) {
+  const {_} = useLingui()
+  const t = useTheme()
+  const {mutate: removeMembership, isPending} = useListMembershipRemoveMutation(
+    {
+      onSuccess: () => Toast.show(_(msg`Removed from starter pack`)),
+      onError: error =>
+        Toast.show(cleanError(error), {
+          type: 'error',
+        }),
+    },
+  )
+
+  return (
+    <View style={[a.flex_row, a.align_center, a.justify_between, a.gap_md]}>
+      <Text style={[a.flex_1, a.text_sm, t.atoms.text_contrast_medium]}>
+        <Trans>Opted out of this starter pack</Trans>
+      </Text>
+      {canRemove ? (
+        <Button
+          label={_(msg`Remove user from starter pack`)}
+          size="small"
+          variant="solid"
+          color="secondary"
+          disabled={isPending}
+          onPress={() =>
+            removeMembership({
+              listUri,
+              actorDid: item.subject.did,
+              membershipUri: item.uri,
+            })
+          }>
+          {isPending ? (
+            <ButtonIcon icon={Loader} />
+          ) : (
+            <ButtonText>
+              <Trans>Remove</Trans>
+            </ButtonText>
+          )}
+        </Button>
+      ) : null}
+    </View>
+  )
+}
