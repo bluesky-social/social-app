@@ -152,9 +152,9 @@ export function useListMetadataMutation() {
 
       // wait for the appview to update
       await whenAppViewReady(appviewClient, res.uri, v => {
-        const list = v.list
+        const list = v?.list
         return (
-          list.name === record.name && list.description === record.description
+          list?.name === record.name && list.description === record.description
         )
       })
       return res
@@ -228,14 +228,10 @@ export function useListDeleteMutation() {
       }
 
       /*
-       * Wait for the appview to update. Once the list is deleted `getList`
-       * throws, `until` catches it and passes `undefined` here, so an absent
-       * body signals a completed delete - the old check read `!v.success` on
-       * the legacy response envelope, which lex does not expose.
+       * Once the deletion is indexed, `getList` throws and `until` passes the
+       * error to this predicate with an undefined response.
        */
-      await whenAppViewReady(appviewClient, uri, v => {
-        return !v
-      })
+      await whenAppViewReady(appviewClient, uri, v => !v)
     },
     onSuccess() {
       invalidateMyLists(queryClient)
@@ -299,7 +295,10 @@ export function useListBlockMutation() {
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res: app.bsky.graph.getList.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.graph.getList.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

@@ -325,9 +325,12 @@ export function useDeleteStarterPackMutation({
       })
 
       if (uri) {
-        await whenAppViewReady(appviewClient, uri, v => {
-          return Boolean(v?.starterPack) === false
-        })
+        /* Once the deletion is indexed, `getStarterPack` throws. */
+        await whenAppViewReady(
+          appviewClient,
+          uri,
+          v => Boolean(v?.starterPack) === false,
+        )
       }
 
       if (listUri) {
@@ -353,7 +356,10 @@ export function useDeleteStarterPackMutation({
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res?: app.bsky.graph.getStarterPack.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.graph.getStarterPack.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries
