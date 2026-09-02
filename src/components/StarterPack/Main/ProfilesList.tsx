@@ -22,6 +22,7 @@ import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Default as ProfileCard} from '#/components/ProfileCard'
 import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {type app} from '#/lexicons'
 
@@ -159,15 +160,22 @@ function OptedOutControls({
   canRemove: boolean
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
+  const [isRemoved, setIsRemoved] = useState(false)
   const {mutate: removeMembership, isPending} = useListMembershipRemoveMutation(
     {
-      onSuccess: () => Toast.show(_(msg`Removed from starter pack`)),
+      onSuccess: () => {
+        setIsRemoved(true)
+        Toast.show(_(msg`Removed from starter pack`))
+      },
       onError: error =>
         Toast.show(cleanError(error), {
           type: 'error',
         }),
     },
   )
+
+  if (isRemoved) return null
 
   return (
     <Admonition.Outer type="info" style={[a.mt_sm]}>
@@ -183,13 +191,14 @@ function OptedOutControls({
             label={_(msg`Remove user from starter pack`)}
             color="secondary"
             disabled={isPending}
-            onPress={() =>
+            onPress={() => {
+              ax.metric('starterPack:removeUser', {context: 'opt-out'})
               removeMembership({
                 listUri,
                 actorDid: item.subject.did,
                 membershipUri: item.uri,
               })
-            }>
+            }}>
             {isPending ? (
               <ButtonIcon icon={Loader} />
             ) : (

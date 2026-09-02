@@ -557,6 +557,11 @@ function OverflowMenu({
           starterPack: starterPack.uri,
           action,
         })
+        Toast.show(
+          action === 'optOut'
+            ? _(msg`Opted out of starter pack`)
+            : _(msg`Opt-out undone`),
+        )
       },
       onError: error => {
         logger.error('Failed to update starter pack opt-out', {
