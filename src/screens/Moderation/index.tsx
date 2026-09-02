@@ -1,6 +1,7 @@
 import {Fragment, useCallback} from 'react'
 import {Linking, View} from 'react-native'
 import {LABELS} from '@bsky/sdk/moderation'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {getLabelingServiceTitle, isAppLabeler} from '#/lib/moderation'
@@ -175,7 +176,10 @@ function SubItem({
                     comment:
                       'Displayed when the number of notifications exceeds the cap – for example, 99+ notifications',
                   })
-                : i18n.number(badge)}
+                : plural(badge, {
+                    one: '# update',
+                    other: '# updates',
+                  })}
             </Text>
           </View>
         ) : null}
