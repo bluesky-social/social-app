@@ -63,7 +63,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
 
       return [...listItems].sort((a, b) => {
         if (a.subjectOptedOut !== b.subjectOptedOut) {
-          return a.subjectOptedOut ? 1 : -1
+          return a.subjectOptedOut ? -1 : 1
         }
         if (isOwn) {
           if (a.subject.did === currentAccount?.did) return -1
