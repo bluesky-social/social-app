@@ -1555,12 +1555,12 @@ export const ComposePost = ({
                   color="primary"
                 />
               )}
+              <Prompt.Cancel cta={l`Keep editing`} />
               <Prompt.Action
                 cta={l`Discard`}
                 onPress={handleDiscard}
                 color="negative_subtle"
               />
-              <Prompt.Cancel cta={l`Keep editing`} />
             </Prompt.Actions>
           </Prompt.Outer>
         )}
@@ -1681,6 +1681,8 @@ let ComposerPost = memo(function ComposerPost({
 
   return (
     <View
+      // Keep focused inputs attached while active-state opacity changes.
+      collapsable={false}
       style={[
         a.mx_lg,
         a.mb_sm,
@@ -1700,7 +1702,7 @@ let ComposerPost = memo(function ComposerPost({
           style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
-          autoFocus={isLastPost}
+          autoFocus={isActive}
           webForceMinHeight={forceMinHeight}
           // To avoid overlap with the close button:
           hasRightPadding={isPartOfThread}

@@ -26,9 +26,11 @@ import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {
+  createFeedViewPostsSlices,
   type FeedPostNumbering,
   FeedTuner,
   type FeedTunerFn,
+  type ValidFeedPostNumbering,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -520,6 +522,32 @@ export function* findAllPostsInQueryData(
           const rootQuotedPost = getEmbeddedPost(item.reply.root.embed)
           if (rootQuotedPost && didOrHandleUriMatches(atUri, rootQuotedPost)) {
             yield embedViewRecordToPostView(rootQuotedPost)
+          }
+        }
+      }
+    }
+  }
+}
+
+export function findPostNumberingInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): ValidFeedPostNumbering | undefined {
+  const atUri = new AtUri(uri)
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<FeedPageUnselected>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) continue
+
+    for (const page of queryData.pages) {
+      for (const slice of createFeedViewPostsSlices(page.feed)) {
+        for (const item of slice.items) {
+          if (item.postNumbering && didOrHandleUriMatches(atUri, item.post)) {
+            return item.postNumbering
           }
         }
       }
