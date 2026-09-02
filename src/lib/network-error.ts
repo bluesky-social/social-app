@@ -1,10 +1,8 @@
 const NETWORK_ERROR_PATTERNS = [
   /*
-   * Case-sensitive on purpose. `AbortError` (web `DOMException`) and the
-   * `Aborted` message thrown by `#/lib/async/cancelable` are transport
-   * cancellations, but the lowercase word shows up in unrelated failures - a
-   * multipart upload the service marked `aborted`, or a `TypeError` naming
-   * `abortController.abort` - which must still be reported.
+   * Case-sensitive: `AbortError` and `Aborted` are cancellations, but the
+   * lowercase word appears in unrelated failures ("Multipart upload aborted")
+   * that must still be reported.
    */
   /\bAbort(?:ed|Error)?\b/,
   /network request failed/i,
@@ -24,12 +22,9 @@ const NETWORK_ERROR_PATTERNS = [
 ]
 
 /**
- * `String(value)` runs code we do not control - a custom `toString`, a
- * `Symbol.toPrimitive`, a `Proxy` trap - and throws outright for a
- * null-prototype object, so stringifying an arbitrary thrown value can itself
- * throw. Returning `undefined` lets callers treat an unreadable value as "not a
- * network error" rather than letting the throw escape `logger.error()` or
- * Sentry's `beforeSend`, where it would lose the original report.
+ * `String()` can throw - null-prototype objects, custom `toString`, proxies -
+ * so an unreadable value counts as "not a network error" rather than crashing
+ * the error path that asked.
  */
 export function safeStringify(value: unknown): string | undefined {
   try {
@@ -45,9 +40,7 @@ export function safeStringify(value: unknown): string | undefined {
  * fetch, and the XRPC clients. Error causes are checked because the XRPC
  * clients wrap the platform-specific fetch error.
  *
- * Never throws: reading `cause` off a hostile value can throw just like
- * stringifying it can, and a throw here would escape whatever error path is
- * asking the question.
+ * Never throws; see {@link safeStringify}.
  */
 export function isNetworkError(value: unknown): boolean {
   try {
@@ -57,10 +50,6 @@ export function isNetworkError(value: unknown): boolean {
   }
 }
 
-/**
- * `seen` stays undefined until the first recursion into an object cause, so the
- * common case (a string or an error with no cause) allocates nothing.
- */
 function isNetworkErrorInner(
   value: unknown,
   seen: Set<object> | undefined,

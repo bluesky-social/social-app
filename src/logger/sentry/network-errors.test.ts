@@ -15,10 +15,7 @@ function statusOnlyError(status: number) {
   return new XrpcResponseError(method, new Response(null, {status}), undefined)
 }
 
-/**
- * An `XrpcResponseError` as the PDS pipethrough produces it: the status is
- * rewritten while the upstream lexicon code is forwarded verbatim.
- */
+/** A pipethrough `XrpcResponseError`: status rewritten, code forwarded. */
 function payloadError(status: number, error: string, message: string) {
   const body = {error, message}
   return new XrpcResponseError(
@@ -92,10 +89,7 @@ describe('isExpectedSentryNetworkError', () => {
 
 describe('dropExpectedNetworkErrors', () => {
   test('drops automatic captures using the original exception', () => {
-    /*
-     * The serialized values do not carry the cause chain, so the hint is the
-     * only place the transport failure is visible.
-     */
+    // the serialized values carry no cause chain, only the hint has the failure
     const event = exceptionEvent(
       'XrpcInternalError',
       'Unable to fulfill XRPC request',

@@ -3,20 +3,14 @@ import {isExpectedSentryNetworkError} from '#/logger/sentry/network-errors'
 import {LogLevel, type Metadata, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
 
-/**
- * Metadata keys that have historically carried the underlying failure as a
- * plain string.
- */
+/** Keys that have historically carried the underlying failure as a plain string. */
 const CHECKED_METADATA_KEYS = ['safeMessage', 'message', 'error']
 
 /**
  * Whether this log records a network failure Sentry should not be told about.
- *
- * The failure is often passed in metadata rather than as the message, and call
- * sites do not consistently use the same key, so any `Error` value counts no
- * matter which key holds it. Values of other types only count under the keys
- * above: metadata is arbitrary, and scanning all of it lets an unrelated string
- * - a stream URL containing "abort", say - suppress a real error.
+ * Call sites do not agree on a metadata key, so any `Error` value counts under
+ * any key; other types only count under `CHECKED_METADATA_KEYS` - scanning all
+ * metadata lets an unrelated string (a URL with "abort") suppress a real error.
  */
 function isExpectedNetworkFailure(
   message: string | Error,
@@ -45,11 +39,7 @@ export const sentryTransport: Transport = (
   // Skip debug messages entirely for now - esb
   if (level === LogLevel.Debug) return
 
-  /*
-   * `__metadata__` is ambient context rather than something the call site
-   * passed, so it is destructured out of the scanned metadata and folded back
-   * in here to keep the attached data unchanged.
-   */
+  // ambient __metadata__ is kept out of the scan but stays in the attached data
   const meta = {
     __context__: context,
     ...prepareMetadata(__metadata__ ? {__metadata__, ...metadata} : metadata),
