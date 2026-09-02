@@ -18,10 +18,6 @@ init({
      */
     `t is not defined`,
     `Can't find variable: t`,
-    /*
-     * Un-useful errors
-     */
-    `Network request failed`,
   ],
   /**
    * Does not affect traces of error events or other logs, just disables

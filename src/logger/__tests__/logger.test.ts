@@ -301,6 +301,15 @@ describe('general functionality', () => {
       timestamp,
     )
 
+    // a named key can carry the failure as a plain string too
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'poll failed',
+      {safeMessage: 'Network request failed'},
+      timestamp,
+    )
+
     // call sites do not consistently use the same metadata key
     sentryTransport(
       LogLevel.Error,
@@ -312,6 +321,8 @@ describe('general functionality', () => {
 
     jest.runAllTimers()
     expect(Sentry.captureMessage).not.toHaveBeenCalled()
+    // suppressing the event must not suppress the breadcrumb
+    expect(Sentry.addBreadcrumb).toHaveBeenCalledTimes(4)
 
     // network Error object
     sentryTransport(
@@ -331,6 +342,52 @@ describe('general functionality', () => {
       timestamp,
     )
     expect(Sentry.captureException).not.toHaveBeenCalled()
+  })
+
+  test('sentryTransport reports errors with unrelated metadata', () => {
+    jest.clearAllMocks()
+    const timestamp = Date.now()
+
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'thumbnail upload failed',
+      {url: 'https://twitch.tv/abort', reason: 'aborted'},
+      timestamp,
+    )
+
+    jest.runAllTimers()
+    expect(Sentry.captureMessage).toHaveBeenCalledTimes(1)
+    expect(Sentry.captureMessage).toHaveBeenCalledWith(
+      'thumbnail upload failed',
+      expect.anything(),
+    )
+
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      new Error('thumbnail upload failed'),
+      {url: 'https://twitch.tv/abort'},
+      timestamp,
+    )
+    expect(Sentry.captureException).toHaveBeenCalledTimes(1)
+  })
+
+  test('sentryTransport keeps breadcrumbs below error level', () => {
+    jest.clearAllMocks()
+    const timestamp = Date.now()
+
+    sentryTransport(
+      LogLevel.Info,
+      Logger.Context.Default,
+      'polling',
+      {safeMessage: new Error('Network request failed')},
+      timestamp,
+    )
+
+    expect(Sentry.addBreadcrumb).toHaveBeenCalledTimes(1)
+    jest.runAllTimers()
+    expect(Sentry.captureMessage).not.toHaveBeenCalled()
   })
 
   test('add/remove transport', () => {
