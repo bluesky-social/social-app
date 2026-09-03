@@ -200,7 +200,7 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="ModerationInboxSubjectDetails"
         getComponent={() => ModerationInboxSubjectDetailsScreen}
-        options={{title: title(msg`Your report`), requireAuth: true}}
+        options={{title: title(msg`Notice`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationModlists"
