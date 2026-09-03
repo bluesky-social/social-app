@@ -19,15 +19,15 @@ const FRONTMATTER_KEYS = [
 const PUBLIC_CHANGELOG_START = '<!-- public-changelog:start -->'
 const PUBLIC_CHANGELOG_END = '<!-- public-changelog:end -->'
 
-export class ReleaseModelError extends Error {
+export class ReleaseError extends Error {
   constructor(message) {
     super(message)
-    this.name = 'ReleaseModelError'
+    this.name = 'ReleaseError'
   }
 }
 
 function fail(message) {
-  throw new ReleaseModelError(message)
+  throw new ReleaseError(message)
 }
 
 export function assertReleaseVersion(version) {
