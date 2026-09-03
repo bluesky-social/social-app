@@ -1,8 +1,9 @@
 # Release model
 
-The cactus release workflows use one canonical release document per native
-version. This contract is intentionally independent of the existing production
-workflows while the new system is being developed and tested.
+Each app release gets one document that keeps its version, build information,
+and public changelog together in one place. We are building this new release
+model alongside the existing production workflows so we can try it safely
+before using it for a real release.
 
 ## Identity
 
