@@ -1,4 +1,3 @@
-import {type AtpAgent} from '@atproto/api'
 import {describe, expect, jest, test} from '@jest/globals'
 
 // Avoid pulling the UI module chain into the test environment via the
@@ -6,10 +5,8 @@ import {describe, expect, jest, test} from '@jest/globals'
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
 }))
-jest.mock('#/state/session/agent', () => ({
-  createPublicAgent: jest.fn(() => ({})),
-}))
 
+import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 
 function makeIdGenerator() {
@@ -17,7 +14,14 @@ function makeIdGenerator() {
   return () => `id-${++i}`
 }
 
-const agent = {} as AtpAgent
+const resolvers = {} as LinkResolvers
+
+function makeStore() {
+  return createThreadStore({
+    resolvers,
+    __createId: makeIdGenerator(),
+  })
+}
 
 function rootId(store: ReturnType<typeof createThreadStore>) {
   return Object.keys(store.getState().posts)[0]
@@ -25,7 +29,7 @@ function rootId(store: ReturnType<typeof createThreadStore>) {
 
 describe('addPost("after")', () => {
   test('inserts a new post immediately after the target and returns its id', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     expect(root).toBe('id-1')
 
@@ -35,7 +39,7 @@ describe('addPost("after")', () => {
   })
 
   test('inserts mid-thread without disturbing surrounding order', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const second = store.actions.addPost('after', root) // id-2
     const third = store.actions.addPost('after', second) // id-3
@@ -49,14 +53,14 @@ describe('addPost("after")', () => {
   })
 
   test('marks state dirty', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     expect(store.getState().isDirty).toBe(false)
     store.actions.addPost('after', rootId(store))
     expect(store.getState().isDirty).toBe(true)
   })
 
   test('is a no-op when the target id is unknown', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const before = store.getState()
     store.actions.addPost('after', 'does-not-exist')
     expect(store.getState()).toBe(before)
@@ -66,7 +70,7 @@ describe('addPost("after")', () => {
 
 describe('addPost("before")', () => {
   test('inserts a new post immediately before the target and returns its id', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const root = rootId(store)
     const newId = store.actions.addPost('before', root)
     expect(newId).toBe('id-2')
@@ -74,7 +78,7 @@ describe('addPost("before")', () => {
   })
 
   test('inserts mid-thread without disturbing surrounding order', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const a = rootId(store)
     const b = store.actions.addPost('after', a)
     const c = store.actions.addPost('after', b)
@@ -83,7 +87,7 @@ describe('addPost("before")', () => {
   })
 
   test('is a no-op when the target id is unknown', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const before = store.getState()
     store.actions.addPost('before', 'does-not-exist')
     expect(store.getState()).toBe(before)
@@ -92,7 +96,7 @@ describe('addPost("before")', () => {
 
 describe('removePost', () => {
   test('removes the matching post and marks dirty', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const a = rootId(store)
     const b = store.actions.addPost('after', a)
     store.actions.removePost(b)
@@ -101,7 +105,7 @@ describe('removePost', () => {
   })
 
   test('refuses to remove the last remaining post', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     const a = rootId(store)
     const before = store.getState()
     store.actions.removePost(a)
@@ -110,7 +114,7 @@ describe('removePost', () => {
   })
 
   test('is a no-op when postId is unknown', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = makeStore()
     store.actions.addPost('after', rootId(store))
     const before = store.getState()
     store.actions.removePost('does-not-exist')

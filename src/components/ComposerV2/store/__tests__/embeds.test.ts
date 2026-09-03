@@ -1,8 +1,3 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type AtpAgent,
-} from '@atproto/api'
 import {beforeEach, describe, expect, jest, test} from '@jest/globals'
 
 // Avoid pulling the UI module chain (gallery → media picker → ALF) into the
@@ -20,16 +15,15 @@ jest.mock('#/lib/api/resolve', () => {
     EmbeddingDisabledError,
   }
 })
-jest.mock('#/state/session/agent', () => ({
-  createPublicAgent: jest.fn(() => ({})),
-}))
 
 import {
   EmbeddingDisabledError,
+  type LinkResolvers,
   type ResolvedLink,
   type resolveLink,
 } from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {app} from '#/lexicons'
 
 const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
 const EXTERNAL_URL = 'https://example.com'
@@ -39,7 +33,7 @@ function makeIdGenerator() {
   return () => `id-${++i}`
 }
 
-const agent = {} as AtpAgent
+const resolvers = {} as LinkResolvers
 
 function rootId(store: ReturnType<typeof createThreadStore>) {
   return Object.keys(store.getState().posts)[0]
@@ -67,20 +61,20 @@ beforeEach(() => {
 
 function makeStore() {
   return createThreadStore({
-    agent,
+    resolvers,
     __createId: makeIdGenerator(),
     __resolveLink: mockResolveLink,
   })
 }
 
 const fakePostView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as AppBskyFeedDefs.PostView
+  ({uri, cid}) as unknown as app.bsky.feed.defs.PostView
 const fakeGeneratorView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as AppBskyFeedDefs.GeneratorView
+  ({uri, cid}) as unknown as app.bsky.feed.defs.GeneratorView
 const fakeListView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as AppBskyGraphDefs.ListView
+  ({uri, cid}) as unknown as app.bsky.graph.defs.ListView
 const fakeStarterPackView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as AppBskyGraphDefs.StarterPackView
+  ({uri, cid}) as unknown as app.bsky.graph.defs.StarterPackView
 
 const postLink: ResolvedLink = {
   type: 'record',
@@ -133,6 +127,7 @@ describe('addUri pre-classifies bsky post URLs to the quote slot', () => {
     const root = rootId(store)
     store.actions.addUri(root, POST_URL)
 
+    expect(mockResolveLink).toHaveBeenCalledWith(resolvers, POST_URL)
     const pending = store.getState().posts[root].quote
     if (pending?.state !== 'pending') throw new Error('expected pending')
     expect(pending.uri).toBe(POST_URL)

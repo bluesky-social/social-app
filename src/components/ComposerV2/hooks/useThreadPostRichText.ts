@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {RichText} from '@atproto/api'
+import {RichText} from '@bsky/sdk/richtext'
 
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {useThreadPost} from '#/components/ComposerV2/hooks/useThreadPost'
