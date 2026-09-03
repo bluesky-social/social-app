@@ -104,11 +104,32 @@ function readPhase(root) {
 }
 
 function screenshotMetadata(file) {
-  const match = path
+  const legacyMatch = path
     .basename(file)
     .match(/^screenshot-.*?-(\d+)-\((.+)\)\.(?:gif|jpe?g|png)$/i)
-  return match
-    ? {file, timestamp: Number(match[1]), flowName: match[2]}
+  if (legacyMatch) {
+    return {
+      file,
+      order: Number(legacyMatch[1]),
+      flowName: legacyMatch[2],
+    }
+  }
+
+  const parts = file.split(/[\\/]/)
+  const screenshotsIndex = parts.lastIndexOf('screenshots')
+  if (
+    screenshotsIndex < 2 ||
+    !parts.slice(0, screenshotsIndex - 1).includes('maestro')
+  ) {
+    return undefined
+  }
+  const step = parts.at(-1)?.match(/^step-(\d+)-.*\.(?:gif|jpe?g|png)$/i)
+  return step
+    ? {
+        file,
+        order: Number(step[1]),
+        flowName: parts[screenshotsIndex - 1],
+      }
     : undefined
 }
 
@@ -118,7 +139,7 @@ export function screenshotsByFlow(files) {
     const screenshot = screenshotMetadata(file)
     if (!screenshot) continue
     const current = screenshots.get(screenshot.flowName)
-    if (!current || screenshot.timestamp > current.timestamp) {
+    if (!current || screenshot.order > current.order) {
       screenshots.set(screenshot.flowName, screenshot)
     }
   }

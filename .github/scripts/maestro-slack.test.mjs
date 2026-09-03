@@ -169,6 +169,8 @@ test('selects the newest Maestro screenshot for each flow', () => {
     '/tmp/screenshot-❌-300-(composer).png',
     '/tmp/screenshot-❌-100-(composer).png',
     '/tmp/screenshot-❌-200-(login).png',
+    '/tmp/artifacts/maestro/composer-self-label/screenshots/step-020-tapOnElement-openMediaBtn.png',
+    '/tmp/artifacts/maestro/composer-self-label/screenshots/step-010-launchApp.png',
     '/tmp/not-a-maestro-screenshot.png',
   ])
 
@@ -177,5 +179,9 @@ test('selects the newest Maestro screenshot for each flow', () => {
     '/tmp/screenshot-❌-300-(composer).png',
   )
   assert.equal(screenshots.get('login'), '/tmp/screenshot-❌-200-(login).png')
-  assert.equal(screenshots.size, 2)
+  assert.equal(
+    screenshots.get('composer-self-label'),
+    '/tmp/artifacts/maestro/composer-self-label/screenshots/step-020-tapOnElement-openMediaBtn.png',
+  )
+  assert.equal(screenshots.size, 3)
 })
