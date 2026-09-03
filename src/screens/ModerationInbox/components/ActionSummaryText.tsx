@@ -13,7 +13,9 @@ export function ActionSummaryText({
   // oxlint-disable-next-line bsky-internal/avoid-unwrapped-text
   return (
     <View style={[a.gap_xs]}>
-      <H1 accessibilityRole="header" style={[a.text_xl, a.font_semi_bold]}>
+      <H1
+        accessibilityRole="header"
+        style={[a.text_xl, a.font_semi_bold, a.leading_tight]}>
         {header}
       </H1>
       <Text style={[a.text_md, t.atoms.text_contrast_high]}>{children}</Text>

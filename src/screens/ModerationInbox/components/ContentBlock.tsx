@@ -12,7 +12,8 @@ export function ContentBlock({
   return (
     <View
       style={[
-        a.p_md,
+        a.py_md,
+        a.px_lg,
         a.gap_md,
         a.rounded_md,
         a.border,
