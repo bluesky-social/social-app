@@ -30,6 +30,10 @@ function fail(message) {
   throw new ReleaseError(message)
 }
 
+function normalizeLineEndings(markdown) {
+  return markdown.replace(/\r\n?/g, '\n')
+}
+
 export function assertReleaseVersion(version) {
   if (typeof version !== 'string' || !VERSION_PATTERN.test(version)) {
     fail(`Release version must use strict x.y.z format; found '${version}'.`)
@@ -49,7 +53,7 @@ export function deriveReleaseIdentity(version) {
 }
 
 function parseFrontmatter(markdown) {
-  const normalized = markdown.replace(/\r\n/g, '\n')
+  const normalized = normalizeLineEndings(markdown)
   if (!normalized.startsWith('---\n')) {
     fail('Release file must start with YAML frontmatter.')
   }
@@ -249,7 +253,8 @@ export function extractPublicChangelog(markdown) {
 }
 
 export function appendOtaChangelog(markdown, sequence, changelog) {
-  const parsed = parseReleaseDocument(markdown)
+  const normalized = normalizeLineEndings(markdown)
+  const parsed = parseReleaseDocument(normalized)
   const expectedSequence = parsed.sections.length
   if (!Number.isSafeInteger(sequence) || sequence !== expectedSequence) {
     fail(`Next OTA sequence must be ${expectedSequence}; found '${sequence}'.`)
@@ -258,22 +263,29 @@ export function appendOtaChangelog(markdown, sequence, changelog) {
   if (!content) fail('OTA changelog cannot be empty.')
 
   const delimiter = `\n\n${PUBLIC_CHANGELOG_END}`
+  if (!normalized.includes(delimiter)) {
+    fail('Could not find the public changelog end delimiter to append the OTA.')
+  }
   const replacement = `\n\n## OTA ${sequence}\n\n${content}${delimiter}`
-  const updated = markdown.replace(delimiter, replacement)
+  const updated = normalized.replace(delimiter, replacement)
   parseReleaseDocument(updated)
   return updated
 }
 
 export function finalizeReleaseDocument(markdown, finalMetadata) {
-  const parsed = parseReleaseDocument(markdown)
+  const normalized = normalizeLineEndings(markdown)
+  const parsed = parseReleaseDocument(normalized)
   const metadata = {...parsed.metadata, ...finalMetadata}
   validateMetadata(metadata, 'final')
 
   const frontmatter = FRONTMATTER_KEYS.map(
     key => `${key}: ${metadata[key]}`,
   ).join('\n')
-  const updated = markdown.replace(
-    /^---\n[\s\S]*?\n---\n/,
+  const frontmatterPattern = /^---\n[\s\S]*?\n---\n/
+  if (!frontmatterPattern.test(normalized))
+    fail('Could not replace the release frontmatter.')
+  const updated = normalized.replace(
+    frontmatterPattern,
     `---\n${frontmatter}\n---\n`,
   )
   parseReleaseDocument(updated, {stage: 'final'})
