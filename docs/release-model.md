@@ -1,14 +1,10 @@
 # Release model
 
-Each app release gets one document that keeps its version, build information,
-and public changelog together in one place. We are building this new release
-model alongside the existing production workflows so we can try it safely
-before using it for a real release.
+Each app release gets one document that keeps its version, build information, and public changelog together in one place.
 
 ## Identity
 
-The workflow accepts one version in strict `x.y.z` format and derives all other
-identifiers from it:
+The workflow accepts one version in strict `x.y.z` format and derives all other identifiers from it:
 
 | Resource | Format |
 | --- | --- |
@@ -22,8 +18,7 @@ Callers must not supply these derived identifiers independently.
 
 ## Prepared state
 
-The preparation workflow creates the document before freezing the native
-candidate. At this stage, only `releaseVersion` is required:
+The preparation workflow creates the document before freezing the native candidate. At this stage, only `releaseVersion` is required:
 
 ```md
 ---
@@ -43,8 +38,7 @@ releaseVersion: 1.131.1
 
 ## Final state
 
-After both native builds succeed, the workflow records the frozen source and
-artifact-derived build numbers. A finalized document requires every field:
+After both native builds succeed, the workflow records the frozen source and artifact-derived build numbers. A finalized document requires every field:
 
 ```yaml
 releaseVersion: 1.131.1
@@ -54,9 +48,6 @@ iosBuildNumber: 1662
 androidVersionCode: 1110
 ```
 
-`sourceTag` must equal `releaseVersion`, `sourceSha` must be a full Git object
-ID, and both build numbers must be positive integers.
+`sourceTag` must equal `releaseVersion`, `sourceSha` must be a full Git object ID, and both build numbers must be positive integers.
 
-Each successful OTA adds exactly one contiguous section (`OTA 1`, `OTA 2`, and
-so on) inside the public changelog delimiters. GitHub Release text is extracted
-only from those delimiters; operational frontmatter is never published.
+Each successful OTA adds exactly one contiguous section (`OTA 1`, `OTA 2`, and so on) inside the public changelog delimiters. GitHub Release text is extracted only from those delimiters; operational frontmatter is never published.
