@@ -98,7 +98,7 @@ export function useReferenceListOptOutMutation({
   >({
     mutationFn: async ({referenceListOptOut}) => {
       if (!starterPack.list) {
-        throw new Error('Starter pack does not have a reference list')
+        throw new Error('Starter Pack does not have a reference list')
       }
 
       let nextOptOut: AtUriString | undefined
