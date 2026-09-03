@@ -412,13 +412,49 @@ jobs:
             --commit-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" \
             > e2e-summary.json
           echo "notify=$(jq -r .notify e2e-summary.json)" >> "$GITHUB_OUTPUT"
-          echo "payload=$(jq -c .payload e2e-summary.json)" >> "$GITHUB_OUTPUT"
+          echo "screenshot_count=$(jq -r .screenshotCount e2e-summary.json)" >> "$GITHUB_OUTPUT"
+          jq .uploadPayload e2e-summary.json > slack-screenshot-upload.json
           jq -r .githubSummary e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
 
-      - name: 🔔 Notify Slack of E2E failures
+      - name: 🖼️ Upload failure screenshots to Slack
+        id: upload_screenshots
+        if: >-
+          steps.summary.outputs.notify == 'true' &&
+          steps.summary.outputs.screenshot_count != '0'
+        continue-on-error: true
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
+        with:
+          method: files.uploadV2
+          token: ${{ secrets.E2E_FAILURES_SLACK_BOT_TOKEN }}
+          payload-file-path: slack-screenshot-upload.json
+
+      - name: 📝 Build Slack message
+        if: steps.summary.outputs.notify == 'true'
+        env:
+          ANDROID_STATUS: ${{ needs.android.result }}
+          IOS_STATUS: ${{ needs.ios.result }}
+          SLACK_CHANNEL_ID: ${{ vars.E2E_FAILURES_SLACK_CHANNEL_ID }}
+          SLACK_UPLOAD_RESPONSE: ${{ steps.upload_screenshots.outputs.response }}
+        run: |
+          node .github/scripts/summarize-maestro.mjs \
+            --ios-status "$IOS_STATUS" \
+            --android-status "$ANDROID_STATUS" \
+            --ios-root downloaded-artifacts/ios \
+            --android-root downloaded-artifacts/android \
+            --artifact-urls artifact-links.json \
+            --sha "$GITHUB_SHA" \
+            --run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
+            --commit-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" \
+            --slack-upload-response "$SLACK_UPLOAD_RESPONSE" \
+            > e2e-summary-with-slack-files.json
+          jq --arg channel "$SLACK_CHANNEL_ID" \
+            '.payload + {channel: $channel, unfurl_links: false, unfurl_media: false}' \
+            e2e-summary-with-slack-files.json > slack-message.json
+
+      - name: 🔔 Notify Slack of E2E result
         if: steps.summary.outputs.notify == 'true'
         uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
         with:
-          webhook: ${{ secrets.E2E_FAILURES_SLACK_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload: ${{ steps.summary.outputs.payload }}
+          method: chat.postMessage
+          token: ${{ secrets.E2E_FAILURES_SLACK_BOT_TOKEN }}
+          payload-file-path: slack-message.json
