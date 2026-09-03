@@ -51,7 +51,7 @@ const syntheticFullView = {
 
 /*
  * Type-level assertions for the view alias: it must accept both the basic and
- * the full starter pack view. Compile-time only - a failure surfaces as a
+ * the full Starter Pack view. Compile-time only - a failure surfaces as a
  * typecheck error.
  */
 type Assignable<From, To> = From extends To ? true : false
