@@ -25,6 +25,7 @@ export type CommonNavigatorParams = {
   Moderation: undefined
   ModerationInbox: undefined
   ModerationInboxSettings: undefined
+  ModerationInboxReportDetails: undefined
   ModerationModlists: undefined
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined

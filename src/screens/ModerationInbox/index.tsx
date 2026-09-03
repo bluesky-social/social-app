@@ -115,6 +115,7 @@ function YourReports() {
         })}
         action={l`Awaiting review`}
         date={new Date()}
+        to="/moderation/inbox/report/details"
         unread
       />
       <ReportRow
@@ -124,6 +125,7 @@ function YourReports() {
         })}
         action={l`No action taken`}
         date={new Date()}
+        to="/moderation/inbox/report/details"
         unread
       />
       <ReportRow
@@ -133,6 +135,7 @@ function YourReports() {
         })}
         action={l`Message deleted`}
         date={new Date()}
+        to="/moderation/inbox/report/details"
       />
     </Layout.Center>
   )
@@ -194,6 +197,7 @@ function YourAccount() {
         })}
         action={l`Violates community guideline: ${guideline}`}
         date={new Date()}
+        to="/moderation/inbox/report/details"
         unread
       />
       <ReportRow
@@ -203,6 +207,7 @@ function YourAccount() {
         })}
         action={l`“${label}” – shown behind a warning`}
         date={new Date()}
+        to="/moderation/inbox/report/details"
       />
       <ReportRow
         subject={l({
@@ -211,6 +216,7 @@ function YourAccount() {
         })}
         action={l`Ban evasion – ${duration}, now expired`}
         date={new Date()}
+        to="/moderation/inbox/report/details"
       />
     </Layout.Center>
   )
