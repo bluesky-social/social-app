@@ -1,12 +1,11 @@
-import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
 import {nanoid} from 'nanoid/non-secure'
 
 import {
+  type LinkResolvers,
   type ResolvedLink,
   resolveLink as importedResolveLink,
   type resolveLink,
 } from '#/lib/api/resolve'
-import {createPublicAgent} from '#/state/session/agent'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
   startImageUpload,
@@ -20,18 +19,19 @@ import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store
 import {createAsyncTaskRev} from '#/components/ComposerV2/store/utils/createAsyncTaskRev'
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
+import {app} from '#/lexicons'
 
 type Listener = () => void
 
 export function createThreadStore(options: {
-  agent: AtpAgent
+  resolvers: LinkResolvers
   /** Override id generation; useful for deterministic tests. */
   __createId?: () => string
   /** Override link resolver; useful for deterministic tests. */
   __resolveLink?: typeof resolveLink
 }) {
   const id = options.__createId ?? nanoid
-  const agent = options.agent
+  const resolvers = options.resolvers
   const resolveLinkOverride = options.__resolveLink
   let state: types.ThreadState = {
     posts: {[id()]: buildThreadPost()},
@@ -197,7 +197,6 @@ export function createThreadStore(options: {
             postId,
             mediaId,
             uri: input.uri,
-            agent,
             setUploadStatus,
           }),
         )
@@ -208,7 +207,6 @@ export function createThreadStore(options: {
             postId,
             mediaId,
             uri: input.uri,
-            agent,
             setUploadStatus,
           }),
         )
@@ -282,7 +280,6 @@ export function createThreadStore(options: {
         postId,
         mediaId,
         uri: item.uri,
-        agent,
         setUploadStatus,
       }),
     )
@@ -324,7 +321,7 @@ export function createThreadStore(options: {
         s.isDirty = true
         return s
       })
-      resolve(createPublicAgent(), uri).then(
+      resolve(resolvers, uri).then(
         link => applyQuoteResolved(rev, postId, uri, link),
         err => applyQuoteFailed(rev, postId, uri, err),
       )
@@ -349,7 +346,7 @@ export function createThreadStore(options: {
       s.isDirty = true
       return s
     })
-    resolve(createPublicAgent(), uri).then(
+    resolve(resolvers, uri).then(
       link => applyEmbedResolved(rev, postId, uri, link),
       err => applyEmbedFailed(rev, postId, uri, err),
     )
@@ -478,7 +475,7 @@ export function createThreadStore(options: {
    */
   function setQuoteEmbed(
     postId: string,
-    ref: {uri: string; cid: string; view?: AppBskyFeedDefs.PostView},
+    ref: {uri: string; cid: string; view?: app.bsky.feed.defs.PostView},
   ) {
     quoteRev.incrementFor(postId)
     mutateState(s => {

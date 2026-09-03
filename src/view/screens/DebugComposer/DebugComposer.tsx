@@ -15,7 +15,7 @@
 import {useMemo, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 
-import {useAgent} from '#/state/session'
+import {useAppviewClient, useChatClient} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Composer} from '#/components/Composer'
@@ -30,8 +30,11 @@ import {createThreadStore} from '#/components/ComposerV2/store'
 import {Text} from '#/components/Typography'
 
 export default function DebugComposer() {
-  const agent = useAgent()
-  const [store] = useState(() => createThreadStore({agent}))
+  const appviewClient = useAppviewClient()
+  const chatClient = useChatClient()
+  const [store] = useState(() =>
+    createThreadStore({resolvers: {appviewClient, chatClient}}),
+  )
   return (
     <ThreadStoreProvider store={store}>
       <View style={[a.p_md, a.gap_md]}>
@@ -159,7 +162,7 @@ function StateDump() {
   const t = useTheme()
 
   // Functions (e.g. retry on failed states) are dropped by JSON.stringify;
-  // BlobRef and AppBskyFeedDefs view types serialize as plain objects.
+  // Lexicon blob and view types serialize as plain objects.
   const dump = useMemo(() => JSON.stringify(state, null, 2), [state])
 
   return (

@@ -1,4 +1,3 @@
-import {type AtpAgent} from '@atproto/api'
 import {beforeEach, describe, expect, jest, test} from '@jest/globals'
 
 // Avoid pulling the UI module chain (gallery → media picker → ALF) into the
@@ -6,11 +5,8 @@ import {beforeEach, describe, expect, jest, test} from '@jest/globals'
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
 }))
-jest.mock('#/state/session/agent', () => ({
-  createPublicAgent: jest.fn(() => ({})),
-}))
 
-import {type resolveLink} from '#/lib/api/resolve'
+import {type LinkResolvers, type resolveLink} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   type AddMediaInput,
@@ -23,7 +19,7 @@ function makeIdGenerator() {
   return () => `id-${++i}`
 }
 
-const agent = {} as AtpAgent
+const resolvers = {} as LinkResolvers
 
 function rootId(store: ReturnType<typeof createThreadStore>) {
   return Object.keys(store.getState().posts)[0]
@@ -71,7 +67,7 @@ beforeEach(() => {
 
 function makeStore() {
   return createThreadStore({
-    agent,
+    resolvers,
     __createId: makeIdGenerator(),
     __resolveLink: mockResolveLink,
   })

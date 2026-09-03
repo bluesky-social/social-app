@@ -1,13 +1,9 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type BlobRef,
-  type ChatBskyGroupDefs,
-  type ComAtprotoRepoStrongRef,
-} from '@atproto/api'
+import {type BlobRef} from '@atproto/lex'
 
 import {type ComposerImage} from '#/state/gallery'
+import {type ChatInvitePreview} from '#/state/queries/join-links'
 import {type Gif} from '#/features/gifPicker/types'
+import {app, com} from '#/lexicons'
 
 /**
  * What an upload reporter (the worker, or a test) sends in. Failed inputs
@@ -124,24 +120,24 @@ export type PostEmbed =
     }
   | {
       state: 'feed'
-      record: ComAtprotoRepoStrongRef.Main
-      view: AppBskyFeedDefs.GeneratorView
+      record: com.atproto.repo.strongRef.Main
+      view: app.bsky.feed.defs.GeneratorView
     }
   | {
       state: 'list'
-      record: ComAtprotoRepoStrongRef.Main
-      view: AppBskyGraphDefs.ListView
+      record: com.atproto.repo.strongRef.Main
+      view: app.bsky.graph.defs.ListView
     }
   | {
       state: 'starter-pack'
-      record: ComAtprotoRepoStrongRef.Main
-      view: AppBskyGraphDefs.StarterPackView
+      record: com.atproto.repo.strongRef.Main
+      view: app.bsky.graph.defs.StarterPackView
     }
   | {
       state: 'chat-invite'
       uri: string
       code: string
-      view: ChatBskyGroupDefs.JoinLinkPreviewView | undefined
+      view: ChatInvitePreview | undefined
     }
 
 /**
@@ -167,7 +163,7 @@ export type PostEmbedQuote =
       state: 'resolved'
       uri: string
       cid: string
-      view?: AppBskyFeedDefs.PostView
+      view?: app.bsky.feed.defs.PostView
     }
 
 export type ThreadPost = {

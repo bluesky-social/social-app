@@ -7,14 +7,14 @@
  * an in-flight upload when the user removes or replaces the media.
  *
  * TODO: replace the simulated progression with real implementations:
- *   - images: AtpAgent.uploadBlob (com.atproto.repo.uploadBlob)
+ *   - images: upload through the account's PDS client
  *   - video: the existing video pipeline (compress, create upload job, poll
  *     until ready, resolve to a BlobRef)
  * The public surface here (startImageUpload / startVideoUpload returning an
  * UploadTask) should not need to change; the simulation lives entirely
  * inside runSimulatedUpload.
  */
-import {type AtpAgent, type BlobRef} from '@atproto/api'
+import {type BlobRef} from '@atproto/lex'
 
 import {type UploadStatus} from './types'
 
@@ -26,7 +26,6 @@ type StartUploadOptions = {
   postId: string
   mediaId: string
   uri: string
-  agent: AtpAgent
   setUploadStatus: (
     postId: string,
     mediaId: string,

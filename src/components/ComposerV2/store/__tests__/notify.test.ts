@@ -1,4 +1,3 @@
-import {type AtpAgent} from '@atproto/api'
 import {describe, expect, jest, test} from '@jest/globals'
 
 // Avoid pulling the UI module chain into the test environment via the
@@ -6,10 +5,8 @@ import {describe, expect, jest, test} from '@jest/globals'
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
 }))
-jest.mock('#/state/session/agent', () => ({
-  createPublicAgent: jest.fn(() => ({})),
-}))
 
+import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 
 function makeIdGenerator() {
@@ -17,7 +14,7 @@ function makeIdGenerator() {
   return () => `id-${++i}`
 }
 
-const agent = {} as AtpAgent
+const resolvers = {} as LinkResolvers
 
 function rootId(store: ReturnType<typeof createThreadStore>) {
   return Object.keys(store.getState().posts)[0]
@@ -25,7 +22,10 @@ function rootId(store: ReturnType<typeof createThreadStore>) {
 
 describe('subscribe / getState', () => {
   test('listener fires on a real change and getState returns a new reference', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+    })
     const root = rootId(store)
     const before = store.getState()
     const fn = jest.fn()
@@ -41,7 +41,10 @@ describe('subscribe / getState', () => {
   })
 
   test('listener does not fire on a no-op and state ref is preserved', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+    })
     const before = store.getState()
     const fn = jest.fn()
     store.subscribe(fn)
@@ -53,7 +56,10 @@ describe('subscribe / getState', () => {
   })
 
   test('unsubscribed listeners stop receiving notifications', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+    })
     const root = rootId(store)
     const fn = jest.fn()
     const unsubscribe = store.subscribe(fn)
@@ -66,7 +72,10 @@ describe('subscribe / getState', () => {
   })
 
   test('destroy clears subscribers and stops further notifications', () => {
-    const store = createThreadStore({agent, __createId: makeIdGenerator()})
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+    })
     const root = rootId(store)
     const fn = jest.fn()
     store.subscribe(fn)
