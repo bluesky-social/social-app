@@ -164,7 +164,7 @@ export function QrCodeDialog({
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(msg`Create a QR code for a starter pack`)}>
+        label={_(msg`Create a QR code for a Starter Pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
           <Suspense fallback={<Loading />}>
             {!link ? (

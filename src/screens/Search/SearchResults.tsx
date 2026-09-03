@@ -117,7 +117,7 @@ let SearchResults = ({
       },
       noFilters &&
         isStarterPacksEnabled && {
-          title: l`Starter packs`,
+          title: l`Starter Packs`,
           component: (
             <SearchScreenStarterPackResults
               query={query}
