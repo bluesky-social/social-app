@@ -10,6 +10,10 @@ on:
         options:
           - testflight
           - production
+      submit:
+        type: boolean
+        description: Submit the build to App Store Connect
+        default: true
       testFlightGroup:
         type: choice
         description: TestFlight group to assign the build to after submitting
@@ -34,6 +38,10 @@ on:
         type: string
         description: Build profile to use
         required: true
+      submit:
+        type: boolean
+        description: Submit the build to App Store Connect
+        default: true
       testFlightGroup:
         type: string
         description: TestFlight group to assign the build to after submitting ("none" to skip)
@@ -58,6 +66,9 @@ on:
       source-sha:
         description: Exact commit used for the build
         value: ${{ jobs.build.outputs.source-sha }}
+      artifact-name:
+        description: Workflow artifact containing the IPA and provenance
+        value: ${{ jobs.build.outputs.artifact-name }}
     secrets:
       EXPO_TOKEN:
         required: true
@@ -98,6 +109,7 @@ jobs:
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
       build-number: ${{ steps.ipa-build-number.outputs.build-number }}
       source-sha: ${{ steps.source.outputs.sha }}
+      artifact-name: ios-build-${{ github.run_id }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -225,26 +237,48 @@ jobs:
           echo "IPA build number: $build_number"
           echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
 
-      # Hand the IPA and dSYM off to the submit job. Retention is deliberately short since
-      # this artifact only exists to bridge the two jobs within a single run.
+      - name: Record artifact provenance
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+          PACKAGE_VERSION: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
+          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
+        run: |
+          artifact="$BUILD_DIR/Bluesky.ipa"
+          checksum=$(shasum -a 256 "$artifact" | awk '{print $1}')
+          jq -n \
+            --arg sourceSha "$SOURCE_SHA" \
+            --arg packageVersion "$PACKAGE_VERSION" \
+            --arg buildNumber "$BUILD_NUMBER" \
+            --arg artifactFilename "Bluesky.ipa" \
+            --arg artifactSha256 "$checksum" \
+            '{sourceSha: $sourceSha, packageVersion: $packageVersion, buildNumber: $buildNumber, artifactFilename: $artifactFilename, artifactSha256: $artifactSha256, submissionState: "notStarted"}' \
+            > ios-build-metadata.json
+          cat ios-build-metadata.json
+
+      # Keep the exact build and its provenance available for inspection and failed-job retries.
       - name: 🚀 Upload build artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ios-build-${{ github.run_id }}
-          retention-days: 1
+          retention-days: 14
           if-no-files-found: error
           path: |
             ${{ env.BUILD_DIR }}/Bluesky.ipa
             ${{ env.BUILD_DIR }}/Bluesky.app.dSYM.zip
+            ios-build-metadata.json
 
       - name: 📝 Write build summary
         env:
-          REMOTE_BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
+          BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
         run: |
+          artifact_sha256=$(jq -r .artifactSha256 ios-build-metadata.json)
           {
             echo "### iOS build number"
             echo
-            echo "\`$REMOTE_BUILD_NUMBER\`"
+            echo "- Build number: \`$BUILD_NUMBER\`"
+            echo "- Source SHA: \`$SOURCE_SHA\`"
+            echo "- IPA SHA-256: \`$artifact_sha256\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:
@@ -252,6 +286,7 @@ jobs:
     # Submission and dSYM upload are I/O bound and don't need the xlarge builder.
     runs-on: macos-26
     needs: [build]
+    if: ${{ inputs.submit != false }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -273,6 +308,29 @@ jobs:
 
       - name: 🚀 Deploy
         run: pnpm eas submit -p ios --non-interactive --path ios-build/Bluesky.ipa
+
+      - name: Record submission receipt
+        env:
+          SOURCE_SHA: ${{ needs.build.outputs.source-sha }}
+          PACKAGE_VERSION: ${{ needs.build.outputs.package-version }}
+          BUILD_NUMBER: ${{ needs.build.outputs.build-number }}
+        run: |
+          artifact_sha256=$(jq -r .artifactSha256 ios-build/ios-build-metadata.json)
+          jq -n \
+            --arg sourceSha "$SOURCE_SHA" \
+            --arg packageVersion "$PACKAGE_VERSION" \
+            --arg buildNumber "$BUILD_NUMBER" \
+            --arg artifactSha256 "$artifact_sha256" \
+            '{sourceSha: $sourceSha, packageVersion: $packageVersion, buildNumber: $buildNumber, artifactSha256: $artifactSha256, submissionState: "submitted"}' \
+            > ios-submission.json
+
+      - name: Upload submission receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios-submission-${{ github.run_id }}
+          path: ios-submission.json
+          retention-days: 14
+          if-no-files-found: error
 
       - name: 🪲 Upload dSYM to Sentry
         env:
