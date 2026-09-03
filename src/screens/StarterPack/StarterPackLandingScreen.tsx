@@ -190,7 +190,7 @@ function LandingScreenLoaded({
               a.text_md,
               {color: 'white'},
             ]}>
-            Starter pack by {`@${creator.handle}`}
+            <Trans>Starter Pack by {`@${creator.handle}`}</Trans>
           </Text>
         </LinearGradientBackground>
         <View style={[a.gap_2xl, a.mx_lg, a.my_2xl]}>

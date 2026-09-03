@@ -839,7 +839,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
       <View style={[a.py_4xl, a.px_xl, a.align_center, a.gap_5xl]}>
         <View style={[a.w_full, a.align_center, a.gap_lg]}>
           <Text style={[a.font_semi_bold, a.text_3xl]}>
-            <Trans>Starter pack is invalid</Trans>
+            <Trans>Starter Pack is invalid</Trans>
           </Text>
           <Text
             style={[

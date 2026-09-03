@@ -82,8 +82,8 @@ export function Card({
             style={[a.leading_snug, t.atoms.text_contrast_medium]}
             numberOfLines={1}>
             {isOwnStarterPack
-              ? l`Starter pack by you`
-              : l`Starter pack by ${sanitizeHandle(creator.handle, '@')}`}
+              ? l`Starter Pack by you`
+              : l`Starter Pack by ${sanitizeHandle(creator.handle, '@')}`}
           </Text>
         </View>
       </View>
