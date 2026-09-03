@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useEffectEvent} from 'react'
 import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
 import {useLingui} from '@lingui/react/macro'
@@ -19,11 +19,14 @@ export function FollowersPromoBanner({
   const t = useTheme()
   const ax = useAnalytics()
 
-  useEffect(() => {
+  const onSeen = useEffectEvent(() => {
     ax.metric('invite:followersPromo:seen', {})
+  })
+
+  useEffect(() => {
     // Fire once per mount - parent unmounts the banner when followers > 0 or
     // when dismissed, so each mount is a distinct impression.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    onSeen()
   }, [])
 
   const handlePress = () => {

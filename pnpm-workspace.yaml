@@ -17,9 +17,8 @@ overrides:
   '@react-native/normalize-colors': '0.86.0'
   '@expo/image-utils': '0.8.12'
   '@types/estree': '1.0.6'
-  'react-native-compressor': '1.13.0'
-  'react-native-reanimated': '4.5.3'
-  'react-native-worklets': '0.11.3'
+  'react-native-reanimated': '4.6.0'
+  'react-native-worklets': '0.12.1'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
   'react-native-screens': '4.26.2'
@@ -30,6 +29,7 @@ allowBuilds:
   'esbuild': false
   'unrs-resolver': true
 patchedDependencies:
+  '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.18.0': patches/@sentry__expo-upload-sourcemaps@8.18.0.patch
   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
   'expo-haptics@57.0.1': patches/expo-haptics@57.0.1.patch
@@ -38,16 +38,13 @@ patchedDependencies:
   'expo-notifications@57.0.7': patches/expo-notifications@57.0.7.patch
   'expo-updates@57.0.10': patches/expo-updates@57.0.10.patch
   expo@57.0.8: patches/expo@57.0.8.patch
-  'react-native-compressor@1.13.0': patches/react-native-compressor@1.13.0.patch
   'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
   'react-native-dotenv@3.4.11': patches/react-native-dotenv@3.4.11.patch
   'react-native-drawer-layout@4.2.3': patches/react-native-drawer-layout@4.2.3.patch
   'react-native-keyboard-controller@1.21.9': patches/react-native-keyboard-controller@1.21.9.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
-  'react-native-reanimated@4.5.3': patches/react-native-reanimated@4.5.3.patch
   'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
-  react-native-worklets@0.11.3: patches/react-native-worklets@0.11.3.patch
   'react-native@0.86.0': patches/react-native@0.86.0.patch
 minimumReleaseAgeExclude:
   - '@atproto/*'

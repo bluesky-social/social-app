@@ -15,7 +15,7 @@ concurrency:
 
 env:
   CI: "1"
-  MAESTRO_VERSION: "2.6.1"
+  MAESTRO_VERSION: "2.10.0"
   MAESTRO_DRIVER_STARTUP_TIMEOUT: "180000"
   MAESTRO_CLI_NO_ANALYTICS: "1"
   MAESTRO_CLI_ANALYSIS_NOTIFICATION_DISABLED: "true"
@@ -51,7 +51,7 @@ jobs:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ☕️ Set up Java 17
-        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
           distribution: temurin
           java-version: "17"
@@ -62,12 +62,12 @@ jobs:
       - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
 
-      - name: 📥 Install Maestro 2.6.1
+      - name: 📥 Install Maestro 2.10.0
         run: |
           echo "Installing Maestro" > artifacts/ios/phase.txt
           curl -fsSL -o "$RUNNER_TEMP/maestro.zip" \
             "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
-          echo "3440825f514f537c6a96bcf5de995780c2a4a7f83a43208fdc95d4f1fecfad3b  $RUNNER_TEMP/maestro.zip" \
+          echo "29b675e10cc12080e445e9bfb2e2b4e4dfb9c0f2e30d5884120d258b5e1cd991  $RUNNER_TEMP/maestro.zip" \
             | shasum -a 256 --check
           unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/maestro/bin" >> "$GITHUB_PATH"
@@ -176,7 +176,7 @@ jobs:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ☕️ Set up Java 17
-        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
         with:
           distribution: temurin
           java-version: "17"
@@ -187,12 +187,12 @@ jobs:
       - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
 
-      - name: 📥 Install Maestro 2.6.1
+      - name: 📥 Install Maestro 2.10.0
         run: |
           echo "Installing Maestro" > artifacts/android/phase.txt
           curl -fsSL -o "$RUNNER_TEMP/maestro.zip" \
             "https://github.com/mobile-dev-inc/Maestro/releases/download/cli-${MAESTRO_VERSION}/maestro.zip"
-          echo "3440825f514f537c6a96bcf5de995780c2a4a7f83a43208fdc95d4f1fecfad3b  $RUNNER_TEMP/maestro.zip" \
+          echo "29b675e10cc12080e445e9bfb2e2b4e4dfb9c0f2e30d5884120d258b5e1cd991  $RUNNER_TEMP/maestro.zip" \
             | shasum -a 256 --check
           unzip -q "$RUNNER_TEMP/maestro.zip" -d "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/maestro/bin" >> "$GITHUB_PATH"

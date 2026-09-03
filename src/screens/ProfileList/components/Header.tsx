@@ -64,6 +64,14 @@ export function Header({
   const onTogglePinned = async () => {
     playHaptic()
 
+    /*
+     * Hoisted above the `try`: inside it, `pinned` is `!savedFeedConfig.pinned`,
+     * which is `!isPinned` on the branch that uses this.
+     */
+    const pinnedMessage = !isPinned
+      ? _(msg`Pinned to your feeds`)
+      : _(msg`Unpinned from your feeds`)
+
     try {
       if (savedFeedConfig) {
         const pinned = !savedFeedConfig.pinned
@@ -73,11 +81,7 @@ export function Header({
             pinned,
           },
         ])
-        Toast.show(
-          pinned
-            ? _(msg`Pinned to your feeds`)
-            : _(msg`Unpinned from your feeds`),
-        )
+        Toast.show(pinnedMessage)
       } else {
         await addSavedFeeds([
           {

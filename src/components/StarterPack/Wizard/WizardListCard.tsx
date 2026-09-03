@@ -36,6 +36,7 @@ function WizardListCard({
   avatar,
   included,
   disabled,
+  subjectOptedOut,
   moderationUi,
 }: {
   type: 'user' | 'algo'
@@ -48,6 +49,7 @@ function WizardListCard({
   avatar?: string
   included?: boolean
   disabled?: boolean
+  subjectOptedOut?: boolean
   moderationUi: ModerationUI
 }) {
   const t = useTheme()
@@ -97,6 +99,11 @@ function WizardListCard({
           numberOfLines={1}>
           {subtitle}
         </Text>
+        {subjectOptedOut ? (
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            <Trans>Opted out</Trans>
+          </Text>
+        ) : null}
       </View>
       {btnType === 'checkbox' ? (
         <Checkbox />
@@ -123,12 +130,14 @@ export function WizardProfileCard({
   dispatch,
   profile,
   moderationOpts,
+  subjectOptedOut = false,
 }: {
   btnType: 'checkbox' | 'remove'
   state: WizardState
   dispatch: (action: WizardAction) => void
   profile: bsky.profile.AnyProfileView
   moderationOpts: ModerationOpts
+  subjectOptedOut?: boolean
 }) {
   const ax = useAnalytics()
   const {currentAccount} = useSession()
@@ -138,7 +147,9 @@ export function WizardProfileCard({
   const isTarget = profile.did === targetProfileDid
   const included = isTarget || state.profiles.some(p => p.did === profile.did)
   const disabled =
-    isTarget || (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE)
+    subjectOptedOut ||
+    isTarget ||
+    (!included && state.profiles.length >= STARTER_PACK_MAX_SIZE)
   const moderationUi = moderateProfile(profile, moderationOpts).ui('avatar')
   const displayName = profile.displayName
     ? sanitizeDisplayName(profile.displayName)
@@ -169,6 +180,7 @@ export function WizardProfileCard({
       avatar={profile.avatar}
       included={included}
       disabled={disabled}
+      subjectOptedOut={subjectOptedOut}
       moderationUi={moderationUi}
     />
   )

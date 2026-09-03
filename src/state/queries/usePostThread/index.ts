@@ -33,6 +33,7 @@ import {useMergeThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies
 import {useBreakpoints} from '#/alf'
 import {IS_WEB} from '#/env'
 import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export * from '#/state/queries/usePostThread/context'
 export {useUpdatePostThreadThreadgateQueryCache} from '#/state/queries/usePostThread/queryCache'
@@ -73,12 +74,35 @@ export function usePostThread({anchor}: {anchor?: string}) {
     enabled: isThreadPreferencesLoaded && !!anchor && !!moderationOpts,
     queryKey: postThreadQueryKey,
     async queryFn(ctx) {
+      const placeholder = getThreadPlaceholder(qc, anchor!)
       const data = await client.call(app.bsky.unspecced.getPostThreadV2, {
         anchor: anchor! as AtUriString,
         branchingFactor: view === 'linear' ? LINEAR_VIEW_BF : TREE_VIEW_BF,
         below,
         sort: sort,
       })
+
+      const cachedKnownLikers =
+        placeholder &&
+        bsky.isType(app.bsky.unspecced.defs.threadItemPost, placeholder.value)
+          ? placeholder.value.post.viewer?.knownLikers
+          : undefined
+      if (cachedKnownLikers?.actors.length) {
+        const anchorItem = data.thread?.find(item => item.uri === anchor)
+        if (
+          anchorItem &&
+          bsky.isType(
+            app.bsky.unspecced.defs.threadItemPost,
+            anchorItem.value,
+          ) &&
+          !anchorItem.value.post.viewer?.knownLikers?.actors.length
+        ) {
+          anchorItem.value.post.viewer = {
+            ...anchorItem.value.post.viewer,
+            knownLikers: cachedKnownLikers,
+          }
+        }
+      }
 
       /*
        * Initialize `ctx.meta` to track if we know we have additional replies

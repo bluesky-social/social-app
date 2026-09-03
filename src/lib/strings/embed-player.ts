@@ -49,6 +49,29 @@ export type EmbedPlayerType =
   | 'bandcamp_album'
   | 'bandcamp_track'
 
+export function getEmbedPlayerMediaType(
+  type: EmbedPlayerType,
+): 'video' | 'audio' | 'gif' | 'other' {
+  if (
+    type === 'youtube_video' ||
+    type === 'youtube_short' ||
+    type === 'twitch_video' ||
+    type === 'vimeo_video'
+  ) {
+    return 'video'
+  }
+  if (type.endsWith('_gif')) return 'gif'
+  if (
+    type.startsWith('spotify_') ||
+    type.startsWith('soundcloud_') ||
+    type.startsWith('apple_music_') ||
+    type.startsWith('bandcamp_')
+  ) {
+    return 'audio'
+  }
+  return 'other'
+}
+
 export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   youtube: 'YouTube',
   youtubeShorts: 'YouTube Shorts',

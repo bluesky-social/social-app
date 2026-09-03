@@ -55,19 +55,164 @@ export function useStarterPackQuery({
   return useQuery<app.bsky.graph.defs.StarterPackView>({
     queryKey: RQKEY(uri ? {uri} : {did, rkey}),
     queryFn: async () => {
-      if (!uri) {
-        uri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
-      } else if (uri && !uri.startsWith('at://')) {
-        uri = httpStarterPackUriToAtUri(uri) as string
+      let atUri = uri
+      if (!atUri) {
+        atUri = `at://${did}/app.bsky.graph.starterpack/${rkey}`
+      } else if (!atUri.startsWith('at://')) {
+        atUri = httpStarterPackUriToAtUri(atUri) as string
       }
 
       const res = await client.call(app.bsky.graph.getStarterPack, {
-        starterPack: uri as AtUriString,
+        starterPack: atUri as AtUriString,
       })
       return res.starterPack
     },
     enabled: Boolean(uri) || Boolean(did && rkey),
     staleTime: STALE.MINUTES.FIVE,
+  })
+}
+
+export function useReferenceListOptOutMutation({
+  starterPack,
+  onError,
+  onSuccess,
+}: {
+  starterPack: app.bsky.graph.defs.StarterPackView
+  onError: (error: Error) => void
+  onSuccess?: (action: 'optOut' | 'undo') => void
+}) {
+  const queryClient = useQueryClient()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
+  const parsed = parseStarterPackUri(starterPack.uri)!
+  const queryKey = RQKEY({did: parsed.name, rkey: parsed.rkey})
+
+  return useMutation<
+    {
+      referenceListOptOut: AtUriString | undefined
+      didObserveRequestedState: boolean
+    },
+    Error,
+    {referenceListOptOut?: string},
+    {previous?: app.bsky.graph.defs.StarterPackView}
+  >({
+    mutationFn: async ({referenceListOptOut}) => {
+      if (!starterPack.list) {
+        throw new Error('Starter pack does not have a reference list')
+      }
+
+      let nextOptOut: AtUriString | undefined
+      if (referenceListOptOut) {
+        const {rkeySafe: rkey} = new AtUri(referenceListOptOut)
+        await pdsClient.delete(app.bsky.graph.referencelistoptout, {
+          repo: pdsClient.assertDid,
+          rkey,
+        })
+      } else {
+        const result = await pdsClient.create(
+          app.bsky.graph.referencelistoptout,
+          {
+            subject: starterPack.list.uri,
+            createdAt: toDatetimeString(new Date()),
+          },
+        )
+        nextOptOut = result.uri
+      }
+
+      const didObserveRequestedState = await until(
+        5,
+        1e3,
+        (value, error) => {
+          if (error) return false
+
+          const observedOptOut =
+            value?.starterPack.list?.viewer?.referenceListOptOut
+
+          // AppView ignores duplicate records and continues to expose the URI
+          // of the record it indexed first. Treat that viewer state as the
+          // source of truth instead of waiting for the newly-created URI.
+          const didObserveRequestedState = referenceListOptOut
+            ? !observedOptOut
+            : Boolean(observedOptOut)
+          if (didObserveRequestedState) {
+            nextOptOut = observedOptOut
+          }
+          return didObserveRequestedState
+        },
+        async () =>
+          await appviewClient.call(app.bsky.graph.getStarterPack, {
+            starterPack: starterPack.uri,
+          }),
+      )
+
+      return {
+        referenceListOptOut: nextOptOut,
+        didObserveRequestedState,
+      }
+    },
+    onMutate: async ({referenceListOptOut}) => {
+      await queryClient.cancelQueries({queryKey})
+      const previous =
+        queryClient.getQueryData<app.bsky.graph.defs.StarterPackView>(queryKey)
+      queryClient.setQueryData<app.bsky.graph.defs.StarterPackView>(
+        queryKey,
+        current =>
+          current?.list
+            ? {
+                ...current,
+                list: {
+                  ...current.list,
+                  viewer: {
+                    ...current.list.viewer,
+                    referenceListOptOut: referenceListOptOut
+                      ? undefined
+                      : `at://${pdsClient.assertDid}/app.bsky.graph.referencelistoptout/pending`,
+                  },
+                },
+              }
+            : current,
+      )
+      return {previous}
+    },
+    onSuccess: ({referenceListOptOut}, variables) => {
+      queryClient.setQueryData<app.bsky.graph.defs.StarterPackView>(
+        queryKey,
+        current =>
+          current?.list
+            ? {
+                ...current,
+                list: {
+                  ...current.list,
+                  viewer: {
+                    ...current.list.viewer,
+                    referenceListOptOut,
+                  },
+                },
+              }
+            : current,
+      )
+      void invalidateListMembersQuery({
+        queryClient,
+        uri: starterPack.list!.uri,
+      })
+      onSuccess?.(variables.referenceListOptOut ? 'undo' : 'optOut')
+    },
+    onError: (error, _, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(queryKey, context.previous)
+      }
+      onError(error)
+    },
+    onSettled: data => {
+      void queryClient.invalidateQueries({
+        queryKey,
+        // If AppView has not indexed the PDS write yet, keep the committed
+        // optimistic state visible. Mark it stale so a later mount/focus can
+        // refetch once AppView has caught up without replacing it immediately
+        // with the known-outdated value.
+        refetchType: data && !data.didObserveRequestedState ? 'none' : 'active',
+      })
+    },
   })
 }
 
@@ -324,9 +469,12 @@ export function useDeleteStarterPackMutation({
       })
 
       if (uri) {
-        await whenAppViewReady(appviewClient, uri, v => {
-          return Boolean(v?.starterPack) === false
-        })
+        /* Once the deletion is indexed, `getStarterPack` throws. */
+        await whenAppViewReady(
+          appviewClient,
+          uri,
+          v => Boolean(v?.starterPack) === false,
+        )
       }
 
       if (listUri) {
@@ -352,7 +500,10 @@ export function useDeleteStarterPackMutation({
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res?: app.bsky.graph.getStarterPack.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.graph.getStarterPack.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

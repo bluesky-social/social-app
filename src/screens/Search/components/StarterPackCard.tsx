@@ -34,6 +34,7 @@ export function StarterPackCard({
   const {gtPhone} = useBreakpoints()
   const link = useStarterPackLink({view})
   const record = view.record
+  const isOwnStarterPack = view.creator?.did === currentAccount?.did
 
   if (!bsky.isType(app.bsky.graph.starterpack, record)) {
     return null
@@ -99,7 +100,7 @@ export function StarterPackCard({
                     t.atoms.text_contrast_medium,
                   ]}
                   numberOfLines={1}>
-                  {view.creator?.did === currentAccount?.did
+                  {isOwnStarterPack
                     ? _(msg`By you`)
                     : _(msg`By ${sanitizeHandle(view.creator.handle, '@')}`)}
                 </Text>

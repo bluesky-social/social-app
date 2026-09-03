@@ -117,6 +117,7 @@ const Context = createContext<AnalyticsBaseContextType>({
     geolocation: device.get(['geolocationServiceResponse']) || {
       countryCode: '',
       regionCode: '',
+      city: '',
     },
   },
 })
@@ -181,6 +182,7 @@ export function AnalyticsContext({
   }
   const deviceId = useDeviceId() ?? 'unknown'
   const sessionId = useSessionId()
+  // only IP based, never GPS
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
   /*

@@ -23,9 +23,10 @@ import * as VideoFallback from './VideoEmbedInner/VideoFallback'
 
 interface Props {
   embed: app.bsky.embed.video.View
+  post?: app.bsky.feed.defs.PostView
 }
 
-export function VideoEmbed({embed}: Props) {
+export function VideoEmbed({embed, post}: Props) {
   const [key, setKey] = useState(0)
 
   const renderError = useCallback(
@@ -52,7 +53,7 @@ export function VideoEmbed({embed}: Props) {
 
   const contents = (
     <ErrorBoundary renderError={renderError} key={key}>
-      <InnerWrapper embed={embed} />
+      <InnerWrapper embed={embed} post={post} />
     </ErrorBoundary>
   )
 
@@ -69,7 +70,7 @@ export function VideoEmbed({embed}: Props) {
   )
 }
 
-function InnerWrapper({embed}: Props) {
+function InnerWrapper({embed, post}: Props) {
   const {_} = useLingui()
   const ax = useAnalytics()
   const ref = useRef<{togglePlayback: () => void}>(null)
@@ -86,6 +87,8 @@ function InnerWrapper({embed}: Props) {
    * the active position cost nothing.
    */
   const telemetryRef = useRef<PlaybackTelemetry | null>(null)
+  const impressionTrackedRef = useRef(false)
+  const playbackStartTrackedRef = useRef(false)
   useEffect(() => {
     return () => {
       telemetryRef.current?.deactivated()
@@ -121,14 +124,36 @@ function InnerWrapper({embed}: Props) {
         setIsActive={active => {
           setIsActive(active)
           if (active) {
-            telemetryRef.current ??= createPlaybackTelemetry({
-              surface: 'feed',
-              presentation: embed.presentation === 'gif' ? 'gif' : 'video',
-            })
+            if (!impressionTrackedRef.current) {
+              impressionTrackedRef.current = true
+              ax.metric('video:impression', {
+                postUri: post?.uri,
+                postAuthorDid: post?.author.did,
+                context: 'embed',
+                presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+              })
+            }
+            if (telemetryRef.current == null) {
+              telemetryRef.current = createPlaybackTelemetry({
+                surface: 'feed',
+                presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+              })
+            }
             telemetryRef.current.activated()
           } else {
             telemetryRef.current?.deactivated()
           }
+        }}
+        onPlaybackStart={autoplay => {
+          if (playbackStartTrackedRef.current) return
+          playbackStartTrackedRef.current = true
+          ax.metric('video:playback:start', {
+            postUri: post?.uri,
+            postAuthorDid: post?.author.did,
+            context: 'embed',
+            presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+            autoplay,
+          })
         }}
         onError={error => {
           telemetryRef.current?.error(error)

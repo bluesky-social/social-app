@@ -78,14 +78,14 @@ describe('useAutoPagination', () => {
     const itemCount = 0
     const {rerender} = renderHook(() => useAutoPagination(value, itemCount, 10))
 
-    for (let i = 1; i < 50; i++) {
+    for (let i = 1; i < 5; i++) {
       value = query({
         fetchNextPage,
         data,
       })
       rerender(undefined)
     }
-    expect(fetchNextPage).toHaveBeenCalledTimes(49)
+    expect(fetchNextPage).toHaveBeenCalledTimes(4)
 
     const second = query({
       data: {

@@ -219,7 +219,7 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
         IS_IOS && align === 'platform' && a.text_center,
         t.atoms.text_contrast_medium,
       ]}
-      numberOfLines={2}>
+      numberOfLines={1}>
       {children}
     </Text>
   )

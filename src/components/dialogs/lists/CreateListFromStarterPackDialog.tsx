@@ -102,7 +102,7 @@ export function CreateListFromStarterPackDialog({
             await until(
               5,
               1e3,
-              (res: {items: unknown[]}) => res.items.length > 0,
+              res => !!res?.items.length,
               () =>
                 appviewClient.call(app.bsky.graph.getList, {
                   list: listUri as AtUriString,

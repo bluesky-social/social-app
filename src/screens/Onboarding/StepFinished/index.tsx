@@ -78,11 +78,12 @@ export function StepFinished() {
         logger.error('Failed to fetch starter pack', {safeMessage: e})
         // don't tell the user, just get them through onboarding.
       }
+      const starterPackList = starterPack?.list
       try {
-        if (starterPack?.list) {
+        if (starterPackList) {
           listItems = await getAllListMembers(
             appviewClient,
-            starterPack.list.uri,
+            starterPackList.uri,
           )
         }
       } catch (e) {
@@ -93,19 +94,24 @@ export function StepFinished() {
       }
     }
 
+    /*
+     * Hoisted above the `try`: React Compiler cannot lower these inside one, and
+     * `listItems` is already settled by the earlier try/catch.
+     */
+    const followDids = [
+      BSKY_APP_ACCOUNT_DID,
+      ...(listItems?.map(i => i.subject.did) ?? []),
+    ]
+    const starterPackRef = starterPack
+      ? {uri: starterPack.uri, cid: starterPack.cid}
+      : undefined
+
     try {
       const {interestsStepResults, profileStepResults} = state
       const {selectedInterests} = interestsStepResults
 
       await Promise.all([
-        bulkWriteFollows(
-          pdsClient,
-          appviewClient,
-          [BSKY_APP_ACCOUNT_DID, ...(listItems?.map(i => i.subject.did) ?? [])],
-          starterPack
-            ? {uri: starterPack.uri, cid: starterPack.cid}
-            : undefined,
-        ),
+        bulkWriteFollows(pdsClient, appviewClient, followDids, starterPackRef),
         (async () => {
           // Interests need to get saved first, then we can write the feeds to prefs
           await pdsClient.call(setInterestsPref, {tags: selectedInterests})

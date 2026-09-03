@@ -1,0 +1,30 @@
+diff --git a/index.js b/index.js
+index 12101e1b954e1a8c7bf7887bef4f4e08fb06a8be..51d7af352a8a222c5320426f376d51c5a173300b 100644
+--- a/index.js
++++ b/index.js
+@@ -170,6 +170,13 @@ var BigDecimal = class BigDecimal {
+ 	times(y) {
+ 		const other = BigDecimal._coerce(y);
+ 		if (this._special || other._special) return this._specialArith(other, "times");
++		// Fast path: multiplying by exactly 1 is an identity operation. ECMA-402's
++		// ToRawFixed multiplies by roundingIncrement, which defaults to 1, on every
++		// format call - without this check that is a full BigInt multiply followed
++		// by a trailing-zero strip. BigDecimal is immutable, so returning the
++		// existing instance is safe.
++		if (other._mantissa === 1n && other._exponent === 0) return this;
++		if (this._mantissa === 1n && this._exponent === 0) return other;
+ 		if (this._mantissa === 0n || other._mantissa === 0n) {
+ 			const negZero = this._isSignNegative() ? !other._isSignNegative() : other._isSignNegative();
+ 			return BigDecimal._create(0n, 0, SpecialValue.NONE, negZero);
+@@ -189,6 +196,11 @@ var BigDecimal = class BigDecimal {
+ 			const negZero = this._isSignNegative() !== other._isSignNegative();
+ 			return BigDecimal._create(0n, 0, SpecialValue.NONE, negZero);
+ 		}
++		// Fast path: dividing by exactly 1 is an identity operation. ECMA-402's
++		// ToRawFixed divides by roundingIncrement, which defaults to 1, on every
++		// format call - without this check that is a 10^DIV_PRECISION BigInt
++		// scale-up, a division, and a trailing-zero strip that undoes the scaling.
++		if (other._mantissa === 1n && other._exponent === 0) return this;
+ 		const [nm, ne] = removeTrailingZeros(this._mantissa * bigintPow10(DIV_PRECISION) / other._mantissa, this._exponent - other._exponent - DIV_PRECISION);
+ 		return BigDecimal._create(nm, ne, SpecialValue.NONE, false);
+ 	}
