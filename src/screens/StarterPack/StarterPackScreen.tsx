@@ -30,6 +30,7 @@ import {useResolveDidQuery} from '#/state/queries/resolve-uri'
 import {useShortenLink} from '#/state/queries/shorten-link'
 import {
   useDeleteStarterPackMutation,
+  useReferenceListOptOutMutation,
   useStarterPackQuery,
 } from '#/state/queries/starter-packs'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
@@ -523,6 +524,7 @@ function OverflowMenu({
   const reportDialogControl = useReportDialogControl()
   const deleteDialogControl = useDialogControl()
   const convertToListDialogControl = useDialogControl()
+  const optOutDialogControl = useDialogControl()
   const navigation = useNavigation<NavigationProp>()
 
   const {
@@ -546,6 +548,30 @@ function OverflowMenu({
   })
 
   const isOwn = starterPack.creator.did === currentAccount?.did
+  const referenceListOptOut = starterPack.list?.viewer?.referenceListOptOut
+  const {mutate: setReferenceListOptOut, isPending: isOptOutPending} =
+    useReferenceListOptOutMutation({
+      starterPack,
+      onSuccess: action => {
+        ax.metric('starterPack:optOut', {
+          starterPack: starterPack.uri,
+          action,
+        })
+        Toast.show(
+          action === 'optOut'
+            ? _(msg`Opted out of starter pack`)
+            : _(msg`Opt-out undone`),
+        )
+      },
+      onError: error => {
+        logger.error('Failed to update starter pack opt-out', {
+          safeMessage: error,
+        })
+        Toast.show(_(msg`Failed to update starter pack opt-out`), {
+          type: 'error',
+        })
+      },
+    })
 
   const onDeleteStarterPack = async () => {
     if (!starterPack.list) {
@@ -650,6 +676,24 @@ function OverflowMenu({
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={CircleInfo} position="right" />
               </Menu.Item>
+              {starterPack.list ? (
+                <Menu.Item
+                  label={
+                    referenceListOptOut
+                      ? _(msg`Undo opt-out from starter pack`)
+                      : _(msg`Opt out of starter pack`)
+                  }
+                  disabled={isOptOutPending}
+                  onPress={() => optOutDialogControl.open()}>
+                  <Menu.ItemText>
+                    {referenceListOptOut ? (
+                      <Trans>Undo opt-out</Trans>
+                    ) : (
+                      <Trans>Opt out of starter pack</Trans>
+                    )}
+                  </Menu.ItemText>
+                </Menu.Item>
+              ) : null}
             </>
           )}
         </Menu.Outer>
@@ -708,6 +752,58 @@ function OverflowMenu({
           <Prompt.Cancel />
         </Prompt.Actions>
       </Prompt.Outer>
+
+      {starterPack.list ? (
+        <Prompt.Outer control={optOutDialogControl}>
+          <Prompt.TitleText>
+            {referenceListOptOut ? (
+              <Trans>Undo opt-out?</Trans>
+            ) : (
+              <Trans>Opt out of this starter pack?</Trans>
+            )}
+          </Prompt.TitleText>
+          <Prompt.DescriptionText>
+            {referenceListOptOut ? (
+              <Trans>
+                You will be eligible to appear in this starter pack again.
+              </Trans>
+            ) : (
+              <Trans>
+                You will no longer appear in this starter pack. The creator will
+                be able to see that you've opted out and remove you if they
+                wish.
+              </Trans>
+            )}
+          </Prompt.DescriptionText>
+          <Prompt.Actions>
+            <Button
+              variant="solid"
+              color={referenceListOptOut ? 'primary' : 'negative'}
+              size="large"
+              label={
+                referenceListOptOut
+                  ? _(msg`Undo opt-out`)
+                  : _(msg`Opt out of starter pack`)
+              }
+              disabled={isOptOutPending}
+              onPress={() => {
+                optOutDialogControl.close(() => {
+                  setReferenceListOptOut({referenceListOptOut})
+                })
+              }}>
+              <ButtonText>
+                {referenceListOptOut ? (
+                  <Trans>Undo opt-out</Trans>
+                ) : (
+                  <Trans>Opt out</Trans>
+                )}
+              </ButtonText>
+              {isOptOutPending && <ButtonIcon icon={Loader} />}
+            </Button>
+            <Prompt.Cancel />
+          </Prompt.Actions>
+        </Prompt.Outer>
+      ) : null}
 
       <CreateListFromStarterPackDialog
         control={convertToListDialogControl}
