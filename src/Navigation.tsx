@@ -89,8 +89,9 @@ import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
 import {ModerationInboxScreen} from '#/screens/ModerationInbox'
-import {ModerationInboxReportDetailsScreen} from '#/screens/ModerationInbox/Details'
+import {ModerationInboxReportDetailsScreen} from '#/screens/ModerationInbox/Report'
 import {ModerationInboxSettingsScreen} from '#/screens/ModerationInbox/Settings'
+import {ModerationInboxSubjectDetailsScreen} from '#/screens/ModerationInbox/Subject'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
 import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
@@ -194,6 +195,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="ModerationInboxReportDetails"
         getComponent={() => ModerationInboxReportDetailsScreen}
+        options={{title: title(msg`Your report`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ModerationInboxSubjectDetails"
+        getComponent={() => ModerationInboxSubjectDetailsScreen}
         options={{title: title(msg`Your report`), requireAuth: true}}
       />
       <Stack.Screen
