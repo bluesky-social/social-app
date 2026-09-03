@@ -234,34 +234,41 @@ export function MoreOptionsMenu({
               </Menu.Item>
             </Menu.Group>
           ) : (
-            <Menu.Group>
-              <Menu.Item
-                label={_(msg`Report list`)}
-                onPress={reportDialogControl.open}>
-                <Menu.ItemText>
-                  <Trans>Report list</Trans>
-                </Menu.ItemText>
-                <Menu.ItemIcon position="right" icon={WarningIcon} />
-              </Menu.Item>
-              {isReferenceList ? (
+            <>
+              <Menu.Group>
                 <Menu.Item
-                  label={
-                    referenceListOptOut
-                      ? _(msg`Undo opt-out from starter pack`)
-                      : _(msg`Opt out of starter pack`)
-                  }
-                  disabled={isOptOutPending}
-                  onPress={optOutDialogControl.open}>
+                  label={_(msg`Report list`)}
+                  onPress={reportDialogControl.open}>
                   <Menu.ItemText>
-                    {referenceListOptOut ? (
-                      <Trans>Undo opt-out</Trans>
-                    ) : (
-                      <Trans>Opt out of starter pack</Trans>
-                    )}
+                    <Trans>Report list</Trans>
                   </Menu.ItemText>
+                  <Menu.ItemIcon position="right" icon={WarningIcon} />
                 </Menu.Item>
+              </Menu.Group>
+              {isReferenceList ? (
+                <>
+                  <Menu.Divider />
+                  <Menu.Group>
+                    <Menu.Item
+                      label={
+                        referenceListOptOut
+                          ? _(msg`Undo opt-out from starter pack`)
+                          : _(msg`Opt out of starter pack`)
+                      }
+                      disabled={isOptOutPending}
+                      onPress={optOutDialogControl.open}>
+                      <Menu.ItemText>
+                        {referenceListOptOut ? (
+                          <Trans>Undo opt-out</Trans>
+                        ) : (
+                          <Trans>Opt out of starter pack</Trans>
+                        )}
+                      </Menu.ItemText>
+                    </Menu.Item>
+                  </Menu.Group>
+                </>
               ) : null}
-            </Menu.Group>
+            </>
           )}
 
           {isModList && isPinned && (
