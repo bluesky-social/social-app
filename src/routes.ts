@@ -82,7 +82,7 @@ export const router = new Router<AllNavigatableRoutes>({
   MessagesConversation: '/messages/:conversation',
   MessagesConversationSettings: '/messages/:conversation/settings',
   MessagesJoinRequests: '/messages/:conversation/requests',
-  // starter packs
+  // Starter Packs
   Start: '/start/:name/:rkey',
   StarterPackEdit: '/starter-pack/edit/:rkey',
   StarterPack: '/starter-pack/:name/:rkey',

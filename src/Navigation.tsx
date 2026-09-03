@@ -575,12 +575,12 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="StarterPackWizard"
         getComponent={() => Wizard}
-        options={{title: title(msg`Create a starter pack`), requireAuth: true}}
+        options={{title: title(msg`Create a Starter Pack`), requireAuth: true}}
       />
       <Stack.Screen
         name="StarterPackEdit"
         getComponent={() => Wizard}
-        options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+        options={{title: title(msg`Edit your Starter Pack`), requireAuth: true}}
       />
       <Stack.Screen
         name="VideoFeed"

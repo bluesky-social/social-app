@@ -40,7 +40,7 @@ export function StepSuggestedStarterpacks() {
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
       <OnboardingPosition />
       <OnboardingTitleText>
-        <Trans comment="Starter packs suggested to the user for them to follow">
+        <Trans comment="Starter Packs suggested to the user for them to follow">
           Find people to follow
         </Trans>
       </OnboardingTitleText>

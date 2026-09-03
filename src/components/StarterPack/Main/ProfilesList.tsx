@@ -2,8 +2,7 @@ import {forwardRef, useCallback, useImperativeHandle, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
@@ -107,6 +106,12 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
       )
     }
 
+    const onRefresh = async () => {
+      setIsPTRing(true)
+      await refetch()
+      setIsPTRing(false)
+    }
+
     if (!data) {
       return (
         <View
@@ -140,11 +145,7 @@ export const ProfilesList = forwardRef<SectionRef, ProfilesListProps>(
           desktopFixedHeight
           initialNumToRender={initialNumToRender}
           refreshing={isPTRing}
-          onRefresh={async () => {
-            setIsPTRing(true)
-            await refetch()
-            setIsPTRing(false)
-          }}
+          onRefresh={() => void onRefresh()}
         />
       )
   },
@@ -159,14 +160,14 @@ function OptedOutControls({
   listUri: string
   canRemove: boolean
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const [isRemoved, setIsRemoved] = useState(false)
   const {mutate: removeMembership, isPending} = useListMembershipRemoveMutation(
     {
       onSuccess: () => {
         setIsRemoved(true)
-        Toast.show(_(msg`Removed from starter pack`))
+        Toast.show(l`Removed from Starter Pack`)
       },
       onError: error =>
         Toast.show(cleanError(error), {
@@ -183,12 +184,12 @@ function OptedOutControls({
         <Admonition.Icon />
         <Admonition.Content>
           <Admonition.Text>
-            <Trans>Opted out of this starter pack</Trans>
+            <Trans>Opted out of this Starter Pack</Trans>
           </Admonition.Text>
         </Admonition.Content>
         {canRemove ? (
           <Admonition.Button
-            label={_(msg`Remove user from starter pack`)}
+            label={l`Remove user from Starter Pack`}
             color="secondary"
             disabled={isPending}
             onPress={() => {
