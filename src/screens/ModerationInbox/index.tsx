@@ -212,7 +212,7 @@ function YourAccount() {
       <ReportRow
         subject={l({
           context: 'moderation-report-action',
-          message: `A label was added to your post`,
+          message: `Your account was suspended`,
         })}
         action={l`Ban evasion – ${duration}, now expired`}
         date={new Date()}
