@@ -1,26 +1,17 @@
 /*
  * Tests for babel-plugin-lexicon-leaf-imports, in three layers:
  *
- * 1. Transform unit tests: run the plugin alone over small snippets against
- *    the real src/lexicons tree and assert the rewrite / bail behavior.
+ * 1. Transform unit tests: rewrite / bail behavior on small snippets.
  *
- * 2. App-source proof: enumerate every chain reachable through the barrels'
- *    own `export * as` graph (the only chains user code can write), generate
- *    a probe file referencing all of them, transform it, and typecheck the
- *    output with the app tsconfig. This proves every rewritten specifier
- *    resolves to a real module. The transform itself also exercises the
- *    plugin's verifyChain proof for every single chain.
+ * 2. App-source proof: enumerate every chain the barrels expose, transform a
+ *    probe referencing all of them, and typecheck it with the app tsconfig -
+ *    proving every rewritten specifier resolves to a real module.
  *
- * 3. SDK dist proof: the plugin also rewrites @bsky/sdk's compiled output
- *    (plain JS). Transform every dist file that imports the lexicon barrel
- *    and typecheck the result with checkJs, where imports resolve to the
- *    SDK's shipped .d.ts files - so unresolvable specifiers (TS2307) and
- *    missing members on a rewritten leaf namespace (TS2339) both surface.
- *    tsc never checks JS under node_modules, so transformed files are
- *    written to a temp mirror and resolved back into the real dist via
- *    rootDirs. checkJs has inherent noise on compiled output, so the shadow
- *    diagnostics are compared against a baseline run of the untransformed
- *    files: only diagnostics introduced by the plugin fail the test.
+ * 3. SDK dist proof: transform @bsky/sdk's compiled JS and typecheck it with
+ *    checkJs against the shipped .d.ts, via a temp mirror resolved back into
+ *    the real dist with rootDirs (tsc never checks JS under node_modules).
+ *    checkJs is noisy on compiled output, so diagnostics are diffed against
+ *    an untransformed baseline: only plugin-introduced ones fail.
  */
 const {transformSync} = require('@babel/core')
 const {parse} = require('@babel/parser')
@@ -135,9 +126,8 @@ describe('transform', () => {
 })
 
 /*
- * The plugin memoizes filesystem stats, barrel export maps, and verified
- * chains in module-level caches that outlive individual transforms. A lexicon
- * regen inside a long-lived worker (Metro dev server, jest --watch) must
+ * The plugin's module-level caches outlive individual transforms, so a
+ * lexicon regen inside a long-lived worker (Metro, jest --watch) must
  * invalidate them - the plugin uses the root index mtime as the epoch.
  */
 describe('cache invalidation across a lexicon regen', () => {
@@ -183,9 +173,8 @@ describe('cache invalidation across a lexicon regen', () => {
     )
 
     /*
-     * Simulate `lex build --clear` deepening the leaf into a barrel. Codegen
-     * rewrites the whole tree, so the root index mtime always moves; force it
-     * forward explicitly since same-millisecond writes would hide the change.
+     * Simulate `lex build --clear` deepening the leaf into a barrel; bump the
+     * root index mtime explicitly since same-millisecond writes would hide it.
      */
     write(
       'lexicons/app/bsky/feed/like.ts',
@@ -199,9 +188,8 @@ describe('cache invalidation across a lexicon regen', () => {
     fs.utimesSync(path.join(lexRoot, 'index.ts'), bumped, bumped)
 
     /*
-     * The chain now stops at a barrel, so the correct result is a bail that
-     * keeps the barrel import. Stale caches would instead replay the rewrite
-     * against the old layout.
+     * The chain now stops at a barrel: fresh caches bail, stale caches would
+     * replay the rewrite against the old layout.
      */
     const out = transform()
     expect(out).toContain(`from './lexicons'`)
@@ -210,10 +198,9 @@ describe('cache invalidation across a lexicon regen', () => {
 })
 
 /**
- * Enumerate every leaf chain by following `export * as <name> from '...'`
- * through the barrel graph, mirroring the plugin's own leaf/barrel rule: a
- * target with a sibling directory is a barrel to recurse into, otherwise a
- * leaf. Chains come out as e.g. ['app', 'bsky', 'feed', 'like'].
+ * Follow `export * as` through the barrel graph, mirroring the plugin's own
+ * leaf/barrel rule (a sibling directory means barrel). Yields chains like
+ * ['app', 'bsky', 'feed', 'like'].
  */
 function collectLeafChains(rootDir) {
   const chains = []
@@ -307,10 +294,7 @@ describe('app sources: every barrel chain rewrites and typechecks', () => {
         chains.map(c => `void ${c.join('.')}`).join('\n') +
         '\n'
 
-      /*
-       * This also runs the plugin's verifyChain proof for every chain: any
-       * filesystem/barrel divergence throws here.
-       */
+      /* Also runs the plugin's verifyChain proof for every chain. */
       const out = applyPlugin(probeSource, PROBE_FILE)
 
       expect(out).not.toContain(`from './lexicons'`)
@@ -318,9 +302,8 @@ describe('app sources: every barrel chain rewrites and typechecks', () => {
       expect(leafImports).toHaveLength(chains.length)
 
       /*
-       * Typecheck the transformed probe with the app tsconfig. The probe is
-       * overlaid at a virtual path inside src/ so its relative leaf imports
-       * resolve against the real tree.
+       * Typecheck the probe overlaid at a virtual src/ path, so its relative
+       * leaf imports resolve against the real tree.
        */
       const options = loadAppCompilerOptions()
       const host = createOverlayHost(options, new Map([[PROBE_FILE, out]]))
@@ -335,8 +318,8 @@ describe('app sources: every barrel chain rewrites and typechecks', () => {
       }
 
       /*
-       * Canary: prove this program setup actually flags a bad specifier, so
-       * a broken overlay host cannot produce a vacuous pass.
+       * Canary: a bad specifier must be flagged, so a broken overlay host
+       * cannot produce a vacuous pass.
        */
       const canary =
         out + `import * as _bad from './lexicons/app/bsky/feed/__nope__'\n`
@@ -434,9 +417,8 @@ describe('@bsky/sdk dist: rewrites typecheck against shipped .d.ts', () => {
           module: ts.ModuleKind.ESNext,
           moduleResolution: ts.ModuleResolutionKind.Bundler,
           /*
-           * Relative imports in the mirror (both untouched ones like
-           * './api.js' and the plugin's '../lexicons/...' rewrites) resolve
-           * into the real dist, landing on its .d.ts files.
+           * Relative imports in the mirror resolve into the real dist,
+           * landing on its .d.ts files.
            */
           rootDirs: [path.join(mirrors[kind], 'dist'), SDK_DIST],
         }
@@ -454,10 +436,8 @@ describe('@bsky/sdk dist: rewrites typecheck against shipped .d.ts', () => {
       }
 
       /*
-       * Canary: prove the checkJs machinery actually checks members through
-       * the SDK's .d.ts files. If this setup ever degrades to not-checking,
-       * a real regression would pass silently - so require a known-bad
-       * member access to be flagged.
+       * Canary: a known-bad member access must be flagged, proving checkJs
+       * actually checks through the SDK's .d.ts files.
        */
       {
         const canary = path.join(mirrors.shadow, 'dist', '__canary__.js')
@@ -508,24 +488,16 @@ describe('app callsites: transformed sources typecheck', () => {
   /*
    * The real-usage complement to the probe: transform every app file that
    * imports the barrel - with babel-plugin-module-resolver ahead of the
-   * plugin, as in babel.config.js, so the '#/lexicons' -> relative-path
-   * interop and ordering are exercised - and typecheck the transformed files
-   * in place of the originals.
+   * plugin, as in babel.config.js - and typecheck the output in place of the
+   * originals.
    *
-   * Types are kept (no preset-typescript) so tsc has something to check.
-   * One behavioral difference follows: in the real pipeline type-only
-   * references are stripped before the plugin's Program exit, so removing a
-   * fully-rewritten specifier is always safe there. Here type positions
-   * survive, and Babel's scope does not count them as references - so when
-   * the plugin drops a specifier the type positions still need it. Those
-   * names are re-added as a type-only barrel import, which is exactly their
-   * production status: erased at runtime, checked against the barrel.
+   * Types are kept (no preset-typescript), so unlike production the type
+   * positions still need a specifier the plugin drops; those names are
+   * re-added as a type-only barrel import - their production status anyway.
    *
-   * checked-vs-baseline: diagnostics of each transformed file are compared
-   * against the same file run through the identical parse/print pipeline
-   * WITHOUT the leaf plugin. Reprinting artifacts (e.g. a reflowed
-   * ts-expect-error directive missing its line) then affect both sides
-   * equally and diff out - only differences the plugin caused can fail.
+   * Diagnostics are diffed against a baseline of the same file through the
+   * identical pipeline without the plugin, so reprinting artifacts affect
+   * both sides equally and diff out - only plugin-caused differences fail.
    */
   test(
     'every file importing the barrel',
@@ -595,9 +567,8 @@ describe('app callsites: transformed sources typecheck', () => {
       }
 
       /*
-       * Files whose shadow output is byte-identical to the baseline output
-       * cannot produce a diagnostics diff, so only changed files are overlaid,
-       * typechecked, and compared - a bit under half of the consumers.
+       * A shadow byte-identical to its baseline cannot produce a diagnostics
+       * diff, so only changed files are overlaid and checked.
        */
       const shadowOverlays = new Map()
       const baselineOverlays = new Map()
@@ -618,16 +589,11 @@ describe('app callsites: transformed sources typecheck', () => {
       const options = loadAppCompilerOptions()
 
       /*
-       * One program holds both versions of every changed consumer: the
-       * baseline at the file's real path and the shadow at a virtual
-       * `.__shadow__.` sibling path - same directory and extension, so every
-       * relative/aliased import and platform-extension resolution behaves as
-       * it would from the real file. The two versions differ only in these
-       * consumer files; everything they import resolves to the same modules.
-       * A single program therefore parses and binds the shared app +
-       * node_modules closure once, where separate baseline and shadow
-       * programs would each redo it - that closure, not checking the roots,
-       * dominates the cost.
+       * One program holds both versions: the baseline at the real path, the
+       * shadow at a virtual `.__shadow__.` sibling (same dir and extension,
+       * so import resolution behaves identically). This parses the shared
+       * app + node_modules closure once - the dominant cost - where separate
+       * programs would each redo it.
        */
       const shadowPath = f => f.replace(/\.(tsx?)$/, '.__shadow__.$1')
       const overlays = new Map()
@@ -639,9 +605,8 @@ describe('app callsites: transformed sources typecheck', () => {
       const program = ts.createProgram([...overlays.keys()], options, host)
 
       /*
-       * Shadow-file diagnostics may spell the virtual path inside messages;
-       * normalize it away so a diagnostic differing only in that spelling
-       * does not count as a regression.
+       * Normalize the virtual path spelling inside messages so it alone
+       * never counts as a regression.
        */
       const diagKey = d =>
         `TS${d.code}: ${ts
