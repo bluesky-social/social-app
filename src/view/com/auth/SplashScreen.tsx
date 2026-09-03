@@ -12,9 +12,9 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-expect-error
-import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.png'
+import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.webp'
 // @ts-expect-error
-import darkSplashImagePointer from '../../../../assets/illustrations/illustration-mobile-dark.png'
+import darkSplashImagePointer from '../../../../assets/illustrations/illustration-mobile-dark.webp'
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer)!.uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
