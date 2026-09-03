@@ -9,18 +9,17 @@ appId: xyz.blueskyweb.app
     when:
       platform: iOS
     commands:
-      - extendedWaitUntil:
-          visible: "http://localhost:8081"
-          timeout: 60000
-      - tapOn: "http://localhost:8081"
+      - openLink: "exp+bluesky://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081"
+      - runFlow:
+          when:
+            visible: 'Open in "Bluesky"'
+          commands:
+            - tapOn: Open
 - runFlow:
     when:
       platform: Android
     commands:
-      - extendedWaitUntil:
-          visible: "http://10.0.2.2:8081"
-          timeout: 60000
-      - tapOn: "http://10.0.2.2:8081"
+      - openLink: "exp+bluesky://expo-development-client/?url=http%3A%2F%2F10.0.2.2%3A8081"
       - extendedWaitUntil:
           visible: "Continue"
           timeout: 180000
