@@ -55,3 +55,7 @@ Each successful OTA adds exactly one contiguous section (`OTA 1`, `OTA 2`, and s
 ## Command line usage
 
 The release model can be exercised locally with `node scripts/release/cli.mjs`. Run it without arguments to see the available commands for creating, validating, finalizing, and updating a release document.
+
+## Manual preview
+
+The **Prepare Cactus Release** workflow accepts a release version and optional source ref. It validates the checked-out package and Expo versions, generates a provisional changelog from commit titles, uploads the prepared release document as an artifact, and summarizes every derived identifier. It has read-only repository permissions and does not create a branch, tag, commit, or GitHub Release.
