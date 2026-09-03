@@ -189,7 +189,7 @@ function OptedOutControls({
         </Admonition.Content>
         {canRemove ? (
           <Admonition.Button
-            label={l`Remove user from starter pack`}
+            label={l`Remove user from Starter Pack`}
             color="secondary"
             disabled={isPending}
             onPress={() => {

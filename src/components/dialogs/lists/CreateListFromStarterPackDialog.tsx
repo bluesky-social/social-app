@@ -143,7 +143,7 @@ export function CreateListFromStarterPackDialog({
         nativeOptions={{preventExpansion: true}}>
         <Dialog.Handle />
         <Dialog.ScrollableInner
-          label={l`Create list from starter pack`}
+          label={l`Create list from Starter Pack`}
           style={web({maxWidth: 400})}>
           <View style={[a.gap_lg]}>
             <Text style={[a.text_xl, a.font_bold]}>

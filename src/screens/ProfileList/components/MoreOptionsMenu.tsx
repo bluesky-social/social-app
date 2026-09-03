@@ -83,10 +83,10 @@ export function MoreOptionsMenu({
         )
       },
       onError: error => {
-        logger.error('Failed to update starter pack opt-out', {
+        logger.error('Failed to update Starter Pack opt-out', {
           safeMessage: error,
         })
-        Toast.show(l`Failed to update starter pack opt-out`, {
+        Toast.show(l`Failed to update Starter Pack opt-out`, {
           type: 'error',
         })
       },

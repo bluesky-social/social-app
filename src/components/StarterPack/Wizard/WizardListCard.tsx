@@ -140,7 +140,7 @@ export function WizardProfileCard({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
 
-  // Determine the "main" profile for this starter pack - either targetDid or current account
+  // Determine the "main" profile for this Starter Pack - either targetDid or current account
   const targetProfileDid = state.targetDid || currentAccount?.did
   const isTarget = profile.did === targetProfileDid
   const included = isTarget || state.profiles.some(p => p.did === profile.did)

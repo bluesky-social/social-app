@@ -239,7 +239,7 @@ function WizardInner({
   const {mutate: createStarterPack} = useCreateStarterPackMutation({
     onSuccess: onSuccessCreate,
     onError: e => {
-      logger.error('Failed to create starter pack', {safeMessage: e})
+      logger.error('Failed to create Starter Pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
       Toast.show(l`Failed to create Starter Pack`, {
         type: 'error',
@@ -249,7 +249,7 @@ function WizardInner({
   const {mutate: editStarterPack} = useEditStarterPackMutation({
     onSuccess: onSuccessEdit,
     onError: e => {
-      logger.error('Failed to edit starter pack', {safeMessage: e})
+      logger.error('Failed to edit Starter Pack', {safeMessage: e})
       dispatch({type: 'SetProcessing', processing: false})
       Toast.show(l`Failed to create Starter Pack`, {
         type: 'error',

@@ -118,7 +118,7 @@ export function ProfileStarterPacks({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh starter packs', {message: err})
+      logger.error('Failed to refresh Starter Packs', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -128,7 +128,7 @@ export function ProfileStarterPacks({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more starter packs', {message: err})
+      logger.error('Failed to load more Starter Packs', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
@@ -203,7 +203,7 @@ function CreateAnother() {
         t.atoms.border_contrast_low,
       ]}>
       <Button
-        label={l`Create a starter pack`}
+        label={l`Create a Starter Pack`}
         variant="solid"
         color="secondary"
         size="small"
@@ -240,7 +240,7 @@ function Empty() {
       setIsGenerating(false)
     },
     onError: e => {
-      logger.error('Failed to generate starter pack', {safeMessage: e})
+      logger.error('Failed to generate Starter Pack', {safeMessage: e})
       setIsGenerating(false)
       if (e.message.includes('NOT_ENOUGH_FOLLOWERS')) {
         followersDialogControl.open()
@@ -299,7 +299,7 @@ function Empty() {
       </View>
       <View style={[a.flex_row, a.gap_md, {marginLeft: 'auto'}]}>
         <Button
-          label={l`Create a starter pack for me`}
+          label={l`Create a Starter Pack for me`}
           variant="ghost"
           color="primary"
           size="small"
@@ -312,7 +312,7 @@ function Empty() {
           {isGenerating && <Loader size="md" />}
         </Button>
         <Button
-          label={l`Create a starter pack`}
+          label={l`Create a Starter Pack`}
           variant="ghost"
           color="primary"
           size="small"

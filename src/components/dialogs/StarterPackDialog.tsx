@@ -99,12 +99,12 @@ function Empty({onStartWizard}: {onStartWizard: () => void}) {
       </View>
       <View style={[a.align_center]}>
         <Button
-          label={l`Create starter pack`}
+          label={l`Create Starter Pack`}
           color="secondary_inverted"
           size="small"
           onPress={onStartWizard}>
           <ButtonText>
-            <Trans comment="Text on button to create a new starter pack">
+            <Trans comment="Text on button to create a new Starter Pack">
               Create
             </Trans>
           </ButtonText>
@@ -196,12 +196,12 @@ function StarterPackList({
               <Trans>New Starter Pack</Trans>
             </Text>
             <Button
-              label={l`Create starter pack`}
+              label={l`Create Starter Pack`}
               color="secondary_inverted"
               size="small"
               onPress={onStartWizard}>
               <ButtonText>
-                <Trans comment="Text on button to create a new starter pack">
+                <Trans comment="Text on button to create a new Starter Pack">
                   Create
                 </Trans>
               </ButtonText>
@@ -269,9 +269,9 @@ function StarterPackItem({
       },
       onError: err => {
         if (!isNetworkError(err)) {
-          logger.error('Failed to add to starter pack', {safeMessage: err})
+          logger.error('Failed to add to Starter Pack', {safeMessage: err})
         }
-        Toast.show(l`Failed to add to starter pack`, {type: 'error'})
+        Toast.show(l`Failed to add to Starter Pack`, {type: 'error'})
       },
     })
 
@@ -282,9 +282,9 @@ function StarterPackItem({
       },
       onError: err => {
         if (!isNetworkError(err)) {
-          logger.error('Failed to remove from starter pack', {safeMessage: err})
+          logger.error('Failed to remove from Starter Pack', {safeMessage: err})
         }
-        Toast.show(l`Failed to remove from starter pack`, {type: 'error'})
+        Toast.show(l`Failed to remove from Starter Pack`, {type: 'error'})
       },
     })
 
