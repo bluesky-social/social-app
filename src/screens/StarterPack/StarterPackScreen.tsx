@@ -352,7 +352,7 @@ function Header({
       Toast.show(l`An error occurred while trying to follow all`, {
         type: 'error',
       })
-      logger.error('Failed to get list members for starter pack', {
+      logger.error('Failed to get list members for Starter Pack', {
         safeMessage: e,
       })
       return
@@ -425,7 +425,7 @@ function Header({
           <View style={[a.flex_row, a.gap_sm, a.align_center]}>
             {isOwn ? (
               <Button
-                label={l`Share this starter pack`}
+                label={l`Share this Starter Pack`}
                 hitSlop={HITSLOP_20}
                 variant="solid"
                 color="primary"
@@ -489,7 +489,7 @@ function Header({
                   a.text_sm,
                   t.atoms.text_contrast_medium,
                 ]}>
-                <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific starter pack">
+                <Trans comment="Number of users (always at least 25) who have joined Bluesky using a specific Starter Pack">
                   <Plural
                     value={starterPack.joinedAllTimeCount || 0}
                     other="# people have"
@@ -541,7 +541,7 @@ function OverflowMenu({
       })
     },
     onError: e => {
-      logger.error('Failed to delete starter pack', {safeMessage: e})
+      logger.error('Failed to delete Starter Pack', {safeMessage: e})
     },
   })
 
@@ -557,15 +557,15 @@ function OverflowMenu({
         })
         Toast.show(
           action === 'optOut'
-            ? l`Opted out of starter pack`
+            ? l`Opted out of Starter Pack`
             : l`Opt-out undone`,
         )
       },
       onError: error => {
-        logger.error('Failed to update starter pack opt-out', {
+        logger.error('Failed to update Starter Pack opt-out', {
           safeMessage: error,
         })
-        Toast.show(l`Failed to update starter pack opt-out`, {
+        Toast.show(l`Failed to update Starter Pack opt-out`, {
           type: 'error',
         })
       },
@@ -592,7 +592,7 @@ function OverflowMenu({
             <Button
               {...props}
               testID="headerDropdownBtn"
-              label={l`Open starter pack menu`}
+              label={l`Open Starter Pack menu`}
               hitSlop={HITSLOP_20}
               variant="solid"
               color="secondary"
@@ -606,7 +606,7 @@ function OverflowMenu({
           {isOwn ? (
             <>
               <Menu.Item
-                label={l`Edit starter pack`}
+                label={l`Edit Starter Pack`}
                 testID="editStarterPackLinkBtn"
                 onPress={() => {
                   navigation.navigate('StarterPackEdit', {
@@ -619,7 +619,7 @@ function OverflowMenu({
                 <Menu.ItemIcon icon={Pencil} position="right" />
               </Menu.Item>
               <Menu.Item
-                label={l`Delete starter pack`}
+                label={l`Delete Starter Pack`}
                 testID="deleteStarterPackBtn"
                 onPress={() => {
                   deleteDialogControl.open()
@@ -630,7 +630,7 @@ function OverflowMenu({
                 <Menu.ItemIcon icon={Trash} position="right" />
               </Menu.Item>
               <Menu.Item
-                label={l`Create a list from this starter pack`}
+                label={l`Create a list from this Starter Pack`}
                 testID="convertToListBtn"
                 onPress={() => {
                   convertToListDialogControl.open()
@@ -646,7 +646,7 @@ function OverflowMenu({
               <Menu.Group>
                 <Menu.Item
                   label={
-                    IS_WEB ? l`Copy link to starter pack` : l`Share via...`
+                    IS_WEB ? l`Copy link to Starter Pack` : l`Share via...`
                   }
                   testID="shareStarterPackLinkBtn"
                   onPress={onOpenShareDialog}>
@@ -665,10 +665,10 @@ function OverflowMenu({
               </Menu.Group>
 
               <Menu.Item
-                label={l`Report starter pack`}
+                label={l`Report Starter Pack`}
                 onPress={() => reportDialogControl.open()}>
                 <Menu.ItemText>
-                  <Trans>Report starter pack</Trans>
+                  <Trans>Report Starter Pack</Trans>
                 </Menu.ItemText>
                 <Menu.ItemIcon icon={CircleInfo} position="right" />
               </Menu.Item>
@@ -676,8 +676,8 @@ function OverflowMenu({
                 <Menu.Item
                   label={
                     referenceListOptOut
-                      ? l`Undo opt-out from starter pack`
-                      : l`Opt out of starter pack`
+                      ? l`Undo opt-out from Starter Pack`
+                      : l`Opt out of Starter Pack`
                   }
                   disabled={isOptOutPending}
                   onPress={() => optOutDialogControl.open()}>
@@ -685,7 +685,7 @@ function OverflowMenu({
                     {referenceListOptOut ? (
                       <Trans>Undo opt-out</Trans>
                     ) : (
-                      <Trans>Opt out of starter pack</Trans>
+                      <Trans>Opt out of Starter Pack</Trans>
                     )}
                   </Menu.ItemText>
                 </Menu.Item>
@@ -705,10 +705,10 @@ function OverflowMenu({
       )}
       <Prompt.Outer control={deleteDialogControl}>
         <Prompt.TitleText>
-          <Trans>Delete starter pack?</Trans>
+          <Trans>Delete Starter Pack?</Trans>
         </Prompt.TitleText>
         <Prompt.DescriptionText>
-          <Trans>Are you sure you want to delete this starter pack?</Trans>
+          <Trans>Are you sure you want to delete this Starter Pack?</Trans>
         </Prompt.DescriptionText>
         {deleteError && (
           <View
@@ -736,7 +736,7 @@ function OverflowMenu({
             variant="solid"
             color="negative"
             size={gtMobile ? 'small' : 'large'}
-            label={l`Yes, delete this starter pack`}
+            label={l`Yes, delete this Starter Pack`}
             onPress={onDeleteStarterPack}>
             <ButtonText>
               <Trans>Delete</Trans>
@@ -752,17 +752,17 @@ function OverflowMenu({
             {referenceListOptOut ? (
               <Trans>Undo opt-out?</Trans>
             ) : (
-              <Trans>Opt out of this starter pack?</Trans>
+              <Trans>Opt out of this Starter Pack?</Trans>
             )}
           </Prompt.TitleText>
           <Prompt.DescriptionText>
             {referenceListOptOut ? (
               <Trans>
-                You will be eligible to appear in this starter pack again.
+                You will be eligible to appear in this Starter Pack again.
               </Trans>
             ) : (
               <Trans>
-                You will no longer appear in this starter pack. The creator will
+                You will no longer appear in this Starter Pack. The creator will
                 be able to see that you've opted out and remove you if they
                 wish.
               </Trans>
@@ -776,7 +776,7 @@ function OverflowMenu({
               label={
                 referenceListOptOut
                   ? l`Undo opt-out`
-                  : l`Opt out of starter pack`
+                  : l`Opt out of Starter Pack`
               }
               disabled={isOptOutPending}
               onPress={() => {
@@ -827,8 +827,8 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
     },
     onError: e => {
       setIsProcessing(false)
-      logger.error('Failed to delete invalid starter pack', {safeMessage: e})
-      Toast.show(l`Failed to delete starter pack`, {
+      logger.error('Failed to delete invalid Starter Pack', {safeMessage: e})
+      Toast.show(l`Failed to delete Starter Pack`, {
         type: 'error',
       })
     },
@@ -850,8 +850,8 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
               gtMobile ? {width: 450} : [a.w_full, a.px_lg],
             ]}>
             <Trans>
-              The starter pack that you are trying to view is invalid. You may
-              delete this starter pack instead.
+              The Starter Pack that you are trying to view is invalid. You may
+              delete this Starter Pack instead.
             </Trans>
           </Text>
         </View>
@@ -859,7 +859,7 @@ function InvalidStarterPack({rkey}: {rkey: string}) {
           <Button
             variant="solid"
             color="primary"
-            label={l`Delete starter pack`}
+            label={l`Delete Starter Pack`}
             size="large"
             style={[a.rounded_sm, a.overflow_hidden, {paddingVertical: 10}]}
             disabled={isProcessing}
