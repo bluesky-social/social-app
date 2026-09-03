@@ -201,7 +201,15 @@ export function AutoSizedImage({
                   },
                 ],
               ]}>
-              <Text style={[a.font_bold, largeAlt ? a.text_xs : {fontSize: 8}]}>
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="clip"
+                textBreakStrategy="simple"
+                style={[
+                  a.font_bold,
+                  largeAlt ? a.text_xs : {fontSize: 8},
+                  {includeFontPadding: false},
+                ]}>
                 <Trans>ALT</Trans>
               </Text>
             </View>
