@@ -51,3 +51,7 @@ androidVersionCode: 1110
 `sourceTag` must equal `releaseVersion`, `sourceSha` must be a full Git object ID, and both build numbers must be positive integers.
 
 Each successful OTA adds exactly one contiguous section (`OTA 1`, `OTA 2`, and so on) inside the public changelog delimiters. GitHub Release text is extracted only from those delimiters; operational frontmatter is never published.
+
+## Command line usage
+
+The release model can be exercised locally with `node scripts/release/cli.mjs`. Run it without arguments to see the available commands for creating, validating, finalizing, and updating a release document.
