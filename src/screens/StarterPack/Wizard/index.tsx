@@ -180,7 +180,7 @@ function WizardInner({
 
   const getDefaultName = () => {
     const displayName = createSanitizedDisplayName(currentProfile!, true)
-    return l`${displayName}'s Starter Pack`.slice(0, 50)
+    return l`${displayName}’s Starter Pack`.slice(0, 50)
   }
 
   const wizardUiStrings: Record<
