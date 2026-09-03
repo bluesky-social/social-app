@@ -427,13 +427,14 @@ jobs:
           method: files.uploadV2
           token: ${{ secrets.E2E_FAILURES_SLACK_BOT_TOKEN }}
           payload-file-path: slack-screenshot-upload.json
+          errors: true
 
       - name: 📝 Build Slack message
         if: steps.summary.outputs.notify == 'true'
         env:
           ANDROID_STATUS: ${{ needs.android.result }}
           IOS_STATUS: ${{ needs.ios.result }}
-          SLACK_CHANNEL_ID: ${{ vars.E2E_FAILURES_SLACK_CHANNEL_ID }}
+          SLACK_CHANNEL_ID: ${{ secrets.E2E_FAILURES_SLACK_CHANNEL_ID }}
           SLACK_UPLOAD_RESPONSE: ${{ steps.upload_screenshots.outputs.response }}
         run: |
           node .github/scripts/summarize-maestro.mjs \
@@ -458,3 +459,4 @@ jobs:
           method: chat.postMessage
           token: ${{ secrets.E2E_FAILURES_SLACK_BOT_TOKEN }}
           payload-file-path: slack-message.json
+          errors: true
