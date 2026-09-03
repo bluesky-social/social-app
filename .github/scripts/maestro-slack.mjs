@@ -107,6 +107,7 @@ function buildUploadPayload(selectedFailures) {
       .map((entry, index) => ({
         file: entry.failure.screenshot,
         filename: uploadFilename(entry, index),
+        highlight_type: 'png',
         alt_text: `${entry.platform.name} failure screenshot for ${entry.failure.name}`,
       })),
   }

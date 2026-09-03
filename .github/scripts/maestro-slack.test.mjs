@@ -60,6 +60,7 @@ test('builds a screenshot carousel for failed flows', () => {
     summary.uploadPayload.file_uploads[0].file,
     platforms[0].failures[0].screenshot,
   )
+  assert.equal(summary.uploadPayload.file_uploads[0].highlight_type, 'png')
   assert.deepEqual(carousel.elements[0].hero_image.slack_file, {id: 'F123ABC'})
 })
 

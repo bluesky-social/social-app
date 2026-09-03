@@ -429,6 +429,10 @@ jobs:
           payload-file-path: slack-screenshot-upload.json
           errors: true
 
+      - name: ⏳ Wait for Slack to process failure screenshots
+        if: steps.upload_screenshots.outcome == 'success'
+        run: sleep 5
+
       - name: 📝 Build Slack message
         if: steps.summary.outputs.notify == 'true'
         env:
