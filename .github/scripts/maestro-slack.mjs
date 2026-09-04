@@ -113,6 +113,23 @@ function buildUploadPayload(selectedFailures) {
   }
 }
 
+function buildThreadPayload(platforms) {
+  const lines = ['*All Maestro failure details*']
+  for (const platform of platforms) {
+    if (platform.failures.length === 0) continue
+    lines.push('', `*${slackEscape(platform.name)}*`)
+    for (const failure of platform.failures) {
+      lines.push(
+        `• *${mrkdwnText(failure.name, 140)}*\n  ${mrkdwnText(failure.message, 300)}`,
+      )
+    }
+    if (platform.artifactUrl) {
+      lines.push(`<${platform.artifactUrl}|Open ${platform.name} artifacts>`)
+    }
+  }
+  return {text: lines.join('\n')}
+}
+
 function buildCarousel(selectedFailures, slackFileIds) {
   let screenshotIndex = 0
   const elements = selectedFailures.map(({platform, failure}, index) => {
@@ -219,8 +236,9 @@ export function buildSlackMessage({
     0,
   )
   const presentation = statePresentation(state, failureCount)
-  const selectedFailures = selectFailures(platforms)
-  const uploadPayload = buildUploadPayload(selectedFailures)
+  const allFailures = selectFailures(platforms, failureCount)
+  const selectedFailures = allFailures.slice(0, CAROUSEL_LIMIT)
+  const uploadPayload = buildUploadPayload(allFailures)
   const detailBlocks = platforms
     .filter(
       platform =>
@@ -235,7 +253,7 @@ export function buildSlackMessage({
       elements: [
         {
           type: 'mrkdwn',
-          text: `Showing ${selectedFailures.length} of ${pluralize(failureCount, 'failed flow')}  •  full details are in the workflow summary`,
+          text: `Showing ${selectedFailures.length} of ${pluralize(failureCount, 'failed flow')}  •  full details and screenshots are in the thread`,
         },
       ],
     })
@@ -269,8 +287,10 @@ export function buildSlackMessage({
 
   return {
     state,
+    failureCount,
     screenshotCount: uploadPayload.file_uploads.length,
     uploadPayload,
+    threadPayload: buildThreadPayload(platforms),
     payload: {text: presentation.fallback, blocks},
   }
 }

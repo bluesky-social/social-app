@@ -289,8 +289,10 @@ export function buildSummary({
       runUrl,
       commitUrl,
     }),
+    failureCount: slack.failureCount,
     screenshotCount: slack.screenshotCount,
     uploadPayload: slack.uploadPayload,
+    threadPayload: slack.threadPayload,
     payload: slack.payload,
   }
 }

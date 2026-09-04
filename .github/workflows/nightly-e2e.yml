@@ -411,8 +411,11 @@ jobs:
             --run-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}" \
             --commit-url "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}" \
             > e2e-summary.json
-          echo "notify=$(jq -r .notify e2e-summary.json)" >> "$GITHUB_OUTPUT"
-          echo "screenshot_count=$(jq -r .screenshotCount e2e-summary.json)" >> "$GITHUB_OUTPUT"
+          {
+            echo "notify=$(jq -r .notify e2e-summary.json)"
+            echo "failure_count=$(jq -r .failureCount e2e-summary.json)"
+            echo "screenshot_count=$(jq -r .screenshotCount e2e-summary.json)"
+          } >> "$GITHUB_OUTPUT"
           jq .uploadPayload e2e-summary.json > slack-screenshot-upload.json
           jq -r .githubSummary e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
 
@@ -447,17 +450,31 @@ jobs:
           payload-file-path: slack-message.json
           errors: true
 
-      - name: 🧵 Prepare threaded screenshot upload
+      - name: 🧵 Prepare Slack thread payloads
         if: >-
           steps.summary.outputs.notify == 'true' &&
-          steps.summary.outputs.screenshot_count != '0'
+          steps.summary.outputs.failure_count != '0'
         env:
           SLACK_CHANNEL_ID: ${{ secrets.E2E_FAILURES_SLACK_CHANNEL_ID }}
           SLACK_THREAD_TS: ${{ steps.notify_slack.outputs.ts }}
         run: |
+          jq --arg channel "$SLACK_CHANNEL_ID" --arg thread_ts "$SLACK_THREAD_TS" \
+            '.threadPayload + {channel: $channel, thread_ts: $thread_ts, unfurl_links: false, unfurl_media: false}' \
+            e2e-summary-for-slack.json > slack-thread-details.json
           jq --arg channel_id "$SLACK_CHANNEL_ID" --arg thread_ts "$SLACK_THREAD_TS" \
             '. + {channel_id: $channel_id, thread_ts: $thread_ts}' \
             slack-screenshot-upload.json > slack-screenshot-upload-thread.json
+
+      - name: 🧾 Post all failure details to Slack thread
+        if: >-
+          steps.summary.outputs.notify == 'true' &&
+          steps.summary.outputs.failure_count != '0'
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
+        with:
+          method: chat.postMessage
+          token: ${{ secrets.E2E_FAILURES_SLACK_BOT_TOKEN }}
+          payload-file-path: slack-thread-details.json
+          errors: true
 
       - name: 🖼️ Upload failure screenshots to Slack thread
         id: upload_screenshots

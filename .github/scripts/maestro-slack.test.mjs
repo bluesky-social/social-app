@@ -69,6 +69,7 @@ test('selects failures across both platforms for the carousel', () => {
     Array.from({length: 7}, (_, index) => ({
       name: `${prefix}-${index}`,
       message: 'Failed',
+      screenshot: `/tmp/${prefix}-${index}.png`,
     }))
   const summary = build([
     platform({
@@ -89,6 +90,11 @@ test('selects failures across both platforms for the carousel', () => {
   )
 
   assert.equal(carousel.elements.length, 10)
+  assert.equal(summary.failureCount, 14)
+  assert.equal(summary.screenshotCount, 14)
+  assert.equal(summary.uploadPayload.file_uploads.length, 14)
+  assert.match(summary.threadPayload.text, /ios-6/)
+  assert.match(summary.threadPayload.text, /android-6/)
   assert.equal(carousel.elements[0].subtitle.text, 'iOS · failed flow')
   assert.equal(carousel.elements[1].subtitle.text, 'Android · failed flow')
 })
