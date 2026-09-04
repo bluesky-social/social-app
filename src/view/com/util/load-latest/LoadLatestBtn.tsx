@@ -14,6 +14,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
+import {useAnalytics} from '#/analytics'
 
 export function LoadLatestBtn({
   onPress,
@@ -35,9 +36,14 @@ export function LoadLatestBtn({
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
+  const ax = useAnalytics()
 
   // move button inline if it starts overlapping the left nav
   const isTallViewport = useMediaQuery({minHeight: 700})
+
+  if (ax.features.enabled(ax.features.FollowingV2Enable)) {
+    return null
+  }
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
