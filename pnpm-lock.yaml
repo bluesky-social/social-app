@@ -305,8 +305,8 @@ importers:
         specifier: ^0.12.5
         version: 0.12.5
       '@expo/ui':
-        specifier: ~57.0.11
-        version: 57.0.15(1760c6f82f9ee7263f11a494f48c7008)
+        specifier: 57.0.11
+        version: 57.0.11(1760c6f82f9ee7263f11a494f48c7008)
       '@expo/webpack-config':
         specifier: ^19.0.1
         version: 19.0.1(clean-css@5.3.3)(cssnano@5.1.15(postcss@8.5.14))(csso@5.0.5)(debug@4.4.3(supports-color@8.1.1))(esbuild@0.25.12)(expo@57.0.8)(html-minifier-terser@6.1.0)(lightningcss@1.32.0)(postcss@8.5.14)(supports-color@8.1.1)
@@ -2113,8 +2113,8 @@ packages:
   '@expo/sudo-prompt@9.3.2':
     resolution: {integrity: sha512-HHQigo3rQWKMDzYDLkubN5WQOYXJJE2eNqIQC2axC2iO3mHdwnIR7FgZVvHWtBwAdzBgAP0ECp8KqS8TiMKvgw==}
 
-  '@expo/ui@57.0.15':
-    resolution: {integrity: sha512-qNntEAbDEq0VGkAUMaopIZLJEZofQMDJNjx8YBngqeG3oZJKjpQFOSI8ui951NbN8nABzJ5Jd55SXdZKYWslDw==}
+  '@expo/ui@57.0.11':
+    resolution: {integrity: sha512-m1BSq15sg4sCmoFwOsMxBpETgyFhGlCbVPUyjdJ6Y00Ve0Fb4sueaFLRyeYRbZ8DC1z3Hgp5LNCYzBBBdMhxMg==}
     peerDependencies:
       '@babel/core': '*'
       expo: '*'
@@ -11288,7 +11288,7 @@ snapshots:
 
   '@expo/sudo-prompt@9.3.2': {}
 
-  '@expo/ui@57.0.15(1760c6f82f9ee7263f11a494f48c7008)':
+  '@expo/ui@57.0.11(1760c6f82f9ee7263f11a494f48c7008)':
     dependencies:
       expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(7aa1f5f5d2c1af01fea68204d31a3f95)
       react: 19.2.3
