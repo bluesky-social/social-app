@@ -1,12 +1,21 @@
 import {File, Paths} from 'expo-file-system'
 import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
+import * as Sharing from 'expo-sharing'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '../../src/lib/constants'
 import {
   downloadAndResize,
   type DownloadAndResizeOpts,
+  saveToDevice,
+  shareImageModal,
 } from '../../src/lib/media/manip'
 import {getResizedDimensions} from '../../src/lib/media/util'
+import {logger} from '../../src/logger'
+
+jest.mock('expo-sharing', () => ({
+  isAvailableAsync: jest.fn().mockResolvedValue(true),
+  shareAsync: jest.fn().mockResolvedValue(undefined),
+}))
 
 const mockResizedImage = {
   size: 100,
@@ -219,5 +228,41 @@ describe('downloadAndResize', () => {
       width: 1000,
       height: 2000,
     })
+  })
+})
+
+describe('temporary file lifecycles', () => {
+  beforeEach(() => {
+    ;(File.downloadFileAsync as jest.Mock).mockResolvedValue(
+      new File('file://downloaded-image.jpg'),
+    )
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('retains a successfully shared image for lazy consumers', async () => {
+    await shareImageModal({uri: 'https://example.com/image.jpg'})
+
+    const sharedPath = (Sharing.shareAsync as jest.Mock).mock.calls[0][0]
+    const deletedPaths = (Paths.info as jest.Mock).mock.calls.map(
+      ([path]) => path,
+    )
+    expect(sharedPath).toContain('/bsky-share/')
+    expect(deletedPaths).not.toContain(sharedPath)
+  })
+
+  it('does not report user cancellation as an error', async () => {
+    const errorSpy = jest.spyOn(logger, 'error')
+    ;(Sharing.shareAsync as jest.Mock).mockRejectedValueOnce(
+      new Error('Picker cancelled'),
+    )
+
+    await expect(
+      saveToDevice('test.txt', 'dGVzdA==', 'text/plain'),
+    ).resolves.toBe(false)
+    expect(errorSpy).not.toHaveBeenCalled()
+    errorSpy.mockRestore()
   })
 })
