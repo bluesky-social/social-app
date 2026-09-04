@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import * as Contacts from 'expo-contacts'
+import * as Contacts from 'expo-contacts/legacy'
 import {type DidString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
