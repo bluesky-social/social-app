@@ -51,6 +51,16 @@ module.exports = function (api) {
           },
         },
       ],
+      /*
+       * Runs in every env (including test) on purpose: Jest then executes the
+       * rewritten leaf imports, so plugin bugs surface in CI rather than in a
+       * production bundle.
+       */
+      [
+        './plugins/babel-plugin-lexicon-leaf-imports',
+        // Absolute path: the plugin must not depend on the host process's cwd.
+        {roots: [require('path').join(__dirname, 'src/lexicons')]},
+      ],
 
       // cannot use `env` field because it will put them after
       // the `react-native-worklets/plugin` plugin
