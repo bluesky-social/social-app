@@ -419,6 +419,16 @@ jobs:
           jq .uploadPayload e2e-summary.json > slack-screenshot-upload.json
           jq -r .githubSummary e2e-summary.json >> "$GITHUB_STEP_SUMMARY"
 
+      - name: 🖼️ Frame failure screenshots for Slack cards
+        if: >-
+          steps.summary.outputs.notify == 'true' &&
+          steps.summary.outputs.failure_count != '0'
+        run: |
+          node .github/scripts/frame-slack-screenshots.mjs \
+            slack-screenshot-upload.json \
+            slack-screenshot-upload-framed.json \
+            slack-screenshots
+
       - name: 📝 Build Slack message
         if: steps.summary.outputs.notify == 'true'
         env:
@@ -463,7 +473,7 @@ jobs:
             e2e-summary-for-slack.json > slack-thread-details.json
           jq --arg channel_id "$SLACK_CHANNEL_ID" --arg thread_ts "$SLACK_THREAD_TS" \
             '. + {channel_id: $channel_id, thread_ts: $thread_ts}' \
-            slack-screenshot-upload.json > slack-screenshot-upload-thread.json
+            slack-screenshot-upload-framed.json > slack-screenshot-upload-thread.json
 
       - name: 🧾 Post all failure details to Slack thread
         if: >-
