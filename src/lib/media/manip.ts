@@ -12,12 +12,13 @@ import {
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system/legacy'
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import {SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {renderImage} from './image-manipulator'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {convertCdnPreset, getResizedDimensions} from './util'
@@ -78,7 +79,7 @@ export async function shareImageModal({uri}: {uri: string}) {
   }
 
   const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
-  const {uri: jpegUri} = await manipulateAsync(downloadedPath, [], {
+  const {uri: jpegUri} = await renderImage(downloadedPath, undefined, {
     format: SaveFormat.JPEG,
     compress: 1.0,
   })
@@ -199,7 +200,7 @@ async function doResize(
   // Now instead, we have to supply the final dimensions to the manipulation function instead.
   // Performing an "empty" manipulation lets us get the dimensions of the original image. React Native's Image.getSize()
   // does not work for local files...
-  const imageRes = await manipulateAsync(localUri, [], {})
+  const imageRes = await renderImage(localUri)
   const newDimensions = getResizedDimensions(
     {
       width: imageRes.width,
@@ -217,9 +218,9 @@ async function doResize(
     const qualityPercentage = Math.round(
       (maxQualityPercentage + minQualityPercentage) / 2,
     )
-    const resizeRes = await manipulateAsync(
+    const resizeRes = await renderImage(
       localUri,
-      [{resize: newDimensions}],
+      context => context.resize(newDimensions),
       {
         format: SaveFormat.JPEG,
         compress: qualityPercentage / 100,
