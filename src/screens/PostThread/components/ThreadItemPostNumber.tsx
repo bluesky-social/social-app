@@ -5,10 +5,6 @@ import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
 import {type app} from '#/lexicons'
 
-/**
- * How far the inline badge is nudged below the text baseline. Android's
- * containing `RichText` reserves matching room via `suffixOffset`.
- */
 const ANDROID_INLINE_OFFSETS = [
   [0.85, 2],
   [1, 4],
@@ -20,7 +16,8 @@ const ANDROID_INLINE_OFFSETS = [
 ] as const
 
 /**
- * Maximum Android inline offset, reserved by `RichText` to avoid clipping.
+ * Max amount the inline badge is nudged below the text baseline. Android's
+ * containing `RichText` reserves matching room via `suffixOffset`.
  */
 export const POST_NUMBER_INLINE_OFFSET = 14
 
@@ -85,16 +82,21 @@ export function ThreadItemPostNumber({
         inline
           ? platform({
               android: {
+                /*
+                 * Android aligns the inline view's bottom to the surrounding
+                 * text baseline.
+                 * We want it to align the inline view's child/text baseline.
+                 */
                 transform: [
-                  /*
-                   * Android aligns the inline view's bottom to the surrounding
-                   * text baseline.
-                   * We want it to align the inline view's child/text baseline.
-                   */
                   {translateY: getAndroidInlineOffset(nativeFontScale)},
                 ],
               },
-              ios: {transform: [{translateY: a.py_2xs.paddingBottom}]},
+              ios: {
+                /*
+                 * For iOS, we just need to offset the padding we applied.
+                 */
+                transform: [{translateY: a.py_2xs.paddingBottom}],
+              },
               web: {
                 /*
                  * Inline views inherit the surrounding line height on web. Keep
