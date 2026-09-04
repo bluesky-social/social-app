@@ -1,20 +1,22 @@
-import {execFileSync} from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 
-const FRAME_FILTER =
-  'scale=1600:1200:force_original_aspect_ratio=decrease,' +
-  'pad=1600:1200:(ow-iw)/2:(oh-ih)/2:color=0xF8F8F8,setsar=1'
+import sharp from 'sharp'
 
-export function frameSlackScreenshots({inputPath, outputPath, outputDir}) {
+export async function frameSlackScreenshots({
+  inputPath,
+  outputPath,
+  outputDir,
+}) {
   const payload = JSON.parse(fs.readFileSync(inputPath, 'utf8'))
   if (!Array.isArray(payload.file_uploads)) {
     throw new Error('Slack upload payload must contain a file_uploads array')
   }
 
   fs.mkdirSync(outputDir, {recursive: true})
-  payload.file_uploads = payload.file_uploads.map((upload, index) => {
+  const framedUploads = []
+  for (const [index, upload] of payload.file_uploads.entries()) {
     if (
       typeof upload.file !== 'string' ||
       typeof upload.filename !== 'string'
@@ -23,26 +25,19 @@ export function frameSlackScreenshots({inputPath, outputPath, outputDir}) {
     }
     const filename = `${path.parse(path.basename(upload.filename)).name}.png`
     const framedFile = path.join(outputDir, filename)
-    execFileSync(
-      'ffmpeg',
-      [
-        '-hide_banner',
-        '-loglevel',
-        'error',
-        '-y',
-        '-i',
-        upload.file,
-        '-vf',
-        FRAME_FILTER,
-        '-frames:v',
-        '1',
-        framedFile,
-      ],
-      {stdio: 'inherit'},
-    )
-    return {...upload, file: framedFile, filename, highlight_type: 'png'}
-  })
+    await sharp(upload.file)
+      .resize(1600, 1200, {fit: 'contain', background: '#f8f8f8'})
+      .png()
+      .toFile(framedFile)
+    framedUploads.push({
+      ...upload,
+      file: framedFile,
+      filename,
+      highlight_type: 'png',
+    })
+  }
 
+  payload.file_uploads = framedUploads
   fs.writeFileSync(outputPath, `${JSON.stringify(payload)}\n`)
 }
 
@@ -56,5 +51,5 @@ if (
       'Usage: frame-slack-screenshots.mjs <input.json> <output.json> <output-dir>',
     )
   }
-  frameSlackScreenshots({inputPath, outputPath, outputDir})
+  await frameSlackScreenshots({inputPath, outputPath, outputDir})
 }
