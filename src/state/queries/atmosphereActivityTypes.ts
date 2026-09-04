@@ -59,6 +59,28 @@ export type SubscriptionRecord = {
   createdAt?: string
 }
 
+export type LivestreamRecord = {
+  $type?: 'place.stream.livestream'
+  title?: string
+  url?: string
+  createdAt: string
+  endedAt?: string
+}
+
+export type GrainPhotoRecord = {
+  $type?: 'social.grain.photo'
+  alt?: string
+  photo: {
+    ref: unknown
+    mimeType: string
+  }
+  aspectRatio?: {
+    width: number
+    height: number
+  }
+  createdAt?: string
+}
+
 export function narrowActivityPage(value: {
   feed: ActivityItem[]
   associatedRecords: unknown
@@ -162,6 +184,19 @@ export function isSubscriptionRecord(
   value: unknown,
 ): value is SubscriptionRecord {
   return isObject(value) && typeof value.publication === 'string'
+}
+
+export function isLivestreamRecord(value: unknown): value is LivestreamRecord {
+  return isObject(value) && typeof value.createdAt === 'string'
+}
+
+export function isGrainPhotoRecord(value: unknown): value is GrainPhotoRecord {
+  return (
+    isObject(value) &&
+    isObject(value.photo) &&
+    'ref' in value.photo &&
+    typeof value.photo.mimeType === 'string'
+  )
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {

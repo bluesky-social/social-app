@@ -7,6 +7,8 @@ import {
   type ActivityItem,
   type AssociatedRecords,
   type AtmosphereActivityPage,
+  isGrainPhotoRecord,
+  isLivestreamRecord,
   isRecommendRecord,
   isSubscriptionRecord,
 } from '#/state/queries/atmosphereActivityTypes'
@@ -33,24 +35,44 @@ export type ActivityRowContent =
       subjectDid: string
       subjectActor: ActivityActor | undefined
       title?: string
+      href?: string
     }
   | {
       type: 'document'
       actorDid?: string
       actor: ActivityActor | undefined
       title?: string
+      href?: string
     }
   | {
       type: 'publication'
       actorDid?: string
       actor: ActivityActor | undefined
       name?: string
+      href?: string
     }
   | {
       type: 'subscription'
       actorDid?: string
       actor: ActivityActor | undefined
       name?: string
+      href?: string
+    }
+  | {
+      type: 'livestream'
+      actorDid?: string
+      actor: ActivityActor | undefined
+      title?: string
+      ended: boolean
+      durationInMinutes?: number
+    }
+  | {
+      type: 'photo'
+      actorDid?: string
+      actor: ActivityActor | undefined
+      imageUri: string
+      alt?: string
+      aspectRatio: number
     }
   | {
       type: 'generic'
@@ -125,6 +147,7 @@ export function getActivityRowContent({
         subjectDid: documentUri.did,
         subjectActor: actors[documentUri.did],
         title: typeof document.title === 'string' ? document.title : undefined,
+        href: getDocumentUrl(document, associatedRecords),
       }
     }
     case 'site.standard.document':
@@ -134,6 +157,7 @@ export function getActivityRowContent({
         actor,
         title:
           typeof rootRecord.title === 'string' ? rootRecord.title : undefined,
+        href: getDocumentUrl(rootRecord, associatedRecords),
       }
     case 'site.standard.publication':
       return {
@@ -141,6 +165,7 @@ export function getActivityRowContent({
         actorDid: root.did,
         actor,
         name: typeof rootRecord.name === 'string' ? rootRecord.name : undefined,
+        href: getWebUrl(rootRecord.url),
       }
     case 'site.standard.graph.subscription': {
       if (!isSubscriptionRecord(rootRecord)) return generic
@@ -152,11 +177,142 @@ export function getActivityRowContent({
         actor,
         name:
           typeof publication.name === 'string' ? publication.name : undefined,
+        href: getWebUrl(publication.url),
+      }
+    }
+    case 'place.stream.livestream': {
+      if (!isLivestreamRecord(rootRecord)) return generic
+      const endedAt =
+        typeof rootRecord.endedAt === 'string' ? rootRecord.endedAt : undefined
+      return {
+        type: 'livestream',
+        actorDid: root.did,
+        actor,
+        title:
+          typeof rootRecord.title === 'string' ? rootRecord.title : undefined,
+        ended: Boolean(endedAt),
+        durationInMinutes: endedAt
+          ? getDurationInMinutes(rootRecord.createdAt, endedAt)
+          : undefined,
+      }
+    }
+    case 'social.grain.photo': {
+      if (!isGrainPhotoRecord(rootRecord)) return generic
+      const imageUri = getPhotoUrl(root.did, rootRecord.photo)
+      if (!imageUri) return generic
+      return {
+        type: 'photo',
+        actorDid: root.did,
+        actor,
+        imageUri,
+        alt: typeof rootRecord.alt === 'string' ? rootRecord.alt : undefined,
+        aspectRatio: getAspectRatio(rootRecord.aspectRatio),
       }
     }
     default:
       return generic
   }
+}
+
+export function getDocumentUrl(
+  document: Record<string, unknown>,
+  associatedRecords: AssociatedRecords,
+): string | undefined {
+  const site = typeof document.site === 'string' ? document.site : undefined
+  if (!site) return undefined
+
+  const publication = associatedRecords[site]?.record
+  const baseUrl = site.startsWith('at://')
+    ? getWebUrl(publication?.url)
+    : getWebUrl(site)
+  if (!baseUrl) return undefined
+
+  const path = typeof document.path === 'string' ? document.path : ''
+  try {
+    return getWebUrl(new URL(path, ensureTrailingSlash(baseUrl)).href)
+  } catch {
+    return undefined
+  }
+}
+
+function getPhotoUrl(
+  did: string,
+  photo: {ref: unknown; mimeType: string},
+): string | undefined {
+  const cid = getBlobCid(photo.ref)
+  const extension = getImageExtension(photo.mimeType)
+  if (!cid || !extension) return undefined
+  return `https://cdn.bsky.app/img/feed_fullsize/plain/${did}/${cid}@${extension}`
+}
+
+function getBlobCid(value: unknown): string | undefined {
+  if (typeof value === 'string') return value
+  if (typeof value !== 'object' || value === null) return undefined
+  if ('$link' in value && typeof value.$link === 'string') return value.$link
+
+  const toString = Reflect.get(value, 'toString')
+  if (typeof toString !== 'function') return undefined
+  const cid = Reflect.apply(toString, value, [])
+  return typeof cid === 'string' && /^b[a-z2-7]+$/i.test(cid) ? cid : undefined
+}
+
+function getImageExtension(mimeType: string): string | undefined {
+  switch (mimeType.toLowerCase()) {
+    case 'image/jpeg':
+      return 'jpeg'
+    case 'image/png':
+      return 'png'
+    case 'image/webp':
+      return 'webp'
+    case 'image/gif':
+      return 'gif'
+    default:
+      return undefined
+  }
+}
+
+function getAspectRatio(value: unknown): number {
+  if (
+    typeof value === 'object' &&
+    value !== null &&
+    'width' in value &&
+    'height' in value &&
+    typeof value.width === 'number' &&
+    typeof value.height === 'number' &&
+    value.width > 0 &&
+    value.height > 0
+  ) {
+    return value.width / value.height
+  }
+  return 1
+}
+
+function getDurationInMinutes(
+  createdAt: string,
+  endedAt: string,
+): number | undefined {
+  const start = new Date(createdAt).getTime()
+  const end = new Date(endedAt).getTime()
+  if (!Number.isFinite(start) || !Number.isFinite(end) || end < start) {
+    return undefined
+  }
+  return Math.max(1, (end - start) / 60_000)
+}
+
+function getWebUrl(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined
+  try {
+    const url = new URL(value)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+      ? url.href
+      : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function ensureTrailingSlash(value: string) {
+  return value.endsWith('/') ? value : `${value}/`
 }
 
 function parseAtUri(

@@ -32,7 +32,9 @@ This work includes:
 - a new authenticated route and screen;
 - a drawer item and desktop left-navigation item;
 - loading, empty, error, refresh, and pagination states;
-- basic rows for all four record collections currently allowed by the API;
+- basic rows for all six record collections currently returned by the API;
+- inline rendering for Grain photo records;
+- linked actor handles, documents, and publications;
 - defensive rendering for missing or malformed associated records and actors.
 
 This work does not include:
@@ -161,6 +163,26 @@ type SubscriptionRecord = {
   publication: string
   createdAt?: string
 }
+
+type LivestreamRecord = {
+  $type?: 'place.stream.livestream'
+  title?: string
+  createdAt: string
+  endedAt?: string
+}
+
+type GrainPhotoRecord = {
+  $type?: 'social.grain.photo'
+  alt?: string
+  photo: {
+    ref: unknown
+    mimeType: string
+  }
+  aspectRatio?: {
+    width: number
+    height: number
+  }
+}
 ```
 
 Narrowing rules:
@@ -277,6 +299,8 @@ Every activity item must produce a visually separate row, including unsupported 
 
 Use the root activity URI's authority as the actor who performed the action. Resolve a referenced document or publication author from that referenced record's URI authority.
 
+Actor handles are prefixed with `@`, sanitized with `sanitizeHandle`, and linked to the in-app profile route built by `makeProfileLink`. Document titles link to their canonical URL, constructed from the document `path` and either its direct HTTPS `site` or the referenced publication's `url`. Publication names link to the publication `url`. These links use normal text color and underline on hover/focus rather than using the default blue link color.
+
 Actor labels use this fallback order:
 
 1. actor `handle`;
@@ -352,6 +376,32 @@ Render:
 
 Use translated `Untitled publication` when the referenced publication exists without a usable name. A missing or invalid publication reference uses the generic row.
 
+### Livestream
+
+For `place.stream.livestream`, render an active record without `endedAt` as:
+
+```text
+<streamer> is livestreaming <title>
+```
+
+When `endedAt` is present, calculate the elapsed duration from `createdAt` through `endedAt`, format it with the app's existing `displayDuration`, and render:
+
+```text
+<streamer> livestreamed <title> for <duration>
+```
+
+Use translated `Untitled livestream` when the title is unavailable. Invalid or negative date intervals omit the duration defensively.
+
+### Grain photo
+
+For `social.grain.photo`, render:
+
+```text
+<photographer> posted a photo
+```
+
+Render the photo beneath the row header. Construct its `feed_fullsize` Bluesky CDN URL from the root URI authority DID, the `photo.ref` CID, and the extension implied by `photo.mimeType`. Preserve a valid record `aspectRatio`, default to a square, use `alt` as the accessibility label, and fall back to translated `Photo` when alt text is absent.
+
 ### Generic fallback
 
 Unsupported collections, invalid URIs, missing root records, and malformed relationship records still render a row:
@@ -413,7 +463,7 @@ Do not add Activity to the mobile or web bottom bar.
 - Use Unicode punctuation, including the typographic apostrophe in the English recommendation sentence.
 - Keep each row's generated sentence available as a coherent accessibility label even if visual fragments use different font weights.
 - Interactive retry controls require labels and useful accessibility hints.
-- Rows are not pressable in this version; do not imply button or link semantics.
+- Rows themselves are not pressable. Only the inline actor, document, and publication links expose link semantics.
 - Use `emoji` for actor labels, publication names, and document titles.
 
 ## Error behavior
@@ -443,7 +493,10 @@ Add focused tests for behavior that carries contract risk:
 - every row receives the same full merged `associatedRecords` reference;
 - associated maps from multiple loaded pages are merged;
 - duplicate activity URIs are rendered once in first-seen order;
-- document, publication, and subscription sentences use their associated data;
+- document, publication, and subscription sentences use their associated data and canonical links;
+- active and ended livestreams use the correct sentence and duration;
+- Grain photo records construct and display the expected CDN image URL, aspect ratio, and alt text;
+- actor handles are sanitized, prefixed with `@`, and linked to profiles;
 - absent actors fall back to DIDs;
 - missing references and unsupported collections produce a generic row instead of being dropped.
 
@@ -486,7 +539,7 @@ Manually verify:
 4. Every feed item renders as a separate row in API order.
 5. Every row receives the same complete merged `associatedRecords` object for the currently loaded pages.
 6. A valid recommendation renders the recommender, document author, and document title by traversing the associated-record map.
-7. All four expected root collections have useful presentation, and malformed or unknown items render a generic fallback row.
+7. All six expected root collections have useful presentation, Grain photos render beneath their row headers, actor handles and document/publication titles are linked, and malformed or unknown items render a generic fallback row.
 8. Loading, empty, initial-error, refresh, next-page loading, and next-page error states are usable.
 9. The appview-sandbox client supports both direct local development and the deployed PDS proxy configuration.
 10. New user-facing strings are translatable and the focused tests, typecheck, lint, and formatting checks pass.

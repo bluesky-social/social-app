@@ -12,7 +12,7 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Last synchronized backend commit | `816cea3 Filter Atmosphere records on read` |
+| Last synchronized backend commit | `db3c141 Add subscription state to Atmosphere activity` |
 | Deployment status | Backend changes are local and have not been pushed or deployed |
 
 When the backend request, response, filtering, authentication, or hydration behavior changes, update this document and the synchronized backend commit before asking the frontend session to consume the change.
@@ -41,8 +41,7 @@ eric.bsky.atmosphere.getActivity
 | Parameter | Type | Required | Behavior |
 | --- | --- | --- | --- |
 | `viewer` | DID string | No | Tracked viewer whose materialized feed should be returned. Temporarily defaults to Eric's DID. The frontend should still pass the signed-in user's DID explicitly. |
-| `limit` | Integer | No | Defaults to `30`; minimum `1`; maximum `100`. |
-| `cursor` | String | No | Opaque pagination cursor returned by the previous page. Do not parse or construct it in the client. |
+| `cursor` | String | No | Opaque event-time/sequence pagination cursor returned by the previous page. Do not parse or construct it in the client. |
 
 Current tracked viewer used for development:
 
@@ -63,8 +62,7 @@ The endpoint currently has no authentication requirement. This is temporary prot
 
 ```sh
 curl --get 'http://localhost:3000/xrpc/eric.bsky.atmosphere.getActivity' \
-  --data-urlencode 'viewer=did:plc:3jpt2mvvsumj2r7eqk4gzzjz' \
-  --data-urlencode 'limit=30'
+  --data-urlencode 'viewer=did:plc:3jpt2mvvsumj2r7eqk4gzzjz'
 ```
 
 No request headers are currently required.
@@ -77,7 +75,10 @@ The conceptual TypeScript shape is:
 type ActivityItem = {
   uri: string // AT URI
   cid: string
-  indexedAt: string // ISO datetime
+  indexedAt: string // Activity event time as an ISO datetime
+  viewerState: {
+    subscribed: boolean
+  }
 }
 
 type AssociatedRecord = {
@@ -116,7 +117,10 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
     {
       "uri": "at://did:plc:recommender/site.standard.graph.recommend/abc",
       "cid": "bafy...",
-      "indexedAt": "2026-09-03T00:00:00.000Z"
+      "indexedAt": "2026-09-03T00:00:00.000Z",
+      "viewerState": {
+        "subscribed": false
+      }
     }
   ],
   "associatedRecords": {
@@ -159,8 +163,12 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
 ### Feed
 
 - `feed` is the ordered pagination skeleton only. It does not contain records.
-- Results are ordered by descending materialized activity sequence.
+- Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker.
+- `indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
 - Results are limited to the rolling 30-day activity window.
+- Every item has a required `viewerState.subscribed` boolean.
+- `subscribed` is `true` only for a root `site.standard.document` whose `site` publication AT URI matches one of the viewer's current `site.standard.graph.subscription` records. It is `false` for non-document activity and documents without a matching subscription.
+- Subscription state is resolved for the whole page with one indexed PostgreSQL query and no per-item or Tango requests.
 - Every `feed[i].uri` has a corresponding entry in `associatedRecords`.
 - Use `associatedRecords[feed[i].uri].record` to obtain the root record.
 - The same URI is materialized at most once for a viewer even if it qualifies through multiple fanout paths.
@@ -223,6 +231,8 @@ site.standard.document
 site.standard.publication
 site.standard.graph.recommend
 site.standard.graph.subscription
+place.stream.livestream
+social.grain.photo
 ```
 
 Useful reference fields:
@@ -233,8 +243,12 @@ Useful reference fields:
 | `site.standard.graph.recommend` | `document` references a `site.standard.document` AT URI. |
 | `site.standard.graph.subscription` | `publication` references a `site.standard.publication` AT URI. |
 | `site.standard.publication` | No required associated-record relationship. |
+| `place.stream.livestream` | `createdAt` marks the start; an `endedAt` value marks completion. |
+| `social.grain.photo` | `photo` is a blob with an optional `alt` and `aspectRatio`. |
 
-Associated record payloads otherwise use raw lexicon JSON. Blob-valued fields such as document `coverImage` and publication `icon` are not currently converted to CDN URLs by this endpoint. Actor `avatar` is the exception.
+The current local registry includes `place.stream.livestream` and `social.grain.photo` in addition to the four collections seeded by the backend migration. For display, an absent `endedAt` means the stream is active. Ended-stream duration is the elapsed time from `createdAt` to `endedAt`.
+
+Associated record payloads otherwise use raw lexicon JSON. Blob-valued fields such as document `coverImage`, publication `icon`, and Grain `photo` are not converted to CDN URLs by this endpoint. The frontend constructs a Bluesky image CDN URL for Grain photos from the root URI authority DID, blob CID, and MIME type. Actor `avatar` is the endpoint-provided exception.
 
 ## Pagination
 
@@ -243,13 +257,17 @@ Use the response cursor verbatim:
 ```ts
 const nextPage = await getActivity({
   viewer,
-  limit: 30,
   cursor: previousPage.cursor,
 })
 ```
 
+- Page size is server-controlled; there is no `limit` parameter.
+- A page contains at least 10 results when available.
+- After result 10, the page continues while adjacent activity events are no more than one hour apart.
+- A page contains at most 200 results.
+- The event crossing the one-hour or 200-result boundary begins the next page.
 - An absent `cursor` means there is no next page.
-- Cursors are implementation details and may change format.
+- Cursors are opaque implementation details and may change format.
 - The client should flatten pages in response order.
 - Deduplicate by activity `uri` defensively if live cache updates are added later.
 
@@ -268,7 +286,6 @@ Known client-relevant failures:
 
 - Viewer is not tracked or is disabled.
 - Cursor is invalid.
-- `limit` is outside the lexicon bounds or is not an integer.
 - Backend database or Tango actor hydration is unavailable.
 
 ## Frontend transport expectations
@@ -297,6 +314,20 @@ lexicons/eric/bsky/atmosphere/getActivity.json
 Then run the repository's normal lexicon generation command before importing the generated schema. Keep the copied lexicon byte-for-byte aligned with the backend source.
 
 ## Change log
+
+### Backend `db3c141`
+
+- Added required `feed[].viewerState.subscribed`.
+- Resolve matching document-publication subscriptions once per page using the local edge index.
+- Return `false` for non-document feed roots.
+
+### Backend `6936b16`
+
+- Removed the caller-controlled `limit` parameter.
+- Added server-controlled 10-200 item burst-aware pagination.
+- Ordered activity by event time descending with sequence as a tie-breaker.
+- Changed `indexedAt` to the activity event time.
+- Changed the opaque cursor to carry event time and sequence.
 
 ### Backend `816cea3`
 

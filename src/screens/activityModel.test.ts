@@ -11,6 +11,11 @@ const recommendationUri =
   'at://did:plc:recommender/site.standard.graph.recommend/one'
 const documentUri = 'at://did:plc:author/site.standard.document/one'
 const publicationUri = 'at://did:plc:publisher/site.standard.publication/one'
+const subscriptionUri =
+  'at://did:plc:subscriber/site.standard.graph.subscription/one'
+const livestreamUri =
+  'at://did:plc:streamer/place.stream.livestream/active-stream'
+const photoUri = 'at://did:plc:photographer/social.grain.photo/one'
 
 function activity(uri: string) {
   return {
@@ -111,7 +116,18 @@ describe('Activity row content', () => {
           cid: 'bafy-document',
           record: {
             $type: 'site.standard.document',
+            site: publicationUri,
+            path: '/posts/building-a-small-web',
             title: 'Building a Small Web',
+          },
+        },
+        [publicationUri]: {
+          uri: publicationUri,
+          cid: 'bafy-publication',
+          record: {
+            $type: 'site.standard.publication',
+            name: 'Small Web Journal',
+            url: 'https://small.example/',
           },
         },
       },
@@ -134,6 +150,161 @@ describe('Activity row content', () => {
       subjectDid: 'did:plc:author',
       subjectActor: item.actors['did:plc:author'],
       title: 'Building a Small Web',
+      href: 'https://small.example/posts/building-a-small-web',
+    })
+  })
+
+  it('constructs publication and document links', () => {
+    const document = getActivityRowContent({
+      type: 'activity',
+      key: documentUri,
+      activity: activity(documentUri),
+      associatedRecords: {
+        [documentUri]: {
+          uri: documentUri,
+          cid: 'bafy-document',
+          record: {
+            $type: 'site.standard.document',
+            site: 'https://writing.example/blog',
+            path: '/posts/hello',
+            title: 'Hello',
+          },
+        },
+      },
+      actors: {},
+    })
+    const publication = getActivityRowContent({
+      type: 'activity',
+      key: publicationUri,
+      activity: activity(publicationUri),
+      associatedRecords: {
+        [publicationUri]: {
+          uri: publicationUri,
+          cid: 'bafy-publication',
+          record: {
+            $type: 'site.standard.publication',
+            name: 'A Publication',
+            url: 'https://publication.example',
+          },
+        },
+      },
+      actors: {},
+    })
+    const subscription = getActivityRowContent({
+      type: 'activity',
+      key: subscriptionUri,
+      activity: activity(subscriptionUri),
+      associatedRecords: {
+        [subscriptionUri]: {
+          uri: subscriptionUri,
+          cid: 'bafy-subscription',
+          record: {
+            $type: 'site.standard.graph.subscription',
+            publication: publicationUri,
+          },
+        },
+        [publicationUri]: {
+          uri: publicationUri,
+          cid: 'bafy-publication',
+          record: {
+            $type: 'site.standard.publication',
+            name: 'A Publication',
+            url: 'https://publication.example',
+          },
+        },
+      },
+      actors: {},
+    })
+
+    expect(document).toMatchObject({
+      type: 'document',
+      href: 'https://writing.example/posts/hello',
+    })
+    expect(publication).toMatchObject({
+      type: 'publication',
+      href: 'https://publication.example/',
+    })
+    expect(subscription).toMatchObject({
+      type: 'subscription',
+      href: 'https://publication.example/',
+    })
+  })
+
+  it('distinguishes active and ended livestreams', () => {
+    const baseItem: ActivityRowItem = {
+      type: 'activity',
+      key: livestreamUri,
+      activity: activity(livestreamUri),
+      associatedRecords: {
+        [livestreamUri]: {
+          uri: livestreamUri,
+          cid: 'bafy-livestream',
+          record: {
+            $type: 'place.stream.livestream',
+            title: 'Building in public',
+            createdAt: '2026-09-04T15:00:00.000Z',
+          },
+        },
+      },
+      actors: {
+        'did:plc:streamer': {
+          did: 'did:plc:streamer',
+          handle: 'streamer.example',
+        },
+      },
+    }
+
+    expect(getActivityRowContent(baseItem)).toMatchObject({
+      type: 'livestream',
+      title: 'Building in public',
+      ended: false,
+    })
+
+    baseItem.associatedRecords[livestreamUri].record.endedAt =
+      '2026-09-04T16:30:00.000Z'
+    expect(getActivityRowContent(baseItem)).toMatchObject({
+      type: 'livestream',
+      title: 'Building in public',
+      ended: true,
+      durationInMinutes: 90,
+    })
+  })
+
+  it('constructs a CDN image for a Grain photo', () => {
+    const item: ActivityRowItem = {
+      type: 'activity',
+      key: photoUri,
+      activity: activity(photoUri),
+      associatedRecords: {
+        [photoUri]: {
+          uri: photoUri,
+          cid: 'bafy-photo-record',
+          record: {
+            $type: 'social.grain.photo',
+            alt: 'A bird perched on a branch.',
+            photo: {
+              ref: {
+                $link:
+                  'bafkreibflar7atvm5upuycojb4aiheylfqz5a5yxusx7m2ubyzuwncjug4',
+              },
+              mimeType: 'image/jpeg',
+            },
+            aspectRatio: {width: 2000, height: 1333},
+            createdAt: '2026-06-11T14:49:07.509Z',
+          },
+        },
+      },
+      actors: {},
+    }
+
+    expect(getActivityRowContent(item)).toEqual({
+      type: 'photo',
+      actorDid: 'did:plc:photographer',
+      actor: undefined,
+      imageUri:
+        'https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:photographer/bafkreibflar7atvm5upuycojb4aiheylfqz5a5yxusx7m2ubyzuwncjug4@jpeg',
+      alt: 'A bird perched on a branch.',
+      aspectRatio: 2000 / 1333,
     })
   })
 

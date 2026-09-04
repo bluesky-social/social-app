@@ -1,13 +1,16 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {makeProfileLink} from '#/lib/routes/links'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {useAtmosphereActivityQuery} from '#/state/queries/atmosphereActivity'
 import {type ActivityActor} from '#/state/queries/atmosphereActivityTypes'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -17,10 +20,12 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import * as Layout from '#/components/Layout'
+import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {displayDuration} from '#/features/liveNow/utils'
 import {
   type ActivityListItem,
   type ActivityRowContent,
@@ -117,65 +122,68 @@ function ActivityRow({
   hideTopBorder: boolean
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const content = getActivityRowContent(item)
 
   return (
-    <View
-      style={[
-        a.flex_row,
-        a.align_start,
-        a.gap_md,
-        a.px_xl,
-        a.py_lg,
-        !hideTopBorder && a.border_t,
-        t.atoms.border_contrast_low,
-      ]}>
-      <UserAvatar
-        avatar={content.actor?.avatar ?? null}
-        size={40}
-        type="user"
-      />
-      <View style={[a.flex_1, a.gap_xs]}>
-        <ActivitySentence content={content} />
-        <TimeElapsed timestamp={item.activity.indexedAt}>
-          {({timeElapsed}) => (
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              {timeElapsed}
-            </Text>
-          )}
-        </TimeElapsed>
+    <View style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}>
+      <View style={[a.flex_row, a.align_start, a.gap_md, a.px_xl, a.py_lg]}>
+        <UserAvatar
+          avatar={content.actor?.avatar ?? null}
+          size={40}
+          type="user"
+        />
+        <View style={[a.flex_1, a.gap_xs]}>
+          <ActivitySentence content={content} />
+          <TimeElapsed timestamp={item.activity.indexedAt}>
+            {({timeElapsed}) => (
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                {timeElapsed}
+              </Text>
+            )}
+          </TimeElapsed>
+        </View>
       </View>
+      {content.type === 'photo' && (
+        <View style={[a.px_xl, a.pb_lg]}>
+          <Image
+            source={{uri: content.imageUri}}
+            style={[a.w_full, a.rounded_lg, {aspectRatio: content.aspectRatio}]}
+            accessibilityLabel={content.alt || l`Photo`}
+            accessibilityHint=""
+            accessibilityIgnoresInvertColors
+            contentFit="cover"
+            loading="lazy"
+            useAppleWebpCodec
+          />
+        </View>
+      )}
     </View>
   )
 }
 
 function ActivitySentence({content}: {content: ActivityRowContent}) {
-  const {t: l} = useLingui()
-  const actor = getActorLabel(content.actor, content.actorDid, l`Unknown user`)
-  const emphasis = [a.font_semi_bold]
+  const {i18n, t: l} = useLingui()
+  const unknown = l`Unknown user`
 
   switch (content.type) {
     case 'recommendation': {
-      const subject = getActorLabel(
-        content.subjectActor,
-        content.subjectDid,
-        l`Unknown user`,
-      )
       const title = content.title || l`Untitled post`
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
-            <Text style={emphasis} emoji>
-              {actor}
-            </Text>{' '}
+            <ActorLink
+              actor={content.actor}
+              did={content.actorDid}
+              unknown={unknown}
+            />{' '}
             recommended{' '}
-            <Text style={emphasis} emoji>
-              {subject}
-            </Text>
-            ’s post{' '}
-            <Text style={emphasis} emoji>
-              {title}
-            </Text>
+            <ActorLink
+              actor={content.subjectActor}
+              did={content.subjectDid}
+              unknown={unknown}
+            />
+            ’s post <ActivityLink href={content.href} text={title} />
           </Trans>
         </Text>
       )
@@ -185,13 +193,12 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
-            <Text style={emphasis} emoji>
-              {actor}
-            </Text>{' '}
-            published{' '}
-            <Text style={emphasis} emoji>
-              {title}
-            </Text>
+            <ActorLink
+              actor={content.actor}
+              did={content.actorDid}
+              unknown={unknown}
+            />{' '}
+            published <ActivityLink href={content.href} text={title} />
           </Trans>
         </Text>
       )
@@ -201,13 +208,13 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
-            <Text style={emphasis} emoji>
-              {actor}
-            </Text>{' '}
+            <ActorLink
+              actor={content.actor}
+              did={content.actorDid}
+              unknown={unknown}
+            />{' '}
             created the publication{' '}
-            <Text style={emphasis} emoji>
-              {name}
-            </Text>
+            <ActivityLink href={content.href} text={name} />
           </Trans>
         </Text>
       )
@@ -217,29 +224,135 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
-            <Text style={emphasis} emoji>
-              {actor}
-            </Text>{' '}
-            subscribed to{' '}
-            <Text style={emphasis} emoji>
-              {name}
-            </Text>
+            <ActorLink
+              actor={content.actor}
+              did={content.actorDid}
+              unknown={unknown}
+            />{' '}
+            subscribed to <ActivityLink href={content.href} text={name} />
           </Trans>
         </Text>
       )
     }
+    case 'livestream': {
+      const title = content.title || l`Untitled livestream`
+      if (content.ended && content.durationInMinutes !== undefined) {
+        const duration = displayDuration(i18n, content.durationInMinutes)
+        return (
+          <Text style={[a.text_md, a.leading_snug]} emoji>
+            <Trans>
+              <ActorLink
+                actor={content.actor}
+                did={content.actorDid}
+                unknown={unknown}
+              />{' '}
+              livestreamed <ActivityEmphasis text={title} /> for {duration}
+            </Trans>
+          </Text>
+        )
+      }
+      if (content.ended) {
+        return (
+          <Text style={[a.text_md, a.leading_snug]} emoji>
+            <Trans>
+              <ActorLink
+                actor={content.actor}
+                did={content.actorDid}
+                unknown={unknown}
+              />{' '}
+              livestreamed <ActivityEmphasis text={title} />
+            </Trans>
+          </Text>
+        )
+      }
+      return (
+        <Text style={[a.text_md, a.leading_snug]} emoji>
+          <Trans>
+            <ActorLink
+              actor={content.actor}
+              did={content.actorDid}
+              unknown={unknown}
+            />{' '}
+            is livestreaming <ActivityEmphasis text={title} />
+          </Trans>
+        </Text>
+      )
+    }
+    case 'photo':
+      return (
+        <Text style={[a.text_md, a.leading_snug]} emoji>
+          <Trans>
+            <ActorLink
+              actor={content.actor}
+              did={content.actorDid}
+              unknown={unknown}
+            />{' '}
+            posted a photo
+          </Trans>
+        </Text>
+      )
     case 'generic':
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
             Activity from{' '}
-            <Text style={emphasis} emoji>
-              {actor}
-            </Text>
+            <ActorLink
+              actor={content.actor}
+              did={content.actorDid}
+              unknown={unknown}
+            />
           </Trans>
         </Text>
       )
   }
+}
+
+function ActorLink({
+  actor,
+  did,
+  unknown,
+}: {
+  actor: ActivityActor | undefined
+  did: string | undefined
+  unknown: string
+}) {
+  const t = useTheme()
+  const label = getActorLabel(actor, did, unknown)
+  if (!did) return <ActivityEmphasis text={label} />
+
+  return (
+    <InlineLinkText
+      label={label}
+      to={makeProfileLink({did, handle: actor?.handle ?? ''})}
+      style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]}
+      emoji>
+      {label}
+    </InlineLinkText>
+  )
+}
+
+function ActivityLink({href, text}: {href?: string; text: string}) {
+  const t = useTheme()
+  if (!href) return <ActivityEmphasis text={text} />
+
+  return (
+    <InlineLinkText
+      label={text}
+      to={href}
+      disableMismatchWarning
+      style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]}
+      emoji>
+      {text}
+    </InlineLinkText>
+  )
+}
+
+function ActivityEmphasis({text}: {text: string}) {
+  return (
+    <Text style={[a.text_md, a.leading_snug, a.font_semi_bold]} emoji>
+      {text}
+    </Text>
+  )
 }
 
 function ActivityLoading() {
@@ -298,7 +411,9 @@ function getActorLabel(
   did: string | undefined,
   unknown: string,
 ) {
-  return actor?.handle || actor?.displayName || did || unknown
+  return actor?.handle
+    ? sanitizeHandle(actor.handle, '@')
+    : actor?.displayName || did || unknown
 }
 
 const keyExtractor = (item: ActivityListItem) => item.key
