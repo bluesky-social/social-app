@@ -7,6 +7,7 @@ export function useNavigationTabState() {
     let currentRoute = state ? getCurrentRoute(state).name : 'Home'
     return {
       isAtHome: currentRoute === 'Home',
+      isAtActivity: currentRoute === 'Activity',
       isAtSearch: currentRoute === 'Search',
       isAtAtmosphere: currentRoute === 'Atmosphere',
       isAtFeeds: currentRoute === 'Feeds',

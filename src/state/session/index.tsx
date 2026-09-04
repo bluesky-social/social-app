@@ -781,6 +781,17 @@ export function useAppviewClient(): Client {
 }
 
 /**
+ * Client for appview-sandbox Atmosphere reads.
+ */
+export function useAtmosphereClient(): Client {
+  const bundle = useContext(BundleContext)
+  if (!bundle) {
+    throw Error('useAtmosphereClient() must be below <SessionProvider>.')
+  }
+  return bundle.atmosphereClient
+}
+
+/**
  * Client for account-host requests. It shares the active session's auth
  * lifecycle but sets no proxy or labeler headers, so calls target the PDS.
  * Logged out, calls throw `NotAuthenticatedError` before network I/O. Use

@@ -18,11 +18,16 @@ jest.mock('jwt-decode', () => ({
   },
 }))
 
-import {BLUESKY_PROXY_HEADER, CHAT_PROXY_SERVICE} from '#/lib/constants'
-import {app, chat, com} from '#/lexicons'
+import {
+  ATMOSPHERE_PROXY_SERVICE,
+  BLUESKY_PROXY_HEADER,
+  CHAT_PROXY_SERVICE,
+} from '#/lib/constants'
+import {app, chat, com, eric} from '#/lexicons'
 import {configureGlobalAppLabelers} from '../additional-moderation-authorities'
 import {
   buildAppviewClient,
+  buildAtmosphereClient,
   buildChatClient,
   buildPdsClient,
   getUnauthenticatedThrowingClient,
@@ -299,6 +304,28 @@ describe('buildChatClient', () => {
       .split(',')
       .filter(l => l.includes('did:plc:labeler'))
     expect(entries).toHaveLength(1)
+  })
+})
+
+describe('buildAtmosphereClient', () => {
+  let fetchMock: MockFetch
+
+  beforeEach(() => {
+    fetchMock = makeProfileFetch()
+    configureGlobalAppLabelers([])
+  })
+
+  it('uses the appview-sandbox proxy with the signed-in session', async () => {
+    const client = buildAtmosphereClient(makeSession(fetchMock))
+
+    await client
+      .call(eric.bsky.atmosphere.getActivity, {viewer: DID, limit: 30})
+      .catch(() => {})
+
+    const headers = headersFor(fetchMock, 'eric.bsky.atmosphere.getActivity')
+    expect(headers.get('atproto-proxy')).toBe(ATMOSPHERE_PROXY_SERVICE)
+    expect(headers.get('authorization')).toBe('Bearer access-jwt')
+    expect(headers.get('atproto-accept-labelers')).toBeNull()
   })
 })
 

@@ -43,6 +43,7 @@ import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {Divider} from '#/components/Divider'
 import {ArrowShareRight_Stroke2_Corner2_Rounded as ArrowShareRightIcon} from '#/components/icons/Arrow'
+import {Atom_Stroke2_Corner0_Rounded as Atom} from '#/components/icons/Atom'
 import {
   Bell_Filled_Corner0_Rounded as BellFilledIcon,
   Bell_Stroke2_Corner0_Rounded as BellIcon,
@@ -212,6 +213,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   const ax = useAnalytics()
   const {
     isAtHome,
+    isAtActivity,
     isAtSearch,
     isAtAtmosphere,
     isAtFeeds,
@@ -312,6 +314,12 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     },
     [navigation, setDrawerOpen],
   )
+
+  const onPressActivity = useCallback(() => {
+    ax.metric('nav:click', {item: 'activity', surface: 'drawer'})
+    navigation.navigate('Activity')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen, ax])
 
   const onPressMyFeeds = useCallback(() => {
     ax.metric('nav:click', {item: 'feeds', surface: 'drawer'})
@@ -419,6 +427,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
                 onPress={onPressAtmosphere}
               />
             )}
+            <ActivityMenuItem
+              isActive={isAtActivity}
+              onPress={onPressActivity}
+            />
             <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
             <ListsMenuItem onPress={onPressLists} />
             <BookmarksMenuItem
@@ -651,6 +663,26 @@ let NotificationsMenuItem = ({
   )
 }
 NotificationsMenuItem = memo(NotificationsMenuItem)
+
+let ActivityMenuItem = ({
+  isActive,
+  onPress,
+}: {
+  isActive: boolean
+  onPress: () => void
+}): React.ReactNode => {
+  const {_} = useLingui()
+  const t = useTheme()
+  return (
+    <MenuItem
+      icon={<Atom style={[t.atoms.text]} width={iconWidth} />}
+      label={_(msg`Activity`)}
+      bold={isActive}
+      onPress={onPress}
+    />
+  )
+}
+ActivityMenuItem = memo(ActivityMenuItem)
 
 let FeedsMenuItem = ({
   isActive,

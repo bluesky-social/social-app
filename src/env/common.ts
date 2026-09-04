@@ -84,6 +84,12 @@ export const MOD_PROXY_DID: DidString | undefined =
   process.env.EXPO_PUBLIC_MOD_PROXY_DID
 
 /**
+ * Optional direct appview-sandbox origin for local Atmosphere development.
+ */
+export const APPVIEW_SANDBOX_URL: string | undefined =
+  process.env.EXPO_PUBLIC_APPVIEW_SANDBOX_URL || undefined
+
+/**
  * Metrics API host
  */
 export const METRICS_API_HOST: string =

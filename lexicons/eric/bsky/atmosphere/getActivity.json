@@ -1,0 +1,54 @@
+{
+  "lexicon": 1,
+  "id": "eric.bsky.atmosphere.getActivity",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns recent activity for a tracked viewer.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "viewer": { "type": "string", "format": "did" },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 30
+          },
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feed", "associatedRecords", "actors"],
+          "properties": {
+            "feed": {
+              "type": "array",
+              "items": { "type": "ref", "ref": "#activityItem" }
+            },
+            "associatedRecords": {
+              "type": "unknown",
+              "description": "A map of AT URI to locally resolved associated record."
+            },
+            "actors": {
+              "type": "unknown",
+              "description": "A map of actor DID to app.bsky.actor.defs#profileViewBasic."
+            },
+            "cursor": { "type": "string" }
+          }
+        }
+      }
+    },
+    "activityItem": {
+      "type": "object",
+      "required": ["uri", "cid", "indexedAt"],
+      "properties": {
+        "uri": { "type": "string", "format": "at-uri" },
+        "cid": { "type": "string", "format": "cid" },
+        "indexedAt": { "type": "string", "format": "datetime" }
+      }
+    }
+  }
+}

@@ -65,6 +65,7 @@ jest.mock('../create-account', () => ({
 import {
   Provider,
   useAppviewClient,
+  useAtmosphereClient,
   useChatClient,
   useMaybeChatClient,
   useMaybePdsClient,
@@ -74,6 +75,7 @@ import {
 import {type SessionApiContext} from '#/state/session/types'
 import {
   buildAppviewClient,
+  buildAtmosphereClient,
   buildChatClient,
   buildPdsClient,
   getUnauthenticatedThrowingClient,
@@ -84,6 +86,7 @@ import {asFetch, makeAccount, makeMockFetch} from './mock-fetch'
 
 type Clients = {
   appview: Client
+  atmosphere: Client
   pds: Client
   chat: Client
   maybePds: Client | null
@@ -91,8 +94,8 @@ type Clients = {
 }
 
 /**
- * Build a bundle over a real `PasswordSession`, with the three clients the
- * provider serves. Only the fields the provider reads are populated.
+ * Build a bundle over a real `PasswordSession`, with the clients the provider
+ * serves. Only the fields the provider reads are populated.
  */
 function makeBundle(account: SessionAccount): SessionBundle {
   const fetchMock = makeMockFetch()
@@ -102,6 +105,7 @@ function makeBundle(account: SessionAccount): SessionBundle {
   return {
     session,
     appviewClient: buildAppviewClient(session),
+    atmosphereClient: buildAtmosphereClient(session),
     pdsClient: buildPdsClient(session),
     chatClient: buildChatClient(session),
     service: new URL(account.service),
@@ -116,6 +120,7 @@ function renderClients(): {api: SessionApiContext; clients: () => Clients} {
     api = useSessionApi()
     clients = {
       appview: useAppviewClient(),
+      atmosphere: useAtmosphereClient(),
       pds: usePdsClient(),
       chat: useChatClient(),
       maybePds: useMaybePdsClient(),
@@ -146,6 +151,7 @@ describe('client hooks while logged out', () => {
   it('serves the throwing client for the write surfaces', () => {
     const {clients} = renderClients()
     const throwing = getUnauthenticatedThrowingClient()
+    expect(clients().atmosphere).toBe(throwing)
     expect(clients().pds).toBe(throwing)
     expect(clients().chat).toBe(throwing)
   })
@@ -169,6 +175,7 @@ describe('client hooks with a session', () => {
     })
 
     expect(clients().appview).toBe(bundle.appviewClient)
+    expect(clients().atmosphere).toBe(bundle.atmosphereClient)
     expect(clients().pds).toBe(bundle.pdsClient)
     expect(clients().chat).toBe(bundle.chatClient)
   })

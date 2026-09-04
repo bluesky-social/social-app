@@ -12,6 +12,7 @@ import {prefetchAgeAssuranceServerData} from '#/ageAssurance/data'
 import {features} from '#/analytics'
 import {
   buildAppviewClient,
+  buildAtmosphereClient,
   buildChatClient,
   buildPdsClient,
   getPublicAppviewClient,
@@ -53,10 +54,11 @@ function deriveServiceUrl(session: PasswordSession | null): URL {
   )
 }
 
-/** The three clients over one `PasswordSession`, the bundle's sole auth core. */
+/** The clients over one `PasswordSession`, the bundle's sole auth core. */
 export type SessionBundle = {
   session: PasswordSession
   appviewClient: Client
+  atmosphereClient: Client
   pdsClient: Client
   chatClient: Client
   readonly service: URL
@@ -109,6 +111,7 @@ export function buildBundle(
   return {
     session,
     appviewClient: buildAppviewClient(agent),
+    atmosphereClient: buildAtmosphereClient(agent),
     pdsClient: buildPdsClient(agent),
     chatClient: buildChatClient(agent),
     get service() {
@@ -202,6 +205,7 @@ export function makeSessionHooks({
 export type PublicSessionBundle = {
   session: null
   appviewClient: Client
+  atmosphereClient: Client
   pdsClient: Client
   chatClient: Client
   readonly service: URL
@@ -226,6 +230,7 @@ export function createPublicSessionBundle(): PublicSessionBundle {
   return {
     session: null,
     appviewClient: getPublicAppviewClient(),
+    atmosphereClient: getUnauthenticatedThrowingClient(),
     pdsClient: getUnauthenticatedThrowingClient(),
     chatClient: getUnauthenticatedThrowingClient(),
     service: new URL(PUBLIC_BSKY_SERVICE),

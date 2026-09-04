@@ -2,11 +2,13 @@ import {type Agent, type Client} from '@atproto/lex'
 import {type PasswordSession} from '@atproto/lex-password-session'
 
 import {
+  ATMOSPHERE_PROXY_SERVICE,
   BLUESKY_PROXY_HEADER,
   CHAT_PROXY_SERVICE,
   PUBLIC_BSKY_SERVICE,
 } from '#/lib/constants'
 import {createLexClient} from '#/lib/lexClient'
+import {APPVIEW_SANDBOX_URL} from '#/env'
 import {networkAwareFetch} from './network'
 
 /**
@@ -66,6 +68,25 @@ export function buildChatClient(agent: Agent): Client {
   return createLexClient(agent, {
     service: CHAT_PROXY_SERVICE,
     includeDeviceSessionHeaders: true,
+  })
+}
+
+/**
+ * Build the appview-sandbox client used by Atmosphere features.
+ *
+ * Local development talks directly to the configured origin. Otherwise the
+ * signed-in session proxies the request through the account's PDS.
+ */
+export function buildAtmosphereClient(agent: Agent): Client {
+  if (APPVIEW_SANDBOX_URL) {
+    return createLexClient(
+      {service: APPVIEW_SANDBOX_URL, fetch: networkAwareFetch},
+      {appLabelers: null},
+    )
+  }
+  return createLexClient(agent, {
+    appLabelers: null,
+    service: ATMOSPHERE_PROXY_SERVICE,
   })
 }
 

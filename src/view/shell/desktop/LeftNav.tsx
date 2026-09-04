@@ -56,6 +56,7 @@ import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/Arrow'
+import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {
   Bell_Filled_Corner0_Rounded as BellFilledIcon,
   Bell_Stroke2_Corner0_Rounded as BellIcon,
@@ -767,6 +768,16 @@ export function DesktopLeftNav({
               }}
             />
           )}
+          <NavItem
+            label={l`Activity`}
+            href="/activity"
+            navItem="activity"
+            minimal={leftNavMinimal}
+            icons={{
+              inactive: AtomIcon,
+              active: AtomIcon,
+            }}
+          />
           <NavItem
             label={l`Chat`}
             href="/messages"

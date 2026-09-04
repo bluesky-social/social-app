@@ -274,6 +274,9 @@ export const BLUESKY_PROXY_HEADER = {
  */
 export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
 
+export const ATMOSPHERE_PROXY_SERVICE: Service =
+  'did:web:appview-sandbox.k1.prod.bsky.dev#bsky_appviewSandbox'
+
 /**
  * Moderation service, in the `did#service_id` form a lex client's per-call
  * `service` option takes. Passing it emits `atproto-proxy: <this value>` on that
