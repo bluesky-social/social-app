@@ -1,9 +1,5 @@
 import {Asset} from 'expo-asset'
-import {
-  documentDirectory,
-  getInfoAsync,
-  readDirectoryAsync,
-} from 'expo-file-system/legacy'
+import {Directory, File, Paths} from 'expo-file-system'
 import {type ImagePickerResult} from 'expo-image-picker'
 import ExpoImageCropTool, {
   type OpenCropperOptions,
@@ -19,27 +15,29 @@ async function getFile() {
     return await getAndroidFile()
   }
 
-  const imagesDir = documentDirectory!
+  const imagesDir = Paths.document.uri
+    .replace(/\/?$/, '/')
     .split('/')
     .slice(0, -6)
     .concat(['Media', 'DCIM', '100APPLE'])
     .join('/')
 
-  let files = await readDirectoryAsync(imagesDir)
-  files = files.filter(file => file.endsWith('.JPG'))
-  const file = `${imagesDir}/${files[0]}`
+  const file = new Directory(imagesDir)
+    .list()
+    .find(
+      (entry): entry is File =>
+        entry instanceof File && entry.name.endsWith('.JPG'),
+    )
 
-  const fileInfo = await getInfoAsync(file)
-
-  if (!fileInfo.exists) {
+  if (!file?.exists) {
     throw new Error('Failed to get file info')
   }
 
   return await compressIfNeeded(
     {
-      path: file,
+      path: file.uri,
       mime: 'image/jpeg',
-      size: fileInfo.size,
+      size: file.size,
       width: 4288,
       height: 2848,
     },
@@ -61,10 +59,9 @@ async function getAndroidFile() {
   )
   await asset.downloadAsync()
 
-  const path = asset.localUri!
-  const fileInfo = await getInfoAsync(path)
+  const file = new File(asset.localUri!)
 
-  if (!fileInfo.exists) {
+  if (!file.exists) {
     throw new Error('Failed to get file info')
   }
 
@@ -75,9 +72,9 @@ async function getAndroidFile() {
    */
   return await compressIfNeeded(
     {
-      path,
+      path: file.uri,
       mime: 'image/jpeg',
-      size: fileInfo.size,
+      size: file.size,
       width: 1432,
       height: 1025,
     },

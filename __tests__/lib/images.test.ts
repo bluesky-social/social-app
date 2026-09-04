@@ -1,8 +1,4 @@
-import {
-  createDownloadResumable,
-  deleteAsync,
-  getInfoAsync,
-} from 'expo-file-system/legacy'
+import {File, Paths} from 'expo-file-system'
 import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '../../src/lib/constants'
@@ -23,6 +19,9 @@ describe('downloadAndResize', () => {
   const errorSpy = jest.spyOn(global.console, 'error')
 
   beforeEach(() => {
+    const mockedDownload = File.downloadFileAsync as jest.Mock
+    mockedDownload.mockResolvedValue(new File('file://downloaded-image.jpg'))
+
     let savedImageCount = 0
     const mockedManipulate = ImageManipulator.manipulate as jest.Mock
     mockedManipulate.mockImplementation(() => {
@@ -51,14 +50,6 @@ describe('downloadAndResize', () => {
   })
 
   it('should return resized image for valid URI and options', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
-    mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
-      downloadAsync: jest
-        .fn()
-        .mockResolvedValue({uri: 'file://resized-image.jpg'}),
-    })
-
     const opts: DownloadAndResizeOpts = {
       uri: 'https://example.com/image.jpg',
       maxDimension: 2000,
@@ -71,11 +62,12 @@ describe('downloadAndResize', () => {
       ...mockResizedImage,
       path: 'file://resized-image-7.jpg',
     })
-    expect(createDownloadResumable).toHaveBeenCalledWith(
+    expect(File.downloadFileAsync).toHaveBeenCalledWith(
       opts.uri,
       expect.anything(),
       {
-        cache: true,
+        idempotent: true,
+        signal: expect.any(AbortSignal),
       },
     )
 
@@ -103,7 +95,7 @@ describe('downloadAndResize', () => {
     expect(resizedImage.saveAsync).toHaveBeenCalledWith(
       expect.objectContaining({format: SaveFormat.JPEG, compress: 1.0}),
     )
-    const deletedPaths = (deleteAsync as jest.Mock).mock.calls.map(
+    const deletedPaths = (Paths.info as jest.Mock).mock.calls.map(
       ([path]) => path,
     )
     expect(deletedPaths).toEqual(
@@ -120,11 +112,8 @@ describe('downloadAndResize', () => {
   })
 
   it('deletes a partial download when downloading fails', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
-    mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
-      downloadAsync: jest.fn().mockRejectedValue(new Error('download failed')),
-    })
+    const mockedDownload = File.downloadFileAsync as jest.Mock
+    mockedDownload.mockRejectedValue(new Error('download failed'))
 
     const opts: DownloadAndResizeOpts = {
       uri: 'https://example.com/image.jpg',
@@ -134,22 +123,19 @@ describe('downloadAndResize', () => {
     }
 
     await expect(downloadAndResize(opts)).rejects.toThrow('download failed')
-    expect(deleteAsync).toHaveBeenCalledWith(expect.stringMatching(/\.bin$/), {
-      idempotent: true,
-    })
+    expect(Paths.info).toHaveBeenCalledWith(expect.stringMatching(/-download$/))
   })
 
   it('deletes every intermediate image when resizing fails', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
-    mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
-      downloadAsync: jest
-        .fn()
-        .mockResolvedValue({uri: 'file://downloaded-image.jpg'}),
+    const mockedManipulate = ImageManipulator.manipulate as jest.Mock
+    const createContext = mockedManipulate.getMockImplementation()!
+    mockedManipulate.mockImplementation((...args) => {
+      const context = createContext(...args)
+      if (mockedManipulate.mock.calls.length === 3) {
+        context.renderAsync.mockRejectedValue(new Error('render failed'))
+      }
+      return context
     })
-    ;(getInfoAsync as jest.Mock)
-      .mockResolvedValueOnce({exists: true, size: 100})
-      .mockRejectedValueOnce(new Error('stat failed'))
 
     const opts: DownloadAndResizeOpts = {
       uri: 'https://example.com/image.jpg',
@@ -158,15 +144,14 @@ describe('downloadAndResize', () => {
       timeout: 10000,
     }
 
-    await expect(downloadAndResize(opts)).rejects.toThrow('stat failed')
-    const deletedPaths = (deleteAsync as jest.Mock).mock.calls.map(
+    await expect(downloadAndResize(opts)).rejects.toThrow('render failed')
+    const deletedPaths = (Paths.info as jest.Mock).mock.calls.map(
       ([path]) => path,
     )
     expect(deletedPaths).toEqual(
       expect.arrayContaining([
         'file://resized-image-1.jpg',
         'file://resized-image-2.jpg',
-        'file://resized-image-3.jpg',
       ]),
     )
   })
