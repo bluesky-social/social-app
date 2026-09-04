@@ -5,6 +5,7 @@ import {SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 
+import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {renderImage} from './image-manipulator'
@@ -67,9 +68,11 @@ export async function shareImageModal({uri}: {uri: string}) {
     return
   }
 
+  const shareDirectory = prepareShareDirectory()
   const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
   let jpegUri: string | undefined
   let imagePath: string | undefined
+  let didShare = false
 
   try {
     const jpeg = await renderImage(downloadedPath, undefined, {
@@ -77,15 +80,16 @@ export async function shareImageModal({uri}: {uri: string}) {
       compress: 1.0,
     })
     jpegUri = jpeg.uri
-    imagePath = await moveToPermanentPath(jpegUri, '.jpg')
+    imagePath = await moveToPermanentPath(jpegUri, '.jpg', shareDirectory)
     await Sharing.shareAsync(imagePath, {
       mimeType: 'image/jpeg',
       UTI: 'image/jpeg',
     })
+    didShare = true
   } finally {
     safeDelete(downloadedPath)
     if (jpegUri) safeDelete(jpegUri)
-    if (imagePath) safeDelete(imagePath)
+    if (imagePath && !didShare) safeDelete(imagePath)
   }
 }
 
@@ -269,7 +273,11 @@ async function doResize(
   }
 }
 
-async function moveToPermanentPath(path: string, ext: string): Promise<string> {
+async function moveToPermanentPath(
+  path: string,
+  ext: string,
+  destinationDirectory = Paths.cache,
+): Promise<string> {
   /*
   Since this package stores images in a temp directory, we need to move the file to a permanent location.
   Relevant: IOS bug when trying to open a second time:
@@ -277,10 +285,28 @@ async function moveToPermanentPath(path: string, ext: string): Promise<string> {
   */
   const filename = uuid.v4()
 
-  const destination = new File(Paths.cache, filename + ext)
+  const destination = new File(destinationDirectory, filename + ext)
   await new File(normalizePath(path)).copy(destination)
   safeDelete(path)
   return normalizePath(destination.uri)
+}
+
+function prepareShareDirectory(): Directory {
+  const directory = new Directory(Paths.cache, 'bsky-share')
+
+  /*
+   * Keep the current file alive after the share sheet closes because Android
+   * targets may consume its content URI lazily. Remove the previous share the
+   * next time a share starts so the cache remains bounded.
+   */
+  if (directory.exists) {
+    for (const entry of directory.list()) {
+      safeDelete(entry.uri)
+    }
+  } else {
+    directory.create({intermediates: true})
+  }
+  return directory
 }
 
 export function safeDelete(path: string) {
@@ -338,6 +364,9 @@ export async function saveToDevice(
       return true
     }
   } catch (e) {
+    if (isCancelledError(e)) {
+      return false
+    }
     logger.error('Error occurred while saving file', {message: e})
     return false
   }
