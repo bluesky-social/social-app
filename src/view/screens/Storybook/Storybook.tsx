@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {Sentry} from '#/logger/sentry/lib'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'
 import {atoms as a, ThemeProvider} from '#/alf'
@@ -97,8 +98,16 @@ export default function Storybook() {
                   }
                 })
               }}
-              label="crash">
+              label="Get GPS location">
               <ButtonText>Get GPS Location</ButtonText>
+            </Button>
+
+            <Button
+              color="negative"
+              size="large"
+              onPress={() => Sentry.nativeCrash()}
+              label="Crash the app to test Sentry">
+              <ButtonText>Crash the app</ButtonText>
             </Button>
 
             <Button
