@@ -36,6 +36,7 @@ import {
   getMatchedContacts,
   normalizeContactBook,
 } from '../contacts'
+import {type DeviceContact, getDeviceContacts} from '../device-contacts'
 import {constructFullPhoneNumber} from '../phone-number'
 import {type Action, type State} from '../state'
 
@@ -62,7 +63,7 @@ export function GetContacts({
   const maybeOnboardingContext = useContext(OnboardingContext)
 
   const {mutate: uploadContacts, isPending: isUploadPending} = useMutation({
-    mutationFn: async (contacts: Contacts.ExistingContact[]) => {
+    mutationFn: async (contacts: DeviceContact[]) => {
       /**
        * `importContacts` triggers a notification for the people you match with,
        * however we prevent notifications coming from users without profiles.
@@ -194,16 +195,7 @@ export function GetContacts({
         throw new PermissionDeniedError()
       }
 
-      const contacts = await Contacts.getContactsAsync({
-        fields: [
-          Contacts.Fields.FirstName,
-          Contacts.Fields.LastName,
-          Contacts.Fields.PhoneNumbers,
-          Contacts.Fields.Image,
-        ],
-      })
-
-      return contactsWithPhoneNumbersOnly(contacts.data)
+      return contactsWithPhoneNumbersOnly(await getDeviceContacts())
     },
     onSuccess: contacts => {
       dispatch({

@@ -1,11 +1,11 @@
 import {createContext, useContext, useReducer} from 'react'
 import {type GestureResponderEvent} from 'react-native'
-import {type ExistingContact} from 'expo-contacts'
 
 import {type CountryCode} from '#/lib/international-telephone-codes'
 import type * as bsky from '#/types/bsky'
+import {type DeviceContact} from './device-contacts'
 
-export type Contact = ExistingContact
+export type Contact = DeviceContact
 
 export type Match = {
   profile: bsky.profile.AnyProfileView

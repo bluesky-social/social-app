@@ -1,18 +1,18 @@
 import {type CountryCode} from '#/lib/international-telephone-codes'
 import {type app} from '#/lexicons'
+import {type DeviceContact} from './device-contacts'
 import {normalizePhoneNumber} from './phone-number'
-import {type Contact, type Match} from './state'
+import {type Match} from './state'
 
 /**
  * Filters out contacts that do not have any associated phone numbers,
  * as well as businesses
  */
-export function contactsWithPhoneNumbersOnly(contacts: Contact[]) {
+export function contactsWithPhoneNumbersOnly(contacts: DeviceContact[]) {
   return contacts.filter(
     contact =>
-      contact.phoneNumbers &&
-      contact.phoneNumbers.length > 0 &&
-      contact.contactType !== 'company',
+      contact.phones.length > 0 &&
+      (!contact.company || contact.givenName || contact.familyName),
   )
 }
 
@@ -24,31 +24,23 @@ export function contactsWithPhoneNumbersOnly(contacts: Contact[]) {
  * I'm making the assumption that most local numbers in someone's phone book will be the same as theirs.
  */
 export function normalizeContactBook(
-  contacts: Contact[],
+  contacts: DeviceContact[],
   countryCode: CountryCode,
   ownNumber: string,
 ): {
   phoneNumbers: string[]
-  indexToContactId: Map<number, Contact['id']>
+  indexToContactId: Map<number, DeviceContact['id']>
 } {
   const phoneNumbers: string[] = []
-  const indexToContactId = new Map<number, Contact['id']>()
+  const indexToContactId = new Map<number, DeviceContact['id']>()
 
   for (const contact of contacts) {
-    for (const number of contact.phoneNumbers ?? []) {
-      let rawNumber: string
-
-      if (number.number) {
-        rawNumber = number.number
-      } else if (number.digits) {
-        rawNumber = number.digits
-      } else {
-        continue
-      }
+    for (const number of contact.phones) {
+      if (!number.number) continue
 
       const normalized = normalizePhoneNumber(
-        rawNumber,
-        number.countryCode,
+        number.number,
+        undefined,
         countryCode,
       )
       if (normalized === null) continue
@@ -68,11 +60,11 @@ export function normalizeContactBook(
 }
 
 export function filterMatchedNumbers(
-  contacts: Contact[],
+  contacts: DeviceContact[],
   results: app.bsky.contact.defs.MatchAndContactIndex[],
-  mapping: Map<number, Contact['id']>,
+  mapping: Map<number, DeviceContact['id']>,
 ) {
-  const filteredIds = new Set<Contact['id']>()
+  const filteredIds = new Set<DeviceContact['id']>()
 
   for (const result of results) {
     const id = mapping.get(result.contactIndex)
@@ -85,9 +77,9 @@ export function filterMatchedNumbers(
 }
 
 export function getMatchedContacts(
-  contacts: Contact[],
+  contacts: DeviceContact[],
   results: app.bsky.contact.defs.MatchAndContactIndex[],
-  mapping: Map<number, Contact['id']>,
+  mapping: Map<number, DeviceContact['id']>,
 ): Array<Match> {
   const contactsById = new Map(contacts.map(c => [c.id, c]))
 
