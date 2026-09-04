@@ -197,7 +197,7 @@ function YourAccount() {
         })}
         action={l`Violates community guideline: ${guideline}`}
         date={new Date()}
-        to="/moderation/inbox/report/details"
+        to="/moderation/inbox/subject/details"
         unread
       />
       <ReportRow
@@ -207,16 +207,16 @@ function YourAccount() {
         })}
         action={l`“${label}” – shown behind a warning`}
         date={new Date()}
-        to="/moderation/inbox/report/details"
+        to="/moderation/inbox/subject/details"
       />
       <ReportRow
         subject={l({
           context: 'moderation-report-action',
-          message: `A label was added to your post`,
+          message: `Your account was suspended`,
         })}
         action={l`Ban evasion – ${duration}, now expired`}
         date={new Date()}
-        to="/moderation/inbox/report/details"
+        to="/moderation/inbox/subject/details"
       />
     </Layout.Center>
   )
