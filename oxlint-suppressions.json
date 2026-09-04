@@ -638,7 +638,7 @@
       "count": 1
     },
     "typescript/no-floating-promises": {
-      "count": 5
+      "count": 3
     }
   },
   "src/lib/media/manip.web.ts": {
