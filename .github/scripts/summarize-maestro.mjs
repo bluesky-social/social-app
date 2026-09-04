@@ -2,6 +2,8 @@ import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 
+import {buildSlackMessage, extractSlackFileIds} from './maestro-slack.mjs'
+
 const ENTITY_REPLACEMENTS = {
   '&amp;': '&',
   '&apos;': "'",
@@ -101,6 +103,54 @@ function readPhase(root) {
   return phaseFile ? fs.readFileSync(phaseFile, 'utf8').trim() : ''
 }
 
+function screenshotMetadata(file) {
+  const legacyMatch = path
+    .basename(file)
+    .match(/^screenshot-.*?-(\d+)-\((.+)\)\.(?:gif|jpe?g|png)$/i)
+  if (legacyMatch) {
+    return {
+      file,
+      order: Number(legacyMatch[1]),
+      flowName: legacyMatch[2],
+    }
+  }
+
+  const parts = file.split(/[\\/]/)
+  const screenshotsIndex = parts.lastIndexOf('screenshots')
+  if (
+    screenshotsIndex < 2 ||
+    !parts.slice(0, screenshotsIndex - 1).includes('maestro')
+  ) {
+    return undefined
+  }
+  const step = parts.at(-1)?.match(/^step-(\d+)-.*\.(?:gif|jpe?g|png)$/i)
+  return step
+    ? {
+        file,
+        order: Number(step[1]),
+        flowName: parts[screenshotsIndex - 1],
+      }
+    : undefined
+}
+
+export function screenshotsByFlow(files) {
+  const screenshots = new Map()
+  for (const file of files) {
+    const screenshot = screenshotMetadata(file)
+    if (!screenshot) continue
+    const current = screenshots.get(screenshot.flowName)
+    if (!current || screenshot.order > current.order) {
+      screenshots.set(screenshot.flowName, screenshot)
+    }
+  }
+  return new Map(
+    [...screenshots].map(([flowName, screenshot]) => [
+      flowName,
+      screenshot.file,
+    ]),
+  )
+}
+
 function platformResult({name, status, root, artifactUrl}) {
   const files = walk(root)
   const reports = files.filter(file => /(?:report|junit).*\.xml$/i.test(file))
@@ -115,7 +165,12 @@ function platformResult({name, status, root, artifactUrl}) {
   )
   // A cancelled or timed-out Maestro run may never flush JUnit. Its CLI log is
   // streamed continuously, so use those failure lines when JUnit has no detail.
-  const failures = junitFailures.length > 0 ? junitFailures : cliFailures
+  const rawFailures = junitFailures.length > 0 ? junitFailures : cliFailures
+  const screenshots = screenshotsByFlow(files)
+  const failures = rawFailures.map(failure => ({
+    ...failure,
+    screenshot: screenshots.get(failure.name),
+  }))
   // A skipped platform (e.g. iOS while temporarily disabled) is not a failure
   // as long as it produced no flow failures.
   const failed =
@@ -131,52 +186,15 @@ function platformResult({name, status, root, artifactUrl}) {
   }
 }
 
-function statusEmoji(status) {
-  if (status === 'success') return ':white_check_mark:'
-  if (status === 'skipped') return ':fast_forward:'
-  return ':x:'
-}
-
-function slackEscape(value) {
-  return value
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-}
-
-function platformBlock(platform) {
+function githubSummary({state, platforms, shortSha, runUrl, commitUrl}) {
+  const outcome =
+    state === 'cancelled'
+      ? 'cancelled'
+      : state === 'passed'
+        ? 'passed'
+        : 'failed'
   const lines = [
-    `${statusEmoji(platform.status)} *${platform.name}* — job status: \`${platform.status}\``,
-  ]
-  if (platform.failures.length > 0) {
-    for (const failure of platform.failures.slice(0, 8)) {
-      lines.push(
-        `• *${slackEscape(failure.name)}:* ${slackEscape(failure.message)}`,
-      )
-    }
-    if (platform.failures.length > 8) {
-      lines.push(`• …and ${platform.failures.length - 8} more failed flows`)
-    }
-  } else if (platform.failed && !platform.hasJUnit) {
-    lines.push(
-      `• *Setup phase:* ${slackEscape(platform.phase || 'No phase metadata was captured')}`,
-    )
-  } else if (platform.failed) {
-    lines.push(
-      `• Job failed after JUnit was written; latest phase: ${slackEscape(platform.phase || 'unknown')}`,
-    )
-  }
-  if (platform.artifactUrl) {
-    lines.push(
-      `• <${platform.artifactUrl}|Open ${platform.name} logs and artifacts>`,
-    )
-  }
-  return lines.join('\n').slice(0, 3000)
-}
-
-function githubSummary({notify, platforms, shortSha, runUrl, commitUrl}) {
-  const lines = [
-    `# Nightly Maestro E2E ${notify ? 'failed' : 'passed'}`,
+    `# Nightly Maestro E2E ${outcome}`,
     '',
     `- Commit: [\`${shortSha}\`](${commitUrl})`,
     `- Workflow run: [open run](${runUrl})`,
@@ -235,6 +253,7 @@ export function buildSummary({
   sha,
   runUrl,
   commitUrl,
+  slackFileIds = [],
 }) {
   const platforms = [
     platformResult({
@@ -252,73 +271,29 @@ export function buildSummary({
   ]
   const notify = platforms.some(platform => platform.failed)
   const shortSha = sha.slice(0, 12)
-  const lines = [
-    ':rotating_light: *Nightly Maestro E2E failed*',
-    `*Commit:* <${commitUrl}|\`${shortSha}\`>`,
-    `*Workflow run:* <${runUrl}|open run>`,
-    '',
-  ]
-
-  for (const platform of platforms) {
-    lines.push(
-      `${statusEmoji(platform.status)} *${platform.name}* — job status: \`${platform.status}\``,
-    )
-    if (platform.failures.length > 0) {
-      for (const failure of platform.failures.slice(0, 10)) {
-        lines.push(
-          `• *${slackEscape(failure.name)}:* ${slackEscape(failure.message)}`,
-        )
-      }
-      if (platform.failures.length > 10) {
-        lines.push(`• …and ${platform.failures.length - 10} more failed flows`)
-      }
-    } else if (platform.failed && !platform.hasJUnit) {
-      lines.push(
-        `• Setup phase: ${platform.phase || 'No phase metadata was captured'}`,
-      )
-    } else if (platform.failed) {
-      lines.push(
-        `• The job failed after JUnit was written (latest phase: ${platform.phase || 'unknown'})`,
-      )
-    }
-    if (platform.artifactUrl) {
-      lines.push(
-        `• <${platform.artifactUrl}|${platform.name} logs and artifacts>`,
-      )
-    }
-    lines.push('')
-  }
-
-  const text = lines.join('\n').trim()
-  const blocks = [
-    {
-      type: 'header',
-      text: {type: 'plain_text', text: 'Nightly Maestro E2E failed'},
-    },
-    {
-      type: 'section',
-      text: {
-        type: 'mrkdwn',
-        text: `*Commit:* <${commitUrl}|\`${shortSha}\`>\n*Workflow run:* <${runUrl}|open run>`,
-      },
-    },
-    {type: 'divider'},
-    ...platforms.flatMap((platform, index) => [
-      {type: 'section', text: {type: 'mrkdwn', text: platformBlock(platform)}},
-      ...(index < platforms.length - 1 ? [{type: 'divider'}] : []),
-    ]),
-  ]
+  const slack = buildSlackMessage({
+    platforms,
+    sha,
+    runUrl,
+    commitUrl,
+    slackFileIds,
+  })
   return {
     notify,
+    state: slack.state,
     platforms,
     githubSummary: githubSummary({
-      notify,
+      state: slack.state,
       platforms,
       shortSha,
       runUrl,
       commitUrl,
     }),
-    payload: {text, blocks},
+    failureCount: slack.failureCount,
+    screenshotCount: slack.screenshotCount,
+    uploadPayload: slack.uploadPayload,
+    threadPayload: slack.threadPayload,
+    payload: slack.payload,
   }
 }
 
@@ -351,6 +326,7 @@ if (
     sha: args.sha,
     runUrl: args['run-url'],
     commitUrl: args['commit-url'],
+    slackFileIds: extractSlackFileIds(args['slack-upload-response']),
   })
   process.stdout.write(`${JSON.stringify(summary)}\n`)
 }

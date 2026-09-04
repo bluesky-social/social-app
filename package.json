@@ -305,6 +305,7 @@
     "prettier": "3.9.6",
     "react-native-dotenv": "^3.4.11",
     "react-refresh": "^0.14.0",
+    "sharp": "^0.35.4",
     "svgo": "^4.0.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
