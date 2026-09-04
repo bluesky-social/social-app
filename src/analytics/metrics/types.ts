@@ -774,12 +774,14 @@ export type Events = {
   }
   'trendingTopic:seen': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
   }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
