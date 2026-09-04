@@ -15,6 +15,7 @@ import {
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
 import {useFetchHandle} from '#/state/queries/handle'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -605,6 +606,7 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
 export function DesktopLeftNav({routeName}: {routeName: string}) {
   const {hasSession, currentAccount} = useSession()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const {gtMobile} = useBreakpoints()
 
   const aa = useAgeAssurance()
@@ -616,6 +618,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
     useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
+  const hasHomeBadge = useHomeBadge()
 
   const leftNavMinimal = isMessagesRelatedScreen || leftNavMinimalBreakpoint
 
@@ -667,6 +670,9 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             href="/"
             navItem="home"
             minimal={leftNavMinimal}
+            hasNew={
+              hasHomeBadge && ax.features.enabled(ax.features.FollowingV2Enable)
+            }
             icons={{
               inactive: HomeIcon,
               active: HomeFilledIcon,
