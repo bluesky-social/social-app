@@ -19,7 +19,11 @@ export function createBskyTopicsHeader(userInterests?: string) {
 export function aggregateUserInterests(
   preferences?: UsePreferencesQueryResponse,
 ) {
-  return preferences?.interests?.tags?.join(',') || ''
+  const tags = preferences?.interests.tags ?? []
+  const updatedAt = preferences?.interests.updatedAt
+
+  const interests = tags.join(',')
+  return updatedAt ? `${interests};${updatedAt}` : interests
 }
 
 export function isBlueskyOwnedFeed(feedUri: string) {
