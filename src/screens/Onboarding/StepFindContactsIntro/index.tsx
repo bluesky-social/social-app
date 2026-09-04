@@ -1,14 +1,11 @@
 import {View} from 'react-native'
-import * as Contacts from 'expo-contacts'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useQuery} from '@tanstack/react-query'
 
 import {urls} from '#/lib/constants'
 import {useCallOnce} from '#/lib/once'
 import {atoms as a} from '#/alf'
-import {Admonition} from '#/components/Admonition'
 import {Button, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
 import {InlineLinkText} from '#/components/Link'
@@ -29,11 +26,6 @@ export function StepFindContactsIntro() {
   useCallOnce(() => {
     ax.metric('onboarding:contacts:presented', {})
   })()
-
-  const {data: isAvailable, isSuccess} = useQuery({
-    queryKey: ['contacts-available'],
-    queryFn: async () => await Contacts.isAvailableAsync(),
-  })
 
   return (
     <View style={[a.w_full, a.gap_sm]}>
@@ -60,23 +52,13 @@ export function StepFindContactsIntro() {
           </InlineLinkText>
         </Trans>
       </OnboardingDescriptionText>
-      {!isAvailable && isSuccess && (
-        <Admonition type="error">
-          <Trans>
-            Contact sync is not available on this device, as the app is unable
-            to access your contacts.
-          </Trans>
-        </Admonition>
-      )}
-
       <OnboardingControls.Portal>
         <View style={[a.gap_md]}>
           <Button
             onPress={() => dispatch({type: 'next'})}
             label={_(msg`Import contacts`)}
             size="large"
-            color="primary"
-            disabled={!isAvailable}>
+            color="primary">
             <ButtonText>
               <Trans>Import contacts</Trans>
             </ButtonText>

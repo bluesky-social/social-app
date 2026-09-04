@@ -1,13 +1,12 @@
 import {useCallback, useEffect, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
-import * as Contacts from 'expo-contacts'
 import {type DidString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
+import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {wait} from '#/lib/async/wait'
 import {HITSLOP_10, urls} from '#/lib/constants'
@@ -33,7 +32,6 @@ import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {List} from '#/view/com/util/List'
 import {atoms as a, tokens, useGutters, useTheme} from '#/alf'
-import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ContactsHeroImage} from '#/components/contacts/components/HeroImage'
 import {useDialogControl} from '#/components/Dialog'
@@ -116,11 +114,6 @@ function Intro() {
   const ax = useAnalytics()
   const inviteFriendsControl = useDialogControl()
 
-  const {data: isAvailable, isSuccess} = useQuery({
-    queryKey: ['contacts-available'],
-    queryFn: async () => await Contacts.isAvailableAsync(),
-  })
-
   return (
     <Layout.Content contentContainerStyle={[gutter, a.gap_lg]}>
       <ContactsHeroImage />
@@ -145,27 +138,16 @@ function Intro() {
           </InlineLinkText>
         </Trans>
       </Text>
-      {isAvailable ? (
-        <Link
-          to={{screen: 'FindContactsFlow'}}
-          label={_(msg`Import contacts`)}
-          size="large"
-          color="primary"
-          style={[a.flex_1, a.justify_center]}>
-          <ButtonText>
-            <Trans>Import contacts</Trans>
-          </ButtonText>
-        </Link>
-      ) : (
-        isSuccess && (
-          <Admonition type="error">
-            <Trans>
-              Contact sync is not available on this device, as the app is unable
-              to access your contacts.
-            </Trans>
-          </Admonition>
-        )
-      )}
+      <Link
+        to={{screen: 'FindContactsFlow'}}
+        label={_(msg`Import contacts`)}
+        size="large"
+        color="primary"
+        style={[a.flex_1, a.justify_center]}>
+        <ButtonText>
+          <Trans>Import contacts</Trans>
+        </ButtonText>
+      </Link>
       <Button
         label={_(msg`Share my profile`)}
         size="large"

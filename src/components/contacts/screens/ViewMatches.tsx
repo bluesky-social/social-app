@@ -183,7 +183,7 @@ export function ViewMatches({
       for (const contact of state.contacts) {
         if (
           search.length === 0 ||
-          [contact.firstName, contact.lastName]
+          [contact.fullName, contact.givenName, contact.familyName]
             .filter(Boolean)
             .join(' ')
             .toLocaleLowerCase()
@@ -458,10 +458,9 @@ function MatchItem({
   const contactName = useMemo(() => {
     if (!contact) return null
 
-    const name = contact.name ?? contact.firstName ?? contact.lastName
+    const name = contact.fullName ?? contact.givenName ?? contact.familyName
     if (name) return _(msg`Your contact ${name}`)
-    const phone =
-      contact.phoneNumbers?.find(p => p.isPrimary) ?? contact.phoneNumbers?.[0]
+    const phone = contact.phones[0]
     if (phone?.number) return phone.number
     return null
   }, [contact, _])
@@ -530,17 +529,16 @@ function ContactItem({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
 
-  const name = contact.name ?? contact.firstName ?? contact.lastName
-  const phone =
-    contact.phoneNumbers?.find(phone => phone.isPrimary) ??
-    contact.phoneNumbers?.[0]
+  const name =
+    contact.fullName ?? contact.givenName ?? contact.familyName ?? undefined
+  const phone = contact.phones[0]
   const phoneNumber = phone?.number
 
   return (
     <View style={[gutter, a.py_md, a.border_t, t.atoms.border_contrast_low]}>
       <ProfileCard.Header>
         {contact.image ? (
-          <UserAvatar size={40} avatar={contact.image.uri} type="user" />
+          <UserAvatar size={40} avatar={contact.image} type="user" />
         ) : (
           <View
             style={[
@@ -572,7 +570,7 @@ function ContactItem({
         </Text>
         {phoneNumber && currentAccount && (
           <Button
-            label={_(msg`Invite ${name} to join Bluesky`)}
+            label={_(msg`Invite ${name ?? phoneNumber} to join Bluesky`)}
             color="secondary"
             size="small"
             onPress={async () => {
