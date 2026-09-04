@@ -41,9 +41,12 @@ describe('Atmosphere activity response narrowing', () => {
     const page = narrowActivityPage({
       feed: [
         {
-          uri: 'at://did:plc:author/site.standard.document/one',
-          cid: 'bafy-one',
-          indexedAt: '2026-09-03T00:00:00.000Z',
+          record: {
+            uri: 'at://did:plc:author/site.standard.document/one',
+            cid: 'bafy-one',
+            indexedAt: '2026-09-03T00:00:00.000Z',
+          },
+          viewerState: {subscribed: true},
         },
       ],
       associatedRecords: null,
@@ -51,9 +54,10 @@ describe('Atmosphere activity response narrowing', () => {
       cursor: 'opaque-cursor',
     })
 
-    expect(page.feed.map(item => item.uri)).toEqual([
+    expect(page.feed.map(item => item.record.uri)).toEqual([
       'at://did:plc:author/site.standard.document/one',
     ])
+    expect(page.feed[0].viewerState.subscribed).toBe(true)
     expect(page.associatedRecords).toEqual({})
     expect(page.actors).toEqual({})
     expect(page.cursor).toBe('opaque-cursor')

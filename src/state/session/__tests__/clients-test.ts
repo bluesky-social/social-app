@@ -319,7 +319,7 @@ describe('buildAtmosphereClient', () => {
     const client = buildAtmosphereClient(makeSession(fetchMock))
 
     await client
-      .call(eric.bsky.atmosphere.getActivity, {viewer: DID, limit: 30})
+      .call(eric.bsky.atmosphere.getActivity, {viewer: DID})
       .catch(() => {})
 
     const headers = headersFor(fetchMock, 'eric.bsky.atmosphere.getActivity')

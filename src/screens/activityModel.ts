@@ -101,11 +101,11 @@ export function buildActivityListItems(
   const items: ActivityRowItem[] = []
   for (const page of data.pages) {
     for (const activity of page.feed) {
-      if (seen.has(activity.uri)) continue
-      seen.add(activity.uri)
+      if (seen.has(activity.record.uri)) continue
+      seen.add(activity.record.uri)
       items.push({
         type: 'activity',
-        key: activity.uri,
+        key: activity.record.uri,
         activity,
         associatedRecords,
         actors,
@@ -121,7 +121,7 @@ export function getActivityRowContent({
   associatedRecords,
   actors,
 }: ActivityRowItem): ActivityRowContent {
-  const root = parseAtUri(activity.uri)
+  const root = parseAtUri(activity.record.uri)
   const actor = root ? actors[root.did] : undefined
   const generic: ActivityRowContent = {
     type: 'generic',
@@ -130,7 +130,7 @@ export function getActivityRowContent({
   }
   if (!root) return generic
 
-  const rootRecord = associatedRecords[activity.uri]?.record
+  const rootRecord = associatedRecords[activity.record.uri]?.record
   if (!rootRecord) return generic
 
   switch (root.collection) {

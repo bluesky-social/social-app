@@ -54,7 +54,6 @@ describe('useAtmosphereActivityQuery', () => {
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
     expect(client.call).toHaveBeenNthCalledWith(1, expect.anything(), {
       viewer,
-      limit: 30,
       cursor: undefined,
     })
     expect(hook.result.current.hasNextPage).toBe(true)
@@ -63,7 +62,6 @@ describe('useAtmosphereActivityQuery', () => {
 
     expect(client.call).toHaveBeenNthCalledWith(2, expect.anything(), {
       viewer,
-      limit: 30,
       cursor: 'opaque-cursor',
     })
     await waitFor(() => expect(hook.result.current.hasNextPage).toBe(false))

@@ -135,7 +135,7 @@ function ActivityRow({
         />
         <View style={[a.flex_1, a.gap_xs]}>
           <ActivitySentence content={content} />
-          <TimeElapsed timestamp={item.activity.indexedAt}>
+          <TimeElapsed timestamp={item.activity.record.indexedAt}>
             {({timeElapsed}) => (
               <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
                 {timeElapsed}

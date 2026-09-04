@@ -100,9 +100,14 @@ Define feature-local structural types in the camelCase query module. They should
 
 ```ts
 type ActivityItem = {
-  uri: string
-  cid: string
-  indexedAt: string
+  record: {
+    uri: string
+    cid: string
+    indexedAt: string
+  }
+  viewerState: {
+    subscribed: boolean
+  }
 }
 
 type AssociatedRecord = {
@@ -189,7 +194,9 @@ Narrowing rules:
 
 - Treat non-object `associatedRecords` and `actors` values as empty maps rather than casting blindly.
 - Ignore malformed individual map entries during lookup, but do not remove their corresponding feed item from the list.
-- Use `AtUri` from `@atproto/syntax` to read an item's collection and authority DID.
+- Treat `activity.record` as metadata only; resolve the raw root payload through `associatedRecords[activity.record.uri].record`.
+- Preserve `activity.viewerState.subscribed` when narrowing the response.
+- Use `AtUri` from `@atproto/syntax` to read `activity.record.uri`'s collection and authority DID.
 - Catch invalid AT URIs and render the generic fallback row.
 - Use the URI collection as the primary row discriminator and confirm that required record fields have the expected primitive types before reading them.
 
@@ -214,8 +221,8 @@ The hook:
 - builds its key with `createQueryKey()` and an object containing `viewer`;
 - calls `eric.bsky.atmosphere.getActivity` with:
   - `viewer: currentAccount.did`;
-  - `limit: 30`;
   - `cursor: pageParam` when present;
+- does not send a limit; page sizing is server-controlled; the backend returns at least 10 items when available, extends through one-hour activity bursts, and caps a page at 200;
 - uses `useInfiniteQuery`;
 - sets `initialPageParam` to `undefined as string | undefined`;
 - returns `lastPage.cursor` from `getNextPageParam`;
@@ -255,7 +262,7 @@ Use the standard layout components:
 Use the app's shared `List` component for virtualization, pull-to-refresh, and pagination. Follow the established Bookmarks screen list behavior:
 
 - preserve API feed order across pages;
-- defensively deduplicate activity items by `uri`, keeping the first occurrence;
+- defensively deduplicate activity items by `record.uri`, keeping the first occurrence;
 - fetch the next page from `onEndReached` only when a next page exists and no next-page request is active;
 - use `ListFooter` for next-page loading, failure, and retry;
 - show an initial loading placeholder;
@@ -269,7 +276,7 @@ Build the list model from all loaded pages:
 
 1. Merge every page's `associatedRecords` into one `AssociatedRecords` object.
 2. Merge every page's `actors` into one `ActivityActors` object.
-3. Flatten each page's `feed` in response order and deduplicate by activity URI.
+3. Flatten each page's `feed` in response order and deduplicate by `activity.record.uri`.
 4. Construct every row with references to the same merged maps:
 
 ```ts
@@ -294,10 +301,10 @@ Every activity item must produce a visually separate row, including unsupported 
 - the root actor's avatar when `actors[rootDid].avatar` is available;
 - an avatar placeholder when the actor or avatar is unavailable;
 - translated sentence text;
-- `TimeElapsed` using `activity.indexedAt`;
+- `TimeElapsed` using `activity.record.indexedAt`;
 - `emoji` on text that can contain actor or record-provided values.
 
-Use the root activity URI's authority as the actor who performed the action. Resolve a referenced document or publication author from that referenced record's URI authority.
+Use `activity.record.uri`'s authority as the actor who performed the action. Resolve a referenced document or publication author from that referenced record's URI authority.
 
 Actor handles are prefixed with `@`, sanitized with `sanitizeHandle`, and linked to the in-app profile route built by `makeProfileLink`. Document titles link to their canonical URL, constructed from the document `path` and either its direct HTTPS `site` or the referenced publication's `url`. Publication names link to the publication `url`. These links use normal text color and underline on hover/focus rather than using the default blue link color.
 
@@ -314,7 +321,7 @@ For the explicit handle-oriented sentences below, render the available label wit
 
 For `site.standard.graph.recommend`:
 
-1. Look up the root recommendation at `associatedRecords[activity.uri]`.
+1. Look up the root recommendation at `associatedRecords[activity.record.uri]`.
 2. Read its `document` AT URI.
 3. Look up that document in the same `associatedRecords` map.
 4. Parse the document URI authority and resolve that actor from `actors`.
@@ -481,7 +488,7 @@ Add focused tests for behavior that carries contract risk:
 
 ### Query tests
 
-- sends the signed-in DID as `viewer` and `limit: 30`;
+- sends the signed-in DID as `viewer` without a caller-controlled limit;
 - omits the cursor on page one and passes the returned cursor verbatim on page two;
 - stops pagination when the cursor is absent;
 - narrows valid `associatedRecords` and `actors` maps;
@@ -535,7 +542,7 @@ Manually verify:
 
 1. Authenticated users can open `/activity` from both the drawer and desktop left nav.
 2. The screen uses `Layout.Screen` and `Layout.Header` and is not added to the bottom bar.
-3. The query explicitly sends the signed-in DID, requests 30 items, and paginates with opaque cursors.
+3. The query explicitly sends the signed-in DID without a limit and paginates with opaque cursors.
 4. Every feed item renders as a separate row in API order.
 5. Every row receives the same complete merged `associatedRecords` object for the currently loaded pages.
 6. A valid recommendation renders the recommender, document author, and document title by traversing the associated-record map.

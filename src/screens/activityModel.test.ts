@@ -17,11 +17,14 @@ const livestreamUri =
   'at://did:plc:streamer/place.stream.livestream/active-stream'
 const photoUri = 'at://did:plc:photographer/social.grain.photo/one'
 
-function activity(uri: string) {
+function activity(uri: string, subscribed = false) {
   return {
-    uri,
-    cid: `bafy-${uri.at(-1)}`,
-    indexedAt: '2026-09-03T00:00:00.000Z',
+    record: {
+      uri,
+      cid: `bafy-${uri.at(-1)}`,
+      indexedAt: '2026-09-03T00:00:00.000Z',
+    },
+    viewerState: {subscribed},
   }
 }
 
@@ -88,7 +91,7 @@ describe('Activity list model', () => {
       undefined,
     ) as ActivityRowItem[]
 
-    expect(items.map(item => item.activity.uri)).toEqual([
+    expect(items.map(item => item.activity.record.uri)).toEqual([
       documentUri,
       publicationUri,
     ])

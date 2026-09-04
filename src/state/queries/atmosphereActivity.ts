@@ -20,7 +20,6 @@ export function useAtmosphereActivityQuery() {
     queryFn: async ({pageParam}) => {
       const response = await client.call(eric.bsky.atmosphere.getActivity, {
         viewer,
-        limit: 30,
         cursor: pageParam,
       })
       return narrowActivityPage(response)

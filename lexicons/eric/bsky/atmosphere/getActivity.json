@@ -9,12 +9,6 @@
         "type": "params",
         "properties": {
           "viewer": { "type": "string", "format": "did" },
-          "limit": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 100,
-            "default": 30
-          },
           "cursor": { "type": "string" }
         }
       },
@@ -43,11 +37,29 @@
     },
     "activityItem": {
       "type": "object",
+      "required": ["record", "viewerState"],
+      "properties": {
+        "record": { "type": "ref", "ref": "#activityRecord" },
+        "viewerState": { "type": "ref", "ref": "#viewerState" }
+      }
+    },
+    "activityRecord": {
+      "type": "object",
       "required": ["uri", "cid", "indexedAt"],
       "properties": {
         "uri": { "type": "string", "format": "at-uri" },
         "cid": { "type": "string", "format": "cid" },
         "indexedAt": { "type": "string", "format": "datetime" }
+      }
+    },
+    "viewerState": {
+      "type": "object",
+      "required": ["subscribed"],
+      "properties": {
+        "subscribed": {
+          "type": "boolean",
+          "description": "Whether the viewer currently subscribes to this document's publication. False for non-document activity."
+        }
       }
     }
   }

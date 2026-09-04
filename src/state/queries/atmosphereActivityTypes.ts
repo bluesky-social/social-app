@@ -1,7 +1,14 @@
-export type ActivityItem = {
+export type ActivityRecord = {
   uri: string
   cid: string
   indexedAt: string
+}
+
+export type ActivityItem = {
+  record: ActivityRecord
+  viewerState: {
+    subscribed: boolean
+  }
 }
 
 export type AssociatedRecord = {
@@ -89,9 +96,14 @@ export function narrowActivityPage(value: {
 }): AtmosphereActivityPage {
   return {
     feed: value.feed.map(item => ({
-      uri: item.uri,
-      cid: item.cid,
-      indexedAt: item.indexedAt,
+      record: {
+        uri: item.record.uri,
+        cid: item.record.cid,
+        indexedAt: item.record.indexedAt,
+      },
+      viewerState: {
+        subscribed: item.viewerState.subscribed,
+      },
     })),
     associatedRecords: narrowAssociatedRecords(value.associatedRecords),
     actors: narrowActors(value.actors),

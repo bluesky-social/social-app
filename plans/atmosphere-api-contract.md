@@ -12,7 +12,7 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Last synchronized backend commit | `db3c141 Add subscription state to Atmosphere activity` |
+| Last synchronized backend commit | `d39fe59 Nest Atmosphere activity record metadata` |
 | Deployment status | Backend changes are local and have not been pushed or deployed |
 
 When the backend request, response, filtering, authentication, or hydration behavior changes, update this document and the synchronized backend commit before asking the frontend session to consume the change.
@@ -73,9 +73,11 @@ The conceptual TypeScript shape is:
 
 ```ts
 type ActivityItem = {
-  uri: string // AT URI
-  cid: string
-  indexedAt: string // Activity event time as an ISO datetime
+  record: {
+    uri: string // AT URI
+    cid: string
+    indexedAt: string // Activity event time as an ISO datetime
+  }
   viewerState: {
     subscribed: boolean
   }
@@ -115,9 +117,11 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
 {
   "feed": [
     {
-      "uri": "at://did:plc:recommender/site.standard.graph.recommend/abc",
-      "cid": "bafy...",
-      "indexedAt": "2026-09-03T00:00:00.000Z",
+      "record": {
+        "uri": "at://did:plc:recommender/site.standard.graph.recommend/abc",
+        "cid": "bafy...",
+        "indexedAt": "2026-09-03T00:00:00.000Z"
+      },
       "viewerState": {
         "subscribed": false
       }
@@ -162,15 +166,16 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
 
 ### Feed
 
-- `feed` is the ordered pagination skeleton only. It does not contain records.
+- `feed` is the ordered pagination skeleton only. Each item has exactly `{record, viewerState}` at the top level.
+- `feed[].record` contains only `{uri, cid, indexedAt}`; it does not contain the raw record payload.
 - Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker.
-- `indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
+- `feed[].record.indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
 - Results are limited to the rolling 30-day activity window.
 - Every item has a required `viewerState.subscribed` boolean.
 - `subscribed` is `true` only for a root `site.standard.document` whose `site` publication AT URI matches one of the viewer's current `site.standard.graph.subscription` records. It is `false` for non-document activity and documents without a matching subscription.
 - Subscription state is resolved for the whole page with one indexed PostgreSQL query and no per-item or Tango requests.
-- Every `feed[i].uri` has a corresponding entry in `associatedRecords`.
-- Use `associatedRecords[feed[i].uri].record` to obtain the root record.
+- Every `feed[i].record.uri` has a corresponding entry in `associatedRecords`.
+- Use `associatedRecords[feed[i].record.uri].record` to obtain the raw root payload.
 - The same URI is materialized at most once for a viewer even if it qualifies through multiple fanout paths.
 
 ### Associated records
@@ -269,7 +274,7 @@ const nextPage = await getActivity({
 - An absent `cursor` means there is no next page.
 - Cursors are opaque implementation details and may change format.
 - The client should flatten pages in response order.
-- Deduplicate by activity `uri` defensively if live cache updates are added later.
+- Deduplicate by `activity.record.uri` defensively if live cache updates are added later.
 
 ## Errors
 
@@ -314,6 +319,11 @@ lexicons/eric/bsky/atmosphere/getActivity.json
 Then run the repository's normal lexicon generation command before importing the generated schema. Keep the copied lexicon byte-for-byte aligned with the backend source.
 
 ## Change log
+
+### Backend `d39fe59`
+
+- Changed each feed item from `{uri, cid, indexedAt, viewerState}` to `{record: {uri, cid, indexedAt}, viewerState}`.
+- Raw root payloads remain in `associatedRecords`; they are not duplicated in `feed`.
 
 ### Backend `db3c141`
 
