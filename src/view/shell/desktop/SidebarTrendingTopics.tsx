@@ -17,6 +17,7 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {
+  getTrendingTopicFeedUri,
   TrendingTopicLink,
   TrendingTopicsPrompt,
 } from '#/components/TrendingTopics'
@@ -133,6 +134,7 @@ function Inner() {
                     onPress={() => {
                       ax.metric('trendingTopic:click', {
                         context: 'sidebar',
+                        feedUri: getTrendingTopicFeedUri(topic),
                         rank,
                         recId: trending.recId,
                       })
