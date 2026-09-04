@@ -296,33 +296,12 @@
       "count": 1
     }
   },
-  "src/components/StarterPack/Main/ProfilesList.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/StarterPack/ProfileStarterPacks.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    }
-  },
   "src/components/StarterPack/QrCodeDialog.tsx": {
     "typescript/no-floating-promises": {
       "count": 5
     },
     "typescript/require-await": {
       "count": 4
-    }
-  },
-  "src/components/StarterPack/ShareDialog.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/require-await": {
-      "count": 1
     }
   },
   "src/components/StarterPack/Wizard/WizardEditListDialog.tsx": {
@@ -406,19 +385,9 @@
       "count": 1
     }
   },
-  "src/components/dialogs/StarterPackDialog.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/components/dialogs/SwitchAccount.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
-    }
-  },
-  "src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
     }
   },
   "src/components/dialogs/lists/CreateOrEditListDialog.tsx": {
@@ -557,11 +526,6 @@
       "count": 2
     }
   },
-  "src/lib/async/until.ts": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/lib/broadcast/stub.ts": {
     "typescript/no-explicit-any": {
       "count": 1
@@ -674,7 +638,7 @@
       "count": 1
     },
     "typescript/no-floating-promises": {
-      "count": 5
+      "count": 3
     }
   },
   "src/lib/media/manip.web.ts": {
@@ -870,14 +834,6 @@
       "count": 1
     }
   },
-  "src/screens/ProfileList/components/MoreOptionsMenu.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 5
-    }
-  },
   "src/screens/ProfileList/components/SubscribeMenu.tsx": {
     "typescript/no-misused-promises": {
       "count": 2
@@ -1006,22 +962,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/screens/StarterPack/StarterPackScreen.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/require-await": {
-      "count": 1
-    }
-  },
-  "src/screens/StarterPack/Wizard/index.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/require-await": {
       "count": 1
     }
   },
@@ -1191,7 +1131,7 @@
       "count": 2
     },
     "typescript/no-floating-promises": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unsafe-member-access": {
       "count": 2
@@ -1226,7 +1166,7 @@
       "count": 3
     },
     "typescript/no-floating-promises": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-unsafe-member-access": {
       "count": 3
@@ -1244,11 +1184,6 @@
     },
     "typescript/require-await": {
       "count": 2
-    }
-  },
-  "src/state/queries/starter-packs.ts": {
-    "typescript/require-await": {
-      "count": 1
     }
   },
   "src/state/queries/suggested-follows.ts": {
@@ -1315,11 +1250,6 @@
   },
   "src/view/com/composer/SelectMediaButton.tsx": {
     "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
-  "src/view/com/composer/drafts/DraftsButton.tsx": {
-    "typescript/no-misused-promises": {
       "count": 1
     }
   },
@@ -1530,11 +1460,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/view/screens/Home.tsx": {
-    "typescript/no-floating-promises": {
       "count": 1
     }
   },

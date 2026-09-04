@@ -122,9 +122,12 @@ export function Trigger({children, hitSlop, label}: TriggerProps) {
   }
 }
 
+const defaultValueText: NonNullable<ValueProps['children']> = value =>
+  value.label
+
 export function ValueText({
   placeholder,
-  children = value => value.label,
+  children = defaultValueText,
   style,
 }: ValueProps) {
   const [value] = useContext(ValueTextContext)

@@ -149,7 +149,7 @@ export function useTopic(
     } else if (link.startsWith('/starter-pack')) {
       return {
         type: 'starter-pack',
-        label: l`Browse starter pack ${displayName}`,
+        label: l`Browse Starter Pack ${displayName}`,
         displayName,
         uri: undefined,
         url: link,

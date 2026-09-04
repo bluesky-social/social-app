@@ -53,7 +53,7 @@ export function useLandingEntry() {
     }, 500)
 
     void (async () => {
-      // Check for starter pack
+      // Check for Starter Pack
       let uri: string | null | undefined
 
       if (IS_ANDROID) {

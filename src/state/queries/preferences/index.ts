@@ -38,7 +38,7 @@ import {
   type UsePreferencesQueryResponse,
 } from '#/state/queries/preferences/types'
 import {createQueryKey} from '#/state/queries/util'
-import {useAppviewClient, usePdsClient} from '#/state/session'
+import {useAppviewClient, useChatClient, usePdsClient} from '#/state/session'
 import {applyLabelersToClient, saveLabelers} from '#/state/session/moderation'
 import {useAgeAssurance} from '#/ageAssurance'
 import {makeAgeRestrictedModerationPrefs} from '#/ageAssurance/util'
@@ -58,6 +58,7 @@ export const preferencesQueryKey = createQueryKey(
 export function usePreferencesQuery() {
   const client = usePdsClient()
   const appviewClient = useAppviewClient()
+  const chatClient = useChatClient()
   const aa = useAgeAssurance()
 
   const query = useQuery({
@@ -85,12 +86,12 @@ export function usePreferencesQuery() {
          * from a labeler would not affect server-attached labels until the
          * session bundle was rebuilt.
          *
-         * The subscriptions go on the appview client, which is what stamps
-         * `atproto-accept-labelers` on its own requests. The Bluesky moderation
-         * DID is dropped so the globally redacted authority is not also listed
-         * unredacted.
+         * The subscriptions go on both services that hydrate moderated content.
+         * The Bluesky moderation DID is dropped so the globally redacted
+         * authority is not also listed unredacted.
          */
         applyLabelersToClient(appviewClient, labelerDids)
+        applyLabelersToClient(chatClient, labelerDids)
 
         /*
          * `BskyPreferences` is now the sdk's own type, so the assembled

@@ -190,7 +190,7 @@ function LandingScreenLoaded({
               a.text_md,
               {color: 'white'},
             ]}>
-            Starter pack by {`@${creator.handle}`}
+            <Trans>Starter Pack by {`@${creator.handle}`}</Trans>
           </Text>
         </LinearGradientBackground>
         <View style={[a.gap_2xl, a.mx_lg, a.my_2xl]}>
@@ -299,14 +299,14 @@ function LandingScreenLoaded({
             ) : null}
           </View>
           <Button
-            label={_(msg`Create an account without using this starter pack`)}
+            label={_(msg`Create an account without using this Starter Pack`)}
             variant="solid"
             color="secondary"
             size="large"
             style={[a.py_lg]}
             onPress={onJoinWithoutPress}>
             <ButtonText>
-              <Trans>Create an account without using this starter pack</Trans>
+              <Trans>Create an account without using this Starter Pack</Trans>
             </ButtonText>
           </Button>
         </View>
@@ -396,7 +396,7 @@ export function AppClipOverlay({
             Download Bluesky to get started!
           </Text>
           <Text style={[a.text_lg, {color: 'white'}]}>
-            We'll remember the starter pack you chose and use it when you create
+            We’ll remember the Starter Pack you chose and use it when you create
             an account in the app.
           </Text>
         </View>

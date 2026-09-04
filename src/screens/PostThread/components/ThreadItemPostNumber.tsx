@@ -2,7 +2,6 @@ import {Text, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, ios, platform, useTheme} from '#/alf'
-import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
 
 /**
@@ -19,12 +18,10 @@ export type ThreadItemPostNumbering = Pick<
 export function useHasThreadItemPostNumber(
   value: ThreadItemPostNumbering | undefined,
 ) {
-  const ax = useAnalytics()
   const index = value?.opThreadPostIndex
   const count = value?.opThreadPostCount
 
   return (
-    ax.features.enabled(ax.features.CanonicalPostNumberingEnable) &&
     index !== undefined &&
     count !== undefined &&
     index >= 1 &&
@@ -67,8 +64,6 @@ export function ThreadItemPostNumber({
               android: {transform: [{translateY: POST_NUMBER_INLINE_OFFSET}]},
               ios: {transform: [{translateY: a.py_2xs.paddingBottom}]},
               web: {
-                top: -2,
-                marginBottom: -2,
                 // Inline views inherit the surrounding line height on web. Keep
                 // the badge at its usual size when emoji-only text enlarges it.
                 lineHeight: a.text_xs.fontSize * a.leading_normal.lineHeight,

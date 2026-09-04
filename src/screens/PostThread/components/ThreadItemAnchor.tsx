@@ -23,7 +23,7 @@ import {type OnPostSuccessData} from '#/state/shell/composer'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
 import {type PostSource} from '#/state/unstable-post-source'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {KnownLikers, LikesStat} from '#/screens/PostThread/components/LikesStat'
+import {LikesStat} from '#/screens/PostThread/components/LikesStat'
 import {ThreadItemAnchorFollowButton} from '#/screens/PostThread/components/ThreadItemAnchorFollowButton'
 import {
   POST_NUMBER_INLINE_OFFSET,
@@ -47,6 +47,7 @@ import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {KnownLikers} from '#/components/Post/KnownLikers'
 import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
@@ -57,7 +58,7 @@ import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
-import {useAnalytics} from '#/analytics'
+import {Features, useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -451,7 +452,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     columnGap: a.gap_lg.gap,
                   },
                   a.border_t,
-                  a.border_b,
                   a.mt_md,
                   a.py_md,
                   t.atoms.border_contrast_low,
@@ -460,10 +460,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Link to={repostsHref} label={l`Reposts of this post`}>
                     <Text
                       testID="repostCount-expanded"
-                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      style={[a.text_sm, t.atoms.text_contrast_high]}>
                       <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
                         <Text
-                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                          style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
                           {formatPostStatCount(post.repostCount)}
                         </Text>{' '}
                         <Plural
@@ -481,10 +481,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Link to={quotesHref} label={l`Quotes of this post`}>
                     <Text
                       testID="quoteCount-expanded"
-                      style={[a.text_md, t.atoms.text_contrast_medium]}>
+                      style={[a.text_sm, t.atoms.text_contrast_high]}>
                       <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
                         <Text
-                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                          style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
                           {formatPostStatCount(post.quoteCount)}
                         </Text>{' '}
                         <Plural
@@ -500,9 +500,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
                   <Text
                     testID="bookmarkCount-expanded"
-                    style={[a.text_md, t.atoms.text_contrast_medium]}>
+                    style={[a.text_sm, t.atoms.text_contrast_high]}>
                     <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
-                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
+                      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
                         {formatPostStatCount(post.bookmarkCount)}
                       </Text>{' '}
                       <Plural
@@ -513,9 +513,12 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     </Trans>
                   </Text>
                 ) : null}
-                <KnownLikers post={post} />
               </View>
             ) : null}
+            <KnownLikers
+              post={post}
+              feature={Features.PostThreadKnownLikersEnable}
+            />
             <View
               style={[
                 a.pt_sm,
@@ -562,7 +565,7 @@ function ExpandedPostDetails({
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+        <Text style={[a.text_xs, t.atoms.text_contrast_high]}>
           {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
         {isRootPost && (

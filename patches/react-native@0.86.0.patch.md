@@ -1,5 +1,36 @@
 # ***This second part of this patch is load bearing, do not remove.***
 
+## Scheduler delegate invalidation - iOS use-after-free
+
+Fixes Sentry issue APP-T28X: an `EXC_BAD_ACCESS` in
+`Scheduler::uiManagerDidFinishTransaction` or
+`Scheduler::uiManagerDidDispatchCommand` after a queued rendering update
+outlives its captured raw `SchedulerDelegate` pointer.
+
+React Native 0.86 contains the invalidation-token guard from
+facebook/react-native#56680, but `enableSchedulerDelegateInvalidation` is false
+for the stable release level used by Expo. Override only this flag in
+`ReactNativeFeatureFlagsOverridesOSSStable` instead of opting the app into all
+experimental React Native flags.
+
+**TODO: Remove after upgrading to a React Native release that closes the
+queued Scheduler delegate lifetime race by default.**
+
+## UIManager.cpp Patch - Fabric focus navigation use-after-free
+
+Fixes Sentry issue APP-T4H9: a SIGSEGV in
+`FabricUIManagerBinding::findNextFocusableElement` during focus navigation.
+
+React Native 0.86 contains the safe implementation behind
+`fixFindShadowNodeByTagRaceCondition`, but the public default is false. The
+fallback captures a raw root shadow-node pointer in `tryCommit` and dereferences
+it after the lock is released, allowing a concurrent commit or surface stop to
+free the node first. This backports the final upstream implementation, which
+holds the current revision's `shared_ptr` for the entire traversal.
+
+**TODO: Remove after bumping React Native to a release containing
+facebook/react-native#56850.**
+
 ## RefreshControl Patch - iOS 17.4 Haptic Regression
 
 Patching `RCTRefreshControl.mm` temporarily to play an impact haptic on refresh when using iOS 17.4 or higher. Since
@@ -144,3 +175,22 @@ PR: https://github.com/facebook/react-native/pull/57483
 
 Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 
 Bandaid fix taken from: https://github.com/react/react-native/commit/581d643a9e59fd88f93757f80194e1efd11bd0e5
+
+## RCTViewComponentView.mm Patch - Hairline border strokes dropped at certain subpixel Y offsets on New Arch
+
+Symptom: dividers built as `borderTopWidth: hairlineWidth` vanish on some screens and not
+others, deterministically by the view's absolute subpixel Y. A background fill of the same
+geometry always renders.
+
+Cause: Fabric draws borders as a stretched 9-slice image. The consumer
+(`RCTAddContourEffectToLayer`) hardcodes the stretchable middle as a 1pt band, which matched
+the image the producer built until RN 0.81. facebook/react-native#54237 changed the image
+size to `ceil(insets) + 1 + ceil(insets)` without updating that formula, so for fractional
+(hairline) insets the labels no longer match the image: transparent filler is treated as a
+rigid cap, and when squeezed into a one-pixel-tall layer the sampling can land on it instead
+of the stroke - no line.
+
+Fix: compute the middle from the cap insets (`size - caps`) instead of assuming 1pt.
+
+Upstream issue: https://github.com/react/react-native/issues/58054 (repro:
+https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and 0.87.0).

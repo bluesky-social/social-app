@@ -105,9 +105,8 @@ function InnerApp() {
         }
       } catch (e) {
         logger.warn('session: resumeSession failed', {message: e})
-      } finally {
-        setIsReady(true)
       }
+      setIsReady(true)
     }
     const account = readLastActiveAccount()
     void onLaunch(account)

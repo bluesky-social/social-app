@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, AtUri, type AtUriString} from '@atproto/syntax'
@@ -26,9 +26,11 @@ import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {
+  createFeedViewPostsSlices,
   type FeedPostNumbering,
   FeedTuner,
   type FeedTunerFn,
+  type ValidFeedPostNumbering,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -46,6 +48,7 @@ import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
+  useAutoPagination,
 } from './util'
 
 type ActorDid = string
@@ -368,56 +371,13 @@ export function usePostFeedQuery(
     ),
   })
 
-  // The server may end up returning an empty page, a page with too few items,
-  // or a page with items that end up getting filtered out. When we fetch pages,
-  // we'll keep track of how many items we actually hope to see. If the server
-  // doesn't return enough items, we're going to continue asking for more items.
-  const lastItemCount = useRef(0)
-  const wantedItemCount = useRef(0)
-  const autoPaginationAttemptCount = useRef(0)
-  useEffect(() => {
-    const {data, isLoading, isRefetching, isFetchingNextPage, hasNextPage} =
-      query
-    // Count the items that we already have.
-    let itemCount = 0
-    for (const page of data?.pages || []) {
-      for (const slice of page.slices) {
-        itemCount += slice.items.length
-      }
+  let itemCount = 0
+  for (const page of query.data?.pages || []) {
+    for (const slice of page.slices) {
+      itemCount += slice.items.length
     }
-
-    // If items got truncated, reset the state we're tracking below.
-    if (itemCount !== lastItemCount.current) {
-      if (itemCount < lastItemCount.current) {
-        wantedItemCount.current = itemCount
-      }
-      lastItemCount.current = itemCount
-    }
-
-    // Now track how many items we really want, and fetch more if needed.
-    if (isLoading || isRefetching) {
-      // During the initial fetch, we want to get an entire page's worth of items.
-      wantedItemCount.current = MIN_POSTS
-    } else if (isFetchingNextPage) {
-      if (itemCount > wantedItemCount.current) {
-        // We have more items than wantedItemCount, so wantedItemCount must be out of date.
-        // Some other code must have called fetchNextPage(), for example, from onEndReached.
-        // Adjust the wantedItemCount to reflect that we want one more full page of items.
-        wantedItemCount.current = itemCount + MIN_POSTS
-      }
-    } else if (hasNextPage) {
-      // At this point we're not fetching anymore, so it's time to make a decision.
-      // If we didn't receive enough items from the server, paginate again until we do.
-      if (itemCount < wantedItemCount.current) {
-        autoPaginationAttemptCount.current++
-        if (autoPaginationAttemptCount.current < 50 /* failsafe */) {
-          query.fetchNextPage()
-        }
-      } else {
-        autoPaginationAttemptCount.current = 0
-      }
-    }
-  }, [query])
+  }
+  useAutoPagination(query, itemCount, MIN_POSTS)
 
   return query
 }
@@ -562,6 +522,32 @@ export function* findAllPostsInQueryData(
           const rootQuotedPost = getEmbeddedPost(item.reply.root.embed)
           if (rootQuotedPost && didOrHandleUriMatches(atUri, rootQuotedPost)) {
             yield embedViewRecordToPostView(rootQuotedPost)
+          }
+        }
+      }
+    }
+  }
+}
+
+export function findPostNumberingInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): ValidFeedPostNumbering | undefined {
+  const atUri = new AtUri(uri)
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<FeedPageUnselected>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) continue
+
+    for (const page of queryData.pages) {
+      for (const slice of createFeedViewPostsSlices(page.feed)) {
+        for (const item of slice.items) {
+          if (item.postNumbering && didOrHandleUriMatches(atUri, item.post)) {
+            return item.postNumbering
           }
         }
       }

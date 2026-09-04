@@ -31,7 +31,7 @@ function assignRef<T>(
  * @returns The function `mergeRefs` is being returned. It takes an array of mutable or legacy refs and
  * returns a ref callback function that can be used to merge multiple refs into a single ref.
  */
-export function mergeRefs<T>(refs: (Ref<T> | undefined)[]): Ref<T> {
+export function mergeRefs<T>(refs: (Ref<T> | undefined)[]): RefCallback<T> {
   return (value: T | null) => {
     const cleanups: (() => void)[] = []
 

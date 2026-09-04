@@ -2,6 +2,7 @@ import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {moderatePost, type ModerationOpts} from '@bsky/sdk/moderation'
 
+import {type ValidFeedPostNumbering} from '#/lib/api/feed-manip'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type ApiThreadItem,
@@ -156,6 +157,7 @@ export function skeleton({
 
 export function postViewToThreadPlaceholder(
   post: app.bsky.feed.defs.PostView,
+  postNumbering?: ValidFeedPostNumbering,
 ): $Typed<
   Omit<app.bsky.unspecced.getPostThreadV2.ThreadItem, 'value'> & {
     value: $Typed<app.bsky.unspecced.defs.ThreadItemPost>
@@ -168,7 +170,8 @@ export function postViewToThreadPlaceholder(
     value: {
       $type: 'app.bsky.unspecced.defs#threadItemPost',
       post,
-      opThread: false,
+      opThread: !!postNumbering,
+      ...postNumbering,
       moreParents: false,
       moreReplies: 0,
       hiddenByThreadgate: false,

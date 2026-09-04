@@ -34,10 +34,6 @@ const IS_IOS15 =
   Platform.OS === 'ios' &&
   // semvar - can be 3 segments, so can't use Number(Platform.Version)
   Number(Platform.Version.split('.').at(0)) < 16
-// older android versions (15 and below) aren't naturally edge-to-edge
-// and behave a little differently
-const IS_NON_E2E_ANDROID =
-  Platform.OS === 'android' && Number(Platform.Version) < 35
 
 export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
@@ -148,24 +144,35 @@ function BottomSheetNativeComponentInner({
   const {height: screenHeight} = useWindowDimensions()
   const isHeightConstrained = maxHeight != null || rest.fullHeight === true
 
-  // sigh... on older Android versions, screenHeight does not include safe area insets
-  // on newer Androids + iOS, it does. we need to find the inner bit + the bottom inset
-  // for the sheet content
-  const sheetHeight = IS_NON_E2E_ANDROID
-    ? screenHeight + insets.bottom
-    : screenHeight - insets.top
-
   return (
     <NativeView
       {...rest}
       maxHeight={maxHeight}
       onStateChange={onStateChange}
       ref={nativeViewRef}
-      style={{
-        position: 'absolute',
-        height: sheetHeight,
-        width: '100%',
-      }}
+      /*
+       * On Android the native side owns this view's size - the canvas the sheet
+       * content is laid out on - and pushes it into the Fabric shadow tree through
+       * ExpoView's `setViewSize` state channel. It knows the real sheet frame
+       * (window insets, Material's max-width cap on tablets, rotation), which JS
+       * can only guess at. `width` and `height` must stay unset there:
+       * `ExpoViewComponentDescriptor::adopt()` only applies the state size on an
+       * axis where the style leaves that dimension undefined, so a style dimension
+       * would silently win and clip the content again.
+       *
+       * iOS still sizes the canvas from JS. Moving it onto the same state channel
+       * needs on-device iteration on iOS 26 sheet geometry (large-detent and
+       * floating-card metrics), so it is deferred.
+       */
+      style={
+        Platform.OS === 'ios'
+          ? {
+              position: 'absolute',
+              height: screenHeight - insets.top,
+              width: '100%',
+            }
+          : {position: 'absolute'}
+      }
       containerBackgroundColor={backgroundColor}>
       <View
         style={[
