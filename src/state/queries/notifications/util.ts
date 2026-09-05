@@ -197,6 +197,91 @@ export function groupNotifications(notifs: Notification[]): FeedNotification[] {
   return groupedNotifs
 }
 
+export function canMergeGroupedNotifications(
+  groupedNotif: FeedNotification,
+  incoming: FeedNotification,
+): boolean {
+  if (!GROUPABLE_REASONS.includes(incoming.notification.reason)) {
+    return false
+  }
+  if (groupedNotif.notification.reason !== incoming.notification.reason) {
+    return false
+  }
+  if (
+    groupedNotif.notification.reasonSubject !==
+    incoming.notification.reasonSubject
+  ) {
+    return false
+  }
+  const ts = +new Date(incoming.notification.indexedAt)
+  const ts2 = +new Date(groupedNotif.notification.indexedAt)
+  if (Math.abs(ts2 - ts) >= MS_2DAY) {
+    return false
+  }
+  if (incoming.notification.reason === 'follow') {
+    if (
+      incoming.notification.starterPack?.uri !==
+      groupedNotif.notification.starterPack?.uri
+    ) {
+      return false
+    }
+    const nextIsFollowBack = !!incoming.notification.author.viewer?.following
+    const prevIsFollowBack =
+      !!groupedNotif.notification.author.viewer?.following
+    if (nextIsFollowBack || prevIsFollowBack) {
+      return false
+    }
+  }
+  return true
+}
+
+export function mergeGroupedNotifications(
+  items: FeedNotification[],
+): FeedNotification[] {
+  const result: FeedNotification[] = []
+  for (const item of items) {
+    let merged = false
+    if (GROUPABLE_REASONS.includes(item.notification.reason)) {
+      for (let i = 0; i < result.length; i++) {
+        if (canMergeGroupedNotifications(result[i], item)) {
+          const prev = result[i]
+          if (prev.type === 'starterpack-joined') {
+            result[i] = {
+              ...prev,
+              subject:
+                prev.subject ??
+                (item.type === 'starterpack-joined' ? item.subject : undefined),
+              additional: [
+                ...(prev.additional || []),
+                item.notification,
+                ...(item.additional || []),
+              ],
+            }
+          } else {
+            result[i] = {
+              ...prev,
+              subject:
+                prev.subject ??
+                (item.type !== 'starterpack-joined' ? item.subject : undefined),
+              additional: [
+                ...(prev.additional || []),
+                item.notification,
+                ...(item.additional || []),
+              ],
+            }
+          }
+          merged = true
+          break
+        }
+      }
+    }
+    if (!merged) {
+      result.push(item)
+    }
+  }
+  return result
+}
+
 async function fetchSubjects(
   client: Client,
   groupedNotifs: FeedNotification[],
