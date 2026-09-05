@@ -10,6 +10,7 @@ import {Plural, Trans} from '@lingui/react/macro'
 import {MAX_LABELERS} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {isAppLabeler} from '#/lib/moderation'
+import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {type Shadow} from '#/state/cache/types'
 import {useLabelerSubscriptionMutation} from '#/state/queries/labeler'
@@ -18,6 +19,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {useRequireAuth, useSession} from '#/state/session'
 import {ProfileMenu} from '#/view/com/profile/ProfileMenu'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {SubscribeProfileButton} from '#/components/activity-notifications/SubscribeProfileButton'
 import {Button, ButtonText} from '#/components/Button'
 import {type DialogOuterProps, useDialogControl} from '#/components/Dialog'
 import {MessageProfileButton} from '#/components/dms/MessageProfileButton'
@@ -114,7 +116,10 @@ let ProfileHeaderLabeler = ({
         <View
           style={[a.flex_row, a.justify_end, a.align_center, a.gap_xs, a.pb_lg]}
           pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
-          <HeaderLabelerButtons profile={profile} />
+          <HeaderLabelerButtons
+            profile={profile}
+            moderationOpts={moderationOpts}
+          />
         </View>
         <View style={[a.flex_col, a.gap_2xs, a.pt_2xs, a.pb_md]}>
           <ProfileHeaderDisplayName profile={profile} moderation={moderation} />
@@ -228,6 +233,7 @@ function CantSubscribePrompt({
 
 export function HeaderLabelerButtons({
   profile,
+  moderationOpts,
   minimal = false,
 }: {
   profile: Shadow<app.bsky.actor.defs.ProfileViewDetailed>
@@ -279,12 +285,34 @@ export function HeaderLabelerButtons({
         ax.logger.error(`Failed to subscribe to labeler`, {message: e.message})
       }
     })
+
+  const subscriptionsAllowed = useMemo(() => {
+    switch (profile.associated?.activitySubscription?.allowSubscriptions) {
+      case 'followers':
+      case undefined:
+        return !!profile.viewer?.following
+      case 'mutuals':
+        return !!profile.viewer?.following && !!profile.viewer.followedBy
+      case 'none':
+      default:
+        return false
+    }
+  }, [profile])
+
   return (
     <>
-      {hasSession &&
-        !isMe &&
-        !profile.viewer?.blockedBy &&
-        !profile.viewer?.blocking && <MessageProfileButton profile={profile} />}
+      {hasSession && !isMe && !isBlockedOrBlocking(profile) ? (
+        <>
+          {subscriptionsAllowed && (
+            <SubscribeProfileButton
+              profile={profile}
+              moderationOpts={moderationOpts}
+              disableHint={minimal}
+            />
+          )}
+          <MessageProfileButton profile={profile} />
+        </>
+      ) : null}
 
       {isMe ? (
         <>
