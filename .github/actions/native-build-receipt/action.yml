@@ -1,0 +1,126 @@
+name: Native build receipt
+description: Verify the packaged Expo runtime and record an immutable native artifact receipt.
+
+inputs:
+  platform:
+    required: true
+  profile:
+    required: true
+  artifact-path:
+    required: true
+  native-build-number:
+    required: true
+  default-channel:
+    required: true
+  output-directory:
+    required: false
+    default: native-build-receipt
+
+runs:
+  using: composite
+  steps:
+    - name: Resolve and verify packaged runtime
+      shell: bash
+      env:
+        PLATFORM: ${{ inputs.platform }}
+        PROFILE: ${{ inputs.profile }}
+        ARTIFACT_PATH: ${{ inputs.artifact-path }}
+        BUILD_NUMBER: ${{ inputs.native-build-number }}
+        DEFAULT_CHANNEL: ${{ inputs.default-channel }}
+        OUTPUT_DIRECTORY: ${{ inputs.output-directory }}
+      run: |
+        set -euo pipefail
+        [[ "$PLATFORM" = ios || "$PLATFORM" = android ]] || { echo "::error::platform must be ios or android"; exit 1; }
+        [[ "$PROFILE" = production || "$PROFILE" = testflight ]] || { echo "::error::profile must be production or testflight"; exit 1; }
+        [ "$DEFAULT_CHANNEL" = "$PROFILE" ] || { echo "::error::default channel must match the native profile"; exit 1; }
+        [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::native build number must be numeric"; exit 1; }
+        [ -f "$ARTIFACT_PATH" ] || { echo "::error::native artifact does not exist"; exit 1; }
+        mkdir -p "$OUTPUT_DIRECTORY"
+        report="$OUTPUT_DIRECTORY/fingerprint-report.json"
+        node scripts/ota/resolve-runtime.mjs \
+          --platform "$PLATFORM" \
+          --profile "$PROFILE" \
+          --source-commit "$GITHUB_SHA" \
+          --output "$report"
+
+        if [ "$PLATFORM" = ios ]; then
+          runtime_entries=$(unzip -Z1 "$ARTIFACT_PATH" | grep -E '^Payload/[^/]+\.app/EXUpdates\.bundle/fingerprint$' || true)
+          if [ "$(printf '%s\n' "$runtime_entries" | grep -c .)" -ne 1 ]; then
+            echo "::error::Expected exactly one packaged iOS Expo fingerprint"
+            exit 1
+          fi
+          runtime_entry="$runtime_entries"
+          inspect_dir=$(mktemp -d)
+          unzip -q "$ARTIFACT_PATH" 'Payload/*.app/Info.plist' 'Payload/*.app/Expo.plist' -d "$inspect_dir"
+          info_plist=$(find "$inspect_dir" -name Info.plist -print -quit)
+          expo_plist=$(find "$inspect_dir" -name Expo.plist -print -quit)
+          packaged_build_number=$(/usr/libexec/PlistBuddy -c 'Print CFBundleVersion' "$info_plist")
+          packaged_channel=$(/usr/libexec/PlistBuddy -c 'Print EXUpdatesRequestHeaders:expo-channel-name' "$expo_plist")
+          packaged_runtime_configuration=$(/usr/libexec/PlistBuddy -c 'Print EXUpdatesRuntimeVersion' "$expo_plist")
+        else
+          runtime_entries=$(unzip -Z1 "$ARTIFACT_PATH" | grep -E '(^|/)assets/fingerprint$' || true)
+          if [ "$(printf '%s\n' "$runtime_entries" | grep -c .)" -ne 1 ]; then
+            echo "::error::Expected exactly one packaged Android Expo fingerprint"
+            exit 1
+          fi
+          runtime_entry="$runtime_entries"
+          inspect_dir=$(mktemp -d)
+          : > "$inspect_dir/runtime-resource.txt"
+          if [[ "$ARTIFACT_PATH" != *.aab ]]; then
+            echo "::error::Android receipt requires an .aab so bundletool can bind compiled resource identities"
+            exit 1
+          fi
+          bundletool dump manifest --bundle="$ARTIFACT_PATH" --module=base > "$inspect_dir/manifest.xml"
+          bundletool dump resources --bundle="$ARTIFACT_PATH" --resource=string/expo_runtime_version --values > "$inspect_dir/runtime-resource.txt"
+          packaged_build_number=$(bundletool dump manifest --bundle="$ARTIFACT_PATH" --module=base --xpath=/manifest/@android:versionCode)
+          packaged_config=$(node .github/scripts/native-receipt-android.mjs "$inspect_dir/manifest.xml" "$inspect_dir/runtime-resource.txt")
+          packaged_channel=$(jq -er .channel <<<"$packaged_config")
+          packaged_runtime_configuration=$(jq -er .runtimeConfiguration <<<"$packaged_config")
+        fi
+        if [ -z "$runtime_entry" ]; then
+          echo "::error::Could not find the packaged Expo fingerprint in $ARTIFACT_PATH"
+          exit 1
+        fi
+        packaged_runtime=$(unzip -p "$ARTIFACT_PATH" "$runtime_entry" | tr -d '\r\n')
+        if [ "$packaged_runtime_configuration" != 'file:fingerprint' ]; then
+          echo "::error::Packaged Expo runtime configuration does not use the fingerprint resource"
+          exit 1
+        fi
+        if [ "$packaged_build_number" != "$BUILD_NUMBER" ]; then
+          echo "::error::Packaged build number does not match the workflow output"
+          exit 1
+        fi
+        if [ "$packaged_channel" != "$DEFAULT_CHANNEL" ]; then
+          echo "::error::Packaged update channel does not match the expected native channel"
+          exit 1
+        fi
+        calculated_runtime=$(jq -r .runtimeVersion "$report")
+        if [ "$packaged_runtime" != "$calculated_runtime" ]; then
+          echo "::error::Packaged runtime does not match the canonical build calculation"
+          exit 1
+        fi
+
+        artifact_digest=$(shasum -a 256 "$ARTIFACT_PATH" | cut -d ' ' -f 1)
+        app_version=$(jq -r .version package.json)
+        jq -n \
+          --arg platform "$PLATFORM" \
+          --arg profile "$PROFILE" \
+          --arg channel "$DEFAULT_CHANNEL" \
+          --arg appVersion "$app_version" \
+          --arg nativeBuildNumber "$BUILD_NUMBER" \
+          --arg runtimeVersion "$packaged_runtime" \
+          --arg sourceCommit "$GITHUB_SHA" \
+          --arg artifactDigest "$artifact_digest" \
+          --arg buildRunUrl "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID" \
+          '{schemaVersion: 1, platform: $platform, nativeProfile: $profile,
+            defaultChannel: $channel, appVersion: $appVersion,
+            nativeBuildNumber: $nativeBuildNumber, runtimeVersion: $runtimeVersion,
+            sourceCommit: $sourceCommit, fingerprintPolicyVersion: 1,
+            fingerprintToolVersion: (input.fingerprintToolVersion),
+            artifactDigest: $artifactDigest, buildRunUrl: $buildRunUrl,
+            fingerprintReportRef: "fingerprint-report.json"}' \
+          "$report" > "$OUTPUT_DIRECTORY/receipt.json"
+
+        jq -e --arg runtime "$packaged_runtime" \
+          '.schemaVersion == 1 and .runtimeVersion == $runtime' \
+          "$OUTPUT_DIRECTORY/receipt.json" >/dev/null

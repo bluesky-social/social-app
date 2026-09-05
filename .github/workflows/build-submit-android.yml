@@ -76,7 +76,7 @@ jobs:
       cancel-in-progress: false
     outputs:
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-      version-code: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+      version-code: ${{ steps.android-build-number.outputs.build-number || steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -109,6 +109,8 @@ jobs:
 
       - name: 🏗️ EAS Build
         uses: ./.github/actions/eas-local-build
+        env:
+          OTA_FINGERPRINT_PIPELINE_ENABLED: ${{ vars.OTA_FINGERPRINT_PIPELINE_ENABLED == 'true' && '1' || '' }}
         with:
           platform: android
           profile: ${{ inputs.profile || 'testflight-android' }}
@@ -122,6 +124,43 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
+      - name: 🔧 Setup bundletool
+        if: ${{ vars.OTA_FINGERPRINT_PIPELINE_ENABLED == 'true' }}
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          version: "1.18.3"
+
+      - name: 🔢 Read build number from AAB
+        if: ${{ vars.OTA_FINGERPRINT_PIPELINE_ENABLED == 'true' }}
+        id: android-build-number
+        run: |
+          build_number=$(bundletool dump manifest --bundle=build.aab --module=base --xpath=/manifest/@android:versionCode)
+          [[ "$build_number" =~ ^[0-9]+$ ]] || { echo "::error::Could not read numeric versionCode from AAB"; exit 1; }
+          echo "Android build number: $build_number"
+          echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
+
+      - name: 🧾 Create fingerprint native-build receipt
+        if: ${{ vars.OTA_FINGERPRINT_PIPELINE_ENABLED == 'true' }}
+        uses: ./.github/actions/native-build-receipt
+        env:
+          OTA_FINGERPRINT_PIPELINE_ENABLED: '1'
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        with:
+          platform: android
+          profile: ${{ (inputs.profile || 'testflight-android') == 'production' && 'production' || 'testflight' }}
+          artifact-path: build.aab
+          native-build-number: ${{ steps.android-build-number.outputs.build-number }}
+          default-channel: ${{ (inputs.profile || 'testflight-android') == 'production' && 'production' || 'testflight' }}
+
+      - name: ⬆️ Upload fingerprint native-build receipt
+        if: ${{ vars.OTA_FINGERPRINT_PIPELINE_ENABLED == 'true' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: native-build-android-${{ (inputs.profile || 'testflight-android') == 'production' && 'production' || 'testflight' }}-${{ steps.android-build-number.outputs.build-number }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: native-build-receipt
+          retention-days: 90
+          if-no-files-found: error
+
       # Hands the built bundle off to the submit / universalApk jobs. Retention is
       # deliberately short (1 day) since it's only an intra-run handoff artifact.
       - name: 🚀 Upload AAB artifact
@@ -134,12 +173,12 @@ jobs:
 
       - name: 📝 Write build summary
         env:
-          REMOTE_VERSION_CODE: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          PACKAGED_VERSION_CODE: ${{ steps.android-build-number.outputs.build-number || steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
         run: |
           {
             echo "### Android build number"
             echo
-            echo "\`$REMOTE_VERSION_CODE\`"
+            echo "\`$PACKAGED_VERSION_CODE\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:

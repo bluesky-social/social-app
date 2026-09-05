@@ -262,6 +262,7 @@ jobs:
       github.event_name == 'pull_request' &&
       github.event.pull_request.head.repo.full_name == github.repository &&
       github.event.pull_request.user.type != 'Bot' &&
+      vars.OTA_FINGERPRINT_PIPELINE_ENABLED != 'true' &&
       needs.fingerprint-native.outputs.includes-changes != 'true'
     concurrency:
       group: pr-ota-${{ github.event.pull_request.number }}
@@ -370,3 +371,189 @@ jobs:
             <img src="https://bsky-qr.vercel.app?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.publish-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.publish-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.publish-pr-ota.outputs.android-build-number }}" width="300" height="300" alt="QR code for the PR OTA deployment">
 
             `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}&releaseVersion=${{ needs.publish-pr-ota.outputs.release-version }}&iosBuildNumber=${{ needs.publish-pr-ota.outputs.ios-build-number }}&androidBuildNumber=${{ needs.publish-pr-ota.outputs.android-build-number }}`
+
+  publish-pr-ota-fingerprint:
+    name: Publish fingerprint PR OTA to denis
+    needs: fingerprint-native
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.type != 'Bot' &&
+      vars.OTA_FINGERPRINT_PIPELINE_ENABLED == 'true'
+    concurrency:
+      group: pr-ota-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      OTA_FINGERPRINT_PIPELINE_ENABLED: '1'
+    steps:
+      - name: 🧭 Validate fingerprint rollout configuration
+        env:
+          DENIS_VERSION: ${{ vars.OTA_FINGERPRINT_DENIS_VERSION }}
+        run: |
+          if [ -z "$DENIS_VERSION" ]; then
+            echo "::error::OTA_FINGERPRINT_DENIS_VERSION must pin a structured-publisher release"
+            exit 1
+          fi
+
+      - name: ⏱️ Allocate publication version
+        id: publication
+        run: echo "bundle-version=$(node -e 'process.stdout.write(String(Date.now()))')" >> "$GITHUB_OUTPUT"
+
+      - name: ⬇️ Checkout exact PR head
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: 🛠️ Setup Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🔤 Compile translations
+        uses: ./.github/actions/compile-i18n
+
+      - name: ✏️ Write environment variables
+        id: env
+        uses: ./.github/actions/write-env
+        with:
+          env-token: ${{ secrets.ENV_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          bitdrift-api-key: ${{ secrets.BITDRIFT_API_KEY }}
+          gcp-project-id: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+          google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+          expo-public-env: testflight
+
+      - name: 🧬 Resolve iOS runtime
+        id: ios-runtime
+        uses: bluesky-social/github-actions/fingerprint-runtime@b890bb3f200c5fb9fee7a2a1647e08537a73bde0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        with:
+          platform: ios
+          profile: testflight
+          source-commit: ${{ github.event.pull_request.head.sha }}
+
+      - name: 🧬 Resolve Android runtime
+        id: android-runtime
+        uses: bluesky-social/github-actions/fingerprint-runtime@b890bb3f200c5fb9fee7a2a1647e08537a73bde0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        with:
+          platform: android
+          profile: testflight
+          source-commit: ${{ github.event.pull_request.head.sha }}
+
+      - name: 📋 Stage fingerprint reports
+        env:
+          IOS_REPORT: ${{ steps.ios-runtime.outputs.report-path }}
+          ANDROID_REPORT: ${{ steps.android-runtime.outputs.report-path }}
+        run: |
+          mkdir ota-release
+          cp "$IOS_REPORT" ota-release/ios-fingerprint.json
+          cp "$ANDROID_REPORT" ota-release/android-fingerprint.json
+
+      - name: 🏗️ Export exact PR head per native platform
+        env:
+          EXPO_PUBLIC_ENV: testflight
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE: ${{ steps.env.outputs.release-version }}
+          SENTRY_DIST: ${{ steps.env.outputs.bundle-identifier }}
+        run: |
+          EAS_BUILD_PLATFORM=ios pnpm exec expo export --platform ios --output-dir ota-release/dist-ios --dump-sourcemap
+          EAS_BUILD_PLATFORM=android pnpm exec expo export --platform android --output-dir ota-release/dist-android --dump-sourcemap
+
+      - name: 🧬 Re-resolve runtimes after export
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: |
+          node scripts/ota/resolve-runtime.mjs --platform ios --profile testflight --source-commit "${{ github.event.pull_request.head.sha }}" --output ota-release/ios-post-export.json
+          node scripts/ota/resolve-runtime.mjs --platform android --profile testflight --source-commit "${{ github.event.pull_request.head.sha }}" --output ota-release/android-post-export.json
+          test "$(jq -r .runtimeVersion ota-release/ios-fingerprint.json)" = "$(jq -r .runtimeVersion ota-release/ios-post-export.json)"
+          test "$(jq -r .runtimeVersion ota-release/android-fingerprint.json)" = "$(jq -r .runtimeVersion ota-release/android-post-export.json)"
+
+      - name: 🧾 Create structured release
+        env:
+          SOURCE_COMMIT: ${{ github.event.pull_request.head.sha }}
+          CHANNEL: pull-request-${{ github.event.pull_request.number }}
+          BUNDLE_VERSION: ${{ steps.publication.outputs.bundle-version }}
+        run: |
+          jq -n \
+            --arg sourceCommit "$SOURCE_COMMIT" \
+            --arg channel "$CHANNEL" \
+            --arg bundleVersion "$BUNDLE_VERSION" \
+            --arg iosRuntime "$(jq -r .runtimeVersion ota-release/ios-fingerprint.json)" \
+            --arg androidRuntime "$(jq -r .runtimeVersion ota-release/android-fingerprint.json)" \
+            '{schemaVersion: 1, sourceCommit: $sourceCommit, channel: $channel,
+              nativeProfile: "testflight", bundleVersion: $bundleVersion,
+              platforms: {
+                ios: {runtimeVersion: $iosRuntime, fingerprintReportRef: "ios-fingerprint.json", bundleDirectory: "dist-ios"},
+                android: {runtimeVersion: $androidRuntime, fingerprintReportRef: "android-fingerprint.json", bundleDirectory: "dist-android"}
+              }}' > ota-release/ota-export.json
+          node scripts/ota/validate-release.mjs --release-file ota-release/ota-export.json > ota-release/verification.json
+          jq -e '.valid == true' ota-release/verification.json >/dev/null
+
+      - name: ⬆️ Upload PR export evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fingerprint-pr-export-${{ github.event.pull_request.number }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ota-release/ota-export.json
+            ota-release/ios-fingerprint.json
+            ota-release/android-fingerprint.json
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: ☁️ Configure AWS credentials (denis, PR-scoped)
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          role-to-assume: arn:aws:iam::007404326489:role/denis-ci-publish-pr
+          aws-region: us-east-2
+          inline-session-policy: |-
+            {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"],
+                  "Resource": "arn:aws:s3:::bsky-denis-ota-prod/pr/${{ github.event.pull_request.number }}/*"
+                },
+                {
+                  "Effect": "Allow",
+                  "Action": "s3:ListBucket",
+                  "Resource": "arn:aws:s3:::bsky-denis-ota-prod",
+                  "Condition": {"StringLike": {"s3:prefix": "pr/${{ github.event.pull_request.number }}/*"}}
+                }
+              ]
+            }
+
+      - name: ⬇️ Setup structured denis CLI
+        uses: ./.github/actions/setup-denis
+        with:
+          release-tag: ${{ vars.OTA_FINGERPRINT_DENIS_VERSION }}
+          app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
+          private-key: ${{ secrets.SYNC_INTERNAL_PK }}
+
+      - name: 🚀 Publish structured OTA to denis
+        run: bash scripts/denisPublish.sh ota-release/ota-export.json
+        env:
+          DENIS_PUBLISH_MODE: structured
+
+  comment-pr-ota-fingerprint:
+    name: Comment fingerprint PR OTA install link
+    needs: publish-pr-ota-fingerprint
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - name: 💬 Drop OTA install comment
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
+        with:
+          header: pull-request-ota
+          message: |
+            The fingerprint OTA deployment for this PR was published. Expo will only offer it to a native build with the same platform runtime.
+
+            `bluesky://intent/apply-ota?channel=pull-request-${{ github.event.pull_request.number }}&sourceCommit=${{ github.event.pull_request.head.sha }}`
