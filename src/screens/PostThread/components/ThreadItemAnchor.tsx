@@ -452,7 +452,6 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                     columnGap: a.gap_lg.gap,
                   },
                   a.border_t,
-                  a.border_b,
                   a.mt_md,
                   a.py_md,
                   t.atoms.border_contrast_low,
