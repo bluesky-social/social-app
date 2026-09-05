@@ -35,6 +35,8 @@ module.exports = function (_config) {
   const UPDATES_ENABLED = IS_TESTFLIGHT || IS_PRODUCTION
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
+  const USE_FINGERPRINT_RUNTIME =
+    process.env.OTA_FINGERPRINT_PIPELINE_ENABLED === '1'
 
   const IOS_ICON_FILE =
     PLATFORM === 'web' // web build doesn't like .icon files
@@ -51,7 +53,7 @@ module.exports = function (_config) {
       scheme: 'bluesky',
       owner: 'blueskysocial',
       runtimeVersion: {
-        policy: 'appVersion',
+        policy: USE_FINGERPRINT_RUNTIME ? 'fingerprint' : 'appVersion',
       },
       icon: './assets/app-icons/ios_icon_default_next.png',
       userInterfaceStyle: 'automatic',
@@ -285,7 +287,7 @@ module.exports = function (_config) {
                 {
                   name: 'MCEmojiPicker',
                   git: 'https://github.com/bluesky-social/MCEmojiPicker.git',
-                  branch: 'main',
+                  commit: 'e2c2e4917df25c34d8cc6ca04918fe026588d828',
                 },
               ],
             },
