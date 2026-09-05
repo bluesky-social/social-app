@@ -1,0 +1,124 @@
+name: Version Bump on Release
+
+on:
+  # Fired by the App Store Connect webhook relay (a Cloudflare Worker) when the
+  # iOS app version state becomes READY_FOR_DISTRIBUTION. The Worker POSTs a
+  # repository_dispatch with event_type "asc-app-released".
+  repository_dispatch:
+    types: [asc-app-released]
+  # Allow manual runs for testing the bump/PR flow without a real release.
+  workflow_dispatch:
+
+# Serialize runs: Apple delivers the release webhook at least once, so two
+# near-simultaneous deliveries could otherwise race the dedup check against
+# branch creation. A single concurrency group forces them to run one at a time.
+concurrency:
+  group: version-bump-on-release
+  cancel-in-progress: false
+
+# Least privilege: we only need to push a branch (contents) and open a PR.
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  version-bump:
+    if: github.repository == 'bluesky-social/social-app'
+    name: 🔖 Open version-bump PR
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout main
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # repository_dispatch always runs on the default branch, but pin it
+          # explicitly so a manual workflow_dispatch from another ref still
+          # bumps from main.
+          ref: main
+
+      - name: 🪛 Setup jq
+        uses: dcarbone/install-jq-action@b7ef57d46ece78760b4019dbc4080a1ba2a40b45 # v3.2.0
+
+      - name: 🧮 Compute next version
+        id: version
+        run: |
+          # Release convention: package.json "version" is the version that just
+          # shipped; the next release is the next minor with patch reset.
+          CURRENT="$(jq -r '.version' package.json)"
+          NEXT="$(echo "$CURRENT" | jq -R -r 'split(".") | "\(.[0]).\(.[1] | tonumber + 1).0"')"
+          echo "Current version: $CURRENT"
+          echo "Next version: $NEXT"
+          echo "current=$CURRENT" >> "$GITHUB_OUTPUT"
+          echo "next=$NEXT" >> "$GITHUB_OUTPUT"
+          echo "branch=bot/version-bump-$NEXT" >> "$GITHUB_OUTPUT"
+
+      - name: 🔁 Skip if PR already open
+        id: dedup
+        # Apple may deliver the release webhook more than once. The branch name
+        # encodes the target version, so an existing open PR for that head means
+        # a previous delivery already handled this release - exit cleanly.
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.version.outputs.branch }}
+        run: |
+          EXISTING="$(gh pr list --state open --head "$BRANCH" --json number --jq 'length')"
+          if [ "$EXISTING" != "0" ]; then
+            echo "An open PR for $BRANCH already exists; nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: ✏️ Bump version in package.json
+        if: steps.dedup.outputs.skip == 'false'
+        env:
+          NEXT: ${{ steps.version.outputs.next }}
+        run: |
+          # jq --indent 2 matches the file's existing 2-space indentation, so
+          # the write-back only touches the "version" line. Verify that.
+          jq --indent 2 --arg v "$NEXT" '.version = $v' package.json > package.json.tmp
+          mv package.json.tmp package.json
+          # Abort if anything other than the single version line changed. numstat
+          # reports "<added>\t<removed>" per file; a clean bump is exactly one line
+          # added and one removed, so any jq reformatting elsewhere trips this.
+          CHANGED="$(git diff --numstat package.json | awk '{print $1"+"$2}')"
+          if [ "$CHANGED" != "1+1" ]; then
+            echo "Unexpected diff in package.json (expected exactly one changed line):"
+            git diff package.json
+            exit 1
+          fi
+
+      - name: 📤 Create branch, commit and open PR
+        if: steps.dedup.outputs.skip == 'false'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          NEXT: ${{ steps.version.outputs.next }}
+          CURRENT: ${{ steps.version.outputs.current }}
+          BRANCH: ${{ steps.version.outputs.branch }}
+          NEW_STATE: ${{ github.event.client_payload.newState }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add package.json
+          git commit -m "bump version to $NEXT"
+          git push --set-upstream origin "$BRANCH"
+          # NOTE: creating a PR with the default GITHUB_TOKEN requires the org/repo
+          # setting "Allow GitHub Actions to create and approve pull requests" to
+          # be enabled (Settings > Actions > General). If it is off, this step
+          # fails with "GitHub Actions is not permitted to create or approve pull
+          # requests" - enable that setting rather than adding a PAT secret.
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "bump version to $NEXT" \
+            --body "$(cat <<EOF
+          Automated version bump.
+
+          Triggered by the App Store Connect release webhook (\`asc-app-released\`, newState: \`${NEW_STATE:-manual dispatch}\`), which fires when the iOS app reaches \`READY_FOR_DISTRIBUTION\`.
+
+          - Released version: \`$CURRENT\`
+          - New version: \`$NEXT\`
+
+          This bumps the minor version and resets the patch, per the release convention. The version flows into \`app.config.js\` (Expo version + OTA \`runtimeVersion\` appVersion policy).
+          EOF
+          )"
