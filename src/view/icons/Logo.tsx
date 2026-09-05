@@ -40,7 +40,7 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       <Image
         source={
           isJapanLogo
-            ? require('../../../assets/icons/custom_logo_japan.svg')
+            ? require('../../../assets/icons/custom/custom_logo_japan.svg')
             : size > 100
               ? require('../../../assets/kawaii.png')
               : require('../../../assets/kawaii_smol.png')

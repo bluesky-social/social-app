@@ -42,8 +42,8 @@ import {
   Bell_Stroke2_Corner0_Rounded as BellIcon,
 } from '#/components/icons/Bell'
 import {
-  Bookmark as BookmarkIcon,
-  BookmarkFilled as BookmarkFilledIcon,
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilledIcon,
+  Bookmark_Stroke2_Corner0_Rounded as BookmarkIcon,
 } from '#/components/icons/Bookmark'
 import {
   BulletList_Filled_Corner0_Rounded as ListFilledIcon,
