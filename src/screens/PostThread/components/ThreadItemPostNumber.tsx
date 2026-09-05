@@ -5,6 +5,9 @@ import {atoms as a, ios, platform, useTheme} from '#/alf'
 import {useNativeFontScale} from '#/alf/util/dimensions'
 import {type app} from '#/lexicons'
 
+/**
+ * Map of Android font scale values to inline offsets.
+ */
 const ANDROID_INLINE_OFFSETS = [
   [0.85, 2],
   [1, 4],
