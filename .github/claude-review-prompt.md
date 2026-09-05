@@ -47,6 +47,10 @@ Apply these checks only where the diff makes them relevant:
 
 - Shared React Native code must work on iOS, Android, and Web. Check platform
   files and guard browser-only or native-only APIs appropriately.
+- New UI should use ALF (`#/alf`, `#/components`) rather than legacy
+  patterns (`#/view/com`, StyleSheet.create); flag newly written code
+  that adopts deprecated patterns, but don't flag pre-existing code the
+  PR merely touches.
 - Make sure any added tests provide long-term value. A test lacks long-term
   value when it merely restates the implementation, tests framework or library
   behavior, depends on incidental structure or copy, or duplicates coverage
