@@ -5,6 +5,9 @@ import {impactAsync, ImpactFeedbackStyle} from 'expo-haptics'
 import {useHapticsDisabled} from '#/state/preferences/disable-haptics'
 import {IS_IOS, IS_WEB} from '#/env'
 
+/**
+ * @deprecated use `useHapticFeedback` instead
+ */
 export function useHaptics() {
   const isHapticsDisabled = useHapticsDisabled()
 
@@ -18,7 +21,7 @@ export function useHaptics() {
       const style = IS_IOS
         ? ImpactFeedbackStyle[strength]
         : ImpactFeedbackStyle.Light
-      impactAsync(style)
+      void impactAsync(style)
 
       // DEV ONLY - show a toast when a haptic is meant to fire on simulator
       if (__DEV__ && !Device.isDevice) {
