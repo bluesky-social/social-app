@@ -112,8 +112,6 @@ export function InviteFriendsDialogInner({
 
   const onScan = () => {
     ax.metric('invite:action:scan', {})
-    // Close dialog first, then navigate (control.close callback per CLAUDE.md
-    // Dialog footgun rule — prevents race with the navigation push).
     control.close(() => {
       navigation.navigate('InviteScanner')
     })
