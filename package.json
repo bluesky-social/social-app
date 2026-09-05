@@ -270,7 +270,7 @@
     "@babel/runtime": "^7.26.0",
     "@crowdin/cli": "^4.14.1",
     "@lingui/babel-plugin-lingui-macro": "^5.9.2",
-    "@lingui/cli": "^5.9.2",
+    "@lingui/cli": "^6.6.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@react-native/babel-preset": "0.86.0",
     "@react-native/jest-preset": "0.86.0",
