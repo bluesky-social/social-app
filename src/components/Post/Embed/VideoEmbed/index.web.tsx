@@ -10,6 +10,8 @@ import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
+import {createPlaybackDurationTracker} from '#/lib/media/video/analytics'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {atoms as a, useTheme} from '#/alf'
 import {useIsWithinMessage} from '#/components/dms/MessageContext'
@@ -63,6 +65,33 @@ export function VideoEmbed({
   const isGif = embed.presentation === 'gif'
   // GIFs don't participate in the "one video at a time" system
   const active = isGif || activeFromContext
+  const [durationTracker] = useState(() => {
+    const tracker = createPlaybackDurationTracker({
+      onSegment: segment => {
+        ax.metric('video:playback:duration', {
+          ...segment,
+          postUri: post?.uri,
+          postAuthorDid: post?.author.did,
+          context: 'embed',
+          presentation: isGif ? 'gif' : 'video',
+        })
+      },
+    })
+    tracker.setForeground(getCurrentState() === 'active')
+    return tracker
+  })
+
+  useOnAppStateChange(state => {
+    durationTracker.setForeground(state === 'active')
+  })
+
+  useEffect(() => {
+    durationTracker.setActive(active && onScreen)
+  }, [active, durationTracker, onScreen])
+
+  useEffect(() => {
+    return () => durationTracker.flush('unmounted')
+  }, [durationTracker])
 
   useEffect(() => {
     if (!meaningfullyVisible || impressionTrackedRef.current) return
@@ -214,6 +243,14 @@ export function VideoEmbed({
                 autoplay,
               })
             }}
+            onPlaybackProgress={progressSeconds => {
+              durationTracker.observeProgress(progressSeconds)
+            }}
+            onPlaybackStateChange={state => {
+              durationTracker.setBuffering(state === 'buffering')
+              durationTracker.setPlaying(state === 'playing')
+            }}
+            onPlaybackEnd={() => durationTracker.flush('ended')}
           />
         </OnlyNearScreen>
       </ErrorBoundary>
