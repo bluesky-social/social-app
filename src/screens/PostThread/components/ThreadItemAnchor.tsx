@@ -453,7 +453,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   },
                   a.border_t,
                   a.mt_md,
-                  a.py_md,
+                  a.py_sm,
                   t.atoms.border_contrast_low,
                 ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
@@ -518,10 +518,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             <KnownLikers
               post={post}
               feature={Features.PostThreadKnownLikersEnable}
+              outerStyle={[a.pt_xs, a.pb_sm]}
             />
             <View
               style={[
-                a.pt_sm,
                 a.pb_2xs,
                 {
                   marginLeft: -5,
