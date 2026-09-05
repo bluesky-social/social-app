@@ -1,5 +1,11 @@
 import {type Schema} from './schema'
 
+/**
+ * A value to persist, or a function that derives one from the freshest
+ * persisted value while the write operation is in progress.
+ */
+export type PersistedWriteValue<T> = T | ((latest: T) => T)
+
 export type PersistedApi = {
   init(): Promise<void>
   get<K extends keyof Schema>(key: K): Schema[K]
@@ -12,7 +18,10 @@ export type PersistedApi = {
    * it is identical to {@link get} (single-instance, no other writer).
    */
   readLatest<K extends keyof Schema>(key: K): Schema[K]
-  write<K extends keyof Schema>(key: K, value: Schema[K]): Promise<void>
+  write<K extends keyof Schema>(
+    key: K,
+    value: PersistedWriteValue<Schema[K]>,
+  ): Promise<void>
   onUpdate<K extends keyof Schema>(
     key: K,
     cb: (v: Schema[K]) => void,
