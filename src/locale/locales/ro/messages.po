@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:19\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -25,7 +25,7 @@ msgstr "Categoria „{interestsDisplayName}” (activă)"
 
 #: src/screens/ModerationInbox/index.tsx:190
 msgid "“{label}” – shown behind a warning"
-msgstr ""
+msgstr "„{label}” – afișat în spatele unui avertisment"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -211,7 +211,7 @@ msgstr "{0, plural, one {postare} few {postări} other {de postări}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
-msgstr "{0, plural, one {} few {# persoane s-au}other {# de persoane s-au}} alăturat la Bluesky folosind acest pachet de pornire!"
+msgstr ""
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:354
@@ -527,7 +527,7 @@ msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt ut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} și <0>{additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}}</0> s-au înscris folosind pachetul tău de început"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr "{firstAuthorLink} v-a repostat repostarea"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} s-a înregistrat cu pachetul dvs. de pornire"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -579,7 +579,7 @@ msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utili
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {{formattedAuthorsCount} și un alt utilizator} few {{formattedAuthorsCount} și alți utilizatori} other {{formattedAuthorsCount} și alși utlizatori}} v-au urmărit prin pachetul de pornire {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -607,7 +607,7 @@ msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utili
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} și {additionalAuthorsCount, plural, one {un alt utilizator} few {alți {formattedAuthorsCount} utilizatori} other {alți {formattedAuthorsCount} de utilizatori}} s-au înregistrat cu pachetul dvs. de pornire"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -623,11 +623,11 @@ msgstr "{firstAuthorName} v-a urmărit înapoi"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr "{firstAuthorName} v-au urmărit prin pachetul de pornire {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} v-a urmărit prin pachetul de pornire {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -655,7 +655,7 @@ msgstr "{firstAuthorName} v-a repostat repostarea"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} s-a înregistrat cu pachetul dvs. de pornire"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "{following} urmăriți"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {postare} few {postări} other {de postări}}"
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# oră } few {# ore} other {# de ore}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -755,7 +755,7 @@ msgstr "Fluxurile și persoanele preferate ale lui {name} - alăturați-vă!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}'s starter pack"
-msgstr "Pachetul de pornire al lui {name}"
+msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -771,12 +771,12 @@ msgstr "{profileName} s-a alăturat la Bluesky cu {timeAgoString} în urmă"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "{profileName} s-a alăturat la Bluesky folosind un pachet de pornire cu {timeAgoString} în urmă"
+msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -838,7 +838,7 @@ msgstr "+{computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} sunt incluși în pachetul dvs. de pornire"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {un alt utilizator} few {al�
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>și {2, plural, one {un alt utilizator} few {alți # utilizatori} other {alți # de utilizatori}} sunt incluși în pachetul dvs. de pornire"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr "<0>{0}</0> {likeCount, plural, one {apreciere} few {aprecieri} other {de
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> și<1> </1><2>{1} </2>sunt incluși în pachetul dvs. de pornire"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> este inclus în pachetul dvs. de pornire"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr "<0>Atingeți aici pentru a vă actualiza locația cu GPS-ul.</0>"
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Dvs.</0> și<1> </1><2>{0} </2> sunteți incluși în pachetul dvs. de pornire"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -959,7 +959,7 @@ msgstr "O colecție de fluxuri populare pe care le puteți găsi pe Bluesky, inc
 #: src/screens/ModerationInbox/index.tsx:194
 msgctxt "moderation-report-action"
 msgid "A label was added to your post"
-msgstr ""
+msgstr "A fost adăugată o etichetă postări dvs."
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/components/dms/getReactionInfo.ts:58
@@ -1174,7 +1174,7 @@ msgstr "Adăugați încă {0} pentru a continua"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:64
 msgid "Add {displayName} to starter pack"
-msgstr "Adăugați {displayName} la pachetul de pornire"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1312,7 +1312,7 @@ msgstr "Adăugați fluxuri recomandate"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "Adăugați niște fluxuri la pachetul de pornire!"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1339,7 +1339,7 @@ msgstr "Adăugare la postările salvate"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to starter packs"
-msgstr "Adăugare la pachete de pornire"
+msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1365,7 +1365,7 @@ msgstr "Adăugat la listă"
 
 #: src/components/dialogs/StarterPackDialog.tsx:271
 msgid "Added to starter pack"
-msgstr "Adăugat la pachetul de pornire"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:224
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:229
@@ -1622,7 +1622,7 @@ msgstr "A apărut o eroare în timpul preluării fluxului."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "A apărut o eroare la generarea pachetului de pornire. Doriți să încercați din nou?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr "Sunteți sigur că doriți să ștergeți acest mesaj? Mesajul va fi șt
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Sunteți sigur că doriți să ștergeți acest pachet de pornire?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2060,7 +2060,7 @@ msgstr "Creator de avatar"
 
 #: src/screens/ModerationInbox/index.tsx:102
 msgid "Awaiting review"
-msgstr ""
+msgstr "În așteptarea examinării"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2099,7 +2099,7 @@ msgstr "Înapoi la conversații"
 
 #: src/screens/ModerationInbox/index.tsx:198
 msgid "Ban evasion – {duration}, now expired"
-msgstr ""
+msgstr "Evitarea interdicției – {duration}, expirată acum"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:218
 msgid "Banned activities or security violations"
@@ -2139,7 +2139,7 @@ msgstr "Înainte de a crea o postare sau un răspuns, trebuie să vă verificaț
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Înainte de a crea un pachet de pornire, trebuie să vă verificați mai întâi e-mailul."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2342,7 +2342,7 @@ msgstr "Bluesky Classic™"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:36
 msgid "Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension."
-msgstr ""
+msgstr "Bluesky a luat măsuri asupra contului sau conținutului dvs. pentru încălcarea regulilor comunității noastre. Alte încălcări vor duce la măsuri mai stricte, inclusiv suspendarea."
 
 #: src/components/contacts/screens/GetContacts.tsx:237
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
@@ -2452,25 +2452,25 @@ msgstr "Răsfoiți mai multe sugestii pe pagina Explorare"
 msgid "Browse other feeds"
 msgstr "Răsfoiți alte fluxuri"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr "Răsfoiți postări despre {displayName}"
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr "Răsfoiți postări etichetate cu {displayName}"
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
-msgstr "Răsfoiți pachetul de pornire {displayName}"
+msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr "Răsfoiți subiectul {0}"
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr "Răsfoiți subiectul {displayName}"
 
@@ -2723,7 +2723,7 @@ msgstr "Modificări salvate"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:163
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr "Modificările la pachetul de pornire nu se vor reflecta în listă după creare. Lista va fi o copie independentă."
+msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:515
@@ -3508,7 +3508,7 @@ msgstr "Copiere link profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:652
 msgid "Copy link to starter pack"
-msgstr "Copiere link pachet de pornire"
+msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:196
 #: src/components/dms/MessageContextMenu.tsx:200
@@ -3663,17 +3663,17 @@ msgstr "Creați o listă"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Create a list from this starter pack"
-msgstr "Creați o listă din acest pachet de pornire"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
-msgstr "Creați un cod QR pentru un pachet de pornire"
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:566
 msgid "Create a starter pack"
-msgstr "Creați un pachet de pornire"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
@@ -3682,7 +3682,7 @@ msgstr "Creați un pachet de pornire"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
-msgstr "Creați un pachet de pornire pentru mine"
+msgstr ""
 
 #: src/components/WelcomeModal.tsx:156
 #: src/components/WelcomeModal.tsx:164
@@ -3709,7 +3709,7 @@ msgstr "Creați un cont"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this starter pack"
-msgstr "Creați un cont fără a utiliza acest pachet de pornire"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3735,7 +3735,7 @@ msgstr "Creare listă de la membri"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:147
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:151
 msgid "Create list from starter pack"
-msgstr "Creare listă din pachet de pornire"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3761,7 +3761,7 @@ msgstr "Creați un raport pentru {0}"
 #: src/components/dialogs/StarterPackDialog.tsx:105
 #: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "Create starter pack"
-msgstr "Creare pachet de pornire"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -3947,11 +3947,11 @@ msgstr "Ștergere postare"
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 #: src/screens/StarterPack/StarterPackScreen.tsx:870
 msgid "Delete starter pack"
-msgstr "Ștergere pachet de pornire"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "Ștergeți pachetul de pornire?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4041,7 +4041,7 @@ msgstr "Luminozitate redusă"
 #: src/screens/ModerationInbox/index.tsx:116
 msgctxt "moderation-report-subject"
 msgid "Direct message from {account}"
-msgstr ""
+msgstr "Mesaj direct de la {account}"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:382
 #: src/screens/Messages/components/InviteLinkDialog.tsx:387
@@ -4128,7 +4128,7 @@ msgstr "Deconectare conversație Germ"
 #: src/lib/strings/feed-names.ts:16
 msgctxt "feed-name"
 msgid "Discover"
-msgstr ""
+msgstr "Descoperiți"
 
 #: src/screens/Search/Explore.tsx:445
 msgid "Discover feeds"
@@ -4487,7 +4487,7 @@ msgstr "Editare profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 msgid "Edit starter pack"
-msgstr "Editare pachet de pornire"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4504,7 +4504,7 @@ msgstr "Editați cine poate răspunde"
 
 #: src/Navigation.tsx:571
 msgid "Edit your starter pack"
-msgstr "Editați-vă pachetul de pornire"
+msgstr ""
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -4709,7 +4709,7 @@ msgstr "Introduceți-vă numele de utilizator și parola"
 msgid "Enters full screen"
 msgstr "Intrați în modul Ecran complet"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr "Divertisment"
 
@@ -4937,7 +4937,7 @@ msgstr "Adăugarea în listă a eșuat"
 
 #: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Failed to add to starter pack"
-msgstr "Adăugarea la pachetul de pornire a eșuat"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -4965,7 +4965,7 @@ msgstr "Crearea linkului de invitație a eșuat"
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "Creare pachetului de pornire a eșuat"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "Ștergerea postării a eșuat, vă rugăm să încercați din nou"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "Ștergerea pachetului de pornire a eșuat"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5136,7 +5136,7 @@ msgstr "Eliminarea din listă a eșuat"
 
 #: src/components/dialogs/StarterPackDialog.tsx:290
 msgid "Failed to remove from starter pack"
-msgstr "Nu s-a putut elimina din pachetul de pornire"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5312,7 +5312,7 @@ msgstr "Fluxuri"
 
 #: src/view/com/home/HomeHeader.tsx:37
 msgid "Feeds ✨"
-msgstr ""
+msgstr "Fluxuri ✨"
 
 #: src/screens/SavedFeeds.tsx:227
 #: src/screens/SavedFeeds.tsx:398
@@ -5345,7 +5345,7 @@ msgstr "Filtrare din fluxuri"
 
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:41
 msgid "Filter moderation reports (currently: {currentLabel})"
-msgstr ""
+msgstr "Filtrare rapoarte de moderare (în prezent: {currentLabel})"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
@@ -5731,7 +5731,7 @@ msgstr "De la aceste persoane"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Generați un pachet de pornire"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -5775,7 +5775,7 @@ msgstr "Obțineți ajutor"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for starter pack joins, verification, and other activity."
-msgstr "Primiți notificări pentru înscrieri cu pachetele de pornire, verificări și alte activități."
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -5998,7 +5998,7 @@ msgstr "Acordați acces"
 #: src/screens/ModerationInbox/index.tsx:140
 msgctxt "moderation-report-label"
 msgid "Graphic media"
-msgstr ""
+msgstr "Conținut media grafic"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -6133,7 +6133,7 @@ msgstr "Vibrații"
 #: src/screens/ModerationInbox/index.tsx:136
 msgctxt "moderation-report-guideline"
 msgid "Harassment"
-msgstr ""
+msgstr "Hărțuire"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Harassment or hate"
@@ -6804,7 +6804,7 @@ msgstr "Link de invitație activat"
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this starter pack!"
-msgstr "Invitați persoane la acest pachet de pornire!"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6834,7 +6834,7 @@ msgstr "Este corect"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr "Acum doar <0>{0} </0> e aici! Adăugați mai multe persoane la pachetul dvs. de pornire căutând mai sus."
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7153,7 +7153,7 @@ msgstr "Apreciați 10 postări"
 #: src/state/shell/progress-guide.tsx:215
 #: src/state/shell/progress-guide.tsx:220
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Apreciați 10 postări pentru a instrui fluxul Descoperă"
+msgstr "Apreciați 10 postări pentru a instrui fluxul Descoperiți"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:560
 msgid "Like this feed"
@@ -7185,7 +7185,7 @@ msgstr "Apreciat de {0, plural, one {un utilizator} few {# utilizatori} other {#
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr "Apreciat de {0}"
 
@@ -7195,7 +7195,7 @@ msgstr "Apreciat de {0}"
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr "Apreciat de {0} și {1}"
 
@@ -7239,7 +7239,7 @@ msgstr "Listă"
 #: src/screens/ModerationInbox/index.tsx:107
 msgctxt "moderation-report-subject"
 msgid "List “{list}”"
-msgstr ""
+msgstr "Lista „{list}”"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -7504,7 +7504,7 @@ msgstr "Manual"
 
 #: src/screens/ModerationInbox/index.tsx:166
 msgid "Mark all actions as read"
-msgstr ""
+msgstr "Marcați toate acțiunile ca citite"
 
 #: src/screens/Messages/Inbox.tsx:311
 #: src/screens/Messages/Inbox.tsx:317
@@ -7522,7 +7522,7 @@ msgstr "Marcați toate conversațiile ca citite"
 
 #: src/screens/ModerationInbox/index.tsx:88
 msgid "Mark all reports as read"
-msgstr ""
+msgstr "Marcați toate raportările ca citite"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
@@ -7937,7 +7937,7 @@ msgstr "Fluxurile mele"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My starter pack"
-msgstr "Pachetul meu de pornire"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -7956,7 +7956,7 @@ msgstr "Navigare la {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:129
 msgid "Navigate to starter pack"
-msgstr "Navigați la pachetul de pornire"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8112,7 +8112,7 @@ msgstr "Postare nouă de la {firstAuthorName} și {additionalAuthorsCount, plura
 
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "New starter pack"
-msgstr "Pachet de pornire nou"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "Cele mai noi răspunsuri primele"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Știri"
 
@@ -8170,7 +8170,7 @@ msgstr "Nu"
 
 #: src/screens/ModerationInbox/index.tsx:111
 msgid "No action taken"
-msgstr ""
+msgstr "Nu s-a luat nicio măsură"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8479,7 +8479,7 @@ msgstr "Notă: Această postare este vizibilă numai pentru utilizatorii conecta
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:67
 msgid "Nothing on your account is restricted right now. Strikes from violations come off your record over time."
-msgstr ""
+msgstr "În acest moment, nu există nicio restricție aplicată contului dvs. Avertismentele primite pentru încălcări sunt eliminate din istoricul dvs. în timp."
 
 #: src/screens/Bookmarks.tsx:290
 msgid "Nothing saved yet"
@@ -8569,7 +8569,7 @@ msgstr "Activată"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
 msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
-msgstr "Pe Bluesky, acest lucru înseamnă că postările dvs. vor apărea în fluxul „Descoperă” doar pentru persoanele care vă urmăresc. Alte aplicații pot alege să țină cont de această preferință în propriile sisteme de recomandare bazate pe algoritmi."
+msgstr "Pe Bluesky, acest lucru înseamnă că postările dvs. vor apărea în fluxul „Descoperiți” doar pentru persoanele care vă urmăresc. Alte aplicații pot alege să țină cont de această preferință în propriile sisteme de recomandare bazate pe algoritmi."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
@@ -8811,7 +8811,7 @@ msgstr "Deschidere meniu distribuire"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Open starter pack menu"
-msgstr "Deschideți meniul pachetului de pornire"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -8827,7 +8827,7 @@ msgstr "Deschideți această conversație de grup"
 
 #: src/view/shell/desktop/Feeds.tsx:185
 msgid "Opens {displayName} feed"
-msgstr ""
+msgstr "Deschide fluxul {displayName}"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr "Vă rugăm să vă scrieți mesajul mai jos:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Politică"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Postare"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Postarea {index} din {count}"
@@ -9510,7 +9510,7 @@ msgstr "Postare blocată"
 #: src/screens/ModerationInbox/index.tsx:98
 msgctxt "moderation-report-subject"
 msgid "Post by {account}"
-msgstr ""
+msgstr "Postare de {account}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:272
@@ -9987,7 +9987,7 @@ msgstr "Eliminați pe {displayName} din conversația de grup"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:63
 msgid "Remove {displayName} from starter pack"
-msgstr "Eliminați pe {displayName} din pachetul de pornire"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10165,7 +10165,7 @@ msgstr "Eliminat din postări salvate"
 #: src/components/dialogs/StarterPackDialog.tsx:284
 #: src/components/StarterPack/Main/ProfilesList.tsx:169
 msgid "Removed from starter pack"
-msgstr "Eliminat din pachetul de pornire"
+msgstr ""
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:106
@@ -10196,7 +10196,7 @@ msgstr "Reînnoire cuvânt amuțit"
 #: src/view/com/posts/FeedShutdownMsg.tsx:134
 #: src/view/com/posts/FeedShutdownMsg.tsx:138
 msgid "Replace with Discover"
-msgstr "Înlocuiți cu Descoperă"
+msgstr "Înlocuiți cu Descoperiți"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -10340,7 +10340,7 @@ msgstr "Raport trimis"
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Report starter pack"
-msgstr "Raportare pachet de pornire"
+msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10381,7 +10381,7 @@ msgstr "Raportați această postare"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
-msgstr "Raportați acest pachet de pornire"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Report this user"
@@ -10568,7 +10568,7 @@ msgstr "Resetați-vă parola prin trimiterea unui cod la adresa dvs. de e-mail"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:27
 msgctxt "moderation-report-filter"
 msgid "Resolved"
-msgstr ""
+msgstr "Rezolvată"
 
 #: src/components/OTAChannelNotice.tsx:58
 msgid "Restore default"
@@ -10952,8 +10952,8 @@ msgstr "Vedeți locuri de muncă la Bluesky"
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr "Vedeți mai multe"
 
@@ -10961,8 +10961,8 @@ msgstr "Vedeți mai multe"
 msgid "See more suggested profiles"
 msgstr "Vedeți mai multe profiluri sugerate"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "Vizualizați mai multe subiecte în tendințe"
 
@@ -11432,11 +11432,11 @@ msgstr "Partajați această căutare"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Share this starter pack"
-msgstr "Distribuiți acest pachet de pornire"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Distribuiți acest pachet de pornire și ajutați oamenii să se alăture comunității dvs. pe Bluesky."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11479,7 +11479,7 @@ msgstr "Afișare"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:42
 msgid "Show account status"
-msgstr ""
+msgstr "Afișați starea contului"
 
 #: src/components/AltBadgeWithDialog.tsx:48
 msgid "Show alt text"
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Spam sau alt comportament inautentic sau înșelăciune"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Sport"
 
@@ -11962,24 +11962,24 @@ msgstr "Pachet de pornire"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:88
 msgid "Starter pack by {0}"
-msgstr "Pachet de pornire de {0}"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Starter pack by <0/>"
-msgstr "Pachet de pornire de <0/>"
+msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:87
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Starter pack by you"
-msgstr "Pachet de pornire de dvs."
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "Pachetul de pornire nu este valid"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
-msgstr "Pachete de pornire"
+msgstr ""
 
 #: src/screens/Search/Explore.tsx:658
 #: src/view/screens/Profile.tsx:241
@@ -11988,11 +11988,11 @@ msgstr "Pachete de pornire"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Pachetele de pornire vă permit să partajați cu ușurință fluxurile și persoanele preferate cu prietenii dvs."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
-msgstr "Pachetele de pornire vă permit să partajați cu ușurință fluxurile și persoanele preferate cu prietenii dvs."
+msgstr ""
 
 #: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
@@ -12380,7 +12380,7 @@ msgstr "Acesta conține următoarele:"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Acest pachet de pornire nu a putut fi găsit."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12428,11 +12428,11 @@ msgstr "Politica Privind Drepturile de Autor a fost mutată la <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:107
 msgid "The Discover feed"
-msgstr "Fluxul Descoperă"
+msgstr "Fluxul Descoperiți"
 
 #: src/state/shell/progress-guide.tsx:225
 msgid "The Discover feed now knows what you like"
-msgstr "Fluxul Descoperă știe acum ce vă place"
+msgstr "Fluxul Descoperiți știe acum ce vă place"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:324
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -12440,7 +12440,7 @@ msgstr "Experiența este mai bună în aplicație. Descărcați Bluesky acum și
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:70
 msgid "The feed has been replaced with Discover."
-msgstr "Fluxul a fost înlocuit cu Descoperă."
+msgstr "Fluxul a fost înlocuit cu Descoperiți."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to this post."
@@ -12515,7 +12515,7 @@ msgstr "Serverul pare să întâmpine probleme. Vă rugăm să încercați din n
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:860
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Pachetul de pornire pe care încercați să îl vizualizați este nevalid. În schimb, puteți șterge acest pachet de pornire."
+msgstr ""
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -12855,7 +12855,7 @@ msgstr "Acest flux este gol."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:104
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "Acest flux nu mai este online. În schimb, afișăm <0>Descoperă</0>."
+msgstr "Acest flux nu mai este online. În schimb, afișăm <0>Descoperiți</0>."
 
 #: src/screens/Messages/components/ChatLocked.tsx:76
 msgid "This group is locked by a moderation action on the owner"
@@ -13064,7 +13064,7 @@ msgstr "Acest videoclip nu poate fi previzualizat în browser-ul dvs. Va fi înc
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:156
 msgid "This will create a new list with the same name, description, and members as this starter pack."
-msgstr "Acest lucru va crea o listă nouă cu același nume, descriere, și membri ca acest pachet de pornire."
+msgstr ""
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13210,9 +13210,9 @@ msgstr "Traducerea în aceeaşi limbă nu este disponibilă pe dispozitivul dvs.
 msgid "Tree view"
 msgstr "Vizualizare arbore"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "În tendințe"
 
@@ -13221,9 +13221,9 @@ msgstr "În tendințe"
 msgid "Trending GIFs"
 msgstr "GIF-uri populare"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr "Opțiuni subiecte în tendințe"
 
@@ -13337,7 +13337,7 @@ msgstr "Imposibil de găsit destinatarul selectat."
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:17
 msgid "Unable to load your account"
-msgstr ""
+msgstr "Nu s-a putut încărca contul dvs."
 
 #: src/lib/strings/errors.ts:77
 msgid "Unable to resolve handle"
@@ -13407,7 +13407,7 @@ msgstr "Deblocare listă"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:23
 msgctxt "moderation-report-filter"
 msgid "Under review"
-msgstr ""
+msgstr "În curs de examinare"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
@@ -13597,7 +13597,7 @@ msgstr "Fixarea listei anulată"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:28
 msgctxt "moderation-report-filter"
 msgid "Unread"
-msgstr ""
+msgstr "Necitite"
 
 #: src/screens/Settings/Settings.tsx:503
 #: src/screens/Settings/Settings.tsx:505
@@ -13975,7 +13975,7 @@ msgstr "Versiune {0}"
 #. When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via starter pack <0/><1>{starterPackName}</1>"
-msgstr "prin pachetul de pornire <0/><1>{starterPackName}</1>"
+msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:123
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:189
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Videoclip de la {0}. Atingeți pentru a reda sau pentru a întrerupe videoclipul"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Jocuri video"
 
@@ -14222,7 +14222,7 @@ msgstr "Vizualizează videoclipul în modul imersiv"
 
 #: src/screens/ModerationInbox/index.tsx:181
 msgid "Violates community guideline: {guideline}"
-msgstr ""
+msgstr "Încalcă regulamentul comunității: {guideline}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
 msgid "Violence"
@@ -14302,7 +14302,7 @@ msgstr "Nu am putut încărca setările acestei conversații"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:18
 msgid "We couldn't load your account settings. Check your internet connection and try again."
-msgstr ""
+msgstr "Nu v-am putut încărca setările contului. Verificați-vă conexiunea la internet și încercați din nou."
 
 #: src/screens/Login/LoginForm.tsx:483
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
@@ -14512,7 +14512,7 @@ msgstr "Care sunt interesele dvs.?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "Cum doriți să vă numiți pachetul de pornire?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "De ce ar trebui revizuită această postare?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "De ce ar trebui revizuit acest pachet de pornire?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr "Da, ștergeți-mi contul"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Da, ștergeți acest pachet de pornire"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14925,7 +14925,7 @@ msgstr "Nu aveți liste."
 
 #: src/components/dialogs/StarterPackDialog.tsx:99
 msgid "You have no starter packs."
-msgstr "Nu aveți pachete de pornire."
+msgstr ""
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -14957,7 +14957,7 @@ msgstr "Aveți modificări nesalvate. Doriți să le salvați înainte de a vă 
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "Încă nu ați creat un pachet de pornire!"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -14987,7 +14987,7 @@ msgstr "V-ați alăturat la Bluesky cu {timeAgoString} în urmă"
 
 #: src/components/NewskieDialog.tsx:105
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "V-ați alăturat la Bluesky folosind un pachet de pornire cu {timeAgoString} în urmă"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15016,7 +15016,7 @@ msgstr "Trebuie să aveți cel puțin 13 ani pentru a utiliza Bluesky. Citiți <
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Trebuie să urmăriți cel puțin alte șapte persoane pentru a genera un pachet de pornire."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
@@ -15240,15 +15240,15 @@ msgstr "Contul dumneavoastră a fost suspendat"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:35
 msgid "Your account has repeated violations of our Community Guidelines. Another violation may result in your account being permanently suspended."
-msgstr ""
+msgstr "Contul dvs. a înregistrat încălcări repetate ale Regulile Comunității noastre. O nouă încălcare ar putea duce la suspendarea definitivă a contului."
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:32
 msgid "Your account has strikes on record"
-msgstr ""
+msgstr "Contul dvs. figurează cu avertismente."
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:31
 msgid "Your account is at risk of permanent suspension"
-msgstr ""
+msgstr "Contul tău este în pericol de suspendare permanentă"
 
 #: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -15393,7 +15393,7 @@ msgstr "Parola dvs. trebuie să aibă cel puțin 8 caractere."
 #: src/screens/ModerationInbox/index.tsx:177
 msgctxt "moderation-report-action"
 msgid "Your post was removed"
-msgstr ""
+msgstr "Postarea dvs. a fost eliminată"
 
 #: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
@@ -15431,7 +15431,7 @@ msgstr "Raportul dvs. va fi trimis la <0>{0}</0>."
 
 #: src/screens/ModerationInbox/index.tsx:46
 msgid "Your reports"
-msgstr ""
+msgstr "Rapoartele dvs."
 
 #: src/screens/Settings/InterestsSettings.tsx:64
 msgid "Your selected interests help us serve you content you care about."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: fi\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:18\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Finnish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -527,7 +527,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} ja <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} muu} other {{formattedAuthorsCount} muuta}}</0> rekisteröityivät aloituspakettisi avulla"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} rekisteröityi aloituspakettisi avulla"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -607,7 +607,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} ja {additionalAuthorsCount, plural, one {{formattedAuthorsCount} muu} other {{formattedAuthorsCount} muuta}} rekisteröityivät aloituspakettisi avulla"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -655,7 +655,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} rekisteröityi aloituspakettisi avulla"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "{following} seurattua"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr ""
@@ -775,8 +775,8 @@ msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr ""
 
@@ -838,7 +838,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>ja {2, plural, one {# muu} other {# muuta}} sisältyvät aloituspakettiisi"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "<0>{0}, </0><1>{1} </1>ja {2, plural, one {# muu} other {# muuta}} sisä
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>ja {2, plural, one {# muu} other {# muuta}} sisältyvät aloituspakettiisi"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> ja<1> </1><2>{1} </2>sisältyvät aloituspakettiisi"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> sisältyy aloituspakettiisi"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr ""
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Sinä</0> ja<1> </1><2>{0} </2>sisällytte aloituspakettiisi"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -1174,7 +1174,7 @@ msgstr "Lisää vielä {0} jatkaaksesi"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:64
 msgid "Add {displayName} to starter pack"
-msgstr "Lisää {displayName} aloituspakettiin"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1312,7 +1312,7 @@ msgstr "Lisää suositellut syötteet"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "Lisää syötteitä aloituspakettiisi!"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1622,7 +1622,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Aloituspakettiasi luotaessa tapahtui virhe. Haluatko yrittää uudelleen?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Haluatko varmasti poistaa tämän aloituspaketin?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2139,7 +2139,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Ennen aloituspaketin luomista sinun on vahvistettava sähköpostiosoitteesi."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2452,25 +2452,25 @@ msgstr "Selaa lisää ehdotuksia Explore-sivulla"
 msgid "Browse other feeds"
 msgstr "Selaa muita syötteitä"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr "Selaa julkaisuja aiheesta {displayName}"
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr "Selaa julkaisuja tunnisteella {displayName}"
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
 msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr "Selaa aihetta {displayName}"
 
@@ -3667,13 +3667,13 @@ msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
-msgstr "Luo QR-koodi aloituspaketille"
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:566
 msgid "Create a starter pack"
-msgstr "Luo aloituspaketti"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
@@ -3682,7 +3682,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
-msgstr "Luo aloituspaketti minulle"
+msgstr ""
 
 #: src/components/WelcomeModal.tsx:156
 #: src/components/WelcomeModal.tsx:164
@@ -3947,11 +3947,11 @@ msgstr "Poista julkaisu"
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 #: src/screens/StarterPack/StarterPackScreen.tsx:870
 msgid "Delete starter pack"
-msgstr "Poista aloituspaketti"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "Poistetaanko aloituspaketti?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4487,7 +4487,7 @@ msgstr "Muokkaa profiilia"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 msgid "Edit starter pack"
-msgstr "Muokkaa aloituspakettia"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4504,7 +4504,7 @@ msgstr "Muokkaa, kuka voi vastata"
 
 #: src/Navigation.tsx:571
 msgid "Edit your starter pack"
-msgstr "Muokkaa aloituspakettiasi"
+msgstr ""
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -4709,7 +4709,7 @@ msgstr "Syötä käyttäjätunnuksesi ja salasanasi"
 msgid "Enters full screen"
 msgstr ""
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr ""
 
@@ -4965,7 +4965,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "Aloituspaketin luominen epäonnistui"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "Julkaisun poistaminen epäonnistui, yritä uudelleen"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "Aloituspaketin poistaminen epäonnistui"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5731,7 +5731,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Generoi aloituspaketti"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -6804,7 +6804,7 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this starter pack!"
-msgstr "Kutsu käyttäjiä tähän aloituspakettiin!"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -7185,7 +7185,7 @@ msgstr "Tykännyt {0, plural, one {# käyttäjä} other {# käyttäjää}}"
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr ""
 
@@ -7195,7 +7195,7 @@ msgstr ""
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr ""
 
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "Uusimmat vastaukset ensin"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Uutiset"
 
@@ -8811,7 +8811,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Open starter pack menu"
-msgstr "Avaa aloituspaketin valikko"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr ""
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Politiikka"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Julkaise"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
@@ -9987,7 +9987,7 @@ msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:63
 msgid "Remove {displayName} from starter pack"
-msgstr "Poista {displayName} aloituspaketista"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10340,7 +10340,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Report starter pack"
-msgstr "Ilmianna aloituspaketti"
+msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10381,7 +10381,7 @@ msgstr "Ilmianna tämä julkaisu"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
-msgstr "Ilmianna tämä aloituspaketti"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Report this user"
@@ -10952,8 +10952,8 @@ msgstr "Katso Blueskyn työpaikat"
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr ""
 
@@ -10961,8 +10961,8 @@ msgstr ""
 msgid "See more suggested profiles"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr ""
 
@@ -11432,11 +11432,11 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Share this starter pack"
-msgstr "Jaa tämä aloituspaketti"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Jaa tämä aloituspaketti ja auta muita liittymään yhteisöösi Blueskyssa."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr ""
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Urheilu"
 
@@ -11962,20 +11962,20 @@ msgstr "Aloituspaketti"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:88
 msgid "Starter pack by {0}"
-msgstr "Aloituspaketti käyttäjältä {0}"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Starter pack by <0/>"
-msgstr "Aloituspaketti käyttäjältä <0/>"
+msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:87
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Starter pack by you"
-msgstr "Oma aloituspakettisi"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "Aloituspaketti on virheellinen"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
@@ -11988,7 +11988,7 @@ msgstr "Aloituspaketit"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Aloituspakettien avulla voit jakaa helposti suosikkisyötteesi ja -käyttäjäsi kavareillesi."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
@@ -12380,7 +12380,7 @@ msgstr "Se sisältää seuraavaa:"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Tätä aloituspakettia ei löydy."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12515,7 +12515,7 @@ msgstr "Palvelin näyttää kärsivän ongelmista. Yritä hetken kuluttua uudell
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:860
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Aloituspaketti, jonka yritit näyttää, on virheellinen. Voit sen sijaan poistaa tämän aloituspaketin."
+msgstr ""
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -13210,9 +13210,9 @@ msgstr ""
 msgid "Tree view"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "Trendaavat"
 
@@ -13221,9 +13221,9 @@ msgstr "Trendaavat"
 msgid "Trending GIFs"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr ""
 
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr ""
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Videopelit"
 
@@ -14512,7 +14512,7 @@ msgstr "Mitkä ovat kiinnostuksenkohteesi?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "Millä nimellä haluat kutsua aloituspakettiasi?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "Miksi tämä julkaisu tulisi arvioida?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "Miksi tämä aloituspaketti tulisi arvioida?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Kyllä, poista tämä aloituspaketti"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14957,7 +14957,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "Et ole luonut vielä aloituspakettia!"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -15016,7 +15016,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Sinun on seurattava ainakin seitsemää muuta käyttäjää, jotta voit luoda aloituspaketin."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92

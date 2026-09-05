@@ -662,8 +662,8 @@ msgstr ""
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 
@@ -689,7 +689,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -770,8 +770,8 @@ msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr ""
 
@@ -2447,25 +2447,25 @@ msgstr ""
 msgid "Browse other feeds"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
 msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr ""
 
@@ -4704,7 +4704,7 @@ msgstr ""
 msgid "Enters full screen"
 msgstr ""
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr ""
 
@@ -7180,7 +7180,7 @@ msgstr ""
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr "Liked by {0}"
 
@@ -7190,7 +7190,7 @@ msgstr "Liked by {0}"
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr "Liked by {0} and {1}"
 
@@ -8125,7 +8125,7 @@ msgid "Newest replies first"
 msgstr ""
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr ""
 
@@ -9455,7 +9455,7 @@ msgid "Please write your message below:"
 msgstr ""
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr ""
 
@@ -9474,7 +9474,7 @@ msgid "Post"
 msgstr ""
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Post {index} of {count}"
@@ -10947,8 +10947,8 @@ msgstr ""
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr ""
 
@@ -10956,8 +10956,8 @@ msgstr ""
 msgid "See more suggested profiles"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "See more trending topics"
 
@@ -11907,7 +11907,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr ""
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr ""
 
@@ -13205,9 +13205,9 @@ msgstr "Translation to the same language is unavailable on your device."
 msgid "Tree view"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr ""
 
@@ -13216,9 +13216,9 @@ msgstr ""
 msgid "Trending GIFs"
 msgstr "Trending GIFs"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr ""
 
@@ -13996,7 +13996,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr ""
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr ""
 

@@ -8,7 +8,7 @@ msgstr ""
 "Language: fr\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:18\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: French\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -25,7 +25,7 @@ msgstr "Catégorie « {interestsDisplayName} » (active)"
 
 #: src/screens/ModerationInbox/index.tsx:190
 msgid "“{label}” – shown behind a warning"
-msgstr ""
+msgstr "« {label} » – visible mais derrière un avertissement"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -211,7 +211,7 @@ msgstr "{0, plural, one {post} other {posts}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
-msgstr "{0, plural, one {# personne a} other {# personnes ont}} rejoint Bluesky via ce kit de démarrage !"
+msgstr ""
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:354
@@ -527,7 +527,7 @@ msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} et <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}}</0> se sont inscrits avec votre kit de démarrage"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr "{firstAuthorLink} a republié votre repost"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} s’est inscrit·e avec votre kit de démarrage"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -579,7 +579,7 @@ msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} se sont abonné·e·s à votre compte via le kit de démarrage {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -607,7 +607,7 @@ msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAut
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} et {additionalAuthorsCount, plural, one {{formattedAuthorsCount} autre compte} other {{formattedAuthorsCount} autres comptes}} se sont inscrits avec votre kit de démarrage"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -623,11 +623,11 @@ msgstr "{firstAuthorName} s’est abonné·e à votre compte en retour"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr "{firstAuthorName} s’est abonné·e à votre compte en retour via le kit de démarrage {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} s’est abonné·e à votre compte via le kit de démarrage {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -655,7 +655,7 @@ msgstr "{firstAuthorName} a republié votre repost"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} s’est inscrit·e avec votre kit de démarrage"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "{following} abonnements"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# heure} other {# heures}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -755,7 +755,7 @@ msgstr "Les fils d’actu et les personnes préférées de {name} – faites com
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}'s starter pack"
-msgstr "Kit de démarrage de {name}"
+msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -771,12 +771,12 @@ msgstr "{profileName} a rejoint Bluesky il y a {timeAgoString}"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "{profileName} a rejoint Bluesky à l’aide d’un kit de démarrage il y a {timeAgoString}"
+msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -838,7 +838,7 @@ msgstr "+ {computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} sont inclus dans votre kit de démarrage"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} so
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1} </1>et {2, plural, one {# autre} other {# autres}} font partie de votre kit de démarrage"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr "<0>{0}</0> {likeCount, plural, one {ont aimé} other {ont aimé}}"
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> et<1> </1><2>{1} </2>faites partie de votre kit de démarrage"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> fait partie de votre kit de démarrage"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr "<0>Tapez ici pour mettre à jour votre position via GPS.</0>"
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Vous</0> et<1> </1><2>{0} </2>faites partie de votre kit de démarrage"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -959,7 +959,7 @@ msgstr "Une collection de fils d’actu populaires que vous pouvez trouver sur B
 #: src/screens/ModerationInbox/index.tsx:194
 msgctxt "moderation-report-action"
 msgid "A label was added to your post"
-msgstr ""
+msgstr "Une étiquette a été ajoutée à votre post"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/components/dms/getReactionInfo.ts:58
@@ -1174,7 +1174,7 @@ msgstr "Ajouter {0} autres pour continuer"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:64
 msgid "Add {displayName} to starter pack"
-msgstr "Ajouter {displayName} au kit de démarrage"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1312,7 +1312,7 @@ msgstr "Ajouter les fils d’actu recommandés"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "Ajoutez des fils d’actu à votre kit de démarrage !"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1339,7 +1339,7 @@ msgstr "Ajouter aux posts conservés"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to starter packs"
-msgstr "Ajouter aux kits de démarrage"
+msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1365,7 +1365,7 @@ msgstr "Ajouté à la liste"
 
 #: src/components/dialogs/StarterPackDialog.tsx:271
 msgid "Added to starter pack"
-msgstr "Compte ajouté au kit de démarrage"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:224
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:229
@@ -1622,7 +1622,7 @@ msgstr "Une erreur s’est produite lors de la récupération du fil d’actu."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Une erreur s’est produite lors de la génération de votre kit de démarrage. Vous voulez réessayer ?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr "Êtes-vous sûr de vouloir supprimer ce message ? Ce message sera suppr
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Êtes-vous sûr de vouloir supprimer ce kit de démarrage ?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2060,7 +2060,7 @@ msgstr "Créateur d’avatar"
 
 #: src/screens/ModerationInbox/index.tsx:102
 msgid "Awaiting review"
-msgstr ""
+msgstr "En attente d’examen"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2099,7 +2099,7 @@ msgstr "Retour aux discussions"
 
 #: src/screens/ModerationInbox/index.tsx:198
 msgid "Ban evasion – {duration}, now expired"
-msgstr ""
+msgstr "Contournement de ban — {duration}, désormais expiré"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:218
 msgid "Banned activities or security violations"
@@ -2139,7 +2139,7 @@ msgstr "Veuillez vérifier votre e-mail avant de créer un post ou de répondre.
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Veuillez vérifier votre e-mail avant de créer un kit de démarrage."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2342,7 +2342,7 @@ msgstr "Bluesky Classic™"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:36
 msgid "Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension."
-msgstr ""
+msgstr "Bluesky a dû intervenir sur votre compte ou votre contenu, car vous n’avez pas respecté nos règles de bonne conduite. De nouvelles infractions pourront entraîner des sanctions plus importantes, pouvant aller jusqu’à la suspension du compte."
 
 #: src/components/contacts/screens/GetContacts.tsx:237
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
@@ -2452,25 +2452,25 @@ msgstr "Parcourir d’autres suggestions sur la page « Explorer »"
 msgid "Browse other feeds"
 msgstr "Parcourir d’autres fils d’actu"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr "Parcourir des posts qui parlent de {displayName}"
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr "Parcourir des posts avec le mot-clé {displayName}"
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
-msgstr "Parcourir le kit de démarrage {displayName}"
+msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr "Parcourir le sujet {0}"
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr "Parcourir le sujet {displayName}"
 
@@ -2723,7 +2723,7 @@ msgstr "Modifications enregistrées"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:163
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr "Les changements ultérieurs dans ce kit de démarrage ne seront pas répercutés sur la liste après sa création. La liste sera une copie indépendante."
+msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:515
@@ -3508,7 +3508,7 @@ msgstr "Copier le lien vers le profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:652
 msgid "Copy link to starter pack"
-msgstr "Copier le lien vers le kit de démarrage"
+msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:196
 #: src/components/dms/MessageContextMenu.tsx:200
@@ -3663,17 +3663,17 @@ msgstr "Créer une liste"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Create a list from this starter pack"
-msgstr "Créer une liste à partir de ce kit de démarrage"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
-msgstr "Créer un code QR pour un kit de démarrage"
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:566
 msgid "Create a starter pack"
-msgstr "Créer un kit de démarrage"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
@@ -3682,7 +3682,7 @@ msgstr "Créer un kit de démarrage"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
-msgstr "Créer un kit de démarrage pour moi"
+msgstr ""
 
 #: src/components/WelcomeModal.tsx:156
 #: src/components/WelcomeModal.tsx:164
@@ -3709,7 +3709,7 @@ msgstr "Créer un compte"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this starter pack"
-msgstr "Créer un compte sans utiliser ce kit de démarrage"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3735,7 +3735,7 @@ msgstr "Créer une liste avec ces membres"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:147
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:151
 msgid "Create list from starter pack"
-msgstr "Créer une liste à partir d’un kit de démarrage"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3761,7 +3761,7 @@ msgstr "Créer un signalement pour {0}"
 #: src/components/dialogs/StarterPackDialog.tsx:105
 #: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "Create starter pack"
-msgstr "Créer un kit de démarrage"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -3947,11 +3947,11 @@ msgstr "Supprimer le post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 #: src/screens/StarterPack/StarterPackScreen.tsx:870
 msgid "Delete starter pack"
-msgstr "Supprimer le kit de démarrage"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "Supprimer le kit de démarrage ?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4041,7 +4041,7 @@ msgstr "Atténué"
 #: src/screens/ModerationInbox/index.tsx:116
 msgctxt "moderation-report-subject"
 msgid "Direct message from {account}"
-msgstr ""
+msgstr "Message privé de {account}"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:382
 #: src/screens/Messages/components/InviteLinkDialog.tsx:387
@@ -4128,7 +4128,7 @@ msgstr "Déconnecter de Germ DM"
 #: src/lib/strings/feed-names.ts:16
 msgctxt "feed-name"
 msgid "Discover"
-msgstr ""
+msgstr "Découvertes"
 
 #: src/screens/Search/Explore.tsx:445
 msgid "Discover feeds"
@@ -4487,7 +4487,7 @@ msgstr "Modifier le profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 msgid "Edit starter pack"
-msgstr "Modifier le kit de démarrage"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4504,7 +4504,7 @@ msgstr "Modifier qui peut répondre"
 
 #: src/Navigation.tsx:571
 msgid "Edit your starter pack"
-msgstr "Modifier votre kit de démarrage"
+msgstr ""
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -4634,7 +4634,7 @@ msgstr "Activer les tendances"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:155
 #: src/screens/Settings/ContentAndMediaSettings.tsx:169
 msgid "Enable trending videos in your Discover feed"
-msgstr "Activer les vidéos tendances dans votre fil Discover"
+msgstr "Activer les vidéos tendances dans votre fil Découvertes"
 
 #: src/screens/Moderation/index.tsx:455
 msgid "Enabled"
@@ -4709,7 +4709,7 @@ msgstr "Entrez votre pseudo et votre mot de passe"
 msgid "Enters full screen"
 msgstr "Passe en mode plein écran"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr "Divertissement"
 
@@ -4937,7 +4937,7 @@ msgstr "Échec de l’ajout à la liste"
 
 #: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Failed to add to starter pack"
-msgstr "Échec de l’ajout au kit de démarrage"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -4965,7 +4965,7 @@ msgstr "Échec de la création du lien d’invitation"
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "Échec de la création du kit de démarrage"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "Échec de la suppression du post, veuillez réessayer"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "Échec de la suppression du kit de démarrage"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5136,7 +5136,7 @@ msgstr "Échec du retrait de la liste"
 
 #: src/components/dialogs/StarterPackDialog.tsx:290
 msgid "Failed to remove from starter pack"
-msgstr "Échec du retrait du kit de démarrage"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5312,7 +5312,7 @@ msgstr "Fils d’actu"
 
 #: src/view/com/home/HomeHeader.tsx:37
 msgid "Feeds ✨"
-msgstr ""
+msgstr "Fils d’actu ✨"
 
 #: src/screens/SavedFeeds.tsx:227
 #: src/screens/SavedFeeds.tsx:398
@@ -5345,7 +5345,7 @@ msgstr "Filtrer des fils d’actu"
 
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:41
 msgid "Filter moderation reports (currently: {currentLabel})"
-msgstr ""
+msgstr "Filtrer les signalements de modération (actuellement : {currentLabel})"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
@@ -5731,7 +5731,7 @@ msgstr "De ces comptes"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Générer un kit de démarrage"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -5775,7 +5775,7 @@ msgstr "Obtenir de l’aide"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for starter pack joins, verification, and other activity."
-msgstr "Notifier quand quelqu’un s’inscrit avec un de vos kits de démarrage, quand votre compte est vérifié, etc."
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -5998,7 +5998,7 @@ msgstr "Autoriser l’accès"
 #: src/screens/ModerationInbox/index.tsx:140
 msgctxt "moderation-report-label"
 msgid "Graphic media"
-msgstr ""
+msgstr "Médias crus"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -6133,7 +6133,7 @@ msgstr "Haptiques"
 #: src/screens/ModerationInbox/index.tsx:136
 msgctxt "moderation-report-guideline"
 msgid "Harassment"
-msgstr ""
+msgstr "Harcèlement"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Harassment or hate"
@@ -6804,7 +6804,7 @@ msgstr "Lien d’invitation activé"
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this starter pack!"
-msgstr "Invitez les gens à ce kit de démarrage !"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6834,7 +6834,7 @@ msgstr "C’est correct"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr "Il n’y a que <0>{0}</0> pour l’instant ! Ajoutez d’autres personnes à votre kit de démarrage en effectuant une recherche ci-dessus."
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7153,7 +7153,7 @@ msgstr "Aimer 10 posts"
 #: src/state/shell/progress-guide.tsx:215
 #: src/state/shell/progress-guide.tsx:220
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Aimez 10 posts afin de former le fil d’actu « Discover »"
+msgstr "Aimez 10 posts afin de former le fil d’actu « Découvertes »"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:560
 msgid "Like this feed"
@@ -7185,7 +7185,7 @@ msgstr "Aimé par {0, plural, one {# compte} other {# comptes}}"
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr "Aimé par {0}"
 
@@ -7195,7 +7195,7 @@ msgstr "Aimé par {0}"
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr "Aimé par {0} et {1}"
 
@@ -7239,7 +7239,7 @@ msgstr "Liste"
 #: src/screens/ModerationInbox/index.tsx:107
 msgctxt "moderation-report-subject"
 msgid "List “{list}”"
-msgstr ""
+msgstr "Liste « {list} »"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -7504,7 +7504,7 @@ msgstr "Manuel"
 
 #: src/screens/ModerationInbox/index.tsx:166
 msgid "Mark all actions as read"
-msgstr ""
+msgstr "Marquer toutes les actions comme lues"
 
 #: src/screens/Messages/Inbox.tsx:311
 #: src/screens/Messages/Inbox.tsx:317
@@ -7522,7 +7522,7 @@ msgstr "Marquer toutes les discussions comme lues"
 
 #: src/screens/ModerationInbox/index.tsx:88
 msgid "Mark all reports as read"
-msgstr ""
+msgstr "Marquer tous les signalements comme lus"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
@@ -7937,7 +7937,7 @@ msgstr "Mes fils d’actu"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My starter pack"
-msgstr "Mon kit de démarrage"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -7956,7 +7956,7 @@ msgstr "Navigue vers {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:129
 msgid "Navigate to starter pack"
-msgstr "Accéder au kit de démarrage"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8112,7 +8112,7 @@ msgstr "Nouveaux posts de {firstAuthorName} et {additionalAuthorsCount, plural, 
 
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "New starter pack"
-msgstr "Nouveau kit de démarrage"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "Réponses les plus récentes en premier"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Actualités"
 
@@ -8170,7 +8170,7 @@ msgstr "Non"
 
 #: src/screens/ModerationInbox/index.tsx:111
 msgid "No action taken"
-msgstr ""
+msgstr "Aucune action prise"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8479,7 +8479,7 @@ msgstr "Note : Ce post n’est visible qu’aux personnes connectées."
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:67
 msgid "Nothing on your account is restricted right now. Strikes from violations come off your record over time."
-msgstr ""
+msgstr "Aucune restriction n’est actuellement appliquée à votre compte. Les avertissements liés aux sanctions passées disparaissent au bout d’un certain temps."
 
 #: src/screens/Bookmarks.tsx:290
 msgid "Nothing saved yet"
@@ -8569,7 +8569,7 @@ msgstr "Activé"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
 msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
-msgstr "Sur Bluesky, cela signifie que vos posts n’apparaîtront que sur le fil d’actu Discover des personnes qui sont abonnées à votre compte. Les autres applis peuvent également choisir de respecter cette préférence dans leurs propres algorithmes de recommandations."
+msgstr "Sur Bluesky, cela signifie que vos posts n’apparaîtront que sur le fil d’actu Découvertes des personnes qui sont abonnées à votre compte. Les autres applis peuvent également choisir de respecter cette préférence dans leurs propres algorithmes de recommandations."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
@@ -8811,7 +8811,7 @@ msgstr "Ouvrir le menu de partage"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Open starter pack menu"
-msgstr "Ouvrir le menu du kit de démarrage"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -8827,7 +8827,7 @@ msgstr "Ouvrir cette discussion de groupe"
 
 #: src/view/shell/desktop/Feeds.tsx:185
 msgid "Opens {displayName} feed"
-msgstr ""
+msgstr "Ouvre le fil d’actu {displayName}"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
@@ -8946,7 +8946,7 @@ msgstr "Ouvre ce profil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:798
 msgid "Opt out"
-msgstr ""
+msgstr "Se retirer"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:256
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:264
@@ -8965,11 +8965,11 @@ msgstr ""
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:83
 #: src/screens/StarterPack/StarterPackScreen.tsx:563
 msgid "Opt-out undone"
-msgstr ""
+msgstr "Retrait annulé"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 msgid "Opted out"
-msgstr ""
+msgstr "Retiré"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:82
 #: src/screens/StarterPack/StarterPackScreen.tsx:562
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr "Veuillez écrire votre message ci-dessous :"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Politique"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Post"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Post {index} sur {count}"
@@ -9510,7 +9510,7 @@ msgstr "Post bloqué"
 #: src/screens/ModerationInbox/index.tsx:98
 msgctxt "moderation-report-subject"
 msgid "Post by {account}"
-msgstr ""
+msgstr "Post de {account}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:272
@@ -9987,7 +9987,7 @@ msgstr "Supprimer {displayName} du groupe"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:63
 msgid "Remove {displayName} from starter pack"
-msgstr "Supprimer {displayName} du kit de démarrage"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10165,7 +10165,7 @@ msgstr "Retiré des posts conservés"
 #: src/components/dialogs/StarterPackDialog.tsx:284
 #: src/components/StarterPack/Main/ProfilesList.tsx:169
 msgid "Removed from starter pack"
-msgstr "Compte retiré du kit de démarrage"
+msgstr ""
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:106
@@ -10196,7 +10196,7 @@ msgstr "Reconduire le mot en sourdine"
 #: src/view/com/posts/FeedShutdownMsg.tsx:134
 #: src/view/com/posts/FeedShutdownMsg.tsx:138
 msgid "Replace with Discover"
-msgstr "Remplacer par Discover"
+msgstr "Remplacer par Découvertes"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -10340,7 +10340,7 @@ msgstr "Rapport envoyé"
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Report starter pack"
-msgstr "Signaler le kit de démarrage"
+msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10381,7 +10381,7 @@ msgstr "Signaler ce post"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
-msgstr "Signaler ce kit de démarrage"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Report this user"
@@ -10568,7 +10568,7 @@ msgstr "Réinitialise votre mot de passe en vous envoyant un code par e-mail"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:27
 msgctxt "moderation-report-filter"
 msgid "Resolved"
-msgstr ""
+msgstr "Résolus"
 
 #: src/components/OTAChannelNotice.tsx:58
 msgid "Restore default"
@@ -10952,8 +10952,8 @@ msgstr "Voir les offres d’emploi chez Bluesky (en anglais)"
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr "Voir plus"
 
@@ -10961,8 +10961,8 @@ msgstr "Voir plus"
 msgid "See more suggested profiles"
 msgstr "Voir plus de profils suggérés"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "Voir plus de tendances"
 
@@ -11432,11 +11432,11 @@ msgstr "Partager cette recherche"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Share this starter pack"
-msgstr "Partagez ce kit de démarrage"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Partagez ce kit de démarrage et aidez les gens à rejoindre votre communauté sur Bluesky."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11479,7 +11479,7 @@ msgstr "Afficher"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:42
 msgid "Show account status"
-msgstr ""
+msgstr "Afficher l’état du compte"
 
 #: src/components/AltBadgeWithDialog.tsx:48
 msgid "Show alt text"
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Spam, comportements inauthentiques ou déceptifs"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Sports"
 
@@ -11962,24 +11962,24 @@ msgstr "Kit de démarrage"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:88
 msgid "Starter pack by {0}"
-msgstr "Kit de démarrage par {0}"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Starter pack by <0/>"
-msgstr "Kit de démarrage par <0/>"
+msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:87
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Starter pack by you"
-msgstr "Kit de démarrage par vous"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "Le kit de démarrage n’est pas valide"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
-msgstr "Kits de démarrage"
+msgstr ""
 
 #: src/screens/Search/Explore.tsx:658
 #: src/view/screens/Profile.tsx:241
@@ -11988,11 +11988,11 @@ msgstr "Kits de démarrage"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Les kits de démarrage vous permettent de partager facilement vos fils d’actu et vos personnes préférées avec vos ami·e·s."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
-msgstr "Les kits de démarrage vous permettent de partager vos fils d’actu préférés et vos personnes favorites."
+msgstr ""
 
 #: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
@@ -12380,7 +12380,7 @@ msgstr "Qui contient les éléments suivants :"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Ce kit de démarrage n’a pas pu être trouvé."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12428,11 +12428,11 @@ msgstr "Notre politique de droits d’auteur a été déplacée vers <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:107
 msgid "The Discover feed"
-msgstr "Le fil d’actu « Discover »"
+msgstr "Le fil d’actu « Découvertes »"
 
 #: src/state/shell/progress-guide.tsx:225
 msgid "The Discover feed now knows what you like"
-msgstr "Le fil d’actu « Discover » sait désormais ce que vous aimez"
+msgstr "Le fil d’actu « Découvertes » sait désormais ce que vous aimez"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:324
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -12440,7 +12440,7 @@ msgstr "L’expérience est meilleure dans l’application. Téléchargez Bluesk
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:70
 msgid "The feed has been replaced with Discover."
-msgstr "Ce fil d’actu a été remplacé par Discover."
+msgstr "Ce fil d’actu a été remplacé par Découvertes."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to this post."
@@ -12515,7 +12515,7 @@ msgstr "Le serveur semble rencontrer des problèmes. Veuillez réessayer ultéri
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:860
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Le kit de démarrage que vous essayez de consulter n’est pas valide. Vous pouvez supprimer ce kit de démarrage à la place."
+msgstr ""
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -12855,7 +12855,7 @@ msgstr "Ce fil d’actu est vide."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:104
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "Ce fil d’actu n’est plus disponible. Nous vous montrons <0>Discover</0> à la place."
+msgstr "Ce fil d’actu n’est plus disponible. Nous vous montrons <0>Découvertes</0> à la place."
 
 #: src/screens/Messages/components/ChatLocked.tsx:76
 msgid "This group is locked by a moderation action on the owner"
@@ -13064,7 +13064,7 @@ msgstr "Cette vidéo ne peut pas être prévisualisée dans votre navigateur. El
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:156
 msgid "This will create a new list with the same name, description, and members as this starter pack."
-msgstr "Cela créera une nouvelle liste avec les mêmes noms, descriptions et membres que ce kit de démarrage."
+msgstr ""
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13210,9 +13210,9 @@ msgstr "La traduction vers la même langue n’est pas disponible sur votre appa
 msgid "Tree view"
 msgstr "Vue arborescente"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "Tendances"
 
@@ -13221,9 +13221,9 @@ msgstr "Tendances"
 msgid "Trending GIFs"
 msgstr "GIFs tendance"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr "Paramètres des tendances"
 
@@ -13337,7 +13337,7 @@ msgstr "Impossible de trouver le compte destinataire sélectionné."
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:17
 msgid "Unable to load your account"
-msgstr ""
+msgstr "Impossible de charger votre compte"
 
 #: src/lib/strings/errors.ts:77
 msgid "Unable to resolve handle"
@@ -13407,7 +13407,7 @@ msgstr "Débloquer la liste"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:23
 msgctxt "moderation-report-filter"
 msgid "Under review"
-msgstr ""
+msgstr "En cours d’examen"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
@@ -13429,7 +13429,7 @@ msgstr "Annuler"
 #: src/screens/StarterPack/StarterPackScreen.tsx:785
 #: src/screens/StarterPack/StarterPackScreen.tsx:796
 msgid "Undo opt-out"
-msgstr ""
+msgstr "Annuler le retrait"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:255
 #: src/screens/StarterPack/StarterPackScreen.tsx:683
@@ -13439,7 +13439,7 @@ msgstr ""
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:337
 #: src/screens/StarterPack/StarterPackScreen.tsx:760
 msgid "Undo opt-out?"
-msgstr ""
+msgstr "Annuler le retrait ?"
 
 #: src/components/PostControls/RepostButton.web.tsx:67
 #: src/components/PostControls/RepostButton.web.tsx:74
@@ -13597,7 +13597,7 @@ msgstr "Liste désépinglée"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:28
 msgctxt "moderation-report-filter"
 msgid "Unread"
-msgstr ""
+msgstr "Non lus"
 
 #: src/screens/Settings/Settings.tsx:503
 #: src/screens/Settings/Settings.tsx:505
@@ -13975,7 +13975,7 @@ msgstr "Version {0}"
 #. When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via starter pack <0/><1>{starterPackName}</1>"
-msgstr "via le kit de démarrage <0/><1>{starterPackName}</1>"
+msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:123
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:189
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Vidéo de {0}. Tapez pour lire ou mettre en pause la vidéo"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Jeux vidéo"
 
@@ -14222,7 +14222,7 @@ msgstr "Affiche la vidéo en mode immersif"
 
 #: src/screens/ModerationInbox/index.tsx:181
 msgid "Violates community guideline: {guideline}"
-msgstr ""
+msgstr "Enfreint une règle de bonne conduite : {guideline}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
 msgid "Violence"
@@ -14302,7 +14302,7 @@ msgstr "Nous n’avons pas pu charger cette discussion"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:18
 msgid "We couldn't load your account settings. Check your internet connection and try again."
-msgstr ""
+msgstr "Nous n’avons pas pu charger les paramètres de votre compte. Vérifiez votre connexion Internet et réessayez."
 
 #: src/screens/Login/LoginForm.tsx:483
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
@@ -14512,7 +14512,7 @@ msgstr "Quels sont vos centres d’intérêt ?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "Quel est le nom de votre kit de démarrage ?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "Pourquoi ce post devrait-il être examiné ?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "Pourquoi ce kit de démarrage devrait-il être examiné ?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr "Oui, supprimer mon compte"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Oui, supprimer ce kit de démarrage"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14925,7 +14925,7 @@ msgstr "Vous n’avez aucune liste."
 
 #: src/components/dialogs/StarterPackDialog.tsx:99
 msgid "You have no starter packs."
-msgstr "Vous n’avez pas de kit de démarrage."
+msgstr ""
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -14957,7 +14957,7 @@ msgstr "Vous avez des modifications non-enregistrées. Voulez-vous les sauvegard
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "Vous n’avez pas encore créé de kit de démarrage !"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -14987,7 +14987,7 @@ msgstr "Vous avez rejoint Bluesky il y a {timeAgoString}"
 
 #: src/components/NewskieDialog.tsx:105
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "Vous avez rejoint Bluesky à l’aide d’un kit de démarrage il y a {timeAgoString}"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15016,7 +15016,7 @@ msgstr "Vous devez avoir au moins 13 ans pour utiliser Bluesky. Lisez nos <0>Con
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Vous devez être abonné·e à au moins sept autres personnes pour générer un kit de démarrage."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
@@ -15240,15 +15240,15 @@ msgstr "Votre compte a été suspendu"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:35
 msgid "Your account has repeated violations of our Community Guidelines. Another violation may result in your account being permanently suspended."
-msgstr ""
+msgstr "Votre compte a enfreint à plusieurs reprises nos règles de bonne conduite. Une nouvelle infraction pourrait entraîner la suspension définitive de votre compte."
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:32
 msgid "Your account has strikes on record"
-msgstr ""
+msgstr "Vous avez eu des avertissements sur votre compte"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:31
 msgid "Your account is at risk of permanent suspension"
-msgstr ""
+msgstr "Votre compte risque une suspension définitive"
 
 #: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -15393,7 +15393,7 @@ msgstr "Votre mot de passe doit comporter au moins 8 caractères."
 #: src/screens/ModerationInbox/index.tsx:177
 msgctxt "moderation-report-action"
 msgid "Your post was removed"
-msgstr ""
+msgstr "Votre post a été supprimé"
 
 #: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
@@ -15431,7 +15431,7 @@ msgstr "Votre signalement sera envoyé à <0>{0}</0>."
 
 #: src/screens/ModerationInbox/index.tsx:46
 msgid "Your reports"
-msgstr ""
+msgstr "Vos signalements"
 
 #: src/screens/Settings/InterestsSettings.tsx:64
 msgid "Your selected interests help us serve you content you care about."

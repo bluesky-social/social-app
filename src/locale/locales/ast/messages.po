@@ -8,7 +8,7 @@ msgstr ""
 "Language: ast\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:18\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Asturian\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -527,7 +527,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} y <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} más} other {{formattedAuthorsCount} más}}</0> rexistróse col to paquete d'iniciación"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} rexistróse col to paquete d'iniciación"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -655,7 +655,7 @@ msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} rexistróse col to paquete d'iniciación"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "Sigue a {following}"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr ""
@@ -775,8 +775,8 @@ msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr ""
 
@@ -838,7 +838,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}</0>, <1>{1}</1> y {2, plural, one {# más} other {# más}} inclúinse nel paquete d'iniciación"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "<0>{0}</0>, <1>{1}</1> y {2, plural, one {# más} other {# más}} inclú
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}</0>, <1>{1}</1> y {2, plural, one {# más} other {# más}} inclúinse nel paquete d'iniciación"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> y <1></1><2>{1}</2> inclúinse nel paquete d'iniciación"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> inclúise nel to paquete d'iniciación"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr ""
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Tu</0> y <1></1><2>{0}</2> tais incluyíos nel paquete d'iniciación"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -1312,7 +1312,7 @@ msgstr "Amestar los feeds aconseyaos"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "¡Amiesta dalgunos feeds al paquete d'iniciación!"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1622,7 +1622,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Prodúxose un error mentanto se xeneraba'l paquete d'iniciación. ¿Quies volver tentalo?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "¿De xuru que quies desaniciar esti elementu del paquete d'iniciación?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2139,7 +2139,7 @@ msgstr ""
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Enantes de crear un paquete d'iniciación, tienes de verificar primero la direición de corréu."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2452,25 +2452,25 @@ msgstr "Restolar más suxerencies na páxina «Esploración»"
 msgid "Browse other feeds"
 msgstr "Restolar otros feeds"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
 msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr ""
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr ""
 
@@ -3951,7 +3951,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "¿Quies desaniciar el paquete d'iniciación?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4709,7 +4709,7 @@ msgstr "Introduz l'identificador y la contraseña de to"
 msgid "Enters full screen"
 msgstr ""
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr ""
 
@@ -4965,7 +4965,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "La creación del paquete d'iniciación falló"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "El desaniciu de la publicación falló. Volvi tentalo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "El desaniciu del paquete d'iniciación falló"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5731,7 +5731,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Xeneración d'un paquete d'iniciación"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -7185,7 +7185,7 @@ msgstr "{0, plural, one {Prestó-y a # usuariu} other {Prestó-yos a # usuarios}
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr ""
 
@@ -7195,7 +7195,7 @@ msgstr ""
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr ""
 
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "Les rempuestes nueves primero"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Noticies"
 
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr ""
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Política"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Publicar"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
@@ -10952,8 +10952,8 @@ msgstr ""
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr ""
 
@@ -10961,8 +10961,8 @@ msgstr ""
 msgid "See more suggested profiles"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr ""
 
@@ -11436,7 +11436,7 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Comparti esti paquete d'iniciación y ayuda a la xente a xunise a la to comunidá en Bluesky."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr ""
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Deportes"
 
@@ -11975,7 +11975,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "El paquete d'iniciación ye inválidu"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
@@ -11988,7 +11988,7 @@ msgstr "Paquetes d'iniciación"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Los paquetes d'iniciación déxente compartir fácilmente los feeds y les persones que prefieres coles amistaes."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
@@ -12380,7 +12380,7 @@ msgstr "Que contenga lo siguiente:"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Nun se pudo atopar esi paquete d'iniciación."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -13210,9 +13210,9 @@ msgstr ""
 msgid "Tree view"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "En tendencia"
 
@@ -13221,9 +13221,9 @@ msgstr "En tendencia"
 msgid "Trending GIFs"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr ""
 
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr ""
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Videoxuegos"
 
@@ -14512,7 +14512,7 @@ msgstr "¿Qué t'interesa?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "¿Cómo quies llamar al paquete d'iniciación?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "¿Por qué habría revisase esta publicación?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "¿Por qué habría revisase esti paquete d'iniciación?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Sí, desanicialu"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14957,7 +14957,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "¡Nun creesti nengún paquete d'iniciación!"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -15016,7 +15016,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Tienes de siguir a, polo menos, siete persones más pa xenerar un paquete d'iniciación."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92

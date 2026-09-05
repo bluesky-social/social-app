@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:19\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -211,7 +211,7 @@ msgstr "{0, plural, one {postiad} other {postiad}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
-msgstr "{0, plural, zero {} one {Mae # person wedi} two {Mae # person wedi} few {Mae # person wedi} many {Mae # person wedi}other {Mae # person wedi}} ymuno â Bluesky drwy'r pecyn cychwyn hwn!"
+msgstr ""
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:354
@@ -527,7 +527,7 @@ msgstr "Mae {firstAuthorLink} a <0>{additionalAuthorsCount, plural, zero {}one {
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "Mae {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} arall} other {{formattedAuthorsCount} arall}}</0> wedi ymuno â'ch pecyn cychwyn"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr "Mae {firstAuthorLink} wedi ail bostio eich ail bostiad"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "Mae {firstAuthorLink} wedi cofrestru gyda'ch pecyn cychwyn"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -579,7 +579,7 @@ msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} arall} other {{formattedAuthorsCount} arall}} wedi'ch dilyn drwy'ch pecyn cychwyn {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -607,7 +607,7 @@ msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, zero {}one {{fo
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, one {{formattedAuthorsCount} arall} other {{formattedAuthorsCount} arall}} wedi ymuno â'ch pecyn cychwyn"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -623,11 +623,11 @@ msgstr "Mae {firstAuthorName} wedi eich dilyn yn ôl"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr "Dilynodd {firstAuthorName} chi yn ôl drwy'r pecyn cychwyn {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr "Dilynodd {firstAuthorName} chi drwy'r pecyn cychwyn {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -655,7 +655,7 @@ msgstr "Mae {firstAuthorName} wedi ail bostio eich ail bostiad"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "Mae {firstAuthorName} wedi ymuno â'ch pecyn cychwyn"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "{following} yn dilyn"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, zero {postiadau} one {postiad} two {bostiad} few {phostiad} many {postiad} other {postiad}}"
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, zero {}one {# awr} two {# awr} few {# awr} many {# hours} other {# awr}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -755,7 +755,7 @@ msgstr "Hoff ffrydiau a phobl {name} - ymunwch â mi!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}'s starter pack"
-msgstr "Pecyn cychwyn {name}"
+msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -771,12 +771,12 @@ msgstr "Ymunodd {profileName} â Bluesky {timeAgoString} yn ôl"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "Ymunodd {profileName} â Bluesky gan ddefnyddio pecyn cychwyn {timeAgoString} yn ôl"
+msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -838,7 +838,7 @@ msgstr "+{computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "Mae <0>{0}, </0><1>{1}, </1>a {2, plural, one {# arall} other {# arall}} wedi'u cynnwys yn eich pecyn cychwyn"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "Mae <0>{0}, </0><1>{1}, </1>a {2, plural, one {# arall} other {# arall}}
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "Mae <0>{0}, </0><1>{1}, </1> a {2, plural, one {# arall} other {# arall}} wedi'u cynnwys yn eich pecyn cychwyn"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr "<0>{0}</0> {likeCount, plural, zero {}one {hoffi} two {hoffi} few {hoffi
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "Mae <0>{0}</0> a<1> </1><2>{1} </2>wedi eu cynnwys yn eich pecyn cychwyn"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "Mae <0>{0}</0> wedi'i gynnwys yn eich pecyn cychwyn"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr "<0>Tapiwch yma i ddiweddaru eich lleoliad gyda GPS.</0>"
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "Rydych <0>chi</0> a <1></1> <2>{0}</2> wedi'ch cynnwys yn eich pecyn cychwyn"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -1174,7 +1174,7 @@ msgstr "Ychwanegu {0} arall i barhau"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:64
 msgid "Add {displayName} to starter pack"
-msgstr "Ychwanegu {displayName} at y pecyn cychwyn"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1312,7 +1312,7 @@ msgstr "Ychwanegu ffrydiau wedi'u hargymell"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "Ychwanegu'r ychydig o lifau i'ch pecyn cychwyn!"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1339,7 +1339,7 @@ msgstr "Ychwanegu i'r postiadau wedi'u cadw"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to starter packs"
-msgstr "Ychwanegu at y pecynnau cychwyn"
+msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1365,7 +1365,7 @@ msgstr "Ychwanegwyd at y rhestr"
 
 #: src/components/dialogs/StarterPackDialog.tsx:271
 msgid "Added to starter pack"
-msgstr "Wedi'i ychwanegu at becyn cychwyn"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:224
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:229
@@ -1622,7 +1622,7 @@ msgstr "Digwyddodd gwall wrth nôl y ffrwd."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Digwyddodd gwall wrth gynhyrchu'ch pecyn cychwyn. Eisiau ceisio eto?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr "Ydych chi'n siŵr eich bod am ddileu'r neges hon? Bydd y neges yn cael e
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Ydych chi'n siŵr eich bod am ddileu'r pecyn cychwyn hwn?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2139,7 +2139,7 @@ msgstr "Cyn creu postiad neu ateb, rhaid i chi ddilysu'ch e-bost yn gyntaf."
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Cyn creu pecyn cychwyn, rhaid i chi wirio'ch e-bost yn gyntaf."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2452,25 +2452,25 @@ msgstr "Porwch ragor o awgrymiadau ar y dudalen Archwilio"
 msgid "Browse other feeds"
 msgstr "Porwch ffrydiau eraill"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr "Porwch bostiadau am {displayName}"
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr "Porwch bostiadau sydd wedi'u tagio â {displayName}"
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
-msgstr "Porwch becyn cychwyn {displayName}"
+msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr "Porwi pwnc {0}"
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr "Porwch bwnc {displayName}"
 
@@ -2723,7 +2723,7 @@ msgstr "Newidiadau wedi'u cadw"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:163
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr "Bydd newidiadau i'r pecyn cychwyn ddim yn cael eu hadlewyrchu i'r rhestr ar ôl eu creu. Bydd y rhestr yn gopi annibynnol."
+msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:515
@@ -3508,7 +3508,7 @@ msgstr "Copïo'r ddolen i'r proffil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:652
 msgid "Copy link to starter pack"
-msgstr "Copïo'r ddolen i'r pecyn cychwyn"
+msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:196
 #: src/components/dms/MessageContextMenu.tsx:200
@@ -3663,17 +3663,17 @@ msgstr "Crëwch restr"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Create a list from this starter pack"
-msgstr "Crëwch restr o'r pecyn cychwyn hwn"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
-msgstr "Creu cod QR ar gyfer pecyn cychwyn"
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:566
 msgid "Create a starter pack"
-msgstr "Creu pecyn cychwyn"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
@@ -3682,7 +3682,7 @@ msgstr "Crëwch Becyn Cychwyn"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
-msgstr "Creu pecyn cychwyn i mi"
+msgstr ""
 
 #: src/components/WelcomeModal.tsx:156
 #: src/components/WelcomeModal.tsx:164
@@ -3709,7 +3709,7 @@ msgstr "Creu cyfrif"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this starter pack"
-msgstr "Crëwch gyfrif heb ddefnyddio'r pecyn cychwyn hwn"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3735,7 +3735,7 @@ msgstr "Crëwch restr o'r aelodau"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:147
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:151
 msgid "Create list from starter pack"
-msgstr "Crëwch restr o'r pecyn cychwyn"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3761,7 +3761,7 @@ msgstr "Creu adroddiad ar gyfer {0}"
 #: src/components/dialogs/StarterPackDialog.tsx:105
 #: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "Create starter pack"
-msgstr "Creu pecyn cychwyn"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -3947,11 +3947,11 @@ msgstr "Dileu postiad"
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 #: src/screens/StarterPack/StarterPackScreen.tsx:870
 msgid "Delete starter pack"
-msgstr "Dileu pecyn cychwyn"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "Dileu pecyn cychwyn?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4487,7 +4487,7 @@ msgstr "Golygu Proffil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 msgid "Edit starter pack"
-msgstr "Golygu pecyn cychwyn"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4504,7 +4504,7 @@ msgstr "Golygu pwy all ateb"
 
 #: src/Navigation.tsx:571
 msgid "Edit your starter pack"
-msgstr "Golygu eich pecyn cychwyn"
+msgstr ""
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -4709,7 +4709,7 @@ msgstr "Rhowch eich enw defnyddiwr a chyfrinair"
 msgid "Enters full screen"
 msgstr "Yn mynd i'r sgrin lawn"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr "Adloniant"
 
@@ -4937,7 +4937,7 @@ msgstr "Methwyd ag ychwanegu at y rhestr"
 
 #: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Failed to add to starter pack"
-msgstr "Wedi methu ychwanegu at becyn cychwyn"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -4965,7 +4965,7 @@ msgstr "Wedi methu creu dolen gwahodd"
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "Wedi methu creu pecyn cychwyn"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "Wedi methu dileu postiad, ceisiwch eto"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "Wedi methu dileu'r pecyn cychwyn"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5136,7 +5136,7 @@ msgstr "Methwyd tynnu o'r rhestr"
 
 #: src/components/dialogs/StarterPackDialog.tsx:290
 msgid "Failed to remove from starter pack"
-msgstr "Wedi methu tynnu o becyn cychwyn"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5731,7 +5731,7 @@ msgstr "Gan y bobl yma"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Creu pecyn cychwyn"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -5775,7 +5775,7 @@ msgstr "Cael cymorth"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for starter pack joins, verification, and other activity."
-msgstr "Cael hysbysiadau ar gyfer paciau cychwyn, gwirio a gweithgareddau eraill."
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -6804,7 +6804,7 @@ msgstr "Dolen gwahodd wedi'i galluogi"
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this starter pack!"
-msgstr "Gwahoddwch bobl i'r pecyn cychwyn hwn!"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6834,7 +6834,7 @@ msgstr "Mae'n gywir"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr "Dim ond <0>{0}</0>ar hyn o bryd! Ychwanegwch fwy o bobl at eich pecyn cychwyn trwy chwilio uchod."
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7185,7 +7185,7 @@ msgstr "Wedi'i hoffi gan {0, plural, one {# defnyddiwr} other {# defnyddiwr}}"
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr "Hoffwyd gan {0}"
 
@@ -7195,7 +7195,7 @@ msgstr "Hoffwyd gan {0}"
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr "Hoffwyd gan {0} a {1}"
 
@@ -7937,7 +7937,7 @@ msgstr "Fy Ffrydiau"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My starter pack"
-msgstr "Fy mhecyn cychwyn"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -7956,7 +7956,7 @@ msgstr "Llywiwch i {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:129
 msgid "Navigate to starter pack"
-msgstr "Ewch i'r pecyn cychwyn"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8112,7 +8112,7 @@ msgstr "Postiadau newydd gan {firstAuthorName} a {additionalAuthorsCount, plural
 
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "New starter pack"
-msgstr "Pecyn cychwyn newydd"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "Atebion diweddaraf yn gyntaf"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Newyddion"
 
@@ -8811,7 +8811,7 @@ msgstr "Agor y ddewislen rhannu"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Open starter pack menu"
-msgstr "Agor dewislen pecyn cychwyn"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr "Ysgrifennwch eich neges isod:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Gwleidyddiaeth"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Postio"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Postiad {index} o {count}"
@@ -9987,7 +9987,7 @@ msgstr "Tynnu {displayName} o'r grŵp sgwrsio"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:63
 msgid "Remove {displayName} from starter pack"
-msgstr "Tynnu {displayName} o'r pecyn cychwyn"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10165,7 +10165,7 @@ msgstr "Wedi'i dynnu o'r postiadau wedi'u cadw"
 #: src/components/dialogs/StarterPackDialog.tsx:284
 #: src/components/StarterPack/Main/ProfilesList.tsx:169
 msgid "Removed from starter pack"
-msgstr "Wedi ei dynnu o'r pecyn cychwyn"
+msgstr ""
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:106
@@ -10340,7 +10340,7 @@ msgstr "Anfonwyd yr adroddiad"
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Report starter pack"
-msgstr "Adrodd ar becyn cychwyn"
+msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10381,7 +10381,7 @@ msgstr "Adrodd ar y postiad hwn"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
-msgstr "Adrodd ar y pecyn cychwyn hwn"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Report this user"
@@ -10952,8 +10952,8 @@ msgstr "Gweld swyddi yn Bluesky"
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr "Gweld rhagor"
 
@@ -10961,8 +10961,8 @@ msgstr "Gweld rhagor"
 msgid "See more suggested profiles"
 msgstr "Gweld rhagor o broffiliau diddorol"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "Gweld mwy o bynciau sy'n trendio"
 
@@ -11432,11 +11432,11 @@ msgstr "Rhannu'r chwilio hwn"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Share this starter pack"
-msgstr "Rhannwch y pecyn cychwyn hwn"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Rhannwch y pecyn cychwynnol hwn a helpwch bobl i ymuno â'ch cymuned ar Bluesky."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Sbam neu ymddygiad annilys neu dwyllodrus"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Chwaraeon"
 
@@ -11962,24 +11962,24 @@ msgstr "Pecyn Cychwyn"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:88
 msgid "Starter pack by {0}"
-msgstr "Pecyn cychwyn gan {0}"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Starter pack by <0/>"
-msgstr "Pecyn cychwyn gan <0/>"
+msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:87
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Starter pack by you"
-msgstr "Pecyn cychwyn gennych chi"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "Mae'r pecyn cychwyn yn annilys"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
-msgstr "Pecynnau cychwyn"
+msgstr ""
 
 #: src/screens/Search/Explore.tsx:658
 #: src/view/screens/Profile.tsx:241
@@ -11988,11 +11988,11 @@ msgstr "Pecynnau Cychwyn"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Mae pecynnau cychwyn yn caniatáu i chi rannu gyda'ch ffrindiau eich hoff ffrydiau a phobl."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
-msgstr "Mae pecynnau cychwyn yn gadael i chi rannu eich hoff ffrydiau a phobl gyda'ch ffrindiau."
+msgstr ""
 
 #: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
@@ -12380,7 +12380,7 @@ msgstr "Mae hynny’n cynnwys y canlynol:"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Doedd dim modd dod o hyd i'r pecyn cychwyn hwnnw."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12515,7 +12515,7 @@ msgstr "Mae'n ymddangos bod y gweinydd yn cael problemau. Ceisiwch eto ymhen ych
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:860
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Mae'r pecyn cychwyn rydych chi'n ceisio ei weld yn annilys. Gallwch ddileu'r pecyn cychwyn hwn yn lle hynny."
+msgstr ""
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -13064,7 +13064,7 @@ msgstr "Does dim modd cael rhagolwg o'r fideo hwn yn eich porwr. Bydd yn dal i g
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:156
 msgid "This will create a new list with the same name, description, and members as this starter pack."
-msgstr "Bydd hyn yn creu rhestr newydd gyda'r un enw, disgrifiad ac aelodau â'r pecyn cychwyn hwn."
+msgstr ""
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13210,9 +13210,9 @@ msgstr "Dyw cyfieithu i'r un iaith ddim ar gael ar eich dyfais."
 msgid "Tree view"
 msgstr "Golwg coeden"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "Yn Trendio"
 
@@ -13221,9 +13221,9 @@ msgstr "Yn Trendio"
 msgid "Trending GIFs"
 msgstr "GIFau sy'n trendio"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr "Dewisiadau sy'n trendio"
 
@@ -13975,7 +13975,7 @@ msgstr "Fersiwn {0}"
 #. When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via starter pack <0/><1>{starterPackName}</1>"
-msgstr "drwy'r pecyn cychwyn <0/><1>{starterPackName}</1>"
+msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:123
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:189
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Fideo gan {0}. Tapio i chwarae neu oedi'r fideo"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Gemau Fideo"
 
@@ -14512,7 +14512,7 @@ msgstr "Beth yw eich diddordebau?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "Beth ydych chi am ei alw'ch pecyn cychwyn?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "Pam dylai'r postiad hon gael ei hadolygu?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "Pam dylai'r pecyn cychwyn hwn gael ei adolygu?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr "Iawn, dileu fy nghyfrif"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Iawn, dilëu'r pecyn cychwyn hwn"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14925,7 +14925,7 @@ msgstr "Does gennych ddim rhestrau."
 
 #: src/components/dialogs/StarterPackDialog.tsx:99
 msgid "You have no starter packs."
-msgstr "Does gennych chi ddim pecynnau cychwyn."
+msgstr ""
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -14957,7 +14957,7 @@ msgstr "Mae gennych chi newidiadau heb eu cadw. Hoffech chi eu cadw cyn edrych a
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "Dydych chi ddim wedi creu pecyn cychwyn eto!"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -14987,7 +14987,7 @@ msgstr "Mi wnaethoch chi ymuno â Bluesky {timeAgoString} yn ôl"
 
 #: src/components/NewskieDialog.tsx:105
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "Mi wnaethoch chi ymuno â Bluesky gan ddefnyddio pecyn cychwyn {timeAgoString} yn ôl"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15016,7 +15016,7 @@ msgstr "Rhaid eich bod yn o leiaf 13 oed i ddefnyddio Bluesky. Darllenwch ein <0
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Rhaid i chi fod yn dilyn o leiaf saith o bobl eraill i gynhyrchu pecyn cychwyn."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92

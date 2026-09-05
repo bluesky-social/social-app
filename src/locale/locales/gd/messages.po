@@ -8,7 +8,7 @@ msgstr ""
 "Language: gd\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:19\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Scottish Gaelic\n"
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : (n>2 && n<20) ? 2 : 3;\n"
@@ -211,7 +211,7 @@ msgstr "{0, plural, one {phost} two {phost} few {puist} other {post}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
-msgstr "Chaidh {0, plural, one {# neach} two {# neach} few {# daoine} other {# daoine}} an sàs Bluesky leis a’ phacaid-thòiseachaidh seo!"
+msgstr ""
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:354
@@ -527,7 +527,7 @@ msgstr "Dh’ath-phostaich {firstAuthorLink} agus <0>{additionalAuthorsCount, pl
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "Chlàraich {firstAuthorLink} agus <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} eile} two {{formattedAuthorsCount} eile} few {{formattedAuthorsCount} eile} other {{formattedAuthorsCount} eile}}</0> aig a’ phacaid tòiseachaidh agad"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr "Dh’ath-phostaich {firstAuthorLink} an ath-phostadh agad"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "Chlàraich {firstAuthorLink} aig a’ phacaid tòiseachaidh agad"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -607,7 +607,7 @@ msgstr "Dh’ath-phostaich {firstAuthorName} agus {additionalAuthorsCount, plura
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "Chlàraich {firstAuthorName} agus {additionalAuthorsCount, plural, one {{formattedAuthorsCount} eile} two {{formattedAuthorsCount} eile} few {{formattedAuthorsCount} eile} other {{formattedAuthorsCount} eile}} aig a’ phacaid tòiseachaidh agad"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -655,7 +655,7 @@ msgstr "Dh’ath-phostaich {firstAuthorName} an ath-phostadh agad"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "Chlàraich {firstAuthorName} aig a’ phacaid tòiseachaidh agad"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "a’ leantainn {following}"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr ""
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# uair a thìde} two {# uair a thìde} few {# uairean a thìde} other {# uair a thìde}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr ""
@@ -755,7 +755,7 @@ msgstr "Na h-inbhirean is daoine as fheàrr le {name} – tiugainn!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}'s starter pack"
-msgstr "A’ phacaid tòiseachaidh aig {name}"
+msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -771,12 +771,12 @@ msgstr "Chaidh {profileName} an sàs Bluesky {timeAgoString} air ais"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "Chaidh {profileName} an sàs Bluesky {timeAgoString} air ais, a’ cleachdadh pacaid-thòiseachaidh"
+msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -838,7 +838,7 @@ msgstr "⁊ {computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "Tha <0>{0}, </0><1>{1}</1> agus {2, plural, one {# eile} two {# eile} few {# eile} other {# others}} gan gabhail a-staigh sa phacaid tòiseachaidh agad"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "Tha <0>{0}, </0><1>{1}</1> agus {2, plural, one {# eile} two {# eile} fe
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "Tha <0>{0}, </0><1>{1}</1> agus {2, plural, one {# eile} two {# eile} few {# eile} other {# others}} gan gabhail a-staigh sa phacaid tòiseachaidh agad"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "Tha <0>{0}</0> agus <1> </1><2>{1} </2> gan gabhail a-staigh sa phacaid tòiseachaidh agad"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "Tha <0>{0}</0> ga ghabhail a-staigh sa phacaid tòiseachaidh agad"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr ""
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "Tha <0>thusa</0> agus <1> </1><2>{0} </2> gan gabhail a-staigh sa phacaid tòiseachaidh agad"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -1174,7 +1174,7 @@ msgstr "Cuir ris {0} a bharrachd mus lean thu air adhart"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:64
 msgid "Add {displayName} to starter pack"
-msgstr "Cuir {displayName} ris a’ phacaid tòiseachaidh"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1312,7 +1312,7 @@ msgstr "Cuir inbhirean a mholadh tu ris"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "Cuir inbhirean ris a’ phacaid tòiseachaidh agad!"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1339,7 +1339,7 @@ msgstr "Cuir ris na puist a shàbhail thu"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to starter packs"
-msgstr "Cuir ris na pacaidean tòiseachaidh"
+msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1365,7 +1365,7 @@ msgstr "Chaidh a chur ris an liosta"
 
 #: src/components/dialogs/StarterPackDialog.tsx:271
 msgid "Added to starter pack"
-msgstr "Air a chur ris a’ phacaid tòiseachaidh"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:224
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:229
@@ -1622,7 +1622,7 @@ msgstr "Dh’èirich mearachd rè nuair a bha sinn a’ faighinn an inbhir."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Dh’èirich mearachd nuair a bha sinn a’ gintinn na pacaid tòiseachaidh agad. A bheil thu airson feuchainn ris a-rithist?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "A bheil thu cinnteach gu bheil thu airson a’ phacaid tòiseachaidh seo a sguabadh às?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2139,7 +2139,7 @@ msgstr "Mus cruthaich thu post no mus fhreagair thu, feumaidh tu am post-d agad 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Mus cruthaich thu pacaid tòiseachaidh, feumaidh tu am post-d agad a dhearbhadh."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2452,25 +2452,25 @@ msgstr "Rùraich barrachd mholaidhean air an duilleag “Rùraich”"
 msgid "Browse other feeds"
 msgstr "Rùraich inbhirean eile"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr "Rùraich puist mu dhèidhinn {displayName}"
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr "Rùraich puist ris a bheil an taga {displayName}"
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
-msgstr "Rùraich a’ phacaid tòiseachaidh {displayName}"
+msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr "Rùraich an cuspair “{0}”"
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr "Rùraich an cuspair {displayName}"
 
@@ -2723,7 +2723,7 @@ msgstr "Chaidh na h-atharraichean a shàbhaladh"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:163
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr "Cha bhi buaidh air an liosta ma dh’atharraicheas tu a’ phacaid-thòiseachaidh an dèidh dhut a chruthachadh. Bidh an liosta na lethbhreac neo-eisimeileach."
+msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:515
@@ -3508,7 +3508,7 @@ msgstr "Cuir lethbhreac dhen cheangal dhan phròifil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:652
 msgid "Copy link to starter pack"
-msgstr "Cuir lethbhreac dhen cheangal dhan pacaid tòiseachaidh"
+msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:196
 #: src/components/dms/MessageContextMenu.tsx:200
@@ -3663,17 +3663,17 @@ msgstr "Cruthaich liosta"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Create a list from this starter pack"
-msgstr "Cruthaich liosta dhen phacaid-thòiseachaidh seo"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
-msgstr "Cruthaich còd QR airson pacaid tòiseachaidh"
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:566
 msgid "Create a starter pack"
-msgstr "Cruthaich pacaid tòiseachaidh"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
@@ -3682,7 +3682,7 @@ msgstr "Cruthaich pacaid tòiseachaidh"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
-msgstr "Cruthaich pacaid tòiseachaidh dhomh"
+msgstr ""
 
 #: src/components/WelcomeModal.tsx:156
 #: src/components/WelcomeModal.tsx:164
@@ -3709,7 +3709,7 @@ msgstr "Cruthaich cunntas"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this starter pack"
-msgstr "Cruthaich cunntas ach as aonais na pacaid tòiseachaidh seo"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3735,7 +3735,7 @@ msgstr "Cruthaich liosta dhe na buill"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:147
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:151
 msgid "Create list from starter pack"
-msgstr "Cruthaich liosta dhen phacaid-thòiseachaidh"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3761,7 +3761,7 @@ msgstr "Cruthaich aithris airson {0}"
 #: src/components/dialogs/StarterPackDialog.tsx:105
 #: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "Create starter pack"
-msgstr "Cruthaich pacaid tòiseachaidh"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -3947,11 +3947,11 @@ msgstr "Sguab às am post"
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 #: src/screens/StarterPack/StarterPackScreen.tsx:870
 msgid "Delete starter pack"
-msgstr "Sguab a’ phacaid tòiseachaidh às"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "A bheil thu airson a’ phacaid tòiseachaidh seo a sguabadh às?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4487,7 +4487,7 @@ msgstr "Deasaich a’ phròifil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 msgid "Edit starter pack"
-msgstr "Deasaich a’ phacaid tòiseachaidh"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4504,7 +4504,7 @@ msgstr "Co-dhùin cò aig a bheil cead freagairt"
 
 #: src/Navigation.tsx:571
 msgid "Edit your starter pack"
-msgstr "Deasaich a’ phacaid tòiseachaidh agad"
+msgstr ""
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -4709,7 +4709,7 @@ msgstr "Cuir a-steach an t-ainm-cleachdaiche ’s am facal-faire agad"
 msgid "Enters full screen"
 msgstr "Fosglaidh seo an làn-sgrìn"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr "Dibhearsan"
 
@@ -4937,7 +4937,7 @@ msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Failed to add to starter pack"
-msgstr "Cha b’ urrainn dhuinn pacaid tòiseachaidh a chur ris"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -4965,7 +4965,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "Cha b’ urrainn dhuinn pacaid tòiseachaidh a chruthachadh"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "Cha b’ urrainn dhuinn am post a sguabadh às, feuch ris a-rithist"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "Cha b’ urrainn dhuinn a’ phacaid tòiseachaidh a sguabadh às"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5136,7 +5136,7 @@ msgstr ""
 
 #: src/components/dialogs/StarterPackDialog.tsx:290
 msgid "Failed to remove from starter pack"
-msgstr "Cha b’ urrainn dhuinn a thoirt air falbh on phacaid tòiseachaidh"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5731,7 +5731,7 @@ msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Gin pacaid tòiseachaidh"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -6804,7 +6804,7 @@ msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this starter pack!"
-msgstr "Thoir cuireadh do dhaoine gun phacaid tòiseachaidh seo!"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6834,7 +6834,7 @@ msgstr "Tha e ceart"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr "Chan eil ann ach <0>{0}</0> aig an ìre-sa! Cuir barrachd dhaoine ris a’ phacaid tòiseachaidh agad le bhith a’ dèanamh lorg gu h-àrd."
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7185,7 +7185,7 @@ msgstr "’S toil le {0, plural, one {# seo} two {# seo} few {# seo} other {# se
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr ""
 
@@ -7195,7 +7195,7 @@ msgstr ""
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr ""
 
@@ -7937,7 +7937,7 @@ msgstr "Na h-inbhirean agam"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My starter pack"
-msgstr "A’ phacaid tòiseachaidh agam"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -7956,7 +7956,7 @@ msgstr "Tadhail air {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:129
 msgid "Navigate to starter pack"
-msgstr "Tadhail air a’ phacaid tòiseachaidh"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8112,7 +8112,7 @@ msgstr "Puist ùra o {firstAuthorName} agus {additionalAuthorsCount, plural, one
 
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "New starter pack"
-msgstr "Pacaid tòiseachaidh ùr"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "As ùire an toiseach"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Naidheachdan"
 
@@ -8811,7 +8811,7 @@ msgstr "Fosgail clàr-taice a’ cho-roinnidh"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Open starter pack menu"
-msgstr "Fosgail clàr-taice na pacaide tòiseachaidh"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr "Sgrìobh do theachdaireachd gu h-ìosal:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Poileataigs"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Postaich"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
@@ -9987,7 +9987,7 @@ msgstr ""
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:63
 msgid "Remove {displayName} from starter pack"
-msgstr "Thoir air falbh {displayName} on phacaid tòiseachaidh"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10165,7 +10165,7 @@ msgstr "Air a thoirt air falbh o na puist a shàbhail thu"
 #: src/components/dialogs/StarterPackDialog.tsx:284
 #: src/components/StarterPack/Main/ProfilesList.tsx:169
 msgid "Removed from starter pack"
-msgstr "Air a thoirt air falbh on phacaid tòiseachaidh"
+msgstr ""
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:106
@@ -10340,7 +10340,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Report starter pack"
-msgstr "Dèan aithris air a’ phacaid tòiseachaidh"
+msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10381,7 +10381,7 @@ msgstr "Dèan aithris air a’ phost seo"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
-msgstr "Dèan aithris air a’ phacaid tòiseachaidh seo"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Report this user"
@@ -10952,8 +10952,8 @@ msgstr "Faic dè na dreuchdan bàna aig Bluesky"
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr "Seall an còrr"
 
@@ -10961,8 +10961,8 @@ msgstr "Seall an còrr"
 msgid "See more suggested profiles"
 msgstr "Barrachd phròifilean a mholamaid"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr ""
 
@@ -11432,11 +11432,11 @@ msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Share this starter pack"
-msgstr "Co-roinn a’ phacaid tòiseachaidh seo"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Co-roinn a’ phacaid tòiseachaidh seo agus cuidich daoine nad choimhearsnachd a tha air ùr-thighinn gu Bluesky."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Spama, giùlan-brèige eile no foill"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Spòrs"
 
@@ -11962,20 +11962,20 @@ msgstr "Pacaid tòiseachaidh"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:88
 msgid "Starter pack by {0}"
-msgstr "Pacaid tòiseachaidh le {0}"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Starter pack by <0/>"
-msgstr "Pacaid tòiseachaidh le <0/>"
+msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:87
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Starter pack by you"
-msgstr "Pacaid tòiseachaidh leat fhèin"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "Tha a’ phacaid tòiseachaidh seo mì-dhligheach"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
@@ -11988,11 +11988,11 @@ msgstr "Pacaidean tòiseachaidh"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Tha e furasta na h-inbhirean is daoine as fheàrr leat a cho-roinneadh le pacaidean tòiseachaidh."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
-msgstr "Bheir pacaid-thòiseachaidh comas dhut na h-inbhirean is daoine as fheàrr leat a sgaoileadh am measg do charaidean."
+msgstr ""
 
 #: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
@@ -12380,7 +12380,7 @@ msgstr "Sa bheil na leanas:"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Cha d’fhuair sinn lorg air a’ phacaid tòiseachaidh sin."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12515,7 +12515,7 @@ msgstr "Tha coltas gu bheil duilgheadasan aig an fhrithealaiche. Feuch ris a-rit
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:860
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Tha a’ phacaid tòiseachaidh a bu toil leat coimhead air mì-dhligheach. ’S urrainn dhut a’ phacaid tòiseachaidh a sguabadh às an àite sin."
+msgstr ""
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -13064,7 +13064,7 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:156
 msgid "This will create a new list with the same name, description, and members as this starter pack."
-msgstr "Cruthaichidh seo liosta ùr air am bi an aon ainm, tuairisgeul agus buill ’s a tha aig a’ phacaid-thòiseachaidh seo."
+msgstr ""
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13210,9 +13210,9 @@ msgstr ""
 msgid "Tree view"
 msgstr "Seall mar chraobh"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "Air bilean an t-sluaigh"
 
@@ -13221,9 +13221,9 @@ msgstr "Air bilean an t-sluaigh"
 msgid "Trending GIFs"
 msgstr ""
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr "Roghainnean a tha a’ treandadh"
 
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Video o {0}. Thoir gnogag air airson a chluich no a chur na stad"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Geamannan video"
 
@@ -14512,7 +14512,7 @@ msgstr "Dè na rudan sa bheil ùidh agad?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "Dè an t-ainm a chuireas sinn air a’ phacaid tòiseachaidh agad?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air a’ phost seo?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "Carson bu chòir dhuinn lèirmheas a dhèanamh air a’ phacaid tòiseachaidh seo?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr "Tha, sguab an cunntas agam às"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Tha, sguabaibh às a’ phacaid tòiseachaidh seo"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14925,7 +14925,7 @@ msgstr "Chan eil liosta sam bith agad."
 
 #: src/components/dialogs/StarterPackDialog.tsx:99
 msgid "You have no starter packs."
-msgstr "Chan eil pacaid tòiseachaidh sam bith agad."
+msgstr ""
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -14957,7 +14957,7 @@ msgstr "Tha atharraichean gun sàbhaladh agad. A bheil thu airson an sàbhaladh 
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "Cha do chruthaich thu pacaid tòiseachaidh fhathast!"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -14987,7 +14987,7 @@ msgstr "Chaidh thu an sàs Bluesky {timeAgoString} air ais"
 
 #: src/components/NewskieDialog.tsx:105
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "Chaidh thu an sàs Bluesky {timeAgoString} air ais, a’ cleachdadh pacaid-thòiseachaidh"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15016,7 +15016,7 @@ msgstr "Feumaidh tu a bhith co-dhiù 13 bliadhna a dh’aois mus urrainn dhut Bl
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Feumaidh tu co-dhiù seachdnar a leantainn mus urrainn dhut pacaid tòiseachaidh a ghintinn."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92

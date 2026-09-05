@@ -8,7 +8,7 @@ msgstr ""
 "Language: eu\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:18\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Basque\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -25,7 +25,7 @@ msgstr "\"{interestsDisplayName}\" kategoria (aktiboa)"
 
 #: src/screens/ModerationInbox/index.tsx:190
 msgid "“{label}” – shown behind a warning"
-msgstr ""
+msgstr "“{label}” – abisu baten atzean erakusten da"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -211,7 +211,7 @@ msgstr "{0, plural, one {post} other {post}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
-msgstr "{0, plural, other {# pertsona}} batu dira Bluesky-ra abio-multzo honen bidez!"
+msgstr ""
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:354
@@ -527,7 +527,7 @@ msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {fo
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} eta <0>{additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}}</0> zure abio multzoan izena eman dute"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr "{firstAuthorLink}-k zure berpostari berpost egin dio"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} zure abio multzoan izena eman du"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -579,7 +579,7 @@ msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {forma
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount}} other {beste {formattedAuthorsCount}}} {starterPackName} abio multzoaren bidez jarraitzen dizute"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -607,7 +607,7 @@ msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {forma
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {formattedAuthorsCount} } other {beste {formattedAuthorsCount}}} zure abio multzoan izena eman dute"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -623,11 +623,11 @@ msgstr "{firstAuthorName} bueltan jarraitzen dizu"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr "{firstAuthorName}-k bueltan jarraitzen dizu {starterPackName} abio multzoaren bidez"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName}-k jarraitzen dizu {starterPackName} abio multzoaren bidez"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -655,7 +655,7 @@ msgstr "{firstAuthorName}-k zure berpostari berpost egin dio"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} zure abio multzoan izena eman du"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "{following} jarraitzen"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {post} other {post}}"
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {ordu #} other {# ordu}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{count}-tik {index}"
@@ -755,7 +755,7 @@ msgstr "{name}-ren feed eta pertsona gogokoenak - elkartu niri!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}'s starter pack"
-msgstr "{name}-ren abio multzoa"
+msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -771,12 +771,12 @@ msgstr "{profileName} Bluesky-n sartu zen orain dela {timeAgoString}"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "{profileName} Bluesky-n sartu zen abio multzo bat erabiliz orain dela {timeAgoString}"
+msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -838,7 +838,7 @@ msgstr "+{computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>eta {2, plural, one {beste #} other {beste #}} zure abio multzoan daude"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "<0>{0}, </0><1>{1}, </1>eta {2, plural, one {beste #} other {beste #}} z
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>eta {2, plural, one {beste #} other {beste #}} zure abio multzoan daude"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr "<0>{0}</0> {likeCount, plural, one {gustoko} other {gustoko}}"
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> eta<1> </1><2>{1} </2>zure abio multzoan daude"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> zure abio multzoan dago"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr "<0>Sakatu hemen zure kokapena GPSarekin eguneratzeko.</0>"
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Zu</0>eta<1> </1><2>{0} </2>zure abio multzoan zaudete"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -959,7 +959,7 @@ msgstr "Bluesky-n aurki ditzakezun feed ezagunen bilduma bat, besteak beste, New
 #: src/screens/ModerationInbox/index.tsx:194
 msgctxt "moderation-report-action"
 msgid "A label was added to your post"
-msgstr ""
+msgstr "Etiketa bat gehitu zaio zure postari"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/components/dms/getReactionInfo.ts:58
@@ -1174,7 +1174,7 @@ msgstr "Gehitu {0} gehiago jarraitzeko"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:64
 msgid "Add {displayName} to starter pack"
-msgstr "Gehitu {displayName} abio multzora"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1312,7 +1312,7 @@ msgstr "Gehitu gomendatutako feddak"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "Gehitu feed batzuk zure abio multzoari!"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1339,7 +1339,7 @@ msgstr "Gehitu gordetako postetara"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to starter packs"
-msgstr "Gehitu abio multzoei"
+msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1365,7 +1365,7 @@ msgstr "Zerrendara gehitua"
 
 #: src/components/dialogs/StarterPackDialog.tsx:271
 msgid "Added to starter pack"
-msgstr "Abio multzora gehituta"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:224
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:229
@@ -1622,7 +1622,7 @@ msgstr "Errore bat gertatu da feeda eskuratzerakoan."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Errore bat gertatu da zure abio multzoa sortzean. Berriro saiatu nahi duzu?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr "Ziur zaude mezu hau ezabatu nahi duzula? Mezua zuretzako ezabatuko da, b
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Ziur zaude abio multzo hau ezabatu nahi duzula?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2060,7 +2060,7 @@ msgstr "Abatar sortzailea"
 
 #: src/screens/ModerationInbox/index.tsx:102
 msgid "Awaiting review"
-msgstr ""
+msgstr "Berrikuspenaren zain"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2099,7 +2099,7 @@ msgstr "Itzuli Txatetara"
 
 #: src/screens/ModerationInbox/index.tsx:198
 msgid "Ban evasion – {duration}, now expired"
-msgstr ""
+msgstr "Debekua saihestea – {duration}, orain iraungita"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:218
 msgid "Banned activities or security violations"
@@ -2139,7 +2139,7 @@ msgstr "Post bat sortu edo erantzun aurretik, zure posta elektronikoa egiaztatu 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Abio multzo bat sortu aurretik, zure posta elektronikoa egiaztatu behar duzu."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2342,7 +2342,7 @@ msgstr "Bluesky Classic™"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:36
 msgid "Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension."
-msgstr ""
+msgstr "Blueskyk neurriak hartu ditu zure kontuaren edo edukiaren kontra gure komunitatearen jarraibideak urratzeagatik. Urraketa gehiagok neurri zorrotzagoak ekarriko dituzte, kontuaren etendura barne."
 
 #: src/components/contacts/screens/GetContacts.tsx:237
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
@@ -2452,25 +2452,25 @@ msgstr "Nabigatu proposamen gehiagotatik Arakatu orrian"
 msgid "Browse other feeds"
 msgstr "Nabigatu beste feedetatik"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr "Nabigatu {displayName}-ri buruzko postak"
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr "Nabigatu {displayName}-rekin etiketatutako postak"
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
-msgstr "Nabigatu {displayName} abio multzoa"
+msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr "Nabigatu {0} gaia"
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr "Nabigatu {displayName} gaia"
 
@@ -2723,7 +2723,7 @@ msgstr "Aldaketak gordeta"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:163
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr "Abio multzoan egindako aldaketak ez dira zerrendan islatuko sortu ondoren. Zerrenda kopia independentea izango da."
+msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:515
@@ -3508,7 +3508,7 @@ msgstr "Kopiatu esteka profilera"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:652
 msgid "Copy link to starter pack"
-msgstr "Kopiatu abio multzoaren esteka"
+msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:196
 #: src/components/dms/MessageContextMenu.tsx:200
@@ -3663,17 +3663,17 @@ msgstr "Sortu zerrenda bat"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Create a list from this starter pack"
-msgstr "Sortu zerrenda bat abio multzo honetatik"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
-msgstr "Sortu QR kodea abio multzo baterako"
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:566
 msgid "Create a starter pack"
-msgstr "Sortu abio multzo bat"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
@@ -3682,7 +3682,7 @@ msgstr "Sortu Abio Multzo bat"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
-msgstr "Sortu niretzat abio multzo bat"
+msgstr ""
 
 #: src/components/WelcomeModal.tsx:156
 #: src/components/WelcomeModal.tsx:164
@@ -3709,7 +3709,7 @@ msgstr "Sortu kontu bat"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this starter pack"
-msgstr "Sortu kontu bat abio multzo hau erabili gabe"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3735,7 +3735,7 @@ msgstr "Sortu zerrenda kideetatik"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:147
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:151
 msgid "Create list from starter pack"
-msgstr "Sortu zerrenda abio multzotik"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3761,7 +3761,7 @@ msgstr "Sortu salaketa {0}rentzat"
 #: src/components/dialogs/StarterPackDialog.tsx:105
 #: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "Create starter pack"
-msgstr "Sortu abio multzoa"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -3947,11 +3947,11 @@ msgstr "Ezabatu posta"
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 #: src/screens/StarterPack/StarterPackScreen.tsx:870
 msgid "Delete starter pack"
-msgstr "Ezabatu abio multzoa"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "Abio multzoa ezabatu nahi duzu?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4041,7 +4041,7 @@ msgstr "Lausotu"
 #: src/screens/ModerationInbox/index.tsx:116
 msgctxt "moderation-report-subject"
 msgid "Direct message from {account}"
-msgstr ""
+msgstr "{account}-k bidalitako mezu zuzena"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:382
 #: src/screens/Messages/components/InviteLinkDialog.tsx:387
@@ -4128,7 +4128,7 @@ msgstr "Deskonektatu Germ DM"
 #: src/lib/strings/feed-names.ts:16
 msgctxt "feed-name"
 msgid "Discover"
-msgstr ""
+msgstr "Aurkitu"
 
 #: src/screens/Search/Explore.tsx:445
 msgid "Discover feeds"
@@ -4487,7 +4487,7 @@ msgstr "Editatu Profila"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 msgid "Edit starter pack"
-msgstr "Editatu abio multzoa"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4504,7 +4504,7 @@ msgstr "Editatu nork erantzun dezakeen"
 
 #: src/Navigation.tsx:571
 msgid "Edit your starter pack"
-msgstr "Editatu zure abio multzoa"
+msgstr ""
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -4709,7 +4709,7 @@ msgstr "Sartu zure erabiltzaile-izena eta pasahitza"
 msgid "Enters full screen"
 msgstr "Pantaila osora sartzen da"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr "Entretenimendua"
 
@@ -4937,7 +4937,7 @@ msgstr "Ezin izan da zerrendara gehitu"
 
 #: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Failed to add to starter pack"
-msgstr "Ezin izan da abio multzora gehitu"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -4965,7 +4965,7 @@ msgstr "Ezin izan da sortu gonbidapen-esteka"
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "Ezin izan da sortu abio multzoa"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "Ezin izan da posta ezabatu. Mesedez, saiatu berriro"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "Ezin izan da abio multzoa ezabatu"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5136,7 +5136,7 @@ msgstr "Ezin izan da zerrendatik kendu"
 
 #: src/components/dialogs/StarterPackDialog.tsx:290
 msgid "Failed to remove from starter pack"
-msgstr "Ezin izan da abio multzotik kendu"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5312,7 +5312,7 @@ msgstr "Feedak"
 
 #: src/view/com/home/HomeHeader.tsx:37
 msgid "Feeds ✨"
-msgstr ""
+msgstr "Feedak ✨"
 
 #: src/screens/SavedFeeds.tsx:227
 #: src/screens/SavedFeeds.tsx:398
@@ -5345,7 +5345,7 @@ msgstr "Feedetatik iragazi"
 
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:41
 msgid "Filter moderation reports (currently: {currentLabel})"
-msgstr ""
+msgstr "Iragazi moderazio-salaketak (oraingoa: {currentLabel})"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
@@ -5731,7 +5731,7 @@ msgstr "Pertsona hauenak"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Abio multzo bat sortu"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -5775,7 +5775,7 @@ msgstr "Laguntza"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for starter pack joins, verification, and other activity."
-msgstr "Jaso jakinarazpena abio-multzoan sartzean, egiaztatzean eta bestelako jardueretan."
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -5998,7 +5998,7 @@ msgstr "Eman sarbidea"
 #: src/screens/ModerationInbox/index.tsx:140
 msgctxt "moderation-report-label"
 msgid "Graphic media"
-msgstr ""
+msgstr "Multimedia grafikoa"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -6133,7 +6133,7 @@ msgstr "Haptikoak"
 #: src/screens/ModerationInbox/index.tsx:136
 msgctxt "moderation-report-guideline"
 msgid "Harassment"
-msgstr ""
+msgstr "Jazarpena"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Harassment or hate"
@@ -6804,7 +6804,7 @@ msgstr "Gonbidapen-esteka gaituta"
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this starter pack!"
-msgstr "Gonbidatu jendea abio multzo honetara!"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6834,7 +6834,7 @@ msgstr "Zuzena da"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr "Oraintxe <0>{0}</0> bakarrik dago! Gehitu jende gehiago zure abio multzoari goiko bilaketan."
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7185,7 +7185,7 @@ msgstr "Gogoko du {0, plural, one {# erabiltzaileak} other {# erabiltzaileek}}"
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr "{0}-k atsegin du"
 
@@ -7195,7 +7195,7 @@ msgstr "{0}-k atsegin du"
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr "{0}-k eta {1}-k atsegin dute"
 
@@ -7239,7 +7239,7 @@ msgstr "Zerrenda"
 #: src/screens/ModerationInbox/index.tsx:107
 msgctxt "moderation-report-subject"
 msgid "List “{list}”"
-msgstr ""
+msgstr "“{list}” zerrenda"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -7504,7 +7504,7 @@ msgstr "Eskuz"
 
 #: src/screens/ModerationInbox/index.tsx:166
 msgid "Mark all actions as read"
-msgstr ""
+msgstr "Markatu ekintza guztiak irakurri gisa"
 
 #: src/screens/Messages/Inbox.tsx:311
 #: src/screens/Messages/Inbox.tsx:317
@@ -7522,7 +7522,7 @@ msgstr "Markatu txat guztiak irakurri gisa"
 
 #: src/screens/ModerationInbox/index.tsx:88
 msgid "Mark all reports as read"
-msgstr ""
+msgstr "Markatu salaketa guztiak irakurritzat"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
@@ -7937,7 +7937,7 @@ msgstr "Nire Feedak"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My starter pack"
-msgstr "Nire abio multzoa"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -7956,7 +7956,7 @@ msgstr "Nabigatu {0}-ra"
 
 #: src/components/StarterPack/StarterPackCard.tsx:129
 msgid "Navigate to starter pack"
-msgstr "Joan abio multzora"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8112,7 +8112,7 @@ msgstr "{firstAuthorName} eta {additionalAuthorsCount, plural, one {beste {forma
 
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "New starter pack"
-msgstr "Abio multzo berria"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "Erantzun berrienak lehenengo"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Berriak"
 
@@ -8170,7 +8170,7 @@ msgstr "Ez"
 
 #: src/screens/ModerationInbox/index.tsx:111
 msgid "No action taken"
-msgstr ""
+msgstr "Ez da neurririk hartu"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8479,7 +8479,7 @@ msgstr "Oharra: Post hau saioa hasi duten erabiltzaileentzat bakarrik ikus daite
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:67
 msgid "Nothing on your account is restricted right now. Strikes from violations come off your record over time."
-msgstr ""
+msgstr "Zure kontuan ez dago ezer mugatuta une honetan. Arau-hausteengatiko zigorrak zure historiatik ezabatzen dira denborarekin."
 
 #: src/screens/Bookmarks.tsx:290
 msgid "Nothing saved yet"
@@ -8811,7 +8811,7 @@ msgstr "Ireki partekatzeko menua"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Open starter pack menu"
-msgstr "Ireki abio multzoaren menua"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -8827,7 +8827,7 @@ msgstr "Ireki txat talde hau"
 
 #: src/view/shell/desktop/Feeds.tsx:185
 msgid "Opens {displayName} feed"
-msgstr ""
+msgstr "{displayName} feeda irekitzen du"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
@@ -8946,7 +8946,7 @@ msgstr "Profil hau irekitzen du"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:798
 msgid "Opt out"
-msgstr ""
+msgstr "Ez parte hartu"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:256
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:264
@@ -8965,11 +8965,11 @@ msgstr ""
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:83
 #: src/screens/StarterPack/StarterPackScreen.tsx:563
 msgid "Opt-out undone"
-msgstr ""
+msgstr "Ez parte hartzeari uko egin zaio"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:104
 msgid "Opted out"
-msgstr ""
+msgstr "Ez parte hartuta"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:82
 #: src/screens/StarterPack/StarterPackScreen.tsx:562
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr "Mesedez, idatzi zure mezua jarraian:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Politika"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Posteatu"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "{count}-tik {index}. posta"
@@ -9510,7 +9510,7 @@ msgstr "Post blokeatuta"
 #: src/screens/ModerationInbox/index.tsx:98
 msgctxt "moderation-report-subject"
 msgid "Post by {account}"
-msgstr ""
+msgstr "{account}-ren posta"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:272
@@ -9987,7 +9987,7 @@ msgstr "Kendu {displayName} txat taldetik"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:63
 msgid "Remove {displayName} from starter pack"
-msgstr "Kendu {displayName} abio multzotik"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10165,7 +10165,7 @@ msgstr "Gordetako postetatik kendua"
 #: src/components/dialogs/StarterPackDialog.tsx:284
 #: src/components/StarterPack/Main/ProfilesList.tsx:169
 msgid "Removed from starter pack"
-msgstr "Abio multzotik kenduta"
+msgstr ""
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:106
@@ -10340,7 +10340,7 @@ msgstr "Salaketa bidalia"
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Report starter pack"
-msgstr "Salatu abio multzoa"
+msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10381,7 +10381,7 @@ msgstr "Salatu post hau"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
-msgstr "Salatu abio multzo hau"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Report this user"
@@ -10568,7 +10568,7 @@ msgstr "Berrezarri pasahitza kode bat zure helbide elektronikora bidaliz"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:27
 msgctxt "moderation-report-filter"
 msgid "Resolved"
-msgstr ""
+msgstr "Ebatzita"
 
 #: src/components/OTAChannelNotice.tsx:58
 msgid "Restore default"
@@ -10952,8 +10952,8 @@ msgstr "Ikusi Bluesky-n lanpostuak"
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr "Ikusi gehiago"
 
@@ -10961,8 +10961,8 @@ msgstr "Ikusi gehiago"
 msgid "See more suggested profiles"
 msgstr "Ikusi iradokitako profil gehiago"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "Ikusi joera-gai gehiago"
 
@@ -11432,11 +11432,11 @@ msgstr "Partekatu bilaketa hau"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Share this starter pack"
-msgstr "Partekatu abio multzo hau"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Partekatu abio multzo hau eta lagundu jendea zure Bluesky komunitatean sartzen."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11479,7 +11479,7 @@ msgstr "Erakutsi"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:42
 msgid "Show account status"
-msgstr ""
+msgstr "Erakutsi kontuaren egoera"
 
 #: src/components/AltBadgeWithDialog.tsx:48
 msgid "Show alt text"
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Spam-a edo bestelako jokabide edo engainu faltsuak"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Kirolak"
 
@@ -11962,24 +11962,24 @@ msgstr "Abio Multzoa"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:88
 msgid "Starter pack by {0}"
-msgstr "{0}-ren abio multzoa"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Starter pack by <0/>"
-msgstr "<0/>-ren abio multzoa"
+msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:87
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Starter pack by you"
-msgstr "Zure abio multzoa"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "Abio multzoa ez da zuzena"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
-msgstr "Abio multzoak"
+msgstr ""
 
 #: src/screens/Search/Explore.tsx:658
 #: src/view/screens/Profile.tsx:241
@@ -11988,11 +11988,11 @@ msgstr "Abio Multzoak"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Abio multzoek zure gogoko feedak eta jendea zure lagunekin erraz partekatzeko aukera ematen dizu."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
-msgstr "Abio multzoek zure gogoko feedak eta jendea zure lagunekin partekatzeko aukera ematen dizu."
+msgstr ""
 
 #: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
@@ -12380,7 +12380,7 @@ msgstr "Horrek honako hauek ditu:"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Ezin izan da aurkitu abio multzo hori."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12515,7 +12515,7 @@ msgstr "Zerbitzariak arazoak dituela dirudi. Mesedez, saiatu berriro une batzuk 
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:860
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "Ikusten saiatzen ari zaren abio multzoa ez da zuzena. Horren ordez, abio multzo hau ezaba dezakezu."
+msgstr ""
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -13064,7 +13064,7 @@ msgstr "Bideo hau ezin da nabigatzailean aurreikusi. Hala ere, kargatu egingo da
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:156
 msgid "This will create a new list with the same name, description, and members as this starter pack."
-msgstr "Honek abio multzo honen izen, deskribapen eta kide berdinak dituen zerrenda berri bat sortuko du."
+msgstr ""
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13210,9 +13210,9 @@ msgstr "Hizkuntza bererako itzulpena ez dago erabilgarri zure gailuan."
 msgid "Tree view"
 msgstr "Zuhaitz-ikuspegia"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "Joera"
 
@@ -13221,9 +13221,9 @@ msgstr "Joera"
 msgid "Trending GIFs"
 msgstr "Modako GIFak"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr "Joera-aukerak"
 
@@ -13337,7 +13337,7 @@ msgstr "Ezin da hautatutako hartzailea aurkitu."
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:17
 msgid "Unable to load your account"
-msgstr ""
+msgstr "Ezin izan da zure kontua kargatu"
 
 #: src/lib/strings/errors.ts:77
 msgid "Unable to resolve handle"
@@ -13407,7 +13407,7 @@ msgstr "Desblokeatu zerrenda"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:23
 msgctxt "moderation-report-filter"
 msgid "Under review"
-msgstr ""
+msgstr "Berrikuspenean"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
@@ -13429,7 +13429,7 @@ msgstr "Desegin"
 #: src/screens/StarterPack/StarterPackScreen.tsx:785
 #: src/screens/StarterPack/StarterPackScreen.tsx:796
 msgid "Undo opt-out"
-msgstr ""
+msgstr "Desegin ez parte hartzea"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:255
 #: src/screens/StarterPack/StarterPackScreen.tsx:683
@@ -13439,7 +13439,7 @@ msgstr ""
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:337
 #: src/screens/StarterPack/StarterPackScreen.tsx:760
 msgid "Undo opt-out?"
-msgstr ""
+msgstr "Ez parte hartzea desegin?"
 
 #: src/components/PostControls/RepostButton.web.tsx:67
 #: src/components/PostControls/RepostButton.web.tsx:74
@@ -13597,7 +13597,7 @@ msgstr "Zerrenda ainguratik kenduta"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:28
 msgctxt "moderation-report-filter"
 msgid "Unread"
-msgstr ""
+msgstr "Irakurri gabe"
 
 #: src/screens/Settings/Settings.tsx:503
 #: src/screens/Settings/Settings.tsx:505
@@ -13975,7 +13975,7 @@ msgstr "{0} bertsioa"
 #. When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via starter pack <0/><1>{starterPackName}</1>"
-msgstr "<0/><1>{starterPackName}</1> abio multzoaren bidez"
+msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:123
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:189
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "{0}-ren bideoa. Sakatu bideoa erreproduzitzeko edo pausatzeko"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Bideo-jokoak"
 
@@ -14222,7 +14222,7 @@ msgstr "Bideoa murgiltze moduan ikusten du"
 
 #: src/screens/ModerationInbox/index.tsx:181
 msgid "Violates community guideline: {guideline}"
-msgstr ""
+msgstr "Komunitatearen jarraibidea urratzen du: {guideline}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
 msgid "Violence"
@@ -14302,7 +14302,7 @@ msgstr "Ezin izan ditugu kargatu elkarrizketa honen ezarpenak"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:18
 msgid "We couldn't load your account settings. Check your internet connection and try again."
-msgstr ""
+msgstr "Ezin izan ditugu zure kontuaren ezarpenak kargatu. Egiaztatu Interneteko konexioa eta saiatu berriro."
 
 #: src/screens/Login/LoginForm.tsx:483
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
@@ -14512,7 +14512,7 @@ msgstr "Zeintzuk dira zure interesak?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "Nola deitu nahi diozu zure abio multzoari?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "Zergatik berrikusi behar da post hau?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "Zergatik berrikusi behar da abio multzo hau?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr "Bai, ezabatu nire kontua"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Bai, ezabatu abio multzo hau"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14925,7 +14925,7 @@ msgstr "Ez duzu zerrendarik."
 
 #: src/components/dialogs/StarterPackDialog.tsx:99
 msgid "You have no starter packs."
-msgstr "Ez duzu abio multzorik."
+msgstr ""
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -14957,7 +14957,7 @@ msgstr "Gorde gabeko aldaketak dituzu. Zirriborroak ikusi aurretik gorde nahi di
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "Ez duzu oraindik abio multzorik sortu!"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -14987,7 +14987,7 @@ msgstr "Zu Bluesky-n sartu zinen orain dela {timeAgoString}"
 
 #: src/components/NewskieDialog.tsx:105
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "Zu Bluesky-n sartu zinen abio multzo bat erabiliz orain dela {timeAgoString}"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15016,7 +15016,7 @@ msgstr "Gutxienez 13 urte izan behar dituzu Bluesky erabiltzeko. Irakurri gure <
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Gutxienez beste zazpi pertsona jarraitu behar dituzu abio multzo bat sortzeko."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
@@ -15240,15 +15240,15 @@ msgstr "Zure kontua bertan behera utzi da"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:35
 msgid "Your account has repeated violations of our Community Guidelines. Another violation may result in your account being permanently suspended."
-msgstr ""
+msgstr "Zure kontuak behin eta berriz urratu ditu gure Komunitatearen Jarraibideak. Beste urraketa batek zure kontua betiko etetea ekar dezake."
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:32
 msgid "Your account has strikes on record"
-msgstr ""
+msgstr "Zure kontuak zigorrak ditu erregistratuta"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:31
 msgid "Your account is at risk of permanent suspension"
-msgstr ""
+msgstr "Zure kontuak behin betiko etetzeko arriskua du"
 
 #: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -15393,7 +15393,7 @@ msgstr "Pasahitzak 8 karaktereko luzera izan behar du gutxienez."
 #: src/screens/ModerationInbox/index.tsx:177
 msgctxt "moderation-report-action"
 msgid "Your post was removed"
-msgstr ""
+msgstr "Zure posta kendu da"
 
 #: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
@@ -15431,7 +15431,7 @@ msgstr "Zure salaketa <0>{0}</0>-ra bidaliko da."
 
 #: src/screens/ModerationInbox/index.tsx:46
 msgid "Your reports"
-msgstr ""
+msgstr "Zure salaketak"
 
 #: src/screens/Settings/InterestsSettings.tsx:64
 msgid "Your selected interests help us serve you content you care about."

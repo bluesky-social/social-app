@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-03 07:18\n"
+"PO-Revision-Date: 2026-09-05 03:31\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -25,7 +25,7 @@ msgstr "Kategorio \"{interestsDisplayName}\" (aktiva)"
 
 #: src/screens/ModerationInbox/index.tsx:190
 msgid "“{label}” – shown behind a warning"
-msgstr ""
+msgstr "\"{label}\" – montrita malantaŭ averto"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -211,7 +211,7 @@ msgstr "{0, plural, one {afiŝo} other {afiŝoj}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:494
 msgid "{0, plural, other {# people have}} joined Bluesky via this starter pack!"
-msgstr "{0, plural, one {# homo}other {# homoj}} aliĝis al Bluesky uzante ĉi tiun startpakon!"
+msgstr ""
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:354
@@ -527,7 +527,7 @@ msgstr "{firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formatte
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your starter pack"
-msgstr "{firstAuthorLink} kaj <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}}</0> registriĝis kun via startpako"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -567,7 +567,7 @@ msgstr "{firstAuthorLink} reafiŝis vian reafiŝon"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your starter pack"
-msgstr "{firstAuthorLink} registriĝis kun via startpako"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -579,7 +579,7 @@ msgstr "{firstAuthorName} kaj {additionalAuthorsCount, plural, one {{formattedAu
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} kaj {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}} eksekvis vin per startpako {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -607,7 +607,7 @@ msgstr "{firstAuthorName} kaj {additionalAuthorsCount, plural, one {{formattedAu
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your starter pack"
-msgstr "{firstAuthorName} kaj {additionalAuthorsCount, plural, one {{formattedAuthorsCount} alia} other {{formattedAuthorsCount} aliaj}} registriĝis kun via startpako"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -623,11 +623,11 @@ msgstr "{firstAuthorName} eksekvis vin reciproke"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via starter pack {starterPackName}"
-msgstr "{firstAuthorName} sekvis vin reciproke per startpako {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via starter pack {starterPackName}"
-msgstr "{firstAuthorName} eksekvis vin reciproke per startpako {starterPackName}"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -655,7 +655,7 @@ msgstr "{firstAuthorName} reafiŝis vian reafiŝon"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your starter pack"
-msgstr "{firstAuthorName} registriĝis kun via startpako"
+msgstr ""
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -667,8 +667,8 @@ msgstr "{following} sekvataj"
 
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
-#: src/components/interstitials/FeedTrendingTopics.tsx:246
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:194
+#: src/components/interstitials/FeedTrendingTopics.tsx:254
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:196
 msgid "{formattedPostCount} {postCount, plural, one {post} other {posts}}"
 msgstr "{formattedPostCount} {postCount, plural, one {afiŝo} other {afiŝoj}}"
 
@@ -694,7 +694,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr "{hours, plural, one {# horo} other {# horoj}}"
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr "{index}/{count}"
@@ -755,7 +755,7 @@ msgstr "Plej ŝatataj fluoj kaj homoj de {name} - aliĝu al mi!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}'s starter pack"
-msgstr "Startpako de {name}"
+msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:334
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -771,12 +771,12 @@ msgstr "{profileName} aliĝis al Bluesky antaŭ {timeAgoString}"
 
 #: src/components/NewskieDialog.tsx:113
 msgid "{profileName} joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "{profileName} aliĝis al Bluesky uzante startpakon antaŭ {timeAgoString}"
+msgstr ""
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
-#: src/components/interstitials/FeedTrendingTopics.tsx:231
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:169
+#: src/components/interstitials/FeedTrendingTopics.tsx:239
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:171
 msgid "{rank}."
 msgstr "{rank}."
 
@@ -838,7 +838,7 @@ msgstr "+{computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:574
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>kaj {2, plural, one {# alia} other {# aliaj}} estas en via startpako"
+msgstr ""
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -846,7 +846,7 @@ msgstr "<0>{0}, </0><1>{1}, </1>kaj {2, plural, one {# alia} other {# aliaj}} es
 #: src/screens/StarterPack/Wizard/index.tsx:521
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your starter pack"
-msgstr "<0>{0}, </0><1>{1}, </1>kaj {2, plural, one {# alia} other {# aliaj}} estas en via startpako"
+msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -893,12 +893,12 @@ msgstr "<0>{0}</0> {likeCount, plural, one {ŝato} other {ŝatoj}}"
 #: src/screens/StarterPack/Wizard/index.tsx:508
 #: src/screens/StarterPack/Wizard/index.tsx:562
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your starter pack"
-msgstr "<0>{0}</0> kaj<1> </1><2>{1} </2>estas en via startpako"
+msgstr ""
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:555
 msgid "<0>{0}</0> is included in your starter pack"
-msgstr "<0>{0}</0> estas en via startpako"
+msgstr ""
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -922,7 +922,7 @@ msgstr "<0>Tuŝeti ĉi tie por aktualigi vian lokon per GPS.</0>"
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:499
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your starter pack"
-msgstr "<0>Vi</0> kaj<1> </1><2>{0} </2>estas en via startpako"
+msgstr ""
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -959,7 +959,7 @@ msgstr "Aro de popularaj fluoj, kiujn vi povas trovi ĉe Bluesky, inkluzive de N
 #: src/screens/ModerationInbox/index.tsx:194
 msgctxt "moderation-report-action"
 msgid "A label was added to your post"
-msgstr ""
+msgstr "Etikedo estis aldonita al via afiŝo"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/components/dms/getReactionInfo.ts:58
@@ -1174,7 +1174,7 @@ msgstr "Aldoni {0} pli por daŭrigi"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:64
 msgid "Add {displayName} to starter pack"
-msgstr "Aldoni {displayName} al la startpako"
+msgstr ""
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1312,7 +1312,7 @@ msgstr "Aldoni rekomenditajn fluojn"
 
 #: src/screens/StarterPack/Wizard/index.tsx:543
 msgid "Add some feeds to your starter pack!"
-msgstr "Aldonu iujn fluojn al via startpako!"
+msgstr ""
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1339,7 +1339,7 @@ msgstr "Aldoni al konservitaj afiŝoj"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to starter packs"
-msgstr "Aldoni al startpakoj"
+msgstr ""
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1365,7 +1365,7 @@ msgstr "Aldonita al listo"
 
 #: src/components/dialogs/StarterPackDialog.tsx:271
 msgid "Added to starter pack"
-msgstr "Aldonita al la startpako"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:224
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:229
@@ -1622,7 +1622,7 @@ msgstr "Eraro okazis dum ŝargado de la fluo."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:377
 msgid "An error occurred while generating your starter pack. Want to try again?"
-msgstr "Eraro okazis dum generado de via startpako. Ĉu vi volas reprovi?"
+msgstr ""
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1936,7 +1936,7 @@ msgstr "Ĉu vi certas, ke vi volas forigi ĉi tiun mesaĝon? La mesaĝo estos fo
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:717
 msgid "Are you sure you want to delete this starter pack?"
-msgstr "Ĉu vi certas, ke vi volas forigi ĉi tiun startpakon?"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2060,7 +2060,7 @@ msgstr "Profilbilda kreilo"
 
 #: src/screens/ModerationInbox/index.tsx:102
 msgid "Awaiting review"
-msgstr ""
+msgstr "Atendanta revizion"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2099,7 +2099,7 @@ msgstr "Reveni al babilejoj"
 
 #: src/screens/ModerationInbox/index.tsx:198
 msgid "Ban evasion – {duration}, now expired"
-msgstr ""
+msgstr "Ĉirkaŭiro de forbaro – {duration}, nun eksvalidiĝita"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:218
 msgid "Banned activities or security violations"
@@ -2139,7 +2139,7 @@ msgstr "Antaŭ ol krei afiŝon aŭ respondi, vi devas unue konfirmi vian retpoŝ
 #: src/components/StarterPack/ProfileStarterPacks.tsx:277
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a starter pack, you must first verify your email."
-msgstr "Antaŭ ol krei startpakon, vi devas unue konfirmi vian retpoŝtadreson."
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2452,25 +2452,25 @@ msgstr "Foliumi pli da proponoj sur la paĝo Esplori"
 msgid "Browse other feeds"
 msgstr "Foliumi aliajn fluojn"
 
-#: src/components/TrendingTopics.tsx:135
+#: src/components/TrendingTopics.tsx:152
 msgid "Browse posts about {displayName}"
 msgstr "Foliumi afiŝojn pri {displayName}"
 
-#: src/components/TrendingTopics.tsx:143
+#: src/components/TrendingTopics.tsx:160
 msgid "Browse posts tagged with {displayName}"
 msgstr "Foliumi afiŝojn etikeditajn per {displayName}"
 
-#: src/components/TrendingTopics.tsx:152
+#: src/components/TrendingTopics.tsx:169
 msgid "Browse starter pack {displayName}"
-msgstr "Foliumi startpakon {displayName}"
+msgstr ""
 
 #. placeholder {0}: trend.displayName
-#: src/components/interstitials/FeedTrendingTopics.tsx:203
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:151
+#: src/components/interstitials/FeedTrendingTopics.tsx:211
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:153
 msgid "Browse topic {0}"
 msgstr "Foliumi temon {0}"
 
-#: src/components/TrendingTopics.tsx:189
+#: src/components/TrendingTopics.tsx:206
 msgid "Browse topic {displayName}"
 msgstr "Foliumi temon {displayName}"
 
@@ -2723,7 +2723,7 @@ msgstr "Ŝanĝoj konservitaj"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:163
 msgid "Changes to the starter pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr "Ŝanĝoj al la startpako ne estos reflektota en la listo post kreo. La listo estos sendependa kopio."
+msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:515
@@ -3508,7 +3508,7 @@ msgstr "Kopii ligilon al profilo"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:652
 msgid "Copy link to starter pack"
-msgstr "Kopii ligilon al startpako"
+msgstr ""
 
 #: src/components/dms/MessageContextMenu.tsx:196
 #: src/components/dms/MessageContextMenu.tsx:200
@@ -3663,17 +3663,17 @@ msgstr "Krei liston"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:635
 msgid "Create a list from this starter pack"
-msgstr "Krei liston el ĉi tiu startpako"
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a starter pack"
-msgstr "Krei QR-kodon por startpako"
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:210
 #: src/components/StarterPack/ProfileStarterPacks.tsx:319
 #: src/Navigation.tsx:566
 msgid "Create a starter pack"
-msgstr "Krei startpakon"
+msgstr ""
 
 #: src/view/screens/Profile.tsx:575
 #: src/view/screens/Profile.tsx:576
@@ -3682,7 +3682,7 @@ msgstr "Krei startpakon"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:306
 msgid "Create a starter pack for me"
-msgstr "Krei startpakon por mi"
+msgstr ""
 
 #: src/components/WelcomeModal.tsx:156
 #: src/components/WelcomeModal.tsx:164
@@ -3709,7 +3709,7 @@ msgstr "Krei konton"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this starter pack"
-msgstr "Krei konton neuzante ĉi tiun startpakon"
+msgstr ""
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3735,7 +3735,7 @@ msgstr "Krei liston el anoj"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:147
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:151
 msgid "Create list from starter pack"
-msgstr "Krei liston el startpako"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3761,7 +3761,7 @@ msgstr "Krei raporton pri {0}"
 #: src/components/dialogs/StarterPackDialog.tsx:105
 #: src/components/dialogs/StarterPackDialog.tsx:202
 msgid "Create starter pack"
-msgstr "Krei startpakon"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -3947,11 +3947,11 @@ msgstr "Forigi afiŝon"
 #: src/screens/StarterPack/StarterPackScreen.tsx:624
 #: src/screens/StarterPack/StarterPackScreen.tsx:870
 msgid "Delete starter pack"
-msgstr "Forigi startpakon"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:714
 msgid "Delete starter pack?"
-msgstr "Ĉu forigi startpakon?"
+msgstr ""
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:324
 msgid "Delete this list?"
@@ -4041,7 +4041,7 @@ msgstr "Malheleta"
 #: src/screens/ModerationInbox/index.tsx:116
 msgctxt "moderation-report-subject"
 msgid "Direct message from {account}"
-msgstr ""
+msgstr "Rekta mesaĝo de {account}"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:382
 #: src/screens/Messages/components/InviteLinkDialog.tsx:387
@@ -4128,7 +4128,7 @@ msgstr "Malkonekti Germ DM"
 #: src/lib/strings/feed-names.ts:16
 msgctxt "feed-name"
 msgid "Discover"
-msgstr ""
+msgstr "Malkovri"
 
 #: src/screens/Search/Explore.tsx:445
 msgid "Discover feeds"
@@ -4169,7 +4169,7 @@ msgstr "Forĵeti interesojn"
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:74
 #: src/features/liveEvents/components/SidebarLiveEventFeedsBanner.tsx:64
 msgid "Dismiss live event banner"
-msgstr ""
+msgstr "Forĵeti rubandon pri tujelsenda evento"
 
 #: src/components/interstitials/TrendingVideos.tsx:91
 msgid "Dismiss this section"
@@ -4487,7 +4487,7 @@ msgstr "Redakti profilon"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:611
 msgid "Edit starter pack"
-msgstr "Redakti startpakon"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4504,7 +4504,7 @@ msgstr "Elekti kiu povas respondi"
 
 #: src/Navigation.tsx:571
 msgid "Edit your starter pack"
-msgstr "Redakti vian startpakon"
+msgstr ""
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -4634,7 +4634,7 @@ msgstr "Videbligi furorajn temojn"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:155
 #: src/screens/Settings/ContentAndMediaSettings.tsx:169
 msgid "Enable trending videos in your Discover feed"
-msgstr "Videbligi furorajn videaĵojn en via fluo Discover"
+msgstr "Videbligi furorajn videaĵojn en via fluo Malkovri"
 
 #: src/screens/Moderation/index.tsx:455
 msgid "Enabled"
@@ -4709,7 +4709,7 @@ msgstr "Entajpu vian uzantnomon kaj pasvorton"
 msgid "Enters full screen"
 msgstr "Ŝaltas plenekranon"
 
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
 msgid "Entertainment"
 msgstr "Amuzo"
 
@@ -4937,7 +4937,7 @@ msgstr "Malsukcesis aldoni al listo"
 
 #: src/components/dialogs/StarterPackDialog.tsx:277
 msgid "Failed to add to starter pack"
-msgstr "Malsukcesis aldoni al la startpako"
+msgstr ""
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -4965,7 +4965,7 @@ msgstr "Malsukcesis krei invitligilon"
 #: src/screens/StarterPack/Wizard/index.tsx:246
 #: src/screens/StarterPack/Wizard/index.tsx:256
 msgid "Failed to create starter pack"
-msgstr "Malsukcesis krei startpakon"
+msgstr ""
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -4983,7 +4983,7 @@ msgstr "Malsukcesis forigi afiŝon, bonvolu reprovi"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:839
 msgid "Failed to delete starter pack"
-msgstr "Malsukcesis forigi startpakon"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:129
 msgid "Failed to disable invite link"
@@ -5136,7 +5136,7 @@ msgstr "Malsukcesis forigi el listo"
 
 #: src/components/dialogs/StarterPackDialog.tsx:290
 msgid "Failed to remove from starter pack"
-msgstr "Malsukcesis forigi el la startpako"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5312,7 +5312,7 @@ msgstr "Fluoj"
 
 #: src/view/com/home/HomeHeader.tsx:37
 msgid "Feeds ✨"
-msgstr ""
+msgstr "Fluoj ✨"
 
 #: src/screens/SavedFeeds.tsx:227
 #: src/screens/SavedFeeds.tsx:398
@@ -5345,7 +5345,7 @@ msgstr "Filtri el fluoj"
 
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:41
 msgid "Filter moderation reports (currently: {currentLabel})"
-msgstr ""
+msgstr "Filtri kontrol-raportojn (nune: {currentLabel})"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
@@ -5731,7 +5731,7 @@ msgstr "De ĉi tiuj homoj"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:340
 msgid "Generate a starter pack"
-msgstr "Generi startpakon"
+msgstr ""
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:236
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
@@ -5775,7 +5775,7 @@ msgstr "Akiri helpon"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for starter pack joins, verification, and other activity."
-msgstr "Ricevi sciigojn pri aniĝoj al startpakoj, konfirmado kaj alia agado."
+msgstr ""
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -5998,7 +5998,7 @@ msgstr "Doni alirpermeson"
 #: src/screens/ModerationInbox/index.tsx:140
 msgctxt "moderation-report-label"
 msgid "Graphic media"
-msgstr ""
+msgstr "Maldeca aŭdvidaĵo"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -6133,7 +6133,7 @@ msgstr "Tuŝ-retrokuplado"
 #: src/screens/ModerationInbox/index.tsx:136
 msgctxt "moderation-report-guideline"
 msgid "Harassment"
-msgstr ""
+msgstr "Ĉikanado"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Harassment or hate"
@@ -6315,7 +6315,7 @@ msgstr "Kaŝas la enhavon"
 
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:87
 msgid "Hides the invite friends promo banner"
-msgstr ""
+msgstr "Kaŝas la reklaman rubandon por inviti amikojn"
 
 #: src/components/dialogs/BirthDateSettings.tsx:76
 msgid "Hmm, it looks like you're signed in with an <0>App Password</0>. To set your birthdate, you'll need to sign in with your main account password, or ask whomever controls this account to do so."
@@ -6804,7 +6804,7 @@ msgstr "Invitligilo ŝaltita"
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this starter pack!"
-msgstr "Invitu homojn al ĉi tiu startpako!"
+msgstr ""
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6834,7 +6834,7 @@ msgstr "Ĝi ĝustas"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:488
 msgid "It's just <0>{0} </0>right now! Add more people to your starter pack by searching above."
-msgstr "<0>{0} </0>estas sola ĉi-momente! Aldoni pli da homoj al via startpako serĉante supre."
+msgstr ""
 
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7153,7 +7153,7 @@ msgstr "Ŝatu 10 afiŝojn"
 #: src/state/shell/progress-guide.tsx:215
 #: src/state/shell/progress-guide.tsx:220
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Ŝatu 10 afiŝojn por trejni la fluon Discover"
+msgstr "Ŝatu 10 afiŝojn por trejni la fluon Malkovri"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:560
 msgid "Like this feed"
@@ -7185,7 +7185,7 @@ msgstr "Ŝatata de {0, plural, one {# uzanto} other {# uzantoj}}"
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr "Ŝatata de {0}"
 
@@ -7195,7 +7195,7 @@ msgstr "Ŝatata de {0}"
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr "Ŝatata de {0} kaj {1}"
 
@@ -7239,7 +7239,7 @@ msgstr "Listo"
 #: src/screens/ModerationInbox/index.tsx:107
 msgctxt "moderation-report-subject"
 msgid "List “{list}”"
-msgstr ""
+msgstr "Listo \"{list}\""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -7504,7 +7504,7 @@ msgstr "Permana"
 
 #: src/screens/ModerationInbox/index.tsx:166
 msgid "Mark all actions as read"
-msgstr ""
+msgstr "Marki ĉiujn agojn kiel legitajn"
 
 #: src/screens/Messages/Inbox.tsx:311
 #: src/screens/Messages/Inbox.tsx:317
@@ -7522,7 +7522,7 @@ msgstr "Marki ĉiujn babilejojn kiel legitajn"
 
 #: src/screens/ModerationInbox/index.tsx:88
 msgid "Mark all reports as read"
-msgstr ""
+msgstr "Marki ĉiujn raportojn kiel legitajn"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
@@ -7937,7 +7937,7 @@ msgstr "Miaj fluoj"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My starter pack"
-msgstr "Mia startpako"
+msgstr ""
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -7956,7 +7956,7 @@ msgstr "Iri al {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:129
 msgid "Navigate to starter pack"
-msgstr "Iri al startpako"
+msgstr ""
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8112,7 +8112,7 @@ msgstr "Novaj afiŝoj de {firstAuthorName} kaj {additionalAuthorsCount, plural, 
 
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "New starter pack"
-msgstr "Nova startpako"
+msgstr ""
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8130,7 +8130,7 @@ msgid "Newest replies first"
 msgstr "La plej novaj respondoj unue"
 
 #: src/lib/interests.ts:67
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:250
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:252
 msgid "News"
 msgstr "Novaĵoj"
 
@@ -8170,7 +8170,7 @@ msgstr "Ne"
 
 #: src/screens/ModerationInbox/index.tsx:111
 msgid "No action taken"
-msgstr ""
+msgstr "Faris neniun agon"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8811,7 +8811,7 @@ msgstr "Malfermi konigadan menuon"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:597
 msgid "Open starter pack menu"
-msgstr "Malfermi menuon de startpako"
+msgstr ""
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -8827,7 +8827,7 @@ msgstr "Malfermi ĉi tiun grupan babilejon"
 
 #: src/view/shell/desktop/Feeds.tsx:185
 msgid "Opens {displayName} feed"
-msgstr ""
+msgstr "Malfermas fluon de {displayName}"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
@@ -9460,7 +9460,7 @@ msgid "Please write your message below:"
 msgstr "Bonvolu tajpi vian mesaĝon sube:"
 
 #: src/lib/interests.ts:70
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
 msgid "Politics"
 msgstr "Politiko"
 
@@ -9479,7 +9479,7 @@ msgid "Post"
 msgstr "Afiŝo"
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr "Afiŝo {index} el {count}"
@@ -9510,7 +9510,7 @@ msgstr "Afiŝo blokita"
 #: src/screens/ModerationInbox/index.tsx:98
 msgctxt "moderation-report-subject"
 msgid "Post by {account}"
-msgstr ""
+msgstr "Afiŝo de {account}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:272
@@ -9713,7 +9713,7 @@ msgstr "Profilo"
 
 #: src/screens/Profile/Header/Shell.tsx:165
 msgid "Profile banner placeholder"
-msgstr ""
+msgstr "Lokokupilo de profila rubando"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:210
 #: src/lib/strings/errors.ts:74
@@ -9987,7 +9987,7 @@ msgstr "Forigi {displayName} el grupa babilejo"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:63
 msgid "Remove {displayName} from starter pack"
-msgstr "Forigi {displayName} el la startpako"
+msgstr ""
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10165,7 +10165,7 @@ msgstr "Forigita el konservitaj afiŝoj"
 #: src/components/dialogs/StarterPackDialog.tsx:284
 #: src/components/StarterPack/Main/ProfilesList.tsx:169
 msgid "Removed from starter pack"
-msgstr "Forigita el la startpako"
+msgstr ""
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:106
@@ -10196,7 +10196,7 @@ msgstr "Renovigi silentigitan vorton"
 #: src/view/com/posts/FeedShutdownMsg.tsx:134
 #: src/view/com/posts/FeedShutdownMsg.tsx:138
 msgid "Replace with Discover"
-msgstr "Anstataŭigi per Discover"
+msgstr "Anstataŭigi per Malkovri"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -10340,7 +10340,7 @@ msgstr "Raporto sendita"
 #: src/screens/StarterPack/StarterPackScreen.tsx:672
 #: src/screens/StarterPack/StarterPackScreen.tsx:675
 msgid "Report starter pack"
-msgstr "Raporti startpakon"
+msgstr ""
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10381,7 +10381,7 @@ msgstr "Raporti ĉi tiun afiŝon"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Report this starter pack"
-msgstr "Raporti ĉi tiun startpakon"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Report this user"
@@ -10568,7 +10568,7 @@ msgstr ""
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:27
 msgctxt "moderation-report-filter"
 msgid "Resolved"
-msgstr ""
+msgstr "Solvita"
 
 #: src/components/OTAChannelNotice.tsx:58
 msgid "Restore default"
@@ -10952,8 +10952,8 @@ msgstr "Vidu laborpostenojn ĉe Bluesky"
 
 #: src/components/FeedInterstitials.tsx:495
 #: src/components/FeedInterstitials.tsx:554
-#: src/components/interstitials/FeedTrendingTopics.tsx:116
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:82
+#: src/components/interstitials/FeedTrendingTopics.tsx:117
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:83
 msgid "See more"
 msgstr "Vidi pli"
 
@@ -10961,8 +10961,8 @@ msgstr "Vidi pli"
 msgid "See more suggested profiles"
 msgstr "Vidi pli da proponataj profiloj"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:102
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:68
+#: src/components/interstitials/FeedTrendingTopics.tsx:103
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:69
 msgid "See more trending topics"
 msgstr "Vidi pli da furoraj temoj"
 
@@ -11361,7 +11361,7 @@ msgstr "Konigi"
 
 #: src/ageAssurance/useVerificationFlow.ts:62
 msgid "Share age range"
-msgstr ""
+msgstr "Kunhavigi aĝan intervalon"
 
 #: src/view/com/profile/ProfileMenu.tsx:582
 msgid "Share anyway"
@@ -11377,7 +11377,7 @@ msgstr "Konigi DID-on de aŭtoro"
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:93
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:98
 msgid "Share feedback"
-msgstr ""
+msgstr "Kunhavigi prikomentadon"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
 #: src/components/Lightbox/Lightbox.web.tsx:281
@@ -11432,11 +11432,11 @@ msgstr "Konigi ĉi tiun serĉon"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:430
 msgid "Share this starter pack"
-msgstr "Konigi ĉi tiun startpakon"
+msgstr ""
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this starter pack and help people join your community on Bluesky."
-msgstr "Konigu ĉi tiun startpakon kaj helpu homojn aliĝi vian komunumon ĉe Bluesky."
+msgstr ""
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11479,7 +11479,7 @@ msgstr "Montri"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:42
 msgid "Show account status"
-msgstr ""
+msgstr "Montri kontan staton"
 
 #: src/components/AltBadgeWithDialog.tsx:48
 msgid "Show alt text"
@@ -11912,7 +11912,7 @@ msgid "Spam or other inauthentic behavior or deception"
 msgstr "Trudmesaĝoj aŭ alia neaŭtentika konduto aŭ trompo"
 
 #: src/lib/interests.ts:72
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:242
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:244
 msgid "Sports"
 msgstr "Sporto"
 
@@ -11962,24 +11962,24 @@ msgstr "Startpako"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:88
 msgid "Starter pack by {0}"
-msgstr "Startpako de {0}"
+msgstr ""
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:171
 msgid "Starter pack by <0/>"
-msgstr "Startpako de <0/>"
+msgstr ""
 
 #: src/components/StarterPack/StarterPackCard.tsx:87
 #: src/view/com/profile/ProfileSubpageHeader.tsx:169
 msgid "Starter pack by you"
-msgstr "Startpako de vi"
+msgstr ""
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:850
 msgid "Starter pack is invalid"
-msgstr "Startpako nevalidas"
+msgstr ""
 
 #: src/screens/Search/SearchResults.tsx:120
 msgid "Starter packs"
-msgstr "Startpakoj"
+msgstr ""
 
 #: src/screens/Search/Explore.tsx:658
 #: src/view/screens/Profile.tsx:241
@@ -11988,11 +11988,11 @@ msgstr "Startpakoj"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:298
 msgid "Starter packs let you easily share your favorite feeds and people with your friends."
-msgstr "Starterpako ebligas al vi konigi viajn plej ŝatatajn fluojn kaj homojn kun viaj amikoj."
+msgstr ""
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:105
 msgid "Starter packs let you share your favorite feeds and people with your friends."
-msgstr "Startpako ebligas al vi konigi viajn plej ŝatatajn fluojn kaj homojn kun viaj amikoj."
+msgstr ""
 
 #: src/view/screens/Profile.tsx:568
 msgid "Starter Packs let you share your favorite feeds and people with your friends."
@@ -12295,7 +12295,7 @@ msgstr "Tuŝetu por vidi reagojn"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:108
 msgid "Targeted harassment"
-msgstr "Intenca ĉikanado"
+msgstr "Celita ĉikanado"
 
 #: src/state/shell/progress-guide.tsx:234
 msgid "Task complete - 10 follows!"
@@ -12380,7 +12380,7 @@ msgstr "Tio enhavas la jenan:"
 #: src/screens/StarterPack/Wizard/index.tsx:112
 #: src/screens/StarterPack/Wizard/index.tsx:122
 msgid "That starter pack could not be found."
-msgstr "Tiu startpako ne troveblas."
+msgstr ""
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12428,11 +12428,11 @@ msgstr "La regularo pri kopirajtoj translokiĝis al <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:107
 msgid "The Discover feed"
-msgstr "La fluo Discover"
+msgstr "La fluo Malkovri"
 
 #: src/state/shell/progress-guide.tsx:225
 msgid "The Discover feed now knows what you like"
-msgstr "La fluo Discover nun scias tion, kio plaĉas al vi"
+msgstr "La fluo Malkovri nun scias tion, kio plaĉas al vi"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:324
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -12440,7 +12440,7 @@ msgstr "Estas pli bone uzi la aplikaĵon. Elŝutu Bluesky nun kaj ni revenos tie
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:70
 msgid "The feed has been replaced with Discover."
-msgstr "La fluo estis anstataŭigita per Discover."
+msgstr "La fluo estis anstataŭigita per Malkovri."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to this post."
@@ -12515,7 +12515,7 @@ msgstr "La servilo ŝajnas havi problemon. Bonvolu reprovi post kelkaj momentoj.
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:860
 msgid "The starter pack that you are trying to view is invalid. You may delete this starter pack instead."
-msgstr "La startpako, kiun vi provas vidi, estas nevalida. Vi povas forigi ĝin."
+msgstr ""
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -12608,7 +12608,7 @@ msgstr "Estis problemo ŝargante viajn listojn. Tuŝetu ĉi tie por reprovi."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:109
 msgid "There was an issue fetching your service info"
-msgstr "Problemo okazis dum ŝarĝi infomojn de via servo"
+msgstr "Problemo okazis dum ŝargi infomojn de via servo"
 
 #: src/view/com/posts/PostFeedErrorMessage.tsx:151
 msgid "There was an issue removing this feed. Please check your internet connection and try again."
@@ -12855,7 +12855,7 @@ msgstr "Ĉi tiu fluo malplenas."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:104
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "Ĉi tiu fluo ne plu estas enreta. Anstataŭe ni montras <0>Discover</0>."
+msgstr "La fluo ne plu estas enreta. Anstataŭe ni montras <0>Malkovri</0>."
 
 #: src/screens/Messages/components/ChatLocked.tsx:76
 msgid "This group is locked by a moderation action on the owner"
@@ -13064,7 +13064,7 @@ msgstr ""
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:156
 msgid "This will create a new list with the same name, description, and members as this starter pack."
-msgstr "Tio kreos novan liston kun la sama nomo, priskribo kaj anoj kiel ĉi tiu startpako."
+msgstr ""
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13210,9 +13210,9 @@ msgstr "Tradukado al la sama lingvo estas nedisponebla sur via aparato."
 msgid "Tree view"
 msgstr "Arbovido"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:98
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:76
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:65
+#: src/components/interstitials/FeedTrendingTopics.tsx:99
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:77
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:66
 msgid "Trending"
 msgstr "Furoraĵoj"
 
@@ -13221,9 +13221,9 @@ msgstr "Furoraĵoj"
 msgid "Trending GIFs"
 msgstr "Furoraj GIF-oj"
 
-#: src/components/interstitials/FeedTrendingTopics.tsx:125
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:79
-#: src/view/shell/desktop/SidebarTrendingTopics.tsx:92
+#: src/components/interstitials/FeedTrendingTopics.tsx:126
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:80
+#: src/view/shell/desktop/SidebarTrendingTopics.tsx:93
 msgid "Trending options"
 msgstr "Opcioj pri furoraĵoj"
 
@@ -13975,7 +13975,7 @@ msgstr "Versio {0}"
 #. When the source of a follow is a starter pack, i.e., 'via starter pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via starter pack <0/><1>{starterPackName}</1>"
-msgstr "per startpako <0/><1>{starterPackName}</1>"
+msgstr ""
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:123
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:189
@@ -14001,7 +14001,7 @@ msgid "Video from {0}. Tap to play or pause the video"
 msgstr "Videaĵo de {0}. Tuŝetu por ludi aŭ paŭzigi la videaĵon"
 
 #: src/lib/interests.ts:62
-#: src/screens/Search/modules/ExploreTrendingTopics.tsx:246
+#: src/screens/Search/modules/ExploreTrendingTopics.tsx:248
 msgid "Video Games"
 msgstr "Videoludoj"
 
@@ -14512,7 +14512,7 @@ msgstr "Kiuj estas viaj interesoj?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your starter pack?"
-msgstr "Kiel vi volas nomi vian startpakon?"
+msgstr ""
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14588,7 +14588,7 @@ msgstr "Kial ĉi tiu afiŝo estu reviziita?"
 
 #: src/components/moderation/ReportDialog/copy.ts:44
 msgid "Why should this starter pack be reviewed?"
-msgstr "Kial ĉi tiu startpako estu reviziita?"
+msgstr ""
 
 #: src/components/moderation/ReportDialog/copy.ts:14
 msgid "Why should this user be reviewed?"
@@ -14665,7 +14665,7 @@ msgstr "Jes, forigu mian konton"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:745
 msgid "Yes, delete this starter pack"
-msgstr "Jes, forigu ĉi tiun startpakon"
+msgstr ""
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -14925,7 +14925,7 @@ msgstr "Vi ne havas listojn."
 
 #: src/components/dialogs/StarterPackDialog.tsx:99
 msgid "You have no starter packs."
-msgstr "Vi havas neniun startpakon."
+msgstr ""
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -14957,7 +14957,7 @@ msgstr "Vi havas nekonservitajn ŝanĝojn. Ĉu vi volas konservi ilin antaŭ ol 
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:295
 msgid "You haven't created a starter pack yet!"
-msgstr "Vi ankoraŭ kreis neniun startpakon!"
+msgstr ""
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -14987,7 +14987,7 @@ msgstr "Vi aliĝis al Bluesky antaŭ {timeAgoString}"
 
 #: src/components/NewskieDialog.tsx:105
 msgid "You joined Bluesky using a starter pack {timeAgoString} ago"
-msgstr "Vi aliĝis al Bluesky uzante startpakon antaŭ {timeAgoString}"
+msgstr ""
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15016,7 +15016,7 @@ msgstr "Vi devas aĝi almenaŭ 13 jarojn por uzi Bluesky. Legu niajn <0>uzokondi
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
 msgid "You must be following at least seven other people to generate a starter pack."
-msgstr "Vi devas sekvi almenaŭ sep aliajn homojn por generi startpakon."
+msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
@@ -15393,7 +15393,7 @@ msgstr "Via pasvorto bezonas almenaŭ 8 signojn."
 #: src/screens/ModerationInbox/index.tsx:177
 msgctxt "moderation-report-action"
 msgid "Your post was removed"
-msgstr ""
+msgstr "Via afiŝo estis forigita"
 
 #: src/view/com/composer/Composer.tsx:1241
 msgid "Your post was sent"
