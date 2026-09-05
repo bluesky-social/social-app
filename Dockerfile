@@ -67,7 +67,7 @@ RUN SENTRY_AUTH_TOKEN=$SENTRY_AUTH_TOKEN \
 # copying the bskyweb/ tree from stage 1 is enough for go:embed to find
 # everything.
 #
-FROM golang:1.26-bookworm AS go-build
+FROM golang:1.27-bookworm AS go-build
 
 WORKDIR /usr/src/social-app
 
