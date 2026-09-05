@@ -509,7 +509,7 @@ export function FollowButtonInner({
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(l`An issue occurred, please try again.`, {
+        Toast.show(l`An issue occurred. Please try again.`, {
           type: 'error',
         })
       }
@@ -534,7 +534,7 @@ export function FollowButtonInner({
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
-        Toast.show(l`An issue occurred, please try again.`, {
+        Toast.show(l`An issue occurred. Please try again.`, {
           type: 'error',
         })
       }
