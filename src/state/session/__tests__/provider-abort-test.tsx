@@ -1,20 +1,27 @@
 import {beforeEach, describe, expect, it, jest} from '@jest/globals'
 import {act, render} from '@testing-library/react-native'
 
+let mockWriteSessionError: Error | undefined
+const mockAnalyticsLoggerWarn = jest.fn()
+
 /*
  * The provider pulls the whole app shell in through `#/state/util` and the
  * account factories. These mocks cut the tree back to the session lifecycle
  * itself, which is all these tests drive.
  */
 jest.mock('#/state/persisted', () => {
+  const actual = jest.requireActual<object>('#/state/persisted')
   const {
     defaults,
   }: typeof import('#/state/persisted/schema') = require('#/state/persisted/schema')
   return {
-    defaults,
-    get: (key: keyof typeof defaults) => defaults[key],
-    write: () => Promise.resolve(),
-    readLatest: (key: keyof typeof defaults) => defaults[key],
+    ...actual,
+    get: () => defaults.session,
+    readLatest: () => defaults.session,
+    writeSession: ({nextSession}: {nextSession: typeof defaults.session}) =>
+      mockWriteSessionError
+        ? Promise.reject(mockWriteSessionError)
+        : Promise.resolve(nextSession),
     onUpdate: () => () => {},
   }
 })
@@ -24,7 +31,14 @@ jest.mock('#/components/dialogs/Context', () => ({
 }))
 jest.mock('#/analytics', () => ({
   AnalyticsContext: ({children}: {children: React.ReactNode}) => children,
-  useAnalyticsBase: () => ({metric() {}, logger: {debug() {}, error() {}}}),
+  useAnalyticsBase: () => ({
+    metric() {},
+    logger: {
+      debug() {},
+      error() {},
+      warn: (...args: unknown[]) => mockAnalyticsLoggerWarn(...args),
+    },
+  }),
   utils: {accountToSessionMetadata: () => ({}), useMeta: () => undefined},
 }))
 jest.mock('#/state/shell/onboarding', () => ({
@@ -79,6 +93,14 @@ function renderProvider(): SessionApiContext {
   return api
 }
 
+beforeEach(() => {
+  mockLogin.mockReset()
+  mockCreateAccount.mockReset()
+  mockDisposeBundle.mockReset()
+  mockWriteSessionError = undefined
+  mockAnalyticsLoggerWarn.mockReset()
+})
+
 /*
  * Every factory returns an ARMED bundle, so a call whose result is thrown away
  * because a newer call superseded it must dispose that bundle. Leaving it armed
@@ -86,18 +108,6 @@ function renderProvider(): SessionApiContext {
  * for an account the app is no longer tracking.
  */
 describe('superseded session tasks dispose their bundle', () => {
-  /*
-   * Without this, a recorded call from an earlier test satisfies a later
-   * assertion. The tagged bundles below are the other half of that guard: two
-   * `{}` literals are structurally equal, so `toHaveBeenCalledWith` could not
-   * tell one test's bundle from the other's even within a cleared mock.
-   */
-  beforeEach(() => {
-    mockLogin.mockReset()
-    mockCreateAccount.mockReset()
-    mockDisposeBundle.mockReset()
-  })
-
   it('disposes the bundle of an aborted login', async () => {
     const bundle = {tag: 'login-bundle'} as never
     let resolveLogin!: (value: unknown) => void
@@ -141,5 +151,76 @@ describe('superseded session tasks dispose their bundle', () => {
     })
 
     expect(mockDisposeBundle).toHaveBeenCalledWith(bundle)
+  })
+})
+
+describe('persistence failures after an in-memory commit', () => {
+  const account = {
+    did: 'did:plc:example',
+    handle: 'alice.test',
+    service: 'https://bsky.social/',
+    accessJwt: 'access-jwt',
+    refreshJwt: 'refresh-jwt',
+  }
+
+  it('treats login as successful and logs a warning', async () => {
+    const error = new Error('storage failed')
+    mockLogin.mockResolvedValueOnce({bundle: {}, account})
+    mockWriteSessionError = error
+    const api = renderProvider()
+
+    await act(async () => {
+      await api.login({} as never, 'LoginForm')
+    })
+
+    expect(mockAnalyticsLoggerWarn).toHaveBeenCalledWith(
+      'Logged in but session persistence failed',
+      {safeMessage: error},
+    )
+  })
+
+  it('treats account creation as successful and logs a warning', async () => {
+    const error = new Error('storage failed')
+    mockCreateAccount.mockResolvedValueOnce({bundle: {}, account})
+    mockWriteSessionError = error
+    const api = renderProvider()
+
+    await act(async () => {
+      await api.createAccount({} as never, {} as never)
+    })
+
+    expect(mockAnalyticsLoggerWarn).toHaveBeenCalledWith(
+      'Account created but session persistence failed',
+      {safeMessage: error},
+    )
+  })
+
+  it('keeps refreshed metadata and logs a warning', async () => {
+    const error = new Error('storage failed')
+    const bundle = {
+      pdsClient: {
+        call: () =>
+          Promise.resolve({
+            did: account.did,
+            emailConfirmed: true,
+            emailAuthFactor: true,
+          }),
+      },
+    }
+    mockLogin.mockResolvedValueOnce({bundle, account})
+    const api = renderProvider()
+    await act(async () => {
+      await api.login({} as never, 'LoginForm')
+    })
+    mockWriteSessionError = error
+
+    await act(async () => {
+      await api.partialRefreshSession()
+    })
+
+    expect(mockAnalyticsLoggerWarn).toHaveBeenCalledWith(
+      'Session metadata updated but persistence failed',
+      {safeMessage: error},
+    )
   })
 })
