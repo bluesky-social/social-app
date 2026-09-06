@@ -169,6 +169,28 @@
         }
       }
     },
+    "knownLikers": {
+      "type": "object",
+      "required": [
+        "count",
+        "actors"
+      ],
+      "properties": {
+        "count": {
+          "type": "integer"
+        },
+        "actors": {
+          "type": "array",
+          "items": {
+            "ref": "app.bsky.actor.defs#profileViewBasic",
+            "type": "ref"
+          },
+          "maxLength": 5,
+          "minLength": 0
+        }
+      },
+      "description": "The post's likers whom you also follow"
+    },
     "requestLess": {
       "type": "token",
       "description": "Request that less content like the given feed item be shown in the feed"
@@ -194,6 +216,11 @@
         "bookmarked": {
           "type": "boolean"
         },
+        "knownLikers": {
+          "ref": "#knownLikers",
+          "type": "ref",
+          "description": "This property is present only in selected cases, as an optimization."
+        },
         "threadMuted": {
           "type": "boolean"
         },
@@ -202,36 +229,9 @@
         },
         "embeddingDisabled": {
           "type": "boolean"
-        },
-        "knownLikers": {
-          "description": "This property is present only in selected cases, as an optimization.",
-          "type": "ref",
-          "ref": "#knownLikers"
         }
       },
       "description": "Metadata about the requesting account's relationship with the subject content. Only has meaningful content for authed requests."
-    },
-    "knownLikers": {
-      "type": "object",
-      "description": "The post's likers whom you also follow",
-      "required": [
-        "count",
-        "actors"
-      ],
-      "properties": {
-        "count": {
-          "type": "integer"
-        },
-        "actors": {
-          "type": "array",
-          "minLength": 0,
-          "maxLength": 5,
-          "items": {
-            "type": "ref",
-            "ref": "app.bsky.actor.defs#profileViewBasic"
-          }
-        }
-      }
     },
     "feedViewPost": {
       "type": "object",

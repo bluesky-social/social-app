@@ -79,10 +79,12 @@ export function usePinnedPostMutation() {
               : undefined
             return existing
           },
-          checkCommitted: profile =>
-            pinCurrentPost
+          checkCommitted: profile => {
+            if (!profile) return false
+            return pinCurrentPost
               ? profile.pinnedPost?.uri === postUri
-              : !profile.pinnedPost,
+              : !profile.pinnedPost
+          },
         })
 
         if (pinCurrentPost) {

@@ -6,9 +6,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {useGenerateStarterPackMutation} from '#/lib/generate-starterpack'
@@ -54,7 +52,7 @@ interface ProfileFeedgensProps {
   isMe: boolean
   emptyStateMessage?: string
   emptyStateButton?: EmptyStateButtonProps
-  emptyStateIcon?: React.ComponentType<any> | React.ReactElement
+  emptyStateIcon?: React.ComponentType | React.ReactElement
 }
 
 function keyExtractor(item: app.bsky.graph.defs.StarterPackViewBasic) {
@@ -90,7 +88,7 @@ export function ProfileStarterPacks({
   const {isTabletOrDesktop} = useWebMediaQueries()
 
   const items = data?.pages.flatMap(page => page.starterPacks)
-  const {_} = useLingui()
+  const {t: l} = useLingui()
 
   const EmptyComponent = useCallback(() => {
     if (emptyStateMessage || emptyStateButton || emptyStateIcon) {
@@ -101,9 +99,7 @@ export function ProfileStarterPacks({
             iconSize="3xl"
             message={
               emptyStateMessage ??
-              _(
-                msg`Starter packs let you share your favorite feeds and people with your friends.`,
-              )
+              l`Starter Packs let you share your favorite feeds and people with your friends.`
             }
             button={emptyStateButton}
           />
@@ -111,7 +107,7 @@ export function ProfileStarterPacks({
       )
     }
     return <Empty />
-  }, [_, emptyStateMessage, emptyStateButton, emptyStateIcon])
+  }, [l, emptyStateMessage, emptyStateButton, emptyStateIcon])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: () => {},
@@ -122,7 +118,7 @@ export function ProfileStarterPacks({
     try {
       await refetch()
     } catch (err) {
-      logger.error('Failed to refresh starter packs', {message: err})
+      logger.error('Failed to refresh Starter Packs', {message: err})
     }
     setIsPTRing(false)
   }, [refetch, setIsPTRing])
@@ -132,7 +128,7 @@ export function ProfileStarterPacks({
     try {
       await fetchNextPage()
     } catch (err) {
-      logger.error('Failed to load more starter packs', {message: err})
+      logger.error('Failed to load more Starter Packs', {message: err})
     }
   }, [isFetchingNextPage, hasNextPage, isError, fetchNextPage])
 
@@ -179,8 +175,8 @@ export function ProfileStarterPacks({
         }}
         removeClippedSubviews={true}
         desktopFixedHeight
-        onEndReached={onEndReached}
-        onRefresh={onRefresh}
+        onEndReached={() => void onEndReached()}
+        onRefresh={() => void onRefresh()}
         ListEmptyComponent={
           data ? (isMe ? EmptyComponent : undefined) : FeedLoadingPlaceholder
         }
@@ -193,7 +189,7 @@ export function ProfileStarterPacks({
 }
 
 function CreateAnother() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const navigation = useNavigation<NavigationProp>()
 
@@ -207,7 +203,7 @@ function CreateAnother() {
         t.atoms.border_contrast_low,
       ]}>
       <Button
-        label={_(msg`Create a starter pack`)}
+        label={l`Create a Starter Pack`}
         variant="solid"
         color="secondary"
         size="small"
@@ -223,7 +219,7 @@ function CreateAnother() {
 }
 
 function Empty() {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const navigation = useNavigation<NavigationProp>()
   const confirmDialogControl = useDialogControl()
   const followersDialogControl = useDialogControl()
@@ -244,7 +240,7 @@ function Empty() {
       setIsGenerating(false)
     },
     onError: e => {
-      logger.error('Failed to generate starter pack', {safeMessage: e})
+      logger.error('Failed to generate Starter Pack', {safeMessage: e})
       setIsGenerating(false)
       if (e.message.includes('NOT_ENOUGH_FOLLOWERS')) {
         followersDialogControl.open()
@@ -265,7 +261,7 @@ function Empty() {
   const wrappedOpenConfirmDialog = requireEmailVerification(openConfirmDialog, {
     instructions: [
       <Trans key="confirm">
-        Before creating a starter pack, you must first verify your email.
+        Before creating a Starter Pack, you must first verify your email.
       </Trans>,
     ],
   })
@@ -275,7 +271,7 @@ function Empty() {
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
       <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
+        Before creating a Starter Pack, you must first verify your email.
       </Trans>,
     ],
   })
@@ -292,18 +288,18 @@ function Empty() {
       ]}>
       <View style={[a.gap_xs]}>
         <Text style={[a.font_semi_bold, a.text_lg, {color: 'white'}]}>
-          <Trans>You haven't created a starter pack yet!</Trans>
+          <Trans>You haven't created a Starter Pack yet!</Trans>
         </Text>
         <Text style={[a.text_md, {color: 'white'}]}>
           <Trans>
-            Starter packs let you easily share your favorite feeds and people
+            Starter Packs let you easily share your favorite feeds and people
             with your friends.
           </Trans>
         </Text>
       </View>
       <View style={[a.flex_row, a.gap_md, {marginLeft: 'auto'}]}>
         <Button
-          label={_(msg`Create a starter pack for me`)}
+          label={l`Create a Starter Pack for me`}
           variant="ghost"
           color="primary"
           size="small"
@@ -316,7 +312,7 @@ function Empty() {
           {isGenerating && <Loader size="md" />}
         </Button>
         <Button
-          label={_(msg`Create a starter pack`)}
+          label={l`Create a Starter Pack`}
           variant="ghost"
           color="primary"
           size="small"
@@ -333,11 +329,10 @@ function Empty() {
           </ButtonText>
         </Button>
       </View>
-
       <Prompt.Outer control={confirmDialogControl}>
         <Prompt.Content>
           <Prompt.TitleText>
-            <Trans>Generate a starter pack</Trans>
+            <Trans>Generate a Starter Pack</Trans>
           </Prompt.TitleText>
           <Prompt.DescriptionText>
             <Trans>
@@ -349,12 +344,12 @@ function Empty() {
         <Prompt.Actions>
           <Prompt.Action
             color="primary"
-            cta={_(msg`Choose for me`)}
+            cta={l`Choose for me`}
             onPress={generate}
           />
           <Prompt.Action
             color="secondary"
-            cta={_(msg`Let me choose`)}
+            cta={l`Let me choose`}
             onPress={() => {
               navigation.navigate('StarterPackWizard', {})
             }}
@@ -363,21 +358,17 @@ function Empty() {
       </Prompt.Outer>
       <Prompt.Basic
         control={followersDialogControl}
-        title={_(msg`Oops!`)}
-        description={_(
-          msg`You must be following at least seven other people to generate a starter pack.`,
-        )}
+        title={l`Oops!`}
+        description={l`You must be following at least seven other people to generate a Starter Pack.`}
         onConfirm={() => {}}
         showCancel={false}
       />
       <Prompt.Basic
         control={errorDialogControl}
-        title={_(msg`Oops!`)}
-        description={_(
-          msg`An error occurred while generating your starter pack. Want to try again?`,
-        )}
+        title={l`Oops!`}
+        description={l`An error occurred while generating your Starter Pack. Want to try again?`}
         onConfirm={generate}
-        confirmButtonCta={_(msg`Retry`)}
+        confirmButtonCta={l`Retry`}
       />
     </LinearGradientBackground>
   )

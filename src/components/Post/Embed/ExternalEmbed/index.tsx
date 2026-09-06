@@ -27,11 +27,13 @@ import {GifEmbed} from './Gif'
 export const ExternalEmbed = ({
   link,
   onOpen,
+  post,
   style,
   hideAlt,
 }: {
   link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
+  post?: app.bsky.feed.defs.PostView
   style?: StyleProp<ViewStyle>
   hideAlt?: boolean
 }) => {
@@ -120,7 +122,11 @@ export const ExternalEmbed = ({
           {embedPlayerParams?.isGif ? (
             <ExternalGif link={link} params={embedPlayerParams} />
           ) : embedPlayerParams ? (
-            <ExternalPlayer link={link} params={embedPlayerParams} />
+            <ExternalPlayer
+              link={link}
+              params={embedPlayerParams}
+              post={post}
+            />
           ) : undefined}
 
           <View

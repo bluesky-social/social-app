@@ -93,24 +93,6 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
-    case Features.CanonicalPostNumberingEnable:
-      return {
-        key: feature,
-        name: i18n._(
-          msg({
-            message: 'Thread numbering',
-            comment:
-              'Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)',
-          }),
-        ),
-        description: i18n._(
-          msg({
-            message:
-              'See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.',
-            comment: 'Description of a feature flag (Thread numbering)',
-          }),
-        ),
-      }
     default:
       return null
   }

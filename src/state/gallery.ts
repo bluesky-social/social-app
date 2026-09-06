@@ -5,14 +5,10 @@ import {
   makeDirectoryAsync,
   moveAsync,
 } from 'expo-file-system/legacy'
-import {
-  type Action,
-  type ActionCrop,
-  manipulateAsync,
-  SaveFormat,
-} from 'expo-image-manipulator'
+import {type ImageManipulatorContext, SaveFormat} from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
+import {renderImage} from '#/lib/media/image-manipulator'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
@@ -22,7 +18,7 @@ import {logger} from '#/logger'
 import {IS_NATIVE, IS_WEB} from '#/env'
 
 export type ImageTransformation = {
-  crop?: ActionCrop['crop']
+  crop?: Parameters<ImageManipulatorContext['crop']>[0]
 }
 
 export type ImageMeta = {
@@ -160,11 +156,8 @@ export async function manipulateImage(
   img: ComposerImage,
   trans: ImageTransformation,
 ): Promise<ComposerImage> {
-  const rawActions: (Action | undefined)[] = [trans.crop && {crop: trans.crop}]
-
-  const actions = rawActions.filter((a): a is Action => a !== undefined)
-
-  if (actions.length === 0) {
+  const crop = trans.crop
+  if (!crop) {
     if (img.transformed === undefined) {
       return img
     }
@@ -173,7 +166,7 @@ export async function manipulateImage(
   }
 
   const source = img.source
-  const result = await manipulateAsync(source.path, actions, {
+  const result = await renderImage(source.path, context => context.crop(crop), {
     format: SaveFormat.PNG,
   })
 
@@ -244,9 +237,9 @@ export async function compressImage(
       continue
     }
 
-    const res = await manipulateAsync(
+    const res = await renderImage(
       source.path,
-      [{resize: {width: w, height: h}}],
+      context => context.resize({width: w, height: h}),
       {
         compress: qualityPercentage / 100,
         format: SaveFormat.JPEG,
@@ -362,8 +355,8 @@ function blobToDataUri(blob: Blob): Promise<string> {
  * media to a post. They live alongside our own `bsky-composer` dir under the OS
  * cache directory. expo-image-picker copies every originally selected photo and
  * video here, and expo-image-manipulator leaves intermediate full-resolution
- * outputs here (compressImage makes several manipulateAsync passes, only the
- * last of which gets moved into `bsky-composer`). Nothing else cleans these up,
+ * outputs here (compressImage makes several rendering passes, only the last of
+ * which gets moved into `bsky-composer`). Nothing else cleans these up,
  * so on iOS - where the OS exposes no "clear cache" - they accumulate
  * indefinitely, one full-resolution copy per attached item.
  */

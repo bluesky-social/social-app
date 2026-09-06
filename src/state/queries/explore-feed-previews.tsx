@@ -11,7 +11,11 @@ import {
 
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
-import {FeedTuner} from '#/lib/api/feed-manip'
+import {
+  createFeedViewPostsSlices,
+  FeedTuner,
+  type ValidFeedPostNumbering,
+} from '#/lib/api/feed-manip'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {
@@ -396,6 +400,35 @@ export function* findAllPostsInQueryData(
           const rootQuotedPost = getEmbeddedPost(item.reply.root.embed)
           if (rootQuotedPost && didOrHandleUriMatches(atUri, rootQuotedPost)) {
             yield embedViewRecordToPostView(rootQuotedPost)
+          }
+        }
+      }
+    }
+  }
+}
+
+export function findPostNumberingInQueryData(
+  queryClient: QueryClient,
+  uri: string,
+): ValidFeedPostNumbering | undefined {
+  const atUri = new AtUri(uri)
+  const queryDatas = queryClient.getQueriesData<
+    InfiniteData<{
+      feed: app.bsky.feed.defs.GeneratorView
+      posts: app.bsky.feed.defs.FeedViewPost[]
+    }>
+  >({
+    queryKey: [RQKEY_ROOT],
+  })
+
+  for (const [_queryKey, queryData] of queryDatas) {
+    if (!queryData?.pages) continue
+
+    for (const page of queryData.pages) {
+      for (const slice of createFeedViewPostsSlices(page.posts)) {
+        for (const item of slice.items) {
+          if (item.postNumbering && didOrHandleUriMatches(atUri, item.post)) {
+            return item.postNumbering
           }
         }
       }

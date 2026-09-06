@@ -134,6 +134,7 @@ function MediaEmbed({
           <ExternalEmbed
             link={embed.view.external}
             onOpen={rest.onOpen}
+            post={rest.post}
             style={[a.mt_sm, rest.style]}
           />
         </ContentHider>
@@ -144,7 +145,7 @@ function MediaEmbed({
         <ContentHider
           modui={rest.moderation?.ui('contentMedia')}
           activeStyle={[a.mt_sm]}>
-          <VideoEmbed embed={embed.view} />
+          <VideoEmbed embed={embed.view} post={rest.post} />
         </ContentHider>
       )
     }

@@ -24,8 +24,10 @@ function keyExtractor(item: bsky.profile.AnyProfileView) {
 
 export function StepProfiles({
   moderationOpts,
+  optedOutDids,
 }: {
   moderationOpts: ModerationOpts
+  optedOutDids: Set<string>
 }) {
   const t = useTheme()
   const [state, dispatch] = useWizardState()
@@ -59,6 +61,7 @@ export function StepProfiles({
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}
+        subjectOptedOut={optedOutDids.has(item.did)}
       />
     )
   }

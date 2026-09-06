@@ -10,12 +10,8 @@ import {AppState, type AppStateStatus} from 'react-native'
 import {type AtUriString, type DidString} from '@atproto/syntax'
 import throttle from 'lodash.throttle'
 
-import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
-import {
-  type FeedSourceFeedInfo,
-  type FeedSourceInfo,
-  isFeedSourceFeedInfo,
-} from '#/state/queries/feed'
+import {PROD_FEEDS, STAGING_FEEDS, TRENDING_DID} from '#/lib/constants'
+import {type FeedSourceInfo, isFeedSourceFeedInfo} from '#/state/queries/feed'
 import {
   type FeedDescriptor,
   type FeedPostSliceItem,
@@ -144,7 +140,7 @@ export function useFeedFeedback(
     const interactionsToSend = interactions.filter(
       interaction =>
         interaction.event &&
-        isInteractionAllowed(enabled, feed, interaction.event),
+        isInteractionAllowed(enabled, feed?.feedDescriptor, interaction.event),
     )
 
     if (interactionsToSend.length === 0) {
@@ -263,22 +259,28 @@ export function useFeedFeedbackContext() {
 // TODO
 // We will introduce a permissions framework for 3p feeds to
 // take advantage of the feed feedback API. Until that's in
-// place, we're hardcoding it to the discover feed.
+// place, we're hardcoding it to the discover and trending feeds.
 // -prf
 export function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
 }
 
+export function isTrendingFeed(feed?: FeedDescriptor) {
+  return !!feed && feed.startsWith(`feedgen|at://${TRENDING_DID}/`)
+}
+
 function isInteractionAllowed(
   enabled: boolean,
-  feed: FeedSourceFeedInfo | undefined,
+  feed: FeedDescriptor | undefined,
   interaction: app.bsky.feed.defs.Interaction['event'],
 ) {
   if (!enabled || !feed) {
     return false
   }
-  const isDiscover = isDiscoverFeed(feed.feedDescriptor)
-  return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
+  if (isDiscoverFeed(feed) || isTrendingFeed(feed)) {
+    return true
+  }
+  return THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
 }
 
 function toString(interaction: app.bsky.feed.defs.Interaction): string {

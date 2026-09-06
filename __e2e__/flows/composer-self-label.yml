@@ -30,6 +30,10 @@ appId: xyz.blueskyweb.app
     id: "confirmBtn"
 - tapOn:
     id: "composerPublishBtn"
+- extendedWaitUntil:
+    notVisible:
+      id: "composePostView"
+    timeout: 30000
 - tapOn:
     id: "e2eRefreshHome"
 - assertVisible: "Adult Content"

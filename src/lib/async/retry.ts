@@ -1,5 +1,9 @@
 import {timeout} from '#/lib/async/timeout'
-import {isNetworkError} from '#/lib/strings/errors'
+import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
+
+export function isRetryableRequestError(error: unknown) {
+  return isNetworkError(error) || shouldRetryError(error)
+}
 
 export async function retry<P>(
   retries: number,

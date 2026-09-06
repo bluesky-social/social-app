@@ -138,7 +138,8 @@ export function Provider({
         currentStep: 'Details',
         name: starterPack.record.name,
         description: starterPack.record.description,
-        profiles: listItems?.map(i => i.subject) ?? [],
+        profiles:
+          listItems?.filter(i => !i.subjectOptedOut).map(i => i.subject) ?? [],
         feeds: starterPack.feeds ?? [],
         processing: false,
         transitionDirection: 'Forward',

@@ -406,7 +406,7 @@ export function shortLinkToHref(url: string): string {
   try {
     const urlp = new URL(url)
 
-    // For now we only support starter packs, but in the future we should add additional paths to this check
+    // For now we only support Starter Packs, but in the future we should add additional paths to this check
     const parts = urlp.pathname.split('/').filter(Boolean)
     if (parts.length === 1) {
       return `/starter-pack-short/${parts[0]}`

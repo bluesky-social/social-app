@@ -4,6 +4,7 @@ import {BlueskyVideoView} from '@bsky.app/video'
 import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_30} from '#/lib/constants'
+import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {useAutoplayDisabled} from '#/state/preferences'
 import {atoms as a, useTheme} from '#/alf'
 import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
@@ -26,6 +27,7 @@ export function VideoEmbedInnerNative({
   setStatus,
   setIsLoading,
   setIsActive,
+  onPlaybackStart,
   onError,
 }: {
   ref: React.Ref<{togglePlayback: () => void}>
@@ -33,6 +35,7 @@ export function VideoEmbedInnerNative({
   setStatus: (status: 'playing' | 'paused') => void
   setIsLoading: (isLoading: boolean) => void
   setIsActive: (isActive: boolean) => void
+  onPlaybackStart: (autoplay: boolean) => void
   /**
    * Called with the native error message before the component throws to the
    * surrounding error boundary.
@@ -46,6 +49,7 @@ export function VideoEmbedInnerNative({
   const [muted, setMuted] = useVideoMuteState()
   const reportDialogMetadata = useReportDialogMetadataContext()
   const maxTimeRemainingSeconds = useRef(0)
+  const playbackStartTrackedRef = useRef(false)
 
   const [isPlaying, setIsPlaying] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(0)
@@ -62,12 +66,13 @@ export function VideoEmbedInnerNative({
   }
 
   const isGif = embed.presentation === 'gif'
+  const autoplay = !autoplayDisabled && !isWithinMessage
 
   return (
     <View style={[a.flex_1, a.relative]}>
       <BlueskyVideoView
         url={embed.playlist}
-        autoplay={!autoplayDisabled && !isWithinMessage}
+        autoplay={autoplay}
         beginMuted={isGif || (autoplayDisabled ? false : muted)}
         style={[a.rounded_sm]}
         onActiveChange={e => {
@@ -88,20 +93,26 @@ export function VideoEmbedInnerNative({
         onTimeRemainingChange={e => {
           const {timeRemaining} = e.nativeEvent
           setTimeRemaining(timeRemaining)
-          if (
-            !isGif &&
-            reportDialogMetadata &&
-            Number.isFinite(timeRemaining) &&
-            timeRemaining >= 0
-          ) {
+          if (Number.isFinite(timeRemaining) && timeRemaining >= 0) {
             maxTimeRemainingSeconds.current = Math.max(
               maxTimeRemainingSeconds.current,
               timeRemaining,
             )
-            reportDialogMetadata.current.videoTimestampSeconds = Math.max(
-              0,
-              maxTimeRemainingSeconds.current - timeRemaining,
-            )
+            if (
+              !playbackStartTrackedRef.current &&
+              hasPlaybackStarted(
+                maxTimeRemainingSeconds.current - timeRemaining,
+              )
+            ) {
+              playbackStartTrackedRef.current = true
+              onPlaybackStart(autoplay)
+            }
+            if (!isGif && reportDialogMetadata) {
+              reportDialogMetadata.current.videoTimestampSeconds = Math.max(
+                0,
+                maxTimeRemainingSeconds.current - timeRemaining,
+              )
+            }
           }
         }}
         onError={e => {

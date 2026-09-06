@@ -84,7 +84,10 @@ export async function invalidateListMembersQuery({
   queryClient: QueryClient
   uri: string
 }) {
-  await queryClient.invalidateQueries({queryKey: RQKEY(uri)})
+  await Promise.all([
+    queryClient.invalidateQueries({queryKey: RQKEY(uri)}),
+    queryClient.invalidateQueries({queryKey: RQKEY_ALL(uri)}),
+  ])
 }
 
 export function* findAllProfilesInQueryData(
