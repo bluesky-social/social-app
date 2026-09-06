@@ -339,11 +339,9 @@ function SettingsHeader({
 
   const groupName = convo.details.name
   const [newGroupName, setNewGroupName] = useState(groupName)
-  const [editNameInputKey, setEditNameInputKey] = useState(0)
 
   const openEditNamePrompt = () => {
     setNewGroupName(groupName)
-    setEditNameInputKey(k => k + 1)
     editNamePrompt.open()
   }
 
@@ -591,7 +589,6 @@ function SettingsHeader({
       <EditNamePrompt
         control={editNamePrompt}
         value={newGroupName}
-        inputKey={editNameInputKey}
         onChangeText={setNewGroupName}
         onConfirm={() => editGroupName({name: newGroupName})}
       />
