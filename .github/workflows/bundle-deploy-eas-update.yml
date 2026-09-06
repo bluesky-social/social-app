@@ -54,8 +54,6 @@ jobs:
       # A version bump forces a native build even if the fingerprint is unchanged
       changes-detected: ${{ steps.fingerprint.outputs.includes-changes ||
         steps.version.outputs.version-changed }}
-      # Changelog since the last native testflight build, for TestFlight notes and Slack
-      notes: ${{ steps.notes.outputs.notes }}
 
     steps:
       - name: 🔑 Check for EXPO_TOKEN
@@ -179,57 +177,6 @@ jobs:
           retention-days: 1
           if-no-files-found: error
 
-      # Native builds go out to the QA Team TestFlight group, so generate a changelog of
-      # what changed since the last native testflight build. That build's commit SHA is
-      # stored as a "testflight-native-build-commit" artifact, advanced by recordBaseline
-      # only after both native builds succeed, so a failed run's commits roll into the
-      # next successful build's notes rather than being silently dropped.
-      - name: 📝 Generate release notes
-        id: notes
-        if: ${{ steps.fingerprint.outputs.includes-changes ||
-          steps.version.outputs.version-changed }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-          REPOSITORY_ID: ${{ github.repository_id }}
-        run: |
-          prev=""
-          url=$(gh api \
-            "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-native-build-commit&per_page=100" \
-            --jq "[.artifacts[] | select(
-              .expired == false and
-              .workflow_run.head_branch == \"main\" and
-              .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
-            )] | max_by(.created_at) | .archive_download_url" \
-            2>/dev/null || true)
-          if [ -n "$url" ] && [ "$url" != "null" ]; then
-            if curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o marker.zip "$url" \
-              && unzip -o -q marker.zip; then
-              prev=$(tr -d '[:space:]' < testflight-native-build-commit.txt 2>/dev/null || true)
-            fi
-            rm -f marker.zip testflight-native-build-commit.txt
-          fi
-
-          if [ -n "$prev" ] && git cat-file -e "${prev}^{commit}" 2>/dev/null; then
-            echo "Generating notes since previous native build: $prev"
-            range="${prev}..HEAD"
-          else
-            echo "No reachable previous native build commit; falling back to last 30 commits."
-            range="HEAD~30..HEAD"
-          fi
-          notes=$(git log --no-merges --pretty=format:'- %s' "$range" 2>/dev/null | head -n 50)
-          if [ -z "$notes" ]; then
-            notes="No new commits since the last native build."
-          fi
-          # Cap the whole changelog: TestFlight "What to Test" allows 4000 characters and
-          # this also keeps the Slack message a reasonable size. head -c caps the combined
-          # stream; cut -c would only cap each line independently.
-          notes=$(printf '%s' "$notes" | head -c 3900)
-          {
-            echo "notes<<NOTES_EOF"
-            echo "$notes"
-            echo "NOTES_EOF"
-          } >> "$GITHUB_OUTPUT"
-
       - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
 
@@ -319,7 +266,6 @@ jobs:
     with:
       profile: testflight
       testFlightGroup: "QA Team"
-      changelog: ${{ needs.bundleDeploy.outputs.notes }}
       # OTA rebuilds don't need the xlarge builder used for releases
       runner: macos-26
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
@@ -370,68 +316,6 @@ jobs:
       ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
-  # Native builds go out to the QA team. NIGHTLY_BUILDS_SLACK_WEBHOOK posts to their
-  # channel (the name predates the removal of the nightly build workflow).
-  notifyIOS:
-    name: Notify Slack of iOS build
-    needs: [bundleDeploy, buildIfNecessaryIOS]
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📝 Build Slack payload
-        id: payload
-        env:
-          NOTES: ${{ needs.bundleDeploy.outputs.notes }}
-          VERSION: ${{ needs.buildIfNecessaryIOS.outputs.package-version }}
-          BUILD_NUMBER: ${{ needs.buildIfNecessaryIOS.outputs.build-number }}
-        run: |
-          text="*New iOS build available in TestFlight (QA Team)*
-          Version ${VERSION} (${BUILD_NUMBER})
-
-          ${NOTES}"
-          payload=$(jq -n --arg text "$text" '{text: $text}')
-          {
-            echo "payload<<PAYLOAD_EOF"
-            echo "$payload"
-            echo "PAYLOAD_EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
-        with:
-          webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload: ${{ steps.payload.outputs.payload }}
-
-  notifyAndroid:
-    name: Notify Slack of Android build
-    needs: [bundleDeploy, buildIfNecessaryAndroid]
-    runs-on: ubuntu-latest
-    steps:
-      - name: 📝 Build Slack payload
-        id: payload
-        env:
-          NOTES: ${{ needs.bundleDeploy.outputs.notes }}
-          VERSION: ${{ needs.buildIfNecessaryAndroid.outputs.package-version }}
-          VERSION_CODE: ${{ needs.buildIfNecessaryAndroid.outputs.version-code }}
-        run: |
-          text="*New Android build available (Internal track)*
-          Version ${VERSION} (${VERSION_CODE})
-
-          ${NOTES}"
-          payload=$(jq -n --arg text "$text" '{text: $text}')
-          {
-            echo "payload<<PAYLOAD_EOF"
-            echo "$payload"
-            echo "PAYLOAD_EOF"
-          } >> "$GITHUB_OUTPUT"
-
-      - name: 🔔 Notify Slack
-        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
-        with:
-          webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload: ${{ steps.payload.outputs.payload }}
-
   # Advance the fingerprint baseline only after BOTH native builds have shipped
   # the new native surface. This replaces the old actions/cache baseline, which
   # only advanced on cache eviction and so silently froze - freezing meant every
@@ -474,22 +358,5 @@ jobs:
         with:
           name: testflight-native-fingerprint
           path: native-fingerprint.json
-          retention-days: 90
-          if-no-files-found: error
-
-      # The changelog marker only moves when native builds actually shipped; an OTA-only
-      # deploy must not advance it, or the next build's notes would miss those commits.
-      - name: ✏️ Write native build commit marker
-        if: ${{ needs.bundleDeploy.outputs.changes-detected == 'true' }}
-        env:
-          GITHUB_SHA: ${{ github.sha }}
-        run: echo "$GITHUB_SHA" > testflight-native-build-commit.txt
-
-      - name: 🚀 Record native build commit marker
-        if: ${{ needs.bundleDeploy.outputs.changes-detected == 'true' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: testflight-native-build-commit
-          path: testflight-native-build-commit.txt
           retention-days: 90
           if-no-files-found: error

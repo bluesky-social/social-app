@@ -33,11 +33,6 @@ on:
         type: string
         description: TestFlight group to assign the build to after submitting ("none" to skip)
         default: none
-      changelog:
-        type: string
-        description: TestFlight "What to Test" notes (only applied when a group is selected)
-        required: false
-        default: ''
       runner:
         type: string
         description: Runner for the build job (defaults to macos-26-xlarge)
