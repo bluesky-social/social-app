@@ -370,6 +370,8 @@ jobs:
       ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
       ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
 
+  # Native builds go out to the QA team. NIGHTLY_BUILDS_SLACK_WEBHOOK posts to their
+  # channel (the name predates the removal of the nightly build workflow).
   notifyIOS:
     name: Notify Slack of iOS build
     needs: [bundleDeploy, buildIfNecessaryIOS]
