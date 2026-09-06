@@ -38,7 +38,10 @@ import {
   Bell_Filled_Corner0_Rounded as BellFilled,
   Bell_Stroke2_Corner0_Rounded as Bell,
 } from '#/components/icons/Bell'
-import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
+import {
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilled,
+  Bookmark_Stroke2_Corner0_Rounded as Bookmark,
+} from '#/components/icons/Bookmark'
 import {BulletList_Stroke2_Corner0_Rounded as List} from '#/components/icons/BulletList'
 import {
   Hashtag_Filled_Corner0_Rounded as HashtagFilled,
