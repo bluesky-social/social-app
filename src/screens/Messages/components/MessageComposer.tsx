@@ -104,12 +104,18 @@ export function MessageComposer({
   const submitDisabled =
     !editable || (!messageEmbed && text.trim().length === 0)
 
+  // The send is committed a frame later, and `text` only clears once the
+  // imperative `.clear()` echoes back through `onChange`. Both leave a window
+  // where a second press re-sends the same message, so guard the send itself.
+  const sendPendingRef = useRef(false)
+
   const onSubmit = (
     message: string,
     embed: MessageEmbedState | undefined,
     replyTo: chat.bsky.convo.defs.MessageView | null,
   ) => {
     if (!editable) return
+    if (sendPendingRef.current) return
     if (!embed && message.trim() === '') return
     const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
@@ -122,6 +128,7 @@ export function MessageComposer({
 
     clearDraft()
     playHaptic()
+    setText('')
     setEmbed(undefined)
     clearReply()
     composerInternalApiRef.current?.clear()
@@ -131,7 +138,9 @@ export function MessageComposer({
     }
 
     // defer send by a frame so that the textinput resizes before we send the message
+    sendPendingRef.current = true
     requestAnimationFrame(() => {
+      sendPendingRef.current = false
       onSendMessage(
         message,
         embed,
