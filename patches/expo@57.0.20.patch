@@ -1,12 +1,11 @@
 diff --git a/build/winter/runtime.native.d.ts b/build/winter/runtime.native.d.ts
-index 85c4227e4e37003dd3769a590e73a69874de5fac..e389ca8edd2310df9ce29684991465c275e804c5 100644
+index 85c4227e4e37003dd3769a590e73a69874de5fac..27bd245675d09b906c2474d4da9efd073dd4f72c 100644
 --- a/build/winter/runtime.native.d.ts
 +++ b/build/winter/runtime.native.d.ts
 @@ -1,3 +1,2 @@
  import 'react-native/Libraries/Core/InitializeCore';
 -import '../../types';
  //# sourceMappingURL=runtime.native.d.ts.map
-\ No newline at end of file
 diff --git a/src/winter/fetch/RequestUtils.ts b/src/winter/fetch/RequestUtils.ts
 index a93473fd2beaf2ab0f3880951d292e58e7288d10..c27911bd5cb56ba6051fb8ebf4194cced43bc0fd 100644
 --- a/src/winter/fetch/RequestUtils.ts
@@ -65,7 +64,7 @@ index a93473fd2beaf2ab0f3880951d292e58e7288d10..c27911bd5cb56ba6051fb8ebf4194cce
  export function normalizeMethod(method: string): string {
    const normalized = method.toUpperCase();
 diff --git a/src/winter/fetch/fetch.ts b/src/winter/fetch/fetch.ts
-index ac789c024c96379e239bf44903c47e6a8e540d63..4f953b845c145de02976e8162ba2f63f8bd4dfd5 100644
+index cbe32225b933462d71b20ee339a6a90c1144cf0a..c421b1f215ff944e70be8ca8510b31ad229001be 100644
 --- a/src/winter/fetch/fetch.ts
 +++ b/src/winter/fetch/fetch.ts
 @@ -3,6 +3,7 @@ import { FetchError } from './FetchErrors';

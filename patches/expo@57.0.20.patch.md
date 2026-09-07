@@ -1,4 +1,4 @@
-# expo
+# Expo patch
 
 ## build/winter/runtime.native.d.ts
 

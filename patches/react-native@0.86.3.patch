@@ -198,7 +198,7 @@ index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90
  }
  
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index a087536f3af0d33b13fe38d8abd1bc6d7935def2..01f5c884ea4772350c0ebe6263723d97632f2b74 100644
+index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6c4aea0bd 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 @@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
@@ -380,19 +380,6 @@ index fdabd7bab1f03966dc04ba9a462465daeccf8ae3..ef70011ee5c270fb2cac52f3a7408d1e
    bool useTurboModules() override
    {
      return true;
-diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-index 9b04cadc22f5ae7b105f9f9875a242b53188cf03..b2b27626edc46625ac2372a13977d700948835b6 100644
---- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-+++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-@@ -361,7 +361,7 @@ static UIFontDescriptorSystemDesign RCTGetFontDescriptorSystemDesign(NSString *f
-       font = [UIFont fontWithName:fontProperties.family size:effectiveFontSize];
-       if (font != nullptr) {
-         fontNames = [UIFont fontNamesForFamilyName:font.familyName];
--        fontWeight = (fontWeight != 0.0) ?: RCTGetFontWeight(font);
-+        fontWeight = (fontWeight != 0.0) ? fontWeight : RCTGetFontWeight(font);
-       } else {
-         // Failback to system font.
-         font = RCTDefaultFontWithFontProperties(fontProperties);
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce9c63137b 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
@@ -410,10 +397,10 @@ index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce
    NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
  
 diff --git a/ReactCommon/react/renderer/uimanager/UIManager.cpp b/ReactCommon/react/renderer/uimanager/UIManager.cpp
-index 3e48dabc6fffc246fd0517ef5f3f2b7721115511..ea4ba5fdf359c513a5ca4f0e94492facf4ead221 100644
+index 4d640400dc129724b1a46e429fc90da2fb1919cc..ecbd4bdbdbbebfd1bb8c893b44f90bc66103711e 100644
 --- a/ReactCommon/react/renderer/uimanager/UIManager.cpp
 +++ b/ReactCommon/react/renderer/uimanager/UIManager.cpp
-@@ -530,30 +530,8 @@ std::shared_ptr<const ShadowNode> UIManager::findShadowNodeByTag_DEPRECATED(
+@@ -535,30 +535,8 @@ std::shared_ptr<const ShadowNode> UIManager::findShadowNodeByTag_DEPRECATED(
    auto shadowNode = std::shared_ptr<const ShadowNode>{};
  
    shadowTreeRegistry_.enumerate([&](const ShadowTree& shadowTree, bool& stop) {
