@@ -3483,12 +3483,12 @@ msgstr ""
 msgid "Copies build version to clipboard"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:259
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:257
 msgid "Copies the canonical profile URL to the clipboard"
 msgstr "Copies the canonical profile URL to the clipboard"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:196
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:269
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:267
 msgid "Copy"
 msgstr ""
 
@@ -3521,7 +3521,7 @@ msgstr ""
 msgid "Copy host"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:258
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:256
 msgid "Copy invite link"
 msgstr "Copy invite link"
 
@@ -3598,7 +3598,7 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:124
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:122
 msgid "Could not copy – please try again"
 msgstr "Could not copy – please try again"
 
@@ -3645,7 +3645,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:173
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:171
 msgid "Could not load profile"
 msgstr "Could not load profile"
 
@@ -4294,8 +4294,8 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:145
 #: src/components/forms/DateField/index.tsx:128
 #: src/components/forms/DateField/index.tsx:145
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:150
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:156
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:148
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:154
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
@@ -4987,7 +4987,7 @@ msgid "Failed to change handle. Please try again."
 msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:133
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
 #: src/screens/Search/Shell.tsx:513
 msgid "Failed to copy link"
 msgstr "Failed to copy link"
@@ -6834,12 +6834,12 @@ msgid "Invite link"
 msgstr "Invite link"
 
 #. Link that invites someone to follow your profile, distinct from a group chat invite link
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:217
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:215
 msgctxt "profile invite"
 msgid "Invite link"
 msgstr "Invite link"
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Invite link copied"
 msgstr "Invite link copied"
 
@@ -11527,8 +11527,8 @@ msgstr "Share my profile"
 msgid "Share post at:// URI"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:144
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:159
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:142
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:157
 msgid "Share Profile"
 msgstr "Share Profile"
 
@@ -13393,7 +13393,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:174
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:172
 msgid "Try again in a moment."
 msgstr "Try again in a moment."
 
