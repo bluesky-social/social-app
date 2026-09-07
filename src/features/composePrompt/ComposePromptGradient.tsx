@@ -5,10 +5,9 @@ import {atoms as a, useTheme, utils} from '#/alf'
 import {useComposePromptState} from './context'
 
 /**
- * Tall enough to cover the pill sitting just above the bar, plus a lead-in
- * over the content above it.
+ * Just tall enough to reach the bottom edge of the pill sitting above the bar.
  */
-const GRADIENT_HEIGHT = 32
+const GRADIENT_HEIGHT = 12
 
 /**
  * Fade from the content into the bottom bar's background, drawn above the
@@ -45,7 +44,7 @@ export function ComposePromptGradient() {
           utils.alpha(t.atoms.bg.backgroundColor, 0),
           t.atoms.bg.backgroundColor,
         ]}
-        locations={[0.15, 0.55]}
+        locations={[0, 1]}
         style={[a.flex_1]}
       />
     </Animated.View>

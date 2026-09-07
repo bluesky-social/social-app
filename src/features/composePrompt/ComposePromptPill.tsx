@@ -4,7 +4,6 @@ import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
 import {useLingui} from '@lingui/react/macro'
 
@@ -28,11 +27,15 @@ import {useComposePromptMedia} from './useComposePromptMedia'
 
 const AVATAR_SIZE = 32
 /**
- * Horizontal inset of the pill while the bottom bar is showing. Once the bar
- * hides, the inset grows to the bottom safe area for equal spacing, so the
- * closer this is to that, the less the pill changes width on the way down.
+ * Horizontal inset of the pill while the bottom bar is showing.
  */
 const SIDE_MARGIN_UP = tokens.space.lg
+/**
+ * Inset from the left, right and bottom edges once the bar has hidden. Kept
+ * close to the up-state inset so the pill barely changes width on the way
+ * down.
+ */
+const MARGIN_DOWN = tokens.space.xl
 /**
  * Gap between the pill and the top of the bottom bar.
  */
@@ -47,7 +50,6 @@ export function ComposePromptPill() {
   const {visibility, config} = useComposePromptState()
   const {footerMode} = useMinimalShellMode()
   const {footerHeight} = useShellLayout()
-  const insets = useSafeAreaInsets()
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -74,9 +76,9 @@ export function ComposePromptPill() {
   /*
    * The pill sits just above the bar and follows it down as it hides. In the
    * down state it is inset from the left, right and bottom edges by the same
-   * amount, so that its corners are concentric with the device bevels.
+   * amount.
    */
-  const downMargin = Math.max(insets.bottom, tokens.space.lg)
+  const downMargin = MARGIN_DOWN
   const wrapperStyle = useAnimatedStyle(() => {
     const mode = footerMode.get()
     const upBottom = footerHeight.get() + GAP_ABOVE_BAR
