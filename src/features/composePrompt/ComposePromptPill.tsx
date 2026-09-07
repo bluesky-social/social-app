@@ -15,7 +15,7 @@ import {useSession} from '#/state/session'
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, ios, tokens, useTheme} from '#/alf'
+import {atoms as a, ios, tokens, useTheme, utils} from '#/alf'
 import {Button} from '#/components/Button'
 import {GlassView, IS_GLASS_AVAILABLE} from '#/components/GlassView'
 import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/Camera'
@@ -28,9 +28,11 @@ import {useComposePromptMedia} from './useComposePromptMedia'
 
 const AVATAR_SIZE = 32
 /**
- * Horizontal inset of the pill while the bottom bar is showing.
+ * Horizontal inset of the pill while the bottom bar is showing. Once the bar
+ * hides, the inset grows to the bottom safe area for equal spacing, so the
+ * closer this is to that, the less the pill changes width on the way down.
  */
-const SIDE_MARGIN_UP = tokens.space.sm
+const SIDE_MARGIN_UP = tokens.space.lg
 /**
  * Gap between the pill and the top of the bottom bar.
  */
@@ -145,6 +147,7 @@ export function ComposePromptPill() {
               style: glassVisible ? 'clear' : 'none',
               animate: true,
             }}
+            tintColor={utils.alpha(t.palette.contrast_50, 0.5)}
             style={[a.rounded_full]}
             fallbackStyle={[
               a.border,

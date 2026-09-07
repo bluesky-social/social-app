@@ -19,7 +19,6 @@ import {
 import {scheduleOnRN} from 'react-native-worklets'
 
 import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
-import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
 import {
   useScreenCoverage,
   useScreenPresence,
@@ -101,10 +100,12 @@ const actionsContext = createContext<ActionsContext | null>(null)
 actionsContext.displayName = 'ComposePromptActionsContext'
 
 let nextId = 0
+const LABEL_SWITCH_MARGIN = 0.1
 
 export function Provider({children}: {children: React.ReactNode}) {
   const [entries, setEntries] = useState<Entry[]>([])
   const [activeId, setActiveId] = useState<number | null>(null)
+  const activeIdOnUI = useSharedValue<number | null>(null)
   const coverage = useScreenCoverage()
 
   const visibility = useDerivedValue(() => {
@@ -118,13 +119,17 @@ export function Provider({children}: {children: React.ReactNode}) {
   /*
    * The pill shows the label of whichever screen is the most present, so
    * that during a push or swipe-back the text switches at the midpoint of
-   * the transition rather than when the outgoing screen unmounts.
+   * the transition rather than when the outgoing screen unmounts. The current
+   * label gets a small head start so the two cannot trade places repeatedly
+   * as they cross.
    */
   const mostPresentId = useDerivedValue(() => {
     let best: number | null = null
     let bestPresence = 0
     for (const entry of entries) {
-      const presence = entryPresence(entry, coverage.get())
+      const presence =
+        entryPresence(entry, coverage.get()) +
+        (entry.id === activeIdOnUI.get() ? LABEL_SWITCH_MARGIN : 0)
       if (presence > bestPresence) {
         best = entry.id
         bestPresence = presence
@@ -138,6 +143,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     (current, previous) => {
       // keep the last label while everything fades out
       if (current !== previous && current !== null) {
+        activeIdOnUI.set(current)
         scheduleOnRN(setActiveId, current)
       }
     },
@@ -222,9 +228,6 @@ export function useComposePromptForScreen(config: ComposePromptConfig | null) {
   const fade = useSharedValue(1)
   const idRef = useRef<number | null>(null)
   const enabled = config !== null
-
-  // the bar's top border would cut across the pill's gradient
-  useHideBottomBarBorderForScreen({enabled})
 
   const getConfig = useEffectEvent(() => config)
 

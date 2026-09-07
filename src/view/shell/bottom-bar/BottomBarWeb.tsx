@@ -48,6 +48,7 @@ import {useAnalytics} from '#/analytics'
 import {
   ComposePromptGradient,
   ComposePromptPill,
+  useComposePromptState,
 } from '#/features/composePrompt'
 import {styles} from './BottomBarStyles'
 
@@ -61,7 +62,9 @@ export function BottomBarWeb() {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {footerHeight} = useShellLayout()
-  const borderStyle = useBottomBarBorderStyle()
+  const {visibility: composePromptVisibility} = useComposePromptState()
+  // the border would cut across the compose pill's gradient
+  const borderStyle = useBottomBarBorderStyle(composePromptVisibility)
   const accountSwitchControl = useDialogControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const iconWidth = 26

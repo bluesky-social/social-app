@@ -36,7 +36,7 @@ function useHideBottomBarBorderSetter() {
  * Hides the bottom bar's top border while the surrounding screen is present,
  * fading it with the screen transition.
  */
-export function useHideBottomBarBorderForScreen({enabled} = {enabled: true}) {
+export function useHideBottomBarBorderForScreen() {
   const register = useHideBottomBarBorderSetter()
   const {presence} = useScreenPresence()
   const contribution = useSharedValue(0)
@@ -44,18 +44,13 @@ export function useHideBottomBarBorderForScreen({enabled} = {enabled: true}) {
   useAnimatedReaction(
     () => presence.get(),
     (current, previous) => {
-      if (enabled && current !== previous) {
+      if (current !== previous) {
         contribution.set(current)
       }
     },
-    [enabled],
   )
 
-  useEffect(() => {
-    if (!enabled) return
-    contribution.set(presence.get())
-    return register(contribution)
-  }, [enabled, register, contribution, presence])
+  useEffect(() => register(contribution), [register, contribution])
 }
 
 /**
@@ -73,16 +68,17 @@ export function useHideBottomBarBorder() {
 
 /**
  * Animated border color for the bottom bar, blending the border into the
- * background as screens that hide it come and go.
+ * background as screens that hide it come and go. `alsoHidden` is a further
+ * 0..1 hidden amount to combine in, for shell UI that sits on the bar.
  */
-export function useBottomBarBorderStyle() {
+export function useBottomBarBorderStyle(alsoHidden?: SharedValue<number>) {
   const t = useTheme()
   const hideBorder = useHideBottomBarBorder()
   const visibleColor = t.atoms.border_contrast_low.borderColor
   const hiddenColor = t.atoms.bg.backgroundColor
   return useAnimatedStyle(() => ({
     borderColor: interpolateColor(
-      hideBorder.get(),
+      Math.max(hideBorder.get(), alsoHidden?.get() ?? 0),
       [0, 1],
       [visibleColor, hiddenColor],
     ),
