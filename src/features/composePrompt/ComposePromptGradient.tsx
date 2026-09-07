@@ -2,6 +2,7 @@ import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {LinearGradient} from 'expo-linear-gradient'
 
 import {atoms as a, useTheme, utils} from '#/alf'
+import {IS_LIQUID_GLASS} from '#/env'
 import {useComposePromptState} from './context'
 
 /**
@@ -22,7 +23,8 @@ export function ComposePromptGradient() {
     opacity: visibility.get(),
   }))
 
-  if (!config) {
+  // with Liquid Glass the pill shapes the list's scroll edge effect instead
+  if (!config || IS_LIQUID_GLASS) {
     return null
   }
 

@@ -5,6 +5,7 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
+import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -128,66 +129,91 @@ export function ComposePromptPill() {
         {paddingBottom: GAP_ABOVE_BAR},
         wrapperStyle,
       ]}>
-      <Animated.View style={pillStyle}>
-        <PressableScale
-          testID="composePromptPill"
-          accessibilityRole="button"
-          accessibilityLabel={config.accessibilityLabel}
-          accessibilityHint={config.accessibilityHint}
-          targetScale={0.97}
-          onPress={() => {
-            onPress()
-            playHaptic('Light')
-          }}
-          onLongPress={ios(() => {
-            onPress()
-            playHaptic('Heavy')
-          })}>
-          <GlassView
-            isInteractive
-            glassEffectStyle={{
-              style: glassVisible ? 'regular' : 'none',
-              animate: true,
+      {/* lets the pill shape the bottom scroll edge effect of the screen's list */}
+      <ScrollEdgeEffect edge="bottom" effect="soft">
+        <Animated.View style={pillStyle}>
+          <PressableScale
+            testID="composePromptPill"
+            accessibilityRole="button"
+            accessibilityLabel={config.accessibilityLabel}
+            accessibilityHint={config.accessibilityHint}
+            targetScale={0.97}
+            onPress={() => {
+              onPress()
+              playHaptic('Light')
             }}
-            tintColor={utils.alpha(t.palette.contrast_50, 0.5)}
-            style={[a.rounded_full]}
-            fallbackStyle={[
-              a.border,
-              t.atoms.bg_contrast_25,
-              t.atoms.border_contrast_low,
-            ]}>
-            <Animated.View
-              style={[
-                a.flex_row,
-                a.align_center,
-                a.gap_sm,
-                a.py_sm,
-                {paddingLeft: tokens.space.sm, paddingRight: tokens.space.md},
-                fadeStyle,
+            onLongPress={ios(() => {
+              onPress()
+              playHaptic('Heavy')
+            })}>
+            <GlassView
+              isInteractive
+              glassEffectStyle={{
+                style: glassVisible ? 'regular' : 'none',
+                animate: true,
+              }}
+              tintColor={utils.alpha(t.palette.contrast_50, 0.5)}
+              style={[a.rounded_full]}
+              fallbackStyle={[
+                a.border,
+                t.atoms.bg_contrast_25,
+                t.atoms.border_contrast_low,
               ]}>
-              <UserAvatar
-                size={AVATAR_SIZE}
-                avatar={profile?.avatar}
-                type={profile?.associated?.labeler ? 'labeler' : 'user'}
-              />
-              <Text
-                numberOfLines={1}
-                style={[a.flex_1, a.text_md, t.atoms.text_contrast_medium]}>
-                {config.label}
-              </Text>
-              {IS_NATIVE && (
+              <Animated.View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_sm,
+                  a.py_sm,
+                  {paddingLeft: tokens.space.sm, paddingRight: tokens.space.md},
+                  fadeStyle,
+                ]}>
+                <UserAvatar
+                  size={AVATAR_SIZE}
+                  avatar={profile?.avatar}
+                  type={profile?.associated?.labeler ? 'labeler' : 'user'}
+                />
+                <Text
+                  numberOfLines={1}
+                  style={[a.flex_1, a.text_md, t.atoms.text_contrast_medium]}>
+                  {config.label}
+                </Text>
+                {IS_NATIVE && (
+                  <Button
+                    onPress={e => {
+                      e.stopPropagation()
+                      void onPressCamera()
+                    }}
+                    label={l`Open camera`}
+                    accessibilityHint={l`Opens device camera`}
+                    variant="ghost"
+                    shape="round"
+                    size="small">
+                    {({hovered, pressed, focused}) => (
+                      <CameraIcon
+                        size="lg"
+                        style={{
+                          color:
+                            hovered || pressed || focused
+                              ? t.palette.primary_500
+                              : t.palette.contrast_400,
+                        }}
+                      />
+                    )}
+                  </Button>
+                )}
                 <Button
                   onPress={e => {
                     e.stopPropagation()
-                    void onPressCamera()
+                    void onPressGallery()
                   }}
-                  label={l`Open camera`}
-                  accessibilityHint={l`Opens device camera`}
+                  label={l`Add image`}
+                  accessibilityHint={l`Opens image picker`}
                   variant="ghost"
                   shape="round"
                   size="small">
                   {({hovered, pressed, focused}) => (
-                    <CameraIcon
+                    <ImageIcon
                       size="lg"
                       style={{
                         color:
@@ -198,33 +224,11 @@ export function ComposePromptPill() {
                     />
                   )}
                 </Button>
-              )}
-              <Button
-                onPress={e => {
-                  e.stopPropagation()
-                  void onPressGallery()
-                }}
-                label={l`Add image`}
-                accessibilityHint={l`Opens image picker`}
-                variant="ghost"
-                shape="round"
-                size="small">
-                {({hovered, pressed, focused}) => (
-                  <ImageIcon
-                    size="lg"
-                    style={{
-                      color:
-                        hovered || pressed || focused
-                          ? t.palette.primary_500
-                          : t.palette.contrast_400,
-                    }}
-                  />
-                )}
-              </Button>
-            </Animated.View>
-          </GlassView>
-        </PressableScale>
-      </Animated.View>
+              </Animated.View>
+            </GlassView>
+          </PressableScale>
+        </Animated.View>
+      </ScrollEdgeEffect>
     </Animated.View>
   )
 }

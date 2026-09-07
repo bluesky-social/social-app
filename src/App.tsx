@@ -10,6 +10,7 @@ import {
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as SplashScreen from 'expo-splash-screen'
 import * as SystemUI from 'expo-system-ui'
+import {ScrollEdgeEffectProvider} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
@@ -175,20 +176,24 @@ function InnerApp() {
                                                     <EmailVerificationProvider>
                                                       <HideBottomBarBorderProvider>
                                                         <ScreenCoverageProvider>
-                                                          <ComposePromptProvider>
-                                                            <GestureHandlerRootView
-                                                              style={a.h_full}>
-                                                              <GlobalGestureEventsProvider>
-                                                                <IntentDialogProvider>
-                                                                  <TranslateOnDeviceProvider>
-                                                                    <TestCtrls />
-                                                                    <Shell />
-                                                                    <ToastOutlet />
-                                                                  </TranslateOnDeviceProvider>
-                                                                </IntentDialogProvider>
-                                                              </GlobalGestureEventsProvider>
-                                                            </GestureHandlerRootView>
-                                                          </ComposePromptProvider>
+                                                          <ScrollEdgeEffectProvider>
+                                                            <ComposePromptProvider>
+                                                              <GestureHandlerRootView
+                                                                style={
+                                                                  a.h_full
+                                                                }>
+                                                                <GlobalGestureEventsProvider>
+                                                                  <IntentDialogProvider>
+                                                                    <TranslateOnDeviceProvider>
+                                                                      <TestCtrls />
+                                                                      <Shell />
+                                                                      <ToastOutlet />
+                                                                    </TranslateOnDeviceProvider>
+                                                                  </IntentDialogProvider>
+                                                                </GlobalGestureEventsProvider>
+                                                              </GestureHandlerRootView>
+                                                            </ComposePromptProvider>
+                                                          </ScrollEdgeEffectProvider>
                                                         </ScreenCoverageProvider>
                                                       </HideBottomBarBorderProvider>
                                                     </EmailVerificationProvider>

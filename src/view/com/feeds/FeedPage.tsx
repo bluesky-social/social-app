@@ -7,6 +7,7 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
+import {useScrollEdgeEffectRef} from '@bsky.app/expo-scroll-edge-effect'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -62,6 +63,7 @@ export function FeedPage({
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
+  const scrollEdgeRef = useScrollEdgeEffectRef()
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
   const isVideoFeed = useMemo(() => {
@@ -77,6 +79,18 @@ export function FeedPage({
       setHomeBadge(hasNew)
     }
   }, [isPageFocused, hasNew, setHomeBadge])
+
+  /*
+   * Hand the focused feed's list to the shell so the compose pill in the
+   * bottom bar can shape its bottom scroll edge effect (iOS 26). The ref is
+   * a callback that takes the node directly, and it is undefined on
+   * platforms without the effect.
+   */
+  useEffect(() => {
+    if (!isPageFocused || !scrollEdgeRef) return
+    scrollEdgeRef(scrollElRef.current)
+    return () => scrollEdgeRef(null)
+  }, [isPageFocused, scrollEdgeRef])
 
   const scrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
