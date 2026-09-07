@@ -20,7 +20,10 @@ import {scheduleOnRN} from 'react-native-worklets'
 
 import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
-import {useScreenPresence} from '#/lib/hooks/useScreenPresence'
+import {
+  useScreenCoverage,
+  useScreenPresence,
+} from '#/lib/hooks/useScreenPresence'
 import {type ComposerOpts} from '#/state/shell/composer'
 
 export type ComposePromptOpenOptions = Pick<
@@ -49,15 +52,22 @@ export type ComposePromptConfig = {
 type Entry = {
   id: number
   /**
-   * The registering screen's own presence, 0..1, read directly so that two
-   * screens mid-transition are always sampled on the same frame.
+   * The registering screen's own presence, 0..1.
    */
   presence: SharedValue<number>
   /**
-   * 1 while registered, sprung to 0 on unregister so a screen that leaves
-   * without a transition still fades the pill out.
+   * 1 once the screen has unregistered but is still fading out. A screen that
+   * is popped from JS is unmounted at the start of the pop and replaced by a
+   * native snapshot, so its own presence stops updating; while leaving, the
+   * entry instead contributes whatever share of the screen no mounted screen
+   * covers yet, which is exactly the incoming screen's complement.
    */
-  weight: SharedValue<number>
+  leaving: SharedValue<number>
+  /**
+   * Springs 1 to 0 after unregistering. Fades a screen that leaves while
+   * still fully on screen (e.g. its config switched off) and times removal.
+   */
+  fade: SharedValue<number>
   config: ComposePromptConfig
 }
 
@@ -77,7 +87,8 @@ type StateContext = {
 type ActionsContext = {
   register: (
     presence: SharedValue<number>,
-    weight: SharedValue<number>,
+    leaving: SharedValue<number>,
+    fade: SharedValue<number>,
     config: ComposePromptConfig,
   ) => number
   update: (id: number, config: ComposePromptConfig) => void
@@ -94,14 +105,15 @@ let nextId = 0
 export function Provider({children}: {children: React.ReactNode}) {
   const [entries, setEntries] = useState<Entry[]>([])
   const [activeId, setActiveId] = useState<number | null>(null)
+  const coverage = useScreenCoverage()
 
   const visibility = useDerivedValue(() => {
     let sum = 0
     for (const entry of entries) {
-      sum += entry.presence.get() * entry.weight.get()
+      sum += entryPresence(entry, coverage.get())
     }
     return clamp(sum, 0, 1)
-  }, [entries])
+  }, [entries, coverage])
 
   /*
    * The pill shows the label of whichever screen is the most present, so
@@ -112,14 +124,14 @@ export function Provider({children}: {children: React.ReactNode}) {
     let best: number | null = null
     let bestPresence = 0
     for (const entry of entries) {
-      const presence = entry.presence.get() * entry.weight.get()
+      const presence = entryPresence(entry, coverage.get())
       if (presence > bestPresence) {
         best = entry.id
         bestPresence = presence
       }
     }
     return best
-  }, [entries])
+  }, [entries, coverage])
 
   useAnimatedReaction(
     () => mostPresentId.get(),
@@ -133,9 +145,9 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const actions = useMemo<ActionsContext>(
     () => ({
-      register(presence, weight, config) {
+      register(presence, leaving, fade, config) {
         const id = nextId++
-        setEntries(prev => [...prev, {id, presence, weight, config}])
+        setEntries(prev => [...prev, {id, presence, leaving, fade, config}])
         return id
       },
       update(id, config) {
@@ -165,6 +177,14 @@ export function Provider({children}: {children: React.ReactNode}) {
       </actionsContext.Provider>
     </stateContext.Provider>
   )
+}
+
+function entryPresence(entry: Entry, coverage: number) {
+  'worklet'
+  if (!entry.leaving.get()) {
+    return entry.presence.get()
+  }
+  return Math.max(1 - coverage, entry.presence.get() * entry.fade.get())
 }
 
 /**
@@ -198,7 +218,8 @@ function useComposePromptActions() {
 export function useComposePromptForScreen(config: ComposePromptConfig | null) {
   const {register, update, unregister} = useComposePromptActions()
   const {presence} = useScreenPresence()
-  const weight = useSharedValue(0)
+  const leaving = useSharedValue(0)
+  const fade = useSharedValue(1)
   const idRef = useRef<number | null>(null)
   const enabled = config !== null
 
@@ -210,16 +231,14 @@ export function useComposePromptForScreen(config: ComposePromptConfig | null) {
   useEffect(() => {
     const initial = getConfig()
     if (!initial) return
-    weight.set(1)
-    const id = register(presence, weight, initial)
+    leaving.set(0)
+    fade.set(1)
+    const id = register(presence, leaving, fade, initial)
     idRef.current = id
     return () => {
       idRef.current = null
-      /*
-       * Fade out before removing so that a screen removed without a
-       * transition (or a config switched off) does not snap the pill away.
-       */
-      weight.set(
+      leaving.set(1)
+      fade.set(
         withSpring(0, SHELL_SPRING_CONFIG, finished => {
           if (finished) {
             scheduleOnRN(unregister, id)
@@ -227,7 +246,7 @@ export function useComposePromptForScreen(config: ComposePromptConfig | null) {
         }),
       )
     }
-  }, [enabled, register, unregister, weight, presence])
+  }, [enabled, register, unregister, leaving, fade, presence])
 
   const label = config?.label
   const accessibilityLabel = config?.accessibilityLabel

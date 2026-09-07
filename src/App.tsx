@@ -14,6 +14,7 @@ import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
+import {ScreenCoverageProvider} from '#/lib/hooks/useScreenPresence'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
@@ -173,20 +174,22 @@ function InnerApp() {
                                                   <ServiceAccountManager>
                                                     <EmailVerificationProvider>
                                                       <HideBottomBarBorderProvider>
-                                                        <ComposePromptProvider>
-                                                          <GestureHandlerRootView
-                                                            style={a.h_full}>
-                                                            <GlobalGestureEventsProvider>
-                                                              <IntentDialogProvider>
-                                                                <TranslateOnDeviceProvider>
-                                                                  <TestCtrls />
-                                                                  <Shell />
-                                                                  <ToastOutlet />
-                                                                </TranslateOnDeviceProvider>
-                                                              </IntentDialogProvider>
-                                                            </GlobalGestureEventsProvider>
-                                                          </GestureHandlerRootView>
-                                                        </ComposePromptProvider>
+                                                        <ScreenCoverageProvider>
+                                                          <ComposePromptProvider>
+                                                            <GestureHandlerRootView
+                                                              style={a.h_full}>
+                                                              <GlobalGestureEventsProvider>
+                                                                <IntentDialogProvider>
+                                                                  <TranslateOnDeviceProvider>
+                                                                    <TestCtrls />
+                                                                    <Shell />
+                                                                    <ToastOutlet />
+                                                                  </TranslateOnDeviceProvider>
+                                                                </IntentDialogProvider>
+                                                              </GlobalGestureEventsProvider>
+                                                            </GestureHandlerRootView>
+                                                          </ComposePromptProvider>
+                                                        </ScreenCoverageProvider>
                                                       </HideBottomBarBorderProvider>
                                                     </EmailVerificationProvider>
                                                   </ServiceAccountManager>

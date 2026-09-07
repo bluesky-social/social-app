@@ -7,6 +7,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context'
 import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
+import {ScreenCoverageProvider} from '#/lib/hooks/useScreenPresence'
 import {Provider as HotkeysProvider} from '#/lib/hotkeys'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
@@ -154,16 +155,18 @@ function InnerApp() {
                                                       <ServiceConfigProvider>
                                                         <EmailVerificationProvider>
                                                           <HideBottomBarBorderProvider>
-                                                            <ComposePromptProvider>
-                                                              <IntentDialogProvider>
-                                                                <TranslateOnDeviceProvider>
-                                                                  <HotkeysProvider>
-                                                                    <Shell />
-                                                                    <ToastOutlet />
-                                                                  </HotkeysProvider>
-                                                                </TranslateOnDeviceProvider>
-                                                              </IntentDialogProvider>
-                                                            </ComposePromptProvider>
+                                                            <ScreenCoverageProvider>
+                                                              <ComposePromptProvider>
+                                                                <IntentDialogProvider>
+                                                                  <TranslateOnDeviceProvider>
+                                                                    <HotkeysProvider>
+                                                                      <Shell />
+                                                                      <ToastOutlet />
+                                                                    </HotkeysProvider>
+                                                                  </TranslateOnDeviceProvider>
+                                                                </IntentDialogProvider>
+                                                              </ComposePromptProvider>
+                                                            </ScreenCoverageProvider>
                                                           </HideBottomBarBorderProvider>
                                                         </EmailVerificationProvider>
                                                       </ServiceConfigProvider>

@@ -16,9 +16,14 @@ import {
 } from '@react-navigation/native'
 
 import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
-import {ScreenPresenceContext} from './context'
+import {ScreenPresenceContext, useRegisterScreenCoverage} from './context'
 
-export {type ScreenPresence, useScreenPresence} from './context'
+export {
+  ScreenCoverageProvider,
+  type ScreenPresence,
+  useScreenCoverage,
+  useScreenPresence,
+} from './context'
 
 /**
  * Swaps react-native-screens' screen implementation for one that pipes the
@@ -86,6 +91,7 @@ function NativeStackScreenPresenceProvider({
   const presence = useDerivedValue(() =>
     Math.min(visibility.get(), ancestorsFocused.get()),
   )
+  useRegisterScreenCoverage(presence)
 
   return (
     <ScreenPresenceContext.Provider value={{visibility, presence}}>
