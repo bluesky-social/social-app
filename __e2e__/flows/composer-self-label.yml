@@ -14,9 +14,9 @@ appId: xyz.blueskyweb.app
 
 # Post an image with the porn label
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
-    id: "composeFAB"
+    id: "composePromptPill"
 - inputText: "Post with an image"
 - tapOn:
     id: "openMediaBtn"

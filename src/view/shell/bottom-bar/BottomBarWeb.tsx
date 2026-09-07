@@ -45,6 +45,7 @@ import {
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
+import {ComposePromptPill} from '#/features/composePrompt'
 import {styles} from './BottomBarStyles'
 
 type NavItemValue = 'home' | 'search' | 'chat' | 'notifications' | 'profile'
@@ -85,6 +86,7 @@ export function BottomBarWeb() {
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
+      {hasSession && <ComposePromptPill />}
 
       <Animated.View
         role="navigation"

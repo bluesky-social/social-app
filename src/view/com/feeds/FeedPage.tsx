@@ -7,13 +7,10 @@ import {
   useState,
 } from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
 import {type NavigationProp, useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {getRootNavigation, getTabState, TabState} from '#/lib/routes/helpers'
 import {type AllNavigatorParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
@@ -28,13 +25,9 @@ import {
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {PostFeed} from '#/view/com/posts/PostFeed'
-import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
-import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {app} from '#/lexicons'
@@ -64,11 +57,8 @@ export function FeedPage({
 }) {
   const ax = useAnalytics()
   const {hasSession} = useSession()
-  const {_} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
   const queryClient = useQueryClient()
-  const {openComposer} = useOpenComposer()
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
@@ -81,7 +71,6 @@ export function FeedPage({
     const _isVideoFeed = isBskyVideoFeed || feedIsVideoMode
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
-  const t = useTheme()
 
   useEffect(() => {
     if (isPageFocused) {
@@ -120,21 +109,6 @@ export function FeedPage({
     return listenSoftReset(onSoftReset)
   }, [onSoftReset, isPageFocused])
 
-  const onPressCompose = useCallback(() => {
-    openComposer({logContext: 'Fab'})
-  }, [openComposer])
-
-  const onPressLoadLatest = useCallback(() => {
-    scrollToTop()
-    truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
-    setHasNew(false)
-    ax.metric('feed:refresh', {
-      feedType: feed.split('|')[0],
-      feedUrl: feed,
-      reason: 'load-latest',
-    })
-  }, [ax, scrollToTop, feed, queryClient])
-
   const shouldPrefetch = IS_NATIVE && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
   return (
@@ -152,7 +126,6 @@ export function FeedPage({
             pollInterval={POLL_FREQ}
             disablePoll={hasNew || !isPageFocused}
             scrollElRef={scrollElRef}
-            onScrolledDownChange={setIsScrolledDown}
             onHasNew={setHasNew}
             renderEmptyState={renderEmptyState}
             renderEndOfFeed={renderEndOfFeed}
@@ -162,24 +135,6 @@ export function FeedPage({
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
-        />
-      )}
-
-      {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg({message: `New post`, context: 'action'}))}
-          accessibilityHint=""
-        />
-      )}
     </View>
   )
 }

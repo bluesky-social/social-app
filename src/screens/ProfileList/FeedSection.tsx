@@ -14,7 +14,6 @@ import {
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
@@ -46,7 +45,6 @@ export function FeedSection({
 }: FeedSectionProps) {
   const queryClient = useQueryClient()
   const [hasNew, setHasNew] = useState(false)
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const isScreenFocused = useIsFocused()
   const {_} = useLingui()
 
@@ -103,17 +101,9 @@ export function FeedSection({
         disablePoll={hasNew}
         scrollElRef={scrollElRef}
         onHasNew={setHasNew}
-        onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
       />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
-        />
-      )}
     </View>
   )
 }

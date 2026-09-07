@@ -1,4 +1,4 @@
-import {useCallback, useImperativeHandle, useState} from 'react'
+import {useCallback, useImperativeHandle} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -8,7 +8,6 @@ import {useSession} from '#/state/session'
 import {ListMembers} from '#/view/com/lists/ListMembers'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {BulletList_Stroke1_Corner0_Rounded as ListIcon} from '#/components/icons/BulletList'
@@ -38,7 +37,6 @@ export function AboutSection({
   const {_} = useLingui()
   const {currentAccount} = useSession()
   const {gtMobile} = useBreakpoints()
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const isOwner = list.creator.did === currentAccount?.did
 
   const onScrollToTop = useCallback(() => {
@@ -124,15 +122,7 @@ export function AboutSection({
         renderHeader={renderHeader}
         renderEmptyState={renderEmptyState}
         headerOffset={headerHeight}
-        onScrolledDownChange={setIsScrolledDown}
       />
-      {isScrolledDown && (
-        <LoadLatestBtn
-          onPress={onScrollToTop}
-          label={_(msg`Scroll to top`)}
-          showIndicator={false}
-        />
-      )}
     </View>
   )
 }

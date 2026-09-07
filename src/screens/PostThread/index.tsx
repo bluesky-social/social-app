@@ -7,8 +7,7 @@ import {
   useState,
 } from 'react'
 import {useWindowDimensions, View} from 'react-native'
-import Animated, {useAnimatedStyle} from 'react-native-reanimated'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -27,7 +26,6 @@ import {
 } from '#/state/queries/usePostThread'
 import {useSession} from '#/state/session'
 import {type OnPostSuccessData} from '#/state/shell/composer'
-import {useShellLayout} from '#/state/shell/shell-layout'
 import {useUnstablePostSource} from '#/state/unstable-post-source'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {HeaderDropdown} from '#/screens/PostThread/components/HeaderDropdown'
@@ -52,11 +50,15 @@ import {
   ThreadItemTreePost,
   ThreadItemTreePostSkeleton,
 } from '#/screens/PostThread/components/ThreadItemTreePost'
-import {atoms as a, native, platform, useBreakpoints, web} from '#/alf'
+import {native, platform, useBreakpoints, web} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {
+  ComposePrompt,
+  type ComposePromptOpenOptions,
+} from '#/features/composePrompt'
 
 const PARENT_CHUNK_SIZE = IS_NATIVE ? 5 : 20
 const CHILDREN_CHUNK_SIZE = 50
@@ -66,6 +68,7 @@ const analyticsOnlySendInteraction: FeedFeedbackStateContext['sendInteraction'] 
 
 export function PostThread({uri}: {uri: string}) {
   const ax = useAnalytics()
+  const {t: l} = useLingui()
   const {gtMobile} = useBreakpoints()
   const {hasSession} = useSession()
   const initialNumToRender = useInitialNumToRender()
@@ -125,34 +128,37 @@ export function PostThread({uri}: {uri: string}) {
       }
     },
   )
-  const onReplyToAnchor = useNonReactiveCallback(() => {
-    if (anchor?.type !== 'threadPost') {
-      return
-    }
-    const post = anchor.value.post
-    openComposer({
-      replyTo: {
-        uri: anchor.uri,
-        cid: post.cid,
-        text: post.record.text,
-        author: post.author,
-        embed: post.embed,
-        moderation: anchor.moderation,
-        langs: post.record.langs,
-      },
-      onPostSuccess: optimisticOnPostReply,
-      logContext: 'PostReply',
-    })
-
-    if (anchorPostSource) {
-      feedFeedback.sendInteraction({
-        item: post.uri,
-        event: 'app.bsky.feed.defs#interactionReply',
-        feedContext: anchorPostSource.post.feedContext,
-        reqId: anchorPostSource.post.reqId,
+  const onReplyToAnchor = useNonReactiveCallback(
+    (options?: ComposePromptOpenOptions) => {
+      if (anchor?.type !== 'threadPost') {
+        return
+      }
+      const post = anchor.value.post
+      openComposer({
+        ...options,
+        replyTo: {
+          uri: anchor.uri,
+          cid: post.cid,
+          text: post.record.text,
+          author: post.author,
+          embed: post.embed,
+          moderation: anchor.moderation,
+          langs: post.record.langs,
+        },
+        onPostSuccess: optimisticOnPostReply,
+        logContext: 'PostReply',
       })
-    }
-  })
+
+      if (anchorPostSource) {
+        feedFeedback.sendInteraction({
+          item: post.uri,
+          event: 'app.bsky.feed.defs#interactionReply',
+          feedContext: anchorPostSource.post.feedContext,
+          reqId: anchorPostSource.post.reqId,
+        })
+      }
+    },
+  )
 
   const isRoot = !!anchor && anchor.value.post.record.reply === undefined
   const canReply = !anchor?.value.post?.viewer?.replyDisabled
@@ -645,7 +651,12 @@ export function PostThread({uri}: {uri: string}) {
       )}
 
       {!gtMobile && canReply && hasSession && (
-        <MobileComposePrompt onPressReply={onReplyToAnchor} />
+        <ComposePrompt
+          label={l`Write your reply`}
+          accessibilityLabel={l`Compose reply`}
+          accessibilityHint={l`Opens composer`}
+          open={onReplyToAnchor}
+        />
       )}
     </PostThreadContextProvider>
   )
@@ -679,22 +690,6 @@ function AnalyticsOnlyFeedFeedbackProvider({
   )
 
   return <FeedFeedbackProvider value={value}>{children}</FeedFeedbackProvider>
-}
-
-function MobileComposePrompt({onPressReply}: {onPressReply: () => unknown}) {
-  const {footerHeight} = useShellLayout()
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      bottom: footerHeight.get(),
-    }
-  })
-
-  return (
-    <Animated.View style={[a.fixed, a.left_0, a.right_0, animatedStyle]}>
-      <ThreadComposePrompt onPressCompose={onPressReply} />
-    </Animated.View>
-  )
 }
 
 const keyExtractor = (item: ThreadItem) => {

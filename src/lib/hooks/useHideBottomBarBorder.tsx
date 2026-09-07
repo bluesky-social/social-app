@@ -36,7 +36,7 @@ function useHideBottomBarBorderSetter() {
  * Hides the bottom bar's top border while the surrounding screen is present,
  * fading it with the screen transition.
  */
-export function useHideBottomBarBorderForScreen() {
+export function useHideBottomBarBorderForScreen({enabled} = {enabled: true}) {
   const register = useHideBottomBarBorderSetter()
   const {presence} = useScreenPresence()
   const contribution = useSharedValue(0)
@@ -44,13 +44,18 @@ export function useHideBottomBarBorderForScreen() {
   useAnimatedReaction(
     () => presence.get(),
     (current, previous) => {
-      if (current !== previous) {
+      if (enabled && current !== previous) {
         contribution.set(current)
       }
     },
+    [enabled],
   )
 
-  useEffect(() => register(contribution), [register, contribution])
+  useEffect(() => {
+    if (!enabled) return
+    contribution.set(presence.get())
+    return register(contribution)
+  }, [enabled, register, contribution, presence])
 }
 
 /**

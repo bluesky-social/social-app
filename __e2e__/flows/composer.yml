@@ -13,16 +13,16 @@ appId: xyz.blueskyweb.app
       id: "viewHeaderHomeFeedPrefsBtn"
 
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
-    id: "composeFAB"
+    id: "composePromptPill"
 - inputText: "Post text only"
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
-    id: "composeFAB"
+    id: "composePromptPill"
 - inputText: "Post with an image"
 - tapOn:
     id: "openMediaBtn"
@@ -32,14 +32,14 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
-    id: "composeFAB"
+    id: "composePromptPill"
 - inputText: "Post with a https://example.com link card"
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
     id: "e2eRefreshHome"
 - tapOn:
@@ -54,7 +54,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
     id: "replyBtn"
 # Wait for the composer to fully open before typing.
@@ -71,7 +71,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
     id: "replyBtn"
 # Wait for the composer to fully open before typing.
@@ -83,7 +83,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
     id: "repostBtn"
 - tapOn:
@@ -92,7 +92,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
     id: "repostBtn"
 - tapOn:
@@ -106,7 +106,7 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
     id: "repostBtn"
 - tapOn:
@@ -115,4 +115,4 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "composerPublishBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"

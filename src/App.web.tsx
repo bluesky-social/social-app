@@ -69,6 +69,7 @@ import {
   features,
   setupDeviceId,
 } from '#/analytics'
+import {Provider as ComposePromptProvider} from '#/features/composePrompt'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -153,14 +154,16 @@ function InnerApp() {
                                                       <ServiceConfigProvider>
                                                         <EmailVerificationProvider>
                                                           <HideBottomBarBorderProvider>
-                                                            <IntentDialogProvider>
-                                                              <TranslateOnDeviceProvider>
-                                                                <HotkeysProvider>
-                                                                  <Shell />
-                                                                  <ToastOutlet />
-                                                                </HotkeysProvider>
-                                                              </TranslateOnDeviceProvider>
-                                                            </IntentDialogProvider>
+                                                            <ComposePromptProvider>
+                                                              <IntentDialogProvider>
+                                                                <TranslateOnDeviceProvider>
+                                                                  <HotkeysProvider>
+                                                                    <Shell />
+                                                                    <ToastOutlet />
+                                                                  </HotkeysProvider>
+                                                                </TranslateOnDeviceProvider>
+                                                              </IntentDialogProvider>
+                                                            </ComposePromptProvider>
                                                           </HideBottomBarBorderProvider>
                                                         </EmailVerificationProvider>
                                                       </ServiceConfigProvider>

@@ -77,6 +77,7 @@ import {
   setupDeviceId,
 } from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {Provider as ComposePromptProvider} from '#/features/composePrompt'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -172,18 +173,20 @@ function InnerApp() {
                                                   <ServiceAccountManager>
                                                     <EmailVerificationProvider>
                                                       <HideBottomBarBorderProvider>
-                                                        <GestureHandlerRootView
-                                                          style={a.h_full}>
-                                                          <GlobalGestureEventsProvider>
-                                                            <IntentDialogProvider>
-                                                              <TranslateOnDeviceProvider>
-                                                                <TestCtrls />
-                                                                <Shell />
-                                                                <ToastOutlet />
-                                                              </TranslateOnDeviceProvider>
-                                                            </IntentDialogProvider>
-                                                          </GlobalGestureEventsProvider>
-                                                        </GestureHandlerRootView>
+                                                        <ComposePromptProvider>
+                                                          <GestureHandlerRootView
+                                                            style={a.h_full}>
+                                                            <GlobalGestureEventsProvider>
+                                                              <IntentDialogProvider>
+                                                                <TranslateOnDeviceProvider>
+                                                                  <TestCtrls />
+                                                                  <Shell />
+                                                                  <ToastOutlet />
+                                                                </TranslateOnDeviceProvider>
+                                                              </IntentDialogProvider>
+                                                            </GlobalGestureEventsProvider>
+                                                          </GestureHandlerRootView>
+                                                        </ComposePromptProvider>
                                                       </HideBottomBarBorderProvider>
                                                     </EmailVerificationProvider>
                                                   </ServiceAccountManager>
