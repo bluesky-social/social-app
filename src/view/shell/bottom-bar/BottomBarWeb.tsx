@@ -6,7 +6,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useNavigationState} from '@react-navigation/native'
 
-import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
+import {useBottomBarBorderStyle} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -57,7 +57,7 @@ export function BottomBarWeb() {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {footerHeight} = useShellLayout()
-  const hideBorder = useHideBottomBarBorder()
+  const borderStyle = useBottomBarBorderStyle()
   const accountSwitchControl = useDialogControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const iconWidth = 26
@@ -92,9 +92,7 @@ export function BottomBarWeb() {
           styles.bottomBar,
           styles.bottomBarWeb,
           t.atoms.bg,
-          hideBorder
-            ? {borderColor: t.atoms.bg.backgroundColor}
-            : t.atoms.border_contrast_low,
+          borderStyle,
           footerMinimalShellTransform,
         ]}
         onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>

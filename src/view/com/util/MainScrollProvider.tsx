@@ -13,6 +13,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {EventEmitter} from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
+import {useMinimalShellScrollMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
@@ -95,6 +96,7 @@ export function useHomeHeaderTransform() {
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const headerMode = useHomeHeaderMode()
+  const footerScrollMode = useMinimalShellScrollMode()
   const {top: topInset} = useSafeAreaInsets()
   const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
   const startDragOffset = useSharedValue<number | null>(null)
@@ -104,14 +106,14 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = useCallback(
     (v: boolean) => {
       'worklet'
-      headerMode.set(
-        withSpring(v ? 1 : 0, {
-          ...Reanimated3DefaultSpringConfig,
-          overshootClamping: true,
-        }),
-      )
+      const target = withSpring(v ? 1 : 0, {
+        ...Reanimated3DefaultSpringConfig,
+        overshootClamping: true,
+      })
+      headerMode.set(target)
+      footerScrollMode.set(target)
     },
-    [headerMode],
+    [headerMode, footerScrollMode],
   )
 
   useEffect(() => {
@@ -216,6 +218,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
         if (newValue !== headerMode.get()) {
           // Manually adjust the value. This won't be (and shouldn't be) animated.
           headerMode.set(newValue)
+          footerScrollMode.set(newValue)
         }
       } else {
         if (didJustRestoreScroll.get()) {
@@ -239,6 +242,7 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
       headerHeight,
       headerPinnedHeight,
       headerMode,
+      footerScrollMode,
       setMode,
       startDragOffset,
       startMode,

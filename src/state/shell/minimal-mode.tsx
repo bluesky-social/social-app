@@ -1,25 +1,29 @@
+import {createContext, useContext, useEffect, useMemo} from 'react'
 import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react'
-import {
+  type DerivedValue,
   Reanimated3DefaultSpringConfig,
   type SharedValue,
+  useAnimatedReaction,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {useFocusEffect} from '@react-navigation/native'
+
+import {useContributionRegistry} from '#/lib/hooks/useContributionRegistry'
+import {useScreenPresence} from '#/lib/hooks/useScreenPresence'
 
 type StateContext = {
-  footerMode: SharedValue<number>
+  /**
+   * How hidden the bottom bar is, 0 (fully visible) to 1 (fully hidden). The
+   * sum of `scrollMode` and every active screen contribution, clamped.
+   */
+  footerMode: DerivedValue<number>
+  /**
+   * The scroll-linked part of `footerMode`, driven by `MainScrollProvider`.
+   */
+  scrollMode: SharedValue<number>
 }
 type SetContext = {
-  add: () => void
-  subtract: () => void
+  register: (contribution: SharedValue<number>) => () => void
 }
 
 const stateContext = createContext<StateContext | null>(null)
@@ -28,50 +32,13 @@ const setContext = createContext<SetContext | null>(null)
 setContext.displayName = 'MinimalModeSetContext'
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
-  const footerMode = useSharedValue(0)
+  const scrollMode = useSharedValue(0)
+  const {total: footerMode, register} = useContributionRegistry(scrollMode)
 
-  const setModeWorklet = useCallback(
-    (v: boolean) => {
-      'worklet'
-      footerMode.set(
-        withSpring(v ? 1 : 0, {
-          ...Reanimated3DefaultSpringConfig,
-          overshootClamping: true,
-        }),
-      )
-    },
-    [footerMode],
-  )
-
-  // defaults to "visible", if the count is >0 it gets hidden
-  const countRef = useRef(0)
-  const add = useCallback(() => {
-    // 0 -> 1 = hide
-    if (countRef.current === 0) setModeWorklet(true)
-
-    countRef.current += 1
-  }, [setModeWorklet])
-  const subtract = useCallback(() => {
-    // 1 -> 0 = show
-    if (countRef.current === 1) setModeWorklet(false)
-
-    // count must never go below 0
-    if (countRef.current > 0) countRef.current -= 1
-  }, [setModeWorklet])
-
-  const setters = useMemo(
-    () => ({
-      add,
-      subtract,
-    }),
-    [add, subtract],
-  )
-
+  const setters = useMemo(() => ({register}), [register])
   const value = useMemo(
-    () => ({
-      footerMode,
-    }),
-    [footerMode],
+    () => ({footerMode, scrollMode}),
+    [footerMode, scrollMode],
   )
   return (
     <stateContext.Provider value={value}>
@@ -89,6 +56,14 @@ export function useMinimalShellMode() {
   return context
 }
 
+/**
+ * The scroll-linked part of the bottom bar's hidden state, for scroll
+ * providers to drive directly. Reset to 0 to reveal the bar.
+ */
+export function useMinimalShellScrollMode() {
+  return useMinimalShellMode().scrollMode
+}
+
 export function useMinimalShellModeSetters() {
   const context = useContext(setContext)
   if (!context)
@@ -98,26 +73,49 @@ export function useMinimalShellModeSetters() {
   return context
 }
 
+/**
+ * Hides the bottom bar for as long as the calling component is mounted and
+ * `enabled`, independent of navigation. Prefer `Layout.Screen`'s
+ * `minimalShell` prop for screens, which tracks the screen transition.
+ */
 export function useEnableMinimalShellMode({enabled} = {enabled: true}) {
-  const setters = useMinimalShellModeSetters()
+  const {register} = useMinimalShellModeSetters()
+  const contribution = useSharedValue(0)
   useEffect(() => {
-    if (enabled) {
-      setters.add()
-      return () => setters.subtract()
-    }
-  }, [enabled, setters])
+    if (!enabled) return
+    const unregister = register(contribution)
+    contribution.set(
+      withSpring(1, {
+        ...Reanimated3DefaultSpringConfig,
+        overshootClamping: true,
+      }),
+    )
+    return unregister
+  }, [enabled, register, contribution])
 }
 
+/**
+ * Hides the bottom bar while the surrounding screen is present, following its
+ * transition in and out frame by frame. Used by `Layout.Screen`.
+ */
 export function useEnableMinimalShellModeForScreen(
   {enabled} = {enabled: true},
 ) {
-  const setters = useMinimalShellModeSetters()
-  useFocusEffect(
-    useCallback(() => {
-      if (enabled) {
-        setters.add()
-        return () => setters.subtract()
+  const {register} = useMinimalShellModeSetters()
+  const {presence} = useScreenPresence()
+  const contribution = useSharedValue(0)
+
+  useAnimatedReaction(
+    () => presence.get(),
+    (current, previous) => {
+      if (current !== previous) {
+        contribution.set(current)
       }
-    }, [enabled, setters]),
+    },
   )
+
+  useEffect(() => {
+    if (!enabled) return
+    return register(contribution)
+  }, [enabled, register, contribution])
 }

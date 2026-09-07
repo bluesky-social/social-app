@@ -28,6 +28,7 @@ import {
   notificationToURL,
   storePayloadForAccountSwitch,
 } from '#/lib/hooks/useNotificationHandler'
+import {ScreenTransitionProvider} from '#/lib/hooks/useScreenPresence'
 import {useWebScrollRestoration} from '#/lib/hooks/useWebScrollRestoration'
 import {useCallOnce} from '#/lib/once'
 import {buildStateObject, getCurrentRoute} from '#/lib/routes/helpers'
@@ -1052,30 +1053,32 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
   })
 
   return (
-    <NavigationContainer
-      ref={navigationRef}
-      linking={LINKING}
-      theme={theme}
-      onStateChange={() => {
-        const currentScreen = getCurrentRouteName()
-        // do this before metric
-        setNavigationMetadata({
-          previousScreen: previousScreen.current,
-          currentScreen,
-        })
-        ax.metric('router:navigate', {from: previousScreen.current})
-        previousScreen.current = currentScreen
-      }}
-      onReady={onNavigationReady}
-      // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
-      // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
-      // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
-      // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
-      // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
-      // -sfn
-      navigationInChildEnabled>
-      {children}
-    </NavigationContainer>
+    <ScreenTransitionProvider>
+      <NavigationContainer
+        ref={navigationRef}
+        linking={LINKING}
+        theme={theme}
+        onStateChange={() => {
+          const currentScreen = getCurrentRouteName()
+          // do this before metric
+          setNavigationMetadata({
+            previousScreen: previousScreen.current,
+            currentScreen,
+          })
+          ax.metric('router:navigate', {from: previousScreen.current})
+          previousScreen.current = currentScreen
+        }}
+        onReady={onNavigationReady}
+        // WARNING: Implicit navigation to nested navigators is depreciated in React Navigation 7.x
+        // However, there's a fair amount of places we do that, especially in when popping to the top of stacks.
+        // See BottomBar.tsx for an example of how to handle nested navigators in the tabs correctly.
+        // I'm scared of missing a spot (esp. with push notifications etc) so let's enable this legacy behaviour for now.
+        // We will need to confirm we handle nested navigators correctly by the time we migrate to React Navigation 8.x
+        // -sfn
+        navigationInChildEnabled>
+        {children}
+      </NavigationContainer>
+    </ScreenTransitionProvider>
   )
 }
 
