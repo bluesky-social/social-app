@@ -162,7 +162,7 @@ export function ComposePromptPill() {
                 a.align_center,
                 a.gap_sm,
                 a.py_sm,
-                {paddingLeft: tokens.space.sm, paddingRight: tokens.space.xs},
+                {paddingLeft: tokens.space.sm, paddingRight: tokens.space.md},
                 fadeStyle,
               ]}>
               <UserAvatar
