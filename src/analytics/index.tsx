@@ -9,6 +9,7 @@ import {Platform} from 'react-native'
 import {type Result, type WidenPrimitives} from '@growthbook/growthbook-react'
 
 import {Logger} from '#/logger'
+import {recordFeatureFlagEvaluation} from '#/logger/sentry/featureFlags'
 import {
   Features,
   features as feats,
@@ -312,6 +313,7 @@ export function AnalyticsFeaturesContext({
         ? sessionMetadataForResult(parentContext, result.experimentResult)
         : undefined,
     )
+    recordFeatureFlagEvaluation(feature, result.value)
   })
   setAttributes(parentContext.metadata)
 
