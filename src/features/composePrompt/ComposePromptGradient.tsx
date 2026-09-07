@@ -8,7 +8,7 @@ import {useComposePromptState} from './context'
  * Tall enough to cover the pill sitting just above the bar, plus a lead-in
  * over the content above it.
  */
-const GRADIENT_HEIGHT = 64
+const GRADIENT_HEIGHT = 32
 
 /**
  * Fade from the content into the bottom bar's background, drawn above the
