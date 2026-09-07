@@ -18,6 +18,11 @@ import {useShellLayout} from '#/state/shell/shell-layout'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
+/**
+ * Header mode below which the header counts as fully shown. In mode units, so
+ * this is a fraction of the header height: well under a pixel.
+ */
+const HEADER_SETTLED_THRESHOLD = 0.002
 
 const HomeHeaderModeContext = createContext<SharedValue<number> | null>(null)
 HomeHeaderModeContext.displayName = 'HomeHeaderModeContext'
@@ -57,25 +62,34 @@ export function useHomeHeaderTransform() {
     const hHeight = headerHeight.get()
 
     if (IS_LIQUID_GLASS) {
-      // bit of a hackfix, but: the header can get affected by scrollEdgeEffects
-      // when animating from closed to open. workaround is to trigger a relayout
-      // by offsetting the top position. the actual value doesn't matter, and we
-      // simultaneously offset it using the translate transform.
-      // I think a cleaner way to do it would be to use UIScrollEdgeElementContainerInteraction
-      // manually or something like that, because this kinda sucks -sfn
-      const relayoutingOffset = headerModeValue === 0 ? 1 : 0
+      /*
+       * bit of a hackfix, but: the header can get affected by scrollEdgeEffects
+       * when animating from closed to open. workaround is to trigger a relayout
+       * by offsetting the top position. the actual value doesn't matter, and we
+       * simultaneously offset it using the translate transform.
+       * I think a cleaner way to do it would be to use UIScrollEdgeElementContainerInteraction
+       * manually or something like that, because this kinda sucks -sfn
+       *
+       * "Settled" is a threshold rather than exactly 0: a critically damped
+       * spring creeps towards 0 and only snaps to it when it terminates, and a
+       * scroll event can cancel it before then. Once settled we also pin the
+       * transform so nothing moves after the relayout.
+       */
+      const settled = headerModeValue < HEADER_SETTLED_THRESHOLD
+      const relayoutingOffset = settled ? 1 : 0
       return {
         top: relayoutingOffset,
-        pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
-        opacity: Math.pow(1 - headerModeValue, 2),
+        pointerEvents: settled ? 'auto' : 'none',
+        opacity: settled ? 1 : Math.pow(1 - headerModeValue, 2),
         transform: [
           {
-            translateY:
-              interpolate(
-                headerModeValue,
-                [0, 1],
-                [0, headerPinnedHeight - hHeight],
-              ) - relayoutingOffset,
+            translateY: settled
+              ? -relayoutingOffset
+              : interpolate(
+                  headerModeValue,
+                  [0, 1],
+                  [0, headerPinnedHeight - hHeight],
+                ),
           },
         ],
       }
