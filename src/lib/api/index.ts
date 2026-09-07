@@ -10,11 +10,12 @@ import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {mapWithSerialRetry} from '#/lib/async/map-with-serial-retry'
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
 import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
-import {compressImage} from '#/state/gallery'
+import {type ComposerImage, compressImage} from '#/state/gallery'
 import {
   fetchResolveGifQuery,
   fetchResolveLinkQuery,
@@ -334,18 +335,15 @@ async function resolveMedia(
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
+    const compressedImages = await compressImages(imagesDraft)
     const images: app.bsky.embed.images.Image[] = await Promise.all(
-      imagesDraft.map(async (image, i) => {
-        logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(
-          image,
-          IMAGE_SIZE_CONFIG_POSTS,
-        )
+      compressedImages.map(async (compressedImage, i) => {
+        const {path, width, height, mime} = compressedImage
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(pdsClient, path, mime)
         return {
           image: res.blob,
-          alt: image.alt,
+          alt: imagesDraft[i].alt,
           aspectRatio: {width, height},
         }
       }),
@@ -361,19 +359,16 @@ async function resolveMedia(
       count: imagesDraft.length,
     })
     onStateChange?.(t`Uploading images...`)
+    const compressedImages = await compressImages(imagesDraft)
     const items: $Typed<app.bsky.embed.gallery.Image>[] = await Promise.all(
-      imagesDraft.map(async (image, i) => {
-        logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(
-          image,
-          IMAGE_SIZE_CONFIG_POSTS,
-        )
+      compressedImages.map(async (compressedImage, i) => {
+        const {path, width, height, mime} = compressedImage
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(pdsClient, path, mime)
         return {
           $type: 'app.bsky.embed.gallery#image' as const,
           image: res.blob,
-          alt: image.alt,
+          alt: imagesDraft[i].alt,
           aspectRatio: {width, height},
         }
       }),
@@ -488,6 +483,28 @@ async function resolveMedia(
     }
   }
   return undefined
+}
+
+type CompressedImage = Awaited<ReturnType<typeof compressImage>>
+
+async function compressImages(
+  images: ComposerImage[],
+): Promise<CompressedImage[]> {
+  return mapWithSerialRetry(
+    images,
+    (image, i) => {
+      logger.debug(`Compressing image #${i}`)
+      return compressImage(image, IMAGE_SIZE_CONFIG_POSTS)
+    },
+    isBitmapLoadingError,
+    (_error, i) => {
+      logger.info(`Retrying image compression serially`, {index: i})
+    },
+  )
+}
+
+function isBitmapLoadingError(error: unknown): boolean {
+  return String(error).includes('Loading bitmap failed')
 }
 
 async function resolveRecord(

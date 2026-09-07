@@ -12,7 +12,7 @@ import {renderImage} from '#/lib/media/image-manipulator'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
-import {getDataUriSize} from '#/lib/media/util'
+import {getUriSize} from '#/lib/media/uriSize'
 import {isCancelledError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {IS_NATIVE, IS_WEB} from '#/env'
@@ -241,15 +241,16 @@ export async function compressImage(
       source.path,
       context => context.resize({width: w, height: h}),
       {
+        // Requesting base64 makes Android encode the bitmap a second time and
+        // retain the encoded bytes and string in memory. Measure the URI instead.
+        base64: false,
         compress: qualityPercentage / 100,
         format: SaveFormat.JPEG,
-        base64: true,
       },
     )
 
-    const base64 = res.base64
-    const size = base64 ? getDataUriSize(base64) : 0
-    if (base64 && size <= maxBytes) {
+    const size = await getUriSize(res.uri)
+    if (size <= maxBytes) {
       minQualityPercentage = qualityPercentage
       newDataUri = {
         path: await moveIfNecessary(res.uri),
