@@ -19,10 +19,8 @@ export enum Features {
   PostFeedKnownLikersEnable = 'post_feed:known_likers:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
-  SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
-  ContentVisibilitySettingsEnable = 'content_visibility_settings:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
 
   // values
