@@ -56,7 +56,6 @@ let SearchResults = ({
   onPageSelected: (page: number) => void
   headerHeight: number
 }): React.ReactNode => {
-  const ax = useAnalytics()
   const {t: l} = useLingui()
   /*
    * People/Feeds visibility keys off post-only filters: a `lang` filter applies
@@ -66,10 +65,6 @@ let SearchResults = ({
   const hasPostFilters = hasPostOnlyFilters(filters) || fromMe
   const activePage = hasPostFilters && activeTab > 1 ? 0 : activeTab
   const tabShape = hasPostFilters ? 'filtered' : 'plain'
-
-  const isStarterPacksEnabled = ax.features.enabled(
-    ax.features.SearchStarterPacksV2Enable,
-  )
 
   const sections = useMemo(() => {
     if (!query && !hasFilters) return []
@@ -115,29 +110,20 @@ let SearchResults = ({
           <SearchScreenFeedsResults query={query} active={activePage === 3} />
         ),
       },
-      noFilters &&
-        isStarterPacksEnabled && {
-          title: l`Starter Packs`,
-          component: (
-            <SearchScreenStarterPackResults
-              query={query}
-              active={activePage === 4}
-            />
-          ),
-        },
+      noFilters && {
+        title: l`Starter Packs`,
+        component: (
+          <SearchScreenStarterPackResults
+            query={query}
+            active={activePage === 4}
+          />
+        ),
+      },
     ].filter(Boolean) as {
       title: string
       component: React.ReactNode
     }[]
-  }, [
-    l,
-    query,
-    filters,
-    hasFilters,
-    hasPostFilters,
-    activePage,
-    isStarterPacksEnabled,
-  ])
+  }, [l, query, filters, hasFilters, hasPostFilters, activePage])
 
   // There may be fewer tabs after changing the search options.
   const selectedPage = activePage > sections.length - 1 ? 0 : activePage
