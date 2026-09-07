@@ -27,6 +27,33 @@ export function getResizedDimensions(
   }
 }
 
+/**
+ * Select a compression limit that balances throughput with decoded bitmap
+ * memory. Android benefits from more parallel work on higher-memory devices;
+ * web and iOS plateau at two concurrent images.
+ */
+export function getImageCompressionConcurrency({
+  isAndroid,
+  totalMemoryBytes,
+}: {
+  isAndroid: boolean
+  totalMemoryBytes: number | null
+}): number {
+  if (!isAndroid) {
+    return 2
+  }
+  if (totalMemoryBytes === null) {
+    return 1
+  }
+  if (totalMemoryBytes >= 6_000_000_000) {
+    return 5
+  }
+  if (totalMemoryBytes >= 3_000_000_000) {
+    return 3
+  }
+  return 1
+}
+
 // Fairly accurate estimate that is more performant
 // than decoding and checking length of URI
 export function getDataUriSize(uri: string): number {

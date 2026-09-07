@@ -8,7 +8,7 @@ import {
 import {type ImageManipulatorContext, SaveFormat} from 'expo-image-manipulator'
 import {nanoid} from 'nanoid/non-secure'
 
-import {renderImage} from '#/lib/media/image-manipulator'
+import {renderImage, revokeObjectUrl} from '#/lib/media/image-manipulator'
 import {getImageDim} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {type PickerImage} from '#/lib/media/picker.shared'
@@ -162,6 +162,7 @@ export async function manipulateImage(
       return img
     }
 
+    revokeObjectUrl(img.transformed.path)
     return {alt: img.alt, source: img.source}
   }
 
@@ -169,12 +170,20 @@ export async function manipulateImage(
   const result = await renderImage(source.path, context => context.crop(crop), {
     format: SaveFormat.PNG,
   })
+  let path: string
+  try {
+    path = await moveIfNecessary(result.uri)
+  } catch (error) {
+    await deleteTemporaryImage(result.uri)
+    throw error
+  }
+  await deleteTemporaryImage(img.transformed?.path)
 
   return {
     alt: img.alt,
     source: img.source,
     transformed: {
-      path: await moveIfNecessary(result.uri),
+      path,
       width: result.width,
       height: result.height,
       mime: 'image/png',
@@ -187,10 +196,17 @@ export function resetImageManipulation(
   img: ComposerImage,
 ): ComposerImageWithoutTransformation {
   if (img.transformed !== undefined) {
+    revokeObjectUrl(img.transformed.path)
     return {alt: img.alt, source: img.source}
   }
 
   return img
+}
+
+/** Release browser resources owned by an image removed from the composer. */
+export function releaseComposerImage(img: ComposerImage): void {
+  revokeObjectUrl(img.source.path)
+  revokeObjectUrl(img.transformed?.path)
 }
 
 export async function compressImage(
@@ -207,7 +223,7 @@ export async function compressImage(
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
-  let newDataUri
+  let newDataUri: PickerImage | undefined
 
   while (maxQualityPercentage - minQualityPercentage > 1) {
     if (attempts >= 4) break
@@ -237,30 +253,43 @@ export async function compressImage(
       continue
     }
 
-    const res = await renderImage(
-      source.path,
-      context => context.resize({width: w, height: h}),
-      {
-        // Requesting base64 makes Android encode the bitmap a second time and
-        // retain the encoded bytes and string in memory. Measure the URI instead.
-        base64: false,
-        compress: qualityPercentage / 100,
-        format: SaveFormat.JPEG,
-      },
-    )
+    let res: Awaited<ReturnType<typeof renderImage>> | undefined
+    try {
+      res = await renderImage(
+        source.path,
+        context => context.resize({width: w, height: h}),
+        {
+          /*
+           * Leave this off in production. On Android, requesting base64 encodes
+           * the bitmap a second time and retains the bytes and string in memory.
+           */
+          base64: false,
+          compress: qualityPercentage / 100,
+          format: SaveFormat.JPEG,
+        },
+      )
 
-    const size = await getUriSize(res.uri)
-    if (size <= maxBytes) {
-      minQualityPercentage = qualityPercentage
-      newDataUri = {
-        path: await moveIfNecessary(res.uri),
-        width: res.width,
-        height: res.height,
-        mime: 'image/jpeg',
-        size,
+      const size = await getUriSize(res.uri)
+      if (size <= maxBytes) {
+        minQualityPercentage = qualityPercentage
+        const previousPath = newDataUri?.path
+        const path = await moveIfNecessary(res.uri)
+        await deleteTemporaryImage(previousPath)
+        newDataUri = {
+          path,
+          width: res.width,
+          height: res.height,
+          mime: 'image/jpeg',
+          size,
+        }
+      } else {
+        await deleteTemporaryImage(res.uri)
+        maxQualityPercentage = qualityPercentage
       }
-    } else {
-      maxQualityPercentage = qualityPercentage
+    } catch (error) {
+      await deleteTemporaryImage(res?.uri)
+      await deleteTemporaryImage(newDataUri?.path)
+      throw error
     }
   }
 
@@ -269,6 +298,27 @@ export async function compressImage(
   }
 
   throw new Error(`Unable to compress image`)
+}
+
+async function deleteTemporaryImage(path: string | undefined): Promise<void> {
+  if (!path) {
+    return
+  }
+  if (IS_WEB) {
+    revokeObjectUrl(path)
+    return
+  }
+  if (!IS_NATIVE) {
+    return
+  }
+
+  try {
+    await deleteAsync(path, {idempotent: true})
+  } catch (error) {
+    logger.info('Failed to delete temporary compressed image', {
+      safeMessage: error,
+    })
+  }
 }
 
 async function moveIfNecessary(from: string) {
@@ -305,7 +355,9 @@ async function copyToCache(from: string): Promise<string> {
       try {
         const response = await fetch(from)
         const blob = await response.blob()
-        return await blobToDataUri(blob)
+        const dataUri = await blobToDataUri(blob)
+        revokeObjectUrl(from)
+        return dataUri
       } catch (e) {
         // Blob URL was likely revoked, return as-is for downstream error handling
         return from

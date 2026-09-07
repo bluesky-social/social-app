@@ -1,3 +1,4 @@
+import {revokeObjectUrl} from './image-manipulator'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {
@@ -14,10 +15,14 @@ export async function compressIfNeeded(
   if (img.size < maxSize) {
     return img
   }
-  return await doResize(img.path, {
-    maxDimension,
-    maxSize,
-  })
+  try {
+    return await doResize(img.path, {
+      maxDimension,
+      maxSize,
+    })
+  } finally {
+    revokeObjectUrl(img.path)
+  }
 }
 
 export interface DownloadAndResizeOpts {

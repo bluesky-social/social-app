@@ -283,6 +283,18 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
   const [videoThumbnail, setVideoThumbnail] = useState<string | undefined>()
 
   useEffect(() => {
+    let cancelled = false
+    const ownedUrls = new Set<string>()
+
+    const ownUrl = (url: string): boolean => {
+      if (cancelled) {
+        storage.revokeMediaUrl(url)
+        return false
+      }
+      ownedUrls.add(url)
+      return true
+    }
+
     async function loadMedia() {
       if (post.images && post.images.length > 0) {
         const loaded: LoadedImage[] = []
@@ -290,36 +302,49 @@ function DraftMediaPreview({post}: {post: DraftPostDisplay}) {
           const alt = image.altText || ''
           try {
             const url = await storage.loadMediaFromLocal(image.localPath)
-            loaded.push({url, alt})
+            if (ownUrl(url)) {
+              loaded.push({url, alt})
+            }
           } catch (e) {
             // Image doesn't exist locally, skip it
           }
         }
-        setLoadedImages(loaded)
+        if (!cancelled) {
+          setLoadedImages(loaded)
+        }
       }
 
       if (post.video?.exists && post.video.localPath) {
-        try {
-          const url = await storage.loadMediaFromLocal(post.video.localPath)
-          if (IS_WEB) {
-            // can't generate thumbnails on web
+        if (IS_WEB) {
+          if (!cancelled) {
+            // We cannot generate draft video thumbnails on web.
             setVideoThumbnail("yep, there's a video")
-          } else {
+          }
+        } else {
+          try {
+            const url = await storage.loadMediaFromLocal(post.video.localPath)
+            if (!ownUrl(url)) return
             logger.debug('generating thumbnail of ', {url})
             const thumbnail = await VideoThumbnails.getThumbnailAsync(url, {
               time: 0,
               quality: 0.2,
             })
             logger.debug('thumbnail generated', {thumbnail})
-            setVideoThumbnail(thumbnail.uri)
+            if (!cancelled) {
+              setVideoThumbnail(thumbnail.uri)
+            }
+          } catch (e) {
+            // Video doesn't exist locally
           }
-        } catch (e) {
-          // Video doesn't exist locally
         }
       }
     }
 
     void loadMedia()
+    return () => {
+      cancelled = true
+      ownedUrls.forEach(storage.revokeMediaUrl)
+    }
   }, [post.images, post.video])
 
   // Nothing to show
