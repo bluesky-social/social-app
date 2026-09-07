@@ -146,7 +146,7 @@ export function ComposePromptPill() {
           <GlassView
             isInteractive
             glassEffectStyle={{
-              style: glassVisible ? 'clear' : 'none',
+              style: glassVisible ? 'regular' : 'none',
               animate: true,
             }}
             tintColor={utils.alpha(t.palette.contrast_50, 0.5)}
