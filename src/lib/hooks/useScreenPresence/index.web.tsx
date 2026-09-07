@@ -1,11 +1,8 @@
 import {useCallback} from 'react'
-import {
-  Reanimated3DefaultSpringConfig,
-  useSharedValue,
-  withSpring,
-} from 'react-native-reanimated'
+import {useSharedValue, withSpring} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
+import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 import {ScreenPresenceContext} from './context'
 
 export {type ScreenPresence, useScreenPresence} from './context'
@@ -35,13 +32,8 @@ export function ScreenPresenceProvider({
 
   useFocusEffect(
     useCallback(() => {
-      const spring = (to: number) =>
-        withSpring(to, {
-          ...Reanimated3DefaultSpringConfig,
-          overshootClamping: true,
-        })
-      presence.set(spring(1))
-      return () => presence.set(spring(0))
+      presence.set(withSpring(1, SHELL_SPRING_CONFIG))
+      return () => presence.set(withSpring(0, SHELL_SPRING_CONFIG))
     }, [presence]),
   )
 

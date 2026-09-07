@@ -1,13 +1,13 @@
 import {createContext, useContext, useEffect, useMemo} from 'react'
 import {
   type DerivedValue,
-  Reanimated3DefaultSpringConfig,
   type SharedValue,
   useAnimatedReaction,
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
 
+import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 import {useContributionRegistry} from '#/lib/hooks/useContributionRegistry'
 import {useScreenPresence} from '#/lib/hooks/useScreenPresence'
 
@@ -84,12 +84,7 @@ export function useEnableMinimalShellMode({enabled} = {enabled: true}) {
   useEffect(() => {
     if (!enabled) return
     const unregister = register(contribution)
-    contribution.set(
-      withSpring(1, {
-        ...Reanimated3DefaultSpringConfig,
-        overshootClamping: true,
-      }),
-    )
+    contribution.set(withSpring(1, SHELL_SPRING_CONFIG))
     return unregister
   }, [enabled, register, contribution])
 }

@@ -3,7 +3,6 @@ import {type NativeScrollEvent} from 'react-native'
 import {
   clamp,
   interpolate,
-  Reanimated3DefaultSpringConfig,
   type SharedValue,
   useAnimatedStyle,
   useSharedValue,
@@ -12,6 +11,7 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {EventEmitter} from 'eventemitter3'
 
+import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {useMinimalShellScrollMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -106,12 +106,9 @@ export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const setMode = useCallback(
     (v: boolean) => {
       'worklet'
-      const target = withSpring(v ? 1 : 0, {
-        ...Reanimated3DefaultSpringConfig,
-        overshootClamping: true,
-      })
-      headerMode.set(target)
-      footerScrollMode.set(target)
+      // animation objects are stateful, so each shared value needs its own
+      headerMode.set(withSpring(v ? 1 : 0, SHELL_SPRING_CONFIG))
+      footerScrollMode.set(withSpring(v ? 1 : 0, SHELL_SPRING_CONFIG))
     },
     [headerMode, footerScrollMode],
   )

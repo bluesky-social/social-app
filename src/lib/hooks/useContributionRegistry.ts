@@ -1,12 +1,13 @@
 import {useCallback, useState} from 'react'
 import {
   clamp,
-  Reanimated3DefaultSpringConfig,
   type SharedValue,
   useDerivedValue,
   withSpring,
 } from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
+
+import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 
 type Contribution = {
   id: number
@@ -52,15 +53,11 @@ export function useContributionRegistry(base?: SharedValue<number>) {
       setContributions(prev => [...prev, {id, value}])
       return () => {
         value.set(
-          withSpring(
-            0,
-            {...Reanimated3DefaultSpringConfig, overshootClamping: true},
-            finished => {
-              if (finished) {
-                scheduleOnRN(remove, id)
-              }
-            },
-          ),
+          withSpring(0, SHELL_SPRING_CONFIG, finished => {
+            if (finished) {
+              scheduleOnRN(remove, id)
+            }
+          }),
         )
       }
     },

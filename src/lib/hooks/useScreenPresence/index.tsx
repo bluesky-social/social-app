@@ -1,6 +1,5 @@
 import {useContext, useEffect} from 'react'
 import {
-  Reanimated3DefaultSpringConfig,
   type SharedValue,
   useDerivedValue,
   useSharedValue,
@@ -16,6 +15,7 @@ import {
   type ParamListBase,
 } from '@react-navigation/native'
 
+import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 import {ScreenPresenceContext} from './context'
 
 export {type ScreenPresence, useScreenPresence} from './context'
@@ -117,10 +117,10 @@ function useAncestorsFocused(navigation: NavigationProp<ParamListBase>) {
     if (ancestors.length === 0) return
     const update = () => {
       focused.set(
-        withSpring(areAncestorsFocused(navigation) ? 1 : 0, {
-          ...Reanimated3DefaultSpringConfig,
-          overshootClamping: true,
-        }),
+        withSpring(
+          areAncestorsFocused(navigation) ? 1 : 0,
+          SHELL_SPRING_CONFIG,
+        ),
       )
     }
     update()

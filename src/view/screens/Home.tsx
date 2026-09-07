@@ -1,9 +1,6 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
 import {ActivityIndicator, AppState, StyleSheet} from 'react-native'
-import {
-  Reanimated3DefaultSpringConfig,
-  withSpring,
-} from 'react-native-reanimated'
+import {withSpring} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -12,6 +9,7 @@ import {
   PROD_DEFAULT_FEED,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
+import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -160,12 +158,9 @@ function HomeScreenReady({
   const footerScrollMode = useMinimalShellScrollMode()
   const showShell = useCallback(() => {
     'worklet'
-    const shown = withSpring(0, {
-      ...Reanimated3DefaultSpringConfig,
-      overshootClamping: true,
-    })
-    headerMode.set(shown)
-    footerScrollMode.set(shown)
+    // animation objects are stateful, so each shared value needs its own
+    headerMode.set(withSpring(0, SHELL_SPRING_CONFIG))
+    footerScrollMode.set(withSpring(0, SHELL_SPRING_CONFIG))
   }, [headerMode, footerScrollMode])
 
   useFocusEffect(
