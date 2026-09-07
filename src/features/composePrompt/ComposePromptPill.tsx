@@ -1,14 +1,11 @@
 import {useState} from 'react'
-import {useWindowDimensions} from 'react-native'
 import Animated, {
   interpolate,
   useAnimatedReaction,
   useAnimatedStyle,
-  useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
-import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -18,7 +15,7 @@ import {useSession} from '#/state/session'
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, ios, tokens, useTheme, utils} from '#/alf'
+import {atoms as a, ios, tokens, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {GlassView, IS_GLASS_AVAILABLE} from '#/components/GlassView'
 import {Camera_Stroke2_Corner0_Rounded as CameraIcon} from '#/components/icons/Camera'
@@ -33,19 +30,11 @@ const AVATAR_SIZE = 32
 /**
  * Horizontal inset of the pill while the bottom bar is showing.
  */
-const SIDE_MARGIN_UP = tokens.space.md
+const SIDE_MARGIN_UP = tokens.space.sm
 /**
  * Gap between the pill and the top of the bottom bar.
  */
-const GAP_ABOVE_BAR = tokens.space.sm
-/**
- * Extra room above the pill for the gradient to fade in over.
- */
-const GRADIENT_LEAD = tokens.space._4xl
-/**
- * How much the pill shrinks once it has dropped into the bar's space.
- */
-const DOWN_SCALE = 0.92
+const GAP_ABOVE_BAR = tokens.space._2xs
 
 /**
  * The compose pill that lives in the bottom bar. Screens opt in with
@@ -57,7 +46,6 @@ export function ComposePromptPill() {
   const {footerMode} = useMinimalShellMode()
   const {footerHeight} = useShellLayout()
   const insets = useSafeAreaInsets()
-  const {width: windowWidth} = useWindowDimensions()
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -65,7 +53,6 @@ export function ComposePromptPill() {
   const {currentAccount} = useSession()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const {onPressGallery, onPressCamera} = useComposePromptMedia(config?.open)
-  const pillHeight = useSharedValue(AVATAR_SIZE + tokens.space.sm * 2)
 
   /*
    * Liquid Glass materializes and dissolves through the system's own
@@ -83,30 +70,24 @@ export function ComposePromptPill() {
   )
 
   /*
-   * In the down state the pill is inset from the left, right and bottom
-   * edges by the same amount, so that its corners are concentric with the
-   * device bevels. The inner pill is scaled about its centre, so the outer
-   * padding and offset are solved for the visual margins after scaling.
+   * The pill sits just above the bar and follows it down as it hides. In the
+   * down state it is inset from the left, right and bottom edges by the same
+   * amount, so that its corners are concentric with the device bevels.
    */
   const downMargin = Math.max(insets.bottom, tokens.space.lg)
   const wrapperStyle = useAnimatedStyle(() => {
     const mode = footerMode.get()
-    const scale = interpolate(mode, [0, 1], [1, DOWN_SCALE])
-    const sideMargin = interpolate(mode, [0, 1], [SIDE_MARGIN_UP, downMargin])
-    const paddingHorizontal =
-      (sideMargin - ((1 - scale) * windowWidth) / 2) / scale
     const upBottom = footerHeight.get() + GAP_ABOVE_BAR
-    const bottomMargin = interpolate(mode, [0, 1], [upBottom, downMargin])
-    const translateY =
-      upBottom -
-      bottomMargin +
-      ((1 - scale) * pillHeight.get()) / 2 +
-      // a small drop while fading, like a sheet dismissing
-      (1 - visibility.get()) * tokens.space.md
     return {
       bottom: footerHeight.get(),
-      paddingHorizontal,
-      transform: [{translateY}],
+      paddingHorizontal: interpolate(
+        mode,
+        [0, 1],
+        [SIDE_MARGIN_UP, downMargin],
+      ),
+      transform: [
+        {translateY: interpolate(mode, [0, 1], [0, upBottom - downMargin])},
+      ],
     }
   })
 
@@ -116,9 +97,6 @@ export function ComposePromptPill() {
       pointerEvents: shown > 0.5 ? 'auto' : 'none',
       // a fully transparent ancestor stops Liquid Glass rendering at all
       opacity: IS_GLASS_AVAILABLE ? 1 : shown,
-      transform: [
-        {scale: interpolate(footerMode.get(), [0, 1], [1, DOWN_SCALE])},
-      ],
     }
   })
 
@@ -143,24 +121,9 @@ export function ComposePromptPill() {
         a.left_0,
         a.right_0,
         a.z_10,
-        {paddingTop: GRADIENT_LEAD, paddingBottom: GAP_ABOVE_BAR},
+        {paddingBottom: GAP_ABOVE_BAR},
         wrapperStyle,
       ]}>
-      <Animated.View
-        pointerEvents="none"
-        style={[a.absolute, a.inset_0, fadeStyle]}>
-        <LinearGradient
-          key={t.name} // android does not update when you change the colors. sigh.
-          start={[0.5, 0]}
-          end={[0.5, 1]}
-          colors={[
-            utils.alpha(t.atoms.bg.backgroundColor, 0),
-            utils.alpha(t.atoms.bg.backgroundColor, 0.75),
-          ]}
-          locations={[0, 0.65]}
-          style={[a.absolute, a.inset_0]}
-        />
-      </Animated.View>
       <Animated.View style={pillStyle}>
         <PressableScale
           testID="composePromptPill"
@@ -175,15 +138,13 @@ export function ComposePromptPill() {
           onLongPress={ios(() => {
             onPress()
             playHaptic('Heavy')
-          })}
-          onLayout={e => pillHeight.set(e.nativeEvent.layout.height)}>
+          })}>
           <GlassView
             isInteractive
             glassEffectStyle={{
-              style: glassVisible ? 'regular' : 'none',
+              style: glassVisible ? 'clear' : 'none',
               animate: true,
             }}
-            tintColor={t.palette.contrast_50}
             style={[a.rounded_full]}
             fallbackStyle={[
               a.border,

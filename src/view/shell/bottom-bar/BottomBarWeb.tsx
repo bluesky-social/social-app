@@ -45,7 +45,10 @@ import {
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {ComposePromptPill} from '#/features/composePrompt'
+import {
+  ComposePromptGradient,
+  ComposePromptPill,
+} from '#/features/composePrompt'
 import {styles} from './BottomBarStyles'
 
 type NavItemValue = 'home' | 'search' | 'chat' | 'notifications' | 'profile'
@@ -98,6 +101,7 @@ export function BottomBarWeb() {
           footerMinimalShellTransform,
         ]}
         onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
+        {hasSession && <ComposePromptGradient />}
         {hasSession ? (
           <>
             <NavItem routeName="Home" href="/" navItem="home">

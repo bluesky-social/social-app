@@ -49,10 +49,15 @@ export type ComposePromptConfig = {
 type Entry = {
   id: number
   /**
-   * How present the registering screen is, 0..1. Owned by the registering
-   * hook so that it can be sprung to 0 on unregister.
+   * The registering screen's own presence, 0..1, read directly so that two
+   * screens mid-transition are always sampled on the same frame.
    */
   presence: SharedValue<number>
+  /**
+   * 1 while registered, sprung to 0 on unregister so a screen that leaves
+   * without a transition still fades the pill out.
+   */
+  weight: SharedValue<number>
   config: ComposePromptConfig
 }
 
@@ -72,6 +77,7 @@ type StateContext = {
 type ActionsContext = {
   register: (
     presence: SharedValue<number>,
+    weight: SharedValue<number>,
     config: ComposePromptConfig,
   ) => number
   update: (id: number, config: ComposePromptConfig) => void
@@ -92,7 +98,7 @@ export function Provider({children}: {children: React.ReactNode}) {
   const visibility = useDerivedValue(() => {
     let sum = 0
     for (const entry of entries) {
-      sum += entry.presence.get()
+      sum += entry.presence.get() * entry.weight.get()
     }
     return clamp(sum, 0, 1)
   }, [entries])
@@ -106,7 +112,7 @@ export function Provider({children}: {children: React.ReactNode}) {
     let best: number | null = null
     let bestPresence = 0
     for (const entry of entries) {
-      const presence = entry.presence.get()
+      const presence = entry.presence.get() * entry.weight.get()
       if (presence > bestPresence) {
         best = entry.id
         bestPresence = presence
@@ -127,9 +133,9 @@ export function Provider({children}: {children: React.ReactNode}) {
 
   const actions = useMemo<ActionsContext>(
     () => ({
-      register(presence, config) {
+      register(presence, weight, config) {
         const id = nextId++
-        setEntries(prev => [...prev, {id, presence, config}])
+        setEntries(prev => [...prev, {id, presence, weight, config}])
         return id
       },
       update(id, config) {
@@ -192,30 +198,20 @@ function useComposePromptActions() {
 export function useComposePromptForScreen(config: ComposePromptConfig | null) {
   const {register, update, unregister} = useComposePromptActions()
   const {presence} = useScreenPresence()
-  const contribution = useSharedValue(0)
+  const weight = useSharedValue(0)
   const idRef = useRef<number | null>(null)
   const enabled = config !== null
 
   // the bar's top border would cut across the pill's gradient
   useHideBottomBarBorderForScreen({enabled})
 
-  useAnimatedReaction(
-    () => presence.get(),
-    (current, previous) => {
-      if (enabled && current !== previous) {
-        contribution.set(current)
-      }
-    },
-    [enabled],
-  )
-
   const getConfig = useEffectEvent(() => config)
 
   useEffect(() => {
     const initial = getConfig()
     if (!initial) return
-    contribution.set(presence.get())
-    const id = register(contribution, initial)
+    weight.set(1)
+    const id = register(presence, weight, initial)
     idRef.current = id
     return () => {
       idRef.current = null
@@ -223,7 +219,7 @@ export function useComposePromptForScreen(config: ComposePromptConfig | null) {
        * Fade out before removing so that a screen removed without a
        * transition (or a config switched off) does not snap the pill away.
        */
-      contribution.set(
+      weight.set(
         withSpring(0, SHELL_SPRING_CONFIG, finished => {
           if (finished) {
             scheduleOnRN(unregister, id)
@@ -231,7 +227,7 @@ export function useComposePromptForScreen(config: ComposePromptConfig | null) {
         }),
       )
     }
-  }, [enabled, register, unregister, contribution, presence])
+  }, [enabled, register, unregister, weight, presence])
 
   const label = config?.label
   const accessibilityLabel = config?.accessibilityLabel

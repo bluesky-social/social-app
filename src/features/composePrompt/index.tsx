@@ -4,6 +4,7 @@ import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {type ComposerLogContext} from '#/state/shell/composer'
 import {type ComposePromptConfig, useComposePromptForScreen} from './context'
 
+export {ComposePromptGradient} from './ComposePromptGradient'
 export {ComposePromptPill} from './ComposePromptPill'
 export {
   type ComposePromptConfig,

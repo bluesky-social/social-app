@@ -56,7 +56,10 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {ComposePromptPill} from '#/features/composePrompt'
+import {
+  ComposePromptGradient,
+  ComposePromptPill,
+} from '#/features/composePrompt'
 import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
@@ -174,6 +177,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         onLayout={e => {
           footerHeight.set(e.nativeEvent.layout.height)
         }}>
+        {hasSession && <ComposePromptGradient />}
         {hasSession ? (
           <>
             <Btn
