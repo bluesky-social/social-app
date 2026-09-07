@@ -8,7 +8,7 @@ msgstr ""
 "Language: lv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-05 03:31\n"
+"PO-Revision-Date: 2026-09-07 07:26\n"
 "Last-Translator: \n"
 "Language-Team: Latvian\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
@@ -712,7 +712,7 @@ msgid "{hours, plural, one {# hour} other {# hours}}"
 msgstr ""
 
 #. Badge indicating post count in a thread, e.g., the 3rd post of 5 total is '3/5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:90
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:129
 msgctxt "post-number-in-thread"
 msgid "{index}/{count}"
 msgstr ""
@@ -3488,12 +3488,12 @@ msgstr ""
 msgid "Copies build version to clipboard"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:259
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:257
 msgid "Copies the canonical profile URL to the clipboard"
 msgstr ""
 
 #: src/components/StarterPack/QrCodeDialog.tsx:196
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:269
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:267
 msgid "Copy"
 msgstr ""
 
@@ -3526,7 +3526,7 @@ msgstr ""
 msgid "Copy host"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:258
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:256
 msgid "Copy invite link"
 msgstr ""
 
@@ -3603,7 +3603,7 @@ msgstr ""
 msgid "Could not connect to feed service"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:124
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:122
 msgid "Could not copy – please try again"
 msgstr ""
 
@@ -3650,7 +3650,7 @@ msgstr ""
 msgid "Could not load list"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:173
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:171
 msgid "Could not load profile"
 msgstr ""
 
@@ -4299,8 +4299,8 @@ msgstr ""
 #: src/components/dms/AfterReportDialog.tsx:145
 #: src/components/forms/DateField/index.tsx:128
 #: src/components/forms/DateField/index.tsx:145
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:150
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:156
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:148
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:154
 #: src/lib/media/picker.tsx:37
 #: src/screens/Login/components/HostingProviderDialog.tsx:253
 #: src/screens/Login/components/HostingProviderDialog.tsx:255
@@ -4992,7 +4992,7 @@ msgid "Failed to change handle. Please try again."
 msgstr ""
 
 #: src/components/Lightbox/Lightbox.web.tsx:302
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:133
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
 #: src/screens/Search/Shell.tsx:513
 msgid "Failed to copy link"
 msgstr ""
@@ -6839,12 +6839,12 @@ msgid "Invite link"
 msgstr ""
 
 #. Link that invites someone to follow your profile, distinct from a group chat invite link
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:217
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:215
 msgctxt "profile invite"
 msgid "Invite link"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:130
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Invite link copied"
 msgstr ""
 
@@ -7248,7 +7248,7 @@ msgstr ""
 #. placeholder {0}: nameLink(names[0])
 #. placeholder {0}: names[0].displayName
 #: src/components/Post/KnownLikers.tsx:68
-#: src/components/Post/KnownLikers.tsx:105
+#: src/components/Post/KnownLikers.tsx:111
 msgid "Liked by {0}"
 msgstr ""
 
@@ -7258,7 +7258,7 @@ msgstr ""
 #. placeholder {1}: nameLink(names[1])
 #. placeholder {1}: names[1].displayName
 #: src/components/Post/KnownLikers.tsx:67
-#: src/components/Post/KnownLikers.tsx:101
+#: src/components/Post/KnownLikers.tsx:107
 msgid "Liked by {0} and {1}"
 msgstr ""
 
@@ -9561,7 +9561,7 @@ msgid "Post"
 msgstr ""
 
 #. Screen reader label indicating post count in a thread, e.g., the 3rd post of 5 total is 'Post 3 of 5'
-#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:75
+#: src/screens/PostThread/components/ThreadItemPostNumber.tsx:114
 msgctxt "post-number-in-thread"
 msgid "Post {index} of {count}"
 msgstr ""
@@ -11532,8 +11532,8 @@ msgstr ""
 msgid "Share post at:// URI"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:144
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:159
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:142
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:157
 msgid "Share Profile"
 msgstr ""
 
@@ -13398,7 +13398,7 @@ msgctxt "action"
 msgid "Try again"
 msgstr ""
 
-#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:174
+#: src/features/inviteFriends/InviteFriendsDialogInner.tsx:172
 msgid "Try again in a moment."
 msgstr ""
 
