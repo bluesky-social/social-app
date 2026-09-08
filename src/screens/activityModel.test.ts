@@ -132,6 +132,106 @@ describe('Activity list model', () => {
     expect(group.associatedRecords[documentUri]).toBeDefined()
   })
 
+  it('keeps actor recommendation groups as one row after deduplication', () => {
+    const firstRecommendationUri = recommendationUri
+    const secondRecommendationUri =
+      'at://did:plc:recommender/site.standard.graph.recommend/two'
+    const thirdRecommendationUri =
+      'at://did:plc:recommender/site.standard.graph.recommend/three'
+    const secondDocumentUri = 'at://did:plc:author/site.standard.document/two'
+    const thirdDocumentUri = 'at://did:plc:author/site.standard.document/three'
+    const items = buildActivityListItems({
+      pages: [
+        page({
+          feed: [
+            {
+              $type: 'eric.bsky.atmosphere.getActivity#group',
+              id: 'recommendation-group',
+              groupBy: 'actor',
+              collection: 'site.standard.graph.recommend',
+              indexedAt: '2026-09-03T00:00:00.000Z',
+              actor: 'did:plc:recommender',
+              items: [
+                activity(firstRecommendationUri),
+                activity(secondRecommendationUri),
+                activity(thirdRecommendationUri),
+              ],
+            },
+          ],
+          associatedRecords: {
+            [firstRecommendationUri]: {
+              uri: firstRecommendationUri,
+              cid: 'bafy-recommendation-one',
+              record: {
+                $type: 'site.standard.graph.recommend',
+                document: documentUri,
+                createdAt: '2026-09-03T00:00:00.000Z',
+              },
+            },
+            [secondRecommendationUri]: {
+              uri: secondRecommendationUri,
+              cid: 'bafy-recommendation-two',
+              record: {
+                $type: 'site.standard.graph.recommend',
+                document: secondDocumentUri,
+                createdAt: '2026-09-03T00:00:00.000Z',
+              },
+            },
+            [thirdRecommendationUri]: {
+              uri: thirdRecommendationUri,
+              cid: 'bafy-recommendation-three',
+              record: {
+                $type: 'site.standard.graph.recommend',
+                document: thirdDocumentUri,
+                createdAt: '2026-09-03T00:00:00.000Z',
+              },
+            },
+          },
+        }),
+      ],
+      pageParams: [undefined],
+    })
+
+    expect(items).toHaveLength(1)
+    const group = items[0] as ActivityGroupRowItem
+    expect(group.key).toBe('recommendation-group')
+    expect(group.group.items.map(item => item.record.uri)).toEqual([
+      firstRecommendationUri,
+      secondRecommendationUri,
+      thirdRecommendationUri,
+    ])
+    expect(Object.keys(group.associatedRecords)).toEqual([
+      firstRecommendationUri,
+      secondRecommendationUri,
+      thirdRecommendationUri,
+    ])
+  })
+
+  it('retains a singular actor recommendation group after deduplication', () => {
+    const items = buildActivityListItems({
+      pages: [
+        page({
+          feed: [
+            {
+              $type: 'eric.bsky.atmosphere.getActivity#group',
+              id: 'singular-recommendation-group',
+              groupBy: 'actor',
+              collection: 'site.standard.graph.recommend',
+              indexedAt: '2026-09-03T00:00:00.000Z',
+              actor: 'did:plc:recommender',
+              items: [activity(recommendationUri), activity(recommendationUri)],
+            },
+          ],
+        }),
+      ],
+      pageParams: [undefined],
+    })
+
+    expect(items).toHaveLength(1)
+    expect(items[0]).toMatchObject({type: 'group'})
+    expect((items[0] as ActivityGroupRowItem).group.items).toHaveLength(1)
+  })
+
   it('deduplicates activity URIs in first-seen order', () => {
     const items = buildActivityListItems(
       {

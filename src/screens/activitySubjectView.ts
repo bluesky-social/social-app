@@ -97,8 +97,7 @@ function createDocumentView(
     uri,
     thumb: getBlobUrl(did, record.coverImage),
     title: record.title,
-    description:
-      getString(record.description) ?? getString(record.textContent) ?? '',
+    description: getDocumentDescription(record),
     source:
       publication && siteUri
         ? createPublicationSource(publication, siteUri.did)
@@ -206,6 +205,13 @@ function getImageExtension(mimeType: string): string | undefined {
     default:
       return undefined
   }
+}
+
+function getDocumentDescription(record: Record<string, unknown>) {
+  const description = getString(record.description)
+  if (description?.trim()) return description
+
+  return getString(record.textContent)?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
 function getString(value: unknown): string | undefined {

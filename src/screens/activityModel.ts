@@ -118,7 +118,13 @@ export function buildActivityListItems(
           return true
         })
         if (groupItems.length === 0) continue
-        if (groupItems.length === 1) {
+        if (
+          groupItems.length === 1 &&
+          !(
+            entry.groupBy === 'actor' &&
+            entry.collection === 'site.standard.graph.recommend'
+          )
+        ) {
           items.push({
             type: 'activity',
             key: groupItems[0].record.uri,
@@ -171,10 +177,15 @@ export function getActivityRowContent({
 
   switch (root.collection) {
     case 'site.standard.graph.recommend': {
-      if (!isRecommendRecord(rootRecord)) return generic
-      const documentUri = parseAtUri(rootRecord.document)
-      if (!documentUri) return generic
-      const document = associatedRecords[rootRecord.document]?.record
+      const documentRecordUri = getRecommendedDocumentUri(
+        activity,
+        associatedRecords,
+      )
+      const documentUri = documentRecordUri
+        ? parseAtUri(documentRecordUri)
+        : undefined
+      if (!documentUri || !documentRecordUri) return generic
+      const document = associatedRecords[documentRecordUri]?.record
       if (!document) return generic
       return {
         type: 'recommendation',
@@ -248,6 +259,19 @@ export function getActivityRowContent({
     default:
       return generic
   }
+}
+
+export function getRecommendedDocumentUri(
+  activity: ActivityItem,
+  associatedRecords: AssociatedRecords,
+): string | undefined {
+  const root = parseAtUri(activity.record.uri)
+  if (!root || root.collection !== 'site.standard.graph.recommend') {
+    return undefined
+  }
+
+  const rootRecord = associatedRecords[activity.record.uri]?.record
+  return isRecommendRecord(rootRecord) ? rootRecord.document : undefined
 }
 
 export function getDocumentUrl(

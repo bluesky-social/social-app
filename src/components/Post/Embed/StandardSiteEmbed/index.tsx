@@ -27,6 +27,8 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 
+export {StandardSiteCompactDocumentCard} from './StandardSiteCompactDocumentCard'
+
 const PUBLICATION_AVATAR_STYLE = {
   borderRadius: a.rounded_sm.borderRadius,
 }

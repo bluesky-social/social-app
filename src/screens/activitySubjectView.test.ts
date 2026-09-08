@@ -148,6 +148,30 @@ describe('createActivitySubjectView', () => {
     })
   })
 
+  it('uses a filtered text preview when the description is empty', () => {
+    const view = createActivitySubjectView({
+      uri: documentUri,
+      associatedRecords: {
+        [documentUri]: {
+          uri: documentUri,
+          cid: documentCid,
+          record: {
+            $type: 'site.standard.document',
+            site: 'https://writing.example',
+            path: '/preview',
+            title: 'A preview',
+            description: '   ',
+            textContent: 'First line\n\nSecond line',
+            publishedAt: '2026-09-08T12:00:00.000Z',
+          },
+        },
+      },
+      actors: {},
+    })
+
+    expect(view?.description).toBe('First line Second line')
+  })
+
   it('returns undefined for unavailable and unsupported subjects', () => {
     expect(
       createActivitySubjectView({

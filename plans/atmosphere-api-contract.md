@@ -12,8 +12,7 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Last synchronized backend commit | `0fae442 Align Atmosphere pagination with grouping windows` |
-| Pending backend working tree | Logical activity identity deduplicates same-actor recommendations and subscriptions; uncommitted |
+| Last synchronized backend commit | `d5440be Filter incomplete Atmosphere activity` |
 | Deployment status | Backend changes are local and have not been pushed or deployed |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
@@ -314,7 +313,7 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker. A group's timestamp is its newest item's timestamp, copied to `group.indexedAt`, which equals `group.items[0].record.indexedAt`; items inside a group are also reverse chronological.
 - `indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
 - Results are limited to the rolling 30-day activity window.
-- Grouping is read-time and page-local: it runs after the 10-200 root record page selection, never crosses a cursor boundary, and does not alter stored activity rows, associated-record hydration, or actor hydration. Root pagination uses the same age-tier windows as grouping so its normal gap boundary does not split a possible group.
+- Grouping is read-time and page-local: it runs after the 10-200 candidate-root page selection and render-required association filtering, never crosses a cursor boundary, and does not alter stored activity rows, associated-record hydration, or actor hydration. Root pagination uses the same age-tier windows as grouping so its normal gap boundary does not split a possible group.
 - Before pagination and grouping, the materialized feed collapses multiple active recommendation records from one actor to one `/document` target into one logical activity. It likewise collapses multiple subscription records from one actor to one `/publication` target. Different actors remain distinct.
 - The earliest active source record represents a collapsed logical activity. A later duplicate does not bump it. If that representative is deleted while another duplicate remains active, the backend promotes the next-earliest record, so the returned root URI may change without the logical action disappearing.
 - Subject interaction grouping runs first, for recommendations keyed by the `/document` target and subscriptions keyed by the `/publication` target, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for the second pass, which groups by author DID plus collection NSID.
@@ -340,7 +339,9 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - `associatedRecords` includes every root feed record plus recursively resolved local records referenced by AT URI.
 - Hydration is breadth-first to a maximum depth of four.
 - The backend fetches at most 100 recursively associated records in addition to feed-root records.
-- Missing, deleted, or unavailable references are omitted.
+- Missing, deleted, or unavailable references do not fail the whole request. Before grouping, they suppress a root when they occupy a configured render-required path: recommendation `/document`, subscription `/publication`, or document `/site` when it is an AT URI. Requirements recurse, so a recommendation is suppressed when its document exists but that document's AT-URI publication does not.
+- HTTPS document sites remain valid. Missing AT URIs outside configured render-required paths, such as Bluesky post references, do not suppress activity.
+- Filtering can shrink a group or turn a would-be group into a standalone item. Clients should use the returned group item count without accounting for omitted roots.
 - Records come from appview-sandbox PostgreSQL, not from the user's PDS at request time.
 - Record objects are read-time projections and are not guaranteed to be byte-for-byte copies of the ingested record.
 
@@ -432,8 +433,8 @@ const nextPage = await getActivity({
 })
 ```
 
-- Page size is server-controlled over root activity records; there is no `limit` parameter.
-- A page contains at least 10 root records when available.
+- Page size is server-controlled over candidate root activity records; there is no `limit` parameter.
+- A page selects at least 10 candidate roots when available. Required-association filtering happens afterward, so the returned feed can contain fewer than 10 roots and the cursor advances past omitted candidates.
 - After root record 10, each adjacent gap is compared with the grouping window selected from the newer event’s age at the fixed request time: 10 minutes when younger than one hour, one hour through 12 hours old, four hours when older than 12 through 24 hours old, and eight hours when older than 24 hours.
 - A page contains at most 200 root records; grouping can make the outer `feed` array shorter.
 - The event whose gap exceeds its age-tier window, or root record 201, begins the next page.
@@ -487,7 +488,14 @@ Then run the repository's normal lexicon generation command before importing the
 
 ## Change log
 
-### Pending backend working tree based on `0fae442`
+### Backend `d5440be`
+
+- Filters activity roots with incomplete render-required associated-record chains before grouping.
+- Recommendations require document hydration and, for documents with AT-URI sites, publication hydration. Subscriptions require publication hydration; standalone documents require publication hydration only for AT-URI sites.
+- Group counts now exclude incomplete children, and groups that fall below two children become standalone items.
+- The response schema and cursor encoding are unchanged.
+
+### Backend `68c0721`
 
 - Added materialized logical activity identity without changing the XRPC response schema.
 - Duplicate recommendations by one actor to one document and duplicate subscriptions by one actor to one publication now return one activity.
