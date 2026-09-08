@@ -52,7 +52,7 @@ export function ModerationInboxSubjectDetailsScreen() {
           <ActionSummaryText header={l`Your post was removed`}>
             <Trans>
               Bluesky Moderation Service removed a post from Bluesky for
-              violating our
+              violating our{' '}
               <InlineLinkText
                 to="https://bsky.social/about/support/community-guidelines"
                 label={l`Read our Community Guidelines`}
