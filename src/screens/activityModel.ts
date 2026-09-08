@@ -118,6 +118,16 @@ export function buildActivityListItems(
           return true
         })
         if (groupItems.length === 0) continue
+        if (groupItems.length === 1) {
+          items.push({
+            type: 'activity',
+            key: groupItems[0].record.uri,
+            activity: groupItems[0],
+            associatedRecords,
+            actors,
+          })
+          continue
+        }
         items.push({
           type: 'group',
           key: entry.id,

@@ -59,13 +59,20 @@ export type DocumentRecord = {
   site: string
   title: string
   textContent?: string
+  description?: unknown
+  path?: unknown
   publishedAt: string
+  updatedAt?: unknown
+  coverImage?: unknown
 }
 
 export type PublicationRecord = {
   $type?: 'site.standard.publication'
   name: string
   url: string
+  description?: unknown
+  icon?: unknown
+  basicTheme?: unknown
 }
 
 export type RecommendRecord = {

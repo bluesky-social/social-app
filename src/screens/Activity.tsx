@@ -1,7 +1,7 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {Image} from 'expo-image'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -17,15 +17,25 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {createActivitySubjectView} from '#/screens/activitySubjectView'
+import {atoms as a, tokens, useTheme, utils} from '#/alf'
+import {AvatarStack} from '#/components/AvatarStack'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText} from '#/components/Link'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {
+  PublicationCard,
+  StandardSiteEmbed,
+} from '#/components/Post/Embed/StandardSiteEmbed'
+import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
+import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 import {displayDuration} from '#/features/liveNow/utils'
+import {type app} from '#/lexicons'
+import type * as bsky from '#/types/bsky'
 import {
   type ActivityGroupRowItem,
   type ActivityListItem,
@@ -34,6 +44,11 @@ import {
   buildActivityListItems,
   getActivityRowContent,
 } from './activityModel'
+
+const GROUPED_ACTIVITY_AVATAR_SIZE = 40
+const GROUPED_ACTIVITY_ACTOR_SIZE = 28
+const GROUPED_ACTIVITY_CONTENT_INDENT =
+  GROUPED_ACTIVITY_AVATAR_SIZE + tokens.space.md
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Activity'>
 
@@ -165,24 +180,222 @@ function ActivityRow({
   )
 }
 
-function ActivityGroupRow({item}: {item: ActivityGroupRowItem}) {
+function ActivityGroupRow({
+  item,
+  hideTopBorder,
+}: {
+  item: ActivityGroupRowItem
+  hideTopBorder: boolean
+}) {
+  if (item.group.groupBy === 'subject') {
+    return <SubjectActivityGroupRow item={item} hideTopBorder={hideTopBorder} />
+  }
+
   return (
     <View style={{borderColor: 'red', borderWidth: 2}}>
       {item.group.items.map((activity, index) => (
         <ActivityRow
           key={activity.record.uri}
-          item={{
-            type: 'activity',
-            key: activity.record.uri,
-            activity,
-            associatedRecords: item.associatedRecords,
-            actors: item.actors,
-          }}
+          item={createGroupedActivityRowItem(item, activity)}
           hideTopBorder={index === 0}
         />
       ))}
     </View>
   )
+}
+
+function SubjectActivityGroupRow({
+  item,
+  hideTopBorder,
+}: {
+  item: ActivityGroupRowItem
+  hideTopBorder: boolean
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const [expanded, setExpanded] = useState(false)
+  const children = item.group.items.map(activity => {
+    const row = createGroupedActivityRowItem(item, activity)
+    return {row, content: getActivityRowContent(row)}
+  })
+  const primary = children[0]?.content
+  const primaryLabel = getActorLabel(
+    primary?.actor,
+    primary?.actorDid,
+    l`Unknown user`,
+  )
+  const profiles = uniqueActors(
+    children.map(child => child.content.actor),
+  ).filter(actor => actor.did !== primary?.actorDid)
+  const otherCount = Math.max(0, item.group.items.length - 1)
+  const subjectView = createActivitySubjectView({
+    uri: item.group.subject,
+    associatedRecords: item.associatedRecords,
+    actors: item.actors,
+  })
+
+  return (
+    <View style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}>
+      <Pressable
+        accessibilityLabel={
+          expanded ? l`Collapse grouped activity` : l`Expand grouped activity`
+        }
+        accessibilityHint=""
+        accessibilityRole="button"
+        accessibilityState={{expanded}}
+        onPress={() => setExpanded(value => !value)}
+        style={[a.flex_row, a.align_start, a.gap_md, a.px_xl, a.py_lg]}>
+        <UserAvatar
+          avatar={primary?.actor?.avatar ?? null}
+          size={GROUPED_ACTIVITY_AVATAR_SIZE}
+          type="user"
+        />
+        <View style={[a.flex_1, a.gap_sm]}>
+          <Text style={[a.text_md, a.leading_snug]} emoji>
+            <Text style={[a.text_md, a.leading_snug, a.font_semi_bold]} emoji>
+              {primaryLabel}
+            </Text>{' '}
+            <Trans>
+              and{' '}
+              <Text style={[a.text_md, a.leading_snug, a.font_semi_bold]} emoji>
+                <Plural value={otherCount} one="# other" other="# others" />
+              </Text>{' '}
+            </Trans>
+            <SubjectGroupAction content={primary} />
+            <TimeElapsed timestamp={item.group.indexedAt}>
+              {({timeElapsed}) => (
+                <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  {' '}
+                  · {timeElapsed}
+                </Text>
+              )}
+            </TimeElapsed>
+          </Text>
+          {expanded ? (
+            <View style={[a.gap_sm]}>
+              {children.slice(1).map(({row, content}) => (
+                <View
+                  key={row.key}
+                  style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <UserAvatar
+                    avatar={content.actor?.avatar ?? null}
+                    size={GROUPED_ACTIVITY_ACTOR_SIZE}
+                    type="user"
+                  />
+                  <Text style={[a.text_sm, a.font_semi_bold]} emoji>
+                    {getActorLabel(
+                      content.actor,
+                      content.actorDid,
+                      l`Unknown user`,
+                    )}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <AvatarStack
+              profiles={profiles.slice(0, 3) as bsky.profile.AnyProfileView[]}
+              numPending={Math.min(otherCount, 3)}
+              size={GROUPED_ACTIVITY_ACTOR_SIZE}
+            />
+          )}
+        </View>
+      </Pressable>
+      {subjectView && (
+        <View
+          style={[
+            a.px_xl,
+            a.pb_lg,
+            {marginLeft: GROUPED_ACTIVITY_CONTENT_INDENT},
+          ]}>
+          <ActivitySubject view={subjectView} />
+        </View>
+      )}
+    </View>
+  )
+}
+
+function ActivitySubject({view}: {view: app.bsky.embed.external.ViewExternal}) {
+  const t = useTheme()
+
+  if (isStandardSitePublicationEmbed(view)) {
+    const theme: ssTypes.ThemeColors = {
+      custom: false,
+      accent: t.atoms.text.color,
+      accentForeground: t.atoms.text_inverted.color,
+    }
+    const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
+    if (accentRGB && accentForegroundRGB) {
+      theme.custom = true
+      theme.accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b)
+      theme.accentForeground = utils.rgbToHex(
+        accentForegroundRGB.r,
+        accentForegroundRGB.g,
+        accentForegroundRGB.b,
+      )
+    }
+    return <PublicationCard view={view} themeColors={theme} />
+  }
+
+  return <StandardSiteEmbed view={view} />
+}
+
+function SubjectGroupAction({content}: {content?: ActivityRowContent}) {
+  const {t: l} = useLingui()
+  const emphasis = [a.text_md, a.leading_snug, a.font_semi_bold]
+
+  if (content?.type === 'subscription') {
+    return (
+      <Trans>
+        subscribed to{' '}
+        <Text style={emphasis} emoji>
+          {content.name || l`Untitled publication`}
+        </Text>
+      </Trans>
+    )
+  }
+  if (content?.type === 'recommendation') {
+    const author = getActorLabel(
+      content.subjectActor,
+      content.subjectDid,
+      l`Unknown user`,
+    )
+    return (
+      <Trans>
+        recommended{' '}
+        <Text style={emphasis} emoji>
+          {author}
+        </Text>
+        ’s post{' '}
+        <Text style={emphasis} emoji>
+          {content.title || l`Untitled post`}
+        </Text>
+      </Trans>
+    )
+  }
+  return <Trans>interacted with the same content</Trans>
+}
+
+function createGroupedActivityRowItem(
+  group: ActivityGroupRowItem,
+  activity: ActivityGroupRowItem['group']['items'][number],
+): ActivityRowItem {
+  return {
+    type: 'activity',
+    key: activity.record.uri,
+    activity,
+    associatedRecords: group.associatedRecords,
+    actors: group.actors,
+  }
+}
+
+function uniqueActors(actors: Array<ActivityActor | undefined>) {
+  const seen = new Set<string>()
+  return actors.filter((actor): actor is ActivityActor => {
+    if (!actor || seen.has(actor.did)) return false
+    seen.add(actor.did)
+    return true
+  })
 }
 
 function ActivitySentence({content}: {content: ActivityRowContent}) {
@@ -427,7 +640,7 @@ function renderItem({item, index}: {item: ActivityListItem; index: number}) {
     case 'activity':
       return <ActivityRow item={item} hideTopBorder={index === 0} />
     case 'group':
-      return <ActivityGroupRow item={item} />
+      return <ActivityGroupRow item={item} hideTopBorder={index === 0} />
   }
 }
 
@@ -436,9 +649,7 @@ function getActorLabel(
   did: string | undefined,
   unknown: string,
 ) {
-  return actor?.handle
-    ? sanitizeHandle(actor.handle, '@')
-    : actor?.displayName || did || unknown
+  return actor?.handle ? sanitizeHandle(actor.handle, '@') : did || unknown
 }
 
 const keyExtractor = (item: ActivityListItem) => item.key

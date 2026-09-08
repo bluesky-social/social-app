@@ -12,17 +12,18 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Last synchronized backend commit | `8abcd9e Group related Atmosphere activity` |
-| Pending backend contract | Uncommitted: align root pagination gap windows with grouping age tiers |
+| Last synchronized backend commit | `0fae442 Align Atmosphere pagination with grouping windows` |
+| Pending backend working tree | Logical activity identity deduplicates same-actor recommendations and subscriptions; uncommitted |
 | Deployment status | Backend changes are local and have not been pushed or deployed |
 
-When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit when one exists before asking the frontend session to consume the change. Grouping is committed locally; the pagination-window alignment described below is pending and uncommitted.
+When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
 
 Normative backend sources:
 
 - `lexicons/eric/bsky/atmosphere/getActivity.json`
 - `src/contributors/eric/api/bsky/atmosphere/getActivity.ts`
 - `src/contributors/eric/atmosphere/record-filters.ts`
+- `src/contributors/eric/atmosphere/activity-identity.ts`
 - `ATMOSPHERE.md`
 
 ## Endpoint
@@ -314,7 +315,9 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - `indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
 - Results are limited to the rolling 30-day activity window.
 - Grouping is read-time and page-local: it runs after the 10-200 root record page selection, never crosses a cursor boundary, and does not alter stored activity rows, associated-record hydration, or actor hydration. Root pagination uses the same age-tier windows as grouping so its normal gap boundary does not split a possible group.
-- Subject interaction grouping runs first, for recommendations keyed by the `/document` target and subscriptions keyed by the `/publication` target, partitioned by collection NSID plus target AT URI. Only items left unconsumed by that pass become eligible for the second pass, which groups by author DID plus collection NSID.
+- Before pagination and grouping, the materialized feed collapses multiple active recommendation records from one actor to one `/document` target into one logical activity. It likewise collapses multiple subscription records from one actor to one `/publication` target. Different actors remain distinct.
+- The earliest active source record represents a collapsed logical activity. A later duplicate does not bump it. If that representative is deleted while another duplicate remains active, the backend promotes the next-earliest record, so the returned root URI may change without the logical action disappearing.
+- Subject interaction grouping runs first, for recommendations keyed by the `/document` target and subscriptions keyed by the `/publication` target, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for the second pass, which groups by author DID plus collection NSID.
 - Every grouping pass evaluates candidate clusters against one fixed request timestamp, not the current wall-clock time at each evaluation. An anchor younger than one hour uses an inclusive ten-minute maximum span; an anchor at least one hour old and no more than 12 hours old uses an inclusive one-hour maximum span; an anchor more than 12 hours old and no more than 24 hours old uses an inclusive four-hour maximum span; and an anchor more than 24 hours old uses an inclusive eight-hour maximum span. Exactly 12 hours uses the one-hour tier and exactly 24 hours uses the four-hour tier. Clusters do not chain through adjacent events.
 - A cluster of exactly one item never becomes a group. It remains, or returns to being, a standalone `ActivityItem` in the feed.
 - Every root activity URI is assigned exactly once across the whole response: either as a standalone item or as exactly one item inside exactly one group.
@@ -484,7 +487,15 @@ Then run the repository's normal lexicon generation command before importing the
 
 ## Change log
 
-### Pending backend pagination alignment
+### Pending backend working tree based on `0fae442`
+
+- Added materialized logical activity identity without changing the XRPC response schema.
+- Duplicate recommendations by one actor to one document and duplicate subscriptions by one actor to one publication now return one activity.
+- Subject-group child counts therefore count distinct actors instead of duplicate source records.
+- The earliest active source record is returned; deleting it promotes the next active duplicate.
+- Raw source records remain independently indexed in PostgreSQL.
+
+### Backend `0fae442`
 
 - Root pagination uses the same age-tier windows as grouping to avoid splitting eligible groups at a smaller gap boundary.
 - The 200-root cap can still split a dense group across cursor pages.

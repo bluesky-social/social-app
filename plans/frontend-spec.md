@@ -1,6 +1,6 @@
 # Activity screen frontend specification
 
-Status: proposed; backend read-time grouping is pending local implementation and is not yet committed or deployed.
+Status: proposed; backend read-time grouping is committed locally, logical activity deduplication is implemented in the uncommitted backend working tree, and neither repository has been pushed or deployed.
 
 This document specifies the first frontend for the Atmosphere activity API described in [`atmosphere-api-contract.md`](./atmosphere-api-contract.md).
 
@@ -8,7 +8,7 @@ This document specifies the first frontend for the Atmosphere activity API descr
 
 Add an authenticated **Activity** screen that displays the signed-in user's Atmosphere activity as a paginated list. Add entry points named **Activity** to the mobile drawer and desktop left navigation.
 
-Each top-level API feed entry is rendered as its own row. A standalone item renders its activity; the initial group prototype renders its child activities inside one red-outlined container without treating children as additional top-level rows. Group summary styling will be designed separately. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
+Each top-level API feed entry is rendered as its own row. A standalone item renders its activity. A subject group renders a collapsed summary for many actors interacting with the same content and expands in place to show its child activities. Actor-group presentation is still provisional and keeps the red diagnostic boundary around its children. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
 
 ```text
 recommendation -> document -> publication
@@ -156,6 +156,8 @@ type AtmosphereActivityPage = {
 ### Grouping timing contract
 
 Grouping is computed by the backend after root pagination and is page-local. Root pagination uses the same age-tier windows for adjacent gap boundaries, preventing its normal gap boundary from splitting a possible group; the 200-root cap can still split one. Each candidate cluster uses one fixed request timestamp and an anchor-based maximum span; it never chains through adjacent events. An anchor younger than one hour uses an inclusive 10-minute span. An anchor at least one hour old and no more than 12 hours old uses an inclusive 1-hour span. An anchor more than 12 hours old and no more than 24 hours old uses an inclusive 4-hour span. An anchor more than 24 hours old uses an inclusive 8-hour span. Exactly 12 hours uses the 1-hour tier, and exactly 24 hours uses the 4-hour tier. The frontend must preserve the API-provided group and child order and must not regroup entries across pages.
+
+Before pagination, the backend collapses duplicate recommendations from one actor to one document and duplicate subscriptions from one actor to one publication into one logical activity. It preserves records from different actors. The earliest active source URI represents the action; if that record is deleted, a remaining duplicate may replace its URI and timestamp. This does not change the response type. Do not add client-side actor/target deduplication, because it would operate too late for correct pagination.
 ```
 
 Add narrow field guards for the records used by row presentation:
@@ -315,7 +317,7 @@ The merged maps may be rebuilt when query data changes; all rows produced by one
 
 ## Row presentation
 
-Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. For the initial grouping prototype, render each direct child inside one group container in the API-provided reverse-chronological order and give that container a two-pixel red border. Do not add a group summary yet. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
+Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. Subject groups use the collapsed and expandable presentation below. Actor groups remain in the diagnostic phase: render each direct child inside one container in API-provided reverse-chronological order and give that container a two-pixel red border. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
 
 - horizontal and vertical padding consistent with other feed rows;
 - a bottom or top separator using `t.atoms.border_contrast_low`;
@@ -327,6 +329,21 @@ Every top-level feed entry must produce a visually separate row, including unsup
 
 For grouped activity, preserve every child item's viewer state and resolve each child's raw root record and actor from the shared sidecars. A subject group may summarize multiple actors targeting one document or publication; an actor group may summarize one actor's activity in one collection. The opaque `group.id` is a list key only and must not be parsed.
 
+### Subject group: many actors, one subject
+
+Render `groupBy: 'subject'` as one collapsed, tappable row. The backend guarantees at most one child per actor for a recommendation/document or subscription/publication subject, so `group.items.length` is the distinct actor count. Use the newest child actor as the primary actor and summarize the remaining child count:
+
+```text
+<primary actor> and <N others> subscribed to <publication> · <elapsed time>
+<primary actor> and <N others> recommended <author>’s post <document> · <elapsed time>
+```
+
+Use each actor's sanitized `@handle`, falling back to their DID or translated `Unknown user`. Show their avatar at the leading edge and an `AvatarStack` of up to three unique remaining actors below the sentence. Exclude the primary actor because their avatar already appears at the leading edge. Do not render the proposed Subscribe button yet.
+
+The entire summary row is a button with an expanded accessibility state. It starts collapsed with an `AvatarStack` for the remaining actors. Tapping replaces that stack with one compact row per remaining child in API order. Each compact row shows an avatar at the same size used by the collapsed stack and the actor's sanitized `@handle` immediately to its right, falling back to the DID or translated `Unknown user`. The primary actor stays represented by the leading avatar and summary sentence, so do not repeat them in the expanded rows. Tapping again restores the stack. Do not flatten those children into the outer virtualized list.
+
+Render the hydrated subject beneath the summary. Build an `app.bsky.embed.external#viewExternal` from the subject and shared sidecars rather than changing the shared embed components. A `site.standard.publication` subject uses `PublicationCard`; a `site.standard.document` subject uses `StandardSiteEmbed`. Include available canonical URLs, descriptions, document dates, image blob CDN URLs, publication source metadata and theme, strong references, and hydrated actor profiles in the constructed view. Indent this subject content to the summary text column using the grouped avatar size plus the row gap, while retaining the row's normal outer padding.
+
 Use `activity.record.uri`'s authority as the actor who performed the action. Resolve a referenced document or publication author from that referenced record's URI authority.
 
 Actor handles are prefixed with `@`, sanitized with `sanitizeHandle`, and linked to the in-app profile route built by `makeProfileLink`. Document titles link to their canonical URL, constructed from the document `path` and either its direct HTTPS `site` or the referenced publication's `url`. Publication names link to the publication `url`. These links use normal text color and underline on hover/focus rather than using the default blue link color.
@@ -334,9 +351,10 @@ Actor handles are prefixed with `@`, sanitized with `sanitizeHandle`, and linked
 Actor labels use this fallback order:
 
 1. actor `handle`;
-2. actor `displayName`;
-3. authority DID;
-4. translated `Unknown user` if no DID can be parsed.
+2. authority DID;
+3. translated `Unknown user` if no DID can be parsed.
+
+Do not use actor display names in activity sentences.
 
 For the explicit handle-oriented sentences below, render the available label without inventing a handle. Do not suppress a row because actor hydration is missing.
 
@@ -520,7 +538,9 @@ Add focused tests for behavior that carries contract risk:
 ### Row/model tests
 
 - recommendation traverses `recommend -> document` and uses both actors plus the document title;
-- subject and actor groups remain one outer row with a red boundary, preserve child order and viewer state, and never render nested groups;
+- subject groups summarize the primary actor plus remaining distinct-actor count, toggle between `AvatarStack` and compact avatar-and-handle rows for the remaining actors, preserve child order and viewer state, and never render nested groups;
+- duplicate source recommendations or subscriptions from one actor to one target are represented once by the backend and require no frontend semantic deduplication;
+- actor groups remain one outer row with a red diagnostic boundary;
 - every row receives the same full merged `associatedRecords` reference;
 - associated maps from multiple loaded pages are merged;
 - duplicate activity URIs are rendered once in first-seen order;
