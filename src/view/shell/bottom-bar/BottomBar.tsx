@@ -32,6 +32,7 @@ import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
+import {GlassView} from '#/components/GlassView'
 import {SwitchAccountDialog} from '#/components/dialogs/SwitchAccount'
 import {
   Bell_Filled_Corner0_Rounded as BellFilled,
@@ -163,17 +164,24 @@ export function BottomBar({navigation}: BottomTabBarProps) {
       <MessagesTabMenu control={messagesMenuControl} />
       <Animated.View
         style={[
-          styles.bottomBar,
-          t.atoms.bg,
-          hideBorder
-            ? {borderColor: t.atoms.bg.backgroundColor}
-            : t.atoms.border_contrast_low,
+          styles.bottomBarWrapper,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
         onLayout={e => {
           footerHeight.set(e.nativeEvent.layout.height)
         }}>
+        <GlassView
+          style={styles.bottomBar}
+          isInteractive
+          glassEffectStyle="regular"
+          fallbackStyle={[
+            styles.bottomBarFallbackBorder,
+            t.atoms.bg,
+            hideBorder
+              ? {borderColor: t.atoms.bg.backgroundColor}
+              : t.atoms.border_contrast_low,
+          ]}>
         {hasSession ? (
           <>
             <Btn
@@ -368,6 +376,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
             </View>
           </>
         )}
+        </GlassView>
       </Animated.View>
     </>
   )
