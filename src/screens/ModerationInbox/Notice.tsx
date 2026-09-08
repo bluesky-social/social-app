@@ -20,7 +20,7 @@ import {Timeline} from './components/Timeline'
 const ANTI_HARASSMENT =
   'https://bsky.social/about/support/community-guidelines#:~:text=coordinated%20harassment%20campaigns.-,Anti%2DHarassment,-%3A%20We%20create%20space'
 
-export function ModerationInboxSubjectDetailsScreen() {
+export function ModerationInboxNoticeDetailsScreen() {
   const t = useTheme()
   const {t: l} = useLingui()
   const ax = useAnalytics()
