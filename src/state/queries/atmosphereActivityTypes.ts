@@ -5,11 +5,25 @@ export type ActivityRecord = {
 }
 
 export type ActivityItem = {
+  $type: 'eric.bsky.atmosphere.getActivity#item'
   record: ActivityRecord
   viewerState: {
     subscribed: boolean
   }
 }
+
+export type ActivityGroup = {
+  $type: 'eric.bsky.atmosphere.getActivity#group'
+  id: string
+  groupBy: 'subject' | 'actor'
+  collection: string
+  indexedAt: string
+  subject?: string
+  actor?: string
+  items: ActivityItem[]
+}
+
+export type ActivityFeedEntry = ActivityItem | ActivityGroup
 
 export type AssociatedRecord = {
   uri: string
@@ -34,7 +48,7 @@ export type ActivityActor = {
 export type ActivityActors = Record<string, ActivityActor>
 
 export type AtmosphereActivityPage = {
-  feed: ActivityItem[]
+  feed: ActivityFeedEntry[]
   associatedRecords: AssociatedRecords
   actors: ActivityActors
   cursor?: string
@@ -89,25 +103,85 @@ export type GrainPhotoRecord = {
 }
 
 export function narrowActivityPage(value: {
-  feed: ActivityItem[]
+  feed: unknown[]
   associatedRecords: unknown
   actors: unknown
   cursor?: string
 }): AtmosphereActivityPage {
   return {
-    feed: value.feed.map(item => ({
-      record: {
-        uri: item.record.uri,
-        cid: item.record.cid,
-        indexedAt: item.record.indexedAt,
-      },
-      viewerState: {
-        subscribed: item.viewerState.subscribed,
-      },
-    })),
+    feed: value.feed.flatMap(entry => {
+      const narrowed = narrowActivityEntry(entry)
+      return narrowed ? [narrowed] : []
+    }),
     associatedRecords: narrowAssociatedRecords(value.associatedRecords),
     actors: narrowActors(value.actors),
     cursor: value.cursor,
+  }
+}
+
+function narrowActivityEntry(value: unknown): ActivityFeedEntry | undefined {
+  if (!isObject(value) || typeof value.$type !== 'string') return undefined
+  if (value.$type === 'eric.bsky.atmosphere.getActivity#item') {
+    return narrowActivityItem(value)
+  }
+  if (value.$type !== 'eric.bsky.atmosphere.getActivity#group') {
+    return undefined
+  }
+  if (
+    typeof value.id !== 'string' ||
+    (value.groupBy !== 'subject' && value.groupBy !== 'actor') ||
+    typeof value.collection !== 'string' ||
+    typeof value.indexedAt !== 'string' ||
+    !Array.isArray(value.items)
+  ) {
+    return undefined
+  }
+  if (
+    (value.groupBy === 'subject' && typeof value.subject !== 'string') ||
+    (value.groupBy === 'actor' && typeof value.actor !== 'string')
+  ) {
+    return undefined
+  }
+  const items = value.items.flatMap(item => {
+    const narrowed = narrowActivityItem(item)
+    return narrowed ? [narrowed] : []
+  })
+  if (items.length < 2) return undefined
+  return {
+    $type: value.$type,
+    id: value.id,
+    groupBy: value.groupBy,
+    collection: value.collection,
+    indexedAt: value.indexedAt,
+    subject: typeof value.subject === 'string' ? value.subject : undefined,
+    actor: typeof value.actor === 'string' ? value.actor : undefined,
+    items,
+  }
+}
+
+function narrowActivityItem(value: unknown): ActivityItem | undefined {
+  if (
+    !isObject(value) ||
+    value.$type !== 'eric.bsky.atmosphere.getActivity#item' ||
+    !isObject(value.record) ||
+    typeof value.record.uri !== 'string' ||
+    typeof value.record.cid !== 'string' ||
+    typeof value.record.indexedAt !== 'string' ||
+    !isObject(value.viewerState) ||
+    typeof value.viewerState.subscribed !== 'boolean'
+  ) {
+    return undefined
+  }
+  return {
+    $type: value.$type,
+    record: {
+      uri: value.record.uri,
+      cid: value.record.cid,
+      indexedAt: value.record.indexedAt,
+    },
+    viewerState: {
+      subscribed: value.viewerState.subscribed,
+    },
   }
 }
 

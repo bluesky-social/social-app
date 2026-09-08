@@ -20,7 +20,10 @@
           "properties": {
             "feed": {
               "type": "array",
-              "items": { "type": "ref", "ref": "#activityItem" }
+              "items": {
+                "type": "union",
+                "refs": ["#item", "#group"]
+              }
             },
             "associatedRecords": {
               "type": "unknown",
@@ -35,12 +38,53 @@
         }
       }
     },
-    "activityItem": {
+    "item": {
       "type": "object",
       "required": ["record", "viewerState"],
       "properties": {
         "record": { "type": "ref", "ref": "#activityRecord" },
         "viewerState": { "type": "ref", "ref": "#viewerState" }
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": ["id", "groupBy", "collection", "indexedAt", "items"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque deterministic identifier for this grouping result."
+        },
+        "groupBy": {
+          "type": "string",
+          "knownValues": ["subject", "actor"],
+          "description": "The grouping dimension used for this entry."
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid",
+          "description": "The root-record collection shared by every child."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "The activity event time of the newest child."
+        },
+        "subject": {
+          "type": "string",
+          "format": "at-uri",
+          "description": "The shared interaction target for a subject group."
+        },
+        "actor": {
+          "type": "string",
+          "format": "did",
+          "description": "The shared author for an actor group."
+        },
+        "items": {
+          "type": "array",
+          "minLength": 2,
+          "items": { "type": "ref", "ref": "#item" },
+          "description": "Reverse-chronological child items; groups are never nested."
+        }
       }
     },
     "activityRecord": {

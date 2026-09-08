@@ -2,6 +2,7 @@ import {describe, expect, it} from '@jest/globals'
 
 import {type AtmosphereActivityPage} from '#/state/queries/atmosphereActivityTypes'
 import {
+  type ActivityGroupRowItem,
   type ActivityRowItem,
   buildActivityListItems,
   getActivityRowContent,
@@ -19,6 +20,7 @@ const photoUri = 'at://did:plc:photographer/social.grain.photo/one'
 
 function activity(uri: string, subscribed = false) {
   return {
+    $type: 'eric.bsky.atmosphere.getActivity#item' as const,
     record: {
       uri,
       cid: `bafy-${uri.at(-1)}`,
@@ -77,6 +79,57 @@ describe('Activity list model', () => {
       documentUri,
       secondDocumentUri,
     ])
+  })
+
+  it('preserves groups as outer rows with ordered child activity', () => {
+    const secondDocumentUri = 'at://did:plc:author/site.standard.document/two'
+    const items = buildActivityListItems({
+      pages: [
+        page({
+          feed: [
+            {
+              $type: 'eric.bsky.atmosphere.getActivity#group',
+              id: 'opaque-group-id',
+              groupBy: 'actor',
+              collection: 'site.standard.document',
+              indexedAt: '2026-09-03T00:00:00.000Z',
+              actor: 'did:plc:author',
+              items: [
+                activity(documentUri, true),
+                activity(secondDocumentUri, false),
+              ],
+            },
+          ],
+          associatedRecords: {
+            [documentUri]: {
+              uri: documentUri,
+              cid: 'bafy-one',
+              record: {title: 'One'},
+            },
+            [secondDocumentUri]: {
+              uri: secondDocumentUri,
+              cid: 'bafy-two',
+              record: {title: 'Two'},
+            },
+          },
+        }),
+      ],
+      pageParams: [undefined],
+    })
+
+    expect(items).toHaveLength(1)
+    const group = items[0] as ActivityGroupRowItem
+    expect(group.type).toBe('group')
+    expect(group.key).toBe('opaque-group-id')
+    expect(group.group.items.map(item => item.record.uri)).toEqual([
+      documentUri,
+      secondDocumentUri,
+    ])
+    expect(group.group.items.map(item => item.viewerState.subscribed)).toEqual([
+      true,
+      false,
+    ])
+    expect(group.associatedRecords[documentUri]).toBeDefined()
   })
 
   it('deduplicates activity URIs in first-seen order', () => {

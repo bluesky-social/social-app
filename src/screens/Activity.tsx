@@ -27,6 +27,7 @@ import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 import {displayDuration} from '#/features/liveNow/utils'
 import {
+  type ActivityGroupRowItem,
   type ActivityListItem,
   type ActivityRowContent,
   type ActivityRowItem,
@@ -61,7 +62,9 @@ function ActivityList() {
     query.data,
     query.error ? cleanError(query.error) : undefined,
   )
-  const hasActivityRows = items.some(item => item.type === 'activity')
+  const hasActivityRows = items.some(
+    item => item.type === 'activity' || item.type === 'group',
+  )
 
   const onRefresh = async () => {
     setIsPTRing(true)
@@ -158,6 +161,26 @@ function ActivityRow({
           />
         </View>
       )}
+    </View>
+  )
+}
+
+function ActivityGroupRow({item}: {item: ActivityGroupRowItem}) {
+  return (
+    <View style={{borderColor: 'red', borderWidth: 2}}>
+      {item.group.items.map((activity, index) => (
+        <ActivityRow
+          key={activity.record.uri}
+          item={{
+            type: 'activity',
+            key: activity.record.uri,
+            activity,
+            associatedRecords: item.associatedRecords,
+            actors: item.actors,
+          }}
+          hideTopBorder={index === 0}
+        />
+      ))}
     </View>
   )
 }
@@ -403,6 +426,8 @@ function renderItem({item, index}: {item: ActivityListItem; index: number}) {
       return <ActivityError error={item.error} />
     case 'activity':
       return <ActivityRow item={item} hideTopBorder={index === 0} />
+    case 'group':
+      return <ActivityGroupRow item={item} />
   }
 }
 

@@ -1,6 +1,6 @@
 # Activity screen frontend specification
 
-Status: proposed
+Status: proposed; backend read-time grouping is pending local implementation and is not yet committed or deployed.
 
 This document specifies the first frontend for the Atmosphere activity API described in [`atmosphere-api-contract.md`](./atmosphere-api-contract.md).
 
@@ -8,7 +8,7 @@ This document specifies the first frontend for the Atmosphere activity API descr
 
 Add an authenticated **Activity** screen that displays the signed-in user's Atmosphere activity as a paginated list. Add entry points named **Activity** to the mobile drawer and desktop left navigation.
 
-Each API activity item is rendered as its own row. Every row receives the complete merged `associatedRecords` map, not only its root record, so the row can follow record references such as:
+Each top-level API feed entry is rendered as its own row. A standalone item renders its activity; the initial group prototype renders its child activities inside one red-outlined container without treating children as additional top-level rows. Group summary styling will be designed separately. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
 
 ```text
 recommendation -> document -> publication
@@ -100,6 +100,7 @@ Define feature-local structural types in the camelCase query module. They should
 
 ```ts
 type ActivityItem = {
+  $type: 'eric.bsky.atmosphere.getActivity#item'
   record: {
     uri: string
     cid: string
@@ -109,6 +110,19 @@ type ActivityItem = {
     subscribed: boolean
   }
 }
+
+type ActivityGroup = {
+  $type: 'eric.bsky.atmosphere.getActivity#group'
+  id: string
+  groupBy: 'subject' | 'actor'
+  collection: string
+  indexedAt: string
+  subject?: string
+  actor?: string
+  items: ActivityItem[]
+}
+
+type ActivityFeedEntry = ActivityItem | ActivityGroup
 
 type AssociatedRecord = {
   uri: string
@@ -133,11 +147,15 @@ type ActivityActor = {
 type ActivityActors = Record<string, ActivityActor>
 
 type AtmosphereActivityPage = {
-  feed: ActivityItem[]
+  feed: ActivityFeedEntry[]
   associatedRecords: AssociatedRecords
   actors: ActivityActors
   cursor?: string
 }
+
+### Grouping timing contract
+
+Grouping is computed by the backend after root pagination and is page-local. Root pagination uses the same age-tier windows for adjacent gap boundaries, preventing its normal gap boundary from splitting a possible group; the 200-root cap can still split one. Each candidate cluster uses one fixed request timestamp and an anchor-based maximum span; it never chains through adjacent events. An anchor younger than one hour uses an inclusive 10-minute span. An anchor at least one hour old and no more than 12 hours old uses an inclusive 1-hour span. An anchor more than 12 hours old and no more than 24 hours old uses an inclusive 4-hour span. An anchor more than 24 hours old uses an inclusive 8-hour span. Exactly 12 hours uses the 1-hour tier, and exactly 24 hours uses the 4-hour tier. The frontend must preserve the API-provided group and child order and must not regroup entries across pages.
 ```
 
 Add narrow field guards for the records used by row presentation:
@@ -193,9 +211,12 @@ type GrainPhotoRecord = {
 Narrowing rules:
 
 - Treat non-object `associatedRecords` and `actors` values as empty maps rather than casting blindly.
-- Ignore malformed individual map entries during lookup, but do not remove their corresponding feed item from the list.
-- Treat `activity.record` as metadata only; resolve the raw root payload through `associatedRecords[activity.record.uri].record`.
-- Preserve `activity.viewerState.subscribed` when narrowing the response.
+- Ignore malformed individual map entries during lookup, but do not remove their corresponding feed entry from the list.
+- Discriminate entries by `$type`; groups contain only direct `ActivityItem` children and have at least two children.
+- Treat every child `activity.record` as metadata only; resolve the raw root payload through `associatedRecords[activity.record.uri].record`.
+- Preserve `activity.viewerState.subscribed` when narrowing each child item.
+- For `groupBy: 'subject'`, expect `subject` and no `actor`; for `groupBy: 'actor'`, expect `actor` and no `subject`.
+- Use `group.indexedAt` for group-level elapsed time; child rows use their own `record.indexedAt`.
 - Use `AtUri` from `@atproto/syntax` to read `activity.record.uri`'s collection and authority DID.
 - Catch invalid AT URIs and render the generic fallback row.
 - Use the URI collection as the primary row discriminator and confirm that required record fields have the expected primitive types before reading them.
@@ -222,7 +243,7 @@ The hook:
 - calls `eric.bsky.atmosphere.getActivity` with:
   - `viewer: currentAccount.did`;
   - `cursor: pageParam` when present;
-- does not send a limit; page sizing is server-controlled; the backend returns at least 10 items when available, extends through one-hour activity bursts, and caps a page at 200;
+- does not send a limit; page sizing is server-controlled over root records; the backend returns at least 10 roots when available, extends through one-hour activity bursts, and caps a page at 200 roots; grouping can make the outer feed shorter;
 - uses `useInfiniteQuery`;
 - sets `initialPageParam` to `undefined as string | undefined`;
 - returns `lastPage.cursor` from `getNextPageParam`;
@@ -262,7 +283,7 @@ Use the standard layout components:
 Use the app's shared `List` component for virtualization, pull-to-refresh, and pagination. Follow the established Bookmarks screen list behavior:
 
 - preserve API feed order across pages;
-- defensively deduplicate activity items by `record.uri`, keeping the first occurrence;
+- defensively deduplicate root activity URIs across loaded pages, keeping the first occurrence; preserve each group's child list and do not render group children as additional top-level list entries;
 - fetch the next page from `onEndReached` only when a next page exists and no next-page request is active;
 - use `ListFooter` for next-page loading, failure, and retry;
 - show an initial loading placeholder;
@@ -276,13 +297,13 @@ Build the list model from all loaded pages:
 
 1. Merge every page's `associatedRecords` into one `AssociatedRecords` object.
 2. Merge every page's `actors` into one `ActivityActors` object.
-3. Flatten each page's `feed` in response order and deduplicate by `activity.record.uri`.
+3. Preserve each page's outer `feed` order, deduplicate root URIs across standalone items and group children, and retain the group entry as the list row for grouped roots.
 4. Construct every row with references to the same merged maps:
 
 ```ts
 type ActivityRowItem = {
   key: string
-  activity: ActivityItem
+  activity: ActivityFeedEntry
   associatedRecords: AssociatedRecords
   actors: ActivityActors
 }
@@ -294,15 +315,17 @@ The merged maps may be rebuilt when query data changes; all rows produced by one
 
 ## Row presentation
 
-Every activity item must produce a visually separate row, including unsupported or malformed records. Rows use standard ALF atoms and theme values:
+Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. For the initial grouping prototype, render each direct child inside one group container in the API-provided reverse-chronological order and give that container a two-pixel red border. Do not add a group summary yet. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
 
 - horizontal and vertical padding consistent with other feed rows;
 - a bottom or top separator using `t.atoms.border_contrast_low`;
 - the root actor's avatar when `actors[rootDid].avatar` is available;
 - an avatar placeholder when the actor or avatar is unavailable;
 - translated sentence text;
-- `TimeElapsed` using `activity.record.indexedAt`;
+- `TimeElapsed` using `group.indexedAt` for a group and `activity.record.indexedAt` for an item;
 - `emoji` on text that can contain actor or record-provided values.
+
+For grouped activity, preserve every child item's viewer state and resolve each child's raw root record and actor from the shared sidecars. A subject group may summarize multiple actors targeting one document or publication; an actor group may summarize one actor's activity in one collection. The opaque `group.id` is a list key only and must not be parsed.
 
 Use `activity.record.uri`'s authority as the actor who performed the action. Resolve a referenced document or publication author from that referenced record's URI authority.
 
@@ -497,6 +520,7 @@ Add focused tests for behavior that carries contract risk:
 ### Row/model tests
 
 - recommendation traverses `recommend -> document` and uses both actors plus the document title;
+- subject and actor groups remain one outer row with a red boundary, preserve child order and viewer state, and never render nested groups;
 - every row receives the same full merged `associatedRecords` reference;
 - associated maps from multiple loaded pages are merged;
 - duplicate activity URIs are rendered once in first-seen order;
@@ -543,7 +567,7 @@ Manually verify:
 1. Authenticated users can open `/activity` from both the drawer and desktop left nav.
 2. The screen uses `Layout.Screen` and `Layout.Header` and is not added to the bottom bar.
 3. The query explicitly sends the signed-in DID without a limit and paginates with opaque cursors.
-4. Every feed item renders as a separate row in API order.
+4. Every outer feed entry renders as a separate row in API order; grouped children render within their group row.
 5. Every row receives the same complete merged `associatedRecords` object for the currently loaded pages.
 6. A valid recommendation renders the recommender, document author, and document title by traversing the associated-record map.
 7. All six expected root collections have useful presentation, Grain photos render beneath their row headers, actor handles and document/publication titles are linked, and malformed or unknown items render a generic fallback row.

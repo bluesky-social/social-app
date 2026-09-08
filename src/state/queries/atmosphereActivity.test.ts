@@ -41,6 +41,7 @@ describe('Atmosphere activity response narrowing', () => {
     const page = narrowActivityPage({
       feed: [
         {
+          $type: 'eric.bsky.atmosphere.getActivity#item',
           record: {
             uri: 'at://did:plc:author/site.standard.document/one',
             cid: 'bafy-one',
@@ -54,12 +55,67 @@ describe('Atmosphere activity response narrowing', () => {
       cursor: 'opaque-cursor',
     })
 
-    expect(page.feed.map(item => item.record.uri)).toEqual([
+    const item = page.feed[0]
+    expect(item.$type).toBe('eric.bsky.atmosphere.getActivity#item')
+    if (item.$type !== 'eric.bsky.atmosphere.getActivity#item') return
+    expect(item.record.uri).toBe(
       'at://did:plc:author/site.standard.document/one',
-    ])
-    expect(page.feed[0].viewerState.subscribed).toBe(true)
+    )
+    expect(item.viewerState.subscribed).toBe(true)
     expect(page.associatedRecords).toEqual({})
     expect(page.actors).toEqual({})
     expect(page.cursor).toBe('opaque-cursor')
+  })
+
+  it('preserves grouped items and their viewer state', () => {
+    const firstUri = 'at://did:plc:author/site.standard.document/one'
+    const secondUri = 'at://did:plc:author/site.standard.document/two'
+    const page = narrowActivityPage({
+      feed: [
+        {
+          $type: 'eric.bsky.atmosphere.getActivity#group',
+          id: 'opaque-group-id',
+          groupBy: 'actor',
+          collection: 'site.standard.document',
+          indexedAt: '2026-09-03T00:00:00.000Z',
+          actor: 'did:plc:author',
+          items: [
+            {
+              $type: 'eric.bsky.atmosphere.getActivity#item',
+              record: {
+                uri: firstUri,
+                cid: 'bafy-one',
+                indexedAt: '2026-09-03T00:00:00.000Z',
+              },
+              viewerState: {subscribed: true},
+            },
+            {
+              $type: 'eric.bsky.atmosphere.getActivity#item',
+              record: {
+                uri: secondUri,
+                cid: 'bafy-two',
+                indexedAt: '2026-09-02T23:55:00.000Z',
+              },
+              viewerState: {subscribed: false},
+            },
+          ],
+        },
+      ],
+      associatedRecords: {},
+      actors: {},
+    })
+
+    const group = page.feed[0]
+    expect(group.$type).toBe('eric.bsky.atmosphere.getActivity#group')
+    if (group.$type !== 'eric.bsky.atmosphere.getActivity#group') return
+    expect(group.id).toBe('opaque-group-id')
+    expect(group.items.map(item => item.record.uri)).toEqual([
+      firstUri,
+      secondUri,
+    ])
+    expect(group.items.map(item => item.viewerState.subscribed)).toEqual([
+      true,
+      false,
+    ])
   })
 })

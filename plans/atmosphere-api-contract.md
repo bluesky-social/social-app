@@ -12,10 +12,11 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Last synchronized backend commit | `d39fe59 Nest Atmosphere activity record metadata` |
+| Last synchronized backend commit | `8abcd9e Group related Atmosphere activity` |
+| Pending backend contract | Uncommitted: align root pagination gap windows with grouping age tiers |
 | Deployment status | Backend changes are local and have not been pushed or deployed |
 
-When the backend request, response, filtering, authentication, or hydration behavior changes, update this document and the synchronized backend commit before asking the frontend session to consume the change.
+When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit when one exists before asking the frontend session to consume the change. Grouping is committed locally; the pagination-window alignment described below is pending and uncommitted.
 
 Normative backend sources:
 
@@ -73,6 +74,7 @@ The conceptual TypeScript shape is:
 
 ```ts
 type ActivityItem = {
+  $type: 'eric.bsky.atmosphere.getActivity#item'
   record: {
     uri: string // AT URI
     cid: string
@@ -81,6 +83,17 @@ type ActivityItem = {
   viewerState: {
     subscribed: boolean
   }
+}
+
+type ActivityGroup = {
+  $type: 'eric.bsky.atmosphere.getActivity#group'
+  id: string // opaque deterministic list key; do not parse
+  groupBy: 'subject' | 'actor'
+  collection: string // root-record collection NSID, shared by every item
+  indexedAt: string // newest child timestamp; equals items[0].record.indexedAt
+  subject?: string // AT URI; present iff groupBy is 'subject'
+  actor?: string // DID; present iff groupBy is 'actor'
+  items: ActivityItem[] // reverse chronological, minimum length two, never groups
 }
 
 type AssociatedRecord = {
@@ -102,7 +115,7 @@ type ProfileViewBasic = {
 }
 
 type GetActivityResponse = {
-  feed: ActivityItem[]
+  feed: Array<ActivityItem | ActivityGroup>
   associatedRecords: Record<string, AssociatedRecord>
   actors: Record<string, ProfileViewBasic>
   cursor?: string
@@ -111,12 +124,13 @@ type GetActivityResponse = {
 
 The generated lexicon type currently exposes `associatedRecords` and `actors` as `unknown`, so frontend code will need local narrowing or feature-specific types until the lexicon is made more specific.
 
-### Example
+### Example: standalone item
 
 ```json
 {
   "feed": [
     {
+      "$type": "eric.bsky.atmosphere.getActivity#item",
       "record": {
         "uri": "at://did:plc:recommender/site.standard.graph.recommend/abc",
         "cid": "bafy...",
@@ -162,21 +176,161 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
 }
 ```
 
+### Example: subject group
+
+Multiple actors recommending the same document, grouped by `groupBy: "subject"`:
+
+```json
+{
+  "feed": [
+    {
+      "$type": "eric.bsky.atmosphere.getActivity#group",
+      "id": "opaque-subject-group-id",
+      "groupBy": "subject",
+      "collection": "site.standard.graph.recommend",
+      "subject": "at://did:plc:author/site.standard.document/def",
+      "indexedAt": "2026-09-04T12:00:00.000Z",
+      "items": [
+        {
+          "$type": "eric.bsky.atmosphere.getActivity#item",
+          "record": {
+            "uri": "at://did:plc:alice/site.standard.graph.recommend/one",
+            "cid": "bafy...",
+            "indexedAt": "2026-09-04T12:00:00.000Z"
+          },
+          "viewerState": { "subscribed": false }
+        },
+        {
+          "$type": "eric.bsky.atmosphere.getActivity#item",
+          "record": {
+            "uri": "at://did:plc:bob/site.standard.graph.recommend/two",
+            "cid": "bafy...",
+            "indexedAt": "2026-09-04T11:56:00.000Z"
+          },
+          "viewerState": { "subscribed": false }
+        }
+      ]
+    }
+  ],
+  "associatedRecords": {
+    "at://did:plc:alice/site.standard.graph.recommend/one": {
+      "uri": "at://did:plc:alice/site.standard.graph.recommend/one",
+      "cid": "bafy...",
+      "record": {
+        "$type": "site.standard.graph.recommend",
+        "document": "at://did:plc:author/site.standard.document/def",
+        "createdAt": "2026-09-04T12:00:00.000Z"
+      }
+    },
+    "at://did:plc:bob/site.standard.graph.recommend/two": {
+      "uri": "at://did:plc:bob/site.standard.graph.recommend/two",
+      "cid": "bafy...",
+      "record": {
+        "$type": "site.standard.graph.recommend",
+        "document": "at://did:plc:author/site.standard.document/def",
+        "createdAt": "2026-09-04T11:56:00.000Z"
+      }
+    },
+    "at://did:plc:author/site.standard.document/def": {
+      "uri": "at://did:plc:author/site.standard.document/def",
+      "cid": "bafy...",
+      "record": {
+        "$type": "site.standard.document",
+        "site": "at://did:plc:publisher/site.standard.publication/ghi",
+        "title": "Example document",
+        "textContent": "At most 300 Unicode characters are returned here.",
+        "publishedAt": "2026-09-02T00:00:00.000Z"
+      }
+    }
+  },
+  "actors": {
+    "did:plc:alice": {
+      "did": "did:plc:alice",
+      "handle": "alice.example.com",
+      "displayName": "Alice"
+    },
+    "did:plc:bob": {
+      "did": "did:plc:bob",
+      "handle": "bob.example.com",
+      "displayName": "Bob"
+    },
+    "did:plc:author": {
+      "did": "did:plc:author",
+      "handle": "author.example.com",
+      "displayName": "Author"
+    }
+  },
+  "cursor": "opaque-cursor"
+}
+```
+
+### Example: actor group
+
+One actor publishing multiple documents, grouped by `groupBy: "actor"`:
+
+```json
+{
+  "$type": "eric.bsky.atmosphere.getActivity#group",
+  "id": "opaque-actor-group-id",
+  "groupBy": "actor",
+  "collection": "site.standard.document",
+  "actor": "did:plc:author",
+  "indexedAt": "2026-09-04T09:00:00.000Z",
+  "items": [
+    {
+      "$type": "eric.bsky.atmosphere.getActivity#item",
+      "record": {
+        "uri": "at://did:plc:author/site.standard.document/three",
+        "cid": "bafy...",
+        "indexedAt": "2026-09-04T09:00:00.000Z"
+      },
+      "viewerState": { "subscribed": true }
+    },
+    {
+      "$type": "eric.bsky.atmosphere.getActivity#item",
+      "record": {
+        "uri": "at://did:plc:author/site.standard.document/four",
+        "cid": "bafy...",
+        "indexedAt": "2026-09-04T08:50:00.000Z"
+      },
+      "viewerState": { "subscribed": true }
+    }
+  ]
+}
+```
+
+A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `actor`. Both variants share the rest of the `ActivityGroup` shape.
+
 ## Response invariants
 
 ### Feed
 
-- `feed` is the ordered pagination skeleton only. Each item has exactly `{record, viewerState}` at the top level.
-- `feed[].record` contains only `{uri, cid, indexedAt}`; it does not contain the raw record payload.
-- Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker.
-- `feed[].record.indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
+- `feed` is the ordered pagination skeleton only. It is a Lexicon `$type`-discriminated union of `ActivityItem` and `ActivityGroup`; narrow on `$type`, never on field presence.
+- An item has exactly `{ $type, record, viewerState }`; a group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
+- `feed[].record` and group item records contain only `{uri, cid, indexedAt}`; they do not contain raw record payloads.
+- `group.items` is `ActivityItem[]` with minimum length two; groups never nest, so `group.items` never contains an `ActivityGroup`.
+- Every item inside a group has the same `collection` as `group.collection`.
+- Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker. A group's timestamp is its newest item's timestamp, copied to `group.indexedAt`, which equals `group.items[0].record.indexedAt`; items inside a group are also reverse chronological.
+- `indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
 - Results are limited to the rolling 30-day activity window.
-- Every item has a required `viewerState.subscribed` boolean.
+- Grouping is read-time and page-local: it runs after the 10-200 root record page selection, never crosses a cursor boundary, and does not alter stored activity rows, associated-record hydration, or actor hydration. Root pagination uses the same age-tier windows as grouping so its normal gap boundary does not split a possible group.
+- Subject interaction grouping runs first, for recommendations keyed by the `/document` target and subscriptions keyed by the `/publication` target, partitioned by collection NSID plus target AT URI. Only items left unconsumed by that pass become eligible for the second pass, which groups by author DID plus collection NSID.
+- Every grouping pass evaluates candidate clusters against one fixed request timestamp, not the current wall-clock time at each evaluation. An anchor younger than one hour uses an inclusive ten-minute maximum span; an anchor at least one hour old and no more than 12 hours old uses an inclusive one-hour maximum span; an anchor more than 12 hours old and no more than 24 hours old uses an inclusive four-hour maximum span; and an anchor more than 24 hours old uses an inclusive eight-hour maximum span. Exactly 12 hours uses the one-hour tier and exactly 24 hours uses the four-hour tier. Clusters do not chain through adjacent events.
+- A cluster of exactly one item never becomes a group. It remains, or returns to being, a standalone `ActivityItem` in the feed.
+- Every root activity URI is assigned exactly once across the whole response: either as a standalone item or as exactly one item inside exactly one group.
+- Each realized group has at least two items, and deterministic opaque IDs distinguish separate temporal clusters that otherwise share `groupBy`, `collection`, and `subject`/`actor` (see Group identifiers below).
+- Every item has a required `viewerState.subscribed` boolean, whether it appears standalone or inside a group.
 - `subscribed` is `true` only for a root `site.standard.document` whose `site` publication AT URI matches one of the viewer's current `site.standard.graph.subscription` records. It is `false` for non-document activity and documents without a matching subscription.
 - Subscription state is resolved for the whole page with one indexed PostgreSQL query and no per-item or Tango requests.
-- Every `feed[i].record.uri` has a corresponding entry in `associatedRecords`.
-- Use `associatedRecords[feed[i].record.uri].record` to obtain the raw root payload.
+- Every item's `record.uri`, whether standalone or nested inside a group, has a corresponding entry in `associatedRecords`.
+- Use `associatedRecords[item.record.uri].record` to obtain each raw root payload, for both standalone items and items nested inside a group.
 - The same URI is materialized at most once for a viewer even if it qualifies through multiple fanout paths.
+
+### Group identifiers
+
+- `group.id` is opaque and deterministic for a given grouping result. Treat it only as a stable list key for this response; never parse it or assume it persists across separate requests or regrouping.
+- The backend derives `id` from `groupBy`, the collection NSID, the subject AT URI or actor DID, and the newest item's root URI.
+- Because the newest item's URI is part of the derivation, two temporal clusters that otherwise share `groupBy`, `collection`, and `subject`/`actor` (for example, a burst of recommendations for the same document an hour apart) still receive distinct IDs.
 
 ### Associated records
 
@@ -203,6 +357,15 @@ document -> publication
 - `avatar`, when present, is a ready-to-render Bluesky CDN URL.
 - Actor hydration is batched through Tango `GetActors` for authority DIDs discovered from root and recursively associated AT URIs.
 - An actor may be absent if Tango does not return an existing actor with a handle. The frontend must tolerate missing actor entries.
+
+## Frontend narrowing and rendering
+
+- Discriminate every `feed` entry on `$type`, not on which fields are present. Check `entry.$type === 'eric.bsky.atmosphere.getActivity#group'` before reading `entry.items`, `entry.groupBy`, `entry.subject`, or `entry.actor`.
+- Within a group, use `entry.groupBy` to decide whether `subject` or `actor` is the populated identifier; the Lexicon union cannot express that conditional requirement, so TypeScript alone will not narrow it for you.
+- Use `entry.id` as the React/FlatList key for a group and `entry.record.uri` as the key for a standalone item at the outer list level. Use each nested `item.record.uri` as the key inside `entry.items`.
+- Do not flatten `entry.items` into the outer `feed` list. Flattening discards the grouping the backend computed and breaks summary UI such as "3 people recommended this document". Render a group as one list row that internally lists, or otherwise summarizes, its items.
+- Because grouping can collapse many roots into one outer entry, `feed.length` no longer tracks the number of underlying root activity records. Do not use `feed.length` to infer page size or to decide whether a page is "full".
+- Concatenate `page.feed` arrays across pages in the order pages are fetched; do not merge or re-group entries across pages, since grouping is computed independently per page and never crosses a cursor boundary.
 
 ## Read-time record filtering
 
@@ -266,15 +429,16 @@ const nextPage = await getActivity({
 })
 ```
 
-- Page size is server-controlled; there is no `limit` parameter.
-- A page contains at least 10 results when available.
-- After result 10, the page continues while adjacent activity events are no more than one hour apart.
-- A page contains at most 200 results.
-- The event crossing the one-hour or 200-result boundary begins the next page.
+- Page size is server-controlled over root activity records; there is no `limit` parameter.
+- A page contains at least 10 root records when available.
+- After root record 10, each adjacent gap is compared with the grouping window selected from the newer event’s age at the fixed request time: 10 minutes when younger than one hour, one hour through 12 hours old, four hours when older than 12 through 24 hours old, and eight hours when older than 24 hours.
+- A page contains at most 200 root records; grouping can make the outer `feed` array shorter.
+- The event whose gap exceeds its age-tier window, or root record 201, begins the next page.
+- Grouping is page-local and never crosses a cursor boundary. Sharing the age tiers prevents ordinary gap pagination from splitting a possible group; the 200-root cap can still split one.
 - An absent `cursor` means there is no next page.
 - Cursors are opaque implementation details and may change format.
-- The client should flatten pages in response order.
-- Deduplicate by `activity.record.uri` defensively if live cache updates are added later.
+- The client should concatenate `page.feed` arrays in response order; see Frontend narrowing and rendering above for why this must not flatten `ActivityGroup.items` into that list.
+- Deduplicate defensively by `record.uri` if live cache updates are added later, checking both standalone item URIs and URIs nested inside `ActivityGroup.items`.
 
 ## Errors
 
@@ -319,6 +483,18 @@ lexicons/eric/bsky/atmosphere/getActivity.json
 Then run the repository's normal lexicon generation command before importing the generated schema. Keep the copied lexicon byte-for-byte aligned with the backend source.
 
 ## Change log
+
+### Pending backend pagination alignment
+
+- Root pagination uses the same age-tier windows as grouping to avoid splitting eligible groups at a smaller gap boundary.
+- The 200-root cap can still split a dense group across cursor pages.
+
+### Backend `8abcd9e`
+
+- `feed` is now a `$type`-discriminated `Item | Group` union.
+- Subject-first interaction grouping and actor-plus-collection grouping use fixed-time anchor windows and never nest or duplicate root URIs.
+- Chronology, viewer state, read filtering, hydration, sidecars, and temporary viewer behavior remain unchanged.
+- Root pagination now uses the same age-tier windows as grouping to avoid splitting eligible groups at a smaller gap boundary.
 
 ### Backend `d39fe59`
 
