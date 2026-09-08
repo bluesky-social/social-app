@@ -62,7 +62,7 @@ export function ModerationInboxReportDetailsScreen() {
             <SubjectPreview />
 
             <View style={[a.gap_2xs]}>
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
                 <Trans>Reason:</Trans>
               </Text>
               <Text style={[a.text_md]}>
@@ -71,7 +71,7 @@ export function ModerationInboxReportDetailsScreen() {
             </View>
 
             <View style={[a.gap_2xs]}>
-              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+              <Text style={[a.text_sm, t.atoms.text_contrast_high]}>
                 <Trans>Your note:</Trans>
               </Text>
               <Text emoji style={[a.text_md]}>
