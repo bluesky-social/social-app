@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -11,6 +11,7 @@ import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {useOnboardingScrollViewVisibility} from '#/screens/Onboarding/Layout'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {AvatarStack} from '#/screens/Search/components/StarterPackCard'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -27,8 +28,12 @@ const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
 
 export function StarterPackCard({
   view,
+  recId,
+  position,
 }: {
   view: app.bsky.graph.defs.StarterPackView
+  recId?: string
+  position: number
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -41,6 +46,19 @@ export function StarterPackCard({
   const record = view.record
   const [isProcessing, setIsProcessing] = useState(false)
   const [isFollowingAll, setIsFollowingAll] = useState(false)
+  const seenRecommendationRef = useRef<string | undefined>(undefined)
+  const recommendationKey = `${recId ?? 'legacy'}:${view.uri}`
+  const visibility = useOnboardingScrollViewVisibility(() => {
+    if (!recId) return
+    if (seenRecommendationRef.current === recommendationKey) return
+    seenRecommendationRef.current = recommendationKey
+    ax.metric('starterPack:suggestion:seen', {
+      logContext: 'Onboarding',
+      starterPack: view.uri,
+      recId,
+      position,
+    })
+  })
 
   const onFollowAll = async () => {
     if (!view.list) return
@@ -100,6 +118,8 @@ export function StarterPackCard({
       logContext: 'Onboarding',
       starterPack: view.uri,
       count: dids.length,
+      recId,
+      position,
     })
   }
 
@@ -114,6 +134,8 @@ export function StarterPackCard({
 
   return (
     <View
+      ref={visibility.ref}
+      onLayout={visibility.onLayout}
       style={[
         a.w_full,
         a.p_lg,

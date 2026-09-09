@@ -1,9 +1,15 @@
-import {useEffect, useRef, useState} from 'react'
-import {ScrollView, View} from 'react-native'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {ScrollView, useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOnboardingDispatch} from '#/state/shell'
 import {useOnboardingInternalState} from '#/screens/Onboarding/state'
@@ -25,14 +31,53 @@ import {IS_ANDROID, IS_INTERNAL, IS_WEB} from '#/env'
 
 const ONBOARDING_COL_WIDTH = 420
 
+const ScrollVisibilityContext = createContext<{
+  subscribe: (listener: () => void) => () => void
+  viewportTop: number
+  viewportBottom: number
+} | null>(null)
+
 export const OnboardingControls = createPortalGroup()
 export const OnboardingHeaderSlot = createPortalGroup()
 
+export function useOnboardingScrollViewVisibility(onVisible: () => void) {
+  const context = useContext(ScrollVisibilityContext)
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
+
+  if (!context) {
+    throw new Error(
+      'useOnboardingScrollViewVisibility must be used within Onboarding Layout',
+    )
+  }
+
+  const {subscribe, viewportTop, viewportBottom} = context
+  const checkVisibility = useCallback(() => {
+    ref.current?.measureInWindow((_x, y, _width, height) => {
+      if (height <= 0) return
+      const visibleHeight = Math.max(
+        0,
+        Math.min(y + height, viewportBottom) - Math.max(y, viewportTop),
+      )
+      if (visibleHeight / height >= 0.5) {
+        onVisible()
+      }
+    })
+  }, [onVisible, viewportBottom, viewportTop])
+
+  useEffect(() => {
+    checkVisibility()
+    return subscribe(checkVisibility)
+  }, [checkVisibility, subscribe])
+
+  return {ref, onLayout: checkVisibility}
+}
+
 export function Layout({children}: React.PropsWithChildren<{}>) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
+  const {height: windowHeight} = useWindowDimensions()
   const onboardDispatch = useOnboardingDispatch()
   const {state, dispatch} = useOnboardingInternalState()
   const scrollview = useRef<React.ComponentRef<typeof ScrollView>>(null)
@@ -45,10 +90,29 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
     }
   }, [state])
 
-  const dialogLabel = _(msg`Set up your account`)
+  const dialogLabel = l`Set up your account`
 
   const [headerHeight, setHeaderHeight] = useState(0)
   const [footerHeight, setFooterHeight] = useState(0)
+  const visibilityListenersRef = useRef(new Set<() => void>())
+  const subscribeToScroll = useCallback((listener: () => void) => {
+    visibilityListenersRef.current.add(listener)
+    return () => visibilityListenersRef.current.delete(listener)
+  }, [])
+  const scrollVisibilityContext = useMemo(
+    () => ({
+      subscribe: subscribeToScroll,
+      viewportTop: gtMobile ? 0 : headerHeight,
+      viewportBottom: windowHeight - footerHeight,
+    }),
+    [footerHeight, gtMobile, headerHeight, subscribeToScroll, windowHeight],
+  )
+
+  const onScroll = () => {
+    for (const listener of visibilityListenersRef.current) {
+      listener()
+    }
+  }
 
   return (
     <View
@@ -57,7 +121,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
       aria-role="dialog"
       aria-label={dialogLabel}
       accessibilityLabel={dialogLabel}
-      accessibilityHint={_(msg`Customizes your Bluesky experience`)}
+      accessibilityHint={l`Customizes your Bluesky experience`}
       style={[IS_WEB ? a.fixed : a.absolute, a.inset_0, a.flex_1, t.atoms.bg]}>
       {!gtMobile ? (
         <View
@@ -94,7 +158,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                   variant="ghost"
                   shape="round"
                   size="small"
-                  label={_(msg`Go back to previous step`)}
+                  label={l`Go back to previous step`}
                   onPress={() => dispatch({type: 'prev'})}>
                   <ButtonIcon icon={ArrowLeft} size="lg" />
                 </Button>
@@ -141,9 +205,10 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
           )}
         </>
       )}
-
       <ScrollView
         ref={scrollview}
+        onScroll={onScroll}
+        scrollEventThrottle={100}
         style={[a.h_full, a.w_full]}
         contentContainerStyle={{
           borderWidth: 0,
@@ -159,11 +224,14 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
           <View style={[a.flex_1, web({maxWidth: ONBOARDING_COL_WIDTH})]}>
-            <View style={[a.w_full, a.py_md]}>{children}</View>
+            <View style={[a.w_full, a.py_md]}>
+              <ScrollVisibilityContext.Provider value={scrollVisibilityContext}>
+                {children}
+              </ScrollVisibilityContext.Provider>
+            </View>
           </View>
         </View>
       </ScrollView>
-
       <View
         onLayout={evt => setFooterHeight(evt.nativeEvent.layout.height)}
         style={[
@@ -195,7 +263,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
                 variant="ghost"
                 shape="square"
                 size="small"
-                label={_(msg`Go back to previous step`)}
+                label={l`Go back to previous step`}
                 onPress={() => dispatch({type: 'prev'})}>
                 <ButtonIcon icon={ArrowLeft} size="lg" />
               </Button>
