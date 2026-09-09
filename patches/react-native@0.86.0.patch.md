@@ -1,4 +1,4 @@
-# ***This second part of this patch is load bearing, do not remove.***
+# React Native 0.86 patch notes
 
 ## Scheduler delegate invalidation - iOS use-after-free
 
@@ -31,12 +31,6 @@ holds the current revision's `shared_ptr` for the entire traversal.
 **TODO: Remove after bumping React Native to a release containing
 facebook/react-native#56850.**
 
-## RefreshControl Patch - iOS 17.4 Haptic Regression
-
-Patching `RCTRefreshControl.mm` temporarily to play an impact haptic on refresh when using iOS 17.4 or higher. Since
-17.4, there has been a regression somewhere causing haptics to not play on iOS on refresh. Should monitor for an update
-in the RN repo: https://github.com/facebook/react-native/issues/43388
-
 ## RCTPullToRefreshViewComponentView.mm Patch - iOS 17.4+ haptic regression and iOS 26 progressViewOffset cancellation on New Arch
 
 Both bugs share one root cause, established by instrumented frame-logging runs on the iOS 26
@@ -61,11 +55,10 @@ home header (home is the only screen passing a non-zero offset). Stock RN appear
 by accident: its own pre-attach `tintColor` write materialized the content view at origin 0
 *before* the offset write. Possibly related upstream: react-native#54183.
 
-**2. Haptic (react-native#43388).** The Paper fix above does not cover Fabric: `updateProps`
-writes `tintColor` pre-attach, and a tint write on a detached control materializes the content
-view outside the scroll view, permanently suppressing the trigger haptic on iOS 17.4+ (the
-creation-time-state story likely explains this too, though the haptic wiring itself is not
-observable in logs).
+**2. Haptic (react-native#43388).** Fabric's `updateProps` writes `tintColor` pre-attach. A tint
+write on a detached control materializes the content view outside the scroll view, permanently
+suppressing the trigger haptic on iOS 17.4+ (the creation-time-state story likely explains this
+too, though the haptic wiring itself is not observable in logs).
 
 **The fix**: both `tintColor` and `progressViewOffset` are parked in the component view
 (`_pendingTintColor` / `_pendingProgressViewOffset`, no `UIRefreshControl` subclass) and applied
@@ -133,6 +126,15 @@ content-less area are attributed to the `UIScrollView`.
 
 Issue: https://github.com/facebook/react-native/issues/54123
 PR: https://github.com/react/react-native/pull/56747
+
+## RCTScrollViewComponentView.mm Patch - Disable ScrollView component-view recycling on New Arch
+
+Fabric ScrollView component-view recycling is disabled by returning `NO` from
+`shouldBeRecycled`. This was added in social-app#8295 to prevent a recycled ScrollView from
+carrying `contentInset` mutations, such as those made by Reanimated, into the next rendered
+ScrollView. The original patch also reset the inset in `prepareForRecycle`; that reset no longer
+survives, leaving the recycling override as the remaining protection. Re-evaluate this hunk when
+upgrading React Native rather than assuming it belongs to either ScrollView fix above.
 
 ## ReactViewGroup.kt Patch - Fatal "Required value was null" during subview clipping on Android
 
