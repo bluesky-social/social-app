@@ -48,6 +48,7 @@ let PostControls = ({
   logContext,
   threadgateRecord,
   onShowLess,
+  onPressHide,
   viaRepost,
   variant,
   forceGoogleTranslate = false,
@@ -64,6 +65,11 @@ let PostControls = ({
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
+  /**
+   * When set, hides the bookmark button and adds a "Hide this post" item to
+   * the post menu. The caller owns dismissing the post and sending feedback.
+   */
+  onPressHide?: () => void
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
@@ -309,14 +315,16 @@ let PostControls = ({
         <View />
       </View>
       <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
-        <BookmarkButton
-          post={post}
-          big={big}
-          logContext={logContext}
-          hitSlop={{
-            right: secondaryControlSpacingStyles.gap / 2,
-          }}
-        />
+        {!onPressHide && (
+          <BookmarkButton
+            post={post}
+            big={big}
+            logContext={logContext}
+            hitSlop={{
+              right: secondaryControlSpacingStyles.gap / 2,
+            }}
+          />
+        )}
         <ShareMenuButton
           testID="postShareBtn"
           post={post}
@@ -343,6 +351,7 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShowLess={onShowLess}
+          onPressHide={onPressHide}
           hitSlop={{
             left: secondaryControlSpacingStyles.gap / 2,
           }}
