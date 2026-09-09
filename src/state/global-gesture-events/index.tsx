@@ -1,19 +1,18 @@
 import {createContext, useContext, useMemo, useRef, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {
-  Gesture,
   GestureDetector,
-  type GestureStateChangeEvent,
-  type GestureUpdateEvent,
-  type PanGestureHandlerEventPayload,
+  type PanGestureActiveEvent,
+  type PanGestureEvent,
+  usePanGesture,
 } from 'react-native-gesture-handler'
 import {EventEmitter} from 'eventemitter3'
 
 export type GlobalGestureEvents = {
-  begin: GestureStateChangeEvent<PanGestureHandlerEventPayload>
-  update: GestureUpdateEvent<PanGestureHandlerEventPayload>
-  end: GestureStateChangeEvent<PanGestureHandlerEventPayload>
-  finalize: GestureStateChangeEvent<PanGestureHandlerEventPayload>
+  begin: PanGestureEvent
+  update: PanGestureActiveEvent
+  end: PanGestureActiveEvent & {canceled: boolean}
+  finalize: PanGestureEvent & {canceled: boolean}
 }
 
 const Context = createContext<{
@@ -55,22 +54,22 @@ export function GlobalGestureEventsProvider({
     }),
     [events, setEnabled],
   )
-  const gesture = Gesture.Pan()
-    .runOnJS(true)
-    .enabled(enabled)
-    .simultaneousWithExternalGesture()
-    .onBegin(e => {
+  const gesture = usePanGesture({
+    runOnJS: true,
+    enabled,
+    onBegin: e => {
       events.emit('begin', e)
-    })
-    .onUpdate(e => {
+    },
+    onUpdate: e => {
       events.emit('update', e)
-    })
-    .onEnd(e => {
+    },
+    onDeactivate: e => {
       events.emit('end', e)
-    })
-    .onFinalize(e => {
+    },
+    onFinalize: e => {
       events.emit('finalize', e)
-    })
+    },
+  })
 
   return (
     <Context.Provider value={ctx}>
