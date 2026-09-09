@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-07 07:26\n"
+"PO-Revision-Date: 2026-09-09 19:35\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -841,7 +841,7 @@ msgstr "+{computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:570
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your Starter Pack"
-msgstr ""
+msgstr "<0>{0}, </0><1>{1}, </1>kaj {2, plural, one {# alia} other {# aliaj}} estas inkluzivitaj en via startpako"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -849,7 +849,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:517
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your Starter Pack"
-msgstr ""
+msgstr "<0>{0}, </0><1>{1}, </1>kaj {2, plural, one {# alia} other {# aliaj}} estas inkluzivitaj en via startpako"
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -4739,7 +4739,7 @@ msgstr "Erara mesaĝo"
 msgid "Error occurred while saving file"
 msgstr "Eraro okazis dum konservado de dosiero"
 
-#: src/screens/Signup/StepCaptcha/index.tsx:126
+#: src/screens/Signup/StepCaptcha/index.tsx:187
 msgid "Error receiving captcha response."
 msgstr "Eraris ricevante la captcha-respondon."
 

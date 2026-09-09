@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-07 07:26\n"
+"PO-Revision-Date: 2026-09-09 19:35\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -4739,7 +4739,7 @@ msgstr "Mesaj de eroare"
 msgid "Error occurred while saving file"
 msgstr "A apărut o eroare la salvarea fișierului"
 
-#: src/screens/Signup/StepCaptcha/index.tsx:126
+#: src/screens/Signup/StepCaptcha/index.tsx:187
 msgid "Error receiving captcha response."
 msgstr "Eroare la primirea răspunsului captcha."
 

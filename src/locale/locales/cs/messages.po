@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-07 07:26\n"
+"PO-Revision-Date: 2026-09-09 19:35\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -4739,7 +4739,7 @@ msgstr "Chybová zpráva"
 msgid "Error occurred while saving file"
 msgstr "Při ukládání souboru došlo k chybě"
 
-#: src/screens/Signup/StepCaptcha/index.tsx:126
+#: src/screens/Signup/StepCaptcha/index.tsx:187
 msgid "Error receiving captcha response."
 msgstr "Chyba při přijímání odpovědi captcha."
 
