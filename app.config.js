@@ -478,10 +478,9 @@ module.exports = function (_config) {
               },
             },
           },
-          // Cleared so `eas init` (run from wherever the actual build is
-          // triggered, since this session's network policy blocks
-          // api.expo.dev) assigns a fresh project under your own account -
-          // the old value pointed at Bluesky's own EAS project.
+          // Assigned by `eas init` under your own Expo account - the old
+          // value pointed at Bluesky's own EAS project.
+          projectId: 'd8bffd3c-a711-4d07-9d5f-046084281b3a',
 
         },
       },
