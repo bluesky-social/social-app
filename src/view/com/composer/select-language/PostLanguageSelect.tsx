@@ -13,6 +13,7 @@ import {Trans} from '@lingui/react/macro'
 import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {codeToLanguageName} from '#/locale/helpers'
 import {
+  fromPostLanguages,
   toPostLanguages,
   useLanguagePrefs,
   useLanguagePrefsApi,
@@ -114,7 +115,9 @@ export function PostLanguageSelect({
                   }}>
                   <Menu.ItemText>{langName}</Menu.ItemText>
                   <Menu.ItemRadio
-                    selected={currentLanguages.includes(historyItem)}
+                    selected={
+                      fromPostLanguages(currentLanguages) === historyItem
+                    }
                   />
                 </Menu.Item>
               )
