@@ -52,9 +52,7 @@ function ActivityV2List() {
     query.error ? cleanError(query.error) : undefined,
   )
   const presentationItems = buildActivityPresentationListItems(items)
-  const hasActivityRows = presentationItems.some(
-    item => item.type === 'activity' || item.type === 'group',
-  )
+  const hasActivityRows = presentationItems.some(item => item.computedItemView)
 
   const onRefresh = async () => {
     setIsPTRing(true)
@@ -153,17 +151,23 @@ function renderItem({
   item: ActivityPresentationListItem
   index: number
 }) {
-  switch (item.type) {
+  switch (item.item.type) {
     case 'loading':
       return <ActivityV2Loading />
     case 'empty':
       return <ActivityV2Empty />
     case 'error':
-      return <ActivityV2Error error={item.error} />
+      return <ActivityV2Error error={item.item.error} />
     case 'activity':
     case 'group':
-      return <ActivityPresentationRow item={item} hideTopBorder={index === 0} />
+      return item.computedItemView ? (
+        <ActivityPresentationRow
+          item={item.item}
+          computedItemView={item.computedItemView}
+          hideTopBorder={index === 0}
+        />
+      ) : null
   }
 }
 
-const keyExtractor = (item: ActivityPresentationListItem) => item.key
+const keyExtractor = (item: ActivityPresentationListItem) => item.item.key

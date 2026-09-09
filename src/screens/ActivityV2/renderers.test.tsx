@@ -7,8 +7,8 @@ import {ActivityPresentationRow} from './components/ActivityPresentationRow'
 import {type ActivityGroupRowItem, type ActivityRowItem} from './model'
 import {
   type ActivityPresentationItem,
-  type PresentableActivityRowItem,
-  resolveActivityActors,
+  type ActivityPresentationProps,
+  buildActivityPresentationListItems,
 } from './presentation'
 import {
   type ActivityActors,
@@ -83,21 +83,31 @@ beforeEach(() => {
 })
 
 function renderRow(item: ActivityPresentationItem) {
-  const actorPresentation = resolveActivityActors(item)
-  if (!actorPresentation) {
-    throw new Error('Expected usable actors for row test')
-  }
-
-  const presentableItem: PresentableActivityRowItem = {
-    ...item,
-    actorPresentation,
-  }
+  const presentationItem = buildSinglePresentationItem(item)
 
   return render(
     <I18nProvider i18n={i18n}>
-      <ActivityPresentationRow item={presentableItem} hideTopBorder={false} />
+      <ActivityPresentationRow
+        item={presentationItem.item}
+        computedItemView={presentationItem.computedItemView}
+        hideTopBorder={false}
+      />
     </I18nProvider>,
   )
+}
+
+function buildSinglePresentationItem(
+  item: ActivityPresentationItem,
+): ActivityPresentationProps {
+  const [presentationItem] = buildActivityPresentationListItems([item])
+  if (!presentationItem?.computedItemView) {
+    throw new Error('Expected usable computed view for row test')
+  }
+
+  return {
+    item: presentationItem.item,
+    computedItemView: presentationItem.computedItemView,
+  }
 }
 
 function handleLabel(handle: string) {

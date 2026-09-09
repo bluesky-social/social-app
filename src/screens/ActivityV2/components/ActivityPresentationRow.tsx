@@ -1,7 +1,4 @@
-import {
-  getActivityCollection,
-  type PresentableActivityRowItem,
-} from '../presentation'
+import {type ActivityPresentationProps} from '../presentation'
 import {
   activityRenderers,
   getActivityRendererTestID,
@@ -10,23 +7,22 @@ import {
 import {isKnownActivityCollection} from '../types'
 
 export function ActivityPresentationRow({
-  item,
+  computedItemView,
   hideTopBorder,
-}: {
-  item: PresentableActivityRowItem
+  item,
+}: ActivityPresentationProps & {
   hideTopBorder: boolean
 }) {
-  const collection = getActivityCollection(item)
-  const Renderer = isKnownActivityCollection(collection)
-    ? activityRenderers[collection]
+  const Renderer = isKnownActivityCollection(computedItemView.rootCollection)
+    ? activityRenderers[computedItemView.rootCollection]
     : UnknownActivityRenderer
 
   return (
     <Renderer
       item={item}
-      actorPresentation={item.actorPresentation}
+      computedItemView={computedItemView}
       hideTopBorder={hideTopBorder}
-      testID={getActivityRendererTestID(collection)}
+      testID={getActivityRendererTestID(computedItemView.rootCollection)}
     />
   )
 }

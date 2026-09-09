@@ -152,7 +152,9 @@ jest.mock('#/view/com/util/List', () => {
           {props.data.map((item, index) => (
             <View key={item.key}>{props.renderItem({item, index})}</View>
           ))}
-          {props.ListFooterComponent}
+          {props.ListFooterComponent ? (
+            <View key="footer">{props.ListFooterComponent}</View>
+          ) : null}
         </View>
       )
     },

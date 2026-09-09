@@ -1,15 +1,13 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {type ActivityGroupRowItem, type ActivityRowItem} from './model'
-import {
-  buildActivityPresentationListItems,
-  resolveActivityActors,
-} from './presentation'
+import {buildActivityPresentationListItems} from './presentation'
 import {activityCollections} from './types'
 
 function activity(
   uri: string,
   collection: string = activityCollections.document,
+  subscribed = false,
 ) {
   return {
     $type: 'eric.bsky.atmosphere.getActivity#item' as const,
@@ -19,7 +17,7 @@ function activity(
       indexedAt: '2026-09-09T00:00:00.000Z',
     },
     collection,
-    viewerState: {subscribed: false},
+    viewerState: {subscribed},
   }
 }
 
@@ -29,6 +27,11 @@ function actor(did: string, handle: string) {
     handle,
     avatar: `https://example.com/${did}.jpg`,
   }
+}
+
+function getComputedView(item: ActivityRowItem | ActivityGroupRowItem) {
+  const [presentationItem] = buildActivityPresentationListItems([item])
+  return presentationItem?.computedItemView
 }
 
 describe('ActivityV2 presentation', () => {
@@ -74,18 +77,126 @@ describe('ActivityV2 presentation', () => {
       },
     }
 
-    const resolved = resolveActivityActors(row)
+    const computedItemView = getComputedView(row)
 
-    expect(resolved?.primary.did).toBe('did:plc:alice')
-    expect(resolved?.usableActors.map(value => value.did)).toEqual([
+    expect(computedItemView?.actorPresentation.primary.did).toBe(
       'did:plc:alice',
-      'did:plc:bob',
-    ])
-    expect(resolved?.othersCount).toBe(1)
-    expect(resolved?.profiles.map(profile => profile.did)).toEqual([
-      'did:plc:alice',
-      'did:plc:bob',
-    ])
+    )
+    expect(
+      computedItemView?.actorPresentation.usableActors.map(value => value.did),
+    ).toEqual(['did:plc:alice', 'did:plc:bob'])
+    expect(computedItemView?.actorPresentation.othersCount).toBe(1)
+    expect(
+      computedItemView?.actorPresentation.profiles.map(profile => profile.did),
+    ).toEqual(['did:plc:alice', 'did:plc:bob'])
+  })
+
+  it('hoists timestamp, relationship data, and explicit subscription summary into computedItemView', () => {
+    const rootUri = 'at://did:plc:recommender/site.standard.graph.recommend/1'
+    const documentUri = 'at://did:plc:author/site.standard.document/1'
+    const row: ActivityRowItem = {
+      type: 'activity',
+      key: rootUri,
+      activity: activity(rootUri, activityCollections.recommendation, true),
+      associatedRecords: {
+        [rootUri]: {
+          uri: rootUri,
+          cid: 'cid-root',
+          record: {
+            $type: activityCollections.recommendation,
+            document: documentUri,
+            createdAt: '2026-09-09T00:00:00.000Z',
+          },
+        },
+        [documentUri]: {
+          uri: documentUri,
+          cid: 'cid-document',
+          record: {
+            $type: activityCollections.document,
+            site: 'https://example.com',
+            path: '/essay',
+            title: 'Essay',
+            publishedAt: '2026-09-08T00:00:00.000Z',
+          },
+        },
+      },
+      actors: {
+        'did:plc:recommender': actor('did:plc:recommender', 'recommender.test'),
+        'did:plc:author': actor('did:plc:author', 'author.test'),
+      },
+    }
+    const group: ActivityGroupRowItem = {
+      type: 'group',
+      key: 'subscription-group',
+      group: {
+        $type: 'eric.bsky.atmosphere.getActivity#group',
+        id: 'subscription-group',
+        groupBy: 'actor',
+        collection: activityCollections.subscription,
+        indexedAt: '2026-09-09T04:00:00.000Z',
+        actor: 'did:plc:subscriber',
+        items: [
+          activity(
+            'at://did:plc:subscriber/site.standard.graph.subscription/1',
+            activityCollections.subscription,
+            true,
+          ),
+          activity(
+            'at://did:plc:subscriber/site.standard.graph.subscription/2',
+            activityCollections.subscription,
+            false,
+          ),
+        ],
+      },
+      associatedRecords: {},
+      actors: {
+        'did:plc:subscriber': actor('did:plc:subscriber', 'subscriber.test'),
+      },
+    }
+
+    const rowComputedView = getComputedView(row)
+    const groupComputedView = getComputedView(group)
+
+    expect(rowComputedView).toEqual(
+      expect.objectContaining({
+        rootCollection: activityCollections.recommendation,
+        timestamp: '2026-09-09T00:00:00.000Z',
+        group: {kind: 'standalone', count: 1},
+        subscriptionState: 'all',
+        roots: [
+          expect.objectContaining({
+            uri: rootUri,
+            isSubscribed: true,
+          }),
+        ],
+        relationships: {
+          recommendation: {
+            document: expect.objectContaining({
+              uri: documentUri,
+              title: 'Essay',
+              url: 'https://example.com/essay',
+              author: expect.objectContaining({
+                did: 'did:plc:author',
+                href: '/profile/author.test',
+              }),
+            }),
+          },
+          subscription: undefined,
+        },
+      }),
+    )
+    expect(groupComputedView).toEqual(
+      expect.objectContaining({
+        rootCollection: activityCollections.subscription,
+        timestamp: '2026-09-09T04:00:00.000Z',
+        group: {kind: 'actor', count: 2},
+        subscriptionState: 'some',
+        roots: [
+          expect.objectContaining({isSubscribed: true}),
+          expect.objectContaining({isSubscribed: false}),
+        ],
+      }),
+    )
   })
 
   it('omits standalone and grouped rows that have no usable actors', () => {
@@ -116,10 +227,10 @@ describe('ActivityV2 presentation', () => {
     }
 
     expect(buildActivityPresentationListItems([standalone])).toEqual([
-      {type: 'empty', key: 'empty'},
+      {item: {type: 'empty', key: 'empty'}, computedItemView: undefined},
     ])
     expect(buildActivityPresentationListItems([group])).toEqual([
-      {type: 'empty', key: 'empty'},
+      {item: {type: 'empty', key: 'empty'}, computedItemView: undefined},
     ])
   })
 })

@@ -3,12 +3,11 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Text} from '#/components/Typography'
-import {type ResolvedActivityActors} from '../presentation'
+import {type ActivityPresentationProps} from '../presentation'
 import {ActivityInlineLinkText} from './ActivityInlineLinkText'
 
 const ACTIVITY_ROW_AVATAR_SIZE = 36
@@ -33,13 +32,12 @@ export function ActivityRow({
 }
 
 export function ActivityRowHeader({
-  actorPresentation,
+  computedItemView,
   children,
-}: React.PropsWithChildren<{
-  actorPresentation: ResolvedActivityActors
-}>) {
+}: React.PropsWithChildren<ActivityPresentationProps>) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const {actorPresentation} = computedItemView
 
   const othersLabel =
     actorPresentation.othersCount > 0
@@ -72,10 +70,7 @@ export function ActivityRowHeader({
           emoji>
           <ActivityInlineLinkText
             label={l`View ${actorPresentation.primary.label}’s profile`}
-            to={makeProfileLink({
-              did: actorPresentation.primary.did,
-              handle: actorPresentation.primary.handle,
-            })}>
+            to={actorPresentation.primary.href}>
             {actorPresentation.primary.label}
           </ActivityInlineLinkText>
           {othersLabel ? ` ${othersLabel}` : ''} {children}
