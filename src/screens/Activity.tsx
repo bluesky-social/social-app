@@ -46,6 +46,7 @@ import {
   buildActivityListItems,
   getActivityRowContent,
   getRecommendedDocumentUri,
+  getSubscribedPublicationUri,
 } from './activityModel'
 
 const GROUP_AVATAR_SIZE = 40
@@ -134,7 +135,7 @@ function ActivityList() {
   )
 }
 
-function ActivityRow({
+export function ActivityRow({
   item,
   hideTopBorder,
 }: {
@@ -144,6 +145,14 @@ function ActivityRow({
   const t = useTheme()
   const {t: l} = useLingui()
   const content = getActivityRowContent(item)
+  const documentView =
+    content.type === 'document'
+      ? createSafeActivitySubjectView({
+          uri: item.activity.record.uri,
+          associatedRecords: item.associatedRecords,
+          actors: item.actors,
+        })
+      : undefined
 
   return (
     <View style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}>
@@ -164,6 +173,11 @@ function ActivityRow({
           </TimeElapsed>
         </View>
       </View>
+      {documentView && (
+        <View style={[a.px_xl, a.pb_lg, {marginLeft: GROUP_CONTENT_INDENT}]}>
+          <StandardSiteEmbed view={documentView} />
+        </View>
+      )}
       {content.type === 'photo' && (
         <View style={[a.px_xl, a.pb_lg]}>
           <Image
@@ -193,10 +207,29 @@ function ActivityGroupRow({
     return <SubjectActivityGroupRow item={item} hideTopBorder={hideTopBorder} />
   }
 
-  if (item.group.collection === 'site.standard.graph.recommend') {
+  if (
+    item.group.groupBy === 'actor' &&
+    item.group.collection === 'site.standard.graph.recommend'
+  ) {
     return (
       <ActorRecommendationGroupRow item={item} hideTopBorder={hideTopBorder} />
     )
+  }
+
+  if (
+    item.group.groupBy === 'actor' &&
+    item.group.collection === 'site.standard.graph.subscription'
+  ) {
+    return (
+      <ActorSubscriptionGroupRow item={item} hideTopBorder={hideTopBorder} />
+    )
+  }
+
+  if (
+    item.group.groupBy === 'actor' &&
+    item.group.collection === 'site.standard.document'
+  ) {
+    return <ActorDocumentGroupRow item={item} hideTopBorder={hideTopBorder} />
   }
 
   return (
@@ -229,7 +262,7 @@ export function ActorRecommendationGroupRow({
   const actor = actorDid ? item.actors[actorDid] : undefined
   const children = item.group.items.map(activity => ({
     key: activity.record.uri,
-    view: createActivitySubjectView({
+    view: createSafeActivitySubjectView({
       uri: getRecommendedDocumentUri(activity, item.associatedRecords),
       associatedRecords: item.associatedRecords,
       actors: item.actors,
@@ -295,6 +328,201 @@ export function ActorRecommendationGroupRow({
         </View>
       </View>
     </View>
+  )
+}
+
+/**
+ * Renders documents from one actor as a single expandable Activity row.
+ */
+export function ActorDocumentGroupRow({
+  item,
+  hideTopBorder,
+}: {
+  item: ActivityGroupRowItem
+  hideTopBorder: boolean
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const [expanded, setExpanded] = useState(false)
+  const actorDid = item.group.actor
+  const actor = actorDid ? item.actors[actorDid] : undefined
+  const children = item.group.items.map(activity => ({
+    key: activity.record.uri,
+    view: createSafeActivitySubjectView({
+      uri: activity.record.uri,
+      associatedRecords: item.associatedRecords,
+      actors: item.actors,
+    }),
+  }))
+  const visibleChildren = expanded ? children : children.slice(0, 2)
+  const canExpand = children.length > 2
+
+  return (
+    <View style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}>
+      <View style={[a.flex_row, a.align_start, a.gap_md, a.px_xl, a.pt_lg]}>
+        <UserAvatar
+          avatar={actor?.avatar ?? null}
+          size={GROUP_AVATAR_SIZE}
+          type="user"
+        />
+        <View style={[a.flex_1, a.gap_sm]}>
+          <Text style={[a.text_md, a.leading_snug]} emoji>
+            <Trans>
+              <ActorLink
+                actor={actor}
+                did={actorDid}
+                unknown={l`Unknown user`}
+              />{' '}
+              published{' '}
+              <Plural
+                value={item.group.items.length}
+                one="# post"
+                other="# posts"
+              />
+            </Trans>
+            <TimeElapsed timestamp={item.group.indexedAt}>
+              {({timeElapsed}) => (
+                <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  {' · '}
+                  {timeElapsed}
+                </Text>
+              )}
+            </TimeElapsed>
+          </Text>
+        </View>
+      </View>
+      <View style={[a.px_xl, a.pb_lg]}>
+        <View style={[a.gap_xs, {marginLeft: GROUP_CONTENT_INDENT}]}>
+          {visibleChildren.map(child => (
+            <StandardSiteCompactDocumentCard
+              key={child.key}
+              view={child.view}
+            />
+          ))}
+          {canExpand && (
+            <Button
+              testID={`activity-group-toggle-${item.group.id}`}
+              label={expanded ? l`See less` : l`See more`}
+              accessibilityHint=""
+              color="secondary"
+              size="small"
+              onPress={() => setExpanded(value => !value)}
+              style={a.self_start}>
+              <ButtonText>{expanded ? l`See less` : l`See more`}</ButtonText>
+            </Button>
+          )}
+        </View>
+      </View>
+    </View>
+  )
+}
+
+/**
+ * Renders subscriptions from one actor as a single expandable Activity row.
+ */
+export function ActorSubscriptionGroupRow({
+  item,
+  hideTopBorder,
+}: {
+  item: ActivityGroupRowItem
+  hideTopBorder: boolean
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const [expanded, setExpanded] = useState(false)
+  const actorDid = item.group.actor
+  const actor = actorDid ? item.actors[actorDid] : undefined
+  const children = item.group.items.map(activity => ({
+    key: activity.record.uri,
+    activity,
+    view: createSafeActivitySubjectView({
+      uri: getSubscribedPublicationUri(activity, item.associatedRecords),
+      associatedRecords: item.associatedRecords,
+      actors: item.actors,
+    }),
+  }))
+  const visibleChildren = expanded ? children : children.slice(0, 2)
+  const canExpand = children.length > 2
+
+  return (
+    <View style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}>
+      <View style={[a.flex_row, a.align_start, a.gap_md, a.px_xl, a.pt_lg]}>
+        <UserAvatar
+          avatar={actor?.avatar ?? null}
+          size={GROUP_AVATAR_SIZE}
+          type="user"
+        />
+        <View style={[a.flex_1, a.gap_sm]}>
+          <Text style={[a.text_md, a.leading_snug]} emoji>
+            <Trans>
+              <ActorLink
+                actor={actor}
+                did={actorDid}
+                unknown={l`Unknown user`}
+              />{' '}
+              subscribed to{' '}
+              <Plural
+                value={item.group.items.length}
+                one="# publication"
+                other="# publications"
+              />
+            </Trans>
+            <TimeElapsed timestamp={item.group.indexedAt}>
+              {({timeElapsed}) => (
+                <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
+                  {' · '}
+                  {timeElapsed}
+                </Text>
+              )}
+            </TimeElapsed>
+          </Text>
+        </View>
+      </View>
+      <View style={[a.px_xl, a.pb_lg]}>
+        <View style={[a.gap_xs, {marginLeft: GROUP_CONTENT_INDENT}]}>
+          {visibleChildren.map(child => (
+            <SubscriptionGroupChild
+              key={child.key}
+              activity={child.activity}
+              view={child.view}
+              group={item}
+            />
+          ))}
+          {canExpand && (
+            <Button
+              testID={`activity-group-toggle-${item.group.id}`}
+              label={expanded ? l`See less` : l`See more`}
+              accessibilityHint=""
+              color="secondary"
+              size="small"
+              onPress={() => setExpanded(value => !value)}
+              style={a.self_start}>
+              <ButtonText>{expanded ? l`See less` : l`See more`}</ButtonText>
+            </Button>
+          )}
+        </View>
+      </View>
+    </View>
+  )
+}
+
+function SubscriptionGroupChild({
+  activity,
+  view,
+  group,
+}: {
+  activity: ActivityGroupRowItem['group']['items'][number]
+  view: app.bsky.embed.external.ViewExternal | undefined
+  group: ActivityGroupRowItem
+}) {
+  if (view) return <ActivityPublicationCard view={view} />
+
+  // Keep malformed sidecars visible rather than silently dropping a child.
+  return (
+    <ActivityRow
+      item={createGroupedActivityRowItem(group, activity)}
+      hideTopBorder
+    />
   )
 }
 
@@ -404,29 +632,52 @@ function SubjectActivityGroupRow({
   )
 }
 
-function ActivitySubject({view}: {view: app.bsky.embed.external.ViewExternal}) {
-  const t = useTheme()
+function createSafeActivitySubjectView({
+  uri,
+  associatedRecords,
+  actors,
+}: {
+  uri: string | undefined
+  associatedRecords: ActivityRowItem['associatedRecords']
+  actors: ActivityRowItem['actors']
+}) {
+  try {
+    return createActivitySubjectView({uri, associatedRecords, actors})
+  } catch {
+    return undefined
+  }
+}
 
+function ActivitySubject({view}: {view: app.bsky.embed.external.ViewExternal}) {
   if (isStandardSitePublicationEmbed(view)) {
-    const theme: ssTypes.ThemeColors = {
-      custom: false,
-      accent: t.atoms.text.color,
-      accentForeground: t.atoms.text_inverted.color,
-    }
-    const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
-    if (accentRGB && accentForegroundRGB) {
-      theme.custom = true
-      theme.accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b)
-      theme.accentForeground = utils.rgbToHex(
-        accentForegroundRGB.r,
-        accentForegroundRGB.g,
-        accentForegroundRGB.b,
-      )
-    }
-    return <PublicationCard view={view} themeColors={theme} />
+    return <ActivityPublicationCard view={view} />
   }
 
   return <StandardSiteEmbed view={view} />
+}
+
+function ActivityPublicationCard({
+  view,
+}: {
+  view: app.bsky.embed.external.ViewExternal
+}) {
+  const t = useTheme()
+  const theme: ssTypes.ThemeColors = {
+    custom: false,
+    accent: t.atoms.text.color,
+    accentForeground: t.atoms.text_inverted.color,
+  }
+  const {accentRGB, accentForegroundRGB} = view.source?.theme || {}
+  if (accentRGB && accentForegroundRGB) {
+    theme.custom = true
+    theme.accent = utils.rgbToHex(accentRGB.r, accentRGB.g, accentRGB.b)
+    theme.accentForeground = utils.rgbToHex(
+      accentForegroundRGB.r,
+      accentForegroundRGB.g,
+      accentForegroundRGB.b,
+    )
+  }
+  return <PublicationCard view={view} themeColors={theme} />
 }
 
 function SubjectGroupAction({content}: {content?: ActivityRowContent}) {

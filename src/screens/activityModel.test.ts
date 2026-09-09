@@ -324,6 +324,7 @@ describe('Activity row content', () => {
             site: 'https://writing.example/blog',
             path: '/posts/hello',
             title: 'Hello',
+            publishedAt: '2026-09-03T00:00:00.000Z',
           },
         },
       },

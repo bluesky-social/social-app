@@ -10,7 +10,8 @@ import {type app} from '#/lexicons'
 const THUMBNAIL_SIZE = 64
 
 /**
- * A compact document link used by grouped Activity recommendations.
+ * A compact document link used by grouped Activity recommendations and actor
+ * document groups.
  *
  * The caller constructs the external view so this component stays independent
  * of Activity's record and sidecar traversal.
@@ -22,12 +23,15 @@ export function StandardSiteCompactDocumentCard({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const title = view?.title || l`Post unavailable`
-  const description = view?.description?.trim() ? view.description : undefined
+  const cardView = view?.uri && view.title?.trim() ? view : undefined
+  const title = cardView?.title?.trim() || l`Post unavailable`
+  const description = cardView?.description?.trim()
+    ? cardView.description
+    : undefined
 
   const content = ({interacting}: {interacting: boolean}) => (
     <View
-      accessible={!view}
+      accessible={!cardView}
       accessibilityLabel={title}
       accessibilityHint=""
       style={[
@@ -51,9 +55,9 @@ export function StandardSiteCompactDocumentCard({
             flexShrink: 0,
           },
         ]}>
-        {view?.thumb ? (
+        {cardView?.thumb ? (
           <Image
-            source={{uri: view.thumb}}
+            source={{uri: cardView.thumb}}
             style={[a.w_full, a.h_full]}
             contentFit="cover"
             accessible={false}
@@ -82,13 +86,13 @@ export function StandardSiteCompactDocumentCard({
     </View>
   )
 
-  if (!view?.uri) {
+  if (!cardView) {
     return content({interacting: false})
   }
 
   return (
     <Link
-      to={view.uri}
+      to={cardView.uri}
       label={title}
       style={[a.w_full, a.rounded_md, web({outline: 0})]}>
       {content}

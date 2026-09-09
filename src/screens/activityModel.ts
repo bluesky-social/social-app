@@ -8,6 +8,7 @@ import {
   type ActivityItem,
   type AssociatedRecords,
   type AtmosphereActivityPage,
+  isDocumentRecord,
   isGrainPhotoRecord,
   isLivestreamRecord,
   isRecommendRecord,
@@ -198,12 +199,12 @@ export function getActivityRowContent({
       }
     }
     case 'site.standard.document':
+      if (!isDocumentRecord(rootRecord)) return generic
       return {
         type: 'document',
         actorDid: root.did,
         actor,
-        title:
-          typeof rootRecord.title === 'string' ? rootRecord.title : undefined,
+        title: rootRecord.title,
         href: getDocumentUrl(rootRecord, associatedRecords),
       }
     case 'site.standard.publication':
@@ -272,6 +273,19 @@ export function getRecommendedDocumentUri(
 
   const rootRecord = associatedRecords[activity.record.uri]?.record
   return isRecommendRecord(rootRecord) ? rootRecord.document : undefined
+}
+
+export function getSubscribedPublicationUri(
+  activity: ActivityItem,
+  associatedRecords: AssociatedRecords,
+): string | undefined {
+  const root = parseAtUri(activity.record.uri)
+  if (!root || root.collection !== 'site.standard.graph.subscription') {
+    return undefined
+  }
+
+  const rootRecord = associatedRecords[activity.record.uri]?.record
+  return isSubscriptionRecord(rootRecord) ? rootRecord.publication : undefined
 }
 
 export function getDocumentUrl(

@@ -116,4 +116,11 @@ describe('StandardSiteCompactDocumentCard', () => {
     expect(result.getByLabelText('Post unavailable')).toBeTruthy()
     expect(result.queryByRole('link')).toBeNull()
   })
+
+  it('does not link a malformed view without a title', () => {
+    const result = renderCard({...view, title: ' '})
+
+    expect(result.getByLabelText('Post unavailable')).toBeTruthy()
+    expect(result.queryByRole('link')).toBeNull()
+  })
 })

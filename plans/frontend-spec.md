@@ -8,7 +8,7 @@ This document specifies the first frontend for the Atmosphere activity API descr
 
 Add an authenticated **Activity** screen that displays the signed-in user's Atmosphere activity as a paginated list. Add entry points named **Activity** to the mobile drawer and desktop left navigation.
 
-Each top-level API feed entry is rendered as its own row. A standalone item renders its activity. A subject group renders a collapsed summary for many actors interacting with the same content and expands in place to show its child activities. An actor group of `site.standard.graph.recommend` records renders one recommendation summary with a compact document list; other actor groups retain the red diagnostic boundary around their children. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
+Each top-level API feed entry is rendered as its own row. A standalone item renders its activity; a standalone `site.standard.document` row retains its activity header and renders a full `StandardSiteEmbed` beneath it. A subject group renders a collapsed summary for many actors interacting with the same content and expands in place to show its child activities. An actor group of `site.standard.graph.recommend` records renders one recommendation summary with a compact document list, and an actor group of `site.standard.graph.subscription` records renders one subscription summary with an expandable `PublicationCard` list; only other actor groups retain the red diagnostic boundary around their children. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
 
 ```text
 recommendation -> document -> publication
@@ -317,7 +317,7 @@ The merged maps may be rebuilt when query data changes; all rows produced by one
 
 ## Row presentation
 
-Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. Subject groups use the collapsed and expandable presentation below. Actor groups other than recommendation groups remain in the diagnostic phase: render each direct child inside one container in API-provided reverse-chronological order and give that container a two-pixel red border. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
+Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. A valid standalone `site.standard.document` adds a full `StandardSiteEmbed` beneath its activity header; if view construction fails, the activity sentence and defensive row remain. Subject groups use the collapsed and expandable presentation below. Actor recommendation, document, and subscription groups use their compact presentations below. Other actor groups remain in the diagnostic phase: render each direct child inside one container in API-provided reverse-chronological order and give that container a two-pixel red border. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
 
 - horizontal and vertical padding consistent with other feed rows;
 - a bottom or top separator using `t.atoms.border_contrast_low`;
@@ -329,6 +329,10 @@ Every top-level feed entry must produce a visually separate row, including unsup
 
 For grouped activity, preserve every child item's viewer state and resolve each child's raw root record and actor from the shared sidecars. A subject group may summarize multiple actors targeting one document or publication; an actor group may summarize one actor's activity in one collection. The opaque `group.id` is a list key only and must not be parsed.
 
+### Actor document group: one actor, many documents
+
+For a top-level `groupBy: "actor"` group whose collection is `site.standard.document`, render one actor summary with a 40px avatar, sanitized linked handle, and a translated pluralized sentence such as `@alice.mosphere.at published 2 posts`. Use `group.indexedAt` for the elapsed time and do not make the outer row pressable. Construct each child document view directly from `activity.record.uri` and the complete shared sidecars. Render the first two children with `StandardSiteCompactDocumentCard`, indented by `40px + tokens.space.md`; for more children, the same independent See more/See less button expands only this group. Actor links, document cards, the summary, and surrounding whitespace do not toggle expansion. Keep malformed children represented by the compact card's unavailable state without changing the API-provided summary count or order.
+
 ### Actor recommendation group: one actor, many documents
 
 For a top-level `groupBy: "actor"` group whose collection is `site.standard.graph.recommend`, render one outer row with the actor from `group.actor`, a 40px leading avatar, and a sanitized `@handle` summary:
@@ -339,9 +343,21 @@ For a top-level `groupBy: "actor"` group whose collection is `site.standard.grap
 
 Use Lingui pluralization with `group.items.length`, including the singular form defensively. Render the group's elapsed timestamp beside the summary without changing the count. Do not wrap the summary or surrounding row in a pressable; the actor link remains an independent profile link.
 
-Resolve each child through the complete shared sidecars (`recommend -> document -> publication`) and construct its external view with `createActivitySubjectView`. Preserve API order, render at most the first two views initially, and use one shared indent of `40px + tokens.space.md` for the document list. The backend omits children whose configured record chain failed to hydrate, so ordinary missing document/publication cases must not produce **Post unavailable**. Keep the non-linking compact fallback only as defensive handling for malformed or contract-violating responses; do not include fallback rows in any independently calculated count. The compact document component is `StandardSiteCompactDocumentCard` at `src/components/Post/Embed/StandardSiteEmbed/StandardSiteCompactDocumentCard.tsx`. It renders a complete canonical document link with a fixed 64px square thumbnail or neutral placeholder, two-line title and description clamps, and no publication footer or full embed chrome.
+Resolve each child through the complete shared sidecars (`recommend -> document -> publication`) and construct its external view with `createActivitySubjectView`. Preserve API order, render at most the first two views initially, and use one shared indent of `40px + tokens.space.md` for the document list. The backend omits children whose configured record chain failed to hydrate, so ordinary missing document/publication cases must not produce **Post unavailable**. Keep the non-linking compact fallback only as defensive handling for malformed or contract-violating responses; do not include fallback rows in any independently calculated count. The compact document component is `StandardSiteCompactDocumentCard` at `src/components/Post/Embed/StandardSiteEmbed/StandardSiteCompactDocumentCard.tsx`. It renders a borderless, chromeless row with tight spacing, a fixed 64px rounded-square thumbnail or neutral placeholder, two-line title and description clamps, muted description text, and only a subtle interaction background. A valid view makes the entire row a canonical document link; malformed or unavailable views remain non-linking placeholders. It has no publication footer, source/meta row, subscribe control, or full embed chrome.
 
 For more than two children, render a shared Button labeled **See more** after the second row. Only this button expands the local group state; it then becomes **See less**, which restores the two-row collapsed state. Compact document links, the actor profile link, the summary, and surrounding whitespace do not expand the group. Keep the opaque `group.id` as the outer list key.
+
+### Actor subscription group: one actor, many publications
+
+For a top-level `groupBy: "actor"` group whose collection is `site.standard.graph.subscription`, render one outer row with the actor from `group.actor`, a 40px leading avatar, and a sanitized `@handle` summary:
+
+```text
+@brookie.blog subscribed to 3 publications
+```
+
+Use Lingui pluralization with `group.items.length`, including the singular form defensively. Render the group's elapsed timestamp beside the summary. Do not wrap the summary or surrounding row in a pressable; the actor link remains an independent profile link.
+
+Resolve each child through the complete shared sidecars (`subscription -> publication`) and construct its external view with `createActivitySubjectView`. Preserve API order, render at most the first two publication views initially, and use one shared indent of `40px + tokens.space.md` for the publication list. Render valid views with the existing `PublicationCard` and its normal publication theme handling. For more than two children, render an independent Button labeled **See more** after the second card. Only this button expands the local group state; it then becomes **See less**, which restores the two-card collapsed state. Publication links, the actor profile link, the summary, and surrounding whitespace do not expand the group. Keep malformed children represented with the defensive generic activity presentation rather than silently dropping them.
 
 ### Subject group: many actors, one subject
 
@@ -525,7 +541,7 @@ Do not add Activity to the mobile or web bottom bar.
 - Use Unicode punctuation, including the typographic apostrophe in the English recommendation sentence.
 - Keep each row's generated sentence available as a coherent accessibility label even if visual fragments use different font weights.
 - Interactive retry controls require labels and useful accessibility hints.
-- Standalone rows and actor recommendation summaries are not pressable. Subject-group summaries retain their existing group button behavior; actor profile links, compact document links, and See more/See less controls expose independent semantics.
+- Standalone rows and actor recommendation or subscription summaries are not pressable. Subject-group summaries retain their existing group button behavior; actor profile links, compact document or publication links, and See more/See less controls expose independent semantics.
 - Use `emoji` for actor labels, publication names, and document titles.
 
 ## Error behavior
@@ -555,7 +571,8 @@ Add focused tests for behavior that carries contract risk:
 - subject groups summarize the primary actor plus remaining distinct-actor count, toggle between `AvatarStack` and compact avatar-and-handle rows for the remaining actors, preserve child order and viewer state, and never render nested groups;
 - duplicate source recommendations or subscriptions from one actor to one target are represented once by the backend and require no frontend semantic deduplication;
 - required-association filtering shrinks group counts before the frontend receives them, and ordinary missing document/publication chains do not render `Post unavailable`;
-- actor recommendation groups render one summary row, preserve child order, collapse to two compact rows, and toggle only from See more/See less; other actor groups retain the red diagnostic boundary;
+- standalone document rows render a full `StandardSiteEmbed` from complete hydrated sidecars and remain represented when view construction fails;
+- actor document groups render one pluralized summary, preserve API order, collapse to two `StandardSiteCompactDocumentCard` rows, and toggle only from See more/See less; actor recommendation groups remain compact document lists, actor subscription groups use the same expandable layout with `PublicationCard`, and only other actor groups retain the red diagnostic boundary;
 - every row receives the same full merged `associatedRecords` reference;
 - associated maps from multiple loaded pages are merged;
 - duplicate activity URIs are rendered once in first-seen order;
@@ -613,7 +630,7 @@ Manually verify:
 4. Every outer feed entry renders as a separate row in API order; grouped children render within their group row.
 5. Every row receives the same complete merged `associatedRecords` object for the currently loaded pages.
 6. A valid recommendation renders the recommender, document author, and document title by traversing the associated-record map.
-7. All six expected root collections have useful presentation, Grain photos render beneath their row headers, actor handles and document/publication titles are linked, and malformed or unknown items render a generic fallback row.
+7. All six expected root collections have useful presentation, standalone documents render full `StandardSiteEmbed` content beneath their headers, actor document and recommendation groups render compact expandable document lists, Grain photos render beneath their row headers, actor handles and document/publication titles are linked, actor subscription groups render expandable publication cards, and malformed or unknown items render a generic fallback row.
 8. Loading, empty, initial-error, refresh, next-page loading, and next-page error states are usable.
 9. The appview-sandbox client supports both direct local development and the deployed PDS proxy configuration.
 10. New user-facing strings are translatable and the focused tests, typecheck, lint, and formatting checks pass.
