@@ -743,8 +743,7 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
   const unknown = l`Unknown user`
 
   switch (content.type) {
-    case 'recommendation': {
-      const title = content.title || l`Untitled post`
+    case 'recommendation':
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
@@ -753,19 +752,11 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
               did={content.actorDid}
               unknown={unknown}
             />{' '}
-            recommended{' '}
-            <ActorLink
-              actor={content.subjectActor}
-              did={content.subjectDid}
-              unknown={unknown}
-            />
-            ’s post <ActivityLink href={content.href} text={title} />
+            recommended a post
           </Trans>
         </Text>
       )
-    }
-    case 'document': {
-      const title = content.title || l`Untitled post`
+    case 'document':
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
@@ -774,13 +765,11 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
               did={content.actorDid}
               unknown={unknown}
             />{' '}
-            published <ActivityLink href={content.href} text={title} />
+            published an article
           </Trans>
         </Text>
       )
-    }
-    case 'publication': {
-      const name = content.name || l`Untitled publication`
+    case 'publication':
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
@@ -789,14 +778,11 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
               did={content.actorDid}
               unknown={unknown}
             />{' '}
-            created the publication{' '}
-            <ActivityLink href={content.href} text={name} />
+            created a publication
           </Trans>
         </Text>
       )
-    }
-    case 'subscription': {
-      const name = content.name || l`Untitled publication`
+    case 'subscription':
       return (
         <Text style={[a.text_md, a.leading_snug]} emoji>
           <Trans>
@@ -805,13 +791,11 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
               did={content.actorDid}
               unknown={unknown}
             />{' '}
-            subscribed to <ActivityLink href={content.href} text={name} />
+            subscribed to a publication
           </Trans>
         </Text>
       )
-    }
     case 'livestream': {
-      const title = content.title || l`Untitled livestream`
       if (content.ended && content.durationInMinutes !== undefined) {
         const duration = displayDuration(i18n, content.durationInMinutes)
         return (
@@ -822,7 +806,7 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
                 did={content.actorDid}
                 unknown={unknown}
               />{' '}
-              livestreamed <ActivityEmphasis text={title} /> for {duration}
+              hosted a livestream for {duration}
             </Trans>
           </Text>
         )
@@ -836,7 +820,7 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
                 did={content.actorDid}
                 unknown={unknown}
               />{' '}
-              livestreamed <ActivityEmphasis text={title} />
+              hosted a livestream
             </Trans>
           </Text>
         )
@@ -849,7 +833,7 @@ function ActivitySentence({content}: {content: ActivityRowContent}) {
               did={content.actorDid}
               unknown={unknown}
             />{' '}
-            is livestreaming <ActivityEmphasis text={title} />
+            is livestreaming
           </Trans>
         </Text>
       )
@@ -903,22 +887,6 @@ function ActorLink({
       style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]}
       emoji>
       {label}
-    </InlineLinkText>
-  )
-}
-
-function ActivityLink({href, text}: {href?: string; text: string}) {
-  const t = useTheme()
-  if (!href) return <ActivityEmphasis text={text} />
-
-  return (
-    <InlineLinkText
-      label={text}
-      to={href}
-      disableMismatchWarning
-      style={[a.text_md, a.leading_snug, a.font_semi_bold, t.atoms.text]}
-      emoji>
-      {text}
     </InlineLinkText>
   )
 }

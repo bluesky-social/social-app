@@ -346,7 +346,7 @@ describe('ActivityRow', () => {
       </I18nProvider>,
     )
 
-    expect(result.getByText(/published/)).toBeTruthy()
+    expect(result.getByText(/published an article/)).toBeTruthy()
     expect(result.getByTestId('full-document-Document one')).toBeTruthy()
   })
 
@@ -360,7 +360,7 @@ describe('ActivityRow', () => {
       </I18nProvider>,
     )
 
-    expect(result.getByText(/published/)).toBeTruthy()
+    expect(result.getByText(/published an article/)).toBeTruthy()
     expect(result.queryByTestId('full-document-Document one')).toBeNull()
   })
 })

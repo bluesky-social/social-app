@@ -8,7 +8,7 @@ This document specifies the first frontend for the Atmosphere activity API descr
 
 Add an authenticated **Activity** screen that displays the signed-in user's Atmosphere activity as a paginated list. Add entry points named **Activity** to the mobile drawer and desktop left navigation.
 
-Each top-level API feed entry is rendered as its own row. A standalone item renders its activity; a standalone `site.standard.document` row retains its activity header and renders a full `StandardSiteEmbed` beneath it. A subject group renders a collapsed summary for many actors interacting with the same content and expands in place to show its child activities. An actor group of `site.standard.graph.recommend` records renders one recommendation summary with a compact document list, and an actor group of `site.standard.graph.subscription` records renders one subscription summary with an expandable `PublicationCard` list; only other actor groups retain the red diagnostic boundary around their children. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
+Each top-level API feed entry is rendered as its own row. A standalone item renders a concise translated action plus generic record-type noun; a standalone `site.standard.document` row retains that header and renders a full `StandardSiteEmbed` beneath it. A subject group renders a collapsed summary for many actors interacting with the same content and expands in place to show its child activities. An actor group of `site.standard.graph.recommend` records renders one recommendation summary with a compact document list, and an actor group of `site.standard.graph.subscription` records renders one subscription summary with an expandable `PublicationCard` list; only other actor groups retain the red diagnostic boundary around their children. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
 
 ```text
 recommendation -> document -> publication
@@ -398,19 +398,13 @@ For `site.standard.graph.recommend`:
 4. Parse the document URI authority and resolve that actor from `actors`.
 5. Read the document's `title`.
 
-Preferred sentence:
+For a standalone recommendation, render the concise sentence:
 
 ```text
-<recommender> recommended <document author>’s post <document title>
+<recommender> recommended a post
 ```
 
-Example:
-
-```text
-alice.example recommended bob.example’s post Building a Small Web
-```
-
-The actor labels and title should be distinguishable with font weight, while remaining one accessible sentence.
+Do not repeat the hydrated document author or title in the standalone sentence; the referenced content is presented separately when applicable. Keep the actor link and elapsed time in one translated accessible sentence. Grouped recommendation summaries retain their own actor/count copy and are unchanged.
 
 Fallbacks:
 
@@ -420,23 +414,23 @@ Fallbacks:
 
 ### Document
 
-For `site.standard.document`, render:
+For `site.standard.document`, render the concise standalone sentence:
 
 ```text
-<document author> published <document title>
+<document author> published an article
 ```
 
-Use translated `Untitled post` if the title is unavailable. The API's `textContent` is only a filtered preview and is not required in this first row design.
+Do not repeat the hydrated document title in the activity sentence; the full `StandardSiteEmbed` beneath it presents that title. Keep the actor link and elapsed time, and use one translated sentence rather than concatenating translated fragments. The API's `textContent` is only a filtered preview and is not required in this first row design.
 
 ### Publication
 
 For `site.standard.publication`, render:
 
 ```text
-<publication author> created the publication <publication name>
+<publication author> created a publication
 ```
 
-Use translated `Untitled publication` if the name is unavailable.
+Do not repeat the hydrated publication name in the standalone sentence; use one translated sentence with the actor link and elapsed time.
 
 ### Subscription
 
@@ -449,26 +443,26 @@ For `site.standard.graph.subscription`:
 Render:
 
 ```text
-<subscriber> subscribed to <publication name>
+<subscriber> subscribed to a publication
 ```
 
-Use translated `Untitled publication` when the referenced publication exists without a usable name. A missing or invalid publication reference uses the generic row.
+Do not repeat the hydrated publication name in the standalone sentence; use one translated sentence with the actor link and elapsed time. A missing or invalid publication reference uses the generic row.
 
 ### Livestream
 
 For `place.stream.livestream`, render an active record without `endedAt` as:
 
 ```text
-<streamer> is livestreaming <title>
+<streamer> is livestreaming
 ```
 
 When `endedAt` is present, calculate the elapsed duration from `createdAt` through `endedAt`, format it with the app's existing `displayDuration`, and render:
 
 ```text
-<streamer> livestreamed <title> for <duration>
+<streamer> hosted a livestream for <duration>
 ```
 
-Use translated `Untitled livestream` when the title is unavailable. Invalid or negative date intervals omit the duration defensively.
+Without a valid duration, render `<streamer> hosted a livestream`. Do not repeat the hydrated title in the standalone sentence; use one translated sentence with the actor link and elapsed time. Invalid or negative date intervals omit the duration defensively.
 
 ### Grain photo
 
