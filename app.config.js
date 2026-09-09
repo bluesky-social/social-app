@@ -36,29 +36,27 @@ module.exports = function (_config) {
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
-  const IOS_ICON_FILE =
-    PLATFORM === 'web' // web build doesn't like .icon files
-      ? './assets/app-icons/ios_icon_default_next.png'
-      : IS_TESTFLIGHT
-        ? './assets/app-icons/ios_icon_testflight.icon'
-        : './assets/app-icons/ios_icon_default.icon'
+  /**
+   * u&u Lab rebrand: flat PNG works for icon/ios.icon/android.icon alike,
+   * so the old .icon-bundle/testflight/web split isn't needed here.
+   */
+  const IOS_ICON_FILE = './assets/app-icons/uu_icon.png'
 
   return {
     expo: {
       version: VERSION,
-      name: 'Bluesky',
-      slug: 'bluesky',
-      scheme: 'bluesky',
-      owner: 'blueskysocial',
+      name: 'u&u Lab',
+      slug: 'uu-lab',
+      scheme: 'uulab',
       runtimeVersion: {
         policy: 'appVersion',
       },
-      icon: './assets/app-icons/ios_icon_default_next.png',
+      icon: './assets/app-icons/uu_icon.png',
       userInterfaceStyle: 'automatic',
-      primaryColor: '#006AFF',
+      primaryColor: '#4A7AB8',
       ios: {
         supportsTablet: false,
-        bundleIdentifier: 'xyz.blueskyweb.app',
+        bundleIdentifier: 'com.br.ucorvoulobo.lab',
         appleTeamId: process.env.EXPO_APPLE_TEAM_ID,
         config: {
           usesNonExemptEncryption: false,
@@ -76,7 +74,7 @@ module.exports = function (_config) {
             'Used to save images to your library.',
           NSPhotoLibraryUsageDescription:
             'Used for profile pictures, posts, and other kinds of content',
-          CFBundleSpokenName: 'Blue Sky',
+          CFBundleSpokenName: 'u e u',
           CFBundleLocalizations: [
             'en',
             'an',
@@ -186,14 +184,14 @@ module.exports = function (_config) {
         barStyle: 'light-content',
       },
       android: {
-        icon: './assets/app-icons/android_icon_default_next.png',
+        icon: './assets/app-icons/uu_icon.png',
         adaptiveIcon: {
-          foregroundImage: './assets/icon-android-foreground.png',
-          monochromeImage: './assets/icon-android-monochrome.png',
-          backgroundColor: '#006AFF',
+          // TODO: swap for a proper cutout/silhouette pair once we commit to this icon
+          foregroundImage: './assets/app-icons/uu_icon.png',
+          monochromeImage: './assets/app-icons/uu_icon.png',
+          backgroundColor: '#4A7AB8',
         },
-        googleServicesFile: './google-services.json',
-        package: 'xyz.blueskyweb.app',
+        package: 'com.br.ucorvoulobo.lab',
         intentFilters: [
           {
             action: 'VIEW',
@@ -341,26 +339,32 @@ module.exports = function (_config) {
         [
           'expo-splash-screen',
           {
+            // u&u Lab rebrand: reusing u&u's own full-bleed splash treatment;
+            // no dark-mode variant exists yet, so light/dark share one image.
             ios: {
               enableFullScreenImage_legacy: true, // iOS only
-              backgroundColor: '#006AFF', // primary_500
-              image: './assets/splash/splash.png',
+              backgroundColor: '#F5EFE2',
+              image: './assets/splash/uu-splash.png',
               resizeMode: 'cover',
               dark: {
                 enableFullScreenImage_legacy: true, // iOS only
-                backgroundColor: '#002861', // primary_900
-                image: './assets/splash/splash-dark.png',
+                backgroundColor: '#F5EFE2',
+                image: './assets/splash/uu-splash.png',
                 resizeMode: 'cover',
               },
             },
             android: {
-              backgroundColor: '#006AFF', // primary_500
-              image: './assets/splash/android-splash-logo-white.png',
-              imageWidth: 102, // even division of 306px
+              // Android's native splash API has no full-bleed mode (iOS-only,
+              // hence "_legacy" above) - it always centers a fixed-size image
+              // on a flat background, so this uses the app icon, not the
+              // full splash composition used for iOS.
+              backgroundColor: '#F5EFE2',
+              image: './assets/app-icons/uu_icon.png',
+              imageWidth: 172,
               dark: {
-                backgroundColor: '#002861', // primary_900
-                image: './assets/splash/android-splash-logo-white.png',
-                imageWidth: 102,
+                backgroundColor: '#F5EFE2',
+                image: './assets/app-icons/uu_icon.png',
+                imageWidth: 172,
               },
             },
           },
@@ -450,31 +454,34 @@ module.exports = function (_config) {
                 appExtensions: [
                   {
                     targetName: 'Share-with-Bluesky',
-                    bundleIdentifier: 'xyz.blueskyweb.app.Share-with-Bluesky',
+                    bundleIdentifier: 'com.br.ucorvoulobo.lab.Share-with-Bluesky',
                     entitlements: {
                       'com.apple.security.application-groups': [
-                        'group.app.bsky',
+                        'group.com.br.ucorvoulobo.lab',
                       ],
                     },
                   },
                   {
                     targetName: 'BlueskyNSE',
-                    bundleIdentifier: 'xyz.blueskyweb.app.BlueskyNSE',
+                    bundleIdentifier: 'com.br.ucorvoulobo.lab.BlueskyNSE',
                     entitlements: {
                       'com.apple.security.application-groups': [
-                        'group.app.bsky',
+                        'group.com.br.ucorvoulobo.lab',
                       ],
                     },
                   },
                   {
                     targetName: 'BlueskyClip',
-                    bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
+                    bundleIdentifier: 'com.br.ucorvoulobo.lab.AppClip',
                   },
                 ],
               },
             },
           },
-          projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
+          // Assigned by `eas init` under your own Expo account - the old
+          // value pointed at Bluesky's own EAS project.
+          projectId: 'd8bffd3c-a711-4d07-9d5f-046084281b3a',
+
         },
       },
     },
