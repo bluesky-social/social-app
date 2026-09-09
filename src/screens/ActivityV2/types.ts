@@ -1,3 +1,15 @@
+export const activityCollections = {
+  document: 'site.standard.document',
+  publication: 'site.standard.publication',
+  recommendation: 'site.standard.graph.recommend',
+  subscription: 'site.standard.graph.subscription',
+  livestream: 'place.stream.livestream',
+  grainPhoto: 'social.grain.photo',
+} as const
+
+export type KnownActivityCollection =
+  (typeof activityCollections)[keyof typeof activityCollections]
+
 export type ActivityRecord = {
   uri: string
   cid: string
@@ -7,10 +19,16 @@ export type ActivityRecord = {
 export type ActivityItem = {
   $type: 'eric.bsky.atmosphere.getActivity#item'
   record: ActivityRecord
+  collection: string
   viewerState: {
     subscribed: boolean
   }
 }
+
+export type CollectionActivityItem<TCollection extends string> =
+  ActivityItem & {
+    collection: TCollection
+  }
 
 export type ActivityGroup = {
   $type: 'eric.bsky.atmosphere.getActivity#group'
@@ -174,6 +192,7 @@ function narrowActivityItem(value: unknown): ActivityItem | undefined {
     typeof value.record.uri !== 'string' ||
     typeof value.record.cid !== 'string' ||
     typeof value.record.indexedAt !== 'string' ||
+    typeof value.collection !== 'string' ||
     !isObject(value.viewerState) ||
     typeof value.viewerState.subscribed !== 'boolean'
   ) {
@@ -186,6 +205,7 @@ function narrowActivityItem(value: unknown): ActivityItem | undefined {
       cid: value.record.cid,
       indexedAt: value.record.indexedAt,
     },
+    collection: value.collection,
     viewerState: {
       subscribed: value.viewerState.subscribed,
     },

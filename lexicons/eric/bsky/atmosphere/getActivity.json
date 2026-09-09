@@ -39,9 +39,14 @@
     },
     "item": {
       "type": "object",
-      "required": ["record", "viewerState"],
+      "required": ["record", "collection", "viewerState"],
       "properties": {
         "record": { "type": "ref", "ref": "#activityRecord" },
+        "collection": {
+          "type": "string",
+          "format": "nsid",
+          "description": "The root record's collection NSID."
+        },
         "viewerState": { "type": "ref", "ref": "#viewerState" }
       }
     },

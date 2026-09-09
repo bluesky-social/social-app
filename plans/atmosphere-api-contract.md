@@ -80,6 +80,7 @@ type ActivityItem = {
     cid: string
     indexedAt: string // Activity event time as an ISO datetime
   }
+  collection: string // root record collection NSID
   viewerState: {
     subscribed: boolean
   }
@@ -136,6 +137,7 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
         "cid": "bafy...",
         "indexedAt": "2026-09-03T00:00:00.000Z"
       },
+      "collection": "site.standard.graph.recommend",
       "viewerState": {
         "subscribed": false
       }
@@ -198,6 +200,7 @@ Multiple actors recommending the same document, grouped by `groupBy: "subject"`:
             "cid": "bafy...",
             "indexedAt": "2026-09-04T12:00:00.000Z"
           },
+          "collection": "site.standard.graph.recommend",
           "viewerState": { "subscribed": false }
         },
         {
@@ -207,6 +210,7 @@ Multiple actors recommending the same document, grouped by `groupBy: "subject"`:
             "cid": "bafy...",
             "indexedAt": "2026-09-04T11:56:00.000Z"
           },
+          "collection": "site.standard.graph.recommend",
           "viewerState": { "subscribed": false }
         }
       ]
@@ -284,6 +288,7 @@ One actor publishing multiple documents, grouped by `groupBy: "actor"`:
         "cid": "bafy...",
         "indexedAt": "2026-09-04T09:00:00.000Z"
       },
+      "collection": "site.standard.document",
       "viewerState": { "subscribed": true }
     },
     {
@@ -293,6 +298,7 @@ One actor publishing multiple documents, grouped by `groupBy: "actor"`:
         "cid": "bafy...",
         "indexedAt": "2026-09-04T08:50:00.000Z"
       },
+      "collection": "site.standard.document",
       "viewerState": { "subscribed": true }
     }
   ]
@@ -306,8 +312,8 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 ### Feed
 
 - `feed` is the ordered pagination skeleton only. It is a Lexicon `$type`-discriminated union of `ActivityItem` and `ActivityGroup`; narrow on `$type`, never on field presence.
-- An item has exactly `{ $type, record, viewerState }`; a group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
-- `feed[].record` and group item records contain only `{uri, cid, indexedAt}`; they do not contain raw record payloads.
+- An item has exactly `{ $type, record, collection, viewerState }`; `collection` is the root record NSID. A group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
+- `feed[].record` and group item records contain only `{uri, cid, indexedAt}`; `collection` is a sibling field and neither carries raw record payloads.
 - `group.items` is `ActivityItem[]` with minimum length two; groups never nest, so `group.items` never contains an `ActivityGroup`.
 - Every item inside a group has the same `collection` as `group.collection`.
 - Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker. A group's timestamp is its newest item's timestamp, copied to `group.indexedAt`, which equals `group.items[0].record.indexedAt`; items inside a group are also reverse chronological.
@@ -321,7 +327,7 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - A cluster of exactly one item never becomes a group. It remains, or returns to being, a standalone `ActivityItem` in the feed.
 - Every root activity URI is assigned exactly once across the whole response: either as a standalone item or as exactly one item inside exactly one group.
 - Each realized group has at least two items, and deterministic opaque IDs distinguish separate temporal clusters that otherwise share `groupBy`, `collection`, and `subject`/`actor` (see Group identifiers below).
-- Every item has a required `viewerState.subscribed` boolean, whether it appears standalone or inside a group.
+- Every item has a required root-record `collection` NSID and a required `viewerState.subscribed` boolean, whether it appears standalone or inside a group.
 - `subscribed` is `true` only for a root `site.standard.document` whose `site` publication AT URI matches one of the viewer's current `site.standard.graph.subscription` records. It is `false` for non-document activity and documents without a matching subscription.
 - Subscription state is resolved for the whole page with one indexed PostgreSQL query and no per-item or Tango requests.
 - Every item's `record.uri`, whether standalone or nested inside a group, has a corresponding entry in `associatedRecords`.
@@ -523,6 +529,10 @@ Then run the repository's normal lexicon generation command before importing the
 - Subject-first interaction grouping and actor-plus-collection grouping use fixed-time anchor windows and never nest or duplicate root URIs.
 - Chronology, viewer state, read filtering, hydration, sidecars, and temporary viewer behavior remain unchanged.
 - Root pagination now uses the same age-tier windows as grouping to avoid splitting eligible groups at a smaller gap boundary.
+
+### Uncommitted backend contract update
+
+- Added required `feed[].collection`, the root record's NSID, to standalone items and group children.
 
 ### Backend `d39fe59`
 

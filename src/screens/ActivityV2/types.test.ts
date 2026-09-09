@@ -1,6 +1,7 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {
+  activityCollections,
   narrowActivityPage,
   narrowActors,
   narrowAssociatedRecords,
@@ -30,7 +31,33 @@ describe('ActivityV2 response narrowing', () => {
     expect(narrowActors({[actor.did]: actor})).toEqual({[actor.did]: actor})
   })
 
-  it('preserves grouped items and their viewer state', () => {
+  it('preserves required standalone item collection', () => {
+    const uri = 'at://did:plc:author/site.standard.document/standalone'
+    const page = narrowActivityPage({
+      feed: [
+        {
+          $type: 'eric.bsky.atmosphere.getActivity#item',
+          record: {
+            uri,
+            cid: 'bafy-standalone',
+            indexedAt: '2026-09-03T00:00:00.000Z',
+          },
+          collection: activityCollections.document,
+          viewerState: {subscribed: true},
+        },
+      ],
+      associatedRecords: {},
+      actors: {},
+    })
+
+    expect(page.feed).toHaveLength(1)
+    const item = page.feed[0]
+    expect(item.$type).toBe('eric.bsky.atmosphere.getActivity#item')
+    if (item.$type !== 'eric.bsky.atmosphere.getActivity#item') return
+    expect(item.collection).toBe(activityCollections.document)
+  })
+
+  it('preserves grouped items and their collection and viewer state', () => {
     const firstUri = 'at://did:plc:author/site.standard.document/one'
     const secondUri = 'at://did:plc:author/site.standard.document/two'
     const page = narrowActivityPage({
@@ -50,6 +77,7 @@ describe('ActivityV2 response narrowing', () => {
                 cid: 'bafy-one',
                 indexedAt: '2026-09-03T00:00:00.000Z',
               },
+              collection: activityCollections.document,
               viewerState: {subscribed: true},
             },
             {
@@ -59,6 +87,7 @@ describe('ActivityV2 response narrowing', () => {
                 cid: 'bafy-two',
                 indexedAt: '2026-09-02T23:55:00.000Z',
               },
+              collection: activityCollections.document,
               viewerState: {subscribed: false},
             },
           ],
@@ -76,9 +105,33 @@ describe('ActivityV2 response narrowing', () => {
       firstUri,
       secondUri,
     ])
+    expect(group.items.map(item => item.collection)).toEqual([
+      activityCollections.document,
+      activityCollections.document,
+    ])
     expect(group.items.map(item => item.viewerState.subscribed)).toEqual([
       true,
       false,
     ])
+  })
+
+  it('drops items that do not include the required collection field', () => {
+    const page = narrowActivityPage({
+      feed: [
+        {
+          $type: 'eric.bsky.atmosphere.getActivity#item',
+          record: {
+            uri: 'at://did:plc:author/site.standard.document/missing-collection',
+            cid: 'bafy-missing-collection',
+            indexedAt: '2026-09-03T00:00:00.000Z',
+          },
+          viewerState: {subscribed: true},
+        },
+      ],
+      associatedRecords: {},
+      actors: {},
+    })
+
+    expect(page.feed).toEqual([])
   })
 })

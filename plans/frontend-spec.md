@@ -108,6 +108,7 @@ type ActivityItem = {
     cid: string
     indexedAt: string
   }
+  collection: string
   viewerState: {
     subscribed: boolean
   }
@@ -217,13 +218,14 @@ Narrowing rules:
 - Treat non-object `associatedRecords` and `actors` values as empty maps rather than casting blindly.
 - Ignore malformed individual map entries during lookup, but do not remove their corresponding feed entry from the list.
 - Discriminate entries by `$type`; groups contain only direct `ActivityItem` children and have at least two children.
+- Treat `activity.collection` as a required sibling of `activity.record` on standalone items and direct group children.
 - Treat every child `activity.record` as metadata only; resolve the raw root payload through `associatedRecords[activity.record.uri].record`.
-- Preserve `activity.viewerState.subscribed` when narrowing each child item.
+- Preserve `activity.collection` and `activity.viewerState.subscribed` when narrowing each child item.
 - For `groupBy: 'subject'`, expect `subject` and no `actor`; for `groupBy: 'actor'`, expect `actor` and no `subject`.
 - Use `group.indexedAt` for group-level elapsed time; child rows use their own `record.indexedAt`.
-- Use `AtUri` from `@atproto/syntax` to read `activity.record.uri`'s collection and authority DID.
+- Use `activity.collection` as the primary standalone row discriminator and confirm that required record fields have the expected primitive types before reading them.
+- Use `AtUri` from `@atproto/syntax` only for URI authority or other URI-property parsing, not to re-derive the root record collection.
 - Catch invalid AT URIs and render the generic fallback row.
-- Use the URI collection as the primary row discriminator and confirm that required record fields have the expected primitive types before reading them.
 
 ## React Query hook
 

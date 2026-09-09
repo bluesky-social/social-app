@@ -4,6 +4,7 @@ import {I18nProvider} from '@lingui/react'
 import {fireEvent, render} from '@testing-library/react-native'
 
 import {ActivityV2Screen} from './index'
+import {activityCollections} from './types'
 
 const mockUseActivityV2Query = jest.fn()
 const mockListFooter = jest.fn((_props: unknown) => null)
@@ -118,50 +119,92 @@ function renderScreen() {
   )
 }
 
-describe('ActivityV2Screen', () => {
-  it('renders one-line JSON previews for activity and group rows only', () => {
-    const activity = {
-      $type: 'eric.bsky.atmosphere.getActivity#item',
-      record: {
-        uri: 'at://did:plc:author/site.standard.document/one',
-        cid: 'bafy-one',
-        indexedAt: '2026-09-03T00:00:00.000Z',
-      },
-      viewerState: {subscribed: true},
-    }
-    const group = {
-      $type: 'eric.bsky.atmosphere.getActivity#group',
-      id: 'opaque-group-id',
-      groupBy: 'actor',
-      collection: 'site.standard.document',
+function activity({
+  collection,
+  uri,
+  cid,
+}: {
+  collection: string
+  uri: string
+  cid: string
+}) {
+  return {
+    $type: 'eric.bsky.atmosphere.getActivity#item' as const,
+    record: {
+      uri,
+      cid,
       indexedAt: '2026-09-03T00:00:00.000Z',
-      actor: 'did:plc:author',
-      items: [
-        activity,
-        {
-          ...activity,
-          record: {
-            ...activity.record,
-            uri: 'at://did:plc:author/site.standard.document/two',
-            cid: 'bafy-two',
-          },
-        },
-      ],
+    },
+    collection,
+    viewerState: {subscribed: true},
+  }
+}
+
+describe('ActivityV2Screen', () => {
+  it('dispatches each known standalone collection to its dedicated V2 row and keeps group rows as JSON previews', () => {
+    const groupChildOne = activity({
+      collection: activityCollections.document,
+      uri: 'at://did:plc:group-author/site.standard.document/one',
+      cid: 'bafy-group-one',
+    })
+    const groupChildTwo = activity({
+      collection: activityCollections.document,
+      uri: 'at://did:plc:group-author/site.standard.document/two',
+      cid: 'bafy-group-two',
+    })
+    const group = {
+      $type: 'eric.bsky.atmosphere.getActivity#group' as const,
+      id: 'opaque-group-id',
+      groupBy: 'actor' as const,
+      collection: activityCollections.document,
+      indexedAt: '2026-09-03T00:00:00.000Z',
+      actor: 'did:plc:group-author',
+      items: [groupChildOne, groupChildTwo],
     }
-    const standaloneActivity = {
-      ...activity,
-      record: {
-        ...activity.record,
-        uri: 'at://did:plc:author/site.standard.document/three',
-        cid: 'bafy-three',
-      },
-    }
+    const documentActivity = activity({
+      collection: activityCollections.document,
+      uri: 'at://did:plc:author/site.standard.document/three',
+      cid: 'bafy-document',
+    })
+    const publicationActivity = activity({
+      collection: activityCollections.publication,
+      uri: 'at://did:plc:author/site.standard.publication/one',
+      cid: 'bafy-publication',
+    })
+    const recommendationActivity = activity({
+      collection: activityCollections.recommendation,
+      uri: 'at://did:plc:author/site.standard.graph.recommend/one',
+      cid: 'bafy-recommendation',
+    })
+    const subscriptionActivity = activity({
+      collection: activityCollections.subscription,
+      uri: 'at://did:plc:author/site.standard.graph.subscription/one',
+      cid: 'bafy-subscription',
+    })
+    const livestreamActivity = activity({
+      collection: activityCollections.livestream,
+      uri: 'at://did:plc:author/place.stream.livestream/one',
+      cid: 'bafy-livestream',
+    })
+    const grainPhotoActivity = activity({
+      collection: activityCollections.grainPhoto,
+      uri: 'at://did:plc:author/social.grain.photo/one',
+      cid: 'bafy-grain-photo',
+    })
 
     mockUseActivityV2Query.mockReturnValue({
       data: {
         pages: [
           {
-            feed: [group, standaloneActivity],
+            feed: [
+              group,
+              documentActivity,
+              publicationActivity,
+              recommendationActivity,
+              subscriptionActivity,
+              livestreamActivity,
+              grainPhotoActivity,
+            ],
             associatedRecords: {},
             actors: {},
           },
@@ -177,13 +220,59 @@ describe('ActivityV2Screen', () => {
 
     const screen = renderScreen()
 
+    expect(screen.getByTestId('activityV2DocumentRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2PublicationRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2RecommendationRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2SubscriptionRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2LivestreamRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2GrainPhotoRow')).toBeTruthy()
     expect(
-      screen.getByText(JSON.stringify(standaloneActivity)).props.numberOfLines,
+      screen.getByText(JSON.stringify(documentActivity)).props.numberOfLines,
     ).toBe(1)
     expect(screen.getByText(JSON.stringify(group)).props.numberOfLines).toBe(1)
     expect(mockListFooter).toHaveBeenCalledWith(
       expect.objectContaining({hasNextPage: true, isFetchingNextPage: false}),
     )
+  })
+
+  it('uses activity.collection for standalone dispatch and falls back safely for unknown collections', () => {
+    const mismatchedUriActivity = activity({
+      collection: activityCollections.subscription,
+      uri: 'at://did:plc:author/site.standard.document/not-used-for-dispatch',
+      cid: 'bafy-mismatched-uri',
+    })
+    const unknownCollectionActivity = activity({
+      collection: 'example.unknown.collection',
+      uri: 'not-an-at-uri',
+      cid: 'bafy-unknown',
+    })
+
+    mockUseActivityV2Query.mockReturnValue({
+      data: {
+        pages: [
+          {
+            feed: [mismatchedUriActivity, unknownCollectionActivity],
+            associatedRecords: {},
+            actors: {},
+          },
+        ],
+        pageParams: [undefined],
+      },
+      error: undefined,
+      isFetchingNextPage: false,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      refetch: jest.fn(),
+    })
+
+    const screen = renderScreen()
+
+    expect(screen.getByTestId('activityV2SubscriptionRow')).toBeTruthy()
+    expect(screen.getByText(JSON.stringify(mismatchedUriActivity))).toBeTruthy()
+    expect(screen.getByTestId('activityV2UnknownRow')).toBeTruthy()
+    expect(
+      screen.getByText(JSON.stringify(unknownCollectionActivity)),
+    ).toBeTruthy()
   })
 
   it('keeps the retry control wired for initial errors', () => {

@@ -1,11 +1,15 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {type ActivityGroupRowItem, buildActivityListItems} from './model'
-import {type AtmosphereActivityPage} from './types'
+import {activityCollections, type AtmosphereActivityPage} from './types'
 
 const documentUri = 'at://did:plc:author/site.standard.document/one'
 
-function activity(uri: string, subscribed = false) {
+function activity(
+  uri: string,
+  subscribed = false,
+  collection = activityCollections.document,
+) {
   return {
     $type: 'eric.bsky.atmosphere.getActivity#item' as const,
     record: {
@@ -13,6 +17,7 @@ function activity(uri: string, subscribed = false) {
       cid: `bafy-${uri.at(-1)}`,
       indexedAt: '2026-09-03T00:00:00.000Z',
     },
+    collection,
     viewerState: {subscribed},
   }
 }

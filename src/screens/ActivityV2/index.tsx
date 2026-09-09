@@ -10,15 +10,25 @@ import {
 import {cleanError} from '#/lib/strings/errors'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
-import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {ActivityV2PreviewRow} from './components/ActivityV2PreviewRow'
+import {
+  DocumentActivityRow,
+  GrainPhotoActivityRow,
+  LivestreamActivityRow,
+  PublicationActivityRow,
+  RecommendationActivityRow,
+  SubscriptionActivityRow,
+  UnknownActivityRow,
+} from './components/StandaloneActivityRows'
 import {type ActivityListItem, buildActivityListItems} from './model'
 import {useActivityV2Query} from './query'
+import {activityCollections, type CollectionActivityItem} from './types'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ActivityV2'>
 
@@ -102,28 +112,6 @@ function ActivityV2List() {
   )
 }
 
-function ActivityV2PreviewRow({
-  hideTopBorder,
-  preview,
-}: {
-  hideTopBorder: boolean
-  preview: string
-}) {
-  const t = useTheme()
-
-  return (
-    <View style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}>
-      <View style={[a.px_xl, a.py_lg]}>
-        <Text
-          numberOfLines={1}
-          style={[a.text_sm, a.leading_snug, t.atoms.text]}>
-          {preview}
-        </Text>
-      </View>
-    </View>
-  )
-}
-
 function ActivityV2Loading() {
   return (
     <View style={[a.w_full, a.align_center, a.py_5xl]}>
@@ -172,12 +160,81 @@ function renderItem({item, index}: {item: ActivityListItem; index: number}) {
     case 'error':
       return <ActivityV2Error error={item.error} />
     case 'activity':
-      return (
-        <ActivityV2PreviewRow
-          hideTopBorder={index === 0}
-          preview={JSON.stringify(item.activity) ?? ''}
-        />
-      )
+      switch (item.activity.collection) {
+        case activityCollections.document:
+          return (
+            <DocumentActivityRow
+              activity={
+                item.activity as CollectionActivityItem<
+                  typeof activityCollections.document
+                >
+              }
+              hideTopBorder={index === 0}
+            />
+          )
+        case activityCollections.publication:
+          return (
+            <PublicationActivityRow
+              activity={
+                item.activity as CollectionActivityItem<
+                  typeof activityCollections.publication
+                >
+              }
+              hideTopBorder={index === 0}
+            />
+          )
+        case activityCollections.recommendation:
+          return (
+            <RecommendationActivityRow
+              activity={
+                item.activity as CollectionActivityItem<
+                  typeof activityCollections.recommendation
+                >
+              }
+              hideTopBorder={index === 0}
+            />
+          )
+        case activityCollections.subscription:
+          return (
+            <SubscriptionActivityRow
+              activity={
+                item.activity as CollectionActivityItem<
+                  typeof activityCollections.subscription
+                >
+              }
+              hideTopBorder={index === 0}
+            />
+          )
+        case activityCollections.livestream:
+          return (
+            <LivestreamActivityRow
+              activity={
+                item.activity as CollectionActivityItem<
+                  typeof activityCollections.livestream
+                >
+              }
+              hideTopBorder={index === 0}
+            />
+          )
+        case activityCollections.grainPhoto:
+          return (
+            <GrainPhotoActivityRow
+              activity={
+                item.activity as CollectionActivityItem<
+                  typeof activityCollections.grainPhoto
+                >
+              }
+              hideTopBorder={index === 0}
+            />
+          )
+        default:
+          return (
+            <UnknownActivityRow
+              activity={item.activity}
+              hideTopBorder={index === 0}
+            />
+          )
+      }
     case 'group':
       return (
         <ActivityV2PreviewRow
