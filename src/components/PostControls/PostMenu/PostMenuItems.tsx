@@ -751,9 +751,9 @@ let PostMenuItems = ({
                   (onPressHide ? (
                     <Menu.Item
                       testID="postDropdownHideBtn"
-                      label={l`Hide this post`}
+                      label={l`Hide post`}
                       onPress={onPressHide}>
-                      <Menu.ItemText>{l`Hide this post`}</Menu.ItemText>
+                      <Menu.ItemText>{l`Hide post`}</Menu.ItemText>
                       <Menu.ItemIcon icon={EyeSlash} position="right" />
                     </Menu.Item>
                   ) : (
