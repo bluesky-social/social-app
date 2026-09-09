@@ -1,34 +1,12 @@
 import 'array.prototype.findlast/auto'
 import 'setimmediate'
 
-if (process.env.NODE_ENV !== 'production') {
-  // In development, react-native-web's <View> tries to validate that
-  // text is wrapped into <Text>. It doesn't catch all cases but is useful.
-  // Unfortunately, it only does that via console.error so it's easy to miss.
-  // This is a hack to get it showing as a redbox on the web so we catch it early.
-  const realConsoleError = console.error
-  const thrownErrors = new WeakSet()
-  console.error = function consoleErrorWrapper(msgOrError) {
-    if (
-      typeof msgOrError === 'string' &&
-      msgOrError.startsWith('Unexpected text node')
-    ) {
-      if (
-        msgOrError ===
-        'Unexpected text node: . A text node cannot be a child of a <View>.'
-      ) {
-        // This is due to a stray empty string.
-        // React already handles this fine, so RNW warning is a false positive. Ignore.
-        return
-      }
-      const err = new Error(msgOrError)
-      thrownErrors.add(err)
-      throw err
-    } else if (!thrownErrors.has(msgOrError)) {
-      // @ts-expect-error
-      return realConsoleError.apply(this, arguments)
-    }
-  }
-}
+/*
+ * NOTE: the webpack-era console.error wrapper that re-threw react-native-web's
+ * "Unexpected text node" warnings as redboxes was removed with the Metro
+ * migration. Metro's LogBox already surfaces console.error prominently, and
+ * any wrapper around console.error becomes the top stack frame of every
+ * captured error, making Metro attribute all of them to this file.
+ */
 
 export {}

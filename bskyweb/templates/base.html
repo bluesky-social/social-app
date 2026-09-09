@@ -13,7 +13,7 @@
 
   <!-- Hello Humans! API docs at https://atproto.com -->
 
-  <link rel="preload" as="font" type="font/woff2" href="{{ staticCDNHost }}/static/media/InterVariable.c504db5c06caaf7cdfba.woff2" crossorigin>
+  {% include "fonts.html" %}
 
   <style>
     /**
@@ -23,20 +23,6 @@
      *
      * THIS NEEDS TO BE DUPLICATED IN `bskyweb/templates/base.html`
      */
-    @font-face {
-      font-family: 'InterVariable';
-      src: url("{{ staticCDNHost }}/static/media/InterVariable.c504db5c06caaf7cdfba.woff2") format('woff2');
-      font-weight: 300 1000;
-      font-style: normal;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'InterVariableItalic';
-      src: url("{{ staticCDNHost }}/static/media/InterVariable-Italic.01dcbad1bac635f9c9cd.woff2") format('woff2');
-      font-weight: 300 1000;
-      font-style: italic;
-      font-display: swap;
-    }
     html,
     body {
       margin: 0px;
