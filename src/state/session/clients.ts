@@ -2,7 +2,7 @@ import {type Agent, type Client} from '@atproto/lex'
 import {type PasswordSession} from '@atproto/lex-password-session'
 
 import {
-  ATMOSPHERE_PROXY_SERVICE,
+  APPVIEW_SANDBOX_PROXY_SERVICE,
   BLUESKY_PROXY_HEADER,
   CHAT_PROXY_SERVICE,
   PUBLIC_BSKY_SERVICE,
@@ -72,21 +72,41 @@ export function buildChatClient(agent: Agent): Client {
 }
 
 /**
- * Build the appview-sandbox client used by Atmosphere features.
+ * Build the signed-in appview-sandbox {@link Client}.
  *
- * Local development talks directly to the configured origin. Otherwise the
- * signed-in session proxies the request through the account's PDS.
+ * By default, requests retain the active session and are proxied by the PDS to
+ * {@link APPVIEW_SANDBOX_PROXY_SERVICE}. This is the path used by OTA builds,
+ * so CI needs no sandbox-specific environment.
+ *
+ * When {@link APPVIEW_SANDBOX_URL} is set, requests go directly to that origin.
+ * The local sandbox runs in development mode and accepts the account DID as its
+ * authorization value, avoiding service-auth setup for local iteration. This
+ * direct client deliberately carries no session token.
  */
-export function buildAtmosphereClient(agent: Agent): Client {
-  if (APPVIEW_SANDBOX_URL) {
-    return createLexClient(
-      {service: APPVIEW_SANDBOX_URL, fetch: networkAwareFetch},
-      {appLabelers: null},
-    )
+export function buildAppviewSandboxClient(
+  agent: Agent,
+  {
+    directUrl = APPVIEW_SANDBOX_URL,
+    fetch = networkAwareFetch,
+  }: {
+    directUrl?: string
+    fetch?: typeof globalThis.fetch
+  } = {},
+): Client {
+  if (directUrl) {
+    if (!agent.did) {
+      throw new NotAuthenticatedError('the appview-sandbox client')
+    }
+    return createLexClient({
+      did: agent.did,
+      service: directUrl,
+      headers: {authorization: agent.did},
+      fetch,
+    })
   }
+
   return createLexClient(agent, {
-    appLabelers: null,
-    service: ATMOSPHERE_PROXY_SERVICE,
+    service: APPVIEW_SANDBOX_PROXY_SERVICE,
   })
 }
 

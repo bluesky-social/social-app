@@ -84,7 +84,8 @@ export const MOD_PROXY_DID: DidString | undefined =
   process.env.EXPO_PUBLIC_MOD_PROXY_DID
 
 /**
- * Optional direct appview-sandbox origin for local Atmosphere development.
+ * Direct appview-sandbox URL for local development. When unset, requests are
+ * proxied through the account's PDS to the deployed sandbox service.
  */
 export const APPVIEW_SANDBOX_URL: string | undefined =
   process.env.EXPO_PUBLIC_APPVIEW_SANDBOX_URL || undefined

@@ -2,11 +2,11 @@ import {type PropsWithChildren} from 'react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
-import {useAtmosphereClient, useSession} from '#/state/session'
+import {useAppviewSandboxClient, useSession} from '#/state/session'
 import {useAtmosphereActivityQuery} from './atmosphereActivity'
 
 jest.mock('#/state/session', () => ({
-  useAtmosphereClient: jest.fn(),
+  useAppviewSandboxClient: jest.fn(),
   useSession: jest.fn(),
 }))
 
@@ -20,7 +20,7 @@ function setup(responses: unknown[]) {
   for (const response of responses) {
     client.call.mockResolvedValueOnce(response)
   }
-  jest.mocked(useAtmosphereClient).mockReturnValue(client as never)
+  jest.mocked(useAppviewSandboxClient).mockReturnValue(client as never)
   jest.mocked(useSession).mockReturnValue({
     hasSession: true,
     currentAccount: {did: viewer},
@@ -37,7 +37,7 @@ beforeEach(() => {
 })
 
 describe('useAtmosphereActivityQuery', () => {
-  it('sends the viewer and passes the pagination cursor through unchanged', async () => {
+  it('uses session auth and passes the pagination cursor through unchanged', async () => {
     const firstPage = {
       feed: [],
       associatedRecords: {},
@@ -53,7 +53,6 @@ describe('useAtmosphereActivityQuery', () => {
 
     await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
     expect(client.call).toHaveBeenNthCalledWith(1, expect.anything(), {
-      viewer,
       cursor: undefined,
     })
     expect(hook.result.current.hasNextPage).toBe(true)
@@ -61,7 +60,6 @@ describe('useAtmosphereActivityQuery', () => {
     await act(() => hook.result.current.fetchNextPage())
 
     expect(client.call).toHaveBeenNthCalledWith(2, expect.anything(), {
-      viewer,
       cursor: 'opaque-cursor',
     })
     await waitFor(() => expect(hook.result.current.hasNextPage).toBe(false))

@@ -9,11 +9,14 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Item | Current value |
 | --- | --- |
 | Backend worktree | `/Users/eric/sites/bluesky/appview-sandbox-worktrees/atmosphere-tab` |
-| Frontend worktree | `/Users/eric/sites/bluesky/social-app-worktrees/atmosphere-tab` |
+| Frontend worktree | `/Users/eric/sites/bluesky/social-app-internal-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Last synchronized backend commit | `d5440be Filter incomplete Atmosphere activity` |
-| Deployment status | Backend changes are local and have not been pushed or deployed |
+| Synchronized backend base commit | `1fccfce Filter incomplete Atmosphere activity` |
+| Uncommitted backend state | Authenticated-viewer integration is implemented and locally verified atop `1fccfce` |
+| Pushed frontend tip | `661ea4408 Present actor recommendation groups` on `social-app-internal/atmosphere-tab` |
+| Uncommitted frontend state | Generic appview-sandbox client and authenticated `getActivity` integration are implemented and locally verified |
+| Deployment status | The pushed frontend tip predates authenticated-viewer integration; current frontend and backend working-tree changes have not been pushed or deployed |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
 
@@ -41,7 +44,6 @@ eric.bsky.atmosphere.getActivity
 
 | Parameter | Type | Required | Behavior |
 | --- | --- | --- | --- |
-| `viewer` | DID string | No | Tracked viewer whose materialized feed should be returned. Temporarily defaults to Eric's DID. The frontend should still pass the signed-in user's DID explicitly. |
 | `cursor` | String | No | Opaque event-time/sequence pagination cursor returned by the previous page. Do not parse or construct it in the client. |
 
 Current tracked viewer used for development:
@@ -50,23 +52,21 @@ Current tracked viewer used for development:
 did:plc:3jpt2mvvsumj2r7eqk4gzzjz
 ```
 
-### Temporary authentication behavior
+### Authentication behavior
 
-The endpoint currently has no authentication requirement. This is temporary prototype behavior for local frontend development.
+The endpoint requires appview-sandbox standard authentication and derives the viewer from `auth.credentials.did`. Callers cannot select another viewer through query parameters.
 
-- Send `viewer` explicitly even though it is currently optional.
-- The selected DID must be enabled in the backend's tracked-viewer registry.
-- A non-tracked viewer returns an XRPC `InvalidRequest` error.
-- Do not design the frontend around the endpoint remaining unauthenticated.
+- The authenticated DID must be enabled in the backend's tracked-viewer registry.
+- An authenticated but non-tracked viewer returns an XRPC `InvalidRequest` error.
+- With the local direct URL override, send the signed-in actor DID as the raw authorization value accepted by appview-sandbox development mode.
+- With the default deployed path, the signed-in session is proxied through the PDS to appview-sandbox and standard service auth supplies the viewer DID.
 
 ### Local request
 
 ```sh
 curl --get 'http://localhost:3000/xrpc/eric.bsky.atmosphere.getActivity' \
-  --data-urlencode 'viewer=did:plc:3jpt2mvvsumj2r7eqk4gzzjz'
+  --header 'Authorization: did:plc:3jpt2mvvsumj2r7eqk4gzzjz'
 ```
-
-No request headers are currently required.
 
 ## Response contract
 
@@ -428,7 +428,6 @@ Use the response cursor verbatim:
 
 ```ts
 const nextPage = await getActivity({
-  viewer,
   cursor: previousPage.cursor,
 })
 ```
@@ -457,13 +456,14 @@ Expected XRPC error shape:
 
 Known client-relevant failures:
 
+- The request is unauthenticated or its service authentication is invalid.
 - Viewer is not tracked or is disabled.
 - Cursor is invalid.
 - Backend database or Tango actor hydration is unavailable.
 
 ## Frontend transport expectations
 
-The appview-sandbox service should eventually be threaded through the app's session bundle as a dedicated `@atproto/lex` client, following the existing chat-client pattern rather than constructing a client inside the Atmosphere feature.
+The appview-sandbox service is threaded through the app's session bundle as a dedicated `@atproto/lex` client, following the existing chat-client pattern rather than constructing a client inside the Atmosphere feature.
 
 Deployed proxy service identifier:
 
@@ -473,8 +473,9 @@ did:web:appview-sandbox.k1.prod.bsky.dev#bsky_appviewSandbox
 
 Expected environments:
 
-- With `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` unset, proxy through the signed-in user's PDS to the deployed service.
-- For tandem local development, put `EXPO_PUBLIC_APPVIEW_SANDBOX_URL=http://localhost:3000` in the frontend worktree's uncommitted `.env.local` and call that origin directly.
+- With `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` unset, proxy through the signed-in user's PDS to the deployed service. The sandbox client retains session authentication and emits the proxy service header through its `service` configuration.
+- For tandem local development, put `EXPO_PUBLIC_APPVIEW_SANDBOX_URL=http://localhost:3000` in the frontend worktree's uncommitted `.env.local`, call that origin directly, and send the signed-in DID as the development authorization value.
+- When exposing Expo web through a tunnel, set `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` to the backend's public HTTPS tunnel origin and restart Expo so the public environment value is rebuilt into the bundle. Do not expose PostgreSQL or the Node inspector. Development raw-DID authorization is not suitable for an unprotected public backend tunnel.
 - Do not commit a developer-local URL.
 - The current backend commits are not deployed, so this exact contract requires the local appview-sandbox service until the backend branch is pushed and deployed.
 
@@ -488,7 +489,15 @@ Then run the repository's normal lexicon generation command before importing the
 
 ## Change log
 
-### Backend `d5440be`
+### Uncommitted authenticated-viewer integration atop backend `1fccfce`
+
+- Requires standard appview-sandbox authentication for `getActivity`.
+- Derives the viewer from `auth.credentials.did` and removes caller-selected `viewer` input.
+- Uses raw DID authorization for direct local development and PDS-proxied service auth for deployed requests.
+- Renames the frontend session surface to the shared `appviewSandboxClient` and applies account labeler subscriptions.
+- Is implemented in both working trees. The local endpoint has been verified to return HTTP 401 without authorization and HTTP 200 with the enabled tracked DID; the backend and frontend integration changes remain uncommitted and undeployed.
+
+### Backend `1fccfce`
 
 - Filters activity roots with incomplete render-required associated-record chains before grouping.
 - Recommendations require document hydration and, for documents with AT-URI sites, publication hydration. Subscriptions require publication hydration; standalone documents require publication hydration only for AT-URI sites.

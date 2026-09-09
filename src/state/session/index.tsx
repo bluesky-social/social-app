@@ -781,14 +781,16 @@ export function useAppviewClient(): Client {
 }
 
 /**
- * Client for appview-sandbox Atmosphere reads.
+ * Authenticated client for appview-sandbox APIs. Logged-out calls throw
+ * `NotAuthenticatedError`; use {@link useMaybeAppviewSandboxClient} when the
+ * caller must branch on authentication.
  */
-export function useAtmosphereClient(): Client {
+export function useAppviewSandboxClient(): Client {
   const bundle = useContext(BundleContext)
   if (!bundle) {
-    throw Error('useAtmosphereClient() must be below <SessionProvider>.')
+    throw Error('useAppviewSandboxClient() must be below <SessionProvider>.')
   }
-  return bundle.atmosphereClient
+  return bundle.appviewSandboxClient
 }
 
 /**
@@ -815,6 +817,14 @@ export function useChatClient(): Client {
     throw Error('useChatClient() must be below <SessionProvider>.')
   }
   return bundle.chatClient
+}
+
+/**
+ * Appview-sandbox client for the active session, or `null` when logged out.
+ */
+export function useMaybeAppviewSandboxClient(): Client | null {
+  const bundle = useContext(BundleContext)
+  return bundle?.session ? bundle.appviewSandboxClient : null
 }
 
 /**

@@ -1,6 +1,6 @@
 # Activity screen frontend specification
 
-Status: proposed; backend read-time grouping, logical activity deduplication, and required-association filtering are committed locally, and neither repository has been pushed or deployed.
+Status: active prototype. The grouped Activity UI is pushed through frontend commit `661ea4408`; authenticated-viewer integration is implemented and locally verified in both working trees but remains uncommitted and undeployed. The backend working tree is based on `1fccfce`.
 
 This document specifies the first frontend for the Atmosphere activity API described in [`atmosphere-api-contract.md`](./atmosphere-api-contract.md).
 
@@ -19,7 +19,7 @@ document -> publication
 The initial recommendation presentation should read like:
 
 ```text
-<recommender handle> recommended <document author handle>’s post <document title>
+@<recommender handle> recommended @<document author handle>’s post <document title>
 ```
 
 ## Scope
@@ -41,7 +41,6 @@ This work does not include:
 
 - an Activity bottom-tab item;
 - full article rendering;
-- converting document cover-image or publication-icon blobs to CDN URLs;
 - interactions that create, delete, or update Atmosphere records;
 - a detail screen for Activity rows;
 - persisted query data or live cache updates.
@@ -74,13 +73,15 @@ The generated namespace should be imported through `#/lexicons`. The endpoint's 
 
 ### Appview-sandbox client
 
-Add a dedicated appview-sandbox client to the session bundle, following the existing `chatClient` structure:
+Add a dedicated appview-sandbox client to the session bundle, following the existing `chatClient` structure and the canonical appview-sandbox client integration:
 
-- add an `atmosphereClient: Client` member to `SessionBundle`;
-- add a `buildAtmosphereClient()` factory in `src/state/session/clients.ts`;
-- construct it with the other clients in `buildBundle()`;
-- expose it as `useAtmosphereClient()` from `src/state/session/index.tsx`;
-- update session test fixtures and client/bundle tests to include it.
+- add an `appviewSandboxClient: Client` member to authenticated and public session bundles;
+- add a `buildAppviewSandboxClient()` factory in `src/state/session/clients.ts`;
+- construct it with the other clients in `buildBundle()` and keep its direct-local transport on the bundle lifecycle's kill-switched fetch;
+- expose strict and nullable hooks as `useAppviewSandboxClient()` and `useMaybeAppviewSandboxClient()` from `src/state/session/index.tsx`;
+- use the shared unauthenticated throwing client in the public bundle;
+- apply cached account labeler subscriptions because sandbox responses contain hydrated Bluesky profile views;
+- update session test fixtures and client/bundle/moderation tests to include it.
 
 Service behavior:
 
@@ -90,9 +91,10 @@ Service behavior:
   did:web:appview-sandbox.k1.prod.bsky.dev#bsky_appviewSandbox
   ```
 
-- When `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` is set, send requests directly to that origin and do not set an `atproto-proxy` header. Tandem local development uses `http://localhost:3000` in the uncommitted `.env.local`.
+- When `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` is set, send requests directly to that origin, do not set an `atproto-proxy` header, and send the signed-in actor DID as the raw authorization value accepted by appview-sandbox development mode. Tandem local development uses `http://localhost:3000` in the uncommitted `.env.local`.
+- When Expo web is accessed through a public tunnel, set `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` to a public HTTPS tunnel for backend port 3000 and restart Expo. Do not expose PostgreSQL or the Node inspector, and do not leave the development raw-DID endpoint publicly unprotected.
 - Add an empty, documented `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` entry to `.env.example` and expose the value through `#/env`.
-- The screen is authenticated even though the prototype endpoint currently is not. Do not make the UI or query depend on the endpoint remaining unauthenticated.
+- The endpoint and screen are authenticated. The backend derives the viewer from auth; the client must not send caller-selected viewer input.
 
 ## Data model and narrowing
 
@@ -240,11 +242,9 @@ useAtmosphereActivityQuery()
 The hook:
 
 - reads `currentAccount.did` from `useSession()`;
-- reads the dedicated client from `useAtmosphereClient()`;
-- builds its key with `createQueryKey()` and an object containing `viewer`;
-- calls `eric.bsky.atmosphere.getActivity` with:
-  - `viewer: currentAccount.did`;
-  - `cursor: pageParam` when present;
+- reads the dedicated client from `useAppviewSandboxClient()`;
+- builds its key with `createQueryKey()` and an object containing the current account DID so caches stay account-scoped;
+- calls `eric.bsky.atmosphere.getActivity` with only `cursor: pageParam` when present; session authentication determines the viewer;
 - does not send a limit; page sizing is server-controlled over candidate roots; the backend selects at least 10 candidates when available, extends through age-tier activity bursts, and caps a page at 200 candidates; required-association filtering and grouping can make the returned feed shorter, and the cursor still advances past omitted candidates;
 - uses `useInfiniteQuery`;
 - sets `initialPageParam` to `undefined as string | undefined`;
@@ -530,7 +530,7 @@ Do not add Activity to the mobile or web bottom bar.
 
 ## Error behavior
 
-Expected backend errors include an untracked viewer, invalid cursor, and unavailable backend dependencies.
+Expected backend errors include missing or invalid authentication, an untracked viewer, an invalid cursor, and unavailable backend dependencies.
 
 - Initial request errors show a translated failure state, cleaned error text, and Retry.
 - Pagination errors preserve already loaded rows and appear in the list footer with Retry.
@@ -543,7 +543,7 @@ Add focused tests for behavior that carries contract risk:
 
 ### Query tests
 
-- sends the signed-in DID as `viewer` without a caller-controlled limit;
+- uses the signed-in appview-sandbox client without caller-selected viewer or limit input;
 - omits the cursor on page one and passes the returned cursor verbatim on page two;
 - stops pagination when the cursor is absent;
 - narrows valid `associatedRecords` and `actors` maps;
@@ -568,9 +568,10 @@ Add focused tests for behavior that carries contract risk:
 
 ### Session/navigation coverage
 
-- direct local atmosphere client targets `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` without a proxy header;
-- default atmosphere client uses the appview-sandbox proxy service;
-- session bundle and provider hook expose the same atmosphere client instance;
+- direct local appview-sandbox client targets `EXPO_PUBLIC_APPVIEW_SANDBOX_URL` without a proxy header and sends the actor DID as development auth;
+- default appview-sandbox client uses the deployed proxy service with the signed-in session;
+- session bundle and strict/nullable provider hooks expose the same appview-sandbox client instance;
+- cached account labeler subscriptions are applied to the appview-sandbox client;
 - route typing and navigation compile for `Activity`.
 
 ## Verification
@@ -585,6 +586,13 @@ pnpm test <focused test paths>
 ```
 
 Do not run `pnpm intl:extract` or `pnpm intl:compile`.
+
+Current authenticated-integration verification:
+
+- frontend lexicon generation, formatting, lint, iOS/Android/web typechecks, and 11 focused suites with 96 tests passed;
+- backend build, lint, and the focused `getActivity` suite with 10 tests passed after rebasing onto current `origin/main`;
+- the local endpoint returned HTTP 401 without authorization and HTTP 200 with the enabled tracked DID;
+- a later full backend run encountered broad 10-second timeouts across unrelated contributor suites after the rebase, so a clean full-suite result is not currently recorded for the rebased tree.
 
 Manually verify:
 
@@ -601,7 +609,7 @@ Manually verify:
 
 1. Authenticated users can open `/activity` from both the drawer and desktop left nav.
 2. The screen uses `Layout.Screen` and `Layout.Header` and is not added to the bottom bar.
-3. The query explicitly sends the signed-in DID without a limit and paginates with opaque cursors.
+3. The query uses the authenticated appview-sandbox client, sends no caller-selected viewer or limit, and paginates with opaque cursors.
 4. Every outer feed entry renders as a separate row in API order; grouped children render within their group row.
 5. Every row receives the same complete merged `associatedRecords` object for the currently loaded pages.
 6. A valid recommendation renders the recommender, document author, and document title by traversing the associated-record map.

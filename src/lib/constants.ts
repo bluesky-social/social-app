@@ -274,7 +274,11 @@ export const BLUESKY_PROXY_HEADER = {
  */
 export const CHAT_PROXY_SERVICE: Service = `${CHAT_PROXY_DID}#bsky_chat`
 
-export const ATMOSPHERE_PROXY_SERVICE: Service =
+/**
+ * The deployed appview-sandbox service. The sandbox client uses this as its
+ * proxy target unless the local URL environment override is set.
+ */
+export const APPVIEW_SANDBOX_PROXY_SERVICE: Service =
   'did:web:appview-sandbox.k1.prod.bsky.dev#bsky_appviewSandbox'
 
 /**

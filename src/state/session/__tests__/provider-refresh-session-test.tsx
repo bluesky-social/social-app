@@ -65,7 +65,7 @@ import {Provider, useSession, useSessionApi} from '#/state/session'
 import {type SessionApiContext} from '#/state/session/types'
 import {
   buildAppviewClient,
-  buildAtmosphereClient,
+  buildAppviewSandboxClient,
   buildChatClient,
   buildPdsClient,
 } from '../clients'
@@ -95,7 +95,7 @@ function makeBundle(
   return {
     session,
     appviewClient: buildAppviewClient(session),
-    atmosphereClient: buildAtmosphereClient(session),
+    appviewSandboxClient: buildAppviewSandboxClient(session),
     pdsClient: buildPdsClient(session),
     chatClient: buildChatClient(session),
     service: new URL(account.service),

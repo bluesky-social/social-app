@@ -65,8 +65,9 @@ jest.mock('../create-account', () => ({
 import {
   Provider,
   useAppviewClient,
-  useAtmosphereClient,
+  useAppviewSandboxClient,
   useChatClient,
+  useMaybeAppviewSandboxClient,
   useMaybeChatClient,
   useMaybePdsClient,
   usePdsClient,
@@ -75,7 +76,7 @@ import {
 import {type SessionApiContext} from '#/state/session/types'
 import {
   buildAppviewClient,
-  buildAtmosphereClient,
+  buildAppviewSandboxClient,
   buildChatClient,
   buildPdsClient,
   getUnauthenticatedThrowingClient,
@@ -86,9 +87,10 @@ import {asFetch, makeAccount, makeMockFetch} from './mock-fetch'
 
 type Clients = {
   appview: Client
-  atmosphere: Client
+  appviewSandbox: Client
   pds: Client
   chat: Client
+  maybeAppviewSandbox: Client | null
   maybePds: Client | null
   maybeChat: Client | null
 }
@@ -105,7 +107,7 @@ function makeBundle(account: SessionAccount): SessionBundle {
   return {
     session,
     appviewClient: buildAppviewClient(session),
-    atmosphereClient: buildAtmosphereClient(session),
+    appviewSandboxClient: buildAppviewSandboxClient(session),
     pdsClient: buildPdsClient(session),
     chatClient: buildChatClient(session),
     service: new URL(account.service),
@@ -120,9 +122,10 @@ function renderClients(): {api: SessionApiContext; clients: () => Clients} {
     api = useSessionApi()
     clients = {
       appview: useAppviewClient(),
-      atmosphere: useAtmosphereClient(),
+      appviewSandbox: useAppviewSandboxClient(),
       pds: usePdsClient(),
       chat: useChatClient(),
+      maybeAppviewSandbox: useMaybeAppviewSandboxClient(),
       maybePds: useMaybePdsClient(),
       maybeChat: useMaybeChatClient(),
     }
@@ -151,13 +154,14 @@ describe('client hooks while logged out', () => {
   it('serves the throwing client for the write surfaces', () => {
     const {clients} = renderClients()
     const throwing = getUnauthenticatedThrowingClient()
-    expect(clients().atmosphere).toBe(throwing)
+    expect(clients().appviewSandbox).toBe(throwing)
     expect(clients().pds).toBe(throwing)
     expect(clients().chat).toBe(throwing)
   })
 
   it('serves null from the maybe variants', () => {
     const {clients} = renderClients()
+    expect(clients().maybeAppviewSandbox).toBeNull()
     expect(clients().maybePds).toBeNull()
     expect(clients().maybeChat).toBeNull()
   })
@@ -175,7 +179,7 @@ describe('client hooks with a session', () => {
     })
 
     expect(clients().appview).toBe(bundle.appviewClient)
-    expect(clients().atmosphere).toBe(bundle.atmosphereClient)
+    expect(clients().appviewSandbox).toBe(bundle.appviewSandboxClient)
     expect(clients().pds).toBe(bundle.pdsClient)
     expect(clients().chat).toBe(bundle.chatClient)
   })
@@ -190,6 +194,7 @@ describe('client hooks with a session', () => {
       await api.login({} as never, 'LoginForm')
     })
 
+    expect(clients().maybeAppviewSandbox).toBe(clients().appviewSandbox)
     expect(clients().maybePds).toBe(clients().pds)
     expect(clients().maybeChat).toBe(clients().chat)
   })

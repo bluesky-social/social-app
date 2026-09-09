@@ -4,11 +4,10 @@
   "defs": {
     "main": {
       "type": "query",
-      "description": "Returns recent activity for a tracked viewer.",
+      "description": "Returns recent activity for the authenticated tracked viewer.",
       "parameters": {
         "type": "params",
         "properties": {
-          "viewer": { "type": "string", "format": "did" },
           "cursor": { "type": "string" }
         }
       },
