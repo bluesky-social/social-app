@@ -1,11 +1,11 @@
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
-import {Text} from '#/components/Typography'
 import {
   ActivityRow,
   ActivityRowFooter,
   ActivityRowHeader,
+  ActivityRowHeaderText,
 } from './components/ActivityHeader'
 import {ActivityInlineLinkText} from './components/ActivityInlineLinkText'
 import {type ActivityPresentationProps} from './presentation'
@@ -61,7 +61,7 @@ export function UnknownActivityRenderer({
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <Text>{l`did something`}</Text>
+        <ActivityRowHeaderText>{l`did something`}</ActivityRowHeaderText>
       </ActivityRowHeader>
       {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -90,7 +90,7 @@ function DocumentActivityRenderer({
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <Text>{actionText}</Text>
+        <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
       {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -119,7 +119,7 @@ function PublicationActivityRenderer({
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <Text>{actionText}</Text>
+        <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
       {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -144,12 +144,12 @@ function RecommendationActivityRenderer({
     return (
       <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <Text>
+          <ActivityRowHeaderText>
             {l`${plural(computedItemView.group.count, {
               one: 'recommended # article',
               other: 'recommended # articles',
             })}`}
-          </Text>
+          </ActivityRowHeaderText>
         </ActivityRowHeader>
         {body}
         <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -161,26 +161,26 @@ function RecommendationActivityRenderer({
     return (
       <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <Text>{`${l`recommended`} `}</Text>
+          <ActivityRowHeaderText>{`${l`recommended`} `}</ActivityRowHeaderText>
           <ActivityInlineLinkText
             label={l`View ${author.label}’s profile`}
             to={author.href}>
             {author.label}
           </ActivityInlineLinkText>
-          <Text>{`${l`’s article`} `}</Text>
+          <ActivityRowHeaderText>{`${l`’s article`} `}</ActivityRowHeaderText>
           {documentUrl ? (
             <>
-              <Text>“</Text>
+              <ActivityRowHeaderText>“</ActivityRowHeaderText>
               <ActivityInlineLinkText
                 disableMismatchWarning
                 label={l`Open article “${title}”`}
                 to={documentUrl}>
                 {title}
               </ActivityInlineLinkText>
-              <Text>”</Text>
+              <ActivityRowHeaderText>”</ActivityRowHeaderText>
             </>
           ) : (
-            <Text>{`“${title}”`}</Text>
+            <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
         {body}
@@ -193,13 +193,13 @@ function RecommendationActivityRenderer({
     return (
       <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <Text>{`${l`recommended`} `}</Text>
+          <ActivityRowHeaderText>{`${l`recommended`} `}</ActivityRowHeaderText>
           <ActivityInlineLinkText
             label={l`View ${author.label}’s profile`}
             to={author.href}>
             {author.label}
           </ActivityInlineLinkText>
-          <Text>{l`’s article`}</Text>
+          <ActivityRowHeaderText>{l`’s article`}</ActivityRowHeaderText>
         </ActivityRowHeader>
         {body}
         <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -211,20 +211,20 @@ function RecommendationActivityRenderer({
     return (
       <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <Text>{`${l`recommended an article`} `}</Text>
+          <ActivityRowHeaderText>{`${l`recommended an article`} `}</ActivityRowHeaderText>
           {documentUrl ? (
             <>
-              <Text>“</Text>
+              <ActivityRowHeaderText>“</ActivityRowHeaderText>
               <ActivityInlineLinkText
                 disableMismatchWarning
                 label={l`Open article “${title}”`}
                 to={documentUrl}>
                 {title}
               </ActivityInlineLinkText>
-              <Text>”</Text>
+              <ActivityRowHeaderText>”</ActivityRowHeaderText>
             </>
           ) : (
-            <Text>{`“${title}”`}</Text>
+            <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
         {body}
@@ -236,7 +236,7 @@ function RecommendationActivityRenderer({
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <Text>{l`recommended an article`}</Text>
+        <ActivityRowHeaderText>{l`recommended an article`}</ActivityRowHeaderText>
       </ActivityRowHeader>
       {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -258,12 +258,12 @@ function SubscriptionActivityRenderer({
     return (
       <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <Text>
+          <ActivityRowHeaderText>
             {l`subscribed to ${plural(computedItemView.group.count, {
               one: '# publication',
               other: '# publications',
             })}`}
-          </Text>
+          </ActivityRowHeaderText>
         </ActivityRowHeader>
         {body}
         <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -277,7 +277,7 @@ function SubscriptionActivityRenderer({
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
           {publication.url ? (
             <>
-              <Text>{`${l`subscribed to`} `}</Text>
+              <ActivityRowHeaderText>{`${l`subscribed to`} `}</ActivityRowHeaderText>
               <ActivityInlineLinkText
                 disableMismatchWarning
                 label={l`Open publication ${publication.name}`}
@@ -286,7 +286,7 @@ function SubscriptionActivityRenderer({
               </ActivityInlineLinkText>
             </>
           ) : (
-            <Text>{l`subscribed to ${publication.name}`}</Text>
+            <ActivityRowHeaderText>{l`subscribed to ${publication.name}`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
         {body}
@@ -298,7 +298,7 @@ function SubscriptionActivityRenderer({
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <Text>{l`subscribed to a publication`}</Text>
+        <ActivityRowHeaderText>{l`subscribed to a publication`}</ActivityRowHeaderText>
       </ActivityRowHeader>
       {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -327,7 +327,7 @@ function LivestreamActivityRenderer({
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <Text>{actionText}</Text>
+        <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
       {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
@@ -356,7 +356,7 @@ function GrainPhotoActivityRenderer({
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <Text>{actionText}</Text>
+        <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
       {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
