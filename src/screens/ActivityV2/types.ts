@@ -10,6 +10,16 @@ export const activityCollections = {
 export type KnownActivityCollection =
   (typeof activityCollections)[keyof typeof activityCollections]
 
+const knownActivityCollections = new Set<string>(
+  Object.values(activityCollections),
+)
+
+export function isKnownActivityCollection(
+  collection: string,
+): collection is KnownActivityCollection {
+  return knownActivityCollections.has(collection)
+}
+
 export type ActivityRecord = {
   uri: string
   cid: string

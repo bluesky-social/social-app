@@ -1,15 +1,19 @@
 import {type PressableProps} from 'react-native'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {fireEvent, render} from '@testing-library/react-native'
+import {act, fireEvent, render} from '@testing-library/react-native'
 
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {ActivityV2Screen} from './index'
 import {activityCollections} from './types'
 
 const mockUseActivityV2Query = jest.fn()
 const mockListFooter = jest.fn((_props: unknown) => null)
+const mockAvatarStack = jest.fn()
+const mockInlineLinkText = jest.fn()
+let latestListProps: ListProps | undefined
 
-type ChildrenProps = {children?: React.ReactNode}
+type ChildrenProps = {children?: React.ReactNode; testID?: string}
 type EmptyStateProps = {
   message: string
   button?: {
@@ -24,41 +28,81 @@ type ListProps = {
   data: ListItem[]
   renderItem: (args: {item: ListItem; index: number}) => React.ReactNode
   ListFooterComponent?: React.ReactNode
-  onEndReached?: () => void
-  onRefresh?: () => void
+  onEndReached?: () => Promise<void> | void
+  onRefresh?: () => Promise<void> | void
 }
 
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
-  useTheme: () => ({atoms: {border_contrast_low: {}, text: {}}}),
+  useTheme: () => ({
+    atoms: {
+      border_contrast_low: {},
+      text: {},
+      text_link: {color: '#0a7aff'},
+      bg: {backgroundColor: '#ffffff'},
+    },
+  }),
 }))
+jest.mock('#/components/AvatarStack', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    AvatarStack: (props: unknown) => {
+      mockAvatarStack(props)
+      return <View testID="activityV2AvatarStack" />
+    },
+  }
+})
 jest.mock('#/components/icons/Atom', () => ({
   Atom_Stroke2_Corner0_Rounded: () => null,
 }))
-jest.mock('#/components/Layout', () => ({
-  Screen: ({children}: ChildrenProps) => children,
-  Header: {
-    Outer: ({children}: ChildrenProps) => children,
-    BackButton: () => null,
-    Content: ({children}: ChildrenProps) => children,
-    TitleText: ({children}: ChildrenProps) => children,
-    Slot: () => null,
-  },
-}))
+jest.mock('#/components/Layout', () => {
+  const {Text, View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Screen: ({children, testID}: ChildrenProps) => (
+      <View testID={testID}>{children}</View>
+    ),
+    Header: {
+      Outer: ({children}: ChildrenProps) => <>{children}</>,
+      BackButton: () => null,
+      Content: ({children}: ChildrenProps) => <>{children}</>,
+      TitleText: ({children}: ChildrenProps) => <Text>{children}</Text>,
+      Slot: () => null,
+    },
+  }
+})
+jest.mock('#/components/Link', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    InlineLinkText: ({
+      children,
+      ...props
+    }: React.PropsWithChildren<Record<string, unknown>>) => {
+      mockInlineLinkText({children, ...props})
+      return <Text {...props}>{children}</Text>
+    },
+  }
+})
 jest.mock('#/components/Lists', () => ({
   ListFooter: (props: unknown) => {
     mockListFooter(props)
     return null
   },
 }))
-jest.mock('#/components/Loader', () => ({Loader: () => 'loader'}))
+jest.mock('#/components/Loader', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {Loader: () => <Text>loader</Text>}
+})
+jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
+  throw new Error('Detailed Activity embed UI should not be used by ActivityV2')
+})
 jest.mock('#/components/Typography', () => {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {Text}
-})
-jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
-  throw new Error('Detailed Activity embed UI should not be used by ActivityV2')
 })
 jest.mock('#/lib/hooks/useInitialNumToRender', () => ({
   useInitialNumToRender: () => 1,
@@ -87,14 +131,17 @@ jest.mock('#/view/com/util/List', () => {
   const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
-    List: ({data, renderItem, ListFooterComponent}: ListProps) => (
-      <View>
-        {data.map((item, index) => (
-          <View key={item.key}>{renderItem({item, index})}</View>
-        ))}
-        {ListFooterComponent}
-      </View>
-    ),
+    List: (props: ListProps) => {
+      latestListProps = props
+      return (
+        <View>
+          {props.data.map((item, index) => (
+            <View key={item.key}>{props.renderItem({item, index})}</View>
+          ))}
+          {props.ListFooterComponent}
+        </View>
+      )
+    },
   }
 })
 jest.mock('./query', () => ({
@@ -104,6 +151,9 @@ jest.mock('./query', () => ({
 i18n.loadAndActivate({locale: 'en', messages: {}})
 
 beforeEach(() => {
+  latestListProps = undefined
+  mockAvatarStack.mockClear()
+  mockInlineLinkText.mockClear()
   mockListFooter.mockClear()
   mockUseActivityV2Query.mockReset()
 })
@@ -117,6 +167,10 @@ function renderScreen() {
       />
     </I18nProvider>,
   )
+}
+
+function handleLabel(handle: string) {
+  return sanitizeHandle(handle, '@')
 }
 
 function activity({
@@ -140,8 +194,16 @@ function activity({
   }
 }
 
+function actor(did: string, handle: string) {
+  return {
+    did,
+    handle,
+    avatar: `https://example.com/${did}.jpg`,
+  }
+}
+
 describe('ActivityV2Screen', () => {
-  it('dispatches each known standalone collection to its dedicated V2 row and keeps group rows as JSON previews', () => {
+  it('keeps the route shell intact and renders standalone, grouped, and unknown V2 rows without JSON diagnostics', () => {
     const groupChildOne = activity({
       collection: activityCollections.document,
       uri: 'at://did:plc:group-author/site.standard.document/one',
@@ -191,6 +253,11 @@ describe('ActivityV2Screen', () => {
       uri: 'at://did:plc:author/social.grain.photo/one',
       cid: 'bafy-grain-photo',
     })
+    const unknownCollectionActivity = activity({
+      collection: 'example.unknown.collection',
+      uri: 'at://did:plc:author/example.unknown.collection/one',
+      cid: 'bafy-unknown',
+    })
 
     mockUseActivityV2Query.mockReturnValue({
       data: {
@@ -204,6 +271,93 @@ describe('ActivityV2Screen', () => {
               subscriptionActivity,
               livestreamActivity,
               grainPhotoActivity,
+              unknownCollectionActivity,
+            ],
+            associatedRecords: {},
+            actors: {
+              'did:plc:author': actor('did:plc:author', 'author.test'),
+              'did:plc:group-author': actor(
+                'did:plc:group-author',
+                'group-author.test',
+              ),
+            },
+          },
+        ],
+        pageParams: [undefined],
+      },
+      error: undefined,
+      isFetchingNextPage: false,
+      hasNextPage: true,
+      fetchNextPage: jest.fn(),
+      refetch: jest.fn(),
+    })
+
+    const screen = renderScreen()
+
+    expect(screen.getByTestId('activityV2Screen')).toBeTruthy()
+    expect(screen.getByText('Activity V2')).toBeTruthy()
+    expect(screen.getAllByTestId('activityV2DocumentRow')).toHaveLength(2)
+    expect(screen.getByTestId('activityV2PublicationRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2RecommendationRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2SubscriptionRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2LivestreamRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2GrainPhotoRow')).toBeTruthy()
+    expect(screen.getByTestId('activityV2UnknownRow')).toBeTruthy()
+    expect(
+      screen.getByLabelText(
+        `${handleLabel('group-author.test')} published 2 articles`,
+      ),
+    ).toBeTruthy()
+    expect(
+      screen.getByLabelText(`${handleLabel('author.test')} did something`),
+    ).toBeTruthy()
+    expect(screen.queryByText(JSON.stringify(documentActivity))).toBeNull()
+    expect(screen.queryByText(JSON.stringify(group))).toBeNull()
+    expect(mockListFooter).toHaveBeenCalledWith(
+      expect.objectContaining({hasNextPage: true, isFetchingNextPage: false}),
+    )
+  })
+
+  it('renders loading and empty states', () => {
+    mockUseActivityV2Query.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isFetchingNextPage: false,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      refetch: jest.fn(),
+    })
+
+    const loadingScreen = renderScreen()
+    expect(loadingScreen.getByText('loader')).toBeTruthy()
+
+    mockUseActivityV2Query.mockReturnValue({
+      data: {
+        pages: [{feed: [], associatedRecords: {}, actors: {}}],
+        pageParams: [undefined],
+      },
+      error: undefined,
+      isFetchingNextPage: false,
+      hasNextPage: false,
+      fetchNextPage: jest.fn(),
+      refetch: jest.fn(),
+    })
+
+    const emptyScreen = renderScreen()
+    expect(emptyScreen.getByTestId('activityV2EmptyState')).toBeTruthy()
+  })
+
+  it('omits actorless successful rows and falls back to the V2 empty state', () => {
+    mockUseActivityV2Query.mockReturnValue({
+      data: {
+        pages: [
+          {
+            feed: [
+              activity({
+                collection: activityCollections.document,
+                uri: 'at://did:plc:ghost/site.standard.document/one',
+                cid: 'bafy-ghost',
+              }),
             ],
             associatedRecords: {},
             actors: {},
@@ -220,59 +374,8 @@ describe('ActivityV2Screen', () => {
 
     const screen = renderScreen()
 
-    expect(screen.getByTestId('activityV2DocumentRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2PublicationRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2RecommendationRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2SubscriptionRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2LivestreamRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2GrainPhotoRow')).toBeTruthy()
-    expect(
-      screen.getByText(JSON.stringify(documentActivity)).props.numberOfLines,
-    ).toBe(1)
-    expect(screen.getByText(JSON.stringify(group)).props.numberOfLines).toBe(1)
-    expect(mockListFooter).toHaveBeenCalledWith(
-      expect.objectContaining({hasNextPage: true, isFetchingNextPage: false}),
-    )
-  })
-
-  it('uses activity.collection for standalone dispatch and falls back safely for unknown collections', () => {
-    const mismatchedUriActivity = activity({
-      collection: activityCollections.subscription,
-      uri: 'at://did:plc:author/site.standard.document/not-used-for-dispatch',
-      cid: 'bafy-mismatched-uri',
-    })
-    const unknownCollectionActivity = activity({
-      collection: 'example.unknown.collection',
-      uri: 'not-an-at-uri',
-      cid: 'bafy-unknown',
-    })
-
-    mockUseActivityV2Query.mockReturnValue({
-      data: {
-        pages: [
-          {
-            feed: [mismatchedUriActivity, unknownCollectionActivity],
-            associatedRecords: {},
-            actors: {},
-          },
-        ],
-        pageParams: [undefined],
-      },
-      error: undefined,
-      isFetchingNextPage: false,
-      hasNextPage: false,
-      fetchNextPage: jest.fn(),
-      refetch: jest.fn(),
-    })
-
-    const screen = renderScreen()
-
-    expect(screen.getByTestId('activityV2SubscriptionRow')).toBeTruthy()
-    expect(screen.getByText(JSON.stringify(mismatchedUriActivity))).toBeTruthy()
-    expect(screen.getByTestId('activityV2UnknownRow')).toBeTruthy()
-    expect(
-      screen.getByText(JSON.stringify(unknownCollectionActivity)),
-    ).toBeTruthy()
+    expect(screen.getByTestId('activityV2EmptyState')).toBeTruthy()
+    expect(mockListFooter).not.toHaveBeenCalled()
   })
 
   it('keeps the retry control wired for initial errors', () => {
@@ -291,5 +394,48 @@ describe('ActivityV2Screen', () => {
 
     expect(refetch).toHaveBeenCalled()
     expect(screen.getByTestId('activityV2ErrorState')).toBeTruthy()
+  })
+
+  it('keeps refresh and pagination wired through the list callbacks', async () => {
+    const refetch = jest.fn().mockResolvedValue(undefined)
+    const fetchNextPage = jest.fn().mockResolvedValue(undefined)
+
+    mockUseActivityV2Query.mockReturnValue({
+      data: {
+        pages: [
+          {
+            feed: [
+              activity({
+                collection: activityCollections.document,
+                uri: 'at://did:plc:author/site.standard.document/one',
+                cid: 'bafy-document',
+              }),
+            ],
+            associatedRecords: {},
+            actors: {
+              'did:plc:author': actor('did:plc:author', 'author.test'),
+            },
+          },
+        ],
+        pageParams: [undefined],
+      },
+      error: undefined,
+      isFetchingNextPage: false,
+      hasNextPage: true,
+      fetchNextPage,
+      refetch,
+    })
+
+    renderScreen()
+
+    await act(async () => {
+      await latestListProps?.onRefresh?.()
+    })
+    await act(async () => {
+      await latestListProps?.onEndReached?.()
+    })
+
+    expect(refetch).toHaveBeenCalledTimes(1)
+    expect(fetchNextPage).toHaveBeenCalledTimes(1)
   })
 })

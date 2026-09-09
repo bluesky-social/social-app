@@ -16,19 +16,13 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {IS_IOS} from '#/env'
-import {ActivityV2PreviewRow} from './components/ActivityV2PreviewRow'
+import {ActivityPresentationRow} from './components/ActivityPresentationRow'
+import {buildActivityListItems} from './model'
 import {
-  DocumentActivityRow,
-  GrainPhotoActivityRow,
-  LivestreamActivityRow,
-  PublicationActivityRow,
-  RecommendationActivityRow,
-  SubscriptionActivityRow,
-  UnknownActivityRow,
-} from './components/StandaloneActivityRows'
-import {type ActivityListItem, buildActivityListItems} from './model'
+  type ActivityPresentationListItem,
+  buildActivityPresentationListItems,
+} from './presentation'
 import {useActivityV2Query} from './query'
-import {activityCollections, type CollectionActivityItem} from './types'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'ActivityV2'>
 
@@ -57,7 +51,8 @@ function ActivityV2List() {
     query.data,
     query.error ? cleanError(query.error) : undefined,
   )
-  const hasActivityRows = items.some(
+  const presentationItems = buildActivityPresentationListItems(items)
+  const hasActivityRows = presentationItems.some(
     item => item.type === 'activity' || item.type === 'group',
   )
 
@@ -86,7 +81,7 @@ function ActivityV2List() {
 
   return (
     <List
-      data={items}
+      data={presentationItems}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
@@ -151,7 +146,13 @@ function ActivityV2Error({error}: {error: string}) {
   )
 }
 
-function renderItem({item, index}: {item: ActivityListItem; index: number}) {
+function renderItem({
+  item,
+  index,
+}: {
+  item: ActivityPresentationListItem
+  index: number
+}) {
   switch (item.type) {
     case 'loading':
       return <ActivityV2Loading />
@@ -160,89 +161,9 @@ function renderItem({item, index}: {item: ActivityListItem; index: number}) {
     case 'error':
       return <ActivityV2Error error={item.error} />
     case 'activity':
-      switch (item.activity.collection) {
-        case activityCollections.document:
-          return (
-            <DocumentActivityRow
-              activity={
-                item.activity as CollectionActivityItem<
-                  typeof activityCollections.document
-                >
-              }
-              hideTopBorder={index === 0}
-            />
-          )
-        case activityCollections.publication:
-          return (
-            <PublicationActivityRow
-              activity={
-                item.activity as CollectionActivityItem<
-                  typeof activityCollections.publication
-                >
-              }
-              hideTopBorder={index === 0}
-            />
-          )
-        case activityCollections.recommendation:
-          return (
-            <RecommendationActivityRow
-              activity={
-                item.activity as CollectionActivityItem<
-                  typeof activityCollections.recommendation
-                >
-              }
-              hideTopBorder={index === 0}
-            />
-          )
-        case activityCollections.subscription:
-          return (
-            <SubscriptionActivityRow
-              activity={
-                item.activity as CollectionActivityItem<
-                  typeof activityCollections.subscription
-                >
-              }
-              hideTopBorder={index === 0}
-            />
-          )
-        case activityCollections.livestream:
-          return (
-            <LivestreamActivityRow
-              activity={
-                item.activity as CollectionActivityItem<
-                  typeof activityCollections.livestream
-                >
-              }
-              hideTopBorder={index === 0}
-            />
-          )
-        case activityCollections.grainPhoto:
-          return (
-            <GrainPhotoActivityRow
-              activity={
-                item.activity as CollectionActivityItem<
-                  typeof activityCollections.grainPhoto
-                >
-              }
-              hideTopBorder={index === 0}
-            />
-          )
-        default:
-          return (
-            <UnknownActivityRow
-              activity={item.activity}
-              hideTopBorder={index === 0}
-            />
-          )
-      }
     case 'group':
-      return (
-        <ActivityV2PreviewRow
-          hideTopBorder={index === 0}
-          preview={JSON.stringify(item.group) ?? ''}
-        />
-      )
+      return <ActivityPresentationRow item={item} hideTopBorder={index === 0} />
   }
 }
 
-const keyExtractor = (item: ActivityListItem) => item.key
+const keyExtractor = (item: ActivityPresentationListItem) => item.key
