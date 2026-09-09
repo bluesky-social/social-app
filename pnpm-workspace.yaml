@@ -18,7 +18,7 @@ overrides:
   '@expo/image-utils': '0.8.12'
   '@types/estree': '1.0.6'
   'react-native-reanimated': '4.6.0'
-  'react-native-worklets': '0.12.1'
+  'react-native-worklets': '0.12.2'
   'psl': '1.9.0'
   '@types/psl': '1.1.1'
   'react-native-screens': '4.26.2'
@@ -51,3 +51,4 @@ minimumReleaseAgeExclude:
   - '@atproto-labs/*'
   - '@bsky.app/*'
   - '@bsky/*'
+  - react-native-worklets@0.12.2
