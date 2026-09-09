@@ -87,6 +87,7 @@ import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
 import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
 import {AtmosphereScreen} from '#/screens/Atmosphere'
 import {ActivityScreen} from '#/screens/Activity'
+import {ActivityV2Screen} from '#/screens/ActivityV2'
 import {BookmarksScreen} from '#/screens/Bookmarks'
 import {CustomFeedScreen} from '#/screens/CustomFeed'
 import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
@@ -198,6 +199,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Activity"
         getComponent={() => ActivityScreen}
         options={{title: title(msg`Activity`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ActivityV2"
+        getComponent={() => ActivityV2Screen}
+        options={{title: title(msg`Activity V2`), requireAuth: true}}
       />
       <Stack.Screen
         name="Lists"
