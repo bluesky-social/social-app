@@ -145,14 +145,19 @@ export function ActivityRow({
   const t = useTheme()
   const {t: l} = useLingui()
   const content = getActivityRowContent(item)
-  const documentView =
-    content.type === 'document'
-      ? createSafeActivitySubjectView({
-          uri: item.activity.record.uri,
-          associatedRecords: item.associatedRecords,
-          actors: item.actors,
-        })
-      : undefined
+  const subjectUri =
+    content.type === 'recommendation'
+      ? getRecommendedDocumentUri(item.activity, item.associatedRecords)
+      : content.type === 'document' || content.type === 'publication'
+        ? item.activity.record.uri
+        : undefined
+  const subjectView = subjectUri
+    ? createSafeActivitySubjectView({
+        uri: subjectUri,
+        associatedRecords: item.associatedRecords,
+        actors: item.actors,
+      })
+    : undefined
 
   return (
     <View style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}>
@@ -173,9 +178,13 @@ export function ActivityRow({
           </TimeElapsed>
         </View>
       </View>
-      {documentView && (
+      {subjectView && (
         <View style={[a.px_xl, a.pb_lg, {marginLeft: GROUP_CONTENT_INDENT}]}>
-          <StandardSiteEmbed view={documentView} />
+          {content.type === 'recommendation' ? (
+            <StandardSiteCompactDocumentCard view={subjectView} />
+          ) : (
+            <ActivitySubject view={subjectView} />
+          )}
         </View>
       )}
       {content.type === 'photo' && (

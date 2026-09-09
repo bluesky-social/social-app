@@ -111,7 +111,8 @@ jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
   }
 })
 jest.mock('#/components/Post/Embed/StandardSiteEmbed/utils', () => ({
-  isStandardSitePublicationEmbed: () => false,
+  isStandardSitePublicationEmbed: (view: {source?: unknown}) =>
+    Boolean(view.source),
 }))
 jest.mock(
   '#/components/Post/Embed/StandardSiteEmbed/StandardSiteCompactDocumentCard',
@@ -291,6 +292,71 @@ function makeStandaloneDocumentRow() {
   }
 }
 
+function makeStandaloneRecommendationRow() {
+  const recommendationUri = `${recommendationBase}one`
+  const documentUri = `${documentBase}one`
+  return {
+    type: 'activity' as const,
+    key: recommendationUri,
+    activity: activity(recommendationUri),
+    associatedRecords: {
+      [recommendationUri]: {
+        uri: recommendationUri,
+        cid: 'recommendation-one',
+        record: {
+          $type: 'site.standard.graph.recommend',
+          document: documentUri,
+          createdAt: '2026-09-03T00:00:00.000Z',
+        },
+      },
+      [documentUri]: {
+        uri: documentUri,
+        cid: 'document-one',
+        record: {
+          $type: 'site.standard.document',
+          site: 'https://brookie.example',
+          path: '/posts/one',
+          title: 'Document one',
+          publishedAt: '2026-09-03T00:00:00.000Z',
+        },
+      },
+    },
+    actors: {
+      'did:plc:brookie': {
+        did: 'did:plc:brookie',
+        handle: 'brookie.blog',
+      },
+    },
+  }
+}
+
+function makeStandalonePublicationRow() {
+  const uri = `${publicationBase}one`
+  const activityItem = activity(uri)
+  return {
+    type: 'activity' as const,
+    key: uri,
+    activity: activityItem,
+    associatedRecords: {
+      [uri]: {
+        uri,
+        cid: 'publication-one',
+        record: {
+          $type: 'site.standard.publication',
+          name: 'Publication one',
+          url: 'https://example.com/publications/one',
+        },
+      },
+    },
+    actors: {
+      'did:plc:publisher': {
+        did: 'did:plc:publisher',
+        handle: 'publisher.example',
+      },
+    },
+  }
+}
+
 function makeSubscriptionGroup(): ActivityGroupRowItem {
   const items = ['one', 'two', 'three'].map(name =>
     activity(`${subscriptionBase}${name}`),
@@ -350,7 +416,50 @@ describe('ActivityRow', () => {
     expect(result.getByTestId('full-document-Document one')).toBeTruthy()
   })
 
-  it('keeps the activity sentence when document view construction fails', () => {
+  it('renders a compact document card for a hydrated recommendation subject', () => {
+    const result = render(
+      <I18nProvider i18n={i18n}>
+        <ActivityRow
+          item={makeStandaloneRecommendationRow()}
+          hideTopBorder={false}
+        />
+      </I18nProvider>,
+    )
+
+    expect(result.getByText(/recommended a post/)).toBeTruthy()
+    expect(result.getByTestId('document-Document one')).toBeTruthy()
+    expect(result.queryByTestId('full-document-Document one')).toBeNull()
+  })
+
+  it('keeps the recommendation header when subject view construction fails', () => {
+    const row = makeStandaloneRecommendationRow()
+    row.associatedRecords[`${documentBase}one`].record.site = 'at://invalid'
+
+    const result = render(
+      <I18nProvider i18n={i18n}>
+        <ActivityRow item={row} hideTopBorder={false} />
+      </I18nProvider>,
+    )
+
+    expect(result.getByText(/recommended a post/)).toBeTruthy()
+    expect(result.queryByTestId('document-Document one')).toBeNull()
+  })
+
+  it('renders a PublicationCard from hydrated publication sidecars', () => {
+    const result = render(
+      <I18nProvider i18n={i18n}>
+        <ActivityRow
+          item={makeStandalonePublicationRow()}
+          hideTopBorder={false}
+        />
+      </I18nProvider>,
+    )
+
+    expect(result.getByText(/created a publication/)).toBeTruthy()
+    expect(result.getByTestId('publication-Publication one')).toBeTruthy()
+  })
+
+  it('keeps the publication activity sentence when view construction fails', () => {
     const row = makeStandaloneDocumentRow()
     row.associatedRecords[row.activity.record.uri].record.site = 'at://invalid'
 
@@ -362,6 +471,24 @@ describe('ActivityRow', () => {
 
     expect(result.getByText(/published an article/)).toBeTruthy()
     expect(result.queryByTestId('full-document-Document one')).toBeNull()
+  })
+
+  it('keeps the publication activity sentence when publication view construction fails', () => {
+    const row = makeStandalonePublicationRow()
+    const associatedRecords = row.associatedRecords as Record<
+      string,
+      {record: Record<string, unknown>}
+    >
+    associatedRecords[row.activity.record.uri].record.url = 'not-a-url'
+
+    const result = render(
+      <I18nProvider i18n={i18n}>
+        <ActivityRow item={row} hideTopBorder={false} />
+      </I18nProvider>,
+    )
+
+    expect(result.getByText(/created a publication/)).toBeTruthy()
+    expect(result.queryByTestId('publication-Publication one')).toBeNull()
   })
 })
 

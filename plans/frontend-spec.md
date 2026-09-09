@@ -404,7 +404,7 @@ For a standalone recommendation, render the concise sentence:
 <recommender> recommended a post
 ```
 
-Do not repeat the hydrated document author or title in the standalone sentence; the referenced content is presented separately when applicable. Keep the actor link and elapsed time in one translated accessible sentence. Grouped recommendation summaries retain their own actor/count copy and are unchanged.
+Do not repeat the hydrated document author or title in the standalone sentence. Resolve the recommendation's `document` AT URI through `getRecommendedDocumentUri`, construct the subject with `createActivitySubjectView` and the complete associated-record and actor maps, and render it beneath the header with the shared `StandardSiteCompactDocumentCard`. Indent it like the standalone document attachment; do not use the full `StandardSiteEmbed` for this subject. If subject view construction fails, retain the concise header. Keep the actor link and elapsed time in one translated accessible sentence. Grouped recommendation summaries retain their own actor/count copy and are unchanged.
 
 Fallbacks:
 
@@ -430,7 +430,7 @@ For `site.standard.publication`, render:
 <publication author> created a publication
 ```
 
-Do not repeat the hydrated publication name in the standalone sentence; use one translated sentence with the actor link and elapsed time.
+Do not repeat the hydrated publication name in the standalone sentence; use one translated sentence with the actor link and elapsed time. Resolve the publication from `activity.record.uri` through `createActivitySubjectView` with the complete associated-record and actor maps, then render it beneath the header with the existing `PublicationCard` and Activity publication-theme handling, indented like a standalone document embed. If view construction fails, retain the concise Activity header without a content card.
 
 ### Subscription
 
