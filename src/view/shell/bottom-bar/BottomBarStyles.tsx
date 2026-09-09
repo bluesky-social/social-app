@@ -3,15 +3,19 @@ import {StyleSheet} from 'react-native'
 import {atoms as a, tokens} from '#/alf'
 
 export const styles = StyleSheet.create({
-  bottomBar: {
+  bottomBarWrapper: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+  },
+  bottomBar: {
     flexDirection: 'row',
-    borderTopWidth: StyleSheet.hairlineWidth,
     paddingLeft: tokens.space.sm,
     paddingRight: tokens.space.sm,
+  },
+  bottomBarFallbackBorder: {
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   bottomBarWeb: a.fixed,
   ctrl: {
