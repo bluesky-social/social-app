@@ -186,7 +186,7 @@ jobs:
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
         timeout-minutes: 5
-        uses: bluesky-social/github-actions/fingerprint-native@abc6a46eb4badf243f55bfd7d6cec42722456300 # v0.3.0
+        uses: bluesky-social/github-actions/fingerprint-native@1c9790b333764fa6143ae4a0d66445287ccb80af # PR 29: detect RN core autolinking changes
         with:
           profile: pull-request
 
