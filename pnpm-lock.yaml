@@ -11137,7 +11137,7 @@ snapshots:
       prompts: 2.4.2
       resolve-from: 5.0.0
       sandbox-cli-detector: 0.2.0
-      semver: 7.8.5
+      semver: 7.8.0
       send: 0.19.2(supports-color@8.1.1)
       slugify: 1.6.9
       stacktrace-parser: 0.1.11
@@ -11177,7 +11177,7 @@ snapshots:
       debug: 4.4.3(supports-color@8.1.1)
       getenv: 2.0.0
       glob: 13.0.6
-      semver: 7.8.5
+      semver: 7.8.0
       slugify: 1.6.9
       xcode: 3.0.1
       xml2js: 0.6.0
@@ -11196,7 +11196,7 @@ snapshots:
       getenv: 1.0.0
       glob: 10.5.0
       resolve-from: 5.0.0
-      semver: 7.8.5
+      semver: 7.8.0
       slash: 3.0.0
       slugify: 1.6.9
       xcode: 3.0.1
@@ -11218,7 +11218,7 @@ snapshots:
       getenv: 2.0.0
       glob: 13.0.6
       resolve-workspace-root: 2.0.1
-      semver: 7.8.5
+      semver: 7.8.0
       slugify: 1.6.9
     transitivePeerDependencies:
       - supports-color
@@ -11266,7 +11266,7 @@ snapshots:
       ignore: 5.3.2
       minimatch: 10.2.5
       resolve-from: 5.0.0
-      semver: 7.8.5
+      semver: 7.8.0
     transitivePeerDependencies:
       - supports-color
 
@@ -11280,7 +11280,7 @@ snapshots:
       jimp-compact: 0.16.1
       parse-png: 2.1.0
       resolve-from: 5.0.0
-      semver: 7.8.5
+      semver: 7.8.0
 
   '@expo/inline-modules@0.1.6(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
     dependencies:
@@ -14743,7 +14743,7 @@ snapshots:
       postcss-modules-scope: 3.2.1(postcss@8.5.14)
       postcss-modules-values: 4.0.0(postcss@8.5.14)
       postcss-value-parser: 4.2.0
-      semver: 7.8.5
+      semver: 7.8.0
     optionalDependencies:
       webpack: 5.106.2(clean-css@5.3.3)(cssnano@5.1.15(postcss@8.5.14))(csso@5.0.5)(esbuild@0.25.12)(html-minifier-terser@6.1.0)(lightningcss@1.32.0)(postcss@8.5.14)
 
@@ -16919,7 +16919,7 @@ snapshots:
       jest-util: 29.7.0
       natural-compare: 1.4.0
       pretty-format: 29.7.0
-      semver: 7.8.5
+      semver: 7.8.0
     transitivePeerDependencies:
       - supports-color
 
