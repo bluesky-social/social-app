@@ -265,7 +265,12 @@ export type Events = {
   'post:showLess': {
     uri: string
     authorDid: string
-    logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
+    logContext:
+      | 'FeedItem'
+      | 'FeedItemHideButton'
+      | 'PostThreadItem'
+      | 'Post'
+      | 'ImmersiveVideo'
     feedDescriptor?: string
     position?: number
   }
