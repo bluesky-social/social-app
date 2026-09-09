@@ -42,6 +42,16 @@ jest.mock('#/components/Typography', () => {
     jest.requireActual<typeof import('react-native')>('react-native')
   return {Text}
 })
+jest.mock(
+  '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow',
+  () => ({StandardSiteMetaRow: () => null}),
+)
+jest.mock('#/components/icons/Clock', () => ({
+  Clock_Stroke2_Corner0_Rounded: () => null,
+}))
+jest.mock('#/components/icons/DotGrid', () => ({
+  DotGrid3x1_Stroke2_Corner0_Rounded: () => null,
+}))
 jest.mock('#/components/Link', () => {
   const {Pressable} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -76,6 +86,11 @@ const view: app.bsky.embed.external.ViewExternal = {
   thumb: 'https://cdn.example/thumb.jpg',
   title: 'A very long document title',
   description: 'A very long document description',
+  source: {
+    $type: 'app.bsky.embed.external#viewExternalSource',
+    uri: 'https://brookie.example',
+    title: 'Brookie Notes',
+  },
 }
 
 function renderCard(cardView?: app.bsky.embed.external.ViewExternal) {
@@ -97,16 +112,14 @@ describe('StandardSiteCompactDocumentCard', () => {
     ).toBeTruthy()
   })
 
-  it('preserves the thumbnail square when no thumbnail is available', () => {
+  it('preserves the thumbnail aspect ratio when no thumbnail is available', () => {
     const result = renderCard({...view, thumb: undefined})
     const thumbnail = result.getByTestId(
       'standard-site-compact-document-thumbnail',
     )
 
     expect(thumbnail.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({width: 64, height: 64}),
-      ]),
+      expect.arrayContaining([expect.objectContaining({aspectRatio: 16 / 9})]),
     )
   })
 
