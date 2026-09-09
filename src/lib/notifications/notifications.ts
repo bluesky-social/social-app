@@ -120,7 +120,11 @@ async function getPushToken() {
   const granted = (await Notifications.getPermissionsAsync()).granted
   notyLogger.debug(`getPushToken`, {granted})
   if (granted) {
-    return Notifications.getDevicePushTokenAsync()
+    try {
+      return await Notifications.getDevicePushTokenAsync()
+    } catch (error) {
+      notyLogger.debug(`getPushToken: failed`, {safeMessage: error})
+    }
   }
 }
 
