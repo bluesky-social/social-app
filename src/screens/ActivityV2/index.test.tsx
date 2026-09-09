@@ -11,6 +11,7 @@ const mockUseActivityV2Query = jest.fn()
 const mockListFooter = jest.fn((_props: unknown) => null)
 const mockAvatarStack = jest.fn()
 const mockInlineLinkText = jest.fn()
+const mockTimeElapsed = jest.fn()
 let latestListProps: ListProps | undefined
 
 type ChildrenProps = {children?: React.ReactNode; testID?: string}
@@ -38,6 +39,7 @@ jest.mock('#/alf', () => ({
     atoms: {
       border_contrast_low: {},
       text: {},
+      text_contrast_medium: {},
       text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
     },
@@ -104,6 +106,18 @@ jest.mock('#/components/Typography', () => {
     jest.requireActual<typeof import('react-native')>('react-native')
   return {Text}
 })
+jest.mock('#/view/com/util/TimeElapsed', () => ({
+  TimeElapsed: ({
+    children,
+    timestamp,
+  }: {
+    timestamp: string
+    children: (value: {timeElapsed: string}) => React.ReactNode
+  }) => {
+    mockTimeElapsed({timestamp})
+    return children({timeElapsed: `elapsed:${timestamp}`})
+  },
+}))
 jest.mock('#/lib/hooks/useInitialNumToRender', () => ({
   useInitialNumToRender: () => 1,
 }))
@@ -155,6 +169,7 @@ beforeEach(() => {
   mockAvatarStack.mockClear()
   mockInlineLinkText.mockClear()
   mockListFooter.mockClear()
+  mockTimeElapsed.mockClear()
   mockUseActivityV2Query.mockReset()
 })
 

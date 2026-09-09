@@ -3,7 +3,12 @@ import {useLingui} from '@lingui/react/macro'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {ActivityHeader} from './components/ActivityHeader'
+import {Text} from '#/components/Typography'
+import {
+  ActivityRow,
+  ActivityRowFooter,
+  ActivityRowHeader,
+} from './components/ActivityHeader'
 import {ActivityInlineLinkText} from './components/ActivityInlineLinkText'
 import {
   type ActivityPresentationItem,
@@ -59,237 +64,329 @@ export function getActivityRendererTestID(collection: string) {
     : 'activityV2UnknownRow'
 }
 
-export function UnknownActivityRenderer(props: ActivityRendererProps) {
+export function UnknownActivityRenderer({
+  actorPresentation,
+  hideTopBorder,
+  item,
+  testID,
+}: ActivityRendererProps) {
   const {t: l} = useLingui()
-  return renderHeader(props, l`did something`)
+  const body = undefined
+  const timestamp = getActivityTimestamp(item)
+
+  return (
+    <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+      <ActivityRowHeader actorPresentation={actorPresentation}>
+        <Text>{l`did something`}</Text>
+      </ActivityRowHeader>
+      {body}
+      <ActivityRowFooter timestamp={timestamp} />
+    </ActivityRow>
+  )
 }
 
-function DocumentActivityRenderer(props: ActivityRendererProps) {
+function DocumentActivityRenderer({
+  actorPresentation,
+  hideTopBorder,
+  item,
+  testID,
+}: ActivityRendererProps) {
   const {t: l} = useLingui()
-
-  if (isActivityActorGroupItem(props.item)) {
-    return renderHeader(
-      props,
-      l`${plural(props.item.group.items.length, {
+  const actionText = isActivityActorGroupItem(item)
+    ? l`${plural(item.group.items.length, {
         one: 'published # article',
         other: 'published # articles',
-      })}`,
-    )
-  }
-
-  return renderHeader(
-    props,
-    isActivitySubjectGroupItem(props.item)
+      })}`
+    : isActivitySubjectGroupItem(item)
       ? l`did something with an article`
-      : l`published an article`,
+      : l`published an article`
+  const body = undefined
+  const timestamp = getActivityTimestamp(item)
+
+  return (
+    <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+      <ActivityRowHeader actorPresentation={actorPresentation}>
+        <Text>{actionText}</Text>
+      </ActivityRowHeader>
+      {body}
+      <ActivityRowFooter timestamp={timestamp} />
+    </ActivityRow>
   )
 }
 
-function PublicationActivityRenderer(props: ActivityRendererProps) {
+function PublicationActivityRenderer({
+  actorPresentation,
+  hideTopBorder,
+  item,
+  testID,
+}: ActivityRendererProps) {
   const {t: l} = useLingui()
-
-  if (isActivityActorGroupItem(props.item)) {
-    return renderHeader(
-      props,
-      l`${plural(props.item.group.items.length, {
+  const actionText = isActivityActorGroupItem(item)
+    ? l`${plural(item.group.items.length, {
         one: 'created # publication',
         other: 'created # publications',
-      })}`,
-    )
-  }
-
-  return renderHeader(
-    props,
-    isActivitySubjectGroupItem(props.item)
+      })}`
+    : isActivitySubjectGroupItem(item)
       ? l`did something with a publication`
-      : l`created a publication`,
+      : l`created a publication`
+  const body = undefined
+  const timestamp = getActivityTimestamp(item)
+
+  return (
+    <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+      <ActivityRowHeader actorPresentation={actorPresentation}>
+        <Text>{actionText}</Text>
+      </ActivityRowHeader>
+      {body}
+      <ActivityRowFooter timestamp={timestamp} />
+    </ActivityRow>
   )
 }
 
-function RecommendationActivityRenderer(props: ActivityRendererProps) {
+function RecommendationActivityRenderer({
+  actorPresentation,
+  hideTopBorder,
+  item,
+  testID,
+}: ActivityRendererProps) {
   const {t: l} = useLingui()
+  const body = undefined
+  const timestamp = getActivityTimestamp(item)
 
-  if (isActivityActorGroupItem(props.item)) {
-    return renderHeader(
-      props,
-      l`${plural(props.item.group.items.length, {
-        one: 'recommended # article',
-        other: 'recommended # articles',
-      })}`,
+  if (isActivityActorGroupItem(item)) {
+    return (
+      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+        <ActivityRowHeader actorPresentation={actorPresentation}>
+          <Text>
+            {l`${plural(item.group.items.length, {
+              one: 'recommended # article',
+              other: 'recommended # articles',
+            })}`}
+          </Text>
+        </ActivityRowHeader>
+        {body}
+        <ActivityRowFooter timestamp={timestamp} />
+      </ActivityRow>
     )
   }
 
-  const documentUri = getRecommendationDocumentUri(props.item)
-  const author = getDocumentAuthor(props.item, documentUri)
-  const title = getDocumentTitle(props.item, documentUri)
-  const documentUrl = getDocumentUrl(props.item, documentUri)
+  const documentUri = getRecommendationDocumentUri(item)
+  const author = getDocumentAuthor(item, documentUri)
+  const title = getDocumentTitle(item, documentUri)
+  const documentUrl = getDocumentUrl(item, documentUri)
 
   if (author && title) {
-    return renderHeader(
-      props,
-      l`recommended ${author.label}’s article “${title}”`,
-      <>
-        {l`recommended`}{' '}
-        <ActivityInlineLinkText
-          label={l`View ${author.label}’s profile`}
-          to={makeProfileLink({did: author.did, handle: author.handle})}>
-          {author.label}
-        </ActivityInlineLinkText>
-        {l`’s article`}{' '}
-        {documentUrl ? (
-          <>
-            {'“'}
-            <ActivityInlineLinkText
-              disableMismatchWarning
-              label={l`Open article “${title}”`}
-              to={documentUrl}>
-              {title}
-            </ActivityInlineLinkText>
-            {'”'}
-          </>
-        ) : (
-          `“${title}”`
-        )}
-      </>,
+    return (
+      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+        <ActivityRowHeader actorPresentation={actorPresentation}>
+          <Text>{`${l`recommended`} `}</Text>
+          <ActivityInlineLinkText
+            label={l`View ${author.label}’s profile`}
+            to={makeProfileLink({did: author.did, handle: author.handle})}>
+            {author.label}
+          </ActivityInlineLinkText>
+          <Text>{`${l`’s article`} `}</Text>
+          {documentUrl ? (
+            <>
+              <Text>“</Text>
+              <ActivityInlineLinkText
+                disableMismatchWarning
+                label={l`Open article “${title}”`}
+                to={documentUrl}>
+                {title}
+              </ActivityInlineLinkText>
+              <Text>”</Text>
+            </>
+          ) : (
+            <Text>{`“${title}”`}</Text>
+          )}
+        </ActivityRowHeader>
+        {body}
+        <ActivityRowFooter timestamp={timestamp} />
+      </ActivityRow>
     )
   }
 
   if (author) {
-    return renderHeader(
-      props,
-      l`recommended ${author.label}’s article`,
-      <>
-        {l`recommended`}{' '}
-        <ActivityInlineLinkText
-          label={l`View ${author.label}’s profile`}
-          to={makeProfileLink({did: author.did, handle: author.handle})}>
-          {author.label}
-        </ActivityInlineLinkText>
-        {l`’s article`}
-      </>,
+    return (
+      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+        <ActivityRowHeader actorPresentation={actorPresentation}>
+          <Text>{`${l`recommended`} `}</Text>
+          <ActivityInlineLinkText
+            label={l`View ${author.label}’s profile`}
+            to={makeProfileLink({did: author.did, handle: author.handle})}>
+            {author.label}
+          </ActivityInlineLinkText>
+          <Text>{l`’s article`}</Text>
+        </ActivityRowHeader>
+        {body}
+        <ActivityRowFooter timestamp={timestamp} />
+      </ActivityRow>
     )
   }
 
   if (title) {
-    return renderHeader(
-      props,
-      l`recommended an article “${title}”`,
-      <>
-        {l`recommended an article`}{' '}
-        {documentUrl ? (
-          <>
-            {'“'}
-            <ActivityInlineLinkText
-              disableMismatchWarning
-              label={l`Open article “${title}”`}
-              to={documentUrl}>
-              {title}
-            </ActivityInlineLinkText>
-            {'”'}
-          </>
-        ) : (
-          `“${title}”`
-        )}
-      </>,
+    return (
+      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+        <ActivityRowHeader actorPresentation={actorPresentation}>
+          <Text>{`${l`recommended an article`} `}</Text>
+          {documentUrl ? (
+            <>
+              <Text>“</Text>
+              <ActivityInlineLinkText
+                disableMismatchWarning
+                label={l`Open article “${title}”`}
+                to={documentUrl}>
+                {title}
+              </ActivityInlineLinkText>
+              <Text>”</Text>
+            </>
+          ) : (
+            <Text>{`“${title}”`}</Text>
+          )}
+        </ActivityRowHeader>
+        {body}
+        <ActivityRowFooter timestamp={timestamp} />
+      </ActivityRow>
     )
   }
 
-  return renderHeader(props, l`recommended an article`)
+  return (
+    <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+      <ActivityRowHeader actorPresentation={actorPresentation}>
+        <Text>{l`recommended an article`}</Text>
+      </ActivityRowHeader>
+      {body}
+      <ActivityRowFooter timestamp={timestamp} />
+    </ActivityRow>
+  )
 }
 
-function SubscriptionActivityRenderer(props: ActivityRendererProps) {
+function SubscriptionActivityRenderer({
+  actorPresentation,
+  hideTopBorder,
+  item,
+  testID,
+}: ActivityRendererProps) {
   const {t: l} = useLingui()
+  const body = undefined
+  const timestamp = getActivityTimestamp(item)
 
-  if (isActivityActorGroupItem(props.item)) {
-    return renderHeader(
-      props,
-      l`subscribed to ${plural(props.item.group.items.length, {
-        one: '# publication',
-        other: '# publications',
-      })}`,
+  if (isActivityActorGroupItem(item)) {
+    return (
+      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+        <ActivityRowHeader actorPresentation={actorPresentation}>
+          <Text>
+            {l`subscribed to ${plural(item.group.items.length, {
+              one: '# publication',
+              other: '# publications',
+            })}`}
+          </Text>
+        </ActivityRowHeader>
+        {body}
+        <ActivityRowFooter timestamp={timestamp} />
+      </ActivityRow>
     )
   }
 
-  const publication = getSubscriptionPublication(props.item)
+  const publication = getSubscriptionPublication(item)
   if (publication?.name) {
-    return renderHeader(
-      props,
-      l`subscribed to ${publication.name}`,
-      publication.url ? (
-        <>
-          {l`subscribed to`}{' '}
-          <ActivityInlineLinkText
-            disableMismatchWarning
-            label={l`Open publication ${publication.name}`}
-            to={publication.url}>
-            {publication.name}
-          </ActivityInlineLinkText>
-        </>
-      ) : (
-        l`subscribed to ${publication.name}`
-      ),
+    return (
+      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+        <ActivityRowHeader actorPresentation={actorPresentation}>
+          {publication.url ? (
+            <>
+              <Text>{`${l`subscribed to`} `}</Text>
+              <ActivityInlineLinkText
+                disableMismatchWarning
+                label={l`Open publication ${publication.name}`}
+                to={publication.url}>
+                {publication.name}
+              </ActivityInlineLinkText>
+            </>
+          ) : (
+            <Text>{l`subscribed to ${publication.name}`}</Text>
+          )}
+        </ActivityRowHeader>
+        {body}
+        <ActivityRowFooter timestamp={timestamp} />
+      </ActivityRow>
     )
   }
 
-  return renderHeader(props, l`subscribed to a publication`)
+  return (
+    <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+      <ActivityRowHeader actorPresentation={actorPresentation}>
+        <Text>{l`subscribed to a publication`}</Text>
+      </ActivityRowHeader>
+      {body}
+      <ActivityRowFooter timestamp={timestamp} />
+    </ActivityRow>
+  )
 }
 
-function LivestreamActivityRenderer(props: ActivityRendererProps) {
+function LivestreamActivityRenderer({
+  actorPresentation,
+  hideTopBorder,
+  item,
+  testID,
+}: ActivityRendererProps) {
   const {t: l} = useLingui()
-
-  if (isActivityActorGroupItem(props.item)) {
-    return renderHeader(
-      props,
-      l`${plural(props.item.group.items.length, {
+  const actionText = isActivityActorGroupItem(item)
+    ? l`${plural(item.group.items.length, {
         one: 'started # livestream',
         other: 'started # livestreams',
-      })}`,
-    )
-  }
-
-  return renderHeader(
-    props,
-    isActivitySubjectGroupItem(props.item)
+      })}`
+    : isActivitySubjectGroupItem(item)
       ? l`did something with a livestream`
-      : l`started a livestream`,
+      : l`started a livestream`
+  const body = undefined
+  const timestamp = getActivityTimestamp(item)
+
+  return (
+    <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+      <ActivityRowHeader actorPresentation={actorPresentation}>
+        <Text>{actionText}</Text>
+      </ActivityRowHeader>
+      {body}
+      <ActivityRowFooter timestamp={timestamp} />
+    </ActivityRow>
   )
 }
 
-function GrainPhotoActivityRenderer(props: ActivityRendererProps) {
+function GrainPhotoActivityRenderer({
+  actorPresentation,
+  hideTopBorder,
+  item,
+  testID,
+}: ActivityRendererProps) {
   const {t: l} = useLingui()
-
-  if (isActivityActorGroupItem(props.item)) {
-    return renderHeader(
-      props,
-      l`${plural(props.item.group.items.length, {
+  const actionText = isActivityActorGroupItem(item)
+    ? l`${plural(item.group.items.length, {
         one: 'posted # photo',
         other: 'posted # photos',
-      })}`,
-    )
-  }
-
-  return renderHeader(
-    props,
-    isActivitySubjectGroupItem(props.item)
+      })}`
+    : isActivitySubjectGroupItem(item)
       ? l`posted photos`
-      : l`posted a photo`,
+      : l`posted a photo`
+  const body = undefined
+  const timestamp = getActivityTimestamp(item)
+
+  return (
+    <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+      <ActivityRowHeader actorPresentation={actorPresentation}>
+        <Text>{actionText}</Text>
+      </ActivityRowHeader>
+      {body}
+      <ActivityRowFooter timestamp={timestamp} />
+    </ActivityRow>
   )
 }
 
-function renderHeader(
-  props: ActivityRendererProps,
-  actionAccessibilityLabel: string,
-  action: React.ReactNode = actionAccessibilityLabel,
-) {
-  return (
-    <ActivityHeader
-      hideTopBorder={props.hideTopBorder}
-      actorPresentation={props.actorPresentation}
-      action={action}
-      actionAccessibilityLabel={actionAccessibilityLabel}
-      testID={props.testID}
-    />
-  )
+function getActivityTimestamp(item: ActivityPresentationItem) {
+  return item.type === 'activity'
+    ? item.activity.record.indexedAt
+    : item.group.indexedAt
 }
 
 function getRecommendationDocumentUri(item: ActivityPresentationItem) {
@@ -316,10 +413,12 @@ function getSubscriptionPublication(item: ActivityPresentationItem) {
   if (!isPublicationRecord(publicationRecord)) return undefined
 
   const name = publicationRecord.name.trim() || undefined
-  return {
-    name,
-    url: getWebUrl(publicationRecord.url),
-  }
+  return publicationRecord.name.trim()
+    ? {
+        name,
+        url: getWebUrl(publicationRecord.url),
+      }
+    : undefined
 }
 
 function getSubscriptionPublicationUri(item: ActivityPresentationItem) {

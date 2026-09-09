@@ -19,6 +19,7 @@ import {
 
 const mockAvatarStack = jest.fn()
 const mockInlineLinkText = jest.fn()
+const mockTimeElapsed = jest.fn()
 
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
@@ -26,6 +27,7 @@ jest.mock('#/alf', () => ({
     atoms: {
       border_contrast_low: {},
       text: {},
+      text_contrast_medium: {},
       text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
     },
@@ -59,12 +61,25 @@ jest.mock('#/components/Typography', () => {
     jest.requireActual<typeof import('react-native')>('react-native')
   return {Text}
 })
+jest.mock('#/view/com/util/TimeElapsed', () => ({
+  TimeElapsed: ({
+    children,
+    timestamp,
+  }: {
+    timestamp: string
+    children: (value: {timeElapsed: string}) => React.ReactNode
+  }) => {
+    mockTimeElapsed({timestamp})
+    return children({timeElapsed: `elapsed:${timestamp}`})
+  },
+}))
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
 
 beforeEach(() => {
   mockAvatarStack.mockClear()
   mockInlineLinkText.mockClear()
+  mockTimeElapsed.mockClear()
 })
 
 function renderRow(item: ActivityPresentationItem) {
@@ -89,13 +104,21 @@ function handleLabel(handle: string) {
   return sanitizeHandle(handle, '@')
 }
 
-function buildActivity({collection, uri}: {collection: string; uri: string}) {
+function buildActivity({
+  collection,
+  uri,
+  indexedAt = '2026-09-09T00:00:00.000Z',
+}: {
+  collection: string
+  uri: string
+  indexedAt?: string
+}) {
   return {
     $type: 'eric.bsky.atmosphere.getActivity#item' as const,
     record: {
       uri,
       cid: `cid-${uri.split('/').at(-1)}`,
-      indexedAt: '2026-09-09T00:00:00.000Z',
+      indexedAt,
     },
     collection,
     viewerState: {subscribed: false},
@@ -123,12 +146,14 @@ function buildActivityRow({
   actorDid,
   associatedRecords = {},
   actors = {},
+  indexedAt = '2026-09-09T00:00:00.000Z',
   rkey = '1',
 }: {
   collection: string
   actorDid: string
   associatedRecords?: AssociatedRecords
   actors?: ActivityActors
+  indexedAt?: string
   rkey?: string
 }): ActivityRowItem {
   return {
@@ -137,6 +162,7 @@ function buildActivityRow({
     activity: buildActivity({
       collection,
       uri: `at://${actorDid}/${collection}/${rkey}`,
+      indexedAt,
     }),
     associatedRecords,
     actors,
@@ -148,11 +174,15 @@ function buildActorGroupRow({
   actorDid,
   count,
   actors = {},
+  groupIndexedAt = '2026-09-09T00:00:00.000Z',
+  itemIndexedAt = '2026-09-09T00:00:00.000Z',
 }: {
   collection: string
   actorDid: string
   count: number
   actors?: ActivityActors
+  groupIndexedAt?: string
+  itemIndexedAt?: string
 }): ActivityGroupRowItem {
   return {
     type: 'group',
@@ -162,12 +192,13 @@ function buildActorGroupRow({
       id: `${collection}-actor-group`,
       groupBy: 'actor',
       collection,
-      indexedAt: '2026-09-09T00:00:00.000Z',
+      indexedAt: groupIndexedAt,
       actor: actorDid,
       items: Array.from({length: count}, (_, index) =>
         buildActivity({
           collection,
           uri: `at://${actorDid}/${collection}/${index + 1}`,
+          indexedAt: itemIndexedAt,
         }),
       ),
     },
@@ -232,6 +263,7 @@ describe('ActivityV2 collection renderers', () => {
     expect(headerText).toBeTruthy()
     expect(headerText.props.numberOfLines).toBe(2)
     expect(screen.getByText(handleLabel('chef.example'))).toBeTruthy()
+    expect(screen.getByText('elapsed:2026-09-09T00:00:00.000Z')).toBeTruthy()
     expect(mockAvatarStack).toHaveBeenLastCalledWith(
       expect.objectContaining({
         size: 36,
@@ -387,6 +419,50 @@ describe('ActivityV2 collection renderers', () => {
         }),
       ]),
     )
+  })
+
+  it('renders footer timestamps from standalone and group indexedAt values using TimeElapsed formatting', () => {
+    const standaloneTimestamp = '2026-09-09T03:00:00.000Z'
+    const groupTimestamp = '2026-09-09T04:00:00.000Z'
+    const row = buildActivityRow({
+      collection: activityCollections.document,
+      actorDid: 'did:plc:footer-standalone',
+      indexedAt: standaloneTimestamp,
+      actors: {
+        'did:plc:footer-standalone': buildActor(
+          'did:plc:footer-standalone',
+          'footer-standalone.test',
+        ),
+      },
+    })
+    const group = buildActorGroupRow({
+      collection: activityCollections.document,
+      actorDid: 'did:plc:footer-group',
+      count: 2,
+      groupIndexedAt: groupTimestamp,
+      itemIndexedAt: '2026-09-09T05:00:00.000Z',
+      actors: {
+        'did:plc:footer-group': buildActor(
+          'did:plc:footer-group',
+          'footer-group.test',
+        ),
+      },
+    })
+
+    const standaloneScreen = renderRow(row)
+    const groupScreen = renderRow(group)
+
+    expect(
+      standaloneScreen.getByText(`elapsed:${standaloneTimestamp}`),
+    ).toBeTruthy()
+    expect(groupScreen.getByText(`elapsed:${groupTimestamp}`)).toBeTruthy()
+    expect(
+      groupScreen.queryByText('elapsed:2026-09-09T05:00:00.000Z'),
+    ).toBeNull()
+    expect(mockTimeElapsed.mock.calls).toEqual([
+      [{timestamp: standaloneTimestamp}],
+      [{timestamp: groupTimestamp}],
+    ])
   })
 
   it('renders actor groups with one actor, no others phrase, and pluralized action from group.items.length', () => {

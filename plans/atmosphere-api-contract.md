@@ -402,11 +402,10 @@ Frontend implications:
 
 ## Record types currently expected in the feed
 
-All enabled collections can appear as feed roots when authored by followed users. Publication subscriptions can additionally qualify documents.
+All enabled collections except `site.standard.publication` can appear as feed roots when authored by followed users. Publication subscriptions can additionally qualify documents. Publications remain indexed and can appear in `associatedRecords`, but publication creations do not materialize feed activity.
 
 ```text
 site.standard.document
-site.standard.publication
 site.standard.graph.recommend
 site.standard.graph.subscription
 place.stream.livestream
@@ -530,9 +529,10 @@ Then run the repository's normal lexicon generation command before importing the
 - Chronology, viewer state, read filtering, hydration, sidecars, and temporary viewer behavior remain unchanged.
 - Root pagination now uses the same age-tier windows as grouping to avoid splitting eligible groups at a smaller gap boundary.
 
-### Uncommitted backend contract update
+### Uncommitted backend contract updates
 
 - Added required `feed[].collection`, the root record's NSID, to standalone items and group children.
+- Removed `site.standard.publication` creation from the activity projection. Publication records remain available for local associated-record hydration.
 
 ### Backend `d39fe59`
 
