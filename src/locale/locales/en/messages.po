@@ -2939,8 +2939,8 @@ msgstr ""
 msgid "Choose People"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:75
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:136
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:76
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:139
 msgid "Choose post languages"
 msgstr ""
 
@@ -4782,7 +4782,7 @@ msgstr ""
 msgid "Error occurred while saving file"
 msgstr ""
 
-#: src/screens/Signup/StepCaptcha/index.tsx:126
+#: src/screens/Signup/StepCaptcha/index.tsx:187
 msgid "Error receiving captcha response."
 msgstr ""
 
@@ -7841,8 +7841,8 @@ msgstr ""
 msgid "More feeds"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:125
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:128
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:131
 msgid "More languages..."
 msgstr ""
 
@@ -8988,7 +8988,7 @@ msgstr ""
 msgid "Opens live status dialog"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:200
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:203
 msgid "Opens post language settings"
 msgstr ""
 
@@ -9641,7 +9641,7 @@ msgid "Post it to Bluesky or share anywhere."
 msgstr "Post it to Bluesky or share anywhere."
 
 #. Accessibility label for button that opens dialog to choose post language settings
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:195
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:198
 msgid "Post language selection"
 msgstr ""
 
@@ -11110,7 +11110,7 @@ msgstr ""
 msgid "Select {0}"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:110
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:111
 msgid "Select {langName}"
 msgstr ""
 
@@ -11219,7 +11219,7 @@ msgstr ""
 msgid "Select moderation service"
 msgstr ""
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:91
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:92
 msgid "Select post language"
 msgstr ""
 
@@ -11239,8 +11239,8 @@ msgstr ""
 msgid "Select the source language"
 msgstr "Select the source language"
 
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:77
-#: src/view/com/composer/select-language/PostLanguageSelect.tsx:137
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:78
+#: src/view/com/composer/select-language/PostLanguageSelect.tsx:140
 msgid "Select up to 3 languages used in this post"
 msgstr ""
 
