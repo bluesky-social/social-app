@@ -4,7 +4,7 @@ import {useLingui} from '@lingui/react/macro'
 import {atoms as a, web} from '#/alf'
 import {Button, ButtonIcon} from '#/components/Button'
 import {CircleQuestion_Stroke2_Corner2_Rounded as QuestionIcon} from '#/components/icons/CircleQuestion'
-import {createActivityV2DebugItem, isActivityV2DebugEnabled} from '../debug'
+import {createAtmosphereDebugItem, isAtmosphereDebugEnabled} from '../debug'
 import {type ActivityPresentationProps} from '../presentation'
 import {
   activityRenderers,
@@ -26,7 +26,7 @@ export function ActivityPresentationRow({
   const Renderer = isKnownActivityCollection(collection)
     ? activityRenderers[collection]
     : UnknownActivityRenderer
-  const showDebugButton = isActivityV2DebugEnabled()
+  const showDebugButton = isAtmosphereDebugEnabled()
 
   return (
     <View style={a.relative}>
@@ -40,13 +40,13 @@ export function ActivityPresentationRow({
         <View style={[a.absolute, a.right_0, a.bottom_0, a.p_xs, a.z_10]}>
           <Button
             label={l`Log activity item`}
-            testID="activityV2DebugButton"
+            testID="atmosphereDebugButton"
             size="tiny"
             color="secondary"
             shape="round"
             style={[a.transition_opacity, web({opacity: 0})]}
             hoverStyle={web({opacity: 1})}
-            onPress={() => console.log(createActivityV2DebugItem(item))}>
+            onPress={() => console.log(createAtmosphereDebugItem(item))}>
             <ButtonIcon icon={QuestionIcon} size="xs" />
           </Button>
         </View>

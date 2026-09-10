@@ -6,7 +6,7 @@ export function useNavigationTabState() {
   return useNavigationState(state => {
     const res = {
       isAtHome: getTabState(state, 'Home') !== TabState.Outside,
-      isAtActivity: getTabState(state, 'Activity') !== TabState.Outside,
+      isAtAtmosphere: getTabState(state, 'Atmosphere') !== TabState.Outside,
       isAtSearch: getTabState(state, 'Search') !== TabState.Outside,
       isAtAtmosphere: getTabState(state, 'Atmosphere') !== TabState.Outside,
       isAtFeeds: getTabState(state, 'Feeds') !== TabState.Outside,
@@ -21,7 +21,7 @@ export function useNavigationTabState() {
 
     if (
       !res.isAtHome &&
-      !res.isAtActivity &&
+      !res.isAtAtmosphere &&
       !res.isAtSearch &&
       !res.isAtAtmosphere &&
       !res.isAtFeeds &&

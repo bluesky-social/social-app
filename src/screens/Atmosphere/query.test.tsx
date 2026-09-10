@@ -3,7 +3,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {useAppviewSandboxClient, useSession} from '#/state/session'
-import {useAtmosphereActivityQuery} from './atmosphereActivity'
+import {useAtmosphereQuery} from './query'
 
 jest.mock('#/state/session', () => ({
   useAppviewSandboxClient: jest.fn(),
@@ -28,7 +28,7 @@ function setup(responses: unknown[]) {
   const wrapper = ({children}: PropsWithChildren) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )
-  const hook = renderHook(() => useAtmosphereActivityQuery(), {wrapper})
+  const hook = renderHook(() => useAtmosphereQuery(), {wrapper})
   return {client, hook}
 }
 
@@ -36,7 +36,7 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-describe('useAtmosphereActivityQuery', () => {
+describe('useAtmosphereQuery', () => {
   it('uses session auth and passes the pagination cursor through unchanged', async () => {
     const firstPage = {
       feed: [],

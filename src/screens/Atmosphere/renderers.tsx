@@ -53,18 +53,18 @@ export const activityRenderers: Record<
 }
 
 const activityRowTestIDs: Record<KnownActivityCollection, string> = {
-  [activityCollections.document]: 'activityV2DocumentRow',
-  [activityCollections.publication]: 'activityV2PublicationRow',
-  [activityCollections.recommendation]: 'activityV2RecommendationRow',
-  [activityCollections.subscription]: 'activityV2SubscriptionRow',
-  [activityCollections.livestream]: 'activityV2LivestreamRow',
-  [activityCollections.grainPhoto]: 'activityV2GrainPhotoRow',
+  [activityCollections.document]: 'atmosphereDocumentRow',
+  [activityCollections.publication]: 'atmospherePublicationRow',
+  [activityCollections.recommendation]: 'atmosphereRecommendationRow',
+  [activityCollections.subscription]: 'atmosphereSubscriptionRow',
+  [activityCollections.livestream]: 'atmosphereLivestreamRow',
+  [activityCollections.grainPhoto]: 'atmosphereGrainPhotoRow',
 }
 
 export function getActivityRendererTestID(collection: string) {
   return isKnownActivityCollection(collection)
     ? activityRowTestIDs[collection]
-    : 'activityV2UnknownRow'
+    : 'atmosphereUnknownRow'
 }
 
 export function UnknownActivityRenderer({

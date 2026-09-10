@@ -11,11 +11,11 @@ import {
   isSubscriptionRecord,
 } from './types'
 
-export function isActivityV2DebugEnabled() {
-  return IS_WEB && hasActivityV2DebugParam(window.location.search)
+export function isAtmosphereDebugEnabled() {
+  return IS_WEB && hasAtmosphereDebugParam(window.location.search)
 }
 
-export function hasActivityV2DebugParam(search: string) {
+export function hasAtmosphereDebugParam(search: string) {
   return new URLSearchParams(search).has('debug')
 }
 
@@ -23,7 +23,7 @@ export function hasActivityV2DebugParam(search: string) {
  * Returns the row's reachable sidecar data while preserving references to the
  * original activity, associated-record, and actor objects.
  */
-export function createActivityV2DebugItem(
+export function createAtmosphereDebugItem(
   item: ActivityPresentationItem,
 ): ActivityPresentationItem {
   const activities = getActivities(item)

@@ -35,7 +35,7 @@ jest.mock('expo-image', () => {
 
 jest.mock('./debug', () => ({
   ...jest.requireActual('./debug'),
-  isActivityV2DebugEnabled: () => true,
+  isAtmosphereDebugEnabled: () => true,
 }))
 
 jest.mock('#/alf', () => ({
@@ -59,7 +59,7 @@ jest.mock('#/components/AvatarStack', () => {
   return {
     AvatarStack: (props: unknown) => {
       mockAvatarStack(props)
-      return <View testID="activityV2AvatarStack" />
+      return <View testID="atmosphereAvatarStack" />
     },
   }
 })
@@ -349,7 +349,7 @@ function buildSubjectGroupRow({
   }
 }
 
-describe('ActivityV2 collection renderers', () => {
+describe('Atmosphere collection renderers', () => {
   it('renders a standalone row with the configured avatar stack, sanitized linked handle, action, and timestamp', () => {
     const actorDid = 'did:plc:chef'
     const row = buildActivityRow({
@@ -362,7 +362,7 @@ describe('ActivityV2 collection renderers', () => {
 
     const screen = renderRow(row)
 
-    expect(screen.getByTestId('activityV2DocumentRow')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereDocumentRow')).toBeTruthy()
     const headerText = screen.getByLabelText(
       activityHeaderLabel(
         `${handleLabel('chef.example')} published an article`,
@@ -430,7 +430,7 @@ describe('ActivityV2 collection renderers', () => {
     const consoleLog = jest.spyOn(console, 'log').mockImplementation()
 
     const screen = renderRow(row)
-    fireEvent.press(screen.getByTestId('activityV2DebugButton'))
+    fireEvent.press(screen.getByTestId('atmosphereDebugButton'))
 
     const firstCall = consoleLog.mock.calls[0] as [ActivityRowItem] | undefined
     const loggedItem = firstCall?.[0]
@@ -1216,7 +1216,7 @@ describe('ActivityV2 collection renderers', () => {
 
     const screen = renderRow(row)
 
-    expect(screen.getByTestId('activityV2PublicationRow')).toBeTruthy()
+    expect(screen.getByTestId('atmospherePublicationRow')).toBeTruthy()
     expect(
       screen.getByLabelText(
         activityHeaderLabel(
@@ -1267,7 +1267,7 @@ describe('ActivityV2 collection renderers', () => {
     })
 
     const screen = renderRow(row)
-    const photos = screen.getAllByTestId('activityV2GrainPhotoImage')
+    const photos = screen.getAllByTestId('atmosphereGrainPhotoImage')
 
     expect(photos).toHaveLength(2)
     expect(photos[0].props.source).toEqual({
@@ -1325,7 +1325,7 @@ describe('ActivityV2 collection renderers', () => {
     }
 
     const screen = renderRow(row)
-    const thumbnail = screen.getByTestId('activityV2LivestreamThumbnail')
+    const thumbnail = screen.getByTestId('atmosphereLivestreamThumbnail')
     const screenWithoutThumbnail = renderRow(withoutThumbnail)
 
     expect(thumbnail.props.source).toEqual({
@@ -1338,7 +1338,7 @@ describe('ActivityV2 collection renderers', () => {
     )
     expect(thumbnail.props.accessibilityLabel).toBe('Building in public')
     expect(
-      screenWithoutThumbnail.queryByTestId('activityV2LivestreamThumbnail'),
+      screenWithoutThumbnail.queryByTestId('atmosphereLivestreamThumbnail'),
     ).toBeNull()
   })
 
@@ -1350,7 +1350,7 @@ describe('ActivityV2 collection renderers', () => {
   }>([
     {
       collection: activityCollections.document,
-      testID: 'activityV2DocumentRow',
+      testID: 'atmosphereDocumentRow',
       build: () =>
         buildActivityRow({
           collection: activityCollections.document,
@@ -1366,7 +1366,7 @@ describe('ActivityV2 collection renderers', () => {
     },
     {
       collection: activityCollections.publication,
-      testID: 'activityV2PublicationRow',
+      testID: 'atmospherePublicationRow',
       build: () =>
         buildActivityRow({
           collection: activityCollections.publication,
@@ -1382,7 +1382,7 @@ describe('ActivityV2 collection renderers', () => {
     },
     {
       collection: activityCollections.recommendation,
-      testID: 'activityV2RecommendationRow',
+      testID: 'atmosphereRecommendationRow',
       build: () => {
         const actorDid = 'did:plc:recommender'
         const documentAuthorDid = 'did:plc:recommendation-target'
@@ -1415,7 +1415,7 @@ describe('ActivityV2 collection renderers', () => {
     },
     {
       collection: activityCollections.subscription,
-      testID: 'activityV2SubscriptionRow',
+      testID: 'atmosphereSubscriptionRow',
       build: () => {
         const actorDid = 'did:plc:subscriber'
         const rootUri = `at://${actorDid}/${activityCollections.subscription}/1`
@@ -1445,7 +1445,7 @@ describe('ActivityV2 collection renderers', () => {
     },
     {
       collection: activityCollections.livestream,
-      testID: 'activityV2LivestreamRow',
+      testID: 'atmosphereLivestreamRow',
       build: () => {
         const actorDid = 'did:plc:streamer'
         const rootUri = `at://${actorDid}/${activityCollections.livestream}/1`
@@ -1469,7 +1469,7 @@ describe('ActivityV2 collection renderers', () => {
     },
     {
       collection: activityCollections.grainPhoto,
-      testID: 'activityV2GrainPhotoRow',
+      testID: 'atmosphereGrainPhotoRow',
       build: () =>
         buildActivityRow({
           collection: activityCollections.grainPhoto,
@@ -1502,7 +1502,7 @@ describe('ActivityV2 collection renderers', () => {
       }),
     )
 
-    expect(screen.getByTestId('activityV2UnknownRow')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereUnknownRow')).toBeTruthy()
     expect(
       screen.getByLabelText(
         activityHeaderLabel(

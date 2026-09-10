@@ -97,7 +97,7 @@ export function LivestreamBody({item}: ActivityPresentationProps) {
         {thumbnails.map(thumbnail => (
           <Image
             key={thumbnail.uri}
-            testID="activityV2LivestreamThumbnail"
+            testID="atmosphereLivestreamThumbnail"
             source={{uri: thumbnail.source}}
             style={[
               a.w_full,
@@ -140,7 +140,7 @@ export function GrainPhotoBody({item}: ActivityPresentationProps) {
         {photos.map(photo => (
           <Image
             key={photo.uri}
-            testID="activityV2GrainPhotoImage"
+            testID="atmosphereGrainPhotoImage"
             source={{uri: photo.source}}
             style={[a.w_full, a.rounded_lg, {aspectRatio: photo.aspectRatio}]}
             contentFit="cover"

@@ -7,7 +7,7 @@ import {
   narrowAssociatedRecords,
 } from './types'
 
-describe('ActivityV2 response narrowing', () => {
+describe('Atmosphere response narrowing', () => {
   it('narrows associated records and actors', () => {
     const associatedRecord = {
       uri: 'at://did:plc:author/site.standard.document/one',

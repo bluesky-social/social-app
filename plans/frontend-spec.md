@@ -1,12 +1,14 @@
-# Activity screen frontend specification
+# Atmosphere screen frontend specification
 
 Status: active prototype. The grouped Activity UI is pushed through frontend commit `661ea4408`; authenticated-viewer integration is implemented and locally verified in both working trees but remains uncommitted and undeployed. The backend working tree is based on `1fccfce`.
 
 This document specifies the first frontend for the Atmosphere activity API described in [`atmosphere-api-contract.md`](./atmosphere-api-contract.md).
 
+The primary implementation is now `src/screens/Atmosphere/`, renamed from Activity V2. It replaces the original Activity screen and uses the authenticated `Atmosphere` route at `/atmosphere`. The prototype rendering details below predate that replacement.
+
 ## Goal
 
-Add an authenticated **Activity** screen that displays the signed-in user's Atmosphere activity as a paginated list. Add entry points named **Activity** to the mobile drawer and desktop left navigation.
+Add an authenticated **Atmosphere** screen that displays the signed-in user's Atmosphere activity as a paginated list. Add entry points named **Atmosphere** to the mobile drawer and desktop left navigation.
 
 Each top-level API feed entry is rendered as its own row. A standalone item renders a concise translated action plus generic record-type noun; a standalone `site.standard.document` row retains that header and renders a full `StandardSiteEmbed` beneath it. A subject group renders a collapsed summary for many actors interacting with the same content and expands in place to show its child activities. An actor group of `site.standard.graph.recommend` records renders one recommendation summary with a compact document list, and an actor group of `site.standard.graph.subscription` records renders one subscription summary with an expandable `PublicationCard` list; only other actor groups retain the red diagnostic boundary around their children. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
 
@@ -40,7 +42,7 @@ This work includes:
 
 This work does not include:
 
-- an Activity bottom-tab item;
+- an Atmosphere bottom-tab item;
 - full article rendering;
 - interactions that create, delete, or update Atmosphere records;
 - a detail screen for Activity rows;
@@ -262,13 +264,13 @@ Narrowing rules:
 Create the camelCase file:
 
 ```text
-src/state/queries/atmosphereActivity.ts
+src/screens/Atmosphere/query.ts
 ```
 
 Export:
 
 ```ts
-useAtmosphereActivityQuery()
+useAtmosphereQuery()
 ```
 
 The hook:
@@ -292,20 +294,20 @@ An absent response cursor means there is no next page. The client must never par
 Create:
 
 ```text
-src/screens/Activity.tsx
+src/screens/Atmosphere/index.tsx
 ```
 
-Export `ActivityScreen`, typed as a `NativeStackScreenProps<CommonNavigatorParams, 'Activity'>` screen.
+Export `AtmosphereScreen`, typed as a `NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>` screen.
 
 Use the standard layout components:
 
 ```tsx
-<Layout.Screen testID="activityScreen">
+<Layout.Screen testID="atmosphereScreen">
   <Layout.Header.Outer>
     <Layout.Header.BackButton />
     <Layout.Header.Content>
       <Layout.Header.TitleText>
-        <Trans>Activity</Trans>
+        <Trans>Atmosphere</Trans>
       </Layout.Header.TitleText>
     </Layout.Header.Content>
     <Layout.Header.Slot />
@@ -520,47 +522,47 @@ Include the elapsed time. In development, the collection or URI may be shown onl
 
 ## Navigation
 
-Activity is a common authenticated screen, not a bottom tab.
+Atmosphere is a common authenticated screen, not a bottom tab.
 
 ### Route registration
 
 Add:
 
 ```ts
-Activity: undefined
+Atmosphere: undefined
 ```
 
 to `CommonNavigatorParams`, and register:
 
 ```text
-Activity -> /activity
+Atmosphere -> /atmosphere
 ```
 
 in `src/routes.ts`.
 
-Register `ActivityScreen` in `commonScreens()` with:
+Register `AtmosphereScreen` in `commonScreens()` with:
 
-- translated title `Activity`;
+- translated title `Atmosphere`;
 - `requireAuth: true`.
 
 ### Drawer
 
-Add an authenticated drawer row labeled **Activity**. Place it after Notifications and before Feeds.
+Add an authenticated drawer row labeled **Atmosphere**. Place it after Notifications and before Feeds.
 
-- Navigate to the common `Activity` route and close the drawer.
-- Add `isAtActivity` to `useNavigationTabState()` so the drawer row can render as active.
-- Include `isAtActivity` in the hook's fallback check so Activity is not incorrectly reported as Home.
-- Emit `nav:click` with `{item: 'activity', surface: 'drawer'}`.
+- Navigate to the common `Atmosphere` route and close the drawer.
+- Add `isAtAtmosphere` to `useNavigationTabState()` so the drawer row can render as active.
+- Include `isAtAtmosphere` in the hook's fallback check so Atmosphere is not incorrectly reported as Home.
+- Emit `nav:click` with `{item: 'atmosphere', surface: 'drawer'}`.
 
 Use `Atom_Stroke2_Corner0_Rounded` from `#/components/icons/Atom` for the first implementation. It may be used for both inactive and active states; active state is also communicated by the bold label.
 
 ### Desktop left navigation
 
-Add **Activity** after Notifications and before Chat, linking to `/activity` with `navItem="activity"` and the Atom icon.
+Add **Atmosphere** after Notifications and before Chat, linking to `/atmosphere` with `navItem="atmosphere"` and the Atom icon.
 
-Extend `Events['nav:click']['item']` with `'activity'` so drawer and left-nav analytics remain typed. The existing `NavItem` route matching should determine the desktop active state from `/activity`.
+Extend `Events['nav:click']['item']` with `'atmosphere'` so drawer and left-nav analytics remain typed. The existing `NavItem` route matching should determine the desktop active state from `/atmosphere`.
 
-Do not add Activity to the mobile or web bottom bar.
+Do not add Atmosphere to the mobile or web bottom bar.
 
 ## Internationalization and accessibility
 
@@ -619,7 +621,7 @@ Add focused tests for behavior that carries contract risk:
 - default appview-sandbox client uses the deployed proxy service with the signed-in session;
 - session bundle and strict/nullable provider hooks expose the same appview-sandbox client instance;
 - cached account labeler subscriptions are applied to the appview-sandbox client;
-- route typing and navigation compile for `Activity`.
+- route typing and navigation compile for `Atmosphere`.
 
 ## Verification
 
@@ -654,7 +656,7 @@ Manually verify:
 
 ## Acceptance criteria
 
-1. Authenticated users can open `/activity` from both the drawer and desktop left nav.
+1. Authenticated users can open `/atmosphere` from both the drawer and desktop left nav.
 2. The screen uses `Layout.Screen` and `Layout.Header` and is not added to the bottom bar.
 3. The query uses the authenticated appview-sandbox client, sends no caller-selected viewer or limit, and paginates with opaque cursors.
 4. Every outer feed entry renders as a separate row in API order; grouped children render within their group row.

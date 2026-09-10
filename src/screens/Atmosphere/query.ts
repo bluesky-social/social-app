@@ -8,15 +8,15 @@ import {narrowActivityPage} from './types'
 
 export * from './types'
 
-const useActivityV2QueryKeyRoot = 'useActivityV2Query'
+const useAtmosphereQueryKeyRoot = 'useAtmosphereQuery'
 
-export function useActivityV2Query() {
+export function useAtmosphereQuery() {
   const client = useAppviewSandboxClient()
   const {currentAccount} = useSession()
   const viewer = currentAccount!.did
 
   return useInfiniteQuery({
-    queryKey: createQueryKey(useActivityV2QueryKeyRoot, {viewer}),
+    queryKey: createQueryKey(useAtmosphereQueryKeyRoot, {viewer}),
     queryFn: async ({pageParam}) => {
       const response = await client.call(eric.bsky.atmosphere.getActivity, {
         cursor: pageParam,

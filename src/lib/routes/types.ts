@@ -32,8 +32,6 @@ export type ModerationInboxTab = 'reports' | 'account'
 export type CommonNavigatorParams = {
   NotFound: undefined
   Atmosphere: undefined
-  Activity: undefined
-  ActivityV2: undefined
   Lists: undefined
   Moderation: undefined
   ModerationInbox: {tab?: ModerationInboxTab}

@@ -56,7 +56,6 @@ import {BetaTag} from '#/components/BetaTag'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {type DialogControlProps} from '#/components/Dialog'
 import {ArrowBoxLeft_Stroke2_Corner0_Rounded as LeaveIcon} from '#/components/icons/Arrow'
-import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import {
   Bell_Filled_Corner0_Rounded as BellFilledIcon,
   Bell_Stroke2_Corner0_Rounded as BellIcon,
@@ -426,7 +425,6 @@ function SwitchMenuItemAvatar({
 interface NavItemProps {
   beta?: boolean
   count?: string
-  exactMatch?: boolean
   hasNew?: boolean
   href: string
   icons: {
@@ -441,7 +439,6 @@ interface NavItemProps {
 function NavItem({
   beta,
   count,
-  exactMatch = false,
   hasNew,
   href,
   icons,
@@ -476,9 +473,7 @@ function NavItem({
     IS_NATIVE && tab
       ? getTabState(navigationState, tab) !== TabState.Outside
       : isCurrent
-  const isRelated = exactMatch
-    ? false
-    : currentRouteInfo.name.startsWith(pathName)
+  const isRelated = currentRouteInfo.name.startsWith(pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
     (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -772,28 +767,6 @@ export function DesktopLeftNav({
               }}
             />
           )}
-          <NavItem
-            label={l`Activity`}
-            href="/activity"
-            navItem="activity"
-            exactMatch
-            minimal={leftNavMinimal}
-            icons={{
-              inactive: AtomIcon,
-              active: AtomIcon,
-            }}
-          />
-          <NavItem
-            label={l`Activity V2`}
-            href="/activity-v2"
-            navItem="activity-v2"
-            exactMatch
-            minimal={leftNavMinimal}
-            icons={{
-              inactive: AtomIcon,
-              active: AtomIcon,
-            }}
-          />
           <NavItem
             label={l`Chat`}
             href="/messages"

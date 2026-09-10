@@ -33,7 +33,7 @@ function page(
   }
 }
 
-describe('ActivityV2 list model', () => {
+describe('Atmosphere list model', () => {
   it('returns loading, error, and empty list states', () => {
     expect(buildActivityListItems(undefined)).toEqual([
       {type: 'loading', key: 'loading'},

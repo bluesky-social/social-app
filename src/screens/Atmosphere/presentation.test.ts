@@ -34,7 +34,7 @@ function getComputedView(item: ActivityRowItem | ActivityGroupRowItem) {
   return presentationItem?.computedItemView
 }
 
-describe('ActivityV2 presentation', () => {
+describe('Atmosphere presentation', () => {
   it('normalizes usable actors in API order while retaining hydrated actor object references', () => {
     const alice = actor('did:plc:alice', 'alice.test')
     const bob = actor('did:plc:bob', 'bob.test')

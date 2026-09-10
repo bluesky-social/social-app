@@ -4,10 +4,10 @@ import {I18nProvider} from '@lingui/react'
 import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {ActivityV2Screen} from './index'
+import {AtmosphereScreen} from './index'
 import {activityCollections} from './types'
 
-const mockUseActivityV2Query = jest.fn()
+const mockUseAtmosphereQuery = jest.fn()
 const mockListFooter = jest.fn((_props: unknown) => null)
 const mockAvatarStack = jest.fn()
 const mockInlineLinkText = jest.fn()
@@ -57,7 +57,7 @@ jest.mock('#/components/AvatarStack', () => {
   return {
     AvatarStack: (props: unknown) => {
       mockAvatarStack(props)
-      return <View testID="activityV2AvatarStack" />
+      return <View testID="atmosphereAvatarStack" />
     },
   }
 })
@@ -110,11 +110,11 @@ jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
   return {
     PublicationCard: (props: unknown) => {
       mockPublicationCard(props)
-      return <View testID="activityV2PublicationCard" />
+      return <View testID="atmospherePublicationCard" />
     },
     StandardSiteEmbed: (props: unknown) => {
       mockStandardSiteEmbed(props)
-      return <View testID="activityV2StandardSiteEmbed" />
+      return <View testID="atmosphereStandardSiteEmbed" />
     },
   }
 })
@@ -180,7 +180,7 @@ jest.mock('#/view/com/util/List', () => {
   }
 })
 jest.mock('./query', () => ({
-  useActivityV2Query: () => mockUseActivityV2Query(),
+  useAtmosphereQuery: () => mockUseAtmosphereQuery(),
 }))
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
@@ -193,14 +193,14 @@ beforeEach(() => {
   mockPublicationCard.mockClear()
   mockStandardSiteEmbed.mockClear()
   mockTimeElapsed.mockClear()
-  mockUseActivityV2Query.mockReset()
+  mockUseAtmosphereQuery.mockReset()
 })
 
 function renderScreen() {
   return render(
     <I18nProvider i18n={i18n}>
-      <ActivityV2Screen
-        route={{key: 'ActivityV2', name: 'ActivityV2'}}
+      <AtmosphereScreen
+        route={{key: 'Atmosphere', name: 'Atmosphere'}}
         navigation={{} as never}
       />
     </I18nProvider>,
@@ -240,8 +240,8 @@ function actor(did: string, handle: string) {
   }
 }
 
-describe('ActivityV2Screen', () => {
-  it('keeps the route shell intact and renders standalone, grouped, and unknown V2 rows without JSON diagnostics', () => {
+describe('AtmosphereScreen', () => {
+  it('renders the Atmosphere screen with standalone, grouped, and unknown rows without JSON diagnostics', () => {
     const groupChildOne = activity({
       collection: activityCollections.document,
       uri: 'at://did:plc:group-author/site.standard.document/one',
@@ -297,7 +297,7 @@ describe('ActivityV2Screen', () => {
       cid: 'bafy-unknown',
     })
 
-    mockUseActivityV2Query.mockReturnValue({
+    mockUseAtmosphereQuery.mockReturnValue({
       data: {
         pages: [
           {
@@ -332,16 +332,16 @@ describe('ActivityV2Screen', () => {
 
     const screen = renderScreen()
 
-    expect(screen.getByTestId('activityV2Screen')).toBeTruthy()
-    expect(screen.getByText('Activity V2')).toBeTruthy()
-    expect(screen.getAllByTestId('activityV2DocumentRow')).toHaveLength(2)
-    expect(screen.getByTestId('activityV2PublicationRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2RecommendationRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2SubscriptionRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2LivestreamRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2GrainPhotoRow')).toBeTruthy()
-    expect(screen.getByTestId('activityV2UnknownRow')).toBeTruthy()
-    expect(screen.queryByTestId('activityV2DebugButton')).toBeNull()
+    expect(screen.getByTestId('atmosphereScreen')).toBeTruthy()
+    expect(screen.getByText('Atmosphere')).toBeTruthy()
+    expect(screen.getAllByTestId('atmosphereDocumentRow')).toHaveLength(2)
+    expect(screen.getByTestId('atmospherePublicationRow')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereRecommendationRow')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereSubscriptionRow')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereLivestreamRow')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereGrainPhotoRow')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereUnknownRow')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereDebugButton')).toBeNull()
     expect(
       screen.getByLabelText(
         `${handleLabel('group-author.test')} published 2 articles · elapsed:2026-09-03T00:00:00.000Z`,
@@ -360,7 +360,7 @@ describe('ActivityV2Screen', () => {
   })
 
   it('renders loading and empty states', () => {
-    mockUseActivityV2Query.mockReturnValue({
+    mockUseAtmosphereQuery.mockReturnValue({
       data: undefined,
       error: undefined,
       isFetchingNextPage: false,
@@ -372,7 +372,7 @@ describe('ActivityV2Screen', () => {
     const loadingScreen = renderScreen()
     expect(loadingScreen.getByText('loader')).toBeTruthy()
 
-    mockUseActivityV2Query.mockReturnValue({
+    mockUseAtmosphereQuery.mockReturnValue({
       data: {
         pages: [{feed: [], associatedRecords: {}, actors: {}}],
         pageParams: [undefined],
@@ -385,11 +385,11 @@ describe('ActivityV2Screen', () => {
     })
 
     const emptyScreen = renderScreen()
-    expect(emptyScreen.getByTestId('activityV2EmptyState')).toBeTruthy()
+    expect(emptyScreen.getByTestId('atmosphereEmptyState')).toBeTruthy()
   })
 
-  it('omits actorless successful rows and falls back to the V2 empty state', () => {
-    mockUseActivityV2Query.mockReturnValue({
+  it('omits actorless successful rows and falls back to the empty state', () => {
+    mockUseAtmosphereQuery.mockReturnValue({
       data: {
         pages: [
           {
@@ -415,13 +415,13 @@ describe('ActivityV2Screen', () => {
 
     const screen = renderScreen()
 
-    expect(screen.getByTestId('activityV2EmptyState')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereEmptyState')).toBeTruthy()
     expect(mockListFooter).not.toHaveBeenCalled()
   })
 
   it('keeps the retry control wired for initial errors', () => {
     const refetch = jest.fn()
-    mockUseActivityV2Query.mockReturnValue({
+    mockUseAtmosphereQuery.mockReturnValue({
       data: undefined,
       error: new Error('boom'),
       isFetchingNextPage: false,
@@ -434,14 +434,14 @@ describe('ActivityV2Screen', () => {
     fireEvent.press(screen.getByLabelText('Retry loading activity'))
 
     expect(refetch).toHaveBeenCalled()
-    expect(screen.getByTestId('activityV2ErrorState')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereErrorState')).toBeTruthy()
   })
 
   it('keeps refresh and pagination wired through the list callbacks', async () => {
     const refetch = jest.fn().mockResolvedValue(undefined)
     const fetchNextPage = jest.fn().mockResolvedValue(undefined)
 
-    mockUseActivityV2Query.mockReturnValue({
+    mockUseAtmosphereQuery.mockReturnValue({
       data: {
         pages: [
           {

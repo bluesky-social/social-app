@@ -3,7 +3,7 @@ import {
   type ActivityItem,
   type CollectionActivityItem,
 } from '../types'
-import {ActivityV2PreviewRow} from './ActivityV2PreviewRow'
+import {AtmospherePreviewRow} from './AtmospherePreviewRow'
 
 type StandaloneActivityRowProps<TCollection extends string> = {
   hideTopBorder: boolean
@@ -16,7 +16,7 @@ function StandaloneActivityPreviewRow<TCollection extends string>({
   testID,
 }: StandaloneActivityRowProps<TCollection> & {testID: string}) {
   return (
-    <ActivityV2PreviewRow
+    <AtmospherePreviewRow
       hideTopBorder={hideTopBorder}
       preview={JSON.stringify(activity) ?? ''}
       testID={testID}
@@ -32,7 +32,7 @@ export function DocumentActivityRow({
     <StandaloneActivityPreviewRow
       activity={activity}
       hideTopBorder={hideTopBorder}
-      testID="activityV2DocumentRow"
+      testID="atmosphereDocumentRow"
     />
   )
 }
@@ -45,7 +45,7 @@ export function PublicationActivityRow({
     <StandaloneActivityPreviewRow
       activity={activity}
       hideTopBorder={hideTopBorder}
-      testID="activityV2PublicationRow"
+      testID="atmospherePublicationRow"
     />
   )
 }
@@ -58,7 +58,7 @@ export function RecommendationActivityRow({
     <StandaloneActivityPreviewRow
       activity={activity}
       hideTopBorder={hideTopBorder}
-      testID="activityV2RecommendationRow"
+      testID="atmosphereRecommendationRow"
     />
   )
 }
@@ -71,7 +71,7 @@ export function SubscriptionActivityRow({
     <StandaloneActivityPreviewRow
       activity={activity}
       hideTopBorder={hideTopBorder}
-      testID="activityV2SubscriptionRow"
+      testID="atmosphereSubscriptionRow"
     />
   )
 }
@@ -84,7 +84,7 @@ export function LivestreamActivityRow({
     <StandaloneActivityPreviewRow
       activity={activity}
       hideTopBorder={hideTopBorder}
-      testID="activityV2LivestreamRow"
+      testID="atmosphereLivestreamRow"
     />
   )
 }
@@ -97,7 +97,7 @@ export function GrainPhotoActivityRow({
     <StandaloneActivityPreviewRow
       activity={activity}
       hideTopBorder={hideTopBorder}
-      testID="activityV2GrainPhotoRow"
+      testID="atmosphereGrainPhotoRow"
     />
   )
 }
@@ -110,10 +110,10 @@ export function UnknownActivityRow({
   activity: ActivityItem
 }) {
   return (
-    <ActivityV2PreviewRow
+    <AtmospherePreviewRow
       hideTopBorder={hideTopBorder}
       preview={JSON.stringify(activity) ?? ''}
-      testID="activityV2UnknownRow"
+      testID="atmosphereUnknownRow"
     />
   )
 }
