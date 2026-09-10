@@ -2,7 +2,12 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {
+  ActivityArticleEmbedsBody,
+  ActivityPublicationCardBody,
+} from './components/ActivityBodyContent'
+import {
   ActivityRow,
+  ActivityRowBody,
   ActivityRowFooter,
   ActivityRowHeader,
   ActivityRowHeaderText,
@@ -56,14 +61,12 @@ export function UnknownActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const body = undefined
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{l`did something`}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
     </ActivityRow>
   )
@@ -76,7 +79,6 @@ function DocumentActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const body = undefined
   const actionText =
     computedItemView.group.kind === 'actor'
       ? l`${plural(computedItemView.group.count, {
@@ -86,6 +88,15 @@ function DocumentActivityRenderer({
       : computedItemView.group.kind === 'subject'
         ? l`did something with an article`
         : l`published an article`
+  const body =
+    computedItemView.body?.kind === 'article-embeds' ? (
+      <ActivityRowBody>
+        <ActivityArticleEmbedsBody
+          item={item}
+          computedItemView={computedItemView}
+        />
+      </ActivityRowBody>
+    ) : undefined
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
@@ -105,7 +116,6 @@ function PublicationActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const body = undefined
   const actionText =
     computedItemView.group.kind === 'actor'
       ? l`${plural(computedItemView.group.count, {
@@ -115,6 +125,15 @@ function PublicationActivityRenderer({
       : computedItemView.group.kind === 'subject'
         ? l`did something with a publication`
         : l`created a publication`
+  const body =
+    computedItemView.body?.kind === 'publication-card' ? (
+      <ActivityRowBody>
+        <ActivityPublicationCardBody
+          item={item}
+          computedItemView={computedItemView}
+        />
+      </ActivityRowBody>
+    ) : undefined
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
@@ -134,7 +153,6 @@ function RecommendationActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const body = undefined
   const document = computedItemView.relationships.recommendation?.document
   const author = document?.author
   const title = document?.title
@@ -151,7 +169,6 @@ function RecommendationActivityRenderer({
             })}`}
           </ActivityRowHeaderText>
         </ActivityRowHeader>
-        {body}
         <ActivityRowFooter timestamp={computedItemView.timestamp} />
       </ActivityRow>
     )
@@ -183,7 +200,6 @@ function RecommendationActivityRenderer({
             <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
-        {body}
         <ActivityRowFooter timestamp={computedItemView.timestamp} />
       </ActivityRow>
     )
@@ -201,7 +217,6 @@ function RecommendationActivityRenderer({
           </ActivityInlineLinkText>
           <ActivityRowHeaderText>{l`’s article`}</ActivityRowHeaderText>
         </ActivityRowHeader>
-        {body}
         <ActivityRowFooter timestamp={computedItemView.timestamp} />
       </ActivityRow>
     )
@@ -227,7 +242,6 @@ function RecommendationActivityRenderer({
             <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
-        {body}
         <ActivityRowFooter timestamp={computedItemView.timestamp} />
       </ActivityRow>
     )
@@ -238,7 +252,6 @@ function RecommendationActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{l`recommended an article`}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
     </ActivityRow>
   )
@@ -251,8 +264,16 @@ function SubscriptionActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const body = undefined
   const publication = computedItemView.relationships.subscription?.publication
+  const body =
+    computedItemView.body?.kind === 'publication-card' ? (
+      <ActivityRowBody>
+        <ActivityPublicationCardBody
+          item={item}
+          computedItemView={computedItemView}
+        />
+      </ActivityRowBody>
+    ) : undefined
 
   if (computedItemView.group.kind === 'actor') {
     return (
@@ -313,7 +334,6 @@ function LivestreamActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const body = undefined
   const actionText =
     computedItemView.group.kind === 'actor'
       ? l`${plural(computedItemView.group.count, {
@@ -329,7 +349,6 @@ function LivestreamActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
     </ActivityRow>
   )
@@ -342,7 +361,6 @@ function GrainPhotoActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const body = undefined
   const actionText =
     computedItemView.group.kind === 'actor'
       ? l`${plural(computedItemView.group.count, {
@@ -358,7 +376,6 @@ function GrainPhotoActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      {body}
       <ActivityRowFooter timestamp={computedItemView.timestamp} />
     </ActivityRow>
   )

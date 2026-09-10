@@ -11,6 +11,8 @@ const mockUseActivityV2Query = jest.fn()
 const mockListFooter = jest.fn((_props: unknown) => null)
 const mockAvatarStack = jest.fn()
 const mockInlineLinkText = jest.fn()
+const mockPublicationCard = jest.fn((_props: unknown) => null)
+const mockStandardSiteEmbed = jest.fn((_props: unknown) => null)
 const mockTimeElapsed = jest.fn()
 let latestListProps: ListProps | undefined
 
@@ -24,10 +26,11 @@ type EmptyStateProps = {
   }
   testID?: string
 }
-type ListItem = {key: string} & Record<string, unknown>
+type ListItem = Record<string, unknown>
 type ListProps = {
   data: ListItem[]
   renderItem: (args: {item: ListItem; index: number}) => React.ReactNode
+  keyExtractor: (item: ListItem) => string
   ListFooterComponent?: React.ReactNode
   onEndReached?: () => Promise<void> | void
   onRefresh?: () => Promise<void> | void
@@ -35,10 +38,12 @@ type ListProps = {
 
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
+  utils: {rgbToHex: () => '#000000'},
   useTheme: () => ({
     atoms: {
       border_contrast_low: {},
-      text: {},
+      text: {color: '#111111'},
+      text_inverted: {color: '#ffffff'},
       text_contrast_medium: {},
       text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
@@ -99,7 +104,18 @@ jest.mock('#/components/Loader', () => {
   return {Loader: () => <Text>loader</Text>}
 })
 jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
-  throw new Error('Detailed Activity embed UI should not be used by ActivityV2')
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    PublicationCard: (props: unknown) => {
+      mockPublicationCard(props)
+      return <View testID="activityV2PublicationCard" />
+    },
+    StandardSiteEmbed: (props: unknown) => {
+      mockStandardSiteEmbed(props)
+      return <View testID="activityV2StandardSiteEmbed" />
+    },
+  }
 })
 jest.mock('#/components/Typography', () => {
   const {Text} =
@@ -150,7 +166,9 @@ jest.mock('#/view/com/util/List', () => {
       return (
         <View>
           {props.data.map((item, index) => (
-            <View key={item.key}>{props.renderItem({item, index})}</View>
+            <View key={props.keyExtractor(item)}>
+              {props.renderItem({item, index})}
+            </View>
           ))}
           {props.ListFooterComponent ? (
             <View key="footer">{props.ListFooterComponent}</View>
@@ -171,6 +189,8 @@ beforeEach(() => {
   mockAvatarStack.mockClear()
   mockInlineLinkText.mockClear()
   mockListFooter.mockClear()
+  mockPublicationCard.mockClear()
+  mockStandardSiteEmbed.mockClear()
   mockTimeElapsed.mockClear()
   mockUseActivityV2Query.mockReset()
 })

@@ -5,6 +5,12 @@ import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 import {
+  createDocumentExternalView,
+  createPublicationExternalView,
+  getPublicationBodyThemeColors,
+  type PublicationBodyThemeColors,
+} from './externalViews'
+import {
   type ActivityGroupRowItem,
   type ActivityListItem,
   type ActivityRowItem,
@@ -13,6 +19,7 @@ import {
   type ActivityActor,
   activityCollections,
   type ActivityItem,
+  type AssociatedRecords,
   isDocumentRecord,
   isPublicationRecord,
   isRecommendRecord,
@@ -48,6 +55,17 @@ export type ActivityComputedRoot = {
   isSubscribed: boolean
 }
 
+export type ActivityComputedBody =
+  | {
+      kind: 'article-embeds'
+      views: app.bsky.embed.external.ViewExternal[]
+    }
+  | {
+      kind: 'publication-card'
+      view: app.bsky.embed.external.ViewExternal
+      themeColors: PublicationBodyThemeColors | undefined
+    }
+
 export type ActivityComputedView = {
   rootCollection: string
   timestamp: string
@@ -58,6 +76,7 @@ export type ActivityComputedView = {
   }
   roots: ActivityComputedRoot[]
   subscriptionState: 'all' | 'some' | 'none'
+  body: ActivityComputedBody | undefined
   relationships: {
     recommendation?: {
       document?: {
@@ -144,6 +163,7 @@ function buildActivityComputedView(
         : {kind: item.group.groupBy, count: item.group.items.length},
     roots,
     subscriptionState: getSubscriptionState(roots),
+    body: buildActivityComputedBody(item, rootCollection, roots),
     relationships: {
       recommendation:
         rootCollection === activityCollections.recommendation
@@ -155,6 +175,99 @@ function buildActivityComputedView(
           : undefined,
     },
   }
+}
+
+function buildActivityComputedBody(
+  item: ActivityPresentationItem,
+  rootCollection: string,
+  roots: ActivityComputedRoot[],
+): ActivityComputedBody | undefined {
+  if (rootCollection === activityCollections.document) {
+    return buildDocumentBody(item, roots)
+  }
+
+  if (rootCollection === activityCollections.publication) {
+    return buildPublicationBody(
+      getPublicationBodyCandidateUris(item),
+      item.associatedRecords,
+      item.actors,
+    )
+  }
+
+  if (rootCollection === activityCollections.subscription) {
+    return buildPublicationBody(
+      getSubscriptionBodyCandidateUris(item),
+      item.associatedRecords,
+      item.actors,
+    )
+  }
+
+  return undefined
+}
+
+function buildDocumentBody(
+  item: ActivityPresentationItem,
+  roots: ActivityComputedRoot[],
+): ActivityComputedBody | undefined {
+  if (!roots.every(root => root.isSubscribed)) {
+    return undefined
+  }
+
+  const views = getRootActivityUris(item).flatMap(uri => {
+    const view = createDocumentExternalView({
+      uri,
+      associatedRecords: item.associatedRecords,
+      actors: item.actors,
+    })
+    return view ? [view] : []
+  })
+
+  return views.length > 0 ? {kind: 'article-embeds', views} : undefined
+}
+
+function buildPublicationBody(
+  uris: Array<string | undefined>,
+  associatedRecords: AssociatedRecords,
+  actors: ActivityPresentationItem['actors'],
+): ActivityComputedBody | undefined {
+  for (const uri of uris) {
+    const view = createPublicationExternalView({uri, associatedRecords, actors})
+    if (view) {
+      return {
+        kind: 'publication-card',
+        view,
+        themeColors: getPublicationBodyThemeColors(view),
+      }
+    }
+  }
+
+  return undefined
+}
+
+function getRootActivityUris(item: ActivityPresentationItem) {
+  return item.type === 'activity'
+    ? [item.activity.record.uri]
+    : item.group.items.map(activity => activity.record.uri)
+}
+
+function getPublicationBodyCandidateUris(item: ActivityPresentationItem) {
+  return getRootActivityUris(item)
+}
+
+function getSubscriptionBodyCandidateUris(item: ActivityPresentationItem) {
+  return item.type === 'activity'
+    ? [
+        getSubscriptionPublicationUriForActivity(
+          item.activity,
+          item.associatedRecords,
+        ),
+      ]
+    : item.group.items.map(activity =>
+        getSubscriptionPublicationUriForActivity(
+          activity,
+          item.associatedRecords,
+        ),
+      )
 }
 
 function buildRecommendationRelationship(item: ActivityPresentationItem) {
@@ -306,8 +419,17 @@ function getSubscriptionPublicationUri(item: ActivityPresentationItem) {
     return undefined
   }
 
-  const subscriptionRecord =
-    item.associatedRecords[item.activity.record.uri]?.record
+  return getSubscriptionPublicationUriForActivity(
+    item.activity,
+    item.associatedRecords,
+  )
+}
+
+function getSubscriptionPublicationUriForActivity(
+  activity: ActivityItem,
+  associatedRecords: AssociatedRecords,
+) {
+  const subscriptionRecord = associatedRecords[activity.record.uri]?.record
   return isSubscriptionRecord(subscriptionRecord)
     ? subscriptionRecord.publication
     : undefined

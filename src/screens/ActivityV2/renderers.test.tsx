@@ -19,14 +19,18 @@ import {
 
 const mockAvatarStack = jest.fn()
 const mockInlineLinkText = jest.fn()
+const mockPublicationCard = jest.fn()
+const mockStandardSiteEmbed = jest.fn()
 const mockTimeElapsed = jest.fn()
 
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
+  utils: {rgbToHex: () => '#000000'},
   useTheme: () => ({
     atoms: {
       border_contrast_low: {},
-      text: {},
+      text: {color: '#111111'},
+      text_inverted: {color: '#ffffff'},
       text_contrast_medium: {},
       text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
@@ -56,6 +60,24 @@ jest.mock('#/components/Link', () => {
     },
   }
 })
+jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    PublicationCard: ({themeColors, view}: Record<string, unknown>) => {
+      mockPublicationCard({themeColors, view})
+      const title =
+        (view as {source?: {title?: string}} | undefined)?.source?.title ??
+        'unknown-publication'
+      return <View testID={`publication-${title}`} />
+    },
+    StandardSiteEmbed: ({view}: Record<string, unknown>) => {
+      mockStandardSiteEmbed({view})
+      const title = (view as {title?: string} | undefined)?.title ?? 'unknown'
+      return <View testID={`full-document-${title}`} />
+    },
+  }
+})
 jest.mock('#/components/Typography', () => {
   const {Text} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -79,6 +101,8 @@ i18n.loadAndActivate({locale: 'en', messages: {}})
 beforeEach(() => {
   mockAvatarStack.mockClear()
   mockInlineLinkText.mockClear()
+  mockPublicationCard.mockClear()
+  mockStandardSiteEmbed.mockClear()
   mockTimeElapsed.mockClear()
 })
 
@@ -118,10 +142,12 @@ function buildActivity({
   collection,
   uri,
   indexedAt = '2026-09-09T00:00:00.000Z',
+  subscribed = false,
 }: {
   collection: string
   uri: string
   indexedAt?: string
+  subscribed?: boolean
 }) {
   return {
     $type: 'eric.bsky.atmosphere.getActivity#item' as const,
@@ -131,7 +157,7 @@ function buildActivity({
       indexedAt,
     },
     collection,
-    viewerState: {subscribed: false},
+    viewerState: {subscribed},
   }
 }
 
@@ -158,6 +184,7 @@ function buildActivityRow({
   actors = {},
   indexedAt = '2026-09-09T00:00:00.000Z',
   rkey = '1',
+  subscribed = false,
 }: {
   collection: string
   actorDid: string
@@ -165,6 +192,7 @@ function buildActivityRow({
   actors?: ActivityActors
   indexedAt?: string
   rkey?: string
+  subscribed?: boolean
 }): ActivityRowItem {
   return {
     type: 'activity',
@@ -173,6 +201,7 @@ function buildActivityRow({
       collection,
       uri: `at://${actorDid}/${collection}/${rkey}`,
       indexedAt,
+      subscribed,
     }),
     associatedRecords,
     actors,
@@ -184,15 +213,19 @@ function buildActorGroupRow({
   actorDid,
   count,
   actors = {},
+  associatedRecords = {},
   groupIndexedAt = '2026-09-09T00:00:00.000Z',
   itemIndexedAt = '2026-09-09T00:00:00.000Z',
+  subscribedStates,
 }: {
   collection: string
   actorDid: string
   count: number
   actors?: ActivityActors
+  associatedRecords?: AssociatedRecords
   groupIndexedAt?: string
   itemIndexedAt?: string
+  subscribedStates?: boolean[]
 }): ActivityGroupRowItem {
   return {
     type: 'group',
@@ -209,10 +242,11 @@ function buildActorGroupRow({
           collection,
           uri: `at://${actorDid}/${collection}/${index + 1}`,
           indexedAt: itemIndexedAt,
+          subscribed: subscribedStates?.[index] ?? false,
         }),
       ),
     },
-    associatedRecords: {},
+    associatedRecords,
     actors,
   }
 }
@@ -376,6 +410,48 @@ describe('ActivityV2 collection renderers', () => {
     )
   })
 
+  it('renders a publication-root body with the existing PublicationCard using computed theme colors', () => {
+    const actorDid = 'did:plc:publication-owner'
+    const publicationUri = `at://${actorDid}/${activityCollections.publication}/1`
+    const row = buildActivityRow({
+      collection: activityCollections.publication,
+      actorDid,
+      actors: {
+        [actorDid]: buildActor(actorDid, 'publication-owner.test'),
+      },
+      associatedRecords: {
+        [publicationUri]: buildAssociatedRecord(publicationUri, {
+          $type: activityCollections.publication,
+          name: 'Orbit Weekly',
+          url: 'https://example.com/publications/orbit-weekly',
+          basicTheme: {
+            accent: {r: 1, g: 2, b: 3},
+            accentForeground: {r: 254, g: 253, b: 252},
+          },
+        }),
+      },
+      rkey: '1',
+    })
+
+    const screen = renderRow(row)
+
+    expect(screen.getByTestId('publication-Orbit Weekly')).toBeTruthy()
+    expect(mockPublicationCard).toHaveBeenCalledWith(
+      expect.objectContaining({
+        view: expect.objectContaining({
+          uri: 'https://example.com/publications/orbit-weekly',
+          associatedRefs: [expect.objectContaining({uri: publicationUri})],
+          associatedProfiles: [expect.objectContaining({did: actorDid})],
+        }),
+        themeColors: {
+          custom: true,
+          accent: '#010203',
+          accentForeground: '#fefdfc',
+        },
+      }),
+    )
+  })
+
   it('links publication titles in subscription activity with the shared link styling', () => {
     const actorDid = 'did:plc:subscriber'
     const rootUri = `at://${actorDid}/${activityCollections.subscription}/1`
@@ -429,6 +505,279 @@ describe('ActivityV2 collection renderers', () => {
         }),
       ]),
     )
+  })
+
+  it('renders full article bodies only for subscribed document activities', () => {
+    const actorDid = 'did:plc:doc-body'
+    const documentUri = `at://${actorDid}/${activityCollections.document}/1`
+    const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
+    const subscribedRow = buildActivityRow({
+      collection: activityCollections.document,
+      actorDid,
+      subscribed: true,
+      actors: {
+        [actorDid]: buildActor(actorDid, 'doc-body.test'),
+        'did:plc:publication': buildActor(
+          'did:plc:publication',
+          'publication.test',
+        ),
+      },
+      associatedRecords: {
+        [documentUri]: buildAssociatedRecord(documentUri, {
+          $type: activityCollections.document,
+          site: publicationUri,
+          path: 'essay',
+          title: 'Body essay',
+          publishedAt: '2026-09-09T00:00:00.000Z',
+        }),
+        [publicationUri]: buildAssociatedRecord(publicationUri, {
+          $type: activityCollections.publication,
+          name: 'Orbit Weekly',
+          url: 'https://example.com/publications/orbit-weekly',
+        }),
+      },
+      rkey: '1',
+    })
+    const unsubscribedRow = buildActivityRow({
+      collection: activityCollections.document,
+      actorDid: 'did:plc:doc-no-body',
+      subscribed: false,
+      actors: {
+        'did:plc:doc-no-body': buildActor(
+          'did:plc:doc-no-body',
+          'doc-no-body.test',
+        ),
+      },
+      associatedRecords: {
+        'at://did:plc:doc-no-body/site.standard.document/1':
+          buildAssociatedRecord(
+            'at://did:plc:doc-no-body/site.standard.document/1',
+            {
+              $type: activityCollections.document,
+              site: 'https://example.com',
+              path: '/hidden',
+              title: 'Hidden essay',
+              publishedAt: '2026-09-09T00:00:00.000Z',
+            },
+          ),
+      },
+      rkey: '1',
+    })
+
+    const subscribedScreen = renderRow(subscribedRow)
+    const unsubscribedScreen = renderRow(unsubscribedRow)
+
+    expect(
+      subscribedScreen.getByTestId('full-document-Body essay'),
+    ).toBeTruthy()
+    expect(
+      unsubscribedScreen.queryByTestId('full-document-Hidden essay'),
+    ).toBeNull()
+    expect(mockStandardSiteEmbed).toHaveBeenCalledWith(
+      expect.objectContaining({
+        view: expect.objectContaining({
+          title: 'Body essay',
+          uri: 'https://example.com/publications/orbit-weekly/essay',
+        }),
+      }),
+    )
+  })
+
+  it('renders document-group article bodies only when every child is subscribed, in API order', () => {
+    const actorDid = 'did:plc:doc-group'
+    const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
+    const allSubscribedRow = buildActorGroupRow({
+      collection: activityCollections.document,
+      actorDid,
+      count: 2,
+      subscribedStates: [true, true],
+      actors: {
+        [actorDid]: buildActor(actorDid, 'doc-group.test'),
+        'did:plc:publication': buildActor(
+          'did:plc:publication',
+          'publication.test',
+        ),
+      },
+      associatedRecords: {
+        [`at://${actorDid}/${activityCollections.document}/1`]:
+          buildAssociatedRecord(
+            `at://${actorDid}/${activityCollections.document}/1`,
+            {
+              $type: activityCollections.document,
+              site: publicationUri,
+              path: 'one',
+              title: 'Doc one',
+              publishedAt: '2026-09-09T00:00:00.000Z',
+            },
+          ),
+        [`at://${actorDid}/${activityCollections.document}/2`]:
+          buildAssociatedRecord(
+            `at://${actorDid}/${activityCollections.document}/2`,
+            {
+              $type: activityCollections.document,
+              site: publicationUri,
+              path: 'two',
+              title: 'Doc two',
+              publishedAt: '2026-09-09T00:00:00.000Z',
+            },
+          ),
+        [publicationUri]: buildAssociatedRecord(publicationUri, {
+          $type: activityCollections.publication,
+          name: 'Orbit Weekly',
+          url: 'https://example.com/publications/orbit-weekly',
+        }),
+      },
+    })
+    const mixedSubscriptionRow = buildActorGroupRow({
+      collection: activityCollections.document,
+      actorDid: 'did:plc:doc-group-mixed',
+      count: 2,
+      subscribedStates: [true, false],
+      actors: {
+        'did:plc:doc-group-mixed': buildActor(
+          'did:plc:doc-group-mixed',
+          'doc-group-mixed.test',
+        ),
+      },
+      associatedRecords: {
+        'at://did:plc:doc-group-mixed/site.standard.document/1':
+          buildAssociatedRecord(
+            'at://did:plc:doc-group-mixed/site.standard.document/1',
+            {
+              $type: activityCollections.document,
+              site: 'https://example.com',
+              path: '/one',
+              title: 'Mixed one',
+              publishedAt: '2026-09-09T00:00:00.000Z',
+            },
+          ),
+        'at://did:plc:doc-group-mixed/site.standard.document/2':
+          buildAssociatedRecord(
+            'at://did:plc:doc-group-mixed/site.standard.document/2',
+            {
+              $type: activityCollections.document,
+              site: 'https://example.com',
+              path: '/two',
+              title: 'Mixed two',
+              publishedAt: '2026-09-09T00:00:00.000Z',
+            },
+          ),
+      },
+    })
+
+    const allSubscribedScreen = renderRow(allSubscribedRow)
+    const mixedScreen = renderRow(mixedSubscriptionRow)
+
+    expect(
+      allSubscribedScreen.getByTestId('full-document-Doc one'),
+    ).toBeTruthy()
+    expect(
+      allSubscribedScreen.getByTestId('full-document-Doc two'),
+    ).toBeTruthy()
+    expect(mixedScreen.queryByTestId('full-document-Mixed one')).toBeNull()
+    expect(
+      mockStandardSiteEmbed.mock.calls.map(
+        ([props]) => (props as {view: {title: string}}).view.title,
+      ),
+    ).toEqual(['Doc one', 'Doc two'])
+  })
+
+  it('renders at most one publication card body from the first valid hydrated publication view', () => {
+    const actorDid = 'did:plc:subscriber-group'
+    const firstRootUri = `at://${actorDid}/${activityCollections.subscription}/1`
+    const secondRootUri = `at://${actorDid}/${activityCollections.subscription}/2`
+    const thirdRootUri = `at://${actorDid}/${activityCollections.subscription}/3`
+    const validPublicationUri = `at://did:plc:publication/${activityCollections.publication}/good`
+    const laterPublicationUri = `at://did:plc:publication/${activityCollections.publication}/later`
+    const row = buildActorGroupRow({
+      collection: activityCollections.subscription,
+      actorDid,
+      count: 3,
+      actors: {
+        [actorDid]: buildActor(actorDid, 'subscriber-group.test'),
+        'did:plc:publication': buildActor(
+          'did:plc:publication',
+          'publication.test',
+        ),
+      },
+    })
+    row.associatedRecords = {
+      [firstRootUri]: buildAssociatedRecord(firstRootUri, {
+        $type: activityCollections.subscription,
+        publication:
+          'at://did:plc:publication/site.standard.publication/missing',
+      }),
+      [secondRootUri]: buildAssociatedRecord(secondRootUri, {
+        $type: activityCollections.subscription,
+        publication: validPublicationUri,
+      }),
+      [thirdRootUri]: buildAssociatedRecord(thirdRootUri, {
+        $type: activityCollections.subscription,
+        publication: laterPublicationUri,
+      }),
+      [validPublicationUri]: buildAssociatedRecord(validPublicationUri, {
+        $type: activityCollections.publication,
+        name: 'Valid publication',
+        url: 'https://example.com/publications/valid',
+      }),
+      [laterPublicationUri]: buildAssociatedRecord(laterPublicationUri, {
+        $type: activityCollections.publication,
+        name: 'Later publication',
+        url: 'https://example.com/publications/later',
+      }),
+    }
+
+    const screen = renderRow(row)
+
+    expect(screen.getByTestId('publication-Valid publication')).toBeTruthy()
+    expect(screen.queryByTestId('publication-Later publication')).toBeNull()
+    expect(mockPublicationCard).toHaveBeenCalledTimes(1)
+    expect(mockPublicationCard).toHaveBeenCalledWith(
+      expect.objectContaining({
+        view: expect.objectContaining({
+          uri: 'https://example.com/publications/valid',
+        }),
+      }),
+    )
+  })
+
+  it('keeps recommendation bodies empty even when the referenced document is hydrated', () => {
+    const actorDid = 'did:plc:recommender-body'
+    const documentAuthorDid = 'did:plc:document-author'
+    const rootUri = `at://${actorDid}/${activityCollections.recommendation}/1`
+    const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/1`
+    const row = buildActivityRow({
+      collection: activityCollections.recommendation,
+      actorDid,
+      subscribed: false,
+      actors: {
+        [actorDid]: buildActor(actorDid, 'recommender-body.test'),
+        [documentAuthorDid]: buildActor(
+          documentAuthorDid,
+          'document-author.test',
+        ),
+      },
+      associatedRecords: {
+        [rootUri]: buildAssociatedRecord(rootUri, {
+          $type: activityCollections.recommendation,
+          document: documentUri,
+          createdAt: '2026-09-09T00:00:00.000Z',
+        }),
+        [documentUri]: buildAssociatedRecord(documentUri, {
+          $type: activityCollections.document,
+          site: 'https://example.com',
+          path: '/essay',
+          title: 'Referenced essay',
+          publishedAt: '2026-09-09T00:00:00.000Z',
+        }),
+      },
+      rkey: '1',
+    })
+
+    const screen = renderRow(row)
+
+    expect(screen.queryByTestId('full-document-Referenced essay')).toBeNull()
+    expect(mockStandardSiteEmbed).not.toHaveBeenCalled()
   })
 
   it('renders footer timestamps from standalone and group indexedAt values using TimeElapsed formatting', () => {
