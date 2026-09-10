@@ -117,9 +117,10 @@ export async function loadDraftMedia(
 /**
  * Hook to save a draft.
  *
- * IMPORTANT: Network operations happen first in mutationFn.
- * Local storage operations (save new media, delete orphaned media) happen in onSuccess.
- * This ensures we don't lose data if the network request fails.
+ * New media is copied to durable local storage before the server write. Composer
+ * media lives in temporary cache directories that the OS may clear at any time,
+ * so a server draft must not be created until all of its local refs are safe.
+ * Destructive cleanup of replaced media still happens only after server success.
  */
 export function useSaveDraftMutation() {
   const client = useAppviewClient()
@@ -151,7 +152,24 @@ export function useSaveDraftMutation() {
         originalLocalRefCount: composerState.originalLocalRefs?.size ?? 0,
       })
 
-      // 1. NETWORK FIRST - Update/create server draft
+      /*
+       * Persist media before the network request so a successful server draft
+       * never points at a temporary file that disappeared before we copied it.
+       */
+      if (localRefPaths.size > 0) {
+        await storage.ensureMediaCachePopulated()
+        for (const [localRefPath, sourcePath] of localRefPaths) {
+          // Reused refs from an existing draft are already in durable storage.
+          if (!storage.mediaExists(localRefPath)) {
+            logger.debug('saving new media file', {localRefPath})
+            await storage.saveMediaToLocal(localRefPath, sourcePath)
+          } else {
+            logger.debug('skipping existing media file', {localRefPath})
+          }
+        }
+      }
+
+      // Update/create the server draft only after its local media is safe.
       let draftId: string
       if (existingDraftId) {
         // Update existing draft
@@ -181,21 +199,9 @@ export function useSaveDraftMutation() {
       }
     },
     onSuccess: async ({draftId, localRefPaths, originalLocalRefs}) => {
-      // 2. LOCAL STORAGE ONLY AFTER NETWORK SUCCEEDS
-      logger.debug('network save succeeded, processing local storage', {
+      logger.debug('network save succeeded, processing local cleanup', {
         draftId,
       })
-
-      // Save new/changed media files
-      for (const [localRefPath, sourcePath] of localRefPaths) {
-        // Only save if this media doesn't already exist (reusing localRefPath)
-        if (!storage.mediaExists(localRefPath)) {
-          logger.debug('saving new media file', {localRefPath})
-          await storage.saveMediaToLocal(localRefPath, sourcePath)
-        } else {
-          logger.debug('skipping existing media file', {localRefPath})
-        }
-      }
 
       // Delete orphaned media (old refs not in new)
       if (originalLocalRefs) {
