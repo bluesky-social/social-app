@@ -1,6 +1,6 @@
 import {type Client} from '@atproto/lex'
 
-import {app} from '#/lexicons'
+import {type app} from '#/lexicons'
 import {MergeFeedAPI} from './merge'
 
 const post = {} as app.bsky.feed.defs.FeedViewPost
