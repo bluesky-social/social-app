@@ -6,7 +6,6 @@ import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {TRENDING_DID, TRENDING_HANDLE, VIDEO_FEED_URIS} from '#/lib/constants'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
@@ -29,15 +28,12 @@ import {useSession} from '#/state/session'
 import {PostFeed} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {useTheme} from '#/alf'
-import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
 import {IS_NATIVE} from '#/env'
+import {NewPostComposePrompt} from '#/features/composePrompt'
 import {app} from '#/lexicons'
 import {
   CustomFeedHeader,
@@ -132,16 +128,13 @@ export function CustomFeedScreenInner({
 }) {
   const {t: l} = useLingui()
   const {hasSession} = useSession()
-  const {openComposer} = useOpenComposer()
   const isScreenFocused = useIsFocused()
-  const t = useTheme()
 
   useSetTitle(feedInfo?.displayName)
 
   const feed = `feedgen|${feedInfo.uri}` as FeedDescriptor
 
   const [hasNew, setHasNew] = useState(false)
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const queryClient = useQueryClient()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useAnimatedRef() as ListRef
@@ -197,28 +190,11 @@ export function CustomFeedScreenInner({
           disablePoll={hasNew}
           onHasNew={setHasNew}
           scrollElRef={scrollElRef}
-          onScrolledDownChange={setIsScrolledDown}
           renderEmptyState={renderPostsEmpty}
           isVideoFeed={isVideoFeed}
         />
       </FeedFeedbackProvider>
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onScrollToTop}
-          label={l`Load new posts`}
-          showIndicator={hasNew}
-        />
-      )}
-      {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={() => openComposer({logContext: 'Fab'})}
-          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={l`New post`}
-          accessibilityHint=""
-        />
-      )}
+      {hasSession && <NewPostComposePrompt />}
     </>
   )
 }

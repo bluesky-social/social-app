@@ -56,6 +56,11 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
+import {
+  ComposePromptGradient,
+  ComposePromptPill,
+  useComposePromptState,
+} from '#/features/composePrompt'
 import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
@@ -80,7 +85,9 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const accountSwitchControl = useDialogControl()
   const messagesMenuControl = Menu.useMenuControl()
   const playHaptic = useHaptics()
-  const borderStyle = useBottomBarBorderStyle()
+  const {visibility: composePromptVisibility} = useComposePromptState()
+  // the border would cut across the compose pill's gradient
+  const borderStyle = useBottomBarBorderStyle(composePromptVisibility)
   const iconWidth = 28
 
   const showSignIn = useCallback(() => {
@@ -161,6 +168,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
       <MessagesTabMenu control={messagesMenuControl} />
+      {hasSession && <ComposePromptPill />}
       <Animated.View
         style={[
           styles.bottomBar,
@@ -172,6 +180,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         onLayout={e => {
           footerHeight.set(e.nativeEvent.layout.height)
         }}>
+        {hasSession && <ComposePromptGradient />}
         {hasSession ? (
           <>
             <Btn

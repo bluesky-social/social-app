@@ -1289,17 +1289,9 @@
       "count": 2
     }
   },
-  "src/view/com/feeds/ComposerPrompt.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/view/com/feeds/FeedPage.tsx": {
     "typescript/no-floating-promises": {
-      "count": 2
+      "count": 1
     }
   },
   "src/view/com/feeds/ProfileFeedgens.tsx": {
