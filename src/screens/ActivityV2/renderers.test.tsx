@@ -699,7 +699,7 @@ describe('ActivityV2 collection renderers', () => {
     )
   })
 
-  it('renders full or compact document group cards from aggregate subscription state in API order', () => {
+  it('renders only the first document from actor groups using aggregate subscription state', () => {
     const actorDid = 'did:plc:doc-group'
     const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
     const allSubscribedRow = buildActorGroupRow({
@@ -801,30 +801,30 @@ describe('ActivityV2 collection renderers', () => {
       allSubscribedScreen.getByTestId('full-document-Doc one'),
     ).toBeTruthy()
     expect(
-      allSubscribedScreen.getByTestId('full-document-Doc two'),
-    ).toBeTruthy()
+      allSubscribedScreen.queryByTestId('full-document-Doc two'),
+    ).toBeNull()
     expect(mixedScreen.queryByTestId('full-document-Mixed one')).toBeNull()
     expect(
       noSubscriptionScreen.queryByTestId('full-document-Mixed one'),
     ).toBeNull()
     expect(mixedScreen.getByTestId('compact-document-Mixed one')).toBeTruthy()
-    expect(mixedScreen.getByTestId('compact-document-Mixed two')).toBeTruthy()
+    expect(mixedScreen.queryByTestId('compact-document-Mixed two')).toBeNull()
     expect(
       noSubscriptionScreen.getByTestId('compact-document-Mixed one'),
     ).toBeTruthy()
     expect(
-      noSubscriptionScreen.getByTestId('compact-document-Mixed two'),
-    ).toBeTruthy()
+      noSubscriptionScreen.queryByTestId('compact-document-Mixed two'),
+    ).toBeNull()
     expect(
       mockStandardSiteEmbed.mock.calls.map(
         ([props]) => (props as {view: {title: string}}).view.title,
       ),
-    ).toEqual(['Doc one', 'Doc two'])
+    ).toEqual(['Doc one'])
     expect(
       mockStandardSiteCompactDocumentCard.mock.calls.map(
         ([props]) => (props as {view: {title: string}}).view.title,
       ),
-    ).toEqual(['Mixed one', 'Mixed two', 'Mixed one', 'Mixed two'])
+    ).toEqual(['Mixed one', 'Mixed one'])
   })
 
   it('renders at most one publication card body from the first valid hydrated publication view', () => {

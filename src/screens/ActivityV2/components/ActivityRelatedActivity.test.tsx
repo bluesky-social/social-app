@@ -2,7 +2,7 @@ import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {render} from '@testing-library/react-native'
 
-import {type ActivityRowItem} from '../model'
+import {type ActivityGroupRowItem, type ActivityRowItem} from '../model'
 import {type ActivityActor, activityCollections} from '../types'
 import {ActivityRelatedActivity} from './ActivityRelatedActivity'
 
@@ -121,5 +121,64 @@ describe('ActivityRelatedActivity', () => {
     const firstCall = mockAvatarStack.mock.calls[0] as
       [{profiles: ActivityActor[]}] | undefined
     expect(firstCall?.[0].profiles).toHaveLength(5)
+  })
+
+  it('renders related activity only for the first document in an actor group', () => {
+    const firstUri = `at://did:plc:author/${activityCollections.document}/first`
+    const secondUri = `at://did:plc:author/${activityCollections.document}/second`
+    const item: ActivityGroupRowItem = {
+      type: 'group',
+      key: 'actor-document-group',
+      group: {
+        $type: 'eric.bsky.atmosphere.getActivity#group',
+        id: 'actor-document-group',
+        groupBy: 'actor',
+        collection: activityCollections.document,
+        indexedAt: '2026-09-03T00:00:00.000Z',
+        actor: 'did:plc:author',
+        items: [
+          {
+            $type: 'eric.bsky.atmosphere.getActivity#item',
+            record: {
+              uri: firstUri,
+              cid: 'bafy-first',
+              indexedAt: '2026-09-03T00:00:00.000Z',
+            },
+            collection: activityCollections.document,
+            viewerState: {subscribed: false},
+            relatedActivity: [relatedActivity(0)],
+          },
+          {
+            $type: 'eric.bsky.atmosphere.getActivity#item',
+            record: {
+              uri: secondUri,
+              cid: 'bafy-second',
+              indexedAt: '2026-09-02T00:00:00.000Z',
+            },
+            collection: activityCollections.document,
+            viewerState: {subscribed: false},
+            relatedActivity: [relatedActivity(1)],
+          },
+        ],
+      },
+      associatedRecords: {},
+      actors: {
+        'did:plc:actor0': actor(0),
+        'did:plc:actor1': actor(1),
+      },
+    }
+
+    render(
+      <I18nProvider i18n={i18n}>
+        <ActivityRelatedActivity item={item} />
+      </I18nProvider>,
+    )
+
+    expect(mockAvatarStack).toHaveBeenCalledTimes(1)
+    expect(mockAvatarStack).toHaveBeenCalledWith(
+      expect.objectContaining({
+        profiles: [expect.objectContaining({did: 'did:plc:actor0'})],
+      }),
+    )
   })
 })

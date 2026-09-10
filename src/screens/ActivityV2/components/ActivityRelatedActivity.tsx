@@ -103,7 +103,11 @@ function RelatedActivityRow({actors}: {actors: ActivityActor[]}) {
 function getDocumentActivities(item: ActivityPresentationItem): ActivityItem[] {
   const activities =
     item.type === 'activity' ? [item.activity] : item.group.items
-  return activities.filter(
+  const visibleActivities =
+    item.type === 'group' && item.group.groupBy === 'actor'
+      ? activities.slice(0, 1)
+      : activities
+  return visibleActivities.filter(
     activity =>
       activity.collection === activityCollections.document &&
       activity.relatedActivity?.length,

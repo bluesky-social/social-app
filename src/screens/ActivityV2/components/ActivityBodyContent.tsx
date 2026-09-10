@@ -122,7 +122,10 @@ function getDocumentUris(item: ActivityPresentationProps['item']) {
     return [getRecommendationDocumentUri(item)]
   }
 
-  return getRootActivityUris(item)
+  const rootUris = getRootActivityUris(item)
+  return item.type === 'group' && item.group.groupBy === 'actor'
+    ? rootUris.slice(0, 1)
+    : rootUris
 }
 
 function getRootActivityUris(item: ActivityPresentationProps['item']) {
