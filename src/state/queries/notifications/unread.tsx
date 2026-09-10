@@ -15,6 +15,7 @@ import {type ISODatetimeString} from '@atproto/syntax'
 import {useQueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
+import {withCleanup} from '#/lib/async/withCleanup'
 import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -137,70 +138,75 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         invalidate,
         isPoll,
       }: {invalidate?: boolean; isPoll?: boolean} = {}) {
-        try {
-          if (!hasSession) return
-          if (AppState.currentState !== 'active') {
-            return
-          }
-
-          // reduce polling if unread count is set
-          if (isPoll && cacheRef.current?.unreadCount !== 0) {
-            // if hit 30+ then don't poll, otherwise reduce polling by 50%
-            if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+        await withCleanup(
+          async () => {
+            if (!hasSession) return
+            if (AppState.currentState !== 'active') {
               return
             }
-          }
 
-          if (isFetchingRef.current) {
-            return
-          }
-          // Do not move this without ensuring it gets a symmetrical reset in the finally block.
-          isFetchingRef.current = true
+            // reduce polling if unread count is set
+            if (isPoll && cacheRef.current?.unreadCount !== 0) {
+              // if hit 30+ then don't poll, otherwise reduce polling by 50%
+              if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+                return
+              }
+            }
 
-          // count
-          const {page, indexedAt: lastIndexed} = await fetchPage({
-            client,
-            cursor: undefined,
-            limit: 40,
-            queryClient,
-            moderationOpts,
-            reasons: [],
+            if (isFetchingRef.current) {
+              return
+            }
+            // Do not move this without ensuring it gets a symmetrical reset in the finally block.
+            isFetchingRef.current = true
 
-            // only fetch subjects when the page is going to be used
-            // in the notifications query, otherwise skip it
-            fetchAdditionalData: !!invalidate,
-          })
-          const unreadCount = countUnread(page)
-          const unreadCountStr =
-            unreadCount >= 30
-              ? '30+'
-              : unreadCount === 0
-                ? ''
-                : String(unreadCount)
+            // count
+            const {page, indexedAt: lastIndexed} = await fetchPage({
+              client,
+              cursor: undefined,
+              limit: 40,
+              queryClient,
+              moderationOpts,
+              reasons: [],
 
-          // track last sync
-          const now = new Date()
-          const lastIndexedDate = lastIndexed
-            ? new Date(lastIndexed)
-            : undefined
-          cacheRef.current = {
-            usableInFeed: !!invalidate, // will be used immediately
-            data: page,
-            syncedAt:
-              !lastIndexedDate || now > lastIndexedDate ? now : lastIndexedDate,
-            unreadCount,
-          }
+              // only fetch subjects when the page is going to be used
+              // in the notifications query, otherwise skip it
+              fetchAdditionalData: !!invalidate,
+            })
+            const unreadCount = countUnread(page)
+            const unreadCountStr =
+              unreadCount >= 30
+                ? '30+'
+                : unreadCount === 0
+                  ? ''
+                  : String(unreadCount)
 
-          // update & broadcast
-          setNumUnread(unreadCountStr)
-          if (invalidate) {
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
-            truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
-          }
-          broadcast.postMessage({event: unreadCountStr})
-        } finally {
-          isFetchingRef.current = false
-        }
+            // track last sync
+            const now = new Date()
+            const lastIndexedDate = lastIndexed
+              ? new Date(lastIndexed)
+              : undefined
+            cacheRef.current = {
+              usableInFeed: !!invalidate, // will be used immediately
+              data: page,
+              syncedAt:
+                !lastIndexedDate || now > lastIndexedDate
+                  ? now
+                  : lastIndexedDate,
+              unreadCount,
+            }
+
+            // update & broadcast
+            setNumUnread(unreadCountStr)
+            if (invalidate) {
+              truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
+              truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
+            }
+            broadcast.postMessage({event: unreadCountStr})
+          },
+          () => {
+            isFetchingRef.current = false
+          },
+        )
       },
 
       getCachedUnreadPage() {
