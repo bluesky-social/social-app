@@ -3,14 +3,18 @@ import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Text, type TextProps} from '#/components/Typography'
+import type * as bsky from '#/types/bsky'
 import {type ActivityPresentationProps} from '../presentation'
 import {ActivityInlineLinkText} from './ActivityInlineLinkText'
 
 const ACTIVITY_ROW_AVATAR_SIZE = 36
+const MAX_ACTIVITY_HEADER_AVATARS = 5
 
 export function ActivityRow({
   children,
@@ -33,20 +37,30 @@ export function ActivityRow({
 
 export function ActivityRowHeader({
   computedItemView,
+  item,
   children,
 }: React.PropsWithChildren<ActivityPresentationProps>) {
   const {t: l} = useLingui()
-  const {actorPresentation} = computedItemView
+  const actors = computedItemView.actors
+  const primaryActor = actors[0]
+  if (!primaryActor) {
+    return null
+  }
 
+  const primaryLabel = sanitizeHandle(primaryActor.handle, '@')
+  const othersCount =
+    item.type === 'group' && item.group.groupBy === 'subject'
+      ? actors.length - 1
+      : 0
   const othersLabel =
-    actorPresentation.othersCount > 0
-      ? l`and ${plural(actorPresentation.othersCount, {
+    othersCount > 0
+      ? l`and ${plural(othersCount, {
           one: '# other',
           other: '# others',
         })}`
       : undefined
   const accessibilityLabel = [
-    actorPresentation.primary.label,
+    primaryLabel,
     othersLabel,
     getActivityRowText(children),
   ]
@@ -57,7 +71,12 @@ export function ActivityRowHeader({
     <View
       style={[a.flex_row, a.align_center, a.gap_md, a.px_xl, a.pt_lg, a.pb_xs]}>
       <AvatarStack
-        profiles={actorPresentation.profiles}
+        profiles={
+          actors.slice(
+            0,
+            MAX_ACTIVITY_HEADER_AVATARS,
+          ) as bsky.profile.AnyProfileView[]
+        }
         size={ACTIVITY_ROW_AVATAR_SIZE}
       />
       <View style={[a.flex_1, a.justify_center]}>
@@ -67,9 +86,12 @@ export function ActivityRowHeader({
           numberOfLines={2}
           emoji>
           <ActivityInlineLinkText
-            label={l`View ${actorPresentation.primary.label}’s profile`}
-            to={actorPresentation.primary.href}>
-            {actorPresentation.primary.label}
+            label={l`View ${primaryLabel}’s profile`}
+            to={makeProfileLink({
+              did: primaryActor.did,
+              handle: primaryActor.handle,
+            })}>
+            {primaryLabel}
           </ActivityInlineLinkText>
           {othersLabel ? ` ${othersLabel}` : ''} {children}
         </ActivityRowHeaderText>
@@ -101,8 +123,14 @@ export function ActivityRowBody({children}: React.PropsWithChildren<{}>) {
   )
 }
 
-export function ActivityRowFooter({timestamp}: {timestamp: string}) {
+export function ActivityRowFooter({
+  item,
+}: Pick<ActivityPresentationProps, 'item'>) {
   const t = useTheme()
+  const timestamp =
+    item.type === 'activity'
+      ? item.activity.record.indexedAt
+      : item.group.indexedAt
 
   return (
     <TimeElapsed timestamp={timestamp}>

@@ -13,8 +13,10 @@ export function ActivityPresentationRow({
 }: ActivityPresentationProps & {
   hideTopBorder: boolean
 }) {
-  const Renderer = isKnownActivityCollection(computedItemView.rootCollection)
-    ? activityRenderers[computedItemView.rootCollection]
+  const collection =
+    item.type === 'activity' ? item.activity.collection : item.group.collection
+  const Renderer = isKnownActivityCollection(collection)
+    ? activityRenderers[collection]
     : UnknownActivityRenderer
 
   return (
@@ -22,7 +24,7 @@ export function ActivityPresentationRow({
       item={item}
       computedItemView={computedItemView}
       hideTopBorder={hideTopBorder}
-      testID={getActivityRendererTestID(computedItemView.rootCollection)}
+      testID={getActivityRendererTestID(collection)}
     />
   )
 }

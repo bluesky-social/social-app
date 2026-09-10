@@ -1,22 +1,33 @@
+import {AtUri} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {makeProfileLink} from '#/lib/routes/links'
+import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {
   ActivityArticleEmbedsBody,
   ActivityPublicationCardBody,
 } from './components/ActivityBodyContent'
 import {
   ActivityRow,
-  ActivityRowBody,
   ActivityRowFooter,
   ActivityRowHeader,
   ActivityRowHeaderText,
 } from './components/ActivityHeader'
 import {ActivityInlineLinkText} from './components/ActivityInlineLinkText'
-import {type ActivityPresentationProps} from './presentation'
+import {type ActivityGroupRowItem} from './model'
 import {
+  type ActivityPresentationItem,
+  type ActivityPresentationProps,
+} from './presentation'
+import {
+  type ActivityActor,
   activityCollections,
+  isDocumentRecord,
   isKnownActivityCollection,
+  isPublicationRecord,
+  isRecommendRecord,
+  isSubscriptionRecord,
   type KnownActivityCollection,
 } from './types'
 
@@ -67,7 +78,7 @@ export function UnknownActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{l`did something`}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityRowFooter timestamp={computedItemView.timestamp} />
+      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -79,32 +90,25 @@ function DocumentActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const actionText =
-    computedItemView.group.kind === 'actor'
-      ? l`${plural(computedItemView.group.count, {
-          one: 'published # article',
-          other: 'published # articles',
-        })}`
-      : computedItemView.group.kind === 'subject'
-        ? l`did something with an article`
-        : l`published an article`
-  const body =
-    computedItemView.body?.kind === 'article-embeds' ? (
-      <ActivityRowBody>
-        <ActivityArticleEmbedsBody
-          item={item}
-          computedItemView={computedItemView}
-        />
-      </ActivityRowBody>
-    ) : undefined
+  const actionText = isActorGroup(item)
+    ? l`${plural(getGroupCount(item), {
+        one: 'published # article',
+        other: 'published # articles',
+      })}`
+    : isSubjectGroup(item)
+      ? l`did something with an article`
+      : l`published an article`
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      {body}
-      <ActivityRowFooter timestamp={computedItemView.timestamp} />
+      <ActivityArticleEmbedsBody
+        item={item}
+        computedItemView={computedItemView}
+      />
+      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -116,32 +120,25 @@ function PublicationActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const actionText =
-    computedItemView.group.kind === 'actor'
-      ? l`${plural(computedItemView.group.count, {
-          one: 'created # publication',
-          other: 'created # publications',
-        })}`
-      : computedItemView.group.kind === 'subject'
-        ? l`did something with a publication`
-        : l`created a publication`
-  const body =
-    computedItemView.body?.kind === 'publication-card' ? (
-      <ActivityRowBody>
-        <ActivityPublicationCardBody
-          item={item}
-          computedItemView={computedItemView}
-        />
-      </ActivityRowBody>
-    ) : undefined
+  const actionText = isActorGroup(item)
+    ? l`${plural(getGroupCount(item), {
+        one: 'created # publication',
+        other: 'created # publications',
+      })}`
+    : isSubjectGroup(item)
+      ? l`did something with a publication`
+      : l`created a publication`
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      {body}
-      <ActivityRowFooter timestamp={computedItemView.timestamp} />
+      <ActivityPublicationCardBody
+        item={item}
+        computedItemView={computedItemView}
+      />
+      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -153,26 +150,34 @@ function RecommendationActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const document = computedItemView.relationships.recommendation?.document
-  const author = document?.author
-  const title = document?.title
-  const documentUrl = document?.url
 
-  if (computedItemView.group.kind === 'actor') {
+  if (isActorGroup(item)) {
     return (
       <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
           <ActivityRowHeaderText>
-            {l`${plural(computedItemView.group.count, {
+            {l`${plural(getGroupCount(item), {
               one: 'recommended # article',
               other: 'recommended # articles',
             })}`}
           </ActivityRowHeaderText>
         </ActivityRowHeader>
-        <ActivityRowFooter timestamp={computedItemView.timestamp} />
+        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
+
+  const documentUri = getRecommendationDocumentUri(item)
+  const documentRecord = documentUri
+    ? item.associatedRecords[documentUri]?.record
+    : undefined
+  const title = isDocumentRecord(documentRecord)
+    ? documentRecord.title.trim() || undefined
+    : undefined
+  const documentUrl = isDocumentRecord(documentRecord)
+    ? getDocumentUrl(documentRecord, item)
+    : undefined
+  const author = documentUri ? getDocumentAuthor(documentUri, item) : undefined
 
   if (author && title) {
     return (
@@ -200,7 +205,7 @@ function RecommendationActivityRenderer({
             <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
-        <ActivityRowFooter timestamp={computedItemView.timestamp} />
+        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -217,7 +222,7 @@ function RecommendationActivityRenderer({
           </ActivityInlineLinkText>
           <ActivityRowHeaderText>{l`’s article`}</ActivityRowHeaderText>
         </ActivityRowHeader>
-        <ActivityRowFooter timestamp={computedItemView.timestamp} />
+        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -242,7 +247,7 @@ function RecommendationActivityRenderer({
             <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
-        <ActivityRowFooter timestamp={computedItemView.timestamp} />
+        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -252,7 +257,7 @@ function RecommendationActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{l`recommended an article`}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityRowFooter timestamp={computedItemView.timestamp} />
+      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -264,33 +269,37 @@ function SubscriptionActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const publication = computedItemView.relationships.subscription?.publication
-  const body =
-    computedItemView.body?.kind === 'publication-card' ? (
-      <ActivityRowBody>
-        <ActivityPublicationCardBody
-          item={item}
-          computedItemView={computedItemView}
-        />
-      </ActivityRowBody>
-    ) : undefined
 
-  if (computedItemView.group.kind === 'actor') {
+  if (isActorGroup(item)) {
     return (
       <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
         <ActivityRowHeader item={item} computedItemView={computedItemView}>
           <ActivityRowHeaderText>
-            {l`subscribed to ${plural(computedItemView.group.count, {
+            {l`subscribed to ${plural(getGroupCount(item), {
               one: '# publication',
               other: '# publications',
             })}`}
           </ActivityRowHeaderText>
         </ActivityRowHeader>
-        {body}
-        <ActivityRowFooter timestamp={computedItemView.timestamp} />
+        <ActivityPublicationCardBody
+          item={item}
+          computedItemView={computedItemView}
+        />
+        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
+
+  const publicationUri = getSubscriptionPublicationUri(item)
+  const publicationRecord = publicationUri
+    ? item.associatedRecords[publicationUri]?.record
+    : undefined
+  const publication = isPublicationRecord(publicationRecord)
+    ? {
+        name: publicationRecord.name.trim() || undefined,
+        url: getWebUrl(publicationRecord.url),
+      }
+    : undefined
 
   if (publication?.name) {
     return (
@@ -310,8 +319,11 @@ function SubscriptionActivityRenderer({
             <ActivityRowHeaderText>{l`subscribed to ${publication.name}`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
-        {body}
-        <ActivityRowFooter timestamp={computedItemView.timestamp} />
+        <ActivityPublicationCardBody
+          item={item}
+          computedItemView={computedItemView}
+        />
+        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -321,8 +333,11 @@ function SubscriptionActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{l`subscribed to a publication`}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      {body}
-      <ActivityRowFooter timestamp={computedItemView.timestamp} />
+      <ActivityPublicationCardBody
+        item={item}
+        computedItemView={computedItemView}
+      />
+      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -334,22 +349,21 @@ function LivestreamActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const actionText =
-    computedItemView.group.kind === 'actor'
-      ? l`${plural(computedItemView.group.count, {
-          one: 'started # livestream',
-          other: 'started # livestreams',
-        })}`
-      : computedItemView.group.kind === 'subject'
-        ? l`did something with a livestream`
-        : l`started a livestream`
+  const actionText = isActorGroup(item)
+    ? l`${plural(getGroupCount(item), {
+        one: 'started # livestream',
+        other: 'started # livestreams',
+      })}`
+    : isSubjectGroup(item)
+      ? l`did something with a livestream`
+      : l`started a livestream`
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityRowFooter timestamp={computedItemView.timestamp} />
+      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -361,22 +375,129 @@ function GrainPhotoActivityRenderer({
   testID,
 }: ActivityRendererProps) {
   const {t: l} = useLingui()
-  const actionText =
-    computedItemView.group.kind === 'actor'
-      ? l`${plural(computedItemView.group.count, {
-          one: 'posted # photo',
-          other: 'posted # photos',
-        })}`
-      : computedItemView.group.kind === 'subject'
-        ? l`posted photos`
-        : l`posted a photo`
+  const actionText = isActorGroup(item)
+    ? l`${plural(getGroupCount(item), {
+        one: 'posted # photo',
+        other: 'posted # photos',
+      })}`
+    : isSubjectGroup(item)
+      ? l`posted photos`
+      : l`posted a photo`
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityRowFooter timestamp={computedItemView.timestamp} />
+      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
+}
+
+function isActorGroup(
+  item: ActivityPresentationItem,
+): item is ActivityGroupRowItem {
+  return item.type === 'group' && item.group.groupBy === 'actor'
+}
+
+function isSubjectGroup(
+  item: ActivityPresentationItem,
+): item is ActivityGroupRowItem {
+  return item.type === 'group' && item.group.groupBy === 'subject'
+}
+
+function getGroupCount(item: ActivityPresentationItem) {
+  return item.type === 'group' ? item.group.items.length : 1
+}
+
+function getRecommendationDocumentUri(item: ActivityPresentationItem) {
+  if (isSubjectGroup(item)) {
+    return item.group.subject
+  }
+  if (item.type !== 'activity') {
+    return undefined
+  }
+
+  const record = item.associatedRecords[item.activity.record.uri]?.record
+  return isRecommendRecord(record) ? record.document : undefined
+}
+
+function getSubscriptionPublicationUri(item: ActivityPresentationItem) {
+  if (isSubjectGroup(item)) {
+    return item.group.subject
+  }
+  if (item.type !== 'activity') {
+    return undefined
+  }
+
+  const record = item.associatedRecords[item.activity.record.uri]?.record
+  return isSubscriptionRecord(record) ? record.publication : undefined
+}
+
+function getDocumentAuthor(uri: string, item: ActivityPresentationItem) {
+  const did = tryGetAuthorityDid(uri)
+  const actor = did ? item.actors[did] : undefined
+  if (!isUsableActivityActor(actor)) {
+    return undefined
+  }
+
+  const label = sanitizeHandle(actor.handle, '@')
+  return {
+    label,
+    href: makeProfileLink({did: actor.did, handle: actor.handle}),
+  }
+}
+
+function getDocumentUrl(
+  document: Record<string, unknown>,
+  item: ActivityPresentationItem,
+) {
+  const site = typeof document.site === 'string' ? document.site : undefined
+  if (!site) return undefined
+
+  const publicationRecord = site.startsWith('at://')
+    ? item.associatedRecords[site]?.record
+    : undefined
+  const baseUrl = site.startsWith('at://')
+    ? getWebUrl(publicationRecord?.url)
+    : getWebUrl(site)
+  if (!baseUrl) return undefined
+
+  const path = typeof document.path === 'string' ? document.path : ''
+  try {
+    return getWebUrl(new URL(path, ensureTrailingSlash(baseUrl)).href)
+  } catch {
+    return undefined
+  }
+}
+
+function getWebUrl(value: unknown): string | undefined {
+  if (typeof value !== 'string') return undefined
+
+  try {
+    const url = new URL(value)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+      ? url.href
+      : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function ensureTrailingSlash(value: string) {
+  return value.endsWith('/') ? value : `${value}/`
+}
+
+function tryGetAuthorityDid(uri: string): string | undefined {
+  try {
+    return new AtUri(uri).host
+  } catch {
+    return undefined
+  }
+}
+
+function isUsableActivityActor(
+  actor: ActivityActor | undefined,
+): actor is ActivityActor {
+  return Boolean(actor?.did && actor.handle && !isInvalidHandle(actor.handle))
 }

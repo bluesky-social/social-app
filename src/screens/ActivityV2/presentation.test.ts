@@ -29,27 +29,21 @@ function actor(did: string, handle: string) {
   }
 }
 
-function buildAssociatedRecord(uri: string, record: Record<string, unknown>) {
-  return {
-    uri,
-    cid: `cid-${uri.split('/').at(-1)}`,
-    record,
-  }
-}
-
 function getComputedView(item: ActivityRowItem | ActivityGroupRowItem) {
   const [presentationItem] = buildActivityPresentationListItems([item])
   return presentationItem?.computedItemView
 }
 
 describe('ActivityV2 presentation', () => {
-  it('excludes unknown and invalid actors from subject-group stacks and counts', () => {
+  it('normalizes usable actors in API order while retaining hydrated actor object references', () => {
+    const alice = actor('did:plc:alice', 'alice.test')
+    const bob = actor('did:plc:bob', 'bob.test')
     const row: ActivityGroupRowItem = {
       type: 'group',
-      key: 'group-subject',
+      key: 'subject-group',
       group: {
         $type: 'eric.bsky.atmosphere.getActivity#group',
-        id: 'group-subject',
+        id: 'subject-group',
         groupBy: 'subject',
         collection: activityCollections.grainPhoto,
         indexedAt: '2026-09-09T00:00:00.000Z',
@@ -79,451 +73,90 @@ describe('ActivityV2 presentation', () => {
       },
       associatedRecords: {},
       actors: {
-        'did:plc:alice': actor('did:plc:alice', 'alice.test'),
-        'did:plc:bob': actor('did:plc:bob', 'bob.test'),
+        'did:plc:alice': alice,
+        'did:plc:bob': bob,
         'did:plc:bad': actor('did:plc:bad', 'handle.invalid'),
       },
     }
 
     const computedItemView = getComputedView(row)
 
-    expect(computedItemView?.actorPresentation.primary.did).toBe(
-      'did:plc:alice',
-    )
-    expect(
-      computedItemView?.actorPresentation.usableActors.map(value => value.did),
-    ).toEqual(['did:plc:alice', 'did:plc:bob'])
-    expect(computedItemView?.actorPresentation.othersCount).toBe(1)
-    expect(
-      computedItemView?.actorPresentation.profiles.map(profile => profile.did),
-    ).toEqual(['did:plc:alice', 'did:plc:bob'])
+    expect(computedItemView?.actors).toEqual([alice, bob])
+    expect(computedItemView?.actors[0]).toBe(alice)
+    expect(computedItemView?.actors[1]).toBe(bob)
   })
 
-  it('hoists timestamp, relationship data, and explicit subscription summary into computedItemView', () => {
-    const rootUri = 'at://did:plc:recommender/site.standard.graph.recommend/1'
+  it('contains only actors and document subscription aggregation', () => {
     const documentUri = 'at://did:plc:author/site.standard.document/1'
-    const row: ActivityRowItem = {
+    const documentActor = actor('did:plc:author', 'author.test')
+    const document: ActivityRowItem = {
       type: 'activity',
-      key: rootUri,
-      activity: activity(rootUri, activityCollections.recommendation, true),
-      associatedRecords: {
-        [rootUri]: {
-          uri: rootUri,
-          cid: 'cid-root',
-          record: {
-            $type: activityCollections.recommendation,
-            document: documentUri,
-            createdAt: '2026-09-09T00:00:00.000Z',
-          },
-        },
-        [documentUri]: {
-          uri: documentUri,
-          cid: 'cid-document',
-          record: {
-            $type: activityCollections.document,
-            site: 'https://example.com',
-            path: '/essay',
-            title: 'Essay',
-            publishedAt: '2026-09-08T00:00:00.000Z',
-          },
-        },
-      },
-      actors: {
-        'did:plc:recommender': actor('did:plc:recommender', 'recommender.test'),
-        'did:plc:author': actor('did:plc:author', 'author.test'),
-      },
+      key: documentUri,
+      activity: activity(documentUri, activityCollections.document, true),
+      associatedRecords: {},
+      actors: {'did:plc:author': documentActor},
     }
-    const group: ActivityGroupRowItem = {
-      type: 'group',
-      key: 'subscription-group',
-      group: {
-        $type: 'eric.bsky.atmosphere.getActivity#group',
-        id: 'subscription-group',
-        groupBy: 'actor',
-        collection: activityCollections.subscription,
-        indexedAt: '2026-09-09T04:00:00.000Z',
-        actor: 'did:plc:subscriber',
-        items: [
-          activity(
-            'at://did:plc:subscriber/site.standard.graph.subscription/1',
-            activityCollections.subscription,
-            true,
-          ),
-          activity(
-            'at://did:plc:subscriber/site.standard.graph.subscription/2',
-            activityCollections.subscription,
-            false,
-          ),
-        ],
-      },
+    const recommendationUri =
+      'at://did:plc:recommender/site.standard.graph.recommend/1'
+    const recommendation: ActivityRowItem = {
+      type: 'activity',
+      key: recommendationUri,
+      activity: activity(recommendationUri, activityCollections.recommendation),
       associatedRecords: {},
       actors: {
-        'did:plc:subscriber': actor('did:plc:subscriber', 'subscriber.test'),
+        'did:plc:recommender': actor('did:plc:recommender', 'recommender.test'),
       },
     }
 
-    const rowComputedView = getComputedView(row)
-    const groupComputedView = getComputedView(group)
-
-    expect(rowComputedView).toEqual(
-      expect.objectContaining({
-        rootCollection: activityCollections.recommendation,
-        timestamp: '2026-09-09T00:00:00.000Z',
-        group: {kind: 'standalone', count: 1},
-        subscriptionState: 'all',
-        roots: [
-          expect.objectContaining({
-            uri: rootUri,
-            isSubscribed: true,
-          }),
-        ],
-        relationships: {
-          recommendation: {
-            document: expect.objectContaining({
-              uri: documentUri,
-              title: 'Essay',
-              url: 'https://example.com/essay',
-              author: expect.objectContaining({
-                did: 'did:plc:author',
-                href: '/profile/author.test',
-              }),
-            }),
-          },
-          subscription: undefined,
-        },
-      }),
-    )
-    expect(groupComputedView).toEqual(
-      expect.objectContaining({
-        rootCollection: activityCollections.subscription,
-        timestamp: '2026-09-09T04:00:00.000Z',
-        group: {kind: 'actor', count: 2},
-        subscriptionState: 'some',
-        roots: [
-          expect.objectContaining({isSubscribed: true}),
-          expect.objectContaining({isSubscribed: false}),
-        ],
-      }),
-    )
+    expect(getComputedView(document)).toEqual({
+      actors: [documentActor],
+      subscriptionState: 'all',
+    })
+    expect(getComputedView(recommendation)).toEqual({
+      actors: [recommendation.actors['did:plc:recommender']],
+    })
+    expect(Object.keys(getComputedView(document) ?? {}).sort()).toEqual([
+      'actors',
+      'subscriptionState',
+    ])
   })
 
-  it('hoists initial article body eligibility and body-ready external views into computedItemView', () => {
-    const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
-    const subscribedDocumentUri = `at://did:plc:author/${activityCollections.document}/subscribed`
-    const unsubscribedDocumentUri = `at://did:plc:author/${activityCollections.document}/unsubscribed`
-    const subscribedRow: ActivityRowItem = {
-      type: 'activity',
-      key: subscribedDocumentUri,
-      activity: activity(
-        subscribedDocumentUri,
-        activityCollections.document,
-        true,
-      ),
-      associatedRecords: {
-        [subscribedDocumentUri]: buildAssociatedRecord(subscribedDocumentUri, {
-          $type: activityCollections.document,
-          site: publicationUri,
-          path: 'subscribed',
-          title: 'Subscribed essay',
-          publishedAt: '2026-09-09T00:00:00.000Z',
-        }),
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Orbit Weekly',
-          url: 'https://example.com/publications/orbit-weekly',
-        }),
-      },
-      actors: {
-        'did:plc:author': actor('did:plc:author', 'author.test'),
-        'did:plc:publication': actor('did:plc:publication', 'publication.test'),
-      },
-    }
-    const unsubscribedRow: ActivityRowItem = {
-      type: 'activity',
-      key: unsubscribedDocumentUri,
-      activity: activity(
-        unsubscribedDocumentUri,
-        activityCollections.document,
-        false,
-      ),
-      associatedRecords: {
-        [unsubscribedDocumentUri]: buildAssociatedRecord(
-          unsubscribedDocumentUri,
-          {
-            $type: activityCollections.document,
-            site: 'https://example.com',
-            path: '/unsubscribed',
-            title: 'Unsubscribed essay',
-            publishedAt: '2026-09-09T00:00:00.000Z',
-          },
-        ),
-      },
-      actors: {
-        'did:plc:author': actor('did:plc:author', 'author.test'),
-      },
-    }
-    const subscribedGroup: ActivityGroupRowItem = {
+  it('aggregates document subscription state without retaining individual roots', () => {
+    const author = actor('did:plc:author', 'author.test')
+    const buildGroup = (subscribed: boolean[]): ActivityGroupRowItem => ({
       type: 'group',
-      key: 'subscribed-group',
+      key: subscribed.join('-'),
       group: {
         $type: 'eric.bsky.atmosphere.getActivity#group',
-        id: 'subscribed-group',
+        id: subscribed.join('-'),
         groupBy: 'actor',
         collection: activityCollections.document,
-        indexedAt: '2026-09-09T04:00:00.000Z',
+        indexedAt: '2026-09-09T00:00:00.000Z',
         actor: 'did:plc:author',
-        items: [
+        items: subscribed.map((value, index) =>
           activity(
-            `at://did:plc:author/${activityCollections.document}/1`,
+            `at://did:plc:author/site.standard.document/${index}`,
             activityCollections.document,
-            true,
+            value,
           ),
-          activity(
-            `at://did:plc:author/${activityCollections.document}/2`,
-            activityCollections.document,
-            true,
-          ),
-        ],
+        ),
       },
-      associatedRecords: {
-        [`at://did:plc:author/${activityCollections.document}/1`]:
-          buildAssociatedRecord(
-            `at://did:plc:author/${activityCollections.document}/1`,
-            {
-              $type: activityCollections.document,
-              site: publicationUri,
-              path: 'one',
-              title: 'First grouped essay',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-        [`at://did:plc:author/${activityCollections.document}/2`]:
-          buildAssociatedRecord(
-            `at://did:plc:author/${activityCollections.document}/2`,
-            {
-              $type: activityCollections.document,
-              site: publicationUri,
-              path: 'two',
-              title: 'Second grouped essay',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Orbit Weekly',
-          url: 'https://example.com/publications/orbit-weekly',
-        }),
-      },
-      actors: {
-        'did:plc:author': actor('did:plc:author', 'author.test'),
-        'did:plc:publication': actor('did:plc:publication', 'publication.test'),
-      },
-    }
-    const mixedGroup: ActivityGroupRowItem = {
-      ...subscribedGroup,
-      key: 'mixed-group',
-      group: {
-        ...subscribedGroup.group,
-        id: 'mixed-group',
-        items: [
-          activity(
-            `at://did:plc:author/${activityCollections.document}/1`,
-            activityCollections.document,
-            true,
-          ),
-          activity(
-            `at://did:plc:author/${activityCollections.document}/2`,
-            activityCollections.document,
-            false,
-          ),
-        ],
-      },
-    }
+      associatedRecords: {},
+      actors: {'did:plc:author': author},
+    })
 
-    expect(getComputedView(subscribedRow)?.body).toEqual(
-      expect.objectContaining({
-        kind: 'article-embeds',
-        views: [
-          expect.objectContaining({
-            title: 'Subscribed essay',
-            uri: 'https://example.com/publications/orbit-weekly/subscribed',
-          }),
-        ],
-      }),
+    expect(getComputedView(buildGroup([true, true]))?.subscriptionState).toBe(
+      'all',
     )
-    expect(getComputedView(unsubscribedRow)?.body).toBeUndefined()
-    expect(getComputedView(subscribedGroup)?.body).toEqual(
-      expect.objectContaining({
-        kind: 'article-embeds',
-        views: [
-          expect.objectContaining({title: 'First grouped essay'}),
-          expect.objectContaining({title: 'Second grouped essay'}),
-        ],
-      }),
+    expect(getComputedView(buildGroup([true, false]))?.subscriptionState).toBe(
+      'some',
     )
-    expect(getComputedView(mixedGroup)?.body).toBeUndefined()
-  })
-
-  it('hoists publication-root body views, theme colors, refs, and profiles into computedItemView', () => {
-    const actorDid = 'did:plc:publication-owner'
-    const publicationUri = `at://${actorDid}/${activityCollections.publication}/1`
-    const row: ActivityRowItem = {
-      type: 'activity',
-      key: publicationUri,
-      activity: activity(
-        publicationUri,
-        activityCollections.publication,
-        false,
-      ),
-      associatedRecords: {
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Orbit Weekly',
-          url: 'https://example.com/publications/orbit-weekly',
-          basicTheme: {
-            accent: {r: 1, g: 2, b: 3},
-            accentForeground: {r: 254, g: 253, b: 252},
-          },
-        }),
-      },
-      actors: {
-        [actorDid]: actor(actorDid, 'publication-owner.test'),
-      },
-    }
-    const invalidRow: ActivityRowItem = {
-      ...row,
-      key: `${publicationUri}-invalid`,
-      activity: activity(
-        publicationUri,
-        activityCollections.publication,
-        false,
-      ),
-      associatedRecords: {
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Broken publication',
-          url: 'notaurl',
-        }),
-      },
-    }
-
-    expect(getComputedView(row)?.body).toEqual(
-      expect.objectContaining({
-        kind: 'publication-card',
-        view: expect.objectContaining({
-          title: 'Orbit Weekly',
-          uri: 'https://example.com/publications/orbit-weekly',
-          associatedRefs: [expect.objectContaining({uri: publicationUri})],
-          associatedProfiles: [expect.objectContaining({did: actorDid})],
-        }),
-        themeColors: {
-          custom: true,
-          accent: '#010203',
-          accentForeground: '#fefdfc',
-        },
-      }),
-    )
-    expect(getComputedView(invalidRow)?.body).toBeUndefined()
-  })
-
-  it('keeps recommendation bodies empty even when a referenced document is hydrated, because article bodies are document-root only', () => {
-    const actorDid = 'did:plc:recommender'
-    const documentAuthorDid = 'did:plc:author'
-    const rootUri = `at://${actorDid}/${activityCollections.recommendation}/1`
-    const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/1`
-    const row: ActivityRowItem = {
-      type: 'activity',
-      key: rootUri,
-      activity: activity(rootUri, activityCollections.recommendation, false),
-      associatedRecords: {
-        [rootUri]: buildAssociatedRecord(rootUri, {
-          $type: activityCollections.recommendation,
-          document: documentUri,
-          createdAt: '2026-09-09T00:00:00.000Z',
-        }),
-        [documentUri]: buildAssociatedRecord(documentUri, {
-          $type: activityCollections.document,
-          site: 'https://example.com',
-          path: 'essay',
-          title: 'Referenced essay',
-          publishedAt: '2026-09-09T00:00:00.000Z',
-        }),
-      },
-      actors: {
-        [actorDid]: actor(actorDid, 'recommender.test'),
-        [documentAuthorDid]: actor(documentAuthorDid, 'author.test'),
-      },
-    }
-
-    expect(getComputedView(row)?.body).toBeUndefined()
-  })
-
-  it('hoists initial publication body selection into computedItemView using the first valid hydrated target in API order', () => {
-    const actorDid = 'did:plc:subscriber'
-    const firstRootUri = `at://${actorDid}/${activityCollections.subscription}/1`
-    const secondRootUri = `at://${actorDid}/${activityCollections.subscription}/2`
-    const thirdRootUri = `at://${actorDid}/${activityCollections.subscription}/3`
-    const validPublicationUri = `at://did:plc:publication/${activityCollections.publication}/good`
-    const laterPublicationUri = `at://did:plc:publication/${activityCollections.publication}/later`
-    const row: ActivityGroupRowItem = {
-      type: 'group',
-      key: 'subscription-group',
-      group: {
-        $type: 'eric.bsky.atmosphere.getActivity#group',
-        id: 'subscription-group',
-        groupBy: 'actor',
-        collection: activityCollections.subscription,
-        indexedAt: '2026-09-09T04:00:00.000Z',
-        actor: actorDid,
-        items: [
-          activity(firstRootUri, activityCollections.subscription, false),
-          activity(secondRootUri, activityCollections.subscription, false),
-          activity(thirdRootUri, activityCollections.subscription, false),
-        ],
-      },
-      associatedRecords: {
-        [firstRootUri]: buildAssociatedRecord(firstRootUri, {
-          $type: activityCollections.subscription,
-          publication:
-            'at://did:plc:publication/site.standard.publication/missing',
-        }),
-        [secondRootUri]: buildAssociatedRecord(secondRootUri, {
-          $type: activityCollections.subscription,
-          publication: validPublicationUri,
-        }),
-        [thirdRootUri]: buildAssociatedRecord(thirdRootUri, {
-          $type: activityCollections.subscription,
-          publication: laterPublicationUri,
-        }),
-        [validPublicationUri]: buildAssociatedRecord(validPublicationUri, {
-          $type: activityCollections.publication,
-          name: 'Valid publication',
-          url: 'https://example.com/publications/valid',
-        }),
-        [laterPublicationUri]: buildAssociatedRecord(laterPublicationUri, {
-          $type: activityCollections.publication,
-          name: 'Later publication',
-          url: 'https://example.com/publications/later',
-        }),
-      },
-      actors: {
-        [actorDid]: actor(actorDid, 'subscriber.test'),
-        'did:plc:publication': actor('did:plc:publication', 'publication.test'),
-      },
-    }
-
-    expect(getComputedView(row)?.body).toEqual(
-      expect.objectContaining({
-        kind: 'publication-card',
-        view: expect.objectContaining({
-          title: 'Valid publication',
-          uri: 'https://example.com/publications/valid',
-        }),
-      }),
+    expect(getComputedView(buildGroup([false, false]))?.subscriptionState).toBe(
+      'none',
     )
   })
 
-  it('omits standalone and grouped rows that have no usable actors', () => {
+  it('omits standalone and grouped rows with no usable hydrated actor', () => {
     const standalone: ActivityRowItem = {
       type: 'activity',
       key: 'standalone',
@@ -540,14 +173,14 @@ describe('ActivityV2 presentation', () => {
         groupBy: 'actor',
         collection: activityCollections.document,
         indexedAt: '2026-09-09T00:00:00.000Z',
-        actor: 'did:plc:ghost',
+        actor: 'did:plc:bad',
         items: [
-          activity('at://did:plc:ghost/site.standard.document/1'),
-          activity('at://did:plc:ghost/site.standard.document/2'),
+          activity('at://did:plc:bad/site.standard.document/1'),
+          activity('at://did:plc:bad/site.standard.document/2'),
         ],
       },
       associatedRecords: {},
-      actors: {},
+      actors: {'did:plc:bad': actor('did:plc:bad', 'handle.invalid')},
     }
 
     expect(buildActivityPresentationListItems([standalone])).toEqual([

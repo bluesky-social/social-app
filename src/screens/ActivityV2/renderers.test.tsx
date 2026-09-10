@@ -124,7 +124,11 @@ function buildSinglePresentationItem(
   item: ActivityPresentationItem,
 ): ActivityPresentationProps {
   const [presentationItem] = buildActivityPresentationListItems([item])
-  if (!presentationItem?.computedItemView) {
+  if (
+    !presentationItem?.computedItemView ||
+    (presentationItem.item.type !== 'activity' &&
+      presentationItem.item.type !== 'group')
+  ) {
     throw new Error('Expected usable computed view for row test')
   }
 

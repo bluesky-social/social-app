@@ -7,46 +7,100 @@ import {
 } from '#/components/Post/Embed/StandardSiteEmbed'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {type app} from '#/lexicons'
+import {
+  createDocumentExternalView,
+  createPublicationExternalView,
+  getPublicationBodyThemeColors,
+} from '../externalViews'
 import {type ActivityPresentationProps} from '../presentation'
+import {activityCollections, isSubscriptionRecord} from '../types'
+import {ActivityRowBody} from './ActivityHeader'
 
 export function ActivityArticleEmbedsBody({
   computedItemView,
+  item,
 }: ActivityPresentationProps) {
-  if (computedItemView.body?.kind !== 'article-embeds') {
+  if (computedItemView.subscriptionState !== 'all') {
+    return null
+  }
+
+  const views = getRootActivityUris(item).flatMap(uri => {
+    const view = createDocumentExternalView({
+      uri,
+      associatedRecords: item.associatedRecords,
+      actors: item.actors,
+    })
+    return view ? [view] : []
+  })
+  if (views.length === 0) {
     return null
   }
 
   return (
-    <View style={[a.gap_sm]}>
-      {computedItemView.body.views.map(view => (
-        <StandardSiteEmbed key={getViewKey(view)} view={view} />
-      ))}
-    </View>
+    <ActivityRowBody>
+      <View style={[a.gap_sm]}>
+        {views.map(view => (
+          <StandardSiteEmbed key={getViewKey(view)} view={view} />
+        ))}
+      </View>
+    </ActivityRowBody>
   )
 }
 
-export function ActivityPublicationCardBody({
-  computedItemView,
-}: ActivityPresentationProps) {
+export function ActivityPublicationCardBody({item}: ActivityPresentationProps) {
   const t = useTheme()
 
-  if (computedItemView.body?.kind !== 'publication-card') {
-    return null
+  for (const uri of getPublicationBodyCandidateUris(item)) {
+    const view = createPublicationExternalView({
+      uri,
+      associatedRecords: item.associatedRecords,
+      actors: item.actors,
+    })
+    if (!view) continue
+
+    const themeColors: ssTypes.ThemeColors = getPublicationBodyThemeColors(
+      view,
+    ) ?? {
+      custom: false,
+      accent: t.atoms.text?.color ?? '#000000',
+      accentForeground: t.atoms.text_inverted?.color ?? '#ffffff',
+    }
+
+    return (
+      <ActivityRowBody>
+        <PublicationCard view={view} themeColors={themeColors} />
+      </ActivityRowBody>
+    )
   }
 
-  const themeColors: ssTypes.ThemeColors = computedItemView.body
-    .themeColors ?? {
-    custom: false,
-    accent: t.atoms.text?.color ?? '#000000',
-    accentForeground: t.atoms.text_inverted?.color ?? '#ffffff',
+  return null
+}
+
+function getRootActivityUris(item: ActivityPresentationProps['item']) {
+  return item.type === 'activity'
+    ? [item.activity.record.uri]
+    : item.group.items.map(activity => activity.record.uri)
+}
+
+function getPublicationBodyCandidateUris(
+  item: ActivityPresentationProps['item'],
+) {
+  const collection =
+    item.type === 'activity' ? item.activity.collection : item.group.collection
+  const rootUris = getRootActivityUris(item)
+  if (collection !== activityCollections.subscription) {
+    return rootUris
   }
 
-  return (
-    <PublicationCard
-      view={computedItemView.body.view}
-      themeColors={themeColors}
-    />
-  )
+  return rootUris.map(uri => getSubscriptionPublicationUri(uri, item))
+}
+
+function getSubscriptionPublicationUri(
+  rootUri: string,
+  item: ActivityPresentationProps['item'],
+) {
+  const record = item.associatedRecords[rootUri]?.record
+  return isSubscriptionRecord(record) ? record.publication : undefined
 }
 
 function getViewKey(view: app.bsky.embed.external.ViewExternal) {
