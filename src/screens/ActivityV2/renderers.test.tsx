@@ -21,6 +21,7 @@ const mockAvatarStack = jest.fn()
 const mockInlineLinkText = jest.fn()
 const mockPublicationCard = jest.fn()
 const mockStandardSiteEmbed = jest.fn()
+const mockStandardSiteCompactDocumentCard = jest.fn()
 const mockTimeElapsed = jest.fn()
 
 jest.mock('#/alf', () => ({
@@ -76,6 +77,11 @@ jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
       const title = (view as {title?: string} | undefined)?.title ?? 'unknown'
       return <View testID={`full-document-${title}`} />
     },
+    StandardSiteCompactDocumentCard: ({view}: Record<string, unknown>) => {
+      mockStandardSiteCompactDocumentCard({view})
+      const title = (view as {title?: string} | undefined)?.title ?? 'unknown'
+      return <View testID={`compact-document-${title}`} />
+    },
   }
 })
 jest.mock('#/components/Typography', () => {
@@ -103,6 +109,7 @@ beforeEach(() => {
   mockInlineLinkText.mockClear()
   mockPublicationCard.mockClear()
   mockStandardSiteEmbed.mockClear()
+  mockStandardSiteCompactDocumentCard.mockClear()
   mockTimeElapsed.mockClear()
 })
 
@@ -511,7 +518,7 @@ describe('ActivityV2 collection renderers', () => {
     )
   })
 
-  it('renders full article bodies only for subscribed document activities', () => {
+  it('renders full or compact document cards based on standalone subscription state', () => {
     const actorDid = 'did:plc:doc-body'
     const documentUri = `at://${actorDid}/${activityCollections.document}/1`
     const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
@@ -577,6 +584,9 @@ describe('ActivityV2 collection renderers', () => {
     expect(
       unsubscribedScreen.queryByTestId('full-document-Hidden essay'),
     ).toBeNull()
+    expect(
+      unsubscribedScreen.getByTestId('compact-document-Hidden essay'),
+    ).toBeTruthy()
     expect(mockStandardSiteEmbed).toHaveBeenCalledWith(
       expect.objectContaining({
         view: expect.objectContaining({
@@ -587,7 +597,7 @@ describe('ActivityV2 collection renderers', () => {
     )
   })
 
-  it('renders document-group article bodies only when every child is subscribed, in API order', () => {
+  it('renders full or compact document group cards from aggregate subscription state in API order', () => {
     const actorDid = 'did:plc:doc-group'
     const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
     const allSubscribedRow = buildActorGroupRow({
@@ -669,8 +679,21 @@ describe('ActivityV2 collection renderers', () => {
       },
     })
 
+    const noSubscriptionRow: ActivityGroupRowItem = {
+      ...mixedSubscriptionRow,
+      key: 'document-group-none',
+      group: {
+        ...mixedSubscriptionRow.group,
+        id: 'document-group-none',
+        items: mixedSubscriptionRow.group.items.map(item => ({
+          ...item,
+          viewerState: {subscribed: false},
+        })),
+      },
+    }
     const allSubscribedScreen = renderRow(allSubscribedRow)
     const mixedScreen = renderRow(mixedSubscriptionRow)
+    const noSubscriptionScreen = renderRow(noSubscriptionRow)
 
     expect(
       allSubscribedScreen.getByTestId('full-document-Doc one'),
@@ -680,10 +703,26 @@ describe('ActivityV2 collection renderers', () => {
     ).toBeTruthy()
     expect(mixedScreen.queryByTestId('full-document-Mixed one')).toBeNull()
     expect(
+      noSubscriptionScreen.queryByTestId('full-document-Mixed one'),
+    ).toBeNull()
+    expect(mixedScreen.getByTestId('compact-document-Mixed one')).toBeTruthy()
+    expect(mixedScreen.getByTestId('compact-document-Mixed two')).toBeTruthy()
+    expect(
+      noSubscriptionScreen.getByTestId('compact-document-Mixed one'),
+    ).toBeTruthy()
+    expect(
+      noSubscriptionScreen.getByTestId('compact-document-Mixed two'),
+    ).toBeTruthy()
+    expect(
       mockStandardSiteEmbed.mock.calls.map(
         ([props]) => (props as {view: {title: string}}).view.title,
       ),
     ).toEqual(['Doc one', 'Doc two'])
+    expect(
+      mockStandardSiteCompactDocumentCard.mock.calls.map(
+        ([props]) => (props as {view: {title: string}}).view.title,
+      ),
+    ).toEqual(['Mixed one', 'Mixed two', 'Mixed one', 'Mixed two'])
   })
 
   it('renders at most one publication card body from the first valid hydrated publication view', () => {
@@ -782,6 +821,110 @@ describe('ActivityV2 collection renderers', () => {
 
     expect(screen.queryByTestId('full-document-Referenced essay')).toBeNull()
     expect(mockStandardSiteEmbed).not.toHaveBeenCalled()
+  })
+
+  it('renders shared article cards only for multi-person recommendation subject groups', () => {
+    const documentAuthorDid = 'did:plc:shared-author'
+    const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/shared`
+    const subjectGroup = buildSubjectGroupRow({
+      collection: activityCollections.recommendation,
+      subject: documentUri,
+      actorDids: ['did:plc:alpha', 'did:plc:beta'],
+      actors: {
+        'did:plc:alpha': buildActor('did:plc:alpha', 'alpha.test'),
+        'did:plc:beta': buildActor('did:plc:beta', 'beta.test'),
+        [documentAuthorDid]: buildActor(
+          documentAuthorDid,
+          'shared-author.test',
+        ),
+      },
+      associatedRecords: {
+        [documentUri]: buildAssociatedRecord(documentUri, {
+          $type: activityCollections.document,
+          site: 'https://example.com',
+          path: '/shared',
+          title: 'Shared article',
+          publishedAt: '2026-09-09T00:00:00.000Z',
+        }),
+      },
+    })
+    const fallbackRootUri = `at://did:plc:alpha/${activityCollections.recommendation}/1`
+    const fallbackSubjectGroup: ActivityGroupRowItem = {
+      ...subjectGroup,
+      key: 'recommendation-subject-group-fallback',
+      group: {
+        ...subjectGroup.group,
+        id: 'recommendation-subject-group-fallback',
+        subject: undefined,
+      },
+      associatedRecords: {
+        ...subjectGroup.associatedRecords,
+        [fallbackRootUri]: buildAssociatedRecord(fallbackRootUri, {
+          $type: activityCollections.recommendation,
+          document: documentUri,
+          createdAt: '2026-09-09T00:00:00.000Z',
+        }),
+      },
+    }
+    const oneChildSubjectGroup = buildSubjectGroupRow({
+      collection: activityCollections.recommendation,
+      subject: documentUri,
+      actorDids: ['did:plc:alpha'],
+      actors: {
+        'did:plc:alpha': buildActor('did:plc:alpha', 'alpha.test'),
+        [documentAuthorDid]: buildActor(
+          documentAuthorDid,
+          'shared-author.test',
+        ),
+      },
+      associatedRecords: {
+        [documentUri]: buildAssociatedRecord(documentUri, {
+          $type: activityCollections.document,
+          site: 'https://example.com',
+          path: '/shared',
+          title: 'Shared article',
+          publishedAt: '2026-09-09T00:00:00.000Z',
+        }),
+      },
+    })
+    const actorGroup = buildActorGroupRow({
+      collection: activityCollections.recommendation,
+      actorDid: 'did:plc:recommender',
+      count: 2,
+      actors: {
+        'did:plc:recommender': buildActor(
+          'did:plc:recommender',
+          'recommender.test',
+        ),
+      },
+    })
+
+    const subjectGroupScreen = renderRow(subjectGroup)
+    const fallbackSubjectGroupScreen = renderRow(fallbackSubjectGroup)
+    const oneChildSubjectGroupScreen = renderRow(oneChildSubjectGroup)
+    const actorGroupScreen = renderRow(actorGroup)
+
+    expect(
+      subjectGroupScreen.getByTestId('full-document-Shared article'),
+    ).toBeTruthy()
+    expect(
+      fallbackSubjectGroupScreen.getByTestId('full-document-Shared article'),
+    ).toBeTruthy()
+    expect(
+      oneChildSubjectGroupScreen.queryByTestId('full-document-Shared article'),
+    ).toBeNull()
+    expect(
+      actorGroupScreen.queryByTestId('full-document-Shared article'),
+    ).toBeNull()
+    expect(mockStandardSiteEmbed).toHaveBeenCalledTimes(2)
+    expect(mockStandardSiteEmbed).toHaveBeenCalledWith(
+      expect.objectContaining({
+        view: expect.objectContaining({
+          title: 'Shared article',
+          uri: 'https://example.com/shared',
+        }),
+      }),
+    )
   })
 
   it('renders footer timestamps from standalone and group indexedAt values using TimeElapsed formatting', () => {

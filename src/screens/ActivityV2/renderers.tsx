@@ -5,8 +5,8 @@ import {useLingui} from '@lingui/react/macro'
 import {makeProfileLink} from '#/lib/routes/links'
 import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {
-  ActivityArticleEmbedsBody,
   ActivityPublicationCardBody,
+  DocumentBody,
 } from './components/ActivityBodyContent'
 import {
   ActivityRow,
@@ -104,10 +104,7 @@ function DocumentActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityArticleEmbedsBody
-        item={item}
-        computedItemView={computedItemView}
-      />
+      <DocumentBody item={item} computedItemView={computedItemView} />
       <ActivityRowFooter item={item} />
     </ActivityRow>
   )
@@ -205,6 +202,7 @@ function RecommendationActivityRenderer({
             <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
+        <DocumentBody item={item} computedItemView={computedItemView} />
         <ActivityRowFooter item={item} />
       </ActivityRow>
     )
@@ -222,6 +220,7 @@ function RecommendationActivityRenderer({
           </ActivityInlineLinkText>
           <ActivityRowHeaderText>{l`’s article`}</ActivityRowHeaderText>
         </ActivityRowHeader>
+        <DocumentBody item={item} computedItemView={computedItemView} />
         <ActivityRowFooter item={item} />
       </ActivityRow>
     )
@@ -247,6 +246,7 @@ function RecommendationActivityRenderer({
             <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
           )}
         </ActivityRowHeader>
+        <DocumentBody item={item} computedItemView={computedItemView} />
         <ActivityRowFooter item={item} />
       </ActivityRow>
     )
@@ -257,6 +257,7 @@ function RecommendationActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{l`recommended an article`}</ActivityRowHeaderText>
       </ActivityRowHeader>
+      <DocumentBody item={item} computedItemView={computedItemView} />
       <ActivityRowFooter item={item} />
     </ActivityRow>
   )
