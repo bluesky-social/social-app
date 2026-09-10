@@ -39,6 +39,7 @@ type ListProps = {
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   utils: {rgbToHex: () => '#000000'},
+  web: (styles: object) => styles,
   useTheme: () => ({
     atoms: {
       border_contrast_low: {},
@@ -340,6 +341,7 @@ describe('ActivityV2Screen', () => {
     expect(screen.getByTestId('activityV2LivestreamRow')).toBeTruthy()
     expect(screen.getByTestId('activityV2GrainPhotoRow')).toBeTruthy()
     expect(screen.getByTestId('activityV2UnknownRow')).toBeTruthy()
+    expect(screen.queryByTestId('activityV2DebugButton')).toBeNull()
     expect(
       screen.getByLabelText(
         `${handleLabel('group-author.test')} published 2 articles`,

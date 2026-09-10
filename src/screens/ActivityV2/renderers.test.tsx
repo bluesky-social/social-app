@@ -1,6 +1,6 @@
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {render} from '@testing-library/react-native'
+import {fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {ActivityPresentationRow} from './components/ActivityPresentationRow'
@@ -24,9 +24,15 @@ const mockStandardSiteEmbed = jest.fn()
 const mockStandardSiteCompactDocumentCard = jest.fn()
 const mockTimeElapsed = jest.fn()
 
+jest.mock('./debug', () => ({
+  ...jest.requireActual('./debug'),
+  isActivityV2DebugEnabled: () => true,
+}))
+
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
   utils: {rgbToHex: () => '#000000'},
+  web: (styles: object) => styles,
   useTheme: () => ({
     atoms: {
       border_contrast_low: {},
@@ -46,6 +52,31 @@ jest.mock('#/components/AvatarStack', () => {
       mockAvatarStack(props)
       return <View testID="activityV2AvatarStack" />
     },
+  }
+})
+jest.mock('#/components/Button', () => {
+  const {Pressable, View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Button: ({
+      children,
+      label,
+      onPress,
+      testID,
+    }: React.PropsWithChildren<{
+      label: string
+      onPress: () => void
+      testID?: string
+    }>) => (
+      <Pressable
+        accessibilityHint=""
+        accessibilityLabel={label}
+        onPress={onPress}
+        testID={testID}>
+        {children}
+      </Pressable>
+    ),
+    ButtonIcon: () => <View />,
   }
 })
 jest.mock('#/components/Link', () => {
@@ -339,6 +370,69 @@ describe('ActivityV2 collection renderers', () => {
         ]),
       }),
     )
+  })
+
+  it('logs only the row-reachable objects while preserving their references', () => {
+    const actorDid = 'did:plc:debug-chef'
+    const publicationDid = 'did:plc:debug-publication'
+    const irrelevantDid = 'did:plc:irrelevant'
+    const rootUri = `at://${actorDid}/${activityCollections.document}/debug-document`
+    const publicationUri = `at://${publicationDid}/${activityCollections.publication}/debug-publication`
+    const irrelevantUri = `at://${irrelevantDid}/${activityCollections.document}/irrelevant`
+    const rootRecord = buildAssociatedRecord(rootUri, {
+      $type: activityCollections.document,
+      site: publicationUri,
+      title: 'Debug document',
+      publishedAt: '2026-09-09T00:00:00.000Z',
+    })
+    const publicationRecord = buildAssociatedRecord(publicationUri, {
+      $type: activityCollections.publication,
+      name: 'Debug publication',
+      url: 'https://debug.example',
+    })
+    const row = buildActivityRow({
+      collection: activityCollections.document,
+      actorDid,
+      rkey: 'debug-document',
+      associatedRecords: {
+        [rootUri]: rootRecord,
+        [publicationUri]: publicationRecord,
+        [irrelevantUri]: buildAssociatedRecord(irrelevantUri, {
+          $type: activityCollections.document,
+        }),
+      },
+      actors: {
+        [actorDid]: buildActor(actorDid, 'debug-chef.example'),
+        [publicationDid]: buildActor(
+          publicationDid,
+          'debug-publication.example',
+        ),
+        [irrelevantDid]: buildActor(irrelevantDid, 'irrelevant.example'),
+      },
+    })
+    const consoleLog = jest.spyOn(console, 'log').mockImplementation()
+
+    const screen = renderRow(row)
+    fireEvent.press(screen.getByTestId('activityV2DebugButton'))
+
+    const firstCall = consoleLog.mock.calls[0] as [ActivityRowItem] | undefined
+    const loggedItem = firstCall?.[0]
+    expect(loggedItem).not.toBe(row)
+    expect(loggedItem?.activity).toBe(row.activity)
+    expect(loggedItem?.associatedRecords).toEqual({
+      [rootUri]: rootRecord,
+      [publicationUri]: publicationRecord,
+    })
+    expect(loggedItem?.associatedRecords[rootUri]).toBe(rootRecord)
+    expect(loggedItem?.associatedRecords[publicationUri]).toBe(
+      publicationRecord,
+    )
+    expect(loggedItem?.actors).toEqual({
+      [actorDid]: row.actors[actorDid],
+      [publicationDid]: row.actors[publicationDid],
+    })
+    expect(loggedItem?.actors[actorDid]).toBe(row.actors[actorDid])
+    consoleLog.mockRestore()
   })
 
   it('renders subject groups with up to five usable actor avatars in API order and counts all usable others', () => {
