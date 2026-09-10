@@ -1,7 +1,7 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {render} from '@testing-library/react-native'
+import {fireEvent, render} from '@testing-library/react-native'
 
 import {type app} from '#/lexicons'
 import {StandardSiteCompactDocumentCard} from './StandardSiteCompactDocumentCard'
@@ -20,6 +20,32 @@ type LinkMockProps = {
   to: string
   style?: StyleProp<ViewStyle>
 }
+
+type ChildrenProps = {children?: React.ReactNode}
+type ButtonMockProps = ChildrenProps & {
+  accessibilityLabel?: string
+  label: string
+  onPress?: () => void
+  testID?: string
+}
+type MenuTriggerProps = {
+  children: (value: {
+    props: {
+      accessibilityLabel: string
+      onPress: () => void
+    }
+  }) => React.ReactNode
+  label: string
+}
+type MenuItemProps = ChildrenProps & {
+  disabled?: boolean
+  label: string
+  onPress: () => void
+}
+
+const mockOpenLink = jest.fn()
+const mockNavigate = jest.fn()
+const mockOpenReportDialog = jest.fn()
 
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
@@ -42,6 +68,68 @@ jest.mock('#/components/Typography', () => {
     jest.requireActual<typeof import('react-native')>('react-native')
   return {Text}
 })
+jest.mock('#/lib/hooks/useOpenLink', () => ({
+  useOpenLink: () => mockOpenLink,
+}))
+jest.mock('#/Navigation', () => ({
+  navigate: (...args: unknown[]) => mockNavigate(...args),
+}))
+jest.mock('#/view/com/util/EventStopper', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {EventStopper: ({children}: ChildrenProps) => <View>{children}</View>}
+})
+jest.mock('#/components/Button', () => {
+  const {Pressable} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Button: ({children, label, onPress, testID}: ButtonMockProps) => (
+      <Pressable
+        accessibilityHint=""
+        accessibilityLabel={label}
+        accessibilityRole="button"
+        onPress={onPress}
+        testID={testID}>
+        {children}
+      </Pressable>
+    ),
+    ButtonIcon: () => null,
+  }
+})
+jest.mock('#/components/Menu', () => {
+  const {Pressable, Text, View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Root: ({children}: ChildrenProps) => <View>{children}</View>,
+    Trigger: ({children, label}: MenuTriggerProps) => (
+      <View>
+        {children({
+          props: {
+            accessibilityLabel: label,
+            onPress: () => {},
+          },
+        })}
+      </View>
+    ),
+    Outer: ({children}: ChildrenProps) => <View>{children}</View>,
+    Group: ({children}: ChildrenProps) => <View>{children}</View>,
+    Divider: () => <View testID="menu-divider" />,
+    Item: ({children, disabled, label, onPress}: MenuItemProps) => (
+      <Pressable
+        accessibilityHint=""
+        accessibilityLabel={label}
+        accessibilityRole="menuitem"
+        disabled={disabled}
+        onPress={onPress}>
+        {children}
+      </Pressable>
+    ),
+    ItemText: ({children}: ChildrenProps) => <Text>{children}</Text>,
+  }
+})
+jest.mock('#/components/moderation/ReportDialog', () => ({
+  useGlobalReportDialogControl: () => ({open: mockOpenReportDialog}),
+}))
 jest.mock(
   '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow',
   () => ({StandardSiteMetaRow: () => null}),
@@ -80,6 +168,12 @@ jest.mock('#/components/Link', () => {
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
 
+const author = {
+  $type: 'app.bsky.actor.defs#profileViewBasic' as const,
+  did: 'did:plc:author' as const,
+  handle: 'author.example' as const,
+}
+
 const view: app.bsky.embed.external.ViewExternal = {
   $type: 'app.bsky.embed.external#viewExternal',
   uri: 'https://brookie.example/posts/one',
@@ -91,6 +185,13 @@ const view: app.bsky.embed.external.ViewExternal = {
     uri: 'https://brookie.example',
     title: 'Brookie Notes',
   },
+  associatedRefs: [
+    {
+      uri: 'at://did:plc:author/site.standard.document/one',
+      cid: 'bafy-document',
+    },
+  ],
+  associatedProfiles: [author],
 }
 
 function renderCard(cardView?: app.bsky.embed.external.ViewExternal) {
@@ -102,6 +203,12 @@ function renderCard(cardView?: app.bsky.embed.external.ViewExternal) {
 }
 
 describe('StandardSiteCompactDocumentCard', () => {
+  beforeEach(() => {
+    mockOpenLink.mockClear()
+    mockNavigate.mockClear()
+    mockOpenReportDialog.mockClear()
+  })
+
   it('clamps the title and description and links the complete row', () => {
     const result = renderCard(view)
 
@@ -110,6 +217,26 @@ describe('StandardSiteCompactDocumentCard', () => {
     expect(
       result.getByTestId('link-https://brookie.example/posts/one'),
     ).toBeTruthy()
+  })
+
+  it('offers publication, author, and report menu actions', () => {
+    const result = renderCard(view)
+
+    expect(result.getByRole('button', {name: 'More options'})).toBeTruthy()
+    expect(result.getByTestId('menu-divider')).toBeTruthy()
+
+    fireEvent.press(result.getByRole('menuitem', {name: 'View publication'}))
+    expect(mockOpenLink).toHaveBeenCalledWith('https://brookie.example')
+
+    fireEvent.press(result.getByRole('menuitem', {name: 'View author'}))
+    expect(mockNavigate).toHaveBeenCalledWith('Profile', {
+      name: 'author.example',
+    })
+
+    fireEvent.press(result.getByRole('menuitem', {name: 'Report this'}))
+    expect(mockOpenReportDialog).toHaveBeenCalledWith({
+      subject: author,
+    })
   })
 
   it('preserves the thumbnail aspect ratio when no thumbnail is available', () => {
