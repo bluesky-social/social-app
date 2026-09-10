@@ -62,15 +62,14 @@ export function StandardSiteCompactDocumentCard({
         a.rounded_lg,
         a.border,
         a.p_md,
-        a.pb_sm,
         t.atoms.bg,
         interacting
           ? [t.atoms.border_contrast_high, t.atoms.bg_contrast_25]
           : t.atoms.border_contrast_low,
       ]}>
-      <View style={[a.flex_row, a.align_center, a.gap_lg, a.pb_sm]}>
-        <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_1]}>
-          {cardView?.source?.icon ? (
+      {cardView?.source?.icon ? (
+        <View style={[a.flex_row, a.align_center, a.gap_lg, a.pb_sm]}>
+          <View style={[a.flex_row, a.align_center, a.gap_sm, a.flex_1]}>
             <Image
               source={{uri: cardView.source.icon}}
               style={[
@@ -88,32 +87,32 @@ export function StandardSiteCompactDocumentCard({
               loading="lazy"
               useAppleWebpCodec
             />
-          ) : undefined}
-          <Text
-            emoji
-            numberOfLines={1}
-            style={[
-              a.flex_1,
-              a.text_sm,
-              a.font_medium,
-              a.leading_snug,
-              sourceTitleStyle,
-            ]}>
-            {sourceTitle}
-          </Text>
+            <Text
+              emoji
+              numberOfLines={1}
+              style={[
+                a.flex_1,
+                a.text_sm,
+                a.font_medium,
+                a.leading_snug,
+                sourceTitleStyle,
+              ]}>
+              {sourceTitle}
+            </Text>
+          </View>
         </View>
-      </View>
+      ) : undefined}
 
       <View style={[a.flex_row, a.gap_md, a.pb_sm]}>
-        <View
-          testID="standard-site-compact-document-thumbnail"
-          style={[
-            a.overflow_hidden,
-            a.rounded_sm,
-            t.atoms.bg_contrast_50,
-            {flex: 3, aspectRatio: IMAGE_ASPECT_RATIO, maxWidth: 119},
-          ]}>
-          {cardView?.thumb ? (
+        {cardView?.thumb ? (
+          <View
+            testID="standard-site-compact-document-thumbnail"
+            style={[
+              a.overflow_hidden,
+              a.rounded_sm,
+              t.atoms.bg_contrast_50,
+              {flex: 3, aspectRatio: IMAGE_ASPECT_RATIO, maxWidth: 119},
+            ]}>
             <Image
               source={{uri: cardView.thumb}}
               style={[a.w_full, a.h_full]}
@@ -123,8 +122,8 @@ export function StandardSiteCompactDocumentCard({
               loading="lazy"
               useAppleWebpCodec
             />
-          ) : undefined}
-        </View>
+          </View>
+        ) : undefined}
         <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
           <Text
             emoji

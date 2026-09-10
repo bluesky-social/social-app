@@ -239,8 +239,16 @@ describe('StandardSiteCompactDocumentCard', () => {
     })
   })
 
-  it('preserves the thumbnail aspect ratio when no thumbnail is available', () => {
+  it('omits the thumbnail region when no thumbnail is available', () => {
     const result = renderCard({...view, thumb: undefined})
+
+    expect(
+      result.queryByTestId('standard-site-compact-document-thumbnail'),
+    ).toBeNull()
+  })
+
+  it('preserves the thumbnail aspect ratio when a thumbnail is available', () => {
+    const result = renderCard(view)
     const thumbnail = result.getByTestId(
       'standard-site-compact-document-thumbnail',
     )
