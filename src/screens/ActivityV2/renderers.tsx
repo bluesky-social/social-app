@@ -10,7 +10,6 @@ import {
 } from './components/ActivityBodyContent'
 import {
   ActivityRow,
-  ActivityRowFooter,
   ActivityRowHeader,
   ActivityRowHeaderText,
 } from './components/ActivityHeader'
@@ -79,7 +78,6 @@ export function UnknownActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{l`did something`}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -107,7 +105,6 @@ function DocumentActivityRenderer({
       </ActivityRowHeader>
       <DocumentBody item={item} computedItemView={computedItemView} />
       <ActivityRelatedActivity item={item} />
-      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -137,7 +134,6 @@ function PublicationActivityRenderer({
         item={item}
         computedItemView={computedItemView}
       />
-      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -161,7 +157,6 @@ function RecommendationActivityRenderer({
             })}`}
           </ActivityRowHeaderText>
         </ActivityRowHeader>
-        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -221,7 +216,6 @@ function RecommendationActivityRenderer({
           ) : undefined}
         </ActivityRowHeader>
         <DocumentBody item={item} computedItemView={computedItemView} />
-        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -278,7 +272,6 @@ function RecommendationActivityRenderer({
         ) : undefined}
       </ActivityRowHeader>
       <DocumentBody item={item} computedItemView={computedItemView} />
-      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -306,7 +299,6 @@ function SubscriptionActivityRenderer({
           item={item}
           computedItemView={computedItemView}
         />
-        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -344,7 +336,6 @@ function SubscriptionActivityRenderer({
           item={item}
           computedItemView={computedItemView}
         />
-        <ActivityRowFooter item={item} />
       </ActivityRow>
     )
   }
@@ -358,7 +349,6 @@ function SubscriptionActivityRenderer({
         item={item}
         computedItemView={computedItemView}
       />
-      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -384,7 +374,6 @@ function LivestreamActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }
@@ -410,7 +399,6 @@ function GrainPhotoActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
-      <ActivityRowFooter item={item} />
     </ActivityRow>
   )
 }

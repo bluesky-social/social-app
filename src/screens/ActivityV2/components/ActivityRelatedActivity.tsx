@@ -33,7 +33,7 @@ export function ActivityRelatedActivity({
   if (rows.length === 0) return null
 
   return (
-    <View style={[a.px_xl, a.py_sm, a.gap_xs]}>
+    <View style={[a.px_xl, a.gap_xs]}>
       {rows.map(({activity, actors}) => (
         <RelatedActivityRow key={activity.record.uri} actors={actors} />
       ))}

@@ -344,11 +344,13 @@ describe('ActivityV2Screen', () => {
     expect(screen.queryByTestId('activityV2DebugButton')).toBeNull()
     expect(
       screen.getByLabelText(
-        `${handleLabel('group-author.test')} published 2 articles`,
+        `${handleLabel('group-author.test')} published 2 articles · elapsed:2026-09-03T00:00:00.000Z`,
       ),
     ).toBeTruthy()
     expect(
-      screen.getByLabelText(`${handleLabel('author.test')} did something`),
+      screen.getByLabelText(
+        `${handleLabel('author.test')} did something · elapsed:2026-09-03T00:00:00.000Z`,
+      ),
     ).toBeTruthy()
     expect(screen.queryByText(JSON.stringify(documentActivity))).toBeNull()
     expect(screen.queryByText(JSON.stringify(group))).toBeNull()

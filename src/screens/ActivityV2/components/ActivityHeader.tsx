@@ -18,18 +18,13 @@ const MAX_ACTIVITY_HEADER_AVATARS = 5
 
 export function ActivityRow({
   children,
-  hideTopBorder,
   testID,
 }: React.PropsWithChildren<{
   hideTopBorder: boolean
   testID?: string
 }>) {
-  const t = useTheme()
-
   return (
-    <View
-      style={[!hideTopBorder && a.border_t, t.atoms.border_contrast_low]}
-      testID={testID}>
+    <View style={[a.gap_sm, a.py_lg]} testID={testID}>
       {children}
     </View>
   )
@@ -41,6 +36,7 @@ export function ActivityRowHeader({
   children,
 }: React.PropsWithChildren<ActivityPresentationProps>) {
   const {t: l} = useLingui()
+  const t = useTheme()
   const actors = computedItemView.actors
   const primaryActor = actors[0]
   if (!primaryActor) {
@@ -59,44 +55,50 @@ export function ActivityRowHeader({
           other: '# others',
         })}`
       : undefined
-  const accessibilityLabel = [
-    primaryLabel,
-    othersLabel,
-    getActivityRowText(children),
-  ]
+  const actionLabel = [primaryLabel, othersLabel, getActivityRowText(children)]
     .filter(Boolean)
     .join(' ')
+  const timestamp =
+    item.type === 'activity'
+      ? item.activity.record.indexedAt
+      : item.group.indexedAt
 
   return (
-    <View
-      style={[a.flex_row, a.align_center, a.gap_md, a.px_xl, a.pt_lg, a.pb_xs]}>
-      <AvatarStack
-        profiles={
-          actors.slice(
-            0,
-            MAX_ACTIVITY_HEADER_AVATARS,
-          ) as bsky.profile.AnyProfileView[]
-        }
-        size={ACTIVITY_ROW_AVATAR_SIZE}
-      />
-      <View style={[a.flex_1, a.justify_center]}>
-        <ActivityRowHeaderText
-          accessibilityHint=""
-          accessibilityLabel={accessibilityLabel}
-          numberOfLines={2}
-          emoji>
-          <ActivityInlineLinkText
-            label={l`View ${primaryLabel}’s profile`}
-            to={makeProfileLink({
-              did: primaryActor.did,
-              handle: primaryActor.handle,
-            })}>
-            {primaryLabel}
-          </ActivityInlineLinkText>
-          {othersLabel ? ` ${othersLabel}` : ''} {children}
-        </ActivityRowHeaderText>
-      </View>
-    </View>
+    <TimeElapsed timestamp={timestamp}>
+      {({timeElapsed}) => (
+        <View style={[a.flex_row, a.align_center, a.gap_md, a.px_xl]}>
+          <AvatarStack
+            profiles={
+              actors.slice(
+                0,
+                MAX_ACTIVITY_HEADER_AVATARS,
+              ) as bsky.profile.AnyProfileView[]
+            }
+            size={ACTIVITY_ROW_AVATAR_SIZE}
+          />
+          <View style={[a.flex_1, a.justify_center]}>
+            <ActivityRowHeaderText
+              accessibilityHint=""
+              accessibilityLabel={`${actionLabel} · ${timeElapsed}`}
+              numberOfLines={2}
+              emoji>
+              <ActivityInlineLinkText
+                label={l`View ${primaryLabel}’s profile`}
+                to={makeProfileLink({
+                  did: primaryActor.did,
+                  handle: primaryActor.handle,
+                })}>
+                {primaryLabel}
+              </ActivityInlineLinkText>
+              {othersLabel ? ` ${othersLabel}` : ''} {children}
+              <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                {` · ${timeElapsed}`}
+              </Text>
+            </ActivityRowHeaderText>
+          </View>
+        </View>
+      )}
+    </TimeElapsed>
   )
 }
 
@@ -104,7 +106,7 @@ export function ActivityRowHeaderText({style, ...rest}: TextProps) {
   const t = useTheme()
 
   return (
-    <Text {...rest} style={[a.text_md, a.leading_snug, t.atoms.text, style]} />
+    <Text {...rest} style={[a.text_sm, a.leading_snug, t.atoms.text, style]} />
   )
 }
 
@@ -114,28 +116,6 @@ export function ActivityRowBody({children}: React.PropsWithChildren<{}>) {
   }
 
   return <View style={[a.px_xl, a.pb_xs]}>{children}</View>
-}
-
-export function ActivityRowFooter({
-  item,
-}: Pick<ActivityPresentationProps, 'item'>) {
-  const t = useTheme()
-  const timestamp =
-    item.type === 'activity'
-      ? item.activity.record.indexedAt
-      : item.group.indexedAt
-
-  return (
-    <TimeElapsed timestamp={timestamp}>
-      {({timeElapsed}) => (
-        <View style={[a.px_xl, a.pb_lg]}>
-          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-            {timeElapsed}
-          </Text>
-        </View>
-      )}
-    </TimeElapsed>
-  )
 }
 
 function getActivityRowText(node: React.ReactNode): string {

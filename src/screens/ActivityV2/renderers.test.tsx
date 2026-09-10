@@ -4,6 +4,7 @@ import {fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {ActivityPresentationRow} from './components/ActivityPresentationRow'
+import {ACTIVITY_ROW_AVATAR_SIZE} from './constants'
 import {type ActivityGroupRowItem, type ActivityRowItem} from './model'
 import {
   type ActivityPresentationItem,
@@ -184,6 +185,13 @@ function handleLabel(handle: string) {
   return sanitizeHandle(handle, '@')
 }
 
+function activityHeaderLabel(
+  action: string,
+  timestamp = '2026-09-09T00:00:00.000Z',
+) {
+  return `${action} · elapsed:${timestamp}`
+}
+
 function buildActivity({
   collection,
   uri,
@@ -334,7 +342,7 @@ function buildSubjectGroupRow({
 }
 
 describe('ActivityV2 collection renderers', () => {
-  it('renders a standalone row with a 36px avatar stack, sanitized linked handle, and configured action', () => {
+  it('renders a standalone row with the configured avatar stack, sanitized linked handle, action, and timestamp', () => {
     const actorDid = 'did:plc:chef'
     const row = buildActivityRow({
       collection: activityCollections.document,
@@ -348,16 +356,17 @@ describe('ActivityV2 collection renderers', () => {
 
     expect(screen.getByTestId('activityV2DocumentRow')).toBeTruthy()
     const headerText = screen.getByLabelText(
-      `${handleLabel('chef.example')} published an article`,
+      activityHeaderLabel(
+        `${handleLabel('chef.example')} published an article`,
+      ),
     )
 
     expect(headerText).toBeTruthy()
     expect(headerText.props.numberOfLines).toBe(2)
     expect(screen.getByText(handleLabel('chef.example'))).toBeTruthy()
-    expect(screen.getByText('elapsed:2026-09-09T00:00:00.000Z')).toBeTruthy()
     expect(mockAvatarStack).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        size: 36,
+        size: ACTIVITY_ROW_AVATAR_SIZE,
         profiles: [expect.objectContaining({did: actorDid})],
       }),
     )
@@ -475,12 +484,14 @@ describe('ActivityV2 collection renderers', () => {
 
     expect(
       screen.getByLabelText(
-        `${handleLabel('alpha.test')} and 5 others recommended ${handleLabel('author.test')}’s article`,
+        activityHeaderLabel(
+          `${handleLabel('alpha.test')} and 5 others recommended ${handleLabel('author.test')}’s article`,
+        ),
       ),
     ).toBeTruthy()
     expect(mockAvatarStack).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        size: 36,
+        size: ACTIVITY_ROW_AVATAR_SIZE,
         profiles: [
           expect.objectContaining({did: 'did:plc:alpha'}),
           expect.objectContaining({did: 'did:plc:beta'}),
@@ -583,7 +594,9 @@ describe('ActivityV2 collection renderers', () => {
 
     expect(
       screen.getByLabelText(
-        `${handleLabel('subscriber.test')} subscribed to Orbit Weekly`,
+        activityHeaderLabel(
+          `${handleLabel('subscriber.test')} subscribed to Orbit Weekly`,
+        ),
       ),
     ).toBeTruthy()
 
@@ -680,7 +693,9 @@ describe('ActivityV2 collection renderers', () => {
     ).toBeTruthy()
     expect(
       unsubscribedScreen.getByLabelText(
-        `${handleLabel('doc-no-body.test')} published an article`,
+        activityHeaderLabel(
+          `${handleLabel('doc-no-body.test')} published an article`,
+        ),
       ),
     ).toBeTruthy()
     expect(
@@ -942,7 +957,9 @@ describe('ActivityV2 collection renderers', () => {
     ).toBeNull()
     expect(
       unfollowedScreen.getByLabelText(
-        `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
+        activityHeaderLabel(
+          `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
+        ),
       ),
     ).toBeTruthy()
     expect(
@@ -950,12 +967,16 @@ describe('ActivityV2 collection renderers', () => {
     ).toBeTruthy()
     expect(
       followedScreen.getByLabelText(
-        `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article`,
+        activityHeaderLabel(
+          `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article`,
+        ),
       ),
     ).toBeTruthy()
     expect(
       followedScreen.queryByLabelText(
-        `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
+        activityHeaderLabel(
+          `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
+        ),
       ),
     ).toBeNull()
     expect(followedScreen.getByText('Referenced essay')).toBeTruthy()
@@ -1093,7 +1114,9 @@ describe('ActivityV2 collection renderers', () => {
     ).toBeNull()
     expect(
       actorGroupScreen.getByLabelText(
-        `${handleLabel('recommender.test')} recommended 2 articles`,
+        activityHeaderLabel(
+          `${handleLabel('recommender.test')} recommended 2 articles`,
+        ),
       ),
     ).toBeTruthy()
     expect(mockStandardSiteEmbed).toHaveBeenCalledTimes(2)
@@ -1115,7 +1138,7 @@ describe('ActivityV2 collection renderers', () => {
     )
   })
 
-  it('renders footer timestamps from standalone and group indexedAt values using TimeElapsed formatting', () => {
+  it('renders inline header timestamps from standalone and group indexedAt values', () => {
     const standaloneTimestamp = '2026-09-09T03:00:00.000Z'
     const groupTimestamp = '2026-09-09T04:00:00.000Z'
     const row = buildActivityRow({
@@ -1147,12 +1170,25 @@ describe('ActivityV2 collection renderers', () => {
     const groupScreen = renderRow(group)
 
     expect(
-      standaloneScreen.getByText(`elapsed:${standaloneTimestamp}`),
+      standaloneScreen.getByText(` · elapsed:${standaloneTimestamp}`),
     ).toBeTruthy()
-    expect(groupScreen.getByText(`elapsed:${groupTimestamp}`)).toBeTruthy()
+    expect(groupScreen.getByText(` · elapsed:${groupTimestamp}`)).toBeTruthy()
     expect(
-      groupScreen.queryByText('elapsed:2026-09-09T05:00:00.000Z'),
-    ).toBeNull()
+      standaloneScreen.getByLabelText(
+        activityHeaderLabel(
+          `${handleLabel('footer-standalone.test')} published an article`,
+          standaloneTimestamp,
+        ),
+      ),
+    ).toBeTruthy()
+    expect(
+      groupScreen.getByLabelText(
+        activityHeaderLabel(
+          `${handleLabel('footer-group.test')} published 2 articles`,
+          groupTimestamp,
+        ),
+      ),
+    ).toBeTruthy()
     expect(mockTimeElapsed.mock.calls).toEqual([
       [{timestamp: standaloneTimestamp}],
       [{timestamp: groupTimestamp}],
@@ -1175,13 +1211,15 @@ describe('ActivityV2 collection renderers', () => {
     expect(screen.getByTestId('activityV2PublicationRow')).toBeTruthy()
     expect(
       screen.getByLabelText(
-        `${handleLabel('pub-owner.test')} created 2 publications`,
+        activityHeaderLabel(
+          `${handleLabel('pub-owner.test')} created 2 publications`,
+        ),
       ),
     ).toBeTruthy()
     expect(screen.queryByText(/and .*others/)).toBeNull()
     expect(mockAvatarStack).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        size: 36,
+        size: ACTIVITY_ROW_AVATAR_SIZE,
         profiles: [expect.objectContaining({did: actorDid})],
       }),
     )
@@ -1332,7 +1370,7 @@ describe('ActivityV2 collection renderers', () => {
     const screen = renderRow(build())
 
     expect(screen.getByTestId(testID)).toBeTruthy()
-    expect(screen.getByLabelText(label)).toBeTruthy()
+    expect(screen.getByLabelText(activityHeaderLabel(label))).toBeTruthy()
   })
 
   it('uses a safe generic fallback action for unknown collections', () => {
@@ -1350,7 +1388,9 @@ describe('ActivityV2 collection renderers', () => {
     expect(screen.getByTestId('activityV2UnknownRow')).toBeTruthy()
     expect(
       screen.getByLabelText(
-        `${handleLabel('unknown-actor.test')} did something`,
+        activityHeaderLabel(
+          `${handleLabel('unknown-actor.test')} did something`,
+        ),
       ),
     ).toBeTruthy()
     expect(screen.queryByText('example.unknown.collection')).toBeNull()
@@ -1407,18 +1447,22 @@ describe('ActivityV2 collection renderers', () => {
 
     expect(
       recommendationScreen.getByLabelText(
-        `${handleLabel('glitch-rec.test')} recommended an article`,
+        activityHeaderLabel(
+          `${handleLabel('glitch-rec.test')} recommended an article`,
+        ),
       ),
     ).toBeTruthy()
     expect(
-      recommendationScreen.getByText('elapsed:2026-09-09T00:00:00.000Z'),
+      recommendationScreen.getByText(' · elapsed:2026-09-09T00:00:00.000Z'),
     ).toBeTruthy()
     expect(
       recommendationScreen.queryByTestId('compact-document-unknown'),
     ).toBeNull()
     expect(
       subscriptionScreen.getByLabelText(
-        `${handleLabel('glitch-sub.test')} subscribed to a publication`,
+        activityHeaderLabel(
+          `${handleLabel('glitch-sub.test')} subscribed to a publication`,
+        ),
       ),
     ).toBeTruthy()
     expect(mockStandardSiteEmbed).not.toHaveBeenCalled()

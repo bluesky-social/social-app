@@ -1,1 +1,1 @@
-export const ACTIVITY_ROW_AVATAR_SIZE = 36
+export const ACTIVITY_ROW_AVATAR_SIZE = 28
