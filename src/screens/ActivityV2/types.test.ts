@@ -23,6 +23,7 @@ describe('ActivityV2 response narrowing', () => {
       did: 'did:plc:author',
       handle: 'author.example',
       avatar: 'https://example.com/avatar.jpg',
+      viewer: {following: 'at://did:plc:viewer/app.bsky.graph.follow/author'},
     }
 
     expect(

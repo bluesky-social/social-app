@@ -113,6 +113,9 @@ type ProfileViewBasic = {
   pronouns?: string
   avatar?: string
   createdAt?: string
+  viewer?: {
+    following?: string // Follow-record AT URI when the authenticated viewer follows this actor
+  }
 }
 
 type GetActivityResponse = {
@@ -364,6 +367,7 @@ document -> publication
 - `actors` is keyed by DID.
 - Values are `app.bsky.actor.defs#profileViewBasic` objects.
 - The backend currently populates `did`, `handle`, `displayName`, `pronouns`, `avatar`, and `createdAt` when available.
+- `viewer.following`, when present, is the standard ProfileViewBasic follow-record AT URI showing that the authenticated viewer follows this actor. Its absence must be treated as not followed; do not infer following from activity inclusion or document/publication subscription state.
 - `avatar`, when present, is a ready-to-render Bluesky CDN URL.
 - Actor hydration is batched through Tango `GetActors` for authority DIDs discovered from root and recursively associated AT URIs.
 - An actor may be absent if Tango does not return an existing actor with a handle. The frontend must tolerate missing actor entries.

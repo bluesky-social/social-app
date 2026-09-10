@@ -164,6 +164,66 @@ function RecommendationActivityRenderer({
     )
   }
 
+  if (item.type === 'activity') {
+    const documentUri = getRecommendationDocumentUri(item)
+    const documentRecord = documentUri
+      ? item.associatedRecords[documentUri]?.record
+      : undefined
+    const title = isDocumentRecord(documentRecord)
+      ? documentRecord.title.trim() || undefined
+      : undefined
+    const documentUrl = isDocumentRecord(documentRecord)
+      ? getDocumentUrl(documentRecord, item)
+      : undefined
+    const author =
+      documentUri && isDocumentRecord(documentRecord)
+        ? getDocumentAuthor(documentUri, item)
+        : undefined
+    const isFollowed = isDocumentAuthorFollowed(documentUri, item)
+
+    return (
+      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
+        <ActivityRowHeader item={item} computedItemView={computedItemView}>
+          {author ? (
+            <>
+              <ActivityRowHeaderText>{`${l`recommended`} `}</ActivityRowHeaderText>
+              <ActivityInlineLinkText
+                label={l`View ${author.label}’s profile`}
+                to={author.href}>
+                {author.label}
+              </ActivityInlineLinkText>
+              <ActivityRowHeaderText>{l`’s article`}</ActivityRowHeaderText>
+            </>
+          ) : (
+            <ActivityRowHeaderText>
+              {title
+                ? `${l`recommended an article`} `
+                : l`recommended an article`}
+            </ActivityRowHeaderText>
+          )}
+          {title && !isFollowed ? (
+            documentUrl ? (
+              <>
+                <ActivityRowHeaderText> “</ActivityRowHeaderText>
+                <ActivityInlineLinkText
+                  disableMismatchWarning
+                  label={l`Open article “${title}”`}
+                  to={documentUrl}>
+                  {title}
+                </ActivityInlineLinkText>
+                <ActivityRowHeaderText>”</ActivityRowHeaderText>
+              </>
+            ) : (
+              <ActivityRowHeaderText>{` “${title}”`}</ActivityRowHeaderText>
+            )
+          ) : undefined}
+        </ActivityRowHeader>
+        <DocumentBody item={item} computedItemView={computedItemView} />
+        <ActivityRowFooter item={item} />
+      </ActivityRow>
+    )
+  }
+
   const documentUri = getRecommendationDocumentUri(item)
   const documentRecord = documentUri
     ? item.associatedRecords[documentUri]?.record
@@ -174,88 +234,46 @@ function RecommendationActivityRenderer({
   const documentUrl = isDocumentRecord(documentRecord)
     ? getDocumentUrl(documentRecord, item)
     : undefined
-  const author = documentUri ? getDocumentAuthor(documentUri, item) : undefined
-
-  if (author && title) {
-    return (
-      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
-        <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <ActivityRowHeaderText>{`${l`recommended`} `}</ActivityRowHeaderText>
-          <ActivityInlineLinkText
-            label={l`View ${author.label}’s profile`}
-            to={author.href}>
-            {author.label}
-          </ActivityInlineLinkText>
-          <ActivityRowHeaderText>{`${l`’s article`} `}</ActivityRowHeaderText>
-          {documentUrl ? (
-            <>
-              <ActivityRowHeaderText>“</ActivityRowHeaderText>
-              <ActivityInlineLinkText
-                disableMismatchWarning
-                label={l`Open article “${title}”`}
-                to={documentUrl}>
-                {title}
-              </ActivityInlineLinkText>
-              <ActivityRowHeaderText>”</ActivityRowHeaderText>
-            </>
-          ) : (
-            <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
-          )}
-        </ActivityRowHeader>
-        <DocumentBody item={item} computedItemView={computedItemView} />
-        <ActivityRowFooter item={item} />
-      </ActivityRow>
-    )
-  }
-
-  if (author) {
-    return (
-      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
-        <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <ActivityRowHeaderText>{`${l`recommended`} `}</ActivityRowHeaderText>
-          <ActivityInlineLinkText
-            label={l`View ${author.label}’s profile`}
-            to={author.href}>
-            {author.label}
-          </ActivityInlineLinkText>
-          <ActivityRowHeaderText>{l`’s article`}</ActivityRowHeaderText>
-        </ActivityRowHeader>
-        <DocumentBody item={item} computedItemView={computedItemView} />
-        <ActivityRowFooter item={item} />
-      </ActivityRow>
-    )
-  }
-
-  if (title) {
-    return (
-      <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
-        <ActivityRowHeader item={item} computedItemView={computedItemView}>
-          <ActivityRowHeaderText>{`${l`recommended an article`} `}</ActivityRowHeaderText>
-          {documentUrl ? (
-            <>
-              <ActivityRowHeaderText>“</ActivityRowHeaderText>
-              <ActivityInlineLinkText
-                disableMismatchWarning
-                label={l`Open article “${title}”`}
-                to={documentUrl}>
-                {title}
-              </ActivityInlineLinkText>
-              <ActivityRowHeaderText>”</ActivityRowHeaderText>
-            </>
-          ) : (
-            <ActivityRowHeaderText>{`“${title}”`}</ActivityRowHeaderText>
-          )}
-        </ActivityRowHeader>
-        <DocumentBody item={item} computedItemView={computedItemView} />
-        <ActivityRowFooter item={item} />
-      </ActivityRow>
-    )
-  }
+  const author =
+    documentUri && isDocumentRecord(documentRecord)
+      ? getDocumentAuthor(documentUri, item)
+      : undefined
+  const isFollowed = isDocumentAuthorFollowed(documentUri, item)
+  const showInlineTitle =
+    item.group.items.length === 1 && Boolean(title) && !isFollowed
 
   return (
     <ActivityRow hideTopBorder={hideTopBorder} testID={testID}>
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
-        <ActivityRowHeaderText>{l`recommended an article`}</ActivityRowHeaderText>
+        {author ? (
+          <>
+            <ActivityRowHeaderText>{`${l`recommended`} `}</ActivityRowHeaderText>
+            <ActivityInlineLinkText
+              label={l`View ${author.label}’s profile`}
+              to={author.href}>
+              {author.label}
+            </ActivityInlineLinkText>
+            <ActivityRowHeaderText>{l`’s article`}</ActivityRowHeaderText>
+          </>
+        ) : (
+          <ActivityRowHeaderText>{l`recommended an article`}</ActivityRowHeaderText>
+        )}
+        {showInlineTitle ? (
+          documentUrl ? (
+            <>
+              <ActivityRowHeaderText> “</ActivityRowHeaderText>
+              <ActivityInlineLinkText
+                disableMismatchWarning
+                label={l`Open article “${title}”`}
+                to={documentUrl}>
+                {title}
+              </ActivityInlineLinkText>
+              <ActivityRowHeaderText>”</ActivityRowHeaderText>
+            </>
+          ) : (
+            <ActivityRowHeaderText>{` “${title}”`}</ActivityRowHeaderText>
+          )
+        ) : undefined}
       </ActivityRowHeader>
       <DocumentBody item={item} computedItemView={computedItemView} />
       <ActivityRowFooter item={item} />
@@ -397,13 +415,13 @@ function GrainPhotoActivityRenderer({
 
 function isActorGroup(
   item: ActivityPresentationItem,
-): item is ActivityGroupRowItem {
+): item is ActivityGroupRowItem & {group: {groupBy: 'actor'}} {
   return item.type === 'group' && item.group.groupBy === 'actor'
 }
 
 function isSubjectGroup(
   item: ActivityPresentationItem,
-): item is ActivityGroupRowItem {
+): item is ActivityGroupRowItem & {group: {groupBy: 'subject'}} {
   return item.type === 'group' && item.group.groupBy === 'subject'
 }
 
@@ -412,15 +430,33 @@ function getGroupCount(item: ActivityPresentationItem) {
 }
 
 function getRecommendationDocumentUri(item: ActivityPresentationItem) {
-  if (isSubjectGroup(item)) {
-    return item.group.subject
+  if (item.type === 'activity') {
+    return getRecommendationTargetUri(item.activity.record.uri, item)
   }
-  if (item.type !== 'activity') {
+  if (!isSubjectGroup(item)) {
     return undefined
   }
 
-  const record = item.associatedRecords[item.activity.record.uri]?.record
+  return (
+    item.group.subject ??
+    getRecommendationTargetUri(item.group.items[0]?.record.uri, item)
+  )
+}
+
+function getRecommendationTargetUri(
+  rootUri: string | undefined,
+  item: ActivityPresentationItem,
+) {
+  const record = rootUri ? item.associatedRecords[rootUri]?.record : undefined
   return isRecommendRecord(record) ? record.document : undefined
+}
+
+function isDocumentAuthorFollowed(
+  uri: string | undefined,
+  item: ActivityPresentationItem,
+) {
+  const did = uri ? tryGetAuthorityDid(uri) : undefined
+  return Boolean(did && item.actors[did]?.viewer?.following)
 }
 
 function getSubscriptionPublicationUri(item: ActivityPresentationItem) {

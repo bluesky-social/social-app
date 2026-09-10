@@ -71,6 +71,9 @@ export type ActivityActor = {
   pronouns?: string
   avatar?: string
   createdAt?: string
+  viewer?: {
+    following?: string
+  }
 }
 
 export type ActivityActors = Record<string, ActivityActor>
@@ -269,6 +272,11 @@ export function narrowActors(value: unknown): ActivityActors {
         createdAt:
           typeof candidate.createdAt === 'string'
             ? candidate.createdAt
+            : undefined,
+        viewer:
+          isObject(candidate.viewer) &&
+          typeof candidate.viewer.following === 'string'
+            ? {following: candidate.viewer.following}
             : undefined,
       }
     }

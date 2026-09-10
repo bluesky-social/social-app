@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
 
 import {atoms as a, useTheme} from '#/alf'
 import {
@@ -26,7 +27,8 @@ export function DocumentBody({
   item,
 }: ActivityPresentationProps) {
   const useLargeCard = getUseLargeCard(item, computedItemView)
-  if (!isDocumentRoot(item) && !useLargeCard) {
+  const useCompactRecommendationCard = isFollowedRecommendationTarget(item)
+  if (!isDocumentRoot(item) && !useLargeCard && !useCompactRecommendationCard) {
     return null
   }
 
@@ -117,19 +119,7 @@ function getDocumentUris(item: ActivityPresentationProps['item']) {
   const collection =
     item.type === 'activity' ? item.activity.collection : item.group.collection
   if (collection === activityCollections.recommendation) {
-    if (
-      item.type !== 'group' ||
-      item.group.groupBy !== 'subject' ||
-      item.group.items.length <= 1
-    ) {
-      return []
-    }
-
-    const fallbackTarget = getRecommendationTargetUri(
-      item.group.items[0]?.record.uri,
-      item,
-    )
-    return item.group.subject ? [item.group.subject] : [fallbackTarget]
+    return [getRecommendationDocumentUri(item)]
   }
 
   return getRootActivityUris(item)
@@ -141,12 +131,44 @@ function getRootActivityUris(item: ActivityPresentationProps['item']) {
     : item.group.items.map(activity => activity.record.uri)
 }
 
+function isFollowedRecommendationTarget(
+  item: ActivityPresentationProps['item'],
+) {
+  const documentUri = getRecommendationDocumentUri(item)
+  const did = getAuthorityDid(documentUri)
+  return Boolean(did && item.actors[did]?.viewer?.following)
+}
+
+function getRecommendationDocumentUri(item: ActivityPresentationProps['item']) {
+  if (item.type === 'activity') {
+    return getRecommendationTargetUri(item.activity.record.uri, item)
+  }
+  if (item.group.groupBy !== 'subject') {
+    return undefined
+  }
+
+  return (
+    item.group.subject ??
+    getRecommendationTargetUri(item.group.items[0]?.record.uri, item)
+  )
+}
+
 function getRecommendationTargetUri(
   rootUri: string | undefined,
   item: ActivityPresentationProps['item'],
 ) {
   const record = rootUri ? item.associatedRecords[rootUri]?.record : undefined
   return isRecommendationRecord(record) ? record.document : undefined
+}
+
+function getAuthorityDid(uri: string | undefined): string | undefined {
+  if (!uri) return undefined
+
+  try {
+    return new AtUri(uri).host
+  } catch {
+    return undefined
+  }
 }
 
 function getPublicationBodyCandidateUris(

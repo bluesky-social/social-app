@@ -62,7 +62,7 @@ jest.mock('#/components/Link', () => {
   }
 })
 jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
-  const {View} =
+  const {Text, View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
     PublicationCard: ({themeColors, view}: Record<string, unknown>) => {
@@ -80,7 +80,11 @@ jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
     StandardSiteCompactDocumentCard: ({view}: Record<string, unknown>) => {
       mockStandardSiteCompactDocumentCard({view})
       const title = (view as {title?: string} | undefined)?.title ?? 'unknown'
-      return <View testID={`compact-document-${title}`} />
+      return (
+        <View testID={`compact-document-${title}`}>
+          <Text>{title}</Text>
+        </View>
+      )
     },
   }
 })
@@ -172,11 +176,12 @@ function buildActivity({
   }
 }
 
-function buildActor(did: string, handle: string) {
+function buildActor(did: string, handle: string, following?: string) {
   return {
     did,
     handle,
     avatar: `https://example.com/${did}.jpg`,
+    viewer: following ? {following} : undefined,
   }
 }
 
@@ -376,7 +381,7 @@ describe('ActivityV2 collection renderers', () => {
 
     expect(
       screen.getByLabelText(
-        `${handleLabel('alpha.test')} and 5 others recommended ${handleLabel('author.test')}’s article “Spiral tide”`,
+        `${handleLabel('alpha.test')} and 5 others recommended ${handleLabel('author.test')}’s article`,
       ),
     ).toBeTruthy()
     expect(mockAvatarStack).toHaveBeenLastCalledWith(
@@ -405,14 +410,6 @@ describe('ActivityV2 collection renderers', () => {
         expect.objectContaining({
           to: '/profile/author.test',
           children: handleLabel('author.test'),
-          style: expect.arrayContaining([
-            expect.objectContaining({color: 'white'}),
-          ]),
-        }),
-        expect.objectContaining({
-          to: 'https://example.com/spiral-tide',
-          children: 'Spiral tide',
-          disableMismatchWarning: true,
           style: expect.arrayContaining([
             expect.objectContaining({color: 'white'}),
           ]),
@@ -587,6 +584,17 @@ describe('ActivityV2 collection renderers', () => {
     expect(
       unsubscribedScreen.getByTestId('compact-document-Hidden essay'),
     ).toBeTruthy()
+    expect(
+      unsubscribedScreen.getByLabelText(
+        `${handleLabel('doc-no-body.test')} published an article`,
+      ),
+    ).toBeTruthy()
+    expect(
+      unsubscribedScreen.queryByLabelText(
+        `${handleLabel('doc-no-body.test')} published an article Hidden essay`,
+      ),
+    ).toBeNull()
+    expect(unsubscribedScreen.getByText('Hidden essay')).toBeTruthy()
     expect(mockStandardSiteEmbed).toHaveBeenCalledWith(
       expect.objectContaining({
         view: expect.objectContaining({
@@ -784,7 +792,7 @@ describe('ActivityV2 collection renderers', () => {
     )
   })
 
-  it('keeps recommendation bodies empty even when the referenced document is hydrated', () => {
+  it('uses target-author following to choose compact or title-only standalone recommendation presentation', () => {
     const actorDid = 'did:plc:recommender-body'
     const documentAuthorDid = 'did:plc:document-author'
     const rootUri = `at://${actorDid}/${activityCollections.recommendation}/1`
@@ -817,13 +825,58 @@ describe('ActivityV2 collection renderers', () => {
       rkey: '1',
     })
 
-    const screen = renderRow(row)
+    const followedRow: ActivityRowItem = {
+      ...row,
+      key: `${row.key}-followed`,
+      actors: {
+        ...row.actors,
+        [documentAuthorDid]: buildActor(
+          documentAuthorDid,
+          'document-author.test',
+          'at://did:plc:viewer/app.bsky.graph.follow/document-author',
+        ),
+      },
+    }
+    const unfollowedScreen = renderRow(row)
+    const followedScreen = renderRow(followedRow)
 
-    expect(screen.queryByTestId('full-document-Referenced essay')).toBeNull()
+    expect(
+      unfollowedScreen.queryByTestId('full-document-Referenced essay'),
+    ).toBeNull()
+    expect(
+      unfollowedScreen.queryByTestId('compact-document-Referenced essay'),
+    ).toBeNull()
+    expect(
+      unfollowedScreen.getByLabelText(
+        `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
+      ),
+    ).toBeTruthy()
+    expect(
+      followedScreen.getByTestId('compact-document-Referenced essay'),
+    ).toBeTruthy()
+    expect(
+      followedScreen.getByLabelText(
+        `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article`,
+      ),
+    ).toBeTruthy()
+    expect(
+      followedScreen.queryByLabelText(
+        `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
+      ),
+    ).toBeNull()
+    expect(followedScreen.getByText('Referenced essay')).toBeTruthy()
     expect(mockStandardSiteEmbed).not.toHaveBeenCalled()
+    expect(mockStandardSiteCompactDocumentCard).toHaveBeenCalledWith(
+      expect.objectContaining({
+        view: expect.objectContaining({
+          title: 'Referenced essay',
+          uri: 'https://example.com/essay',
+        }),
+      }),
+    )
   })
 
-  it('renders shared article cards only for multi-person recommendation subject groups', () => {
+  it('renders one full article card only for multi-person recommendation subject groups', () => {
     const documentAuthorDid = 'did:plc:shared-author'
     const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/shared`
     const subjectGroup = buildSubjectGroupRow({
@@ -887,6 +940,18 @@ describe('ActivityV2 collection renderers', () => {
         }),
       },
     })
+    const followedOneChildSubjectGroup: ActivityGroupRowItem = {
+      ...oneChildSubjectGroup,
+      key: 'recommendation-subject-group-followed',
+      actors: {
+        ...oneChildSubjectGroup.actors,
+        [documentAuthorDid]: buildActor(
+          documentAuthorDid,
+          'shared-author.test',
+          'at://did:plc:viewer/app.bsky.graph.follow/shared-author',
+        ),
+      },
+    }
     const actorGroup = buildActorGroupRow({
       collection: activityCollections.recommendation,
       actorDid: 'did:plc:recommender',
@@ -902,6 +967,9 @@ describe('ActivityV2 collection renderers', () => {
     const subjectGroupScreen = renderRow(subjectGroup)
     const fallbackSubjectGroupScreen = renderRow(fallbackSubjectGroup)
     const oneChildSubjectGroupScreen = renderRow(oneChildSubjectGroup)
+    const followedOneChildSubjectGroupScreen = renderRow(
+      followedOneChildSubjectGroup,
+    )
     const actorGroupScreen = renderRow(actorGroup)
 
     expect(
@@ -914,9 +982,35 @@ describe('ActivityV2 collection renderers', () => {
       oneChildSubjectGroupScreen.queryByTestId('full-document-Shared article'),
     ).toBeNull()
     expect(
+      oneChildSubjectGroupScreen.queryByTestId(
+        'compact-document-Shared article',
+      ),
+    ).toBeNull()
+    expect(
+      followedOneChildSubjectGroupScreen.getByTestId(
+        'compact-document-Shared article',
+      ),
+    ).toBeTruthy()
+    expect(
       actorGroupScreen.queryByTestId('full-document-Shared article'),
     ).toBeNull()
+    expect(
+      actorGroupScreen.queryByTestId('compact-document-Shared article'),
+    ).toBeNull()
+    expect(
+      actorGroupScreen.getByLabelText(
+        `${handleLabel('recommender.test')} recommended 2 articles`,
+      ),
+    ).toBeTruthy()
     expect(mockStandardSiteEmbed).toHaveBeenCalledTimes(2)
+    expect(mockStandardSiteCompactDocumentCard).toHaveBeenCalledWith(
+      expect.objectContaining({
+        view: expect.objectContaining({
+          title: 'Shared article',
+          uri: 'https://example.com/shared',
+        }),
+      }),
+    )
     expect(mockStandardSiteEmbed).toHaveBeenCalledWith(
       expect.objectContaining({
         view: expect.objectContaining({
@@ -1223,9 +1317,17 @@ describe('ActivityV2 collection renderers', () => {
       ),
     ).toBeTruthy()
     expect(
+      recommendationScreen.getByText('elapsed:2026-09-09T00:00:00.000Z'),
+    ).toBeTruthy()
+    expect(
+      recommendationScreen.queryByTestId('compact-document-unknown'),
+    ).toBeNull()
+    expect(
       subscriptionScreen.getByLabelText(
         `${handleLabel('glitch-sub.test')} subscribed to a publication`,
       ),
     ).toBeTruthy()
+    expect(mockStandardSiteEmbed).not.toHaveBeenCalled()
+    expect(mockStandardSiteCompactDocumentCard).not.toHaveBeenCalled()
   })
 })
