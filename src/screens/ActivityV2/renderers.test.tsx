@@ -25,6 +25,14 @@ const mockStandardSiteEmbed = jest.fn()
 const mockStandardSiteCompactDocumentCard = jest.fn()
 const mockTimeElapsed = jest.fn()
 
+jest.mock('expo-image', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Image: (props: Record<string, unknown>) => <View {...props} />,
+  }
+})
+
 jest.mock('./debug', () => ({
   ...jest.requireActual('./debug'),
   isActivityV2DebugEnabled: () => true,
@@ -1223,6 +1231,59 @@ describe('ActivityV2 collection renderers', () => {
         profiles: [expect.objectContaining({did: actorDid})],
       }),
     )
+  })
+
+  it('renders Grain photos in API order using their recorded aspect ratios', () => {
+    const actorDid = 'did:plc:grain-photographer'
+    const firstUri = `at://${actorDid}/${activityCollections.grainPhoto}/1`
+    const secondUri = `at://${actorDid}/${activityCollections.grainPhoto}/2`
+    const row = buildActorGroupRow({
+      collection: activityCollections.grainPhoto,
+      actorDid,
+      count: 2,
+      actors: {
+        [actorDid]: buildActor(actorDid, 'grain-photographer.test'),
+      },
+      associatedRecords: {
+        [firstUri]: buildAssociatedRecord(firstUri, {
+          $type: activityCollections.grainPhoto,
+          alt: 'Wide field of flowers',
+          photo: {
+            ref: {$link: 'bafywidephoto'},
+            mimeType: 'image/jpeg',
+          },
+          aspectRatio: {width: 3, height: 2},
+        }),
+        [secondUri]: buildAssociatedRecord(secondUri, {
+          $type: activityCollections.grainPhoto,
+          alt: 'Tall stone arch',
+          photo: {
+            ref: {$link: 'bafytallphoto'},
+            mimeType: 'image/png',
+          },
+          aspectRatio: {width: 4, height: 5},
+        }),
+      },
+    })
+
+    const screen = renderRow(row)
+    const photos = screen.getAllByTestId('activityV2GrainPhotoImage')
+
+    expect(photos).toHaveLength(2)
+    expect(photos[0].props.source).toEqual({
+      uri: `https://cdn.bsky.app/img/feed_fullsize/plain/${actorDid}/bafywidephoto@jpeg`,
+    })
+    expect(photos[0].props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({aspectRatio: 3 / 2})]),
+    )
+    expect(photos[0].props.accessibilityLabel).toBe('Wide field of flowers')
+    expect(photos[1].props.source).toEqual({
+      uri: `https://cdn.bsky.app/img/feed_fullsize/plain/${actorDid}/bafytallphoto@png`,
+    })
+    expect(photos[1].props.style).toEqual(
+      expect.arrayContaining([expect.objectContaining({aspectRatio: 4 / 5})]),
+    )
+    expect(photos[1].props.accessibilityLabel).toBe('Tall stone arch')
   })
 
   it.each<{

@@ -216,7 +216,7 @@ function isRgbChannel(value: unknown): value is number {
   return Number.isInteger(value) && Number(value) >= 0 && Number(value) <= 255
 }
 
-function getBlobUrl(did: string, value: unknown): string | undefined {
+export function getBlobUrl(did: string, value: unknown): string | undefined {
   if (!isObject(value) || typeof value.mimeType !== 'string') return undefined
 
   const cid = getBlobCid(value.ref)

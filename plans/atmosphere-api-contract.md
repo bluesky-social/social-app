@@ -12,10 +12,10 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-internal-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Synchronized backend base commit | `3956dd6 Group unsubscribed documents by actor` |
-| Uncommitted backend state | Selective live-only `app.bsky.feed.post` document-share ingestion, related attachment, subject grouping, raw-post hydration, tests, and contract updates atop `3956dd6` |
-| Pushed frontend tip | `661ea4408 Present actor recommendation groups` on `social-app-internal/atmosphere-tab` |
-| Uncommitted frontend state | Related-activity rendering, types, tests, Lexicon sync, and contract updates are present in the working tree; not verified by this backend session |
+| Synchronized backend base commit | `b49fd871dde1 Add selective live-only document share ingestion` |
+| Uncommitted backend state | Optional typed item views and livestream `feed_thumbnail` CDN URL hydration atop `b49fd871dde1` |
+| Frontend tip | `3ed5eb4eb Compact activity row headers and inline timestamps` |
+| Uncommitted frontend state | Unrelated `ActivityV2` implementation changes are present; this backend session modifies only contract Markdown |
 | Deployment status | The pushed frontend tip predates authenticated-viewer integration; current frontend and backend working-tree changes have not been pushed or deployed |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
@@ -73,6 +73,17 @@ curl --get 'http://localhost:3000/xrpc/eric.bsky.atmosphere.getActivity' \
 The conceptual TypeScript shape is:
 
 ```ts
+type ActivityView =
+  | {
+      $type: 'eric.bsky.atmosphere.getActivity#livestreamView'
+      thumb?: string // feed_thumbnail CDN URL
+    }
+  | {$type: 'eric.bsky.atmosphere.getActivity#longformView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#photoView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#recommendationView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#subscriptionView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#shareView'}
+
 type ActivityItem = {
   $type: 'eric.bsky.atmosphere.getActivity#item'
   record: {
@@ -84,6 +95,7 @@ type ActivityItem = {
   viewerState: {
     subscribed: boolean
   }
+  view?: ActivityView // appview-derived presentation data; currently emitted only for livestreams
   relatedActivity?: ActivityItem[] // on-page recommendations and post shares targeting this document; never recursively populated
 }
 
@@ -128,6 +140,8 @@ type GetActivityResponse = {
 ```
 
 The generated lexicon type currently exposes `associatedRecords` and `actors` as `unknown`, so frontend code will need local narrowing or feature-specific types until the lexicon is made more specific.
+
+`ActivityItem.view` is an optional typed union. The backend currently emits only `#livestreamView`; the longform, photo, recommendation, subscription, and share definitions are empty extension points and are not emitted yet. Every livestream root receives `#livestreamView`. Its optional `thumb` is derived from the raw record's `thumb` blob as `https://cdn.bsky.app/img/feed_thumbnail/plain/<author DID>/<blob CID>`. A missing or malformed blob produces a livestream view without `thumb`; clients must not reconstruct the CDN URL from the raw blob.
 
 ### Example: standalone item
 
@@ -181,6 +195,27 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
   "cursor": "opaque-cursor"
 }
 ```
+
+### Example: livestream item view
+
+```json
+{
+  "$type": "eric.bsky.atmosphere.getActivity#item",
+  "record": {
+    "uri": "at://did:plc:streamer/place.stream.livestream/abc",
+    "cid": "bafy-record",
+    "indexedAt": "2026-09-11T00:00:00.000Z"
+  },
+  "collection": "place.stream.livestream",
+  "viewerState": { "subscribed": false },
+  "view": {
+    "$type": "eric.bsky.atmosphere.getActivity#livestreamView",
+    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:streamer/bafy-thumb"
+  }
+}
+```
+
+The view is preserved unchanged when the item appears inside a group or as related activity. `thumb` is optional, but the `#livestreamView` discriminator is present for every livestream item.
 
 ### Example: document with related recommendation activity
 
@@ -353,7 +388,7 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 ### Feed
 
 - `feed` is the ordered pagination skeleton only. It is a Lexicon `$type`-discriminated union of `ActivityItem` and `ActivityGroup`; narrow on `$type`, never on field presence.
-- An item has `{ $type, record, collection, viewerState, relatedActivity? }`; `collection` is the root record NSID. A group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
+- An item has `{ $type, record, collection, viewerState, view?, relatedActivity? }`; `collection` is the root record NSID. A group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
 - Item records at every depth contain only `{uri, cid, indexedAt}`; `collection` is a sibling field and neither carries raw record payloads.
 - `group.items` is `ActivityItem[]` with minimum length two; groups never nest, so `group.items` never contains an `ActivityGroup`. A document item may carry `relatedActivity: ActivityItem[]`; those children are recommendations or post shares and never recursively carry related activity.
 - Every item inside a group has the same `collection` as `group.collection`.

@@ -7,6 +7,7 @@ import {isInvalidHandle, sanitizeHandle} from '#/lib/strings/handles'
 import {
   ActivityPublicationCardBody,
   DocumentBody,
+  GrainPhotoBody,
 } from './components/ActivityBodyContent'
 import {
   ActivityRow,
@@ -399,6 +400,7 @@ function GrainPhotoActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
+      <GrainPhotoBody item={item} computedItemView={computedItemView} />
     </ActivityRow>
   )
 }

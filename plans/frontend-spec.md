@@ -102,6 +102,17 @@ Service behavior:
 Define feature-local structural types in the camelCase query module. They should describe only fields this screen reads.
 
 ```ts
+type ActivityView =
+  | {
+      $type: 'eric.bsky.atmosphere.getActivity#livestreamView'
+      thumb?: string
+    }
+  | {$type: 'eric.bsky.atmosphere.getActivity#longformView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#photoView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#recommendationView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#subscriptionView'}
+  | {$type: 'eric.bsky.atmosphere.getActivity#shareView'}
+
 type ActivityItem = {
   $type: 'eric.bsky.atmosphere.getActivity#item'
   record: {
@@ -113,6 +124,7 @@ type ActivityItem = {
   viewerState: {
     subscribed: boolean
   }
+  view?: ActivityView
   relatedActivity?: ActivityItem[]
 }
 
@@ -233,6 +245,8 @@ Narrowing rules:
 - Ignore malformed individual map entries during lookup, but do not remove their corresponding feed entry from the list.
 - Discriminate entries by `$type`; groups contain only direct `ActivityItem` children and have at least two children.
 - Treat `activity.collection` as a required sibling of `activity.record` on standalone items and direct group children.
+- Narrow `view` by its `$type` discriminator. Preserve unknown typed variants defensively. The backend currently emits only `#livestreamView`; the other declared variants are empty extension points for later view hydration.
+- A livestream view's optional `thumb` is already a complete `feed_thumbnail` CDN URL. Use it directly; do not reconstruct it from the raw record blob.
 - A document item may contain `relatedActivity`, a reverse-chronological list of recommendation or post-share items targeting that document. Preserve it on standalone documents and document group children, never flatten it into the outer feed, and discard nested `relatedActivity` defensively.
 - A post share's complete raw `app.bsky.feed.post` record is at `associatedRecords[item.record.uri].record`. It is not a hydrated `PostView`; preserve unknown post fields during narrowing.
 - Treat every child `activity.record` as metadata only; resolve the raw root payload through `associatedRecords[activity.record.uri].record`.
@@ -482,6 +496,8 @@ When `endedAt` is present, calculate the elapsed duration from `createdAt` throu
 
 Without a valid duration, render `<streamer> hosted a livestream`. Do not repeat the hydrated title in the standalone sentence; use one translated sentence with the actor link and elapsed time. Invalid or negative date intervals omit the duration defensively.
 
+When `activity.view.$type` is `eric.bsky.atmosphere.getActivity#livestreamView` and `thumb` is a valid URI, render that CDN image beneath the row header. The backend uses the `feed_thumbnail` preset. Omit the image when the view or `thumb` is absent; do not fall back to parsing the raw `thumb` blob.
+
 ### Grain photo
 
 For `social.grain.photo`, render:
@@ -590,6 +606,7 @@ Add focused tests for behavior that carries contract risk:
 - duplicate activity URIs are rendered once in first-seen order;
 - document, publication, and subscription sentences use their associated data and canonical links;
 - active and ended livestreams use the correct sentence and duration;
+- livestream views render the backend-provided CDN thumbnail and omit the image when `thumb` is absent;
 - Grain photo records construct and display the expected CDN image URL, aspect ratio, and alt text;
 - actor handles are sanitized, prefixed with `@`, and linked to profiles;
 - absent actors fall back to DIDs;

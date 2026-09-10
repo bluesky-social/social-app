@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {Image} from 'expo-image'
 import {AtUri} from '@atproto/syntax'
 
 import {atoms as a, useTheme} from '#/alf'
@@ -12,11 +13,13 @@ import {type app} from '#/lexicons'
 import {
   createDocumentExternalView,
   createPublicationExternalView,
+  getBlobUrl,
   getPublicationBodyThemeColors,
 } from '../externalViews'
 import {type ActivityPresentationProps} from '../presentation'
 import {
   activityCollections,
+  isGrainPhotoRecord,
   isRecommendRecord as isRecommendationRecord,
   isSubscriptionRecord,
 } from '../types'
@@ -57,6 +60,45 @@ export function DocumentBody({
             />
           ),
         )}
+      </View>
+    </ActivityRowBody>
+  )
+}
+
+export function GrainPhotoBody({item}: ActivityPresentationProps) {
+  const photos = getRootActivityUris(item).flatMap(uri => {
+    const did = getAuthorityDid(uri)
+    const record = item.associatedRecords[uri]?.record
+    if (!did || !isGrainPhotoRecord(record)) return []
+
+    const source = getBlobUrl(did, record.photo)
+    if (!source) return []
+
+    const alt = record.alt?.trim() || undefined
+    const aspectRatio = getAspectRatio(record.aspectRatio)
+    return [{uri, source, alt, aspectRatio}]
+  })
+
+  if (photos.length === 0) return null
+
+  return (
+    <ActivityRowBody>
+      <View style={a.gap_sm}>
+        {photos.map(photo => (
+          <Image
+            key={photo.uri}
+            testID="activityV2GrainPhotoImage"
+            source={{uri: photo.source}}
+            style={[a.w_full, a.rounded_lg, {aspectRatio: photo.aspectRatio}]}
+            contentFit="cover"
+            accessible={Boolean(photo.alt)}
+            accessibilityHint=""
+            accessibilityLabel={photo.alt}
+            accessibilityIgnoresInvertColors
+            loading="lazy"
+            useAppleWebpCodec
+          />
+        ))}
       </View>
     </ActivityRowBody>
   )
@@ -193,6 +235,18 @@ function getSubscriptionPublicationUri(
 ) {
   const record = item.associatedRecords[rootUri]?.record
   return isSubscriptionRecord(record) ? record.publication : undefined
+}
+
+function getAspectRatio(
+  aspectRatio: {width: number; height: number} | undefined,
+) {
+  return aspectRatio &&
+    Number.isFinite(aspectRatio.width) &&
+    Number.isFinite(aspectRatio.height) &&
+    aspectRatio.width > 0 &&
+    aspectRatio.height > 0
+    ? aspectRatio.width / aspectRatio.height
+    : 1
 }
 
 function getViewKey(view: app.bsky.embed.external.ViewExternal) {
