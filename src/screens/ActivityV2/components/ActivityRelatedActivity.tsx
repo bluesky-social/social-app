@@ -10,7 +10,6 @@ import {AvatarStack} from '#/components/AvatarStack'
 import {InlineLinkText} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
-import {ACTIVITY_ROW_AVATAR_SIZE} from '../constants'
 import {type ActivityPresentationItem} from '../presentation'
 import {
   type ActivityActor,
@@ -34,15 +33,10 @@ export function ActivityRelatedActivity({
   if (rows.length === 0) return null
 
   return (
-    <View style={[a.px_xl, a.py_sm]}>
-      <View style={[a.flex_row, a.gap_md]}>
-        <View style={{width: ACTIVITY_ROW_AVATAR_SIZE}} />
-        <View style={[a.flex_1, a.gap_xs]}>
-          {rows.map(({activity, actors}) => (
-            <RelatedActivityRow key={activity.record.uri} actors={actors} />
-          ))}
-        </View>
-      </View>
+    <View style={[a.px_xl, a.py_sm, a.gap_xs]}>
+      {rows.map(({activity, actors}) => (
+        <RelatedActivityRow key={activity.record.uri} actors={actors} />
+      ))}
     </View>
   )
 }

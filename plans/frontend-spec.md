@@ -12,6 +12,7 @@ Each top-level API feed entry is rendered as its own row. A standalone item rend
 
 ```text
 recommendation -> document -> publication
+post share -> document -> publication
 subscription -> publication
 document -> publication
 ```
@@ -32,7 +33,7 @@ This work includes:
 - a new authenticated route and screen;
 - a drawer item and desktop left-navigation item;
 - loading, empty, error, refresh, and pagination states;
-- basic rows for all six record collections currently returned by the API;
+- basic rows for the configured record collections plus qualifying `app.bsky.feed.post` document shares;
 - inline rendering for Grain photo records;
 - linked actor handles, documents, and publications;
 - defensive rendering for missing or malformed associated records and actors.
@@ -159,9 +160,9 @@ type AtmosphereActivityPage = {
 
 ### Grouping timing contract
 
-Grouping is computed by the backend after root pagination and is page-local. Root pagination uses the same age-tier windows for adjacent gap boundaries, preventing its normal gap boundary from splitting a possible group; the 200-root cap can still split one. Each candidate cluster uses one fixed request timestamp and an anchor-based maximum span; it never chains through adjacent events. An anchor younger than one hour uses an inclusive 10-minute span. An anchor at least one hour old and no more than 12 hours old uses an inclusive 1-hour span. An anchor more than 12 hours old and no more than 24 hours old uses an inclusive 4-hour span. An anchor more than 24 hours old uses an inclusive 8-hour span. Exactly 12 hours uses the 1-hour tier, and exactly 24 hours uses the 4-hour tier. The frontend must preserve the API-provided group and child order and must not regroup entries across pages.
+Grouping is computed by the backend after root pagination and is page-local. Root pagination uses the same age-tier windows for adjacent gap boundaries, preventing its normal gap boundary from splitting a possible group; the 200-root cap can still split one. Each candidate cluster uses one fixed request timestamp and an anchor-based maximum span; it never chains through adjacent events. An anchor younger than one hour uses an inclusive 30-minute span. An anchor at least one hour old and no more than 12 hours old uses an inclusive 1-hour span. An anchor more than 12 hours old and no more than 24 hours old uses an inclusive 4-hour span. An anchor more than 24 hours old uses an inclusive 8-hour span. Exactly 12 hours uses the 1-hour tier, and exactly 24 hours uses the 4-hour tier. The frontend must preserve the API-provided group and child order and must not regroup entries across pages.
 
-Before pagination, the backend collapses duplicate recommendations from one actor to one document and duplicate subscriptions from one actor to one publication into one logical activity. After selecting a page and hydrating associated records, it removes roots whose render-required chain is incomplete before grouping. Recommendations require their document and its AT-URI publication; subscriptions require their publication; documents require an AT-URI publication when `site` uses one. Group counts already exclude omitted roots, and a would-be two-item group may arrive as one standalone item. It preserves records from different actors. The earliest active source URI represents the action; if that record is deleted, a remaining duplicate may replace its URI and timestamp. This does not change the response type. Do not add client-side actor/target deduplication, because it would operate too late for correct pagination.
+Before pagination, the backend collapses duplicate recommendations from one actor to one document, duplicate subscriptions from one actor to one publication, and duplicate post shares from one actor to one external associated document into one logical activity. After selecting a page and hydrating associated records, it removes roots whose render-required chain is incomplete before grouping. Recommendations and post shares require their document and its AT-URI publication; subscriptions require their publication; documents require an AT-URI publication when `site` uses one. Group counts already exclude omitted roots, and a would-be two-item group may arrive as one standalone item. It preserves records from different actors. The earliest active source URI represents the action; if that record is deleted, a remaining duplicate may replace its URI and timestamp. This does not change the response type. Do not add client-side actor/target deduplication, because it would operate too late for correct pagination.
 ```
 
 Add narrow field guards for the records used by row presentation:
@@ -193,6 +194,18 @@ type SubscriptionRecord = {
   createdAt?: string
 }
 
+type PostRecord = {
+  $type?: 'app.bsky.feed.post'
+  text: string
+  facets?: unknown[]
+  embed?: unknown
+  langs?: string[]
+  labels?: unknown
+  tags?: string[]
+  createdAt: string
+  [key: string]: unknown
+}
+
 type LivestreamRecord = {
   $type?: 'place.stream.livestream'
   title?: string
@@ -220,7 +233,8 @@ Narrowing rules:
 - Ignore malformed individual map entries during lookup, but do not remove their corresponding feed entry from the list.
 - Discriminate entries by `$type`; groups contain only direct `ActivityItem` children and have at least two children.
 - Treat `activity.collection` as a required sibling of `activity.record` on standalone items and direct group children.
-- A document item may contain `relatedActivity`, a reverse-chronological list of recommendation items targeting that document. Preserve it on standalone documents and document group children, never flatten it into the outer feed, and discard nested `relatedActivity` defensively.
+- A document item may contain `relatedActivity`, a reverse-chronological list of recommendation or post-share items targeting that document. Preserve it on standalone documents and document group children, never flatten it into the outer feed, and discard nested `relatedActivity` defensively.
+- A post share's complete raw `app.bsky.feed.post` record is at `associatedRecords[item.record.uri].record`. It is not a hydrated `PostView`; preserve unknown post fields during narrowing.
 - Treat every child `activity.record` as metadata only; resolve the raw root payload through `associatedRecords[activity.record.uri].record`.
 - Preserve `activity.collection` and `activity.viewerState.subscribed` when narrowing each child item.
 - For `groupBy: 'subject'`, expect `subject` and no `actor`; for `groupBy: 'actor'`, expect `actor` and no `subject`.
@@ -321,7 +335,7 @@ The merged maps may be rebuilt when query data changes; all rows produced by one
 
 ## Row presentation
 
-Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. A document’s `relatedActivity` renders inside that document row below its body and above its footer. Collapse the related recommendations into one secondary row per document: an `AvatarStack` of up to five unique hydrated recommender profiles at 16px, followed by `text_xs` copy in the form `@<handle> [and <n> others] recommended`. Count all remaining usable actors even when the stack is capped at five, preserve related-activity order, drop unknown actors, and omit the secondary row when no usable related actor remains. A valid standalone `site.standard.document` adds a full `StandardSiteEmbed` beneath its activity header; if view construction fails, the activity sentence and defensive row remain. Subject groups use the collapsed and expandable presentation below. Actor recommendation, document, and subscription groups use their compact presentations below. Other actor groups remain in the diagnostic phase: render each direct child inside one container in API-provided reverse-chronological order and give that container a two-pixel red border. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
+Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. A document’s `relatedActivity` renders inside that document row below its body and above its footer. Recommendation children may keep the existing collapsed recommender row. Post-share children should produce a separate share summary using their raw post records and hydrated actors, with copy equivalent to `@<handle> [and <n> others] shared`; do not label shares as recommendations. Collapse the related recommendations into one secondary row per document: an `AvatarStack` of up to five unique hydrated recommender profiles at 16px, followed by `text_xs` copy in the form `@<handle> [and <n> others] recommended`. Count all remaining usable actors even when the stack is capped at five, preserve related-activity order, drop unknown actors, and omit the secondary row when no usable related actor remains. A valid standalone `site.standard.document` adds a full `StandardSiteEmbed` beneath its activity header; if view construction fails, the activity sentence and defensive row remain. Subject groups use the collapsed and expandable presentation below. Actor recommendation, document, and subscription groups use their compact presentations below. Other actor groups remain in the diagnostic phase: render each direct child inside one container in API-provided reverse-chronological order and give that container a two-pixel red border. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
 
 - horizontal and vertical padding consistent with other feed rows;
 - a bottom or top separator using `t.atoms.border_contrast_low`;
@@ -331,7 +345,7 @@ Every top-level feed entry must produce a visually separate row, including unsup
 - `TimeElapsed` using `group.indexedAt` for a group and `activity.record.indexedAt` for an item;
 - `emoji` on text that can contain actor or record-provided values.
 
-For grouped activity, preserve every child item's viewer state and resolve each child's raw root record and actor from the shared sidecars. A subject group may summarize multiple actors targeting one document or publication; an actor group may summarize one actor's activity in one collection. The opaque `group.id` is a list key only and must not be parsed.
+For grouped activity, preserve every child item's viewer state and resolve each child's raw root record and actor from the shared sidecars. A subject group may summarize multiple actors targeting one document or publication. For `app.bsky.feed.post`, use copy equivalent to “Eric and 5 others shared Alice’s article,” resolve the article from `group.subject`, and retain each child’s complete post record for expanded rendering. Other subject groups retain their collection-specific summaries. An actor group may summarize one actor's activity in one collection. The opaque `group.id` is a list key only and must not be parsed.
 
 ### Actor document group: one actor, many documents
 
@@ -365,7 +379,7 @@ Resolve each child through the complete shared sidecars (`subscription -> public
 
 ### Subject group: many actors, one subject
 
-Render `groupBy: 'subject'` as one collapsed, tappable row. The backend guarantees at most one child per actor for a recommendation/document or subscription/publication subject, so `group.items.length` is the distinct actor count. Use the newest child actor as the primary actor and summarize the remaining child count:
+Render `groupBy: 'subject'` as one collapsed, tappable row. The backend guarantees at most one child per actor for a recommendation/document, subscription/publication, or post-share/document subject, so `group.items.length` is the distinct actor count. Use the newest child actor as the primary actor and summarize the remaining child count:
 
 ```text
 <primary actor> and <N others> subscribed to <publication> · <elapsed time>
@@ -628,7 +642,7 @@ Manually verify:
 4. Every outer feed entry renders as a separate row in API order; grouped children render within their group row.
 5. Every row receives the same complete merged `associatedRecords` object for the currently loaded pages.
 6. A valid recommendation renders the recommender, document author, and document title by traversing the associated-record map.
-7. All six expected root collections have useful presentation, standalone documents render full `StandardSiteEmbed` content beneath their headers, actor document and recommendation groups render compact expandable document lists, Grain photos render beneath their row headers, actor handles and document/publication titles are linked, actor subscription groups render expandable publication cards, and malformed or unknown items render a generic fallback row.
+7. All expected root collections, including post shares, have useful presentation, standalone documents render full `StandardSiteEmbed` content beneath their headers, actor document and recommendation groups render compact expandable document lists, Grain photos render beneath their row headers, actor handles and document/publication titles are linked, actor subscription groups render expandable publication cards, and malformed or unknown items render a generic fallback row.
 8. Loading, empty, initial-error, refresh, next-page loading, and next-page error states are usable.
 9. The appview-sandbox client supports both direct local development and the deployed PDS proxy configuration.
 10. New user-facing strings are translatable and the focused tests, typecheck, lint, and formatting checks pass.

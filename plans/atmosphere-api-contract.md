@@ -12,8 +12,8 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-internal-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Synchronized backend base commit | `2f6e59c Attach on-page recommendations to document activity` |
-| Uncommitted backend state | Under-one-hour grouping and pagination window increased to 30 minutes through centralized tier configuration atop `2f6e59c` |
+| Synchronized backend base commit | `3956dd6 Group unsubscribed documents by actor` |
+| Uncommitted backend state | Selective live-only `app.bsky.feed.post` document-share ingestion, related attachment, subject grouping, raw-post hydration, tests, and contract updates atop `3956dd6` |
 | Pushed frontend tip | `661ea4408 Present actor recommendation groups` on `social-app-internal/atmosphere-tab` |
 | Uncommitted frontend state | Related-activity rendering, types, tests, Lexicon sync, and contract updates are present in the working tree; not verified by this backend session |
 | Deployment status | The pushed frontend tip predates authenticated-viewer integration; current frontend and backend working-tree changes have not been pushed or deployed |
@@ -84,7 +84,7 @@ type ActivityItem = {
   viewerState: {
     subscribed: boolean
   }
-  relatedActivity?: ActivityItem[] // on-page recommendations targeting this document; never recursively populated
+  relatedActivity?: ActivityItem[] // on-page recommendations and post shares targeting this document; never recursively populated
 }
 
 type ActivityGroup = {
@@ -215,7 +215,9 @@ When a document root and recommendations targeting it occur on the same selected
 }
 ```
 
-This projection is page-local and happens before normal subject and actor grouping. It adds no time rule beyond existing page selection. A related recommendation appears nowhere else in the response tree. The document retains its own outer timestamp, and `relatedActivity` remains attached if the document becomes an actor-group child. Recommendations whose document is not an outer root on the page continue through normal grouping.
+This projection is page-local and happens before normal subject and actor grouping. It adds no time rule beyond existing page selection. A related recommendation or post share appears nowhere else in the response tree. The document retains its own outer timestamp, and `relatedActivity` remains attached if the document becomes an actor-group child. Related roots whose document is not an outer root on the page continue through normal grouping.
+
+For an `app.bsky.feed.post` share, `associatedRecords[postUri].record` is the complete raw post record persisted from Jetstream—not an `app.bsky.feed.defs#postView`. It includes available post fields such as `text`, `facets`, `embed`, `langs`, `labels`, and `tags`. A qualifying post uses either a direct `app.bsky.embed.external` or `app.bsky.embed.recordWithMedia` with external media, and that external object contains a strong `associatedRefs` reference to `site.standard.document`. The referenced document and publication are recursively present in `associatedRecords` when renderable.
 
 ### Example: subject group
 
@@ -353,16 +355,16 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - `feed` is the ordered pagination skeleton only. It is a Lexicon `$type`-discriminated union of `ActivityItem` and `ActivityGroup`; narrow on `$type`, never on field presence.
 - An item has `{ $type, record, collection, viewerState, relatedActivity? }`; `collection` is the root record NSID. A group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
 - Item records at every depth contain only `{uri, cid, indexedAt}`; `collection` is a sibling field and neither carries raw record payloads.
-- `group.items` is `ActivityItem[]` with minimum length two; groups never nest, so `group.items` never contains an `ActivityGroup`. A document item may carry `relatedActivity: ActivityItem[]`; those children are recommendations and never recursively carry related activity.
+- `group.items` is `ActivityItem[]` with minimum length two; groups never nest, so `group.items` never contains an `ActivityGroup`. A document item may carry `relatedActivity: ActivityItem[]`; those children are recommendations or post shares and never recursively carry related activity.
 - Every item inside a group has the same `collection` as `group.collection`.
 - Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker. A group's timestamp is its newest item's timestamp, copied to `group.indexedAt`, which equals `group.items[0].record.indexedAt`; items inside a group are also reverse chronological.
 - `indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
 - Results are limited to the rolling 30-day activity window.
 - Grouping is read-time and page-local: it runs after the 10-200 candidate-root page selection and render-required association filtering, never crosses a cursor boundary, and does not alter stored activity rows, associated-record hydration, or actor hydration. Root pagination uses the same age-tier windows as grouping so its normal gap boundary does not split a possible group.
-- Before pagination and grouping, the materialized feed collapses multiple active recommendation records from one actor to one `/document` target into one logical activity. It likewise collapses multiple subscription records from one actor to one `/publication` target. Different actors remain distinct.
+- Before pagination and grouping, the materialized feed collapses multiple active recommendation records from one actor to one `/document` target, multiple subscription records from one actor to one `/publication` target, and multiple qualifying post shares from one actor to one external associated document into one logical activity. Different actors remain distinct.
 - The earliest active source record represents a collapsed logical activity. A later duplicate does not bump it. If that representative is deleted while another duplicate remains active, the backend promotes the next-earliest record, so the returned root URI may change without the logical action disappearing.
-- Related-activity projection runs first. A recommendation whose `/document` target is also a document root on the selected page moves beneath that document and is consumed. It does not also appear as an outer item or grouping child. The document keeps its own timestamp and can subsequently become an actor-group child with `relatedActivity` intact.
-- Subject interaction grouping then runs for remaining recommendations keyed by `/document` and subscriptions keyed by `/publication`, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for actor grouping by author DID plus collection NSID. In that actor pass, root documents with `viewerState.subscribed: true` remain standalone; only unsubscribed documents are eligible to group under their actor.
+- Related-activity projection runs first. A recommendation whose `/document` target or a post whose external `associatedRefs` target is also a document root on the selected page moves beneath that document and is consumed. It does not also appear as an outer item or grouping child. The document keeps its own timestamp and can subsequently become an actor-group child with `relatedActivity` intact.
+- Subject interaction grouping then runs for remaining recommendations keyed by `/document`, subscriptions keyed by `/publication`, and posts keyed by their external associated document, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for actor grouping by author DID plus collection NSID. In that actor pass, root documents with `viewerState.subscribed: true` remain standalone; only unsubscribed documents are eligible to group under their actor.
 - Every grouping pass evaluates candidate clusters against one fixed request timestamp, not the current wall-clock time at each evaluation. An anchor younger than one hour uses an inclusive 30-minute maximum span; an anchor at least one hour old and no more than 12 hours old uses an inclusive one-hour maximum span; an anchor more than 12 hours old and no more than 24 hours old uses an inclusive four-hour maximum span; and an anchor more than 24 hours old uses an inclusive eight-hour maximum span. Exactly 12 hours uses the one-hour tier and exactly 24 hours uses the four-hour tier. Clusters do not chain through adjacent events.
 - A cluster of exactly one item never becomes a group. It remains, or returns to being, a standalone `ActivityItem` in the feed.
 - Every root activity URI is assigned exactly once across the whole response: as a standalone item, as one direct group item, or as one document's `relatedActivity` child.
@@ -385,7 +387,7 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - `associatedRecords` includes every root feed record plus recursively resolved local records referenced by AT URI.
 - Hydration is breadth-first to a maximum depth of four.
 - The backend fetches at most 100 recursively associated records in addition to feed-root records.
-- Missing, deleted, or unavailable references do not fail the whole request. Before grouping, they suppress a root when they occupy a configured render-required path: recommendation `/document`, subscription `/publication`, or document `/site` when it is an AT URI. Requirements recurse, so a recommendation is suppressed when its document exists but that document's AT-URI publication does not.
+- Missing, deleted, or unavailable references do not fail the whole request. Before grouping, they suppress a root when they occupy a configured render-required relationship: recommendation `/document`, post-share external associated document, subscription `/publication`, or document `/site` when it is an AT URI. Requirements recurse, so a recommendation is suppressed when its document exists but that document's AT-URI publication does not.
 - HTTPS document sites remain valid. Missing AT URIs outside configured render-required paths, such as Bluesky post references, do not suppress activity.
 - Filtering can shrink a group or turn a would-be group into a standalone item. Clients should use the returned group item count without accounting for omitted roots.
 - Records come from appview-sandbox PostgreSQL, not from the user's PDS at request time.
@@ -395,6 +397,7 @@ Common resolution paths include:
 
 ```text
 recommendation -> document -> publication
+post share -> document -> publication
 subscription -> publication
 document -> publication
 ```
@@ -414,7 +417,7 @@ document -> publication
 - Discriminate every `feed` entry on `$type`, not on which fields are present. Check `entry.$type === 'eric.bsky.atmosphere.getActivity#group'` before reading `entry.items`, `entry.groupBy`, `entry.subject`, or `entry.actor`.
 - Within a group, use `entry.groupBy` to decide whether `subject` or `actor` is the populated identifier; the Lexicon union cannot express that conditional requirement, so TypeScript alone will not narrow it for you.
 - Use `entry.id` as the React/FlatList key for a group and `entry.record.uri` as the key for a standalone item at the outer list level. Use each nested `item.record.uri` as the key inside `entry.items` and `item.relatedActivity`.
-- Do not flatten `entry.items` or `item.relatedActivity` into the outer `feed` list. Flattening discards the projection the backend computed. Render a group as one list row that internally lists or summarizes its items, and render related recommendations within their document row.
+- Do not flatten `entry.items` or `item.relatedActivity` into the outer `feed` list. Flattening discards the projection the backend computed. Render a group as one list row that internally lists or summarizes its items, and render related recommendations or post shares within their document row.
 - Because grouping can collapse many roots into one outer entry, `feed.length` no longer tracks the number of underlying root activity records. Do not use `feed.length` to infer page size or to decide whether a page is "full".
 - Concatenate `page.feed` arrays across pages in the order pages are fetched; do not merge or re-group entries across pages, since grouping is computed independently per page and never crosses a cursor boundary.
 
@@ -443,7 +446,7 @@ Frontend implications:
 
 ## Record types currently expected in the feed
 
-All enabled collections except `site.standard.publication` can appear as feed roots when authored by followed users. Publication subscriptions can additionally qualify documents. Publications remain indexed and can appear in `associatedRecords`, but publication creations do not materialize feed activity.
+All enabled collections except `site.standard.publication` can appear as feed roots when authored by followed users. Qualifying live-tail `app.bsky.feed.post` document shares can also appear, but unrelated posts are never persisted and no post archive is backfilled. Publication subscriptions can additionally qualify documents. Publications remain indexed and can appear in `associatedRecords`, but publication creations do not materialize feed activity.
 
 ```text
 site.standard.document
@@ -451,6 +454,7 @@ site.standard.graph.recommend
 site.standard.graph.subscription
 place.stream.livestream
 social.grain.photo
+app.bsky.feed.post // qualifying shares only; separate live-only stream
 ```
 
 Useful reference fields:
@@ -463,6 +467,7 @@ Useful reference fields:
 | `site.standard.publication` | No required associated-record relationship. |
 | `place.stream.livestream` | `createdAt` marks the start; an `endedAt` value marks completion. |
 | `social.grain.photo` | `photo` is a blob with an optional `alt` and `aspectRatio`. |
+| `app.bsky.feed.post` | A direct or record-with-media external embed has `external.associatedRefs` containing a strong ref to `site.standard.document`. |
 
 The current local registry includes `place.stream.livestream` and `social.grain.photo` in addition to the four collections seeded by the backend migration. For display, an absent `endedAt` means the stream is active. Ended-stream duration is the elapsed time from `createdAt` to `endedAt`.
 
@@ -573,8 +578,9 @@ Then run the repository's normal lexicon generation command before importing the
 ### Uncommitted backend contract updates
 
 - Grouping age thresholds, inclusivity, and spans are centralized in the backend's exported `GROUPING_WINDOW_TIERS`; the under-one-hour span is now 30 minutes, and pagination uses the same resolver.
-- `ActivityItem.relatedActivity?: ActivityItem[]` contains reverse-chronological recommendation roots targeting an on-page document root.
-- Related recommendations are consumed before subject and actor grouping and occur nowhere else in the response tree.
+- `ActivityItem.relatedActivity?: ActivityItem[]` contains reverse-chronological recommendation and post-share roots targeting an on-page document root.
+- Related recommendations and post shares are consumed before subject and actor grouping and occur nowhere else in the response tree.
+- Remaining post shares group by the referenced document, and every share's complete raw post record is keyed by its post URI in `associatedRecords`.
 - Attachment is page-local, uses the existing page-selection boundary as its temporal scope, and remains present when a document becomes an actor-group child.
 
 - Added required `feed[].collection`, the root record's NSID, to standalone items and group children.

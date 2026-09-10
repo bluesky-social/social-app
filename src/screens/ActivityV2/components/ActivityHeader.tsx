@@ -113,14 +113,7 @@ export function ActivityRowBody({children}: React.PropsWithChildren<{}>) {
     return null
   }
 
-  return (
-    <View style={[a.px_xl, a.pb_xs]}>
-      <View style={[a.flex_row, a.gap_md]}>
-        <View style={{width: ACTIVITY_ROW_AVATAR_SIZE}} />
-        <View style={[a.flex_1]}>{children}</View>
-      </View>
-    </View>
-  )
+  return <View style={[a.px_xl, a.pb_xs]}>{children}</View>
 }
 
 export function ActivityRowFooter({
@@ -136,12 +129,9 @@ export function ActivityRowFooter({
     <TimeElapsed timestamp={timestamp}>
       {({timeElapsed}) => (
         <View style={[a.px_xl, a.pb_lg]}>
-          <View style={[a.flex_row, a.align_center, a.gap_md]}>
-            <View style={{width: ACTIVITY_ROW_AVATAR_SIZE}} />
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              {timeElapsed}
-            </Text>
-          </View>
+          <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
+            {timeElapsed}
+          </Text>
         </View>
       )}
     </TimeElapsed>
