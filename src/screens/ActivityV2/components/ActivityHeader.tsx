@@ -10,10 +10,10 @@ import {atoms as a, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Text, type TextProps} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
+import {ACTIVITY_ROW_AVATAR_SIZE} from '../constants'
 import {type ActivityPresentationProps} from '../presentation'
 import {ActivityInlineLinkText} from './ActivityInlineLinkText'
 
-const ACTIVITY_ROW_AVATAR_SIZE = 36
 const MAX_ACTIVITY_HEADER_AVATARS = 5
 
 export function ActivityRow({

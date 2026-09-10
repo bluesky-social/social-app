@@ -12,10 +12,10 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-internal-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Synchronized backend base commit | `1fccfce Filter incomplete Atmosphere activity` |
-| Uncommitted backend state | Authenticated-viewer integration is implemented and locally verified atop `1fccfce` |
+| Synchronized backend base commit | `2f6e59c Attach on-page recommendations to document activity` |
+| Uncommitted backend state | Under-one-hour grouping and pagination window increased to 30 minutes through centralized tier configuration atop `2f6e59c` |
 | Pushed frontend tip | `661ea4408 Present actor recommendation groups` on `social-app-internal/atmosphere-tab` |
-| Uncommitted frontend state | Generic appview-sandbox client and authenticated `getActivity` integration are implemented and locally verified |
+| Uncommitted frontend state | Related-activity rendering, types, tests, Lexicon sync, and contract updates are present in the working tree; not verified by this backend session |
 | Deployment status | The pushed frontend tip predates authenticated-viewer integration; current frontend and backend working-tree changes have not been pushed or deployed |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
@@ -84,6 +84,7 @@ type ActivityItem = {
   viewerState: {
     subscribed: boolean
   }
+  relatedActivity?: ActivityItem[] // on-page recommendations targeting this document; never recursively populated
 }
 
 type ActivityGroup = {
@@ -180,6 +181,41 @@ The generated lexicon type currently exposes `associatedRecords` and `actors` as
   "cursor": "opaque-cursor"
 }
 ```
+
+### Example: document with related recommendation activity
+
+When a document root and recommendations targeting it occur on the same selected page, the recommendations move out of the outer feed and into the document's `relatedActivity`:
+
+```json
+{
+  "feed": [
+    {
+      "$type": "eric.bsky.atmosphere.getActivity#item",
+      "record": {
+        "uri": "at://did:plc:author/site.standard.document/def",
+        "cid": "bafy-document",
+        "indexedAt": "2026-09-04T11:59:00.000Z"
+      },
+      "collection": "site.standard.document",
+      "viewerState": { "subscribed": false },
+      "relatedActivity": [
+        {
+          "$type": "eric.bsky.atmosphere.getActivity#item",
+          "record": {
+            "uri": "at://did:plc:ryan/site.standard.graph.recommend/one",
+            "cid": "bafy-recommendation",
+            "indexedAt": "2026-09-04T12:00:00.000Z"
+          },
+          "collection": "site.standard.graph.recommend",
+          "viewerState": { "subscribed": false }
+        }
+      ]
+    }
+  ]
+}
+```
+
+This projection is page-local and happens before normal subject and actor grouping. It adds no time rule beyond existing page selection. A related recommendation appears nowhere else in the response tree. The document retains its own outer timestamp, and `relatedActivity` remains attached if the document becomes an actor-group child. Recommendations whose document is not an outer root on the page continue through normal grouping.
 
 ### Example: subject group
 
@@ -315,9 +351,9 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 ### Feed
 
 - `feed` is the ordered pagination skeleton only. It is a Lexicon `$type`-discriminated union of `ActivityItem` and `ActivityGroup`; narrow on `$type`, never on field presence.
-- An item has exactly `{ $type, record, collection, viewerState }`; `collection` is the root record NSID. A group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
-- `feed[].record` and group item records contain only `{uri, cid, indexedAt}`; `collection` is a sibling field and neither carries raw record payloads.
-- `group.items` is `ActivityItem[]` with minimum length two; groups never nest, so `group.items` never contains an `ActivityGroup`.
+- An item has `{ $type, record, collection, viewerState, relatedActivity? }`; `collection` is the root record NSID. A group has exactly `{ $type, id, groupBy, collection, indexedAt, subject|actor, items }`.
+- Item records at every depth contain only `{uri, cid, indexedAt}`; `collection` is a sibling field and neither carries raw record payloads.
+- `group.items` is `ActivityItem[]` with minimum length two; groups never nest, so `group.items` never contains an `ActivityGroup`. A document item may carry `relatedActivity: ActivityItem[]`; those children are recommendations and never recursively carry related activity.
 - Every item inside a group has the same `collection` as `group.collection`.
 - Results are ordered by activity event time descending, with sequence descending as a stable tie-breaker. A group's timestamp is its newest item's timestamp, copied to `group.indexedAt`, which equals `group.items[0].record.indexedAt`; items inside a group are also reverse chronological.
 - `indexedAt` is the activity event time, including for backfilled rows; it is not the PostgreSQL projection-write time.
@@ -325,10 +361,11 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - Grouping is read-time and page-local: it runs after the 10-200 candidate-root page selection and render-required association filtering, never crosses a cursor boundary, and does not alter stored activity rows, associated-record hydration, or actor hydration. Root pagination uses the same age-tier windows as grouping so its normal gap boundary does not split a possible group.
 - Before pagination and grouping, the materialized feed collapses multiple active recommendation records from one actor to one `/document` target into one logical activity. It likewise collapses multiple subscription records from one actor to one `/publication` target. Different actors remain distinct.
 - The earliest active source record represents a collapsed logical activity. A later duplicate does not bump it. If that representative is deleted while another duplicate remains active, the backend promotes the next-earliest record, so the returned root URI may change without the logical action disappearing.
-- Subject interaction grouping runs first, for recommendations keyed by the `/document` target and subscriptions keyed by the `/publication` target, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for the second pass, which groups by author DID plus collection NSID. In that actor pass, root documents with `viewerState.subscribed: false` remain standalone; only subscribed documents are eligible to group under their actor.
-- Every grouping pass evaluates candidate clusters against one fixed request timestamp, not the current wall-clock time at each evaluation. An anchor younger than one hour uses an inclusive ten-minute maximum span; an anchor at least one hour old and no more than 12 hours old uses an inclusive one-hour maximum span; an anchor more than 12 hours old and no more than 24 hours old uses an inclusive four-hour maximum span; and an anchor more than 24 hours old uses an inclusive eight-hour maximum span. Exactly 12 hours uses the one-hour tier and exactly 24 hours uses the four-hour tier. Clusters do not chain through adjacent events.
+- Related-activity projection runs first. A recommendation whose `/document` target is also a document root on the selected page moves beneath that document and is consumed. It does not also appear as an outer item or grouping child. The document keeps its own timestamp and can subsequently become an actor-group child with `relatedActivity` intact.
+- Subject interaction grouping then runs for remaining recommendations keyed by `/document` and subscriptions keyed by `/publication`, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for actor grouping by author DID plus collection NSID. In that actor pass, root documents with `viewerState.subscribed: false` remain standalone; only subscribed documents are eligible to group under their actor.
+- Every grouping pass evaluates candidate clusters against one fixed request timestamp, not the current wall-clock time at each evaluation. An anchor younger than one hour uses an inclusive 30-minute maximum span; an anchor at least one hour old and no more than 12 hours old uses an inclusive one-hour maximum span; an anchor more than 12 hours old and no more than 24 hours old uses an inclusive four-hour maximum span; and an anchor more than 24 hours old uses an inclusive eight-hour maximum span. Exactly 12 hours uses the one-hour tier and exactly 24 hours uses the four-hour tier. Clusters do not chain through adjacent events.
 - A cluster of exactly one item never becomes a group. It remains, or returns to being, a standalone `ActivityItem` in the feed.
-- Every root activity URI is assigned exactly once across the whole response: either as a standalone item or as exactly one item inside exactly one group.
+- Every root activity URI is assigned exactly once across the whole response: as a standalone item, as one direct group item, or as one document's `relatedActivity` child.
 - Each realized group has at least two items, and deterministic opaque IDs distinguish separate temporal clusters that otherwise share `groupBy`, `collection`, and `subject`/`actor` (see Group identifiers below).
 - Every item has a required root-record `collection` NSID and a required `viewerState.subscribed` boolean, whether it appears standalone or inside a group.
 - `subscribed` is `true` only for a root `site.standard.document` whose `site` publication AT URI matches one of the viewer's current `site.standard.graph.subscription` records. It is `false` for non-document activity and documents without a matching subscription.
@@ -376,8 +413,8 @@ document -> publication
 
 - Discriminate every `feed` entry on `$type`, not on which fields are present. Check `entry.$type === 'eric.bsky.atmosphere.getActivity#group'` before reading `entry.items`, `entry.groupBy`, `entry.subject`, or `entry.actor`.
 - Within a group, use `entry.groupBy` to decide whether `subject` or `actor` is the populated identifier; the Lexicon union cannot express that conditional requirement, so TypeScript alone will not narrow it for you.
-- Use `entry.id` as the React/FlatList key for a group and `entry.record.uri` as the key for a standalone item at the outer list level. Use each nested `item.record.uri` as the key inside `entry.items`.
-- Do not flatten `entry.items` into the outer `feed` list. Flattening discards the grouping the backend computed and breaks summary UI such as "3 people recommended this document". Render a group as one list row that internally lists, or otherwise summarizes, its items.
+- Use `entry.id` as the React/FlatList key for a group and `entry.record.uri` as the key for a standalone item at the outer list level. Use each nested `item.record.uri` as the key inside `entry.items` and `item.relatedActivity`.
+- Do not flatten `entry.items` or `item.relatedActivity` into the outer `feed` list. Flattening discards the projection the backend computed. Render a group as one list row that internally lists or summarizes its items, and render related recommendations within their document row.
 - Because grouping can collapse many roots into one outer entry, `feed.length` no longer tracks the number of underlying root activity records. Do not use `feed.length` to infer page size or to decide whether a page is "full".
 - Concatenate `page.feed` arrays across pages in the order pages are fetched; do not merge or re-group entries across pages, since grouping is computed independently per page and never crosses a cursor boundary.
 
@@ -443,7 +480,7 @@ const nextPage = await getActivity({
 
 - Page size is server-controlled over candidate root activity records; there is no `limit` parameter.
 - A page selects at least 10 candidate roots when available. Required-association filtering happens afterward, so the returned feed can contain fewer than 10 roots and the cursor advances past omitted candidates.
-- After root record 10, each adjacent gap is compared with the grouping window selected from the newer event’s age at the fixed request time: 10 minutes when younger than one hour, one hour through 12 hours old, four hours when older than 12 through 24 hours old, and eight hours when older than 24 hours.
+- After root record 10, each adjacent gap is compared with the grouping window selected from the newer event’s age at the fixed request time: 30 minutes when younger than one hour, one hour through 12 hours old, four hours when older than 12 through 24 hours old, and eight hours when older than 24 hours.
 - A page contains at most 200 root records; grouping can make the outer `feed` array shorter.
 - The event whose gap exceeds its age-tier window, or root record 201, begins the next page.
 - Grouping is page-local and never crosses a cursor boundary. Sharing the age tiers prevents ordinary gap pagination from splitting a possible group; the 200-root cap can still split one.
@@ -534,6 +571,11 @@ Then run the repository's normal lexicon generation command before importing the
 - Root pagination now uses the same age-tier windows as grouping to avoid splitting eligible groups at a smaller gap boundary.
 
 ### Uncommitted backend contract updates
+
+- Grouping age thresholds, inclusivity, and spans are centralized in the backend's exported `GROUPING_WINDOW_TIERS`; the under-one-hour span is now 30 minutes, and pagination uses the same resolver.
+- `ActivityItem.relatedActivity?: ActivityItem[]` contains reverse-chronological recommendation roots targeting an on-page document root.
+- Related recommendations are consumed before subject and actor grouping and occur nowhere else in the response tree.
+- Attachment is page-local, uses the existing page-selection boundary as its temporal scope, and remains present when a document becomes an actor-group child.
 
 - Added required `feed[].collection`, the root record's NSID, to standalone items and group children.
 - Removed `site.standard.publication` creation from the activity projection. Publication records remain available for local associated-record hydration.

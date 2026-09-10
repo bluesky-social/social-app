@@ -58,6 +58,71 @@ describe('ActivityV2 response narrowing', () => {
     expect(item.collection).toBe(activityCollections.document)
   })
 
+  it('preserves non-recursive recommendation activity related to documents', () => {
+    const documentUri =
+      'at://did:plc:author/site.standard.document/with-related'
+    const recommendationUri =
+      'at://did:plc:recommender/site.standard.graph.recommend/one'
+    const nestedRecommendationUri =
+      'at://did:plc:nested/site.standard.graph.recommend/two'
+    const recommendation = {
+      $type: 'eric.bsky.atmosphere.getActivity#item',
+      record: {
+        uri: recommendationUri,
+        cid: 'bafy-recommendation',
+        indexedAt: '2026-09-03T00:01:00.000Z',
+      },
+      collection: activityCollections.recommendation,
+      viewerState: {subscribed: false},
+      relatedActivity: [
+        {
+          $type: 'eric.bsky.atmosphere.getActivity#item',
+          record: {
+            uri: nestedRecommendationUri,
+            cid: 'bafy-nested',
+            indexedAt: '2026-09-03T00:02:00.000Z',
+          },
+          collection: activityCollections.recommendation,
+          viewerState: {subscribed: false},
+        },
+      ],
+    }
+    const page = narrowActivityPage({
+      feed: [
+        {
+          $type: 'eric.bsky.atmosphere.getActivity#item',
+          record: {
+            uri: documentUri,
+            cid: 'bafy-document',
+            indexedAt: '2026-09-03T00:00:00.000Z',
+          },
+          collection: activityCollections.document,
+          viewerState: {subscribed: false},
+          relatedActivity: [
+            recommendation,
+            {
+              ...recommendation,
+              collection: activityCollections.subscription,
+            },
+          ],
+        },
+      ],
+      associatedRecords: {},
+      actors: {},
+    })
+
+    const item = page.feed[0]
+    expect(item.$type).toBe('eric.bsky.atmosphere.getActivity#item')
+    if (item.$type !== 'eric.bsky.atmosphere.getActivity#item') return
+    expect(item.relatedActivity).toEqual([
+      expect.objectContaining({
+        collection: activityCollections.recommendation,
+        relatedActivity: undefined,
+        record: expect.objectContaining({uri: recommendationUri}),
+      }),
+    ])
+  })
+
   it('preserves grouped items and their collection and viewer state', () => {
     const firstUri = 'at://did:plc:author/site.standard.document/one'
     const secondUri = 'at://did:plc:author/site.standard.document/two'

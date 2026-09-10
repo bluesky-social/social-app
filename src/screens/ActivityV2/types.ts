@@ -33,6 +33,7 @@ export type ActivityItem = {
   viewerState: {
     subscribed: boolean
   }
+  relatedActivity?: ActivityItem[]
 }
 
 export type CollectionActivityItem<TCollection extends string> =
@@ -197,7 +198,10 @@ function narrowActivityEntry(value: unknown): ActivityFeedEntry | undefined {
   }
 }
 
-function narrowActivityItem(value: unknown): ActivityItem | undefined {
+function narrowActivityItem(
+  value: unknown,
+  allowRelatedActivity = true,
+): ActivityItem | undefined {
   if (
     !isObject(value) ||
     value.$type !== 'eric.bsky.atmosphere.getActivity#item' ||
@@ -211,6 +215,19 @@ function narrowActivityItem(value: unknown): ActivityItem | undefined {
   ) {
     return undefined
   }
+
+  const relatedActivity =
+    allowRelatedActivity &&
+    value.collection === activityCollections.document &&
+    Array.isArray(value.relatedActivity)
+      ? value.relatedActivity.flatMap(candidate => {
+          const related = narrowActivityItem(candidate, false)
+          return related?.collection === activityCollections.recommendation
+            ? [related]
+            : []
+        })
+      : []
+
   return {
     $type: value.$type,
     record: {
@@ -222,6 +239,7 @@ function narrowActivityItem(value: unknown): ActivityItem | undefined {
     viewerState: {
       subscribed: value.viewerState.subscribed,
     },
+    relatedActivity: relatedActivity.length > 0 ? relatedActivity : undefined,
   }
 }
 

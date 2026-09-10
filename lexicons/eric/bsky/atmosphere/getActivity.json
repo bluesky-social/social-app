@@ -47,7 +47,13 @@
           "format": "nsid",
           "description": "The root record's collection NSID."
         },
-        "viewerState": { "type": "ref", "ref": "#viewerState" }
+        "viewerState": { "type": "ref", "ref": "#viewerState" },
+        "relatedActivity": {
+          "type": "array",
+          "minLength": 1,
+          "items": { "type": "ref", "ref": "#item" },
+          "description": "Page-local recommendation activity targeting this document. Children are reverse chronological and do not contain related activity."
+        }
       }
     },
     "group": {

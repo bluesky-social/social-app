@@ -15,6 +15,7 @@ import {
   ActivityRowHeaderText,
 } from './components/ActivityHeader'
 import {ActivityInlineLinkText} from './components/ActivityInlineLinkText'
+import {ActivityRelatedActivity} from './components/ActivityRelatedActivity'
 import {type ActivityGroupRowItem} from './model'
 import {
   type ActivityPresentationItem,
@@ -105,6 +106,7 @@ function DocumentActivityRenderer({
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
       <DocumentBody item={item} computedItemView={computedItemView} />
+      <ActivityRelatedActivity item={item} />
       <ActivityRowFooter item={item} />
     </ActivityRow>
   )
