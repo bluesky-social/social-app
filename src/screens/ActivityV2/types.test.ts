@@ -58,6 +58,40 @@ describe('ActivityV2 response narrowing', () => {
     expect(item.collection).toBe(activityCollections.document)
   })
 
+  it('preserves appview-derived livestream thumbnail views', () => {
+    const uri = 'at://did:plc:streamer/place.stream.livestream/with-thumbnail'
+    const page = narrowActivityPage({
+      feed: [
+        {
+          $type: 'eric.bsky.atmosphere.getActivity#item',
+          record: {
+            uri,
+            cid: 'bafy-livestream',
+            indexedAt: '2026-09-11T00:00:00.000Z',
+          },
+          collection: activityCollections.livestream,
+          viewerState: {subscribed: false},
+          view: {
+            $type: 'eric.bsky.atmosphere.getActivity#livestreamView',
+            thumb:
+              'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:streamer/bafy-thumb',
+          },
+        },
+      ],
+      associatedRecords: {},
+      actors: {},
+    })
+
+    const item = page.feed[0]
+    expect(item.$type).toBe('eric.bsky.atmosphere.getActivity#item')
+    if (item.$type !== 'eric.bsky.atmosphere.getActivity#item') return
+    expect(item.view).toEqual({
+      $type: 'eric.bsky.atmosphere.getActivity#livestreamView',
+      thumb:
+        'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:streamer/bafy-thumb',
+    })
+  })
+
   it('preserves non-recursive recommendation activity related to documents', () => {
     const documentUri =
       'at://did:plc:author/site.standard.document/with-related'

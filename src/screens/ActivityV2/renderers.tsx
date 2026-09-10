@@ -8,6 +8,7 @@ import {
   ActivityPublicationCardBody,
   DocumentBody,
   GrainPhotoBody,
+  LivestreamBody,
 } from './components/ActivityBodyContent'
 import {
   ActivityRow,
@@ -375,6 +376,7 @@ function LivestreamActivityRenderer({
       <ActivityRowHeader item={item} computedItemView={computedItemView}>
         <ActivityRowHeaderText>{actionText}</ActivityRowHeaderText>
       </ActivityRowHeader>
+      <LivestreamBody item={item} computedItemView={computedItemView} />
     </ActivityRow>
   )
 }

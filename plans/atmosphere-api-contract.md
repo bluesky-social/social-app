@@ -14,9 +14,9 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend branch | `atmosphere-tab` |
 | Synchronized backend base commit | `b49fd871dde1 Add selective live-only document share ingestion` |
 | Uncommitted backend state | Optional typed item views and livestream `feed_thumbnail` CDN URL hydration atop `b49fd871dde1` |
-| Frontend tip | `3ed5eb4eb Compact activity row headers and inline timestamps` |
-| Uncommitted frontend state | Unrelated `ActivityV2` implementation changes are present; this backend session modifies only contract Markdown |
-| Deployment status | The pushed frontend tip predates authenticated-viewer integration; current frontend and backend working-tree changes have not been pushed or deployed |
+| Frontend tip | `c51d89a9e Render Grain photos in activity rows` |
+| Uncommitted frontend state | Contract synchronization only; no frontend implementation files changed by this backend session |
+| Deployment status | The local frontend branch is ahead of its remote; the item-view backend changes are uncommitted and undeployed |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
 
@@ -399,7 +399,7 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 - Before pagination and grouping, the materialized feed collapses multiple active recommendation records from one actor to one `/document` target, multiple subscription records from one actor to one `/publication` target, and multiple qualifying post shares from one actor to one external associated document into one logical activity. Different actors remain distinct.
 - The earliest active source record represents a collapsed logical activity. A later duplicate does not bump it. If that representative is deleted while another duplicate remains active, the backend promotes the next-earliest record, so the returned root URI may change without the logical action disappearing.
 - Related-activity projection runs first. A recommendation whose `/document` target or a post whose external `associatedRefs` target is also a document root on the selected page moves beneath that document and is consumed. It does not also appear as an outer item or grouping child. The document keeps its own timestamp and can subsequently become an actor-group child with `relatedActivity` intact.
-- Subject interaction grouping then runs for remaining recommendations keyed by `/document`, subscriptions keyed by `/publication`, and posts keyed by their external associated document, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for actor grouping by author DID plus collection NSID. In that actor pass, root documents with `viewerState.subscribed: true` remain standalone; only unsubscribed documents are eligible to group under their actor.
+- Subject interaction grouping then runs for remaining recommendations keyed by `/document`, subscriptions keyed by `/publication`, and posts keyed by their external associated document, partitioned by collection NSID plus target AT URI. Because activity is already logically deduplicated, every child in one of these subject groups represents a distinct actor. Only items left unconsumed by that pass become eligible for actor grouping by author DID plus collection NSID. In that actor pass, root documents with `viewerState.subscribed: true` remain standalone; only unsubscribed documents are eligible to group under their actor. Active `place.stream.livestream` records without `endedAt` also remain standalone regardless of nearby streams from the same actor; ended livestreams retain normal actor grouping.
 - Every grouping pass evaluates candidate clusters against one fixed request timestamp, not the current wall-clock time at each evaluation. An anchor younger than one hour uses an inclusive 30-minute maximum span; an anchor at least one hour old and no more than 12 hours old uses an inclusive one-hour maximum span; an anchor more than 12 hours old and no more than 24 hours old uses an inclusive four-hour maximum span; and an anchor more than 24 hours old uses an inclusive eight-hour maximum span. Exactly 12 hours uses the one-hour tier and exactly 24 hours uses the four-hour tier. Clusters do not chain through adjacent events.
 - A cluster of exactly one item never becomes a group. It remains, or returns to being, a standalone `ActivityItem` in the feed.
 - Every root activity URI is assigned exactly once across the whole response: as a standalone item, as one direct group item, or as one document's `relatedActivity` child.
@@ -504,7 +504,7 @@ Useful reference fields:
 | `social.grain.photo` | `photo` is a blob with an optional `alt` and `aspectRatio`. |
 | `app.bsky.feed.post` | A direct or record-with-media external embed has `external.associatedRefs` containing a strong ref to `site.standard.document`. |
 
-The current local registry includes `place.stream.livestream` and `social.grain.photo` in addition to the four collections seeded by the backend migration. For display, an absent `endedAt` means the stream is active. Ended-stream duration is the elapsed time from `createdAt` to `endedAt`.
+The current local registry includes `place.stream.livestream` and `social.grain.photo` in addition to the four collections seeded by the backend migration. For display and grouping, an absent `endedAt` means the stream is active. Active livestreams are always standalone. Ended-stream duration is the elapsed time from `createdAt` to `endedAt`, and ended livestreams may be actor-grouped normally.
 
 Associated record payloads otherwise use raw lexicon JSON. Blob-valued fields such as document `coverImage`, publication `icon`, and Grain `photo` are not converted to CDN URLs by this endpoint. The frontend constructs a Bluesky image CDN URL for Grain photos from the root URI authority DID, blob CID, and MIME type. Actor `avatar` is the endpoint-provided exception.
 
@@ -621,6 +621,7 @@ Then run the repository's normal lexicon generation command before importing the
 - Added required `feed[].collection`, the root record's NSID, to standalone items and group children.
 - Removed `site.standard.publication` creation from the activity projection. Publication records remain available for local associated-record hydration.
 - Actor document groups include only documents whose publication is not currently subscribed by the viewer; subscribed documents remain standalone.
+- Active livestreams without `endedAt` remain standalone; only ended livestreams may appear in an actor group.
 
 ### Backend `d39fe59`
 

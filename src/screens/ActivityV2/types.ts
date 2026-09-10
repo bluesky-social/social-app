@@ -26,6 +26,20 @@ export type ActivityRecord = {
   indexedAt: string
 }
 
+export type ActivityView =
+  | {
+      $type: 'eric.bsky.atmosphere.getActivity#livestreamView'
+      thumb?: string
+    }
+  | {
+      $type:
+        | 'eric.bsky.atmosphere.getActivity#longformView'
+        | 'eric.bsky.atmosphere.getActivity#photoView'
+        | 'eric.bsky.atmosphere.getActivity#recommendationView'
+        | 'eric.bsky.atmosphere.getActivity#subscriptionView'
+        | 'eric.bsky.atmosphere.getActivity#shareView'
+    }
+
 export type ActivityItem = {
   $type: 'eric.bsky.atmosphere.getActivity#item'
   record: ActivityRecord
@@ -33,6 +47,7 @@ export type ActivityItem = {
   viewerState: {
     subscribed: boolean
   }
+  view?: ActivityView
   relatedActivity?: ActivityItem[]
 }
 
@@ -239,7 +254,30 @@ function narrowActivityItem(
     viewerState: {
       subscribed: value.viewerState.subscribed,
     },
+    view: narrowActivityView(value.view),
     relatedActivity: relatedActivity.length > 0 ? relatedActivity : undefined,
+  }
+}
+
+function narrowActivityView(value: unknown): ActivityView | undefined {
+  if (!isObject(value) || typeof value.$type !== 'string') return undefined
+
+  if (value.$type === 'eric.bsky.atmosphere.getActivity#livestreamView') {
+    return {
+      $type: value.$type,
+      thumb: typeof value.thumb === 'string' ? value.thumb : undefined,
+    }
+  }
+
+  switch (value.$type) {
+    case 'eric.bsky.atmosphere.getActivity#longformView':
+    case 'eric.bsky.atmosphere.getActivity#photoView':
+    case 'eric.bsky.atmosphere.getActivity#recommendationView':
+    case 'eric.bsky.atmosphere.getActivity#subscriptionView':
+    case 'eric.bsky.atmosphere.getActivity#shareView':
+      return {$type: value.$type}
+    default:
+      return undefined
   }
 }
 

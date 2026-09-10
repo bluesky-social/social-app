@@ -20,6 +20,7 @@ import {type ActivityPresentationProps} from '../presentation'
 import {
   activityCollections,
   isGrainPhotoRecord,
+  isLivestreamRecord,
   isRecommendRecord as isRecommendationRecord,
   isSubscriptionRecord,
 } from '../types'
@@ -60,6 +61,58 @@ export function DocumentBody({
             />
           ),
         )}
+      </View>
+    </ActivityRowBody>
+  )
+}
+
+export function LivestreamBody({item}: ActivityPresentationProps) {
+  const thumbnails = getRootActivities(item).flatMap(activity => {
+    if (
+      activity.view?.$type !==
+        'eric.bsky.atmosphere.getActivity#livestreamView' ||
+      !activity.view.thumb
+    ) {
+      return []
+    }
+
+    const record = item.associatedRecords[activity.record.uri]?.record
+    const accessibilityLabel = isLivestreamRecord(record)
+      ? record.title?.trim() || undefined
+      : undefined
+    return [
+      {
+        uri: activity.record.uri,
+        source: activity.view.thumb,
+        accessibilityLabel,
+      },
+    ]
+  })
+
+  if (thumbnails.length === 0) return null
+
+  return (
+    <ActivityRowBody>
+      <View style={a.gap_sm}>
+        {thumbnails.map(thumbnail => (
+          <Image
+            key={thumbnail.uri}
+            testID="activityV2LivestreamThumbnail"
+            source={{uri: thumbnail.source}}
+            style={[
+              a.w_full,
+              a.rounded_lg,
+              {aspectRatio: 16 / 9, maxWidth: 200},
+            ]}
+            contentFit="cover"
+            accessible={Boolean(thumbnail.accessibilityLabel)}
+            accessibilityHint=""
+            accessibilityLabel={thumbnail.accessibilityLabel}
+            accessibilityIgnoresInvertColors
+            loading="lazy"
+            useAppleWebpCodec
+          />
+        ))}
       </View>
     </ActivityRowBody>
   )
@@ -170,10 +223,12 @@ function getDocumentUris(item: ActivityPresentationProps['item']) {
     : rootUris
 }
 
+function getRootActivities(item: ActivityPresentationProps['item']) {
+  return item.type === 'activity' ? [item.activity] : item.group.items
+}
+
 function getRootActivityUris(item: ActivityPresentationProps['item']) {
-  return item.type === 'activity'
-    ? [item.activity.record.uri]
-    : item.group.items.map(activity => activity.record.uri)
+  return getRootActivities(item).map(activity => activity.record.uri)
 }
 
 function isFollowedRecommendationTarget(

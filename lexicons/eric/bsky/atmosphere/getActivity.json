@@ -48,11 +48,23 @@
           "description": "The root record's collection NSID."
         },
         "viewerState": { "type": "ref", "ref": "#viewerState" },
+        "view": {
+          "type": "union",
+          "refs": [
+            "#livestreamView",
+            "#longformView",
+            "#photoView",
+            "#recommendationView",
+            "#subscriptionView",
+            "#shareView"
+          ],
+          "description": "Collection-specific presentation data derived by the appview. Absent when no view builder is configured for the root collection."
+        },
         "relatedActivity": {
           "type": "array",
           "minLength": 1,
           "items": { "type": "ref", "ref": "#item" },
-          "description": "Page-local recommendation activity targeting this document. Children are reverse chronological and do not contain related activity."
+          "description": "Page-local activity related to this parent by a configured collection and target path. Children are reverse chronological and do not contain related activity."
         }
       }
     },
@@ -115,6 +127,42 @@
           "description": "Whether the viewer currently subscribes to this document's publication. False for non-document activity."
         }
       }
+    },
+    "livestreamView": {
+      "type": "object",
+      "description": "Appview-derived presentation data for place.stream.livestream activity.",
+      "properties": {
+        "thumb": {
+          "type": "string",
+          "format": "uri",
+          "description": "CDN URL for the livestream record's thumbnail blob."
+        }
+      }
+    },
+    "longformView": {
+      "type": "object",
+      "description": "Reserved appview-derived presentation data for site.standard.document activity.",
+      "properties": {}
+    },
+    "photoView": {
+      "type": "object",
+      "description": "Reserved appview-derived presentation data for social.grain.photo activity.",
+      "properties": {}
+    },
+    "recommendationView": {
+      "type": "object",
+      "description": "Reserved appview-derived presentation data for site.standard.graph.recommend activity.",
+      "properties": {}
+    },
+    "subscriptionView": {
+      "type": "object",
+      "description": "Reserved appview-derived presentation data for site.standard.graph.subscription activity.",
+      "properties": {}
+    },
+    "shareView": {
+      "type": "object",
+      "description": "Reserved appview-derived presentation data for qualifying app.bsky.feed.post share activity.",
+      "properties": {}
     }
   }
 }

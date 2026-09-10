@@ -1286,6 +1286,62 @@ describe('ActivityV2 collection renderers', () => {
     expect(photos[1].props.accessibilityLabel).toBe('Tall stone arch')
   })
 
+  it('renders only appview-provided livestream thumbnails at up to 200px wide', () => {
+    const actorDid = 'did:plc:thumbnail-streamer'
+    const rootUri = `at://${actorDid}/${activityCollections.livestream}/live`
+    const row = buildActivityRow({
+      collection: activityCollections.livestream,
+      actorDid,
+      rkey: 'live',
+      actors: {
+        [actorDid]: buildActor(actorDid, 'thumbnail-streamer.test'),
+      },
+      associatedRecords: {
+        [rootUri]: buildAssociatedRecord(rootUri, {
+          $type: activityCollections.livestream,
+          title: 'Building in public',
+          thumb: {
+            ref: {$link: 'bafy-raw-thumb'},
+            mimeType: 'image/jpeg',
+          },
+          createdAt: '2026-09-11T00:00:00.000Z',
+        }),
+      },
+    })
+    row.activity.view = {
+      $type: 'eric.bsky.atmosphere.getActivity#livestreamView',
+      thumb:
+        'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:thumbnail-streamer/bafy-view-thumb',
+    }
+    const withoutThumbnail = {
+      ...row,
+      key: `${row.key}-without-thumbnail`,
+      activity: {
+        ...row.activity,
+        view: {
+          $type: 'eric.bsky.atmosphere.getActivity#livestreamView' as const,
+        },
+      },
+    }
+
+    const screen = renderRow(row)
+    const thumbnail = screen.getByTestId('activityV2LivestreamThumbnail')
+    const screenWithoutThumbnail = renderRow(withoutThumbnail)
+
+    expect(thumbnail.props.source).toEqual({
+      uri: 'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:thumbnail-streamer/bafy-view-thumb',
+    })
+    expect(thumbnail.props.style).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({aspectRatio: 16 / 9, maxWidth: 200}),
+      ]),
+    )
+    expect(thumbnail.props.accessibilityLabel).toBe('Building in public')
+    expect(
+      screenWithoutThumbnail.queryByTestId('activityV2LivestreamThumbnail'),
+    ).toBeNull()
+  })
+
   it.each<{
     collection: KnownActivityCollection
     testID: string
