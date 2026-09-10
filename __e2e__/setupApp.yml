@@ -4,21 +4,6 @@ appId: xyz.blueskyweb.app
     appId: "xyz.blueskyweb.app"
     clearState: true
 - extendedWaitUntil:
-    visible:
-      id: e2eProxyHeaderInput
-    timeout: 180000
-- extendedWaitUntil:
     visible: "Sign in"
     timeout: 180000
-- retry:
-    maxRetries: 3
-    commands:
-      - tapOn:
-          id: e2eProxyHeaderInput
-      - eraseText
-      - inputText: ${output.result}
-      - pressKey: Enter
-      - extendedWaitUntil:
-          visible:
-            id: e2eSignInAlice
-          timeout: 10000
+- waitForAnimationToEnd
