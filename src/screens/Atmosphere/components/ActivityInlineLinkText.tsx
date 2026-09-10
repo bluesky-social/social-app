@@ -1,4 +1,4 @@
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {InlineLinkText} from '#/components/Link'
 
 export function ActivityInlineLinkText({
@@ -11,12 +11,13 @@ export function ActivityInlineLinkText({
   to: string
   disableMismatchWarning?: boolean
 }>) {
+  const t = useTheme()
   return (
     <InlineLinkText
       label={label}
       to={to}
       disableMismatchWarning={disableMismatchWarning}
-      style={[a.text_sm, a.leading_snug, a.font_semi_bold, {color: 'white'}]}
+      style={[a.text_sm, a.leading_snug, a.font_semi_bold, t.atoms.text]}
       emoji>
       {children}
     </InlineLinkText>
