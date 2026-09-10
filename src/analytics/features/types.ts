@@ -24,6 +24,7 @@ export enum Features {
   ModerationInboxEnable = 'moderation_inbox:enable',
 
   // values
+  StarterPacksConfig = 'starter_packs:config',
   TrendingDiscoverValues = 'trending_discover:values',
   TrendingExploreTopicsCountValue = 'trending_explore_topics_count:value',
 
