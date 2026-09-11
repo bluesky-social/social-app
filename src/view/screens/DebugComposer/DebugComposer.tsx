@@ -2,18 +2,20 @@
  * Minimal end-to-end playground for the ComposerV2 store. Wires a single
  * Composer text input to the store's root post, surfaces the live state
  * as a monospace dump, and exposes a few action buttons so we can poke at
- * the surface (addPost, removeEmbed, removeQuote) without building the
- * full UI yet.
+ * the surface (addPost, removeMediaAttachment, removeRecordAttachment) without building the
+ * full UI yet. Posts share the record slot with feeds, lists, and starter packs;
+ * external cards share the media slot with images, video, and GIFs.
  *
  * Useful for verifying:
  *   - useSyncExternalStore actually rerenders on store mutations
  *   - onFacetCommitted -> addUri produces the expected pending/resolved/
- *     failed embed or quote states
- *   - addUri validation (embedding-disabled, embed/media exclusion) shows
+ *     failed media or record attachment states
+ *   - addUri validation (embedding-disabled, attachment conflicts) shows
  *     up the way we expect
  */
 import {useMemo, useState} from 'react'
 import {ScrollView, View} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useAppviewClient, useChatClient} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
@@ -111,6 +113,7 @@ function PostRow({postId, index}: {postId: string; index: number}) {
 }
 
 function PostFooter({postId}: {postId: string}) {
+  const {t: l} = useLingui()
   const {shortenedGraphemeLength} = useThreadPostRichText(postId)
   const store = useThreadStore()
   return (
@@ -119,18 +122,22 @@ function PostFooter({postId}: {postId: string}) {
         graphemes: {shortenedGraphemeLength} / 300
       </Text>
       <Button
-        label="Remove embed"
+        label={l`Remove media`}
         size="tiny"
         color="secondary"
-        onPress={() => store.actions.removeEmbed(postId)}>
-        <ButtonText>- embed</ButtonText>
+        onPress={() => store.actions.removeMediaAttachment(postId)}>
+        <ButtonText>
+          <Trans>Remove media</Trans>
+        </ButtonText>
       </Button>
       <Button
-        label="Remove quote"
+        label={l`Remove record`}
         size="tiny"
         color="secondary"
-        onPress={() => store.actions.removeQuoteEmbed(postId)}>
-        <ButtonText>- quote</ButtonText>
+        onPress={() => store.actions.removeRecordAttachment(postId)}>
+        <ButtonText>
+          <Trans>Remove record</Trans>
+        </ButtonText>
       </Button>
     </View>
   )

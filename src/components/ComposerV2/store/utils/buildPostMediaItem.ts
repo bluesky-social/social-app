@@ -1,12 +1,12 @@
 import {
   type AddMediaInput,
-  type PostEmbedMedia,
+  type PostMediaItem,
 } from '#/components/ComposerV2/store/types'
 
 export function buildPostMediaItem(
   input: AddMediaInput,
   ids: {id: string; postId: string},
-): PostEmbedMedia {
+): PostMediaItem {
   if (input.kind === 'image') {
     return {
       kind: 'image',

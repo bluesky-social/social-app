@@ -14,15 +14,17 @@ import {
 } from '#/components/ComposerV2/store/uploads'
 import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostMediaItem'
 import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPost'
-import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
+import {
+  type AttachmentSlot,
+  classifyUriTarget,
+} from '#/components/ComposerV2/store/utils/classifyUriTarget'
 import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store/utils/computePostMediaSelectionsRemaining'
 import {createAsyncTaskRev} from '#/components/ComposerV2/store/utils/createAsyncTaskRev'
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
+import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
-import {app} from '#/lexicons'
 
-type Listener = () => void
-
+/** One isolated thread composition session, independent of React. */
 export function createThreadStore(options: {
   resolvers: LinkResolvers
   /** Override id generation; useful for deterministic tests. */
@@ -31,59 +33,39 @@ export function createThreadStore(options: {
   __resolveLink?: typeof resolveLink
 }) {
   const id = options.__createId ?? nanoid
-  const resolvers = options.resolvers
-  const resolveLinkOverride = options.__resolveLink
+  const resolve = options.__resolveLink ?? importedResolveLink
   let state: types.ThreadState = {
     posts: {[id()]: buildThreadPost()},
     isDirty: false,
     draftId: undefined,
   }
-
-  const listeners = new Set<Listener>()
+  const listeners = new Set<() => void>()
   let destroyed = false
 
-  /**
-   * In-flight upload tasks keyed by media id. Held outside of state because
-   * cancellation handles aren't serializable. Cleared on terminal status
-   * (uploaded/failed) and on store destroy.
-   */
+  /** Cancellation handles belong to the session, not its published snapshots. */
   const uploadTasks = new Map<string, UploadTask>()
-
-  /**
-   * Per-slot revision counters. Quote and embed are orthogonal slots, so
-   * each has its own counter; invalidating one doesn't invalidate the
-   * other. Every action that starts or supersedes a resolution for a slot
-   * calls `incrementFor(postId)`, and the worker callback closes over the
-   * returned `isCurrent` checker to decide whether to write back.
-   */
-  const quoteRev = createAsyncTaskRev()
-  const embedRev = createAsyncTaskRev()
-
-  /**
-   * Action bodies mutate `s` in place. Returning `null` signals a no-op (the
-   * state ref is preserved and listeners are not notified). Otherwise we
-   * shallow-clone both the top-level state and the inner `posts` object so
-   * any consumer of either reference sees a fresh value. (Some actions
-   * mutate `s.posts` in place, e.g. removePost's `delete s.posts[id]`;
-   * cloning posts here means selectors and React Compiler memoization can
-   * use ref equality reliably.)
-   */
-  function mutateState(fn: (s: types.ThreadState) => types.ThreadState | null) {
-    if (destroyed) return
-    const next = fn(state)
-    if (next === null) return
-    state = {...next, posts: {...next.posts}}
-    for (const listener of listeners) listener()
+  /** Replacing one attachment slot must not invalidate work in the other. */
+  const resolutionRevs = {
+    record: createAsyncTaskRev(),
+    media: createAsyncTaskRev(),
   }
 
   /**
-   * Actions
+   * Actions replace touched posts and mutate only this shallow working copy.
+   * Returning null preserves the current snapshot and skips notification.
    */
+  function mutateState(fn: (s: types.ThreadState) => types.ThreadState | null) {
+    if (destroyed) return
+    const next = fn({...state, posts: {...state.posts}})
+    if (next === null) return
+    state = next
+    for (const listener of listeners) listener()
+  }
 
   function setPostText(postId: string, text: string) {
     mutateState(s => {
       const post = s.posts[postId]
-      if (!post) return null
+      if (!post || post.text === text) return null
       s.posts[postId] = {...post, text}
       s.isDirty = true
       return s
@@ -114,8 +96,7 @@ export function createThreadStore(options: {
     const newId = id()
     mutateState(s => {
       if (!(postId in s.posts)) return null
-      // Object key order is insertion order, so to insert mid-thread we
-      // rebuild the posts object.
+      // Rebuild insertion order without changing existing post identities.
       const next: Record<string, types.ThreadPost> = {}
       for (const [k, v] of Object.entries(s.posts)) {
         if (position === 'before' && k === postId) {
@@ -135,15 +116,12 @@ export function createThreadStore(options: {
 
   function removePost(postId: string) {
     mutateState(s => {
-      // The composer always has at least one post.
-      if (Object.keys(s.posts).length <= 1) return null
-      if (!(postId in s.posts)) return null
-      // Cancel any in-flight uploads for media on this post before dropping it.
-      for (const m of s.posts[postId].media) cancelUploadTask(m.id)
-      // Drop both rev entries so any stale resolution callbacks for this
-      // post can never write back into state.
-      quoteRev.clearFor(postId)
-      embedRev.clearFor(postId)
+      if (Object.keys(s.posts).length <= 1 || !(postId in s.posts)) return null
+      for (const item of getMediaItems(s.posts[postId].attachments.media)) {
+        cancelUploadTask(item.id)
+      }
+      resolutionRevs.record.clearFor(postId)
+      resolutionRevs.media.clearFor(postId)
       delete s.posts[postId]
       s.isDirty = true
       return s
@@ -151,80 +129,44 @@ export function createThreadStore(options: {
   }
 
   /**
-   * Add one or more media items to a post and start any required uploads.
-   * Accepts a heterogeneous list (images, video, gif). Gifs don't kick off
-   * an upload task; images and videos do.
-   *
-   * Returns the new media ids in input order, or undefined if the postId
-   * doesn't exist (no items are added in that case).
+   * Adds compatible items to the media slot and starts uploads eagerly.
+   * Existing record attachments never block media. Returns accepted item IDs.
    */
   function addMedia(
     postId: string,
     inputs: types.AddMediaInput[],
   ): string[] | undefined {
-    if (!(postId in state.posts)) return undefined
-    if (inputs.length === 0) return []
-
-    // Embeds (external link cards, feed/list/starter-pack record cards, and
-    // the in-flight pending state) are mutually exclusive with media. This
-    // rule is permanent (unlike the kind/cap rules in filterMediaInputs) so
-    // it lives here at the action boundary rather than inside the filter.
-    if (state.posts[postId].embed !== undefined) return []
-
-    const accepted = filterMediaInputs(state.posts[postId].media, inputs)
+    if (destroyed || !(postId in state.posts)) return undefined
+    const post = state.posts[postId]
+    const accepted = filterMediaInputs(post.attachments.media, inputs)
     if (accepted.length === 0) return []
-
-    const newIds = accepted.map(() => id())
-    const newItems: types.PostEmbedMedia[] = accepted.map((input, i) =>
-      buildPostMediaItem(input, {id: newIds[i], postId}),
+    const items = accepted.map(input =>
+      buildPostMediaItem(input, {id: id(), postId}),
     )
 
+    resolutionRevs.media.incrementFor(postId)
     mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      s.posts[postId] = setPostMedia(post, [...post.media, ...newItems])
+      s.posts[postId] = setPostMediaItems(post, [
+        ...getMediaItems(post.attachments.media),
+        ...items,
+      ])
       s.isDirty = true
       return s
     })
-
-    for (let i = 0; i < accepted.length; i++) {
-      const input = accepted[i]
-      const mediaId = newIds[i]
-      if (input.kind === 'image') {
-        uploadTasks.set(
-          mediaId,
-          startImageUpload({
-            postId,
-            mediaId,
-            uri: input.uri,
-            setUploadStatus,
-          }),
-        )
-      } else if (input.kind === 'video') {
-        uploadTasks.set(
-          mediaId,
-          startVideoUpload({
-            postId,
-            mediaId,
-            uri: input.uri,
-            setUploadStatus,
-          }),
-        )
-      }
-      // gif: no upload task
-    }
-
-    return newIds
+    for (const item of items) startMediaUpload(postId, item.id)
+    return items.map(item => item.id)
   }
 
+  /** Removes one selected item; use removeMediaAttachment to clear the slot. */
   function removeMedia(postId: string, mediaId: string) {
-    cancelUploadTask(mediaId)
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      const next = post.media.filter(m => m.id !== mediaId)
-      if (next.length === post.media.length) return null
-      s.posts[postId] = setPostMedia(post, next)
+      const items = getMediaItems(post.attachments.media)
+      const next = items.filter(item => item.id !== mediaId)
+      if (next.length === items.length) return null
+      cancelUploadTask(mediaId)
+      s.posts[postId] = setPostMediaItems(post, next)
       s.isDirty = true
       return s
     })
@@ -239,394 +181,285 @@ export function createThreadStore(options: {
       const post = s.posts[postId]
       if (!post) return null
       let changed = false
-      const media = post.media.map(m => {
-        if (m.id !== mediaId) return m
-        if (m.altText === altText) return m
+      const items = getMediaItems(post.attachments.media).map(item => {
+        if (item.id !== mediaId || item.altText === altText) return item
         changed = true
-        return {...m, altText}
+        return {...item, altText}
       })
       if (!changed) return null
-      s.posts[postId] = setPostMedia(post, media)
+      s.posts[postId] = setPostMediaItems(post, items)
       s.isDirty = true
       return s
     })
   }
 
-  /**
-   * Restart a failed (or in-flight) upload for an image or video. No-ops on
-   * a gif (no upload lifecycle) or on unknown ids.
-   */
+  /** Restarts an image/video upload; cards, GIFs, and missing items are no-ops. */
   function retryMediaUpload(postId: string, mediaId: string) {
+    if (destroyed) return
     const post = state.posts[postId]
     if (!post) return
-    const item = post.media.find(m => m.id === mediaId)
-    if (!item) return
-    if (item.kind === 'gif') return
+    const items = getMediaItems(post.attachments.media)
+    const item = items.find(m => m.id === mediaId)
+    if (!item || item.kind === 'gif') return
 
     cancelUploadTask(mediaId)
+    const pending = {...item, upload: {state: 'pending' as const}}
     mutateState(s => {
-      const p = s.posts[postId]
-      if (!p) return null
-      const media = p.media.map(m =>
-        m.id === mediaId ? {...m, upload: {state: 'pending' as const}} : m,
+      s.posts[postId] = setPostMediaItems(
+        post,
+        items.map(m => (m.id === mediaId ? pending : m)),
       )
-      s.posts[postId] = setPostMedia(p, media)
       return s
     })
-    const start = item.kind === 'image' ? startImageUpload : startVideoUpload
-    uploadTasks.set(
-      mediaId,
-      start({
-        postId,
-        mediaId,
-        uri: item.uri,
-        setUploadStatus,
-      }),
-    )
+    startMediaUpload(postId, mediaId)
   }
 
   /**
-   * Generic URI handler. Pre-classifies the URI from its URL pattern to
-   * decide which slot the eventual data will land in:
-   *
-   * - Bluesky post URL -> `quote` slot (coexists with media).
-   * - Anything else (feed / list / starter-pack / external) -> `embed` slot
-   *   (mutually exclusive with media).
-   *
-   * Conflict checks happen synchronously based on the target slot:
-   * - If targeting quote and quote is already set -> no-op (preserves prior).
-   * - If targeting embed and embed is already set -> no-op.
-   * - If targeting embed and media is set -> no-op.
-   *
-   * Otherwise, pending state is written to the target slot synchronously and
-   * `resolveLink` runs in the background. The outcome lands in the same slot
-   * (resolved or failed). Cancellation is per-slot rev-based.
+   * Reserve the record or media slot before resolving a URL. Settled values
+   * block new candidates; pending/failed candidates can be superseded.
    */
   function addUri(postId: string, uri: string) {
+    if (destroyed) return
     const post = state.posts[postId]
     if (!post) return
-
-    const resolve = resolveLinkOverride ?? importedResolveLink
-    const target = classifyUriTarget(uri)
-
-    if (target === 'quote') {
-      // No-op only when the slot has a settled value. Pending and failed
-      // states are replaceable (failed.retry() relies on this).
-      if (post.quote?.state === 'resolved') return
-      const rev = quoteRev.incrementFor(postId)
-      mutateState(s => {
-        const p = s.posts[postId]
-        if (!p) return null
-        s.posts[postId] = setPostQuote(p, {state: 'pending', uri})
-        s.isDirty = true
-        return s
-      })
-      resolve(resolvers, uri).then(
-        link => applyQuoteResolved(rev, postId, uri, link),
-        err => applyQuoteFailed(rev, postId, uri, err),
-      )
-      return
-    }
-
-    // target === 'embed'
-    // Same rule as quote: settled values block; pending / failed are
-    // replaceable (so retry() works on a failed embed).
-    const embedSettled =
-      post.embed !== undefined &&
-      post.embed.state !== 'pending' &&
-      post.embed.state !== 'failed'
-    if (embedSettled) return
-    if (post.media.length > 0) return
-
-    const rev = embedRev.incrementFor(postId)
+    const slot = classifyUriTarget(uri)
+    if (post.attachments[slot]?.state === 'resolved') return
+    const rev = resolutionRevs[slot].incrementFor(postId)
     mutateState(s => {
-      const p = s.posts[postId]
-      if (!p) return null
-      s.posts[postId] = setPostEmbed(p, {state: 'pending', uri})
+      s.posts[postId] = setPostResolution(post, slot, {state: 'pending', uri})
       s.isDirty = true
       return s
     })
-    resolve(resolvers, uri).then(
-      link => applyEmbedResolved(rev, postId, uri, link),
-      err => applyEmbedFailed(rev, postId, uri, err),
+    if (destroyed || !resolutionRevs[slot].isCurrentFor(postId, rev)) return
+    resolve(options.resolvers, uri).then(
+      link => applyResolved(slot, rev, postId, uri, link),
+      err => applyFailed(slot, rev, postId, uri, err),
     )
   }
 
-  function applyQuoteResolved(
+  function applyResolved(
+    slot: AttachmentSlot,
     rev: number,
     postId: string,
     uri: string,
     link: ResolvedLink,
   ) {
-    if (destroyed) return
-    if (!quoteRev.isCurrentFor(postId, rev)) return
-    // Pre-classification said this was a post URL. If resolveLink disagrees
-    // (rare, since both use the same URL patterns), surface as a generic
-    // failure in the quote slot.
-    if (link.type !== 'record' || link.kind !== 'post') {
-      applyQuoteFailed(rev, postId, uri, new Error('Could not resolve post'))
-      return
-    }
-    mutateState(s => {
-      const p = s.posts[postId]
-      if (!p) return null
-      s.posts[postId] = setPostQuote(p, {
-        state: 'resolved',
-        uri: link.record.uri,
-        cid: link.record.cid,
-        view: link.view,
-      })
-      return s
-    })
-  }
-
-  function applyQuoteFailed(
-    rev: number,
-    postId: string,
-    uri: string,
-    err: unknown,
-  ) {
-    if (destroyed) return
-    if (!quoteRev.isCurrentFor(postId, rev)) return
-    // Non-retryable failure codes (e.g. embedding-disabled) get a failed
-    // state with no `retry()`; the user has to remove the embed manually.
-    const {code, isRetryable} = parseResolveLinkError(err)
-    mutateState(s => {
-      const p = s.posts[postId]
-      if (!p) return null
-      s.posts[postId] = setPostQuote(p, {
-        state: 'failed',
-        uri,
-        error: stringifyError(err),
-        code,
-        retry: isRetryable ? () => addUri(postId, uri) : undefined,
-      })
-      return s
-    })
-  }
-
-  function applyEmbedResolved(
-    rev: number,
-    postId: string,
-    uri: string,
-    link: ResolvedLink,
-  ) {
-    if (destroyed) return
-    if (!embedRev.isCurrentFor(postId, rev)) return
-    // Pre-classification said this was a non-post URL. If resolveLink
-    // surprises us with a post outcome, treat as failure rather than
-    // silently moving slots.
-    if (link.type === 'record' && link.kind === 'post') {
-      applyEmbedFailed(
+    if (destroyed || !resolutionRevs[slot].isCurrentFor(postId, rev)) return
+    if ((link.type === 'record') !== (slot === 'record')) {
+      applyFailed(
+        slot,
         rev,
         postId,
         uri,
-        new Error('Unexpected post outcome for non-post URL'),
+        new Error('Unexpected attachment type'),
       )
       return
     }
     mutateState(s => {
-      const p = s.posts[postId]
-      if (!p) return null
-      s.posts[postId] = setPostEmbed(p, resolvedLinkToEmbed(link))
+      const post = s.posts[postId]
+      if (!post) return null
+      if (link.type === 'record') {
+        const {type: _type, ...record} = link
+        s.posts[postId] = setPostRecord(post, {state: 'resolved', ...record})
+      } else if (link.type === 'external') {
+        const {type: _type, ...external} = link
+        s.posts[postId] = setPostMedia(post, {
+          state: 'resolved',
+          kind: 'external',
+          ...external,
+        })
+      } else {
+        const {type: _type, ...invite} = link
+        s.posts[postId] = setPostMedia(post, {
+          state: 'resolved',
+          kind: 'chat-invite',
+          ...invite,
+        })
+      }
       return s
     })
   }
 
-  function applyEmbedFailed(
+  function applyFailed(
+    slot: AttachmentSlot,
     rev: number,
     postId: string,
     uri: string,
     err: unknown,
   ) {
-    if (destroyed) return
-    if (!embedRev.isCurrentFor(postId, rev)) return
+    if (destroyed || !resolutionRevs[slot].isCurrentFor(postId, rev)) return
     const {code, isRetryable} = parseResolveLinkError(err)
     mutateState(s => {
-      const p = s.posts[postId]
-      if (!p) return null
-      s.posts[postId] = setPostEmbed(p, {
+      const post = s.posts[postId]
+      if (!post) return null
+      s.posts[postId] = setPostResolution(post, slot, {
         state: 'failed',
         uri,
-        error: stringifyError(err),
+        error: String((err && (err as Error).message) ?? err),
         code,
-        retry: isRetryable ? () => addUri(postId, uri) : undefined,
+        retry: isRetryable
+          ? () => {
+              if (resolutionRevs[slot].isCurrentFor(postId, rev)) {
+                addUri(postId, uri)
+              }
+            }
+          : undefined,
       })
       return s
     })
   }
 
-  function removeEmbed(postId: string) {
-    embedRev.incrementFor(postId)
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      if (post.embed === undefined) return null
-      s.posts[postId] = setPostEmbed(post, undefined)
-      s.isDirty = true
-      return s
-    })
-  }
-
-  /**
-   * Direct setter for an already-resolved quote. Used for draft restore and
-   * any UI flow that already has the post ref+view in hand. Bumps the quote
-   * rev so any in-flight resolution is invalidated.
-   */
-  function setQuoteEmbed(
+  /** Direct insertion of a known record replaces only the record slot. */
+  function setRecordAttachment(
     postId: string,
-    ref: {uri: string; cid: string; view?: app.bsky.feed.defs.PostView},
+    value: types.RecordAttachmentValue,
   ) {
-    quoteRev.incrementFor(postId)
+    if (destroyed || !state.posts[postId]) return
+    resolutionRevs.record.incrementFor(postId)
     mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      s.posts[postId] = setPostQuote(post, {
+      s.posts[postId] = setPostRecord(s.posts[postId], {
         state: 'resolved',
-        uri: ref.uri,
-        cid: ref.cid,
-        view: ref.view,
+        ...value,
       })
       s.isDirty = true
       return s
     })
   }
 
-  function removeQuoteEmbed(postId: string) {
-    quoteRev.incrementFor(postId)
+  function removeRecordAttachment(postId: string) {
     mutateState(s => {
       const post = s.posts[postId]
-      if (!post) return null
-      if (post.quote === undefined) return null
-      s.posts[postId] = setPostQuote(post, undefined)
+      if (!post || !post.attachments.record) return null
+      resolutionRevs.record.incrementFor(postId)
+      s.posts[postId] = setPostRecord(post, undefined)
       s.isDirty = true
       return s
     })
   }
 
-  /**
-   * Public so the simulated upload worker can push progress in. Real callers
-   * should not invoke this directly; use addMedia / retryMediaUpload.
-   *
-   * Failed inputs are wrapped here with a `retry()` method bound to this
-   * (postId, mediaId) so consumers reading the status from state can retry
-   * without having to look up the ids themselves.
-   */
+  /** Clears a card or all selected media, cancelling its pending work. */
+  function removeMediaAttachment(postId: string) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post || !post.attachments.media) return null
+      resolutionRevs.media.incrementFor(postId)
+      for (const item of getMediaItems(post.attachments.media)) {
+        cancelUploadTask(item.id)
+      }
+      s.posts[postId] = setPostMedia(post, undefined)
+      s.isDirty = true
+      return s
+    })
+  }
+
+  /** Upload progress does not dirty the draft or affect the record attachment. */
   function setUploadStatus(
     postId: string,
     mediaId: string,
-    statusInput: types.UploadStatus,
+    input: types.UploadStatus,
   ) {
+    const post = state.posts[postId]
+    if (destroyed || !post) return
+    const items = getMediaItems(post.attachments.media)
+    const found = items.find(item => item.id === mediaId)
+    if (!found || found.kind === 'gif') return
+    if (input.state === 'uploaded' || input.state === 'failed') {
+      cancelUploadTask(mediaId)
+    }
     const status: types.PostMediaUploadStatus =
-      statusInput.state === 'failed'
-        ? {...statusInput, retry: () => retryMediaUpload(postId, mediaId)}
-        : statusInput
-
+      input.state === 'failed'
+        ? {...input, retry: () => retryMediaUpload(postId, mediaId)}
+        : input
     mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      const idx = post.media.findIndex(m => m.id === mediaId)
-      if (idx === -1) return null
-      const found = post.media[idx]
-      // Gifs don't have an upload lifecycle.
-      if (found.kind === 'gif') return null
-      const media = post.media.slice()
-      media[idx] = {...found, upload: status}
-      s.posts[postId] = setPostMedia(post, media)
-      // Upload progress isn't a user edit, so don't mark dirty here.
+      s.posts[postId] = setPostMediaItems(
+        post,
+        items.map(item =>
+          item.id === mediaId ? {...found, upload: status} : item,
+        ),
+      )
       return s
     })
-    if (status.state === 'uploaded' || status.state === 'failed') {
-      uploadTasks.delete(mediaId)
-    }
+  }
+
+  function startMediaUpload(postId: string, mediaId: string) {
+    if (destroyed || uploadTasks.has(mediaId)) return
+    const post = state.posts[postId]
+    if (!post) return
+    // Read live state: a subscriber may have edited, removed, or retried this item.
+    const item = getMediaItems(post.attachments.media).find(
+      m => m.id === mediaId,
+    )
+    if (!item || item.kind === 'gif' || item.upload.state !== 'pending') return
+    const start = item.kind === 'image' ? startImageUpload : startVideoUpload
+    const task = start({
+      postId,
+      mediaId: item.id,
+      uri: item.uri,
+      setUploadStatus: (p, m, status) => {
+        if (uploadTasks.get(m) === task) setUploadStatus(p, m, status)
+      },
+    })
+    uploadTasks.set(item.id, task)
   }
 
   function cancelUploadTask(mediaId: string) {
     const task = uploadTasks.get(mediaId)
-    if (task) {
-      task.cancel()
-      uploadTasks.delete(mediaId)
+    uploadTasks.delete(mediaId)
+    task?.cancel()
+  }
+
+  /** Regroup only selected items; record identity is unaffected. */
+  function setPostMediaItems(
+    post: types.ThreadPost,
+    items: types.PostMediaItem[],
+  ): types.ThreadPost {
+    const first = items[0]
+    if (!first) return setPostMedia(post, undefined)
+    switch (first.kind) {
+      case 'image':
+        return setPostMedia(post, {
+          state: 'resolved',
+          kind: 'images',
+          items: items.filter(item => item.kind === 'image'),
+        })
+      case 'video':
+      case 'gif':
+        return setPostMedia(
+          post,
+          first.kind === 'video'
+            ? {state: 'resolved', kind: 'video', item: first}
+            : {state: 'resolved', kind: 'gif', item: first},
+        )
     }
   }
 
-  /**
-   * Single chokepoint for replacing a post's media array. Recomputes the
-   * derived selectionsRemaining flags so they never drift from the array.
-   */
+  /** All media replacements recompute selection capacity together. */
   function setPostMedia(
     post: types.ThreadPost,
-    media: types.PostEmbedMedia[],
+    media: types.MediaAttachment | undefined,
   ): types.ThreadPost {
     return {
       ...post,
-      media,
-      ...computePostMediaSelectionsRemaining(media, post.embed),
+      attachments: {...post.attachments, media},
+      ...computePostMediaSelectionsRemaining(media),
     }
   }
 
-  /**
-   * Single chokepoint for replacing a post's embed slot. Mirrors
-   * setPostMedia so the selectionsRemaining flags stay consistent (any
-   * embed - including pending and failed - blocks all media selections).
-   */
-  function setPostEmbed(
+  function setPostRecord(
     post: types.ThreadPost,
-    embed: types.PostEmbed | undefined,
+    record: types.RecordAttachment | undefined,
   ): types.ThreadPost {
-    return {
-      ...post,
-      embed,
-      ...computePostMediaSelectionsRemaining(post.media, embed),
-    }
+    return {...post, attachments: {...post.attachments, record}}
   }
 
-  /**
-   * Single chokepoint for replacing a post's quote slot. Quote is
-   * orthogonal to media so no selectionsRemaining recomputation is needed.
-   */
-  function setPostQuote(
+  function setPostResolution(
     post: types.ThreadPost,
-    quote: types.PostEmbedQuote | undefined,
-  ): types.ThreadPost {
-    return {...post, quote}
-  }
-
-  /**
-   * Map a non-post ResolvedLink into the PostEmbed shape stored on the post.
-   * Callers handle the post-record case separately (those go to quote).
-   */
-  function resolvedLinkToEmbed(link: ResolvedLink): types.PostEmbed {
-    if (link.type === 'external') {
-      return {
-        state: 'external',
-        uri: link.uri,
-        title: link.title,
-        description: link.description,
-        thumb: link.thumb,
-      }
-    }
-    if (link.type === 'chat-invite') {
-      return {
-        state: 'chat-invite',
-        uri: link.uri,
-        code: link.code,
-        view: link.view,
-      }
-    }
-    switch (link.kind) {
-      case 'feed':
-        return {state: 'feed', record: link.record, view: link.view}
-      case 'list':
-        return {state: 'list', record: link.record, view: link.view}
-      case 'starter-pack':
-        return {state: 'starter-pack', record: link.record, view: link.view}
-      case 'post':
-        throw new Error('post records should route to quote, not embed')
-    }
-  }
-
-  function stringifyError(err: unknown): string {
-    return String((err && (err as Error).message) ?? err)
+    slot: AttachmentSlot,
+    resolution: types.AttachmentResolution,
+  ) {
+    return slot === 'record'
+      ? setPostRecord(post, resolution)
+      : setPostMedia(post, resolution)
   }
 
   return {
@@ -641,22 +474,24 @@ export function createThreadStore(options: {
       updateMediaAltText,
       retryMediaUpload,
       addUri,
-      removeEmbed,
-      setQuoteEmbed,
-      removeQuoteEmbed,
+      setRecordAttachment,
+      removeRecordAttachment,
+      removeMediaAttachment,
       setUploadStatus,
     },
     destroy() {
       destroyed = true
       for (const task of uploadTasks.values()) task.cancel()
       uploadTasks.clear()
-      quoteRev.clearAll()
-      embedRev.clearAll()
+      resolutionRevs.record.clearAll()
+      resolutionRevs.media.clearAll()
+      listeners.clear()
     },
     getState() {
       return state
     },
-    subscribe(listener: Listener) {
+    subscribe(listener: () => void) {
+      if (destroyed) return () => {}
       listeners.add(listener)
       return () => {
         listeners.delete(listener)

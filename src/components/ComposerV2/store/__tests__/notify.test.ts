@@ -1,7 +1,6 @@
 import {describe, expect, jest, test} from '@jest/globals'
 
-// Avoid pulling the UI module chain into the test environment via the
-// resolveLink import in linkResolution.ts.
+/* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
 }))
@@ -37,6 +36,8 @@ describe('subscribe / getState', () => {
     const after = store.getState()
     expect(after).not.toBe(before)
     expect(after.posts[root].text).toBe('hello')
+    expect(before.posts[root].text).toBe('')
+    expect(before.isDirty).toBe(false)
     unsubscribe()
   })
 
@@ -69,6 +70,39 @@ describe('subscribe / getState', () => {
     unsubscribe()
     store.actions.setPostText(root, 'b')
     expect(fn).toHaveBeenCalledTimes(1)
+  })
+
+  test('attachment mutations preserve old snapshots and unrelated post references', () => {
+    const store = createThreadStore({resolvers, __createId: makeIdGenerator()})
+    const root = rootId(store)
+    const other = store.actions.addPost('after', root)
+    const before = store.getState()
+    const [mediaId] = store.actions.addMedia(root, [
+      {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
+    ])!
+    expect(before.posts[root].attachments.media).toBeUndefined()
+    expect(store.getState().posts[other]).toBe(before.posts[other])
+    const added = store.getState()
+    store.actions.updateMediaAltText(root, mediaId, 'alt')
+    const media = added.posts[root].attachments.media
+    if (media?.state !== 'resolved' || media.kind !== 'images')
+      throw new Error('expected images')
+    expect(media.items[0].altText).toBe('')
+    store.actions.removeMediaAttachment(root)
+    expect(added.posts[root].attachments.media).toBe(media)
+    store.actions.removePost(other)
+    expect(before.posts[other]).toBeDefined()
+    store.destroy()
+  })
+
+  test('empty slot removals preserve the snapshot', () => {
+    const store = createThreadStore({resolvers})
+    const root = rootId(store)
+    const before = store.getState()
+    store.actions.removeRecordAttachment(root)
+    store.actions.removeMediaAttachment(root)
+    store.actions.setPostText(root, '')
+    expect(store.getState()).toBe(before)
   })
 
   test('destroy clears subscribers and stops further notifications', () => {

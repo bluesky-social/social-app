@@ -6,9 +6,7 @@ export function buildThreadPost(): ThreadPost {
     text: '',
     langs: [],
     labels: [],
-    media: [],
-    embed: undefined,
-    quote: undefined,
-    ...computePostMediaSelectionsRemaining([], undefined),
+    attachments: {record: undefined, media: undefined},
+    ...computePostMediaSelectionsRemaining(undefined),
   }
 }

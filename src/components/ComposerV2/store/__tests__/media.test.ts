@@ -1,7 +1,13 @@
-import {beforeEach, describe, expect, jest, test} from '@jest/globals'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from '@jest/globals'
 
-// Avoid pulling the UI module chain (gallery → media picker → ALF) into the
-// test environment via the resolveLink import in linkResolution.ts.
+/* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
 }))
@@ -10,7 +16,7 @@ import {type LinkResolvers, type resolveLink} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   type AddMediaInput,
-  type PostEmbedMedia,
+  type PostMediaItem,
 } from '#/components/ComposerV2/store/types'
 import {type Gif} from '#/features/gifPicker/types'
 
@@ -28,8 +34,12 @@ function rootId(store: ReturnType<typeof createThreadStore>) {
 function getMedia(
   store: ReturnType<typeof createThreadStore>,
   postId: string,
-): PostEmbedMedia[] {
-  return store.getState().posts[postId].media
+): PostMediaItem[] {
+  const media = store.getState().posts[postId].attachments.media
+  if (media?.state !== 'resolved') return []
+  if (media.kind === 'images') return media.items
+  if (media.kind === 'video' || media.kind === 'gif') return [media.item]
+  return []
 }
 
 const imageInput: AddMediaInput = {
@@ -63,6 +73,11 @@ beforeEach(() => {
   mockResolveLink = jest.fn(
     () => new Promise(() => {}),
   ) as unknown as jest.Mock<typeof resolveLink>
+})
+
+afterEach(() => {
+  jest.clearAllTimers()
+  jest.useRealTimers()
 })
 
 function makeStore() {
@@ -349,7 +364,7 @@ describe('selectionsRemaining flags on the post', () => {
     const store = makeStore()
     const root = rootId(store)
     store.actions.addUri(root, 'https://example.com')
-    store.actions.removeEmbed(root)
+    store.actions.removeMediaAttachment(root)
     const post = store.getState().posts[root]
     expect(post.imageSelectionsRemaining).toBe(4)
     expect(post.videoSelectionsRemaining).toBe(1)
@@ -499,13 +514,92 @@ describe('removePost cancels media uploads', () => {
   })
 })
 
-describe('destroy cancels uploads', () => {
-  test('destroy stops any in-flight uploads', () => {
+describe('attachment lifecycle', () => {
+  test.each(['edit', 'remove', 'retry', 'destroy'])(
+    'subscriber can %s newly added media before its worker starts',
+    action => {
+      const store = makeStore()
+      const root = rootId(store)
+      let handled = false
+      store.subscribe(() => {
+        if (handled) return
+        handled = true
+        const item = getMedia(store, root)[0]
+        if (action === 'edit')
+          store.actions.updateMediaAltText(root, item.id, 'alt')
+        else if (action === 'remove') store.actions.removeMedia(root, item.id)
+        else if (action === 'retry')
+          store.actions.retryMediaUpload(root, item.id)
+        else store.destroy()
+      })
+      store.actions.addMedia(root, [imageInput])
+      expect(jest.getTimerCount()).toBe(
+        action === 'edit' || action === 'retry' ? 1 : 0,
+      )
+      jest.runAllTimers()
+      if (action === 'edit' || action === 'retry') {
+        const item = getMedia(store, root)[0]
+        expect(item.kind !== 'gif' && item.upload.state).toBe('uploaded')
+        if (action === 'edit') expect(item.altText).toBe('alt')
+      }
+    },
+  )
+
+  test('removing the media attachment cancels all uploads and restores capacity', () => {
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addMedia(root, [imageInput])
+    store.actions.addMedia(root, [imageInput, imageInput])
+    jest.advanceTimersByTime(100)
+    store.actions.removeMediaAttachment(root)
+    const after = store.getState()
+    expect(after.posts[root].attachments.media).toBeUndefined()
+    expect(after.posts[root].imageSelectionsRemaining).toBe(4)
+    expect(jest.getTimerCount()).toBe(0)
+    jest.runAllTimers()
+    expect(store.getState()).toBe(after)
+  })
+
+  test('destroy cancels tasks and prevents later actions from starting work', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const [mediaId] = store.actions.addMedia(root, [imageInput])!
     jest.advanceTimersByTime(100)
     store.destroy()
-    expect(() => jest.runAllTimers()).not.toThrow()
+    const after = store.getState()
+    store.actions.addMedia(root, [imageInput])
+    store.actions.retryMediaUpload(root, mediaId)
+    store.actions.addUri(root, 'https://example.com')
+    expect(jest.getTimerCount()).toBe(0)
+    expect(mockResolveLink).not.toHaveBeenCalled()
+    expect(store.getState()).toBe(after)
+  })
+
+  test('failed reports stop the old worker before retrying', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const [mediaId] = store.actions.addMedia(root, [imageInput])!
+    store.actions.setUploadStatus(root, mediaId, {
+      state: 'failed',
+      error: 'network',
+    })
+    expect(jest.getTimerCount()).toBe(0)
+    store.actions.retryMediaUpload(root, mediaId)
+    expect(jest.getTimerCount()).toBe(1)
+    jest.runAllTimers()
+    const item = getMedia(store, root)[0]
+    expect(item.kind !== 'gif' && item.upload.state).toBe('uploaded')
+  })
+
+  test('removing the final item frees the slot for an external card', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const [mediaId] = store.actions.addMedia(root, [videoInput])!
+    store.actions.removeMedia(root, mediaId)
+    expect(store.getState().posts[root].attachments.media).toBeUndefined()
+    store.actions.addUri(root, 'https://example.com')
+    expect(store.getState().posts[root].attachments.media?.state).toBe(
+      'pending',
+    )
+    expect(store.actions.addMedia(root, [imageInput])).toEqual([])
   })
 })

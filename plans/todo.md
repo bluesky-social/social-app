@@ -9,7 +9,15 @@ Reference documents:
 
 ## 1. Migrate to record/media attachment slots
 
-Status: pending
+Status: completed
+
+Implemented `attachments.record` and `attachments.media` in `src/components/ComposerV2/store/`. Posts, feeds, lists, and starter packs share the record slot; external cards and chat invites share the media slot with images, video, and GIFs. Each record kind can coexist with each media kind. Uploads remain simulated and the four-image cap is unchanged.
+
+- Updated URI classification, direct record insertion, slot removal, item edits, selection capacities, and the debug composer controls.
+- Preserved slot-local async invalidation and retry behavior; stale results cannot restore removed attachments or overwrite the other slot.
+- Kept the existing V2 collision policy: settled attachments block incoming URI candidates; pending/failed URI candidates may be replaced. Explicit record setters replace the record. Dormant link-card suggestions are not added in this step.
+- Fixed snapshot isolation by cloning before applying mutations, and kept upload ownership tied to media IDs across attachment changes.
+- Verification: 115 ComposerV2 tests passed; iOS/Android/web typechecks passed; project lint, changed-source formatting, and `git diff --check` passed. Debug UI was updated but not exercised on a running device.
 
 ## 2. Define `ThreadStoreInitialState`
 

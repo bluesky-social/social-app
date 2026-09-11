@@ -71,7 +71,7 @@ Each post has a stable nanoid. Object insertion order is currently used as threa
 
 This lets async work address a post by identity rather than array index. Adding, removing, or reordering posts does not need to change which post owns a media upload or link-resolution task.
 
-Each `ThreadPost` currently owns text, languages, labels, media, a broad non-quote embed slot, and a separate quote slot. The target shape replaces those overlapping attachment fields with protocol-aligned slots:
+Each `ThreadPost` now owns text, languages, labels, and two protocol-aligned attachment slots:
 
 ```ts
 {
@@ -80,11 +80,9 @@ Each `ThreadPost` currently owns text, languages, labels, media, a broad non-quo
   labels
 
   attachments: {
-    record?: RecordAttachment
-    media?: MediaAttachment
+    record: RecordAttachment | undefined
+    media: MediaAttachment | undefined
   }
-
-  suggestedExternal?: ExternalAttachment
 
   imageSelectionsRemaining
   videoSelectionsRemaining
@@ -92,7 +90,7 @@ Each `ThreadPost` currently owns text, languages, labels, media, a broad non-quo
 }
 ```
 
-`suggestedExternal` is optional dormant UI state, not an active publishable attachment. It preserves the existing behavior where a detected link card may reappear after user-selected media is removed without pretending that two media embeds can be submitted.
+A future `suggestedExternal` field could retain dormant UI suggestions separately from publishable attachments. It is not implemented by the attachment migration. For now settled attachments block incoming URI candidates, pending/failed URI candidates can be superseded, and explicit record setters replace the record.
 
 The planned state also expands the thread aggregate with:
 
@@ -194,8 +192,8 @@ The store owns non-serializable runtime sidecars:
 
 ```ts
 uploadTasks: Map<mediaId, UploadTask>
-recordRev
-mediaResolutionRev
+resolutionRevs.record
+resolutionRevs.media
 ```
 
 Uploads are keyed by stable media ID. Removing media or destroying the composer cancels its task.
@@ -209,7 +207,7 @@ Link resolution uses revision counters:
 
 Record and media resolution have separate revision domains. Removing an external card therefore does not cancel an unrelated quoted-post resolution, even though the quote is now modeled as a post-kind record attachment.
 
-The current implementation still names these counters after its older `quote` and `embed` fields; they should be renamed when the attachment model migrates. The same pattern should govern real compression, image upload, multipart video jobs, and submission planning.
+The same pattern should govern real compression, image upload, multipart video jobs, and submission planning.
 
 ## 6. Actions are the invariant boundary
 
@@ -224,7 +222,6 @@ removeMedia()
 addUri()
 setRecordAttachment()
 removeRecordAttachment()
-setMediaAttachment()
 removeMediaAttachment()
 ```
 
@@ -494,7 +491,8 @@ Implemented:
 - Media invariants.
 - Simulated uploads with cancellation and retry.
 - URI resolution and stale-result suppression.
-- Initial quote/non-quote embed separation; migration to the unified record/media attachment model remains to be implemented.
+- Unified record/media attachment slots, including quotes as post-kind records.
+- Slot-local retries, cancellation, and snapshot isolation.
 - Grapheme derivation.
 - Debug harness.
 - Current lex-client adaptation.
