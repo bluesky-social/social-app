@@ -1510,7 +1510,7 @@ msgstr ""
 msgid "All of these words"
 msgstr "All of these words"
 
-#: src/view/screens/Feeds.tsx:700
+#: src/view/screens/Feeds.tsx:704
 msgid "All the feeds you've saved, right in one place."
 msgstr ""
 
@@ -2961,7 +2961,7 @@ msgstr ""
 msgid "Choose your hosting provider"
 msgstr "Choose your hosting provider"
 
-#: src/view/screens/Feeds.tsx:726
+#: src/view/screens/Feeds.tsx:730
 msgid "Choose your own timeline! Feeds built by the community help you find content you love."
 msgstr ""
 
@@ -4184,7 +4184,7 @@ msgstr "Discover feeds"
 msgid "Discover new custom feeds"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:723
+#: src/view/screens/Feeds.tsx:727
 msgid "Discover New Feeds"
 msgstr ""
 
@@ -4494,7 +4494,7 @@ msgid "Edit moderation list"
 msgstr ""
 
 #: src/Navigation.tsx:387
-#: src/view/screens/Feeds.tsx:511
+#: src/view/screens/Feeds.tsx:512
 msgid "Edit My Feeds"
 msgstr ""
 
@@ -5346,7 +5346,7 @@ msgstr ""
 #: src/screens/SavedFeeds.tsx:303
 #: src/screens/Search/SearchResults.tsx:108
 #: src/screens/StarterPack/StarterPackScreen.tsx:193
-#: src/view/screens/Feeds.tsx:504
+#: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:711
 #: src/view/shell/Drawer.tsx:592
@@ -5649,7 +5649,7 @@ msgstr ""
 
 #: src/lib/strings/feed-names.ts:13
 #: src/screens/SavedFeeds.tsx:618
-#: src/view/screens/Feeds.tsx:596
+#: src/view/screens/Feeds.tsx:597
 msgctxt "feed-name"
 msgid "Following"
 msgstr ""
@@ -7999,7 +7999,7 @@ msgstr "My birthdate"
 msgid "My favorite feeds and people - join me!"
 msgstr "My favorite feeds and people - join me!"
 
-#: src/view/screens/Feeds.tsx:697
+#: src/view/screens/Feeds.tsx:701
 msgid "My Feeds"
 msgstr ""
 
@@ -8158,7 +8158,7 @@ msgstr ""
 #: src/screens/CustomFeed/index.tsx:218
 #: src/screens/ProfileList/index.tsx:234
 #: src/screens/ProfileList/index.tsx:277
-#: src/view/screens/Feeds.tsx:545
+#: src/view/screens/Feeds.tsx:546
 #: src/view/screens/Notifications.tsx:165
 #: src/view/screens/Profile.tsx:606
 msgid "New post"
@@ -8432,7 +8432,7 @@ msgstr ""
 msgid "No results found"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:466
+#: src/view/screens/Feeds.tsx:467
 msgid "No results found for \"{query}\""
 msgstr ""
 
@@ -10945,7 +10945,7 @@ msgstr ""
 msgid "Search contacts"
 msgstr ""
 
-#: src/view/screens/Feeds.tsx:437
+#: src/view/screens/Feeds.tsx:438
 msgid "Search feeds"
 msgstr ""
 
