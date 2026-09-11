@@ -21,7 +21,7 @@ describe('createStarterPackList', () => {
       call,
       create,
     } as unknown as Client
-    const profiles = Array.from({length: 101}, (_, i) => ({
+    const profiles = Array.from({length: 401}, (_, i) => ({
       did: `did:plc:${i}`,
     })) as bsky.profile.AnyProfileView[]
 
@@ -35,6 +35,6 @@ describe('createStarterPackList', () => {
     const inputs = (call.mock.calls as unknown[][]).map(
       ([, input]) => input as com.atproto.repo.applyWrites.$InputBody,
     )
-    expect(inputs.map(input => input.writes.length)).toEqual([50, 50, 1])
+    expect(inputs.map(input => input.writes.length)).toEqual([200, 200, 1])
   })
 })

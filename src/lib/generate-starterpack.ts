@@ -1,9 +1,9 @@
+import {chunkArray} from '@atproto/common-web'
 import {type Client} from '@atproto/lex'
 import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
-import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -37,7 +37,7 @@ export const createStarterPackList = async ({
     purpose: 'app.bsky.graph.defs#referencelist',
   })
   if (!list) throw new Error('List creation failed')
-  for (const profilesChunk of chunk(profiles, 50)) {
+  for (const profilesChunk of chunkArray(profiles, 200)) {
     await client.call(com.atproto.repo.applyWrites, {
       repo: client.assertDid,
       writes: profilesChunk.map(p =>
