@@ -1,0 +1,515 @@
+# Composer V2 architecture
+
+## Summary
+
+Composer V2 is a per-composer domain store with React as a thin view layer. It replaces the current pattern where UI, uploads, drafts, and submission logic are tightly coupled inside a large component.
+
+```text
+ComposerOpts -----------------> composerOptsToInitialState() --+
+                                                             |
+Saved draft + loaded media ---> draftToInitialState() --------+
+                                                             |
+                                                             v
+                                                  ThreadStoreInitialState
+                                                             |
+                                                             v
++------------------------------------------------------------+
+| ThreadStore                                                |
+|                                                            |
+| Serializable post data                                     |
+| Actions and invariants                                     |
+| Async task coordination                                    |
++------------------------------+-----------------------------+
+                               | subscriptions
+                               v
+                        React hooks and UI
+
+ThreadStore ---> draft codec ---> saved draft
+ThreadStore ---> submit planner ---> validated/logged writes
+                                  later: applyWrites
+```
+
+## 1. One store per composer session
+
+`createThreadStore()` creates an isolated store for one open composer. It is not global application state and does not depend on React.
+
+The store exposes:
+
+```ts
+{
+  getState()
+  subscribe(listener)
+  actions
+  destroy()
+}
+```
+
+This provides:
+
+- Deterministic unit testing without rendering anything.
+- Explicit cleanup when the composer closes.
+- No Context-wide cascade for every keystroke.
+- A place to enforce protocol and product invariants independently of UI.
+
+The implementation lives in `src/components/ComposerV2/store/index.ts`.
+
+The earlier parallel implementation under `ComposerV2/lib` has been removed, leaving one store implementation.
+
+## 2. The thread is the aggregate root
+
+The top-level state is currently:
+
+```ts
+type ThreadState = {
+  posts: Record<string, ThreadPost>
+  draftId: string | undefined
+  isDirty: boolean
+}
+```
+
+Each post has a stable nanoid. Object insertion order is currently used as thread order.
+
+This lets async work address a post by identity rather than array index. Adding, removing, or reordering posts does not need to change which post owns a media upload or link-resolution task.
+
+Each `ThreadPost` currently owns text, languages, labels, media, a broad non-quote embed slot, and a separate quote slot. The target shape replaces those overlapping attachment fields with protocol-aligned slots:
+
+```ts
+{
+  text
+  langs
+  labels
+
+  attachments: {
+    record?: RecordAttachment
+    media?: MediaAttachment
+  }
+
+  suggestedExternal?: ExternalAttachment
+
+  imageSelectionsRemaining
+  videoSelectionsRemaining
+  gifSelectionsRemaining
+}
+```
+
+`suggestedExternal` is optional dormant UI state, not an active publishable attachment. It preserves the existing behavior where a detected link card may reappear after user-selected media is removed without pretending that two media embeds can be submitted.
+
+The planned state also expands the thread aggregate with:
+
+- Reply target.
+- Thread-wide postgate settings.
+- Threadgate settings.
+- Submission and validation state.
+- Draft media bookkeeping.
+- Explicit hydration metadata.
+
+Focus, open dialogs, and callbacks such as `onPost` remain outside persisted domain state.
+
+## 3. Attachments are one record slot plus one media slot
+
+A post has exactly one top-level lexicon embed. The valid protocol shapes are a record, media, or `recordWithMedia`, so V2 models publishable attachments as two orthogonal slots:
+
+```ts
+type PostAttachments = {
+  record?: RecordAttachment
+  media?: MediaAttachment
+}
+```
+
+### Record attachment
+
+The record slot contains at most one strong-ref-backed record:
+
+- Quoted post.
+- Custom feed.
+- List.
+- Starter pack.
+- Another supported record embed.
+
+A quote is a post-kind record attachment. It does not require a structurally separate quote slot.
+
+Two records cannot coexist because `app.bsky.embed.recordWithMedia` accepts one record and one media attachment, not two records.
+
+### Media attachment
+
+The media slot contains at most one media embed:
+
+- Images.
+- Gallery.
+- Video.
+- External card.
+
+GIFs and chat invites are encoded as external cards, so they occupy the media slot despite being presented differently in the UI.
+
+An images/gallery attachment contains multiple image items but remains one media attachment. The target image behavior is:
+
+- One to four images produce `app.bsky.embed.images`.
+- Five to 10 images produce `app.bsky.embed.gallery`.
+- One video is allowed.
+- One external card or GIF is allowed.
+- Different media attachment kinds are never mixed.
+
+### Valid combinations
+
+| Record slot | Media slot | Submitted embed |
+| --- | --- | --- |
+| Empty | Empty | No embed |
+| Set | Empty | `app.bsky.embed.record` |
+| Empty | Set | The active media embed |
+| Set | Set | `app.bsky.embed.recordWithMedia` |
+
+The store prevents two active records and two active media attachments. Record construction derives the final lexicon variant from the slots instead of using submit-time priority to discard conflicting state.
+
+A detected external-card suggestion may be retained separately as `suggestedExternal`. It becomes publishable only when promoted into the media slot; selected images or video can temporarily displace it without destroying the suggestion.
+
+## 4. Async state is represented explicitly
+
+Uploads and URI resolution are state machines rather than loose component booleans.
+
+An upload moves through:
+
+```text
+pending
+   |
+   v
+uploading(progress)
+   |            \
+   v             v
+uploaded(blob)  failed(error, retry)
+```
+
+Link resolution similarly has pending, resolved, and failed variants.
+
+The UI renders the current domain state instead of coordinating multiple effects to infer what is happening.
+
+Retry functions are currently attached directly to failed states for UI convenience. Because functions are not serializable, draft hydration will formalize the boundary:
+
+- Persisted data contains stable status and error information.
+- Runtime hydration reattaches retry behavior.
+- Task handles and abort controllers always remain outside serialized state.
+
+## 5. Runtime tasks live beside state
+
+The store owns non-serializable runtime sidecars:
+
+```ts
+uploadTasks: Map<mediaId, UploadTask>
+recordRev
+mediaResolutionRev
+```
+
+Uploads are keyed by stable media ID. Removing media or destroying the composer cancels its task.
+
+Link resolution uses revision counters:
+
+1. Start resolving a URI and increment that post slot's revision.
+2. Capture the revision in the promise callback.
+3. If another URI replaces it, or the user removes the embed, the revision changes.
+4. The stale callback sees that it is no longer current and does nothing.
+
+Record and media resolution have separate revision domains. Removing an external card therefore does not cancel an unrelated quoted-post resolution, even though the quote is now modeled as a post-kind record attachment.
+
+The current implementation still names these counters after its older `quote` and `embed` fields; they should be renamed when the attachment model migrates. The same pattern should govern real compression, image upload, multipart video jobs, and submission planning.
+
+## 6. Actions are the invariant boundary
+
+UI components do not directly replace post objects. They invoke store actions such as:
+
+```ts
+setPostText()
+addPost()
+removePost()
+addMedia()
+removeMedia()
+addUri()
+setRecordAttachment()
+removeRecordAttachment()
+setMediaAttachment()
+removeMediaAttachment()
+```
+
+Actions perform:
+
+- Conflict checks.
+- Task cancellation.
+- Dirty-state changes.
+- Derived-state recomputation.
+- Stale async result invalidation.
+
+For example, `setPostMedia()` is the chokepoint that also recalculates picker capacity. This prevents the media array and selection counters from disagreeing.
+
+No-op actions preserve the current state reference and do not notify subscribers.
+
+## 7. Lex clients are injected dependencies
+
+The store receives the network capabilities required for link resolution:
+
+```ts
+createThreadStore({
+  resolvers: {
+    appviewClient,
+    chatClient,
+  },
+})
+```
+
+It does not create a global agent internally.
+
+As real uploads are implemented, the dependency boundary will expand to include:
+
+- PDS client.
+- Appview client.
+- Chat client.
+- Account dispatch URL for video service authentication.
+- Potentially injected media operations for deterministic tests.
+
+The store remains testable because tests can inject fake clients, resolvers, and workers rather than mocking global session state.
+
+## 8. React is an adapter over the store
+
+`ThreadStoreProvider` only distributes an already-created store.
+
+There are two subscription levels:
+
+- `useThreadState()` subscribes to the whole thread.
+- `useThreadPost(postId)` subscribes to one post object.
+
+This allows the thread list to respond to ordering changes while an individual composer row avoids rerendering when another post's upload progresses.
+
+The debug screen demonstrates the integration in `src/view/screens/DebugComposer/DebugComposer.tsx`.
+
+The text input is intentionally uncontrolled:
+
+- `defaultValue` hydrates it once.
+- The native input owns its text while typing.
+- Each change is mirrored into the store.
+
+This avoids turning every native text event into a controlled-input round trip.
+
+## 9. Rich text is derived
+
+The store keeps plain text rather than a `RichText` class instance.
+
+`useThreadPostRichText()` derives:
+
+- A `RichText` instance.
+- Detected facets.
+- Shortened grapheme length.
+
+This keeps core state closer to serializable data and avoids recomputing rich text when unrelated state, such as upload progress or alt text, changes.
+
+The final submission planner performs authoritative facet resolution and text normalization. The hook provides responsive preview and character-count validity.
+
+## 10. Hydration converges on one input interface
+
+Open-composer intents and saved drafts are different source formats, but they are not separate store initialization paths. Both adapters produce the same normalized input interface before `createThreadStore()` runs.
+
+```text
+ComposerOpts -----------------> composerOptsToInitialState() --+
+                                                             |
+Saved draft + loaded media ---> draftToInitialState() --------+--> ThreadStoreInitialState
+```
+
+The provisional `ThreadStoreInitialState` interface is plain source-independent data describing:
+
+- Ordered posts.
+- Text, languages, and labels.
+- Reply context.
+- One record attachment and one media attachment per post.
+- Local image, video, GIF, and external-card sources.
+- Thread-wide postgate settings.
+- Threadgate settings.
+- Draft identity and initial dirty/saved state.
+
+It does not contain:
+
+- Upload handles or abort controllers.
+- Retry closures.
+- Async revision counters.
+- React state.
+- Shell callbacks such as `onPost` or `onPostSuccess`.
+
+The store constructor performs the single transformation from `ThreadStoreInitialState` into live `ThreadState`. That is where it generates runtime IDs when needed, computes derived fields, attaches task ownership, and starts eager media processing.
+
+### `ComposerOpts` adapter
+
+The public shell contract remains compatible during migration. `composerOptsToInitialState()` translates existing intents without requiring every caller to understand the V2 store shape.
+
+It handles:
+
+- Initial text.
+- Mention.
+- Reply target.
+- Quote.
+- Photos.
+- Video.
+- Gallery-opening intent.
+- Default interaction settings.
+
+Callbacks such as `onPost`, `onPostSuccess`, close behavior, and logging context remain session or shell concerns rather than initial record data.
+
+### Draft adapter
+
+`draftToInitialState()` performs draft-specific decoding and local media lookup, then returns the same `ThreadStoreInitialState` interface as the `ComposerOpts` adapter. Draft restoration must not have a separate action sequence or privileged mutation path inside the store.
+
+Neither source should mount an empty store and dispatch corrective actions. The first published snapshot should already describe the hydrated composer. Equivalent intent and draft content should produce semantically equivalent normalized inputs.
+
+Draft-derived local media begins processing and uploading eagerly once the store is created.
+
+Supplied hydrated embed views are trusted for the lifetime of the composer session. V2 resolves only missing data and does not force-refresh a supplied quote or external view before submission.
+
+## 11. Drafts are a codec around the store
+
+Draft persistence is a bidirectional boundary:
+
+```text
+ThreadState <--> app.bsky.draft.defs.Draft
+```
+
+Serialization strips runtime concerns and preserves:
+
+- Posts and ordering.
+- Text, labels, and gate settings.
+- Media local references.
+- Quotes and external embeds.
+- Captions and alt text.
+- Draft identity.
+
+Hydration supports both legacy `embedImages` drafts and current `embedGallery` drafts.
+
+Local media remains the durable draft source. Completed blobs and multipart job state do not replace the local file needed to reopen and edit a draft.
+
+Hydrated media begins processing and uploading eagerly. A valid upload from the same live session may be reused, but persisted drafts must not depend on ephemeral upload state.
+
+## 12. Real media processing is eager
+
+Selecting or hydrating media begins processing immediately.
+
+### Images
+
+```text
+local source
+    |
+    v
+compress and resize
+    |
+    v
+upload through PDS
+    |
+    v
+BlobRef stored on media item
+```
+
+The implementation should reuse the existing post image compression configuration and blob-upload helper.
+
+### Video
+
+```text
+local source
+    |
+    v
+validate and compress
+    |
+    v
+multipart upload
+    |
+    v
+finish and poll job
+    |
+    v
+completed video BlobRef
+```
+
+The existing multipart implementation already supports:
+
+- Byte progress.
+- Missing-part recovery.
+- Token refresh.
+- Retryable failures.
+- Cancellation and remote abort cleanup.
+
+The store should expose compression and network progress distinctly while preserving one race-safe task lifecycle for each video.
+
+## 13. Postgates and threadgates are thread-level settings
+
+The composer exposes one shared postgate configuration for the thread rather than independently editable settings on every post.
+
+During submission planning:
+
+- If the shared postgate configuration requires records, emit a matching postgate for every post using that post's URI and record key.
+- Emit a threadgate only for the root post.
+- Gate records use the same record key as their associated post.
+
+This keeps the UI and store model simple while producing the protocol's per-post records where necessary.
+
+## 14. Reordering is a domain capability
+
+The store will support moving an existing post without changing its identity or recreating its content.
+
+A reorder operation must preserve:
+
+- Post ID.
+- Text and embeds.
+- Media IDs.
+- In-flight upload ownership.
+- Link-resolution task ownership.
+
+The submission planner and tests will honor the resulting order. The debug harness will expose the capability, but production reordering UI is deferred.
+
+## 15. Submission is split into planning and execution
+
+The first submission implementation performs real media uploads but does not mutate the repository.
+
+```text
+Store snapshot
+   |
+   +-- wait for eager uploads
+   +-- resolve facets
+   +-- normalize text
+   +-- allocate TIDs and rkeys
+   +-- build post records
+   +-- compute CIDs
+   +-- chain reply refs
+   +-- build threadgates and postgates
+   +-- build applyWrites input
+   +-- validate with generated lexicons
+   +-- safely log the plan
+```
+
+No `applyWrites` request is made in this milestone.
+
+The planner produces the final validated writes, so enabling publication later should be a narrow final step:
+
+```ts
+await pdsClient.call(com.atproto.repo.applyWrites, validatedInput)
+```
+
+## Current implementation status
+
+Implemented:
+
+- External thread store and React subscriptions.
+- Stable thread/post identity.
+- Text, language, and label mutations.
+- Media invariants.
+- Simulated uploads with cancellation and retry.
+- URI resolution and stale-result suppression.
+- Initial quote/non-quote embed separation; migration to the unified record/media attachment model remains to be implemented.
+- Grapheme derivation.
+- Debug harness.
+- Current lex-client adaptation.
+
+Still to implement:
+
+- Expanded composer-session state.
+- The shared `ThreadStoreInitialState` interface plus `ComposerOpts` and draft adapters.
+- Postgates and threadgates.
+- Gallery limits and embed selection.
+- Draft codec.
+- Real image processing and uploads.
+- Real video processing and multipart uploads.
+- Post reordering action.
+- Submission planner.
+- Production UI migration.
+
+The detailed implementation plan is in `plans/composer-v2.md`.
