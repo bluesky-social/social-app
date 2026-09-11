@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "fingerprintPolicyVersion": 1,
+  "runtimeFormat": "sha1-lowercase-hex",
+  "normalizedFields": [
+    "expo.version",
+    "expo.ios.buildNumber",
+    "expo.android.versionCode"
+  ]
+}

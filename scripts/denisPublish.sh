@@ -3,42 +3,24 @@ set -o errexit
 set -o pipefail
 set -o nounset
 
-# Publishes the just-exported Expo bundle to the denis OTA service (S3) via the
-# `denis publish` CLI.
-# Expects: the `denis` binary on PATH (setup-denis action), ambient AWS creds
-# (configure-aws-credentials OIDC), and BSKY_IOS_BUILD_NUMBER /
-# BSKY_ANDROID_VERSION_CODE from the use-build-number wrapper.
-
-rm -rf bundleTempDir
-
-echo "Assembling bundle directory..."
-node scripts/bundleUpdate.js
-
-if [ -z "$RUNTIME_VERSION" ]; then
-  RUNTIME_VERSION=$(cat package.json | jq '.version' -r)
-fi
-
-BUNDLE_VERSION=$(date +%s)
 DENIS_CDN_DOMAIN="${DENIS_CDN_DOMAIN:-updates.bsky.app}"
 DENIS_S3_BUCKET="${DENIS_S3_BUCKET:-bsky-denis-ota-prod}"
+PUBLISH_MODE="${DENIS_PUBLISH_MODE:-legacy}"
 
-echo "Publishing to denis..."
-echo "  runtime-version: $RUNTIME_VERSION"
-echo "  bundle-version: $BUNDLE_VERSION"
-echo "  channel: $CHANNEL_NAME"
-echo "  ios-build-number: $BSKY_IOS_BUILD_NUMBER"
-echo "  android-build-number: $BSKY_ANDROID_VERSION_CODE"
-echo "  cdn-domain: $DENIS_CDN_DOMAIN"
-echo "  s3-bucket: $DENIS_S3_BUCKET"
-
-denis publish \
-  --bundle-dir bundleTempDir \
-  --runtime-version "$RUNTIME_VERSION" \
-  --bundle-version "$BUNDLE_VERSION" \
-  --channel "$CHANNEL_NAME" \
-  --ios-build-number "$BSKY_IOS_BUILD_NUMBER" \
-  --android-build-number "$BSKY_ANDROID_VERSION_CODE" \
-  --cdn-domain "$DENIS_CDN_DOMAIN" \
-  --s3-bucket "$DENIS_S3_BUCKET"
-
-rm -rf bundleTempDir
+if [ "$PUBLISH_MODE" = "structured" ]; then
+  RELEASE_FILE="${1:?Usage: denisPublish.sh ota-export.json}"
+  node scripts/ota/validate-release.mjs --release-file "$RELEASE_FILE"
+  PACKAGED_RELEASE_FILE="$(node scripts/bundleUpdate.js --release-file "$RELEASE_FILE")"
+  node scripts/ota/validate-release.mjs --release-file "$PACKAGED_RELEASE_FILE"
+  denis publish --release-file "$PACKAGED_RELEASE_FILE" --cdn-domain "$DENIS_CDN_DOMAIN" --s3-bucket "$DENIS_S3_BUCKET"
+  # Retain the unique packaged output for debugging and idempotent CLI retries.
+elif [ "$PUBLISH_MODE" = "legacy" ]; then
+  : "${CHANNEL_NAME:?CHANNEL_NAME is required}"
+  : "${BSKY_IOS_BUILD_NUMBER:?BSKY_IOS_BUILD_NUMBER is required}"
+  : "${BSKY_ANDROID_VERSION_CODE:?BSKY_ANDROID_VERSION_CODE is required}"
+  : "Legacy mode is retained by scripts/denisPublishLegacy.sh during rollout"
+  exec bash scripts/denisPublishLegacy.sh
+else
+  echo "DENIS_PUBLISH_MODE must be structured or legacy" >&2
+  exit 1
+fi

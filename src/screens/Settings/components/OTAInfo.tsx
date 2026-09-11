@@ -4,7 +4,11 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 import {useMutation, useQuery} from '@tanstack/react-query'
 
-import {splash} from '#/lib/hooks/useOTAUpdates'
+import {
+  checkForOTAUpdate,
+  fetchOTAUpdate,
+  splash,
+} from '#/lib/hooks/useOTAUpdates'
 import {useTheme} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as RetryIcon} from '#/components/icons/ArrowRotate'
@@ -25,7 +29,7 @@ export function OTAInfo() {
   } = useQuery({
     queryKey: ['ota-info'],
     queryFn: async () => {
-      const status = await Updates.checkForUpdateAsync()
+      const status = await checkForOTAUpdate()
       return status.isAvailable
     },
   })
@@ -33,7 +37,7 @@ export function OTAInfo() {
   const {mutate: fetchAndLaunchUpdate, isPending: isPendingUpdate} =
     useMutation({
       mutationFn: async () => {
-        await Updates.fetchUpdateAsync()
+        await fetchOTAUpdate()
         await Updates.reloadAsync({
           reloadScreenOptions: splash(t.scheme),
         })

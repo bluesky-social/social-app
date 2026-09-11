@@ -1,13 +1,66 @@
 # OTA Deployments
 
+## Fingerprint rollout
+
+The fingerprint pipeline is staged behind the repository variable
+`OTA_FINGERPRINT_PIPELINE_ENABLED`. Leave it unset until the additive Denis
+server support and structured publisher release have been deployed. The legacy
+numeric-runtime workflow remains the rollback and supported-client hotfix path
+during migration.
+
+Fingerprint releases calculate iOS and Android runtimes independently from the
+exact commit and native profile being exported. Production still requires an
+explicit numeric native build target for each platform. A native build receipt
+may be supplied as additional validation: a valid receipt must match the
+calculated runtime, profile, platform, and build number, but an expired or
+missing GitHub Actions artifact does not freeze production publishing. Never
+copy a runtime from a receipt onto a newly exported bundle.
+
+TestFlight and pull-request channels do not target build numbers once the
+fingerprint server path is enabled. They remain isolated by platform, channel,
+and the native runtime fingerprint. Existing numeric-runtime binaries continue
+to use the legacy build filters.
+
+Before enabling the repository variable, verify that the pinned Denis release
+accepts `publish --release-file`, both serving and asset routes accept hash
+runtimes, and the new shared calculator action has been pinned to a reviewed
+commit. Do not enable the variable with only one of those dependencies ready.
+
+The structured publisher version is pinned by `OTA_FINGERPRINT_DENIS_VERSION`.
+After canary validation, set `OTA_FINGERPRINT_PIPELINE_ENABLED` to `true` to
+select the new automatic workflow and fingerprint native builds. The process
+environment flag passed to app config is `1`; an unset flag retains app-version
+runtimes. Use **Bundle and Deploy Fingerprint OTA** for an explicit fingerprint
+production publication, selecting the release branch and exact iOS/Android
+build numbers. Optional native receipt run IDs/attempts add evidence, not a
+runtime override. Each platform's verified/unverified result is in the summary.
+
+This draft still needs automatic per-platform TestFlight receipt lookup and
+native rebuild scheduling. With the gate enabled, the main workflow can publish
+a safe fingerprinted update without a matching installed binary; it does not
+yet automatically create the missing binary. Trigger a native build explicitly
+during canary testing, and do not treat publication as proof that a compatible
+TestFlight build is available to install. Real fingerprint IPA/AAB canaries are
+also required to verify packaged runtime/channel/build extraction before
+enablement. Slack notification enrichment and OTA notifications are tracked in
+APP-3042; until implemented, verification warnings remain in the GHA summary.
+
+The legacy workflow below remains available for explicitly dispatched
+production hotfixes after the gate is enabled. It must export from the correct
+legacy release source; do not use it as an automatic fallback after a failed
+fingerprint publication.
+
 ## Automatic internal OTAs
+
+The following describes the legacy workflow while the fingerprint rollout
+flag is unset.
 
 OTA deployments to TestFlight/APK installs happen automatically upon all merges
 into main. In cases where the fingerprint diff shows incompatible native
 changes, a new client build will automatically be ran and deployed to TestFlight
 (iOS) or delivered in Slack (Android).
 
-## Production OTAs
+## Legacy production OTAs
 
 Production OTAs can only update the JavaScript bundle. Changes to native modules
 must be done as a full release cycle through the app stores.

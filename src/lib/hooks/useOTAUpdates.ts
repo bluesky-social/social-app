@@ -7,12 +7,14 @@ import {
 } from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
 import {
+  channel as nativeChannel,
   checkForUpdateAsync,
   type CurrentlyRunningInfo,
   fetchUpdateAsync,
   isEnabled,
   reloadAsync,
   type ReloadScreenOptions,
+  runtimeVersion as nativeRuntimeVersion,
   setExtraParamAsync,
   UpdateCheckResultNotAvailableReason,
   useUpdates,
@@ -31,7 +33,42 @@ const OTA_RECOVERY_WINDOW = 5 * 60e3
  * The channel this native build is expected to receive updates from. Anything
  * else is only reachable through the dev tooling in settings.
  */
-const DEFAULT_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
+const DEFAULT_CHANNEL =
+  nativeChannel || (IS_TESTFLIGHT ? 'testflight' : 'production')
+
+const FINGERPRINT_RUNTIME_VERSION = /^[0-9a-f]{40}$/
+const OTA_RESOLVE_URL = 'https://updates.bsky.app/v1/ota/resolve'
+
+type OTAResolveResult = {
+  status:
+    | 'available'
+    | 'already-running'
+    | 'runtime-mismatch'
+    | 'not-published'
+    | 'stale-link'
+  deployments: {
+    runtimeVersion: string
+    sourceCommit?: string
+    publicationId?: string
+    updateId?: string
+  }[]
+}
+
+let requestQueue = Promise.resolve()
+let manualRequestOwner: symbol | undefined
+
+function isManualRequestPending() {
+  return manualRequestOwner !== undefined
+}
+
+function serializeOTARequest<T>(operation: () => Promise<T>): Promise<T> {
+  const result = requestQueue.then(operation, operation)
+  requestQueue = result.then(
+    () => undefined,
+    () => undefined,
+  )
+  return result
+}
 
 /**
  * Channels that our native builds are configured with, see `eas.json`. An
@@ -69,17 +106,7 @@ function getRunningChannel(
   return currentlyRunning?.channel || undefined
 }
 
-async function setExtraParams() {
-  await setExtraParamAsync(
-    IS_IOS ? 'ios-build-number' : 'android-build-number',
-    // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
-    // This just ensures it gets passed as a string
-    `${nativeBuildVersion}`,
-  )
-  await setExtraParamAsync('channel', DEFAULT_CHANNEL)
-}
-
-async function setExtraParamsPullRequest(channel: string) {
+export async function prepareOTAUpdateRequest(channel = DEFAULT_CHANNEL) {
   await setExtraParamAsync(
     IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
@@ -89,12 +116,55 @@ async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync('channel', channel)
 }
 
-async function updateTestflight(scheme: 'light' | 'dark') {
-  await setExtraParams()
+export function checkForOTAUpdate(channel = DEFAULT_CHANNEL) {
+  return serializeOTARequest(async () => {
+    await prepareOTAUpdateRequest(channel)
+    return checkForUpdateAsync()
+  })
+}
 
-  const res = await checkForUpdateAsync()
+export function fetchOTAUpdate(channel = DEFAULT_CHANNEL) {
+  return serializeOTARequest(async () => {
+    await prepareOTAUpdateRequest(channel)
+    return fetchUpdateAsync()
+  })
+}
+
+async function resolvePullRequestDeployment({
+  channel,
+  currentUpdateId,
+  expected,
+}: {
+  channel: string
+  currentUpdateId?: string
+  expected?: {sourceCommit?: string | null; publicationId?: string | null}
+}): Promise<OTAResolveResult | undefined> {
+  if (!FINGERPRINT_RUNTIME_VERSION.test(nativeRuntimeVersion || '')) {
+    return undefined
+  }
+
+  const query = new URLSearchParams({
+    channel,
+    platform: IS_IOS ? 'ios' : 'android',
+    runtimeVersion: nativeRuntimeVersion!,
+  })
+  if (currentUpdateId) query.set('currentUpdateId', currentUpdateId)
+  if (expected?.sourceCommit) {
+    query.set('sourceCommit', expected.sourceCommit)
+  }
+  if (expected?.publicationId) {
+    query.set('publicationId', expected.publicationId)
+  }
+
+  const response = await fetch(`${OTA_RESOLVE_URL}?${query}`)
+  if (!response.ok) throw new Error(`OTA resolve failed (${response.status})`)
+  return response.json() as Promise<OTAResolveResult>
+}
+
+async function updateTestflight(scheme: 'light' | 'dark') {
+  const res = await checkForOTAUpdate()
   if (res.isAvailable) {
-    await fetchUpdateAsync()
+    await fetchOTAUpdate()
     Alert.alert(
       'Update Available',
       'A new version of the app is available. Relaunch now?',
@@ -121,6 +191,7 @@ export function useApplyPullRequestOTAUpdate() {
   const t = useTheme()
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = useState(false)
+  const requestOwnerRef = useRef<symbol>(undefined)
   const currentChannel = getRunningChannel(currentlyRunning)
   const isCurrentlyRunningPullRequestDeployment =
     currentChannel?.startsWith('pull-request')
@@ -133,15 +204,73 @@ export function useApplyPullRequestOTAUpdate() {
     currentChannel && !STANDARD_CHANNELS.includes(currentChannel),
   )
 
+  useEffect(() => {
+    return () => {
+      if (manualRequestOwner === requestOwnerRef.current) {
+        manualRequestOwner = undefined
+        void serializeOTARequest(() => prepareOTAUpdateRequest())
+      }
+    }
+  }, [])
+
   const tryApplyUpdate = async (
     channel: string,
     declaredAppVersion?: string | null,
+    expected?: {sourceCommit?: string | null; publicationId?: string | null},
   ) => {
+    if (!/^pull-request-[1-9]\d*$/.test(channel)) {
+      Alert.alert(
+        'Invalid Deployment',
+        'Only pull request deployments can be applied manually.',
+      )
+      return
+    }
+    if (manualRequestOwner) return
+
+    const requestOwner = Symbol(channel)
+    manualRequestOwner = requestOwner
+    requestOwnerRef.current = requestOwner
+    setPending(true)
     const deploymentName = getDeploymentName(channel)
+    let resolvedDeployment: OTAResolveResult | undefined
 
     const checkForDeployment = async () => {
-      await setExtraParamsPullRequest(channel)
-      const res = await checkForUpdateAsync()
+      try {
+        resolvedDeployment = await resolvePullRequestDeployment({
+          channel,
+          currentUpdateId: currentlyRunning?.updateId,
+          expected,
+        })
+      } catch (err) {
+        logger.debug('Could not resolve OTA deployment diagnostics', {
+          safeMessage: err,
+        })
+      }
+
+      if (resolvedDeployment?.status === 'already-running') return false
+      if (resolvedDeployment?.status === 'runtime-mismatch') {
+        Alert.alert(
+          'Different Native Build Required',
+          `The ${deploymentName} deployment requires a different native build. Install a compatible TestFlight build and try again.`,
+        )
+        return false
+      }
+      if (resolvedDeployment?.status === 'not-published') {
+        Alert.alert(
+          'No Deployment Available',
+          `The ${deploymentName} deployment has not been published or is no longer available.`,
+        )
+        return false
+      }
+      if (resolvedDeployment?.status === 'stale-link') {
+        Alert.alert(
+          'Deployment Link Is Out of Date',
+          `This link does not refer to the latest ${deploymentName} deployment. Open the newest link and try again.`,
+        )
+        return false
+      }
+
+      const res = await checkForOTAUpdate(channel)
       if (!res.isAvailable) {
         if (
           res.reason ===
@@ -161,14 +290,48 @@ export function useApplyPullRequestOTAUpdate() {
       return res.isAvailable
     }
 
+    const finishManualRequest = async (restoreDefault: boolean) => {
+      if (manualRequestOwner !== requestOwner) return
+      manualRequestOwner = undefined
+      requestOwnerRef.current = undefined
+      if (restoreDefault) {
+        await serializeOTARequest(() => prepareOTAUpdateRequest()).catch(
+          () => {},
+        )
+      }
+      setPending(false)
+    }
+
+    const restoreAfterCancellation = () => {
+      void finishManualRequest(true)
+    }
+
     const applyUpdate = () => {
-      setPending(true)
       void (async () => {
+        let reloadSucceeded = false
         try {
           if (!(await checkForDeployment())) return
-          const fetchedUpdate = await fetchUpdateAsync()
+          const fetchedUpdate = await fetchOTAUpdate(channel)
           if (!fetchedUpdate.isNew) {
             throw new Error('Expo did not download a new update.')
+          }
+
+          const manifest = fetchedUpdate.manifest as {
+            extra?: {
+              ota?: {sourceCommit?: unknown; publicationId?: unknown}
+            }
+          }
+          const sourceCommit = manifest.extra?.ota?.sourceCommit
+          const publicationId = manifest.extra?.ota?.publicationId
+          if (
+            (expected?.sourceCommit &&
+              sourceCommit !== expected.sourceCommit) ||
+            (expected?.publicationId &&
+              publicationId !== expected.publicationId)
+          ) {
+            throw new Error(
+              'The deployment changed while it was being downloaded. Check the link again to review the newest deployment.',
+            )
           }
 
           device.set(['pendingOTAUpdate'], {
@@ -180,6 +343,7 @@ export function useApplyPullRequestOTAUpdate() {
             await reloadAsync({
               reloadScreenOptions: splash(t.scheme),
             })
+            reloadSucceeded = true
           } catch (e) {
             device.remove(['pendingOTAUpdate'])
             throw e
@@ -192,7 +356,7 @@ export function useApplyPullRequestOTAUpdate() {
             `Could not apply the ${deploymentName} deployment: ${error}`,
           )
         } finally {
-          setPending(false)
+          await finishManualRequest(!reloadSucceeded)
         }
       })()
     }
@@ -203,11 +367,17 @@ export function useApplyPullRequestOTAUpdate() {
      * update re-delivers the deep link that triggered it, and the same link may
      * also just be tapped again.
      */
-    setPending(true)
     try {
-      if (!(await checkForDeployment())) return
+      if (!(await checkForDeployment())) {
+        await finishManualRequest(true)
+        return
+      }
 
-      if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
+      if (
+        !FINGERPRINT_RUNTIME_VERSION.test(nativeRuntimeVersion || '') &&
+        declaredAppVersion &&
+        declaredAppVersion !== APP_VERSION
+      ) {
         Alert.alert(
           'App Version Mismatch',
           `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
@@ -215,6 +385,7 @@ export function useApplyPullRequestOTAUpdate() {
             {
               text: 'Cancel',
               style: 'cancel',
+              onPress: restoreAfterCancellation,
             },
             {
               text: 'Apply Anyway',
@@ -233,6 +404,7 @@ export function useApplyPullRequestOTAUpdate() {
           {
             text: 'Cancel',
             style: 'cancel',
+            onPress: restoreAfterCancellation,
           },
           {
             text: 'Apply',
@@ -242,14 +414,13 @@ export function useApplyPullRequestOTAUpdate() {
         ],
       )
     } catch (e: unknown) {
+      await finishManualRequest(true)
       const error = String(e)
       logger.error('Internal OTA Update Error', {error})
       Alert.alert(
         'Update Check Failed',
         `Could not check the ${deploymentName} deployment: ${error}`,
       )
-    } finally {
-      setPending(false)
     }
   }
 
@@ -260,10 +431,9 @@ export function useApplyPullRequestOTAUpdate() {
   const restoreDefaultChannel = async () => {
     setPending(true)
     try {
-      await setExtraParams()
-      const res = await checkForUpdateAsync()
+      const res = await checkForOTAUpdate()
       if (res.isAvailable) {
-        await fetchUpdateAsync()
+        await fetchOTAUpdate()
         await reloadAsync()
       } else {
         Alert.alert(
@@ -351,14 +521,14 @@ export function useOTAUpdates() {
   const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
       try {
-        await setExtraParams()
+        if (isManualRequestPending()) return
 
         logger.debug('Checking for update...')
-        const res = await checkForUpdateAsync()
+        const res = await checkForOTAUpdate()
 
         if (res.isAvailable) {
           logger.debug('Attempting to fetch update...')
-          await fetchUpdateAsync()
+          await fetchOTAUpdate()
         } else {
           logger.debug('No update available.')
         }
@@ -419,6 +589,7 @@ export function useOTAUpdates() {
           // If it's been 15 minutes since the last "minimize", we should feel comfortable updating the client since
           // chances are that there isn't anything important going on in the current session.
           if (lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME) {
+            if (isManualRequestPending()) return
             if (isUpdatePending) {
               await reloadAsync({
                 reloadScreenOptions: splash(t.scheme),
