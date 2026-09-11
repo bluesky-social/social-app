@@ -58,22 +58,24 @@ export function useAllListMembersQuery(uri?: string) {
 }
 
 export async function getAllListMembers(client: Client, uri: string) {
-  let hasMore = true
   let cursor: string | undefined
   const listItems: app.bsky.graph.defs.ListItemView[] = []
-  // We want to cap this at 6 pages, just for anything weird happening with the api
-  let i = 0
-  while (hasMore && i < 6) {
+  const seenCursors = new Set<string>()
+
+  do {
     const res = await client.call(app.bsky.graph.getList, {
       list: uri as AtUriString,
-      limit: 50,
+      limit: 100,
       cursor,
     })
     listItems.push(...res.items)
-    hasMore = Boolean(res.cursor)
     cursor = res.cursor
-    i++
-  }
+    if (cursor && seenCursors.has(cursor)) {
+      throw new Error('Repeated cursor while fetching list members')
+    }
+    if (cursor) seenCursors.add(cursor)
+  } while (cursor)
+
   return listItems
 }
 

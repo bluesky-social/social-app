@@ -3,6 +3,7 @@ import {type AtUriString, toDatetimeString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation} from '@tanstack/react-query'
+import chunk from 'lodash.chunk'
 
 import {until} from '#/lib/async/until'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -36,10 +37,14 @@ export const createStarterPackList = async ({
     purpose: 'app.bsky.graph.defs#referencelist',
   })
   if (!list) throw new Error('List creation failed')
-  await client.call(com.atproto.repo.applyWrites, {
-    repo: client.assertDid,
-    writes: profiles.map(p => createListItem({did: p.did, listUri: list.uri})),
-  })
+  for (const profilesChunk of chunk(profiles, 50)) {
+    await client.call(com.atproto.repo.applyWrites, {
+      repo: client.assertDid,
+      writes: profilesChunk.map(p =>
+        createListItem({did: p.did, listUri: list.uri}),
+      ),
+    })
+  }
 
   return list
 }
