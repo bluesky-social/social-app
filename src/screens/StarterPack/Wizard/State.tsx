@@ -73,7 +73,7 @@ function reducer(state: State, action: Action): State {
       updatedState = {...state, description: action.description}
       break
     case 'AddProfile':
-      if (state.profiles.length > state.profileLimit) {
+      if (state.profiles.length >= state.profileLimit) {
         Toast.show(
           msg`You may only add up to ${plural(state.profileLimit, {
             other: `${state.profileLimit} profiles`,
