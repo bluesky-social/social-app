@@ -680,8 +680,8 @@ func (srv *Server) WebPost(c echo.Context) error {
 	isEmbedHidden := postEmbedHidden(postView, hideEmbedLabels)
 	data["postText"] = postRecordText(postView)
 
-	if thumbs := extractPostMedia(postView, isEmbedHidden); len(thumbs) > 0 {
-		data["imgThumbUrls"] = thumbs
+	if imgs := extractPostMedia(postView, isEmbedHidden); len(imgs) > 0 {
+		data["postImages"] = imgs
 	}
 	if vm := extractVideoMeta(postView, isEmbedHidden); vm.URL != "" {
 		data["videoUrl"] = vm.URL
