@@ -1,7 +1,10 @@
 import {LexError} from '@atproto/lex'
 import {t} from '@lingui/core/macro'
 
+import {isNetworkError} from '#/lib/network-error'
 import {isXrpcError} from '#/lib/xrpc-error'
+
+export {isNetworkError} from '#/lib/network-error'
 
 /**
  * The text to show the user when no special case applies.
@@ -36,7 +39,8 @@ export function cleanError(e: unknown): string {
    */
   // oxlint-disable-next-line typescript/no-base-to-string
   const str = typeof e === 'string' ? e : e.toString()
-  if (isNetworkError(str)) {
+  // the original value, not `str`, so wrapped causes are checked
+  if (isNetworkError(e)) {
     return t`Unable to connect. Please check your internet connection and try again.`
   }
   /*
@@ -77,26 +81,6 @@ export function cleanError(e: unknown): string {
     return t`Unable to resolve handle`
   }
   return toDisplayString(e, str)
-}
-
-const NETWORK_ERRORS = [
-  'Abort',
-  'Network request failed',
-  'Failed to fetch',
-  'fetch failed',
-  'Load failed',
-  'Upstream service unreachable',
-  'NetworkError when attempting to fetch resource',
-]
-
-export function isNetworkError(e: unknown) {
-  const str = String(e)
-  for (const err of NETWORK_ERRORS) {
-    if (str.includes(err)) {
-      return true
-    }
-  }
-  return false
 }
 
 /**
