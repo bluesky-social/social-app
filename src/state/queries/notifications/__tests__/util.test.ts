@@ -1,8 +1,12 @@
-import {type DidString} from '@atproto/syntax'
+import {
+  type AtUriString,
+  type DatetimeString,
+  type DidString,
+} from '@atproto/syntax'
 import {describe, expect, it, jest} from '@jest/globals'
 
 import {type Notification} from '../types'
-import {groupNotifications} from '../util'
+import {groupNotifications, mergeGroupedNotifications} from '../util'
 
 jest.mock('#/state/queries/profile', () => ({precacheProfile: jest.fn()}))
 
@@ -79,5 +83,130 @@ describe('groupNotifications', () => {
       ['did:plc:b', 'did:plc:e'],
       ['did:plc:d', 'did:plc:f'],
     ])
+  })
+})
+
+function makeLikeNotification(
+  authorDid: DidString,
+  subjectUri: string,
+  indexedAt = '2026-07-28T12:00:00.000Z',
+): Notification {
+  return {
+    uri: `at://${authorDid}/app.bsky.feed.like/like-${authorDid}`,
+    cid: `cid-${authorDid}`,
+    author: {
+      did: authorDid,
+      handle: `${authorDid}.test`,
+      displayName: authorDid,
+      avatar: undefined,
+      associated: undefined,
+      viewer: {},
+      labels: [],
+      createdAt: '2026-07-28T12:00:00.000Z',
+    },
+    reason: 'like',
+    record: {
+      $type: 'app.bsky.feed.like',
+      subject: {uri: subjectUri, cid: 'cid-post'},
+      createdAt: indexedAt,
+    },
+    reasonSubject: subjectUri as AtUriString,
+    isRead: false,
+    indexedAt: indexedAt as DatetimeString,
+  }
+}
+
+function makeSubscribedPostNotification(
+  authorDid: DidString,
+  postRkey: string,
+  indexedAt = '2026-07-28T12:00:00.000Z',
+): Notification {
+  return {
+    uri: `at://${authorDid}/app.bsky.feed.post/${postRkey}`,
+    cid: `cid-${postRkey}`,
+    author: {
+      did: authorDid,
+      handle: `${authorDid}.test`,
+      displayName: authorDid,
+      avatar: undefined,
+      associated: undefined,
+      viewer: {},
+      labels: [],
+      createdAt: '2026-07-28T12:00:00.000Z',
+    },
+    reason: 'subscribed-post',
+    record: {
+      $type: 'app.bsky.feed.post',
+      text: `Post ${postRkey}`,
+      createdAt: indexedAt,
+    },
+    isRead: false,
+    indexedAt: indexedAt as DatetimeString,
+  }
+}
+
+describe('mergeGroupedNotifications', () => {
+  it('merges notification groups across page boundaries for the same post like', () => {
+    const postUri = 'at://did:plc:author/app.bsky.feed.post/post1'
+    const page0 = groupNotifications([
+      makeLikeNotification('did:plc:alice', postUri),
+      makeLikeNotification('did:plc:bob', postUri),
+    ])
+    const page1 = groupNotifications([
+      makeLikeNotification('did:plc:charlie', postUri),
+      makeLikeNotification('did:plc:dave', postUri),
+    ])
+
+    expect(page0).toHaveLength(1)
+    expect(page1).toHaveLength(1)
+
+    const merged = mergeGroupedNotifications([...page0, ...page1])
+
+    expect(merged).toHaveLength(1)
+    expect(merged[0].notification.author.did).toBe('did:plc:alice')
+    expect(merged[0].additional?.map(n => n.author.did)).toEqual([
+      'did:plc:bob',
+      'did:plc:charlie',
+      'did:plc:dave',
+    ])
+  })
+
+  it('merges subscribed-post notifications across page boundaries', () => {
+    const page0 = groupNotifications([
+      makeSubscribedPostNotification('did:plc:alice', 'post1'),
+      makeSubscribedPostNotification('did:plc:alice', 'post2'),
+    ])
+    const page1 = groupNotifications([
+      makeSubscribedPostNotification('did:plc:alice', 'post3'),
+    ])
+
+    expect(page0).toHaveLength(1)
+    expect(page1).toHaveLength(1)
+
+    const merged = mergeGroupedNotifications([...page0, ...page1])
+
+    expect(merged).toHaveLength(1)
+    expect(merged[0].notification.uri).toBe(
+      'at://did:plc:alice/app.bsky.feed.post/post1',
+    )
+    expect(merged[0].additional?.map(n => n.uri)).toEqual([
+      'at://did:plc:alice/app.bsky.feed.post/post2',
+      'at://did:plc:alice/app.bsky.feed.post/post3',
+    ])
+  })
+
+  it('does not merge likes on different posts', () => {
+    const post1 = 'at://did:plc:author/app.bsky.feed.post/post1'
+    const post2 = 'at://did:plc:author/app.bsky.feed.post/post2'
+    const page0 = groupNotifications([
+      makeLikeNotification('did:plc:alice', post1),
+    ])
+    const page1 = groupNotifications([
+      makeLikeNotification('did:plc:bob', post2),
+    ])
+
+    const merged = mergeGroupedNotifications([...page0, ...page1])
+
+    expect(merged).toHaveLength(2)
   })
 })
