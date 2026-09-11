@@ -29,7 +29,7 @@
   <meta property="og:title" content="{{ profileView.Handle }}">
   {% endif -%}
 
-  <link rel="alternate" href="at://{{ profileView.Did }}/app.bsky.actor.profile/self" />
+  <meta name="at:canonical" content="at://{{ profileView.Did }}/app.bsky.actor.profile/self" />
 
   <meta name="twitter:label1" content="Account DID">
   <meta name="twitter:value1" content="{{ profileView.Did }}">
