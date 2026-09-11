@@ -49,4 +49,25 @@ describe('getAllListMembers', () => {
     ).rejects.toThrow('Repeated cursor while fetching list members')
     expect(call).toHaveBeenCalledTimes(2)
   })
+
+  it('stops after 500 members', async () => {
+    const call = jest.fn()
+    for (let page = 0; page < 6; page++) {
+      call.mockResolvedValueOnce({
+        items: Array.from({length: 100}, (_, item) => ({
+          uri: `at://did:plc:test/app.bsky.graph.listitem/${page}-${item}`,
+        })),
+        cursor: String(page + 1),
+      })
+    }
+    const client = {call} as unknown as Client
+
+    const items = await getAllListMembers(
+      client,
+      'at://did:plc:test/app.bsky.graph.list/test',
+    )
+
+    expect(items).toHaveLength(500)
+    expect(call).toHaveBeenCalledTimes(5)
+  })
 })

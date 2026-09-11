@@ -1,7 +1,7 @@
 import {createContext, useContext, useReducer} from 'react'
 import {msg, plural} from '@lingui/core/macro'
 
-import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
+import {STARTER_PACK_DEFAULT_SIZE, STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
@@ -129,10 +129,11 @@ export function Provider({
   children: React.ReactNode
 }) {
   const ax = useAnalytics()
-  const {limit: profileLimit} = ax.features.getValue(
+  const {limit: configuredProfileLimit} = ax.features.getValue(
     ax.features.StarterPacksConfig,
-    {limit: STARTER_PACK_MAX_SIZE},
+    {limit: STARTER_PACK_DEFAULT_SIZE},
   )
+  const profileLimit = Math.min(configuredProfileLimit, STARTER_PACK_MAX_SIZE)
 
   const createInitialState = (): State => {
     const targetDid = targetProfile?.did
