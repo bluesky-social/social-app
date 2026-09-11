@@ -902,11 +902,6 @@
       "count": 1
     }
   },
-  "src/screens/Settings/components/ChangePasswordDialog.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    }
-  },
   "src/screens/Settings/components/CopyButton.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
