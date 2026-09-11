@@ -7,17 +7,24 @@ import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartIconFilled,
   Heart2_Stroke2_Corner0_Rounded as HeartIconOutline,
 } from '#/components/icons/Heart2'
+import {PostControlButtonIcon} from '#/components/PostControls/PostControlButton'
 
-const animationConfig = {
-  duration: 600,
-  easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+// slower animation for small buttons
+// I cannot explain why it feels better this way, 25ms makes a big difference
+const animationConfigSmall = {
+  duration: 575,
+  easing: 'cubic-bezier(0.25, 0.5, 0.25, 1)',
   fill: 'forwards' as FillMode,
+}
+
+const animationConfigBig = {
+  ...animationConfigSmall,
+  duration: 550,
 }
 
 const keyframe = [
   {transform: 'scale(1)'},
-  {transform: 'scale(0.7)'},
-  {transform: 'scale(1.2)'},
+  {transform: 'scale(1.5)'},
   {transform: 'scale(1)'},
 ]
 
@@ -25,16 +32,16 @@ const circle1Keyframe = [
   {opacity: 0, transform: 'scale(0)'},
   {opacity: 0.4},
   {transform: 'scale(1.5)'},
-  {opacity: 0.4},
-  {opacity: 0, transform: 'scale(1.5)'},
+  {opacity: 0.2},
+  {opacity: 0, transform: 'scale(2.0)'},
 ]
 
 const circle2Keyframe = [
   {opacity: 0, transform: 'scale(0)'},
+  {opacity: 0, transform: 'scale(0)'},
+  {opacity: 1, transform: 'scale(1.0)'},
   {opacity: 1},
-  {transform: 'scale(0)'},
-  {opacity: 1},
-  {opacity: 0, transform: 'scale(1.5)'},
+  {opacity: 0, transform: 'scale(1.9)'},
 ]
 
 export function AnimatedLikeIcon({
@@ -55,6 +62,8 @@ export function AnimatedLikeIcon({
   const circle1Ref = useRef<HTMLDivElement>(null)
   const circle2Ref = useRef<HTMLDivElement>(null)
 
+  const animationConfig = big ? animationConfigBig : animationConfigSmall
+
   useEffect(() => {
     if (prevIsLiked.current === isLiked) {
       return
@@ -66,19 +75,26 @@ export function AnimatedLikeIcon({
       circle2Ref.current?.animate?.(circle2Keyframe, animationConfig)
     }
     prevIsLiked.current = isLiked
-  }, [shouldAnimate, isLiked])
+  }, [shouldAnimate, isLiked, animationConfig])
 
   return (
     <View>
       {isLiked ? (
         // @ts-expect-error is div
         <View ref={likeIconRef}>
-          <HeartIconFilled style={{color: t.palette.pink}} width={size} />
+          <PostControlButtonIcon
+            icon={HeartIconFilled}
+            style={{color: t.palette.pink}}
+          />
         </View>
       ) : (
-        <HeartIconOutline
-          style={[{color: t.palette.contrast_500}, {pointerEvents: 'none'}]}
-          width={size}
+        <PostControlButtonIcon
+          icon={HeartIconOutline}
+          style={[
+            {color: t.palette.contrast_500},
+            // TODO(iLynxcat): why is this here?
+            {pointerEvents: 'none'},
+          ]}
         />
       )}
       <View
