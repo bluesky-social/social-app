@@ -1,55 +1,94 @@
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
-import {fireEvent, render} from '@testing-library/react-native'
+import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {type app} from '#/lexicons'
 import {ActivityPresentationRow} from './components/ActivityPresentationRow'
-import {ACTIVITY_ROW_AVATAR_SIZE} from './constants'
-import {type ActivityGroupRowItem, type ActivityRowItem} from './model'
+import {atmospherePresentationConfig} from './config'
+import {type ActivityPresentationItem} from './presentation'
+import {getActivityRowKind} from './rowLayout'
 import {
-  type ActivityPresentationItem,
-  type ActivityPresentationProps,
-  buildActivityPresentationListItems,
-} from './presentation'
-import {
-  type ActivityActors,
-  activityCollections,
-  type AssociatedRecords,
-  type KnownActivityCollection,
-} from './types'
+  createActivity,
+  createActor,
+  createDocumentRecords,
+  createRecord,
+  createRow,
+  createShareRecord,
+  documentUri,
+  present,
+  publicationUri,
+  recordCid,
+} from './testFixtures'
+import {activityCollections, type ActivityItem} from './types'
 
 const mockAvatarStack = jest.fn()
-const mockInlineLinkText = jest.fn()
+const mockLink = jest.fn((_props: Record<string, unknown>) => {})
+const mockMenu = jest.fn()
+const mockShareSnippets = jest.fn(
+  (
+    _props: React.ComponentProps<
+      typeof import('./components/ShareSnippets').ShareSnippets
+    >,
+  ) => {},
+)
+const mockGallery = jest.fn(
+  (
+    _props: React.ComponentProps<
+      typeof import('#/components/images/Gallery').Gallery
+    >,
+  ) => {},
+)
+const mockAutoSizedImage = jest.fn(
+  (
+    _props: React.ComponentProps<
+      typeof import('#/components/images/AutoSizedImage').AutoSizedImage
+    >,
+  ) => {},
+)
+const mockImageContextMenu = jest.fn(
+  (
+    _props: React.ComponentProps<
+      typeof import('#/components/Post/Embed/ImageContextMenu').ImageContextMenu
+    >,
+  ) => {},
+)
+const mockOpenLightbox = jest.fn(
+  (_props: Omit<import('#/components/Lightbox/state').Lightbox, 'id'>) => {},
+)
 const mockPublicationCard = jest.fn()
-const mockStandardSiteEmbed = jest.fn()
-const mockStandardSiteCompactDocumentCard = jest.fn()
-const mockTimeElapsed = jest.fn()
+const mockSubscribeButton = jest.fn(
+  (_props: {view: app.bsky.embed.external.ViewExternal}) => {},
+)
 
+jest.unmock('multiformats/cid')
 jest.mock('expo-image', () => {
   const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
-  return {
-    Image: (props: Record<string, unknown>) => <View {...props} />,
-  }
+  return {Image: (props: object) => <View {...props} />}
 })
-
 jest.mock('./debug', () => ({
   ...jest.requireActual('./debug'),
   isAtmosphereDebugEnabled: () => true,
 }))
-
 jest.mock('#/alf', () => ({
   atoms: new Proxy({}, {get: () => ({})}),
-  utils: {rgbToHex: () => '#000000'},
+  tokens: {borderRadius: {md: 12}},
   web: (styles: object) => styles,
   useTheme: () => ({
+    palette: {
+      primary_500: '#006aff',
+      negative_500: '#d9003c',
+      white: '#ffffff',
+    },
     atoms: {
       border_contrast_low: {},
       text: {color: '#111111'},
+      text_contrast_medium: {color: '#667788'},
       text_inverted: {color: '#ffffff'},
-      text_contrast_medium: {},
-      text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
+      bg_contrast_25: {backgroundColor: '#f9fafb'},
     },
   }),
 }))
@@ -59,10 +98,52 @@ jest.mock('#/components/AvatarStack', () => {
   return {
     AvatarStack: (props: unknown) => {
       mockAvatarStack(props)
-      return <View testID="atmosphereAvatarStack" />
+      return <View testID="avatars" />
     },
   }
 })
+jest.mock('#/components/images/Gallery', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Gallery: (
+      props: React.ComponentProps<
+        typeof import('#/components/images/Gallery').Gallery
+      >,
+    ) => {
+      mockGallery(props)
+      return <View testID="gallery" />
+    },
+    GalleryBleed: ({children}: React.PropsWithChildren) => <>{children}</>,
+  }
+})
+jest.mock('#/components/images/AutoSizedImage', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    AutoSizedImage: (
+      props: React.ComponentProps<
+        typeof import('#/components/images/AutoSizedImage').AutoSizedImage
+      >,
+    ) => {
+      mockAutoSizedImage(props)
+      return <View testID="auto-sized-image" />
+    },
+  }
+})
+jest.mock('#/components/Post/Embed/ImageContextMenu', () => ({
+  ImageContextMenu: (
+    props: React.ComponentProps<
+      typeof import('#/components/Post/Embed/ImageContextMenu').ImageContextMenu
+    >,
+  ) => {
+    mockImageContextMenu(props)
+    return <>{props.children}</>
+  },
+}))
+jest.mock('#/components/Lightbox/state', () => ({
+  useLightboxControls: () => ({openLightbox: mockOpenLightbox}),
+}))
 jest.mock('#/components/Button', () => {
   const {Pressable, View} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -89,50 +170,77 @@ jest.mock('#/components/Button', () => {
   }
 })
 jest.mock('#/components/Link', () => {
-  const {Text} =
+  const {Text, View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
     InlineLinkText: ({
       children,
       ...props
     }: React.PropsWithChildren<Record<string, unknown>>) => {
-      mockInlineLinkText({children, ...props})
+      mockLink({children, ...props})
       return <Text {...props}>{children}</Text>
+    },
+    Link: ({
+      children,
+      ...props
+    }: React.PropsWithChildren<Record<string, unknown>>) => {
+      mockLink({children, ...props})
+      return <View {...props}>{children}</View>
     },
   }
 })
-jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
-  const {Text, View} =
+jest.mock('./components/DocumentMenu', () => {
+  const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
-    PublicationCard: ({themeColors, view}: Record<string, unknown>) => {
-      mockPublicationCard({themeColors, view})
-      const title =
-        (view as {source?: {title?: string}} | undefined)?.source?.title ??
-        'unknown-publication'
-      return <View testID={`publication-${title}`} />
+    DocumentMenu: (props: unknown) => {
+      mockMenu(props)
+      return <View testID="article-menu" />
     },
-    StandardSiteEmbed: ({view}: Record<string, unknown>) => {
-      mockStandardSiteEmbed({view})
-      const title = (view as {title?: string} | undefined)?.title ?? 'unknown'
-      return <View testID={`full-document-${title}`} />
-    },
-    StandardSiteCompactDocumentCard: ({view}: Record<string, unknown>) => {
-      mockStandardSiteCompactDocumentCard({view})
-      const title = (view as {title?: string} | undefined)?.title ?? 'unknown'
+  }
+})
+jest.mock('./components/ShareSnippets', () => {
+  const {View, Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    ShareSnippets: (
+      props: React.ComponentProps<
+        typeof import('./components/ShareSnippets').ShareSnippets
+      >,
+    ) => {
+      mockShareSnippets(props)
       return (
-        <View testID={`compact-document-${title}`}>
-          <Text>{title}</Text>
+        <View testID="share-snippets">
+          {props.shares.map(({activity}) => {
+            const record = props.associatedRecords[activity.record.uri]?.record
+            return (
+              <Text key={activity.record.uri}>
+                {typeof record?.text === 'string' ? record.text : ''}
+              </Text>
+            )
+          })}
         </View>
       )
     },
   }
 })
-jest.mock('#/components/Typography', () => {
-  const {Text} =
+jest.mock('#/components/Post/Embed/StandardSiteEmbed', () => {
+  const {View} =
     jest.requireActual<typeof import('react-native')>('react-native')
-  return {Text}
+  return {
+    PublicationCard: (props: unknown) => {
+      mockPublicationCard(props)
+      return <View testID="publication-card" />
+    },
+    SubscribeButton: (props: {view: app.bsky.embed.external.ViewExternal}) => {
+      mockSubscribeButton(props)
+      return <View testID="publication-cta" />
+    },
+  }
 })
+jest.mock('#/components/Typography', () => ({
+  Text: jest.requireActual<typeof import('react-native')>('react-native').Text,
+}))
 jest.mock('#/view/com/util/TimeElapsed', () => ({
   TimeElapsed: ({
     children,
@@ -140,1449 +248,1264 @@ jest.mock('#/view/com/util/TimeElapsed', () => ({
   }: {
     timestamp: string
     children: (value: {timeElapsed: string}) => React.ReactNode
-  }) => {
-    mockTimeElapsed({timestamp})
-    return children({timeElapsed: `elapsed:${timestamp}`})
-  },
+  }) => children({timeElapsed: `elapsed:${timestamp}`}),
 }))
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
-
 beforeEach(() => {
-  mockAvatarStack.mockClear()
-  mockInlineLinkText.mockClear()
-  mockPublicationCard.mockClear()
-  mockStandardSiteEmbed.mockClear()
-  mockStandardSiteCompactDocumentCard.mockClear()
-  mockTimeElapsed.mockClear()
+  jest.clearAllMocks()
+})
+afterEach(() => {
+  atmospherePresentationConfig.recommendationCardThreshold = 2
+  atmospherePresentationConfig.subscriptionCardThreshold = 2
 })
 
 function renderRow(item: ActivityPresentationItem) {
-  const presentationItem = buildSinglePresentationItem(item)
-
-  return render(
+  const props = present(item)
+  const screen = render(
     <I18nProvider i18n={i18n}>
-      <ActivityPresentationRow
-        item={presentationItem.item}
-        computedItemView={presentationItem.computedItemView}
-        hideTopBorder={false}
-      />
+      <ActivityPresentationRow {...props} hideTopBorder={false} />
     </I18nProvider>,
+  )
+  const kind = getActivityRowKind(props)
+  if (kind) {
+    const hasCard = [
+      'atmosphereArticleCard',
+      'atmosphereSubscriptionCard',
+      'atmosphereShareCard',
+      'atmosphereActiveLivestream',
+      'atmospherePhotoCard',
+      'publication-card',
+    ].some(id => screen.queryAllByTestId(id).length > 0)
+    expect(hasCard).toBe(kind === 'card')
+  }
+  expect(screen.getAllByTestId('atmosphereDebugButton')).toHaveLength(1)
+  return screen
+}
+
+function recommend(did: string, rkey = 'recommend') {
+  return createActivity({
+    collection: activityCollections.recommendation,
+    did,
+    rkey,
+  })
+}
+
+function recommendationRow(count = 1) {
+  const activities = Array.from({length: count}, (_, i) =>
+    recommend(`did:plc:actor${i}`),
+  )
+  const records = createDocumentRecords()
+  for (const activity of activities)
+    records[activity.record.uri] = createRecord(activity.record.uri, {
+      document: documentUri,
+      createdAt: activity.record.indexedAt,
+    })
+  const row = createRow(activities, {associatedRecords: records})
+  row.actors['did:plc:author'] = createActor()
+  return row
+}
+
+function documentRow(subscribed = false, relatedActivity: ActivityItem[] = []) {
+  const associatedRecords = createDocumentRecords()
+  const actors = {'did:plc:author': createActor()}
+  for (const activity of relatedActivity) {
+    associatedRecords[activity.record.uri] = createRecord(
+      activity.record.uri,
+      activity.collection === activityCollections.share
+        ? createShareRecord()
+        : {document: documentUri, createdAt: activity.record.indexedAt},
+    )
+    Object.assign(actors, createRow([activity]).actors)
+  }
+  return createRow([createActivity({subscribed, relatedActivity})], {
+    associatedRecords,
+    actors,
+  })
+}
+
+function hasLink(to: string) {
+  expect(mockLink.mock.calls.map(([props]) => props)).toEqual(
+    expect.arrayContaining([expect.objectContaining({to})]),
   )
 }
 
-function buildSinglePresentationItem(
-  item: ActivityPresentationItem,
-): ActivityPresentationProps {
-  const [presentationItem] = buildActivityPresentationListItems([item])
-  if (
-    !presentationItem?.computedItemView ||
-    (presentationItem.item.type !== 'activity' &&
-      presentationItem.item.type !== 'group')
-  ) {
-    throw new Error('Expected usable computed view for row test')
-  }
-
-  return {
-    item: presentationItem.item,
-    computedItemView: presentationItem.computedItemView,
-  }
-}
-
-function handleLabel(handle: string) {
-  return sanitizeHandle(handle, '@')
-}
-
-function activityHeaderLabel(
-  action: string,
-  timestamp = '2026-09-09T00:00:00.000Z',
-) {
-  return `${action} · elapsed:${timestamp}`
-}
-
-function buildActivity({
-  collection,
-  uri,
-  indexedAt = '2026-09-09T00:00:00.000Z',
-  subscribed = false,
-}: {
-  collection: string
-  uri: string
-  indexedAt?: string
-  subscribed?: boolean
-}) {
-  return {
-    $type: 'eric.bsky.atmosphere.getActivity#item' as const,
-    record: {
-      uri,
-      cid: `cid-${uri.split('/').at(-1)}`,
-      indexedAt,
-    },
-    collection,
-    viewerState: {subscribed},
-  }
-}
-
-function buildActor(did: string, handle: string, following?: string) {
-  return {
-    did,
-    handle,
-    avatar: `https://example.com/${did}.jpg`,
-    viewer: following ? {following} : undefined,
-  }
-}
-
-function buildAssociatedRecord(uri: string, record: Record<string, unknown>) {
-  return {
-    uri,
-    cid: `cid-${uri.split('/').at(-1)}`,
-    record,
-  }
-}
-
-function buildActivityRow({
-  collection,
-  actorDid,
-  associatedRecords = {},
-  actors = {},
-  indexedAt = '2026-09-09T00:00:00.000Z',
-  rkey = '1',
-  subscribed = false,
-}: {
-  collection: string
-  actorDid: string
-  associatedRecords?: AssociatedRecords
-  actors?: ActivityActors
-  indexedAt?: string
-  rkey?: string
-  subscribed?: boolean
-}): ActivityRowItem {
-  return {
-    type: 'activity',
-    key: `at://${actorDid}/${collection}/${rkey}`,
-    activity: buildActivity({
-      collection,
-      uri: `at://${actorDid}/${collection}/${rkey}`,
-      indexedAt,
-      subscribed,
-    }),
-    associatedRecords,
-    actors,
-  }
-}
-
-function buildActorGroupRow({
-  collection,
-  actorDid,
-  count,
-  actors = {},
-  associatedRecords = {},
-  groupIndexedAt = '2026-09-09T00:00:00.000Z',
-  itemIndexedAt = '2026-09-09T00:00:00.000Z',
-  subscribedStates,
-}: {
-  collection: string
-  actorDid: string
-  count: number
-  actors?: ActivityActors
-  associatedRecords?: AssociatedRecords
-  groupIndexedAt?: string
-  itemIndexedAt?: string
-  subscribedStates?: boolean[]
-}): ActivityGroupRowItem {
-  return {
-    type: 'group',
-    key: `${collection}-actor-group`,
-    group: {
-      $type: 'eric.bsky.atmosphere.getActivity#group',
-      id: `${collection}-actor-group`,
-      groupBy: 'actor',
-      collection,
-      indexedAt: groupIndexedAt,
-      actor: actorDid,
-      items: Array.from({length: count}, (_, index) =>
-        buildActivity({
-          collection,
-          uri: `at://${actorDid}/${collection}/${index + 1}`,
-          indexedAt: itemIndexedAt,
-          subscribed: subscribedStates?.[index] ?? false,
+describe('content-first articles and recommendations', () => {
+  it.each([false, true])(
+    'renders a root document as a card only when subscribed=%s',
+    subscribed => {
+      const screen = renderRow(documentRow(subscribed))
+      expect(Boolean(screen.queryByTestId('atmosphereArticleCard'))).toBe(
+        subscribed,
+      )
+      expect(Boolean(screen.queryByTestId('atmosphereFootnote'))).toBe(
+        !subscribed,
+      )
+      expect(screen.getByText('An article')).toBeTruthy()
+      hasLink('https://publication.example/')
+      hasLink('/profile/author.example')
+      expect(mockMenu).toHaveBeenCalledWith(
+        expect.objectContaining({
+          author: expect.objectContaining({did: 'did:plc:author'}),
         }),
-      ),
+      )
     },
-    associatedRecords,
-    actors,
-  }
-}
+  )
 
-function buildSubjectGroupRow({
-  collection,
-  subject,
-  actorDids,
-  actors = {},
-  associatedRecords = {},
-}: {
-  collection: string
-  subject: string
-  actorDids: string[]
-  actors?: ActivityActors
-  associatedRecords?: AssociatedRecords
-}): ActivityGroupRowItem {
-  return {
-    type: 'group',
-    key: `${collection}-subject-group`,
-    group: {
-      $type: 'eric.bsky.atmosphere.getActivity#group',
-      id: `${collection}-subject-group`,
-      groupBy: 'subject',
-      collection,
-      indexedAt: '2026-09-09T00:00:00.000Z',
-      subject,
-      items: actorDids.map((actorDid, index) =>
-        buildActivity({
-          collection,
-          uri: `at://${actorDid}/${collection}/${index + 1}`,
-        }),
-      ),
-    },
-    associatedRecords,
-    actors,
-  }
-}
-
-describe('Atmosphere collection renderers', () => {
-  it('renders a standalone row with the configured avatar stack, sanitized linked handle, action, and timestamp', () => {
-    const actorDid = 'did:plc:chef'
-    const row = buildActivityRow({
-      collection: activityCollections.document,
-      actorDid,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'chef.example'),
-      },
-    })
-
-    const screen = renderRow(row)
-
-    expect(screen.getByTestId('atmosphereDocumentRow')).toBeTruthy()
-    const headerText = screen.getByLabelText(
-      activityHeaderLabel(
-        `${handleLabel('chef.example')} published an article`,
-      ),
-    )
-
-    expect(headerText).toBeTruthy()
-    expect(headerText.props.numberOfLines).toBe(2)
-    expect(screen.getByText(handleLabel('chef.example'))).toBeTruthy()
-    expect(mockAvatarStack).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        size: ACTIVITY_ROW_AVATAR_SIZE,
-        profiles: [expect.objectContaining({did: actorDid})],
-      }),
-    )
-    expect(mockInlineLinkText).toHaveBeenLastCalledWith(
-      expect.objectContaining({
-        to: '/profile/chef.example',
-        children: handleLabel('chef.example'),
-        style: expect.arrayContaining([
-          expect.objectContaining({color: 'white'}),
-        ]),
-      }),
-    )
-  })
-
-  it('logs only the row-reachable objects while preserving their references', () => {
-    const actorDid = 'did:plc:debug-chef'
-    const publicationDid = 'did:plc:debug-publication'
-    const irrelevantDid = 'did:plc:irrelevant'
-    const rootUri = `at://${actorDid}/${activityCollections.document}/debug-document`
-    const publicationUri = `at://${publicationDid}/${activityCollections.publication}/debug-publication`
-    const irrelevantUri = `at://${irrelevantDid}/${activityCollections.document}/irrelevant`
-    const rootRecord = buildAssociatedRecord(rootUri, {
-      $type: activityCollections.document,
-      site: publicationUri,
-      title: 'Debug document',
-      publishedAt: '2026-09-09T00:00:00.000Z',
-    })
-    const publicationRecord = buildAssociatedRecord(publicationUri, {
-      $type: activityCollections.publication,
-      name: 'Debug publication',
-      url: 'https://debug.example',
-    })
-    const row = buildActivityRow({
-      collection: activityCollections.document,
-      actorDid,
-      rkey: 'debug-document',
-      associatedRecords: {
-        [rootUri]: rootRecord,
-        [publicationUri]: publicationRecord,
-        [irrelevantUri]: buildAssociatedRecord(irrelevantUri, {
-          $type: activityCollections.document,
-        }),
-      },
-      actors: {
-        [actorDid]: buildActor(actorDid, 'debug-chef.example'),
-        [publicationDid]: buildActor(
-          publicationDid,
-          'debug-publication.example',
+  it.each([1, 2, 3])(
+    'uses default recommendation threshold with %s usable actors',
+    count => {
+      const screen = renderRow(recommendationRow(count))
+      expect(Boolean(screen.queryByTestId('atmosphereArticleCard'))).toBe(
+        count >= 2,
+      )
+      expect(Boolean(screen.queryByTestId('atmosphereFootnote'))).toBe(
+        count < 2,
+      )
+      const others =
+        count > 1 ? ` and ${count - 1} ${count === 2 ? 'other' : 'others'}` : ''
+      expect(
+        screen.getByLabelText(
+          new RegExp(
+            `${sanitizeHandle('actor0.example', '@')}${others} recommended`,
+          ),
         ),
-        [irrelevantDid]: buildActor(irrelevantDid, 'irrelevant.example'),
-      },
-    })
-    const consoleLog = jest.spyOn(console, 'log').mockImplementation()
+      ).toBeTruthy()
+    },
+  )
 
-    const screen = renderRow(row)
-    fireEvent.press(screen.getByTestId('atmosphereDebugButton'))
-
-    const firstCall = consoleLog.mock.calls[0] as [ActivityRowItem] | undefined
-    const loggedItem = firstCall?.[0]
-    expect(loggedItem).not.toBe(row)
-    expect(loggedItem?.activity).toBe(row.activity)
-    expect(loggedItem?.associatedRecords).toEqual({
-      [rootUri]: rootRecord,
-      [publicationUri]: publicationRecord,
-    })
-    expect(loggedItem?.associatedRecords[rootUri]).toBe(rootRecord)
-    expect(loggedItem?.associatedRecords[publicationUri]).toBe(
-      publicationRecord,
+  it('applies configuration to both recommendation groups and related proof', () => {
+    atmospherePresentationConfig.recommendationCardThreshold = 3
+    const cluster = renderRow(recommendationRow(2))
+    expect(cluster.queryByTestId('atmosphereArticleCard')).toBeNull()
+    cluster.unmount()
+    const document = renderRow(
+      documentRow(false, [recommend('did:plc:one'), recommend('did:plc:two')]),
     )
-    expect(loggedItem?.actors).toEqual({
-      [actorDid]: row.actors[actorDid],
-      [publicationDid]: row.actors[publicationDid],
-    })
-    expect(loggedItem?.actors[actorDid]).toBe(row.actors[actorDid])
-    consoleLog.mockRestore()
+    expect(document.queryByTestId('atmosphereArticleCard')).toBeNull()
   })
 
-  it('renders subject groups with up to five usable actor avatars in API order and counts all usable others', () => {
-    const documentAuthorDid = 'did:plc:document-author'
-    const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/target`
-    const row = buildSubjectGroupRow({
-      collection: activityCollections.recommendation,
-      subject: documentUri,
-      actorDids: [
-        'did:plc:alpha',
-        'did:plc:beta',
-        'did:plc:gamma',
-        'did:plc:delta',
-        'did:plc:epsilon',
-        'did:plc:zeta',
-        'did:plc:ghost',
-        'did:plc:alpha',
-      ],
-      actors: {
-        'did:plc:alpha': buildActor('did:plc:alpha', 'alpha.test'),
-        'did:plc:beta': buildActor('did:plc:beta', 'beta.test'),
-        'did:plc:gamma': buildActor('did:plc:gamma', 'gamma.test'),
-        'did:plc:delta': buildActor('did:plc:delta', 'delta.test'),
-        'did:plc:epsilon': buildActor('did:plc:epsilon', 'epsilon.test'),
-        'did:plc:zeta': buildActor('did:plc:zeta', 'zeta.test'),
-        [documentAuthorDid]: buildActor(documentAuthorDid, 'author.test'),
-      },
-      associatedRecords: {
-        [documentUri]: buildAssociatedRecord(documentUri, {
-          $type: activityCollections.document,
-          site: 'https://example.com',
-          path: '/spiral-tide',
-          title: 'Spiral tide',
-          publishedAt: '2026-09-09T00:00:00.000Z',
-        }),
-      },
-    })
-
+  it.each([false, true])('ignores target-author following=%s', following => {
+    const row = recommendationRow()
+    row.actors['did:plc:author'].viewer = following
+      ? {following: 'at://did:plc:viewer/app.bsky.graph.follow/author'}
+      : undefined
     const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
+    expect(screen.getByText('An article')).toBeTruthy()
+  })
 
+  it('bounds the avatar stack to five and counts distinct usable actors in API order', () => {
+    const row = recommendationRow(8)
+    if (row.type !== 'group') throw new Error('Expected group')
+    row.group.items.push(row.group.items[0])
+    delete row.actors['did:plc:actor6']
+    row.actors['did:plc:actor7'].handle = 'handle.invalid'
+    const screen = renderRow(row)
     expect(
       screen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('alpha.test')} and 5 others recommended ${handleLabel('author.test')}’s article`,
-        ),
+        `${sanitizeHandle('actor0.example', '@')} and 5 others recommended`,
       ),
     ).toBeTruthy()
     expect(mockAvatarStack).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        size: ACTIVITY_ROW_AVATAR_SIZE,
-        profiles: [
-          expect.objectContaining({did: 'did:plc:alpha'}),
-          expect.objectContaining({did: 'did:plc:beta'}),
-          expect.objectContaining({did: 'did:plc:gamma'}),
-          expect.objectContaining({did: 'did:plc:delta'}),
-          expect.objectContaining({did: 'did:plc:epsilon'}),
-        ],
+        size: 16,
+        profiles: [0, 1, 2, 3, 4].map(i => row.actors[`did:plc:actor${i}`]),
       }),
     )
-
-    const linkProps = mockInlineLinkText.mock.calls.map(([props]) => props)
-    expect(linkProps).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          to: '/profile/alpha.test',
-          children: handleLabel('alpha.test'),
-          style: expect.arrayContaining([
-            expect.objectContaining({color: 'white'}),
-          ]),
-        }),
-        expect.objectContaining({
-          to: '/profile/author.test',
-          children: handleLabel('author.test'),
-          style: expect.arrayContaining([
-            expect.objectContaining({color: 'white'}),
-          ]),
-        }),
-      ]),
-    )
+    expect(screen.queryByText(/actor6|actor7|did:plc:/)).toBeNull()
   })
 
-  it('renders a publication-root body with the existing PublicationCard using computed theme colors', () => {
-    const actorDid = 'did:plc:publication-owner'
-    const publicationUri = `at://${actorDid}/${activityCollections.publication}/1`
-    const row = buildActivityRow({
-      collection: activityCollections.publication,
-      actorDid,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'publication-owner.test'),
-      },
-      associatedRecords: {
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Orbit Weekly',
-          url: 'https://example.com/publications/orbit-weekly',
-          basicTheme: {
-            accent: {r: 1, g: 2, b: 3},
-            accentForeground: {r: 254, g: 253, b: 252},
-          },
-        }),
-      },
-      rkey: '1',
-    })
+  it.each([1, 2, 3])(
+    'promotes related recommendation proof at the same default threshold (%s)',
+    count => {
+      const screen = renderRow(
+        documentRow(
+          false,
+          Array.from({length: count}, (_, i) => recommend(`did:plc:rec${i}`)),
+        ),
+      )
+      expect(Boolean(screen.queryByTestId('atmosphereArticleCard'))).toBe(
+        count >= 2,
+      )
+    },
+  )
 
-    const screen = renderRow(row)
-
-    expect(screen.getByTestId('publication-Orbit Weekly')).toBeTruthy()
-    expect(mockPublicationCard).toHaveBeenCalledWith(
-      expect.objectContaining({
-        view: expect.objectContaining({
-          uri: 'https://example.com/publications/orbit-weekly',
-          associatedRefs: [expect.objectContaining({uri: publicationUri})],
-          associatedProfiles: [expect.objectContaining({did: actorDid})],
-        }),
-        themeColors: {
-          custom: true,
-          accent: '#010203',
-          accentForeground: '#fefdfc',
-        },
-      }),
+  it('promotes mixed and self-share proof without labeling shares as recommendations', () => {
+    const selfShare = createActivity({collection: activityCollections.share})
+    const screen = renderRow(
+      documentRow(false, [recommend('did:plc:one'), selfShare]),
     )
-  })
-
-  it('links publication titles in subscription activity with the shared link styling', () => {
-    const actorDid = 'did:plc:subscriber'
-    const rootUri = `at://${actorDid}/${activityCollections.subscription}/1`
-    const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
-    const row = buildActivityRow({
-      collection: activityCollections.subscription,
-      actorDid,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'subscriber.test'),
-      },
-      associatedRecords: {
-        [rootUri]: buildAssociatedRecord(rootUri, {
-          $type: activityCollections.subscription,
-          publication: publicationUri,
-          createdAt: '2026-09-09T00:00:00.000Z',
-        }),
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Orbit Weekly',
-          url: 'https://example.com/publications/orbit-weekly',
-        }),
-      },
-      rkey: '1',
-    })
-
-    const screen = renderRow(row)
-
+    expect(screen.getByTestId('atmosphereArticleCard')).toBeTruthy()
     expect(
       screen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('subscriber.test')} subscribed to Orbit Weekly`,
-        ),
+        `${sanitizeHandle('one.example', '@')} recommended`,
       ),
     ).toBeTruthy()
-
-    const linkProps = mockInlineLinkText.mock.calls.map(([props]) => props)
-    expect(linkProps).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          to: '/profile/subscriber.test',
-          children: handleLabel('subscriber.test'),
-          style: expect.arrayContaining([
-            expect.objectContaining({color: 'white'}),
-          ]),
-        }),
-        expect.objectContaining({
-          to: 'https://example.com/publications/orbit-weekly',
-          children: 'Orbit Weekly',
-          disableMismatchWarning: true,
-          style: expect.arrayContaining([
-            expect.objectContaining({color: 'white'}),
-          ]),
-        }),
-      ]),
-    )
+    expect(screen.queryByText(/and 1 other|and 2 others/)).toBeNull()
+    expect(
+      screen.queryByLabelText(
+        `${sanitizeHandle('author.example', '@')} recommended`,
+      ),
+    ).toBeNull()
+    screen.unmount()
+    const selfOnly = renderRow(documentRow(false, [selfShare]))
+    expect(selfOnly.getByTestId('atmosphereArticleCard')).toBeTruthy()
+    expect(selfOnly.queryByText(/recommended/)).toBeNull()
   })
 
-  it('renders full or compact document cards based on standalone subscription state', () => {
-    const actorDid = 'did:plc:doc-body'
-    const documentUri = `at://${actorDid}/${activityCollections.document}/1`
-    const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
-    const subscribedRow = buildActivityRow({
-      collection: activityCollections.document,
-      actorDid,
-      subscribed: true,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'doc-body.test'),
-        'did:plc:publication': buildActor(
-          'did:plc:publication',
-          'publication.test',
-        ),
-      },
-      associatedRecords: {
-        [documentUri]: buildAssociatedRecord(documentUri, {
-          $type: activityCollections.document,
+  it.each([activityCollections.document, activityCollections.recommendation])(
+    'bounds 15-item actor groups to the first title plus count (%s)',
+    collection => {
+      const activities = Array.from({length: 15}, (_, i) =>
+        createActivity({collection, rkey: String(i), subscribed: true}),
+      )
+      const records = createDocumentRecords()
+      const lateProof = recommend('did:plc:late')
+      records[lateProof.record.uri] = createRecord(lateProof.record.uri, {
+        document: `at://did:plc:author/site.standard.document/1`,
+        createdAt: lateProof.record.indexedAt,
+      })
+      for (const [i, activity] of activities.entries()) {
+        const uri = `at://did:plc:author/site.standard.document/${i}`
+        records[uri] = createRecord(uri, {
+          title: `Article ${i}`,
           site: publicationUri,
-          path: 'essay',
-          title: 'Body essay',
-          publishedAt: '2026-09-09T00:00:00.000Z',
-        }),
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Orbit Weekly',
-          url: 'https://example.com/publications/orbit-weekly',
-        }),
-      },
-      rkey: '1',
-    })
-    const unsubscribedRow = buildActivityRow({
-      collection: activityCollections.document,
-      actorDid: 'did:plc:doc-no-body',
-      subscribed: false,
-      actors: {
-        'did:plc:doc-no-body': buildActor(
-          'did:plc:doc-no-body',
-          'doc-no-body.test',
-        ),
-      },
-      associatedRecords: {
-        'at://did:plc:doc-no-body/site.standard.document/1':
-          buildAssociatedRecord(
-            'at://did:plc:doc-no-body/site.standard.document/1',
-            {
-              $type: activityCollections.document,
-              site: 'https://example.com',
-              path: '/hidden',
-              title: 'Hidden essay',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-      },
-      rkey: '1',
-    })
+          path: `/article-${i}`,
+          publishedAt: '2026-09-10T00:00:00Z',
+        })
+        if (collection === activityCollections.recommendation)
+          records[activity.record.uri] = createRecord(activity.record.uri, {
+            document: uri,
+            createdAt: activity.record.indexedAt,
+          })
+      }
+      activities[1].relatedActivity = [lateProof]
+      const row = createRow(activities, {
+        groupBy: 'actor',
+        associatedRecords: records,
+      })
+      row.actors['did:plc:late'] = createActor('did:plc:late')
+      const screen = renderRow(row)
+      expect(screen.getByText(/^Article 0/)).toBeTruthy()
+      expect(screen.getByText(/and 14 more articles/)).toBeTruthy()
+      expect(screen.queryByText('Article 1')).toBeNull()
+      expect(screen.queryByText(/late.example|and 14 others/)).toBeNull()
+      expect(Boolean(screen.queryByTestId('atmosphereArticleCard'))).toBe(
+        collection === activityCollections.document,
+      )
+      expect(row.type === 'group' && row.group.items).toHaveLength(15)
+    },
+  )
 
-    const subscribedScreen = renderRow(subscribedRow)
-    const unsubscribedScreen = renderRow(unsubscribedRow)
-
-    expect(
-      subscribedScreen.getByTestId('full-document-Body essay'),
-    ).toBeTruthy()
-    expect(
-      unsubscribedScreen.queryByTestId('full-document-Hidden essay'),
-    ).toBeNull()
-    expect(
-      unsubscribedScreen.getByTestId('compact-document-Hidden essay'),
-    ).toBeTruthy()
-    expect(
-      unsubscribedScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('doc-no-body.test')} published an article`,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(
-      unsubscribedScreen.queryByLabelText(
-        `${handleLabel('doc-no-body.test')} published an article Hidden essay`,
-      ),
-    ).toBeNull()
-    expect(unsubscribedScreen.getByText('Hidden essay')).toBeTruthy()
-    expect(mockStandardSiteEmbed).toHaveBeenCalledWith(
-      expect.objectContaining({
-        view: expect.objectContaining({
-          title: 'Body essay',
-          uri: 'https://example.com/publications/orbit-weekly/essay',
-        }),
-      }),
+  it('does not select a later actor-group article when the first is unavailable', () => {
+    const row = createRow(
+      [
+        createActivity({rkey: 'missing', subscribed: true}),
+        createActivity({subscribed: true}),
+      ],
+      {groupBy: 'actor', associatedRecords: createDocumentRecords()},
     )
-  })
-
-  it('renders only the first document from actor groups using aggregate subscription state', () => {
-    const actorDid = 'did:plc:doc-group'
-    const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
-    const allSubscribedRow = buildActorGroupRow({
-      collection: activityCollections.document,
-      actorDid,
-      count: 2,
-      subscribedStates: [true, true],
-      actors: {
-        [actorDid]: buildActor(actorDid, 'doc-group.test'),
-        'did:plc:publication': buildActor(
-          'did:plc:publication',
-          'publication.test',
-        ),
-      },
-      associatedRecords: {
-        [`at://${actorDid}/${activityCollections.document}/1`]:
-          buildAssociatedRecord(
-            `at://${actorDid}/${activityCollections.document}/1`,
-            {
-              $type: activityCollections.document,
-              site: publicationUri,
-              path: 'one',
-              title: 'Doc one',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-        [`at://${actorDid}/${activityCollections.document}/2`]:
-          buildAssociatedRecord(
-            `at://${actorDid}/${activityCollections.document}/2`,
-            {
-              $type: activityCollections.document,
-              site: publicationUri,
-              path: 'two',
-              title: 'Doc two',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-        [publicationUri]: buildAssociatedRecord(publicationUri, {
-          $type: activityCollections.publication,
-          name: 'Orbit Weekly',
-          url: 'https://example.com/publications/orbit-weekly',
-        }),
-      },
-    })
-    const mixedSubscriptionRow = buildActorGroupRow({
-      collection: activityCollections.document,
-      actorDid: 'did:plc:doc-group-mixed',
-      count: 2,
-      subscribedStates: [true, false],
-      actors: {
-        'did:plc:doc-group-mixed': buildActor(
-          'did:plc:doc-group-mixed',
-          'doc-group-mixed.test',
-        ),
-      },
-      associatedRecords: {
-        'at://did:plc:doc-group-mixed/site.standard.document/1':
-          buildAssociatedRecord(
-            'at://did:plc:doc-group-mixed/site.standard.document/1',
-            {
-              $type: activityCollections.document,
-              site: 'https://example.com',
-              path: '/one',
-              title: 'Mixed one',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-        'at://did:plc:doc-group-mixed/site.standard.document/2':
-          buildAssociatedRecord(
-            'at://did:plc:doc-group-mixed/site.standard.document/2',
-            {
-              $type: activityCollections.document,
-              site: 'https://example.com',
-              path: '/two',
-              title: 'Mixed two',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-      },
-    })
-
-    const noSubscriptionRow: ActivityGroupRowItem = {
-      ...mixedSubscriptionRow,
-      key: 'document-group-none',
-      group: {
-        ...mixedSubscriptionRow.group,
-        id: 'document-group-none',
-        items: mixedSubscriptionRow.group.items.map(item => ({
-          ...item,
-          viewerState: {subscribed: false},
-        })),
-      },
-    }
-    const allSubscribedScreen = renderRow(allSubscribedRow)
-    const mixedScreen = renderRow(mixedSubscriptionRow)
-    const noSubscriptionScreen = renderRow(noSubscriptionRow)
-
-    expect(
-      allSubscribedScreen.getByTestId('full-document-Doc one'),
-    ).toBeTruthy()
-    expect(
-      allSubscribedScreen.queryByTestId('full-document-Doc two'),
-    ).toBeNull()
-    expect(mixedScreen.queryByTestId('full-document-Mixed one')).toBeNull()
-    expect(
-      noSubscriptionScreen.queryByTestId('full-document-Mixed one'),
-    ).toBeNull()
-    expect(mixedScreen.getByTestId('compact-document-Mixed one')).toBeTruthy()
-    expect(mixedScreen.queryByTestId('compact-document-Mixed two')).toBeNull()
-    expect(
-      noSubscriptionScreen.getByTestId('compact-document-Mixed one'),
-    ).toBeTruthy()
-    expect(
-      noSubscriptionScreen.queryByTestId('compact-document-Mixed two'),
-    ).toBeNull()
-    expect(
-      mockStandardSiteEmbed.mock.calls.map(
-        ([props]) => (props as {view: {title: string}}).view.title,
-      ),
-    ).toEqual(['Doc one'])
-    expect(
-      mockStandardSiteCompactDocumentCard.mock.calls.map(
-        ([props]) => (props as {view: {title: string}}).view.title,
-      ),
-    ).toEqual(['Mixed one', 'Mixed one'])
-  })
-
-  it('renders at most one publication card body from the first valid hydrated publication view', () => {
-    const actorDid = 'did:plc:subscriber-group'
-    const firstRootUri = `at://${actorDid}/${activityCollections.subscription}/1`
-    const secondRootUri = `at://${actorDid}/${activityCollections.subscription}/2`
-    const thirdRootUri = `at://${actorDid}/${activityCollections.subscription}/3`
-    const validPublicationUri = `at://did:plc:publication/${activityCollections.publication}/good`
-    const laterPublicationUri = `at://did:plc:publication/${activityCollections.publication}/later`
-    const row = buildActorGroupRow({
-      collection: activityCollections.subscription,
-      actorDid,
-      count: 3,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'subscriber-group.test'),
-        'did:plc:publication': buildActor(
-          'did:plc:publication',
-          'publication.test',
-        ),
-      },
-    })
-    row.associatedRecords = {
-      [firstRootUri]: buildAssociatedRecord(firstRootUri, {
-        $type: activityCollections.subscription,
-        publication:
-          'at://did:plc:publication/site.standard.publication/missing',
-      }),
-      [secondRootUri]: buildAssociatedRecord(secondRootUri, {
-        $type: activityCollections.subscription,
-        publication: validPublicationUri,
-      }),
-      [thirdRootUri]: buildAssociatedRecord(thirdRootUri, {
-        $type: activityCollections.subscription,
-        publication: laterPublicationUri,
-      }),
-      [validPublicationUri]: buildAssociatedRecord(validPublicationUri, {
-        $type: activityCollections.publication,
-        name: 'Valid publication',
-        url: 'https://example.com/publications/valid',
-      }),
-      [laterPublicationUri]: buildAssociatedRecord(laterPublicationUri, {
-        $type: activityCollections.publication,
-        name: 'Later publication',
-        url: 'https://example.com/publications/later',
-      }),
-    }
-
     const screen = renderRow(row)
+    expect(screen.getByText(/^Article unavailable/)).toBeTruthy()
+    expect(screen.queryByText('An article')).toBeNull()
+    expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
+    expect(screen.getByText(/and 1 more article/)).toBeTruthy()
+  })
 
-    expect(screen.getByTestId('publication-Valid publication')).toBeTruthy()
-    expect(screen.queryByTestId('publication-Later publication')).toBeNull()
-    expect(mockPublicationCard).toHaveBeenCalledTimes(1)
-    expect(mockPublicationCard).toHaveBeenCalledWith(
-      expect.objectContaining({
-        view: expect.objectContaining({
-          uri: 'https://example.com/publications/valid',
+  it('uses outer timestamps rather than publication time or hidden child timestamps', () => {
+    const row = createRow([createActivity(), createActivity({rkey: 'other'})], {
+      groupBy: 'actor',
+      associatedRecords: createDocumentRecords(),
+    })
+    if (row.type !== 'group') throw new Error('Expected group')
+    row.group.indexedAt = '2026-09-09T05:00:00Z'
+    const screen = renderRow(row)
+    expect(
+      screen.getByLabelText(
+        `${sanitizeHandle('author.example', '@')} published · elapsed:2026-09-09T05:00:00Z`,
+      ),
+    ).toBeTruthy()
+  })
+
+  it.each(['card', 'footnote'])(
+    'omits missing media and renders actual covers for a %s',
+    kind => {
+      const row = documentRow(kind === 'card')
+      const screen = renderRow(row)
+      expect(screen.queryByTestId('atmosphereArticleCover')).toBeNull()
+      expect(screen.queryByTestId('atmosphereFootnoteThumbnail')).toBeNull()
+      screen.unmount()
+      row.associatedRecords[documentUri].record.coverImage = {
+        ref: {$link: 'bafycover'},
+        mimeType: 'image/jpeg',
+      }
+      const withCover = renderRow(row)
+      const image = withCover.getByTestId(
+        kind === 'card'
+          ? 'atmosphereArticleCover'
+          : 'atmosphereFootnoteThumbnail',
+      )
+      expect(image.props.source).toEqual({
+        uri: 'https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:author/bafycover@jpeg',
+      })
+    },
+  )
+
+  it.each([
+    '',
+    'javascript:alert(1)',
+    'at://did:plc:missing/site.standard.publication/site',
+  ])(
+    'degrades missing/unsafe site URL %s to a non-linked title without a card',
+    site => {
+      const row = documentRow(true)
+      row.associatedRecords[documentUri].record.site = site
+      const screen = renderRow(row)
+      expect(screen.getByText('An article')).toBeTruthy()
+      expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+      expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
+      expect(mockMenu).toHaveBeenCalledWith(
+        expect.objectContaining({
+          view: undefined,
+          author: row.actors['did:plc:author'],
         }),
+      )
+      expect(mockLink.mock.calls.map(([props]) => props.to)).toEqual([
+        '/profile/author.example',
+      ])
+    },
+  )
+
+  it('preserves long emoji/RTL titles and renders preview without reading-time metadata', () => {
+    const row = documentRow(true)
+    const title = 'مرحبا 🌌 '.repeat(30)
+    row.associatedRecords[documentUri].record.title = title
+    row.associatedRecords[documentUri].record.textContent = 'Actual preview'
+    const screen = renderRow(row)
+    expect(screen.getByText(title.trim())).toBeTruthy()
+    expect(screen.getByText('Actual preview')).toBeTruthy()
+    expect(screen.queryByText(/min read|last hour|214 follows/)).toBeNull()
+  })
+
+  it('does not fabricate a missing document author for recommendation cards', () => {
+    const row = recommendationRow(2)
+    delete row.actors['did:plc:author']
+    renderRow(row)
+    expect(mockMenu).toHaveBeenCalledWith(
+      expect.objectContaining({author: undefined}),
+    )
+    expect(
+      mockLink.mock.calls.some(
+        ([props]) => props.to === '/profile/author.example',
+      ),
+    ).toBe(false)
+  })
+
+  it('keeps one debug control per outer row with reachable original objects', () => {
+    const row = documentRow(true, [recommend('did:plc:one')])
+    row.associatedRecords.unrelated = createRecord('unrelated', {})
+    const log = jest.spyOn(console, 'log').mockImplementation()
+    const screen = renderRow(row)
+    expect(screen.getAllByTestId('atmosphereDebugButton')).toHaveLength(1)
+    fireEvent.press(screen.getByTestId('atmosphereDebugButton'))
+    const logged = log.mock.calls[0][0] as ActivityPresentationItem
+    expect(logged.associatedRecords[documentUri]).toBe(
+      row.associatedRecords[documentUri],
+    )
+    expect(logged.associatedRecords[publicationUri]).toBe(
+      row.associatedRecords[publicationUri],
+    )
+    expect(logged.actors['did:plc:one']).toBe(row.actors['did:plc:one'])
+    expect(logged.associatedRecords.unrelated).toBeUndefined()
+    log.mockRestore()
+  })
+})
+
+function subscriptionRow(count = 1) {
+  const activities = Array.from({length: count}, (_, i) =>
+    createActivity({
+      collection: activityCollections.subscription,
+      did: `did:plc:subscriber${i}`,
+    }),
+  )
+  const associatedRecords = createDocumentRecords()
+  for (const activity of activities)
+    associatedRecords[activity.record.uri] = createRecord(activity.record.uri, {
+      publication: publicationUri,
+    })
+  const row = createRow(activities, {associatedRecords})
+  if (row.type === 'group') row.group.subject = publicationUri
+  row.actors['did:plc:publisher'] = createActor('did:plc:publisher')
+  return row
+}
+
+describe('subscription social proof', () => {
+  it.each([1, 2, 3])(
+    'uses the configured default boundary with %s subscribers',
+    count => {
+      const screen = renderRow(subscriptionRow(count))
+      expect(Boolean(screen.queryByTestId('atmosphereSubscriptionCard'))).toBe(
+        count >= 2,
+      )
+      expect(Boolean(screen.queryByTestId('atmosphereFootnote'))).toBe(
+        count < 2,
+      )
+      expect(Boolean(screen.queryByTestId('publication-cta'))).toBe(count >= 2)
+      expect(screen.getByText('A publication')).toBeTruthy()
+      hasLink('https://publication.example/')
+      hasLink('/profile/subscriber0.example')
+      expect(mockMenu).toHaveBeenCalledWith(
+        expect.objectContaining({
+          testID: 'atmospherePublicationMenu',
+          author: expect.objectContaining({did: 'did:plc:publisher'}),
+        }),
+      )
+    },
+  )
+
+  it('uses an independent subscription threshold and ignores viewer subscription on interaction rows', () => {
+    atmospherePresentationConfig.subscriptionCardThreshold = 3
+    const screen = renderRow(subscriptionRow(2))
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    screen.unmount()
+    atmospherePresentationConfig.recommendationCardThreshold = 1
+    const single = subscriptionRow()
+    if (single.type !== 'activity') throw new Error('Expected activity')
+    single.activity.viewerState.subscribed = true
+    expect(
+      renderRow(single).queryByTestId('atmosphereSubscriptionCard'),
+    ).toBeNull()
+  })
+
+  it('counts only distinct usable subscribers and bounds their avatars', () => {
+    const row = subscriptionRow(8)
+    if (row.type !== 'group') throw new Error('Expected group')
+    row.group.items.push(row.group.items[0])
+    delete row.actors['did:plc:subscriber6']
+    row.actors['did:plc:subscriber7'].handle = 'handle.invalid'
+    const screen = renderRow(row)
+    expect(
+      screen.getByLabelText(
+        `${sanitizeHandle('subscriber0.example', '@')} and 5 others subscribed`,
+      ),
+    ).toBeTruthy()
+    expect(mockAvatarStack).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        size: 16,
+        profiles: [0, 1, 2, 3, 4].map(
+          i => row.actors[`did:plc:subscriber${i}`],
+        ),
       }),
+    )
+    for (const i of [1, 2, 3, 4, 5]) delete row.actors[`did:plc:subscriber${i}`]
+    screen.unmount()
+    const reduced = renderRow(row)
+    expect(reduced.queryByTestId('atmosphereSubscriptionCard')).toBeNull()
+    expect(reduced.queryByText(/others subscribed/)).toBeNull()
+  })
+
+  it('summarizes ten different-publication subscriptions by one actor with first title and remaining count', () => {
+    const activities = Array.from({length: 10}, (_, i) =>
+      createActivity({
+        collection: activityCollections.subscription,
+        rkey: String(i),
+      }),
+    )
+    const associatedRecords = createDocumentRecords()
+    for (const [i, activity] of activities.entries()) {
+      const target = `${publicationUri}-${i}`
+      associatedRecords[activity.record.uri] = createRecord(
+        activity.record.uri,
+        {publication: target},
+      )
+      associatedRecords[target] = createRecord(target, {
+        name: `Publication ${i}`,
+        url: `https://publication-${i}.example`,
+      })
+    }
+    const row = createRow(activities, {groupBy: 'actor', associatedRecords})
+    const screen = renderRow(row)
+    expect(screen.getByText(/^Publication 0/)).toBeTruthy()
+    expect(screen.getByText(/and 9 more publications/)).toBeTruthy()
+    expect(screen.queryByText('Publication 1')).toBeNull()
+    expect(screen.queryByTestId('atmosphereSubscriptionCard')).toBeNull()
+    expect(screen.queryByTestId('publication-cta')).toBeNull()
+    expect(screen.queryByText(/others subscribed/)).toBeNull()
+    expect(row.type === 'group' && row.group.items).toHaveLength(10)
+    screen.unmount()
+    delete row.associatedRecords[`${publicationUri}-0`]
+    const missingFirst = renderRow(row)
+    expect(missingFirst.getByText(/^Publication unavailable/)).toBeTruthy()
+    expect(missingFirst.queryByText('Publication 1')).toBeNull()
+  })
+
+  it.each([
+    '',
+    'javascript:alert(1)',
+    'at://did:plc:publisher/site.standard.publication/site',
+  ])('does not render a card or CTA for invalid publication URL %s', url => {
+    const row = subscriptionRow(2)
+    row.associatedRecords[publicationUri].record.url = url
+    const screen = renderRow(row)
+    expect(screen.getByText('A publication')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereSubscriptionCard')).toBeNull()
+    expect(mockSubscribeButton).not.toHaveBeenCalled()
+    expect(mockMenu).toHaveBeenCalledWith(
+      expect.objectContaining({
+        view: undefined,
+        author: row.actors['did:plc:publisher'],
+      }),
+    )
+    expect(
+      mockLink.mock.calls.every(([props]) =>
+        String(props.to).startsWith('/profile/'),
+      ),
+    ).toBe(true)
+  })
+
+  it('omits the menu when neither a publication URL nor author is available', () => {
+    const row = subscriptionRow(2)
+    row.associatedRecords[publicationUri].record.url = ''
+    delete row.actors['did:plc:publisher']
+    const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(mockMenu).not.toHaveBeenCalled()
+    expect(mockSubscribeButton).not.toHaveBeenCalled()
+  })
+
+  it('omits absent icons/author and preserves real icon blobs and long names', () => {
+    const row = subscriptionRow(2)
+    delete row.actors['did:plc:publisher']
+    const screen = renderRow(row)
+    expect(screen.queryByTestId('atmospherePublicationIcon')).toBeNull()
+    expect(screen.queryByText(/by @/)).toBeNull()
+    expect(mockMenu).toHaveBeenCalledWith(
+      expect.objectContaining({author: undefined}),
+    )
+    screen.unmount()
+    const name = 'مرحبا 🌐 '.repeat(30)
+    row.associatedRecords[publicationUri].record.name = name
+    row.associatedRecords[publicationUri].record.icon = {
+      ref: {$link: 'bafyicon'},
+      mimeType: 'image/png',
+    }
+    row.associatedRecords[publicationUri].record.description =
+      'Real description'
+    const withIcon = renderRow(row)
+    expect(withIcon.getByText(name.trim()).props.numberOfLines).toBe(3)
+    expect(withIcon.getByText('Real description')).toBeTruthy()
+    expect(
+      withIcon.getByTestId('atmospherePublicationIcon').props.source,
+    ).toEqual({
+      uri: 'https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:publisher/bafyicon@png',
+    })
+  })
+
+  it.each([
+    ['https://paul.leaflet.pub', 'Leaflet'],
+    ['https://writer.pckt.blog', 'pckt'],
+    ['https://offprint.app', 'Offprint'],
+    ['https://publication.example', undefined],
+    ['https://notleaflet.pub', undefined],
+    ['https://leaflet.pub.evil.example', undefined],
+  ])(
+    'passes the real external view to the existing contrast-safe CTA (%s)',
+    (url, publisher) => {
+      const row = subscriptionRow(2)
+      row.associatedRecords[publicationUri].record.url = url
+      row.associatedRecords[publicationUri].record.basicTheme = {
+        accent: {$type: 'site.standard.theme#rgb', r: 10, g: 20, b: 30},
+        accentForeground: {
+          $type: 'site.standard.theme#rgb',
+          r: 255,
+          g: 255,
+          b: 255,
+        },
+      }
+      renderRow(row)
+      const {view} = mockSubscribeButton.mock.calls[0][0]
+      expect(view.uri).toBe(`${url}/`)
+      expect(view.source?.uri).toBe(`${url}/`)
+      expect(view.source?.theme).toEqual(
+        expect.objectContaining({
+          accentRGB: {r: 10, g: 20, b: 30},
+          accentForegroundRGB: {r: 255, g: 255, b: 255},
+        }),
+      )
+      expect(matchStandardSitePublisher(view)?.name).toBe(publisher)
+      hasLink('/profile/publisher.example')
+      hasLink('/profile/subscriber0.example')
+    },
+  )
+})
+
+function shareRow(count = 1, recordWithMedia = false) {
+  const activities = Array.from({length: count}, (_, i) =>
+    createActivity({
+      collection: activityCollections.share,
+      did: `did:plc:sharer${i}`,
+    }),
+  )
+  const associatedRecords = createDocumentRecords()
+  for (const [i, activity] of activities.entries()) {
+    associatedRecords[activity.record.uri] = createRecord(activity.record.uri, {
+      ...createShareRecord(documentUri, recordWithMedia),
+      text: `Commentary ${i}`,
+    })
+  }
+  const row = createRow(activities, {associatedRecords})
+  row.actors['did:plc:author'] = createActor()
+  return row
+}
+
+describe('document share cards', () => {
+  it.each([false, true])(
+    'renders a standalone external share (record-with-media=%s)',
+    recordWithMedia => {
+      const row = shareRow(1, recordWithMedia)
+      const screen = renderRow(row)
+      expect(screen.getByTestId('atmosphereShareRow')).toBeTruthy()
+      expect(screen.getByTestId('atmosphereShareCard')).toBeTruthy()
+      expect(screen.getAllByText('An article')).toHaveLength(1)
+      expect(screen.getByText('Commentary 0')).toBeTruthy()
+      expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
+      expect(
+        screen.queryByTestId('atmosphereShareDocumentThumbnail'),
+      ).toBeNull()
+      hasLink('https://publication.example/')
+      hasLink('/profile/sharer0.example')
+      expect(mockMenu).toHaveBeenCalledWith(
+        expect.objectContaining({author: row.actors['did:plc:author']}),
+      )
+      expect(mockShareSnippets).toHaveBeenCalledWith(
+        expect.objectContaining({
+          associatedRecords: row.associatedRecords,
+          showActorMetadata: false,
+        }),
+      )
+      expect(
+        mockLink.mock.calls.some(([props]) =>
+          String(props.to).includes('quoted'),
+        ),
+      ).toBe(false)
+    },
+  )
+
+  it('keeps one preview and all same-document posts for the snippet expansion', () => {
+    const row = shareRow(5)
+    if (row.type !== 'group') throw new Error('Expected group')
+    const screen = renderRow(row)
+    expect(
+      screen.getAllByTestId('atmosphereShareDocumentPreview'),
+    ).toHaveLength(1)
+    expect(screen.getByLabelText(/and 4 others shared/)).toBeTruthy()
+    const props = mockShareSnippets.mock.calls[0][0]
+    expect(props.shares.map(share => share.activity)).toEqual(row.group.items)
+    expect(props.shares[0].activity).toBe(row.group.items[0])
+    expect(props.shares[0].actor).toBe(row.actors['did:plc:sharer0'])
+    expect(props.associatedRecords).toBe(row.associatedRecords)
+  })
+
+  it('counts unique people separately from their posts and ignores repeated post URIs', () => {
+    const row = shareRow(3)
+    if (row.type !== 'group') throw new Error('Expected group')
+    const repeatedActor = createActivity({
+      collection: activityCollections.share,
+      did: 'did:plc:sharer0',
+      rkey: 'second',
+    })
+    row.group.items[2] = repeatedActor
+    row.group.items.push(row.group.items[0])
+    row.associatedRecords[repeatedActor.record.uri] = createRecord(
+      repeatedActor.record.uri,
+      createShareRecord(),
+    )
+    const screen = renderRow(row)
+    expect(screen.getByLabelText(/and 1 other shared/)).toBeTruthy()
+    expect(screen.queryByLabelText(/and 2 others shared/)).toBeNull()
+    expect(mockShareSnippets.mock.calls[0][0].shares).toHaveLength(3)
+  })
+
+  it('excludes unavailable actors, invalid posts, different targets, and non-post source URIs from proof', () => {
+    const row = shareRow(5)
+    if (row.type !== 'group') throw new Error('Expected group')
+    delete row.actors['did:plc:sharer1']
+    row.associatedRecords[row.group.items[2].record.uri].record.text = 42
+    row.associatedRecords[row.group.items[3].record.uri].record =
+      createShareRecord(`${documentUri}-other`)
+    const wrongSource = row.group.items[4]
+    wrongSource.record.uri =
+      'at://did:plc:sharer4/site.standard.document/not-a-post'
+    row.associatedRecords[wrongSource.record.uri] = createRecord(
+      wrongSource.record.uri,
+      createShareRecord(),
+    )
+    const screen = renderRow(row)
+    expect(screen.queryByLabelText(/others shared/)).toBeNull()
+    expect(
+      mockShareSnippets.mock.calls[0][0].shares.map(share => share.activity),
+    ).toEqual([row.group.items[0]])
+  })
+
+  it('bounds different-subject actor groups to their first share and preview plus count', () => {
+    const first = createActivity({collection: activityCollections.share})
+    const second = createActivity({
+      collection: activityCollections.share,
+      rkey: 'second',
+    })
+    const records = createDocumentRecords()
+    records[first.record.uri] = createRecord(first.record.uri, {
+      ...createShareRecord(),
+      text: 'First commentary',
+    })
+    records[second.record.uri] = createRecord(second.record.uri, {
+      ...createShareRecord(`${documentUri}-other`),
+      text: 'Later commentary',
+    })
+    records[`${documentUri}-other`] = createRecord(`${documentUri}-other`, {
+      ...records[documentUri].record,
+      title: 'Later article',
+    })
+    const row = createRow([first, second], {
+      groupBy: 'actor',
+      associatedRecords: records,
+    })
+    const screen = renderRow(row)
+    expect(screen.getByText('First commentary')).toBeTruthy()
+    expect(screen.getByText('and 1 more post')).toBeTruthy()
+    expect(screen.queryByText('Later commentary')).toBeNull()
+    expect(screen.queryByText('Later article')).toBeNull()
+    expect(screen.queryByLabelText(/other shared/)).toBeNull()
+    expect(mockShareSnippets.mock.calls[0][0].shares).toHaveLength(1)
+    screen.unmount()
+    jest.clearAllMocks()
+    delete records[first.record.uri]
+    const unavailable = renderRow(row)
+    expect(unavailable.getByText(/^Post unavailable/)).toBeTruthy()
+    expect(unavailable.queryByText('Later commentary')).toBeNull()
+    expect(mockShareSnippets).not.toHaveBeenCalled()
+  })
+
+  it('retains a usable post without inventing an unavailable article or thumbnail', () => {
+    const row = shareRow()
+    delete row.associatedRecords[documentUri]
+    const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereShareCard')).toBeTruthy()
+    expect(screen.getByText('Article unavailable')).toBeTruthy()
+    expect(screen.getByText('Commentary 0')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereShareDocumentThumbnail')).toBeNull()
+    expect(
+      mockLink.mock.calls.every(([props]) =>
+        String(props.to).startsWith('/profile/'),
+      ),
+    ).toBe(true)
+  })
+
+  it('uses only actual document covers and does not link an unsafe article URL', () => {
+    const row = shareRow()
+    row.associatedRecords[documentUri].record.coverImage = {
+      ref: {$link: 'bafycover'},
+      mimeType: 'image/jpeg',
+    }
+    const screen = renderRow(row)
+    expect(
+      screen.getByTestId('atmosphereShareDocumentThumbnail').props.source,
+    ).toEqual({
+      uri: 'https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:author/bafycover@jpeg',
+    })
+    screen.unmount()
+    jest.clearAllMocks()
+    row.associatedRecords[publicationUri].record.url = 'javascript:alert(1)'
+    const unsafe = renderRow(row)
+    expect(unsafe.getByText('An article')).toBeTruthy()
+    expect(unsafe.queryByTestId('atmosphereShareDocumentThumbnail')).toBeNull()
+    expect(
+      mockLink.mock.calls.every(([props]) =>
+        String(props.to).startsWith('/profile/'),
+      ),
+    ).toBe(true)
+  })
+
+  it('keeps mixed recommendation and self-share proof inside one parent article', () => {
+    const share = createActivity({collection: activityCollections.share})
+    const row = documentRow(false, [
+      recommend('did:plc:author'),
+      recommend('did:plc:friend'),
+      share,
+    ])
+    const screen = renderRow(row)
+    expect(screen.getAllByTestId('atmosphereArticleCard')).toHaveLength(1)
+    expect(screen.queryByTestId('atmosphereShareCard')).toBeNull()
+    expect(screen.getByLabelText(/and 1 other recommended/)).toBeTruthy()
+    const props = mockShareSnippets.mock.calls[0][0]
+    expect(props.shares).toEqual([
+      {activity: share, actor: row.actors['did:plc:author']},
+    ])
+    expect(props.associatedRecords).toBe(row.associatedRecords)
+  })
+})
+
+describe('stream lifecycle treatments', () => {
+  function streamRow(fields: Record<string, unknown> = {}, count = 1) {
+    const activities = Array.from({length: count}, (_, i) =>
+      createActivity({
+        collection: activityCollections.livestream,
+        rkey: `stream${i}`,
+      }),
+    )
+    const associatedRecords = Object.fromEntries(
+      activities.map((activity, i) => [
+        activity.record.uri,
+        createRecord(activity.record.uri, {
+          $type: activityCollections.livestream,
+          title: i === 0 ? 'A real stream' : `Hidden stream ${i}`,
+          url: `https://stream.example/real${i}`,
+          createdAt: '2026-01-01T00:00:00Z',
+          ...fields,
+        }),
+      ]),
+    )
+    return createRow(activities, {associatedRecords, groupBy: 'actor'})
+  }
+
+  it('keeps stale no-end records active without claiming friends are watching', () => {
+    const row = streamRow({
+      lastSeenAt: '2026-01-01T00:00:01Z',
+      idleTimeoutSeconds: 300,
+    })
+    const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereActiveLivestream')).toBeTruthy()
+    expect(screen.getByText('LIVE NOW')).toBeTruthy()
+    expect(screen.getByLabelText(/author.example.*streaming/)).toBeTruthy()
+    expect(screen.getByText('elapsed:2026-09-10T12:00:00.000Z')).toBeTruthy()
+    expect(screen.queryByText(/watching|friends|replay/i)).toBeNull()
+    expect(mockAvatarStack).not.toHaveBeenCalled()
+    expect(mockMenu).not.toHaveBeenCalled()
+    hasLink('https://stream.example/real0')
+    hasLink('/profile/author.example')
+  })
+
+  it('uses raw lifecycle duration but outer indexed time for an ended footnote', () => {
+    const row = streamRow({endedAt: '2026-01-01T00:48:59Z'})
+    const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereEndedLivestream')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.getByText('A real stream')).toBeTruthy()
+    expect(
+      screen.getByLabelText(
+        /streamed for 48 min.*elapsed:2026-09-10T12:00:00.000Z/,
+      ),
+    ).toBeTruthy()
+    expect(screen.queryByText('LIVE NOW')).toBeNull()
+    hasLink('https://stream.example/real0')
+  })
+
+  it.each(['', 'not a date', '2025-12-31T00:00:00Z'])(
+    'keeps a present end value %s ended without an invalid duration',
+    endedAt => {
+      const screen = renderRow(streamRow({endedAt}))
+      expect(screen.getByTestId('atmosphereEndedLivestream')).toBeTruthy()
+      expect(screen.getByLabelText(/streamed · elapsed:/)).toBeTruthy()
+      expect(screen.queryByLabelText(/streamed for|NaN|Infinity/)).toBeNull()
+    },
+  )
+
+  it('updates duration units when the locale changes', () => {
+    const screen = renderRow(streamRow({endedAt: '2026-01-01T00:48:00Z'}))
+    expect(screen.getByLabelText(/streamed for 48 min/)).toBeTruthy()
+    try {
+      act(() => i18n.loadAndActivate({locale: 'fr', messages: {}}))
+      const duration = i18n.number(48, {
+        style: 'unit',
+        unit: 'minute',
+        unitDisplay: 'short',
+      })
+      expect(
+        screen.getByLabelText(/streamed for/).props.accessibilityLabel,
+      ).toContain(`streamed for ${duration}`)
+    } finally {
+      act(() => i18n.activate('en'))
+    }
+  })
+
+  it('uses seconds below a minute, including a real zero duration', () => {
+    const screen = renderRow(streamRow({endedAt: '2026-01-01T00:00:00Z'}))
+    expect(screen.getByLabelText(/streamed for 0 sec/)).toBeTruthy()
+  })
+
+  it('bounds thirteen ended streams to the first title, count, and first duration', () => {
+    const row = streamRow({endedAt: '2026-01-01T01:53:10Z'}, 13)
+    if (row.type !== 'group') throw new Error('Expected group')
+    row.group.indexedAt = '2026-09-11T09:00:00Z'
+    for (const child of row.group.items) {
+      child.view = {
+        $type: 'eric.bsky.atmosphere.getActivity#livestreamView',
+        thumb: 'https://cdn.example/real',
+      }
+    }
+    const screen = renderRow(row)
+    expect(screen.getAllByTestId('atmosphereFootnote')).toHaveLength(1)
+    expect(
+      screen.getByText(/A real stream and 12 more livestreams/),
+    ).toBeTruthy()
+    expect(
+      screen.getByLabelText(
+        /streamed \(first stream: 113 min\).*elapsed:2026-09-11T09:00:00Z/,
+      ),
+    ).toBeTruthy()
+    expect(screen.queryByText(/Hidden stream/)).toBeNull()
+    expect(screen.queryByTestId('atmosphereLivestreamThumbnail')).toBeNull()
+    expect(row.group.items).toHaveLength(13)
+    expect(Object.keys(row.associatedRecords)).toHaveLength(13)
+  })
+
+  it('does not substitute later group content when the first record is missing', () => {
+    const row = streamRow({endedAt: '2026-01-01T00:02:00Z'}, 2)
+    if (row.type !== 'group') throw new Error('Expected group')
+    delete row.associatedRecords[row.group.items[0].record.uri]
+    const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereUnavailableLivestream')).toBeTruthy()
+    expect(
+      screen.getByText(/Livestream unavailable and 1 more livestream/),
+    ).toBeTruthy()
+    expect(screen.queryByText(/Hidden stream/)).toBeNull()
+    expect(mockLink.mock.calls.map(([props]) => props.to)).not.toContain(
+      'https://stream.example/real1',
     )
   })
 
-  it('uses target-author following to choose compact or title-only standalone recommendation presentation', () => {
-    const actorDid = 'did:plc:recommender-body'
-    const documentAuthorDid = 'did:plc:document-author'
-    const rootUri = `at://${actorDid}/${activityCollections.recommendation}/1`
-    const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/1`
-    const row = buildActivityRow({
-      collection: activityCollections.recommendation,
-      actorDid,
-      subscribed: false,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'recommender-body.test'),
-        [documentAuthorDid]: buildActor(
-          documentAuthorDid,
-          'document-author.test',
-        ),
-      },
-      associatedRecords: {
-        [rootUri]: buildAssociatedRecord(rootUri, {
-          $type: activityCollections.recommendation,
-          document: documentUri,
-          createdAt: '2026-09-09T00:00:00.000Z',
-        }),
-        [documentUri]: buildAssociatedRecord(documentUri, {
-          $type: activityCollections.document,
-          site: 'https://example.com',
-          path: '/essay',
-          title: 'Referenced essay',
-          publishedAt: '2026-09-09T00:00:00.000Z',
-        }),
-      },
-      rkey: '1',
-    })
-
-    const followedRow: ActivityRowItem = {
-      ...row,
-      key: `${row.key}-followed`,
-      actors: {
-        ...row.actors,
-        [documentAuthorDid]: buildActor(
-          documentAuthorDid,
-          'document-author.test',
-          'at://did:plc:viewer/app.bsky.graph.follow/document-author',
-        ),
-      },
-    }
-    const unfollowedScreen = renderRow(row)
-    const followedScreen = renderRow(followedRow)
-
-    expect(
-      unfollowedScreen.queryByTestId('full-document-Referenced essay'),
-    ).toBeNull()
-    expect(
-      unfollowedScreen.queryByTestId('compact-document-Referenced essay'),
-    ).toBeNull()
-    expect(
-      unfollowedScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(
-      followedScreen.getByTestId('compact-document-Referenced essay'),
-    ).toBeTruthy()
-    expect(
-      followedScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article`,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(
-      followedScreen.queryByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('recommender-body.test')} recommended ${handleLabel('document-author.test')}’s article “Referenced essay”`,
-        ),
-      ),
-    ).toBeNull()
-    expect(followedScreen.getByText('Referenced essay')).toBeTruthy()
-    expect(mockStandardSiteEmbed).not.toHaveBeenCalled()
-    expect(mockStandardSiteCompactDocumentCard).toHaveBeenCalledWith(
-      expect.objectContaining({
-        view: expect.objectContaining({
-          title: 'Referenced essay',
-          uri: 'https://example.com/essay',
-        }),
-      }),
-    )
-  })
-
-  it('renders one full article card only for multi-person recommendation subject groups', () => {
-    const documentAuthorDid = 'did:plc:shared-author'
-    const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/shared`
-    const subjectGroup = buildSubjectGroupRow({
-      collection: activityCollections.recommendation,
-      subject: documentUri,
-      actorDids: ['did:plc:alpha', 'did:plc:beta'],
-      actors: {
-        'did:plc:alpha': buildActor('did:plc:alpha', 'alpha.test'),
-        'did:plc:beta': buildActor('did:plc:beta', 'beta.test'),
-        [documentAuthorDid]: buildActor(
-          documentAuthorDid,
-          'shared-author.test',
-        ),
-      },
-      associatedRecords: {
-        [documentUri]: buildAssociatedRecord(documentUri, {
-          $type: activityCollections.document,
-          site: 'https://example.com',
-          path: '/shared',
-          title: 'Shared article',
-          publishedAt: '2026-09-09T00:00:00.000Z',
-        }),
-      },
-    })
-    const fallbackRootUri = `at://did:plc:alpha/${activityCollections.recommendation}/1`
-    const fallbackSubjectGroup: ActivityGroupRowItem = {
-      ...subjectGroup,
-      key: 'recommendation-subject-group-fallback',
-      group: {
-        ...subjectGroup.group,
-        id: 'recommendation-subject-group-fallback',
-        subject: undefined,
-      },
-      associatedRecords: {
-        ...subjectGroup.associatedRecords,
-        [fallbackRootUri]: buildAssociatedRecord(fallbackRootUri, {
-          $type: activityCollections.recommendation,
-          document: documentUri,
-          createdAt: '2026-09-09T00:00:00.000Z',
-        }),
-      },
-    }
-    const oneChildSubjectGroup = buildSubjectGroupRow({
-      collection: activityCollections.recommendation,
-      subject: documentUri,
-      actorDids: ['did:plc:alpha'],
-      actors: {
-        'did:plc:alpha': buildActor('did:plc:alpha', 'alpha.test'),
-        [documentAuthorDid]: buildActor(
-          documentAuthorDid,
-          'shared-author.test',
-        ),
-      },
-      associatedRecords: {
-        [documentUri]: buildAssociatedRecord(documentUri, {
-          $type: activityCollections.document,
-          site: 'https://example.com',
-          path: '/shared',
-          title: 'Shared article',
-          publishedAt: '2026-09-09T00:00:00.000Z',
-        }),
-      },
-    })
-    const followedOneChildSubjectGroup: ActivityGroupRowItem = {
-      ...oneChildSubjectGroup,
-      key: 'recommendation-subject-group-followed',
-      actors: {
-        ...oneChildSubjectGroup.actors,
-        [documentAuthorDid]: buildActor(
-          documentAuthorDid,
-          'shared-author.test',
-          'at://did:plc:viewer/app.bsky.graph.follow/shared-author',
-        ),
-      },
-    }
-    const actorGroup = buildActorGroupRow({
-      collection: activityCollections.recommendation,
-      actorDid: 'did:plc:recommender',
-      count: 2,
-      actors: {
-        'did:plc:recommender': buildActor(
-          'did:plc:recommender',
-          'recommender.test',
-        ),
-      },
-    })
-
-    const subjectGroupScreen = renderRow(subjectGroup)
-    const fallbackSubjectGroupScreen = renderRow(fallbackSubjectGroup)
-    const oneChildSubjectGroupScreen = renderRow(oneChildSubjectGroup)
-    const followedOneChildSubjectGroupScreen = renderRow(
-      followedOneChildSubjectGroup,
-    )
-    const actorGroupScreen = renderRow(actorGroup)
-
-    expect(
-      subjectGroupScreen.getByTestId('full-document-Shared article'),
-    ).toBeTruthy()
-    expect(
-      fallbackSubjectGroupScreen.getByTestId('full-document-Shared article'),
-    ).toBeTruthy()
-    expect(
-      oneChildSubjectGroupScreen.queryByTestId('full-document-Shared article'),
-    ).toBeNull()
-    expect(
-      oneChildSubjectGroupScreen.queryByTestId(
-        'compact-document-Shared article',
-      ),
-    ).toBeNull()
-    expect(
-      followedOneChildSubjectGroupScreen.getByTestId(
-        'compact-document-Shared article',
-      ),
-    ).toBeTruthy()
-    expect(
-      actorGroupScreen.queryByTestId('full-document-Shared article'),
-    ).toBeNull()
-    expect(
-      actorGroupScreen.queryByTestId('compact-document-Shared article'),
-    ).toBeNull()
-    expect(
-      actorGroupScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('recommender.test')} recommended 2 articles`,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(mockStandardSiteEmbed).toHaveBeenCalledTimes(2)
-    expect(mockStandardSiteCompactDocumentCard).toHaveBeenCalledWith(
-      expect.objectContaining({
-        view: expect.objectContaining({
-          title: 'Shared article',
-          uri: 'https://example.com/shared',
-        }),
-      }),
-    )
-    expect(mockStandardSiteEmbed).toHaveBeenCalledWith(
-      expect.objectContaining({
-        view: expect.objectContaining({
-          title: 'Shared article',
-          uri: 'https://example.com/shared',
-        }),
-      }),
-    )
-  })
-
-  it('renders inline header timestamps from standalone and group indexedAt values', () => {
-    const standaloneTimestamp = '2026-09-09T03:00:00.000Z'
-    const groupTimestamp = '2026-09-09T04:00:00.000Z'
-    const row = buildActivityRow({
-      collection: activityCollections.document,
-      actorDid: 'did:plc:footer-standalone',
-      indexedAt: standaloneTimestamp,
-      actors: {
-        'did:plc:footer-standalone': buildActor(
-          'did:plc:footer-standalone',
-          'footer-standalone.test',
-        ),
-      },
-    })
-    const group = buildActorGroupRow({
-      collection: activityCollections.document,
-      actorDid: 'did:plc:footer-group',
-      count: 2,
-      groupIndexedAt: groupTimestamp,
-      itemIndexedAt: '2026-09-09T05:00:00.000Z',
-      actors: {
-        'did:plc:footer-group': buildActor(
-          'did:plc:footer-group',
-          'footer-group.test',
-        ),
-      },
-    })
-
-    const standaloneScreen = renderRow(row)
-    const groupScreen = renderRow(group)
-
-    expect(
-      standaloneScreen.getByText(` · elapsed:${standaloneTimestamp}`),
-    ).toBeTruthy()
-    expect(groupScreen.getByText(` · elapsed:${groupTimestamp}`)).toBeTruthy()
-    expect(
-      standaloneScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('footer-standalone.test')} published an article`,
-          standaloneTimestamp,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(
-      groupScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('footer-group.test')} published 2 articles`,
-          groupTimestamp,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(mockTimeElapsed.mock.calls).toEqual([
-      [{timestamp: standaloneTimestamp}],
-      [{timestamp: groupTimestamp}],
+  it.each([
+    undefined,
+    '',
+    'javascript:alert(1)',
+    'https://user:pass@stream.example/',
+  ])('omits unavailable or unsafe stream URL %s without a dead menu', url => {
+    const screen = renderRow(streamRow({title: ' ', url}))
+    expect(screen.getByText('Livestream')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereLivestreamTitle')).toBeNull()
+    expect(mockMenu).not.toHaveBeenCalled()
+    expect(mockLink.mock.calls.map(([props]) => props.to)).toEqual([
+      '/profile/author.example',
     ])
   })
 
-  it('renders actor groups with one actor, no others phrase, and pluralized action from group.items.length', () => {
-    const actorDid = 'did:plc:pub-owner'
-    const row = buildActorGroupRow({
-      collection: activityCollections.publication,
-      actorDid,
-      count: 2,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'pub-owner.test'),
-      },
-    })
+  it('preserves emoji and RTL titles without truncating the underlying string', () => {
+    const title = '🎥 مرحباً بالعالم '.repeat(30)
+    const screen = renderRow(streamRow({title}))
+    expect(screen.getByText(title.trim()).props.numberOfLines).toBe(3)
+    expect(screen.getByTestId('atmosphereLivestreamTitle').props.label).toBe(
+      title.trim(),
+    )
+  })
 
-    const screen = renderRow(row)
+  it('handles malformed optional fields as unavailable content', () => {
+    const screen = renderRow(streamRow({title: {invalid: true}}))
+    expect(screen.getByTestId('atmosphereUnavailableLivestream')).toBeTruthy()
+    expect(screen.queryByText('LIVE NOW')).toBeNull()
+  })
+})
 
-    expect(screen.getByTestId('atmospherePublicationRow')).toBeTruthy()
-    expect(
-      screen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('pub-owner.test')} created 2 publications`,
-        ),
+describe('photo cards and shared media integration', () => {
+  function photoRow(count = 1) {
+    const activities = Array.from({length: count}, (_, i) =>
+      createActivity({
+        collection: activityCollections.grainPhoto,
+        rkey: `photo${i}`,
+      }),
+    )
+    return createRow(activities, {
+      groupBy: 'actor',
+      associatedRecords: Object.fromEntries(
+        activities.map((activity, i) => [
+          activity.record.uri,
+          createRecord(activity.record.uri, {
+            photo: {ref: {$link: recordCid}, mimeType: 'image/jpeg'},
+            alt: `Photo ${i}`,
+            aspectRatio: {width: 2, height: 3},
+          }),
+        ]),
       ),
+    })
+  }
+
+  function imageRef() {
+    return Object.assign(
+      () => {
+        throw new Error('Test image ref should not be invoked')
+      },
+      {current: null, observe: () => () => {}},
+    )
+  }
+
+  it('uses the existing constrained single-image surface and real lightbox fields', () => {
+    const screen = renderRow(photoRow())
+    expect(screen.getByTestId('atmospherePhotoCard')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereSinglePhoto')).toBeTruthy()
+    expect(screen.queryByTestId('atmospherePhotoGallery')).toBeNull()
+    expect(screen.getByLabelText(/posted a photo/)).toBeTruthy()
+    const props = mockAutoSizedImage.mock.calls[0][0]
+    expect(props.crop).toBe('constrained')
+    const ref = imageRef(),
+      dims = {width: 400, height: 600}
+    props.onPress?.(ref, dims)
+    const lightbox = mockOpenLightbox.mock.calls[0][0]
+    expect(lightbox.index).toBe(0)
+    expect(lightbox.metricsContext).toBeUndefined()
+    expect(lightbox.images).toEqual([
+      {
+        uri: props.image.fullsize,
+        thumbUri: props.image.thumb,
+        alt: 'Photo 0',
+        dimensions: {width: 2, height: 3},
+        thumbRect: null,
+        thumbRef: ref,
+        thumbDimensions: dims,
+        thumbBorderRadius: 12,
+        type: 'image',
+      },
+    ])
+    expect(mockGallery).not.toHaveBeenCalled()
+    expect(mockMenu).not.toHaveBeenCalled()
+  })
+
+  it('uses the captured single-image ref and dimensions for a context-menu preview', () => {
+    renderRow(photoRow())
+    const image = mockAutoSizedImage.mock.calls[0][0],
+      menu = mockImageContextMenu.mock.calls[0][0]
+    menu.onPreviewPress?.()
+    expect(mockOpenLightbox).not.toHaveBeenCalled()
+    const ref = imageRef(),
+      dims = {width: 600, height: 900}
+    image.onContainerRef?.(ref)
+    image.onDimsChange?.(dims)
+    menu.onPreviewPress?.()
+    expect(mockOpenLightbox.mock.calls[0][0].images[0]).toEqual(
+      expect.objectContaining({thumbRef: ref, thumbDimensions: dims}),
+    )
+    expect(menu.fullsizeUri).toBe(image.image.fullsize)
+  })
+
+  it('caps an 87-photo group at ten in Gallery and lightbox without changing raw counts', () => {
+    const row = photoRow(87)
+    if (row.type !== 'group') throw new Error('Expected group')
+    row.group.indexedAt = '2026-09-11T09:00:00Z'
+    const screen = renderRow(row)
+    expect(screen.getAllByTestId('gallery')).toHaveLength(1)
+    expect(
+      screen.getByLabelText(/posted 87 photos.*elapsed:2026-09-11T09:00:00Z/),
     ).toBeTruthy()
-    expect(screen.queryByText(/and .*others/)).toBeNull()
-    expect(mockAvatarStack).toHaveBeenLastCalledWith(
+    const props = mockGallery.mock.calls[0][0]
+    expect(props.images).toHaveLength(10)
+    expect(props.images.map(image => image.alt)).toEqual(
+      Array.from({length: 10}, (_, i) => `Photo ${i}`),
+    )
+    expect(Object.keys(props).sort()).toEqual(['images', 'onPress'])
+    props.onPress?.(9, [], [])
+    const lightbox = mockOpenLightbox.mock.calls[0][0]
+    expect(lightbox.images).toHaveLength(10)
+    expect(lightbox.index).toBe(9)
+    expect(lightbox.images[9].alt).toBe('Photo 9')
+    expect(lightbox.metricsContext).toBeUndefined()
+    expect(mockAutoSizedImage).not.toHaveBeenCalled()
+    expect(row.group.items).toHaveLength(87)
+    expect(Object.keys(row.associatedRecords)).toHaveLength(87)
+  })
+
+  it('compacts skipped images before selecting a lightbox index', () => {
+    const row = photoRow(3)
+    if (row.type !== 'group') throw new Error('Expected group')
+    const badUri = row.group.items[1].record.uri
+    row.associatedRecords[badUri] = createRecord(badUri, {
+      photo: {ref: 'bad', mimeType: 'image/jpeg'},
+    })
+    const screen = renderRow(row)
+    expect(screen.getByLabelText(/posted 3 photos/)).toBeTruthy()
+    const gallery = mockGallery.mock.calls[0][0]
+    expect(gallery.images.map(image => image.alt)).toEqual([
+      'Photo 0',
+      'Photo 2',
+    ])
+    const firstRef = imageRef(),
+      secondRef = imageRef(),
+      dims = {width: 600, height: 900}
+    gallery.onPress?.(1, [firstRef, secondRef], [null, dims])
+    const lightbox = mockOpenLightbox.mock.calls[0][0]
+    expect(lightbox.index).toBe(1)
+    expect(lightbox.images.map(image => image.alt)).toEqual([
+      'Photo 0',
+      'Photo 2',
+    ])
+    expect(lightbox.images[1].thumbRef).toBe(secondRef)
+    expect(lightbox.images[1].thumbDimensions).toBe(dims)
+    expect(lightbox.images[0].thumbRef).toBe(firstRef)
+    expect(lightbox.metricsContext).toBeUndefined()
+    expect(row.group.items).toHaveLength(3)
+  })
+
+  it('aligns the selected-only ref from Gallery screen-reader mode', () => {
+    renderRow(photoRow(2))
+    const ref = imageRef(),
+      dims = {width: 600, height: 900}
+    mockGallery.mock.calls[0][0].onPress?.(1, [ref], [dims])
+    const lightbox = mockOpenLightbox.mock.calls[0][0]
+    expect(lightbox.index).toBe(1)
+    expect(lightbox.images[0].thumbRef).toBeNull()
+    expect(lightbox.images[0].thumbDimensions).toBeNull()
+    expect(lightbox.images[1].thumbRef).toBe(ref)
+    expect(lightbox.images[1].thumbDimensions).toBe(dims)
+  })
+
+  it('keeps a surviving image as a singleton without changing the raw group count', () => {
+    const row = photoRow(3)
+    if (row.type !== 'group') throw new Error('Expected group')
+    delete row.associatedRecords[row.group.items[0].record.uri]
+    delete row.associatedRecords[row.group.items[2].record.uri]
+    const screen = renderRow(row)
+    expect(screen.getByTestId('atmosphereSinglePhoto')).toBeTruthy()
+    expect(screen.getByLabelText(/posted 3 photos/)).toBeTruthy()
+    const image = mockAutoSizedImage.mock.calls[0][0]
+    expect(image.image.alt).toBe('Photo 1')
+    image.onPress?.(imageRef(), null)
+    expect(mockOpenLightbox.mock.calls[0][0].index).toBe(0)
+    expect(mockGallery).not.toHaveBeenCalled()
+  })
+
+  it('renders no media frame or empty card when all images are missing', () => {
+    const row = photoRow(2)
+    row.associatedRecords = {}
+    const screen = renderRow(row)
+    expect(screen.getByText('Photos unavailable')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
+    expect(screen.queryByTestId('atmospherePhotoCard')).toBeNull()
+    expect(mockGallery).not.toHaveBeenCalled()
+    expect(mockAutoSizedImage).not.toHaveBeenCalled()
+  })
+
+  it('keeps alt text as media metadata, not a visible caption', () => {
+    const row = photoRow()
+    if (row.type !== 'activity') throw new Error('Expected activity')
+    const alt = '🌇 وصف الصورة - actual alt, not a caption'
+    row.associatedRecords[row.activity.record.uri].record.alt = alt
+    const screen = renderRow(row)
+    expect(mockAutoSizedImage.mock.calls[0][0].image.alt).toBe(alt)
+    expect(screen.queryByText(alt)).toBeNull()
+  })
+})
+
+describe('collection dispatch and retained media boundaries', () => {
+  it.each([
+    [activityCollections.document, 'atmosphereDocumentRow'],
+    [activityCollections.recommendation, 'atmosphereRecommendationRow'],
+    [activityCollections.publication, 'atmospherePublicationRow'],
+    [activityCollections.subscription, 'atmosphereSubscriptionRow'],
+    [activityCollections.livestream, 'atmosphereLivestreamRow'],
+    [activityCollections.grainPhoto, 'atmosphereGrainPhotoRow'],
+    [activityCollections.share, 'atmosphereShareRow'],
+    ['example.unknown', 'atmosphereUnknownRow'],
+  ])('dispatches from API collection %s', (collection, testID) => {
+    const activity = createActivity({collection})
+    activity.record.uri = documentUri
+    expect(renderRow(createRow([activity])).getByTestId(testID)).toBeTruthy()
+  })
+
+  it('keeps publication-root bodies and actor-group counts', () => {
+    const first = createActivity({
+      collection: activityCollections.publication,
+      did: 'did:plc:publisher',
+      rkey: 'site',
+    })
+    const second = createActivity({
+      collection: activityCollections.publication,
+      did: 'did:plc:publisher',
+      rkey: 'other',
+    })
+    const screen = renderRow(
+      createRow([first, second], {
+        groupBy: 'actor',
+        associatedRecords: createDocumentRecords(),
+      }),
+    )
+    expect(screen.getByTestId('publication-card')).toBeTruthy()
+    expect(screen.getByLabelText(/created 2 publications/)).toBeTruthy()
+    expect(mockPublicationCard).toHaveBeenCalledWith(
       expect.objectContaining({
-        size: ACTIVITY_ROW_AVATAR_SIZE,
-        profiles: [expect.objectContaining({did: actorDid})],
+        view: expect.objectContaining({uri: 'https://publication.example/'}),
       }),
     )
   })
 
-  it('renders Grain photos in API order using their recorded aspect ratios', () => {
-    const actorDid = 'did:plc:grain-photographer'
-    const firstUri = `at://${actorDid}/${activityCollections.grainPhoto}/1`
-    const secondUri = `at://${actorDid}/${activityCollections.grainPhoto}/2`
-    const row = buildActorGroupRow({
-      collection: activityCollections.grainPhoto,
-      actorDid,
-      count: 2,
-      actors: {
-        [actorDid]: buildActor(actorDid, 'grain-photographer.test'),
-      },
-      associatedRecords: {
-        [firstUri]: buildAssociatedRecord(firstUri, {
-          $type: activityCollections.grainPhoto,
-          alt: 'Wide field of flowers',
-          photo: {
-            ref: {$link: 'bafywidephoto'},
-            mimeType: 'image/jpeg',
-          },
-          aspectRatio: {width: 3, height: 2},
+  it('keeps Grain image ordering, aspect ratios, and real alt text', () => {
+    const activities = [
+      createActivity({collection: activityCollections.grainPhoto}),
+      createActivity({
+        collection: activityCollections.grainPhoto,
+        rkey: 'second',
+      }),
+    ]
+    const associatedRecords = Object.fromEntries(
+      activities.map((activity, i) => [
+        activity.record.uri,
+        createRecord(activity.record.uri, {
+          photo: {ref: {$link: recordCid}, mimeType: 'image/jpeg'},
+          alt: `Photo ${i}`,
+          aspectRatio: {width: i + 2, height: 2},
         }),
-        [secondUri]: buildAssociatedRecord(secondUri, {
-          $type: activityCollections.grainPhoto,
-          alt: 'Tall stone arch',
-          photo: {
-            ref: {$link: 'bafytallphoto'},
-            mimeType: 'image/png',
-          },
-          aspectRatio: {width: 4, height: 5},
-        }),
-      },
-    })
-
-    const screen = renderRow(row)
-    const photos = screen.getAllByTestId('atmosphereGrainPhotoImage')
-
-    expect(photos).toHaveLength(2)
-    expect(photos[0].props.source).toEqual({
-      uri: `https://cdn.bsky.app/img/feed_fullsize/plain/${actorDid}/bafywidephoto@jpeg`,
-    })
-    expect(photos[0].props.style).toEqual(
-      expect.arrayContaining([expect.objectContaining({aspectRatio: 3 / 2})]),
-    )
-    expect(photos[0].props.accessibilityLabel).toBe('Wide field of flowers')
-    expect(photos[1].props.source).toEqual({
-      uri: `https://cdn.bsky.app/img/feed_fullsize/plain/${actorDid}/bafytallphoto@png`,
-    })
-    expect(photos[1].props.style).toEqual(
-      expect.arrayContaining([expect.objectContaining({aspectRatio: 4 / 5})]),
-    )
-    expect(photos[1].props.accessibilityLabel).toBe('Tall stone arch')
-  })
-
-  it('renders only appview-provided livestream thumbnails at up to 200px wide', () => {
-    const actorDid = 'did:plc:thumbnail-streamer'
-    const rootUri = `at://${actorDid}/${activityCollections.livestream}/live`
-    const row = buildActivityRow({
-      collection: activityCollections.livestream,
-      actorDid,
-      rkey: 'live',
-      actors: {
-        [actorDid]: buildActor(actorDid, 'thumbnail-streamer.test'),
-      },
-      associatedRecords: {
-        [rootUri]: buildAssociatedRecord(rootUri, {
-          $type: activityCollections.livestream,
-          title: 'Building in public',
-          thumb: {
-            ref: {$link: 'bafy-raw-thumb'},
-            mimeType: 'image/jpeg',
-          },
-          createdAt: '2026-09-11T00:00:00.000Z',
-        }),
-      },
-    })
-    row.activity.view = {
-      $type: 'eric.bsky.atmosphere.getActivity#livestreamView',
-      thumb:
-        'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:thumbnail-streamer/bafy-view-thumb',
-    }
-    const withoutThumbnail = {
-      ...row,
-      key: `${row.key}-without-thumbnail`,
-      activity: {
-        ...row.activity,
-        view: {
-          $type: 'eric.bsky.atmosphere.getActivity#livestreamView' as const,
-        },
-      },
-    }
-
-    const screen = renderRow(row)
-    const thumbnail = screen.getByTestId('atmosphereLivestreamThumbnail')
-    const screenWithoutThumbnail = renderRow(withoutThumbnail)
-
-    expect(thumbnail.props.source).toEqual({
-      uri: 'https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:thumbnail-streamer/bafy-view-thumb',
-    })
-    expect(thumbnail.props.style).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({aspectRatio: 16 / 9, maxWidth: 200}),
       ]),
     )
-    expect(thumbnail.props.accessibilityLabel).toBe('Building in public')
-    expect(
-      screenWithoutThumbnail.queryByTestId('atmosphereLivestreamThumbnail'),
-    ).toBeNull()
-  })
-
-  it.each<{
-    collection: KnownActivityCollection
-    testID: string
-    build: () => ActivityPresentationItem
-    label: string
-  }>([
-    {
-      collection: activityCollections.document,
-      testID: 'atmosphereDocumentRow',
-      build: () =>
-        buildActivityRow({
-          collection: activityCollections.document,
-          actorDid: 'did:plc:doc-author',
-          actors: {
-            'did:plc:doc-author': buildActor(
-              'did:plc:doc-author',
-              'doc-author.test',
-            ),
-          },
-        }),
-      label: `${handleLabel('doc-author.test')} published an article`,
-    },
-    {
-      collection: activityCollections.publication,
-      testID: 'atmospherePublicationRow',
-      build: () =>
-        buildActivityRow({
-          collection: activityCollections.publication,
-          actorDid: 'did:plc:publication-author',
-          actors: {
-            'did:plc:publication-author': buildActor(
-              'did:plc:publication-author',
-              'publication-author.test',
-            ),
-          },
-        }),
-      label: `${handleLabel('publication-author.test')} created a publication`,
-    },
-    {
-      collection: activityCollections.recommendation,
-      testID: 'atmosphereRecommendationRow',
-      build: () => {
-        const actorDid = 'did:plc:recommender'
-        const documentAuthorDid = 'did:plc:recommendation-target'
-        const rootUri = `at://${actorDid}/${activityCollections.recommendation}/1`
-        const documentUri = `at://${documentAuthorDid}/${activityCollections.document}/1`
-        return buildActivityRow({
-          collection: activityCollections.recommendation,
-          actorDid,
-          actors: {
-            [actorDid]: buildActor(actorDid, 'recommender.test'),
-            [documentAuthorDid]: buildActor(documentAuthorDid, 'target.test'),
-          },
-          associatedRecords: {
-            [rootUri]: buildAssociatedRecord(rootUri, {
-              $type: activityCollections.recommendation,
-              document: documentUri,
-              createdAt: '2026-09-09T00:00:00.000Z',
-            }),
-            [documentUri]: buildAssociatedRecord(documentUri, {
-              $type: activityCollections.document,
-              site: 'https://example.com',
-              title: 'Article tide',
-              publishedAt: '2026-09-09T00:00:00.000Z',
-            }),
-          },
-          rkey: '1',
-        })
-      },
-      label: `${handleLabel('recommender.test')} recommended ${handleLabel('target.test')}’s article “Article tide”`,
-    },
-    {
-      collection: activityCollections.subscription,
-      testID: 'atmosphereSubscriptionRow',
-      build: () => {
-        const actorDid = 'did:plc:subscriber'
-        const rootUri = `at://${actorDid}/${activityCollections.subscription}/1`
-        const publicationUri = `at://did:plc:publication/${activityCollections.publication}/1`
-        return buildActivityRow({
-          collection: activityCollections.subscription,
-          actorDid,
-          actors: {
-            [actorDid]: buildActor(actorDid, 'subscriber.test'),
-          },
-          associatedRecords: {
-            [rootUri]: buildAssociatedRecord(rootUri, {
-              $type: activityCollections.subscription,
-              publication: publicationUri,
-              createdAt: '2026-09-09T00:00:00.000Z',
-            }),
-            [publicationUri]: buildAssociatedRecord(publicationUri, {
-              $type: activityCollections.publication,
-              name: 'Orbit Weekly',
-              url: 'https://example.com',
-            }),
-          },
-          rkey: '1',
-        })
-      },
-      label: `${handleLabel('subscriber.test')} subscribed to Orbit Weekly`,
-    },
-    {
-      collection: activityCollections.livestream,
-      testID: 'atmosphereLivestreamRow',
-      build: () => {
-        const actorDid = 'did:plc:streamer'
-        const rootUri = `at://${actorDid}/${activityCollections.livestream}/1`
-        return buildActivityRow({
-          collection: activityCollections.livestream,
-          actorDid,
-          actors: {
-            [actorDid]: buildActor(actorDid, 'streamer.test'),
-          },
-          associatedRecords: {
-            [rootUri]: buildAssociatedRecord(rootUri, {
-              $type: activityCollections.livestream,
-              createdAt: '2026-09-09T00:00:00.000Z',
-              endedAt: '2026-09-09T01:00:00.000Z',
-            }),
-          },
-          rkey: '1',
-        })
-      },
-      label: `${handleLabel('streamer.test')} started a livestream`,
-    },
-    {
-      collection: activityCollections.grainPhoto,
-      testID: 'atmosphereGrainPhotoRow',
-      build: () =>
-        buildActivityRow({
-          collection: activityCollections.grainPhoto,
-          actorDid: 'did:plc:photographer',
-          actors: {
-            'did:plc:photographer': buildActor(
-              'did:plc:photographer',
-              'photographer.test',
-            ),
-          },
-        }),
-      label: `${handleLabel('photographer.test')} posted a photo`,
-    },
-  ])('uses the $collection renderer', ({build, label, testID}) => {
-    const screen = renderRow(build())
-
-    expect(screen.getByTestId(testID)).toBeTruthy()
-    expect(screen.getByLabelText(activityHeaderLabel(label))).toBeTruthy()
-  })
-
-  it('uses a safe generic fallback action for unknown collections', () => {
-    const actorDid = 'did:plc:unknown-actor'
     const screen = renderRow(
-      buildActivityRow({
-        collection: 'example.unknown.collection',
-        actorDid,
-        actors: {
-          [actorDid]: buildActor(actorDid, 'unknown-actor.test'),
-        },
-      }),
+      createRow(activities, {groupBy: 'actor', associatedRecords}),
     )
-
-    expect(screen.getByTestId('atmosphereUnknownRow')).toBeTruthy()
-    expect(
-      screen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('unknown-actor.test')} did something`,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(screen.queryByText('example.unknown.collection')).toBeNull()
+    expect(screen.getByTestId('atmospherePhotoGallery')).toBeTruthy()
+    const images = mockGallery.mock.calls[0][0].images
+    expect(images).toHaveLength(2)
+    for (const [i, image] of images.entries()) {
+      expect(image.fullsize).toBe(
+        `https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:author/${recordCid}@jpeg`,
+      )
+      expect(image.thumb).toBe(image.fullsize)
+      expect(image.alt).toBe(`Photo ${i}`)
+      expect(image.aspectRatio).toEqual({width: i + 2, height: 2})
+    }
   })
 
-  it('degrades malformed recommendation and subscription sidecars safely', () => {
-    const recommendationActorDid = 'did:plc:glitch-rec'
-    const recommendationRootUri = `at://${recommendationActorDid}/${activityCollections.recommendation}/1`
-    const recommendationScreen = renderRow(
-      buildActivityRow({
-        collection: activityCollections.recommendation,
-        actorDid: recommendationActorDid,
-        actors: {
-          [recommendationActorDid]: buildActor(
-            recommendationActorDid,
-            'glitch-rec.test',
-          ),
-        },
-        associatedRecords: {
-          [recommendationRootUri]: buildAssociatedRecord(
-            recommendationRootUri,
-            {
-              $type: activityCollections.recommendation,
-              document: 'not-an-at-uri',
-              createdAt: '2026-09-09T00:00:00.000Z',
-            },
-          ),
-        },
-        rkey: '1',
+  it('uses only appview stream thumbs, never the raw blob', () => {
+    const activity = createActivity({
+      collection: activityCollections.livestream,
+    })
+    activity.view = {
+      $type: 'eric.bsky.atmosphere.getActivity#livestreamView',
+      thumb: 'https://cdn.example/actual-thumb',
+    }
+    const associatedRecords = {
+      [activity.record.uri]: createRecord(activity.record.uri, {
+        createdAt: '2026-09-10T00:00:00Z',
+        title: 'A stream',
+        thumb: {ref: {$link: 'bafyraw'}, mimeType: 'image/jpeg'},
       }),
+    }
+    const screen = renderRow(createRow([activity], {associatedRecords}))
+    const image = screen.getByTestId('atmosphereLivestreamThumbnail')
+    expect(image.props.source).toEqual({uri: activity.view.thumb})
+    expect(image.props.style).toContainEqual(
+      expect.objectContaining({width: 78, height: 78}),
     )
-    const subscriptionActorDid = 'did:plc:glitch-sub'
-    const subscriptionRootUri = `at://${subscriptionActorDid}/${activityCollections.subscription}/1`
-    const subscriptionScreen = renderRow(
-      buildActivityRow({
-        collection: activityCollections.subscription,
-        actorDid: subscriptionActorDid,
-        actors: {
-          [subscriptionActorDid]: buildActor(
-            subscriptionActorDid,
-            'glitch-sub.test',
-          ),
-        },
-        associatedRecords: {
-          [subscriptionRootUri]: buildAssociatedRecord(subscriptionRootUri, {
-            $type: activityCollections.subscription,
-            publication: 'at://did:plc:publication/site.standard.publication/1',
-            createdAt: '2026-09-09T00:00:00.000Z',
-          }),
-        },
-        rkey: '1',
-      }),
-    )
-
-    expect(
-      recommendationScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('glitch-rec.test')} recommended an article`,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(
-      recommendationScreen.getByText(' · elapsed:2026-09-09T00:00:00.000Z'),
-    ).toBeTruthy()
-    expect(
-      recommendationScreen.queryByTestId('compact-document-unknown'),
-    ).toBeNull()
-    expect(
-      subscriptionScreen.getByLabelText(
-        activityHeaderLabel(
-          `${handleLabel('glitch-sub.test')} subscribed to a publication`,
-        ),
-      ),
-    ).toBeTruthy()
-    expect(mockStandardSiteEmbed).not.toHaveBeenCalled()
-    expect(mockStandardSiteCompactDocumentCard).not.toHaveBeenCalled()
+    expect(image.props.accessible).toBe(false)
+    expect(image.props.loading).toBe('lazy')
+    expect(image.props.contentFit).toBe('cover')
+    screen.unmount()
+    const missingViews: ActivityItem['view'][] = [
+      undefined,
+      {$type: 'eric.bsky.atmosphere.getActivity#livestreamView'},
+      {$type: 'eric.bsky.atmosphere.getActivity#livestreamView', thumb: '   '},
+    ]
+    for (const view of missingViews) {
+      activity.view = view
+      const missing = renderRow(createRow([activity], {associatedRecords}))
+      expect(missing.queryByTestId('atmosphereLivestreamThumbnail')).toBeNull()
+      missing.unmount()
+    }
   })
 })

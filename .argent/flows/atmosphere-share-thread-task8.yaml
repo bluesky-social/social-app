@@ -1,0 +1,13 @@
+executionPrerequisite: >-
+  Instrumented signed-in English iOS app at the top of Atmosphere, local API
+  loaded with a standalone share card containing nonempty post text.
+steps:
+  - echo: Tap a standalone share quote body; expect its Bluesky thread, not the article.
+  - scroll-to:
+      target: {id: atmosphereShareQuote, within: {id: atmosphereShareCard}}
+      direction: down
+  - await:
+      visible: {id: atmosphereShareQuote, within: {id: atmosphereShareCard}}
+  - tap: {id: atmosphereShareQuote, within: {id: atmosphereShareCard}}
+  - await: {visible: {text: Thread options}}
+  - await: {idle: true}

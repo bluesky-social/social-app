@@ -6,7 +6,12 @@ import {
   type ActivityListItem,
   type ActivityRowItem,
 } from './model'
-import {type ActivityActor, activityCollections} from './types'
+import {
+  type ActivityActor,
+  type ActivityActors,
+  activityCollections,
+  type ActivityItem,
+} from './types'
 
 export type ActivityPresentationItem = ActivityRowItem | ActivityGroupRowItem
 
@@ -88,6 +93,24 @@ function getDocumentSubscriptionState(
   if (subscribedCount === 0) return 'none'
   if (subscribedCount === activities.length) return 'all'
   return 'some'
+}
+
+/** Returns the original hydrated actor when usable, without a fallback identity. */
+export function getActivityActor(
+  activity: ActivityItem,
+  actors: ActivityActors,
+): ActivityActor | undefined {
+  return getRecordActor(activity.record.uri, actors)
+}
+
+/** Resolves a record's owner without inventing an identity for missing sidecars. */
+export function getRecordActor(
+  uri: string | undefined,
+  actors: ActivityActors,
+): ActivityActor | undefined {
+  const did = tryGetAuthorityDid(uri)
+  const actor = did ? actors[did] : undefined
+  return isUsableActivityActor(actor) ? actor : undefined
 }
 
 function resolveActivityActors(

@@ -24,7 +24,7 @@ export function ActivityRow({
   testID?: string
 }>) {
   return (
-    <View style={[a.gap_sm, a.py_lg]} testID={testID}>
+    <View style={a.gap_sm} testID={testID}>
       {children}
     </View>
   )
@@ -115,7 +115,7 @@ export function ActivityRowBody({children}: React.PropsWithChildren<{}>) {
     return null
   }
 
-  return <View style={[a.px_xl, a.pb_xs]}>{children}</View>
+  return <View style={a.px_xl}>{children}</View>
 }
 
 function getActivityRowText(node: React.ReactNode): string {

@@ -1,6 +1,6 @@
 # Atmosphere screen frontend specification
 
-Status: active prototype. The grouped Activity UI is pushed through frontend commit `661ea4408`; authenticated-viewer integration is implemented and locally verified in both working trees but remains uncommitted and undeployed. The backend working tree is based on `1fccfce`.
+Status: social-proof prototype implemented in `src/screens/Atmosphere/`; implementation changes remain uncommitted. The current presentation contract below and [`atmosphere-social-proof-design.md`](./atmosphere-social-proof-design.md) supersede the original row proposals later in this document. See that plan for exact verification evidence and remaining manual-QA limitations.
 
 This document specifies the first frontend for the Atmosphere activity API described in [`atmosphere-api-contract.md`](./atmosphere-api-contract.md).
 
@@ -10,7 +10,7 @@ The primary implementation is now `src/screens/Atmosphere/`, renamed from Activi
 
 Add an authenticated **Atmosphere** screen that displays the signed-in user's Atmosphere activity as a paginated list. Add entry points named **Atmosphere** to the mobile drawer and desktop left navigation.
 
-Each top-level API feed entry is rendered as its own row. A standalone item renders a concise translated action plus generic record-type noun; a standalone `site.standard.document` row retains that header and renders a full `StandardSiteEmbed` beneath it. A subject group renders a collapsed summary for many actors interacting with the same content and expands in place to show its child activities. An actor group of `site.standard.graph.recommend` records renders one recommendation summary with a compact document list, and an actor group of `site.standard.graph.subscription` records renders one subscription summary with an expandable `PublicationCard` list; only other actor groups retain the red diagnostic boundary around their children. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
+Render a virtualized chronological stream of content-first cards and quiet footnotes. Keep backend order and grouping rather than regrouping repeated subjects across pages. Every row receives the complete merged `associatedRecords` map, not only its root record, so it can follow record references such as:
 
 ```text
 recommendation -> document -> publication
@@ -19,11 +19,28 @@ subscription -> publication
 document -> publication
 ```
 
-The initial recommendation presentation should read like:
+## Current presentation contract
 
-```text
-@<recommender handle> recommended @<document author handle>’s post <document title>
-```
+| Collection | Presentation |
+| --- | --- |
+| Documents/recommendations | Content-first article card for subscribed documents or qualifying recommendation/share proof; otherwise a title-first footnote. Recommendation threshold defaults to two distinct usable actors. No target-author-follow exception. |
+| Subscriptions | Publication card for two or more distinct usable subscribers; otherwise a footnote. Threshold is independently configurable. CTA uses the existing publisher-aware external-link path, not an account mutation. |
+| Raw document shares | Sharer metadata, original text/facets, and one compact document preview. Same-subject groups expand beyond two initial snippets; distinct-subject actor groups keep the first preview plus count. Related shares stay separate from recommendation proof on their parent article. |
+| Streams | Absent `endedAt`: active standalone card. Any defined `endedAt`: ended footnote. Duration requires valid ordered raw dates; grouped duration is explicitly the first stream's. Missing thumbnails are omitted. Stale no-end records remain an accepted backend limitation. |
+| Grain photos | Existing single-image or Gallery/lightbox composition. First ten usable photos in API order, with original alt and safe dimensions. Original group counts and sidecars remain intact. Shared Gallery/lightbox code is unchanged. |
+| Publication roots/unknown collections | Retained publication creation rendering or generic compact activity fallback. No diagnostic colored rails. |
+
+Use hydrated usable actors, never DID placeholders or invented friends/counts. Keep original related children, sidecar references, and item/group keys. Only normalized actor references and root-document subscription aggregation belong in `computedItemView`; content and transient timeline layout are resolved separately.
+
+### Timeline
+
+- Use outer item/group `indexedAt` for heading placement. The rolling last three hours are unheaded, even across midnight; remaining local-today rows use **Earlier today**, yesterday uses **Yesterday**, and older rows use a Lingui-localized full date.
+- Invalid timestamps create no heading; future timestamps remain unheaded. Recompute on the shared minute tick and app resume. Locale changes update translated headings/date formatting.
+- Approximately 14px between cards, 24px between cards and footnote runs, and 8px within compact runs, with faint internal separators. A heading belongs to its first visible row; suppressed rows leave no orphan heading or gap. Each group stays one virtualized row, not an unbounded nested list.
+- Preserve loading/empty/error/retry, pull-to-refresh, next-page guards/footer, and account-scoped query caches. Opaque cursors pass through unchanged.
+- Web-only `?debug` remains one object-log control per outer row, with reference-preserving reachable sidecars. No native debug button.
+
+The detailed implementation proposals below are historical where they conflict with this contract. In particular, expanded group children, target-author-follow promotion, colored diagnostic borders, and DID identity fallbacks are not current behavior.
 
 ## Scope
 
@@ -349,7 +366,7 @@ Do not copy or reduce `associatedRecords` per row. The row must receive the full
 
 The merged maps may be rebuilt when query data changes; all rows produced by one list-model calculation must share those map references.
 
-## Row presentation
+## Historical row presentation (superseded)
 
 Every top-level feed entry must produce a visually separate row, including unsupported or malformed items. Standalone items use their root activity presentation. A document’s `relatedActivity` renders inside that document row below its body and above its footer. Recommendation children may keep the existing collapsed recommender row. Post-share children should produce a separate share summary using their raw post records and hydrated actors, with copy equivalent to `@<handle> [and <n> others] shared`; do not label shares as recommendations. Collapse the related recommendations into one secondary row per document: an `AvatarStack` of up to five unique hydrated recommender profiles at 16px, followed by `text_xs` copy in the form `@<handle> [and <n> others] recommended`. Count all remaining usable actors even when the stack is capped at five, preserve related-activity order, drop unknown actors, and omit the secondary row when no usable related actor remains. A valid standalone `site.standard.document` adds a full `StandardSiteEmbed` beneath its activity header; if view construction fails, the activity sentence and defensive row remain. Subject groups use the collapsed and expandable presentation below. Actor recommendation, document, and subscription groups use their compact presentations below. Other actor groups remain in the diagnostic phase: render each direct child inside one container in API-provided reverse-chronological order and give that container a two-pixel red border. Group children are not recursively rendered as groups. Rows use standard ALF atoms and theme values:
 

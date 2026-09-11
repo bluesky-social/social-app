@@ -29,7 +29,7 @@ function setup(responses: unknown[]) {
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   )
   const hook = renderHook(() => useAtmosphereQuery(), {wrapper})
-  return {client, hook}
+  return {client, hook, queryClient}
 }
 
 beforeEach(() => {
@@ -63,5 +63,68 @@ describe('useAtmosphereQuery', () => {
       cursor: 'opaque-cursor',
     })
     await waitFor(() => expect(hook.result.current.hasNextPage).toBe(false))
+  })
+
+  it('keeps account caches isolated when an old account request finishes late', async () => {
+    let finishOld!: (value: unknown) => void
+    const oldPage = {
+      feed: [],
+      associatedRecords: {},
+      actors: {},
+      cursor: 'old-viewer-cursor',
+    }
+    const newPage = {...oldPage, cursor: 'new-viewer-cursor'}
+    const pendingOld = new Promise(resolve => {
+      finishOld = resolve
+    })
+    const {hook, queryClient} = setup([pendingOld, newPage])
+    jest.mocked(useSession).mockReturnValue({
+      hasSession: true,
+      currentAccount: {did: 'did:plc:other-viewer'},
+    } as never)
+    hook.rerender({})
+    expect(hook.result.current.data).toBeUndefined()
+    await waitFor(() =>
+      expect(hook.result.current.data?.pages[0].cursor).toBe(
+        'new-viewer-cursor',
+      ),
+    )
+    await act(async () => {
+      finishOld(oldPage)
+      await pendingOld
+    })
+    expect(hook.result.current.data?.pages[0].cursor).toBe('new-viewer-cursor')
+    expect(
+      queryClient.getQueriesData({queryKey: ['useAtmosphereQuery']}),
+    ).toHaveLength(2)
+  })
+
+  it('retains loaded data and the opaque cursor after a next-page failure, then retries', async () => {
+    const firstPage = {
+      feed: [],
+      associatedRecords: {},
+      actors: {},
+      cursor: 'opaque+/=cursor',
+    }
+    const {client, hook} = setup([firstPage])
+    await waitFor(() => expect(hook.result.current.isSuccess).toBe(true))
+    const originalPage = hook.result.current.data?.pages[0]
+    client.call.mockRejectedValueOnce(new Error('Next page unavailable'))
+    await act(() => hook.result.current.fetchNextPage())
+    await waitFor(() =>
+      expect(hook.result.current.isFetchNextPageError).toBe(true),
+    )
+    expect(hook.result.current.data?.pages[0]).toBe(originalPage)
+    client.call.mockResolvedValueOnce({
+      feed: [],
+      associatedRecords: {},
+      actors: {},
+    })
+    await act(() => hook.result.current.fetchNextPage())
+    await waitFor(() => expect(hook.result.current.data?.pages).toHaveLength(2))
+    expect(client.call).toHaveBeenLastCalledWith(expect.anything(), {
+      cursor: 'opaque+/=cursor',
+    })
+    expect(hook.result.current.isFetchNextPageError).toBe(false)
   })
 })

@@ -16,13 +16,15 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {IS_IOS} from '#/env'
-import {ActivityPresentationRow} from './components/ActivityPresentationRow'
+import {TimelineRow} from './components/TimelineRow'
 import {buildActivityListItems} from './model'
-import {
-  type ActivityPresentationListItem,
-  buildActivityPresentationListItems,
-} from './presentation'
+import {buildActivityPresentationListItems} from './presentation'
 import {useAtmosphereQuery} from './query'
+import {
+  type ActivityTimelineListItem,
+  buildActivityTimelineItems,
+} from './timeline'
+import {useTimelineNow} from './useTimelineNow'
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
@@ -47,12 +49,16 @@ function AtmosphereList() {
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
   const query = useAtmosphereQuery()
+  const now = useTimelineNow()
   const items = buildActivityListItems(
     query.data,
     query.error ? cleanError(query.error) : undefined,
   )
-  const presentationItems = buildActivityPresentationListItems(items)
-  const hasActivityRows = presentationItems.some(item => item.computedItemView)
+  const timelineItems = buildActivityTimelineItems(
+    buildActivityPresentationListItems(items),
+    now,
+  )
+  const hasActivityRows = timelineItems.some(item => item.layout)
 
   const onRefresh = async () => {
     setIsPTRing(true)
@@ -79,7 +85,9 @@ function AtmosphereList() {
 
   return (
     <List
-      data={presentationItems}
+      testID="atmosphereList"
+      data={timelineItems}
+      contentContainerStyle={{paddingBottom: 24}}
       renderItem={renderItem}
       keyExtractor={keyExtractor}
       refreshing={isPTRing}
@@ -144,13 +152,7 @@ function AtmosphereError({error}: {error: string}) {
   )
 }
 
-function renderItem({
-  item,
-  index,
-}: {
-  item: ActivityPresentationListItem
-  index: number
-}) {
+function renderItem({item}: {item: ActivityTimelineListItem}) {
   switch (item.item.type) {
     case 'loading':
       return <AtmosphereLoading />
@@ -160,14 +162,14 @@ function renderItem({
       return <AtmosphereError error={item.item.error} />
     case 'activity':
     case 'group':
-      return item.computedItemView ? (
-        <ActivityPresentationRow
+      return item.computedItemView && item.layout ? (
+        <TimelineRow
           item={item.item}
           computedItemView={item.computedItemView}
-          hideTopBorder={index === 0}
+          layout={item.layout}
         />
       ) : null
   }
 }
 
-const keyExtractor = (item: ActivityPresentationListItem) => item.item.key
+const keyExtractor = (item: ActivityTimelineListItem) => item.item.key

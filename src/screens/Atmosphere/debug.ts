@@ -1,5 +1,6 @@
 import {AtUri} from '@atproto/syntax'
 
+import {getShareDocumentUri} from '#/screens/Atmosphere/relationships'
 import {IS_WEB} from '#/env'
 import {type ActivityPresentationItem} from './presentation'
 import {
@@ -77,6 +78,8 @@ function getActivityUris(activity: ActivityItem): string[] {
 function getAssociatedRecordReferences(
   record: Record<string, unknown>,
 ): string[] {
+  const shareDocumentUri = getShareDocumentUri(record)
+  if (shareDocumentUri) return [shareDocumentUri]
   if (isDocumentRecord(record)) return [record.site]
   if (isRecommendRecord(record)) return [record.document]
   if (isSubscriptionRecord(record)) return [record.publication]

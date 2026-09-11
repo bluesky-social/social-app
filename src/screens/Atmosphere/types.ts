@@ -1,3 +1,6 @@
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+
 export const activityCollections = {
   document: 'site.standard.document',
   publication: 'site.standard.publication',
@@ -5,6 +8,7 @@ export const activityCollections = {
   subscription: 'site.standard.graph.subscription',
   livestream: 'place.stream.livestream',
   grainPhoto: 'social.grain.photo',
+  share: 'app.bsky.feed.post',
 } as const
 
 export type KnownActivityCollection =
@@ -134,6 +138,13 @@ export type SubscriptionRecord = {
   createdAt?: string
 }
 
+/** Raw share excerpt fields, not a hydrated or moderated post view. */
+export type ShareRecord = Pick<app.bsky.feed.post.Main, 'text' | 'facets'> & {
+  $type: 'app.bsky.feed.post'
+  createdAt: string
+  embed?: unknown
+}
+
 export type LivestreamRecord = {
   $type?: 'place.stream.livestream'
   title?: string
@@ -237,7 +248,9 @@ function narrowActivityItem(
     Array.isArray(value.relatedActivity)
       ? value.relatedActivity.flatMap(candidate => {
           const related = narrowActivityItem(candidate, false)
-          return related?.collection === activityCollections.recommendation
+          return related &&
+            (related.collection === activityCollections.recommendation ||
+              related.collection === activityCollections.share)
             ? [related]
             : []
         })
@@ -373,8 +386,30 @@ export function isSubscriptionRecord(
   return isObject(value) && typeof value.publication === 'string'
 }
 
+export function isShareRecord(value: unknown): value is ShareRecord {
+  return (
+    isObject(value) &&
+    value.$type === activityCollections.share &&
+    typeof value.text === 'string' &&
+    typeof value.createdAt === 'string' &&
+    (value.facets === undefined ||
+      (Array.isArray(value.facets) &&
+        value.facets.every(facet =>
+          bsky.matches(app.bsky.richtext.facet, facet),
+        )))
+  )
+}
+
 export function isLivestreamRecord(value: unknown): value is LivestreamRecord {
-  return isObject(value) && typeof value.createdAt === 'string'
+  return (
+    isObject(value) &&
+    (value.$type === undefined ||
+      value.$type === activityCollections.livestream) &&
+    typeof value.createdAt === 'string' &&
+    (value.title === undefined || typeof value.title === 'string') &&
+    (value.url === undefined || typeof value.url === 'string') &&
+    (value.endedAt === undefined || typeof value.endedAt === 'string')
+  )
 }
 
 export function isGrainPhotoRecord(value: unknown): value is GrainPhotoRecord {

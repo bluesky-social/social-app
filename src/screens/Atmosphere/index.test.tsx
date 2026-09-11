@@ -1,3 +1,4 @@
+import {createContext} from 'react'
 import {type PressableProps} from 'react-native'
 import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
@@ -5,9 +6,19 @@ import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {AtmosphereScreen} from './index'
+import {
+  createActivity,
+  createActor,
+  createDocumentRecords,
+  createRecord,
+  documentUri,
+} from './testFixtures'
+import {type ActivityTimelineListItem} from './timeline'
 import {activityCollections} from './types'
 
 const mockUseAtmosphereQuery = jest.fn()
+const mockQueryUpdates = createContext(0)
+let mockQueryRevision = 0
 const mockListFooter = jest.fn((_props: unknown) => null)
 const mockAvatarStack = jest.fn()
 const mockInlineLinkText = jest.fn()
@@ -15,6 +26,8 @@ const mockPublicationCard = jest.fn((_props: unknown) => null)
 const mockStandardSiteEmbed = jest.fn((_props: unknown) => null)
 const mockTimeElapsed = jest.fn()
 let latestListProps: ListProps | undefined
+let mockNow = new Date(2026, 8, 11, 12).getTime()
+jest.mock('./useTimelineNow', () => ({useTimelineNow: () => new Date(mockNow)}))
 
 type ChildrenProps = {children?: React.ReactNode; testID?: string}
 type EmptyStateProps = {
@@ -34,6 +47,7 @@ type ListProps = {
   ListFooterComponent?: React.ReactNode
   onEndReached?: () => Promise<void> | void
   onRefresh?: () => Promise<void> | void
+  refreshing?: boolean
 }
 
 jest.mock('#/alf', () => ({
@@ -45,11 +59,25 @@ jest.mock('#/alf', () => ({
       border_contrast_low: {},
       text: {color: '#111111'},
       text_inverted: {color: '#ffffff'},
-      text_contrast_medium: {},
+      text_contrast_medium: {color: '#667788'},
       text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
     },
   }),
+}))
+jest.mock('./components/ShareSnippets', () => ({ShareSnippets: () => null}))
+jest.mock('#/components/images/Gallery', () => ({
+  Gallery: () => null,
+  GalleryBleed: ({children}: React.PropsWithChildren) => <>{children}</>,
+}))
+jest.mock('#/components/images/AutoSizedImage', () => ({
+  AutoSizedImage: () => null,
+}))
+jest.mock('#/components/Post/Embed/ImageContextMenu', () => ({
+  ImageContextMenu: ({children}: React.PropsWithChildren) => <>{children}</>,
+}))
+jest.mock('#/components/Lightbox/state', () => ({
+  useLightboxControls: () => ({openLightbox: jest.fn()}),
 }))
 jest.mock('#/components/AvatarStack', () => {
   const {View} =
@@ -81,9 +109,15 @@ jest.mock('#/components/Layout', () => {
   }
 })
 jest.mock('#/components/Link', () => {
-  const {Text} =
+  const {Text, View} =
     jest.requireActual<typeof import('react-native')>('react-native')
   return {
+    Link: ({
+      children,
+      ...props
+    }: React.PropsWithChildren<Record<string, unknown>>) => (
+      <View {...props}>{children}</View>
+    ),
     InlineLinkText: ({
       children,
       ...props
@@ -179,13 +213,22 @@ jest.mock('#/view/com/util/List', () => {
     },
   }
 })
-jest.mock('./query', () => ({
-  useAtmosphereQuery: () => mockUseAtmosphereQuery(),
-}))
+jest.mock('./components/DocumentMenu', () => ({DocumentMenu: () => null}))
+jest.mock('./query', () => {
+  const {use} = jest.requireActual<typeof import('react')>('react')
+  return {
+    useAtmosphereQuery: () => {
+      // Model the query subscription even when React Compiler reuses the screen child.
+      use(mockQueryUpdates)
+      return mockUseAtmosphereQuery()
+    },
+  }
+})
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
 
 beforeEach(() => {
+  mockNow = new Date(2026, 8, 11, 12).getTime()
   latestListProps = undefined
   mockAvatarStack.mockClear()
   mockInlineLinkText.mockClear()
@@ -197,13 +240,19 @@ beforeEach(() => {
 })
 
 function renderScreen() {
-  return render(
-    <I18nProvider i18n={i18n}>
-      <AtmosphereScreen
-        route={{key: 'Atmosphere', name: 'Atmosphere'}}
-        navigation={{} as never}
-      />
-    </I18nProvider>,
+  return render(screenElement())
+}
+
+function screenElement() {
+  return (
+    <mockQueryUpdates.Provider value={++mockQueryRevision}>
+      <I18nProvider i18n={i18n}>
+        <AtmosphereScreen
+          route={{key: 'Atmosphere', name: 'Atmosphere'}}
+          navigation={{} as never}
+        />
+      </I18nProvider>
+    </mockQueryUpdates.Provider>
   )
 }
 
@@ -344,7 +393,7 @@ describe('AtmosphereScreen', () => {
     expect(screen.queryByTestId('atmosphereDebugButton')).toBeNull()
     expect(
       screen.getByLabelText(
-        `${handleLabel('group-author.test')} published 2 articles · elapsed:2026-09-03T00:00:00.000Z`,
+        `${handleLabel('group-author.test')} published · elapsed:2026-09-03T00:00:00.000Z`,
       ),
     ).toBeTruthy()
     expect(
@@ -479,4 +528,150 @@ describe('AtmosphereScreen', () => {
     expect(refetch).toHaveBeenCalledTimes(1)
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
   })
+})
+
+function basicQuery() {
+  const entry = createActivity()
+  entry.record.indexedAt = new Date(mockNow - 2 * 60 * 60_000).toISOString()
+  return {
+    data: {
+      pages: [
+        {
+          feed: [entry],
+          associatedRecords: {},
+          actors: {'did:plc:author': createActor()},
+        },
+      ],
+      pageParams: [undefined],
+    },
+    error: undefined as Error | undefined,
+    isFetchingNextPage: false,
+    hasNextPage: true,
+    fetchNextPage: jest.fn().mockResolvedValue(undefined),
+    refetch: jest.fn().mockResolvedValue(undefined),
+  }
+}
+
+it.each(['fetching', 'last-page', 'error'] as const)(
+  'does not request another page when %s',
+  reason => {
+    const query = basicQuery()
+    if (reason === 'fetching') query.isFetchingNextPage = true
+    if (reason === 'last-page') query.hasNextPage = false
+    if (reason === 'error') query.error = new Error('Next page failed')
+    mockUseAtmosphereQuery.mockReturnValue(query)
+    const screen = renderScreen()
+    act(() => {
+      void latestListProps?.onEndReached?.()
+    })
+    expect(query.fetchNextPage).not.toHaveBeenCalled()
+    expect(screen.getByTestId('atmosphereDocumentRow')).toBeTruthy()
+    if (reason === 'error') {
+      expect(mockListFooter).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          error: 'Next page failed',
+          onRetry: query.fetchNextPage,
+        }),
+      )
+    }
+  },
+)
+
+it('keeps refresh feedback until refetch resolves', async () => {
+  const query = basicQuery()
+  let resolve!: () => void
+  const pending = new Promise<void>(done => {
+    resolve = done
+  })
+  query.refetch.mockReturnValue(pending)
+  mockUseAtmosphereQuery.mockReturnValue(query)
+  renderScreen()
+  act(() => {
+    void latestListProps?.onRefresh?.()
+  })
+  expect(latestListProps?.refreshing).toBe(true)
+  await act(async () => {
+    resolve()
+    await pending
+  })
+  expect(latestListProps?.refreshing).toBe(false)
+})
+
+it('moves a row across the recent cutoff without changing its key', () => {
+  const query = basicQuery()
+  mockUseAtmosphereQuery.mockReturnValue(query)
+  const screen = renderScreen()
+  expect(screen.queryByTestId('atmosphereDateHeading')).toBeNull()
+  const keys = latestListProps!.data.map(latestListProps!.keyExtractor)
+  mockNow += 2 * 60 * 60_000
+  screen.rerender(screenElement())
+  expect(screen.getByTestId('atmosphereDateHeading')).toHaveTextContent(
+    'Earlier today',
+  )
+  expect(latestListProps!.data.map(latestListProps!.keyExtractor)).toEqual(keys)
+})
+
+it('recomputes presentation and spacing after a refresh crosses the recommendation threshold', async () => {
+  const first = createActivity({
+    collection: activityCollections.recommendation,
+    did: 'did:plc:one',
+  })
+  const second = createActivity({
+    collection: activityCollections.recommendation,
+    did: 'did:plc:two',
+  })
+  const associatedRecords = createDocumentRecords()
+  for (const activity of [first, second]) {
+    associatedRecords[activity.record.uri] = createRecord(activity.record.uri, {
+      document: documentUri,
+      createdAt: activity.record.indexedAt,
+    })
+  }
+  const query = basicQuery()
+  const context = {
+    associatedRecords,
+    actors: {
+      'did:plc:one': createActor('did:plc:one'),
+      'did:plc:two': createActor('did:plc:two'),
+    },
+  }
+  mockUseAtmosphereQuery.mockReturnValue({
+    ...query,
+    data: {pages: [{...context, feed: [first]}], pageParams: [undefined]},
+  })
+  const screen = renderScreen()
+  expect(
+    (latestListProps!.data as ActivityTimelineListItem[])[0].layout?.kind,
+  ).toBe('footnote')
+  await act(async () => {
+    await latestListProps?.onRefresh?.()
+  })
+  mockUseAtmosphereQuery.mockReturnValue({
+    ...query,
+    data: {
+      pages: [
+        {
+          ...context,
+          feed: [
+            {
+              $type: 'eric.bsky.atmosphere.getActivity#group',
+              id: 'recommendation-cluster',
+              collection: activityCollections.recommendation,
+              groupBy: 'subject',
+              subject: documentUri,
+              indexedAt: first.record.indexedAt,
+              items: [first, second],
+            },
+          ],
+        },
+      ],
+      pageParams: [undefined],
+    },
+  })
+  screen.rerender(screenElement())
+  expect(
+    (latestListProps!.data as ActivityTimelineListItem[])[0].layout?.kind,
+  ).toBe('card')
+  expect(screen.getByTestId('atmosphereArticleCard')).toBeTruthy()
+  expect(screen.queryByTestId('atmosphereTimelineSeparator')).toBeNull()
 })

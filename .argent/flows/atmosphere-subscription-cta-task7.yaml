@@ -1,0 +1,18 @@
+executionPrerequisite: >-
+  Instrumented iOS development app signed in on Atmosphere at the top, English
+  locale, with the browser preference unset. Initial loaded feed includes a
+  multi-person subscription card with an external publication CTA.
+steps:
+  - echo: Find a subscription cluster card's external publication CTA.
+  - scroll-to:
+      target: {id: atmospherePublicationCTA}
+      direction: down
+  - await: {visible: {text: subscribed}}
+  - tap: {id: atmospherePublicationCTA}
+  - await: {visible: {text: 'How should we open this link?'}}
+  - await: {idle: true}
+  - echo: Cancel the external-link prompt without changing the browser preference.
+  - tap: {text: Cancel}
+  - await: {hidden: {text: 'How should we open this link?'}}
+  - await: {visible: {id: atmospherePublicationMenu}}
+  - await: {idle: true}

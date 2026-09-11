@@ -1,7 +1,15 @@
 import {describe, expect, it} from '@jest/globals'
 
 import {
+  createActivity,
+  createDocumentRecords,
+  createRecord,
+  createShareRecord,
+  documentUri,
+} from '#/screens/Atmosphere/testFixtures'
+import {
   activityCollections,
+  isKnownActivityCollection,
   narrowActivityPage,
   narrowActors,
   narrowAssociatedRecords,
@@ -213,6 +221,99 @@ describe('Atmosphere response narrowing', () => {
       true,
       false,
     ])
+  })
+
+  it('preserves standalone and grouped shares, raw records, and typed views', () => {
+    const first = createActivity({collection: activityCollections.share})
+    const second = createActivity({
+      collection: activityCollections.share,
+      rkey: 'second',
+    })
+    const raw = createShareRecord()
+    const view = {$type: 'eric.bsky.atmosphere.getActivity#shareView'}
+    const page = narrowActivityPage({
+      feed: [
+        {...first, view},
+        ...(['subject', 'actor'] as const).map(groupBy => ({
+          $type: 'eric.bsky.atmosphere.getActivity#group',
+          id: groupBy,
+          groupBy,
+          collection: activityCollections.share,
+          subject: groupBy === 'subject' ? documentUri : undefined,
+          actor: groupBy === 'actor' ? 'did:plc:author' : undefined,
+          indexedAt: first.record.indexedAt,
+          items: [first, second],
+        })),
+      ],
+      associatedRecords: {
+        [first.record.uri]: createRecord(first.record.uri, raw),
+      },
+      actors: {},
+      cursor: 'opaque-cursor',
+    })
+    expect(isKnownActivityCollection(activityCollections.share)).toBe(true)
+    expect(page.feed).toHaveLength(3)
+    expect(page.feed[0]).toMatchObject({...first, view})
+    expect(page.associatedRecords[first.record.uri].record).toBe(raw)
+    expect(page.cursor).toBe('opaque-cursor')
+    for (const group of page.feed.slice(1)) {
+      if (group.$type !== 'eric.bsky.atmosphere.getActivity#group')
+        throw new Error('Expected a group')
+      expect(group.items.map(item => item.record.uri)).toEqual([
+        first.record.uri,
+        second.record.uri,
+      ])
+    }
+  })
+
+  it('keeps mixed recommendation/share children in API order on grouped documents without recursion', () => {
+    const nested = createActivity({
+      collection: activityCollections.share,
+      rkey: 'nested',
+    })
+    const recommendation = createActivity({
+      collection: activityCollections.recommendation,
+      relatedActivity: [nested],
+    })
+    const share = createActivity({
+      collection: activityCollections.share,
+      relatedActivity: [nested],
+    })
+    const parent = {
+      ...createActivity(),
+      relatedActivity: [
+        recommendation,
+        share,
+        createActivity({collection: activityCollections.subscription}),
+        null,
+      ],
+    }
+    const second = createActivity({rkey: 'second'})
+    const page = narrowActivityPage({
+      feed: [
+        {
+          $type: 'eric.bsky.atmosphere.getActivity#group',
+          id: 'documents',
+          groupBy: 'actor',
+          actor: 'did:plc:author',
+          collection: activityCollections.document,
+          indexedAt: parent.record.indexedAt,
+          items: [parent, second],
+        },
+        {...share, relatedActivity: [recommendation]},
+      ],
+      associatedRecords: createDocumentRecords(),
+      actors: {},
+    })
+    const group = page.feed[0]
+    if (group.$type !== 'eric.bsky.atmosphere.getActivity#group')
+      throw new Error('Expected a group')
+    expect(group.items[0].relatedActivity).toEqual([
+      {...recommendation, relatedActivity: undefined},
+      {...share, relatedActivity: undefined},
+    ])
+    expect(group.items[1].relatedActivity).toBeUndefined()
+    expect(page.feed[1]).toMatchObject({...share, relatedActivity: undefined})
   })
 
   it('drops items that do not include the required collection field', () => {

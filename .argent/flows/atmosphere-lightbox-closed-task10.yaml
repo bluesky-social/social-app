@@ -1,0 +1,8 @@
+executionPrerequisite: The instrumented English iOS app has just closed an Atmosphere image lightbox after a positive Close image visibility check.
+steps:
+  - assert: {hidden: {text: Close image}}
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector: {text: Atmosphere, role: StaticText}
+  - await: {idle: true}

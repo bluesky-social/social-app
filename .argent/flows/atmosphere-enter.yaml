@@ -1,0 +1,12 @@
+executionPrerequisite: Instrumented iOS development app on the signed-in English Home feed with drawer closed and the local Atmosphere API running.
+# Navigation-only prefix of the recorded task-6 flow; no first-row content assumption.
+steps:
+  - tap: {text: Open drawer menu}
+  - await: {visible: {id: menuItemButton-Atmosphere}}
+  - await: {idle: true}
+  - tap: {id: menuItemButton-Atmosphere}
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector: {text: Atmosphere, role: StaticText}
+  - await: {idle: true}

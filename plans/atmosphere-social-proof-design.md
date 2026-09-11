@@ -2,17 +2,24 @@
 
 ## Status and operator instructions
 
-Preparation and decision recording complete. All product questions, including
-date headings, are resolved. The operator answered the implementation questions and
-asked that the approach and compaction context be documented. This follow-up
-changes only this plan and the seven pending task briefs; no implementation task
-has started. **The recorded operator decisions below override earlier prototype
-notes and proposals.** Keep continuation context here and individual tasks in
-`AGENTS/tasks/`; work one at a time in numeric order. Ask about committing before
-starting the next task, including preparation docs before task 0005. Never commit
-without an explicit request. At most two delegates total, preferably inexpensive
-models; one read-only Luna delegate completed the dependency audit (pane `%253`).
-No second delegate was used.
+Preparation and decisions are complete; all product questions are resolved.
+The operator requested committing the plan and beginning work. Plan committed as
+`8a3a70ec40fd`. **Tasks 0005-0010 are completed; implementation
+is uncommitted. Task 0011 is in progress.** Photo galleries/lightboxes are capped at ten
+usable images, per the operator's latest instruction; shared lightbox code is
+unchanged. The photo path and repaired task-0008 mixed-share replay now pass;
+see task 0010's evidence and remaining integration caveats below.
+The operator subsequently said: "don't worry
+about committing, just keep going - if you feel you need a checkpoint, commit it
+and we can always squash it later." Continue serially without commit prompts;
+checkpoint commits are explicitly authorized but not required. See completion
+sections below for files, checks, and integration caveats. **Recorded product
+decisions override historical prototype notes and proposals.** Keep continuation
+context here and individual tasks in `AGENTS/tasks/`. Two delegate sessions were
+created: read-only Luna dependency audit `%253` (now closed) and Luna article-card/
+menu implementation `%254` (available and reused). The operator subsequently
+reminded us that delegates can be created and reused; `%254` was reused for the
+task 0007 review and task 0008 snippets. No subdelegation has been authorized.
 
 Working tree was clean when preparation began. Current HEAD at inspection:
 `839f8a42b Link color` (newer than the earlier route-rename handoff). Preserve all
@@ -75,7 +82,7 @@ cards and runs of compact rows for final inspection.
   gap and "1 of N" indicator. **Operator override: reuse Gallery and lightbox
   as-is; exact mock carousel sizing/dots/count are not required.**
 
-## Contract constraints and immediate implementation gaps
+## Contract constraints and gaps identified during preparation
 
 - Keep `$type` entry discrimination and API-provided `collection` dispatch.
 - Preserve backend order, group boundaries, opaque keys/cursors, and attached
@@ -421,6 +428,11 @@ external subscription buttons and functional ellipsis menus were also approved.
   captions, or a post URI for metrics; metadata omissions from D3 still apply.
 - Single photos use existing single-image/lightbox patterns; actor photo groups
   use Gallery in API order. Invalid/missing actual image blobs remain omitted.
+- Latest operator decision after the 87-photo test: "do not support that many
+  images, just cap it at 10, don't change the lightbox in any way." Cap the
+  feature-local usable-image projection at ten, after validation, for both
+  Gallery and lightbox. Preserve original group counts/children and sidecars;
+  no shared lightbox, pager-dot, or Gallery changes.
 - Keep alt as alt/accessible controls, not a fabricated visible caption.
 - Subscription CTA opens the publication externally, using existing publisher
   recognition/fallback semantics. No in-app subscription mutation.
@@ -463,20 +475,21 @@ frames for targeting. Do not claim unrun platform checks.
 
 ## Continuation checklist
 
-1. Tasks 0005-0011 remain pending and are updated to D1-D6. No application files
-   or historical tasks 0001-0004 have been changed.
+1. Tasks 0005-0010 are completed; 0011 is in progress. Preparation plan
+   commit: `8a3a70ec40fd`; implementation is uncommitted. Historical tasks
+   0001-0004 were not changed.
 2. All answers, including D3's calendar headings, are recorded. Do not re-ask
    resolved promotion, moderation, Gallery, or date-heading questions.
-3. Before starting task 0005, ask whether to commit the preparation docs if the
-   operator has not already committed them. Do not commit automatically. Mark
-   only the current task in progress immediately before starting implementation.
-4. Implement tasks serially in numeric order, updating this document and task
-   status with actual verification evidence. Ask about committing between tasks.
-5. Use at most one additional inexpensive delegate if needed (one Luna has
-   already been used). Do not enable subdelegation. After compaction, re-read
-   D1-D6, the current task, and git status before touching code.
+3. The operator authorized continuing without commit prompts and optional
+   checkpoint commits. Mark only the current task in progress immediately before
+   implementation; complete and verify it before the next one.
+4. Work serially in numeric order, updating this document and task status with
+   actual verification evidence. No implementation checkpoint has been made yet.
+5. Reuse existing delegate `%254` as appropriate; the operator explicitly
+   encouraged reuse. `%253` is closed. Do not enable subdelegation. After compaction, re-read D1-D6,
+   the current task, and git status before touching code.
 
-## Pending task queue
+## Task queue
 
 | Number | Task | Main boundary |
 | --- | --- | --- |
@@ -488,9 +501,9 @@ frames for targeting. Do not claim unrun platform checks.
 | 0010 | `AGENTS/tasks/0010-task-atmosphere-photo-card-galleries.md` | Photo cards, horizontal groups, media accessibility/interactions |
 | 0011 | `AGENTS/tasks/0011-task-atmosphere-timeline-rhythm-verification.md` | Adjacent-row rhythm, approved date dividers, integrated regression/visual verification |
 
-All seven are pending. Each includes context, approval gates, requirements,
-constraints, verification, and definition of done. Earlier tasks 0001-0004 were
-not modified. The operator may redirect this proposed sequence before work
+Tasks 0005-0010 are completed; 0011 is in progress. Each includes context,
+requirements, constraints, verification, and definition of done. Earlier tasks
+0001-0004 were not modified. The operator may redirect this proposed sequence before work
 begins; absent that, follow numeric order one at a time.
 
 ## Preparation verification
@@ -502,5 +515,665 @@ begins; absent that, follow numeric order one at a time.
   with `status: pending`, but `AGENTS/` is ignored by
   `/Users/eric/.gitignore_global:23`. Do not force-add them or change ignore rules
   without an explicit request. They remain available locally for continuation.
-- No tests/typechecks were run for this documentation-only preparation, and no
-  implementation or commit was performed. One read-only Luna delegate was used.
+- At the end of the original documentation-only preparation, no tests/typechecks
+  or implementation had been performed. One read-only Luna delegate was used.
+  Subsequent plan commit and task 0005 results are recorded below.
+
+## Task 0005 completion and continuation details
+
+### Implemented
+
+- `src/screens/Atmosphere/config.ts`: independently configurable code-level
+  recommendation/subscription thresholds, both defaulting to 2. Tests pass
+  alternate configurations; no preferences UI or remote configuration added.
+- `relationships.ts`: validates document strong refs using the generated
+  `com.atproto.repo.strongRef` schema; reads direct external and record-with-media
+  external targets only, ignores quoted post/free-text URLs, validates DID-owned
+  document/rkey targets, and selects the first API child without reordering.
+- `types.ts`: recognizes the share collection and preserves mixed recommendation
+  and share children on documents, including grouped documents, without recursive
+  related activity. Added `ShareRecord` excerpt fields and a structural guard
+  that validates supplied facets. Raw post records remain the sidecar originals;
+  no post-view hydration or moderation equivalence is introduced.
+- `presentation.ts`: added `getActivityActor` returning the original usable actor.
+  `computedItemView` still contains only normalized actors and root-document
+  subscription aggregation.
+- `socialProof.ts`: `getDocumentSocialProof` returns separate deduplicated
+  recommenders and shares with original actor/activity references, checking
+  relationship targets. `getActivityPresentationKind` implements approved
+  signal-level rules, including configurable thresholds, no follow exception,
+  related/self-share promotion, bounded actor-group policies, photo/share cards,
+  and accepted endedAt-based stream state with a follow-up TODO.
+- `debug.ts`: share -> document -> publication traversal, excluding quoted and
+  unrelated sidecars while retaining included object references.
+- `ActivityRelatedActivity.tsx`: explicitly filters to recommendations. This is
+  necessary now that shares survive normalization; without it the old component
+  would count and label sharers as recommenders.
+- Tests added in `relationships.test.ts`, `socialProof.test.ts`, and expanded
+  narrowing/debug/related-summary coverage. `testFixtures.ts` contains minimal
+  synthetic record fixtures; no live snapshots were committed.
+
+### Integration caveats at completion of task 0005 (superseded by 0006 below)
+
+- **At this point the new signal helper was not yet wired into visual renderers.** Old cards,
+  actor-first headers, and followed-author visual behavior remain until task
+  0006 replaces those paths. Do not claim the new design is already visible.
+- `getActivityPresentationKind` is a signal decision, not a full renderability
+  check or cached view. Renderers must resolve valid content/URLs before actual
+  layout so missing content does not leave phantom card spacing.
+- The newly known share collection deliberately maps to `UnknownActivityRenderer`
+  and `atmosphereUnknownRow` until task 0008 supplies the share card. Replace that
+  mapping then, not with a temporary fabricated post view.
+- `getDocumentSocialProof` validates share excerpt fields and relationships;
+  invalid/missing actors or records do not promote a parent. A person can occur
+  once in each separate proof category; never sum categories into a recommendation
+  total. An author self-share promotes but is not an additional friend.
+- Stream duration is not present in the inspected local type/sample; no made-up
+  duration field or freshness timeout was added. Continue D5's accepted caveat.
+
+### Verification and resolved issues
+
+- `pnpm test --runInBand src/screens/Atmosphere`: **10 suites, 83 tests passed**
+  on iOS.
+- `pnpm test --preset jest-expo/android --runInBand src/screens/Atmosphere`:
+  **10 suites, 83 tests passed** on Android.
+- `pnpm typecheck`: iOS, Android, and web passed.
+- `pnpm lint`, `pnpm prettier`, and `git diff --check`: passed. Existing Watchman
+  recrawl and Prettier package-module-type warnings remain non-blocking.
+- Initial strong-ref tests failed because the repository's manual
+  `__mocks__/multiformats/cid.js` is an empty CID stub. The relevant suites use
+  `jest.unmock('multiformats/cid')` so real schema validation is tested. Production
+  validation was not weakened to satisfy mock behavior.
+- Three old renderer tests expected hardcoded white text, invalidated by the
+  operator's `839f8a42b Link color` commit. Updated five assertions to mocked
+  theme text `#111111`; preserved `ActivityInlineLinkText.tsx` unchanged.
+- A new accessibility test initially omitted the sanitization bidi markers;
+  fixed it to compare `sanitizeHandle(...)` output rather than altering UI copy.
+- Lint autofix also touched two unrelated suppressed type-only imports; those
+  two tool-only edits were reverted precisely. Final source changes are confined
+  to `src/screens/Atmosphere/` (plus this plan and the ignored task status).
+
+### Argent evidence
+
+Used the running iPhone 17 Pro simulator
+`A8ADF8F1-F81E-4D34-BD1E-4F5110FACAD5`. The app was on Home; opened the native
+drawer and tapped Atmosphere using fresh accessibility frames. Atmosphere loaded
+current rows including `@aparker.io` and `@divy.zone` generic activity,
+subscription cards, and a cameron.stream document; no error overlay appeared in
+the returned screen. Final capture:
+`/tmp/simserver-Ua8qOo/media/952959000-1789131337964.png`.
+
+This was an iOS navigation/feed-load smoke check, not visual verification of
+future card designs. The data/rule coverage is from focused tests. No Android/web
+manual UI check or native debug-log inspection is claimed. The app is left at
+the top of Atmosphere at that point. No additional delegate had been used yet.
+The commit-prompt instruction was subsequently overridden by the operator; see
+current status above.
+
+## Task 0006 completion and continuation details
+
+### Implementation
+
+- Added feature-owned `components/ActivityPrimitives.tsx`: ALF card surface with
+  16px radius and 13px/14px padding, quiet icon/title-first footnotes, muted linked
+  actor/action/time lines, bounded 16px avatar stacks, and timestamps.
+- Added `components/ArticleActivity.tsx`, which owns document/recommendation
+  renderer boundaries, resolves actual views before deciding card renderability,
+  applies task 0005's thresholds, preserves first-child actor-group previews and
+  counts, and renders recommendation proof separately from publishing identity.
+- Added `components/ArticleCard.tsx` and `DocumentMenu.tsx` (Luna `%254`). Source
+  and activity time/menu precede title, preview, optional cover, and proof footer.
+  Links are separate siblings, not one giant link wrapping menus/actor controls.
+  Menu retains external publication, author profile, and author-account report.
+- Added `getRecordActor` in `presentation.ts`; still no expanded computed view.
+- Removed obsolete document body/target-author-follow helpers from renderers and
+  `ActivityBodyContent.tsx`. Removed the now-unused `ActivityRelatedActivity`
+  component/test; current proof rendering uses the stricter task 0005 helper.
+- Replaced obsolete renderer expectations with the new matrix and retained
+  dispatch, debug-reference, publication/subscription, Grain, and stream-thumb
+  regressions. Added independent menu-target/account-report tests and updated
+  screen tests for the new footnote copy.
+- Shared `StandardSiteEmbed`, compact document embed, and post/composer cards are
+  unchanged. Subscriptions, shares, streams, and photos still use their old
+  visual treatments until their numbered tasks. Related share snippets are NOT
+  rendered yet; preserved raw shares already promote document cards correctly.
+- Global row adjacency/rhythm/date headings remain task 0011. Current article
+  outer padding is `a.px_xl, a.py_sm`; card/footnote primitives do not reorder rows.
+
+### Checks
+
+- iOS: `pnpm test --runInBand src/screens/Atmosphere`: 10 suites / 98 tests passed.
+- Android: `pnpm test --preset jest-expo/android --runInBand src/screens/Atmosphere`:
+  10 suites / 98 tests passed.
+- `pnpm typecheck` (iOS/Android/web), `pnpm lint`, `pnpm prettier`, and
+  `git diff --check` passed. Existing Watchman and Prettier module-type warnings.
+- Initial new test fixtures omitted recommendation `createdAt`; corrected the
+  fixtures rather than weakening production guards. Inline title+suffix tests
+  use combined text matching. Menu mock's local uppercase Container triggered
+  React Compiler/Jest `_c` hoisting; inline mock fields fixed it. Mocked DotGrid
+  to avoid loading the entire ALF/dialog app graph in the isolated menu suite.
+- No lint autofix was run across unrelated source files in task 0006. Scoped
+  Prettier used a temporary root ignore file, which was removed afterward.
+
+### Live iOS evidence and replay
+
+Device remains iPhone 17 Pro `A8ADF8F1-F81E-4D34-BD1E-4F5110FACAD5`, app
+`xyz.blueskyweb.app`. Argent restarted it once to enable native-devtools
+instrumentation required by the flow runner. No Metro restart, account mutation,
+prototype export render, or reporting submission occurred.
+
+Observed:
+
+- Chris Coyier's new article and mackuba.eu's "Experiments with agents" render as
+  cards due to related self-shares, while their root `subscribed` is false.
+- Brookie's subscribed "a look out my window" gets an article card.
+- Two-person recommendation subject group "An open letter to Bluesky Social
+  PBC..." gets a card with `@brookie.blog and 1 other recommended`.
+- cameron.stream/werd.io/scripting.com documents and a tynanpurdy.com lone
+  recommendation render as compact title-first footnotes with separate actor
+  links and menus.
+- Real mixed document "AtmosphereConf 2027 Organizing is Underway" gets one card
+  with publishing identity and six recommender actors; UI correctly shows
+  `@chadkoh.com and 5 others recommended`. renderg.host's related share is
+  preserved but not added to that recommendation total.
+- Article menu -> View author opened the correct Chris Coyier profile after
+  closing the native menu; article navigation was not accidentally triggered.
+
+Latest sampled live response: `/tmp/atmosphere-task6-live.json` (do not commit).
+Conf now has chadkoh.com, bmann.ca, pds.dad, ronentk.me, tynanpurdy.com, sri.xyz
+recommendations plus renderg.host's share. The original preparation sample had
+only five recommenders; count the current returned data, not that stale sample.
+
+Saved recorded/replayed fragments:
+
+- `.argent/flows/atmosphere-article-menu-task6.yaml`: Home -> drawer -> Atmosphere
+  -> document menu -> author profile. Full replay passed 13 executable steps.
+- `.argent/flows/atmosphere-related-proof-task6.yaml`: from Atmosphere top, scroll
+  to native `atmosphereArticleRecommendations` and verify visible recommendation
+  copy. Full retry passed both executable steps.
+- `/tmp/atmosphere-open-task6.yaml`: verified prefix of the first flow, useful to
+  stage Atmosphere from signed-in Home without opening a menu. Seven steps pass.
+
+Flow caveats and repairs:
+
+- Before injection, tap capture had no runner tree. Restarting the app fixed it.
+- One captured drawer tap incorrectly targeted `userAvatarImage` and navigated
+  to the operator's profile. Restored Home and re-recorded the actual drawer
+  control; removed the bad capture and failed wait only after finishing.
+- Some captures kept points or wrong iOS roles. Polished to strict source-backed
+  ids/text and proved the complete replay; no raw point remains in saved flows.
+- The title's AX `StaticText` role differs from the native runner role. Its live
+  `await-ui-element` stays raw in the menu flow; a native menu-id gate follows.
+- UITextView exposes `atmosphereArticleRecommendations` in the native hierarchy
+  but not AX. `native-find-views` confirmed the visible native id and window
+  frame. Recorded a successful visible `recommended` text check, converted the
+  element-seeking swipes to native-id `scroll-to`, and replayed successfully.
+  Original recorder output is preserved in `/tmp/atmosphere-*-recorded.yaml`.
+- Flows are data-dependent local fragments, not deterministic CI QA acceptance
+  suites. They declare prerequisites and have no screenshot baselines or scripts.
+
+Screenshots:
+
+- Initial self-share card: `/tmp/simserver-Ua8qOo/media/731170000-1789132950744.png`
+- Menu: `/tmp/simserver-Ua8qOo/media/920454000-1789133008937.png`
+- Correct author profile: `/tmp/simserver-Ua8qOo/media/733854000-1789133048747.png`
+- Subscribed card/footnote: `/tmp/simserver-Ua8qOo/media/977510000-1789133373990.png`
+- Two-person recommendation card: `/tmp/simserver-Ua8qOo/media/806226000-1789133388821.png`
+- Mixed card, initial inspection: `/tmp/simserver-Ua8qOo/media/442378000-1789133517458.png`
+- Mixed card, successful retry: `/tmp/simserver-Ua8qOo/media/839486000-1789136283851.png`
+
+The later retry showed a pre-existing Home/app network-error LogBox banner
+(`XrpcFetchError ... Internet connection appears to be offline`). The local
+Atmosphere endpoint returned HTTP 200 and both replayed paths passed. The banner
+was not investigated or attributed to a specific request; do not claim clean
+runtime logs. It overlays the bottom tab bar, so dismiss it through UI before
+any bottom-target interaction. The app is currently scrolled to the mixed
+AtmosphereConf document (about 57%). No Android/web manual UI, dark-theme,
+large-text, or visual-diff acceptance is claimed yet.
+
+At completion of task 0006, both initial delegates had been used and task 0007
+was next. No implementation commit had been made. The operator explicitly said
+to continue without commit prompts and permitted checkpoint commits if useful.
+
+## Task 0007 completion and continuation details
+
+### Implementation
+
+- New `components/SubscriptionActivity.tsx` replaces the old subscription
+  renderer with feature-owned publication cards and title-first footnotes.
+  Default-two distinct usable subscribers and threshold overrides use the
+  centralized signal rules; actor groups remain first-publication-plus-count
+  footnotes without hidden-child substitution or invented subscriber counts.
+- Cards use actual optional icons, title/domain, optional author/description,
+  outer timestamp, bounded subscriber proof, and independent publication,
+  profile, menu, and CTA controls. Invalid URLs cannot create cards or CTAs.
+- Reuses the unchanged shared `SubscribeButton`, preserving real publisher
+  recognition, contrast-safe styling, and external Subscribe/View publication
+  behavior. No subscription or viewer-state mutation was added.
+- Reused Luna delegate `%254` for a read-only review. It caught an invalid-URL
+  fallback that unnecessarily hid known-author menu actions. Fixed by allowing
+  `DocumentMenu` to accept an absent external view and retaining author-only
+  menus in subscription and article footnotes. Publication navigation stays
+  disabled without a valid source URI; author navigation/reporting still work.
+  The delegate rechecked the fix and reported no blocking findings.
+- Regression coverage includes 1/2/3 subscriber boundaries and overrides,
+  duplicate/unusable actors, bounded avatars, ten-publication actor groups,
+  missing first records, actual/missing media and authors, invalid URLs,
+  author-only menus, long RTL/emoji names, and real publisher/CTA view data.
+  Renderer tests mock the CTA but verify the actual view/theme passed to the
+  existing implementation; author/report behavior has independent menu tests.
+
+### Verification
+
+- Final iOS and Android runs each passed **14 suites / 138 tests**, including
+  Atmosphere plus retained route, route-helper, drawer, and shared compact-card
+  regressions. Logs: `/tmp/atmosphere-task7-ios-final.log` and
+  `/tmp/atmosphere-task7-android-final.log`.
+- `pnpm typecheck` passed iOS, Android, and web; `pnpm lint` passed.
+  `pnpm prettier` initially identified the new conditional's formatting; after
+  the formatting-only fix, Prettier and `git diff --check` passed.
+- Live iOS screenshot review showed a single `matthieu.bsky.team` subscription
+  as a footnote and the `natemoo.re` plus one-other subject cluster as an
+  ATmosphereConf News card with real icon, domain, author, description, proof,
+  and View publication CTA. Capture:
+  `/tmp/simserver-Ua8qOo/media/988390000-1789137159000.png`.
+- Recorded/polished/replayed
+  `.argent/flows/atmosphere-subscription-cta-task7.yaml`: **9 executable steps
+  passed**, no failures/errors/skips (11 total including echoes). It locates
+  the native CTA ID, opens the existing external-link browser-choice dialog,
+  cancels, and proves the dialog disappeared and publication controls returned.
+  This preserves the unset browser preference and does not subscribe.
+- One idle gate warned that a small screen region was still moving. Explicit
+  prompt-visible, Cancel, prompt-hidden, and returned-control gates all passed;
+  the warning's motion source was not identified. This is a data-dependent
+  local fragment, not a deterministic CI acceptance suite.
+- The destination website itself was **not** opened: the browser-choice prompt
+  was cancelled rather than changing the user's preference. Android/web manual
+  UI, dark-theme, and large-text checks remain unclaimed.
+
+### Runtime connection recovery
+
+The simulator had returned to the Expo launcher and the discovered LAN Metro URL
+would not load the app. Existing Metro PID 84205 on port 8081 was confirmed to use
+this worktree. Opening
+`bluesky://expo-development-client/?url=http%3A%2F%2F127.0.0.1%3A8081`
+and accepting the system Open prompt downloaded the bundle and restored the
+signed-in app. Debugger status confirmed this worktree and the iPhone target.
+Only this simulator's app was restarted; Metro was not restarted and the
+simulator was not rebooted. The existing Home-to-Atmosphere fragment replayed
+successfully after recovery.
+
+At task 0007 completion, shares still used the generic renderer. Task 0008
+replaced that treatment as documented below. No implementation checkpoint
+commit has been made.
+
+## Task 0008 implementation and verification
+
+- Reused Luna `%254` for `components/ShareSnippets.tsx` and its tests; source
+  and tests have been handed back. Parent reviewed the integration and extended
+  tests. Luna also made early share-renderer wiring/composition edits before
+  parent integration; no source ownership remains outstanding. No subdelegation.
+- Parent added `components/ShareActivity.tsx`: API-collection share dispatch,
+  one compact document preview, independent document menu, separate real sharer
+  header, and snippets. Subject groups retain valid matching posts (deduplicated
+  by post URI) and count distinct usable people separately. Actor groups stay
+  first-share/preview plus remaining-post count. Invalid/missing content falls
+  back without invented excerpts/media. Shared sidecars and original references
+  remain intact.
+- `ArticleActivity.tsx` now includes selected related shares in the one parent
+  article card, separately from publisher and recommendation lines. Only the
+  first document's related children render in actor groups. Existing malformed
+  article/external-view fallback remains intact.
+- `relationships.ts` adds `getSharePostHref(activity, actor)` for actual-owner
+  post-thread links. `socialProof.ts` now rejects share sources that cannot form
+  a real owned post-thread link; existing related actor deduplication remains.
+- Parent renderer/relationship/social-proof tests cover root/mixed/self shares,
+  original references, distinct people versus posts, invalid sources/targets,
+  first-only actor groups, missing/unsafe article targets, and actual covers.
+  Snippet rendering is mocked in composition/list tests; delegate owns actual
+  excerpt/expansion/interaction tests.
+- Intermediate parent checks passed **10 iOS suites / 129 tests**, all-platform
+  typechecks and lint. This is not final task verification: the delegate is
+  still refining snippets. Initial failures were a nested footnote text query,
+  list-test imports pulling real RichText infrastructure, and mock stringifying
+  unknown data; fixed with anchored matching, a focused snippet mock, and a
+  string type check. Production guards were not weakened.
+- Working scoped Prettier ignore pattern is `*`, then `!*/`, then explicit file
+  negations, in a temporary repository-root ignore file. `**/*` plus only file
+  negations silently matches no files. The working command fixed four parent
+  files and the temporary ignore file was removed.
+- New read-only live snapshots (do not commit): `/tmp/atmosphere-task8-live.json`,
+  `/tmp/atmosphere-task8-live-2.json`, `/tmp/atmosphere-task8-live-3.json`.
+  Three inspected pages contain 20/12/52 outer rows. First-page standalone
+  shares include `aparker.io` (CSS resets), `divy.zone` (atproto spaces), and
+  `test.esb.lol` (Making software hurts now); related shares include Chris
+  Coyier's self-share, mackuba.eu's self-share, and renderg.host's conference
+  post with real tag/mention/link facets. No grouped shares were observed.
+- `ShareSnippets` initially shows two usable posts, with translated expansion
+  and collapse. Empty text retains thread access without a quote box. Complete
+  raw text/facets enter RichTextAPI unchanged, with a four-line display cap.
+  Short facet-free emoji uses a locally capped Text; long emoji already goes
+  through RichText's capped normal branch (`isOnlyEmoji` has a length limit).
+  The delegate's initial long-emoji test assumption was corrected, not worked
+  around in production code. Mention/tag/link UTF-8 offsets and original facet
+  references are covered, including emoji before the facets.
+- Quote bodies use a link-role Button without href, avoiding nested web anchors.
+  Facet events prevent the parent thread action; profile, document preview,
+  and menu targets stay independent. The raw-sidecar boundary explicitly notes
+  the absence of hydrated moderation, server labels, and viewer state.
+
+### Final automated verification
+
+- iOS and Android each passed **15 suites / 162 tests**, including Atmosphere,
+  routes, route helpers, drawer, and the unchanged shared compact-card regressions.
+  Logs: `/tmp/atmosphere-task8-ios-final.log` and
+  `/tmp/atmosphere-task8-android-final.log`.
+- `pnpm typecheck` passed all three platforms; `pnpm lint` and `pnpm prettier`
+  passed. Logs: `/tmp/atmosphere-task8-{types,lint,prettier}-final.log`.
+  Restored two unrelated type-import edits in KnownLikers and merge.test.
+- Grouped shares/expansion, malformed data, self-shares, mixed categories,
+  bounded actor groups, and missing-content cases have deterministic coverage.
+  No grouped shares were available in the inspected live data.
+
+### Actual iOS verification and saved fragments
+
+- Reviewed the live light-theme card screenshots: Chris Coyier's self-share
+  inside its article; aparker.io's standalone quote and compact CSS article;
+  and the conference article with one publisher line, six recommenders
+  (`@chadkoh.com and 5 others recommended`), and renderg.host's separate quote.
+  Mixed-card capture: `/tmp/simserver-Ua8qOo/media/657341000-1789141656664.png`.
+- `.argent/flows/atmosphere-share-thread-task8.yaml` replay passed **5 steps**;
+  the standalone quote opened the aparker.io post, not the article.
+- `.argent/flows/atmosphere-share-article-menu-task8.yaml` replay passed
+  **15 executable steps**: the article entered the external-link browser-choice
+  path, Cancel returned to the card, and View author opened vale.rocks.
+  One idle gate reported small unidentified motion; visible-returned-preview
+  and stable menu/destination controls passed. The external site was not loaded,
+  browser preference was not changed, and no report/subscription was submitted.
+- A separate sharer-handle tap opened austin's aparker.io profile, independently
+  of the document author. Capture:
+  `/tmp/simserver-Ua8qOo/media/275483000-1789141513287.png`.
+- The mixed card's quote opened the actual renderg.host thread (captured at
+  `/tmp/simserver-Ua8qOo/media/749310000-1789142056761.png`). Returning to the
+  card and tapping its nested `@gui.do` facet opened Guido X Jansen's profile,
+  not the parent thread. Capture:
+  `/tmp/simserver-Ua8qOo/media/312524000-1789142113318.png`.
+- `.argent/flows/atmosphere-mixed-share-task8.yaml` preserves the recorded
+  mixed-card path and a native-verified scoped quote selector. **Its final full
+  replay is not proven.** It failed at the nested recommendation scroll target
+  after 25 attempts. Subsequent inspection found new live activity at the top:
+  a subscription followed by j4ck.xyz's **87-photo actor group**, currently
+  rendered as an unbounded vertical stack by the old photo renderer. This also
+  invalidated the old navigation fragment's assumption of a document menu in
+  the first viewport. Capture:
+  `/tmp/simserver-Ua8qOo/media/810508000-1789142268816.png`.
+  The earlier starting-position suspicion was not the demonstrated cause;
+  changed live data and the old photo layout explain the scroll-limit failure.
+  Revisit this data-dependent fragment after task 0010's bounded Gallery work;
+  do not call it a passing regression test. Manual mixed-share evidence above
+  remains valid. No checks were weakened to hide the failure.
+- These are data-dependent local fragments, not deterministic CI QA suites.
+  Android/web manual UI, dark themes, large text, and on-device grouped-share
+  expansion remain unclaimed. Task 0011 retains cross-platform integration QA.
+
+Task 0008's implementation, automated coverage, and actual share interactions
+are complete. The optional mixed-fragment replay limitation is retained above
+for integration follow-up.
+
+## Task 0009 implementation and verification
+
+### Implementation
+
+- Added `components/StreamActivity.tsx`: active standalone cards have translated
+  LIVE NOW status, outer activity time, title, independent streamer/profile link,
+  and an optional 78px-square appview thumbnail. No watching counts, player,
+  autoplay, guessed replay URL, or nonfunctional menu is rendered.
+- Ended streams are title-first footnotes. Actor groups show only the first
+  title plus remaining count, and explicitly label duration as belonging to the
+  first stream. All original children/sidecars remain available to data/debug.
+  Missing first records do not select later content. Unexpected active actor
+  groups remain bounded summaries rather than implying the whole group is live.
+- `streams.ts` centralizes present-endedAt versus absent-endedAt classification,
+  finite ordered raw lifecycle duration, and credential-free absolute HTTP(S)
+  URL validation. `socialProof.ts` uses the same status helper. Even empty or
+  invalid end strings mean ended, but have no duration. No freshness timeout,
+  lastSeenAt policy, invented duration field, or liveness query was added.
+- Durations use Lingui number/unit formatting (seconds below a minute, otherwise
+  whole elapsed minutes); outer indexedAt remains the feed timestamp. Tests
+  verify locale changes update units. `isLivestreamRecord` now validates optional
+  fields and a present discriminator, tolerating invalid date strings safely.
+- Removed the obsolete unbounded `LivestreamBody`. Images use only the first
+  item's typed `view.thumb`, verbatim, with lazy loading. Missing/blank thumbs
+  produce no image frame; raw blob fields are never used as a fallback.
+- Reused Luna `%254` for helpers/guard/tests; parent owns final integration.
+  A plain tmux buffer paste split the brief into separate prompts and initially
+  put helpers in socialProof.ts. Corrected by sending a single-line instruction
+  to read the complete brief file. Helpers now live in streams.ts, the temporary
+  livestream.test.ts was removed, and ownership was handed back. Future reuse:
+  send a one-line instruction to read the brief, or use bracketed paste (`-p`).
+
+### Automated verification
+
+- Final iOS and Android runs each passed **16 suites / 194 tests**, including
+  Atmosphere and retained route, route-helper, drawer, and shared compact-card
+  regressions. Logs: `/tmp/atmosphere-task9-ios-final.log` and
+  `/tmp/atmosphere-task9-android-final.log`.
+- `pnpm typecheck` passed iOS, Android, and web; `pnpm lint`, explicitly scoped
+  `pnpm prettier`, and `git diff --check` passed. Logs use
+  `/tmp/atmosphere-task9-{types,lint,prettier}-final.log`.
+- Coverage includes fresh/stale no-end policy, empty/invalid/reversed end dates,
+  zero and valid raw durations, indexed-time independence, thirteen-item groups,
+  missing first records/metadata, malformed fields, safe/missing URLs, real and
+  missing/blank appview thumbnails, no raw-blob fallback, emoji/RTL, and runtime
+  locale switching. An initial locale test used a matcher callback unsupported
+  by React Native Testing Library; corrected the test to assert the label value.
+
+### Device evidence and fixture cleanup
+
+- New live photo groups made natural stream scrolling unsuitable before task
+  0010. Used a temporary, explicitly labeled fixture projection in only the
+  current account's **non-persisted Atmosphere query cache**. The query key has
+  no persistedVersion (`query.ts`, `state/queries/util.ts`). No source override,
+  backend record mutation, account mutation, or persisted fixture was added.
+- Retrieved one additional page through the existing query function with its
+  opaque cursor, then projected the actual iame.li ended group. Added labeled
+  synthetic no-end/missing-thumbnail and invalid-ended-date cases, plus a
+  labeled active case using the real item's unchanged appview thumbnail/URL.
+  LIVE NOW on those synthetic cases is not evidence that iame.li is streaming.
+- Actual light-theme screenshot review showed the real birthday/HITMAN title
+  plus one remaining stream and `@iame.li streamed (first stream: 113 min)`.
+  Missing-thumbnail active and invalid-date ended fixtures had no blank image
+  frames or invalid duration text. The image fixture showed its real appview
+  thumbnail at the intended compact size. Capture:
+  `/tmp/simserver-Ua8qOo/media/390025000-1789143706402.png`.
+- `.argent/flows/atmosphere-stream-link-task9.yaml` was recorded, polished to
+  stable selectors, and replayed: **8 passed, 0 failed/errored/skipped**. The
+  title entered the existing browser-choice path; Cancel returned to the card.
+  The website was not opened and browser preference was unchanged. One final
+  idle gate warned about small motion; subsequent screenshot review showed the
+  settled fixture cards with no visible loading spinner, but did not identify
+  the source of that earlier motion. Capture:
+  `/tmp/simserver-Ua8qOo/media/386892000-1789143894400.png`.
+- Restored the original query state/data and verified **original data reference
+  equality**, then removed the `__atmosphereTask9QA` backup. The original single
+  cached page and first subscription collection returned. No fixture remains
+  installed. The saved fragment requires fixture setup; it is not a standalone
+  deterministic CI QA suite. No recording is left open.
+- `/tmp/atmosphere-enter-task9.yaml` is a navigation-only prefix of the already
+  recorded Home/drawer path, without the obsolete first-document-menu assumption;
+  its six steps passed. It does not prove first-row content or a top position.
+- Android/web manual UI, other themes, and large text remain unclaimed for task
+  0011. Keep the backend TODO: stale records without endedAt can display LIVE
+  NOW indefinitely under the explicitly accepted prototype policy.
+
+Task 0009 is complete. Continue with task 0010, then revisit the task-0008 mixed
+replay after replacing the old unbounded photo stack. No checkpoint commit has
+been made.
+
+## Task 0010 implementation and verification
+
+### Implemented and checked
+
+- Added `photos.ts` / `photos.test.ts` and `components/PhotoActivity.tsx`.
+  Renderer registration is wired; removed old `GrainPhotoBody` and its vertical
+  image stack. Publication-root behavior is retained. No shared image component
+  has been edited.
+- Reused Luna `%254` for only the adapter and adapter tests; ownership is handed
+  back. Parent tightened local CID parsing/exception handling, used isValidDid,
+  reused getBlobUrl's existing MIME handling rather than duplicating its list,
+  and made invalid/overflowing ratios fall back to square without hiding a valid
+  photo. Missing/malformed alt safely becomes empty, never fabricated caption.
+- Photos stay in API order, filtering only unusable media/owners/records. CID
+  validation is feature-local; shared externalViews behavior is unchanged.
+  Missing media renders a quiet unavailable footnote, not an empty image card.
+- Multiple usable photos use the unchanged Gallery in a feature-local
+  GalleryBleed boundary sized to the card. A singleton (including a group with
+  only one usable image) uses AutoSizedImage plus existing ImageContextMenu and
+  lightbox integration. Raw group counts remain intact while Gallery/lightbox
+  indexes use the compact usable-image array.
+- Lightbox gets actual URLs, alt, dimensions, refs and thumbnail dimensions;
+  metricsContext/post IDs are omitted. Gallery's screen-reader fallback supplies
+  just the selected ref/dimensions: the adapter aligns those to the selected
+  image instead of attaching them to image zero. No bulk prefetch was added.
+- Parent renderer tests cover single-image/context-preview callbacks, one
+  Gallery capped at ten images from an 87-photo group, unchanged Gallery defaults, skipped-image indexes,
+  screen-reader refs, surviving singletons, missing-media fallbacks, alt metadata,
+  and no post metrics. List tests mock only media boundaries, preserving real
+  collection dispatch. Old fake photo CIDs were replaced with valid test CIDs.
+- Final checks: **17 suites / 222 tests passed on both iOS and Android**, including
+  retained routes/helpers/drawer/shared Standard Site card regressions.
+  All-platform typechecks, lint, scoped formatting, and diff checks passed.
+  Logs: `/tmp/atmosphere-task10-cap-{ios,android,types,lint,format}.log`.
+  Cap tests cover 9/10/11/87 photos, validation before limiting, original map/group
+  references, ordered first ten, and opening the tenth lightbox image without metrics.
+  The first list test failed because a too-broad renderer mock hid its row;
+  corrected by retaining the renderer and mocking Gallery/AutoSizedImage/etc.
+
+### Initial live device evidence before the ten-photo cap
+
+- iPhone 17 Pro, UDID `A8ADF8F1-F81E-4D34-BD1E-4F5110FACAD5`, bundle
+  `xyz.blueskyweb.app`, connected Metro 8081. Code changes reloaded the app to
+  Home; the navigation-only task-9 fragment passed 6 steps to reenter Atmosphere.
+- The actual j4ck.xyz **87-photo** group now occupies a 200pt-high horizontal
+  Gallery rather than many screens of vertical images. Native discovery found
+  `atmospherePhotoGallery` at x=34.33, width=333.33, height=200, with clipping
+  enabled inside the card. Image badges and real ALT data use the existing UI.
+  Initial capture: `/tmp/simserver-Ua8qOo/media/897887000-1789145081903.png`.
+- A horizontal swipe moved from the parrot toward the capybara without scrolling
+  the feed vertically or opening the drawer. Reviewed capture:
+  `/tmp/simserver-Ua8qOo/media/795645000-1789145232801.png`.
+- Tapping the capybara opened the correct full image. Read-only runtime inspection
+  confirmed lightbox **index 1**, **87 images**, the capybara's original alt, and
+  **no metricsContext**. Capture:
+  `/tmp/simserver-Ua8qOo/media/212560000-1789145347219.png`.
+
+### Resolved overflow: feature-local cap, shared lightbox unchanged
+
+- The recorded `Close image` visibility gate failed. This is a real layout bug,
+  not merely an AX/native selector disagreement: native discovery found the
+  Close control at **x=633, y=70, width=32, height=32** on the **402pt-wide**
+  screen. `Lightbox/chrome/Header.tsx` lays out ImageMenu, PagerDots, and Close in
+  one row; `PagerDots.tsx` renders every dot without bounding its width. The
+  87-dot strip pushes Close offscreen. The screenshot shows the overflowing dots.
+- The operator rejected changing shared lightbox code and instead explicitly
+  capped photo galleries at **ten images**. `getGrainPhotos()` now returns the
+  first ten usable images; the same array feeds Gallery and lightbox. All 87
+  raw children, shared sidecars, and the truthful outer activity count remain.
+  No shared Gallery, lightbox, pager-dot, image-menu, or ImageEmbed file changed.
+- Preserved the original failed recording at
+  `/tmp/atmosphere-photo-gallery-task10-uncapped-failure.yaml`, then re-recorded
+  the capped path. Raw new take:
+  `/tmp/atmosphere-photo-gallery-task10-capped-recorded.yaml`.
+- Reviewed the capped Gallery's `2/10` badge and unchanged 87-photo header:
+  `/tmp/simserver-Ua8qOo/media/415492000-1789146470422.png`.
+  Capped capybara lightbox with ten dots and visible Close:
+  `/tmp/simserver-Ua8qOo/media/69694000-1789146547083.png`.
+  Native Close is now **x=358, y=70, width=32, height=32** on the 402pt screen.
+- The simulator's AX tree still omits lightbox controls despite their valid
+  on-screen native frames. Replaced the failed AX gate with the same positive
+  `Close image` visibility assertion on the runner's native tree, executed live
+  through the recorded `atmosphere-lightbox-visible-task10.yaml` helper. The
+  corresponding closed helper proves Close disappears and Atmosphere returns.
+  This is not a gesture-only dismissal or weakened check.
+- Gallery horizontal movement preserved vertical position and did not open the
+  drawer. The initial short, momentum-free lightbox swipe returned to the same
+  image; the corrected natural left flick paged from capybara to monkeys:
+  `/tmp/simserver-Ua8qOo/media/979909000-1789146751988.png`.
+  The shared native pager is an unlabeled full-screen RNCPagerViewComponentView;
+  its semantic `swipe: left` is the documented selector-less gesture exception.
+- Used the actual Close control, returned to the feed, scrolled vertically, and
+  opened/closed trezy.codes' standalone equipment photo. Lightbox capture:
+  `/tmp/simserver-Ua8qOo/media/245138000-1789146890254.png`.
+  Returned single-photo card:
+  `/tmp/simserver-Ua8qOo/media/87844000-1789147039100.png`.
+- Final `.argent/flows/atmosphere-photo-gallery-task10.yaml` replay:
+  **25 passed, 0 failed/errored/skipped**, with one small-motion idle warning in
+  the standalone lightbox. Subsequent Close/hidden/Atmosphere checks passed.
+  Manual singleton capture showed a loaded image; the replay's transient motion
+  source was not identified. Images/counts were visually reviewed, not asserted
+  by deterministic screenshot baselines. The flow remains live-data dependent.
+
+### Retained mixed-share replay repaired and passed
+
+- After reentering at the top through the six-step navigation-only fragment,
+  the old mixed-share replay reached recommendation proof but missed its quote
+  tap: the quote was below the bottom bar. Thread identity correctly failed.
+  Recorded the missing vertical seek and quote visibility check, then added
+  only `scroll-to` for the scoped quote ahead of the existing checks/tap.
+  Raw captured span: `/tmp/atmosphere-mixed-share-scroll-task10-recorded.yaml`.
+- Reentered from Home, then the complete
+  `.argent/flows/atmosphere-mixed-share-task8.yaml` passed **8 steps, 0 failures**.
+  Its recommendation, scoped quote, and Thread options checks are unchanged.
+  Reviewed the resulting renderg.host post:
+  `/tmp/simserver-Ua8qOo/media/416017000-1789147374422.png`.
+  This supersedes task 0008's earlier unproven-full-replay caveat.
+
+### Continuation
+
+Task 0010 is complete; task 0011 is next. No checkpoint commit has been made.
+The simulator currently shows the renderg.host thread reached by the mixed-share
+replay. No cache fixtures, backups in runtime globals, or active recordings were
+created in the cap-verification session. No account/backend mutations or saved
+images. Android/web manual UI, other themes, large text, and actual screen-reader
+interaction remain unclaimed for task 0011; native preset tests are not device QA.
+
+## Task 0011 in-progress integration and reconnect handoff
+
+- Operator resumed work and requested delegation. Task 0011 is `in_progress`.
+- Luna `%259` completed `timelineDates.ts` / `timelineDates.test.ts`: 11 tests
+  passed. Inclusive rolling three-hour cutoff, local-calendar keys, future dates
+  unheaded, invalid dates omitted from heading generation. Ownership handed back.
+- Luna `%260` completed `rowLayout.test.ts` / `timeline.test.ts`: 13 tests passed,
+  no bugs reported. Ownership handed back; no delegates are writing these files.
+- Parent implemented `rowLayout.ts`, `timeline.ts`, `useTimelineNow.ts`, and
+  `components/TimelineRow.tsx`, wired through `index.tsx`. Layout metadata is
+  outside the minimal computed view. Headings live inside their first outer row,
+  not in new group/list containers. Existing item/sidecar references stay intact.
+- Actual renderability determines card/footnote spacing (14/24/8), including
+  unavailable-content fallbacks. Share selection and article/subscription targets
+  are reused by rendering and layout classification. Removed independent vertical
+  renderer padding; compact separators and date headings are owned by TimelineRow.
+  Shared image and lightbox components remain untouched.
+- Parent added classifier/rendered-card agreement and one-debug-control checks to
+  the existing renderer test helper. Combined check passed **5 iOS suites / 114
+  tests**: date, layout, timeline, screen, and renderer tests.
+  Log: `/tmp/atmosphere-task11-combined-tests.log`.
+- On operator request, reconnected Argent. JS debugger connected on 8081 to the
+  correct worktree; native tooling reported `stale_process`. An app-only restart
+  restored native `connected: true`; Metro and simulator were not restarted.
+- Recorded, polished, and replayed `.argent/flows/atmosphere-timeline-task11.yaml`:
+  **10/10 passed** for launch/Home/drawer/Atmosphere navigation. It composes the
+  previously recorded navigation-only `.argent/flows/atmosphere-enter.yaml`.
+  This proves recovery/navigation, not complete timeline acceptance.
+- Actual first-viewport review shows unheaded recent rows, a compact separator,
+  and Earlier today before the first older-today row:
+  `/tmp/simserver-IDWOHd/media/871426000-1789154212883.png`.
+  Native date-heading ID resolves; Yesterday is mounted below the viewport and
+  has not yet been visually checked. Simulator currently shows Atmosphere at top.
+- Remaining work: finish reviewing delegate tests (strengthen the DST example,
+  which currently compares noons after the transition); add clock/resume/language
+  and list lifecycle/account-switch integration coverage; formatting/type/lint and
+  full native regression checks; date-heading/spacing/pagination UI verification,
+  Android/web/theme/large-text/keyboard/screen-reader checks; update the stale
+  frontend specification and final evidence. No task 0011 completion claim yet.
+- No active recording, fixture cache, shared media edits, or new commit.
