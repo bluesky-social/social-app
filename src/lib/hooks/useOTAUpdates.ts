@@ -448,8 +448,8 @@ export function useOTAUpdates() {
 export const splash = (scheme: 'light' | 'dark') => {
   const source =
     scheme === 'light'
-      ? require('../../../assets/splash/splash.png')
-      : require('../../../assets/splash/splash-dark.png')
+      ? require('../../../assets/splash/splash.webp')
+      : require('../../../assets/splash/splash-dark.webp')
 
   return {
     image: RNImage.resolveAssetSource(source)!.uri,

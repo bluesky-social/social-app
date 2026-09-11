@@ -344,12 +344,12 @@ module.exports = function (_config) {
             ios: {
               enableFullScreenImage_legacy: true, // iOS only
               backgroundColor: '#006AFF', // primary_500
-              image: './assets/splash/splash.png',
+              image: './assets/splash/splash.webp',
               resizeMode: 'cover',
               dark: {
                 enableFullScreenImage_legacy: true, // iOS only
                 backgroundColor: '#002861', // primary_900
-                image: './assets/splash/splash-dark.png',
+                image: './assets/splash/splash-dark.webp',
                 resizeMode: 'cover',
               },
             },

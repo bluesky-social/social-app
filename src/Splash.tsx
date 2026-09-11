@@ -21,9 +21,9 @@ import * as SplashScreen from 'expo-splash-screen'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a} from '#/alf'
 // @ts-expect-error
-import splashImagePointer from '../assets/splash/splash.png'
+import splashImagePointer from '../assets/splash/splash.webp'
 // @ts-expect-error
-import darkSplashImagePointer from '../assets/splash/splash-dark.png'
+import darkSplashImagePointer from '../assets/splash/splash-dark.webp'
 
 const splashImageUri = RNImage.resolveAssetSource(splashImagePointer)!.uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
