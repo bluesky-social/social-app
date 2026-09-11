@@ -31,10 +31,12 @@ export function ShareSnippets({
   shares,
   associatedRecords,
   showActorMetadata = true,
+  hideActorMetadataForDid,
 }: {
   shares: Share[]
   associatedRecords: AssociatedRecords
   showActorMetadata?: boolean
+  hideActorMetadataForDid?: string
 }) {
   const {t: l} = useLingui()
   const [expanded, setExpanded] = useState(false)
@@ -57,7 +59,9 @@ export function ShareSnippets({
         <ShareSnippet
           key={share.activity.record.uri}
           share={share}
-          showActorMetadata={showActorMetadata}
+          showActorMetadata={
+            showActorMetadata && share.actor.did !== hideActorMetadataForDid
+          }
         />
       ))}
       {hasOverflow ? (

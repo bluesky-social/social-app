@@ -1063,6 +1063,7 @@ describe('document share cards', () => {
       {activity: share, actor: row.actors['did:plc:author']},
     ])
     expect(props.associatedRecords).toBe(row.associatedRecords)
+    expect(props.hideActorMetadataForDid).toBe('did:plc:author')
   })
 })
 

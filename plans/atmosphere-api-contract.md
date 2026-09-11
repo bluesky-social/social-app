@@ -14,8 +14,8 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend branch | `atmosphere-tab` |
 | Synchronized backend base commit | `fa958a37012b Add livestream activity views and preserve active streams` |
 | Uncommitted backend state | Batched post interaction-count hydration in `#shareView` atop `fa958a37012b` |
-| Frontend tip | `1223b7099 Implement Atmosphere social-proof cards and timeline layout` |
-| Uncommitted frontend state | Unrelated Atmosphere implementation changes are present; this backend session modifies only contract Markdown |
+| Frontend tip | `d604edc59 Refine Atmosphere document share card layout and bylines` |
+| Uncommitted frontend state | Contract synchronization only; no frontend implementation files changed by this backend session |
 | Deployment status | The share-count backend changes are uncommitted and undeployed |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.

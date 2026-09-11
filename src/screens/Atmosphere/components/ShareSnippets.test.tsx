@@ -117,6 +117,7 @@ function renderShares(
   shares: ShareFixture[],
   showActorMetadata?: boolean,
   missingRecordUris: string[] = [],
+  hideActorMetadataForDid?: string,
 ) {
   const missing = new Set(missingRecordUris)
   const associatedRecords = Object.fromEntries(
@@ -133,6 +134,7 @@ function renderShares(
         shares={shares.map(({activity, actor}) => ({activity, actor}))}
         associatedRecords={associatedRecords}
         showActorMetadata={showActorMetadata}
+        hideActorMetadataForDid={hideActorMetadataForDid}
       />
     </I18nProvider>,
   )
@@ -207,6 +209,22 @@ describe('ShareSnippets', () => {
       expect.objectContaining({
         timestamp: share.activity.record.indexedAt,
       }),
+    )
+  })
+
+  it('omits actor metadata only for a matching article author', () => {
+    const authorShare = createShare(0)
+    const otherShare = createShare(1)
+    renderShares(
+      [authorShare, otherShare],
+      undefined,
+      [],
+      authorShare.actor.did,
+    )
+
+    expect(mockActorLineProps).toHaveBeenCalledTimes(1)
+    expect(mockActorLineProps).toHaveBeenCalledWith(
+      expect.objectContaining({actors: [otherShare.actor]}),
     )
   })
 

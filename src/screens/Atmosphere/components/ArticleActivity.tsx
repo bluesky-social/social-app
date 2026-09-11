@@ -85,6 +85,7 @@ function ArticleActivity({
               <ShareSnippets
                 shares={shares}
                 associatedRecords={item.associatedRecords}
+                hideActorMetadataForDid={author?.did}
               />
             ) : null}
           </View>
