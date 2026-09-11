@@ -271,16 +271,16 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
         run: |
-          status=$(curl -sS -o /dev/null -w '%{http_code}' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}")
-          if [ "$status" = "200" ]; then
+          if response=$(gh api "repos/${GITHUB_REPOSITORY}/releases/tags/${TAG}" 2>&1); then
             echo "Found GitHub Release for tag $TAG"
             echo "exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "No GitHub Release found for tag $TAG (HTTP $status); skipping APK attachment."
+          elif [[ "$response" == *"(HTTP 404)"* ]]; then
+            echo "No GitHub Release found for tag $TAG; skipping APK attachment."
             echo "exists=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::Could not check for a GitHub Release for tag $TAG."
+            echo "$response"
+            exit 1
           fi
 
       - name: ⬇️ Download APK artifact
