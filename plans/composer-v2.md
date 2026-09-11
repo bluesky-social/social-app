@@ -163,7 +163,7 @@ Draft round-trip tests should assert semantic equality rather than object identi
 
 ### 5. Support `app.bsky.embed.gallery`
 
-The V2 media model currently enforces the legacy four-image ceiling. Update it for the gallery embed.
+The V2 media model now accepts up to 10 images. Serialization still needs to choose between the legacy images embed and gallery based on item count.
 
 Requirements:
 

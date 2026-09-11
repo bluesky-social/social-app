@@ -182,7 +182,7 @@ describe('record and media routing', () => {
         record: {state: 'pending', uri},
         media: undefined,
       })
-      expect(store.getState().posts[root].imageSelectionsRemaining).toBe(4)
+      expect(store.getState().posts[root].imageSelectionsRemaining).toBe(10)
       expect(store.actions.addMedia(root, [uploads[0]])).toHaveLength(1)
       d.resolve(link)
       await d.promise
@@ -332,7 +332,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     expect(failed.error).toBe('network down')
     expect(failed.retry).toEqual(expect.any(Function))
     expect(store.getState().posts[root].imageSelectionsRemaining).toBe(
-      slot === 'media' ? 0 : 4,
+      slot === 'media' ? 0 : 10,
     )
     if (slot === 'media')
       expect(store.actions.addMedia(root, [uploads[0]])).toEqual([])
