@@ -9,7 +9,6 @@ import {nanoid} from 'nanoid/non-secure'
 import {type LinkResolvers, resolveLink} from '#/lib/api/resolve'
 import {getDeviceName} from '#/lib/deviceName'
 import {getImageDim} from '#/lib/media/manip'
-import {mimeToExt} from '#/lib/media/video/util'
 import {shortenLinks} from '#/lib/strings/rich-text-manip'
 import {type ComposerImage} from '#/state/gallery'
 import {threadgateAllowUISettingToAllowRecordValue} from '#/state/queries/threadgate/util'
@@ -173,8 +172,7 @@ async function postDraftToServerPost(
 
 /**
  * Serialize images to server format with localRef paths.
- * Reuses existing localRefPath if present (when editing a draft),
- * otherwise generates a new one.
+ * Uses the stable localRefPath assigned when the attachment entered the composer.
  */
 function serializeImages(
   images: ComposerImage[],
@@ -182,16 +180,10 @@ function serializeImages(
 ): app.bsky.draft.defs.DraftEmbedGalleryItems {
   return images.map(image => {
     const sourcePath = image.transformed?.path || image.source.path
-    // Reuse existing localRefPath if present (editing draft), otherwise generate new
-    const isReusing = !!image.localRefPath
-    const localRefPath = image.localRefPath || `image:${nanoid()}`
+    const localRefPath = image.localRefPath
     localRefPaths.set(localRefPath, sourcePath)
 
-    logger.debug('serializing image', {
-      localRefPath,
-      isReusing,
-      sourcePath,
-    })
+    logger.debug('serializing image', {localRefPath})
 
     return {
       $type: 'app.bsky.draft.defs#draftEmbedImage' as const,
@@ -217,10 +209,7 @@ async function serializeVideo(
     return undefined
   }
 
-  // Encode mime type in the path for restoration
-  const mimeType = videoState.video.mimeType || 'video/mp4'
-  const ext = mimeToExt(mimeType)
-  const localRefPath = `video:${mimeType}:${nanoid()}.${ext}`
+  const localRefPath = videoState.localRefPath
   localRefPaths.set(localRefPath, videoState.video.uri)
 
   // Read caption file contents as text

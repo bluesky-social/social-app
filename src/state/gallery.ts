@@ -35,8 +35,8 @@ export type ImageSource = ImageMeta & {
 type ComposerImageBase = {
   alt: string
   source: ImageSource
-  /** Original localRef path from draft, if editing an existing draft. Used to reuse the same storage key. */
-  localRefPath?: string
+  /** Stable attachment ref used for every draft-save retry. */
+  localRefPath: string
 }
 type ComposerImageWithoutTransformation = ComposerImageBase & {
   transformed?: undefined
@@ -65,6 +65,7 @@ export async function createComposerImage(
 ): Promise<ComposerImageWithoutTransformation> {
   return {
     alt: '',
+    localRefPath: `image:${nanoid()}`,
     source: {
       id: nanoid(),
       // Copy to cache to ensure file survives OS temporary file cleanup
@@ -89,6 +90,7 @@ export function createInitialImages(
   return uris.map(({uri, width, height, altText = ''}) => {
     return {
       alt: altText,
+      localRefPath: `image:${nanoid()}`,
       source: {
         id: nanoid(),
         path: uri,
@@ -108,6 +110,7 @@ export async function pasteImage(
 
   return {
     alt: '',
+    localRefPath: `image:${nanoid()}`,
     source: {
       id: nanoid(),
       path: uri,
@@ -134,6 +137,7 @@ export async function cropImage(img: ComposerImage): Promise<ComposerImage> {
 
     return {
       alt: img.alt,
+      localRefPath: img.localRefPath,
       source: source,
       transformed: {
         path: await moveIfNecessary(cropped.path),
@@ -162,7 +166,11 @@ export async function manipulateImage(
       return img
     }
 
-    return {alt: img.alt, source: img.source}
+    return {
+      alt: img.alt,
+      localRefPath: img.localRefPath,
+      source: img.source,
+    }
   }
 
   const source = img.source
@@ -172,6 +180,7 @@ export async function manipulateImage(
 
   return {
     alt: img.alt,
+    localRefPath: img.localRefPath,
     source: img.source,
     transformed: {
       path: await moveIfNecessary(result.uri),
@@ -187,7 +196,11 @@ export function resetImageManipulation(
   img: ComposerImage,
 ): ComposerImageWithoutTransformation {
   if (img.transformed !== undefined) {
-    return {alt: img.alt, source: img.source}
+    return {
+      alt: img.alt,
+      localRefPath: img.localRefPath,
+      source: img.source,
+    }
   }
 
   return img
