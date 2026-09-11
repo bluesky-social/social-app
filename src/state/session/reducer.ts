@@ -46,6 +46,7 @@ export type Action =
     }
   | {
       type: 'logged-out-current-account'
+      accountDid?: string
     }
   | {
       type: 'logged-out-every-account'
@@ -179,7 +180,7 @@ let reducer = (state: State, action: Action): State => {
     }
     case 'logged-out-current-account': {
       const {currentBundleState} = state
-      const accountDid = currentBundleState.did
+      const accountDid = action.accountDid ?? currentBundleState.did
       // side effect
       const account = state.accounts.find(a => a.did === accountDid)
       if (account && accountDid) {
@@ -206,7 +207,10 @@ let reducer = (state: State, action: Action): State => {
               }
             : a,
         ),
-        currentBundleState: createPublicBundleState(),
+        currentBundleState:
+          currentBundleState.did === accountDid
+            ? createPublicBundleState()
+            : currentBundleState,
         needsPersist: true,
       }
     }
