@@ -4,6 +4,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {formatDateTime} from '#/lib/strings/time'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
@@ -435,7 +436,7 @@ function AccessSection() {
               ) : lastInitiatedAt && timeAgo && diff ? (
                 <Text
                   style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
-                  title={i18n.date(lastInitiatedAt, {
+                  title={formatDateTime(i18n, lastInitiatedAt, {
                     dateStyle: 'medium',
                     timeStyle: 'medium',
                   })}>

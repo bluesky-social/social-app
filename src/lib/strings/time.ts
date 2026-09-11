@@ -1,5 +1,19 @@
+import {getCalendars} from 'expo-localization'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
+
+export function formatDateTime(
+  i18n: I18n,
+  date: number | string | Date,
+  options: Intl.DateTimeFormatOptions,
+) {
+  const uses24hourClock = getCalendars()[0].uses24hourClock
+
+  return i18n.date(date, {
+    ...options,
+    ...(uses24hourClock === null ? {} : {hour12: !uses24hourClock}),
+  })
+}
 
 export function niceDate(
   i18n: I18n,
@@ -14,15 +28,14 @@ export function niceDate(
     return i18n._(
       msg({
         context: 'date and time formatted like this: [time] · [date]',
-        message: `${i18n.date(d, {timeStyle: ts})} · ${i18n.date(d, {dateStyle: 'medium'})}`,
+        message: `${formatDateTime(i18n, d, {timeStyle: ts})} · ${i18n.date(d, {dateStyle: 'medium'})}`,
       }),
     )
   }
 
-  return i18n.date(d, {
-    dateStyle,
-    timeStyle: ts,
-  })
+  return ts
+    ? formatDateTime(i18n, d, {dateStyle, timeStyle: ts})
+    : i18n.date(d, {dateStyle})
 }
 
 export function getAge(birthDate: Date): number {

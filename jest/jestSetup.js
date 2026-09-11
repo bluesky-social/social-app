@@ -144,5 +144,6 @@ jest.mock('expo-modules-core', () => ({
 }))
 
 jest.mock('expo-localization', () => ({
+  getCalendars: jest.fn(() => [{uses24hourClock: null}]),
   getLocales: () => [],
 }))
