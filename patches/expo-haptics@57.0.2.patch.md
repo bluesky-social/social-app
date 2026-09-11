@@ -1,4 +1,4 @@
-# Expo Haptics Patch
+# Expo Haptics patch
 
 Whenever we migrated to Expo Haptics, there was a difference between how the previous and new libraries handled the
 Android implementation of an iOS "light" haptic. The previous library used the `Vibration` API solely, which does not

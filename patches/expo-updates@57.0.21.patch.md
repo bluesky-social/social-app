@@ -1,4 +1,4 @@
-# Expo-Updates Patch
+# Expo Updates patch
 
 This is a small patch to convert timestamp formats that are returned from the backend. Instead of relying on the
 backend to return the correct format for a specific format (the format required on Android is not the same as on iOS)
