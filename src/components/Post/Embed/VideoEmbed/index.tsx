@@ -5,6 +5,8 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
+import {createPlaybackDurationTracker} from '#/lib/media/video/analytics'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
@@ -89,11 +91,30 @@ function InnerWrapper({embed, post}: Props) {
   const telemetryRef = useRef<PlaybackTelemetry | null>(null)
   const impressionTrackedRef = useRef(false)
   const playbackStartTrackedRef = useRef(false)
+  const [durationTracker] = useState(() => {
+    const tracker = createPlaybackDurationTracker({
+      onSegment: segment => {
+        ax.metric('video:playback:duration', {
+          ...segment,
+          postUri: post?.uri,
+          postAuthorDid: post?.author.did,
+          context: 'embed',
+          presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        })
+      },
+    })
+    tracker.setForeground(getCurrentState() === 'active')
+    return tracker
+  })
+  useOnAppStateChange(state => {
+    durationTracker.setForeground(state === 'active')
+  })
   useEffect(() => {
     return () => {
       telemetryRef.current?.deactivated()
+      durationTracker.flush('unmounted')
     }
-  }, [])
+  }, [durationTracker])
 
   const showOverlay =
     !isActive ||
@@ -111,18 +132,21 @@ function InnerWrapper({embed, post}: Props) {
         embed={embed}
         setStatus={s => {
           setStatus(s)
+          durationTracker.setPlaying(s === 'playing')
           if (s === 'playing') {
             telemetryRef.current?.playing()
           }
         }}
         setIsLoading={loading => {
           setIsLoading(loading)
+          durationTracker.setBuffering(loading)
           if (!loading) {
             telemetryRef.current?.ready()
           }
         }}
         setIsActive={active => {
           setIsActive(active)
+          durationTracker.setActive(active)
           if (active) {
             if (!impressionTrackedRef.current) {
               impressionTrackedRef.current = true
@@ -155,7 +179,11 @@ function InnerWrapper({embed, post}: Props) {
             autoplay,
           })
         }}
+        onPlaybackProgress={progressSeconds => {
+          durationTracker.observeProgress(progressSeconds)
+        }}
         onError={error => {
+          durationTracker.flush('error')
           telemetryRef.current?.error(error)
           ax.metric('video:playback:failed', {
             surface: 'feed',
