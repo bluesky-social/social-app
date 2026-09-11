@@ -3,6 +3,8 @@ import {I18nProvider} from '@lingui/react'
 import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {BookmarkFilled} from '#/components/icons/Bookmark'
+import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon} from '#/components/icons/Heart2'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {type app} from '#/lexicons'
 import {ActivityPresentationRow} from './components/ActivityPresentationRow'
@@ -79,6 +81,7 @@ jest.mock('#/alf', () => ({
   useTheme: () => ({
     palette: {
       primary_500: '#006aff',
+      positive_500: '#168a45',
       negative_500: '#d9003c',
       white: '#ffffff',
     },
@@ -374,6 +377,26 @@ describe('content-first articles and recommendations', () => {
     },
   )
 
+  it.each([1, 2])(
+    'uses the filled primary heart for recommendation %s-actor presentation',
+    count => {
+      const screen = renderRow(recommendationRow(count))
+      const icon = screen.UNSAFE_getByType(HeartFilledIcon)
+      expect(icon.props.fill).toBe('#006aff')
+    },
+  )
+
+  it.each([false, true])(
+    'uses the filled primary heart for related proof in card=%s presentation',
+    subscribed => {
+      const screen = renderRow(
+        documentRow(subscribed, [recommend('did:plc:one')]),
+      )
+      const icon = screen.UNSAFE_getByType(HeartFilledIcon)
+      expect(icon.props.fill).toBe('#006aff')
+    },
+  )
+
   it('applies configuration to both recommendation groups and related proof', () => {
     atmospherePresentationConfig.recommendationCardThreshold = 3
     const cluster = renderRow(recommendationRow(2))
@@ -662,6 +685,15 @@ describe('subscription social proof', () => {
           author: expect.objectContaining({did: 'did:plc:publisher'}),
         }),
       )
+    },
+  )
+
+  it.each([1, 2])(
+    'uses the filled green bookmark for subscription %s-actor presentation',
+    count => {
+      const screen = renderRow(subscriptionRow(count))
+      const icon = screen.UNSAFE_getByType(BookmarkFilled)
+      expect(icon.props.fill).toBe('#168a45')
     },
   )
 

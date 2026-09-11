@@ -14,7 +14,7 @@ import {getSubscriptionActivityUri} from '#/screens/Atmosphere/rowLayout'
 import {getActivityPresentationKind} from '#/screens/Atmosphere/socialProof'
 import {isPublicationRecord} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
-import {BellPlus_Stroke2_Corner0_Rounded as SubscribeIcon} from '#/components/icons/BellPlus'
+import {BookmarkFilled as SubscribeIcon} from '#/components/icons/Bookmark'
 import {InlineLinkText, Link} from '#/components/Link'
 import {SubscribeButton} from '#/components/Post/Embed/StandardSiteEmbed'
 import {Text} from '#/components/Typography'
@@ -135,6 +135,8 @@ export function SubscriptionActivityRenderer({
                 <ActivityActorLine
                   actors={computedItemView.actors}
                   action={l`subscribed`}
+                  icon={SubscribeIcon}
+                  iconColor={t.palette.positive_500}
                 />
                 <View testID="atmospherePublicationCTA">
                   <SubscribeButton
@@ -151,6 +153,7 @@ export function SubscriptionActivityRenderer({
           title={title}
           to={view?.uri}
           icon={SubscribeIcon}
+          iconColor={t.palette.positive_500}
           suffix={suffix}
           thumb={view?.source?.icon}
           menu={menu}>

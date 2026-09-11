@@ -12,9 +12,9 @@ import {
   getDocumentSocialProof,
 } from '#/screens/Atmosphere/socialProof'
 import {isDocumentRecord} from '#/screens/Atmosphere/types'
-import {atoms as a} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
+import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/components/icons/Heart2'
 import {PageText_Stroke2_Corner0_Rounded as ArticleIcon} from '#/components/icons/PageText'
-import {Repost_Stroke2_Corner2_Rounded as RecommendIcon} from '#/components/icons/Repost'
 import {ActivityActorLine, ActivityFootnote} from './ActivityPrimitives'
 import {ArticleCard} from './ArticleCard'
 import {DocumentMenu} from './DocumentMenu'
@@ -34,6 +34,7 @@ function ArticleActivity({
   testID,
   recommendation,
 }: ActivityRendererProps & {recommendation: boolean}) {
+  const t = useTheme()
   const {t: l} = useLingui()
   const first = getFirstActivity(item)
   if (!first || computedItemView.actors.length === 0) return null
@@ -73,12 +74,16 @@ function ArticleActivity({
             <ActivityActorLine
               actors={computedItemView.actors}
               action={action}
+              icon={recommendation ? RecommendIcon : undefined}
+              iconColor={recommendation ? t.palette.primary_500 : undefined}
             />
             {!recommendation && recommenders.length > 0 ? (
               <ActivityActorLine
                 testID="atmosphereArticleRecommendations"
                 actors={recommenders}
                 action={l`recommended`}
+                icon={RecommendIcon}
+                iconColor={t.palette.primary_500}
               />
             ) : null}
             {!recommendation && shares.length > 0 ? (
@@ -95,6 +100,7 @@ function ArticleActivity({
           title={title}
           to={view?.uri}
           icon={recommendation ? RecommendIcon : ArticleIcon}
+          iconColor={recommendation ? t.palette.primary_500 : undefined}
           suffix={suffix}
           thumb={view?.thumb}
           menu={
@@ -114,6 +120,8 @@ function ArticleActivity({
               actors={recommenders}
               action={l`recommended`}
               showAvatars={false}
+              icon={RecommendIcon}
+              iconColor={t.palette.primary_500}
             />
           ) : null}
         </ActivityFootnote>

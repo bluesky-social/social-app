@@ -48,6 +48,8 @@ export function ActivityActorLine({
   action,
   timestamp,
   showAvatars = true,
+  icon: Icon,
+  iconColor,
   testID,
 }: {
   testID?: string
@@ -55,6 +57,8 @@ export function ActivityActorLine({
   action: string
   timestamp?: string
   showAvatars?: boolean
+  icon?: React.ComponentType<IconProps>
+  iconColor?: string
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -68,6 +72,7 @@ export function ActivityActorLine({
       : ''
   const content = (elapsed?: string) => (
     <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+      {Icon ? <Icon size="sm" fill={iconColor} /> : null}
       {showAvatars ? (
         <AvatarStack
           profiles={actors.slice(0, 5) as bsky.profile.AnyProfileView[]}
@@ -110,6 +115,7 @@ export function ActivityFootnote({
   title,
   to,
   icon: Icon,
+  iconColor,
   suffix,
   thumb,
   menu,
@@ -118,6 +124,7 @@ export function ActivityFootnote({
   title: string
   to?: string
   icon: React.ComponentType<IconProps>
+  iconColor?: string
   suffix?: string
   thumb?: string
   menu?: React.ReactNode
@@ -127,7 +134,11 @@ export function ActivityFootnote({
   return (
     <View testID="atmosphereFootnote" style={[a.flex_row, a.gap_md]}>
       <View style={{paddingTop: 2}}>
-        <Icon size="sm" style={t.atoms.text_contrast_medium} />
+        <Icon
+          size="sm"
+          fill={iconColor}
+          style={iconColor ? undefined : t.atoms.text_contrast_medium}
+        />
       </View>
       <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
         <Text emoji numberOfLines={3} style={[a.text_sm, a.leading_snug]}>
