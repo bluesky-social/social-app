@@ -81,7 +81,7 @@ export function QrCodeDialog({
           // works with the add-only permission on iOS (APP-2374)
           await saveToLibraryAsync(`file://${uri}`)
         } catch (e: unknown) {
-          Toast.show(_(msg`An error occurred while saving the QR code!`), {
+          Toast.show(_(msg`An error occurred while saving the QR code.`), {
             type: 'error',
           })
           logger.error('Failed to save QR code', {error: e})

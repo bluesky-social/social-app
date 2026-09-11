@@ -334,11 +334,11 @@ export function StepInfo({
                             <Trans>
                               Have we got your location wrong?{' '}
                               <SimpleInlineLinkText
-                                label={l`Tap here to update your location with GPS.`}
+                                label={l`Tap here to update your location.`}
                                 {...createStaticClick(() => {
                                   locationControl.open()
                                 })}>
-                                Tap here to update your location with GPS.
+                                Tap here to update your location.
                               </SimpleInlineLinkText>
                             </Trans>
                           </Admonition.Text>
