@@ -1,5 +1,6 @@
 import {getGlobalScope, init} from '@sentry/react-native'
 
+import {featureFlagsIntegration} from '#/logger/sentry/featureFlags'
 import * as env from '#/env'
 
 init({
@@ -10,6 +11,7 @@ init({
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
   release: env.RELEASE_VERSION,
+  integrations: [featureFlagsIntegration],
   ignoreErrors: [
     /*
      * Unknown internals errors
