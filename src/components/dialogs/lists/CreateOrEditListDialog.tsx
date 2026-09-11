@@ -5,6 +5,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
+import {revokeObjectUrl} from '#/lib/media/image-manipulator'
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {richTextToString} from '#/lib/strings/rich-text-helpers'
@@ -186,6 +187,13 @@ function DialogInner({
   const [newListAvatar, setNewListAvatar] = useState<
     ImageMeta | undefined | null
   >()
+
+  useEffect(
+    () => () => {
+      revokeObjectUrl(newListAvatar?.path)
+    },
+    [newListAvatar],
+  )
 
   // When creating with pre-filled values (from Starter Pack), consider dirty
   // immediately so the Save button is enabled
