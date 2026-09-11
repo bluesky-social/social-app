@@ -38,104 +38,97 @@ export function ArticleCard({
   return (
     <View testID="atmosphereArticleCard">
       <ActivityCard>
-        <View style={[a.gap_md]}>
-          <View style={[a.flex_row, a.align_center, a.gap_sm]}>
-            {sourceUri ? (
-              <Link
-                to={sourceUri}
-                label={sourceTitle}
-                style={[a.flex_1, a.justify_start, web({outline: 0})]}>
-                <Source view={view} title={sourceTitle} />
-              </Link>
-            ) : (
-              <View style={a.flex_1}>
-                <Source view={view} title={sourceTitle} />
-              </View>
-            )}
-            <ActivityTimestamp timestamp={timestamp} />
-            <DocumentMenu view={view} author={author} />
-          </View>
+        <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_xs]}>
+          {sourceUri ? (
+            <Link
+              to={sourceUri}
+              label={sourceTitle}
+              style={[a.flex_1, a.justify_start, web({outline: 0})]}>
+              <Source view={view} title={sourceTitle} />
+            </Link>
+          ) : (
+            <View style={a.flex_1}>
+              <Source view={view} title={sourceTitle} />
+            </View>
+          )}
+          <ActivityTimestamp timestamp={timestamp} />
+          <DocumentMenu view={view} author={author} />
+        </View>
 
-          <View style={[a.gap_xs, {minWidth: 0}]}>
+        <View style={[a.gap_xs, a.pb_sm, {minWidth: 0}]}>
+          <Link
+            to={view.uri}
+            label={title}
+            testID="atmosphereArticleTitle"
+            style={[a.justify_start, web({outline: 0})]}>
+            <Text
+              emoji
+              numberOfLines={3}
+              style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
+              {title}
+            </Text>
+          </Link>
+          {description ? (
             <Link
               to={view.uri}
-              label={title}
-              testID="atmosphereArticleTitle"
+              label={description}
               style={[a.justify_start, web({outline: 0})]}>
               <Text
                 emoji
                 numberOfLines={3}
-                style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
-                {title}
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                {description}
               </Text>
             </Link>
-            {description ? (
-              <Link
-                to={view.uri}
-                label={description}
-                style={[a.justify_start, web({outline: 0})]}>
-                <Text
-                  emoji
-                  numberOfLines={3}
-                  style={[
-                    a.text_sm,
-                    a.leading_snug,
-                    t.atoms.text_contrast_medium,
-                  ]}>
-                  {description}
-                </Text>
-              </Link>
-            ) : undefined}
-          </View>
-
-          {view.thumb ? (
-            <Link
-              to={view.uri}
-              label={title}
-              style={[
-                a.w_full,
-                a.overflow_hidden,
-                a.rounded_md,
-                web({outline: 0}),
-              ]}>
-              <Image
-                testID="atmosphereArticleCover"
-                source={{uri: view.thumb}}
-                style={[a.w_full, {aspectRatio: 16 / 9}]}
-                contentFit="cover"
-                accessible
-                accessibilityHint=""
-                accessibilityLabel={title}
-                accessibilityIgnoresInvertColors
-                loading="lazy"
-                useAppleWebpCodec
-              />
-            </Link>
-          ) : undefined}
-
-          {hasFooter ? (
-            <View
-              style={[
-                a.mt_xs,
-                a.pt_md,
-                t.atoms.border_contrast_low,
-                a.border_t,
-              ]}>
-              {children}
-            </View>
-          ) : undefined}
-
-          {remainingCount > 0 ? (
-            <Text
-              emoji
-              style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
-              {l`and ${plural(remainingCount, {
-                one: '# more article',
-                other: '# more articles',
-              })}`}
-            </Text>
           ) : undefined}
         </View>
+
+        {view.thumb ? (
+          <Link
+            to={view.uri}
+            label={title}
+            style={[
+              a.w_full,
+              a.overflow_hidden,
+              a.rounded_md,
+              web({outline: 0}),
+            ]}>
+            <Image
+              testID="atmosphereArticleCover"
+              source={{uri: view.thumb}}
+              style={[a.w_full, {aspectRatio: 16 / 9}]}
+              contentFit="cover"
+              accessible
+              accessibilityHint=""
+              accessibilityLabel={title}
+              accessibilityIgnoresInvertColors
+              loading="lazy"
+              useAppleWebpCodec
+            />
+          </Link>
+        ) : undefined}
+
+        {hasFooter ? (
+          <View
+            style={[a.mt_sm, a.pt_md, t.atoms.border_contrast_low, a.border_t]}>
+            {children}
+          </View>
+        ) : undefined}
+
+        {remainingCount > 0 ? (
+          <Text
+            emoji
+            style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+            {l`and ${plural(remainingCount, {
+              one: '# more article',
+              other: '# more articles',
+            })}`}
+          </Text>
+        ) : undefined}
       </ActivityCard>
     </View>
   )

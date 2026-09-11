@@ -3,6 +3,8 @@ import {Image} from 'expo-image'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {makeProfileLink} from '#/lib/routes/links'
+import {sanitizeHandle} from '#/lib/strings/handles'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {createDocumentExternalView} from '#/screens/Atmosphere/externalViews'
 import {getRecordActor} from '#/screens/Atmosphere/presentation'
@@ -12,10 +14,10 @@ import {
   getArticleActivityUri,
   getShareActivities,
 } from '#/screens/Atmosphere/rowLayout'
-import {isDocumentRecord} from '#/screens/Atmosphere/types'
+import {type ActivityActor, isDocumentRecord} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {
   ActivityActorLine,
@@ -67,32 +69,37 @@ export function ShareActivityRenderer({
       {shares.length > 0 ? (
         <View testID="atmosphereShareCard">
           <ActivityCard>
-            <View style={a.gap_md}>
-              <View style={[a.flex_row, a.align_start, a.gap_sm]}>
-                <View style={a.flex_1}>
-                  <ActivityActorLine
-                    actors={actors}
-                    action={l`shared`}
-                    timestamp={timestamp}
-                  />
-                </View>
-                {menu}
+            <View style={[a.flex_row, a.align_start, a.gap_sm]}>
+              <View style={a.flex_1}>
+                <ActivityActorLine
+                  actors={actors}
+                  action={l`shared`}
+                  timestamp={timestamp}
+                />
               </View>
-              {!isMultiple ? (
-                <ShareSnippets
-                  shares={shares}
-                  associatedRecords={item.associatedRecords}
-                  showActorMetadata={false}
-                />
-              ) : null}
-              <ShareDocumentPreview view={view} title={title} suffix={suffix} />
-              {isMultiple ? (
-                <ShareSnippets
-                  shares={shares}
-                  associatedRecords={item.associatedRecords}
-                />
-              ) : null}
+              {menu}
             </View>
+            {!isMultiple ? (
+              <ShareSnippets
+                shares={shares}
+                associatedRecords={item.associatedRecords}
+                showActorMetadata={false}
+              />
+            ) : null}
+            <View style={[a.pt_sm]}>
+              <ShareDocumentPreview
+                view={view}
+                title={title}
+                suffix={suffix}
+                author={author}
+              />
+            </View>
+            {isMultiple ? (
+              <ShareSnippets
+                shares={shares}
+                associatedRecords={item.associatedRecords}
+              />
+            ) : null}
           </ActivityCard>
         </View>
       ) : (
@@ -117,62 +124,112 @@ function ShareDocumentPreview({
   view,
   title,
   suffix,
+  author,
 }: {
   view: ReturnType<typeof createDocumentExternalView>
   title: string
   suffix?: string
+  author?: ActivityActor
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
+  const sourceTitle = view
+    ? view.source?.title || toNiceDomain(view.uri)
+    : undefined
   const content = (
-    <>
+    <View
+      testID="atmosphereShareDocumentPreview"
+      style={[a.flex_row, a.align_start, a.gap_md]}>
       <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
-        <Text
-          emoji
-          numberOfLines={3}
-          style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
-          {title}
-        </Text>
+        {view ? (
+          <InlineLinkText
+            to={view.uri}
+            label={title}
+            style={[t.atoms.text, a.text_lg, a.font_semi_bold, a.leading_snug]}
+            numberOfLines={3}>
+            {title}
+          </InlineLinkText>
+        ) : (
+          <Text
+            emoji
+            numberOfLines={3}
+            style={[a.text_lg, a.font_semi_bold, a.leading_snug]}>
+            {title}
+          </Text>
+        )}
         {suffix ? (
           <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
             {suffix}
           </Text>
         ) : null}
         {view ? (
-          <Text
-            emoji
-            numberOfLines={1}
-            style={[a.text_xs, t.atoms.text_contrast_medium]}>
-            {view.source?.title || toNiceDomain(view.uri)}
-          </Text>
+          <View
+            testID="atmosphereShareDocumentByline"
+            style={[a.flex_row, a.align_center, a.gap_xs, {minWidth: 0}]}>
+            {sourceTitle ? (
+              <InlineLinkText
+                to={view.source?.uri || view.uri}
+                label={sourceTitle}
+                style={[
+                  a.flex_shrink,
+                  a.justify_start,
+                  a.text_xs,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                <Text
+                  testID="atmosphereShareDocumentPublication"
+                  emoji
+                  numberOfLines={1}
+                  ellipsizeMode="middle"
+                  style={[a.flex_1, a.text_xs, t.atoms.text_contrast_medium]}>
+                  {sourceTitle}
+                </Text>
+              </InlineLinkText>
+            ) : null}
+            {author ? (
+              <>
+                <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>•</Text>
+                <InlineLinkText
+                  to={makeProfileLink(author)}
+                  label={l`View ${sanitizeHandle(author.handle, '@')}’s profile`}
+                  style={[
+                    a.flex_1,
+                    a.justify_start,
+                    a.text_xs,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  <Text
+                    testID="atmosphereShareDocumentAuthor"
+                    emoji
+                    numberOfLines={1}
+                    ellipsizeMode="middle"
+                    style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                    {l`by ${sanitizeHandle(author.handle, '@')}`}
+                  </Text>
+                </InlineLinkText>
+              </>
+            ) : null}
+          </View>
         ) : null}
       </View>
       {view?.thumb ? (
-        <Image
-          testID="atmosphereShareDocumentThumbnail"
-          source={{uri: view.thumb}}
-          style={[a.rounded_sm, {width: 66, height: 66}]}
-          contentFit="cover"
-          accessible={false}
-          accessibilityIgnoresInvertColors
-          loading="lazy"
-          useAppleWebpCodec
-        />
+        <Link
+          to={view.uri}
+          label={title}
+          style={[a.justify_start, a.overflow_hidden]}>
+          <Image
+            testID="atmosphereShareDocumentThumbnail"
+            source={{uri: view.thumb}}
+            style={[a.rounded_sm, {width: 66, height: 66}]}
+            contentFit="cover"
+            accessible={false}
+            accessibilityIgnoresInvertColors
+            loading="lazy"
+            useAppleWebpCodec
+          />
+        </Link>
       ) : null}
-    </>
-  )
-  return view ? (
-    <Link
-      testID="atmosphereShareDocumentPreview"
-      to={view.uri}
-      label={title}
-      style={[a.flex_row, a.align_start, a.gap_md]}>
-      {content}
-    </Link>
-  ) : (
-    <View
-      testID="atmosphereShareDocumentPreview"
-      style={[a.flex_row, a.gap_md]}>
-      {content}
     </View>
   )
+  return content
 }

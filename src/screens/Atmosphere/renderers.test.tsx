@@ -894,6 +894,24 @@ describe('document share cards', () => {
     },
   )
 
+  it('renders the publication author inline with middle ellipsis truncation', () => {
+    const row = shareRow()
+    const screen = renderRow(row)
+
+    const byline = screen.getByTestId('atmosphereShareDocumentByline')
+    const publication = screen.getByTestId('atmosphereShareDocumentPublication')
+    const author = screen.getByTestId('atmosphereShareDocumentAuthor')
+
+    expect(byline).toBeTruthy()
+    expect(publication).toHaveTextContent('A publication')
+    expect(author).toHaveTextContent('by @author.example')
+    expect(publication.props.numberOfLines).toBe(1)
+    expect(publication.props.ellipsizeMode).toBe('middle')
+    expect(author.props.numberOfLines).toBe(1)
+    expect(author.props.ellipsizeMode).toBe('middle')
+    hasLink('/profile/author.example')
+  })
+
   it('keeps one preview and all same-document posts for the snippet expansion', () => {
     const row = shareRow(5)
     if (row.type !== 'group') throw new Error('Expected group')

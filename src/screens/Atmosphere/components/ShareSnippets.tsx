@@ -140,7 +140,7 @@ function ShareSnippet({
             a.w_full,
             a.justify_start,
             a.rounded_md,
-            a.p_sm,
+            a.p_md,
             t.atoms.bg_contrast_50,
           ]}
           onPress={event => {
@@ -165,7 +165,7 @@ function ShareSnippet({
                 event.preventDefault()
               }}
               numberOfLines={4}
-              style={[a.text_sm, a.leading_snug, t.atoms.text]}
+              style={[a.text_sm, a.leading_snug, a.italic, t.atoms.text]}
             />
           )}
         </Button>

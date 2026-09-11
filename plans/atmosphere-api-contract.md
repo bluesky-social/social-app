@@ -12,11 +12,11 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-internal-worktrees/atmosphere-tab` |
 | Backend branch | `atmosphere-tab` |
 | Frontend branch | `atmosphere-tab` |
-| Synchronized backend base commit | `b49fd871dde1 Add selective live-only document share ingestion` |
-| Uncommitted backend state | Optional typed item views and livestream `feed_thumbnail` CDN URL hydration atop `b49fd871dde1` |
-| Frontend tip | `c51d89a9e Render Grain photos in activity rows` |
-| Uncommitted frontend state | Contract synchronization only; no frontend implementation files changed by this backend session |
-| Deployment status | The local frontend branch is ahead of its remote; the item-view backend changes are uncommitted and undeployed |
+| Synchronized backend base commit | `fa958a37012b Add livestream activity views and preserve active streams` |
+| Uncommitted backend state | Batched post interaction-count hydration in `#shareView` atop `fa958a37012b` |
+| Frontend tip | `1223b7099 Implement Atmosphere social-proof cards and timeline layout` |
+| Uncommitted frontend state | Unrelated Atmosphere implementation changes are present; this backend session modifies only contract Markdown |
+| Deployment status | The share-count backend changes are uncommitted and undeployed |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
 
@@ -82,7 +82,14 @@ type ActivityView =
   | {$type: 'eric.bsky.atmosphere.getActivity#photoView'}
   | {$type: 'eric.bsky.atmosphere.getActivity#recommendationView'}
   | {$type: 'eric.bsky.atmosphere.getActivity#subscriptionView'}
-  | {$type: 'eric.bsky.atmosphere.getActivity#shareView'}
+  | {
+      $type: 'eric.bsky.atmosphere.getActivity#shareView'
+      likeCount: number
+      replyCount: number
+      repostCount: number
+      quoteCount: number
+      bookmarkCount: number
+    }
 
 type ActivityItem = {
   $type: 'eric.bsky.atmosphere.getActivity#item'
@@ -141,7 +148,7 @@ type GetActivityResponse = {
 
 The generated lexicon type currently exposes `associatedRecords` and `actors` as `unknown`, so frontend code will need local narrowing or feature-specific types until the lexicon is made more specific.
 
-`ActivityItem.view` is an optional typed union. The backend currently emits only `#livestreamView`; the longform, photo, recommendation, subscription, and share definitions are empty extension points and are not emitted yet. Every livestream root receives `#livestreamView`. Its optional `thumb` is derived from the raw record's `thumb` blob as `https://cdn.bsky.app/img/feed_thumbnail/plain/<author DID>/<blob CID>`. A missing or malformed blob produces a livestream view without `thumb`; clients must not reconstruct the CDN URL from the raw blob.
+`ActivityItem.view` is an optional typed union. The backend currently emits `#livestreamView` and `#shareView`; longform, photo, recommendation, and subscription remain empty extension points and are not emitted yet. Every livestream root receives `#livestreamView`. Its optional `thumb` is derived from the raw record's `thumb` blob as `https://cdn.bsky.app/img/feed_thumbnail/plain/<author DID>/<blob CID>`. A missing or malformed blob produces a livestream view without `thumb`; clients must not reconstruct the CDN URL from the raw blob. Every qualifying `app.bsky.feed.post` root receives `#shareView` with required `likeCount`, `replyCount`, `repostCount`, `quoteCount`, and `bookmarkCount`. These are current aggregate counts fetched by URI and CID in one dataplane call for all share roots on the page; a missing positional count is returned as zero.
 
 ### Example: standalone item
 
@@ -252,7 +259,20 @@ When a document root and recommendations targeting it occur on the same selected
 
 This projection is page-local and happens before normal subject and actor grouping. It adds no time rule beyond existing page selection. A related recommendation or post share appears nowhere else in the response tree. The document retains its own outer timestamp, and `relatedActivity` remains attached if the document becomes an actor-group child. Related roots whose document is not an outer root on the page continue through normal grouping.
 
-For an `app.bsky.feed.post` share, `associatedRecords[postUri].record` is the complete raw post record persisted from Jetstream—not an `app.bsky.feed.defs#postView`. It includes available post fields such as `text`, `facets`, `embed`, `langs`, `labels`, and `tags`. A qualifying post uses either a direct `app.bsky.embed.external` or `app.bsky.embed.recordWithMedia` with external media, and that external object contains a strong `associatedRefs` reference to `site.standard.document`. The referenced document and publication are recursively present in `associatedRecords` when renderable.
+For an `app.bsky.feed.post` share, `associatedRecords[postUri].record` is the complete raw post record persisted from Jetstream—not an `app.bsky.feed.defs#postView`. The raw record includes available post fields such as `text`, `facets`, `embed`, `langs`, `labels`, and `tags`. Post interaction counts are available separately in that item's `#shareView`; clients must not expect them inside the raw record:
+
+```json
+{
+  "$type": "eric.bsky.atmosphere.getActivity#shareView",
+  "likeCount": 12,
+  "replyCount": 3,
+  "repostCount": 4,
+  "quoteCount": 2,
+  "bookmarkCount": 6
+}
+```
+
+A qualifying post uses either a direct `app.bsky.embed.external` or `app.bsky.embed.recordWithMedia` with external media, and that external object contains a strong `associatedRefs` reference to `site.standard.document`. The referenced document and publication are recursively present in `associatedRecords` when renderable.
 
 ### Example: subject group
 
@@ -615,7 +635,7 @@ Then run the repository's normal lexicon generation command before importing the
 - Grouping age thresholds, inclusivity, and spans are centralized in the backend's exported `GROUPING_WINDOW_TIERS`; the under-one-hour span is now 30 minutes, and pagination uses the same resolver.
 - `ActivityItem.relatedActivity?: ActivityItem[]` contains reverse-chronological recommendation and post-share roots targeting an on-page document root.
 - Related recommendations and post shares are consumed before subject and actor grouping and occur nowhere else in the response tree.
-- Remaining post shares group by the referenced document, and every share's complete raw post record is keyed by its post URI in `associatedRecords`.
+- Remaining post shares group by the referenced document, every share's complete raw post record is keyed by its post URI in `associatedRecords`, and every share item carries its own current interaction counts in `#shareView`.
 - Attachment is page-local, uses the existing page-selection boundary as its temporal scope, and remains present when a document becomes an actor-group child.
 
 - Added required `feed[].collection`, the root record's NSID, to standalone items and group children.
