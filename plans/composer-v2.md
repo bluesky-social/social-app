@@ -94,7 +94,7 @@ Reuse the existing conversion utilities in `src/state/queries/threadgate/` and `
 
 ### 3. Unified initial-state hydration
 
-Define one normalized input interface, provisionally `ThreadStoreInitialState`, that is the only initial-data shape consumed by `createThreadStore()`. Both open-composer intents and saved drafts must transform into this same interface before the store is created:
+Implemented in todo #2: `createThreadStore({resolvers, initialState})` accepts one normalized `ThreadStoreInitialState` interface. Both open-composer intents and saved drafts must transform into this same interface before the store is created; the adapters are todo #3:
 
 ```text
 ComposerOpts -----------------> composerOptsToInitialState() --+
@@ -104,7 +104,7 @@ Saved draft + loaded media ---> draftToInitialState() --------+--> ThreadStoreIn
 
 Keep the existing shell-facing `ComposerOpts` contract during migration, but isolate it behind the compatibility adapter. The draft adapter performs its source-specific decoding and media lookup, then produces the same normalized input. The internal V2 shape can improve independently without forcing open-composer callers or the draft schema to mirror the store directly.
 
-`ThreadStoreInitialState` should be plain data. It should describe posts, reply context, gates, draft identity, and local media sources without containing generated runtime task handles, retry closures, revision counters, or UI callbacks. The store constructor owns the one-time transformation from this normalized input into live `ThreadState`, including IDs, derived fields, runtime task setup, and eager media work.
+`ThreadStoreInitialState` is plain data. It currently describes ordered posts, text/languages/labels, record/media attachments, draft identity/dirty state, and local media sources (including local refs, alt text, and captions). Reply context and gate settings will be added alongside their store capabilities. It contains no generated item IDs, upload statuses, runtime task handles, retry closures, revision counters, or UI callbacks. The store constructor builds the full initial snapshot before starting eager simulated uploads or resolving URI candidates. Progress and retries do not dirty the initial composition. Oversized normalized image sets are rejected before starting work rather than silently losing media.
 
 Support at minimum:
 

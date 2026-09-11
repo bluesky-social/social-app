@@ -307,16 +307,39 @@ ComposerOpts -----------------> composerOptsToInitialState() --+
 Saved draft + loaded media ---> draftToInitialState() --------+--> ThreadStoreInitialState
 ```
 
-The provisional `ThreadStoreInitialState` interface is plain source-independent data describing:
+`ThreadStoreInitialState` is implemented in `src/components/ComposerV2/store/types.ts`. It is plain source-independent data describing:
 
 - Ordered posts.
 - Text, languages, and labels.
-- Reply context.
 - One record attachment and one media attachment per post.
-- Local image, video, GIF, and external-card sources.
-- Thread-wide postgate settings.
-- Threadgate settings.
+- Local image/video sources, local draft refs, alt text, and caption contents.
+- GIF metadata and resolved external/chat-invite cards.
 - Draft identity and initial dirty/saved state.
+
+Reply context and gate settings will extend this contract as those capabilities are added. The source adapters themselves remain the next task.
+
+```ts
+createThreadStore({
+  resolvers: {appviewClient, chatClient},
+  initialState: {
+    draftId: 'saved-draft-id',
+    posts: [
+      {
+        text: 'Initial text',
+        attachments: {
+          record: {kind: 'uri', uri: postUrl},
+          media: {
+            kind: 'images',
+            items: [{uri: localImageUri, width: 1200, height: 800}],
+          },
+        },
+      },
+    ],
+  },
+})
+```
+
+Omitted or empty `posts` produce one empty post. Attachment inputs either provide known values (for example `{kind: 'post', record, view}`) or a `{kind: 'uri', uri}` candidate in the chosen slot. Initial URI candidates reserve that slot immediately; known attachments are not refetched. Initial image sets over 10 are rejected before starting work rather than silently truncating normalized data.
 
 It does not contain:
 
@@ -326,7 +349,7 @@ It does not contain:
 - React state.
 - Shell callbacks such as `onPost` or `onPostSuccess`.
 
-The store constructor performs the single transformation from `ThreadStoreInitialState` into live `ThreadState`. That is where it generates runtime IDs when needed, computes derived fields, attaches task ownership, and starts eager media processing.
+The store constructor performs the single transformation from `ThreadStoreInitialState` into live `ThreadState`. Pure builders generate fresh post/item IDs, copy editable input fields, and compute capacities before any background work starts. The constructor then starts simulated uploads and pending URI resolution. Initialization, background progress, and retries leave the draft clean unless `isDirty: true` was explicitly supplied. Supplied views and GIF metadata are treated as immutable; the store does not modify them.
 
 ### `ComposerOpts` adapter
 
@@ -496,11 +519,12 @@ Implemented:
 - Grapheme derivation.
 - Debug harness.
 - Current lex-client adaptation.
+- `ThreadStoreInitialState`, direct initial snapshot construction, and eager simulated uploads/URI resolution.
 
 Still to implement:
 
 - Expanded composer-session state.
-- The shared `ThreadStoreInitialState` interface plus `ComposerOpts` and draft adapters.
+- `ComposerOpts` and draft adapters against `ThreadStoreInitialState`.
 - Postgates and threadgates.
 - Gallery limits and embed selection.
 - Draft codec.

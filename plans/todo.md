@@ -21,7 +21,16 @@ Implemented `attachments.record` and `attachments.media` in `src/components/Comp
 
 ## 2. Define `ThreadStoreInitialState`
 
-Status: pending
+Status: completed
+
+Implemented `createThreadStore({resolvers, initialState})`. `ThreadStoreInitialState` in `store/types.ts` accepts ordered posts, text/languages/labels, record/media attachments, draft identity, and optional initial dirty state. Source adapters and gate state remain in #3 and #4.
+
+- Pure builders construct the complete first snapshot with new post/item IDs and derived capacities before any background work starts.
+- Omitted or empty posts create one empty post; empty image sets normalize to no media. More than 10 initial images throw before any work starts rather than silently dropping content.
+- Supplied record views and card data are used directly. `{kind: 'uri', uri}` reserves its assigned slot and starts resolution.
+- Images/video start eager simulated uploads; alt text, dimensions, MIME type, local refs, and captions are retained. Runtime upload state and retry functions are generated, not imported.
+- Initialization, progress, and retries stay clean unless `isDirty: true` was explicitly supplied. Retry also preserves the initial slot for URLs that cannot be pre-classified.
+- Verification: 148 ComposerV2 tests passed with `--watchman=false --runInBand` (the default invocation timed out); iOS/Android/web typechecks, project lint, changed-source formatting, and `git diff --check` passed.
 
 ## 3. Build the `ComposerOpts` and draft adapters
 
