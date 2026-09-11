@@ -112,14 +112,7 @@ function Inner({
 
       try {
         await pdsClient.call(setInterestsPref, {tags: interests})
-        qc.setQueriesData(
-          {queryKey: preferencesQueryKey},
-          (old?: UsePreferencesQueryResponse) => {
-            if (!old) return old
-            old.interests.tags = interests
-            return old
-          },
-        )
+        await qc.invalidateQueries({queryKey: preferencesQueryKey})
         await Promise.all([
           qc.resetQueries({queryKey: createSuggestedStarterPacksQueryKey()}),
           qc.resetQueries({queryKey: createGetSuggestedFeedsQueryKey()}),
