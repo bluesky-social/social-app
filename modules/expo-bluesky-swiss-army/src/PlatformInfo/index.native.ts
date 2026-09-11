@@ -5,8 +5,20 @@ import {type AudioCategory} from './types'
 
 const NativeModule = requireNativeModule('ExpoPlatformInfo')
 
+/**
+ * Whether the user has enabled reduced motion at the OS level.
+ *
+ * This is called at module scope during boot via src/state/persisted/schema.ts,
+ * so a rejected native call would crash the app on startup. We catch any native
+ * failure and fall back to false to keep boot safe. See Sentry issue APP-T2EW,
+ * where a malformed TRANSITION_ANIMATION_SCALE setting threw at startup.
+ */
 export function getIsReducedMotionEnabled(): boolean {
-  return NativeModule.getIsReducedMotionEnabled()
+  try {
+    return NativeModule.getIsReducedMotionEnabled()
+  } catch {
+    return false
+  }
 }
 
 export function setAudioActive(active: boolean): void {
