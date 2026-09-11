@@ -1,4 +1,4 @@
-FROM node:24.19.0-alpine3.23 AS build
+FROM node:26.7.0-alpine3.23 AS build
 
 # Tells pnpm to run non-interactively (needed for install/script steps)
 ENV CI=true
@@ -16,10 +16,11 @@ COPY ./bskyogcard ./
 
 # build then prune dev deps
 RUN pnpm install-fonts && pnpm build
-RUN pnpm install --prod --ignore-scripts --prefer-offline
+RUN rm -rf node_modules && \
+  pnpm install --prod --frozen-lockfile --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
-FROM node:24.19.0-alpine3.23
+FROM node:26.7.0-alpine3.23
 
 RUN apk add --update dumb-init
 

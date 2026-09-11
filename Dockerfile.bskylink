@@ -1,10 +1,11 @@
-FROM node:24.19.0-alpine3.23 AS build
+FROM node:26.7.0-alpine3.23 AS build
 
 # Move files into the image and install
 WORKDIR /app
 
 COPY ./bskylink/package.json ./
 COPY ./bskylink/yarn.lock ./
+RUN npm install --global yarn@1.22.22
 RUN yarn install --frozen-lockfile
 
 COPY ./bskylink ./
@@ -14,7 +15,7 @@ RUN yarn build
 RUN yarn install --production --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
-FROM node:24.19.0-alpine3.23
+FROM node:26.7.0-alpine3.23
 
 RUN apk add --update dumb-init
 
