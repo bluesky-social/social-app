@@ -13112,8 +13112,8 @@ snapshots:
     dependencies:
       '@react-native/js-polyfills': 0.86.3
       '@react-native/metro-babel-transformer': 0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
-      metro-config: 0.84.5(supports-color@8.1.1)
-      metro-runtime: 0.84.5
+      metro-config: 0.84.4(supports-color@8.1.1)
+      metro-runtime: 0.84.4
     transitivePeerDependencies:
       - '@babel/core'
       - bufferutil
@@ -14786,7 +14786,7 @@ snapshots:
       postcss-modules-scope: 3.2.1(postcss@8.5.14)
       postcss-modules-values: 4.0.0(postcss@8.5.14)
       postcss-value-parser: 4.2.0
-      semver: 7.8.5
+      semver: 7.8.0
     optionalDependencies:
       webpack: 5.106.2(clean-css@5.3.3)(cssnano@5.1.15(postcss@8.5.14))(csso@5.0.5)(esbuild@0.25.12)(html-minifier-terser@6.1.0)(lightningcss@1.32.0)(postcss@8.5.14)
 
