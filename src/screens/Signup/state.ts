@@ -15,10 +15,6 @@ import {com} from '#/lexicons'
 
 export type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
-const date = new Date()
-date.setFullYear(date.getFullYear() - 20) // default to 20 years ago
-const DEFAULT_DATE = date
-
 export enum SignupStep {
   INFO,
   HANDLE,
@@ -43,7 +39,7 @@ export type SignupState = {
   serviceUrl: string
   serviceDescription?: ServiceDescription
   userDomain: string
-  dateOfBirth: Date
+  dateOfBirth: Date | undefined
   email: string
   password: string
   inviteCode: string
@@ -71,7 +67,7 @@ export type SignupAction =
   | {type: 'setServiceDescription'; value: ServiceDescription | undefined}
   | {type: 'setEmail'; value: string}
   | {type: 'setPassword'; value: string}
-  | {type: 'setDateOfBirth'; value: Date}
+  | {type: 'setDateOfBirth'; value: Date | undefined}
   | {type: 'setInviteCode'; value: string}
   | {type: 'setHandle'; value: string}
   | {type: 'setError'; value: string; field?: ErrorField}
@@ -90,7 +86,7 @@ export const initialState: SignupState = {
   serviceUrl: DEFAULT_SERVICE,
   serviceDescription: undefined,
   userDomain: '',
-  dateOfBirth: DEFAULT_DATE,
+  dateOfBirth: undefined,
   email: '',
   password: '',
   handle: '',
@@ -308,6 +304,15 @@ export function useSubmitSignup() {
           field: 'handle',
         })
       }
+      const dateOfBirth = state.dateOfBirth
+      if (!dateOfBirth) {
+        dispatch({type: 'setStep', value: SignupStep.INFO})
+        return dispatch({
+          type: 'setError',
+          value: l`Please enter your date of birth.`,
+          field: 'date-of-birth',
+        })
+      }
       if (
         state.serviceDescription?.phoneVerificationRequired &&
         !state.pendingSubmit?.verificationCode
@@ -330,7 +335,7 @@ export function useSubmitSignup() {
             email: state.email,
             handle: createFullHandle(state.handle, state.userDomain),
             password: state.password,
-            birthDate: state.dateOfBirth,
+            birthDate: dateOfBirth,
             inviteCode: state.inviteCode.trim(),
             verificationCode,
           },

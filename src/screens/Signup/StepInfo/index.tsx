@@ -168,6 +168,13 @@ export function StepInfo({
         field: 'password',
       })
     }
+    if (!state.dateOfBirth) {
+      return dispatch({
+        type: 'setError',
+        value: l`Please enter your date of birth.`,
+        field: 'date-of-birth',
+      })
+    }
 
     preemptivelyCompleteActivePolicyUpdate()
     dispatch({type: 'setInviteCode', value: inviteCode})
@@ -300,7 +307,7 @@ export function StepInfo({
               <DateField.DateField
                 testID="date"
                 inputRef={birthdateInputRef}
-                value={state.dateOfBirth}
+                value={state.dateOfBirth ?? ''}
                 onChangeDate={date => {
                   dispatch({
                     type: 'setDateOfBirth',
