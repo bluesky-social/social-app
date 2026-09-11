@@ -104,7 +104,15 @@ export type ItemProps = React.PropsWithChildren<
     }
 >
 
-export type ItemTextProps = React.PropsWithChildren<TextStyleProp & {}>
+export type ItemTextProps = React.PropsWithChildren<
+  TextStyleProp & {
+    /**
+     * Forwarded to the underlying `Text`. Enable when children may contain
+     * emoji, e.g. user-generated text such as display names.
+     */
+    emoji?: boolean
+  }
+>
 export type ItemIconProps = React.PropsWithChildren<{
   icon: React.ComponentType<SVGIconProps>
   position?: 'left' | 'right'

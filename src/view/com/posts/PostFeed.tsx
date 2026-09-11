@@ -887,6 +887,7 @@ let PostFeed = ({
             }
             isParentBlocked={item.isParentBlocked}
             isParentNotFound={item.isParentNotFound}
+            isAuthorFeed={feedType === 'author'}
             hideTopBorder={rowIndex === 0 && indexInSlice === 0}
             rootPost={slice.items[0].post}
             onShowLess={onPressShowLess}

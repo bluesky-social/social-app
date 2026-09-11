@@ -210,6 +210,7 @@ input:focus {
 }
 .dropdown-menu-constrain-size > * {
   max-height: var(--radix-dropdown-menu-content-available-height);
+  max-width: var(--radix-dropdown-menu-content-available-width);
 }
 
 .force-no-clicks > *,

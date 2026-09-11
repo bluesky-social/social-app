@@ -9,11 +9,12 @@ import * as Clipboard from 'expo-clipboard'
 import {AtUri} from '@atproto/syntax'
 import {type RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
@@ -26,7 +27,10 @@ import {useTranslate} from '#/lib/translation'
 import {getPostLanguageTags} from '#/locale/helpers'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/post-shadow'
-import {useProfileShadow} from '#/state/cache/profile-shadow'
+import {
+  useMaybeProfileShadow,
+  useProfileShadow,
+} from '#/state/cache/profile-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {
   useHiddenPosts,
@@ -43,6 +47,7 @@ import {getMaybeDetachedQuoteEmbed} from '#/state/queries/postgate/util'
 import {
   useProfileBlockMutationQueue,
   useProfileMuteMutationQueue,
+  useProfileMuteRepostsMutationQueue,
 } from '#/state/queries/profile'
 import {
   InvalidInteractionSettingsError,
@@ -74,6 +79,7 @@ import {
 } from '#/components/icons/Mute'
 import {PersonX_Stroke2_Corner0_Rounded as PersonX} from '#/components/icons/Person'
 import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {RepostStrike_Stroke2_Corner0_Rounded as RepostStrikeIcon} from '#/components/icons/Repost'
 import {SettingsGear2_Stroke2_Corner0_Rounded as Gear} from '#/components/icons/SettingsGear2'
 import {
   SpeakerVolumeFull_Stroke2_Corner0_Rounded as Unmute,
@@ -102,6 +108,7 @@ let PostMenuItems = ({
   richText,
   threadgateRecord,
   onShowLess,
+  reposter,
   logContext,
   forceGoogleTranslate,
 }: {
@@ -117,6 +124,7 @@ let PostMenuItems = ({
   timestamp: string
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
+  reposter?: app.bsky.actor.defs.ProfileViewBasic
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean
 }): React.ReactNode => {
@@ -151,6 +159,22 @@ let PostMenuItems = ({
   const postUri = post.uri
   const postCid = post.cid
   const postAuthor = useProfileShadow(post.author)
+  const reposterShadow = useMaybeProfileShadow(reposter)
+  const [queueMuteReposts, queueUnmuteReposts] =
+    useProfileMuteRepostsMutationQueue(
+      // the fallback is never acted on: the menu item only renders when reposterShadow exists
+      reposterShadow ?? postAuthor,
+    )
+  const reposterName = reposterShadow
+    ? createSanitizedDisplayName(reposterShadow, true)
+    : ''
+  const canHideReposter =
+    !!reposterShadow &&
+    reposterShadow.did !== currentAccount?.did &&
+    !reposterShadow.viewer?.muted &&
+    !reposterShadow.viewer?.mutedOnlyReposts &&
+    !reposterShadow.viewer?.blocking &&
+    !reposterShadow.viewer?.mutedByList
   const quoteEmbed = useMemo(() => {
     if (!currentAccount || !post.embed) return
     return getMaybeDetachedQuoteEmbed({
@@ -480,6 +504,71 @@ let PostMenuItems = ({
     }
   }
 
+  const onUndoHideReposts = async () => {
+    if (!reposterShadow) return
+    try {
+      await queueUnmuteReposts()
+      Toast.show(
+        <Toast.Outer>
+          <Toast.Icon />
+          <Toast.Text emoji>
+            {l`Reposts from ${reposterName} will be shown in feeds`}
+          </Toast.Text>
+        </Toast.Outer>,
+      )
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to unhide reposts', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {
+          type: 'error',
+        })
+      }
+    } finally {
+      ax.metric('postMenu:unmuteReposts', {
+        uri: postUri,
+        reposterDid: reposterShadow.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    }
+  }
+
+  const onHideReposts = async () => {
+    if (!reposterShadow) return
+    try {
+      await queueMuteReposts()
+      Toast.show(
+        <Toast.Outer>
+          <Toast.Icon />
+          <Toast.Text emoji>
+            {l`Reposts from ${reposterName} will be hidden in feeds`}
+          </Toast.Text>
+          <Toast.Action
+            label={l`Undo`}
+            onPress={() => void onUndoHideReposts()}>
+            <Trans>Undo</Trans>
+          </Toast.Action>
+        </Toast.Outer>,
+      )
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        logger.error('Failed to hide reposts', {message: e})
+        Toast.show(l`There was an issue! ${e.toString()}`, {
+          type: 'error',
+        })
+      }
+    } finally {
+      ax.metric('postMenu:muteReposts', {
+        uri: postUri,
+        reposterDid: reposterShadow.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+    }
+  }
+
   const onReportMisclassification = () => {
     const url = `https://docs.google.com/forms/d/e/1FAIpQLSd0QPqhNFksDQf1YyOos7r1ofCLvmrKAH1lU042TaS3GAZaWQ/viewform?entry.1756031717=${toShareUrl(
       href,
@@ -738,6 +827,18 @@ let PostMenuItems = ({
           <>
             <Menu.Divider />
             <Menu.Group>
+              {canHideReposter && (
+                <Menu.Item
+                  testID="postDropdownHideRepostsBtn"
+                  label={l`Hide reposts from ${reposterName}`}
+                  onPress={() => void onHideReposts()}>
+                  <Menu.ItemText emoji>
+                    {l`Hide reposts from ${reposterName}`}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon icon={RepostStrikeIcon} position="right" />
+                </Menu.Item>
+              )}
+
               {!isAuthor && (
                 <>
                   <Menu.Item
