@@ -14,6 +14,7 @@ import {
 } from '#/components/ComposerV2/store/uploads'
 import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostMediaItem'
 import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPost'
+import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {
   type AttachmentSlot,
   classifyUriTarget,
@@ -27,6 +28,7 @@ import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseRe
 /** One isolated thread composition session, independent of React. */
 export function createThreadStore(options: {
   resolvers: LinkResolvers
+  initialState?: types.ThreadStoreInitialState
   /** Override id generation; useful for deterministic tests. */
   __createId?: () => string
   /** Override link resolver; useful for deterministic tests. */
@@ -34,11 +36,7 @@ export function createThreadStore(options: {
 }) {
   const id = options.__createId ?? nanoid
   const resolve = options.__resolveLink ?? importedResolveLink
-  let state: types.ThreadState = {
-    posts: {[id()]: buildThreadPost()},
-    isDirty: false,
-    draftId: undefined,
-  }
+  let state = buildThreadState(options.initialState ?? {}, id)
   const listeners = new Set<() => void>()
   let destroyed = false
 
@@ -100,11 +98,11 @@ export function createThreadStore(options: {
       const next: Record<string, types.ThreadPost> = {}
       for (const [k, v] of Object.entries(s.posts)) {
         if (position === 'before' && k === postId) {
-          next[newId] = buildThreadPost()
+          next[newId] = buildThreadPost(newId, id)
         }
         next[k] = v
         if (position === 'after' && k === postId) {
-          next[newId] = buildThreadPost()
+          next[newId] = buildThreadPost(newId, id)
         }
       }
       s.posts = next
@@ -219,17 +217,35 @@ export function createThreadStore(options: {
    * block new candidates; pending/failed candidates can be superseded.
    */
   function addUri(postId: string, uri: string) {
+    setUriAttachment(postId, classifyUriTarget(uri), uri, true)
+  }
+
+  /** Retries keep their assigned slot and are not new content edits. */
+  function setUriAttachment(
+    postId: string,
+    slot: AttachmentSlot,
+    uri: string,
+    markDirty: boolean,
+  ) {
     if (destroyed) return
     const post = state.posts[postId]
-    if (!post) return
-    const slot = classifyUriTarget(uri)
-    if (post.attachments[slot]?.state === 'resolved') return
+    if (!post || post.attachments[slot]?.state === 'resolved') return
     const rev = resolutionRevs[slot].incrementFor(postId)
     mutateState(s => {
       s.posts[postId] = setPostResolution(post, slot, {state: 'pending', uri})
-      s.isDirty = true
+      if (markDirty) s.isDirty = true
       return s
     })
+    startUriResolution(slot, rev, postId, uri)
+  }
+
+  /** Initial hydration shares the worker but does not dispatch a dirtying edit. */
+  function startUriResolution(
+    slot: AttachmentSlot,
+    rev: number,
+    postId: string,
+    uri: string,
+  ) {
     if (destroyed || !resolutionRevs[slot].isCurrentFor(postId, rev)) return
     resolve(options.resolvers, uri).then(
       link => applyResolved(slot, rev, postId, uri, link),
@@ -300,7 +316,7 @@ export function createThreadStore(options: {
         retry: isRetryable
           ? () => {
               if (resolutionRevs[slot].isCurrentFor(postId, rev)) {
-                addUri(postId, uri)
+                setUriAttachment(postId, slot, uri, false)
               }
             }
           : undefined,
@@ -460,6 +476,20 @@ export function createThreadStore(options: {
     return slot === 'record'
       ? setPostRecord(post, resolution)
       : setPostMedia(post, resolution)
+  }
+
+  /* The full initial snapshot is ready before any background work begins. */
+  for (const [postId, post] of Object.entries(state.posts)) {
+    for (const item of getMediaItems(post.attachments.media)) {
+      startMediaUpload(postId, item.id)
+    }
+    for (const slot of ['record', 'media'] as const) {
+      const attachment = post.attachments[slot]
+      if (attachment?.state === 'pending') {
+        const rev = resolutionRevs[slot].incrementFor(postId)
+        startUriResolution(slot, rev, postId, attachment.uri)
+      }
+    }
   }
 
   return {

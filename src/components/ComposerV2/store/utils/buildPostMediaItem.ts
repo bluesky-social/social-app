@@ -1,11 +1,33 @@
 import {
   type AddMediaInput,
+  type PostMediaGif,
+  type PostMediaImage,
   type PostMediaItem,
+  type PostMediaVideo,
 } from '#/components/ComposerV2/store/types'
 
+type MediaIds = {id: string; postId: string}
+
+export function buildPostMediaItem(
+  input: Extract<AddMediaInput, {kind: 'image'}>,
+  ids: MediaIds,
+): PostMediaImage
+export function buildPostMediaItem(
+  input: Extract<AddMediaInput, {kind: 'video'}>,
+  ids: MediaIds,
+): PostMediaVideo
+export function buildPostMediaItem(
+  input: Extract<AddMediaInput, {kind: 'gif'}>,
+  ids: MediaIds,
+): PostMediaGif
 export function buildPostMediaItem(
   input: AddMediaInput,
-  ids: {id: string; postId: string},
+  ids: MediaIds,
+): PostMediaItem
+/** Copy source data into a fresh item with a new upload lifecycle. */
+export function buildPostMediaItem(
+  input: AddMediaInput,
+  ids: MediaIds,
 ): PostMediaItem {
   if (input.kind === 'image') {
     return {
@@ -16,6 +38,7 @@ export function buildPostMediaItem(
       width: input.width,
       height: input.height,
       altText: input.altText ?? '',
+      localRefPath: input.localRefPath,
       upload: {state: 'pending'},
     }
   }
@@ -29,7 +52,8 @@ export function buildPostMediaItem(
       height: input.height,
       mimeType: input.mimeType,
       altText: input.altText ?? '',
-      captions: [],
+      localRefPath: input.localRefPath,
+      captions: input.captions?.map(caption => ({...caption})) ?? [],
       upload: {state: 'pending'},
     }
   }
