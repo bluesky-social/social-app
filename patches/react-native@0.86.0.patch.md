@@ -194,3 +194,19 @@ Fix: compute the middle from the cap insets (`size - caps`) instead of assuming 
 
 Upstream issue: https://github.com/react/react-native/issues/58054 (repro:
 https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and 0.87.0).
+
+## RCTModalHostViewComponentView.mm Patch - Blank sheet when dismissing a modal with a child controller
+
+Fixes https://github.com/bluesky-social/social-app/issues/11393: showing the iOS
+Undo Typing alert while submitting a post or reply can leave an empty composer
+sheet that cannot be dismissed. UIKit dismisses only the child controller when
+the modal itself receives `dismissViewControllerAnimated:completion:`.
+
+Backport of https://github.com/react/react-native/pull/58364, commit
+`3f556d7574999bcba5fa8a1ba70de57346284463`: when a child is presented, dismiss
+through the modal's presenting controller to close the entire stack. Fall back
+to the modal if its presenting controller is nil, and keep direct dismissal when
+there is no child.
+
+**TODO: Remove after upgrading to a React Native release containing this fix.**
+The upstream PR is still open as of September 9, 2026.
