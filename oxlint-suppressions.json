@@ -636,9 +636,6 @@
   "src/lib/media/manip.ts": {
     "typescript/no-explicit-any": {
       "count": 1
-    },
-    "typescript/no-floating-promises": {
-      "count": 3
     }
   },
   "src/lib/media/manip.web.ts": {
@@ -1210,11 +1207,6 @@
   "src/state/shell/color-mode.tsx": {
     "typescript/no-floating-promises": {
       "count": 2
-    }
-  },
-  "src/state/shell/composer/index.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
     }
   },
   "src/state/shell/onboarding.tsx": {
