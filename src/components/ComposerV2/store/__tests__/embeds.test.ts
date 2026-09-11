@@ -1,19 +1,16 @@
-import {beforeEach, describe, expect, jest, test} from '@jest/globals'
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  jest,
+  test,
+} from '@jest/globals'
 
-// Avoid pulling the UI module chain (gallery → media picker → ALF) into the
-// test environment. Tests inject `__resolveLink` directly, so the real
-// implementation is never invoked. We do mirror EmbeddingDisabledError so
-// `instanceof` checks in parseErrorCode still match the imported class.
+/* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => {
-  class EmbeddingDisabledError extends Error {
-    constructor() {
-      super('Embedding is disabled for this record')
-    }
-  }
-  return {
-    resolveLink: jest.fn(),
-    EmbeddingDisabledError,
-  }
+  class EmbeddingDisabledError extends Error {}
+  return {resolveLink: jest.fn(), EmbeddingDisabledError}
 })
 
 import {
@@ -23,376 +20,474 @@ import {
   type resolveLink,
 } from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {app} from '#/lexicons'
+import {type AddMediaInput} from '#/components/ComposerV2/store/types'
+import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
+import {type Gif} from '#/features/gifPicker/types'
+import {type app} from '#/lexicons'
 
 const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
+const FEED_URL = 'https://bsky.app/profile/test.bsky.social/feed/abc'
+const LIST_URL = 'https://bsky.app/profile/test.bsky.social/lists/abc'
+const STARTER_PACK_URL = 'https://bsky.app/starter-pack/test.bsky.social/abc'
 const EXTERNAL_URL = 'https://example.com'
+const INVITE_URL = 'https://bsky.app/chat/abc1234'
 
-function makeIdGenerator() {
-  let i = 0
-  return () => `id-${++i}`
+const postLink: Extract<ResolvedLink, {type: 'record'; kind: 'post'}> = {
+  type: 'record',
+  kind: 'post',
+  record: {uri: 'at://did:plc:example/app.bsky.feed.post/abc', cid: 'cp'},
+  view: {
+    uri: 'at://did:plc:example/app.bsky.feed.post/abc',
+    cid: 'cp',
+  } as unknown as app.bsky.feed.defs.PostView,
 }
-
+const feedLink: Extract<ResolvedLink, {type: 'record'; kind: 'feed'}> = {
+  type: 'record',
+  kind: 'feed',
+  record: {uri: 'at://did:plc:example/app.bsky.feed.generator/abc', cid: 'cf'},
+  view: {
+    uri: 'at://did:plc:example/app.bsky.feed.generator/abc',
+    cid: 'cf',
+  } as unknown as app.bsky.feed.defs.GeneratorView,
+}
+const listLink: Extract<ResolvedLink, {type: 'record'; kind: 'list'}> = {
+  type: 'record',
+  kind: 'list',
+  record: {uri: 'at://did:plc:example/app.bsky.graph.list/abc', cid: 'cl'},
+  view: {
+    uri: 'at://did:plc:example/app.bsky.graph.list/abc',
+    cid: 'cl',
+  } as unknown as app.bsky.graph.defs.ListView,
+}
+const starterPackLink: Extract<
+  ResolvedLink,
+  {type: 'record'; kind: 'starter-pack'}
+> = {
+  type: 'record',
+  kind: 'starter-pack',
+  record: {
+    uri: 'at://did:plc:example/app.bsky.graph.starterpack/abc',
+    cid: 'cs',
+  },
+  view: {
+    uri: 'at://did:plc:example/app.bsky.graph.starterpack/abc',
+    cid: 'cs',
+  } as unknown as app.bsky.graph.defs.StarterPackView,
+}
+const externalLink: Extract<ResolvedLink, {type: 'external'}> = {
+  type: 'external',
+  uri: EXTERNAL_URL,
+  title: 'Example',
+  description: 'A description',
+  thumb: undefined,
+  associatedRefs: [postLink.record],
+}
+const chatInviteLink: Extract<ResolvedLink, {type: 'chat-invite'}> = {
+  type: 'chat-invite',
+  uri: INVITE_URL,
+  code: 'abc1234',
+  view: undefined,
+}
+const records = [
+  {uri: POST_URL, link: postLink},
+  {uri: FEED_URL, link: feedLink},
+  {uri: LIST_URL, link: listLink},
+  {uri: STARTER_PACK_URL, link: starterPackLink},
+]
+const cards = [
+  {uri: EXTERNAL_URL, link: externalLink},
+  {uri: INVITE_URL, link: chatInviteLink},
+]
+const uploads: AddMediaInput[] = [
+  {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
+  {
+    kind: 'video',
+    uri: 'file:///a.mp4',
+    width: 10,
+    height: 10,
+    mimeType: 'video/mp4',
+  },
+  {kind: 'gif', gif: {url: 'https://example.com/g.gif'} as Gif},
+]
+const slots = [
+  {slot: 'record' as const, uri: POST_URL, link: postLink},
+  {slot: 'media' as const, uri: EXTERNAL_URL, link: externalLink},
+]
 const resolvers = {} as LinkResolvers
+let mockResolveLink: jest.Mock<typeof resolveLink>
+
+beforeEach(() => {
+  jest.useFakeTimers()
+  mockResolveLink = jest.fn<typeof resolveLink>()
+})
+afterEach(() => {
+  jest.clearAllTimers()
+  jest.useRealTimers()
+})
+
+function makeStore() {
+  let i = 0
+  return createThreadStore({
+    resolvers,
+    __createId: () => `id-${++i}`,
+    __resolveLink: mockResolveLink,
+  })
+}
 
 function rootId(store: ReturnType<typeof createThreadStore>) {
   return Object.keys(store.getState().posts)[0]
 }
 
-function deferred<T>() {
-  let resolve!: (v: T) => void
+function deferred() {
+  let resolve!: (value: ResolvedLink) => void
   let reject!: (err: unknown) => void
-  const promise = new Promise<T>((res, rej) => {
+  const promise = new Promise<ResolvedLink>((res, rej) => {
     resolve = res
     reject = rej
   })
   return {promise, resolve, reject}
 }
 
-async function flushPromises() {
-  await new Promise(resolve => setImmediate(resolve))
+function removeSlot(
+  store: ReturnType<typeof createThreadStore>,
+  postId: string,
+  slot: 'record' | 'media',
+) {
+  if (slot === 'record') store.actions.removeRecordAttachment(postId)
+  else store.actions.removeMediaAttachment(postId)
 }
 
-let mockResolveLink: jest.Mock<typeof resolveLink>
+function setPostRecord(
+  store: ReturnType<typeof createThreadStore>,
+  postId: string,
+) {
+  store.actions.setRecordAttachment(postId, {
+    kind: 'post',
+    record: postLink.record,
+    view: postLink.view,
+  })
+}
 
-beforeEach(() => {
-  mockResolveLink = jest.fn() as unknown as jest.Mock<typeof resolveLink>
+describe('record and media routing', () => {
+  test.each(records)(
+    '$link.kind reserves and resolves the record slot',
+    async ({uri, link}) => {
+      const d = deferred()
+      mockResolveLink.mockReturnValue(d.promise)
+      const store = makeStore()
+      const root = rootId(store)
+      store.actions.addUri(root, uri)
+      expect(mockResolveLink).toHaveBeenCalledWith(resolvers, uri)
+      expect(store.getState().posts[root].attachments).toEqual({
+        record: {state: 'pending', uri},
+        media: undefined,
+      })
+      expect(store.getState().posts[root].imageSelectionsRemaining).toBe(4)
+      expect(store.actions.addMedia(root, [uploads[0]])).toHaveLength(1)
+      d.resolve(link)
+      await d.promise
+      expect(store.getState().posts[root].attachments.record).toEqual({
+        state: 'resolved',
+        kind: link.kind,
+        record: link.record,
+        view: link.view,
+      })
+    },
+  )
+
+  test('legacy starter-pack URLs also target the record slot', () => {
+    expect(
+      classifyUriTarget('https://bsky.app/start/test.bsky.social/abc'),
+    ).toBe('record')
+  })
+
+  test.each(cards)(
+    '$link.type reserves and resolves the media slot',
+    async ({uri, link}) => {
+      mockResolveLink.mockResolvedValue(link)
+      const store = makeStore()
+      const root = rootId(store)
+      store.actions.addUri(root, uri)
+      expect(store.getState().posts[root].attachments.media).toEqual({
+        state: 'pending',
+        uri,
+      })
+      expect(store.getState().posts[root].imageSelectionsRemaining).toBe(0)
+      await Promise.resolve()
+      const {type: kind, ...value} = link
+      expect(store.getState().posts[root].attachments.media).toEqual({
+        state: 'resolved',
+        kind,
+        ...value,
+      })
+      expect(store.getState().posts[root].attachments.record).toBeUndefined()
+    },
+  )
 })
 
-function makeStore() {
-  return createThreadStore({
-    resolvers,
-    __createId: makeIdGenerator(),
-    __resolveLink: mockResolveLink,
-  })
-}
-
-const fakePostView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as app.bsky.feed.defs.PostView
-const fakeGeneratorView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as app.bsky.feed.defs.GeneratorView
-const fakeListView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as app.bsky.graph.defs.ListView
-const fakeStarterPackView = (uri: string, cid: string) =>
-  ({uri, cid}) as unknown as app.bsky.graph.defs.StarterPackView
-
-const postLink: ResolvedLink = {
-  type: 'record',
-  kind: 'post',
-  record: {uri: 'at://post', cid: 'cp'},
-  view: fakePostView('at://post', 'cp'),
-}
-
-const feedLink: ResolvedLink = {
-  type: 'record',
-  kind: 'feed',
-  record: {uri: 'at://feed', cid: 'cf'},
-  view: fakeGeneratorView('at://feed', 'cf'),
-}
-
-const listLink: ResolvedLink = {
-  type: 'record',
-  kind: 'list',
-  record: {uri: 'at://list', cid: 'cl'},
-  view: fakeListView('at://list', 'cl'),
-}
-
-const starterPackLink: ResolvedLink = {
-  type: 'record',
-  kind: 'starter-pack',
-  record: {uri: 'at://sp', cid: 'csp'},
-  view: fakeStarterPackView('at://sp', 'csp'),
-}
-
-const externalLink: ResolvedLink = {
-  type: 'external',
-  uri: EXTERNAL_URL,
-  title: 'Example',
-  description: 'A description',
-  thumb: undefined,
-}
-
-const chatInviteLink: ResolvedLink = {
-  type: 'chat-invite',
-  uri: 'https://bsky.app/messages/join/abc123',
-  code: 'abc123',
-  view: undefined,
-}
-
-describe('addUri pre-classifies bsky post URLs to the quote slot', () => {
-  test('post URL → quote.pending → quote.resolved (with view)', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, POST_URL)
-
-    expect(mockResolveLink).toHaveBeenCalledWith(resolvers, POST_URL)
-    const pending = store.getState().posts[root].quote
-    if (pending?.state !== 'pending') throw new Error('expected pending')
-    expect(pending.uri).toBe(POST_URL)
-    expect(store.getState().posts[root].embed).toBeUndefined()
-
-    d.resolve(postLink)
-    await flushPromises()
-
-    const quote = store.getState().posts[root].quote
-    if (quote?.state !== 'resolved') throw new Error('expected resolved')
-    expect(quote.uri).toBe('at://post')
-    expect(quote.cid).toBe('cp')
-    expect(quote.view).toBe(
-      postLink.kind === 'post' ? postLink.view : undefined,
-    )
+describe.each(records)('$link.kind coexists with media', ({uri, link}) => {
+  test.each(uploads)('$kind before and after the record', async input => {
+    for (const recordFirst of [false, true]) {
+      mockResolveLink.mockResolvedValue(link)
+      const store = makeStore()
+      const root = rootId(store)
+      if (recordFirst) {
+        store.actions.addUri(root, uri)
+        await Promise.resolve()
+      }
+      expect(store.actions.addMedia(root, [input])).toHaveLength(1)
+      if (!recordFirst) store.actions.addUri(root, uri)
+      await Promise.resolve()
+      const {record, media} = store.getState().posts[root].attachments
+      expect(record).toMatchObject({state: 'resolved', kind: link.kind})
+      expect(media).toMatchObject({
+        state: 'resolved',
+        kind: input.kind === 'image' ? 'images' : input.kind,
+      })
+      jest.runAllTimers()
+      expect(store.getState().posts[root].attachments.record).toBe(record)
+      store.actions.removeRecordAttachment(root)
+      expect(store.getState().posts[root].attachments.media).toBeDefined()
+      store.destroy()
+    }
   })
 
-  test('addUri is a no-op when quote is already set', () => {
+  test.each(cards)('$link.type before and after the record', async card => {
+    for (const recordFirst of [false, true]) {
+      mockResolveLink.mockImplementation((_clients, url) =>
+        Promise.resolve(url === uri ? link : card.link),
+      )
+      const store = makeStore()
+      const root = rootId(store)
+      const uris = recordFirst ? [uri, card.uri] : [card.uri, uri]
+      for (const url of uris) {
+        store.actions.addUri(root, url)
+        await Promise.resolve()
+      }
+      const {record, media} = store.getState().posts[root].attachments
+      expect(record).toMatchObject({state: 'resolved', kind: link.kind})
+      expect(media).toMatchObject({state: 'resolved', kind: card.link.type})
+      store.actions.removeMediaAttachment(root)
+      expect(store.getState().posts[root].attachments.record).toBe(record)
+    }
+  })
+})
+
+describe('slot collisions', () => {
+  test.each(records)(
+    '$link.kind excludes every other settled record candidate',
+    async ({uri, link}) => {
+      mockResolveLink.mockResolvedValue(link)
+      const store = makeStore()
+      const root = rootId(store)
+      store.actions.addUri(root, uri)
+      await Promise.resolve()
+      const before = store.getState()
+      for (const candidate of records) store.actions.addUri(root, candidate.uri)
+      expect(store.getState()).toBe(before)
+      expect(mockResolveLink).toHaveBeenCalledTimes(1)
+    },
+  )
+
+  test.each(cards)(
+    '$link.type excludes uploaded media and other cards',
+    async ({uri, link}) => {
+      mockResolveLink.mockResolvedValue(link)
+      const store = makeStore()
+      const root = rootId(store)
+      store.actions.addUri(root, uri)
+      await Promise.resolve()
+      const before = store.getState()
+      for (const input of uploads)
+        expect(store.actions.addMedia(root, [input])).toEqual([])
+      for (const card of cards) store.actions.addUri(root, card.uri)
+      expect(store.getState()).toBe(before)
+      expect(mockResolveLink).toHaveBeenCalledTimes(1)
+    },
+  )
+
+  test.each(uploads)('$kind excludes both external card kinds', input => {
     const store = makeStore()
     const root = rootId(store)
-    store.actions.setQuoteEmbed(root, {uri: 'at://existing', cid: 'cx'})
+    store.actions.addMedia(root, [input])
     const before = store.getState()
-    store.actions.addUri(root, POST_URL)
+    for (const card of cards) store.actions.addUri(root, card.uri)
     expect(store.getState()).toBe(before)
     expect(mockResolveLink).not.toHaveBeenCalled()
   })
-
-  test('post URL with media still routes to quote (orthogonal to media)', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addMedia(root, [
-      {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
-    ])
-    store.actions.addUri(root, POST_URL)
-    d.resolve(postLink)
-    await flushPromises()
-    expect(store.getState().posts[root].quote?.state).toBe('resolved')
-    expect(store.getState().posts[root].media).toHaveLength(1)
-  })
-
-  test('post resolution failure produces quote.failed with bound retry()', async () => {
-    const d1 = deferred<ResolvedLink>()
-    const d2 = deferred<ResolvedLink>()
-    mockResolveLink
-      .mockReturnValueOnce(d1.promise)
-      .mockReturnValueOnce(d2.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, POST_URL)
-    d1.reject(new Error('post deleted'))
-    await flushPromises()
-
-    const failed = store.getState().posts[root].quote
-    if (failed?.state !== 'failed') throw new Error('expected failed')
-    expect(failed.error).toContain('post deleted')
-    expect(failed.code).toBe('unknown')
-    expect(typeof failed.retry).toBe('function')
-
-    failed.retry?.()
-    expect(store.getState().posts[root].quote?.state).toBe('pending')
-
-    d2.resolve(postLink)
-    await flushPromises()
-    expect(store.getState().posts[root].quote?.state).toBe('resolved')
-  })
-
-  test('embedding-disabled error is non-retryable (no retry on failed)', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, POST_URL)
-    d.reject(new EmbeddingDisabledError())
-    await flushPromises()
-
-    const failed = store.getState().posts[root].quote
-    if (failed?.state !== 'failed') throw new Error('expected failed')
-    expect(failed.code).toBe('embedding-disabled')
-    expect(failed.retry).toBeUndefined()
-  })
 })
 
-describe('addUri pre-classifies non-post URLs to the embed slot', () => {
-  test('feed → embed.feed', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
+describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
+  test('retryable failure carries a bound retry and reserves the slot', async () => {
+    mockResolveLink
+      .mockRejectedValueOnce(new Error('network down'))
+      .mockResolvedValueOnce(link)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    expect(store.getState().posts[root].embed?.state).toBe('pending')
-    d.resolve(feedLink)
-    await flushPromises()
-    expect(store.getState().posts[root].embed?.state).toBe('feed')
+    store.actions.addUri(root, uri)
+    await Promise.resolve()
+    const failed = store.getState().posts[root].attachments[slot]
+    if (failed?.state !== 'failed') throw new Error('expected failed')
+    expect(failed.code).toBe('unknown')
+    expect(failed.error).toBe('network down')
+    expect(failed.retry).toEqual(expect.any(Function))
+    expect(store.getState().posts[root].imageSelectionsRemaining).toBe(
+      slot === 'media' ? 0 : 4,
+    )
+    if (slot === 'media')
+      expect(store.actions.addMedia(root, [uploads[0]])).toEqual([])
+    failed.retry?.()
+    expect(store.getState().posts[root].attachments[slot]?.state).toBe(
+      'pending',
+    )
+    await Promise.resolve()
+    expect(store.getState().posts[root].attachments[slot]?.state).toBe(
+      'resolved',
+    )
   })
 
-  test('list → embed.list', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    d.resolve(listLink)
-    await flushPromises()
-    expect(store.getState().posts[root].embed?.state).toBe('list')
+  test('new pending candidates supersede old successes and failures', async () => {
+    for (const oldFails of [false, true]) {
+      const first = deferred()
+      const second = deferred()
+      mockResolveLink
+        .mockReturnValueOnce(first.promise)
+        .mockReturnValueOnce(second.promise)
+      const store = makeStore()
+      const root = rootId(store)
+      store.actions.addUri(root, uri)
+      store.actions.addUri(root, `${uri}?new`)
+      second.resolve(link)
+      await second.promise
+      const before = store.getState()
+      if (oldFails) first.reject(new Error('old failure'))
+      else first.resolve(link)
+      await first.promise.catch(() => {})
+      expect(store.getState()).toBe(before)
+    }
   })
 
-  test('starter-pack → embed["starter-pack"]', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
+  test('removal prevents a stale response from reviving the attachment', async () => {
+    const d = deferred()
+    mockResolveLink.mockReturnValue(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    d.resolve(starterPackLink)
-    await flushPromises()
-    expect(store.getState().posts[root].embed?.state).toBe('starter-pack')
+    store.actions.addUri(root, uri)
+    removeSlot(store, root, slot)
+    const before = store.getState()
+    d.resolve(link)
+    await d.promise
+    expect(store.getState()).toBe(before)
+    expect(before.posts[root].attachments[slot]).toBeUndefined()
   })
 
-  test('external → embed.external', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
+  test('removing the other slot does not cancel this resolution', async () => {
+    mockResolveLink.mockImplementation((_clients, url) =>
+      Promise.resolve(url === POST_URL ? postLink : externalLink),
+    )
     const store = makeStore()
     const root = rootId(store)
+    store.actions.addUri(root, POST_URL)
     store.actions.addUri(root, EXTERNAL_URL)
-    d.resolve(externalLink)
-    await flushPromises()
-    const embed = store.getState().posts[root].embed
-    if (embed?.state !== 'external') throw new Error('expected external')
-    expect(embed.title).toBe('Example')
+    removeSlot(store, root, slot === 'record' ? 'media' : 'record')
+    await Promise.resolve()
+    expect(store.getState().posts[root].attachments[slot]?.state).toBe(
+      'resolved',
+    )
   })
 
-  test('chat-invite → embed["chat-invite"]', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
+  test('a retry retained from removed state cannot restore it', async () => {
+    mockResolveLink.mockRejectedValue(new Error('network down'))
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    d.resolve(chatInviteLink)
-    await flushPromises()
-    const embed = store.getState().posts[root].embed
-    if (embed?.state !== 'chat-invite') throw new Error('expected chat-invite')
-    expect(embed.code).toBe('abc123')
-  })
-
-  test('addUri is a no-op when embed has settled (resolved)', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    d.resolve(externalLink)
-    await flushPromises()
-    expect(store.getState().posts[root].embed?.state).toBe('external')
-
-    store.actions.addUri(root, 'https://other.example')
-    // Settled slot blocks the second addUri.
+    store.actions.addUri(root, uri)
+    await Promise.resolve()
+    const failed = store.getState().posts[root].attachments[slot]
+    if (failed?.state !== 'failed') throw new Error('expected failed')
+    removeSlot(store, root, slot)
+    const before = store.getState()
+    failed.retry?.()
+    expect(store.getState()).toBe(before)
     expect(mockResolveLink).toHaveBeenCalledTimes(1)
-    expect(store.getState().posts[root].embed?.state).toBe('external')
   })
 
-  test('addUri replaces a pending embed (e.g. user pastes a different URL)', () => {
-    mockResolveLink.mockReturnValue(new Promise(() => {}))
+  test('a mismatched result fails in its original slot without overwriting the other', async () => {
+    mockResolveLink.mockResolvedValue(
+      slot === 'record' ? externalLink : feedLink,
+    )
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    store.actions.addUri(root, 'https://other.example')
-    expect(mockResolveLink).toHaveBeenCalledTimes(2)
-    const embed = store.getState().posts[root].embed
-    if (embed?.state !== 'pending') throw new Error('expected pending')
-    expect(embed.uri).toBe('https://other.example')
+    if (slot === 'record') store.actions.addMedia(root, [uploads[0]])
+    else setPostRecord(store, root)
+    const other = slot === 'record' ? 'media' : 'record'
+    const previous = store.getState().posts[root].attachments[other]
+    store.actions.addUri(root, uri)
+    await Promise.resolve()
+    expect(store.getState().posts[root].attachments[slot]?.state).toBe('failed')
+    expect(store.getState().posts[root].attachments[other]).toBe(previous)
   })
 
-  test('addUri is a no-op when media is set (target is embed)', () => {
+  test('post removal and destroy discard pending responses', async () => {
+    for (const destroy of [false, true]) {
+      const d = deferred()
+      mockResolveLink.mockReturnValue(d.promise)
+      const store = makeStore()
+      const postId = store.actions.addPost('after', rootId(store))
+      store.actions.addUri(postId, uri)
+      if (destroy) store.destroy()
+      else store.actions.removePost(postId)
+      const before = store.getState()
+      d.resolve(link)
+      await d.promise
+      expect(store.getState()).toBe(before)
+    }
+  })
+})
+
+describe('direct record insertion', () => {
+  test('replaces a pending record without disturbing media', async () => {
+    const d = deferred()
+    mockResolveLink.mockReturnValue(d.promise)
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addMedia(root, [
-      {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
-    ])
-    store.actions.addUri(root, EXTERNAL_URL)
-    expect(store.getState().posts[root].embed).toBeUndefined()
-    expect(mockResolveLink).not.toHaveBeenCalled()
+    store.actions.addMedia(root, [uploads[0]])
+    const media = store.getState().posts[root].attachments.media
+    store.actions.addUri(root, FEED_URL)
+    setPostRecord(store, root)
+    const before = store.getState()
+    expect(before.isDirty).toBe(true)
+    expect(before.posts[root].attachments.record).toMatchObject({
+      state: 'resolved',
+      kind: 'post',
+    })
+    expect(before.posts[root].attachments.media).toBe(media)
+    d.resolve(feedLink)
+    await d.promise
+    expect(store.getState()).toBe(before)
   })
 
-  test('embed resolution failure produces embed.failed with bound retry()', async () => {
-    const d1 = deferred<ResolvedLink>()
-    const d2 = deferred<ResolvedLink>()
-    mockResolveLink
-      .mockReturnValueOnce(d1.promise)
-      .mockReturnValueOnce(d2.promise)
+  test.each(records)('supports hydrated $link.kind and removal', ({link}) => {
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    d1.reject(new Error('network down'))
-    await flushPromises()
+    const {type: _type, ...value} = link
+    store.actions.setRecordAttachment(root, value)
+    expect(store.getState().posts[root].attachments.record).toEqual({
+      state: 'resolved',
+      ...value,
+    })
+    store.actions.removeRecordAttachment(root)
+    expect(store.getState().posts[root].attachments.record).toBeUndefined()
+  })
 
-    const failed = store.getState().posts[root].embed
+  test('embedding-disabled is a non-retryable record failure', async () => {
+    mockResolveLink.mockRejectedValue(new EmbeddingDisabledError())
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, POST_URL)
+    await Promise.resolve()
+    const failed = store.getState().posts[root].attachments.record
+    expect(failed).toMatchObject({state: 'failed', code: 'embedding-disabled'})
     if (failed?.state !== 'failed') throw new Error('expected failed')
-    expect(failed.error).toContain('network down')
-    expect(failed.code).toBe('unknown')
-
-    failed.retry?.()
-    expect(store.getState().posts[root].embed?.state).toBe('pending')
-
-    d2.resolve(externalLink)
-    await flushPromises()
-    expect(store.getState().posts[root].embed?.state).toBe('external')
-  })
-})
-
-describe('addUri cancellation by ignoring stale responses', () => {
-  test('removeEmbed before the response lands keeps embed undefined', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, EXTERNAL_URL)
-    store.actions.removeEmbed(root)
-    d.resolve(externalLink)
-    await flushPromises()
-    expect(store.getState().posts[root].embed).toBeUndefined()
-  })
-
-  test('removeQuoteEmbed before the response lands keeps quote undefined', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, POST_URL)
-    store.actions.removeQuoteEmbed(root)
-    d.resolve(postLink)
-    await flushPromises()
-    expect(store.getState().posts[root].quote).toBeUndefined()
-  })
-
-  test('removeEmbed does not invalidate an in-flight quote resolution', async () => {
-    const d = deferred<ResolvedLink>()
-    mockResolveLink.mockReturnValueOnce(d.promise)
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.addUri(root, POST_URL)
-    store.actions.removeEmbed(root) // unrelated slot
-    d.resolve(postLink)
-    await flushPromises()
-    expect(store.getState().posts[root].quote?.state).toBe('resolved')
-  })
-})
-
-describe('setQuoteEmbed / removeQuoteEmbed', () => {
-  test('sets the quote embed and marks state dirty', () => {
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.setQuoteEmbed(root, {uri: 'at://x', cid: 'c'})
-    const quote = store.getState().posts[root].quote
-    if (quote?.state !== 'resolved') throw new Error('expected resolved')
-    expect(quote.uri).toBe('at://x')
-    expect(quote.cid).toBe('c')
-    expect(store.getState().isDirty).toBe(true)
-  })
-
-  test('removeQuoteEmbed clears the quote', () => {
-    const store = makeStore()
-    const root = rootId(store)
-    store.actions.setQuoteEmbed(root, {uri: 'at://x', cid: 'c'})
-    store.actions.removeQuoteEmbed(root)
-    expect(store.getState().posts[root].quote).toBeUndefined()
+    expect(failed.retry).toBeUndefined()
   })
 })

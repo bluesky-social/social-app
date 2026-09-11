@@ -1,194 +1,129 @@
 import {type BlobRef} from '@atproto/lex'
 
-import {type ComposerImage} from '#/state/gallery'
-import {type ChatInvitePreview} from '#/state/queries/join-links'
+import {type ResolvedLink} from '#/lib/api/resolve'
 import {type Gif} from '#/features/gifPicker/types'
-import {app, com} from '#/lexicons'
+import {type app, type com} from '#/lexicons'
 
-/**
- * What an upload reporter (the worker, or a test) sends in. Failed inputs
- * carry just the error string; the store wraps the failure with a bound
- * `retry()` method when it stores the status.
- */
+/** Status reported by an upload worker. The store attaches retry behavior. */
 export type UploadStatus =
   | {state: 'pending'}
   | {state: 'uploading'; progress: number}
   | {state: 'uploaded'; blob: BlobRef}
   | {state: 'failed'; error: string}
 
-/**
- * What's stored on a media item. The failed variant has a bound `retry()` so
- * UI can call it directly without having to look up postId/mediaId.
- *
- * Note: `retry` is a function reference and won't survive JSON serialization.
- * On restore (OS-resume / draft load), the store re-attaches it.
- */
+/** Runtime retry functions must be reattached when hydrating serialized data. */
 export type PostMediaUploadStatus =
   | {state: 'pending'}
   | {state: 'uploading'; progress: number}
   | {state: 'uploaded'; blob: BlobRef}
   | {state: 'failed'; error: string; retry: () => void}
 
-export type PostEmbedMediaImage = {
+export type PostMediaImage = {
+  kind: 'image'
   id: string
-  /** Id of the post this media is attached to. */
   postId: string
   uri: string
   width: number
   height: number
   altText: string
-  /**
-   * Stable path used to round-trip through saved drafts without re-copying
-   * bytes. Set when loaded from a draft, or generated at draft-save time for
-   * media that was added during this composer session.
-   */
+  /** Durable draft path, reused when saving restored media. */
   localRefPath?: string
   upload: PostMediaUploadStatus
 }
 
-export type PostEmbedMediaVideo = {
+export type PostMediaVideo = {
+  kind: 'video'
   id: string
-  /** Id of the post this media is attached to. */
   postId: string
   uri: string
   width: number
   height: number
   altText: string
   mimeType: string
-  /** See PostEmbedMediaImage.localRefPath. */
+  /** Durable draft path, reused when saving restored media. */
   localRefPath?: string
   captions: Array<{lang: string; content: string}>
   upload: PostMediaUploadStatus
 }
 
-export type PostEmbedMediaGif = {
+export type PostMediaGif = {
+  kind: 'gif'
   id: string
-  /** Id of the post this media is attached to. */
   postId: string
   gif: Gif
   altText: string
 }
 
-/**
- * A single piece of embedded media. A post's `media` is an array of these.
- * The bsky semantics (up to 4 images OR 1 video OR 1 gif, never mixed) are
- * enforced by the actions that mutate the array, not by this type.
- */
-export type PostEmbedMedia =
-  | (PostEmbedMediaImage & {kind: 'image'})
-  | (PostEmbedMediaVideo & {kind: 'video'})
-  | (PostEmbedMediaGif & {kind: 'gif'})
+/** Individually editable media items with stable upload ownership. */
+export type PostMediaItem = PostMediaImage | PostMediaVideo | PostMediaGif
 
-/**
- * Coarse classification of why a link resolution failed. Drives UI
- * affordances — for example, `embedding-disabled` is a permanent rejection
- * (embedding the post is forbidden by the author), so the failed variant
- * does not carry a `retry()`. Anything else falls under `unknown` and is
- * retryable.
- */
+/** Embedding-disabled is permanent; unknown failures can be retried. */
 export type LinkResolutionFailureCode = 'embedding-disabled' | 'unknown'
 
-/**
- * What's stored on a post's `embed` field. The failed variant carries a
- * bound `retry()` for retryable codes; for permanent failures (e.g.
- * `embedding-disabled`) `retry` is omitted so UI can detect that case and
- * surface a non-retryable message. The pending variant is set synchronously
- * by addUri while resolution is in flight; the resolved variants
- * (external/feed/list/starter-pack/chat-invite) land when the worker
- * reports back.
- *
- * Note: `retry` is a function reference and won't survive JSON serialization.
- * On restore (OS-resume / draft load), the store re-attaches it.
- *
- * (Worker-side input and outcome types live in linkResolution.ts.)
- */
-export type PostEmbed =
+/** Pending and failed URI candidates reserve their target attachment slot. */
+export type AttachmentResolution =
   | {state: 'pending'; uri: string}
   | {
       state: 'failed'
       uri: string
       error: string
       code: LinkResolutionFailureCode
+      /** Omitted for permanent failures; not serializable. */
       retry?: () => void
-    }
-  | {
-      state: 'external'
-      uri: string
-      title: string
-      description: string
-      thumb: ComposerImage | undefined
-    }
-  | {
-      state: 'feed'
-      record: com.atproto.repo.strongRef.Main
-      view: app.bsky.feed.defs.GeneratorView
-    }
-  | {
-      state: 'list'
-      record: com.atproto.repo.strongRef.Main
-      view: app.bsky.graph.defs.ListView
-    }
-  | {
-      state: 'starter-pack'
-      record: com.atproto.repo.strongRef.Main
-      view: app.bsky.graph.defs.StarterPackView
-    }
-  | {
-      state: 'chat-invite'
-      uri: string
-      code: string
-      view: ChatInvitePreview | undefined
     }
 
+/** A quote is a post-kind record, sharing this slot with other record kinds. */
+export type RecordAttachmentValue = {
+  record: com.atproto.repo.strongRef.Main
+} & (
+  | {kind: 'post'; view?: app.bsky.feed.defs.PostView}
+  | {kind: 'feed'; view?: app.bsky.feed.defs.GeneratorView}
+  | {kind: 'list'; view?: app.bsky.graph.defs.ListView}
+  | {kind: 'starter-pack'; view?: app.bsky.graph.defs.StarterPackView}
+)
+
+export type RecordAttachment =
+  AttachmentResolution | ({state: 'resolved'} & RecordAttachmentValue)
+
 /**
- * What's stored on a post's `quote` field. Mirrors `PostEmbed`'s shape: the
- * pending variant is set synchronously by addUri while the post is being
- * resolved; the resolved variant lands when the worker reports back; the
- * failed variant carries a bound `retry()`.
- *
- * `view` is optional on the resolved variant because `setQuoteEmbed` (used
- * for direct programmatic insertion, e.g. draft restore) may not have a
- * hydrated post view to hand.
+ * One media embed. Images form one attachment; video and GIF are single items.
+ * External cards and chat invites share this slot with user-selected media.
+ * Resolved means the attachment kind is known; item uploads may still be pending.
  */
-export type PostEmbedQuote =
-  | {state: 'pending'; uri: string}
-  | {
-      state: 'failed'
-      uri: string
-      error: string
-      code: LinkResolutionFailureCode
-      retry?: () => void
-    }
-  | {
-      state: 'resolved'
-      uri: string
-      cid: string
-      view?: app.bsky.feed.defs.PostView
-    }
+export type MediaAttachment =
+  | AttachmentResolution
+  | ({state: 'resolved'} & (
+      | {kind: 'images'; items: PostMediaImage[]}
+      | {kind: 'video'; item: PostMediaVideo}
+      | {kind: 'gif'; item: PostMediaGif}
+      | ({kind: 'external'} & Omit<
+          Extract<ResolvedLink, {type: 'external'}>,
+          'type'
+        >)
+      | ({kind: 'chat-invite'} & Omit<
+          Extract<ResolvedLink, {type: 'chat-invite'}>,
+          'type'
+        >)
+    ))
+
+/** Record + media becomes recordWithMedia only when constructing a post record. */
+export type PostAttachments = {
+  record: RecordAttachment | undefined
+  media: MediaAttachment | undefined
+}
 
 export type ThreadPost = {
   text: string
   langs: string[]
   labels: string[]
-  media: PostEmbedMedia[]
-  /** Single non-quote embed slot. Mutually exclusive with media. */
-  embed: PostEmbed | undefined
-  quote: PostEmbedQuote | undefined
-  /**
-   * Derived from `media`. How many more items of each kind addMedia would
-   * accept on this post given the current state. Kept in sync by the store
-   * whenever `media` is mutated; UI can read these directly to gate pickers.
-   */
+  attachments: PostAttachments
+  /** Derived from the media slot; record attachments never consume capacity. */
   imageSelectionsRemaining: number
   videoSelectionsRemaining: number
   gifSelectionsRemaining: number
 }
 
-/**
- * Input shape for addMedia. Each entry carries its own kind discriminator
- * plus the kind-specific source fields. The store generates ids and
- * postIds; callers don't deal with either.
- */
+/** The store generates item IDs and postIds; callers provide only sources. */
 export type AddMediaInput =
   | {
       kind: 'image'
@@ -212,14 +147,10 @@ export type AddMediaInput =
     }
 
 export type ThreadState = {
-  /**
-   * Posts keyed by id. Insertion order is the thread order; rely on object
-   * key insertion-order semantics for ES2015+. Keys are nanoid strings so
-   * they will not be coerced into the integer-key bucket that re-sorts.
-   */
+  /** Nanoid keys retain insertion order, which is the thread order. */
   posts: Record<string, ThreadPost>
   /** ID of the saved draft this composer was opened from, if any. */
   draftId: string | undefined
-  /** True when local state has diverged from the loaded draft (or initial open state). */
+  /** Whether a user edit has changed the initial or loaded draft state. */
   isDirty: boolean
 }

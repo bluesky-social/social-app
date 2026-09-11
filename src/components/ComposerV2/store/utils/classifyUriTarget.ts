@@ -1,17 +1,27 @@
-import {isBskyPostUrl} from '#/lib/strings/url-helpers'
+import {
+  isBskyCustomFeedUrl,
+  isBskyListUrl,
+  isBskyPostUrl,
+  isBskyStarterPackUrl,
+  isBskyStartUrl,
+} from '#/lib/strings/url-helpers'
+
+export type AttachmentSlot = 'record' | 'media'
 
 /**
- * Which slot on a post a given URI is destined for. Bluesky post URLs go to
- * the `quote` slot; everything else (feed/list/starter-pack records and
- * generic external links) goes to the `embed` slot.
- *
- * Used by addUri to set the pending state on the correct slot synchronously,
- * surface conflict no-ops upfront, and avoid a "data moves between slots"
- * race after async resolution.
+ * Reserve the slot synchronously using the same record URL patterns as
+ * resolveLink. A result for a different slot is rejected rather than moved
+ * into a slot that may have acquired another attachment in the meantime.
  */
-export type EmbedTargetSlot = 'quote' | 'embed'
-
-export function classifyUriTarget(uri: string): EmbedTargetSlot {
-  if (isBskyPostUrl(uri)) return 'quote'
-  return 'embed'
+export function classifyUriTarget(uri: string): AttachmentSlot {
+  if (
+    isBskyPostUrl(uri) ||
+    isBskyCustomFeedUrl(uri) ||
+    isBskyListUrl(uri) ||
+    isBskyStarterPackUrl(uri) ||
+    isBskyStartUrl(uri)
+  ) {
+    return 'record'
+  }
+  return 'media'
 }

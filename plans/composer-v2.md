@@ -12,8 +12,8 @@ The first submission milestone will stop before writing records to the repositor
 
 - A provider-owned external store with `getState()`, `subscribe()`, actions, and `destroy()`.
 - Ordered multi-post thread state.
-- Per-post text, languages, labels, media, a non-quote embed, and a quote embed.
-- A unified media model for images, one video, or one GIF.
+- Per-post text, languages, labels, and one record attachment plus one media attachment.
+- Quotes, feeds, lists, and starter packs share the record slot; images, video, GIFs, external cards, and chat invites share the media slot.
 - Simulated image/video upload progress, cancellation, failure, and retry.
 - Async URI resolution with pending, resolved, and failed states.
 - Per-post revision counters that prevent stale link-resolution results from overwriting newer state.
@@ -47,7 +47,7 @@ Invariants should remain enforced at the store action boundary rather than relyi
 
 #### Record and media attachment slots
 
-Replace the current `quote` / `embed` / media split with two protocol-aligned active attachment slots:
+Implemented in todo #1: the `quote` / `embed` / media split is replaced by two protocol-aligned active attachment slots:
 
 ```ts
 type PostAttachments = {
@@ -118,7 +118,7 @@ Support at minimum:
 - `openGallery` intent.
 - Default postgate/threadgate preferences.
 - Intent combinations that are valid, such as text plus quote or text plus photos.
-- Link detection in initial text using the same quote-versus-external rules as text entered after opening.
+- Link detection in initial text using the same record-versus-media routing rules as text entered after opening.
 
 The hydration API should make ownership clear:
 

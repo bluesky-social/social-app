@@ -1,7 +1,6 @@
 import {describe, expect, jest, test} from '@jest/globals'
 
-// Avoid pulling the UI module chain into the test environment via the
-// resolveLink import in linkResolution.ts.
+/* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
 }))
