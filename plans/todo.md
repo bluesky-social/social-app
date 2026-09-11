@@ -11,7 +11,7 @@ Reference documents:
 
 Status: completed
 
-Implemented `attachments.record` and `attachments.media` in `src/components/ComposerV2/store/`. Posts, feeds, lists, and starter packs share the record slot; external cards and chat invites share the media slot with images, video, and GIFs. Each record kind can coexist with each media kind. Uploads remain simulated and the four-image cap is unchanged.
+Implemented `attachments.record` and `attachments.media` in `src/components/ComposerV2/store/`. Posts, feeds, lists, and starter packs share the record slot; external cards and chat invites share the media slot with images, video, and GIFs. Each record kind can coexist with each media kind. Uploads remain simulated. The four-image cap was retained during this migration; the subsequent capacity change is tracked under #5.
 
 - Updated URI classification, direct record insertion, slot removal, item edits, selection capacities, and the debug composer controls.
 - Preserved slot-local async invalidation and retry behavior; stale results cannot restore removed attachments or overwrite the other slot.
@@ -33,7 +33,11 @@ Status: pending
 
 ## 5. Add gallery capacity and output selection
 
-Status: pending
+Status: in_progress
+
+Per operator direction, the selection cap is now 10, independently of record serialization. Capacity checks, append limits, and tests cover the 4/5/10 boundaries and rejection beyond 10. Output selection remains to be implemented: `app.bsky.embed.images` for 1-4 images and `app.bsky.embed.gallery` for 5-10.
+
+Verification of the capacity change: 118 ComposerV2 tests passed; iOS/Android/web typechecks, project lint, changed-source formatting, and `git diff --check` passed.
 
 ## 6. Implement draft round trips
 

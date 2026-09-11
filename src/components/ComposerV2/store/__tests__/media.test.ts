@@ -186,22 +186,38 @@ describe('addMedia', () => {
 })
 
 describe('addMedia input validation (first item dictates kind, cap by count)', () => {
-  test('image-first: filters out non-images and caps at 4', () => {
+  test('image-first: filters out non-images and caps at 10', () => {
     const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [
       imageInput,
       videoInput,
-      imageInput,
-      imageInput,
       gifInput,
-      imageInput,
-      imageInput,
+      ...Array.from({length: 10}, () => imageInput),
     ])
-    expect(ids).toHaveLength(4)
+    expect(ids).toHaveLength(10)
     const media = getMedia(store, root)
-    expect(media).toHaveLength(4)
+    expect(media).toHaveLength(10)
     expect(media.every(m => m.kind === 'image')).toBe(true)
+    expect(jest.getTimerCount()).toBe(10)
+  })
+
+  test.each([4, 5, 10])('accepts %i images in order', count => {
+    const store = makeStore()
+    const root = rootId(store)
+    const inputs = Array.from({length: count}, (_, i) => ({
+      ...imageInput,
+      uri: `file:///image-${i}.jpg`,
+    }))
+    const ids = store.actions.addMedia(root, inputs)
+    const media = getMedia(store, root)
+    expect(ids).toHaveLength(count)
+    expect(media.map(item => item.kind !== 'gif' && item.uri)).toEqual(
+      inputs.map(input => input.uri),
+    )
+    expect(store.getState().posts[root].imageSelectionsRemaining).toBe(
+      10 - count,
+    )
   })
 
   test('video-first: filters out non-videos and caps at 1', () => {
@@ -226,18 +242,20 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
 })
 
 describe('addMedia respects existing media on the post', () => {
-  test('appends images up to a total of 4 when the post already has images', () => {
+  test('appends images up to a total of 10 when the post already has images', () => {
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addMedia(root, [imageInput, imageInput])
+    store.actions.addMedia(
+      root,
+      Array.from({length: 8}, () => imageInput),
+    )
     const ids = store.actions.addMedia(root, [
       imageInput,
       imageInput,
       imageInput,
     ])
-    // Two existing + capacity of 2 more.
     expect(ids).toHaveLength(2)
-    expect(getMedia(store, root)).toHaveLength(4)
+    expect(getMedia(store, root)).toHaveLength(10)
   })
 
   test('drops non-image inputs when the post already has images', () => {
@@ -249,15 +267,13 @@ describe('addMedia respects existing media on the post', () => {
     expect(getMedia(store, root)).toHaveLength(1)
   })
 
-  test('is a no-op when the post already has 4 images', () => {
+  test('is a no-op when the post already has 10 images', () => {
     const store = makeStore()
     const root = rootId(store)
-    store.actions.addMedia(root, [
-      imageInput,
-      imageInput,
-      imageInput,
-      imageInput,
-    ])
+    store.actions.addMedia(
+      root,
+      Array.from({length: 10}, () => imageInput),
+    )
     const before = store.getState()
     const ids = store.actions.addMedia(root, [imageInput])
     expect(ids).toEqual([])
@@ -296,10 +312,10 @@ describe('addMedia respects existing media on the post', () => {
 })
 
 describe('selectionsRemaining flags on the post', () => {
-  test('empty post starts with 4 / 1 / 1', () => {
+  test('empty post starts with 10 / 1 / 1', () => {
     const store = makeStore()
     const post = store.getState().posts[rootId(store)]
-    expect(post.imageSelectionsRemaining).toBe(4)
+    expect(post.imageSelectionsRemaining).toBe(10)
     expect(post.videoSelectionsRemaining).toBe(1)
     expect(post.gifSelectionsRemaining).toBe(1)
   })
@@ -309,11 +325,16 @@ describe('selectionsRemaining flags on the post', () => {
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput, imageInput])
     let post = store.getState().posts[root]
-    expect(post.imageSelectionsRemaining).toBe(2)
+    expect(post.imageSelectionsRemaining).toBe(8)
     expect(post.videoSelectionsRemaining).toBe(0)
     expect(post.gifSelectionsRemaining).toBe(0)
 
     store.actions.addMedia(root, [imageInput, imageInput])
+    expect(store.getState().posts[root].imageSelectionsRemaining).toBe(6)
+    store.actions.addMedia(
+      root,
+      Array.from({length: 6}, () => imageInput),
+    )
     post = store.getState().posts[root]
     expect(post.imageSelectionsRemaining).toBe(0)
   })
@@ -342,10 +363,10 @@ describe('selectionsRemaining flags on the post', () => {
     const store = makeStore()
     const root = rootId(store)
     const [imgId] = store.actions.addMedia(root, [imageInput])!
-    expect(store.getState().posts[root].imageSelectionsRemaining).toBe(3)
+    expect(store.getState().posts[root].imageSelectionsRemaining).toBe(9)
     store.actions.removeMedia(root, imgId)
     const post = store.getState().posts[root]
-    expect(post.imageSelectionsRemaining).toBe(4)
+    expect(post.imageSelectionsRemaining).toBe(10)
     expect(post.videoSelectionsRemaining).toBe(1)
     expect(post.gifSelectionsRemaining).toBe(1)
   })
@@ -366,7 +387,7 @@ describe('selectionsRemaining flags on the post', () => {
     store.actions.addUri(root, 'https://example.com')
     store.actions.removeMediaAttachment(root)
     const post = store.getState().posts[root]
-    expect(post.imageSelectionsRemaining).toBe(4)
+    expect(post.imageSelectionsRemaining).toBe(10)
     expect(post.videoSelectionsRemaining).toBe(1)
     expect(post.gifSelectionsRemaining).toBe(1)
   })
@@ -553,7 +574,7 @@ describe('attachment lifecycle', () => {
     store.actions.removeMediaAttachment(root)
     const after = store.getState()
     expect(after.posts[root].attachments.media).toBeUndefined()
-    expect(after.posts[root].imageSelectionsRemaining).toBe(4)
+    expect(after.posts[root].imageSelectionsRemaining).toBe(10)
     expect(jest.getTimerCount()).toBe(0)
     jest.runAllTimers()
     expect(store.getState()).toBe(after)
