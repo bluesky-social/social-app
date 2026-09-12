@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 
 export function getRkey({uri}: {uri: string}): string {
   const at = new AtUri(uri)
