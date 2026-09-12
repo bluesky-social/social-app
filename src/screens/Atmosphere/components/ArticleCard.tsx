@@ -114,7 +114,11 @@ export function ArticleCard({
 
         {hasFooter ? (
           <View
-            style={[a.mt_sm, a.pt_md, t.atoms.border_contrast_low, a.border_t]}>
+            style={[
+              a.pt_md,
+              t.atoms.border_contrast_low,
+              !view.thumb && [a.border_t, a.mt_sm],
+            ]}>
             {children}
           </View>
         ) : undefined}
