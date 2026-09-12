@@ -86,7 +86,7 @@ export function ShareActivityRenderer({
                 showActorMetadata={false}
               />
             ) : null}
-            <View style={[a.pt_sm]}>
+            <View style={[a.pt_md]}>
               <ShareDocumentPreview
                 view={view}
                 title={title}

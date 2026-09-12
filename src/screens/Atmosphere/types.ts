@@ -41,8 +41,17 @@ export type ActivityView =
         | 'eric.bsky.atmosphere.getActivity#photoView'
         | 'eric.bsky.atmosphere.getActivity#recommendationView'
         | 'eric.bsky.atmosphere.getActivity#subscriptionView'
-        | 'eric.bsky.atmosphere.getActivity#shareView'
     }
+  | ShareActivityView
+
+export type ShareActivityView = {
+  $type: 'eric.bsky.atmosphere.getActivity#shareView'
+  likeCount: number
+  replyCount: number
+  repostCount: number
+  quoteCount: number
+  bookmarkCount: number
+}
 
 export type ActivityItem = {
   $type: 'eric.bsky.atmosphere.getActivity#item'
@@ -287,8 +296,18 @@ function narrowActivityView(value: unknown): ActivityView | undefined {
     case 'eric.bsky.atmosphere.getActivity#photoView':
     case 'eric.bsky.atmosphere.getActivity#recommendationView':
     case 'eric.bsky.atmosphere.getActivity#subscriptionView':
-    case 'eric.bsky.atmosphere.getActivity#shareView':
       return {$type: value.$type}
+    case 'eric.bsky.atmosphere.getActivity#shareView':
+      return isShareActivityView(value)
+        ? {
+            $type: value.$type,
+            likeCount: value.likeCount,
+            replyCount: value.replyCount,
+            repostCount: value.repostCount,
+            quoteCount: value.quoteCount,
+            bookmarkCount: value.bookmarkCount,
+          }
+        : undefined
     default:
       return undefined
   }
@@ -400,6 +419,20 @@ export function isShareRecord(value: unknown): value is ShareRecord {
   )
 }
 
+export function isShareActivityView(
+  value: unknown,
+): value is ShareActivityView {
+  return (
+    isObject(value) &&
+    value.$type === 'eric.bsky.atmosphere.getActivity#shareView' &&
+    isNonnegativeInteger(value.likeCount) &&
+    isNonnegativeInteger(value.replyCount) &&
+    isNonnegativeInteger(value.repostCount) &&
+    isNonnegativeInteger(value.quoteCount) &&
+    isNonnegativeInteger(value.bookmarkCount)
+  )
+}
+
 export function isLivestreamRecord(value: unknown): value is LivestreamRecord {
   return (
     isObject(value) &&
@@ -419,6 +452,10 @@ export function isGrainPhotoRecord(value: unknown): value is GrainPhotoRecord {
     'ref' in value.photo &&
     typeof value.photo.mimeType === 'string'
   )
+}
+
+function isNonnegativeInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 0
 }
 
 function isObject(value: unknown): value is Record<string, unknown> {

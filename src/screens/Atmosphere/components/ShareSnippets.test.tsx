@@ -4,15 +4,22 @@ import {i18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {fireEvent, render, within} from '@testing-library/react-native'
 
+import {formatCount} from '#/view/com/util/numeric/format'
+import {Heart2_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
+import {Mark as BlueskyIcon} from '#/components/icons/Logo'
+import {Reply as ReplyIcon} from '#/components/icons/Reply'
+import {Repost_Stroke2_Corner2_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {
   createActivity,
   createActor,
   createRecord,
   createShareRecord,
+  createShareView,
 } from '../testFixtures'
 import {
   type ActivityActor,
   activityCollections,
+  type ActivityItem,
   type ShareRecord,
 } from '../types'
 import {ShareSnippets} from './ShareSnippets'
@@ -30,15 +37,30 @@ const mockOpenThread = jest.fn()
 type Children = {children?: React.ReactNode}
 
 i18n.loadAndActivate({locale: 'en', messages: {}})
+i18n.load('de', {})
 
 jest.mock('#/alf', () => ({
-  atoms: new Proxy({}, {get: () => ({})}),
+  atoms: new Proxy(
+    {},
+    {
+      get: (_, key) =>
+        key === 'text_xs'
+          ? {fontSize: 12}
+          : key === 'justify_start'
+            ? {justifyContent: 'flex-start'}
+            : key === 'ml_auto'
+              ? {marginLeft: 'auto'}
+              : {},
+    },
+  ),
   useTheme: () => ({
     atoms: {
       bg_contrast_50: {},
       text: {},
-      text_contrast_medium: {},
+      text_contrast_low: {color: '#8993a4'},
+      text_contrast_medium: {color: '#5d6879'},
     },
+    palette: {primary_500: '#006aff'},
   }),
 }))
 jest.mock('#/components/Button', () => {
@@ -142,6 +164,7 @@ function renderShares(
 
 beforeEach(() => {
   jest.clearAllMocks()
+  i18n.activate('en')
 })
 
 describe('ShareSnippets', () => {
@@ -226,6 +249,106 @@ describe('ShareSnippets', () => {
     expect(mockActorLineProps).toHaveBeenCalledWith(
       expect.objectContaining({actors: [otherShare.actor]}),
     )
+  })
+
+  it('renders ordered, themed, localized metrics beneath the post text', () => {
+    const share = createShare(0)
+    share.activity.view = createShareView({
+      likeCount: 1234,
+      repostCount: 56_789,
+      replyCount: 0,
+      quoteCount: 321,
+      bookmarkCount: 654,
+    })
+    const screen = renderShares([share])
+    const quote = screen.getByTestId('atmosphereShareQuote')
+    const metrics = within(quote).getByTestId('atmosphereShareMetrics')
+
+    expect(metrics.props.style).toEqual(
+      expect.arrayContaining([{justifyContent: 'flex-start'}]),
+    )
+    expect(
+      metrics.children.map(child =>
+        typeof child === 'string' ? child : child.props.testID,
+      ),
+    ).toEqual([
+      'atmosphereShareLikeMetric',
+      'atmosphereShareRepostMetric',
+      'atmosphereShareReplyMetric',
+      'atmosphereShareBlueskyAttribution',
+    ])
+
+    for (const Icon of [HeartIcon, RepostIcon, ReplyIcon]) {
+      const icon = screen.UNSAFE_getByType(Icon)
+      expect(icon.props).toEqual(
+        expect.objectContaining({size: 'xs', fill: '#8993a4'}),
+      )
+    }
+    const attribution = screen.getByTestId('atmosphereShareBlueskyAttribution')
+    expect(attribution.props.style).toEqual(
+      expect.arrayContaining([{marginLeft: 'auto'}]),
+    )
+    expect(within(attribution).getByText('via').props.style).toEqual(
+      expect.arrayContaining([{fontSize: 12}]),
+    )
+    expect(within(attribution).getByText('Bluesky').props.style).toEqual(
+      expect.arrayContaining([{fontSize: 12}]),
+    )
+    expect(screen.UNSAFE_getByType(BlueskyIcon).props).toEqual(
+      expect.objectContaining({size: 'xs', fill: '#006aff'}),
+    )
+    expect(screen.getByTestId('atmosphereShareLikeCount')).toHaveTextContent(
+      formatCount(i18n, 1234),
+    )
+    expect(screen.getByTestId('atmosphereShareRepostCount')).toHaveTextContent(
+      formatCount(i18n, 56_789),
+    )
+    expect(screen.getByTestId('atmosphereShareReplyCount')).toHaveTextContent(
+      '0',
+    )
+    for (const count of [
+      'atmosphereShareLikeCount',
+      'atmosphereShareRepostCount',
+      'atmosphereShareReplyCount',
+    ]) {
+      expect(screen.getByTestId(count).props.style).toEqual(
+        expect.arrayContaining([{fontSize: 12}, {color: '#5d6879'}]),
+      )
+    }
+    expect(screen.queryByText('321')).toBeNull()
+    expect(screen.queryByText('654')).toBeNull()
+  })
+
+  it('localizes large counts and renders metrics for an empty post', () => {
+    i18n.activate('de')
+    const share = createShare(0, '   ')
+    share.activity.view = createShareView({
+      likeCount: 0,
+      repostCount: 12_345,
+      replyCount: 9_876_543,
+    })
+    const screen = renderShares([share])
+
+    expect(screen.getByTestId('atmosphereShareLikeCount')).toHaveTextContent(
+      formatCount(i18n, 0),
+    )
+    expect(screen.getByTestId('atmosphereShareRepostCount')).toHaveTextContent(
+      formatCount(i18n, 12_345),
+    )
+    expect(screen.getByTestId('atmosphereShareReplyCount')).toHaveTextContent(
+      formatCount(i18n, 9_876_543),
+    )
+  })
+
+  it.each([
+    undefined,
+    {$type: 'eric.bsky.atmosphere.getActivity#photoView'},
+    {$type: 'eric.bsky.atmosphere.getActivity#shareView', likeCount: 1},
+  ])('omits metrics for absent, wrong, or malformed views (%j)', view => {
+    const share = createShare(0)
+    share.activity.view = view as ActivityItem['view']
+    const screen = renderShares([share])
+    expect(screen.queryByTestId('atmosphereShareMetrics')).toBeNull()
   })
 
   it('keeps quote, facet, and already-prevented thread events independent', () => {

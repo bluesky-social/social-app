@@ -9,6 +9,7 @@ import {
   type ActivityActors,
   activityCollections,
   type ActivityItem,
+  type ActivityView,
   type AssociatedRecord,
   type AssociatedRecords,
 } from '#/screens/Atmosphere/types'
@@ -24,12 +25,14 @@ export function createActivity({
   did = 'did:plc:author',
   rkey = 'article',
   subscribed = false,
+  view,
   relatedActivity,
 }: {
   collection?: string
   did?: string
   rkey?: string
   subscribed?: boolean
+  view?: ActivityView
   relatedActivity?: ActivityItem[]
 } = {}): ActivityItem {
   return {
@@ -41,6 +44,7 @@ export function createActivity({
     },
     collection,
     viewerState: {subscribed},
+    view,
     relatedActivity,
   }
 }
@@ -69,6 +73,32 @@ export function createDocumentRecords(): AssociatedRecords {
       name: 'A publication',
       url: 'https://publication.example/',
     }),
+  }
+}
+
+export function createShareView({
+  likeCount = 12,
+  replyCount = 34,
+  repostCount = 56,
+  quoteCount = 78,
+  bookmarkCount = 90,
+}: {
+  likeCount?: number
+  replyCount?: number
+  repostCount?: number
+  quoteCount?: number
+  bookmarkCount?: number
+} = {}): Extract<
+  ActivityView,
+  {$type: 'eric.bsky.atmosphere.getActivity#shareView'}
+> {
+  return {
+    $type: 'eric.bsky.atmosphere.getActivity#shareView',
+    likeCount,
+    replyCount,
+    repostCount,
+    quoteCount,
+    bookmarkCount,
   }
 }
 

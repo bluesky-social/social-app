@@ -5,6 +5,7 @@ import {
   createDocumentRecords,
   createRecord,
   createShareRecord,
+  createShareView,
   documentUri,
 } from '#/screens/Atmosphere/testFixtures'
 import {
@@ -230,7 +231,7 @@ describe('Atmosphere response narrowing', () => {
       rkey: 'second',
     })
     const raw = createShareRecord()
-    const view = {$type: 'eric.bsky.atmosphere.getActivity#shareView'}
+    const view = createShareView()
     const page = narrowActivityPage({
       feed: [
         {...first, view},
@@ -266,6 +267,31 @@ describe('Atmosphere response narrowing', () => {
     }
   })
 
+  it.each([
+    undefined,
+    {$type: 'eric.bsky.atmosphere.getActivity#shareView'},
+    {
+      ...createShareView(),
+      likeCount: -1,
+    },
+    {
+      ...createShareView(),
+      replyCount: 1.5,
+    },
+  ])('safely omits malformed or wrong share views (%j)', view => {
+    const activity = createActivity({collection: activityCollections.share})
+    const page = narrowActivityPage({
+      feed: [{...activity, view}],
+      associatedRecords: {},
+      actors: {},
+    })
+    const narrowed = page.feed[0]
+    if (narrowed.$type !== 'eric.bsky.atmosphere.getActivity#item') {
+      throw new Error('Expected an activity')
+    }
+    expect(narrowed.view).toBeUndefined()
+  })
+
   it('keeps mixed recommendation/share children in API order on grouped documents without recursion', () => {
     const nested = createActivity({
       collection: activityCollections.share,
@@ -277,6 +303,7 @@ describe('Atmosphere response narrowing', () => {
     })
     const share = createActivity({
       collection: activityCollections.share,
+      view: createShareView(),
       relatedActivity: [nested],
     })
     const parent = {

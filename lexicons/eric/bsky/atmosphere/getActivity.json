@@ -161,8 +161,36 @@
     },
     "shareView": {
       "type": "object",
-      "description": "Reserved appview-derived presentation data for qualifying app.bsky.feed.post share activity.",
-      "properties": {}
+      "description": "Appview-derived presentation data for a qualifying app.bsky.feed.post share.",
+      "required": [
+        "likeCount",
+        "replyCount",
+        "repostCount",
+        "quoteCount",
+        "bookmarkCount"
+      ],
+      "properties": {
+        "likeCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "replyCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "repostCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "quoteCount": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "bookmarkCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
     }
   }
 }

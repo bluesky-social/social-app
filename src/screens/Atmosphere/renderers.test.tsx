@@ -18,6 +18,7 @@ import {
   createRecord,
   createRow,
   createShareRecord,
+  createShareView,
   documentUri,
   present,
   publicationUri,
@@ -879,6 +880,11 @@ function shareRow(count = 1, recordWithMedia = false) {
     createActivity({
       collection: activityCollections.share,
       did: `did:plc:sharer${i}`,
+      view: createShareView({
+        likeCount: i + 1,
+        repostCount: i + 2,
+        replyCount: i + 3,
+      }),
     }),
   )
   const associatedRecords = createDocumentRecords()
@@ -916,6 +922,17 @@ describe('document share cards', () => {
         expect.objectContaining({
           associatedRecords: row.associatedRecords,
           showActorMetadata: false,
+          shares: [
+            expect.objectContaining({
+              activity: expect.objectContaining({
+                view: createShareView({
+                  likeCount: 1,
+                  repostCount: 2,
+                  replyCount: 3,
+                }),
+              }),
+            }),
+          ],
         }),
       )
       expect(
@@ -936,7 +953,9 @@ describe('document share cards', () => {
 
     expect(byline).toBeTruthy()
     expect(publication).toHaveTextContent('A publication')
-    expect(author).toHaveTextContent('by @author.example')
+    expect(author).toHaveTextContent(
+      `by ${sanitizeHandle('author.example', '@')}`,
+    )
     expect(publication.props.numberOfLines).toBe(1)
     expect(publication.props.ellipsizeMode).toBe('middle')
     expect(author.props.numberOfLines).toBe(1)
@@ -954,6 +973,9 @@ describe('document share cards', () => {
     expect(screen.getByLabelText(/and 4 others shared/)).toBeTruthy()
     const props = mockShareSnippets.mock.calls[0][0]
     expect(props.shares.map(share => share.activity)).toEqual(row.group.items)
+    expect(props.shares.map(share => share.activity.view?.$type)).toEqual(
+      Array(5).fill('eric.bsky.atmosphere.getActivity#shareView'),
+    )
     expect(props.shares[0].activity).toBe(row.group.items[0])
     expect(props.shares[0].actor).toBe(row.actors['did:plc:sharer0'])
     expect(props.associatedRecords).toBe(row.associatedRecords)
@@ -1080,7 +1102,10 @@ describe('document share cards', () => {
   })
 
   it('keeps mixed recommendation and self-share proof inside one parent article', () => {
-    const share = createActivity({collection: activityCollections.share})
+    const share = createActivity({
+      collection: activityCollections.share,
+      view: createShareView(),
+    })
     const row = documentRow(false, [
       recommend('did:plc:author'),
       recommend('did:plc:friend'),
@@ -1094,6 +1119,7 @@ describe('document share cards', () => {
     expect(props.shares).toEqual([
       {activity: share, actor: row.actors['did:plc:author']},
     ])
+    expect(props.shares[0].activity.view).toBe(share.view)
     expect(props.associatedRecords).toBe(row.associatedRecords)
     expect(props.hideActorMetadataForDid).toBe('did:plc:author')
   })
