@@ -201,6 +201,12 @@ jest.mock('./components/DocumentMenu', () => {
       mockMenu(props)
       return <View testID="article-menu" />
     },
+    DocumentMenuPlaceholder: () => (
+      <View
+        testID="atmosphereDocumentMenuPlaceholder"
+        style={{width: 1, height: 25}}
+      />
+    ),
   }
 })
 jest.mock('./components/ShareSnippets', () => {
@@ -348,11 +354,10 @@ describe('content-first articles and recommendations', () => {
       expect(screen.getByText('An article')).toBeTruthy()
       hasLink('https://publication.example/')
       hasLink('/profile/author.example')
-      expect(mockMenu).toHaveBeenCalledWith(
-        expect.objectContaining({
-          author: expect.objectContaining({did: 'did:plc:author'}),
-        }),
-      )
+      expect(
+        screen.getByTestId('atmosphereDocumentMenuPlaceholder'),
+      ).toHaveStyle({width: 1, height: 25})
+      expect(mockMenu).not.toHaveBeenCalled()
     },
   )
 
@@ -590,12 +595,7 @@ describe('content-first articles and recommendations', () => {
       expect(screen.getByText('An article')).toBeTruthy()
       expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
       expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
-      expect(mockMenu).toHaveBeenCalledWith(
-        expect.objectContaining({
-          view: undefined,
-          author: row.actors['did:plc:author'],
-        }),
-      )
+      expect(mockMenu).not.toHaveBeenCalled()
       expect(mockLink.mock.calls.map(([props]) => props.to)).toEqual([
         '/profile/author.example',
       ])
@@ -617,9 +617,7 @@ describe('content-first articles and recommendations', () => {
     const row = recommendationRow(2)
     delete row.actors['did:plc:author']
     renderRow(row)
-    expect(mockMenu).toHaveBeenCalledWith(
-      expect.objectContaining({author: undefined}),
-    )
+    expect(mockMenu).not.toHaveBeenCalled()
     expect(
       mockLink.mock.calls.some(
         ([props]) => props.to === '/profile/author.example',
@@ -680,12 +678,10 @@ describe('subscription social proof', () => {
       expect(screen.getByText('A publication')).toBeTruthy()
       hasLink('https://publication.example/')
       hasLink('/profile/subscriber0.example')
-      expect(mockMenu).toHaveBeenCalledWith(
-        expect.objectContaining({
-          testID: 'atmospherePublicationMenu',
-          author: expect.objectContaining({did: 'did:plc:publisher'}),
-        }),
-      )
+      expect(
+        screen.getByTestId('atmosphereDocumentMenuPlaceholder'),
+      ).toHaveStyle({width: 1, height: 25})
+      expect(mockMenu).not.toHaveBeenCalled()
     },
   )
 
@@ -786,12 +782,7 @@ describe('subscription social proof', () => {
     expect(screen.getByTestId('atmosphereFootnote')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereSubscriptionCard')).toBeNull()
     expect(mockSubscribeButton).not.toHaveBeenCalled()
-    expect(mockMenu).toHaveBeenCalledWith(
-      expect.objectContaining({
-        view: undefined,
-        author: row.actors['did:plc:publisher'],
-      }),
-    )
+    expect(mockMenu).not.toHaveBeenCalled()
     expect(
       mockLink.mock.calls.every(([props]) =>
         String(props.to).startsWith('/profile/'),
@@ -799,7 +790,7 @@ describe('subscription social proof', () => {
     ).toBe(true)
   })
 
-  it('omits the menu when neither a publication URL nor author is available', () => {
+  it('omits the menu and CTA when neither a publication URL nor author is available', () => {
     const row = subscriptionRow(2)
     row.associatedRecords[publicationUri].record.url = ''
     delete row.actors['did:plc:publisher']
@@ -815,9 +806,7 @@ describe('subscription social proof', () => {
     const screen = renderRow(row)
     expect(screen.queryByTestId('atmospherePublicationIcon')).toBeNull()
     expect(screen.queryByText(/by @/)).toBeNull()
-    expect(mockMenu).toHaveBeenCalledWith(
-      expect.objectContaining({author: undefined}),
-    )
+    expect(mockMenu).not.toHaveBeenCalled()
     screen.unmount()
     const name = 'مرحبا 🌐 '.repeat(30)
     row.associatedRecords[publicationUri].record.name = name
@@ -915,9 +904,10 @@ describe('document share cards', () => {
       ).toBeNull()
       hasLink('https://publication.example/')
       hasLink('/profile/sharer0.example')
-      expect(mockMenu).toHaveBeenCalledWith(
-        expect.objectContaining({author: row.actors['did:plc:author']}),
-      )
+      expect(
+        screen.getByTestId('atmosphereDocumentMenuPlaceholder'),
+      ).toHaveStyle({width: 1, height: 25})
+      expect(mockMenu).not.toHaveBeenCalled()
       expect(mockShareSnippets).toHaveBeenCalledWith(
         expect.objectContaining({
           associatedRecords: row.associatedRecords,

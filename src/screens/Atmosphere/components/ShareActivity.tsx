@@ -24,7 +24,7 @@ import {
   ActivityCard,
   ActivityFootnote,
 } from './ActivityPrimitives'
-import {DocumentMenu} from './DocumentMenu'
+import {DocumentMenuPlaceholder} from './DocumentMenu'
 import {ShareSnippets} from './ShareSnippets'
 
 export function ShareActivityRenderer({
@@ -60,8 +60,6 @@ export function ShareActivityRenderer({
     (isDocumentRecord(record) ? record.title.trim() : '') ||
     l`Article unavailable`
   const author = getRecordActor(documentUri, item.actors)
-  const menu =
-    view || author ? <DocumentMenu view={view} author={author} /> : undefined
   const isMultiple = shares.length > 1
 
   return (
@@ -77,7 +75,7 @@ export function ShareActivityRenderer({
                   timestamp={timestamp}
                 />
               </View>
-              {menu}
+              <DocumentMenuPlaceholder />
             </View>
             {!isMultiple ? (
               <ShareSnippets

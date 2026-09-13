@@ -1,3 +1,4 @@
+import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -9,6 +10,18 @@ import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog
 import {type app} from '#/lexicons'
 import {navigate} from '#/Navigation'
 import {type ActivityActor} from '../types'
+
+/** Preserves the menu trigger's row height while its actions are hidden. */
+export function DocumentMenuPlaceholder() {
+  return (
+    <View
+      testID="atmosphereDocumentMenuPlaceholder"
+      accessible={false}
+      pointerEvents="none"
+      style={{width: 1, height: 25}}
+    />
+  )
+}
 
 export function DocumentMenu({
   view,

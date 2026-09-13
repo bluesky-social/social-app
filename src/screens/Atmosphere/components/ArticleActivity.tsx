@@ -17,7 +17,7 @@ import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/componen
 import {PageText_Stroke2_Corner0_Rounded as ArticleIcon} from '#/components/icons/PageText'
 import {ActivityActorLine, ActivityFootnote} from './ActivityPrimitives'
 import {ArticleCard} from './ArticleCard'
-import {DocumentMenu} from './DocumentMenu'
+import {DocumentMenuPlaceholder} from './DocumentMenu'
 import {ShareSnippets} from './ShareSnippets'
 
 export function DocumentActivityRenderer(props: ActivityRendererProps) {
@@ -68,7 +68,6 @@ function ArticleActivity({
         <ArticleCard
           view={view}
           timestamp={timestamp}
-          author={author}
           remainingCount={remainingCount}>
           <View style={a.gap_sm}>
             <ActivityActorLine
@@ -103,11 +102,7 @@ function ArticleActivity({
           iconColor={recommendation ? t.palette.primary_500 : undefined}
           suffix={suffix}
           thumb={view?.thumb}
-          menu={
-            view || author ? (
-              <DocumentMenu view={view} author={author} />
-            ) : undefined
-          }>
+          menu={<DocumentMenuPlaceholder />}>
           <ActivityActorLine
             actors={computedItemView.actors}
             action={action}

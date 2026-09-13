@@ -24,7 +24,7 @@ import {
   ActivityFootnote,
   ActivityTimestamp,
 } from './ActivityPrimitives'
-import {DocumentMenu as PublicationMenu} from './DocumentMenu'
+import {DocumentMenuPlaceholder} from './DocumentMenu'
 
 export function SubscriptionActivityRenderer({
   item,
@@ -55,14 +55,6 @@ export function SubscriptionActivityRenderer({
   const isCard =
     Boolean(view?.title.trim()) &&
     getActivityPresentationKind({item, computedItemView}) === 'card'
-  const menu =
-    view || author ? (
-      <PublicationMenu
-        view={view}
-        author={author}
-        testID="atmospherePublicationMenu"
-      />
-    ) : undefined
 
   return (
     <View testID={testID} style={a.px_xl}>
@@ -102,7 +94,7 @@ export function SubscriptionActivityRenderer({
                   </View>
                 </Link>
                 <ActivityTimestamp timestamp={timestamp} />
-                {menu}
+                <DocumentMenuPlaceholder />
               </View>
               {author ? (
                 <InlineLinkText
@@ -156,7 +148,7 @@ export function SubscriptionActivityRenderer({
           iconColor={t.palette.positive_500}
           suffix={suffix}
           thumb={view?.source?.icon}
-          menu={menu}>
+          menu={<DocumentMenuPlaceholder />}>
           <ActivityActorLine
             actors={computedItemView.actors}
             action={l`subscribed`}

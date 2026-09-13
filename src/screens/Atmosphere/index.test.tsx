@@ -63,6 +63,7 @@ jest.mock('#/alf', () => ({
       text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
     },
+    palette: {primary_500: '#006aff', positive_500: '#168a45'},
   }),
 }))
 jest.mock('./components/ShareSnippets', () => ({ShareSnippets: () => null}))
@@ -213,7 +214,16 @@ jest.mock('#/view/com/util/List', () => {
     },
   }
 })
-jest.mock('./components/DocumentMenu', () => ({DocumentMenu: () => null}))
+jest.mock('./components/DocumentMenu', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    DocumentMenu: () => null,
+    DocumentMenuPlaceholder: () => (
+      <View testID="atmosphereDocumentMenuPlaceholder" />
+    ),
+  }
+})
 jest.mock('./query', () => {
   const {use} = jest.requireActual<typeof import('react')>('react')
   return {

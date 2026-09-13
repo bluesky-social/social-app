@@ -5,23 +5,20 @@ import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme, web} from '#/alf'
-import {Link} from '#/components/Link'
+import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
-import {type ActivityActor} from '../types'
 import {ActivityCard, ActivityTimestamp} from './ActivityPrimitives'
-import {DocumentMenu} from './DocumentMenu'
+import {DocumentMenuPlaceholder} from './DocumentMenu'
 
 export function ArticleCard({
   view,
   timestamp,
-  author,
   remainingCount = 0,
   children,
 }: {
   view: app.bsky.embed.external.ViewExternal
   timestamp: string
-  author?: ActivityActor
   remainingCount?: number
   children?: React.ReactNode
 }) {
@@ -38,12 +35,12 @@ export function ArticleCard({
   return (
     <View testID="atmosphereArticleCard">
       <ActivityCard>
-        <View style={[a.flex_row, a.align_center, a.gap_sm, a.pb_xs]}>
+        <View style={[a.flex_row, a.align_center, a.pb_xs]}>
           {sourceUri ? (
             <Link
               to={sourceUri}
               label={sourceTitle}
-              style={[a.flex_1, a.justify_start, web({outline: 0})]}>
+              style={[a.flex_1, a.justify_start, a.pr_md, web({outline: 0})]}>
               <Source view={view} title={sourceTitle} />
             </Link>
           ) : (
@@ -52,7 +49,18 @@ export function ArticleCard({
             </View>
           )}
           <ActivityTimestamp timestamp={timestamp} />
-          <DocumentMenu view={view} author={author} />
+          <Text
+            style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+            {' '}
+            • 
+            <InlineLinkText
+              to="example"
+              label={l`via pckt`}
+              style={[t.atoms.text_contrast_medium, a.text_xs]}>
+              via pkct
+            </InlineLinkText>
+          </Text>
+          <DocumentMenuPlaceholder />
         </View>
 
         <View style={[a.gap_xs, a.pb_sm, {minWidth: 0}]}>

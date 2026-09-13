@@ -10,7 +10,7 @@ import {
 } from '#/screens/Atmosphere/testFixtures'
 import {type ActivityActor} from '#/screens/Atmosphere/types'
 import {type app} from '#/lexicons'
-import {DocumentMenu} from './DocumentMenu'
+import {DocumentMenu, DocumentMenuPlaceholder} from './DocumentMenu'
 
 const mockOpenLink = jest.fn()
 const mockNavigate = jest.fn()
@@ -105,6 +105,16 @@ function renderMenu(article = view(), author?: ActivityActor) {
     </I18nProvider>,
   )
 }
+
+describe('DocumentMenuPlaceholder', () => {
+  it('preserves the tiny round trigger height without its width', () => {
+    const screen = render(<DocumentMenuPlaceholder />)
+    const placeholder = screen.getByTestId('atmosphereDocumentMenuPlaceholder')
+    expect(placeholder).toHaveStyle({width: 1, height: 25})
+    expect(placeholder.props.accessible).toBe(false)
+    expect(placeholder.props.pointerEvents).toBe('none')
+  })
+})
 
 describe('Atmosphere document menu', () => {
   it('opens publication and author targets independently and reports the author account', () => {
