@@ -147,13 +147,7 @@ function ShareSnippet({
           accessibilityRole="link"
           testID="atmosphereShareQuote"
           label={share.record.text}
-          style={[
-            a.w_full,
-            a.justify_start,
-            a.rounded_md,
-            a.p_md,
-            t.atoms.bg_contrast_50,
-          ]}
+          style={[a.w_full, a.justify_start, a.rounded_md, a.p_md, t.atoms.bg]}
           onPress={event => {
             if (!event.defaultPrevented) openThread(event)
           }}>

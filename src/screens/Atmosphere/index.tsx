@@ -8,13 +8,16 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {Pager} from '#/view/com/pager/Pager'
+import {TabBar} from '#/view/com/pager/TabBar'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {atoms as a} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
 import {TimelineRow} from './components/TimelineRow'
 import {buildActivityListItems} from './model'
@@ -29,19 +32,54 @@ import {useTimelineNow} from './useTimelineNow'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
 export function AtmosphereScreen({}: Props) {
+  const {t: l} = useLingui()
+  const sections = [
+    {title: l`Explore`, component: <AtmosphereExplore />},
+    {title: l`Activity`, component: <AtmosphereList />},
+  ]
+
   return (
     <Layout.Screen testID="atmosphereScreen">
-      <Layout.Header.Outer>
-        <Layout.Header.BackButton />
-        <Layout.Header.Content>
-          <Layout.Header.TitleText>
-            <Trans>Atmosphere</Trans>
-          </Layout.Header.TitleText>
-        </Layout.Header.Content>
-        <Layout.Header.Slot />
-      </Layout.Header.Outer>
-      <AtmosphereList />
+      <Pager
+        testID="atmospherePager"
+        initialPage={0}
+        renderTabBar={props => (
+          <Layout.Center style={[a.z_10, web([a.sticky, {top: 0}])]}>
+            <Layout.Header.Outer noBottomBorder>
+              <Layout.Header.BackButton />
+              <Layout.Header.Content>
+                <Layout.Header.TitleText>
+                  <Trans>Atmosphere</Trans>
+                </Layout.Header.TitleText>
+              </Layout.Header.Content>
+              <Layout.Header.Slot />
+            </Layout.Header.Outer>
+            <TabBar
+              testID="atmosphereTabBar"
+              items={sections.map(section => section.title)}
+              {...props}
+            />
+          </Layout.Center>
+        )}>
+        {sections.map(section => (
+          <View key={section.title} style={a.flex_1}>
+            {section.component}
+          </View>
+        ))}
+      </Pager>
     </Layout.Screen>
+  )
+}
+
+function AtmosphereExplore() {
+  return (
+    <View
+      testID="atmosphereExplore"
+      style={[a.flex_1, a.align_center, a.justify_center]}>
+      <Text emoji style={a.text_md}>
+        (╯°□°)╯︵ ┻━┻
+      </Text>
+    </View>
   )
 }
 

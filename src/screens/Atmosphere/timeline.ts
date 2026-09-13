@@ -51,7 +51,7 @@ export function buildActivityTimelineItems(
       : heading
         ? 32
         : previousKind !== kind
-          ? 20
+          ? 14
           : kind === 'card'
             ? 14
             : 20

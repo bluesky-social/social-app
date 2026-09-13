@@ -15,7 +15,7 @@ import {
   getShareActivities,
 } from '#/screens/Atmosphere/rowLayout'
 import {type ActivityActor, isDocumentRecord} from '#/screens/Atmosphere/types'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {ArrowOutOfBox_Stroke2_Corner0_Rounded as ShareIcon} from '#/components/icons/ArrowOutOfBox'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
@@ -134,6 +134,7 @@ function ShareDocumentPreview({
   const sourceTitle = view
     ? view.source?.title || toNiceDomain(view.uri)
     : undefined
+  const {gtPhone} = useBreakpoints()
   const content = (
     <View
       testID="atmosphereShareDocumentPreview"
@@ -184,7 +185,7 @@ function ShareDocumentPreview({
                 </Text>
               </InlineLinkText>
             ) : null}
-            {author ? (
+            {author && gtPhone ? (
               <>
                 <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>•</Text>
                 <InlineLinkText

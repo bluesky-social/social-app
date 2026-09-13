@@ -71,7 +71,7 @@ export function ActivityActorLine({
       ? l`and ${plural(count, {one: '# other', other: '# others'})}`
       : ''
   const content = (elapsed?: string) => (
-    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+    <View style={[a.flex_shrink, a.flex_row, a.align_center, a.gap_sm]}>
       {Icon ? <Icon size="sm" fill={iconColor} /> : null}
       {showAvatars ? (
         <AvatarStack

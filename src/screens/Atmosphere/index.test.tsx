@@ -93,6 +93,74 @@ jest.mock('#/components/AvatarStack', () => {
 jest.mock('#/components/icons/Atom', () => ({
   Atom_Stroke2_Corner0_Rounded: () => null,
 }))
+jest.mock('#/view/com/pager/Pager', () => {
+  const React = jest.requireActual<typeof import('react')>('react')
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    Pager: ({
+      children,
+      initialPage = 0,
+      renderTabBar,
+      testID,
+    }: React.PropsWithChildren<{
+      initialPage?: number
+      renderTabBar: (props: {
+        selectedPage: number
+        onSelect: (index: number) => void
+        dragProgress: {value: number}
+        dragState: {value: 'idle'}
+      }) => React.ReactNode
+      testID?: string
+    }>) => {
+      const [selectedPage, setSelectedPage] = React.useState(initialPage)
+      const pages = React.Children.toArray(children)
+      const onSelect = (index: number) => setSelectedPage(index)
+      return (
+        <View testID={testID}>
+          {renderTabBar({
+            selectedPage,
+            onSelect,
+            dragProgress: {value: selectedPage},
+            dragState: {value: 'idle'},
+          })}
+          {pages[selectedPage]}
+        </View>
+      )
+    },
+  }
+})
+jest.mock('#/view/com/pager/TabBar', () => {
+  const {Pressable, Text, View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    TabBar: ({
+      items,
+      onSelect,
+      selectedPage,
+      testID,
+    }: {
+      items: string[]
+      onSelect?: (index: number) => void
+      selectedPage: number
+      testID?: string
+    }) => (
+      <View testID={testID}>
+        {items.map((item, index) => (
+          <Pressable
+            key={item}
+            accessibilityHint=""
+            accessibilityLabel={item}
+            accessibilityRole="tab"
+            accessibilityState={{selected: selectedPage === index}}
+            onPress={() => onSelect?.(index)}>
+            <Text>{item}</Text>
+          </Pressable>
+        ))}
+      </View>
+    ),
+  }
+})
 jest.mock('#/components/Layout', () => {
   const {Text, View} =
     jest.requireActual<typeof import('react-native')>('react-native')
@@ -100,6 +168,7 @@ jest.mock('#/components/Layout', () => {
     Screen: ({children, testID}: ChildrenProps) => (
       <View testID={testID}>{children}</View>
     ),
+    Center: ({children}: ChildrenProps) => <View>{children}</View>,
     Header: {
       Outer: ({children}: ChildrenProps) => <>{children}</>,
       BackButton: () => null,
@@ -250,7 +319,9 @@ beforeEach(() => {
 })
 
 function renderScreen() {
-  return render(screenElement())
+  const screen = render(screenElement())
+  fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
+  return screen
 }
 
 function screenElement() {
@@ -300,6 +371,25 @@ function actor(did: string, handle: string) {
 }
 
 describe('AtmosphereScreen', () => {
+  it('defaults to Explore and switches to the existing Activity list', () => {
+    mockUseAtmosphereQuery.mockReturnValue(basicQuery())
+    const screen = render(screenElement())
+
+    expect(
+      screen.getByRole('tab', {name: 'Explore'}).props.accessibilityState,
+    ).toEqual({selected: true})
+    expect(screen.getByText('(╯°□°)╯︵ ┻━┻')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereList')).toBeNull()
+
+    fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
+
+    expect(
+      screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
+    ).toEqual({selected: true})
+    expect(screen.queryByTestId('atmosphereExplore')).toBeNull()
+    expect(screen.getByTestId('atmosphereList')).toBeTruthy()
+  })
+
   it('renders the Atmosphere screen with standalone, grouped, and unknown rows without JSON diagnostics', () => {
     const groupChildOne = activity({
       collection: activityCollections.document,
