@@ -218,7 +218,7 @@ function ShareDocumentPreview({
           <Image
             testID="atmosphereShareDocumentThumbnail"
             source={{uri: view.thumb}}
-            style={[a.rounded_sm, {width: 66, height: 66}]}
+            style={[a.rounded_sm, {width: 110, aspectRatio: 16 / 9}]}
             contentFit="cover"
             accessible={false}
             accessibilityIgnoresInvertColors

@@ -33,7 +33,7 @@ export function TimelineRow({
   return (
     <View
       testID="atmosphereTimelineRow"
-      style={[a.relative, {paddingTop: layout.gap}]}>
+      style={[a.relative, a.mt_sm, {paddingTop: layout.gap}]}>
       {layout.separator ? (
         <View
           testID="atmosphereTimelineSeparator"
@@ -41,23 +41,29 @@ export function TimelineRow({
             a.absolute,
             a.border_t,
             t.atoms.border_contrast_low,
-            {top: layout.gap / 2, start: 48, end: 20},
+            {top: layout.gap / 3, start: 48, end: 20},
           ]}
         />
       ) : null}
       {label ? (
-        <Text
-          testID="atmosphereDateHeading"
-          accessibilityRole="header"
+        <View
           style={[
+            a.flex_row,
+            a.align_center,
+            a.justify_start,
             a.px_xl,
             a.pb_lg,
-            a.text_sm,
-            a.font_semi_bold,
-            t.atoms.text_contrast_medium,
+            a.gap_sm,
           ]}>
-          {label}
-        </Text>
+          <Text
+            testID="atmosphereDateHeading"
+            accessibilityRole="header"
+            style={[a.text_sm, a.font_semi_bold, t.atoms.text_contrast_medium]}>
+            {label}
+          </Text>
+
+          <View style={[a.flex_1, a.border_t, t.atoms.border_contrast_low]} />
+        </View>
       ) : null}
       <ActivityPresentationRow
         item={item}

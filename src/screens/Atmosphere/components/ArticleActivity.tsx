@@ -15,6 +15,9 @@ import {isDocumentRecord} from '#/screens/Atmosphere/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as RecommendIcon} from '#/components/icons/Heart2'
 import {PageText_Stroke2_Corner0_Rounded as ArticleIcon} from '#/components/icons/PageText'
+import {Link} from '#/components/Link'
+import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
+import {Text} from '#/components/Typography'
 import {ActivityActorLine, ActivityFootnote} from './ActivityPrimitives'
 import {ArticleCard} from './ArticleCard'
 import {DocumentMenuPlaceholder} from './DocumentMenu'
@@ -61,11 +64,17 @@ function ArticleActivity({
   const isCard =
     Boolean(view?.title.trim()) &&
     getActivityPresentationKind({item, computedItemView}) === 'card'
+  const publisher = view
+    ? matchStandardSitePublisherByViewHints(view)
+    : undefined
+  const PublisherIcon = publisher?.Icon
 
   return (
-    <View testID={testID} style={a.px_xl}>
+    <View testID={testID} style={[a.px_xl]}>
       {isCard && view ? (
         <ArticleCard
+          item={item}
+          computedItemView={computedItemView}
           view={view}
           timestamp={timestamp}
           remainingCount={remainingCount}>
@@ -103,12 +112,29 @@ function ArticleActivity({
           suffix={suffix}
           thumb={view?.thumb}
           menu={<DocumentMenuPlaceholder />}>
-          <ActivityActorLine
-            actors={computedItemView.actors}
-            action={action}
-            timestamp={timestamp}
-            showAvatars={false}
-          />
+          <View style={[a.flex_row, a.align_center]}>
+            <ActivityActorLine
+              actors={computedItemView.actors}
+              action={action}
+              timestamp={timestamp}
+              showAvatars={false}
+            />
+            {publisher && PublisherIcon && (
+              <Link to={publisher.url} label={l`via ${publisher.name}`}>
+                <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                  {' • '}via{' '}
+                </Text>
+                <View style={[a.align_center, a.justify_center]}>
+                  <PublisherIcon
+                    testID="atmosphereArticlePublisherIcon"
+                    accessible={false}
+                    size="xs"
+                    fill={t.atoms.text_contrast_medium.color}
+                  />
+                </View>
+              </Link>
+            )}
+          </View>
           {!recommendation && recommenders.length > 0 ? (
             <ActivityActorLine
               testID="atmosphereArticleRecommendations"

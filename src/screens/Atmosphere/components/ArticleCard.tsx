@@ -4,20 +4,26 @@ import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {atoms as a, useTheme, web} from '#/alf'
+import {BookmarkFilled} from '#/components/icons/Bookmark'
 import {InlineLinkText, Link} from '#/components/Link'
 import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
+import {ActivityComputedView, ActivityPresentationItem} from '../presentation'
 import {ActivityCard, ActivityTimestamp} from './ActivityPrimitives'
 import {DocumentMenuPlaceholder} from './DocumentMenu'
 
 export function ArticleCard({
+  item,
   view,
   timestamp,
   remainingCount = 0,
   children,
 }: {
+  item: ActivityPresentationItem
+  computedItemView: ActivityComputedView
   view: app.bsky.embed.external.ViewExternal
   timestamp: string
   remainingCount?: number
@@ -34,23 +40,45 @@ export function ArticleCard({
   const publisher = matchStandardSitePublisherByViewHints(view)
   const PublisherIcon = publisher?.Icon
   const hasFooter = Boolean(children)
+  const firstItem = getFirstActivity(item)
 
   return (
     <View testID="atmosphereArticleCard">
       <ActivityCard>
         <View style={[a.flex_row, a.align_center, a.pb_xs]}>
-          {sourceUri ? (
-            <Link
-              to={sourceUri}
-              label={sourceTitle}
-              style={[a.flex_1, a.justify_start, a.pr_md, web({outline: 0})]}>
-              <Source view={view} title={sourceTitle} />
-            </Link>
-          ) : (
-            <View style={a.flex_1}>
-              <Source view={view} title={sourceTitle} />
-            </View>
-          )}
+          <View style={[a.flex_row, a.flex_1, a.align_center]}>
+            {sourceUri ? (
+              <Link
+                to={sourceUri}
+                label={sourceTitle}
+                style={[a.pr_md, web({outline: 0})]}>
+                <Source view={view} title={sourceTitle} />
+              </Link>
+            ) : (
+              <View style={a.flex_1}>
+                <Source view={view} title={sourceTitle} />
+              </View>
+            )}
+            {firstItem.viewerState.subscribed && (
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_2xs,
+                  a.px_xs,
+                  a.py_2xs,
+                  a.rounded_sm,
+                  {
+                    backgroundColor: '#0ac266',
+                  },
+                ]}>
+                <BookmarkFilled size="xs" fill="white" />
+                <Text style={[a.text_xs, a.font_semi_bold, {color: 'white'}]}>
+                  Subscribed
+                </Text>
+              </View>
+            )}
+          </View>
           <ActivityTimestamp timestamp={timestamp} />
           {publisher && PublisherIcon ? (
             <InlineLinkText
