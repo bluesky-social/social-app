@@ -7,13 +7,16 @@ import {useLingui} from '@lingui/react/macro'
 import {getGrainPhotos} from '#/screens/Atmosphere/photos'
 import {getFirstActivity} from '#/screens/Atmosphere/relationships'
 import {type ActivityRendererProps} from '#/screens/Atmosphere/renderers'
-import {atoms as a, tokens} from '#/alf'
+import {atoms as a, tokens, useTheme} from '#/alf'
+import {Grain} from '#/components/icons/community/Grain'
 import {Image_Stroke2_Corner2_Rounded as PhotoIcon} from '#/components/icons/Image'
 import {AutoSizedImage} from '#/components/images/AutoSizedImage'
 import {Gallery, GalleryBleed} from '#/components/images/Gallery'
 import {useLightboxControls} from '#/components/Lightbox/state'
 import {type Dimensions} from '#/components/Lightbox/types'
+import {Link} from '#/components/Link'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
+import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {
   ActivityActorLine,
@@ -26,6 +29,7 @@ export function GrainPhotoActivityRenderer({
   computedItemView,
   testID,
 }: ActivityRendererProps) {
+  const t = useTheme()
   const {t: l} = useLingui()
   const first = getFirstActivity(item)
   if (!first) return null
@@ -50,8 +54,27 @@ export function GrainPhotoActivityRenderer({
       {images.length > 0 ? (
         <View testID="atmospherePhotoCard">
           <ActivityCard>
-            <View style={a.gap_md}>
-              {metadata}
+            <View style={[a.gap_md]}>
+              <View style={[a.flex_row, a.align_center, a.justify_between]}>
+                {metadata}
+                <Link to={`https://grain.social/`} label={l`via Grain`}>
+                  <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                    via{' '}
+                  </Text>
+                  <View
+                    style={[
+                      a.align_center,
+                      a.justify_center,
+                      {width: 36, height: 10},
+                    ]}>
+                    <Grain
+                      width={36}
+                      style={[a.absolute]}
+                      fill={t.atoms.text_contrast_medium.color}
+                    />
+                  </View>
+                </Link>
+              </View>
               <PhotoMedia images={images} />
             </View>
           </ActivityCard>

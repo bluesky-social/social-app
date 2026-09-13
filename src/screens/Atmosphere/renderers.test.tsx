@@ -4,6 +4,9 @@ import {act, fireEvent, render} from '@testing-library/react-native'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {BookmarkFilled} from '#/components/icons/Bookmark'
+import {Leaflet} from '#/components/icons/community/Leaflet'
+import {Offprint} from '#/components/icons/community/Offprint'
+import {Pckt} from '#/components/icons/community/Pckt'
 import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilledIcon} from '#/components/icons/Heart2'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {type app} from '#/lexicons'
@@ -360,6 +363,77 @@ describe('content-first articles and recommendations', () => {
       expect(mockMenu).not.toHaveBeenCalled()
     },
   )
+
+  it.each([
+    ['https://writer.leaflet.pub', 'Leaflet', Leaflet],
+    ['https://writer.pckt.blog', 'pckt', Pckt],
+    ['https://offprint.app', 'Offprint', Offprint],
+  ])('shows the %s publication URL as a via icon', (url, name, Icon) => {
+    const row = documentRow(true)
+    row.associatedRecords[publicationUri].record.url = url
+    const screen = renderRow(row)
+    expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
+    expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
+    expect(
+      screen.getByTestId('atmosphereArticlePublisherIcon').props.width,
+    ).toBe(12)
+    expect(mockLink).toHaveBeenCalledWith(
+      expect.objectContaining({
+        testID: 'atmosphereArticlePublisher',
+        to: new URL(url).href,
+      }),
+    )
+  })
+
+  it.each([
+    ['pub.leaflet.theme#basic', 'Leaflet', Leaflet],
+    ['blog.pckt.theme#basic', 'pckt', Pckt],
+    ['app.offprint.theme#basic', 'Offprint', Offprint],
+  ])('uses the %s theme NSID as a publisher hint', ($type, name, Icon) => {
+    const row = documentRow(true)
+    row.associatedRecords[publicationUri].record.url =
+      'https://custom-domain.example'
+    row.associatedRecords[publicationUri].record.basicTheme = {$type}
+    const screen = renderRow(row)
+    expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
+    expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
+    expect(mockLink).toHaveBeenCalledWith(
+      expect.objectContaining({
+        testID: 'atmosphereArticlePublisher',
+        to: 'https://custom-domain.example/',
+      }),
+    )
+  })
+
+  it('prefers publication URL evidence over a conflicting theme hint', () => {
+    const row = documentRow(true)
+    row.associatedRecords[publicationUri].record.url =
+      'https://writer.pckt.blog'
+    row.associatedRecords[publicationUri].record.basicTheme = {
+      $type: 'pub.leaflet.theme#basic',
+    }
+    const screen = renderRow(row)
+    expect(screen.getByLabelText('via pckt')).toBeTruthy()
+    expect(screen.UNSAFE_getByType(Pckt)).toBeTruthy()
+    expect(screen.queryByLabelText('via Leaflet')).toBeNull()
+    expect(mockLink).toHaveBeenCalledWith(
+      expect.objectContaining({
+        testID: 'atmosphereArticlePublisher',
+        to: 'https://writer.pckt.blog/',
+      }),
+    )
+  })
+
+  it('omits via branding for unknown and lookalike publisher hints', () => {
+    const row = documentRow(true)
+    row.associatedRecords[publicationUri].record.url =
+      'https://leaflet.pub.evil.example'
+    row.associatedRecords[publicationUri].record.basicTheme = {
+      $type: 'evilblog.pckt.theme#basic',
+    }
+    const screen = renderRow(row)
+    expect(screen.queryByTestId('atmosphereArticlePublisher')).toBeNull()
+  })
 
   it.each([1, 2, 3])(
     'uses default recommendation threshold with %s usable actors',

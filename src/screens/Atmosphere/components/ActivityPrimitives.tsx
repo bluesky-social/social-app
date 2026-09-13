@@ -98,7 +98,7 @@ export function ActivityActorLine({
           {handle}
         </InlineLinkText>
         {others ? ` ${others}` : ''} {action}
-        {elapsed ? ` · ${elapsed}` : ''}
+        {elapsed ? ` • ${elapsed}` : ''}
       </Text>
     </View>
   )

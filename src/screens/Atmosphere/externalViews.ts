@@ -191,7 +191,9 @@ function toStrongRef(record: AssociatedRecord) {
 function getTheme(value: unknown) {
   if (!isObject(value)) return undefined
 
+  const $type = getString(value.$type)
   const theme = {
+    ...($type ? {$type} : {}),
     accentRGB: getRgb(value.accent),
     backgroundRGB: getRgb(value.background),
     foregroundRGB: getRgb(value.foreground),

@@ -4,15 +4,35 @@ import {Pckt} from '#/components/icons/community/Pckt'
 import {type app} from '#/lexicons'
 
 export type StandardSitePublisher = {
+  url: string
   host: string
+  themeNsidRoot: string
   name: string
   Icon: typeof Leaflet
 }
 
 const STANDARD_SITE_PUBLISHERS: StandardSitePublisher[] = [
-  {host: 'leaflet.pub', name: 'Leaflet', Icon: Leaflet},
-  {host: 'pckt.blog', name: 'pckt', Icon: Pckt},
-  {host: 'offprint.app', name: 'Offprint', Icon: Offprint},
+  {
+    url: 'https://leaflet.pub',
+    host: 'leaflet.pub',
+    themeNsidRoot: 'pub.leaflet',
+    name: 'Leaflet',
+    Icon: Leaflet,
+  },
+  {
+    url: 'https://pckt.blog',
+    host: 'pckt.blog',
+    themeNsidRoot: 'blog.pckt',
+    name: 'pckt',
+    Icon: Pckt,
+  },
+  {
+    url: 'https://offprint.app',
+    host: 'offprint.app',
+    themeNsidRoot: 'app.offprint',
+    name: 'Offprint',
+    Icon: Offprint,
+  },
 ]
 
 function hostFromUri(uri: string | undefined): string | null {
@@ -39,6 +59,21 @@ function matchHostByDomain(url: string): StandardSitePublisher | null {
   return STANDARD_SITE_PUBLISHERS.find(p => hostMatches(host, p.host)) ?? null
 }
 
+function matchByThemeNsid(
+  view: app.bsky.embed.external.ViewExternal,
+): StandardSitePublisher | null {
+  const $type = (view.source?.theme as {$type?: unknown} | undefined)?.$type
+  if (typeof $type !== 'string') return null
+  return (
+    STANDARD_SITE_PUBLISHERS.find(
+      p =>
+        $type === p.themeNsidRoot ||
+        $type.startsWith(`${p.themeNsidRoot}.`) ||
+        $type.startsWith(`${p.themeNsidRoot}#`),
+    ) ?? null
+  )
+}
+
 export function matchStandardSiteHostByPublication(
   view: app.bsky.embed.external.ViewExternal,
 ): StandardSitePublisher | null {
@@ -49,4 +84,15 @@ export function matchStandardSiteHostByUrl(
   url: string | undefined,
 ): StandardSitePublisher | null {
   return matchHostByDomain(url || '')
+}
+
+/** Uses URL evidence first, then a preserved vendor theme NSID as a hint. */
+export function matchStandardSitePublisherByViewHints(
+  view: app.bsky.embed.external.ViewExternal,
+): StandardSitePublisher | null {
+  return (
+    matchStandardSiteHostByPublication(view) ||
+    matchStandardSiteHostByUrl(view.uri) ||
+    matchByThemeNsid(view)
+  )
 }

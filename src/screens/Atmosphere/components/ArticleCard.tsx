@@ -6,6 +6,7 @@ import {useLingui} from '@lingui/react/macro'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {atoms as a, useTheme, web} from '#/alf'
 import {InlineLinkText, Link} from '#/components/Link'
+import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {ActivityCard, ActivityTimestamp} from './ActivityPrimitives'
@@ -30,6 +31,8 @@ export function ArticleCard({
   const sourceTitle =
     view.source?.title?.trim() ||
     (sourceUri ? toNiceDomain(sourceUri) : toNiceDomain(view.uri))
+  const publisher = matchStandardSitePublisherByViewHints(view)
+  const PublisherIcon = publisher?.Icon
   const hasFooter = Boolean(children)
 
   return (
@@ -49,17 +52,28 @@ export function ArticleCard({
             </View>
           )}
           <ActivityTimestamp timestamp={timestamp} />
-          <Text
-            style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
-            {' '}
-            • 
+          {publisher && PublisherIcon ? (
             <InlineLinkText
-              to="example"
-              label={l`via pckt`}
-              style={[t.atoms.text_contrast_medium, a.text_xs]}>
-              via pkct
+              testID="atmosphereArticlePublisher"
+              to={publisher.url}
+              label={l`via ${publisher.name}`}
+              style={[
+                a.align_center,
+                a.gap_2xs,
+                a.text_xs,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+              ]}>
+              {' '}
+              • {l`via `}
+              <PublisherIcon
+                testID="atmosphereArticlePublisherIcon"
+                accessible={false}
+                size="xs"
+                fill={t.atoms.text_contrast_medium.color}
+              />
             </InlineLinkText>
-          </Text>
+          ) : null}
           <DocumentMenuPlaceholder />
         </View>
 
