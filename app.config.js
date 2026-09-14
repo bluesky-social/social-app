@@ -125,7 +125,7 @@ module.exports = function (_config) {
         entitlements: {
           'com.apple.developer.kernel.increased-memory-limit': true,
           'com.apple.developer.kernel.extended-virtual-addressing': true,
-          'com.apple.security.application-groups': 'group.app.bsky',
+          'com.apple.security.application-groups': ['group.app.bsky'],
           'com.apple.developer.usernotifications.communication': true,
           // 'com.apple.developer.device-information.user-assigned-device-name': true,
           'com.apple.developer.declared-age-range': true,
@@ -257,6 +257,28 @@ module.exports = function (_config) {
         'expo-video',
         'expo-localization',
         'expo-web-browser',
+        'expo-background-task',
+        [
+          'expo-widgets',
+          {
+            bundleIdentifier: 'xyz.blueskyweb.app.BlueskyWidgets',
+            groupIdentifier: 'group.app.bsky',
+            widgets: [
+              {
+                name: 'TrendingTopicsWidget',
+                displayName: 'Trending Topics',
+                description: 'See what people are talking about on Bluesky.',
+                ios: {
+                  supportedFamilies: [
+                    'systemSmall',
+                    'systemMedium',
+                    'systemLarge',
+                  ],
+                },
+              },
+            ],
+          },
+        ],
         [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
