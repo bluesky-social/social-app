@@ -1,21 +1,48 @@
-import {isNetworkError} from '#/lib/strings/errors'
 import {Sentry} from '#/logger/sentry/lib'
-import {LogLevel, type Transport} from '#/logger/types'
+import {isExpectedSentryNetworkError} from '#/logger/sentry/network-errors'
+import {LogLevel, type Metadata, type Transport} from '#/logger/types'
 import {prepareMetadata} from '#/logger/util'
+
+/** Keys that have historically carried the underlying failure as a plain string. */
+const CHECKED_METADATA_KEYS = ['safeMessage', 'message', 'error']
+
+/**
+ * Whether this log records a network failure Sentry should not be told about.
+ * Call sites do not agree on a metadata key, so any `Error` value counts under
+ * any key; other types only count under `CHECKED_METADATA_KEYS` - scanning all
+ * metadata lets an unrelated string (a URL with "abort") suppress a real error.
+ */
+function isExpectedNetworkFailure(
+  message: string | Error,
+  metadata: Metadata,
+): boolean {
+  if (isExpectedSentryNetworkError(message)) {
+    return true
+  }
+  for (const value of Object.values(metadata)) {
+    if (value instanceof Error && isExpectedSentryNetworkError(value)) {
+      return true
+    }
+  }
+  return CHECKED_METADATA_KEYS.some(
+    key => key in metadata && isExpectedSentryNetworkError(metadata[key]),
+  )
+}
 
 export const sentryTransport: Transport = (
   level,
   context,
   message,
-  {type, tags, fingerprint, ...metadata},
+  {type, tags, fingerprint, __metadata__, ...metadata},
   timestamp,
 ) => {
   // Skip debug messages entirely for now - esb
   if (level === LogLevel.Debug) return
 
+  // ambient __metadata__ is kept out of the scan but stays in the attached data
   const meta = {
     __context__: context,
-    ...prepareMetadata(metadata),
+    ...prepareMetadata(__metadata__ ? {__metadata__, ...metadata} : metadata),
   }
   let _tags = tags || {}
   _tags = {
@@ -47,24 +74,15 @@ export const sentryTransport: Transport = (
       timestamp: timestamp / 1000, // Sentry expects seconds
     })
 
-    // We don't want to send any network errors to sentry. The underlying
-    // cause is often passed via metadata rather than the message itself, so
-    // check the common metadata keys too.
-    if (
-      isNetworkError(message) ||
-      isNetworkError(metadata.safeMessage) ||
-      isNetworkError(metadata.message) ||
-      isNetworkError(metadata.error)
-    ) {
-      return
-    }
-
     /**
      * Only error-level strings are reported to Sentry as events. Lower levels
      * are captured as breadcrumbs above and attached to the next event, if
-     * any.
+     * any - so the network check only has to run here.
      */
     if (level === LogLevel.Error) {
+      // Keep the breadcrumb, but don't send expected network failures as events
+      if (isExpectedNetworkFailure(message, metadata)) return
+
       // Defer non-critical messages so they're sent in a batch
       queueMessageForSentry(message, {
         level: severity,
@@ -74,10 +92,7 @@ export const sentryTransport: Transport = (
       })
     }
   } else {
-    // We don't want to send any network errors to sentry
-    if (isNetworkError(message)) {
-      return
-    }
+    if (isExpectedNetworkFailure(message, metadata)) return
 
     /**
      * It's otherwise an Error and should be reported with captureException
