@@ -1,3 +1,22 @@
+diff --git a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
+index c27f816e14e1bd33e41b92aea075c5e6379fc758..a77961366293d8077b294aa402bb88ace51b0f2c 100644
+--- a/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/Modal/RCTModalHostViewComponentView.mm
+@@ -159,7 +159,13 @@ - (void)dismissViewController:(UIViewController *)modalViewController
+                      animated:(BOOL)animated
+                    completion:(void (^)(void))completion
+ {
+-  [modalViewController dismissViewControllerAnimated:animated completion:completion];
++  if (modalViewController.presentedViewController) {
++    // Dismissing a controller that is itself presenting only dismisses its child, so dismiss both.
++    UIViewController *presentingViewController = modalViewController.presentingViewController ?: modalViewController;
++    [presentingViewController dismissViewControllerAnimated:animated completion:completion];
++  } else {
++    [modalViewController dismissViewControllerAnimated:animated completion:completion];
++  }
+ }
+ 
+ - (void)ensurePresentedOnlyIfNeeded
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
 index 1b02e8b2d39672063551411d5c403a69b671a869..b3481c1b98b45dea769035140dc2fd8d9b088b24 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTEnhancedScrollView.mm
