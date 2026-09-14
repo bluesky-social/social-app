@@ -14,11 +14,18 @@ export default defineConfig({
       // pruned on release (`intl:release`), so stale keys in translations
       // are routine mid-cycle.
       'superfluous-key': 'warn',
+      // Many translations predate Crowdin and carry a `one` case in locales
+      // that only use `other` (e.g. zh, ja). It's harmless, but could be removed.
+      'unreachable-plural-case': 'off',
     },
     overrides: [
       {
-        // The {name} argument is omitted on purpose
-        keys: "Before you can get notifications for {name}'s posts, you must first verify your email.",
+        // Arguments are omitted on purpose
+        keys: [
+          "Before you can get notifications for {name}'s posts, you must first verify your email.",
+          '{formattedPostCount} {postCount, plural, one {post} other {posts}}',
+          'Only {0} of {1} {2, plural, one {image} other {images}} added; limit is {MAX_GALLERY_IMAGES}',
+        ],
         locales: ['hu'],
         rules: {'inconsistent-args': 'off'},
       },
