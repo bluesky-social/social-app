@@ -116,6 +116,10 @@ export function ActivityFootnote({
   to,
   icon: Icon,
   iconColor,
+  actors = [],
+  action,
+  timestamp,
+  app,
   suffix,
   thumb,
   menu,
@@ -125,14 +129,76 @@ export function ActivityFootnote({
   to?: string
   icon: React.ComponentType<IconProps>
   iconColor?: string
+  actors?: ActivityActor[]
+  action?: string
+  timestamp?: string
+  app?: {name: string; to: string}
   suffix?: string
   thumb?: string
   menu?: React.ReactNode
-  children: React.ReactNode
+  children?: React.ReactNode
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
+  const primary = actors[0]
+  const handle = primary ? sanitizeHandle(primary.handle, '@') : undefined
+  const count = actors.length - 1
+  const others =
+    count > 0
+      ? l`and ${plural(count, {one: '# other', other: '# others'})}`
+      : undefined
+  const content = (elapsed?: string) => (
+    <Text
+      testID="atmosphereFootnoteText"
+      emoji
+      numberOfLines={3}
+      style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+      {primary && handle ? (
+        <>
+          <InlineLinkText
+            testID="atmosphereFootnoteActor"
+            emoji
+            to={makeProfileLink(primary)}
+            label={l`View ${handle}’s profile`}
+            style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+            {handle}
+          </InlineLinkText>
+          {others ? ` ${others}` : ''}
+          {action ? ` ${action} ` : ' '}
+        </>
+      ) : null}
+      {to ? (
+        <InlineLinkText
+          testID="atmosphereFootnoteTitle"
+          emoji
+          disableMismatchWarning
+          to={to}
+          label={title}
+          style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+          {title}
+        </InlineLinkText>
+      ) : (
+        title
+      )}
+      {suffix ? ` ${suffix}` : ''}
+      {app ? (
+        <>
+          {` ${l`via`} `}
+          <InlineLinkText
+            testID="atmosphereFootnoteApp"
+            to={app.to}
+            label={l`Visit ${app.name}`}
+            style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+            {app.name}
+          </InlineLinkText>
+        </>
+      ) : null}
+      {elapsed ? ` • ${elapsed}` : ''}
+    </Text>
+  )
+
   return (
-    <View testID="atmosphereFootnote" style={[a.flex_row, a.gap_md]}>
+    <View testID="atmosphereFootnote" style={[a.flex_row, a.gap_sm]}>
       <View style={{paddingTop: 2}}>
         <Icon
           size="sm"
@@ -140,26 +206,22 @@ export function ActivityFootnote({
           style={iconColor ? undefined : t.atoms.text_contrast_medium}
         />
       </View>
+      {primary ? (
+        <View style={{paddingTop: 2}}>
+          <AvatarStack
+            profiles={actors.slice(0, 5) as bsky.profile.AnyProfileView[]}
+            size={16}
+          />
+        </View>
+      ) : null}
       <View style={[a.flex_1, a.gap_xs, {minWidth: 0}]}>
-        <Text emoji numberOfLines={3} style={[a.text_sm, a.leading_snug]}>
-          {to ? (
-            <InlineLinkText
-              emoji
-              disableMismatchWarning
-              to={to}
-              label={title}
-              style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
-              {title}
-            </InlineLinkText>
-          ) : (
-            title
-          )}
-          {suffix ? (
-            <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
-              {` ${suffix}`}
-            </Text>
-          ) : null}
-        </Text>
+        {timestamp ? (
+          <TimeElapsed timestamp={timestamp}>
+            {({timeElapsed}) => content(timeElapsed)}
+          </TimeElapsed>
+        ) : (
+          content()
+        )}
         {children}
       </View>
       {thumb && to ? (

@@ -79,7 +79,12 @@ jest.mock('./debug', () => ({
   isAtmosphereDebugEnabled: () => true,
 }))
 jest.mock('#/alf', () => ({
-  atoms: new Proxy({}, {get: () => ({})}),
+  atoms: new Proxy(
+    {},
+    {
+      get: (_, atom) => (atom === 'font_semi_bold' ? {fontWeight: '600'} : {}),
+    },
+  ),
   tokens: {borderRadius: {md: 12}},
   web: (styles: object) => styles,
   useTheme: () => ({
@@ -456,6 +461,39 @@ describe('content-first articles and recommendations', () => {
       ).toBeTruthy()
     },
   )
+
+  it('renders recommendation footnotes as one linked sentence with full-contrast links', () => {
+    const row = recommendationRow(1)
+    row.associatedRecords[publicationUri].record.url =
+      'https://writer.pckt.blog'
+    const screen = renderRow(row)
+
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveTextContent(
+      /recommended An article via pckt/,
+    )
+    expect(screen.getByTestId('atmosphereFootnoteText')).toHaveStyle({
+      color: '#667788',
+    })
+    expect(screen.getByTestId('atmosphereFootnoteActor')).toHaveStyle({
+      color: '#111111',
+    })
+    expect(screen.getByTestId('atmosphereFootnoteTitle')).toHaveStyle({
+      color: '#111111',
+    })
+    expect(screen.getByTestId('atmosphereFootnoteApp')).toHaveStyle({
+      color: '#111111',
+      fontWeight: '600',
+    })
+    expect(screen.getByTestId('atmosphereFootnoteApp').props.to).toBe(
+      'https://pckt.blog',
+    )
+    expect(mockAvatarStack).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        profiles: [row.actors['did:plc:actor0']],
+        size: 16,
+      }),
+    )
+  })
 
   it.each([1, 2])(
     'uses the filled primary heart for recommendation %s-actor presentation',

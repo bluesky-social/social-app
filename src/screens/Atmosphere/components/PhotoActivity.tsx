@@ -37,14 +37,14 @@ export function GrainPhotoActivityRenderer({
   const count = item.type === 'group' ? item.group.items.length : 1
   const timestamp =
     item.type === 'group' ? item.group.indexedAt : first.record.indexedAt
+  const action =
+    count === 1
+      ? l`posted a photo`
+      : l`posted ${plural(count, {one: '# photo', other: '# photos'})}`
   const metadata = (
     <ActivityActorLine
       actors={computedItemView.actors}
-      action={
-        count === 1
-          ? l`posted a photo`
-          : l`posted ${plural(count, {one: '# photo', other: '# photos'})}`
-      }
+      action={action}
       timestamp={timestamp}
       showAvatars={images.length > 0}
     />
@@ -82,9 +82,12 @@ export function GrainPhotoActivityRenderer({
       ) : (
         <ActivityFootnote
           title={count === 1 ? l`Photo unavailable` : l`Photos unavailable`}
-          icon={PhotoIcon}>
-          {metadata}
-        </ActivityFootnote>
+          icon={PhotoIcon}
+          actors={computedItemView.actors}
+          action={action}
+          timestamp={timestamp}
+          app={{name: 'Grain', to: 'https://grain.social/'}}
+        />
       )}
     </View>
   )

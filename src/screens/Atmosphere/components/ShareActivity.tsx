@@ -104,14 +104,11 @@ export function ShareActivityRenderer({
         <ActivityFootnote
           title={l`Post unavailable`}
           icon={ShareIcon}
-          suffix={suffix}>
-          <ActivityActorLine
-            actors={computedItemView.actors}
-            action={l`shared`}
-            timestamp={timestamp}
-            showAvatars={false}
-          />
-        </ActivityFootnote>
+          actors={computedItemView.actors}
+          action={l`shared`}
+          timestamp={timestamp}
+          suffix={suffix}
+        />
       )}
     </View>
   )

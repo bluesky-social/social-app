@@ -17,6 +17,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {BookmarkFilled as SubscribeIcon} from '#/components/icons/Bookmark'
 import {InlineLinkText, Link} from '#/components/Link'
 import {SubscribeButton} from '#/components/Post/Embed/StandardSiteEmbed'
+import {matchStandardSitePublisherByViewHints} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {Text} from '#/components/Typography'
 import {
   ActivityActorLine,
@@ -55,6 +56,9 @@ export function SubscriptionActivityRenderer({
   const isCard =
     Boolean(view?.title.trim()) &&
     getActivityPresentationKind({item, computedItemView}) === 'card'
+  const publisher = view
+    ? matchStandardSitePublisherByViewHints(view)
+    : undefined
 
   return (
     <View testID={testID} style={a.px_xl}>
@@ -146,16 +150,16 @@ export function SubscriptionActivityRenderer({
           to={view?.uri}
           icon={SubscribeIcon}
           iconColor={t.palette.positive_500}
+          actors={computedItemView.actors}
+          action={l`subscribed to`}
+          timestamp={timestamp}
+          app={
+            publisher ? {name: publisher.name, to: publisher.url} : undefined
+          }
           suffix={suffix}
           thumb={view?.source?.icon}
-          menu={<DocumentMenuPlaceholder />}>
-          <ActivityActorLine
-            actors={computedItemView.actors}
-            action={l`subscribed`}
-            timestamp={timestamp}
-            showAvatars={false}
-          />
-        </ActivityFootnote>
+          menu={<DocumentMenuPlaceholder />}
+        />
       )}
     </View>
   )

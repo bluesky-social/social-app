@@ -62,6 +62,8 @@ export function LivestreamActivityRenderer({
       ? l`streamed (first stream: ${duration})`
       : l`streamed for ${duration}`
     : l`streamed`
+  const footnoteAction =
+    status === 'ended' ? endedAction : l`started a livestream`
   const thumb =
     first.view?.$type === 'eric.bsky.atmosphere.getActivity#livestreamView' &&
     first.view.thumb?.trim()
@@ -157,20 +159,11 @@ export function LivestreamActivityRenderer({
             title={title}
             to={href}
             icon={StreamIcon}
-            suffix={suffix}>
-            {actor ? (
-              <ActivityActorLine
-                actors={actors}
-                action={
-                  status === 'ended' ? endedAction : l`started a livestream`
-                }
-                timestamp={timestamp}
-                showAvatars={false}
-              />
-            ) : (
-              <ActivityTimestamp timestamp={timestamp} />
-            )}
-          </ActivityFootnote>
+            actors={actors}
+            action={footnoteAction}
+            timestamp={timestamp}
+            suffix={suffix}
+          />
         </View>
       )}
     </View>

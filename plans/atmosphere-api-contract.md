@@ -440,8 +440,9 @@ A `groupBy: "actor"` group omits `subject`; a `groupBy: "subject"` group omits `
 ### Associated records
 
 - `associatedRecords` includes every root feed record plus recursively resolved local records referenced by AT URI.
-- Hydration is breadth-first to a maximum depth of four.
-- The backend fetches at most 100 recursively associated records in addition to feed-root records.
+- The backend hydrates configured render-required chains first, then uses the remainder of its budget for optional references breadth-first. Optional references cannot displace a document or publication needed to render a root.
+- Hydration has a maximum depth of four, a hard required-discovery safety bound of 800 records across the candidate page, and a response budget of at most 100 associated records in addition to feed roots.
+- When a candidate page's available required closure would exceed 100 records, the backend returns the largest chronological root prefix that fits. Its cursor stops after that prefix, so valid deferred activity remains reachable on the next page.
 - Missing, deleted, or unavailable references do not fail the whole request. Before grouping, they suppress a root when they occupy a configured render-required relationship: recommendation `/document`, post-share external associated document, subscription `/publication`, or document `/site` when it is an AT URI. Requirements recurse, so a recommendation is suppressed when its document exists but that document's AT-URI publication does not.
 - HTTPS document sites remain valid. Missing AT URIs outside configured render-required paths, such as Bluesky post references, do not suppress activity.
 - Filtering can shrink a group or turn a would-be group into a standalone item. Clients should use the returned group item count without accounting for omitted roots.
@@ -539,9 +540,9 @@ const nextPage = await getActivity({
 ```
 
 - Page size is server-controlled over candidate root activity records; there is no `limit` parameter.
-- A page selects at least 10 candidate roots when available. Required-association filtering happens afterward, so the returned feed can contain fewer than 10 roots and the cursor advances past omitted candidates.
+- A page initially selects at least 10 candidate roots when available. If their required associated-record closure exceeds the bounded response budget, the backend may return a shorter chronological prefix and leaves deferred roots behind the cursor for the next page. Genuinely missing required associations are filtered afterward, so the returned feed can still contain fewer than 10 roots and the cursor advances past those genuinely unrenderable candidates.
 - After root record 10, each adjacent gap is compared with the grouping window selected from the newer event’s age at the fixed request time: 30 minutes when younger than one hour, one hour through 12 hours old, four hours when older than 12 through 24 hours old, and eight hours when older than 24 hours.
-- A page contains at most 200 root records; grouping can make the outer `feed` array shorter.
+- A candidate page contains at most 200 root records; required-association budgeting can shorten it before grouping, and grouping can make the outer `feed` array shorter.
 - The event whose gap exceeds its age-tier window, or root record 201, begins the next page.
 - Grouping is page-local and never crosses a cursor boundary. Sharing the age tiers prevents ordinary gap pagination from splitting a possible group; the 200-root cap can still split one.
 - An absent `cursor` means there is no next page.
