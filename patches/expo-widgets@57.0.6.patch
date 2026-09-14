@@ -1,0 +1,62 @@
+diff --git a/plugin/build/ios/withIosWidgets.js b/plugin/build/ios/withIosWidgets.js
+index c8cd8411b9027a3584300ce821085c878559be62..74cbbfadbee515af626be1aaa643db2742e9cb14 100644
+--- a/plugin/build/ios/withIosWidgets.js
++++ b/plugin/build/ios/withIosWidgets.js
+@@ -23,7 +23,7 @@ const withIosWidgets = (config, props) => {
+     }
+     let plugins = [];
+     const deploymentTarget = config.ios?.deploymentTarget ?? '16.4';
+-    const targetName = 'ExpoWidgetsTarget';
++    const targetName = 'BlueskyWidgets';
+     const widgets = props.widgets.filter((widget) => widget.ios !== null);
+     const enablePushNotifications = props.enablePushNotifications ?? false;
+     const frequentUpdates = props.frequentUpdates ?? false;
+diff --git a/plugin/build/ios/xcode/addPbxGroup.js b/plugin/build/ios/xcode/addPbxGroup.js
+index 1eabc0621d61475f513a5c78e14fd5872b5b3a55..f5bc416f01098323475fd182bc1fe1e0afbeb091 100644
+--- a/plugin/build/ios/xcode/addPbxGroup.js
++++ b/plugin/build/ios/xcode/addPbxGroup.js
+@@ -11,7 +11,11 @@ function addPbxGroup(xcodeProject, { targetName, widgetFiles, }) {
+     const groups = xcodeProject.hash.project.objects['PBXGroup'];
+     if (pbxGroupUuid) {
+         Object.keys(groups).forEach(function (key) {
+-            if (groups[key].name === undefined && groups[key].path === undefined) {
++            const group = groups[key];
++            if (group &&
++                typeof group === 'object' &&
++                group.name === undefined &&
++                group.path === undefined) {
+                 xcodeProject.addToPbxGroup(pbxGroupUuid, key);
+             }
+         });
+diff --git a/plugin/src/ios/withIosWidgets.ts b/plugin/src/ios/withIosWidgets.ts
+index e880642371a1f841fd354157274f7d7625e7e1a7..e9079bf3f1b1132b460886a32801f5c5e1102f00 100644
+--- a/plugin/src/ios/withIosWidgets.ts
++++ b/plugin/src/ios/withIosWidgets.ts
+@@ -32,7 +32,7 @@ const withIosWidgets: ConfigPlugin<IosWidgetsProps> = (config, props) => {
+ 
+   let plugins: (StaticPlugin | ConfigPlugin | string)[] = [];
+   const deploymentTarget = config.ios?.deploymentTarget ?? '16.4';
+-  const targetName = 'ExpoWidgetsTarget';
++  const targetName = 'BlueskyWidgets';
+   const widgets = props.widgets.filter((widget) => widget.ios !== null);
+ 
+   const enablePushNotifications = props.enablePushNotifications ?? false;
+diff --git a/plugin/src/ios/xcode/addPbxGroup.ts b/plugin/src/ios/xcode/addPbxGroup.ts
+index 59c5e5bcee29118b7a3ed0621415e0776d1b7229..a7fe47f36e545e8e934ca64ed355d0879ecd4562 100644
+--- a/plugin/src/ios/xcode/addPbxGroup.ts
++++ b/plugin/src/ios/xcode/addPbxGroup.ts
+@@ -25,7 +25,13 @@ export function addPbxGroup(
+   const groups = xcodeProject.hash.project.objects['PBXGroup'];
+   if (pbxGroupUuid) {
+     Object.keys(groups).forEach(function (key) {
+-      if (groups[key].name === undefined && groups[key].path === undefined) {
++      const group = groups[key];
++      if (
++        group &&
++        typeof group === 'object' &&
++        group.name === undefined &&
++        group.path === undefined
++      ) {
+         xcodeProject.addToPbxGroup(pbxGroupUuid, key);
+       }
+     });

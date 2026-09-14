@@ -37,6 +37,7 @@ patchedDependencies:
   'expo-modules-core@57.0.8': patches/expo-modules-core@57.0.8.patch
   'expo-notifications@57.0.7': patches/expo-notifications@57.0.7.patch
   'expo-updates@57.0.10': patches/expo-updates@57.0.10.patch
+  expo-widgets@57.0.6: patches/expo-widgets@57.0.6.patch
   expo@57.0.8: patches/expo@57.0.8.patch
   'react-native-date-picker@5.0.13': patches/react-native-date-picker@5.0.13.patch
   'react-native-dotenv@3.4.11': patches/react-native-dotenv@3.4.11.patch
