@@ -26,7 +26,6 @@ export type TrendingTopicsWidgetProps = {
     description?: string
     destination: string
     displayName: string
-    postCountLabel: string
   }[]
 }
 
@@ -40,7 +39,7 @@ function TrendingTopicsWidget(
   const isDark = environment.colorScheme === 'dark'
   const isSmall = environment.widgetFamily === 'systemSmall'
   const isMedium = environment.widgetFamily === 'systemMedium'
-  const topicLimit = isSmall ? 2 : isMedium ? 3 : 5
+  const topicLimit = isSmall || isMedium ? 3 : 5
   const topics = (props.topics ?? []).slice(0, topicLimit)
   const backgroundColor = isDark ? '#10161F' : '#FFFFFF'
   const textColor = isDark ? '#F1F3F5' : '#0A0A0A'
@@ -57,46 +56,37 @@ function TrendingTopicsWidget(
       description?: string
       destination: string
       displayName: string
-      postCountLabel: string
     }
     rank: number
   }) {
     'use no memo'
 
-    const row = isMedium ? (
-      <HStack
-        alignment="firstTextBaseline"
-        spacing={6}
-        modifiers={[padding({vertical: 6})]}>
+    const row = isSmall ? (
+      <HStack alignment="top" spacing={5} modifiers={[padding({vertical: 3})]}>
         <Text
           modifiers={[
-            frame({width: 18, alignment: 'leading'}),
-            font({size: 13, weight: 'medium'}),
+            frame({width: 16, alignment: 'leading'}),
+            font({size: 12, weight: 'medium'}),
             foregroundStyle(secondaryTextColor),
           ]}>
           {rank}.
         </Text>
         <Text
           modifiers={[
-            font({size: 14, weight: 'semibold'}),
+            font({size: 12, weight: 'semibold'}),
             foregroundStyle(textColor),
-            lineLimit(1),
+            lineLimit(3),
+            minimumScaleFactor(0.8),
           ]}>
           {topic.displayName}
         </Text>
-        <Spacer minLength={4} />
-        <Text
-          modifiers={[
-            font({size: 11}),
-            foregroundStyle(secondaryTextColor),
-            lineLimit(1),
-            minimumScaleFactor(0.75),
-          ]}>
-          {topic.postCountLabel}
-        </Text>
+        <Spacer minLength={0} />
       </HStack>
     ) : (
-      <HStack alignment="top" spacing={6} modifiers={[padding({vertical: 7})]}>
+      <HStack
+        alignment="top"
+        spacing={6}
+        modifiers={[padding({vertical: isMedium ? 3 : 7})]}>
         <Text
           modifiers={[
             frame({width: 18, alignment: 'leading'}),
@@ -105,34 +95,26 @@ function TrendingTopicsWidget(
           ]}>
           {rank}.
         </Text>
-        <VStack alignment="leading" spacing={isSmall ? 2 : 3}>
+        <VStack alignment="leading" spacing={2}>
           <Text
             modifiers={[
-              font({size: isSmall ? 13 : 14, weight: 'semibold'}),
+              font({size: isMedium ? 13 : 14, weight: 'semibold'}),
               foregroundStyle(textColor),
-              lineLimit(isSmall ? 2 : 1),
+              lineLimit(1),
               minimumScaleFactor(0.8),
             ]}>
             {topic.displayName}
           </Text>
-          {!isSmall && topic.description ? (
+          {topic.description ? (
             <Text
               modifiers={[
-                font({size: 11}),
+                font({size: isMedium ? 10 : 11}),
                 foregroundStyle(secondaryTextColor),
-                lineLimit(1),
+                lineLimit(2),
               ]}>
               {topic.description}
             </Text>
           ) : null}
-          <Text
-            modifiers={[
-              font({size: 10}),
-              foregroundStyle(secondaryTextColor),
-              lineLimit(1),
-            ]}>
-            {topic.postCountLabel}
-          </Text>
         </VStack>
         <Spacer minLength={0} />
       </HStack>
@@ -148,24 +130,32 @@ function TrendingTopicsWidget(
       modifiers={[
         containerBackground(backgroundColor, 'widget'),
         frame({maxWidth: 1000, maxHeight: 1000, alignment: 'topLeading'}),
-        padding({all: isSmall ? 12 : 14}),
+        padding(
+          isSmall
+            ? {all: 2}
+            : isMedium
+              ? {horizontal: 10, vertical: 6}
+              : {horizontal: 8, vertical: 4},
+        ),
         widgetURL(rootDestination),
       ]}>
-      <HStack spacing={6}>
-        <Image
-          systemName="chart.line.uptrend.xyaxis"
-          size={14}
-          color="#0085FF"
-        />
-        <Text
-          modifiers={[
-            font({size: 15, weight: 'bold'}),
-            foregroundStyle(textColor),
-          ]}>
-          {props.title ?? 'Trending'}
-        </Text>
-        <Spacer minLength={0} />
-      </HStack>
+      {!isSmall ? (
+        <HStack spacing={6} modifiers={[padding({bottom: 4})]}>
+          <Image
+            systemName="chart.line.uptrend.xyaxis"
+            size={14}
+            color="#0085FF"
+          />
+          <Text
+            modifiers={[
+              font({size: isMedium ? 13 : 15, weight: 'bold'}),
+              foregroundStyle(textColor),
+            ]}>
+            {props.title ?? 'Trending on Bluesky'}
+          </Text>
+          <Spacer minLength={0} />
+        </HStack>
+      ) : null}
 
       {topics.length ? (
         <VStack alignment="leading" spacing={0}>
