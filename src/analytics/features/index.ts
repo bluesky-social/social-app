@@ -1,10 +1,11 @@
 import {MMKV} from 'react-native-mmkv'
 import {setPolyfills} from '@growthbook/growthbook'
-import {GrowthBook} from '@growthbook/growthbook-react'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
 import {Logger} from '#/logger'
+import {readFeatureBootstrap} from '#/analytics/features/bootstrap'
+import {createGrowthBook} from '#/analytics/features/client'
 import {Features} from '#/analytics/features/types'
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
@@ -37,11 +38,15 @@ const TIMEOUT_INIT = 2000 // TODO should base on p99 or something
 const TIMEOUT_PREFER_LOW_LATENCY = 250
 const TIMEOUT_PREFER_FRESH_GATES = 1500
 
-export const features = new GrowthBook({
+const sdkOptions = {
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
   enableDevMode: env.IS_INTERNAL,
-})
+}
+export const features = createGrowthBook(
+  sdkOptions,
+  readFeatureBootstrap(sdkOptions),
+)
 
 /**
  * Initializer promise that must be awaited before using the GrowthBook
