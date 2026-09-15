@@ -21,6 +21,7 @@ export function TrendingTopicsWidgetSync() {
     enabled: isWidgetInstalled,
     fetchLimit: 10,
     limit: 5,
+    refetchOnWindowFocus: true,
   })
   const {data: preferences} = usePreferencesQuery()
   const languagePrefs = useLanguagePrefs()
