@@ -92,11 +92,13 @@ export function useIntentHandler() {
             releaseVersion && buildNumber
               ? `${releaseVersion}.${buildNumber}`
               : null
+          const sourceCommit = params.get('sourceCommit')
+          const publicationId = params.get('publicationId')
           if (!channel) {
             Alert.alert('Error', 'No channel provided to look for.')
             return
           }
-          tryApplyUpdate(channel, appVersion)
+          tryApplyUpdate(channel, appVersion, {sourceCommit, publicationId})
           return
         }
         default: {

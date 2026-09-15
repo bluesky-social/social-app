@@ -5,6 +5,10 @@ export function useApplyPullRequestOTAUpdate() {
     tryApplyUpdate: async (
       _channel: string,
       _declaredAppVersion?: string | null,
+      _expected?: {
+        sourceCommit?: string | null
+        publicationId?: string | null
+      },
     ) => {},
     restoreDefaultChannel: async () => {},
     isCurrentlyRunningPullRequestDeployment: false,

@@ -1,104 +1,130 @@
+#!/usr/bin/env node
+/* oxlint-disable import/no-nodejs-modules -- This is a Node-only build script. */
 const crypto = require('crypto')
 const fs = require('fs')
 const fsp = fs.promises
 const path = require('path')
 
-const DIST_DIR = './dist'
-const BUNDLES_DIR = '/_expo/static/js'
-const IOS_BUNDLE_DIR = path.join(DIST_DIR, BUNDLES_DIR, '/ios')
-const ANDROID_BUNDLE_DIR = path.join(DIST_DIR, BUNDLES_DIR, '/android')
-const METADATA_PATH = path.join(DIST_DIR, '/metadata.json')
-const DEST_DIR = './bundleTempDir'
-
-// Weird, don't feel like figuring out _why_ it wants this
-const METADATA = require(`../${METADATA_PATH}`)
-const IOS_METADATA_ASSETS = METADATA.fileMetadata.ios.assets
-const ANDROID_METADATA_ASSETS = METADATA.fileMetadata.android.assets
-
-const getMd5 = async path => {
-  return new Promise(res => {
-    const hash = crypto.createHash('md5')
-    const rStream = fs.createReadStream(path)
-    rStream.on('data', data => {
-      hash.update(data)
-    })
-    rStream.on('end', () => {
-      res(hash.digest('hex'))
-    })
-  })
+/** @param {string[]} argv */
+function args(argv) {
+  /** @type {Record<string, string>} */
+  const out = {}
+  for (let i = 0; i < argv.length; i += 2) {
+    if (!argv[i]?.startsWith('--') || argv[i + 1] == null)
+      throw new Error(`Invalid argument: ${argv[i]}`)
+    out[argv[i].slice(2)] = argv[i + 1]
+  }
+  return out
+}
+async function digest(file) {
+  const hash = crypto.createHash('md5')
+  for await (const chunk of fs.createReadStream(file)) hash.update(chunk)
+  return hash.digest('hex')
+}
+async function childOf(parent, child) {
+  const relative = path.relative(
+    await fsp.realpath(parent),
+    await fsp.realpath(child),
+  )
+  return (
+    relative !== '' && !relative.startsWith('..') && !path.isAbsolute(relative)
+  )
 }
 
-const moveFiles = async () => {
-  console.log('Making directory...')
-  await fsp.mkdir(DEST_DIR)
-  await fsp.mkdir(path.join(DEST_DIR, '/assets'))
-
-  console.log('Getting ios md5...')
-  const iosCurrPath = path.join(
-    IOS_BUNDLE_DIR,
-    (await fsp.readdir(IOS_BUNDLE_DIR))[0],
-  )
-  const iosMd5 = await getMd5(iosCurrPath)
-  const iosNewPath = `bundles/${iosMd5}.bundle`
-
-  console.log('Copying ios bundle...')
-  await fsp.cp(iosCurrPath, path.join(DEST_DIR, iosNewPath))
-
-  console.log('Getting android md5...')
-  const androidCurrPath = path.join(
-    ANDROID_BUNDLE_DIR,
-    (await fsp.readdir(ANDROID_BUNDLE_DIR))[0],
-  )
-  const androidMd5 = await getMd5(androidCurrPath)
-  const androidNewPath = `bundles/${androidMd5}.bundle`
-
-  console.log('Copying android bundle...')
-  await fsp.cp(androidCurrPath, path.join(DEST_DIR, androidNewPath))
-
-  const iosAssets = []
-  const androidAssets = []
-
-  console.log('Getting ios asset md5s and moving them...')
-  for (const asset of IOS_METADATA_ASSETS) {
-    const currPath = path.join(DIST_DIR, asset.path)
-    const md5 = await getMd5(currPath)
-    const withExtPath = `assets/${md5}.${asset.ext}`
-    iosAssets.push(withExtPath)
-    await fsp.cp(currPath, path.join(DEST_DIR, withExtPath))
+/**
+ * @param {string} platform
+ * @param {string} sourceDir
+ * @param {string} destinationDir
+ */
+async function packagePlatform(platform, sourceDir, destinationDir) {
+  const metadataPath = path.join(sourceDir, 'metadata.json')
+  if (!(await childOf(sourceDir, metadataPath)))
+    throw new Error('Metadata escapes export directory')
+  /** @type {{fileMetadata?: Record<string, {bundle: string, assets?: {path: string, ext: string}[]}>}} */
+  const metadata = JSON.parse(await fsp.readFile(metadataPath, 'utf8'))
+  const input = metadata.fileMetadata?.[platform]
+  if (!input || typeof input.bundle !== 'string')
+    throw new Error(`${metadataPath} has no explicit ${platform} bundle`)
+  const outputDir = path.join(destinationDir, platform)
+  await fsp.mkdir(path.join(outputDir, 'bundles'), {recursive: true})
+  await fsp.mkdir(path.join(outputDir, 'assets'), {recursive: true})
+  const bundleSource = path.resolve(sourceDir, input.bundle)
+  if (!(await childOf(sourceDir, bundleSource)))
+    throw new Error(`Bundle escapes export directory: ${input.bundle}`)
+  const bundle = `bundles/${await digest(bundleSource)}.bundle`
+  await fsp.copyFile(bundleSource, path.join(outputDir, bundle))
+  const assets = []
+  for (const asset of input.assets ?? []) {
+    if (
+      typeof asset.path !== 'string' ||
+      typeof asset.ext !== 'string' ||
+      !/^[a-zA-Z0-9]+$/.test(asset.ext)
+    )
+      throw new Error(`Invalid ${platform} asset metadata`)
+    const source = path.resolve(sourceDir, asset.path)
+    if (!(await childOf(sourceDir, source)))
+      throw new Error(`Asset escapes export directory: ${asset.path}`)
+    const target = `assets/${await digest(source)}.${asset.ext}`
+    await fsp.copyFile(source, path.join(outputDir, target))
+    assets.push(target)
   }
-
-  console.log('Getting android asset md5s and moving them...')
-  for (const asset of ANDROID_METADATA_ASSETS) {
-    const currPath = path.join(DIST_DIR, asset.path)
-    const md5 = await getMd5(currPath)
-    const withExtPath = `assets/${md5}.${asset.ext}`
-    androidAssets.push(withExtPath)
-    await fsp.cp(currPath, path.join(DEST_DIR, withExtPath))
-  }
-
-  const result = {
-    version: 0,
-    bundler: 'metro',
-    fileMetadata: {
-      ios: {
-        bundle: iosNewPath,
-        assets: iosAssets,
-      },
-      android: {
-        bundle: androidNewPath,
-        assets: androidAssets,
-      },
-    },
-  }
-
-  console.log('Writing metadata...')
   await fsp.writeFile(
-    path.join(DEST_DIR, 'metadata.json'),
-    JSON.stringify(result),
+    path.join(outputDir, 'metadata.json'),
+    `${JSON.stringify({version: 0, bundler: 'metro', fileMetadata: {[platform]: {bundle, assets}}})}\n`,
   )
-
-  console.log('Finished!')
-  console.log('Metadata:', result)
+  const rollbackPath = path.join(sourceDir, 'rollback')
+  if (fs.existsSync(rollbackPath)) {
+    if (!(await childOf(sourceDir, rollbackPath)))
+      throw new Error('Rollback marker escapes export directory')
+    await fsp.copyFile(rollbackPath, path.join(outputDir, 'rollback'))
+  }
 }
 
-moveFiles()
+async function main() {
+  const options = args(process.argv.slice(2))
+  if (!options['release-file']) throw new Error('--release-file is required')
+  const releasePath = path.resolve(options['release-file'])
+  const base = path.dirname(releasePath)
+  /** @type {{schemaVersion: number, bundleVersion: string, platforms: Record<string, {bundleDirectory: string}>}} */
+  const release = JSON.parse(await fsp.readFile(releasePath, 'utf8'))
+  if (
+    release.schemaVersion !== 1 ||
+    !release.platforms ||
+    !/^[0-9]{13}$/.test(release.bundleVersion ?? '')
+  )
+    throw new Error('Invalid OTA export schema')
+  const outputDir = options['output-dir']
+    ? path.resolve(options['output-dir'])
+    : await fsp.mkdtemp(path.join(base, 'ota-bundles-'))
+  const outputRelative = path.relative(base, outputDir)
+  if (
+    !outputRelative ||
+    outputRelative.startsWith('..') ||
+    path.isAbsolute(outputRelative)
+  )
+    throw new Error('Packaged output must be inside the release directory')
+  if (options['output-dir']) await fsp.mkdir(outputDir, {recursive: false})
+  for (const [platform, entry] of Object.entries(release.platforms)) {
+    if (
+      !['ios', 'android'].includes(platform) ||
+      typeof entry.bundleDirectory !== 'string'
+    )
+      throw new Error(`Invalid platform entry: ${platform}`)
+    const sourceDir = path.resolve(base, entry.bundleDirectory)
+    if (sourceDir !== base && !(await childOf(base, sourceDir)))
+      throw new Error('Export directory escapes release directory')
+    await packagePlatform(platform, sourceDir, outputDir)
+    entry.bundleDirectory = path.relative(base, path.join(outputDir, platform))
+  }
+  const packagedReleasePath = `${outputDir}.json`
+  await fsp.writeFile(
+    packagedReleasePath,
+    `${JSON.stringify(release, null, 2)}\n`,
+    {flag: 'wx'},
+  )
+  process.stdout.write(`${packagedReleasePath}\n`)
+}
+main().catch(error => {
+  console.error(error instanceof Error ? error.message : error)
+  process.exitCode = 1
+})

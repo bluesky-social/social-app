@@ -1,0 +1,305 @@
+---
+name: Bundle and Deploy Fingerprint OTA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      channel:
+        type: choice
+        options: [testflight, production]
+        default: testflight
+      iosBuildNumber:
+        type: string
+        description: Required exact production iOS build target
+      androidVersionCode:
+        type: string
+        description: Required exact production Android build target
+      iosReceiptRunId:
+        type: string
+        description: Optional trusted iOS native-build workflow run containing a matching receipt
+      iosReceiptRunAttempt:
+        type: string
+        default: '1'
+        description: Attempt number for the optional iOS receipt run
+      androidReceiptRunId:
+        type: string
+        description: Optional trusted Android native-build workflow run containing a matching receipt
+      androidReceiptRunAttempt:
+        type: string
+        default: '1'
+        description: Attempt number for the optional Android receipt run
+
+permissions: {}
+
+jobs:
+  publish:
+    name: Export and publish fingerprint OTA
+    if: >-
+      github.repository == 'bluesky-social/social-app' &&
+      vars.OTA_FINGERPRINT_PIPELINE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: fingerprint-ota-${{ github.ref }}-${{ inputs.channel || 'testflight' }}
+      cancel-in-progress: true
+    permissions:
+      contents: read
+      id-token: write
+      actions: read
+    env:
+      OTA_FINGERPRINT_PIPELINE_ENABLED: '1'
+      CHANNEL: ${{ inputs.channel || 'testflight' }}
+    steps:
+      - name: 🧭 Validate rollout configuration
+        env:
+          DENIS_VERSION: ${{ vars.OTA_FINGERPRINT_DENIS_VERSION }}
+          IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
+          ANDROID_BUILD_NUMBER: ${{ inputs.androidVersionCode }}
+        run: |
+          if [ -z "$DENIS_VERSION" ]; then
+            echo "::error::OTA_FINGERPRINT_DENIS_VERSION must pin a structured-publisher release"
+            exit 1
+          fi
+          if [ "$CHANNEL" = production ]; then
+            [[ "$IOS_BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::A numeric iOS production target is required"; exit 1; }
+            [[ "$ANDROID_BUILD_NUMBER" =~ ^[0-9]+$ ]] || { echo "::error::A numeric Android production target is required"; exit 1; }
+          fi
+
+      - name: ⏱️ Allocate publication version
+        id: publication
+        run: echo "bundle-version=$(node -e 'process.stdout.write(String(Date.now()))')" >> "$GITHUB_OUTPUT"
+
+      - name: ⬇️ Checkout exact source commit
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: 🛠️ Setup Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: 🔤 Compile translations
+        uses: ./.github/actions/compile-i18n
+
+      - name: ✏️ Write environment variables
+        id: env
+        uses: ./.github/actions/write-env
+        with:
+          env-token: ${{ secrets.ENV_TOKEN }}
+          sentry-dsn: ${{ secrets.SENTRY_DSN }}
+          bitdrift-api-key: ${{ secrets.BITDRIFT_API_KEY }}
+          gcp-project-id: ${{ secrets.EXPO_PUBLIC_GCP_PROJECT_ID }}
+          google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
+          expo-public-env: ${{ inputs.channel || 'testflight' }}
+
+      - name: 🧬 Resolve iOS runtime
+        id: ios-runtime
+        uses: bluesky-social/github-actions/fingerprint-runtime@b890bb3f200c5fb9fee7a2a1647e08537a73bde0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        with:
+          platform: ios
+          profile: ${{ inputs.channel || 'testflight' }}
+          source-commit: ${{ github.sha }}
+
+      - name: 🧬 Resolve Android runtime
+        id: android-runtime
+        uses: bluesky-social/github-actions/fingerprint-runtime@b890bb3f200c5fb9fee7a2a1647e08537a73bde0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        with:
+          platform: android
+          profile: ${{ inputs.channel || 'testflight' }}
+          source-commit: ${{ github.sha }}
+
+      - name: 📋 Stage fingerprint reports
+        env:
+          IOS_REPORT: ${{ steps.ios-runtime.outputs.report-path }}
+          ANDROID_REPORT: ${{ steps.android-runtime.outputs.report-path }}
+        run: |
+          mkdir ota-release
+          cp "$IOS_REPORT" ota-release/ios-fingerprint.json
+          cp "$ANDROID_REPORT" ota-release/android-fingerprint.json
+
+      - name: 🏗️ Export per native platform
+        env:
+          EXPO_PUBLIC_ENV: ${{ inputs.channel || 'testflight' }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_RELEASE: ${{ steps.env.outputs.release-version }}
+          SENTRY_DIST: ${{ steps.env.outputs.bundle-identifier }}
+        run: |
+          EAS_BUILD_PLATFORM=ios pnpm exec expo export --platform ios --output-dir ota-release/dist-ios --dump-sourcemap
+          EAS_BUILD_PLATFORM=android pnpm exec expo export --platform android --output-dir ota-release/dist-android --dump-sourcemap
+
+      - name: 🧬 Re-resolve iOS runtime after export
+        id: ios-runtime-after-export
+        uses: bluesky-social/github-actions/fingerprint-runtime@b890bb3f200c5fb9fee7a2a1647e08537a73bde0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        with:
+          platform: ios
+          profile: ${{ inputs.channel || 'testflight' }}
+          source-commit: ${{ github.sha }}
+
+      - name: 🧬 Re-resolve Android runtime after export
+        id: android-runtime-after-export
+        uses: bluesky-social/github-actions/fingerprint-runtime@b890bb3f200c5fb9fee7a2a1647e08537a73bde0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        with:
+          platform: android
+          profile: ${{ inputs.channel || 'testflight' }}
+          source-commit: ${{ github.sha }}
+
+      - name: 🧐 Verify export did not change native inputs
+        env:
+          IOS_POST_REPORT: ${{ steps.ios-runtime-after-export.outputs.report-path }}
+          ANDROID_POST_REPORT: ${{ steps.android-runtime-after-export.outputs.report-path }}
+        run: |
+          test "$(jq -r .runtimeVersion ota-release/ios-fingerprint.json)" = "$(jq -r .runtimeVersion "$IOS_POST_REPORT")"
+          test "$(jq -r .runtimeVersion ota-release/android-fingerprint.json)" = "$(jq -r .runtimeVersion "$ANDROID_POST_REPORT")"
+
+      - name: 🔎 Find trusted iOS native receipt
+        id: find-ios-receipt
+        if: ${{ inputs.iosReceiptRunId }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/find-native-receipt.mjs
+          --platform ios
+          --build-number "${{ inputs.iosBuildNumber }}"
+          --run-id "${{ inputs.iosReceiptRunId }}"
+          --run-attempt "${{ inputs.iosReceiptRunAttempt }}"
+
+      - name: 🔎 Find trusted Android native receipt
+        id: find-android-receipt
+        if: ${{ inputs.androidReceiptRunId && always() }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          node .github/scripts/find-native-receipt.mjs
+          --platform android
+          --build-number "${{ inputs.androidVersionCode }}"
+          --run-id "${{ inputs.androidReceiptRunId }}"
+          --run-attempt "${{ inputs.androidReceiptRunAttempt }}"
+
+      - name: ⬇️ Download iOS native receipt
+        id: download-ios-receipt
+        if: ${{ steps.find-ios-receipt.outputs.available == 'true' && always() }}
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ steps.find-ios-receipt.outputs.artifact-name }}
+          path: ota-release/ios-native-receipt
+          run-id: ${{ inputs.iosReceiptRunId }}
+          github-token: ${{ github.token }}
+
+      - name: ⬇️ Download Android native receipt
+        id: download-android-receipt
+        if: ${{ steps.find-android-receipt.outputs.available == 'true' && always() }}
+        continue-on-error: true
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ steps.find-android-receipt.outputs.artifact-name }}
+          path: ota-release/android-native-receipt
+          run-id: ${{ inputs.androidReceiptRunId }}
+          github-token: ${{ github.token }}
+
+      - name: 🧐 Bind downloaded iOS receipt to its build run
+        id: bind-ios-receipt
+        if: ${{ inputs.iosReceiptRunId && always() }}
+        env:
+          EXPECTED_SOURCE_COMMIT: ${{ steps.find-ios-receipt.outputs.head-sha }}
+        run: |
+          if [ ! -f ota-release/ios-native-receipt/receipt.json ]; then
+            echo "::warning::iOS native receipt was unavailable; target could not be verified"
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          else
+            test -n "$EXPECTED_SOURCE_COMMIT"
+            test "$(jq -r .sourceCommit ota-release/ios-native-receipt/receipt.json)" = "$EXPECTED_SOURCE_COMMIT"
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🧐 Bind downloaded Android receipt to its build run
+        id: bind-android-receipt
+        if: ${{ inputs.androidReceiptRunId && always() }}
+        env:
+          EXPECTED_SOURCE_COMMIT: ${{ steps.find-android-receipt.outputs.head-sha }}
+        run: |
+          if [ ! -f ota-release/android-native-receipt/receipt.json ]; then
+            echo "::warning::Android native receipt was unavailable; target could not be verified"
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          else
+            test -n "$EXPECTED_SOURCE_COMMIT"
+            test "$(jq -r .sourceCommit ota-release/android-native-receipt/receipt.json)" = "$EXPECTED_SOURCE_COMMIT"
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🧾 Create structured release
+        env:
+          BUNDLE_VERSION: ${{ steps.publication.outputs.bundle-version }}
+          IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
+          ANDROID_BUILD_NUMBER: ${{ inputs.androidVersionCode }}
+          IOS_RECEIPT_AVAILABLE: ${{ steps.bind-ios-receipt.outputs.available == 'true' && 'true' || 'false' }}
+          ANDROID_RECEIPT_AVAILABLE: ${{ steps.bind-android-receipt.outputs.available == 'true' && 'true' || 'false' }}
+        run: |
+          jq -n \
+            --arg sourceCommit "$GITHUB_SHA" --arg channel "$CHANNEL" \
+            --arg bundleVersion "$BUNDLE_VERSION" \
+            --arg iosRuntime "$(jq -r .runtimeVersion ota-release/ios-fingerprint.json)" \
+            --arg androidRuntime "$(jq -r .runtimeVersion ota-release/android-fingerprint.json)" \
+            --arg iosBuild "$IOS_BUILD_NUMBER" --arg androidBuild "$ANDROID_BUILD_NUMBER" \
+            '{schemaVersion: 1, sourceCommit: $sourceCommit, channel: $channel,
+              nativeProfile: $channel, bundleVersion: $bundleVersion,
+              platforms: {
+                ios: ({runtimeVersion: $iosRuntime, fingerprintReportRef: "ios-fingerprint.json", bundleDirectory: "dist-ios"} + if $channel == "production" then ({targetNativeBuildNumber: $iosBuild} + if $ENV.IOS_RECEIPT_AVAILABLE == "true" then {targetNativeBuildReceiptRef: "ios-native-receipt/receipt.json"} else {} end) else {} end),
+                android: ({runtimeVersion: $androidRuntime, fingerprintReportRef: "android-fingerprint.json", bundleDirectory: "dist-android"} + if $channel == "production" then ({targetNativeBuildNumber: $androidBuild} + if $ENV.ANDROID_RECEIPT_AVAILABLE == "true" then {targetNativeBuildReceiptRef: "android-native-receipt/receipt.json"} else {} end) else {} end)
+              }}' > ota-release/ota-export.json
+          node scripts/ota/validate-release.mjs --release-file ota-release/ota-export.json > ota-release/verification.json
+          jq -e '.valid == true' ota-release/verification.json >/dev/null
+
+      - name: ⬆️ Upload export evidence
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: fingerprint-ota-export-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            ota-release/ota-export.json
+            ota-release/ios-fingerprint.json
+            ota-release/android-fingerprint.json
+            ota-release/verification.json
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: ☁️ Configure AWS credentials (denis)
+        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        with:
+          role-to-assume: arn:aws:iam::007404326489:role/denis-ci-publish
+          aws-region: us-east-2
+
+      - name: ⬇️ Setup structured denis CLI
+        uses: ./.github/actions/setup-denis
+        with:
+          release-tag: ${{ vars.OTA_FINGERPRINT_DENIS_VERSION }}
+          app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
+          private-key: ${{ secrets.SYNC_INTERNAL_PK }}
+
+      - name: 🚀 Publish structured OTA to denis
+        run: bash scripts/denisPublish.sh ota-release/ota-export.json
+        env:
+          DENIS_PUBLISH_MODE: structured
+
+      - name: 📝 Summarize publication
+        run: |
+          {
+            echo "### Fingerprint OTA"
+            echo
+            echo "- Channel: \`$CHANNEL\`"
+            echo "- Source: \`$GITHUB_SHA\`"
+            echo "- Bundle version: \`${{ steps.publication.outputs.bundle-version }}\`"
+            if [ "$CHANNEL" = production ]; then
+              ios_status=$(jq -r '.platforms.ios.receiptVerification.status' ota-release/verification.json)
+              android_status=$(jq -r '.platforms.android.receiptVerification.status' ota-release/verification.json)
+              echo "- iOS native target verification: \`$ios_status\`"
+              echo "- Android native target verification: \`$android_status\`"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
