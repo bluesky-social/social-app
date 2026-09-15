@@ -113,17 +113,8 @@ declare module 'expo-file-system' {
 declare module 'expo-image-manipulator' {
   import {type ImageManipulator as ImageManipulatorModule} from 'expo-image-manipulator/build/ImageManipulator.types'
   export const ImageManipulator: ImageManipulatorModule
+  export {useImageManipulator} from 'expo-image-manipulator/build/ImageManipulator'
   export {
-    manipulateAsync,
-    useImageManipulator,
-  } from 'expo-image-manipulator/build/ImageManipulator'
-  export {
-    type Action,
-    type ActionCrop,
-    type ActionExtent,
-    type ActionFlip,
-    type ActionResize,
-    type ActionRotate,
     FlipType,
     type ImageResult,
     SaveFormat,

@@ -98,7 +98,7 @@ export function useReferenceListOptOutMutation({
   >({
     mutationFn: async ({referenceListOptOut}) => {
       if (!starterPack.list) {
-        throw new Error('Starter pack does not have a reference list')
+        throw new Error('Starter Pack does not have a reference list')
       }
 
       let nextOptOut: AtUriString | undefined
@@ -292,7 +292,7 @@ export function useCreateStarterPackMutation({
       })
       onSuccess(data)
     },
-    onError: async error => {
+    onError: error => {
       onError(error)
     },
   })
@@ -333,7 +333,7 @@ export function useEditStarterPackMutation({
       }
 
       if (!bsky.isType(app.bsky.graph.starterpack, currentStarterPack.record)) {
-        throw new Error('Invalid starter pack')
+        throw new Error('Invalid Starter Pack')
       }
 
       const removedItems = currentListItems.filter(

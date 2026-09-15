@@ -41,12 +41,12 @@ export function StepDetails() {
         </View>
         <View>
           <TextField.LabelText>
-            <Trans>What do you want to call your starter pack?</Trans>
+            <Trans>What do you want to call your Starter Pack?</Trans>
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
               label={
-                name ? _(msg`${name}'s starter pack`) : _(msg`My starter pack`)
+                name ? _(msg`${name}’s Starter Pack`) : _(msg`My Starter Pack`)
               }
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}
