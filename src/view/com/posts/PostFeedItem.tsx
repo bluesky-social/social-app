@@ -1,8 +1,9 @@
 import {memo, useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {LayoutAnimation, StyleSheet, View} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type ReasonFeedSource} from '#/lib/api/feed/types'
@@ -18,6 +19,7 @@ import {
   usePostShadow,
 } from '#/state/cache/post-shadow'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
+import {useHiddenPostsApi} from '#/state/preferences'
 import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {useMergedThreadgateHiddenReplies} from '#/state/threadgate-hidden-replies'
@@ -52,6 +54,7 @@ import {PostControls} from '#/components/PostControls'
 import {DiscoverDebug} from '#/components/PostControls/DiscoverDebug'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
+import * as Toast from '#/components/Toast'
 import {Features, useAnalytics} from '#/analytics'
 import {useActorStatus} from '#/features/liveNow'
 import {app} from '#/lexicons'
@@ -174,7 +177,10 @@ let FeedItemInner = ({
   const {openComposer} = useOpenComposer()
   const pal = usePalette('default')
   const t = useTheme()
+  const {t: l} = useLingui()
   const {currentAccount} = useSession()
+  const {hidePost, unhidePost} = useHiddenPostsApi()
+  const isHidePostEnabled = ax.features.enabled(Features.HidePostEnable)
 
   const [hover, setHover] = useState(false)
 
@@ -228,6 +234,39 @@ let FeedItemInner = ({
       feedContext,
       reqId,
     })
+  }
+
+  const onPressHide = () => {
+    sendInteraction({
+      item: post.uri,
+      event: 'app.bsky.feed.defs#requestLess',
+      feedContext,
+      reqId,
+    })
+    ax.metric('post:showLess', {
+      uri: post.uri,
+      authorDid: post.author.did,
+      logContext: 'FeedItemHideButton',
+      feedDescriptor,
+    })
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+    hidePost({uri: post.uri})
+    Toast.show(
+      <Toast.Outer>
+        <Toast.Icon />
+        <Toast.Text>
+          <Trans>Post hidden</Trans>
+        </Toast.Text>
+        <Toast.Action
+          label={l`Undo`}
+          onPress={() => {
+            unhidePost({uri: post.uri})
+          }}>
+          <Trans>Undo</Trans>
+        </Toast.Action>
+      </Toast.Outer>,
+      {type: 'success'},
+    )
   }
 
   const onOpenEmbed = () => {
@@ -455,6 +494,13 @@ let FeedItemInner = ({
               reqId={reqId}
               threadgateRecord={threadgateRecord}
               onShowLess={onShowLess}
+              onPressHide={
+                isHidePostEnabled &&
+                currentAccount &&
+                currentAccount.did !== post.author.did
+                  ? onPressHide
+                  : undefined
+              }
               viaRepost={viaRepost}
             />
             <KnownLikers
