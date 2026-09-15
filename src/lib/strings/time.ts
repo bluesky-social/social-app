@@ -7,7 +7,7 @@ export function formatDateTime(
   date: number | string | Date,
   options: Intl.DateTimeFormatOptions,
 ) {
-  const uses24hourClock = getCalendars()[0].uses24hourClock
+  const uses24hourClock = getCalendars()[0]?.uses24hourClock ?? null
 
   return i18n.date(date, {
     ...options,
