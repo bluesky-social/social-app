@@ -15,10 +15,23 @@ export function isValidCode(value?: string) {
 }
 
 export function TokenField({
+  testID,
+  autoFocus,
+  editable,
   value,
   onChangeText,
+  onFocus,
   onSubmitEditing,
-}: Pick<TextInputProps, 'value' | 'onChangeText' | 'onSubmitEditing'>) {
+}: Pick<
+  TextInputProps,
+  | 'testID'
+  | 'autoFocus'
+  | 'editable'
+  | 'value'
+  | 'onChangeText'
+  | 'onFocus'
+  | 'onSubmitEditing'
+>) {
   const {t: l} = useLingui()
   const isInvalid = Boolean(value && value.length > 10 && !isValidCode(value))
 
@@ -31,14 +44,18 @@ export function TokenField({
       <TextField.Root>
         <TextField.Icon icon={Shield} />
         <TextField.Input
+          testID={testID}
           autoComplete="off"
           autoCorrect={false}
+          autoFocus={autoFocus}
+          editable={editable}
           isInvalid={isInvalid}
           label={l`Confirmation code`}
           maxLength={11}
           placeholder="XXXXX-XXXXX"
           value={value}
           onChangeText={handleOnChangeText}
+          onFocus={onFocus}
           onSubmitEditing={onSubmitEditing}
         />
       </TextField.Root>
