@@ -34,6 +34,7 @@ function TrendingTopicsWidget(
   props: TrendingTopicsWidgetProps,
   environment: WidgetEnvironment,
 ) {
+  'use no memo'
   'widget'
 
   const isDark = environment.colorScheme === 'dark'
@@ -60,6 +61,8 @@ function TrendingTopicsWidget(
     }
     rank: number
   }) {
+    'use no memo'
+
     const row = isMedium ? (
       <HStack
         alignment="firstTextBaseline"
