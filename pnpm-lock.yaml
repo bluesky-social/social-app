@@ -225,7 +225,7 @@ patchedDependencies:
   expo-modules-core@57.0.8: 7c2fd5f0b146ee5208ea607ccdd3127af95bf7202e733cd92c9ca5d2350b4832
   expo-notifications@57.0.7: 542d7d2024b364ba601b7f2af041353dccde555db0e6ecf0b5948c90e6b33a75
   expo-updates@57.0.10: 04f28cb005b770e9ae8f0065eab96e43cbb1e58107f5f6ad1bdd18f6deb66487
-  expo-widgets@57.0.6: 5aa5049008ac7b995dfe21c60245296b3ffa2b7abdd2a4266d6ea2e09ddff2fc
+  expo-widgets@57.0.6: a4a0b7bba39744e5f9a3818a348da4bb329de33b9fa0d09fb9e641580280afe8
   expo@57.0.8: 1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a
   react-native-date-picker@5.0.13: 92943fb79d17d7342a29bbb12b0d8ee3cf6f7bca12ed322dc8d124a3e9fb75bd
   react-native-dotenv@3.4.11: 16b34eb974399935d3cf7c2526534f906991ccd876215176658347059cdd2021
@@ -563,7 +563,7 @@ importers:
         version: 57.0.2(expo@57.0.8)(react-native@0.86.0(patch_hash=239208992c380d6785576d1fae2e3f60f60f509d7b09d56bf552be29d6c42a06)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))
       expo-widgets:
         specifier: 57.0.6
-        version: 57.0.6(patch_hash=5aa5049008ac7b995dfe21c60245296b3ffa2b7abdd2a4266d6ea2e09ddff2fc)(9ce32e34ce681003bab715af1b9e1d09)
+        version: 57.0.6(patch_hash=a4a0b7bba39744e5f9a3818a348da4bb329de33b9fa0d09fb9e641580280afe8)(9ce32e34ce681003bab715af1b9e1d09)
       fast-deep-equal:
         specifier: ^3.1.3
         version: 3.1.3
@@ -14373,7 +14373,7 @@ snapshots:
     optionalDependencies:
       '@babel/runtime': 7.29.2
       expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(98ccbd1890a42e04df5d0324ccc8b3d4)
-      expo-widgets: 57.0.6(patch_hash=5aa5049008ac7b995dfe21c60245296b3ffa2b7abdd2a4266d6ea2e09ddff2fc)(9ce32e34ce681003bab715af1b9e1d09)
+      expo-widgets: 57.0.6(patch_hash=a4a0b7bba39744e5f9a3818a348da4bb329de33b9fa0d09fb9e641580280afe8)(9ce32e34ce681003bab715af1b9e1d09)
     transitivePeerDependencies:
       - '@babel/core'
       - supports-color
@@ -15822,7 +15822,7 @@ snapshots:
       expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(98ccbd1890a42e04df5d0324ccc8b3d4)
       react-native: 0.86.0(patch_hash=239208992c380d6785576d1fae2e3f60f60f509d7b09d56bf552be29d6c42a06)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
-  expo-widgets@57.0.6(patch_hash=5aa5049008ac7b995dfe21c60245296b3ffa2b7abdd2a4266d6ea2e09ddff2fc)(9ce32e34ce681003bab715af1b9e1d09):
+  expo-widgets@57.0.6(patch_hash=a4a0b7bba39744e5f9a3818a348da4bb329de33b9fa0d09fb9e641580280afe8)(9ce32e34ce681003bab715af1b9e1d09):
     dependencies:
       '@expo/plist': 0.8.1
       '@expo/ui': 57.0.18(9ce32e34ce681003bab715af1b9e1d09)

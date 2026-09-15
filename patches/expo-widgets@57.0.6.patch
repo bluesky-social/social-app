@@ -1,3 +1,17 @@
+diff --git a/metro.config.js b/metro.config.js
+index 8ee9a0fa124fb425db0fe0560d31718b1dae25f3..93aed983aea3061bbe1406d4a2fc7ca3358b4c96 100644
+--- a/metro.config.js
++++ b/metro.config.js
+@@ -40,6 +40,9 @@ const buildConfig = {
+       if (fileSpecifierRe.test(moduleName)) {
+         return context.resolveRequest(context, moduleName, platform);
+       }
++      if (moduleName.startsWith('react-native/')) {
++        return { type: 'empty' };
++      }
+       switch (moduleName) {
+         case 'expo':
+           return { type: 'sourceFile', filePath: expoStubPath };
 diff --git a/plugin/build/ios/withIosWidgets.js b/plugin/build/ios/withIosWidgets.js
 index c8cd8411b9027a3584300ce821085c878559be62..74cbbfadbee515af626be1aaa643db2742e9cb14 100644
 --- a/plugin/build/ios/withIosWidgets.js
