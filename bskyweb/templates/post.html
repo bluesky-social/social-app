@@ -33,10 +33,16 @@
   <meta property="og:description" content="{{ postText }}">
   <meta property="twitter:description" content="{{ postText }}">
   {% endif -%}
-  {%- if imgThumbUrls %}
-  {% for imgThumbUrl in imgThumbUrls %}
-  <meta property="og:image" content="{{ imgThumbUrl }}">
-  <meta property="twitter:image" content="{{ imgThumbUrl }}">
+  {%- if postImages %}
+  {% for img in postImages %}
+  <meta property="og:image" content="{{ img.Thumb }}">
+  {%- if img.Alt %}
+  <meta property="og:image:alt" content="{{ img.Alt }}">
+  {% endif -%}
+  <meta property="twitter:image" content="{{ img.Thumb }}">
+  {%- if img.Alt %}
+  <meta property="twitter:image:alt" content="{{ img.Alt }}">
+  {% endif -%}
   {% endfor %}
   <meta name="twitter:card" content="summary_large_image">
   {% else %}
