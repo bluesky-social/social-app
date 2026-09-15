@@ -1,4 +1,4 @@
-import {useCallback, useEffect} from 'react'
+import {useCallback, useEffect, useEffectEvent} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -76,7 +76,7 @@ export function NoAccessScreen() {
   const geolocationString = createGeolocationString(geolocation, i18n.locale)
   const isUsingGPS = !!geolocation.deviceGeolocation?.countryCode && IS_NATIVE
 
-  useEffect(() => {
+  const onShown = useEffectEvent(() => {
     // just counting overall hits here
     ax.metric(`blockedGeoOverlay:shown`, {})
     ax.metric(`ageAssurance:noAccessScreen:shown`, {
@@ -85,8 +85,10 @@ export function NoAccessScreen() {
       hasDeclaredAge,
       canUpdateBirthday,
     })
-    // TODO This can be cleaned up with useEffectEvent once we're on 19.2
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  })
+
+  useEffect(() => {
+    onShown()
   }, [])
 
   const onPressLogout = useCallback(() => {

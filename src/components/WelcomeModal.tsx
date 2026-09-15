@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useEffectEvent, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -35,11 +35,14 @@ export function WelcomeModal({control}: WelcomeModalProps) {
     }, 150)
   }
 
+  const onPresented = useEffectEvent(() => {
+    ax.metric('welcomeModal:presented', {})
+  })
+
   useEffect(() => {
     if (control.isOpen) {
-      ax.metric('welcomeModal:presented', {})
+      onPresented()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [control.isOpen])
 
   const onPressCreateAccount = () => {

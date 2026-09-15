@@ -5,23 +5,36 @@ import {type CaptchaWebViewProps} from './CaptchaWebView.shared'
 
 const REDIRECT_HOST = new URL(window.location.href).host
 
+/**
+ * How long someone can work on a challenge before we consider it slow.
+ */
+const SLOW_THRESHOLD = 30e3
+
+/**
+ * Module scope because React Compiler cannot lower an optional chain inside a
+ * `try`, and this one has to stay in the `try` - reading `location` on a
+ * cross-origin frame throws.
+ */
+function getFrameHref(frame: HTMLIFrameElement | null): string | undefined {
+  return frame?.contentWindow?.location.href
+}
+
 export function CaptchaWebView({
   url,
   stateParam,
   onSuccess,
   onError,
+  onSlow,
 }: CaptchaWebViewProps) {
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onError({
-        errorMessage: 'User did not complete the captcha within 30 seconds',
-      })
-    }, 30e3)
+      onSlow?.()
+    }, SLOW_THRESHOLD)
 
     return () => {
       clearTimeout(timeout)
     }
-  }, [onError])
+  }, [onSlow])
 
   const onLoad = useCallback(() => {
     const frame: HTMLIFrameElement = document.getElementById(
@@ -29,7 +42,7 @@ export function CaptchaWebView({
     ) as HTMLIFrameElement
 
     try {
-      const href = frame?.contentWindow?.location.href
+      const href = getFrameHref(frame)
       if (!href) return
       const urlp = new URL(href)
 
@@ -37,8 +50,13 @@ export function CaptchaWebView({
       if (urlp.host !== REDIRECT_HOST) return
 
       const code = urlp.searchParams.get('code')
-      if (urlp.searchParams.get('state') !== stateParam || !code) {
-        onError({error: 'Invalid state or code'})
+      const stateMismatch = urlp.searchParams.get('state') !== stateParam
+      if (stateMismatch) {
+        onError({reason: 'state-mismatch', host: urlp.host})
+        return
+      }
+      if (!code) {
+        onError({reason: 'state-mismatch', host: urlp.host})
         return
       }
       onSuccess(code)

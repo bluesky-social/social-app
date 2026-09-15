@@ -61,7 +61,8 @@ The component uses a class-based approach to expose imperative methods (`present
   - Preserves status/nav bar appearance from host activity
 - **DialogRootViewGroup.kt**: Custom ViewGroup acting as RootView for the dialog
   - Forwards touch events to React Native event system
-  - Updates shadow node size to match window dimensions
+  - Reports its measured width to `BottomSheetView` so the content canvas can follow it
+  - Also carries the legacy `UIManagerModule.updateNodeSize()` shadow node sizing, which only runs on the old architecture
   - Based on React Native's ReactModalHostView pattern
 - **SheetManager.kt**: Singleton for tracking sheets (same pattern as iOS)
 
@@ -73,6 +74,24 @@ Both platforms detect content height changes natively without JS bridge round-tr
 - **Android**: `OnLayoutChangeListener` on child views (catches React Native's direct `layout()` calls)
 
 This eliminates layout jank when content changes (e.g., keyboard appearance, dynamic content loading).
+
+### Content Canvas Sizing
+
+The "canvas" is the size the sheet content is laid out on by Yoga. **On Android the native side owns it**; on iOS it is still sized from JS.
+
+- **Android**: JS renders unsized `flex: 1` content and `BottomSheetView` pushes the canvas size into the Fabric shadow tree through `ExpoView`'s `setViewSize` state channel (`shadowNodeProxy.setViewSize()`). Only native knows the real sheet frame - Material caps the frame at 640dp on tablets and centers it, and it changes on rotation.
+- **iOS**: `BottomSheetNativeComponent` sets `height: screenHeight - insets.top` and `width: '100%'` on the native view. Moving iOS onto the same state channel is deferred: it needs on-device iteration on iOS 26 sheet geometry (large-detent and floating-card metrics, where the visible sheet is shorter than the window minus the top inset).
+
+How the Android path works:
+
+- The JS style on the native view **must not set `width` or `height`** on Android. `ExpoViewComponentDescriptor::adopt()` only applies the state size on an axis where the style leaves that dimension undefined, so a style dimension would silently win.
+- The two axes come from different places, and the distinction is load-bearing:
+  - **Width** is authoritatively the dialog container's measured width, reported through `DialogRootViewGroup`'s size-change listener - that is the real sheet width, with the horizontal window insets and Material's 640dp cap already applied. It is seeded from `min(window width, material_bottom_sheet_max_width)` on the first `onLayout` so content has something to lay out in before the dialog exists.
+  - **Height** is always computed natively as `screenHeight - statusBarHeight` (matching the behavior's `expandedOffset`) - the whole expanded frame, **never** the dialog's measured height. The canvas has to be room for the content to grow *into*, because the content's height is what drives the snap points. Sizing it from the dialog's own height is circular: `BottomSheetBehavior` measures the container against the sheet, so the canvas collapses onto the content height and the content is then pinned - extra `ScrollView` padding (the Android keyboard path) or a longer list becomes scroll extent instead of a height change, `OnLayoutChangeListener` never fires, and the sheet stops responding to its content.
+- Seeding runs once per open cycle - re-seeding would fight the width the dialog reported and the two would push each other back and forth.
+- Because the content measures 0x0 until that first state commit lands, `present()` bails out early when the content height is still zero. The commit resizes the native view, which re-fires `onLayout`, which re-enters `present()` - so presentation self-retries rather than needing an explicit callback. Full-height sheets skip the check, since they don't need a content measurement.
+- Rotation is handled by the container push: the RN activity handles configuration changes itself, so the view is never recreated. `screenHeight` is read per access so the computed height follows the rotation, and the container reports the new width (plus a deferred `updateLayout()` to reposition the sheet).
+- On the **old architecture** there is no state channel (`stateWrapper` is null, so `setViewSize` no-ops) and Android falls back to `DialogRootViewGroup`'s legacy `UIManagerModule.updateNodeSize()` path. The `present()` gate is skipped there for the same reason - nothing would ever resize the view.
 
 ## Props
 
@@ -212,6 +231,10 @@ BottomSheetNativeComponent.dismissAll()
 3. **Drag Handling**: On full-height sheets with `preventDismiss`, dragging is disabled to prevent accidental dismissal (since there's no half-expanded snap point to land on).
 
 4. **Layout Updates During Gestures**: Content height changes are deferred during drag gestures to prevent fighting the user's input.
+
+5. **Tablet Width**: Material caps the sheet frame at 640dp (`material_bottom_sheet_max_width`, the `android:maxWidth` on `Widget.MaterialComponents.BottomSheet`) and centers it horizontally, so on tablets the sheet is narrower than the screen. `BottomSheetView` reads that cap from resources when seeding the canvas width, and the dialog container's measured width then corrects it - see [Content Canvas Sizing](#content-canvas-sizing).
+
+6. **Rotation**: The RN activity handles configuration changes itself, so a rotation resizes the display without recreating `BottomSheetView`. Screen height is therefore read per access rather than cached, and `maxHeight` is stored unclamped and clamped against the current screen at use time.
 
 ### Platform Differences
 

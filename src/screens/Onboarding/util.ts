@@ -43,7 +43,7 @@ export async function bulkWriteFollows(
       writes: chunk,
     })
   }
-  await whenFollowsIndexed(appviewClient, did, res => !!res.follows.length)
+  await whenFollowsIndexed(appviewClient, did, res => !!res?.follows.length)
 
   const followUris = new Map<string, string>()
   for (const r of followWrites) {
@@ -58,7 +58,10 @@ export async function bulkWriteFollows(
 async function whenFollowsIndexed(
   appviewClient: Client,
   actor: string,
-  fn: (res: app.bsky.graph.getFollows.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.graph.getFollows.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

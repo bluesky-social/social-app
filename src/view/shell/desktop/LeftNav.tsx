@@ -559,9 +559,8 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
           handle = await fetchHandle(handle)
         } catch (e) {
           handle = undefined
-        } finally {
-          setIsFetchingHandle(false)
         }
+        setIsFetchingHandle(false)
       }
 
       if (

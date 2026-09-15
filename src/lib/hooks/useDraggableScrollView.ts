@@ -74,8 +74,13 @@ export function useDraggableScroll<
     }
   }, [cursor])
 
+  /*
+   * Deferred into the callback so the merge does not happen during the render of
+   * whichever component uses this hook - see SearchInput for the full reasoning.
+   */
   const refs = useMemo(
-    () => mergeRefs(outerRef ? [ref, outerRef] : [ref]),
+    () => (node: Scrollable | null) =>
+      mergeRefs(outerRef ? [ref, outerRef] : [ref])(node),
     [ref, outerRef],
   )
 

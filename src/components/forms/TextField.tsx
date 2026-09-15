@@ -26,6 +26,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
+import {IS_WEB} from '#/env'
 
 const Context = createContext<{
   inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null> | null
@@ -101,11 +102,13 @@ export function Root({children, isInvalid = false, style}: RootProps) {
           {zIndex: 0},
           style,
         ]}
-        {...web({
-          onClick: () => inputRef.current?.focus(),
-          onMouseOver: onHoverIn,
-          onMouseOut: onHoverOut,
-        })}>
+        {...(IS_WEB
+          ? {
+              onClick: () => inputRef.current?.focus(),
+              onMouseOver: onHoverIn,
+              onMouseOut: onHoverOut,
+            }
+          : {})}>
         {children}
       </View>
     </Context.Provider>

@@ -194,8 +194,7 @@ export const MAX_LABELERS = 20
 export const VIDEO_SERVICE = 'https://video.bsky.app'
 export const VIDEO_SERVICE_DID = 'did:web:video.bsky.app'
 
-export const VIDEO_MAX_DURATION_MS = 3 * 60 * 1000 // 3 minutes in milliseconds
-export const VIDEO_10_MINUTE_MAX_DURATION_MS = 10 * 60 * 1000
+export const VIDEO_MAX_DURATION_MS = 10 * 60 * 1000 // 10 minutes in milliseconds
 /**
  * Maximum size of a video in megabytes, _not_ mebibytes. Backend uses
  * ISO megabytes.
@@ -235,7 +234,6 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
-export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always the same
 
 // temp hack for e2e - esb
 export const BLUESKY_PROXY_HEADER = {

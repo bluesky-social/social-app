@@ -141,7 +141,10 @@ function createListItem({
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res?: app.bsky.graph.getStarterPack.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.graph.getStarterPack.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

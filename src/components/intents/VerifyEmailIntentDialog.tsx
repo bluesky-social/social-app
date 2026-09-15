@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
 import {usePdsClient, useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {type DialogControlProps} from '#/components/Dialog'
@@ -62,7 +62,8 @@ function Inner({}: {control: DialogControlProps}) {
     <Dialog.ScrollableInner
       label={_(msg`Verify email dialog`)}
       style={[
-        gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+        a.w_full,
+        gtMobile && web({width: 'auto', maxWidth: 400, minWidth: 200}),
       ]}>
       <View style={[a.gap_xl]}>
         {status === 'loading' ? (

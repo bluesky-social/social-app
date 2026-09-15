@@ -79,6 +79,11 @@ const ImageItem = ({
 
   // Keep track of when we're entering or leaving scaled rendering.
   // Note: DO NOT move any logic reading animated values outside this function.
+  function handleZoom(nextIsScaled: boolean) {
+    setIsScaled(nextIsScaled)
+    onZoom(nextIsScaled)
+  }
+
   useAnimatedReaction(
     () => {
       if (pinchScale.get() !== 1) {
@@ -99,11 +104,6 @@ const ImageItem = ({
       }
     },
   )
-
-  function handleZoom(nextIsScaled: boolean) {
-    setIsScaled(nextIsScaled)
-    onZoom(nextIsScaled)
-  }
 
   // On Android, stock apps prevent going "out of bounds" on pan or pinch. You should "bump" into edges.
   // If the user tried to pan too hard, this function will provide the negative panning to stay in bounds.

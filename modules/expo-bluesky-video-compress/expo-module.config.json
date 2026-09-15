@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "android"],
-  "ios": {
-    "modules": ["ExpoBlueskyVideoCompressModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.blueskyvideocompress.ExpoBlueskyVideoCompressModule"]
-  }
-}

@@ -23,180 +23,6 @@ index 1b02e8b2d39672063551411d5c403a69b671a869..b3481c1b98b45dea769035140dc2fd8d
  - (void)setFrame:(CGRect)frame
  {
    [super setFrame:frame];
-diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index a087536f3af0d33b13fe38d8abd1bc6d7935def2..01f5c884ea4772350c0ebe6263723d97632f2b74 100644
---- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-+++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
- 
-   MAP_SCROLL_VIEW_PROP(zoomScale);
- 
--  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset) {
-+  // When disabling centerContent, reset inset to prop value
-+  // (enabling is handled automatically by the setCenterContent: setter)
-+  if (oldScrollViewProps.centerContent && !newScrollViewProps.centerContent) {
-+    _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
-+  }
-+
-+  // Only apply contentInset from props if centerContent is disabled
-+  // When centerContent is enabled, the inset is calculated by centerContentIfNeeded
-+  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset && !newScrollViewProps.centerContent) {
-     _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
-   }
- 
-@@ -523,7 +531,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
-     }
-   }
- 
--  return isPointInside ? self : nil;
-+  return isPointInside ? _scrollView : nil;
- }
- 
- /*
-@@ -1133,6 +1141,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
-   return _virtualViewContainerState;
- }
- 
-++ (BOOL)shouldBeRecycled
-+{
-+  return NO;
-+}
-+
- @end
- 
- Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
-diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
-index ed306d7cadbf36a2fed79be8bd9d68b5dca135bd..d447dad534fefa9fcbdbbde6dcbbdcddadd5a824 100644
---- a/React/Views/RefreshControl/RCTRefreshControl.h
-+++ b/React/Views/RefreshControl/RCTRefreshControl.h
-@@ -18,6 +18,7 @@ __attribute__((deprecated("This API will be removed along with the legacy archit
- @property (nonatomic, copy) NSString *title;
- @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
- @property (nonatomic, weak) UIScrollView *scrollView;
-+@property (nonatomic, copy) UIColor *customTintColor;
- 
- @end
- 
-diff --git a/React/Views/RefreshControl/RCTRefreshControl.m b/React/Views/RefreshControl/RCTRefreshControl.m
-index 2dc86e464264c9450eef18d7b153d35bf6a5cc55..6661dc69a04766afa0284d6e83839b219e98cf57 100644
---- a/React/Views/RefreshControl/RCTRefreshControl.m
-+++ b/React/Views/RefreshControl/RCTRefreshControl.m
-@@ -25,6 +25,7 @@ @implementation RCTRefreshControl {
-   UIColor *_titleColor;
-   CGFloat _progressViewOffset;
-   BOOL _hasMovedToWindow;
-+  UIColor *_customTintColor;
- }
- 
- - (instancetype)init
-@@ -60,6 +61,12 @@ - (void)layoutSubviews
-   _isInitialRender = false;
- }
- 
-+- (void)didMoveToSuperview
-+{
-+  [super didMoveToSuperview];
-+  [self setTintColor:_customTintColor];
-+}
-+
- - (void)didMoveToWindow
- {
-   [super didMoveToWindow];
-@@ -225,6 +232,18 @@ - (void)refreshControlValueChanged
-   }
- }
- 
-+// Fix for https://github.com/facebook/react-native/issues/43388
-+// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
-+// is set before the refresh control gets added to the scrollview. We'll call this
-+// function whenever the superview changes. We'll also call it if the value of customTintColor
-+// changes.
-+- (void)setTintColor:(UIColor *)tintColor
-+{
-+  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
-+    [super setTintColor:tintColor];
-+  }
-+}
-+
- @end
- 
- #endif // RCT_REMOVE_LEGACY_ARCH
-diff --git a/React/Views/RefreshControl/RCTRefreshControlManager.m b/React/Views/RefreshControl/RCTRefreshControlManager.m
-index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad6bf8622b 100644
---- a/React/Views/RefreshControl/RCTRefreshControlManager.m
-+++ b/React/Views/RefreshControl/RCTRefreshControlManager.m
-@@ -24,11 +24,12 @@ - (UIView *)view
- 
- RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
- RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
--RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
- RCT_EXPORT_VIEW_PROPERTY(title, NSString)
- RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
- RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
- 
-+RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
-+
- RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
- {
-   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
-diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
---- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-+++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
-@@ -459,6 +459,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
-     inSubviewClippingLoop = true
-     var clippedSoFar = 0
-     for (i in 0..<allChildrenCount) {
-+      // Reentrant child removal during this loop can compact allChildren and leave a null at
-+      // an index below allChildrenCount. A null entry means the view is already detached, so
-+      // treat it as clipped instead of crashing.
-+      if (childArray[i] == null) {
-+        clippedSoFar++
-+        continue
-+      }
-       try {
-         updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
-       } catch (ex: IndexOutOfBoundsException) {
-@@ -496,7 +503,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
-   ) {
-     assertOnUiThread()
- 
--    val child = checkNotNull(allChildren?.get(idx))
-+    // allChildren can be mutated reentrantly while a clipping pass is running, so a stale
-+    // index can point at a null slot. Skip it instead of crashing.
-+    val child = allChildren?.get(idx) ?: return
-     val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
-     var needUpdateClippingRecursive = false
- 
-diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-index 9b04cadc22f5ae7b105f9f9875a242b53188cf03..b2b27626edc46625ac2372a13977d700948835b6 100644
---- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-+++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
-@@ -361,7 +361,7 @@ static UIFontDescriptorSystemDesign RCTGetFontDescriptorSystemDesign(NSString *f
-       font = [UIFont fontWithName:fontProperties.family size:effectiveFontSize];
-       if (font != nullptr) {
-         fontNames = [UIFont fontNamesForFamilyName:font.familyName];
--        fontWeight = (fontWeight != 0.0) ?: RCTGetFontWeight(font);
-+        fontWeight = (fontWeight != 0.0) ? fontWeight : RCTGetFontWeight(font);
-       } else {
-         // Failback to system font.
-         font = RCTDefaultFontWithFontProperties(fontProperties);
-diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce9c63137b 100644
---- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-+++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-@@ -389,8 +389,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
-     size.height = enumeratedLinesHeight;
-   }
- 
--  size = (CGSize){ceil(size.width * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
--                  ceil(size.height * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
-+  CGFloat epsilon = 0.001;
-+  size = (CGSize){ceil((size.width + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
-+                  ceil((size.height + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
- 
-   NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
- 
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
 index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90180691f1 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTPullToRefreshViewComponentView.mm
@@ -371,3 +197,252 @@ index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90
    }
  }
  
+diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+index a087536f3af0d33b13fe38d8abd1bc6d7935def2..01f5c884ea4772350c0ebe6263723d97632f2b74 100644
+--- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
+@@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+ 
+   MAP_SCROLL_VIEW_PROP(zoomScale);
+ 
+-  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset) {
++  // When disabling centerContent, reset inset to prop value
++  // (enabling is handled automatically by the setCenterContent: setter)
++  if (oldScrollViewProps.centerContent && !newScrollViewProps.centerContent) {
++    _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
++  }
++
++  // Only apply contentInset from props if centerContent is disabled
++  // When centerContent is enabled, the inset is calculated by centerContentIfNeeded
++  if (oldScrollViewProps.contentInset != newScrollViewProps.contentInset && !newScrollViewProps.centerContent) {
+     _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
+   }
+ 
+@@ -523,7 +531,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
+     }
+   }
+ 
+-  return isPointInside ? self : nil;
++  return isPointInside ? _scrollView : nil;
+ }
+ 
+ /*
+@@ -1133,6 +1141,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+   return _virtualViewContainerState;
+ }
+ 
+++ (BOOL)shouldBeRecycled
++{
++  return NO;
++}
++
+ @end
+ 
+ Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
+diff --git a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
+index b033b7c71914d287470b7b86bd6bf39d311294ba..7e10dc929147fa4474ca9f955f5cd85d27aea935 100644
+--- a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
++++ b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
+@@ -827,9 +827,17 @@ static void RCTAddContourEffectToLayer(
+   } else {
+     CGSize imageSize = image.size;
+     UIEdgeInsets imageCapInsets = image.capInsets;
++    // The stretchable middle is whatever lies between the cap insets. The image
++    // may be larger than capInsets + 1 (its size is ceil'd to whole points), so
++    // deriving the middle from the caps rather than assuming a 1pt band keeps
++    // the bottom/right caps at their true size. A phantom cap here makes the
++    // caps overflow sub-pixel-sized layers (e.g. hairline borders), and the
++    // squeezed mesh + nearest-neighbor filtering drops the stroke entirely.
+     CGRect contentsCenter = CGRect{
+         CGPoint{imageCapInsets.left / imageSize.width, imageCapInsets.top / imageSize.height},
+-        CGSize{(CGFloat)1.0 / imageSize.width, (CGFloat)1.0 / imageSize.height}};
++        CGSize{
++            (imageSize.width - imageCapInsets.left - imageCapInsets.right) / imageSize.width,
++            (imageSize.height - imageCapInsets.top - imageCapInsets.bottom) / imageSize.height}};
+     layer.contents = (id)image.CGImage;
+     layer.contentsScale = image.scale;
+ 
+diff --git a/React/Views/RefreshControl/RCTRefreshControl.h b/React/Views/RefreshControl/RCTRefreshControl.h
+index ed306d7cadbf36a2fed79be8bd9d68b5dca135bd..d447dad534fefa9fcbdbbde6dcbbdcddadd5a824 100644
+--- a/React/Views/RefreshControl/RCTRefreshControl.h
++++ b/React/Views/RefreshControl/RCTRefreshControl.h
+@@ -18,6 +18,7 @@ __attribute__((deprecated("This API will be removed along with the legacy archit
+ @property (nonatomic, copy) NSString *title;
+ @property (nonatomic, copy) RCTDirectEventBlock onRefresh;
+ @property (nonatomic, weak) UIScrollView *scrollView;
++@property (nonatomic, copy) UIColor *customTintColor;
+ 
+ @end
+ 
+diff --git a/React/Views/RefreshControl/RCTRefreshControl.m b/React/Views/RefreshControl/RCTRefreshControl.m
+index 2dc86e464264c9450eef18d7b153d35bf6a5cc55..6661dc69a04766afa0284d6e83839b219e98cf57 100644
+--- a/React/Views/RefreshControl/RCTRefreshControl.m
++++ b/React/Views/RefreshControl/RCTRefreshControl.m
+@@ -25,6 +25,7 @@ @implementation RCTRefreshControl {
+   UIColor *_titleColor;
+   CGFloat _progressViewOffset;
+   BOOL _hasMovedToWindow;
++  UIColor *_customTintColor;
+ }
+ 
+ - (instancetype)init
+@@ -60,6 +61,12 @@ - (void)layoutSubviews
+   _isInitialRender = false;
+ }
+ 
++- (void)didMoveToSuperview
++{
++  [super didMoveToSuperview];
++  [self setTintColor:_customTintColor];
++}
++
+ - (void)didMoveToWindow
+ {
+   [super didMoveToWindow];
+@@ -225,6 +232,18 @@ - (void)refreshControlValueChanged
+   }
+ }
+ 
++// Fix for https://github.com/facebook/react-native/issues/43388
++// A bug in iOS 17.4 causes the haptic to not play when refreshing if the tintColor
++// is set before the refresh control gets added to the scrollview. We'll call this
++// function whenever the superview changes. We'll also call it if the value of customTintColor
++// changes.
++- (void)setTintColor:(UIColor *)tintColor
++{
++  if ([self.superview isKindOfClass:[UIScrollView class]] && self.tintColor != tintColor) {
++    [super setTintColor:tintColor];
++  }
++}
++
+ @end
+ 
+ #endif // RCT_REMOVE_LEGACY_ARCH
+diff --git a/React/Views/RefreshControl/RCTRefreshControlManager.m b/React/Views/RefreshControl/RCTRefreshControlManager.m
+index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad6bf8622b 100644
+--- a/React/Views/RefreshControl/RCTRefreshControlManager.m
++++ b/React/Views/RefreshControl/RCTRefreshControlManager.m
+@@ -24,11 +24,12 @@ - (UIView *)view
+ 
+ RCT_EXPORT_VIEW_PROPERTY(onRefresh, RCTDirectEventBlock)
+ RCT_EXPORT_VIEW_PROPERTY(refreshing, BOOL)
+-RCT_EXPORT_VIEW_PROPERTY(tintColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(title, NSString)
+ RCT_EXPORT_VIEW_PROPERTY(titleColor, UIColor)
+ RCT_EXPORT_VIEW_PROPERTY(progressViewOffset, CGFloat)
+ 
++RCT_REMAP_VIEW_PROPERTY(tintColor, customTintColor, UIColor)
++
+ RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
+ {
+   [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
+@@ -459,6 +459,13 @@ public open class ReactViewGroup public constructor(context: Context?) :
+     inSubviewClippingLoop = true
+     var clippedSoFar = 0
+     for (i in 0..<allChildrenCount) {
++      // Reentrant child removal during this loop can compact allChildren and leave a null at
++      // an index below allChildrenCount. A null entry means the view is already detached, so
++      // treat it as clipped instead of crashing.
++      if (childArray[i] == null) {
++        clippedSoFar++
++        continue
++      }
+       try {
+         updateSubviewClipStatus(clippingRect, i, clippedSoFar, excludedViewsSet)
+       } catch (ex: IndexOutOfBoundsException) {
+@@ -496,7 +503,9 @@ public open class ReactViewGroup public constructor(context: Context?) :
+   ) {
+     assertOnUiThread()
+ 
+-    val child = checkNotNull(allChildren?.get(idx))
++    // allChildren can be mutated reentrantly while a clipping pass is running, so a stale
++    // index can point at a null slot. Skip it instead of crashing.
++    val child = allChildren?.get(idx) ?: return
+     val intersects = clippingRect.intersects(child.left, child.top, child.right, child.bottom)
+     var needUpdateClippingRecursive = false
+ 
+diff --git a/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h b/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h
+index fdabd7bab1f03966dc04ba9a462465daeccf8ae3..ef70011ee5c270fb2cac52f3a7408d1e87334145 100644
+--- a/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h
++++ b/ReactCommon/react/featureflags/ReactNativeFeatureFlagsOverridesOSSStable.h
+@@ -21,6 +21,10 @@ class ReactNativeFeatureFlagsOverridesOSSStable : public ReactNativeFeatureFlags
+   {
+     return true;
+   }
++  bool enableSchedulerDelegateInvalidation() override
++  {
++    return true;
++  }
+   bool useTurboModules() override
+   {
+     return true;
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+index 9b04cadc22f5ae7b105f9f9875a242b53188cf03..b2b27626edc46625ac2372a13977d700948835b6 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTFontUtils.mm
+@@ -361,7 +361,7 @@ static UIFontDescriptorSystemDesign RCTGetFontDescriptorSystemDesign(NSString *f
+       font = [UIFont fontWithName:fontProperties.family size:effectiveFontSize];
+       if (font != nullptr) {
+         fontNames = [UIFont fontNamesForFamilyName:font.familyName];
+-        fontWeight = (fontWeight != 0.0) ?: RCTGetFontWeight(font);
++        fontWeight = (fontWeight != 0.0) ? fontWeight : RCTGetFontWeight(font);
+       } else {
+         // Failback to system font.
+         font = RCTDefaultFontWithFontProperties(fontProperties);
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce9c63137b 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
+@@ -389,8 +389,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
+     size.height = enumeratedLinesHeight;
+   }
+ 
+-  size = (CGSize){ceil(size.width * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
+-                  ceil(size.height * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
++  CGFloat epsilon = 0.001;
++  size = (CGSize){ceil((size.width + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor,
++                  ceil((size.height + epsilon) * layoutContext.pointScaleFactor) / layoutContext.pointScaleFactor};
+ 
+   NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
+ 
+diff --git a/ReactCommon/react/renderer/uimanager/UIManager.cpp b/ReactCommon/react/renderer/uimanager/UIManager.cpp
+index 3e48dabc6fffc246fd0517ef5f3f2b7721115511..ea4ba5fdf359c513a5ca4f0e94492facf4ead221 100644
+--- a/ReactCommon/react/renderer/uimanager/UIManager.cpp
++++ b/ReactCommon/react/renderer/uimanager/UIManager.cpp
+@@ -530,30 +530,8 @@ std::shared_ptr<const ShadowNode> UIManager::findShadowNodeByTag_DEPRECATED(
+   auto shadowNode = std::shared_ptr<const ShadowNode>{};
+ 
+   shadowTreeRegistry_.enumerate([&](const ShadowTree& shadowTree, bool& stop) {
+-    // Obtain a pointer to the root node. The flag-gated path uses
+-    // getCurrentRevision() which keeps the root alive via shared_ptr for
+-    // the entire traversal, fixing a use-after-free race condition.
+-    RootShadowNode::Shared rootShadowNodeHolder;
+-    const RootShadowNode* rootShadowNode = nullptr;
+-    if (ReactNativeFeatureFlags::fixFindShadowNodeByTagRaceCondition()) {
+-      rootShadowNodeHolder = shadowTree.getCurrentRevision().rootShadowNode;
+-      rootShadowNode = rootShadowNodeHolder.get();
+-    } else {
+-      // TODO(T257154369): Remove after flag rollout.
+-      // The public interface of `ShadowTree` discourages accessing a stored
+-      // pointer to a root node because of the possible data race.
+-      // To work around this, we ask for a commit and immediately cancel it
+-      // returning `nullptr` instead of a new shadow tree.
+-      // We don't want to add a way to access a stored pointer to a root
+-      // node because this `findShadowNodeByTag` is deprecated. It is only
+-      // added to make migration to the new architecture easier.
+-      shadowTree.tryCommit(
+-          [&](const RootShadowNode& oldRootShadowNode) {
+-            rootShadowNode = &oldRootShadowNode;
+-            return nullptr;
+-          },
+-          {/* default commit options */});
+-    }
++    auto rootShadowNodeHolder = shadowTree.getCurrentRevision().rootShadowNode;
++    const auto* rootShadowNode = rootShadowNodeHolder.get();
+ 
+     if (rootShadowNode != nullptr) {
+       const auto& children = rootShadowNode->getChildren();

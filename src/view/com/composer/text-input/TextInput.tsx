@@ -186,12 +186,10 @@ export function TextInput({
   }, [t, fonts])
 
   const textDecorated = useMemo(() => {
-    let i = 0
-
-    return Array.from(richtext.segments()).map(segment => {
+    return Array.from(richtext.segments()).map((segment, i) => {
       return (
         <RNText
-          key={i++}
+          key={i}
           style={[
             inputTextStyle,
             {

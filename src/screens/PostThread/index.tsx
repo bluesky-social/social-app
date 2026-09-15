@@ -104,6 +104,7 @@ export function PostThread({uri}: {uri: string}) {
       ax.metric('post:view', {
         uri: post.uri,
         authorDid: post.author.did,
+        isReply: !!post.record.reply,
         logContext: 'Post',
         feedDescriptor: feedFeedback.feedDescriptor,
       })

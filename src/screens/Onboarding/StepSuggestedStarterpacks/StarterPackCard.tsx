@@ -55,7 +55,7 @@ export function StarterPackCard({
       Toast.show(_(msg`An error occurred while trying to follow all`), {
         type: 'error',
       })
-      logger.error('Failed to get list members for starter pack', {
+      logger.error('Failed to get list members for Starter Pack', {
         safeMessage: e,
       })
       return

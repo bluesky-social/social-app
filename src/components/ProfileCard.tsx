@@ -491,16 +491,21 @@ export function FollowButtonInner({
   const onPressFollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    const displayNameOrHandle = profile.displayName || profile.handle
     try {
       await queueFollow()
       Toast.show(
         l`Following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
+          displayNameOrHandle,
           moderation.ui('displayName'),
         )}`,
       )
-      onPressProp?.(e)
-      onFollow?.()
+      if (onPressProp) {
+        onPressProp(e)
+      }
+      if (onFollow) {
+        onFollow()
+      }
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {
@@ -514,15 +519,18 @@ export function FollowButtonInner({
   const onPressUnfollow = async (e: GestureResponderEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    const displayNameOrHandle = profile.displayName || profile.handle
     try {
       await queueUnfollow()
       Toast.show(
         l`No longer following ${sanitizeDisplayName(
-          profile.displayName || profile.handle,
+          displayNameOrHandle,
           moderation.ui('displayName'),
         )}`,
       )
-      onPressProp?.(e)
+      if (onPressProp) {
+        onPressProp(e)
+      }
     } catch (e) {
       const err = e as Error
       if (err?.name !== 'AbortError') {

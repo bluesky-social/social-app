@@ -251,19 +251,35 @@ describe('buildChatClient', () => {
     expect(headers.get('authorization')).toBe('Bearer access-jwt')
   })
 
-  it('emits no labeler header', async () => {
-    /* the global authorities do not apply: a chat call is not an appview read */
+  it('emits a global app labeler once, redacted', async () => {
+    const client = buildChatClient(makeSession(fetchMock))
     configureGlobalAppLabelers(['did:plc:global-labeler'])
 
-    await buildChatClient(makeSession(fetchMock))
-      .call(chat.bsky.convo.listConvos, {})
-      .catch(() => {})
+    await client.call(chat.bsky.convo.listConvos, {}).catch(() => {})
 
-    expect(
-      headersFor(fetchMock, 'chat.bsky.convo.listConvos').get(
-        'atproto-accept-labelers',
-      ),
-    ).toBeNull()
+    const labelers = headersFor(fetchMock, 'chat.bsky.convo.listConvos').get(
+      'atproto-accept-labelers',
+    )
+    const entries = labelers!
+      .split(',')
+      .map(l => l.trim())
+      .filter(l => l.includes('did:plc:global-labeler'))
+    expect(entries).toEqual(['did:plc:global-labeler;redact'])
+  })
+
+  it('emits an account subscription exactly once', async () => {
+    const client = buildChatClient(makeSession(fetchMock))
+    client.setLabelers(['did:plc:labeler'])
+
+    await client.call(chat.bsky.convo.listConvos, {}).catch(() => {})
+
+    const labelers = headersFor(fetchMock, 'chat.bsky.convo.listConvos').get(
+      'atproto-accept-labelers',
+    )
+    const entries = labelers!
+      .split(',')
+      .filter(l => l.includes('did:plc:labeler'))
+    expect(entries).toHaveLength(1)
   })
 })
 

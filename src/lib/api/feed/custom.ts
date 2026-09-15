@@ -96,7 +96,7 @@ export class CustomFeedAPI implements FeedAPI {
     const feed =
       data.feed.length > limit ? data.feed.slice(0, limit) : data.feed
     return {
-      cursor: feed.length ? data.cursor : undefined,
+      cursor: data.cursor,
       feed,
     }
   }
@@ -154,11 +154,7 @@ async function loggedOutFetch(
 
   // no data, try again with language headers removed
   data = await getFeedOrNull(params, '')
-  if (data?.feed?.length) {
-    return data
-  }
-
-  return null
+  return data
 }
 
 /**

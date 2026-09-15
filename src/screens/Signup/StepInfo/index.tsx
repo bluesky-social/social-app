@@ -46,6 +46,19 @@ function sanitizeDate(date: Date): Date {
   return date
 }
 
+/*
+ * Module scope because React Compiler cannot lower an `import()` expression
+ * inside a component or hook body.
+ */
+function loadTLDs(): Promise<typeof tldts> {
+  // @ts-expect-error - valid path
+  return import('tldts/dist/index.cjs.min.js')
+}
+
+function preloadViewShot() {
+  return import('react-native-view-shot')
+}
+
 export function StepInfo({
   onPressBack,
   isServerError,
@@ -90,12 +103,11 @@ export function StepInfo({
 
   const tldtsRef = useRef<typeof tldts>(undefined)
   useEffect(() => {
-    // @ts-expect-error - valid path
-    void import('tldts/dist/index.cjs.min.js').then(tldts => {
+    void loadTLDs().then(tldts => {
       tldtsRef.current = tldts
     })
     // This will get used in the avatar creator a few steps later, so lets preload it now
-    void import('react-native-view-shot')
+    void preloadViewShot()
   }, [])
 
   const onNextPress = () => {

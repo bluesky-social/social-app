@@ -6,7 +6,6 @@ import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {
-  VIDEO_10_MINUTE_MAX_DURATION_MS,
   VIDEO_MAX_DURATION_MS,
   VIDEO_MAX_SIZE,
   VIDEO_MAX_SIZE_MB,
@@ -23,7 +22,6 @@ import {Button} from '#/components/Button'
 import {useSheetWrapper} from '#/components/Dialog/sheet-wrapper'
 import {Image_Stroke2_Corner2_Rounded as ImageIcon} from '#/components/icons/Image'
 import * as toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
 import {isAnimatedGif} from './videos/isAnimatedGif'
 import {hasWebCodecs} from './videos/metadata'
@@ -400,13 +398,6 @@ export function SelectMediaButton({
   autoOpen,
 }: SelectMediaButtonProps) {
   const {_} = useLingui()
-  const ax = useAnalytics()
-  const allow10MinuteVideos = ax.features.enabled(
-    ax.features.VideoAllow10MinuteEnable,
-  )
-  const videoMaxDurationMs = allow10MinuteVideos
-    ? VIDEO_10_MINUTE_MAX_DURATION_MS
-    : VIDEO_MAX_DURATION_MS
   const {requestPhotoAccessIfNeeded} = usePhotoLibraryPermission()
   const {requestVideoAccessIfNeeded} = useVideoLibraryPermission()
   const sheetWrapper = useSheetWrapper()
@@ -426,7 +417,7 @@ export function SelectMediaButton({
       } = await processImagePickerAssets(rawAssets, {
         selectionCountRemaining,
         allowedAssetTypes,
-        videoMaxDurationMs,
+        videoMaxDurationMs: VIDEO_MAX_DURATION_MS,
       })
 
       /*
@@ -451,9 +442,9 @@ export function SelectMediaButton({
           [SelectedAssetError.MaxVideos]: _(
             msg`You can only select one video at a time.`,
           ),
-          [SelectedAssetError.VideoTooLong]: allow10MinuteVideos
-            ? _(msg`Videos must be 10 minutes or less.`)
-            : _(msg`Videos must be less than 3 minutes long.`),
+          [SelectedAssetError.VideoTooLong]: _(
+            msg`Videos must be 10 minutes or less.`,
+          ),
           [SelectedAssetError.MaxGIFs]: _(
             msg`You can only select one GIF at a time.`,
           ),
@@ -473,14 +464,7 @@ export function SelectMediaButton({
         errors,
       })
     },
-    [
-      _,
-      onSelectAssets,
-      selectionCountRemaining,
-      allowedAssetTypes,
-      videoMaxDurationMs,
-      allow10MinuteVideos,
-    ],
+    [_, onSelectAssets, selectionCountRemaining, allowedAssetTypes],
   )
 
   const onPressSelectMedia = useCallback(async () => {
@@ -503,7 +487,10 @@ export function SelectMediaButton({
     }
 
     const {assets, canceled} = await sheetWrapper(
-      openUnifiedPicker({selectionCountRemaining, videoMaxDurationMs}),
+      openUnifiedPicker({
+        selectionCountRemaining,
+        videoMaxDurationMs: VIDEO_MAX_DURATION_MS,
+      }),
     )
 
     if (canceled) return
@@ -516,7 +503,6 @@ export function SelectMediaButton({
     sheetWrapper,
     processSelectedAssets,
     selectionCountRemaining,
-    videoMaxDurationMs,
   ])
 
   useEffect(() => {

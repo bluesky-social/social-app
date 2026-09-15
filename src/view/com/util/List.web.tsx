@@ -541,14 +541,12 @@ function useWebListTelemetry({
       return
     }
 
-    let taskCount = 0
-    let totalDurationMs = 0
-    let maxDurationMs = 0
+    const stats = {taskCount: 0, totalDurationMs: 0, maxDurationMs: 0}
     const observer = new PerformanceObserver(list => {
       for (const entry of list.getEntries()) {
-        taskCount++
-        totalDurationMs += entry.duration
-        maxDurationMs = Math.max(maxDurationMs, entry.duration)
+        stats.taskCount++
+        stats.totalDurationMs += entry.duration
+        stats.maxDurationMs = Math.max(stats.maxDurationMs, entry.duration)
       }
     })
 
@@ -560,18 +558,18 @@ function useWebListTelemetry({
     }
 
     const report = () => {
-      if (taskCount === 0) return
+      if (stats.taskCount === 0) return
       ax.metric('web:list:longTasks', {
         itemCount: itemCountRef.current,
-        taskCount,
-        totalDurationMs: Math.round(totalDurationMs),
-        maxDurationMs: Math.round(maxDurationMs),
+        taskCount: stats.taskCount,
+        totalDurationMs: Math.round(stats.totalDurationMs),
+        maxDurationMs: Math.round(stats.maxDurationMs),
         intervalMs: LONG_TASK_REPORT_INTERVAL,
         ...getWebListDiagnostics(containerRef, rowNodesRef),
       })
-      taskCount = 0
-      totalDurationMs = 0
-      maxDurationMs = 0
+      stats.taskCount = 0
+      stats.totalDurationMs = 0
+      stats.maxDurationMs = 0
     }
     const interval = setInterval(report, LONG_TASK_REPORT_INTERVAL)
     return () => {

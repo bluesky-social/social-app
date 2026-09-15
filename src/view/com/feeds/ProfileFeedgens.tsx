@@ -79,7 +79,7 @@ export function ProfileFeedgens({
     error,
     refetch,
   } = useProfileFeedgensQuery(did, opts)
-  const isEmpty = !isPending && !data?.pages[0]?.feeds.length
+  const isEmpty = !isPending && !data?.pages.some(page => page.feeds.length)
   const {data: preferences} = usePreferencesQuery()
   const navigation = useNavigation()
   const {currentAccount} = useSession()

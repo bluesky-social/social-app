@@ -3,14 +3,21 @@ import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {type QueryClient, useQueryClient} from '@tanstack/react-query'
 
+import {type ValidFeedPostNumbering} from '#/lib/api/feed-manip'
 import {
   dangerousGetPostShadow,
   updatePostShadow,
 } from '#/state/cache/post-shadow'
 import {findAllPostsInQueryData as findAllPostsInBookmarksQueryData} from '#/state/queries/bookmarks/useBookmarksQuery'
-import {findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData} from '#/state/queries/explore-feed-previews'
+import {
+  findAllPostsInQueryData as findAllPostsInExploreFeedPreviewsQueryData,
+  findPostNumberingInQueryData as findPostNumberingInExploreFeedPreviewsQueryData,
+} from '#/state/queries/explore-feed-previews'
 import {findAllPostsInQueryData as findAllPostsInNotifsQueryData} from '#/state/queries/notifications/feed'
-import {findAllPostsInQueryData as findAllPostsInFeedQueryData} from '#/state/queries/post-feed'
+import {
+  findAllPostsInQueryData as findAllPostsInFeedQueryData,
+  findPostNumberingInQueryData as findPostNumberingInFeedQueryData,
+} from '#/state/queries/post-feed'
 import {findAllPostsInQueryData as findAllPostsInQuoteQueryData} from '#/state/queries/post-quotes'
 import {findAllPostsInQueryData as findAllPostsInSearchQueryData} from '#/state/queries/search-posts-v2'
 import {usePostThreadContext} from '#/state/queries/usePostThread'
@@ -207,8 +214,15 @@ export function getThreadPlaceholder(
   queryClient: QueryClient,
   uri: string,
 ): $Typed<app.bsky.unspecced.getPostThreadV2.ThreadItem> | void {
+  const postNumbering =
+    findPostNumberingInFeedQueryData(queryClient, uri) ??
+    findPostNumberingInExploreFeedPreviewsQueryData(queryClient, uri)
   let partial
-  for (let item of getThreadPlaceholderCandidates(queryClient, uri)) {
+  for (let item of getThreadPlaceholderCandidates(
+    queryClient,
+    uri,
+    postNumbering,
+  )) {
     /*
      * Currently, the backend doesn't send full post info in some cases (for
      * example, for quoted posts). We use missing `likeCount` as a way to
@@ -231,6 +245,7 @@ export function getThreadPlaceholder(
 export function* getThreadPlaceholderCandidates(
   queryClient: QueryClient,
   uri: string,
+  postNumbering?: ValidFeedPostNumbering,
 ): Generator<
   $Typed<
     Omit<app.bsky.unspecced.getPostThreadV2.ThreadItem, 'value'> & {
@@ -243,7 +258,7 @@ export function* getThreadPlaceholderCandidates(
    * Check post thread queries first
    */
   for (const post of findAllPostsInQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(post)
+    yield postViewToThreadPlaceholder(post, postNumbering)
   }
 
   /*
@@ -253,25 +268,25 @@ export function* getThreadPlaceholderCandidates(
    * avoid a notification->post scroll jump.
    */
   for (let post of findAllPostsInNotifsQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(post)
+    yield postViewToThreadPlaceholder(post, postNumbering)
   }
   for (let post of findAllPostsInFeedQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(post)
+    yield postViewToThreadPlaceholder(post, postNumbering)
   }
   for (let post of findAllPostsInQuoteQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(post)
+    yield postViewToThreadPlaceholder(post, postNumbering)
   }
   for (let post of findAllPostsInSearchQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(post)
+    yield postViewToThreadPlaceholder(post, postNumbering)
   }
   for (let post of findAllPostsInBookmarksQueryData(queryClient, uri)) {
-    yield postViewToThreadPlaceholder(post)
+    yield postViewToThreadPlaceholder(post, postNumbering)
   }
   for (let post of findAllPostsInExploreFeedPreviewsQueryData(
     queryClient,
     uri,
   )) {
-    yield postViewToThreadPlaceholder(post)
+    yield postViewToThreadPlaceholder(post, postNumbering)
   }
 }
 

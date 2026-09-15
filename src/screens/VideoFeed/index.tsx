@@ -44,6 +44,7 @@ import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
@@ -382,11 +383,10 @@ function Feed() {
         }
       }
 
-      if (
-        updatedSources[0]?.source !== currentSources[0]?.source ||
-        updatedSources[1]?.source !== currentSources[1]?.source ||
-        updatedSources[2]?.source !== currentSources[2]?.source
-      ) {
+      const sourcesChanged = [0, 1, 2].some(
+        i => updatedSources[i]?.source !== currentSources[i]?.source,
+      )
+      if (sourcesChanged) {
         setCurrentSources(updatedSources)
       }
     },
@@ -493,9 +493,19 @@ let VideoItem = ({
   const {width, height} = useSafeAreaFrame()
   const {sendInteraction, feedDescriptor} = useFeedFeedbackContext()
   const hasTrackedView = useRef(false)
+  const hasTrackedVideoImpression = useRef(false)
 
   useEffect(() => {
     if (active) {
+      if (!hasTrackedVideoImpression.current) {
+        hasTrackedVideoImpression.current = true
+        ax.metric('video:impression', {
+          postUri: post.uri,
+          postAuthorDid: post.author.did,
+          context: 'immersiveFeed',
+          presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        })
+      }
       sendInteraction({
         item: post.uri,
         event: 'app.bsky.feed.defs#interactionSeen',
@@ -509,6 +519,7 @@ let VideoItem = ({
         ax.metric('post:view', {
           uri: post.uri,
           authorDid: post.author.did,
+          isReply: !!post.record.reply,
           logContext: 'ImmersiveVideo',
           feedDescriptor,
         })
@@ -519,6 +530,7 @@ let VideoItem = ({
     active,
     post.uri,
     post.author.did,
+    embed.presentation,
     feedContext,
     reqId,
     sendInteraction,
@@ -557,7 +569,12 @@ let VideoItem = ({
         <>
           <VideoItemPlaceholder embed={embed} />
           {shouldRenderVideo && player && (
-            <VideoItemInner player={player} embed={embed} active={active} />
+            <VideoItemInner
+              player={player}
+              embed={embed}
+              post={post}
+              active={active}
+            />
           )}
           {moderation && (
             <Overlay
@@ -587,16 +604,20 @@ VideoItem = memo(VideoItem)
 function VideoItemInner({
   player,
   embed,
+  post,
   active,
 }: {
   player: VideoPlayer
   embed: app.bsky.embed.video.View
+  post: app.bsky.feed.defs.PostView
   active: boolean
 }) {
   const {bottom} = useSafeAreaInsets()
   const [isReady, setIsReady] = useState(!IS_ANDROID)
   const reportDialogMetadata =
     ReportDialogMetadataContext.useReportDialogMetadataContext()
+  const ax = useAnalytics()
+  const playbackStartTrackedRef = useRef(false)
 
   usePlaybackTelemetry({player, active, playlist: embed.playlist})
 
@@ -616,6 +637,20 @@ function VideoItemInner({
       evt.currentTime >= 0
     ) {
       reportDialogMetadata.current.videoTimestampSeconds = evt.currentTime
+    }
+    if (
+      active &&
+      !playbackStartTrackedRef.current &&
+      hasPlaybackStarted(evt.currentTime)
+    ) {
+      playbackStartTrackedRef.current = true
+      ax.metric('video:playback:start', {
+        postUri: post.uri,
+        postAuthorDid: post.author.did,
+        context: 'immersiveFeed',
+        presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        autoplay: true,
+      })
     }
   })
 
@@ -659,10 +694,12 @@ function usePlaybackTelemetry({
 
   useEffect(() => {
     if (!active) return
-    telemetryRef.current ??= createPlaybackTelemetry({
-      surface: 'immersiveFeed',
-      presentation: 'video',
-    })
+    if (telemetryRef.current == null) {
+      telemetryRef.current = createPlaybackTelemetry({
+        surface: 'immersiveFeed',
+        presentation: 'video',
+      })
+    }
     const telemetry = telemetryRef.current
     const preloaded = player.status === 'readyToPlay'
     telemetry.activated({preloaded})

@@ -1,3 +1,19 @@
+diff --git a/android/src/main/cpp/worklets/WorkletJSCallInvoker.cpp b/android/src/main/cpp/worklets/WorkletJSCallInvoker.cpp
+index a2d707ce76ceb35456eb075d06473ac98ad8b5eb..be2e3d66031d2bbd6208a7cdc1700a9daefb1267 100644
+--- a/android/src/main/cpp/worklets/WorkletJSCallInvoker.cpp
++++ b/android/src/main/cpp/worklets/WorkletJSCallInvoker.cpp
+@@ -24,10 +24,7 @@ namespace expo {
+       return;
+     }
+ 
+-    workletRuntime->executeSync([func = std::move(func)](jsi::Runtime &rt) -> jsi::Value {
+-      func(rt);
+-      return jsi::Value::undefined();
+-    });
++    workletRuntime->runSync(func);
+   }
+ } // namespace expo
+ 
 diff --git a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt b/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
 index 47c4d15f6b10bbd77858cfff425cda9a618735b9..afe138d22d566244482498a7be0e14b8454eab96 100644
 --- a/android/src/main/java/expo/modules/kotlin/devtools/ExpoNetworkInspectOkHttpInterceptors.kt
@@ -13,3 +29,16 @@ index 47c4d15f6b10bbd77858cfff425cda9a618735b9..afe138d22d566244482498a7be0e14b8
    // Check for Content-Type
    val skipContentTypes = listOf(
      "text/event-stream", // Server Sent Events
+diff --git a/ios/WorkletsAdapter/ExpoWorkletsBridgeProvider.mm b/ios/WorkletsAdapter/ExpoWorkletsBridgeProvider.mm
+index 126545fae12dc3af71e0ea382b976ef430e62d17..d97163a2e9a9db09f43786bc919f2fa229f21901 100644
+--- a/ios/WorkletsAdapter/ExpoWorkletsBridgeProvider.mm
++++ b/ios/WorkletsAdapter/ExpoWorkletsBridgeProvider.mm
+@@ -233,7 +233,7 @@ - (void)executeWorkletWithRuntimeHandle:(id)runtimeHandle
+     return;
+   }
+ 
+-  workletRuntime->executeSync([worklet, arguments](jsi::Runtime &rt) -> jsi::Value {
++  workletRuntime->runSync([worklet, arguments](jsi::Runtime &rt) -> jsi::Value {
+     return callWorklet(rt, worklet, arguments);
+   });
+ }

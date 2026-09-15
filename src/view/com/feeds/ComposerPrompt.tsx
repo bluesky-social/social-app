@@ -56,8 +56,10 @@ export function ComposerPrompt() {
         requestVideoAccessIfNeeded(),
       ])
 
-      if (!photoAccess && !videoAccess) {
-        return
+      if (!photoAccess) {
+        if (!videoAccess) {
+          return
+        }
       }
 
       if (Keyboard.isVisible()) {
@@ -108,8 +110,10 @@ export function ComposerPrompt() {
         return
       }
 
-      if (IS_NATIVE && Keyboard.isVisible()) {
-        Keyboard.dismiss()
+      if (IS_NATIVE) {
+        if (Keyboard.isVisible()) {
+          Keyboard.dismiss()
+        }
       }
 
       const image = await openCamera({
@@ -127,8 +131,16 @@ export function ComposerPrompt() {
         },
       ]
 
+      /*
+       * Statement form rather than a ternary: React Compiler cannot lower a
+       * conditional expression inside a `try`, and `imageUris` is built here.
+       */
+      let nativeImageUris
+      if (IS_NATIVE) {
+        nativeImageUris = imageUris
+      }
       openComposer({
-        imageUris: IS_NATIVE ? imageUris : undefined,
+        imageUris: nativeImageUris,
         logContext: 'Fab',
       })
     } catch (err: any) {

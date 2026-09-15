@@ -76,10 +76,11 @@ export function StepHandle() {
 
     dispatch({type: 'setIsLoading', value: true})
 
+    const serviceDid = state.serviceDescription?.did ?? 'UNKNOWN'
     try {
       const {available: handleAvailable} = await checkHandleAvailability(
         createFullHandle(handle, state.userDomain),
-        state.serviceDescription?.did ?? 'UNKNOWN',
+        serviceDid,
         {},
       )
 
@@ -90,6 +91,7 @@ export function StepHandle() {
           value: _(msg`That username is already taken`),
           field: 'handle',
         })
+        dispatch({type: 'setIsLoading', value: false})
         return
       } else {
         ax.metric('signup:handleAvailable', {typeahead: false})
@@ -99,9 +101,8 @@ export function StepHandle() {
         safeMessage: error,
       })
       // do nothing on error, let them pass
-    } finally {
-      dispatch({type: 'setIsLoading', value: false})
     }
+    dispatch({type: 'setIsLoading', value: false})
 
     ax.metric('signup:nextPressed', {
       activeStep: state.activeStep,

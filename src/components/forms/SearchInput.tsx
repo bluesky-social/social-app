@@ -47,7 +47,13 @@ export function SearchInput({
       <TextField.Root>
         <TextField.Icon icon={MagnifyingGlassIcon} />
         <TextField.Input
-          inputRef={mergeRefs([internalRef, ref])}
+          /*
+           * Deferred into the callback: React Compiler only special-cases the
+           * `ref` prop, so a merged ref built during render and handed to
+           * `inputRef` reads as accessing a ref. `mergeRefs` already returns a
+           * fresh function per render, so this adds no identity churn.
+           */
+          inputRef={node => mergeRefs([internalRef, ref])(node)}
           label={label || l`Search`}
           value={value}
           placeholder={l`Search`}
