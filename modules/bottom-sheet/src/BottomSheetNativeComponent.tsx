@@ -182,6 +182,11 @@ function BottomSheetNativeComponentInner({
           },
           maxHeight != null && {maxHeight},
           Platform.OS === 'android' && {
+            /*
+             * The native canvas is sized after the first layout. Allow content
+             * measured without a height constraint to shrink to that canvas.
+             */
+            flexShrink: 1,
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
             overflow: 'hidden',

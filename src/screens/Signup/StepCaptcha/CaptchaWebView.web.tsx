@@ -6,6 +6,11 @@ import {type CaptchaWebViewProps} from './CaptchaWebView.shared'
 const REDIRECT_HOST = new URL(window.location.href).host
 
 /**
+ * How long someone can work on a challenge before we consider it slow.
+ */
+const SLOW_THRESHOLD = 30e3
+
+/**
  * Module scope because React Compiler cannot lower an optional chain inside a
  * `try`, and this one has to stay in the `try` - reading `location` on a
  * cross-origin frame throws.
@@ -19,18 +24,17 @@ export function CaptchaWebView({
   stateParam,
   onSuccess,
   onError,
+  onSlow,
 }: CaptchaWebViewProps) {
   useEffect(() => {
     const timeout = setTimeout(() => {
-      onError({
-        errorMessage: 'User did not complete the captcha within 30 seconds',
-      })
-    }, 30e3)
+      onSlow?.()
+    }, SLOW_THRESHOLD)
 
     return () => {
       clearTimeout(timeout)
     }
-  }, [onError])
+  }, [onSlow])
 
   const onLoad = useCallback(() => {
     const frame: HTMLIFrameElement = document.getElementById(
@@ -48,11 +52,11 @@ export function CaptchaWebView({
       const code = urlp.searchParams.get('code')
       const stateMismatch = urlp.searchParams.get('state') !== stateParam
       if (stateMismatch) {
-        onError({error: 'Invalid state or code'})
+        onError({reason: 'state-mismatch', host: urlp.host})
         return
       }
       if (!code) {
-        onError({error: 'Invalid state or code'})
+        onError({reason: 'state-mismatch', host: urlp.host})
         return
       }
       onSuccess(code)
