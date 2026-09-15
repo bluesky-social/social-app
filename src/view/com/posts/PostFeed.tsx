@@ -75,7 +75,6 @@ import {
 } from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
 import {PostFeedErrorMessage} from './PostFeedErrorMessage'
@@ -160,10 +159,6 @@ type FeedRow =
     }
   | {
       type: 'ageAssuranceBanner'
-      key: string
-    }
-  | {
-      type: 'composerPrompt'
       key: string
     }
   | {
@@ -558,17 +553,6 @@ let PostFeed = ({
                       type: 'liveEventFeedsAndTrendingBanner',
                       key: 'liveEventFeedsAndTrendingBanner-' + sliceIndex,
                     })
-                    // Show composer prompt for Discover and Following feeds
-                    if (
-                      hasSession &&
-                      (feedUriOrActorDid === DISCOVER_FEED_URI ||
-                        feed === 'following')
-                    ) {
-                      arr.push({
-                        type: 'composerPrompt',
-                        key: 'composerPrompt-' + sliceIndex,
-                      })
-                    }
                   } else if (sliceIndex === trendingIndices.topics) {
                     arr.push({
                       type: 'interstitialFeedTrendingTopics',
@@ -587,16 +571,6 @@ let PostFeed = ({
                       type: 'interstitialFollows',
                       key: 'interstitial-' + sliceIndex + '-' + lastFetchedAt,
                     })
-                  }
-                } else if (feedKind === 'following') {
-                  if (sliceIndex === 0) {
-                    // Show composer prompt for Following feed
-                    if (hasSession) {
-                      arr.push({
-                        type: 'composerPrompt',
-                        key: 'composerPrompt-' + sliceIndex,
-                      })
-                    }
                   }
                 } else if (feedKind === 'profile') {
                   if (sliceIndex === 5) {
@@ -854,8 +828,6 @@ let PostFeed = ({
         )
       } else if (row.type === 'liveEventFeedsAndTrendingBanner') {
         return <DiscoverFeedLiveEventFeedsAndTrendingBanner />
-      } else if (row.type === 'composerPrompt') {
-        return <ComposerPrompt />
       } else if (row.type === 'interstitialTrendingVideos') {
         return <TrendingVideosInterstitial />
       } else if (row.type === 'fallbackMarker') {

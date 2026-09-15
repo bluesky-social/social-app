@@ -45,6 +45,11 @@ import {
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
+import {
+  ComposePromptGradient,
+  ComposePromptPill,
+  useComposePromptState,
+} from '#/features/composePrompt'
 import {styles} from './BottomBarStyles'
 
 type NavItemValue = 'home' | 'search' | 'chat' | 'notifications' | 'profile'
@@ -57,7 +62,9 @@ export function BottomBarWeb() {
   const {requestSwitchToAccount} = useLoggedOutViewControls()
   const closeAllActiveElements = useCloseAllActiveElements()
   const {footerHeight} = useShellLayout()
-  const borderStyle = useBottomBarBorderStyle()
+  const {visibility: composePromptVisibility} = useComposePromptState()
+  // the border would cut across the compose pill's gradient
+  const borderStyle = useBottomBarBorderStyle(composePromptVisibility)
   const accountSwitchControl = useDialogControl()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
   const iconWidth = 26
@@ -85,6 +92,7 @@ export function BottomBarWeb() {
   return (
     <>
       <SwitchAccountDialog control={accountSwitchControl} />
+      {hasSession && <ComposePromptPill />}
 
       <Animated.View
         role="navigation"
@@ -96,6 +104,7 @@ export function BottomBarWeb() {
           footerMinimalShellTransform,
         ]}
         onLayout={event => footerHeight.set(event.nativeEvent.layout.height)}>
+        {hasSession && <ComposePromptGradient />}
         {hasSession ? (
           <>
             <NavItem routeName="Home" href="/" navItem="home">

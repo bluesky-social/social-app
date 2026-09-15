@@ -49,6 +49,7 @@ import {NoFeedsPinned} from '#/screens/Home/NoFeedsPinned'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {NewPostComposePrompt} from '#/features/composePrompt'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
@@ -311,50 +312,53 @@ function HomeScreenReady({
   }
 
   return hasSession ? (
-    <Pager
-      key={allFeeds.join(',')}
-      ref={pagerRef}
-      testID="homeScreen"
-      initialPage={selectedIndex}
-      onPageSelected={onPageSelected}
-      onPageScrollStateChanged={onPageScrollStateChanged}
-      renderTabBar={renderTabBar}>
-      {pinnedFeedInfos.length ? (
-        pinnedFeedInfos.map((feedInfo, index) => {
-          const feed = feedInfo.feedDescriptor
-          if (feed === 'following') {
+    <>
+      <NewPostComposePrompt />
+      <Pager
+        key={allFeeds.join(',')}
+        ref={pagerRef}
+        testID="homeScreen"
+        initialPage={selectedIndex}
+        onPageSelected={onPageSelected}
+        onPageScrollStateChanged={onPageScrollStateChanged}
+        renderTabBar={renderTabBar}>
+        {pinnedFeedInfos.length ? (
+          pinnedFeedInfos.map((feedInfo, index) => {
+            const feed = feedInfo.feedDescriptor
+            if (feed === 'following') {
+              return (
+                <FeedPage
+                  key={feed}
+                  testID="followingFeedPage"
+                  isPageFocused={maybeSelectedFeed === feed}
+                  isPageAdjacent={Math.abs(selectedIndex - index) === 1}
+                  feed={feed}
+                  feedParams={homeFeedParams}
+                  renderEmptyState={renderFollowingEmptyState}
+                  renderEndOfFeed={FollowingEndOfFeed}
+                  feedInfo={feedInfo}
+                />
+              )
+            }
+            const savedFeedConfig = feedInfo.savedFeed
             return (
               <FeedPage
                 key={feed}
-                testID="followingFeedPage"
+                testID="customFeedPage"
                 isPageFocused={maybeSelectedFeed === feed}
                 isPageAdjacent={Math.abs(selectedIndex - index) === 1}
                 feed={feed}
-                feedParams={homeFeedParams}
-                renderEmptyState={renderFollowingEmptyState}
-                renderEndOfFeed={FollowingEndOfFeed}
+                renderEmptyState={renderCustomFeedEmptyState}
+                savedFeedConfig={savedFeedConfig}
                 feedInfo={feedInfo}
               />
             )
-          }
-          const savedFeedConfig = feedInfo.savedFeed
-          return (
-            <FeedPage
-              key={feed}
-              testID="customFeedPage"
-              isPageFocused={maybeSelectedFeed === feed}
-              isPageAdjacent={Math.abs(selectedIndex - index) === 1}
-              feed={feed}
-              renderEmptyState={renderCustomFeedEmptyState}
-              savedFeedConfig={savedFeedConfig}
-              feedInfo={feedInfo}
-            />
-          )
-        })
-      ) : (
-        <NoFeedsPinned preferences={preferences} />
-      )}
-    </Pager>
+          })
+        ) : (
+          <NoFeedsPinned preferences={preferences} />
+        )}
+      </Pager>
+    </>
   ) : (
     <Pager
       testID="homeScreen"

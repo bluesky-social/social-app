@@ -10,10 +10,12 @@ import {
 import * as ScreenOrientation from 'expo-screen-orientation'
 import * as SplashScreen from 'expo-splash-screen'
 import * as SystemUI from 'expo-system-ui'
+import {ScrollEdgeEffectProvider} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import * as Sentry from '@sentry/react-native'
 
 import {Provider as HideBottomBarBorderProvider} from '#/lib/hooks/useHideBottomBarBorder'
+import {ScreenCoverageProvider} from '#/lib/hooks/useScreenPresence'
 import {QueryProvider} from '#/lib/react-query'
 import {ThemeProvider} from '#/lib/ThemeContext'
 import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
@@ -77,6 +79,7 @@ import {
   setupDeviceId,
 } from '#/analytics'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {Provider as ComposePromptProvider} from '#/features/composePrompt'
 import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
@@ -172,18 +175,26 @@ function InnerApp() {
                                                   <ServiceAccountManager>
                                                     <EmailVerificationProvider>
                                                       <HideBottomBarBorderProvider>
-                                                        <GestureHandlerRootView
-                                                          style={a.h_full}>
-                                                          <GlobalGestureEventsProvider>
-                                                            <IntentDialogProvider>
-                                                              <TranslateOnDeviceProvider>
-                                                                <TestCtrls />
-                                                                <Shell />
-                                                                <ToastOutlet />
-                                                              </TranslateOnDeviceProvider>
-                                                            </IntentDialogProvider>
-                                                          </GlobalGestureEventsProvider>
-                                                        </GestureHandlerRootView>
+                                                        <ScreenCoverageProvider>
+                                                          <ScrollEdgeEffectProvider>
+                                                            <ComposePromptProvider>
+                                                              <GestureHandlerRootView
+                                                                style={
+                                                                  a.h_full
+                                                                }>
+                                                                <GlobalGestureEventsProvider>
+                                                                  <IntentDialogProvider>
+                                                                    <TranslateOnDeviceProvider>
+                                                                      <TestCtrls />
+                                                                      <Shell />
+                                                                      <ToastOutlet />
+                                                                    </TranslateOnDeviceProvider>
+                                                                  </IntentDialogProvider>
+                                                                </GlobalGestureEventsProvider>
+                                                              </GestureHandlerRootView>
+                                                            </ComposePromptProvider>
+                                                          </ScrollEdgeEffectProvider>
+                                                        </ScreenCoverageProvider>
                                                       </HideBottomBarBorderProvider>
                                                     </EmailVerificationProvider>
                                                   </ServiceAccountManager>

@@ -9,7 +9,6 @@ import {Trans} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
 import {
   type CommonNavigatorParams,
@@ -27,17 +26,16 @@ import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
-import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ListHiddenScreen} from '#/screens/List/ListHiddenScreen'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {useDialogControl} from '#/components/Dialog'
 import {ListAddRemoveUsersDialog} from '#/components/dialogs/lists/ListAddRemoveUsersDialog'
-import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import * as Layout from '#/components/Layout'
 import {Loader} from '#/components/Loader'
 import * as Hider from '#/components/moderation/Hider'
 import {IS_WEB} from '#/env'
+import {NewPostComposePrompt} from '#/features/composePrompt'
 import {app} from '#/lexicons'
 import {AboutSection} from './AboutSection'
 import {ErrorScreen} from './components/ErrorScreen'
@@ -150,7 +148,6 @@ function ProfileListScreenLoaded({
   const t = useTheme()
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const {openComposer} = useOpenComposer()
   const {currentAccount} = useSession()
   const {rkey} = route.params
   const feedSectionRef = useRef<SectionRef>(null)
@@ -226,14 +223,7 @@ function ProfileListScreenLoaded({
                 />
               )}
             </PagerWithHeader>
-            <FAB
-              testID="composeFAB"
-              onPress={() => openComposer({logContext: 'Fab'})}
-              icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-              accessibilityRole="button"
-              accessibilityLabel={_(msg`New post`)}
-              accessibilityHint=""
-            />
+            {currentAccount && <NewPostComposePrompt />}
           </View>
           <ListAddRemoveUsersDialog
             control={addUserDialogControl}
@@ -269,14 +259,7 @@ function ProfileListScreenLoaded({
               headerHeight={IS_WEB ? 0 : headerHeight}
             />
           )}
-          <FAB
-            testID="composeFAB"
-            onPress={() => openComposer({logContext: 'Fab'})}
-            icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-            accessibilityRole="button"
-            accessibilityLabel={_(msg`New post`)}
-            accessibilityHint=""
-          />
+          {currentAccount && <NewPostComposePrompt />}
         </View>
         <ListAddRemoveUsersDialog
           control={addUserDialogControl}

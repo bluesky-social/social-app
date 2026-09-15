@@ -7,7 +7,6 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -24,18 +23,16 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {NotificationFeed} from '#/view/com/notifications/NotificationFeed'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
-import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {ButtonIcon} from '#/components/Button'
-import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {IS_NATIVE} from '#/env'
+import {NewPostComposePrompt} from '#/features/composePrompt'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -48,8 +45,6 @@ type Props = NativeStackScreenProps<
 >
 export function NotificationsScreen({}: Props) {
   const {_} = useLingui()
-  const t = useTheme()
-  const {openComposer} = useOpenComposer()
   const unreadNotifs = useUnreadNotifications()
   const hasNew = !!unreadNotifs
   const {checkUnread: checkUnreadAll} = useUnreadNotificationsApi()
@@ -157,14 +152,7 @@ export function NotificationsScreen({}: Props) {
           <View key={i}>{section.component}</View>
         ))}
       </Pager>
-      <FAB
-        testID="composeFAB"
-        onPress={() => openComposer({logContext: 'Fab'})}
-        icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-        accessibilityRole="button"
-        accessibilityLabel={_(msg`New post`)}
-        accessibilityHint=""
-      />
+      <NewPostComposePrompt />
     </Layout.Screen>
   )
 }
@@ -184,7 +172,6 @@ function NotificationsTab({
   checkUnread: ({invalidate}: {invalidate: boolean}) => Promise<void>
   setIsLoadingLatest: (v: boolean) => void
 }) {
-  const {_} = useLingui()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const scrollElRef = useRef<ListMethods>(null)
   const queryClient = useQueryClient()
@@ -265,13 +252,6 @@ function NotificationsTab({
           ) : undefined
         }
       />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label={_(msg`Load new notifications`)}
-          showIndicator={hasNew}
-        />
-      )}
     </>
   )
 }
