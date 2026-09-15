@@ -17,6 +17,7 @@ export const DEFAULT_LIMIT = 5
 export const DEFAULT_FETCH_LIMIT = 20
 
 type QueryProps = {
+  enabled?: boolean
   fetchLimit?: number
   limit?: number
   refetchOnWindowFocus?: boolean
@@ -29,6 +30,21 @@ function dedupe<T extends {link: string}>(trends: T[]): T[] {
     seen.add(trend.link)
     return true
   })
+}
+
+export function filterTrends(
+  trends: app.bsky.unspecced.getTrends.$OutputBody['trends'],
+  mutedWords: Parameters<typeof hasMutedWord>[0]['mutedWords'],
+  limit: number,
+) {
+  return dedupe(
+    trends.filter(trend => {
+      return !hasMutedWord({
+        mutedWords,
+        text: `${trend.topic} ${trend.displayName} ${trend.category}`,
+      })
+    }),
+  ).slice(0, limit)
 }
 
 export const createGetTrendsQueryKey = (fetchLimit?: number) =>
@@ -44,7 +60,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
   }, [preferences?.moderationPrefs])
 
   return useQuery({
-    enabled: !!preferences,
+    enabled: props.enabled !== false && !!preferences,
     refetchOnWindowFocus: props.refetchOnWindowFocus,
     staleTime: STALE.MINUTES.THREE,
     queryKey: createGetTrendsQueryKey(fetchLimit),
@@ -71,14 +87,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
       (data: app.bsky.unspecced.getTrends.$OutputBody) => {
         return {
           recId: data.recIdStr,
-          trends: dedupe(
-            (data.trends ?? []).filter(t => {
-              return !hasMutedWord({
-                mutedWords,
-                text: `${t.topic} ${t.displayName} ${t.category}`,
-              })
-            }),
-          ).slice(0, limit),
+          trends: filterTrends(data.trends ?? [], mutedWords, limit),
         }
       },
       [limit, mutedWords],

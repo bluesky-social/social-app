@@ -6,7 +6,8 @@
       "ExpoBlueskyReferrerModule",
       "ExpoBlueskyVisibilityViewModule",
       "ExpoPlatformInfoModule",
-      "ExpoBlueskyNotificationSettingsModule"
+      "ExpoBlueskyNotificationSettingsModule",
+      "ExpoBlueskyWidgetInfoModule"
     ]
   },
   "android": {
