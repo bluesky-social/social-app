@@ -15,6 +15,7 @@ import {type ISODatetimeString} from '@atproto/syntax'
 import {useQueryClient} from '@tanstack/react-query'
 import {EventEmitter} from 'eventemitter3'
 
+import {useOnAppStateChange} from '#/lib/appState'
 import BroadcastChannel from '#/lib/broadcast'
 import {resetBadgeCount} from '#/lib/notifications/notifications'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -92,6 +93,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     )
     return () => clearInterval(interval)
   }, [hasSession])
+
+  /*
+   * checkUnread early-returns while the app is backgrounded, so without this
+   * the badge stays stale after a foreground until the next poll happens to
+   * land while the app is active. Only a real background counts - iOS also
+   * reports 'inactive' for transient interruptions like the control center,
+   * and refetching on each of those would be wasted requests.
+   */
+  const wasBackgroundedRef = useRef(false)
+  useOnAppStateChange(state => {
+    if (state === 'background') {
+      wasBackgroundedRef.current = true
+    } else if (state === 'active' && wasBackgroundedRef.current) {
+      wasBackgroundedRef.current = false
+      void checkUnreadRef.current?.()
+    }
+  })
 
   // listen for broadcasts
   useEffect(() => {
@@ -191,13 +209,20 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             unreadCount,
           }
 
-          // update & broadcast
-          setNumUnread(unreadCountStr)
           if (invalidate) {
+            /*
+             * The feed we're invalidating consumes this same page and calls
+             * markAllRead(), which zeroes the badge. Painting the count first
+             * would only flash it at a user who is already looking at the
+             * notifications it counts.
+             */
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
+          } else {
+            // update & broadcast
+            setNumUnread(unreadCountStr)
+            broadcast.postMessage({event: unreadCountStr})
           }
-          broadcast.postMessage({event: unreadCountStr})
         } finally {
           isFetchingRef.current = false
         }
