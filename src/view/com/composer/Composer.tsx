@@ -288,7 +288,7 @@ export const ComposePost = ({
   const discardPromptControl = Prompt.usePromptControl()
   const emptyPostsPromptControl = Prompt.usePromptControl()
   const skipEmptyConfirmedRef = useRef(false)
-  const {mutateAsync: saveDraft, isPending: _isSavingDraft} =
+  const {mutateAsync: saveDraft, isPending: isSavingDraft} =
     useSaveDraftMutation()
   const {mutate: cleanupPublishedDraft} = useCleanupPublishedDraftMutation()
   const {closeAllDialogs} = useDialogStateControlContext()
@@ -882,6 +882,9 @@ export const ComposePost = ({
   )
 
   const onPressCancel = useCallback(() => {
+    if (isSavingDraft) {
+      return
+    }
     if (textInputRef.current?.maybeClosePopup()) {
       return
     }
@@ -902,6 +905,7 @@ export const ComposePost = ({
       onClose()
     }
   }, [
+    isSavingDraft,
     thread,
     composerState.draftId,
     composerState.isDirty,
@@ -1022,7 +1026,7 @@ export const ComposePost = ({
   }, [thread])
 
   const onPressPublish = useCallback(async () => {
-    if (isPublishing) {
+    if (isPublishing || isSavingDraft) {
       return
     }
 
@@ -1264,6 +1268,7 @@ export const ComposePost = ({
     pdsClient,
     canPost,
     isPublishing,
+    isSavingDraft,
     currentLanguages,
     onClose,
     onPost,
@@ -1433,6 +1438,7 @@ export const ComposePost = ({
             isReply={!!replyTo}
             isPublishQueued={publishOnUpload}
             isPublishing={isPublishing}
+            isSavingDraft={isSavingDraft}
             isThread={thread.posts.length > 1}
             publishingStage={publishingStage}
             topBarAnimatedStyle={topBarAnimatedStyle}
@@ -1789,6 +1795,7 @@ function ComposerTopBar({
   isReply,
   isPublishQueued,
   isPublishing,
+  isSavingDraft,
   isThread,
   publishingStage,
   onCancel,
@@ -1805,6 +1812,7 @@ function ComposerTopBar({
   children,
 }: {
   isPublishing: boolean
+  isSavingDraft: boolean
   publishingStage: string
   canPost: boolean
   isReply: boolean
@@ -1846,6 +1854,7 @@ function ComposerTopBar({
           style={[{paddingLeft: 7, paddingRight: 7}]}
           hoverStyle={[a.bg_transparent, {opacity: 0.5}]}
           onPress={onCancel}
+          disabled={isSavingDraft}
           accessibilityHint={l`Closes post composer and discards post draft`}>
           <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
             <Trans>Cancel</Trans>
@@ -1871,6 +1880,7 @@ function ComposerTopBar({
                 isEmpty={isEmpty}
                 isDirty={isDirty}
                 isEditingDraft={isEditingDraft}
+                isSaving={isSavingDraft}
                 canSaveDraft={canSaveDraft}
                 textLength={textLength}
               />
@@ -1905,7 +1915,7 @@ function ComposerTopBar({
               color="primary"
               size="small"
               onPress={onPublish}
-              disabled={!canPost || isPublishQueued}>
+              disabled={!canPost || isPublishQueued || isSavingDraft}>
               <ButtonText style={[a.text_md]} maxFontSizeMultiplier={2}>
                 {isReply ? (
                   <Trans context="action">Reply</Trans>
