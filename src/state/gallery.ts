@@ -223,7 +223,7 @@ export async function compressImage(
 
     /*
      * In the event the image doesn't compress well, we want to avoid
-     * unecessary iterations. In this case, binary search will check 51, 26,
+     * unnecessary iterations. In this case, binary search will check 51, 26,
      * 13(rounded). We don't want to go below 25, so if we've halved to 13,
      * reset the loop and reduce the image dimensions instead.
      */
