@@ -16,6 +16,7 @@ import {
   TIMELINE_SAVED_FEED,
   VIDEO_SAVED_FEED,
 } from '#/lib/constants'
+import {revokeObjectUrl} from '#/lib/media/image-manipulator'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {logger} from '#/logger'
 import {useSetHasCheckedForStarterPack} from '#/state/preferences/used-starter-packs'
@@ -148,43 +149,47 @@ export function StepFinished() {
         })(),
         (async () => {
           const {imageUri, imageMime} = profileStepResults
-          const blobPromise =
-            imageUri && imageMime
-              ? uploadBlob(pdsClient, imageUri, imageMime)
-              : undefined
+          try {
+            const blobPromise =
+              imageUri && imageMime
+                ? uploadBlob(pdsClient, imageUri, imageMime)
+                : undefined
 
-          await pdsClient.call(upsertProfile, async existing => {
-            let next: Un$Typed<app.bsky.actor.profile.Main> = existing ?? {}
+            await pdsClient.call(upsertProfile, async existing => {
+              let next: Un$Typed<app.bsky.actor.profile.Main> = existing ?? {}
 
-            if (blobPromise) {
-              const res = await blobPromise
-              if (res.blob) {
-                next.avatar = res.blob
+              if (blobPromise) {
+                const res = await blobPromise
+                if (res.blob) {
+                  next.avatar = res.blob
+                }
               }
-            }
 
-            if (starterPack) {
-              next.joinedViaStarterPack = {
-                uri: starterPack.uri,
-                cid: starterPack.cid,
+              if (starterPack) {
+                next.joinedViaStarterPack = {
+                  uri: starterPack.uri,
+                  cid: starterPack.cid,
+                }
               }
-            }
 
-            next.displayName = ''
+              next.displayName = ''
 
-            if (!next.createdAt) {
-              next.createdAt = toDatetimeString(new Date())
-            }
-            return next
-          })
+              if (!next.createdAt) {
+                next.createdAt = toDatetimeString(new Date())
+              }
+              return next
+            })
 
-          ax.metric('onboarding:finished:avatarResult', {
-            avatarResult: profileStepResults.isCreatedAvatar
-              ? 'created'
-              : profileStepResults.image
-                ? 'uploaded'
-                : 'default',
-          })
+            ax.metric('onboarding:finished:avatarResult', {
+              avatarResult: profileStepResults.isCreatedAvatar
+                ? 'created'
+                : profileStepResults.image
+                  ? 'uploaded'
+                  : 'default',
+            })
+          } finally {
+            revokeObjectUrl(imageUri)
+          }
         })(),
         requestNotificationsPermission('AfterOnboarding'),
       ])
