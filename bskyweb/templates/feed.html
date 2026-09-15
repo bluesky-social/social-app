@@ -38,7 +38,7 @@
   <meta name="twitter:label1" content="Created by">
   <meta name="twitter:value1" content="@{{ feedView.Creator.Handle }}">
 
-  <link rel="alternate" href="{{ feedView.Uri }}" />
+  <meta name="at:canonical" content="{{ feedView.Uri }}" />
 {% endif -%}
 {%- endblock %}
 
