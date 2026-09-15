@@ -1,5 +1,6 @@
 import {type DidString} from '@atproto/syntax'
 import {addLabeler, removeLabeler} from '@bsky/sdk'
+import {chunkArray} from '@atproto/common-web'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
 import {z} from 'zod'
 
@@ -123,15 +124,24 @@ export function useLabelerSubscriptionMutation() {
        */
       const labelerDids = (
         preferences.data?.moderationPrefs?.labelers ?? []
-      ).map(l => l.did)
+      ).map(l => l.did as DidString)
       const invalidLabelers: DidString[] = []
       if (labelerDids.length) {
-        const profiles = await appviewClient.call(app.bsky.actor.getProfiles, {
-          actors: labelerDids,
-        })
-        if (profiles) {
+        try {
+          const chunks = chunkArray(labelerDids, 25)
+          const results = await Promise.all(
+            chunks.map(
+              actors =>
+                appviewClient.call(app.bsky.actor.getProfiles, {
+                  actors,
+                }) as Promise<{
+                  profiles: app.bsky.actor.defs.ProfileViewDetailed[]
+                }>,
+            ),
+          )
+          const allProfiles = results.flatMap(res => res.profiles ?? [])
           for (const labelerDid of labelerDids) {
-            const exists = profiles.profiles.find(p => p.did === labelerDid)
+            const exists = allProfiles.find(p => p.did === labelerDid)
             if (exists) {
               // profile came back but it's not a valid labeler
               if (exists.associated && !exists.associated.labeler) {
@@ -142,6 +152,8 @@ export function useLabelerSubscriptionMutation() {
               invalidLabelers.push(labelerDid)
             }
           }
+        } catch (e) {
+          invalidLabelers.length = 0
         }
       }
       if (invalidLabelers.length) {
