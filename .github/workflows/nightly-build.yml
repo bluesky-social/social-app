@@ -74,7 +74,7 @@ jobs:
   ios:
     name: Nightly iOS Build
     needs: [prepare]
-    uses: ./.github/workflows/build-submit-ios.yml
+    uses: $/.github/workflows/build-submit-ios.yml
     with:
       profile: testflight
       testFlightGroup: "QA Team"
@@ -101,7 +101,7 @@ jobs:
     # validates the reusable-workflow permission ceiling, so the caller must grant it here.
     permissions:
       contents: write
-    uses: ./.github/workflows/build-submit-android.yml
+    uses: $/.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
