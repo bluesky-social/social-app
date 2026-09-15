@@ -15,7 +15,7 @@ import {updateTrendingWidgetSnapshot} from '#/features/trendingWidget/Snapshot'
 import {WidgetInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 export function TrendingTopicsWidgetSync() {
-  const {i18n, t: l} = useLingui()
+  const {t: l} = useLingui()
   const [isWidgetInstalled, setIsWidgetInstalled] = useState(false)
   const {data} = useGetTrendsQuery({
     enabled: isWidgetInstalled,
@@ -26,11 +26,8 @@ export function TrendingTopicsWidgetSync() {
   const {data: preferences} = usePreferencesQuery()
   const languagePrefs = useLanguagePrefs()
   const copy = {
-    title: l`Trending`,
     emptyMessage: l`No trending topics are available right now.`,
-    postSingular: l`post`,
-    postPlural: l`posts`,
-    locale: i18n.locale,
+    title: l`Trending on Bluesky`,
   }
 
   useEffect(() => {
