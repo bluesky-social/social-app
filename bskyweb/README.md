@@ -65,3 +65,12 @@ can replace them. The app document uses `Cache-Control: no-cache` so new documen
 loads revalidate. An already-open tab does not receive a new HTML snapshot during
 SPA navigation. Native apps and static development pages use the existing SDK
 behavior, and metrics continue to use their existing endpoint.
+
+To verify that the SDK applied the embedded configuration, open the System log
+under Settings > About (`/sys/log` on web) and look for
+`GrowthBook HTML fallback applied`.
+The entry includes the applied revision, feature count, and saved-group count.
+`GrowthBook SDK configuration applied` records a configuration supplied by the
+SDK instead, including recovery to a newer revision. These diagnostics are
+available in production whenever a matching HTML snapshot is present. Repeated
+refreshes of the same source and revision do not add duplicate entries.

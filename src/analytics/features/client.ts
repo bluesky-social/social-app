@@ -5,9 +5,15 @@ import {
   type RefreshFeaturesOptions,
 } from '@growthbook/growthbook'
 
+import {Logger} from '#/logger'
+
+const logger = Logger.create(Logger.Context.Growthbook)
+
 /** Retain the newest known rules across SDK cache, network, and timeout updates. */
 class GrowthBookWithFallback extends GrowthBook {
   private selectedPayload: FeatureApiResponse
+  private selectedSource: 'html-fallback' | 'sdk' = 'html-fallback'
+  private lastLoggedPayload: string | undefined
   private pendingPayload = Promise.resolve()
 
   constructor(options: Options, fallback: FeatureApiResponse) {
@@ -19,16 +25,40 @@ class GrowthBookWithFallback extends GrowthBook {
     /*
      * init() sets an empty payload after a timeout, and refreshes can return an
      * older SDK cache entry. Neither should replace newer HTML or network data.
+     * refreshFeatures() also reapplies getPayload() after failure; that must
+     * retain its source until the SDK actually supplies another payload.
      */
     if (
+      payload !== this.getPayload() &&
       payload.features &&
       Date.parse(payload.dateUpdated ?? '') >=
         Date.parse(this.selectedPayload.dateUpdated ?? '')
     ) {
       this.selectedPayload = completePayload(payload)
+      this.selectedSource = 'sdk'
     }
     const selected = this.selectedPayload
-    const pending = this.pendingPayload.then(() => super.setPayload(selected))
+    const source = this.selectedSource
+    const pending = this.pendingPayload.then(async () => {
+      await super.setPayload(selected)
+      const logKey = `${source}:${selected.dateUpdated}`
+      if (this.lastLoggedPayload !== logKey) {
+        this.lastLoggedPayload = logKey
+        logger.info(
+          source === 'html-fallback'
+            ? 'GrowthBook HTML fallback applied'
+            : 'GrowthBook SDK configuration applied',
+          {
+            source,
+            dateUpdated: selected.dateUpdated,
+            featureCount: Object.keys(this.getFeatures()).length,
+            savedGroupCount: Object.keys(
+              this.getDecryptedPayload().savedGroups ?? {},
+            ).length,
+          },
+        )
+      }
+    })
     // Keep later updates usable even if applying one payload fails.
     this.pendingPayload = pending.catch(() => {})
     return pending

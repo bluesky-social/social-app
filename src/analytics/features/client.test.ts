@@ -6,6 +6,14 @@ import {
 
 import {createGrowthBook} from '#/analytics/features/client'
 
+const mockLogInfo = jest.fn()
+jest.mock('#/logger', () => ({
+  Logger: {
+    Context: {Growthbook: 'growthbook'},
+    create: () => ({info: (...args: unknown[]) => mockLogInfo(...args)}),
+  },
+}))
+
 const options = {apiHost: 'https://events.test/gb', clientKey: 'sdk-test'}
 const fallback: FeatureApiResponse = {
   dateUpdated: '2026-09-10T00:00:00Z',
@@ -43,6 +51,7 @@ beforeEach(async () => {
   })
   await clearCache()
   fetchMock.mockReset()
+  mockLogInfo.mockClear()
   fetchMock.mockRejectedValue(new TypeError('Blocked'))
 })
 
@@ -99,6 +108,10 @@ it('uses the fallback within the session refresh budget even while init is pendi
   await jest.advanceTimersByTimeAsync(250)
   await refresh
   expect(client.getPayload()).toEqual(fallback)
+  expect(mockLogInfo).toHaveBeenCalledWith(
+    'GrowthBook HTML fallback applied',
+    expect.objectContaining({source: 'html-fallback'}),
+  )
 
   resolve(respond(primary))
   await init
@@ -121,6 +134,7 @@ it('retains the fallback when both startup waits time out and recovers on refres
   await jest.advanceTimersByTimeAsync(2000)
   await Promise.all([init, refresh])
   expect(client.getPayload()).toEqual(fallback)
+  expect(mockLogInfo).toHaveBeenCalledTimes(1)
   resolve(respond(primary))
   await jest.advanceTimersByTimeAsync(0)
   await client.refreshFeatures()
@@ -190,5 +204,50 @@ it('clears old targeting groups when a later response omits them', async () => {
   )
   await client.refreshFeatures({skipCache: true})
   expect(client.isOn('demo')).toBe(false)
+  client.destroy()
+})
+
+it('logs the applied fallback once, then records SDK recovery without mislabeling refreshes', async () => {
+  const client = createGrowthBook(options, fallback)
+  expect(mockLogInfo).not.toHaveBeenCalled()
+  await client.init()
+  expect(mockLogInfo).toHaveBeenLastCalledWith(
+    'GrowthBook HTML fallback applied',
+    {
+      source: 'html-fallback',
+      dateUpdated: fallback.dateUpdated,
+      featureCount: 1,
+      savedGroupCount: 1,
+    },
+  )
+  await client.refreshFeatures({skipCache: true})
+  await client.refreshFeatures({skipCache: true})
+  expect(mockLogInfo).toHaveBeenCalledTimes(1)
+
+  fetchMock.mockResolvedValueOnce(respond(primary))
+  await client.refreshFeatures({skipCache: true})
+  expect(mockLogInfo).toHaveBeenLastCalledWith(
+    'GrowthBook SDK configuration applied',
+    {
+      source: 'sdk',
+      dateUpdated: primary.dateUpdated,
+      featureCount: 1,
+      savedGroupCount: 0,
+    },
+  )
+  await client.refreshFeatures({skipCache: true})
+  expect(mockLogInfo).toHaveBeenCalledTimes(2)
+  client.destroy()
+})
+
+it('does not report a fallback application when the SDK supplies the configuration', async () => {
+  const client = createGrowthBook(options, fallback)
+  fetchMock.mockResolvedValueOnce(respond(primary))
+  await client.init()
+  expect(mockLogInfo).toHaveBeenCalledTimes(1)
+  expect(mockLogInfo).toHaveBeenCalledWith(
+    'GrowthBook SDK configuration applied',
+    expect.objectContaining({source: 'sdk', dateUpdated: primary.dateUpdated}),
+  )
   client.destroy()
 })
