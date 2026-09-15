@@ -10,7 +10,10 @@ import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {useRequireAuth} from '#/state/session'
 import {useTheme} from '#/alf'
-import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
+import {
+  Bookmark_Filled_Corner0_Rounded as BookmarkFilled,
+  Bookmark_Stroke2_Corner0_Rounded as Bookmark,
+} from '#/components/icons/Bookmark'
 import {Trash_Stroke2_Corner0_Rounded as TrashIcon} from '#/components/icons/Trash'
 import * as toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
