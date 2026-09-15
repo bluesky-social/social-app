@@ -1,9 +1,9 @@
-import {getInfoAsync} from 'expo-file-system/legacy'
+import {File} from 'expo-file-system'
 
-export async function getUriSize(uri: string): Promise<number> {
-  const info = await getInfoAsync(uri)
-  if (!info.exists) {
+export function getUriSize(uri: string): Promise<number> {
+  const file = new File(uri)
+  if (!file.exists) {
     throw new Error('Failed to read image size')
   }
-  return info.size
+  return Promise.resolve(file.size)
 }
