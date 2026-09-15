@@ -29,6 +29,7 @@ import {
   Autocomplete as AutocompleteBase,
   AutocompleteItemEmoji,
   AutocompleteItemProfile,
+  type LocalSource,
   parseAutocompleteItemType,
   useAutocomplete,
 } from '#/components/Autocomplete'
@@ -104,6 +105,8 @@ export type ComposerProps = Omit<
     undefined
   >['placement']
   disableEmojiFacets?: boolean
+  /** Local datasets weighted above remote results in the mention typeahead. */
+  localSources?: LocalSource[]
 }
 
 export function Composer({
@@ -120,6 +123,7 @@ export function Composer({
   autocompletePlacement,
   defaultValue,
   disableEmojiFacets = !IS_WEB,
+  localSources,
   ...rest
 }: ComposerProps) {
   const {theme: t, fonts} = useAlf()
@@ -384,6 +388,7 @@ export function Composer({
           inverted={autocompletePlacement?.startsWith('top')}
           sift={sift}
           activeFacet={activeFacet}
+          localSources={localSources}
           onDismiss={() => setActiveFacet(null)}
         />
       )}
@@ -399,16 +404,20 @@ function AutocompleteInner({
   inverted,
   sift,
   activeFacet,
+  localSources,
   onDismiss,
 }: {
   inverted?: boolean
   sift: UseSiftReturn
   activeFacet: TapperActiveFacet
+  localSources?: LocalSource[]
   onDismiss: () => void
 }) {
+  const itemType = parseAutocompleteItemType(activeFacet.type)
   const {items} = useAutocomplete({
-    type: parseAutocompleteItemType(activeFacet.type),
+    type: itemType,
     query: activeFacet.value,
+    sources: itemType === 'profile' ? localSources : undefined,
   })
 
   useEffect(() => {
