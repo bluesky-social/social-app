@@ -1253,22 +1253,6 @@
       "count": 1
     }
   },
-  "src/view/com/composer/drafts/state/queries.ts": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
-  "src/view/com/composer/drafts/state/storage.ts": {
-    "typescript/require-await": {
-      "count": 2
-    }
-  },
   "src/view/com/composer/photos/Gallery.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
