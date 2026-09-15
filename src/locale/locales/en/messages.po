@@ -2033,8 +2033,8 @@ msgstr "Ask apps and sites not to show my account to logged-out users"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:32
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:35
-msgid "Ask apps to hide my posts from algorithmic recommendations"
-msgstr "Ask apps to hide my posts from algorithmic recommendations"
+msgid "Ask apps and sites to hide my posts from algorithmic recommendations"
+msgstr "Ask apps and sites to hide my posts from algorithmic recommendations"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:616
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:618
