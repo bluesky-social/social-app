@@ -1,0 +1,149 @@
+---
+name: Prepare Cactus Release
+run-name: Prepare ${{ inputs.releaseVersion }} from ${{ inputs.sourceRef }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        type: string
+        description: Release version in strict x.y.z format
+        required: true
+      sourceRef:
+        type: string
+        description: Branch, tag, or commit to prepare from
+        required: false
+        default: main
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    if: github.repository == 'bluesky-social/social-app'
+    name: Prepare release document
+    runs-on: ubuntu-latest
+    steps:
+      - name: Show workflow inputs
+        env:
+          RELEASE_VERSION: ${{ inputs.releaseVersion }}
+          SOURCE_REF: ${{ inputs.sourceRef }}
+        run: |
+          echo "Release version: $RELEASE_VERSION"
+          echo "Source ref: $SOURCE_REF"
+
+      - name: Checkout source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.sourceRef }}
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Derive release identity
+        id: identity
+        env:
+          RELEASE_VERSION: ${{ inputs.releaseVersion }}
+        run: |
+          identity=$(node scripts/release/cli.mjs identity "$RELEASE_VERSION")
+          echo "$identity"
+          {
+            echo "version=$(jq -r .version <<< "$identity")"
+            echo "branch=$(jq -r .branch <<< "$identity")"
+            echo "tag=$(jq -r .tag <<< "$identity")"
+            echo "filename=$(jq -r .filename <<< "$identity")"
+            echo "release-name=$(jq -r .githubReleaseName <<< "$identity")"
+            echo "source-sha=$(git rev-parse HEAD)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate package and Expo versions
+        env:
+          RELEASE_VERSION: ${{ steps.identity.outputs.version }}
+        run: |
+          node --input-type=commonjs <<'NODE'
+          const pkg = require('./package.json')
+          const config = require('./app.config.js')({}).expo
+          const expected = process.env.RELEASE_VERSION
+
+          if (pkg.version !== expected) {
+            throw new Error(`package.json version '${pkg.version}' does not match release version '${expected}'.`)
+          }
+          if (config.version !== expected) {
+            throw new Error(`Expo app version '${config.version}' does not match release version '${expected}'.`)
+          }
+          if (config.runtimeVersion?.policy !== 'appVersion') {
+            throw new Error("Expo runtimeVersion must use the 'appVersion' policy.")
+          }
+
+          console.log(`package.json version: ${pkg.version}`)
+          console.log(`Expo app version: ${config.version}`)
+          console.log(`Effective Expo runtime version: ${config.version}`)
+          NODE
+
+      - name: Generate provisional changelog
+        id: changelog
+        env:
+          RELEASE_VERSION: ${{ steps.identity.outputs.version }}
+        run: |
+          previous_tag=""
+          while IFS= read -r tag; do
+            if [[ "$tag" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && [ "$tag" != "$RELEASE_VERSION" ]; then
+              previous_tag="$tag"
+              break
+            fi
+          done < <(git tag --merged HEAD --sort=-version:refname)
+
+          if [ -n "$previous_tag" ]; then
+            range="refs/tags/$previous_tag..HEAD"
+            echo "Generating changelog from $range"
+          else
+            range="HEAD"
+            echo "No previous release tag is reachable; generating changelog from HEAD"
+          fi
+
+          git log --no-merges --pretty=format:'- %s' "$range" > initial-changelog.md
+          if [ ! -s initial-changelog.md ]; then
+            echo "- No changes since the previous release tag." > initial-changelog.md
+          fi
+          echo "previous-tag=${previous_tag:-none}" >> "$GITHUB_OUTPUT"
+
+      - name: Create and validate release document
+        env:
+          RELEASE_VERSION: ${{ steps.identity.outputs.version }}
+          RELEASE_FILE: ${{ steps.identity.outputs.filename }}
+        run: |
+          node scripts/release/cli.mjs create "$RELEASE_VERSION" initial-changelog.md "$RELEASE_FILE"
+          node scripts/release/cli.mjs validate "$RELEASE_FILE" prepared
+
+      - name: Upload release document preview
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: cactus-release-${{ steps.identity.outputs.version }}-${{ github.run_id }}
+          path: ${{ steps.identity.outputs.filename }}
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Summarize release candidate
+        env:
+          VERSION: ${{ steps.identity.outputs.version }}
+          BRANCH: ${{ steps.identity.outputs.branch }}
+          TAG: ${{ steps.identity.outputs.tag }}
+          RELEASE_FILE: ${{ steps.identity.outputs.filename }}
+          RELEASE_NAME: ${{ steps.identity.outputs.release-name }}
+          SOURCE_REF: ${{ inputs.sourceRef }}
+          SOURCE_SHA: ${{ steps.identity.outputs.source-sha }}
+          PREVIOUS_TAG: ${{ steps.changelog.outputs.previous-tag }}
+        run: |
+          {
+            echo "## Cactus release preview"
+            echo
+            echo "- Version: \`$VERSION\`"
+            echo "- Source ref: \`$SOURCE_REF\`"
+            echo "- Source SHA: \`$SOURCE_SHA\`"
+            echo "- Previous release tag: \`$PREVIOUS_TAG\`"
+            echo "- Release branch: \`$BRANCH\`"
+            echo "- Release tag: \`$TAG\`"
+            echo "- Release document: \`$RELEASE_FILE\`"
+            echo "- GitHub Release name: \`$RELEASE_NAME\`"
+            echo
+            echo "This was a read-only preview. No branch, tag, commit, or GitHub Release was created."
+          } >> "$GITHUB_STEP_SUMMARY"

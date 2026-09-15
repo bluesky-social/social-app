@@ -14,6 +14,11 @@ on:
         type: boolean
         description: Submit the build to Google Play (disable to only produce the APK artifact)
         default: true
+      sourceRef:
+        type: string
+        description: Source ref to build; use a full commit SHA for immutable builds
+        required: false
+        default: ''
   workflow_call:
     inputs:
       profile:
@@ -29,6 +34,11 @@ on:
         description: Runner for the build job (defaults to Linux-x64-32core)
         required: false
         default: ''
+      sourceRef:
+        type: string
+        description: Source ref to build; use a full commit SHA for immutable builds
+        required: false
+        default: ''
     outputs:
       package-version:
         description: Version from package.json
@@ -36,6 +46,12 @@ on:
       version-code:
         description: Android version code
         value: ${{ jobs.build.outputs.version-code }}
+      source-sha:
+        description: Exact commit used for the build
+        value: ${{ jobs.build.outputs.source-sha }}
+      artifact-name:
+        description: Workflow artifact containing the AAB and provenance
+        value: ${{ jobs.build.outputs.artifact-name }}
     secrets:
       EXPO_TOKEN:
         required: true
@@ -75,13 +91,22 @@ jobs:
       group: android-build
       cancel-in-progress: false
     outputs:
-      package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
-      version-code: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+      package-version: ${{ steps.package.outputs.version }}
+      version-code: ${{ steps.aab-version.outputs.version-code }}
+      source-sha: ${{ steps.source.outputs.sha }}
+      artifact-name: android-aab-${{ github.run_id }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.sourceRef || github.sha }}
           fetch-depth: 5
+
+      - name: Resolve build source
+        id: source
+        run: |
+          echo "Building source: $(git rev-parse HEAD)"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: 🔧 Setup Expo project
         uses: ./.github/actions/setup-expo-project
@@ -92,6 +117,11 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
+
+      - name: 🔧 Setup bundletool
+        uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
+        with:
+          version: "1.18.3"
 
       - name: 🔤 Compile translations
         uses: ./.github/actions/compile-i18n
@@ -118,28 +148,61 @@ jobs:
           sentry-release: ${{ steps.env.outputs.release-version }}
           sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
 
-      - name: 📚 Get version from package.json
-        id: get-build-info
-        run: bash scripts/setGitHubOutput.sh
+      - name: 📚 Get package version
+        id: package
+        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
 
-      # Hands the built bundle off to the submit / universalApk jobs. Retention is
-      # deliberately short (1 day) since it's only an intra-run handoff artifact.
+      - name: 🔢 Read version code from AAB
+        id: aab-version
+        run: |
+          version_code=$(bundletool dump manifest --bundle=build.aab --xpath=/manifest/@android:versionCode)
+          [[ "$version_code" =~ ^[1-9][0-9]*$ ]] || {
+            echo "::error::Could not read a positive Android version code from build.aab"
+            exit 1
+          }
+          echo "AAB version code: $version_code"
+          echo "version-code=$version_code" >> "$GITHUB_OUTPUT"
+
+      - name: Record artifact provenance
+        env:
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+          PACKAGE_VERSION: ${{ steps.package.outputs.version }}
+          VERSION_CODE: ${{ steps.aab-version.outputs.version-code }}
+        run: |
+          checksum=$(sha256sum build.aab | awk '{print $1}')
+          jq -n \
+            --arg sourceSha "$SOURCE_SHA" \
+            --arg packageVersion "$PACKAGE_VERSION" \
+            --arg versionCode "$VERSION_CODE" \
+            --arg artifactFilename "build.aab" \
+            --arg artifactSha256 "$checksum" \
+            '{sourceSha: $sourceSha, packageVersion: $packageVersion, versionCode: $versionCode, artifactFilename: $artifactFilename, artifactSha256: $artifactSha256, submissionState: "notStarted"}' \
+            > android-build-metadata.json
+          cat android-build-metadata.json
+
+      # Keep the exact build and its provenance available for inspection and failed-job retries.
       - name: 🚀 Upload AAB artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-aab-${{ github.run_id }}
-          retention-days: 1
+          retention-days: 14
           if-no-files-found: error
-          path: build.aab
+          path: |
+            build.aab
+            android-build-metadata.json
 
       - name: 📝 Write build summary
         env:
-          REMOTE_VERSION_CODE: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
+          VERSION_CODE: ${{ steps.aab-version.outputs.version-code }}
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
         run: |
+          artifact_sha256=$(jq -r .artifactSha256 android-build-metadata.json)
           {
             echo "### Android build number"
             echo
-            echo "\`$REMOTE_VERSION_CODE\`"
+            echo "- Version code: \`$VERSION_CODE\`"
+            echo "- Source SHA: \`$SOURCE_SHA\`"
+            echo "- AAB SHA-256: \`$artifact_sha256\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:
@@ -153,6 +216,7 @@ jobs:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.build.outputs.source-sha }}
           fetch-depth: 5
 
       - name: 🔧 Setup Expo project
@@ -169,6 +233,29 @@ jobs:
         env:
           PROFILE: ${{ inputs.profile || 'testflight-android' }}
         run: pnpm eas submit -p android --profile $PROFILE --non-interactive --path build.aab
+
+      - name: Record submission receipt
+        env:
+          SOURCE_SHA: ${{ needs.build.outputs.source-sha }}
+          PACKAGE_VERSION: ${{ needs.build.outputs.package-version }}
+          VERSION_CODE: ${{ needs.build.outputs.version-code }}
+        run: |
+          artifact_sha256=$(jq -r .artifactSha256 android-build-metadata.json)
+          jq -n \
+            --arg sourceSha "$SOURCE_SHA" \
+            --arg packageVersion "$PACKAGE_VERSION" \
+            --arg versionCode "$VERSION_CODE" \
+            --arg artifactSha256 "$artifact_sha256" \
+            '{sourceSha: $sourceSha, packageVersion: $packageVersion, versionCode: $versionCode, artifactSha256: $artifactSha256, submissionState: "submitted"}' \
+            > android-submission.json
+
+      - name: Upload submission receipt
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-submission-${{ github.run_id }}
+          path: android-submission.json
+          retention-days: 14
+          if-no-files-found: error
 
       - name: 🔔 Notify Slack of Play Store Submission
         if: ${{ inputs.profile == 'production' }}
