@@ -269,6 +269,7 @@ module.exports = function (_config) {
                 displayName: 'Trending Topics',
                 description: 'See what people are talking about on Bluesky.',
                 ios: {
+                  contentMarginsDisabled: true,
                   supportedFamilies: [
                     'systemSmall',
                     'systemMedium',
