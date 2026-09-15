@@ -23,11 +23,14 @@ export function useRecentSearchesSource({
 
   if (!profilesOnly) {
     for (const entry of termHistory) {
-      /* Filtered searches lose their filters here - selecting the item runs
-       * a plain term search, same as the search fallback row. */
-      const {q} = parseHistoryEntry(entry)
+      const {q, filters} = parseHistoryEntry(entry)
       if (!q) continue
-      items.push({key: `recent-${q}`, type: 'search' as const, value: q})
+      items.push({
+        key: `recent-${entry}`,
+        type: 'search' as const,
+        value: q,
+        filters,
+      })
     }
   }
 

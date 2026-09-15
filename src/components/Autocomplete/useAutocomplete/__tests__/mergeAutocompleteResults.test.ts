@@ -28,6 +28,53 @@ const bob = profileItem('did:plc:2', 'bob.test', 'Bob')
 const carol = profileItem('did:plc:3', 'carol.test', 'Carol')
 
 describe('mergeAutocompleteResults', () => {
+  it('keeps matching group members ahead of better matching follows', () => {
+    const member = profileItem('did:plc:member', 'alicia.test', 'Alicia')
+    const follows = Array.from({length: 4}, (_, i) =>
+      profileItem(`did:plc:follow${i}`, `alice${i}.test`, 'Alice'),
+    )
+    const result = mergeAutocompleteResults({
+      query: 'alice',
+      sources: [
+        {key: 'follows', items: follows},
+        {key: 'members', priority: 1, items: [member, bob]},
+      ],
+    })
+    expect(result).toHaveLength(3)
+    expect(result[0]).toEqual(member)
+    expect(result).not.toContainEqual(bob)
+  })
+
+  it('preserves source recency when match scores tie', () => {
+    const older = profileItem('did:plc:older', 'alice.test', 'Alice')
+    expect(
+      mergeAutocompleteResults({
+        query: 'alice',
+        sources: [{key: 'recents', items: [alice, older]}],
+      }),
+    ).toEqual([alice, older])
+  })
+
+  it('updates the selected handle as well as the displayed remote profile', () => {
+    const renamed = profileItem(alice.profile.did, 'alice-new.test', 'Alice')
+    expect(
+      mergeAutocompleteResults({
+        query: 'alice',
+        sources: [{key: 'recents', items: [alice]}],
+        remoteItems: [renamed],
+      }),
+    ).toEqual([renamed])
+  })
+
+  it('normalizes local queries like remote queries', () => {
+    expect(
+      mergeAutocompleteResults({
+        query: ' ALICE. ',
+        sources: [{key: 'recents', items: [alice]}],
+      }),
+    ).toEqual([alice])
+  })
+
   it('returns remote items untouched when no sources', () => {
     const result = mergeAutocompleteResults({
       query: 'al',

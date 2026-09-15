@@ -4,6 +4,7 @@ import {keepPreviousData, useQuery} from '@tanstack/react-query'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
+import {hasActiveFilters} from '#/screens/Search/searchParams'
 import {
   type AutocompleteApi,
   type AutocompleteItem,
@@ -120,7 +121,11 @@ export function useAutocomplete({
        */
       results = results.filter(
         item =>
-          !(item.type === 'search' && item.value.trim().toLowerCase() === nq),
+          !(
+            item.type === 'search' &&
+            !hasActiveFilters(item.filters ?? {}) &&
+            item.value.trim().toLowerCase() === nq
+          ),
       )
       results.unshift({
         key: `search-${q}`,

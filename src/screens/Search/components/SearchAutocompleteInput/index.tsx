@@ -66,7 +66,7 @@ export function SearchAutocompleteInput({
       const position = items.filter(i => i.type === 'profile').indexOf(item)
       onSelectProfile?.(item.profile, position)
     } else if (item.type === 'search') {
-      onSelectSearch?.(item.value)
+      onSelectSearch?.(item.value, item.filters)
     }
     inputRef.current?.blur()
   }

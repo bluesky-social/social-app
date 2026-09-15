@@ -1,3 +1,4 @@
+import {type SearchFilters} from '#/screens/Search/searchParams'
 import {type SearchInput} from '#/components/forms/SearchInput'
 import type * as bsky from '#/types/bsky'
 
@@ -17,7 +18,8 @@ export type SearchAutocompleteInputProps = SearchInputProps & {
     position: number,
   ) => void
   /**
-   * Web only. Called when the "Search for X" row in the dropdown is selected.
+   * Web only. Called when a search row is selected, with saved filters for
+   * recent searches and undefined for the typed fallback.
    */
-  onSelectSearch?: (value: string) => void
+  onSelectSearch?: (value: string, filters?: SearchFilters) => void
 }

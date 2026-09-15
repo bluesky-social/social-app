@@ -1,46 +1,90 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect} from 'react'
+import {type AtIdentifierString} from '@atproto/syntax'
+import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useProfilesQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
+import {GCTIME, STALE} from '#/state/queries'
+import {createQueryKey} from '#/state/queries/util'
+import {useAppviewClient, useSession} from '#/state/session'
 import {
   type SearchFilters,
   serializeHistoryEntry,
 } from '#/screens/Search/searchParams'
+import {app} from '#/lexicons'
 import {account, useStorage} from '#/storage'
 import type * as bsky from '#/types/bsky'
 
 const MAX_TERMS = 6
 const MAX_PROFILES = 10
 
+const recentSearchProfilesQueryKey = (did: string) =>
+  createQueryKey('useRecentSearchProfilesQuery', {did}, {persistedVersion: 1})
+
+function useRecentSearchProfilesQuery(did: string, accountHistory: string[]) {
+  const client = useAppviewClient()
+  const queryClient = useQueryClient()
+  const {data, refetch} = useQuery({
+    queryKey: recentSearchProfilesQueryKey(did),
+    enabled: accountHistory.length > 0,
+    staleTime: STALE.MINUTES.FIVE,
+    gcTime: GCTIME.INFINITY,
+    refetchOnWindowFocus: true,
+    refetchInterval: STALE.MINUTES.FIVE,
+    async queryFn(): Promise<bsky.profile.AnyProfileView[]> {
+      try {
+        const data = await client.call(app.bsky.actor.getProfiles, {
+          actors: accountHistory as AtIdentifierString[],
+        })
+        return data.profiles
+      } catch (error) {
+        /* Keep offline snapshots eligible for persistence, which only saves
+         * successful queries. Retry on the next refresh opportunity. */
+        const cached = queryClient.getQueryData<bsky.profile.AnyProfileView[]>(
+          recentSearchProfilesQueryKey(did),
+        )
+        if (cached) return cached
+        throw error
+      }
+    },
+  })
+
+  /* The cache key stays bounded to one snapshot per account. Refresh when
+   * its membership changes, including after restoring older DID-only history. */
+  useEffect(() => {
+    if (accountHistory.length) void refetch({cancelRefetch: false})
+  }, [accountHistory, refetch])
+
+  return data
+}
+
 /**
  * Per-account recent search history (device storage). Terms are stored as
  * serialized history entries (plain string, or JSON when filters are
- * attached); profiles are stored as DIDs and hydrated via useProfilesQuery,
- * which keeps avatars/names fresh (stale-while-revalidate). Both lists are
- * ordered most-recent-first.
+ * attached); profile snapshots are persisted in an account-scoped query and
+ * revalidated while in use. Both lists are ordered most-recent-first.
  */
 export function useSearchHistory() {
   const {currentAccount} = useSession()
+  const queryClient = useQueryClient()
+  const did = currentAccount?.did ?? 'pwi'
   const [termHistory = [], setTermHistory] = useStorage(account, [
-    currentAccount?.did ?? 'pwi',
+    did,
     'searchTermHistory',
   ] as const)
   const [accountHistory = [], setAccountHistory] = useStorage(account, [
-    currentAccount?.did ?? 'pwi',
+    did,
     'searchAccountHistory',
   ])
-
-  const {data: accountHistoryProfiles} = useProfilesQuery({
-    handles: accountHistory,
-    maintainData: true,
-  })
+  const accountHistoryProfiles = useRecentSearchProfilesQuery(
+    did,
+    accountHistory,
+  )
 
   /*
    * getProfiles response order is not guaranteed, so map over accountHistory
    * to preserve most-recent-first order (and drop entries not yet hydrated).
    */
   const profiles = accountHistory
-    .map(did => accountHistoryProfiles?.profiles.find(p => p.did === did))
+    .map(did => accountHistoryProfiles?.find(p => p.did === did))
     .filter(p => p !== undefined)
 
   const updateSearchHistory = useCallback(
@@ -67,9 +111,19 @@ export function useSearchHistory() {
         item.did,
         ...accountHistory.filter(p => p !== item.did),
       ].slice(0, MAX_PROFILES)
+      void queryClient.cancelQueries({
+        queryKey: recentSearchProfilesQueryKey(did),
+      })
+      queryClient.setQueryData<bsky.profile.AnyProfileView[]>(
+        recentSearchProfilesQueryKey(did),
+        previous =>
+          [item, ...(previous ?? []).filter(p => p.did !== item.did)].filter(
+            p => newAccountHistory.includes(p.did),
+          ),
+      )
       setAccountHistory(newAccountHistory)
     },
-    [accountHistory, setAccountHistory],
+    [accountHistory, setAccountHistory, queryClient, did],
   )
 
   const deleteSearchHistoryItem = useCallback(
@@ -81,9 +135,16 @@ export function useSearchHistory() {
 
   const deleteProfileHistoryItem = useCallback(
     (item: bsky.profile.AnyProfileView) => {
+      void queryClient.cancelQueries({
+        queryKey: recentSearchProfilesQueryKey(did),
+      })
+      queryClient.setQueryData<bsky.profile.AnyProfileView[]>(
+        recentSearchProfilesQueryKey(did),
+        previous => previous?.filter(p => p.did !== item.did),
+      )
       setAccountHistory(accountHistory.filter(p => p !== item.did))
     },
-    [accountHistory, setAccountHistory],
+    [accountHistory, setAccountHistory, queryClient, did],
   )
 
   return {

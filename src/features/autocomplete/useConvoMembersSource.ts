@@ -14,6 +14,7 @@ export function useConvoMembersSource(): LocalSource {
 
   return {
     key: 'convo-members',
+    priority: 1,
     items: members
       .filter(member => member.did !== currentAccount?.did)
       .map(member => ({

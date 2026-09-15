@@ -138,7 +138,7 @@ export function SearchScreenShell({
     setSearchText(text)
   }, [])
 
-  const recents = useRecentSearchesSource({profilesOnly: true})
+  const recents = useRecentSearchesSource()
 
   const {items: autocompleteItems, isFetching: isAutocompleteFetching} =
     useAutocomplete({
@@ -378,18 +378,17 @@ export function SearchScreenShell({
   )
 
   /**
-   * Web only. Selecting the "Search for X" row from the anchored autocomplete
-   * dropdown. This runs the typed query as-is (not a suggested profile), so it
-   * is attributed to `typed` rather than `autocomplete`.
+   * Selects a recent search with its saved filters, or submits the typed
+   * fallback using the currently active filters, on either platform.
    */
   const onSelectSearch = useCallback(
-    (value: string) => {
+    (value: string, itemFilters?: SearchFilters) => {
       ax.metric('search:query', {
-        source: 'typed',
-        filterCount: countActiveFilters(filters),
+        source: itemFilters ? 'history' : 'typed',
+        filterCount: countActiveFilters(itemFilters ?? filters),
       })
       updateSearchText(value)
-      navigateToItem(value)
+      navigateToItem(value, itemFilters)
     },
     [ax, filters, navigateToItem, updateSearchText],
   )
@@ -628,6 +627,7 @@ export function SearchScreenShell({
                 onSubmit={onSubmit('autocomplete')}
                 onResultPress={onAutocompleteResultPress}
                 onProfileClick={handleProfileClick}
+                onSelectSearch={onSelectSearch}
               />
             ) : (
               <SearchHistory
