@@ -178,7 +178,7 @@ jobs:
           if-no-files-found: error
 
       - name: 🔤 Compile translations
-        uses: ./.github/actions/compile-i18n
+        uses: $/.github/actions/compile-i18n
 
       - name: 🧹 Lint check
         run: pnpm lint
@@ -207,7 +207,7 @@ jobs:
       - name: ✏️ Write environment variables
         id: env
         if: ${{ !steps.fingerprint.outputs.includes-changes && !steps.version.outputs.version-changed }}
-        uses: ./.github/actions/write-env
+        uses: $/.github/actions/write-env
         with:
           env-token: ${{ secrets.ENV_TOKEN }}
           sentry-dsn: ${{ secrets.SENTRY_DSN }}
@@ -236,7 +236,7 @@ jobs:
       - name: ⬇️ Setup denis CLI
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
-        uses: ./.github/actions/setup-denis
+        uses: $/.github/actions/setup-denis
         with:
           release-tag: ${{ env.DENIS_RELEASE_TAG }}
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
@@ -262,7 +262,7 @@ jobs:
     if: ${{ inputs.channel != 'production' &&
       needs.bundleDeploy.outputs.changes-detected && github.repository ==
       'bluesky-social/social-app' }}
-    uses: ./.github/workflows/build-submit-ios.yml
+    uses: $/.github/workflows/build-submit-ios.yml
     with:
       profile: testflight
       testFlightGroup: none
@@ -296,7 +296,7 @@ jobs:
     # validates the reusable-workflow permission ceiling, so the caller must grant it.
     permissions:
       contents: write
-    uses: ./.github/workflows/build-submit-android.yml
+    uses: $/.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android
       runner: ubuntu-latest

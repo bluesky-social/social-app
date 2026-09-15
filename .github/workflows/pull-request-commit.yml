@@ -280,16 +280,16 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: 🛠️ Setup Expo project
-        uses: ./.github/actions/setup-expo-project
+        uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🔤 Compile translations
-        uses: ./.github/actions/compile-i18n
+        uses: $/.github/actions/compile-i18n
 
       - name: ✏️ Write environment variables
         id: env
-        uses: ./.github/actions/write-env
+        uses: $/.github/actions/write-env
         with:
           env-token: ${{ secrets.ENV_TOKEN }}
           sentry-dsn: ${{ secrets.SENTRY_DSN }}
@@ -334,7 +334,7 @@ jobs:
             }
 
       - name: ⬇️ Setup denis CLI
-        uses: ./.github/actions/setup-denis
+        uses: $/.github/actions/setup-denis
         with:
           release-tag: ${{ env.DENIS_RELEASE_TAG }}
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
