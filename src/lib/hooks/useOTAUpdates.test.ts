@@ -299,6 +299,74 @@ describe('useApplyPullRequestOTAUpdate', () => {
     expect(device.remove).toHaveBeenCalledWith(['pendingOTAUpdate'])
     expect(result.current.pending).toBe(false)
   })
+
+  describe('checkForUpdates', () => {
+    it('offers to relaunch into a newer update of the running channel', async () => {
+      mockCurrentlyRunning({
+        buildChannel: 'testflight',
+        channel: 'pull-request-123',
+      })
+      jest.mocked(checkForUpdateAsync).mockResolvedValue({
+        isAvailable: true,
+      } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+      jest.mocked(fetchUpdateAsync).mockResolvedValue({
+        isNew: true,
+        isRollBackToEmbedded: false,
+        manifest: {id: 'new-update'},
+      } as Awaited<ReturnType<typeof fetchUpdateAsync>>)
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+
+      // The running channel is checked, not the build's default channel.
+      expect(setExtraParamAsync).toHaveBeenCalledWith(
+        'channel',
+        'pull-request-123',
+      )
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Update Available',
+        expect.stringContaining('PR #123'),
+        expect.arrayContaining([expect.objectContaining({text: 'Relaunch'})]),
+      )
+
+      const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
+      act(() => buttons?.[1].onPress?.())
+
+      await waitFor(() => expect(reloadAsync).toHaveBeenCalled())
+      expect(result.current.pending).toBe(false)
+    })
+
+    it('reports being up to date on a standard channel', async () => {
+      mockCurrentlyRunning({buildChannel: 'testflight', channel: 'testflight'})
+      jest.mocked(checkForUpdateAsync).mockResolvedValue({
+        isAvailable: false,
+        reason:
+          UpdateCheckResultNotAvailableReason.NO_UPDATE_AVAILABLE_ON_SERVER,
+      } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Up to Date',
+        expect.stringContaining('testflight'),
+      )
+      expect(fetchUpdateAsync).not.toHaveBeenCalled()
+    })
+
+    it('informs the user when the check fails', async () => {
+      jest.mocked(checkForUpdateAsync).mockRejectedValue(new Error('offline'))
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Update Check Failed',
+        expect.stringContaining('Error: offline'),
+      )
+      expect(result.current.pending).toBe(false)
+    })
+  })
 })
 
 describe('useOTAUpdateRecovery', () => {
