@@ -12,8 +12,9 @@ import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
-import {atoms as a, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
+import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -32,10 +33,11 @@ import {useTimelineNow} from './useTimelineNow'
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Atmosphere'>
 
 export function AtmosphereScreen({}: Props) {
+  const t = useTheme()
   const {t: l} = useLingui()
   const sections = [
-    {title: l`Explore`, component: <AtmosphereExplore />},
     {title: l`Activity`, component: <AtmosphereList />},
+    {title: l`Explore`, component: <AtmosphereExplore />},
   ]
 
   return (
@@ -48,9 +50,27 @@ export function AtmosphereScreen({}: Props) {
             <Layout.Header.Outer noBottomBorder>
               <Layout.Header.BackButton />
               <Layout.Header.Content>
-                <Layout.Header.TitleText>
-                  <Trans>Atmosphere</Trans>
-                </Layout.Header.TitleText>
+                <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+                  <Layout.Header.TitleText>
+                    <Trans>Atmosphere</Trans>
+                  </Layout.Header.TitleText>
+                  <View
+                    testID="atmosphereBetaBadge"
+                    style={[a.flex_row, a.align_center, a.gap_xs]}>
+                    <SparkleIcon
+                      accessible={false}
+                      fill={t.palette.primary_800}
+                      size="sm"
+                    />
+                    <Text
+                      style={[
+                        a.font_semi_bold,
+                        {color: t.palette.primary_800},
+                      ]}>
+                      <Trans>Beta</Trans>
+                    </Text>
+                  </View>
+                </View>
               </Layout.Header.Content>
               <Layout.Header.Slot />
             </Layout.Header.Outer>

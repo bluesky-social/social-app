@@ -63,7 +63,11 @@ jest.mock('#/alf', () => ({
       text_link: {color: '#0a7aff'},
       bg: {backgroundColor: '#ffffff'},
     },
-    palette: {primary_500: '#006aff', positive_500: '#168a45'},
+    palette: {
+      primary_500: '#006aff',
+      primary_800: '#004299',
+      positive_500: '#168a45',
+    },
   }),
 }))
 jest.mock('./components/ShareSnippets', () => ({ShareSnippets: () => null}))
@@ -371,23 +375,34 @@ function actor(did: string, handle: string) {
 }
 
 describe('AtmosphereScreen', () => {
-  it('defaults to Explore and switches to the existing Activity list', () => {
+  it('defaults to Activity and switches to Explore', () => {
     mockUseAtmosphereQuery.mockReturnValue(basicQuery())
     const screen = render(screenElement())
+
+    expect(
+      screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
+    ).toEqual(['Activity', 'Explore'])
+    expect(
+      screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
+    ).toEqual({selected: true})
+    expect(screen.getByTestId('atmosphereList')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereExplore')).toBeNull()
+
+    fireEvent.press(screen.getByRole('tab', {name: 'Explore'}))
 
     expect(
       screen.getByRole('tab', {name: 'Explore'}).props.accessibilityState,
     ).toEqual({selected: true})
     expect(screen.getByText('(╯°□°)╯︵ ┻━┻')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereList')).toBeNull()
+  })
 
-    fireEvent.press(screen.getByRole('tab', {name: 'Activity'}))
+  it('shows a Beta badge next to the Atmosphere title', () => {
+    mockUseAtmosphereQuery.mockReturnValue(basicQuery())
+    const screen = render(screenElement())
 
-    expect(
-      screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
-    ).toEqual({selected: true})
-    expect(screen.queryByTestId('atmosphereExplore')).toBeNull()
-    expect(screen.getByTestId('atmosphereList')).toBeTruthy()
+    expect(screen.getByText('Atmosphere')).toBeTruthy()
+    expect(screen.getByTestId('atmosphereBetaBadge')).toHaveTextContent('Beta')
   })
 
   it('renders the Atmosphere screen with standalone, grouped, and unknown rows without JSON diagnostics', () => {
