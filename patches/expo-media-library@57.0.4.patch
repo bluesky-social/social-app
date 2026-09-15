@@ -1,8 +1,8 @@
 diff --git a/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt b/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
-index 97c19ff07a49dc80adce7f100eb205b2045dc115..a9a520617eb74caddbbd9cbd15635f113017ab65 100644
+index dada8649fe532d2aae6113c3b8689859f27bebc3..c9f716b2a717e01c0b5bfcacfcc475ac70e2a95b 100644
 --- a/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
 +++ b/android/src/main/java/expo/modules/medialibrary/MediaLibraryModule.kt
-@@ -109,7 +109,7 @@ class MediaLibraryModule : Module() {
+@@ -110,7 +110,7 @@ class MediaLibraryModule : Module() {
      }
  
      AsyncFunction("createAssetAsync") Coroutine { localUri: String, albumId: String? ->
