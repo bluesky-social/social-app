@@ -265,7 +265,7 @@ jobs:
     uses: ./.github/workflows/build-submit-ios.yml
     with:
       profile: testflight
-      testFlightGroup: none
+      testFlightGroup: "QA Team"
       # OTA rebuilds don't need the xlarge builder used for releases
       runner: macos-26
     # Pass only the secrets the reusable workflow declares, rather than `secrets: inherit`,
