@@ -1,16 +1,21 @@
-import {
-  createDownloadResumable,
-  deleteAsync,
-  getInfoAsync,
-} from 'expo-file-system/legacy'
+import {File, Paths} from 'expo-file-system'
 import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
+import * as Sharing from 'expo-sharing'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '../../src/lib/constants'
 import {
   downloadAndResize,
   type DownloadAndResizeOpts,
+  saveToDevice,
+  shareImageModal,
 } from '../../src/lib/media/manip'
 import {getResizedDimensions} from '../../src/lib/media/util'
+import {logger} from '../../src/logger'
+
+jest.mock('expo-sharing', () => ({
+  isAvailableAsync: jest.fn().mockResolvedValue(true),
+  shareAsync: jest.fn().mockResolvedValue(undefined),
+}))
 
 const mockResizedImage = {
   size: 100,
@@ -23,6 +28,9 @@ describe('downloadAndResize', () => {
   const errorSpy = jest.spyOn(global.console, 'error')
 
   beforeEach(() => {
+    const mockedDownload = File.downloadFileAsync as jest.Mock
+    mockedDownload.mockResolvedValue(new File('file://downloaded-image.jpg'))
+
     let savedImageCount = 0
     const mockedManipulate = ImageManipulator.manipulate as jest.Mock
     mockedManipulate.mockImplementation(() => {
@@ -51,14 +59,6 @@ describe('downloadAndResize', () => {
   })
 
   it('should return resized image for valid URI and options', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
-    mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
-      downloadAsync: jest
-        .fn()
-        .mockResolvedValue({uri: 'file://resized-image.jpg'}),
-    })
-
     const opts: DownloadAndResizeOpts = {
       uri: 'https://example.com/image.jpg',
       maxDimension: 2000,
@@ -71,11 +71,12 @@ describe('downloadAndResize', () => {
       ...mockResizedImage,
       path: 'file://resized-image-7.jpg',
     })
-    expect(createDownloadResumable).toHaveBeenCalledWith(
+    expect(File.downloadFileAsync).toHaveBeenCalledWith(
       opts.uri,
       expect.anything(),
       {
-        cache: true,
+        idempotent: true,
+        signal: expect.any(AbortSignal),
       },
     )
 
@@ -103,7 +104,7 @@ describe('downloadAndResize', () => {
     expect(resizedImage.saveAsync).toHaveBeenCalledWith(
       expect.objectContaining({format: SaveFormat.JPEG, compress: 1.0}),
     )
-    const deletedPaths = (deleteAsync as jest.Mock).mock.calls.map(
+    const deletedPaths = (Paths.info as jest.Mock).mock.calls.map(
       ([path]) => path,
     )
     expect(deletedPaths).toEqual(
@@ -120,11 +121,8 @@ describe('downloadAndResize', () => {
   })
 
   it('deletes a partial download when downloading fails', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
-    mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
-      downloadAsync: jest.fn().mockRejectedValue(new Error('download failed')),
-    })
+    const mockedDownload = File.downloadFileAsync as jest.Mock
+    mockedDownload.mockRejectedValue(new Error('download failed'))
 
     const opts: DownloadAndResizeOpts = {
       uri: 'https://example.com/image.jpg',
@@ -134,22 +132,19 @@ describe('downloadAndResize', () => {
     }
 
     await expect(downloadAndResize(opts)).rejects.toThrow('download failed')
-    expect(deleteAsync).toHaveBeenCalledWith(expect.stringMatching(/\.bin$/), {
-      idempotent: true,
-    })
+    expect(Paths.info).toHaveBeenCalledWith(expect.stringMatching(/-download$/))
   })
 
   it('deletes every intermediate image when resizing fails', async () => {
-    const mockedFetch = createDownloadResumable as jest.Mock
-    mockedFetch.mockReturnValue({
-      cancelAsync: jest.fn(),
-      downloadAsync: jest
-        .fn()
-        .mockResolvedValue({uri: 'file://downloaded-image.jpg'}),
+    const mockedManipulate = ImageManipulator.manipulate as jest.Mock
+    const createContext = mockedManipulate.getMockImplementation()!
+    mockedManipulate.mockImplementation((...args) => {
+      const context = createContext(...args)
+      if (mockedManipulate.mock.calls.length === 3) {
+        context.renderAsync.mockRejectedValue(new Error('render failed'))
+      }
+      return context
     })
-    ;(getInfoAsync as jest.Mock)
-      .mockResolvedValueOnce({exists: true, size: 100})
-      .mockRejectedValueOnce(new Error('stat failed'))
 
     const opts: DownloadAndResizeOpts = {
       uri: 'https://example.com/image.jpg',
@@ -158,15 +153,14 @@ describe('downloadAndResize', () => {
       timeout: 10000,
     }
 
-    await expect(downloadAndResize(opts)).rejects.toThrow('stat failed')
-    const deletedPaths = (deleteAsync as jest.Mock).mock.calls.map(
+    await expect(downloadAndResize(opts)).rejects.toThrow('render failed')
+    const deletedPaths = (Paths.info as jest.Mock).mock.calls.map(
       ([path]) => path,
     )
     expect(deletedPaths).toEqual(
       expect.arrayContaining([
         'file://resized-image-1.jpg',
         'file://resized-image-2.jpg',
-        'file://resized-image-3.jpg',
       ]),
     )
   })
@@ -234,5 +228,41 @@ describe('downloadAndResize', () => {
       width: 1000,
       height: 2000,
     })
+  })
+})
+
+describe('temporary file lifecycles', () => {
+  beforeEach(() => {
+    ;(File.downloadFileAsync as jest.Mock).mockResolvedValue(
+      new File('file://downloaded-image.jpg'),
+    )
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('retains a successfully shared image for lazy consumers', async () => {
+    await shareImageModal({uri: 'https://example.com/image.jpg'})
+
+    const sharedPath = (Sharing.shareAsync as jest.Mock).mock.calls[0][0]
+    const deletedPaths = (Paths.info as jest.Mock).mock.calls.map(
+      ([path]) => path,
+    )
+    expect(sharedPath).toContain('/bsky-share/')
+    expect(deletedPaths).not.toContain(sharedPath)
+  })
+
+  it('does not report user cancellation as an error', async () => {
+    const errorSpy = jest.spyOn(logger, 'error')
+    ;(Sharing.shareAsync as jest.Mock).mockRejectedValueOnce(
+      new Error('Picker cancelled'),
+    )
+
+    await expect(
+      saveToDevice('test.txt', 'dGVzdA==', 'text/plain'),
+    ).resolves.toBe(false)
+    expect(errorSpy).not.toHaveBeenCalled()
+    errorSpy.mockRestore()
   })
 })
