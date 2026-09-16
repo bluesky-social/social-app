@@ -194,13 +194,13 @@ msgid "{0, plural, one {1 more post} other {# more posts}}"
 msgstr ""
 
 #. placeholder {0}: profile.followersCount || 0
-#: src/components/ProfileHoverCard/index.web.tsx:440
+#: src/components/ProfileHoverCard/index.web.tsx:452
 #: src/screens/Profile/Header/Metrics.tsx:22
 msgid "{0, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: profile.followsCount || 0
-#: src/components/ProfileHoverCard/index.web.tsx:444
+#: src/components/ProfileHoverCard/index.web.tsx:456
 #: src/screens/Profile/Header/Metrics.tsx:26
 msgid "{0, plural, one {following} other {following}}"
 msgstr ""
@@ -226,9 +226,9 @@ msgstr ""
 msgid "{0, plural, other {You must be # years of age or older to create an account in your region.}}"
 msgstr ""
 
-#. placeholder {0}: i18n.date(d, {timeStyle: ts})
+#. placeholder {0}: formatDateTime(i18n, d, {timeStyle: ts})
 #. placeholder {1}: i18n.date(d, {dateStyle: 'medium'})
-#: src/lib/strings/time.ts:15
+#: src/lib/strings/time.ts:29
 msgctxt "date and time formatted like this: [time] · [date]"
 msgid "{0} · {1}"
 msgstr ""
@@ -486,7 +486,7 @@ msgstr ""
 msgid "{count, plural, other {#+ requests to join}}"
 msgstr "{count, plural, other {#+ requests to join}}"
 
-#: src/components/dms/DateDivider.tsx:60
+#: src/components/dms/DateDivider.tsx:61
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
@@ -674,7 +674,7 @@ msgstr "{firstAuthorName} signed up with your Starter Pack"
 msgid "{firstAuthorName} verified you"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:568
+#: src/components/ProfileHoverCard/index.web.tsx:580
 msgid "{following} following"
 msgstr ""
 
@@ -932,7 +932,7 @@ msgstr "<0>Community Guidelines: Harassment</0>"
 msgid "<0>Sign in</0><1> or </1><2>create an account</2><3> </3><4>to search for news, sports, politics, and everything else happening on Bluesky.</4>"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:250
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:251
 msgid "<0>Tap here to update your location with GPS.</0>"
 msgstr "<0>Tap here to update your location with GPS.</0>"
 
@@ -1206,7 +1206,7 @@ msgstr "Add {displayName} to Starter Pack"
 msgid "Add a content warning"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:114
+#: src/features/liveNow/components/GoLiveDialog.tsx:118
 msgid "Add a temporary live status to your profile. When someone clicks on your avatar, they’ll see information about your live event."
 msgstr ""
 
@@ -1257,8 +1257,8 @@ msgstr "Add another search filter"
 msgid "Add app password"
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:75
-#: src/screens/Settings/AppPasswords.tsx:83
+#: src/screens/Settings/AppPasswords.tsx:76
+#: src/screens/Settings/AppPasswords.tsx:84
 #: src/screens/Settings/components/AddAppPasswordDialog.tsx:111
 msgid "Add App Password"
 msgstr ""
@@ -1370,7 +1370,7 @@ msgstr "Add to Starter Packs"
 msgid "Add user to list"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:299
+#: src/ageAssurance/components/NoAccessScreen.tsx:300
 msgid "Add your birthdate"
 msgstr ""
 
@@ -1459,11 +1459,11 @@ msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:185
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:186
 msgid "Age assurance only takes a few minutes"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:451
+#: src/ageAssurance/components/NoAccessScreen.tsx:452
 msgid "Age assurance only takes a few minutes."
 msgstr "Age assurance only takes a few minutes."
 
@@ -1564,7 +1564,7 @@ msgstr ""
 msgid "Allow your followers to reply"
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:201
+#: src/screens/Settings/AppPasswords.tsx:202
 msgid "Allows access to direct messages"
 msgstr ""
 
@@ -1711,7 +1711,7 @@ msgstr "An illustration of the Bluesky app with a paper airplane flying out of i
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:195
+#: src/screens/Messages/components/InviteLinkDialog.tsx:196
 msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 msgstr "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
 
@@ -1792,13 +1792,13 @@ msgstr ""
 msgid "Anyone can join"
 msgstr "Anyone can join"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:150
 #: src/screens/Messages/components/InviteLinkDialog.tsx:151
+#: src/screens/Messages/components/InviteLinkDialog.tsx:152
 msgid "Anyone can join instantly"
 msgstr "Anyone can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:155
 #: src/screens/Messages/components/InviteLinkDialog.tsx:156
+#: src/screens/Messages/components/InviteLinkDialog.tsx:157
 msgid "Anyone can request to join"
 msgstr "Anyone can request to join"
 
@@ -1808,7 +1808,7 @@ msgstr "Anyone can request to join"
 msgid "Anyone who follows me"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:475
+#: src/screens/Messages/components/InviteLinkDialog.tsx:476
 msgid "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 msgstr "Anyone who has it will no longer be able to join or request to join. You can always create a new one."
 
@@ -1828,7 +1828,7 @@ msgstr ""
 msgid "App Password"
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:147
+#: src/screens/Settings/AppPasswords.tsx:148
 msgctxt "toast"
 msgid "App password deleted"
 msgstr ""
@@ -1851,7 +1851,7 @@ msgid "App passwords"
 msgstr ""
 
 #: src/Navigation.tsx:382
-#: src/screens/Settings/AppPasswords.tsx:51
+#: src/screens/Settings/AppPasswords.tsx:52
 msgid "App Passwords"
 msgstr ""
 
@@ -1963,7 +1963,7 @@ msgid "Are you searching for posts in {0}or {1}?"
 msgstr "Are you searching for posts in {0}or {1}?"
 
 #. placeholder {0}: appPassword.name
-#: src/screens/Settings/AppPasswords.tsx:210
+#: src/screens/Settings/AppPasswords.tsx:211
 msgid "Are you sure you want to delete the app password \"{0}\"?"
 msgstr ""
 
@@ -2117,8 +2117,8 @@ msgstr "Awaiting review"
 #: src/screens/Login/SetNewPasswordForm.tsx:168
 #: src/screens/Messages/components/ChatDisabled.tsx:162
 #: src/screens/Messages/components/ChatDisabled.tsx:164
-#: src/screens/Messages/components/InviteLinkDialog.tsx:273
-#: src/screens/Messages/components/InviteLinkDialog.tsx:301
+#: src/screens/Messages/components/InviteLinkDialog.tsx:274
+#: src/screens/Messages/components/InviteLinkDialog.tsx:302
 #: src/screens/Messages/Inbox.tsx:232
 #: src/screens/Profile/Header/Shell.tsx:175
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:275
@@ -2146,19 +2146,19 @@ msgstr ""
 msgid "Banned user returning"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:186
+#: src/ageAssurance/components/NoAccessScreen.tsx:187
 msgid "Based on your device's location, we think you're in <0>{geolocationString}</0>."
 msgstr "Based on your device's location, we think you're in <0>{geolocationString}</0>."
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:236
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:237
 msgid "Based on your device's location, we think you're in <0>{region}</0>."
 msgstr "Based on your device's location, we think you're in <0>{region}</0>."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:196
+#: src/ageAssurance/components/NoAccessScreen.tsx:197
 msgid "Based on your network, we think you're in <0>{geolocationString}</0>. This estimate may be inaccurate if you're using a VPN."
 msgstr "Based on your network, we think you're in <0>{geolocationString}</0>. This estimate may be inaccurate if you're using a VPN."
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:241
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:242
 msgid "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
 msgstr "Based on your network, we think you're in <0>{region}</0>. This estimate may be inaccurate if you're using a VPN."
 
@@ -2610,12 +2610,12 @@ msgstr "Camera access needed"
 #: src/components/Prompt.tsx:154
 #: src/components/SendErrorReportDialog.tsx:98
 #: src/components/SendErrorReportDialog.tsx:102
-#: src/features/liveNow/components/GoLiveDialog.tsx:254
-#: src/features/liveNow/components/GoLiveDialog.tsx:260
+#: src/features/liveNow/components/GoLiveDialog.tsx:258
+#: src/features/liveNow/components/GoLiveDialog.tsx:264
 #: src/lib/media/picker.tsx:38
 #: src/screens/Deactivated.tsx:154
-#: src/screens/Messages/components/InviteLinkDialog.tsx:497
-#: src/screens/Messages/components/InviteLinkDialog.tsx:501
+#: src/screens/Messages/components/InviteLinkDialog.tsx:498
+#: src/screens/Messages/components/InviteLinkDialog.tsx:502
 #: src/screens/Messages/ConversationSettings/prompts.tsx:108
 #: src/screens/Messages/ConversationSettings/prompts.tsx:132
 #: src/screens/Messages/ConversationSettings/prompts.tsx:156
@@ -2948,7 +2948,7 @@ msgstr ""
 msgid "Choose this color as your avatar"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:240
+#: src/screens/Messages/components/InviteLinkDialog.tsx:241
 msgid "Choose who can join this group chat and how."
 msgstr "Choose who can join this group chat and how."
 
@@ -3021,11 +3021,11 @@ msgstr "Click here to add people to this group chat"
 msgid "Click here to create or manage an invite link for this group chat"
 msgstr "Click here to create or manage an invite link for this group chat"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:329
+#: src/ageAssurance/components/NoAccessScreen.tsx:330
 msgid "Click here to delete your account"
 msgstr "Click here to delete your account"
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:320
+#: src/ageAssurance/components/NoAccessScreen.tsx:321
 msgid "Click here to log out"
 msgstr ""
 
@@ -3038,8 +3038,8 @@ msgstr "Click here to resend the email"
 msgid "Click here to restart the verification process."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:121
-#: src/ageAssurance/components/NoAccessScreen.tsx:296
+#: src/ageAssurance/components/NoAccessScreen.tsx:122
+#: src/ageAssurance/components/NoAccessScreen.tsx:297
 msgid "Click here to update your birthdate"
 msgstr ""
 
@@ -3109,8 +3109,8 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerErrorBoundary.tsx:45
 #: src/features/liveNow/components/EditLiveDialog.tsx:212
 #: src/features/liveNow/components/EditLiveDialog.tsx:218
-#: src/screens/Messages/components/InviteLinkDialog.tsx:521
-#: src/screens/Messages/components/InviteLinkDialog.tsx:526
+#: src/screens/Messages/components/InviteLinkDialog.tsx:522
+#: src/screens/Messages/components/InviteLinkDialog.tsx:527
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:290
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:295
 #: src/view/com/feeds/MissingFeed.tsx:211
@@ -3306,13 +3306,13 @@ msgstr "Connecting…"
 msgid "Connection issue"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:406
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:128
+#: src/ageAssurance/components/NoAccessScreen.tsx:407
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:129
 #: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:31
 msgid "Contact our moderation team"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:109
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:110
 msgid "Contact our support team"
 msgstr ""
 
@@ -3464,7 +3464,7 @@ msgid "Copied link to clipboard"
 msgstr "Copied link to clipboard"
 
 #: src/components/dms/ChatInvite/Root.tsx:100
-#: src/components/dms/MessageContextMenu.tsx:95
+#: src/components/dms/MessageContextMenu.tsx:96
 #: src/components/PostControls/DiscoverDebug.tsx:36
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:269
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:75
@@ -3556,8 +3556,8 @@ msgstr ""
 msgid "Copy link to Starter Pack"
 msgstr "Copy link to Starter Pack"
 
-#: src/components/dms/MessageContextMenu.tsx:196
-#: src/components/dms/MessageContextMenu.tsx:200
+#: src/components/dms/MessageContextMenu.tsx:197
+#: src/components/dms/MessageContextMenu.tsx:201
 msgid "Copy message text"
 msgstr ""
 
@@ -3810,12 +3810,12 @@ msgstr "Create Starter Pack"
 msgid "Create user list"
 msgstr ""
 
-#. placeholder {0}: i18n.date(appPassword.createdAt, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', })
-#. placeholder {0}: i18n.date(createdAt, { dateStyle: 'long', timeStyle: 'short', })
+#. placeholder {0}: formatDateTime(i18n, appPassword.createdAt, { year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', })
+#. placeholder {0}: formatDateTime(i18n, createdAt, { dateStyle: 'long', timeStyle: 'short', })
 #. placeholder {0}: i18n.date(createdAt, { month: 'long', day: 'numeric', year: 'numeric', })
-#: src/screens/Messages/components/InviteLinkDialog.tsx:352
+#: src/screens/Messages/components/InviteLinkDialog.tsx:353
 #: src/screens/Messages/ConversationSettings/index.tsx:502
-#: src/screens/Settings/AppPasswords.tsx:174
+#: src/screens/Settings/AppPasswords.tsx:175
 msgid "Created {0}"
 msgstr ""
 
@@ -3913,7 +3913,7 @@ msgstr ""
 #: src/components/dms/MessageOverlays.tsx:184
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:821
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:320
-#: src/screens/Settings/AppPasswords.tsx:213
+#: src/screens/Settings/AppPasswords.tsx:214
 #: src/screens/StarterPack/StarterPackScreen.tsx:628
 #: src/screens/StarterPack/StarterPackScreen.tsx:742
 #: src/screens/StarterPack/StarterPackScreen.tsx:871
@@ -3930,11 +3930,11 @@ msgstr ""
 msgid "Delete account “{currentHandle}”"
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:187
+#: src/screens/Settings/AppPasswords.tsx:188
 msgid "Delete app password"
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:208
+#: src/screens/Settings/AppPasswords.tsx:209
 msgid "Delete app password?"
 msgstr ""
 
@@ -3960,7 +3960,7 @@ msgstr ""
 msgid "Delete conversation"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:210
+#: src/components/dms/MessageContextMenu.tsx:211
 msgid "Delete for me"
 msgstr ""
 
@@ -3973,7 +3973,7 @@ msgstr ""
 msgid "Delete message"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:207
+#: src/components/dms/MessageContextMenu.tsx:208
 msgid "Delete message for me"
 msgstr ""
 
@@ -4086,8 +4086,8 @@ msgctxt "moderation-report-subject"
 msgid "Direct message from {account}"
 msgstr "Direct message from {account}"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:382
-#: src/screens/Messages/components/InviteLinkDialog.tsx:387
+#: src/screens/Messages/components/InviteLinkDialog.tsx:383
+#: src/screens/Messages/components/InviteLinkDialog.tsx:388
 msgid "Disable"
 msgstr "Disable"
 
@@ -4113,8 +4113,8 @@ msgstr ""
 msgid "Disable haptic feedback"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:485
-#: src/screens/Messages/components/InviteLinkDialog.tsx:491
+#: src/screens/Messages/components/InviteLinkDialog.tsx:486
+#: src/screens/Messages/components/InviteLinkDialog.tsx:492
 msgid "Disable link"
 msgstr "Disable link"
 
@@ -4126,7 +4126,7 @@ msgstr ""
 msgid "Disable replies entirely"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:472
+#: src/screens/Messages/components/InviteLinkDialog.tsx:473
 msgid "Disable this invite link?"
 msgstr "Disable this invite link?"
 
@@ -4475,7 +4475,7 @@ msgctxt "button"
 msgid "Edit invite link"
 msgstr "Edit invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:366
+#: src/screens/Messages/components/InviteLinkDialog.tsx:367
 msgid "Edit link settings"
 msgstr "Edit link settings"
 
@@ -4890,8 +4890,8 @@ msgid "Expires in {0}"
 msgstr ""
 
 #. placeholder {0}: displayDuration(i18n, minutesUntilExpiry)
-#. placeholder {1}: i18n.date(expiryDateTime, { hour: 'numeric', minute: '2-digit', hour12: true, })
-#: src/features/liveNow/components/EditLiveDialog.tsx:127
+#. placeholder {1}: formatDateTime(i18n, expiryDateTime, { hour: 'numeric', minute: '2-digit', })
+#: src/features/liveNow/components/EditLiveDialog.tsx:128
 msgid "Expires in {0} at {1}"
 msgstr ""
 
@@ -4965,7 +4965,7 @@ msgid "Failed to accept join request"
 msgstr "Failed to accept join request"
 
 #: src/components/dms/ActionsWrapper.web.tsx:93
-#: src/components/dms/MessageContextMenu.tsx:138
+#: src/components/dms/MessageContextMenu.tsx:139
 msgid "Failed to add emoji reaction"
 msgstr ""
 
@@ -5001,7 +5001,7 @@ msgstr ""
 msgid "Failed to create conversation"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:103
+#: src/screens/Messages/components/InviteLinkDialog.tsx:104
 msgid "Failed to create invite link"
 msgstr "Failed to create invite link"
 
@@ -5028,7 +5028,7 @@ msgstr ""
 msgid "Failed to delete Starter Pack"
 msgstr "Failed to delete Starter Pack"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:129
+#: src/screens/Messages/components/InviteLinkDialog.tsx:130
 msgid "Failed to disable invite link"
 msgstr "Failed to disable invite link"
 
@@ -5041,11 +5041,11 @@ msgstr ""
 msgid "Failed to edit group chat name"
 msgstr "Failed to edit group chat name"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:116
+#: src/screens/Messages/components/InviteLinkDialog.tsx:117
 msgid "Failed to edit invite link"
 msgstr "Failed to edit invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:139
+#: src/screens/Messages/components/InviteLinkDialog.tsx:140
 msgid "Failed to enable invite link"
 msgstr "Failed to enable invite link"
 
@@ -5168,7 +5168,7 @@ msgid "Failed to remove data. {0}"
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:78
-#: src/components/dms/MessageContextMenu.tsx:123
+#: src/components/dms/MessageContextMenu.tsx:124
 #: src/components/dms/ReactionsDialog.tsx:179
 msgid "Failed to remove emoji reaction"
 msgstr ""
@@ -5521,8 +5521,8 @@ msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:553
-#: src/components/ProfileHoverCard/index.web.tsx:491
-#: src/components/ProfileHoverCard/index.web.tsx:502
+#: src/components/ProfileHoverCard/index.web.tsx:503
+#: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:415
@@ -5637,8 +5637,8 @@ msgstr ""
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:544
-#: src/components/ProfileHoverCard/index.web.tsx:490
-#: src/components/ProfileHoverCard/index.web.tsx:501
+#: src/components/ProfileHoverCard/index.web.tsx:502
+#: src/components/ProfileHoverCard/index.web.tsx:513
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:411
 #: src/screens/VideoFeed/index.tsx:992
@@ -5698,7 +5698,7 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:108
+#: src/ageAssurance/components/NoAccessScreen.tsx:109
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr ""
 
@@ -5776,17 +5776,17 @@ msgstr "From these people"
 msgid "Generate a Starter Pack"
 msgstr "Generate a Starter Pack"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:236
-#: src/screens/Messages/components/InviteLinkDialog.tsx:274
-#: src/screens/Messages/components/InviteLinkDialog.tsx:302
+#: src/screens/Messages/components/InviteLinkDialog.tsx:237
+#: src/screens/Messages/components/InviteLinkDialog.tsx:275
+#: src/screens/Messages/components/InviteLinkDialog.tsx:303
 msgid "Generate invite link"
 msgstr "Generate invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:443
+#: src/screens/Messages/components/InviteLinkDialog.tsx:444
 msgid "Generate new invite link"
 msgstr "Generate new invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:448
+#: src/screens/Messages/components/InviteLinkDialog.tsx:449
 msgid "Generate new link"
 msgstr "Generate new link"
 
@@ -5902,8 +5902,8 @@ msgstr ""
 
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:71
 #: src/components/dialogs/EmailDialog/screens/VerificationReminder.tsx:81
-#: src/screens/Messages/components/InviteLinkDialog.tsx:216
-#: src/screens/Messages/components/InviteLinkDialog.tsx:223
+#: src/screens/Messages/components/InviteLinkDialog.tsx:217
+#: src/screens/Messages/components/InviteLinkDialog.tsx:224
 msgid "Get started"
 msgstr ""
 
@@ -5972,10 +5972,10 @@ msgstr ""
 msgid "Go live"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:106
-#: src/features/liveNow/components/GoLiveDialog.tsx:111
-#: src/features/liveNow/components/GoLiveDialog.tsx:239
-#: src/features/liveNow/components/GoLiveDialog.tsx:248
+#: src/features/liveNow/components/GoLiveDialog.tsx:110
+#: src/features/liveNow/components/GoLiveDialog.tsx:115
+#: src/features/liveNow/components/GoLiveDialog.tsx:243
+#: src/features/liveNow/components/GoLiveDialog.tsx:252
 msgid "Go Live"
 msgstr ""
 
@@ -5984,7 +5984,7 @@ msgstr ""
 msgid "Go live (disabled)"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:181
+#: src/features/liveNow/components/GoLiveDialog.tsx:185
 msgid "Go live for"
 msgstr ""
 
@@ -6079,7 +6079,7 @@ msgstr ""
 msgid "Group chat"
 msgstr "Group chat"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:553
+#: src/screens/Messages/components/InviteLinkDialog.tsx:554
 msgid "Group chat invite link dialog"
 msgstr "Group chat invite link dialog"
 
@@ -6123,7 +6123,7 @@ msgid "Group chats are only available to users 18 and over."
 msgstr "Group chats are only available to users 18 and over."
 
 #. placeholder {0}: convo.details.memberLimit
-#: src/screens/Messages/components/InviteLinkDialog.tsx:202
+#: src/screens/Messages/components/InviteLinkDialog.tsx:203
 msgid "Group chats can only have a maximum of {0, plural, other {# people}}."
 msgstr "Group chats can only have a maximum of {0, plural, other {# people}}."
 
@@ -6255,11 +6255,11 @@ msgstr ""
 msgid "Hey there 👋"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:173
+#: src/ageAssurance/components/NoAccessScreen.tsx:174
 msgid "Hey there!"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:278
+#: src/ageAssurance/components/NoAccessScreen.tsx:279
 msgid "Hi there!"
 msgstr ""
 
@@ -6495,7 +6495,7 @@ msgstr ""
 msgid "If none are selected, all languages will be shown in your feeds."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:103
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:104
 msgid "If you are 18 years of age or older and want to try again, click the button below and use a different verification method if one is available in your region. If you have questions or concerns, <0>our support team can help.</0>"
 msgstr ""
 
@@ -6503,7 +6503,7 @@ msgstr ""
 msgid "If you are not yet an adult according to the laws of your country, your parent or legal guardian must read these Terms on your behalf."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:118
+#: src/ageAssurance/components/NoAccessScreen.tsx:119
 msgid "If you believe your birthdate is incorrect, you can update it by <0>clicking here</0>."
 msgstr ""
 
@@ -6639,7 +6639,7 @@ msgstr ""
 msgid "Imported on {0}"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:281
+#: src/ageAssurance/components/NoAccessScreen.tsx:282
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
 
@@ -6824,10 +6824,10 @@ msgstr ""
 msgid "Invite friends <0/>"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:190
-#: src/screens/Messages/components/InviteLinkDialog.tsx:326
-#: src/screens/Messages/components/InviteLinkDialog.tsx:332
-#: src/screens/Messages/components/InviteLinkDialog.tsx:511
+#: src/screens/Messages/components/InviteLinkDialog.tsx:191
+#: src/screens/Messages/components/InviteLinkDialog.tsx:327
+#: src/screens/Messages/components/InviteLinkDialog.tsx:333
+#: src/screens/Messages/components/InviteLinkDialog.tsx:512
 #: src/screens/Messages/components/MessagesListGroupInfoPanel.tsx:149
 #: src/screens/Messages/ConversationSettings/index.tsx:550
 msgid "Invite link"
@@ -6848,7 +6848,7 @@ msgid "Invite link created"
 msgstr "Invite link created"
 
 #: src/components/dms/getSystemMessageInfo.ts:164
-#: src/screens/Messages/components/InviteLinkDialog.tsx:326
+#: src/screens/Messages/components/InviteLinkDialog.tsx:327
 msgid "Invite link disabled"
 msgstr "Invite link disabled"
 
@@ -7006,13 +7006,13 @@ msgstr ""
 msgid "Larger"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:445
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:179
+#: src/ageAssurance/components/NoAccessScreen.tsx:446
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:180
 msgid "Last initiated {timeAgo} ago"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:443
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:177
+#: src/ageAssurance/components/NoAccessScreen.tsx:444
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:178
 msgid "Last initiated just now"
 msgstr ""
 
@@ -7425,8 +7425,8 @@ msgstr ""
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:144
 #: src/features/liveNow/components/EditLiveDialog.tsx:148
-#: src/features/liveNow/components/GoLiveDialog.tsx:137
 #: src/features/liveNow/components/GoLiveDialog.tsx:141
+#: src/features/liveNow/components/GoLiveDialog.tsx:145
 msgid "Live link"
 msgstr ""
 
@@ -7704,7 +7704,7 @@ msgstr "Message failed to send."
 
 #. placeholder {0}: sender?.handle ?? 'unknown'
 #. placeholder {1}: message.text
-#: src/components/dms/MessageContextMenu.tsx:164
+#: src/components/dms/MessageContextMenu.tsx:165
 msgid "Message from @{0}: {1}"
 msgstr ""
 
@@ -7721,7 +7721,7 @@ msgstr ""
 msgid "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 msgstr "Message is too long ({graphemeCount}/{MAX_DM_GRAPHEME_LENGTH})"
 
-#: src/components/dms/MessageContextMenu.tsx:163
+#: src/components/dms/MessageContextMenu.tsx:164
 msgid "Message options"
 msgstr ""
 
@@ -8244,7 +8244,7 @@ msgstr "No action taken"
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:108
+#: src/screens/Settings/AppPasswords.tsx:109
 msgid "No app passwords yet"
 msgstr ""
 
@@ -8762,7 +8762,7 @@ msgstr "Oops, this profile doesn't exist. Try scanning another one."
 #: src/components/Lists.tsx:184
 #: src/components/StarterPack/ProfileStarterPacks.tsx:361
 #: src/components/StarterPack/ProfileStarterPacks.tsx:368
-#: src/screens/Settings/AppPasswords.tsx:59
+#: src/screens/Settings/AppPasswords.tsx:60
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:108
 #: src/view/screens/Profile.tsx:132
 msgid "Oops!"
@@ -9202,11 +9202,11 @@ msgstr ""
 msgid "People"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:161
+#: src/screens/Messages/components/InviteLinkDialog.tsx:162
 msgid "People {ownerName} follows can join instantly"
 msgstr "People {ownerName} follows can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:166
+#: src/screens/Messages/components/InviteLinkDialog.tsx:167
 msgid "People {ownerName} follows can request to join"
 msgstr "People {ownerName} follows can request to join"
 
@@ -9240,11 +9240,11 @@ msgctxt "display posts made by"
 msgid "People I follow"
 msgstr "People I follow"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:160
+#: src/screens/Messages/components/InviteLinkDialog.tsx:161
 msgid "People I follow can join instantly"
 msgstr "People I follow can join instantly"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:165
+#: src/screens/Messages/components/InviteLinkDialog.tsx:166
 msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
@@ -9645,8 +9645,8 @@ msgstr "Post it to Bluesky or share anywhere."
 msgid "Post language selection"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:392
-#: src/screens/Messages/components/InviteLinkDialog.tsx:408
+#: src/screens/Messages/components/InviteLinkDialog.tsx:393
+#: src/screens/Messages/components/InviteLinkDialog.tsx:409
 msgid "Post link"
 msgstr "Post link"
 
@@ -9929,11 +9929,11 @@ msgstr ""
 msgid "Re-attach quote"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:430
+#: src/screens/Messages/components/InviteLinkDialog.tsx:431
 msgid "Re-enable invite link"
 msgstr "Re-enable invite link"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:437
+#: src/screens/Messages/components/InviteLinkDialog.tsx:438
 msgid "Re-enable link"
 msgstr "Re-enable link"
 
@@ -10351,8 +10351,8 @@ msgstr ""
 msgid "Replies to this post are disabled."
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:180
-#: src/components/dms/MessageContextMenu.tsx:183
+#: src/components/dms/MessageContextMenu.tsx:181
+#: src/components/dms/MessageContextMenu.tsx:184
 msgid "Reply"
 msgstr "Reply"
 
@@ -10398,7 +10398,7 @@ msgstr ""
 msgid "Reply was successfully hidden"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:218
+#: src/components/dms/MessageContextMenu.tsx:219
 #: src/features/liveNow/components/LiveStatusDialog.tsx:264
 #: src/screens/Messages/ConversationSettings/index.tsx:576
 msgid "Report"
@@ -10431,7 +10431,7 @@ msgstr ""
 msgid "Report list"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:215
+#: src/components/dms/MessageContextMenu.tsx:216
 msgid "Report message"
 msgstr ""
 
@@ -11161,7 +11161,7 @@ msgstr "Select chat \"{name}\""
 msgid "Select content languages"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:186
+#: src/features/liveNow/components/GoLiveDialog.tsx:190
 msgid "Select duration"
 msgstr ""
 
@@ -11338,8 +11338,8 @@ msgstr ""
 msgid "Send via chat"
 msgstr "Send via chat"
 
-#. placeholder {0}: i18n.date(new Date(message.sentAt), { timeStyle: 'short', })
-#: src/components/dms/MessageContextMenu.tsx:173
+#. placeholder {0}: formatDateTime(i18n, new Date(message.sentAt), { timeStyle: 'short', })
+#: src/components/dms/MessageContextMenu.tsx:174
 msgid "Sent at {0}"
 msgstr "Sent at {0}"
 
@@ -11373,7 +11373,7 @@ msgstr ""
 msgid "Set who can reply to your post"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:288
+#: src/ageAssurance/components/NoAccessScreen.tsx:289
 msgid "Set your birthdate below and we'll get you back to posting and exploring in no time!"
 msgstr ""
 
@@ -11468,8 +11468,8 @@ msgstr ""
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
 #: src/components/StarterPack/QrCodeDialog.tsx:196
 #: src/screens/Hashtag.tsx:132
-#: src/screens/Messages/components/InviteLinkDialog.tsx:412
-#: src/screens/Messages/components/InviteLinkDialog.tsx:423
+#: src/screens/Messages/components/InviteLinkDialog.tsx:413
+#: src/screens/Messages/components/InviteLinkDialog.tsx:424
 #: src/screens/StarterPack/StarterPackScreen.tsx:435
 #: src/screens/Topic.tsx:91
 msgid "Share"
@@ -12346,7 +12346,7 @@ msgstr ""
 msgid "Tap for more information"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:215
+#: src/ageAssurance/components/NoAccessScreen.tsx:216
 #: src/screens/Signup/StepInfo/index.tsx:337
 msgid "Tap here to update your location with GPS."
 msgstr "Tap here to update your location with GPS."
@@ -12480,8 +12480,8 @@ msgstr "Thanks for your feedback!"
 msgid "Thanks, you have successfully verified your email address. You can close this dialog."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:235
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:224
+#: src/ageAssurance/components/NoAccessScreen.tsx:236
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:225
 msgid "Thanks! You're all set."
 msgstr ""
 
@@ -12566,7 +12566,7 @@ msgstr "The following labels were applied to this post."
 msgid "The following labels were applied to your account."
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDialog.tsx:168
+#: src/features/liveNow/components/GoLiveDialog.tsx:172
 msgid "The following services are enabled for your account: {allowedServices}"
 msgstr ""
 
@@ -12675,7 +12675,7 @@ msgstr ""
 msgid "There is a limit to how often you can change your birthdate. You may need to wait a day or two before updating it again."
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:516
+#: src/screens/Messages/components/InviteLinkDialog.tsx:517
 msgid "There is no invite link for this group chat."
 msgstr "There is no invite link for this group chat."
 
@@ -12721,7 +12721,7 @@ msgstr ""
 msgid "There was an issue fetching the list. Tap here to try again."
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:60
+#: src/screens/Settings/AppPasswords.tsx:61
 msgid "There was an issue fetching your app passwords"
 msgstr ""
 
@@ -13010,7 +13010,7 @@ msgid "This is just a one-time security check, since we haven't seen this accoun
 msgstr "This is just a one-time security check, since we haven't seen this account on this device before."
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:173
-#: src/features/liveNow/components/GoLiveDialog.tsx:161
+#: src/features/liveNow/components/GoLiveDialog.tsx:165
 msgid "This is not a valid link"
 msgstr ""
 
@@ -13240,7 +13240,7 @@ msgstr ""
 msgid "Time remaining: {0, plural, one {# second} other {# seconds}}"
 msgstr ""
 
-#: src/screens/ModerationInbox/components/Timeline.tsx:11
+#: src/screens/ModerationInbox/components/Timeline.tsx:12
 msgid "Timeline"
 msgstr "Timeline"
 
@@ -13262,11 +13262,11 @@ msgstr ""
 msgid "To disable your email 2FA method, please verify your access to <0>{0}</0>"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:317
+#: src/ageAssurance/components/NoAccessScreen.tsx:318
 msgid "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete your account</1>."
 msgstr "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete your account</1>."
 
-#: src/components/dms/DateDivider.tsx:27
+#: src/components/dms/DateDivider.tsx:28
 msgid "Today"
 msgstr ""
 
@@ -13307,8 +13307,8 @@ msgstr ""
 msgid "Topic"
 msgstr ""
 
-#: src/components/dms/MessageContextMenu.tsx:189
-#: src/components/dms/MessageContextMenu.tsx:192
+#: src/components/dms/MessageContextMenu.tsx:190
+#: src/components/dms/MessageContextMenu.tsx:193
 #: src/components/Post/Translated/index.tsx:147
 #: src/components/Post/Translated/index.tsx:154
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:557
@@ -13598,11 +13598,11 @@ msgstr ""
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:265
+#: src/ageAssurance/components/NoAccessScreen.tsx:266
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:249
+#: src/ageAssurance/components/NoAccessScreen.tsx:250
 msgid "Unfortunately, your declared age indicates that you are not old enough to access Bluesky in your region."
 msgstr ""
 
@@ -13787,9 +13787,9 @@ msgstr ""
 msgid "Update in Lists"
 msgstr "Update in Lists"
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:236
-#: src/screens/Messages/components/InviteLinkDialog.tsx:272
-#: src/screens/Messages/components/InviteLinkDialog.tsx:300
+#: src/screens/Messages/components/InviteLinkDialog.tsx:237
+#: src/screens/Messages/components/InviteLinkDialog.tsx:273
+#: src/screens/Messages/components/InviteLinkDialog.tsx:301
 msgid "Update invite link"
 msgstr "Update invite link"
 
@@ -13802,8 +13802,8 @@ msgstr ""
 msgid "Update your email"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:210
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:252
+#: src/ageAssurance/components/NoAccessScreen.tsx:211
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:253
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:41
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:105
 msgid "Update your location"
@@ -13864,7 +13864,7 @@ msgstr ""
 msgid "Uploading video..."
 msgstr ""
 
-#: src/screens/Settings/AppPasswords.tsx:67
+#: src/screens/Settings/AppPasswords.tsx:68
 msgid "Use app passwords to sign in to other Bluesky clients without giving full access to your account or password."
 msgstr ""
 
@@ -14208,7 +14208,7 @@ msgstr "View {displayName}’s profile"
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
-#: src/components/ProfileHoverCard/index.web.tsx:475
+#: src/components/ProfileHoverCard/index.web.tsx:487
 msgid "View blocked user's profile"
 msgstr ""
 
@@ -14265,9 +14265,9 @@ msgstr ""
 msgid "View post"
 msgstr ""
 
-#: src/components/ProfileHoverCard/index.web.tsx:461
-#: src/components/ProfileHoverCard/index.web.tsx:481
-#: src/components/ProfileHoverCard/index.web.tsx:508
+#: src/components/ProfileHoverCard/index.web.tsx:473
+#: src/components/ProfileHoverCard/index.web.tsx:493
+#: src/components/ProfileHoverCard/index.web.tsx:520
 #: src/view/com/posts/PostFeedErrorMessage.tsx:181
 #: src/view/com/util/PostMeta.tsx:93
 #: src/view/com/util/PostMeta.tsx:121
@@ -14567,8 +14567,8 @@ msgstr "We’re so excited to have you join us!"
 msgid "We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky."
 msgstr "We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky."
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:229
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:218
+#: src/ageAssurance/components/NoAccessScreen.tsx:230
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:219
 msgid "We're sorry, but based on your device's location, you are currently located in a region that requires age assurance."
 msgstr ""
 
@@ -14669,7 +14669,7 @@ msgstr ""
 msgid "Who can interact with this post?"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:244
+#: src/screens/Messages/components/InviteLinkDialog.tsx:245
 msgid "Who can join this group chat and how"
 msgstr "Who can join this group chat and how"
 
@@ -14775,7 +14775,7 @@ msgid "Wrong kind of conversation"
 msgstr "Wrong kind of conversation"
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:149
-#: src/features/liveNow/components/GoLiveDialog.tsx:142
+#: src/features/liveNow/components/GoLiveDialog.tsx:146
 msgid "www.mylivestream.tv"
 msgstr ""
 
@@ -14815,7 +14815,7 @@ msgstr ""
 msgid "Yes, reactivate my account"
 msgstr ""
 
-#: src/components/dms/DateDivider.tsx:29
+#: src/components/dms/DateDivider.tsx:30
 msgid "Yesterday"
 msgstr ""
 
@@ -14823,7 +14823,7 @@ msgstr ""
 msgid "You are a trusted verifier"
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:176
+#: src/ageAssurance/components/NoAccessScreen.tsx:177
 msgid "You are accessing Bluesky from a region that legally requires us to verify your age before allowing you to access the app."
 msgstr ""
 
@@ -14848,8 +14848,8 @@ msgstr ""
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr ""
 
-#: src/ageAssurance/components/NoAccessScreen.tsx:402
-#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:124
+#: src/ageAssurance/components/NoAccessScreen.tsx:403
+#: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:125
 msgid "You are currently unable to access Bluesky's Age Assurance flow. Please <0>contact our moderation team</0> if you believe this is an error."
 msgstr ""
 
@@ -14857,8 +14857,8 @@ msgstr ""
 msgid "You are in line."
 msgstr ""
 
-#: src/features/liveNow/components/EditLiveDialog.tsx:115
-#: src/features/liveNow/components/EditLiveDialog.tsx:120
+#: src/features/liveNow/components/EditLiveDialog.tsx:116
+#: src/features/liveNow/components/EditLiveDialog.tsx:121
 msgid "You are Live"
 msgstr ""
 
@@ -14973,7 +14973,7 @@ msgid "You can update this later from your settings."
 msgstr ""
 
 #: src/components/dms/ActionsWrapper.web.tsx:82
-#: src/components/dms/MessageContextMenu.tsx:127
+#: src/components/dms/MessageContextMenu.tsx:128
 msgid "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 msgstr "You cannot add more than {EMOJI_REACTION_LIMIT, plural, one {# emoji reaction} other {# emoji reactions}}"
 
@@ -15524,7 +15524,7 @@ msgstr ""
 msgid "Your muted words"
 msgstr ""
 
-#: src/screens/Messages/components/InviteLinkDialog.tsx:208
+#: src/screens/Messages/components/InviteLinkDialog.tsx:209
 msgid "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 msgstr "Your name, avatar, the name of the group chat, and the number of members will be visible to everyone."
 
