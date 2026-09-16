@@ -269,6 +269,9 @@ module.exports = function (_config) {
                   organization: 'blueskyweb',
                   project: 'app',
                   url: 'https://sentry.io',
+                  experimental_android: {
+                    enableAndroidGradlePlugin: true,
+                  },
                 },
               ]),
             ]
@@ -294,6 +297,7 @@ module.exports = function (_config) {
               targetSdkVersion: 36,
               buildToolsVersion: '36.0.0',
               buildReactNativeFromSource: IS_PRODUCTION,
+              enableMinifyInReleaseBuilds: true,
             },
           },
         ],
