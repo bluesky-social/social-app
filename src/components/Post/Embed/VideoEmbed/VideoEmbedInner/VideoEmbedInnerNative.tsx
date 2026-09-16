@@ -28,6 +28,7 @@ export function VideoEmbedInnerNative({
   setIsLoading,
   setIsActive,
   onPlaybackStart,
+  onPlaybackProgress,
   onError,
 }: {
   ref: React.Ref<{togglePlayback: () => void}>
@@ -36,6 +37,7 @@ export function VideoEmbedInnerNative({
   setIsLoading: (isLoading: boolean) => void
   setIsActive: (isActive: boolean) => void
   onPlaybackStart: (autoplay: boolean) => void
+  onPlaybackProgress: (progressSeconds: number) => void
   /**
    * Called with the native error message before the component throws to the
    * surrounding error boundary.
@@ -107,6 +109,9 @@ export function VideoEmbedInnerNative({
               playbackStartTrackedRef.current = true
               onPlaybackStart(autoplay)
             }
+            onPlaybackProgress(
+              Math.max(0, maxTimeRemainingSeconds.current - timeRemaining),
+            )
             if (!isGif && reportDialogMetadata) {
               reportDialogMetadata.current.videoTimestampSeconds = Math.max(
                 0,
