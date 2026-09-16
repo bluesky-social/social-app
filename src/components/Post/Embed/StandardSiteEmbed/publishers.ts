@@ -13,21 +13,21 @@ export type StandardSitePublisher = {
 
 const STANDARD_SITE_PUBLISHERS: StandardSitePublisher[] = [
   {
-    url: 'https://leaflet.pub',
+    url: 'https://bsky.app/profile/leaflet.pub',
     host: 'leaflet.pub',
     themeNsidRoot: 'pub.leaflet',
     name: 'Leaflet',
     Icon: Leaflet,
   },
   {
-    url: 'https://pckt.blog',
+    url: 'https://bsky.app/profile/pckt.blog',
     host: 'pckt.blog',
     themeNsidRoot: 'blog.pckt',
     name: 'pckt',
     Icon: Pckt,
   },
   {
-    url: 'https://offprint.app',
+    url: 'https://bsky.app/profile/offprint.app',
     host: 'offprint.app',
     themeNsidRoot: 'app.offprint',
     name: 'Offprint',

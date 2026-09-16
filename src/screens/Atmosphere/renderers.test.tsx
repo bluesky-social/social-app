@@ -370,45 +370,81 @@ describe('content-first articles and recommendations', () => {
   )
 
   it.each([
-    ['https://writer.leaflet.pub', 'Leaflet', Leaflet],
-    ['https://writer.pckt.blog', 'pckt', Pckt],
-    ['https://offprint.app', 'Offprint', Offprint],
-  ])('shows the %s publication URL as a via icon', (url, name, Icon) => {
-    const row = documentRow(true)
-    row.associatedRecords[publicationUri].record.url = url
-    const screen = renderRow(row)
-    expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
-    expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
-    expect(
-      screen.getByTestId('atmosphereArticlePublisherIcon').props.width,
-    ).toBe(12)
-    expect(mockLink).toHaveBeenCalledWith(
-      expect.objectContaining({
-        testID: 'atmosphereArticlePublisher',
-        to: new URL(url).href,
-      }),
-    )
-  })
+    [
+      'https://writer.leaflet.pub',
+      'Leaflet',
+      Leaflet,
+      'https://bsky.app/profile/leaflet.pub',
+    ],
+    [
+      'https://writer.pckt.blog',
+      'pckt',
+      Pckt,
+      'https://bsky.app/profile/pckt.blog',
+    ],
+    [
+      'https://offprint.app',
+      'Offprint',
+      Offprint,
+      'https://bsky.app/profile/offprint.app',
+    ],
+  ])(
+    'shows the %s publication URL as a via icon linked to its Bluesky profile',
+    (url, name, Icon, profileUrl) => {
+      const row = documentRow(true)
+      row.associatedRecords[publicationUri].record.url = url
+      const screen = renderRow(row)
+      expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
+      expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
+      expect(
+        screen.getByTestId('atmosphereArticlePublisherIcon').props.width,
+      ).toBe(12)
+      expect(mockLink).toHaveBeenCalledWith(
+        expect.objectContaining({
+          testID: 'atmosphereArticlePublisher',
+          to: profileUrl,
+        }),
+      )
+    },
+  )
 
   it.each([
-    ['pub.leaflet.theme#basic', 'Leaflet', Leaflet],
-    ['blog.pckt.theme#basic', 'pckt', Pckt],
-    ['app.offprint.theme#basic', 'Offprint', Offprint],
-  ])('uses the %s theme NSID as a publisher hint', ($type, name, Icon) => {
-    const row = documentRow(true)
-    row.associatedRecords[publicationUri].record.url =
-      'https://custom-domain.example'
-    row.associatedRecords[publicationUri].record.basicTheme = {$type}
-    const screen = renderRow(row)
-    expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
-    expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
-    expect(mockLink).toHaveBeenCalledWith(
-      expect.objectContaining({
-        testID: 'atmosphereArticlePublisher',
-        to: 'https://custom-domain.example/',
-      }),
-    )
-  })
+    [
+      'pub.leaflet.theme#basic',
+      'Leaflet',
+      Leaflet,
+      'https://bsky.app/profile/leaflet.pub',
+    ],
+    [
+      'blog.pckt.theme#basic',
+      'pckt',
+      Pckt,
+      'https://bsky.app/profile/pckt.blog',
+    ],
+    [
+      'app.offprint.theme#basic',
+      'Offprint',
+      Offprint,
+      'https://bsky.app/profile/offprint.app',
+    ],
+  ])(
+    'uses the %s theme NSID as a publisher hint',
+    ($type, name, Icon, profileUrl) => {
+      const row = documentRow(true)
+      row.associatedRecords[publicationUri].record.url =
+        'https://custom-domain.example'
+      row.associatedRecords[publicationUri].record.basicTheme = {$type}
+      const screen = renderRow(row)
+      expect(screen.getByLabelText(`via ${name}`)).toBeTruthy()
+      expect(screen.UNSAFE_getByType(Icon)).toBeTruthy()
+      expect(mockLink).toHaveBeenCalledWith(
+        expect.objectContaining({
+          testID: 'atmosphereArticlePublisher',
+          to: profileUrl,
+        }),
+      )
+    },
+  )
 
   it('prefers publication URL evidence over a conflicting theme hint', () => {
     const row = documentRow(true)
@@ -424,7 +460,7 @@ describe('content-first articles and recommendations', () => {
     expect(mockLink).toHaveBeenCalledWith(
       expect.objectContaining({
         testID: 'atmosphereArticlePublisher',
-        to: 'https://writer.pckt.blog/',
+        to: 'https://bsky.app/profile/pckt.blog',
       }),
     )
   })
@@ -485,7 +521,7 @@ describe('content-first articles and recommendations', () => {
       fontWeight: '600',
     })
     expect(screen.getByTestId('atmosphereFootnoteApp').props.to).toBe(
-      'https://pckt.blog',
+      'https://bsky.app/profile/pckt.blog',
     )
     expect(mockAvatarStack).toHaveBeenLastCalledWith(
       expect.objectContaining({
@@ -1638,6 +1674,12 @@ describe('collection dispatch and retained media boundaries', () => {
       createRow(activities, {groupBy: 'actor', associatedRecords}),
     )
     expect(screen.getByTestId('atmospherePhotoGallery')).toBeTruthy()
+    expect(mockLink).toHaveBeenCalledWith(
+      expect.objectContaining({
+        label: 'via Grain',
+        to: 'https://bsky.app/profile/grain.social',
+      }),
+    )
     const images = mockGallery.mock.calls[0][0].images
     expect(images).toHaveLength(2)
     for (const [i, image] of images.entries()) {

@@ -57,7 +57,9 @@ export function GrainPhotoActivityRenderer({
             <View style={[a.gap_md]}>
               <View style={[a.flex_row, a.align_center, a.justify_between]}>
                 {metadata}
-                <Link to={`https://grain.social/`} label={l`via Grain`}>
+                <Link
+                  to="https://bsky.app/profile/grain.social"
+                  label={l`via Grain`}>
                   <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
                     via{' '}
                   </Text>
@@ -86,7 +88,10 @@ export function GrainPhotoActivityRenderer({
           actors={computedItemView.actors}
           action={action}
           timestamp={timestamp}
-          app={{name: 'Grain', to: 'https://grain.social/'}}
+          app={{
+            name: 'Grain',
+            to: 'https://bsky.app/profile/grain.social',
+          }}
         />
       )}
     </View>
