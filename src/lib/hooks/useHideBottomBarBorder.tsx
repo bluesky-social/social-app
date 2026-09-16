@@ -1,51 +1,95 @@
-import {createContext, useCallback, useContext, useState} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
+import {createContext, useContext, useEffect} from 'react'
+import {
+  type DerivedValue,
+  interpolateColor,
+  type SharedValue,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 
-type HideBottomBarBorderSetter = () => () => void
+import {useContributionRegistry} from '#/lib/hooks/useContributionRegistry'
+import {useScreenPresence} from '#/lib/hooks/useScreenPresence'
+import {useTheme} from '#/alf'
 
-const HideBottomBarBorderContext = createContext<boolean>(false)
+type Register = (contribution: SharedValue<number>) => () => void
+
+const HideBottomBarBorderContext = createContext<DerivedValue<number> | null>(
+  null,
+)
 HideBottomBarBorderContext.displayName = 'HideBottomBarBorderContext'
-const HideBottomBarBorderSetterContext =
-  createContext<HideBottomBarBorderSetter | null>(null)
+const HideBottomBarBorderSetterContext = createContext<Register | null>(null)
 HideBottomBarBorderSetterContext.displayName =
   'HideBottomBarBorderSetterContext'
 
-export function useHideBottomBarBorderSetter() {
-  const hideBottomBarBorder = useContext(HideBottomBarBorderSetterContext)
-  if (!hideBottomBarBorder) {
+function useHideBottomBarBorderSetter() {
+  const register = useContext(HideBottomBarBorderSetterContext)
+  if (!register) {
     throw new Error(
       'useHideBottomBarBorderSetter must be used within a HideBottomBarBorderProvider',
     )
   }
-  return hideBottomBarBorder
+  return register
 }
 
+/**
+ * Hides the bottom bar's top border while the surrounding screen is present,
+ * fading it with the screen transition.
+ */
 export function useHideBottomBarBorderForScreen() {
-  const hideBorder = useHideBottomBarBorderSetter()
+  const register = useHideBottomBarBorderSetter()
+  const {presence} = useScreenPresence()
+  const contribution = useSharedValue(0)
 
-  useFocusEffect(
-    useCallback(() => {
-      const cleanup = hideBorder()
-      return () => cleanup()
-    }, [hideBorder]),
+  useAnimatedReaction(
+    () => presence.get(),
+    (current, previous) => {
+      if (current !== previous) {
+        contribution.set(current)
+      }
+    },
   )
+
+  useEffect(() => register(contribution), [register, contribution])
 }
 
+/**
+ * How hidden the bottom bar border is, 0 (visible) to 1 (hidden).
+ */
 export function useHideBottomBarBorder() {
-  return useContext(HideBottomBarBorderContext)
+  const value = useContext(HideBottomBarBorderContext)
+  if (!value) {
+    throw new Error(
+      'useHideBottomBarBorder must be used within a HideBottomBarBorderProvider',
+    )
+  }
+  return value
+}
+
+/**
+ * Animated border color for the bottom bar, blending the border into the
+ * background as screens that hide it come and go.
+ */
+export function useBottomBarBorderStyle() {
+  const t = useTheme()
+  const hideBorder = useHideBottomBarBorder()
+  const visibleColor = t.atoms.border_contrast_low.borderColor
+  const hiddenColor = t.atoms.bg.backgroundColor
+  return useAnimatedStyle(() => ({
+    borderColor: interpolateColor(
+      hideBorder.get(),
+      [0, 1],
+      [visibleColor, hiddenColor],
+    ),
+  }))
 }
 
 export function Provider({children}: {children: React.ReactNode}) {
-  const [refCount, setRefCount] = useState(0)
-
-  const setter = useCallback(() => {
-    setRefCount(prev => prev + 1)
-    return () => setRefCount(prev => prev - 1)
-  }, [])
+  const {total, register} = useContributionRegistry()
 
   return (
-    <HideBottomBarBorderSetterContext.Provider value={setter}>
-      <HideBottomBarBorderContext.Provider value={refCount > 0}>
+    <HideBottomBarBorderSetterContext.Provider value={register}>
+      <HideBottomBarBorderContext.Provider value={total}>
         {children}
       </HideBottomBarBorderContext.Provider>
     </HideBottomBarBorderSetterContext.Provider>
