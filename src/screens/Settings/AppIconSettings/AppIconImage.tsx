@@ -13,10 +13,7 @@ export function AppIconImage({
   const t = useTheme()
   return (
     <Image
-      source={platform({
-        ios: icon.iosImage(),
-        android: icon.androidImage(),
-      })}
+      source={icon.image()}
       style={[
         {width: size, height: size},
         platform({
