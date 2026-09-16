@@ -154,9 +154,8 @@ function Inner({
             type: 'error',
           },
         )
-      } finally {
-        setIsSaving(false)
       }
+      setIsSaving(false)
     }, 1500)
   }, [_, pdsClient, setIsSaving, qc, preselectedInterests])
 

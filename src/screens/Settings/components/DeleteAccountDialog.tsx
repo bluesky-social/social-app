@@ -8,6 +8,7 @@ import {useCleanError} from '#/lib/hooks/useCleanError'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {
+  type SessionAccount,
   useChatClient,
   usePdsClient,
   useSession,
@@ -47,6 +48,17 @@ enum EmailState {
 
 function isPasswordValid(password: string) {
   return password.length >= PASSWORD_MIN_LENGTH
+}
+
+/**
+ * Out of the component because React Compiler cannot lower a `throw`, or the
+ * optional chain in this check, inside a `try`. Keeping the check in the `try` -
+ * rather than hoisting it above - means the catch below still runs: inline
+ * error, log, and reset to the code step.
+ */
+function requireAccount(account: SessionAccount | undefined): SessionAccount {
+  if (!account?.did) throw new Error('Invalid did')
+  return account
 }
 
 export function DeleteAccountDialog({
@@ -106,17 +118,14 @@ function DeleteAccountDialogInner({
       logger.error(raw || e, {
         message: 'Failed to send account deletion verification email',
       })
-    } finally {
-      setEmailState(EmailState.DEFAULT)
     }
+    setEmailState(EmailState.DEFAULT)
   }, [client, cleanError, emailState, setEmailState])
 
   const confirmDeletion = useCallback(async () => {
     try {
       setError('')
-      if (!currentAccount?.did) {
-        throw new Error('Invalid did')
-      }
+      const account = requireAccount(currentAccount)
       const token = confirmCode.replace(WHITESPACE_RE, '')
       /*
        * Inform chat service of intent to delete account. A non-2xx response
@@ -125,14 +134,14 @@ function DeleteAccountDialogInner({
        */
       await chatClient.call(chat.bsky.actor.deleteAccount)
       await client.call(com.atproto.server.deleteAccount, {
-        did: currentAccount.did,
+        did: account.did,
         password,
         token,
       })
       control.close(() => {
         toast.show(_(msg`Your account has been deleted, see ya! ✌️`))
         resetToTab('HomeTab')
-        removeAccount(currentAccount)
+        removeAccount(account)
       })
     } catch (e: any) {
       const {clean, raw} = cleanError(e)
