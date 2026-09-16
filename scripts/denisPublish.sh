@@ -9,10 +9,21 @@ set -o nounset
 # (configure-aws-credentials OIDC), and BSKY_IOS_BUILD_NUMBER /
 # BSKY_ANDROID_VERSION_CODE from the use-build-number wrapper.
 
-rm -rf bundleTempDir
+# Set when bundleTempDir was assembled by a separate job and handed over as an
+# artifact, as the PR OTA flow does so the bundle can be built in parallel with
+# the fingerprint check. Without it, assemble the directory from ./dist here.
+if [ -n "${SKIP_BUNDLE_ASSEMBLY:-}" ]; then
+  echo "Using pre-assembled bundle directory..."
+  if [ ! -f bundleTempDir/metadata.json ]; then
+    echo "bundleTempDir/metadata.json is missing; nothing to publish" >&2
+    exit 1
+  fi
+else
+  rm -rf bundleTempDir
 
-echo "Assembling bundle directory..."
-node scripts/bundleUpdate.js
+  echo "Assembling bundle directory..."
+  node scripts/bundleUpdate.js
+fi
 
 if [ -z "$RUNTIME_VERSION" ]; then
   RUNTIME_VERSION=$(cat package.json | jq '.version' -r)
