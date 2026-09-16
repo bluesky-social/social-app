@@ -14,9 +14,9 @@ appId: xyz.blueskyweb.app
     visible:
       id: "viewHeaderHomeFeedPrefsBtn"
 - assertVisible:
-    id: "composeFAB"
+    id: "composePromptPill"
 - tapOn:
-    id: "composeFAB"
+    id: "composePromptPill"
 - inputText: "Test thread"
 - tapOn:
     id: "composerPublishBtn"
@@ -24,7 +24,7 @@ appId: xyz.blueskyweb.app
 # out. Without a settle guard the next action can race the closing composer.
 - extendedWaitUntil:
     visible:
-      id: "composeFAB"
+      id: "composePromptPill"
     timeout: 10000
 
 # Login, reply to the thread, and log out
@@ -48,7 +48,7 @@ appId: xyz.blueskyweb.app
 # Wait for the composer to close before signing out.
 - extendedWaitUntil:
     visible:
-      id: "composeFAB"
+      id: "composePromptPill"
     timeout: 10000
 
 # Login, confirm notification exists, mute thread, and log out

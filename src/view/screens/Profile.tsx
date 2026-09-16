@@ -35,14 +35,12 @@ import {ProfileLists} from '#/view/com/lists/ProfileLists'
 import {PagerWithHeader} from '#/view/com/pager/PagerWithHeader'
 import {type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
-import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a} from '#/alf'
 import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
-import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {Image_Stroke1_Corner0_Rounded as ImageIcon} from '#/components/icons/Image'
 import {Message_Stroke1_Corner0_Rounded_Filled as MessageIcon} from '#/components/icons/Message'
@@ -50,6 +48,7 @@ import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
+import {NewPostComposePrompt} from '#/features/composePrompt'
 import {type app} from '#/lexicons'
 import {navigate} from '#/Navigation'
 
@@ -172,7 +171,6 @@ function ProfileScreenLoaded({
   hideBackButton: boolean
   isPlaceholderProfile: boolean
 }) {
-  const t = useTheme()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
   const {openComposer} = useOpenComposer()
@@ -326,14 +324,11 @@ function ProfileScreenLoaded({
   // events
   // =
 
-  const onPressCompose = () => {
-    const mention =
-      profile.handle === currentAccount?.handle ||
-      isInvalidHandle(profile.handle)
-        ? undefined
-        : profile.handle
-    openComposer({mention, logContext: 'ProfileFeed'})
-  }
+  // the compose pill pre-fills a mention when viewing someone else's profile
+  const composeMention =
+    profile.handle === currentAccount?.handle || isInvalidHandle(profile.handle)
+      ? undefined
+      : profile.handle
 
   const onPageSelected = (i: number) => {
     setCurrentPage(i)
@@ -598,13 +593,9 @@ function ProfileScreenLoaded({
           : null}
       </PagerWithHeader>
       {hasSession && (
-        <FAB
-          testID="composeFAB"
-          onPress={onPressCompose}
-          icon={<EditBigIcon size="lg" fill={t.palette.white} />}
-          accessibilityRole="button"
-          accessibilityLabel={_(msg`New post`)}
-          accessibilityHint=""
+        <NewPostComposePrompt
+          mention={composeMention}
+          logContext="ProfileFeed"
         />
       )}
     </ScreenHider>

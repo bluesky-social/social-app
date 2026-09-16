@@ -61,7 +61,7 @@ export function ListMembers({
   list: string
   style?: StyleProp<ViewStyle>
   scrollElRef?: ListRef
-  onScrolledDownChange: (isScrolledDown: boolean) => void
+  onScrolledDownChange?: (isScrolledDown: boolean) => void
   onPressTryAgain?: () => void
   renderHeader: () => React.ReactElement
   renderEmptyState: () => React.ReactElement

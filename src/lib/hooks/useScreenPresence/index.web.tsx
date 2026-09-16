@@ -3,9 +3,14 @@ import {useSharedValue, withSpring} from 'react-native-reanimated'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
-import {ScreenPresenceContext} from './context'
+import {ScreenPresenceContext, useRegisterScreenCoverage} from './context'
 
-export {type ScreenPresence, useScreenPresence} from './context'
+export {
+  ScreenCoverageProvider,
+  type ScreenPresence,
+  useScreenCoverage,
+  useScreenPresence,
+} from './context'
 
 /**
  * No-op on web: there are no native stack transitions to track.
@@ -29,6 +34,7 @@ export function ScreenPresenceProvider({
 }) {
   const visibility = useSharedValue(1)
   const presence = useSharedValue(0)
+  useRegisterScreenCoverage(presence)
 
   useFocusEffect(
     useCallback(() => {

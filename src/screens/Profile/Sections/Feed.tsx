@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
+import {useCallback, useEffect, useImperativeHandle} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -18,7 +18,6 @@ import {
 } from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {findListNativeTag} from '#/view/com/util/listNativeTag'
-import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
@@ -54,8 +53,6 @@ export function ProfileFeedSection({
 }: FeedSectionProps) {
   const {_} = useLingui()
   const queryClient = useQueryClient()
-  const [hasNew, setHasNew] = useState(false)
-  const [isScrolledDown, setIsScrolledDown] = useState(false)
   const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
   const isVideoFeed = IS_NATIVE && feed.endsWith('posts_with_video')
   const adjustedInitialNumToRender = useInitialNumToRender({
@@ -67,8 +64,7 @@ export function ProfileFeedSection({
       offset: -headerHeight,
     })
     truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
-    setHasNew(false)
-  }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
+  }, [scrollElRef, headerHeight, queryClient, feed])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
@@ -102,8 +98,6 @@ export function ProfileFeedSection({
         enabled={isFocused}
         feed={feed}
         scrollElRef={scrollElRef}
-        onHasNew={setHasNew}
-        onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
         progressViewOffset={ios(0)}
@@ -115,13 +109,6 @@ export function ProfileFeedSection({
         isVideoFeed={isVideoFeed}
         ref={postFeedRef}
       />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
-          onPress={onScrollToTop}
-          label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
-        />
-      )}
     </View>
   )
 }

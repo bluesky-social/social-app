@@ -6,7 +6,6 @@ import {Trans} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useHaptics} from '#/lib/haptics'
-import {useHideBottomBarBorderForScreen} from '#/lib/hooks/useHideBottomBarBorder'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
@@ -33,8 +32,6 @@ export function ThreadComposePrompt({
     onIn: onHoverIn,
     onOut: onHoverOut,
   } = useInteractionState()
-
-  useHideBottomBarBorderForScreen()
 
   return (
     <View
