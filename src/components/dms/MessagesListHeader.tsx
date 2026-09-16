@@ -1,5 +1,5 @@
 import {useMemo} from 'react'
-import {View} from 'react-native'
+import {ImageBackground, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
@@ -24,6 +24,16 @@ import {IS_LIQUID_GLASS} from '#/env'
 import {type ConvoWithDetails} from './util'
 
 const PFP_SIZE = 40
+
+/**
+ * 1x1 transparent PNG. On iOS 26+ the header blur (scroll edge effect) only
+ * gets a region from UIKit-recognized elements inside the container, such as
+ * a UIImageView. Profiles without an avatar render the default avatar as SVG,
+ * which UIKit ignores, so we always keep a real image view behind the avatar.
+ */
+const TRANSPARENT_PNG = {
+  uri: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+}
 
 export function MessagesListHeader({convo}: {convo?: ConvoWithDetails | null}) {
   const t = useTheme()
@@ -104,6 +114,15 @@ function ProfileHeaderReady({
     : createSanitizedDisplayName(profile, true, moderation.ui('displayName'))
   const handle = isDeletedAccount ? null : sanitizeHandle(profile.handle, '@')
 
+  const avatar = (
+    <PreviewableUserAvatar
+      size={PFP_SIZE}
+      profile={profile}
+      moderation={moderation.ui('avatar')}
+      disableHoverCard={moderation.blocked}
+    />
+  )
+
   return (
     <Wrapper
       heading={
@@ -111,12 +130,15 @@ function ProfileHeaderReady({
           label={l`View ${displayName}’s profile`}
           style={[a.flex_row, a.gap_md, a.flex_1]}
           to={makeProfileLink(profile)}>
-          <PreviewableUserAvatar
-            size={PFP_SIZE}
-            profile={profile}
-            moderation={moderation.ui('avatar')}
-            disableHoverCard={moderation.blocked}
-          />
+          {IS_LIQUID_GLASS ? (
+            <ImageBackground
+              source={TRANSPARENT_PNG}
+              style={{width: PFP_SIZE, height: PFP_SIZE}}>
+              {avatar}
+            </ImageBackground>
+          ) : (
+            avatar
+          )}
           <View style={[a.flex_1]}>
             <View style={[a.flex_row, a.align_center, a.flex_1, web(a.mb_2xs)]}>
               <Text
