@@ -13,12 +13,7 @@ class ExpoPlatformInfoModule : Module() {
       Function("getIsReducedMotionEnabled") {
         val resolver = appContext.reactContext?.contentResolver ?: return@Function false
         val scale = Settings.Global.getString(resolver, Settings.Global.TRANSITION_ANIMATION_SCALE) ?: return@Function false
-
-        try {
-          return@Function scale.toFloat() == 0f
-        } catch (_: Error) {
-          return@Function false
-        }
+        return@Function scale.toFloatOrNull() == 0f
       }
     }
 }
