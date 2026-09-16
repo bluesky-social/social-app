@@ -14,7 +14,6 @@ import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
-import {Sparkle_Stroke2_Corner0_Rounded as SparkleIcon} from '#/components/icons/Sparkle'
 import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
@@ -56,16 +55,18 @@ export function AtmosphereScreen({}: Props) {
                   </Layout.Header.TitleText>
                   <View
                     testID="atmosphereBetaBadge"
-                    style={[a.flex_row, a.align_center, a.gap_xs]}>
-                    <SparkleIcon
-                      accessible={false}
-                      fill={t.palette.primary_800}
-                      size="sm"
-                    />
+                    style={[
+                      a.px_sm,
+                      a.py_xs,
+                      a.rounded_full,
+                      {backgroundColor: t.palette.primary_100},
+                    ]}>
                     <Text
                       style={[
+                        a.text_xs,
                         a.font_semi_bold,
-                        {color: t.palette.primary_800},
+                        a.leading_tight,
+                        {color: t.palette.primary_600},
                       ]}>
                       <Trans>Beta</Trans>
                     </Text>

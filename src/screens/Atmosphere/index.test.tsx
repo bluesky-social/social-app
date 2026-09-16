@@ -64,6 +64,8 @@ jest.mock('#/alf', () => ({
       bg: {backgroundColor: '#ffffff'},
     },
     palette: {
+      primary_100: '#CCE1FF',
+      primary_600: '#0059D6',
       primary_500: '#006aff',
       primary_800: '#004299',
       positive_500: '#168a45',
@@ -397,12 +399,16 @@ describe('AtmosphereScreen', () => {
     expect(screen.queryByTestId('atmosphereList')).toBeNull()
   })
 
-  it('shows a Beta badge next to the Atmosphere title', () => {
+  it('shows a blue text-only Beta badge next to the Atmosphere title', () => {
     mockUseAtmosphereQuery.mockReturnValue(basicQuery())
     const screen = render(screenElement())
+    const badge = screen.getByTestId('atmosphereBetaBadge')
 
     expect(screen.getByText('Atmosphere')).toBeTruthy()
-    expect(screen.getByTestId('atmosphereBetaBadge')).toHaveTextContent('Beta')
+    expect(badge).toHaveTextContent('Beta')
+    expect(badge).toHaveStyle({backgroundColor: '#CCE1FF'})
+    expect(badge.children).toHaveLength(1)
+    expect(screen.getByText('Beta')).toHaveStyle({color: '#0059D6'})
   })
 
   it('renders the Atmosphere screen with standalone, grouped, and unknown rows without JSON diagnostics', () => {
