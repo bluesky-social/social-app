@@ -1,48 +1,10 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useState,
-} from 'react'
+import {usePref, useSetPref} from './simple-prefs'
 
-import * as persisted from '#/state/persisted'
-
-type StateContext = boolean
-type SetContext = (v: boolean) => void
-
-const stateContext = createContext<StateContext>(
-  Boolean(persisted.defaults.subtitlesEnabled),
-)
-stateContext.displayName = 'SubtitlesStateContext'
-const setContext = createContext<SetContext>((_: boolean) => {})
-setContext.displayName = 'SubtitlesSetContext'
-
-export function Provider({children}: {children: React.ReactNode}) {
-  const [state, setState] = useState(Boolean(persisted.get('subtitlesEnabled')))
-
-  const setStateWrapped = useCallback(
-    (subtitlesEnabled: persisted.Schema['subtitlesEnabled']) => {
-      setState(Boolean(subtitlesEnabled))
-      persisted.write('subtitlesEnabled', subtitlesEnabled)
-    },
-    [setState],
-  )
-
-  useEffect(() => {
-    return persisted.onUpdate('subtitlesEnabled', nextSubtitlesEnabled => {
-      setState(Boolean(nextSubtitlesEnabled))
-    })
-  }, [setStateWrapped])
-
-  return (
-    <stateContext.Provider value={state}>
-      <setContext.Provider value={setStateWrapped}>
-        {children}
-      </setContext.Provider>
-    </stateContext.Provider>
-  )
+/* Backed by the merged simple-prefs provider; see simple-prefs.tsx. */
+export function useSubtitlesEnabled() {
+  return Boolean(usePref('subtitlesEnabled'))
 }
 
-export const useSubtitlesEnabled = () => useContext(stateContext)
-export const useSetSubtitlesEnabled = () => useContext(setContext)
+export function useSetSubtitlesEnabled() {
+  return useSetPref('subtitlesEnabled')
+}
