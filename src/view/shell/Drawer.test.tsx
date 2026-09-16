@@ -136,6 +136,7 @@ describe('Atmosphere drawer navigation', () => {
   it('opens Atmosphere and closes the drawer from its labeled entry', () => {
     const screen = renderDrawer()
 
+    expect(screen.getByText('🌎')).toBeTruthy()
     fireEvent.press(screen.getByRole('tab', {name: 'Atmosphere'}))
 
     expect(mockNavigate).toHaveBeenCalledWith('Atmosphere')
