@@ -217,6 +217,7 @@ overrides:
 packageExtensionsChecksum: sha256-KbeCj471Qk3TA758q8nLPkiGCPDA0TX18iO/Coy89lo=
 
 patchedDependencies:
+  '@bsky.app/expo-scroll-edge-effect@0.1.9': 13796c59a2ae19e58c259a6e5ead3bd2fc430aa83b43fe823583befea1d2d3bf
   '@formatjs/bigdecimal@0.2.5': 53afe18a845c1469b8b9002a460582559dfd52f502bc66a0f4c05662c2619291
   '@sentry/expo-upload-sourcemaps@8.18.0': 2368e1e1986165e7ead3c60017b78b2f9ade1b6a6b2f5ad27cd428608c6f12ae
   expo-age-range@57.0.2: c325225749993424461eeece1d97a99b19c00da2ebc958a73c12e4eca0c39306
@@ -271,7 +272,7 @@ importers:
         version: 0.5.1(expo@57.0.8)(react-native@0.86.0(patch_hash=745c21714c02aea2e319f2f4f4f8ac3c8641d66351d41d77727e960ac13583f1)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       '@bsky.app/expo-scroll-edge-effect':
         specifier: ^0.1.9
-        version: 0.1.9(expo@57.0.8)(react-native@0.86.0(patch_hash=745c21714c02aea2e319f2f4f4f8ac3c8641d66351d41d77727e960ac13583f1)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
+        version: 0.1.9(patch_hash=13796c59a2ae19e58c259a6e5ead3bd2fc430aa83b43fe823583befea1d2d3bf)(expo@57.0.8)(react-native@0.86.0(patch_hash=745c21714c02aea2e319f2f4f4f8ac3c8641d66351d41d77727e960ac13583f1)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       '@bsky.app/expo-translate-text':
         specifier: ^0.2.9
         version: 0.2.9(expo@57.0.8)(react-native@0.86.0(patch_hash=745c21714c02aea2e319f2f4f4f8ac3c8641d66351d41d77727e960ac13583f1)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
@@ -10894,7 +10895,7 @@ snapshots:
       react: 19.2.3
       react-native: 0.86.0(patch_hash=745c21714c02aea2e319f2f4f4f8ac3c8641d66351d41d77727e960ac13583f1)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
-  '@bsky.app/expo-scroll-edge-effect@0.1.9(expo@57.0.8)(react-native@0.86.0(patch_hash=745c21714c02aea2e319f2f4f4f8ac3c8641d66351d41d77727e960ac13583f1)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
+  '@bsky.app/expo-scroll-edge-effect@0.1.9(patch_hash=13796c59a2ae19e58c259a6e5ead3bd2fc430aa83b43fe823583befea1d2d3bf)(expo@57.0.8)(react-native@0.86.0(patch_hash=745c21714c02aea2e319f2f4f4f8ac3c8641d66351d41d77727e960ac13583f1)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.0(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)':
     dependencies:
       '@types/jest': 30.0.0
       expo: 57.0.8(patch_hash=1722861d12907a2d412d04230545b2fcbfa5547a79f99d763cb3e8de6f3a6f2a)(a30b6966c86e316118b4756850420741)

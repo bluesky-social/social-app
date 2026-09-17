@@ -1,0 +1,65 @@
+diff --git a/ios/ExpoScrollEdgeEffectView.swift b/ios/ExpoScrollEdgeEffectView.swift
+index 6b24e55cf97c96142e53172dc9097c4e054d4d53..6abb731e75a4fc06d2ad13a917a60b673b8e075b 100644
+--- a/ios/ExpoScrollEdgeEffectView.swift
++++ b/ios/ExpoScrollEdgeEffectView.swift
+@@ -4,6 +4,20 @@ import UIKit
+ class ExpoScrollEdgeEffectView: ExpoView {
+   private var currentInteraction: NSObject?
+ 
++  /**
++   UIKit derives a UIScrollEdgeElementContainerInteraction's effect region from the
++   "elements" it recognizes among the container's descendants (image views, labels,
++   glass views, controls), not from the container's own frame. React Native views,
++   text and SVG are plain UIViews that UIKit ignores, so a container holding only
++   those gets no effect at all. This empty, non-interactive image view filling our
++   bounds guarantees a region equal to the container.
++   */
++  private var pocketElementView: UIImageView?
++
++  private static let clearImage: UIImage = {
++    UIGraphicsImageRenderer(size: CGSize(width: 1, height: 1)).image { _ in }
++  }()
++
+   private var isAttached = false
+   private var resolveAttempts = 0
+   private let maxResolveAttempts = 30
+@@ -53,11 +67,30 @@ class ExpoScrollEdgeEffectView: ExpoView {
+   override func layoutSubviews() {
+     super.layoutSubviews()
+ 
++    // React Native mounts children by absolute subview index, so the element
++    // view must stay last to keep those indices valid.
++    if let pocketElementView, subviews.last !== pocketElementView {
++      bringSubviewToFront(pocketElementView)
++    }
++
+     if !isAttached, window != nil, scrollViewTag != nil, resolveAttempts < maxResolveAttempts {
+       updateInteraction()
+     }
+   }
+ 
++  private func ensurePocketElementView() {
++    if pocketElementView != nil {
++      return
++    }
++    let view = UIImageView(frame: bounds)
++    view.image = Self.clearImage
++    view.isUserInteractionEnabled = false
++    view.isAccessibilityElement = false
++    view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
++    addSubview(view)
++    pocketElementView = view
++  }
++
+   private func scheduleResolve() {
+     resolveAttempts = 0
+     updateInteraction()
+@@ -97,6 +130,8 @@ class ExpoScrollEdgeEffectView: ExpoView {
+       return
+     }
+ 
++    ensurePocketElementView()
++
+     let interaction = UIScrollEdgeElementContainerInteraction()
+     interaction.scrollView = scrollView
+     interaction.edge = resolvedEdge
