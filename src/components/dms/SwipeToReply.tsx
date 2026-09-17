@@ -92,7 +92,7 @@ export function SwipeToReply({
     activeOffsetX: isFromSelf
       ? [-10, EFFECTIVELY_DISABLED_OFFSET]
       : [-EFFECTIVELY_DISABLED_OFFSET, 10],
-    activeOffsetY: [-EFFECTIVELY_DISABLED_OFFSET, EFFECTIVELY_DISABLED_OFFSET],
+    failOffsetY: [-10, 10],
     onUpdate: e => {
       'worklet'
       const dir = isFromSelf

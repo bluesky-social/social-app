@@ -111,7 +111,7 @@ export function GestureActionView({
       actions.leftFirst ? -10 : -effectivelyDisabledOffset,
       actions.rightFirst ? 10 : effectivelyDisabledOffset,
     ],
-    activeOffsetY: [-effectivelyDisabledOffset, effectivelyDisabledOffset],
+    failOffsetY: [-10, 10],
     onActivate: () => {
       'worklet'
       isActive.set(true)
