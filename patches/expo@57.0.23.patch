@@ -65,7 +65,7 @@ index a93473fd2beaf2ab0f3880951d292e58e7288d10..c27911bd5cb56ba6051fb8ebf4194cce
  export function normalizeMethod(method: string): string {
    const normalized = method.toUpperCase();
 diff --git a/src/winter/fetch/fetch.ts b/src/winter/fetch/fetch.ts
-index ac789c024c96379e239bf44903c47e6a8e540d63..4f953b845c145de02976e8162ba2f63f8bd4dfd5 100644
+index cbe32225b933462d71b20ee339a6a90c1144cf0a..c421b1f215ff944e70be8ca8510b31ad229001be 100644
 --- a/src/winter/fetch/fetch.ts
 +++ b/src/winter/fetch/fetch.ts
 @@ -3,6 +3,7 @@ import { FetchError } from './FetchErrors';

@@ -1,5 +1,5 @@
 diff --git a/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift b/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
-index 68086bd9963675e71fcc4008df693fed9110cd3a..78c776191ac9071ff0057fd9d045ca1e01011dcf 100644
+index ec6697d00061055cad2fc986fc7e5c252ed7664a..2999edaaf4b513ae74d75d9780cc870a5bbad2b1 100644
 --- a/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
 +++ b/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
 @@ -78,13 +78,20 @@ public final class ExpoUpdatesUpdate: Update {
