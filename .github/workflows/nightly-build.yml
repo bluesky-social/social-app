@@ -9,6 +9,7 @@ on:
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
   contents: read
+  actions: read
 
 jobs:
   # Generate the changelog once, shared by both platforms. The range covers commits since
@@ -101,6 +102,7 @@ jobs:
     # validates the reusable-workflow permission ceiling, so the caller must grant it here.
     permissions:
       contents: write
+      actions: read
     uses: ./.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android

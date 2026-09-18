@@ -78,9 +78,10 @@ on:
       ANDROID_KEY_PASSWORD:
         required: true
 
-# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
+# Artifact discovery needs actions: read; store uploads still use EXPO_TOKEN.
 permissions:
   contents: read
+  actions: read
 
 jobs:
   build:
@@ -91,10 +92,13 @@ jobs:
       group: android-build
       cancel-in-progress: false
     outputs:
-      package-version: ${{ steps.package.outputs.version }}
-      version-code: ${{ steps.aab-version.outputs.version-code }}
+      package-version: ${{ steps.verified.outputs.package-version }}
+      version-code: ${{ steps.verified.outputs.build-number }}
       source-sha: ${{ steps.source.outputs.sha }}
       artifact-name: android-aab-${{ github.run_id }}
+    env:
+      RELEASE_PLATFORM: android
+      RELEASE_PROFILE: ${{ inputs.profile || 'testflight-android' }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -107,27 +111,77 @@ jobs:
         run: |
           echo "Building source: $(git rev-parse HEAD)"
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+          echo "RELEASE_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          echo "RELEASE_PACKAGE_VERSION=$(jq -r .version package.json)" >> "$GITHUB_ENV"
+
+      - name: Restore frozen source identity
+        id: source-checkpoint
+        uses: ./.github/actions/restore-release-artifact
+        with:
+          name: android-source-${{ github.run_id }}
+          path: ${{ runner.temp }}/release-source-android
+
+      - name: Freeze or verify source identity
+        env:
+          RESTORED: ${{ steps.source-checkpoint.outputs.artifact-id != '' }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/release-source-android"
+          node scripts/release/recovery.mjs source "$RUNNER_TEMP/release-source-android" "$RESTORED"
+
+      - name: Persist frozen source identity
+        if: steps.source-checkpoint.outputs.artifact-id == ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-source-${{ github.run_id }}
+          path: ${{ runner.temp }}/release-source-android/
+          retention-days: 14
+          if-no-files-found: error
+
+      - name: Restore native build
+        id: restore
+        uses: ./.github/actions/restore-release-artifact
+        with:
+          name: android-aab-${{ github.run_id }}
+          path: native-artifact
+
+      - name: Refuse to rebuild a missing submitted artifact
+        if: steps.restore.outputs.artifact-id == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for checkpoint in android-submission-intent android-submission; do
+            result=$(node scripts/release/recovery.mjs lookup "$checkpoint-$GITHUB_RUN_ID")
+            if [ "$result" != "artifact-id=" ]; then
+              echo "::error::A submission checkpoint exists but its native artifact is missing. Restore the original evidence; do not rebuild this run."
+              exit 1
+            fi
+          done
 
       - name: 🔧 Setup Expo project
+        if: steps.restore.outputs.artifact-id == ''
         uses: ./.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
       - uses: actions/setup-java@dd06d9cba3e5552c54d9f8ea23572deb30010f7c # v6.0.0
+        if: steps.restore.outputs.artifact-id == ''
         with:
           distribution: "temurin"
           java-version: "17"
 
       - name: 🔧 Setup bundletool
+        if: steps.restore.outputs.artifact-id == ''
         uses: amyu/setup-bundletool@cc2e1857284660bd625e43f2c8a45626f034302f # v1.1
         with:
           version: "1.18.3"
 
       - name: 🔤 Compile translations
+        if: steps.restore.outputs.artifact-id == ''
         uses: ./.github/actions/compile-i18n
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
+        if: steps.restore.outputs.artifact-id == ''
         id: env
         uses: ./.github/actions/write-env
         with:
@@ -138,6 +192,7 @@ jobs:
           google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
 
       - name: 🏗️ EAS Build
+        if: steps.restore.outputs.artifact-id == ''
         uses: ./.github/actions/eas-local-build
         with:
           platform: android
@@ -148,11 +203,8 @@ jobs:
           sentry-release: ${{ steps.env.outputs.release-version }}
           sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
 
-      - name: 📚 Get package version
-        id: package
-        run: echo "version=$(jq -r .version package.json)" >> "$GITHUB_OUTPUT"
-
       - name: 🔢 Read version code from AAB
+        if: steps.restore.outputs.artifact-id == ''
         id: aab-version
         run: |
           version_code=$(bundletool dump manifest --bundle=build.aab --xpath=/manifest/@android:versionCode)
@@ -163,46 +215,40 @@ jobs:
           echo "AAB version code: $version_code"
           echo "version-code=$version_code" >> "$GITHUB_OUTPUT"
 
-      - name: Record artifact provenance
+      - name: Stage native artifact and provenance
+        if: steps.restore.outputs.artifact-id == ''
         env:
-          SOURCE_SHA: ${{ steps.source.outputs.sha }}
-          PACKAGE_VERSION: ${{ steps.package.outputs.version }}
-          VERSION_CODE: ${{ steps.aab-version.outputs.version-code }}
+          NATIVE_BUILD_NUMBER: ${{ steps.aab-version.outputs.version-code }}
         run: |
-          checksum=$(sha256sum build.aab | awk '{print $1}')
-          jq -n \
-            --arg sourceSha "$SOURCE_SHA" \
-            --arg packageVersion "$PACKAGE_VERSION" \
-            --arg versionCode "$VERSION_CODE" \
-            --arg artifactFilename "build.aab" \
-            --arg artifactSha256 "$checksum" \
-            '{sourceSha: $sourceSha, packageVersion: $packageVersion, versionCode: $versionCode, artifactFilename: $artifactFilename, artifactSha256: $artifactSha256, submissionState: "notStarted"}' \
-            > android-build-metadata.json
-          cat android-build-metadata.json
+          mkdir -p native-artifact
+          cp build.aab native-artifact/
+          node scripts/release/recovery.mjs record-build native-artifact "$NATIVE_BUILD_NUMBER"
 
-      # Keep the exact build and its provenance available for inspection and failed-job retries.
-      - name: 🚀 Upload AAB artifact
+      - name: Verify native artifact
+        id: verified
+        run: node scripts/release/recovery.mjs verify-build native-artifact
+
+      - name: Upload native artifact
+        if: steps.restore.outputs.artifact-id == ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-aab-${{ github.run_id }}
           retention-days: 14
           if-no-files-found: error
-          path: |
-            build.aab
-            android-build-metadata.json
+          path: native-artifact/
 
-      - name: 📝 Write build summary
+      - name: Write build summary
         env:
-          VERSION_CODE: ${{ steps.aab-version.outputs.version-code }}
-          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+          RESTORED: ${{ steps.restore.outputs.artifact-id }}
+          NATIVE_BUILD_NUMBER: ${{ steps.verified.outputs.build-number }}
         run: |
-          artifact_sha256=$(jq -r .artifactSha256 android-build-metadata.json)
+          state=Built
+          if [ -n "$RESTORED" ]; then state=Reused; fi
           {
-            echo "### Android build number"
-            echo
-            echo "- Version code: \`$VERSION_CODE\`"
-            echo "- Source SHA: \`$SOURCE_SHA\`"
-            echo "- AAB SHA-256: \`$artifact_sha256\`"
+            echo "### android build: $state"
+            echo "- Source SHA: $RELEASE_SOURCE_SHA"
+            echo "- Profile: $RELEASE_PROFILE"
+            echo "- Build number: $NATIVE_BUILD_NUMBER"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:
@@ -211,6 +257,14 @@ jobs:
     needs: [build]
     # Submit unless explicitly disabled; on events where inputs is empty this still submits.
     if: ${{ inputs.submit != false }}
+    concurrency:
+      group: android-submit-${{ github.run_id }}
+      cancel-in-progress: false
+    env:
+      RELEASE_PLATFORM: android
+      RELEASE_PROFILE: ${{ inputs.profile || 'testflight-android' }}
+      RELEASE_SOURCE_SHA: ${{ needs.build.outputs.source-sha }}
+      RELEASE_PACKAGE_VERSION: ${{ needs.build.outputs.package-version }}
     steps:
       # eas submit reads app config from the repo, so we need a checkout.
       - name: ⬇️ Checkout
@@ -219,37 +273,64 @@ jobs:
           ref: ${{ needs.build.outputs.source-sha }}
           fetch-depth: 5
 
-      - name: 🔧 Setup Expo project
-        uses: ./.github/actions/setup-expo-project
-        with:
-          expo-token: ${{ secrets.EXPO_TOKEN }}
-
       - name: ⬇️ Download AAB artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: android-aab-${{ github.run_id }}
 
+      - name: Restore submission intent
+        id: intent
+        uses: ./.github/actions/restore-release-artifact
+        with:
+          name: android-submission-intent-${{ github.run_id }}
+          path: recovery-intent
+
+      - name: Restore submission receipt
+        id: receipt
+        uses: ./.github/actions/restore-release-artifact
+        with:
+          name: android-submission-${{ github.run_id }}
+          path: recovery-receipt
+
+      - name: Decide whether to submit
+        id: recovery
+        env:
+          INTENT_ID: ${{ steps.intent.outputs.artifact-id }}
+          RECEIPT_ID: ${{ steps.receipt.outputs.artifact-id }}
+        run: |
+          intent=-
+          receipt=-
+          if [ -n "$INTENT_ID" ]; then intent=recovery-intent/android-submission-intent.json; fi
+          if [ -n "$RECEIPT_ID" ]; then receipt=recovery-receipt/android-submission.json; fi
+          node scripts/release/recovery.mjs submission . "$intent" "$receipt"
+
+      - name: 🔧 Setup Expo project
+        uses: ./.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
+
+      # Persist intent before contacting EAS: a missing receipt is not proof of failure.
+      - name: Upload submission intent
+        if: steps.recovery.outputs.state == 'submit'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: android-submission-intent-${{ github.run_id }}
+          path: android-submission-intent.json
+          retention-days: 14
+          if-no-files-found: error
+
       - name: 🚀 Submit to Google Play
+        if: steps.recovery.outputs.state == 'submit'
         env:
           PROFILE: ${{ inputs.profile || 'testflight-android' }}
-        run: pnpm eas submit -p android --profile $PROFILE --non-interactive --path build.aab
+        run: pnpm eas submit -p android --profile "$PROFILE" --wait --non-interactive --path build.aab
 
       - name: Record submission receipt
-        env:
-          SOURCE_SHA: ${{ needs.build.outputs.source-sha }}
-          PACKAGE_VERSION: ${{ needs.build.outputs.package-version }}
-          VERSION_CODE: ${{ needs.build.outputs.version-code }}
-        run: |
-          artifact_sha256=$(jq -r .artifactSha256 android-build-metadata.json)
-          jq -n \
-            --arg sourceSha "$SOURCE_SHA" \
-            --arg packageVersion "$PACKAGE_VERSION" \
-            --arg versionCode "$VERSION_CODE" \
-            --arg artifactSha256 "$artifact_sha256" \
-            '{sourceSha: $sourceSha, packageVersion: $packageVersion, versionCode: $versionCode, artifactSha256: $artifactSha256, submissionState: "submitted"}' \
-            > android-submission.json
+        if: steps.recovery.outputs.state == 'submit'
+        run: node scripts/release/recovery.mjs receipt .
 
       - name: Upload submission receipt
+        if: steps.recovery.outputs.state == 'submit'
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-submission-${{ github.run_id }}
@@ -266,6 +347,20 @@ jobs:
           payload-templated: true
           payload: |
             {"text": "Android ${{ inputs.profile || 'testflight-android' }} build submitted to Google Play!\n```Version Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.version-code }}```"}
+
+      - name: Write submission summary
+        if: always()
+        env:
+          RECOVERY_STATE: ${{ steps.recovery.outputs.state }}
+          JOB_STATUS: ${{ job.status }}
+        run: |
+          {
+            echo "### android submission"
+            echo "- Recovery decision: ${RECOVERY_STATE:-blocked}"
+            echo "- Job status: $JOB_STATUS"
+            echo "- Source SHA: $RELEASE_SOURCE_SHA"
+            echo "Inspect the submission receipt for confirmed store upload; a failed job may have already submitted."
+          } >> "$GITHUB_STEP_SUMMARY"
 
   # Runs in parallel with submit: the QA APK shouldn't be blocked by a Play submission failure.
   universalApk:
