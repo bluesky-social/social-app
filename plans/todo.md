@@ -34,7 +34,15 @@ Implemented `createThreadStore({resolvers, initialState})`. `ThreadStoreInitialS
 
 ## 3. Build the `ComposerOpts` and draft adapters
 
-Status: pending
+Status: completed
+
+Implementation plan: `plans/composer-v2-adapters.md`.
+
+Implemented and exported `composerOptsToInitialState()` and `draftToInitialState()` under `src/components/ComposerV2/adapters/`. Both return `ThreadStoreInitialState`; reply intents preserve a serializable parent preview without moderation or a fabricated root. Adapters preserve text/mention precedence, attachment order, record/media classification, local refs, captions, languages, labels, GIF metadata, and supplied record views. Unsupported or lossy draft input throws `ComposerAdapterError` with a stable code. Store initialization remains direct and simulated uploads remain unchanged.
+
+Gate mapping remains #4. Draft saving/serialization and round trips remain #6. Real uploads, production UI migration, and other later todo boundaries were not started.
+
+Verification: 159 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. Work remains uncommitted and unstaged.
 
 ## 4. Add postgate/threadgate state
 

@@ -62,6 +62,7 @@ The top-level state is currently:
 ```ts
 type ThreadState = {
   posts: Record<string, ThreadPost>
+  replyTo: ThreadReplyTarget | undefined
   draftId: string | undefined
   isDirty: boolean
 }
@@ -149,12 +150,12 @@ An images/gallery attachment contains multiple image items but remains one media
 
 ### Valid combinations
 
-| Record slot | Media slot | Submitted embed |
-| --- | --- | --- |
-| Empty | Empty | No embed |
-| Set | Empty | `app.bsky.embed.record` |
-| Empty | Set | The active media embed |
-| Set | Set | `app.bsky.embed.recordWithMedia` |
+| Record slot | Media slot | Submitted embed                  |
+| ----------- | ---------- | -------------------------------- |
+| Empty       | Empty      | No embed                         |
+| Set         | Empty      | `app.bsky.embed.record`          |
+| Empty       | Set        | The active media embed           |
+| Set         | Set        | `app.bsky.embed.recordWithMedia` |
 
 The store prevents two active records and two active media attachments. Record construction derives the final lexicon variant from the slots instead of using submit-time priority to discard conflicting state.
 
@@ -315,8 +316,11 @@ Saved draft + loaded media ---> draftToInitialState() --------+--> ThreadStoreIn
 - Local image/video sources, local draft refs, alt text, and caption contents.
 - GIF metadata and resolved external/chat-invite cards.
 - Draft identity and initial dirty/saved state.
+- A minimal serializable reply target: parent URI/CID, text, languages, author,
+  and a moderation-free embed preview. The root is intentionally unresolved.
 
-Reply context and gate settings will extend this contract as those capabilities are added. The source adapters themselves remain the next task.
+The adapters are implemented in `src/components/ComposerV2/adapters/`. They do
+not add gate state, draft serialization, or shell UI intents to this contract.
 
 ```ts
 createThreadStore({
@@ -353,30 +357,35 @@ The store constructor performs the single transformation from `ThreadStoreInitia
 
 ### `ComposerOpts` adapter
 
-The public shell contract remains compatible during migration. `composerOptsToInitialState()` translates existing intents without requiring every caller to understand the V2 store shape.
+The public shell contract remains compatible during migration. The async
+`composerOptsToInitialState(opts, metadataOptions?)` translates existing intents
+without requiring callers to understand the V2 store shape. It preserves text
+and mention precedence, detects at most one record and one media URI from
+initial facets, and gives explicit quote/images/video inputs precedence over
+those candidates. Video MIME type comes from the existing platform metadata
+probe, which is injectable for deterministic tests.
 
-It handles:
-
-- Initial text.
-- Mention.
-- Reply target.
-- Quote.
-- Photos.
-- Video.
-- Gallery-opening intent.
-- Default interaction settings.
-
-Callbacks such as `onPost`, `onPostSuccess`, close behavior, and logging context remain session or shell concerns rather than initial record data.
+Supplied quotes are passed through as resolved post records and local media is
+passed as source data. `openGallery`, `onPost`, `onPostSuccess`, `logContext`,
+close behavior, and blocking/auth checks remain shell concerns. The adapter does
+not return them or initialize them in the store.
 
 ### Draft adapter
 
-`draftToInitialState()` performs draft-specific decoding and local media lookup, then returns the same `ThreadStoreInitialState` interface as the `ComposerOpts` adapter. Draft restoration must not have a separate action sequence or privileged mutation path inside the store.
+The async `draftToInitialState({draftId, draft, loadedMedia, ...metadata})`
+performs draft-specific decoding and local media lookup, then returns the same
+`ThreadStoreInitialState` interface. It reads legacy images before gallery
+images, preserves local refs, probes image/video metadata, restores captions,
+reconstructs Tenor/Klipy GIF data, and classifies ordinary external URLs by
+record/media slot. Known record refs are classified from their AT-URI
+collection and are not refetched.
 
-Neither source should mount an empty store and dispatch corrective actions. The first published snapshot should already describe the hydrated composer. Equivalent intent and draft content should produce semantically equivalent normalized inputs.
-
-Draft-derived local media begins processing and uploading eagerly once the store is created.
-
-Supplied hydrated embed views are trusted for the lifetime of the composer session. V2 resolves only missing data and does not force-refresh a supplied quote or external view before submission.
+Missing local media, failed metadata, unsupported entries/record kinds,
+conflicting active attachments, and image overflow throw
+`ComposerAdapterError` with a stable `code`; they are not silently reduced to
+text-only state. Neither source mounts an empty store or dispatches corrective
+actions. The store constructor starts only its existing simulated uploads and
+URI resolution after the complete snapshot is built.
 
 ## 11. Drafts are a codec around the store
 
@@ -520,11 +529,12 @@ Implemented:
 - Debug harness.
 - Current lex-client adaptation.
 - `ThreadStoreInitialState`, direct initial snapshot construction, and eager simulated uploads/URI resolution.
+- `ComposerOpts` and draft adapters, including serializable reply previews and
+  explicit conversion errors.
 
 Still to implement:
 
-- Expanded composer-session state.
-- `ComposerOpts` and draft adapters against `ThreadStoreInitialState`.
+- Expanded composer-session state beyond the reply preview.
 - Postgates and threadgates.
 - Gallery limits and embed selection.
 - Draft codec.

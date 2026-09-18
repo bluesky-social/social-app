@@ -16,7 +16,32 @@ export function buildThreadState(
   }
   return {
     posts,
+    replyTo: input.replyTo
+      ? {
+          ...input.replyTo,
+          langs: [...input.replyTo.langs],
+          author: cloneSerializable(input.replyTo.author),
+          embed: input.replyTo.embed
+            ? cloneSerializable(input.replyTo.embed)
+            : undefined,
+        }
+      : undefined,
     draftId: input.draftId,
     isDirty: input.isDirty ?? false,
   }
+}
+
+function cloneSerializable<T>(value: T): T {
+  if (Array.isArray(value)) {
+    return value.map(item => cloneSerializable(item)) as T
+  }
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.entries(value).map(([key, item]) => [
+        key,
+        cloneSerializable(item),
+      ]),
+    ) as T
+  }
+  return value
 }
