@@ -116,6 +116,16 @@ export type PostAttachments = {
   media: MediaAttachment | undefined
 }
 
+/** Serializable preview data for the post this thread is replying to. */
+export type ThreadReplyTarget = {
+  uri: string
+  cid: string
+  text: string
+  langs: string[]
+  author: app.bsky.actor.defs.ProfileViewBasic
+  embed?: app.bsky.feed.defs.PostView['embed']
+}
+
 export type ThreadPost = {
   text: string
   langs: string[]
@@ -189,6 +199,8 @@ export type ThreadPostInitialState = {
 export type ThreadStoreInitialState = {
   /** Ordered inputs. Omitted or empty posts create one empty post. */
   posts?: readonly ThreadPostInitialState[]
+  /** Parent preview for a reply; the submission layer resolves any root. */
+  replyTo?: ThreadReplyTarget
   draftId?: string
   /** Defaults to false; true can explicitly restore an unsaved composition. */
   isDirty?: boolean
@@ -197,6 +209,8 @@ export type ThreadStoreInitialState = {
 export type ThreadState = {
   /** Nanoid keys retain insertion order, which is the thread order. */
   posts: Record<string, ThreadPost>
+  /** Parent preview for a reply; the submission layer resolves any root. */
+  replyTo: ThreadReplyTarget | undefined
   /** ID of the saved draft this composer was opened from, if any. */
   draftId: string | undefined
   /** Whether a user edit has changed the initial or loaded draft state. */

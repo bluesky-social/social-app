@@ -94,7 +94,7 @@ Reuse the existing conversion utilities in `src/state/queries/threadgate/` and `
 
 ### 3. Unified initial-state hydration
 
-Implemented in todo #2: `createThreadStore({resolvers, initialState})` accepts one normalized `ThreadStoreInitialState` interface. Both open-composer intents and saved drafts must transform into this same interface before the store is created; the adapters are todo #3:
+Implemented in todo #2 and #3: `createThreadStore({resolvers, initialState})` accepts one normalized `ThreadStoreInitialState` interface, and the adapters in `src/components/ComposerV2/adapters/` transform open-composer intents and saved drafts into it:
 
 ```text
 ComposerOpts -----------------> composerOptsToInitialState() --+
@@ -104,7 +104,15 @@ Saved draft + loaded media ---> draftToInitialState() --------+--> ThreadStoreIn
 
 Keep the existing shell-facing `ComposerOpts` contract during migration, but isolate it behind the compatibility adapter. The draft adapter performs its source-specific decoding and media lookup, then produces the same normalized input. The internal V2 shape can improve independently without forcing open-composer callers or the draft schema to mirror the store directly.
 
-`ThreadStoreInitialState` is plain data. It currently describes ordered posts, text/languages/labels, record/media attachments, draft identity/dirty state, and local media sources (including local refs, alt text, and captions). Reply context and gate settings will be added alongside their store capabilities. It contains no generated item IDs, upload statuses, runtime task handles, retry closures, revision counters, or UI callbacks. The store constructor builds the full initial snapshot before starting eager simulated uploads or resolving URI candidates. Progress and retries do not dirty the initial composition. Oversized normalized image sets are rejected before starting work rather than silently losing media.
+`ThreadStoreInitialState` is plain data. It describes ordered posts,
+text/languages/labels, record/media attachments, a minimal serializable reply
+target, draft identity/dirty state, and local media sources (including local
+refs, alt text, and captions). It contains no generated item IDs, upload
+statuses, runtime task handles, retry closures, revision counters, moderation
+objects, or UI callbacks. The store constructor builds the full initial
+snapshot before starting eager simulated uploads or resolving URI candidates.
+Progress and retries do not dirty the initial composition. Oversized normalized
+image sets are rejected before starting work rather than silently losing media.
 
 Support at minimum:
 
@@ -115,10 +123,15 @@ Support at minimum:
 - Initial photos, including dimensions and alt text.
 - Initial video, including dimensions and any known MIME type.
 - Reply targets.
-- `openGallery` intent.
-- Default postgate/threadgate preferences.
-- Intent combinations that are valid, such as text plus quote or text plus photos.
-- Link detection in initial text using the same record-versus-media routing rules as text entered after opening.
+- Link detection in initial text using the same record-versus-media routing
+  rules as text entered after opening.
+- Draft-level languages, labels, local refs, captions, GIFs, and record
+  collection classification.
+
+`openGallery`, callbacks, logging context, and auth/block checks remain outside
+this data contract. Video MIME probing and draft image/video metadata probes are
+injectable at the adapter boundary. Unsupported or lossy input throws a local
+`ComposerAdapterError` rather than being silently dropped.
 
 The hydration API should make ownership clear:
 
@@ -129,7 +142,10 @@ The hydration API should make ownership clear:
 - Hydrated state starts clean unless the source is explicitly an unsaved user mutation.
 - Equivalent intent and draft content should normalize to semantically equivalent `ThreadStoreInitialState` values.
 
-Add table-driven tests covering every supported intent and meaningful combination, plus contract tests that feed normalized initial state directly into the store independently of its source adapter.
+Focused adapter tests cover link classification, explicit precedence, reply
+sanitization, draft media ordering/metadata/captions/GIFs, conversion errors,
+and adapter-to-store initialization. Contract tests continue to feed normalized
+initial state directly into the store independently of its source adapter.
 
 ### 4. Draft hydration and serialization
 
