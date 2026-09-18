@@ -14,7 +14,6 @@ import {LANG_DROPDOWN_HITSLOP} from '#/lib/constants'
 import {codeToLanguageName} from '#/locale/helpers'
 import {
   fromPostLanguages,
-  toPostLanguages,
   useLanguagePrefs,
 } from '#/state/preferences/languages'
 import {atoms as a, useTheme} from '#/alf'
@@ -48,11 +47,10 @@ export function PostLanguageSelect({
   const languageDialogControl = Dialog.useDialogControl()
 
   const dedupedHistory = Array.from(
-    new Set([...langPrefs.postLanguageHistory, langPrefs.postLanguage]),
+    new Set([...langPrefs.postLanguageHistory, langPrefs.primaryLanguage]),
   )
 
-  const currentLanguages =
-    currentLanguagesProp ?? toPostLanguages(langPrefs.postLanguage)
+  const currentLanguages = currentLanguagesProp ?? [langPrefs.primaryLanguage]
 
   const onSelectLanguages = (languages: string[]) => {
     let langsString = languages.join(',')
@@ -64,7 +62,7 @@ export function PostLanguageSelect({
 
   if (
     dedupedHistory.length === 1 &&
-    dedupedHistory[0] === langPrefs.postLanguage
+    dedupedHistory[0] === langPrefs.primaryLanguage
   ) {
     return (
       <>
@@ -161,8 +159,7 @@ function LanguageBtn({
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
 
-  const postLanguagesPref = toPostLanguages(langPrefs.postLanguage)
-  const currentLanguages = currentLanguagesProp ?? postLanguagesPref
+  const currentLanguages = currentLanguagesProp ?? [langPrefs.primaryLanguage]
 
   /*
    * Stays at 0 when idle; each nudge runs two pulses with a faster

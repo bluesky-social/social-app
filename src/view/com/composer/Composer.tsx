@@ -309,7 +309,7 @@ export const ComposePost = ({
 
   /**
    * A manual selection or accepted suggestion applies only to this composer
-   * session, without changing the saved post language preference.
+   * session, without changing the primary language preference.
    */
   const [selectedPostLanguage, setSelectedPostLanguage] = useState<
     string | null
@@ -323,15 +323,15 @@ export const ComposePost = ({
   )
 
   /**
-   * The currently selected languages of the post. Prefer local temporary
-   * language selection over global lang prefs, if available.
+   * Default to the primary language, ignoring the legacy sticky post language
+   * preference. Manual selections and accepted suggestions apply locally.
    */
   const currentLanguages = useMemo(
     () =>
       selectedPostLanguage
         ? toPostLanguages(selectedPostLanguage)
-        : toPostLanguages(langPrefs.postLanguage),
-    [selectedPostLanguage, langPrefs.postLanguage],
+        : [langPrefs.primaryLanguage],
+    [selectedPostLanguage, langPrefs.primaryLanguage],
   )
 
   /**
