@@ -16,7 +16,6 @@ import {
   fromPostLanguages,
   toPostLanguages,
   useLanguagePrefs,
-  useLanguagePrefsApi,
 } from '#/state/preferences/languages'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, type ButtonProps} from '#/components/Button'
@@ -34,7 +33,7 @@ export function PostLanguageSelect({
   nudgeAt = 0,
 }: {
   currentLanguages?: string[]
-  onSelectLanguage?: (language: string) => void
+  onSelectLanguage: (language: string) => void
   /**
    * Timestamp (ms) of the last honored language-detection nudge. Each
    * time this changes, the button flashes a transient hint and fades.
@@ -46,7 +45,6 @@ export function PostLanguageSelect({
 }) {
   const {_} = useLingui()
   const langPrefs = useLanguagePrefs()
-  const setLangPrefs = useLanguagePrefsApi()
   const languageDialogControl = Dialog.useDialogControl()
 
   const dedupedHistory = Array.from(
@@ -61,8 +59,7 @@ export function PostLanguageSelect({
     if (!langsString) {
       langsString = langPrefs.primaryLanguage
     }
-    setLangPrefs.setPostLanguage(langsString)
-    onSelectLanguage?.(langsString)
+    onSelectLanguage(langsString)
   }
 
   if (
@@ -71,7 +68,11 @@ export function PostLanguageSelect({
   ) {
     return (
       <>
-        <LanguageBtn onPress={languageDialogControl.open} nudgeAt={nudgeAt} />
+        <LanguageBtn
+          currentLanguages={currentLanguages}
+          onPress={languageDialogControl.open}
+          nudgeAt={nudgeAt}
+        />
         <LanguageSelectDialog
           titleText={<Trans>Choose post languages</Trans>}
           subtitleText={
@@ -109,10 +110,7 @@ export function PostLanguageSelect({
                 <Menu.Item
                   key={historyItem}
                   label={_(msg`Select ${langName}`)}
-                  onPress={() => {
-                    setLangPrefs.setPostLanguage(historyItem)
-                    onSelectLanguage?.(historyItem)
-                  }}>
+                  onPress={() => onSelectLanguage(historyItem)}>
                   <Menu.ItemText>{langName}</Menu.ItemText>
                   <Menu.ItemRadio
                     selected={
