@@ -319,8 +319,23 @@ Saved draft + loaded media ---> draftToInitialState() --------+--> ThreadStoreIn
 - A minimal serializable reply target: parent URI/CID, text, languages, author,
   and a moderation-free embed preview. The root is intentionally unresolved.
 
-The adapters are implemented in `src/components/ComposerV2/adapters/`. They do
-not add gate state, draft serialization, or shell UI intents to this contract.
+The adapters are implemented in `src/components/ComposerV2/adapters/`. They
+hydrate gate state but do not perform draft serialization or carry shell UI
+intents in this contract.
+
+The gate fields in the normalized input and live state are:
+
+```ts
+{
+  threadgateAllowRules: ThreadgateAllowRule[] | undefined
+  postgateEmbeddingRules: PostgateEmbeddingRule[]
+}
+```
+
+`threadgateAllowRules: undefined` means everyone may reply and `[]` means no
+one may reply. Postgate rules default to `[]`, which permits quoting. Both rule
+arrays use the generated threadgate/postgate lexicon unions, including opaque
+unknown typed objects, and are deeply cloned during hydration.
 
 ```ts
 createThreadStore({
@@ -461,7 +476,9 @@ The store should expose compression and network progress distinctly while preser
 
 ## 13. Postgates and threadgates are thread-level settings
 
-The composer exposes one shared postgate configuration for the thread rather than independently editable settings on every post.
+The composer exposes one shared postgate configuration for the thread rather than independently editable settings on every post. `ThreadStoreInitialState` accepts `threadgateAllowRules` and `postgateEmbeddingRules`; `ThreadState` owns cloned live values. New-composer hydration accepts a caller-supplied `PostInteractionSettingsPref` through `composerOptsToInitialState` adapter options. Draft hydration reads the draft's top-level gate fields, and absent draft fields use protocol defaults rather than account preferences.
+
+The store exposes `setThreadgateAllowRules`, `setPostgateEmbeddingRules`, and `setPostgateConfiguration`. These actions copy incoming serializable data, mark real edits dirty, preserve no-op state identity, and do not start media or link work. Gate configuration is not attached to individual posts, so adding/removing posts and post/media async completion leave it unchanged.
 
 During submission planning:
 
@@ -531,11 +548,12 @@ Implemented:
 - `ThreadStoreInitialState`, direct initial snapshot construction, and eager simulated uploads/URI resolution.
 - `ComposerOpts` and draft adapters, including serializable reply previews and
   explicit conversion errors.
+- Thread-level postgate/threadgate configuration, preference and draft
+  hydration, opaque rule preservation, and editing actions.
 
 Still to implement:
 
 - Expanded composer-session state beyond the reply preview.
-- Postgates and threadgates.
 - Gallery limits and embed selection.
 - Draft codec.
 - Real image processing and uploads.

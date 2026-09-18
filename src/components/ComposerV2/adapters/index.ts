@@ -15,6 +15,7 @@ import {
   type ThreadReplyTarget,
   type ThreadStoreInitialState,
 } from '#/components/ComposerV2/store/types'
+import {cloneSerializable} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
 import {type Gif} from '#/features/gifPicker/types'
 import {app} from '#/lexicons'
@@ -52,6 +53,8 @@ export type AdapterMetadataOptions = {
     uri: string,
     fallbackMimeType?: string,
   ) => Promise<VideoMetadata>
+  /** Defaults used for a new composition; drafts use their own saved values. */
+  postInteractionSettings?: app.bsky.actor.defs.PostInteractionSettingsPref
 }
 
 export type DraftToInitialStateInput = AdapterMetadataOptions & {
@@ -68,7 +71,10 @@ export type DraftToInitialStateInput = AdapterMetadataOptions & {
  */
 export async function composerOptsToInitialState(
   opts: ComposerOpts,
-  {getVideoMetadata = defaultGetVideoMetadata}: AdapterMetadataOptions = {},
+  {
+    getVideoMetadata = defaultGetVideoMetadata,
+    postInteractionSettings,
+  }: AdapterMetadataOptions = {},
 ): Promise<ThreadStoreInitialState> {
   const imageUris = opts.imageUris?.length ? opts.imageUris : undefined
   if (imageUris && opts.videoUri) {
@@ -130,6 +136,11 @@ export async function composerOptsToInitialState(
 
   return {
     replyTo: opts.replyTo ? toReplyTarget(opts.replyTo) : undefined,
+    threadgateAllowRules: cloneRules(
+      postInteractionSettings?.threadgateAllowRules,
+    ),
+    postgateEmbeddingRules:
+      cloneRules(postInteractionSettings?.postgateEmbeddingRules) ?? [],
     posts: [
       {
         text,
@@ -165,6 +176,8 @@ export async function draftToInitialState({
   return {
     draftId,
     isDirty: false,
+    threadgateAllowRules: cloneRules(draft.threadgateAllow),
+    postgateEmbeddingRules: cloneRules(draft.postgateEmbeddingRules) ?? [],
     posts,
   }
 }
@@ -605,6 +618,10 @@ function validDimensions(value: {
     Number.isFinite(value.height) &&
     value.height > 0
   )
+}
+
+function cloneRules<T>(rules: readonly T[] | undefined): T[] | undefined {
+  return rules?.map(rule => cloneSerializable(rule))
 }
 
 function cloneWithoutModeration<T>(value: T): T {

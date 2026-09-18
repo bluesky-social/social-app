@@ -81,7 +81,7 @@ Requirements:
 - Restore gate settings from a saved draft.
 - Preserve the distinction between “everybody may reply,” explicit allow rules, and “nobody may reply.”
 - Support mention, follower, following, and list threadgate rules.
-- Support postgate embedding rules and detached embedding URIs where applicable.
+- Support postgate embedding rules for newly composed posts.
 - Keep one thread-wide postgate configuration rather than independently editable per-post settings.
 - Mark gate edits dirty and include them in draft serialization.
 - During submit planning:
