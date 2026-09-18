@@ -26,12 +26,16 @@ draftToInitialState(input: DraftToInitialStateInput): Promise<ThreadStoreInitial
 ```
 
 `AdapterMetadataOptions` injects image-dimension and video-metadata probes for
-local deterministic tests. `ComposerAdapterError` exposes a stable `code` for
-missing media, failed metadata, conflicting or oversized attachments, and
-unsupported draft data. `ThreadStoreInitialState.replyTo` and `ThreadState.replyTo`
-carry only the serializable parent preview; no root is fabricated and moderation
-is omitted. Gate state remains todo #4, and draft serialization/saving remains
-todo #6. Uploads remain simulated.
+local deterministic tests. It also accepts optional
+`postInteractionSettings` for new-composition gate defaults. `ComposerAdapterError`
+exposes a stable `code` for missing media, failed metadata, conflicting or
+oversized attachments, and unsupported draft data. `ThreadStoreInitialState.replyTo`
+and `ThreadState.replyTo` carry only the serializable parent preview; no root is
+fabricated and moderation is omitted. The adapters map shared thread-level
+`threadgateAllowRules` and `postgateEmbeddingRules`; draft fields win over
+preferences, and absent draft fields use protocol defaults. Unknown typed rules
+are cloned and preserved. Draft serialization/saving remains todo #6. Uploads
+remain simulated.
 
 This is todo #3 in `plans/todo.md`. Do not start another todo, commit changes, or delegate this work further.
 
@@ -43,7 +47,9 @@ This is todo #3 in `plans/todo.md`. Do not start another todo, commit changes, o
 - The store generates fresh post/media IDs and starts simulated image/video uploads and URI resolution eagerly after building the complete snapshot.
 - Supplied resolved attachments are not refetched. `{kind: 'uri', uri}` reserves the adapter-selected slot.
 - Initial image sets over 10 throw before any work starts; empty image sets normalize to no media.
-- The store now has minimal reply context but still has no gate state.
+- The store now has minimal reply context and shared thread-level gate state.
+  `undefined` threadgate rules mean everybody, `[]` means nobody, and postgate
+  rules default to `[]` (quoting allowed).
 - The existing ComposerV2 suite has 148 tests. The default Jest invocation previously timed out; use the Watchman-disabled command below.
 
 ## Scope and constraints
@@ -58,8 +64,8 @@ Implement:
 
 Do not implement:
 
-- Gate editing or gate hydration: todo #4 owns those additions. Document this remaining boundary rather than claiming full draft fidelity.
-- Draft serialization, saving, deletion, orphan-media cleanup, or round trips: todo #6.
+- Draft serialization, saving, deletion, orphan-media cleanup, or round trips:
+  todo #6 owns writing the normalized gate fields back to the draft schema.
 - Real compression, uploads, or multipart video: todo #7.
 - Reordering, submit planning, or production composer UI integration.
 - Dormant external-card suggestions, a new shell API, or a generic migration framework.
@@ -68,7 +74,7 @@ Keep `ComposerOpts` unchanged for existing callers. Put the new adapters near V2
 
 ## 1. Shared adapter contract
 
-- Both adapters produce `ThreadStoreInitialState`, not separate source-specific store shapes.
+- Both adapters produce `ThreadStoreInitialState`, not separate source-specific store shapes. Gate settings are top-level shared configuration, not per-post fields.
 - Async adapters are fine where local media metadata must be probed; complete normalization before constructing the store.
 - Accept loaded draft media from the caller. Do not load, copy, persist, or delete draft files inside the conversion layer.
 - Keep local metadata access narrow and injectable for deterministic tests. Reuse existing image/video metadata primitives rather than inventing another pipeline.

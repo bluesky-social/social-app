@@ -40,13 +40,19 @@ Implementation plan: `plans/composer-v2-adapters.md`.
 
 Implemented and exported `composerOptsToInitialState()` and `draftToInitialState()` under `src/components/ComposerV2/adapters/`. Both return `ThreadStoreInitialState`; reply intents preserve a serializable parent preview without moderation or a fabricated root. Adapters preserve text/mention precedence, attachment order, record/media classification, local refs, captions, languages, labels, GIF metadata, and supplied record views. Unsupported or lossy draft input throws `ComposerAdapterError` with a stable code. Store initialization remains direct and simulated uploads remain unchanged.
 
-Gate mapping remains #4. Draft saving/serialization and round trips remain #6. Real uploads, production UI migration, and other later todo boundaries were not started.
+Gate mapping is implemented in #4. Draft saving/serialization and round trips remain #6. Real uploads, production UI migration, and other later todo boundaries were not started.
 
-Verification: 159 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. Work remains uncommitted and unstaged.
+Verification: 159 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. Work was committed by the operator as `c1dd1b145d48`.
 
 ## 4. Add postgate/threadgate state
 
-Status: pending
+Status: completed
+
+Implemented serializable thread-level `threadgateAllowRules` and `postgateEmbeddingRules` in normalized initial and live state. New compositions accept caller-supplied `PostInteractionSettingsPref` through `composerOptsToInitialState` adapter options; drafts restore their own top-level gate fields and use protocol defaults when fields are absent. `undefined` threadgate rules mean everybody, `[]` means nobody, postgate `[]` allows quoting, and known plus unknown typed rules are deeply cloned and preserved. Store actions edit the shared configuration, mark real edits dirty, preserve no-op identity, and avoid background work.
+
+Outbound draft serialization remains #6; actual gate records and submission behavior remain #9. No production UI migration or network writes were added.
+
+Verification: 167 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. Work remains uncommitted and unstaged for operator review.
 
 ## 5. Add gallery capacity and output selection
 
@@ -72,6 +78,10 @@ Status: pending
 
 Status: pending
 
+Support explicit per-post tags in composer state and normalized initial input, and populate the `tags` field on each `app.bsky.feed.post` record. These are separate from hashtag facets in the post text. Validate against the current post lexicon and cover tag preservation in planner tests. Document any draft-schema limitations for preserving tags rather than silently claiming round-trip support.
+
 ## 10. Build the production UI
 
 Status: pending
+
+Include a typeahead input for editing each post's explicit tags, wired to the state used to populate the post record's `tags` field. Typeahead data source and interaction details can be specified when implementing the UI.

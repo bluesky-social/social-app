@@ -26,12 +26,18 @@ export function buildThreadState(
             : undefined,
         }
       : undefined,
+    threadgateAllowRules: input.threadgateAllowRules
+      ? input.threadgateAllowRules.map(rule => cloneSerializable(rule))
+      : input.threadgateAllowRules,
+    postgateEmbeddingRules: (input.postgateEmbeddingRules ?? []).map(rule =>
+      cloneSerializable(rule),
+    ),
     draftId: input.draftId,
     isDirty: input.isDirty ?? false,
   }
 }
 
-function cloneSerializable<T>(value: T): T {
+export function cloneSerializable<T>(value: T): T {
   if (Array.isArray(value)) {
     return value.map(item => cloneSerializable(item)) as T
   }

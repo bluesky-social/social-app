@@ -116,6 +116,21 @@ export type PostAttachments = {
   media: MediaAttachment | undefined
 }
 
+/** A protocol threadgate rule, including unknown future typed rules. */
+export type ThreadgateAllowRule = NonNullable<
+  app.bsky.feed.threadgate.Main['allow']
+>[number]
+
+/** A protocol postgate rule, including unknown future typed rules. */
+export type PostgateEmbeddingRule = NonNullable<
+  app.bsky.feed.postgate.Main['embeddingRules']
+>[number]
+
+/** Serializable shared postgate configuration for a composition. */
+export type PostgateConfigurationInput = {
+  embeddingRules?: readonly PostgateEmbeddingRule[]
+}
+
 /** Serializable preview data for the post this thread is replying to. */
 export type ThreadReplyTarget = {
   uri: string
@@ -201,6 +216,10 @@ export type ThreadStoreInitialState = {
   posts?: readonly ThreadPostInitialState[]
   /** Parent preview for a reply; the submission layer resolves any root. */
   replyTo?: ThreadReplyTarget
+  /** Undefined means everybody may reply; an empty array means nobody may. */
+  threadgateAllowRules?: readonly ThreadgateAllowRule[]
+  /** Empty or omitted rules allow quoting; unknown rules are retained. */
+  postgateEmbeddingRules?: readonly PostgateEmbeddingRule[]
   draftId?: string
   /** Defaults to false; true can explicitly restore an unsaved composition. */
   isDirty?: boolean
@@ -211,6 +230,10 @@ export type ThreadState = {
   posts: Record<string, ThreadPost>
   /** Parent preview for a reply; the submission layer resolves any root. */
   replyTo: ThreadReplyTarget | undefined
+  /** Undefined means everybody may reply; an empty array means nobody may. */
+  threadgateAllowRules: ThreadgateAllowRule[] | undefined
+  /** Empty rules allow quoting; unknown rules are retained. */
+  postgateEmbeddingRules: PostgateEmbeddingRule[]
   /** ID of the saved draft this composer was opened from, if any. */
   draftId: string | undefined
   /** Whether a user edit has changed the initial or loaded draft state. */
