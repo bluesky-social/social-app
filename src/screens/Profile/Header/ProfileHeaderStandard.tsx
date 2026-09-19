@@ -39,6 +39,10 @@ import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
 import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
+import {
+  ProfileSupportButton,
+  useShowsProfileSupportButton,
+} from '#/features/supportButton'
 import {type app} from '#/lexicons'
 import {GermButton} from '../components/GermButton'
 import {ProfileHeaderDisplayName} from './DisplayName'
@@ -102,6 +106,21 @@ let ProfileHeaderStandard = ({
   const isMe = currentAccount?.did === profile.did
 
   const {isActive: live} = useActorStatus(profile)
+  const showsSupportButton = useShowsProfileSupportButton(profile)
+  /*
+   * TEMP (design review only): pretend this profile has a Germ DM link so the
+   * fully loaded header (Support + Germ + social proof + labels) can be seen.
+   * Remove before merging.
+   */
+  const germ =
+    profile.associated?.germ ??
+    (__DEV__ && profile.handle === 'kattenbarge.bsky.social'
+      ? {
+          messageMeUrl: 'https://landing.ger.mx/demo',
+          showButtonTo: 'everyone',
+        }
+      : undefined)
+  const showsGermButton = !!germ
 
   return (
     <>
@@ -157,8 +176,12 @@ let ProfileHeaderStandard = ({
                 </View>
               ) : undefined}
 
-              {profile.associated?.germ && (
-                <GermButton germ={profile.associated.germ} profile={profile} />
+              {(showsSupportButton || showsGermButton) && (
+                <View
+                  style={[a.flex_row, a.flex_wrap, a.align_center, a.gap_sm]}>
+                  <ProfileSupportButton profile={profile} />
+                  {germ && <GermButton germ={germ} profile={profile} />}
+                </View>
               )}
 
               {!isMe &&

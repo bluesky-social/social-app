@@ -1,6 +1,7 @@
 import '#/logger/sentry/setup'
 
 import {Fragment, useEffect, useState} from 'react'
+import {LogBox} from 'react-native'
 import {GestureHandlerRootView} from 'react-native-gesture-handler'
 import {KeyboardProvider as KeyboardControllerProvider} from 'react-native-keyboard-controller'
 import {
@@ -85,6 +86,15 @@ import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 import {BottomSheetProvider} from '../modules/bottom-sheet'
 import {BackgroundNotificationPreferencesProvider} from '../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+
+/*
+ * PROTOTYPE ONLY: keep the dev warning toasts (LogBox) off the screen so the
+ * simulator reads like a release build during design review. Remove before
+ * merging.
+ */
+if (__DEV__) {
+  LogBox.ignoreAllLogs()
+}
 
 void SplashScreen.preventAutoHideAsync()
 if (IS_IOS) {

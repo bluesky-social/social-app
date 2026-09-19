@@ -3,10 +3,12 @@ import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type UriString} from '@atproto/lex'
 
 import {cleanError} from '#/lib/strings/errors'
+import {useProfileQuery} from '#/state/queries/profile'
 import {
   useResolveGifQuery,
   useResolveLinkQuery,
 } from '#/state/queries/resolve-link'
+import {useSession} from '#/state/session'
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
@@ -19,6 +21,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
 import {type Gif} from '#/features/gifPicker/types'
+import {SupportEmbedCard, useIsSupportEmbed} from '#/features/supportButton'
 
 export const ExternalEmbedGif = ({
   onRemove,
@@ -87,9 +90,26 @@ export const ExternalEmbedLink = ({
 }) => {
   const t = useTheme()
   const {data, error} = useResolveLinkQuery(uri)
+  const {currentAccount} = useSession()
+  const {data: author} = useProfileQuery({did: currentAccount?.did})
+  const isSupportEmbed = useIsSupportEmbed(author, uri)
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
+        if (isSupportEmbed) {
+          return (
+            <SupportEmbedCard
+              preview
+              link={{
+                uri,
+                title: data.title,
+                description: data.description,
+                thumb: data.thumb?.source.path,
+              }}
+              author={author}
+            />
+          )
+        }
         if (data.view && isStandardSiteEmbed(data.view.external)) {
           return (
             <StandardSiteEmbed
@@ -148,7 +168,7 @@ export const ExternalEmbedLink = ({
         return <StarterPackEmbed starterPack={data.view} />
       }
     }
-  }, [data, uri])
+  }, [data, uri, author, isSupportEmbed])
 
   if (data?.type === 'record' && hasQuote) {
     // This is not currently supported by the data model so don't preview it.

@@ -73,17 +73,14 @@ export function GermButton({
         label={_(msg`Open Germ DM`)}
         overridePresentation={false}
         shouldProxy={false}
-        style={[
-          t.atoms.bg_contrast_50,
-          a.rounded_full,
-          a.self_start,
-          {padding: 6},
-        ]}>
+        size="small"
+        color="secondary"
+        style={{paddingLeft: 12}}>
         <GermLogo size="small" />
-        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+        <ButtonText>
           <Trans>Germ DM</Trans>
-        </Text>
-        <ArrowTopRightIcon style={[t.atoms.text, a.mx_2xs]} width={14} />
+        </ButtonText>
+        <ArrowTopRightIcon style={t.atoms.text} width={14} />
       </Link>
       <CustomLinkWarningDialog
         control={linkWarningControl}
@@ -113,7 +110,6 @@ function GermLogo({size}: {size: 'small' | 'large'}) {
 }
 
 function GermSelfButton({did}: {did: string}) {
-  const t = useTheme()
   const ax = useAnalytics()
   const {_} = useLingui()
   const selfExplanationDialogControl = Dialog.useDialogControl()
@@ -219,16 +215,13 @@ function GermSelfButton({did}: {did: string}) {
           ax.metric('profile:associated:germ:click-self-info', {})
           selfExplanationDialogControl.open()
         }}
-        style={[
-          t.atoms.bg_contrast_50,
-          a.rounded_full,
-          a.self_start,
-          {padding: 6, paddingRight: 10},
-        ]}>
+        size="small"
+        color="secondary"
+        style={{paddingLeft: 12}}>
         <GermLogo size="small" />
-        <Text style={[a.text_sm, a.font_medium, a.ml_xs]}>
+        <ButtonText>
           <Trans>Germ DM</Trans>
-        </Text>
+        </ButtonText>
       </Button>
 
       <Dialog.Outer

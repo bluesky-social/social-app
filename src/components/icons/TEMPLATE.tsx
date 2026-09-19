@@ -46,12 +46,18 @@ export function createSinglePathSVG({
   strokeWidth = 0,
   strokeLinecap = 'butt',
   strokeLinejoin = 'miter',
+  fillRule = 'evenodd',
 }: {
   path: string
   viewBox?: string
   strokeWidth?: number
   strokeLinecap?: 'butt' | 'round' | 'square'
   strokeLinejoin?: 'miter' | 'round' | 'bevel'
+  /**
+   * Our icons are authored for evenodd. Third-party paths (e.g. Simple Icons)
+   * assume the SVG default, nonzero, and can lose whole shapes under evenodd.
+   */
+  fillRule?: 'evenodd' | 'nonzero'
 }) {
   const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
@@ -74,8 +80,8 @@ export function createSinglePathSVG({
           strokeWidth={strokeWidth}
           strokeLinecap={strokeLinecap}
           strokeLinejoin={strokeLinejoin}
-          fillRule="evenodd"
-          clipRule="evenodd"
+          fillRule={fillRule}
+          clipRule={fillRule}
           d={path}
         />
       </Svg>

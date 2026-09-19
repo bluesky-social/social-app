@@ -50,6 +50,8 @@ import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 import {useActorStatus} from '#/features/liveNow'
+import {SupporterLabel} from '#/features/supportButton/components/SupporterLabel'
+import {useIsThreadSupporter} from '#/features/supportButton/supporters'
 import {type app} from '#/lexicons'
 
 export type ThreadItemPostProps = {
@@ -201,6 +203,7 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
 
   const post = item.value.post
   const record = item.value.post.record
+  const isSupporter = useIsThreadSupporter(post.author)
   const postNumbering = item.value
   const showPostNumber = useHasThreadItemPostNumber(postNumbering)
   const moderation = item.moderation
@@ -302,6 +305,11 @@ const ThreadItemPostInner = memo(function ThreadItemPostInner({
             </View>
 
             <View style={[a.flex_1]}>
+              {isSupporter && (
+                <View style={[{paddingBottom: 4}]}>
+                  <SupporterLabel />
+                </View>
+              )}
               <PostMeta
                 author={post.author}
                 moderation={moderation}

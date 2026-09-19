@@ -25,6 +25,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
+import {SupportEmbedCard, useIsSupportEmbed} from '#/features/supportButton'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
@@ -87,6 +88,10 @@ function MediaEmbed({
 }: CommonProps & {
   embed: TEmbed
 }) {
+  const isSupportEmbed = useIsSupportEmbed(
+    rest.post?.author,
+    embed.type === 'link' ? embed.view.external.uri : undefined,
+  )
   switch (embed.type) {
     case 'images':
     case 'gallery': {
@@ -99,6 +104,20 @@ function MediaEmbed({
       )
     }
     case 'link': {
+      if (isSupportEmbed) {
+        return (
+          <ContentHider
+            modui={rest.moderation?.ui('contentMedia')}
+            activeStyle={[a.mt_sm]}>
+            <SupportEmbedCard
+              link={embed.view.external}
+              author={rest.post?.author}
+              onOpen={rest.onOpen}
+              style={[a.mt_sm, rest.style]}
+            />
+          </ContentHider>
+        )
+      }
       if (isStandardSiteEmbed(embed.view.external)) {
         return (
           <ContentHider

@@ -1,6 +1,7 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
 import {type Gif} from '#/features/gifPicker/types'
 import {type InviteThemeKey} from '#/features/inviteFriends/themes'
+import {type SupportLink} from '#/features/supportButton/types'
 import {type Geolocation} from '#/geolocation/types'
 
 /**
@@ -78,6 +79,12 @@ export type Device = {
    */
   policyUpdateDebugOverride?: boolean
   [PolicyUpdate202508]?: boolean
+
+  /**
+   * CTA prototype: support links keyed by DID. Device-scoped on purpose so a
+   * demo profile's button survives account switches on the same device.
+   */
+  supportLinks?: Record<string, SupportLink>
 }
 
 export type Account = {

@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useState} from 'react'
-import {View} from 'react-native'
+import {Pressable, View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
@@ -18,12 +18,18 @@ import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
+import {ChainLink_Stroke2_Corner0_Rounded as ChainLink} from '#/components/icons/ChainLink'
 import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
+import {
+  formatSupportUri,
+  SupportLinkDialog,
+  useMySupportLink,
+} from '#/features/supportButton'
 import {type app} from '#/lexicons'
 
 export function EditProfileDialog({
@@ -37,7 +43,13 @@ export function EditProfileDialog({
 }) {
   const {_} = useLingui()
   const cancelControl = Dialog.useDialogControl()
+  const supportLinkControl = Dialog.useDialogControl()
   const [dirty, setDirty] = useState(false)
+  /*
+   * The Support sheet stores its link immediately, so Edit Profile only needs
+   * to know that something changed in this session to light up Save.
+   */
+  const [supportLinkDirty, setSupportLinkDirty] = useState(false)
 
   const onPressCancel = useCallback(() => {
     if (dirty) {
@@ -50,6 +62,8 @@ export function EditProfileDialog({
   return (
     <Dialog.Outer
       control={control}
+      // this component outlives the sheet, so the flag has to reset by hand
+      onClose={() => setSupportLinkDirty(false)}
       nativeOptions={{
         preventDismiss: dirty,
         fullHeight: true,
@@ -69,6 +83,14 @@ export function EditProfileDialog({
         onUpdate={onUpdate}
         setDirty={setDirty}
         onPressCancel={onPressCancel}
+        supportLinkControl={supportLinkControl}
+        supportLinkDirty={supportLinkDirty}
+      />
+
+      <SupportLinkDialog
+        control={supportLinkControl}
+        onSaved={() => setSupportLinkDirty(true)}
+        onRemoved={() => setSupportLinkDirty(true)}
       />
 
       <Prompt.Basic
@@ -88,11 +110,15 @@ function DialogInner({
   onUpdate,
   setDirty,
   onPressCancel,
+  supportLinkControl,
+  supportLinkDirty,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
   onUpdate?: () => void
   setDirty: (dirty: boolean) => void
   onPressCancel: () => void
+  supportLinkControl: Dialog.DialogControlProps
+  supportLinkDirty: boolean
 }) {
   const {_} = useLingui()
   const t = useTheme()
@@ -111,6 +137,7 @@ function DialogInner({
   const [displayName, setDisplayName] = useState(initialDisplayName)
   const initialDescription = profile.description || ''
   const [description, setDescription] = useState(initialDescription)
+  const {link: supportLink} = useMySupportLink()
   const [userBanner, setUserBanner] = useState<string | undefined | null>(
     profile.banner,
   )
@@ -124,15 +151,20 @@ function DialogInner({
     ImageMeta | undefined | null
   >()
 
-  const dirty =
+  const profileDirty =
     displayName !== initialDisplayName ||
     description !== initialDescription ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
+  /*
+   * Save lights up for a Support link change too, but only profile edits are
+   * "unsaved": the link is already stored, so Cancel has nothing to discard.
+   */
+  const dirty = profileDirty || supportLinkDirty
 
   useEffect(() => {
-    setDirty(dirty)
-  }, [dirty, setDirty])
+    setDirty(profileDirty)
+  }, [profileDirty, setDirty])
 
   const onSelectNewAvatar = useCallback(
     (img: ImageMeta | null) => {
@@ -172,6 +204,12 @@ function DialogInner({
 
   const onPressSave = useCallback(async () => {
     setImageError('')
+    // Only the Support link changed; it's already stored, so nothing to upload.
+    if (!profileDirty) {
+      control.close(() => onUpdate?.())
+      Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
+      return
+    }
     try {
       await updateProfileMutation({
         profile,
@@ -196,6 +234,7 @@ function DialogInner({
     description,
     newUserAvatar,
     newUserBanner,
+    profileDirty,
     setImageError,
     _,
   ])
@@ -383,6 +422,62 @@ function DialogInner({
               />
             </Text>
           )}
+        </View>
+
+        <View>
+          <TextField.LabelText>
+            <Trans>Support button</Trans>
+          </TextField.LabelText>
+          {/*
+           * Read-only, so plain text rather than a disabled input: iOS wraps a
+           * long URL at the slash inside an input and hides the rest. Tapping
+           * anywhere on the row opens the sheet.
+           */}
+          <Pressable
+            testID="editProfileSupportLinkField"
+            accessibilityRole="button"
+            accessibilityLabel={
+              supportLink
+                ? _(msg`Edit Support button`)
+                : _(msg`Add Support button`)
+            }
+            accessibilityHint={_(msg`Opens the Support button sheet`)}
+            onPress={() => supportLinkControl.open()}
+            style={[
+              a.flex_row,
+              a.align_center,
+              a.pl_md,
+              t.atoms.bg_contrast_50,
+              {paddingRight: 6, paddingVertical: 6, borderRadius: 10},
+            ]}>
+            <TextField.Icon icon={ChainLink} />
+            <Text
+              numberOfLines={1}
+              style={[
+                a.flex_1,
+                a.text_md,
+                a.px_xs,
+                supportLink ? t.atoms.text : {color: t.palette.contrast_300},
+              ]}>
+              {supportLink
+                ? formatSupportUri(supportLink.uri)
+                : 'patreon.com/yourname'}
+            </Text>
+            <Button
+              testID="editProfileEditSupportBtn"
+              label={
+                supportLink
+                  ? _(msg`Edit Support button`)
+                  : _(msg`Add Support button`)
+              }
+              size="small"
+              color="secondary"
+              onPress={() => supportLinkControl.open()}>
+              <ButtonText>
+                {supportLink ? <Trans>Edit</Trans> : <Trans>Add</Trans>}
+              </ButtonText>
+            </Button>
+          </Pressable>
         </View>
       </View>
     </Dialog.ScrollableInner>
