@@ -1,10 +1,12 @@
-# Composer V2 implementation plan
+# Composer V2 implementation reference
 
 ## Goal
 
-Replace the current post composer with a store-first implementation that can represent, hydrate, edit, validate, and eventually publish every composer flow supported by the app.
+Develop and verify the store-first composer through `/sys/debug-composer`, covering initialization, editing, media, gates, record construction, and eventually draft round trips. Production composer UI migration is out of the current plan.
 
-The first submission milestone will stop before writing records to the repository: it will build the complete write set, validate every record locally, and log a safe/debuggable representation of the result. Actual `applyWrites` execution can be enabled after the record-building path is proven.
+The first submission milestone stops before writing records to the repository: build the complete write set, validate every record locally, and expose a safe/debuggable result. Actual `applyWrites` execution requires a separate decision.
+
+`AGENTS/tasks/` is the only active execution queue; `AGENTS/tasks/README.md` records the operator-approved order. This document specifies behavior; its section numbers are topics, not task IDs. Completed legacy milestones are archived in `plans/composer-v2-history.md`.
 
 ## Current baseline
 
@@ -21,7 +23,7 @@ The first submission milestone will stop before writing records to the repositor
 - Derived rich text and shortened grapheme length through `useThreadPostRichText()`.
 - A debug route at `/sys/debug-composer` for exercising the store.
 
-This is not yet connected to the production composer shell, draft system, real media processing, or publishing pipeline.
+Real media workers are implemented and wired into the tester. Full draft persistence and no-write record construction are still pending; production shell migration and publishing are outside the current scope.
 
 ## Required work
 
@@ -47,7 +49,7 @@ Invariants should remain enforced at the store action boundary rather than relyi
 
 #### Record and media attachment slots
 
-Implemented in todo #1: the `quote` / `embed` / media split is replaced by two protocol-aligned active attachment slots:
+Implemented in legacy milestone #1 (see `plans/composer-v2-history.md`): the `quote` / `embed` / media split is replaced by two protocol-aligned active attachment slots:
 
 ```ts
 type PostAttachments = {
@@ -73,7 +75,7 @@ If we preserve the current behavior where an automatically suggested external ca
 
 ### 2. Postgates and threadgates
 
-Represent both interaction-control record types in the V2 store and expose actions for editing them. Postgate configuration is thread-wide in the composer: one setting is edited once and applied consistently to every post record in the thread.
+Store configuration, inbound hydration, and editing actions are implemented. Postgate configuration is thread-wide: one setting is edited once and applied consistently to every post record in the thread. Task 0006 builds the actual records; task 0008 adds draft serialization. The following describes the end-to-end behavior.
 
 Requirements:
 
@@ -94,7 +96,7 @@ Reuse the existing conversion utilities in `src/state/queries/threadgate/` and `
 
 ### 3. Unified initial-state hydration
 
-Implemented in todo #2 and #3: `createThreadStore({resolvers, initialState})` accepts one normalized `ThreadStoreInitialState` interface, and the adapters in `src/components/ComposerV2/adapters/` transform open-composer intents and saved drafts into it:
+Implemented in legacy milestones #2 and #3: `createThreadStore({resolvers, initialState})` accepts one normalized `ThreadStoreInitialState` interface, and the adapters in `src/components/ComposerV2/adapters/` transform open-composer intents and saved drafts into it:
 
 ```text
 ComposerOpts -----------------> composerOptsToInitialState() --+
@@ -194,7 +196,7 @@ Requirements:
 
 ### 6. Real image processing and uploads
 
-Implemented in todo #7 with the existing production primitives. Compression and upload begin eagerly when an image enters the store, including through intent or draft hydration.
+Implemented in legacy milestone #7 with the existing production primitives. Compression and upload begin eagerly when an image enters the store, including through intent or draft hydration.
 
 Pipeline:
 
@@ -215,7 +217,7 @@ The store receives an explicit media dependency bundle containing the PDS lex cl
 
 ### 7. Real video processing and multipart upload
 
-Implemented in todo #7 with the existing compression and multipart pipeline. Compression and upload begin eagerly when a video enters the store, including through intent or draft hydration.
+Implemented in legacy milestone #7 with the existing compression and multipart pipeline. Compression and upload begin eagerly when a video enters the store, including through intent or draft hydration.
 
 Requirements:
 
@@ -257,14 +259,14 @@ Build a submission planner that performs the same deterministic work needed by t
 3. Ensure required media processing/uploads have completed successfully.
 4. Resolve rich-text facets using the appview client.
 5. Trim and normalize text exactly as production submission will.
-6. Build each `app.bsky.feed.post` record in thread order.
+6. Build each `app.bsky.feed.post` record in thread order, including explicit `tags` from per-post state, separate from hashtag facets. Validate tag limits against the current lexicon; document draft-schema gaps rather than silently claiming tag persistence.
 7. Allocate deterministic TIDs/rkeys and final AT URIs.
 8. Compute each post CID so later posts can reference the preceding post.
 9. Build reply refs:
    - preserve an external reply root for replies;
    - otherwise use the first post as the thread root;
    - use the immediately previous post as each subsequent parent.
-10. Build the active record and media attachments from resolved state and uploaded blobs, emitting a record, media, or `recordWithMedia` embed as appropriate.
+10. Build the active record and media attachments from resolved state and uploaded blobs, emitting a record, media, or `recordWithMedia` embed as appropriate. Select `embed.images` for 1-4 images and `embed.gallery` for 5-10 here, in complete record-set construction rather than a separate serialization task.
 11. Build required threadgate and postgate records with matching rkeys.
 12. Produce the complete `com.atproto.repo.applyWrites` create list.
 13. Validate each record using the generated lexicon validators and validate the complete write input shape.
@@ -280,7 +282,7 @@ Do not log local file paths, caption contents, auth data, or other sensitive/tra
 Expand `/sys/debug-composer` as implementation lands:
 
 - Open with representative composer intents.
-- Add/remove/reorder thread posts. Reordering should be supported by the store and debug harness, but does not need to ship in the initial production UI.
+- Add/remove/reorder thread posts through the store and tester controls. Production UI is outside this plan.
 - Exercise photos, gallery limits, video, GIF, quotes, and external embeds.
 - Edit postgate/threadgate settings.
 - Save and restore a draft.
@@ -288,7 +290,7 @@ Expand `/sys/debug-composer` as implementation lands:
 - Display grapheme counts and validation failures.
 - Run submit planning and show the redacted validated write set.
 
-The debug route should remain a harness. Production UI migration should begin only after the store, adapters, and submission planner have stable contracts.
+The debug route is the tester UI for this plan, not a prototype production composer. Task 0007 completes controls and a verification checklist for all implemented capabilities, including gate editing, per-item/bulk retry, reordering, explicit tags, and no-write plan inspection. Task 0008 adds actual draft save/restore controls last. Production UI migration is not scheduled.
 
 ## Cross-cutting requirements
 
@@ -329,17 +331,52 @@ Maintain focused tests for:
 - Lexicon validation of every planned record.
 - Confirmation that the initial submit milestone never calls `applyWrites`.
 
-## Implementation sequence
+## Execution queue
 
-`plans/todo.md` tracks the authoritative execution order with stable todo numbers. Initial-intent and draft hydration, gate state, and the 10-image selection cap are implemented. Per operator direction, the remaining work proceeds as follows after the cloning cleanup:
+The authoritative task definitions/statuses live in `AGENTS/tasks/`; existing task numbers are stable. Follow `AGENTS/tasks/README.md`, not numeric order or old milestone numbers:
 
-1. **Todo #7:** Replace simulated image/video workers with real eager compression/upload, including multipart video and caption uploads.
-2. **Todo #8:** Add post reordering while preserving post/media identity and in-flight work.
-3. **Todo #9:** Build the no-write record-set planner, rich-text and lexicon validation, and safe logging. Select `embed.images` for 1-4 images or `embed.gallery` for 5-10 here, as part of complete embed/post/gate construction. Include explicit post `tags`.
-4. **Todo #10:** Build the production UI, including a typeahead input for explicit post tags.
-5. **Todo #6:** Implement draft serialization, save bookkeeping, media cleanup, and full round trips last. Existing inbound draft hydration remains available; draft embeds use their own schema.
+1. **0001:** Name creation-action result fields (`addedMediaIds`, `addedPostId`) and avoid reporting phantom additions.
+2. **0002:** Retry all eligible failed uploads without restarting active work.
+3. **0003:** Simplify URI-resolution helpers while preserving destination ownership and retry semantics.
+4. **0005:** Add reordering and minimal tester controls.
+5. **0006:** Build and validate the complete no-write record set, including gallery selection, explicit tags, replies, and gates; expose a minimal tester action.
+6. **0007:** Complete the tester UI so every implemented capability can be exercised. The task retains its original `production-ui` filename, but production UI is explicitly dropped from its scope.
+7. **0004:** Extract image compression behind a UI-free static import, moved here by operator direction immediately before drafts.
+8. **0008:** Add draft serialization, persistence, safe cleanup, round trips, and tester save/restore controls last.
 
-Gallery output selection is folded into #9 rather than implemented as a separate step. The completed capacity work remains recorded under #5.
+Use the tester as capabilities land, then close coverage gaps in 0007; do not wait for a production UI. The originally requested explicit-tag typeahead remains a future production design intention, not a requirement to invent a suggestions service for the tester. A simple explicit-tags editor is sufficient for testing.
+
+Initial hydration, gate state, the 10-image cap, store-boundary copying, and real media workers are already implemented. Their milestone history and the old-to-new task mapping are in `plans/composer-v2-history.md`.
+
+## Development checks
+
+Use repository scripts, never the underlying quality tools directly:
+
+```sh
+pnpm test src/components/ComposerV2 --watchman=false --runInBand
+pnpm typecheck
+pnpm lint
+git diff --check
+```
+
+Run additional affected helper tests through `pnpm test`. Unit/integration checks use mocked network/native dependencies; they do not prove a live device upload or UI flow. Load the applicable Argent skills before UI verification and use only authorized test media/accounts. Do not publish, run intl extraction/compilation, or modify generated lexicons as incidental verification.
+
+For scoped formatting, the `pnpm prettier` script includes `--check .`. Never append `--write` without restricting that root scan. Create a temporary ignore file such as `.composer-v2-format.ignore` containing:
+
+```gitignore
+**/*
+!*/
+!src/components/ComposerV2/store/index.ts
+```
+
+Add one negated exact path for each touched file, then run:
+
+```sh
+pnpm prettier --write --ignore-path .composer-v2-format.ignore
+pnpm prettier --ignore-path .composer-v2-format.ignore
+```
+
+Remove the temporary file afterward. Do not rewrite unrelated files or leave the ignore file in the working tree. Never stage or commit unless the operator explicitly asks.
 
 ## Decisions made
 
@@ -357,7 +394,8 @@ Gallery output selection is folded into #9 rather than implemented as a separate
 The first coherent V2 milestone is complete when:
 
 - Every existing open-composer intent hydrates into V2 state.
-- Drafts round-trip all supported content and gate settings.
+- The tester exercises all implemented editing/worker/planning capabilities without migrating the production UI.
+- Drafts round-trip all supported content and gate settings, with schema limitations explicit.
 - Up to 10 images can produce a gallery embed.
 - Images and videos use real, cancellable upload paths, including multipart video.
 - Every post exposes correct shortened grapheme validity.
