@@ -73,11 +73,12 @@ export function createThreadStore(options: {
     })
   }
 
+  /** Copy caller-owned editable arrays at the store boundary. */
   function setPostLanguages(postId: string, languages: string[]) {
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      s.posts[postId] = {...post, langs: languages}
+      s.posts[postId] = {...post, langs: [...languages]}
       s.isDirty = true
       return s
     })
@@ -87,12 +88,13 @@ export function createThreadStore(options: {
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      s.posts[postId] = {...post, labels}
+      s.posts[postId] = {...post, labels: [...labels]}
       s.isDirty = true
       return s
     })
   }
 
+  /** Copy nested rules so caller mutations cannot alter published snapshots. */
   function setThreadgateAllowRules(
     allow: readonly types.ThreadgateAllowRule[] | undefined,
   ) {

@@ -193,7 +193,7 @@ describe('composerOptsToInitialState', () => {
     expect(videoMetadata).toHaveBeenCalledWith('file:///video.mp4')
   })
 
-  test('hydrates new-composer gate defaults and caller preferences without lossy conversion', async () => {
+  test('normalizes gate values without cloning and leaves ownership to the store', async () => {
     const defaults = await composerOptsToInitialState({text: 'new'})
     expect(defaults.threadgateAllowRules).toBeUndefined()
     expect(defaults.postgateEmbeddingRules).toEqual([])
@@ -217,43 +217,54 @@ describe('composerOptsToInitialState', () => {
         futurePostgateRule,
       ],
     } as unknown as app.bsky.actor.defs.PostInteractionSettingsPref
+    const beforeAdapter = JSON.stringify(settings)
     const initial = await composerOptsToInitialState(
       {text: 'restricted'},
       {postInteractionSettings: settings},
     )
 
-    expect(initial.threadgateAllowRules).toEqual(settings.threadgateAllowRules)
-    expect(initial.postgateEmbeddingRules).toEqual(
-      settings.postgateEmbeddingRules,
-    )
-    futureThreadgateRule.nested.enabled = false
-    futurePostgateRule.nested.enabled = false
-    expect(
-      (
-        initial.threadgateAllowRules?.[2] as unknown as {
-          nested: {enabled: boolean}
-        }
-      ).nested.enabled,
-    ).toBe(true)
-    expect(
-      (
-        initial.postgateEmbeddingRules?.[1] as unknown as {
-          nested: {enabled: boolean}
-        }
-      ).nested.enabled,
-    ).toBe(true)
+    expect(JSON.stringify(settings)).toBe(beforeAdapter)
+    expect(initial.threadgateAllowRules).toBe(settings.threadgateAllowRules)
+    expect(initial.postgateEmbeddingRules).toBe(settings.postgateEmbeddingRules)
 
     const store = createThreadStore({
       initialState: initial,
       resolvers: {} as never,
       __createId: () => 'post-id',
     })
-    expect(store.getState().threadgateAllowRules).toEqual(
-      initial.threadgateAllowRules,
+    expect(store.getState().threadgateAllowRules).not.toBe(
+      settings.threadgateAllowRules,
     )
-    expect(store.getState().postgateEmbeddingRules).toEqual(
-      initial.postgateEmbeddingRules,
+    expect(store.getState().postgateEmbeddingRules).not.toBe(
+      settings.postgateEmbeddingRules,
     )
+    expect(store.getState().threadgateAllowRules?.[2]).not.toBe(
+      futureThreadgateRule,
+    )
+    expect(store.getState().postgateEmbeddingRules[1]).not.toBe(
+      futurePostgateRule,
+    )
+
+    settings.threadgateAllowRules!.push({
+      $type: 'app.bsky.feed.threadgate#followerRule',
+    })
+    futureThreadgateRule.nested.enabled = false
+    futurePostgateRule.nested.enabled = false
+    expect(store.getState().threadgateAllowRules).toHaveLength(3)
+    expect(
+      (
+        store.getState().threadgateAllowRules?.[2] as unknown as {
+          nested: {enabled: boolean}
+        }
+      ).nested.enabled,
+    ).toBe(true)
+    expect(
+      (
+        store.getState().postgateEmbeddingRules[1] as unknown as {
+          nested: {enabled: boolean}
+        }
+      ).nested.enabled,
+    ).toBe(true)
     store.destroy()
   })
 })
@@ -270,10 +281,18 @@ describe('draftToInitialState', () => {
     expect(absent.threadgateAllowRules).toBeUndefined()
     expect(absent.postgateEmbeddingRules).toEqual([])
 
+    const draftThreadgateRule = {
+      $type: 'app.bsky.feed.threadgate#futureRule',
+      nested: {enabled: true},
+    }
+    const draftPostgateRule = {
+      $type: 'app.bsky.feed.postgate#futureRule',
+      nested: {enabled: true},
+    }
     const draft: app.bsky.draft.defs.Draft = {
       posts: [draftPost({text: 'first'}), draftPost({text: 'second'})],
-      threadgateAllow: [],
-      postgateEmbeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+      threadgateAllow: [draftThreadgateRule] as never,
+      postgateEmbeddingRules: [draftPostgateRule] as never,
     }
     const initial = await draftToInitialState({
       draftId: 'draft-gates',
@@ -282,15 +301,36 @@ describe('draftToInitialState', () => {
       getImageDimensions: imageDimensions,
       getVideoMetadata: videoMetadata,
     })
-    expect(initial.threadgateAllowRules).toEqual([])
-    expect(initial.postgateEmbeddingRules).toEqual([
-      {$type: 'app.bsky.feed.postgate#disableRule'},
-    ])
+    expect(initial.threadgateAllowRules).toBe(draft.threadgateAllow)
+    expect(initial.postgateEmbeddingRules).toBe(draft.postgateEmbeddingRules)
     expect(initial.posts).toHaveLength(2)
+
+    const store = createThreadStore({
+      initialState: initial,
+      resolvers: {} as never,
+      __createId: () => 'draft-post-id',
+    })
     draft.threadgateAllow!.push({
       $type: 'app.bsky.feed.threadgate#mentionRule',
-    })
-    expect(initial.threadgateAllowRules).toEqual([])
+    } as never)
+    draftThreadgateRule.nested.enabled = false
+    draftPostgateRule.nested.enabled = false
+    expect(store.getState().threadgateAllowRules).toHaveLength(1)
+    expect(
+      (
+        store.getState().threadgateAllowRules?.[0] as unknown as {
+          nested: {enabled: boolean}
+        }
+      ).nested.enabled,
+    ).toBe(true)
+    expect(
+      (
+        store.getState().postgateEmbeddingRules[0] as unknown as {
+          nested: {enabled: boolean}
+        }
+      ).nested.enabled,
+    ).toBe(true)
+    store.destroy()
   })
 
   test('restores post order, languages, labels, local images, records, and captions', async () => {

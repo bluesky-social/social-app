@@ -115,8 +115,12 @@ describe('threadgate and postgate state', () => {
       postgateEmbeddingRules[1],
     )
 
+    threadgateAllowRules.push(mentionRule)
+    postgateEmbeddingRules.push(disableRule)
     opaqueRule(threadgateAllowRules[5]).nested.enabled = false
     opaqueRule(postgateEmbeddingRules[1]).nested.enabled = false
+    expect(store.getState().threadgateAllowRules).toHaveLength(6)
+    expect(store.getState().postgateEmbeddingRules).toHaveLength(2)
     expect(
       opaqueRule(store.getState().threadgateAllowRules?.[5]).nested.enabled,
     ).toBe(true)
@@ -126,8 +130,11 @@ describe('threadgate and postgate state', () => {
     store.destroy()
   })
 
-  test('gate edits are dirty, isolated, and no-op when values repeat', () => {
+  test('gate edits are dirty, isolated, structurally shared, and no-op when values repeat', () => {
     const store = makeStore()
+    const root = rootId(store)
+    const other = store.actions.addPost('after', root)
+    const before = store.getState()
     const notify = jest.fn()
     store.subscribe(notify)
     const rules = [unknownThreadgateRule()] as ThreadgateAllowRule[]
@@ -136,7 +143,11 @@ describe('threadgate and postgate state', () => {
     const afterThreadgate = store.getState()
     expect(afterThreadgate.isDirty).toBe(true)
     expect(notify).toHaveBeenCalledTimes(1)
+    expect(afterThreadgate.posts[root]).toBe(before.posts[root])
+    expect(afterThreadgate.posts[other]).toBe(before.posts[other])
+    rules.push(mentionRule)
     opaqueRule(rules[0]).nested.enabled = false
+    expect(afterThreadgate.threadgateAllowRules).toHaveLength(1)
     expect(
       opaqueRule(afterThreadgate.threadgateAllowRules?.[0]).nested.enabled,
     ).toBe(true)
@@ -150,16 +161,38 @@ describe('threadgate and postgate state', () => {
     expect(notify).toHaveBeenCalledTimes(1)
     expect(store.getState()).toBe(afterThreadgate)
 
+    const postgateRules = [unknownPostgateRule()] as PostgateEmbeddingRule[]
     store.actions.setPostgateConfiguration({
-      embeddingRules: [unknownPostgateRule()],
+      embeddingRules: postgateRules,
     })
     const afterPostgate = store.getState()
     expect(notify).toHaveBeenCalledTimes(2)
+    expect(afterPostgate.posts[root]).toBe(before.posts[root])
+    expect(afterPostgate.posts[other]).toBe(before.posts[other])
+    postgateRules.push(disableRule)
+    opaqueRule(postgateRules[0]).nested.enabled = false
+    expect(afterPostgate.postgateEmbeddingRules).toHaveLength(1)
+    expect(
+      opaqueRule(afterPostgate.postgateEmbeddingRules[0]).nested.enabled,
+    ).toBe(true)
     store.actions.setPostgateConfiguration({
       embeddingRules: [unknownPostgateRule()],
     })
     expect(notify).toHaveBeenCalledTimes(2)
     expect(store.getState()).toBe(afterPostgate)
+
+    store.actions.setThreadgateAllowRules([])
+    const latest = store.getState()
+    expect(notify).toHaveBeenCalledTimes(3)
+    expect(latest.posts[root]).toBe(before.posts[root])
+    expect(latest.posts[other]).toBe(before.posts[other])
+    expect(afterThreadgate.threadgateAllowRules?.[0]).toEqual(
+      unknownThreadgateRule(),
+    )
+    expect(latest.threadgateAllowRules).toEqual([])
+    store.actions.setThreadgateAllowRules([])
+    expect(notify).toHaveBeenCalledTimes(3)
+    expect(store.getState()).toBe(latest)
     store.destroy()
   })
 

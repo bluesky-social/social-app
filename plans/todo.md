@@ -52,7 +52,7 @@ Implemented serializable thread-level `threadgateAllowRules` and `postgateEmbedd
 
 Outbound draft serialization remains #6; actual gate records and submission behavior remain #9. No production UI migration or network writes were added.
 
-Verification: 167 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. Work remains uncommitted and unstaged for operator review.
+Verification: 167 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. The initial #4 implementation is in HEAD `369612867`; this follow-up cleanup keeps adapter normalization non-owning while the store owns editable gate data. The cleanup remains uncommitted and unstaged for operator review.
 
 ## 5. Add gallery capacity and output selection
 

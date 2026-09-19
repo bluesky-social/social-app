@@ -95,6 +95,29 @@ describe('subscribe / getState', () => {
     store.destroy()
   })
 
+  test('language and label setters copy caller arrays and preserve old snapshots', () => {
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+    })
+    const root = rootId(store)
+    const before = store.getState()
+    const languages = ['en']
+    const labels = ['sexual']
+
+    store.actions.setPostLanguages(root, languages)
+    store.actions.setPostLabels(root, labels)
+    const after = store.getState()
+    languages.push('fr')
+    labels.push('nudity')
+
+    expect(before.posts[root].langs).toEqual([])
+    expect(before.posts[root].labels).toEqual([])
+    expect(after.posts[root].langs).toEqual(['en'])
+    expect(after.posts[root].labels).toEqual(['sexual'])
+    store.destroy()
+  })
+
   test('empty slot removals preserve the snapshot', () => {
     const store = createThreadStore({resolvers})
     const root = rootId(store)

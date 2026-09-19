@@ -34,15 +34,16 @@ and `ThreadState.replyTo` carry only the serializable parent preview; no root is
 fabricated and moderation is omitted. The adapters map shared thread-level
 `threadgateAllowRules` and `postgateEmbeddingRules`; draft fields win over
 preferences, and absent draft fields use protocol defaults. Unknown typed rules
-are cloned and preserved. Draft serialization/saving remains todo #6. Uploads
-remain simulated.
+are normalized without adapter-owned defensive copies; the store copies them
+when it takes ownership of live editable state. Draft serialization/saving
+remains todo #6. Uploads remain simulated.
 
 This is todo #3 in `plans/todo.md`. Do not start another todo, commit changes, or delegate this work further.
 
 ## Current implementation
 
 - `src/components/ComposerV2/store/types.ts` defines `ThreadStoreInitialState`, `ThreadPostInitialState`, source media inputs, and record/media attachment types.
-- `src/components/ComposerV2/store/utils/buildThreadState.ts` and `buildThreadPost.ts` construct initial snapshots.
+- `src/components/ComposerV2/store/utils/buildThreadState.ts` and `buildThreadPost.ts` construct initial snapshots. Adapters may share immutable source values; the store owns copies of incoming editable gate data, and callers must treat published snapshots as read-only.
 - `createThreadStore({resolvers, initialState})` already supports ordered posts, text/languages/labels, local refs, captions, supplied record/card data, URI-only candidates, draft identity, and initial dirty state.
 - The store generates fresh post/media IDs and starts simulated image/video uploads and URI resolution eagerly after building the complete snapshot.
 - Supplied resolved attachments are not refetched. `{kind: 'uri', uri}` reserves the adapter-selected slot.
