@@ -18,6 +18,7 @@ import {
   type AddMediaInput,
   type PostMediaItem,
 } from '#/components/ComposerV2/store/types'
+import {type UploadWorkerOverrides} from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
 import {simulatedUploadWorkers} from './uploadTestUtils'
 
@@ -41,6 +42,14 @@ function getMedia(
   if (media.kind === 'images') return media.items
   if (media.kind === 'video' || media.kind === 'gif') return [media.item]
   return []
+}
+
+function getUploadState(
+  store: ReturnType<typeof createThreadStore>,
+  postId: string,
+) {
+  const item = getMedia(store, postId)[0]
+  return item && item.kind !== 'gif' ? item.upload.state : undefined
 }
 
 const imageInput: AddMediaInput = {
@@ -511,6 +520,252 @@ describe('retryMediaUpload', () => {
     expect(store.getState()).toBe(before)
     store.actions.retryMediaUpload('nope', 'whatever')
     expect(store.getState()).toBe(before)
+  })
+})
+
+describe('retryAllFailedUploads', () => {
+  test('retries eligible failures across posts in stable order', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const second = store.actions.addPost('after', root)!.addedPostId
+    const {
+      addedMediaIds: [imageId],
+    } = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [videoId],
+    } = store.actions.addMedia(second, [videoInput])!
+    store.actions.setUploadStatus(root, imageId, {
+      state: 'failed',
+      error: 'image failed',
+    })
+    store.actions.setUploadStatus(second, videoId, {
+      state: 'failed',
+      error: 'video failed',
+    })
+
+    expect(store.actions.retryAllFailedUploads()).toEqual({
+      retriedMediaIds: [imageId, videoId],
+    })
+    expect(getUploadState(store, root)).toBe('pending')
+    expect(getUploadState(store, second)).toBe('pending')
+    jest.runAllTimers()
+    expect(getUploadState(store, root)).toBe('uploaded')
+    expect(getUploadState(store, second)).toBe('uploaded')
+  })
+
+  test('skips terminal, active, successful, GIF, card, and unresolved items', async () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const second = store.actions.addPost('after', root)!.addedPostId
+    const third = store.actions.addPost('after', second)!.addedPostId
+    const successfulPost = store.actions.addPost('after', third)!.addedPostId
+    const {
+      addedMediaIds: [eligibleId],
+    } = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [terminalId],
+    } = store.actions.addMedia(second, [imageInput])!
+    const {
+      addedMediaIds: [activeId],
+    } = store.actions.addMedia(third, [videoInput])!
+    store.actions.setUploadStatus(root, eligibleId, {
+      state: 'failed',
+      error: 'retryable',
+    })
+    store.actions.setUploadStatus(second, terminalId, {
+      state: 'failed',
+      error: 'terminal',
+      retryable: false,
+    })
+    store.actions.setUploadStatus(third, activeId, {
+      state: 'uploading',
+    })
+    const {
+      addedMediaIds: [successfulId],
+    } = store.actions.addMedia(successfulPost, [imageInput])!
+    store.actions.setUploadStatus(successfulPost, successfulId, {
+      state: 'uploaded',
+      blob: {} as never,
+    })
+    const gifPost = store.actions.addPost('after', successfulPost)!.addedPostId
+    store.actions.addMedia(gifPost, [gifInput])
+    const cardPost = store.actions.addPost('after', gifPost)!.addedPostId
+    store.actions.addUri(cardPost, 'https://example.com/card')
+    const unresolvedPost = store.actions.addPost('after', cardPost)!.addedPostId
+    mockResolveLink.mockRejectedValueOnce(new Error('bad uri'))
+    store.actions.addUri(unresolvedPost, 'https://example.com/unresolved')
+    await Promise.resolve()
+
+    const before = store.getState()
+    const result = store.actions.retryAllFailedUploads()
+
+    expect(result).toEqual({retriedMediaIds: [eligibleId]})
+    expect(store.getState().posts[second].attachments.media).toBe(
+      before.posts[second].attachments.media,
+    )
+    expect(getUploadState(store, third)).toBe('uploading')
+    expect(getUploadState(store, successfulPost)).toBe('uploaded')
+    expect(getMedia(store, gifPost)[0].kind).toBe('gif')
+    expect(store.getState().posts[cardPost].attachments.media?.state).toBe(
+      'pending',
+    )
+    expect(
+      store.getState().posts[unresolvedPost].attachments.media?.state,
+    ).toBe('failed')
+    jest.runAllTimers()
+    await Promise.resolve()
+  })
+
+  test('does not restart work on a repeated call', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const {
+      addedMediaIds: [mediaId],
+    } = store.actions.addMedia(root, [imageInput])!
+    store.actions.setUploadStatus(root, mediaId, {
+      state: 'failed',
+      error: 'retryable',
+    })
+
+    expect(store.actions.retryAllFailedUploads()).toEqual({
+      retriedMediaIds: [mediaId],
+    })
+    expect(store.actions.retryAllFailedUploads()).toEqual({
+      retriedMediaIds: [],
+    })
+    expect(jest.getTimerCount()).toBe(1)
+    jest.runAllTimers()
+  })
+
+  test('does not retry a candidate changed by a synchronous subscriber', () => {
+    for (const change of ['active', 'remove', 'supersede'] as const) {
+      const store = makeStore()
+      const root = rootId(store)
+      const second = store.actions.addPost('after', root)!.addedPostId
+      const {
+        addedMediaIds: [firstId],
+      } = store.actions.addMedia(root, [imageInput])!
+      const {
+        addedMediaIds: [secondId],
+      } = store.actions.addMedia(second, [imageInput])!
+      store.actions.setUploadStatus(root, firstId, {
+        state: 'failed',
+        error: 'first',
+      })
+      store.actions.setUploadStatus(second, secondId, {
+        state: 'failed',
+        error: 'second',
+      })
+
+      let handled = false
+      store.subscribe(() => {
+        if (handled || getMedia(store, root)[0]?.id !== firstId) return
+        const first = getMedia(store, root)[0]
+        if (first.kind === 'image' && first.upload.state !== 'failed') {
+          handled = true
+          if (change === 'active') {
+            store.actions.setUploadStatus(second, secondId, {
+              state: 'uploading',
+            })
+          } else {
+            store.actions.removeMediaAttachment(second)
+            if (change === 'supersede') {
+              store.actions.addUri(second, 'https://example.com/replacement')
+            }
+          }
+        }
+      })
+
+      expect(store.actions.retryAllFailedUploads()).toEqual({
+        retriedMediaIds: [firstId],
+      })
+      if (change === 'active') {
+        expect(getUploadState(store, second)).toBe('uploading')
+      } else {
+        expect(getMedia(store, second)).toEqual([])
+        if (change === 'supersede') {
+          expect(store.getState().posts[second].attachments.media?.state).toBe(
+            'pending',
+          )
+        }
+      }
+      store.destroy()
+    }
+  })
+
+  test('stops without more work when a subscriber destroys the store', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const second = store.actions.addPost('after', root)!.addedPostId
+    const {
+      addedMediaIds: [firstId],
+    } = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [secondId],
+    } = store.actions.addMedia(second, [imageInput])!
+    store.actions.setUploadStatus(root, firstId, {
+      state: 'failed',
+      error: 'first',
+    })
+    store.actions.setUploadStatus(second, secondId, {
+      state: 'failed',
+      error: 'second',
+    })
+    store.subscribe(() => store.destroy())
+
+    expect(store.actions.retryAllFailedUploads()).toEqual({
+      retriedMediaIds: [firstId],
+    })
+    expect(jest.getTimerCount()).toBe(0)
+  })
+
+  test('does not repeat an immediate failure in one invocation', () => {
+    const starts: string[] = []
+    const workers: UploadWorkerOverrides = {
+      startImageUpload: opts => {
+        starts.push(opts.mediaId)
+        opts.setUploadStatus(opts.postId, opts.mediaId, {
+          state: 'failed',
+          error: 'still failing',
+        })
+        return {cancel() {}}
+      },
+    }
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+      __uploadWorkers: workers,
+    })
+    const root = rootId(store)
+    const {
+      addedMediaIds: [mediaId],
+    } = store.actions.addMedia(root, [imageInput])!
+
+    expect(starts).toEqual([mediaId])
+    expect(store.actions.retryAllFailedUploads()).toEqual({
+      retriedMediaIds: [mediaId],
+    })
+    expect(starts).toEqual([mediaId, mediaId])
+    expect(getUploadState(store, root)).toBe('failed')
+  })
+
+  test('empty and destroyed stores are silent no-ops', () => {
+    const store = makeStore()
+    const before = store.getState()
+    const listener = jest.fn()
+    store.subscribe(listener)
+
+    expect(store.actions.retryAllFailedUploads()).toEqual({
+      retriedMediaIds: [],
+    })
+    expect(store.getState()).toBe(before)
+    expect(listener).not.toHaveBeenCalled()
+
+    store.destroy()
+    expect(store.actions.retryAllFailedUploads()).toEqual({
+      retriedMediaIds: [],
+    })
+    expect(listener).not.toHaveBeenCalled()
   })
 })
 
