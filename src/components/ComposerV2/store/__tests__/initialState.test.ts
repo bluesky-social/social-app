@@ -547,6 +547,27 @@ describe('initial URI resolution', () => {
     expect(mockResolveLink).toHaveBeenLastCalledWith(expect.anything(), uri)
   })
 
+  test('hydration and retries preserve an existing dirty flag', async () => {
+    mockResolveLink
+      .mockRejectedValueOnce(new Error('network'))
+      .mockResolvedValueOnce(externalLink)
+    const store = makeStore({
+      isDirty: true,
+      posts: [{attachments: {media: {kind: 'uri', uri: EXTERNAL_URL}}}],
+    })
+    await Promise.resolve()
+    const failed = root(store).post.attachments.media
+    if (failed?.state !== 'failed') throw new Error('expected failure')
+    expect(store.getState().isDirty).toBe(true)
+    failed.retry?.()
+    await Promise.resolve()
+    expect(root(store).post.attachments.media).toMatchObject({
+      state: 'resolved',
+      kind: 'external',
+    })
+    expect(store.getState().isDirty).toBe(true)
+  })
+
   test('embedding-disabled remains non-retryable on initial resolution', async () => {
     mockResolveLink.mockRejectedValue(new EmbeddingDisabledError())
     const store = makeStore({
