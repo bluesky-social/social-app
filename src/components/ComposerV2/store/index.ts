@@ -308,112 +308,134 @@ export function createThreadStore(options: {
    * block new candidates; pending/failed candidates can be superseded.
    */
   function addUri(postId: string, uri: string) {
-    setUriAttachment(postId, classifyUriTarget(uri), uri, true)
-  }
-
-  /** Retries keep their assigned slot and are not new content edits. */
-  function setUriAttachment(
-    postId: string,
-    slot: AttachmentSlot,
-    uri: string,
-    markDirty: boolean,
-  ) {
     if (destroyed) return
+    const target = classifyUriTarget(uri)
     const post = state.posts[postId]
-    if (!post || post.attachments[slot]?.state === 'resolved') return
-    const rev = resolutionRevs[slot].incrementFor(postId)
+    if (!post || post.attachments[target]?.state === 'resolved') return
+    const rev = resolutionRevs[target].incrementFor(postId)
     mutateState(s => {
-      s.posts[postId] = setPostResolution(post, slot, {state: 'pending', uri})
-      if (markDirty) s.isDirty = true
-      return s
-    })
-    startUriResolution(slot, rev, postId, uri)
-  }
-
-  /** Initial hydration shares the worker but does not dispatch a dirtying edit. */
-  function startUriResolution(
-    slot: AttachmentSlot,
-    rev: number,
-    postId: string,
-    uri: string,
-  ) {
-    if (destroyed || !resolutionRevs[slot].isCurrentFor(postId, rev)) return
-    resolve(options.resolvers, uri).then(
-      link => applyResolved(slot, rev, postId, uri, link),
-      err => applyFailed(slot, rev, postId, uri, err),
-    )
-  }
-
-  function applyResolved(
-    slot: AttachmentSlot,
-    rev: number,
-    postId: string,
-    uri: string,
-    link: ResolvedLink,
-  ) {
-    if (destroyed || !resolutionRevs[slot].isCurrentFor(postId, rev)) return
-    if ((link.type === 'record') !== (slot === 'record')) {
-      applyFailed(
-        slot,
-        rev,
-        postId,
-        uri,
-        new Error('Unexpected attachment type'),
-      )
-      return
-    }
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      if (link.type === 'record') {
-        const {type: _type, ...record} = link
-        s.posts[postId] = setPostRecord(post, {state: 'resolved', ...record})
-      } else if (link.type === 'external') {
-        const {type: _type, ...external} = link
-        s.posts[postId] = setPostMedia(post, {
-          state: 'resolved',
-          kind: 'external',
-          ...external,
-        })
-      } else {
-        const {type: _type, ...invite} = link
-        s.posts[postId] = setPostMedia(post, {
-          state: 'resolved',
-          kind: 'chat-invite',
-          ...invite,
-        })
+      const currentPost = s.posts[postId]
+      if (
+        !currentPost ||
+        currentPost.attachments[target]?.state === 'resolved'
+      ) {
+        return null
       }
+      if (target === 'record') {
+        s.posts[postId] = setPostRecord(currentPost, {state: 'pending', uri})
+      } else {
+        s.posts[postId] = setPostMedia(currentPost, {state: 'pending', uri})
+      }
+      s.isDirty = true
       return s
     })
+    resolveAttachmentUri({postId, target, uri, rev})
   }
 
-  function applyFailed(
-    slot: AttachmentSlot,
-    rev: number,
-    postId: string,
-    uri: string,
-    err: unknown,
-  ) {
-    if (destroyed || !resolutionRevs[slot].isCurrentFor(postId, rev)) return
-    const {code, isRetryable} = parseResolveLinkError(err)
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post) return null
-      s.posts[postId] = setPostResolution(post, slot, {
-        state: 'failed',
+  /**
+   * Resolve one reserved destination. Completion and retry handlers close over
+   * this attempt's destination, revision, post, and URI so stale work can
+   * never be redirected into the other attachment slot.
+   */
+  function resolveAttachmentUri({
+    postId,
+    target,
+    uri,
+    rev,
+  }: {
+    postId: string
+    target: AttachmentSlot
+    uri: string
+    rev: number
+  }) {
+    if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) return
+
+    const applyFailed = (err: unknown) => {
+      if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) return
+      const {code, isRetryable} = parseResolveLinkError(err)
+      const retry = isRetryable
+        ? () => {
+            if (
+              destroyed ||
+              !resolutionRevs[target].isCurrentFor(postId, rev)
+            ) {
+              return
+            }
+            const retryRev = resolutionRevs[target].incrementFor(postId)
+            mutateState(retryState => {
+              const currentPost = retryState.posts[postId]
+              if (!currentPost) return null
+              if (target === 'record') {
+                retryState.posts[postId] = setPostRecord(currentPost, {
+                  state: 'pending',
+                  uri,
+                })
+              } else {
+                retryState.posts[postId] = setPostMedia(currentPost, {
+                  state: 'pending',
+                  uri,
+                })
+              }
+              return retryState
+            })
+            resolveAttachmentUri({postId, target, uri, rev: retryRev})
+          }
+        : undefined
+      const failure = {
+        state: 'failed' as const,
         uri,
         error: String((err && (err as Error).message) ?? err),
         code,
-        retry: isRetryable
-          ? () => {
-              if (resolutionRevs[slot].isCurrentFor(postId, rev)) {
-                setUriAttachment(postId, slot, uri, false)
-              }
-            }
-          : undefined,
+        retry,
+      }
+      mutateState(s => {
+        const post = s.posts[postId]
+        if (!post) return null
+        s.posts[postId] =
+          target === 'record'
+            ? setPostRecord(post, failure)
+            : setPostMedia(post, failure)
+        return s
       })
-      return s
-    })
+    }
+
+    const applyResolved = (link: ResolvedLink) => {
+      if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) {
+        return
+      }
+      if ((link.type === 'record') !== (target === 'record')) {
+        applyFailed(new Error('Unexpected attachment type'))
+        return
+      }
+      mutateState(s => {
+        const post = s.posts[postId]
+        if (!post) return null
+        if (link.type === 'record') {
+          const {type: _type, ...record} = link
+          s.posts[postId] = setPostRecord(post, {
+            state: 'resolved',
+            ...record,
+          })
+        } else if (link.type === 'external') {
+          const {type: _type, ...external} = link
+          s.posts[postId] = setPostMedia(post, {
+            state: 'resolved',
+            kind: 'external',
+            ...external,
+          })
+        } else {
+          const {type: _type, ...invite} = link
+          s.posts[postId] = setPostMedia(post, {
+            state: 'resolved',
+            kind: 'chat-invite',
+            ...invite,
+          })
+        }
+        return s
+      })
+    }
+
+    resolve(options.resolvers, uri).then(applyResolved, applyFailed)
   }
 
   /** Direct insertion of a known record replaces only the record slot. */
@@ -674,16 +696,6 @@ export function createThreadStore(options: {
     return {...post, attachments: {...post.attachments, record}}
   }
 
-  function setPostResolution(
-    post: types.ThreadPost,
-    slot: AttachmentSlot,
-    resolution: types.AttachmentResolution,
-  ) {
-    return slot === 'record'
-      ? setPostRecord(post, resolution)
-      : setPostMedia(post, resolution)
-  }
-
   /* The full initial snapshot is ready before any background work begins. */
   for (const [postId, post] of Object.entries(state.posts)) {
     for (const item of getMediaItems(post.attachments.media)) {
@@ -693,7 +705,12 @@ export function createThreadStore(options: {
       const attachment = post.attachments[slot]
       if (attachment?.state === 'pending') {
         const rev = resolutionRevs[slot].incrementFor(postId)
-        startUriResolution(slot, rev, postId, attachment.uri)
+        resolveAttachmentUri({
+          postId,
+          target: slot,
+          uri: attachment.uri,
+          rev,
+        })
       }
     }
   }

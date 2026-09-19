@@ -8,9 +8,10 @@ import {
 } from '@jest/globals'
 
 /* Avoid loading the UI module chain through the real link resolver. */
-jest.mock('#/lib/api/resolve', () => ({
-  resolveLink: jest.fn(),
-}))
+jest.mock('#/lib/api/resolve', () => {
+  class EmbeddingDisabledError extends Error {}
+  return {resolveLink: jest.fn(), EmbeddingDisabledError}
+})
 
 import {type LinkResolvers, type resolveLink} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'

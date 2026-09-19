@@ -225,6 +225,42 @@ describe('record and media routing', () => {
       expect(store.getState().posts[root].attachments.record).toBeUndefined()
     },
   )
+
+  test('resolves concurrent record and media candidates independently', async () => {
+    const recordPending = deferred()
+    const mediaPending = deferred()
+    mockResolveLink
+      .mockReturnValueOnce(recordPending.promise)
+      .mockReturnValueOnce(mediaPending.promise)
+    const store = makeStore()
+    const root = rootId(store)
+
+    store.actions.addUri(root, POST_URL)
+    store.actions.addUri(root, EXTERNAL_URL)
+    expect(store.getState().posts[root].attachments).toEqual({
+      record: {state: 'pending', uri: POST_URL},
+      media: {state: 'pending', uri: EXTERNAL_URL},
+    })
+    expect(store.getState().posts[root].imageSelectionsRemaining).toBe(0)
+
+    mediaPending.resolve(externalLink)
+    await mediaPending.promise
+    expect(store.getState().posts[root].attachments.record).toEqual({
+      state: 'pending',
+      uri: POST_URL,
+    })
+    expect(store.getState().posts[root].attachments.media).toMatchObject({
+      state: 'resolved',
+      kind: 'external',
+    })
+
+    recordPending.resolve(postLink)
+    await recordPending.promise
+    expect(store.getState().posts[root].attachments.record).toMatchObject({
+      state: 'resolved',
+      kind: 'post',
+    })
+  })
 })
 
 describe.each(records)('$link.kind coexists with media', ({uri, link}) => {
@@ -373,6 +409,28 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
       await first.promise.catch(() => {})
       expect(store.getState()).toBe(before)
     }
+  })
+
+  test('a stale retry cannot replace a newer candidate', async () => {
+    mockResolveLink
+      .mockRejectedValueOnce(new Error('network down'))
+      .mockResolvedValueOnce(link)
+    const store = makeStore()
+    const root = rootId(store)
+    store.actions.addUri(root, uri)
+    await Promise.resolve()
+    const failed = store.getState().posts[root].attachments[slot]
+    if (failed?.state !== 'failed') throw new Error('expected failed')
+
+    store.actions.addUri(root, `${uri}?new`)
+    expect(mockResolveLink).toHaveBeenCalledTimes(2)
+    failed.retry?.()
+    expect(mockResolveLink).toHaveBeenCalledTimes(2)
+    await Promise.resolve()
+    expect(store.getState().posts[root].attachments[slot]).toMatchObject({
+      state: 'resolved',
+      kind: slot === 'record' ? link.kind : link.type,
+    })
   })
 
   test('removal prevents a stale response from reviving the attachment', async () => {
