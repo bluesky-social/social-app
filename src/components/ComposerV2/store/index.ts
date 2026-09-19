@@ -31,6 +31,11 @@ import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMedia
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
 
+function isRetryableFailedUpload(item: types.PostMediaItem): boolean {
+  if (item.kind !== 'image' && item.kind !== 'video') return false
+  return item.upload.state === 'failed' && item.upload.retryable !== false
+}
+
 /** One isolated thread composition session, independent of React. */
 export function createThreadStore(options: {
   resolvers: LinkResolvers
@@ -263,6 +268,39 @@ export function createThreadStore(options: {
       return s
     })
     startMediaUpload(postId, mediaId)
+  }
+
+  /**
+   * Retries each currently eligible failed image/video upload once in thread
+   * order. Candidates are snapshotted before the first retry, then checked
+   * against live state so reentrant subscribers cannot restart changed work.
+   */
+  function retryAllFailedUploads(): {retriedMediaIds: string[]} {
+    if (destroyed) return {retriedMediaIds: []}
+
+    const candidates: Array<{postId: string; mediaId: string}> = []
+    for (const [postId, post] of Object.entries(state.posts)) {
+      for (const item of getMediaItems(post.attachments.media)) {
+        if (isRetryableFailedUpload(item)) {
+          candidates.push({postId, mediaId: item.id})
+        }
+      }
+    }
+
+    const retriedMediaIds: string[] = []
+    for (const {postId, mediaId} of candidates) {
+      if (destroyed) break
+      const post = state.posts[postId]
+      const item = post
+        ? getMediaItems(post.attachments.media).find(
+            media => media.id === mediaId,
+          )
+        : undefined
+      if (!item || !isRetryableFailedUpload(item)) continue
+      retryMediaUpload(postId, mediaId)
+      retriedMediaIds.push(mediaId)
+    }
+    return {retriedMediaIds}
   }
 
   /**
@@ -674,6 +712,7 @@ export function createThreadStore(options: {
       removeMedia,
       updateMediaAltText,
       retryMediaUpload,
+      retryAllFailedUploads,
       addUri,
       setRecordAttachment,
       removeRecordAttachment,
