@@ -19,6 +19,7 @@ import {
   type PostMediaItem,
 } from '#/components/ComposerV2/store/types'
 import {type Gif} from '#/features/gifPicker/types'
+import {simulatedUploadWorkers} from './uploadTestUtils'
 
 function makeIdGenerator() {
   let i = 0
@@ -85,6 +86,7 @@ function makeStore() {
     resolvers,
     __createId: makeIdGenerator(),
     __resolveLink: mockResolveLink,
+    __uploadWorkers: simulatedUploadWorkers,
   })
 }
 

@@ -7,6 +7,7 @@ import {
 } from '#/components/ComposerV2/adapters'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type app, type com} from '#/lexicons'
+import {simulatedUploadWorkers} from '../../store/__tests__/uploadTestUtils'
 
 jest.mock('#/lib/media/manip', () => ({
   getImageDim: jest.fn(),
@@ -629,6 +630,7 @@ describe('draftToInitialState', () => {
         let id = 0
         return () => `id-${++id}`
       })(),
+      __uploadWorkers: simulatedUploadWorkers,
     })
     const post = Object.values(store.getState().posts)[0]
     expect(store.getState().isDirty).toBe(false)

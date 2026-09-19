@@ -29,6 +29,7 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app} from '#/lexicons'
+import {simulatedUploadWorkers} from './uploadTestUtils'
 
 const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
 const EXTERNAL_URL = 'https://example.com'
@@ -107,6 +108,7 @@ function makeStore(initialState?: ThreadStoreInitialState) {
     resolvers: {} as LinkResolvers,
     __resolveLink: mockResolveLink,
     __createId: () => `id-${++id}`,
+    __uploadWorkers: simulatedUploadWorkers,
   })
 }
 

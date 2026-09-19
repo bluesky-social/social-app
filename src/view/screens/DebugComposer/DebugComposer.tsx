@@ -13,11 +13,16 @@
  *   - addUri validation (embedding-disabled, attachment conflicts) shows
  *     up the way we expect
  */
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo} from 'react'
 import {ScrollView, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {useAppviewClient, useChatClient} from '#/state/session'
+import {
+  useAppviewClient,
+  useChatClient,
+  usePdsClient,
+  useSession,
+} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Composer} from '#/components/Composer'
@@ -34,9 +39,21 @@ import {Text} from '#/components/Typography'
 export default function DebugComposer() {
   const appviewClient = useAppviewClient()
   const chatClient = useChatClient()
-  const [store] = useState(() =>
-    createThreadStore({resolvers: {appviewClient, chatClient}}),
+  const pdsClient = usePdsClient()
+  const {currentAccount} = useSession()
+  const {i18n} = useLingui()
+  const dispatchUrl = currentAccount?.pdsUrl ?? currentAccount?.service
+  const store = useMemo(
+    () =>
+      createThreadStore({
+        resolvers: {appviewClient, chatClient},
+        media: {pdsClient, dispatchUrl, i18n},
+      }),
+    [appviewClient, chatClient, pdsClient, dispatchUrl, i18n],
   )
+
+  useEffect(() => () => store.destroy(), [store])
+
   return (
     <ThreadStoreProvider store={store}>
       <View style={[a.p_md, a.gap_md]}>

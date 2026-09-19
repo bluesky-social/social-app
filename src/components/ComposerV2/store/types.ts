@@ -4,19 +4,74 @@ import {type ResolvedLink} from '#/lib/api/resolve'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app, type com} from '#/lexicons'
 
+/** A real media worker phase. Compression has no percentage on native images. */
+export type UploadPhase =
+  'validating' | 'compressing' | 'uploading' | 'processing' | 'captions'
+
 /** Status reported by an upload worker. The store attaches retry behavior. */
 export type UploadStatus =
   | {state: 'pending'}
-  | {state: 'uploading'; progress: number}
-  | {state: 'uploaded'; blob: BlobRef}
-  | {state: 'failed'; error: string}
+  | {
+      state: 'uploading'
+      phase?: UploadPhase
+      progress?: number
+    }
+  | {
+      state: 'uploaded'
+      blob: BlobRef
+      captionBlobs?: UploadedCaption[]
+    }
+  | {
+      state: 'failed'
+      error: string
+      code?: string
+      retryable?: boolean
+      blob?: BlobRef
+      captionBlobs?: UploadedCaption[]
+    }
 
 /** Runtime retry functions must be reattached when hydrating serialized data. */
 export type PostMediaUploadStatus =
   | {state: 'pending'}
-  | {state: 'uploading'; progress: number}
-  | {state: 'uploaded'; blob: BlobRef}
-  | {state: 'failed'; error: string; retry: () => void}
+  | {
+      state: 'uploading'
+      phase?: UploadPhase
+      progress?: number
+    }
+  | {
+      state: 'uploaded'
+      blob: BlobRef
+      captionBlobs?: UploadedCaption[]
+    }
+  | {
+      state: 'failed'
+      error: string
+      code?: string
+      retryable?: boolean
+      retry: () => void
+      blob?: BlobRef
+      captionBlobs?: UploadedCaption[]
+    }
+
+export type UploadedCaption = {lang: string; blob: BlobRef}
+
+export type PreparedImage = {
+  uri: string
+  width: number
+  height: number
+  mimeType: string
+  aspectRatio: {width: number; height: number}
+  size?: number
+}
+
+export type PreparedVideo = {
+  uri: string
+  size: number
+  mimeType: string
+  width: number
+  height: number
+  aspectRatio: {width: number; height: number}
+}
 
 export type PostMediaImage = {
   kind: 'image'
@@ -26,8 +81,12 @@ export type PostMediaImage = {
   width: number
   height: number
   altText: string
+  /** The source MIME type, before post-image compression. */
+  mimeType?: string
   /** Durable draft path, reused when saving restored media. */
   localRefPath?: string
+  /** Output of the post image compressor; the source fields remain unchanged. */
+  prepared?: PreparedImage
   upload: PostMediaUploadStatus
 }
 
@@ -40,9 +99,19 @@ export type PostMediaVideo = {
   height: number
   altText: string
   mimeType: string
+  /** Duration from the media metadata probe, in milliseconds. */
+  duration?: number
   /** Durable draft path, reused when saving restored media. */
   localRefPath?: string
+  /** Web picker input retained for metadata/compression; never serialized to drafts. */
+  file?: Blob
   captions: Array<{lang: string; content: string}>
+  /** Uploaded caption refs are kept separate from editable caption contents. */
+  captionBlobs: UploadedCaption[]
+  /** The compressed output used by a later retry, without web byte buffers. */
+  prepared?: PreparedVideo
+  /** A completed video is retained when a later caption upload fails. */
+  videoBlob?: BlobRef
   upload: PostMediaUploadStatus
 }
 
@@ -157,6 +226,7 @@ export type PostMediaImageInput = {
   uri: string
   width: number
   height: number
+  mimeType?: string
   altText?: string
   localRefPath?: string
 }
@@ -169,6 +239,9 @@ export type PostMediaVideoInput = {
   mimeType: string
   altText?: string
   localRefPath?: string
+  /** Native callers use uri; web callers may provide the picker File. */
+  file?: Blob
+  duration?: number
   captions?: ReadonlyArray<{lang: string; content: string}>
 }
 

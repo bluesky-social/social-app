@@ -14,7 +14,7 @@ The first submission milestone will stop before writing records to the repositor
 - Ordered multi-post thread state.
 - Per-post text, languages, labels, and one record attachment plus one media attachment.
 - Quotes, feeds, lists, and starter packs share the record slot; images, video, GIFs, external cards, and chat invites share the media slot.
-- Simulated image/video upload progress, cancellation, failure, and retry.
+- Eager real image/video processing, PDS uploads, multipart video processing, caption uploads, cancellation, failure classification, and retry.
 - Async URI resolution with pending, resolved, and failed states.
 - Per-post revision counters that prevent stale link-resolution results from overwriting newer state.
 - `useSyncExternalStore` hooks for whole-thread and per-post subscriptions.
@@ -110,7 +110,7 @@ target, draft identity/dirty state, and local media sources (including local
 refs, alt text, and captions). It contains no generated item IDs, upload
 statuses, runtime task handles, retry closures, revision counters, moderation
 objects, or UI callbacks. The store constructor builds the full initial
-snapshot before starting eager simulated uploads or resolving URI candidates.
+snapshot before starting eager real media workers or resolving URI candidates.
 Progress and retries do not dirty the initial composition. Oversized normalized
 image sets are rejected before starting work rather than silently losing media.
 
@@ -194,7 +194,7 @@ Requirements:
 
 ### 6. Real image processing and uploads
 
-Replace the image upload simulation with the existing production primitives. Compression and upload begin eagerly when an image enters the store, including through intent or draft hydration.
+Implemented in todo #7 with the existing production primitives. Compression and upload begin eagerly when an image enters the store, including through intent or draft hydration.
 
 Pipeline:
 
@@ -209,11 +209,13 @@ Pipeline:
 
 The implementation should reuse `compressImage`, `IMAGE_SIZE_CONFIG_POSTS`, and the existing blob-upload helper rather than creating a second compression policy.
 
-Uploads must be race-safe: a completion from a removed/replaced image cannot write into the current post.
+Uploads must be race-safe: a completion from a removed/replaced image cannot write into the current post. Image compression is logically cancellable because the existing compressor has no abort signal; a cancelled result is discarded and cannot start the PDS upload.
+
+The store receives an explicit media dependency bundle containing the PDS lex client, localization, and the account dispatch URL used for video service auth. Missing dependencies fail the item instead of producing a placeholder blob. Prepared image outputs and transformed metadata are retained separately from the original source fields.
 
 ### 7. Real video processing and multipart upload
 
-Replace the video upload simulation with the existing compression and multipart pipeline. Compression and upload begin eagerly when a video enters the store, including through intent or draft hydration.
+Implemented in todo #7 with the existing compression and multipart pipeline. Compression and upload begin eagerly when a video enters the store, including through intent or draft hydration.
 
 Requirements:
 
@@ -228,6 +230,8 @@ Requirements:
 - Upload captions through the PDS, retain language metadata, and include caption blob refs in the final embed.
 - Expose retryable versus terminal failures without allowing stale jobs to update replaced media.
 - Keep draft serialization based on durable local compressed media and caption content, not ephemeral multipart session state.
+
+Todo #7 uses `uploadVideo()` only as the production wrapper around `uploadVideoMultipart()`; it does not use the legacy component reducer/process branch. The worker handles immediate completed jobs and bounded status polling, preserves completed video blobs when a caption upload fails, and stores caption blob refs separately from editable `{lang, content}` values. Compression, multipart byte transfer, server processing, and caption upload are distinct observable phases.
 
 ### 8. Grapheme counting and post validity
 

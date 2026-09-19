@@ -64,7 +64,15 @@ Verification of the capacity change: 118 ComposerV2 tests passed; iOS/Android/we
 
 ## 7. Replace simulated media workers with real eager uploads
 
-Status: pending
+Status: completed
+
+Replaced timer-based image/video workers with explicit production dependencies: PDS lex client, account dispatch URL, localization, and injectable media primitives. Selected and hydrated media starts eagerly after the complete initial snapshot is published. Original sources, local refs, editable captions, transformed outputs, uploaded video/caption refs, and distinct validating/compression/upload/processing/caption phases are retained.
+
+Images use `compressImage` with `IMAGE_SIZE_CONFIG_POSTS` and the platform blob-upload helper. Videos validate metadata and policy limits, use `compressVideo`, delegate through `uploadVideo()` to the existing `uploadVideoMultipart()` engine, poll unfinished jobs with cancellation, and upload VTT captions through the PDS. Missing dependencies fail explicitly; there is no production simulation fallback. Image compression cancellation is logical because the existing primitive has no signal; cancelled results never begin upload. Prepared output and final callbacks are guarded by media task ownership, including synchronous worker callbacks. Retryable and terminal failures are classified, and completed video blobs survive caption failures.
+
+Tests use injected deterministic fakes for store-only invariants and mocked real-worker dependencies; no live-account upload or repository write was added. Verification: `pnpm test src/components/ComposerV2 --watchman=false --runInBand` (8 suites, 173 tests passed), `pnpm test src/lib/media/video --watchman=false --runInBand` (7 suites, 41 tests passed), `pnpm typecheck` (iOS/Android/web passed), scoped `pnpm prettier --write .` with a temporary restrictive ignore (passed), lint via the repository Oxlint script with `--format default` (0 errors, 229 warnings), and `git diff --check` (passed). The unredirected lint display in this harness reports a JSON parser EOF despite the underlying command exiting 0 with no errors.
+
+Record-set construction/gallery output remains #9, production UI remains #10, and draft saving/round trips remain last under #6. No sub-delegation, staging, or commits.
 
 ## 8. Add reordering
 
