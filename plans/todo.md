@@ -1,6 +1,6 @@
 # Composer V2 todos
 
-Work through these in order, one at a time. Each section can hold implementation details and notes as the work progresses.
+Work through these in the displayed order, one at a time. Numbers remain stable for cross-references. Per operator direction, the remaining execution order is #7, #8, #9, #10, then #6 (draft round trips last). Each section can hold implementation details and notes as the work progresses.
 
 Reference documents:
 
@@ -54,17 +54,13 @@ Outbound draft serialization remains #6; actual gate records and submission beha
 
 Verification: 167 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. The initial #4 implementation is in HEAD `369612867`; this follow-up cleanup keeps adapter normalization non-owning while the store owns editable gate data. The cleanup remains uncommitted and unstaged for operator review.
 
-## 5. Add gallery capacity and output selection
+## 5. Add gallery capacity
 
-Status: in_progress
+Status: completed
 
-Per operator direction, the selection cap is now 10, independently of record serialization. Capacity checks, append limits, and tests cover the 4/5/10 boundaries and rejection beyond 10. Output selection remains to be implemented: `app.bsky.embed.images` for 1-4 images and `app.bsky.embed.gallery` for 5-10.
+Per operator direction, the selection cap is now 10, independently of record serialization. Capacity checks, append limits, and tests cover the 4/5/10 boundaries and rejection beyond 10. The remaining output-selection work has moved into #9 as part of overall record-set construction; it is not implemented yet.
 
 Verification of the capacity change: 118 ComposerV2 tests passed; iOS/Android/web typechecks, project lint, changed-source formatting, and `git diff --check` passed.
-
-## 6. Implement draft round trips
-
-Status: pending
 
 ## 7. Replace simulated media workers with real eager uploads
 
@@ -78,6 +74,8 @@ Status: pending
 
 Status: pending
 
+Include gallery output selection, moved from #5, in overall record-set construction: emit `app.bsky.embed.images` for 1-4 images and `app.bsky.embed.gallery` for 5-10. Combine media with any record attachment via `recordWithMedia`, construct the post/reply/gate records, and validate the complete record set without publishing. Test the image-count boundary and record-plus-media combinations in that context rather than building a standalone serializer first.
+
 Support explicit per-post tags in composer state and normalized initial input, and populate the `tags` field on each `app.bsky.feed.post` record. These are separate from hashtag facets in the post text. Validate against the current post lexicon and cover tag preservation in planner tests. Document any draft-schema limitations for preserving tags rather than silently claiming round-trip support.
 
 ## 10. Build the production UI
@@ -85,3 +83,9 @@ Support explicit per-post tags in composer state and normalized initial input, a
 Status: pending
 
 Include a typeahead input for editing each post's explicit tags, wired to the state used to populate the post record's `tags` field. Typeahead data source and interaction details can be specified when implementing the UI.
+
+## 6. Implement draft round trips
+
+Status: pending
+
+Moved to the end of the execution order per operator direction, after #10. Implement outbound draft serialization, save bookkeeping, media cleanup, and full round-trip verification against the finalized state. Existing inbound draft hydration from #3/#4 remains in place. Draft embeds use their own schema; published embed selection belongs to #9.
