@@ -91,11 +91,11 @@ function makeStore() {
 }
 
 describe('addMedia', () => {
-  test('adds a single image with pending upload status and returns its id', () => {
+  test('adds a single image with pending upload status and returns its named id', () => {
     const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [imageInput])
-    expect(ids).toEqual(['id-2'])
+    expect(ids).toEqual({addedMediaIds: ['id-2']})
 
     const media = getMedia(store, root)
     expect(media).toHaveLength(1)
@@ -114,8 +114,8 @@ describe('addMedia', () => {
       imageInput,
       imageInput,
     ])
-    expect(ids).toHaveLength(3)
-    expect(getMedia(store, root).map(m => m.id)).toEqual(ids)
+    expect(ids?.addedMediaIds).toHaveLength(3)
+    expect(getMedia(store, root).map(m => m.id)).toEqual(ids?.addedMediaIds)
   })
 
   test('marks state dirty', () => {
@@ -133,18 +133,25 @@ describe('addMedia', () => {
     expect(store.getState()).toBe(before)
   })
 
-  test('returns [] for an empty input list and is a no-op', () => {
+  test('returns named empty ids for an empty input list and is a no-op', () => {
     const store = makeStore()
     const before = store.getState()
+    const notify = jest.fn()
+    store.subscribe(notify)
     const result = store.actions.addMedia(rootId(store), [])
-    expect(result).toEqual([])
+    expect(result).toEqual({addedMediaIds: []})
     expect(store.getState()).toBe(before)
+    expect(store.getState().isDirty).toBe(false)
+    expect(notify).not.toHaveBeenCalled()
+    expect(jest.getTimerCount()).toBe(0)
   })
 
   test('drives an image upload from pending -> uploading -> uploaded', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [imageId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [imageId],
+    } = store.actions.addMedia(root, [imageInput])!
 
     const get = () => {
       const m = getMedia(store, root).find(x => x.id === imageId)!
@@ -162,7 +169,9 @@ describe('addMedia', () => {
   test('drives a video upload through to uploaded', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [videoId] = store.actions.addMedia(root, [videoInput])!
+    const {
+      addedMediaIds: [videoId],
+    } = store.actions.addMedia(root, [videoInput])!
 
     const get = () => {
       const m = getMedia(store, root).find(x => x.id === videoId)!
@@ -197,7 +206,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
       gifInput,
       ...Array.from({length: 10}, () => imageInput),
     ])
-    expect(ids).toHaveLength(10)
+    expect(ids?.addedMediaIds).toHaveLength(10)
     const media = getMedia(store, root)
     expect(media).toHaveLength(10)
     expect(media.every(m => m.kind === 'image')).toBe(true)
@@ -213,7 +222,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
     }))
     const ids = store.actions.addMedia(root, inputs)
     const media = getMedia(store, root)
-    expect(ids).toHaveLength(count)
+    expect(ids?.addedMediaIds).toHaveLength(count)
     expect(media.map(item => item.kind !== 'gif' && item.uri)).toEqual(
       inputs.map(input => input.uri),
     )
@@ -230,7 +239,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
       imageInput,
       videoInput,
     ])
-    expect(ids).toHaveLength(1)
+    expect(ids?.addedMediaIds).toHaveLength(1)
     expect(getMedia(store, root)[0].kind).toBe('video')
   })
 
@@ -238,7 +247,7 @@ describe('addMedia input validation (first item dictates kind, cap by count)', (
     const store = makeStore()
     const root = rootId(store)
     const ids = store.actions.addMedia(root, [gifInput, gifInput, imageInput])
-    expect(ids).toHaveLength(1)
+    expect(ids?.addedMediaIds).toHaveLength(1)
     expect(getMedia(store, root)[0].kind).toBe('gif')
   })
 })
@@ -256,7 +265,7 @@ describe('addMedia respects existing media on the post', () => {
       imageInput,
       imageInput,
     ])
-    expect(ids).toHaveLength(2)
+    expect(ids?.addedMediaIds).toHaveLength(2)
     expect(getMedia(store, root)).toHaveLength(10)
   })
 
@@ -265,7 +274,7 @@ describe('addMedia respects existing media on the post', () => {
     const root = rootId(store)
     store.actions.addMedia(root, [imageInput])
     const ids = store.actions.addMedia(root, [videoInput, gifInput])
-    expect(ids).toEqual([])
+    expect(ids).toEqual({addedMediaIds: []})
     expect(getMedia(store, root)).toHaveLength(1)
   })
 
@@ -278,7 +287,7 @@ describe('addMedia respects existing media on the post', () => {
     )
     const before = store.getState()
     const ids = store.actions.addMedia(root, [imageInput])
-    expect(ids).toEqual([])
+    expect(ids).toEqual({addedMediaIds: []})
     expect(store.getState()).toBe(before)
   })
 
@@ -288,7 +297,7 @@ describe('addMedia respects existing media on the post', () => {
     store.actions.addMedia(root, [videoInput])
     const before = store.getState()
     const ids = store.actions.addMedia(root, [imageInput, gifInput])
-    expect(ids).toEqual([])
+    expect(ids).toEqual({addedMediaIds: []})
     expect(store.getState()).toBe(before)
   })
 
@@ -298,7 +307,7 @@ describe('addMedia respects existing media on the post', () => {
     store.actions.addMedia(root, [gifInput])
     const before = store.getState()
     const ids = store.actions.addMedia(root, [imageInput, videoInput])
-    expect(ids).toEqual([])
+    expect(ids).toEqual({addedMediaIds: []})
     expect(store.getState()).toBe(before)
   })
 
@@ -308,7 +317,7 @@ describe('addMedia respects existing media on the post', () => {
     store.actions.addUri(root, 'https://example.com')
     const before = store.getState()
     const ids = store.actions.addMedia(root, [imageInput])
-    expect(ids).toEqual([])
+    expect(ids).toEqual({addedMediaIds: []})
     expect(store.getState()).toBe(before)
   })
 })
@@ -364,7 +373,9 @@ describe('selectionsRemaining flags on the post', () => {
   test('removing media restores capacity', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [imgId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [imgId],
+    } = store.actions.addMedia(root, [imageInput])!
     expect(store.getState().posts[root].imageSelectionsRemaining).toBe(9)
     store.actions.removeMedia(root, imgId)
     const post = store.getState().posts[root]
@@ -399,7 +410,9 @@ describe('removeMedia', () => {
   test('removes the matching media and leaves others intact', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [a, b] = store.actions.addMedia(root, [imageInput, imageInput])!
+    const {
+      addedMediaIds: [a, b],
+    } = store.actions.addMedia(root, [imageInput, imageInput])!
 
     store.actions.removeMedia(root, a)
     expect(getMedia(store, root).map(m => m.id)).toEqual([b])
@@ -408,7 +421,9 @@ describe('removeMedia', () => {
   test('cancels in-flight upload (no further status writes after removal)', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [imageId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [imageId],
+    } = store.actions.addMedia(root, [imageInput])!
     jest.advanceTimersByTime(100)
     store.actions.removeMedia(root, imageId)
     expect(() => jest.runAllTimers()).not.toThrow()
@@ -429,7 +444,9 @@ describe('retryMediaUpload', () => {
   test('resets a failed image upload back to pending and walks it to uploaded', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [imageId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [imageId],
+    } = store.actions.addMedia(root, [imageInput])!
     store.actions.setUploadStatus(root, imageId, {
       state: 'failed',
       error: 'boom',
@@ -451,7 +468,9 @@ describe('retryMediaUpload', () => {
   test('failed status carries a bound retry() method that restarts the upload', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [imageId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [imageId],
+    } = store.actions.addMedia(root, [imageInput])!
     store.actions.setUploadStatus(root, imageId, {
       state: 'failed',
       error: 'network',
@@ -475,7 +494,9 @@ describe('retryMediaUpload', () => {
   test('is a no-op for a gif media id', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [gifId] = store.actions.addMedia(root, [gifInput])!
+    const {
+      addedMediaIds: [gifId],
+    } = store.actions.addMedia(root, [gifInput])!
     const before = store.getState()
     store.actions.retryMediaUpload(root, gifId)
     expect(store.getState()).toBe(before)
@@ -497,7 +518,9 @@ describe('updateMediaAltText', () => {
   test('updates only the matching media (image)', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [a, b] = store.actions.addMedia(root, [imageInput, imageInput])!
+    const {
+      addedMediaIds: [a, b],
+    } = store.actions.addMedia(root, [imageInput, imageInput])!
     store.actions.updateMediaAltText(root, b, 'a description')
 
     const media = getMedia(store, root)
@@ -508,7 +531,9 @@ describe('updateMediaAltText', () => {
   test('works on a gif as well', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [gifId] = store.actions.addMedia(root, [gifInput])!
+    const {
+      addedMediaIds: [gifId],
+    } = store.actions.addMedia(root, [gifInput])!
     store.actions.updateMediaAltText(root, gifId, 'animated joy')
     expect(getMedia(store, root)[0].altText).toBe('animated joy')
   })
@@ -516,7 +541,9 @@ describe('updateMediaAltText', () => {
   test('is a no-op when alt text is unchanged', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [imageId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [imageId],
+    } = store.actions.addMedia(root, [imageInput])!
     const before = store.getState()
     store.actions.updateMediaAltText(root, imageId, '')
     expect(store.getState()).toBe(before)
@@ -527,7 +554,7 @@ describe('removePost cancels media uploads', () => {
   test('removing a post cancels any in-flight uploads on that post', () => {
     const store = makeStore()
     const a = rootId(store)
-    const b = store.actions.addPost('after', a)
+    const b = store.actions.addPost('after', a)!.addedPostId
     store.actions.addMedia(b, [imageInput])
     jest.advanceTimersByTime(100)
 
@@ -585,11 +612,13 @@ describe('attachment lifecycle', () => {
   test('destroy cancels tasks and prevents later actions from starting work', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [mediaId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [mediaId],
+    } = store.actions.addMedia(root, [imageInput])!
     jest.advanceTimersByTime(100)
     store.destroy()
     const after = store.getState()
-    store.actions.addMedia(root, [imageInput])
+    expect(store.actions.addMedia(root, [imageInput])).toBeUndefined()
     store.actions.retryMediaUpload(root, mediaId)
     store.actions.addUri(root, 'https://example.com')
     expect(jest.getTimerCount()).toBe(0)
@@ -600,7 +629,9 @@ describe('attachment lifecycle', () => {
   test('failed reports stop the old worker before retrying', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [mediaId] = store.actions.addMedia(root, [imageInput])!
+    const {
+      addedMediaIds: [mediaId],
+    } = store.actions.addMedia(root, [imageInput])!
     store.actions.setUploadStatus(root, mediaId, {
       state: 'failed',
       error: 'network',
@@ -616,13 +647,17 @@ describe('attachment lifecycle', () => {
   test('removing the final item frees the slot for an external card', () => {
     const store = makeStore()
     const root = rootId(store)
-    const [mediaId] = store.actions.addMedia(root, [videoInput])!
+    const {
+      addedMediaIds: [mediaId],
+    } = store.actions.addMedia(root, [videoInput])!
     store.actions.removeMedia(root, mediaId)
     expect(store.getState().posts[root].attachments.media).toBeUndefined()
     store.actions.addUri(root, 'https://example.com')
     expect(store.getState().posts[root].attachments.media?.state).toBe(
       'pending',
     )
-    expect(store.actions.addMedia(root, [imageInput])).toEqual([])
+    expect(store.actions.addMedia(root, [imageInput])).toEqual({
+      addedMediaIds: [],
+    })
   })
 })

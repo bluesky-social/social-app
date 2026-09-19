@@ -32,17 +32,18 @@ describe('addPost("after")', () => {
     const root = rootId(store)
     expect(root).toBe('id-1')
 
-    const second = store.actions.addPost('after', root)
-    expect(second).toBe('id-2')
-    expect(Object.keys(store.getState().posts)).toEqual(['id-1', 'id-2'])
+    const result = store.actions.addPost('after', root)
+    expect(result).toEqual({addedPostId: 'id-2'})
+    const second = result!.addedPostId
+    expect(Object.keys(store.getState().posts)).toEqual(['id-1', second])
   })
 
   test('inserts mid-thread without disturbing surrounding order', () => {
     const store = makeStore()
     const root = rootId(store)
-    const second = store.actions.addPost('after', root) // id-2
-    const third = store.actions.addPost('after', second) // id-3
-    const between = store.actions.addPost('after', root) // id-4
+    const second = store.actions.addPost('after', root)!.addedPostId // id-2
+    const third = store.actions.addPost('after', second)!.addedPostId // id-3
+    const between = store.actions.addPost('after', root)!.addedPostId // id-4
     expect(Object.keys(store.getState().posts)).toEqual([
       root,
       between,
@@ -54,16 +55,32 @@ describe('addPost("after")', () => {
   test('marks state dirty', () => {
     const store = makeStore()
     expect(store.getState().isDirty).toBe(false)
-    store.actions.addPost('after', rootId(store))
+    const result = store.actions.addPost('after', rootId(store))
+    expect(result).toEqual({addedPostId: 'id-2'})
     expect(store.getState().isDirty).toBe(true)
   })
 
   test('is a no-op when the target id is unknown', () => {
     const store = makeStore()
     const before = store.getState()
-    store.actions.addPost('after', 'does-not-exist')
+    const notify = jest.fn()
+    store.subscribe(notify)
+    const result = store.actions.addPost('after', 'does-not-exist')
+    expect(result).toBeUndefined()
     expect(store.getState()).toBe(before)
+    expect(notify).not.toHaveBeenCalled()
+    expect(store.getState().isDirty).toBe(false)
     expect(Object.keys(store.getState().posts).length).toBe(1)
+  })
+  test('returns undefined after the store is destroyed', () => {
+    const store = makeStore()
+    const root = rootId(store)
+    const before = store.getState()
+    store.destroy()
+
+    expect(store.actions.addPost('after', root)).toBeUndefined()
+    expect(store.getState()).toBe(before)
+    expect(Object.keys(store.getState().posts)).toEqual([root])
   })
 })
 
@@ -71,24 +88,26 @@ describe('addPost("before")', () => {
   test('inserts a new post immediately before the target and returns its id', () => {
     const store = makeStore()
     const root = rootId(store)
-    const newId = store.actions.addPost('before', root)
-    expect(newId).toBe('id-2')
+    const result = store.actions.addPost('before', root)
+    expect(result).toEqual({addedPostId: 'id-2'})
+    const newId = result!.addedPostId
     expect(Object.keys(store.getState().posts)).toEqual([newId, root])
   })
 
   test('inserts mid-thread without disturbing surrounding order', () => {
     const store = makeStore()
     const a = rootId(store)
-    const b = store.actions.addPost('after', a)
-    const c = store.actions.addPost('after', b)
-    const before = store.actions.addPost('before', c)
+    const b = store.actions.addPost('after', a)!.addedPostId
+    const c = store.actions.addPost('after', b)!.addedPostId
+    const before = store.actions.addPost('before', c)!.addedPostId
     expect(Object.keys(store.getState().posts)).toEqual([a, b, before, c])
   })
 
   test('is a no-op when the target id is unknown', () => {
     const store = makeStore()
     const before = store.getState()
-    store.actions.addPost('before', 'does-not-exist')
+    const result = store.actions.addPost('before', 'does-not-exist')
+    expect(result).toBeUndefined()
     expect(store.getState()).toBe(before)
   })
 })
@@ -97,7 +116,7 @@ describe('removePost', () => {
   test('removes the matching post and marks dirty', () => {
     const store = makeStore()
     const a = rootId(store)
-    const b = store.actions.addPost('after', a)
+    const b = store.actions.addPost('after', a)!.addedPostId
     store.actions.removePost(b)
     expect(Object.keys(store.getState().posts)).toEqual([a])
     expect(store.getState().isDirty).toBe(true)

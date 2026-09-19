@@ -261,9 +261,9 @@ describe('normalized initial state', () => {
       const {id, post} = root(store)
       expect(post.attachments.media).toEqual({state: 'resolved', ...card})
       expect(post.imageSelectionsRemaining).toBe(0)
-      expect(store.actions.addMedia(id, [{...image, kind: 'image'}])).toEqual(
-        [],
-      )
+      expect(store.actions.addMedia(id, [{...image, kind: 'image'}])).toEqual({
+        addedMediaIds: [],
+      })
       expect(mockResolveLink).not.toHaveBeenCalled()
       expect(jest.getTimerCount()).toBe(0)
     },
