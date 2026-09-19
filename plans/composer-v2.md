@@ -325,20 +325,17 @@ Maintain focused tests for:
 - Lexicon validation of every planned record.
 - Confirmation that the initial submit milestone never calls `applyWrites`.
 
-## Proposed implementation sequence
+## Implementation sequence
 
-The sequence is intended to keep each step testable and avoid building UI against unstable state shapes:
+`plans/todo.md` tracks the authoritative execution order with stable todo numbers. Initial-intent and draft hydration, gate state, and the 10-image selection cap are implemented. Per operator direction, the remaining work proceeds as follows after the cloning cleanup:
 
-1. Finish lex-client adaptation and remove obsolete client/agent assumptions.
-2. Finalize the serializable composer state and runtime-task boundary.
-3. Add initial-intent hydration and postgate/threadgate state.
-4. Add gallery semantics and update media invariants.
-5. Add draft serialization/hydration against the finalized state shape.
-6. Replace image simulation with real compression/upload.
-7. Replace video simulation with real compression/multipart upload and caption uploads.
-8. Centralize grapheme/rich-text validation.
-9. Build the no-write submit planner, lexicon validation, and safe logging.
-10. Expand the debug harness, then begin production UI migration.
+1. **Todo #7:** Replace simulated image/video workers with real eager compression/upload, including multipart video and caption uploads.
+2. **Todo #8:** Add post reordering while preserving post/media identity and in-flight work.
+3. **Todo #9:** Build the no-write record-set planner, rich-text and lexicon validation, and safe logging. Select `embed.images` for 1-4 images or `embed.gallery` for 5-10 here, as part of complete embed/post/gate construction. Include explicit post `tags`.
+4. **Todo #10:** Build the production UI, including a typeahead input for explicit post tags.
+5. **Todo #6:** Implement draft serialization, save bookkeeping, media cleanup, and full round trips last. Existing inbound draft hydration remains available; draft embeds use their own schema.
+
+Gallery output selection is folded into #9 rather than implemented as a separate step. The completed capacity work remains recorded under #5.
 
 ## Decisions made
 
