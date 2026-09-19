@@ -165,17 +165,17 @@ A detected external-card suggestion may be retained separately as `suggestedExte
 
 Uploads and URI resolution are state machines rather than loose component booleans.
 
-An upload moves through:
+An upload moves through distinct real-worker phases:
 
 ```text
-pending
-   |
-   v
-uploading(progress)
-   |            \
-   v             v
-uploaded(blob)  failed(error, retry)
+pending -> validating -> compressing -> uploading -> processing -> captions -> uploaded(blob)
+                                             \-> failed(error, retryable?)
 ```
+
+Image compression may be physically uncancellable because the existing image
+primitive has no signal. The store still cancels the logical task, ignores its
+result, and never starts the following PDS upload. Video signals reach
+compression, multipart transfer, server polling, and multipart abort cleanup.
 
 Link resolution similarly has pending, resolved, and failed variants.
 
@@ -253,13 +253,17 @@ createThreadStore({
 
 It does not create a global agent internally.
 
-As real uploads are implemented, the dependency boundary will expand to include:
+The real media dependency boundary now includes:
 
-- PDS client.
-- Appview client.
-- Chat client.
-- Account dispatch URL for video service authentication.
-- Potentially injected media operations for deterministic tests.
+- PDS lex client for image and caption blob uploads.
+- Localization (`I18n`) for safe worker failures.
+- Account dispatch/PDS URL for video service-auth audience derivation.
+- Optional injected compression, metadata, upload, service-client, and sleep operations for deterministic tests.
+
+The production video path is `uploadVideo()` -> `uploadVideoMultipart()`; the
+store does not call the legacy component video reducer. Missing production
+media dependencies fail the item explicitly rather than selecting a fake
+fallback.
 
 The store remains testable because tests can inject fake clients, resolvers, and workers rather than mocking global session state.
 
@@ -370,7 +374,7 @@ It does not contain:
 - React state.
 - Shell callbacks such as `onPost` or `onPostSuccess`.
 
-The store constructor performs the single transformation from `ThreadStoreInitialState` into live `ThreadState`. Pure builders generate fresh post/item IDs, copy editable input fields, and compute capacities before any background work starts. The constructor then starts simulated uploads and pending URI resolution. Initialization, background progress, and retries leave the draft clean unless `isDirty: true` was explicitly supplied. Supplied views and GIF metadata are treated as immutable; the store does not modify them.
+The store constructor performs the single transformation from `ThreadStoreInitialState` into live `ThreadState`. Pure builders generate fresh post/item IDs, copy editable input fields, and compute capacities before any background work starts. The constructor then starts real media workers and pending URI resolution. Initialization, background progress, and retries leave the draft clean unless `isDirty: true` was explicitly supplied. Supplied views and GIF metadata are treated as immutable; the store does not modify them.
 
 ### `ComposerOpts` adapter
 
@@ -401,8 +405,8 @@ Missing local media, failed metadata, unsupported entries/record kinds,
 conflicting active attachments, and image overflow throw
 `ComposerAdapterError` with a stable `code`; they are not silently reduced to
 text-only state. Neither source mounts an empty store or dispatches corrective
-actions. The store constructor starts only its existing simulated uploads and
-URI resolution after the complete snapshot is built.
+actions. The store constructor starts real media workers and URI resolution only after
+the complete snapshot is built.
 
 ## 11. Drafts are a codec around the store
 
@@ -474,7 +478,7 @@ The existing multipart implementation already supports:
 - Retryable failures.
 - Cancellation and remote abort cleanup.
 
-The store should expose compression and network progress distinctly while preserving one race-safe task lifecycle for each video.
+The store exposes compression, multipart network, server processing, and caption phases distinctly while preserving one race-safe task lifecycle for each video. Completed video blobs remain available when a later caption upload fails, and uploaded caption refs are kept separate from editable caption contents. Prepared outputs contain no transient multipart controllers or web byte buffers.
 
 ## 13. Postgates and threadgates are thread-level settings
 
@@ -540,26 +544,26 @@ Implemented:
 - Stable thread/post identity.
 - Text, language, and label mutations.
 - Media invariants.
-- Simulated uploads with cancellation and retry.
+- Real eager image/video workers with cancellation, retry classification, transformed outputs, multipart upload delegation, processing polling, and caption refs.
 - URI resolution and stale-result suppression.
 - Unified record/media attachment slots, including quotes as post-kind records.
 - Slot-local retries, cancellation, and snapshot isolation.
 - Grapheme derivation.
 - Debug harness.
 - Current lex-client adaptation.
-- `ThreadStoreInitialState`, direct initial snapshot construction, and eager simulated uploads/URI resolution.
+- `ThreadStoreInitialState`, direct initial snapshot construction, and eager real media workers/URI resolution.
 - `ComposerOpts` and draft adapters, including serializable reply previews and
   explicit conversion errors.
 - Thread-level postgate/threadgate configuration, preference and draft
   hydration, opaque rule preservation, and editing actions.
+
+Todo #7 verification covers injected image compression/blob handling, video metadata policy rejection, immediate and polled jobs, caption separation, cancellation, and stale-task ownership. No live-account upload is used in tests.
 
 Still to implement:
 
 - Expanded composer-session state beyond the reply preview.
 - Gallery limits and embed selection.
 - Draft codec.
-- Real image processing and uploads.
-- Real video processing and multipart uploads.
 - Post reordering action.
 - Submission planner.
 - Production UI migration.

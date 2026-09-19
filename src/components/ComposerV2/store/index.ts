@@ -8,9 +8,12 @@ import {
 } from '#/lib/api/resolve'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
+  type PreparedOutput,
   startImageUpload,
   startVideoUpload,
+  type UploadDependencies,
   type UploadTask,
+  type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostMediaItem'
 import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPost'
@@ -36,6 +39,10 @@ export function createThreadStore(options: {
   __createId?: () => string
   /** Override link resolver; useful for deterministic tests. */
   __resolveLink?: typeof resolveLink
+  /** Real PDS/media dependencies. Missing dependencies fail media explicitly. */
+  media?: UploadDependencies
+  /** Test-only worker seam; never selected implicitly in production. */
+  __uploadWorkers?: UploadWorkerOverrides
 }) {
   const id = options.__createId ?? nanoid
   const resolve = options.__resolveLink ?? importedResolveLink
@@ -237,6 +244,9 @@ export function createThreadStore(options: {
     const items = getMediaItems(post.attachments.media)
     const item = items.find(m => m.id === mediaId)
     if (!item || item.kind === 'gif') return
+    if (item.upload.state === 'failed' && item.upload.retryable === false) {
+      return
+    }
 
     cancelUploadTask(mediaId)
     const pending = {...item, upload: {state: 'pending' as const}}
@@ -414,23 +424,45 @@ export function createThreadStore(options: {
   ) {
     const post = state.posts[postId]
     if (destroyed || !post) return
-    const items = getMediaItems(post.attachments.media)
-    const found = items.find(item => item.id === mediaId)
+    const found = getMediaItems(post.attachments.media).find(
+      item => item.id === mediaId,
+    )
     if (!found || found.kind === 'gif') return
-    if (input.state === 'uploaded' || input.state === 'failed') {
-      cancelUploadTask(mediaId)
-    }
+    if (input.state === 'failed') cancelUploadTask(mediaId)
+    else if (input.state === 'uploaded') uploadTasks.delete(mediaId)
     const status: types.PostMediaUploadStatus =
       input.state === 'failed'
-        ? {...input, retry: () => retryMediaUpload(postId, mediaId)}
+        ? ({
+            ...input,
+            ...(input.retryable === false
+              ? {}
+              : {retry: () => retryMediaUpload(postId, mediaId)}),
+          } as types.PostMediaUploadStatus)
         : input
     mutateState(s => {
-      s.posts[postId] = setPostMediaItems(
-        post,
-        items.map(item =>
-          item.id === mediaId ? {...found, upload: status} : item,
-        ),
-      )
+      const currentPost = s.posts[postId]
+      if (!currentPost) return null
+      const currentItems = getMediaItems(currentPost.attachments.media)
+      const current = currentItems.find(item => item.id === mediaId)
+      if (!current || current.kind === 'gif') return null
+      const next =
+        current.kind === 'video'
+          ? {
+              ...current,
+              videoBlob:
+                input.state === 'uploaded' || input.state === 'failed'
+                  ? (input.blob ?? current.videoBlob)
+                  : current.videoBlob,
+              captionBlobs:
+                input.state === 'uploaded' || input.state === 'failed'
+                  ? (input.captionBlobs ?? current.captionBlobs)
+                  : current.captionBlobs,
+              upload: status,
+            }
+          : {...current, upload: status}
+      s.posts[postId] = setPostMediaItems(currentPost, [
+        ...currentItems.map(item => (item.id === mediaId ? next : item)),
+      ])
       return s
     })
   }
@@ -444,22 +476,115 @@ export function createThreadStore(options: {
       m => m.id === mediaId,
     )
     if (!item || item.kind === 'gif' || item.upload.state !== 'pending') return
-    const start = item.kind === 'image' ? startImageUpload : startVideoUpload
-    const task = start({
+
+    /*
+     * Register ownership before invoking a worker. A worker may report a
+     * synchronous first phase (especially in tests), so callbacks must not
+     * close over an uninitialised task.
+     */
+    let started: UploadTask | undefined
+    let cancelled = false
+    const registered: UploadTask = {
+      cancel() {
+        cancelled = true
+        started?.cancel()
+      },
+    }
+    uploadTasks.set(item.id, registered)
+    const callbacks = {
       postId,
       mediaId: item.id,
-      uri: item.uri,
-      setUploadStatus: (p, m, status) => {
-        if (uploadTasks.get(m) === task) setUploadStatus(p, m, status)
+      dependencies: options.media,
+      setUploadStatus: (p: string, m: string, status: types.UploadStatus) => {
+        if (uploadTasks.get(m) === registered) setUploadStatus(p, m, status)
       },
-    })
-    uploadTasks.set(item.id, task)
+      setPrepared: (p: string, m: string, output: PreparedOutput) => {
+        if (uploadTasks.get(m) === registered) setPrepared(p, m, output)
+      },
+      setCaptionBlobs: (
+        p: string,
+        m: string,
+        captions: types.UploadedCaption[],
+      ) => {
+        if (uploadTasks.get(m) === registered) setCaptionBlobs(p, m, captions)
+      },
+    }
+    started =
+      item.kind === 'image'
+        ? (options.__uploadWorkers?.startImageUpload ?? startImageUpload)({
+            ...callbacks,
+            media: item,
+          })
+        : (options.__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
+            ...callbacks,
+            media: item,
+          })
+    if (cancelled) started.cancel()
   }
 
   function cancelUploadTask(mediaId: string) {
     const task = uploadTasks.get(mediaId)
     uploadTasks.delete(mediaId)
     task?.cancel()
+  }
+
+  function setPrepared(
+    postId: string,
+    mediaId: string,
+    output: PreparedOutput,
+  ) {
+    const post = state.posts[postId]
+    if (!post) return
+    const items = getMediaItems(post.attachments.media)
+    const found = items.find(item => item.id === mediaId)
+    if (!found || found.kind !== output.kind) return
+    mutateState(s => {
+      const current = getMediaItems(s.posts[postId]?.attachments.media).find(
+        item => item.id === mediaId,
+      )
+      if (!current || current.kind !== output.kind) return null
+      const next = {
+        ...current,
+        prepared: output,
+      } as types.PostMediaItem
+      const currentItems = getMediaItems(s.posts[postId].attachments.media)
+      s.posts[postId] = setPostMediaItems(
+        s.posts[postId],
+        currentItems.map(item => (item.id === mediaId ? next : item)),
+      )
+      return s
+    })
+  }
+
+  function setCaptionBlobs(
+    postId: string,
+    mediaId: string,
+    captions: types.UploadedCaption[],
+  ) {
+    const post = state.posts[postId]
+    if (!post) return
+    const items = getMediaItems(post.attachments.media)
+    const found = items.find(item => item.id === mediaId)
+    if (!found || found.kind !== 'video') return
+    mutateState(s => {
+      const current = getMediaItems(s.posts[postId]?.attachments.media).find(
+        item => item.id === mediaId,
+      )
+      if (!current || current.kind !== 'video') return null
+      const currentItems = getMediaItems(s.posts[postId].attachments.media)
+      s.posts[postId] = setPostMediaItems(
+        s.posts[postId],
+        currentItems.map(item =>
+          item.id === mediaId
+            ? {
+                ...current,
+                captionBlobs: captions.map(caption => ({...caption})),
+              }
+            : item,
+        ),
+      )
+      return s
+    })
   }
 
   /** Regroup only selected items; record identity is unaffected. */

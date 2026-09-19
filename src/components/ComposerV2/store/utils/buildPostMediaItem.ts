@@ -38,6 +38,7 @@ export function buildPostMediaItem(
       width: input.width,
       height: input.height,
       altText: input.altText ?? '',
+      mimeType: input.mimeType,
       localRefPath: input.localRefPath,
       upload: {state: 'pending'},
     }
@@ -52,8 +53,11 @@ export function buildPostMediaItem(
       height: input.height,
       mimeType: input.mimeType,
       altText: input.altText ?? '',
+      duration: input.duration,
       localRefPath: input.localRefPath,
+      file: input.file,
       captions: input.captions?.map(caption => ({...caption})) ?? [],
+      captionBlobs: [],
       upload: {state: 'pending'},
     }
   }

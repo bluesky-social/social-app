@@ -44,7 +44,10 @@ export class ComposerAdapterError extends Error {
   }
 }
 
-type VideoMetadata = Pick<ImagePickerAsset, 'mimeType' | 'width' | 'height'>
+type VideoMetadata = Pick<
+  ImagePickerAsset,
+  'mimeType' | 'width' | 'height' | 'duration'
+>
 
 export type AdapterMetadataOptions = {
   getImageDimensions?: (uri: string) => Promise<{width: number; height: number}>
@@ -373,6 +376,7 @@ async function restoreVideo(
     width: metadata.width,
     height: metadata.height,
     mimeType,
+    duration: metadata.duration ?? undefined,
     altText: video.alt,
     localRefPath: video.localRef.path,
     captions: video.captions?.map(caption => ({
@@ -401,6 +405,7 @@ function intentVideoToMedia(
           width: video.width,
           height: video.height,
           mimeType: metadata.mimeType,
+          duration: metadata.duration ?? undefined,
         },
       }
     },
