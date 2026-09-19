@@ -1,4 +1,6 @@
-# Composer V2: initial-state adapters (todo #3)
+# Archived: Composer V2 initial-state adapters (legacy milestone #3)
+
+This is the completed implementation brief, retained as historical context. Its task-local constraints and verification counts describe that stage, not current work; references below to simulated uploads and deferred gate/draft work are historical. Real workers and gate hydration are now implemented. The active queue is `AGENTS/tasks/`, current behavior is documented in `plans/composer-v2.md`, and completed milestone results are in `plans/composer-v2-history.md`.
 
 ## Goal
 
@@ -38,7 +40,7 @@ are normalized without adapter-owned defensive copies; the store copies them
 when it takes ownership of live editable state. Draft serialization/saving
 remains todo #6. Uploads remain simulated.
 
-This is todo #3 in `plans/todo.md`. Do not start another todo, commit changes, or delegate this work further.
+This was legacy milestone #3, now recorded in `plans/composer-v2-history.md`. The scope and instructions below are archived, not an active work order.
 
 ## Current implementation
 
@@ -213,6 +215,6 @@ Do not run intl extraction/compilation, modify generated lexicons, commit, stage
 - Supported input content survives normalization, and unsupported/lossy cases are surfaced explicitly.
 - Source-specific conversion logic does not leak into the thread store's actions.
 - Tests and required checks pass, or any external blocker is reported precisely.
-- `plans/todo.md` marks #3 completed only after verification and records the results and remaining gate/save boundaries.
+- The legacy tracker recorded #3 completed after verification, with remaining gate/save boundaries; see `plans/composer-v2-history.md`.
 - The overall architecture/implementation docs reflect the actual API and behavior.
 - All work remains uncommitted for operator review.

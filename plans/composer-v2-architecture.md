@@ -2,7 +2,9 @@
 
 ## Summary
 
-Composer V2 is a per-composer domain store with React as a thin view layer. It replaces the current pattern where UI, uploads, drafts, and submission logic are tightly coupled inside a large component.
+Composer V2 is a per-composer domain store with React as a thin view layer. It separates UI, uploads, drafts, and submission logic that are coupled in the legacy composer. The current plan develops and verifies this through the tester at `/sys/debug-composer`; production UI migration is not scheduled.
+
+`AGENTS/tasks/` is the sole active queue, with execution order in `AGENTS/tasks/README.md`. `plans/composer-v2.md` is the implementation reference, and `plans/composer-v2-history.md` preserves completed legacy milestones. This document's section numbers are architecture topics, not task IDs.
 
 ```text
 ComposerOpts -----------------> composerOptsToInitialState() --+
@@ -63,6 +65,8 @@ The top-level state is currently:
 type ThreadState = {
   posts: Record<string, ThreadPost>
   replyTo: ThreadReplyTarget | undefined
+  threadgateAllowRules: ThreadgateAllowRule[] | undefined
+  postgateEmbeddingRules: PostgateEmbeddingRule[]
   draftId: string | undefined
   isDirty: boolean
 }
@@ -93,14 +97,7 @@ Each `ThreadPost` now owns text, languages, labels, and two protocol-aligned att
 
 A future `suggestedExternal` field could retain dormant UI suggestions separately from publishable attachments. It is not implemented by the attachment migration. For now settled attachments block incoming URI candidates, pending/failed URI candidates can be superseded, and explicit record setters replace the record.
 
-The planned state also expands the thread aggregate with:
-
-- Reply target.
-- Thread-wide postgate settings.
-- Threadgate settings.
-- Submission and validation state.
-- Draft media bookkeeping.
-- Explicit hydration metadata.
+The thread aggregate already includes a reply preview, shared postgate/threadgate configuration, and draft identity/dirty state. Remaining state work includes submission/validation bookkeeping, explicit per-post tags, and draft-save/media bookkeeping.
 
 Focus, open dialogs, and callbacks such as `onPost` remain outside persisted domain state.
 
@@ -159,7 +156,7 @@ An images/gallery attachment contains multiple image items but remains one media
 
 The store prevents two active records and two active media attachments. Record construction derives the final lexicon variant from the slots instead of using submit-time priority to discard conflicting state.
 
-A detected external-card suggestion may be retained separately as `suggestedExternal`. It becomes publishable only when promoted into the media slot; selected images or video can temporarily displace it without destroying the suggestion.
+Retaining a dormant external-card suggestion separately from active media remains an optional future behavior, not an implemented capability or part of the current queue.
 
 ## 4. Async state is represented explicitly
 
@@ -183,8 +180,8 @@ The UI renders the current domain state instead of coordinating multiple effects
 
 Retry functions are currently attached directly to failed states for UI convenience. Because functions are not serializable, draft hydration will formalize the boundary:
 
-- Persisted data contains stable status and error information.
-- Runtime hydration reattaches retry behavior.
+- Persisted drafts contain durable composition/media data, not transient upload statuses or failures.
+- Runtime hydration creates fresh work and reattaches retry behavior when failures occur.
 - Task handles and abort controllers always remain outside serialized state.
 
 ## 5. Runtime tasks live beside state
@@ -208,7 +205,7 @@ Link resolution uses revision counters:
 
 Record and media resolution have separate revision domains. Removing an external card therefore does not cancel an unrelated quoted-post resolution, even though the quote is now modeled as a post-kind record attachment.
 
-The same pattern should govern real compression, image upload, multipart video jobs, and submission planning.
+Real upload callbacks use the registered task object's identity as their revision token, keyed by media ID. Removal/retry replaces or removes that ownership entry, so stale callbacks cannot update state. Initial upload startup does not need to increment a URI-resolution revision; selecting media separately invalidates a competing URI candidate.
 
 ## 6. Actions are the invariant boundary
 
@@ -248,6 +245,7 @@ createThreadStore({
     appviewClient,
     chatClient,
   },
+  media: {pdsClient, dispatchUrl, i18n},
 })
 ```
 
@@ -346,6 +344,7 @@ snapshots are read-only to callers.
 ```ts
 createThreadStore({
   resolvers: {appviewClient, chatClient},
+  media: {pdsClient, dispatchUrl, i18n},
   initialState: {
     draftId: 'saved-draft-id',
     posts: [
@@ -450,7 +449,7 @@ upload through PDS
 BlobRef stored on media item
 ```
 
-The implementation should reuse the existing post image compression configuration and blob-upload helper.
+The implementation reuses the existing post image compression configuration and blob-upload helper. Task 0004 removes the remaining lazy import from the UI-oriented gallery module by extracting a UI-free compression boundary.
 
 ### Video
 
@@ -506,7 +505,7 @@ A reorder operation must preserve:
 - In-flight upload ownership.
 - Link-resolution task ownership.
 
-The submission planner and tests will honor the resulting order. The debug harness will expose the capability, but production reordering UI is deferred.
+Task 0005 adds this action and tester controls; the planner and tests honor the resulting order. Production reordering UI is outside the current plan.
 
 ## 15. Submission is split into planning and execution
 
@@ -519,7 +518,8 @@ Store snapshot
    +-- resolve facets
    +-- normalize text
    +-- allocate TIDs and rkeys
-   +-- build post records
+   +-- build post records, including explicit tags
+   +-- choose images vs gallery and combine active embeds
    +-- compute CIDs
    +-- chain reply refs
    +-- build threadgates and postgates
@@ -557,15 +557,17 @@ Implemented:
 - Thread-level postgate/threadgate configuration, preference and draft
   hydration, opaque rule preservation, and editing actions.
 
-Todo #7 verification covers injected image compression/blob handling, video metadata policy rejection, immediate and polled jobs, caption separation, cancellation, and stale-task ownership. No live-account upload is used in tests.
+Legacy milestone #7 verification covered injected image compression/blob handling, video metadata policy rejection, immediate and polled jobs, caption separation, cancellation, and stale-task ownership. No live-account upload was used in those tests; the recorded results are in `plans/composer-v2-history.md`.
 
-Still to implement:
+Remaining work is defined only in `AGENTS/tasks/`, following the order in its README:
 
-- Expanded composer-session state beyond the reply preview.
-- Gallery limits and embed selection.
-- Draft codec.
-- Post reordering action.
-- Submission planner.
-- Production UI migration.
+- 0001-0003: named action results, bulk upload retry, and simpler URI resolution.
+- 0005: post reordering and tester controls.
+- 0006: no-write record-set construction, including image/gallery selection, explicit tags, replies, and gates.
+- 0007: comprehensive tester UI covering implemented capabilities.
+- 0004: UI-free image compression, explicitly moved to immediately before drafts.
+- 0008: outbound draft codec, persistence/cleanup, round trips, and tester save/restore controls last.
 
-The detailed implementation plan is in `plans/composer-v2.md`.
+The 10-image capacity limit and inbound draft hydration are already implemented. Production UI is not scheduled; the future tag-typeahead intention does not require a production UI or suggestions service in this plan.
+
+The detailed behavioral reference and development checks are in `plans/composer-v2.md`.

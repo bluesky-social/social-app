@@ -1,17 +1,29 @@
-# Composer V2 todos
+# Composer V2 completed milestone history
 
-Work through these in the displayed order, one at a time. Numbers remain stable for cross-references. Per operator direction, the remaining execution order is #7, #8, #9, #10, then #6 (draft round trips last). Each section can hold implementation details and notes as the work progresses.
+This archives the completed milestones from the former `plans/todo.md`. The numbers below are legacy milestone IDs, not the numbered task IDs in `AGENTS/tasks/`. Verification counts describe historical implementation reports; they were not rerun during this documentation migration.
+
+The only active execution queue is `AGENTS/tasks/`, with the operator-approved order in `AGENTS/tasks/README.md`. Remaining feature work was migrated without changing its relative order:
+
+| Legacy milestone                                        | Current task                                               |
+| ------------------------------------------------------- | ---------------------------------------------------------- |
+| #8 Reordering                                           | `AGENTS/tasks/0005-task-composer-v2-post-reordering.md`    |
+| #9 Record-set planner, including #5 gallery output      | `AGENTS/tasks/0006-task-composer-v2-record-set-planner.md` |
+| #10 UI, now scoped to the tester; production UI dropped | `AGENTS/tasks/0007-task-composer-v2-production-ui.md`      |
+| #6 Draft round trips, last                              | `AGENTS/tasks/0008-task-composer-v2-draft-round-trips.md`  |
+
+Cleanup tasks 0001-0003 precede the migrated feature work. The operator subsequently moved cleanup 0004 to immediately before drafts (0008), after the tester UI. By subsequent operator direction, task 0007 completes the tester UI instead of a production UI; its existing filename is retained. Drafts remain last. Task frontmatter, not this archive, is authoritative for pending/completed status.
 
 Reference documents:
 
-- `plans/composer-v2.md`
-- `plans/composer-v2-architecture.md`
+- `plans/composer-v2.md`: current requirements and development checks.
+- `plans/composer-v2-architecture.md`: current architecture.
+- `plans/archive/composer-v2-adapters.md`: historical implementation brief for legacy #3.
 
 ## 1. Migrate to record/media attachment slots
 
 Status: completed
 
-Implemented `attachments.record` and `attachments.media` in `src/components/ComposerV2/store/`. Posts, feeds, lists, and starter packs share the record slot; external cards and chat invites share the media slot with images, video, and GIFs. Each record kind can coexist with each media kind. Uploads remain simulated. The four-image cap was retained during this migration; the subsequent capacity change is tracked under #5.
+Implemented `attachments.record` and `attachments.media` in `src/components/ComposerV2/store/`. Posts, feeds, lists, and starter packs share the record slot; external cards and chat invites share the media slot with images, video, and GIFs. Each record kind can coexist with each media kind. Uploads were still simulated at this milestone; legacy #7 below replaced them with real workers. The four-image cap was retained during this migration; the subsequent capacity change is tracked under legacy #5.
 
 - Updated URI classification, direct record insertion, slot removal, item edits, selection capacities, and the debug composer controls.
 - Preserved slot-local async invalidation and retry behavior; stale results cannot restore removed attachments or overwrite the other slot.
@@ -36,13 +48,13 @@ Implemented `createThreadStore({resolvers, initialState})`. `ThreadStoreInitialS
 
 Status: completed
 
-Implementation plan: `plans/composer-v2-adapters.md`.
+Archived implementation plan: `plans/archive/composer-v2-adapters.md`.
 
 Implemented and exported `composerOptsToInitialState()` and `draftToInitialState()` under `src/components/ComposerV2/adapters/`. Both return `ThreadStoreInitialState`; reply intents preserve a serializable parent preview without moderation or a fabricated root. Adapters preserve text/mention precedence, attachment order, record/media classification, local refs, captions, languages, labels, GIF metadata, and supplied record views. Unsupported or lossy draft input throws `ComposerAdapterError` with a stable code. Store initialization remains direct and simulated uploads remain unchanged.
 
 Gate mapping is implemented in #4. Draft saving/serialization and round trips remain #6. Real uploads, production UI migration, and other later todo boundaries were not started.
 
-Verification: 159 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. Work was committed by the operator as `c1dd1b145d48`.
+Verification: 159 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. The implementation is committed as `4533b1346` in the current history.
 
 ## 4. Add postgate/threadgate state
 
@@ -52,7 +64,7 @@ Implemented serializable thread-level `threadgateAllowRules` and `postgateEmbedd
 
 Outbound draft serialization remains #6; actual gate records and submission behavior remain #9. No production UI migration or network writes were added.
 
-Verification: 167 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. The initial #4 implementation is in HEAD `369612867`; this follow-up cleanup keeps adapter normalization non-owning while the store owns editable gate data. The cleanup remains uncommitted and unstaged for operator review.
+Verification: 167 ComposerV2 tests passed with `--watchman=false --runInBand`; iOS/Android/web typechecks passed; project lint passed; scoped `pnpm prettier` passed; `git diff --check` passed. The initial #4 implementation is committed as `62a48e949`; cleanup commit `da41f10ca` keeps adapter normalization non-owning while the store owns editable gate data. Both are committed.
 
 ## 5. Add gallery capacity
 
@@ -72,28 +84,4 @@ Images use `compressImage` with `IMAGE_SIZE_CONFIG_POSTS` and the platform blob-
 
 Tests use injected deterministic fakes for store-only invariants and mocked real-worker dependencies; no live-account upload or repository write was added. Verification: `pnpm test src/components/ComposerV2 --watchman=false --runInBand` (8 suites, 173 tests passed), `pnpm test src/lib/media/video --watchman=false --runInBand` (7 suites, 41 tests passed), `pnpm typecheck` (iOS/Android/web passed), scoped `pnpm prettier --write .` with a temporary restrictive ignore (passed), lint via the repository Oxlint script with `--format default` (0 errors, 229 warnings), and `git diff --check` (passed). The unredirected lint display in this harness reports a JSON parser EOF despite the underlying command exiting 0 with no errors.
 
-Record-set construction/gallery output remains #9, production UI remains #10, and draft saving/round trips remain last under #6. No sub-delegation, staging, or commits.
-
-## 8. Add reordering
-
-Status: pending
-
-## 9. Build the no-write submission planner
-
-Status: pending
-
-Include gallery output selection, moved from #5, in overall record-set construction: emit `app.bsky.embed.images` for 1-4 images and `app.bsky.embed.gallery` for 5-10. Combine media with any record attachment via `recordWithMedia`, construct the post/reply/gate records, and validate the complete record set without publishing. Test the image-count boundary and record-plus-media combinations in that context rather than building a standalone serializer first.
-
-Support explicit per-post tags in composer state and normalized initial input, and populate the `tags` field on each `app.bsky.feed.post` record. These are separate from hashtag facets in the post text. Validate against the current post lexicon and cover tag preservation in planner tests. Document any draft-schema limitations for preserving tags rather than silently claiming round-trip support.
-
-## 10. Build the production UI
-
-Status: pending
-
-Include a typeahead input for editing each post's explicit tags, wired to the state used to populate the post record's `tags` field. Typeahead data source and interaction details can be specified when implementing the UI.
-
-## 6. Implement draft round trips
-
-Status: pending
-
-Moved to the end of the execution order per operator direction, after #10. Implement outbound draft serialization, save bookkeeping, media cleanup, and full round-trip verification against the finalized state. Existing inbound draft hydration from #3/#4 remains in place. Draft embeds use their own schema; published embed selection belongs to #9.
+Committed as `5a343bc65`. The UI-free image-compression import cleanup is tracked separately in task 0004. Remaining feature work lives in tasks 0005-0008, with draft round trips last; see the migration table above.
