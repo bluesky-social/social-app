@@ -135,10 +135,14 @@ export function createThreadStore(options: {
     setPostgateConfiguration({embeddingRules})
   }
 
-  function addPost(position: 'before' | 'after', postId: string): string {
+  /** Adds a post and returns its ID only when the insertion succeeds. */
+  function addPost(
+    position: 'before' | 'after',
+    postId: string,
+  ): {addedPostId: string} | undefined {
+    if (destroyed || !(postId in state.posts)) return undefined
     const newId = id()
     mutateState(s => {
-      if (!(postId in s.posts)) return null
       // Rebuild insertion order without changing existing post identities.
       const next: Record<string, types.ThreadPost> = {}
       for (const [k, v] of Object.entries(s.posts)) {
@@ -154,7 +158,7 @@ export function createThreadStore(options: {
       s.isDirty = true
       return s
     })
-    return newId
+    return {addedPostId: newId}
   }
 
   function removePost(postId: string) {
@@ -173,16 +177,17 @@ export function createThreadStore(options: {
 
   /**
    * Adds compatible items to the media slot and starts uploads eagerly.
-   * Existing record attachments never block media. Returns accepted item IDs.
+   * Existing record attachments never block media. Returns accepted IDs in
+   * `{addedMediaIds}` when the target post exists.
    */
   function addMedia(
     postId: string,
     inputs: types.AddMediaInput[],
-  ): string[] | undefined {
+  ): {addedMediaIds: string[]} | undefined {
     if (destroyed || !(postId in state.posts)) return undefined
     const post = state.posts[postId]
     const accepted = filterMediaInputs(post.attachments.media, inputs)
-    if (accepted.length === 0) return []
+    if (accepted.length === 0) return {addedMediaIds: []}
     const items = accepted.map(input =>
       buildPostMediaItem(input, {id: id(), postId}),
     )
@@ -197,7 +202,7 @@ export function createThreadStore(options: {
       return s
     })
     for (const item of items) startMediaUpload(postId, item.id)
-    return items.map(item => item.id)
+    return {addedMediaIds: items.map(item => item.id)}
   }
 
   /** Removes one selected item; use removeMediaAttachment to clear the slot. */

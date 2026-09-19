@@ -183,7 +183,9 @@ describe('record and media routing', () => {
         media: undefined,
       })
       expect(store.getState().posts[root].imageSelectionsRemaining).toBe(10)
-      expect(store.actions.addMedia(root, [uploads[0]])).toHaveLength(1)
+      expect(
+        store.actions.addMedia(root, [uploads[0]])?.addedMediaIds,
+      ).toHaveLength(1)
       d.resolve(link)
       await d.promise
       expect(store.getState().posts[root].attachments.record).toEqual({
@@ -235,7 +237,9 @@ describe.each(records)('$link.kind coexists with media', ({uri, link}) => {
         store.actions.addUri(root, uri)
         await Promise.resolve()
       }
-      expect(store.actions.addMedia(root, [input])).toHaveLength(1)
+      expect(store.actions.addMedia(root, [input])?.addedMediaIds).toHaveLength(
+        1,
+      )
       if (!recordFirst) store.actions.addUri(root, uri)
       await Promise.resolve()
       const {record, media} = store.getState().posts[root].attachments
@@ -299,7 +303,9 @@ describe('slot collisions', () => {
       await Promise.resolve()
       const before = store.getState()
       for (const input of uploads)
-        expect(store.actions.addMedia(root, [input])).toEqual([])
+        expect(store.actions.addMedia(root, [input])).toEqual({
+          addedMediaIds: [],
+        })
       for (const card of cards) store.actions.addUri(root, card.uri)
       expect(store.getState()).toBe(before)
       expect(mockResolveLink).toHaveBeenCalledTimes(1)
@@ -335,7 +341,9 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
       slot === 'media' ? 0 : 10,
     )
     if (slot === 'media')
-      expect(store.actions.addMedia(root, [uploads[0]])).toEqual([])
+      expect(store.actions.addMedia(root, [uploads[0]])).toEqual({
+        addedMediaIds: [],
+      })
     failed.retry?.()
     expect(store.getState().posts[root].attachments[slot]?.state).toBe(
       'pending',
@@ -432,7 +440,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
       const d = deferred()
       mockResolveLink.mockReturnValue(d.promise)
       const store = makeStore()
-      const postId = store.actions.addPost('after', rootId(store))
+      const postId = store.actions.addPost('after', rootId(store))!.addedPostId
       store.actions.addUri(postId, uri)
       if (destroy) store.destroy()
       else store.actions.removePost(postId)

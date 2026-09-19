@@ -231,6 +231,11 @@ Actions perform:
 - Derived-state recomputation.
 - Stale async result invalidation.
 
+The creation actions return named results: `addPost()` returns
+`{addedPostId}` only when insertion succeeds, and `addMedia()` returns
+`{addedMediaIds}` for accepted items, including an empty array for a valid
+no-op. Missing targets and destroyed stores return `undefined`.
+
 For example, `setPostMedia()` is the chokepoint that also recalculates picker capacity. This prevents the media array and selection counters from disagreeing.
 
 No-op actions preserve the current state reference and do not notify subscribers.

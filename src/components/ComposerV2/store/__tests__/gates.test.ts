@@ -133,7 +133,7 @@ describe('threadgate and postgate state', () => {
   test('gate edits are dirty, isolated, structurally shared, and no-op when values repeat', () => {
     const store = makeStore()
     const root = rootId(store)
-    const other = store.actions.addPost('after', root)
+    const other = store.actions.addPost('after', root)!.addedPostId
     const before = store.getState()
     const notify = jest.fn()
     store.subscribe(notify)
@@ -205,7 +205,7 @@ describe('threadgate and postgate state', () => {
     const root = rootId(store)
     const before = store.getState()
     store.actions.setPostText(root, 'text')
-    const second = store.actions.addPost('after', root)
+    const second = store.actions.addPost('after', root)!.addedPostId
     store.actions.addMedia(root, [
       {kind: 'image', uri: 'file:///image.jpg', width: 10, height: 10},
     ])

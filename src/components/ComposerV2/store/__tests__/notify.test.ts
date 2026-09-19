@@ -75,9 +75,11 @@ describe('subscribe / getState', () => {
   test('attachment mutations preserve old snapshots and unrelated post references', () => {
     const store = createThreadStore({resolvers, __createId: makeIdGenerator()})
     const root = rootId(store)
-    const other = store.actions.addPost('after', root)
+    const other = store.actions.addPost('after', root)!.addedPostId
     const before = store.getState()
-    const [mediaId] = store.actions.addMedia(root, [
+    const {
+      addedMediaIds: [mediaId],
+    } = store.actions.addMedia(root, [
       {kind: 'image', uri: 'file:///a.jpg', width: 10, height: 10},
     ])!
     expect(before.posts[root].attachments.media).toBeUndefined()
