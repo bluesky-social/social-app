@@ -4,7 +4,11 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPost'
 
-/** All posts are constructed before any upload or URI resolution can start. */
+/**
+ * Build the store-owned snapshot before any upload or URI resolution can start.
+ * Adapters may share source gate values; editable gate data is copied here so
+ * later caller mutations cannot affect live state.
+ */
 export function buildThreadState(
   input: ThreadStoreInitialState,
   createId: () => string,

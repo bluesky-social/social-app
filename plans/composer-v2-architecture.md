@@ -335,7 +335,9 @@ The gate fields in the normalized input and live state are:
 `threadgateAllowRules: undefined` means everyone may reply and `[]` means no
 one may reply. Postgate rules default to `[]`, which permits quoting. Both rule
 arrays use the generated threadgate/postgate lexicon unions, including opaque
-unknown typed objects, and are deeply cloned during hydration.
+unknown typed objects. Adapters may share these immutable source values while
+normalizing; the store deeply copies them at its ownership boundary. Published
+snapshots are read-only to callers.
 
 ```ts
 createThreadStore({
