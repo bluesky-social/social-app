@@ -20,7 +20,6 @@ import {
   getAndMigrateDeviceId,
   getDeviceId,
   getInitialSessionId,
-  useDeviceId,
   useSessionId,
 } from '#/analytics/identifiers'
 import {
@@ -180,7 +179,7 @@ export function AnalyticsContext({
       )
     }
   }
-  const deviceId = useDeviceId() ?? 'unknown'
+  const deviceId = getDeviceId() ?? 'unknown'
   const sessionId = useSessionId()
   // only IP based, never GPS
   const geolocation = useGeolocationServiceResponse()
