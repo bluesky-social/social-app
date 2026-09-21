@@ -11,7 +11,7 @@ import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {BOTTOM_BAR_AVI} from '#/lib/demo'
 import {useHaptics} from '#/lib/haptics'
 import {useDedupe} from '#/lib/hooks/useDedupe'
-import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
+import {useBottomBarBorderStyle} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
 import {clamp} from '#/lib/numbers'
@@ -80,7 +80,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const accountSwitchControl = useDialogControl()
   const messagesMenuControl = Menu.useMenuControl()
   const playHaptic = useHaptics()
-  const hideBorder = useHideBottomBarBorder()
+  const borderStyle = useBottomBarBorderStyle()
   const iconWidth = 28
 
   const showSignIn = useCallback(() => {
@@ -165,9 +165,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
         style={[
           styles.bottomBar,
           t.atoms.bg,
-          hideBorder
-            ? {borderColor: t.atoms.bg.backgroundColor}
-            : t.atoms.border_contrast_low,
+          borderStyle,
           {paddingBottom: clamp(safeAreaInsets.bottom, 15, 60)},
           footerMinimalShellTransform,
         ]}
