@@ -48,10 +48,11 @@ function check(scenario) {
     const checked = await checkGitHub(report, read)
     if (scenario === 'get-only') {
       globalThis.fetch = async (url, options) => {
+        if (url !== 'https://api.github.com/repos/owner/repo') throw new Error('Wrong repository endpoint')
         if (options.method !== 'GET' || options.body) throw new Error('Mutation attempted')
         return {ok:false,status:404}
       }
-      try { await githubReader('owner/repo','dummy')('git/refs') } catch(error) { checked.transportError = error.message }
+      try { await githubReader('owner/repo','dummy')('') } catch(error) { checked.transportError = error.message }
     }
     process.stdout.write(JSON.stringify(checked))
   `,

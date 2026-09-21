@@ -11,7 +11,7 @@ export function githubReader(repository, token) {
   }
   return async path => {
     const response = await fetch(
-      `https://api.github.com/repos/${repository}/${path}`,
+      `https://api.github.com/repos/${repository}${path ? `/${path}` : ''}`,
       {
         method: 'GET',
         headers: {
