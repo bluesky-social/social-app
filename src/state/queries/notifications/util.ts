@@ -102,7 +102,6 @@ export async function fetchPage({
       cursor: data.cursor,
       seenAt,
       items: notifsGrouped,
-      priority: data.priority ?? false,
     },
     indexedAt,
   }

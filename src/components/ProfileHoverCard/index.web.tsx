@@ -1,7 +1,14 @@
 import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
-import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
+import {
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  size,
+  useFloating,
+} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -108,10 +115,6 @@ const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const navigation = useNavigation<NavigationProp>()
-
-  const {refs, floatingStyles} = useFloating({
-    middleware: floatingMiddlewares,
-  })
 
   const [currentState, dispatch] = useReducer(
     // Tip: console.log(state, action) when debugging.
@@ -309,6 +312,12 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     currentState.stage === 'might-hide' ||
     currentState.stage === 'hiding'
 
+  const {refs, floatingStyles, isPositioned} = useFloating({
+    open: isVisible,
+    middleware: floatingMiddlewares,
+    whileElementsMounted: autoUpdate,
+  })
+
   const animationStyle = {
     animation:
       currentState.stage === 'hiding'
@@ -329,7 +338,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
         <Portal>
           <div
             ref={refs.setFloating}
-            style={floatingStyles}
+            style={{
+              ...floatingStyles,
+              visibility: isPositioned ? 'visible' : 'hidden',
+            }}
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
             <div style={{willChange: 'transform', ...animationStyle}}>

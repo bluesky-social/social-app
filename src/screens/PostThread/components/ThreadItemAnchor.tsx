@@ -453,17 +453,17 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   },
                   a.border_t,
                   a.mt_md,
-                  a.py_md,
+                  a.py_sm,
                   t.atoms.border_contrast_low,
                 ]}>
                 {post.repostCount != null && post.repostCount !== 0 ? (
                   <Link to={repostsHref} label={l`Reposts of this post`}>
                     <Text
                       testID="repostCount-expanded"
-                      style={[a.text_sm, t.atoms.text_contrast_high]}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
                       <Trans comment="Repost count display, the <0> tags enclose the number of reposts in bold (will never be 0)">
                         <Text
-                          style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
                           {formatPostStatCount(post.repostCount)}
                         </Text>{' '}
                         <Plural
@@ -481,10 +481,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                   <Link to={quotesHref} label={l`Quotes of this post`}>
                     <Text
                       testID="quoteCount-expanded"
-                      style={[a.text_sm, t.atoms.text_contrast_high]}>
+                      style={[a.text_md, t.atoms.text_contrast_medium]}>
                       <Trans comment="Quote count display, the <0> tags enclose the number of quotes in bold (will never be 0)">
                         <Text
-                          style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+                          style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
                           {formatPostStatCount(post.quoteCount)}
                         </Text>{' '}
                         <Plural
@@ -500,9 +500,9 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 {post.bookmarkCount != null && post.bookmarkCount !== 0 ? (
                   <Text
                     testID="bookmarkCount-expanded"
-                    style={[a.text_sm, t.atoms.text_contrast_high]}>
+                    style={[a.text_md, t.atoms.text_contrast_medium]}>
                     <Trans comment="Save count display, the <0> tags enclose the number of saves in bold (will never be 0)">
-                      <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+                      <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
                         {formatPostStatCount(post.bookmarkCount)}
                       </Text>{' '}
                       <Plural
@@ -518,10 +518,10 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
             <KnownLikers
               post={post}
               feature={Features.PostThreadKnownLikersEnable}
+              outerStyle={[a.pt_xs, a.pb_sm]}
             />
             <View
               style={[
-                a.pt_sm,
                 a.pb_2xs,
                 {
                   marginLeft: -5,
@@ -565,7 +565,7 @@ function ExpandedPostDetails({
     <View style={[a.gap_md, a.pt_md, a.align_start]}>
       <BackdatedPostIndicator post={post} />
       <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
-        <Text style={[a.text_xs, t.atoms.text_contrast_high]}>
+        <Text style={[a.text_sm, t.atoms.text_contrast_medium]}>
           {niceDate(i18n, post.indexedAt, 'dot separated')}
         </Text>
         {isRootPost && (

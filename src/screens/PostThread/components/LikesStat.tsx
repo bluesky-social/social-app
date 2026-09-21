@@ -32,9 +32,9 @@ export function LikesStat({post}: {post: app.bsky.feed.defs.PostView}) {
       onPress={() => ax.metric('post:likedBy:click', {})}>
       <Text
         testID="likeCount-expanded"
-        style={[a.text_sm, t.atoms.text_contrast_high]}>
+        style={[a.text_md, t.atoms.text_contrast_medium]}>
         <Trans comment="Like count display, the <0> tags enclose the number of likes in bold (will never be 0)">
-          <Text style={[a.text_sm, a.font_semi_bold, t.atoms.text]}>
+          <Text style={[a.text_md, a.font_semi_bold, t.atoms.text]}>
             {formatPostStatCount(likeCount)}
           </Text>{' '}
           <Plural value={likeCount} one="like" other="likes" />

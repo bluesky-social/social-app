@@ -194,3 +194,8 @@ Fix: compute the middle from the cap insets (`size - caps`) instead of assuming 
 
 Upstream issue: https://github.com/react/react-native/issues/58054 (repro:
 https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and 0.87.0).
+
+## RCTTextInputComponentView.mm Patch - reveal the caret after a multiline input grows (iOS New Arch)
+
+Fixes ScrollView doesn't scroll up on new line in TextInput issue 
+https://github.com/react/react-native/issues/58517

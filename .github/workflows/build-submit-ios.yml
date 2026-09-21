@@ -91,7 +91,7 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Expo project
-        uses: ./.github/actions/setup-expo-project
+        uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
@@ -120,12 +120,12 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: 🔤 Compile translations
-        uses: ./.github/actions/compile-i18n
+        uses: $/.github/actions/compile-i18n
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
         id: env
-        uses: ./.github/actions/write-env
+        uses: $/.github/actions/write-env
         with:
           env-token: ${{ secrets.ENV_TOKEN }}
           sentry-dsn: ${{ secrets.SENTRY_DSN }}
@@ -134,7 +134,7 @@ jobs:
           google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
 
       - name: 🏗️ EAS Build
-        uses: ./.github/actions/eas-local-build
+        uses: $/.github/actions/eas-local-build
         with:
           platform: ios
           profile: ${{ inputs.profile || 'testflight' }}
@@ -239,7 +239,7 @@ jobs:
           fetch-depth: 5
 
       - name: 🔧 Setup Expo project
-        uses: ./.github/actions/setup-expo-project
+        uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
