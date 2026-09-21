@@ -171,7 +171,12 @@ test('new preparation prints dependent requests and skips every write and build 
         expect.objectContaining({
           id: 'build-web',
           result: 'skipped-dry-run',
-          request: expect.objectContaining({body: {ref: '1.2.3', inputs: {}}}),
+          request: expect.objectContaining({
+            body: {
+              ref: '1.2.3',
+              inputs: {sourceRef: {fromStep: 'prepared-commit', field: 'sha'}},
+            },
+          }),
         }),
       ]),
     },
@@ -253,7 +258,7 @@ test('planned build inputs match the actual dispatch definitions and no live opt
       const workflow = yaml.load(readFileSync('.github/workflows/' + build.file,'utf8'))
       assert('workflow_dispatch' in workflow.on)
       const definitions = workflow.on.workflow_dispatch?.inputs ?? {}
-      const inputs = {...build.inputs,...(build.sourceInput ? {sourceRef:'candidate'} : {})}
+      const inputs = {...build.inputs,sourceRef:'candidate'}
       for (const [key,value] of Object.entries(inputs)) {
         assert(definitions[key], key)
         if (definitions[key].type === 'boolean') assert.equal(typeof value,'boolean')
@@ -261,6 +266,21 @@ test('planned build inputs match the actual dispatch definitions and no live opt
       }
       for (const [key,definition] of Object.entries(definitions)) if (definition.required && definition.default === undefined) assert(key in inputs)
       assert.match(workflowHashes()[build.file], /^[a-f0-9]{40}$/)
+      const job = workflow.jobs.build ?? workflow.jobs['bskyweb-container-aws']
+      const checkout = job.steps.find(step => step.uses?.startsWith('actions/checkout@'))
+      assert.equal(checkout.with.ref, '${'$'}{{ inputs.sourceRef || github.sha }}')
+      assert.equal(job.outputs['source-sha'], '${'$'}{{ steps.source.outputs.sha }}')
+      if (build.platform !== 'web') {
+        assert.equal(workflow.on.workflow_call.inputs.sourceRef.default, '')
+        assert.equal(workflow.on.workflow_call.inputs.submit.default, true)
+        assert.equal(workflow.jobs.submit.if, '${'$'}{{ inputs.submit != false }}')
+        assert.equal(workflow.jobs.submit.steps.find(step => step.uses?.startsWith('actions/checkout@')).with.ref, '${'$'}{{ needs.build.outputs.source-sha }}')
+      } else {
+        const metadata = job.steps.find(step => step.uses?.startsWith('docker/metadata-action@'))
+        assert(metadata.with.tags.includes('${'$'}{{ steps.source.outputs.sha }}'))
+        assert(metadata.with.labels.includes('${'$'}{{ steps.source.outputs.sha }}'))
+      }
+
     }
   `,
     ],

@@ -29,7 +29,6 @@ on:
 # Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
   contents: read
-  actions: read
 
 # denis release tag in bluesky-social/tango whose linux-amd64 binary this
 # workflow downloads to publish OTA bundles. Bump this one line to roll denis.
@@ -297,7 +296,6 @@ jobs:
     # validates the reusable-workflow permission ceiling, so the caller must grant it.
     permissions:
       contents: write
-      actions: read
     uses: $/.github/workflows/build-submit-android.yml
     with:
       profile: testflight-android

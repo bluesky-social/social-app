@@ -48,9 +48,9 @@ original GitHub state throughout the run.
 
 - **iOS and Android:** production profile, exact prepared commit, store submission
   disabled.
-- **Web:** the existing workflow builds and pushes a production image to ECR.
+- **Web:** the existing workflow builds the prepared commit and pushes a production image to ECR.
   The dry run only prints that request.
-- **All three:** use the release tag. The source's workflow files must match the
+- **All three:** run from the release tag and check out the exact prepared commit. The source's workflow files must match the
   definitions reviewed with this tool, and GitHub must report the workflows active.
 
 These are planned requests, not proof that the builds will succeed.

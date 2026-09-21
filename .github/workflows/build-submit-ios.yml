@@ -4,16 +4,21 @@ name: Build and Submit iOS
 on:
   workflow_dispatch:
     inputs:
+      submit:
+        type: boolean
+        description: Submit the build to App Store Connect
+        default: true
+      sourceRef:
+        type: string
+        description: Source ref to build; use a full commit SHA for immutable builds
+        required: false
+        default: ''
       profile:
         type: choice
         description: Build profile to use
         options:
           - testflight
           - production
-      submit:
-        type: boolean
-        description: Submit the build to App Store Connect
-        default: true
       testFlightGroup:
         type: choice
         description: TestFlight group to assign the build to after submitting
@@ -27,21 +32,21 @@ on:
         description: TestFlight "What to Test" notes (only applied when a group is selected)
         required: false
         default: ''
+  workflow_call:
+    inputs:
+      submit:
+        type: boolean
+        description: Submit the build to App Store Connect
+        default: true
       sourceRef:
         type: string
         description: Source ref to build; use a full commit SHA for immutable builds
         required: false
         default: ''
-  workflow_call:
-    inputs:
       profile:
         type: string
         description: Build profile to use
         required: true
-      submit:
-        type: boolean
-        description: Submit the build to App Store Connect
-        default: true
       testFlightGroup:
         type: string
         description: TestFlight group to assign the build to after submitting ("none" to skip)
@@ -51,24 +56,16 @@ on:
         description: Runner for the build job (defaults to macos-26-xlarge)
         required: false
         default: ''
-      sourceRef:
-        type: string
-        description: Source ref to build; use a full commit SHA for immutable builds
-        required: false
-        default: ''
     outputs:
+      source-sha:
+        description: Exact commit used for the build
+        value: ${{ jobs.build.outputs.source-sha }}
       package-version:
         description: Version from package.json
         value: ${{ jobs.build.outputs.package-version }}
       build-number:
         description: iOS build number
         value: ${{ jobs.build.outputs.build-number }}
-      source-sha:
-        description: Exact commit used for the build
-        value: ${{ jobs.build.outputs.source-sha }}
-      artifact-name:
-        description: Workflow artifact containing the IPA and provenance
-        value: ${{ jobs.build.outputs.artifact-name }}
     secrets:
       EXPO_TOKEN:
         required: true
@@ -93,10 +90,9 @@ on:
       SLACK_CLIENT_ALERT_WEBHOOK:
         required: true
 
-# Artifact discovery needs actions: read; store uploads still use EXPO_TOKEN.
+# Deploys happen via EAS using EXPO_TOKEN; the GITHUB_TOKEN only checks out code
 permissions:
   contents: read
-  actions: read
 
 jobs:
   build:
@@ -107,13 +103,9 @@ jobs:
       group: ios-build
       cancel-in-progress: false
     outputs:
-      package-version: ${{ steps.verified.outputs.package-version }}
-      build-number: ${{ steps.verified.outputs.build-number }}
       source-sha: ${{ steps.source.outputs.sha }}
-      artifact-name: ios-build-${{ github.run_id }}
-    env:
-      RELEASE_PLATFORM: ios
-      RELEASE_PROFILE: ${{ inputs.profile || 'testflight' }}
+      package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
+      build-number: ${{ steps.ipa-build-number.outputs.build-number }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -126,65 +118,17 @@ jobs:
         run: |
           echo "Building source: $(git rev-parse HEAD)"
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
-          echo "RELEASE_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
-          echo "RELEASE_PACKAGE_VERSION=$(jq -r .version package.json)" >> "$GITHUB_ENV"
-
-      - name: Restore frozen source identity
-        id: source-checkpoint
-        uses: $/.github/actions/restore-release-artifact
-        with:
-          name: ios-source-${{ github.run_id }}
-          path: ${{ runner.temp }}/release-source-ios
-
-      - name: Freeze or verify source identity
-        env:
-          RESTORED: ${{ steps.source-checkpoint.outputs.artifact-id != '' }}
-        run: |
-          mkdir -p "$RUNNER_TEMP/release-source-ios"
-          node scripts/release/recovery.mjs source "$RUNNER_TEMP/release-source-ios" "$RESTORED"
-
-      - name: Persist frozen source identity
-        if: steps.source-checkpoint.outputs.artifact-id == ''
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: ios-source-${{ github.run_id }}
-          path: ${{ runner.temp }}/release-source-ios/
-          retention-days: 14
-          if-no-files-found: error
-
-      - name: Restore native build
-        id: restore
-        uses: $/.github/actions/restore-release-artifact
-        with:
-          name: ios-build-${{ github.run_id }}
-          path: native-artifact
-
-      - name: Refuse to rebuild a missing submitted artifact
-        if: steps.restore.outputs.artifact-id == ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          for checkpoint in ios-submission-intent ios-submission; do
-            result=$(node scripts/release/recovery.mjs lookup "$checkpoint-$GITHUB_RUN_ID")
-            if [ "$result" != "artifact-id=" ]; then
-              echo "::error::A submission checkpoint exists but its native artifact is missing. Restore the original evidence; do not rebuild this run."
-              exit 1
-            fi
-          done
 
       - name: 🔧 Setup Expo project
-        if: steps.restore.outputs.artifact-id == ''
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
-        if: steps.restore.outputs.artifact-id == ''
         with:
           xcode-version: "26.4"
 
       - name: ☕️ Assert Cocoapods version
-        if: steps.restore.outputs.artifact-id == ''
         run: |
           EXPECTED=1.17.0
           ACTUAL=$(pod --version)
@@ -196,7 +140,6 @@ jobs:
           fi
 
       - name: 💾 Cache Pods
-        if: steps.restore.outputs.artifact-id == ''
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         id: pods-cache
         with:
@@ -206,12 +149,10 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: 🔤 Compile translations
-        if: steps.restore.outputs.artifact-id == ''
         uses: $/.github/actions/compile-i18n
 
       # EXPO_PUBLIC_ENV is handled in eas.json
       - name: ✏️ Write environment variables
-        if: steps.restore.outputs.artifact-id == ''
         id: env
         uses: $/.github/actions/write-env
         with:
@@ -222,7 +163,6 @@ jobs:
           google-services-token: ${{ secrets.GOOGLE_SERVICES_TOKEN }}
 
       - name: 🏗️ EAS Build
-        if: steps.restore.outputs.artifact-id == ''
         uses: $/.github/actions/eas-local-build
         with:
           platform: ios
@@ -234,7 +174,6 @@ jobs:
           sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
 
       - name: 📂 Extract build artifact
-        if: steps.restore.outputs.artifact-id == ''
         run: |
           if [ -f "build.tar.gz" ]; then
             echo "Extracting build.tar.gz..."
@@ -269,6 +208,10 @@ jobs:
             exit 1
           fi
 
+      - name: 📚 Get version from package.json
+        id: get-build-info
+        run: bash scripts/setGitHubOutput.sh
+
       # Read the build number straight from the IPA's CFBundleVersion. This is the value
       # baked in at build time by use-build-number-with-bump (remote counter + 1) and the
       # number that actually lands in App Store Connect. `eas build:version:get` reads the
@@ -276,7 +219,6 @@ jobs:
       # using it here would make distribute_only poll for a nonexistent build.
       # PlistBuddy is macOS-only, which is why this stays in the build job.
       - name: 🔢 Read build number from IPA
-        if: steps.restore.outputs.artifact-id == ''
         id: ipa-build-number
         run: |
           plist_dir="$(mktemp -d)"
@@ -291,63 +233,46 @@ jobs:
           echo "IPA build number: $build_number"
           echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
 
-      - name: Stage native artifact and provenance
-        if: steps.restore.outputs.artifact-id == ''
-        env:
-          NATIVE_BUILD_NUMBER: ${{ steps.ipa-build-number.outputs.build-number }}
-        run: |
-          mkdir -p native-artifact
-          cp "$BUILD_DIR/Bluesky.ipa" "$BUILD_DIR/Bluesky.app.dSYM.zip" native-artifact/
-          node scripts/release/recovery.mjs record-build native-artifact "$NATIVE_BUILD_NUMBER"
-
-      - name: Verify native artifact
-        id: verified
-        run: node scripts/release/recovery.mjs verify-build native-artifact
-
-      - name: Upload native artifact
-        if: steps.restore.outputs.artifact-id == ''
+      # Hand the IPA and dSYM off to the submit job. Retention is deliberately short since
+      # this artifact only exists to bridge the two jobs within a single run.
+      - name: 🚀 Upload build artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ios-build-${{ github.run_id }}
-          retention-days: 14
+          retention-days: 1
           if-no-files-found: error
-          path: native-artifact/
+          path: |
+            ${{ env.BUILD_DIR }}/Bluesky.ipa
+            ${{ env.BUILD_DIR }}/Bluesky.app.dSYM.zip
 
-      - name: Write build summary
+      - name: 📝 Write build summary
         env:
-          RESTORED: ${{ steps.restore.outputs.artifact-id }}
-          NATIVE_BUILD_NUMBER: ${{ steps.verified.outputs.build-number }}
+          REMOTE_BUILD_NUMBER: ${{ steps.get-build-info.outputs.BSKY_IOS_BUILD_NUMBER }}
         run: |
-          state=Built
-          if [ -n "$RESTORED" ]; then state=Reused; fi
           {
-            echo "### ios build: $state"
-            echo "- Source SHA: $RELEASE_SOURCE_SHA"
-            echo "- Profile: $RELEASE_PROFILE"
-            echo "- Build number: $NATIVE_BUILD_NUMBER"
+            echo "### iOS build number"
+            echo
+            echo "\`$REMOTE_BUILD_NUMBER\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
   submit:
+    if: ${{ inputs.submit != false }}
     name: Submit iOS
     # Submission and dSYM upload are I/O bound and don't need the xlarge builder.
     runs-on: macos-26
     needs: [build]
-    if: ${{ inputs.submit != false }}
-    concurrency:
-      group: ios-submit-${{ github.run_id }}
-      cancel-in-progress: false
-    env:
-      RELEASE_PLATFORM: ios
-      RELEASE_PROFILE: ${{ inputs.profile || 'testflight' }}
-      RELEASE_SOURCE_SHA: ${{ needs.build.outputs.source-sha }}
-      RELEASE_PACKAGE_VERSION: ${{ needs.build.outputs.package-version }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          # eas submit reads the app config from the repo
           ref: ${{ needs.build.outputs.source-sha }}
+          # eas submit reads the app config from the repo
           fetch-depth: 5
+
+      - name: 🔧 Setup Expo project
+        uses: $/.github/actions/setup-expo-project
+        with:
+          expo-token: ${{ secrets.EXPO_TOKEN }}
 
       - name: ⬇️ Download build artifact
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
@@ -355,63 +280,8 @@ jobs:
           name: ios-build-${{ github.run_id }}
           path: ios-build
 
-      - name: Restore submission intent
-        id: intent
-        uses: $/.github/actions/restore-release-artifact
-        with:
-          name: ios-submission-intent-${{ github.run_id }}
-          path: recovery-intent
-
-      - name: Restore submission receipt
-        id: receipt
-        uses: $/.github/actions/restore-release-artifact
-        with:
-          name: ios-submission-${{ github.run_id }}
-          path: recovery-receipt
-
-      - name: Decide whether to submit
-        id: recovery
-        env:
-          INTENT_ID: ${{ steps.intent.outputs.artifact-id }}
-          RECEIPT_ID: ${{ steps.receipt.outputs.artifact-id }}
-        run: |
-          intent=-
-          receipt=-
-          if [ -n "$INTENT_ID" ]; then intent=recovery-intent/ios-submission-intent.json; fi
-          if [ -n "$RECEIPT_ID" ]; then receipt=recovery-receipt/ios-submission.json; fi
-          node scripts/release/recovery.mjs submission ios-build "$intent" "$receipt"
-
-      - name: 🔧 Setup Expo project
-        uses: $/.github/actions/setup-expo-project
-        with:
-          expo-token: ${{ secrets.EXPO_TOKEN }}
-
-      # Persist intent before contacting EAS: a missing receipt is not proof of failure.
-      - name: Upload submission intent
-        if: steps.recovery.outputs.state == 'submit'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: ios-submission-intent-${{ github.run_id }}
-          path: ios-submission-intent.json
-          retention-days: 14
-          if-no-files-found: error
-
       - name: 🚀 Deploy
-        if: steps.recovery.outputs.state == 'submit'
-        run: pnpm eas submit -p ios --wait --non-interactive --path ios-build/Bluesky.ipa
-
-      - name: Record submission receipt
-        if: steps.recovery.outputs.state == 'submit'
-        run: node scripts/release/recovery.mjs receipt ios-build
-
-      - name: Upload submission receipt
-        if: steps.recovery.outputs.state == 'submit'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: ios-submission-${{ github.run_id }}
-          path: ios-submission.json
-          retention-days: 14
-          if-no-files-found: error
+        run: pnpm eas submit -p ios --non-interactive --path ios-build/Bluesky.ipa
 
       - name: 🪲 Upload dSYM to Sentry
         env:
@@ -429,20 +299,6 @@ jobs:
           payload-templated: true
           payload: |
             {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.build-number }}```"}
-
-      - name: Write submission summary
-        if: always()
-        env:
-          RECOVERY_STATE: ${{ steps.recovery.outputs.state }}
-          JOB_STATUS: ${{ job.status }}
-        run: |
-          {
-            echo "### ios submission"
-            echo "- Recovery decision: ${RECOVERY_STATE:-blocked}"
-            echo "- Job status: $JOB_STATUS"
-            echo "- Source SHA: $RELEASE_SOURCE_SHA"
-            echo "Inspect the submission receipt for confirmed store upload; a failed job may have already submitted."
-          } >> "$GITHUB_STEP_SUMMARY"
 
   distribute:
     name: Assign build to TestFlight group

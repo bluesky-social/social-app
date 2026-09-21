@@ -11,19 +11,16 @@ export const buildWorkflows = [
     platform: 'iOS',
     file: 'build-submit-ios.yml',
     inputs: {profile: 'production', submit: false, testFlightGroup: 'none'},
-    sourceInput: true,
   },
   {
     platform: 'Android',
     file: 'build-submit-android.yml',
     inputs: {profile: 'production', submit: false},
-    sourceInput: true,
   },
   {
     platform: 'web',
     file: 'build-and-push-bskyweb-aws.yaml',
     inputs: {},
-    sourceInput: false,
   },
 ]
 
@@ -183,7 +180,7 @@ export function planRelease(report, repository, hashes) {
         ref: identity.tag,
         inputs: {
           ...build.inputs,
-          ...(build.sourceInput ? {sourceRef: candidate} : {}),
+          sourceRef: candidate,
         },
       },
       ['draft'],
@@ -191,7 +188,7 @@ export function planRelease(report, repository, hashes) {
   }
   plan.notes = [
     'Requests are templates only. Objects with fromStep/field refer to outputs that do not exist until a live request succeeds.',
-    'All workflow dispatches use the release tag. Native builds also receive the exact prepared commit and have store submission disabled.',
+    'All workflow dispatches use the release tag and receive the exact prepared commit. Native builds have store submission disabled.',
     'The web workflow would build and push a production image to ECR. No workflow is dispatched in this dry run.',
     'Existing build runs and receipts are not checked here. A future live runner must prevent duplicate dispatches when retrying.',
   ]
