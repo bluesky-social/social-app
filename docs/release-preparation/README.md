@@ -1,75 +1,51 @@
-# Release preparation demo
+# Release preparation dry run
 
-This demo shows how release prep should handle a normal run, retries, and
-conflicts. It uses made-up release data and keeps all changes in memory. It
-won't create branches or tags, contact GitHub, or kick off a build.
+Choose a source branch, tag, or commit and the version you want to release.
+The **Prepare Cactus Release (dry run)** action checks that the package and Expo
+versions match, then puts together the release notes from Git history.
 
-Start with the [example walkthrough](./example.md). You can read it right in the
-PR. The **Release Preparation Demo** CI job also includes the walkthrough in its
-summary and uploads a `release-preparation-demo-<run>-<attempt>` artifact with:
+At the end, it prints the source commit, release branch and tag names, the release
+file, public notes, and the steps a real release would take. You can share the
+Actions summary with reviewers or download the report and notes from that run.
+This uses the source you picked; the old demo and its made-up scenarios are gone.
 
-- `README.md` — the walkthrough.
-- `report.json` — the inputs and the state of each simulated release after each run.
-- `RELEASE-1.133.0.md` — an example release file, including its metadata.
-- `github-release-body.md` — the public release notes extracted from that file.
+A real run would create the release branch, commit the release file, create a
+draft GitHub Release, and request native and web builds. Once those builds finish,
+it would record their build numbers in the release file. Releasing the app would
+still be a manual step.
 
-## What to look for
+This action only checks the source and writes the report. It doesn't create those
+resources, run builds, submit to stores, or deploy anything. It has read-only
+repository permissions and no release or store secrets.
 
-On the first run, prep checks that the package, Expo, and runtime versions all
-match the requested release version. It generates the release file and derives
-the branch, tag, and GitHub Release names from that version.
+## What still needs work
 
-The demo then simulates creating the candidate commit, release branch, tag, and
-draft GitHub Release. Before doing any of that, it checks whether something with
-the same identity already exists:
+The dry run doesn't check GitHub for existing releases or prove that retrying a
+real release is safe. Creating and reusing release branches, tags, and drafts,
+wiring up all three builds, and saving the completed release file are still to do.
+The separate native build workflows retain their existing recovery support.
 
-- If it matches, reuse it.
-- If it differs, or there's not enough information to verify it, stop.
-
-The retry examples stop after each step, then run prep again. Completed steps
-should be reused, and the remaining steps should finish with the same result as
-an uninterrupted run. Changing the source commit or changelog should cause a
-conflict. Prep should never replace an existing release to make a retry work.
-
-## What's still missing
-
-This is a demo of the preparation rules, not the release workflow itself. The
-source commit is a placeholder, and IDs beginning with `simulation:` aren't Git
-SHAs. The results don't tell us whether any real branch, tag, or release exists.
-The demo covers initial preparation; an already-published release or a release
-branch that has moved will cause a conflict.
-
-We still need to connect this to Git and GitHub, pull translations, create real
-commits, handle concurrent runs, and wire up approvals, builds, and finalization.
-The version checks also need to be reconciled with the fingerprint runtime work
-in APP-3042. The demo doesn't run translation commands.
-
-There's no `--apply` option or live API connection. The CI job has read-only
-repository access and no release or store secrets. The existing **Prepare Cactus
-Release** workflow is separate: it previews a selected source but doesn't carry
-out the steps shown here.
+The notes are provisional commit titles since the highest version tag reachable
+from the selected commit, excluding the requested version. With no earlier tag,
+it uses all reachable history. Translations aren't refreshed. The version check
+currently requires Expo's `appVersion` runtime policy; fingerprint runtime support
+will need a separate adjustment.
 
 ## Run it locally
 
-From the repository root, print the walkthrough:
+Use a clean checkout with full Git history. The version must match that checkout:
 
 ```sh
-node scripts/release/prepare-demo.mjs
+node scripts/release/prepare.mjs 1.133.0 /path/to/source
 ```
 
-Or save the walkthrough and supporting files:
+To save the report and notes too, add a new output directory:
 
 ```sh
-node scripts/release/prepare-demo.mjs --output /tmp/release-preparation-demo
+node scripts/release/prepare.mjs 1.133.0 /path/to/source /tmp/release-report
 ```
 
-Use a new directory each time; the demo won't overwrite an existing one. It runs
-without installing dependencies and checks the expected result of each example.
-CI compares its output with the committed walkthrough to catch stale examples.
-
-The additional tests cover input validation, keeping the original data unchanged,
-and writing the report files:
-
-```sh
-pnpm test --runInBand --watchman=false --runTestsByPath scripts/release/prepare.test.js
-```
+The output directory must not already exist. The report contains the actual
+source commit; it doesn't invent a prepared commit or build numbers. Loading
+`app.config.js` executes the selected checkout's configuration, so use trusted
+repository code, just as you would when running other project scripts.

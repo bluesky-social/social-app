@@ -1,130 +1,157 @@
-import {createHash} from 'node:crypto'
-import {isDeepStrictEqual} from 'node:util'
+import {execFileSync} from 'node:child_process'
+import {mkdirSync, readFileSync, writeFileSync} from 'node:fs'
+import {createRequire} from 'node:module'
+import {join, resolve} from 'node:path'
+import {pathToFileURL} from 'node:url'
 
 import {
   createReleaseDocument,
   deriveReleaseIdentity,
-  extractPublicChangelog,
   parseReleaseDocument,
 } from './model.mjs'
 
-function requireValue(condition, message) {
-  if (!condition) throw new Error(message)
+/** Read a selected checkout and describe release preparation without changing it. */
+export function prepareRelease(sourceDirectory, releaseVersion) {
+  const identity = deriveReleaseIdentity(releaseVersion)
+  const source = resolve(sourceDirectory)
+  const git = (...args) =>
+    execFileSync('git', ['-C', source, ...args], {encoding: 'utf8'}).trim()
+  if (git('status', '--porcelain', '--untracked-files=no')) {
+    throw new Error(
+      'The source checkout has tracked changes. Commit or discard them first.',
+    )
+  }
+  if (git('rev-parse', '--is-shallow-repository') !== 'false') {
+    throw new Error('Full Git history is required to generate the changelog.')
+  }
+  const sourceSha = git('rev-parse', 'HEAD')
+  const packageVersion = JSON.parse(
+    readFileSync(join(source, 'package.json'), 'utf8'),
+  ).version
+  const require = createRequire(join(source, 'package.json'))
+  delete require.cache[require.resolve('./app.config.js')]
+  const expo = require('./app.config.js')({}).expo
+  if (packageVersion !== releaseVersion || expo.version !== releaseVersion) {
+    throw new Error(
+      `Requested ${releaseVersion}, but package version is ${packageVersion} and Expo version is ${expo.version}.`,
+    )
+  }
+  if (expo.runtimeVersion?.policy !== 'appVersion') {
+    throw new Error(
+      'Expected Expo runtimeVersion.policy to be appVersion. Review the runtime policy before preparing this release.',
+    )
+  }
+  const previousTag =
+    git('tag', '--merged', sourceSha, '--sort=-version:refname')
+      .split('\n')
+      .find(
+        tag =>
+          /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(tag) &&
+          tag !== releaseVersion,
+      ) || null
+  const changelog =
+    git(
+      'log',
+      '--no-merges',
+      '--pretty=format:- %s',
+      previousTag ? `${previousTag}..${sourceSha}` : sourceSha,
+    ) || '- No changes since the previous release.'
+  const document = createReleaseDocument(releaseVersion, changelog)
+  const {publicChangelog} = parseReleaseDocument(document, {
+    filename: identity.filename,
+  })
+  return {
+    mode: 'dry-run',
+    identity,
+    sourceSha,
+    packageVersion,
+    expoVersion: expo.version,
+    runtimePolicy: expo.runtimeVersion.policy,
+    previousTag,
+    document,
+    publicChangelog,
+    steps: [
+      `Create ${identity.branch} from ${sourceSha}.`,
+      `Commit ${identity.filename} to that branch. Its contents are included below.`,
+      `Create draft GitHub Release "${identity.githubReleaseName}" with tag ${identity.tag} and the public notes below.`,
+      'Request production iOS, Android, and web builds from the prepared commit.',
+      'After successful builds, record their actual build numbers and source commit in the release file.',
+      'Leave the app release to a person.',
+    ],
+    notChecked: [
+      'Existing GitHub branches, tags, and releases are not checked for conflicts or safe reuse.',
+      'Builds, credentials, store submissions, and deployment are not exercised.',
+      'The prepared commit, build numbers, and final release file do not exist yet.',
+      'Translations are not refreshed. Release notes are provisional commit titles.',
+    ],
+  }
 }
 
-/**
- * Plan against an explicit simulated resource snapshot. No Git or GitHub writes.
- * Candidate IDs deliberately cannot be mistaken for deployable Git SHAs.
- */
-export function planPreparation(input, observed = {}) {
-  const identity = deriveReleaseIdentity(input.releaseVersion)
-  requireValue(
-    typeof input.sourceSha === 'string' &&
-      /^[0-9a-f]{40}$/.test(input.sourceSha),
-    'sourceSha must be a resolved full commit SHA.',
-  )
-  for (const key of ['packageVersion', 'expoVersion', 'runtimeVersion']) {
-    requireValue(
-      input[key] === identity.version,
-      `${key} must match releaseVersion.`,
-    )
-  }
-  requireValue(
-    observed !== null &&
-      typeof observed === 'object' &&
-      !Array.isArray(observed),
-    'An explicit resource snapshot is required.',
-  )
-  const document = createReleaseDocument(identity.version, input.changelog)
-  parseReleaseDocument(document, {
-    filename: identity.filename,
-    stage: 'prepared',
-  })
-  const candidate = {
-    sourceSha: input.sourceSha,
-    filename: identity.filename,
-    document,
-    releaseVersion: identity.version,
-  }
-  const candidateId = `simulation:${createHash('sha256').update(JSON.stringify(candidate)).digest('hex')}`
-  const expected = {
-    candidate: {id: candidateId, ...candidate},
-    branch: {name: identity.branch, candidateId},
-    tag: {name: identity.tag, candidateId},
-    release: {
-      name: identity.githubReleaseName,
-      tag: identity.tag,
-      candidateId,
-      draft: true,
-      body: extractPublicChangelog(document),
-    },
-  }
-  for (const key of Object.keys(observed)) {
-    requireValue(
-      Object.hasOwn(expected, key),
-      `Unknown resource in snapshot: ${key}`,
-    )
-  }
-  const actions = []
-  const conflicts = []
-  for (const [resource, value] of Object.entries(expected)) {
-    const existing = observed[resource]
-    if (existing === undefined) {
-      actions.push({resource, action: 'create', expected: value})
-    } else if (isDeepStrictEqual(existing, value)) {
-      actions.push({resource, action: 'reuse', expected: value})
-    } else {
-      conflicts.push(
-        `${resource} exists with different or unverifiable identity; leave it unchanged.`,
+/** Format the same report for the terminal and the Actions summary. */
+export function renderReport(report) {
+  return [
+    `# Release ${report.identity.version}: dry run`,
+    '',
+    'Version checks passed. No release branch, commit, tag, GitHub Release, build, or deployment was created.',
+    '',
+    `- Source commit: ${report.sourceSha}`,
+    `- Package / Expo version: ${report.packageVersion} / ${report.expoVersion}`,
+    `- Runtime policy: ${report.runtimePolicy}`,
+    `- Previous release tag: ${report.previousTag ?? 'none (using all reachable history)'}`,
+    `- Release branch: ${report.identity.branch}`,
+    `- Release tag: ${report.identity.tag}`,
+    `- GitHub Release: ${report.identity.githubReleaseName}`,
+    '',
+    '## What a real run would do',
+    '',
+    ...report.steps.map((step, index) => `${index + 1}. ${step}`),
+    '',
+    '## Still unverified',
+    '',
+    ...report.notChecked.map(item => `- ${item}`),
+    '',
+    `## ${report.identity.filename}`,
+    '',
+    '<pre>',
+    report.document
+      .replaceAll('&', '&amp;')
+      .replaceAll('<', '&lt;')
+      .replaceAll('>', '&gt;'),
+    '</pre>',
+    '',
+    '## Public release notes',
+    '',
+    report.publicChangelog,
+    '',
+  ].join('\n')
+}
+
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
+  try {
+    const [version, source, output, ...extra] = process.argv.slice(2)
+    if (!version || !source || extra.length) {
+      throw new Error(
+        'Usage: node scripts/release/prepare.mjs VERSION SOURCE_DIRECTORY [NEW_OUTPUT_DIRECTORY]',
       )
     }
-  }
-  // A matching ref without its candidate provenance is not safe to reconstruct.
-  if (
-    observed.candidate === undefined &&
-    ['branch', 'tag', 'release'].some(key => observed[key] !== undefined)
-  ) {
-    conflicts.push(
-      'Existing resources have no candidate provenance; leave them unchanged.',
-    )
-  }
-  return {
-    mode: 'simulation',
-    status: conflicts.length ? 'blocked' : 'ready',
-    identity,
-    sourceSha: input.sourceSha,
-    candidateId,
-    document,
-    publicChangelog: expected.release.body,
-    conflicts,
-    actions: conflicts.length ? [] : actions,
-  }
-}
-
-/**
- * Execute only in a copied in-memory snapshot. stopAfter models a crash after
- * a durable step but before the following step (including a lost final response).
- */
-export function simulatePreparation(input, observed = {}, {stopAfter} = {}) {
-  requireValue(
-    stopAfter === undefined ||
-      (Number.isInteger(stopAfter) && stopAfter >= 0 && stopAfter <= 4),
-    'stopAfter must be an integer from 0 through 4.',
-  )
-  const plan = planPreparation(input, observed)
-  const state = structuredClone(observed)
-  const events = []
-  if (plan.status === 'blocked') return {...plan, state, events}
-  for (const step of plan.actions) {
-    if (events.length === stopAfter)
-      return {...plan, status: 'interrupted', state, events}
-    state[step.resource] = structuredClone(step.expected)
-    events.push({resource: step.resource, action: step.action})
-  }
-  return {
-    ...plan,
-    status: stopAfter === 4 ? 'interrupted' : 'complete',
-    state,
-    events,
+    const report = prepareRelease(source, version)
+    const markdown = renderReport(report)
+    if (output) {
+      mkdirSync(output)
+      for (const [name, content] of Object.entries({
+        'README.md': markdown,
+        'report.json': JSON.stringify(report, null, 2) + '\n',
+        [report.identity.filename]: report.document,
+        'github-release-body.md': report.publicChangelog + '\n',
+      }))
+        writeFileSync(join(output, name), content, {flag: 'wx'})
+    }
+    process.stdout.write(markdown)
+  } catch (error) {
+    process.stderr.write(`${error.message}\n`)
+    process.exitCode = 1
   }
 }

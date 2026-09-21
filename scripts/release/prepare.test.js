@@ -1,139 +1,116 @@
-/* oxlint-disable import/no-nodejs-modules -- This suite exercises a Node CLI and temporary report files. */
-import {spawnSync} from 'node:child_process'
-import {mkdtempSync, readdirSync, readFileSync, rmSync} from 'node:fs'
+/* oxlint-disable import/no-nodejs-modules -- This suite exercises a Node CLI with temporary Git repositories. */
+import {execFileSync, spawnSync} from 'node:child_process'
+import {mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs'
 import {tmpdir} from 'node:os'
 import {join, resolve} from 'node:path'
-import {pathToFileURL} from 'node:url'
 
-const moduleUrl = pathToFileURL(resolve('scripts/release/prepare.mjs')).href
-const demoUrl = pathToFileURL(resolve('scripts/release/prepare-demo.mjs')).href
-const input = {
-  releaseVersion: '1.133.0',
-  sourceSha: 'a'.repeat(40),
-  packageVersion: '1.133.0',
-  expoVersion: '1.133.0',
-  runtimeVersion: '1.133.0',
-  changelog: '- A change',
+const cli = resolve('scripts/release/prepare.mjs')
+let directory
+let source
+
+function git(...args) {
+  return execFileSync('git', ['-C', source, ...args], {encoding: 'utf8'}).trim()
 }
 
-/**
- * Run the actual ESM modules without applying the app's Babel transforms.
- * @returns {{value?: unknown, error?: string}}
- */
-function evaluate(code, data = {}) {
-  const result = spawnSync(
+function run(version = '1.2.3', output) {
+  return spawnSync(
     process.execPath,
-    [
-      '--input-type=module',
-      '-e',
-      `
-    import {readFileSync} from 'node:fs'
-    import {planPreparation, simulatePreparation} from ${JSON.stringify(moduleUrl)}
-    import {runDemo, renderReport} from ${JSON.stringify(demoUrl)}
-    const data = JSON.parse(readFileSync(0, 'utf8'))
-    try {
-      const value = (() => { ${code} })()
-      process.stdout.write(JSON.stringify({value}))
-    } catch (error) {
-      process.stdout.write(JSON.stringify({error: error.message}))
-    }
-  `,
-    ],
-    {encoding: 'utf8', input: JSON.stringify(data)},
+    [cli, version, source, ...(output ? [output] : [])],
+    {encoding: 'utf8'},
   )
-  if (result.status !== 0) throw new Error(result.stderr)
-  return JSON.parse(result.stdout)
 }
 
-test('the self-checking demo produces deterministic reviewer evidence', () => {
-  expect(
-    evaluate(
-      'return JSON.stringify(runDemo()) === JSON.stringify(runDemo()) && renderReport(runDemo()) === renderReport(runDemo())',
-    ),
-  ).toEqual({value: true})
+beforeEach(() => {
+  directory = mkdtempSync(join(tmpdir(), 'release-dry-run-'))
+  source = join(directory, 'source')
+  execFileSync('git', ['init', '--quiet', source])
+  git('config', 'user.email', 'test@example.com')
+  git('config', 'user.name', 'Test')
+  git('config', 'commit.gpgsign', 'false')
+  git('config', 'tag.gpgsign', 'false')
+  git('config', 'core.hooksPath', '/dev/null')
+  writeFileSync(join(source, 'package.json'), '{"version":"1.2.3"}')
+  writeFileSync(
+    join(source, 'app.config.js'),
+    "module.exports = () => ({expo: {version: '1.2.3', runtimeVersion: {policy: 'appVersion'}}})",
+  )
+  git('add', '.')
+  git('commit', '--quiet', '-m', 'Old change')
+  git('tag', '1.2.2')
+  writeFileSync(join(source, 'change.txt'), 'change')
+  git('add', '.')
+  git('commit', '--quiet', '-m', 'New change')
 })
 
-test('rejects noncanonical release versions', () => {
-  expect(
-    evaluate('return planPreparation(data)', {
-      ...input,
-      releaseVersion: '01.2.3',
-    }).error,
-  ).toContain('strict x.y.z')
-})
+afterEach(() => rmSync(directory, {recursive: true, force: true}))
 
-test('requires a resolved commit instead of a mutable branch name', () => {
-  expect(
-    evaluate('return planPreparation(data)', {...input, sourceSha: 'main'})
-      .error,
-  ).toContain('resolved full commit SHA')
-})
-
-test('an invalid generated changelog is rejected before planning resources', () => {
-  expect(
-    evaluate('return planPreparation(data)', {
-      ...input,
-      changelog: '- Change\n\n## Unsupported\n\n- Hidden content',
-    }).error,
-  ).toContain('Unsupported public changelog section')
-})
-
-test('draft body excludes operational metadata and delimiters', () => {
-  expect(
-    evaluate(
-      `
-    const plan = planPreparation(data)
-    return {body: plan.publicChangelog, name: plan.identity.githubReleaseName, idIsSimulated: plan.candidateId.startsWith('simulation:')}
-  `,
-      input,
-    ),
-  ).toEqual({
-    value: {
-      body: '## Initial release\n\n- A change',
-      name: 'Release 1.133.0',
-      idIsSimulated: true,
-    },
-  })
-})
-
-test('simulation isolates caller snapshots from subsequent changes', () => {
-  expect(
-    evaluate(
-      `
-      const original = simulatePreparation(data, {}, {stopAfter: 1}).state
-      const before = JSON.stringify(original)
-      const resumed = simulatePreparation(data, original)
-      resumed.state.candidate.document = 'edited output'
-      return JSON.stringify(original) === before
-    `,
-      input,
-    ),
-  ).toEqual({value: true})
-})
-
-test('CLI writes only reviewer files, refuses overwrite, and has no live mode', () => {
-  const directory = mkdtempSync(join(tmpdir(), 'release-prep-demo-'))
-  const demo = resolve('scripts/release/prepare-demo.mjs')
+test('reads real history and saves notes without changing source or refs; repeats safely', () => {
+  const before = [
+    git('rev-parse', 'HEAD'),
+    git('show-ref'),
+    git('status', '--porcelain'),
+  ]
   const output = join(directory, 'report')
-  const run = args =>
-    spawnSync(process.execPath, [demo, ...args], {
-      cwd: directory,
-      encoding: 'utf8',
-    })
-  try {
-    expect(run(['--output', output]).status).toBe(0)
-    expect(readdirSync(output).sort()).toEqual([
-      'README.md',
-      'RELEASE-1.133.0.md',
-      'github-release-body.md',
-      'report.json',
-    ])
-    const before = readFileSync(join(output, 'report.json'), 'utf8')
-    expect(run(['--output', output]).status).toBe(1)
-    expect(readFileSync(join(output, 'report.json'), 'utf8')).toBe(before)
-    expect(run(['--apply']).status).toBe(1)
-    expect(readdirSync(directory)).toEqual(['report'])
-  } finally {
-    rmSync(directory, {recursive: true, force: true})
-  }
+  const result = run('1.2.3', output)
+  expect(result.status).toBe(0)
+  expect(result.stdout).toContain(before[0])
+  expect(result.stdout).toContain('release-1.2.3')
+  expect(
+    JSON.parse(readFileSync(join(output, 'report.json'), 'utf8')),
+  ).toMatchObject({
+    mode: 'dry-run',
+    sourceSha: before[0],
+    previousTag: '1.2.2',
+    publicChangelog: '## Initial release\n\n- New change',
+  })
+  expect(
+    readFileSync(join(output, 'github-release-body.md'), 'utf8'),
+  ).not.toContain('releaseVersion:')
+  expect(run().stdout).toBe(result.stdout)
+  expect(run('1.2.3', output).status).toBe(1)
+  expect([
+    git('rev-parse', 'HEAD'),
+    git('show-ref'),
+    git('status', '--porcelain'),
+  ]).toEqual(before)
+})
+
+test('rejects invalid and mismatched versions before writing a report', () => {
+  expect(run('01.2.3').stderr).toContain('strict x.y.z')
+  expect(run('1.2.4').stderr).toContain('package version is 1.2.3')
+  expect(run('--apply').status).toBe(1)
+})
+
+test('rejects changed source instead of claiming it matches the commit', () => {
+  writeFileSync(join(source, 'change.txt'), 'uncommitted')
+  expect(run().stderr).toContain('tracked changes')
+})
+
+test('rejects a different runtime policy', () => {
+  writeFileSync(
+    join(source, 'app.config.js'),
+    "module.exports = () => ({expo: {version: '1.2.3', runtimeVersion: {policy: 'fingerprint'}}})",
+  )
+  git('add', '.')
+  git('commit', '--quiet', '-m', 'Change runtime')
+  expect(run().stderr).toContain('runtimeVersion.policy')
+})
+
+test('uses reachable history when there is no previous version tag', () => {
+  git('tag', '-d', '1.2.2')
+  expect(run().stdout).toContain('- Old change')
+  expect(run().stdout).toContain('none (using all reachable history)')
+})
+
+test('rejects shallow history instead of generating incomplete notes', () => {
+  const clone = join(directory, 'shallow')
+  execFileSync('git', [
+    'clone',
+    '--quiet',
+    '--depth=1',
+    `file://${source}`,
+    clone,
+  ])
+  source = clone
+  expect(run().stderr).toContain('Full Git history')
 })

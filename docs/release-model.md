@@ -56,16 +56,13 @@ Each successful OTA adds exactly one contiguous section (`OTA 1`, `OTA 2`, and s
 
 The release model can be exercised locally with `node scripts/release/cli.mjs`. Run it without arguments to see the available commands for creating, validating, finalizing, and updating a release document.
 
-## Manual preview
+## Release preparation dry run
 
-The **Prepare Cactus Release** workflow accepts a release version and optional source ref. It validates the checked-out package and Expo versions, generates a provisional changelog from commit titles, uploads the prepared release document as an artifact, and summarizes every derived identifier. It has read-only repository permissions and does not create a branch, tag, commit, or GitHub Release.
-
-## Preparation simulation for reviewers
-
-The [reviewer guide](release-preparation/README.md) and
-[generated walkthrough](release-preparation/example.md) demonstrate preparation,
-retry, and conflict behavior with fixtures. The read-only **Release Preparation
-Demo** check produces downloadable evidence; it creates no release resources.
+The **Prepare Cactus Release (dry run)** workflow reads the selected source,
+checks its versions, and prints the release details, provisional notes, and steps
+a real run would take. It saves those files as a downloadable artifact. It does
+not create release resources or start builds. See the
+[release preparation guide](release-preparation/README.md) for usage and limits.
 
 ## Build provenance
 
