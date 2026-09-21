@@ -3,8 +3,6 @@ import {interpolate, useAnimatedStyle} from 'react-native-reanimated'
 import {useMinimalShellMode} from '#/state/shell/minimal-mode'
 import {useShellLayout} from '#/state/shell/shell-layout'
 
-// Keep these separated so that we only pay for useAnimatedStyle that gets used.
-
 export function useMinimalShellFooterTransform() {
   const {footerMode} = useMinimalShellMode()
   const {footerHeight} = useShellLayout()
@@ -27,19 +25,4 @@ export function useMinimalShellFooterTransform() {
   })
 
   return footerTransform
-}
-
-export function useMinimalShellFabTransform() {
-  const {footerMode} = useMinimalShellMode()
-
-  const fabTransform = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          translateY: interpolate(footerMode.get(), [0, 1], [-44, 0]),
-        },
-      ],
-    }
-  })
-  return fabTransform
 }
