@@ -1,76 +1,63 @@
 # Release preparation dry run
 
-Choose a source branch, tag, or commit and the version you want to release.
-The **Prepare Cactus Release (dry run)** action checks that the package and Expo
-versions match, then puts together the release notes from Git history.
+Check a proposed release without creating branches or tags, starting builds, or
+publishing anything.
 
-At the end, it prints the source commit, release branch and tag names, the release
-file, public notes, and the steps a real release would take. You can share the
-Actions summary with reviewers or download the report and notes from that run.
-This uses the source you picked; the old demo and its made-up scenarios are gone.
+## Run it in GitHub
 
-A real run would create the release branch, commit the release file, create a
-draft GitHub Release, and request native and web builds. Once those builds finish,
-it would record their build numbers in the release file. Releasing the app would
-still be a manual step.
+Run **Prepare Cactus Release (dry run)** with:
 
-This action only checks the source and writes the report. It doesn't create those
-resources, run builds, submit to stores, or deploy anything. It has read-only
-repository permissions and no release or store secrets.
+- **Source:** the branch, tag, or commit you want to release.
+- **Version:** an `x.y.z` version matching the source's package and Expo versions.
 
-## What still needs work
+The action checks the source and existing GitHub release resources. It prints a
+summary and saves a downloadable report with the release file and public notes.
+Both scripts run automatically in the action; there are no separate script commands
+to run. Share the completed run with reviewers.
 
-The dry run now reads GitHub and marks each release branch, tag, release file,
-and draft as something to create, reuse, or stop over. It verifies a reusable
-preparation commit has the selected source as its only parent, the exact release
-file, and no other file changes. A matching branch still at the source can be
-reused before that commit is made. Tags must resolve to the verified preparation
-commit; drafts must match the tag, name, and public notes. Published releases,
-moved branches, changed files, and API failures stop the check. The report is
-saved even when these checks fail.
+## Read the results
 
-GitHub only guarantees draft visibility to users with push access. The action
-keeps read-only permissions, so if its token cannot establish that visibility,
-the report marks that check as blocked instead of assuming no draft exists.
-Locally, you can run the checker with an authenticated account that has push
-access; the checker still only makes GET requests.
+The report lists the source commit, release names, notes, and proposed steps.
+Each branch, tag, release file, and GitHub draft gets a result:
 
-These checks describe GitHub at the time of the run. A live release will need to
-recheck before each write and handle concurrent changes. Actually creating the
-resources, wiring up all three builds, and saving the completed release file
-are still to do. The separate native workflows retain their recovery support.
+- **Create:** it doesn't exist yet.
+- **Reuse:** it matches what this release needs.
+- **Blocked:** something differs or couldn't be checked. The whole run stops.
 
-The notes are provisional commit titles since the highest version tag reachable
-from the selected commit, excluding the requested version. With no earlier tag,
-it uses all reachable history. Translations aren't refreshed. The version check
-currently requires Expo's `appVersion` runtime policy; fingerprint runtime support
-will need a separate adjustment.
+The report is saved even when a GitHub check blocks the run.
 
-## Run it locally
+### What counts as a match?
 
-Use a clean checkout with full Git history. The version must match that checkout:
+- **Branch:** it still points to the selected source, or has exactly one
+  preparation commit whose only change is the expected release file.
+- **Release file:** its contents match exactly, so no new commit is needed.
+- **Tag:** it points to the verified preparation commit.
+- **Draft:** its tag, name, and public notes match, and it hasn't been published.
 
-```sh
-node scripts/release/prepare.mjs 1.133.0 /path/to/source
-```
+Moved branches, changed files, published releases, and API errors block the run.
+If the token can't establish that it can see drafts, that check is blocked too.
+GitHub's [draft visibility rules](https://docs.github.com/en/rest/releases/releases#list-releases)
+require push access; the action keeps read-only permissions.
 
-To save the report and notes too, add a new output directory:
+## Where it stops
 
-```sh
-node scripts/release/prepare.mjs 1.133.0 /path/to/source /tmp/release-report
-```
+A passing report means the checks passed at that moment. It doesn't reserve or
+change anything on GitHub.
 
-The output directory must not already exist. The report contains the actual
-source commit; it doesn't invent a prepared commit or build numbers. Loading
-`app.config.js` executes the selected checkout's configuration, so use trusted
-repository code, just as you would when running other project scripts.
+A future live workflow would still need to:
 
-After saving a local report, check it against GitHub:
+- Create or reuse the branch, release file, tag, and draft.
+- Start iOS, Android, and web builds, then record their build numbers.
+- Recheck before each write in case another run changed something.
 
-```sh
-node scripts/release/check-github.mjs /tmp/release-report bluesky-social/social-app
-```
+Those actions are outside this PR's dry-run scope. Releasing the app would remain
+a manual step.
 
-Set `GH_TOKEN` in your environment first. Conflicts return a nonzero exit status
-and are included in the saved report. The checker never creates or updates remote
-resources. Draft visibility follows [GitHub's release API rules](https://docs.github.com/en/rest/releases/releases#list-releases).
+Other limits:
+
+- **Notes need review.** They're commit titles since the highest reachable version
+  tag, excluding the requested version. Without an earlier tag, they include all
+  reachable history.
+- **Translations aren't refreshed.** Builds, store submissions, and deployments
+  aren't tested.
+- **Runtime policy must be `appVersion`.** Fingerprint runtimes aren't supported yet.
