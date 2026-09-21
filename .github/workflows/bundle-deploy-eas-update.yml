@@ -116,7 +116,7 @@ jobs:
             echo "version-changed=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
 
       - name: 🔧 Setup Node
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
@@ -157,7 +157,7 @@ jobs:
 
       - name: 📷 Check fingerprint and install dependencies
         id: fingerprint
-        uses: bluesky-social/github-actions/fingerprint-native@abc6a46eb4badf243f55bfd7d6cec42722456300 # v0.3.0
+        uses: bluesky-social/github-actions/fingerprint-native@2287aefd4ddca2914fd85715cbe47124b7d9f360 # v0.4.0
         with:
           profile: ${{ inputs.channel || 'testflight' }}
           previous-commit-tag: ${{ inputs.runtimeVersion }}
@@ -228,7 +228,7 @@ jobs:
       - name: ☁️ Configure AWS credentials (denis)
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
-        uses: aws-actions/configure-aws-credentials@e6de054238d6b7531b4efff3b6587d9aade6a06c # v6.2.3
+        uses: aws-actions/configure-aws-credentials@cbe3b392738ccf3f987d68400dafcf4b0624a56c # v6.2.4
         with:
           role-to-assume: arn:aws:iam::007404326489:role/denis-ci-publish
           aws-region: us-east-2
