@@ -8,70 +8,25 @@ import {
 import {Logger} from '#/logger'
 
 const logger = Logger.create(Logger.Context.Growthbook)
+const lastLoggedPayload = new WeakMap<GrowthBook, string>()
 
-/** Retain the newest known rules across SDK cache, network, and timeout updates. */
-class GrowthBookWithFallback extends GrowthBook {
-  private selectedPayload: FeatureApiResponse
-  private selectedSource: 'html-fallback' | 'sdk' = 'html-fallback'
-  private lastLoggedPayload: string | undefined
-  private pendingPayload = Promise.resolve()
+function logPayload(client: GrowthBook, source: 'html-fallback' | 'sdk'): void {
+  const payload = client.getDecryptedPayload()
+  const logKey = `${source}:${payload.dateUpdated}`
+  if (lastLoggedPayload.get(client) === logKey) return
 
-  constructor(options: Options, fallback: FeatureApiResponse) {
-    super(options)
-    this.selectedPayload = completePayload(fallback)
-  }
-
-  override setPayload(payload: FeatureApiResponse): Promise<void> {
-    /*
-     * init() sets an empty payload after a timeout, and refreshes can return an
-     * older SDK cache entry. Neither should replace newer HTML or network data.
-     * refreshFeatures() also reapplies getPayload() after failure; that must
-     * retain its source until the SDK actually supplies another payload.
-     */
-    if (
-      payload !== this.getPayload() &&
-      payload.features &&
-      Date.parse(payload.dateUpdated ?? '') >=
-        Date.parse(this.selectedPayload.dateUpdated ?? '')
-    ) {
-      this.selectedPayload = completePayload(payload)
-      this.selectedSource = 'sdk'
-    }
-    const selected = this.selectedPayload
-    const source = this.selectedSource
-    const pending = this.pendingPayload.then(async () => {
-      await super.setPayload(selected)
-      const logKey = `${source}:${selected.dateUpdated}`
-      if (this.lastLoggedPayload !== logKey) {
-        this.lastLoggedPayload = logKey
-        logger.info(
-          source === 'html-fallback'
-            ? 'GrowthBook HTML fallback applied'
-            : 'GrowthBook SDK configuration applied',
-          {
-            source,
-            dateUpdated: selected.dateUpdated,
-            featureCount: Object.keys(this.getFeatures()).length,
-            savedGroupCount: Object.keys(
-              this.getDecryptedPayload().savedGroups ?? {},
-            ).length,
-          },
-        )
-      }
-    })
-    // Keep later updates usable even if applying one payload fails.
-    this.pendingPayload = pending.catch(() => {})
-    return pending
-  }
-
-  override async refreshFeatures(options?: RefreshFeaturesOptions) {
-    await super.refreshFeatures(options)
-    /*
-     * The SDK resolves without setting a payload on error/timeout. Session
-     * startup awaits this shorter refresh rather than the initial 2s request.
-     */
-    await this.setPayload(this.getPayload())
-  }
+  lastLoggedPayload.set(client, logKey)
+  logger.info(
+    source === 'html-fallback'
+      ? 'GrowthBook HTML fallback applied'
+      : 'GrowthBook SDK configuration applied',
+    {
+      source,
+      dateUpdated: payload.dateUpdated,
+      featureCount: Object.keys(client.getFeatures()).length,
+      savedGroupCount: Object.keys(payload.savedGroups ?? {}).length,
+    },
+  )
 }
 
 /** The SDK merges optional fields; an omitted group/experiment list must clear the previous one. */
@@ -88,7 +43,38 @@ export function createGrowthBook(
   options: Options,
   fallback?: FeatureApiResponse,
 ): GrowthBook {
-  return fallback
-    ? new GrowthBookWithFallback(options, fallback)
-    : new GrowthBook(options)
+  if (!fallback) return new GrowthBook(options)
+
+  const payload = completePayload(fallback)
+  /* initSync does not copy savedGroups into the evaluation context in v1.6.5. */
+  const client = new GrowthBook({...options, savedGroups: payload.savedGroups})
+  client.initSync({payload})
+  logPayload(client, 'html-fallback')
+  return client
+}
+
+/** Refresh a synchronously initialized fallback without allowing older cache data to win. */
+export async function refreshGrowthBook(
+  client: GrowthBook,
+  options?: RefreshFeaturesOptions,
+): Promise<void> {
+  const previous = client.getPayload()
+  await client.refreshFeatures({...options, skipCache: true})
+  let current = client.getPayload()
+  const currentRevision = Date.parse(current.dateUpdated ?? '')
+
+  if (
+    !Number.isFinite(currentRevision) ||
+    currentRevision < Date.parse(previous.dateUpdated ?? '')
+  ) {
+    await client.setPayload(previous)
+    return
+  }
+  if (current === previous) return
+
+  if (!current.savedGroups || !current.experiments) {
+    current = completePayload(current)
+    await client.setPayload(current)
+  }
+  logPayload(client, 'sdk')
 }

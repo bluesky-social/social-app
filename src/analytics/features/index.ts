@@ -5,7 +5,7 @@ import {msg} from '@lingui/core/macro'
 
 import {Logger} from '#/logger'
 import {readFeatureBootstrap} from '#/analytics/features/bootstrap'
-import {createGrowthBook} from '#/analytics/features/client'
+import {createGrowthBook, refreshGrowthBook} from '#/analytics/features/client'
 import {Features} from '#/analytics/features/types'
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
@@ -43,37 +43,39 @@ const sdkOptions = {
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
   enableDevMode: env.IS_INTERNAL,
 }
-export const features = createGrowthBook(
-  sdkOptions,
-  readFeatureBootstrap(sdkOptions),
-)
+const bootstrap = readFeatureBootstrap(sdkOptions)
+export const features = createGrowthBook(sdkOptions, bootstrap)
 
 /**
  * Initializer promise that must be awaited before using the GrowthBook
- * instance or rendering the `AnalyticsFeaturesContext`. Note: this may not be
- * fully initialized if it takes longer than `TIMEOUT_INIT` to initialize. In
- * that case, we may see a flash of uncustomized content until the
- * initialization completes.
+ * instance or rendering the `AnalyticsFeaturesContext`. A valid HTML bootstrap
+ * is available synchronously while this revalidates it. Without one, a slow
+ * initialization may cause a flash of uncustomized content.
  */
-export const init = features.init({timeout: TIMEOUT_INIT}).then(res => {
-  if (!res.success) {
-    logger.warn('GrowthBook initialization failed or timed out', {
-      source: res.source,
-      safeMessage: res.error?.toString(),
+export const init = bootstrap
+  ? refreshGrowthBook(features, {timeout: TIMEOUT_INIT})
+  : features.init({timeout: TIMEOUT_INIT}).then(res => {
+      if (!res.success) {
+        logger.warn('GrowthBook initialization failed or timed out', {
+          source: res.source,
+          safeMessage: res.error?.toString(),
+        })
+      }
     })
-  }
-})
 
 /**
  * Refresh feature gates from GrowthBook.
  */
 export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
-  await features.refreshFeatures({
+  const options = {
     timeout:
       strategy === 'prefer-low-latency'
         ? TIMEOUT_PREFER_LOW_LATENCY
         : TIMEOUT_PREFER_FRESH_GATES,
-  })
+  }
+  await (bootstrap
+    ? refreshGrowthBook(features, options)
+    : features.refreshFeatures(options))
 }
 
 export function getFeatures() {
