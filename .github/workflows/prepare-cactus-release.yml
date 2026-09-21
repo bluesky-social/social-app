@@ -21,7 +21,6 @@ permissions:
 
 jobs:
   prepare:
-    if: github.repository == 'bluesky-social/social-app'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout release tooling
