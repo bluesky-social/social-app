@@ -500,17 +500,26 @@ This keeps the UI and store model simple while producing the protocol's per-post
 
 ## 14. Reordering is a domain capability
 
-The store will support moving an existing post without changing its identity or recreating its content.
+The store exposes `movePost(postId, toIndex)`, where `toIndex` is the desired
+zero-based final index in the current insertion order. A successful move
+returns the named result `{movedPostId}`. A missing post, non-integer or
+out-of-range index, same-position move, or destroyed-store call returns
+`undefined` without changing the snapshot or notifying subscribers.
 
-A reorder operation must preserve:
+A real move creates a new thread snapshot and marks it dirty, but only rebuilds
+the ordered posts map. It preserves every post object and therefore preserves:
 
 - Post ID.
-- Text and embeds.
-- Media IDs.
+- Text, labels, languages, and embeds.
+- Media IDs and all attachment metadata.
 - In-flight upload ownership.
 - Link-resolution task ownership.
+- Thread-level reply, gate, and draft state.
 
-Task 0005 adds this action and tester controls; the planner and tests honor the resulting order. Production reordering UI is outside the current plan.
+Because async work addresses posts and media by stable IDs, completions continue
+to update the correct post after it moves. The debug tester exposes disabled
+boundary-aware up/down controls; production reordering UI remains outside the
+current plan.
 
 ## 15. Submission is split into planning and execution
 

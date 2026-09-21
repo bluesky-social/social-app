@@ -166,6 +166,41 @@ export function createThreadStore(options: {
     return {addedPostId: newId}
   }
 
+  /**
+   * Moves an existing post to its final zero-based thread index without
+   * changing its identity. Same-position, invalid, and destroyed-store calls
+   * return undefined without publishing a snapshot.
+   */
+  function movePost(
+    postId: string,
+    toIndex: number,
+  ): {movedPostId: string} | undefined {
+    if (destroyed) return undefined
+    const postIds = Object.keys(state.posts)
+    const fromIndex = postIds.indexOf(postId)
+    if (
+      fromIndex < 0 ||
+      !Number.isInteger(toIndex) ||
+      toIndex < 0 ||
+      toIndex >= postIds.length ||
+      fromIndex === toIndex
+    ) {
+      return undefined
+    }
+
+    mutateState(s => {
+      const entries = Object.entries(s.posts)
+      const [entry] = entries.splice(fromIndex, 1)
+      entries.splice(toIndex, 0, entry)
+      const next: Record<string, types.ThreadPost> = {}
+      for (const [id, post] of entries) next[id] = post
+      s.posts = next
+      s.isDirty = true
+      return s
+    })
+    return {movedPostId: postId}
+  }
+
   function removePost(postId: string) {
     mutateState(s => {
       if (Object.keys(s.posts).length <= 1 || !(postId in s.posts)) return null
@@ -724,6 +759,7 @@ export function createThreadStore(options: {
       setPostgateConfiguration,
       setPostgateEmbeddingRules,
       addPost,
+      movePost,
       removePost,
       addMedia,
       removeMedia,

@@ -71,15 +71,29 @@ function PostList() {
   return (
     <View style={[a.gap_md]}>
       {postIds.map((postId, i) => (
-        <PostRow key={postId} postId={postId} index={i} />
+        <PostRow
+          key={postId}
+          postId={postId}
+          index={i}
+          isLast={i === postIds.length - 1}
+        />
       ))}
     </View>
   )
 }
 
-function PostRow({postId, index}: {postId: string; index: number}) {
+function PostRow({
+  postId,
+  index,
+  isLast,
+}: {
+  postId: string
+  index: number
+  isLast: boolean
+}) {
   const post = useThreadPost(postId)
   const store = useThreadStore()
+  const {t: l} = useLingui()
   const t = useTheme()
 
   // Composer is uncontrolled - defaultValue is read once on mount and the
@@ -103,15 +117,39 @@ function PostRow({postId, index}: {postId: string; index: number}) {
         <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
           [{index}] {postId}
         </Text>
-        {index > 0 && (
+        <View style={[a.flex_row, a.gap_xs]}>
           <Button
-            label={`Remove post ${index}`}
+            disabled={index === 0}
+            label={l`Move post ${index + 1} up`}
+            testID={`debug-composer-post-${postId}-move-up`}
             size="tiny"
             color="secondary"
-            onPress={() => store.actions.removePost(postId)}>
-            <ButtonText>x</ButtonText>
+            onPress={() => store.actions.movePost(postId, index - 1)}>
+            <ButtonText>
+              <Trans>Up</Trans>
+            </ButtonText>
           </Button>
-        )}
+          <Button
+            disabled={isLast}
+            label={l`Move post ${index + 1} down`}
+            testID={`debug-composer-post-${postId}-move-down`}
+            size="tiny"
+            color="secondary"
+            onPress={() => store.actions.movePost(postId, index + 1)}>
+            <ButtonText>
+              <Trans>Down</Trans>
+            </ButtonText>
+          </Button>
+          {index > 0 && (
+            <Button
+              label={l`Remove post ${index + 1}`}
+              size="tiny"
+              color="secondary"
+              onPress={() => store.actions.removePost(postId)}>
+              <ButtonText>x</ButtonText>
+            </Button>
+          )}
+        </View>
       </View>
       <Composer
         label="Post text"
