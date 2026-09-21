@@ -1,8 +1,12 @@
 ---
 name: Prepare Cactus Release (dry run)
-run-name: Dry run release ${{ inputs.releaseVersion }} from ${{ inputs.sourceRef }}
+run-name: Dry run release ${{ inputs.releaseVersion || '(source version)' }} from ${{ inputs.sourceRef || github.sha }}
 
 on:
+  # Temporary branch test; remove before merging.
+  push:
+    branches:
+      - app-2943-ota
   workflow_dispatch:
     inputs:
       releaseVersion:
@@ -31,7 +35,7 @@ jobs:
       - name: Checkout selected source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: ${{ inputs.sourceRef }}
+          ref: ${{ inputs.sourceRef || github.sha }}
           path: source
           fetch-depth: 0
           persist-credentials: false
@@ -43,6 +47,9 @@ jobs:
         env:
           RELEASE_VERSION: ${{ inputs.releaseVersion }}
         run: |
+          if [ "$GITHUB_EVENT_NAME" = "push" ]; then
+            RELEASE_VERSION=$(node -p "require('./source/package.json').version")
+          fi
           node tooling/scripts/release/prepare.mjs "$RELEASE_VERSION" source release-preparation
       - name: Plan release requests and recheck GitHub
         env:
