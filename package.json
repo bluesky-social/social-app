@@ -35,7 +35,8 @@
         "react-native-pager-view",
         "react-native-view-shot",
         "react-native-webview",
-        "react-native-worklets"
+        "react-native-worklets",
+        "typescript"
       ]
     }
   },
@@ -311,7 +312,7 @@
     "sharp": "^0.35.4",
     "svgo": "^4.0.2",
     "ts-plugin-sort-import-suggestions": "^1.0.4",
-    "typescript": "^6.0.3",
+    "typescript": "npm:@typescript/typescript6@^6.0.2",
     "webpack-bundle-analyzer": "^4.10.1"
   },
   "jest": {
