@@ -336,7 +336,7 @@ export function PublicationCard({
         shouldProxy
         to={view.source.uri}
         label={
-          view.source.title ? l`View ${view.source.title}` : l`View publication`
+          view.source.title ? l`View ${view.source.title}` : l`View publisher`
         }
         onPress={onPress}
         onLongPress={onLongPress}
@@ -444,7 +444,7 @@ export function SubscribeButton({
   const highlightedPublisher = matchStandardSitePublisher(view)
   const cta = highlightedPublisher
     ? l`Subscribe on ${highlightedPublisher.name}`
-    : l`View publication`
+    : l`Discover more from publisher`
 
   /*
    * The custom site theme paints the button background with `accent` and the
@@ -468,14 +468,14 @@ export function SubscribeButton({
 
   if (!view.source) return null
 
-  const publicationTitle = view.source.title
+  const publisherTitle = view.source.title
   const label = highlightedPublisher
-    ? publicationTitle
-      ? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
+    ? publisherTitle
+      ? l`Subscribe to ${publisherTitle} on ${highlightedPublisher.name}`
       : l`Subscribe on ${highlightedPublisher.name}`
-    : publicationTitle
-      ? l`View ${publicationTitle}`
-      : l`View publication`
+    : publisherTitle
+      ? l`Discover more from ${publisherTitle}`
+      : l`Discover more from publisher`
 
   const onPress = () => {
     playHaptic('Light')
@@ -666,7 +666,7 @@ export function PublicationFooter({
         shouldProxy
         to={view.source.uri}
         label={
-          view.source.title ? l`View ${view.source.title}` : l`View publication`
+          view.source.title ? l`View ${view.source.title}` : l`View publisher`
         }
         onPress={onPress}
         onLongPress={onLongPress}
