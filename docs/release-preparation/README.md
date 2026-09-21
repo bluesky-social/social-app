@@ -1,74 +1,75 @@
-# Reviewing release preparation
+# Release preparation demo
 
-This PR demonstrates release preparation without creating real release resources.
-Start with the [generated example](./example.md): it shows the first run, an exact
-retry, interruptions after every step, and conflicting resources. The example is
-committed so it can be shared directly from the PR, without downloading anything.
+This demo shows how release prep should handle a normal run, retries, and
+conflicts. It uses made-up release data and keeps all changes in memory. It
+won't create branches or tags, contact GitHub, or kick off a build.
 
-The **Release Preparation Demo** CI check also uploads a
-`release-preparation-demo-<run>-<attempt>` artifact containing:
+Start with the [example walkthrough](./example.md). You can read it right in the
+PR. The **Release Preparation Demo** CI job also includes the walkthrough in its
+summary and uploads a `release-preparation-demo-<run>-<attempt>` artifact with:
 
-- `README.md`: the same walkthrough shown in the job summary.
-- `report.json`: inputs, planned actions, conflict reasons, and resulting snapshots.
-- `RELEASE-1.133.0.md`: the proposed canonical release document.
-- `github-release-body.md`: only the public changelog, without operational metadata.
+- `README.md` — the walkthrough.
+- `report.json` — the inputs and the state of each simulated release after each run.
+- `RELEASE-1.133.0.md` — an example release file, including its metadata.
+- `github-release-body.md` — the public release notes extracted from that file.
 
-## What the demo verifies
+## What to look for
 
-The planner validates the release, package, Expo, and effective runtime versions
-and requires a resolved source SHA. It derives all resource names from the release
-version, validates the generated release document, and binds the document and
-source to a deterministic simulated candidate identity.
+On the first run, prep checks that the package, Expo, and runtime versions all
+match the requested release version. It generates the release file and derives
+the branch, tag, and GitHub Release names from that version.
 
-It then preflights all four resources: candidate, release branch, immutable native
-tag, and draft GitHub Release. Existing resources are reused only when their
-recorded identity and contents match. Any conflict blocks the entire plan before
-any simulated change. Missing provenance also blocks preparation. Nothing is
-force-moved, overwritten, or published.
+The demo then simulates creating the candidate commit, release branch, tag, and
+draft GitHub Release. Before doing any of that, it checks whether something with
+the same identity already exists:
 
-The executor operates on a copied in-memory snapshot. Fixtures simulate an
-interruption after each durable step, including after the draft release exists
-but before success is acknowledged. An exact retry reuses completed steps and
-finishes the rest. Changing the source or changelog produces a conflict rather
-than silently replacing the candidate.
+- If it matches, reuse it.
+- If it differs, or there's not enough information to verify it, stop.
 
-## Safety and limits
+The retry examples stop after each step, then run prep again. Completed steps
+should be reused, and the remaining steps should finish with the same result as
+an uninterrupted run. Changing the source commit or changelog should cause a
+conflict. Prep should never replace an existing release to make a retry work.
 
-There is no live adapter, token input, `--apply` option, Git subprocess, or network
-client. Running the demo without arguments prints to stdout. `--output` writes
-only to a new directory and refuses to overwrite an existing report. CI has
-`contents: read`, disables checkout credential persistence, and receives no
-release or store secrets. Its only published output is the workflow artifact.
+## What's still missing
 
-All inputs and resource snapshots are fixtures, **not live GitHub observations**.
-`simulation:` candidate IDs are content digests, **not real Git commit SHAs**.
-The original source SHA and the generated candidate identity are deliberately
-separate. The demo does not claim the real release refs are available or safe to
-create. Published releases and advanced release branches intentionally conflict;
-this models initial preparation, not later release maintenance.
+This is a demo of the preparation rules, not the release workflow itself. The
+source commit is a placeholder, and IDs beginning with `simulation:` aren't Git
+SHAs. The results don't tell us whether any real branch, tag, or release exists.
+The demo covers initial preparation; an already-published release or a release
+branch that has moved will cause a conflict.
 
-This is reviewable planning logic, not a runnable production release workflow.
-Real source resolution, translation generation, committing a tree, GitHub reads
-and writes, race-safe resource creation, approval rules, builds, and release
-finalization still need implementation and validation. In particular, runtime
-validation currently models the existing app-version policy; fingerprint runtime
-integration remains coordinated work with APP-3042. No translation commands run.
+We still need to connect this to Git and GitHub, pull translations, create real
+commits, handle concurrent runs, and wire up approvals, builds, and finalization.
+The version checks also need to be reconciled with the fingerprint runtime work
+in APP-3042. The demo doesn't run translation commands.
 
-The existing **Prepare Cactus Release** workflow remains a separate, read-only
-preview of a selected source. It does not execute this simulation as a live plan.
+There's no `--apply` option or live API connection. The CI job has read-only
+repository access and no release or store secrets. The existing **Prepare Cactus
+Release** workflow is separate: it previews a selected source but doesn't carry
+out the steps shown here.
 
-## Reproduce locally
+## Run it locally
 
-From the repository root:
+From the repository root, print the walkthrough:
 
 ```sh
 node scripts/release/prepare-demo.mjs
-node scripts/release/prepare-demo.mjs --output /tmp/release-preparation-demo
-pnpm test --runInBand --watchman=false --runTestsByPath scripts/release/prepare.test.js
 ```
 
-Choose a new output directory if that path already exists. The demo self-checks
-21 scenarios without installing dependencies. Seven focused Jest tests add malformed-input,
-no-overwrite, snapshot-isolation, and CLI checks without duplicating the demo
-scenario matrix. CI compares the generated
-walkthrough to the committed example so reviewer documentation stays current.
+Or save the walkthrough and supporting files:
+
+```sh
+node scripts/release/prepare-demo.mjs --output /tmp/release-preparation-demo
+```
+
+Use a new directory each time; the demo won't overwrite an existing one. It runs
+without installing dependencies and checks the expected result of each example.
+CI compares its output with the committed walkthrough to catch stale examples.
+
+The additional tests cover input validation, keeping the original data unchanged,
+and writing the report files:
+
+```sh
+pnpm test --runInBand --watchman=false --runTestsByPath scripts/release/prepare.test.js
+```
