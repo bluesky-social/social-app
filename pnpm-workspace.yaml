@@ -51,3 +51,4 @@ minimumReleaseAgeExclude:
   - '@atproto-labs/*'
   - '@bsky.app/*'
   - '@bsky/*'
+  - '@bzky/sdk@1.1.4-alpha'
