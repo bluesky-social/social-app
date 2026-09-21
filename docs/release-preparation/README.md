@@ -28,9 +28,10 @@ stops the run. The report includes request bodies, dependencies, and step result
 - **Tag:** resolves to the preparation commit.
 - **Draft:** tag, name, and public notes match; it isn't published or a prerelease.
 
-The checker blocks if it can't establish draft visibility.
-[GitHub requires push access to see drafts](https://docs.github.com/en/rest/releases/releases#list-releases);
-the action uses read-only permissions.
+The action's read-only token may not see all drafts. That check is marked
+`unverified`, and the plan finishes as `complete-with-warnings`. A draft-creation
+request includes a precondition to check for existing drafts with release
+permissions before execution. Conflicts and API errors still block the run.
 
 ## Build inputs
 

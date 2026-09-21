@@ -57,12 +57,18 @@ export function planRelease(report, repository, hashes) {
       'Final release file and manual app release.',
     ],
   }
-  if (report.github?.status !== 'ready' || !report.github.observed)
+  if (
+    !['ready', 'incomplete'].includes(report.github?.status) ||
+    !report.github.observed
+  )
     return {
       ...plan,
       status: 'blocked',
       reason: 'GitHub checks must pass before requests can be planned.',
     }
+  plan.warnings = report.github.checks
+    .filter(check => check.action === 'unverified')
+    .map(check => check.detail)
   const {identity, sourceSha, document, publicChangelog} = report
   const {sourceTreeSha, sourceTree, candidateSha} = report.github.observed
   const action = resource =>
@@ -164,6 +170,10 @@ export function planRelease(report, repository, hashes) {
       },
       ['tag'],
     )
+  if (action('GitHub Release') === 'unverified') {
+    plan.steps.find(step => step.id === 'draft').precondition =
+      `Confirm that no draft exists for tag ${identity.tag} with a token that has release permissions.`
+  }
   for (const build of buildWorkflows) {
     const path = `.github/workflows/${build.file}`
     const file = sourceTree.find(entry => entry.path === path)
@@ -210,7 +220,7 @@ export async function dryRunRelease(
       const fresh = await checkGitHub(report, read)
       step.checkedAt = fresh.github.checkedAt
       if (
-        fresh.github.status !== 'ready' ||
+        !['ready', 'incomplete'].includes(fresh.github.status) ||
         JSON.stringify(fresh.github.observed) !== baseline
       ) {
         plan.status = 'blocked'
@@ -240,7 +250,8 @@ export async function dryRunRelease(
       step.result =
         step.action === 'reuse' ? 'verified-reuse' : 'skipped-dry-run'
     }
-    if (plan.status !== 'blocked') plan.status = 'complete'
+    if (plan.status !== 'blocked')
+      plan.status = plan.warnings.length ? 'complete-with-warnings' : 'complete'
   }
   return {...checked, execution: plan}
 }

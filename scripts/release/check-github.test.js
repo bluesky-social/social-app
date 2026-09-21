@@ -24,7 +24,7 @@ function check(scenario) {
     const report = {identity: {branch:'release-1.2.3',tag:'1.2.3',filename:'RELEASE-1.2.3.md',githubReleaseName:'Release 1.2.3'},sourceSha:'source',document:'exact document',publicChangelog:'notes'}
     const file = {path:'app.js',mode:'100644',type:'blob',sha:'app'}
     const data = {
-      '': {permissions:{push:scenario !== 'hidden'}},
+      '': {permissions:{push:!scenario.includes('hidden')}},
       'git/matching-refs/heads/release-1.2.3': [{ref:'refs/heads/release-1.2.3',object:{type:'commit',sha:'candidate'}}],
       'git/matching-refs/tags/1.2.3': [{ref:'refs/tags/1.2.3',object:{type:'tag',sha:'annotated'}}],
       'git/tags/annotated': {object:{type:'commit',sha:'candidate'}},
@@ -35,11 +35,11 @@ function check(scenario) {
       'git/blobs/document': {encoding:'base64',content:Buffer.from('exact document').toString('base64')},
       'releases?per_page=100&page=1': [{id:1,tag_name:'1.2.3',draft:true,prerelease:false,name:'Release 1.2.3',body:'notes'}],
     }
-    if (scenario === 'new' || ['plan-new','plan-drift','plan-workflow'].includes(scenario)) for (const key of Object.keys(data)) if (key.includes('matching-refs') || key.startsWith('releases')) data[key] = []
+    if (scenario === 'new' || ['plan-new','plan-drift','plan-workflow','plan-hidden'].includes(scenario)) for (const key of Object.keys(data)) if (key.includes('matching-refs') || key.startsWith('releases')) data[key] = []
     if (scenario === 'moved') data['git/commits/candidate'].parents = [{sha:'other'}]
     if (scenario === 'changed') data['git/trees/after?recursive=1'].tree[0] = {...file,sha:'changed'}
     if (scenario === 'truncated') data['git/trees/after?recursive=1'].truncated = true
-    if (scenario === 'published') data['releases?per_page=100&page=1'][0].draft = false
+    if (scenario === 'published' || scenario === 'plan-hidden-published') data['releases?per_page=100&page=1'][0].draft = false
     if (scenario === 'pagination') {
       data['releases?per_page=100&page=2'] = data['releases?per_page=100&page=1']
       data['releases?per_page=100&page=1'] = Array.from({length:100},()=>({tag_name:'other'}))
@@ -105,7 +105,6 @@ test('moved branches, unrelated file changes, published releases, and incomplete
     'changed',
     'published',
     'truncated',
-    'hidden',
     'api-error',
   ]) {
     expect(check(scenario)).toMatchObject({github: {status: 'blocked'}})
@@ -295,4 +294,33 @@ test('planned build inputs match the actual dispatch definitions and no live opt
   )
   expect(live.status).toBe(1)
   expect(live.stderr).toContain('Live execution is not available')
+})
+
+test('read-only draft visibility allows a conditional dry-run plan but still catches conflicts', () => {
+  expect(check('plan-hidden')).toMatchObject({
+    github: {
+      status: 'incomplete',
+      checks: expect.arrayContaining([
+        expect.objectContaining({
+          resource: 'GitHub Release',
+          action: 'unverified',
+        }),
+      ]),
+    },
+    execution: {
+      status: 'complete-with-warnings',
+      steps: expect.arrayContaining([
+        expect.objectContaining({
+          id: 'draft',
+          precondition: expect.stringContaining('Confirm that no draft exists'),
+          result: 'skipped-dry-run',
+        }),
+        expect.objectContaining({id: 'build-web', result: 'skipped-dry-run'}),
+      ]),
+    },
+  })
+  expect(check('plan-hidden-published')).toMatchObject({
+    github: {status: 'blocked'},
+    execution: {status: 'blocked'},
+  })
 })

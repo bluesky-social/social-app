@@ -124,11 +124,17 @@ export function renderReport(report) {
           '',
           `Dry run: ${report.execution.status}. No requests below were sent.`,
           ...(report.execution.reason ? [report.execution.reason] : []),
+          ...(report.execution.warnings ?? []).map(
+            warning => `- Unverified: ${warning}`,
+          ),
           '',
           ...report.execution.steps.flatMap(step => [
             `### ${step.label}`,
             '',
             `Result: ${step.result ?? 'not reached'}.`,
+            ...(step.precondition
+              ? [`Precondition: ${step.precondition}`]
+              : []),
             ...(step.checkedAt
               ? [`GitHub rechecked at ${step.checkedAt}.`]
               : []),

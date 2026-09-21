@@ -39,11 +39,12 @@ export async function checkGitHub(report, read) {
     checks.push({resource, action, detail})
   try {
     const repository = await read('')
-    if (repository.permissions?.push !== true) {
+    const draftVisibility = repository.permissions?.push === true
+    if (!draftVisibility) {
       add(
         'draft visibility',
-        'blocked',
-        'GitHub only guarantees draft visibility to users with push access. This token cannot establish that no hidden draft exists.',
+        'unverified',
+        'This token cannot establish full draft visibility. Draft creation requires a check with release permissions before execution.',
       )
     }
     const ref = async name => {
@@ -156,6 +157,7 @@ export async function checkGitHub(report, read) {
       sourceTreeSha: base.tree.sha,
       sourceTree: before.tree,
       candidateSha: candidate,
+      draftVisibility,
     }
     if (!tag)
       add(
@@ -176,7 +178,13 @@ export async function checkGitHub(report, read) {
       )
     }
     if (releases.length === 0)
-      add('GitHub Release', 'create', `No release uses tag ${identity.tag}.`)
+      add(
+        'GitHub Release',
+        draftVisibility ? 'create' : 'unverified',
+        draftVisibility
+          ? `No release uses tag ${identity.tag}.`
+          : `No visible release uses tag ${identity.tag}; a hidden draft may exist.`,
+      )
     else if (releases.length !== 1)
       add('GitHub Release', 'blocked', 'Multiple releases use this tag.')
     else {
@@ -205,7 +213,9 @@ export async function checkGitHub(report, read) {
     github: {
       status: checks.some(item => item.action === 'blocked')
         ? 'blocked'
-        : 'ready',
+        : checks.some(item => item.action === 'unverified')
+          ? 'incomplete'
+          : 'ready',
       checkedAt: new Date().toISOString(),
       checks,
       observed,
