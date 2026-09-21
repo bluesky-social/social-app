@@ -19,7 +19,6 @@ export interface FeedPage {
   cursor: string | undefined
   seenAt: Date
   items: FeedNotification[]
-  priority: boolean
 }
 
 export interface CachedFeedPage {

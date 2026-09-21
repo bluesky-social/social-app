@@ -161,16 +161,6 @@ the prebuilt AAR from Maven Central instead, where this hunk (like any ReactAndr
 source change) has no effect - do not expect to see the fix in a local debug build unless
 you prebuild with EXPO_PUBLIC_ENV=production or add the substitution block manually.
 
-## RCTFontUtils.mm Patch - Custom font weights render as the heaviest face on New Arch
-
-**TODO: Remove after bumping React Native to a release that contains facebook/react-native#57483**
-(commit 918fb15bfe5f, on `main`; not in 0.86 and not yet released).
-
-Backport of the upstream one-liner: use a real ternary so the numeric weight is returned instead of
-the boolean. For a double, `(A != 0.0) ? A : B` is exactly equivalent to the original `A ?: B`.
-
-PR: https://github.com/facebook/react-native/pull/57483
-
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 
 Issue: https://github.com/react/react-native/issues/53450#issuecomment-3298157830 
@@ -194,3 +184,8 @@ Fix: compute the middle from the cap insets (`size - caps`) instead of assuming 
 
 Upstream issue: https://github.com/react/react-native/issues/58054 (repro:
 https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and 0.87.0).
+
+## RCTTextInputComponentView.mm Patch - reveal the caret after a multiline input grows (iOS New Arch)
+
+Fixes ScrollView doesn't scroll up on new line in TextInput issue 
+https://github.com/react/react-native/issues/58517

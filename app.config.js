@@ -255,6 +255,8 @@ module.exports = function (_config) {
               : {}),
           },
         ],
+        'expo-asset',
+        'expo-sharing',
         'expo-video',
         'expo-localization',
         'expo-web-browser',

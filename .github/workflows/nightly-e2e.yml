@@ -46,7 +46,7 @@ jobs:
           cp google-services.json.example google-services.json
 
       - name: 🔧 Set up Expo project
-        uses: ./.github/actions/setup-expo-project
+        uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
@@ -60,7 +60,7 @@ jobs:
         run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/ios/dependencies.log
 
       - name: 🔤 Compile translations
-        uses: ./.github/actions/compile-i18n
+        uses: $/.github/actions/compile-i18n
 
       - name: 📥 Install Maestro 2.10.0
         run: |
@@ -116,7 +116,7 @@ jobs:
         run: echo "Building the iOS development client" > artifacts/ios/phase.txt
 
       - name: 🏗️ Build iOS development client
-        uses: ./.github/actions/eas-local-build
+        uses: $/.github/actions/eas-local-build
         with:
           platform: ios
           profile: e2e
@@ -171,7 +171,7 @@ jobs:
           cp google-services.json.example google-services.json
 
       - name: 🔧 Set up Expo project
-        uses: ./.github/actions/setup-expo-project
+        uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
 
@@ -185,7 +185,7 @@ jobs:
         run: pnpm --dir dev-env install --frozen-lockfile 2>&1 | tee artifacts/android/dependencies.log
 
       - name: 🔤 Compile translations
-        uses: ./.github/actions/compile-i18n
+        uses: $/.github/actions/compile-i18n
 
       - name: 📥 Install Maestro 2.10.0
         run: |
@@ -303,7 +303,7 @@ jobs:
         run: echo "Building the Android development client" > artifacts/android/phase.txt
 
       - name: 🏗️ Build Android development client
-        uses: ./.github/actions/eas-local-build
+        uses: $/.github/actions/eas-local-build
         with:
           platform: android
           profile: e2e

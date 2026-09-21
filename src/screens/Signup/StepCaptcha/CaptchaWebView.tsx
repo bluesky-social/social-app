@@ -17,6 +17,14 @@ const ALLOWED_HOSTS = [
 
 const MIN_DELAY = 3_500
 
+function safeHost(url: string): string {
+  try {
+    return new URL(url).host
+  } catch {
+    return 'unparseable'
+  }
+}
+
 export function CaptchaWebView({
   url,
   stateParam,
@@ -24,6 +32,7 @@ export function CaptchaWebView({
   onComplete,
   onSuccess,
   onError,
+  onBlockedLoad,
 }: CaptchaWebViewProps) {
   const startedAt = useRef(Date.now())
   const successTo = useRef<NodeJS.Timeout>(undefined)
@@ -48,8 +57,22 @@ export function CaptchaWebView({
   const wasSuccessful = useRef(false)
 
   const onShouldStartLoadWithRequest = (event: ShouldStartLoadRequest) => {
-    const urlp = new URL(event.url)
-    return ALLOWED_HOSTS.includes(urlp.host)
+    const host = safeHost(event.url)
+    const allowed = ALLOWED_HOSTS.includes(host)
+
+    /*
+     * iOS routes subframe navigations through this handler and cancels them if
+     * we return false; Android's shouldOverrideUrlLoading only ever sees the
+     * main frame. Report what we refuse so we can tell whether the allowlist is
+     * silently breaking hCaptcha's challenge on iOS.
+     * TODO Behavior is intentionally unchanged here - the fix is gated on this
+     * data. -dsb
+     */
+    if (!allowed) {
+      onBlockedLoad?.(host, event.isTopFrame)
+    }
+
+    return allowed
   }
 
   const onNavigationStateChange = (e: WebViewNavigation) => {
@@ -60,7 +83,7 @@ export function CaptchaWebView({
 
     const code = urlp.searchParams.get('code')
     if (urlp.searchParams.get('state') !== stateParam || !code) {
-      onError({error: 'Invalid state or code'})
+      onError({reason: 'state-mismatch', host: urlp.host})
       return
     }
 
@@ -91,10 +114,19 @@ export function CaptchaWebView({
       onNavigationStateChange={onNavigationStateChange}
       scrollEnabled={false}
       onError={e => {
-        onError(e.nativeEvent)
+        onError({
+          reason: 'webview-error',
+          host: safeHost(e.nativeEvent.url),
+          cause: e.nativeEvent,
+        })
       }}
       onHttpError={e => {
-        onError(e.nativeEvent)
+        onError({
+          reason: 'http-error',
+          host: safeHost(e.nativeEvent.url),
+          statusCode: e.nativeEvent.statusCode,
+          cause: e.nativeEvent,
+        })
       }}
     />
   )

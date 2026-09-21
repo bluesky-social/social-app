@@ -285,6 +285,7 @@ export function Explore({
     useGetSuggestedFeedsQuery({
       enabled: useFullExperience,
     })
+  const [feedPreviewsEnabled, setFeedPreviewsEnabled] = useState(false)
   const {
     data: feedPreviewSlices,
     query: {
@@ -294,7 +295,10 @@ export function Explore({
       hasNextPage: hasNextPageFeedPreviews,
       error: feedPreviewSlicesError,
     },
-  } = useFeedPreviews(suggestedFeeds?.feeds ?? [], useFullExperience)
+  } = useFeedPreviews(
+    suggestedFeeds?.feeds ?? [],
+    useFullExperience && feedPreviewsEnabled,
+  )
 
   const qc = useQueryClient()
   const [isPTR, setIsPTR] = useState(false)
@@ -1094,6 +1098,11 @@ export function Explore({
   )
 
   const handleOnEndReached = () => {
+    if (!useFullExperience) return
+    if (!feedPreviewsEnabled) {
+      setFeedPreviewsEnabled(true)
+      return
+    }
     void onLoadMoreFeedPreviews()
   }
 
