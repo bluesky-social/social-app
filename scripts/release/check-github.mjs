@@ -33,6 +33,7 @@ export function githubReader(repository, token) {
 /** Compare actual remote resources, accepting only an exact, single-file preparation commit. */
 export async function checkGitHub(report, read) {
   const {identity, sourceSha, document, publicChangelog} = report
+  let observed = null
   const checks = []
   const add = (resource, action, detail) =>
     checks.push({resource, action, detail})
@@ -148,6 +149,14 @@ export async function checkGitHub(report, read) {
           )
       }
     }
+    observed = {
+      branch,
+      tag,
+      releases,
+      sourceTreeSha: base.tree.sha,
+      sourceTree: before.tree,
+      candidateSha: candidate,
+    }
     if (!tag)
       add(
         'tag',
@@ -199,6 +208,7 @@ export async function checkGitHub(report, read) {
         : 'ready',
       checkedAt: new Date().toISOString(),
       checks,
+      observed,
     },
   }
 }

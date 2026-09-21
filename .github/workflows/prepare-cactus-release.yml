@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 jobs:
   prepare:
@@ -44,11 +45,11 @@ jobs:
           RELEASE_VERSION: ${{ inputs.releaseVersion }}
         run: |
           node tooling/scripts/release/prepare.mjs "$RELEASE_VERSION" source release-preparation
-      - name: Check existing GitHub release resources
+      - name: Plan release requests and recheck GitHub
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_REPOSITORY: ${{ github.repository }}
-        run: node tooling/scripts/release/check-github.mjs release-preparation "$RELEASE_REPOSITORY"
+        run: node tooling/scripts/release/plan.mjs release-preparation "$RELEASE_REPOSITORY"
       - name: Print report including conflicts
         if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
         run: cat release-preparation/README.md >> "$GITHUB_STEP_SUMMARY"

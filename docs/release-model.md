@@ -60,7 +60,9 @@ The release model can be exercised locally with `node scripts/release/cli.mjs`. 
 
 The **Prepare Cactus Release (dry run)** workflow reads the selected source,
 checks its versions, and prints the release details, provisional notes, and steps
-a real run would take. It saves those files as a downloadable artifact. It does
+a real run would take. It also prepares ordered GitHub and build request templates,
+rechecks remote state before each step, and skips every write. It saves those
+files as a downloadable artifact. It does
 not create release resources or start builds. See the
 [release preparation guide](release-preparation/README.md) for usage and limits.
 

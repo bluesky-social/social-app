@@ -118,6 +118,39 @@ export function renderReport(report) {
           'GitHub has not been checked. Run check-github.mjs to inspect existing resources.',
         ]),
     '',
+    ...(report.execution
+      ? [
+          '## Planned requests',
+          '',
+          `Dry run: ${report.execution.status}. No requests below were sent.`,
+          ...(report.execution.reason ? [report.execution.reason] : []),
+          '',
+          ...report.execution.steps.flatMap(step => [
+            `### ${step.label}`,
+            '',
+            `Result: ${step.result ?? 'not reached'}.`,
+            ...(step.checkedAt
+              ? [`GitHub rechecked at ${step.checkedAt}.`]
+              : []),
+            ...(step.dependsOn?.length
+              ? [`Depends on: ${step.dependsOn.join(', ')}.`]
+              : []),
+            '',
+            '<pre>',
+            JSON.stringify(step.request ?? {reuse: step.value}, null, 2)
+              .replaceAll('&', '&amp;')
+              .replaceAll('<', '&lt;')
+              .replaceAll('>', '&gt;'),
+            '</pre>',
+            '',
+          ]),
+          ...(report.execution.notes ?? []).map(note => `- ${note}`),
+          '',
+          'Still pending:',
+          ...report.execution.pending.map(item => `- ${item}`),
+          '',
+        ]
+      : []),
     '## What a real run would do',
     '',
     ...report.steps.map((step, index) => `${index + 1}. ${step}`),
