@@ -44,8 +44,16 @@ jobs:
           RELEASE_VERSION: ${{ inputs.releaseVersion }}
         run: |
           node tooling/scripts/release/prepare.mjs "$RELEASE_VERSION" source release-preparation
-          cat release-preparation/README.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Check existing GitHub release resources
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_REPOSITORY: ${{ github.repository }}
+        run: node tooling/scripts/release/check-github.mjs release-preparation "$RELEASE_REPOSITORY"
+      - name: Print report including conflicts
+        if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
+        run: cat release-preparation/README.md >> "$GITHUB_STEP_SUMMARY"
       - name: Save report and release notes
+        if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: release-preparation-${{ github.run_id }}-${{ github.run_attempt }}

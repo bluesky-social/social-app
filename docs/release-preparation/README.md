@@ -20,10 +20,25 @@ repository permissions and no release or store secrets.
 
 ## What still needs work
 
-The dry run doesn't check GitHub for existing releases or prove that retrying a
-real release is safe. Creating and reusing release branches, tags, and drafts,
-wiring up all three builds, and saving the completed release file are still to do.
-The separate native build workflows retain their existing recovery support.
+The dry run now reads GitHub and marks each release branch, tag, release file,
+and draft as something to create, reuse, or stop over. It verifies a reusable
+preparation commit has the selected source as its only parent, the exact release
+file, and no other file changes. A matching branch still at the source can be
+reused before that commit is made. Tags must resolve to the verified preparation
+commit; drafts must match the tag, name, and public notes. Published releases,
+moved branches, changed files, and API failures stop the check. The report is
+saved even when these checks fail.
+
+GitHub only guarantees draft visibility to users with push access. The action
+keeps read-only permissions, so if its token cannot establish that visibility,
+the report marks that check as blocked instead of assuming no draft exists.
+Locally, you can run the checker with an authenticated account that has push
+access; the checker still only makes GET requests.
+
+These checks describe GitHub at the time of the run. A live release will need to
+recheck before each write and handle concurrent changes. Actually creating the
+resources, wiring up all three builds, and saving the completed release file
+are still to do. The separate native workflows retain their recovery support.
 
 The notes are provisional commit titles since the highest version tag reachable
 from the selected commit, excluding the requested version. With no earlier tag,
@@ -49,3 +64,13 @@ The output directory must not already exist. The report contains the actual
 source commit; it doesn't invent a prepared commit or build numbers. Loading
 `app.config.js` executes the selected checkout's configuration, so use trusted
 repository code, just as you would when running other project scripts.
+
+After saving a local report, check it against GitHub:
+
+```sh
+node scripts/release/check-github.mjs /tmp/release-report bluesky-social/social-app
+```
+
+Set `GH_TOKEN` in your environment first. Conflicts return a nonzero exit status
+and are included in the saved report. The checker never creates or updates remote
+resources. Draft visibility follows [GitHub's release API rules](https://docs.github.com/en/rest/releases/releases#list-releases).

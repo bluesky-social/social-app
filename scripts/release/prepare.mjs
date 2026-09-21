@@ -102,13 +102,31 @@ export function renderReport(report) {
     `- Release tag: ${report.identity.tag}`,
     `- GitHub Release: ${report.identity.githubReleaseName}`,
     '',
+    '## GitHub checks',
+    '',
+    ...(report.github
+      ? [
+          `Result: ${report.github.status}. Checked at ${report.github.checkedAt}.`,
+          ...report.github.checks.map(
+            check =>
+              `- ${check.resource}: **${check.action}** — ${check.detail}`,
+          ),
+          '',
+          'Create/reuse describes a proposed action only. If any check is blocked, the whole preparation is blocked. These reads are a snapshot; a live run must recheck before writing.',
+        ]
+      : [
+          'GitHub has not been checked. Run check-github.mjs to inspect existing resources.',
+        ]),
+    '',
     '## What a real run would do',
     '',
     ...report.steps.map((step, index) => `${index + 1}. ${step}`),
     '',
     '## Still unverified',
     '',
-    ...report.notChecked.map(item => `- ${item}`),
+    ...report.notChecked
+      .filter(item => !report.github || !item.startsWith('Existing GitHub'))
+      .map(item => `- ${item}`),
     '',
     `## ${report.identity.filename}`,
     '',
