@@ -233,13 +233,12 @@ jobs:
           echo "IPA build number: $build_number"
           echo "build-number=$build_number" >> "$GITHUB_OUTPUT"
 
-      # Hand the IPA and dSYM off to the submit job. Retention is deliberately short since
-      # this artifact only exists to bridge the two jobs within a single run.
+      # Build-only release candidates need to survive preparation and later submission.
       - name: 🚀 Upload build artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ios-build-${{ github.run_id }}
-          retention-days: 1
+          retention-days: 30
           if-no-files-found: error
           path: |
             ${{ env.BUILD_DIR }}/Bluesky.ipa

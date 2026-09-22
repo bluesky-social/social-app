@@ -89,10 +89,13 @@ export function prepareRelease(sourceDirectory, releaseVersion) {
 
 /** Format the same report for the terminal and the Actions summary. */
 export function renderReport(report) {
+  const live = report.mode === 'live'
   return [
-    `# Release ${report.identity.version}: dry run`,
+    `# Release ${report.identity.version}: ${live ? 'live preparation' : 'dry run'}`,
     '',
-    'Version checks passed. No release branch, commit, tag, GitHub Release, build, or deployment was created.',
+    live
+      ? 'Live preparation was requested. Inspect the operation results below; a stopped run may have created resources or dispatched builds.'
+      : 'Version checks passed. No release branch, commit, tag, GitHub Release, build, or deployment was created.',
     '',
     `- Source commit: ${report.sourceSha}`,
     `- Package / Expo version: ${report.packageVersion} / ${report.expoVersion}`,
@@ -112,7 +115,9 @@ export function renderReport(report) {
               `- ${check.resource}: **${check.action}** — ${check.detail}`,
           ),
           '',
-          'Create/reuse describes a proposed action only. If any check is blocked, the whole preparation is blocked. These reads are a snapshot; a live run must recheck before writing.',
+          live
+            ? 'These checks describe the most recently verified GitHub state. Operation results below record completed writes and dispatched builds.'
+            : 'Create/reuse describes a proposed action only. If any check is blocked, the whole preparation is blocked. These reads are a snapshot; a live run must recheck before writing.',
         ]
       : [
           'GitHub has not been checked. Run check-github.mjs to inspect existing resources.',
@@ -120,9 +125,11 @@ export function renderReport(report) {
     '',
     ...(report.execution
       ? [
-          '## Planned requests',
+          live ? '## Execution results' : '## Planned requests',
           '',
-          `Dry run: ${report.execution.status}. No requests below were sent.`,
+          live
+            ? `Live preparation: ${report.execution.status}.`
+            : `Dry run: ${report.execution.status}. No requests below were sent.`,
           ...(report.execution.reason ? [report.execution.reason] : []),
           ...(report.execution.warnings ?? []).map(
             warning => `- Unverified: ${warning}`,
@@ -132,6 +139,15 @@ export function renderReport(report) {
             `### ${step.label}`,
             '',
             `Result: ${step.result ?? 'not reached'}.`,
+            ...(step.output?.sha ? [`Created SHA: ${step.output.sha}.`] : []),
+            ...(step.output?.id
+              ? [`Created resource ID: ${step.output.id}.`]
+              : []),
+            ...(step.run
+              ? [
+                  `Build run: [${step.run.id}](${step.run.url}) (${step.run.status}${step.run.conclusion ? ` / ${step.run.conclusion}` : ''}).`,
+                ]
+              : []),
             ...(step.precondition
               ? [`Precondition: ${step.precondition}`]
               : []),
@@ -157,7 +173,7 @@ export function renderReport(report) {
           '',
         ]
       : []),
-    '## What a real run would do',
+    live ? '## Release lifecycle' : '## What a real run would do',
     '',
     ...report.steps.map((step, index) => `${index + 1}. ${step}`),
     '',
@@ -165,6 +181,7 @@ export function renderReport(report) {
     '',
     ...report.notChecked
       .filter(item => !report.github || !item.startsWith('Existing GitHub'))
+      .filter(item => !live || !item.startsWith('The prepared commit'))
       .map(item => `- ${item}`),
     '',
     `## ${report.identity.filename}`,

@@ -200,7 +200,7 @@ export function planRelease(report, repository, hashes) {
     'Requests are templates only. Objects with fromStep/field refer to outputs that do not exist until a live request succeeds.',
     'All workflow dispatches use the release tag and receive the exact prepared commit. Native builds have store submission disabled.',
     'The web workflow would build and push a production image to ECR. No workflow is dispatched in this dry run.',
-    'Existing build runs and receipts are not checked here. A future live runner must prevent duplicate dispatches when retrying.',
+    'Live preparation only accepts a new release. Partial failures require manual recovery; it does not automatically resume or retry requests.',
   ]
   return plan
 }

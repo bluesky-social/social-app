@@ -62,7 +62,11 @@ SHA, and expose the checked-out commit as `source-sha`. Native submission jobs
 check out that same commit. Web image tags and revision labels use it too.
 
 Native workflows accept `submit`, defaulting to `true`. The preparation plan sets
-it to `false`. Build and submission recovery is separate work.
+it to `false`. Preparation can now create the branch, document, tag, and draft
+and dispatch all three builds. Returned build-run IDs are included in the
+preparation report. Live execution only accepts new releases; partial failures
+require manual recovery. Native artifacts remain available for 30 days. Build-result collection, document finalization, and submission of
+retained artifacts are separate work.
 
 ## Implementation
 

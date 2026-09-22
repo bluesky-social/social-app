@@ -143,13 +143,12 @@ jobs:
         id: get-build-info
         run: bash scripts/setGitHubOutput.sh
 
-      # Hands the built bundle off to the submit / universalApk jobs. Retention is
-      # deliberately short (1 day) since it's only an intra-run handoff artifact.
+      # Retain build-only release candidates for later inspection and submission.
       - name: 🚀 Upload AAB artifact
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: android-aab-${{ github.run_id }}
-          retention-days: 1
+          retention-days: 30
           if-no-files-found: error
           path: build.aab
 
