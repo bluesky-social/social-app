@@ -11,12 +11,18 @@ import {
   createActor,
   createDocumentRecords,
   createRecord,
+  createShareRecord,
   documentUri,
+  publicationUri,
+  recordCid,
 } from './testFixtures'
 import {type ActivityTimelineListItem} from './timeline'
 import {activityCollections} from './types'
 
+jest.unmock('multiformats/cid')
+
 const mockUseAtmosphereQuery = jest.fn()
+const mockUseAtmosphereRawQuery = jest.fn()
 const mockQueryUpdates = createContext(0)
 let mockQueryRevision = 0
 const mockListFooter = jest.fn((_props: unknown) => null)
@@ -41,6 +47,7 @@ type EmptyStateProps = {
 }
 type ListItem = Record<string, unknown>
 type ListProps = {
+  testID?: string
   data: ListItem[]
   renderItem: (args: {item: ListItem; index: number}) => React.ReactNode
   keyExtractor: (item: ListItem) => string
@@ -275,7 +282,7 @@ jest.mock('#/view/com/util/List', () => {
     List: (props: ListProps) => {
       latestListProps = props
       return (
-        <View>
+        <View testID={props.testID}>
           {props.data.map((item, index) => (
             <View key={props.keyExtractor(item)}>
               {props.renderItem({item, index})}
@@ -307,6 +314,10 @@ jest.mock('./query', () => {
       use(mockQueryUpdates)
       return mockUseAtmosphereQuery()
     },
+    useAtmosphereRawQuery: () => {
+      use(mockQueryUpdates)
+      return mockUseAtmosphereRawQuery()
+    },
   }
 })
 
@@ -322,6 +333,7 @@ beforeEach(() => {
   mockStandardSiteEmbed.mockClear()
   mockTimeElapsed.mockClear()
   mockUseAtmosphereQuery.mockReset()
+  mockUseAtmosphereRawQuery.mockReset()
 })
 
 function renderScreen() {
@@ -383,7 +395,7 @@ describe('AtmosphereScreen', () => {
 
     expect(
       screen.getAllByRole('tab').map(tab => tab.props.accessibilityLabel),
-    ).toEqual(['Activity', 'Explore'])
+    ).toEqual(['Activity', 'Raw', 'Explore'])
     expect(
       screen.getByRole('tab', {name: 'Activity'}).props.accessibilityState,
     ).toEqual({selected: true})
@@ -513,10 +525,13 @@ describe('AtmosphereScreen', () => {
     expect(screen.getByTestId('atmosphereUnknownRow')).toBeTruthy()
     expect(screen.queryByTestId('atmosphereDebugButton')).toBeNull()
     expect(
-      screen.getByLabelText(
-        `${handleLabel('group-author.test')} published · elapsed:2026-09-03T00:00:00.000Z`,
-      ),
-    ).toBeTruthy()
+      screen
+        .getAllByTestId('atmosphereFootnoteActor')
+        .some(
+          actorNode =>
+            actorNode.props.children === handleLabel('group-author.test'),
+        ),
+    ).toBe(true)
     expect(
       screen.getByLabelText(
         `${handleLabel('author.test')} did something · elapsed:2026-09-03T00:00:00.000Z`,
@@ -648,6 +663,179 @@ describe('AtmosphereScreen', () => {
 
     expect(refetch).toHaveBeenCalledTimes(1)
     expect(fetchNextPage).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('Raw tab', () => {
+  it('renders each raw root as a footnote without cards, grouping, or related rows', () => {
+    const document = createActivity({
+      subscribed: true,
+      relatedActivity: [
+        createActivity({
+          collection: activityCollections.recommendation,
+          rkey: 'related',
+        }),
+      ],
+    })
+    const recommend = createActivity({
+      collection: activityCollections.recommendation,
+    })
+    const secondRecommend = createActivity({
+      collection: activityCollections.recommendation,
+      rkey: 'second',
+    })
+    const subscription = createActivity({
+      collection: activityCollections.subscription,
+    })
+    const stream = createActivity({collection: activityCollections.livestream})
+    const photo = createActivity({collection: activityCollections.grainPhoto})
+    const share = createActivity({collection: activityCollections.share})
+    const publication = createActivity({
+      collection: activityCollections.publication,
+      did: 'did:plc:publisher',
+      rkey: 'site',
+    })
+    const unknown = createActivity({
+      collection: 'example.unknown.record',
+      did: 'did:plc:missing',
+    })
+    const rawQuery = basicQuery()
+    rawQuery.data.pages[0] = {
+      feed: [
+        document,
+        recommend,
+        secondRecommend,
+        subscription,
+        stream,
+        photo,
+        share,
+        publication,
+        unknown,
+      ],
+      actors: {'did:plc:author': createActor()},
+      associatedRecords: {
+        ...createDocumentRecords(),
+        [recommend.record.uri]: createRecord(recommend.record.uri, {
+          document: documentUri,
+          createdAt: document.record.indexedAt,
+        }),
+        [secondRecommend.record.uri]: createRecord(secondRecommend.record.uri, {
+          document: documentUri,
+          createdAt: document.record.indexedAt,
+        }),
+        [subscription.record.uri]: createRecord(subscription.record.uri, {
+          publication: publicationUri,
+        }),
+        [stream.record.uri]: createRecord(stream.record.uri, {
+          title: 'Live stream',
+          url: 'https://stream.place/author',
+          createdAt: stream.record.indexedAt,
+        }),
+        [photo.record.uri]: createRecord(photo.record.uri, {
+          photo: {ref: recordCid, mimeType: 'image/jpeg'},
+          alt: 'A capybara',
+        }),
+        [share.record.uri]: createRecord(share.record.uri, createShareRecord()),
+      },
+    }
+    mockUseAtmosphereQuery.mockReturnValue(basicQuery())
+    mockUseAtmosphereRawQuery.mockReturnValue(rawQuery)
+    const screen = renderScreen()
+    expect(mockUseAtmosphereRawQuery).not.toHaveBeenCalled()
+    fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
+
+    expect(screen.getByTestId('atmosphereRawList')).toBeTruthy()
+    expect(screen.queryByTestId('atmosphereList')).toBeNull()
+    expect(screen.getAllByTestId('atmosphereRawRow')).toHaveLength(9)
+    expect(screen.getAllByTestId('atmosphereFootnote')).toHaveLength(9)
+    expect(latestListProps?.data.map(item => item.key)).toEqual(
+      rawQuery.data.pages[0].feed.map(item => item.record.uri),
+    )
+    expect(screen.queryByTestId('atmosphereArticleCard')).toBeNull()
+    expect(screen.queryByTestId('atmosphereSubscriptionCard')).toBeNull()
+    expect(screen.queryByTestId('atmosphereActiveLivestream')).toBeNull()
+    expect(screen.queryByTestId('atmospherePhotoCard')).toBeNull()
+    expect(screen.queryByTestId('atmosphereShareCard')).toBeNull()
+    expect(screen.queryByTestId('atmosphereArticleRecommendations')).toBeNull()
+    expect(screen.queryByTestId('atmosphereFootnoteThumbnail')).toBeNull()
+    expect(
+      screen
+        .getAllByTestId('atmosphereFootnoteTitle')
+        .map(node => node.props.to),
+    ).toContain('/profile/author.example/post/article')
+  })
+
+  it('keeps raw loading, empty, and retry states independent of Activity', () => {
+    const activityQuery = basicQuery()
+    const raw = {
+      ...basicQuery(),
+      data: undefined,
+      error: undefined as Error | undefined,
+    }
+    mockUseAtmosphereQuery.mockReturnValue(activityQuery)
+    mockUseAtmosphereRawQuery.mockReturnValue(raw)
+    const screen = renderScreen()
+    fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
+    expect(screen.getByTestId('atmosphereRawLoading')).toBeTruthy()
+    raw.error = new Error('Raw unavailable')
+    screen.rerender(screenElement())
+    expect(screen.getByTestId('atmosphereRawError')).toBeTruthy()
+    fireEvent.press(screen.getByLabelText('Retry loading raw activity'))
+    expect(raw.refetch).toHaveBeenCalledTimes(1)
+    expect(activityQuery.refetch).not.toHaveBeenCalled()
+    const empty = basicQuery()
+    empty.data.pages[0].feed = []
+    mockUseAtmosphereRawQuery.mockReturnValue(empty)
+    screen.rerender(screenElement())
+    expect(screen.getByTestId('atmosphereRawEmpty')).toBeTruthy()
+  })
+
+  it.each(['fetching', 'last-page'] as const)(
+    'does not fetch another raw page when %s',
+    reason => {
+      const raw = {
+        ...basicQuery(),
+        isFetching: reason === 'fetching',
+        hasNextPage: reason !== 'last-page',
+      }
+      mockUseAtmosphereQuery.mockReturnValue(basicQuery())
+      mockUseAtmosphereRawQuery.mockReturnValue(raw)
+      const screen = renderScreen()
+      fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
+      act(() => {
+        void latestListProps?.onEndReached?.()
+      })
+      expect(raw.fetchNextPage).not.toHaveBeenCalled()
+    },
+  )
+
+  it('wires raw refresh and pagination and stops automatic pagination after an error', async () => {
+    const raw = basicQuery()
+    mockUseAtmosphereQuery.mockReturnValue(basicQuery())
+    mockUseAtmosphereRawQuery.mockReturnValue(raw)
+    const screen = renderScreen()
+    fireEvent.press(screen.getByRole('tab', {name: 'Raw'}))
+    await act(async () => {
+      await latestListProps?.onRefresh?.()
+    })
+    act(() => {
+      void latestListProps?.onEndReached?.()
+    })
+    expect(raw.refetch).toHaveBeenCalledTimes(1)
+    expect(raw.fetchNextPage).toHaveBeenCalledWith({cancelRefetch: false})
+    raw.error = new Error('Next page failed')
+    screen.rerender(screenElement())
+    act(() => {
+      void latestListProps?.onEndReached?.()
+    })
+    expect(raw.fetchNextPage).toHaveBeenCalledTimes(1)
+    expect(screen.getByTestId('atmosphereRawRow')).toBeTruthy()
+    expect(mockListFooter).toHaveBeenLastCalledWith(
+      expect.objectContaining({
+        error: 'Next page failed',
+        onRetry: expect.any(Function),
+      }),
+    )
   })
 })
 

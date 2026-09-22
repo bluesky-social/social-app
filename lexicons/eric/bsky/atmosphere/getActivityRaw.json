@@ -1,0 +1,42 @@
+{
+  "lexicon": 1,
+  "id": "eric.bsky.atmosphere.getActivityRaw",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Returns recent activity for the authenticated tracked viewer as flat items without grouping or related-activity attachment. Uses the same pagination, filtering, and hydration as getActivity.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "cursor": { "type": "string" }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["feed", "associatedRecords", "actors"],
+          "properties": {
+            "feed": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "eric.bsky.atmosphere.getActivity#item"
+              },
+              "description": "Reverse-chronological activity items. No groups or relatedActivity children are emitted."
+            },
+            "associatedRecords": {
+              "type": "unknown",
+              "description": "A map of AT URI to locally resolved associated record."
+            },
+            "actors": {
+              "type": "unknown",
+              "description": "A map of actor DID to app.bsky.actor.defs#profileViewBasic."
+            },
+            "cursor": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}

@@ -9,6 +9,7 @@ import {narrowActivityPage} from './types'
 export * from './types'
 
 const useAtmosphereQueryKeyRoot = 'useAtmosphereQuery'
+const useAtmosphereRawQueryKeyRoot = 'useAtmosphereRawQuery'
 
 export function useAtmosphereQuery() {
   const client = useAppviewSandboxClient()
@@ -22,6 +23,31 @@ export function useAtmosphereQuery() {
         cursor: pageParam,
       })
       return narrowActivityPage(response)
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: lastPage => lastPage.cursor,
+    staleTime: STALE.SECONDS.FIFTEEN,
+  })
+}
+
+export function useAtmosphereRawQuery() {
+  const client = useAppviewSandboxClient()
+  const {currentAccount} = useSession()
+  const viewer = currentAccount!.did
+
+  return useInfiniteQuery({
+    queryKey: createQueryKey(useAtmosphereRawQueryKeyRoot, {viewer}),
+    queryFn: async ({pageParam}) => {
+      const response = await client.call(eric.bsky.atmosphere.getActivityRaw, {
+        cursor: pageParam,
+      })
+      const page = narrowActivityPage(response)
+      return {
+        ...page,
+        feed: page.feed.filter(
+          entry => entry.$type === 'eric.bsky.atmosphere.getActivity#item',
+        ),
+      }
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,

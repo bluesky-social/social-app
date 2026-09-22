@@ -19,6 +19,7 @@ import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {RawActivityList} from './components/RawActivityList'
 import {TimelineRow} from './components/TimelineRow'
 import {buildActivityListItems} from './model'
 import {buildActivityPresentationListItems} from './presentation'
@@ -36,6 +37,7 @@ export function AtmosphereScreen({}: Props) {
   const {t: l} = useLingui()
   const sections = [
     {title: l`Activity`, component: <AtmosphereList />},
+    {title: l`Raw`, component: <RawActivityList />},
     {title: l`Explore`, component: <AtmosphereExplore />},
   ]
 

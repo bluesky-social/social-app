@@ -10,23 +10,25 @@ This document is the shared contract between the appview-sandbox Atmosphere back
 | --- | --- |
 | Backend worktree | `/Users/eric/sites/bluesky/appview-sandbox-worktrees/atmosphere-tab` |
 | Frontend worktree | `/Users/eric/sites/bluesky/social-app-internal-worktrees/atmosphere-tab` |
-| Backend branch | `atmosphere-tab` |
+| Backend branch | `atmosphere-tab-alt-routes` |
 | Frontend branch | `atmosphere-tab` |
-| Synchronized backend base commit | `fa958a37012b Add livestream activity views and preserve active streams` |
-| Uncommitted backend state | Batched post interaction-count hydration in `#shareView` atop `fa958a37012b` |
-| Frontend tip | `d604edc59 Refine Atmosphere document share card layout and bylines` |
-| Uncommitted frontend state | Contract synchronization only; no frontend implementation files changed by this backend session |
-| Deployment status | The share-count backend changes are uncommitted and undeployed |
+| Synchronized backend base commit | `a122f1d Fix docs` |
+| Uncommitted backend state | Adds `getActivityRaw` with a flat item feed and the same envelope, pagination, filtering, and hydration as `getActivity` |
+| Frontend tip | `e47a1d25b Refine Atmosphere Beta badge styling` |
+| Uncommitted frontend state | Separate frontend work is in progress; this backend session changes only this Markdown contract |
+| Deployment status | `getActivityRaw` is running locally on port 3000; the backend addition remains uncommitted and is not deployed to production |
 
 When the backend request, response, filtering, authentication, hydration, pagination, or grouping behavior changes, update this document and record the backend commit before asking the frontend session to consume the change.
 
 Normative backend sources:
 
 - `lexicons/eric/bsky/atmosphere/getActivity.json`
+- `lexicons/eric/bsky/atmosphere/getActivityRaw.json`
 - `src/contributors/eric/api/bsky/atmosphere/getActivity.ts`
+- `src/contributors/eric/api/bsky/atmosphere/getActivityRaw.ts`
 - `src/contributors/eric/atmosphere/record-filters.ts`
 - `src/contributors/eric/atmosphere/activity-identity.ts`
-- `ATMOSPHERE.md`
+- `contributors/eric/plans/atmosphere-architecture.md`
 
 ## Endpoint
 
@@ -54,7 +56,7 @@ did:plc:3jpt2mvvsumj2r7eqk4gzzjz
 
 ### Authentication behavior
 
-The endpoint requires appview-sandbox standard authentication and derives the viewer from `auth.credentials.did`. Callers cannot select another viewer through query parameters.
+Both `getActivity` and `getActivityRaw` require appview-sandbox standard authentication and derive the viewer from `auth.credentials.did`. Callers cannot select another viewer through query parameters.
 
 - The authenticated DID must be enabled in the backend's tracked-viewer registry.
 - An authenticated but non-tracked viewer returns an XRPC `InvalidRequest` error.
@@ -67,6 +69,16 @@ The endpoint requires appview-sandbox standard authentication and derives the vi
 curl --get 'http://localhost:3000/xrpc/eric.bsky.atmosphere.getActivity' \
   --header 'Authorization: did:plc:3jpt2mvvsumj2r7eqk4gzzjz'
 ```
+
+### Ungrouped endpoint
+
+```text
+GET /xrpc/eric.bsky.atmosphere.getActivityRaw
+```
+
+`getActivityRaw` accepts the same optional `cursor` and returns the same `{ feed, cursor, associatedRecords, actors }` envelope. Its `feed` contains only flat `eric.bsky.atmosphere.getActivity#item` objects: no subject or actor groups and no `relatedActivity` children. Recommendations and post shares stay top-level even when their target document is on the page. Existing item and view `$type` values are reused; they do not become `getActivityRaw` types.
+
+Everything before grouping is shared with `getActivity`: authentication and tracking, the 30-day activity window, reverse chronology with sequence tie-breaking, age-sensitive page boundaries, 10-candidate minimum, 200-root cap, hydration-budget cursor deferral, required-association filtering, record read filters, viewer state, typed views, and actor/record sidecars. `cursor` remains optional. Raw means ungrouped materialized activity, not unfiltered record JSON or undeduplicated ingestion events. `getActivity` keeps its existing grouped behavior.
 
 ## Response contract
 
@@ -140,6 +152,13 @@ type ProfileViewBasic = {
 
 type GetActivityResponse = {
   feed: Array<ActivityItem | ActivityGroup>
+  associatedRecords: Record<string, AssociatedRecord>
+  actors: Record<string, ProfileViewBasic>
+  cursor?: string
+}
+
+type GetActivityRawResponse = {
+  feed: Array<Omit<ActivityItem, 'relatedActivity'>>
   associatedRecords: Record<string, AssociatedRecord>
   actors: Record<string, ProfileViewBasic>
   cursor?: string
