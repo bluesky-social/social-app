@@ -471,7 +471,7 @@ function AttieFooter({
   const {currentAccount} = useSession()
   const {data: authorProfile} = useProfileQuery({did: authorDid})
   const destination = createAttieCtaUri(view.uri, currentAccount)
-  const cta = l`Check it out`
+  const cta = l`Visit site`
 
   const onPress = () => {
     playHaptic('Light')
@@ -526,8 +526,8 @@ function AttieFooter({
                   t.atoms.text_contrast_medium,
                 ]}>
                 {authorProfile?.handle
-                  ? l`by @${authorProfile.handle}`
-                  : l`by ${authorDid}`}
+                  ? l`@${authorProfile.handle}`
+                  : authorDid}
               </Text>
             </View>
           </>
@@ -544,7 +544,7 @@ function AttieFooter({
       <Link
         shouldProxy
         to={destination}
-        label={l`Check it out on Attie`}
+        label={l`Visit site on Attie`}
         size="small"
         color="secondary_inverted"
         hoverStyle={{backgroundColor: '#552fe0'}}
@@ -580,7 +580,7 @@ export function SubscribeButton({
   const isAttie = isAttieEmbed(view)
   const highlightedPublisher = matchStandardSitePublisher(view)
   const cta = isAttie
-    ? l`Check it out`
+    ? l`Visit site`
     : highlightedPublisher
       ? l`Subscribe on ${highlightedPublisher.name}`
       : l`View publication`
@@ -612,7 +612,7 @@ export function SubscribeButton({
     : view.source.uri
   const publicationTitle = view.source.title
   const label = isAttie
-    ? l`Check it out on Attie`
+    ? l`Visit site on Attie`
     : highlightedPublisher
       ? publicationTitle
         ? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
