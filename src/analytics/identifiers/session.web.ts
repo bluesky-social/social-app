@@ -29,11 +29,14 @@ function migrateLegacySession(now = Date.now()): SessionRecord | undefined {
   const validLastEventAt = Number.isFinite(lastEventAt)
     ? lastEventAt
     : undefined
-  return {
-    id,
-    inactivityAt: validLastEventAt,
-    rotatedAt: validLastEventAt ?? now,
-  }
+  return normalizeSessionRecord(
+    {
+      id,
+      inactivityAt: validLastEventAt,
+      rotatedAt: validLastEventAt ?? now,
+    },
+    now,
+  )
 }
 
 function readSessionRecord(now = Date.now()) {
