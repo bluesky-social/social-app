@@ -321,7 +321,7 @@ describe('web session lifecycle', () => {
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
   })
 
-  test.failing('uses one app-state listener for every mounted consumer', () => {
+  test('uses one app-state listener for every mounted consumer', () => {
     setLegacySession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     renderHook(() => {
@@ -333,7 +333,7 @@ describe('web session lifecycle', () => {
     expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
   })
 
-  test.failing('updates every mounted consumer after rotating once', () => {
+  test('updates every mounted consumer after rotating once', () => {
     setLegacySession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => {
@@ -357,24 +357,21 @@ describe('web session lifecycle', () => {
     expect(hook.result.current).toEqual(['session-a', 'session-a', 'session-a'])
   })
 
-  test.failing(
-    'keeps the shared listener until the last consumer unmounts',
-    () => {
-      setLegacySession('tab-a', 'existing-session', NOW.getTime())
-      const {useSessionId} = loadSession()
-      const first = renderHook(() => useSessionId())
-      const second = renderHook(() => useSessionId())
+  test('keeps the shared listener until the last consumer unmounts', () => {
+    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const first = renderHook(() => useSessionId())
+    const second = renderHook(() => useSessionId())
 
-      expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
-      expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
+    expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
+    expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
 
-      first.unmount()
-      expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
+    first.unmount()
+    expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
 
-      second.unmount()
-      expect(mockAppStateListeners.get('tab-a')?.size).toBe(0)
-    },
-  )
+    second.unmount()
+    expect(mockAppStateListeners.get('tab-a')?.size).toBe(0)
+  })
 
   test.failing(
     'updates another tab when one tab rotates the shared session',
