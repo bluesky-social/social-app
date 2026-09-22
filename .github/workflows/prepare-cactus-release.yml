@@ -60,14 +60,6 @@ jobs:
       - name: Print report including conflicts
         if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
         run: cat release-preparation/README.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Save report and release notes
-        if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: release-preparation-${{ github.run_id }}-${{ github.run_attempt }}
-          path: release-preparation/
-          retention-days: 14
-          if-no-files-found: error
 
   prepare:
     if: ${{ !inputs.dryRun && github.ref == 'refs/heads/main' && github.repository == 'bluesky-social/social-app' }}
@@ -108,11 +100,3 @@ jobs:
       - name: Print report including conflicts
         if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
         run: cat release-preparation/README.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Save report and release notes
-        if: ${{ !cancelled() && hashFiles('release-preparation/README.md') != '' }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
-        with:
-          name: release-preparation-${{ github.run_id }}-${{ github.run_attempt }}
-          path: release-preparation/
-          retention-days: 14
-          if-no-files-found: error

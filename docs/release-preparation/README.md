@@ -7,8 +7,8 @@ Run **Prepare Cactus Release** in GitHub Actions with:
 - `dryRun`: optional checkbox, unchecked by default. Check it to preview only;
   leave it unchecked to create the draft and start builds.
 
-The run produces an Actions summary and an artifact containing the request plan,
-release file, and public notes. Reports are saved on conflicts too.
+The run prints the request plan, release file, and public notes in the Actions
+summary, including when preparation stops on a conflict.
 
 ## Cut a release candidate
 
@@ -87,7 +87,7 @@ requests. If the release branch, tag, or GitHub Release already exists, it stops
 before writing anything. A failure during preparation stops the remaining steps;
 completed writes and dispatched builds are not rolled back.
 
-1. Inspect the run summary and `report.json` artifact. They contain the selected
+1. Inspect the Actions summary and logs. They contain the selected
    source, resolved request bodies, completed operations, and returned build-run
    links. A `write-requested` or `dispatch-requested` result means the response
    was not confirmed: GitHub may still have accepted the request.
