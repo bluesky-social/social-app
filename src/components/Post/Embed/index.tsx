@@ -21,7 +21,10 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
-import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {
+  isAttieEmbed,
+  isStandardSiteEmbed,
+} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -99,7 +102,10 @@ function MediaEmbed({
       )
     }
     case 'link': {
-      if (isStandardSiteEmbed(embed.view.external)) {
+      if (
+        isStandardSiteEmbed(embed.view.external) ||
+        isAttieEmbed(embed.view.external)
+      ) {
         return (
           <ContentHider
             modui={rest.moderation?.ui('contentMedia')}

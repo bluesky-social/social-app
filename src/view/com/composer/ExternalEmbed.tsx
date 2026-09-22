@@ -15,6 +15,7 @@ import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {JoinRequestEmbed} from '#/components/Post/Embed/JoinRequestEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
+import {isAttieUrl} from '#/components/Post/Embed/StandardSiteEmbed/attie'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
@@ -90,10 +91,14 @@ export const ExternalEmbedLink = ({
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
-        if (data.view && isStandardSiteEmbed(data.view.external)) {
+        if (
+          (data.view && isStandardSiteEmbed(data.view.external)) ||
+          isAttieUrl(uri)
+        ) {
           return (
             <StandardSiteEmbed
               preview
+              authorDid={data.authorDid}
               view={{
                 ...data.view?.external,
                 title: data.view?.external?.title || data.title || uri,
