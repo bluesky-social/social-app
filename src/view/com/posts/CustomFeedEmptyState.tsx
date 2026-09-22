@@ -1,11 +1,11 @@
 import {useCallback, useEffect, useEffectEvent, useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {MagnifyingGlassIcon} from '#/lib/icons'
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'

@@ -1,6 +1,6 @@
 import {useCallback} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
 
+import {useFocusEffect} from '#/lib/navigation'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,

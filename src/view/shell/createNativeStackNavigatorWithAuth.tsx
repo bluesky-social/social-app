@@ -1,5 +1,12 @@
 import {useEffect, useRef} from 'react'
 import {View} from 'react-native'
+import {NativeStackView} from 'expo-router/native-stack'
+import {
+  type NativeStackNavigationEventMap,
+  type NativeStackNavigationOptions,
+  type NativeStackNavigationProp,
+  type NativeStackNavigatorProps,
+} from 'expo-router/native-stack'
 // Based on @react-navigation/native-stack/src/navigators/createNativeStackNavigator.ts
 // MIT License
 // Copyright (c) 2017 React Navigation Contributors
@@ -16,16 +23,11 @@ import {
   type StaticConfig,
   type TypedNavigator,
   useNavigationBuilder,
-} from '@react-navigation/native'
-import {NativeStackView} from '@react-navigation/native-stack'
-import {
-  type NativeStackNavigationEventMap,
-  type NativeStackNavigationOptions,
-  type NativeStackNavigationProp,
-  type NativeStackNavigatorProps,
-} from '@react-navigation/native-stack'
+} from 'expo-router/react-navigation'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
+import {getScreenName} from '#/lib/navigation/routes'
+import {RouteTitle} from '#/lib/navigation/RouteTitle'
 import {useSession} from '#/state/session'
 import {useOnboardingState} from '#/state/shell'
 import {
@@ -115,6 +117,7 @@ function NativeStackNavigator({
   const {hasSession, currentAccount} = useSession()
   const activeRoute = state.routes[state.index]
   const activeDescriptor = descriptors[activeRoute.key]
+  const pageTitle = <RouteTitle title={activeDescriptor.options.title} />
   const activeRouteRequiresAuth = activeDescriptor.options.requireAuth ?? false
   const onboardingState = useOnboardingState()
   const {showLoggedOut} = useLoggedOutView()
@@ -122,16 +125,36 @@ function NativeStackNavigator({
   const {isMobile} = useWebMediaQueries()
   const {leftNavMinimal} = useLayoutBreakpoints()
   if (!hasSession && (activeRouteRequiresAuth || IS_NATIVE)) {
-    return <LoggedOut />
+    return (
+      <>
+        {pageTitle}
+        <LoggedOut />
+      </>
+    )
   }
   if (hasSession && currentAccount?.signupQueued) {
-    return <SignupQueued />
+    return (
+      <>
+        {pageTitle}
+        <SignupQueued />
+      </>
+    )
   }
   if (showLoggedOut) {
-    return <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+    return (
+      <>
+        {pageTitle}
+        <LoggedOut onDismiss={() => setShowLoggedOut(false)} />
+      </>
+    )
   }
   if (onboardingState.isActive) {
-    return <Onboarding />
+    return (
+      <>
+        {pageTitle}
+        <Onboarding />
+      </>
+    )
   }
   // On web, limit how many screens stay mounted to prevent memory growth.
   // Home is always pinned, the focused screen is always mounted, and the
@@ -159,7 +182,7 @@ function NativeStackNavigator({
     // Build mount set: Home (pinned) + focused + N most recent
     const mountSet = new Set<string>()
     mountSet.add(focusedKey)
-    const homeKey = state.routes.find(r => r.name === 'Home')?.key
+    const homeKey = state.routes.find(r => r.name === 'index')?.key
     if (homeKey) mountSet.add(homeKey)
     let cached = 0
     for (const key of lruKeysRef.current) {
@@ -190,6 +213,7 @@ function NativeStackNavigator({
 
   return (
     <NavigationContent>
+      {pageTitle}
       <View role="main" style={a.flex_1}>
         <NativeStackView
           {...rest}
@@ -204,9 +228,11 @@ function NativeStackNavigator({
           {showBottomBar ? (
             <BottomBarWeb />
           ) : (
-            <DesktopLeftNav routeName={activeRoute.name} />
+            <DesktopLeftNav routeName={getScreenName(activeRoute.name)} />
           )}
-          {!isMobile && <DesktopRightNav routeName={activeRoute.name} />}
+          {!isMobile && (
+            <DesktopRightNav routeName={getScreenName(activeRoute.name)} />
+          )}
         </>
       )}
 

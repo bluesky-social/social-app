@@ -51,20 +51,29 @@ function createRoute(pattern: string): Route {
 
       const res = matcherRe.exec(pathname)
       if (res) {
-        return {params: Object.assign(addedParams, res.groups || {})}
+        try {
+          const pathParams = Object.fromEntries(
+            Object.entries(res.groups || {}).map(([key, value]) => [
+              key,
+              decodeURIComponent(value),
+            ]),
+          )
+          return {params: {...addedParams, ...pathParams}}
+        } catch {
+          return undefined
+        }
       }
       return undefined
     },
     build(params = {}) {
-      const str = pattern.replace(
-        /:([\w]+)/g,
-        (_m, name) => params[encodeURIComponent(name)] || 'undefined',
+      const str = pattern.replace(/:([\w]+)/g, (_m: string, name: string) =>
+        encodeURIComponent(params[name] ?? 'undefined'),
       )
 
       let hasQp = false
       const qp = new URLSearchParams()
       for (const paramName in params) {
-        if (!pathParamNames.has(paramName)) {
+        if (!pathParamNames.has(paramName) && params[paramName] !== undefined) {
           qp.set(paramName, params[paramName])
           hasQp = true
         }

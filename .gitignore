@@ -129,6 +129,8 @@ src/lexicons/
 bskyogcard/src/assets/fonts/noto-*
 
 # bskyweb build output
+bskyweb/static/_expo/
+bskyweb/static/assets/
 bskyweb/static/media/*.webp
 bskyweb/static/media/*.jpg
 bskyweb/static/media/*.png

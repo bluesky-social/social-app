@@ -8,8 +8,8 @@ import Animated, {
   LinearTransition,
 } from 'react-native-reanimated'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useGetPopularFeedsQuery} from '#/state/queries/feed'

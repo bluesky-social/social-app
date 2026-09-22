@@ -1,9 +1,9 @@
 import {useCallback} from 'react'
 import {Dimensions, StyleSheet, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {usePalette} from '#/lib/hooks/usePalette'
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {s} from '#/lib/styles'
 import {atoms as a} from '#/alf'

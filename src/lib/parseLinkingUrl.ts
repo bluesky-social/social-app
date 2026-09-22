@@ -1,10 +1,8 @@
 export function parseLinkingUrl(url: string): URL {
   /*
-   * Hack: add a third slash to bluesky:// urls so that `URL.host` is empty and
+   * Add a third slash to app-scheme URLs so that `URL.host` is empty and
    * `URL.pathname` has the full path.
    */
-  if (url.startsWith('bluesky://') && !url.startsWith('bluesky:///')) {
-    url = url.replace('bluesky://', 'bluesky:///')
-  }
+  url = url.replace(/^(bluesky|bsky):\/\/(?!\/)/i, '$1:///')
   return new URL(url)
 }

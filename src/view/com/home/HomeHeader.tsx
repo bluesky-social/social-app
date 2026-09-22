@@ -1,8 +1,8 @@
 import {useCallback, useMemo} from 'react'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {TIMELINE_SAVED_FEED} from '#/lib/constants'
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {getLocalizedFeedName} from '#/lib/strings/feed-names'
 import {type FeedSourceInfo} from '#/state/queries/feed'

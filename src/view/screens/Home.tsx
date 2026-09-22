@@ -5,7 +5,6 @@ import {
   withSpring,
 } from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
 
 import {
   DISCOVER_FEED_URI,
@@ -15,6 +14,7 @@ import {
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
+import {useFocusEffect} from '#/lib/navigation'
 import {useRequestNotificationsPermission} from '#/lib/notifications/notifications'
 import {
   type HomeTabNavigatorParams,

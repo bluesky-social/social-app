@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {useLingui} from '@lingui/react/macro'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -39,12 +39,12 @@ export default function TopicScreen({
   const {t: l} = useLingui()
 
   const headerTitle = useMemo(() => {
-    return enforceLen(decodeURIComponent(topic), 24, true, 'middle')
+    return enforceLen(topic, 24, true, 'middle')
   }, [topic])
 
   const onShare = useCallback(() => {
     const url = new URL('https://bsky.app')
-    url.pathname = `/topic/${topic}`
+    url.pathname = `/topic/${encodeURIComponent(topic)}`
     void shareUrl(url.toString())
   }, [topic])
 
@@ -137,7 +137,7 @@ function TopicScreenTab({
     fetchNextPage,
     hasNextPage,
   } = useSearchPostsV2Query({
-    query: decodeURIComponent(topic),
+    query: topic,
     sort,
     enabled: active,
   })

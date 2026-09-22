@@ -1,5 +1,5 @@
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useProfileQuery} from '#/state/queries/profile'

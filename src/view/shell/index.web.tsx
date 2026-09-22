@@ -1,11 +1,12 @@
-import {useCallback, useEffect, useLayoutEffect, useState} from 'react'
+import {useEffect, useLayoutEffect, useState} from 'react'
 import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native'
+import {Slot} from 'expo-router'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSession} from '#/state/session'
 import {useIsDrawerOpen, useSetDrawerOpen} from '#/state/shell'
@@ -34,7 +35,7 @@ import {DataUnavailableScreen} from '#/ageAssurance/components/DataUnavailableSc
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
-import {FlatNavigator, RoutesContainer} from '#/Navigation'
+import {RoutesContainer} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
 
@@ -53,16 +54,10 @@ function ShellInner() {
     return unsubscribe
   }, [navigator, closeAllActiveElements])
 
-  const drawerLayout = useCallback(
-    ({children}: {children: React.ReactNode}) => (
-      <DrawerLayout>{children}</DrawerLayout>
-    ),
-    [],
-  )
   return (
     <>
       <ErrorBoundary>
-        <FlatNavigator layout={drawerLayout} />
+        <Slot />
       </ErrorBoundary>
       <Composer />
       <MutedWordsDialog />
@@ -90,7 +85,7 @@ function ShellInner() {
   )
 }
 
-function DrawerLayout({children}: {children: React.ReactNode}) {
+export function DrawerLayout({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const isDrawerOpen = useIsDrawerOpen()
   const setDrawerOpen = useSetDrawerOpen()

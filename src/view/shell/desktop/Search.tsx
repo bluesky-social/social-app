@@ -1,8 +1,8 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {useSift} from '@bsky.app/sift'
-import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {StackActions, useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a} from '#/alf'
 import {

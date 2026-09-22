@@ -3,8 +3,8 @@ import {type StyleProp, Text as RNText, type TextStyle} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isInvalidHandle} from '#/lib/strings/handles'
 import {
@@ -83,7 +83,7 @@ export function RichTextTag({
           <InlineLinkText
             to={{
               screen: 'Hashtag',
-              params: {tag: encodeURIComponent(tag)},
+              params: {tag},
             }}
             {...menuProps}
             onPress={e => {
@@ -114,7 +114,7 @@ export function RichTextTag({
             label={_(msg`See ${isCashtag ? tag : `#${tag}`} posts`)}
             onPress={() => {
               navigation.push('Hashtag', {
-                tag: encodeURIComponent(tag),
+                tag,
               })
             }}>
             <Menu.ItemText>
@@ -131,7 +131,7 @@ export function RichTextTag({
               label={_(msg`See ${isCashtag ? tag : `#${tag}`} posts by user`)}
               onPress={() => {
                 navigation.push('Hashtag', {
-                  tag: encodeURIComponent(tag),
+                  tag,
                   author: authorHandle,
                 })
               }}>

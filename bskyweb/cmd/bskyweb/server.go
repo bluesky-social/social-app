@@ -270,6 +270,19 @@ func serve(cctx *cli.Context) error {
 	}
 
 	e.GET("/iframe/*", echo.WrapHandler(staticHandler))
+	// Expo Router's Metro bundles and imported assets use these public roots.
+	for _, prefix := range []string{"/_expo/*", "/assets/*"} {
+		e.GET(prefix, echo.WrapHandler(staticHandler), func(next echo.HandlerFunc) echo.HandlerFunc {
+			return func(c echo.Context) error {
+				c.Response().Before(func() {
+					if c.Response().Status < 300 {
+						c.Response().Header().Set("Cache-Control", "public, max-age=31536000, immutable")
+					}
+				})
+				return next(c)
+			}
+		})
+	}
 	e.GET("/static/*", echo.WrapHandler(http.StripPrefix("/static/", staticHandler)), func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			c.Response().Before(func() {

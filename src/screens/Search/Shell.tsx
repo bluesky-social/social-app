@@ -20,12 +20,12 @@ import Animated, {
 } from 'react-native-reanimated'
 import {setStringAsync} from 'expo-clipboard'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useNavigation, useRoute} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {HITSLOP_10, HITSLOP_20} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {MagnifyingGlassIcon} from '#/lib/icons'
+import {useFocusEffect, useNavigation, useRoute} from '#/lib/navigation'
 import {type NavigationProp, type SearchParams} from '#/lib/routes/types'
 import {listenSoftReset} from '#/state/events'
 import {

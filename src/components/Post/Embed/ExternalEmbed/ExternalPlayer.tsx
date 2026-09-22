@@ -12,13 +12,12 @@ import Animated, {
   useFrameCallback,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {WebView} from 'react-native-webview'
 import {scheduleOnRN} from 'react-native-worklets'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type EmbedPlayerParams,
@@ -36,10 +35,7 @@ import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
-
-interface ShouldStartLoadRequest {
-  url: string
-}
+import {PlayerFrame} from './PlayerFrame'
 
 // This renders the overlay when the player is either inactive or loading as a separate layer
 function PlaceholderOverlay({
@@ -84,35 +80,13 @@ function Player({
   params: EmbedPlayerParams
   onLoad: () => void
 }) {
-  // ensures we only load what's requested
-  // when it's a youtube video, we need to allow both bsky.app and youtube.com
-  const onShouldStartLoadWithRequest = useCallback(
-    (event: ShouldStartLoadRequest) =>
-      event.url === params.playerUri ||
-      (params.source.startsWith('youtube') &&
-        event.url.includes('www.youtube.com')),
-    [params.playerUri, params.source],
-  )
-
   // Don't show the player until it is active
   if (!isPlayerActive) return null
 
   return (
     <>
       <EventStopper style={[a.absolute, a.inset_0, {zIndex: 3}]}>
-        <WebView
-          javaScriptEnabled={true}
-          onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-          mediaPlaybackRequiresUserAction={false}
-          allowsInlineMediaPlayback
-          bounces={false}
-          allowsFullscreenVideo
-          nestedScrollEnabled
-          source={{uri: params.playerUri}}
-          onLoad={onLoad}
-          style={a.bg_transparent}
-          setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
-        />
+        <PlayerFrame params={params} onLoad={onLoad} />
       </EventStopper>
       <KeepAwake />
     </>

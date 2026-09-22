@@ -1,6 +1,6 @@
 import {useEffect} from 'react'
-import {useNavigation} from '@react-navigation/native'
 
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {bskyTitle} from '#/lib/strings/headings'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'

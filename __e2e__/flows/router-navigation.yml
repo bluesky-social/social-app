@@ -1,0 +1,123 @@
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+      SERVER_PATH: "?users&follows&posts"
+- runFlow:
+    file: ../setupApp.yml
+
+# A signed-out deep link should survive sign-in and have a Home destination.
+- openLink: "bluesky://profile/bob.test"
+- assertVisible: "Sign in"
+- tapOn:
+    id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "profileView"
+    timeout: 30000
+- assertVisible:
+    id: "profileHeaderDisplayName"
+    text: "Bob.*"
+- tapOn:
+    id: "profileHeaderBackBtn"
+- assertVisible:
+    id: "homeScreenFeedTabs"
+
+# Each tab retains its stack; pressing the selected tab returns to its root.
+- tapOn:
+    id: "bottomBarSearchBtn"
+- tapOn:
+    id: "searchScreenInput"
+- inputText: "bob"
+- tapOn:
+    id: "searchAutoCompleteResult-bob.test"
+- assertVisible:
+    id: "profileView"
+- tapOn:
+    id: "bottomBarHomeBtn"
+- assertVisible:
+    id: "homeScreenFeedTabs"
+- tapOn:
+    id: "bottomBarSearchBtn"
+- assertVisible:
+    id: "profileView"
+- tapOn:
+    id: "bottomBarSearchBtn"
+- assertVisible:
+    id: "searchScreenInput"
+
+# Both app schemes open a native screen and Android back returns to Home.
+- openLink: "bsky://profile/bob.test"
+- assertVisible:
+    id: "profileView"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - back
+      - assertVisible:
+          id: "homeScreenFeedTabs"
+- tapOn:
+    id: "bottomBarNotificationsBtn"
+- assertVisible:
+    id: "notificationsScreen"
+- tapOn:
+    id: "bottomBarMessagesBtn"
+- assertVisible:
+    id: "messagesScreen"
+- tapOn:
+    id: "bottomBarProfileBtn"
+- assertVisible:
+    id: "profileHeaderDisplayName"
+    text: "Alice.*"
+
+# Changing accounts clears history and resolves My Profile for the new account.
+- tapOn:
+    id: "e2eSignInBob"
+- extendedWaitUntil:
+    visible:
+      id: "homeScreenFeedTabs"
+    timeout: 30000
+- tapOn:
+    id: "bottomBarProfileBtn"
+- assertVisible:
+    id: "profileHeaderDisplayName"
+    text: "Bob.*"
+- tapOn:
+    id: "e2eGotoSettings"
+- tapOn:
+    id: "e2eSignOut"
+- extendedWaitUntil:
+    visible: "Sign in"
+    timeout: 30000
+- tapOn:
+    id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "homeScreenFeedTabs"
+    timeout: 30000
+
+# A warm compose intent preserves the current screen.
+- openLink: "bluesky://profile/bob.test"
+- extendedWaitUntil:
+    visible:
+      id: "profileView"
+    timeout: 30000
+- assertVisible:
+    id: "profileHeaderDisplayName"
+    text: "Bob.*"
+- openLink: "bluesky://intent/compose?text=Router%20intent%20smoke%20test"
+- extendedWaitUntil:
+    visible:
+      id: "composePostView"
+    timeout: 10000
+- assertVisible: "Router intent smoke test"
+- tapOn: "Cancel"
+- tapOn: "Discard"
+- assertVisible:
+    id: "profileView"
+- tapOn:
+    id: "profileHeaderBackBtn"
+- assertVisible:
+    id: "homeScreenFeedTabs"

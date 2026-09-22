@@ -1,17 +1,17 @@
 import {useCallback, useEffect, useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {HITSLOP_20} from '#/lib/constants'
 import {isBlockedOrBlocking, isMuted} from '#/lib/moderation/blocked-and-muted'
+import {useNavigation} from '#/lib/navigation'
 import {makeProfileLink, makeStarterPackLink} from '#/lib/routes/links'
 import {
   type CommonNavigatorParams,

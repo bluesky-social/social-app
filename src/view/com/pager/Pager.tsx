@@ -24,8 +24,8 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
-import {useFocusEffect} from '@react-navigation/native'
 
+import {useFocusEffect} from '#/lib/navigation'
 import {useSetDrawerSwipeDisabled} from '#/state/shell'
 import {atoms as a, native} from '#/alf'
 

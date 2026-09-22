@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {useNavigation} from '@react-navigation/native'
 
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {useSetThemePrefs} from '#/state/shell'
 import {ListContained} from '#/view/screens/Storybook/ListContained'

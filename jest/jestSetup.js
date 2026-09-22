@@ -13,13 +13,33 @@ jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
   const {EventEmitter} = require('events')
   return {
     __esModule: true,
-    default: EventEmitter,
+    default: class NativeEventEmitter {
+      emitter = new EventEmitter()
+      addListener(event, listener) {
+        this.emitter.on(event, listener)
+        return {remove: () => this.emitter.off(event, listener)}
+      }
+      emit(event, ...args) {
+        this.emitter.emit(event, ...args)
+      }
+      removeAllListeners(event) {
+        this.emitter.removeAllListeners(event)
+      }
+      listenerCount(event) {
+        return this.emitter.listenerCount(event)
+      }
+    },
   }
 })
 
 jest.mock('react-native-safe-area-context', () => {
+  /** @type {typeof import('react-native-safe-area-context/jest/mock')} */
+  const {default: mock} = jest.requireActual(
+    'react-native-safe-area-context/jest/mock',
+  )
   const inset = {top: 0, right: 0, bottom: 0, left: 0}
   return {
+    ...mock,
     SafeAreaProvider: jest.fn().mockImplementation(({children}) => children),
     SafeAreaConsumer: jest.fn().mockImplementation(
       /** @param {{children: (i: typeof inset) => unknown}} props */
@@ -117,6 +137,7 @@ jest.mock('expo-application', () => ({
 }))
 
 jest.mock('expo-modules-core', () => ({
+  ...jest.requireActual('expo-modules-core'),
   requireNativeModule: jest.fn().mockImplementation(
     /** @param {string} moduleName */
     moduleName => {

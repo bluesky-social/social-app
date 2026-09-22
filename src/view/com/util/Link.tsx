@@ -11,7 +11,6 @@ import {
   type ViewStyle,
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
-import {StackActions} from '@react-navigation/native'
 
 import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {
@@ -19,6 +18,7 @@ import {
   useNavigationDeduped,
 } from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {StackActions} from '#/lib/navigation'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {
   convertBskyAppUrlIfNeeded,

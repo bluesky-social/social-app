@@ -1,6 +1,6 @@
 import {useLingui} from '@lingui/react/macro'
-import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {StackActions, useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {matchXrpcError} from '#/lib/xrpc-error'

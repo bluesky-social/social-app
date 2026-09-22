@@ -2,15 +2,15 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import type Animated from 'react-native-reanimated'
 import {useAnimatedRef, useScrollOffset} from 'react-native-reanimated'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {TID} from '@atproto/common-web'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {RECOMMENDED_SAVED_FEEDS, TIMELINE_SAVED_FEED} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
+import {useNavigation} from '#/lib/navigation'
 import {
   type CommonNavigatorParams,
   type NavigationProp,

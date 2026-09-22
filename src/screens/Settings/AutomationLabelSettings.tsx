@@ -1,7 +1,7 @@
 import {View} from 'react-native'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {type $Typed} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type CommonNavigatorParams} from '#/lib/routes/types'

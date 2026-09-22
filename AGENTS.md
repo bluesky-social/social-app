@@ -11,7 +11,7 @@ Bluesky Social is a cross-platform social media application built with React Nat
 - React 19.2
 - React Native 0.86 with Expo 57
 - TypeScript 7
-- React Navigation 7 for routing
+- Expo Router 57 for file-based routing
 - TanStack Query (React Query) for data fetching
 - Lingui 5 for internationalization
 - Custom design system called ALF (Application Layout Framework)
@@ -63,7 +63,8 @@ src/
 │   └── persisted/          # Persistent storage layer
 ├── lib/                    # Utilities, constants, helpers
 ├── locale/                 # i18n configuration and language files
-└── Navigation.tsx          # Main navigation configuration
+├── app/                    # Expo Router route files and layouts
+└── Navigation.tsx          # Navigation analytics and notification entry handling
 ```
 
 ### Project Structure in Depth
@@ -402,11 +403,13 @@ e.g. `useAutoplayDisabled()` / `useSetAutoplayDisabled()`.
 
 ## Navigation
 
-React Navigation with type-safe route params. Type a screen with
-`NativeStackScreenProps<CommonNavigatorParams, 'X'>` (`route`/`navigation` come
-from props; params via `route.params`). Navigate programmatically with
-`useNavigation()`, or the `navigate` helper from `#/Navigation`. Config lives in
-`src/Navigation.tsx`, routes in `src/routes.ts`, types in `src/lib/routes/types.ts`.
+Expo Router owns routing on iOS, Android, and web. Routes and layouts live in
+`src/app`; keep screen implementations in `src/screens`. Prefer `useRouter`,
+`Link`, and `useLocalSearchParams` from `expo-router` in new code. Existing screens
+use the typed adapter in `#/lib/navigation` and `createRouteScreen` route wrappers.
+Use Expo Router entry points for lifecycle hooks and navigator types; do not
+import from `@react-navigation/*`. See `src/lib/navigation/README.md` for the shared
+native tab stacks, web layout, authentication gates, and URL parameter conventions.
 
 ## Platform-Specific Code
 
@@ -580,8 +583,8 @@ Only use `useMemo`/`useCallback` when you have a specific reason, such as:
 | Theme definitions | `src/alf/themes.ts`                          |
 | Design tokens     | `src/alf/tokens.ts`                          |
 | Static atoms      | `src/alf/atoms.ts` (extends `@bsky.app/alf`) |
-| Navigation config | `src/Navigation.tsx`                         |
-| Route definitions | `src/routes.ts`                              |
+| Navigation layouts | `src/app/**/_layout.tsx`                    |
+| Route definitions | `src/app/`, `src/lib/navigation/routeConfig.ts` |
 | Route types       | `src/lib/routes/types.ts`                    |
 | Query hooks       | `src/state/queries/*.ts`                     |
 | Session state     | `src/state/session/index.tsx`                |

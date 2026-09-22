@@ -1,7 +1,7 @@
 import {Pressable, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
 
+import {useNavigation, useNavigationState} from '#/lib/navigation'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {type NavigationProp} from '#/lib/routes/types'
 import {getLocalizedFeedName} from '#/lib/strings/feed-names'

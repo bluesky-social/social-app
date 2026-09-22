@@ -1,23 +1,23 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {type LayoutChangeEvent, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {
   ScrollEdgeEffect,
   ScrollEdgeEffectProvider,
 } from '@bsky.app/expo-scroll-edge-effect'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
+
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
 import {
   type RouteProp,
   useFocusEffect,
   useIsFocused,
   useNavigation,
   useRoute,
-} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
-
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {useViewportZoomLock} from '#/lib/hooks/useViewportZoomLock'
+} from '#/lib/navigation'
 import {
   type CommonNavigatorParams,
   type NavigationProp,

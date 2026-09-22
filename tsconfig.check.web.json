@@ -31,7 +31,8 @@
     }
   },
   "include": [
-    "index.web.ts",
+    "index.ts",
+    "src/app/**/*.tsx",
     "src/**/*.web.ts",
     "src/**/*.web.tsx",
     "src/platform/*.web-check.d.ts"

@@ -2,12 +2,12 @@ import {useEffect, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {isBlockedOrBlocking} from '#/lib/moderation/blocked-and-muted'
+import {useNavigation} from '#/lib/navigation'
 import {useCallOnce} from '#/lib/once'
 import {
   type CommonNavigatorParams,

@@ -12,7 +12,8 @@ import {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
-import {useFocusEffect} from '@react-navigation/native'
+
+import {useFocusEffect} from '#/lib/navigation'
 
 type StateContext = {
   footerMode: SharedValue<number>

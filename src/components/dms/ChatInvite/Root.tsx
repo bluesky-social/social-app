@@ -1,7 +1,7 @@
 import {setStringAsync} from 'expo-clipboard'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {
   type ChatInvitePreview,

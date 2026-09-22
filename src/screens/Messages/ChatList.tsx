@@ -1,17 +1,13 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {useFocusEffect, useIsFocused, useNavigation} from '#/lib/navigation'
 import {
   type MessagesTabNavigatorParams,
   type NavigationProp,

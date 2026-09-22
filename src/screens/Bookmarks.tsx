@@ -4,14 +4,14 @@ import {type $Typed} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
+
+import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {
   type NavigationProp,
   useFocusEffect,
   useNavigation,
-} from '@react-navigation/native'
-
-import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
-import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
+} from '#/lib/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,

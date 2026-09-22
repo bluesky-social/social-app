@@ -1,5 +1,5 @@
 import {type ViewStyle} from 'react-native'
-import {StyleProp} from 'react-native'
+import {type StyleProp} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'

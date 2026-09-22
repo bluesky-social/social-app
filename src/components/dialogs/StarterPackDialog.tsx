@@ -1,9 +1,9 @@
-import {useCallback} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {useRequireEmailVerification} from '#/lib/hooks/useRequireEmailVerification'
+import {useIsFocused, useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
@@ -14,6 +14,7 @@ import {
 } from '#/state/queries/list-memberships'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
+import {listenStarterPackWizardComplete} from '#/screens/StarterPack/Wizard/completion'
 import {atoms as a, native, platform, useTheme} from '#/alf'
 import {AvatarStack} from '#/components/AvatarStack'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -46,19 +47,32 @@ export function StarterPackDialog({
 }: StarterPackDialogProps) {
   const navigation = useNavigation<NavigationProp>()
   const requireEmailVerification = useRequireEmailVerification()
+  const awaitingWizard = useRef(false)
+  const [reopenOnFocus, setReopenOnFocus] = useState(false)
+  const isFocused = useIsFocused()
+
+  useEffect(
+    () =>
+      listenStarterPackWizardComplete(did => {
+        if (awaitingWizard.current && did === targetDid) {
+          awaitingWizard.current = false
+          setReopenOnFocus(true)
+        }
+      }),
+    [targetDid],
+  )
+
+  useEffect(() => {
+    if (isFocused && reopenOnFocus) {
+      setReopenOnFocus(false)
+      control.open()
+    }
+  }, [isFocused, reopenOnFocus, control])
 
   const navToWizard = useCallback(() => {
-    control.close()
-    navigation.navigate('StarterPackWizard', {
-      fromDialog: true,
-      targetDid: targetDid,
-      onSuccess: () => {
-        setTimeout(() => {
-          if (!control.isOpen) {
-            control.open()
-          }
-        }, 0)
-      },
+    control.close(() => {
+      awaitingWizard.current = true
+      navigation.navigate('StarterPackWizard', {fromDialog: true, targetDid})
     })
   }, [navigation, control, targetDid])
 

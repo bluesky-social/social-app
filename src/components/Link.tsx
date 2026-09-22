@@ -7,15 +7,12 @@ import {
 } from 'react-native'
 import {sanitizeUrl} from '@braintree/sanitize-url'
 import {useLingui} from '@lingui/react/macro'
-import {
-  type LinkProps as RNLinkProps,
-  StackActions,
-} from '@react-navigation/native'
 
 import {BSKY_DOWNLOAD_URL} from '#/lib/constants'
 import {useGroupChatJoinIntent} from '#/lib/hooks/useIntentHandler'
 import {useNavigationDeduped} from '#/lib/hooks/useNavigationDeduped'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
+import {type LinkProps as RNLinkProps, StackActions} from '#/lib/navigation'
 import {type AllNavigatorParams, type RouteParams} from '#/lib/routes/types'
 import {shareUrl} from '#/lib/sharing'
 import {
@@ -190,32 +187,6 @@ export function useLink({
               screen: keyof AllNavigatorParams,
               params?: RouteParams,
             ]
-
-            // does not apply to web's flat navigator
-            if (IS_NATIVE && screen !== 'NotFound') {
-              const state = navigation.getState()
-              // if screen is not in the current navigator, it means it's
-              // most likely a tab screen. note: state can be undefined
-              if (!state?.routeNames?.includes?.(screen)) {
-                const parent = navigation.getParent()
-                if (
-                  parent &&
-                  parent.getState().routeNames.includes(`${screen}Tab`)
-                ) {
-                  // yep, it's a tab screen. i.e. SearchTab
-                  // thus we need to navigate to the child screen
-                  // via the parent navigator
-                  // see https://reactnavigation.org/docs/upgrading-from-6.x/#changes-to-the-navigate-action
-                  // TODO: can we support the other kinds of actions? push/replace -sfn
-
-                  // @ts-expect-error include does not narrow the type unfortunately
-                  parent.navigate(`${screen}Tab`, {screen, params})
-                  return
-                } else {
-                  // will probably fail, but let's try anyway
-                }
-              }
-            }
 
             if (action === 'push') {
               navigation.dispatch(StackActions.push(screen, params))

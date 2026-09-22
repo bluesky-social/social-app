@@ -1,9 +1,8 @@
-import {useEffect, useState} from 'react'
 import {View} from 'react-native'
+import {useGlobalSearchParams} from 'expo-router'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
 import {FEEDBACK_FORM_URL, HELP_DESK_URL} from '#/lib/constants'
 import {useSession} from '#/state/session'
@@ -26,20 +25,7 @@ import {Text} from '#/components/Typography'
 import {SidebarLiveEventFeedsBanner} from '#/features/liveEvents/components/SidebarLiveEventFeedsBanner'
 
 function useWebQueryParams() {
-  const navigation = useNavigation()
-  const [params, setParams] = useState<Record<string, string>>({})
-
-  useEffect(() => {
-    return navigation.addListener('state', e => {
-      try {
-        const {state} = e.data
-        const lastRoute = state.routes[state.routes.length - 1]
-        setParams(lastRoute.params)
-      } catch (err) {}
-    })
-  }, [navigation, setParams])
-
-  return params
+  return useGlobalSearchParams<{q?: string}>()
 }
 
 export function DesktopRightNav({routeName}: {routeName: string}) {

@@ -1,10 +1,10 @@
-import {type NavigationState, type PartialState} from '@react-navigation/native'
-import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
+import {type NativeStackNavigationProp} from 'expo-router/native-stack'
 
+import {type NavigationState, type PartialState} from '#/lib/navigation'
 import {type SearchFilters} from '#/screens/Search/searchParams'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
 
-export type {NativeStackScreenProps} from '@react-navigation/native-stack'
+export type {NativeStackScreenProps} from 'expo-router/native-stack'
 
 /**
  * The advanced-search filter params are owned by searchParams.ts (the param
@@ -97,7 +97,6 @@ export type CommonNavigatorParams = {
   StarterPackWizard: {
     fromDialog?: boolean
     targetDid?: string
-    onSuccess?: () => void
   }
   StarterPackEdit: {rkey?: string}
   VideoFeed: VideoFeedSourceContext

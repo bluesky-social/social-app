@@ -1,7 +1,6 @@
 import {useCallback, useMemo, useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect, useNavigation} from '@react-navigation/native'
 import {
   type InfiniteData,
   type UseInfiniteQueryResult,
@@ -9,6 +8,7 @@ import {
 
 import {useAppState} from '#/lib/appState'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {useFocusEffect, useNavigation} from '#/lib/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,

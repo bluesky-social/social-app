@@ -6,10 +6,10 @@ import {
   useState,
   useSyncExternalStore,
 } from 'react'
-import {useFocusEffect} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useAppState} from '#/lib/appState'
+import {useFocusEffect} from '#/lib/navigation'
 import {Convo} from '#/state/messages/convo/agent'
 import {
   type ConvoParams,

@@ -2,10 +2,9 @@ import {type JSX, useCallback} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {type BottomTabBarProps} from 'expo-router/js-tabs'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {type BottomTabBarProps} from '@react-navigation/bottom-tabs'
-import {StackActions} from '@react-navigation/native'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {BOTTOM_BAR_AVI} from '#/lib/demo'
@@ -14,6 +13,7 @@ import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useHideBottomBarBorder} from '#/lib/hooks/useHideBottomBarBorder'
 import {useMinimalShellFooterTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {useNavigationTabState} from '#/lib/hooks/useNavigationTabState'
+import {StackActions, useNavigation} from '#/lib/navigation'
 import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
@@ -60,7 +60,8 @@ import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
 
-export function BottomBar({navigation}: BottomTabBarProps) {
+export function BottomBar(_props: BottomTabBarProps) {
+  const navigation = useNavigation()
   const {hasSession, currentAccount} = useSession()
   const t = useTheme()
   const {t: l} = useLingui()
@@ -197,6 +198,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
               accessibilityHint=""
             />
             <Btn
+              testID="bottomBarSearchBtn"
               icon={
                 isAtSearch ? (
                   <MagnifyingGlassFilled
@@ -205,7 +207,6 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   />
                 ) : (
                   <MagnifyingGlass
-                    testID="bottomBarSearchBtn"
                     width={iconWidth + 2}
                     style={[styles.ctrlIcon, t.atoms.text, styles.searchIcon]}
                   />

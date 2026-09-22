@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useRef, useState} from 'react'
-import {useFocusEffect} from '@react-navigation/native'
 import debounce from 'lodash.debounce'
 
+import {useFocusEffect} from '#/lib/navigation'
 import {useCallOnce} from '#/lib/once'
 import {
   usePreferencesQuery,

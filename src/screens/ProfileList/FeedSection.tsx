@@ -3,9 +3,9 @@ import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
-import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useIsFocused} from '#/lib/navigation'
 import {listenSoftReset} from '#/state/events'
 import {
   type FeedDescriptor,

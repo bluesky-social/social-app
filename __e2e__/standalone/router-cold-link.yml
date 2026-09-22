@@ -1,0 +1,28 @@
+# Run with a standalone E2E build; Expo development clients cannot cold-link.
+appId: xyz.blueskyweb.app
+---
+- runScript:
+    file: ../setupServer.js
+    env:
+      SERVER_PATH: "?users&follows&posts"
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+- extendedWaitUntil:
+    visible:
+      id: "homeScreenFeedTabs"
+    timeout: 30000
+- stopApp
+- openLink: "bluesky://profile/bob.test"
+- extendedWaitUntil:
+    visible:
+      id: "profileView"
+    timeout: 30000
+- assertVisible:
+    id: "profileHeaderDisplayName"
+    text: "Bob.*"
+- tapOn:
+    id: "profileHeaderBackBtn"
+- assertVisible:
+    id: "homeScreenFeedTabs"

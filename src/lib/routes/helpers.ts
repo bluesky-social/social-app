@@ -1,5 +1,4 @@
-import {type NavigationProp} from '@react-navigation/native'
-
+import {type NavigationProp, toAppState} from '#/lib/navigation'
 import {type RouteParams, type State} from './types'
 
 export function getRootNavigation<T extends {}>(
@@ -8,7 +7,11 @@ export function getRootNavigation<T extends {}>(
   while (nav.getParent()) {
     nav = nav.getParent()
   }
-  return nav
+  return {
+    ...nav,
+    getState: () =>
+      toAppState(nav.getState()) as ReturnType<typeof nav.getState>,
+  }
 }
 
 export function getCurrentRoute(state?: State) {

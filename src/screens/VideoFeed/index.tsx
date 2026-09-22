@@ -22,6 +22,7 @@ import {
 import {useEvent, useEventListener} from 'expo'
 import {Image, type ImageStyle} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {createVideoPlayer, type VideoPlayer, VideoView} from 'expo-video'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
@@ -31,14 +32,6 @@ import {
   type ListViewToken as ViewToken,
   type ViewabilityConfig,
 } from '@react-native/virtualized-lists'
-import {
-  type RouteProp,
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
@@ -49,6 +42,13 @@ import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
 } from '#/lib/media/video/playbackTelemetry'
+import {
+  type RouteProp,
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from '#/lib/navigation'
 import {
   type CommonNavigatorParams,
   type NavigationProp,

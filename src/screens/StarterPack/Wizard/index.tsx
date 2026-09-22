@@ -3,14 +3,14 @@ import {Keyboard, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {Image} from 'expo-image'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {AtUri} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
+import {useNavigation} from '#/lib/navigation'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -53,6 +53,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
+import {completeStarterPackWizard} from './completion'
 import {Provider} from './State'
 
 export function Wizard({
@@ -65,7 +66,9 @@ export function Wizard({
   const rkey = 'rkey' in params ? params.rkey : undefined
   const fromDialog = 'fromDialog' in params ? params.fromDialog : false
   const targetDid = 'targetDid' in params ? params.targetDid : undefined
-  const onSuccess = 'onSuccess' in params ? params.onSuccess : undefined
+  const onSuccess = () => {
+    if (targetDid) completeStarterPackWizard(targetDid)
+  }
   const {currentAccount} = useSession()
   const moderationOpts = useModerationOpts()
 

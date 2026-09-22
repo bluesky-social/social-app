@@ -4,9 +4,9 @@ import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
 import {HITSLOP_20} from '#/lib/constants'
+import {type RouteProp, useNavigation, useRoute} from '#/lib/navigation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {
   type CommonNavigatorParams,

@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
+import {type NativeStackScreenProps} from 'expo-router/native-stack'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
@@ -45,9 +45,7 @@ export default function HashtagScreen({
   const {tag, author} = route.params
   const {t: l} = useLingui()
 
-  const decodedTag = useMemo(() => {
-    return decodeURIComponent(tag)
-  }, [tag])
+  const decodedTag = tag
 
   const isCashtag = decodedTag.startsWith('$')
 
@@ -69,7 +67,7 @@ export default function HashtagScreen({
 
   const onShare = useCallback(() => {
     const url = new URL('https://bsky.app')
-    url.pathname = `/hashtag/${decodeURIComponent(tag)}`
+    url.pathname = `/hashtag/${encodeURIComponent(tag)}`
     if (author) {
       url.searchParams.set('author', author)
     }

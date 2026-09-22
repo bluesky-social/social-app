@@ -1,9 +1,9 @@
 import {useCallback} from 'react'
 import {View} from 'react-native'
 import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
-import {type ScreenLayoutArgs, useIsFocused} from '@react-navigation/native'
-import {type NativeStackNavigationProp} from '@react-navigation/native-stack'
+import {type NativeStackNavigationProp} from 'expo-router/native-stack'
 
+import {type ScreenLayoutArgs, useIsFocused} from '#/lib/navigation'
 import {type FlatNavigatorParams} from '#/lib/routes/types'
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {useChatActorStatusQuery} from '#/state/queries/messages/get-status'

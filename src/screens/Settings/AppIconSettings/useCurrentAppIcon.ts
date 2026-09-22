@@ -1,7 +1,7 @@
 import {useCallback, useMemo, useState} from 'react'
 import * as DynamicAppIcon from '@bsky.app/expo-dynamic-app-icon'
-import {useFocusEffect} from '@react-navigation/native'
 
+import {useFocusEffect} from '#/lib/navigation'
 import {useAppIconSets} from '#/screens/Settings/AppIconSettings/useAppIconSets'
 
 export function useCurrentAppIcon() {

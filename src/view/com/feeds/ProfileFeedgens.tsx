@@ -14,9 +14,9 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {useNavigation} from '#/lib/navigation'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePreferencesQuery} from '#/state/queries/preferences'

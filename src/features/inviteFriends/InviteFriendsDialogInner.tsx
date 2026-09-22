@@ -7,8 +7,8 @@ import {
   saveToLibraryAsync,
 } from 'expo-media-library/legacy'
 import {useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 
+import {useNavigation} from '#/lib/navigation'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl as nativeShareUrl} from '#/lib/sharing'
 import {logger} from '#/logger'

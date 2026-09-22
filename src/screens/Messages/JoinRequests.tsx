@@ -1,11 +1,11 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
-import {useNavigation} from '@react-navigation/native'
 import {type InfiniteData, useQueryClient} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {isNetworkError} from '#/lib/hooks/useCleanError'
+import {useNavigation} from '#/lib/navigation'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,

@@ -4,12 +4,13 @@ import {Drawer} from 'react-native-drawer-layout'
 import {SystemBars} from 'react-native-edge-to-edge'
 import {Gesture} from 'react-native-gesture-handler'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import {useNavigation, useNavigationState} from '@react-navigation/native'
+import {Slot} from 'expo-router'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useIntentHandler} from '#/lib/hooks/useIntentHandler'
 import {useNotificationsHandler} from '#/lib/hooks/useNotificationHandler'
 import {useOTAUpdateRecovery} from '#/lib/hooks/useOTAUpdates'
+import {useNavigation, useNavigationState} from '#/lib/navigation'
 import {useNotificationsRegistration} from '#/lib/notifications/notifications'
 import {isStateAtTabRoot} from '#/lib/routes/helpers'
 import {useDialogFullyExpandedCountContext} from '#/state/dialogs'
@@ -45,7 +46,7 @@ import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
-import {RoutesContainer, TabsNavigator} from '#/Navigation'
+import {RoutesContainer} from '#/Navigation'
 import {BottomSheetOutlet} from '../../../modules/bottom-sheet'
 import {updateActiveViewAsync} from '../../../modules/expo-bluesky-swiss-army/src/VisibilityView'
 import {Composer} from './Composer'
@@ -93,19 +94,12 @@ function ShellInner() {
     }
   }, [dedupe, navigation])
 
-  const drawerLayout = useCallback(
-    ({children}: {children: React.ReactNode}) => (
-      <DrawerLayout>{children}</DrawerLayout>
-    ),
-    [],
-  )
-
   return (
     <>
       <View style={[a.h_full]}>
         <ErrorBoundary
           style={{paddingTop: insets.top, paddingBottom: insets.bottom}}>
-          <TabsNavigator layout={drawerLayout} />
+          <Slot />
         </ErrorBoundary>
       </View>
       <Composer />
@@ -132,7 +126,7 @@ function ShellInner() {
   )
 }
 
-function DrawerLayout({children}: {children: React.ReactNode}) {
+export function DrawerLayout({children}: {children: React.ReactNode}) {
   const t = useTheme()
   const isDrawerOpen = useIsDrawerOpen()
   const setIsDrawerOpen = useSetDrawerOpen()

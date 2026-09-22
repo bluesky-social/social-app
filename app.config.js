@@ -48,7 +48,7 @@ module.exports = function (_config) {
       version: VERSION,
       name: 'Bluesky',
       slug: 'bluesky',
-      scheme: 'bluesky',
+      scheme: ['bluesky', 'bsky'],
       owner: 'blueskysocial',
       runtimeVersion: {
         policy: 'appVersion',
@@ -217,6 +217,8 @@ module.exports = function (_config) {
         ],
       },
       web: {
+        bundler: 'metro',
+        output: 'single',
         favicon: './assets/favicon.png',
       },
       updates: {
@@ -235,6 +237,7 @@ module.exports = function (_config) {
         checkAutomatically: 'NEVER',
       },
       plugins: [
+        'expo-router',
         [
           'expo-dev-client',
           {
@@ -296,6 +299,8 @@ module.exports = function (_config) {
               targetSdkVersion: 36,
               buildToolsVersion: '36.0.0',
               buildReactNativeFromSource: IS_PRODUCTION,
+              // Standalone E2E builds connect to the local HTTP fixture server.
+              ...(IS_E2E ? {usesCleartextTraffic: true} : {}),
             },
           },
         ],
