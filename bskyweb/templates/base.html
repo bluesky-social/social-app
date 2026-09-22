@@ -157,10 +157,11 @@
   </div>
 
   <noscript>
-    <h1 lang="en">JavaScript Required</h1>
-    <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
-    <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.
     {% block noscript_extra %}{% endblock %}
+    <div data-nosnippet>
+      <p lang="en">Enable JavaScript to use Bluesky.</p>
+      <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.</p>
+    </div>
   </noscript>
 {% endblock -%}
 </body>
