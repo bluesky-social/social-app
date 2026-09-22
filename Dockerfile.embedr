@@ -22,7 +22,7 @@ ENV CI=true
 COPY . .
 
 #
-# Generate the JavaScript webpack. NOTE: this will change
+# Generate the JavaScript bundle. NOTE: this will change
 #
 RUN mkdir --parents $NVM_DIR && \
   wget \
