@@ -4,7 +4,8 @@ Run **Prepare Cactus Release** in GitHub Actions with:
 
 - `sourceRef`: branch, tag, or commit to release.
 - `releaseVersion`: strict `x.y.z`, matching the package and Expo versions.
-- `dryRun`: defaults to `true`. Disable it to create the draft and start builds.
+- `dryRun`: optional checkbox, unchecked by default. Check it to preview only;
+  leave it unchecked to create the draft and start builds.
 
 The run produces an Actions summary and an artifact containing the request plan,
 release file, and public notes. Reports are saved on conflicts too.
@@ -14,8 +15,8 @@ release file, and public notes. Reports are saved on conflicts too.
 1. Choose a green commit on main with the intended package and Expo version.
    Review the commit-title changelog and refresh translations before choosing
    that commit if needed.
-2. Run a preview with that **full commit SHA** as `sourceRef` and review the
-   generated release document and requests.
+2. To preview first, check **Dry run**, use that **full commit SHA** as `sourceRef`,
+   and review the generated release document and requests.
 3. Run the workflow on `main` with the same version and SHA and `dryRun: false`.
    Live preparation only accepts source commits in the tooling commit's main
    history. Its build workflow definitions must match the tooling checkout.

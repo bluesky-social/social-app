@@ -6,9 +6,9 @@ on:
   workflow_dispatch:
     inputs:
       dryRun:
-        description: Preview only (disable to create the draft release and start builds)
+        description: Dry run (preview only; do not create the release or start builds)
         type: boolean
-        default: true
+        default: false
       releaseVersion:
         description: Release version (x.y.z; must match the source)
         required: true
