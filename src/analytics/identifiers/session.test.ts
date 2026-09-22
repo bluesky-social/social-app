@@ -13,6 +13,9 @@ const mockDeviceSet = jest.fn((key: string[], value: unknown) => {
   mockDeviceValues.set(storageKey, value)
   mockDeviceListeners.get(storageKey)?.forEach(listener => listener())
 })
+const mockDeviceRemove = jest.fn((key: string[]) => {
+  mockDeviceValues.delete(key.join(':'))
+})
 const mockDeviceAddOnValueChangedListener = jest.fn(
   (key: string[], listener: () => void) => {
     const storageKey = key.join(':')
@@ -61,6 +64,7 @@ jest.mock('#/storage', () => ({
   device: {
     get: mockDeviceGet,
     set: mockDeviceSet,
+    remove: mockDeviceRemove,
     addOnValueChangedListener: mockDeviceAddOnValueChangedListener,
   },
 }))
@@ -92,6 +96,10 @@ function setLegacySession(id: string, lastEventAt?: number) {
   }
 }
 
+function setSessionRecord(record: unknown) {
+  mockDeviceValues.set('nativeSession', record)
+}
+
 function emitAppState(state: string) {
   mockCurrentAppState = state
   mockAppStateListeners.forEach(listener => listener(state))
@@ -112,6 +120,11 @@ describe('native session initialization', () => {
     expect(getInitialSessionId()).toBe('session-a')
     expect(getSessionId()).toBe('session-a')
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(mockDeviceSet).toHaveBeenCalledTimes(1)
+    expect(mockDeviceSet).toHaveBeenCalledWith(['nativeSession'], {
+      id: 'session-a',
+      rotatedAt: NOW.getTime(),
+    })
   })
 
   it('creates a session when initialized in the background without one', () => {
@@ -132,6 +145,12 @@ describe('native session initialization', () => {
     expect(getInitialSessionId()).toBe('existing-session')
     expect(getSessionId()).toBe('existing-session')
     expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(mockDeviceValues.get('nativeSession')).toMatchObject({
+      id: 'existing-session',
+      rotatedAt: NOW.getTime() - FIVE_MINUTES + 1,
+    })
+    expect(mockDeviceValues.has('nativeSessionId')).toBe(false)
+    expect(mockDeviceValues.has('nativeSessionIdLastEventAt')).toBe(false)
   })
 
   it('rotates an active stored session at the exact five-minute boundary', () => {
@@ -157,25 +176,49 @@ describe('native session initialization', () => {
     expect(mockUuidV4).not.toHaveBeenCalled()
   })
 
-  test.failing(
-    'defers rotating an expired stored session initialized in the background',
-    () => {
-      mockCurrentAppState = 'background'
-      setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES)
+  test('defers rotating an expired stored session initialized in the background', () => {
+    mockCurrentAppState = 'background'
+    setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES)
 
-      const {getInitialSessionId, getSessionId} = loadSession()
+    const {getInitialSessionId, getSessionId} = loadSession()
 
-      expect(getInitialSessionId()).toBe('existing-session')
-      expect(getSessionId()).toBe('existing-session')
-      expect(mockUuidV4).not.toHaveBeenCalled()
-    },
-  )
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(getSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  it('does not rotate a session younger than five minutes', () => {
+    setSessionRecord({
+      id: 'existing-session',
+      inactivityAt: NOW.getTime() - FIVE_MINUTES,
+      rotatedAt: NOW.getTime() - FIVE_MINUTES + 1,
+    })
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  it('normalizes malformed record timestamps without rotating', () => {
+    setSessionRecord({
+      id: 'existing-session',
+      inactivityAt: 'invalid',
+      rotatedAt: 'invalid',
+    })
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(mockDeviceValues.get('nativeSession')).toEqual({
+      id: 'existing-session',
+      inactivityAt: undefined,
+      rotatedAt: NOW.getTime(),
+    })
+  })
 })
 
-/*
- * These known-failure tests define the coordinator contract. Remove
- * `test.failing` as the corresponding production behavior is implemented.
- */
 describe('native session lifecycle', () => {
   it('does not rotate when foregrounded before five minutes', () => {
     setLegacySession('existing-session', NOW.getTime())
@@ -201,6 +244,11 @@ describe('native session lifecycle', () => {
 
     expect(hook.result.current).toBe('session-a')
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(mockDeviceValues.get('nativeSession')).toEqual({
+      id: 'session-a',
+      inactivityAt: undefined,
+      rotatedAt: NOW.getTime() + FIVE_MINUTES,
+    })
   })
 
   it('does not rotate again inside five minutes', () => {
@@ -219,23 +267,20 @@ describe('native session lifecycle', () => {
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
   })
 
-  test.failing(
-    'does not erase the inactivity start during intermediate states',
-    () => {
-      setLegacySession('existing-session', NOW.getTime())
-      const {useSessionId} = loadSession()
-      const hook = renderHook(() => useSessionId())
+  test('does not erase the inactivity start during intermediate states', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const hook = renderHook(() => useSessionId())
 
-      act(() => emitAppState('inactive'))
-      jest.advanceTimersByTime(FIVE_MINUTES - 1)
-      act(() => emitAppState('background'))
-      jest.advanceTimersByTime(1)
-      act(() => emitAppState('active'))
+    act(() => emitAppState('inactive'))
+    jest.advanceTimersByTime(FIVE_MINUTES - 1)
+    act(() => emitAppState('background'))
+    jest.advanceTimersByTime(1)
+    act(() => emitAppState('active'))
 
-      expect(hook.result.current).toBe('session-a')
-      expect(mockUuidV4).toHaveBeenCalledTimes(1)
-    },
-  )
+    expect(hook.result.current).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
 
   test('uses one app-state listener for every mounted consumer', () => {
     setLegacySession('existing-session', NOW.getTime())
@@ -278,7 +323,12 @@ describe('native session lifecycle', () => {
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
-    act(() => mockDeviceSet(['nativeSessionId'], 'external-session'))
+    act(() =>
+      mockDeviceSet(['nativeSession'], {
+        id: 'external-session',
+        rotatedAt: NOW.getTime(),
+      }),
+    )
 
     expect(hook.result.current).toBe('external-session')
   })

@@ -1,4 +1,5 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {type SessionRecord} from '#/analytics/identifiers/util'
 import {type Gif} from '#/features/gifPicker/types'
 import {type InviteThemeKey} from '#/features/inviteFriends/themes'
 import {type Geolocation} from '#/geolocation/types'
@@ -12,10 +13,11 @@ export type Device = {
    * device, used with our logging and metrics tracking.
    */
   deviceId?: string
-  /**
-   * Session ID storage for _native only_. On web, use we `sessionStorage`
-   */
+  /** Analytics session storage for native. */
+  nativeSession?: SessionRecord
+  /** @deprecated Migrated to `nativeSession`. */
   nativeSessionId?: string
+  /** @deprecated Migrated to `nativeSession`. */
   nativeSessionIdLastEventAt?: number
 
   fontScale: '-2' | '-1' | '0' | '1' | '2'
