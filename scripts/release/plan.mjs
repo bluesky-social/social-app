@@ -1,10 +1,9 @@
 import {createHash} from 'node:crypto'
-import {readFileSync, writeFileSync} from 'node:fs'
+import {readFileSync} from 'node:fs'
 import {dirname, join, resolve} from 'node:path'
-import {fileURLToPath, pathToFileURL} from 'node:url'
+import {fileURLToPath} from 'node:url'
 
-import {checkGitHub, githubReader} from './check-github.mjs'
-import {renderReport} from './prepare.mjs'
+import {checkGitHub} from './check-github.mjs'
 
 export const buildWorkflows = [
   {
@@ -254,34 +253,4 @@ export async function dryRunRelease(
       plan.status = plan.warnings.length ? 'complete-with-warnings' : 'complete'
   }
   return {...checked, execution: plan}
-}
-
-if (
-  process.argv[1] &&
-  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
-) {
-  try {
-    const [directory, repository, ...extra] = process.argv.slice(2)
-    if (!directory || !repository || extra.length)
-      throw new Error(
-        'Usage: node scripts/release/plan.mjs REPORT_DIRECTORY OWNER/REPO. Live execution is not available.',
-      )
-    const report = await dryRunRelease(
-      JSON.parse(readFileSync(join(directory, 'report.json'), 'utf8')),
-      repository,
-      githubReader(repository, process.env.GH_TOKEN),
-    )
-    report.github.repository = repository
-    writeFileSync(
-      join(directory, 'report.json'),
-      JSON.stringify(report, null, 2) + '\n',
-    )
-    const markdown = renderReport(report)
-    writeFileSync(join(directory, 'README.md'), markdown)
-    process.stdout.write(markdown)
-    if (report.execution.status === 'blocked') process.exitCode = 1
-  } catch (error) {
-    process.stderr.write(`${error.message}\n`)
-    process.exitCode = 1
-  }
 }

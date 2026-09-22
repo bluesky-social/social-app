@@ -1,35 +1,3 @@
-import {readFileSync, writeFileSync} from 'node:fs'
-import {join, resolve} from 'node:path'
-import {pathToFileURL} from 'node:url'
-
-import {renderReport} from './prepare.mjs'
-
-/** GET-only GitHub reader. Missing resources are established by successful lists. */
-export function githubReader(repository, token) {
-  if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository) || !token) {
-    throw new Error('A repository (owner/name) and GH_TOKEN are required.')
-  }
-  return async path => {
-    const response = await fetch(
-      `https://api.github.com/repos/${repository}${path ? `/${path}` : ''}`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: 'application/vnd.github+json',
-          'X-GitHub-Api-Version': '2022-11-28',
-        },
-        signal: AbortSignal.timeout(30000),
-      },
-    )
-    if (!response.ok)
-      throw new Error(
-        `GitHub GET ${path}: HTTP ${response.status}. No absence or reuse can be assumed.`,
-      )
-    return response.json()
-  }
-}
-
 /** Compare actual remote resources, accepting only an exact, single-file preparation commit. */
 export async function checkGitHub(report, read) {
   const {identity, sourceSha, document, publicChangelog} = report
@@ -220,34 +188,5 @@ export async function checkGitHub(report, read) {
       checks,
       observed,
     },
-  }
-}
-
-if (
-  process.argv[1] &&
-  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
-) {
-  try {
-    const [directory, repository, ...extra] = process.argv.slice(2)
-    if (!directory || !repository || extra.length)
-      throw new Error(
-        'Usage: node scripts/release/check-github.mjs REPORT_DIRECTORY OWNER/REPO',
-      )
-    const report = await checkGitHub(
-      JSON.parse(readFileSync(join(directory, 'report.json'), 'utf8')),
-      githubReader(repository, process.env.GH_TOKEN),
-    )
-    report.github.repository = repository
-    writeFileSync(
-      join(directory, 'report.json'),
-      JSON.stringify(report, null, 2) + '\n',
-    )
-    const markdown = renderReport(report)
-    writeFileSync(join(directory, 'README.md'), markdown)
-    process.stdout.write(markdown)
-    if (report.github.status === 'blocked') process.exitCode = 1
-  } catch (error) {
-    process.stderr.write(`${error.message}\n`)
-    process.exitCode = 1
   }
 }

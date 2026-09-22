@@ -29,15 +29,10 @@ PAT is required. The workflow serializes runs for each release version, never
 force-updates a ref, and never publishes the draft or submits native builds.
 The web build does push its production image to ECR.
 
-The local live entry point is deliberately separate from the preview CLI:
-
-```sh
-node scripts/release/prepare.mjs 1.133.0 /path/to/clean/source release-preparation
-node scripts/release/execute.mjs release-preparation bluesky-social/social-app --apply
-```
-
-It requires `GH_TOKEN` with Contents and Actions write permissions. Prefer the
-workflow for its main-only entry point and per-version concurrency control.
+Preparation runs through `actions/github-script` using its authenticated GitHub
+client. The workflow calls the release functions directly and writes their report
+to the Actions summary; there is no live CLI or report-file handoff between steps.
+API requests are not automatically retried.
 
 ## Plan
 

@@ -17,7 +17,7 @@ function check(scenario) {
       '--input-type=module',
       '-e',
       `
-    import {checkGitHub, githubReader} from ${JSON.stringify(moduleUrl)}
+    import {checkGitHub} from ${JSON.stringify(moduleUrl)}
     import {dryRunRelease, buildWorkflows} from ${JSON.stringify(plannerUrl)}
     const scenario = process.argv[1]
     const hashes = Object.fromEntries(buildWorkflows.map(build => [build.file, build.file]))
@@ -61,14 +61,6 @@ function check(scenario) {
       return data[path]
     }
     const checked = scenario.startsWith('plan-') ? await dryRunRelease(report, 'owner/repo', read, hashes) : await checkGitHub(report, read)
-    if (scenario === 'get-only') {
-      globalThis.fetch = async (url, options) => {
-        if (url !== 'https://api.github.com/repos/owner/repo') throw new Error('Wrong repository endpoint')
-        if (options.method !== 'GET' || options.body) throw new Error('Mutation attempted')
-        return {ok:false,status:404}
-      }
-      try { await githubReader('owner/repo','dummy')('') } catch(error) { checked.transportError = error.message }
-    }
     process.stdout.write(JSON.stringify(checked))
   `,
       scenario,
@@ -119,12 +111,6 @@ test('checks later pages of releases', () => {
         expect.objectContaining({resource: 'GitHub Release', action: 'reuse'}),
       ]),
     },
-  })
-})
-
-test('reader only sends GET and treats HTTP errors as failures, not missing resources', () => {
-  expect(check('get-only')).toMatchObject({
-    transportError: expect.stringContaining('HTTP 404'),
   })
 })
 
@@ -241,7 +227,7 @@ test('a missing or changed build workflow blocks all proposed operations', () =>
   })
 })
 
-test('planned build inputs match the actual dispatch definitions and no live option exists', () => {
+test('planned build inputs match the actual dispatch definitions', () => {
   const result = spawnSync(
     process.execPath,
     [
@@ -287,13 +273,6 @@ test('planned build inputs match the actual dispatch definitions and no live opt
   )
   expect(result.stderr).toBe('')
   expect(result.status).toBe(0)
-  const live = spawnSync(
-    process.execPath,
-    [resolve('scripts/release/plan.mjs'), 'report', 'owner/repo', '--apply'],
-    {encoding: 'utf8'},
-  )
-  expect(live.status).toBe(1)
-  expect(live.stderr).toContain('Live execution is not available')
 })
 
 test('read-only draft visibility allows a conditional dry-run plan but still catches conflicts', () => {

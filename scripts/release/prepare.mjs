@@ -120,7 +120,7 @@ export function renderReport(report) {
             : 'Create/reuse describes a proposed action only. If any check is blocked, the whole preparation is blocked. These reads are a snapshot; a live run must recheck before writing.',
         ]
       : [
-          'GitHub has not been checked. Run check-github.mjs to inspect existing resources.',
+          'GitHub has not been checked. Run the preparation workflow to inspect existing resources.',
         ]),
     '',
     ...(report.execution

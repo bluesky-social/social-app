@@ -1,11 +1,5 @@
-import {readFileSync, writeFileSync} from 'node:fs'
-import {join, resolve} from 'node:path'
-import {pathToFileURL} from 'node:url'
-
 import {checkGitHub} from './check-github.mjs'
-import {githubClient} from './github.mjs'
 import {buildWorkflows, planRelease, workflowHashes} from './plan.mjs'
-import {renderReport} from './prepare.mjs'
 
 /** Ignore mutable counters and asset lists, but retain every release identity field. */
 function snapshot(checked) {
@@ -182,34 +176,4 @@ export async function executeRelease(
   }
   result.github.repository = repository
   return result
-}
-
-if (
-  process.argv[1] &&
-  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
-) {
-  try {
-    const [directory, repository, confirmation, ...extra] =
-      process.argv.slice(2)
-    if (!directory || !repository || confirmation !== '--apply' || extra.length)
-      throw new Error(
-        'Usage: node scripts/release/execute.mjs REPORT_DIRECTORY OWNER/REPO --apply',
-      )
-    const report = await executeRelease(
-      JSON.parse(readFileSync(join(directory, 'report.json'), 'utf8')),
-      repository,
-      githubClient(repository, process.env.GH_TOKEN),
-    )
-    const markdown = renderReport(report)
-    writeFileSync(
-      join(directory, 'report.json'),
-      JSON.stringify(report, null, 2) + '\n',
-    )
-    writeFileSync(join(directory, 'README.md'), markdown)
-    process.stdout.write(markdown)
-    if (report.execution.status === 'blocked') process.exitCode = 1
-  } catch (error) {
-    process.stderr.write(`${error.message}\n`)
-    process.exitCode = 1
-  }
 }
