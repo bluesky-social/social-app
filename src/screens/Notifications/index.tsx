@@ -15,12 +15,15 @@ import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
+import {type GroupedNotificationsFilter} from '#/state/queries/notifications/grouped'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
   useHomeHeaderMode,
 } from '#/view/com/util/MainScrollProvider'
 import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/Notifications'
+import {DUMMY_GROUPED_NOTIFICATIONS} from '#/screens/Notifications/components/GroupedNotificationItem/dummyData'
+import {type GroupedNotification} from '#/screens/Notifications/components/GroupedNotificationItem/types'
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
@@ -29,6 +32,8 @@ import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import * as Layout from '#/components/Layout'
 import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {useDemoMode} from '#/storage/hooks/demo-mode'
+import {useDevMode} from '#/storage/hooks/dev-mode'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -37,11 +42,13 @@ type Props = NativeStackScreenProps<
 
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
+  const [demoMode] = useDemoMode()
+  const [devMode] = useDevMode()
   const isNewNotificationsEnabled = ax.features.enabled(
     ax.features.NotificationsV2Enable,
   )
 
-  if (isNewNotificationsEnabled) {
+  if (isNewNotificationsEnabled || devMode || demoMode) {
     return <NewNotificationsScreen {...props} />
   }
 
@@ -60,16 +67,52 @@ export function NewNotificationsScreen({}: Props) {
 
 function NewNotificationsScreenInner() {
   const {t: l} = useLingui()
+  const [demoMode] = useDemoMode()
+  const [devMode] = useDevMode()
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
-  const tabs = [
-    {key: 'all', label: l`All`},
-    {key: 'people-i-follow', label: l`People I follow`},
-    {key: 'follows', label: l`Follows`},
-    {key: 'replies', label: l`Replies`},
-    {key: 'activity', label: l`Activity`},
-    {key: 'atmosphere', label: l`Atmosphere`},
+  const tabs: {
+    key: string
+    label: string
+    filter: GroupedNotificationsFilter
+    demoItems?: GroupedNotification[]
+  }[] = [
+    {
+      key: 'all',
+      label: l`All`,
+      filter: 'all',
+    },
+    {
+      key: 'people-i-follow',
+      label: l`People I follow`,
+      filter: 'people-i-follow',
+    },
+    {
+      key: 'follows',
+      label: l`Follows`,
+      filter: 'followers',
+    },
+    {
+      key: 'replies',
+      label: l`Replies`,
+      filter: 'conversations',
+    },
+    {
+      key: 'activity',
+      label: l`Activity`,
+      filter: 'activity',
+    },
+    ...(devMode || demoMode
+      ? [
+          {
+            key: 'demo',
+            label: l`Demo`,
+            filter: 'all' as const,
+            demoItems: DUMMY_GROUPED_NOTIFICATIONS,
+          },
+        ]
+      : []),
   ]
 
   const showHeader = useCallback(() => {
@@ -90,6 +133,7 @@ function NewNotificationsScreenInner() {
 
   return (
     <Pager.Root
+      key={devMode || demoMode ? 'with-demo' : 'real-only'}
       onTabPressed={showHeader}
       onPageScrollStateChanged={state => {
         'worklet'
@@ -113,10 +157,11 @@ function NewNotificationsScreenInner() {
         </Pager.TabBar>
       </NotificationsHeader>
       <Pager.Content manageDrawerGesture testID="notificationsPagerView">
-        {tabs.map((tab, pageIndex) => (
+        {tabs.map(tab => (
           <PageList
             key={tab.key}
-            pageIndex={pageIndex}
+            demoItems={tab.demoItems}
+            filter={tab.filter}
             headerOffset={headerOffset}
           />
         ))}

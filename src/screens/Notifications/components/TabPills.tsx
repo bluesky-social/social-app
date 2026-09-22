@@ -1,7 +1,7 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {
+  type HostInstance,
   Pressable,
-  type ReactNativeElement,
   type ScrollView,
   type StyleProp,
   useWindowDimensions,
@@ -50,13 +50,13 @@ export function TabPills({
   const t = useTheme()
   const {t: l} = useLingui()
   const {width: windowWidth} = useWindowDimensions()
-  const listRef = useRef<ScrollView & ReactNativeElement>(null)
+  const listRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const [totalWidth, setTotalWidth] = useState(0)
   const [scrollX, setScrollX] = useState(0)
   const [contentWidth, setContentWidth] = useState(0)
   const [tabOffsets, setTabOffsets] = useState<PillLayout[]>([])
-  const contentRef = useRef<View>(null)
-  const tabRefs = useRef<Array<View | null>>([])
+  const contentRef = useRef<HostInstance>(null)
+  const tabRefs = useRef<Array<HostInstance | null>>([])
   const didMeasure = useRef(false)
   const tabLayoutKey = tabs.map(tab => `${tab.key}:${tab.label}`).join('|')
   const tabCount = tabs.length
@@ -230,27 +230,32 @@ export function TabPills({
                 onSelectTab={handleSelectTab}
               />
             ))}
-            {tabOffsets.map((layout, index) => (
-              <View
-                key={`border-${tabs[index].key}`}
-                accessible={false}
-                pointerEvents="none"
-                style={[
-                  a.absolute,
-                  a.rounded_full,
-                  a.curve_continuous,
-                  t.atoms.bg,
-                  t.atoms.border_contrast_low,
-                  {
-                    zIndex: 1,
-                    borderWidth: 1,
-                    left: layout.x,
-                    top: layout.y,
-                    width: layout.width,
-                    height: layout.height,
-                  },
-                ]}></View>
-            ))}
+            {tabOffsets.map((layout, index) => {
+              const tab = tabs[index]
+              if (!tab) return null
+              return (
+                <View
+                  key={`border-${tab.key}`}
+                  accessible={false}
+                  pointerEvents="none"
+                  style={[
+                    a.absolute,
+                    a.rounded_full,
+                    a.curve_continuous,
+                    t.atoms.bg,
+                    t.atoms.border_contrast_low,
+                    {
+                      zIndex: 1,
+                      borderWidth: 1,
+                      left: layout.x,
+                      top: layout.y,
+                      width: layout.width,
+                      height: layout.height,
+                    },
+                  ]}
+                />
+              )
+            })}
             {tabOffsets.length === tabs.length && (
               <PillIndicator
                 layouts={tabOffsets}
@@ -259,37 +264,41 @@ export function TabPills({
                 borderColor={t.palette.contrast_50}
               />
             )}
-            {tabOffsets.map((layout, index) => (
-              <View
-                key={`label-${tabs[index].key}`}
-                aria-hidden
-                accessible={false}
-                accessibilityElementsHidden
-                importantForAccessibility="no-hide-descendants"
-                pointerEvents="none"
-                style={[
-                  a.absolute,
-                  a.align_center,
-                  a.justify_center,
-                  {
-                    zIndex: 3,
-                    left: layout.x,
-                    top: layout.y,
-                    width: layout.width,
-                    height: layout.height,
-                  },
-                ]}>
-                <Text
+            {tabOffsets.map((layout, index) => {
+              const tab = tabs[index]
+              if (!tab) return null
+              return (
+                <View
+                  key={`label-${tab.key}`}
+                  aria-hidden
+                  accessible={false}
+                  accessibilityElementsHidden
+                  importantForAccessibility="no-hide-descendants"
+                  pointerEvents="none"
                   style={[
-                    a.font_medium,
-                    tabs[index].key === selectedTab
-                      ? t.atoms.text
-                      : t.atoms.text_contrast_high,
+                    a.absolute,
+                    a.align_center,
+                    a.justify_center,
+                    {
+                      zIndex: 3,
+                      left: layout.x,
+                      top: layout.y,
+                      width: layout.width,
+                      height: layout.height,
+                    },
                   ]}>
-                  {tabs[index].label}
-                </Text>
-              </View>
-            ))}
+                  <Text
+                    style={[
+                      a.font_medium,
+                      tab.key === selectedTab
+                        ? t.atoms.text
+                        : t.atoms.text_contrast_high,
+                    ]}>
+                    {tab.label}
+                  </Text>
+                </View>
+              )
+            })}
           </View>
         </DraggableScrollView>
       </BlockDrawerGesture>
@@ -376,7 +385,7 @@ function TabPill({
   index,
   onSelectTab,
 }: {
-  elementRef: React.Ref<View>
+  elementRef: React.Ref<HostInstance>
   tab: TabPillItem
   active: boolean
   index: number

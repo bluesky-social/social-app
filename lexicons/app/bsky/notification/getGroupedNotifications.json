@@ -1,0 +1,643 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.notification.getGroupedNotifications",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Enumerate notifications for the requesting account, pre-grouped for rendering. Supersedes listNotifications. Requires auth.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "filter": {
+            "type": "string",
+            "description": "Which notification feed to return. Grouping behavior and the application of the account's notification preferences vary per feed: 'all' and 'people-i-follow' respect notification preferences, while dedicated feeds do not.",
+            "maxLength": 32,
+            "knownValues": [
+              "all",
+              "people-i-follow",
+              "conversations",
+              "followers",
+              "activity"
+            ],
+            "default": "all"
+          },
+          "utcOffset": {
+            "type": "integer",
+            "description": "Offset from UTC in minutes, positive east, used to determine local day boundaries when grouping. Groups never span a local day boundary. Defaults to UTC.",
+            "minimum": -720,
+            "maximum": 840,
+            "default": 0
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Maximum number of groups to return.",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 30
+          },
+          "cursor": { "type": "string", "maxLength": 1024 }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["groups"],
+          "properties": {
+            "cursor": { "type": "string", "maxLength": 1024 },
+            "groups": {
+              "type": "array",
+              "description": "Notification groups, newest first. Clients should ignore group types they do not recognize.",
+              "items": {
+                "type": "union",
+                "refs": [
+                  "#likeGroup",
+                  "#multiPostLikeGroup",
+                  "#repostGroup",
+                  "#likeViaRepostGroup",
+                  "#repostViaRepostGroup",
+                  "#followGroup",
+                  "#subscribedPostGroup",
+                  "#generatorLikeGroup",
+                  "#replyNotification",
+                  "#quoteNotification",
+                  "#mentionNotification",
+                  "#followBackNotification",
+                  "#verifiedNotification",
+                  "#unverifiedNotification",
+                  "#starterPackJoinedNotification",
+                  "#contactMatchNotification"
+                ]
+              }
+            },
+            "seenAt": { "type": "string", "format": "datetime" }
+          }
+        }
+      }
+    },
+    "likeGroup": {
+      "type": "object",
+      "description": "One or more likes on the same post.",
+      "required": ["id", "isRead", "indexedAt", "post", "actors", "count"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "post": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The post that was liked."
+        },
+        "actors": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the actors who liked the post, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileView" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of likes in this group.",
+          "minimum": 1
+        }
+      }
+    },
+    "multiPostLikeGroup": {
+      "type": "object",
+      "description": "One actor liked multiple posts by the requesting account.",
+      "required": [
+        "id",
+        "isRead",
+        "indexedAt",
+        "actor",
+        "posts",
+        "postUris",
+        "count"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "actor": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView",
+          "description": "The actor who liked the posts."
+        },
+        "posts": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the liked posts, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.feed.defs#postView" }
+        },
+        "postUris": {
+          "type": "array",
+          "minLength": 1,
+          "description": "URIs of every liked post in this group, newest first. Hydrate with app.bsky.feed.getPosts to display the full list.",
+          "items": { "type": "string", "format": "at-uri" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of likes in this group.",
+          "minimum": 1
+        }
+      }
+    },
+    "repostGroup": {
+      "type": "object",
+      "description": "One or more reposts of the same post.",
+      "required": ["id", "isRead", "indexedAt", "post", "actors", "count"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "post": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The post that was reposted."
+        },
+        "actors": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the actors who reposted the post, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileView" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of reposts in this group.",
+          "minimum": 1
+        }
+      }
+    },
+    "likeViaRepostGroup": {
+      "type": "object",
+      "description": "One or more likes on a repost of the same post.",
+      "required": ["id", "isRead", "indexedAt", "post", "actors", "count"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "post": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The subject post of the repost that was liked."
+        },
+        "actors": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the actors who liked the repost, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileView" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of likes in this group.",
+          "minimum": 1
+        }
+      }
+    },
+    "repostViaRepostGroup": {
+      "type": "object",
+      "description": "One or more reposts of a repost of the same post.",
+      "required": ["id", "isRead", "indexedAt", "post", "actors", "count"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "post": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The subject post of the repost that was reposted."
+        },
+        "actors": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the actors who reposted the repost, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileView" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of reposts in this group.",
+          "minimum": 1
+        }
+      }
+    },
+    "followGroup": {
+      "type": "object",
+      "description": "One or more accounts followed the requesting account.",
+      "required": ["id", "isRead", "indexedAt", "actors", "count"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "actors": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the accounts that followed, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileView" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of follows in this group.",
+          "minimum": 1
+        },
+        "starterPack": {
+          "type": "ref",
+          "ref": "app.bsky.graph.defs#starterPackViewBasic",
+          "description": "Present when the follows in this group all originated from the same starter pack. Follows via different starter packs are never grouped together."
+        }
+      }
+    },
+    "subscribedPostGroup": {
+      "type": "object",
+      "description": "One or more new posts from an account the requesting account has an activity subscription to.",
+      "required": [
+        "id",
+        "isRead",
+        "indexedAt",
+        "actor",
+        "posts",
+        "postUris",
+        "count"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "actor": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView",
+          "description": "The account that posted."
+        },
+        "posts": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the new posts, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.feed.defs#postView" }
+        },
+        "postUris": {
+          "type": "array",
+          "minLength": 1,
+          "description": "URIs of every new post in this group, newest first. Hydrate with app.bsky.feed.getPosts to display the full list.",
+          "items": { "type": "string", "format": "at-uri" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of posts in this group.",
+          "minimum": 1
+        }
+      }
+    },
+    "generatorLikeGroup": {
+      "type": "object",
+      "description": "One or more likes on the same feed generator.",
+      "required": ["id", "isRead", "indexedAt", "generator", "actors", "count"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this group, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when every notification in this group has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the newest notification in this group."
+        },
+        "generator": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#generatorView",
+          "description": "The feed generator that was liked."
+        },
+        "actors": {
+          "type": "array",
+          "minLength": 1,
+          "description": "Sample of the actors who liked the feed generator, newest first. May contain fewer entries than count.",
+          "items": { "type": "ref", "ref": "app.bsky.actor.defs#profileView" }
+        },
+        "count": {
+          "type": "integer",
+          "description": "Total number of likes in this group.",
+          "minimum": 1
+        }
+      }
+    },
+    "replyNotification": {
+      "type": "object",
+      "description": "A reply to a post by the requesting account, or to a thread they are participating in.",
+      "required": ["id", "isRead", "indexedAt", "post", "parent"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "post": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The reply post."
+        },
+        "parent": {
+          "type": "union",
+          "refs": [
+            "app.bsky.feed.defs#postView",
+            "app.bsky.feed.defs#notFoundPost",
+            "app.bsky.feed.defs#blockedPost"
+          ],
+          "description": "The post being replied to."
+        }
+      }
+    },
+    "quoteNotification": {
+      "type": "object",
+      "description": "A post quoting a post by the requesting account.",
+      "required": ["id", "isRead", "indexedAt", "post"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "post": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The post containing the quote. Its embed includes the quoted post."
+        },
+        "parent": {
+          "type": "union",
+          "refs": [
+            "app.bsky.feed.defs#postView",
+            "app.bsky.feed.defs#notFoundPost",
+            "app.bsky.feed.defs#blockedPost"
+          ],
+          "description": "The post being replied to, when the quoting post is itself a reply."
+        }
+      }
+    },
+    "mentionNotification": {
+      "type": "object",
+      "description": "A post mentioning the requesting account.",
+      "required": ["id", "isRead", "indexedAt", "post"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "post": {
+          "type": "ref",
+          "ref": "app.bsky.feed.defs#postView",
+          "description": "The post containing the mention."
+        },
+        "parent": {
+          "type": "union",
+          "refs": [
+            "app.bsky.feed.defs#postView",
+            "app.bsky.feed.defs#notFoundPost",
+            "app.bsky.feed.defs#blockedPost"
+          ],
+          "description": "The post being replied to, when the mentioning post is itself a reply."
+        }
+      }
+    },
+    "followBackNotification": {
+      "type": "object",
+      "description": "An account followed the requesting account back.",
+      "required": ["id", "isRead", "indexedAt", "actor"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "actor": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView",
+          "description": "The account that followed back."
+        }
+      }
+    },
+    "verifiedNotification": {
+      "type": "object",
+      "description": "The requesting account was verified.",
+      "required": ["id", "isRead", "indexedAt", "actor"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "actor": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView",
+          "description": "The account that issued the verification."
+        }
+      }
+    },
+    "unverifiedNotification": {
+      "type": "object",
+      "description": "A verification of the requesting account was removed.",
+      "required": ["id", "isRead", "indexedAt", "actor"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "actor": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView",
+          "description": "The account that removed the verification."
+        }
+      }
+    },
+    "starterPackJoinedNotification": {
+      "type": "object",
+      "description": "An account joined Bluesky via a starter pack created by the requesting account.",
+      "required": ["id", "isRead", "indexedAt", "actor", "starterPack"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "actor": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView",
+          "description": "The account that joined."
+        },
+        "starterPack": {
+          "type": "ref",
+          "ref": "app.bsky.graph.defs#starterPackViewBasic",
+          "description": "The starter pack that was joined."
+        }
+      }
+    },
+    "contactMatchNotification": {
+      "type": "object",
+      "description": "A contact of the requesting account joined Bluesky.",
+      "required": ["id", "isRead", "indexedAt", "actor"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Opaque identifier for this notification, unique within the notification feed. Clients must not attempt to derive meaning from it.",
+          "maxLength": 256
+        },
+        "isRead": {
+          "type": "boolean",
+          "description": "True when this notification has been seen."
+        },
+        "indexedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Timestamp of the notification."
+        },
+        "actor": {
+          "type": "ref",
+          "ref": "app.bsky.actor.defs#profileView",
+          "description": "The contact that joined."
+        }
+      }
+    }
+  }
+}
