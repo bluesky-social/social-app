@@ -1,10 +1,10 @@
-/* oxlint-disable import/no-nodejs-modules -- This suite exercises a Node CLI with temporary Git repositories. */
+/* oxlint-disable import/no-nodejs-modules -- This suite exercises Actions preparation with temporary Git repositories. */
 import {execFileSync, spawnSync} from 'node:child_process'
-import {mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs'
+import {mkdtempSync, rmSync, writeFileSync} from 'node:fs'
 import {tmpdir} from 'node:os'
 import {join, resolve} from 'node:path'
 
-const cli = resolve('scripts/release/prepare.mjs')
+const fixture = resolve('scripts/release/__fixtures__/workflow.cjs')
 let directory
 let source
 
@@ -12,10 +12,26 @@ function git(...args) {
   return execFileSync('git', ['-C', source, ...args], {encoding: 'utf8'}).trim()
 }
 
-function run(version = '1.2.3', output) {
+function run(version = '1.2.3') {
   return spawnSync(
     process.execPath,
-    [cli, version, source, ...(output ? [output] : [])],
+    [
+      '-e',
+      `
+    const {prepareRelease, renderReport} = require(process.argv[1])
+    try {
+      const report = prepareRelease(process.argv[3], process.argv[2])
+      console.log(JSON.stringify(report))
+      console.log(renderReport(report))
+    } catch (error) {
+      console.error(error.message)
+      process.exitCode = 1
+    }
+  `,
+      fixture,
+      version,
+      source,
+    ],
     {encoding: 'utf8'},
   )
 }
@@ -44,30 +60,23 @@ beforeEach(() => {
 
 afterEach(() => rmSync(directory, {recursive: true, force: true}))
 
-test('reads real history and saves notes without changing source or refs; repeats safely', () => {
+test('reads real history and generates notes without changing source or refs; repeats safely', () => {
   const before = [
     git('rev-parse', 'HEAD'),
     git('show-ref'),
     git('status', '--porcelain'),
   ]
-  const output = join(directory, 'report')
-  const result = run('1.2.3', output)
+  const result = run('1.2.3')
   expect(result.status).toBe(0)
   expect(result.stdout).toContain(before[0])
   expect(result.stdout).toContain('release-1.2.3')
-  expect(
-    JSON.parse(readFileSync(join(output, 'report.json'), 'utf8')),
-  ).toMatchObject({
+  expect(JSON.parse(result.stdout.split('\n')[0])).toMatchObject({
     mode: 'dry-run',
     sourceSha: before[0],
     previousTag: '1.2.2',
     publicChangelog: '## Initial release\n\n- New change',
   })
-  expect(
-    readFileSync(join(output, 'github-release-body.md'), 'utf8'),
-  ).not.toContain('releaseVersion:')
   expect(run().stdout).toBe(result.stdout)
-  expect(run('1.2.3', output).status).toBe(1)
   expect([
     git('rev-parse', 'HEAD'),
     git('show-ref'),

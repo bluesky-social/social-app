@@ -30,8 +30,9 @@ force-updates a ref, and never publishes the draft or submits native builds.
 The web build does push its production image to ECR.
 
 Preparation runs through `actions/github-script` using its authenticated GitHub
-client. The workflow calls the release functions directly and writes their report
-to the Actions summary; there is no live CLI or report-file handoff between steps.
+client. All preparation logic lives in the workflow and writes its report to the
+Actions summary. Preview and live jobs share the same inline script through a
+YAML anchor; there are no release CLI modules or report-file handoffs.
 API requests are not automatically retried.
 
 ## Plan

@@ -1,10 +1,10 @@
-/* oxlint-disable import/no-nodejs-modules -- Runs the ESM release executor against a stateful API fixture. */
+/* oxlint-disable import/no-nodejs-modules -- Runs the Actions release executor against a stateful API fixture. */
 import {spawnSync} from 'node:child_process'
 import {resolve} from 'node:path'
 import {pathToFileURL} from 'node:url'
 
 const fixture = pathToFileURL(
-  resolve('scripts/release/__fixtures__/live.mjs'),
+  resolve('scripts/release/__fixtures__/live.cjs'),
 ).href
 
 function run(scenario) {

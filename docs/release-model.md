@@ -71,5 +71,5 @@ retained artifacts are separate work.
 ## Implementation
 
 - [Preparation workflow and checks](release-preparation/README.md)
-- `scripts/release/model.mjs`: document creation, validation, and changelog parsing.
-- `scripts/release/cli.mjs`: command-line access to the document helpers.
+- `.github/workflows/prepare-cactus-release.yml`: document creation, validation,
+  GitHub checks, release creation, and build dispatch.

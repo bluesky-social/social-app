@@ -3,10 +3,12 @@ import {spawnSync} from 'node:child_process'
 import {resolve} from 'node:path'
 import {pathToFileURL} from 'node:url'
 
-const plannerUrl = pathToFileURL(resolve('scripts/release/plan.mjs')).href
+const plannerUrl = pathToFileURL(
+  resolve('scripts/release/__fixtures__/workflow.cjs'),
+).href
 
 const moduleUrl = pathToFileURL(
-  resolve('scripts/release/check-github.mjs'),
+  resolve('scripts/release/__fixtures__/workflow.cjs'),
 ).href
 
 /** Run the real checker with a strict fake reader; no network calls. */
@@ -17,8 +19,8 @@ function check(scenario) {
       '--input-type=module',
       '-e',
       `
-    import {checkGitHub} from ${JSON.stringify(moduleUrl)}
-    import {dryRunRelease, buildWorkflows} from ${JSON.stringify(plannerUrl)}
+    import workflow from ${JSON.stringify(moduleUrl)}
+    const {checkGitHub, dryRunRelease, buildWorkflows} = workflow
     const scenario = process.argv[1]
     const hashes = Object.fromEntries(buildWorkflows.map(build => [build.file, build.file]))
     const report = {identity: {branch:'release-1.2.3',tag:'1.2.3',filename:'RELEASE-1.2.3.md',githubReleaseName:'Release 1.2.3'},sourceSha:'source',document:'exact document',publicChangelog:'notes'}
@@ -237,7 +239,8 @@ test('planned build inputs match the actual dispatch definitions', () => {
     import {readFileSync} from 'node:fs'
     import {createRequire} from 'node:module'
     import assert from 'node:assert/strict'
-    import {buildWorkflows,workflowHashes} from ${JSON.stringify(plannerUrl)}
+    import workflowFunctions from ${JSON.stringify(plannerUrl)}
+    const {buildWorkflows,workflowHashes} = workflowFunctions
     const yaml = createRequire(import.meta.url)('js-yaml')
     for (const build of buildWorkflows) {
       const workflow = yaml.load(readFileSync('.github/workflows/' + build.file,'utf8'))
@@ -250,7 +253,7 @@ test('planned build inputs match the actual dispatch definitions', () => {
         if (definitions[key].options) assert(definitions[key].options.includes(value))
       }
       for (const [key,definition] of Object.entries(definitions)) if (definition.required && definition.default === undefined) assert(key in inputs)
-      assert.match(workflowHashes()[build.file], /^[a-f0-9]{40}$/)
+      assert.match(workflowHashes(process.cwd())[build.file], /^[a-f0-9]{40}$/)
       const job = workflow.jobs.build ?? workflow.jobs['bskyweb-container-aws']
       const checkout = job.steps.find(step => step.uses?.startsWith('actions/checkout@'))
       assert.equal(checkout.with.ref, '${'$'}{{ inputs.sourceRef || github.sha }}')

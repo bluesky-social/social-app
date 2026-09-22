@@ -1,9 +1,12 @@
-import {executeRelease} from '../execute.mjs'
-import {buildWorkflows} from '../plan.mjs'
-import {createReleaseDocument, deriveReleaseIdentity} from '../model.mjs'
+const {
+  executeRelease,
+  buildWorkflows,
+  createReleaseDocument,
+  deriveReleaseIdentity,
+} = require('./workflow.cjs')
 
 /** Stateful GitHub fixture: writes change exactly what the checker subsequently reads. */
-export async function simulate(scenario) {
+exports.simulate = async function simulate(scenario) {
   const source = 'a'.repeat(40)
   const candidate = 'b'.repeat(40)
   const version = '1.2.3'

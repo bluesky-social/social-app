@@ -48,23 +48,1095 @@ jobs:
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: tooling/package.json
-      - name: Check release and print dry run
+      - &release-preparation
+        name: Prepare release or preview
         uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
         env:
           RELEASE_VERSION: ${{ inputs.releaseVersion }}
+          DRY_RUN: ${{ inputs.dryRun }}
         with:
           retries: 0
           script: |
-            const root = `${process.env.GITHUB_WORKSPACE}/tooling/scripts/release`
-            const {prepareRelease, renderReport} = await import(`${root}/prepare.mjs`)
-            const {dryRunRelease} = await import(`${root}/plan.mjs`)
+            const {execFileSync} = require('node:child_process')
+            const {readFileSync} = require('node:fs')
+            const {createRequire} = require('node:module')
+            const {join, resolve} = require('node:path')
+            const {createHash} = require('node:crypto')
+
+            const VERSION_COMPONENT = '(?:0|[1-9][0-9]*)'
+            const VERSION_PATTERN = new RegExp(
+              `^${VERSION_COMPONENT}\\.${VERSION_COMPONENT}\\.${VERSION_COMPONENT}$`,
+            )
+            const RELEASE_FILENAME_PATTERN = new RegExp(
+              `^RELEASE-(${VERSION_COMPONENT}\\.${VERSION_COMPONENT}\\.${VERSION_COMPONENT})\\.md$`,
+            )
+            const SOURCE_SHA_PATTERN = /^(?:[0-9a-f]{40}|[0-9a-f]{64})$/
+            const POSITIVE_INTEGER_PATTERN = /^[1-9][0-9]*$/
+
+            const FRONTMATTER_KEYS = [
+              'releaseVersion',
+              'sourceTag',
+              'sourceSha',
+              'iosBuildNumber',
+              'androidVersionCode',
+            ]
+
+            const PUBLIC_CHANGELOG_START = '<!-- public-changelog:start -->'
+            const PUBLIC_CHANGELOG_END = '<!-- public-changelog:end -->'
+
+            class ReleaseError extends Error {
+              constructor(message) {
+                super(message)
+                this.name = 'ReleaseError'
+              }
+            }
+
+            function fail(message) {
+              throw new ReleaseError(message)
+            }
+
+            function normalizeLineEndings(markdown) {
+              return markdown.replace(/\r\n?/g, '\n')
+            }
+
+            function assertReleaseVersion(version) {
+              if (typeof version !== 'string' || !VERSION_PATTERN.test(version)) {
+                fail(`Release version must use strict x.y.z format; found '${version}'.`)
+              }
+              return version
+            }
+
+            function deriveReleaseIdentity(version) {
+              assertReleaseVersion(version)
+              return Object.freeze({
+                version,
+                branch: `release-${version}`,
+                tag: version,
+                filename: `RELEASE-${version}.md`,
+                githubReleaseName: `Release ${version}`,
+              })
+            }
+
+            function parseFrontmatter(markdown) {
+              const normalized = normalizeLineEndings(markdown)
+              if (!normalized.startsWith('---\n')) {
+                fail('Release file must start with YAML frontmatter.')
+              }
+
+              const end = normalized.indexOf('\n---\n', 4)
+              if (end === -1) fail('Release file frontmatter is not closed.')
+
+              const metadata = {}
+              const lines = normalized.slice(4, end).split('\n')
+              for (const line of lines) {
+                if (!line.trim()) continue
+                const match = /^([A-Za-z][A-Za-z0-9]*):[ \t]*(.*)$/.exec(line)
+                if (!match) fail(`Unsupported frontmatter line: '${line}'.`)
+
+                const [, key, rawValue] = match
+                if (!FRONTMATTER_KEYS.includes(key)) {
+                  fail(`Unknown release frontmatter field '${key}'.`)
+                }
+                if (Object.hasOwn(metadata, key)) {
+                  fail(`Duplicate release frontmatter field '${key}'.`)
+                }
+                if (!rawValue) fail(`Release frontmatter field '${key}' cannot be empty.`)
+                metadata[key] = rawValue
+              }
+
+              const body = normalized.slice(end + 5)
+              if (!body.startsWith('\n')) {
+                fail('Release file must contain a blank line after frontmatter.')
+              }
+
+              return {metadata, body: body.slice(1)}
+            }
+
+            function findDelimitedSection(body, startMarker, endMarker) {
+              const start = body.indexOf(startMarker)
+              const end = body.indexOf(endMarker)
+              if (start === -1 || end === -1) {
+                fail('Release file must contain the public changelog delimiters.')
+              }
+              if (
+                start !== body.lastIndexOf(startMarker) ||
+                end !== body.lastIndexOf(endMarker)
+              ) {
+                fail('Public changelog delimiters must occur exactly once.')
+              }
+              if (end < start)
+                fail('Public changelog end delimiter precedes its start delimiter.')
+
+              return {
+                before: body.slice(0, start + startMarker.length),
+                content: body.slice(start + startMarker.length, end).trim(),
+                after: body.slice(end),
+              }
+            }
+
+            function parseChangelogSections(publicChangelog) {
+              const unsupportedHeading = publicChangelog.match(
+                /^## (?!Initial release\s*$|OTA [1-9][0-9]*\s*$).+$/m,
+              )
+              if (unsupportedHeading) {
+                fail(`Unsupported public changelog section '${unsupportedHeading[0]}'.`)
+              }
+
+              const headings = [
+                ...publicChangelog.matchAll(
+                  /^## (Initial release|OTA ([1-9][0-9]*))\s*$/gm,
+                ),
+              ]
+              if (!headings.length || headings[0][1] !== 'Initial release') {
+                fail("Public changelog must begin with an '## Initial release' section.")
+              }
+
+              const prefix = publicChangelog.slice(0, headings[0].index).trim()
+              if (prefix)
+                fail(
+                  'Public changelog cannot contain content before its initial release section.',
+                )
+
+              const sections = headings.map((heading, index) => {
+                const start = heading.index + heading[0].length
+                const end = headings[index + 1]?.index ?? publicChangelog.length
+                const content = publicChangelog.slice(start, end).trim()
+                if (!content) fail(`Changelog section '${heading[1]}' cannot be empty.`)
+                return {
+                  type: heading[1] === 'Initial release' ? 'initial' : 'ota',
+                  sequence: heading[2] ? Number(heading[2]) : null,
+                  content,
+                }
+              })
+
+              sections.slice(1).forEach((section, index) => {
+                const expected = index + 1
+                if (section.type !== 'ota' || section.sequence !== expected) {
+                  fail(
+                    `OTA changelog sections must be contiguous; expected OTA ${expected}.`,
+                  )
+                }
+              })
+
+              return sections
+            }
+
+            function validateMetadata(metadata, stage) {
+              assertReleaseVersion(metadata.releaseVersion)
+
+              if (metadata.sourceTag !== undefined) {
+                assertReleaseVersion(metadata.sourceTag)
+                if (metadata.sourceTag !== metadata.releaseVersion) {
+                  fail('sourceTag must match releaseVersion.')
+                }
+              }
+              if (
+                metadata.sourceSha !== undefined &&
+                !SOURCE_SHA_PATTERN.test(metadata.sourceSha)
+              ) {
+                fail('sourceSha must be a full lowercase hexadecimal Git object ID.')
+              }
+              for (const key of ['iosBuildNumber', 'androidVersionCode']) {
+                if (
+                  metadata[key] !== undefined &&
+                  !POSITIVE_INTEGER_PATTERN.test(metadata[key])
+                ) {
+                  fail(`${key} must be a positive integer.`)
+                }
+              }
+
+              if (stage === 'final') {
+                for (const key of FRONTMATTER_KEYS) {
+                  if (metadata[key] === undefined) {
+                    fail(`Finalized release file is missing '${key}'.`)
+                  }
+                }
+              }
+            }
+
+            function parseReleaseDocument(markdown, options = {}) {
+              if (typeof markdown !== 'string') fail('Release document must be a string.')
+              const stage = options.stage ?? 'prepared'
+              if (!['prepared', 'final'].includes(stage)) {
+                fail(`Unknown release validation stage '${stage}'.`)
+              }
+
+              const {metadata, body} = parseFrontmatter(markdown)
+              validateMetadata(metadata, stage)
+
+              const expectedTitle = `# Release ${metadata.releaseVersion}`
+              if (!body.startsWith(`${expectedTitle}\n`)) {
+                fail(
+                  `Release document must begin with '${expectedTitle}' after frontmatter.`,
+                )
+              }
+
+              if (options.filename !== undefined) {
+                const filenameMatch = RELEASE_FILENAME_PATTERN.exec(options.filename)
+                if (!filenameMatch || filenameMatch[1] !== metadata.releaseVersion) {
+                  fail(`Filename must be 'RELEASE-${metadata.releaseVersion}.md'.`)
+                }
+              }
+
+              const delimited = findDelimitedSection(
+                body,
+                PUBLIC_CHANGELOG_START,
+                PUBLIC_CHANGELOG_END,
+              )
+              const sections = parseChangelogSections(delimited.content)
+
+              return Object.freeze({
+                metadata: Object.freeze({...metadata}),
+                publicChangelog: delimited.content,
+                sections: Object.freeze(sections.map(section => Object.freeze(section))),
+              })
+            }
+
+            function createReleaseDocument(version, initialChangelog) {
+              assertReleaseVersion(version)
+              const content = initialChangelog?.trim()
+              if (!content) fail('Initial release changelog cannot be empty.')
+
+              return `---
+            releaseVersion: ${version}
+            ---
+
+            # Release ${version}
+
+            ${PUBLIC_CHANGELOG_START}
+
+            ## Initial release
+
+            ${content}
+
+            ${PUBLIC_CHANGELOG_END}
+            `
+            }
+
+            /** Read a selected checkout and describe release preparation without changing it. */
+            function prepareRelease(sourceDirectory, releaseVersion) {
+              const identity = deriveReleaseIdentity(releaseVersion)
+              const source = resolve(sourceDirectory)
+              const git = (...args) =>
+                execFileSync('git', ['-C', source, ...args], {encoding: 'utf8'}).trim()
+              if (git('status', '--porcelain', '--untracked-files=no')) {
+                throw new Error(
+                  'The source checkout has tracked changes. Commit or discard them first.',
+                )
+              }
+              if (git('rev-parse', '--is-shallow-repository') !== 'false') {
+                throw new Error('Full Git history is required to generate the changelog.')
+              }
+              const sourceSha = git('rev-parse', 'HEAD')
+              const packageVersion = JSON.parse(
+                readFileSync(join(source, 'package.json'), 'utf8'),
+              ).version
+              const require = createRequire(join(source, 'package.json'))
+              delete require.cache[require.resolve('./app.config.js')]
+              const expo = require('./app.config.js')({}).expo
+              if (packageVersion !== releaseVersion || expo.version !== releaseVersion) {
+                throw new Error(
+                  `Requested ${releaseVersion}, but package version is ${packageVersion} and Expo version is ${expo.version}.`,
+                )
+              }
+              if (expo.runtimeVersion?.policy !== 'appVersion') {
+                throw new Error(
+                  'Expected Expo runtimeVersion.policy to be appVersion. Review the runtime policy before preparing this release.',
+                )
+              }
+              const previousTag =
+                git('tag', '--merged', sourceSha, '--sort=-version:refname')
+                  .split('\n')
+                  .find(
+                    tag =>
+                      /^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/.test(tag) &&
+                      tag !== releaseVersion,
+                  ) || null
+              const changelog =
+                git(
+                  'log',
+                  '--no-merges',
+                  '--pretty=format:- %s',
+                  previousTag ? `${previousTag}..${sourceSha}` : sourceSha,
+                ) || '- No changes since the previous release.'
+              const document = createReleaseDocument(releaseVersion, changelog)
+              const {publicChangelog} = parseReleaseDocument(document, {
+                filename: identity.filename,
+              })
+              return {
+                mode: 'dry-run',
+                identity,
+                sourceSha,
+                packageVersion,
+                expoVersion: expo.version,
+                runtimePolicy: expo.runtimeVersion.policy,
+                previousTag,
+                document,
+                publicChangelog,
+                steps: [
+                  `Create ${identity.branch} from ${sourceSha}.`,
+                  `Commit ${identity.filename} to that branch. Its contents are included below.`,
+                  `Create draft GitHub Release "${identity.githubReleaseName}" with tag ${identity.tag} and the public notes below.`,
+                  'Request production iOS, Android, and web builds from the prepared commit.',
+                  'After successful builds, record their actual build numbers and source commit in the release file.',
+                  'Leave the app release to a person.',
+                ],
+                notChecked: [
+                  'Existing GitHub branches, tags, and releases are not checked for conflicts or safe reuse.',
+                  'Builds, credentials, store submissions, and deployment are not exercised.',
+                  'The prepared commit, build numbers, and final release file do not exist yet.',
+                  'Translations are not refreshed. Release notes are provisional commit titles.',
+                ],
+              }
+            }
+
+            /** Format the same report for the terminal and the Actions summary. */
+            function renderReport(report) {
+              const live = report.mode === 'live'
+              return [
+                `# Release ${report.identity.version}: ${live ? 'live preparation' : 'dry run'}`,
+                '',
+                live
+                  ? 'Live preparation was requested. Inspect the operation results below; a stopped run may have created resources or dispatched builds.'
+                  : 'Version checks passed. No release branch, commit, tag, GitHub Release, build, or deployment was created.',
+                '',
+                `- Source commit: ${report.sourceSha}`,
+                `- Package / Expo version: ${report.packageVersion} / ${report.expoVersion}`,
+                `- Runtime policy: ${report.runtimePolicy}`,
+                `- Previous release tag: ${report.previousTag ?? 'none (using all reachable history)'}`,
+                `- Release branch: ${report.identity.branch}`,
+                `- Release tag: ${report.identity.tag}`,
+                `- GitHub Release: ${report.identity.githubReleaseName}`,
+                '',
+                '## GitHub checks',
+                '',
+                ...(report.github
+                  ? [
+                      `Result: ${report.github.status}. Checked at ${report.github.checkedAt}.`,
+                      ...report.github.checks.map(
+                        check =>
+                          `- ${check.resource}: **${check.action}** — ${check.detail}`,
+                      ),
+                      '',
+                      live
+                        ? 'These checks describe the most recently verified GitHub state. Operation results below record completed writes and dispatched builds.'
+                        : 'Create/reuse describes a proposed action only. If any check is blocked, the whole preparation is blocked. These reads are a snapshot; a live run must recheck before writing.',
+                    ]
+                  : [
+                      'GitHub has not been checked. Run the preparation workflow to inspect existing resources.',
+                    ]),
+                '',
+                ...(report.execution
+                  ? [
+                      live ? '## Execution results' : '## Planned requests',
+                      '',
+                      live
+                        ? `Live preparation: ${report.execution.status}.`
+                        : `Dry run: ${report.execution.status}. No requests below were sent.`,
+                      ...(report.execution.reason ? [report.execution.reason] : []),
+                      ...(report.execution.warnings ?? []).map(
+                        warning => `- Unverified: ${warning}`,
+                      ),
+                      '',
+                      ...report.execution.steps.flatMap(step => [
+                        `### ${step.label}`,
+                        '',
+                        `Result: ${step.result ?? 'not reached'}.`,
+                        ...(step.output?.sha ? [`Created SHA: ${step.output.sha}.`] : []),
+                        ...(step.output?.id
+                          ? [`Created resource ID: ${step.output.id}.`]
+                          : []),
+                        ...(step.run
+                          ? [
+                              `Build run: [${step.run.id}](${step.run.url}) (${step.run.status}${step.run.conclusion ? ` / ${step.run.conclusion}` : ''}).`,
+                            ]
+                          : []),
+                        ...(step.precondition
+                          ? [`Precondition: ${step.precondition}`]
+                          : []),
+                        ...(step.checkedAt
+                          ? [`GitHub rechecked at ${step.checkedAt}.`]
+                          : []),
+                        ...(step.dependsOn?.length
+                          ? [`Depends on: ${step.dependsOn.join(', ')}.`]
+                          : []),
+                        '',
+                        '<pre>',
+                        JSON.stringify(step.request ?? {reuse: step.value}, null, 2)
+                          .replaceAll('&', '&amp;')
+                          .replaceAll('<', '&lt;')
+                          .replaceAll('>', '&gt;'),
+                        '</pre>',
+                        '',
+                      ]),
+                      ...(report.execution.notes ?? []).map(note => `- ${note}`),
+                      '',
+                      'Still pending:',
+                      ...report.execution.pending.map(item => `- ${item}`),
+                      '',
+                    ]
+                  : []),
+                live ? '## Release lifecycle' : '## What a real run would do',
+                '',
+                ...report.steps.map((step, index) => `${index + 1}. ${step}`),
+                '',
+                '## Still unverified',
+                '',
+                ...report.notChecked
+                  .filter(item => !report.github || !item.startsWith('Existing GitHub'))
+                  .filter(item => !live || !item.startsWith('The prepared commit'))
+                  .map(item => `- ${item}`),
+                '',
+                `## ${report.identity.filename}`,
+                '',
+                '<pre>',
+                report.document
+                  .replaceAll('&', '&amp;')
+                  .replaceAll('<', '&lt;')
+                  .replaceAll('>', '&gt;'),
+                '</pre>',
+                '',
+                '## Public release notes',
+                '',
+                report.publicChangelog,
+                '',
+              ].join('\n')
+            }
+
+            /** Compare actual remote resources, accepting only an exact, single-file preparation commit. */
+            async function checkGitHub(report, read) {
+              const {identity, sourceSha, document, publicChangelog} = report
+              let observed = null
+              const checks = []
+              const add = (resource, action, detail) =>
+                checks.push({resource, action, detail})
+              try {
+                const repository = await read('')
+                const draftVisibility = repository.permissions?.push === true
+                if (!draftVisibility) {
+                  add(
+                    'draft visibility',
+                    'unverified',
+                    'This token cannot establish full draft visibility. Draft creation requires a check with release permissions before execution.',
+                  )
+                }
+                const ref = async name => {
+                  const refs = await read(`git/matching-refs/${name}`)
+                  if (!Array.isArray(refs))
+                    throw new Error('Invalid GitHub reference response.')
+                  return refs.find(item => item.ref === `refs/${name}`) ?? null
+                }
+                const branch = await ref(`heads/${identity.branch}`)
+                const tag = await ref(`tags/${identity.tag}`)
+                const releases = []
+                for (let page = 1; ; page++) {
+                  const items = await read(`releases?per_page=100&page=${page}`)
+                  if (!Array.isArray(items))
+                    throw new Error('Invalid GitHub releases response.')
+                  releases.push(...items.filter(item => item.tag_name === identity.tag))
+                  if (items.length < 100) break
+                }
+                const base = await read(`git/commits/${sourceSha}`)
+                const before = await read(`git/trees/${base.tree.sha}?recursive=1`)
+                if (before.truncated || !Array.isArray(before.tree))
+                  throw new Error('Cannot verify the complete source tree.')
+                if (before.tree.some(item => item.path === identity.filename)) {
+                  throw new Error(
+                    'Selected source already contains this release file. Select the original source before preparation; existing release metadata will not be overwritten.',
+                  )
+                }
+                let candidate = null
+                if (!branch) {
+                  add('branch', 'create', `${identity.branch} does not exist.`)
+                  add(
+                    'release file',
+                    'create',
+                    `Would commit ${identity.filename}; no prepared commit exists yet.`,
+                  )
+                } else if (branch.object?.type !== 'commit') {
+                  add('branch', 'blocked', 'Release branch does not point to a commit.')
+                } else if (branch.object.sha === sourceSha) {
+                  add(
+                    'branch',
+                    'reuse',
+                    `Branch still points to the selected source ${sourceSha}.`,
+                  )
+                  add(
+                    'release file',
+                    'create',
+                    'The preparation commit has not been made yet.',
+                  )
+                } else {
+                  const commit = await read(`git/commits/${branch.object.sha}`)
+                  if (commit.parents?.length !== 1 || commit.parents[0].sha !== sourceSha) {
+                    add(
+                      'branch',
+                      'blocked',
+                      'Branch has moved or was prepared from a different source.',
+                    )
+                  } else {
+                    const after = await read(`git/trees/${commit.tree.sha}?recursive=1`)
+                    if (
+                      before.truncated ||
+                      after.truncated ||
+                      !Array.isArray(before.tree) ||
+                      !Array.isArray(after.tree)
+                    )
+                      throw new Error('Cannot verify the complete Git trees.')
+                    const entries = tree =>
+                      tree
+                        .filter(
+                          item => item.type !== 'tree' && item.path !== identity.filename,
+                        )
+                        .map(({path, mode, type, sha}) => ({path, mode, type, sha}))
+                        .sort((a, b) => a.path.localeCompare(b.path))
+                    const file = after.tree.find(item => item.path === identity.filename)
+                    let matches = false
+                    if (
+                      file?.type === 'blob' &&
+                      file.mode === '100644' &&
+                      JSON.stringify(entries(before.tree)) ===
+                        JSON.stringify(entries(after.tree))
+                    ) {
+                      const blob = await read(`git/blobs/${file.sha}`)
+                      matches =
+                        blob.encoding === 'base64' &&
+                        Buffer.from(blob.content, 'base64').toString('utf8') === document
+                    }
+                    if (matches) {
+                      candidate = branch.object.sha
+                      add(
+                        'branch',
+                        'reuse',
+                        `Verified preparation commit ${candidate}: same source, same release file, no other file changes.`,
+                      )
+                      add(
+                        'release file',
+                        'reuse',
+                        'Contents already match; no new commit is needed.',
+                      )
+                    } else
+                      add(
+                        'branch',
+                        'blocked',
+                        'Release file or other files differ from the expected preparation.',
+                      )
+                  }
+                }
+                observed = {
+                  branch,
+                  tag,
+                  releases,
+                  sourceTreeSha: base.tree.sha,
+                  sourceTree: before.tree,
+                  candidateSha: candidate,
+                  draftVisibility,
+                }
+                if (!tag)
+                  add(
+                    'tag',
+                    'create',
+                    `${identity.tag} does not exist. It would point to the prepared commit.`,
+                  )
+                else {
+                  let object = tag.object
+                  for (let depth = 0; object?.type === 'tag' && depth < 10; depth++)
+                    object = (await read(`git/tags/${object.sha}`)).object
+                  add(
+                    'tag',
+                    candidate && object?.type === 'commit' && object.sha === candidate
+                      ? 'reuse'
+                      : 'blocked',
+                    `Existing tag resolves to ${object?.sha ?? 'an unknown object'}. It must match a verified preparation commit.`,
+                  )
+                }
+                if (releases.length === 0)
+                  add(
+                    'GitHub Release',
+                    draftVisibility ? 'create' : 'unverified',
+                    draftVisibility
+                      ? `No release uses tag ${identity.tag}.`
+                      : `No visible release uses tag ${identity.tag}; a hidden draft may exist.`,
+                  )
+                else if (releases.length !== 1)
+                  add('GitHub Release', 'blocked', 'Multiple releases use this tag.')
+                else {
+                  const release = releases[0]
+                  const matches =
+                    candidate &&
+                    tag &&
+                    checks.find(item => item.resource === 'tag')?.action === 'reuse' &&
+                    release.draft === true &&
+                    release.prerelease === false &&
+                    release.name === identity.githubReleaseName &&
+                    release.body === publicChangelog
+                  add(
+                    'GitHub Release',
+                    matches ? 'reuse' : 'blocked',
+                    matches
+                      ? `Draft #${release.id} matches the verified tag and public notes.`
+                      : 'Existing release is published, differs from the expected draft, or has no verified tag and preparation commit.',
+                  )
+                }
+              } catch (error) {
+                add('GitHub checks', 'blocked', error.message)
+              }
+              return {
+                ...report,
+                github: {
+                  status: checks.some(item => item.action === 'blocked')
+                    ? 'blocked'
+                    : checks.some(item => item.action === 'unverified')
+                      ? 'incomplete'
+                      : 'ready',
+                  checkedAt: new Date().toISOString(),
+                  checks,
+                  observed,
+                },
+              }
+            }
+
+            const buildWorkflows = [
+              {
+                platform: 'iOS',
+                file: 'build-submit-ios.yml',
+                inputs: {profile: 'production', submit: false, testFlightGroup: 'none'},
+              },
+              {
+                platform: 'Android',
+                file: 'build-submit-android.yml',
+                inputs: {profile: 'production', submit: false},
+              },
+              {
+                platform: 'web',
+                file: 'build-and-push-bskyweb-aws.yaml',
+                inputs: {},
+              },
+            ]
+
+            /** Keep dispatch plans tied to the workflow definitions reviewed with this tool. */
+            function workflowHashes(root = resolve(process.env.GITHUB_WORKSPACE, 'tooling')) {
+              return Object.fromEntries(
+                buildWorkflows.map(({file}) => {
+                  const content = readFileSync(join(root, '.github/workflows', file))
+                  const sha = createHash('sha1')
+                    .update(`blob ${content.length}\0`)
+                    .update(content)
+                    .digest('hex')
+                  return [file, sha]
+                }),
+              )
+            }
+
+            /** An output reference is deliberately not a fake Git SHA or an executable API value. */
+            function output(step, field) {
+              return {fromStep: step, field}
+            }
+
+            /** Construct ordered request templates. This function cannot send them. */
+            function planRelease(report, repository, hashes) {
+              if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repository))
+                throw new Error('Expected repository owner/name.')
+              const plan = {
+                mode: 'dry-run',
+                status: 'planned',
+                steps: [],
+                pending: [
+                  'Build completion and artifact-derived build numbers.',
+                  'Final release file and manual app release.',
+                ],
+              }
+              if (
+                !['ready', 'incomplete'].includes(report.github?.status) ||
+                !report.github.observed
+              )
+                return {
+                  ...plan,
+                  status: 'blocked',
+                  reason: 'GitHub checks must pass before requests can be planned.',
+                }
+              plan.warnings = report.github.checks
+                .filter(check => check.action === 'unverified')
+                .map(check => check.detail)
+              const {identity, sourceSha, document, publicChangelog} = report
+              const {sourceTreeSha, sourceTree, candidateSha} = report.github.observed
+              const action = resource =>
+                report.github.checks.find(check => check.resource === resource)?.action
+              const add = (id, label, method, path, body, dependsOn = []) =>
+                plan.steps.push({
+                  id,
+                  label,
+                  dependsOn,
+                  request: {method, path: `repos/${repository}/${path}`, body},
+                })
+              const reuse = (id, label, value) =>
+                plan.steps.push({id, label, action: 'reuse', value})
+              if (action('branch') === 'reuse')
+                reuse(
+                  'branch',
+                  'Reuse release branch',
+                  report.github.observed.branch.object.sha,
+                )
+              else
+                add('branch', 'Create release branch', 'POST', 'git/refs', {
+                  ref: `refs/heads/${identity.branch}`,
+                  sha: sourceSha,
+                })
+              let candidate = candidateSha
+              if (candidate)
+                reuse('prepared-commit', 'Reuse verified release file commit', candidate)
+              else {
+                add(
+                  'release-tree',
+                  'Write release file into a new Git tree',
+                  'POST',
+                  'git/trees',
+                  {
+                    base_tree: sourceTreeSha,
+                    tree: [
+                      {
+                        path: identity.filename,
+                        mode: '100644',
+                        type: 'blob',
+                        content: document,
+                      },
+                    ],
+                  },
+                  ['branch'],
+                )
+                add(
+                  'prepared-commit',
+                  'Commit release file',
+                  'POST',
+                  'git/commits',
+                  {
+                    message: `Prepare release ${identity.version}`,
+                    tree: output('release-tree', 'sha'),
+                    parents: [sourceSha],
+                  },
+                  ['release-tree'],
+                )
+                candidate = output('prepared-commit', 'sha')
+                add(
+                  'branch-tip',
+                  'Advance release branch to prepared commit',
+                  'PATCH',
+                  `git/refs/heads/${identity.branch}`,
+                  {sha: candidate, force: false},
+                  ['prepared-commit'],
+                )
+              }
+              if (action('tag') === 'reuse')
+                reuse('tag', 'Reuse verified release tag', identity.tag)
+              else
+                add(
+                  'tag',
+                  'Create release tag',
+                  'POST',
+                  'git/refs',
+                  {ref: `refs/tags/${identity.tag}`, sha: candidate},
+                  [candidateSha ? 'prepared-commit' : 'branch-tip'],
+                )
+              if (action('GitHub Release') === 'reuse')
+                reuse(
+                  'draft',
+                  'Reuse matching draft release',
+                  report.github.observed.releases[0].id,
+                )
+              else
+                add(
+                  'draft',
+                  'Create draft GitHub Release',
+                  'POST',
+                  'releases',
+                  {
+                    tag_name: identity.tag,
+                    target_commitish: candidate,
+                    name: identity.githubReleaseName,
+                    body: publicChangelog,
+                    draft: true,
+                    prerelease: false,
+                  },
+                  ['tag'],
+                )
+              if (action('GitHub Release') === 'unverified') {
+                plan.steps.find(step => step.id === 'draft').precondition =
+                  `Confirm that no draft exists for tag ${identity.tag} with a token that has release permissions.`
+              }
+              for (const build of buildWorkflows) {
+                const path = `.github/workflows/${build.file}`
+                const file = sourceTree.find(entry => entry.path === path)
+                if (!hashes[build.file] || file?.sha !== hashes[build.file]) {
+                  plan.status = 'blocked'
+                  plan.reason = `Selected source has a missing or different ${path}; its build inputs have not been verified by this tool.`
+                }
+                add(
+                  `build-${build.platform.toLowerCase()}`,
+                  `Request ${build.platform} build`,
+                  'POST',
+                  `actions/workflows/${build.file}/dispatches`,
+                  {
+                    ref: identity.tag,
+                    inputs: {
+                      ...build.inputs,
+                      sourceRef: candidate,
+                    },
+                  },
+                  ['draft'],
+                )
+              }
+              plan.notes = [
+                'Requests are templates only. Objects with fromStep/field refer to outputs that do not exist until a live request succeeds.',
+                'All workflow dispatches use the release tag and receive the exact prepared commit. Native builds have store submission disabled.',
+                'The web workflow would build and push a production image to ECR. No workflow is dispatched in this dry run.',
+                'Live preparation only accepts a new release. Partial failures require manual recovery; it does not automatically resume or retry requests.',
+              ]
+              return plan
+            }
+
+            /** Re-read GitHub before each proposed operation, but never execute a write or dispatch. */
+            async function dryRunRelease(
+              report,
+              repository,
+              read,
+              hashes = workflowHashes(),
+            ) {
+              const checked = await checkGitHub(report, read)
+              const plan = planRelease(checked, repository, hashes)
+              const baseline = JSON.stringify(checked.github.observed)
+              if (plan.status !== 'blocked') {
+                for (const step of plan.steps) {
+                  const fresh = await checkGitHub(report, read)
+                  step.checkedAt = fresh.github.checkedAt
+                  if (
+                    !['ready', 'incomplete'].includes(fresh.github.status) ||
+                    JSON.stringify(fresh.github.observed) !== baseline
+                  ) {
+                    plan.status = 'blocked'
+                    plan.reason = `GitHub changed or could not be verified before ${step.id}. No requests were sent.`
+                    step.result = 'blocked'
+                    plan.latestChecks = fresh.github.checks
+                    break
+                  }
+                  const build = buildWorkflows.find(
+                    item => step.id === `build-${item.platform.toLowerCase()}`,
+                  )
+                  if (build) {
+                    try {
+                      const workflow = await read(`actions/workflows/${build.file}`)
+                      if (
+                        workflow.state !== 'active' ||
+                        workflow.path !== `.github/workflows/${build.file}`
+                      )
+                        throw new Error('Workflow is disabled or its path differs.')
+                    } catch (error) {
+                      plan.status = 'blocked'
+                      plan.reason = `Cannot request ${build.platform} build: ${error.message}`
+                      step.result = 'blocked'
+                      break
+                    }
+                  }
+                  step.result =
+                    step.action === 'reuse' ? 'verified-reuse' : 'skipped-dry-run'
+                }
+                if (plan.status !== 'blocked')
+                  plan.status = plan.warnings.length ? 'complete-with-warnings' : 'complete'
+              }
+              return {...checked, execution: plan}
+            }
+
+            /** Ignore mutable counters and asset lists, but retain every release identity field. */
+            function snapshot(checked) {
+              const observed = checked.github.observed
+              const object = ref =>
+                ref ? {type: ref.object.type, sha: ref.object.sha} : null
+              return {
+                branch: object(observed.branch),
+                tag: object(observed.tag),
+                candidate: observed.candidateSha,
+                tree: observed.sourceTreeSha,
+                releases: observed.releases.map(
+                  ({id, tag_name, name, body, draft, prerelease}) => ({
+                    id,
+                    tag_name,
+                    name,
+                    body,
+                    draft,
+                    prerelease,
+                  }),
+                ),
+              }
+            }
+
+            /** Resolve only outputs produced or verified by this execution. */
+            function resolveOutputs(value, outputs) {
+              if (Array.isArray(value))
+                return value.map(item => resolveOutputs(item, outputs))
+              if (value && typeof value === 'object') {
+                if ('fromStep' in value) {
+                  const resolved = outputs[value.fromStep]?.[value.field]
+                  if (!resolved)
+                    throw new Error(`Missing output ${value.fromStep}.${value.field}.`)
+                  return resolved
+                }
+                return Object.fromEntries(
+                  Object.entries(value).map(([key, item]) => [
+                    key,
+                    resolveOutputs(item, outputs),
+                  ]),
+                )
+              }
+              return value
+            }
+
+            /** Apply the same plan as the preview, stopping on conflicts or ambiguous writes. */
+            async function executeRelease(
+              report,
+              repository,
+              client,
+              hashes = workflowHashes(),
+            ) {
+              let checked = await checkGitHub(report, client.read)
+              const initial = planRelease(checked, repository, hashes)
+              const execution = {
+                ...initial,
+                mode: 'live',
+                status: 'running',
+                notes: [
+                  'Native submissions are disabled. Web builds push a production image to ECR.',
+                  'Build run IDs are recorded below. Dispatched does not mean the build succeeded.',
+                  'Partial failures require manual recovery. Do not rerun preparation to retry a build.',
+                ],
+              }
+              const result = {...checked, mode: 'live', execution}
+              let active
+              try {
+                if (initial.status === 'blocked') throw new Error(initial.reason)
+                if (checked.github.status !== 'ready')
+                  throw new Error(
+                    'Live preparation requires verified draft visibility and conflict-free GitHub checks.',
+                  )
+                const observed = checked.github.observed
+                if (observed.branch || observed.tag || observed.releases.length) {
+                  throw new Error(
+                    'Release resources already exist. Inspect the previous report and recover manually; live preparation does not resume existing releases.',
+                  )
+                }
+                const expected = snapshot(checked)
+                const verify = async () => {
+                  checked = await checkGitHub(report, client.read)
+                  result.github = checked.github
+                  if (
+                    checked.github.status !== 'ready' ||
+                    JSON.stringify(snapshot(checked)) !== JSON.stringify(expected)
+                  ) {
+                    throw new Error(
+                      'GitHub changed or could not be verified. Stopping without overwriting remote state.',
+                    )
+                  }
+                  result.preparedSha = checked.github.observed.candidateSha
+                }
+                const verifyWorkflow = async build => {
+                  const workflow = await client.read(`actions/workflows/${build.file}`)
+                  if (
+                    workflow.state !== 'active' ||
+                    workflow.path !== `.github/workflows/${build.file}`
+                  )
+                    throw new Error(
+                      `Workflow ${build.file} is disabled or its path differs.`,
+                    )
+                }
+                // Check all workflows before making even the first release write.
+                for (const build of buildWorkflows) await verifyWorkflow(build)
+                const outputs = {}
+                for (const step of execution.steps) {
+                  active = step
+                  await verify()
+                  step.checkedAt = checked.github.checkedAt
+                  step.request.body = resolveOutputs(step.request.body, outputs)
+                  const build = buildWorkflows.find(
+                    item => step.id === `build-${item.platform.toLowerCase()}`,
+                  )
+                  if (build) {
+                    await verifyWorkflow(build)
+                    step.result = 'dispatch-requested'
+                    const run = await client.write(
+                      'POST',
+                      `actions/workflows/${build.file}/dispatches`,
+                      {...step.request.body, return_run_details: true},
+                    )
+                    if (
+                      !Number.isSafeInteger(run?.workflow_run_id) ||
+                      run.workflow_run_id <= 0
+                    ) {
+                      throw new Error(
+                        'GitHub did not return a build run ID. Inspect Actions manually; the build may already be running.',
+                      )
+                    }
+                    step.run = {
+                      id: run.workflow_run_id,
+                      url: run.html_url,
+                      status: 'dispatched',
+                      conclusion: null,
+                    }
+                    step.result = 'dispatched'
+                    continue
+                  }
+                  const path = step.request.path.slice(`repos/${repository}/`.length)
+                  step.result = 'write-requested'
+                  const response = await client.write(
+                    step.request.method,
+                    path,
+                    step.request.body,
+                  )
+                  outputs[step.id] = response
+                  step.output = {
+                    sha: response.sha ?? response.object?.sha,
+                    id: response.id,
+                  }
+                  step.result = 'created'
+                  if (step.id === 'branch')
+                    expected.branch = {type: 'commit', sha: report.sourceSha}
+                  if (step.id === 'branch-tip') {
+                    expected.branch = {type: 'commit', sha: outputs['prepared-commit'].sha}
+                    expected.candidate = outputs['prepared-commit'].sha
+                  }
+                  if (step.id === 'tag')
+                    expected.tag = {type: 'commit', sha: outputs['prepared-commit'].sha}
+                  if (step.id === 'draft') {
+                    const {tag_name, name, body, draft, prerelease} = step.request.body
+                    expected.releases = [
+                      {id: response.id, tag_name, name, body, draft, prerelease},
+                    ]
+                  }
+                  await verify()
+                }
+                execution.status = 'builds-dispatched'
+                result.preparedSha = expected.candidate
+              } catch (error) {
+                execution.status = 'blocked'
+                execution.reason = `${error.message} No automatic retries were attempted. Inspect the report and GitHub before taking further action.`
+                if (active) active.result = active.result ?? 'blocked'
+              }
+              result.github.repository = repository
+              return result
+            }
+
+            // Run preparation with the authenticated Actions client.
             const repository = `${context.repo.owner}/${context.repo.repo}`
             const read = async path => (await github.request(`GET /repos/${repository}${path ? `/${path}` : ''}`, {
               request: {timeout: 30000},
             })).data
+            const write = async (method, path, body) => (await github.request(`${method} /repos/${repository}/${path}`, {
+              data: body,
+              headers: {'X-GitHub-Api-Version': '2022-11-28'},
+              request: {timeout: 30000},
+            })).data
             let report = prepareRelease('source', process.env.RELEASE_VERSION)
             try {
-              report = await dryRunRelease(report, repository, read)
+              report = process.env.DRY_RUN === 'true'
+                ? await dryRunRelease(report, repository, read)
+                : await executeRelease(report, repository, {read, write})
               if (report.execution.status === 'blocked') core.setFailed(report.execution.reason)
             } finally {
               await core.summary.addRaw(renderReport(report)).write()
@@ -97,29 +1169,4 @@ jobs:
         uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version-file: tooling/package.json
-      - name: Create draft release and dispatch builds
-        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
-        env:
-          RELEASE_VERSION: ${{ inputs.releaseVersion }}
-        with:
-          retries: 0
-          script: |
-            const root = `${process.env.GITHUB_WORKSPACE}/tooling/scripts/release`
-            const {prepareRelease, renderReport} = await import(`${root}/prepare.mjs`)
-            const {executeRelease} = await import(`${root}/execute.mjs`)
-            const repository = `${context.repo.owner}/${context.repo.repo}`
-            const read = async path => (await github.request(`GET /repos/${repository}${path ? `/${path}` : ''}`, {
-              request: {timeout: 30000},
-            })).data
-            const write = async (method, path, body) => (await github.request(`${method} /repos/${repository}/${path}`, {
-              data: body,
-              headers: {'X-GitHub-Api-Version': '2022-11-28'},
-              request: {timeout: 30000},
-            })).data
-            let report = prepareRelease('source', process.env.RELEASE_VERSION)
-            try {
-              report = await executeRelease(report, repository, {read, write})
-              if (report.execution.status === 'blocked') core.setFailed(report.execution.reason)
-            } finally {
-              await core.summary.addRaw(renderReport(report)).write()
-            }
+      - *release-preparation
