@@ -10,13 +10,17 @@ import {
 } from '#/analytics/identifiers/util'
 
 const SESSION_RECORD_KEY = 'bsky_analytics_session_v1'
+const SESSION_TIMEOUT = 30 * 60 * 1e3
 const runtimeWindow = window
+let locallyCreatedSessionId: string | undefined
 
 function createSessionRecord(now = Date.now()): SessionRecord {
-  return {
+  const record = {
     id: String(uuid.v4()),
     rotatedAt: now,
   }
+  locallyCreatedSessionId = record.id
+  return record
 }
 
 function parseSessionRecord(rawRecord: string | null, now = Date.now()) {
@@ -118,6 +122,39 @@ function persistInactivityStart(now = Date.now()) {
   })
 }
 
+function selectCanonicalSessionRecord(record: SessionRecord) {
+  if (record.id === sessionRecord.id) return record
+
+  const rotatedAtDelta = record.rotatedAt - sessionRecord.rotatedAt
+  const isCompetingLocalCreation =
+    sessionRecord.id === locallyCreatedSessionId &&
+    Math.abs(rotatedAtDelta) < SESSION_TIMEOUT
+
+  if (isCompetingLocalCreation) {
+    if (rotatedAtDelta !== 0) {
+      return rotatedAtDelta < 0 ? record : sessionRecord
+    }
+    return record.id < sessionRecord.id ? record : sessionRecord
+  }
+
+  return rotatedAtDelta >= 0 ? record : sessionRecord
+}
+
+function reconcileSessionRecord(record: SessionRecord) {
+  const canonicalRecord = selectCanonicalSessionRecord(record)
+
+  if (canonicalRecord === sessionRecord) {
+    writeSessionRecord(sessionRecord)
+  } else if (
+    currentAppState === 'active' &&
+    canonicalRecord.inactivityAt !== undefined
+  ) {
+    persistSessionRecord({...canonicalRecord, inactivityAt: undefined})
+  } else {
+    updateSessionRecord(canonicalRecord)
+  }
+}
+
 function onSessionRecordStorageChanged(event: StorageEvent) {
   if (
     event.key !== SESSION_RECORD_KEY ||
@@ -128,17 +165,7 @@ function onSessionRecordStorageChanged(event: StorageEvent) {
 
   const record = readSessionRecord()
   if (!record) return
-
-  if (record.rotatedAt < sessionRecord.rotatedAt) {
-    writeSessionRecord(sessionRecord)
-  } else if (
-    currentAppState === 'active' &&
-    record.inactivityAt !== undefined
-  ) {
-    persistSessionRecord({...record, inactivityAt: undefined})
-  } else {
-    updateSessionRecord(record)
-  }
+  reconcileSessionRecord(record)
 }
 
 function onAppStateChanged(nextAppState: AppStateStatus) {
@@ -164,7 +191,10 @@ function onPageHide() {
 function startCoordinator() {
   runtimeWindow.addEventListener('storage', onSessionRecordStorageChanged)
   runtimeWindow.addEventListener('pagehide', onPageHide)
-  sessionRecord = readSessionRecord() ?? sessionRecord
+  const persistedRecord = readSessionRecord()
+  if (persistedRecord) {
+    reconcileSessionRecord(persistedRecord)
+  }
   appStateSubscription = onAppStateChange(onAppStateChanged)
 }
 
