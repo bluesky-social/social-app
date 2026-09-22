@@ -638,7 +638,7 @@ export function SubscribeButton({
   const onLongPress = IS_NATIVE
     ? () => {
         playHaptic('Heavy')
-        void shareUrl(view.uri)
+        void shareUrl(isAttie ? view.uri : view.source?.uri || view.uri)
         if (!isAttie && highlightedPublisher) {
           ax.metric('embed:standardSite:subscribe:longPress', {
             url: view.source?.uri || '',
