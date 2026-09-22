@@ -556,6 +556,71 @@ describe('web session lifecycle', () => {
     expect(secondTabHook.result.current).toBe('session-a')
   })
 
+  test('reads current storage when handling a delayed storage event', () => {
+    setSessionRecord('tab-a', {
+      id: 'older-session',
+      rotatedAt: NOW.getTime() - 1,
+    })
+    const session = loadSession('tab-a')
+    const hook = renderHook(() => session.useSessionId())
+    const target = setActiveTab('tab-a')
+    setSessionRecord('tab-a', {
+      id: 'newer-session',
+      rotatedAt: NOW.getTime(),
+    })
+
+    act(() => {
+      target.dispatchStorage({
+        key: SESSION_RECORD_KEY,
+        newValue: JSON.stringify({
+          id: 'older-session',
+          inactivityAt: NOW.getTime(),
+          rotatedAt: NOW.getTime() - 1,
+        }),
+        oldValue: null,
+        storageArea: target.localStorage,
+      })
+    })
+
+    expect(hook.result.current).toBe('newer-session')
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'newer-session',
+      rotatedAt: NOW.getTime(),
+    })
+  })
+
+  test('does not adopt a stored session older than the current snapshot', () => {
+    setSessionRecord('tab-a', {
+      id: 'newer-session',
+      rotatedAt: NOW.getTime(),
+    })
+    const session = loadSession('tab-a')
+    const hook = renderHook(() => session.useSessionId())
+    const target = setActiveTab('tab-a')
+    setSessionRecord('tab-a', {
+      id: 'older-session',
+      rotatedAt: NOW.getTime() - 1,
+    })
+
+    act(() => {
+      target.dispatchStorage({
+        key: SESSION_RECORD_KEY,
+        newValue: JSON.stringify({
+          id: 'older-session',
+          rotatedAt: NOW.getTime() - 1,
+        }),
+        oldValue: null,
+        storageArea: target.localStorage,
+      })
+    })
+
+    expect(hook.result.current).toBe('newer-session')
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'newer-session',
+      rotatedAt: NOW.getTime(),
+    })
+  })
+
   test('treats activation in either tab as shared activity', () => {
     setStoredSession('tab-a', 'existing-session', NOW.getTime())
     setStoredSession('tab-b', 'existing-session', NOW.getTime())

@@ -126,13 +126,18 @@ function onSessionRecordStorageChanged(event: StorageEvent) {
     return
   }
 
-  const record = parseSessionRecord(event.newValue)
-  if (record) {
-    if (currentAppState === 'active' && record.inactivityAt !== undefined) {
-      persistSessionRecord({...record, inactivityAt: undefined})
-    } else {
-      updateSessionRecord(record)
-    }
+  const record = readSessionRecord()
+  if (!record) return
+
+  if (record.rotatedAt < sessionRecord.rotatedAt) {
+    writeSessionRecord(sessionRecord)
+  } else if (
+    currentAppState === 'active' &&
+    record.inactivityAt !== undefined
+  ) {
+    persistSessionRecord({...record, inactivityAt: undefined})
+  } else {
+    updateSessionRecord(record)
   }
 }
 
