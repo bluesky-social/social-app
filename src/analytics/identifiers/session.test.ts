@@ -1,79 +1,294 @@
+import {act, renderHook} from '@testing-library/react-native'
+
+const FIVE_MINUTES = 5 * 60 * 1e3
+const NOW = new Date('2026-09-22T12:00:00.000Z')
+
+const mockDeviceValues = new Map<string, unknown>()
+const mockDeviceListeners = new Map<string, Set<() => void>>()
+const mockDeviceGet = jest.fn((key: string[]) =>
+  mockDeviceValues.get(key.join(':')),
+)
+const mockDeviceSet = jest.fn((key: string[], value: unknown) => {
+  const storageKey = key.join(':')
+  mockDeviceValues.set(storageKey, value)
+  mockDeviceListeners.get(storageKey)?.forEach(listener => listener())
+})
+const mockDeviceAddOnValueChangedListener = jest.fn(
+  (key: string[], listener: () => void) => {
+    const storageKey = key.join(':')
+    const listeners = mockDeviceListeners.get(storageKey) ?? new Set()
+    listeners.add(listener)
+    mockDeviceListeners.set(storageKey, listeners)
+    return {
+      remove: jest.fn(() => {
+        listeners.delete(listener)
+      }),
+    }
+  },
+)
+
+const mockAppStateListeners = new Set<(state: string) => void>()
+let mockCurrentAppState = 'active'
+const mockOnAppStateChange = jest.fn((listener: (state: string) => void) => {
+  mockAppStateListeners.add(listener)
+  return {
+    remove: jest.fn(() => {
+      mockAppStateListeners.delete(listener)
+    }),
+  }
+})
+const mockGetCurrentState = jest.fn(() => mockCurrentAppState)
+
+const mockUuidV4 = jest.fn<unknown, []>()
+
+/*
+ * Keep one React instance across module resets. The session module initializes
+ * at import time, so each test needs a fresh module without giving renderHook a
+ * different React instance from the hook under test.
+ */
+let mockReact: typeof import('react') | undefined
+jest.mock('react', () => {
+  mockReact ??= jest.requireActual('react')
+  return mockReact
+})
+
+jest.mock('react-native-uuid', () => ({
+  __esModule: true,
+  default: {v4: mockUuidV4},
+}))
+
 jest.mock('#/storage', () => ({
   device: {
-    get: jest.fn(),
-    set: jest.fn(),
+    get: mockDeviceGet,
+    set: mockDeviceSet,
+    addOnValueChangedListener: mockDeviceAddOnValueChangedListener,
   },
 }))
 
-jest.mock('#/analytics/identifiers/util', () => ({
-  isSessionIdExpired: jest.fn(),
-}))
-
 jest.mock('#/lib/appState', () => ({
-  onAppStateChange: jest.fn(() => ({remove: jest.fn()})),
+  getCurrentState: mockGetCurrentState,
+  onAppStateChange: mockOnAppStateChange,
 }))
 
 beforeEach(() => {
-  jest.resetModules()
+  jest.useFakeTimers()
+  jest.setSystemTime(NOW)
   jest.clearAllMocks()
+  mockDeviceValues.clear()
+  mockDeviceListeners.clear()
+  mockAppStateListeners.clear()
+  mockCurrentAppState = 'active'
+  mockUuidV4.mockReturnValue('session-a')
 })
 
-function getMocks() {
-  const {device} = require('#/storage')
-  const {isSessionIdExpired} = require('#/analytics/identifiers/util')
-  return {
-    device: jest.mocked(device),
-    isSessionIdExpired: jest.mocked(isSessionIdExpired),
+afterEach(() => {
+  jest.useRealTimers()
+})
+
+function setLegacySession(id: string, lastEventAt?: number) {
+  mockDeviceValues.set('nativeSessionId', id)
+  if (lastEventAt !== undefined) {
+    mockDeviceValues.set('nativeSessionIdLastEventAt', lastEventAt)
   }
 }
 
-describe('session initialization', () => {
-  it('creates new session and sets timestamp when none exists', () => {
-    const {device, isSessionIdExpired} = getMocks()
-    device.get.mockReturnValue(undefined)
-    isSessionIdExpired.mockReturnValue(false)
+function emitAppState(state: string) {
+  mockCurrentAppState = state
+  mockAppStateListeners.forEach(listener => listener(state))
+}
 
-    const {getInitialSessionId} = require('./session')
-    const id = getInitialSessionId()
+function loadSession(): typeof import('./session') {
+  let session: typeof import('./session') | undefined
+  jest.isolateModules(() => {
+    session = require('./session')
+  })
+  return session!
+}
 
-    expect(id).toBeDefined()
-    expect(typeof id).toBe('string')
-    expect(device.set).toHaveBeenCalledWith(['nativeSessionId'], id)
-    expect(device.set).toHaveBeenCalledWith(
-      ['nativeSessionIdLastEventAt'],
-      expect.any(Number),
-    )
+describe('native session initialization', () => {
+  it('creates exactly one session when none exists', () => {
+    const {getInitialSessionId, getSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('session-a')
+    expect(getSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
   })
 
-  it('reuses existing session when not expired', () => {
-    const {device, isSessionIdExpired} = getMocks()
-    const existingId = 'existing-session-id'
-    device.get.mockImplementation((key: string[]) => {
-      if (key[0] === 'nativeSessionId') return existingId
-      if (key[0] === 'nativeSessionIdLastEventAt') return Date.now()
-      return undefined
+  it('creates a session when initialized in the background without one', () => {
+    mockCurrentAppState = 'background'
+
+    const {getInitialSessionId, getSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('session-a')
+    expect(getSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
+
+  it('reuses an unexpired stored session', () => {
+    setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES + 1)
+
+    const {getInitialSessionId, getSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(getSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  it('rotates an active stored session at the exact five-minute boundary', () => {
+    setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES)
+
+    const {getInitialSessionId, getSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('session-a')
+    expect(getSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
+
+  it.each([
+    ['missing', undefined],
+    ['malformed', Number.NaN],
+  ])('preserves an existing session with a %s timestamp', (_, timestamp) => {
+    setLegacySession('existing-session', timestamp)
+
+    const {getInitialSessionId, getSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(getSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  test.failing(
+    'defers rotating an expired stored session initialized in the background',
+    () => {
+      mockCurrentAppState = 'background'
+      setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES)
+
+      const {getInitialSessionId, getSessionId} = loadSession()
+
+      expect(getInitialSessionId()).toBe('existing-session')
+      expect(getSessionId()).toBe('existing-session')
+      expect(mockUuidV4).not.toHaveBeenCalled()
+    },
+  )
+})
+
+/*
+ * These known-failure tests define the coordinator contract. Remove
+ * `test.failing` as the corresponding production behavior is implemented.
+ */
+describe('native session lifecycle', () => {
+  it('does not rotate when foregrounded before five minutes', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const hook = renderHook(() => useSessionId())
+
+    act(() => emitAppState('background'))
+    jest.advanceTimersByTime(FIVE_MINUTES - 1)
+    act(() => emitAppState('active'))
+
+    expect(hook.result.current).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  it('rotates once when foregrounded at the exact five-minute boundary', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const hook = renderHook(() => useSessionId())
+
+    act(() => emitAppState('background'))
+    jest.advanceTimersByTime(FIVE_MINUTES)
+    act(() => emitAppState('active'))
+
+    expect(hook.result.current).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not rotate again inside five minutes', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const hook = renderHook(() => useSessionId())
+
+    act(() => emitAppState('background'))
+    jest.advanceTimersByTime(FIVE_MINUTES)
+    act(() => emitAppState('active'))
+    act(() => emitAppState('background'))
+    jest.advanceTimersByTime(FIVE_MINUTES - 1)
+    act(() => emitAppState('active'))
+
+    expect(hook.result.current).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
+
+  test.failing(
+    'does not erase the inactivity start during intermediate states',
+    () => {
+      setLegacySession('existing-session', NOW.getTime())
+      const {useSessionId} = loadSession()
+      const hook = renderHook(() => useSessionId())
+
+      act(() => emitAppState('inactive'))
+      jest.advanceTimersByTime(FIVE_MINUTES - 1)
+      act(() => emitAppState('background'))
+      jest.advanceTimersByTime(1)
+      act(() => emitAppState('active'))
+
+      expect(hook.result.current).toBe('session-a')
+      expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    },
+  )
+
+  test.failing('uses one app-state listener for every mounted consumer', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    renderHook(() => {
+      useSessionId()
+      useSessionId()
+      useSessionId()
     })
-    isSessionIdExpired.mockReturnValue(false)
 
-    const {getInitialSessionId} = require('./session')
-
-    expect(getInitialSessionId()).toBe(existingId)
+    expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
   })
 
-  it('creates new session when existing is expired', () => {
-    const {device, isSessionIdExpired} = getMocks()
-    const existingId = 'existing-session-id'
-    device.get.mockImplementation((key: string[]) => {
-      if (key[0] === 'nativeSessionId') return existingId
-      if (key[0] === 'nativeSessionIdLastEventAt') return Date.now() - 999999
-      return undefined
+  test.failing('updates every mounted consumer after rotating once', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const hook = renderHook(() => {
+      const first = useSessionId()
+      const second = useSessionId()
+      const third = useSessionId()
+      return [first, second, third]
     })
-    isSessionIdExpired.mockReturnValue(true)
 
-    const {getInitialSessionId} = require('./session')
-    const id = getInitialSessionId()
+    expect(hook.result.current).toEqual([
+      'existing-session',
+      'existing-session',
+      'existing-session',
+    ])
 
-    expect(id).not.toBe(existingId)
-    expect(device.set).toHaveBeenCalledWith(['nativeSessionId'], id)
+    act(() => emitAppState('background'))
+    jest.advanceTimersByTime(FIVE_MINUTES)
+    act(() => emitAppState('active'))
+
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(hook.result.current).toEqual(['session-a', 'session-a', 'session-a'])
   })
+
+  test.failing(
+    'keeps the shared listener until the last consumer unmounts',
+    () => {
+      setLegacySession('existing-session', NOW.getTime())
+      const {useSessionId} = loadSession()
+      const first = renderHook(() => useSessionId())
+      const second = renderHook(() => useSessionId())
+
+      expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
+      expect(mockAppStateListeners.size).toBe(1)
+
+      first.unmount()
+      expect(mockAppStateListeners.size).toBe(1)
+
+      second.unmount()
+      expect(mockAppStateListeners.size).toBe(0)
+    },
+  )
 })
