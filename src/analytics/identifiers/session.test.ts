@@ -217,6 +217,22 @@ describe('native session initialization', () => {
       rotatedAt: NOW.getTime(),
     })
   })
+
+  it('replaces an unreadable stored session without crashing', () => {
+    mockDeviceGet.mockImplementationOnce(() => {
+      throw new SyntaxError('Invalid persisted JSON')
+    })
+
+    const {getInitialSessionId, getSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('session-a')
+    expect(getSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(mockDeviceValues.get('nativeSession')).toEqual({
+      id: 'session-a',
+      rotatedAt: NOW.getTime(),
+    })
+  })
 })
 
 describe('native session lifecycle', () => {

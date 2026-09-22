@@ -32,11 +32,17 @@ function migrateLegacySession(now = Date.now()): SessionRecord | undefined {
   }
 }
 
+function readPersistedSessionRecord(now = Date.now()) {
+  try {
+    return normalizeSessionRecord(device.get(['nativeSession']), now)
+  } catch (error) {
+    if (error instanceof SyntaxError) return undefined
+    throw error
+  }
+}
+
 function readSessionRecord(now = Date.now()) {
-  return (
-    normalizeSessionRecord(device.get(['nativeSession']), now) ??
-    migrateLegacySession(now)
-  )
+  return readPersistedSessionRecord(now) ?? migrateLegacySession(now)
 }
 
 function persistSessionRecord(record: SessionRecord) {
@@ -85,10 +91,7 @@ export function getInitialSessionId() {
 }
 
 export function getSessionId() {
-  return (
-    normalizeSessionRecord(device.get(['nativeSession']))?.id ??
-    initialSessionRecord.id
-  )
+  return readPersistedSessionRecord()?.id ?? initialSessionRecord.id
 }
 
 function onAppStateChanged(nextAppState: AppStateStatus) {
