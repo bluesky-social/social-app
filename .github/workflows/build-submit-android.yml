@@ -4,6 +4,11 @@ name: Build and Submit Android
 on:
   workflow_dispatch:
     inputs:
+      sourceRef:
+        type: string
+        description: Source ref to build; use a full commit SHA for immutable builds
+        required: false
+        default: ''
       profile:
         type: choice
         description: Build profile to use
@@ -16,6 +21,11 @@ on:
         default: true
   workflow_call:
     inputs:
+      sourceRef:
+        type: string
+        description: Source ref to build; use a full commit SHA for immutable builds
+        required: false
+        default: ''
       profile:
         type: string
         description: Build profile to use
@@ -30,6 +40,9 @@ on:
         required: false
         default: ''
     outputs:
+      source-sha:
+        description: Exact commit used for the build
+        value: ${{ jobs.build.outputs.source-sha }}
       package-version:
         description: Version from package.json
         value: ${{ jobs.build.outputs.package-version }}
@@ -75,13 +88,21 @@ jobs:
       group: android-build
       cancel-in-progress: false
     outputs:
+      source-sha: ${{ steps.source.outputs.sha }}
       package-version: ${{ steps.get-build-info.outputs.PACKAGE_VERSION }}
       version-code: ${{ steps.get-build-info.outputs.BSKY_ANDROID_VERSION_CODE }}
     steps:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ inputs.sourceRef || github.sha }}
           fetch-depth: 5
+
+      - name: Resolve build source
+        id: source
+        run: |
+          echo "Building source: $(git rev-parse HEAD)"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: 🔧 Setup Expo project
         uses: $/.github/actions/setup-expo-project
@@ -153,6 +174,7 @@ jobs:
       - name: ⬇️ Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          ref: ${{ needs.build.outputs.source-sha }}
           fetch-depth: 5
 
       - name: 🔧 Setup Expo project

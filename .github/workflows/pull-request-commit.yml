@@ -26,7 +26,7 @@ env:
 
 jobs:
   # Populate this from main so every PR can restore the same trusted baseline.
-  webpack-analyzer-base:
+  bundle-analyzer-base:
     runs-on: ubuntu-24.04
     if: ${{ github.event_name == 'push' }}
     permissions:
@@ -43,28 +43,29 @@ jobs:
           node-version-file: package.json
           cache: pnpm
 
-      - name: ⬇️ Get base stats from cache
-        id: get-base-stats
+      - name: ⬇️ Get base bundle size from cache
+        id: get-base-size
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: stats.json
-          key: stats-base-main-${{ github.sha }}
+          path: base-bundle-size.txt
+          key: base-bundle-size-main-${{ github.sha }}
 
-      - name: 🔦 Generate stats file for base commit
-        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+      - name: 🔦 Build and measure base bundle
+        if: ${{ !steps.get-base-size.outputs.cache-hit }}
         run: |
           pnpm install
           pnpm intl:build
-          pnpm generate-webpack-stats-file
+          pnpm build-web
+          node scripts/measure-web-bundle.js > base-bundle-size.txt
 
-      - name: ⬆️ Save base stats to cache
-        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+      - name: ⬆️ Save base bundle size to cache
+        if: ${{ !steps.get-base-size.outputs.cache-hit }}
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: stats.json
-          key: stats-base-main-${{ github.sha }}
+          path: base-bundle-size.txt
+          key: base-bundle-size-main-${{ github.sha }}
 
-  webpack-analyzer:
+  bundle-analyzer:
     runs-on: ubuntu-24.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     permissions:
@@ -109,41 +110,66 @@ jobs:
           pnpm install
           pnpm intl:build
 
-      - name: 🔦 Generate stats file for PR
+      - name: 🔦 Build and measure PR bundle
         run: |
-          pnpm generate-webpack-stats-file
-          mv stats.json ../stats-new.json
+          pnpm build-web
+          node scripts/measure-web-bundle.js > ../pr-bundle-size.txt
 
-      - name: ⬇️ Get base stats from cache
-        id: get-base-stats
+      - name: ⬇️ Get base bundle size from cache
+        id: get-base-size
         # Restore-only prevents PR-scoped fallback builds from creating caches.
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: stats.json
-          key: stats-base-main-${{ steps.base-commit.outputs.base-commit }}
+          path: base-bundle-size.txt
+          key: base-bundle-size-main-${{ steps.base-commit.outputs.base-commit }}
 
       - name: ⏪ Restore to base commit
-        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+        if: ${{ !steps.get-base-size.outputs.cache-hit }}
         env:
           BASE_COMMIT: ${{ steps.base-commit.outputs.base-commit }}
         run: |
           git reset "$BASE_COMMIT"
           git restore .
+          # Drop the PR-side export so the measure script's output-dir
+          # auto-detection can't pick it up: a webpack base exports to
+          # web-build/ while the PR's Metro build left dist/ behind.
+          rm -rf dist web-build
 
-      - name: 🔦 Generate stats file from base commit
-        if: ${{ !steps.get-base-stats.outputs.cache-hit }}
+      - name: 🔦 Build and measure base bundle
+        if: ${{ !steps.get-base-size.outputs.cache-hit }}
         run: |
           pnpm install
           pnpm intl:build
-          pnpm generate-webpack-stats-file
+          pnpm build-web
+          node scripts/measure-web-bundle.js --allow-missing > base-bundle-size.txt
 
       - name: ％ Get diff
         id: get-diff
-        uses: NejcZdovc/bundle-size-diff@5321de41d2d62a7b0f4d6e60f59d1280a0034160 # v1.1.0
-        with:
-          base_path: "stats.json"
-          pr_path: "../stats-new.json"
-          excluded_assets: "(.+).chunk.js|(.+).js.map|(.+).json|(.+).png|(.+).svg|(.+).webp|(.+).jpg|(.+).ico"
+        run: |
+          node -e '
+            const fs = require("node:fs")
+            const base = Number(fs.readFileSync("base-bundle-size.txt", "utf8").trim())
+            const pr = Number(fs.readFileSync("../pr-bundle-size.txt", "utf8").trim())
+            if (!Number.isFinite(base) || !Number.isFinite(pr) || base <= 0) {
+              console.error(`Bad measurements: base=${base} pr=${pr}`)
+              process.exit(1)
+            }
+            const fmt = bytes => {
+              const abs = Math.abs(bytes)
+              if (abs >= 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(2)} MB`
+              if (abs >= 1024) return `${(bytes / 1024).toFixed(2)} KB`
+              return `${bytes} B`
+            }
+            const diff = pr - base
+            const out = [
+              `base_file_string=${fmt(base)}`,
+              `pr_file_string=${fmt(pr)}`,
+              `diff_file_string=${diff > 0 ? "+" : ""}${fmt(diff)}`,
+              `percent=${((diff / base) * 100).toFixed(2)}`,
+            ].join("\n")
+            console.log(out)
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, out + "\n")
+          '
 
       - name: 💬 Drop a comment
         uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
