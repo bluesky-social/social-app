@@ -237,7 +237,7 @@ describe('native session lifecycle', () => {
     },
   )
 
-  test.failing('uses one app-state listener for every mounted consumer', () => {
+  test('uses one app-state listener for every mounted consumer', () => {
     setLegacySession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     renderHook(() => {
@@ -249,7 +249,7 @@ describe('native session lifecycle', () => {
     expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
   })
 
-  test.failing('updates every mounted consumer after rotating once', () => {
+  test('updates every mounted consumer after rotating once', () => {
     setLegacySession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => {
@@ -273,22 +273,29 @@ describe('native session lifecycle', () => {
     expect(hook.result.current).toEqual(['session-a', 'session-a', 'session-a'])
   })
 
-  test.failing(
-    'keeps the shared listener until the last consumer unmounts',
-    () => {
-      setLegacySession('existing-session', NOW.getTime())
-      const {useSessionId} = loadSession()
-      const first = renderHook(() => useSessionId())
-      const second = renderHook(() => useSessionId())
+  test('updates consumers when the persisted session changes', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const hook = renderHook(() => useSessionId())
 
-      expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
-      expect(mockAppStateListeners.size).toBe(1)
+    act(() => mockDeviceSet(['nativeSessionId'], 'external-session'))
 
-      first.unmount()
-      expect(mockAppStateListeners.size).toBe(1)
+    expect(hook.result.current).toBe('external-session')
+  })
 
-      second.unmount()
-      expect(mockAppStateListeners.size).toBe(0)
-    },
-  )
+  test('keeps the shared listener until the last consumer unmounts', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    const first = renderHook(() => useSessionId())
+    const second = renderHook(() => useSessionId())
+
+    expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
+    expect(mockAppStateListeners.size).toBe(1)
+
+    first.unmount()
+    expect(mockAppStateListeners.size).toBe(1)
+
+    second.unmount()
+    expect(mockAppStateListeners.size).toBe(0)
+  })
 })
