@@ -1,7 +1,19 @@
 import {useEffect, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 
-export const getCurrentState = () => AppState.currentState
+export function getCurrentState(): AppStateStatus | undefined {
+  const state = AppState.currentState
+  switch (state) {
+    case 'active':
+    case 'background':
+    case 'extension':
+    case 'inactive':
+    case 'unknown':
+      return state
+    default:
+      return undefined
+  }
+}
 
 export function onAppStateChange(cb: (state: AppStateStatus) => void) {
   let prev = AppState.currentState

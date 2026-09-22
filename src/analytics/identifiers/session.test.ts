@@ -317,6 +317,19 @@ describe('native session lifecycle', () => {
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
   })
 
+  it('captures inactivity that begins before the first consumer mounts', () => {
+    setLegacySession('existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    mockCurrentAppState = 'background'
+    const hook = renderHook(() => useSessionId())
+
+    jest.advanceTimersByTime(FIVE_MINUTES)
+    act(() => emitAppState('active'))
+
+    expect(hook.result.current).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
+
   test('does not erase the inactivity start during intermediate states', () => {
     setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()

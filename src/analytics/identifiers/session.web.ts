@@ -172,6 +172,10 @@ function startCoordinator() {
     reconcileSessionRecord(persistedRecord)
   }
   appStateSubscription = onAppStateChange(onAppStateChanged)
+  const latestAppState = getCurrentState()
+  if (latestAppState && latestAppState !== currentAppState) {
+    onAppStateChanged(latestAppState)
+  }
 }
 
 function stopCoordinator() {
