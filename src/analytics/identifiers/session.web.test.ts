@@ -299,22 +299,45 @@ describe('web session initialization', () => {
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
   })
 
-  test('converges competing initial sessions on the earliest creation', () => {
-    mockUuidV4.mockReturnValueOnce('later-id').mockReturnValueOnce('earlier-id')
+  test('converges competing initial sessions on the latest creation', () => {
+    mockUuidV4.mockReturnValueOnce('first-id').mockReturnValueOnce('second-id')
     const firstTabSession = loadSession('tab-a')
     const firstTabHook = renderHook(() => firstTabSession.useSessionId())
     mockSharedLocalStorage.clear()
     jest.advanceTimersByTime(1)
 
-    const secondTabSession = loadSession('tab-b')
+    let secondTabSession!: ReturnType<typeof loadSession>
+    act(() => {
+      secondTabSession = loadSession('tab-b')
+    })
     const secondTabHook = renderHook(() => secondTabSession.useSessionId())
 
     expect(mockUuidV4).toHaveBeenCalledTimes(2)
-    expect(firstTabHook.result.current).toBe('later-id')
-    expect(secondTabHook.result.current).toBe('later-id')
+    expect(firstTabHook.result.current).toBe('second-id')
+    expect(secondTabHook.result.current).toBe('second-id')
     expect(getSessionRecord('tab-a')).toEqual({
-      id: 'later-id',
-      rotatedAt: NOW.getTime(),
+      id: 'second-id',
+      rotatedAt: NOW.getTime() + 1,
+    })
+  })
+
+  test('converges when a third tab adopts a competing session', () => {
+    mockUuidV4.mockReturnValueOnce('first-id').mockReturnValueOnce('second-id')
+    const firstTabSession = loadSession('tab-a')
+    mockSharedLocalStorage.clear()
+    jest.advanceTimersByTime(1)
+
+    loadSession('tab-b')
+    const adoptingTabSession = loadSession('tab-c')
+    const adoptingTabHook = renderHook(() => adoptingTabSession.useSessionId())
+    const firstTabHook = renderHook(() => firstTabSession.useSessionId())
+
+    expect(mockUuidV4).toHaveBeenCalledTimes(2)
+    expect(firstTabHook.result.current).toBe('second-id')
+    expect(adoptingTabHook.result.current).toBe('second-id')
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'second-id',
+      rotatedAt: NOW.getTime() + 1,
     })
   })
 
