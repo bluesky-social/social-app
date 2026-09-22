@@ -130,13 +130,7 @@ function TrendingTopicsWidget(
       modifiers={[
         containerBackground(backgroundColor, 'widget'),
         frame({maxWidth: 1000, maxHeight: 1000, alignment: 'topLeading'}),
-        padding(
-          isSmall
-            ? {all: 2}
-            : isMedium
-              ? {horizontal: 10, vertical: 6}
-              : {horizontal: 8, vertical: 4},
-        ),
+        padding({all: isSmall ? 12 : 14}),
         widgetURL(rootDestination),
       ]}>
       {!isSmall ? (
