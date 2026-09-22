@@ -329,6 +329,25 @@ describe('web session initialization', () => {
       rotatedAt: NOW.getTime(),
     })
   })
+
+  it('clamps future legacy timestamps during migration', () => {
+    mockCurrentAppStates.set('tab-a', 'background')
+    setLegacySession(
+      'tab-a',
+      'existing-session',
+      NOW.getTime() + THIRTY_MINUTES,
+    )
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'existing-session',
+      inactivityAt: NOW.getTime(),
+      rotatedAt: NOW.getTime(),
+    })
+  })
 })
 
 describe('web session lifecycle', () => {

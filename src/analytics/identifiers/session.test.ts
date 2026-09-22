@@ -218,6 +218,40 @@ describe('native session initialization', () => {
     })
   })
 
+  it('clamps future record timestamps to the current time', () => {
+    mockCurrentAppState = 'background'
+    setSessionRecord({
+      id: 'existing-session',
+      inactivityAt: NOW.getTime() + FIVE_MINUTES,
+      rotatedAt: NOW.getTime() + FIVE_MINUTES,
+    })
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(mockDeviceValues.get('nativeSession')).toEqual({
+      id: 'existing-session',
+      inactivityAt: NOW.getTime(),
+      rotatedAt: NOW.getTime(),
+    })
+  })
+
+  it('clamps future legacy timestamps during migration', () => {
+    mockCurrentAppState = 'background'
+    setLegacySession('existing-session', NOW.getTime() + FIVE_MINUTES)
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(mockDeviceValues.get('nativeSession')).toEqual({
+      id: 'existing-session',
+      inactivityAt: NOW.getTime(),
+      rotatedAt: NOW.getTime(),
+    })
+  })
+
   it('replaces an unreadable stored session without crashing', () => {
     mockDeviceGet.mockImplementationOnce(() => {
       throw new SyntaxError('Invalid persisted JSON')

@@ -15,6 +15,12 @@ export type SessionRecord = {
   rotatedAt: number
 }
 
+function normalizeTimestamp(value: unknown, now: number) {
+  return typeof value === 'number' && Number.isFinite(value)
+    ? Math.min(value, now)
+    : undefined
+}
+
 export function normalizeSessionRecord(
   value: unknown,
   now = Date.now(),
@@ -24,12 +30,12 @@ export function normalizeSessionRecord(
   const record = value as Partial<SessionRecord>
   if (typeof record.id !== 'string' || !record.id) return undefined
 
+  const rotatedAt = normalizeTimestamp(record.rotatedAt, now)
+
   return {
     id: record.id,
-    inactivityAt: Number.isFinite(record.inactivityAt)
-      ? record.inactivityAt
-      : undefined,
-    rotatedAt: Number.isFinite(record.rotatedAt) ? record.rotatedAt! : now,
+    inactivityAt: normalizeTimestamp(record.inactivityAt, now),
+    rotatedAt: rotatedAt ?? now,
   }
 }
 
