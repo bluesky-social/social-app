@@ -10,6 +10,7 @@ import {
 } from '#/analytics/identifiers/util'
 
 const SESSION_RECORD_KEY = 'bsky_analytics_session_v1'
+const runtimeWindow = window
 
 function createSessionRecord(now = Date.now()): SessionRecord {
   return {
@@ -18,21 +19,35 @@ function createSessionRecord(now = Date.now()): SessionRecord {
   }
 }
 
-function readSessionRecord(now = Date.now()) {
-  const rawRecord = window.sessionStorage.getItem(SESSION_RECORD_KEY)
-  if (rawRecord) {
-    try {
-      const record = normalizeSessionRecord(JSON.parse(rawRecord), now)
-      if (record) return record
-    } catch {
-      // Treat malformed storage as a missing session.
-    }
+function parseSessionRecord(rawRecord: string | null, now = Date.now()) {
+  if (!rawRecord) return undefined
+  try {
+    return normalizeSessionRecord(JSON.parse(rawRecord), now)
+  } catch {
+    return undefined
   }
-  return undefined
+}
+
+function readSessionRecord(now = Date.now()) {
+  return parseSessionRecord(
+    runtimeWindow.localStorage.getItem(SESSION_RECORD_KEY),
+    now,
+  )
+}
+
+function readSessionToMigrate(now = Date.now()) {
+  return parseSessionRecord(
+    runtimeWindow.sessionStorage.getItem(SESSION_RECORD_KEY),
+    now,
+  )
 }
 
 function writeSessionRecord(record: SessionRecord) {
-  window.sessionStorage.setItem(SESSION_RECORD_KEY, JSON.stringify(record))
+  runtimeWindow.localStorage.setItem(SESSION_RECORD_KEY, JSON.stringify(record))
+}
+
+function removeSessionStorageRecord() {
+  runtimeWindow.sessionStorage.removeItem(SESSION_RECORD_KEY)
 }
 
 function resolveSessionForActivation(now = Date.now()) {
@@ -46,7 +61,7 @@ function resolveSessionForActivation(now = Date.now()) {
 let currentAppState = getCurrentState()
 let sessionRecord = (() => {
   const now = Date.now()
-  const existing = readSessionRecord(now)
+  const existing = readSessionRecord(now) ?? readSessionToMigrate(now)
   let record: SessionRecord
 
   if (currentAppState === 'active' && existing) {
@@ -63,6 +78,7 @@ let sessionRecord = (() => {
   }
 
   writeSessionRecord(record)
+  removeSessionStorageRecord()
   return record
 })()
 
@@ -81,12 +97,34 @@ function notifyListeners() {
   listeners.forEach(listener => listener())
 }
 
-function persistSessionRecord(record: SessionRecord) {
-  writeSessionRecord(record)
+function updateSessionRecord(record: SessionRecord) {
   const sessionIdChanged = record.id !== sessionRecord.id
   sessionRecord = record
   if (sessionIdChanged) {
     notifyListeners()
+  }
+}
+
+function persistSessionRecord(record: SessionRecord) {
+  writeSessionRecord(record)
+  updateSessionRecord(record)
+}
+
+function onSessionRecordStorageChanged(event: StorageEvent) {
+  if (
+    event.key !== SESSION_RECORD_KEY ||
+    event.storageArea !== runtimeWindow.localStorage
+  ) {
+    return
+  }
+
+  const record = parseSessionRecord(event.newValue)
+  if (record) {
+    if (currentAppState === 'active' && record.inactivityAt !== undefined) {
+      persistSessionRecord({...record, inactivityAt: undefined})
+    } else {
+      updateSessionRecord(record)
+    }
   }
 }
 
@@ -108,10 +146,13 @@ function onAppStateChanged(nextAppState: AppStateStatus) {
 }
 
 function startCoordinator() {
+  runtimeWindow.addEventListener('storage', onSessionRecordStorageChanged)
+  sessionRecord = readSessionRecord() ?? sessionRecord
   appStateSubscription = onAppStateChange(onAppStateChanged)
 }
 
 function stopCoordinator() {
+  runtimeWindow.removeEventListener('storage', onSessionRecordStorageChanged)
   appStateSubscription?.remove()
   appStateSubscription = undefined
 }

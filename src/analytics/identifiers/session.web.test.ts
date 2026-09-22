@@ -84,6 +84,10 @@ class TestWindow {
   dispatchStorage(event: Parameters<StorageListener>[0]) {
     this.storageListeners.forEach(listener => listener(event))
   }
+
+  get storageListenerCount() {
+    return this.storageListeners.size
+  }
 }
 
 const mockAppStateListeners = new Map<string, Set<(state: string) => void>>()
@@ -132,7 +136,7 @@ beforeEach(() => {
   mockAppStateListeners.clear()
   mockCurrentAppStates.clear()
   mockActiveTabId = 'tab-a'
-  mockUuidV4.mockReturnValue('session-a')
+  mockUuidV4.mockReset().mockReturnValue('session-a')
   setActiveTab('tab-a')
 })
 
@@ -171,6 +175,13 @@ function loadSession(tabId = mockActiveTabId): typeof import('./session.web') {
 }
 
 function setSessionRecord(tabId: string, record: unknown) {
+  setActiveTab(tabId).localStorage.setItem(
+    SESSION_RECORD_KEY,
+    JSON.stringify(record),
+  )
+}
+
+function setSessionStorageRecord(tabId: string, record: unknown) {
   setActiveTab(tabId).sessionStorage.setItem(
     SESSION_RECORD_KEY,
     JSON.stringify(record),
@@ -186,8 +197,7 @@ function setStoredSession(tabId: string, id: string, lastEventAt?: number) {
 }
 
 function getSessionRecord(tabId: string) {
-  const rawRecord =
-    setActiveTab(tabId).sessionStorage.getItem(SESSION_RECORD_KEY)
+  const rawRecord = setActiveTab(tabId).localStorage.getItem(SESSION_RECORD_KEY)
   return rawRecord ? JSON.parse(rawRecord) : undefined
 }
 
@@ -259,20 +269,56 @@ describe('web session initialization', () => {
     expect(mockUuidV4).not.toHaveBeenCalled()
   })
 
-  test.failing(
-    'shares an unexpired session with an independently opened tab',
-    () => {
-      mockUuidV4
-        .mockReturnValueOnce('session-a')
-        .mockReturnValueOnce('session-b')
-      const firstTab = loadSession('tab-a')
-      const secondTab = loadSession('tab-b')
+  test('shares an unexpired session with an independently opened tab', () => {
+    const firstTab = loadSession('tab-a')
+    const secondTab = loadSession('tab-b')
 
-      expect(firstTab.getInitialSessionId()).toBe('session-a')
-      expect(secondTab.getInitialSessionId()).toBe('session-a')
-      expect(mockUuidV4).toHaveBeenCalledTimes(1)
-    },
-  )
+    expect(firstTab.getInitialSessionId()).toBe('session-a')
+    expect(secondTab.getInitialSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
+
+  it('migrates the versioned per-tab session record', () => {
+    setSessionStorageRecord('tab-a', {
+      id: 'existing-session',
+      rotatedAt: NOW.getTime(),
+    })
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'existing-session',
+      rotatedAt: NOW.getTime(),
+    })
+    expect(
+      setActiveTab('tab-a').sessionStorage.getItem(SESSION_RECORD_KEY),
+    ).toBeNull()
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  it('prefers the browser-wide record over stale per-tab data', () => {
+    setSessionRecord('tab-a', {
+      id: 'browser-session',
+      rotatedAt: NOW.getTime(),
+    })
+    setSessionStorageRecord('tab-a', {
+      id: 'tab-session',
+      rotatedAt: NOW.getTime(),
+    })
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('browser-session')
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'browser-session',
+      rotatedAt: NOW.getTime(),
+    })
+    expect(
+      setActiveTab('tab-a').sessionStorage.getItem(SESSION_RECORD_KEY),
+    ).toBeNull()
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
 
   test('defers rotating an expired stored session initialized in the background', () => {
     mockCurrentAppStates.set('tab-a', 'background')
@@ -405,41 +451,83 @@ describe('web session lifecycle', () => {
 
   test('keeps the shared listener until the last consumer unmounts', () => {
     setStoredSession('tab-a', 'existing-session', NOW.getTime())
+    const target = setActiveTab('tab-a')
     const {useSessionId} = loadSession()
     const first = renderHook(() => useSessionId())
     const second = renderHook(() => useSessionId())
 
     expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
     expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
+    expect(target.storageListenerCount).toBe(1)
 
     first.unmount()
     expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
+    expect(target.storageListenerCount).toBe(1)
 
     second.unmount()
     expect(mockAppStateListeners.get('tab-a')?.size).toBe(0)
+    expect(target.storageListenerCount).toBe(0)
   })
 
-  test.failing(
-    'updates another tab when one tab rotates the shared session',
-    () => {
-      setStoredSession('tab-a', 'existing-session', NOW.getTime())
-      setStoredSession('tab-b', 'existing-session', NOW.getTime())
+  test('updates another tab when one tab rotates the shared session', () => {
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-b', 'existing-session', NOW.getTime())
 
-      const firstTabSession = loadSession('tab-a')
-      const firstTabHook = renderHook(() => firstTabSession.useSessionId())
-      const secondTabSession = loadSession('tab-b')
-      const secondTabHook = renderHook(() => secondTabSession.useSessionId())
+    const firstTabSession = loadSession('tab-a')
+    const firstTabHook = renderHook(() => firstTabSession.useSessionId())
+    const secondTabSession = loadSession('tab-b')
+    const secondTabHook = renderHook(() => secondTabSession.useSessionId())
 
-      act(() => {
-        emitAppState('tab-a', 'background')
-        emitAppState('tab-b', 'background')
-      })
-      jest.advanceTimersByTime(THIRTY_MINUTES)
-      act(() => emitAppState('tab-a', 'active'))
+    act(() => {
+      emitAppState('tab-a', 'background')
+      emitAppState('tab-b', 'background')
+    })
+    jest.advanceTimersByTime(THIRTY_MINUTES)
+    act(() => emitAppState('tab-a', 'active'))
 
-      expect(mockUuidV4).toHaveBeenCalledTimes(1)
-      expect(firstTabHook.result.current).toBe('session-a')
-      expect(secondTabHook.result.current).toBe('session-a')
-    },
-  )
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(firstTabHook.result.current).toBe('session-a')
+    expect(secondTabHook.result.current).toBe('session-a')
+  })
+
+  test('treats activation in either tab as shared activity', () => {
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-b', 'existing-session', NOW.getTime())
+
+    const firstTabSession = loadSession('tab-a')
+    const firstTabHook = renderHook(() => firstTabSession.useSessionId())
+    const secondTabSession = loadSession('tab-b')
+    const secondTabHook = renderHook(() => secondTabSession.useSessionId())
+
+    act(() => {
+      emitAppState('tab-a', 'background')
+      emitAppState('tab-b', 'background')
+    })
+    jest.advanceTimersByTime(THIRTY_MINUTES - 1)
+    act(() => emitAppState('tab-b', 'active'))
+    jest.advanceTimersByTime(1)
+    act(() => emitAppState('tab-a', 'active'))
+
+    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(firstTabHook.result.current).toBe('existing-session')
+    expect(secondTabHook.result.current).toBe('existing-session')
+  })
+
+  test('does not become inactive while another tab remains active', () => {
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-b', 'existing-session', NOW.getTime())
+
+    const firstTabSession = loadSession('tab-a')
+    const firstTabHook = renderHook(() => firstTabSession.useSessionId())
+    const secondTabSession = loadSession('tab-b')
+    const secondTabHook = renderHook(() => secondTabSession.useSessionId())
+
+    act(() => emitAppState('tab-b', 'background'))
+    jest.advanceTimersByTime(THIRTY_MINUTES)
+    act(() => emitAppState('tab-b', 'active'))
+
+    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(firstTabHook.result.current).toBe('existing-session')
+    expect(secondTabHook.result.current).toBe('existing-session')
+  })
 })
