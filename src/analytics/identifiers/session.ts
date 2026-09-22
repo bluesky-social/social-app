@@ -2,17 +2,82 @@ import {useSyncExternalStore} from 'react'
 import {type AppStateStatus} from 'react-native'
 import uuid from 'react-native-uuid'
 
-import {onAppStateChange} from '#/lib/appState'
-import {isSessionIdExpired} from '#/analytics/identifiers/util'
+import {getCurrentState, onAppStateChange} from '#/lib/appState'
+import {
+  normalizeSessionRecord,
+  type SessionRecord,
+  shouldRotateSession,
+} from '#/analytics/identifiers/util'
 import {device} from '#/storage'
 
-const initialSessionId = (() => {
-  const existing = device.get(['nativeSessionId'])
-  const lastEvent = device.get(['nativeSessionIdLastEventAt'])
-  const id = existing && !isSessionIdExpired(lastEvent) ? existing : uuid.v4()
-  device.set(['nativeSessionId'], id)
-  device.set(['nativeSessionIdLastEventAt'], Date.now())
-  return id
+function createSessionRecord(now = Date.now()): SessionRecord {
+  return {
+    id: String(uuid.v4()),
+    rotatedAt: now,
+  }
+}
+
+function migrateLegacySession(now = Date.now()): SessionRecord | undefined {
+  const id = device.get(['nativeSessionId'])
+  if (!id) return undefined
+
+  const lastEventAt = device.get(['nativeSessionIdLastEventAt'])
+  const validLastEventAt = Number.isFinite(lastEventAt)
+    ? lastEventAt
+    : undefined
+  return {
+    id,
+    inactivityAt: validLastEventAt,
+    rotatedAt: validLastEventAt ?? now,
+  }
+}
+
+function readSessionRecord(now = Date.now()) {
+  return (
+    normalizeSessionRecord(device.get(['nativeSession']), now) ??
+    migrateLegacySession(now)
+  )
+}
+
+function persistSessionRecord(record: SessionRecord) {
+  device.set(['nativeSession'], record)
+}
+
+function removeLegacySession() {
+  device.remove(['nativeSessionId'])
+  device.remove(['nativeSessionIdLastEventAt'])
+}
+
+function resolveSessionForActivation(now = Date.now()) {
+  const latest = readSessionRecord(now)
+  if (!latest || shouldRotateSession(latest)) {
+    return createSessionRecord(now)
+  }
+  return latest
+}
+
+let currentAppState = getCurrentState()
+const initialSessionRecord = (() => {
+  const now = Date.now()
+  const existing = readSessionRecord(now)
+  let record: SessionRecord
+
+  if (currentAppState === 'active' && existing) {
+    record = shouldRotateSession(existing)
+      ? resolveSessionForActivation(now)
+      : existing
+    record = {...record, inactivityAt: undefined}
+  } else {
+    record = existing ?? createSessionRecord(now)
+  }
+
+  if (currentAppState !== 'active' && record.inactivityAt === undefined) {
+    record = {...record, inactivityAt: now}
+  }
+
+  persistSessionRecord(record)
+  removeLegacySession()
+  return record
 })()
 
 export function getInitialSessionId() {
@@ -20,17 +85,27 @@ export function getInitialSessionId() {
 }
 
 export function getSessionId() {
-  return device.get(['nativeSessionId']) ?? initialSessionId
+  return (
+    normalizeSessionRecord(device.get(['nativeSession']))?.id ??
+    initialSessionRecord.id
+  )
 }
 
-function onAppStateChanged(state: AppStateStatus) {
-  if (state === 'active') {
-    const lastEvent = device.get(['nativeSessionIdLastEventAt'])
-    if (isSessionIdExpired(lastEvent)) {
-      device.set(['nativeSessionId'], uuid.v4())
-    }
+function onAppStateChanged(nextAppState: AppStateStatus) {
+  const now = Date.now()
+
+  if (nextAppState === 'active') {
+    const record = resolveSessionForActivation(now)
+    persistSessionRecord({...record, inactivityAt: undefined})
+  } else if (currentAppState === 'active') {
+    const record = readSessionRecord(now) ?? createSessionRecord(now)
+    persistSessionRecord({
+      ...record,
+      inactivityAt: record.inactivityAt ?? now,
+    })
   }
-  device.set(['nativeSessionIdLastEventAt'], Date.now())
+
+  currentAppState = nextAppState
 }
 
 class SessionStore {
@@ -61,7 +136,7 @@ class SessionStore {
 
   private start() {
     this.storageSubscription = device.addOnValueChangedListener(
-      ['nativeSessionId'],
+      ['nativeSession'],
       this.notify,
     )
     this.appStateSubscription = onAppStateChange(onAppStateChanged)
