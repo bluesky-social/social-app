@@ -1222,7 +1222,7 @@ msgstr ""
 
 #: src/view/com/composer/GifAltText.tsx:77
 #: src/view/com/composer/GifAltText.tsx:151
-#: src/view/com/composer/GifAltText.tsx:217
+#: src/view/com/composer/GifAltText.tsx:218
 #: src/view/com/composer/photos/Gallery.tsx:201
 #: src/view/com/composer/photos/Gallery.tsx:236
 #: src/view/com/composer/photos/ImageAltTextDialog.tsx:95
@@ -1612,8 +1612,8 @@ msgid "Alt text describes images for blind and low-vision users, and helps give 
 msgstr ""
 
 #. placeholder {0}: i18n.number(MAX_ALT_TEXT)
-#: src/view/com/composer/GifAltText.tsx:185
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:148
+#: src/view/com/composer/GifAltText.tsx:186
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:149
 msgid "Alt text will be truncated. {MAX_ALT_TEXT, plural, other {Limit: {0} characters.}}"
 msgstr ""
 
@@ -1641,7 +1641,7 @@ msgstr ""
 msgid "An error occurred while fetching suggested accounts."
 msgstr ""
 
-#: src/state/queries/explore-feed-previews.tsx:185
+#: src/state/queries/explore-feed-previews.tsx:201
 msgid "An error occurred while fetching the feed."
 msgstr ""
 
@@ -2532,7 +2532,7 @@ msgstr ""
 #: src/components/moderation/ReportDialog/index.tsx:1092
 #: src/screens/Messages/JoinRequest.tsx:185
 #: src/screens/Search/components/StarterPackCard.tsx:105
-#: src/screens/Search/Explore.tsx:957
+#: src/screens/Search/Explore.tsx:961
 msgid "By {0}"
 msgstr ""
 
@@ -4173,7 +4173,7 @@ msgctxt "feed-name"
 msgid "Discover"
 msgstr "Discover"
 
-#: src/screens/Search/Explore.tsx:445
+#: src/screens/Search/Explore.tsx:449
 msgid "Discover feeds"
 msgstr "Discover feeds"
 
@@ -5081,16 +5081,16 @@ msgstr "Failed to leave group chat"
 msgid "Failed to load conversations"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:523
-#: src/screens/Search/Explore.tsx:568
-#: src/screens/Search/Explore.tsx:614
+#: src/screens/Search/Explore.tsx:527
+#: src/screens/Search/Explore.tsx:572
+#: src/screens/Search/Explore.tsx:618
 msgid "Failed to load feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:482
-#: src/screens/Search/Explore.tsx:537
-#: src/screens/Search/Explore.tsx:582
-#: src/screens/Search/Explore.tsx:628
+#: src/screens/Search/Explore.tsx:486
+#: src/screens/Search/Explore.tsx:541
+#: src/screens/Search/Explore.tsx:586
+#: src/screens/Search/Explore.tsx:632
 msgid "Failed to load feeds preferences"
 msgstr ""
 
@@ -5115,14 +5115,14 @@ msgstr ""
 msgid "Failed to load profiles"
 msgstr "Failed to load profiles"
 
-#: src/screens/Search/Explore.tsx:475
-#: src/screens/Search/Explore.tsx:530
-#: src/screens/Search/Explore.tsx:575
-#: src/screens/Search/Explore.tsx:621
+#: src/screens/Search/Explore.tsx:479
+#: src/screens/Search/Explore.tsx:534
+#: src/screens/Search/Explore.tsx:579
+#: src/screens/Search/Explore.tsx:625
 msgid "Failed to load suggested feeds"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:383
+#: src/screens/Search/Explore.tsx:387
 msgid "Failed to load suggested follows"
 msgstr ""
 
@@ -5217,7 +5217,7 @@ msgstr ""
 msgid "Failed to save settings. Please try again."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:148
+#: src/screens/Settings/InterestsSettings.tsx:160
 msgctxt "toast"
 msgid "Failed to save your interests."
 msgstr ""
@@ -7434,8 +7434,8 @@ msgstr ""
 msgid "Load more"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:512
-#: src/screens/Search/Explore.tsx:603
+#: src/screens/Search/Explore.tsx:516
+#: src/screens/Search/Explore.tsx:607
 msgid "Load more suggested feeds"
 msgstr ""
 
@@ -8423,7 +8423,7 @@ msgid "No results"
 msgstr ""
 
 #. placeholder {0}: interestsDisplayNames[selectedInterest]
-#: src/screens/Search/Explore.tsx:814
+#: src/screens/Search/Explore.tsx:818
 msgid "No results for \"{0}\"."
 msgstr ""
 
@@ -8448,7 +8448,7 @@ msgstr "No results found for “<0>{query}</0>”."
 msgid "No results found for your query with advanced search filters applied."
 msgstr "No results found for your query with advanced search filters applied."
 
-#: src/screens/Search/Explore.tsx:818
+#: src/screens/Search/Explore.tsx:822
 msgid "No results."
 msgstr ""
 
@@ -10786,12 +10786,12 @@ msgstr "Sad GIFs"
 #: src/screens/SavedFeeds.tsx:124
 #: src/screens/SavedFeeds.tsx:315
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:269
-#: src/view/com/composer/GifAltText.tsx:199
-#: src/view/com/composer/GifAltText.tsx:208
+#: src/view/com/composer/GifAltText.tsx:200
+#: src/view/com/composer/GifAltText.tsx:209
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:63
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:76
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:162
-#: src/view/com/composer/photos/ImageAltTextDialog.tsx:172
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:163
+#: src/view/com/composer/photos/ImageAltTextDialog.tsx:173
 msgid "Save"
 msgstr ""
 
@@ -10971,11 +10971,11 @@ msgstr "Search for {q}"
 msgid "Search for feeds that you want to suggest to others."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:370
+#: src/screens/Search/Explore.tsx:374
 msgid "Search for more accounts"
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:449
+#: src/screens/Search/Explore.tsx:453
 msgid "Search for more feeds"
 msgstr ""
 
@@ -11261,7 +11261,7 @@ msgid "Select your date of birth"
 msgstr ""
 
 #: src/screens/Onboarding/StepInterests/index.tsx:115
-#: src/screens/Settings/InterestsSettings.tsx:179
+#: src/screens/Settings/InterestsSettings.tsx:191
 msgid "Select your interests from the options below"
 msgstr ""
 
@@ -12099,7 +12099,7 @@ msgstr "Starter Pack by you"
 msgid "Starter Pack is invalid"
 msgstr "Starter Pack is invalid"
 
-#: src/screens/Search/Explore.tsx:658
+#: src/screens/Search/Explore.tsx:662
 #: src/screens/Search/SearchResults.tsx:114
 #: src/view/screens/Profile.tsx:241
 msgid "Starter Packs"
@@ -12241,7 +12241,7 @@ msgstr ""
 msgid "Suggested"
 msgstr "Suggested"
 
-#: src/screens/Search/Explore.tsx:366
+#: src/screens/Search/Explore.tsx:370
 msgid "Suggested accounts"
 msgstr ""
 
@@ -12712,7 +12712,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/screens/Search/Explore.tsx:1013
+#: src/screens/Search/Explore.tsx:1017
 #: src/view/com/posts/PostFeed.tsx:825
 msgid "There was an issue fetching posts. Tap here to try again."
 msgstr ""
@@ -14477,7 +14477,7 @@ msgstr ""
 msgid "We ran out of posts from your follows. Here's the latest from <0/>."
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:172
+#: src/screens/Settings/InterestsSettings.tsx:184
 msgid "We recommend selecting at least two interests."
 msgstr ""
 
@@ -15503,11 +15503,11 @@ msgstr "Your hosting provider is detected automatically from the username you en
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:62
 #: src/screens/Settings/ContentAndMediaSettings.tsx:94
 #: src/screens/Settings/ContentAndMediaSettings.tsx:97
-#: src/screens/Settings/InterestsSettings.tsx:50
+#: src/screens/Settings/InterestsSettings.tsx:51
 msgid "Your interests"
 msgstr ""
 
-#: src/screens/Settings/InterestsSettings.tsx:139
+#: src/screens/Settings/InterestsSettings.tsx:151
 msgctxt "toast"
 msgid "Your interests have been updated!"
 msgstr ""
@@ -15593,7 +15593,7 @@ msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
 msgstr "Your reports notifications"
 
-#: src/screens/Settings/InterestsSettings.tsx:64
+#: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
 msgstr ""
 
