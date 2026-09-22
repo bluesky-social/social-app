@@ -10,6 +10,7 @@ type StorageListener = (event: {
   oldValue: string | null
   storageArea: TestStorage
 }) => void
+type PageHideListener = () => void
 
 const mockWindows = new Map<string, TestWindow>()
 const mockSharedLocalStorage = new Map<string, string>()
@@ -67,26 +68,46 @@ class TestWindow {
   localStorage: TestStorage
   sessionStorage: TestStorage
   private storageListeners = new Set<StorageListener>()
+  private pageHideListeners = new Set<PageHideListener>()
 
   constructor(readonly tabId: string) {
     this.localStorage = new TestStorage(mockSharedLocalStorage, tabId, true)
     this.sessionStorage = new TestStorage(new Map(), tabId, false)
   }
 
-  addEventListener(type: string, listener: StorageListener) {
-    if (type === 'storage') this.storageListeners.add(listener)
+  addEventListener(type: string, listener: StorageListener | PageHideListener) {
+    if (type === 'storage') {
+      this.storageListeners.add(listener)
+    } else if (type === 'pagehide') {
+      this.pageHideListeners.add(listener as PageHideListener)
+    }
   }
 
-  removeEventListener(type: string, listener: StorageListener) {
-    if (type === 'storage') this.storageListeners.delete(listener)
+  removeEventListener(
+    type: string,
+    listener: StorageListener | PageHideListener,
+  ) {
+    if (type === 'storage') {
+      this.storageListeners.delete(listener)
+    } else if (type === 'pagehide') {
+      this.pageHideListeners.delete(listener as PageHideListener)
+    }
   }
 
   dispatchStorage(event: Parameters<StorageListener>[0]) {
     this.storageListeners.forEach(listener => listener(event))
   }
 
+  dispatchPageHide() {
+    this.pageHideListeners.forEach(listener => listener())
+  }
+
   get storageListenerCount() {
     return this.storageListeners.size
+  }
+
+  get pageHideListenerCount() {
+    return this.pageHideListeners.size
   }
 }
 
@@ -459,14 +480,59 @@ describe('web session lifecycle', () => {
     expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
     expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
     expect(target.storageListenerCount).toBe(1)
+    expect(target.pageHideListenerCount).toBe(1)
 
     first.unmount()
     expect(mockAppStateListeners.get('tab-a')?.size).toBe(1)
     expect(target.storageListenerCount).toBe(1)
+    expect(target.pageHideListenerCount).toBe(1)
 
     second.unmount()
     expect(mockAppStateListeners.get('tab-a')?.size).toBe(0)
     expect(target.storageListenerCount).toBe(0)
+    expect(target.pageHideListenerCount).toBe(0)
+  })
+
+  test('reuses the session when the browser reloads inside thirty minutes', () => {
+    setSessionRecord('tab-a', {
+      id: 'existing-session',
+      rotatedAt: NOW.getTime(),
+    })
+    const session = loadSession()
+    const hook = renderHook(() => session.useSessionId())
+    const target = setActiveTab('tab-a')
+
+    act(() => target.dispatchPageHide())
+    hook.unmount()
+    jest.advanceTimersByTime(THIRTY_MINUTES - 1)
+
+    const reloadedSession = loadSession()
+
+    expect(reloadedSession.getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  test('rotates the session when the browser reopens after thirty minutes', () => {
+    setSessionRecord('tab-a', {
+      id: 'existing-session',
+      rotatedAt: NOW.getTime(),
+    })
+    const session = loadSession()
+    const hook = renderHook(() => session.useSessionId())
+    const target = setActiveTab('tab-a')
+
+    act(() => target.dispatchPageHide())
+    hook.unmount()
+    jest.advanceTimersByTime(THIRTY_MINUTES)
+
+    const reopenedSession = loadSession()
+
+    expect(reopenedSession.getInitialSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'session-a',
+      rotatedAt: NOW.getTime() + THIRTY_MINUTES,
+    })
   })
 
   test('updates another tab when one tab rotates the shared session', () => {

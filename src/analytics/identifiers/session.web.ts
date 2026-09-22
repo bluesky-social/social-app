@@ -110,6 +110,14 @@ function persistSessionRecord(record: SessionRecord) {
   updateSessionRecord(record)
 }
 
+function persistInactivityStart(now = Date.now()) {
+  const record = readSessionRecord(now) ?? createSessionRecord(now)
+  persistSessionRecord({
+    ...record,
+    inactivityAt: record.inactivityAt ?? now,
+  })
+}
+
 function onSessionRecordStorageChanged(event: StorageEvent) {
   if (
     event.key !== SESSION_RECORD_KEY ||
@@ -135,24 +143,29 @@ function onAppStateChanged(nextAppState: AppStateStatus) {
     const record = resolveSessionForActivation(now)
     persistSessionRecord({...record, inactivityAt: undefined})
   } else if (currentAppState === 'active') {
-    const record = readSessionRecord(now) ?? createSessionRecord(now)
-    persistSessionRecord({
-      ...record,
-      inactivityAt: record.inactivityAt ?? now,
-    })
+    persistInactivityStart(now)
   }
 
   currentAppState = nextAppState
 }
 
+function onPageHide() {
+  if (currentAppState !== 'active') return
+
+  persistInactivityStart()
+  currentAppState = 'background'
+}
+
 function startCoordinator() {
   runtimeWindow.addEventListener('storage', onSessionRecordStorageChanged)
+  runtimeWindow.addEventListener('pagehide', onPageHide)
   sessionRecord = readSessionRecord() ?? sessionRecord
   appStateSubscription = onAppStateChange(onAppStateChanged)
 }
 
 function stopCoordinator() {
   runtimeWindow.removeEventListener('storage', onSessionRecordStorageChanged)
+  runtimeWindow.removeEventListener('pagehide', onPageHide)
   appStateSubscription?.remove()
   appStateSubscription = undefined
 }
