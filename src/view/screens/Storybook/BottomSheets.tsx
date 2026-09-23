@@ -35,10 +35,12 @@ function FooterButton({
   text,
   onPress,
   testID,
+  children,
 }: {
   text: string
   onPress: () => void
   testID: string
+  children?: React.ReactNode
 }) {
   const t = useTheme()
 
@@ -52,6 +54,7 @@ function FooterButton({
         t.atoms.border_contrast_low,
         {paddingBottom: tokens.space.xl},
       ]}>
+      {children}
       <Button
         color="primary"
         size="large"
@@ -239,16 +242,17 @@ export function BottomSheets() {
         nativeOptions={{maxHeight: 360}}
         testID="bottomSheetMaxHeight">
         <Dialog.ScrollableInner
+          testID="bottomSheetMaxHeightScroll"
           label="Max-height bottom sheet"
           footer={
             <FooterButton
               text="Done"
               onPress={() => maxHeight.close()}
-              testID="bottomSheetMaxHeightDone"
-            />
+              testID="bottomSheetMaxHeightDone">
+              <SnapPointText testID="bottomSheetMaxHeightSnapPoint" />
+            </FooterButton>
           }>
           <H3>Max-height sheet</H3>
-          <SnapPointText testID="bottomSheetMaxHeightSnapPoint" />
           <P>This sheet must remain within a 360-point canvas.</P>
           {MAX_HEIGHT_ROWS.map(row => (
             <RowText
