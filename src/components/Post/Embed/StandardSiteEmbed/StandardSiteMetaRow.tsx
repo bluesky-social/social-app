@@ -17,7 +17,6 @@ import {
 import {Text} from '#/components/Typography'
 
 export function StandardSiteMetaRow({
-  authorDid: authorDidProp,
   type = 'document',
   view,
 }: ssTypes.CommonProps &
@@ -35,17 +34,16 @@ export function StandardSiteMetaRow({
       )
       .map(ref => new AtUri(ref.uri).host) || []
   // atm should only be one docment
-  const authorDid = didsFromRecords.at(0) || authorDidProp
+  const authorDid = didsFromRecords.at(0)
   const authorProfile = authorDid
     ? view.associatedProfiles?.find(p => p.did === authorDid)
     : undefined
-  const authorHandle = authorProfile?.handle
   const articleDomain = toNiceDomain(view.uri)
   const articlePublisher = matchStandardSitePublisherByUri(view.uri)
   const domainHandleMatch =
-    authorHandle &&
-    (articleDomain === authorHandle ||
-      articleDomain.endsWith(`.${authorHandle}`))
+    authorProfile?.handle &&
+    (articleDomain === authorProfile.handle ||
+      articleDomain.endsWith(`.${authorProfile.handle}`))
   const DomainIcon = articlePublisher?.Icon
   const metaTextStyle = [
     a.text_xs,
@@ -71,12 +69,12 @@ export function StandardSiteMetaRow({
     })
   }
 
-  if (authorHandle) {
+  if (authorProfile) {
     items.push({
       key: 'author',
       node: (
         <Text numberOfLines={1} style={[metaTextStyle]}>
-          <Trans>by @{authorHandle}</Trans>
+          <Trans>by @{authorProfile.handle}</Trans>
         </Text>
       ),
     })

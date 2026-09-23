@@ -26,7 +26,6 @@ describe('isAttieUrl', () => {
 describe('createAttieCtaUri', () => {
   const viewer = {
     handle: 'viewer.bsky.social',
-    did: 'did:plc:viewer',
   }
 
   it('leaves the URI unchanged without a signed-in viewer', () => {
@@ -43,25 +42,37 @@ describe('createAttieCtaUri', () => {
     )
 
     expect(result.searchParams.get('ref')).toBe('post')
-    expect(result.searchParams.get('login_hint')).toBe(viewer.handle)
-    expect(result.searchParams.get('viewer_did')).toBe(viewer.did)
+    expect(result.searchParams.get('viewer_handle')).toBe(viewer.handle)
+    expect(result.searchParams.has('login_hint')).toBe(false)
+    expect(result.searchParams.has('viewer_did')).toBe(false)
     expect(result.hash).toBe('#details')
   })
 
   it('replaces existing identity hints with the current signed-in viewer', () => {
     const result = new URL(
       createAttieCtaUri(
-        'https://attie.ai/@owner/pages/report?login_hint=other&viewer_did=did%3Aplc%3Aother',
+        'https://attie.ai/@owner/pages/report?viewer_handle=stale&login_hint=other&viewer_did=did%3Aplc%3Aother',
         viewer,
       ),
     )
 
-    expect(result.searchParams.get('login_hint')).toBe(viewer.handle)
-    expect(result.searchParams.get('viewer_did')).toBe(viewer.did)
+    expect(result.searchParams.get('viewer_handle')).toBe(viewer.handle)
+    expect(result.searchParams.has('login_hint')).toBe(false)
+    expect(result.searchParams.has('viewer_did')).toBe(false)
   })
 
   it('does not add hints to a URL outside the Attie card contract', () => {
     const uri = 'https://attie.ai/feeds'
     expect(createAttieCtaUri(uri, viewer)).toBe(uri)
   })
+})
+
+it('clears viewer hints for signed-out navigation', () => {
+  const result = new URL(
+    createAttieCtaUri(
+      'https://example.attie.site/?viewer_handle=old&login_hint=old&viewer_did=did:plc:old',
+      undefined,
+    ),
+  )
+  expect(result.search).toBe('')
 })

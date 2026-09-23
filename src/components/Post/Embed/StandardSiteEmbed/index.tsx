@@ -32,7 +32,6 @@ const PUBLICATION_AVATAR_STYLE = {
 }
 
 export const StandardSiteEmbed = ({
-  authorDid,
   preview,
   view,
   onEmbedInteractionCallback,
@@ -267,11 +266,7 @@ export const StandardSiteEmbed = ({
               <View style={[a.px_md]}>
                 <Divider />
                 <View style={[a.py_sm]}>
-                  <StandardSiteMetaRow
-                    authorDid={authorDid}
-                    preview={preview}
-                    view={view}
-                  />
+                  <StandardSiteMetaRow preview={preview} view={view} />
                 </View>
               </View>
             )}

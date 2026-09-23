@@ -7,6 +7,7 @@ import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {getEmbedCreator} from '#/lib/at-card'
 import {makeProfileLink} from '#/lib/routes/links'
 import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -20,8 +21,8 @@ import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
-import {AtEmbed} from '#/components/Post/Embed/AtEmbed'
-import {getAtEmbedProvider} from '#/components/Post/Embed/AtEmbed/providers'
+import {AtCard} from '#/components/Post/Embed/AtCard'
+import {getAtCardProvider} from '#/components/Post/Embed/AtCard/providers'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
@@ -101,15 +102,19 @@ function MediaEmbed({
       )
     }
     case 'link': {
-      const atProvider = getAtEmbedProvider(embed.view.external.uri)
+      const atProvider = getAtCardProvider(embed.view.external.uri)
       if (atProvider || isStandardSiteEmbed(embed.view.external)) {
-        const Card = atProvider ? AtEmbed : StandardSiteEmbed
+        const Card = atProvider ? AtCard : StandardSiteEmbed
         return (
           <ContentHider
             modui={rest.moderation?.ui('contentMedia')}
             activeStyle={[a.mt_sm]}>
             <Card
               view={embed.view.external}
+              authorDid={getEmbedCreator(
+                rest.post?.record,
+                embed.view.external.uri,
+              )}
               onEmbedInteractionCallback={rest.onOpen}
               style={[a.mt_sm, rest.style]}
             />

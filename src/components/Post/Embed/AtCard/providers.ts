@@ -14,6 +14,6 @@ const providers = [
   },
 ]
 
-export function getAtEmbedProvider(uri: string) {
+export function getAtCardProvider(uri: string) {
   return providers.find(provider => provider.matches(uri))
 }

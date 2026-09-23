@@ -13,10 +13,10 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
-import {getAtEmbedProvider} from './providers'
+import {getAtCardProvider} from './providers'
 
 /** A whole-card link for AT-aware services, starting with Attie. */
-export function AtEmbed({
+export function AtCard({
   view,
   authorDid,
   preview,
@@ -35,14 +35,14 @@ export function AtEmbed({
   const playHaptic = useHaptics()
   const {currentAccount} = useSession()
   const {data: authorProfile} = useProfileQuery({did: authorDid})
-  const provider = getAtEmbedProvider(view.uri)
+  const provider = getAtCardProvider(view.uri)
   if (!provider) return null
 
   const destination = provider.createDestination(view.uri, currentAccount)
 
   return (
     <Link
-      testID="atEmbed"
+      testID="atCard"
       shouldProxy
       to={destination}
       label={
