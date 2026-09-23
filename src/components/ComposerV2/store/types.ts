@@ -214,6 +214,8 @@ export type ThreadPost = {
   text: string
   langs: string[]
   labels: string[]
+  /** Explicit post tags; these are separate from rich-text hashtag facets. */
+  tags: string[]
   attachments: PostAttachments
   /** Derived from the media slot; record attachments never consume capacity. */
   imageSelectionsRemaining: number
@@ -273,6 +275,8 @@ export type ThreadPostInitialState = {
   text?: string
   langs?: readonly string[]
   labels?: readonly string[]
+  /** Explicit post tags; draft schemas currently cannot persist these. */
+  tags?: readonly string[]
   attachments?: {
     record?: RecordAttachmentInput
     media?: MediaAttachmentInput

@@ -273,9 +273,11 @@ Build a submission planner that performs the same deterministic work needed by t
 14. Log a redacted structured representation of the planned writes and validation result.
 15. Return structured success/errors to the debug UI without performing a repository write.
 
+The planner is implemented in `src/components/ComposerV2/planner.ts` as `planComposerV2({snapshot, dependencies})`. It accepts one copied composition snapshot, a DID, deterministic clock/key seams, and explicit read/upload helpers. It returns either the validated `applyWrites` input and planned post refs or stable structured errors. It never calls a repository mutation. The snapshot is copied before the first await: upload completions after capture are not mixed into the attempt, and edits during reply/facet preparation cannot change it; callers retry planning with a new snapshot after work finishes.
+
 The planner should be separated from the future side effect so enabling real submission later is a narrow change: pass the already-validated writes to the PDS client with `validate: true`.
 
-Do not log local file paths, caption contents, auth data, or other sensitive/transient values. Blob refs, record types, rkeys, URIs, counts, and validation errors are sufficient for debugging.
+Do not log local file paths, caption contents, auth data, or other sensitive/transient values. Blob refs, record types, rkeys, URIs, counts, and validation errors are sufficient for debugging. The debug harness uses `summarizeComposerV2Plan()` and exposes only structural counts, refs, embed kinds, and stable error codes; its state dump likewise omits post text, captions, paths, blobs, views, and exception payloads.
 
 ### 10. Debug UI and integration harness
 
