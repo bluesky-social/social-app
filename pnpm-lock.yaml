@@ -413,6 +413,9 @@ importers:
       array.prototype.findlast:
         specifier: ^1.2.3
         version: 1.2.5
+      array.prototype.findlastindex:
+        specifier: ^1.2.6
+        version: 1.2.6
       babel-plugin-transform-remove-console:
         specifier: ^6.9.4
         version: 6.9.4
@@ -804,6 +807,9 @@ importers:
       babel-preset-expo:
         specifier: ~57.0.12
         version: 57.0.12(@babel/core@7.29.0(supports-color@8.1.1))(@babel/runtime@7.29.2)(expo@57.0.24)(react-refresh@0.14.2)(supports-color@8.1.1)
+      es-check:
+        specifier: 9.8.1
+        version: 9.8.1
       eslint-plugin-bsky-internal:
         specifier: link:lint-rules
         version: link:lint-rules
@@ -4192,6 +4198,11 @@ packages:
     engines: {node: '>=0.4.0'}
     hasBin: true
 
+  acorn@8.18.0:
+    resolution: {integrity: sha512-lGq+9yr1/GuAWaVYIHRjvvySG5/4VfKIvC8EWxStPdcDh/Ka7FG3twP6v4d5BkravUilhIAsG4Qj83t02LWUPQ==}
+    engines: {node: '>=0.4.0'}
+    hasBin: true
+
   agent-base@6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
@@ -4313,6 +4324,10 @@ packages:
 
   array.prototype.findlast@1.2.5:
     resolution: {integrity: sha512-CVvd6FHg1Z3POpBLxO6E6zr+rSKEQ9L6rZHAaY7lLfhKsWYUBBOuMs0e9o24oopj6H+geRCX0YJ+TJLBK2eHyQ==}
+    engines: {node: '>= 0.4'}
+
+  array.prototype.findlastindex@1.2.6:
+    resolution: {integrity: sha512-F/TKATkzseUExPlfvmwQKGITM3DGTK+vkAsCZoDc5daVygbJBnjEUCbgkAvVFsgfXfX4YIqZ/27G3k3tdXrTxQ==}
     engines: {node: '>= 0.4'}
 
   array.prototype.flat@1.3.3:
@@ -4450,6 +4465,11 @@ packages:
     engines: {node: '>=6.0.0'}
     hasBin: true
 
+  baseline-browser-mapping@2.11.25:
+    resolution: {integrity: sha512-gMmEShwwq7FJqMwvfRwvCl00v4kN+KOfJqXn+f4nrufak5gNHJOksd/60Dvjuz7sI8Y5WiSFBa8FEYr+zoyqCw==}
+    engines: {node: '>=6.0.0'}
+    hasBin: true
+
   basic-auth@2.0.1:
     resolution: {integrity: sha512-NF+epuEdnUYVlGuhaxbbq+dvJttwLnGY+YixlXlME5KpQ5W3CnXA5cVTneY3SPbPDRkcjMbifrwmFYcClgOZeg==}
     engines: {node: '>= 0.8'}
@@ -4514,6 +4534,11 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
+  browserslist@4.29.0:
+    resolution: {integrity: sha512-3GSvyjvDI4Dur1Meg2BekJquu5uF+9R9a1+5M1Mde192eZoXbeXjzgOsgqPS2V8D5wrrip0gR5Hf/GhWQ9ZzaA==}
+    engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
+    hasBin: true
+
   bser@2.1.1:
     resolution: {integrity: sha512-gQxTNE/GAfIIrmHLUE3oJyp5FO6HRBfhjnw4/wMmA63ZGDJnWBmgY/lyQBpnDUkGmAhbSe39tx2d/iTOAfglwQ==}
 
@@ -4562,6 +4587,9 @@ packages:
 
   caniuse-lite@1.0.30001792:
     resolution: {integrity: sha512-hVLMUZFgR4JJ6ACt1uEESvQN1/dBVqPAKY0hgrV70eN3391K6juAfTjKZLKvOMsx8PxA7gsY1/tLMMTcfFLLpw==}
+
+  caniuse-lite@1.0.30001810:
+    resolution: {integrity: sha512-TITQPUkaz+aVk5GL6NhOdwk1aEaNTSDPsGFWrTuhKGtjTF70jL/Oht2W4c6rXUe5fu7Ie19VIahAXHIIiWWNeg==}
 
   cborg@4.5.8:
     resolution: {integrity: sha512-6/viltD51JklRhq4L7jC3zgy6gryuG5xfZ3kzpE+PravtyeQLeQmCYLREhQH7pWENg5pY4Yu/XCd6a7dKScVlw==}
@@ -5061,6 +5089,9 @@ packages:
   electron-to-chromium@1.5.353:
     resolution: {integrity: sha512-kOrWphBi8TOZyiJZqsgqIle0lw+tzmnQK83pV9dZUd01Nm2POECSyFQMAuarzZdYqQW7FH9RaYOuaRo3h+bQ3w==}
 
+  electron-to-chromium@1.5.434:
+    resolution: {integrity: sha512-7EeFW9OLf1NN9NKQP9xdOE/XKqjxv7JDPP6AEAkHli11+Fae1OaLoNuAf13hQv1PPNtuES0pLQSPk2+fS3s8ww==}
+
   email-validator@2.0.4:
     resolution: {integrity: sha512-gYCwo7kh5S3IDyZPLZf6hSS0MnZT8QmJFqYvbqlDZSbwdZlY6QZWxJ4i/6UhITOJ4XzyI647Bm2MXKCLqnJ4nQ==}
     engines: {node: '>4.0'}
@@ -5121,6 +5152,11 @@ packages:
   es-abstract@1.24.2:
     resolution: {integrity: sha512-2FpH9Q5i2RRwyEP1AylXe6nYLR5OhaJTZwmlcP0dL/+JCbgg7yyEo/sEK6HeGZRf3dFpWwThaRHVApXSkW3xeg==}
     engines: {node: '>= 0.4'}
+
+  es-check@9.8.1:
+    resolution: {integrity: sha512-F6bumjRmN+OWpEUh3ewhE/S1ey6cHKGMNXPn0iE2tBnict3O855Uij6UYbuHnLS1E3eILvg61KdH6kHbGi9www==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
 
   es-define-property@1.0.1:
     resolution: {integrity: sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==}
@@ -6975,6 +7011,10 @@ packages:
   node-releases@2.0.44:
     resolution: {integrity: sha512-5WUyunoPMsvvEhS8AxHtRzP+oA8UCkJ7YRxatWKjngndhDGLiqEVAQKWjFAiAiuL8zMRGzGSJxFnLetoa43qGQ==}
 
+  node-releases@2.0.56:
+    resolution: {integrity: sha512-x0InOIyzgdk+eyaWaRJFH5snEtiImgBgblZ2CyPrLmqqcuMQkEvcDPHbzqbD8eDsSeJbVOjn+crzyzHaM4D+/A==}
+    engines: {node: '>=18'}
+
   node@runtime:24.21.0:
     resolution:
       type: variations
@@ -8754,6 +8794,12 @@ packages:
 
   update-browserslist-db@1.2.3:
     resolution: {integrity: sha512-Js0m9cx+qOgDxo0eMiFGEueWztz+d4+M3rGlmKPT+T4IS/jP4ylw3Nwpu6cpTTP8R1MAC1kF4VbdLt3ARf209w==}
+    hasBin: true
+    peerDependencies:
+      browserslist: '>= 4.21.0'
+
+  update-browserslist-db@1.3.3:
+    resolution: {integrity: sha512-pJ2sYawQS0R/WI928Gj5GlPhTGzbMelq0+4INtSYNDV9ErKJcX6xjGWkoG/VnB3dpUm00zALaqkrUD77pO5TDQ==}
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
@@ -12921,13 +12967,13 @@ snapshots:
       acorn: 8.16.0
       acorn-walk: 8.3.5
 
-  acorn-import-phases@1.0.4(acorn@8.16.0):
+  acorn-import-phases@1.0.4(acorn@8.18.0):
     dependencies:
-      acorn: 8.16.0
+      acorn: 8.18.0
 
-  acorn-jsx@5.3.2(acorn@8.16.0):
+  acorn-jsx@5.3.2(acorn@8.18.0):
     dependencies:
-      acorn: 8.16.0
+      acorn: 8.18.0
     optional: true
 
   acorn-walk@8.3.5:
@@ -12935,6 +12981,8 @@ snapshots:
       acorn: 8.16.0
 
   acorn@8.16.0: {}
+
+  acorn@8.18.0: {}
 
   agent-base@6.0.2(supports-color@8.1.1):
     dependencies:
@@ -13047,6 +13095,16 @@ snapshots:
   array.prototype.findlast@1.2.5:
     dependencies:
       call-bind: 1.0.9
+      define-properties: 1.2.1
+      es-abstract: 1.24.2
+      es-errors: 1.3.0
+      es-object-atoms: 1.1.1
+      es-shim-unscopables: 1.1.0
+
+  array.prototype.findlastindex@1.2.6:
+    dependencies:
+      call-bind: 1.0.9
+      call-bound: 1.0.4
       define-properties: 1.2.1
       es-abstract: 1.24.2
       es-errors: 1.3.0
@@ -13271,6 +13329,8 @@ snapshots:
 
   baseline-browser-mapping@2.10.29: {}
 
+  baseline-browser-mapping@2.11.25: {}
+
   basic-auth@2.0.1:
     dependencies:
       safe-buffer: 5.1.2
@@ -13355,6 +13415,14 @@ snapshots:
       node-releases: 2.0.44
       update-browserslist-db: 1.2.3(browserslist@4.28.2)
 
+  browserslist@4.29.0:
+    dependencies:
+      baseline-browser-mapping: 2.11.25
+      caniuse-lite: 1.0.30001810
+      electron-to-chromium: 1.5.434
+      node-releases: 2.0.56
+      update-browserslist-db: 1.3.3(browserslist@4.29.0)
+
   bser@2.1.1:
     dependencies:
       node-int64: 0.4.0
@@ -13401,13 +13469,15 @@ snapshots:
 
   caniuse-api@3.0.0:
     dependencies:
-      browserslist: 4.28.2
-      caniuse-lite: 1.0.30001792
+      browserslist: 4.29.0
+      caniuse-lite: 1.0.30001810
       lodash.memoize: 4.1.2
       lodash.uniq: 4.5.0
     optional: true
 
   caniuse-lite@1.0.30001792: {}
+
+  caniuse-lite@1.0.30001810: {}
 
   cborg@4.5.8: {}
 
@@ -13943,6 +14013,8 @@ snapshots:
 
   electron-to-chromium@1.5.353: {}
 
+  electron-to-chromium@1.5.434: {}
+
   email-validator@2.0.4: {}
 
   emittery@0.13.1: {}
@@ -14039,6 +14111,12 @@ snapshots:
       typed-array-length: 1.0.7
       unbox-primitive: 1.1.0
       which-typed-array: 1.1.20
+
+  es-check@9.8.1:
+    dependencies:
+      acorn: 8.18.0
+      browserslist: 4.29.0
+      fast-glob: 3.3.3
 
   es-define-property@1.0.1: {}
 
@@ -14189,8 +14267,8 @@ snapshots:
 
   espree@9.6.1:
     dependencies:
-      acorn: 8.16.0
-      acorn-jsx: 5.3.2(acorn@8.16.0)
+      acorn: 8.18.0
+      acorn-jsx: 5.3.2(acorn@8.18.0)
       eslint-visitor-keys: 3.4.3
     optional: true
 
@@ -16367,6 +16445,8 @@ snapshots:
 
   node-releases@2.0.44: {}
 
+  node-releases@2.0.56: {}
+
   node@runtime:24.21.0: {}
 
   normalize-path@3.0.0: {}
@@ -16678,7 +16758,7 @@ snapshots:
 
   postcss-colormin@5.3.1(postcss@8.5.14):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.29.0
       caniuse-api: 3.0.0
       colord: 2.9.3
       postcss: 8.5.14
@@ -16687,7 +16767,7 @@ snapshots:
 
   postcss-convert-values@5.1.3(postcss@8.5.14):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.29.0
       postcss: 8.5.14
       postcss-value-parser: 4.2.0
     optional: true
@@ -16721,7 +16801,7 @@ snapshots:
 
   postcss-merge-rules@5.1.4(postcss@8.5.14):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.29.0
       caniuse-api: 3.0.0
       cssnano-utils: 3.1.0(postcss@8.5.14)
       postcss: 8.5.14
@@ -16744,7 +16824,7 @@ snapshots:
 
   postcss-minify-params@5.1.4(postcss@8.5.14):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.29.0
       cssnano-utils: 3.1.0(postcss@8.5.14)
       postcss: 8.5.14
       postcss-value-parser: 4.2.0
@@ -16793,7 +16873,7 @@ snapshots:
 
   postcss-normalize-unicode@5.1.1(postcss@8.5.14):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.29.0
       postcss: 8.5.14
       postcss-value-parser: 4.2.0
     optional: true
@@ -16820,7 +16900,7 @@ snapshots:
 
   postcss-reduce-initial@5.1.2(postcss@8.5.14):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.29.0
       caniuse-api: 3.0.0
       postcss: 8.5.14
     optional: true
@@ -17948,7 +18028,7 @@ snapshots:
 
   stylehacks@5.1.1(postcss@8.5.14):
     dependencies:
-      browserslist: 4.28.2
+      browserslist: 4.29.0
       postcss: 8.5.14
       postcss-selector-parser: 6.1.2
     optional: true
@@ -18033,7 +18113,7 @@ snapshots:
   terser@5.47.1:
     dependencies:
       '@jridgewell/source-map': 0.3.11
-      acorn: 8.16.0
+      acorn: 8.18.0
       commander: 2.20.3
       source-map-support: 0.5.21
 
@@ -18250,6 +18330,12 @@ snapshots:
       escalade: 3.2.0
       picocolors: 1.1.1
 
+  update-browserslist-db@1.3.3(browserslist@4.29.0):
+    dependencies:
+      browserslist: 4.29.0
+      escalade: 3.2.0
+      picocolors: 1.1.1
+
   uri-js@4.4.1:
     dependencies:
       punycode: 2.3.1
@@ -18362,9 +18448,9 @@ snapshots:
       '@webassemblyjs/ast': 1.14.1
       '@webassemblyjs/wasm-edit': 1.14.1
       '@webassemblyjs/wasm-parser': 1.14.1
-      acorn: 8.16.0
-      acorn-import-phases: 1.0.4(acorn@8.16.0)
-      browserslist: 4.28.2
+      acorn: 8.18.0
+      acorn-import-phases: 1.0.4(acorn@8.18.0)
+      browserslist: 4.29.0
       chrome-trace-event: 1.0.4
       enhanced-resolve: 5.21.3
       es-module-lexer: 2.1.0
