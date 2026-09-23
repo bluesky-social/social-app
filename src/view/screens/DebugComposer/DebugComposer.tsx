@@ -19,6 +19,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {resolveGif} from '#/lib/api/resolve'
 import {uploadBlob} from '#/lib/api/upload-blob'
+import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useAppviewClient,
   useChatClient,
@@ -209,6 +210,7 @@ function Toolbar() {
   const appviewClient = useAppviewClient()
   const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
+  const requireAltTextEnabled = useRequireAltTextEnabled()
   const {t: l} = useLingui()
   const [planSummary, setPlanSummary] = useState<
     ReturnType<typeof summarizeComposerV2Plan> | undefined
@@ -245,6 +247,13 @@ function Toolbar() {
                 uploadBlob: async ({path, mime}) =>
                   (await uploadBlob(pdsClient, path, mime)).blob,
               },
+              /*
+               * Preflight is a caller policy: the require-alt-text preference
+               * and the (not yet built) empty-post confirmation dialog live
+               * outside the planner. The tester surfaces the structured error
+               * codes instead of confirming.
+               */
+              preflight: {requireAltText: requireAltTextEnabled},
             })
             setPlanSummary(summarizeComposerV2Plan(result))
           }}>

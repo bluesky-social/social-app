@@ -273,7 +273,13 @@ Build a submission planner that performs the same deterministic work needed by t
 14. Log a redacted structured representation of the planned writes and validation result.
 15. Return structured success/errors to the debug UI without performing a repository write.
 
-The planner is implemented in `src/components/ComposerV2/planner.ts` as `planComposerV2({snapshot, dependencies})`. It accepts one copied composition snapshot, a DID, deterministic clock/key seams, and explicit read/upload helpers. It returns either the validated `applyWrites` input and planned post refs or stable structured errors. It never calls a repository mutation. The snapshot is copied before the first await: upload completions after capture are not mixed into the attempt, and edits during reply/facet preparation cannot change it; callers retry planning with a new snapshot after work finishes.
+The planner is implemented in `src/components/ComposerV2/planner.ts` as `planComposerV2({snapshot, dependencies, preflight})`. It accepts one published composition snapshot, a DID, deterministic clock/key seams, explicit read/upload helpers, and caller preflight policy. It returns either the validated `applyWrites` input and planned post refs or stable structured errors. It never calls a repository mutation.
+
+Snapshot policy: published store snapshots are immutable (the store replaces changed branches), so the planner captures the snapshot reference once before the first await and relies on that contract instead of defensively copying. Upload completions after capture are not mixed into the attempt, and edits during reply/facet preparation cannot change it; callers retry planning with a new snapshot after work finishes.
+
+Record keys: allocation uses the collision-resistant `TID.next` sequence; `__createRkey` is a test-only deterministic seam and is never selected implicitly. Every post key must be a valid TID and unique within the plan, while gate records intentionally reuse their post's key in other collections.
+
+Preflight is caller-side policy, not the lexicon: an all-empty composition is rejected, trailing empty posts are dropped, and skipping non-trailing empty posts requires the caller's explicit confirmation (`skipEmptyPostsConfirmed`). A post with only explicit tags is not empty and is never silently discarded. Required alt text is the `requireAltText` preflight flag, fed from the user preference by the caller. Text normalization is shared with the existing write path through `resolveRichText` in `src/lib/api/rich-text.ts`, and external reply refs resolve through the AppView with authoritative parent uri/cid.
 
 The planner should be separated from the future side effect so enabling real submission later is a narrow change: pass the already-validated writes to the PDS client with `validate: true`.
 

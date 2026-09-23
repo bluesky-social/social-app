@@ -5,15 +5,14 @@ import {
   toDatetimeString,
   type UriString,
 } from '@atproto/syntax'
-import {RichText} from '@bsky/sdk/richtext'
 import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {resolveRichText} from '#/lib/api/rich-text'
 import {withCreator} from '#/lib/at-card'
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
-import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
 import {logger} from '#/logger'
 import {compressImage} from '#/state/gallery'
 import {
@@ -91,7 +90,7 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
     const draft = thread.posts[i]
 
     // Not awaited to avoid waterfalls.
-    const rtPromise = resolveRT(opts.appviewClient, draft.richtext)
+    const rtPromise = resolveRichText(opts.appviewClient, draft.richtext.text)
     const embedPromise = resolveEmbed(
       opts.appviewClient,
       opts.chatClient,
@@ -200,20 +199,6 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
   }
 
   return {uris}
-}
-
-async function resolveRT(appviewClient: Client, richtext: RichText) {
-  const trimmedText = richtext.text
-    // Trim leading whitespace-only lines (but don't break ASCII art).
-    .replace(/^(\s*\n)+/, '')
-    // Trim any trailing whitespace.
-    .trimEnd()
-  let rt = new RichText({text: trimmedText}, {cleanNewlines: true})
-  await rt.detectFacets(appviewClient)
-
-  rt = shortenLinks(rt)
-  rt = stripInvalidMentions(rt)
-  return rt
 }
 
 export class ReplyDeletedError extends Error {

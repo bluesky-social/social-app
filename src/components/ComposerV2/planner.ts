@@ -3,6 +3,7 @@ import {type $Typed, type BlobRef, type Client} from '@atproto/lex'
 import {
   type AtUriString,
   type DidString,
+  isValidTid,
   toDatetimeString,
   type UriString,
 } from '@atproto/syntax'
@@ -10,7 +11,8 @@ import {RichText} from '@bsky/sdk/richtext'
 
 import {computeCid} from '#/lib/api/computeCid'
 import {type ResolvedLink} from '#/lib/api/resolve'
-import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
+import {resolveRichText} from '#/lib/api/rich-text'
+import {createGIFDescription} from '#/lib/gif-alt-text'
 import {MAX_IMAGES_PER_POST} from '#/components/ComposerV2/store/const'
 import {
   type MediaAttachment,
@@ -18,9 +20,11 @@ import {
   type PostMediaImage,
   type PostMediaItem,
   type PostMediaVideo,
+  type ThreadPost,
   type ThreadReplyTarget,
   type ThreadState,
 } from '#/components/ComposerV2/store/types'
+import {cloneSerializable} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {type Gif} from '#/features/gifPicker/types'
 import {app, chat, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -28,12 +32,16 @@ import * as bsky from '#/types/bsky'
 export type ComposerV2PlanErrorCode =
   | 'missing-dependency'
   | 'invalid-snapshot'
+  | 'empty-composition'
+  | 'empty-post-requires-confirmation'
+  | 'missing-alt-text'
   | 'attachment-not-ready'
   | 'media-failed'
   | 'unsupported-attachment'
   | 'reply-resolution-failed'
   | 'rich-text-resolution-failed'
   | 'media-upload-failed'
+  | 'invalid-record-key'
   | 'invalid-record'
   | 'invalid-write-input'
   | 'unexpected-error'
@@ -41,25 +49,53 @@ export type ComposerV2PlanErrorCode =
 export type ComposerV2PlanError = {
   code: ComposerV2PlanErrorCode
   message: string
+  /** Position of the offending post within the captured snapshot order. */
   postIndex?: number
   postId?: string
   mediaId?: string
   collection?: string
 }
 
+/**
+ * Caller-supplied submission policy that is not a lexicon constraint. These
+ * decisions belong to the composing surface (user preferences, confirmation
+ * dialogs), so the planner takes them as explicit inputs.
+ */
+export type ComposerV2PlannerPreflight = {
+  /**
+   * Mirrors the user's require-alt-text preference. When true, resolved
+   * images, GIFs, and non-failed videos without alt text fail preflight.
+   */
+  requireAltText?: boolean
+  /**
+   * Production asks for confirmation before skipping empty posts in the
+   * middle of a thread. Pass true only after that confirmation; otherwise a
+   * non-trailing empty post returns a structured error.
+   */
+  skipEmptyPostsConfirmed?: boolean
+}
+
 export type ComposerV2PlannerDependencies = {
   /** DID that owns every planned post and gate record. */
   did: string
-  /** AppView client used only for authoritative rich-text and reply-root reads. */
+  /** AppView client used only for authoritative rich-text and reply reads. */
   appviewClient?: Client
   /** Captured once per plan. */
   now?: () => Date
-  /** Deterministic seam for tests and future submit orchestration. */
-  createRkey?: (index: number, createdAt: Date) => string
-  /** Resolve the root of the external parent; never fabricate one from a preview. */
-  resolveReplyRoot?: (
+  /**
+   * Test-only deterministic key seam. When absent, keys always come from the
+   * collision-resistant TID.next sequence. Either way keys must be valid
+   * TIDs and unique per plan.
+   */
+  __createRkey?: (index: number, createdAt: Date) => string
+  /**
+   * Resolve the actual reply refs of the external parent; never fabricate a
+   * root from a preview. The default reads the parent through the AppView
+   * and uses its authoritative uri/cid for the parent ref.
+   */
+  resolveReply?: (
     replyTo: ThreadReplyTarget,
-  ) => Promise<com.atproto.repo.strongRef.Main>
+  ) => Promise<NonNullable<app.bsky.feed.post.Main['reply']>>
   /** Uploads a card/GIF thumbnail. This is a blob upload, never a record write. */
   uploadBlob?: (input: {path: string; mime: string}) => Promise<BlobRef>
   /** Injectable GIF resolver keeps planner tests off the network. */
@@ -96,23 +132,33 @@ class PlannerFailure extends Error {
 /**
  * Construct a complete, locally validated applyWrites input without writing it.
  *
- * Snapshot policy: callers pass one immutable ThreadState snapshot. The planner
- * never reads a store again, never mixes a later upload/edit into that snapshot,
- * and never waits in a React effect. An upload that completes after capture is
- * visible to the next planning attempt, while an edit during another caller's
- * preparation cannot affect the in-flight plan. Pending or failed work in the
- * captured snapshot returns a structured error instead of being serialized.
+ * Snapshot policy: callers pass one published store snapshot. Published
+ * snapshots are immutable - the store replaces changed branches instead of
+ * mutating them - so the planner captures the snapshot reference once and
+ * relies on that contract instead of defensively copying. It never reads the
+ * store again, never mixes a later upload/edit into the captured snapshot,
+ * and never waits in a React effect. An upload that completes after capture
+ * is visible to the next planning attempt, while an edit during another
+ * caller's preparation cannot affect the in-flight plan. Pending or failed
+ * work in the captured snapshot returns a structured error instead of being
+ * serialized.
+ *
+ * Preflight policy: an all-empty composition is rejected, trailing empty
+ * posts are dropped, and non-trailing empty posts require the caller's
+ * explicit confirmation before being skipped. A post is empty only when it
+ * has no trimmed text, no attachments, and no explicit tags - a tags-only
+ * post has content and is never silently discarded. Required alt text is a
+ * caller preference passed through `preflight`, not a lexicon constraint.
  */
 export async function planComposerV2({
   snapshot,
   dependencies,
+  preflight,
 }: {
   snapshot: ThreadState
   dependencies: ComposerV2PlannerDependencies
+  preflight?: ComposerV2PlannerPreflight
 }): Promise<ComposerV2PlanResult> {
-  /* Copy the composition projection before the first await. Runtime handles
-   * and upload callbacks are not part of the plan, but their current statuses
-   * are. This makes concurrent store edits unable to alter this attempt. */
   try {
     if (
       !snapshot ||
@@ -126,27 +172,34 @@ export async function planComposerV2({
     ) {
       throw failure('invalid-snapshot', 'Composition snapshot is invalid')
     }
-    snapshot = clonePlannerSnapshot(snapshot)
+    /* Capture the immutable snapshot's branches once, before the first await.
+     * Concurrent store edits publish new snapshots and cannot alter these. */
+    const {posts, replyTo, threadgateAllowRules, postgateEmbeddingRules} =
+      snapshot
     validateSnapshot(snapshot, dependencies)
-    const postEntries = Object.entries(snapshot.posts)
-    if (postEntries.length === 0) {
+    const allEntries = Object.entries(posts)
+    if (allEntries.length === 0) {
       throw failure('invalid-snapshot', 'Composition has no posts')
     }
+
+    const acceptedEntries = preflightEntries(allEntries, preflight)
 
     const now = dependencies.now?.() ?? new Date()
     if (!Number.isFinite(now.getTime())) {
       throw failure('invalid-snapshot', 'Composition time is invalid')
     }
 
-    const externalReplyRoot = snapshot.replyTo
-      ? await resolveExternalReplyRoot(snapshot.replyTo, dependencies)
+    const externalReply = replyTo
+      ? await resolveExternalReply(replyTo, dependencies)
       : undefined
     const prepared = [] as Array<{
       postId: string
+      postIndex: number
       post: app.bsky.feed.post.Main
     }>
 
-    for (const [postIndex, [postId, post]] of postEntries.entries()) {
+    for (const [order, entry] of acceptedEntries.entries()) {
+      const {postId, postIndex, post} = entry
       const richText = await normalizeRichText(
         post.text,
         dependencies.appviewClient,
@@ -171,7 +224,7 @@ export async function planComposerV2({
 
       const record: app.bsky.feed.post.Main = {
         $type: 'app.bsky.feed.post',
-        createdAt: toDatetimeString(new Date(now.getTime() + postIndex)),
+        createdAt: toDatetimeString(new Date(now.getTime() + order)),
         text: richText.text,
         ...(richText.facets ? {facets: richText.facets} : {}),
         ...(post.langs.length ? {langs: post.langs.slice(0, 3)} : {}),
@@ -179,48 +232,55 @@ export async function planComposerV2({
         ...(post.tags.length ? {tags: [...post.tags]} : {}),
         ...(embed ? {embed} : {}),
       }
-      prepared.push({postId, post: record})
+      prepared.push({postId, postIndex, post: record})
     }
 
     const plannedPosts: PlannedComposerV2Post[] = []
-    let previous: com.atproto.repo.strongRef.Main | undefined
-    for (const [postIndex, entry] of prepared.entries()) {
-      const createdAt = new Date(now.getTime() + postIndex)
-      const rkey =
-        dependencies.createRkey?.(postIndex, createdAt) ??
-        TID.fromTime(createdAt.getTime() * 1000, 0).toString()
+    const usedKeys = new Set<string>()
+    let tid: TID | undefined
+    let reply = externalReply
+    for (const [order, entry] of prepared.entries()) {
+      const createdAt = new Date(now.getTime() + order)
+      let rkey: string
+      if (dependencies.__createRkey) {
+        rkey = dependencies.__createRkey(order, createdAt)
+      } else {
+        tid = TID.next(tid)
+        rkey = tid.toString()
+      }
+      if (!isValidTid(rkey)) {
+        throw failure(
+          'invalid-record-key',
+          'Post record key is not a valid TID',
+          entry.postIndex,
+          entry.postId,
+        )
+      }
+      if (usedKeys.has(rkey)) {
+        throw failure(
+          'invalid-record-key',
+          'Post record keys must be unique within a plan',
+          entry.postIndex,
+          entry.postId,
+        )
+      }
+      usedKeys.add(rkey)
       const uri =
         `at://${dependencies.did}/app.bsky.feed.post/${rkey}` as AtUriString
-      const parent =
-        previous ??
-        (snapshot.replyTo
-          ? {
-              uri: snapshot.replyTo.uri as AtUriString,
-              cid: snapshot.replyTo.cid,
-            }
-          : undefined)
-      const root =
-        externalReplyRoot ??
-        (plannedPosts[0]
-          ? {
-              uri: plannedPosts[0].uri as AtUriString,
-              cid: plannedPosts[0].cid,
-            }
-          : undefined)
-      const reply = root && parent ? {root, parent} : undefined
       const record: app.bsky.feed.post.Main = reply
         ? {...entry.post, reply}
         : entry.post
       const cid = await computeCid(record)
-      const planned = {
+      plannedPosts.push({
         postId: entry.postId,
         rkey,
         uri,
         cid,
         record,
-      }
-      plannedPosts.push(planned)
-      previous = {uri, cid}
+      })
+      // The next post replies to this one, keeping the original thread root.
+      const ref = {uri, cid}
+      reply = {root: reply?.root ?? ref, parent: ref}
     }
 
     const writes: PlannedComposerV2Write[] = []
@@ -237,12 +297,14 @@ export async function planComposerV2({
         planned.postId,
       )
 
-      if (postIndex === 0 && snapshot.threadgateAllowRules !== undefined) {
+      /* Gate records intentionally reuse their post's record key in another
+       * collection; only post keys must be unique among themselves. */
+      if (postIndex === 0 && threadgateAllowRules !== undefined) {
         const value: app.bsky.feed.threadgate.Main = {
           $type: 'app.bsky.feed.threadgate',
           post: planned.uri as AtUriString,
           createdAt: planned.record.createdAt,
-          allow: snapshot.threadgateAllowRules.map(rule => clone(rule)),
+          allow: threadgateAllowRules.map(rule => cloneSerializable(rule)),
         }
         addValidatedWrite(
           writes,
@@ -257,13 +319,13 @@ export async function planComposerV2({
         )
       }
 
-      if (snapshot.postgateEmbeddingRules.length > 0) {
+      if (postgateEmbeddingRules.length > 0) {
         const value: app.bsky.feed.postgate.Main = {
           $type: 'app.bsky.feed.postgate',
           post: planned.uri as AtUriString,
           createdAt: planned.record.createdAt,
-          embeddingRules: snapshot.postgateEmbeddingRules.map(rule =>
-            clone(rule),
+          embeddingRules: postgateEmbeddingRules.map(rule =>
+            cloneSerializable(rule),
           ),
         }
         addValidatedWrite(
@@ -304,69 +366,100 @@ export async function planComposerV2({
   }
 }
 
-function clonePlannerSnapshot(input: ThreadState): ThreadState {
-  const posts: ThreadState['posts'] = {}
-  for (const [postId, post] of Object.entries(input.posts)) {
-    const record = post.attachments.record
-    const media = post.attachments.media
-    posts[postId] = {
-      ...post,
-      langs: [...post.langs],
-      labels: [...post.labels],
-      tags: [...post.tags],
-      attachments: {
-        record:
-          record?.state === 'resolved'
-            ? {...record, record: {...record.record}}
-            : record
-              ? {...record}
-              : undefined,
-        media: cloneMediaAttachment(media),
-      },
-    }
+/**
+ * Empty-post handling: reject an all-empty composition, silently drop
+ * trailing empty posts, and require explicit confirmation before skipping
+ * empty posts in the middle of the thread. Attachment-only posts are not
+ * empty; pending/failed attachments keep their posts and fail later
+ * readiness checks instead of being dropped.
+ */
+function preflightEntries(
+  allEntries: Array<[string, ThreadPost]>,
+  preflight: ComposerV2PlannerPreflight | undefined,
+): Array<{postId: string; postIndex: number; post: ThreadPost}> {
+  const emptyFlags = allEntries.map(([, post]) => isEmptyThreadPost(post))
+  if (emptyFlags.every(Boolean)) {
+    throw failure('empty-composition', 'Composition has no content to post')
   }
-  return {
-    ...input,
-    posts,
-    replyTo: input.replyTo
-      ? {
-          ...input.replyTo,
-          langs: [...input.replyTo.langs],
-        }
-      : undefined,
-    threadgateAllowRules: input.threadgateAllowRules?.map(rule => clone(rule)),
-    postgateEmbeddingRules: input.postgateEmbeddingRules.map(rule =>
-      clone(rule),
-    ),
+
+  if (preflight?.requireAltText) {
+    requireAltText(allEntries)
   }
+
+  const lastNonEmptyIndex = emptyFlags.lastIndexOf(false)
+  const firstNonTrailingEmpty = emptyFlags.findIndex(
+    (empty, index) => empty && index < lastNonEmptyIndex,
+  )
+  if (firstNonTrailingEmpty !== -1 && !preflight?.skipEmptyPostsConfirmed) {
+    throw failure(
+      'empty-post-requires-confirmation',
+      'Skipping an empty post inside the thread requires confirmation',
+      firstNonTrailingEmpty,
+      allEntries[firstNonTrailingEmpty][0],
+    )
+  }
+
+  return allEntries
+    .map(([postId, post], postIndex) => ({postId, postIndex, post}))
+    .filter(({postIndex}) => !emptyFlags[postIndex])
 }
 
-function cloneMediaAttachment(media: MediaAttachment | undefined) {
-  if (!media || media.state !== 'resolved')
-    return media ? {...media} : undefined
-  if (media.kind === 'images') {
-    return {
-      ...media,
-      items: media.items.map(item => ({
-        ...item,
-        upload: {...item.upload},
-        prepared: item.prepared ? {...item.prepared} : undefined,
-      })),
+/**
+ * A post is empty when it has no trimmed text, no attachments, and no
+ * explicit tags: a post carrying only tags has content and must not be
+ * silently discarded.
+ */
+function isEmptyThreadPost(post: ThreadPost): boolean {
+  return (
+    post.text.trim().length === 0 &&
+    !post.attachments.media &&
+    !post.attachments.record &&
+    post.tags.length === 0
+  )
+}
+
+/**
+ * Preference-dependent alt-text preflight: images and GIFs always need alt
+ * text, and videos need it unless their upload already failed (the failure
+ * error takes precedence).
+ */
+function requireAltText(allEntries: Array<[string, ThreadPost]>) {
+  for (const [postIndex, [postId, post]] of allEntries.entries()) {
+    const media = post.attachments.media
+    if (!media || media.state !== 'resolved') continue
+    if (media.kind === 'images') {
+      const missing = media.items.find(item => !item.altText)
+      if (missing) {
+        throw failure(
+          'missing-alt-text',
+          'One or more images is missing alt text',
+          postIndex,
+          postId,
+          missing.id,
+        )
+      }
+    } else if (media.kind === 'gif') {
+      if (!media.item.altText) {
+        throw failure(
+          'missing-alt-text',
+          'A GIF is missing alt text',
+          postIndex,
+          postId,
+          media.item.id,
+        )
+      }
+    } else if (media.kind === 'video') {
+      if (media.item.upload.state !== 'failed' && !media.item.altText) {
+        throw failure(
+          'missing-alt-text',
+          'A video is missing alt text',
+          postIndex,
+          postId,
+          media.item.id,
+        )
+      }
     }
   }
-  if (media.kind === 'video') {
-    return {
-      ...media,
-      item: {
-        ...media.item,
-        upload: {...media.item.upload},
-        captions: media.item.captions.map(caption => ({...caption})),
-        captionBlobs: media.item.captionBlobs.map(caption => ({...caption})),
-        prepared: media.item.prepared ? {...media.item.prepared} : undefined,
-      },
-    }
-  }
-  return {...media}
 }
 
 function validateSnapshot(
@@ -397,21 +490,17 @@ async function normalizeRichText(
   postIndex: number,
   postId: string,
 ): Promise<RichText> {
+  if (!appviewClient) {
+    throw failure(
+      'missing-dependency',
+      'An AppView client is required for rich-text resolution',
+      postIndex,
+      postId,
+    )
+  }
   try {
-    const trimmedText = text.replace(/^((?:\s*\n)+)/, '').trimEnd()
-    const richText = new RichText({text: trimmedText}, {cleanNewlines: true})
-    if (!appviewClient) {
-      throw failure(
-        'missing-dependency',
-        'An AppView client is required for rich-text resolution',
-        postIndex,
-        postId,
-      )
-    }
-    await richText.detectFacets(appviewClient)
-    return stripInvalidMentions(shortenLinks(richText))
-  } catch (error) {
-    if (error instanceof PlannerFailure) throw error
+    return await resolveRichText(appviewClient, text)
+  } catch {
     throw failure(
       'rich-text-resolution-failed',
       'Rich-text resolution failed',
@@ -421,13 +510,19 @@ async function normalizeRichText(
   }
 }
 
-async function resolveExternalReplyRoot(
+/**
+ * Resolve the reply refs of the external parent: the parent ref comes from
+ * the fetched post (not the local preview), the root is the parent's own
+ * root when the parent is itself a reply, and otherwise the parent is the
+ * root.
+ */
+async function resolveExternalReply(
   replyTo: ThreadReplyTarget,
   dependencies: ComposerV2PlannerDependencies,
-): Promise<com.atproto.repo.strongRef.Main> {
-  if (dependencies.resolveReplyRoot) {
+): Promise<NonNullable<app.bsky.feed.post.Main['reply']>> {
+  if (dependencies.resolveReply) {
     try {
-      return await dependencies.resolveReplyRoot(replyTo)
+      return await dependencies.resolveReply(replyTo)
     } catch {
       throw failure(
         'reply-resolution-failed',
@@ -445,15 +540,17 @@ async function resolveExternalReplyRoot(
     const data = await dependencies.appviewClient.call(app.bsky.feed.getPosts, {
       uris: [replyTo.uri as AtUriString],
     })
-    const parent = data.posts[0]
-    if (!parent) throw new Error('missing')
+    const parentPost = data.posts[0]
+    if (!parentPost) throw new Error('missing')
+    const parentRef = {uri: parentPost.uri, cid: parentPost.cid}
+    let rootRef: com.atproto.repo.strongRef.Main = parentRef
     if (
-      bsky.matches(app.bsky.feed.post, parent.record) &&
-      parent.record.reply
+      bsky.isType(app.bsky.feed.post, parentPost.record) &&
+      parentPost.record.reply
     ) {
-      return parent.record.reply.root
+      rootRef = parentPost.record.reply.root
     }
-    return {uri: parent.uri, cid: parent.cid}
+    return {root: rootRef, parent: parentRef}
   } catch {
     throw failure('reply-resolution-failed', 'Reply root could not be resolved')
   }
@@ -499,6 +596,7 @@ function requireResolvedRecord(
       context.postId,
     )
   }
+  // The output record set owns its refs; copy out of the shared snapshot.
   return {...attachment.record}
 }
 
@@ -551,9 +649,9 @@ async function buildMediaEmbed(
         context.postId,
       )
     }
+    let resolved: Extract<ResolvedLink, {type: 'external'}>
     try {
-      const resolved = await resolve(media.item.gif)
-      return externalRecord(resolved, context)
+      resolved = await resolve(media.item.gif)
     } catch {
       throw failure(
         'media-upload-failed',
@@ -562,6 +660,16 @@ async function buildMediaEmbed(
         context.postId,
         media.item.id,
       )
+    }
+    const external = await externalRecord(resolved, context)
+    return {
+      ...external,
+      external: {
+        ...external.external,
+        /* A nonempty user alt is preserved with the user prefix; otherwise
+         * fall back to the provider title. */
+        description: createGIFDescription(resolved.title, media.item.altText),
+      },
     }
   }
   return externalRecord(media, context)
@@ -808,16 +916,6 @@ function failure(
     mediaId,
     collection,
   })
-}
-
-function clone<T>(value: T): T {
-  if (Array.isArray(value)) return value.map(clone) as T
-  if (value && typeof value === 'object') {
-    return Object.fromEntries(
-      Object.entries(value).map(([key, entry]) => [key, clone(entry)]),
-    ) as T
-  }
-  return value
 }
 
 /** Return only structural data suitable for the debug harness. */
