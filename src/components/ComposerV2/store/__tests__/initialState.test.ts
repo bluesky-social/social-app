@@ -138,6 +138,7 @@ describe('normalized initial state', () => {
         text: '',
         langs: [],
         labels: [],
+        tags: [],
         attachments: {record: undefined, media: undefined},
         imageSelectionsRemaining: 10,
         videoSelectionsRemaining: 1,

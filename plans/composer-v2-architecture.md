@@ -97,7 +97,7 @@ Each `ThreadPost` now owns text, languages, labels, and two protocol-aligned att
 
 A future `suggestedExternal` field could retain dormant UI suggestions separately from publishable attachments. It is not implemented by the attachment migration. For now settled attachments block incoming URI candidates, pending/failed URI candidates can be superseded, and explicit record setters replace the record.
 
-The thread aggregate already includes a reply preview, shared postgate/threadgate configuration, and draft identity/dirty state. Remaining state work includes submission/validation bookkeeping, explicit per-post tags, and draft-save/media bookkeeping.
+The thread aggregate already includes a reply preview, shared postgate/threadgate configuration, draft identity/dirty state, and explicit per-post tags. Remaining state work includes draft-save/media bookkeeping.
 
 Focus, open dialogs, and callbacks such as `onPost` remain outside persisted domain state.
 
@@ -528,7 +528,7 @@ The first submission implementation performs real media uploads but does not mut
 ```text
 Store snapshot
    |
-   +-- wait for eager uploads
+   +-- require ready eager uploads from the captured snapshot
    +-- resolve facets
    +-- normalize text
    +-- allocate TIDs and rkeys
@@ -542,7 +542,7 @@ Store snapshot
    +-- safely log the plan
 ```
 
-No `applyWrites` request is made in this milestone.
+No `applyWrites` request is made in this milestone. `planComposerV2({snapshot, dependencies})` copies the composition before its first await; later upload completion or edits are not mixed into the attempt and require a new plan. The debug harness displays only its redacted structural summary.
 
 The planner produces the final validated writes, so enabling publication later should be a narrow final step:
 
@@ -570,6 +570,9 @@ Implemented:
   explicit conversion errors.
 - Thread-level postgate/threadgate configuration, preference and draft
   hydration, opaque rule preservation, and editing actions.
+- Explicit per-post tags, the no-write record-set planner, generated-lexicon
+  validation, deterministic refs/CIDs, gallery selection, replies, embeds,
+  gates, and redacted debug-plan summaries.
 
 Legacy milestone #7 verification covered injected image compression/blob handling, video metadata policy rejection, immediate and polled jobs, caption separation, cancellation, and stale-task ownership. No live-account upload was used in those tests; the recorded results are in `plans/composer-v2-history.md`.
 
@@ -577,7 +580,6 @@ Remaining work is defined only in `AGENTS/tasks/`, following the order in its RE
 
 - 0001-0003: named action results, bulk upload retry, and simpler URI resolution.
 - 0005: post reordering and tester controls.
-- 0006: no-write record-set construction, including image/gallery selection, explicit tags, replies, and gates.
 - 0007: comprehensive tester UI covering implemented capabilities.
 - 0004: UI-free image compression, explicitly moved to immediately before drafts.
 - 0008: outbound draft codec, persistence/cleanup, round trips, and tester save/restore controls last.

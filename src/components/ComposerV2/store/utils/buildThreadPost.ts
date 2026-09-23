@@ -20,6 +20,7 @@ export function buildThreadPost(
     text: input.text ?? '',
     langs: [...(input.langs ?? [])],
     labels: [...(input.labels ?? [])],
+    tags: [...(input.tags ?? [])],
     attachments: {
       record: !recordInput
         ? undefined

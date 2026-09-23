@@ -13,10 +13,12 @@
  *   - addUri validation (embedding-disabled, attachment conflicts) shows
  *     up the way we expect
  */
-import {useEffect, useMemo} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {ScrollView, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {resolveGif} from '#/lib/api/resolve'
+import {uploadBlob} from '#/lib/api/upload-blob'
 import {
   useAppviewClient,
   useChatClient,
@@ -33,6 +35,10 @@ import {
   useThreadState,
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
+import {
+  planComposerV2,
+  summarizeComposerV2Plan,
+} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {Text} from '#/components/Typography'
 
@@ -200,21 +206,56 @@ function PostFooter({postId}: {postId: string}) {
 
 function Toolbar() {
   const store = useThreadStore()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
+  const {currentAccount} = useSession()
+  const {t: l} = useLingui()
+  const [planSummary, setPlanSummary] = useState<
+    ReturnType<typeof summarizeComposerV2Plan> | undefined
+  >()
+
   return (
-    <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
-      <Button
-        label="Append post"
-        size="small"
-        color="secondary"
-        onPress={() => {
-          // Read live state at click time so we always append after the
-          // current last post (instead of capturing a stale id at render).
-          const ids = Object.keys(store.getState().posts)
-          const lastId = ids[ids.length - 1]
-          if (lastId) store.actions.addPost('after', lastId)
-        }}>
-        <ButtonText>+ post</ButtonText>
-      </Button>
+    <View style={[a.gap_sm]}>
+      <View style={[a.flex_row, a.flex_wrap, a.gap_sm]}>
+        <Button
+          label={l`Append post`}
+          size="small"
+          color="secondary"
+          onPress={() => {
+            // Read live state at click time so we always append after the
+            // current last post (instead of capturing a stale id at render).
+            const ids = Object.keys(store.getState().posts)
+            const lastId = ids[ids.length - 1]
+            if (lastId) store.actions.addPost('after', lastId)
+          }}>
+          <ButtonText>+ post</ButtonText>
+        </Button>
+        <Button
+          label={l`Plan record set`}
+          accessibilityHint={l`Validate a redacted no-write record plan`}
+          size="small"
+          color="secondary"
+          onPress={async () => {
+            const result = await planComposerV2({
+              snapshot: store.getState(),
+              dependencies: {
+                did: currentAccount?.did ?? '',
+                appviewClient,
+                resolveGif,
+                uploadBlob: async ({path, mime}) =>
+                  (await uploadBlob(pdsClient, path, mime)).blob,
+              },
+            })
+            setPlanSummary(summarizeComposerV2Plan(result))
+          }}>
+          <ButtonText>
+            <Trans>Plan records</Trans>
+          </ButtonText>
+        </Button>
+      </View>
+      <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
+        {planSummary ? JSON.stringify(planSummary, null, 2) : l`No plan yet.`}
+      </Text>
     </View>
   )
 }
@@ -223,9 +264,31 @@ function StateDump() {
   const state = useThreadState()
   const t = useTheme()
 
-  // Functions (e.g. retry on failed states) are dropped by JSON.stringify;
-  // Lexicon blob and view types serialize as plain objects.
-  const dump = useMemo(() => JSON.stringify(state, null, 2), [state])
+  // Keep the tester diagnostic safe: expose structure and readiness, never
+  // text, captions, local paths, blobs, views, or retry/error payloads.
+  const summary = useMemo(
+    () => ({
+      postCount: Object.keys(state.posts).length,
+      isDirty: state.isDirty,
+      hasReplyTarget: !!state.replyTo,
+      threadgate:
+        state.threadgateAllowRules === undefined
+          ? 'everybody'
+          : state.threadgateAllowRules.length === 0
+            ? 'nobody'
+            : 'rules',
+      postgateRuleCount: state.postgateEmbeddingRules.length,
+      posts: Object.entries(state.posts).map(([postId, post]) => ({
+        postId,
+        textLength: post.text.length,
+        tagCount: post.tags.length,
+        record: post.attachments.record?.state ?? 'none',
+        media: summarizeMedia(post.attachments.media),
+      })),
+    }),
+    [state],
+  )
+  const dump = JSON.stringify(summary, null, 2)
 
   return (
     <View
@@ -243,4 +306,25 @@ function StateDump() {
       </ScrollView>
     </View>
   )
+}
+
+function summarizeMedia(
+  media: ReturnType<
+    typeof useThreadState
+  >['posts'][string]['attachments']['media'],
+) {
+  if (!media) return 'none'
+  if (media.state !== 'resolved') return media.state
+  switch (media.kind) {
+    case 'images':
+      return `images:${media.items.length}/${media.items.filter(item => item.upload.state === 'uploaded').length}`
+    case 'video':
+      return `video:${media.item.upload.state}`
+    case 'gif':
+      return 'gif'
+    case 'external':
+      return 'external'
+    case 'chat-invite':
+      return 'chat-invite'
+  }
 }

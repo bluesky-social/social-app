@@ -106,6 +106,18 @@ export function createThreadStore(options: {
     })
   }
 
+  /** Edit explicit post tags without changing rich-text hashtag facets. */
+  function setPostTags(postId: string, tags: string[]) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post) return null
+      if (serializableEqual(post.tags, tags)) return null
+      s.posts[postId] = {...post, tags: [...tags]}
+      s.isDirty = true
+      return s
+    })
+  }
+
   /** Copy nested rules so caller mutations cannot alter published snapshots. */
   function setThreadgateAllowRules(
     allow: readonly types.ThreadgateAllowRule[] | undefined,
@@ -755,6 +767,7 @@ export function createThreadStore(options: {
       setPostText,
       setPostLanguages,
       setPostLabels,
+      setPostTags,
       setThreadgateAllowRules,
       setPostgateConfiguration,
       setPostgateEmbeddingRules,
