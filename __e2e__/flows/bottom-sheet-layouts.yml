@@ -117,7 +117,7 @@ appId: xyz.blueskyweb.app
 - assertNotVisible:
     id: "bottomSheetDynamic"
 
-# Opening and dismissing the Android keyboard must not lose the fixed footer.
+# Opening the keyboard must not make the fixed footer unreachable.
 - tapOn:
     id: "bottomSheetKeyboardOpen"
 - assertVisible:
@@ -125,6 +125,18 @@ appId: xyz.blueskyweb.app
 - tapOn:
     id: "bottomSheetKeyboardInput"
 - inputText: "Bottom sheet keyboard test"
+- assertVisible:
+    id: "bottomSheetKeyboardDone"
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetKeyboardEnd"
+    direction: DOWN
+    timeout: 30000
+- tapOn:
+    id: "bottomSheetKeyboardEnd"
+- assertVisible:
+    id: "bottomSheetKeyboardEnd"
+    text: "Reached keyboard sheet end"
 - assertVisible:
     id: "bottomSheetKeyboardDone"
 - runFlow:
