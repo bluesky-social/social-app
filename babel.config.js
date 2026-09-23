@@ -3,6 +3,8 @@
  * which breaks the structuredClone Metro performs on the AST when
  * EXPO_UNSTABLE_TREE_SHAKING is enabled. Strip them after all other
  * transforms have run.
+ *
+ * @returns {import('@babel/core').PluginObj}
  */
 const stripSymbolLocs = () => ({
   post(file) {
@@ -16,6 +18,26 @@ const stripSymbolLocs = () => ({
     if (typeof file.ast.program.loc === 'symbol') {
       file.ast.program.loc = undefined
     }
+  },
+})
+
+/**
+ * Replace Sentry's debug flag before Metro tree shaking so production builds
+ * can discard the SDK's debug logging code.
+ *
+ * @param {{types: typeof import('@babel/types')}} api
+ * @returns {import('@babel/core').PluginObj}
+ */
+const stripSentryDebug = ({types}) => ({
+  visitor: {
+    ReferencedIdentifier(path) {
+      if (
+        path.node.name === '__SENTRY_DEBUG__' &&
+        !path.scope.hasBinding('__SENTRY_DEBUG__')
+      ) {
+        path.replaceWith(types.booleanLiteral(false))
+      }
+    },
   },
 })
 
@@ -63,7 +85,9 @@ module.exports = function (api) {
             '@babel/plugin-transform-dynamic-import',
           ]
         : []),
-      ...(api.env('production') ? ['transform-remove-console'] : []),
+      ...(api.env('production')
+        ? ['transform-remove-console', stripSentryDebug]
+        : []),
 
       stripSymbolLocs,
       'react-native-worklets/plugin', // NOTE: this plugin MUST be last
