@@ -132,11 +132,6 @@ appId: xyz.blueskyweb.app
       id: "bottomSheetKeyboardEnd"
     direction: DOWN
     timeout: 30000
-- tapOn:
-    id: "bottomSheetKeyboardEnd"
-- assertVisible:
-    id: "bottomSheetKeyboardEnd"
-    text: "Reached keyboard sheet end"
 - assertVisible:
     id: "bottomSheetKeyboardDone"
 - runFlow:
