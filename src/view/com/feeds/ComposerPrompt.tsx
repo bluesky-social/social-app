@@ -157,7 +157,7 @@ export function ComposerPrompt() {
   return (
     <Pressable
       onPress={onPress}
-      accessibilityRole="button"
+      accessibilityRole={IS_NATIVE ? 'button' : undefined} // In HTML, <button> cannot be a descendant of <button>.
       accessibilityLabel={_(msg`Compose new post`)}
       accessibilityHint={_(msg`Opens the post composer`)}
       onPointerEnter={() => setHover(true)}

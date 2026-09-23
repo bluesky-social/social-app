@@ -1,8 +1,6 @@
-import {useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
@@ -11,6 +9,7 @@ import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {getAllListMembers} from '#/state/queries/list-members'
 import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
+import {useOnboardingScrollViewVisibility} from '#/screens/Onboarding/Layout'
 import {bulkWriteFollows} from '#/screens/Onboarding/util'
 import {AvatarStack} from '#/screens/Search/components/StarterPackCard'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
@@ -27,11 +26,15 @@ const IGNORED_ACCOUNT = 'did:plc:pifkcjimdcfwaxkanzhwxufp'
 
 export function StarterPackCard({
   view,
+  recId,
+  position,
 }: {
   view: app.bsky.graph.defs.StarterPackView
+  recId?: string
+  position: number
 }) {
   const t = useTheme()
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {gtPhone} = useBreakpoints()
@@ -41,6 +44,21 @@ export function StarterPackCard({
   const record = view.record
   const [isProcessing, setIsProcessing] = useState(false)
   const [isFollowingAll, setIsFollowingAll] = useState(false)
+  const seenRecommendationRef = useRef<string | undefined>(undefined)
+  const visibilityRef = useRef<React.ComponentRef<typeof View>>(null)
+  const recommendationKey = `${recId ?? 'legacy'}:${view.uri}`
+  const onVisible = useCallback(() => {
+    if (!recId) return
+    if (seenRecommendationRef.current === recommendationKey) return
+    seenRecommendationRef.current = recommendationKey
+    ax.metric('starterPack:suggestion:seen', {
+      logContext: 'Onboarding',
+      starterPack: view.uri,
+      recId,
+      position,
+    })
+  }, [ax, position, recId, recommendationKey, view.uri])
+  const onLayout = useOnboardingScrollViewVisibility(visibilityRef, onVisible)
 
   const onFollowAll = async () => {
     if (!view.list) return
@@ -52,7 +70,7 @@ export function StarterPackCard({
       listItems = await getAllListMembers(appviewClient, view.list.uri)
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), {
+      Toast.show(l`An error occurred while trying to follow all`, {
         type: 'error',
       })
       logger.error('Failed to get list members for Starter Pack', {
@@ -80,7 +98,7 @@ export function StarterPackCard({
       })
     } catch (e) {
       setIsProcessing(false)
-      Toast.show(_(msg`An error occurred while trying to follow all`), {
+      Toast.show(l`An error occurred while trying to follow all`, {
         type: 'error',
       })
       logger.error('Failed to follow all accounts', {safeMessage: e})
@@ -95,11 +113,13 @@ export function StarterPackCard({
         })
       }
     })
-    Toast.show(_(msg`All accounts have been followed!`), {type: 'success'})
+    Toast.show(l`All accounts have been followed!`, {type: 'success'})
     ax.metric('starterPack:followAll', {
       logContext: 'Onboarding',
       starterPack: view.uri,
       count: dids.length,
+      recId,
+      position,
     })
   }
 
@@ -114,6 +134,8 @@ export function StarterPackCard({
 
   return (
     <View
+      ref={visibilityRef}
+      onLayout={onLayout}
       style={[
         a.w_full,
         a.p_lg,
@@ -128,7 +150,6 @@ export function StarterPackCard({
         numPending={profileCount}
         total={view.list?.listItemCount}
       />
-
       <View
         style={[
           a.w_full,
@@ -155,7 +176,7 @@ export function StarterPackCard({
           </Text>
         </View>
         <Button
-          label={_(msg`Follow all`)}
+          label={l`Follow all`}
           disabled={isProcessing || isFollowingAll}
           onPress={onFollowAll}
           color="secondary"

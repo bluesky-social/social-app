@@ -164,6 +164,7 @@ function AltTextInner({
                   defaultValue={altText}
                   multiline
                   autoFocus
+                  scrollEnabled={false}
                   onKeyPress={({nativeEvent}) => {
                     if (nativeEvent.key === 'Escape') {
                       control.close()
