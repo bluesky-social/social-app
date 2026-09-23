@@ -294,6 +294,7 @@ module.exports = function (_config) {
                   branch: 'main',
                 },
               ],
+              enableSceneSupport: true,
             },
             android: {
               compileSdkVersion: 36,
