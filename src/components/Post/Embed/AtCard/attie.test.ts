@@ -1,4 +1,4 @@
-import {createAttieCtaUri, isAttieUrl} from './attie'
+import {isAttieUrl} from './attie'
 
 describe('isAttieUrl', () => {
   it.each([
@@ -21,58 +21,4 @@ describe('isAttieUrl', () => {
   ])('does not recognize unsupported URL %s', uri => {
     expect(isAttieUrl(uri)).toBe(false)
   })
-})
-
-describe('createAttieCtaUri', () => {
-  const viewer = {
-    handle: 'viewer.bsky.social',
-  }
-
-  it('leaves the URI unchanged without a signed-in viewer', () => {
-    const uri = 'https://sowing-dewy-sorbet.attie.site/?ref=post#details'
-    expect(createAttieCtaUri(uri, undefined)).toBe(uri)
-  })
-
-  it('adds identity hints while retaining other query parameters and fragments', () => {
-    const result = new URL(
-      createAttieCtaUri(
-        'https://sowing-dewy-sorbet.attie.site/?ref=post#details',
-        viewer,
-      ),
-    )
-
-    expect(result.searchParams.get('ref')).toBe('post')
-    expect(result.searchParams.get('viewer_handle')).toBe(viewer.handle)
-    expect(result.searchParams.has('login_hint')).toBe(false)
-    expect(result.searchParams.has('viewer_did')).toBe(false)
-    expect(result.hash).toBe('#details')
-  })
-
-  it('replaces existing identity hints with the current signed-in viewer', () => {
-    const result = new URL(
-      createAttieCtaUri(
-        'https://attie.ai/@owner/pages/report?viewer_handle=stale&login_hint=other&viewer_did=did%3Aplc%3Aother',
-        viewer,
-      ),
-    )
-
-    expect(result.searchParams.get('viewer_handle')).toBe(viewer.handle)
-    expect(result.searchParams.has('login_hint')).toBe(false)
-    expect(result.searchParams.has('viewer_did')).toBe(false)
-  })
-
-  it('does not add hints to a URL outside the Attie card contract', () => {
-    const uri = 'https://attie.ai/feeds'
-    expect(createAttieCtaUri(uri, viewer)).toBe(uri)
-  })
-})
-
-it('clears viewer hints for signed-out navigation', () => {
-  const result = new URL(
-    createAttieCtaUri(
-      'https://example.attie.site/?viewer_handle=old&login_hint=old&viewer_did=did:plc:old',
-      undefined,
-    ),
-  )
-  expect(result.search).toBe('')
 })

@@ -5,7 +5,6 @@ import {useLingui} from '@lingui/react/macro'
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Divider} from '#/components/Divider'
@@ -33,18 +32,15 @@ export function AtCard({
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
   const playHaptic = useHaptics()
-  const {currentAccount} = useSession()
   const {data: authorProfile} = useProfileQuery({did: authorDid})
   const provider = getAtCardProvider(view.uri)
   if (!provider) return null
-
-  const destination = provider.createDestination(view.uri, currentAccount)
 
   return (
     <Link
       testID="atCard"
       shouldProxy
-      to={destination}
+      to={view.uri}
       label={
         view.title
           ? l`Visit ${view.title} on ${provider.name}`
@@ -58,7 +54,6 @@ export function AtCard({
         IS_NATIVE
           ? () => {
               playHaptic('Heavy')
-              // Share the public URL without adding the viewer's identity hints.
               void shareUrl(view.uri)
               return false
             }

@@ -1,8 +1,3 @@
-/** The signed-in Bluesky identity that Attie can use as a viewer hint. */
-export type AttieViewer = {
-  handle: string
-}
-
 /**
  * Returns whether a URL is a public Attie site or a public Attie report.
  *
@@ -28,23 +23,4 @@ export function isAttieUrl(uri: string | undefined): boolean {
   } catch {
     return false
   }
-}
-
-/**
- * Adds the signed-in Bluesky user as non-authenticating Attie viewer hints.
- * Existing hint values are always replaced so a shared URL cannot identify a
- * different viewer.
- */
-export function createAttieCtaUri(
-  uri: string,
-  viewer: AttieViewer | undefined,
-): string {
-  if (!isAttieUrl(uri)) return uri
-
-  const url = new URL(uri)
-  url.searchParams.delete('login_hint')
-  url.searchParams.delete('viewer_did')
-  url.searchParams.delete('viewer_handle')
-  if (viewer) url.searchParams.set('viewer_handle', viewer.handle)
-  return url.toString()
 }

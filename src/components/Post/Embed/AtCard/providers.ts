@@ -1,12 +1,11 @@
 import {Attie, AttieCloud} from '#/components/icons/community/Attie'
-import {createAttieCtaUri, isAttieUrl} from './attie'
+import {isAttieUrl} from './attie'
 
-/** Provider-specific branding and navigation for the shared AT embed card. */
+/** Provider-specific branding and matching for the shared AT embed card. */
 const providers = [
   {
     name: 'Attie',
     matches: isAttieUrl,
-    createDestination: createAttieCtaUri,
     Icon: Attie,
     CtaIcon: AttieCloud,
     backgroundColor: '#6338ff',
