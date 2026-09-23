@@ -42,8 +42,9 @@ jobs:
         run: |
           mkdir -p artifacts/ios
           echo "Installing dependencies" > artifacts/ios/phase.txt
-          # Expo's development env loader gives this file precedence over shell values.
-          sed 's/^EXPO_PUBLIC_ENV=.*/EXPO_PUBLIC_ENV=e2e/' .env.example > .env.development
+          cp .env.example .env
+          # Expo loads standard env filenames, so map the E2E overrides to development.
+          cp .env.e2e .env.development
           cp google-services.json.example google-services.json
 
       - name: 🔧 Set up Expo project
@@ -168,8 +169,9 @@ jobs:
         run: |
           mkdir -p artifacts/android
           echo "Installing dependencies" > artifacts/android/phase.txt
-          # Expo's development env loader gives this file precedence over shell values.
-          sed 's/^EXPO_PUBLIC_ENV=.*/EXPO_PUBLIC_ENV=e2e/' .env.example > .env.development
+          cp .env.example .env
+          # Expo loads standard env filenames, so map the E2E overrides to development.
+          cp .env.e2e .env.development
           cp google-services.json.example google-services.json
 
       - name: 🔧 Set up Expo project
