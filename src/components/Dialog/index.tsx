@@ -23,6 +23,7 @@ import {useReanimatedKeyboardAnimation} from 'react-native-keyboard-controller'
 import Animated, {
   type ScrollEvent,
   useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
@@ -231,6 +232,7 @@ export function ScrollableInner({
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
   const insets = useSafeAreaInsets()
+  const scrollPhase = useRef<'idle' | 'drag' | 'momentum'>('idle')
   const [keyboardHeight, setKeyboardHeight] = useState(() =>
     IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
   )
@@ -262,9 +264,41 @@ export function ScrollableInner({
     const {contentOffset} = e.nativeEvent
     if (contentOffset.y > 1 && !disableDrag) {
       setDisableDrag(true)
-    } else if (contentOffset.y <= 1 && disableDrag) {
+    } else if (
+      contentOffset.y <= 1 &&
+      scrollPhase.current === 'idle' &&
+      disableDrag
+    ) {
       setDisableDrag(false)
     }
+  }
+
+  const onScrollBeginDrag = () => {
+    scrollPhase.current = 'drag'
+  }
+
+  const onScrollEndDrag = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!IS_ANDROID) {
+      return
+    }
+    const {contentOffset, velocity} = e.nativeEvent
+    const hasMomentum = Math.abs(velocity?.y ?? 0) > 0
+    scrollPhase.current = hasMomentum ? 'momentum' : 'idle'
+    if (!hasMomentum) {
+      setDisableDrag(contentOffset.y > 1)
+    }
+  }
+
+  const onMomentumScrollBegin = () => {
+    scrollPhase.current = 'momentum'
+  }
+
+  const onMomentumScrollEnd = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!IS_ANDROID) {
+      return
+    }
+    scrollPhase.current = 'idle'
+    setDisableDrag(e.nativeEvent.contentOffset.y > 1)
   }
 
   return (
@@ -292,12 +326,16 @@ export function ScrollableInner({
         nestedScrollEnabled={IS_ANDROID}
         bounces={isAtMaxSnapPoint}
         scrollEventThrottle={50}
-        // set drag state based on scroll on android.
-        // we want to detect if it's at the top or not, so watch
-        // scrollEndDrag and momentumScrollEnd as well
+        /*
+         * Only re-enable sheet dragging after the scroll gesture ends. Doing
+         * so from onScroll can hand the rest of a downward gesture to the
+         * sheet as soon as the content reaches the top, dismissing it.
+         */
+        onScrollBeginDrag={android(onScrollBeginDrag)}
         onScroll={android(onScroll)}
-        onScrollEndDrag={android(onScroll)}
-        onMomentumScrollEnd={android(onScroll)}
+        onScrollEndDrag={android(onScrollEndDrag)}
+        onMomentumScrollBegin={android(onMomentumScrollBegin)}
+        onMomentumScrollEnd={android(onMomentumScrollEnd)}
         keyboardShouldPersistTaps="handled"
         // TODO: figure out why this positions the header absolutely (rather than stickily)
         // on Android. fine to disable for now, because we don't have any
@@ -334,6 +372,7 @@ export const InnerFlatList = forwardRef<
 ) {
   const insets = useSafeAreaInsets()
   const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+  const scrollPhase = useSharedValue<'idle' | 'drag' | 'momentum'>('idle')
 
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
 
@@ -345,16 +384,47 @@ export const InnerFlatList = forwardRef<
     const {contentOffset} = e
     if (contentOffset.y > 1 && !disableDrag) {
       scheduleOnRN(setDisableDrag, true)
-    } else if (contentOffset.y <= 1 && disableDrag) {
+    } else if (
+      contentOffset.y <= 1 &&
+      scrollPhase.get() === 'idle' &&
+      disableDrag
+    ) {
       scheduleOnRN(setDisableDrag, false)
     }
   }
 
+  const onScrollBeginDrag = () => {
+    'worklet'
+    scrollPhase.set('drag')
+  }
+
+  const onScrollEndDrag = (e: ScrollEvent) => {
+    'worklet'
+    if (!IS_ANDROID) {
+      return
+    }
+    const hasMomentum = Math.abs(e.velocity?.y ?? 0) > 0
+    scrollPhase.set(hasMomentum ? 'momentum' : 'idle')
+    if (!hasMomentum) {
+      scheduleOnRN(setDisableDrag, e.contentOffset.y > 1)
+    }
+  }
+
+  const onMomentumScrollEnd = (e: ScrollEvent) => {
+    'worklet'
+    if (!IS_ANDROID) {
+      return
+    }
+    scrollPhase.set('idle')
+    scheduleOnRN(setDisableDrag, e.contentOffset.y > 1)
+  }
+
   return (
     <ScrollProvider
+      onBeginDrag={onScrollBeginDrag}
       onScroll={onScroll}
-      onEndDrag={onScroll}
-      onMomentumEnd={onScroll}>
+      onEndDrag={onScrollEndDrag}
+      onMomentumEnd={onMomentumScrollEnd}>
       <List
         keyboardShouldPersistTaps="handled"
         contentInsetAdjustmentBehavior={
