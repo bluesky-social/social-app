@@ -1,4 +1,3 @@
-import {Attie} from '#/components/icons/community/Attie'
 import {Leaflet} from '#/components/icons/community/Leaflet'
 import {Offprint} from '#/components/icons/community/Offprint'
 import {Pckt} from '#/components/icons/community/Pckt'
@@ -11,8 +10,6 @@ export type StandardSitePublisher = {
 }
 
 const STANDARD_SITE_PUBLISHERS: StandardSitePublisher[] = [
-  {host: 'attie.site', name: 'Attie', Icon: Attie},
-  {host: 'attie.ai', name: 'Attie', Icon: Attie},
   {host: 'leaflet.pub', name: 'Leaflet', Icon: Leaflet},
   {host: 'pckt.blog', name: 'pckt', Icon: Pckt},
   {host: 'offprint.app', name: 'Offprint', Icon: Offprint},

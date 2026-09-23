@@ -20,11 +20,10 @@ import {GalleryBleed} from '#/components/images/Gallery'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
+import {AtEmbed} from '#/components/Post/Embed/AtEmbed'
+import {getAtEmbedProvider} from '#/components/Post/Embed/AtEmbed/providers'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
-import {
-  isAttieEmbed,
-  isStandardSiteEmbed,
-} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
@@ -102,15 +101,14 @@ function MediaEmbed({
       )
     }
     case 'link': {
-      if (
-        isStandardSiteEmbed(embed.view.external) ||
-        isAttieEmbed(embed.view.external)
-      ) {
+      const atProvider = getAtEmbedProvider(embed.view.external.uri)
+      if (atProvider || isStandardSiteEmbed(embed.view.external)) {
+        const Card = atProvider ? AtEmbed : StandardSiteEmbed
         return (
           <ContentHider
             modui={rest.moderation?.ui('contentMedia')}
             activeStyle={[a.mt_sm]}>
-            <StandardSiteEmbed
+            <Card
               view={embed.view.external}
               onEmbedInteractionCallback={rest.onOpen}
               style={[a.mt_sm, rest.style]}

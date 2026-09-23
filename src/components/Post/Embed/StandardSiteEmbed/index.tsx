@@ -8,8 +8,6 @@ import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
-import {useProfileQuery} from '#/state/queries/profile'
-import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, utils, web} from '#/alf'
 import {ButtonIcon, ButtonText} from '#/components/Button'
@@ -17,19 +15,14 @@ import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
-import {Attie, AttieCloud} from '#/components/icons/community/Attie'
 import {StandardSite} from '#/components/icons/community/StandardSite'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {createAttieCtaUri} from '#/components/Post/Embed/StandardSiteEmbed/attie'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
-import {
-  isAttieEmbed,
-  isStandardSitePublicationEmbed,
-} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
@@ -56,13 +49,9 @@ export const StandardSiteEmbed = ({
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.thumb
   const hasMedia = Boolean(imageUri)
-  const isStandard = Boolean(
-    view.associatedRefs?.some(ref =>
-      new AtUri(ref.uri).collection.startsWith('site.standard.'),
-    ),
+  const isStandard = view.associatedRefs?.some(ref =>
+    new AtUri(ref.uri).collection.startsWith('site.standard.'),
   )
-  const isAttie = isAttieEmbed(view)
-  const isFeatured = isStandard || isAttie
   const isStandardPublication = isStandardSitePublicationEmbed(view)
   let themeColors: ssTypes.ThemeColors = {
     custom: false,
@@ -178,11 +167,10 @@ export const StandardSiteEmbed = ({
                 borderTopLeftRadius: a.rounded_lg.borderRadius,
                 borderTopRightRadius: a.rounded_lg.borderRadius,
               },
-              !view.source &&
-                !isAttie && {
-                  borderBottomLeftRadius: a.rounded_lg.borderRadius,
-                  borderBottomRightRadius: a.rounded_lg.borderRadius,
-                },
+              !view.source && {
+                borderBottomLeftRadius: a.rounded_lg.borderRadius,
+                borderBottomRightRadius: a.rounded_lg.borderRadius,
+              },
               interacted ? t.atoms.bg_contrast_25 : pressed && t.atoms.bg,
             ]}>
             {imageUri ? (
@@ -204,14 +192,14 @@ export const StandardSiteEmbed = ({
                   ? t.atoms.border_contrast_high
                   : t.atoms.border_contrast_low,
                 {gap: 3},
-                isFeatured && a.pt_md,
+                isStandard && a.pt_md,
               ]}>
               <View
                 style={[
                   a.pb_xs,
                   a.px_md,
                   {gap: 3},
-                  isFeatured && [{gap: 5}, a.pb_sm],
+                  isStandard && [{gap: 5}, a.pb_sm],
                 ]}>
                 <Text
                   emoji
@@ -220,14 +208,14 @@ export const StandardSiteEmbed = ({
                     a.text_md,
                     a.font_semi_bold,
                     a.leading_snug,
-                    isFeatured && [a.text_lg, a.font_bold],
+                    isStandard && [a.text_lg, a.font_bold],
                   ]}>
                   {view.title}
                 </Text>
                 {view.description ? (
                   <Text
                     emoji
-                    numberOfLines={view.thumb ? (isAttie ? 3 : 2) : 4}
+                    numberOfLines={view.thumb ? 2 : 4}
                     style={[a.text_sm, a.leading_snug]}>
                     {view.description}
                   </Text>
@@ -275,35 +263,21 @@ export const StandardSiteEmbed = ({
               </View>
             </View>
 
-            {!view.source && !isAttie && (
-              <>
-                <View style={[a.px_md]}>
-                  <Divider />
-                  <View style={[a.py_sm]}>
-                    <StandardSiteMetaRow
-                      authorDid={authorDid}
-                      preview={preview}
-                      view={view}
-                    />
-                  </View>
+            {!view.source && (
+              <View style={[a.px_md]}>
+                <Divider />
+                <View style={[a.py_sm]}>
+                  <StandardSiteMetaRow
+                    authorDid={authorDid}
+                    preview={preview}
+                    view={view}
+                  />
                 </View>
-              </>
+              </View>
             )}
           </View>
         )}
       </Link>
-
-      {!view.source && isAttie && (
-        <View>
-          <Divider />
-          <AttieFooter
-            authorDid={authorDid}
-            preview={preview}
-            view={view}
-            onEmbedInteractionCallback={onEmbedInteractionCallback}
-          />
-        </View>
-      )}
 
       {view.source && (
         <View>
@@ -458,110 +432,6 @@ export function PublicationCard({
   )
 }
 
-function AttieFooter({
-  authorDid,
-  preview,
-  view,
-  onEmbedInteractionCallback,
-}: ssTypes.CommonProps & ssTypes.PreviewProps & ssTypes.PublicApiProps) {
-  const {t: l} = useLingui()
-  const t = useTheme()
-  const {gtPhone} = useBreakpoints()
-  const playHaptic = useHaptics()
-  const {currentAccount} = useSession()
-  const {data: authorProfile} = useProfileQuery({did: authorDid})
-  const destination = createAttieCtaUri(view.uri, currentAccount)
-  const cta = l`Visit site`
-
-  const onPress = () => {
-    playHaptic('Light')
-    onEmbedInteractionCallback?.()
-  }
-
-  return (
-    <View
-      style={[
-        a.align_center,
-        a.justify_between,
-        a.p_md,
-        a.gap_md,
-        {
-          borderBottomLeftRadius: a.rounded_lg.borderRadius,
-          borderBottomRightRadius: a.rounded_lg.borderRadius,
-        },
-        gtPhone && [a.flex_row, a.gap_sm],
-        preview && a.pointer_events_none,
-      ]}>
-      <View
-        style={[
-          a.w_full,
-          a.flex_row,
-          a.align_center,
-          a.gap_sm,
-          a.pointer_events_none,
-          gtPhone && a.flex_1,
-        ]}>
-        {authorDid ? (
-          <>
-            <UserAvatar avatar={authorProfile?.avatar} size={32} type="user" />
-            <View style={[a.flex_1, a.gap_2xs]}>
-              <Text
-                emoji
-                numberOfLines={1}
-                style={[
-                  a.text_sm,
-                  a.font_medium,
-                  a.leading_tight,
-                  t.atoms.text,
-                ]}>
-                {authorProfile?.displayName ||
-                  authorProfile?.handle ||
-                  authorDid}
-              </Text>
-              <Text
-                numberOfLines={1}
-                style={[
-                  a.text_xs,
-                  a.leading_tight,
-                  t.atoms.text_contrast_medium,
-                ]}>
-                {authorProfile?.handle
-                  ? l`@${authorProfile.handle}`
-                  : authorDid}
-              </Text>
-            </View>
-          </>
-        ) : (
-          <>
-            <Attie size="md" />
-            <Text
-              style={[a.text_sm, a.font_medium, a.leading_tight, t.atoms.text]}>
-              Attie
-            </Text>
-          </>
-        )}
-      </View>
-      <Link
-        shouldProxy
-        to={destination}
-        label={l`Visit site on Attie`}
-        size="small"
-        color="secondary_inverted"
-        hoverStyle={{backgroundColor: '#552fe0'}}
-        style={[
-          a.z_10,
-          a.gap_sm,
-          {backgroundColor: '#6338ff'},
-          !gtPhone && [a.w_full, a.justify_center],
-        ]}
-        onPress={onPress}>
-        <ButtonIcon icon={AttieCloud} size="md" />
-        <ButtonText>{cta}</ButtonText>
-      </Link>
-    </View>
-  )
-}
-
 export function SubscribeButton({
   preview,
   view,
@@ -575,15 +445,11 @@ export function SubscribeButton({
   const ax = useAnalytics()
   const {t: l} = useLingui()
   const playHaptic = useHaptics()
-  const {currentAccount} = useSession()
 
-  const isAttie = isAttieEmbed(view)
   const highlightedPublisher = matchStandardSitePublisher(view)
-  const cta = isAttie
-    ? l`Visit site`
-    : highlightedPublisher
-      ? l`Subscribe on ${highlightedPublisher.name}`
-      : l`View publication`
+  const cta = highlightedPublisher
+    ? l`Subscribe on ${highlightedPublisher.name}`
+    : l`View publication`
 
   /*
    * The custom site theme paints the button background with `accent` and the
@@ -607,28 +473,23 @@ export function SubscribeButton({
 
   if (!view.source) return null
 
-  const destination = isAttie
-    ? createAttieCtaUri(view.uri, currentAccount)
-    : view.source.uri
   const publicationTitle = view.source.title
-  const label = isAttie
-    ? l`Visit site on Attie`
-    : highlightedPublisher
-      ? publicationTitle
-        ? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
-        : l`Subscribe on ${highlightedPublisher.name}`
-      : publicationTitle
-        ? l`View ${publicationTitle}`
-        : l`View publication`
+  const label = highlightedPublisher
+    ? publicationTitle
+      ? l`Subscribe to ${publicationTitle} on ${highlightedPublisher.name}`
+      : l`Subscribe on ${highlightedPublisher.name}`
+    : publicationTitle
+      ? l`View ${publicationTitle}`
+      : l`View publication`
 
   const onPress = () => {
     playHaptic('Light')
     onEmbedInteractionCallback?.()
-    if (!isAttie && highlightedPublisher) {
+    if (highlightedPublisher) {
       ax.metric('embed:standardSite:subscribe:press', {
         url: view.source?.uri || '',
       })
-    } else if (!isAttie) {
+    } else {
       ax.metric('embed:standardSite:publicationCta:press', {
         url: view.source?.uri || '',
       })
@@ -637,16 +498,18 @@ export function SubscribeButton({
 
   const onLongPress = IS_NATIVE
     ? () => {
-        playHaptic('Heavy')
-        void shareUrl(isAttie ? view.uri : view.source?.uri || view.uri)
-        if (!isAttie && highlightedPublisher) {
-          ax.metric('embed:standardSite:subscribe:longPress', {
-            url: view.source?.uri || '',
-          })
-        } else if (!isAttie) {
-          ax.metric('embed:standardSite:publicationCta:longPress', {
-            url: view.source?.uri || '',
-          })
+        if (view.source?.uri) {
+          playHaptic('Heavy')
+          void shareUrl(view.source.uri)
+          if (highlightedPublisher) {
+            ax.metric('embed:standardSite:subscribe:longPress', {
+              url: view.source?.uri || '',
+            })
+          } else {
+            ax.metric('embed:standardSite:publicationCta:longPress', {
+              url: view.source?.uri || '',
+            })
+          }
         }
       }
     : undefined
@@ -654,7 +517,7 @@ export function SubscribeButton({
   const button = (
     <Link
       shouldProxy
-      to={destination}
+      to={view.source.uri}
       label={label}
       size="small"
       color="secondary_inverted"
@@ -665,13 +528,10 @@ export function SubscribeButton({
       ]}
       onPress={onPress}
       onLongPress={onLongPress}>
-      {isAttie || highlightedPublisher ? (
+      {highlightedPublisher ? (
         <>
           <View style={[a.flex_row, a.align_center, {gap: 7}]}>
-            <ButtonIcon
-              icon={isAttie ? Attie : highlightedPublisher!.Icon}
-              size="md"
-            />
+            <ButtonIcon icon={highlightedPublisher.Icon} size="md" />
           </View>
           <ButtonText>{cta}</ButtonText>
         </>

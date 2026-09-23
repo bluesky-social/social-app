@@ -10,12 +10,13 @@ import {
 import {ExternalEmbedRemoveBtn} from '#/view/com/composer/ExternalEmbedRemoveBtn'
 import {atoms as a, useTheme} from '#/alf'
 import {Loader} from '#/components/Loader'
+import {AtEmbed} from '#/components/Post/Embed/AtEmbed'
+import {getAtEmbedProvider} from '#/components/Post/Embed/AtEmbed/providers'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {ModeratedFeedEmbed} from '#/components/Post/Embed/FeedEmbed'
 import {JoinRequestEmbed} from '#/components/Post/Embed/JoinRequestEmbed'
 import {ModeratedListEmbed} from '#/components/Post/Embed/ListEmbed'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
-import {isAttieUrl} from '#/components/Post/Embed/StandardSiteEmbed/attie'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {Embed as StarterPackEmbed} from '#/components/StarterPack/StarterPackCard'
 import {Text} from '#/components/Typography'
@@ -91,12 +92,14 @@ export const ExternalEmbedLink = ({
   const linkComponent = useMemo(() => {
     if (data) {
       if (data.type === 'external') {
+        const atProvider = getAtEmbedProvider(uri)
         if (
           (data.view && isStandardSiteEmbed(data.view.external)) ||
-          isAttieUrl(uri)
+          atProvider
         ) {
+          const Card = atProvider ? AtEmbed : StandardSiteEmbed
           return (
-            <StandardSiteEmbed
+            <Card
               preview
               authorDid={data.authorDid}
               view={{

@@ -1,7 +1,6 @@
 import {AtUri} from '@atproto/syntax'
 
 import {type app, type com} from '#/lexicons'
-import {isAttieUrl} from './attie'
 
 export function isStandardSiteDocumentUri(
   ref: com.atproto.repo.strongRef.Main,
@@ -23,10 +22,6 @@ export function isStandardSiteEmbed(
   view: app.bsky.embed.external.ViewExternal,
 ) {
   return view.associatedRefs?.some(ref => isStandardSiteUri(ref))
-}
-
-export function isAttieEmbed(view: app.bsky.embed.external.ViewExternal) {
-  return isAttieUrl(view.uri)
 }
 
 export function isStandardSitePublicationEmbed(
