@@ -40,9 +40,11 @@ const ScrollVisibilityContext = createContext<{
 export const OnboardingControls = createPortalGroup()
 export const OnboardingHeaderSlot = createPortalGroup()
 
-export function useOnboardingScrollViewVisibility(onVisible: () => void) {
+export function useOnboardingScrollViewVisibility(
+  ref: React.RefObject<React.ComponentRef<typeof View> | null>,
+  onVisible: () => void,
+) {
   const context = useContext(ScrollVisibilityContext)
-  const ref = useRef<React.ComponentRef<typeof View>>(null)
 
   if (!context) {
     throw new Error(
@@ -62,14 +64,14 @@ export function useOnboardingScrollViewVisibility(onVisible: () => void) {
         onVisible()
       }
     })
-  }, [onVisible, viewportBottom, viewportTop])
+  }, [onVisible, ref, viewportBottom, viewportTop])
 
   useEffect(() => {
     checkVisibility()
     return subscribe(checkVisibility)
   }, [checkVisibility, subscribe])
 
-  return {ref, onLayout: checkVisibility}
+  return checkVisibility
 }
 
 export function Layout({children}: React.PropsWithChildren<{}>) {
