@@ -42,7 +42,8 @@ jobs:
         run: |
           mkdir -p artifacts/ios
           echo "Installing dependencies" > artifacts/ios/phase.txt
-          cp .env.example .env.development
+          # Expo's development env loader gives this file precedence over shell values.
+          sed 's/^EXPO_PUBLIC_ENV=.*/EXPO_PUBLIC_ENV=e2e/' .env.example > .env.development
           cp google-services.json.example google-services.json
 
       - name: 🔧 Set up Expo project
@@ -167,7 +168,8 @@ jobs:
         run: |
           mkdir -p artifacts/android
           echo "Installing dependencies" > artifacts/android/phase.txt
-          cp .env.example .env.development
+          # Expo's development env loader gives this file precedence over shell values.
+          sed 's/^EXPO_PUBLIC_ENV=.*/EXPO_PUBLIC_ENV=e2e/' .env.example > .env.development
           cp google-services.json.example google-services.json
 
       - name: 🔧 Set up Expo project
