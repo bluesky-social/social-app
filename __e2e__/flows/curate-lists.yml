@@ -89,10 +89,17 @@ appId: xyz.blueskyweb.app
 - inputText: "b"
 - pressKey: Enter
 - tapOn: "Add user to list"
-- swipe:
-    from:
-      text: "Add people to list"
-    direction: DOWN
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - back
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - swipe:
+          direction: DOWN
 - assertVisible:
     id: "profileCard-bob.test-link"
 
