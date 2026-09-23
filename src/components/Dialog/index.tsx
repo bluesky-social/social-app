@@ -80,7 +80,9 @@ export function Outer({
 
   const [disableDrag, setDisableDrag] = useState(false)
   const [snapPoint, setSnapPoint] = useState<BottomSheetSnapPoint>(
-    BottomSheetSnapPoint.Partial,
+    nativeOptions?.fullHeight
+      ? BottomSheetSnapPoint.Full
+      : BottomSheetSnapPoint.Partial,
   )
 
   const callQueuedCallbacks = useCallback(() => {
@@ -100,8 +102,20 @@ export function Outer({
     callQueuedCallbacks()
     onOpen?.()
     setDialogIsOpen(control.id, true)
+    setDisableDrag(false)
+    setSnapPoint(
+      nativeOptions?.fullHeight
+        ? BottomSheetSnapPoint.Full
+        : BottomSheetSnapPoint.Partial,
+    )
     ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks, onOpen])
+  }, [
+    setDialogIsOpen,
+    control.id,
+    callQueuedCallbacks,
+    onOpen,
+    nativeOptions?.fullHeight,
+  ])
 
   // This is the function that we call when we want to dismiss the dialog.
   const close = useCallback<DialogControlProps['close']>(cb => {
@@ -159,9 +173,6 @@ export function Outer({
     [open, close],
   )
 
-  const isHeightConstrained =
-    nativeOptions?.maxHeight != null || nativeOptions?.fullHeight === true
-
   const context = useMemo(
     () => ({
       close,
@@ -170,9 +181,8 @@ export function Outer({
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
-      isHeightConstrained,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag, isHeightConstrained],
+    [close, snapPoint, disableDrag, setDisableDrag],
   )
 
   return (
@@ -188,7 +198,11 @@ export function Outer({
       <Context.Provider value={context}>
         <View
           testID={testID}
-          style={[a.relative, isHeightConstrained && a.flex_1]}>
+          style={[
+            a.relative,
+            {flexShrink: 1},
+            snapPoint === BottomSheetSnapPoint.Full && a.flex_1,
+          ]}>
           {children}
         </View>
       </Context.Provider>
@@ -214,8 +228,7 @@ export function ScrollableInner({
 }: DialogInnerProps & {
   ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
 }) {
-  const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
-    useDialogContext()
+  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
   const insets = useSafeAreaInsets()
   const [keyboardHeight, setKeyboardHeight] = useState(() =>
@@ -233,7 +246,7 @@ export function ScrollableInner({
       return
     }
     const {contentOffset} = e.nativeEvent
-    if (contentOffset.y > 0 && !disableDrag) {
+    if (contentOffset.y > 1 && !disableDrag) {
       setDisableDrag(true)
     } else if (contentOffset.y <= 1 && disableDrag) {
       setDisableDrag(false)
@@ -243,7 +256,7 @@ export function ScrollableInner({
   return (
     <>
       <ScrollView
-        style={[isHeightConstrained && a.flex_1, style]}
+        style={[{flexShrink: 1}, isAtMaxSnapPoint && a.flex_1, style]}
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
@@ -262,6 +275,7 @@ export function ScrollableInner({
         }
         automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
         {...props}
+        nestedScrollEnabled={IS_ANDROID}
         bounces={isAtMaxSnapPoint}
         scrollEventThrottle={50}
         // set drag state based on scroll on android.
@@ -305,7 +319,7 @@ export const InnerFlatList = forwardRef<
       return
     }
     const {contentOffset} = e
-    if (contentOffset.y > 0 && !disableDrag) {
+    if (contentOffset.y > 1 && !disableDrag) {
       scheduleOnRN(setDisableDrag, true)
     } else if (contentOffset.y <= 1 && disableDrag) {
       scheduleOnRN(setDisableDrag, false)
@@ -328,7 +342,8 @@ export const InnerFlatList = forwardRef<
         ref={ref}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
-        style={[a.h_full, style]}
+        style={[{flexShrink: 1}, isAtMaxSnapPoint && a.flex_1, style]}
+        nestedScrollEnabled={IS_ANDROID}
         contentContainerStyle={[
           {paddingTop: headerOffset},
           android({
