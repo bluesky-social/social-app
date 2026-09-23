@@ -106,7 +106,6 @@ function BottomSheetNativeComponentInner({
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
   const {height: screenHeight} = useWindowDimensions()
-  const isHeightConstrained = maxHeight != null || rest.fullHeight === true
 
   return (
     <NativeView
@@ -144,19 +143,21 @@ function BottomSheetNativeComponentInner({
             flex: 1,
             backgroundColor,
           },
-          maxHeight != null && {maxHeight},
+          Platform.OS === 'ios' && maxHeight != null && {maxHeight},
           Platform.OS === 'android' && {
             /*
-             * The native canvas is sized after the first layout. Allow content
-             * measured without a height constraint to shrink to that canvas.
+             * The native canvas is sized after the first layout. Clamp content
+             * measured without a height constraint to that canvas once its size
+             * reaches the shadow tree.
              */
-            flexShrink: 1,
+            maxHeight: maxHeight ?? '100%',
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
             overflow: 'hidden',
           },
         ]}>
-        <View style={isHeightConstrained ? {flex: 1} : undefined}>
+        <View
+          style={[{flexShrink: 1}, rest.fullHeight === true && {flexGrow: 1}]}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

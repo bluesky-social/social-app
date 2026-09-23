@@ -91,18 +91,15 @@ class BottomSheetView(
   var disableDrag = false
     set(value) {
       field = value
-      this.setDraggable(!value)
+      this.updateDraggable()
     }
 
   var preventDismiss = false
     set(value) {
       field = value
       this.dialog?.setCancelable(!value)
-      // Full-height sheets have no half-expanded snap point, so any drag
-      // would dismiss. Disable dragging when dismiss is prevented.
-      if (fullHeight) {
-        this.setDraggable(!value && !disableDrag)
-      }
+      this.setHideable(!value)
+      this.updateDraggable()
     }
 
   var fullHeight = false
@@ -199,7 +196,14 @@ class BottomSheetView(
     r: Int,
     b: Int,
   ) {
-    this.seedCanvasSize()
+    /*
+     * Do not present from the same layout pass that seeds the Fabric canvas.
+     * The children can still have a nonzero intermediate height in that pass,
+     * especially virtualized lists, but it is not the viewport we asked Fabric
+     * to commit. Presenting against it makes full-height list sizing depend on
+     * which layout wins the race.
+     */
+    if (this.seedCanvasSize()) return
     this.present()
   }
 
@@ -234,8 +238,8 @@ class BottomSheetView(
    * architecture it is null and this no-ops, which is fine: DialogRootViewGroup's legacy
    * updateNodeSize() path still sizes the content there.
    */
-  private fun seedCanvasSize() {
-    if (lastPushedCanvasWidth > 0f) return
+  private fun seedCanvasSize(): Boolean {
+    if (lastPushedCanvasWidth > 0f) return false
     val density = context.resources.displayMetrics.density
     val widthPx =
       minOf(
@@ -244,6 +248,7 @@ class BottomSheetView(
         getMaxSheetWidth(),
       )
     this.pushCanvasSize(widthPx / density, canvasHeight / density)
+    return stateWrapper != null
   }
 
   /**
@@ -288,13 +293,11 @@ class BottomSheetView(
 
   // Presentation
 
-  private fun getHalfExpandedRatio(contentHeight: Float): Float =
-    when {
-      // Full height sheets
-      contentHeight >= screenHeight -> 0.99f
+  private fun getHalfExpandedRatio(): Float =
+    this.clampRatio(this.getTargetHeight() / screenHeight)
 
-      else -> this.clampRatio(this.getTargetHeight() / screenHeight)
-    }
+  private val shouldPreventExpansion: Boolean
+    get() = preventExpansion || maxHeight < screenHeight
 
   private fun present() {
     if (this.isOpen || this.isOpening || this.isClosing) return
@@ -303,12 +306,12 @@ class BottomSheetView(
 
     // The content is unsized until the canvas size we pushed lands in the shadow tree,
     // so bail and let this retry itself: the state commit resizes this view, that
-    // re-fires onLayout, and onLayout re-enters present(). Full-height sheets don't
-    // need a content measurement, so they can go ahead immediately.
+    // re-fires onLayout, and onLayout re-enters present(). Full-height sheets still
+    // need to wait because their scroll viewport and pinned footer depend on that canvas.
     //
     // Only gate when there is a state channel to wait on. Without one (old architecture)
     // nothing would ever resize this view, and the sheet would never present.
-    if (stateWrapper != null && !fullHeight && contentHeight <= 0f) return
+    if (stateWrapper != null && contentHeight <= 0f) return
 
     var activityWindow: Window? = null
     var currentContext = context
@@ -358,22 +361,22 @@ class BottomSheetView(
       val behavior = BottomSheetBehavior.from(it)
       behavior.state = BottomSheetBehavior.STATE_HIDDEN
       behavior.skipCollapsed = true
-      behavior.isDraggable = true
-      behavior.isHideable = true
+      behavior.isDraggable = !disableDrag && (!fullHeight || !preventDismiss)
+      behavior.isHideable = !preventDismiss
       if (fullHeight) {
         behavior.isFitToContents = false
         behavior.expandedOffset = getStatusBarHeight()
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.selectedSnapPoint = 2
-      } else if (preventExpansion) {
+      } else if (shouldPreventExpansion) {
         behavior.isFitToContents = true
-        behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
+        behavior.halfExpandedRatio = getHalfExpandedRatio()
         behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
         this.selectedSnapPoint = 1
       } else {
         behavior.isFitToContents = false
-        behavior.halfExpandedRatio = getHalfExpandedRatio(contentHeight)
+        behavior.halfExpandedRatio = getHalfExpandedRatio()
         behavior.expandedOffset = getStatusBarHeight()
 
         val targetHeight = this.getTargetHeight()
@@ -395,7 +398,7 @@ class BottomSheetView(
             bottomSheet: View,
             newState: Int,
           ) {
-            if (newState == BottomSheetBehavior.STATE_EXPANDED && preventExpansion) {
+            if (newState == BottomSheetBehavior.STATE_EXPANDED && shouldPreventExpansion) {
               behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
               return
             }
@@ -434,7 +437,6 @@ class BottomSheetView(
   fun updateLayout() {
     if (fullHeight) return
     val dialog = this.dialog ?: return
-    val contentHeight = this.getContentHeight()
 
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
     bottomSheet?.let {
@@ -442,7 +444,7 @@ class BottomSheetView(
       val currentState = behavior.state
 
       val oldRatio = behavior.halfExpandedRatio
-      val newRatio = getHalfExpandedRatio(contentHeight)
+      val newRatio = getHalfExpandedRatio()
 
       val targetHeight = this.getTargetHeight()
       val availableHeight = screenHeight - getStatusBarHeight() - getNavigationBarHeight()
@@ -456,7 +458,7 @@ class BottomSheetView(
 
       behavior.halfExpandedRatio = newRatio
 
-      if (preventExpansion) {
+      if (shouldPreventExpansion) {
         behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
         it.requestLayout()
       }
@@ -470,7 +472,7 @@ class BottomSheetView(
         return
       }
 
-      if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !preventExpansion) {
+      if (shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_EXPANDED && !shouldPreventExpansion) {
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
       } else if (!shouldBeExpanded && behavior.state != BottomSheetBehavior.STATE_HALF_EXPANDED) {
         behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
@@ -579,6 +581,18 @@ class BottomSheetView(
     bottomSheet?.let {
       val behavior = BottomSheetBehavior.from(it)
       behavior.isDraggable = draggable
+    }
+  }
+
+  private fun updateDraggable() {
+    this.setDraggable(!disableDrag && (!fullHeight || !preventDismiss))
+  }
+
+  private fun setHideable(hideable: Boolean) {
+    val dialog = this.dialog ?: return
+    val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
+    bottomSheet?.let {
+      BottomSheetBehavior.from(it).isHideable = hideable
     }
   }
 
