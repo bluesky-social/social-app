@@ -141,6 +141,13 @@ jest.mock('react-native-uuid', () => ({
 
 jest.mock('#/env', () => ({IS_NATIVE: false}))
 
+jest.mock('#/logger', () => ({
+  Logger: {
+    Context: {Session: 'session'},
+    create: () => ({debug: jest.fn()}),
+  },
+}))
+
 jest.mock('#/lib/appState', () => ({
   getCurrentState: mockGetCurrentState,
   onAppStateChange: mockOnAppStateChange,
