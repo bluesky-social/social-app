@@ -234,6 +234,20 @@ export function ScrollableInner({
   const [keyboardHeight, setKeyboardHeight] = useState(() =>
     IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
   )
+  const {height: animatedKeyboardHeight, progress: keyboardProgress} =
+    useReanimatedKeyboardAnimation()
+
+  const footerAnimatedStyle = useAnimatedStyle(() => {
+    if (!IS_IOS) return {}
+    return {
+      marginBottom: Math.max(
+        0,
+        -animatedKeyboardHeight.get() -
+          insets.bottom +
+          10 * keyboardProgress.get(),
+      ),
+    }
+  })
 
   const keyboardEventHandler = useCallback((e: KeyboardEvent) => {
     setKeyboardHeight(e.endCoordinates.height)
@@ -293,12 +307,15 @@ export function ScrollableInner({
         {children}
       </ScrollView>
       {footer ? (
-        <View
-          style={android({
-            transform: [{translateY: -keyboardHeight}],
-          })}>
+        <Animated.View
+          style={[
+            footerAnimatedStyle,
+            android({
+              transform: [{translateY: -keyboardHeight}],
+            }),
+          ]}>
           {footer}
-        </View>
+        </Animated.View>
       ) : null}
     </>
   )

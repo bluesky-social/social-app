@@ -9,6 +9,7 @@ import {BottomSheetSnapPoint} from '../../../../modules/bottom-sheet'
 
 const TALL_ROWS = Array.from({length: 30}, (_, index) => index + 1)
 const MAX_HEIGHT_ROWS = Array.from({length: 20}, (_, index) => index + 1)
+const KEYBOARD_ROWS = Array.from({length: 20}, (_, index) => index + 1)
 
 function OpenButton({
   text,
@@ -102,6 +103,7 @@ export function BottomSheets() {
   const keyboard = Dialog.useDialogControl()
   const infinite = Dialog.useDialogControl()
   const [dynamicIsExpanded, setDynamicIsExpanded] = useState(false)
+  const [keyboardEndReached, setKeyboardEndReached] = useState(false)
   const [infiniteRowCount, setInfiniteRowCount] = useState(20)
   const [infiniteFooterHeight, setInfiniteFooterHeight] = useState(0)
   const infiniteRows = Array.from(
@@ -147,7 +149,10 @@ export function BottomSheets() {
       />
       <OpenButton
         text="Open keyboard sheet"
-        onPress={keyboard.open}
+        onPress={() => {
+          setKeyboardEndReached(false)
+          keyboard.open()
+        }}
         testID="bottomSheetKeyboardOpen"
       />
       <OpenButton
@@ -319,6 +324,19 @@ export function BottomSheets() {
             placeholder="Type here"
             testID="bottomSheetKeyboardInput"
           />
+          {KEYBOARD_ROWS.map(row => (
+            <RowText key={row}>Keyboard row {row}</RowText>
+          ))}
+          <Button
+            color="secondary"
+            size="small"
+            label="Reach the end of the keyboard sheet"
+            onPress={() => setKeyboardEndReached(true)}
+            testID="bottomSheetKeyboardEnd">
+            <ButtonText>
+              {keyboardEndReached ? 'Reached keyboard sheet end' : 'Reach end'}
+            </ButtonText>
+          </Button>
         </Dialog.ScrollableInner>
       </Dialog.Outer>
 
