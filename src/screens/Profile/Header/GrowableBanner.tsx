@@ -44,18 +44,20 @@ export function GrowableBanner({
   // plain non-growable mode for Android/Web
   if (!pagerContext || !IS_IOS) {
     return (
-      <Pressable
-        testID={testID}
-        onPress={onPress}
-        accessibilityRole="image"
-        accessibilityLabel={label}
-        accessibilityHint=""
-        style={[a.w_full, a.h_full]}>
-        <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
-          {children}
-        </Animated.View>
+      <View style={[a.w_full, a.h_full]}>
+        <Pressable
+          testID={testID}
+          onPress={onPress}
+          accessibilityRole="image"
+          accessibilityLabel={label}
+          accessibilityHint=""
+          style={[a.w_full, a.h_full]}>
+          <Animated.View ref={bannerRef} style={[a.w_full, a.h_full]}>
+            {children}
+          </Animated.View>
+        </Pressable>
         {backButton}
-      </Pressable>
+      </View>
     )
   }
 
@@ -193,7 +195,9 @@ function GrowableBannerInner({
           />
         </Animated.View>
       </View>
-      <Animated.View style={[animatedBackButtonStyle]}>
+      <Animated.View
+        pointerEvents="box-none"
+        style={[a.absolute, a.inset_0, animatedBackButtonStyle]}>
         {backButton}
       </Animated.View>
     </>

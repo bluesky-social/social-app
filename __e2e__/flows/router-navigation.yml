@@ -8,7 +8,10 @@ appId: xyz.blueskyweb.app
     file: ../setupApp.yml
 
 # A signed-out deep link should survive sign-in and have a Home destination.
-- openLink: "bluesky://profile/bob.test"
+- runFlow:
+    file: ../openLink.yml
+    env:
+      LINK: "bluesky://profile/bob.test"
 - assertVisible: "Sign in"
 - tapOn:
     id: "e2eSignInAlice"
@@ -48,7 +51,10 @@ appId: xyz.blueskyweb.app
     id: "searchScreenInput"
 
 # Both app schemes open a native screen and Android back returns to Home.
-- openLink: "bsky://profile/bob.test"
+- runFlow:
+    file: ../openLink.yml
+    env:
+      LINK: "bsky://profile/bob.test"
 - assertVisible:
     id: "profileView"
 - runFlow:
@@ -79,6 +85,7 @@ appId: xyz.blueskyweb.app
     visible:
       id: "homeScreenFeedTabs"
     timeout: 30000
+- waitForAnimationToEnd
 - tapOn:
     id: "bottomBarProfileBtn"
 - assertVisible:
@@ -99,7 +106,10 @@ appId: xyz.blueskyweb.app
     timeout: 30000
 
 # A warm compose intent preserves the current screen.
-- openLink: "bluesky://profile/bob.test"
+- runFlow:
+    file: ../openLink.yml
+    env:
+      LINK: "bluesky://profile/bob.test"
 - extendedWaitUntil:
     visible:
       id: "profileView"
@@ -107,7 +117,10 @@ appId: xyz.blueskyweb.app
 - assertVisible:
     id: "profileHeaderDisplayName"
     text: "Bob.*"
-- openLink: "bluesky://intent/compose?text=Router%20intent%20smoke%20test"
+- runFlow:
+    file: ../openLink.yml
+    env:
+      LINK: "bluesky://intent/compose?text=Router%20intent%20smoke%20test"
 - extendedWaitUntil:
     visible:
       id: "composePostView"

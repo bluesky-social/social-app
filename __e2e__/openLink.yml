@@ -1,0 +1,9 @@
+appId: xyz.blueskyweb.app
+---
+- openLink: ${LINK}
+- runFlow:
+    when:
+      platform: iOS
+      visible: 'Open in .*Bluesky.*'
+    commands:
+      - tapOn: "Open"

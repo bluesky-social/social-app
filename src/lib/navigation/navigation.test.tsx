@@ -3,6 +3,7 @@ import {router, Stack as RootStack, Tabs} from 'expo-router'
 import {act, renderRouter, screen, waitFor} from 'expo-router/testing-library'
 
 import {
+  CommonActions,
   navigate,
   reset,
   resetToTab,
@@ -70,6 +71,7 @@ beforeEach(() => {
   mockHasSession = true
 })
 
+let tabNavigation: NavigationProp
 let navigation: NavigationProp
 let app: ReturnType<typeof renderRouter>
 
@@ -94,6 +96,11 @@ function Root() {
   return <RootStack screenOptions={{headerShown: false, animation: 'none'}} />
 }
 
+function TabBarProbe() {
+  tabNavigation = useNavigation()
+  return null
+}
+
 function Probe() {
   navigation = useNavigation()
   const route = useRoute()
@@ -109,7 +116,10 @@ const context = {
   _layout: Root,
   '(tabs)/_layout': {
     default: () => (
-      <Tabs screenOptions={{headerShown: false}} tabBar={() => null} />
+      <Tabs
+        screenOptions={{headerShown: false}}
+        tabBar={() => <TabBarProbe />}
+      />
     ),
     unstable_settings: {initialRouteName: '(home)'},
   },
@@ -142,7 +152,7 @@ describe('Expo Router navigation', () => {
   })
 
   it('preserves independent native tab histories', async () => {
-    app = renderRouter(context)
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
     await step(() => navigation.push('Profile', {name: 'alice.test'}))
     await waitFor(() => expect(app.getPathname()).toBe('/profile/alice.test'))
     await step(() => {
@@ -164,7 +174,7 @@ describe('Expo Router navigation', () => {
   })
 
   it('routes notification conversation parameters to Messages', async () => {
-    app = renderRouter(context)
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
     await step(() => {
       void navigate('MessagesTab', {
         screen: 'Messages',
@@ -185,8 +195,113 @@ describe('Expo Router navigation', () => {
     )
   })
 
+  it.each([
+    ['HomeTab', '/'],
+    ['SearchTab', '/search'],
+    ['MessagesTab', '/messages'],
+    ['NotificationsTab', '/notifications'],
+    ['MyProfileTab', '/my-profile'],
+  ])('opens %s at its own root on first selection', async (tab, path) => {
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
+    await step(() => {
+      void navigate(tab)
+    })
+    await waitFor(() => expect(app.getPathname()).toBe(path))
+  })
+
+  it('preserves the Messages back destination when a notification replaces a conversation', async () => {
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
+    await step(() => navigation.push('Profile', {name: 'alice.test'}))
+    await waitFor(() => expect(app.getPathname()).toBe('/profile/alice.test'))
+    await step(() => {
+      void navigate('MessagesTab', {screen: 'Messages'})
+    })
+    await waitFor(() => expect(app.getPathname()).toBe('/messages'))
+    await step(() =>
+      navigation.push('MessagesConversation', {conversation: 'old'}),
+    )
+    await waitFor(() => expect(app.getPathname()).toBe('/messages/old'))
+    expect(navigation.getState().routes.map(route => route.name)).toEqual([
+      'Messages',
+      'MessagesConversation',
+    ])
+    await step(() =>
+      navigation.dispatch(state =>
+        CommonActions.reset({
+          ...state,
+          routes: [
+            ...state.routes.slice(0, -1),
+            {name: 'MessagesConversation', params: {conversation: 'new'}},
+          ],
+        }),
+      ),
+    )
+    await waitFor(() => expect(app.getPathname()).toBe('/messages/new'))
+    await step(() => navigation.goBack())
+    await waitFor(() => expect(app.getPathname()).toBe('/messages'))
+    await step(() => {
+      void navigate('HomeTab')
+    })
+    await waitFor(() => expect(app.getPathname()).toBe('/profile/alice.test'))
+  })
+
+  it('preserves the requested reset index and route parameters', async () => {
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
+    await step(() =>
+      navigation.reset({
+        index: 1,
+        routes: [
+          {name: 'Home'},
+          {
+            name: 'Profile',
+            params: {name: 'alice.test', hideBackButton: false},
+          },
+          {name: 'Profile', params: {name: 'bob.test'}},
+        ],
+      }),
+    )
+    await waitFor(() => expect(app.getPathname()).toBe('/profile/alice.test'))
+    expect(navigation.getState().index).toBe(1)
+    expect(navigation.getState().routes).toHaveLength(3)
+    expect(screen.getByTestId('route').props.children).toContain(
+      '"hideBackButton":false',
+    )
+  })
+
+  it('rehydrates the other tabs after a partial tab reset', async () => {
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
+    await step(() =>
+      tabNavigation.reset({
+        index: 0,
+        routes: [{name: 'HomeTab'}],
+      }),
+    )
+    await waitFor(() => expect(app.getPathname()).toBe('/'))
+    expect(tabNavigation.getState().routes).toHaveLength(5)
+    await step(() => {
+      void navigate('SearchTab')
+    })
+    await waitFor(() => expect(app.getPathname()).toBe('/search'))
+  })
+
+  it('opens My Profile at its own root after an account reset', async () => {
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
+    await step(() => {
+      void navigate('MyProfileTab')
+    })
+    await waitFor(() => expect(app.getPathname()).toBe('/my-profile'))
+    await step(() => {
+      void reset()
+    })
+    await waitFor(() => expect(app.getPathname()).toBe('/'))
+    await step(() => {
+      void navigate('MyProfileTab')
+    })
+    await waitFor(() => expect(app.getPathname()).toBe('/my-profile'))
+  })
+
   it('clears navigation history when switching accounts', async () => {
-    app = renderRouter(context)
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
     await step(() => navigation.push('Profile', {name: 'alice.test'}))
     await waitFor(() => expect(app.getPathname()).toBe('/profile/alice.test'))
     await step(() => {
@@ -219,7 +334,7 @@ describe('URL boundaries', () => {
     const href = appLinks.matchName('Hashtag')!.build({tag})
     expect(href).toBe(`/hashtag/${encodeURIComponent(tag)}`)
     expect(appLinks.matchPath(href)).toEqual(['Hashtag', {tag}])
-    app = renderRouter(context)
+    app = renderRouter(context, {initialUrl: '/(tabs)/(home)'})
     await step(() => navigation.push('Hashtag', {tag}))
     expect(screen.getByTestId('route').props.children).toContain(tag)
     expect(appLinks.matchPath('/hashtag/%broken')[0]).toBe('NotFound')

@@ -666,7 +666,6 @@ export function SearchScreenShell({
               web: [a.flex_1],
               native: [t.atoms.bg, a.absolute, a.inset_0],
             })}
-            accessibilityViewIsModal
             accessibilityRole="list">
             {searchText.length > 0 && IS_NATIVE ? (
               <AutocompleteResults

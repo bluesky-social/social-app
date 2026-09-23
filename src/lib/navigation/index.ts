@@ -6,6 +6,7 @@ import {
   type NavigationContainerRefWithCurrent,
   type NavigationState,
   type ParamListBase,
+  type PartialState,
   type RouteProp,
   TabActions,
   useNavigation as useRouterNavigation,
@@ -14,6 +15,7 @@ import {
 } from 'expo-router/react-navigation'
 
 import {
+  getRouteFile,
   getScreenName,
   getScreenParams,
   screenHref,
@@ -73,12 +75,8 @@ export function toAppRoute<T extends {name: string; params?: object}>(
   }
 }
 
-const stateCache = new WeakMap<NavigationState, NavigationState>()
-
-/** Keep screen identifiers stable for analytics and existing tab-selection UI. */
-export function toAppState(state: NavigationState): NavigationState {
-  const cached = stateCache.get(state)
-  if (cached) return cached
+/** Skip layout wrappers shared by the legacy state adapter and reset actions. */
+function unwrapState(state: NavigationState): NavigationState {
   const active = state.routes[state.index ?? 0]
   if (
     active?.state &&
@@ -86,8 +84,19 @@ export function toAppState(state: NavigationState): NavigationState {
       active.name === '(tabs)' ||
       (IS_WEB && active.name.startsWith('(')))
   ) {
-    return toAppState(active.state as NavigationState)
+    return unwrapState(active.state as NavigationState)
   }
+  return state
+}
+
+const stateCache = new WeakMap<NavigationState, NavigationState>()
+
+/** Keep screen identifiers stable for analytics and existing tab-selection UI. */
+export function toAppState(state: NavigationState): NavigationState {
+  const cached = stateCache.get(state)
+  if (cached) return cached
+  const unwrapped = unwrapState(state)
+  if (unwrapped !== state) return toAppState(unwrapped)
   const result = {
     ...state,
     routeNames: state.routeNames?.map(name => toAppRoute({name}).name),
@@ -181,6 +190,63 @@ export function reset() {
   return Promise.resolve()
 }
 
+type ResetState = {
+  index?: number
+  routes: {
+    key?: string
+    name: string
+    params?: object
+    state?: ResetState
+  }[]
+  routeNames?: string[]
+}
+
+/** Translate reset destinations without discarding history or changing its index. */
+function toRouterState(
+  state: ResetState,
+  original?: NavigationState | PartialState<NavigationState>,
+): ResetState {
+  const routeName = (name: string) => {
+    const group = tabGroups[name as keyof typeof tabGroups]
+    return group ? `(${group})` : getRouteFile(name)
+  }
+  /*
+   * Stack rehydration selects the last route in a partial state, ignoring index.
+   * Tab resets remain partial so omitted tabs are restored by the tab router.
+   */
+  return {
+    ...(original?.type === 'stack' ? original : {}),
+    ...state,
+    ...(original?.type === 'stack' && original.stale === false
+      ? {stale: false, index: state.index ?? state.routes.length - 1}
+      : {}),
+    routeNames: original?.routeNames ?? state.routeNames?.map(routeName),
+    routes: state.routes.map(route => {
+      const previous = route.key
+        ? original?.routes.find(candidate => candidate.key === route.key)
+        : undefined
+      return {
+        ...route,
+        name:
+          previous && getScreenName(previous.name) === route.name
+            ? previous.name
+            : routeName(route.name),
+        params:
+          route.params &&
+          Object.fromEntries(
+            Object.entries(route.params).map(([key, value]) => [
+              key,
+              typeof value === 'boolean' ? String(value) : value,
+            ]),
+          ),
+        state: route.state
+          ? toRouterState(route.state, previous?.state)
+          : undefined,
+      }
+    }),
+  }
+}
+
 /** Existing screen actions delegate to Expo Router; focus and gesture events stay native. */
 export function useNavigation<T = NavigationProp>(): T {
   const navigation = useRouterNavigation<NavigationProp>()
@@ -210,9 +276,13 @@ export function useNavigation<T = NavigationProp>(): T {
           router.replace(href(payload.name, payload.params))
         else router.dismissTo(href(payload.name, payload.params))
       } else if (action.type === 'RESET' && payload?.routes?.length) {
-        const route = payload.routes[payload.routes.length - 1]
-        router.dismissAll()
-        router.replace(href(route.name, route.params))
+        const state = unwrapState(navigation.getState())
+        const dispatcher = rootRef ?? navigation
+        dispatcher.dispatch({
+          ...action,
+          target: action.target ?? state.key,
+          payload: toRouterState({...payload, routes: payload.routes}, state),
+        })
       } else {
         navigation.dispatch(action)
       }
