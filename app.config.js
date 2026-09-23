@@ -264,6 +264,17 @@ module.exports = function (_config) {
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
         ],
+        /*
+         * Expo runs Gradle mods in reverse registration order. Keep Bitdrift
+         * before Sentry so its plugins block is prepended after Sentry's apply
+         * statement and remains at the top, as required by Gradle.
+         */
+        [
+          '@bitdrift/react-native',
+          {
+            networkInstrumentation: true,
+          },
+        ],
         ...(USE_SENTRY
           ? [
               /** @type {[string, any]} */ ([
@@ -310,12 +321,6 @@ module.exports = function (_config) {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
-          },
-        ],
-        [
-          '@bitdrift/react-native',
-          {
-            networkInstrumentation: true,
           },
         ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
