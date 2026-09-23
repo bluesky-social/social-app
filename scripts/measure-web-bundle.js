@@ -1,3 +1,4 @@
+/* oxlint-disable import/no-nodejs-modules -- This CLI measures build output using Node APIs. */
 /*
  * Measures the initial payload of the exported web bundle.
  *
@@ -7,6 +8,9 @@
  * Per-file details go to stderr, so callers can do:
  *
  *   SIZE=$(node scripts/measure-web-bundle.js --exclude '\.ico$|\.woff2?$')
+ *
+ * Pass --json to print {raw, gzip} byte totals instead. Each resource is
+ * gzipped separately, as it would be when served over HTTP.
  *
  * Lazily-loaded chunks (locale messages, hls, etc.) are not referenced from
  * index.html and therefore do not count toward the total.
@@ -18,18 +22,20 @@
  */
 const fs = require('node:fs')
 const path = require('node:path')
+const {gzipSync} = require('node:zlib')
 
 const projectRoot = path.join(__dirname, '..')
 
 function usage() {
   console.error(
-    'Usage: node scripts/measure-web-bundle.js [--dir <path>] [--exclude <regex>]... [--allow-missing]',
+    'Usage: node scripts/measure-web-bundle.js [--dir <path>] [--exclude <regex>]... [--allow-missing] [--json]',
   )
   process.exit(1)
 }
 
 let dirArg = null
 let allowMissing = false
+let json = false
 const excludes = []
 const argv = process.argv.slice(2)
 for (let i = 0; i < argv.length; i++) {
@@ -39,6 +45,8 @@ for (let i = 0; i < argv.length; i++) {
     excludes.push(argv[++i])
   } else if (argv[i] === '--allow-missing') {
     allowMissing = true
+  } else if (argv[i] === '--json') {
+    json = true
   } else {
     usage()
   }
@@ -70,6 +78,7 @@ const html = fs.readFileSync(indexPath, 'utf8')
  * <script> or <link> tag. Inline url(...) references (e.g. the italic font in
  * the splash CSS) are fetched on demand, so they are intentionally skipped.
  */
+/** @type {Set<string>} */
 const urls = new Set()
 for (const match of html.matchAll(
   /<(?:script|link)\b[^>]*?\b(?:src|href)="([^"]+)"/g,
@@ -83,6 +92,7 @@ for (const match of html.matchAll(
  * and '/foo' resolve to '<outDir>/foo', so try the path with and without
  * the baseUrl prefix.
  */
+/** @param {string} url */
 function resolveLocal(url) {
   const rel = url.replace(/^\//, '')
   for (const candidate of [rel, rel.replace(/^static\//, '')]) {
@@ -93,8 +103,12 @@ function resolveLocal(url) {
 }
 
 let total = fs.statSync(indexPath).size
+let gzipTotal = gzipSync(fs.readFileSync(indexPath)).length
 let count = 1
-console.error(`${String(total).padStart(12)}  index.html`)
+console.error('   Raw bytes    Gzip bytes  Resource')
+console.error(
+  `${String(total).padStart(12)}  ${String(gzipTotal).padStart(12)}  index.html`,
+)
 
 for (const url of [...urls].sort()) {
   if (/^(?:https?:)?\/\//.test(url) || url.startsWith('data:')) continue
@@ -111,10 +125,15 @@ for (const url of [...urls].sort()) {
     continue
   }
   if (excludeRes.some(re => re.test(resolved.rel))) continue
-  const {size} = fs.statSync(resolved.abs)
+  const content = fs.readFileSync(resolved.abs)
+  const size = content.length
+  const gzipSize = gzipSync(content).length
   total += size
+  gzipTotal += gzipSize
   count++
-  console.error(`${String(size).padStart(12)}  ${resolved.rel}`)
+  console.error(
+    `${String(size).padStart(12)}  ${String(gzipSize).padStart(12)}  ${resolved.rel}`,
+  )
 }
 
 if (count === 1) {
@@ -125,6 +144,6 @@ if (count === 1) {
 }
 
 console.error(
-  `Measured index.html + ${count - 1} referenced assets in ${outDir}: ${(total / 1024).toFixed(2)} KB`,
+  `Measured index.html + ${count - 1} referenced assets in ${outDir}: ${(total / 1024).toFixed(2)} KB raw, ${(gzipTotal / 1024).toFixed(2)} KB gzip`,
 )
-console.log(total)
+console.log(json ? JSON.stringify({raw: total, gzip: gzipTotal}) : total)
