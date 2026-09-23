@@ -100,7 +100,7 @@ function MyComponent() {
 ### iOS
 - ExpoModulesCore
 - MCEmojiPicker (external CocoaPods dependency)
-- Minimum iOS version: 15.1
+- Minimum iOS version: 16.4
 
 ### Android
 - expo-modules-core
