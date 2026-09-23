@@ -1,5 +1,6 @@
 import {getGlobalScope, init} from '@sentry/react-native'
 
+import {dropExpectedNetworkErrors} from '#/logger/sentry/network-errors'
 import * as env from '#/env'
 
 init({
@@ -10,16 +11,13 @@ init({
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
   release: env.RELEASE_VERSION,
+  beforeSend: dropExpectedNetworkErrors,
   ignoreErrors: [
     /*
      * Unknown internals errors
      */
     `t is not defined`,
     `Can't find variable: t`,
-    /*
-     * Un-useful errors
-     */
-    `Network request failed`,
   ],
   /**
    * Does not affect traces of error events or other logs, just disables
