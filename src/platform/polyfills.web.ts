@@ -1,4 +1,5 @@
 import 'array.prototype.findlast/auto'
+import 'array.prototype.findlastindex/auto'
 import 'setimmediate'
 
 /*

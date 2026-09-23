@@ -66,6 +66,7 @@ jobs:
           key: base-bundle-size-main-${{ github.sha }}
 
   bundle-analyzer:
+    name: Web bundle size and browser support
     runs-on: ubuntu-24.04
     if: ${{ github.event.pull_request.head.repo.full_name == github.repository && github.event_name == 'pull_request'}}
     permissions:
@@ -114,6 +115,9 @@ jobs:
         run: |
           pnpm build-web
           node scripts/measure-web-bundle.js > ../pr-bundle-size.txt
+
+      - name: 🔎 Check web browser support
+        run: pnpm check-web-browser-support
 
       - name: ⬇️ Get base bundle size from cache
         id: get-base-size
