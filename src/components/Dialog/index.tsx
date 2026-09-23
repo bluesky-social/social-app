@@ -292,7 +292,14 @@ export function ScrollableInner({
         {header}
         {children}
       </ScrollView>
-      {footer}
+      {footer ? (
+        <View
+          style={android({
+            transform: [{translateY: -keyboardHeight}],
+          })}>
+          {footer}
+        </View>
+      ) : null}
     </>
   )
 }
