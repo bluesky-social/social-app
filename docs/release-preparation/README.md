@@ -1,116 +1,86 @@
 # Release preparation
 
-Run **Prepare Cactus Release** in GitHub Actions with:
+All release orchestration lives in GitHub Actions, using inline Bash, `gh`, and
+`jq`. No release JavaScript or local release scripts are required.
 
-- `sourceRef`: branch, tag, or commit to release.
-- `releaseVersion`: strict `x.y.z`, matching the package and Expo versions.
-- `dryRun`: optional checkbox, unchecked by default. Check it to preview only;
-  leave it unchecked to create the draft and start builds.
+## Create a release
 
-The run prints the request plan, release file, and public notes in the Actions
-summary, including when preparation stops on a conflict.
+Run **Create Release** (`create-release.yml`) on `main` with:
 
-## Cut a release candidate
+- `releaseVersion`: strict `x.y.z`, matching package.json and Expo config.
+- `sourceRef`: a commit, branch, or tag in main history (default `main`).
+- `dryRun`: validate and preview without creating resources or starting builds.
 
-1. Choose a green commit on main with the intended package and Expo version.
-   Review the commit-title changelog and refresh translations before choosing
-   that commit if needed.
-2. To preview first, check **Dry run**, use that **full commit SHA** as `sourceRef`,
-   and review the generated release document and requests.
-3. Run the workflow on `main` with the same version and SHA and `dryRun: false`.
-   Live preparation only accepts source commits in the tooling commit's main
-   history. Its build workflow definitions must match the tooling checkout.
-4. Follow the three build links in the execution summary. `builds-dispatched`
-   means that the builds were started, not that they succeeded.
+The workflow checks versions, Expo's appVersion runtime policy, source ancestry,
+build workflow definitions, active workflows, and existing release resources.
+It generates notes through GitHub's release notes API, adds `RELEASE-x.y.z.md`
+in one preparation commit, and creates `release-x.y.z` at that commit.
+Only after these checks succeed does it dispatch **Run Release**.
+Both workflows must be on main and active before use.
 
-The live job has `contents: write` and `actions: write`; the preview remains
-read-only. Live preparation rejects unverified draft visibility. No separate
-PAT is required. The workflow serializes runs for each release version, never
-force-updates a ref, and never publishes the draft or submits native builds.
-The web build does push its production image to ECR.
+The summary records the original and prepared commits. Dry runs perform reads
+and generate a preview but do not create a branch, tag, release, or build.
+The workflow token provides the required contents/actions permissions; no PAT
+is required. Both workflows serialize on the same release version.
 
-Preparation runs through `actions/github-script` using its authenticated GitHub
-client. All preparation logic lives in the workflow and writes its report to the
-Actions summary. Preview and live jobs share the same inline script through a
-YAML anchor; there are no release CLI modules or report-file handoffs.
-API requests are not automatically retried.
+## Run or resume a release
 
-## Plan
+**Run Release** (`run-release.yml`) is kicked off automatically by Create Release.
+For recovery, run it on `main` with the same `releaseVersion`, the prepared SHA
+as `sourceRef`, and the original source SHA as `sourceSha`.
 
-The preview can describe creation or verified reuse; live execution only accepts
-a new release.
+It verifies the preparation commit, branch, tag, and existing draft identity.
+Before tagging, it downloads translations from Crowdin using the repository's
+`CROWDIN_PERSONAL_TOKEN` secret, extracts all catalogs, and commits only
+`src/locale/locales/*/messages.po` changes. Even when catalogs are unchanged,
+an empty translation checkpoint commit records that the refresh completed.
 
-1. Create or reuse the release branch.
-2. Create the tree and commit for the release file, or reuse a matching commit.
-3. Advance the branch and create or reuse the tag and draft release.
-4. Prepare the iOS, Android, and web workflow dispatches.
+It then compiles translations and runs lint, formatting, lexicon verification,
+all platform typechecks, and tests. Only successful checks allow tag creation,
+draft creation/update, or build dispatch. Builds use the translation commit.
+Draft notes are overwritten from the public changelog in the release document. Published releases and
+conflicting refs are rejected; refs are never force-updated.
 
-Each preview step rechecks GitHub against the initial state. A change or failed check
-stops the run. The report includes request bodies, dependencies, and step results:
-`skipped-dry-run`, `verified-reuse`, or `blocked`. Output references such as
-`fromStep: prepared-commit` are resolved by the preceding request in live execution.
+`startBuilds` defaults to false for manual runs, allowing notes and draft recovery
+without starting builds. Create Release sets it to true. Builds use the release
+tag with the immutable prepared commit passed as `sourceRef`:
 
-Live execution resolves these references to actual API outputs, rechecks state
-before each operation, and verifies each resource write before continuing. It
-records completed writes even if a later operation fails.
+- iOS and Android: production builds with `submit: false`.
+- Web: production image pushed to ECR.
 
-## Reuse checks
+Each dispatch reserves `release-build-x.y.z-ios`, `-android`, or `-web` first.
+Repeated runs skip reserved builds. The summary links to each dispatched run;
+dispatch success does not mean build success. The draft is never published and
+native builds are never submitted by this process.
 
-- **Branch:** points to the selected source or a single preparation commit whose
-  only change is the expected release file.
-- **Release file:** contents match exactly.
-- **Tag:** resolves to the preparation commit.
-- **Draft:** tag, name, and public notes match; it isn't published or a prerelease.
+## Partial failures
 
-The action's read-only token may not see all drafts. That check is marked
-`unverified`, and the plan finishes as `complete-with-warnings`. A draft-creation
-request includes a precondition to check for existing drafts with release
-permissions before execution. Conflicts and API errors still block the run.
+If creation succeeded but the handoff failed, retry Create Release with the same
+version and original source SHA. It verifies that the branch contains exactly
+one preparation commit adding the expected release document, optionally followed
+by one translation checkpoint commit containing only regular catalog files. It
+preserves existing notes, checks any tag, draft, and build reservations, and retries the
+handoff. A dry run validates reuse without dispatching anything. Different
+sources, unexpected changes, and conflicting release resources still fail.
 
-## Build inputs
+Use a full commit SHA for `sourceRef`: retrying with `main` or another moving
+branch can resolve to a newer commit and will then be rejected. The original
+source SHA is recorded in the creation summary. Alternatively, use Run Release
+directly with both SHAs from that summary.
 
-All three dispatches use the release tag and pass the prepared commit as
-`sourceRef`. The source's workflow files must match this checkout's definitions,
-and the workflows must be active in GitHub.
+Once a translation checkpoint exists, retries reuse it and rerun checks without
+pulling translations again. Once tagged, the commit is never changed. A failed
+check leaves the checkpoint available for inspection but creates no tag or builds;
+source fixes require a new release preparation rather than changing that checkpoint.
+Tags from the older flow without a translation checkpoint are rejected.
 
-- **iOS / Android:** `profile: production`, `submit: false`.
-- **Web:** builds the production image and pushes it to ECR.
+GitHub outages can leave completed writes behind even when a request reports a
+failure. After recovery, retry with the same source; no branch or tag is reset.
+For failed builds, rerun failed jobs in their own Actions runs.
 
-## Partial failures and manual recovery
+If a dispatch fails after its reservation was created, inspect Actions before
+manually dispatching that build: a timeout may still have started it. Reservations
+are intentionally retained to prevent automatic duplicate native builds.
 
-Live preparation does not resume existing releases or automatically retry API
-requests. If the release branch, tag, or GitHub Release already exists, it stops
-before writing anything. A failure during preparation stops the remaining steps;
-completed writes and dispatched builds are not rolled back.
-
-1. Inspect the Actions summary and logs. They contain the selected
-   source, resolved request bodies, completed operations, and returned build-run
-   links. A `write-requested` or `dispatch-requested` result means the response
-   was not confirmed: GitHub may still have accepted the request.
-2. Check GitHub before issuing any manual request. A timeout does not prove that
-   a branch, draft, or build was not created. Do not delete a release tag or
-   rerun the whole preparation workflow to retry a build.
-3. Finish only the missing operations, using the report's source and prepared
-   commit. Native builds must use the release tag as their workflow ref and the
-   exact prepared commit as `sourceRef`, with `profile: production` and
-   `submit: false`. The iOS `testFlightGroup` stays `none`.
-4. For a failed build, inspect and rerun its failed jobs in Actions. If a dispatch
-   response was lost, find the run by workflow, time, release tag, and commit
-   before considering a new dispatch. Escalate uncertain outcomes for inspection.
-
-The workflow serializes preparation by version, but manual commands must not run
-alongside an active preparation job. IPA/dSYM and AAB artifacts are retained for
-30 days for inspection and later submission. This workflow does not wait for
-builds, collect their metadata, or submit them to stores.
-
-## Remaining work
-
-- Wait for build results and record build numbers in the release file.
-- Collect verified build receipts and finalize the release document.
-- Submit the retained artifacts without rebuilding, then perform manual rollout.
-- Add fingerprint runtime support; validation currently requires `appVersion`.
-
-Release notes are commit titles since the highest reachable version tag,
-excluding the requested version. Without an earlier tag, they include all
-reachable history. Notes still need review, and translations aren't refreshed.
-App release remains manual.
+Build-result collection, release document finalization, and submission of retained
+artifacts remain separate work. Native artifacts are retained for 30 days.

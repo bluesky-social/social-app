@@ -1,0 +1,243 @@
+---
+name: Create Release
+run-name: ${{ inputs.dryRun && 'Preview' || 'Create' }} release ${{ inputs.releaseVersion }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: Release version (x.y.z; must match the source)
+        required: true
+        type: string
+      sourceRef:
+        description: Source branch, tag, or commit in main history
+        required: true
+        default: main
+        type: string
+      dryRun:
+        description: Validate and preview without creating anything
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.releaseVersion }}
+  cancel-in-progress: false
+
+jobs:
+  create:
+    if: ${{ github.ref == 'refs/heads/main' && github.repository == 'bluesky-social/social-app' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      VERSION: ${{ inputs.releaseVersion }}
+      TOOLING_SHA: ${{ github.sha }}
+      DRY_RUN: ${{ inputs.dryRun }}
+    steps:
+      - name: Checkout workflow source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: tooling
+          persist-credentials: false
+      - name: Checkout release source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.sourceRef }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+        with:
+          package_json_file: source/package.json
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: source/package.json
+      - name: Install dependencies for Expo config validation
+        working-directory: source
+        run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: Validate and create release branch
+        id: release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          fail() { echo "::error::$*" >&2; exit 1; }
+          summary() { echo "$*" | tee -a "$GITHUB_STEP_SUMMARY"; }
+          api() { local path="$1"; shift; gh api "repos/$GH_REPO/$path" "$@"; }
+
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || fail 'Expected strict x.y.z version.'
+          BRANCH="release-$VERSION"
+          FILE="RELEASE-$VERSION.md"
+          WORKFLOWS=(build-submit-ios.yml build-submit-android.yml build-and-push-bskyweb-aws.yaml)
+
+          # Empty results mean absent; authentication and network failures still abort.
+          ref_sha() {
+            api "git/matching-refs/$1" | jq -er --arg ref "refs/$1" '
+              [.[] | select(.ref == $ref)] |
+              if length == 0 then "" elif length == 1 and .[0].object.type == "commit"
+              then .[0].object.sha else error("Unexpected ref type or count") end'
+          }
+
+          releases() {
+            api 'releases?per_page=100' --paginate --slurp |
+              jq -c --arg tag "$VERSION" '[.[][] | select(.tag_name == $tag)]'
+          }
+
+          validate_source() {
+            [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || fail 'Expected full source SHA.'
+            git -C source merge-base --is-ancestor "$BASE_SHA" "$TOOLING_SHA" || fail 'Source is not in the trusted main history.'
+            [[ "$(git -C source rev-parse --is-shallow-repository)" == false ]] || fail 'Full source history is required.'
+            [[ -z "$(git -C source status --porcelain)" ]] || fail 'Source checkout is dirty.'
+            [[ "$(jq -r .version source/package.json)" == "$VERSION" ]] || fail 'Package version mismatch.'
+            (cd source && EXPO_PUBLIC_ENV=production pnpm exec expo config --type public --json) > "$RUNNER_TEMP/expo.json"
+            jq -e --arg version "$VERSION" '.version == $version and .runtimeVersion.policy == "appVersion"' \
+              "$RUNNER_TEMP/expo.json" >/dev/null || fail 'Expo version or runtime policy mismatch.'
+            api '' | jq -e '.permissions.push == true' >/dev/null || fail 'Cannot establish visibility of all draft releases.'
+            for workflow in "${WORKFLOWS[@]}"; do
+              cmp "tooling/.github/workflows/$workflow" "source/.github/workflows/$workflow" || fail "Unreviewed build workflow: $workflow"
+              api "actions/workflows/$workflow" | jq -e --arg path ".github/workflows/$workflow" \
+                '.state == "active" and .path == $path' >/dev/null || fail "Build workflow is not active: $workflow"
+            done
+          }
+
+          require_new_release() {
+            [[ -z "$(ref_sha "heads/$BRANCH")" ]] || fail 'Release branch already exists; use Run Release for recovery.'
+            [[ -z "$(ref_sha "tags/$VERSION")" ]] || fail 'Release tag already exists.'
+            [[ "$(releases)" == '[]' ]] || fail 'GitHub Release already exists.'
+            for platform in ios android web; do
+              [[ -z "$(ref_sha "heads/release-build-$VERSION-$platform")" ]] || fail 'Build reservation already exists.'
+            done
+          }
+
+          verify_prepared() {
+            [[ "$(ref_sha "heads/$BRANCH")" == "$PREPARED_SHA" ]] || fail 'Release branch moved.'
+            local tag
+            tag=$(ref_sha "tags/$VERSION")
+            [[ -z "$tag" || "$tag" == "$PREPARED_SHA" ]] || fail 'Release tag points to another commit.'
+            if [[ "${REQUIRE_TAG:-false}" == true ]]; then
+              [[ "$tag" == "$PREPARED_SHA" ]] || fail 'Release tag is missing.'
+            fi
+            RELEASES=$(releases)
+            jq -e --arg sha "$PREPARED_SHA" --arg name "Release $VERSION" '
+              length == 0 or (length == 1 and .[0].draft == true and
+              .[0].prerelease == false and .[0].name == $name and .[0].target_commitish == $sha)
+            ' <<< "$RELEASES" >/dev/null || fail 'Existing release is published or has a different identity.'
+            if [[ "${REQUIRE_DRAFT:-false}" == true ]]; then
+              [[ "$(jq length <<< "$RELEASES")" == 1 ]] || fail 'Draft release is missing.'
+            fi
+          }
+
+          generate_notes() {
+            local previous_tag
+            previous_tag=$(git -C source tag --merged "$BASE_SHA" --sort=-version:refname |
+              awk -v version="$VERSION" '/^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$/ && $0 != version {print; exit}')
+            local args=(-f "tag_name=$VERSION" -f "target_commitish=$BASE_SHA")
+            if [[ -n "$previous_tag" ]]; then args+=(-f "previous_tag_name=$previous_tag"); fi
+            api releases/generate-notes -X POST "${args[@]}" --jq .body > "$RUNNER_TEMP/notes.md"
+            [[ -s "$RUNNER_TEMP/notes.md" ]] || fail 'GitHub generated empty notes.'
+          }
+
+          BASE_SHA=$(git -C source rev-parse HEAD)
+          validate_source source
+          [[ ! -e "source/$FILE" ]] || fail 'Source already contains this release document.'
+          # Check the handoff before creating anything.
+          api actions/workflows/run-release.yml | jq -e '.state == "active" and .path == ".github/workflows/run-release.yml"' >/dev/null
+
+          PREPARED_SHA=$(ref_sha "heads/$BRANCH")
+          if [[ -n "$PREPARED_SHA" ]]; then
+            # Validate the existing commit without regenerating mutable GitHub notes.
+            git -C source fetch origin "$PREPARED_SHA"
+            BRANCH_SHA=$PREPARED_SHA
+            if [[ "$(git -C source show -s --format=%B "$PREPARED_SHA")" == "Prepare release translations $VERSION" ]]; then
+              git -C source diff-tree --no-commit-id --name-only -r "$PREPARED_SHA" > "$RUNNER_TEMP/changed-paths"
+              while IFS= read -r path; do
+                [[ "$path" =~ ^src/locale/locales/[^/]+/messages\.po$ ]] || fail "Unexpected translation change: $path"
+                [[ "$(git -C source ls-tree "$PREPARED_SHA" -- "$path" | cut -d ' ' -f 1)" == 100644 ]] || fail 'Catalog must be a regular file.'
+              done < "$RUNNER_TEMP/changed-paths"
+              PREPARED_SHA=$(git -C source show -s --format=%P "$PREPARED_SHA")
+              [[ "$PREPARED_SHA" =~ ^[0-9a-f]{40}$ ]] || fail 'Translation commit must have exactly one parent.'
+            fi
+            [[ "$(git -C source show -s --format=%P "$PREPARED_SHA")" == "$BASE_SHA" ]] ||
+              fail 'Existing release has a different source. Retry with the original source SHA from the creation summary.'
+            [[ "$(git -C source show -s --format=%B "$PREPARED_SHA")" == "Prepare release $VERSION" ]] ||
+              fail 'Existing branch does not point to a preparation commit.'
+            [[ "$(git -C source diff-tree --no-commit-id --name-status -r "$PREPARED_SHA")" == $'A\t'"$FILE" ]] ||
+              fail 'Existing preparation commit must only add the release document.'
+            [[ "$(git -C source ls-tree "$PREPARED_SHA" -- "$FILE" | cut -d ' ' -f 1)" == 100644 ]] ||
+              fail 'Release document must be a regular file.'
+            git -C source show "$PREPARED_SHA:$FILE" > "$RUNNER_TEMP/$FILE"
+            printf '%s\n' '---' "releaseVersion: $VERSION" '---' '' "# Release $VERSION" '' \
+              '<!-- public-changelog:start -->' '' '## Initial release' '' > "$RUNNER_TEMP/header.md"
+            head -n 10 "$RUNNER_TEMP/$FILE" | cmp "$RUNNER_TEMP/header.md" - || fail 'Unexpected release document header.'
+            [[ "$(grep -c '^<!-- public-changelog:start -->$' "$RUNNER_TEMP/$FILE")" == 1 ]] || fail 'Invalid changelog start marker.'
+            [[ "$(grep -c '^<!-- public-changelog:end -->$' "$RUNNER_TEMP/$FILE")" == 1 ]] || fail 'Invalid changelog end marker.'
+            [[ "$(tail -n 1 "$RUNNER_TEMP/$FILE")" == '<!-- public-changelog:end -->' ]] || fail 'Unexpected release document ending.'
+            sed '1,10d; $d' "$RUNNER_TEMP/$FILE" | grep -q '[^[:space:]]' || fail 'Empty release notes.'
+            INITIAL_PREPARED_SHA=$PREPARED_SHA
+            PREPARED_SHA=$BRANCH_SHA
+            verify_prepared
+            for platform in ios android web; do
+              reservation=$(ref_sha "heads/release-build-$VERSION-$platform")
+              [[ -z "$reservation" || "$reservation" == "$PREPARED_SHA" ]] || fail "Conflicting $platform build reservation."
+            done
+            summary "Verified existing $BRANCH at $PREPARED_SHA (source $BASE_SHA)."
+            if [[ "$DRY_RUN" == true ]]; then
+              summary 'Preview only: branch can be reused. No resources changed or builds requested.'
+              cat "$RUNNER_TEMP/$FILE" >> "$GITHUB_STEP_SUMMARY"
+            else
+              {
+                echo "source-sha=$BASE_SHA"
+                echo "prepared-sha=$INITIAL_PREPARED_SHA"
+              } >> "$GITHUB_OUTPUT"
+            fi
+            exit 0
+          fi
+
+          require_new_release
+          generate_notes
+          {
+            printf '%s\n' '---' "releaseVersion: $VERSION" '---' '' "# Release $VERSION" '' '<!-- public-changelog:start -->' '' '## Initial release' ''
+            # Nest GitHub headings under the release document's Initial release section.
+            sed 's/^## /### /' "$RUNNER_TEMP/notes.md"
+            printf '\n%s\n' '<!-- public-changelog:end -->'
+          } > "$RUNNER_TEMP/$FILE"
+          summary "Source: $BASE_SHA. Version, runtime, ancestry, workflows, and release conflicts checked."
+          if [[ "$DRY_RUN" == true ]]; then
+            summary 'Preview only: no branch, tag, release, or builds created.'
+            cat "$RUNNER_TEMP/$FILE" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          require_new_release
+          base_tree=$(api "git/commits/$BASE_SHA" --jq .tree.sha)
+          jq -n --arg tree "$base_tree" --arg path "$FILE" --rawfile content "$RUNNER_TEMP/$FILE" \
+            '{base_tree: $tree, tree: [{path: $path, mode: "100644", type: "blob", content: $content}]}' > "$RUNNER_TEMP/tree.json"
+          tree=$(api git/trees -X POST --input "$RUNNER_TEMP/tree.json" --jq .sha)
+          jq -n --arg tree "$tree" --arg parent "$BASE_SHA" --arg message "Prepare release $VERSION" \
+            '{tree: $tree, parents: [$parent], message: $message}' > "$RUNNER_TEMP/commit.json"
+          PREPARED_SHA=$(api git/commits -X POST --input "$RUNNER_TEMP/commit.json" --jq .sha)
+          require_new_release
+          # Create the branch directly at the prepared commit; never advance or force a ref.
+          api git/refs -X POST -f "ref=refs/heads/$BRANCH" -f "sha=$PREPARED_SHA" >/dev/null
+          summary "Created $BRANCH at $PREPARED_SHA (source $BASE_SHA)."
+          verify_prepared
+          {
+            echo "source-sha=$BASE_SHA"
+            echo "prepared-sha=$PREPARED_SHA"
+          } >> "$GITHUB_OUTPUT"
+      - name: Start Run Release
+        if: ${{ !inputs.dryRun }}
+        env:
+          SOURCE_SHA: ${{ steps.release.outputs.source-sha }}
+          PREPARED_SHA: ${{ steps.release.outputs.prepared-sha }}
+        run: |
+          gh workflow run run-release.yml --ref main \
+            -f "releaseVersion=$VERSION" -f "sourceRef=$PREPARED_SHA" \
+            -f "sourceSha=$SOURCE_SHA" -f startBuilds=true
+          echo "Run Release requested for $PREPARED_SHA. Follow its run in Actions." >> "$GITHUB_STEP_SUMMARY"
