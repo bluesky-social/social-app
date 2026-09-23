@@ -3,7 +3,6 @@ import {type AppStateStatus} from 'react-native'
 import uuid from 'react-native-uuid'
 
 import {getCurrentState, onAppStateChange} from '#/lib/appState'
-import {Logger} from '#/logger'
 import {
   normalizeSessionRecord,
   type SessionRecord,
@@ -12,19 +11,6 @@ import {
 
 const SESSION_RECORD_KEY = 'bsky_analytics_session_v1'
 const runtimeWindow = window
-const logger = Logger.create(Logger.Context.Session)
-
-function debugSession(
-  message: string,
-  metadata: Record<string, unknown> & {record: SessionRecord},
-) {
-  if (__DEV__) {
-    logger.debug(`[analytics-session] [${metadata.record.id}] ${message}`, {
-      sessionId: metadata.record.id,
-      ...metadata,
-    })
-  }
-}
 
 function createSessionRecord(now = Date.now()): SessionRecord {
   return {
@@ -55,22 +41,9 @@ function writeSessionRecord(record: SessionRecord) {
 
 function resolveSessionForActivation(now = Date.now()) {
   const latest = readSessionRecord(now)
-  const shouldRotate = latest ? shouldRotateSession(latest) : false
-
-  if (!latest || shouldRotate) {
-    const record = createSessionRecord(now)
-    debugSession('Analytics session activated', {
-      action: latest ? 'rotated' : 'created',
-      previousRecord: latest,
-      record,
-    })
-    return record
+  if (!latest || shouldRotateSession(latest)) {
+    return createSessionRecord(now)
   }
-
-  debugSession('Analytics session activated', {
-    action: 'resumed',
-    record: latest,
-  })
   return latest
 }
 
@@ -94,10 +67,6 @@ let sessionRecord = (() => {
   }
 
   writeSessionRecord(record)
-  debugSession('Analytics session initialized', {
-    appState: currentAppState,
-    record,
-  })
   return record
 })()
 
@@ -117,14 +86,9 @@ function notifyListeners() {
 }
 
 function updateSessionRecord(record: SessionRecord) {
-  const previousRecord = sessionRecord
-  const sessionIdChanged = record.id !== previousRecord.id
+  const sessionIdChanged = record.id !== sessionRecord.id
   sessionRecord = record
   if (sessionIdChanged) {
-    debugSession('Analytics session ID changed', {
-      previousRecord,
-      record,
-    })
     notifyListeners()
   }
 }
@@ -136,15 +100,10 @@ function persistSessionRecord(record: SessionRecord) {
 
 function persistInactivityStart(now = Date.now()) {
   const record = readSessionRecord(now) ?? createSessionRecord(now)
-  const nextRecord = {
+  persistSessionRecord({
     ...record,
     inactivityAt: record.inactivityAt ?? now,
-  }
-  debugSession('Analytics session inactivity started', {
-    appState: currentAppState,
-    record: nextRecord,
   })
-  persistSessionRecord(nextRecord)
 }
 
 function selectCanonicalSessionRecord(record: SessionRecord) {
@@ -159,29 +118,17 @@ function selectCanonicalSessionRecord(record: SessionRecord) {
 
 function reconcileSessionRecord(record: SessionRecord) {
   const canonicalRecord = selectCanonicalSessionRecord(record)
-  let action: 'adopted' | 'cleared-inactivity' | 'retained'
 
   if (canonicalRecord === sessionRecord) {
-    action = 'retained'
     writeSessionRecord(sessionRecord)
   } else if (
     currentAppState === 'active' &&
     canonicalRecord.inactivityAt !== undefined
   ) {
-    action = 'cleared-inactivity'
     persistSessionRecord({...canonicalRecord, inactivityAt: undefined})
   } else {
-    action = 'adopted'
     updateSessionRecord(canonicalRecord)
   }
-
-  debugSession('Analytics session records reconciled', {
-    action,
-    appState: currentAppState,
-    incomingRecord: record,
-    canonicalRecord,
-    record: sessionRecord,
-  })
 }
 
 function onSessionRecordStorageChanged(event: StorageEvent) {
@@ -194,19 +141,11 @@ function onSessionRecordStorageChanged(event: StorageEvent) {
 
   const record = readSessionRecord()
   if (!record) return
-  debugSession('Analytics session storage event received', {record})
   reconcileSessionRecord(record)
 }
 
 function onAppStateChanged(nextAppState: AppStateStatus) {
   const now = Date.now()
-  const previousAppState = currentAppState
-
-  debugSession('Analytics session app state changed', {
-    record: sessionRecord,
-    previousAppState,
-    nextAppState,
-  })
 
   if (nextAppState === 'active') {
     const record = resolveSessionForActivation(now)
@@ -221,19 +160,11 @@ function onAppStateChanged(nextAppState: AppStateStatus) {
 function onPageHide() {
   if (currentAppState !== 'active') return
 
-  debugSession('Analytics session page hidden', {
-    appState: currentAppState,
-    record: sessionRecord,
-  })
   persistInactivityStart()
   currentAppState = 'background'
 }
 
 function startCoordinator() {
-  debugSession('Analytics session coordinator started', {
-    appState: currentAppState,
-    record: sessionRecord,
-  })
   runtimeWindow.addEventListener('storage', onSessionRecordStorageChanged)
   runtimeWindow.addEventListener('pagehide', onPageHide)
   const persistedRecord = readSessionRecord()
@@ -248,10 +179,6 @@ function startCoordinator() {
 }
 
 function stopCoordinator() {
-  debugSession('Analytics session coordinator stopped', {
-    appState: currentAppState,
-    record: sessionRecord,
-  })
   runtimeWindow.removeEventListener('storage', onSessionRecordStorageChanged)
   runtimeWindow.removeEventListener('pagehide', onPageHide)
   appStateSubscription?.remove()
