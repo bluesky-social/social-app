@@ -90,6 +90,8 @@ appId: xyz.blueskyweb.app
 - pressKey: Enter
 - tapOn: "Add user to list"
 - swipe:
+    from:
+      text: "Add people to list"
     direction: DOWN
 - assertVisible:
     id: "profileCard-bob.test-link"

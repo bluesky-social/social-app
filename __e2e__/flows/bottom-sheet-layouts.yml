@@ -71,16 +71,21 @@ appId: xyz.blueskyweb.app
     text: "Snap point: Partial"
 - swipe:
     from:
-      id: "bottomSheetMaxHeightSnapPoint"
+      id: "bottomSheetMaxHeightScroll"
     direction: UP
 - assertVisible:
     id: "bottomSheetMaxHeightSnapPoint"
     text: "Snap point: Partial"
-- scrollUntilVisible:
-    element:
-      id: "bottomSheetMaxHeightEnd"
-    direction: DOWN
-    timeout: 30000
+- repeat:
+    times: 5
+    commands:
+      - swipe:
+          from:
+            id: "bottomSheetMaxHeightScroll"
+          direction: UP
+          duration: 500
+- assertVisible:
+    id: "bottomSheetMaxHeightEnd"
 - assertVisible:
     id: "bottomSheetMaxHeightDone"
 - tapOn:

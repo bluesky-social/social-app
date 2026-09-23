@@ -200,7 +200,7 @@ export function Outer({
           testID={testID}
           style={[
             a.relative,
-            {flexShrink: 1},
+            {maxHeight: '100%'},
             snapPoint === BottomSheetSnapPoint.Full && a.flex_1,
           ]}>
           {children}
