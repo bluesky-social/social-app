@@ -382,8 +382,8 @@ msgstr ""
 
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || sanitizeHandle(profile.handle), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || sanitizeHandle(profile.handle), )
-#: src/view/com/util/UserAvatar.tsx:599
-#: src/view/com/util/UserAvatar.tsx:617
+#: src/view/com/util/UserAvatar.tsx:601
+#: src/view/com/util/UserAvatar.tsx:621
 msgid "{0}'s avatar"
 msgstr ""
 
@@ -841,7 +841,7 @@ msgid "+{0}"
 msgstr "+{0}"
 
 #. Indicates the number of additional profiles are in the Starter Pack e.g. +12
-#: src/screens/Search/components/StarterPackCard.tsx:251
+#: src/screens/Search/components/StarterPackCard.tsx:260
 msgid "+{computedTotal}"
 msgstr ""
 
@@ -1574,7 +1574,7 @@ msgstr ""
 msgid "Already have a code?"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:190
+#: src/components/WelcomeModal.tsx:191
 msgid "Already have an account?"
 msgstr ""
 
@@ -1731,8 +1731,8 @@ msgstr "An issue occurred starting the group chat, please try again."
 
 #: src/components/hooks/useFollowMethods.ts:35
 #: src/components/hooks/useFollowMethods.ts:52
-#: src/components/ProfileCard.tsx:512
-#: src/components/ProfileCard.tsx:537
+#: src/components/ProfileCard.tsx:515
+#: src/components/ProfileCard.tsx:540
 #: src/view/com/notifications/NotificationFeedItem.tsx:827
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
 msgid "An issue occurred, please try again."
@@ -2531,7 +2531,7 @@ msgstr ""
 #: src/components/LabelingServiceCard/index.tsx:62
 #: src/components/moderation/ReportDialog/index.tsx:1092
 #: src/screens/Messages/JoinRequest.tsx:185
-#: src/screens/Search/components/StarterPackCard.tsx:105
+#: src/screens/Search/components/StarterPackCard.tsx:114
 #: src/screens/Search/Explore.tsx:961
 msgid "By {0}"
 msgstr ""
@@ -2574,7 +2574,7 @@ msgstr ""
 msgid "By creating an account you agree to the <0>Terms of Service</0>."
 msgstr ""
 
-#: src/screens/Search/components/StarterPackCard.tsx:104
+#: src/screens/Search/components/StarterPackCard.tsx:113
 msgid "By you"
 msgstr ""
 
@@ -3118,8 +3118,8 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/components/Dialog/index.web.tsx:137
-#: src/components/Dialog/index.web.tsx:351
+#: src/components/Dialog/index.web.tsx:139
+#: src/components/Dialog/index.web.tsx:353
 msgid "Close active dialog"
 msgstr ""
 
@@ -3153,8 +3153,8 @@ msgstr ""
 msgid "Close image"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:73
-#: src/components/Lightbox/Lightbox.web.tsx:334
+#: src/components/Lightbox/Lightbox.web.tsx:74
+#: src/components/Lightbox/Lightbox.web.tsx:335
 msgid "Close image viewer"
 msgstr ""
 
@@ -3181,7 +3181,7 @@ msgstr "Close the incoming requests banner"
 msgid "Close this dialog"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:215
+#: src/components/WelcomeModal.tsx:216
 msgid "Close welcome modal"
 msgstr ""
 
@@ -3727,8 +3727,8 @@ msgstr ""
 msgid "Create a Starter Pack for me"
 msgstr "Create a Starter Pack for me"
 
-#: src/components/WelcomeModal.tsx:156
-#: src/components/WelcomeModal.tsx:164
+#: src/components/WelcomeModal.tsx:157
+#: src/components/WelcomeModal.tsx:165
 #: src/screens/Messages/JoinRequest.tsx:318
 #: src/screens/Signup/index.tsx:139
 #: src/view/com/auth/SplashScreen.tsx:108
@@ -4340,8 +4340,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/Lightbox/Lightbox.web.tsx:312
-#: src/components/Lightbox/Lightbox.web.tsx:324
+#: src/components/Lightbox/Lightbox.web.tsx:313
+#: src/components/Lightbox/Lightbox.web.tsx:325
 msgid "Download image"
 msgstr "Download image"
 
@@ -4436,7 +4436,7 @@ msgctxt "action"
 msgid "Edit"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:464
+#: src/view/com/util/UserAvatar.tsx:465
 #: src/view/com/util/UserBanner.tsx:132
 msgid "Edit avatar"
 msgstr ""
@@ -4845,7 +4845,7 @@ msgid "Exit fullscreen"
 msgstr ""
 
 #: src/components/Lightbox/chrome/Footer.tsx:69
-#: src/components/Lightbox/Lightbox.web.tsx:245
+#: src/components/Lightbox/Lightbox.web.tsx:246
 msgid "Expand alt text"
 msgstr ""
 
@@ -4911,8 +4911,8 @@ msgstr ""
 msgid "Explore"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:169
-#: src/components/WelcomeModal.tsx:178
+#: src/components/WelcomeModal.tsx:170
+#: src/components/WelcomeModal.tsx:179
 msgid "Explore the app"
 msgstr ""
 
@@ -4986,7 +4986,7 @@ msgstr "Failed to add to Starter Pack"
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:302
+#: src/components/Lightbox/Lightbox.web.tsx:303
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
 #: src/screens/Search/Shell.tsx:513
 msgid "Failed to copy link"
@@ -5203,7 +5203,7 @@ msgstr ""
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:319
+#: src/components/Lightbox/Lightbox.web.tsx:320
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -5520,7 +5520,7 @@ msgid "Focus the search field"
 msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
-#: src/components/ProfileCard.tsx:553
+#: src/components/ProfileCard.tsx:556
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
@@ -5580,7 +5580,7 @@ msgid "Follow all accounts"
 msgstr ""
 
 #. User is not following this account, click to follow back
-#: src/components/ProfileCard.tsx:549
+#: src/components/ProfileCard.tsx:552
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:413
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
@@ -5636,7 +5636,7 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
-#: src/components/ProfileCard.tsx:544
+#: src/components/ProfileCard.tsx:547
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
@@ -5657,7 +5657,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
-#: src/components/ProfileCard.tsx:498
+#: src/components/ProfileCard.tsx:501
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:250
 #: src/view/com/notifications/NotificationFeedItem.tsx:820
 msgid "Following {0}"
@@ -5716,7 +5716,7 @@ msgstr ""
 
 #: src/components/ProgressGuide/FollowDialog.tsx:131
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:353
-#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:87
+#: src/screens/Search/modules/ExploreSuggestedAccounts.tsx:88
 msgid "For You"
 msgstr ""
 
@@ -6487,7 +6487,7 @@ msgstr ""
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:246
+#: src/components/Lightbox/Lightbox.web.tsx:247
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr ""
 
@@ -6555,7 +6555,7 @@ msgstr "Image {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:261
+#: src/components/Lightbox/Lightbox.web.tsx:262
 msgid "Image {0} of {1}"
 msgstr ""
 
@@ -6590,18 +6590,18 @@ msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:72
-#: src/components/Lightbox/Lightbox.web.tsx:265
-#: src/components/Lightbox/Lightbox.web.tsx:273
+#: src/components/Lightbox/Lightbox.web.tsx:266
+#: src/components/Lightbox/Lightbox.web.tsx:274
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/Lightbox/Lightbox.web.tsx:316
+#: src/components/Lightbox/Lightbox.web.tsx:317
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:82
+#: src/components/Lightbox/Lightbox.web.tsx:83
 msgid "Image viewer"
 msgstr ""
 
@@ -7286,7 +7286,7 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:300
+#: src/components/Lightbox/Lightbox.web.tsx:301
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
 
@@ -8222,7 +8222,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:218
+#: src/components/Lightbox/Lightbox.web.tsx:219
 msgid "Next image"
 msgstr ""
 
@@ -8323,7 +8323,7 @@ msgstr ""
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( displayNameOrHandle, moderation.ui('displayName'), )
 #. placeholder {0}: sanitizeDisplayName( profile.displayName || profile.handle, )
-#: src/components/ProfileCard.tsx:526
+#: src/components/ProfileCard.tsx:529
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:279
 #: src/view/com/notifications/NotificationFeedItem.tsx:841
 msgid "No longer following {0}"
@@ -8829,8 +8829,8 @@ msgstr ""
 msgid "Open group chat"
 msgstr "Open group chat"
 
-#: src/components/dms/MessagesListHeader.tsx:167
-#: src/components/dms/MessagesListHeader.tsx:203
+#: src/components/dms/MessagesListHeader.tsx:168
+#: src/components/dms/MessagesListHeader.tsx:204
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
@@ -8856,7 +8856,7 @@ msgstr ""
 msgid "Open muted words and tags settings"
 msgstr ""
 
-#: src/screens/Search/components/StarterPackCard.tsx:121
+#: src/screens/Search/components/StarterPackCard.tsx:130
 msgid "Open pack"
 msgstr ""
 
@@ -8984,7 +8984,7 @@ msgstr ""
 msgid "Opens link {0}"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:603
+#: src/view/com/util/UserAvatar.tsx:605
 msgid "Opens live status dialog"
 msgstr ""
 
@@ -9017,7 +9017,7 @@ msgstr ""
 msgid "Opens this draft in the composer"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:621
+#: src/view/com/util/UserAvatar.tsx:625
 msgid "Opens this profile"
 msgstr ""
 
@@ -9737,7 +9737,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:197
+#: src/components/Lightbox/Lightbox.web.tsx:198
 msgid "Previous image"
 msgstr ""
 
@@ -9999,11 +9999,11 @@ msgstr ""
 msgid "Read the Bluesky Terms of Service"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:147
+#: src/components/WelcomeModal.tsx:148
 msgid "Real conversations."
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:145
+#: src/components/WelcomeModal.tsx:146
 msgid "Real people."
 msgstr ""
 
@@ -10119,8 +10119,8 @@ msgstr ""
 msgid "Remove attachment"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:523
-#: src/view/com/util/UserAvatar.tsx:526
+#: src/view/com/util/UserAvatar.tsx:524
+#: src/view/com/util/UserAvatar.tsx:527
 msgid "Remove Avatar"
 msgstr ""
 
@@ -11496,8 +11496,8 @@ msgid "Share feedback"
 msgstr "Share feedback"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:281
-#: src/components/Lightbox/Lightbox.web.tsx:307
+#: src/components/Lightbox/Lightbox.web.tsx:282
+#: src/components/Lightbox/Lightbox.web.tsx:308
 msgid "Share image"
 msgstr "Share image"
 
@@ -11725,8 +11725,8 @@ msgstr ""
 
 #: src/components/dialogs/Signin.tsx:98
 #: src/components/dialogs/Signin.tsx:100
-#: src/components/WelcomeModal.tsx:196
-#: src/components/WelcomeModal.tsx:207
+#: src/components/WelcomeModal.tsx:197
+#: src/components/WelcomeModal.tsx:208
 #: src/screens/Hashtag.tsx:233
 #: src/screens/Login/index.tsx:143
 #: src/screens/Login/index.tsx:165
@@ -11877,7 +11877,7 @@ msgstr ""
 msgid "So many thoughts, you should post one"
 msgstr ""
 
-#: src/components/WelcomeModal.tsx:149
+#: src/components/WelcomeModal.tsx:150
 msgid "Social media you control."
 msgstr ""
 
@@ -13827,20 +13827,20 @@ msgstr ""
 msgid "Upload a text file to:"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:494
-#: src/view/com/util/UserAvatar.tsx:497
+#: src/view/com/util/UserAvatar.tsx:495
+#: src/view/com/util/UserAvatar.tsx:498
 #: src/view/com/util/UserBanner.tsx:171
 #: src/view/com/util/UserBanner.tsx:174
 msgid "Upload from Camera"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:511
+#: src/view/com/util/UserAvatar.tsx:512
 #: src/view/com/util/UserBanner.tsx:188
 msgid "Upload from Files"
 msgstr ""
 
-#: src/view/com/util/UserAvatar.tsx:505
-#: src/view/com/util/UserAvatar.tsx:509
+#: src/view/com/util/UserAvatar.tsx:506
+#: src/view/com/util/UserAvatar.tsx:510
 #: src/view/com/util/UserBanner.tsx:182
 #: src/view/com/util/UserBanner.tsx:186
 msgid "Upload from Library"
