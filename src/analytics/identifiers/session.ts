@@ -23,15 +23,6 @@ export function getSessionId() {
   return device.get(['nativeSessionId']) ?? initialSessionId
 }
 
-const listeners = new Set<() => void>()
-let appStateSubscription: ReturnType<typeof onAppStateChange> | undefined
-let storageSubscription:
-  ReturnType<typeof device.addOnValueChangedListener> | undefined
-
-function notifyListeners() {
-  listeners.forEach(listener => listener())
-}
-
 function onAppStateChanged(state: AppStateStatus) {
   if (state === 'active') {
     const lastEvent = device.get(['nativeSessionIdLastEventAt'])
@@ -42,35 +33,54 @@ function onAppStateChanged(state: AppStateStatus) {
   device.set(['nativeSessionIdLastEventAt'], Date.now())
 }
 
-function startCoordinator() {
-  storageSubscription = device.addOnValueChangedListener(
-    ['nativeSessionId'],
-    notifyListeners,
-  )
-  appStateSubscription = onAppStateChange(onAppStateChanged)
-}
+class SessionStore {
+  private listeners = new Set<() => void>()
+  private appStateSubscription: ReturnType<typeof onAppStateChange> | undefined
+  private storageSubscription:
+    ReturnType<typeof device.addOnValueChangedListener> | undefined
 
-function stopCoordinator() {
-  storageSubscription?.remove()
-  storageSubscription = undefined
-  appStateSubscription?.remove()
-  appStateSubscription = undefined
-}
+  getSnapshot = getSessionId
 
-export function subscribeToSessionId(listener: () => void) {
-  listeners.add(listener)
-  if (listeners.size === 1) {
-    startCoordinator()
-  }
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener)
+    if (this.listeners.size === 1) {
+      this.start()
+    }
 
-  return () => {
-    listeners.delete(listener)
-    if (listeners.size === 0) {
-      stopCoordinator()
+    return () => {
+      this.listeners.delete(listener)
+      if (this.listeners.size === 0) {
+        this.stop()
+      }
     }
   }
+
+  private notify = () => {
+    this.listeners.forEach(listener => listener())
+  }
+
+  private start() {
+    this.storageSubscription = device.addOnValueChangedListener(
+      ['nativeSessionId'],
+      this.notify,
+    )
+    this.appStateSubscription = onAppStateChange(onAppStateChanged)
+  }
+
+  private stop() {
+    this.storageSubscription?.remove()
+    this.storageSubscription = undefined
+    this.appStateSubscription?.remove()
+    this.appStateSubscription = undefined
+  }
+}
+
+const store = new SessionStore()
+
+export function subscribeToSessionId(listener: () => void) {
+  return store.subscribe(listener)
 }
 
 export function useSessionId() {
-  return useSyncExternalStore(subscribeToSessionId, getSessionId)
+  return useSyncExternalStore(store.subscribe, store.getSnapshot)
 }
