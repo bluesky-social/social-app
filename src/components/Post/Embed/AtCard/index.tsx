@@ -32,7 +32,9 @@ export function AtCard({
   const {t: l} = useLingui()
   const {gtPhone} = useBreakpoints()
   const playHaptic = useHaptics()
-  const {data: authorProfile} = useProfileQuery({did: authorDid})
+  const {data: authorProfile, isError: authorLookupFailed} = useProfileQuery({
+    did: authorDid,
+  })
   const provider = getAtCardProvider(view.uri)
   if (!provider) return null
 
@@ -118,7 +120,7 @@ export function AtCard({
                 a.pointer_events_none,
                 gtPhone && a.flex_1,
               ]}>
-              {authorDid ? (
+              {authorDid && (authorProfile || !authorLookupFailed) ? (
                 <>
                   <UserAvatar
                     avatar={authorProfile?.avatar}
