@@ -444,7 +444,7 @@ describe('web session lifecycle', () => {
   })
 
   it('captures inactivity that begins before the first consumer mounts', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     mockCurrentAppStates.set('tab-a', 'background')
     const hook = renderHook(() => useSessionId())

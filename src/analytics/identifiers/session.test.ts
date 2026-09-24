@@ -318,7 +318,7 @@ describe('native session lifecycle', () => {
   })
 
   it('captures inactivity that begins before the first consumer mounts', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     mockCurrentAppState = 'background'
     const hook = renderHook(() => useSessionId())
