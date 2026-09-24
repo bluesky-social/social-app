@@ -24,14 +24,16 @@ export function TimeIndicator({
     return null
   }
 
-  const minutes = Math.floor(time / 60)
-  const seconds = String(time % 60).padStart(2, '0')
+  const roundedTime = Math.round(time)
+  const minutes = Math.floor(roundedTime / 60)
+  const secondsNum = roundedTime % 60
+  const seconds = secondsNum < 10 ? `0${secondsNum}` : `${secondsNum}`
 
   return (
     <View
       pointerEvents="none"
       accessibilityLabel={_(
-        msg`Time remaining: ${plural(Number(time) || 0, {
+        msg`Time remaining: ${plural(roundedTime, {
           one: '# second',
           other: '# seconds',
         })}`,
