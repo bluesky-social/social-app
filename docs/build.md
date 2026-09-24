@@ -1,5 +1,16 @@
 # Build instructions
 
+## Installing yarn
+
+Install [Corepack](https://yarnpkg.com/getting-started/install) with NPM.
+- `npm install -g corepack`
+
+## Installing expo
+
+Install [expo](https://docs.expo.dev/more/expo-cli/#installation) with Yarn and then install dependencies.
+- `yarn add expo`
+- `npx expo install`
+
 ## Running Web App
 
 - `pnpm install`
