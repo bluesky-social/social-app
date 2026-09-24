@@ -14,6 +14,8 @@ import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {getAtCardProvider} from './providers'
 
+const ATTIE_ACCOUNT_DID = 'did:plc:v7lt2fu7igydcjszoexxrvl2'
+
 /** A whole-card link for AT-aware services, starting with Attie. */
 export function AtCard({
   view,
@@ -35,6 +37,17 @@ export function AtCard({
   const {data: authorProfile, isError: authorLookupFailed} = useProfileQuery({
     did: authorDid,
   })
+  const showAttieAccount = !authorDid || (authorLookupFailed && !authorProfile)
+  const {data: attieProfile} = useProfileQuery({
+    did: showAttieAccount ? ATTIE_ACCOUNT_DID : undefined,
+  })
+  const displayedProfile = showAttieAccount ? attieProfile : authorProfile
+  const displayedName = showAttieAccount
+    ? displayedProfile?.displayName || 'Attie'
+    : displayedProfile?.displayName || displayedProfile?.handle || authorDid
+  const displayedHandle = showAttieAccount
+    ? displayedProfile?.handle || 'attie.ai'
+    : displayedProfile?.handle
   const provider = getAtCardProvider(view.uri)
   if (!provider) return null
 
@@ -120,54 +133,33 @@ export function AtCard({
                 a.pointer_events_none,
                 gtPhone && a.flex_1,
               ]}>
-              {authorDid && (authorProfile || !authorLookupFailed) ? (
-                <>
-                  <UserAvatar
-                    avatar={authorProfile?.avatar}
-                    size={32}
-                    type="user"
-                  />
-                  <View style={[a.flex_1, a.gap_2xs]}>
-                    <Text
-                      emoji
-                      numberOfLines={1}
-                      style={[
-                        a.text_sm,
-                        a.font_medium,
-                        a.leading_tight,
-                        t.atoms.text,
-                      ]}>
-                      {authorProfile?.displayName ||
-                        authorProfile?.handle ||
-                        authorDid}
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      style={[
-                        a.text_xs,
-                        a.leading_tight,
-                        t.atoms.text_contrast_medium,
-                      ]}>
-                      {authorProfile?.handle
-                        ? l`@${authorProfile.handle}`
-                        : authorDid}
-                    </Text>
-                  </View>
-                </>
-              ) : (
-                <>
-                  <provider.Icon size="md" />
-                  <Text
-                    style={[
-                      a.text_sm,
-                      a.font_medium,
-                      a.leading_tight,
-                      t.atoms.text,
-                    ]}>
-                    {provider.name}
-                  </Text>
-                </>
-              )}
+              <UserAvatar
+                avatar={displayedProfile?.avatar}
+                size={32}
+                type="user"
+              />
+              <View style={[a.flex_1, a.gap_2xs]}>
+                <Text
+                  emoji
+                  numberOfLines={1}
+                  style={[
+                    a.text_sm,
+                    a.font_medium,
+                    a.leading_tight,
+                    t.atoms.text,
+                  ]}>
+                  {displayedName}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={[
+                    a.text_xs,
+                    a.leading_tight,
+                    t.atoms.text_contrast_medium,
+                  ]}>
+                  {displayedHandle ? l`@${displayedHandle}` : authorDid}
+                </Text>
+              </View>
             </View>
 
             {/* The CTA is visual; the enclosing link is the single interactive target. */}
