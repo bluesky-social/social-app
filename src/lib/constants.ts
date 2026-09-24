@@ -115,11 +115,9 @@ export const STAGING_LINK_META_PROXY =
 
 export const PROD_LINK_META_PROXY = 'https://cardyb.bsky.app/v1/extract?url='
 
-const DEV_LINK_META_PROXY = process.env.EXPO_PUBLIC_LINK_META_PROXY
-
 export function LINK_META_PROXY(_serviceUrl: string) {
   if (IS_DEV) {
-    return DEV_LINK_META_PROXY || STAGING_LINK_META_PROXY
+    return STAGING_LINK_META_PROXY
   }
 
   return PROD_LINK_META_PROXY
