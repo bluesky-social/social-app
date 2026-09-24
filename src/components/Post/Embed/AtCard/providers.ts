@@ -1,4 +1,4 @@
-import {Attie, AttieCloud} from '#/components/icons/community/Attie'
+import {Attie_Filled_Corner0_Rounded as Attie} from '#/components/icons/Attie'
 import {isAttieUrl} from './attie'
 
 /** Provider-specific branding and matching for the shared AT embed card. */
@@ -7,7 +7,7 @@ const providers = [
     name: 'Attie',
     matches: isAttieUrl,
     Icon: Attie,
-    CtaIcon: AttieCloud,
+    CtaIcon: Attie,
     backgroundColor: '#6338ff',
     hoverColor: '#552fe0',
   },
