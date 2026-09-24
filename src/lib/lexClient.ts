@@ -1,13 +1,43 @@
 import {
   type Agent,
   type AgentOptions,
+  buildAgent,
   Client,
   type ClientOptions,
 } from '@atproto/lex'
 
+import {getDeviceId, getSessionId} from '#/analytics/identifiers'
+
+/**
+ * Adds the current analytics identifiers to every AT Protocol request. Values
+ * are read at dispatch time so session rotation does not require rebuilding
+ * long-lived clients.
+ */
+function withAtprotoIdentifiers(agentOptions: Agent | AgentOptions): Agent {
+  const agent = buildAgent(agentOptions)
+  return {
+    get did() {
+      return agent.did
+    },
+    fetchHandler(path, init) {
+      const headers = new Headers(init.headers)
+      const deviceId = getDeviceId()
+      const sessionId = getSessionId()
+      if (deviceId) {
+        headers.set('x-atproto-device-id', deviceId)
+      }
+      if (sessionId) {
+        headers.set('x-atproto-session-id', sessionId)
+      }
+      return agent.fetchHandler(path, {...init, headers})
+    },
+  }
+}
+
 /**
  * App-standard factory for lex {@link Client}s. Use this instead of `new
- * Client(...)` so every client shares the same lenient response processing.
+ * Client(...)` so every client shares the same lenient response processing and
+ * current analytics identifiers.
  *
  * lex-client defaults to strict Lex processing, which rejects responses
  * containing the LEGACY blob reference format (objects with `cid` and
@@ -22,7 +52,10 @@ export function createLexClient(
   agent: Agent | AgentOptions,
   options?: ClientOptions,
 ): Client {
-  return new Client(agent, {strictResponseProcessing: false, ...options})
+  return new Client(withAtprotoIdentifiers(agent), {
+    strictResponseProcessing: false,
+    ...options,
+  })
 }
 
 /**
