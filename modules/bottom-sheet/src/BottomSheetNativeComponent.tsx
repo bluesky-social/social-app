@@ -1,7 +1,5 @@
 import {Component, createRef} from 'react'
 import {
-  Dimensions,
-  type LayoutChangeEvent,
   type NativeSyntheticEvent,
   Platform,
   type StyleProp,
@@ -30,16 +28,10 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
-const IS_IOS15 =
-  Platform.OS === 'ios' &&
-  // semvar - can be 3 segments, so can't use Number(Platform.Version)
-  Number(Platform.Version.split('.').at(0)) < 16
-
 export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
-    viewHeight?: number
   }
 > {
   ref = createRef<any>()
@@ -86,36 +78,12 @@ export class BottomSheetNativeComponent extends Component<
       return null
     }
 
-    let extraStyles
-    if (IS_IOS15 && this.state.viewHeight) {
-      const screenHeight = Dimensions.get('screen').height
-      const {viewHeight} = this.state
-      const cornerRadius = this.props.cornerRadius ?? 0
-      if (viewHeight < screenHeight / 2) {
-        extraStyles = {
-          height: viewHeight,
-          marginTop: screenHeight / 2 - viewHeight,
-          borderTopLeftRadius: cornerRadius,
-          borderTopRightRadius: cornerRadius,
-        }
-      }
-    }
-
     return (
       <Portal>
         <BottomSheetNativeComponentInner
           {...this.props}
           nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
-          extraStyles={extraStyles}
-          onLayout={
-            IS_IOS15
-              ? e => {
-                  const {height} = e.nativeEvent.layout
-                  this.setState({viewHeight: height})
-                }
-              : undefined
-          }
         />
       </Portal>
     )
@@ -126,18 +94,14 @@ function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
   maxHeight,
-  onLayout,
   onStateChange,
   nativeViewRef,
-  extraStyles,
   ...rest
 }: BottomSheetViewProps & {
-  extraStyles?: StyleProp<ViewStyle>
   onStateChange: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
   nativeViewRef: React.RefObject<View>
-  onLayout?: (event: LayoutChangeEvent) => void
 }) {
   const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
@@ -191,11 +155,8 @@ function BottomSheetNativeComponentInner({
             borderTopRightRadius: cornerRadius,
             overflow: 'hidden',
           },
-          extraStyles,
         ]}>
-        <View
-          onLayout={onLayout}
-          style={isHeightConstrained ? {flex: 1} : undefined}>
+        <View style={isHeightConstrained ? {flex: 1} : undefined}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

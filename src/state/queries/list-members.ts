@@ -8,6 +8,7 @@ import {
   useQuery,
 } from '@tanstack/react-query'
 
+import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {STALE} from '#/state/queries'
 import {useAppviewClient} from '#/state/session'
 import {app} from '#/lexicons'
@@ -58,22 +59,29 @@ export function useAllListMembersQuery(uri?: string) {
 }
 
 export async function getAllListMembers(client: Client, uri: string) {
-  let hasMore = true
   let cursor: string | undefined
   const listItems: app.bsky.graph.defs.ListItemView[] = []
-  // We want to cap this at 6 pages, just for anything weird happening with the api
-  let i = 0
-  while (hasMore && i < 6) {
+  const seenCursors = new Set<string>()
+
+  do {
+    const remaining = STARTER_PACK_MAX_SIZE - listItems.length
     const res = await client.call(app.bsky.graph.getList, {
       list: uri as AtUriString,
-      limit: 50,
+      limit: Math.min(100, remaining),
       cursor,
     })
-    listItems.push(...res.items)
-    hasMore = Boolean(res.cursor)
+    listItems.push(...res.items.slice(0, remaining))
     cursor = res.cursor
-    i++
-  }
+    if (
+      cursor &&
+      listItems.length < STARTER_PACK_MAX_SIZE &&
+      seenCursors.has(cursor)
+    ) {
+      throw new Error('Repeated cursor while fetching list members')
+    }
+    if (cursor) seenCursors.add(cursor)
+  } while (cursor && listItems.length < STARTER_PACK_MAX_SIZE)
+
   return listItems
 }
 

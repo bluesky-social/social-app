@@ -46,38 +46,21 @@ class SheetViewController: UIViewController {
 
     let adjustedHeight = contentHeight - bottomSafeAreaAdjustment
 
-    if #available(iOS 16.0, *) {
-      if contentHeight > screenHeight - 100 {
-        sheet.detents = [
-          .large()
-        ]
-        sheet.selectedDetentIdentifier = .large
-      } else {
-        sheet.detents = [
-          .custom { _ in
-            return adjustedHeight
-          }
-        ]
-        if !preventExpansion {
-          sheet.detents.append(.large())
-        }
-        sheet.selectedDetentIdentifier = .medium
-      }
+    if contentHeight > screenHeight - 100 {
+      sheet.detents = [
+        .large()
+      ]
+      sheet.selectedDetentIdentifier = .large
     } else {
-      if contentHeight > screenHeight / 2 {
-        sheet.detents = [
-          .large()
-        ]
-        sheet.selectedDetentIdentifier = .large
-      } else {
-        sheet.detents = [
-          .medium()
-        ]
-        if !preventExpansion {
-          sheet.detents.append(.large())
+      sheet.detents = [
+        .custom { _ in
+          return adjustedHeight
         }
-        sheet.selectedDetentIdentifier = .medium
+      ]
+      if !preventExpansion {
+        sheet.detents.append(.large())
       }
+      sheet.selectedDetentIdentifier = .medium
     }
   }
 
@@ -86,11 +69,9 @@ class SheetViewController: UIViewController {
       // Capture `self` weakly to prevent retain cycles.
       // Also, capture `sheet` weakly to avoid potential strong references held by animateChanges.
       sheet.animateChanges { [weak self, weak sheet] in
-          guard let weakSelf = self, let weakSheet = sheet else { return }
-          weakSelf.setDetents(contentHeight: contentHeight, preventExpansion: preventExpansion)
-          if #available(iOS 16.0, *) {
-              weakSheet.invalidateDetents()
-          }
+        guard let weakSelf = self, let weakSheet = sheet else { return }
+        weakSelf.setDetents(contentHeight: contentHeight, preventExpansion: preventExpansion)
+        weakSheet.invalidateDetents()
       }
     }
   }

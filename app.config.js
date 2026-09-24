@@ -217,6 +217,7 @@ module.exports = function (_config) {
         ],
       },
       web: {
+        bundler: 'metro',
         favicon: './assets/favicon.png',
       },
       updates: {
@@ -254,12 +255,25 @@ module.exports = function (_config) {
               : {}),
           },
         ],
+        'expo-asset',
+        'expo-sharing',
         'expo-video',
         'expo-localization',
         'expo-web-browser',
         [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
+        ],
+        /*
+         * Expo runs Gradle mods in reverse registration order. Keep Bitdrift
+         * before Sentry so its plugins block is prepended after Sentry's apply
+         * statement and remains at the top, as required by Gradle.
+         */
+        [
+          '@bitdrift/react-native',
+          {
+            networkInstrumentation: true,
+          },
         ],
         ...(USE_SENTRY
           ? [
@@ -269,6 +283,9 @@ module.exports = function (_config) {
                   organization: 'blueskyweb',
                   project: 'app',
                   url: 'https://sentry.io',
+                  experimental_android: {
+                    enableAndroidGradlePlugin: true,
+                  },
                 },
               ]),
             ]
@@ -294,6 +311,7 @@ module.exports = function (_config) {
               targetSdkVersion: 36,
               buildToolsVersion: '36.0.0',
               buildReactNativeFromSource: IS_PRODUCTION,
+              enableMinifyInReleaseBuilds: true,
             },
           },
         ],
@@ -303,12 +321,6 @@ module.exports = function (_config) {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
-          },
-        ],
-        [
-          '@bitdrift/react-native',
-          {
-            networkInstrumentation: true,
           },
         ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
@@ -476,6 +488,9 @@ module.exports = function (_config) {
           },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
+      },
+      experiments: {
+        baseUrl: '/static',
       },
     },
   }

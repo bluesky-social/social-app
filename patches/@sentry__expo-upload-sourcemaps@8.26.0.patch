@@ -1,8 +1,8 @@
 diff --git a/cli.js b/cli.js
-index 2a2e6afbd46a6a5182918373d71853193945ff31..44e5888e869003438fc7ef4931b9992f2896a23f 100755
+index d825b6457105d7526c9099d03d8452f9eb87bf63..fc89a9d9a4ca8b8e3b55c9c7933084ac02e762d9 100755
 --- a/cli.js
 +++ b/cli.js
-@@ -304,6 +304,9 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
+@@ -306,6 +306,9 @@ for (const [assetGroupName, assets] of Object.entries(groupedAssets)) {
    if (isHermes) {
      args.push('--debug-id-reference');
    }

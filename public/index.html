@@ -16,10 +16,11 @@
     -->
     <link rel="preconnect" href="https://bsky.social">
     <link rel="preconnect" href="https://go.bsky.app">
-    <title>%WEB_TITLE%</title>
+    <!-- let js set by leaving empty -->
+    <title></title>
+    <meta name="description" content="Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again." />
 
-    <link rel="preload" as="font" type="font/woff2" href="/static/media/InterVariable.c504db5c06caaf7cdfba.woff2" crossorigin>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preload" as="font" type="font/woff2" href="/assets/assets/fonts/inter/InterVariable.woff2" crossorigin>
 
     <style>
       /**
@@ -31,14 +32,14 @@
        */
       @font-face {
         font-family: 'InterVariable';
-        src: url(/static/media/InterVariable.c504db5c06caaf7cdfba.woff2) format('woff2');
+        src: url(/assets/assets/fonts/inter/InterVariable.woff2) format('woff2');
         font-weight: 300 1000;
         font-style: normal;
         font-display: swap;
       }
       @font-face {
         font-family: 'InterVariableItalic';
-        src: url(/static/media/InterVariable-Italic.01dcbad1bac635f9c9cd.woff2) format('woff2');
+        src: url(/assets/assets/fonts/inter/InterVariable-Italic.woff2) format('woff2');
         font-weight: 300 1000;
         font-style: italic;
         font-display: swap;
@@ -165,25 +166,29 @@
             width: 80%;
           "
         >
-          <p lang="en">Oh no! It looks like JavaScript is not enabled in your browser.</p>
-          <p lang="en" style="margin: 20px 0;">
-            <button
-              type="submit"
-              style="
-                background-color: #4630eb;
-                border-radius: 100px;
-                border: none;
-                box-shadow: none;
-                color: #fff;
-                cursor: pointer;
-                font-weight: bold;
-                line-height: 20px;
-                padding: 6px 16px;
-              "
-            >
-              Reload
-            </button>
-          </p>
+          <h1 lang="en">Bluesky</h1>
+          <p lang="en">Social media as it should be. Find your community among millions of users, unleash your creativity, and have some fun again.</p>
+          <div data-nosnippet>
+            <p lang="en">Enable JavaScript to use Bluesky.</p>
+            <p lang="en" style="margin: 20px 0;">
+              <button
+                type="submit"
+                style="
+                  background-color: #4630eb;
+                  border-radius: 100px;
+                  border: none;
+                  box-shadow: none;
+                  color: #fff;
+                  cursor: pointer;
+                  font-weight: bold;
+                  line-height: 20px;
+                  padding: 6px 16px;
+                "
+              >
+                Reload
+              </button>
+            </p>
+          </div>
         </div>
       </form>
     </noscript>

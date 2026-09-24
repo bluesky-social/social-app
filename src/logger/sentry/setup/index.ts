@@ -1,15 +1,18 @@
 import {getGlobalScope, init} from '@sentry/react-native'
 
+import {featureFlagsIntegration} from '#/logger/sentry/featureFlags'
 import * as env from '#/env'
 
 init({
   enabled: !env.IS_DEV && !!env.SENTRY_DSN,
   enableAutoSessionTracking: false,
+  enableTombstone: true,
   dsn: env.SENTRY_DSN,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
   release: env.RELEASE_VERSION,
+  integrations: [featureFlagsIntegration],
   ignoreErrors: [
     /*
      * Unknown internals errors

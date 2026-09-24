@@ -1,0 +1,112 @@
+---
+name: Nightly Changelog
+
+on:
+  schedule:
+    - cron: "10 2 * * *" # run at 2:10 AM UTC, after the nightly i18n job
+  workflow_dispatch:
+
+# Only reads the repo and its artifacts; posting to Slack uses the webhook secret
+permissions:
+  contents: read
+
+jobs:
+  changelog:
+    name: Post changelog to QA team
+    if: github.repository == 'bluesky-social/social-app'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      # The range covers commits since the previous post, whose commit SHA is stored as a
+      # "nightly-build-commit" artifact. The name is kept from the retired nightly build
+      # workflow so the first run of this one continues from where that left off. The
+      # marker is advanced at the end of the job, so a failed post's commits roll into the
+      # next successful one rather than being silently dropped.
+      - name: 📝 Generate changelog
+        id: notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          prev=""
+          url=$(gh api \
+            "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=nightly-build-commit&per_page=100" \
+            --jq "[.artifacts[] | select(
+              .expired == false and
+              .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
+            )] | max_by(.created_at) | .archive_download_url" \
+            2>/dev/null || true)
+          if [ -n "$url" ] && [ "$url" != "null" ]; then
+            if curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o marker.zip "$url" \
+              && unzip -o -q marker.zip; then
+              prev=$(tr -d '[:space:]' < nightly-build-commit.txt 2>/dev/null || true)
+            fi
+            rm -f marker.zip nightly-build-commit.txt
+          fi
+
+          if [ -n "$prev" ] && git cat-file -e "${prev}^{commit}" 2>/dev/null; then
+            echo "Generating changelog since previous post: $prev"
+            range_args=("${prev}..HEAD")
+          else
+            echo "No reachable previous marker; falling back to the last 24 hours."
+            range_args=(--since="24 hours ago" HEAD)
+          fi
+          notes=$(git log --no-merges --pretty=format:'- %s' "${range_args[@]}" | head -n 50)
+          if [ -z "$notes" ]; then
+            echo "No new commits; nothing to post."
+            echo "has-changes=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Cap the whole changelog to keep the Slack message a reasonable size.
+          # head -c caps the combined stream; cut -c would only cap each line independently.
+          notes=$(printf '%s' "$notes" | head -c 3900)
+          {
+            echo "has-changes=true"
+            echo "notes<<NOTES_EOF"
+            echo "$notes"
+            echo "NOTES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 📝 Build Slack payload
+        id: payload
+        if: ${{ steps.notes.outputs.has-changes == 'true' }}
+        env:
+          NOTES: ${{ steps.notes.outputs.notes }}
+        run: |
+          text="*What changed on main since yesterday*
+
+          ${NOTES}"
+          payload=$(jq -n --arg text "$text" '{text: $text}')
+          {
+            echo "payload<<PAYLOAD_EOF"
+            echo "$payload"
+            echo "PAYLOAD_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: 🔔 Notify Slack
+        if: ${{ steps.notes.outputs.has-changes == 'true' }}
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
+        with:
+          webhook: ${{ secrets.NIGHTLY_BUILDS_SLACK_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload: ${{ steps.payload.outputs.payload }}
+
+      # Steps run in order, so a failed Slack post stops the job before the marker moves.
+      - name: ✏️ Write commit marker
+        env:
+          GITHUB_SHA: ${{ github.sha }}
+        run: echo "$GITHUB_SHA" > nightly-build-commit.txt
+
+      - name: 🚀 Upload commit marker
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: nightly-build-commit
+          path: nightly-build-commit.txt
+          retention-days: 90

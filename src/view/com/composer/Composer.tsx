@@ -308,11 +308,10 @@ export const ComposePost = ({
   >(null)
 
   /**
-   * A temporary local reference to a language suggestion that the user has
-   * accepted. This overrides the global post language preference, but is not
-   * stored permanently.
+   * A manual selection or accepted suggestion applies only to this composer
+   * session, without changing the primary language preference.
    */
-  const [acceptedLanguageSuggestion, setAcceptedLanguageSuggestion] = useState<
+  const [selectedPostLanguage, setSelectedPostLanguage] = useState<
     string | null
   >(null)
 
@@ -324,24 +323,23 @@ export const ComposePost = ({
   )
 
   /**
-   * The currently selected languages of the post. Prefer local temporary
-   * language suggestion over global lang prefs, if available.
+   * Default to the primary language, ignoring the legacy sticky post language
+   * preference. Manual selections and accepted suggestions apply locally.
    */
   const currentLanguages = useMemo(
     () =>
-      acceptedLanguageSuggestion
-        ? [acceptedLanguageSuggestion]
-        : toPostLanguages(langPrefs.postLanguage),
-    [acceptedLanguageSuggestion, langPrefs.postLanguage],
+      selectedPostLanguage
+        ? toPostLanguages(selectedPostLanguage)
+        : [langPrefs.primaryLanguage],
+    [selectedPostLanguage, langPrefs.primaryLanguage],
   )
 
   /**
    * When the user selects a language from the composer language selector,
-   * clear any temporary language suggestions they may have selected
-   * previously, and any we might try to suggest to them.
+   * override the current selection and clear reply language suggestions.
    */
-  const onSelectLanguage = () => {
-    setAcceptedLanguageSuggestion(null)
+  const onSelectLanguage = (language: string) => {
+    setSelectedPostLanguage(language)
     setReplyToLanguages([])
   }
 
@@ -1209,7 +1207,7 @@ export const ComposePost = ({
         originalLocalRefs: composerState.originalLocalRefs,
       })
     }
-    setLangPrefs.savePostLanguageToHistory()
+    setLangPrefs.savePostLanguageToHistory(fromPostLanguages(currentLanguages))
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
       void whenAppViewReady(client, initQuote.uri, res => {
@@ -1384,7 +1382,7 @@ export const ComposePost = ({
         text={activePost.richtext.text}
         replyToLanguages={replyToLanguages}
         currentLanguages={currentLanguages}
-        onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
+        onAcceptSuggestedLanguage={setSelectedPostLanguage}
         onNudge={onLanguageNudge}
       />
       <ComposerPills
@@ -2141,7 +2139,7 @@ function ComposerFooter({
   ) => void | Promise<void>
   onAddPost: () => void
   currentLanguages: string[]
-  onSelectLanguage?: (language: string) => void
+  onSelectLanguage: (language: string) => void
   languageNudgeAt: number
   openGallery?: boolean
   textInputRef: React.RefObject<TextInputRef | null>
