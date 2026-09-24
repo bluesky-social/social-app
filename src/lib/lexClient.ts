@@ -8,6 +8,14 @@ import {
 
 import {getDeviceId, getSessionId} from '#/analytics/identifiers'
 
+type CreateLexClientOptions = ClientOptions & {
+  /**
+   * Include the stable device ID and current session ID on every request.
+   * Enable only when the request is bound for a trusted AppView.
+   */
+  includeAtprotoIdentifiers?: boolean
+}
+
 /**
  * Adds the current analytics identifiers to every AT Protocol request. Values
  * are read at dispatch time so session rotation does not require rebuilding
@@ -36,8 +44,7 @@ function withAtprotoIdentifiers(agentOptions: Agent | AgentOptions): Agent {
 
 /**
  * App-standard factory for lex {@link Client}s. Use this instead of `new
- * Client(...)` so every client shares the same lenient response processing and
- * current analytics identifiers.
+ * Client(...)` so every client shares the same lenient response processing.
  *
  * lex-client defaults to strict Lex processing, which rejects responses
  * containing the LEGACY blob reference format (objects with `cid` and
@@ -50,12 +57,16 @@ function withAtprotoIdentifiers(agentOptions: Agent | AgentOptions): Agent {
  */
 export function createLexClient(
   agent: Agent | AgentOptions,
-  options?: ClientOptions,
+  options: CreateLexClientOptions = {},
 ): Client {
-  return new Client(withAtprotoIdentifiers(agent), {
-    strictResponseProcessing: false,
-    ...options,
-  })
+  const {includeAtprotoIdentifiers, ...clientOptions} = options
+  return new Client(
+    includeAtprotoIdentifiers ? withAtprotoIdentifiers(agent) : agent,
+    {
+      strictResponseProcessing: false,
+      ...clientOptions,
+    },
+  )
 }
 
 /**
@@ -74,10 +85,12 @@ export function createLexClient(
  * input, and a typo'd or dead service must not be reported as the app losing
  * network reachability.
  *
- * `appLabelers: null` suppresses the global `Client.appLabelers` static: these
- * are `com.atproto.server` calls to a host the user typed, which have no use
- * for moderation labels, and the header would disclose the app's configured
- * moderation authorities to an arbitrary third-party server.
+ * The default `includeAtprotoIdentifiers: false` keeps stable analytics IDs off
+ * these requests. `appLabelers: null` also suppresses the global
+ * `Client.appLabelers` static: these are `com.atproto.server` calls to a host the
+ * user typed, which have no use for moderation labels, and the header would
+ * disclose the app's configured moderation authorities to an arbitrary
+ * third-party server.
  */
 export function createServiceClient(service: string): Client {
   return createLexClient({service}, {appLabelers: null})

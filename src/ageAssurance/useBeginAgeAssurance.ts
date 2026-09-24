@@ -51,10 +51,13 @@ export function useBeginAgeAssurance() {
        * allowed to preset that header where a session-backed one is not, which
        * also makes the old `refreshJwt = ''` clone unnecessary.
        */
-      const scopedClient = createLexClient({
-        service: APPVIEW,
-        headers: {authorization: `Bearer ${token}`},
-      })
+      const scopedClient = createLexClient(
+        {
+          service: APPVIEW,
+          headers: {authorization: `Bearer ${token}`},
+        },
+        {includeAtprotoIdentifiers: true},
+      )
 
       ax.metric('ageAssurance:api:begin', {
         platform: Platform.OS,

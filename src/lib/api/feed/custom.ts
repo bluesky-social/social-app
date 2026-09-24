@@ -123,9 +123,10 @@ let loggedOutAppviewClient: Client | undefined
  * own failure handling and should not move the app-wide network signal.
  */
 function getLoggedOutAppviewClient(): Client {
-  return (loggedOutAppviewClient ??= createLexClient({
-    service: PUBLIC_APPVIEW,
-  }))
+  return (loggedOutAppviewClient ??= createLexClient(
+    {service: PUBLIC_APPVIEW},
+    {includeAtprotoIdentifiers: true},
+  ))
 }
 
 /*
