@@ -724,7 +724,7 @@ importers:
         version: 2.0.7(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       sonner-native:
         specifier: 0.26.4
-        version: 0.26.4(afdb501343f9d072d6ec3ec12061dda2)
+        version: 0.26.4(dfc691d9c53cf80e0f236d2a3ddd34bd)
       tippy.js:
         specifier: ^6.3.7
         version: 6.3.7
@@ -17956,7 +17956,7 @@ snapshots:
     dependencies:
       atomic-sleep: 1.0.0
 
-  sonner-native@0.26.4(afdb501343f9d072d6ec3ec12061dda2):
+  sonner-native@0.26.4(dfc691d9c53cf80e0f236d2a3ddd34bd):
     dependencies:
       react: 19.2.3
       react-native: 0.86.3(patch_hash=b98fd903a666d35370a478712d555fc967023b6b40a07efe51e90adc04da15d9)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
