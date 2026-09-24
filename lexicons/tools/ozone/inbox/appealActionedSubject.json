@@ -1,0 +1,94 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.appealActionedSubject",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Appeal a moderation action affecting the user's account or content.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subject"],
+          "properties": {
+            "action": {
+              "type": "union",
+              "refs": ["#actionRef", "#labelRef", "#takedownRef"],
+              "closed": true,
+              "description": "Moderation action being appealed."
+            },
+            "subject": {
+              "type": "union",
+              "refs": [
+                "com.atproto.admin.defs#repoRef",
+                "com.atproto.repo.strongRef"
+              ],
+              "description": "Subject being appealed."
+            },
+            "reason": {
+              "type": "string",
+              "maxGraphemes": 2000,
+              "maxLength": 20000,
+              "description": "Optional explanation supplied by the user."
+            },
+            "modTool": {
+              "type": "ref",
+              "ref": "com.atproto.moderation.createReport#modTool"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "tools.ozone.inbox.defs#subjectView"
+        }
+      },
+      "errors": [
+        {
+          "name": "InvalidAppealSubject",
+          "description": "Invalid appeal subject input."
+        },
+        {
+          "name": "AlreadyAppealed",
+          "description": "An active appeal already exists for this action."
+        },
+        {
+          "name": "NotAppealable",
+          "description": "The subject cannot be appealed."
+        },
+        {
+          "name": "AppealWindowExpired",
+          "description": "The appeal window for this action has closed."
+        }
+      ]
+    },
+    "actionRef": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ID of the moderation action being appealed, available via actions in mod inbox."
+        }
+      }
+    },
+    "labelRef": {
+      "type": "object",
+      "required": ["val"],
+      "properties": {
+        "val": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Label being appealed."
+        }
+      }
+    },
+    "takedownRef": {
+      "type": "object",
+      "properties": {}
+    }
+  }
+}
