@@ -1,8 +1,9 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useEffectEvent, useState} from 'react'
 import {Pressable, View} from 'react-native'
 import {ImageBackground} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {FocusGuards, FocusScope} from 'radix-ui/internal'
+import * as FocusGuards from '@radix-ui/react-focus-guards'
+import * as FocusScope from '@radix-ui/react-focus-scope'
 
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
 import {Logo} from '#/view/icons/Logo'
@@ -35,11 +36,14 @@ export function WelcomeModal({control}: WelcomeModalProps) {
     }, 150)
   }
 
+  const onPresented = useEffectEvent(() => {
+    ax.metric('welcomeModal:presented', {})
+  })
+
   useEffect(() => {
     if (control.isOpen) {
-      ax.metric('welcomeModal:presented', {})
+      onPresented()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [control.isOpen])
 
   const onPressCreateAccount = () => {

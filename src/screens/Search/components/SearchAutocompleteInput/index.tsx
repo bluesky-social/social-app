@@ -37,7 +37,7 @@ export function SearchAutocompleteInput({
    * keystroke while the input is still focused.
    */
   const [dismissed, setDismissed] = useState(false)
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
 
   const sift = useSift({
     offset: a.p_sm.padding,

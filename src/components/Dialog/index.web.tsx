@@ -19,7 +19,9 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
+import * as DismissableLayer from '@radix-ui/react-dismissable-layer'
+import * as FocusGuards from '@radix-ui/react-focus-guards'
+import * as FocusScope from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'
@@ -73,12 +75,18 @@ export function Outer({
       setIsOpen(false)
 
       try {
-        if (cb && typeof cb === 'function') {
-          // This timeout ensures that the callback runs at the same time as it would on native. I.e.
-          // console.log('Step 1') -> close(() => console.log('Step 3')) -> console.log('Step 2')
-          // This should always output 'Step 1', 'Step 2', 'Step 3', but without the timeout it would output
-          // 'Step 1', 'Step 3', 'Step 2'.
-          setTimeout(cb)
+        /*
+         * Nested rather than `&&`: React Compiler cannot lower a logical
+         * expression in a test position inside a `try`.
+         */
+        if (cb) {
+          if (typeof cb === 'function') {
+            // This timeout ensures that the callback runs at the same time as it would on native. I.e.
+            // console.log('Step 1') -> close(() => console.log('Step 3')) -> console.log('Step 2')
+            // This should always output 'Step 1', 'Step 2', 'Step 3', but without the timeout it would output
+            // 'Step 1', 'Step 3', 'Step 2'.
+            setTimeout(cb)
+          }
         }
       } catch (e: any) {
         logger.error(`Dialog closeCallback failed`, {
@@ -193,7 +201,6 @@ export function Inner({
         aria-label={label}
         aria-labelledby={accessibilityLabelledBy}
         aria-describedby={accessibilityDescribedBy}
-        // @ts-expect-error web only -prf
         onClick={stopPropagation}
         onStartShouldSetResponder={_ => true}
         onTouchEnd={stopPropagation}
@@ -239,7 +246,9 @@ export function Inner({
 export function ScrollableInner({
   ref: _ref,
   ...props
-}: DialogInnerProps & {ref?: React.Ref<ScrollView>}) {
+}: DialogInnerProps & {
+  ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
+}) {
   return <Inner {...props} />
 }
 

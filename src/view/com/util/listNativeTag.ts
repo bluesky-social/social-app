@@ -8,5 +8,5 @@ import {type ListMethods} from './List'
  */
 export function findListNativeTag(list: ListMethods | null): number | null {
   if (!list) return null
-  return findNodeHandle(list)
+  return findNodeHandle(list) ?? null
 }

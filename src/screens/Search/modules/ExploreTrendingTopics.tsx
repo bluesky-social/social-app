@@ -11,6 +11,7 @@ import {
   useTrendingSettingsApi,
 } from '#/state/preferences/trending'
 import {
+  DEFAULT_FETCH_LIMIT,
   DEFAULT_LIMIT,
   useGetTrendsQuery,
 } from '#/state/queries/trending/useGetTrendsQuery'
@@ -24,7 +25,11 @@ import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
-import {useTrendingTopicSeen} from '#/components/TrendingTopics'
+import {
+  getTrendingTopicFeedUri,
+  TrendingTopicsPrompt,
+  useTrendingTopicSeen,
+} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
@@ -54,7 +59,10 @@ function Inner() {
     error,
     isLoading,
     isRefetching,
-  } = useGetTrendsQuery({limit: topicCount})
+  } = useGetTrendsQuery({
+    fetchLimit: Math.min(topicCount * 2, DEFAULT_FETCH_LIMIT),
+    limit: topicCount,
+  })
   const noTopics = !isLoading && !error && !trending?.trends?.length
   const showLoading = isLoading || isRefetching
 
@@ -88,6 +96,7 @@ function Inner() {
                   onPress={() => {
                     ax.metric('trendingTopic:click', {
                       context: 'explore',
+                      feedUri: getTrendingTopicFeedUri(trend),
                       rank,
                       recId: trending.recId,
                     })
@@ -97,11 +106,8 @@ function Inner() {
             })}
       </View>
 
-      <Prompt.Basic
+      <TrendingTopicsPrompt
         control={trendingPrompt}
-        title={l`Hide trending topics?`}
-        description={l`You can update this later from your settings.`}
-        confirmButtonCta={l`Hide`}
         onConfirm={() => {
           ax.metric('trendingTopics:hide', {context: 'explore:trending'})
           setTrendingDisabled(true)
@@ -130,7 +136,7 @@ export function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('explore', rank, recId)
+  useTrendingTopicSeen('explore', getTrendingTopicFeedUri(trend), rank, recId)
 
   const description = useMemo(() => {
     if (!trend.description) return

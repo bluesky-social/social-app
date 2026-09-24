@@ -95,9 +95,8 @@ function DeviceLocationRequestDialogInner({onLocationAcquired}: Props) {
           safeMessage: e.message,
         })
       }
-    } finally {
-      setIsRequesting(false)
     }
+    setIsRequesting(false)
   }
 
   return (

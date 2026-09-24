@@ -62,7 +62,6 @@ import {
   MAX_GRAPHEME_LENGTH,
   SUPPORTED_MIME_TYPES,
   type SupportedMimeTypes,
-  VIDEO_10_MINUTE_MAX_DURATION_MS,
   VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
@@ -270,17 +269,10 @@ export const ComposePost = ({
   const {currentAccount} = useSession()
   const t = useTheme()
   const ax = useAnalytics()
-  const allow10MinuteVideos = ax.features.enabled(
-    ax.features.VideoAllow10MinuteEnable,
-  )
-  const videoMaxDurationMs = allow10MinuteVideos
-    ? VIDEO_10_MINUTE_MAX_DURATION_MS
-    : VIDEO_MAX_DURATION_MS
   const client = useAppviewClient()
   const chatClient = useChatClient()
   const pdsClient = usePdsClient()
   const queryClient = useQueryClient()
-  const currentDid = currentAccount!.did
   /*
    * The host the video service-auth token is minted for. This is the same value
    * that seeds the session's PDS routing, so the audience always matches the host
@@ -316,11 +308,10 @@ export const ComposePost = ({
   >(null)
 
   /**
-   * A temporary local reference to a language suggestion that the user has
-   * accepted. This overrides the global post language preference, but is not
-   * stored permanently.
+   * A manual selection or accepted suggestion applies only to this composer
+   * session, without changing the primary language preference.
    */
-  const [acceptedLanguageSuggestion, setAcceptedLanguageSuggestion] = useState<
+  const [selectedPostLanguage, setSelectedPostLanguage] = useState<
     string | null
   >(null)
 
@@ -332,24 +323,23 @@ export const ComposePost = ({
   )
 
   /**
-   * The currently selected languages of the post. Prefer local temporary
-   * language suggestion over global lang prefs, if available.
+   * Default to the primary language, ignoring the legacy sticky post language
+   * preference. Manual selections and accepted suggestions apply locally.
    */
   const currentLanguages = useMemo(
     () =>
-      acceptedLanguageSuggestion
-        ? [acceptedLanguageSuggestion]
-        : toPostLanguages(langPrefs.postLanguage),
-    [acceptedLanguageSuggestion, langPrefs.postLanguage],
+      selectedPostLanguage
+        ? toPostLanguages(selectedPostLanguage)
+        : [langPrefs.primaryLanguage],
+    [selectedPostLanguage, langPrefs.primaryLanguage],
   )
 
   /**
    * When the user selects a language from the composer language selector,
-   * clear any temporary language suggestions they may have selected
-   * previously, and any we might try to suggest to them.
+   * override the current selection and clear reply language suggestions.
    */
-  const onSelectLanguage = () => {
-    setAcceptedLanguageSuggestion(null)
+  const onSelectLanguage = (language: string) => {
+    setSelectedPostLanguage(language)
     setReplyToLanguages([])
   }
 
@@ -416,7 +406,7 @@ export const ComposePost = ({
         asset.mimeType !== 'image/gif'
       ) {
         try {
-          const probed = await getVideoMetadata(asset.uri)
+          const probed = await getVideoMetadata(asset.uri, asset.mimeType)
           asset = {
             ...asset,
             mimeType: probed.mimeType ?? asset.mimeType,
@@ -451,7 +441,7 @@ export const ComposePost = ({
        * Fail early on duration so we don't spend time compressing a video the
        * server would reject anyway.
        */
-      if (asset.duration != null && asset.duration > videoMaxDurationMs) {
+      if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
         composerDispatch({
           type: 'update_post',
           postId: postId,
@@ -459,9 +449,7 @@ export const ComposePost = ({
             type: 'embed_update_video',
             videoAction: {
               type: 'to_error',
-              error: allow10MinuteVideos
-                ? l`Videos must be 10 minutes or less.`
-                : l`Videos must be less than 3 minutes long.`,
+              error: l`Videos must be 10 minutes or less.`,
               signal: abortController.signal,
             },
           },
@@ -483,23 +471,12 @@ export const ComposePost = ({
         },
         pdsClient,
         currentDispatchUrl,
-        currentDid,
         abortController.signal,
         i18n,
         telemetry,
       )
     },
-    [
-      l,
-      i18n,
-      pdsClient,
-      currentDispatchUrl,
-      currentDid,
-      composerDispatch,
-      ax.metric,
-      videoMaxDurationMs,
-      allow10MinuteVideos,
-    ],
+    [l, i18n, pdsClient, currentDispatchUrl, composerDispatch, ax.metric],
   )
 
   const onInitVideo = useNonReactiveCallback(() => {
@@ -559,22 +536,22 @@ export const ComposePost = ({
           let uri = videoInfo.uri
           if (IS_ANDROID) {
             // Android: expo-file-system double-encodes filenames with special chars.
-            // The file exists, but react-native-compressor's MediaMetadataRetriever
-            // can't handle the double-encoded URI. Copy to a temp file with a simple name.
+            // The native metadata probe can't handle the double-encoded URI, so
+            // copy it to a temp file with a simple name.
             const sourceFile = new FileSystem.File(videoInfo.uri)
             const tempFileName = `draft-video-${Date.now()}.${mimeToExt(videoInfo.mimeType)}`
             const tempFile = new FileSystem.File(
               FileSystem.Paths.cache,
               tempFileName,
             )
-            sourceFile.copy(tempFile)
+            await sourceFile.copy(tempFile)
             logger.debug('restoreVideo: copied to temp file', {
               source: videoInfo.uri,
               temp: tempFile.uri,
             })
             uri = tempFile.uri
           }
-          asset = await getVideoMetadata(uri)
+          asset = await getVideoMetadata(uri, videoInfo.mimeType)
         }
 
         // Start video processing using existing flow
@@ -596,7 +573,7 @@ export const ComposePost = ({
           },
         })
 
-        if (asset.duration != null && asset.duration > videoMaxDurationMs) {
+        if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
           composerDispatch({
             type: 'update_post',
             postId,
@@ -604,9 +581,7 @@ export const ComposePost = ({
               type: 'embed_update_video',
               videoAction: {
                 type: 'to_error',
-                error: allow10MinuteVideos
-                  ? l`Videos must be 10 minutes or less.`
-                  : l`Videos must be less than 3 minutes long.`,
+                error: l`Videos must be 10 minutes or less.`,
                 signal: abortController.signal,
               },
             },
@@ -667,7 +642,6 @@ export const ComposePost = ({
           },
           pdsClient,
           currentDispatchUrl,
-          currentDid,
           abortController.signal,
           i18n,
           telemetry,
@@ -679,17 +653,7 @@ export const ComposePost = ({
         })
       }
     },
-    [
-      l,
-      i18n,
-      pdsClient,
-      currentDispatchUrl,
-      currentDid,
-      composerDispatch,
-      ax.metric,
-      videoMaxDurationMs,
-      allow10MinuteVideos,
-    ],
+    [l, i18n, pdsClient, currentDispatchUrl, composerDispatch, ax.metric],
   )
 
   const handleSelectDraft = useCallback(
@@ -1243,11 +1207,11 @@ export const ComposePost = ({
         originalLocalRefs: composerState.originalLocalRefs,
       })
     }
-    setLangPrefs.savePostLanguageToHistory()
+    setLangPrefs.savePostLanguageToHistory(fromPostLanguages(currentLanguages))
     if (initQuote) {
       // We want to wait for the quote count to update before we call `onPost`, which will refetch data
       void whenAppViewReady(client, initQuote.uri, res => {
-        const anchor = res.thread.at(0)
+        const anchor = res?.thread.at(0)
         if (
           bsky.isType(app.bsky.unspecced.defs.threadItemPost, anchor?.value) &&
           anchor.value.post.quoteCount !== initQuote.quoteCount
@@ -1418,7 +1382,7 @@ export const ComposePost = ({
         text={activePost.richtext.text}
         replyToLanguages={replyToLanguages}
         currentLanguages={currentLanguages}
-        onAcceptSuggestedLanguage={setAcceptedLanguageSuggestion}
+        onAcceptSuggestedLanguage={setSelectedPostLanguage}
         onNudge={onLanguageNudge}
       />
       <ComposerPills
@@ -1589,12 +1553,12 @@ export const ComposePost = ({
                   color="primary"
                 />
               )}
+              <Prompt.Cancel cta={l`Keep editing`} />
               <Prompt.Action
                 cta={l`Discard`}
                 onPress={handleDiscard}
                 color="negative_subtle"
               />
-              <Prompt.Cancel cta={l`Keep editing`} />
             </Prompt.Actions>
           </Prompt.Outer>
         )}
@@ -1715,6 +1679,8 @@ let ComposerPost = memo(function ComposerPost({
 
   return (
     <View
+      // Keep focused inputs attached while active-state opacity changes.
+      collapsable={false}
       style={[
         a.mx_lg,
         a.mb_sm,
@@ -1734,7 +1700,7 @@ let ComposerPost = memo(function ComposerPost({
           style={[a.pt_xs]}
           richtext={richtext}
           placeholder={selectTextInputPlaceholder}
-          autoFocus={isLastPost}
+          autoFocus={isActive}
           webForceMinHeight={forceMinHeight}
           // To avoid overlap with the close button:
           hasRightPadding={isPartOfThread}
@@ -2173,7 +2139,7 @@ function ComposerFooter({
   ) => void | Promise<void>
   onAddPost: () => void
   currentLanguages: string[]
-  onSelectLanguage?: (language: string) => void
+  onSelectLanguage: (language: string) => void
   languageNudgeAt: number
   openGallery?: boolean
   textInputRef: React.RefObject<TextInputRef | null>
@@ -2512,7 +2478,10 @@ function useKeyboardVerticalOffset() {
 async function whenAppViewReady(
   client: Client,
   uri: string,
-  fn: (res: app.bsky.unspecced.getPostThreadV2.$OutputBody) => boolean,
+  fn: (
+    res: app.bsky.unspecced.getPostThreadV2.$OutputBody | undefined,
+    err: unknown,
+  ) => boolean,
 ) {
   await until(
     5, // 5 tries

@@ -57,7 +57,7 @@ export function getLocales() {
       }
     }
 
-    // @ts-ignore checked above
+    // @ts-expect-error checked above
     output.push(locale)
   }
 

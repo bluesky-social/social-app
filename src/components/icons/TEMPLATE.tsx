@@ -23,7 +23,7 @@ export const IconTemplate_Stroke2_Corner0_Rounded = forwardRef(
       <Svg
         fill="none"
         {...rest}
-        // @ts-ignore it's fiiiiine
+        // @ts-expect-error it's fiiiiine
         ref={ref}
         viewBox="0 0 24 24"
         width={size}

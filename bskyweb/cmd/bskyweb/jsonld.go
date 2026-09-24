@@ -554,11 +554,8 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		}
 	}
 
-	if pv.ReplyCount != nil {
+	if pv.ReplyCount != nil && *pv.ReplyCount > 0 {
 		node.CommentCount = pv.ReplyCount
-	} else {
-		zero := int64(0)
-		node.CommentCount = &zero
 	}
 
 	if !embedHidden {

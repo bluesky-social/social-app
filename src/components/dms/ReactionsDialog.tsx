@@ -255,7 +255,7 @@ function ReactionTabs({
   const t = useTheme()
   const {t: l} = useLingui()
 
-  const scrollViewRef = useRef<ScrollView>(null)
+  const scrollViewRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const scrollState = useRef({x: 0, width: 0})
   const tabLayouts = useRef<Map<string, {x: number; width: number}>>(new Map())
 

@@ -78,8 +78,8 @@ export const LoginForm = ({
   const [identifier, setIdentifier] = useState(initialHandle || '')
   const [identifierFocused, setIdentifierFocused] = useState(false)
   const [authFactorToken, setAuthFactorToken] = useState('')
-  const identifierRef = useRef<TextInput>(null)
-  const passwordRef = useRef<TextInput>(null)
+  const identifierRef = useRef<React.ComponentRef<typeof TextInput>>(null)
+  const passwordRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const hasFocusedOnce = useRef(false)
   const [hasPassword, setHasPassword] = useState(false)
   const [revealPassword, setRevealPassword] = useState(false)
@@ -602,7 +602,12 @@ function RevealPasswordButton({
   const {t: l} = useLingui()
   const context = TextField.useTextFieldContext()
 
-  const Icon = !active ? EyeSlashIcon : EyeIcon
+  /*
+   * The icon shows the action the button performs, not the current state: an
+   * open eye when the password is hidden (tap to reveal), a crossed-out eye
+   * when it is visible (tap to hide).
+   */
+  const Icon = active ? EyeSlashIcon : EyeIcon
 
   if (!hasPassword && !context.focused) return null
 

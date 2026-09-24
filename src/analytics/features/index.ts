@@ -77,37 +77,19 @@ export function getFeatures() {
 
 export function getFeatureDescription(feature: Features, i18n: I18n) {
   switch (feature) {
-    case Features.VideoAllow10MinuteEnable:
+    case Features.PostFeedKnownLikersEnable:
       return {
         key: feature,
         name: i18n._(
           msg({
-            message: 'Longer videos',
-            comment: 'Name for a feature flag (longer videos)',
+            message: 'Social proofing on posts',
+            comment: 'Name for a feature flag',
           }),
         ),
         description: i18n._(
           msg({
-            message: 'Enable 10-minute video uploads.',
-            comment: 'Description of a feature flag (10-minute video uploads)',
-          }),
-        ),
-      }
-    case Features.CanonicalPostNumberingEnable:
-      return {
-        key: feature,
-        name: i18n._(
-          msg({
-            message: 'Thread numbering',
-            comment:
-              'Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)',
-          }),
-        ),
-        description: i18n._(
-          msg({
-            message:
-              'See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.',
-            comment: 'Description of a feature flag (Thread numbering)',
+            message: 'Spot posts your friends and follows have liked.',
+            comment: 'Description of a feature flag (Social proofing on posts)',
           }),
         ),
       }

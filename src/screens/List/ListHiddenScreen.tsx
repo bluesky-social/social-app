@@ -103,9 +103,8 @@ export function ListHiddenScreen({
           msg`There was an issue. Please check your internet connection and try again.`,
         ),
       )
-    } finally {
-      setIsProcessing(false)
     }
+    setIsProcessing(false)
   }
 
   return (

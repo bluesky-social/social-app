@@ -1,6 +1,7 @@
-import {useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import PagerView from 'react-native-pager-view'
+import {type PagerViewOnPageSelectedEvent} from 'react-native-pager-view'
 import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -25,8 +26,16 @@ export function ValuePropositionPager({
 
   if (step !== activePage) {
     setActivePage(step)
-    ref.current?.setPage(step)
   }
+
+  /*
+   * In an effect rather than inline above: driving the pager is a side effect,
+   * and reading a ref during render is a Rules of React violation. `initialPage`
+   * already covers the first render, so the mount run is a no-op.
+   */
+  useEffect(() => {
+    ref.current?.setPage(step)
+  }, [step])
 
   const images = [PROP_1[t.name], PROP_2[t.name], PROP_3[t.name]]
 
@@ -36,7 +45,7 @@ export function ValuePropositionPager({
         ref={ref}
         style={[a.flex_1]}
         initialPage={step}
-        onPageSelected={evt => {
+        onPageSelected={(evt: PagerViewOnPageSelectedEvent) => {
           const page = evt.nativeEvent.position as 0 | 1 | 2
           if (step !== page) {
             setActivePage(page)

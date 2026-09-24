@@ -246,7 +246,6 @@ export function ProfileFollowers({name}: {name: string}) {
               onRetry={fetchNextPage}
             />
           }
-          // @ts-ignore our .web version only -prf
           desktopFixedHeight
           initialNumToRender={initialNumToRender}
           windowSize={11}

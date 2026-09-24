@@ -9,6 +9,7 @@ import {Platform} from 'react-native'
 import {type Result, type WidenPrimitives} from '@growthbook/growthbook-react'
 
 import {Logger} from '#/logger'
+import {recordFeatureFlagEvaluation} from '#/logger/sentry/featureFlags'
 import {
   Features,
   features as feats,
@@ -20,7 +21,6 @@ import {
   getAndMigrateDeviceId,
   getDeviceId,
   getInitialSessionId,
-  useDeviceId,
   useSessionId,
 } from '#/analytics/identifiers'
 import {
@@ -117,6 +117,7 @@ const Context = createContext<AnalyticsBaseContextType>({
     geolocation: device.get(['geolocationServiceResponse']) || {
       countryCode: '',
       regionCode: '',
+      city: '',
     },
   },
 })
@@ -179,8 +180,9 @@ export function AnalyticsContext({
       )
     }
   }
-  const deviceId = useDeviceId() ?? 'unknown'
+  const deviceId = getDeviceId() ?? 'unknown'
   const sessionId = useSessionId()
+  // only IP based, never GPS
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
   /*
@@ -311,6 +313,7 @@ export function AnalyticsFeaturesContext({
         ? sessionMetadataForResult(parentContext, result.experimentResult)
         : undefined,
     )
+    recordFeatureFlagEvaluation(feature, result.value)
   })
   setAttributes(parentContext.metadata)
 

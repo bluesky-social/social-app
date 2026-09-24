@@ -89,7 +89,7 @@ export const GifPickerGrid = forwardRef<ListMethods, Props>(
               onRetry={fetchNextPage}
               style={{borderTopWidth: 0}}
             />
-          ) : null
+          ) : undefined
         }
       />
     )

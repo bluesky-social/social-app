@@ -322,6 +322,7 @@ export function useSubmitSignup() {
       dispatch({type: 'setError', value: ''})
       dispatch({type: 'setIsLoading', value: true})
 
+      const verificationCode = state.pendingSubmit?.verificationCode
       try {
         await createAccount(
           {
@@ -331,7 +332,7 @@ export function useSubmitSignup() {
             password: state.password,
             birthDate: state.dateOfBirth,
             inviteCode: state.inviteCode.trim(),
-            verificationCode: state.pendingSubmit?.verificationCode,
+            verificationCode,
           },
           {
             signupDuration: Date.now() - state.signupStartTime,
@@ -360,6 +361,7 @@ export function useSubmitSignup() {
             field: 'invite-code',
           })
           dispatch({type: 'setStep', value: SignupStep.INFO})
+          dispatch({type: 'setIsLoading', value: false})
           return
         }
 
@@ -384,9 +386,8 @@ export function useSubmitSignup() {
             safeMessage: e,
           })
         }
-      } finally {
-        dispatch({type: 'setIsLoading', value: false})
       }
+      dispatch({type: 'setIsLoading', value: false})
     },
     [l, ax, createAccount, onboardingDispatch],
   )

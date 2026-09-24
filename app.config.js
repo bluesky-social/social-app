@@ -20,6 +20,7 @@ module.exports = function (_config) {
 
   const IS_TESTFLIGHT = process.env.EXPO_PUBLIC_ENV === 'testflight'
   const IS_PRODUCTION = process.env.EXPO_PUBLIC_ENV === 'production'
+  const IS_E2E = process.env.EXPO_PUBLIC_ENV === 'e2e'
   const IS_DEV = !IS_TESTFLIGHT && !IS_PRODUCTION
 
   const ASSOCIATED_DOMAINS = [
@@ -184,10 +185,6 @@ module.exports = function (_config) {
       androidStatusBar: {
         barStyle: 'light-content',
       },
-      // Dark nav bar in light mode is better than light nav bar in dark mode
-      androidNavigationBar: {
-        barStyle: 'light-content',
-      },
       android: {
         icon: './assets/app-icons/android_icon_default_next.png',
         adaptiveIcon: {
@@ -220,6 +217,7 @@ module.exports = function (_config) {
         ],
       },
       web: {
+        bundler: 'metro',
         favicon: './assets/favicon.png',
       },
       updates: {
@@ -238,12 +236,44 @@ module.exports = function (_config) {
         checkAutomatically: 'NEVER',
       },
       plugins: [
+        [
+          'expo-dev-client',
+          {
+            toolsButton: false,
+            ...(IS_E2E
+              ? {
+                  launchMode: 'most-recent',
+                  skipOnboarding: true,
+                  showMenuAtLaunch: false,
+                  ios: {
+                    defaultLaunchURL: 'http://localhost:8081',
+                  },
+                  android: {
+                    defaultLaunchURL: 'http://10.0.2.2:8081',
+                  },
+                }
+              : {}),
+          },
+        ],
+        'expo-asset',
+        'expo-sharing',
         'expo-video',
         'expo-localization',
         'expo-web-browser',
         [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
+        ],
+        /*
+         * Expo runs Gradle mods in reverse registration order. Keep Bitdrift
+         * before Sentry so its plugins block is prepended after Sentry's apply
+         * statement and remains at the top, as required by Gradle.
+         */
+        [
+          '@bitdrift/react-native',
+          {
+            networkInstrumentation: true,
+          },
         ],
         ...(USE_SENTRY
           ? [
@@ -253,6 +283,9 @@ module.exports = function (_config) {
                   organization: 'blueskyweb',
                   project: 'app',
                   url: 'https://sentry.io',
+                  experimental_android: {
+                    enableAndroidGradlePlugin: true,
+                  },
                 },
               ]),
             ]
@@ -261,7 +294,7 @@ module.exports = function (_config) {
           'expo-build-properties',
           {
             ios: {
-              deploymentTarget: '15.1',
+              deploymentTarget: '16.4',
               buildReactNativeFromSource: true,
               ccacheEnabled: IS_DEV,
               cxxLanguageStandard: 'c++23',
@@ -275,9 +308,10 @@ module.exports = function (_config) {
             },
             android: {
               compileSdkVersion: 36,
-              targetSdkVersion: 35,
-              buildToolsVersion: '35.0.0',
+              targetSdkVersion: 36,
+              buildToolsVersion: '36.0.0',
               buildReactNativeFromSource: IS_PRODUCTION,
+              enableMinifyInReleaseBuilds: true,
             },
           },
         ],
@@ -287,13 +321,6 @@ module.exports = function (_config) {
             icon: './assets/icon-android-notification.png',
             color: '#1185fe',
             sounds: PLATFORM === 'ios' ? ['assets/dm.aiff'] : ['assets/dm.mp3'],
-          },
-        ],
-        'react-native-compressor',
-        [
-          '@bitdrift/react-native',
-          {
-            networkInstrumentation: true,
           },
         ],
         './plugins/starterPackAppClipExtension/withStarterPackAppClip.js',
@@ -461,6 +488,9 @@ module.exports = function (_config) {
           },
           projectId: '55bd077a-d905-4184-9c7f-94789ba0f302',
         },
+      },
+      experiments: {
+        baseUrl: '/static',
       },
     },
   }

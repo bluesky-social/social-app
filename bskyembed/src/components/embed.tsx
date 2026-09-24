@@ -466,6 +466,7 @@ function VideoEmbed({content}: {content: AppBskyEmbedVideo.View}) {
         preload="metadata"
         // @ts-expect-error https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/video#loading
         loading="lazy"
+        crossorigin="anonymous"
         aria-label={content.alt || undefined}
         onClickCapture={evt => evt.stopPropagation()}
         className="w-full rounded-xl bg-black"

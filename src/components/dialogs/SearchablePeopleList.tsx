@@ -97,7 +97,7 @@ export function SearchablePeopleList({
   const [headerHeight, setHeaderHeight] = useState(0)
   const listRef = useRef<ListMethods>(null)
   const {currentAccount} = useSession()
-  const inputRef = useRef<TextInput>(null)
+  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
 
   const [searchText, setSearchText] = useState('')
 
@@ -634,7 +634,7 @@ function SearchInput({
   value: string
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<TextInput | null>
+  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()

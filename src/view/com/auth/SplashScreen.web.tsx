@@ -73,7 +73,6 @@ export const SplashScreen = ({
           style={[
             a.h_full,
             a.justify_center,
-            // @ts-expect-error web only
             {paddingBottom: '20vh'},
             IS_WEB_MOBILE && a.pb_5xl,
             t.atoms.border_contrast_medium,

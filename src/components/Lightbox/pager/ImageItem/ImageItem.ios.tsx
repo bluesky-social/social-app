@@ -82,7 +82,7 @@ const ImageItem = ({
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       'worklet'
-      const nextIsScaled = e.zoomScale > 1
+      const nextIsScaled = (e.zoomScale ?? 1) > 1
       if (scaled !== nextIsScaled) {
         scheduleOnRN(handleZoom, nextIsScaled)
       }
@@ -109,7 +109,6 @@ const ImageItem = ({
     height: number
   }) {
     const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
-    // @ts-ignore
     scrollResponderRef?.scrollResponderZoomTo({
       ...nextZoomRect, // This rect is in screen coordinates
       animated: true,
@@ -218,7 +217,6 @@ const ImageItem = ({
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
-        // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}

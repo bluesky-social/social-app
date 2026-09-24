@@ -27,7 +27,7 @@ export function PostControlButton({
   activeColor,
   ...props
 }: Omit<ButtonProps, 'hitSlop'> & {
-  ref?: React.Ref<View>
+  ref?: React.Ref<React.ComponentRef<typeof View>>
   active?: boolean
   big?: boolean
   color?: string

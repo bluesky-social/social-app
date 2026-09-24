@@ -6,6 +6,7 @@ export type VideoEmbedInnerWebProps = {
   setActive: () => void
   onScreen: boolean
   lastKnownTime: React.RefObject<number | undefined>
+  onPlaybackStart: (autoplay: boolean) => void
 }
 
 export class HLSUnsupportedError extends Error {

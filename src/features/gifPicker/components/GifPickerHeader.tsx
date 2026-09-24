@@ -15,7 +15,7 @@ export function GifPickerHeader({
   onEscape,
   canClear,
 }: {
-  inputRef: Ref<TextInput>
+  inputRef: Ref<React.ComponentRef<typeof TextInput>>
   onChangeText: (text: string) => void
   onClear: () => void
   onEscape: () => void

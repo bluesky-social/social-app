@@ -102,7 +102,7 @@ function DialogInner({
     if (isMe) {
       if (profile.joinedViaStarterPack) {
         return _(
-          msg`You joined Bluesky using a starter pack ${timeAgoString} ago`,
+          msg`You joined Bluesky using a Starter Pack ${timeAgoString} ago`,
         )
       } else {
         return _(msg`You joined Bluesky ${timeAgoString} ago`)
@@ -110,7 +110,7 @@ function DialogInner({
     } else {
       if (profile.joinedViaStarterPack) {
         return _(
-          msg`${profileName} joined Bluesky using a starter pack ${timeAgoString} ago`,
+          msg`${profileName} joined Bluesky using a Starter Pack ${timeAgoString} ago`,
         )
       } else {
         return _(msg`${profileName} joined Bluesky ${timeAgoString} ago`)

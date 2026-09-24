@@ -1,9 +1,17 @@
-import {useCallback, useEffect, useId, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useId,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import type * as HlsTypes from 'hls.js'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {atoms as a} from '#/alf'
 import {AltBadgeWithDialog} from '#/components/AltBadgeWithDialog'
 import {useFullscreen} from '#/components/hooks/useFullscreen'
@@ -29,6 +37,7 @@ export function VideoEmbedInnerWeb({
   setActive,
   onScreen,
   lastKnownTime,
+  onPlaybackStart,
 }: VideoEmbedInnerWebProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -40,6 +49,7 @@ export function VideoEmbedInnerWeb({
   const [isFullscreen] = useFullscreen(containerRef)
   const isGif = embed.presentation === 'gif'
   const reportDialogMetadata = useReportDialogMetadataContext()
+  const playbackStartTrackedRef = useRef(false)
 
   // send error up to error boundary
   const [error, setError] = useState<Error | null>(null)
@@ -79,6 +89,13 @@ export function VideoEmbedInnerWeb({
             onTimeUpdate={e => {
               const currentTime = e.currentTarget.currentTime
               lastKnownTime.current = currentTime
+              if (
+                !playbackStartTrackedRef.current &&
+                hasPlaybackStarted(currentTime)
+              ) {
+                playbackStartTrackedRef.current = true
+                onPlaybackStart(!focused)
+              }
               if (
                 !isGif &&
                 reportDialogMetadata &&
@@ -149,7 +166,7 @@ function canPlayBskyVideoCodecs(): boolean {
 
 type CachedPromise<T> = Promise<T> & {value: undefined | T}
 const promiseForHls = import(
-  // @ts-ignore
+  // @ts-expect-error
   'hls.js/dist/hls.min'
   // oxlint-disable-next-line typescript/no-unsafe-member-access
 ).then(mod => mod.default) as CachedPromise<typeof HlsTypes.default>
@@ -264,6 +281,14 @@ function useHLS({
     },
   )
 
+  /*
+   * The hls handler below must call the latest `updateCuePositions` without the
+   * effect tearing down and re-attaching every time its identity changes.
+   */
+  const onSubtitleFragProcessed = useEffectEvent(() => {
+    updateCuePositions()
+  })
+
   useEffect(() => {
     if (!videoRef.current) return
     if (!Hls) return
@@ -302,7 +327,7 @@ function useHLS({
     })
 
     hls.on(Hls.Events.SUBTITLE_FRAG_PROCESSED, () => {
-      updateCuePositions()
+      onSubtitleFragProcessed()
     })
 
     hls.on(Hls.Events.FRAG_BUFFERED, (_event, {frag}) => {

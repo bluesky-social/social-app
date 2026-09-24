@@ -43,7 +43,8 @@ export type AgeAssuranceState = {
   lastInitiatedAt?: string
   status: AgeAssuranceStatus
   access: AgeAssuranceAccess
-  error?: 'config' // maybe other specific cases in the future
+  isLoading?: boolean
+  error?: 'config' | 'account-data'
 }
 
 export type AgeAssuranceFlags = {

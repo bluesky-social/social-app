@@ -47,12 +47,22 @@ export function InterestTabs({
 }) {
   const t = useTheme()
   const {_} = useLingui()
-  const listRef = useRef<ScrollView>(null)
+  const listRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const [totalWidth, setTotalWidth] = useState(0)
   const [scrollX, setScrollX] = useState(0)
   const [contentWidth, setContentWidth] = useState(0)
   const pendingTabOffsets = useRef<{x: number; width: number}[]>([])
   const [tabOffsets, setTabOffsets] = useState<{x: number; width: number}[]>([])
+
+  function scrollIntoViewIfNeeded(index: number) {
+    const btnLayout = tabOffsets[index]
+    if (!btnLayout) return
+    listRef.current?.scrollTo({
+      // centered
+      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
+      animated: true,
+    })
+  }
 
   const onInitialLayout = useNonReactiveCallback(() => {
     const index = interests.indexOf(selectedInterest)
@@ -64,16 +74,6 @@ export function InterestTabs({
       onInitialLayout()
     }
   }, [tabOffsets, onInitialLayout])
-
-  function scrollIntoViewIfNeeded(index: number) {
-    const btnLayout = tabOffsets[index]
-    if (!btnLayout) return
-    listRef.current?.scrollTo({
-      // centered
-      x: btnLayout.x - (totalWidth / 2 - btnLayout.width / 2),
-      animated: true,
-    })
-  }
 
   function handleSelectTab(index: number) {
     const tab = interests[index]

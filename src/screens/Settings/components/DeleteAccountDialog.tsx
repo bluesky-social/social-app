@@ -73,7 +73,7 @@ function DeleteAccountDialogInner({
   control: DialogOuterProps['control']
   deactivateDialogControl: DialogOuterProps['control']
 }) {
-  const passwordRef = useRef<TextInput | null>(null)
+  const passwordRef = useRef<React.ComponentRef<typeof TextInput> | null>(null)
   const t = useTheme()
   const {_} = useLingui()
   const cleanError = useCleanError()

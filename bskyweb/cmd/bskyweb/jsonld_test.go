@@ -313,7 +313,7 @@ func TestBuildPostJSONLD_Bare(t *testing.T) {
 	if main["datePublished"] != "2024-01-02T03:04:05Z" {
 		t.Errorf("datePublished wrong: %v", main["datePublished"])
 	}
-	// commentCount should always be emitted, even at zero.
+	// Positive commentCount values should be emitted.
 	cc, ok := main["commentCount"].(float64)
 	if !ok || int64(cc) != 3 {
 		t.Errorf("commentCount wrong: %v", main["commentCount"])
@@ -339,6 +339,41 @@ func TestBuildPostJSONLD_Bare(t *testing.T) {
 	}
 	if _, present := main["sharedContent"]; present {
 		t.Errorf("bare post should not have sharedContent")
+	}
+}
+
+func TestBuildPostJSONLD_CommentCount(t *testing.T) {
+	tests := []struct {
+		name  string
+		count *int64
+		want  *int64
+	}{
+		{name: "nil", count: nil, want: nil},
+		{name: "zero", count: intPtr(0), want: nil},
+		{name: "negative", count: intPtr(-1), want: nil},
+		{name: "positive", count: intPtr(3), want: intPtr(3)},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "hello")
+			pv.ReplyCount = tt.count
+			out, err := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
+			if err != nil {
+				t.Fatal(err)
+			}
+			main := unmarshalLD(t, out)["mainEntity"].(map[string]any)
+			got, present := main["commentCount"]
+			if tt.want == nil {
+				if present {
+					t.Errorf("commentCount should be omitted, got %v", got)
+				}
+				return
+			}
+			if !present || int64(got.(float64)) != *tt.want {
+				t.Errorf("commentCount = %v, want %d", got, *tt.want)
+			}
+		})
 	}
 }
 

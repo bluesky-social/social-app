@@ -45,14 +45,14 @@ export function PressableScale({
           onPressIn(e)
         }
         cancelAnimation(scale)
-        scale.set(() => withTiming(targetScale, {duration: 100}))
+        scale.set(withTiming(targetScale, {duration: 100}))
       }}
       onPressOut={e => {
         if (onPressOut) {
           onPressOut(e)
         }
         cancelAnimation(scale)
-        scale.set(() => withTiming(1, {duration: 100}))
+        scale.set(withTiming(1, {duration: 100}))
       }}
       style={[!reducedMotion && animatedStyle, style]}
       {...rest}>

@@ -50,7 +50,7 @@ export async function saveMediaToLocal(
 
   try {
     const sourceFile = new File(normalizedSource)
-    sourceFile.copy(destFile)
+    await sourceFile.copy(destFile)
     // Update cache after successful save
     mediaExistsCache.set(localRefPath, true)
   } catch (error) {

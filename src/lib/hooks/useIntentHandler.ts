@@ -109,7 +109,18 @@ export function useIntentHandler() {
       if (previousIntentUrl === incomingUrl) {
         return
       }
-      handleIncomingURL(incomingUrl)
+      handleIncomingURL(incomingUrl).finally(() => {
+        /*
+         * expo-linking caches the URL that launched the app and replays it to
+         * every new `useLinkingURL`/`getLinkingURL` caller, so an account
+         * switch (which remounts the tree, see `key={currentAccount?.did}` in
+         * `App.native.tsx`) or a runtime reload would hand us the same link
+         * again. Drop it now that it's been handled - this hook is the last
+         * consumer of the launch URL, everything else reads it while
+         * rendering, before this effect runs. No-op on web.
+         */
+        Linking.clearInitialURL()
+      })
       previousIntentUrl = incomingUrl
     }
   }, [

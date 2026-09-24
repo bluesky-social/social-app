@@ -21,6 +21,12 @@ import expo.modules.kotlin.AppContext
 import expo.modules.kotlin.viewevent.EventDispatcher
 import expo.modules.kotlin.views.ExpoView
 
+/**
+ * Fallback for Material's `material_bottom_sheet_max_width` dimen (in dp), used only
+ * if the resource lookup fails. 640dp is the value Material ships.
+ */
+private const val FALLBACK_MAX_SHEET_WIDTH_DP = 640f
+
 class BottomSheetView(
   context: Context,
   appContext: AppContext,
@@ -38,26 +44,30 @@ class BottomSheetView(
   private var lastObservedContentHeight: Float = 0f
   private var pendingLayoutUpdate: Boolean = false
 
-  private val screenHeight: Float =
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-      // API 35+: edge-to-edge is mandatory, heightPixels is the full display
-      context.resources.displayMetrics.heightPixels
-        .toFloat()
-    } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-      // API 30-34: heightPixels may exclude nav bar, use currentWindowMetrics
-      val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-      wm.currentWindowMetrics.bounds
-        .height()
-        .toFloat()
-    } else {
-      // API < 30: currentWindowMetrics not available, use getRealSize
-      // which includes system bars (heightPixels may exclude them)
-      val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
-      val size = android.graphics.Point()
-      @Suppress("DEPRECATION")
-      wm.defaultDisplay.getRealSize(size)
-      size.y.toFloat()
-    }
+  // Computed per read rather than cached at construction: the RN activity handles
+  // configuration changes itself, so a rotation resizes the display without
+  // recreating this view and a cached value would stay stale for the sheet's life.
+  private val screenHeight: Float
+    get() =
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+        // API 35+: edge-to-edge is mandatory, heightPixels is the full display
+        context.resources.displayMetrics.heightPixels
+          .toFloat()
+      } else if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        // API 30-34: heightPixels may exclude nav bar, use currentWindowMetrics
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+        wm.currentWindowMetrics.bounds
+          .height()
+          .toFloat()
+      } else {
+        // API < 30: currentWindowMetrics not available, use getRealSize
+        // which includes system bars (heightPixels may exclude them)
+        val wm = context.getSystemService(Context.WINDOW_SERVICE) as android.view.WindowManager
+        val size = android.graphics.Point()
+        @Suppress("DEPRECATION")
+        wm.defaultDisplay.getRealSize(size)
+        size.y.toFloat()
+      }
 
   private fun getNavigationBarHeight(): Int {
     val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
@@ -72,6 +82,11 @@ class BottomSheetView(
   private val onAttemptDismiss by EventDispatcher()
   private val onSnapPointChange by EventDispatcher()
   private val onStateChange by EventDispatcher()
+
+  // Last canvas size (in dp) pushed into the shadow tree, so repeated layout
+  // passes don't spam state updates
+  private var lastPushedCanvasWidth: Float = -1f
+  private var lastPushedCanvasHeight: Float = -1f
 
   var disableDrag = false
     set(value) {
@@ -99,10 +114,11 @@ class BottomSheetView(
       field = if (value < 0) 0f else dpToPx(value)
     }
 
-  var maxHeight = this.screenHeight
+  // Stored unclamped (in px) because screenHeight can change under us on rotation.
+  // The clamp against the screen happens at use time, in getTargetHeight().
+  var maxHeight = Float.MAX_VALUE
     set(value) {
-      val px = dpToPx(value)
-      field = if (px > this.screenHeight) this.screenHeight else px
+      field = dpToPx(value)
     }
 
   private var isOpen: Boolean = false
@@ -140,6 +156,38 @@ class BottomSheetView(
       this.eventDispatcher = UIManagerHelper.getEventDispatcherForReactTag(it, this.id)
       this.dialogRootViewGroup = DialogRootViewGroup(context)
       this.dialogRootViewGroup.eventDispatcher = this.eventDispatcher
+
+      // The dialog container's measured WIDTH is the authoritative canvas width: it
+      // already accounts for the window's horizontal insets, Material's max-width cap on
+      // tablets and the current rotation. DialogRootViewGroup's own updateNodeSize() path
+      // is a no-op on the new architecture (getNativeModule(UIManagerModule) returns null
+      // under Fabric), so this state channel is what actually gets the width across there.
+      //
+      // Its measured HEIGHT is deliberately ignored - see canvasHeight.
+      this.dialogRootViewGroup.setOnSizeChangeListener(
+        object : DialogRootViewGroup.OnSizeChangeListener {
+          override fun onSizeChange(
+            width: Int,
+            height: Int,
+          ) {
+            val density = context.resources.displayMetrics.density
+            pushCanvasSize(width / density, canvasHeight / density)
+
+            // onSizeChanged fires from inside a layout pass, so defer the reposition:
+            // updateLayout() reads child heights that aren't final yet. This is what
+            // makes the sheet settle back into place after a rotation. It no-ops for
+            // fullHeight sheets, which is correct - those are pinned to the expanded
+            // offset either way.
+            if ((isOpen || isOpening) && !isClosing) {
+              post {
+                if ((isOpen || isOpening) && !isClosing) {
+                  updateLayout()
+                }
+              }
+            }
+          }
+        },
+      )
     }
     SheetManager.add(this)
   }
@@ -151,8 +199,83 @@ class BottomSheetView(
     r: Int,
     b: Int,
   ) {
+    this.seedCanvasSize()
     this.present()
   }
+
+  /**
+   * The height, in px, of the canvas the sheet content is laid out on. This is the whole
+   * expanded frame (the behavior's expandedOffset is the status bar height), NOT the
+   * sheet's current height.
+   *
+   * That distinction is the whole ballgame. The content's height is what drives the snap
+   * points, so the canvas has to be room to grow *into*. Sizing the canvas from the
+   * dialog's own measured height is circular - BottomSheetBehavior measures the dialog
+   * container against the sheet, so the canvas collapses onto the content height, and from
+   * then on the content is pinned: extra ScrollView padding (the Android keyboard path) or
+   * a longer list just becomes scroll extent instead of a height change, the
+   * OnLayoutChangeListener never fires, and the sheet stops responding to its content.
+   */
+  private val canvasHeight: Float
+    get() = screenHeight - getStatusBarHeight()
+
+  /**
+   * JS renders the sheet content unsized, so before the first state commit it measures
+   * 0x0 and present() has no content height to derive snap points from. Seed the canvas
+   * here to kick that off - the dialog container reports the authoritative width later,
+   * via its OnSizeChangeListener.
+   *
+   * Runs at most once per open cycle. It has to: each state commit re-fires onLayout, so
+   * re-seeding would fight the width the dialog reported and the two would push each other
+   * back and forth forever.
+   *
+   * stateWrapper is assigned while Fabric mounts the view, before the first layout pass,
+   * so setViewSize() should already reach the shadow tree from here. On the old
+   * architecture it is null and this no-ops, which is fine: DialogRootViewGroup's legacy
+   * updateNodeSize() path still sizes the content there.
+   */
+  private fun seedCanvasSize() {
+    if (lastPushedCanvasWidth > 0f) return
+    val density = context.resources.displayMetrics.density
+    val widthPx =
+      minOf(
+        context.resources.displayMetrics.widthPixels
+          .toFloat(),
+        getMaxSheetWidth(),
+      )
+    this.pushCanvasSize(widthPx / density, canvasHeight / density)
+  }
+
+  /**
+   * Sets the size of this view's shadow node, which is the canvas the sheet content is
+   * laid out on. Deduped because both onLayout and the dialog container's size changes
+   * can re-report an unchanged size.
+   */
+  private fun pushCanvasSize(
+    widthDp: Float,
+    heightDp: Float,
+  ) {
+    if (widthDp <= 0f || heightDp <= 0f) return
+    if (widthDp == lastPushedCanvasWidth && heightDp == lastPushedCanvasHeight) return
+    lastPushedCanvasWidth = widthDp
+    lastPushedCanvasHeight = heightDp
+    this.shadowNodeProxy.setViewSize(widthDp.toDouble(), heightDp.toDouble())
+  }
+
+  /**
+   * Material caps the sheet frame at `material_bottom_sheet_max_width` (the
+   * `android:maxWidth` on `Widget.MaterialComponents.BottomSheet`, which our dialog theme
+   * inherits from) and centers it horizontally, so on tablets the sheet is narrower than
+   * the display. Returns the cap in px.
+   */
+  private fun getMaxSheetWidth(): Float =
+    try {
+      resources
+        .getDimensionPixelSize(com.google.android.material.R.dimen.material_bottom_sheet_max_width)
+        .toFloat()
+    } catch (e: android.content.res.Resources.NotFoundException) {
+      FALLBACK_MAX_SHEET_WIDTH_DP * context.resources.displayMetrics.density
+    }
 
   private fun destroy() {
     this.stopObservingContentHeight()
@@ -177,6 +300,15 @@ class BottomSheetView(
     if (this.isOpen || this.isOpening || this.isClosing) return
 
     val contentHeight = this.getContentHeight()
+
+    // The content is unsized until the canvas size we pushed lands in the shadow tree,
+    // so bail and let this retry itself: the state commit resizes this view, that
+    // re-fires onLayout, and onLayout re-enters present(). Full-height sheets don't
+    // need a content measurement, so they can go ahead immediately.
+    //
+    // Only gate when there is a state channel to wait on. Without one (old architecture)
+    // nothing would ever resize this view, and the sheet would never present.
+    if (stateWrapper != null && !fullHeight && contentHeight <= 0f) return
 
     var activityWindow: Window? = null
     var currentContext = context
@@ -425,8 +557,10 @@ class BottomSheetView(
 
   private fun getTargetHeight(): Float {
     val contentHeight = this.getContentHeight()
+    // maxHeight is stored unclamped, so clamp it against the current screen here
+    val effectiveMaxHeight = minOf(this.maxHeight, this.screenHeight)
     return when {
-      contentHeight > maxHeight -> maxHeight
+      contentHeight > effectiveMaxHeight -> effectiveMaxHeight
       contentHeight < minHeight -> minHeight
       else -> contentHeight
     }

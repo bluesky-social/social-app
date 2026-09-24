@@ -90,7 +90,7 @@ export function ListMembers({
     hasNextPage,
     isFetchingNextPage,
   } = useListMembersQuery(list)
-  const isEmpty = !isFetching && !data?.pages[0].items.length
+  const isEmpty = !isFetching && !data?.pages.some(page => page.items.length)
   const isOwner =
     currentAccount && data?.pages[0].list.creator.did === currentAccount.did
 

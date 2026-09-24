@@ -115,7 +115,9 @@ function ProfileScreenInner({route}: Props) {
   }, [queryClient, profile?.viewer?.blockedBy, resolvedDid])
 
   // Most pushes will happen here, since we will have only placeholder data
-  if (isDidPending || isProfilePending) {
+  // A disabled dependent query remains pending, so only consider the profile
+  // pending once handle resolution has produced a DID.
+  if (isDidPending || (!!resolvedDid && isProfilePending)) {
     return (
       <Layout.Content>
         <ProfileHeaderLoading />
@@ -347,7 +349,7 @@ function ProfileScreenLoaded({
   const wrappedNavToWizard = requireEmailVerification(navToWizard, {
     instructions: [
       <Trans key="nav">
-        Before creating a starter pack, you must first verify your email.
+        Before creating a Starter Pack, you must first verify your email.
       </Trans>,
     ],
   })
@@ -647,7 +649,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
     height: '100%',
-    // @ts-ignore Web-only.
+    // @ts-expect-error Web-only.
     overflowAnchor: 'none', // Fixes jumps when switching tabs while scrolled down.
   },
   loading: {

@@ -1,0 +1,26 @@
+diff --git a/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift b/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
+index ec6697d00061055cad2fc986fc7e5c252ed7664a..2999edaaf4b513ae74d75d9780cc870a5bbad2b1 100644
+--- a/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
++++ b/ios/EXUpdates/Update/ExpoUpdatesUpdate.swift
+@@ -78,13 +78,20 @@ public final class ExpoUpdatesUpdate: Update {
+       status = UpdateStatus.StatusPending
+     }
+ 
++    // Instead of relying on various hacks to get the correct format for the specific
++    // platform on the backend, we can just add this little patch..
++    let dateFormatter = DateFormatter()
++    dateFormatter.locale = Locale(identifier: "en_US_POSIX")
++    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
++    let date = dateFormatter.date(from:commitTime) ?? RCTConvert.nsDate(commitTime)!
++
+     return Update(
+       manifest: manifest,
+       config: config,
+       database: database,
+       updateId: uuid,
+       scopeKey: config.scopeKey,
+-      commitTime: RCTConvert.nsDate(commitTime),
++      commitTime: date,
+       runtimeVersion: runtimeVersion,
+       keep: true,
+       status: status,

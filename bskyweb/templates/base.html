@@ -13,7 +13,7 @@
 
   <!-- Hello Humans! API docs at https://atproto.com -->
 
-  <link rel="preload" as="font" type="font/woff2" href="{{ staticCDNHost }}/static/media/InterVariable.c504db5c06caaf7cdfba.woff2" crossorigin>
+  {% include "fonts.html" %}
 
   <style>
     /**
@@ -23,20 +23,6 @@
      *
      * THIS NEEDS TO BE DUPLICATED IN `bskyweb/templates/base.html`
      */
-    @font-face {
-      font-family: 'InterVariable';
-      src: url("{{ staticCDNHost }}/static/media/InterVariable.c504db5c06caaf7cdfba.woff2") format('woff2');
-      font-weight: 300 1000;
-      font-style: normal;
-      font-display: swap;
-    }
-    @font-face {
-      font-family: 'InterVariableItalic';
-      src: url("{{ staticCDNHost }}/static/media/InterVariable-Italic.01dcbad1bac635f9c9cd.woff2") format('woff2');
-      font-weight: 300 1000;
-      font-style: italic;
-      font-display: swap;
-    }
     html,
     body {
       margin: 0px;
@@ -157,10 +143,11 @@
   </div>
 
   <noscript>
-    <h1 lang="en">JavaScript Required</h1>
-    <p lang="en">This is a heavily interactive web application, and JavaScript is required. Simple HTML interfaces are possible, but that is not what this is.
-    <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.
     {% block noscript_extra %}{% endblock %}
+    <div data-nosnippet>
+      <p lang="en">Enable JavaScript to use Bluesky.</p>
+      <p lang="en">Learn more about Bluesky at <a href="https://bsky.social">bsky.social</a> and <a href="https://atproto.com">atproto.com</a>.</p>
+    </div>
   </noscript>
 {% endblock -%}
 </body>

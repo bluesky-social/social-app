@@ -32,12 +32,12 @@ export function NewMessagesPill({
 
   const onPressIn = useCallback(() => {
     if (IS_WEB) return
-    scale.set(() => withTiming(1.075, {duration: 100}))
+    scale.set(withTiming(1.075, {duration: 100}))
   }, [scale])
 
   const onPressOut = useCallback(() => {
     if (IS_WEB) return
-    scale.set(() => withTiming(1, {duration: 100}))
+    scale.set(withTiming(1, {duration: 100}))
   }, [scale])
 
   const onPress = useCallback(() => {

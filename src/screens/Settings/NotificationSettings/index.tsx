@@ -387,7 +387,7 @@ export function NotificationSettingsScreen({}: Props) {
         titleText={<Trans>Everything else</Trans>}
         subtitleText={
           <Trans>
-            Get notifications for starter pack joins, verification, and other
+            Get notifications for Starter Pack joins, verification, and other
             activity.
           </Trans>
         }

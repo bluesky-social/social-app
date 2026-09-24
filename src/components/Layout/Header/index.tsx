@@ -42,7 +42,7 @@ export function Outer({
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
-  headerRef?: React.RefObject<View | null>
+  headerRef?: React.RefObject<React.ComponentRef<typeof View> | null>
   sticky?: boolean
 }) {
   const t = useTheme()
@@ -219,7 +219,7 @@ export function SubtitleText({children}: {children: React.ReactNode}) {
         IS_IOS && align === 'platform' && a.text_center,
         t.atoms.text_contrast_medium,
       ]}
-      numberOfLines={2}>
+      numberOfLines={1}>
       {children}
     </Text>
   )

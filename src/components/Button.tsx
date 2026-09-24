@@ -101,6 +101,8 @@ export type ButtonProps = Pick<
   | 'onPressOut'
   | 'onFocus'
   | 'onBlur'
+  | 'onAccessibilityAction'
+  | 'onAccessibilityEscape'
 > &
   AccessibilityProps &
   VariantProps & {
@@ -131,7 +133,7 @@ export function useButtonContext() {
   return useContext(Context)
 }
 
-export const Button = forwardRef<View, ButtonProps>(
+export const Button = forwardRef<React.ComponentRef<typeof View>, ButtonProps>(
   (
     {
       children,
@@ -575,7 +577,6 @@ export const Button = forwardRef<View, ButtonProps>(
         role="button"
         accessibilityHint={undefined} // optional
         {...rest}
-        // @ts-ignore - this will always be a pressable
         ref={ref}
         aria-label={label}
         aria-pressed={state.pressed}

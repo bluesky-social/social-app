@@ -1,5 +1,5 @@
 import {useCallback, useState} from 'react'
-import {Pressable, StyleSheet, useWindowDimensions, View} from 'react-native'
+import {Pressable, useWindowDimensions, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import Svg, {Path} from 'react-native-svg'
 import {
@@ -125,7 +125,7 @@ export function InviteScannerScreen() {
       noInsetTop
       style={{backgroundColor: t.palette.black}}>
       <CameraView
-        style={StyleSheet.absoluteFill}
+        style={[a.absolute, a.inset_0]}
         facing="back"
         barcodeScannerSettings={{barcodeTypes: ['qr']}}
         onBarcodeScanned={scannerEnabled ? onBarcodeScanned : undefined}
@@ -254,7 +254,7 @@ function ScannerScrim() {
     `V${y + r} A${r} ${r} 0 0 1 ${x + r} ${y} Z`
   return (
     <Svg
-      style={StyleSheet.absoluteFill}
+      style={[a.absolute, a.inset_0]}
       width={width}
       height={height}
       pointerEvents="none">

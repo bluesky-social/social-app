@@ -366,7 +366,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'specific',
       level: LogLevel.Debug,
     })
@@ -388,7 +388,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'namespace:foo',
       contextFilter: 'namespace:*',
       level: LogLevel.Debug,
@@ -411,7 +411,7 @@ describe('debug contexts', () => {
     const timestamp = Date.now()
     const message = nanoid()
     const logger = new Logger({
-      // @ts-ignore
+      // @ts-expect-error
       context: 'namespace:bar:baz',
       contextFilter: 'namespace:foo:*',
     })

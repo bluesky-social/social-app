@@ -1,7 +1,10 @@
 import {Suspense, useRef, useState} from 'react'
 import {View} from 'react-native'
-import type ViewShot from 'react-native-view-shot'
-import {requestPermissionsAsync, saveToLibraryAsync} from 'expo-media-library'
+import {type ViewShotRef} from 'react-native-view-shot'
+import {
+  requestPermissionsAsync,
+  saveToLibraryAsync,
+} from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -38,7 +41,7 @@ export function QrCodeDialog({
   const [isSaveProcessing, setIsSaveProcessing] = useState(false)
   const [isCopyProcessing, setIsCopyProcessing] = useState(false)
 
-  const ref = useRef<ViewShot>(null)
+  const ref = useRef<ViewShotRef>(null)
 
   const getCanvas = (base64: string): Promise<HTMLCanvasElement> => {
     return new Promise(resolve => {
@@ -161,7 +164,7 @@ export function QrCodeDialog({
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
       <Dialog.Handle />
       <Dialog.ScrollableInner
-        label={_(msg`Create a QR code for a starter pack`)}>
+        label={_(msg`Create a QR code for a Starter Pack`)}>
         <View style={[a.flex_1, a.align_center, a.gap_5xl]}>
           <Suspense fallback={<Loading />}>
             {!link ? (

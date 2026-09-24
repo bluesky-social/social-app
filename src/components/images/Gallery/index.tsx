@@ -65,7 +65,7 @@ interface GalleryProps {
 }
 
 const Context = createContext<{
-  bleedRef: React.RefObject<View | null>
+  bleedRef: React.RefObject<React.ComponentRef<typeof View> | null>
   bleedWidth: number
 }>({
   bleedRef: {current: null},
@@ -73,7 +73,7 @@ const Context = createContext<{
 })
 
 export function GalleryBleed({children}: {children: React.ReactNode}) {
-  const ref = useRef<View>(null)
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
   const [bleedWidth, setBleedWidth] = useState(0)
 
   if (!isValidElement(children)) {
@@ -145,7 +145,7 @@ export function Gallery({
    * scroll position, so it works correctly for off-screen FlatList items.
    */
   const {bleedRef, bleedWidth} = useGalleryBleed()
-  const contentRef = useRef<View>(null)
+  const contentRef = useRef<React.ComponentRef<typeof View>>(null)
   const [contentDims, setContentDims] = useState<{x: number; width: number}>()
   const measure = () => {
     if (contentRef.current && bleedRef.current) {
@@ -168,7 +168,9 @@ export function Gallery({
 
   const flatListRef = useRef<FlatList>(null)
   const itemWidthsRef = useRef<Map<number, number>>(new Map())
-  const itemRefsRef = useRef<Map<number, View>>(new Map())
+  const itemRefsRef = useRef<Map<number, React.ComponentRef<typeof View>>>(
+    new Map(),
+  )
   const containerRefsRef = useRef<Map<number, AnimatedRef<any>>>(new Map())
   const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
@@ -408,7 +410,7 @@ function GalleryImage({
   index: number
   imageCount: number
   onWidthChange: (index: number, width: number) => void
-  itemRef: (node: View | null) => void
+  itemRef: (node: React.ComponentRef<typeof View> | null) => void
   largeAltBadge?: boolean
   onContainerRef: (index: number, ref: AnimatedRef<any>) => void
   onThumbDims: (index: number, dims: Dimensions) => void

@@ -60,11 +60,6 @@
       "count": 1
     }
   },
-  "src/Navigation.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/Splash.android.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
@@ -78,14 +73,6 @@
   "src/ageAssurance/components/RedirectOverlay.tsx": {
     "typescript/require-await": {
       "count": 1
-    }
-  },
-  "src/alf/util/flatten.ts": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 9
     }
   },
   "src/alf/util/systemUI.ts": {
@@ -167,9 +154,6 @@
     "typescript/no-explicit-any": {
       "count": 4
     },
-    "typescript/no-misused-promises": {
-      "count": 1
-    },
     "typescript/no-unsafe-call": {
       "count": 2
     },
@@ -224,9 +208,6 @@
   "src/components/Lists.tsx": {
     "typescript/no-explicit-any": {
       "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/components/Menu/types.ts": {
@@ -261,9 +242,6 @@
   "src/components/PostControls/BookmarkButton.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/components/PostControls/DiscoverDebug.tsx": {
@@ -318,39 +296,12 @@
       "count": 1
     }
   },
-  "src/components/StarterPack/Main/ProfilesList.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/StarterPack/ProfileStarterPacks.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    }
-  },
   "src/components/StarterPack/QrCodeDialog.tsx": {
     "typescript/no-floating-promises": {
       "count": 5
     },
-    "typescript/no-misused-promises": {
-      "count": 2
-    },
     "typescript/require-await": {
       "count": 4
-    }
-  },
-  "src/components/StarterPack/ShareDialog.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    },
-    "typescript/require-await": {
-      "count": 1
     }
   },
   "src/components/StarterPack/Wizard/WizardEditListDialog.tsx": {
@@ -361,16 +312,6 @@
   "src/components/WhoCanReply.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
-    }
-  },
-  "src/components/ageAssurance/AgeAssuranceErrors.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/ageAssurance/AgeAssuranceInitDialog.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 2
     }
   },
   "src/components/ageAssurance/AgeAssuranceRedirectDialog.tsx": {
@@ -388,16 +329,8 @@
       "count": 1
     }
   },
-  "src/components/contacts/screens/ViewMatches.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/components/dialogs/DeviceLocationRequestDialog.tsx": {
     "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
@@ -407,26 +340,6 @@
   "src/components/dialogs/EmailDialog/components/ResendEmailText.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
-    }
-  },
-  "src/components/dialogs/EmailDialog/screens/Manage2FA/Disable.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 3
-    }
-  },
-  "src/components/dialogs/EmailDialog/screens/Manage2FA/Enable.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/dialogs/EmailDialog/screens/Update.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 3
-    }
-  },
-  "src/components/dialogs/EmailDialog/screens/Verify.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 3
     }
   },
   "src/components/dialogs/LanguageSelectDialog.tsx": {
@@ -447,7 +360,7 @@
       "count": 2
     },
     "typescript/no-misused-promises": {
-      "count": 3
+      "count": 1
     },
     "typescript/no-unsafe-member-access": {
       "count": 2
@@ -472,27 +385,14 @@
       "count": 1
     }
   },
-  "src/components/dialogs/StarterPackDialog.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/components/dialogs/SwitchAccount.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
     }
   },
-  "src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/components/dialogs/lists/CreateOrEditListDialog.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/components/dialogs/nuxs/FindContactsAnnouncement.tsx": {
@@ -580,16 +480,6 @@
       "count": 2
     }
   },
-  "src/components/intents/VerifyEmailIntentDialog.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/components/verification/VerificationCreatePrompt.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/components/verification/VerificationRemovePrompt.tsx": {
     "typescript/no-misused-promises": {
       "count": 1
@@ -632,11 +522,6 @@
     }
   },
   "src/lib/async/retry.ts": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    }
-  },
-  "src/lib/async/until.ts": {
     "typescript/no-explicit-any": {
       "count": 2
     }
@@ -696,13 +581,10 @@
       "count": 1
     },
     "typescript/no-misused-promises": {
-      "count": 3
+      "count": 2
     }
   },
   "src/lib/hooks/usePermissions.ts": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    },
     "typescript/no-unsafe-enum-comparison": {
       "count": 5
     }
@@ -756,7 +638,7 @@
       "count": 1
     },
     "typescript/no-floating-promises": {
-      "count": 5
+      "count": 3
     }
   },
   "src/lib/media/manip.web.ts": {
@@ -845,15 +727,9 @@
     },
     "typescript/no-floating-promises": {
       "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/screens/E2E/SharedPreferencesTesterScreen.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 6
-    },
     "typescript/require-await": {
       "count": 6
     }
@@ -863,40 +739,13 @@
       "count": 1
     }
   },
-  "src/screens/Feeds/NoSavedFeedsOfAnyType.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/Home/NoFeedsPinned.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
   "src/screens/List/ListHiddenScreen.tsx": {
     "typescript/no-floating-promises": {
       "count": 3
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/screens/Log.tsx": {
     "typescript/no-unsafe-enum-comparison": {
-      "count": 2
-    }
-  },
-  "src/screens/Moderation/index.tsx": {
-    "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
       "count": 2
     }
   },
@@ -922,19 +771,6 @@
   "src/screens/Onboarding/StepProfile/index.tsx": {
     "typescript/no-floating-promises": {
       "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/Onboarding/StepSuggestedStarterpacks/StarterPackCard.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/Onboarding/StepSuggestedStarterpacks/index.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx": {
@@ -962,17 +798,11 @@
   "src/screens/Profile/Header/EditProfileDialog.tsx": {
     "typescript/no-explicit-any": {
       "count": 3
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/screens/Profile/Header/ProfileHeaderLabeler.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
     },
     "typescript/no-unsafe-member-access": {
       "count": 3
@@ -1004,19 +834,6 @@
       "count": 1
     }
   },
-  "src/screens/ProfileList/components/Header.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 3
-    }
-  },
-  "src/screens/ProfileList/components/MoreOptionsMenu.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 5
-    }
-  },
   "src/screens/ProfileList/components/SubscribeMenu.tsx": {
     "typescript/no-misused-promises": {
       "count": 2
@@ -1025,11 +842,6 @@
   "src/screens/ProfileList/index.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
-    }
-  },
-  "src/screens/SavedFeeds.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 2
     }
   },
   "src/screens/Search/modules/ExploreSuggestedAccounts.tsx": {
@@ -1093,9 +905,6 @@
   "src/screens/Settings/components/ChangePasswordDialog.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
     }
   },
   "src/screens/Settings/components/CopyButton.tsx": {
@@ -1107,9 +916,6 @@
     "typescript/no-explicit-any": {
       "count": 1
     },
-    "typescript/no-misused-promises": {
-      "count": 1
-    },
     "typescript/no-unsafe-member-access": {
       "count": 1
     }
@@ -1117,11 +923,6 @@
   "src/screens/Settings/components/DeleteAccountDialog.tsx": {
     "typescript/no-explicit-any": {
       "count": 2
-    }
-  },
-  "src/screens/Settings/components/DisableEmail2FADialog.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 4
     }
   },
   "src/screens/Settings/components/OTAInfo.tsx": {
@@ -1147,7 +948,7 @@
       "count": 1
     },
     "typescript/no-misused-promises": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unsafe-call": {
       "count": 1
@@ -1161,30 +962,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/screens/StarterPack/StarterPackScreen.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 2
-    },
-    "typescript/require-await": {
-      "count": 1
-    }
-  },
-  "src/screens/StarterPack/Wizard/StepFeeds.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/screens/StarterPack/Wizard/index.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
-    },
-    "typescript/require-await": {
       "count": 1
     }
   },
@@ -1354,7 +1131,7 @@
       "count": 2
     },
     "typescript/no-floating-promises": {
-      "count": 2
+      "count": 1
     },
     "typescript/no-unsafe-member-access": {
       "count": 2
@@ -1389,7 +1166,7 @@
       "count": 3
     },
     "typescript/no-floating-promises": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-unsafe-member-access": {
       "count": 3
@@ -1407,11 +1184,6 @@
     },
     "typescript/require-await": {
       "count": 2
-    }
-  },
-  "src/state/queries/starter-packs.ts": {
-    "typescript/require-await": {
-      "count": 1
     }
   },
   "src/state/queries/suggested-follows.ts": {
@@ -1479,14 +1251,6 @@
   "src/view/com/composer/SelectMediaButton.tsx": {
     "typescript/no-floating-promises": {
       "count": 1
-    },
-    "typescript/no-misused-promises": {
-      "count": 1
-    }
-  },
-  "src/view/com/composer/drafts/DraftsButton.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
     }
   },
   "src/view/com/composer/drafts/state/queries.ts": {
@@ -1502,12 +1266,7 @@
   },
   "src/view/com/composer/drafts/state/storage.ts": {
     "typescript/require-await": {
-      "count": 3
-    }
-  },
-  "src/view/com/composer/photos/EditImageDialog.web.tsx": {
-    "typescript/no-misused-promises": {
-      "count": 1
+      "count": 2
     }
   },
   "src/view/com/composer/photos/Gallery.tsx": {
@@ -1517,9 +1276,6 @@
   },
   "src/view/com/composer/photos/OpenCameraBtn.tsx": {
     "typescript/no-explicit-any": {
-      "count": 1
-    },
-    "typescript/no-misused-promises": {
       "count": 1
     }
   },
@@ -1565,7 +1321,7 @@
       "count": 2
     },
     "typescript/no-misused-promises": {
-      "count": 3
+      "count": 2
     },
     "typescript/no-unsafe-member-access": {
       "count": 6
@@ -1603,12 +1359,6 @@
   "src/view/com/pager/TabBar.web.tsx": {
     "typescript/no-explicit-any": {
       "count": 1
-    },
-    "typescript/no-unsafe-call": {
-      "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 4
     }
   },
   "src/view/com/post-thread/PostLikedBy.tsx": {
@@ -1631,9 +1381,6 @@
   },
   "src/view/com/posts/FeedShutdownMsg.tsx": {
     "typescript/no-explicit-any": {
-      "count": 2
-    },
-    "typescript/no-misused-promises": {
       "count": 2
     }
   },
@@ -1698,18 +1445,10 @@
   "src/view/com/util/Views.tsx": {
     "react/display-name": {
       "count": 1
-    },
-    "typescript/no-explicit-any": {
-      "count": 1
     }
   },
   "src/view/com/util/Views.web.tsx": {
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/view/com/util/forms/Button.tsx": {
-    "typescript/no-misused-promises": {
       "count": 1
     }
   },
@@ -1721,11 +1460,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 1
-    }
-  },
-  "src/view/screens/Home.tsx": {
-    "typescript/no-floating-promises": {
       "count": 1
     }
   },

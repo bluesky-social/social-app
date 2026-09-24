@@ -95,11 +95,13 @@ function Inner({preferences}: {preferences: UsePreferencesQueryResponse}) {
   const onSave = useCallback(async () => {
     setError('')
 
+    const embeddingRules = maybeEditedPostgate.embeddingRules ?? []
+
     try {
       await setPostInteractionSettings({
         threadgateAllowRules:
           threadgateAllowUISettingToAllowRecordValue(maybeEditedAllowUI),
-        postgateEmbeddingRules: maybeEditedPostgate.embeddingRules ?? [],
+        postgateEmbeddingRules: embeddingRules,
       })
       Toast.show(_(msg({message: 'Settings saved', context: 'toast'})))
     } catch (e: any) {

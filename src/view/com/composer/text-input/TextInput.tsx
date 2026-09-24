@@ -50,7 +50,7 @@ export function TextInput({
 }: TextInputProps) {
   const {t: l} = useLingui()
   const {theme: t, fonts} = useAlf()
-  const textInput = useRef<RNTextInput>(null)
+  const textInput = useRef<React.ComponentRef<typeof RNTextInput>>(null)
   const textInputSelection = useRef<Selection>({start: 0, end: 0})
   const theme = useTheme()
   const [autocompletePrefix, setAutocompletePrefix] = useState('')
@@ -177,21 +177,19 @@ export function TextInput({
      * Android impl of `PasteInput` doesn't support the array syntax for `fontVariant`
      */
     if (IS_ANDROID) {
-      // @ts-ignore
-      style.fontVariant = style.fontVariant
-        ? style.fontVariant.join(' ')
-        : undefined
+      style.fontVariant =
+        typeof style.fontVariant === 'string'
+          ? style.fontVariant
+          : style.fontVariant?.join(' ')
     }
     return style
   }, [t, fonts])
 
   const textDecorated = useMemo(() => {
-    let i = 0
-
-    return Array.from(richtext.segments()).map(segment => {
+    return Array.from(richtext.segments()).map((segment, i) => {
       return (
         <RNText
-          key={i++}
+          key={i}
           style={[
             inputTextStyle,
             {

@@ -62,7 +62,6 @@ import {
   PostFeedVideoGridRowPlaceholder,
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
-import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
@@ -144,10 +143,6 @@ type FeedRow =
     }
   | {
       type: 'interstitialProgressGuide'
-      key: string
-    }
-  | {
-      type: 'interstitialTrending'
       key: string
     }
   | {
@@ -757,7 +752,9 @@ let PostFeed = ({
     })
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
-      onHasNew?.(false)
+      if (onHasNew) {
+        onHasNew(false)
+      }
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
@@ -851,8 +848,6 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'ageAssuranceBanner') {
         return <AgeAssuranceDismissibleFeedBanner />
-      } else if (row.type === 'interstitialTrending') {
-        return <TrendingInterstitial />
       } else if (row.type === 'interstitialFeedTrendingTopics') {
         return (
           <FeedTrendingTopicsInterstitial feedSliceIndex={row.feedSliceIndex} />
@@ -877,6 +872,7 @@ let PostFeed = ({
           <PostFeedItem
             post={item.post}
             record={item.record}
+            postNumbering={item.postNumbering}
             reason={indexInSlice === 0 ? slice.reason : undefined}
             feedContext={slice.feedContext}
             reqId={slice.reqId}
@@ -1081,15 +1077,22 @@ let PostFeed = ({
 
         onPostSeen(post)
 
-        // Only track the root post of each slice (index 0) to avoid double-counting thread items
-        if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
+        // Track the post selected by the feed once it is actually visible.
+        if (
+          post.uri === slice.feedPostUri &&
+          !seenPostUrisRef.current.has(post.uri)
+        ) {
           seenPostUrisRef.current.add(post.uri)
 
-          const position = getPostPosition('sliceItem', item.key)
+          const position = getPostPosition(
+            'sliceItem',
+            slice.items[0]._reactKey,
+          )
 
           ax.metric('post:view', {
             uri: post.uri,
             authorDid: post.author.did,
+            isReply: !!postItem.record.reply,
             logContext: 'FeedItem',
             feedDescriptor: feedFeedback.feedDescriptor || feed,
             position,
@@ -1125,6 +1128,7 @@ let PostFeed = ({
             ax.metric('post:view', {
               uri: post.uri,
               authorDid: post.author.did,
+              isReply: !!postItem.record.reply,
               logContext: 'FeedItem',
               feedDescriptor: feedFeedback.feedDescriptor || feed,
               position,
