@@ -15,10 +15,6 @@ export type Device = {
   deviceId?: string
   /** Analytics session storage for native. */
   nativeSession?: SessionRecord
-  /** @deprecated Migrated to `nativeSession`. */
-  nativeSessionId?: string
-  /** @deprecated Migrated to `nativeSession`. */
-  nativeSessionIdLastEventAt?: number
 
   fontScale: '-2' | '-1' | '0' | '1' | '2'
   fontFamily: 'system' | 'theme'
