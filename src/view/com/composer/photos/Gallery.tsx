@@ -18,7 +18,11 @@ import {Trans} from '@lingui/react/macro'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {type Dimensions} from '#/lib/media/types'
 import {colors} from '#/lib/styles'
-import {type ComposerImage, cropImage} from '#/state/gallery'
+import {
+  type ComposerImage,
+  cropImage,
+  releaseComposerImage,
+} from '#/state/gallery'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import * as Dialog from '#/components/Dialog'
@@ -119,6 +123,7 @@ const GalleryInner = ({images, containerInfo, dispatch}: GalleryInnerProps) => {
                 dispatch({type: 'embed_update_image', image: next})
               }}
               onRemove={() => {
+                releaseComposerImage(image)
                 dispatch({type: 'embed_remove_image', image})
               }}
             />

@@ -9,7 +9,7 @@ import {
 } from 'react'
 import {View} from 'react-native'
 import {Image as ExpoImage} from 'expo-image'
-import {ImageManipulator, SaveFormat} from 'expo-image-manipulator'
+import {SaveFormat} from 'expo-image-manipulator'
 import {
   type ImagePickerOptions,
   launchImageLibraryAsync,
@@ -20,6 +20,7 @@ import {Trans} from '@lingui/react/macro'
 
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
+import {renderImage, revokeObjectUrl} from '#/lib/media/image-manipulator'
 import {compressIfNeeded} from '#/lib/media/manip'
 import {openCropper} from '#/lib/media/picker'
 import {getUriSize} from '#/lib/media/uriSize'
@@ -120,18 +121,17 @@ export function StepProfile() {
       const asset = (response.assets ?? [])[0]
       if (!asset) return []
 
+      let result: Awaited<ReturnType<typeof renderImage>> | undefined
       try {
-        const context = ImageManipulator.manipulate(asset.uri)
-        const rendered = await context.renderAsync()
-        const result = await rendered.saveAsync({
+        result = await renderImage(asset.uri, undefined, {
           format: SaveFormat.JPEG,
-          compress: 1.0,
+          compress: 1,
         })
         return [
           {
             mime: 'image/jpeg',
-            height: rendered.height,
-            width: rendered.width,
+            height: result.height,
+            width: result.width,
             path: result.uri,
             size: await getUriSize(result.uri),
           },
@@ -140,7 +140,10 @@ export function StepProfile() {
         setError(
           l`This image could not be used. Try a different format like .jpg or .png.`,
         )
+        revokeObjectUrl(result?.uri)
         return []
+      } finally {
+        revokeObjectUrl(asset.uri)
       }
     },
     [l, setError, sheetWrapper],

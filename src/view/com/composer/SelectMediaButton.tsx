@@ -14,6 +14,7 @@ import {
   usePhotoLibraryPermission,
   useVideoLibraryPermission,
 } from '#/lib/hooks/usePermissions'
+import {revokeObjectUrl} from '#/lib/media/image-manipulator'
 import {openUnifiedPicker} from '#/lib/media/picker'
 import {blobToDataUri, extractDataUriMime} from '#/lib/media/util'
 import {MAX_GALLERY_IMAGES} from '#/view/com/composer/state/composer'
@@ -260,133 +261,151 @@ async function processImagePickerAssets(
    */
   let supportedAssets: ValidatedImagePickerAsset[] = []
 
-  for (const asset of assets) {
-    const {success, type, mimeType} = await classifyImagePickerAsset(asset)
-
-    if (!success) {
-      errors.add(SelectedAssetError.Unsupported)
-      continue
-    }
-
-    /*
-     * If we have an `allowedAssetTypes` prop, constrain to that. Otherwise,
-     * set this to the first valid asset type we see, and then use that to
-     * constrain all remaining selected assets.
-     */
-    selectableAssetType = allowedAssetTypes || selectableAssetType || type
-
-    // ignore mixed types
-    if (type !== selectableAssetType) {
-      errors.add(SelectedAssetError.MixedTypes)
-      continue
-    }
-
-    if (type === 'video') {
-      /**
-       * We don't care too much about mimeType at this point on native,
-       * since the `processVideo` step later on will convert to `.mp4`.
-       */
-      if (IS_WEB && !isSupportedVideoMimeType(mimeType)) {
-        errors.add(SelectedAssetError.Unsupported)
-        continue
-      }
-
-      /*
-       * Filesize appears to be stable across all platforms, so we can use it
-       * to filter out large files on web. On native, we compress these anyway,
-       * so we only check on web. On web, we can reject early if the browser
-       * doesn't support WebCodecs.
-       */
-      if (
-        IS_WEB &&
-        !hasWebCodecs() &&
-        asset.fileSize &&
-        asset.fileSize > VIDEO_MAX_SIZE
-      ) {
-        errors.add(SelectedAssetError.FileTooBig)
-        continue
-      }
-    }
-
-    if (type === 'image') {
-      if (!isSupportedImageMimeType(mimeType)) {
-        errors.add(SelectedAssetError.Unsupported)
-        continue
-      }
-    }
-
-    if (type === 'gif') {
-      /*
-       * Filesize appears to be stable across all platforms, so we can use it
-       * to filter out large files. We can't compress GIFs on either platform.
-       */
-      if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
-        errors.add(SelectedAssetError.FileTooBig)
-        continue
-      }
-    }
-
-    /*
-     * All validations passed, we have an asset!
-     */
-    let uri = asset.uri
-    if (IS_WEB && type === 'image' && asset.file) {
-      uri = await blobToDataUri(asset.file)
-    }
-
-    supportedAssets.push({
-      mimeType,
-      ...asset,
-      /*
-       * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
-       * data-uri. Our handling elsewhere in the app (for web) relies on the
-       * data-uri, so read images only after their type has been validated.
-       * Videos retain their File/blob URL and avoid an expensive base64 read.
-       */
-      uri,
-    })
+  const pendingAssetUrls = new Set(assets.map(asset => asset.uri))
+  const limitSupportedAssets = (limit: number) => {
+    supportedAssets.slice(limit).forEach(asset => revokeObjectUrl(asset.uri))
+    supportedAssets = supportedAssets.slice(0, limit)
   }
 
-  if (supportedAssets.length > 0) {
-    if (selectableAssetType === 'image') {
-      if (supportedAssets.length > selectionCountRemaining) {
-        errors.add(SelectedAssetError.MaxImages)
-        supportedAssets = supportedAssets.slice(0, selectionCountRemaining)
-      }
-    } else if (selectableAssetType === 'video') {
-      if (supportedAssets.length > 1) {
-        errors.add(SelectedAssetError.MaxVideos)
-        supportedAssets = supportedAssets.slice(0, 1)
-      }
+  try {
+    for (const asset of assets) {
+      const {success, type, mimeType} = await classifyImagePickerAsset(asset)
 
-      if (supportedAssets[0].duration) {
-        if (IS_WEB) {
-          /*
-           * Web reports duration as seconds
-           */
-          supportedAssets[0].duration = supportedAssets[0].duration * 1000
-        }
-
-        if (supportedAssets[0].duration > videoMaxDurationMs) {
-          errors.add(SelectedAssetError.VideoTooLong)
-          supportedAssets = []
-        }
-      } else {
+      if (!success) {
         errors.add(SelectedAssetError.Unsupported)
-        supportedAssets = []
+        continue
       }
-    } else if (selectableAssetType === 'gif') {
-      if (supportedAssets.length > 1) {
-        errors.add(SelectedAssetError.MaxGIFs)
-        supportedAssets = supportedAssets.slice(0, 1)
+
+      /*
+       * If we have an `allowedAssetTypes` prop, constrain to that. Otherwise,
+       * set this to the first valid asset type we see, and then use that to
+       * constrain all remaining selected assets.
+       */
+      selectableAssetType = allowedAssetTypes || selectableAssetType || type
+
+      // ignore mixed types
+      if (type !== selectableAssetType) {
+        errors.add(SelectedAssetError.MixedTypes)
+        continue
+      }
+
+      if (type === 'video') {
+        /**
+         * We don't care too much about mimeType at this point on native,
+         * since the `processVideo` step later on will convert to `.mp4`.
+         */
+        if (IS_WEB && !isSupportedVideoMimeType(mimeType)) {
+          errors.add(SelectedAssetError.Unsupported)
+          continue
+        }
+
+        /*
+         * Filesize appears to be stable across all platforms, so we can use it
+         * to filter out large files on web. On native, we compress these anyway,
+         * so we only check on web. On web, we can reject early if the browser
+         * doesn't support WebCodecs.
+         */
+        if (
+          IS_WEB &&
+          !hasWebCodecs() &&
+          asset.fileSize &&
+          asset.fileSize > VIDEO_MAX_SIZE
+        ) {
+          errors.add(SelectedAssetError.FileTooBig)
+          continue
+        }
+      }
+
+      if (type === 'image') {
+        if (!isSupportedImageMimeType(mimeType)) {
+          errors.add(SelectedAssetError.Unsupported)
+          continue
+        }
+      }
+
+      if (type === 'gif') {
+        /*
+         * Filesize appears to be stable across all platforms, so we can use it
+         * to filter out large files. We can't compress GIFs on either platform.
+         */
+        if (IS_WEB && asset.fileSize && asset.fileSize > VIDEO_MAX_SIZE) {
+          errors.add(SelectedAssetError.FileTooBig)
+          continue
+        }
+      }
+
+      /*
+       * All validations passed, we have an asset!
+       */
+      let uri = asset.uri
+      if (IS_WEB && type === 'image' && asset.file) {
+        try {
+          uri = await blobToDataUri(asset.file)
+        } finally {
+          revokeObjectUrl(asset.uri)
+        }
+      }
+
+      supportedAssets.push({
+        mimeType,
+        ...asset,
+        /*
+         * In `expo-image-picker` >= v17, `uri` is now a `blob:` URL, not a
+         * data-uri. Our handling elsewhere in the app (for web) relies on the
+         * data-uri, so read images only after their type has been validated.
+         * Videos retain their File/blob URL and avoid an expensive base64 read.
+         */
+        uri,
+      })
+      pendingAssetUrls.delete(asset.uri)
+    }
+
+    if (supportedAssets.length > 0) {
+      if (selectableAssetType === 'image') {
+        if (supportedAssets.length > selectionCountRemaining) {
+          errors.add(SelectedAssetError.MaxImages)
+          limitSupportedAssets(selectionCountRemaining)
+        }
+      } else if (selectableAssetType === 'video') {
+        if (supportedAssets.length > 1) {
+          errors.add(SelectedAssetError.MaxVideos)
+          limitSupportedAssets(1)
+        }
+
+        if (supportedAssets[0].duration) {
+          if (IS_WEB) {
+            /*
+             * Web reports duration as seconds
+             */
+            supportedAssets[0].duration = supportedAssets[0].duration * 1000
+          }
+
+          if (supportedAssets[0].duration > videoMaxDurationMs) {
+            errors.add(SelectedAssetError.VideoTooLong)
+            limitSupportedAssets(0)
+          }
+        } else {
+          errors.add(SelectedAssetError.Unsupported)
+          limitSupportedAssets(0)
+        }
+      } else if (selectableAssetType === 'gif') {
+        if (supportedAssets.length > 1) {
+          errors.add(SelectedAssetError.MaxGIFs)
+          limitSupportedAssets(1)
+        }
       }
     }
-  }
 
-  return {
-    type: selectableAssetType!, // set above
-    assets: supportedAssets,
-    errors,
+    return {
+      type: selectableAssetType!, // set above
+      assets: supportedAssets,
+      errors,
+    }
+  } catch (error) {
+    supportedAssets.forEach(asset => revokeObjectUrl(asset.uri))
+    throw error
+  } finally {
+    pendingAssetUrls.forEach(revokeObjectUrl)
   }
 }
 

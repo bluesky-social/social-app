@@ -5,6 +5,7 @@ import {useLingui} from '@lingui/react'
 import {Plural, Trans} from '@lingui/react/macro'
 
 import {MAX_DESCRIPTION, MAX_DISPLAY_NAME, urls} from '#/lib/constants'
+import {revokeObjectUrl} from '#/lib/media/image-manipulator'
 import {cleanError} from '#/lib/strings/errors'
 import {isOverMaxGraphemeCount} from '#/lib/strings/helpers'
 import {logger} from '#/logger'
@@ -123,6 +124,19 @@ function DialogInner({
   const [newUserAvatar, setNewUserAvatar] = useState<
     ImageMeta | undefined | null
   >()
+
+  useEffect(
+    () => () => {
+      revokeObjectUrl(newUserBanner?.path)
+    },
+    [newUserBanner],
+  )
+  useEffect(
+    () => () => {
+      revokeObjectUrl(newUserAvatar?.path)
+    },
+    [newUserAvatar],
+  )
 
   const dirty =
     displayName !== initialDisplayName ||

@@ -65,6 +65,7 @@ import {
   VIDEO_MAX_DURATION_MS,
 } from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {revokeObjectUrl} from '#/lib/media/image-manipulator'
 import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {mimeToExt} from '#/lib/media/video/util'
 import {useCallOnce} from '#/lib/once'
@@ -79,6 +80,7 @@ import {
   type ComposerImage,
   createComposerImage,
   pasteImage,
+  releaseComposerImage,
 } from '#/state/gallery'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
@@ -157,7 +159,7 @@ import {
   useSaveDraftMutation,
 } from './drafts/state/queries'
 import {type DraftSummary} from './drafts/state/schema'
-import {revokeAllMediaUrls} from './drafts/state/storage'
+import {revokeAllMediaUrls, revokeMediaUrl} from './drafts/state/storage'
 import {PostLanguageSelect} from './select-language/PostLanguageSelect'
 import {
   type AssetType,
@@ -187,6 +189,14 @@ import {clearThumbnailCache} from './videos/VideoTranscodeBackdrop'
 
 type CancelRef = {
   onPressCancel: () => void
+}
+
+function releaseEmbedMedia(media: EmbedDraft['media']): void {
+  if (media?.type === 'images' || media?.type === 'gallery') {
+    media.images.forEach(releaseComposerImage)
+  } else if (media?.type === 'video') {
+    revokeObjectUrl(media.video.asset?.uri)
+  }
 }
 
 function applyGalleryCap(
@@ -501,6 +511,10 @@ export const ComposePost = ({
 
   const clearVideo = useCallback(
     (postId: string) => {
+      const post = thread.posts.find(item => item.id === postId)
+      if (post?.embed.media?.type === 'video') {
+        revokeObjectUrl(post.embed.media.video.asset?.uri)
+      }
       composerDispatch({
         type: 'update_post',
         postId: postId,
@@ -509,7 +523,7 @@ export const ComposePost = ({
         },
       })
     },
-    [composerDispatch],
+    [composerDispatch, thread.posts],
   )
 
   const restoreVideo = useCallback(
@@ -525,9 +539,10 @@ export const ComposePost = ({
         let asset: ImagePickerAsset
 
         if (IS_WEB) {
-          // Web: Convert blob URL to a File, then get video metadata (returns data URL)
+          // Convert the saved draft URL to a File and release the old URL.
           const response = await fetch(videoInfo.uri)
           const blob = await response.blob()
+          revokeMediaUrl(videoInfo.uri)
           const file = new File([blob], 'restored-video', {
             type: videoInfo.mimeType,
           })
@@ -681,6 +696,7 @@ export const ComposePost = ({
       )
 
       // Dispatch restore action (this also sets draftId in state)
+      thread.posts.forEach(post => releaseEmbedMedia(post.embed.media))
       composerDispatch({
         type: 'restore_from_draft',
         draftId: draftSummary.id,
@@ -713,7 +729,7 @@ export const ComposePost = ({
         void restoreVideo(postId, videoInfo)
       }
     },
-    [composerDispatch, restoreVideo, ax],
+    [composerDispatch, restoreVideo, ax, thread.posts],
   )
 
   const [publishOnUpload, setPublishOnUpload] = useState(false)
@@ -724,10 +740,11 @@ export const ComposePost = ({
     if (IS_ANDROID) {
       Keyboard.dismiss()
     }
+    thread.posts.forEach(post => releaseEmbedMedia(post.embed.media))
     closeComposer()
     clearThumbnailCache(queryClient)
     revokeAllMediaUrls()
-  }, [closeComposer, queryClient])
+  }, [closeComposer, queryClient, thread.posts])
 
   const getDraftSaveError = useCallback(
     (e: unknown): string => {
@@ -864,11 +881,12 @@ export const ComposePost = ({
 
   // Clear the composer (discard current content)
   const handleClearComposer = useCallback(() => {
+    thread.posts.forEach(post => releaseEmbedMedia(post.embed.media))
     composerDispatch({
       type: 'clear',
       initInteractionSettings: preferences?.postInteractionSettings,
     })
-  }, [composerDispatch, preferences?.postInteractionSettings])
+  }, [composerDispatch, preferences?.postInteractionSettings, thread.posts])
 
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
@@ -1760,6 +1778,7 @@ let ComposerPost = memo(function ComposerPost({
             title={l`Discard post?`}
             description={l`Are you sure you'd like to discard this post?`}
             onConfirm={() => {
+              releaseEmbedMedia(post.embed.media)
               dispatch({
                 type: 'remove_post',
                 postId: post.id,
