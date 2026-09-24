@@ -35,19 +35,8 @@ function readSessionRecord(now = Date.now()) {
   )
 }
 
-function readSessionToMigrate(now = Date.now()) {
-  return parseSessionRecord(
-    runtimeWindow.sessionStorage.getItem(SESSION_RECORD_KEY),
-    now,
-  )
-}
-
 function writeSessionRecord(record: SessionRecord) {
   runtimeWindow.localStorage.setItem(SESSION_RECORD_KEY, JSON.stringify(record))
-}
-
-function removeSessionStorageRecord() {
-  runtimeWindow.sessionStorage.removeItem(SESSION_RECORD_KEY)
 }
 
 function resolveSessionForActivation(now = Date.now()) {
@@ -61,7 +50,7 @@ function resolveSessionForActivation(now = Date.now()) {
 let currentAppState = getCurrentState()
 let sessionRecord = (() => {
   const now = Date.now()
-  const existing = readSessionRecord(now) ?? readSessionToMigrate(now)
+  const existing = readSessionRecord(now)
   let record: SessionRecord
 
   if (currentAppState === 'active' && existing) {
@@ -78,7 +67,6 @@ let sessionRecord = (() => {
   }
 
   writeSessionRecord(record)
-  removeSessionStorageRecord()
   return record
 })()
 

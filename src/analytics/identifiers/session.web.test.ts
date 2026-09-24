@@ -66,13 +66,11 @@ class TestStorage {
 
 class TestWindow {
   localStorage: TestStorage
-  sessionStorage: TestStorage
   private storageListeners = new Set<StorageListener>()
   private pageHideListeners = new Set<PageHideListener>()
 
   constructor(readonly tabId: string) {
     this.localStorage = new TestStorage(mockSharedLocalStorage, tabId, true)
-    this.sessionStorage = new TestStorage(new Map(), tabId, false)
   }
 
   addEventListener(type: string, listener: StorageListener | PageHideListener) {
@@ -197,13 +195,6 @@ function loadSession(tabId = mockActiveTabId): typeof import('./session.web') {
 
 function setSessionRecord(tabId: string, record: unknown) {
   setActiveTab(tabId).localStorage.setItem(
-    SESSION_RECORD_KEY,
-    JSON.stringify(record),
-  )
-}
-
-function setSessionStorageRecord(tabId: string, record: unknown) {
-  setActiveTab(tabId).sessionStorage.setItem(
     SESSION_RECORD_KEY,
     JSON.stringify(record),
   )
@@ -357,48 +348,6 @@ describe('web session initialization', () => {
       id: 'session-a',
       rotatedAt: NOW.getTime(),
     })
-  })
-
-  it('migrates the versioned per-tab session record', () => {
-    setSessionStorageRecord('tab-a', {
-      id: 'existing-session',
-      rotatedAt: NOW.getTime(),
-    })
-
-    const {getInitialSessionId} = loadSession()
-
-    expect(getInitialSessionId()).toBe('existing-session')
-    expect(getSessionRecord('tab-a')).toEqual({
-      id: 'existing-session',
-      rotatedAt: NOW.getTime(),
-    })
-    expect(
-      setActiveTab('tab-a').sessionStorage.getItem(SESSION_RECORD_KEY),
-    ).toBeNull()
-    expect(mockUuidV4).not.toHaveBeenCalled()
-  })
-
-  it('prefers the browser-wide record over stale per-tab data', () => {
-    setSessionRecord('tab-a', {
-      id: 'browser-session',
-      rotatedAt: NOW.getTime(),
-    })
-    setSessionStorageRecord('tab-a', {
-      id: 'tab-session',
-      rotatedAt: NOW.getTime(),
-    })
-
-    const {getInitialSessionId} = loadSession()
-
-    expect(getInitialSessionId()).toBe('browser-session')
-    expect(getSessionRecord('tab-a')).toEqual({
-      id: 'browser-session',
-      rotatedAt: NOW.getTime(),
-    })
-    expect(
-      setActiveTab('tab-a').sessionStorage.getItem(SESSION_RECORD_KEY),
-    ).toBeNull()
-    expect(mockUuidV4).not.toHaveBeenCalled()
   })
 
   test('defers rotating an expired stored session initialized in the background', () => {
