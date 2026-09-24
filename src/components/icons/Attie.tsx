@@ -1,12 +1,18 @@
-import {forwardRef, useId} from 'react'
-import Svg, {Defs, G, Mask, Path} from 'react-native-svg'
+import {forwardRef} from 'react'
+import Svg, {Path} from 'react-native-svg'
 
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
+
+// The eye shapes are cut out of the body with even-odd fill. A single path
+// avoids platform differences in SVG mask rendering.
+const path =
+  'M14.398 2c4.502 0 8.151 3.634 8.151 8.117q0 .678-.108 1.325a5.67 5.67 0 0 1 1.507 3.855c0 8.837-23.948 8.837-23.948 0a5.68 5.68 0 0 1 1.977-4.31 5 5 0 0 1-.153-1.234c0-2.775 2.259-5.025 5.046-5.025q.67.002 1.289.166A8.15 8.15 0 0 1 14.399 2Z' +
+  ' M9.328 11.032a1.6 1.6 0 0 0-.46.008 1.09 1.09 0 0 1-1.628 1.414c-.137.3-.236.637-.284.997-.198 1.484.543 2.807 1.656 2.956 1.112.148 2.174-.934 2.372-2.419s-.544-2.807-1.656-2.956Z' +
+  ' M15.336 11.032a1.6 1.6 0 0 0-.46.008 1.09 1.09 0 0 1-1.628 1.414c-.137.3-.236.637-.284.997-.198 1.484.544 2.807 1.656 2.956 1.112.148 2.174-.935 2.372-2.419s-.544-2.807-1.656-2.956Z'
 
 export const Attie_Filled_Corner0_Rounded = forwardRef<Svg, Props>(
   function Attie_Filled_Corner0_Rounded(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
-    const maskId = useId().replace(/:/g, '')
 
     return (
       <Svg
@@ -18,21 +24,7 @@ export const Attie_Filled_Corner0_Rounded = forwardRef<Svg, Props>(
         height={size}
         style={[style]}>
         {gradient}
-        <Defs>
-          <Mask id={maskId} x="0" y="2" width="24" height="20">
-            <Path fill="white" d="M24 2H0v20h24z" />
-            <Path
-              fill="black"
-              d="M9.328 11.032a1.6 1.6 0 0 0-.46.008 1.09 1.09 0 0 1-1.628 1.414c-.137.3-.236.637-.284.997-.198 1.484.543 2.807 1.656 2.956 1.112.148 2.174-.934 2.372-2.419s-.544-2.807-1.656-2.956M15.336 11.032a1.6 1.6 0 0 0-.46.008 1.09 1.09 0 0 1-1.628 1.414c-.137.3-.236.637-.284.997-.198 1.484.544 2.807 1.656 2.956 1.112.148 2.174-.935 2.372-2.419s-.544-2.807-1.656-2.956"
-            />
-          </Mask>
-        </Defs>
-        <G mask={`url(#${maskId})`}>
-          <Path
-            fill={fill}
-            d="M14.398 2c4.502 0 8.151 3.634 8.151 8.117q0 .678-.108 1.325a5.67 5.67 0 0 1 1.507 3.855c0 8.837-23.948 8.837-23.948 0a5.68 5.68 0 0 1 1.977-4.31 5 5 0 0 1-.153-1.234c0-2.775 2.259-5.025 5.046-5.025q.67.002 1.289.166A8.15 8.15 0 0 1 14.399 2"
-          />
-        </G>
+        <Path fill={fill} fillRule="evenodd" clipRule="evenodd" d={path} />
       </Svg>
     )
   },
