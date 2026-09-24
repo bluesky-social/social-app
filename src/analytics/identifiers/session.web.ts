@@ -28,7 +28,7 @@ export function getInitialSessionId() {
  * generally be trusted to be up to date.
  */
 export function getSessionId() {
-  return window.sessionStorage.getItem(SESSION_ID_KEY)
+  return sessionId
 }
 
 export function useSessionId() {

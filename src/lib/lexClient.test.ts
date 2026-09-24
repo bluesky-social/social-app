@@ -33,7 +33,7 @@ describe('createLexClient', () => {
     jest.mocked(getSessionId).mockReturnValue('session-123')
     const client = createLexClient(
       {fetchHandler},
-      {includeAtprotoIdentifiers: true},
+      {includeDeviceSessionHeaders: true},
     )
 
     await client.call(app.bsky.actor.getProfile, {actor: 'alice.test'})
@@ -57,17 +57,17 @@ describe('createLexClient', () => {
     expect(requestHeaders(0).get('x-atproto-session-id')).toBeNull()
   })
 
-  it('omits identifiers that are not initialized', async () => {
+  it('omits the device identifier before initialization', async () => {
     jest.mocked(getDeviceId).mockReturnValue(undefined)
-    jest.mocked(getSessionId).mockReturnValue(undefined)
+    jest.mocked(getSessionId).mockReturnValue('session-123')
     const client = createLexClient(
       {fetchHandler},
-      {includeAtprotoIdentifiers: true},
+      {includeDeviceSessionHeaders: true},
     )
 
     await client.call(app.bsky.actor.getProfile, {actor: 'alice.test'})
 
     expect(requestHeaders(0).get('x-atproto-device-id')).toBeNull()
-    expect(requestHeaders(0).get('x-atproto-session-id')).toBeNull()
+    expect(requestHeaders(0).get('x-atproto-session-id')).toBe('session-123')
   })
 })

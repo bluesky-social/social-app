@@ -30,7 +30,7 @@ import {networkAwareFetch} from './network'
 export function buildAppviewClient(agent: Agent): Client {
   return createLexClient(agent, {
     service: BLUESKY_PROXY_HEADER.get(),
-    includeAtprotoIdentifiers: true,
+    includeDeviceSessionHeaders: true,
   })
 }
 
@@ -65,6 +65,7 @@ export function buildPdsClient(agent: Agent): Client {
 export function buildChatClient(agent: Agent): Client {
   return createLexClient(agent, {
     service: CHAT_PROXY_SERVICE,
+    includeDeviceSessionHeaders: true,
   })
 }
 
@@ -156,6 +157,6 @@ export function getPublicAppviewClient(): Client {
       service: PUBLIC_BSKY_SERVICE,
       fetch: networkAwareFetch,
     },
-    {includeAtprotoIdentifiers: true},
+    {includeDeviceSessionHeaders: true},
   ))
 }

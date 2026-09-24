@@ -11,9 +11,9 @@ import {getDeviceId, getSessionId} from '#/analytics/identifiers'
 type CreateLexClientOptions = ClientOptions & {
   /**
    * Include the stable device ID and current session ID on every request.
-   * Enable only when the request is bound for a trusted AppView.
+   * Enable only when the request is bound for a trusted service.
    */
-  includeAtprotoIdentifiers?: boolean
+  includeDeviceSessionHeaders?: boolean
 }
 
 /**
@@ -21,7 +21,7 @@ type CreateLexClientOptions = ClientOptions & {
  * are read at dispatch time so session rotation does not require rebuilding
  * long-lived clients.
  */
-function withAtprotoIdentifiers(agentOptions: Agent | AgentOptions): Agent {
+function withDeviceSessionHeaders(agentOptions: Agent | AgentOptions): Agent {
   const agent = buildAgent(agentOptions)
   return {
     get did() {
@@ -59,9 +59,9 @@ export function createLexClient(
   agent: Agent | AgentOptions,
   options: CreateLexClientOptions = {},
 ): Client {
-  const {includeAtprotoIdentifiers, ...clientOptions} = options
+  const {includeDeviceSessionHeaders, ...clientOptions} = options
   return new Client(
-    includeAtprotoIdentifiers ? withAtprotoIdentifiers(agent) : agent,
+    includeDeviceSessionHeaders ? withDeviceSessionHeaders(agent) : agent,
     {
       strictResponseProcessing: false,
       ...clientOptions,
@@ -85,8 +85,8 @@ export function createLexClient(
  * input, and a typo'd or dead service must not be reported as the app losing
  * network reachability.
  *
- * The default `includeAtprotoIdentifiers: false` keeps stable analytics IDs off
- * these requests. `appLabelers: null` also suppresses the global
+ * The default `includeDeviceSessionHeaders: false` keeps stable analytics IDs
+ * off these requests. `appLabelers: null` also suppresses the global
  * `Client.appLabelers` static: these are `com.atproto.server` calls to a host the
  * user typed, which have no use for moderation labels, and the header would
  * disclose the app's configured moderation authorities to an arbitrary
