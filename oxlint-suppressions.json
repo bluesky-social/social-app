@@ -628,11 +628,6 @@
       "count": 1
     }
   },
-  "src/lib/link-meta/link-meta.ts": {
-    "typescript/no-unsafe-member-access": {
-      "count": 9
-    }
-  },
   "src/lib/media/manip.ts": {
     "typescript/no-explicit-any": {
       "count": 1
