@@ -17,25 +17,7 @@ function createSessionRecord(now = Date.now()): SessionRecord {
   }
 }
 
-function migrateLegacySession(now = Date.now()): SessionRecord | undefined {
-  const id = device.get(['nativeSessionId'])
-  if (!id) return undefined
-
-  const lastEventAt = device.get(['nativeSessionIdLastEventAt'])
-  const validLastEventAt = Number.isFinite(lastEventAt)
-    ? lastEventAt
-    : undefined
-  return normalizeSessionRecord(
-    {
-      id,
-      inactivityAt: validLastEventAt,
-      rotatedAt: validLastEventAt ?? now,
-    },
-    now,
-  )
-}
-
-function readPersistedSessionRecord(now = Date.now()) {
+function readSessionRecord(now = Date.now()) {
   try {
     return normalizeSessionRecord(device.get(['nativeSession']), now)
   } catch (error) {
@@ -44,17 +26,8 @@ function readPersistedSessionRecord(now = Date.now()) {
   }
 }
 
-function readSessionRecord(now = Date.now()) {
-  return readPersistedSessionRecord(now) ?? migrateLegacySession(now)
-}
-
 function persistSessionRecord(record: SessionRecord) {
   device.set(['nativeSession'], record)
-}
-
-function removeLegacySession() {
-  device.remove(['nativeSessionId'])
-  device.remove(['nativeSessionIdLastEventAt'])
 }
 
 function resolveSessionForActivation(now = Date.now()) {
@@ -85,7 +58,6 @@ const initialSessionRecord = (() => {
   }
 
   persistSessionRecord(record)
-  removeLegacySession()
   return record
 })()
 
@@ -94,7 +66,7 @@ export function getInitialSessionId() {
 }
 
 export function getSessionId() {
-  return readPersistedSessionRecord()?.id ?? initialSessionRecord.id
+  return readSessionRecord()?.id ?? initialSessionRecord.id
 }
 
 function onAppStateChanged(nextAppState: AppStateStatus) {

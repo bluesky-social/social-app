@@ -170,22 +170,19 @@ function loadSession(tabId = mockActiveTabId): typeof import('./session.web') {
   return session!
 }
 
-function setLegacySession(tabId: string, id: string, lastEventAt?: number) {
-  const target = setActiveTab(tabId)
-  target.sessionStorage.setItem('bsky_session_id', id)
-  if (lastEventAt !== undefined) {
-    target.sessionStorage.setItem(
-      'bsky_session_id_last_event_at',
-      String(lastEventAt),
-    )
-  }
-}
-
 function setSessionRecord(tabId: string, record: unknown) {
   setActiveTab(tabId).sessionStorage.setItem(
     SESSION_RECORD_KEY,
     JSON.stringify(record),
   )
+}
+
+function setStoredSession(tabId: string, id: string, lastEventAt?: number) {
+  setSessionRecord(tabId, {
+    id,
+    inactivityAt: lastEventAt,
+    rotatedAt: lastEventAt,
+  })
 }
 
 function getSessionRecord(tabId: string) {
@@ -218,7 +215,7 @@ describe('web session initialization', () => {
   })
 
   it('reuses an unexpired stored session', () => {
-    setLegacySession(
+    setStoredSession(
       'tab-a',
       'existing-session',
       NOW.getTime() - THIRTY_MINUTES + 1,
@@ -233,18 +230,10 @@ describe('web session initialization', () => {
       id: 'existing-session',
       rotatedAt: NOW.getTime() - THIRTY_MINUTES + 1,
     })
-    expect(
-      setActiveTab('tab-a').sessionStorage.getItem('bsky_session_id'),
-    ).toBeNull()
-    expect(
-      setActiveTab('tab-a').sessionStorage.getItem(
-        'bsky_session_id_last_event_at',
-      ),
-    ).toBeNull()
   })
 
   it('rotates at the exact thirty-minute boundary', () => {
-    setLegacySession(
+    setStoredSession(
       'tab-a',
       'existing-session',
       NOW.getTime() - THIRTY_MINUTES,
@@ -261,7 +250,7 @@ describe('web session initialization', () => {
     ['missing', undefined],
     ['malformed', Number.NaN],
   ])('preserves an existing session with a %s timestamp', (_, timestamp) => {
-    setLegacySession('tab-a', 'existing-session', timestamp)
+    setStoredSession('tab-a', 'existing-session', timestamp)
 
     const {getInitialSessionId, getSessionId} = loadSession()
 
@@ -287,7 +276,7 @@ describe('web session initialization', () => {
 
   test('defers rotating an expired stored session initialized in the background', () => {
     mockCurrentAppStates.set('tab-a', 'background')
-    setLegacySession(
+    setStoredSession(
       'tab-a',
       'existing-session',
       NOW.getTime() - THIRTY_MINUTES,
@@ -330,21 +319,21 @@ describe('web session initialization', () => {
     })
   })
 
-  it('clamps future legacy timestamps during migration', () => {
-    mockCurrentAppStates.set('tab-a', 'background')
-    setLegacySession(
-      'tab-a',
-      'existing-session',
-      NOW.getTime() + THIRTY_MINUTES,
+  it('ignores obsolete session keys', () => {
+    const target = setActiveTab('tab-a')
+    target.sessionStorage.setItem('bsky_session_id', 'obsolete-session')
+    target.sessionStorage.setItem(
+      'bsky_session_id_last_event_at',
+      String(NOW.getTime()),
     )
 
-    const {getInitialSessionId} = loadSession()
+    const {getInitialSessionId, getSessionId} = loadSession()
 
-    expect(getInitialSessionId()).toBe('existing-session')
-    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(getInitialSessionId()).toBe('session-a')
+    expect(getSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
     expect(getSessionRecord('tab-a')).toEqual({
-      id: 'existing-session',
-      inactivityAt: NOW.getTime(),
+      id: 'session-a',
       rotatedAt: NOW.getTime(),
     })
   })
@@ -352,7 +341,7 @@ describe('web session initialization', () => {
 
 describe('web session lifecycle', () => {
   it('does not rotate when foregrounded before thirty minutes', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -365,7 +354,7 @@ describe('web session lifecycle', () => {
   })
 
   it('rotates once when foregrounded at the thirty-minute boundary', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -382,7 +371,7 @@ describe('web session lifecycle', () => {
   })
 
   it('does not rotate again inside thirty minutes', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -398,7 +387,7 @@ describe('web session lifecycle', () => {
   })
 
   test('uses one app-state listener for every mounted consumer', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     renderHook(() => {
       useSessionId()
@@ -410,7 +399,7 @@ describe('web session lifecycle', () => {
   })
 
   test('updates every mounted consumer after rotating once', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => {
       const first = useSessionId()
@@ -434,7 +423,7 @@ describe('web session lifecycle', () => {
   })
 
   test('keeps the shared listener until the last consumer unmounts', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const first = renderHook(() => useSessionId())
     const second = renderHook(() => useSessionId())
@@ -452,8 +441,8 @@ describe('web session lifecycle', () => {
   test.failing(
     'updates another tab when one tab rotates the shared session',
     () => {
-      setLegacySession('tab-a', 'existing-session', NOW.getTime())
-      setLegacySession('tab-b', 'existing-session', NOW.getTime())
+      setStoredSession('tab-a', 'existing-session', NOW.getTime())
+      setStoredSession('tab-b', 'existing-session', NOW.getTime())
 
       const firstTabSession = loadSession('tab-a')
       const firstTabHook = renderHook(() => firstTabSession.useSessionId())

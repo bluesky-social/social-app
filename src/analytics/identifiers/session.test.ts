@@ -89,15 +89,16 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
-function setLegacySession(id: string, lastEventAt?: number) {
-  mockDeviceValues.set('nativeSessionId', id)
-  if (lastEventAt !== undefined) {
-    mockDeviceValues.set('nativeSessionIdLastEventAt', lastEventAt)
-  }
-}
-
 function setSessionRecord(record: unknown) {
   mockDeviceValues.set('nativeSession', record)
+}
+
+function setStoredSession(id: string, lastEventAt?: number) {
+  setSessionRecord({
+    id,
+    inactivityAt: lastEventAt,
+    rotatedAt: lastEventAt,
+  })
 }
 
 function emitAppState(state: string) {
@@ -138,7 +139,7 @@ describe('native session initialization', () => {
   })
 
   it('reuses an unexpired stored session', () => {
-    setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES + 1)
+    setStoredSession('existing-session', NOW.getTime() - FIVE_MINUTES + 1)
 
     const {getInitialSessionId, getSessionId} = loadSession()
 
@@ -149,12 +150,10 @@ describe('native session initialization', () => {
       id: 'existing-session',
       rotatedAt: NOW.getTime() - FIVE_MINUTES + 1,
     })
-    expect(mockDeviceValues.has('nativeSessionId')).toBe(false)
-    expect(mockDeviceValues.has('nativeSessionIdLastEventAt')).toBe(false)
   })
 
   it('rotates an active stored session at the exact five-minute boundary', () => {
-    setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES)
+    setStoredSession('existing-session', NOW.getTime() - FIVE_MINUTES)
 
     const {getInitialSessionId, getSessionId} = loadSession()
 
@@ -167,7 +166,7 @@ describe('native session initialization', () => {
     ['missing', undefined],
     ['malformed', Number.NaN],
   ])('preserves an existing session with a %s timestamp', (_, timestamp) => {
-    setLegacySession('existing-session', timestamp)
+    setStoredSession('existing-session', timestamp)
 
     const {getInitialSessionId, getSessionId} = loadSession()
 
@@ -178,7 +177,7 @@ describe('native session initialization', () => {
 
   test('defers rotating an expired stored session initialized in the background', () => {
     mockCurrentAppState = 'background'
-    setLegacySession('existing-session', NOW.getTime() - FIVE_MINUTES)
+    setStoredSession('existing-session', NOW.getTime() - FIVE_MINUTES)
 
     const {getInitialSessionId, getSessionId} = loadSession()
 
@@ -237,17 +236,18 @@ describe('native session initialization', () => {
     })
   })
 
-  it('clamps future legacy timestamps during migration', () => {
-    mockCurrentAppState = 'background'
-    setLegacySession('existing-session', NOW.getTime() + FIVE_MINUTES)
+  it('ignores obsolete session keys', () => {
+    mockDeviceValues.set('nativeSessionId', 'obsolete-session')
+    mockDeviceValues.set('nativeSessionIdLastEventAt', NOW.getTime())
 
-    const {getInitialSessionId} = loadSession()
+    const {getInitialSessionId, getSessionId} = loadSession()
 
-    expect(getInitialSessionId()).toBe('existing-session')
-    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(getInitialSessionId()).toBe('session-a')
+    expect(getSessionId()).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(mockDeviceRemove).not.toHaveBeenCalled()
     expect(mockDeviceValues.get('nativeSession')).toEqual({
-      id: 'existing-session',
-      inactivityAt: NOW.getTime(),
+      id: 'session-a',
       rotatedAt: NOW.getTime(),
     })
   })
@@ -271,7 +271,7 @@ describe('native session initialization', () => {
 
 describe('native session lifecycle', () => {
   it('does not rotate when foregrounded before five minutes', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -284,7 +284,7 @@ describe('native session lifecycle', () => {
   })
 
   it('rotates once when foregrounded at the exact five-minute boundary', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -302,7 +302,7 @@ describe('native session lifecycle', () => {
   })
 
   it('does not rotate again inside five minutes', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -318,7 +318,7 @@ describe('native session lifecycle', () => {
   })
 
   test('does not erase the inactivity start during intermediate states', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -333,7 +333,7 @@ describe('native session lifecycle', () => {
   })
 
   test('uses one app-state listener for every mounted consumer', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     renderHook(() => {
       useSessionId()
@@ -345,7 +345,7 @@ describe('native session lifecycle', () => {
   })
 
   test('updates every mounted consumer after rotating once', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => {
       const first = useSessionId()
@@ -369,7 +369,7 @@ describe('native session lifecycle', () => {
   })
 
   test('updates consumers when the persisted session changes', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -384,7 +384,7 @@ describe('native session lifecycle', () => {
   })
 
   test('keeps the shared listener until the last consumer unmounts', () => {
-    setLegacySession('existing-session', NOW.getTime())
+    setStoredSession('existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const first = renderHook(() => useSessionId())
     const second = renderHook(() => useSessionId())

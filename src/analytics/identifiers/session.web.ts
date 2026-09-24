@@ -10,33 +10,12 @@ import {
 } from '#/analytics/identifiers/util'
 
 const SESSION_RECORD_KEY = 'bsky_analytics_session_v1'
-const LEGACY_SESSION_ID_KEY = 'bsky_session_id'
-const LEGACY_LAST_EVENT_KEY = 'bsky_session_id_last_event_at'
 
 function createSessionRecord(now = Date.now()): SessionRecord {
   return {
     id: String(uuid.v4()),
     rotatedAt: now,
   }
-}
-
-function migrateLegacySession(now = Date.now()): SessionRecord | undefined {
-  const id = window.sessionStorage.getItem(LEGACY_SESSION_ID_KEY)
-  if (!id) return undefined
-
-  const lastEventStr = window.sessionStorage.getItem(LEGACY_LAST_EVENT_KEY)
-  const lastEventAt = lastEventStr ? Number(lastEventStr) : undefined
-  const validLastEventAt = Number.isFinite(lastEventAt)
-    ? lastEventAt
-    : undefined
-  return normalizeSessionRecord(
-    {
-      id,
-      inactivityAt: validLastEventAt,
-      rotatedAt: validLastEventAt ?? now,
-    },
-    now,
-  )
 }
 
 function readSessionRecord(now = Date.now()) {
@@ -46,19 +25,14 @@ function readSessionRecord(now = Date.now()) {
       const record = normalizeSessionRecord(JSON.parse(rawRecord), now)
       if (record) return record
     } catch {
-      // Fall through to legacy migration.
+      // Treat malformed storage as a missing session.
     }
   }
-  return migrateLegacySession(now)
+  return undefined
 }
 
 function writeSessionRecord(record: SessionRecord) {
   window.sessionStorage.setItem(SESSION_RECORD_KEY, JSON.stringify(record))
-}
-
-function removeLegacySession() {
-  window.sessionStorage.removeItem(LEGACY_SESSION_ID_KEY)
-  window.sessionStorage.removeItem(LEGACY_LAST_EVENT_KEY)
 }
 
 function resolveSessionForActivation(now = Date.now()) {
@@ -89,7 +63,6 @@ let sessionRecord = (() => {
   }
 
   writeSessionRecord(record)
-  removeLegacySession()
   return record
 })()
 
