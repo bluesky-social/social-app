@@ -2,8 +2,8 @@
 
 Tester UI for task 0007, reachable at Settings > Developer options > Debug
 Composer V2 (`/sys/debug-composer`). The tester drives the real
-store/adapters/workers/planner; it has no second state model, no publishing
-path, and no draft persistence.
+store/adapters/workers/planner; an explicit one-shot publishing action is
+available only after enabling its checkbox, and there is no draft persistence.
 
 Legend for "verified": `unit` = covered by jest tests in this repo,
 `parent-pending` = interactive iOS verification owned by the parent session
@@ -28,8 +28,10 @@ Successful plans also display the complete `applyWrites` writes array as
 selectable, formatted JSON, including post and gate record contents. External
 attachments show their complete resolved fields (including descriptions,
 thumbnail metadata, associated refs, and supplied views), plus a thumbnail
-preview when available. These contents are intentionally visible in the tester;
-they are not logged or published. The separate state summary remains redacted.
+preview when available. These contents are intentionally visible in the tester
+and are not logged automatically. They are sent to the PDS only after the
+publishing checkbox is enabled and the explicit publish button is pressed. The
+separate state summary remains redacted.
 
 ## Sessions and initialization
 
@@ -83,18 +85,20 @@ they are not logged or published. The separate state summary remains redacted.
 | Shared postgate quote toggle                                                                             | `GateControls.tsx` | parent-pending |
 | Unknown threadgate/postgate rules preserved on edits, never silently broadened; explicit discard control | `gateRules.ts`     | unit           |
 
-## Planning (no writes)
+## Planning and explicit publishing
 
 | Capability                                                                                                                                                      | Where                                           | Verified                                        |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------- |
 | No-write plan with busy/success/failure states                                                                                                                  | `PlanSection.tsx`, `usePlanRunner.ts`           | unit + parent-pending                           |
+| Exact successful plan retained for an explicit writer action; publishing checkbox gates a one-shot publish button                                                | `usePlanRunner.ts`, `PlanSection.tsx`, `index.tsx` | unit (plan retention, checkbox gating) + parent-pending |
+| Write status retains the captured plan and lists planned URIs; rejected calls are treated as ambiguous and are never retried automatically                          | `index.tsx`, `writer.ts`                         | unit (writer errors) + parent-pending            |
 | Redacted structural results: order, rkeys, embed type (incl. 4/5-image images-vs-gallery switch), reply flags, writes per collection (post/threadgate/postgate) | `PlanSection.tsx` via `summarizeComposerV2Plan` | parent-pending                                  |
 | Expandable structure view: final at:// URIs, actual reply root/parent relationships (in-plan targets shown by post position), per-post gate associations        | `PlanSection.tsx` `PlanStructure`               | unit (summary fields) + parent-pending (UI)     |
 | Actionable static hints per error code                                                                                                                          | `PlanSection.tsx` via `messages.ts`             | unit (non-empty translated output per code)     |
 | Stale marking after edits; cleared on reset/session/account change; an old async plan never populates a different session                                       | `usePlanRunner.ts`                              | unit                                            |
 | Empty-post confirmation contract (`empty-post-requires-confirmation` -> explicit re-plan with confirmation)                                                     | `PlanSection.tsx`                               | unit (runner flag) + parent-pending (UI)        |
 | Required-alt-text preflight toggle (initialized from preference)                                                                                                | `index.tsx`, `PlanSection.tsx`                  | parent-pending                                  |
-| No repository write APIs anywhere in the tester                                                                                                                 | whole directory                                 | unit (planner seam records calls) + code review |
+| Publishing calls only the dedicated ComposerV2 writer; the planner remains no-write and production composer is not wired to it                                     | `index.tsx`, `writer.ts`, `planner.ts`            | unit + code review                               |
 
 ## Diagnostics and safety
 
@@ -107,8 +111,10 @@ they are not logged or published. The separate state summary remains redacted.
 
 ## Known limitations
 
-- No publishing controls exist by design; gate records and posts are only
-  planned, never written.
+- Publishing is explicitly opt-in and one-shot per tester mount. Any rejected
+  write is treated as ambiguous: the exact plan stays in memory and cannot be
+  retried through this UI. There is no reconciliation engine or durable plan
+  storage, so unmounting the tester discards that in-memory plan.
 - Draft saving/restoring is task 0008; the adapter fixture is synthetic and
   clearly labelled.
 - The production tag typeahead is intentionally out of scope.
@@ -146,5 +152,6 @@ Dialogs: `-alt-input`, `-alt-save`, `-caption-{i}-lang|content|remove`,
 Gates: `-gates-open`, `-gates-discard-unknown`.
 Plan: `-plan`, `-plan-confirm-skip`, `-plan-clear`, `-plan-stale`,
 `-plan-result`, `-plan-errors`, `-plan-structure-toggle`, `-plan-structure`,
-`-plan-post-{index}-structure`.
+`-plan-post-{index}-structure`, `-publish-enable`, `-publish`, `-publish-status`,
+`-publish-uris`.
 Summary: `-summary-toggle`, `-summary-dump`.

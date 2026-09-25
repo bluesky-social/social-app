@@ -4,6 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {usePlanErrorHint} from '#/components/ComposerV2/tester/messages'
 import {
   type PlanSummary,
@@ -17,22 +18,39 @@ type PlanApi = ReturnType<typeof usePlanRunner>
 
 /**
  * No-write planning controls, structural summary, and full generated records.
- * Record contents are displayed only in this tester, not logged or published.
+ * Publishing is a separate explicit action, never part of planning.
  */
 export function PlanSection({
   plan,
   requireAltText,
   onChangeRequireAltText,
+  accountDid,
+  publishAttempted,
+  isPublishing,
+  onPublishPlan,
 }: {
   plan: PlanApi
   requireAltText: boolean
   onChangeRequireAltText: (value: boolean) => void
+  accountDid: string | undefined
+  publishAttempted: boolean
+  isPublishing: boolean
+  onPublishPlan: (plan: ComposerV2Plan) => void
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
   const planErrorHint = usePlanErrorHint()
   const [showStructure, setShowStructure] = useState(false)
+  const [publishingEnabled, setPublishingEnabled] = useState(false)
   const summary = plan.result?.summary
+  const successfulPlan = plan.result?.plan
+  const canPublish =
+    publishingEnabled &&
+    !publishAttempted &&
+    !plan.isPlanning &&
+    !plan.isStale &&
+    successfulPlan !== undefined &&
+    successfulPlan.input.repo === accountDid
 
   const needsEmptyPostConfirmation =
     summary !== undefined &&
@@ -53,7 +71,7 @@ export function PlanSection({
           testID="composerV2Tester-plan"
           size="small"
           color="primary"
-          disabled={plan.isPlanning}
+          disabled={plan.isPlanning || publishAttempted}
           onPress={() => void plan.runPlan()}>
           <ButtonText>
             <Trans>Plan records</Trans>
@@ -65,7 +83,7 @@ export function PlanSection({
             testID="composerV2Tester-plan-confirm-skip"
             size="small"
             color="secondary"
-            disabled={plan.isPlanning}
+            disabled={plan.isPlanning || publishAttempted}
             onPress={() => void plan.runPlan({skipEmptyPostsConfirmed: true})}>
             <ButtonText>
               <Trans>Skip empty posts & re-plan</Trans>
@@ -78,6 +96,7 @@ export function PlanSection({
             testID="composerV2Tester-plan-clear"
             size="small"
             color="secondary"
+            disabled={publishAttempted}
             onPress={plan.clearPlan}>
             <ButtonText>
               <Trans>Clear</Trans>
@@ -98,6 +117,50 @@ export function PlanSection({
           <Trans>Require alt text preflight</Trans>
         </Toggle.LabelText>
       </Toggle.Item>
+
+      <Toggle.Item
+        name="enablePublishing"
+        type="checkbox"
+        label={l`Enable publishing controls for this tester`}
+        value={publishingEnabled}
+        disabled={publishAttempted}
+        testID="composerV2Tester-publish-enable"
+        onChange={setPublishingEnabled}>
+        <Toggle.Checkbox />
+        <Toggle.LabelText>
+          <Trans>Enable publishing in this tester</Trans>
+        </Toggle.LabelText>
+      </Toggle.Item>
+
+      {publishingEnabled && (
+        <View style={[a.gap_xs]} testID="composerV2Tester-publish-controls">
+          <Text style={[a.text_xs, {color: t.palette.negative_500}]}>
+            <Trans>
+              Publishing creates real records on the signed-in account. This
+              action writes the exact plan shown here; planning alone never
+              publishes.
+            </Trans>
+          </Text>
+          <Button
+            label={l`Publish the exact planned records to your account`}
+            accessibilityHint={l`Writes the current plan to the signed-in account. This cannot be undone here.`}
+            testID="composerV2Tester-publish"
+            size="small"
+            color="primary"
+            disabled={!canPublish || isPublishing}
+            onPress={() => {
+              if (canPublish && successfulPlan) onPublishPlan(successfulPlan)
+            }}>
+            <ButtonText>
+              {isPublishing ? (
+                <Trans>Publishing…</Trans>
+              ) : (
+                <Trans>Publish planned records</Trans>
+              )}
+            </ButtonText>
+          </Button>
+        </View>
+      )}
 
       {plan.isStale && (
         <Text

@@ -17,7 +17,9 @@ export type PlanRunnerResult = {
   /** The immutable snapshot the plan was computed from. */
   snapshot: ThreadState
   summary: PlanSummary
-  /** Full planned writes for inspection in the tester, never sent or logged. */
+  /** The exact successful plan, retained for a separate explicit write action. */
+  plan: ComposerV2Plan | undefined
+  /** Full planned writes for inspection in the tester, never logged. */
   writes: ComposerV2Plan['writes'] | undefined
   skipEmptyPostsConfirmed: boolean
 }
@@ -85,6 +87,7 @@ export function usePlanRunner({
         sessionKey,
         snapshot,
         summary: summarizeComposerV2Plan(planned),
+        plan: planned.ok ? planned : undefined,
         writes: planned.ok ? planned.writes : undefined,
         skipEmptyPostsConfirmed,
       })

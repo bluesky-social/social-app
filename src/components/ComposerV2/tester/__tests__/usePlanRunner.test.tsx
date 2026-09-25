@@ -9,6 +9,7 @@ jest.mock('#/lib/api/resolve', () => {
 
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {
+  type ComposerV2Plan,
   type ComposerV2PlannerDependencies,
   type ComposerV2PlanResult,
   type planComposerV2,
@@ -79,6 +80,25 @@ describe('usePlanRunner', () => {
       ],
     })
     expect(result.current.isStale).toBe(false)
+    initialSession.store.destroy()
+  })
+
+  test('retains the exact successful plan for a separate writer action', async () => {
+    const successfulPlan = {
+      ok: true,
+      input: {repo: 'did:plc:tester', writes: [], validate: true},
+      posts: [],
+      writes: [],
+    } as unknown as ComposerV2Plan
+    const {result, initialSession} = setup(() =>
+      Promise.resolve(successfulPlan),
+    )
+
+    await act(async () => {
+      await result.current.runPlan()
+    })
+
+    expect(result.current.result?.plan).toBe(successfulPlan)
     initialSession.store.destroy()
   })
 

@@ -8,6 +8,7 @@ jest.unmock('multiformats/cid')
 jest.unmock('multiformats/hashes/hasher')
 jest.mock('#/lib/api/resolve', () => ({resolveLink: jest.fn()}))
 jest.mock('#/components/Toast', () => ({show: jest.fn()}))
+jest.mock('#/lib/haptics', () => ({useHaptics: () => jest.fn()}))
 /* Neither inspection view opens a dialog; avoid loading the native sheet. */
 jest.mock('#/components/Dialog', () => ({}))
 jest.mock('#/components/Loader', () => ({Loader: () => null}))
@@ -47,6 +48,7 @@ describe('tester record inspection', () => {
       },
     })
     const planner = jest.fn<typeof planComposerV2>(planComposerV2)
+    const onPublishPlan = jest.fn()
     const session = {key: 'inspection', scenarioId: 'empty' as const, store}
     function Harness() {
       const plan = usePlanRunner({
@@ -60,6 +62,10 @@ describe('tester record inspection', () => {
           plan={plan}
           requireAltText={false}
           onChangeRequireAltText={() => {}}
+          accountDid="did:plc:tester"
+          publishAttempted={false}
+          isPublishing={false}
+          onPublishPlan={onPublishPlan}
         />
       )
     }
@@ -91,6 +97,16 @@ describe('tester record inspection', () => {
       expect(output.props.numberOfLines).toBeUndefined()
       expect(output.props.selectable).toBe(true)
       expect(appviewCall).not.toHaveBeenCalled()
+      expect(onPublishPlan).not.toHaveBeenCalled()
+      expect(screen.queryByTestId('composerV2Tester-publish')).toBeNull()
+
+      fireEvent.press(screen.getByTestId('composerV2Tester-publish-enable'))
+      const publishButton = screen.getByTestId('composerV2Tester-publish')
+      expect(publishButton.props.disabled).toBeFalsy()
+      expect(onPublishPlan).not.toHaveBeenCalled()
+      fireEvent.press(publishButton)
+      expect(onPublishPlan).toHaveBeenCalledTimes(1)
+      expect(onPublishPlan).toHaveBeenCalledWith(planned)
 
       fireEvent.press(screen.getByTestId('composerV2Tester-plan-clear'))
       expect(screen.queryByTestId('composerV2Tester-plan-records')).toBeNull()

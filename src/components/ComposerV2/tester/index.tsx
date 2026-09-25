@@ -1,9 +1,10 @@
-import {useState} from 'react'
+import {useRef, useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {resolveGif} from '#/lib/api/resolve'
 import {uploadBlob} from '#/lib/api/upload-blob'
+import {logger} from '#/logger'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useAppviewClient,
@@ -19,6 +20,7 @@ import {
   useThreadState,
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
+import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {GateControls} from '#/components/ComposerV2/tester/components/GateControls'
 import {PlanSection} from '#/components/ComposerV2/tester/components/PlanSection'
@@ -27,14 +29,20 @@ import {SessionControls} from '#/components/ComposerV2/tester/components/Session
 import {StateSummary} from '#/components/ComposerV2/tester/components/StateSummary'
 import {usePlanRunner} from '#/components/ComposerV2/tester/usePlanRunner'
 import {useTesterSession} from '#/components/ComposerV2/tester/useTesterSession'
+import {writeComposerV2Plan} from '#/components/ComposerV2/writer'
 import {Divider} from '#/components/Divider'
 import {Text} from '#/components/Typography'
+
+type ComposerV2PublishAttempt =
+  | {status: 'writing' | 'uncertain'; plan: ComposerV2Plan}
+  | {status: 'published'; plan: ComposerV2Plan; uris: string[]}
 
 /**
  * Full ComposerV2 tester behind Settings > Developer options > Debug Composer
  * V2. It drives the real store/adapters/workers/planner end to end: sessions
  * are isolated and rebuilt from normalized input, media uploads are real,
- * planning never publishes, and nothing entered here is saved anywhere.
+ * planning remains no-write, and publishing is a separate explicit action.
+ * Nothing entered here is saved as a draft.
  *
  * See ./COVERAGE.md for the capability coverage checklist and test IDs.
  */
@@ -53,6 +61,24 @@ export function ComposerV2Tester() {
     media: {pdsClient, dispatchUrl, i18n},
   })
   const {session} = sessionApi
+  const [publishAttempt, setPublishAttempt] =
+    useState<ComposerV2PublishAttempt>()
+  const publishStartedRef = useRef(false)
+
+  async function publishPlan(plan: ComposerV2Plan) {
+    if (publishStartedRef.current) return
+    publishStartedRef.current = true
+    setPublishAttempt({status: 'writing', plan})
+    try {
+      const {uris} = await writeComposerV2Plan({plan, pdsClient})
+      setPublishAttempt({status: 'published', plan, uris})
+    } catch (error) {
+      logger.error('ComposerV2 tester: publishing failed', {
+        safeMessage: error,
+      })
+      setPublishAttempt({status: 'uncertain', plan})
+    }
+  }
 
   /*
    * Local preflight toggle initialized from the user preference, so the
@@ -80,11 +106,14 @@ export function ComposerV2Tester() {
       <View style={[a.p_md, a.gap_md]} testID="composerV2Tester">
         <Admonition type="info">
           <Trans>
-            Tester only: media uploads are real blob uploads, planning never
-            publishes records, and nothing here is saved as a draft.
+            Tester only: media uploads are real blob uploads. Planning never
+            publishes records. The optional publisher makes real PDS writes only
+            after explicit opt-in and button press; nothing here is saved as a
+            draft.
           </Trans>
         </Admonition>
         <SessionControls {...sessionApi} />
+        {publishAttempt && <PublishAttemptNotice attempt={publishAttempt} />}
         <Divider />
         {/* Keying by session remounts every uncontrolled input on reset. */}
         <View key={session.key} style={[a.gap_md]}>
@@ -96,12 +125,60 @@ export function ComposerV2Tester() {
             plan={plan}
             requireAltText={requireAltText}
             onChangeRequireAltText={setRequireAltText}
+            accountDid={currentAccount?.did}
+            publishAttempted={publishAttempt !== undefined}
+            isPublishing={publishAttempt?.status === 'writing'}
+            onPublishPlan={plan => {
+              void publishPlan(plan)
+            }}
           />
           <Divider />
           <StateSummary />
         </View>
       </View>
     </ThreadStoreProvider>
+  )
+}
+
+function PublishAttemptNotice({attempt}: {attempt: ComposerV2PublishAttempt}) {
+  const t = useTheme()
+  const uris =
+    attempt.status === 'published'
+      ? attempt.uris
+      : attempt.plan.posts.map(post => post.uri)
+
+  return (
+    <View
+      style={[
+        a.gap_2xs,
+        a.p_sm,
+        a.rounded_sm,
+        a.border,
+        t.atoms.border_contrast_low,
+      ]}
+      testID="composerV2Tester-publish-status">
+      <Text style={[a.text_xs, a.font_bold]}>
+        {attempt.status === 'writing' ? (
+          <Trans>Publishing the captured plan…</Trans>
+        ) : attempt.status === 'published' ? (
+          <Trans>The planned records were published.</Trans>
+        ) : (
+          <Trans>
+            The write failed and its outcome may be uncertain. This exact plan
+            is retained; do not retry or replace it until you check these URIs.
+          </Trans>
+        )}
+      </Text>
+      <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+        <Trans>Repository: {attempt.plan.input.repo}</Trans>
+      </Text>
+      <Text
+        selectable
+        style={[a.text_xs, {fontFamily: 'monospace'}]}
+        testID="composerV2Tester-publish-uris">
+        {uris.join('\n')}
+      </Text>
+    </View>
   )
 }
 

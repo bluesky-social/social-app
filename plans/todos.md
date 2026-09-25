@@ -1,6 +1,6 @@
 # ComposerV2 follow-up discussions
 
-These are discussion notes requested by the operator, not approved implementation tasks. Discuss them before scheduling or implementing. Executable task briefs remain in `AGENTS/tasks/`.
+These are follow-up discussions requested by the operator. Items remain discussion-only unless explicitly marked approved below. Executable task briefs remain in `AGENTS/tasks/`.
 
 The public/internal action-surface cleanup is separately queued as `AGENTS/tasks/0011-task-composer-v2-internal-actions.md`.
 
@@ -8,9 +8,11 @@ The public/internal action-surface cleanup is separately queued as `AGENTS/tasks
 
 `PostMediaUploadStatus` in `src/components/ComposerV2/store/types.ts` currently requires a `retry` function on every failed upload. `setUploadStatus()` in `store/index.ts` omits that function for terminal failures (`retryable === false`) and casts the result to the declared type.
 
-Discuss the smallest accurate contract: optional retry or a discriminated retryable/terminal failure type. Ensure consumers narrow correctly and do not assume every failure can be retried. Remove the cast hiding this mismatch and cover retryable versus terminal behavior when implementation is approved.
+Approved and in progress with Luna: `AGENTS/tasks/0012-task-composer-v2-upload-failure-types.md`.
 
-Scope should stay on type/runtime agreement, not redesign the upload lifecycle.
+Use explicit stored variants: `retryable: true` with a required retry function, or `retryable: false` without one. Keep worker reports unchanged and normalize their optional flag at the store boundary, preserving the existing default that omission permits retry. Remove the cast hiding the mismatch and verify both runtime behavior and type narrowing.
+
+Scope stays on type/runtime agreement, not redesigning the upload lifecycle.
 
 ## 3. Test store invariants across action sequences
 
