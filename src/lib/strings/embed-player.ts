@@ -126,13 +126,8 @@ const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
 /** AT Protocol TID, i.e. the rkey of a `fm.freemix.track` record */
 const freemixRkeyRegex = /^[2-7a-z]{13}$/
 
-/*
- * staging.freemix.fm is FreeMix's live test environment; match it in dev
- * builds only.
- */
-const freemixHosts = __DEV__
-  ? ['app.freemix.fm', 'staging.freemix.fm']
-  : ['app.freemix.fm']
+/** staging.freemix.fm is FreeMix's live test environment */
+const freemixHosts = ['app.freemix.fm', 'staging.freemix.fm']
 
 export function parseEmbedPlayerFromUrl(
   url: string,
