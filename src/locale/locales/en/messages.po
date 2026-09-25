@@ -154,7 +154,7 @@ msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
 #. placeholder {0}: quoteCount ?? 0
-#: src/screens/Post/PostQuotes.tsx:34
+#: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr ""
 
@@ -7894,6 +7894,11 @@ msgstr ""
 msgid "More options"
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:41
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:46
+msgid "Most liked"
+msgstr "Most liked"
+
 #: src/screens/SavedFeeds.tsx:488
 msgid "Move feed down"
 msgstr ""
@@ -8245,6 +8250,11 @@ msgstr "New to Bluesky? <0>Sign up</0>"
 msgid "New user info dialog"
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:51
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:56
+msgid "Newest"
+msgstr "Newest"
+
 #: src/screens/PostThread/components/HeaderDropdown.tsx:95
 #: src/screens/PostThread/components/HeaderDropdown.tsx:100
 #: src/screens/Settings/ThreadPreferences.tsx:73
@@ -8448,7 +8458,7 @@ msgstr ""
 msgid "No posts yet"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:107
+#: src/view/com/post-thread/PostQuotes.tsx:110
 msgid "No quotes yet"
 msgstr ""
 
@@ -8533,7 +8543,7 @@ msgstr ""
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:109
+#: src/view/com/post-thread/PostQuotes.tsx:112
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr ""
 
@@ -9973,8 +9983,13 @@ msgstr ""
 msgid "Quote posts disabled"
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:21
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:24
+msgid "Quote sorting"
+msgstr "Quote sorting"
+
 #: src/lib/hooks/useNotificationHandler.ts:186
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:38
 #: src/screens/Settings/NotificationSettings/index.tsx:203
 #: src/screens/Settings/NotificationSettings/index.tsx:346
 msgid "Quotes"
@@ -12072,6 +12087,10 @@ msgstr ""
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:37
+msgid "Sort quotes by"
+msgstr "Sort quotes by"
+
 #: src/screens/Settings/ThreadPreferences.tsx:45
 msgid "Sort replies"
 msgstr ""
@@ -12582,7 +12601,7 @@ msgstr "That Starter Pack could not be found."
 msgid "That username is already taken"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:135
+#: src/view/com/post-thread/PostQuotes.tsx:138
 msgid "That's all, folks!"
 msgstr ""
 

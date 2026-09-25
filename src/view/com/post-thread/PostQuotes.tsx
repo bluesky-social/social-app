@@ -8,7 +8,10 @@ import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {usePostQuotesQuery} from '#/state/queries/post-quotes'
+import {
+  type QuotesSort,
+  usePostQuotesQuery,
+} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {Post} from '#/view/com/post/Post'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
@@ -38,7 +41,7 @@ function keyExtractor(item: {
   return item.post.uri
 }
 
-export function PostQuotes({uri}: {uri: string}) {
+export function PostQuotes({uri, sort}: {uri: string; sort?: QuotesSort}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -57,7 +60,7 @@ export function PostQuotes({uri}: {uri: string}) {
     fetchNextPage,
     error,
     refetch,
-  } = usePostQuotesQuery(resolvedUri?.uri)
+  } = usePostQuotesQuery(resolvedUri?.uri, {sort})
 
   const moderationOpts = useModerationOpts()
 

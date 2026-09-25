@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
+import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
@@ -18,11 +19,49 @@ import {
 const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
-const RQKEY_ROOT = 'post-quotes'
-export const RQKEY = (resolvedUri: string) => [RQKEY_ROOT, resolvedUri]
+export type QuotesSort = 'latest' | 'top'
+const DEFAULT_SORT: QuotesSort = 'latest'
 
-export function usePostQuotesQuery(resolvedUri: string | undefined) {
+const RQKEY_ROOT = 'post-quotes'
+export const RQKEY = (resolvedUri: string, sort: QuotesSort = DEFAULT_SORT) => [
+  RQKEY_ROOT,
+  resolvedUri,
+  sort,
+]
+
+export function buildGetQuotesParams({
+  uri,
+  cursor,
+  sort,
+}: {
+  uri: string
+  cursor?: string
+  sort?: QuotesSort
+}) {
+  /*
+   * The vendored lexicon does not declare `sort`, so it is spread in only
+   * when set and the whole params object is asserted. lex forwards
+   * undeclared params verbatim but rejects an undeclared key whose value
+   * is `undefined`, hence the conditional spread.
+   */
+  return {
+    uri: uri as AtUriString,
+    limit: PAGE_SIZE,
+    cursor,
+    ...(sort ? {sort} : {}),
+  } as app.bsky.feed.getQuotes.$Params
+}
+
+export function usePostQuotesQuery(
+  resolvedUri: string | undefined,
+  {sort}: {sort?: QuotesSort} = {},
+) {
+  const ax = useAnalytics()
+  const isSortEnabled = ax.features.enabled(ax.features.QuoteSortEnable)
   const client = useAppviewClient()
+
+  const sortParam = isSortEnabled ? (sort ?? DEFAULT_SORT) : undefined
+
   return useInfiniteQuery<
     app.bsky.feed.getQuotes.$OutputBody,
     Error,
@@ -30,14 +69,17 @@ export function usePostQuotesQuery(resolvedUri: string | undefined) {
     QueryKey,
     RQPageParam
   >({
-    queryKey: RQKEY(resolvedUri || ''),
+    queryKey: RQKEY(resolvedUri || '', sortParam),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(app.bsky.feed.getQuotes, {
-        // the enabled flag prevents this from running until resolvedUri is set
-        uri: (resolvedUri || '') as AtUriString,
-        limit: PAGE_SIZE,
-        cursor: pageParam,
-      })
+      return await client.call(
+        app.bsky.feed.getQuotes,
+        buildGetQuotesParams({
+          // the enabled flag prevents this from running until resolvedUri is set
+          uri: resolvedUri || '',
+          cursor: pageParam,
+          sort: sortParam,
+        }),
+      )
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
