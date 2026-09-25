@@ -154,7 +154,7 @@ msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
 #. placeholder {0}: quoteCount ?? 0
-#: src/screens/Post/PostQuotes.tsx:34
+#: src/screens/Post/PostQuotes.tsx:41
 msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr ""
 
@@ -831,6 +831,10 @@ msgstr ""
 #: src/components/verification/VerificationsDialog.tsx:71
 msgid "{userName}'s verifications"
 msgstr ""
+
+#: src/components/Post/Embed/AtCard/index.tsx:160
+msgid "@{displayedHandle}"
+msgstr "@{displayedHandle}"
 
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
@@ -2320,7 +2324,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:215
+#: src/components/Post/Embed/index.tsx:224
 msgid "Blocked"
 msgstr ""
 
@@ -4004,7 +4008,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:208
+#: src/components/Post/Embed/index.tsx:217
 msgid "Deleted"
 msgstr ""
 
@@ -4865,7 +4869,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr ""
 
-#: src/lib/api/index.ts:500
+#: src/lib/api/index.ts:504
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -7853,6 +7857,11 @@ msgstr ""
 msgid "More options"
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:41
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:46
+msgid "Most liked"
+msgstr "Most liked"
+
 #: src/screens/SavedFeeds.tsx:488
 msgid "Move feed down"
 msgstr ""
@@ -8190,6 +8199,11 @@ msgstr "New to Bluesky? <0>Sign up</0>"
 msgid "New user info dialog"
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:51
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:56
+msgid "Newest"
+msgstr "Newest"
+
 #: src/screens/PostThread/components/HeaderDropdown.tsx:95
 #: src/screens/PostThread/components/HeaderDropdown.tsx:100
 #: src/screens/Settings/ThreadPreferences.tsx:73
@@ -8393,7 +8407,7 @@ msgstr ""
 msgid "No posts yet"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:107
+#: src/view/com/post-thread/PostQuotes.tsx:110
 msgid "No quotes yet"
 msgstr ""
 
@@ -8478,7 +8492,7 @@ msgstr ""
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:109
+#: src/view/com/post-thread/PostQuotes.tsx:112
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr ""
 
@@ -9606,7 +9620,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
 
-#: src/lib/api/index.ts:194
+#: src/lib/api/index.ts:195
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
@@ -9791,7 +9805,7 @@ msgstr ""
 msgid "Processing video..."
 msgstr ""
 
-#: src/lib/api/index.ts:65
+#: src/lib/api/index.ts:66
 msgid "Processing..."
 msgstr ""
 
@@ -9905,8 +9919,13 @@ msgstr ""
 msgid "Quote posts disabled"
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:21
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:24
+msgid "Quote sorting"
+msgstr "Quote sorting"
+
 #: src/lib/hooks/useNotificationHandler.ts:186
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:38
 #: src/screens/Settings/NotificationSettings/index.tsx:203
 #: src/screens/Settings/NotificationSettings/index.tsx:346
 msgid "Quotes"
@@ -10243,11 +10262,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:243
+#: src/components/Post/Embed/index.tsx:252
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:241
+#: src/components/Post/Embed/index.tsx:250
 msgid "Removed by you"
 msgstr ""
 
@@ -12002,6 +12021,10 @@ msgstr ""
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
+#: src/view/com/post-thread/PostQuotesSortDropdown.tsx:37
+msgid "Sort quotes by"
+msgstr "Sort quotes by"
+
 #: src/screens/Settings/ThreadPreferences.tsx:45
 msgid "Sort replies"
 msgstr ""
@@ -12502,7 +12525,7 @@ msgstr "That Starter Pack could not be found."
 msgid "That username is already taken"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:135
+#: src/view/com/post-thread/PostQuotes.tsx:138
 msgid "That's all, folks!"
 msgstr ""
 
@@ -13850,13 +13873,13 @@ msgstr ""
 msgid "Uploading GIF..."
 msgstr ""
 
-#: src/lib/api/index.ts:336
-#: src/lib/api/index.ts:363
+#: src/lib/api/index.ts:337
+#: src/lib/api/index.ts:364
 msgid "Uploading images..."
 msgstr ""
 
-#: src/lib/api/index.ts:436
-#: src/lib/api/index.ts:460
+#: src/lib/api/index.ts:437
+#: src/lib/api/index.ts:461
 msgid "Uploading link thumbnail..."
 msgstr ""
 
@@ -14364,10 +14387,22 @@ msgstr ""
 msgid "Violent or threatening content"
 msgstr ""
 
+#. placeholder {0}: view.title
+#. placeholder {1}: provider.name
+#: src/components/Post/Embed/AtCard/index.tsx:61
+msgid "Visit {0} on {1}"
+msgstr "Visit {0} on {1}"
+
 #: src/components/dialogs/LinkWarning.tsx:112
 #: src/components/dialogs/LinkWarning.tsx:122
+#: src/components/Post/Embed/AtCard/index.tsx:185
 msgid "Visit site"
 msgstr ""
+
+#. placeholder {0}: provider.name
+#: src/components/Post/Embed/AtCard/index.tsx:62
+msgid "Visit site on {0}"
+msgstr "Visit site on {0}"
 
 #: src/view/screens/Notifications.tsx:296
 msgid "Visit your notification settings"

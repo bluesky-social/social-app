@@ -20,6 +20,7 @@ export enum Features {
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
   FollowSortEnable = 'follow_sort:enable',
+  QuoteSortEnable = 'quote_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
 
