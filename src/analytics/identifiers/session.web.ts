@@ -10,6 +10,7 @@ import {
 } from '#/analytics/identifiers/util'
 
 const SESSION_RECORD_KEY = 'bsky_analytics_session_v1'
+const runtimeWindow = window
 
 function createSessionRecord(now = Date.now()): SessionRecord {
   return {
@@ -18,21 +19,24 @@ function createSessionRecord(now = Date.now()): SessionRecord {
   }
 }
 
-function readSessionRecord(now = Date.now()) {
-  const rawRecord = window.sessionStorage.getItem(SESSION_RECORD_KEY)
-  if (rawRecord) {
-    try {
-      const record = normalizeSessionRecord(JSON.parse(rawRecord), now)
-      if (record) return record
-    } catch {
-      // Treat malformed storage as a missing session.
-    }
+function parseSessionRecord(rawRecord: string | null, now = Date.now()) {
+  if (!rawRecord) return undefined
+  try {
+    return normalizeSessionRecord(JSON.parse(rawRecord), now)
+  } catch {
+    return undefined
   }
-  return undefined
+}
+
+function readSessionRecord(now = Date.now()) {
+  return parseSessionRecord(
+    runtimeWindow.localStorage.getItem(SESSION_RECORD_KEY),
+    now,
+  )
 }
 
 function writeSessionRecord(record: SessionRecord) {
-  window.sessionStorage.setItem(SESSION_RECORD_KEY, JSON.stringify(record))
+  runtimeWindow.localStorage.setItem(SESSION_RECORD_KEY, JSON.stringify(record))
 }
 
 function resolveSessionForActivation(now = Date.now()) {
@@ -81,13 +85,63 @@ function notifyListeners() {
   listeners.forEach(listener => listener())
 }
 
-function persistSessionRecord(record: SessionRecord) {
-  writeSessionRecord(record)
+function updateSessionRecord(record: SessionRecord) {
   const sessionIdChanged = record.id !== sessionRecord.id
   sessionRecord = record
   if (sessionIdChanged) {
     notifyListeners()
   }
+}
+
+function persistSessionRecord(record: SessionRecord) {
+  writeSessionRecord(record)
+  updateSessionRecord(record)
+}
+
+function persistInactivityStart(now = Date.now()) {
+  const record = readSessionRecord(now) ?? createSessionRecord(now)
+  persistSessionRecord({
+    ...record,
+    inactivityAt: record.inactivityAt ?? now,
+  })
+}
+
+function selectCanonicalSessionRecord(record: SessionRecord) {
+  if (record.id === sessionRecord.id) return record
+
+  if (record.rotatedAt !== sessionRecord.rotatedAt) {
+    return record.rotatedAt > sessionRecord.rotatedAt ? record : sessionRecord
+  }
+
+  return record.id < sessionRecord.id ? record : sessionRecord
+}
+
+function reconcileSessionRecord(record: SessionRecord) {
+  const canonicalRecord = selectCanonicalSessionRecord(record)
+
+  if (canonicalRecord === sessionRecord) {
+    writeSessionRecord(sessionRecord)
+  } else if (
+    currentAppState === 'active' &&
+    canonicalRecord.inactivityAt !== undefined
+  ) {
+    persistSessionRecord({...canonicalRecord, inactivityAt: undefined})
+  } else {
+    updateSessionRecord(canonicalRecord)
+  }
+}
+
+function onSessionRecordStorageChanged(event: StorageEvent) {
+  if (
+    event.key !== SESSION_RECORD_KEY ||
+    event.storageArea !== runtimeWindow.localStorage
+  ) {
+    return
+  }
+
+  const record = readSessionRecord()
+  if (!record) return
+  reconcileSessionRecord(record)
 }
 
 function onAppStateChanged(nextAppState: AppStateStatus) {
@@ -97,21 +151,32 @@ function onAppStateChanged(nextAppState: AppStateStatus) {
     const record = resolveSessionForActivation(now)
     persistSessionRecord({...record, inactivityAt: undefined})
   } else if (currentAppState === 'active') {
-    const record = readSessionRecord(now) ?? createSessionRecord(now)
-    persistSessionRecord({
-      ...record,
-      inactivityAt: record.inactivityAt ?? now,
-    })
+    persistInactivityStart(now)
   }
 
   currentAppState = nextAppState
 }
 
+function onPageHide() {
+  if (currentAppState !== 'active') return
+
+  persistInactivityStart()
+  currentAppState = 'background'
+}
+
 function startCoordinator() {
+  runtimeWindow.addEventListener('storage', onSessionRecordStorageChanged)
+  runtimeWindow.addEventListener('pagehide', onPageHide)
+  const persistedRecord = readSessionRecord()
+  if (persistedRecord) {
+    reconcileSessionRecord(persistedRecord)
+  }
   appStateSubscription = onAppStateChange(onAppStateChanged)
 }
 
 function stopCoordinator() {
+  runtimeWindow.removeEventListener('storage', onSessionRecordStorageChanged)
+  runtimeWindow.removeEventListener('pagehide', onPageHide)
   appStateSubscription?.remove()
   appStateSubscription = undefined
 }

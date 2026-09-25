@@ -82,7 +82,7 @@ beforeEach(() => {
   mockDeviceListeners.clear()
   mockAppStateListeners.clear()
   mockCurrentAppState = 'active'
-  mockUuidV4.mockReturnValue('session-a')
+  mockUuidV4.mockReset().mockReturnValue('session-a')
 })
 
 afterEach(() => {
