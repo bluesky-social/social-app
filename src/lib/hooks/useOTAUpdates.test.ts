@@ -330,7 +330,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
       )
 
       const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
-      act(() => buttons?.[1].onPress?.())
+      void act(() => buttons?.[1].onPress?.())
 
       await waitFor(() => expect(reloadAsync).toHaveBeenCalled())
       expect(result.current.pending).toBe(false)
