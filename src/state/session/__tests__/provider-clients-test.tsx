@@ -11,14 +11,16 @@ import {type SessionAccount} from '../types'
  * itself, mirroring provider-abort-test.tsx.
  */
 jest.mock('#/state/persisted', () => {
+  const actual = jest.requireActual<object>('#/state/persisted')
   const {
     defaults,
   }: typeof import('#/state/persisted/schema') = require('#/state/persisted/schema')
   return {
-    defaults,
-    get: (key: keyof typeof defaults) => defaults[key],
-    write: () => Promise.resolve(),
-    readLatest: (key: keyof typeof defaults) => defaults[key],
+    ...actual,
+    get: () => defaults.session,
+    readLatest: () => defaults.session,
+    writeSession: ({nextSession}: {nextSession: typeof defaults.session}) =>
+      Promise.resolve(nextSession),
     onUpdate: () => () => {},
   }
 })

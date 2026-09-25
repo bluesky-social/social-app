@@ -57,12 +57,21 @@ const currentAccountSchema = accountSchema.extend({
 })
 export type PersistedCurrentAccount = z.infer<typeof currentAccountSchema>
 
+const credentialStateSchema = z.object({
+  credentialVersion: z.number().int().nonnegative(),
+  refreshJti: z.string().optional(),
+  status: z.enum(['active', 'logged-out', 'removed']),
+})
+export type PersistedCredentialState = z.infer<typeof credentialStateSchema>
+
 const schema = z.object({
   colorMode: z.enum(['system', 'light', 'dark']),
   darkTheme: z.enum(['dim', 'dark']).optional(),
   session: z.object({
     accounts: z.array(accountSchema),
     currentAccount: currentAccountSchema.optional(),
+    /** Per-account credential ordering, including logout and removal tombstones. */
+    credentialStates: z.record(z.string(), credentialStateSchema).optional(),
   }),
   reminders: z.object({
     lastEmailConfirm: z.string().optional(),
