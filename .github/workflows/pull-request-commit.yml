@@ -47,8 +47,8 @@ jobs:
         id: get-base-size
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: base-bundle-size.txt
-          key: base-bundle-size-main-${{ github.sha }}
+          path: base-bundle-size.json
+          key: base-bundle-size-v2-main-${{ github.sha }}
 
       - name: 🔦 Build and measure base bundle
         if: ${{ !steps.get-base-size.outputs.cache-hit }}
@@ -56,14 +56,14 @@ jobs:
           pnpm install
           pnpm intl:build
           pnpm build-web
-          node scripts/measure-web-bundle.js > base-bundle-size.txt
+          node scripts/measure-web-bundle.js --json > base-bundle-size.json
 
       - name: ⬆️ Save base bundle size to cache
         if: ${{ !steps.get-base-size.outputs.cache-hit }}
         uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: base-bundle-size.txt
-          key: base-bundle-size-main-${{ github.sha }}
+          path: base-bundle-size.json
+          key: base-bundle-size-v2-main-${{ github.sha }}
 
   bundle-analyzer:
     name: Web bundle size and browser support
@@ -114,7 +114,8 @@ jobs:
       - name: 🔦 Build and measure PR bundle
         run: |
           pnpm build-web
-          node scripts/measure-web-bundle.js > ../pr-bundle-size.txt
+          node scripts/measure-web-bundle.js --json > ../pr-bundle-size.json
+          cp scripts/measure-web-bundle.js "$RUNNER_TEMP/measure-web-bundle.js"
 
       - name: 🔎 Check web browser support
         run: pnpm check-web-browser-support
@@ -124,8 +125,8 @@ jobs:
         # Restore-only prevents PR-scoped fallback builds from creating caches.
         uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
-          path: base-bundle-size.txt
-          key: base-bundle-size-main-${{ steps.base-commit.outputs.base-commit }}
+          path: base-bundle-size.json
+          key: base-bundle-size-v2-main-${{ steps.base-commit.outputs.base-commit }}
 
       - name: ⏪ Restore to base commit
         if: ${{ !steps.get-base-size.outputs.cache-hit }}
@@ -134,6 +135,9 @@ jobs:
         run: |
           git reset "$BASE_COMMIT"
           git restore .
+          # Measure both builds with the PR's script, even when the base
+          # predates support for gzip measurements.
+          cp "$RUNNER_TEMP/measure-web-bundle.js" scripts/measure-web-bundle.js
           # Drop the PR-side export so the measure script's output-dir
           # auto-detection can't pick it up: a webpack base exports to
           # web-build/ while the PR's Metro build left dist/ behind.
@@ -145,34 +149,39 @@ jobs:
           pnpm install
           pnpm intl:build
           pnpm build-web
-          node scripts/measure-web-bundle.js --allow-missing > base-bundle-size.txt
+          node scripts/measure-web-bundle.js --allow-missing --json > base-bundle-size.json
 
       - name: ％ Get diff
         id: get-diff
         run: |
           node -e '
             const fs = require("node:fs")
-            const base = Number(fs.readFileSync("base-bundle-size.txt", "utf8").trim())
-            const pr = Number(fs.readFileSync("../pr-bundle-size.txt", "utf8").trim())
-            if (!Number.isFinite(base) || !Number.isFinite(pr) || base <= 0) {
-              console.error(`Bad measurements: base=${base} pr=${pr}`)
-              process.exit(1)
-            }
+            const base = JSON.parse(fs.readFileSync("base-bundle-size.json", "utf8"))
+            const pr = JSON.parse(fs.readFileSync("../pr-bundle-size.json", "utf8"))
             const fmt = bytes => {
               const abs = Math.abs(bytes)
               if (abs >= 1024 * 1024) return `${(bytes / 1024 / 1024).toFixed(2)} MB`
               if (abs >= 1024) return `${(bytes / 1024).toFixed(2)} KB`
               return `${bytes} B`
             }
-            const diff = pr - base
-            const out = [
-              `base_file_string=${fmt(base)}`,
-              `pr_file_string=${fmt(pr)}`,
-              `diff_file_string=${diff > 0 ? "+" : ""}${fmt(diff)}`,
-              `percent=${((diff / base) * 100).toFixed(2)}`,
-            ].join("\n")
-            console.log(out)
-            fs.appendFileSync(process.env.GITHUB_OUTPUT, out + "\n")
+            const out = []
+            for (const metric of ["raw", "gzip"]) {
+              const baseSize = base[metric]
+              const prSize = pr[metric]
+              if (!Number.isFinite(baseSize) || !Number.isFinite(prSize) || baseSize <= 0 || prSize < 0) {
+                console.error(`Bad ${metric} measurements: base=${baseSize} pr=${prSize}`)
+                process.exit(1)
+              }
+              const diff = prSize - baseSize
+              out.push(
+                `${metric}_base_file_string=${fmt(baseSize)}`,
+                `${metric}_pr_file_string=${fmt(prSize)}`,
+                `${metric}_diff_file_string=${diff > 0 ? "+" : ""}${fmt(diff)}`,
+                `${metric}_percent=${((diff / baseSize) * 100).toFixed(2)}`,
+              )
+            }
+            console.log(out.join("\n"))
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, out.join("\n") + "\n")
           '
 
       - name: 💬 Drop a comment
@@ -180,9 +189,10 @@ jobs:
         with:
           header: bundle-diff
           message: |
-            | Old size | New size | Diff                  |
-            |----------|----------|-----------------------|
-            | ${{ steps.get-diff.outputs.base_file_string }} | ${{ steps.get-diff.outputs.pr_file_string }} | ${{ steps.get-diff.outputs.diff_file_string }} (${{ steps.get-diff.outputs.percent }}%) |
+            | Size | Old size | New size | Diff |
+            |------|----------|----------|------|
+            | Uncompressed | ${{ steps.get-diff.outputs.raw_base_file_string }} | ${{ steps.get-diff.outputs.raw_pr_file_string }} | ${{ steps.get-diff.outputs.raw_diff_file_string }} (${{ steps.get-diff.outputs.raw_percent }}%) |
+            | Gzip | ${{ steps.get-diff.outputs.gzip_base_file_string }} | ${{ steps.get-diff.outputs.gzip_pr_file_string }} | ${{ steps.get-diff.outputs.gzip_diff_file_string }} (${{ steps.get-diff.outputs.gzip_percent }}%) |
             ---
 
   fingerprint-native:
