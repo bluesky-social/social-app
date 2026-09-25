@@ -38,7 +38,16 @@ function keyExtractor(item: {
   return item.post.uri
 }
 
-export function PostQuotes({uri, sort}: {uri: string; sort?: QuotesSort}) {
+export function PostQuotes({
+  uri,
+  sort,
+  active = true,
+}: {
+  uri: string
+  sort?: QuotesSort
+  /** When false (an unselected pager tab), the list doesn't fetch yet. */
+  active?: boolean
+}) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
@@ -52,12 +61,13 @@ export function PostQuotes({uri, sort}: {uri: string; sort?: QuotesSort}) {
   const {
     data,
     isLoading: isLoadingQuotes,
+    isFetched,
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
     error,
     refetch,
-  } = usePostQuotesQuery(resolvedUri?.uri, {sort})
+  } = usePostQuotesQuery(resolvedUri?.uri, {sort, enabled: active})
 
   const moderationOpts = useModerationOpts()
 
@@ -101,7 +111,10 @@ export function PostQuotes({uri, sort}: {uri: string; sort?: QuotesSort}) {
   if (quotes.length < 1) {
     return (
       <ListMaybePlaceholder
-        isLoading={isLoadingUri || isLoadingQuotes}
+        // A tab that hasn't fetched yet shows loading, not "No quotes yet".
+        isLoading={
+          isLoadingUri || isLoadingQuotes || (!!resolvedUri && !isFetched)
+        }
         isError={isError}
         emptyType="results"
         emptyTitle={_(msg`No quotes yet`)}

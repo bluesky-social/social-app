@@ -54,7 +54,7 @@ export function buildGetQuotesParams({
 
 export function usePostQuotesQuery(
   resolvedUri: string | undefined,
-  {sort}: {sort?: QuotesSort} = {},
+  {sort, enabled = true}: {sort?: QuotesSort; enabled?: boolean} = {},
 ) {
   const ax = useAnalytics()
   const isSortEnabled = ax.features.enabled(ax.features.QuoteSortEnable)
@@ -83,7 +83,7 @@ export function usePostQuotesQuery(
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
-    enabled: !!resolvedUri,
+    enabled: !!resolvedUri && enabled,
     select: data => {
       return {
         ...data,
