@@ -66,6 +66,11 @@ const stripSentryDebug = ({types}) => ({
   },
 })
 
+const workletsPluginOptions = {
+  bundleMode: true,
+  strictGlobal: true, // optional, but recommended
+}
+
 /**
  * @param {import("@babel/core").ConfigAPI} api
  * @returns {import("@babel/core").InputOptions}
@@ -115,7 +120,7 @@ module.exports = function (api) {
         : []),
 
       stripSymbolLocs,
-      'react-native-worklets/plugin', // NOTE: this plugin MUST be last
+      ['react-native-worklets/plugin', workletsPluginOptions], // NOTE: this plugin MUST be last
     ],
   }
 }
