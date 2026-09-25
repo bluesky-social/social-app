@@ -832,6 +832,10 @@ msgstr ""
 msgid "{userName}'s verifications"
 msgstr ""
 
+#: src/components/Post/Embed/AtCard/index.tsx:160
+msgid "@{displayedHandle}"
+msgstr "@{displayedHandle}"
+
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
 #. placeholder {0}: totalNumber - 3
@@ -2320,7 +2324,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:215
+#: src/components/Post/Embed/index.tsx:224
 msgid "Blocked"
 msgstr ""
 
@@ -4004,7 +4008,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:208
+#: src/components/Post/Embed/index.tsx:217
 msgid "Deleted"
 msgstr ""
 
@@ -4865,7 +4869,7 @@ msgstr ""
 msgid "Expands or collapses post text"
 msgstr ""
 
-#: src/lib/api/index.ts:500
+#: src/lib/api/index.ts:504
 msgid "Expected uri to resolve to a record"
 msgstr ""
 
@@ -9606,7 +9610,7 @@ msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
 
-#: src/lib/api/index.ts:194
+#: src/lib/api/index.ts:195
 msgid "Post failed to upload. Please check your Internet connection and try again."
 msgstr ""
 
@@ -9791,7 +9795,7 @@ msgstr ""
 msgid "Processing video..."
 msgstr ""
 
-#: src/lib/api/index.ts:65
+#: src/lib/api/index.ts:66
 msgid "Processing..."
 msgstr ""
 
@@ -10243,11 +10247,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:243
+#: src/components/Post/Embed/index.tsx:252
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:241
+#: src/components/Post/Embed/index.tsx:250
 msgid "Removed by you"
 msgstr ""
 
@@ -13850,13 +13854,13 @@ msgstr ""
 msgid "Uploading GIF..."
 msgstr ""
 
-#: src/lib/api/index.ts:336
-#: src/lib/api/index.ts:363
+#: src/lib/api/index.ts:337
+#: src/lib/api/index.ts:364
 msgid "Uploading images..."
 msgstr ""
 
-#: src/lib/api/index.ts:436
-#: src/lib/api/index.ts:460
+#: src/lib/api/index.ts:437
+#: src/lib/api/index.ts:461
 msgid "Uploading link thumbnail..."
 msgstr ""
 
@@ -14364,10 +14368,22 @@ msgstr ""
 msgid "Violent or threatening content"
 msgstr ""
 
+#. placeholder {0}: view.title
+#. placeholder {1}: provider.name
+#: src/components/Post/Embed/AtCard/index.tsx:61
+msgid "Visit {0} on {1}"
+msgstr "Visit {0} on {1}"
+
 #: src/components/dialogs/LinkWarning.tsx:112
 #: src/components/dialogs/LinkWarning.tsx:122
+#: src/components/Post/Embed/AtCard/index.tsx:185
 msgid "Visit site"
 msgstr ""
+
+#. placeholder {0}: provider.name
+#: src/components/Post/Embed/AtCard/index.tsx:62
+msgid "Visit site on {0}"
+msgstr "Visit site on {0}"
 
 #: src/view/screens/Notifications.tsx:296
 msgid "Visit your notification settings"
