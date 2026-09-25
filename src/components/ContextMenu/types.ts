@@ -4,7 +4,7 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
-import {type GestureType} from 'react-native-gesture-handler'
+import {type PanGesture} from 'react-native-gesture-handler'
 import {type SharedValue} from 'react-native-reanimated'
 
 import type * as Dialog from '#/components/Dialog'
@@ -89,7 +89,7 @@ export type TriggerProps = {
   style?: StyleProp<ViewStyle>
   /**
    * Callback for single taps. Composed with the double-tap and
-   * press-and-hold gestures via `Gesture.Exclusive`, so a double tap
+   * press-and-hold gestures via `useExclusiveGestures`, so a double tap
    * does not also fire this handler.
    *
    * @platform ios, android
@@ -97,12 +97,13 @@ export type TriggerProps = {
   onTap?: () => void
   /**
    * An optional gesture (e.g. swipe-to-reply) composed into the same
-   * arbitration group as the tap and press-and-hold gestures via `Gesture.Race`,
-   * making it mutually exclusive with them - only one can win a given touch.
+   * arbitration group as the tap and press-and-hold gestures via
+   * `useCompetingGestures`, making it mutually exclusive with them - only one
+   * can win a given touch.
    *
    * @platform ios, android
    */
-  swipeGesture?: GestureType
+  swipeGesture?: PanGesture
 }
 export type TriggerChildProps =
   | {
