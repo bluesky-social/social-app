@@ -8,7 +8,7 @@ The public/internal action-surface cleanup is separately queued as `AGENTS/tasks
 
 `PostMediaUploadStatus` in `src/components/ComposerV2/store/types.ts` currently requires a `retry` function on every failed upload. `setUploadStatus()` in `store/index.ts` omits that function for terminal failures (`retryable === false`) and casts the result to the declared type.
 
-Approved and in progress with Luna: `AGENTS/tasks/0012-task-composer-v2-upload-failure-types.md`.
+Implemented and verified by Luna: `AGENTS/tasks/0012-task-composer-v2-upload-failure-types.md`.
 
 Use explicit stored variants: `retryable: true` with a required retry function, or `retryable: false` without one. Keep worker reports unchanged and normalize their optional flag at the store boundary, preserving the existing default that omission permits retry. Remove the cast hiding the mismatch and verify both runtime behavior and type narrowing.
 

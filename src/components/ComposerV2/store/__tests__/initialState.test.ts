@@ -370,7 +370,8 @@ describe('initial media and eager uploads', () => {
     if (
       failed?.state !== 'resolved' ||
       failed.kind !== 'video' ||
-      failed.item.upload.state !== 'failed'
+      failed.item.upload.state !== 'failed' ||
+      failed.item.upload.retryable !== true
     )
       throw new Error('expected failed upload')
     failed.item.upload.retry()

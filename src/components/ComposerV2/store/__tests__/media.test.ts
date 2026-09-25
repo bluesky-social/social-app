@@ -18,6 +18,8 @@ import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   type AddMediaInput,
   type PostMediaItem,
+  type PostMediaUploadStatus,
+  type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {type UploadWorkerOverrides} from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
@@ -74,6 +76,45 @@ const gifInput: AddMediaInput = {
   gif: {url: 'https://example.com/g.gif'} as Gif,
 }
 
+test('stored upload failure types require a retry only when retryable', () => {
+  const retry = jest.fn()
+  const retryable: PostMediaUploadStatus = {
+    state: 'failed',
+    error: 'retryable',
+    retryable: true,
+    retry,
+  }
+  const terminal: PostMediaUploadStatus = {
+    state: 'failed',
+    error: 'terminal',
+    retryable: false,
+  }
+  const retryIfAllowed = (status: PostMediaUploadStatus) => {
+    if (status.state === 'failed' && status.retryable === true) {
+      status.retry()
+    }
+  }
+  // @ts-expect-error retryable failures require a retry callback
+  const retryableWithoutRetry: PostMediaUploadStatus = {
+    state: 'failed',
+    error: 'retryable',
+    retryable: true,
+  }
+  const terminalWithRetry: PostMediaUploadStatus = {
+    state: 'failed',
+    error: 'terminal',
+    retryable: false,
+    // @ts-expect-error terminal failures cannot carry a retry callback
+    retry,
+  }
+
+  retryIfAllowed(retryable)
+  retryIfAllowed(terminal)
+  expect(retry).toHaveBeenCalledTimes(1)
+  expect(retryableWithoutRetry).toMatchObject({retryable: true})
+  expect(terminalWithRetry).toMatchObject({retryable: false})
+})
+
 // Embed-routing tests live in embeds.test.ts; here we just need a never-
 // resolving resolveLink so any addUri-driven resolution doesn't crash and
 // no result ever lands. The promise never settles, which is what we want.
@@ -99,6 +140,86 @@ function makeStore() {
     __uploadWorkers: simulatedUploadWorkers,
   })
 }
+
+describe('stored upload failure normalization', () => {
+  test.each([
+    {label: 'omitted', retryable: undefined},
+    {label: 'true', retryable: true},
+    {label: 'false', retryable: false},
+  ])('normalizes a worker failure with retryable $label', ({retryable}) => {
+    const started: string[] = []
+    let reportStatus: ((status: UploadStatus) => void) | undefined
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+      initialState: {
+        posts: [
+          {
+            attachments: {
+              media: {
+                kind: 'images',
+                items: [{uri: imageInput.uri, width: 100, height: 100}],
+              },
+            },
+          },
+        ],
+      },
+      __uploadWorkers: {
+        startImageUpload: opts => {
+          started.push(opts.mediaId)
+          reportStatus = status =>
+            opts.setUploadStatus(opts.postId, opts.mediaId, status)
+          return {cancel() {}}
+        },
+      },
+    })
+    const postId = rootId(store)
+    const item = getMedia(store, postId)[0]
+    if (item.kind !== 'image') throw new Error('expected image')
+    expect(started).toEqual([item.id])
+
+    const failure: UploadStatus = {
+      state: 'failed',
+      error: 'network failure',
+      code: 'upload-failed',
+      ...(retryable === undefined ? {} : {retryable}),
+    }
+    reportStatus!(failure)
+
+    const stored = getMedia(store, postId)[0]
+    if (stored.kind !== 'image' || stored.upload.state !== 'failed') {
+      throw new Error('expected failed image upload')
+    }
+    expect(stored.upload).toMatchObject({
+      state: 'failed',
+      error: 'network failure',
+      code: 'upload-failed',
+      retryable: retryable !== false,
+    })
+    expect(store.getState().isDirty).toBe(false)
+    expect(started).toEqual([item.id])
+
+    if (stored.upload.retryable === false) {
+      expect(Object.prototype.hasOwnProperty.call(stored.upload, 'retry')).toBe(
+        false,
+      )
+      const failedState = store.getState()
+      store.actions.retryMediaUpload(postId, item.id)
+      expect(store.getState()).toBe(failedState)
+      expect(store.actions.retryAllFailedUploads()).toEqual({
+        retriedMediaIds: [],
+      })
+      expect(started).toEqual([item.id])
+    } else {
+      expect(typeof stored.upload.retry).toBe('function')
+      stored.upload.retry()
+      expect(getUploadState(store, postId)).toBe('pending')
+      expect(started).toEqual([item.id, item.id])
+      expect(store.getState().isDirty).toBe(false)
+    }
+    store.destroy()
+  })
+})
 
 describe('addMedia', () => {
   test('adds a single image with pending upload status and returns its named id', () => {
@@ -492,7 +613,9 @@ describe('retryMediaUpload', () => {
       return m.upload
     }
     const failed = get()
-    if (failed.state !== 'failed') throw new Error('expected failed')
+    if (failed.state !== 'failed' || failed.retryable !== true) {
+      throw new Error('expected retryable failed upload')
+    }
     expect(typeof failed.retry).toBe('function')
 
     failed.retry()

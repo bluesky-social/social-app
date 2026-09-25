@@ -33,7 +33,7 @@ import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseRe
 
 function isRetryableFailedUpload(item: types.PostMediaItem): boolean {
   if (item.kind !== 'image' && item.kind !== 'video') return false
-  return item.upload.state === 'failed' && item.upload.retryable !== false
+  return item.upload.state === 'failed' && item.upload.retryable === true
 }
 
 /** One isolated thread composition session, independent of React. */
@@ -602,12 +602,13 @@ export function createThreadStore(options: {
     else if (input.state === 'uploaded') uploadTasks.delete(mediaId)
     const status: types.PostMediaUploadStatus =
       input.state === 'failed'
-        ? ({
-            ...input,
-            ...(input.retryable === false
-              ? {}
-              : {retry: () => retryMediaUpload(postId, mediaId)}),
-          } as types.PostMediaUploadStatus)
+        ? input.retryable === false
+          ? {...input, retryable: false}
+          : {
+              ...input,
+              retryable: true,
+              retry: () => retryMediaUpload(postId, mediaId),
+            }
         : input
     mutateState(s => {
       const currentPost = s.posts[postId]
