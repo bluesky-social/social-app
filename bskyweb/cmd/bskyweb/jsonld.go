@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	comatproto "github.com/bluesky-social/indigo/api/atproto"
 	appbsky "github.com/bluesky-social/indigo/api/bsky"
 	"github.com/bluesky-social/indigo/atproto/syntax"
 )
@@ -45,9 +46,27 @@ type verifier struct {
 	URL           string `json:"url,omitempty"`
 }
 
-type sharedContent struct {
-	Type string `json:"@type"`
-	URL  string `json:"url"`
+// sharedWebPage is the schema.org WebPage shape for an external link card in
+// sharedContent. Google wants link-preview images here rather than in the
+// post's own image[].
+type sharedWebPage struct {
+	Type        string `json:"@type"`
+	URL         string `json:"url"`
+	Name        string `json:"name,omitempty"`
+	Description string `json:"description,omitempty"`
+	Image       string `json:"image,omitempty"`
+}
+
+// quotedPost is the lightweight DiscussionForumPosting shape for a quoted
+// post in sharedContent. Stats, media, and nested fields are omitted to keep
+// SSR HTML small; url/identifier let crawlers follow to the full page.
+type quotedPost struct {
+	Type          string       `json:"@type"`
+	URL           string       `json:"url,omitempty"`
+	Identifier    string       `json:"identifier,omitempty"`
+	Author        *personOrOrg `json:"author,omitempty"`
+	Text          string       `json:"text,omitempty"`
+	DatePublished string       `json:"datePublished,omitempty"`
 }
 
 type discussionForumPosting struct {
@@ -66,7 +85,11 @@ type discussionForumPosting struct {
 	Comment         []comment         `json:"comment,omitempty"`
 	IsBasedOn       string            `json:"isBasedOn,omitempty"`
 	IsPartOf        string            `json:"isPartOf,omitempty"`
-	SharedContent   *sharedContent    `json:"sharedContent,omitempty"`
+	// SharedContent is a single *quotedPost / *sharedWebPage, or a []any of
+	// both when a record-with-media embed carries a quote and a link card.
+	SharedContent any `json:"sharedContent,omitempty"`
+	// ParentItem is the reply's ancestor chain, nearest parent outermost.
+	ParentItem *comment `json:"parentItem,omitempty"`
 }
 
 // videoObject is the schema.org VideoObject shape for video embeds.
@@ -85,7 +108,9 @@ type videoObject struct {
 
 // comment is the schema.org Comment shape used in
 // DiscussionForumPosting.comment[]. The comment property does not accept
-// DiscussionForumPosting, so replies map to Comment.
+// DiscussionForumPosting, so replies map to Comment. Also used for
+// parentItem ancestors, where the thread root is typed
+// DiscussionForumPosting instead.
 type comment struct {
 	Type          string       `json:"@type"`
 	URL           string       `json:"url,omitempty"`
@@ -96,6 +121,8 @@ type comment struct {
 	ThumbnailURL  string       `json:"thumbnailUrl,omitempty"`
 	Video         *videoObject `json:"video,omitempty"`
 	DatePublished string       `json:"datePublished,omitempty"`
+	SharedContent any          `json:"sharedContent,omitempty"`
+	ParentItem    *comment     `json:"parentItem,omitempty"`
 }
 
 type webPage struct {
@@ -115,6 +142,9 @@ type profilePage struct {
 
 // maxComments caps DiscussionForumPosting.comment[] to keep SSR HTML small.
 const maxComments = 10
+
+// maxAncestors caps the parentItem chain depth on reply pages.
+const maxAncestors = 10
 
 // maxRecentPosts caps ProfilePage.hasPart[].
 const maxRecentPosts = 10
@@ -327,22 +357,140 @@ func extractQuotedPostURL(pv *appbsky.FeedDefs_PostView) string {
 	return bskyPostURLFromATURI(vr.Author.Handle, vr.Uri)
 }
 
-// extractSharedContentURL returns the URL of an external link embed (also
-// from the media slot of a record-with-media embed).
-func extractSharedContentURL(pv *appbsky.FeedDefs_PostView) string {
+// buildSharedWebPage returns a WebPage for an external link embed (also
+// from the media slot of a record-with-media embed), or nil if none.
+func buildSharedWebPage(pv *appbsky.FeedDefs_PostView) *sharedWebPage {
 	if pv == nil || pv.Embed == nil {
-		return ""
+		return nil
 	}
-	if pv.Embed.EmbedExternal_View != nil && pv.Embed.EmbedExternal_View.External != nil {
-		return pv.Embed.EmbedExternal_View.External.Uri
-	}
-	if pv.Embed.EmbedRecordWithMedia_View != nil &&
+	var ext *appbsky.EmbedExternal_ViewExternal
+	if pv.Embed.EmbedExternal_View != nil {
+		ext = pv.Embed.EmbedExternal_View.External
+	} else if pv.Embed.EmbedRecordWithMedia_View != nil &&
 		pv.Embed.EmbedRecordWithMedia_View.Media != nil &&
-		pv.Embed.EmbedRecordWithMedia_View.Media.EmbedExternal_View != nil &&
-		pv.Embed.EmbedRecordWithMedia_View.Media.EmbedExternal_View.External != nil {
-		return pv.Embed.EmbedRecordWithMedia_View.Media.EmbedExternal_View.External.Uri
+		pv.Embed.EmbedRecordWithMedia_View.Media.EmbedExternal_View != nil {
+		ext = pv.Embed.EmbedRecordWithMedia_View.Media.EmbedExternal_View.External
 	}
-	return ""
+	if ext == nil || ext.Uri == "" {
+		return nil
+	}
+	page := &sharedWebPage{
+		Type:        "WebPage",
+		URL:         ext.Uri,
+		Name:        ext.Title,
+		Description: ext.Description,
+	}
+	if ext.Thumb != nil {
+		page.Image = *ext.Thumb
+	}
+	return page
+}
+
+// buildQuotedPost returns a lightweight DiscussionForumPosting for a quoted
+// post, or nil if the quote is blocked / not-found / detached / a non-post
+// record, carries a label in any of labelSets, or its author requires auth.
+// The quoted text is third-party content, so it gets the same gating as
+// replies.
+func buildQuotedPost(pv *appbsky.FeedDefs_PostView, labelSets ...map[string]bool) *quotedPost {
+	if pv == nil || pv.Embed == nil {
+		return nil
+	}
+	var rec *appbsky.EmbedRecord_View
+	if pv.Embed.EmbedRecord_View != nil {
+		rec = pv.Embed.EmbedRecord_View
+	} else if pv.Embed.EmbedRecordWithMedia_View != nil {
+		rec = pv.Embed.EmbedRecordWithMedia_View.Record
+	}
+	if rec == nil || rec.Record == nil {
+		return nil
+	}
+	vr := rec.Record.EmbedRecord_ViewRecord
+	if vr == nil || vr.Author == nil || authorRequiresAuth(vr.Author) {
+		return nil
+	}
+	var post *appbsky.FeedPost
+	if vr.Value != nil {
+		post, _ = vr.Value.Val.(*appbsky.FeedPost)
+	}
+	for _, set := range labelSets {
+		if labelsHaveHideLabel(vr.Labels, post, set) {
+			return nil
+		}
+	}
+	url := bskyPostURLFromATURIWithDIDFallback(vr.Author.Handle, vr.Uri)
+	if url == "" {
+		return nil
+	}
+	qp := &quotedPost{
+		Type:          "DiscussionForumPosting",
+		URL:           url,
+		Identifier:    vr.Uri,
+		Author:        buildAuthor(vr.Author),
+		DatePublished: vr.IndexedAt,
+	}
+	if post != nil {
+		qp.Text = ExpandPostText(post)
+	}
+	return qp
+}
+
+// buildSharedContent returns the sharedContent value for a post: nil, a
+// single quoted post or link card, or []any{quote, linkCard} when both are
+// present. Returns nil when the post's embeds are hidden by labels.
+func buildSharedContent(pv *appbsky.FeedDefs_PostView, embedHidden bool, labelSets ...map[string]bool) any {
+	if embedHidden {
+		return nil
+	}
+	quote := buildQuotedPost(pv, labelSets...)
+	page := buildSharedWebPage(pv)
+	switch {
+	case quote != nil && page != nil:
+		return []any{quote, page}
+	case quote != nil:
+		return quote
+	case page != nil:
+		return page
+	}
+	return nil
+}
+
+// buildAncestorChain walks tv's parent chain upward and returns it as nested
+// parentItem nodes, nearest parent outermost, capped at maxAncestors. The
+// chain stops at the first ancestor that is blocked / not-found, carries a
+// label in hideLabels or hideReplyLabels, or whose author requires auth, so
+// a hidden post never appears and the hierarchy is never misrepresented by
+// skipping a level. The thread root is typed DiscussionForumPosting.
+func buildAncestorChain(tv *appbsky.FeedDefs_ThreadViewPost, hideLabels, hideReplyLabels map[string]bool) *comment {
+	if tv == nil {
+		return nil
+	}
+	var nodes []*comment
+	for parent := tv.Parent; parent != nil && len(nodes) < maxAncestors; {
+		ptv := parent.FeedDefs_ThreadViewPost
+		if ptv == nil || ptv.Post == nil || ptv.Post.Author == nil {
+			break
+		}
+		ppv := ptv.Post
+		if postAuthorRequiresAuth(ppv) || postHasHideLabel(ppv, hideReplyLabels) || postHasHideLabel(ppv, hideLabels) {
+			break
+		}
+		node := buildReplyNode(ppv, hideLabels, hideReplyLabels)
+		if node.Type == "" {
+			break
+		}
+		if threadRootURI(ppv) == "" {
+			node.Type = "DiscussionForumPosting"
+		}
+		nodes = append(nodes, &node)
+		parent = ptv.Parent
+	}
+	if len(nodes) == 0 {
+		return nil
+	}
+	for i := 0; i < len(nodes)-1; i++ {
+		nodes[i].ParentItem = nodes[i+1]
+	}
+	return nodes[0]
 }
 
 // threadRootURI returns the AT-URI of the root post of the thread a reply
@@ -456,20 +604,29 @@ func postHasHideLabel(pv *appbsky.FeedDefs_PostView, labelSet map[string]bool) b
 	if pv == nil {
 		return false
 	}
-	for _, label := range pv.Labels {
+	var rec *appbsky.FeedPost
+	if pv.Record != nil {
+		rec, _ = pv.Record.Val.(*appbsky.FeedPost)
+	}
+	return labelsHaveHideLabel(pv.Labels, rec, labelSet)
+}
+
+// labelsHaveHideLabel reports whether any non-negated label, or any of
+// rec's self-labels, is in labelSet. rec may be nil.
+func labelsHaveHideLabel(labels []*comatproto.LabelDefs_Label, rec *appbsky.FeedPost, labelSet map[string]bool) bool {
+	if len(labelSet) == 0 {
+		return false
+	}
+	for _, label := range labels {
 		isNeg := label.Neg != nil && *label.Neg
 		if labelSet[label.Val] && !isNeg {
 			return true
 		}
 	}
-	if pv.Record != nil {
-		if rec, ok := pv.Record.Val.(*appbsky.FeedPost); ok {
-			if rec.Labels != nil && rec.Labels.LabelDefs_SelfLabels != nil {
-				for _, label := range rec.Labels.LabelDefs_SelfLabels.Values {
-					if labelSet[label.Val] {
-						return true
-					}
-				}
+	if rec != nil && rec.Labels != nil && rec.Labels.LabelDefs_SelfLabels != nil {
+		for _, label := range rec.Labels.LabelDefs_SelfLabels.Values {
+			if labelSet[label.Val] {
+				return true
 			}
 		}
 	}
@@ -562,10 +719,8 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		if quoted := extractQuotedPostURL(pv); quoted != "" {
 			node.IsBasedOn = quoted
 		}
-		if shared := extractSharedContentURL(pv); shared != "" {
-			node.SharedContent = &sharedContent{Type: "WebPage", URL: shared}
-		}
 	}
+	node.SharedContent = buildSharedContent(pv, embedHidden, hideLabels, hideReplyLabels)
 
 	for _, r := range replies {
 		if r == nil || r.FeedDefs_ThreadViewPost == nil || r.FeedDefs_ThreadViewPost.Post == nil {
@@ -575,12 +730,13 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 			break
 		}
 		replyPV := r.FeedDefs_ThreadViewPost.Post
-		// Drop labeled replies entirely so abusive/spam text isn't surfaced
-		// into the parent post's structured data.
-		if postHasHideLabel(replyPV, hideReplyLabels) || postHasHideLabel(replyPV, hideLabels) {
+		// Drop labeled replies and replies from !no-unauthenticated authors
+		// entirely so their text isn't surfaced into the parent post's
+		// structured data.
+		if postAuthorRequiresAuth(replyPV) || postHasHideLabel(replyPV, hideReplyLabels) || postHasHideLabel(replyPV, hideLabels) {
 			continue
 		}
-		reply := buildReplyNode(replyPV, hideLabels)
+		reply := buildReplyNode(replyPV, hideLabels, hideReplyLabels)
 		if reply.Type == "" {
 			continue
 		}
@@ -590,9 +746,11 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 	return node
 }
 
-// buildReplyNode builds a schema.org Comment for a reply. Returns the
-// zero value if pv or pv.Author is nil.
-func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) comment {
+// buildReplyNode builds a schema.org Comment for a reply or ancestor.
+// Returns the zero value if pv or pv.Author is nil. Callers are responsible
+// for gating pv itself; hideLabels/hideReplyLabels gate its media and any
+// quoted post in sharedContent.
+func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels, hideReplyLabels map[string]bool) comment {
 	if pv == nil || pv.Author == nil {
 		return comment{}
 	}
@@ -614,6 +772,7 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 		ThumbnailURL:  thumb,
 		Video:         buildVideoObject(pv, postURL, postText, embedHidden),
 		DatePublished: pv.IndexedAt,
+		SharedContent: buildSharedContent(pv, embedHidden, hideLabels, hideReplyLabels),
 	}
 }
 
@@ -623,12 +782,19 @@ func buildReplyNode(pv *appbsky.FeedDefs_PostView, hideLabels map[string]bool) c
 // non-empty, is the handle-form canonical URL of the thread root the handler
 // resolved for a reply; pass "" to omit isPartOf (non-reply, or the root could
 // not be resolved). We never emit a DID-form isPartOf because it would not
-// match the root page's handle-form canonical.
-func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem, canonicalURL string, isPartOfURL string, hideLabels, hideReplyLabels map[string]bool) (string, error) {
+// match the root page's handle-form canonical. thread, when non-nil, is the
+// post's thread view; its replies become comment[] and its parent chain
+// becomes parentItem.
+func buildPostJSONLD(pv *appbsky.FeedDefs_PostView, thread *appbsky.FeedDefs_ThreadViewPost, canonicalURL string, isPartOfURL string, hideLabels, hideReplyLabels map[string]bool) (string, error) {
 	if pv == nil || pv.Author == nil {
 		return "", fmt.Errorf("nil post view or author")
 	}
+	var replies []*appbsky.FeedDefs_ThreadViewPost_Replies_Elem
+	if thread != nil {
+		replies = thread.Replies
+	}
 	node := buildPostNode(pv, replies, hideLabels, hideReplyLabels)
+	node.ParentItem = buildAncestorChain(thread, hideLabels, hideReplyLabels)
 
 	if isPartOfURL != "" {
 		node.IsPartOf = isPartOfURL
@@ -716,9 +882,9 @@ func buildProfileJSONLD(pv *appbsky.ActorDefs_ProfileViewDetailed, recentPosts [
 		if postHasHideLabel(rp, hideReplyLabels) || postHasHideLabel(rp, hideLabels) {
 			continue
 		}
-		// Recent posts go in nested form. No replies are passed, so the
-		// reply-label set is irrelevant; pass nil.
-		node := buildPostNode(rp, nil, hideLabels, nil)
+		// Recent posts go in nested form with no replies; hideReplyLabels
+		// still gates any quoted post in sharedContent.
+		node := buildPostNode(rp, nil, hideLabels, hideReplyLabels)
 		if node.Type == "" {
 			continue
 		}

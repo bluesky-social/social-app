@@ -723,7 +723,7 @@ func (srv *Server) WebPost(c echo.Context) error {
 		}
 	}
 
-	if jsonld, err := buildPostJSONLD(postView, threadView.Replies, jsonldURL, isPartOfURL, hideEmbedLabels, hideReplyLabels); err == nil {
+	if jsonld, err := buildPostJSONLD(postView, threadView, jsonldURL, isPartOfURL, hideEmbedLabels, hideReplyLabels); err == nil {
 		data["postJSONLD"] = jsonld
 	} else {
 		log.Warnf("failed to build post JSON-LD for %s: %v", uri, err)
