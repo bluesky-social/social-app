@@ -1,0 +1,260 @@
+import {useState} from 'react'
+import {View} from 'react-native'
+import {Trans, useLingui} from '@lingui/react/macro'
+
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {usePlanErrorHint} from '#/components/ComposerV2/tester/messages'
+import {
+  type PlanSummary,
+  type usePlanRunner,
+} from '#/components/ComposerV2/tester/usePlanRunner'
+import * as Toggle from '#/components/forms/Toggle'
+import {Loader} from '#/components/Loader'
+import {Text} from '#/components/Typography'
+
+type PlanApi = ReturnType<typeof usePlanRunner>
+
+/**
+ * No-write planning controls, structural summary, and full generated records.
+ * Record contents are displayed only in this tester, not logged or published.
+ */
+export function PlanSection({
+  plan,
+  requireAltText,
+  onChangeRequireAltText,
+}: {
+  plan: PlanApi
+  requireAltText: boolean
+  onChangeRequireAltText: (value: boolean) => void
+}) {
+  const {t: l} = useLingui()
+  const t = useTheme()
+  const planErrorHint = usePlanErrorHint()
+  const [showStructure, setShowStructure] = useState(false)
+  const summary = plan.result?.summary
+
+  const needsEmptyPostConfirmation =
+    summary !== undefined &&
+    !summary.ok &&
+    summary.errors.some(
+      error => error.code === 'empty-post-requires-confirmation',
+    )
+
+  return (
+    <View style={[a.gap_sm]}>
+      <Text style={[a.text_sm, a.font_bold]}>
+        <Trans>No-write record plan</Trans>
+      </Text>
+      <View style={[a.flex_row, a.align_center, a.flex_wrap, a.gap_sm]}>
+        <Button
+          label={l`Plan the record set without writing`}
+          accessibilityHint={l`Validates and constructs the records locally; nothing is published`}
+          testID="composerV2Tester-plan"
+          size="small"
+          color="primary"
+          disabled={plan.isPlanning}
+          onPress={() => void plan.runPlan()}>
+          <ButtonText>
+            <Trans>Plan records</Trans>
+          </ButtonText>
+        </Button>
+        {needsEmptyPostConfirmation && (
+          <Button
+            label={l`Confirm skipping empty posts and plan again`}
+            testID="composerV2Tester-plan-confirm-skip"
+            size="small"
+            color="secondary"
+            disabled={plan.isPlanning}
+            onPress={() => void plan.runPlan({skipEmptyPostsConfirmed: true})}>
+            <ButtonText>
+              <Trans>Skip empty posts & re-plan</Trans>
+            </ButtonText>
+          </Button>
+        )}
+        {plan.result && (
+          <Button
+            label={l`Clear the plan result`}
+            testID="composerV2Tester-plan-clear"
+            size="small"
+            color="secondary"
+            onPress={plan.clearPlan}>
+            <ButtonText>
+              <Trans>Clear</Trans>
+            </ButtonText>
+          </Button>
+        )}
+        {plan.isPlanning && <Loader size="sm" />}
+      </View>
+
+      <Toggle.Item
+        name="requireAltText"
+        type="checkbox"
+        label={l`Require alt text during planning preflight`}
+        value={requireAltText}
+        onChange={onChangeRequireAltText}>
+        <Toggle.Checkbox />
+        <Toggle.LabelText>
+          <Trans>Require alt text preflight</Trans>
+        </Toggle.LabelText>
+      </Toggle.Item>
+
+      {plan.isStale && (
+        <Text
+          style={[a.text_xs, {color: t.palette.negative_500}]}
+          testID="composerV2Tester-plan-stale">
+          <Trans>
+            Stale: the composition changed after this plan was captured.
+          </Trans>
+        </Text>
+      )}
+
+      {summary === undefined ? (
+        <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+          {plan.isPlanning ? (
+            <Trans>Planning…</Trans>
+          ) : (
+            <Trans>No plan yet. Planning never publishes anything.</Trans>
+          )}
+        </Text>
+      ) : summary.ok ? (
+        <View style={[a.gap_xs]} testID="composerV2Tester-plan-result">
+          <Text style={[a.text_xs, a.font_bold]}>
+            <Trans>
+              Plan OK: {summary.postCount} posts, {summary.writeCount} writes
+            </Trans>
+          </Text>
+          {summary.posts.map((post, index) => (
+            <Text
+              key={post.rkey}
+              style={[a.text_xs, {fontFamily: 'monospace'}]}
+              numberOfLines={2}>
+              [{index}] rkey={post.rkey} embed={post.embedType ?? 'none'} reply=
+              {post.hasReply ? 'yes' : 'no'} tags={post.tagCount} graphemes=
+              {post.textGraphemes}
+            </Text>
+          ))}
+          <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
+            {Object.entries(summary.writesByCollection)
+              .map(([collection, count]) => `${collection}: ${count}`)
+              .join('\n')}
+          </Text>
+          <Button
+            label={
+              showStructure
+                ? l`Hide final URIs, reply relationships, and gate associations`
+                : l`Show final URIs, reply relationships, and gate associations`
+            }
+            testID="composerV2Tester-plan-structure-toggle"
+            size="tiny"
+            color="secondary"
+            style={[a.self_start]}
+            onPress={() => setShowStructure(current => !current)}>
+            <ButtonText>
+              {showStructure ? (
+                <Trans>Hide structure</Trans>
+              ) : (
+                <Trans>Show structure</Trans>
+              )}
+            </ButtonText>
+          </Button>
+          {showStructure && <PlanStructure summary={summary} />}
+          <Text style={[a.text_xs, a.font_bold]}>
+            <Trans>Generated records (applyWrites)</Trans>
+          </Text>
+          <Text
+            emoji
+            selectable
+            style={[a.text_xs, {fontFamily: 'monospace'}]}
+            testID="composerV2Tester-plan-records">
+            {JSON.stringify(plan.result?.writes, null, 2)}
+          </Text>
+        </View>
+      ) : (
+        <View style={[a.gap_xs]} testID="composerV2Tester-plan-errors">
+          {summary.errors.map((error, index) => (
+            <View key={index} style={[a.gap_2xs]}>
+              <Text
+                style={[
+                  a.text_xs,
+                  {fontFamily: 'monospace', color: t.palette.negative_500},
+                ]}>
+                {error.code}
+                {error.postIndex !== undefined
+                  ? ` (post ${error.postIndex + 1})`
+                  : ''}
+                {error.collection ? ` [${error.collection}]` : ''}
+              </Text>
+              <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
+                {planErrorHint(error.code)}
+              </Text>
+            </View>
+          ))}
+        </View>
+      )}
+    </View>
+  )
+}
+
+/**
+ * Expanded structural inspection of a successful plan: each post's final
+ * at:// URI, its actual reply root/parent relationship (resolved back to a
+ * planned post position when the target is inside this plan), and the gate
+ * records associated with it. URIs and record keys only - never record
+ * payloads, text, captions, or local paths.
+ */
+function PlanStructure({summary}: {summary: Extract<PlanSummary, {ok: true}>}) {
+  const t = useTheme()
+
+  /** Show in-plan reply targets by position instead of repeating the URI. */
+  const describeRef = (uri: string | undefined): string => {
+    if (uri === undefined) return 'none'
+    const index = summary.posts.findIndex(post => post.uri === uri)
+    return index >= 0 ? `post ${index}` : uri
+  }
+
+  return (
+    <View
+      style={[
+        a.gap_xs,
+        a.p_sm,
+        a.rounded_sm,
+        a.border,
+        t.atoms.border_contrast_low,
+      ]}
+      testID="composerV2Tester-plan-structure">
+      {summary.posts.map((post, index) => {
+        const gates = summary.gates.filter(gate => gate.postUri === post.uri)
+        return (
+          <View
+            key={post.rkey}
+            style={[a.gap_2xs]}
+            testID={`composerV2Tester-plan-post-${index}-structure`}>
+            <Text style={[a.text_xs, {fontFamily: 'monospace'}]}>
+              [{index}] {post.uri}
+            </Text>
+            <Text
+              style={[
+                a.text_xs,
+                a.pl_md,
+                {fontFamily: 'monospace'},
+                t.atoms.text_contrast_medium,
+              ]}>
+              root={describeRef(post.replyRootUri)}
+              {'\n'}parent={describeRef(post.replyParentUri)}
+              {'\n'}gates=
+              {gates.length > 0
+                ? gates
+                    .map(
+                      gate =>
+                        `${gate.collection.split('.').pop()}@${gate.rkey}`,
+                    )
+                    .join(' ')
+                : 'none'}
+            </Text>
+          </View>
+        )
+      })}
+    </View>
+  )
+}

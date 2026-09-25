@@ -940,6 +940,12 @@ export function summarizeComposerV2Plan(result: ComposerV2PlanResult) {
       uri: post.uri,
       cid: post.cid,
       hasReply: !!post.record.reply,
+      /*
+       * Final reply relationship by reference only: at:// URIs are
+       * structural (repo/collection/rkey), never post text.
+       */
+      replyRootUri: post.record.reply?.root.uri,
+      replyParentUri: post.record.reply?.parent.uri,
       embedType:
         typeof post.record.embed === 'object' && post.record.embed
           ? (post.record.embed.$type ?? 'unknown')
@@ -947,6 +953,27 @@ export function summarizeComposerV2Plan(result: ComposerV2PlanResult) {
       textGraphemes: new RichText({text: post.record.text}).graphemeLength,
       tagCount: post.record.tags?.length ?? 0,
     })),
+    /*
+     * Gate record writes with the URI of the post each one governs, so the
+     * harness can show per-post gate associations without the rule payloads.
+     */
+    gates: result.writes.flatMap(write => {
+      if (write.$type !== 'com.atproto.repo.applyWrites#create') return []
+      if (
+        write.collection !== 'app.bsky.feed.threadgate' &&
+        write.collection !== 'app.bsky.feed.postgate'
+      ) {
+        return []
+      }
+      const subject = (write.value as {post?: unknown}).post
+      return [
+        {
+          collection: write.collection,
+          rkey: write.rkey,
+          postUri: typeof subject === 'string' ? subject : undefined,
+        },
+      ]
+    }),
     writesByCollection: result.writes.reduce<Record<string, number>>(
       (counts, write) => {
         if (write.$type === 'com.atproto.repo.applyWrites#create') {
