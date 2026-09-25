@@ -111,37 +111,34 @@ export function Pager({
   const dragState = useSharedValue<'idle' | 'settling' | 'dragging'>('idle')
   const dragProgress = useSharedValue(selectedPage)
   const didInit = useSharedValue(false)
-  const handlePageScroll = usePagerHandlers(
-    {
-      onPageScroll(e: PagerViewOnPageScrollEventData) {
-        'worklet'
-        if (didInit.get() === false) {
-          // On iOS, there's a spurious scroll event with 0 position
-          // even if a different page was supplied as the initial page.
-          // Ignore it and wait for the first confirmed selection instead.
-          return
-        }
-        dragProgress.set(e.offset + e.position)
-      },
-      onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
-        'worklet'
-        scheduleOnRN(setIsIdle, e.pageScrollState === 'idle')
-        if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
-          // This is a programmatic scroll on Android.
-          // Stay "idle" to match iOS and avoid confusing downstream code.
-          return
-        }
-        dragState.set(e.pageScrollState)
-        parentOnPageScrollStateChanged?.(e.pageScrollState)
-      },
-      onPageSelected(e: PagerViewOnPageSelectedEventData) {
-        'worklet'
-        didInit.set(true)
-        scheduleOnRN(onPageSelectedJSThread, e.position)
-      },
+  const handlePageScroll = usePagerHandlers({
+    onPageScroll(e: PagerViewOnPageScrollEventData) {
+      'worklet'
+      if (didInit.get() === false) {
+        // On iOS, there's a spurious scroll event with 0 position
+        // even if a different page was supplied as the initial page.
+        // Ignore it and wait for the first confirmed selection instead.
+        return
+      }
+      dragProgress.set(e.offset + e.position)
     },
-    [parentOnPageScrollStateChanged],
-  )
+    onPageScrollStateChanged(e: PageScrollStateChangedNativeEventData) {
+      'worklet'
+      scheduleOnRN(setIsIdle, e.pageScrollState === 'idle')
+      if (dragState.get() === 'idle' && e.pageScrollState === 'settling') {
+        // This is a programmatic scroll on Android.
+        // Stay "idle" to match iOS and avoid confusing downstream code.
+        return
+      }
+      dragState.set(e.pageScrollState)
+      parentOnPageScrollStateChanged?.(e.pageScrollState)
+    },
+    onPageSelected(e: PagerViewOnPageSelectedEventData) {
+      'worklet'
+      didInit.set(true)
+      scheduleOnRN(onPageSelectedJSThread, e.position)
+    },
+  })
 
   return (
     <View testID={testID} style={[a.flex_1, native(a.overflow_hidden)]}>
@@ -178,15 +175,12 @@ function DrawerGestureRequireFail({children}: {children: React.ReactNode}) {
   return <GestureDetector gesture={nativeGesture}>{children}</GestureDetector>
 }
 
-function usePagerHandlers(
-  handlers: {
-    onPageScroll: (e: PagerViewOnPageScrollEventData) => void
-    onPageScrollStateChanged: (e: PageScrollStateChangedNativeEventData) => void
-    onPageSelected: (e: PagerViewOnPageSelectedEventData) => void
-  },
-  dependencies: unknown[],
-) {
-  const {doDependenciesDiffer} = useHandler(handlers as any, dependencies)
+function usePagerHandlers(handlers: {
+  onPageScroll: (e: PagerViewOnPageScrollEventData) => void
+  onPageScrollStateChanged: (e: PageScrollStateChangedNativeEventData) => void
+  onPageSelected: (e: PagerViewOnPageSelectedEventData) => void
+}) {
+  const {doDependenciesDiffer} = useHandler(handlers as any)
   const subscribeForEvents = [
     'onPageScroll',
     'onPageScrollStateChanged',
