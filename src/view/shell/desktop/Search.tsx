@@ -1,9 +1,14 @@
-import {useState} from 'react'
-import {View} from 'react-native'
+import {useRef, useState} from 'react'
+import {type TextInput, View} from 'react-native'
 import {useSift} from '@bsky.app/sift'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
+import {mergeRefs} from '#/lib/merge-refs'
 import {type NavigationProp} from '#/lib/routes/types'
+import {
+  completeActorSearchOperator,
+  getActorAutocompleteState,
+} from '#/screens/Search/actorAutocomplete'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete as AutocompleteBase,
@@ -16,7 +21,9 @@ export function DesktopSearch() {
   const navigation = useNavigation<NavigationProp>()
   const [active, setActive] = useState(false)
   const [query, setQuery] = useState<string>('')
+  const operatorContext = getActorAutocompleteState(query).context
   const showResults = active && !!query.length
+  const inputRef = useRef<TextInput>(null)
 
   const sift = useSift({
     offset: a.p_sm.padding,
@@ -46,21 +53,35 @@ export function DesktopSearch() {
   const onSubmit = () => {
     if (!query.length) return
     onClearText()
-    sift.elements.input.blur()
+    inputRef.current?.blur()
     navigation.dispatch(StackActions.push('Search', {q: query}))
   }
 
   const onSelect = (item: AutocompleteItem) => {
     if (item.type === 'profile') {
+      if (operatorContext) {
+        setQuery(
+          completeActorSearchOperator(
+            query,
+            operatorContext,
+            item.profile.handle,
+          ),
+        )
+        setActive(false)
+        inputRef.current?.focus()
+        return
+      }
       onClearText()
-      sift.elements.input.blur()
+      inputRef.current?.blur()
       navigation.navigate('Profile', {name: item.profile.handle})
     } else if (item.type === 'search') {
       onClearText()
-      sift.elements.input.blur()
+      inputRef.current?.blur()
       navigation.navigate('Search', {q: item.value})
     }
   }
+
+  const {ref: siftInputRef, ...siftTargetProps} = sift.targetProps
 
   return (
     <View collapsable={false} ref={sift.refs.setAnchor}>
@@ -72,7 +93,8 @@ export function DesktopSearch() {
         onChangeText={onChangeText}
         onClearText={onClearText}
         onSubmitEditing={onSubmit}
-        {...sift.targetProps}
+        ref={mergeRefs([inputRef, siftInputRef])}
+        {...siftTargetProps}
       />
       {showResults && (
         <Inner
@@ -97,11 +119,16 @@ function Inner({
   onSelect: (item: AutocompleteItem) => void
   onDismiss: () => void
 }) {
-  const {items} = useAutocomplete({
+  const autocompleteState = getActorAutocompleteState(query)
+  const {items: autocompleteItems} = useAutocomplete({
     type: 'profile',
-    query,
-    showSearchFallback: true,
+    query: autocompleteState.query,
+    showSearchFallback: !autocompleteState.showFullSearchFallback,
   })
+  const actorItems = autocompleteState.query ? autocompleteItems : []
+  const items: AutocompleteItem[] = autocompleteState.showFullSearchFallback
+    ? [{key: `search-${query}`, type: 'search', value: query}, ...actorItems]
+    : actorItems
 
   return items && items.length ? (
     <AutocompleteBase
