@@ -715,10 +715,10 @@ func buildPostNode(pv *appbsky.FeedDefs_PostView, replies []*appbsky.FeedDefs_Th
 		node.CommentCount = pv.ReplyCount
 	}
 
-	if !embedHidden {
-		if quoted := extractQuotedPostURL(pv); quoted != "" {
-			node.IsBasedOn = quoted
-		}
+	// Gate isBasedOn on the same checks as sharedContent so a labeled or
+	// auth-gated quoted post is never referenced.
+	if !embedHidden && buildQuotedPost(pv, hideLabels, hideReplyLabels) != nil {
+		node.IsBasedOn = extractQuotedPostURL(pv)
 	}
 	node.SharedContent = buildSharedContent(pv, embedHidden, hideLabels, hideReplyLabels)
 

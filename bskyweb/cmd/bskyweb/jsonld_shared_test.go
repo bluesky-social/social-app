@@ -193,8 +193,12 @@ func TestSharedContent_QuoteGated(t *testing.T) {
 		t.Run(tc.name, func(t *testing.T) {
 			pv := makePostView("alice.bsky.social", "did:plc:alice", "abc123", "quoting", tc.opts()...)
 			out, _ := buildPostJSONLD(pv, nil, "u", "", hideEmbedLabels, hideReplyLabels)
-			if sc, present := mainEntity(t, out)["sharedContent"]; present {
+			main := mainEntity(t, out)
+			if sc, present := main["sharedContent"]; present {
 				t.Errorf("sharedContent should be omitted, got %v", sc)
+			}
+			if ib, present := main["isBasedOn"]; present {
+				t.Errorf("isBasedOn should be omitted, got %v", ib)
 			}
 		})
 	}
