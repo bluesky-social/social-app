@@ -1,8 +1,6 @@
 import {useCallback, useEffect, useMemo} from 'react'
 import {Keyboard, View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Trans} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useCallOnce} from '#/lib/once'
 import {EmptyState} from '#/view/com/util/EmptyState'
@@ -10,6 +8,7 @@ import {atoms as a, select, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {PageX_Stroke2_Corner0_Rounded_Large as PageXIcon} from '#/components/icons/PageX'
+import {Warning_Stroke2_Corner0_Rounded as WarningIcon} from '#/components/icons/Warning'
 import {ListFooter} from '#/components/Lists'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
@@ -26,12 +25,21 @@ export function DraftsListDialog({
   control: Dialog.DialogControlProps
   onSelectDraft: (draft: DraftSummary) => void
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const t = useTheme()
   const {gtPhone} = useBreakpoints()
   const ax = useAnalytics()
-  const {data, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} =
-    useDraftsQuery()
+  const {
+    data,
+    isLoading,
+    isError,
+    isFetching,
+    isRefetching,
+    isFetchNextPageError,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = useDraftsQuery()
   const {mutate: deleteDraft} = useDeleteDraftMutation()
 
   const drafts = useMemo(
@@ -84,7 +92,7 @@ export function DraftsListDialog({
   const backButton = useCallback(
     () => (
       <Button
-        label={_(msg`Back`)}
+        label={l`Back`}
         onPress={() => control.close()}
         size="small"
         color="primary"
@@ -94,7 +102,7 @@ export function DraftsListDialog({
         </ButtonText>
       </Button>
     ),
-    [control, _],
+    [control, l],
   )
 
   const renderItem = useCallback(
@@ -124,27 +132,45 @@ export function DraftsListDialog({
   )
 
   const onEndReached = useCallback(() => {
-    if (hasNextPage && !isFetchingNextPage) {
+    if (hasNextPage && !isFetching && !isError) {
       void fetchNextPage()
     }
-  }, [hasNextPage, isFetchingNextPage, fetchNextPage])
+  }, [hasNextPage, isFetching, isError, fetchNextPage])
 
   const emptyComponent = useMemo(() => {
-    if (isLoading) {
+    if (isLoading || isRefetching) {
       return (
         <View style={[a.py_xl, a.align_center]}>
           <Loader size="lg" />
         </View>
       )
     }
+    if (isError) {
+      return (
+        <EmptyState
+          testID="draftsLoadError"
+          icon={WarningIcon}
+          message={l`Could not load drafts. Please try again.`}
+          button={{
+            testID: 'draftsRetryButton',
+            label: l`Retry loading drafts`,
+            text: l`Retry`,
+            onPress: () => void refetch(),
+            color: 'primary',
+            size: 'small',
+          }}
+          style={[a.justify_center, {minHeight: 500}]}
+        />
+      )
+    }
     return (
       <EmptyState
         icon={PageXIcon}
-        message={_(msg`No drafts yet`)}
+        message={l`No drafts yet`}
         style={[a.justify_center, {minHeight: 500}]}
       />
     )
-  }, [isLoading, _])
+  }, [isLoading, isRefetching, isError, refetch, l])
 
   const footerComponent = useMemo(
     () => (
@@ -157,17 +183,36 @@ export function DraftsListDialog({
           </View>
         )}
         <ListFooter
-          isFetchingNextPage={isFetchingNextPage}
+          isFetchingNextPage={isFetching && drafts.length > 0}
           hasNextPage={hasNextPage}
+          error={
+            isError && drafts.length > 0
+              ? l`Could not load drafts. Please try again.`
+              : undefined
+          }
+          onRetry={isFetchNextPageError ? fetchNextPage : refetch}
           style={[a.border_transparent]}
         />
       </>
     ),
-    [isFetchingNextPage, hasNextPage, drafts.length, t],
+    [
+      isFetching,
+      hasNextPage,
+      isError,
+      isFetchNextPageError,
+      fetchNextPage,
+      refetch,
+      drafts.length,
+      t,
+      l,
+    ],
   )
 
   return (
-    <Dialog.Outer control={control} nativeOptions={{fullHeight: true}}>
+    <Dialog.Outer
+      control={control}
+      onOpen={() => void refetch()}
+      nativeOptions={{fullHeight: true}}>
       {/* We really really need to figure out a nice, consistent API for doing a header cross-platform -sfn */}
       {IS_NATIVE && header}
       <Dialog.InnerFlatList
