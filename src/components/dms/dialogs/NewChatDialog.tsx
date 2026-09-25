@@ -49,7 +49,7 @@ export function NewChat({
     },
     onError: error => {
       logger.error('Failed to create chat', {safeMessage: error})
-      let errorMessage = l`An issue occurred starting the chat, please try again.`
+      let errorMessage = l`An issue occurred starting the chat. Please try again.`
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
       } else {
@@ -84,7 +84,7 @@ export function NewChat({
     },
     onError: error => {
       logger.error('Failed to create groupchat', {safeMessage: error})
-      let errorMessage = l`An issue occurred starting the group chat, please try again.`
+      let errorMessage = l`An issue occurred starting the group chat. Please try again.`
       if (isNetworkError(error)) {
         errorMessage = l`A network error occurred. Please check your internet connection.`
       } else {

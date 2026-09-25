@@ -104,7 +104,7 @@ export function InviteFriendsDialogInner({
       Toast.show(l`QR code saved to your camera roll!`)
     } catch (err) {
       logger.error('InviteFriendsDialog: download failed', {safeMessage: err})
-      Toast.show(l`An error occurred while saving the QR code!`, {
+      Toast.show(l`An error occurred while saving the QR code.`, {
         type: 'error',
       })
     }
