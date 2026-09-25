@@ -2,20 +2,68 @@ import {useSyncExternalStore} from 'react'
 import {type AppStateStatus} from 'react-native'
 import uuid from 'react-native-uuid'
 
-import {onAppStateChange} from '#/lib/appState'
-import {isSessionIdExpired} from '#/analytics/identifiers/util'
+import {getCurrentState, onAppStateChange} from '#/lib/appState'
+import {
+  normalizeSessionRecord,
+  type SessionRecord,
+  shouldRotateSession,
+} from '#/analytics/identifiers/util'
 
-const SESSION_ID_KEY = 'bsky_session_id'
-const LAST_EVENT_KEY = 'bsky_session_id_last_event_at'
+const SESSION_RECORD_KEY = 'bsky_analytics_session_v1'
 
-let sessionId = (() => {
-  const existing = window.sessionStorage.getItem(SESSION_ID_KEY)
-  const lastEventStr = window.sessionStorage.getItem(LAST_EVENT_KEY)
-  const lastEvent = lastEventStr ? Number(lastEventStr) : undefined
-  const id = existing && !isSessionIdExpired(lastEvent) ? existing : uuid.v4()
-  window.sessionStorage.setItem(SESSION_ID_KEY, id)
-  window.sessionStorage.setItem(LAST_EVENT_KEY, String(Date.now()))
-  return id
+function createSessionRecord(now = Date.now()): SessionRecord {
+  return {
+    id: String(uuid.v4()),
+    rotatedAt: now,
+  }
+}
+
+function readSessionRecord(now = Date.now()) {
+  const rawRecord = window.sessionStorage.getItem(SESSION_RECORD_KEY)
+  if (rawRecord) {
+    try {
+      const record = normalizeSessionRecord(JSON.parse(rawRecord), now)
+      if (record) return record
+    } catch {
+      // Treat malformed storage as a missing session.
+    }
+  }
+  return undefined
+}
+
+function writeSessionRecord(record: SessionRecord) {
+  window.sessionStorage.setItem(SESSION_RECORD_KEY, JSON.stringify(record))
+}
+
+function resolveSessionForActivation(now = Date.now()) {
+  const latest = readSessionRecord(now)
+  if (!latest || shouldRotateSession(latest)) {
+    return createSessionRecord(now)
+  }
+  return latest
+}
+
+let currentAppState = getCurrentState()
+let sessionRecord = (() => {
+  const now = Date.now()
+  const existing = readSessionRecord(now)
+  let record: SessionRecord
+
+  if (currentAppState === 'active' && existing) {
+    record = shouldRotateSession(existing)
+      ? resolveSessionForActivation(now)
+      : existing
+    record = {...record, inactivityAt: undefined}
+  } else {
+    record = existing ?? createSessionRecord(now)
+  }
+
+  if (currentAppState !== 'active' && record.inactivityAt === undefined) {
+    record = {...record, inactivityAt: now}
+  }
+
+  writeSessionRecord(record)
+  return record
 })()
 
 export function getInitialSessionId() {
@@ -23,7 +71,7 @@ export function getInitialSessionId() {
 }
 
 export function getSessionId() {
-  return sessionId
+  return sessionRecord.id
 }
 
 const listeners = new Set<() => void>()
@@ -33,18 +81,30 @@ function notifyListeners() {
   listeners.forEach(listener => listener())
 }
 
-function onAppStateChanged(state: AppStateStatus) {
-  if (state === 'active') {
-    const lastEventStr = window.sessionStorage.getItem(LAST_EVENT_KEY)
-    const lastEvent = lastEventStr ? Number(lastEventStr) : undefined
-    if (isSessionIdExpired(lastEvent)) {
-      const nextSessionId = uuid.v4()
-      window.sessionStorage.setItem(SESSION_ID_KEY, String(nextSessionId))
-      sessionId = nextSessionId
-      notifyListeners()
-    }
+function persistSessionRecord(record: SessionRecord) {
+  writeSessionRecord(record)
+  const sessionIdChanged = record.id !== sessionRecord.id
+  sessionRecord = record
+  if (sessionIdChanged) {
+    notifyListeners()
   }
-  window.sessionStorage.setItem(LAST_EVENT_KEY, String(Date.now()))
+}
+
+function onAppStateChanged(nextAppState: AppStateStatus) {
+  const now = Date.now()
+
+  if (nextAppState === 'active') {
+    const record = resolveSessionForActivation(now)
+    persistSessionRecord({...record, inactivityAt: undefined})
+  } else if (currentAppState === 'active') {
+    const record = readSessionRecord(now) ?? createSessionRecord(now)
+    persistSessionRecord({
+      ...record,
+      inactivityAt: record.inactivityAt ?? now,
+    })
+  }
+
+  currentAppState = nextAppState
 }
 
 function startCoordinator() {

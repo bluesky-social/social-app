@@ -2,6 +2,7 @@ import {act, renderHook} from '@testing-library/react-native'
 
 const THIRTY_MINUTES = 30 * 60 * 1e3
 const NOW = new Date('2026-09-22T12:00:00.000Z')
+const SESSION_RECORD_KEY = 'bsky_analytics_session_v1'
 
 type StorageListener = (event: {
   key: string | null
@@ -169,15 +170,25 @@ function loadSession(tabId = mockActiveTabId): typeof import('./session.web') {
   return session!
 }
 
-function setLegacySession(tabId: string, id: string, lastEventAt?: number) {
-  const target = setActiveTab(tabId)
-  target.sessionStorage.setItem('bsky_session_id', id)
-  if (lastEventAt !== undefined) {
-    target.sessionStorage.setItem(
-      'bsky_session_id_last_event_at',
-      String(lastEventAt),
-    )
-  }
+function setSessionRecord(tabId: string, record: unknown) {
+  setActiveTab(tabId).sessionStorage.setItem(
+    SESSION_RECORD_KEY,
+    JSON.stringify(record),
+  )
+}
+
+function setStoredSession(tabId: string, id: string, lastEventAt?: number) {
+  setSessionRecord(tabId, {
+    id,
+    inactivityAt: lastEventAt,
+    rotatedAt: lastEventAt,
+  })
+}
+
+function getSessionRecord(tabId: string) {
+  const rawRecord =
+    setActiveTab(tabId).sessionStorage.getItem(SESSION_RECORD_KEY)
+  return rawRecord ? JSON.parse(rawRecord) : undefined
 }
 
 describe('web session initialization', () => {
@@ -187,6 +198,10 @@ describe('web session initialization', () => {
     expect(getInitialSessionId()).toBe('session-a')
     expect(getSessionId()).toBe('session-a')
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'session-a',
+      rotatedAt: NOW.getTime(),
+    })
   })
 
   it('creates a session when initialized in the background without one', () => {
@@ -200,7 +215,7 @@ describe('web session initialization', () => {
   })
 
   it('reuses an unexpired stored session', () => {
-    setLegacySession(
+    setStoredSession(
       'tab-a',
       'existing-session',
       NOW.getTime() - THIRTY_MINUTES + 1,
@@ -211,10 +226,14 @@ describe('web session initialization', () => {
     expect(getInitialSessionId()).toBe('existing-session')
     expect(getSessionId()).toBe('existing-session')
     expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(getSessionRecord('tab-a')).toMatchObject({
+      id: 'existing-session',
+      rotatedAt: NOW.getTime() - THIRTY_MINUTES + 1,
+    })
   })
 
   it('rotates at the exact thirty-minute boundary', () => {
-    setLegacySession(
+    setStoredSession(
       'tab-a',
       'existing-session',
       NOW.getTime() - THIRTY_MINUTES,
@@ -231,7 +250,7 @@ describe('web session initialization', () => {
     ['missing', undefined],
     ['malformed', Number.NaN],
   ])('preserves an existing session with a %s timestamp', (_, timestamp) => {
-    setLegacySession('tab-a', 'existing-session', timestamp)
+    setStoredSession('tab-a', 'existing-session', timestamp)
 
     const {getInitialSessionId, getSessionId} = loadSession()
 
@@ -255,32 +274,55 @@ describe('web session initialization', () => {
     },
   )
 
-  test.failing(
-    'defers rotating an expired stored session initialized in the background',
-    () => {
-      mockCurrentAppStates.set('tab-a', 'background')
-      setLegacySession(
-        'tab-a',
-        'existing-session',
-        NOW.getTime() - THIRTY_MINUTES,
-      )
+  test('defers rotating an expired stored session initialized in the background', () => {
+    mockCurrentAppStates.set('tab-a', 'background')
+    setStoredSession(
+      'tab-a',
+      'existing-session',
+      NOW.getTime() - THIRTY_MINUTES,
+    )
 
-      const {getInitialSessionId, getSessionId} = loadSession()
+    const {getInitialSessionId, getSessionId} = loadSession()
 
-      expect(getInitialSessionId()).toBe('existing-session')
-      expect(getSessionId()).toBe('existing-session')
-      expect(mockUuidV4).not.toHaveBeenCalled()
-    },
-  )
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(getSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  it('does not rotate a session younger than thirty minutes', () => {
+    setSessionRecord('tab-a', {
+      id: 'existing-session',
+      inactivityAt: NOW.getTime() - THIRTY_MINUTES,
+      rotatedAt: NOW.getTime() - THIRTY_MINUTES + 1,
+    })
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+  })
+
+  it('normalizes malformed record timestamps without rotating', () => {
+    setSessionRecord('tab-a', {
+      id: 'existing-session',
+      inactivityAt: 'invalid',
+      rotatedAt: 'invalid',
+    })
+
+    const {getInitialSessionId} = loadSession()
+
+    expect(getInitialSessionId()).toBe('existing-session')
+    expect(mockUuidV4).not.toHaveBeenCalled()
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'existing-session',
+      rotatedAt: NOW.getTime(),
+    })
+  })
 })
 
-/*
- * These known-failure tests define the coordinator contract. Remove
- * `test.failing` as the corresponding production behavior is implemented.
- */
 describe('web session lifecycle', () => {
   it('does not rotate when foregrounded before thirty minutes', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -293,7 +335,7 @@ describe('web session lifecycle', () => {
   })
 
   it('rotates once when foregrounded at the thirty-minute boundary', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -303,10 +345,14 @@ describe('web session lifecycle', () => {
 
     expect(hook.result.current).toBe('session-a')
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
+    expect(getSessionRecord('tab-a')).toEqual({
+      id: 'session-a',
+      rotatedAt: NOW.getTime() + THIRTY_MINUTES,
+    })
   })
 
   it('does not rotate again inside thirty minutes', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => useSessionId())
 
@@ -322,7 +368,7 @@ describe('web session lifecycle', () => {
   })
 
   test('uses one app-state listener for every mounted consumer', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     renderHook(() => {
       useSessionId()
@@ -334,7 +380,7 @@ describe('web session lifecycle', () => {
   })
 
   test('updates every mounted consumer after rotating once', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const hook = renderHook(() => {
       const first = useSessionId()
@@ -358,7 +404,7 @@ describe('web session lifecycle', () => {
   })
 
   test('keeps the shared listener until the last consumer unmounts', () => {
-    setLegacySession('tab-a', 'existing-session', NOW.getTime())
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
     const first = renderHook(() => useSessionId())
     const second = renderHook(() => useSessionId())
@@ -376,8 +422,8 @@ describe('web session lifecycle', () => {
   test.failing(
     'updates another tab when one tab rotates the shared session',
     () => {
-      setLegacySession('tab-a', 'existing-session', NOW.getTime())
-      setLegacySession('tab-b', 'existing-session', NOW.getTime())
+      setStoredSession('tab-a', 'existing-session', NOW.getTime())
+      setStoredSession('tab-b', 'existing-session', NOW.getTime())
 
       const firstTabSession = loadSession('tab-a')
       const firstTabHook = renderHook(() => firstTabSession.useSessionId())
