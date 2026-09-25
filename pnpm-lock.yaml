@@ -208,8 +208,8 @@ overrides:
   '@react-native/normalize-colors': 0.86.3
   '@expo/image-utils': 0.8.12
   '@types/estree': 1.0.6
-  react-native-reanimated: 4.6.0
-  react-native-worklets: 0.12.2
+  react-native-reanimated: 4.7.0
+  react-native-worklets: 0.13.0
   psl: 1.9.0
   '@types/psl': 1.1.1
   react-native-screens: 4.26.2
@@ -5579,7 +5579,7 @@ packages:
     peerDependencies:
       react: '*'
       react-native: '*'
-      react-native-worklets: 0.12.2
+      react-native-worklets: 0.13.0
     peerDependenciesMeta:
       react-native-worklets:
         optional: true
@@ -7892,7 +7892,7 @@ packages:
       react: '>= 18.2.0'
       react-native: '*'
       react-native-gesture-handler: '>= 2.0.0'
-      react-native-reanimated: 4.6.0
+      react-native-reanimated: 4.7.0
 
   react-native-edge-to-edge@1.8.1:
     resolution: {integrity: sha512-bhvsKqeX9PGkY9wBUk9vni/tJNJdKtLPbs/j3e/3CdV4JmUWfTXYYoL+4Hc8Wmej+5eJxkc8KOFa454ruFWBCA==}
@@ -7917,7 +7917,7 @@ packages:
     peerDependencies:
       react: '*'
       react-native: '*'
-      react-native-reanimated: 4.6.0
+      react-native-reanimated: 4.7.0
 
   react-native-mmkv@3.3.3:
     resolution: {integrity: sha512-GMsfOmNzx0p5+CtrCFRVtpOOMYNJXuksBVARSQrCFaZwjUyHJdQzcN900GGaFFNTxw2fs8s5Xje//RDKj9+PZA==}
@@ -7949,7 +7949,7 @@ packages:
     peerDependencies:
       react: '*'
       react-native: 0.86 - 0.88
-      react-native-worklets: 0.12.2
+      react-native-worklets: 0.13.0
 
   react-native-safe-area-context@5.7.0:
     resolution: {integrity: sha512-/9/MtQz8ODphjsLdZ+GZAIcC/RtoqW9EeShf7Uvnfgm/pzYrJ75y3PV/J1wuAV1T5Dye5ygq4EAW20RoBq0ABQ==}
@@ -8388,11 +8388,11 @@ packages:
       react: '*'
       react-native: '*'
       react-native-gesture-handler: '>=2.28.0'
-      react-native-reanimated: 4.6.0
+      react-native-reanimated: 4.7.0
       react-native-safe-area-context: ^5.6.0
       react-native-screens: 4.26.2
       react-native-svg: ^15.12.1
-      react-native-worklets: 0.12.2
+      react-native-worklets: 0.13.0
 
   sonner@2.0.7:
     resolution: {integrity: sha512-W6ZN4p58k8aDKA4XPcx2hpIQXBRAgyiWVkYhT7CvK6D3iAu7xjvVyhQHg2/iaKJZ1XVJ4r7XuwGL+WGEK37i9w==}
