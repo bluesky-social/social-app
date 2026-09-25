@@ -61,3 +61,4 @@ minimumReleaseAgeExclude:
   - expo-location@57.0.19
   - expo-notifications@57.0.20
   - expo-sharing@57.0.21 # TODO
+  - '@expo/ui@57.0.20'

@@ -308,8 +308,8 @@ importers:
         specifier: ~57.0.8
         version: 57.0.16(@expo/log-box@57.0.4)(expo@57.0.24)(react-dom@19.2.3(react@19.2.3))(react-native@0.86.3(patch_hash=b98fd903a666d35370a478712d555fc967023b6b40a07efe51e90adc04da15d9)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       '@expo/ui':
-        specifier: 57.0.11
-        version: 57.0.11(38ee2c08f0a1daccc755de862abc2226)
+        specifier: 57.0.20
+        version: 57.0.20(38ee2c08f0a1daccc755de862abc2226)
       '@floating-ui/dom':
         specifier: ^1.6.3
         version: 1.7.6
@@ -2120,8 +2120,8 @@ packages:
   '@expo/sudo-prompt@9.3.2':
     resolution: {integrity: sha512-HHQigo3rQWKMDzYDLkubN5WQOYXJJE2eNqIQC2axC2iO3mHdwnIR7FgZVvHWtBwAdzBgAP0ECp8KqS8TiMKvgw==}
 
-  '@expo/ui@57.0.11':
-    resolution: {integrity: sha512-m1BSq15sg4sCmoFwOsMxBpETgyFhGlCbVPUyjdJ6Y00Ve0Fb4sueaFLRyeYRbZ8DC1z3Hgp5LNCYzBBBdMhxMg==}
+  '@expo/ui@57.0.20':
+    resolution: {integrity: sha512-0ChmuyWBwEy3JHMR5wDkJGyvkTR5zH3BTwjJrv3f2ymtamhpU9hD5uH4GsLoWuB6MJFOPTuchq4zByZbtgPyNw==}
     peerDependencies:
       '@babel/core': '*'
       expo: '*'
@@ -10861,7 +10861,7 @@ snapshots:
 
   '@expo/sudo-prompt@9.3.2': {}
 
-  '@expo/ui@57.0.11(38ee2c08f0a1daccc755de862abc2226)':
+  '@expo/ui@57.0.20(38ee2c08f0a1daccc755de862abc2226)':
     dependencies:
       expo: 57.0.24(patch_hash=0856ae2db56b30b378fdaa8dbec8e7cda50b13fc29d89b873e1b12cc0affac33)(3256fd5297b3db1c4dc5b1999d599336)
       react: 19.2.3
