@@ -1,11 +1,12 @@
-import {useEffect, useState} from 'react'
+import {useSyncExternalStore} from 'react'
+import {type AppStateStatus} from 'react-native'
 import uuid from 'react-native-uuid'
 
 import {onAppStateChange} from '#/lib/appState'
 import {isSessionIdExpired} from '#/analytics/identifiers/util'
 import {device} from '#/storage'
 
-let sessionId = (() => {
+const initialSessionId = (() => {
   const existing = device.get(['nativeSessionId'])
   const lastEvent = device.get(['nativeSessionIdLastEventAt'])
   const id = existing && !isSessionIdExpired(lastEvent) ? existing : uuid.v4()
@@ -15,36 +16,71 @@ let sessionId = (() => {
 })()
 
 export function getInitialSessionId() {
-  return sessionId
+  return getSessionId()
 }
 
-/**
- * Gets the current session ID. Freshness depends on `useSessionId` being
- * mounted, which handles refreshing this value between foreground/background
- * transitions. Since that's mounted in `analytics/index.tsx`, this value can
- * generally be trusted to be up to date.
- */
 export function getSessionId() {
-  return device.get(['nativeSessionId'])
+  return device.get(['nativeSessionId']) ?? initialSessionId
+}
+
+function onAppStateChanged(state: AppStateStatus) {
+  if (state === 'active') {
+    const lastEvent = device.get(['nativeSessionIdLastEventAt'])
+    if (isSessionIdExpired(lastEvent)) {
+      device.set(['nativeSessionId'], uuid.v4())
+    }
+  }
+  device.set(['nativeSessionIdLastEventAt'], Date.now())
+}
+
+class SessionStore {
+  private listeners = new Set<() => void>()
+  private appStateSubscription: ReturnType<typeof onAppStateChange> | undefined
+  private storageSubscription:
+    ReturnType<typeof device.addOnValueChangedListener> | undefined
+
+  getSnapshot = getSessionId
+
+  subscribe = (listener: () => void) => {
+    this.listeners.add(listener)
+    if (this.listeners.size === 1) {
+      this.start()
+    }
+
+    return () => {
+      this.listeners.delete(listener)
+      if (this.listeners.size === 0) {
+        this.stop()
+      }
+    }
+  }
+
+  private notify = () => {
+    this.listeners.forEach(listener => listener())
+  }
+
+  private start() {
+    this.storageSubscription = device.addOnValueChangedListener(
+      ['nativeSessionId'],
+      this.notify,
+    )
+    this.appStateSubscription = onAppStateChange(onAppStateChanged)
+  }
+
+  private stop() {
+    this.storageSubscription?.remove()
+    this.storageSubscription = undefined
+    this.appStateSubscription?.remove()
+    this.appStateSubscription = undefined
+  }
+}
+
+const store = new SessionStore()
+
+export function subscribeToSessionId(listener: () => void) {
+  return store.subscribe(listener)
 }
 
 export function useSessionId() {
-  const [id, setId] = useState(() => sessionId)
-
-  useEffect(() => {
-    const sub = onAppStateChange(state => {
-      if (state === 'active') {
-        const lastEvent = device.get(['nativeSessionIdLastEventAt'])
-        if (isSessionIdExpired(lastEvent)) {
-          sessionId = uuid.v4()
-          device.set(['nativeSessionId'], sessionId)
-          setId(sessionId)
-        }
-      }
-      device.set(['nativeSessionIdLastEventAt'], Date.now())
-    })
-    return () => sub.remove()
-  }, [])
-
-  return id
+  return useSyncExternalStore(store.subscribe, store.getSnapshot)
 }

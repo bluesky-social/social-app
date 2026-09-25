@@ -1,4 +1,5 @@
-import {useEffect, useState} from 'react'
+import {useSyncExternalStore} from 'react'
+import {type AppStateStatus} from 'react-native'
 import uuid from 'react-native-uuid'
 
 import {onAppStateChange} from '#/lib/appState'
@@ -18,37 +19,57 @@ let sessionId = (() => {
 })()
 
 export function getInitialSessionId() {
+  return getSessionId()
+}
+
+export function getSessionId() {
   return sessionId
 }
 
-/**
- * Gets the current session ID. Freshness depends on `useSessionId` being
- * mounted, which handles refreshing this value between foreground/background
- * transitions. Since that's mounted in `analytics/index.tsx`, this value can
- * generally be trusted to be up to date.
- */
-export function getSessionId() {
-  return window.sessionStorage.getItem(SESSION_ID_KEY)
+const listeners = new Set<() => void>()
+let appStateSubscription: ReturnType<typeof onAppStateChange> | undefined
+
+function notifyListeners() {
+  listeners.forEach(listener => listener())
+}
+
+function onAppStateChanged(state: AppStateStatus) {
+  if (state === 'active') {
+    const lastEventStr = window.sessionStorage.getItem(LAST_EVENT_KEY)
+    const lastEvent = lastEventStr ? Number(lastEventStr) : undefined
+    if (isSessionIdExpired(lastEvent)) {
+      const nextSessionId = uuid.v4()
+      window.sessionStorage.setItem(SESSION_ID_KEY, String(nextSessionId))
+      sessionId = nextSessionId
+      notifyListeners()
+    }
+  }
+  window.sessionStorage.setItem(LAST_EVENT_KEY, String(Date.now()))
+}
+
+function startCoordinator() {
+  appStateSubscription = onAppStateChange(onAppStateChanged)
+}
+
+function stopCoordinator() {
+  appStateSubscription?.remove()
+  appStateSubscription = undefined
+}
+
+export function subscribeToSessionId(listener: () => void) {
+  listeners.add(listener)
+  if (listeners.size === 1) {
+    startCoordinator()
+  }
+
+  return () => {
+    listeners.delete(listener)
+    if (listeners.size === 0) {
+      stopCoordinator()
+    }
+  }
 }
 
 export function useSessionId() {
-  const [id, setId] = useState(() => sessionId)
-
-  useEffect(() => {
-    const sub = onAppStateChange(state => {
-      if (state === 'active') {
-        const lastEventStr = window.sessionStorage.getItem(LAST_EVENT_KEY)
-        const lastEvent = lastEventStr ? Number(lastEventStr) : undefined
-        if (isSessionIdExpired(lastEvent)) {
-          sessionId = uuid.v4()
-          window.sessionStorage.setItem(SESSION_ID_KEY, sessionId)
-          setId(sessionId)
-        }
-      }
-      window.sessionStorage.setItem(LAST_EVENT_KEY, String(Date.now()))
-    })
-    return () => sub.remove()
-  }, [])
-
-  return id
+  return useSyncExternalStore(subscribeToSessionId, getSessionId)
 }
