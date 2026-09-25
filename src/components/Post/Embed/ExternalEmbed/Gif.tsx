@@ -19,12 +19,14 @@ export function GifEmbed({
   altText,
   isPreferredAltText,
   hideAlt,
+  minMobileAspectRatio = 14 / 9,
 }: {
   params: EmbedPlayerParams
   thumb: string | undefined
   altText: string
   isPreferredAltText: boolean
   hideAlt?: boolean
+  minMobileAspectRatio?: number
 }) {
   const t = useTheme()
   const {_} = useLingui()
@@ -58,7 +60,9 @@ export function GifEmbed({
   const constrained = Math.max(aspectRatio, 1 / 2)
 
   return (
-    <ConstrainedImage aspectRatio={constrained} minMobileAspectRatio={14 / 9}>
+    <ConstrainedImage
+      aspectRatio={constrained}
+      minMobileAspectRatio={minMobileAspectRatio}>
       <View
         style={[
           a.flex_1,
