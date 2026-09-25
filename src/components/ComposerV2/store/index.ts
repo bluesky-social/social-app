@@ -293,6 +293,64 @@ export function createThreadStore(options: {
     })
   }
 
+  /**
+   * Narrow caption setter for the tester/UI: replaces the editable caption
+   * contents of one video without duplicating state in React. Uploaded
+   * caption blobs are kept only for captions whose language and content are
+   * unchanged, so a stale blob can never be attached to edited caption text.
+   * When the upload already ran (or is running), the task is cancelled and
+   * restarted so the eager worker covers the new captions; a completed video
+   * blob is reused by the caption-only retry path inside the worker.
+   */
+  function setVideoCaptions(
+    postId: string,
+    mediaId: string,
+    captions: ReadonlyArray<{lang: string; content: string}>,
+  ) {
+    if (destroyed) return
+    const post = state.posts[postId]
+    if (!post) return
+    const item = getMediaItems(post.attachments.media).find(
+      m => m.id === mediaId,
+    )
+    if (!item || item.kind !== 'video') return
+    const nextCaptions = captions.map(caption => ({
+      lang: caption.lang,
+      content: caption.content,
+    }))
+    if (serializableEqual(item.captions, nextCaptions)) return
+
+    const keptBlobs = item.captionBlobs.filter(blob => {
+      const previous = item.captions.find(caption => caption.lang === blob.lang)
+      if (!previous) return false
+      return nextCaptions.some(
+        next => next.lang === blob.lang && next.content === previous.content,
+      )
+    })
+    const shouldRestart =
+      item.upload.state === 'uploading' || item.upload.state === 'uploaded'
+    if (shouldRestart) cancelUploadTask(mediaId)
+    const next: types.PostMediaVideo = {
+      ...item,
+      captions: nextCaptions,
+      captionBlobs: keptBlobs,
+      upload: shouldRestart ? {state: 'pending'} : item.upload,
+    }
+    mutateState(s => {
+      const currentPost = s.posts[postId]
+      if (!currentPost) return null
+      const items = getMediaItems(currentPost.attachments.media)
+      if (!items.some(m => m.id === mediaId)) return null
+      s.posts[postId] = setPostMediaItems(
+        currentPost,
+        items.map(m => (m.id === mediaId ? next : m)),
+      )
+      s.isDirty = true
+      return s
+    })
+    if (shouldRestart) startMediaUpload(postId, mediaId)
+  }
+
   /** Restarts an image/video upload; cards, GIFs, and missing items are no-ops. */
   function retryMediaUpload(postId: string, mediaId: string) {
     if (destroyed) return
@@ -777,6 +835,7 @@ export function createThreadStore(options: {
       addMedia,
       removeMedia,
       updateMediaAltText,
+      setVideoCaptions,
       retryMediaUpload,
       retryAllFailedUploads,
       addUri,

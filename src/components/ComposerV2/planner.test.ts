@@ -1023,6 +1023,46 @@ describe('ComposerV2 no-write planner', () => {
     }
   })
 
+  test('summarizes reply relationships and per-post gate associations by reference', async () => {
+    const state = snapshot({
+      posts: [{text: 'root post'}, {text: 'second post'}],
+      threadgateAllowRules: [{$type: 'app.bsky.feed.threadgate#mentionRule'}],
+      postgateEmbeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
+    })
+    const result = await plan(state)
+    expect(result.ok).toBe(true)
+    const summary = summarizeComposerV2Plan(result)
+    expect(summary.ok).toBe(true)
+    if (!summary.ok) return
+
+    /* Root post: no reply refs; second post: chained to the root. */
+    expect(summary.posts[0].replyRootUri).toBeUndefined()
+    expect(summary.posts[0].replyParentUri).toBeUndefined()
+    expect(summary.posts[1].replyRootUri).toBe(summary.posts[0].uri)
+    expect(summary.posts[1].replyParentUri).toBe(summary.posts[0].uri)
+
+    /* Threadgate on the root only; postgate per post; refs, not payloads. */
+    expect(summary.gates).toEqual([
+      {
+        collection: 'app.bsky.feed.threadgate',
+        rkey: summary.posts[0].rkey,
+        postUri: summary.posts[0].uri,
+      },
+      {
+        collection: 'app.bsky.feed.postgate',
+        rkey: summary.posts[0].rkey,
+        postUri: summary.posts[0].uri,
+      },
+      {
+        collection: 'app.bsky.feed.postgate',
+        rkey: summary.posts[1].rkey,
+        postUri: summary.posts[1].uri,
+      },
+    ])
+    expect(JSON.stringify(summary)).not.toContain('mentionRule')
+    expect(JSON.stringify(summary)).not.toContain('root post')
+  })
+
   test('does not claim draft tags are persisted', () => {
     const state = snapshot({posts: [{tags: ['future-tag']}]})
     expect(state.posts[Object.keys(state.posts)[0]].tags).toEqual([

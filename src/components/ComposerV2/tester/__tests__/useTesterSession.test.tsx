@@ -1,0 +1,237 @@
+import {describe, expect, jest, test} from '@jest/globals'
+import {act, renderHook} from '@testing-library/react-native'
+
+/* Avoid loading the UI module chain through the real link resolver. */
+jest.mock('#/lib/api/resolve', () => {
+  class EmbeddingDisabledError extends Error {}
+  return {resolveLink: jest.fn(), EmbeddingDisabledError}
+})
+
+/* Scenario failures are logged, not rendered; keep test output clean. */
+const mockLoggerError = jest.fn()
+jest.mock('#/logger', () => ({
+  logger: {
+    error: (...args: unknown[]) => mockLoggerError(...args),
+  },
+}))
+
+import {type LinkResolvers} from '#/lib/api/resolve'
+import {createThreadStore} from '#/components/ComposerV2/store'
+import {type UploadDependencies} from '#/components/ComposerV2/store/uploads'
+import {useTesterSession} from '#/components/ComposerV2/tester/useTesterSession'
+
+/** Wrap the real constructor so destruction is observable per store. */
+function makeCreateStoreSpy() {
+  const destroyed: boolean[] = []
+  const create: typeof createThreadStore = options => {
+    const store = createThreadStore(options)
+    const index = destroyed.length
+    destroyed.push(false)
+    const realDestroy = store.destroy.bind(store)
+    store.destroy = () => {
+      destroyed[index] = true
+      realDestroy()
+    }
+    return store
+  }
+  const spy = jest.fn(create)
+  return {spy, destroyed}
+}
+
+const resolvers = {} as LinkResolvers
+const media = {} as UploadDependencies
+
+function setup(initialDid = 'did:plc:one') {
+  const {spy, destroyed} = makeCreateStoreSpy()
+  const hook = renderHook(
+    ({did}: {did: string}) =>
+      useTesterSession({
+        accountDid: did,
+        resolvers,
+        media,
+        __createStore: spy,
+      }),
+    {initialProps: {did: initialDid}},
+  )
+  return {...hook, spy, destroyed}
+}
+
+describe('useTesterSession', () => {
+  test('creates an initial empty session through the constructor', () => {
+    const {result, spy} = setup()
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(result.current.session.scenarioId).toBe('empty')
+    const posts = Object.values(result.current.session.store.getState().posts)
+    expect(posts).toHaveLength(1)
+    expect(posts[0].text).toBe('')
+  })
+
+  test('applying a scenario replaces the session and destroys the old store', async () => {
+    const {result, destroyed} = setup()
+    const firstKey = result.current.session.key
+    await act(async () => {
+      await result.current.applyScenario('thread', () => ({
+        posts: [{text: 'one'}, {text: 'two'}],
+      }))
+    })
+    expect(result.current.session.key).not.toBe(firstKey)
+    expect(result.current.session.scenarioId).toBe('thread')
+    const posts = Object.values(result.current.session.store.getState().posts)
+    expect(posts.map(post => post.text)).toEqual(['one', 'two'])
+    expect(destroyed[0]).toBe(true)
+    expect(destroyed[1]).toBe(false)
+  })
+
+  test('reset rebuilds the same scenario from its original input', async () => {
+    const {result, destroyed} = setup()
+    await act(async () => {
+      await result.current.applyScenario('thread', () => ({
+        posts: [{text: 'original'}],
+      }))
+    })
+    const editedStore = result.current.session.store
+    act(() => {
+      const postId = Object.keys(editedStore.getState().posts)[0]
+      editedStore.actions.setPostText(postId, 'edited beyond recognition')
+    })
+    const keyBeforeReset = result.current.session.key
+
+    act(() => {
+      result.current.resetSession()
+    })
+    expect(result.current.session.key).not.toBe(keyBeforeReset)
+    expect(result.current.session.scenarioId).toBe('thread')
+    const posts = Object.values(result.current.session.store.getState().posts)
+    expect(posts[0].text).toBe('original')
+    expect(destroyed[1]).toBe(true)
+  })
+
+  test('an account change destroys the session and starts empty', async () => {
+    const {result, rerender, destroyed} = setup()
+    await act(async () => {
+      await result.current.applyScenario('thread', () => ({
+        posts: [{text: 'account one content'}],
+      }))
+    })
+    const keyBefore = result.current.session.key
+
+    rerender({did: 'did:plc:two'})
+    expect(result.current.session.key).not.toBe(keyBefore)
+    expect(result.current.session.scenarioId).toBe('empty')
+    const posts = Object.values(result.current.session.store.getState().posts)
+    expect(posts).toHaveLength(1)
+    expect(posts[0].text).toBe('')
+    expect(destroyed[1]).toBe(true)
+  })
+
+  test('unmount destroys the final store', () => {
+    const {result, unmount, destroyed} = setup()
+    expect(result.current.session).toBeDefined()
+    unmount()
+    expect(destroyed[0]).toBe(true)
+  })
+
+  test('a stale async scenario build never populates a newer session', async () => {
+    const {result, spy} = setup()
+    let resolveBuild!: (value: {posts: Array<{text: string}>}) => void
+    const pending = new Promise<{posts: Array<{text: string}>}>(resolve => {
+      resolveBuild = resolve
+    })
+
+    let staleApply: Promise<void>
+    act(() => {
+      staleApply = result.current.applyScenario('reply', () => pending)
+    })
+    expect(result.current.isApplyingScenario).toBe(true)
+
+    /* A newer session arrives while the old build is still in flight. */
+    await act(async () => {
+      await result.current.applyScenario('thread', () => ({
+        posts: [{text: 'newer session'}],
+      }))
+    })
+    const newerKey = result.current.session.key
+    const storeCallsBefore = spy.mock.calls.length
+
+    await act(async () => {
+      resolveBuild({posts: [{text: 'stale build'}]})
+      await staleApply
+    })
+    expect(result.current.session.key).toBe(newerKey)
+    expect(result.current.session.scenarioId).toBe('thread')
+    expect(spy.mock.calls.length).toBe(storeCallsBefore)
+    const posts = Object.values(result.current.session.store.getState().posts)
+    expect(posts[0].text).toBe('newer session')
+  })
+
+  test('scenario build failures surface as typed errors without raw exception text', async () => {
+    const {result} = setup()
+    const keyBefore = result.current.session.key
+    await act(async () => {
+      await result.current.applyScenario('draft-fixture', () => {
+        throw new Error('private adapter diagnostic detail')
+      })
+    })
+    expect(result.current.session.key).toBe(keyBefore)
+    /* The UI only ever sees the typed shape; the raw message goes to logs. */
+    expect(result.current.scenarioError).toEqual({
+      code: 'scenario-build-failed',
+      scenarioId: 'draft-fixture',
+    })
+    expect(JSON.stringify(result.current.scenarioError)).not.toContain(
+      'private adapter diagnostic detail',
+    )
+    expect(mockLoggerError).toHaveBeenCalled()
+    expect(result.current.isApplyingScenario).toBe(false)
+  })
+
+  test('a scenario build resolving after unmount never creates an ownerless store', async () => {
+    const {result, unmount, spy, destroyed} = setup()
+    let resolveBuild!: (value: {posts: Array<{text: string}>}) => void
+    const pending = new Promise<{posts: Array<{text: string}>}>(resolve => {
+      resolveBuild = resolve
+    })
+
+    let deferredApply: Promise<void>
+    act(() => {
+      deferredApply = result.current.applyScenario('reply', () => pending)
+    })
+    expect(result.current.isApplyingScenario).toBe(true)
+
+    unmount()
+    expect(destroyed[0]).toBe(true)
+
+    const storeCallsBefore = spy.mock.calls.length
+    await act(async () => {
+      resolveBuild({posts: [{text: 'arrived after unmount'}]})
+      await deferredApply
+    })
+    /* No new store may exist; there is no owner left to destroy it. */
+    expect(spy.mock.calls.length).toBe(storeCallsBefore)
+    expect(destroyed).toEqual([true])
+  })
+
+  test('a scenario build rejecting after unmount is swallowed without state updates', async () => {
+    const {result, unmount} = setup()
+    let rejectBuild!: (error: Error) => void
+    const pending = new Promise<{posts: Array<{text: string}>}>(
+      (_resolve, reject) => {
+        rejectBuild = reject
+      },
+    )
+
+    let deferredApply: Promise<void>
+    act(() => {
+      deferredApply = result.current.applyScenario('quote', () => pending)
+    })
+    unmount()
+
+    mockLoggerError.mockClear()
+    await act(async () => {
+      rejectBuild(new Error('late failure'))
+      await deferredApply
+    })
+    /* Invalidated request: not even logged as a tester scenario failure. */
+    expect(mockLoggerError).not.toHaveBeenCalled()
+  })
+})

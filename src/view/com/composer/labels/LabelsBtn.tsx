@@ -23,9 +23,12 @@ import {IS_WEB} from '#/env'
 export function LabelsBtn({
   labels,
   onChange,
+  testID = 'labelsBtn',
 }: {
   labels: SelfLabel[]
   onChange: (v: SelfLabel[]) => void
+  /** Override the default test ID when several posts render label buttons. */
+  testID?: string
 }) {
   const control = Dialog.useDialogControl()
   const {_} = useLingui()
@@ -53,7 +56,7 @@ export function LabelsBtn({
       <Button
         color="secondary"
         size="small"
-        testID="labelsBtn"
+        testID={testID}
         onPress={() => {
           Keyboard.dismiss()
           control.open()
