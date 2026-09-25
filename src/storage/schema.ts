@@ -78,6 +78,7 @@ export type Device = {
    */
   policyUpdateDebugOverride?: boolean
   [PolicyUpdate202508]?: boolean
+  videoVolume: number
 }
 
 export type Account = {
