@@ -5,29 +5,32 @@ import {useReducedMotion} from 'react-native-reanimated'
 import {decideShouldRoll} from '#/lib/custom-animations/util'
 
 const animationConfig = {
-  duration: 400,
+  duration: 250,
   easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
   fill: 'forwards' as FillMode,
 }
 
+const FILTER_BLUR_MAX = 'blur(0.15em)'
+const FILTER_BLUR_NONE = 'blur(0)'
+
 const enteringUpKeyframe = [
-  {opacity: 0, transform: 'translateY(18px)'},
-  {opacity: 1, transform: 'translateY(0)'},
+  {opacity: 0, transform: 'translateY(10px)', filter: FILTER_BLUR_MAX},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
 ]
 
 const enteringDownKeyframe = [
-  {opacity: 0, transform: 'translateY(-18px)'},
-  {opacity: 1, transform: 'translateY(0)'},
+  {opacity: 0, transform: 'translateY(-10px)', filter: FILTER_BLUR_MAX},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
 ]
 
 const exitingUpKeyframe = [
-  {opacity: 1, transform: 'translateY(0)'},
-  {opacity: 0, transform: 'translateY(-18px)'},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
+  {opacity: 0, transform: 'translateY(-10px)', filter: FILTER_BLUR_MAX},
 ]
 
 const exitingDownKeyframe = [
-  {opacity: 1, transform: 'translateY(0)'},
-  {opacity: 0, transform: 'translateY(18px)'},
+  {opacity: 1, transform: 'translateY(0)', filter: FILTER_BLUR_NONE},
+  {opacity: 0, transform: 'translateY(10px)', filter: FILTER_BLUR_MAX},
 ]
 
 export function CountWheel({
