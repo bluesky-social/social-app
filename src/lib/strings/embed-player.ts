@@ -25,6 +25,7 @@ export const embedPlayerSources = [
   'klipy',
   'flickr',
   'bandcamp',
+  'bluvyTube',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -48,6 +49,7 @@ export type EmbedPlayerType =
   | 'flickr_album'
   | 'bandcamp_album'
   | 'bandcamp_track'
+  | 'bluvy_tube_video'
 
 export function getEmbedPlayerMediaType(
   type: EmbedPlayerType,
@@ -56,7 +58,8 @@ export function getEmbedPlayerMediaType(
     type === 'youtube_video' ||
     type === 'youtube_short' ||
     type === 'twitch_video' ||
-    type === 'vimeo_video'
+    type === 'vimeo_video' ||
+    type === 'bluvy_tube_video'
   ) {
     return 'video'
   }
@@ -85,6 +88,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
   bandcamp: 'Bandcamp',
+  bluvyTube: 'Bluvy Tube',
 }
 
 /**
@@ -543,6 +547,53 @@ export function parseEmbedPlayerFromUrl(
         return undefined
     }
   }
+
+  // Bluvy Tube (tube.bluvy.app)
+  if (
+    urlp.hostname === 'tube.bluvy.app' ||
+    urlp.hostname === 'www.tube.bluvy.app'
+  ) {
+    const path = urlp.pathname
+
+    const mAt = path.match(
+      /^\/(?:watch|at|embed\/at)\/([a-zA-Z0-9.:_-]+)\/([a-zA-Z0-9._~-]+)/,
+    )
+    if (mAt) {
+      const author = encodeURIComponent(mAt[1])
+      const rkey = encodeURIComponent(mAt[2])
+      return {
+        type: 'bluvy_tube_video',
+        source: 'bluvyTube',
+        playerUri: `https://tube.bluvy.app/embed/at/${author}/${rkey}`,
+      }
+    }
+
+    const mId = path.match(/^\/(?:video|embed\/video)\/(\d+)/)
+    if (mId) {
+      const videoId = encodeURIComponent(mId[1])
+      return {
+        type: 'bluvy_tube_video',
+        source: 'bluvyTube',
+        playerUri: `https://tube.bluvy.app/embed/video/${videoId}`,
+      }
+    }
+
+    if (path === '/embed/player') {
+      const stream = urlp.searchParams.get('stream')
+      const poster = urlp.searchParams.get('poster')
+      if (stream) {
+        const streamParam = encodeURIComponent(stream)
+        const posterParam = poster
+          ? `&poster=${encodeURIComponent(poster)}`
+          : ''
+        return {
+          type: 'bluvy_tube_video',
+          source: 'bluvyTube',
+          playerUri: `https://tube.bluvy.app/embed/player?stream=${streamParam}${posterParam}`,
+        }
+      }
+    }
+  }
 }
 
 export function getPlayerAspect({
@@ -560,6 +611,7 @@ export function getPlayerAspect({
     case 'youtube_video':
     case 'twitch_video':
     case 'vimeo_video':
+    case 'bluvy_tube_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
       if (SCREEN_HEIGHT < 600) {
