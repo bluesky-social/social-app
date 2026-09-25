@@ -49,6 +49,7 @@ let PostControls = ({
   threadgateRecord,
   onShowLess,
   viaRepost,
+  reposter,
   variant,
   forceGoogleTranslate = false,
 }: {
@@ -65,6 +66,7 @@ let PostControls = ({
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
   viaRepost?: {uri: string; cid: string}
+  reposter?: app.bsky.actor.defs.ProfileViewBasic
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
 }): React.ReactNode => {
@@ -343,6 +345,7 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShowLess={onShowLess}
+          reposter={reposter}
           hitSlop={{
             left: secondaryControlSpacingStyles.gap / 2,
           }}
