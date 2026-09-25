@@ -153,8 +153,8 @@ msgstr "{0, plural, one {# new join request} other {# new join requests}}"
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
-#. placeholder {0}: quoteCount ?? 0
-#: src/screens/Post/PostQuotes.tsx:34
+#. placeholder {0}: post.quoteCount ?? 0
+#: src/screens/Post/PostQuotes.tsx:38
 msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr ""
 
@@ -7021,6 +7021,7 @@ msgid "Last initiated just now"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:99
+#: src/screens/Post/PostQuotes.tsx:90
 #: src/screens/Search/SearchResults.tsx:90
 #: src/screens/Topic.tsx:66
 msgid "Latest"
@@ -8397,7 +8398,7 @@ msgstr ""
 msgid "No posts yet"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:107
+#: src/view/com/post-thread/PostQuotes.tsx:120
 msgid "No quotes yet"
 msgstr ""
 
@@ -8482,7 +8483,7 @@ msgstr ""
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:109
+#: src/view/com/post-thread/PostQuotes.tsx:122
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr ""
 
@@ -9910,7 +9911,7 @@ msgid "Quote posts disabled"
 msgstr ""
 
 #: src/lib/hooks/useNotificationHandler.ts:186
-#: src/screens/Post/PostQuotes.tsx:31
+#: src/screens/Post/PostQuotes.tsx:35
 #: src/screens/Settings/NotificationSettings/index.tsx:203
 #: src/screens/Settings/NotificationSettings/index.tsx:346
 msgid "Quotes"
@@ -12506,7 +12507,7 @@ msgstr "That Starter Pack could not be found."
 msgid "That username is already taken"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:135
+#: src/view/com/post-thread/PostQuotes.tsx:148
 msgid "That's all, folks!"
 msgstr ""
 
@@ -13295,6 +13296,7 @@ msgid "Too many contacts - you've exceeded the number of contacts you can import
 msgstr ""
 
 #: src/screens/Hashtag.tsx:88
+#: src/screens/Post/PostQuotes.tsx:84
 #: src/screens/Search/SearchResults.tsx:78
 #: src/screens/Topic.tsx:60
 msgid "Top"
