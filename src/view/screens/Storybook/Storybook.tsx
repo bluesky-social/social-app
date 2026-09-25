@@ -14,6 +14,7 @@ import {
   useRequestDeviceGeolocation,
 } from '#/geolocation'
 import {Admonitions} from './Admonitions'
+import {BottomSheets} from './BottomSheets'
 import {Breakpoints} from './Breakpoints'
 import {Buttons} from './Buttons'
 import {Dialogs} from './Dialogs'
@@ -42,6 +43,8 @@ export default function Storybook() {
       <View style={[a.p_xl, a.gap_5xl, {paddingBottom: 100}]}>
         {!showContainedList ? (
           <>
+            <BottomSheets />
+
             <View style={[a.flex_row, a.align_start, a.gap_md]}>
               <Button
                 color="primary"
