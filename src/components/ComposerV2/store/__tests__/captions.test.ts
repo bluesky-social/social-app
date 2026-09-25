@@ -86,6 +86,48 @@ function getVideo(store: ReturnType<typeof createThreadStore>) {
   return {postId, item: media.item}
 }
 
+describe('failed video upload normalization', () => {
+  test('retains partial video and caption blobs for an explicit retry', () => {
+    const {started, workers} = makeManualWorkers()
+    const store = createThreadStore({
+      resolvers,
+      __createId: makeIdGenerator(),
+      __uploadWorkers: workers,
+      initialState: {posts: [{attachments: {media: {...videoInput}}}]},
+    })
+    const videoBlob = blob('video')
+    const captionBlobs = [{lang: 'en', blob: blob('caption-en')}]
+
+    started[0].report({
+      state: 'failed',
+      error: 'caption upload failed',
+      code: 'caption-upload-failed',
+      blob: videoBlob,
+      captionBlobs,
+    })
+
+    const failed = getVideo(store).item
+    if (failed.upload.state !== 'failed' || failed.upload.retryable !== true) {
+      throw new Error('expected retryable failed upload')
+    }
+    expect(failed.upload).toMatchObject({
+      error: 'caption upload failed',
+      code: 'caption-upload-failed',
+      retryable: true,
+    })
+    expect(failed.videoBlob).toBe(videoBlob)
+    expect(failed.captionBlobs).toEqual(captionBlobs)
+    expect(store.getState().isDirty).toBe(false)
+
+    failed.upload.retry()
+    expect(started).toHaveLength(2)
+    expect(started[1].media.videoBlob).toBe(videoBlob)
+    expect(started[1].media.captionBlobs).toEqual(captionBlobs)
+    expect(store.getState().isDirty).toBe(false)
+    store.destroy()
+  })
+})
+
 describe('setVideoCaptions', () => {
   test('updates captions, marks dirty, and prunes stale caption blobs', () => {
     const {started, workers} = makeManualWorkers()

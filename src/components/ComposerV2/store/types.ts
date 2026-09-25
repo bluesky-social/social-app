@@ -30,6 +30,14 @@ export type UploadStatus =
       captionBlobs?: UploadedCaption[]
     }
 
+type FailedPostMediaUploadStatus = {
+  state: 'failed'
+  error: string
+  code?: string
+  blob?: BlobRef
+  captionBlobs?: UploadedCaption[]
+} & ({retryable: true; retry: () => void} | {retryable: false; retry?: never})
+
 /** Runtime retry functions must be reattached when hydrating serialized data. */
 export type PostMediaUploadStatus =
   | {state: 'pending'}
@@ -43,15 +51,7 @@ export type PostMediaUploadStatus =
       blob: BlobRef
       captionBlobs?: UploadedCaption[]
     }
-  | {
-      state: 'failed'
-      error: string
-      code?: string
-      retryable?: boolean
-      retry: () => void
-      blob?: BlobRef
-      captionBlobs?: UploadedCaption[]
-    }
+  | FailedPostMediaUploadStatus
 
 export type UploadedCaption = {lang: string; blob: BlobRef}
 

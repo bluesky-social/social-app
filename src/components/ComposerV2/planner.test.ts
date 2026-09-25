@@ -710,7 +710,7 @@ describe('ComposerV2 no-write planner', () => {
     const video = (
       upload:
         | {state: 'uploaded'; blob: BlobRef}
-        | {state: 'failed'; error: string; retryable: false; retry: () => void},
+        | {state: 'failed'; error: string; retryable: false; retry?: never},
     ) => {
       const state = snapshot({
         posts: [
@@ -753,7 +753,6 @@ describe('ComposerV2 no-write planner', () => {
         state: 'failed',
         error: 'private worker detail',
         retryable: false,
-        retry: jest.fn(),
       }),
       {},
       {requireAltText: true},
@@ -989,7 +988,6 @@ describe('ComposerV2 no-write planner', () => {
       state: 'failed',
       error: 'private worker detail',
       retryable: false,
-      retry: jest.fn(),
     }
     const result = await plan(state)
     expect(result.ok).toBe(false)
