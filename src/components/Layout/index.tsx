@@ -12,6 +12,7 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
+import {ScreenPresenceProvider} from '#/lib/hooks/useScreenPresence'
 import {useEnableMinimalShellModeForScreen} from '#/state/shell'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
@@ -52,10 +53,9 @@ export const Screen = memo(function Screen({
   const {top} = useSafeAreaInsets()
   const {isWithinSplitView} = useIsWithinSplitView()
 
-  useEnableMinimalShellModeForScreen({enabled: minimalShell})
-
   return (
-    <>
+    <ScreenPresenceProvider>
+      <MinimalShell enabled={minimalShell} />
       {IS_WEB && !isWithinSplitView && <WebCenterBorders />}
       <View
         style={[
@@ -66,9 +66,18 @@ export const Screen = memo(function Screen({
         ]}
         {...props}
       />
-    </>
+    </ScreenPresenceProvider>
   )
 })
+
+/**
+ * Rendered inside the presence provider so the shell follows this screen's
+ * transition rather than its focus state.
+ */
+function MinimalShell({enabled}: {enabled: boolean}) {
+  useEnableMinimalShellModeForScreen({enabled})
+  return null
+}
 
 export type ContentProps = AnimatedScrollViewProps & {
   style?: StyleProp<ViewStyle>
