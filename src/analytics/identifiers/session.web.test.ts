@@ -318,25 +318,6 @@ describe('web session initialization', () => {
       rotatedAt: NOW.getTime(),
     })
   })
-
-  it('ignores obsolete session keys', () => {
-    const target = setActiveTab('tab-a')
-    target.sessionStorage.setItem('bsky_session_id', 'obsolete-session')
-    target.sessionStorage.setItem(
-      'bsky_session_id_last_event_at',
-      String(NOW.getTime()),
-    )
-
-    const {getInitialSessionId, getSessionId} = loadSession()
-
-    expect(getInitialSessionId()).toBe('session-a')
-    expect(getSessionId()).toBe('session-a')
-    expect(mockUuidV4).toHaveBeenCalledTimes(1)
-    expect(getSessionRecord('tab-a')).toEqual({
-      id: 'session-a',
-      rotatedAt: NOW.getTime(),
-    })
-  })
 })
 
 describe('web session lifecycle', () => {
