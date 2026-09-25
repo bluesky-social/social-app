@@ -104,6 +104,15 @@ export function MessageComposer({
   const submitDisabled =
     !editable || (!messageEmbed && text.trim().length === 0)
 
+  /*
+   * Guards against a second `onSubmit` firing (a fast double-tap, or a
+   * native double-dispatch of onPress) before React has re-rendered with
+   * the cleared input. `submitDisabled`/`text` are state, so they lag a
+   * frame behind the synchronous `.clear()` call below - a ref is needed
+   * to block re-entry within that window.
+   */
+  const isSubmittingRef = useRef(false)
+
   const onSubmit = (
     message: string,
     embed: MessageEmbedState | undefined,
@@ -111,6 +120,7 @@ export function MessageComposer({
   ) => {
     if (!editable) return
     if (!embed && message.trim() === '') return
+    if (isSubmittingRef.current) return
     const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(
@@ -120,6 +130,7 @@ export function MessageComposer({
       return
     }
 
+    isSubmittingRef.current = true
     clearDraft()
     playHaptic()
     setEmbed(undefined)
@@ -132,6 +143,7 @@ export function MessageComposer({
 
     // defer send by a frame so that the textinput resizes before we send the message
     requestAnimationFrame(() => {
+      isSubmittingRef.current = false
       onSendMessage(
         message,
         embed,
