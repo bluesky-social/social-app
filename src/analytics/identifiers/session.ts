@@ -118,6 +118,10 @@ class SessionStore {
       this.notify,
     )
     this.appStateSubscription = onAppStateChange(onAppStateChanged)
+    const latestAppState = getCurrentState()
+    if (latestAppState && latestAppState !== currentAppState) {
+      onAppStateChanged(latestAppState)
+    }
   }
 
   private stop() {

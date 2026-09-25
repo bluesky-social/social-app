@@ -443,6 +443,19 @@ describe('web session lifecycle', () => {
     expect(mockUuidV4).toHaveBeenCalledTimes(1)
   })
 
+  it('captures inactivity that begins before the first consumer mounts', () => {
+    setStoredSession('tab-a', 'existing-session', NOW.getTime())
+    const {useSessionId} = loadSession()
+    mockCurrentAppStates.set('tab-a', 'background')
+    const hook = renderHook(() => useSessionId())
+
+    jest.advanceTimersByTime(THIRTY_MINUTES)
+    act(() => emitAppState('tab-a', 'active'))
+
+    expect(hook.result.current).toBe('session-a')
+    expect(mockUuidV4).toHaveBeenCalledTimes(1)
+  })
+
   test('uses one app-state listener for every mounted consumer', () => {
     setStoredSession('tab-a', 'existing-session', NOW.getTime())
     const {useSessionId} = loadSession()
