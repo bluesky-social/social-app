@@ -75,6 +75,7 @@
     "lint": "oxlint --quiet src modules && node scripts/check-sentry-browser-version.mjs",
     "lint-native": "swiftlint ./modules && ktlint ./modules",
     "lint-native:fix": "swiftlint --fix ./modules && ktlint --format ./modules",
+    "react-compiler:report": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/react-compiler-report.ts",
     "lexicons:generate": "lex build --clear --index-file --import-ext ''",
     "lexicons:install": "lex install",
     "lexicons:update": "lex install --update",
