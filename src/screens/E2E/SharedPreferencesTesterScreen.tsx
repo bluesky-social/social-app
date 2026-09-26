@@ -1,12 +1,12 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {SharedPrefs} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {ScrollView} from '#/view/com/util/Views'
 import {atoms as a} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
-import {SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
 export function SharedPreferencesTesterScreen() {
   const [currentTestOutput, setCurrentTestOutput] = useState<string>('')

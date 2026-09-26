@@ -1,8 +1,8 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
 import {AccessibilityInfo} from 'react-native'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {IS_WEB} from '#/env'
-import {PlatformInfo} from '../../modules/expo-bluesky-swiss-army'
 
 const Context = createContext({
   reduceMotionEnabled: false,

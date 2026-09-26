@@ -1,5 +1,7 @@
 import {useRef, useState} from 'react'
 import {View} from 'react-native'
+import {GifView} from '@bsky.app/expo-bluesky-gif-view'
+import {type GifViewStateChangeEvent} from '@bsky.app/expo-bluesky-gif-view/src/GifView.types'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -9,8 +11,6 @@ import {atoms as a, useTheme} from '#/alf'
 import {Fill} from '#/components/Fill'
 import {ConstrainedImage} from '#/components/images/AutoSizedImage'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
-import {GifView} from '../../../../../modules/expo-bluesky-gif-view'
-import {type GifViewStateChangeEvent} from '../../../../../modules/expo-bluesky-gif-view/src/GifView.types'
 import {GifPresentationControls} from '../VideoEmbed/GifPresentationControls'
 
 export function GifEmbed({
