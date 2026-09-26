@@ -12,6 +12,7 @@ describe('getEmbedPlayerMediaType', () => {
     ['soundcloud_set', 'audio'],
     ['apple_music_album', 'audio'],
     ['bandcamp_track', 'audio'],
+    ['freemix_track', 'audio'],
     ['giphy_gif', 'gif'],
     ['flickr_album', 'other'],
   ])('classifies %s as %s', (type, expected) => {

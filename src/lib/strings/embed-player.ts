@@ -25,6 +25,7 @@ export const embedPlayerSources = [
   'klipy',
   'flickr',
   'bandcamp',
+  'freemix',
 ] as const
 
 export type EmbedPlayerSource = (typeof embedPlayerSources)[number]
@@ -48,6 +49,7 @@ export type EmbedPlayerType =
   | 'flickr_album'
   | 'bandcamp_album'
   | 'bandcamp_track'
+  | 'freemix_track'
 
 export function getEmbedPlayerMediaType(
   type: EmbedPlayerType,
@@ -65,7 +67,8 @@ export function getEmbedPlayerMediaType(
     type.startsWith('spotify_') ||
     type.startsWith('soundcloud_') ||
     type.startsWith('apple_music_') ||
-    type.startsWith('bandcamp_')
+    type.startsWith('bandcamp_') ||
+    type.startsWith('freemix_')
   ) {
     return 'audio'
   }
@@ -85,6 +88,7 @@ export const externalEmbedLabels: Record<EmbedPlayerSource, string> = {
   soundcloud: 'SoundCloud',
   flickr: 'Flickr',
   bandcamp: 'Bandcamp',
+  freemix: 'FreeMix',
 }
 
 /**
@@ -118,6 +122,12 @@ export interface EmbedPlayerParams {
 
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
 const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
+
+/** AT Protocol TID, i.e. the rkey of a `fm.freemix.track` record */
+const freemixRkeyRegex = /^[2-7a-z]{13}$/
+
+/** staging.freemix.fm is FreeMix's live test environment */
+const freemixHosts = ['app.freemix.fm', 'staging.freemix.fm']
 
 export function parseEmbedPlayerFromUrl(
   url: string,
@@ -543,6 +553,26 @@ export function parseEmbedPlayerFromUrl(
         return undefined
     }
   }
+
+  // freemix
+  if (freemixHosts.includes(urlp.hostname)) {
+    const segments = urlp.pathname.split('/').filter(Boolean)
+    /*
+     * /track/{rkey} is the canonical track URL. Other paths, such as
+     * /track/{rkey}/tree (remix-tree view), fall through to a link card.
+     */
+    if (segments[0] === 'track' && segments.length === 2) {
+      const rkey = segments[1]
+      if (freemixRkeyRegex.test(rkey)) {
+        return {
+          type: 'freemix_track',
+          source: 'freemix',
+          // the player lives on the same host as the track URL
+          playerUri: `https://${urlp.hostname}/embed/${rkey}`,
+        }
+      }
+    }
+  }
 }
 
 export function getPlayerAspect({
@@ -554,6 +584,13 @@ export function getPlayerAspect({
   hasThumb: boolean
   width: number
 }): {aspectRatio?: number; height?: number} {
+  /*
+   * The FreeMix player has a fixed intrinsic height, so it doesn't need a
+   * thumb to size the frame. Without this, posts lacking a thumb fall back to
+   * 16:9 and the player renders with a large dead area below it.
+   */
+  if (type === 'freemix_track') return {height: 175}
+
   if (!hasThumb) return {aspectRatio: 16 / 9}
 
   switch (type) {
