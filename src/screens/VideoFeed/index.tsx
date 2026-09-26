@@ -40,11 +40,15 @@ import {
 } from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {getCurrentState, useOnAppStateChange} from '#/lib/appState'
 import {HITSLOP_20} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {hasPlaybackStarted} from '#/lib/media/video/analytics'
+import {
+  createPlaybackDurationTracker,
+  hasPlaybackStarted,
+} from '#/lib/media/video/analytics'
 import {
   createPlaybackTelemetry,
   type PlaybackTelemetry,
@@ -618,10 +622,38 @@ function VideoItemInner({
     ReportDialogMetadataContext.useReportDialogMetadataContext()
   const ax = useAnalytics()
   const playbackStartTrackedRef = useRef(false)
+  const [durationTracker] = useState(() => {
+    const tracker = createPlaybackDurationTracker({
+      onSegment: segment => {
+        ax.metric('video:playback:duration', {
+          ...segment,
+          postUri: post.uri,
+          postAuthorDid: post.author.did,
+          context: 'immersiveFeed',
+          presentation: embed.presentation === 'gif' ? 'gif' : 'video',
+        })
+      },
+    })
+    tracker.setForeground(getCurrentState() === 'active')
+    return tracker
+  })
+
+  useOnAppStateChange(state => {
+    durationTracker.setForeground(state === 'active')
+  })
+
+  useEffect(() => {
+    durationTracker.setActive(active)
+  }, [active, durationTracker])
+
+  useEffect(() => {
+    return () => durationTracker.flush('unmounted')
+  }, [durationTracker])
 
   usePlaybackTelemetry({player, active, playlist: embed.playlist})
 
   useEventListener(player, 'timeUpdate', evt => {
+    durationTracker.observeProgress(evt.currentTime)
     if (IS_ANDROID && !isReady && evt.currentTime >= 0.05) {
       setIsReady(true)
     }
@@ -652,6 +684,14 @@ function VideoItemInner({
         autoplay: true,
       })
     }
+  })
+
+  useEventListener(player, 'playingChange', evt => {
+    durationTracker.setPlaying(evt.isPlaying)
+  })
+
+  useEventListener(player, 'statusChange', evt => {
+    if (evt.status === 'error') durationTracker.flush('error')
   })
 
   return (
