@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
+import {withCleanup} from '#/lib/async/withCleanup'
 import {atoms as a, type TextStyleProp, useTheme} from '#/alf'
 import {CheckThick_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {createStaticClick, InlineLinkText} from '#/components/Link'
@@ -20,14 +21,17 @@ export function ResendEmailText({
 
   const handleOnPress = async () => {
     setStatus('sending')
-    try {
-      await wait(1000, onPress())
-      setStatus('success')
-    } finally {
-      setTimeout(() => {
-        setStatus(null)
-      }, 1000)
-    }
+    await withCleanup(
+      async () => {
+        await wait(1000, onPress())
+        setStatus('success')
+      },
+      () => {
+        setTimeout(() => {
+          setStatus(null)
+        }, 1000)
+      },
+    )
   }
 
   return (

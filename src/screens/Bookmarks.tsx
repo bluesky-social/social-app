@@ -10,6 +10,7 @@ import {
   useNavigation,
 } from '@react-navigation/native'
 
+import {withCleanup} from '#/lib/async/withCleanup'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {
@@ -104,11 +105,14 @@ function BookmarksInner() {
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
-    try {
-      await refetch()
-    } finally {
-      setIsPTRing(false)
-    }
+    await withCleanup(
+      async () => {
+        await refetch()
+      },
+      () => {
+        setIsPTRing(false)
+      },
+    )
   }, [refetch, setIsPTRing])
 
   const onEndReached = useCallback(async () => {
