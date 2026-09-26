@@ -119,6 +119,16 @@ export interface EmbedPlayerParams {
 const giphyRegex = /media(?:[0-4]\.giphy\.com|\.giphy\.com)/i
 const gifFilenameRegex = /^(\S+)\.(webp|gif|mp4)$/i
 
+/**
+ * Converts a YouTube `t` param such as `90`, `90s` or `1h2m3s` to seconds.
+ */
+function parseYouTubeStart(t: string | null) {
+  const match = t?.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/)
+  if (!match) return 0
+  const [, h = 0, m = 0, s = 0] = match
+  return Number(h) * 3600 + Number(m) * 60 + Number(s)
+}
+
 export function parseEmbedPlayerFromUrl(
   url: string,
 ): EmbedPlayerParams | undefined {
@@ -132,8 +142,7 @@ export function parseEmbedPlayerFromUrl(
   // youtube
   if (urlp.hostname === 'youtu.be') {
     const videoId = urlp.pathname.split('/')[1]
-    const t = urlp.searchParams.get('t') ?? '0'
-    const seek = encodeURIComponent(t.replace(/s$/, ''))
+    const seek = parseYouTubeStart(urlp.searchParams.get('t'))
 
     if (videoId) {
       return {
@@ -157,8 +166,7 @@ export function parseEmbedPlayerFromUrl(
       isShorts || isLive
         ? shortOrLiveVideoId
         : (urlp.searchParams.get('v') as string)
-    const t = urlp.searchParams.get('t') ?? '0'
-    const seek = encodeURIComponent(t.replace(/s$/, ''))
+    const seek = parseYouTubeStart(urlp.searchParams.get('t'))
 
     if (videoId) {
       return {
