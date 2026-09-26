@@ -37,6 +37,8 @@ import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} fro
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {useConvoMembersSource} from '#/features/autocomplete/useConvoMembersSource'
+import {useFollowsSource} from '#/features/autocomplete/useFollowsSource'
 import {type chat} from '#/lexicons'
 import {type MessageEmbedState} from './MessageInputEmbed'
 
@@ -72,6 +74,8 @@ export function MessageComposer({
 
   const [text, setText] = useState(getDraft)
   useSaveMessageDraft(text)
+  const convoMembers = useConvoMembersSource()
+  const follows = useFollowsSource()
 
   useEffect(() => {
     if (!replyTo) return
@@ -258,6 +262,7 @@ export function MessageComposer({
                     : l({message: 'Message', context: 'description'})
                 }
                 autocompletePlacement="top-start"
+                localSources={[convoMembers, follows]}
                 internalApiRef={composerInternalApiRef}
                 defaultValue={text}
                 editable={editable}

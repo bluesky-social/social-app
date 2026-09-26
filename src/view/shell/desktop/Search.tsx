@@ -4,6 +4,7 @@ import {useSift} from '@bsky.app/sift'
 import {StackActions, useNavigation} from '@react-navigation/native'
 
 import {type NavigationProp} from '#/lib/routes/types'
+import {definedFilterParams} from '#/screens/Search/searchParams'
 import {atoms as a} from '#/alf'
 import {
   Autocomplete as AutocompleteBase,
@@ -11,12 +12,15 @@ import {
   useAutocomplete,
 } from '#/components/Autocomplete'
 import {SearchInput} from '#/components/forms/SearchInput'
+import {useSearchHistory} from '#/features/searchHistory'
+import {useRecentSearchesSource} from '#/features/searchHistory/useRecentSearchesSource'
 
 export function DesktopSearch() {
   const navigation = useNavigation<NavigationProp>()
+  const {updateProfileHistory, updateSearchHistory} = useSearchHistory()
   const [active, setActive] = useState(false)
   const [query, setQuery] = useState<string>('')
-  const showResults = active && !!query.length
+  const showResults = active
 
   const sift = useSift({
     offset: a.p_sm.padding,
@@ -24,7 +28,7 @@ export function DesktopSearch() {
   })
 
   const onFocus = () => {
-    if (query.length) setActive(true)
+    setActive(true)
   }
 
   const onBlur = () => {
@@ -45,6 +49,7 @@ export function DesktopSearch() {
 
   const onSubmit = () => {
     if (!query.length) return
+    updateSearchHistory(query)
     onClearText()
     sift.elements.input.blur()
     navigation.dispatch(StackActions.push('Search', {q: query}))
@@ -52,13 +57,18 @@ export function DesktopSearch() {
 
   const onSelect = (item: AutocompleteItem) => {
     if (item.type === 'profile') {
+      updateProfileHistory(item.profile)
       onClearText()
       sift.elements.input.blur()
       navigation.navigate('Profile', {name: item.profile.handle})
     } else if (item.type === 'search') {
+      updateSearchHistory(item.value, item.filters)
       onClearText()
       sift.elements.input.blur()
-      navigation.navigate('Search', {q: item.value})
+      navigation.push('Search', {
+        q: item.value,
+        ...definedFilterParams(item.filters ?? {}),
+      })
     }
   }
 
@@ -97,10 +107,12 @@ function Inner({
   onSelect: (item: AutocompleteItem) => void
   onDismiss: () => void
 }) {
+  const recents = useRecentSearchesSource()
   const {items} = useAutocomplete({
     type: 'profile',
     query,
     showSearchFallback: true,
+    sources: [recents],
   })
 
   return items && items.length ? (
