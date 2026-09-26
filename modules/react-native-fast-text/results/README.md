@@ -66,4 +66,5 @@ repetitions; use the two-run `android-typography-final-summary.json` instead.
   full resolution.
 
 The baseline revision and measurement caveats are in [the report](../PERFORMANCE.md).
-Source/binary fingerprints at handoff are recorded in [provenance.json](provenance.json).
+Source/binary fingerprints for the delivered tree are recorded in
+[provenance.json](provenance.json), including notes on tooling-only changes after measurement.

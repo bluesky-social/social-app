@@ -1,14 +1,15 @@
 /* eslint-disable import/no-nodejs-modules -- This is a Node-only analysis CLI, not app code. */
+/* eslint-disable import/consistent-type-specifier-style -- Node must erase type-only TSX dependencies. */
 import assert from 'node:assert/strict'
 import {readFile, writeFile} from 'node:fs/promises'
 import {relative, resolve} from 'node:path'
 
-import {
-  type Configuration,
-  type Renderer,
-  type Result,
-  type Sample,
-  type Workload,
+import type {
+  Configuration,
+  Renderer,
+  Result,
+  Sample,
+  Workload,
 } from './BenchmarkApp'
 
 type Metric = 'jsCommitMs' | 'layoutMs' | 'settledMs'

@@ -1,11 +1,12 @@
 /* eslint-disable import/no-nodejs-modules -- Node-only profiler artifact extraction. */
+/* eslint-disable import/consistent-type-specifier-style -- Node must erase type-only TSX dependencies. */
 import assert from 'node:assert/strict'
 import {createHash} from 'node:crypto'
 import {readFile, writeFile} from 'node:fs/promises'
 import {basename} from 'node:path'
 import {gunzipSync, gzipSync} from 'node:zlib'
 
-import {type Result} from './BenchmarkApp'
+import type {Result} from './BenchmarkApp'
 
 type Profile = {
   meta: {
