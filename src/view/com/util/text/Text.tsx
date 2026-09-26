@@ -1,6 +1,5 @@
 import {useMemo} from 'react'
 import {StyleSheet, type TextProps} from 'react-native'
-import {UITextView} from '@bsky.app/react-native-uitextview'
 
 import {lh, s} from '#/lib/styles'
 import {type TypographyVariant, useTheme} from '#/lib/ThemeContext'
@@ -11,6 +10,7 @@ import {
   renderChildrenWithEmoji,
   type StringChild,
 } from '#/alf/typography'
+import {useTypographyText} from '#/components/TypographyText'
 import {IS_IOS, IS_WEB} from '#/env'
 
 export type CustomTextProps = Omit<TextProps, 'children'> & {
@@ -19,6 +19,8 @@ export type CustomTextProps = Omit<TextProps, 'children'> & {
   title?: string
   dataSet?: Record<string, string | number>
   selectable?: boolean
+  /** Keeps the original renderer for a compatibility-sensitive label. */
+  deopt?: boolean
 } & (
     | {
         emoji: true
@@ -96,9 +98,8 @@ function Text_DEPRECATED({
     type,
   ])
 
-  return (
-    <UITextView {...textProps}>
-      {renderChildrenWithEmoji(children, textProps, emoji ?? false)}
-    </UITextView>
-  )
+  return useTypographyText({
+    ...textProps,
+    children: renderChildrenWithEmoji(children, textProps, emoji ?? false),
+  })
 }

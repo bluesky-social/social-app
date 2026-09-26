@@ -1,0 +1,26 @@
+{
+  "name": "fast-text-benchmark",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "scripts": {
+    "start": "expo start --dev-client --port 8083",
+    "start:prod": "expo start --dev-client --port 8083 --no-dev --minify",
+    "ios": "expo run:ios --port 8083",
+    "android": "expo run:android --port 8083",
+    "export:web": "expo export --platform web",
+    "collect": "node collect.mjs"
+  },
+  "dependencies": {
+    "@bsky.app/react-native-uitextview": "2.7.1",
+    "@lingui/core": "5.9.2",
+    "@lingui/react": "5.9.2",
+    "expo": "57.0.24",
+    "expo-build-properties": "57.0.21",
+    "expo-dev-client": "57.0.19",
+    "expo-font": "57.0.4",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "react-native-plain-text": "0.9.0"
+  }
+}

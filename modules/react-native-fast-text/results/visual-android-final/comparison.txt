@@ -1,0 +1,15 @@
+Screenshot diff summary
+
+Overall:
+- status: unchanged
+- pixel_mismatch: 0% - no pixel change
+- changed_areas: shown=0 total=0 omitted=0
+- diff_images: see diffPath (full size) and contextDiffPath in this result
+  - legend: green=pixel brighter in current, red=pixel darker in current, yellow rectangles outline changed regions
+
+Text changes:
+- text_analysis: status=skipped provider=ocr
+
+Regions:
+- regions: shown=0 total=0 omitted=0
+- None detected.

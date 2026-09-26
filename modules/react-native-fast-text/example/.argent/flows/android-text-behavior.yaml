@@ -1,0 +1,48 @@
+steps:
+  - tool: open-url
+    args:
+      url: fasttextbench://specimens?renderer=typography-fast&page=behavior
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        identifier: pressed
+  # RN's AX bounds span the row; press the glyphs near its discovered left edge.
+  - tool: gesture-tap
+    args:
+      x: 0.12
+      y: 0.3945
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        identifier: scalar-update
+      expectedText: "Count: 1"
+  - tool: gesture-tap
+    args:
+      x: 0.12
+      y: 0.4345
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        identifier: translated
+      expectedText: "Bonjour, Ada"
+  - tool: gesture-custom
+    args:
+      events:
+        - type: Down
+          x: 0.2
+          y: 0.4755
+        - type: Up
+          x: 0.2
+          y: 0.4755
+          delayMs: 900
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        text: Select all
+executionPrerequisite: Final Release harness freshly launched on Pixel_9_36 in
+  portrait, English locale, zero counter, no benchmark running. Coordinates are
+  specific to the recorded emulator configuration. Collector available.

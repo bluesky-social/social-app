@@ -1,0 +1,9 @@
+steps:
+  - tool: open-url
+    args:
+      url: fasttextbench://run?group=typography
+executionPrerequisite: "Unprofiled Release app installed and idle. Collector
+  listening on host port 8124; Android has adb reverse tcp:8124 tcp:8124. This
+  flow ONLY starts the run: wait for a new collector result before any further
+  device action. Do not poll the accessibility tree, build, or run analysis
+  during measurement."
