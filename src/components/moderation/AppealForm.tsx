@@ -48,9 +48,12 @@ export function AppealForm({
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       await client.call(
-        com.atproto.moderation.createReport,
+        tools.ozone.inbox.appealActionedSubject,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          action: {
+            $type: 'tools.ozone.inbox.appealActionedSubject#labelRef',
+            val: label.val,
+          },
           /*
            * `useLabelSubject` derives one shape or the other from the label's
            * `cid`: an at-uri plus cid for a record, or the label's `uri` reused
@@ -74,9 +77,8 @@ export function AppealForm({
     },
     onError: err => {
       /*
-       * `AlreadyAppealed` is real server behavior that createReport's lexicon
-       * does NOT declare, so `matchXrpcError` cannot see it and the raw error
-       * code is checked instead. Worth an upstream PR to declare it.
+       * The endpoint declares `AlreadyAppealed`, but this check also handles
+       * the error code directly when the server rejects a duplicate appeal.
        */
       if (err instanceof XrpcResponseError && err.error === 'AlreadyAppealed') {
         setError(
