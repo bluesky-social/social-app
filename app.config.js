@@ -311,7 +311,7 @@ module.exports = function (_config) {
               compileSdkVersion: 36,
               targetSdkVersion: 36,
               buildToolsVersion: '36.0.0',
-              buildReactNativeFromSource: IS_PRODUCTION,
+              buildReactNativeFromSource: true,
               enableMinifyInReleaseBuilds: true,
             },
           },

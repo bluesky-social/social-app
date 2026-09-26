@@ -240,7 +240,7 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index c0e56acd2a0f1015f5a4581909e9209a56c46166..06184e0a095decd1559f8888d1d67d62eda00df2 100644
+index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d446715b8 100644
 --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 @@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
@@ -399,6 +399,40 @@ index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad
  RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+diff --git a/ReactAndroid/hermes-engine/build.gradle.kts b/ReactAndroid/hermes-engine/build.gradle.kts
+index faf4e4f9d1ffea5cfd088fa2235f2cd99b9576ca..4a524aa87cac710929345d44a83d37854f99d5a1 100644
+--- a/ReactAndroid/hermes-engine/build.gradle.kts
++++ b/ReactAndroid/hermes-engine/build.gradle.kts
+@@ -90,7 +90,7 @@ val hermesVersionProvider: Provider<String> = providers.provider {
+       )
+ 
+   if (hermesVersionFile.exists()) {
+-    hermesVersion = hermesVersionFile.readText()
++    hermesVersion = hermesVersionFile.readText().trim()
+   }
+ 
+   hermesVersion
+@@ -107,7 +107,7 @@ val downloadHermes by
+     tasks.registering(Download::class) {
+       src(
+           providers.provider {
+-            "https://github.com/facebook/hermes/tarball/${hermesVersionProvider.get()}"
++            "https://github.com/mozzius/hermes/tarball/${hermesVersionProvider.get()}"
+           }
+       )
+       onlyIfModified(true)
+@@ -123,9 +123,8 @@ val unzipHermes by
+       dependsOn(downloadHermes)
+       from(tarTree(downloadHermesDest)) {
+         eachFile {
+-          // We flatten the unzip as the tarball contains a `facebook-hermes-<SHA>`
+-          // folder at the top level.
+-          if (this.path.startsWith("facebook-hermes-")) {
++          // GitHub includes the repository owner in the tarball's top-level folder.
++          if (this.path.startsWith("mozzius-hermes-")) {
+             this.path = this.path.substringAfter("/")
+           }
+         }
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
@@ -496,3 +530,72 @@ index 4d640400dc129724b1a46e429fc90da2fb1919cc..ecbd4bdbdbbebfd1bb8c893b44f90bc6
  
      if (rootShadowNode != nullptr) {
        const auto& children = rootShadowNode->getChildren();
+diff --git a/sdks/.hermesv1version b/sdks/.hermesv1version
+index 94c1145b3fc48471778290f71f018f66fc05a6e1..675da2a412e6e5a4b6bc3722f11fe4d778edc3c2 100644
+--- a/sdks/.hermesv1version
++++ b/sdks/.hermesv1version
+@@ -1 +1 @@
+-hermes-v250829098.0.17
+\ No newline at end of file
++18b57bcf09196b8a13e25e892d23b8ee5a9ba30e
+diff --git a/sdks/hermes-engine/hermes-utils.rb b/sdks/hermes-engine/hermes-utils.rb
+index 4b8ce896f9da32dd1befaa3b7cc47263b62eaaa9..09e607213fe014a1350225a51c5062d2f85b7b8a 100644
+--- a/sdks/hermes-engine/hermes-utils.rb
++++ b/sdks/hermes-engine/hermes-utils.rb
+@@ -7,7 +7,7 @@ require 'digest'
+ require 'net/http'
+ require 'rexml/document'
+ 
+-HERMES_GITHUB_URL = "https://github.com/facebook/hermes.git"
++HERMES_GITHUB_URL = "https://github.com/mozzius/hermes.git"
+ ENV_BUILD_FROM_SOURCE = "RCT_BUILD_HERMES_FROM_SOURCE"
+ 
+ module HermesEngineSourceType
+@@ -51,7 +51,7 @@ def hermes_source_type(version, react_native_path)
+         return HermesEngineSourceType::LOCAL_PREBUILT_TARBALL
+     end
+ 
+-    if hermes_commit_envvar_defined()
++    if hermes_commit_envvar_defined() || pinned_hermes_commit(react_native_path)
+         return HermesEngineSourceType::BUILD_FROM_GITHUB_COMMIT
+     end
+ 
+@@ -86,6 +86,16 @@ def hermes_commit_envvar_defined()
+     return ENV.has_key?('HERMES_COMMIT')
+ end
+ 
++def pinned_hermes_commit(react_native_path)
++    return nil unless hermes_v1_enabled()
++    version_file = hermestag_file(react_native_path)
++    return nil unless File.exist?(version_file)
++
++    version = File.read(version_file).strip
++    return version if version.match?(/\A[0-9a-f]{40}\z/)
++    nil
++end
++
+ def hermes_v1_enabled()
+     return ENV['RCT_HERMES_V1_ENABLED'] != "0"
+ end
+@@ -113,7 +123,7 @@ def podspec_source(source_type, version, react_native_path)
+     when HermesEngineSourceType::LOCAL_PREBUILT_TARBALL
+         return podspec_source_local_prebuilt_tarball()
+     when HermesEngineSourceType::BUILD_FROM_GITHUB_COMMIT
+-        return podspec_source_build_from_github_commit()
++        return podspec_source_build_from_github_commit(react_native_path)
+     when HermesEngineSourceType::BUILD_FROM_GITHUB_TAG
+         return podspec_source_build_from_github_tag(react_native_path)
+     when HermesEngineSourceType::BUILD_FROM_GITHUB_MAIN
+@@ -167,9 +177,9 @@ def podspec_source_local_prebuilt_tarball()
+     EOS
+ end
+ 
+-def podspec_source_build_from_github_commit()
+-    commit = ENV['HERMES_COMMIT']
+-    hermes_log("Using commit defined by HERMES_COMMIT envvar: #{commit}")
++def podspec_source_build_from_github_commit(react_native_path)
++    commit = ENV['HERMES_COMMIT'] || pinned_hermes_commit(react_native_path)
++    hermes_log("Using Hermes source commit: #{commit}")
+     return {:git => HERMES_GITHUB_URL, :commit => commit}
+ end
+ 
