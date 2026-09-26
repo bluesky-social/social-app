@@ -111,7 +111,7 @@ The extension coordinates with the main app through:
 Users can control notification sounds via the Chat Settings screen (`src/screens/Messages/Settings.tsx`):
 
 ```typescript
-import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
+import {useBackgroundNotificationPreferences} from '@bsky.app/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 const {preferences, setPref} = useBackgroundNotificationPreferences()
 setPref('playSoundChat', true) // Enable DM sounds

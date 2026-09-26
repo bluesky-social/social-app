@@ -1,5 +1,5 @@
 {
-  "name": "react-native-scroll-forwarder",
+  "name": "@bsky.app/react-native-scroll-forwarder",
   "version": "0.0.0",
   "description": "Scroll forwarder module for Bluesky profile headers",
   "main": "src/index",
