@@ -153,13 +153,10 @@ Not fixed upstream as of July 2026 (identical `checkNotNull` on `main`); the sib
 attempt facebook/react-native#57365 for the same bookkeeping corruption (different stack)
 was abandoned. Re-check when bumping React Native.
 
-Note on build modes: production Android builds compile react-android from source
-(`buildReactNativeFromSource: IS_PRODUCTION` via expo-build-properties in app.config.js
-injects the includeBuild/dependency-substitution block at prebuild), so this hunk IS
-active in production releases. Local dev builds prebuilt in a non-production env consume
-the prebuilt AAR from Maven Central instead, where this hunk (like any ReactAndroid
-source change) has no effect - do not expect to see the fix in a local debug build unless
-you prebuild with EXPO_PUBLIC_ENV=production or add the substitution block manually.
+Note on build modes: Android now compiles react-android from source in all profiles
+(`buildReactNativeFromSource: true` via expo-build-properties in app.config.js
+injects the includeBuild/dependency-substitution block at prebuild), so this hunk is
+active in local debug builds as well as production releases.
 
 ## RCTTextLayoutManager.mm Patch - Text overflows instead of wrapping on the last line
 
@@ -189,3 +186,19 @@ https://github.com/abulenok/HairlineBorderRepro, fails identically on 0.86.0 and
 
 Fixes ScrollView doesn't scroll up on new line in TextInput issue 
 https://github.com/react/react-native/issues/58517
+
+## Hermes V1 source pin - Intl.DateTimeFormat hour cycles (APP-3132)
+
+RN 0.86.3 normally downloads prebuilt Hermes V1 for both platforms. Those binaries do not
+contain the Apple styled-hour-cycle fix (facebook/hermes#2208) or the Android midnight-cycle
+fix (facebook/hermes#2210, reported in facebook/hermes#2209). The app instead builds
+Hermes from a single pinned commit in `mozzius/hermes`, based on RN's
+`hermes-v250829098.0.17` tag with both fixes cherry-picked.
+
+The pinned SHA lives in `sdks/.hermesv1version`. The patched iOS podspec source selector
+recognizes the SHA and checks out that commit from the fork, bypassing the prebuilt release
+tarball. The patched Android Gradle task downloads the same commit's source tarball and
+flattens its fork-specific archive directory. `app.config.js` enables Android's source
+dependency substitution in every profile, including local dev and testflight builds.
+These builds will take longer. Remove this pin and the source-build override once an
+official RN/Hermes release includes both upstream fixes.
