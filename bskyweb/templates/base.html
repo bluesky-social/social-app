@@ -117,6 +117,9 @@
     }
   </script>
 
+  {% if featureGateBootstrap %}
+  <script id="bsky-app-config" type="application/json">{{ featureGateBootstrap|safe }}</script>
+  {% endif %}
   {% include "scripts.html" %}
   <link rel="apple-touch-icon" sizes="180x180" href="{{ staticCDNHost }}/static/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="{{ staticCDNHost }}/static/favicon-32x32.png">
