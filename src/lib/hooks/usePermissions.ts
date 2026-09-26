@@ -1,7 +1,7 @@
 import {Linking} from 'react-native'
 import {useCameraPermissions as useExpoCameraPermissions} from 'expo-camera'
-import * as MediaLibrary from 'expo-media-library/legacy'
 
+import {usePermissions as useMediaLibraryPermissions} from '#/lib/media/media-library'
 import {Alert} from '#/view/com/util/Alert'
 import {IS_WEB} from '#/env'
 
@@ -20,7 +20,7 @@ const openPermissionAlert = (perm: string) => {
 }
 
 export function usePhotoLibraryPermission() {
-  const [res, requestPermission] = MediaLibrary.usePermissions({
+  const [res, requestPermission] = useMediaLibraryPermissions({
     granularPermissions: ['photo'],
   })
   const requestPhotoAccessIfNeeded = async () => {
@@ -49,7 +49,7 @@ export function usePhotoLibraryPermission() {
 }
 
 export function useVideoLibraryPermission() {
-  const [res, requestPermission] = MediaLibrary.usePermissions({
+  const [res, requestPermission] = useMediaLibraryPermissions({
     granularPermissions: ['video'],
   })
   const requestVideoAccessIfNeeded = async () => {
