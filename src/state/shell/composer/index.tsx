@@ -1,4 +1,12 @@
-import {createContext, useContext, useMemo, useState} from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {InteractionManager} from 'react-native'
 import {type ModerationDecision} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -68,6 +76,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const {_} = useLingui()
   const [state, setState] = useState<StateContext>()
   const queryClient = useQueryClient()
+  const pendingPurgeRef =
+    useRef<ReturnType<typeof InteractionManager.runAfterInteractions>>(
+      undefined,
+    )
+
+  useEffect(() => {
+    return () => pendingPurgeRef.current?.cancel()
+  }, [])
 
   const openComposer = useNonReactiveCallback((opts: ComposerOpts) => {
     if (opts.quote) {
@@ -97,6 +113,12 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         type: 'warning',
       })
     } else {
+      /*
+       * A purge scheduled by the previous composer must not delete files from
+       * a composer that is opened before the callback gets to run.
+       */
+      pendingPurgeRef.current?.cancel()
+      pendingPurgeRef.current = undefined
       setState(prevOpts => {
         if (prevOpts) {
           // Never replace an already open composer.
@@ -111,13 +133,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     let wasOpen = !!state
     if (wasOpen) {
       setState(undefined)
-      purgeTemporaryImageFiles()
-      // Purging deletes cached thumbnails on disk, so remove the query
-      // caches that may hold references to those now-deleted file paths.
-      // Without this, restoring a draft would serve stale ResolvedLink
-      // data pointing at missing files, causing "Failed to load blob".
-      queryClient.removeQueries({queryKey: [RQKEY_LINK_ROOT]})
-      queryClient.removeQueries({queryKey: [RQKEY_GIF_ROOT]})
+      pendingPurgeRef.current?.cancel()
+      pendingPurgeRef.current = InteractionManager.runAfterInteractions(() => {
+        pendingPurgeRef.current = undefined
+        purgeTemporaryImageFiles()
+        // Purging deletes cached thumbnails on disk, so remove the query
+        // caches that may hold references to those now-deleted file paths.
+        // Without this, restoring a draft would serve stale ResolvedLink
+        // data pointing at missing files, causing "Failed to load blob".
+        queryClient.removeQueries({queryKey: [RQKEY_LINK_ROOT]})
+        queryClient.removeQueries({queryKey: [RQKEY_GIF_ROOT]})
+      })
     }
 
     return wasOpen
