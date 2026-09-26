@@ -1,0 +1,16 @@
+steps:
+  - tool: debugger-evaluate
+    args:
+      port: 8083
+      expression: void
+        globalThis.__FAST_TEXT_BENCHMARK__.run({renderers:['react-native','plain-text'],workloads:['label','lingui','fragments','nested'],count:400,rounds:4,warmups:1});
+        'started'
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        text: "Complete:"
+      expectedText: "Complete:"
+      timeoutMs: 60000
+executionPrerequisite: Fast Text Benchmark debug app running on iPhone 17, Metro
+  on 8083 and collector on 8124; no benchmark in progress.

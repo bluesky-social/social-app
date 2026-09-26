@@ -1,0 +1,160 @@
+{
+  "platform": "ios",
+  "device": "iPhone 17 simulator, iOS 26.5",
+  "rendererComparison": [
+    "typography-before",
+    "typography-fast"
+  ],
+  "page": "styles",
+  "baseline": {
+    "default": {
+      "x": 0,
+      "y": 0,
+      "width": 362,
+      "height": 17
+    },
+    "normal": {
+      "x": 0,
+      "y": 25,
+      "width": 362,
+      "height": 22
+    },
+    "compact": {
+      "x": 0,
+      "y": 55,
+      "width": 362,
+      "height": 13.999984741210938
+    },
+    "inter": {
+      "x": 0,
+      "y": 77,
+      "width": 362,
+      "height": 24
+    },
+    "wrapped": {
+      "x": 0,
+      "y": 109,
+      "width": 362,
+      "height": 66
+    },
+    "ellipsis": {
+      "x": 0,
+      "y": 183,
+      "width": 362,
+      "height": 22
+    },
+    "padded": {
+      "x": 0,
+      "y": 213,
+      "width": 362,
+      "height": 40
+    },
+    "rtl": {
+      "x": 0,
+      "y": 261,
+      "width": 362,
+      "height": 24
+    },
+    "emoji": {
+      "x": 0,
+      "y": 293,
+      "width": 362,
+      "height": 24.000030517578125
+    },
+    "decoration": {
+      "x": 0,
+      "y": 325,
+      "width": 362,
+      "height": 23
+    },
+    "baseline": {
+      "x": 51,
+      "y": 0,
+      "width": 101.66667175292969,
+      "height": 34
+    },
+    "empty": {
+      "x": 0,
+      "y": 0,
+      "width": 362,
+      "height": 17
+    }
+  },
+  "current": {
+    "default": {
+      "x": 0,
+      "y": 0,
+      "width": 362,
+      "height": 17
+    },
+    "normal": {
+      "x": 0,
+      "y": 25,
+      "width": 362,
+      "height": 22
+    },
+    "compact": {
+      "x": 0,
+      "y": 55,
+      "width": 362,
+      "height": 13.999984741210938
+    },
+    "inter": {
+      "x": 0,
+      "y": 77,
+      "width": 362,
+      "height": 24
+    },
+    "wrapped": {
+      "x": 0,
+      "y": 109,
+      "width": 362,
+      "height": 66
+    },
+    "ellipsis": {
+      "x": 0,
+      "y": 183,
+      "width": 362,
+      "height": 22
+    },
+    "padded": {
+      "x": 0,
+      "y": 213,
+      "width": 362,
+      "height": 40
+    },
+    "rtl": {
+      "x": 0,
+      "y": 261,
+      "width": 362,
+      "height": 24
+    },
+    "emoji": {
+      "x": 0,
+      "y": 293,
+      "width": 362,
+      "height": 24.000030517578125
+    },
+    "decoration": {
+      "x": 0,
+      "y": 325,
+      "width": 362,
+      "height": 23
+    },
+    "baseline": {
+      "x": 51,
+      "y": 0,
+      "width": 101.66667175292969,
+      "height": 34
+    },
+    "empty": {
+      "x": 0,
+      "y": 0,
+      "width": 362,
+      "height": 17
+    }
+  },
+  "identical": true,
+  "screenshotMismatchPercent": 1.48,
+  "notes": "Full-screen pixel difference, not a text-only similarity score. Matching bounds do not imply pixel-identical glyphs."
+}

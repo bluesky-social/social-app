@@ -1,0 +1,40 @@
+{
+  "name": "@bsky.app/react-native-fast-text",
+  "version": "0.1.0",
+  "description": "Translation-aware, compatible fast text for React Native",
+  "main": "src/index.tsx",
+  "react-native": "src/index.tsx",
+  "browser": "src/index.web.tsx",
+  "types": "src/index.tsx",
+  "exports": {
+    ".": {
+      "types": "./src/index.tsx",
+      "browser": "./src/index.web.tsx",
+      "react-native": "./src/index.tsx",
+      "default": "./src/index.web.tsx"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src/*.ts",
+    "src/*.tsx",
+    "README.md",
+    "PERFORMANCE.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "analyze": "node example/analyze.ts",
+    "profile:extract": "node example/extract-profile.ts",
+    "lint": "oxlint --quiet src example",
+    "prettier": "prettier --write package.json README.md PERFORMANCE.md results/README.md 'src/**/*.{ts,tsx}' 'example/*.{ts,tsx,json,cjs,mjs}' 'example/fixtures/*.ts'",
+    "test": "pnpm --dir ../.. test --runInBand modules/react-native-fast-text/src",
+    "typecheck": "pnpm --dir ../.. typecheck"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "@lingui/react": "^5.9.2",
+    "react": "^19.2.0",
+    "react-native": "^0.86.0",
+    "react-native-plain-text": "0.9.0"
+  }
+}

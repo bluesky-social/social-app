@@ -1,0 +1,71 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-25T22:16:55.369Z",
+  "baselineCommit": "31613cdd193925b37419e1e313aae5c6b8cf1bc5",
+  "sourceState": "Uncommitted task implementation. Fingerprints are of the handoff tree; tooling/docs changed after the measured build but runtime source was unchanged.",
+  "sha256": {
+    "package.json": "bb7c6ac7619c360017148685c332767d287b70df6533bab6661ddbbbc81a60dc",
+    "pnpm-lock.yaml": "7df9c733d5377544e46310ee3e79bd901ece6a91fc05732c0b19e035dde16879",
+    "pnpm-workspace.yaml": "ea8aa50b0391f7ee638f48f79e6ccdeeb2d37035da7527cab00efc475c5901d4",
+    "src/alf/typography.tsx": "7b19cbd47b0256915679fde1b683dd24e444c70131ae5e9324cd81ee7a2897fd",
+    "src/components/Typography.tsx": "c5a7c3d6076aaa30c6feb08d75ad2e5f3a2c1b42b548fee4caaefc24c3d8ea16",
+    "src/components/TypographyText/index.tsx": "f4390b46129d3a47f2c2781f57c14b183979a2631e2a775c32a2902b37127d90",
+    "src/view/com/util/text/Text.tsx": "2e9709d0362f9eae7bb860df7c784b2a2f79f6e1ecd984192bed4beb04cf9087",
+    "modules/react-native-fast-text/package.json": "7830552ac698193b29003b178fe74158d594a32fd491dfb4fec32defcad8c2bf",
+    "modules/react-native-fast-text/src/index.tsx": "1795ca78f1f0d6a51e597997a9fb68025e0f77b58a2796debb73c534a7f7ee7e",
+    "modules/react-native-fast-text/src/index.web.tsx": "eec4b4b2e12f4a5044c7303b549d8711aae7ef95dc35fcfc2d2e40565652ef52",
+    "modules/react-native-fast-text/src/resolveText.ts": "cf918b23e13469d44d5103e185bcc7f02bf89f4ad616c5fa0c3087a845440fcd",
+    "modules/react-native-fast-text/src/supported.ts": "4f9f4039a070943c88e5fec9a348b85972ffbdb5c1050d2e3b21378253d21218",
+    "modules/react-native-fast-text/src/types.ts": "6fe742806d4b512887011bfa427b385fd53e80ca85ad26780e8570cab8a97715",
+    "modules/react-native-fast-text/example/BaselineEmoji.tsx": "f089fa43b95a6e004c8f5a69cd72141f2703e6f1aeceeac7777e69eed59731c4",
+    "modules/react-native-fast-text/example/BaselineTypography.tsx": "345ad255a71811b00e70ea08d2e3323dce85ddbbd2a7b66f2056d704489616f7",
+    "modules/react-native-fast-text/example/BenchmarkApp.tsx": "9e987dcc409a7dd142a39719d1ef9dcb63133689ee82a2740557a71b38ccdc3b",
+    "modules/react-native-fast-text/example/Specimens.tsx": "a6f136b105947d0de94059a8326f4d24e0b78bb104373ef75a222b67d9b5973f",
+    "modules/react-native-fast-text/example/TypographyVariants.tsx": "96b57b156fe0b2fa197c00d6b2db0033e11322579b39a33491c14a364ad725a7",
+    "modules/react-native-fast-text/example/UpstreamText.tsx": "06fd0fbfc896963b1e2dfe638bfa2943260763b6342705bb5b3754ffff9f764f",
+    "modules/react-native-fast-text/example/UpstreamText.web.tsx": "33540bb0aee0c2dd715c6ad692259afcfbcf223774fdaf8aa720da399f7ccf2d",
+    "modules/react-native-fast-text/example/analyze.ts": "d7abcf8b5b8e876839a60c745d56bf8b06ed9842105ac7df3266342521957b0f",
+    "modules/react-native-fast-text/example/app.json": "c1d2e7fe214b5a4f0010dd7ba377bb0126fd5167667e4ad442088c9292167335",
+    "modules/react-native-fast-text/example/babel.config.cjs": "b2662e0d6222dc87f33eb37251ef9e5a8a948d531a31e0f6cf0c8a42273fcc40",
+    "modules/react-native-fast-text/example/collect.mjs": "67204bfdf2af4b6f86f679bde92b571ea3bc27fded25a09dc66ce6fe5da96e37",
+    "modules/react-native-fast-text/example/extract-profile.ts": "934395486b4050be1e739e17f57055d2e20d8e052ff16520e5cfed80950cd277",
+    "modules/react-native-fast-text/example/index.ts": "5ca753c6cb93114c20ecd38b2bd31ce7542750d21789bbe603e62c2b6b653395",
+    "modules/react-native-fast-text/example/metro.config.cjs": "3e037a0e86eed575823556529567ee004d430ad63f584da64b42978d52a05acb",
+    "modules/react-native-fast-text/example/package.json": "fef9c4e805d53bfae155864106c838e918d569eff4fa89d8e6cac259b15693ad",
+    "modules/react-native-fast-text/example/tsconfig.json": "59500d8697626d2f8ce4585dcb3b7b7b723ad97dfc3fa704b4cc15256bb735ba",
+    "modules/react-native-fast-text/example/fixtures/constants.ts": "cbc9530a66c0997b2d7816d418cc13673c943365284813f1a6897174182cd395",
+    "modules/react-native-fast-text/example/fixtures/environment.ts": "6c4077eec018ee2dea94ab40135823b21e5cc5327411b6ce3b299f3d77d6b316",
+    "modules/react-native-fast-text/example/fixtures/logger.ts": "0701adb70eaf6ecb754db494959229783f64582da1297370e84859d081be2b51",
+    "modules/react-native-fast-text/example/fixtures/storage.ts": "04deecb888a0ca6325fae4d6f0fab6c73bc8feb48a2fdf27c71d491746cbd88c"
+  },
+  "rawRunsSha256": {
+    "2026-09-25T20-38-49.578Z.json": "13a9f699fb0ae1235ef794ac7f4a52de8153860a924fb9d5a620571b855e6d54",
+    "2026-09-25T20-47-26.688Z.json": "309f31c31a56373a83ad38a4b75dfb9ecd0aa98d451563091c2be8615c2fad73",
+    "2026-09-25T20-59-06.626Z.json": "5d9aaa93a447703727fedefc4d7d5c3d1accb35dc54e0b11cd313f9a238485b6",
+    "2026-09-25T21-06-05.922Z.json": "76bdc3977ee7e9429eddb3fcdda38cfdb333d1e93d33cf08a7826aa6f2430d66",
+    "2026-09-25T21-12-30.171Z.json": "85ffac68a1384e7372d78d200c5ac37f29c7931524e7796592d3fc465269b7fd",
+    "2026-09-25T21-15-37.021Z.json": "53dd3ae67532c6f851e2ccb69da9d0d93db736e6134e47e42391e0e1073d0207",
+    "2026-09-25T21-16-46.089Z.json": "eca154d514e114ebb91f72c208c4ad183a55bfb3bde2218cbb5ca75e3ec8e9f4",
+    "2026-09-25T21-18-13.053Z.json": "fbd32602982964afb015dd9f04ca9b497d7bd035b16e8f288843f4e3fb825198",
+    "2026-09-25T21-20-26.402Z.json": "ef9d88476606be81e04bb02b029c2ad35f8e4028565421aed9c1586fb9b0168c",
+    "2026-09-25T21-35-40.372Z.json": "d154e55e93a30dd59ea26e42a57077d743a992bc7c414e40547da6eea37da59f",
+    "2026-09-25T21-42-12.799Z.json": "20dcbc2a724f0d9c2ba13bbeb8344e5ec63c592ba1a8581bf9c46ef09311dd04",
+    "2026-09-25T21-50-39.424Z.json": "3c78be8020bc826424db1dd140404a6f0a5c45dfead3707dd35279ca1b560c05",
+    "2026-09-25T21-55-36.859Z.json": "ae5aa93c6ad811f418250fe5dec8d1cb4d26765f5f5e4a46d6f3c084e194654f",
+    "2026-09-25T21-59-49.860Z.json": "ee454a1e2847aea3679ed46764fcc3c8a607f4b3b480c38608fbc15a09fd7016",
+    "2026-09-25T22-03-42.520Z.json": "1520a5a649f71bfceed940f94911c9c95703731e65f7dc3da9abfab866044bb8",
+    "2026-09-25T22-04-52.395Z.json": "28c9b446d53f2a7961cfb33602fbae8efd225b37648baaf4f6af222b6eba1a49",
+    "2026-09-25T22-05-57.241Z.json": "78fd8c2578c2e614ad5152b42061923b122b8adbc4befc9295ee62f366c6ab80",
+    "2026-09-25T22-07-27.776Z.json": "bd61bc7ec05a5c8f700770611fd80454cdfda116e44125dcfd0f1304d0c19431"
+  },
+  "measuredBinaries": {
+    "iosHermesBundle": {
+      "file": "FastTextBenchmark.app/main.jsbundle",
+      "sha256": "f3c400adeeb0fa3d5582f9c5a64a57ce740ccfaab350a48d3ee1e63476b69ba9"
+    },
+    "androidApk": {
+      "file": "app-release.apk",
+      "sha256": "116b929cd12aefb06ebd70260811b06d8ae3deb2adf084133e6f61778ed8a6ab"
+    }
+  }
+}

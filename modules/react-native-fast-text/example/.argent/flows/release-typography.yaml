@@ -1,0 +1,39 @@
+steps:
+  - tool: open-url
+    args:
+      url: fasttextbench://run?group=typography
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        identifier: benchmark-status
+      expectedText: fragments
+      timeoutMs: 60000
+      pollIntervalMs: 1500
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        identifier: benchmark-status
+      expectedText: nested
+      timeoutMs: 60000
+      pollIntervalMs: 1500
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        identifier: benchmark-status
+      expectedText: emoji-label
+      timeoutMs: 60000
+      pollIntervalMs: 1500
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        text: "Complete:"
+      timeoutMs: 60000
+      pollIntervalMs: 1500
+executionPrerequisite: The uninstrumented FastTextBenchmark Release app is
+  installed and idle on the selected device. Collector is listening on host port
+  8124; Android has adb reverse tcp:8124 tcp:8124. Do not attach a
+  debugger/profiler or run builds during measurement.

@@ -1,3 +1,4 @@
+/* Frozen from 31613cdd for before/after measurement. */
 import {Children} from 'react'
 import {
   type StyleProp,
@@ -53,8 +54,6 @@ export function normalizeTextStyles(
 
 export type StringChild = string | (string | null)[]
 export type TextProps = RNTextProps & {
-  /** Keeps the original renderer for an individual compatibility-sensitive label. */
-  deopt?: boolean
   /**
    * Lets the user select text, to use the native copy and paste functionality.
    */
@@ -75,14 +74,11 @@ export type TextProps = RNTextProps & {
 }
 
 const EMOJI = createEmojiRegex()
-/* Testing must not advance the global matcher used for splitting strings. */
-const HAS_EMOJI = new RegExp(EMOJI.source)
 
 export function childHasEmoji(children: React.ReactNode) {
-  if (typeof children === 'string') return HAS_EMOJI.test(children)
   let hasEmoji = false
   Children.forEach(children, child => {
-    if (typeof child === 'string' && HAS_EMOJI.test(child)) {
+    if (typeof child === 'string' && createEmojiRegex().test(child)) {
       hasEmoji = true
     }
   })
@@ -95,10 +91,6 @@ export function renderChildrenWithEmoji(
   emoji: boolean,
 ) {
   if (!IS_IOS || !emoji) {
-    return children
-  }
-  /* The common emoji-enabled label contains no emoji and needs no traversal. */
-  if (typeof children === 'string' && !HAS_EMOJI.test(children)) {
     return children
   }
   return Children.map(children, child => {

@@ -1,0 +1,16 @@
+steps:
+  - tool: debugger-evaluate
+    args:
+      port: 8083
+      expression: void
+        globalThis.__FAST_TEXT_BENCHMARK__.run({renderers:['typography-before','typography-wrapper','typography-fast'],workloads:['label','lingui','fragments','nested','emoji-label','emoji-mixed'],count:400,rounds:6,warmups:2});
+        'started'
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        text: "Complete:"
+      timeoutMs: 60000
+      pollIntervalMs: 2000
+executionPrerequisite: Fast Text Benchmark debug app running, Metro 8083 and
+  collector 8124, no benchmark running.
