@@ -171,7 +171,7 @@ export class SafelinkClient {
 
     await db.db
       .deleteFrom('safelink_rule')
-      .where('pattern', '=', 'domain')
+      .where('pattern', '=', rule.pattern)
       .where('url', '=', rule.url)
       .execute()
       .catch(err => {
