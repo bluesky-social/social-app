@@ -1,10 +1,10 @@
-import {ScrollView, StyleSheet, View} from 'react-native'
+import {ScrollView, StyleSheet, useWindowDimensions, View} from 'react-native'
 
 import {useColorSchemeStyle} from '#/lib/hooks/useColorSchemeStyle'
 import {usePalette} from '#/lib/hooks/usePalette'
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
-import {atoms as a} from '#/alf'
-import {IS_WEB} from '#/env'
+import {atoms as a, BreakpointWidthContext} from '#/alf'
+import {IS_IPAD, IS_NATIVE, IS_WEB} from '#/env'
 import {Text} from '../text/Text'
 
 export const LoggedOutLayout = ({
@@ -20,6 +20,7 @@ export const LoggedOutLayout = ({
   scrollable?: boolean
 }>) => {
   const {isMobile, isTabletOrMobile} = useWebMediaQueries()
+  const {width} = useWindowDimensions()
   const pal = usePalette('default')
   const sideBg = useColorSchemeStyle(pal.viewLight, pal.view)
   const contentBg = useColorSchemeStyle(pal.view, {
@@ -28,7 +29,21 @@ export const LoggedOutLayout = ({
     borderLeftWidth: 1,
   })
 
-  if (isMobile) {
+  if (IS_NATIVE || isMobile) {
+    const content = (
+      <BreakpointWidthContext
+        value={IS_IPAD ? Math.min(width, 600) : undefined}>
+        <View
+          style={[
+            scrollable && a.flex_1,
+            a.pt_lg,
+            IS_IPAD && [a.w_full, a.self_center, {maxWidth: 600}],
+          ]}>
+          {children}
+        </View>
+      </BreakpointWidthContext>
+    )
+
     if (scrollable) {
       return (
         <ScrollView
@@ -36,11 +51,11 @@ export const LoggedOutLayout = ({
           keyboardShouldPersistTaps="handled"
           keyboardDismissMode="none"
           contentContainerStyle={[a.flex_grow]}>
-          <View style={[a.flex_1, a.pt_lg]}>{children}</View>
+          {content}
         </ScrollView>
       )
     } else {
-      return <View style={a.pt_lg}>{children}</View>
+      return content
     }
   }
   return (
