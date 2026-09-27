@@ -11,6 +11,7 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
+import {IS_IPAD} from '#/env'
 // @ts-expect-error
 import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.png'
 // @ts-expect-error
@@ -79,7 +80,12 @@ export const SplashScreen = ({
 
         <View
           testID="signinOrCreateAccount"
-          style={[a.px_5xl, a.gap_md, a.pb_sm]}>
+          style={[
+            a.px_5xl,
+            a.gap_md,
+            a.pb_sm,
+            IS_IPAD && [a.w_full, a.self_center, {maxWidth: 600}],
+          ]}>
           <Button
             testID="createAccountButton"
             onPress={() => {

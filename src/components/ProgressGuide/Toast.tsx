@@ -20,7 +20,7 @@ import {useLingui} from '@lingui/react'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Portal} from '#/components/Portal'
-import {IS_WEB} from '#/env'
+import {IS_IPAD, IS_WEB} from '#/env'
 import {AnimatedCheck, type AnimatedCheckRef} from '../anim/AnimatedCheck'
 import {Text} from '../Typography'
 
@@ -115,7 +115,7 @@ export const ProgressGuideToast = forwardRef<
   const containerStyle = useMemo(() => {
     let left = 10
     let right = 10
-    if (IS_WEB && winDim.width > 400) {
+    if ((IS_WEB || IS_IPAD) && winDim.width > 400) {
       left = right = (winDim.width - 380) / 2
     }
     return {
