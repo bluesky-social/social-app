@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native'
+import {StyleSheet, useWindowDimensions} from 'react-native'
 import Animated from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {useMediaQuery} from 'react-responsive'
@@ -14,6 +14,7 @@ import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowIcon} from '#/components/icons/Arrow'
 import {CENTER_COLUMN_OFFSET} from '#/components/Layout'
 import {SubtleHover} from '#/components/SubtleHover'
+import {IS_IPAD} from '#/env'
 
 export function LoadLatestBtn({
   onPress,
@@ -27,6 +28,8 @@ export function LoadLatestBtn({
   const {hasSession} = useSession()
   const {isDesktop, isTablet, isMobile, isTabletOrMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
+  const {height: windowHeight, width: windowWidth} = useWindowDimensions()
+  const centerColumnLeftOffset = centerColumnOffset ? CENTER_COLUMN_OFFSET : 0
   const fabMinimalShellTransform = useMinimalShellFabTransform()
   const insets = useSafeAreaInsets()
   const t = useTheme()
@@ -37,7 +40,8 @@ export function LoadLatestBtn({
   } = useInteractionState()
 
   // move button inline if it starts overlapping the left nav
-  const isTallViewport = useMediaQuery({minHeight: 700})
+  const isTallViewportMedia = useMediaQuery({minHeight: 700})
+  const isTallViewport = IS_IPAD ? windowHeight >= 700 : isTallViewportMedia
 
   // Adjust height of the fab if we have a session only on mobile web. If we don't have a session, we want to adjust
   // it on both tablet and mobile since we are showing the bottom bar (see createNativeStackNavigatorWithAuth)
@@ -62,6 +66,13 @@ export function LoadLatestBtn({
           (centerColumnOffset
             ? styles.loadLatestInlineOffset
             : styles.loadLatestInline),
+        IS_IPAD &&
+          (isTablet || isDesktop) && {
+            left:
+              isDesktop && isTallViewport
+                ? windowWidth / 2 - 382
+                : windowWidth / 2 - 282 + centerColumnLeftOffset,
+          },
         bottomPosition,
         showBottomBar && fabMinimalShellTransform,
       ]}>

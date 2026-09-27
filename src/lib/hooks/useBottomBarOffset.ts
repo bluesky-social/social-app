@@ -2,13 +2,15 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {useWebMediaQueries} from '#/lib/hooks/useWebMediaQueries'
 import {clamp} from '#/lib/numbers'
-import {IS_WEB} from '#/env'
+import {useSession} from '#/state/session'
+import {IS_IPAD, IS_WEB} from '#/env'
 
 export function useBottomBarOffset(modifier: number = 0) {
   const {isTabletOrDesktop} = useWebMediaQueries()
   const {bottom: bottomInset} = useSafeAreaInsets()
-  return (
-    (IS_WEB && isTabletOrDesktop ? 0 : clamp(60 + bottomInset, 60, 75)) +
-    modifier
-  )
+  const {hasSession} = useSession()
+  const hasNoBottomBar =
+    (IS_WEB && isTabletOrDesktop) ||
+    (IS_IPAD && hasSession && isTabletOrDesktop)
+  return (hasNoBottomBar ? 0 : clamp(60 + bottomInset, 60, 75)) + modifier
 }

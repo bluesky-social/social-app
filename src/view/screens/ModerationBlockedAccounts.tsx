@@ -87,52 +87,50 @@ export function ModerationBlockedAccounts({}: Props) {
 
   return (
     <Layout.Screen testID="blockedAccountsScreen">
-      <Layout.Center>
-        <Layout.Header.Outer>
-          <Layout.Header.BackButton />
-          <Layout.Header.Content>
-            <Layout.Header.TitleText>
-              <Trans>Blocked Accounts</Trans>
-            </Layout.Header.TitleText>
-          </Layout.Header.Content>
-          <Layout.Header.Slot />
-        </Layout.Header.Outer>
-        {isEmpty ? (
-          <View>
-            <Info style={[a.border_b]} />
-            {isError ? (
-              <ErrorScreen
-                title="Oops!"
-                message={cleanError(error)}
-                onPressTryAgain={refetch}
-              />
-            ) : (
-              <Empty />
-            )}
-          </View>
-        ) : (
-          <List
-            data={profiles}
-            keyExtractor={(item: app.bsky.actor.defs.ProfileView) => item.did}
-            refreshing={isPTRing}
-            onRefresh={onRefresh}
-            onEndReached={onEndReached}
-            renderItem={renderItem}
-            initialNumToRender={15}
-            // FIXME(dan)
+      <Layout.Header.Outer>
+        <Layout.Header.BackButton />
+        <Layout.Header.Content>
+          <Layout.Header.TitleText>
+            <Trans>Blocked Accounts</Trans>
+          </Layout.Header.TitleText>
+        </Layout.Header.Content>
+        <Layout.Header.Slot />
+      </Layout.Header.Outer>
+      {isEmpty ? (
+        <Layout.Center>
+          <Info style={[a.border_b]} />
+          {isError ? (
+            <ErrorScreen
+              title="Oops!"
+              message={cleanError(error)}
+              onPressTryAgain={refetch}
+            />
+          ) : (
+            <Empty />
+          )}
+        </Layout.Center>
+      ) : (
+        <List
+          data={profiles}
+          keyExtractor={(item: app.bsky.actor.defs.ProfileView) => item.did}
+          refreshing={isPTRing}
+          onRefresh={onRefresh}
+          onEndReached={onEndReached}
+          renderItem={renderItem}
+          initialNumToRender={15}
+          // FIXME(dan)
 
-            ListHeaderComponent={Info}
-            ListFooterComponent={
-              <ListFooter
-                isFetchingNextPage={isFetchingNextPage}
-                hasNextPage={hasNextPage}
-                error={cleanError(error)}
-                onRetry={fetchNextPage}
-              />
-            }
-          />
-        )}
-      </Layout.Center>
+          ListHeaderComponent={Info}
+          ListFooterComponent={
+            <ListFooter
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage}
+              error={cleanError(error)}
+              onRetry={fetchNextPage}
+            />
+          }
+        />
+      )}
     </Layout.Screen>
   )
 }

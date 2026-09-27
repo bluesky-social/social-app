@@ -40,9 +40,17 @@ export function isStateAtTabRoot(state: State | undefined) {
     return true
   }
   const currentRoute = getCurrentRoute(state)
+  const activeTab = state.routes[state.index || 0].name
+  const isSecondaryTabRoot =
+    (activeTab === 'FeedsTab' && currentRoute.name === 'Feeds') ||
+    (activeTab === 'ListsTab' && currentRoute.name === 'Lists') ||
+    (activeTab === 'BookmarksTab' && currentRoute.name === 'Bookmarks') ||
+    (activeTab === 'SettingsTab' && currentRoute.name === 'Settings')
+
   return (
     isTab(currentRoute.name, 'Home') ||
     isTab(currentRoute.name, 'Search') ||
+    isSecondaryTabRoot ||
     isTab(currentRoute.name, 'Messages') ||
     isTab(currentRoute.name, 'Notifications') ||
     isTab(currentRoute.name, 'MyProfile')
@@ -61,19 +69,55 @@ export function isTab(current: string, route: string) {
   )
 }
 
+/** The native profile tab root is named `MyProfile` instead of `Profile`. */
+export function isCurrentProfileRoute({
+  routeName,
+  profileName,
+  currentHandle,
+}: {
+  routeName: string
+  profileName?: string
+  currentHandle?: string
+}) {
+  return (
+    routeName === 'MyProfile' ||
+    (routeName === 'Profile' &&
+      !!currentHandle &&
+      profileName === currentHandle)
+  )
+}
+
 export enum TabState {
   InsideAtRoot,
   Inside,
   Outside,
 }
+
+const SECONDARY_TAB_ROUTES: Record<string, string> = {
+  Feeds: 'FeedsTab',
+  Lists: 'ListsTab',
+  Bookmarks: 'BookmarksTab',
+  Settings: 'SettingsTab',
+}
+
 export function getTabState(state: State | undefined, tab: string): TabState {
   if (!state) {
     return TabState.Outside
   }
+
   const currentRoute = getCurrentRoute(state)
+  const activeTabRoute = state.routes[state.index || 0].name
+  const secondaryTabRoute = SECONDARY_TAB_ROUTES[tab]
+  if (secondaryTabRoute) {
+    if (activeTabRoute !== secondaryTabRoute) {
+      return TabState.Outside
+    }
+    return currentRoute.name === tab ? TabState.InsideAtRoot : TabState.Inside
+  }
+
   if (isTab(currentRoute.name, tab)) {
     return TabState.InsideAtRoot
-  } else if (isTab(state.routes[state.index || 0].name, tab)) {
+  } else if (isTab(activeTabRoute, tab)) {
     return TabState.Inside
   }
   return TabState.Outside
