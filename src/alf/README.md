@@ -67,3 +67,9 @@ if (b.gtMobile) {
   // render tablet or desktop UI
 }
 ```
+
+Native contained surfaces can provide `BreakpointWidthContext` with their
+measured width. Dialogs and the composer do this so their children respond to
+the sheet's available space, not the window behind it. UIKit size classes
+separately control popover-to-sheet adaptation; they are not layout
+breakpoints.

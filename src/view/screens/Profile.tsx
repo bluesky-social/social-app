@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
-import {StyleSheet} from 'react-native'
-import {SafeAreaView} from 'react-native-safe-area-context'
+import {StyleSheet, useWindowDimensions} from 'react-native'
+import {SafeAreaView, useSafeAreaInsets} from 'react-native-safe-area-context'
 import {ScrollForwarderView} from '@bsky.app/react-native-scroll-forwarder'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
@@ -38,6 +38,7 @@ import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListRef} from '#/view/com/util/List'
 import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
+import {getProfileBannerSafeAreaCoverHeight} from '#/screens/Profile/Header/layout'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
 import {atoms as a, useTheme} from '#/alf'
@@ -50,6 +51,7 @@ import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
+import {IS_IPAD} from '#/env'
 import {type app} from '#/lexicons'
 import {navigate} from '#/Navigation'
 
@@ -59,9 +61,28 @@ interface SectionRef {
 
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
+  const t = useTheme()
+  const {top: topInset} = useSafeAreaInsets()
+  const safeAreaCoverHeight = getProfileBannerSafeAreaCoverHeight({
+    isIPad: IS_IPAD,
+    topInset,
+  })
+
   return (
     <Layout.Screen testID="profileScreen" style={[a.pt_0]}>
       <ProfileScreenInner {...props} />
+      {safeAreaCoverHeight > 0 && (
+        <Layout.Center
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            a.top_0,
+            a.z_50,
+            {height: safeAreaCoverHeight, alignSelf: 'center'},
+            t.atoms.bg,
+          ]}
+        />
+      )}
     </Layout.Screen>
   )
 }
@@ -173,6 +194,7 @@ function ProfileScreenLoaded({
   isPlaceholderProfile: boolean
 }) {
   const t = useTheme()
+  const {height: windowHeight} = useWindowDimensions()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
   const {openComposer} = useOpenComposer()
@@ -401,7 +423,8 @@ function ProfileScreenLoaded({
         onPageSelected={onPageSelected}
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
-        allowHeaderOverScroll>
+        allowHeaderOverScroll
+        headerOverflowInset={IS_IPAD ? windowHeight : undefined}>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection
