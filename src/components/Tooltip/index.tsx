@@ -7,9 +7,12 @@ import {
   useRef,
   useState,
 } from 'react'
-import {useWindowDimensions, View} from 'react-native'
+import {View} from 'react-native'
 import Animated, {Easing, ZoomIn} from 'react-native-reanimated'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {
+  useSafeAreaFrame,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context'
 
 import {useIsKeyboardVisible} from '#/lib/hooks/useIsKeyboardVisible'
 import {GlobalGestureEventsProvider} from '#/state/global-gesture-events'
@@ -158,6 +161,7 @@ export function Target({children}: {children: React.ReactNode}) {
   const targetRef = useRef<React.ComponentRef<typeof View>>(null)
   const containerRef = useContext(TooltipProviderContext)
   const keyboardIsOpen = useIsKeyboardVisible()
+  const {width, height} = useSafeAreaFrame()
 
   useEffect(() => {
     if (!shouldMeasure || !hasLaidOut) return
@@ -187,6 +191,8 @@ export function Target({children}: {children: React.ReactNode}) {
     hasLaidOut,
     containerRef,
     keyboardIsOpen,
+    width,
+    height,
   ])
 
   return (
@@ -256,7 +262,7 @@ function Bubble({
   const t = useTheme()
   const style = getTooltipStyle(t, color)
   const insets = useSafeAreaInsets()
-  const dimensions = useWindowDimensions()
+  const dimensions = useSafeAreaFrame()
   const [bubbleMeasurements, setBubbleMeasurements] = useState<
     | {
         width: number
