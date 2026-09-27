@@ -1,4 +1,4 @@
-import {fireEvent, render} from '@testing-library/react-native'
+import {fireEvent, render, within} from '@testing-library/react-native'
 
 import * as Menu from '#/components/Menu'
 import {RepostButtonMenu} from './RepostButtonMenu'
@@ -34,6 +34,9 @@ jest.mock('#/components/Menu', () => {
         props: {accessibilityLabel: label, onPress: open},
       }),
     Outer: ({children}: React.PropsWithChildren) => <View>{children}</View>,
+    Group: ({children}: React.PropsWithChildren) => (
+      <View testID="menuGroup">{children}</View>
+    ),
     Item: ({
       children,
       disabled,
@@ -117,6 +120,21 @@ afterEach(() => {
 })
 
 describe('RepostButtonMenu', () => {
+  it('keeps repost and quote together in one group', () => {
+    const screen = render(
+      <RepostButtonMenu
+        isReposted={false}
+        onRepost={jest.fn()}
+        onQuote={jest.fn()}
+        embeddingDisabled={false}
+      />,
+    )
+    const group = within(screen.getByTestId('menuGroup'))
+
+    expect(group.getByTestId('repostDropdownRepostBtn')).toBeTruthy()
+    expect(group.getByTestId('repostDropdownQuoteBtn')).toBeTruthy()
+  })
+
   it('keeps Undo repost available and disables quote when embedding is disabled', () => {
     const onRepost = jest.fn()
     const onQuote = jest.fn()

@@ -72,31 +72,35 @@ export function RepostButtonMenu({
           )}
         </Menu.Trigger>
         <Menu.Outer style={{minWidth: 170}}>
-          <Menu.Item
-            label={
-              isReposted
-                ? l`Undo repost`
-                : l({message: `Repost`, context: 'action'})
-            }
-            testID="repostDropdownRepostBtn"
-            onPress={onRepost}>
-            <Menu.ItemText>
-              {isReposted
-                ? l`Undo repost`
-                : l({message: `Repost`, context: 'action'})}
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={RepostIcon} position="right" />
-          </Menu.Item>
-          <Menu.Item
-            disabled={embeddingDisabled}
-            label={embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
-            testID="repostDropdownQuoteBtn"
-            onPress={onQuote}>
-            <Menu.ItemText>
-              {embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
-            </Menu.ItemText>
-            <Menu.ItemIcon icon={QuoteIcon} position="right" />
-          </Menu.Item>
+          <Menu.Group>
+            <Menu.Item
+              label={
+                isReposted
+                  ? l`Undo repost`
+                  : l({message: `Repost`, context: 'action'})
+              }
+              testID="repostDropdownRepostBtn"
+              onPress={onRepost}>
+              <Menu.ItemText>
+                {isReposted
+                  ? l`Undo repost`
+                  : l({message: `Repost`, context: 'action'})}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={RepostIcon} position="right" />
+            </Menu.Item>
+            <Menu.Item
+              disabled={embeddingDisabled}
+              label={
+                embeddingDisabled ? l`Quote posts disabled` : l`Quote post`
+              }
+              testID="repostDropdownQuoteBtn"
+              onPress={onQuote}>
+              <Menu.ItemText>
+                {embeddingDisabled ? l`Quote posts disabled` : l`Quote post`}
+              </Menu.ItemText>
+              <Menu.ItemIcon icon={QuoteIcon} position="right" />
+            </Menu.Item>
+          </Menu.Group>
         </Menu.Outer>
       </Menu.Root>
     </EventStopper>
