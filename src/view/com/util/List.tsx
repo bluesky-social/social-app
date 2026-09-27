@@ -51,7 +51,7 @@ export type ListProps<ItemT = any> = Omit<
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
-  /** Disable the centered iPad viewport for full-bleed content. */
+  /** Disable the centered iPad content column for full-bleed content. */
   disableTabletLayout?: boolean
   sideBorders?: boolean
   progressViewOffset?: number
@@ -71,6 +71,7 @@ let List = forwardRef<ListMethods, ListProps>(
       sideBorders,
       disableTabletLayout = false,
       style,
+      contentContainerStyle,
       progressViewOffset,
       automaticallyAdjustsScrollIndicatorInsets = false,
       ...props
@@ -203,8 +204,9 @@ let List = forwardRef<ListMethods, ListProps>(
           onScroll={scrollHandler}
           scrollsToTop={scrollsToTop}
           scrollEventThrottle={1}
-          style={[
-            style,
+          style={[style, centerOnIPad && {width: '100%'}]}
+          contentContainerStyle={[
+            // Keep the gutters inside the scrollable viewport.
             centerOnIPad && {
               width: '100%',
               maxWidth: CENTER_COLUMN_WIDTH,
@@ -221,6 +223,7 @@ let List = forwardRef<ListMethods, ListProps>(
                 },
                 t.atoms.border_contrast_low,
               ],
+            contentContainerStyle,
           ]}
           ref={ref}
         />

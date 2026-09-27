@@ -103,6 +103,7 @@ import {useActorStatus} from '#/features/liveNow'
 import {type app} from '#/lexicons'
 import {router} from '#/routes'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
+import {getComposeButtonLayout} from './composeButtonLayout'
 
 const LARGE_ELEMENT_SIZE = 48
 const NAV_ICON_WIDTH = 28
@@ -639,18 +640,17 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
   const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle(), logContext: 'Fab'})
 
+  const layout = getComposeButtonLayout({minimal, isNative: IS_NATIVE})
+
   return (
-    <View style={minimal ? [a.px_sm, a.pt_lg] : [a.flex_row, a.pl_md, a.pt_lg]}>
+    <View style={layout.container}>
       <Button
         disabled={isFetchingHandle}
         label={l`Compose new post`}
         onPress={() => void onPressCompose()}
         size="large"
         color="primary"
-        style={[
-          a.rounded_full,
-          minimal && {width: LARGE_ELEMENT_SIZE, height: LARGE_ELEMENT_SIZE},
-        ]}>
+        style={layout.button}>
         <ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
         {!minimal && (
           <ButtonText>
@@ -792,6 +792,7 @@ export function DesktopLeftNav({
   return (
     <View
       role="navigation"
+      pointerEvents={IS_NATIVE ? 'box-none' : undefined}
       style={[
         a.fixed,
         a.top_0,

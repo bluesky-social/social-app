@@ -93,6 +93,7 @@ export const Content = memo(function Content({
   children,
   style,
   contentContainerStyle,
+  centerContent,
   ignoreTabletLayoutOffset,
   ref,
   ...props
@@ -126,12 +127,24 @@ export const Content = memo(function Content({
     <Animated.ScrollView
       ref={ref}
       id="content"
+      centerContent={centerOnIPad ? false : centerContent}
       automaticallyAdjustsScrollIndicatorInsets={false}
       indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
       style={[
         a.w_full,
         animatedStyle,
+        isWithinSplitView &&
+          web({
+            flex: 1,
+            overflowY: 'scroll',
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${t.palette.contrast_100} transparent`,
+          }),
+        style,
+      ]}
+      contentContainerStyle={[
         centerOnIPad && {
+          width: '100%',
           maxWidth: CENTER_COLUMN_WIDTH,
           alignSelf: 'center',
           transform: [
@@ -143,16 +156,10 @@ export const Content = memo(function Content({
             },
           ],
         },
-        isWithinSplitView &&
-          web({
-            flex: 1,
-            overflowY: 'scroll',
-            scrollbarWidth: 'thin',
-            scrollbarColor: `${t.palette.contrast_100} transparent`,
-          }),
-        style,
+        /* UIKit centering would also add horizontal insets to the column. */
+        centerOnIPad && centerContent && [a.flex_grow, a.justify_center],
+        contentContainerStyle,
       ]}
-      contentContainerStyle={[contentContainerStyle]}
       {...props}>
       {IS_WEB ? (
         <Center ignoreTabletLayoutOffset={ignoreTabletLayoutOffset}>
