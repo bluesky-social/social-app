@@ -6,7 +6,7 @@ The public/internal action-surface cleanup is separately queued as `AGENTS/tasks
 
 ## 2. Make upload failure types match runtime behavior
 
-`PostMediaUploadStatus` in `src/components/ComposerV2/store/types.ts` currently requires a `retry` function on every failed upload. `setUploadStatus()` in `store/index.ts` omits that function for terminal failures (`retryable === false`) and casts the result to the declared type.
+Previously, `PostMediaUploadStatus` in `src/components/ComposerV2/store/types.ts` required a `retry` function on every failed upload, while `setUploadStatus()` omitted it for terminal failures and cast the result. Task 0012 corrected that mismatch.
 
 Implemented and verified by Luna: `AGENTS/tasks/0012-task-composer-v2-upload-failure-types.md`.
 
@@ -16,7 +16,9 @@ Scope stays on type/runtime agreement, not redesigning the upload lifecycle.
 
 ## 3. Test store invariants across action sequences
 
-Complement individual action tests with deterministic generated/model-based sequences of add, remove, reorder, replace, edit, and retry operations. Control async worker/resolver completion order, including late success/failure after replacement, removal, retry, or destruction.
+Completed in commit `1aa1a4d8ec41` (`Guard media upload retries against stale and active attempts`). Astra added `store/__tests__/sequences.test.ts` with four reproducible seeds of 60 operations, explicit stale-callback cases, and caption retry integration coverage. The work also fixed individual retries restarting active attempts and retained retry closures affecting superseding failures. The final test log records 319 passing ComposerV2 tests across 22 suites.
+
+Original scope: complement individual action tests with deterministic generated/model-based sequences of add, remove, reorder, replace, edit, and retry operations. Control async worker/resolver completion order, including late success/failure after replacement, removal, retry, or destruction.
 
 Candidate invariants:
 
@@ -30,7 +32,7 @@ Candidate invariants:
 
 Distinguish internal corruption from legitimate but not-yet-publishable editing states: empty/overlength text, pending uploads, and recoverable failures must remain representable.
 
-Discuss the minimal test harness first; prefer reproducible seeds and existing test seams rather than a new testing framework/dependency by default.
+Implemented using existing test seams and reproducible seeds, without a new testing dependency.
 
 ## Error handling: one per-session reporting callback
 
