@@ -277,6 +277,7 @@ function SwitchMenuItems({
 }) {
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const navigation = useNavigation<NavigationProp>()
   const {control} = Menu.useMenuContext()
   const currentRouteInfo = useNavigationState(state => {
@@ -338,16 +339,28 @@ function SwitchMenuItems({
     <Menu.Outer>
       {accounts && accounts.length > 0 && (
         <>
+          <Menu.LabelText>
+            <Trans>Switch account</Trans>
+          </Menu.LabelText>
           <Menu.Group>
-            <Menu.LabelText>
-              <Trans>Switch account</Trans>
-            </Menu.LabelText>
-            {accounts.map(other => (
-              <SwitchMenuItem
-                key={other.account.did}
-                account={other.account}
-                profile={other.profile}
-              />
+            {/* Native groups require Menu.Item as a direct child. */}
+            {accounts.map(({account, profile}) => (
+              <Menu.Item
+                key={account.did}
+                disabled={!!pendingDid}
+                style={[a.gap_sm, {minWidth: 150}]}
+                label={l`Switch to ${sanitizeHandle(
+                  profile?.handle ?? account.handle,
+                  '@',
+                )}`}
+                onPress={() =>
+                  void onPressSwitchAccount(account, 'SwitchAccount')
+                }>
+                <SwitchMenuItemAvatar profile={profile} />
+                <Menu.ItemText>
+                  {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+                </Menu.ItemText>
+              </Menu.Item>
             ))}
           </Menu.Group>
           <Menu.Divider />
@@ -381,40 +394,23 @@ function SwitchMenuItems({
   )
 }
 
-function SwitchMenuItem({
-  account,
+function SwitchMenuItemAvatar({
   profile,
 }: {
-  account: SessionAccount
   profile: app.bsky.actor.defs.ProfileViewDetailed | undefined
 }) {
-  const {t: l} = useLingui()
-  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {isActive: live} = useActorStatus(profile)
 
   return (
-    <Menu.Item
-      disabled={!!pendingDid}
-      style={[a.gap_sm, {minWidth: 150}]}
-      key={account.did}
-      label={l`Switch to ${sanitizeHandle(
-        profile?.handle ?? account.handle,
-        '@',
-      )}`}
-      onPress={() => void onPressSwitchAccount(account, 'SwitchAccount')}>
-      <View>
-        <UserAvatar
-          avatar={profile?.avatar}
-          size={20}
-          type={profile?.associated?.labeler ? 'labeler' : 'user'}
-          live={live}
-          hideLiveBadge
-        />
-      </View>
-      <Menu.ItemText>
-        {sanitizeHandle(profile?.handle ?? account.handle, '@')}
-      </Menu.ItemText>
-    </Menu.Item>
+    <View>
+      <UserAvatar
+        avatar={profile?.avatar}
+        size={20}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
+        hideLiveBadge
+      />
+    </View>
   )
 }
 
