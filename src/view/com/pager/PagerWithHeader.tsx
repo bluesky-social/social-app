@@ -54,6 +54,8 @@ export interface PagerWithHeaderProps {
   onPageSelected?: (index: number) => void
   onCurrentPageSelected?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  /** Extra vertical clipping bounds for a header that must clip horizontally. */
+  headerOverflowInset?: number
 }
 export function PagerWithHeader({
   ref,
@@ -66,6 +68,7 @@ export function PagerWithHeader({
   onPageSelected,
   onCurrentPageSelected,
   allowHeaderOverScroll,
+  headerOverflowInset,
 }: PagerWithHeaderProps) {
   const [currentPage, setCurrentPage] = useState(0)
   const [tabBarHeight, setTabBarHeight] = useState(0)
@@ -98,6 +101,7 @@ export function PagerWithHeader({
             isHeaderReady={isHeaderReady}
             renderHeader={renderHeader}
             currentPage={currentPage}
+            headerOverflowInset={headerOverflowInset}
             onCurrentPageSelected={onCurrentPageSelected}
             onTabBarLayout={onTabBarLayout}
             onHeaderOnlyLayout={onHeaderOnlyLayout}
@@ -123,6 +127,7 @@ export function PagerWithHeader({
       scrollY,
       testID,
       allowHeaderOverScroll,
+      headerOverflowInset,
     ],
   )
 
@@ -232,6 +237,7 @@ let PagerTabBar = ({
   onCurrentPageSelected,
   onSelect,
   allowHeaderOverScroll,
+  headerOverflowInset,
   dragProgress,
   dragState,
 }: {
@@ -251,6 +257,8 @@ let PagerTabBar = ({
   onCurrentPageSelected?: (index: number) => void
   onSelect?: (index: number) => void
   allowHeaderOverScroll?: boolean
+  /** Extra vertical clipping bounds for a header that must clip horizontally. */
+  headerOverflowInset?: number
   dragProgress: SharedValue<number>
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
@@ -294,7 +302,14 @@ let PagerTabBar = ({
             fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
           }
         }}>
-        <Center>
+        <Center
+          style={
+            headerOverflowInset != null && {
+              overflow: 'hidden',
+              marginVertical: -headerOverflowInset,
+              paddingVertical: headerOverflowInset,
+            }
+          }>
           {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
         </Center>
         {

@@ -55,7 +55,11 @@ import {CHAT_INVITE_CODE_REGEX} from '#/lib/strings/url-helpers'
 import {emitSoftReset} from '#/state/events'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {useSession} from '#/state/session'
-import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useOnboardingState} from '#/state/shell'
+import {
+  useLoggedOutView,
+  useLoggedOutViewControls,
+} from '#/state/shell/logged-out'
 import {
   shouldRequestEmailConfirmation,
   snoozeEmailConfirmationPrompt,
@@ -82,6 +86,7 @@ import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
 import {DesktopLeftNav} from '#/view/shell/desktop/LeftNav'
+import {getNativeTabBarVisibility} from '#/view/shell/nativeTabBarVisibility'
 import {BookmarksScreen} from '#/screens/Bookmarks'
 import {CustomFeedScreen} from '#/screens/CustomFeed'
 import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
@@ -712,17 +717,26 @@ function SettingsTabNavigator() {
 
 function NativeTabBar(props: BottomTabBarProps) {
   const {gtMobile} = useBreakpoints()
-  const {hasSession} = useSession()
+  const {hasSession, currentAccount} = useSession()
+  const onboardingState = useOnboardingState()
+  const {showLoggedOut} = useLoggedOutView()
   const {footerHeight} = useShellLayout()
   const currentRouteName = getCurrentRoute(props.state).name
-  const showTabletSidebar =
-    IS_IPAD && gtMobile && hasSession && currentRouteName !== 'VideoFeed'
+  const {showTabletSidebar, hideTabBar} = getNativeTabBarVisibility({
+    isIPad: IS_IPAD,
+    gtMobile,
+    hasSession,
+    signupQueued: !!currentAccount?.signupQueued,
+    showLoggedOut,
+    onboardingActive: onboardingState.isActive,
+    isVideoFeed: currentRouteName === 'VideoFeed',
+  })
 
   useEffect(() => {
-    if (showTabletSidebar) {
+    if (showTabletSidebar || hideTabBar) {
       footerHeight.set(0)
     }
-  }, [showTabletSidebar, footerHeight])
+  }, [showTabletSidebar, hideTabBar, footerHeight])
 
   const onNavigateTab = (tab: SidebarTab) => {
     const state = props.navigation.getState()
@@ -747,6 +761,10 @@ function NativeTabBar(props: BottomTabBarProps) {
       // The tab navigator route names mirror the shared navigation tab names.
       props.navigation.navigate(`${tab}Tab`)
     }
+  }
+
+  if (hideTabBar) {
+    return null
   }
 
   if (showTabletSidebar) {

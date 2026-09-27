@@ -33,7 +33,7 @@ export function Composer() {
       aria-modal
       accessibilityViewIsModal
       visible={open}
-      presentationStyle="pageSheet"
+      presentationStyle={IS_IPAD ? 'formSheet' : 'pageSheet'}
       supportedOrientations={
         IS_IPAD
           ? [

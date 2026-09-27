@@ -98,16 +98,17 @@ describe('iPad responsive layout', () => {
     expect(result.current).toBe(before)
   })
 
-  it('updates the sidebar layout without hiding native feed modules', () => {
+  it('keeps native centered columns centered without a right rail', () => {
     setWindowWidth(1099)
     const {result, rerender} = renderHook(useLayoutBreakpoints)
     expect(result.current.rightNavVisible).toBe(false)
+    expect(result.current.centerColumnOffset).toBe(false)
 
     setWindowWidth(1100)
     rerender({})
     expect(result.current).toEqual({
       rightNavVisible: false,
-      centerColumnOffset: true,
+      centerColumnOffset: false,
       leftNavMinimal: true,
     })
 
@@ -120,10 +121,19 @@ describe('iPad responsive layout', () => {
     })
   })
 
-  it('preserves the web right rail threshold in the shared layout rules', () => {
-    expect(getLayoutBreakpoints(1099).rightNavVisible).toBe(false)
-    expect(getLayoutBreakpoints(1100).rightNavVisible).toBe(true)
-    expect(getLayoutBreakpoints(1366).rightNavVisible).toBe(true)
+  it('preserves web right rail thresholds and its tablet column offset', () => {
+    expect(getLayoutBreakpoints(1099)).toMatchObject({
+      rightNavVisible: false,
+      centerColumnOffset: false,
+    })
+    expect(getLayoutBreakpoints(1100)).toMatchObject({
+      rightNavVisible: true,
+      centerColumnOffset: true,
+    })
+    expect(getLayoutBreakpoints(1366)).toMatchObject({
+      rightNavVisible: true,
+      centerColumnOffset: false,
+    })
   })
 
   it('does not apply a second native tablet offset to nested centered content', () => {

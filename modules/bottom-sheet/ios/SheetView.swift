@@ -239,7 +239,7 @@ class SheetView: ExpoView {
       sheet.preferredCornerRadius = self.cornerRadius
       self.selectedDetentIdentifier = sheet.selectedDetentIdentifier
     }
-    sheetVc.view.addSubview(innerView)
+    sheetVc.setContentView(innerView)
 
     if let popover = sheetVc.popoverPresentationController {
       let sourceView: UIView

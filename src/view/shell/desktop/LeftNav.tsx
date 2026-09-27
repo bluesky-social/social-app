@@ -14,8 +14,10 @@ import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {
   getCurrentRoute,
+  getTabState,
   isCurrentProfileRoute,
   isTab,
+  TabState,
 } from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
 import {type SidebarTab} from '#/lib/routes/tab-to-nav-item'
@@ -459,13 +461,10 @@ function NavItem({
   const {currentAccount} = useSession()
 
   const [pathName] = useMemo(() => router.matchPath(href), [href])
-  const currentRouteInfo = useNavigationState(state => {
-    if (!state) {
-      return {name: 'Home'}
-    }
-    return getCurrentRoute(state)
-  })
-  let isCurrent =
+  const navigationState = useNavigationState(state => state)
+  const currentRouteInfo = getCurrentRoute(navigationState)
+  const tab = NAV_ITEM_TO_TAB[navItem]
+  const isCurrent =
     navItem === 'profile'
       ? isCurrentProfileRoute({
           routeName: currentRouteInfo.name,
@@ -477,6 +476,10 @@ function NavItem({
           currentHandle: currentAccount?.handle,
         })
       : isTab(currentRouteInfo.name, pathName)
+  const isSelected =
+    IS_NATIVE && tab
+      ? getTabState(navigationState, tab) !== TabState.Outside
+      : isCurrent
   const isRelated = currentRouteInfo.name.startsWith(pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
@@ -486,23 +489,23 @@ function NavItem({
         return
       }
       e.preventDefault?.()
+      if (tab && onNavigateTab) {
+        onNavigateTab(tab)
+        return
+      }
       if (isCurrent) {
         emitSoftReset()
       } else {
-        const tab = NAV_ITEM_TO_TAB[navItem]
-        if (tab && onNavigateTab) {
-          onNavigateTab(tab)
-          return
-        }
         const [screen, params] = router.matchPath(href)
         // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
         navigation.navigate(screen, params, {pop: true})
       }
     },
-    [navigation, href, isCurrent, ax, navItem, onNavigateTab],
+    [navigation, href, isCurrent, ax, navItem, onNavigateTab, tab],
   )
 
-  const Icon = isCurrent || isRelated ? icons.active : icons.inactive
+  const Icon =
+    isSelected || (!IS_NATIVE && isRelated) ? icons.active : icons.inactive
 
   return (
     <PressableWithHover
@@ -522,6 +525,7 @@ function NavItem({
       dataSet={{noUnderline: 1}}
       role="link"
       accessibilityLabel={label}
+      accessibilityState={IS_NATIVE ? {selected: isSelected} : undefined}
       accessibilityHint="">
       <View
         style={[
@@ -589,7 +593,7 @@ function NavItem({
         ) : null}
       </View>
       {!minimal && (
-        <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>
+        <Text style={[a.text_xl, isSelected ? a.font_bold : a.font_normal]}>
           {label}
         </Text>
       )}

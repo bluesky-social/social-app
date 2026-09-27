@@ -20,13 +20,20 @@ export type BottomSheetPresentationSizeChangeEvent = NativeSyntheticEvent<{
   height: number
   /** Whether UIKit is currently presenting this surface as a floating popover. */
   isPopover: boolean
+  /**
+   * Insets inside the reported content frame. Popovers report zero because
+   * their host is already safe-area inset.
+   */
   safeAreaInsets: {
     top: number
     right: number
     bottom: number
     left: number
   }
-  /** Distance between the presented sheet's bottom and the presentation window's bottom. */
+  /**
+   * Distance between the reported content frame's bottom and the presentation
+   * window's bottom.
+   */
   bottomOffset: number
 }>
 

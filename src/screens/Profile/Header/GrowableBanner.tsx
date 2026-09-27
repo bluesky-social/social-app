@@ -21,6 +21,7 @@ import {RQKEY_ROOT as LIST_RQKEY_ROOT} from '#/state/queries/profile-lists'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {atoms as a} from '#/alf'
 import {IS_IOS} from '#/env'
+import {PROFILE_BANNER_HEIGHT} from './layout'
 
 const AnimatedBlurView = Animated.createAnimatedComponent(BlurView)
 
@@ -149,7 +150,7 @@ function GrowableBannerInner({
         style={[
           a.absolute,
           {left: 0, right: 0, bottom: 0},
-          {height: 150},
+          {height: PROFILE_BANNER_HEIGHT},
           {transformOrigin: 'bottom'},
           animatedStyle,
         ]}>

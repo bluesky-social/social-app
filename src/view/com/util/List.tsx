@@ -73,7 +73,7 @@ let List = forwardRef<ListMethods, ListProps>(
       style,
       contentContainerStyle,
       progressViewOffset,
-      automaticallyAdjustsScrollIndicatorInsets = false,
+      automaticallyAdjustsScrollIndicatorInsets,
       ...props
     },
     ref,
@@ -93,6 +93,8 @@ let List = forwardRef<ListMethods, ListProps>(
       isWithinOffsetView,
       disabled: disableTabletLayout,
     })
+    const isWithinContainedTabletSurface =
+      IS_IPAD && (isWithinDialog || isWithinSplitView || isWithinOffsetView)
     const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
@@ -192,13 +194,20 @@ let List = forwardRef<ListMethods, ListProps>(
           viewabilityConfig={viewabilityConfig}
           {...props}
           automaticallyAdjustsScrollIndicatorInsets={
-            automaticallyAdjustsScrollIndicatorInsets
+            automaticallyAdjustsScrollIndicatorInsets ??
+            (isWithinContainedTabletSurface ? undefined : false)
           }
-          scrollIndicatorInsets={{
-            top: headerOffset,
-            right: 1,
-            ...props.scrollIndicatorInsets,
-          }}
+          scrollIndicatorInsets={
+            isWithinContainedTabletSurface
+              ? headerOffset != null || props.scrollIndicatorInsets
+                ? {top: headerOffset, ...props.scrollIndicatorInsets}
+                : undefined
+              : {
+                  top: headerOffset,
+                  right: 1,
+                  ...props.scrollIndicatorInsets,
+                }
+          }
           indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
           refreshControl={refreshControl}
           onScroll={scrollHandler}

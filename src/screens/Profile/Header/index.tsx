@@ -20,8 +20,9 @@ import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {atoms as a, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
-import {IS_NATIVE} from '#/env'
+import {IS_IPAD, IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+import {shouldUseProfileLightStatusBar} from './layout'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,
@@ -152,7 +153,13 @@ const MinimalHeader = memo(function MinimalHeader({
     },
   )
 
-  useSetLightStatusBar(isScreenFocused && !visible)
+  useSetLightStatusBar(
+    shouldUseProfileLightStatusBar({
+      isIPad: IS_IPAD,
+      isScreenFocused,
+      isHeaderHidden: !visible,
+    }),
+  )
 
   return (
     <Animated.View

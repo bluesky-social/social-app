@@ -45,5 +45,7 @@ export function useLayoutBreakpoints() {
     ...breakpoints,
     // Native has no right rail, so its feed modules must stay in the feed.
     rightNavVisible: false,
+    // Unlike web, there is no right rail to offset the centered column for.
+    centerColumnOffset: false,
   }
 }

@@ -26,6 +26,11 @@ class SheetViewController: UIViewController,
   private var preventExpansion = false
   private var fullHeight = false
   private var isAdaptedToSheet = false
+  private let contentHostView = UIView()
+  private weak var contentView: UIView?
+  private var popoverContentHostConstraints: [NSLayoutConstraint] = []
+  private var sheetContentHostConstraints: [NSLayoutConstraint] = []
+  private var contentHostUsesPopoverSafeArea: Bool?
   private var didRefreshDetentsForPresentedBounds = false
   private weak var adaptedSheetPresentationController: UISheetPresentationController?
 
@@ -45,10 +50,14 @@ class SheetViewController: UIViewController,
 
   override func viewDidLayoutSubviews() {
     super.viewDidLayoutSubviews()
-    // The popover presentation frame includes the arrow outside React's content.
+    self.updateContentHostConstraints()
+    /*
+     * Popover bounds can include arrow safe-area insets. Report the content host
+     * frame so React measures the same usable area that UIKit lays out.
+     */
     self.onPresentedBoundsChange?(
-      self.view.bounds.size,
-      self.view.safeAreaInsets,
+      self.presentedContentBounds.size,
+      self.presentedContentSafeAreaInsets,
       self.presentationBottomOffset,
       self.isPresentedAsPopover
     )
@@ -74,6 +83,62 @@ class SheetViewController: UIViewController,
         sheet.selectedDetentIdentifier = selectedDetent
       }
     }
+  }
+
+  func setContentView(_ contentView: UIView) {
+    self.contentView = contentView
+    self.contentHostView.backgroundColor = .clear
+    self.contentHostView.clipsToBounds = true
+    self.contentHostView.translatesAutoresizingMaskIntoConstraints = false
+    self.view.addSubview(self.contentHostView)
+    contentView.translatesAutoresizingMaskIntoConstraints = true
+    var contentFrame = contentView.frame
+    contentFrame.origin = .zero
+    contentView.frame = contentFrame
+    self.contentHostView.addSubview(contentView)
+
+    let safeArea = self.view.safeAreaLayoutGuide
+    self.popoverContentHostConstraints = [
+      self.contentHostView.leadingAnchor.constraint(equalTo: safeArea.leadingAnchor),
+      self.contentHostView.trailingAnchor.constraint(equalTo: safeArea.trailingAnchor),
+      self.contentHostView.topAnchor.constraint(equalTo: safeArea.topAnchor),
+      self.contentHostView.bottomAnchor.constraint(equalTo: safeArea.bottomAnchor),
+    ]
+    self.sheetContentHostConstraints = [
+      self.contentHostView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+      self.contentHostView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+      self.contentHostView.topAnchor.constraint(equalTo: self.view.topAnchor),
+      self.contentHostView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+    ]
+    self.updateContentHostConstraints()
+  }
+
+  private func updateContentHostConstraints() {
+    guard self.contentView != nil else { return }
+    let usePopoverSafeArea = self.isPresentedAsPopover
+    guard self.contentHostUsesPopoverSafeArea != usePopoverSafeArea else { return }
+
+    NSLayoutConstraint.deactivate(
+      usePopoverSafeArea
+        ? self.sheetContentHostConstraints
+        : self.popoverContentHostConstraints
+    )
+    NSLayoutConstraint.activate(
+      usePopoverSafeArea
+        ? self.popoverContentHostConstraints
+        : self.sheetContentHostConstraints
+    )
+    self.contentHostUsesPopoverSafeArea = usePopoverSafeArea
+  }
+
+  private var presentedContentBounds: CGRect {
+    return self.isPresentedAsPopover
+      ? self.view.safeAreaLayoutGuide.layoutFrame
+      : self.view.bounds
+  }
+
+  private var presentedContentSafeAreaInsets: UIEdgeInsets {
+    return self.isPresentedAsPopover ? .zero : self.view.safeAreaInsets
   }
 
   func setPopoverSource(sourceView: UIView, sourceRect: CGRect) {
@@ -215,7 +280,10 @@ class SheetViewController: UIViewController,
   private var presentationBottomOffset: CGFloat {
     guard let window = self.viewIfLoaded?.window else { return 0 }
     let bottom = self.view.convert(
-      CGPoint(x: self.view.bounds.midX, y: self.view.bounds.maxY),
+      CGPoint(
+        x: self.presentedContentBounds.midX,
+        y: self.presentedContentBounds.maxY
+      ),
       to: window
     ).y
     return max(0, window.bounds.maxY - bottom)

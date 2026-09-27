@@ -90,7 +90,10 @@ function OffsetProbe() {
 
 type CommonScrollProps = Pick<
   ScrollViewProps,
-  'style' | 'contentContainerStyle' | 'scrollIndicatorInsets'
+  | 'style'
+  | 'contentContainerStyle'
+  | 'scrollIndicatorInsets'
+  | 'automaticallyAdjustsScrollIndicatorInsets'
 >
 
 function renderScrollable(
@@ -231,6 +234,94 @@ it('keeps header spacing and scroll indicator overrides on the viewport', () => 
     bottom: 20,
   })
 })
+
+it.each(['List', 'Content'] as const)(
+  'uses system scroll indicator insets for a compact dialog-contained iPad %s',
+  component => {
+    mockIsWithinDialog = true
+    mockGtMobile = false
+    const {viewport} = renderScrollable(component, {
+      scrollIndicatorInsets: {bottom: 20},
+    })
+
+    expect(
+      viewport.props.automaticallyAdjustsScrollIndicatorInsets,
+    ).toBeUndefined()
+    expect(viewport.props.scrollIndicatorInsets).toEqual({bottom: 20})
+  },
+)
+
+it.each([true, false])(
+  'respects an explicit scroll indicator auto-adjustment value of %s',
+  value => {
+    mockIsWithinDialog = true
+    const {viewport} = renderScrollable('List', {
+      automaticallyAdjustsScrollIndicatorInsets: value,
+    })
+
+    expect(viewport.props.automaticallyAdjustsScrollIndicatorInsets).toBe(value)
+  },
+)
+
+it('keeps the list header indicator offset without forcing a right inset in a sheet', () => {
+  mockIsWithinDialog = true
+  const result = render(
+    <List data={[]} renderItem={() => null} headerOffset={80} />,
+  )
+  const list = result.UNSAFE_getByType(FlatList)
+
+  expect(list.props.automaticallyAdjustsScrollIndicatorInsets).toBeUndefined()
+  expect(list.props.scrollIndicatorInsets).toEqual({top: 80})
+})
+
+it.each(['split view', 'centered parent'] as const)(
+  'uses system indicator insets for an iPad %s',
+  context => {
+    const Wrapper = ({children}: React.PropsWithChildren) =>
+      context === 'split view' ? (
+        <SplitViewProvider side="left">{children}</SplitViewProvider>
+      ) : (
+        <ScrollbarOffsetContext value={{isWithinOffsetView: true}}>
+          {children}
+        </ScrollbarOffsetContext>
+      )
+    const {viewport} = renderScrollable('List', {}, Wrapper)
+
+    expect(
+      viewport.props.automaticallyAdjustsScrollIndicatorInsets,
+    ).toBeUndefined()
+    expect(viewport.props.scrollIndicatorInsets).toBeUndefined()
+  },
+)
+
+it('keeps the full-bleed tablet list on its full-width indicator layout', () => {
+  const result = render(
+    <List data={[]} renderItem={() => null} disableTabletLayout />,
+  )
+  const list = result.UNSAFE_getByType(FlatList)
+
+  expect(list.props.automaticallyAdjustsScrollIndicatorInsets).toBe(false)
+  expect(list.props.scrollIndicatorInsets).toEqual({
+    top: undefined,
+    right: 1,
+  })
+})
+
+it.each(['List', 'Content'] as const)(
+  'preserves phone scroll indicator configuration for %s',
+  component => {
+    jest.replaceProperty(env, 'IS_IPAD', false)
+    const {viewport} = renderScrollable(component)
+
+    expect(viewport.props.automaticallyAdjustsScrollIndicatorInsets).toBe(false)
+    if (component === 'List') {
+      expect(viewport.props.scrollIndicatorInsets).toEqual({
+        top: undefined,
+        right: 1,
+      })
+    }
+  },
+)
 
 it('can opt out of the offset without narrowing the Content viewport', () => {
   mockCenterColumnOffset = true

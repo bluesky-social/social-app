@@ -56,6 +56,11 @@ describe('native tab navigation state', () => {
   })
 
   it.each([
+    ['HomeTab', 'Home'],
+    ['SearchTab', 'Search'],
+    ['MessagesTab', 'Messages'],
+    ['NotificationsTab', 'Notifications'],
+    ['MyProfileTab', 'MyProfile'],
     ['FeedsTab', 'Feeds'],
     ['ListsTab', 'Lists'],
     ['BookmarksTab', 'Bookmarks'],
@@ -86,6 +91,7 @@ describe('native tab navigation state', () => {
 
     expect(getTabState(state, 'Lists')).toBe(TabState.Inside)
     expect(getTabState(state, 'Settings')).toBe(TabState.Outside)
+    expect(getTabState(state, 'MyProfile')).toBe(TabState.Outside)
   })
 
   it.each(['Feeds', 'Lists', 'Bookmarks', 'Settings'])(
