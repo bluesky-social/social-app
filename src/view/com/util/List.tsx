@@ -95,6 +95,8 @@ let List = forwardRef<ListMethods, ListProps>(
     })
     const isWithinContainedTabletSurface =
       IS_IPAD && (isWithinDialog || isWithinSplitView || isWithinOffsetView)
+    const usesSystemScrollIndicatorInsets =
+      IS_IPAD && gtMobile && !isWithinContainedTabletSurface
     const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
@@ -195,18 +197,22 @@ let List = forwardRef<ListMethods, ListProps>(
           {...props}
           automaticallyAdjustsScrollIndicatorInsets={
             automaticallyAdjustsScrollIndicatorInsets ??
-            (isWithinContainedTabletSurface ? undefined : false)
+            (usesSystemScrollIndicatorInsets || isWithinContainedTabletSurface
+              ? undefined
+              : false)
           }
           scrollIndicatorInsets={
-            isWithinContainedTabletSurface
-              ? headerOffset != null || props.scrollIndicatorInsets
-                ? {top: headerOffset, ...props.scrollIndicatorInsets}
-                : undefined
-              : {
-                  top: headerOffset,
-                  right: 1,
-                  ...props.scrollIndicatorInsets,
-                }
+            usesSystemScrollIndicatorInsets
+              ? props.scrollIndicatorInsets
+              : isWithinContainedTabletSurface
+                ? headerOffset != null || props.scrollIndicatorInsets
+                  ? {top: headerOffset, ...props.scrollIndicatorInsets}
+                  : undefined
+                : {
+                    top: headerOffset,
+                    right: 1,
+                    ...props.scrollIndicatorInsets,
+                  }
           }
           indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
           refreshControl={refreshControl}

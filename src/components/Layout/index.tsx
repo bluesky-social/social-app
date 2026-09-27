@@ -115,6 +115,8 @@ export const Content = memo(function Content({
   })
   const isWithinContainedTabletSurface =
     IS_IPAD && (isWithinDialog || isWithinSplitView || isWithinOffsetView)
+  const usesSystemScrollIndicatorInsets =
+    IS_IPAD && gtMobile && !isWithinContainedTabletSurface
   const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
 
   // note - if we ever make the footer transparent in any way,
@@ -133,7 +135,9 @@ export const Content = memo(function Content({
       centerContent={centerOnIPad ? false : centerContent}
       automaticallyAdjustsScrollIndicatorInsets={
         automaticallyAdjustsScrollIndicatorInsets ??
-        (isWithinContainedTabletSurface ? undefined : false)
+        (usesSystemScrollIndicatorInsets || isWithinContainedTabletSurface
+          ? undefined
+          : false)
       }
       indicatorStyle={t.scheme === 'dark' ? 'white' : 'black'}
       style={[

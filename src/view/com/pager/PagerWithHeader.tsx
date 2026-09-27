@@ -302,7 +302,9 @@ let PagerTabBar = ({
             fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
           }
         }}>
+        {/* The extended clipping bounds must not intercept touches over the feed. */}
         <Center
+          pointerEvents={headerOverflowInset != null ? 'box-none' : undefined}
           style={
             headerOverflowInset != null && {
               overflow: 'hidden',

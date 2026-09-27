@@ -216,7 +216,7 @@ it('keeps full-bleed lists out of the centered column', () => {
   })
 })
 
-it('keeps header spacing and scroll indicator overrides on the viewport', () => {
+it('keeps header spacing on the viewport without adding main-screen insets', () => {
   const result = render(
     <List
       data={[]}
@@ -228,12 +228,74 @@ it('keeps header spacing and scroll indicator overrides on the viewport', () => 
   const list = result.UNSAFE_getByType(FlatList)
 
   expect(StyleSheet.flatten(list.props.style)).toHaveProperty('paddingTop', 80)
-  expect(list.props.scrollIndicatorInsets).toEqual({
-    top: 80,
-    right: 1,
-    bottom: 20,
-  })
+  expect(list.props.scrollIndicatorInsets).toEqual({bottom: 20})
 })
+
+it('keeps profile header and refresh offsets without shrinking the iPad scrollbar', () => {
+  const result = render(
+    <List
+      data={[]}
+      renderItem={() => null}
+      headerOffset={80}
+      refreshing={false}
+      onRefresh={() => {}}
+    />,
+  )
+  const list = result.UNSAFE_getByType(FlatList)
+
+  expect(StyleSheet.flatten(list.props.style)).toHaveProperty('paddingTop', 80)
+  expect(list.props.refreshControl).toHaveProperty(
+    'props.progressViewOffset',
+    80,
+  )
+  expect(list.props.automaticallyAdjustsScrollIndicatorInsets).toBeUndefined()
+  expect(list.props.scrollIndicatorInsets).toBeUndefined()
+})
+
+it.each(['List', 'Content'] as const)(
+  'uses system scroll indicator insets for a large primary iPad %s',
+  component => {
+    const {viewport} = renderScrollable(component)
+
+    expect(
+      viewport.props.automaticallyAdjustsScrollIndicatorInsets,
+    ).toBeUndefined()
+    expect(viewport.props.scrollIndicatorInsets).toBeUndefined()
+  },
+)
+
+it.each(['List', 'Content'] as const)(
+  'preserves explicit large-screen %s indicator overrides',
+  component => {
+    const {viewport} = renderScrollable(component, {
+      automaticallyAdjustsScrollIndicatorInsets: false,
+      scrollIndicatorInsets: {top: 12, right: 3, bottom: 20},
+    })
+
+    expect(viewport.props.automaticallyAdjustsScrollIndicatorInsets).toBe(false)
+    expect(viewport.props.scrollIndicatorInsets).toEqual({
+      top: 12,
+      right: 3,
+      bottom: 20,
+    })
+  },
+)
+
+it.each(['List', 'Content'] as const)(
+  'uses the compact inset behavior for a compact iPad %s',
+  component => {
+    mockGtMobile = false
+    const {viewport} = renderScrollable(component)
+
+    expect(viewport.props.automaticallyAdjustsScrollIndicatorInsets).toBe(false)
+    if (component === 'List') {
+      expect(viewport.props.scrollIndicatorInsets).toEqual({
+        top: undefined,
+        right: 1,
+      })
+    }
+  },
+)
 
 it.each(['List', 'Content'] as const)(
   'uses system scroll indicator insets for a compact dialog-contained iPad %s',
@@ -274,18 +336,28 @@ it('keeps the list header indicator offset without forcing a right inset in a sh
   expect(list.props.scrollIndicatorInsets).toEqual({top: 80})
 })
 
-it.each(['split view', 'centered parent'] as const)(
-  'uses system indicator insets for an iPad %s',
-  context => {
+it.each([
+  ['List', 'dialog'],
+  ['Content', 'dialog'],
+  ['List', 'split view'],
+  ['Content', 'split view'],
+  ['List', 'centered parent'],
+  ['Content', 'centered parent'],
+] as const)(
+  'retains contained indicator behavior for an iPad %s in a %s',
+  (component, context) => {
     const Wrapper = ({children}: React.PropsWithChildren) =>
-      context === 'split view' ? (
+      context === 'dialog' ? (
+        children
+      ) : context === 'split view' ? (
         <SplitViewProvider side="left">{children}</SplitViewProvider>
       ) : (
         <ScrollbarOffsetContext value={{isWithinOffsetView: true}}>
           {children}
         </ScrollbarOffsetContext>
       )
-    const {viewport} = renderScrollable('List', {}, Wrapper)
+    if (context === 'dialog') mockIsWithinDialog = true
+    const {viewport} = renderScrollable(component, {}, Wrapper)
 
     expect(
       viewport.props.automaticallyAdjustsScrollIndicatorInsets,
@@ -294,17 +366,14 @@ it.each(['split view', 'centered parent'] as const)(
   },
 )
 
-it('keeps the full-bleed tablet list on its full-width indicator layout', () => {
+it('keeps the full-bleed large iPad list on system indicators', () => {
   const result = render(
     <List data={[]} renderItem={() => null} disableTabletLayout />,
   )
   const list = result.UNSAFE_getByType(FlatList)
 
-  expect(list.props.automaticallyAdjustsScrollIndicatorInsets).toBe(false)
-  expect(list.props.scrollIndicatorInsets).toEqual({
-    top: undefined,
-    right: 1,
-  })
+  expect(list.props.automaticallyAdjustsScrollIndicatorInsets).toBeUndefined()
+  expect(list.props.scrollIndicatorInsets).toBeUndefined()
 })
 
 it.each(['List', 'Content'] as const)(
