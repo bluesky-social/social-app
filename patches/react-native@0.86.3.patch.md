@@ -192,8 +192,9 @@ https://github.com/react/react-native/issues/58517
 RN 0.86.3 normally downloads prebuilt Hermes V1 for both platforms. Those binaries do not
 contain the Apple styled-hour-cycle fix (facebook/hermes#2208) or the Android midnight-cycle
 fix (facebook/hermes#2210, reported in facebook/hermes#2209). The app instead builds
-Hermes from a single pinned commit in `mozzius/hermes`, based on RN's
-`hermes-v250829098.0.17` tag with both fixes cherry-picked.
+Hermes from a single pinned commit in `bluesky-social/hermes`, based on RN's
+`hermes-v250829098.0.17` tag with both fixes cherry-picked:
+https://github.com/bluesky-social/hermes/commit/18b57bcf09196b8a13e25e892d23b8ee5a9ba30e
 
 The pinned SHA lives in `sdks/.hermesv1version`. The patched iOS podspec source selector
 recognizes the SHA and checks out that commit from the fork, bypassing the prebuilt release

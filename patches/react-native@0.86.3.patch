@@ -400,7 +400,7 @@ index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
 diff --git a/ReactAndroid/hermes-engine/build.gradle.kts b/ReactAndroid/hermes-engine/build.gradle.kts
-index faf4e4f9d1ffea5cfd088fa2235f2cd99b9576ca..4a524aa87cac710929345d44a83d37854f99d5a1 100644
+index faf4e4f9d1ffea5cfd088fa2235f2cd99b9576ca..cd8973a1233b67998c7faa0d16f13e05e61d6e2e 100644
 --- a/ReactAndroid/hermes-engine/build.gradle.kts
 +++ b/ReactAndroid/hermes-engine/build.gradle.kts
 @@ -90,7 +90,7 @@ val hermesVersionProvider: Provider<String> = providers.provider {
@@ -417,7 +417,7 @@ index faf4e4f9d1ffea5cfd088fa2235f2cd99b9576ca..4a524aa87cac710929345d44a83d3785
        src(
            providers.provider {
 -            "https://github.com/facebook/hermes/tarball/${hermesVersionProvider.get()}"
-+            "https://github.com/mozzius/hermes/tarball/${hermesVersionProvider.get()}"
++            "https://github.com/bluesky-social/hermes/tarball/${hermesVersionProvider.get()}"
            }
        )
        onlyIfModified(true)
@@ -429,7 +429,7 @@ index faf4e4f9d1ffea5cfd088fa2235f2cd99b9576ca..4a524aa87cac710929345d44a83d3785
 -          // folder at the top level.
 -          if (this.path.startsWith("facebook-hermes-")) {
 +          // GitHub includes the repository owner in the tarball's top-level folder.
-+          if (this.path.startsWith("mozzius-hermes-")) {
++          if (this.path.startsWith("bluesky-social-hermes-")) {
              this.path = this.path.substringAfter("/")
            }
          }
@@ -539,7 +539,7 @@ index 94c1145b3fc48471778290f71f018f66fc05a6e1..675da2a412e6e5a4b6bc3722f11fe4d7
 \ No newline at end of file
 +18b57bcf09196b8a13e25e892d23b8ee5a9ba30e
 diff --git a/sdks/hermes-engine/hermes-utils.rb b/sdks/hermes-engine/hermes-utils.rb
-index 4b8ce896f9da32dd1befaa3b7cc47263b62eaaa9..09e607213fe014a1350225a51c5062d2f85b7b8a 100644
+index 4b8ce896f9da32dd1befaa3b7cc47263b62eaaa9..c3b34382644cf2f004799896d2a5fdc6c36f6474 100644
 --- a/sdks/hermes-engine/hermes-utils.rb
 +++ b/sdks/hermes-engine/hermes-utils.rb
 @@ -7,7 +7,7 @@ require 'digest'
@@ -547,7 +547,7 @@ index 4b8ce896f9da32dd1befaa3b7cc47263b62eaaa9..09e607213fe014a1350225a51c5062d2
  require 'rexml/document'
  
 -HERMES_GITHUB_URL = "https://github.com/facebook/hermes.git"
-+HERMES_GITHUB_URL = "https://github.com/mozzius/hermes.git"
++HERMES_GITHUB_URL = "https://github.com/bluesky-social/hermes.git"
  ENV_BUILD_FROM_SOURCE = "RCT_BUILD_HERMES_FROM_SOURCE"
  
  module HermesEngineSourceType
