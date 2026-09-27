@@ -26,7 +26,7 @@ import {useLightboxControls} from '#/components/Lightbox/state'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_IPAD} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
@@ -34,6 +34,7 @@ import {LiveStatusDialog} from '#/features/liveNow/components/LiveStatusDialog'
 import {type app} from '#/lexicons'
 import {GrowableAvatar} from './GrowableAvatar'
 import {GrowableBanner} from './GrowableBanner'
+import {PROFILE_BANNER_HEIGHT} from './layout'
 import {StatusBarShadow} from './StatusBarShadow'
 
 interface Props {
@@ -155,8 +156,8 @@ let ProfileHeaderShell = ({
     <View style={t.atoms.bg} pointerEvents={IS_IOS ? 'auto' : 'box-none'}>
       <View
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}
-        style={[a.relative, {height: 150}]}>
-        <StatusBarShadow />
+        style={[a.relative, {height: PROFILE_BANNER_HEIGHT}]}>
+        {!IS_IPAD && <StatusBarShadow />}
         <GrowableBanner
           testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
           label={
