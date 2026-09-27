@@ -1,4 +1,5 @@
 import {type BlobRef} from '@atproto/lex'
+import {jest} from '@jest/globals'
 
 import {type UploadStatus} from '#/components/ComposerV2/store/types'
 import {
@@ -51,6 +52,34 @@ function simulated(
       if (timer) clearTimeout(timer)
     },
   }
+}
+
+/** Keeps callbacks callable after cancellation to exercise store-side ownership. */
+export function manualUploadWorkers() {
+  type Options =
+    | Parameters<NonNullable<UploadWorkerOverrides['startImageUpload']>>[0]
+    | Parameters<NonNullable<UploadWorkerOverrides['startVideoUpload']>>[0]
+  const attempts: Array<
+    Options & {
+      cancel: jest.Mock
+      report: (status: UploadStatus) => void
+    }
+  > = []
+  const start = (options: Options) => {
+    const attempt = {
+      ...options,
+      cancel: jest.fn(),
+      report: (status: UploadStatus) =>
+        options.setUploadStatus(options.postId, options.mediaId, status),
+    }
+    attempts.push(attempt)
+    return {cancel: attempt.cancel}
+  }
+  const workers: UploadWorkerOverrides = {
+    startImageUpload: start,
+    startVideoUpload: start,
+  }
+  return {attempts, workers}
 }
 
 export const simulatedUploadWorkers: UploadWorkerOverrides = {

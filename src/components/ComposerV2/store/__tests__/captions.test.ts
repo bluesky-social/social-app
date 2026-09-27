@@ -14,6 +14,7 @@ import {
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {
+  type UploadDependencies,
   type UploadTask,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
@@ -126,6 +127,143 @@ describe('failed video upload normalization', () => {
     expect(store.getState().isDirty).toBe(false)
     store.destroy()
   })
+})
+
+test('a real caption retry reuses video and unchanged captions after a partial failure and edit', async () => {
+  const videoBlob = blob('video')
+  const english = blob('english')
+  const french = blob('french')
+  const editedEnglish = blob('edited-english')
+  const editedGerman = blob('edited-german')
+  const getVideoMetadata = jest
+    .fn<NonNullable<UploadDependencies['getVideoMetadata']>>()
+    .mockResolvedValue({
+      uri: videoInput.item.uri,
+      width: 1920,
+      height: 1080,
+      mimeType: 'video/mp4',
+      duration: 1000,
+    })
+  const compressVideo = jest
+    .fn<NonNullable<UploadDependencies['compressVideo']>>()
+    .mockResolvedValue({
+      uri: 'file:///compressed.mp4',
+      size: 100,
+      mimeType: 'video/mp4',
+    })
+  const uploadVideo = jest
+    .fn<NonNullable<UploadDependencies['uploadVideo']>>()
+    .mockResolvedValue({
+      state: 'JOB_STATE_COMPLETED',
+      jobId: 'job-1',
+      did: 'did:plc:example',
+      blob: videoBlob,
+    })
+  const uploadBlob = jest
+    .fn<NonNullable<UploadDependencies['uploadBlob']>>()
+    .mockResolvedValueOnce({blob: english})
+    .mockResolvedValueOnce({blob: french})
+    .mockRejectedValueOnce(new Error('caption upload failed'))
+    .mockResolvedValueOnce({blob: editedEnglish})
+    .mockResolvedValueOnce({blob: editedGerman})
+  const store = createThreadStore({
+    resolvers,
+    __createId: makeIdGenerator(),
+    initialState: {
+      posts: [
+        {
+          attachments: {
+            media: {
+              kind: 'video',
+              item: {
+                ...videoInput.item,
+                captions: [
+                  {lang: 'en', content: 'original english'},
+                  {lang: 'fr', content: 'original french'},
+                  {lang: 'de', content: 'original german'},
+                ],
+              },
+            },
+          },
+        },
+      ],
+    },
+    media: {
+      pdsClient: {} as never,
+      i18n: {_: () => 'Upload failed'} as never,
+      dispatchUrl: 'https://pds.example.test',
+      getVideoMetadata,
+      compressVideo,
+      uploadVideo,
+      uploadBlob,
+      createVideoServiceClient: () => {
+        throw new Error('Unexpected polling')
+      },
+    },
+  })
+  const waitForUpload = async (state: 'failed' | 'uploaded') => {
+    if (getVideo(store).item.upload.state === state) return
+    await new Promise<void>(resolve => {
+      const unsubscribe = store.subscribe(() => {
+        if (getVideo(store).item.upload.state === state) {
+          unsubscribe()
+          resolve()
+        }
+      })
+    })
+  }
+  try {
+    await waitForUpload('failed')
+    const {postId, item: failed} = getVideo(store)
+    expect(store.getState().isDirty).toBe(false)
+    expect(failed.videoBlob).toBe(videoBlob)
+    expect(failed.captionBlobs).toEqual([
+      {lang: 'en', blob: english},
+      {lang: 'fr', blob: french},
+    ])
+    const editedCaptions = [
+      {lang: 'en', content: 'new english caption'},
+      {lang: 'fr', content: 'original french'},
+      {lang: 'de', content: 'new and longer german caption'},
+    ]
+    store.actions.setVideoCaptions(postId, failed.id, editedCaptions)
+    expect(getVideo(store).item.captionBlobs).toEqual([
+      {lang: 'fr', blob: french},
+    ])
+    expect(uploadBlob).toHaveBeenCalledTimes(3)
+    if (failed.upload.state !== 'failed' || !failed.upload.retryable)
+      throw new Error('expected retryable failure')
+    failed.upload.retry()
+    await waitForUpload('uploaded')
+
+    const completed = getVideo(store).item
+    expect(completed.videoBlob).toBe(videoBlob)
+    expect(completed.captionBlobs).toEqual([
+      {lang: 'fr', blob: french},
+      {lang: 'en', blob: editedEnglish},
+      {lang: 'de', blob: editedGerman},
+    ])
+    expect(completed.captions).toEqual(editedCaptions)
+    expect(store.getState().isDirty).toBe(true)
+    expect(getVideoMetadata).toHaveBeenCalledTimes(1)
+    expect(compressVideo).toHaveBeenCalledTimes(1)
+    expect(uploadVideo).toHaveBeenCalledTimes(1)
+    expect(uploadBlob).toHaveBeenCalledTimes(5)
+    expect(
+      uploadBlob.mock.calls.slice(3).map(([, input]) => (input as Blob).size),
+    ).toEqual([
+      editedCaptions[0].content.length,
+      editedCaptions[2].content.length,
+    ])
+    expect(failed.captions[0].content).toBe('original english')
+    expect(failed.captionBlobs).toEqual([
+      {lang: 'en', blob: english},
+      {lang: 'fr', blob: french},
+    ])
+    expect(failed.upload.state).toBe('failed')
+  } finally {
+    store.destroy()
+  }
 })
 
 describe('setVideoCaptions', () => {
