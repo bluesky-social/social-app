@@ -23,7 +23,7 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {type UploadWorkerOverrides} from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
-import {simulatedUploadWorkers} from './uploadTestUtils'
+import {manualUploadWorkers, simulatedUploadWorkers} from './uploadTestUtils'
 
 function makeIdGenerator() {
   let i = 0
@@ -572,6 +572,97 @@ describe('removeMedia', () => {
 })
 
 describe('retryMediaUpload', () => {
+  test.each([imageInput, videoInput])(
+    'does not restart pending, uploading, or uploaded $kind work',
+    input => {
+      for (const status of [
+        {state: 'pending'},
+        {state: 'uploading', progress: 0.5},
+        {state: 'uploaded', blob: {} as never},
+      ] satisfies UploadStatus[]) {
+        const {attempts, workers} = manualUploadWorkers()
+        const store = createThreadStore({
+          resolvers,
+          __createId: makeIdGenerator(),
+          __uploadWorkers: workers,
+        })
+        const postId = rootId(store)
+        const {
+          addedMediaIds: [mediaId],
+        } = store.actions.addMedia(postId, [input])!
+        attempts[0].report(status)
+        const before = store.getState()
+        const notify = jest.fn()
+        store.subscribe(notify)
+
+        store.actions.retryMediaUpload(postId, mediaId)
+        expect(store.getState()).toBe(before)
+        expect(attempts).toHaveLength(1)
+        expect(attempts[0].cancel).not.toHaveBeenCalled()
+        expect(notify).not.toHaveBeenCalled()
+        store.destroy()
+      }
+    },
+  )
+
+  test.each([imageInput, videoInput])(
+    'binds the $kind retry to its failure, not a later attempt',
+    input => {
+      const {attempts, workers} = manualUploadWorkers()
+      const store = createThreadStore({
+        resolvers,
+        __createId: makeIdGenerator(),
+        __uploadWorkers: workers,
+      })
+      const postId = rootId(store)
+      const {
+        addedMediaIds: [mediaId],
+      } = store.actions.addMedia(postId, [input])!
+      const retry = () => {
+        const item = getMedia(store, postId)[0]
+        if (
+          item.kind === 'gif' ||
+          item.upload.state !== 'failed' ||
+          !item.upload.retryable
+        ) {
+          throw new Error('expected retryable failure')
+        }
+        return item.upload.retry
+      }
+      attempts[0].report({state: 'failed', error: 'first failure'})
+      const firstRetry = retry()
+      // Editing the item does not supersede its failed upload.
+      store.actions.updateMediaAltText(postId, mediaId, 'edited alt')
+      firstRetry()
+      expect(attempts).toHaveLength(2)
+      const pending = store.getState()
+      firstRetry()
+      store.actions.retryMediaUpload(postId, mediaId)
+      expect(store.getState()).toBe(pending)
+      attempts[1].report({state: 'uploading', progress: 0.5})
+      const uploading = store.getState()
+      firstRetry()
+      expect(store.getState()).toBe(uploading)
+      expect(attempts[1].cancel).not.toHaveBeenCalled()
+
+      attempts[1].report({state: 'failed', error: 'second failure'})
+      const secondRetry = retry()
+      const failed = store.getState()
+      firstRetry()
+      expect(store.getState()).toBe(failed)
+      expect(attempts).toHaveLength(2)
+      secondRetry()
+      expect(attempts).toHaveLength(3)
+      attempts[2].report({state: 'uploaded', blob: {} as never})
+      const uploaded = store.getState()
+      firstRetry()
+      secondRetry()
+      expect(store.getState()).toBe(uploaded)
+      expect(attempts).toHaveLength(3)
+      store.destroy()
+    },
+  )
+
   test('resets a failed image upload back to pending and walks it to uploaded', () => {
     const store = makeStore()
     const root = rootId(store)

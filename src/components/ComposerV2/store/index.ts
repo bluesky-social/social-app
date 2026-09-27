@@ -351,17 +351,14 @@ export function createThreadStore(options: {
     if (shouldRestart) startMediaUpload(postId, mediaId)
   }
 
-  /** Restarts an image/video upload; cards, GIFs, and missing items are no-ops. */
+  /** Retries only currently retryable failures, never active or completed work. */
   function retryMediaUpload(postId: string, mediaId: string) {
     if (destroyed) return
     const post = state.posts[postId]
     if (!post) return
     const items = getMediaItems(post.attachments.media)
     const item = items.find(m => m.id === mediaId)
-    if (!item || item.kind === 'gif') return
-    if (item.upload.state === 'failed' && item.upload.retryable === false) {
-      return
-    }
+    if (!item || !isRetryableFailedUpload(item)) return
 
     cancelUploadTask(mediaId)
     const pending = {...item, upload: {state: 'pending' as const}}
@@ -607,7 +604,19 @@ export function createThreadStore(options: {
           : {
               ...input,
               retryable: true,
-              retry: () => retryMediaUpload(postId, mediaId),
+              retry: () => {
+                const current = getMediaItems(
+                  state.posts[postId]?.attachments.media,
+                ).find(item => item.id === mediaId)
+                // A retained retry belongs to this failure, not a later attempt.
+                if (
+                  current &&
+                  current.kind !== 'gif' &&
+                  current.upload === status
+                ) {
+                  retryMediaUpload(postId, mediaId)
+                }
+              },
             }
         : input
     mutateState(s => {
