@@ -29,6 +29,7 @@ export const ANDROID_API_LEVEL: number = 0
  * Platform detection
  */
 export const IS_IOS: boolean = false
+export const IS_IPAD: boolean = false
 export const IS_ANDROID: boolean = false
 export const IS_NATIVE: boolean = false
 export const IS_WEB: boolean = true
