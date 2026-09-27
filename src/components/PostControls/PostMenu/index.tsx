@@ -48,11 +48,11 @@ let PostMenuButton = ({
   const lazyMenuControl = useMemo(
     () => ({
       ...menuControl,
-      open() {
+      open(options?: Parameters<typeof menuControl.open>[0]) {
         setHasBeenOpen(true)
         // HACK. We need the state update to be flushed by the time
         // menuControl.open() fires but RN doesn't expose flushSync.
-        setTimeout(menuControl.open)
+        setTimeout(() => menuControl.open(options))
       },
     }),
     [menuControl, setHasBeenOpen],

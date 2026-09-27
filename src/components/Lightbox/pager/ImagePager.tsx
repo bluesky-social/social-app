@@ -42,7 +42,7 @@ import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS} from '#/env'
+import {IS_IOS, IS_IPAD} from '#/env'
 import {PlatformInfo} from '../../../../modules/expo-bluesky-swiss-army'
 import {Footer} from '../chrome/Footer'
 import {Header} from '../chrome/Header'
@@ -157,10 +157,11 @@ export default function ImageViewRoot({
   useAnimatedReaction(
     () => openProgress.get() === 1,
     (isOpen, wasOpen) => {
+      if (IS_IPAD) return
       if (isOpen && !wasOpen) {
         scheduleOnRN(ScreenOrientation.unlockAsync)
       } else if (!isOpen && wasOpen) {
-        // default is PORTRAIT_UP - set via config plugin in app.config.js -sfn
+        // Restore the phone's portrait layout after leaving the lightbox.
         scheduleOnRN(ScreenOrientation.lockAsync, PORTRAIT_UP)
       }
     },

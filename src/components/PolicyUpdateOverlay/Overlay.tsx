@@ -11,7 +11,7 @@ import {useA11y} from '#/state/a11y'
 import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {FocusScope} from '#/components/FocusScope'
 import {LockScroll} from '#/components/LockScroll'
-import {IS_ANDROID, IS_NATIVE} from '#/env'
+import {IS_ANDROID, IS_IPAD, IS_NATIVE} from '#/env'
 
 const GUTTER = 24
 
@@ -68,7 +68,15 @@ export function Overlay({
               paddingVertical: '10vh',
             }),
         ]}
-        contentContainerStyle={[a.align_center]}>
+        contentContainerStyle={[
+          a.align_center,
+          IS_IPAD && [
+            a.flex_grow,
+            a.justify_center,
+            a.px_2xl,
+            {paddingTop: Math.max(insets.top, GUTTER)},
+          ],
+        ]}>
         {/**
          * This is needed to prevent centered dialogs from overflowing
          * above the screen, and provides a "natural" centering so that
@@ -124,9 +132,8 @@ export function Overlay({
                   a.border,
                   t.atoms.shadow_lg,
                   t.atoms.border_contrast_low,
-                  web({
-                    maxWidth: 420,
-                  }),
+                  web({maxWidth: 420}),
+                  IS_IPAD && {maxWidth: 420},
                 ],
               ]}>
               {children}

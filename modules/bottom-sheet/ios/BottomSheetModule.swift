@@ -12,7 +12,8 @@ public class BottomSheetModule: Module {
       Events([
         "onAttemptDismiss",
         "onSnapPointChange",
-        "onStateChange"
+        "onStateChange",
+        "onPresentationSizeChange"
       ])
 
       AsyncFunction("dismiss") { (view: SheetView) in
@@ -28,11 +29,14 @@ public class BottomSheetModule: Module {
       }
 
       Prop("minHeight") { (view: SheetView, prop: Double) in
-        view.minHeight = prop
+        view.minHeight = CGFloat(prop)
       }
 
-      Prop("maxHeight") { (view: SheetView, prop: Double) in
-        view.maxHeight = prop
+      Prop("maxHeight") { (view: SheetView, prop: Double?) in
+        view.maxHeight = prop.map { CGFloat($0) }
+      }
+      Prop("desiredContentHeight") { (view: SheetView, prop: Double?) in
+        view.desiredContentHeight = prop.map { CGFloat($0) }
       }
 
       Prop("preventDismiss") { (view: SheetView, prop: Bool) in
@@ -41,6 +45,16 @@ public class BottomSheetModule: Module {
 
       Prop("preventExpansion") { (view: SheetView, prop: Bool) in
         view.preventExpansion = prop
+      }
+
+      Prop("popover") { (view: SheetView, prop: Bool) in
+        view.popover = prop
+      }
+
+      Prop("popoverWidth") { (view: SheetView, prop: Double?) in
+        if let prop = prop, prop > 0 {
+          view.popoverWidth = CGFloat(prop)
+        }
       }
 
       Prop("sourceViewTag") { (view: SheetView, prop: Int?) in

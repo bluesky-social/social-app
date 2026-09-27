@@ -23,6 +23,7 @@ import {
   type RenderTabBarFnProps,
 } from '#/view/com/pager/Pager'
 import {useTheme} from '#/alf'
+import {Center} from '#/components/Layout'
 import {IS_IOS} from '#/env'
 import {type ListMethods} from '../util/List'
 import {PagerHeaderProvider} from './PagerHeaderContext'
@@ -293,7 +294,9 @@ let PagerTabBar = ({
             fallbackHeaderOnlyHeight.current = e.nativeEvent.layout.height
           }
         }}>
-        {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
+        <Center>
+          {renderHeader?.({setMinimumHeight: setMinimumHeaderHeight})}
+        </Center>
         {
           // It wouldn't be enough to place `onLayout` on the parent node because
           // this would risk measuring before `isHeaderReady` has turned `true`.

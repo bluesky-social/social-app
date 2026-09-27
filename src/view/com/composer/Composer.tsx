@@ -137,6 +137,7 @@ import {useAnalytics} from '#/analytics'
 import {
   IS_ANDROID,
   IS_IOS,
+  IS_IPAD,
   IS_LIQUID_GLASS,
   IS_NATIVE,
   IS_WEB,
@@ -873,7 +874,7 @@ export const ComposePost = ({
   const insets = useSafeAreaInsets()
   const viewStyles = useMemo(
     () => ({
-      paddingTop: IS_ANDROID ? insets.top : 0,
+      paddingTop: IS_ANDROID || IS_IPAD ? insets.top : 0,
       paddingBottom: insets.bottom,
     }),
     [insets.top, insets.bottom],
@@ -1421,6 +1422,7 @@ export const ComposePost = ({
         testID="composePostView"
         behavior={IS_IOS ? 'padding' : 'height'}
         keyboardVerticalOffset={keyboardVerticalOffset}
+        automaticOffset={IS_IPAD}
         style={a.flex_1}>
         <View
           style={[a.flex_1, viewStyles]}
@@ -2453,6 +2455,9 @@ function useKeyboardVerticalOffset() {
   // the keyboardavoidingview has bottom padding to avoid being obscured by the safe area when keyboard is closed.
   // however, this leads to a gap when the keyboard is open. we account for that by subtracting the bottom inset when open.
   let keyboardVerticalOffset = insets.bottom * -1
+
+  // iPad page sheets measure their own position via automaticOffset.
+  if (IS_IPAD) return keyboardVerticalOffset
 
   // iOS requires a bit of extra offset to account for the native sheet not being at the top of the screen
   if (IS_IOS) {

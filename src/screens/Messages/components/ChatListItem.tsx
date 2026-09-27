@@ -423,7 +423,7 @@ function BaseChatItem({
       void decrementBadgeCount(convo.view.unreadCount)
       if (isDeletedAccount) {
         e.preventDefault()
-        menuControl.open()
+        menuControl.open(e)
         return false
       } else {
         ax.metric('chat:open', {logContext: 'ChatsList'})
@@ -432,10 +432,13 @@ function BaseChatItem({
     [ax, isDeletedAccount, menuControl, queryClient, convo],
   )
 
-  const onLongPress = useCallback(() => {
-    playHaptic()
-    menuControl.open()
-  }, [playHaptic, menuControl])
+  const onLongPress = useCallback(
+    (e: {currentTarget: GestureResponderEvent['currentTarget']}) => {
+      playHaptic()
+      menuControl.open({currentTarget: e.currentTarget})
+    },
+    [playHaptic, menuControl],
+  )
 
   const markReadAction = {
     threshold: 120,

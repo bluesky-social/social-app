@@ -11,9 +11,11 @@ import {
 } from 'react'
 import {
   BackHandler,
+  Dimensions,
   Keyboard,
   type LayoutChangeEvent,
   Pressable,
+  type ScaledSize,
   type StyleProp,
   useWindowDimensions,
   View,
@@ -75,7 +77,7 @@ import {
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {createPortalGroup} from '#/components/Portal'
 import {Text} from '#/components/Typography'
-import {IS_ANDROID, IS_IOS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_IPAD} from '#/env'
 import {Backdrop} from './Backdrop'
 
 export {
@@ -228,6 +230,22 @@ export function Root({children}: {children: React.ReactNode}) {
 
       return () => listener.remove()
     }
+  }, [context])
+
+  useEffect(() => {
+    if (!IS_IPAD || !context.isOpen) return
+
+    // The captured preview and hit targets belong to the pre-resize layout.
+    const {width, height} = Dimensions.get('window')
+    const subscription = Dimensions.addEventListener(
+      'change',
+      ({window}: {window: ScaledSize}) => {
+        if (window.width !== width || window.height !== height) {
+          context.close()
+        }
+      },
+    )
+    return () => subscription.remove()
   }, [context])
 
   return <Context.Provider value={context}>{children}</Context.Provider>

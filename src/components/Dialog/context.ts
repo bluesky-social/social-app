@@ -19,11 +19,16 @@ import {BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomShee
 export const Context = createContext<DialogContextProps>({
   close: () => {},
   isNativeDialog: false,
+  availableWidth: undefined,
+  presentationBottomOffset: 0,
+  isNativePopover: false,
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
   disableDrag: false,
   setDisableDrag: () => {},
   isWithinDialog: false,
   isHeightConstrained: false,
+  shouldMeasureContentHeight: false,
+  setDesiredContentHeight: () => {},
 })
 Context.displayName = 'DialogContext'
 
@@ -50,9 +55,9 @@ export function useDialogControl(): DialogOuterProps['control'] {
     () => ({
       id,
       ref: control,
-      open: () => {
+      open: options => {
         if (control.current) {
-          control.current.open()
+          control.current.open(options)
         } else {
           if (IS_DEV) {
             console.warn(

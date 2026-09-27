@@ -1,5 +1,5 @@
 import {useMemo, useState} from 'react'
-import {type ColorValue, Dimensions, View} from 'react-native'
+import {type ColorValue, View} from 'react-native'
 import {Gesture, GestureDetector} from 'react-native-gesture-handler'
 import Animated, {
   clamp,
@@ -19,7 +19,6 @@ import {useHaptics} from '#/lib/haptics'
 import {atoms as a} from '#/alf'
 import {type GestureActions} from './GestureActionView.shared'
 
-const MAX_WIDTH = Dimensions.get('screen').width
 const ICON_SIZE = 32
 
 export function GestureActionView({
@@ -46,9 +45,10 @@ export function GestureActionView({
   const isReducedMotion = useReducedMotion()
 
   const transX = useSharedValue(0)
+  const containerWidth = useSharedValue(0)
   const clampedTransX = useDerivedValue(() => {
-    const min = actions.leftFirst ? -MAX_WIDTH : 0
-    const max = actions.rightFirst ? MAX_WIDTH : 0
+    const min = actions.leftFirst ? -containerWidth.get() : 0
+    const max = actions.rightFirst ? containerWidth.get() : 0
     return clamp(transX.get(), min, max)
   })
 
@@ -287,7 +287,7 @@ export function GestureActionView({
 
   return (
     <GestureDetector gesture={composedGesture}>
-      <View>
+      <View onLayout={evt => containerWidth.set(evt.nativeEvent.layout.width)}>
         <Animated.View style={[a.absolute, a.inset_0, animatedBackgroundStyle]}>
           <View
             style={{

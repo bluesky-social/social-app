@@ -3,6 +3,7 @@ import {
   type AccessibilityRole,
   type GestureResponderEvent,
   type PressableProps,
+  type View,
 } from 'react-native'
 
 import {type TextStyleProp, type ViewStyleProp} from '#/alf'
@@ -61,8 +62,8 @@ export type TriggerChildProps =
        * object is empty.
        */
       props: {
-        ref: null
-        onPress: () => void
+        ref: React.RefObject<React.ComponentRef<typeof View> | null>
+        onPress: (event?: GestureResponderEvent) => void
         onFocus: () => void
         onBlur: () => void
         onPressIn: () => void

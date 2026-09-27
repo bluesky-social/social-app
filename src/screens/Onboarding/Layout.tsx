@@ -27,7 +27,7 @@ import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeft} from '#/components/icons
 import {HEADER_SLOT_SIZE} from '#/components/Layout'
 import {createPortalGroup} from '#/components/Portal'
 import {P, Text} from '#/components/Typography'
-import {IS_ANDROID, IS_INTERNAL, IS_WEB} from '#/env'
+import {IS_ANDROID, IS_INTERNAL, IS_IPAD, IS_WEB} from '#/env'
 
 const ONBOARDING_COL_WIDTH = 420
 
@@ -149,7 +149,7 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
               a.align_center,
               a.flex_row,
               a.justify_between,
-              web({maxWidth: ONBOARDING_COL_WIDTH}),
+              (IS_WEB || IS_IPAD) && {maxWidth: ONBOARDING_COL_WIDTH},
               web(a.pointer_events_box_none),
             ]}>
             <HeaderSlot>
@@ -225,7 +225,11 @@ export function Layout({children}: React.PropsWithChildren<{}>) {
         centerContent={gtMobile}>
         <View
           style={[a.flex_row, a.justify_center, gtMobile ? a.px_5xl : a.px_xl]}>
-          <View style={[a.flex_1, web({maxWidth: ONBOARDING_COL_WIDTH})]}>
+          <View
+            style={[
+              a.flex_1,
+              (IS_WEB || IS_IPAD) && {maxWidth: ONBOARDING_COL_WIDTH},
+            ]}>
             <View style={[a.w_full, a.py_md]}>
               <ScrollVisibilityContext.Provider value={scrollVisibilityContext}>
                 {children}

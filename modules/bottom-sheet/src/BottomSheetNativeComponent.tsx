@@ -3,14 +3,14 @@ import {
   type NativeSyntheticEvent,
   Platform,
   type StyleProp,
-  useWindowDimensions,
   View,
   type ViewStyle,
 } from 'react-native'
-import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {requireNativeModule, requireNativeViewManager} from 'expo-modules-core'
 
+import {IS_IPAD} from '#/env'
 import {
+  type BottomSheetPresentationSizeChangeEvent,
   type BottomSheetState,
   type BottomSheetViewProps,
 } from './BottomSheet.types'
@@ -32,6 +32,7 @@ export class BottomSheetNativeComponent extends Component<
   BottomSheetViewProps,
   {
     open: boolean
+    presentationSize?: BottomSheetPresentationSizeChangeEvent['nativeEvent']
   }
 > {
   ref = createRef<any>()
@@ -42,11 +43,12 @@ export class BottomSheetNativeComponent extends Component<
     super(props)
     this.state = {
       open: false,
+      presentationSize: undefined,
     }
   }
 
   present() {
-    this.setState({open: true})
+    this.setState({open: true, presentationSize: undefined})
   }
 
   dismiss() {
@@ -58,8 +60,18 @@ export class BottomSheetNativeComponent extends Component<
   ) => {
     const {state} = event.nativeEvent
     const isOpen = state !== 'closed'
-    this.setState({open: isOpen})
+    this.setState({
+      open: isOpen,
+      presentationSize: isOpen ? this.state.presentationSize : undefined,
+    })
     this.props.onStateChange?.(event)
+  }
+
+  private onPresentationSizeChange = (
+    event: BottomSheetPresentationSizeChangeEvent,
+  ) => {
+    this.setState({presentationSize: event.nativeEvent})
+    this.props.onPresentationSizeChange?.(event)
   }
 
   static dismissAll = async () => {
@@ -84,6 +96,8 @@ export class BottomSheetNativeComponent extends Component<
           {...this.props}
           nativeViewRef={this.ref}
           onStateChange={this.onStateChange}
+          onPresentationSizeChange={this.onPresentationSizeChange}
+          presentationSize={this.state.presentationSize}
         />
       </Portal>
     )
@@ -93,24 +107,61 @@ export class BottomSheetNativeComponent extends Component<
 function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
+  desiredContentHeight,
   maxHeight,
   onStateChange,
+  onPresentationSizeChange,
+  popover,
+  popoverWidth,
+  presentationSize,
   nativeViewRef,
   ...rest
 }: BottomSheetViewProps & {
   onStateChange: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
+  onPresentationSizeChange: BottomSheetViewProps['onPresentationSizeChange']
+  presentationSize?: BottomSheetPresentationSizeChangeEvent['nativeEvent']
   nativeViewRef: React.RefObject<View>
 }) {
-  const insets = useSafeAreaInsets()
   const cornerRadius = rest.cornerRadius ?? 0
-  const {height: screenHeight} = useWindowDimensions()
-  const isHeightConstrained = maxHeight != null || rest.fullHeight === true
+  const presentationHeight =
+    Platform.OS === 'ios' ? presentationSize?.height : undefined
+  const hasPresentedPopover = presentationSize?.isPopover === true
+  const usesReportedContentHeight =
+    (IS_IPAD || (Platform.OS === 'ios' && popover === true)) &&
+    presentationHeight != null &&
+    desiredContentHeight != null
+  const isHeightConstrained =
+    maxHeight != null ||
+    rest.fullHeight === true ||
+    hasPresentedPopover ||
+    usesReportedContentHeight
+  const viewportMaxHeight =
+    maxHeight != null
+      ? presentationHeight != null
+        ? Math.min(maxHeight, presentationHeight)
+        : maxHeight
+      : (rest.fullHeight === true || hasPresentedPopover) &&
+          presentationHeight != null
+        ? presentationHeight
+        : undefined
+
+  const effectiveViewportMaxHeight =
+    viewportMaxHeight ??
+    (usesReportedContentHeight ? presentationHeight : undefined)
 
   return (
     <NativeView
       {...rest}
+      {...(Platform.OS === 'ios'
+        ? {
+            desiredContentHeight,
+            popover,
+            popoverWidth,
+            onPresentationSizeChange,
+          }
+        : {})}
       maxHeight={maxHeight}
       onStateChange={onStateChange}
       ref={nativeViewRef}
@@ -124,19 +175,11 @@ function BottomSheetNativeComponentInner({
        * axis where the style leaves that dimension undefined, so a style dimension
        * would silently win and clip the content again.
        *
-       * iOS still sizes the canvas from JS. Moving it onto the same state channel
-       * needs on-device iteration on iOS 26 sheet geometry (large-detent and
-       * floating-card metrics), so it is deferred.
+       * iOS now uses the same native sizing path. UIKit knows the actual presented
+       * controller bounds, including popover width, form-sheet width, and changes
+       * after adaptation or rotation.
        */
-      style={
-        Platform.OS === 'ios'
-          ? {
-              position: 'absolute',
-              height: screenHeight - insets.top,
-              width: '100%',
-            }
-          : {position: 'absolute'}
-      }
+      style={{position: 'absolute'}}
       containerBackgroundColor={backgroundColor}>
       <View
         style={[
@@ -144,7 +187,9 @@ function BottomSheetNativeComponentInner({
             flex: 1,
             backgroundColor,
           },
-          maxHeight != null && {maxHeight},
+          effectiveViewportMaxHeight != null && {
+            maxHeight: effectiveViewportMaxHeight,
+          },
           Platform.OS === 'android' && {
             /*
              * The native canvas is sized after the first layout. Allow content
@@ -156,7 +201,17 @@ function BottomSheetNativeComponentInner({
             overflow: 'hidden',
           },
         ]}>
-        <View style={isHeightConstrained ? {flex: 1} : undefined}>
+        <View
+          style={
+            isHeightConstrained
+              ? [
+                  {flex: 1},
+                  effectiveViewportMaxHeight != null && {
+                    maxHeight: effectiveViewportMaxHeight,
+                  },
+                ]
+              : undefined
+          }>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

@@ -2,8 +2,6 @@ import {Dimensions} from 'react-native'
 
 import {IS_WEB} from '#/env'
 
-const {height: SCREEN_HEIGHT} = Dimensions.get('window')
-
 const IFRAME_HOST = IS_WEB
   ? window.location.host === 'localhost:8100'
     ? 'http://localhost:8100'
@@ -562,7 +560,7 @@ export function getPlayerAspect({
     case 'vimeo_video':
       return {aspectRatio: 16 / 9}
     case 'youtube_short':
-      if (SCREEN_HEIGHT < 600) {
+      if (Dimensions.get('window').height < 600) {
         return {aspectRatio: (9 / 16) * 1.75}
       } else {
         return {aspectRatio: (9 / 16) * 1.5}
