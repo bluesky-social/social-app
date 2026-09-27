@@ -150,11 +150,14 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     accountSwitchControl.open()
   }, [accountSwitchControl, playHaptic])
 
-  const onLongPressMessages = useCallback(() => {
-    if (aa.flags.chatDisabled) return
-    playHaptic()
-    messagesMenuControl.open()
-  }, [aa.flags.chatDisabled, messagesMenuControl, playHaptic])
+  const onLongPressMessages = useCallback(
+    (e: GestureResponderEvent) => {
+      if (aa.flags.chatDisabled) return
+      playHaptic()
+      messagesMenuControl.open(e)
+    },
+    [aa.flags.chatDisabled, messagesMenuControl, playHaptic],
+  )
 
   const [demoMode] = useDemoMode()
   const {isActive: live} = useActorStatus(profile)

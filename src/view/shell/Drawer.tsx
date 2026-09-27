@@ -71,6 +71,16 @@ import {InviteFriendsDialog} from '#/features/inviteFriends'
 import {useActorStatus} from '#/features/liveNow'
 
 const iconWidth = 26
+type SecondarySidebarTab = 'Feeds' | 'Lists' | 'Bookmarks' | 'Settings'
+const SECONDARY_TAB_ROUTES: Record<
+  SecondarySidebarTab,
+  'FeedsTab' | 'ListsTab' | 'BookmarksTab' | 'SettingsTab'
+> = {
+  Feeds: 'FeedsTab',
+  Lists: 'ListsTab',
+  Bookmarks: 'BookmarksTab',
+  Settings: 'SettingsTab',
+}
 
 let DrawerProfileCard = ({
   account,
@@ -269,29 +279,59 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
     onPressTab('MyProfile', 'drawerHeader')
   }, [onPressTab])
 
+  const navigateToSecondaryTab = useCallback(
+    (tab: SecondarySidebarTab) => {
+      const state = navigation.getState()
+      const tabState = getTabState(state, tab)
+      const routeName = SECONDARY_TAB_ROUTES[tab]
+      if (tabState === TabState.InsideAtRoot) {
+        emitSoftReset()
+      } else if (tabState === TabState.Inside) {
+        const target = state.routes.find(route => route.name === routeName)
+          ?.state?.key
+        if (target) {
+          navigation.dispatch({
+            ...StackActions.popToTop(),
+            target,
+          })
+        } else {
+          navigation.reset({index: 0, routes: [{name: routeName}]})
+        }
+      } else {
+        navigation.navigate(routeName)
+      }
+      setDrawerOpen(false)
+    },
+    [navigation, setDrawerOpen],
+  )
+
   const onPressMyFeeds = useCallback(() => {
     ax.metric('nav:click', {item: 'feeds', surface: 'drawer'})
-    navigation.navigate('Feeds')
-    setDrawerOpen(false)
-  }, [navigation, setDrawerOpen, ax])
+    if (IS_WEB) navigation.navigate('Feeds')
+    else navigateToSecondaryTab('Feeds')
+    if (IS_WEB) setDrawerOpen(false)
+  }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressLists = useCallback(() => {
     ax.metric('nav:click', {item: 'lists', surface: 'drawer'})
-    navigation.navigate('Lists')
-    setDrawerOpen(false)
-  }, [navigation, setDrawerOpen, ax])
+    if (IS_WEB) navigation.navigate('Lists')
+    else navigateToSecondaryTab('Lists')
+    if (IS_WEB) setDrawerOpen(false)
+  }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressBookmarks = useCallback(() => {
     ax.metric('nav:click', {item: 'saved', surface: 'drawer'})
-    navigation.navigate('Bookmarks')
-    setDrawerOpen(false)
-  }, [navigation, setDrawerOpen, ax])
+    if (IS_WEB) navigation.navigate('Bookmarks')
+    else navigateToSecondaryTab('Bookmarks')
+    if (IS_WEB) setDrawerOpen(false)
+  }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressSettings = useCallback(() => {
     ax.metric('nav:click', {item: 'settings', surface: 'drawer'})
-    navigation.navigate('Settings')
-    setDrawerOpen(false)
-  }, [navigation, setDrawerOpen, ax])
+    if (IS_WEB) navigation.navigate('Settings')
+    else navigateToSecondaryTab('Settings')
+    if (IS_WEB) setDrawerOpen(false)
+  }, [navigation, navigateToSecondaryTab, setDrawerOpen, ax])
 
   const onPressFeedback = useCallback(() => {
     Linking.openURL(
