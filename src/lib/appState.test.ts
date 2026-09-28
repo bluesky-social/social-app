@@ -1,3 +1,4 @@
+import type * as ReactNative from 'react-native'
 import {type AppStateStatus} from 'react-native'
 import type * as TestingLibrary from '@testing-library/react-native/pure'
 
@@ -45,12 +46,15 @@ let cleanup: (() => void) | undefined
 
 /*
  * The return tracker is module state that lives as long as the JS runtime, so
- * each test loads a fresh copy of the module. The testing library is loaded
- * alongside it so that the hook renders with the same copy of React. It is the
- * `pure` entry point, which leaves cleanup to us: the default one registers
- * `afterEach` hooks, and those can't be added from inside a test.
+ * each test loads a fresh copy of the module, on the platform it asks for. The
+ * testing library is loaded alongside it so that the hook renders with the same
+ * copy of React. It is the `pure` entry point, which leaves cleanup to us: the
+ * default one registers `afterEach` hooks, and those can't be added from inside
+ * a test.
  */
-function load() {
+function load({platform = 'ios'}: {platform?: 'ios' | 'android'} = {}) {
+  const {Platform} = require('react-native') as typeof ReactNative
+  jest.replaceProperty(Platform, 'OS', platform)
   const rtl =
     require('@testing-library/react-native/pure') as typeof TestingLibrary
   cleanup = rtl.cleanup
@@ -273,5 +277,203 @@ describe('useOnAppReturnedFromBackground', () => {
     unmount()
     emit('background', 'active')
     expect(cb).not.toHaveBeenCalled()
+  })
+})
+
+describe('app-initiated activities', () => {
+  it('still counts a trip made outside any scope on Android', () => {
+    const {onAppReturnedFromBackground} = load({platform: 'android'})
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not count a trip that starts inside a scope', () => {
+    const {beginAppInitiatedActivity, onAppReturnedFromBackground} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    const end = beginAppInitiatedActivity()
+    emit('background', 'active')
+    end()
+    expect(cb).not.toHaveBeenCalled()
+
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not let a scope ended before the trip hide it', () => {
+    const {beginAppInitiatedActivity, onAppReturnedFromBackground} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    // e.g. a permission that was already granted, so no dialog opened
+    beginAppInitiatedActivity()()
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps covering while any nested scope is open', () => {
+    const {beginAppInitiatedActivity, onAppReturnedFromBackground} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    const endOuter = beginAppInitiatedActivity()
+    const endInner = beginAppInitiatedActivity()
+    endInner()
+    emit('background', 'active')
+    endOuter()
+    expect(cb).not.toHaveBeenCalled()
+
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('ends the scope when the wrapped call settles', async () => {
+    const {onAppReturnedFromBackground, runAppInitiatedActivity} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    const value = await runAppInitiatedActivity(() => {
+      emit('background', 'active')
+      return Promise.resolve('picked')
+    })
+    expect(value).toBe('picked')
+    expect(cb).not.toHaveBeenCalled()
+
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('ends the scope when the wrapped call rejects', async () => {
+    const {onAppReturnedFromBackground, runAppInitiatedActivity} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    await expect(
+      runAppInitiatedActivity(() => Promise.reject(new Error('denied'))),
+    ).rejects.toThrow('denied')
+
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('ends the scope when the wrapped call throws before returning', async () => {
+    const {onAppReturnedFromBackground, runAppInitiatedActivity} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    await expect(
+      runAppInitiatedActivity(() => {
+        throw new Error('no activity')
+      }),
+    ).rejects.toThrow('no activity')
+
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('lets a trip end a scope whose call never settles', () => {
+    const {onAppReturnedFromBackground, runAppInitiatedActivity} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    void runAppInitiatedActivity(() => new Promise(() => {}))
+    emit('background', 'active')
+    expect(cb).not.toHaveBeenCalled()
+
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('lets a scope that is never ended hide at most one trip', () => {
+    const {beginAppInitiatedActivity, onAppReturnedFromBackground} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    // a launch that resolves straight away, and whose scope is left to the trip
+    beginAppInitiatedActivity()
+    emit('background', 'active')
+    emit('background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('keeps a scope opened mid-trip for the trip that follows', () => {
+    const {beginAppInitiatedActivity, onAppReturnedFromBackground} = load({
+      platform: 'android',
+    })
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    const endPermission = beginAppInitiatedActivity()
+    emit('background')
+    /*
+     * Android delivers the activity result before `onResume`, so the
+     * permission call can settle and the picker open before the `active`.
+     */
+    endPermission()
+    const endPicker = beginAppInitiatedActivity()
+    emit('active')
+
+    emit('background', 'active')
+    endPicker()
+    expect(cb).not.toHaveBeenCalled()
+  })
+
+  it('starts tracking when a scope opens', () => {
+    const {beginAppInitiatedActivity, onAppReturnedFromBackground} = load({
+      platform: 'android',
+    })
+
+    beginAppInitiatedActivity()
+    emit('background')
+    /*
+     * Joining now would seed an armed latch from `background` if the scope
+     * hadn't already started the tracker that saw why the app left.
+     */
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    emit('active')
+    expect(cb).not.toHaveBeenCalled()
+  })
+
+  it('does nothing on iOS, where these flows stay inside the app', async () => {
+    const {
+      beginAppInitiatedActivity,
+      onAppReturnedFromBackground,
+      runAppInitiatedActivity,
+    } = load({platform: 'ios'})
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    // pressing Home while a picker is showing
+    beginAppInitiatedActivity()
+    emit('inactive', 'background', 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+
+    await runAppInitiatedActivity(() => {
+      emit('inactive', 'background', 'active')
+      return Promise.resolve()
+    })
+    expect(cb).toHaveBeenCalledTimes(2)
   })
 })
