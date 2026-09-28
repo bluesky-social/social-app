@@ -153,6 +153,7 @@ let ProfileHeaderStandard = ({
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
+                    shouldProxyLinks={true}
                   />
                 </View>
               ) : undefined}

@@ -9,7 +9,6 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import {STARTER_PACK_MAX_SIZE} from '#/lib/constants'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {
   type CommonNavigatorParams,
@@ -442,7 +441,7 @@ function Footer({
         <View style={[a.absolute, {right: 14, top: 31}]}>
           <Text style={[a.font_semi_bold]}>
             {items.length}/
-            {state.currentStep === 'Profiles' ? STARTER_PACK_MAX_SIZE : 3}
+            {state.currentStep === 'Profiles' ? state.profileLimit : 3}
           </Text>
         </View>
       )}

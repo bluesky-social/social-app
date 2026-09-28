@@ -21,12 +21,25 @@ export interface LinkMeta {
   title?: string
   description?: string
   image?: string
+  author?: string
   /**
    * The AT-URI of the Atmosphere record representing this external content, if
    * it exists. Example: a site.standard.document record.
    */
   associatedRefs?: app.bsky.embed.external.External['associatedRefs']
   view?: app.bsky.embed.external.View
+}
+
+type CardybLinkMetaResponse = {
+  error: string
+  url: string
+  title?: string
+  description?: string
+  image?: string
+  author?: string
+  associated_refs?: LinkMeta['associatedRefs']
+  view?: LinkMeta['view']
+  external_view?: LinkMeta['view']
 }
 
 export async function getLinkMeta(
@@ -79,7 +92,7 @@ export async function getLinkMeta(
       {signal: controller.signal},
     )
 
-    const body = await response.json()
+    const body = (await response.json()) as CardybLinkMetaResponse
 
     if (body.error !== '') {
       throw new Error(body.error)
@@ -87,6 +100,7 @@ export async function getLinkMeta(
 
     meta.description = body.description
     meta.image = body.image
+    meta.author = body.author
     meta.title = body.title
     meta.associatedRefs = body.associated_refs
     meta.view = body.view || body.external_view

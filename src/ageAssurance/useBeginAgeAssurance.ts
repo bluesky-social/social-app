@@ -7,8 +7,8 @@ import {
   PUBLIC_APPVIEW,
   PUBLIC_APPVIEW_DID,
 } from '#/lib/constants'
-import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {createLexClient} from '#/lib/lexClient'
+import {isNetworkError} from '#/lib/network-error'
 import {usePdsClient} from '#/state/session'
 import {usePatchAgeAssuranceServerState} from '#/ageAssurance'
 import {logger} from '#/ageAssurance/logger'
@@ -51,10 +51,13 @@ export function useBeginAgeAssurance() {
        * allowed to preset that header where a session-backed one is not, which
        * also makes the old `refreshJwt = ''` clone unnecessary.
        */
-      const scopedClient = createLexClient({
-        service: APPVIEW,
-        headers: {authorization: `Bearer ${token}`},
-      })
+      const scopedClient = createLexClient(
+        {
+          service: APPVIEW,
+          headers: {authorization: `Bearer ${token}`},
+        },
+        {includeDeviceSessionHeaders: true},
+      )
 
       ax.metric('ageAssurance:api:begin', {
         platform: Platform.OS,
