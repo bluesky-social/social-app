@@ -19,13 +19,13 @@ import {
 /**
  * Whether a valid Following snapshot is hydrated on a cold start.
  *
- * Off until the restore prepend (APP-3167) lands, which switches it on. On its
- * own a restored snapshot would be a stale top with nothing newer above it,
- * since feeds never go stale by time. While off, snapshots are still written
- * and validated on restore (and the outcome reported), then dropped, so
- * Following cold-loads as it always has.
+ * On since the restore prepend (APP-3167) fetches what is newer than a
+ * restored top: without it, a restored snapshot would be a stale top with
+ * nothing newer above it, since feeds never go stale by time. Switching it off
+ * again still writes and validates snapshots (and reports the outcome), then
+ * drops them, so Following cold-loads as it used to.
  */
-export const FOLLOWING_SNAPSHOT_RESTORE_ENABLED = false
+export const FOLLOWING_SNAPSHOT_RESTORE_ENABLED = true
 
 /**
  * The version of the snapshot format, bumped on any breaking change to it.
