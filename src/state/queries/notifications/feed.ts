@@ -16,7 +16,7 @@
  * 3. Don't call this query's `refetch()` if you're trying to sync latest; call `checkUnread()` instead.
  */
 
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef, useSyncExternalStore} from 'react'
 import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky/sdk/moderation'
 import {
@@ -41,7 +41,7 @@ import {
 } from '../util'
 import {type FeedPage} from './types'
 import {useUnreadNotificationsApi} from './unread'
-import {fetchPage} from './util'
+import {fetchPage, MENTIONS_REASONS, newestNotificationAt} from './util'
 
 export type {FeedNotification, FeedPage, NotificationType} from './types'
 
@@ -96,12 +96,8 @@ export function useNotificationFeedQuery(opts: {
       if (!page) {
         let reasons: string[] = []
         if (filter === 'mentions') {
-          reasons = [
-            // Anything that's a post
-            'mention',
-            'reply',
-            'quote',
-          ]
+          // Anything that's a post
+          reasons = MENTIONS_REASONS
         }
         const {page: fetchedPage} = await fetchPage({
           client,
@@ -226,6 +222,45 @@ export function useNotificationFeedQuery(opts: {
   useAutoPagination(query, itemCount, PAGE_SIZE)
 
   return query
+}
+
+/**
+ * The top of a notification list as loaded, read from the cache without
+ * observing or fetching the list itself. It reads the raw pages, from before
+ * `select` drops hidden replies and moderated posts: those are still loaded.
+ */
+export function useNotificationFeedTop(filter: 'all' | 'mentions'): {
+  /** When the list's first page was requested; undefined until one loads. */
+  requestedAt: number | undefined
+  /** When its newest loaded notification was indexed; undefined if none. */
+  newestAt: number | undefined
+  /** Whether its first page is being fetched, rather than a next page. */
+  isFetching: boolean
+} {
+  const queryClient = useQueryClient()
+  // stable, so the store is not resubscribed on every render
+  const subscribe = useCallback(
+    (onChange: () => void) =>
+      queryClient.getQueryCache().subscribe(event => {
+        const [root, eventFilter] = event.query.queryKey
+        if (root === RQKEY_ROOT && eventFilter === filter) onChange()
+      }),
+    [queryClient, filter],
+  )
+  const getPages = () =>
+    queryClient.getQueryData<InfiniteData<FeedPage>>(RQKEY(filter))?.pages
+  const requestedAt = useSyncExternalStore(
+    subscribe,
+    () => getPages()?.[0]?.requestedAt,
+  )
+  const newestAt = useSyncExternalStore(subscribe, () =>
+    newestNotificationAt(getPages() ?? []),
+  )
+  const isFetching = useSyncExternalStore(subscribe, () => {
+    const state = queryClient.getQueryState(RQKEY(filter))
+    return state?.fetchStatus === 'fetching' && !state.fetchMeta?.fetchMore
+  })
+  return {requestedAt, newestAt, isFetching}
 }
 
 export function* findAllPostsInQueryData(
