@@ -8,6 +8,7 @@ import {
   type ModerationPrefs,
 } from '@bsky/sdk/moderation'
 import {
+  hashKey,
   type InfiniteData,
   type Query,
   type QueryClient,
@@ -47,9 +48,18 @@ import * as bsky from '#/types/bsky'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {
+  classifySincePage,
+  type SinceSeam,
+  tuneOrder,
+} from './post-feed-boundary'
+import {
+  beginPostFeedRestorePrepend,
+  ensurePostFeedTopApi,
   getPostFeedQueryEntry,
   peekPostFeedQueryEntry,
+  prependPostFeedQuery,
   refreshPostFeedQuery,
+  settlePostFeedRestore,
   supersedePostFeedRefresh,
   supersedePostFeedRefreshes,
 } from './post-feed-registry'
@@ -129,9 +139,9 @@ export interface FeedPageUnselected {
    */
   startCursor?: string
   /**
-   * The `since` the page was requested with, so that an exhausted bounded
-   * page (`cursor === since`) can be recognized. Set by the restore prepend
-   * (APP-3167); no request makes one yet.
+   * The `since` the page was requested with, only set on a page added above
+   * the others (the restore prepend), so that an exhausted bounded page
+   * (`cursor === since`) can be told from a gapped one.
    */
   since?: string
   feed: app.bsky.feed.defs.FeedViewPost[]
@@ -141,6 +151,8 @@ export interface FeedPageUnselected {
 export interface FeedPage {
   tuner: FeedTuner
   cursor: string | undefined
+  /** See {@link FeedPageUnselected.since}. */
+  since?: string
   slices: FeedPostSlice[]
   fetchedAt: number
 }
@@ -199,9 +211,13 @@ function usePostFeedFetcher(feedDesc: FeedDescriptor, params?: FeedParams) {
       }),
     async fetchPage(
       api: FeedAPI,
-      cursor: string | undefined,
+      {
+        cursor,
+        since,
+        limit = fetchLimit,
+      }: {cursor?: string; since?: string; limit?: number} = {},
     ): Promise<FeedPageUnselected> {
-      const res = await api.fetch({cursor, limit: fetchLimit})
+      const res = await api.fetch({cursor, since, limit})
 
       /*
        * If this is a public view, we need to check if posts fail moderation.
@@ -220,6 +236,7 @@ function usePostFeedFetcher(feedDesc: FeedDescriptor, params?: FeedParams) {
       return {
         cursor: res.cursor,
         ...(res.startCursor !== undefined && {startCursor: res.startCursor}),
+        ...(since !== undefined && {since}),
         feed: res.feed,
         fetchedAt: Date.now(),
       }
@@ -271,12 +288,16 @@ export function usePostFeedQuery(
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
       const entry = getPostFeedQueryEntry(queryClient, queryKey)
       if (!pageParam) {
-        // A fetch from the top overtakes any refresh in flight.
+        /*
+         * A fetch from the top overtakes any refresh in flight, and replaces
+         * a restored top before its follow-up can add to it.
+         */
         supersedePostFeedRefresh(entry)
+        settlePostFeedRestore(queryClient, hashKey(queryKey))
       }
       const api =
         (pageParam && entry.feedApis.get(pageParam)) || createFeedApi()
-      const page = await fetchPage(api, pageParam?.cursor)
+      const page = await fetchPage(api, {cursor: pageParam?.cursor})
       entry.feedApis.set(page, api)
       return page
     },
@@ -304,7 +325,9 @@ export function usePostFeedQuery(
 
         // Keep track of the last run and whether we can reuse
         // some already selected pages from there.
-        let reusedPages = []
+        const order = tuneOrder(data.pages)
+        const selected: FeedPage[] = new Array(data.pages.length)
+        let reused = 0
         if (lastRun.current) {
           const {
             data: lastData,
@@ -322,97 +345,114 @@ export function usePostFeedQuery(
             }
           }
           if (canReuse) {
-            for (let i = 0; i < data.pages.length; i++) {
-              if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-                reusedPages.push(lastResult.pages[i])
-                // Keep the tuner in sync so that the end result is deterministic.
-                tuner.tune(lastData.pages[i].feed)
-                continue
+            /*
+             * Pages are tuned in the order they were fetched (see tuneOrder),
+             * so a page added above the others comes last, and everything
+             * tuned before it can be reused.
+             */
+            const lastOrder = tuneOrder(lastData.pages)
+            for (
+              ;
+              reused < order.length && reused < lastOrder.length;
+              reused++
+            ) {
+              const index = order[reused]
+              const lastIndex = lastOrder[reused]
+              if (
+                !data.pages[index] ||
+                lastData.pages[lastIndex] !== data.pages[index]
+              ) {
+                // Stop as soon as pages stop matching up.
+                break
               }
-              // Stop as soon as pages stop matching up.
-              break
+              selected[index] = lastResult.pages[lastIndex]
+              // Keep the tuner in sync so that the end result is deterministic.
+              tuner.tune(data.pages[index].feed)
             }
+          }
+        }
+
+        for (const index of order.slice(reused)) {
+          const page = data.pages[index]
+          selected[index] = {
+            tuner,
+            cursor: page.cursor,
+            ...(page.since !== undefined && {since: page.since}),
+            fetchedAt: page.fetchedAt,
+            slices: tuner
+              .tune(page.feed)
+              .map(slice => {
+                const moderations = slice.items.map(item =>
+                  moderatePost(item.post, moderationOpts!),
+                )
+
+                // apply moderation filter
+                for (let i = 0; i < slice.items.length; i++) {
+                  const ignoreFilter =
+                    slice.items[i].post.author.did === ignoreFilterFor
+                  if (ignoreFilter) {
+                    // remove mutes to avoid confused UIs
+                    moderations[i].causes = moderations[i].causes.filter(
+                      cause => cause.type !== 'muted',
+                    )
+                  }
+                  if (
+                    !ignoreFilter &&
+                    moderations[i]?.ui('contentList').filter
+                  ) {
+                    return undefined
+                  }
+                }
+
+                if (isDiscover) {
+                  userActionHistory.seen(
+                    slice.items.map(item => ({
+                      feedContext: slice.feedContext,
+                      reqId: slice.reqId,
+                      likeCount: item.post.likeCount ?? 0,
+                      repostCount: item.post.repostCount ?? 0,
+                      replyCount: item.post.replyCount ?? 0,
+                      isFollowedBy: Boolean(
+                        item.post.author.viewer?.followedBy,
+                      ),
+                      uri: item.post.uri,
+                    })),
+                  )
+                }
+
+                const feedPostSlice: FeedPostSlice = {
+                  _reactKey: slice._reactKey,
+                  _isFeedPostSlice: true,
+                  isIncompleteThread: slice.isIncompleteThread,
+                  isFallbackMarker: slice.isFallbackMarker,
+                  feedContext: slice.feedContext,
+                  reqId: slice.reqId,
+                  reason: slice.reason,
+                  feedPostUri: slice.feedPostUri,
+                  items: slice.items.map((item, i) => {
+                    const feedPostSliceItem: FeedPostSliceItem = {
+                      _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+                      uri: item.post.uri,
+                      post: item.post,
+                      record: item.record,
+                      postNumbering: item.postNumbering,
+                      moderation: moderations[i],
+                      parentAuthor: item.parentAuthor,
+                      isParentBlocked: item.isParentBlocked,
+                      isParentNotFound: item.isParentNotFound,
+                    }
+                    return feedPostSliceItem
+                  }),
+                }
+                return feedPostSlice
+              })
+              .filter(n => !!n),
           }
         }
 
         const result = {
           pageParams: data.pageParams,
-          pages: [
-            ...reusedPages,
-            ...data.pages.slice(reusedPages.length).map(page => ({
-              tuner,
-              cursor: page.cursor,
-              fetchedAt: page.fetchedAt,
-              slices: tuner
-                .tune(page.feed)
-                .map(slice => {
-                  const moderations = slice.items.map(item =>
-                    moderatePost(item.post, moderationOpts!),
-                  )
-
-                  // apply moderation filter
-                  for (let i = 0; i < slice.items.length; i++) {
-                    const ignoreFilter =
-                      slice.items[i].post.author.did === ignoreFilterFor
-                    if (ignoreFilter) {
-                      // remove mutes to avoid confused UIs
-                      moderations[i].causes = moderations[i].causes.filter(
-                        cause => cause.type !== 'muted',
-                      )
-                    }
-                    if (
-                      !ignoreFilter &&
-                      moderations[i]?.ui('contentList').filter
-                    ) {
-                      return undefined
-                    }
-                  }
-
-                  if (isDiscover) {
-                    userActionHistory.seen(
-                      slice.items.map(item => ({
-                        feedContext: slice.feedContext,
-                        reqId: slice.reqId,
-                        likeCount: item.post.likeCount ?? 0,
-                        repostCount: item.post.repostCount ?? 0,
-                        replyCount: item.post.replyCount ?? 0,
-                        isFollowedBy: Boolean(
-                          item.post.author.viewer?.followedBy,
-                        ),
-                        uri: item.post.uri,
-                      })),
-                    )
-                  }
-
-                  const feedPostSlice: FeedPostSlice = {
-                    _reactKey: slice._reactKey,
-                    _isFeedPostSlice: true,
-                    isIncompleteThread: slice.isIncompleteThread,
-                    isFallbackMarker: slice.isFallbackMarker,
-                    feedContext: slice.feedContext,
-                    reqId: slice.reqId,
-                    reason: slice.reason,
-                    feedPostUri: slice.feedPostUri,
-                    items: slice.items.map((item, i) => {
-                      const feedPostSliceItem: FeedPostSliceItem = {
-                        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-                        uri: item.post.uri,
-                        post: item.post,
-                        record: item.record,
-                        postNumbering: item.postNumbering,
-                        moderation: moderations[i],
-                        parentAuthor: item.parentAuthor,
-                        isParentBlocked: item.isParentBlocked,
-                        isParentNotFound: item.isParentNotFound,
-                      }
-                      return feedPostSliceItem
-                    }),
-                  }
-                  return feedPostSlice
-                })
-                .filter(n => !!n),
-            })),
-          ],
+          pages: selected,
         }
         // Save for memoization.
         lastRun.current = {data, result, args: selectArgs}
@@ -475,7 +515,7 @@ export function usePostFeedRefresh(
         RQKEY(feedDesc, params),
         async () => {
           const api = createFeedApi()
-          return {api, page: await fetchPage(api, undefined)}
+          return {api, page: await fetchPage(api)}
         },
       )
     } catch (e) {
@@ -494,6 +534,127 @@ export function usePostFeedRefresh(
   }
 
   return {refresh, error, isRefreshing}
+}
+
+/**
+ * How many posts the restore prepend asks for above a restored top. Twice an
+ * ordinary page, since a range that hits the limit leaves a gap.
+ */
+const PREPEND_LIMIT = 60
+
+/**
+ * What the restore prepend found above a restored top: how the page joined
+ * onto it (see {@link SinceSeam}) and how many posts it added, or why it did
+ * not run.
+ */
+export type FollowingPrependOutcome =
+  | {outcome: SinceSeam; itemCount: number}
+  | {outcome: 'noStartCursor' | 'superseded' | 'failed'}
+
+/**
+ * Follows up a Following query restored from disk this account session: fetch
+ * what is newer than its top with `since` set to the top page's server
+ * boundary, classify it, and add it above in one write - see
+ * {@link prependPostFeedQuery}. Once per account session: `prepend` does
+ * nothing unless the restore is still pending, and settles it whatever
+ * happens, so later checks and polls go ahead. Never rejects.
+ *
+ * Without a `startCursor` on the top page, or when the request fails (an
+ * appview that does not support `since` may reject it), the restored content
+ * stays as it is and an ordinary refresh still works.
+ */
+export function useFollowingRestorePrepend(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const {isReady, createFeedApi, fetchPage} = usePostFeedFetcher(
+    feedDesc,
+    params,
+  )
+
+  return async (): Promise<FollowingPrependOutcome | undefined> => {
+    const queryKey = RQKEY(feedDesc, params)
+    if (!isReady || !beginPostFeedRestorePrepend(queryClient, queryKey)) {
+      return undefined
+    }
+    logger.debug('useFollowingRestorePrepend', {feedDesc})
+    try {
+      const {status, detail} = await prependPostFeedQuery<
+        FeedPageUnselected,
+        FollowingPrependOutcome
+      >(queryClient, queryKey, async top => {
+        const since = top.startCursor
+        if (since === undefined) {
+          return {detail: {outcome: 'noStartCursor'}}
+        }
+        const api = createFeedApi()
+        const fetched = await fetchPage(api, {since, limit: PREPEND_LIMIT})
+        const {seam, page} = classifySincePage({...fetched, since}, top)
+        return {
+          page,
+          api,
+          detail: {outcome: seam, itemCount: page?.feed.length ?? 0},
+        }
+      })
+      return status === 'superseded' ? {outcome: 'superseded'} : detail
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to fetch newer posts for a restored feed', {
+          message: e,
+        })
+      }
+      return {outcome: 'failed'}
+    } finally {
+      settlePostFeedRestore(queryClient, hashKey(queryKey))
+      // Polls peek with the top page's API, which a restored page lacks.
+      ensurePostFeedTopApi(queryClient, queryKey, createFeedApi)
+    }
+  }
+}
+
+/** At most this many authors are offered with new content (the facepile). */
+export const NEW_CONTENT_FACEPILE_LIMIT = 3
+
+/**
+ * The eligible, rendered content added above the rest of a feed this session:
+ * the posts on the pages at the head that were fetched with `since`, after
+ * tuning and moderation, and the first few of their authors.
+ *
+ * For the new-posts pill (D1), which decides what to offer from it. Whether
+ * the reader has reached this content yet is not known here.
+ */
+export function summarizeNewContentAbove(
+  pages: FeedPage[] | undefined,
+):
+  {count: number; authors: app.bsky.actor.defs.ProfileViewBasic[]} | undefined {
+  let count = 0
+  const authors: app.bsky.actor.defs.ProfileViewBasic[] = []
+  const seen = new Set<string>()
+  for (const page of pages ?? []) {
+    if (page.since === undefined) {
+      break
+    }
+    for (const slice of page.slices) {
+      if (slice.isFallbackMarker) {
+        continue
+      }
+      count++
+      const author = (
+        slice.items.find(item => item.uri === slice.feedPostUri) ??
+        slice.items.at(-1)
+      )?.post.author
+      if (
+        author &&
+        !seen.has(author.did) &&
+        authors.length < NEW_CONTENT_FACEPILE_LIMIT
+      ) {
+        seen.add(author.did)
+        authors.push(author)
+      }
+    }
+  }
+  return count > 0 ? {count, authors} : undefined
 }
 
 export async function pollLatest(

@@ -44,6 +44,8 @@ function getEntries(queryClient: QueryClient) {
     const created = new Map<string, PostFeedQueryEntry>()
     queryClient.getQueryCache().subscribe(event => {
       if (event.type === 'removed') {
+        // Its restore, if it had one, is over, but stays recorded.
+        settlePostFeedRestore(queryClient, event.query.queryHash)
         const entry = created.get(event.query.queryHash)
         if (entry) {
           // A refresh in flight can no longer write, so it settles now.
@@ -103,6 +105,7 @@ export function supersedePostFeedRefreshes(
 ) {
   const entries = registries.get(queryClient)
   for (const query of queryClient.getQueryCache().findAll(filters)) {
+    settlePostFeedRestore(queryClient, query.queryHash)
     const entry = entries?.get(query.queryHash)
     if (entry) {
       supersedePostFeedRefresh(entry)
@@ -157,6 +160,8 @@ export function refreshPostFeedQuery<Page extends object>(
         return
       }
       entry.feedApis.set(page, api)
+      // What was restored is replaced, so there is nothing left to follow up.
+      settlePostFeedRestore(queryClient, hashKey(queryKey))
       /*
        * A fetch still in flight, such as a fetchNextPage, would land after this
        * write and put back the pages it replaces, so it is cancelled first. In
@@ -196,9 +201,104 @@ function createPendingRefresh(): PendingRefresh {
 }
 
 /**
- * A post-feed query that was restored from disk this account session, and
- * whether its restore has been followed up yet (the restore prepend,
- * APP-3167).
+ * Adds a page above a post-feed query's top page in a single write, or leaves
+ * the query untouched.
+ *
+ * `fetchAbove` fetches the page, bounded by the top page it is handed, and
+ * decides whether there is anything to add. Nothing is written until it has,
+ * and then only if the top page is still the one it was bounded by: a refresh
+ * or a fetch from the top that started meanwhile, or one still in flight,
+ * replaces the top, and the query's removal ends it. The page starts a chain
+ * of its own (its page param is `undefined`), so a TanStack refetch from the
+ * first page param is an ordinary fetch from the top, never a replay of the
+ * bounded one.
+ *
+ * `beforeCommit` runs between the fetch and the write, and everything is
+ * checked again after it. The commit-at-rest gate (D2) waits there for the list
+ * to stop moving.
+ *
+ * Rejects when `fetchAbove` does, having written nothing.
+ */
+export async function prependPostFeedQuery<Page extends object, Detail>(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  fetchAbove: (
+    top: Page,
+  ) => Promise<{page?: Page; api?: FeedAPI; detail: Detail}>,
+  {beforeCommit}: {beforeCommit?: () => Promise<void>} = {},
+): Promise<{
+  status: 'committed' | 'nothing' | 'superseded'
+  detail?: Detail
+}> {
+  const readTop = () =>
+    queryClient.getQueryData<InfiniteData<Page, unknown>>(queryKey)?.pages[0]
+  const top = readTop()
+  if (!top) {
+    return {status: 'superseded'}
+  }
+  const entry = getPostFeedQueryEntry(queryClient, queryKey)
+  const generation = entry.generation
+  const isCurrent = () =>
+    entry.generation === generation &&
+    entry.refresh === undefined &&
+    peekPostFeedQueryEntry(queryClient, queryKey) === entry &&
+    readTop() === top
+
+  const {page, api, detail} = await fetchAbove(top)
+  if (!isCurrent()) {
+    return {status: 'superseded', detail}
+  }
+  if (!page) {
+    return {status: 'nothing', detail}
+  }
+  await beforeCommit?.()
+  if (!isCurrent()) {
+    return {status: 'superseded', detail}
+  }
+  if (api) {
+    entry.feedApis.set(page, api)
+  }
+  // As in `refreshPostFeedQuery`: nothing in flight may land after this.
+  notifyManager.batch(() => {
+    void queryClient.cancelQueries({queryKey, exact: true})
+    queryClient.setQueryData<InfiniteData<Page, unknown>>(queryKey, data =>
+      data && data.pages[0] === top
+        ? {
+            pages: [page, ...data.pages],
+            pageParams: [undefined, ...data.pageParams],
+          }
+        : data,
+    )
+  })
+  return {status: 'committed', detail}
+}
+
+/**
+ * Gives the top page of a post-feed query an API if it has none, as a page
+ * restored from disk does, so that the feed can be peeked at for new posts.
+ */
+export function ensurePostFeedTopApi(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  createApi: () => FeedAPI,
+) {
+  const top =
+    queryClient.getQueryData<InfiniteData<object, unknown>>(queryKey)?.pages[0]
+  const entry = peekPostFeedQueryEntry(queryClient, queryKey)
+  if (top && entry && !entry.feedApis.has(top)) {
+    entry.feedApis.set(top, createApi())
+  }
+}
+
+/**
+ * A post-feed query that was restored from disk this account session, and how
+ * far its follow-up has got: the fetch of what is newer than the restored top
+ * (the restore prepend).
+ *
+ * - `pending`: restored, and not followed up yet.
+ * - `prepending`: the follow-up is in flight.
+ * - `settled`: followed up, or overtaken by whatever replaced the restored top
+ *   (a refresh, a fetch from the top, a reset, the query's removal).
  *
  * Unlike the entries above, these are not disposed with their query: the
  * restore happened once for the session, whatever becomes of the query later.
@@ -207,7 +307,7 @@ function createPendingRefresh(): PendingRefresh {
 export type PostFeedRestore = {
   restoredAt: number
   pageCount: number
-  isAttempted: boolean
+  status: 'pending' | 'prepending' | 'settled'
 }
 
 const restores = new WeakMap<QueryClient, Map<string, PostFeedRestore>>()
@@ -218,14 +318,16 @@ const restores = new WeakMap<QueryClient, Map<string, PostFeedRestore>>()
 export function recordPostFeedRestore(
   queryClient: QueryClient,
   queryHash: string,
-  restore: Omit<PostFeedRestore, 'isAttempted'>,
+  restore: Omit<PostFeedRestore, 'status'>,
 ) {
+  // So that the query's removal settles it.
+  getEntries(queryClient)
   let records = restores.get(queryClient)
   if (!records) {
     records = new Map()
     restores.set(queryClient, records)
   }
-  records.set(queryHash, {...restore, isAttempted: false})
+  records.set(queryHash, {...restore, status: 'pending'})
 }
 
 /**
@@ -240,15 +342,43 @@ export function getPostFeedRestore(
 }
 
 /**
- * Marks the restore of the post-feed query with this key as followed up, so
- * that it is attempted once per account session.
+ * Whether the post-feed query with this key was restored and its follow-up has
+ * not finished, whether it has started or not. Checks and polls that would
+ * measure the restored top hold back until it has.
  */
-export function markPostFeedRestoreAttempted(
+export function isPostFeedRestorePending(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+) {
+  const status = getPostFeedRestore(queryClient, queryKey)?.status
+  return status === 'pending' || status === 'prepending'
+}
+
+/**
+ * Claims the follow-up of the restore of the post-feed query with this key,
+ * if it is still to be made. True for exactly one caller per account session.
+ */
+export function beginPostFeedRestorePrepend(
   queryClient: QueryClient,
   queryKey: QueryKey,
 ) {
   const restore = getPostFeedRestore(queryClient, queryKey)
+  if (restore?.status !== 'pending') {
+    return false
+  }
+  restore.status = 'prepending'
+  return true
+}
+
+/**
+ * Marks the restore of the query with this hash as followed up, if it had one.
+ */
+export function settlePostFeedRestore(
+  queryClient: QueryClient,
+  queryHash: string,
+) {
+  const restore = restores.get(queryClient)?.get(queryHash)
   if (restore) {
-    restore.isAttempted = true
+    restore.status = 'settled'
   }
 }

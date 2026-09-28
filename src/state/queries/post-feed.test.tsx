@@ -19,13 +19,16 @@ import {
   pollLatest,
   resetPostsFeedQueries,
   RQKEY,
+  summarizeNewContentAbove,
+  useFollowingRestorePrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
 } from './post-feed'
 import {
+  beginPostFeedRestorePrepend,
   getPostFeedRestore,
   isPostFeedRefreshing,
-  markPostFeedRestoreAttempted,
+  isPostFeedRestorePending,
   peekPostFeedQueryEntry,
   recordPostFeedRestore,
 } from './post-feed-registry'
@@ -69,17 +72,29 @@ const FEED = 'following'
 const KEY = RQKEY(FEED)
 
 type MockFeedApi = {
-  fetch: jest.Mock<Promise<FeedAPIResponse>, [{cursor: string | undefined}]>
+  fetch: jest.Mock<
+    Promise<FeedAPIResponse>,
+    [{cursor: string | undefined; since?: string; limit: number}]
+  >
   peekLatest: jest.Mock
 }
 
 let apis: MockFeedApi[] = []
 
 /** Cursors encode `<instance>:<page>` to expose API ownership mistakes. */
-function createApi({top}: {top?: () => Promise<FeedAPIResponse>} = {}) {
+function createApi({
+  top,
+  since: fetchSince,
+}: {
+  top?: () => Promise<FeedAPIResponse>
+  since?: (since: string) => Promise<FeedAPIResponse>
+} = {}) {
   const id = apis.length
   const api: MockFeedApi = {
-    fetch: jest.fn(({cursor}) => {
+    fetch: jest.fn(({cursor, since}) => {
+      if (since !== undefined && fetchSince) {
+        return fetchSince(since)
+      }
       if (!cursor && top) {
         return top()
       }
@@ -747,7 +762,7 @@ describe('Following snapshot identity', () => {
 })
 
 describe('post-feed restore markers', () => {
-  it('outlive the query they were recorded for', async () => {
+  it('outlive the query they were recorded for, settled', async () => {
     const {hook, queryClient} = await renderLoadedFeed()
     recordPostFeedRestore(queryClient, hashKey(KEY), {
       restoredAt: 1,
@@ -756,15 +771,29 @@ describe('post-feed restore markers', () => {
     expect(getPostFeedRestore(queryClient, KEY)).toEqual({
       restoredAt: 1,
       pageCount: 2,
-      isAttempted: false,
+      status: 'pending',
     })
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(true)
 
-    markPostFeedRestoreAttempted(queryClient, KEY)
     hook.unmount()
     queryClient.removeQueries({queryKey: KEY})
 
     expect(peekPostFeedQueryEntry(queryClient, KEY)).toBeUndefined()
-    expect(getPostFeedRestore(queryClient, KEY)?.isAttempted).toBe(true)
+    expect(getPostFeedRestore(queryClient, KEY)?.status).toBe('settled')
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(false)
+  })
+
+  it('are claimed once', () => {
+    const queryClient = createQueryClient()
+    recordPostFeedRestore(queryClient, hashKey(KEY), {
+      restoredAt: 1,
+      pageCount: 1,
+    })
+
+    expect(beginPostFeedRestorePrepend(queryClient, KEY)).toBe(true)
+    expect(beginPostFeedRestorePrepend(queryClient, KEY)).toBe(false)
+    // Claimed but not finished is still pending.
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(true)
   })
 
   it('belong to the QueryClient they were recorded on', () => {
@@ -774,7 +803,338 @@ describe('post-feed restore markers', () => {
 
     expect(getPostFeedRestore(first, KEY)).toBeDefined()
     expect(getPostFeedRestore(second, KEY)).toBeUndefined()
-    markPostFeedRestoreAttempted(second, KEY)
-    expect(getPostFeedRestore(second, KEY)).toBeUndefined()
+    expect(beginPostFeedRestorePrepend(second, KEY)).toBe(false)
+    expect(isPostFeedRestorePending(second, KEY)).toBe(false)
+  })
+})
+
+describe('useFollowingRestorePrepend', () => {
+  const HOUR = 60 * 60 * 1000
+
+  /** Two pages as a restore leaves them: no APIs, and old. */
+  function restoredData(
+    top: Partial<FeedPageUnselected> = {},
+  ): InfiniteData<FeedPageUnselected> {
+    const fetchedAt = Date.now() - HOUR
+    return {
+      pages: [
+        {
+          cursor: 'r:1',
+          startCursor: 'S',
+          feed: [feedItem('r-0'), feedItem('r-1')],
+          fetchedAt,
+          ...top,
+        },
+        {cursor: 'r:2', feed: [feedItem('r-2')], fetchedAt: fetchedAt + 1},
+      ],
+      pageParams: [undefined, {cursor: 'r:1'}],
+    }
+  }
+
+  function renderRestoredFeed(data = restoredData()) {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(KEY, data)
+    recordPostFeedRestore(queryClient, hashKey(KEY), {
+      restoredAt: Date.now(),
+      pageCount: data.pages.length,
+    })
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    const hook = renderHook(
+      () => ({
+        query: usePostFeedQuery(FEED),
+        prepend: useFollowingRestorePrepend(FEED),
+        refresh: usePostFeedRefresh(FEED).refresh,
+      }),
+      {wrapper},
+    )
+    return {hook, queryClient, data}
+  }
+
+  function nextApiSince(since: (since: string) => Promise<FeedAPIResponse>) {
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(() => createApi({since}) as never)
+  }
+
+  function newerPage(rkeys: string[], cursor: string | undefined = 'S') {
+    return Promise.resolve({
+      cursor,
+      startCursor: 'N',
+      feed: rkeys.map(feedItem),
+    })
+  }
+
+  function watchWrites(queryClient: QueryClient) {
+    let writes = 0
+    queryClient.getQueryCache().subscribe(event => {
+      if (event.type === 'updated' && event.action.type === 'success') {
+        writes++
+      }
+    })
+    return () => writes
+  }
+
+  it('renders the restored pages without fetching', async () => {
+    const {hook} = renderRestoredFeed()
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(2),
+    )
+    expect(apis).toHaveLength(0)
+  })
+
+  it('adds what is newer above the restored top in one write, once', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const writes = watchWrites(queryClient)
+    nextApiSince(() => newerPage(['n-0', 'n-1']))
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.prepend()
+    })
+
+    expect(outcome).toEqual({outcome: 'contiguous', itemCount: 2})
+    expect(apis[0].fetch).toHaveBeenCalledWith({
+      cursor: undefined,
+      since: 'S',
+      limit: 60,
+    })
+    expect(writes()).toBe(1)
+    const {pages, pageParams} = cachedData(queryClient)
+    expect(pages.map(page => page.cursor)).toEqual(['S', 'r:1', 'r:2'])
+    expect(pages[0]).toMatchObject({since: 'S', startCursor: 'N'})
+    // It starts a chain of its own, like the page it sits on.
+    expect(pageParams).toEqual([undefined, undefined, {cursor: 'r:1'}])
+
+    await act(async () => {
+      expect(await hook.result.current.prepend()).toBeUndefined()
+    })
+    expect(apis).toHaveLength(1)
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(false)
+  })
+
+  it('keeps the rows below as they were, and drops duplicates from above', async () => {
+    const {hook} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const [top, next] = hook.result.current.query.data!.pages
+    // The appview's copy of a post the restored top already holds.
+    nextApiSince(() =>
+      Promise.resolve({
+        cursor: 'S',
+        feed: [feedItem('n-0'), feedItem('r-0')],
+      }),
+    )
+
+    await act(() => hook.result.current.prepend())
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(3),
+    )
+
+    const pages = hook.result.current.query.data!.pages
+    expect(pages[1]).toBe(top)
+    expect(pages[2]).toBe(next)
+    expect(pages[0].slices.map(slice => slice.feedPostUri)).toEqual([
+      'at://did:plc:author/app.bsky.feed.post/n-0',
+    ])
+    expect(summarizeNewContentAbove(pages)).toEqual({
+      count: 1,
+      authors: [expect.objectContaining({did: 'did:plc:author'})],
+    })
+  })
+
+  it('is pending until it settles, and holds nothing back after', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const newer = deferred<FeedAPIResponse>()
+    nextApiSince(() => newer.promise)
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(true)
+
+    let prepending!: Promise<unknown>
+    act(() => {
+      prepending = hook.result.current.prepend()
+    })
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(true)
+    await act(async () => {
+      newer.resolve({cursor: 'S', feed: [feedItem('n-0')]})
+      await prepending
+    })
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(false)
+  })
+
+  it('adds nothing when nothing is newer', async () => {
+    const {hook, queryClient, data} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    nextApiSince(() => newerPage([]))
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.prepend()
+    })
+
+    expect(outcome).toEqual({outcome: 'empty', itemCount: 0})
+    expect(cachedData(queryClient)).toBe(data)
+    expect(
+      summarizeNewContentAbove(hook.result.current.query.data?.pages),
+    ).toBe(undefined)
+  })
+
+  it('leaves the restored top ready to be peeked at when it adds nothing', async () => {
+    const appState = AppState.currentState
+    AppState.currentState = 'active'
+    try {
+      const {hook, queryClient} = renderRestoredFeed()
+      await waitFor(() =>
+        expect(hook.result.current.query.isSuccess).toBe(true),
+      )
+      const page = hook.result.current.query.data?.pages[0]
+      expect(await pollLatest(queryClient, KEY, page)).toBe(false)
+      expect(apis).toHaveLength(0)
+      nextApiSince(() => newerPage([]))
+
+      await act(() => hook.result.current.prepend())
+      await pollLatest(queryClient, KEY, page)
+
+      expect(apis.some(api => api.peekLatest.mock.calls.length > 0)).toBe(true)
+    } finally {
+      AppState.currentState = appState
+    }
+  })
+
+  it('does not ask a server that gave no startCursor', async () => {
+    const {hook, queryClient} = renderRestoredFeed(
+      restoredData({startCursor: undefined}),
+    )
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.prepend()
+    })
+
+    expect(outcome).toEqual({outcome: 'noStartCursor'})
+    expect(apis.every(api => api.fetch.mock.calls.length === 0)).toBe(true)
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(false)
+  })
+
+  it('keeps the restored feed when the fetch fails', async () => {
+    const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
+    try {
+      const {hook, queryClient, data} = renderRestoredFeed()
+      await waitFor(() =>
+        expect(hook.result.current.query.isSuccess).toBe(true),
+      )
+      nextApiSince(() => Promise.reject(new Error('Unknown parameter: since')))
+
+      let outcome
+      await act(async () => {
+        outcome = await hook.result.current.prepend()
+      })
+
+      expect(outcome).toEqual({outcome: 'failed'})
+      expect(cachedData(queryClient)).toBe(data)
+      expect(isPostFeedRestorePending(queryClient, KEY)).toBe(false)
+    } finally {
+      logError.mockRestore()
+    }
+  })
+
+  it('gives way to a refresh that replaces the top meanwhile', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const newer = deferred<FeedAPIResponse>()
+    nextApiSince(() => newer.promise)
+
+    let prepending!: Promise<unknown>
+    act(() => {
+      prepending = hook.result.current.prepend()
+    })
+    await act(() => hook.result.current.refresh())
+    const refreshed = cachedData(queryClient)
+    await act(async () => {
+      newer.resolve({cursor: 'S', feed: [feedItem('n-0')]})
+      expect(await prepending).toEqual({outcome: 'superseded'})
+    })
+
+    expect(cachedData(queryClient)).toBe(refreshed)
+    expect(refreshed.pages).toHaveLength(1)
+  })
+
+  it('gives way to a refetch from the top that starts meanwhile', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const newer = deferred<FeedAPIResponse>()
+    nextApiSince(() => newer.promise)
+
+    let prepending!: Promise<unknown>
+    act(() => {
+      prepending = hook.result.current.prepend()
+    })
+    await act(() => hook.result.current.query.refetch())
+    await act(async () => {
+      newer.resolve({cursor: 'S', feed: [feedItem('n-0')]})
+      expect(await prepending).toEqual({outcome: 'superseded'})
+    })
+
+    expect(cachedData(queryClient).pages.every(page => !page.since)).toBe(true)
+  })
+
+  it('settles the restore when a fetch from the top replaces it first', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+
+    await act(() => hook.result.current.query.refetch())
+
+    expect(isPostFeedRestorePending(queryClient, KEY)).toBe(false)
+    await act(async () => {
+      expect(await hook.result.current.prepend()).toBeUndefined()
+    })
+  })
+
+  it('drops a fetchNextPage that was in flight when it wrote', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const next = deferred<FeedAPIResponse>()
+    jest.mocked(FollowingFeedAPI).mockImplementationOnce(() => {
+      const api = createApi()
+      api.fetch.mockImplementationOnce(() => next.promise)
+      return api as never
+    })
+    let fetchNextPage!: Promise<unknown>
+    act(() => {
+      fetchNextPage = hook.result.current.query.fetchNextPage()
+    })
+    await waitFor(() => expect(apis).toHaveLength(1))
+    nextApiSince(() => newerPage(['n-0']))
+
+    await act(() => hook.result.current.prepend())
+    await act(async () => {
+      next.resolve({cursor: 'r:3', feed: [feedItem('r-3')]})
+      await fetchNextPage
+    })
+
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      'S',
+      'r:1',
+      'r:2',
+    ])
+  })
+
+  it('leaves a refetch to start an ordinary chain from the top', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    nextApiSince(() => newerPage(['n-0']))
+    await act(() => hook.result.current.prepend())
+
+    await act(() => hook.result.current.query.refetch())
+
+    const refetchApi = apis[apis.length - 1]
+    expect(refetchApi.fetch.mock.calls[0][0]).toEqual({
+      cursor: undefined,
+      since: undefined,
+      limit: 30,
+    })
+    expect(cachedData(queryClient).pages.every(page => !page.since)).toBe(true)
   })
 })
