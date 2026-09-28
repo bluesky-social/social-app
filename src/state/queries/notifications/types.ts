@@ -18,7 +18,25 @@ export type FeedNotification =
 export interface FeedPage {
   cursor: string | undefined
   seenAt: Date
+  /** When the page was requested from the server, in ms since the epoch. */
+  requestedAt: number
   items: FeedNotification[]
+}
+
+/**
+ * What the last unread check found, for the lists that can offer it: the
+ * Following v2 "New" pill on Notifications.
+ */
+export interface UnreadCheck {
+  /** When the check asked the server, comparable with `FeedPage.requestedAt`. */
+  requestedAt: number
+  /**
+   * When the newest unread notification each list would show was indexed, in
+   * ms since the epoch, or undefined if the check found none.
+   */
+  newestUnreadAt: Record<'all' | 'mentions', number | undefined>
+  /** Whether the check also loaded its page into the lists. */
+  loadsIntoFeed: boolean
 }
 
 export interface CachedFeedPage {

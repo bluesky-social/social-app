@@ -22,8 +22,8 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {type CachedFeedPage, type FeedPage} from './types'
-import {fetchPage} from './util'
+import {type CachedFeedPage, type FeedPage, type UnreadCheck} from './types'
+import {fetchPage, markUnreadCheckSeen, summarizeUnreadCheck} from './util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
@@ -45,6 +45,9 @@ interface ApiContext {
 const stateContext = createContext<StateContext>('')
 stateContext.displayName = 'NotificationsUnreadStateContext'
 
+const lastCheckContext = createContext<UnreadCheck | undefined>(undefined)
+lastCheckContext.displayName = 'NotificationsUnreadLastCheckContext'
+
 const apiContext = createContext<ApiContext>({
   async markAllRead() {},
   async checkUnread() {},
@@ -59,6 +62,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const moderationOpts = useModerationOpts()
 
   const [numUnread, setNumUnread] = useState('')
+  const [lastCheck, setLastCheck] = useState<UnreadCheck | undefined>()
 
   const checkUnreadRef = useRef<ApiContext['checkUnread'] | null>(null)
   const cacheRef = useRef<CachedFeedPage>({
@@ -121,14 +125,17 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const api = useMemo<ApiContext>(() => {
     return {
       async markAllRead() {
+        const seenAt = cacheRef.current.syncedAt
+
         // update server
         await client.call(app.bsky.notification.updateSeen, {
           // toISOString always emits the Z-suffixed form the format requires
-          seenAt: cacheRef.current.syncedAt.toISOString() as ISODatetimeString,
+          seenAt: seenAt.toISOString() as ISODatetimeString,
         })
 
         // update & broadcast
         setNumUnread('')
+        setLastCheck(check => markUnreadCheckSeen(check, seenAt.getTime()))
         broadcast.postMessage({event: ''})
         resetBadgeCount()
       },
@@ -193,6 +200,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // update & broadcast
           setNumUnread(unreadCountStr)
+          setLastCheck(
+            summarizeUnreadCheck(page, {loadsIntoFeed: !!invalidate}),
+          )
           if (invalidate) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
@@ -210,18 +220,35 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         }
       },
     }
-  }, [setNumUnread, queryClient, moderationOpts, client, hasSession])
+  }, [
+    setNumUnread,
+    setLastCheck,
+    queryClient,
+    moderationOpts,
+    client,
+    hasSession,
+  ])
   checkUnreadRef.current = api.checkUnread
 
   return (
     <stateContext.Provider value={numUnread}>
-      <apiContext.Provider value={api}>{children}</apiContext.Provider>
+      <lastCheckContext.Provider value={lastCheck}>
+        <apiContext.Provider value={api}>{children}</apiContext.Provider>
+      </lastCheckContext.Provider>
     </stateContext.Provider>
   )
 }
 
 export function useUnreadNotifications() {
   return useContext(stateContext)
+}
+
+/**
+ * What the last unread check found, or undefined before the first one. Updated
+ * on every check, and when everything up to now is marked read.
+ */
+export function useLastUnreadCheck() {
+  return useContext(lastCheckContext)
 }
 
 export function useUnreadNotificationsApi() {

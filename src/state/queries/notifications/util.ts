@@ -17,6 +17,7 @@ import {
   type FeedPage,
   type Notification,
   type NotificationType,
+  type UnreadCheck,
 } from './types'
 
 const GROUPABLE_REASONS = [
@@ -29,6 +30,9 @@ const GROUPABLE_REASONS = [
 ]
 const MS_1HR = 1e3 * 60 * 60
 const MS_2DAY = MS_1HR * 48
+
+/** The reasons the Mentions tab lists. */
+export const MENTIONS_REASONS = ['mention', 'reply', 'quote']
 
 // exported api
 // =
@@ -53,6 +57,7 @@ export async function fetchPage({
   page: FeedPage
   indexedAt: string | undefined
 }> {
+  const requestedAt = Date.now()
   const data = await client.call(app.bsky.notification.listNotifications, {
     limit,
     cursor,
@@ -101,9 +106,81 @@ export async function fetchPage({
     page: {
       cursor: data.cursor,
       seenAt,
+      requestedAt,
       items: notifsGrouped,
     },
     indexedAt,
+  }
+}
+
+/**
+ * When the newest matching notification in some pages was indexed, in ms
+ * since the epoch, or undefined if none matches. Pages run newest first, so
+ * the search stops at the first page with a match.
+ */
+export function newestNotificationAt(
+  pages: FeedPage[],
+  {
+    unreadOnly = false,
+    reasons,
+  }: {
+    /** Only count notifications the server reported as unread. */
+    unreadOnly?: boolean
+    /** Only count these reasons, as a list filtered by reason would. */
+    reasons?: string[]
+  } = {},
+): number | undefined {
+  for (const page of pages) {
+    let newest: number | undefined
+    for (const item of page.items) {
+      for (const notif of [item.notification, ...(item.additional ?? [])]) {
+        if (unreadOnly && notif.isRead) continue
+        if (reasons && !reasons.includes(notif.reason)) continue
+        const indexedAt = Date.parse(notif.indexedAt)
+        if (Number.isNaN(indexedAt)) continue
+        if (newest === undefined || indexedAt > newest) newest = indexedAt
+      }
+    }
+    if (newest !== undefined) return newest
+  }
+  return undefined
+}
+
+/** Summarizes an unread check's page for the lists; see `UnreadCheck`. */
+export function summarizeUnreadCheck(
+  page: FeedPage,
+  {loadsIntoFeed}: {loadsIntoFeed: boolean},
+): UnreadCheck {
+  return {
+    requestedAt: page.requestedAt,
+    newestUnreadAt: {
+      all: newestNotificationAt([page], {unreadOnly: true}),
+      mentions: newestNotificationAt([page], {
+        unreadOnly: true,
+        reasons: MENTIONS_REASONS,
+      }),
+    },
+    loadsIntoFeed,
+  }
+}
+
+/**
+ * An unread check once everything indexed before `seenAt` has been marked
+ * read, matching how the feed derives `isRead` from `seenAt`.
+ */
+export function markUnreadCheckSeen(
+  check: UnreadCheck | undefined,
+  seenAt: number,
+): UnreadCheck | undefined {
+  if (!check) return check
+  const stillUnread = (at: number | undefined) =>
+    at !== undefined && at >= seenAt ? at : undefined
+  return {
+    ...check,
+    newestUnreadAt: {
+      all: stillUnread(check.newestUnreadAt.all),
+      mentions: stillUnread(check.newestUnreadAt.mentions),
+    },
   }
 }
 
