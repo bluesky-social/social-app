@@ -1,5 +1,5 @@
 import {useEffect, useEffectEvent, useId, useState} from 'react'
-import {AppState, type StyleProp, View, type ViewStyle} from 'react-native'
+import {AppState, View} from 'react-native'
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -17,15 +17,23 @@ import {atoms as a, useTheme} from '#/alf'
 import {GlassView, IS_GLASS_AVAILABLE} from '#/components/GlassView'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTop_Stroke2_Corner0_Rounded as ArrowTopIcon} from '#/components/icons/Arrow'
+import {NEW_POSTS_PILL_HEADER_GAP} from '#/components/NewPostsPill/placement'
 import {
   newPostsPillLeadsUp,
   newPostsPillPresentation,
   type NewPostsPillVariant,
 } from '#/components/NewPostsPill/presentation'
+import {type NewPostsPillPlacementStyle} from '#/components/NewPostsPill/usePillPlacement'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
 
 export type {NewPostsPillVariant}
+export {
+  type NewPostsPillPlacementStyle,
+  useHomeHeaderPillPlacement,
+  usePagerHeaderPillPlacement,
+  useScreenHeaderPillPlacement,
+} from '#/components/NewPostsPill/usePillPlacement'
 
 /** Only authors whose avatars are safe to display should be supplied. */
 export type NewPostsPillAuthor = {
@@ -39,12 +47,18 @@ const AVATAR_SIZE = 24
 const AVATAR_OVERLAP = 7
 const FACE_GAP = 2
 const ANIMATION_DURATION = 200
-const PILL_TRAVEL = 56
+/**
+ * Far enough for the tallest capsule to tuck in behind the edge the placement
+ * hooks clip at, `NEW_POSTS_PILL_HEADER_GAP` above the pill.
+ */
+const PILL_TRAVEL = FACEPILE_PILL_HEIGHT + NEW_POSTS_PILL_HEADER_GAP
 const NO_AUTHORS: NewPostsPillAuthor[] = []
 
 /**
  * A floating capsule's content and lifecycle, independent of feed data, metrics,
- * and header positioning. The parent positions it beneath its own header.
+ * and header positioning. The parent positions it beneath its own header, with
+ * `useHomeHeaderPillPlacement`, `usePagerHeaderPillPlacement` or
+ * `useScreenHeaderPillPlacement` on native.
  * Exiting pills stay mounted for the slide, but are immediately inert.
  */
 export function NewPostsPill({
@@ -70,8 +84,11 @@ export function NewPostsPill({
   text?: string
   /** Accessible action label; defaults to localized variant/count wording. */
   label?: string
-  /** The parent can provide positioning without coupling this to a header. */
-  style?: StyleProp<ViewStyle>
+  /**
+   * The parent can provide positioning without coupling this to a header; see
+   * the placement hooks above.
+   */
+  style?: NewPostsPillPlacementStyle
   testID?: string
   onPress: () => void
 }) {
