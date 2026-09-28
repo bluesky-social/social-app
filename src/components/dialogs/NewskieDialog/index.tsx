@@ -142,7 +142,9 @@ function DialogInner({
                 a.rounded_sm,
                 t.atoms.border_contrast_low,
               ]}>
-              <StarterPackCard.Card starterPack={profile.joinedViaStarterPack} />
+              <StarterPackCard.Card
+                starterPack={profile.joinedViaStarterPack}
+              />
             </View>
           </StarterPackCard.Link>
         ) : null}
