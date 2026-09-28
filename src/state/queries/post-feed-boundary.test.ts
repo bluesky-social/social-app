@@ -6,6 +6,8 @@ import {
   classifySincePage,
   feedItemKey,
   feedSortTime,
+  findFeedGaps,
+  gapBelow,
   isContiguousAbove,
   isExhaustedSincePage,
   tuneOrder,
@@ -315,6 +317,116 @@ describe('classifySincePage', () => {
     // still carries the newest boundary.
     const page = since(['hidden'], 'S')
     expect(classifySincePage(page, top).page).toBe(page)
+  })
+})
+
+describe('gapBelow', () => {
+  const gapped = {since: 'S', cursor: 'G'}
+
+  it('finds an open gap below a gapped since page', () => {
+    // The restored top it was bounded by starts a chain of its own.
+    expect(gapBelow(gapped, undefined)).toBe('open')
+    // Or a page that continues something else.
+    expect(gapBelow(gapped, {cursor: 'elsewhere'})).toBe('open')
+  })
+
+  it('finds it filled once the page below continues from its cursor', () => {
+    expect(gapBelow(gapped, {cursor: 'G'})).toBe('filled')
+  })
+
+  it('finds nothing missing below any other page', () => {
+    expect(gapBelow({since: 'S', cursor: 'S'}, undefined)).toBe(undefined)
+    expect(gapBelow({cursor: 'C'}, {cursor: 'C'})).toBe(undefined)
+    // A page from a chain of its own, as an algorithmic batch would be.
+    expect(gapBelow({cursor: 'C'}, undefined)).toBe(undefined)
+  })
+
+  it('finds nothing to fill below a since page without a cursor', () => {
+    expect(gapBelow({since: 'S', cursor: undefined}, undefined)).toBe(undefined)
+  })
+})
+
+describe('findFeedGaps', () => {
+  const always = () => true
+
+  it('marks the gap below a gapped since page', () => {
+    const pages = [
+      {since: 'S', cursor: 'G'},
+      {cursor: 'r:1', startCursor: 'S'},
+      {cursor: 'r:2'},
+    ]
+    const pageParams = [undefined, undefined, {cursor: 'r:1'}]
+
+    expect(findFeedGaps(pages, pageParams, always)).toEqual(
+      new Map([[0, {since: 'S', cursor: 'G', status: 'open'}]]),
+    )
+  })
+
+  it('marks it filled once the page below continues from it', () => {
+    const pages = [{since: 'S', cursor: 'G'}, {cursor: 'G:1'}]
+
+    expect(findFeedGaps(pages, [undefined, {cursor: 'G'}], always)).toEqual(
+      new Map([[0, {since: 'S', cursor: 'G', status: 'filled'}]]),
+    )
+  })
+
+  it('marks nothing where every page continues the one above', () => {
+    const contiguous = [{since: 'S', cursor: 'S'}, {cursor: 'r:1'}]
+    expect(findFeedGaps(contiguous, [undefined, undefined], always).size).toBe(
+      0,
+    )
+    const ordinary = [{cursor: 'c:1'}, {cursor: 'c:2'}]
+    expect(
+      findFeedGaps(ordinary, [undefined, {cursor: 'c:1'}], always).size,
+    ).toBe(0)
+  })
+
+  it('marks nothing between chains that are not since pages', () => {
+    // Independently ranked batches, each fetched from the top: their cursors
+    // do not join up, but nothing is missing between them.
+    const batches = [{cursor: 'b:1'}, {cursor: 'a:1'}, {cursor: 'a:2'}]
+    expect(
+      findFeedGaps(batches, [undefined, undefined, {cursor: 'a:1'}], always)
+        .size,
+    ).toBe(0)
+  })
+
+  it('collapses adjacent gaps into the upper one', () => {
+    const pages = [
+      {since: 'S1', cursor: 'G1'},
+      // Renders nothing, so its gap would sit right under the one above.
+      {since: 'S0', cursor: 'G0'},
+      {cursor: 'r:1'},
+    ]
+    const pageParams = [undefined, undefined, undefined]
+
+    expect(findFeedGaps(pages, pageParams, index => index !== 1)).toEqual(
+      new Map([[0, {since: 'S1', cursor: 'G1', status: 'open'}]]),
+    )
+  })
+
+  it('keeps gaps with rows between them apart', () => {
+    const pages = [
+      {since: 'S1', cursor: 'G1'},
+      {since: 'S0', cursor: 'G0'},
+      {cursor: 'r:1'},
+    ]
+
+    expect(
+      [...findFeedGaps(pages, [undefined, undefined, undefined], always)].map(
+        ([index, gap]) => [index, gap.cursor],
+      ),
+    ).toEqual([
+      [0, 'G1'],
+      [1, 'G0'],
+    ])
+  })
+
+  it('marks a gap below a page that renders nothing', () => {
+    const pages = [{since: 'S', cursor: 'G'}, {cursor: 'r:1'}]
+    expect(findFeedGaps(pages, [undefined, undefined], () => false).size).toBe(
+      1,
+    )
   })
 })
 

@@ -20,6 +20,83 @@ export function isExhaustedSincePage(page: BoundaryPage<unknown>) {
 }
 
 /**
+ * What lies between a page fetched with `since` whose range was not exhausted
+ * (a `gap` page, see {@link classifySincePage}) and the page below it:
+ *
+ * - `open`: the page below does not continue from the upper page's cursor, so
+ *   the posts between them are missing. Filling the gap fetches from there.
+ * - `filled`: the page below is the one that continues from that cursor, so
+ *   nothing is missing any more.
+ *
+ * `undefined` for any other page, which has nothing missing below it: an
+ * exhausted `since` page ends where the page below starts, and an ordinary
+ * page is continued by the one below. Also for a `since` page without a
+ * cursor, which gives nothing to fetch the missing posts from.
+ *
+ * `lowerParam` is the page param of the page below.
+ */
+export function gapBelow(
+  upper: Pick<BoundaryPage<unknown>, 'cursor' | 'since'>,
+  lowerParam: unknown,
+): 'open' | 'filled' | undefined {
+  // An exhausted page echoes its `since` as its cursor.
+  if (
+    upper.since === undefined ||
+    upper.cursor === undefined ||
+    upper.cursor === upper.since
+  ) {
+    return undefined
+  }
+  const continues =
+    typeof lowerParam === 'object' &&
+    lowerParam !== null &&
+    (lowerParam as {cursor?: unknown}).cursor === upper.cursor
+  return continues ? 'filled' : 'open'
+}
+
+/**
+ * A gap below one of a feed's pages, identified by that page's `since` and
+ * cursor, which stay the same whatever is added above it.
+ */
+export type FeedGap = {
+  since: string
+  cursor: string
+  status: 'open' | 'filled'
+}
+
+/**
+ * The gaps to mark in a feed, by the index of the page each is below - see
+ * {@link gapBelow}.
+ *
+ * An open gap with no rows between it and an open gap above it (the pages
+ * between them render nothing) is left out: they would read as one, and
+ * filling the upper one replaces everything below it, the lower one included.
+ * `hasRows` says whether the page at an index renders any rows.
+ */
+export function findFeedGaps(
+  pages: readonly Pick<BoundaryPage<unknown>, 'cursor' | 'since'>[],
+  pageParams: readonly unknown[],
+  hasRows: (pageIndex: number) => boolean,
+): Map<number, FeedGap> {
+  const gaps = new Map<number, FeedGap>()
+  /** Whether the last row so far is the row of an open gap. */
+  let isBelowOpenGap = false
+  for (let index = 0; index < pages.length - 1; index++) {
+    const page = pages[index]
+    if (hasRows(index)) {
+      isBelowOpenGap = false
+    }
+    const status = gapBelow(page, pageParams[index + 1])
+    if (status === undefined || (status === 'open' && isBelowOpenGap)) {
+      continue
+    }
+    gaps.set(index, {since: page.since!, cursor: page.cursor!, status})
+    isBelowOpenGap = status === 'open'
+  }
+  return gaps
+}
+
+/**
  * Whether `lower`, a page fetched from the top rather than continued from a
  * cursor, directly follows `upper`: `upper` is an exhausted `since` page whose
  * bound is exactly where `lower` starts.
