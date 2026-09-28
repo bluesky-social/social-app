@@ -1,5 +1,10 @@
 import {createContext, useCallback, useContext} from 'react'
-import {type GestureResponderEvent, Keyboard, View} from 'react-native'
+import {
+  type GestureResponderEvent,
+  Keyboard,
+  type LayoutChangeEvent,
+  View,
+} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -39,11 +44,17 @@ export function Outer({
   noBottomBorder,
   headerRef,
   sticky = true,
+  onLayout,
 }: {
   children: React.ReactNode
   noBottomBorder?: boolean
   headerRef?: React.RefObject<React.ComponentRef<typeof View> | null>
   sticky?: boolean
+  /**
+   * For anything floating beneath the header that needs its bottom edge, such
+   * as `useScreenHeaderPillPlacement`.
+   */
+  onLayout?: (e: LayoutChangeEvent) => void
 }) {
   const t = useTheme()
   const gutters = useGutters([0, 'base'])
@@ -55,6 +66,7 @@ export function Outer({
   return (
     <View
       ref={headerRef}
+      onLayout={onLayout}
       style={[
         a.w_full,
         !noBottomBorder && a.border_b,
