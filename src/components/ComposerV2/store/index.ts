@@ -964,6 +964,7 @@ export function createThreadStore(options: {
   return {
     /** Share the session's policy with callers; inert after destruction. */
     reportError,
+    /** User-facing composer commands for editing a thread. */
     actions: {
       setPostText,
       setPostLanguages,
@@ -985,6 +986,12 @@ export function createThreadStore(options: {
       setRecordAttachment,
       removeRecordAttachment,
       removeMediaAttachment,
+    },
+    /**
+     * Internal/test seam for exercising upload state transitions. UI callers
+     * must use the upload workers rather than mutating status directly.
+     */
+    internalActions: {
       setUploadStatus,
     },
     destroy,

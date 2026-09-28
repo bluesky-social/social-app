@@ -1351,7 +1351,7 @@ describe('ComposerV2 no-write planner', () => {
       const mediaId = media.items[0].id
 
       const inFlight = plan(pendingSnapshot)
-      store.actions.setUploadStatus(postId, mediaId, {
+      store.internalActions.setUploadStatus(postId, mediaId, {
         state: 'uploaded',
         blob: blob('image/jpeg'),
       })

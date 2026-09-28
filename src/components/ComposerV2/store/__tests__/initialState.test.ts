@@ -362,7 +362,7 @@ describe('initial media and eager uploads', () => {
       postId: id,
       upload: {state: 'pending'},
     })
-    store.actions.setUploadStatus(id, media.item.id, {
+    store.internalActions.setUploadStatus(id, media.item.id, {
       state: 'failed',
       error: 'network',
     })
