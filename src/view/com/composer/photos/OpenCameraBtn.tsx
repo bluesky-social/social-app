@@ -2,6 +2,7 @@ import * as MediaLibrary from 'expo-media-library/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
@@ -34,7 +35,7 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
       }
       if (!mediaGranted) {
         if (mediaCanAskAgain) {
-          await requestMediaPermission()
+          await runAppInitiatedActivity(() => requestMediaPermission())
         }
       }
 

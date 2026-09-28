@@ -9,6 +9,7 @@ import {
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {type NavigationProp} from '#/lib/routes/types'
 import {shareUrl as nativeShareUrl} from '#/lib/sharing'
 import {logger} from '#/logger'
@@ -86,7 +87,9 @@ export function InviteFriendsDialogInner({
 
     // Write-only permission - saving the QR image does not require read access
     // to the user's photo library.
-    const permission = await requestPermissionsAsync(true)
+    const permission = await runAppInitiatedActivity(() =>
+      requestPermissionsAsync(true),
+    )
     if (!permission.granted) {
       Toast.show(
         l`You must grant access to your photo library to save a QR code`,

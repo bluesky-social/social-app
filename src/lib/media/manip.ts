@@ -16,6 +16,7 @@ import {SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {renderImage} from './image-manipulator'
@@ -88,11 +89,14 @@ export async function shareImageModal({uri}: {uri: string}) {
       compress: 1.0,
     })
     jpegUri = jpeg.uri
-    imagePath = await moveToPermanentPath(jpegUri, '.jpg')
-    await Sharing.shareAsync(imagePath, {
-      mimeType: 'image/jpeg',
-      UTI: 'image/jpeg',
-    })
+    const sharedPath = await moveToPermanentPath(jpegUri, '.jpg')
+    imagePath = sharedPath
+    await runAppInitiatedActivity(() =>
+      Sharing.shareAsync(sharedPath, {
+        mimeType: 'image/jpeg',
+        UTI: 'image/jpeg',
+      }),
+    )
   } finally {
     await safeDeleteAsync(downloadedPath)
     if (jpegUri) await safeDeleteAsync(jpegUri)
@@ -128,7 +132,10 @@ export async function saveImageToMediaLibrary({uri}: {uri: string}) {
         // try and migrate if needed
         try {
           if (await MediaLibrary.albumNeedsMigrationAsync(album)) {
-            await MediaLibrary.migrateAlbumIfNeededAsync(album)
+            // may ask for write access to the album's files
+            await runAppInitiatedActivity(() =>
+              MediaLibrary.migrateAlbumIfNeededAsync(album),
+            )
           }
         } catch (err) {
           logger.info('Attempted and failed to migrate album', {
@@ -356,8 +363,9 @@ export async function saveToDevice(
       })
       return true
     } else {
-      const permissions =
-        await StorageAccessFramework.requestDirectoryPermissionsAsync()
+      const permissions = await runAppInitiatedActivity(() =>
+        StorageAccessFramework.requestDirectoryPermissionsAsync(),
+      )
 
       if (!permissions.granted) {
         return false

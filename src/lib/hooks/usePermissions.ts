@@ -2,6 +2,7 @@ import {Linking} from 'react-native'
 import {useCameraPermissions as useExpoCameraPermissions} from 'expo-camera'
 import * as MediaLibrary from 'expo-media-library/legacy'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {Alert} from '#/view/com/util/Alert'
 import {IS_WEB} from '#/env'
 
@@ -33,7 +34,9 @@ export function usePhotoLibraryPermission() {
     if (res?.granted) {
       return true
     } else if (!res || res.status === 'undetermined' || res?.canAskAgain) {
-      const {canAskAgain, granted, status} = await requestPermission()
+      const {canAskAgain, granted, status} = await runAppInitiatedActivity(() =>
+        requestPermission(),
+      )
 
       if (!canAskAgain && status === 'undetermined') {
         openPermissionAlert('photo library')
@@ -62,7 +65,9 @@ export function useVideoLibraryPermission() {
     if (res?.granted) {
       return true
     } else if (!res || res.status === 'undetermined' || res?.canAskAgain) {
-      const {canAskAgain, granted, status} = await requestPermission()
+      const {canAskAgain, granted, status} = await runAppInitiatedActivity(() =>
+        requestPermission(),
+      )
 
       if (!canAskAgain && status === 'undetermined') {
         openPermissionAlert('video library')
@@ -84,7 +89,9 @@ export function useCameraPermission() {
     if (res?.granted) {
       return true
     } else if (!res || res?.status === 'undetermined' || res?.canAskAgain) {
-      const updatedRes = await requestPermission()
+      const updatedRes = await runAppInitiatedActivity(() =>
+        requestPermission(),
+      )
       return updatedRes?.granted
     } else {
       openPermissionAlert('camera')

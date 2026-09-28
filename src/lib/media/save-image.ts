@@ -3,6 +3,7 @@ import * as MediaLibrary from 'expo-media-library/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import * as Toast from '#/components/Toast'
 import {IS_NATIVE} from '#/env'
 import {saveImageToMediaLibrary} from './manip'
@@ -41,7 +42,9 @@ export function useSaveImageToMediaLibrary() {
       } else {
         if (permission.canAskAgain) {
           // request again once
-          const askAgain = await requestPermission()
+          const askAgain = await runAppInitiatedActivity(() =>
+            requestPermission(),
+          )
           if (askAgain.granted) {
             await save()
           } else {

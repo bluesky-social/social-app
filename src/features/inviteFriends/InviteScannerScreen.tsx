@@ -10,6 +10,7 @@ import {
 import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {type NavigationProp} from '#/lib/routes/types'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -108,7 +109,9 @@ export function InviteScannerScreen() {
             label={l`Grant access`}
             color="primary"
             size="large"
-            onPress={() => void requestPermission()}
+            onPress={() =>
+              void runAppInitiatedActivity(() => requestPermission())
+            }
             style={{marginTop: 8}}>
             <ButtonText>{l`Grant access`}</ButtonText>
           </Button>

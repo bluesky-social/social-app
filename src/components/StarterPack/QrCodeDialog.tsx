@@ -10,6 +10,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {logger} from '#/logger'
 import {atoms as a, useBreakpoints} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
@@ -64,7 +65,9 @@ export function QrCodeDialog({
       if (IS_NATIVE) {
         // Write-only permission - saving the QR image does not require read
         // access to the user's photo library.
-        const res = await requestPermissionsAsync(true)
+        const res = await runAppInitiatedActivity(() =>
+          requestPermissionsAsync(true),
+        )
 
         if (!res.granted) {
           Toast.show(
@@ -147,15 +150,15 @@ export function QrCodeDialog({
   const onSharePress = async () => {
     ref.current?.capture?.().then(async (uri: string) => {
       control.close(() => {
-        Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}).then(
-          () => {
-            ax.metric('starterPack:share', {
-              starterPack: starterPack.uri,
-              shareType: 'qrcode',
-              qrShareType: 'share',
-            })
-          },
-        )
+        runAppInitiatedActivity(() =>
+          Sharing.shareAsync(uri, {mimeType: 'image/png', UTI: 'image/png'}),
+        ).then(() => {
+          ax.metric('starterPack:share', {
+            starterPack: starterPack.uri,
+            shareType: 'qrcode',
+            qrShareType: 'share',
+          })
+        })
       })
     })
   }
