@@ -178,18 +178,6 @@ function ExternalCardEmbed({
   const moderationOpts = useModerationOpts()
   const external = embed.view.external
 
-  if (embed.view.external.uri === 'https://notes.erlend.sh/3muwdtclths2d') {
-    external.labels = [
-      {
-        cts: '2026-03-19T23:09:27.836Z',
-        src: 'did:plc:ar7c4by46qjdydhdevvrndac',
-        uri: 'did:plc:zzzzzzzzzzzzzzzzzzzzzzzz',
-        val: 'porn',
-        ver: 1,
-      },
-    ]
-  }
-
   /*
    * The card is both the "content" and the "media" of the embed, so merge
    * the two contexts: label defs with `blurs: content` act on `contentView`,
