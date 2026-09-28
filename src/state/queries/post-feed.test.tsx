@@ -1,6 +1,7 @@
 import {type PropsWithChildren} from 'react'
 import {AppState} from 'react-native'
 import {
+  hashKey,
   type InfiniteData,
   notifyManager,
   QueryClient,
@@ -22,9 +23,13 @@ import {
   usePostFeedRefresh,
 } from './post-feed'
 import {
+  getPostFeedRestore,
   isPostFeedRefreshing,
+  markPostFeedRestoreAttempted,
   peekPostFeedQueryEntry,
+  recordPostFeedRestore,
 } from './post-feed-registry'
+import {FOLLOWING_SNAPSHOT_QUERY_KEY} from './post-feed-snapshot'
 
 jest.mock('#/lib/api/feed/following', () => ({
   FollowingFeedAPI: jest.fn(),
@@ -703,5 +708,73 @@ describe('usePostFeedRefresh', () => {
       await refresh
     })
     expect(isPostFeedRefreshing(queryClient, KEY)).toBe(false)
+  })
+})
+
+describe('Following snapshot identity', () => {
+  it('is the Home Following query, unmerged', () => {
+    // As `Home` builds its params with the merged feed switched off.
+    const homeParams = {mergeFeedEnabled: false, mergeFeedSources: []}
+    expect(hashKey(FOLLOWING_SNAPSHOT_QUERY_KEY)).toBe(
+      hashKey(RQKEY('following', homeParams)),
+    )
+    expect(hashKey(FOLLOWING_SNAPSHOT_QUERY_KEY)).not.toBe(
+      hashKey(
+        RQKEY('following', {mergeFeedEnabled: true, mergeFeedSources: []}),
+      ),
+    )
+  })
+
+  it('keeps the startCursor of a response on its page, and only then', async () => {
+    jest.mocked(FollowingFeedAPI).mockImplementation(() => {
+      const api = createApi()
+      api.fetch.mockImplementationOnce(() =>
+        Promise.resolve({
+          cursor: '0:1',
+          startCursor: 'start',
+          feed: [feedItem('0-1')],
+        }),
+      )
+      return api as never
+    })
+    const {hook, queryClient} = await renderLoadedFeed()
+    await act(() => hook.result.current.fetchNextPage())
+
+    const [top, next] = cachedData(queryClient).pages
+    expect(top.startCursor).toBe('start')
+    expect('startCursor' in next).toBe(false)
+  })
+})
+
+describe('post-feed restore markers', () => {
+  it('outlive the query they were recorded for', async () => {
+    const {hook, queryClient} = await renderLoadedFeed()
+    recordPostFeedRestore(queryClient, hashKey(KEY), {
+      restoredAt: 1,
+      pageCount: 2,
+    })
+    expect(getPostFeedRestore(queryClient, KEY)).toEqual({
+      restoredAt: 1,
+      pageCount: 2,
+      isAttempted: false,
+    })
+
+    markPostFeedRestoreAttempted(queryClient, KEY)
+    hook.unmount()
+    queryClient.removeQueries({queryKey: KEY})
+
+    expect(peekPostFeedQueryEntry(queryClient, KEY)).toBeUndefined()
+    expect(getPostFeedRestore(queryClient, KEY)?.isAttempted).toBe(true)
+  })
+
+  it('belong to the QueryClient they were recorded on', () => {
+    const first = createQueryClient()
+    const second = createQueryClient()
+    recordPostFeedRestore(first, hashKey(KEY), {restoredAt: 1, pageCount: 1})
+
+    expect(getPostFeedRestore(first, KEY)).toBeDefined()
+    expect(getPostFeedRestore(second, KEY)).toBeUndefined()
+    markPostFeedRestoreAttempted(second, KEY)
+    expect(getPostFeedRestore(second, KEY)).toBeUndefined()
   })
 })
