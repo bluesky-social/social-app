@@ -41,6 +41,7 @@ export type DialogContextProps = {
   close: DialogControlProps['close']
   isNativeDialog: boolean
   nativeSnapPoint: BottomSheetSnapPoint
+  nativeFullHeight: boolean
   disableDrag: boolean
   setDisableDrag: React.Dispatch<React.SetStateAction<boolean>>
   // in the event that the hook is used outside of a dialog

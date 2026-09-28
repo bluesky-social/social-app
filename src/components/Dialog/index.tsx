@@ -179,11 +179,12 @@ export function Outer({
       close,
       isNativeDialog: true,
       nativeSnapPoint: snapPoint,
+      nativeFullHeight: nativeOptions?.fullHeight === true,
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
     }),
-    [close, snapPoint, disableDrag, setDisableDrag],
+    [close, snapPoint, nativeOptions?.fullHeight, disableDrag, setDisableDrag],
   )
 
   return (
@@ -230,7 +231,8 @@ export function ScrollableInner({
 }: DialogInnerProps & {
   ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
 }) {
-  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+  const {nativeSnapPoint, nativeFullHeight, disableDrag, setDisableDrag} =
+    useDialogContext()
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
   const insets = useSafeAreaInsets()
   const scrollPhase = useRef<'idle' | 'drag' | 'momentum'>('idle')
@@ -305,7 +307,11 @@ export function ScrollableInner({
   return (
     <>
       <ScrollView
-        style={[{flexShrink: 1}, isAtMaxSnapPoint && a.flex_1, style]}
+        style={[
+          {flexShrink: 1},
+          (nativeFullHeight || (IS_IOS && isAtMaxSnapPoint)) && a.flex_1,
+          style,
+        ]}
         contentContainerStyle={[
           a.pt_2xl,
           IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
@@ -371,7 +377,8 @@ export const InnerFlatList = forwardRef<
   ref,
 ) {
   const insets = useSafeAreaInsets()
-  const {nativeSnapPoint, disableDrag, setDisableDrag} = useDialogContext()
+  const {nativeSnapPoint, nativeFullHeight, disableDrag, setDisableDrag} =
+    useDialogContext()
   const scrollPhase = useSharedValue<'idle' | 'drag' | 'momentum'>('idle')
 
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
@@ -436,7 +443,11 @@ export const InnerFlatList = forwardRef<
         ref={ref}
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
-        style={[{flexShrink: 1}, isAtMaxSnapPoint && a.flex_1, style]}
+        style={[
+          {flexShrink: 1},
+          (nativeFullHeight || (IS_IOS && isAtMaxSnapPoint)) && a.flex_1,
+          style,
+        ]}
         contentContainerStyle={[
           {paddingTop: headerOffset},
           android({

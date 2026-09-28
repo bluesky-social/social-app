@@ -398,6 +398,10 @@ class BottomSheetView(
             bottomSheet: View,
             newState: Int,
           ) {
+            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+              // A queued layout update must not reopen a sheet being dismissed by a drag.
+              isClosing = true
+            }
             if (newState == BottomSheetBehavior.STATE_EXPANDED && shouldPreventExpansion) {
               behavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
               return
@@ -411,7 +415,7 @@ class BottomSheetView(
             // Apply deferred layout update after gesture completes
             if (newState != BottomSheetBehavior.STATE_DRAGGING &&
               newState != BottomSheetBehavior.STATE_SETTLING &&
-              pendingLayoutUpdate
+              pendingLayoutUpdate && !isClosing
             ) {
               pendingLayoutUpdate = false
               updateLayout()
@@ -435,13 +439,14 @@ class BottomSheetView(
   }
 
   fun updateLayout() {
-    if (fullHeight) return
+    if (fullHeight || isClosing || getContentHeight() <= 0f) return
     val dialog = this.dialog ?: return
 
     val bottomSheet = dialog.findViewById<FrameLayout>(com.google.android.material.R.id.design_bottom_sheet)
     bottomSheet?.let {
       val behavior = BottomSheetBehavior.from(it)
       val currentState = behavior.state
+      if (currentState == BottomSheetBehavior.STATE_HIDDEN) return
 
       val oldRatio = behavior.halfExpandedRatio
       val newRatio = getHalfExpandedRatio()
@@ -509,7 +514,13 @@ class BottomSheetView(
         val oldHeight = oldBottom - oldTop
         if (newHeight != oldHeight) {
           val contentHeight = getContentHeight()
-          if (contentHeight != lastObservedContentHeight && contentHeight > 0 && (isOpen || isOpening) && !isClosing) {
+          if (contentHeight <= 0f) {
+            /*
+             * A transient zero can move the sheet to its minimum ratio. Treat
+             * the returning height as new even if it matches the previous one.
+             */
+            lastObservedContentHeight = 0f
+          } else if (contentHeight != lastObservedContentHeight && (isOpen || isOpening) && !isClosing) {
             lastObservedContentHeight = contentHeight
             updateLayout()
           }
