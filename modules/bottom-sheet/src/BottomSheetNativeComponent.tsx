@@ -172,6 +172,7 @@ function BottomSheetNativeComponentInner({
             Platform.OS === 'ios' &&
               (maxHeight != null || rest.fullHeight === true) && {flex: 1},
             (rest.fullHeight === true || contentFillsCanvas) && {flexGrow: 1},
+            Platform.OS === 'android' && contentFillsCanvas && {height: '100%'},
           ]}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>

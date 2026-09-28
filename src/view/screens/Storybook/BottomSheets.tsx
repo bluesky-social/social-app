@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
@@ -44,6 +45,7 @@ function FooterButton({
   children?: React.ReactNode
 }) {
   const t = useTheme()
+  const {bottom} = useSafeAreaInsets()
 
   return (
     <View
@@ -53,7 +55,7 @@ function FooterButton({
         a.pt_md,
         t.atoms.bg,
         t.atoms.border_contrast_low,
-        {paddingBottom: tokens.space.xl},
+        {paddingBottom: bottom + tokens.space.md},
       ]}>
       {children}
       <Button

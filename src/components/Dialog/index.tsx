@@ -223,6 +223,7 @@ export function Outer({
               ? isHeightConstrained
               : nativeOptions?.fullHeight ||
                 snapPoint === BottomSheetSnapPoint.Full) && a.flex_1,
+            contentFillsCanvas && a.h_full,
           ]}>
           {children}
         </View>
