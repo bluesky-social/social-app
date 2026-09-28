@@ -2,7 +2,7 @@
 
 These are follow-up discussions requested by the operator. Items remain discussion-only unless explicitly marked approved below. Executable task briefs remain in `AGENTS/tasks/`.
 
-The public/internal action-surface cleanup is separately queued as `AGENTS/tasks/0011-task-composer-v2-internal-actions.md`.
+The public/internal action-surface cleanup is implemented and verified by Luna in `AGENTS/tasks/0011-task-composer-v2-internal-actions.md`: intended composer commands remain public, and low-level upload status mutation is now internal-only.
 
 ## 2. Make upload failure types match runtime behavior
 
