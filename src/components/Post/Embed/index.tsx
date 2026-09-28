@@ -2,13 +2,16 @@ import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
-import {moderatePost, ModerationUI} from '@bsky/sdk/moderation'
+import {
+  mergeModUIResults,
+  moderatePost,
+  moderateViewExternal,
+} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {getEmbedCreator} from '#/lib/at-card'
-import {moderateViewExternal} from '#/lib/moderation'
 import {makeProfileLink} from '#/lib/routes/links'
 import {getChatInviteCodeFromUrl} from '#/lib/strings/url-helpers'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -199,7 +202,7 @@ function ExternalCardEmbed({
   }
 
   return (
-    <ContentHider modui={mergeModui(moduis)} activeStyle={[a.mt_sm]}>
+    <ContentHider modui={mergeModUIResults(...moduis)} activeStyle={[a.mt_sm]}>
       <Card
         view={external}
         authorDid={getEmbedCreator(rest.post?.record, external.uri)}
@@ -208,19 +211,6 @@ function ExternalCardEmbed({
       />
     </ContentHider>
   )
-}
-
-function mergeModui(moduis: (ModerationUI | undefined)[]): ModerationUI {
-  const merged = new ModerationUI()
-  for (const modui of moduis) {
-    if (!modui) continue
-    merged.noOverride = merged.noOverride || modui.noOverride
-    merged.filters.push(...modui.filters)
-    merged.blurs.push(...modui.blurs)
-    merged.alerts.push(...modui.alerts)
-    merged.informs.push(...modui.informs)
-  }
-  return merged
 }
 
 function RecordEmbed({

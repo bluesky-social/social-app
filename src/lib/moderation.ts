@@ -5,7 +5,6 @@ import {
   type InterpretedLabelValueDefinition,
   LABELS,
   type ModerationCause,
-  ModerationDecision,
   type ModerationOpts,
   type ModerationUI,
 } from '@bsky/sdk/moderation'
@@ -72,25 +71,6 @@ export function filterUserFacingLabels(
       !label.val.startsWith('!') &&
       !(label.val === 'bot' && label.src === currentAccountDid),
   )
-}
-
-/**
- * Computes a moderation decision for an `app.bsky.embed.external#viewExternal`
- * based on its `labels`. The SDK's `moderatePost` does not account for labels
- * attached directly to an external embed view, so callers must compute a
- * standalone decision for the embed and apply it to the rendered card.
- */
-export function moderateViewExternal(
-  view: app.bsky.embed.external.ViewExternal,
-  opts: ModerationOpts,
-): ModerationDecision {
-  const decision = new ModerationDecision()
-  if (view.labels?.length) {
-    for (const label of view.labels) {
-      decision.addLabel('content', label, opts)
-    }
-  }
-  return decision
 }
 
 export function getLabelingServiceTitle({
