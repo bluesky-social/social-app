@@ -168,6 +168,13 @@ export function StepInfo({
         field: 'password',
       })
     }
+    if (!state.dateOfBirth) {
+      return dispatch({
+        type: 'setError',
+        value: l`Please enter your date of birth.`,
+        field: 'date-of-birth',
+      })
+    }
 
     preemptivelyCompleteActivePolicyUpdate()
     dispatch({type: 'setInviteCode', value: inviteCode})
@@ -182,7 +189,7 @@ export function StepInfo({
   return (
     <>
       <View style={[a.gap_md, a.pt_lg]}>
-        {state.error && (
+        {!!state.error && (
           <Admonition.Admonition type="error">
             {state.error}
           </Admonition.Admonition>
@@ -300,14 +307,19 @@ export function StepInfo({
               <DateField.DateField
                 testID="date"
                 inputRef={birthdateInputRef}
-                value={state.dateOfBirth}
+                value={state.dateOfBirth ?? ''}
+                isInvalid={state.errorField === 'date-of-birth'}
                 onChangeDate={date => {
                   dispatch({
                     type: 'setDateOfBirth',
                     value: sanitizeDate(new Date(date)),
                   })
+                  if (state.errorField === 'date-of-birth') {
+                    dispatch({type: 'clearError'})
+                  }
                 }}
                 label={l`Date of birth`}
+                placeholder={l`Select your date of birth`}
                 accessibilityHint={l`Select your date of birth`}
                 maximumDate={new Date()}
               />

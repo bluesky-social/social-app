@@ -242,7 +242,7 @@ function StepCaptchaInner({
             <ActivityIndicator size="large" />
           )}
         </View>
-        {state.error && <Admonition type="error">{state.error}</Admonition>}
+        {!!state.error && <Admonition type="error">{state.error}</Admonition>}
       </View>
       <BackNextButtons
         hideNext
