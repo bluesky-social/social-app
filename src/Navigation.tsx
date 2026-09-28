@@ -69,6 +69,7 @@ import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
 import {StorybookScreen} from '#/view/screens/Storybook'
+import {PrependLabScreen} from '#/view/screens/Storybook/PrependLab'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
@@ -335,6 +336,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="DebugMod"
         getComponent={() => DebugModScreen}
         options={{title: title(msg`Moderation states`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="PrependLab"
+        getComponent={() => PrependLabScreen}
+        options={{title: title(msg`Prepend lab`), requireAuth: true}}
       />
       <Stack.Screen
         name="InviteScanner"

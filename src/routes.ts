@@ -43,6 +43,7 @@ export const router = new Router<AllNavigatableRoutes>({
   // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
+  PrependLab: '/sys/prepend-lab',
   Log: '/sys/log',
   // invite friends
   InviteScanner: '/invite/scan',
