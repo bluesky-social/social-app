@@ -1,6 +1,8 @@
 import {useEffect, useEffectEvent, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 
+import {IS_ANDROID} from '#/env'
+
 export const getCurrentState = () => AppState.currentState
 
 export function onAppStateChange(cb: (state: AppStateStatus) => void) {
@@ -50,6 +52,14 @@ const returnListeners = new Set<(appReturn: AppReturn) => void>()
 let isTrackingReturns = false
 let lastReturnId = 0
 
+/** Android only: scopes opened by {@link beginAppInitiatedActivity}. */
+const activityScopes = new Set<symbol>()
+/**
+ * The scopes that were open when the app last went to the background, if any
+ * were: the trip away is theirs, and the `active` that ends it ends them too.
+ */
+let scopesOfTrip: Set<symbol> | undefined
+
 /**
  * Starts the single app state listener that all return listeners share, so
  * that each return gets one id however many listeners hear it, and whether a
@@ -64,13 +74,28 @@ function trackReturns() {
   let hasBeenBackgrounded = AppState.currentState === 'background'
   onAppStateChange(next => {
     if (next === 'background') {
-      hasBeenBackgrounded = true
-    } else if (next === 'active' && hasBeenBackgrounded) {
-      hasBeenBackgrounded = false
-      const appReturn: AppReturn = {id: ++lastReturnId, timestamp: Date.now()}
-      for (const listener of [...returnListeners]) {
-        // an earlier listener may have removed this one
-        if (returnListeners.has(listener)) listener(appReturn)
+      if (activityScopes.size > 0) {
+        scopesOfTrip = new Set(activityScopes)
+      } else {
+        hasBeenBackgrounded = true
+      }
+    } else if (next === 'active') {
+      if (scopesOfTrip) {
+        /*
+         * Only the scopes that were open when the trip began: one opened since
+         * (the next step of a flow, started when this step's result arrived
+         * ahead of this event) covers the trip that is still to come.
+         */
+        for (const scope of scopesOfTrip) activityScopes.delete(scope)
+        scopesOfTrip = undefined
+      }
+      if (hasBeenBackgrounded) {
+        hasBeenBackgrounded = false
+        const appReturn: AppReturn = {id: ++lastReturnId, timestamp: Date.now()}
+        for (const listener of [...returnListeners]) {
+          // an earlier listener may have removed this one
+          if (returnListeners.has(listener)) listener(appReturn)
+        }
       }
     }
   })
@@ -108,25 +133,32 @@ function trackReturns() {
  *   system activities such as autofill credential pickers (even if launched by
  *   your app or the system)". A runtime permission request may start one
  *   (`Activity#requestPermissions`: "you should be prepared that your activity
- *   may be paused and resumed"), and so do the share sheet, system pickers and
- *   Custom Tabs, so coming back from any of those is a return here. The
- *   notification shade is not: system windows "such as the status bar
- *   notification panel or a system alert ... temporarily take window input
- *   focus without pausing the foreground activity"
- *   (`Activity#onWindowFocusChanged`), which RN reports as AppState's `blur`
- *   event rather than a `change`.
+ *   may be paused and resumed"), and so do the share sheet, system pickers,
+ *   the image cropper and Custom Tabs, all of which iOS shows inside the app.
+ *   To match iOS, the calls that open them are wrapped in
+ *   {@link runAppInitiatedActivity} or {@link beginAppInitiatedActivity}: a
+ *   `background` that starts while one is open doesn't arm the latch, so the
+ *   `active` that ends the trip isn't a return. Two gaps remain. Activities the
+ *   system starts on its own, such as the autofill credential picker, still
+ *   count. And pressing Home while one of ours is open doesn't, because the
+ *   app already went to the background when it opened, whereas on iOS that
+ *   press is a return. The notification shade doesn't reach AppState at all:
+ *   system windows "such as the status bar notification panel or a system
+ *   alert ... temporarily take window input focus without pausing the
+ *   foreground activity" (`Activity#onWindowFocusChanged`), which RN reports as
+ *   AppState's `blur` event rather than a `change`.
  * - Web (react-native-web) reports only `active` and `background`, from the
  *   document's visibility, so a return is the tab becoming visible again.
  *
  * All listeners share one latch, armed by `background` and spent by the next
  * `active`, and one id counter. The latch is seeded from
- * `AppState.currentState` when the first listener subscribes, so a listener
- * attached while the app is backgrounded still hears the return that follows,
- * and it keeps tracking from then on, so later listeners join it rather than
- * seeding their own. A process that starts in the background (an iOS launch to
- * handle a remote notification, or Android when `AppStateModule` is created
- * before the activity has resumed and starts at `background`) therefore counts
- * its first `active` as a return.
+ * `AppState.currentState` when the first listener subscribes (or, on Android,
+ * the first scope opens), so a listener attached while the app is backgrounded
+ * still hears the return that follows, and it keeps tracking from then on, so
+ * later listeners join it rather than seeding their own. A process that starts
+ * in the background (an iOS launch to handle a remote notification, or Android
+ * when `AppStateModule` is created before the activity has resumed and starts
+ * at `background`) therefore counts its first `active` as a return.
  */
 export function onAppReturnedFromBackground(
   cb: (appReturn: AppReturn) => void,
@@ -155,4 +187,50 @@ export function useOnAppReturnedFromBackground(
     const sub = onAppReturnedFromBackground(appReturn => onReturn(appReturn))
     return () => sub.remove()
   }, [])
+}
+
+/**
+ * Marks the start of something the app does that may open another Android
+ * activity over its own, such as a permission dialog, a system picker, the
+ * share sheet or a Custom Tab, and returns a function that marks its end.
+ * While it is open, a trip to the background doesn't count as a return: see
+ * {@link onAppReturnedFromBackground}. Does nothing on iOS and web, where
+ * those flows stay inside the app and a trip to the background while one is
+ * showing is a real one.
+ *
+ * Prefer {@link runAppInitiatedActivity} for a call that settles once the
+ * activity has closed. Use this directly for one that settles as soon as the
+ * activity has launched, like RN's `Share.share` and expo-web-browser's
+ * `openBrowserAsync` on Android: ending the scope then would end it before the
+ * app has even left, so end it only if the launch fails, and otherwise leave it
+ * to the trip.
+ *
+ * A trip ends every scope that was open when it began, so a scope that is never
+ * ended - a promise that never settles, or a launch that never left the app -
+ * can hide at most one trip that wasn't really its own.
+ */
+export function beginAppInitiatedActivity() {
+  if (!IS_ANDROID) return () => {}
+  trackReturns()
+  const scope = Symbol('appInitiatedActivity')
+  activityScopes.add(scope)
+  return () => {
+    activityScopes.delete(scope)
+  }
+}
+
+/**
+ * Runs `fn` inside a {@link beginAppInitiatedActivity} scope that ends when
+ * `fn` settles, for a call that settles once the activity it opens has closed,
+ * such as a permission request or a picker.
+ */
+export async function runAppInitiatedActivity<T>(
+  fn: () => Promise<T>,
+): Promise<T> {
+  const end = beginAppInitiatedActivity()
+  try {
+    return await fn()
+  } finally {
+    end()
+  }
 }
