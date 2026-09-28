@@ -10,6 +10,7 @@ import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {FollowingFeedAPI} from '#/lib/api/feed/following'
 import {type FeedAPIResponse} from '#/lib/api/feed/types'
+import {logger} from '#/logger'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {type app} from '#/lexicons'
 import {
@@ -615,6 +616,75 @@ describe('usePostFeedRefresh', () => {
     top.resolve({cursor: '1:1', feed: [feedItem('1-1')]})
     await flushNotifications()
     expect(queryClient.getQueryCache().find({queryKey: KEY})).toBeUndefined()
+  })
+
+  it('reports the failure of the latest refresh until another starts', async () => {
+    const {hook} = await renderLoadedRefreshableFeed()
+    const state = () => hook.result.current.refreshState
+    nextApiTop(() => Promise.reject(new Error('offline')))
+    await act(() => hook.result.current.refresh())
+    expect(state().error?.message).toBe('offline')
+    expect(state().isRefreshing).toBe(false)
+
+    // A retry clears the error while it is pending, and it comes back if the
+    // retry fails too.
+    const retry = deferred<FeedAPIResponse>()
+    nextApiTop(() => retry.promise)
+    let retrying!: Promise<FeedPageUnselected | undefined>
+    act(() => {
+      retrying = hook.result.current.refresh()
+    })
+    expect(state().error).toBeUndefined()
+    expect(state().isRefreshing).toBe(true)
+    await act(async () => {
+      retry.reject(new Error('still offline'))
+      await retrying
+    })
+    expect(state().error?.message).toBe('still offline')
+    expect(state().isRefreshing).toBe(false)
+
+    await act(() => hook.result.current.refresh())
+    expect(state().error).toBeUndefined()
+    expect(state().isRefreshing).toBe(false)
+  })
+
+  it('reports network failures without logging them as errors', async () => {
+    const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
+    try {
+      const {hook} = await renderLoadedRefreshableFeed()
+      nextApiTop(() => Promise.reject(new TypeError('Network request failed')))
+      await act(() => hook.result.current.refresh())
+      expect(hook.result.current.refreshState.error?.message).toBe(
+        'Network request failed',
+      )
+      expect(logError).not.toHaveBeenCalled()
+
+      nextApiTop(() => Promise.reject(new Error('Unexpected')))
+      await act(() => hook.result.current.refresh())
+      expect(hook.result.current.refreshState.error?.message).toBe('Unexpected')
+      expect(logError).toHaveBeenCalledTimes(1)
+    } finally {
+      logError.mockRestore()
+    }
+  })
+
+  it('reports nothing for a refresh that a refetch from the top overtook', async () => {
+    const {hook} = await renderLoadedRefreshableFeed()
+    const top = deferred<FeedAPIResponse>()
+    nextApiTop(() => top.promise)
+    let refresh!: Promise<FeedPageUnselected | undefined>
+    act(() => {
+      refresh = hook.result.current.refresh()
+    })
+    await waitFor(() => expect(apis).toHaveLength(2))
+    await act(() => hook.result.current.query.refetch())
+    await act(async () => {
+      top.reject(new Error('offline'))
+      await refresh
+    })
+
+    expect(hook.result.current.refreshState.error).toBeUndefined()
+    expect(hook.result.current.refreshState.isRefreshing).toBe(false)
   })
 
   it('reports a refresh in flight until it settles', async () => {
