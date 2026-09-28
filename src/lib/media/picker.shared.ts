@@ -6,6 +6,7 @@ import {
 } from 'expo-image-picker'
 import {t} from '@lingui/core/macro'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {type ImageMeta} from '#/state/gallery'
 import * as Toast from '#/components/Toast'
 import {IS_IOS} from '#/env'
@@ -17,17 +18,19 @@ export type PickerImage = ImageMeta & {
 }
 
 export async function openPicker(opts?: ImagePickerOptions) {
-  const response = await launchImageLibraryAsync({
-    exif: false,
-    mediaTypes: ['images'],
-    quality: 1,
-    selectionLimit: 1,
-    ...opts,
-    shouldDownloadFromNetwork: true,
-    legacy: true,
-    preferredAssetRepresentationMode:
-      UIImagePickerPreferredAssetRepresentationMode.Automatic,
-  })
+  const response = await runAppInitiatedActivity(() =>
+    launchImageLibraryAsync({
+      exif: false,
+      mediaTypes: ['images'],
+      quality: 1,
+      selectionLimit: 1,
+      ...opts,
+      shouldDownloadFromNetwork: true,
+      legacy: true,
+      preferredAssetRepresentationMode:
+        UIImagePickerPreferredAssetRepresentationMode.Automatic,
+    }),
+  )
 
   return (response.assets ?? [])
     .filter(asset => {
@@ -53,21 +56,23 @@ export async function openUnifiedPicker({
   selectionCountRemaining: number
   videoMaxDurationMs?: number
 }) {
-  return await launchImageLibraryAsync({
-    exif: false,
-    mediaTypes: ['images', 'videos'],
-    quality: 1,
-    allowsMultipleSelection: true,
-    legacy: true,
-    // Reading videos as base64 can fail in the browser before callers have a
-    // chance to validate the file size. Web callers can read image files from
-    // the `file` returned on each asset after validation instead.
-    base64: false,
-    selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
-    shouldDownloadFromNetwork: true,
-    preferredAssetRepresentationMode:
-      UIImagePickerPreferredAssetRepresentationMode.Automatic,
-    videoExportPreset: VideoExportPreset.Passthrough,
-    videoMaxDuration: videoMaxDurationMs / 1000,
-  })
+  return await runAppInitiatedActivity(() =>
+    launchImageLibraryAsync({
+      exif: false,
+      mediaTypes: ['images', 'videos'],
+      quality: 1,
+      allowsMultipleSelection: true,
+      legacy: true,
+      // Reading videos as base64 can fail in the browser before callers have a
+      // chance to validate the file size. Web callers can read image files from
+      // the `file` returned on each asset after validation instead.
+      base64: false,
+      selectionLimit: IS_IOS ? selectionCountRemaining : undefined,
+      shouldDownloadFromNetwork: true,
+      preferredAssetRepresentationMode:
+        UIImagePickerPreferredAssetRepresentationMode.Automatic,
+      videoExportPreset: VideoExportPreset.Passthrough,
+      videoMaxDuration: videoMaxDurationMs / 1000,
+    }),
+  )
 }

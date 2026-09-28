@@ -18,6 +18,7 @@ import {
 import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {usePhotoLibraryPermission} from '#/lib/hooks/usePermissions'
 import {compressIfNeeded} from '#/lib/media/manip'
@@ -105,16 +106,18 @@ export function StepProfile() {
   const openPicker = useCallback(
     async (opts?: ImagePickerOptions) => {
       const response = await sheetWrapper(
-        launchImageLibraryAsync({
-          exif: false,
-          shouldDownloadFromNetwork: true,
-          mediaTypes: ['images'],
-          quality: 1,
-          ...opts,
-          legacy: true,
-          preferredAssetRepresentationMode:
-            UIImagePickerPreferredAssetRepresentationMode.Automatic,
-        }),
+        runAppInitiatedActivity(() =>
+          launchImageLibraryAsync({
+            exif: false,
+            shouldDownloadFromNetwork: true,
+            mediaTypes: ['images'],
+            quality: 1,
+            ...opts,
+            legacy: true,
+            preferredAssetRepresentationMode:
+              UIImagePickerPreferredAssetRepresentationMode.Automatic,
+          }),
+        ),
       )
 
       const asset = (response.assets ?? [])[0]

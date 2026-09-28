@@ -4,6 +4,8 @@ import ExpoImageCropTool, {
 } from '@bsky.app/expo-image-crop-tool'
 import {t} from '@lingui/core/macro'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
+
 export {
   openPicker,
   openUnifiedPicker,
@@ -15,7 +17,7 @@ export async function openCamera(customOpts: ImagePickerOptions) {
     mediaTypes: 'images',
     ...customOpts,
   }
-  const res = await launchCameraAsync(opts)
+  const res = await runAppInitiatedActivity(() => launchCameraAsync(opts))
 
   if (res.canceled) {
     return
@@ -33,12 +35,14 @@ export async function openCamera(customOpts: ImagePickerOptions) {
 }
 
 export async function openCropper(opts: OpenCropperOptions) {
-  const item = await ExpoImageCropTool.openCropperAsync({
-    doneButtonText: t`Done`,
-    cancelButtonText: t`Cancel`,
-    ...opts,
-    format: 'jpeg',
-  })
+  const item = await runAppInitiatedActivity(() =>
+    ExpoImageCropTool.openCropperAsync({
+      doneButtonText: t`Done`,
+      cancelButtonText: t`Cancel`,
+      ...opts,
+      format: 'jpeg',
+    }),
+  )
 
   return {
     path: item.path,

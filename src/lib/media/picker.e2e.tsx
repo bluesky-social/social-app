@@ -9,6 +9,7 @@ import ExpoImageCropTool, {
   type OpenCropperOptions,
 } from '@bsky.app/expo-image-crop-tool'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {IMAGE_SIZE_CONFIG_2K_1MB} from '#/lib/constants'
 import {IS_ANDROID} from '#/env'
 import {compressIfNeeded} from './manip'
@@ -110,10 +111,12 @@ export async function openCamera(): Promise<PickerImage> {
 }
 
 export async function openCropper(opts: OpenCropperOptions) {
-  const item = await ExpoImageCropTool.openCropperAsync({
-    ...opts,
-    format: 'jpeg',
-  })
+  const item = await runAppInitiatedActivity(() =>
+    ExpoImageCropTool.openCropperAsync({
+      ...opts,
+      format: 'jpeg',
+    }),
+  )
 
   return {
     path: item.path,
