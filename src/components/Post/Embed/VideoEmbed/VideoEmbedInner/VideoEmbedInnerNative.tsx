@@ -3,6 +3,7 @@ import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
 import {BlueskyVideoView} from '@bsky.app/video'
 import {useLingui} from '@lingui/react/macro'
 
+import {beginAppInitiatedActivity} from '#/lib/appState'
 import {HITSLOP_30} from '#/lib/constants'
 import {hasPlaybackStarted} from '#/lib/media/video/analytics'
 import {useAutoplayDisabled} from '#/state/preferences'
@@ -136,6 +137,12 @@ export function VideoEmbedInnerNative({
         <>
           <VideoPresentationControls
             enterFullscreen={() => {
+              /*
+               * On Android the player goes fullscreen in an activity of its
+               * own, and the call doesn't report back, so the scope is left to
+               * end with the trip.
+               */
+              beginAppInitiatedActivity()
               videoRef.current?.enterFullscreen(true)
             }}
             toggleMuted={() => {
