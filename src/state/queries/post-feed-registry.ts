@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 
 import {type FeedAPI} from '#/lib/api/feed/types'
+import {type PostFeedCheckState} from './post-feed-checks'
 
 /** Live feed state, kept outside serializable query data. */
 export type PostFeedQueryEntry = {
@@ -28,6 +29,12 @@ export type PostFeedQueryEntry = {
    * that writes, so every caller learns of the commit that served it.
    */
   refresh?: PendingRefresh
+  /**
+   * When the query was last checked for new content, the check in flight and
+   * the real return it still owes a check or an offer. Shared by every view of
+   * the query - see `post-feed-checks.ts`, which creates it on first use.
+   */
+  checks?: PostFeedCheckState
 }
 
 type PendingRefresh = {
