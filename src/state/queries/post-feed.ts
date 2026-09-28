@@ -49,12 +49,14 @@ import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {
   classifySincePage,
+  type FeedGap,
   type SinceSeam,
   tuneOrder,
 } from './post-feed-boundary'
 import {
   beginPostFeedRestorePrepend,
   ensurePostFeedTopApi,
+  fillPostFeedGap,
   getPostFeedQueryEntry,
   peekPostFeedQueryEntry,
   prependPostFeedQuery,
@@ -609,6 +611,67 @@ export function useFollowingRestorePrepend(
       settlePostFeedRestore(queryClient, hashKey(queryKey))
       // Polls peek with the top page's API, which a restored page lacks.
       ensurePostFeedTopApi(queryClient, queryKey, createFeedApi)
+    }
+  }
+}
+
+/**
+ * How filling a gap in Following went: `filled`, with how many posts the page
+ * that fills it holds, or why not. `superseded` is the gap having gone, or
+ * the pages having been replaced, before anything was written.
+ */
+export type FollowingGapOutcome =
+  {outcome: 'filled'; itemCount: number} | {outcome: 'failed' | 'superseded'}
+
+/**
+ * Fills a gap that the restore prepend left in a Following feed, a `since`
+ * page that did not reach the restored top (see `gapBelow`): fetch the
+ * page that continues from its cursor, as ordinary pagination would, then
+ * replace everything below it with that page in one write - see
+ * {@link fillPostFeedGap}. Later pages continue from it. Never rejects: a
+ * failed fetch writes nothing and leaves the gap to be filled again.
+ */
+export function useFollowingGapFill(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const {isReady, createFeedApi, fetchPage} = usePostFeedFetcher(
+    feedDesc,
+    params,
+  )
+
+  return async (
+    gap: Pick<FeedGap, 'since' | 'cursor'>,
+  ): Promise<FollowingGapOutcome> => {
+    const queryKey = RQKEY(feedDesc, params)
+    const upper = queryClient
+      .getQueryData<InfiniteData<FeedPageUnselected>>(queryKey)
+      ?.pages.find(
+        page => page.since === gap.since && page.cursor === gap.cursor,
+      )
+    if (!isReady || !upper) {
+      return {outcome: 'superseded'}
+    }
+    logger.debug('useFollowingGapFill', {feedDesc})
+    try {
+      const result = await fillPostFeedGap(
+        queryClient,
+        queryKey,
+        upper,
+        async upperApi => {
+          const api = upperApi ?? createFeedApi()
+          return {api, page: await fetchPage(api, {cursor: upper.cursor})}
+        },
+      )
+      return result.status === 'filled'
+        ? {outcome: 'filled', itemCount: result.page.feed.length}
+        : {outcome: 'superseded'}
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to fill a gap in a feed', {message: e})
+      }
+      return {outcome: 'failed'}
     }
   }
 }

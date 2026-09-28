@@ -21,10 +21,12 @@ import {
   resetPostsFeedQueries,
   RQKEY,
   summarizeNewContentAbove,
+  useFollowingGapFill,
   useFollowingRestorePrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
 } from './post-feed'
+import {findFeedGaps} from './post-feed-boundary'
 import {
   beginPostFeedRestorePrepend,
   getPostFeedRestore,
@@ -1240,5 +1242,353 @@ describe('useFollowingRestorePrepend', () => {
       limit: 30,
     })
     expect(cachedData(queryClient).pages.every(page => !page.since)).toBe(true)
+  })
+})
+
+describe('useFollowingGapFill', () => {
+  const HOUR = 60 * 60 * 1000
+  /** Where the page fetched with `since` left off, short of the restored top. */
+  const GAP = {since: 'S', cursor: '0:10'}
+
+  /**
+   * A restored feed with a page above it that did not reach its top: the
+   * restore prepend's API, the first one created, issued the gap's cursor.
+   */
+  async function renderGappedFeed() {
+    const queryClient = createQueryClient()
+    const fetchedAt = Date.now() - HOUR
+    queryClient.setQueryData<InfiniteData<FeedPageUnselected>>(KEY, {
+      pages: [
+        {
+          cursor: 'r:1',
+          startCursor: 'S',
+          feed: [feedItem('r-0'), feedItem('r-1')],
+          fetchedAt,
+        },
+        {cursor: 'r:2', feed: [feedItem('r-2')], fetchedAt: fetchedAt + 1},
+      ],
+      pageParams: [undefined, {cursor: 'r:1'}],
+    })
+    recordPostFeedRestore(queryClient, hashKey(KEY), {
+      restoredAt: Date.now(),
+      pageCount: 2,
+    })
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    const hook = renderHook(
+      () => ({
+        query: usePostFeedQuery(FEED),
+        prepend: useFollowingRestorePrepend(FEED),
+        fill: useFollowingGapFill(FEED),
+        refresh: usePostFeedRefresh(FEED).refresh,
+      }),
+      {wrapper},
+    )
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    jest.mocked(FollowingFeedAPI).mockImplementationOnce(
+      () =>
+        createApi({
+          since: () =>
+            Promise.resolve({
+              cursor: GAP.cursor,
+              startCursor: 'N',
+              feed: [feedItem('n-0'), feedItem('n-1')],
+            }),
+        }) as never,
+    )
+    let prepended
+    await act(async () => {
+      prepended = await hook.result.current.prepend()
+    })
+    expect(prepended).toEqual({outcome: 'gap', itemCount: 2})
+    return {hook, queryClient, gapApi: apis[0]}
+  }
+
+  function watchWrites(queryClient: QueryClient) {
+    let writes = 0
+    queryClient.getQueryCache().subscribe(event => {
+      if (event.type === 'updated' && event.action.type === 'success') {
+        writes++
+      }
+    })
+    return () => writes
+  }
+
+  function gapsIn(queryClient: QueryClient) {
+    const {pages, pageParams} = cachedData(queryClient)
+    return findFeedGaps(pages, pageParams, () => true)
+  }
+
+  it('is open below a page fetched with since that did not reach the top', async () => {
+    const {queryClient} = await renderGappedFeed()
+    expect(gapsIn(queryClient)).toEqual(
+      new Map([[0, {...GAP, status: 'open'}]]),
+    )
+    // The old pages below are still there to scroll through.
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      '0:10',
+      'r:1',
+      'r:2',
+    ])
+  })
+
+  it('replaces everything below the gap with the page that continues it, in one write', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const gapPage = cachedData(queryClient).pages[0]
+    const writes = watchWrites(queryClient)
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.fill(GAP)
+    })
+
+    expect(outcome).toEqual({outcome: 'filled', itemCount: 1})
+    expect(writes()).toBe(1)
+    // An ordinary page, fetched with the gap page's own API.
+    expect(gapApi.fetch).toHaveBeenLastCalledWith({
+      cursor: '0:10',
+      since: undefined,
+      limit: 30,
+    })
+    const {pages, pageParams} = cachedData(queryClient)
+    expect(pages[0]).toBe(gapPage)
+    expect(pages.map(page => page.cursor)).toEqual(['0:10', '0:11'])
+    expect(pages[1].since).toBeUndefined()
+    expect(pageParams).toEqual([undefined, {cursor: '0:10'}])
+    expect(gapsIn(queryClient)).toEqual(
+      new Map([[0, {...GAP, status: 'filled'}]]),
+    )
+  })
+
+  it('keeps the rows above the gap', async () => {
+    const {hook} = await renderGappedFeed()
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(3),
+    )
+    const keys = () =>
+      hook.result.current.query.data!.pages[0].slices.map(
+        slice => slice._reactKey,
+      )
+    const before = keys()
+
+    await act(() => hook.result.current.fill(GAP))
+
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(2),
+    )
+    expect(keys()).toEqual(before)
+  })
+
+  it('paginates on from the page that filled the gap, with its API', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    await act(() => hook.result.current.fill(GAP))
+
+    await act(() => hook.result.current.query.fetchNextPage())
+
+    expect(cursorsFetchedBy(gapApi)).toEqual([undefined, '0:10', '0:11'])
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      '0:10',
+      '0:11',
+      '0:12',
+    ])
+  })
+
+  it('keeps the old pages and the gap when the fetch fails, to try again', async () => {
+    const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
+    try {
+      const {hook, queryClient, gapApi} = await renderGappedFeed()
+      const data = cachedData(queryClient)
+      gapApi.fetch.mockImplementationOnce(() =>
+        Promise.reject(new Error('Upstream failure')),
+      )
+
+      let outcome
+      await act(async () => {
+        outcome = await hook.result.current.fill(GAP)
+      })
+
+      expect(outcome).toEqual({outcome: 'failed'})
+      expect(cachedData(queryClient)).toBe(data)
+      expect(gapsIn(queryClient).get(0)?.status).toBe('open')
+      // And the old pages still paginate.
+      await act(() => hook.result.current.query.fetchNextPage())
+      expect(cachedData(queryClient).pages).toHaveLength(4)
+
+      await act(async () => {
+        outcome = await hook.result.current.fill(GAP)
+      })
+      expect(outcome).toEqual({outcome: 'filled', itemCount: 1})
+      expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+        '0:10',
+        '0:11',
+      ])
+    } finally {
+      logError.mockRestore()
+    }
+  })
+
+  it('gives way to a refresh that starts while it is in flight', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const below = deferred<FeedAPIResponse>()
+    gapApi.fetch.mockImplementationOnce(() => below.promise)
+    const writes = watchWrites(queryClient)
+
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fill(GAP)
+    })
+    await act(() => hook.result.current.refresh())
+    const refreshed = cachedData(queryClient)
+    await act(async () => {
+      below.resolve({cursor: '0:11', feed: [feedItem('0-11')]})
+      expect(await filling).toEqual({outcome: 'superseded'})
+    })
+
+    expect(cachedData(queryClient)).toBe(refreshed)
+    expect(refreshed.pages).toHaveLength(1)
+    expect(writes()).toBe(1)
+  })
+
+  it('gives way to a refetch from the top that starts while it is in flight', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const below = deferred<FeedAPIResponse>()
+    gapApi.fetch.mockImplementationOnce(() => below.promise)
+
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fill(GAP)
+    })
+    await act(() => hook.result.current.query.refetch())
+    const refetched = cachedData(queryClient)
+    await act(async () => {
+      below.resolve({cursor: '0:11', feed: [feedItem('0-11')]})
+      expect(await filling).toEqual({outcome: 'superseded'})
+    })
+
+    expect(cachedData(queryClient)).toBe(refetched)
+    expect(refetched.pages.every(page => !page.since)).toBe(true)
+  })
+
+  it('does not fetch for a gap a refresh has already replaced', async () => {
+    const {hook, gapApi} = await renderGappedFeed()
+    await act(() => hook.result.current.refresh())
+    const calls = gapApi.fetch.mock.calls.length
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.fill(GAP)
+    })
+
+    expect(outcome).toEqual({outcome: 'superseded'})
+    expect(gapApi.fetch.mock.calls).toHaveLength(calls)
+  })
+
+  it('does not write into a query removed while it was in flight', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const below = deferred<FeedAPIResponse>()
+    gapApi.fetch.mockImplementationOnce(() => below.promise)
+
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fill(GAP)
+    })
+    hook.unmount()
+    queryClient.removeQueries({queryKey: KEY})
+    below.resolve({cursor: '0:11', feed: [feedItem('0-11')]})
+
+    expect(await filling).toEqual({outcome: 'superseded'})
+    expect(queryClient.getQueryCache().find({queryKey: KEY})).toBeUndefined()
+  })
+
+  it('drops a fetchNextPage that was in flight when it wrote', async () => {
+    const {hook, queryClient} = await renderGappedFeed()
+    // The restored pages have no API, so their next page gets a fresh one.
+    const next = deferred<FeedAPIResponse>()
+    jest.mocked(FollowingFeedAPI).mockImplementationOnce(() => {
+      const api = createApi()
+      api.fetch.mockImplementationOnce(() => next.promise)
+      return api as never
+    })
+    let fetchNextPage!: Promise<unknown>
+    act(() => {
+      fetchNextPage = hook.result.current.query.fetchNextPage()
+    })
+    await waitFor(() => expect(apis).toHaveLength(2))
+
+    await act(() => hook.result.current.fill(GAP))
+    await act(async () => {
+      next.resolve({cursor: 'r:3', feed: [feedItem('r-3')]})
+      await fetchNextPage
+    })
+
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      '0:10',
+      '0:11',
+    ])
+  })
+
+  it('keeps what is added above the gap while it is in flight', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const below = deferred<FeedAPIResponse>()
+    gapApi.fetch.mockImplementationOnce(() => below.promise)
+
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fill(GAP)
+    })
+    await act(() =>
+      prependPostFeedQuery<FeedPageUnselected, undefined>(
+        queryClient,
+        KEY,
+        () =>
+          Promise.resolve({
+            page: {
+              since: 'N',
+              cursor: 'N',
+              startCursor: 'M',
+              feed: [feedItem('m-0')],
+              fetchedAt: Date.now(),
+            },
+            detail: undefined,
+          }),
+      ),
+    )
+    await act(async () => {
+      below.resolve({cursor: '0:11', feed: [feedItem('0-11')]})
+      expect(await filling).toEqual({outcome: 'filled', itemCount: 1})
+    })
+
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      'N',
+      '0:10',
+      '0:11',
+    ])
+    expect(cachedData(queryClient).pageParams).toEqual([
+      undefined,
+      undefined,
+      {cursor: '0:10'},
+    ])
+  })
+
+  it('shares one fetch between fills of the same gap that overlap', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const writes = watchWrites(queryClient)
+    const calls = gapApi.fetch.mock.calls.length
+
+    let outcomes
+    await act(async () => {
+      outcomes = await Promise.all([
+        hook.result.current.fill(GAP),
+        hook.result.current.fill(GAP),
+      ])
+    })
+
+    expect(outcomes).toEqual([
+      {outcome: 'filled', itemCount: 1},
+      {outcome: 'filled', itemCount: 1},
+    ])
+    expect(gapApi.fetch.mock.calls).toHaveLength(calls + 1)
+    expect(writes()).toBe(1)
   })
 })
