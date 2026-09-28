@@ -187,7 +187,7 @@ function DialogInner({
     ImageMeta | undefined | null
   >()
 
-  // When creating with pre-filled values (from starter pack), consider dirty
+  // When creating with pre-filled values (from Starter Pack), consider dirty
   // immediately so the Save button is enabled
   const hasInitialValuesForCreate = !list && initialValues != null
   const dirty =

@@ -40,7 +40,7 @@ export function StepSuggestedStarterpacks() {
     <View style={[a.align_start, a.gap_sm]} testID="onboardingInterests">
       <OnboardingPosition />
       <OnboardingTitleText>
-        <Trans comment="Starter packs suggested to the user for them to follow">
+        <Trans comment="Starter Packs suggested to the user for them to follow">
           Find people to follow
         </Trans>
       </OnboardingTitleText>
@@ -73,11 +73,17 @@ export function StepSuggestedStarterpacks() {
           </View>
         ) : (
           <View style={[a.flex_1]}>
-            {suggestedStarterPacks?.starterPacks.map(starterPack => (
-              <View style={[a.pb_lg]} key={starterPack.uri}>
-                <StarterPackCard view={starterPack} />
-              </View>
-            ))}
+            {suggestedStarterPacks?.starterPacks.map(
+              (starterPack, position) => (
+                <View style={[a.pb_lg]} key={starterPack.uri}>
+                  <StarterPackCard
+                    view={starterPack}
+                    recId={suggestedStarterPacks.recId}
+                    position={position}
+                  />
+                </View>
+              ),
+            )}
           </View>
         )}
       </View>

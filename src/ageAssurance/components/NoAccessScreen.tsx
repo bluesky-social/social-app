@@ -1,9 +1,11 @@
 import {useCallback, useEffect, useEffectEvent} from 'react'
 import {ScrollView, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {dateDiff, useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
+import {formatDateTime} from '#/lib/strings/time'
 import {useIsBirthdateUpdateAllowed} from '#/state/birthdate'
 import {useSessionApi} from '#/state/session'
 import {DeactivateAccountDialog} from '#/screens/Settings/components/DeactivateAccountDialog'
@@ -25,7 +27,6 @@ import {Loader} from '#/components/Loader'
 import {Outlet as PortalOutlet} from '#/components/Portal'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {BottomSheetOutlet} from '#/../modules/bottom-sheet'
 import {useAgeAssurance} from '#/ageAssurance'
 import {DeviceSignalsNotice} from '#/ageAssurance/components/DeviceSignalsNotice'
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
@@ -435,7 +436,7 @@ function AccessSection() {
               ) : lastInitiatedAt && timeAgo && diff ? (
                 <Text
                   style={[a.text_sm, a.italic, t.atoms.text_contrast_medium]}
-                  title={i18n.date(lastInitiatedAt, {
+                  title={formatDateTime(i18n, lastInitiatedAt, {
                     dateStyle: 'medium',
                     timeStyle: 'medium',
                   })}>

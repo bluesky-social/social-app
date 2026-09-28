@@ -81,11 +81,11 @@ function ShareDialogInner({
           <View style={[!gtMobile && a.gap_lg]}>
             <View style={[a.gap_sm, gtMobile && a.pb_lg]}>
               <Text style={[a.font_semi_bold, a.text_2xl]}>
-                <Trans>Invite people to this starter pack!</Trans>
+                <Trans>Invite people to this Starter Pack!</Trans>
               </Text>
               <Text style={[a.text_md, t.atoms.text_contrast_medium]}>
                 <Trans>
-                  Share this starter pack and help people join your community on
+                  Share this Starter Pack and help people join your community on
                   Bluesky.
                 </Trans>
               </Text>

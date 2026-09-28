@@ -91,7 +91,7 @@ export function LoggedOut({onDismiss}: {onDismiss?: () => void}) {
   /*
    * Back from the login or create-account step. Where it returns depends on how
    * the view was entered:
-   * - Entered on the splash or a landing screen (starter pack, group chat
+   * - Entered on the splash or a landing screen (Starter Pack, group chat
    *   invite): return there, i.e. the screen the user actually saw first.
    * - Dropped directly onto login/create-account (e.g. tapping "Create
    *   account" elsewhere in the app): there is no preceding screen in this

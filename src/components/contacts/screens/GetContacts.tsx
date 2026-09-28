@@ -1,7 +1,7 @@
 import {useContext} from 'react'
 import {Alert, View} from 'react-native'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
-import * as Contacts from 'expo-contacts'
+import * as Contacts from 'expo-contacts/legacy'
 import {type Un$Typed} from '@atproto/lex'
 import {type Client} from '@atproto/lex'
 import {toDatetimeString} from '@atproto/syntax'

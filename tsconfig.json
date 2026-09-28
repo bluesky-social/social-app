@@ -25,5 +25,5 @@
     ],
     "customConditions": ["react-native-strict-api"]
   },
-  "exclude": ["bskyweb", "bskyembed", "web-build"]
+  "exclude": ["bskyweb", "bskyembed", "web-build", "dist"]
 }

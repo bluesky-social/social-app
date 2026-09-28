@@ -33,6 +33,7 @@ type ResolvedExternalLink = {
   title: string
   description: string
   thumb: ComposerImage | undefined
+  authorDid?: string
   /**
    * The AT-URI of the Atmosphere record representing this external content, if
    * it exists. Example: a site.standard.document record.
@@ -272,6 +273,18 @@ function getFileSlug(url: string | undefined): string | undefined {
   return dotIndex > 0 ? filename.slice(0, dotIndex) : undefined
 }
 
+function getAuthorDid(author: string | undefined): string | undefined {
+  if (!author) return
+
+  try {
+    const uri = new AtUri(author)
+    if (!uri.host.startsWith('did:') || uri.collection || uri.rkey) return
+    return uri.host
+  } catch {
+    return
+  }
+}
+
 async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
   const result = await getLinkMeta(uri)
   return {
@@ -280,6 +293,7 @@ async function resolveExternal(uri: string): Promise<ResolvedExternalLink> {
     title: result.title ?? '',
     description: result.description ?? '',
     thumb: result.image ? await imageToThumb(result.image) : undefined,
+    authorDid: getAuthorDid(result.author),
     /*
      * New fields from Standard Site integration. Other fields are derived from
      * opengraph/oembed as before.
