@@ -36,10 +36,7 @@ describe('createFeedViewPostsSlices', () => {
       reply: {root, parent},
       opThreadPostIndex: 3,
       opThreadPostCount: 4,
-    } as app.bsky.feed.defs.FeedViewPost & {
-      opThreadPostIndex: number
-      opThreadPostCount: number
-    }
+    } as app.bsky.feed.defs.FeedViewPost
 
     const [slice] = createFeedViewPostsSlices([feedPost])
 

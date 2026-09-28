@@ -5,14 +5,13 @@ import {FALLBACK_MARKER_POST} from './feed/home'
 import {type ReasonFeedSource} from './feed/types'
 
 export type FeedPostNumbering = Pick<
-  app.bsky.unspecced.defs.ThreadItemPost,
+  app.bsky.feed.defs.FeedViewPost,
   'opThreadPostIndex' | 'opThreadPostCount'
 >
 
 export type ValidFeedPostNumbering = Required<FeedPostNumbering>
 
-// AppView adds these fields to feed responses ahead of their feed lexicon.
-type FeedViewPost = app.bsky.feed.defs.FeedViewPost & FeedPostNumbering
+type FeedViewPost = app.bsky.feed.defs.FeedViewPost
 
 function getPostNumbering(
   value: FeedPostNumbering,
