@@ -1,0 +1,1834 @@
+{
+  "schemaVersion": 1,
+  "timestamp": "2026-09-25T21:59:48.236Z",
+  "environment": {
+    "platform": "android",
+    "osVersion": 36,
+    "development": false,
+    "reactNative": {
+      "minor": 86,
+      "prerelease": null,
+      "patch": 3,
+      "major": 0
+    },
+    "engine": "Hermes"
+  },
+  "configuration": {
+    "renderers": [
+      "react-native",
+      "plain-text",
+      "fast-text"
+    ],
+    "workloads": [
+      "label",
+      "lingui",
+      "fragments",
+      "nested"
+    ],
+    "count": 400,
+    "rounds": 12,
+    "warmups": 3
+  },
+  "samples": [
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 418.5522919893265,
+      "layoutMs": 604.4424170255661,
+      "settledMs": 638.2332919836044
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 151.21533298492432,
+      "layoutMs": 455.8932499885559,
+      "settledMs": 574.9116249680519
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 66.91595804691315,
+      "layoutMs": 345.6343750357628,
+      "settledMs": 401.61045902967453
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 95.41529095172882,
+      "layoutMs": 232.54745799303055,
+      "settledMs": 265.38020795583725
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 104.4445829987526,
+      "layoutMs": 323.8024579882622,
+      "settledMs": 376.9420830011368
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 71.42179197072983,
+      "layoutMs": 388.49108296632767,
+      "settledMs": 542.3646249771118
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 195.56895899772644,
+      "layoutMs": 1458.9725840091705,
+      "settledMs": 1674.7316679954529
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 67.83399999141693,
+      "layoutMs": 257.65037500858307,
+      "settledMs": 431.42833399772644
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 86.4600830078125,
+      "layoutMs": 406.53583401441574,
+      "settledMs": 493.462916970253
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 97.40766602754593,
+      "layoutMs": 103.27645802497864,
+      "settledMs": 471.72870802879333
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 106.86329102516174,
+      "layoutMs": 298.9108330011368,
+      "settledMs": 323.8532910346985
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 108.1642079949379,
+      "layoutMs": 348.3942909836769,
+      "settledMs": 414.5708329677582
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 88.90108400583267,
+      "layoutMs": 301.57504200935364,
+      "settledMs": 347.84383404254913
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 115.40087503194809,
+      "layoutMs": 304.9839590191841,
+      "settledMs": 411.2241260409355
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 103.18879103660583,
+      "layoutMs": 106.46395802497864,
+      "settledMs": 426.0046670436859
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 101.91733402013779,
+      "layoutMs": 503.0960420370102,
+      "settledMs": 581.7260010242462
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 67.04541701078415,
+      "layoutMs": 318.29562497138977,
+      "settledMs": 430.2193340063095
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 102.09249997138977,
+      "layoutMs": 104.4705839753151,
+      "settledMs": 296.91095900535583
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 123.11233401298523,
+      "layoutMs": 125.50720900297165,
+      "settledMs": 372.21783405542374
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 100.55616700649261,
+      "layoutMs": 220.0681670308113,
+      "settledMs": 362.1742089986801
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 105.99845796823502,
+      "layoutMs": 304.3366670012474,
+      "settledMs": 354.275250017643
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 94.07066595554352,
+      "layoutMs": 318.0585829615593,
+      "settledMs": 345.08562499284744
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 106.72516602277756,
+      "layoutMs": 353.2750419974327,
+      "settledMs": 429.1048330068588
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 74.60333400964737,
+      "layoutMs": 78.59741699695587,
+      "settledMs": 375.4920000433922
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 106.47912496328354,
+      "layoutMs": 422.6997919678688,
+      "settledMs": 659.982333958149
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 68.34162503480911,
+      "layoutMs": 74.4483750462532,
+      "settledMs": 455.16133403778076
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 84.41654199361801,
+      "layoutMs": 90.22154200077057,
+      "settledMs": 415.3671250343323
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 84.67508298158646,
+      "layoutMs": 487.8387079834938,
+      "settledMs": 707.7751669883728
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 122.13220804929733,
+      "layoutMs": 352.1949170231819,
+      "settledMs": 515.2920830249786
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 84.62141597270966,
+      "layoutMs": 87.06679099798203,
+      "settledMs": 465.6085829734802
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 85.93595796823502,
+      "layoutMs": 430.2266249656677,
+      "settledMs": 486.7131670117378
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 106.6064590215683,
+      "layoutMs": 109.31558400392532,
+      "settledMs": 456.53075098991394
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 120.32949995994568,
+      "layoutMs": 479.292584002018,
+      "settledMs": 565.6457919478416
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 79.76004201173782,
+      "layoutMs": 82.52220898866653,
+      "settledMs": 502.77820897102356
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 101.50749999284744,
+      "layoutMs": 262.24087500572205,
+      "settledMs": 447.4311250448227
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 102.42329102754593,
+      "layoutMs": 240.6951670050621,
+      "settledMs": 463.5368329882622
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 87.83033299446106,
+      "layoutMs": 364.7108330130577,
+      "settledMs": 403.8454999923706
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 182.180458009243,
+      "layoutMs": 184.2879170179367,
+      "settledMs": 359.3663330078125
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 101.63999998569489,
+      "layoutMs": 382.8167089819908,
+      "settledMs": 414.7360000014305
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 65.96299999952316,
+      "layoutMs": 353.4324579834938,
+      "settledMs": 405.99199998378754
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 109.81825000047684,
+      "layoutMs": 339.0900830030441,
+      "settledMs": 404.7430000305176
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 73.2860409617424,
+      "layoutMs": 78.99691599607468,
+      "settledMs": 419.90174996852875
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "label",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 116.38037598133087,
+      "layoutMs": 249.8609589934349,
+      "settledMs": 283.8337510228157
+    },
+    {
+      "renderer": "react-native",
+      "workload": "label",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 101.19833302497864,
+      "layoutMs": 413.07791697978973,
+      "settledMs": 460.94662499427795
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "label",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 106.20525002479553,
+      "layoutMs": 108.92037498950958,
+      "settledMs": 442.149875998497
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 120.16687500476837,
+      "layoutMs": 338.9402080178261,
+      "settledMs": 387.41958302259445
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 112.39954096078873,
+      "layoutMs": 409.2917919754982,
+      "settledMs": 480.7055000066757
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 112.46937501430511,
+      "layoutMs": 285.6541250348091,
+      "settledMs": 557.0856260061264
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 130.4997500181198,
+      "layoutMs": 402.08287501335144,
+      "settledMs": 460.72170799970627
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 97.42033302783966,
+      "layoutMs": 455.0041249990463,
+      "settledMs": 505.0605419874191
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 118.86199998855591,
+      "layoutMs": 319.6845840215683,
+      "settledMs": 458.0249170064926
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 123.8327499628067,
+      "layoutMs": 397.90937501192093,
+      "settledMs": 614.7320420145988
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 191.5545420050621,
+      "layoutMs": 402.4748749732971,
+      "settledMs": 455.9315829873085
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 100.69025003910065,
+      "layoutMs": 103.3606670498848,
+      "settledMs": 368.1013750433922
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 82.76120901107788,
+      "layoutMs": 242.8097090125084,
+      "settledMs": 294.44495898485184
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 112.81825000047684,
+      "layoutMs": 366.55058294534683,
+      "settledMs": 409.7556249499321
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 107.16070801019669,
+      "layoutMs": 258.15933299064636,
+      "settledMs": 318.58379101753235
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 138.09149998426437,
+      "layoutMs": 499.9633329510689,
+      "settledMs": 606.046374976635
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 100.44945901632309,
+      "layoutMs": 453.1128749847412,
+      "settledMs": 521.9927089810371
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 104.32154202461243,
+      "layoutMs": 241.09750002622604,
+      "settledMs": 297.40104204416275
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 100.43291699886322,
+      "layoutMs": 102.8974170088768,
+      "settledMs": 382.00387597084045
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 119.45083302259445,
+      "layoutMs": 396.6127089858055,
+      "settledMs": 432.01241701841354
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 117.49241703748703,
+      "layoutMs": 254.36062502861023,
+      "settledMs": 325.5600839853287
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 103.13687497377396,
+      "layoutMs": 335.80425000190735,
+      "settledMs": 374.8647499680519
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 123.2741670012474,
+      "layoutMs": 506.77237498760223,
+      "settledMs": 739.4141249656677
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 112.55758303403854,
+      "layoutMs": 375.6096659898758,
+      "settledMs": 469.44745802879333
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 135.20808297395706,
+      "layoutMs": 138.86308300495148,
+      "settledMs": 359.3813329935074
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 91.41945803165436,
+      "layoutMs": 347.2584580183029,
+      "settledMs": 411.16416704654694
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 117.73325002193451,
+      "layoutMs": 134.03837502002716,
+      "settledMs": 363.8044580221176
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 117.4685840010643,
+      "layoutMs": 227.3877500295639,
+      "settledMs": 301.30212503671646
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 108.62716698646545,
+      "layoutMs": 215.85000097751617,
+      "settledMs": 265.35425102710724
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 108.13545799255371,
+      "layoutMs": 307.42670798301697,
+      "settledMs": 349.3724160194397
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 128.16920799016953,
+      "layoutMs": 130.91679102182388,
+      "settledMs": 420.559249997139
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 148.4892920255661,
+      "layoutMs": 287.53637504577637,
+      "settledMs": 348.37204200029373
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 80.43212497234344,
+      "layoutMs": 301.9151669740677,
+      "settledMs": 335.78383296728134
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 115.35425001382828,
+      "layoutMs": 118.0938749909401,
+      "settledMs": 464.6263749599457
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 110.47675102949142,
+      "layoutMs": 351.88383400440216,
+      "settledMs": 412.9685840010643
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 129.93916696310043,
+      "layoutMs": 491.3712919950485,
+      "settledMs": 532.0102079510689
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 94.10187596082687,
+      "layoutMs": 95.66054195165634,
+      "settledMs": 305.0022089481354
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 129.3214579820633,
+      "layoutMs": 301.1177920103073,
+      "settledMs": 468.13754200935364
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 119.75108402967453,
+      "layoutMs": 261.26995903253555,
+      "settledMs": 323.27941703796387
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 88.02216601371765,
+      "layoutMs": 395.5790830254555,
+      "settledMs": 497.39987498521805
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 136.22866702079773,
+      "layoutMs": 329.95366698503494,
+      "settledMs": 366.2481669783592
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 112.42383402585983,
+      "layoutMs": 400.071084022522,
+      "settledMs": 449.92229199409485
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 112.80800002813339,
+      "layoutMs": 480.87587505578995,
+      "settledMs": 543.5470000505447
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 94.97629100084305,
+      "layoutMs": 283.7787910103798,
+      "settledMs": 349.49020797014236
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 93.16395801305771,
+      "layoutMs": 346.14637500047684,
+      "settledMs": 413.18808299303055
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 117.01354205608368,
+      "layoutMs": 260.5022920370102,
+      "settledMs": 320.0447090268135
+    },
+    {
+      "renderer": "react-native",
+      "workload": "lingui",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 93.08516699075699,
+      "layoutMs": 262.13558399677277,
+      "settledMs": 393.90158396959305
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "lingui",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 90.53108298778534,
+      "layoutMs": 98.60587501525879,
+      "settledMs": 453.693499982357
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 72.91616600751877,
+      "layoutMs": 422.5340830087662,
+      "settledMs": 462.9698749780655
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 116.52625000476837,
+      "layoutMs": 384.1975840330124,
+      "settledMs": 553.2924590110779
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 139.15170800685883,
+      "layoutMs": 141.95862501859665,
+      "settledMs": 365.30166697502136
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 107.17120802402496,
+      "layoutMs": 366.43779200315475,
+      "settledMs": 401.070042014122
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 126.9628329873085,
+      "layoutMs": 484.04670798778534,
+      "settledMs": 548.7392500042915
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 88.33816701173782,
+      "layoutMs": 440.1305420398712,
+      "settledMs": 559.4271250367165
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 118.5448750257492,
+      "layoutMs": 318.3811669945717,
+      "settledMs": 444.92191702127457
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 108.956915974617,
+      "layoutMs": 307.2638750076294,
+      "settledMs": 440.19158297777176
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 88.19562500715256,
+      "layoutMs": 401.2048749923706,
+      "settledMs": 464.3912910223007
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 110.98966699838638,
+      "layoutMs": 373.5025420188904,
+      "settledMs": 409.48679196834564
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 160.51899999380112,
+      "layoutMs": 163.43049997091293,
+      "settledMs": 373.8822499513626
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 87.78470802307129,
+      "layoutMs": 91.20787501335144,
+      "settledMs": 393.4409170150757
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 99.75658303499222,
+      "layoutMs": 102.02437502145767,
+      "settledMs": 316.50916600227356
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 83.94700002670288,
+      "layoutMs": 238.14200001955032,
+      "settledMs": 438.2952499985695
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 120.933041036129,
+      "layoutMs": 123.55695801973343,
+      "settledMs": 479.2048330307007
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 97.4081249833107,
+      "layoutMs": 100.32904201745987,
+      "settledMs": 359.0895829796791
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 83.91691702604294,
+      "layoutMs": 95.91312497854233,
+      "settledMs": 599.9493750333786
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 121.88433301448822,
+      "layoutMs": 323.683207988739,
+      "settledMs": 567.5682919621468
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 133.36141699552536,
+      "layoutMs": 443.57074999809265,
+      "settledMs": 497.82145899534225
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 112.29174995422363,
+      "layoutMs": 114.67587500810623,
+      "settledMs": 507.1940829753876
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 131.3402500152588,
+      "layoutMs": 307.747250020504,
+      "settledMs": 377.8607920408249
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 115.05320799350739,
+      "layoutMs": 322.7853749990463,
+      "settledMs": 363.21545803546906
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 90.111083984375,
+      "layoutMs": 92.35412496328354,
+      "settledMs": 443.61662501096725
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 99.81291699409485,
+      "layoutMs": 378.8594999909401,
+      "settledMs": 549.698458969593
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 114.4499579668045,
+      "layoutMs": 241.59595799446106,
+      "settledMs": 296.8467499613762
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 116.1241250038147,
+      "layoutMs": 308.47362500429153,
+      "settledMs": 374.8871250152588
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 105.53512501716614,
+      "layoutMs": 261.0318750143051,
+      "settledMs": 311.2350000143051
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 109.21995800733566,
+      "layoutMs": 339.87900000810623,
+      "settledMs": 540.6994169950485
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 151.72804200649261,
+      "layoutMs": 155.85412502288818,
+      "settledMs": 349.51012498140335
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 75.46316599845886,
+      "layoutMs": 295.9515410065651,
+      "settledMs": 406.80066698789597
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 94.60895800590515,
+      "layoutMs": 254.45437502861023,
+      "settledMs": 314.4480829834938
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 75.13720899820328,
+      "layoutMs": 443.91829204559326,
+      "settledMs": 571.6542510390282
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 131.86666703224182,
+      "layoutMs": 379.5112090110779,
+      "settledMs": 431.5651670098305
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 98.9622500538826,
+      "layoutMs": 101.15962505340576,
+      "settledMs": 495.8333330154419
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 123.43299996852875,
+      "layoutMs": 302.6347079873085,
+      "settledMs": 364.6216250061989
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 134.08237498998642,
+      "layoutMs": 300.62470799684525,
+      "settledMs": 402.81854099035263
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 110.51658302545547,
+      "layoutMs": 113.22954201698303,
+      "settledMs": 386.7187080383301
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 98.42325001955032,
+      "layoutMs": 431.41308403015137,
+      "settledMs": 498.9810839891434
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 105.55287498235703,
+      "layoutMs": 410.6985419988632,
+      "settledMs": 453.18883299827576
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 175.5034999847412,
+      "layoutMs": 178.12666696310043,
+      "settledMs": 361.28733295202255
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 106.27383297681808,
+      "layoutMs": 283.84766697883606,
+      "settledMs": 316.4521669745445
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 134.09608298540115,
+      "layoutMs": 140.00108301639557,
+      "settledMs": 374.64466696977615
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 126.5537080168724,
+      "layoutMs": 416.69125002622604,
+      "settledMs": 464.6614170074463
+    },
+    {
+      "renderer": "react-native",
+      "workload": "fragments",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 103.60724997520447,
+      "layoutMs": 106.91995799541473,
+      "settledMs": 315.3276659846306
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "fragments",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 111.70862603187561,
+      "layoutMs": 499.99587601423264,
+      "settledMs": 575.5822920203209
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 276.20158302783966,
+      "layoutMs": 281.4995000362396,
+      "settledMs": 597.2857910394669
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 164.58741700649261,
+      "layoutMs": 169.8845829963684,
+      "settledMs": 422.70479196310043
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": -3,
+      "warmup": true,
+      "jsCommitMs": 142.67912501096725,
+      "layoutMs": 511.3383750319481,
+      "settledMs": 559.3839580416679
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 172.68866699934006,
+      "layoutMs": 386.72649997472763,
+      "settledMs": 432.9582920074463
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 178.28637498617172,
+      "layoutMs": 181.66533303260803,
+      "settledMs": 435.963250041008
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": -2,
+      "warmup": true,
+      "jsCommitMs": 141.58991700410843,
+      "layoutMs": 145.40229201316833,
+      "settledMs": 397.67670798301697
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 118.3350830078125,
+      "layoutMs": 423.9532080292702,
+      "settledMs": 465.85537499189377
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 110.14512503147125,
+      "layoutMs": 119.57166701555252,
+      "settledMs": 477.23279201984406
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": -1,
+      "warmup": true,
+      "jsCommitMs": 157.07858300209045,
+      "layoutMs": 416.40750002861023,
+      "settledMs": 462.9098749756813
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 141.371209025383,
+      "layoutMs": 146.3472499847412,
+      "settledMs": 363.56550002098083
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 167.18283396959305,
+      "layoutMs": 423.49620896577835,
+      "settledMs": 470.5937919616699
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 0,
+      "warmup": false,
+      "jsCommitMs": 322.7920419573784,
+      "layoutMs": 330.8882089853287,
+      "settledMs": 580.9808340072632
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 149.24979203939438,
+      "layoutMs": 314.38324999809265,
+      "settledMs": 357.95329201221466
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 178.5042080283165,
+      "layoutMs": 181.55229198932648,
+      "settledMs": 406.2178750038147
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 1,
+      "warmup": false,
+      "jsCommitMs": 190.74491602182388,
+      "layoutMs": 477.6724170446396,
+      "settledMs": 529.8289999961853
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 150.1385840177536,
+      "layoutMs": 580.0041670203209,
+      "settledMs": 626.5967509746552
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 147.8113750219345,
+      "layoutMs": 481.8002920150757,
+      "settledMs": 541.1572499871254
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 2,
+      "warmup": false,
+      "jsCommitMs": 188.94995898008347,
+      "layoutMs": 485.0145000219345,
+      "settledMs": 531.4816669821739
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 169.62812501192093,
+      "layoutMs": 335.00999999046326,
+      "settledMs": 416.7115420103073
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 181.40674996376038,
+      "layoutMs": 185.37491697072983,
+      "settledMs": 571.4660419821739
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 3,
+      "warmup": false,
+      "jsCommitMs": 173.145958006382,
+      "layoutMs": 176.76875001192093,
+      "settledMs": 524.0249580144882
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 174.62008398771286,
+      "layoutMs": 178.3531669974327,
+      "settledMs": 580.0792090296745
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 157.31379103660583,
+      "layoutMs": 312.7077080011368,
+      "settledMs": 359.49808299541473
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 4,
+      "warmup": false,
+      "jsCommitMs": 137.09383296966553,
+      "layoutMs": 502.59066700935364,
+      "settledMs": 554.6868329644203
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 159.49858301877975,
+      "layoutMs": 378.80300003290176,
+      "settledMs": 468.4566659927368
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 144.07524996995926,
+      "layoutMs": 149.34499996900558,
+      "settledMs": 448.13274997472763
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 5,
+      "warmup": false,
+      "jsCommitMs": 128.00091695785522,
+      "layoutMs": 439.0622090101242,
+      "settledMs": 646.7701259851456
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 165.43862503767014,
+      "layoutMs": 169.22250002622604,
+      "settledMs": 433.531751036644
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 196.56837499141693,
+      "layoutMs": 205.9879999756813,
+      "settledMs": 498.9929170012474
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 6,
+      "warmup": false,
+      "jsCommitMs": 152.3220419883728,
+      "layoutMs": 362.19650000333786,
+      "settledMs": 414.783999979496
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 152.1423749923706,
+      "layoutMs": 413.6927919983864,
+      "settledMs": 464.95220798254013
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 176.4097499847412,
+      "layoutMs": 405.33287501335144,
+      "settledMs": 649.9305419921875
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 7,
+      "warmup": false,
+      "jsCommitMs": 172.1259999871254,
+      "layoutMs": 177.1980829834938,
+      "settledMs": 609.2030839920044
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 193.56008303165436,
+      "layoutMs": 446.57037502527237,
+      "settledMs": 518.0922090411186
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 160.64700001478195,
+      "layoutMs": 459.3912500143051,
+      "settledMs": 569.1924999952316
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 8,
+      "warmup": false,
+      "jsCommitMs": 176.24754202365875,
+      "layoutMs": 181.98720800876617,
+      "settledMs": 384.1541250348091
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 168.13895797729492,
+      "layoutMs": 171.81475001573563,
+      "settledMs": 395.15433299541473
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 192.70058298110962,
+      "layoutMs": 470.9010410308838,
+      "settledMs": 534.335667014122
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 9,
+      "warmup": false,
+      "jsCommitMs": 133.49670898914337,
+      "layoutMs": 407.37554198503494,
+      "settledMs": 451.00391697883606
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 157.6001249551773,
+      "layoutMs": 411.29320895671844,
+      "settledMs": 466.95112496614456
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 178.21158403158188,
+      "layoutMs": 373.35366702079773,
+      "settledMs": 454.05916702747345
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 10,
+      "warmup": false,
+      "jsCommitMs": 104.46504199504852,
+      "layoutMs": 109.2519999742508,
+      "settledMs": 381.92591696977615
+    },
+    {
+      "renderer": "plain-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 189.61162501573563,
+      "layoutMs": 195.14758402109146,
+      "settledMs": 392.7202500104904
+    },
+    {
+      "renderer": "react-native",
+      "workload": "nested",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 138.4555420279503,
+      "layoutMs": 141.79216700792313,
+      "settledMs": 498.7872080206871
+    },
+    {
+      "renderer": "fast-text",
+      "workload": "nested",
+      "count": 400,
+      "round": 11,
+      "warmup": false,
+      "jsCommitMs": 164.96375000476837,
+      "layoutMs": 169.9260839819908,
+      "settledMs": 492.8549169898033
+    }
+  ]
+}

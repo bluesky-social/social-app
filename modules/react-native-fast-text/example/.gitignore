@@ -1,0 +1,12 @@
+/ios/
+/android/
+/.expo/
+/node_modules/
+/dist/
+
+# Keep only reproducible flows, even when local Git excludes .argent globally.
+!/.argent/
+/.argent/*
+!/.argent/flows/
+/.argent/flows/*
+!/.argent/flows/*.yaml

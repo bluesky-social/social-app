@@ -1,0 +1,45 @@
+steps:
+  - tool: open-url
+    args:
+      url: fasttextbench://specimens?renderer=typography-fast&page=behavior
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        identifier: scalar-update
+  - tap:
+      x: 0.217
+      y: 0.406
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        identifier: scalar-update
+      expectedText: "Count: 1"
+  - tap:
+      x: 0.222
+      y: 0.449
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector:
+        identifier: translated
+      expectedText: "Bonjour, Ada"
+  - tool: gesture-custom
+    args:
+      events:
+        - type: Down
+          x: 0.2
+          y: 0.491
+        - type: Up
+          x: 0.2
+          y: 0.491
+          delayMs: 900
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        text: Copy
+executionPrerequisite: Final Release iOS harness freshly launched, English
+  locale and zero counter, iPhone 17 iOS 26.5 portrait. No benchmark running.
+  Coordinates are specific to the recorded simulator configuration.

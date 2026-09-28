@@ -1,13 +1,14 @@
+/* Frozen from 31613cdd: only the emoji helper import below is redirected. */
+import {UITextView} from '@bsky.app/react-native-uitextview'
+
 import {logger} from '#/logger'
-import {atoms as a, type TextStyleProp, useAlf, web} from '#/alf'
+import {atoms as a, type TextStyleProp, useAlf, useTheme, web} from '#/alf'
 import {
   childHasEmoji,
   normalizeTextStyles,
   renderChildrenWithEmoji,
   type TextProps,
-} from '#/alf/typography'
-import {useTypographyText} from '#/components/TypographyText'
-import {IS_WEB} from '#/env'
+} from './BaselineEmoji'
 
 export type {TextProps}
 export {Text as Span} from 'react-native'
@@ -26,7 +27,8 @@ export function Text({
   allowFontScaling = true,
   ...rest
 }: TextProps) {
-  const {fonts, flags, theme: t} = useAlf()
+  const {fonts, flags} = useAlf()
+  const t = useTheme()
   const s = normalizeTextStyles(
     [
       a.text_sm,
@@ -56,19 +58,16 @@ export function Text({
     selectable,
     numberOfLines,
     style: s,
-    dataSet: IS_WEB
-      ? title === undefined
-        ? dataSet
-        : Object.assign({tooltip: title}, dataSet)
-      : undefined,
+    dataSet: Object.assign({tooltip: title}, dataSet || {}),
     allowFontScaling,
     ...rest,
   }
 
-  return useTypographyText({
-    ...shared,
-    children: renderChildrenWithEmoji(children, shared, emoji ?? false),
-  })
+  return (
+    <UITextView {...shared}>
+      {renderChildrenWithEmoji(children, shared, emoji ?? false)}
+    </UITextView>
+  )
 }
 
 function createHeadingElement({level}: {level: number}) {

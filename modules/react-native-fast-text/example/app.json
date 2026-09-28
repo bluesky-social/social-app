@@ -1,0 +1,18 @@
+{
+  "expo": {
+    "name": "Fast Text Benchmark",
+    "slug": "fast-text-benchmark",
+    "scheme": "fasttextbench",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "ios": {
+      "bundleIdentifier": "app.bsky.fasttext.benchmark",
+      "infoPlist": {"NSAppTransportSecurity": {"NSAllowsArbitraryLoads": true}}
+    },
+    "android": {"package": "app.bsky.fasttext.benchmark"},
+    "plugins": [
+      ["expo-dev-client", {"launchMode": "most-recent"}],
+      ["expo-build-properties", {"android": {"usesCleartextTraffic": true}}]
+    ]
+  }
+}

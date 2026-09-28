@@ -1,0 +1,22 @@
+Screenshot diff summary
+
+Overall:
+- status: changed
+- pixel_mismatch: 1.48% - minor broad visual change
+- changed_areas: shown=8 total=12 omitted=4
+- diff_images: see diffPath (full size) and contextDiffPath in this result
+  - legend: green=pixel brighter in current, red=pixel darker in current, yellow rectangles outline changed regions
+
+Text changes:
+- text_analysis: status=unavailable provider=ocr
+
+Regions:
+- regions: shown=8 total=12 omitted=4
+- Region 1: x=0.0531 y=0.2578 w=0.3118 h=0.0179 - changed_pixels=1,798
+- Region 2: x=0.0539 y=0.2834 w=0.4096 h=0.0034 - changed_pixels=535
+- Region 3: x=0.5 y=0.2834 w=0.1078 h=0.0034 - changed_pixels=148
+- Region 4: x=0.0506 y=0.3535 w=0.8889 h=0.0187 - changed_pixels=5,282
+- Region 5: x=0.0514 y=0.3791 w=0.7886 h=0.0183 - changed_pixels=5,003
+- Region 6: x=0.0522 y=0.4043 w=0.6385 h=0.0179 - changed_pixels=3,537
+- Region 7: x=0.0514 y=0.4382 w=0.8955 h=0.0187 - changed_pixels=4,838
+- Region 8: x=0.0755 y=0.4832 w=0.4627 h=0.0145 - changed_pixels=2,835
