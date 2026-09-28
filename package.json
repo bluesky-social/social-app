@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.133.0",
+  "version": "1.134.0",
   "private": true,
   "sideEffects": [
     "*.css",
@@ -122,7 +122,7 @@
     "@bsky.app/expo-dynamic-app-icon": "^1.8.5",
     "@bsky.app/expo-guess-language": "^0.2.8",
     "@bsky.app/expo-image-crop-tool": "^0.5.1",
-    "@bsky.app/expo-scroll-edge-effect": "^0.1.9",
+    "@bsky.app/expo-scroll-edge-effect": "^0.1.10",
     "@bsky.app/expo-translate-text": "^0.2.9",
     "@bsky.app/peek-menu": "^0.3.2",
     "@bsky.app/react-native-uitextview": "^2.7.1",
@@ -135,6 +135,7 @@
     "@emoji-mart/react": "^1.1.1",
     "@expo/html-elements": "^0.12.5",
     "@expo/metro-runtime": "~57.0.8",
+    "@expo/ui": "57.0.20",
     "@floating-ui/dom": "^1.6.3",
     "@floating-ui/react-dom": "^2.0.8",
     "@formatjs/intl-displaynames": "^7.3.9",
@@ -246,7 +247,6 @@
     "react-is": "19",
     "react-keyed-flatten-children": "^5.0.0",
     "react-native": "0.86.3",
-    "react-native-date-picker": "^5.0.13",
     "react-native-device-attest": "^0.1.6",
     "react-native-drawer-layout": "^4.2.3",
     "react-native-edge-to-edge": "^1.8.1",
