@@ -1,5 +1,4 @@
-import {type ViewStyle} from 'react-native'
-import {StyleProp} from 'react-native'
+import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -83,18 +82,7 @@ export function KnownLikers({
   )
 
   return (
-    <Link
-      to={likesHref}
-      label={rowLabel}
-      style={[
-        a.w_full,
-        a.flex_row,
-        a.align_center,
-        a.gap_xs,
-        a.flex_shrink,
-        outerStyle,
-      ]}
-      onPress={() => ax.metric('post:likedBy:click', {})}>
+    <View style={[a.flex_row, a.align_center, a.gap_xs, outerStyle]}>
       <AvatarStack
         profiles={aviStackProfiles}
         size={16}
@@ -102,17 +90,23 @@ export function KnownLikers({
         borderWidth={0.5}
         backgroundColor={t.atoms.bg_contrast_25.backgroundColor}
       />
-      <Text testID="knownLikersStat" style={[a.flex_shrink, textStyle]}>
-        {names.length >= 2 ? (
-          <Trans comment="Social proof below a post; the bolded names are people the viewer follows who liked the post">
-            Liked by {nameLink(names[0])} and {nameLink(names[1])}
-          </Trans>
-        ) : (
-          <Trans comment="Social proof below a post; the bolded name is a person the viewer follows who liked the post">
-            Liked by {nameLink(names[0])}
-          </Trans>
-        )}
-      </Text>
-    </Link>
+      <Link
+        to={likesHref}
+        label={rowLabel}
+        style={a.flex_shrink}
+        onPress={() => ax.metric('post:likedBy:click', {})}>
+        <Text testID="knownLikersStat" style={textStyle}>
+          {names.length >= 2 ? (
+            <Trans comment="Social proof below a post; the bolded names are people the viewer follows who liked the post">
+              Liked by {nameLink(names[0])} and {nameLink(names[1])}
+            </Trans>
+          ) : (
+            <Trans comment="Social proof below a post; the bolded name is a person the viewer follows who liked the post">
+              Liked by {nameLink(names[0])}
+            </Trans>
+          )}
+        </Text>
+      </Link>
+    </View>
   )
 }
