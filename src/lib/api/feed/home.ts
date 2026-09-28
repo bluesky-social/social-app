@@ -77,9 +77,11 @@ export class HomeFeedAPI implements FeedAPI {
 
   async fetch({
     cursor,
+    since,
     limit,
   }: {
     cursor: string | undefined
+    since?: string
     limit: number
   }): Promise<FeedAPIResponse> {
     if (!cursor) {
@@ -91,12 +93,13 @@ export class HomeFeedAPI implements FeedAPI {
     let posts: app.bsky.feed.defs.FeedViewPost[] = []
 
     if (!this.usingDiscover) {
-      const res = await this.following.fetch({cursor, limit})
+      const res = await this.following.fetch({cursor, since, limit})
       returnCursor = res.cursor
       // The page starts with Following posts, so it starts where they do.
       startCursor = res.startCursor
       posts = posts.concat(res.feed)
-      if (!returnCursor) {
+      // A bounded range ending is not Following running out.
+      if (!returnCursor && since === undefined) {
         cursor = ''
         posts.push(FALLBACK_MARKER_POST)
         this.usingDiscover = true

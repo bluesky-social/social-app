@@ -14,10 +14,17 @@ export interface FeedAPI {
   peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost>
   fetch({
     cursor,
+    since,
     limit,
     signal,
   }: {
     cursor: string | undefined
+    /**
+     * An exclusive lower bound, for the feeds that support one
+     * (`getTimeline`): only posts newer than it are returned, and once the
+     * range is exhausted the cursor comes back equal to it. Others ignore it.
+     */
+    since?: string
     limit: number
     signal?: AbortSignal
   }): Promise<FeedAPIResponse>

@@ -19,9 +19,11 @@ export class FollowingFeedAPI implements FeedAPI {
 
   async fetch({
     cursor,
+    since,
     limit,
   }: {
     cursor: string | undefined
+    since?: string
     limit: number
   }): Promise<FeedAPIResponse> {
     /*
@@ -32,6 +34,7 @@ export class FollowingFeedAPI implements FeedAPI {
      */
     const data = await this.client.call(app.bsky.feed.getTimeline, {
       cursor,
+      ...(since !== undefined && {since}),
       limit,
     })
     return {

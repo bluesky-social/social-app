@@ -69,3 +69,48 @@ describe('startCursor', () => {
     expect(page.feed).toContain(FALLBACK_MARKER_POST)
   })
 })
+
+describe('since', () => {
+  it('is forwarded to getTimeline by the Following and Home feeds', async () => {
+    const response = {feed: [post], cursor: 'S', startCursor: 'n1'}
+    const following = clientReturning(response)
+    const home = clientReturning(response)
+
+    await new FollowingFeedAPI({client: following}).fetch({
+      cursor: undefined,
+      since: 'S',
+      limit: 60,
+    })
+    await new HomeFeedAPI({client: home}).fetch({
+      cursor: undefined,
+      since: 'S',
+      limit: 60,
+    })
+
+    for (const client of [following, home]) {
+      expect(jest.mocked(client.call)).toHaveBeenCalledWith(expect.anything(), {
+        cursor: undefined,
+        since: 'S',
+        limit: 60,
+      })
+    }
+  })
+
+  it('is left out of an ordinary request', async () => {
+    const client = clientReturning({feed: [post], cursor: 'c1'})
+    await new FollowingFeedAPI({client}).fetch({cursor: 'c0', limit: 30})
+    expect(jest.mocked(client.call)).toHaveBeenCalledWith(expect.anything(), {
+      cursor: 'c0',
+      limit: 30,
+    })
+  })
+
+  it('does not fall back to Discover when a bounded range comes back without a cursor', async () => {
+    const api = new HomeFeedAPI({client: clientReturning({feed: [post]})})
+
+    const page = await api.fetch({cursor: undefined, since: 'S', limit: 60})
+
+    expect(page.feed).not.toContain(FALLBACK_MARKER_POST)
+    expect(api.usingDiscover).toBe(false)
+  })
+})
