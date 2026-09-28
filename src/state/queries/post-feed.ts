@@ -9,6 +9,7 @@ import {
 } from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
+  type Query,
   type QueryClient,
   type QueryKey,
   useInfiniteQuery,
@@ -24,7 +25,7 @@ import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
 import {PostListFeedAPI} from '#/lib/api/feed/posts'
-import {type ReasonFeedSource} from '#/lib/api/feed/types'
+import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {
   createFeedViewPostsSlices,
@@ -47,6 +48,9 @@ import {useModerationOpts} from '../preferences/moderation-opts'
 import {
   getPostFeedQueryEntry,
   peekPostFeedQueryEntry,
+  refreshPostFeedQuery,
+  supersedePostFeedRefresh,
+  supersedePostFeedRefreshes,
 } from './post-feed-registry'
 import {usePreferencesQuery} from './preferences'
 import {
@@ -136,22 +140,14 @@ export interface FeedPage {
  */
 const MIN_POSTS = 30
 
-export function usePostFeedQuery(
-  feedDesc: FeedDescriptor,
-  params?: FeedParams,
-  opts?: {enabled?: boolean; ignoreFilterFor?: string},
-) {
+/**
+ * What fetching a page of this feed needs, shared by the query and by
+ * {@link usePostFeedRefresh} so that both build the same API and page.
+ */
+function usePostFeedFetcher(feedDesc: FeedDescriptor, params?: FeedParams) {
   const feedTuners = useFeedTuners(feedDesc)
   const moderationOpts = useModerationOpts()
   const {data: preferences} = usePreferencesQuery()
-  /**
-   * Load bearing: we need to await AA state or risk FOUC. This marginally
-   * delays feeds, but AA state is fetched immediately on load and is then
-   * available for the remainder of the session, so this delay only affects cold
-   * loads. -esb
-   */
-  const enabled =
-    opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const userInterests = aggregateUserInterests(preferences)
   const followingPinnedIndex =
     preferences?.savedFeeds?.findIndex(
@@ -160,6 +156,72 @@ export function usePostFeedQuery(
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
   const {hasSession} = useSession()
   const client = useAppviewClient()
+
+  /**
+   * The number of posts to fetch in a single request. Because we filter
+   * unwanted content, we may over-fetch here to try and fill pages by
+   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
+   */
+  const fetchLimit = MIN_POSTS
+
+  return {
+    feedTuners,
+    moderationOpts,
+    /**
+     * Load bearing: we need to await AA state or risk FOUC. This marginally
+     * delays feeds, but AA state is fetched immediately on load and is then
+     * available for the remainder of the session, so this delay only affects
+     * cold loads. -esb
+     */
+    isReady: Boolean(moderationOpts) && Boolean(preferences),
+    createFeedApi: () =>
+      createApi({
+        feedDesc,
+        feedParams: params || {},
+        feedTuners,
+        client,
+        // Not in the query key because they don't change:
+        userInterests,
+        // Not in the query key. Reacting to it switching isn't important:
+        enableFollowingToDiscoverFallback,
+      }),
+    async fetchPage(
+      api: FeedAPI,
+      cursor: string | undefined,
+    ): Promise<FeedPageUnselected> {
+      const res = await api.fetch({cursor, limit: fetchLimit})
+
+      /*
+       * If this is a public view, we need to check if posts fail moderation.
+       * If all fail, we throw an error. If only some fail, we continue and let
+       * moderations happen later, which results in some posts being shown and
+       * some not.
+       */
+      if (!hasSession) {
+        assertSomePostsPassModeration(
+          res.feed,
+          preferences?.moderationPrefs ||
+            DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+        )
+      }
+
+      return {
+        cursor: res.cursor,
+        feed: res.feed,
+        fetchedAt: Date.now(),
+      }
+    },
+  }
+}
+
+export function usePostFeedQuery(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+  opts?: {enabled?: boolean; ignoreFilterFor?: string},
+) {
+  const {feedTuners, moderationOpts, isReady, createFeedApi, fetchPage} =
+    usePostFeedFetcher(feedDesc, params)
+  const enabled = opts?.enabled !== false && isReady
   const queryClient = useQueryClient()
   const queryKey = RQKEY(feedDesc, params)
   const lastRun = useRef<{
@@ -168,13 +230,6 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
-
-  /**
-   * The number of posts to fetch in a single request. Because we filter
-   * unwanted content, we may over-fetch here to try and fill pages by
-   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
-   */
-  const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = useMemo(
@@ -201,45 +256,15 @@ export function usePostFeedQuery(
     queryKey,
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-      const {feedApis} = getPostFeedQueryEntry(queryClient, queryKey)
+      const entry = getPostFeedQueryEntry(queryClient, queryKey)
+      if (!pageParam) {
+        // A fetch from the top overtakes any refresh in flight.
+        supersedePostFeedRefresh(entry)
+      }
       const api =
-        (pageParam && feedApis.get(pageParam)) ||
-        createApi({
-          feedDesc,
-          feedParams: params || {},
-          feedTuners,
-          client,
-          // Not in the query key because they don't change:
-          userInterests,
-          // Not in the query key. Reacting to it switching isn't important:
-          enableFollowingToDiscoverFallback,
-        })
-
-      const res = await api.fetch({
-        cursor: pageParam?.cursor,
-        limit: fetchLimit,
-      })
-
-      /*
-       * If this is a public view, we need to check if posts fail moderation.
-       * If all fail, we throw an error. If only some fail, we continue and let
-       * moderations happen later, which results in some posts being shown and
-       * some not.
-       */
-      if (!hasSession) {
-        assertSomePostsPassModeration(
-          res.feed,
-          preferences?.moderationPrefs ||
-            DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-        )
-      }
-
-      const page: FeedPageUnselected = {
-        cursor: res.cursor,
-        feed: res.feed,
-        fetchedAt: Date.now(),
-      }
-      feedApis.set(page, api)
+        (pageParam && entry.feedApis.get(pageParam)) || createFeedApi()
+      const page = await fetchPage(api, pageParam?.cursor)
+      entry.feedApis.set(page, api)
       return page
     },
     initialPageParam: undefined,
@@ -393,6 +418,41 @@ export function usePostFeedQuery(
   useAutoPagination(query, itemCount, MIN_POSTS)
 
   return query
+}
+
+/**
+ * Refreshes this feed from the top in one write, keeping what it has if the
+ * fetch fails - see {@link refreshPostFeedQuery}. Resolves with the page that
+ * was written, or `undefined` if nothing was.
+ *
+ * Only used with Following v2 for now. Otherwise feeds still refresh through
+ * TanStack (`truncateAndInvalidate` and the like).
+ */
+export function usePostFeedRefresh(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const {isReady, createFeedApi, fetchPage} = usePostFeedFetcher(
+    feedDesc,
+    params,
+  )
+
+  return async (): Promise<FeedPageUnselected | undefined> => {
+    // Nothing may land before the query itself would be allowed to fetch.
+    if (!isReady) {
+      return undefined
+    }
+    logger.debug('usePostFeedRefresh', {feedDesc})
+    return refreshPostFeedQuery(
+      queryClient,
+      RQKEY(feedDesc, params),
+      async () => {
+        const api = createFeedApi()
+        return {api, page: await fetchPage(api, undefined)}
+      },
+    )
+  }
 }
 
 export async function pollLatest(
@@ -650,9 +710,12 @@ function assertSomePostsPassModeration(
 
 export function resetPostsFeedQueries(queryClient: QueryClient, timeout = 0) {
   setTimeout(() => {
-    queryClient.resetQueries({
-      predicate: query => query.queryKey[0] === RQKEY_ROOT,
-    })
+    const filters = {
+      predicate: (query: Query) => query.queryKey[0] === RQKEY_ROOT,
+    }
+    // Whatever a refresh in flight fetches predates the change behind this.
+    supersedePostFeedRefreshes(queryClient, filters)
+    queryClient.resetQueries(filters)
   }, timeout)
 }
 
@@ -662,13 +725,16 @@ export function resetProfilePostsQueries(
   timeout = 0,
 ) {
   setTimeout(() => {
-    queryClient.resetQueries({
-      predicate: query =>
+    const filters = {
+      predicate: (query: Query) =>
         !!(
           query.queryKey[0] === RQKEY_ROOT &&
           (query.queryKey[1] as string)?.includes(did)
         ),
-    })
+    }
+    // Whatever a refresh in flight fetches predates the change behind this.
+    supersedePostFeedRefreshes(queryClient, filters)
+    queryClient.resetQueries(filters)
   }, timeout)
 }
 
