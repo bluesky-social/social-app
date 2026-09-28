@@ -319,6 +319,7 @@ export function StepInfo({
                   }
                 }}
                 label={l`Date of birth`}
+                placeholder={l`Select your date of birth`}
                 accessibilityHint={l`Select your date of birth`}
                 maximumDate={new Date()}
               />
