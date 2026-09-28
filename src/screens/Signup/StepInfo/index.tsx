@@ -308,11 +308,15 @@ export function StepInfo({
                 testID="date"
                 inputRef={birthdateInputRef}
                 value={state.dateOfBirth ?? ''}
+                isInvalid={state.errorField === 'date-of-birth'}
                 onChangeDate={date => {
                   dispatch({
                     type: 'setDateOfBirth',
                     value: sanitizeDate(new Date(date)),
                   })
+                  if (state.errorField === 'date-of-birth') {
+                    dispatch({type: 'clearError'})
+                  }
                 }}
                 label={l`Date of birth`}
                 accessibilityHint={l`Select your date of birth`}

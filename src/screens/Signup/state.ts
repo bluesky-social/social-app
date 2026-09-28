@@ -304,15 +304,6 @@ export function useSubmitSignup() {
           field: 'handle',
         })
       }
-      const dateOfBirth = state.dateOfBirth
-      if (!dateOfBirth) {
-        dispatch({type: 'setStep', value: SignupStep.INFO})
-        return dispatch({
-          type: 'setError',
-          value: l`Please enter your date of birth.`,
-          field: 'date-of-birth',
-        })
-      }
       if (
         state.serviceDescription?.phoneVerificationRequired &&
         !state.pendingSubmit?.verificationCode
@@ -335,7 +326,8 @@ export function useSubmitSignup() {
             email: state.email,
             handle: createFullHandle(state.handle, state.userDomain),
             password: state.password,
-            birthDate: dateOfBirth,
+            // StepInfo requires a birth date before advancing.
+            birthDate: state.dateOfBirth!,
             inviteCode: state.inviteCode.trim(),
             verificationCode,
           },
