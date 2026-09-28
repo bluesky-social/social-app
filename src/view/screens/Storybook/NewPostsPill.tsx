@@ -1,7 +1,8 @@
 import {useState} from 'react'
-import {Image as RNImage, ScrollView, View} from 'react-native'
+import {Image as RNImage, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 
+import {NewPostsPillPlacement} from '#/view/screens/Storybook/NewPostsPillPlacement'
 import {atoms as a, ThemeProvider, useAlf, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
@@ -167,8 +168,8 @@ export function NewPostsPill() {
         />
       </View>
 
-      <Text style={[a.font_bold]}>Scrollable header placement</Text>
-      <HeaderFixture />
+      <Text style={[a.font_bold]}>Header placement</Text>
+      <NewPostsPillPlacement authors={avatars} />
     </View>
   )
 }
@@ -179,74 +180,6 @@ function ThemeCase({name}: {name: string}) {
     <View style={[a.p_md, t.atoms.bg, {width: 160, minHeight: 88}]}>
       <Text>{name}</Text>
       <Pill visible count={4} authors={avatars} onPress={() => {}} />
-    </View>
-  )
-}
-
-function HeaderFixture() {
-  const t = useTheme()
-  const [scrollY, setScrollY] = useState(0)
-  const [header, setHeader] = useState<'home' | 'pager' | 'web'>('home')
-  const expandedHeight = header === 'home' ? 96 : header === 'pager' ? 76 : 80
-  const pinnedHeight = header === 'home' ? 48 : header === 'pager' ? 44 : 40
-  const headerHeight = Math.max(pinnedHeight, expandedHeight - scrollY)
-
-  return (
-    <View style={[a.gap_sm]}>
-      <View style={[a.flex_row, a.gap_sm, a.flex_wrap]}>
-        {(['home', 'pager', 'web'] as const).map(value => (
-          <Button
-            key={value}
-            color={header === value ? 'primary' : 'secondary'}
-            size="small"
-            label={`Preview ${value} header`}
-            onPress={() => setHeader(value)}>
-            <ButtonText>{value}</ButtonText>
-          </Button>
-        ))}
-      </View>
-      <View
-        style={[
-          a.rounded_md,
-          t.atoms.border_contrast_low,
-          a.border,
-          {height: 280, maxWidth: 440, overflow: 'hidden'},
-        ]}>
-        <ScrollView
-          scrollEventThrottle={16}
-          onScroll={event => setScrollY(event.nativeEvent.contentOffset.y)}>
-          <View style={{height: expandedHeight}} />
-          {Array.from({length: 12}, (_, index) => (
-            <View
-              key={index}
-              style={[a.p_md, a.border_b, t.atoms.border_contrast_low]}>
-              <Text>Example post {index + 1}</Text>
-            </View>
-          ))}
-        </ScrollView>
-        <View
-          pointerEvents="none"
-          style={[
-            a.absolute,
-            a.z_10,
-            t.atoms.bg,
-            a.justify_center,
-            a.px_md,
-            {top: 0, left: 0, right: 0, height: headerHeight},
-          ]}>
-          <Text>{header} header</Text>
-        </View>
-        <Pill
-          visible
-          count={5}
-          authors={avatars}
-          style={[
-            a.absolute,
-            {top: headerHeight + 16, left: 0, right: 0, zIndex: 5},
-          ]}
-          onPress={() => {}}
-        />
-      </View>
     </View>
   )
 }
