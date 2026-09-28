@@ -42,9 +42,9 @@ export function FeedGap({
         !hideTopBorder && a.border_t,
         t.atoms.border_contrast_low,
       ]}>
-      {({hovered}) => (
+      {({hovered, pressed}) => (
         <>
-          <SubtleHover hover={hovered && !isLoading} />
+          <SubtleHover hover={(hovered || pressed) && !isLoading} native />
           {isLoading && <Loader size="sm" />}
           <Text
             style={[
