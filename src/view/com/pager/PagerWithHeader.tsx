@@ -25,6 +25,7 @@ import {
 import {useTheme} from '#/alf'
 import {IS_IOS} from '#/env'
 import {type ListMethods} from '../util/List'
+import {pagerHeaderCollapseTranslateY} from './pagerHeaderCollapse'
 import {PagerHeaderProvider} from './PagerHeaderContext'
 import {TabBar} from './TabBar'
 
@@ -69,6 +70,12 @@ export function PagerWithHeader({
   const [currentPage, setCurrentPage] = useState(0)
   const [tabBarHeight, setTabBarHeight] = useState(0)
   const [headerOnlyHeight, setHeaderOnlyHeight] = useState(0)
+  /*
+   * A shared value rather than tab bar state so that it can go into the context
+   * below without re-rendering the pager: the header's collapse is capped by
+   * it, and whatever hangs beneath the header has to follow the same travel.
+   */
+  const minimumHeaderHeight = useSharedValue(0)
   const scrollY = useSharedValue(0)
   const headerHeight = headerOnlyHeight + tabBarHeight
 
@@ -86,32 +93,40 @@ export function PagerWithHeader({
       setHeaderOnlyHeight(Math.round(height * 2) / 2)
     }
   }, [])
+  const setMinimumHeaderHeight = useCallback(
+    (height: number) => {
+      minimumHeaderHeight.set(height)
+    },
+    [minimumHeaderHeight],
+  )
 
   const renderTabBar = useCallback(
     (props: RenderTabBarFnProps) => {
       return (
-        <PagerHeaderProvider scrollY={scrollY} headerHeight={headerOnlyHeight}>
-          <PagerTabBar
-            headerOnlyHeight={headerOnlyHeight}
-            items={items}
-            isHeaderReady={isHeaderReady}
-            renderHeader={renderHeader}
-            currentPage={currentPage}
-            onCurrentPageSelected={onCurrentPageSelected}
-            onTabBarLayout={onTabBarLayout}
-            onHeaderOnlyLayout={onHeaderOnlyLayout}
-            onSelect={props.onSelect}
-            scrollY={scrollY}
-            testID={testID}
-            allowHeaderOverScroll={allowHeaderOverScroll}
-            dragProgress={props.dragProgress}
-            dragState={props.dragState}
-          />
-        </PagerHeaderProvider>
+        <PagerTabBar
+          headerOnlyHeight={headerOnlyHeight}
+          minimumHeaderHeight={minimumHeaderHeight}
+          setMinimumHeaderHeight={setMinimumHeaderHeight}
+          items={items}
+          isHeaderReady={isHeaderReady}
+          renderHeader={renderHeader}
+          currentPage={currentPage}
+          onCurrentPageSelected={onCurrentPageSelected}
+          onTabBarLayout={onTabBarLayout}
+          onHeaderOnlyLayout={onHeaderOnlyLayout}
+          onSelect={props.onSelect}
+          scrollY={scrollY}
+          testID={testID}
+          allowHeaderOverScroll={allowHeaderOverScroll}
+          dragProgress={props.dragProgress}
+          dragState={props.dragState}
+        />
       )
     },
     [
       headerOnlyHeight,
+      minimumHeaderHeight,
+      setMinimumHeaderHeight,
       items,
       isHeaderReady,
       renderHeader,
@@ -186,41 +201,57 @@ export function PagerWithHeader({
     scheduleOnUI(adjustScrollForOtherPages, 'dragging')
   }, [adjustScrollForOtherPages])
 
+  /*
+   * Wraps the whole pager, not just the header, so that the pages can read the
+   * header's collapse too: anything a page hangs beneath the header, such as
+   * the new posts pill, would otherwise see no header at all. The scroll offset
+   * and minimum height are shared values, and the pages already re-render when
+   * the measured header height changes, since `headerHeight` is one of their
+   * props.
+   */
   return (
-    <Pager
-      ref={ref}
-      testID={testID}
-      initialPage={initialPage}
-      onTabPressed={onTabPressed}
-      onPageSelected={onPageSelectedInner}
-      renderTabBar={renderTabBar}
-      onPageScrollStateChanged={adjustScrollForOtherPages}>
-      {toArray(children)
-        .filter(Boolean)
-        .map((child, i) => {
-          const isReady =
-            isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
-          return (
-            <View key={i} collapsable={false}>
-              <PagerItem
-                headerHeight={headerHeight}
-                index={i}
-                isReady={isReady}
-                isFocused={i === currentPage}
-                onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
-                registerRef={registerRef}
-                renderTab={child}
-              />
-            </View>
-          )
-        })}
-    </Pager>
+    <PagerHeaderProvider
+      scrollY={scrollY}
+      headerHeight={headerOnlyHeight}
+      minimumHeaderHeight={minimumHeaderHeight}
+      allowHeaderOverScroll={allowHeaderOverScroll}>
+      <Pager
+        ref={ref}
+        testID={testID}
+        initialPage={initialPage}
+        onTabPressed={onTabPressed}
+        onPageSelected={onPageSelectedInner}
+        renderTabBar={renderTabBar}
+        onPageScrollStateChanged={adjustScrollForOtherPages}>
+        {toArray(children)
+          .filter(Boolean)
+          .map((child, i) => {
+            const isReady =
+              isHeaderReady && headerOnlyHeight > 0 && tabBarHeight > 0
+            return (
+              <View key={i} collapsable={false}>
+                <PagerItem
+                  headerHeight={headerHeight}
+                  index={i}
+                  isReady={isReady}
+                  isFocused={i === currentPage}
+                  onScrollWorklet={i === currentPage ? onScrollWorklet : noop}
+                  registerRef={registerRef}
+                  renderTab={child}
+                />
+              </View>
+            )
+          })}
+      </Pager>
+    </PagerHeaderProvider>
   )
 }
 
 let PagerTabBar = ({
   currentPage,
   headerOnlyHeight,
+  minimumHeaderHeight,
+  setMinimumHeaderHeight,
   isHeaderReady,
   items,
   scrollY,
@@ -236,6 +267,8 @@ let PagerTabBar = ({
 }: {
   currentPage: number
   headerOnlyHeight: number
+  minimumHeaderHeight: SharedValue<number>
+  setMinimumHeaderHeight: (height: number) => void
   isHeaderReady: boolean
   items: string[]
   testID?: string
@@ -254,23 +287,18 @@ let PagerTabBar = ({
   dragState: SharedValue<'idle' | 'dragging' | 'settling'>
 }): React.ReactNode => {
   const t = useTheme()
-  const [minimumHeaderHeight, setMinimumHeaderHeight] = useState(0)
-  const headerTransform = useAnimatedStyle(() => {
-    const translateY =
-      Math.min(
-        scrollY.get(),
-        Math.max(headerOnlyHeight - minimumHeaderHeight, 0),
-      ) * -1
-    return {
-      transform: [
-        {
-          translateY: allowHeaderOverScroll
-            ? translateY
-            : Math.min(translateY, 0),
-        },
-      ],
-    }
-  })
+  const headerTransform = useAnimatedStyle(() => ({
+    transform: [
+      {
+        translateY: pagerHeaderCollapseTranslateY({
+          scrollY: scrollY.get(),
+          headerOnlyHeight,
+          minimumHeaderHeight: minimumHeaderHeight.get(),
+          allowHeaderOverScroll,
+        }),
+      },
+    ],
+  }))
   const headerRef = useRef<React.ComponentRef<typeof View>>(null)
   const fallbackHeaderOnlyHeight = useRef(0)
   return (
