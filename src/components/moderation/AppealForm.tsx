@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {XrpcResponseError} from '@atproto/lex'
 import {type AtUriString, type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -11,6 +10,7 @@ import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useAppviewClient} from '#/state/session'
 import {atoms as a, useBreakpoints} from '#/alf'
@@ -76,11 +76,10 @@ export function AppealForm({
       )
     },
     onError: err => {
-      /*
-       * The endpoint declares `AlreadyAppealed`, but this check also handles
-       * the error code directly when the server rejects a duplicate appeal.
-       */
-      if (err instanceof XrpcResponseError && err.error === 'AlreadyAppealed') {
+      if (
+        matchXrpcError(err, tools.ozone.inbox.appealActionedSubject) ===
+        'AlreadyAppealed'
+      ) {
         setError(
           _(
             msg`You've already appealed this label and it's being reviewed by our moderation team.`,
