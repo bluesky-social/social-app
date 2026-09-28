@@ -19,20 +19,17 @@ function createSessionRecord(now = Date.now()): SessionRecord {
   }
 }
 
-function parseSessionRecord(rawRecord: string | null, now = Date.now()) {
-  if (!rawRecord) return undefined
-  try {
-    return normalizeSessionRecord(JSON.parse(rawRecord), now)
-  } catch {
-    return undefined
-  }
-}
-
 function readSessionRecord(now = Date.now()) {
-  return parseSessionRecord(
-    runtimeWindow.localStorage.getItem(SESSION_RECORD_KEY),
-    now,
-  )
+  const rawRecord = runtimeWindow.localStorage.getItem(SESSION_RECORD_KEY)
+  if (rawRecord) {
+    try {
+      const record = normalizeSessionRecord(JSON.parse(rawRecord), now)
+      if (record) return record
+    } catch {
+      // Treat malformed storage as a missing session.
+    }
+  }
+  return undefined
 }
 
 function writeSessionRecord(record: SessionRecord) {
@@ -48,7 +45,7 @@ function resolveSessionForActivation(now = Date.now()) {
 }
 
 let currentAppState = getCurrentState()
-let sessionRecord = (() => {
+const initialSessionRecord = (() => {
   const now = Date.now()
   const existing = readSessionRecord(now)
   let record: SessionRecord
@@ -75,7 +72,7 @@ export function getInitialSessionId() {
 }
 
 export function getSessionId() {
-  return sessionRecord.id
+  return readSessionRecord()?.id ?? initialSessionRecord.id
 }
 
 const listeners = new Set<() => void>()
@@ -85,17 +82,9 @@ function notifyListeners() {
   listeners.forEach(listener => listener())
 }
 
-function updateSessionRecord(record: SessionRecord) {
-  const sessionIdChanged = record.id !== sessionRecord.id
-  sessionRecord = record
-  if (sessionIdChanged) {
-    notifyListeners()
-  }
-}
-
 function persistSessionRecord(record: SessionRecord) {
   writeSessionRecord(record)
-  updateSessionRecord(record)
+  notifyListeners()
 }
 
 function persistInactivityStart(now = Date.now()) {
@@ -106,29 +95,13 @@ function persistInactivityStart(now = Date.now()) {
   })
 }
 
-function selectCanonicalSessionRecord(record: SessionRecord) {
-  if (record.id === sessionRecord.id) return record
-
-  if (record.rotatedAt !== sessionRecord.rotatedAt) {
-    return record.rotatedAt > sessionRecord.rotatedAt ? record : sessionRecord
+function clearInactivityIfActive(record: SessionRecord | undefined) {
+  if (currentAppState !== 'active' || record?.inactivityAt === undefined) {
+    return false
   }
 
-  return record.id < sessionRecord.id ? record : sessionRecord
-}
-
-function reconcileSessionRecord(record: SessionRecord) {
-  const canonicalRecord = selectCanonicalSessionRecord(record)
-
-  if (canonicalRecord === sessionRecord) {
-    writeSessionRecord(sessionRecord)
-  } else if (
-    currentAppState === 'active' &&
-    canonicalRecord.inactivityAt !== undefined
-  ) {
-    persistSessionRecord({...canonicalRecord, inactivityAt: undefined})
-  } else {
-    updateSessionRecord(canonicalRecord)
-  }
+  persistSessionRecord({...record, inactivityAt: undefined})
+  return true
 }
 
 function onSessionRecordStorageChanged(event: StorageEvent) {
@@ -139,9 +112,9 @@ function onSessionRecordStorageChanged(event: StorageEvent) {
     return
   }
 
-  const record = readSessionRecord()
-  if (!record) return
-  reconcileSessionRecord(record)
+  if (!clearInactivityIfActive(readSessionRecord())) {
+    notifyListeners()
+  }
 }
 
 function onAppStateChanged(nextAppState: AppStateStatus) {
@@ -167,15 +140,12 @@ function onPageHide() {
 function startCoordinator() {
   runtimeWindow.addEventListener('storage', onSessionRecordStorageChanged)
   runtimeWindow.addEventListener('pagehide', onPageHide)
-  const persistedRecord = readSessionRecord()
-  if (persistedRecord) {
-    reconcileSessionRecord(persistedRecord)
-  }
   appStateSubscription = onAppStateChange(onAppStateChanged)
   const latestAppState = getCurrentState()
   if (latestAppState && latestAppState !== currentAppState) {
     onAppStateChanged(latestAppState)
   }
+  clearInactivityIfActive(readSessionRecord())
 }
 
 function stopCoordinator() {
