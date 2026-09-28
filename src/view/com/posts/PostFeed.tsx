@@ -20,7 +20,7 @@ import {
 } from 'react-native'
 import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
-import {useQueryClient} from '@tanstack/react-query'
+import {hashKey, useQueryClient} from '@tanstack/react-query'
 
 import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
@@ -41,14 +41,20 @@ import {
   type FeedPostSliceItem,
   pollLatest,
   RQKEY,
+  useFollowingRestorePrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
 } from '#/state/queries/post-feed'
 import {
   isPostFeedRefreshing,
+  isPostFeedRestorePending,
   peekPostFeedQueryEntry,
   supersedePostFeedRefreshes,
 } from '#/state/queries/post-feed-registry'
+import {
+  FOLLOWING_SNAPSHOT_QUERY_HASH,
+  FOLLOWING_SNAPSHOT_RESTORE_ENABLED,
+} from '#/state/queries/post-feed-snapshot'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
@@ -219,6 +225,33 @@ export type PostFeedRef = {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
+/**
+ * How long after its first layout a restored feed waits for the list to report
+ * its first scroll event before fetching newer posts to put above it anyway.
+ * Provisional, to be measured (APP-3159).
+ *
+ * On a cold start iOS applies the list's resting offset (the safe-area inset)
+ * a beat after mount, and it arrives as the first scroll event: a page added
+ * above before it lands can leave the reader at the top of the new posts
+ * rather than on the post they left off at. The prototype saw it about 0.8s
+ * after mount on iOS 26. Not every list reports one, hence the fallback, which
+ * only ends the wait: the insertion is still anchored by
+ * `maintainVisibleContentPosition`.
+ */
+const RESTORE_POSITION_FALLBACK_MS = 2500
+
+/**
+ * Rows that show posts. The rows before the first of them are headers, which
+ * `maintainVisibleContentPosition` must not anchor on.
+ */
+const CONTENT_ROW_TYPES: ReadonlySet<FeedRow['type']> = new Set([
+  'sliceItem',
+  'sliceViewFullThread',
+  'showLessFollowup',
+  'videoGridRow',
+  'fallbackMarker',
+])
+
 let PostFeed = ({
   feed,
   description,
@@ -226,6 +259,7 @@ let PostFeed = ({
   ignoreFilterFor,
   style,
   enabled,
+  isPageFocused = true,
   pollInterval,
   disablePoll,
   scrollElRef,
@@ -250,6 +284,12 @@ let PostFeed = ({
   ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
   enabled?: boolean
+  /**
+   * Whether the reader is looking at this feed, as against it being mounted to
+   * prefetch it beside the one they are. A restored feed only fetches what is
+   * newer while it is in view.
+   */
+  isPageFocused?: boolean
   pollInterval?: number
   disablePoll?: boolean
   scrollElRef?: ListRef
@@ -328,6 +368,17 @@ let PostFeed = ({
     error: refreshError,
     isRefreshing,
   } = usePostFeedRefresh(feed, feedParams)
+  /**
+   * Whether this is Home's Following feed restored from disk with Following
+   * v2: the rows added above its restored top are anchored, and the rows that
+   * would sit above the posts are left out.
+   */
+  const isRestorationEnabled =
+    FOLLOWING_SNAPSHOT_RESTORE_ENABLED &&
+    feed === 'following' &&
+    hashKey(RQKEY(feed, feedParams)) === FOLLOWING_SNAPSHOT_QUERY_HASH &&
+    isFollowingV2Eligible(ax)
+  const restorePrepend = useFollowingRestorePrepend(feed, feedParams)
   const refetchFromTop = useNonReactiveCallback(() => {
     if (isFollowingV2Eligible(ax)) {
       void refreshPostFeed()
@@ -347,11 +398,57 @@ let PostFeed = ({
     }
   }, [lastFetchedAt])
 
+  /**
+   * The `fetchedAt` of the page a refresh from this list wrote, until the
+   * render that shows it. Kept on this instance because every `PostFeed`
+   * observing the query sees the write, and only the list that asked for the
+   * refresh should scroll.
+   */
+  const scrollToTopOnPageRef = useRef<number | undefined>(undefined)
+  /**
+   * The `fetchedAt` of the top page the last committed render showed, in case
+   * that render comes before the refresh's promise does.
+   */
+  const renderedTopPageRef = useRef<number | undefined>(undefined)
+  const scrollToTop = () => {
+    scrollElRef?.current?.scrollToOffset({
+      animated: IS_NATIVE,
+      offset: -headerOffset,
+    })
+  }
+  useEffect(() => {
+    renderedTopPageRef.current = lastFetchedAt
+    if (
+      lastFetchedAt !== undefined &&
+      lastFetchedAt === scrollToTopOnPageRef.current
+    ) {
+      scrollToTopOnPageRef.current = undefined
+      scrollToTop()
+    }
+  })
+
+  /**
+   * Scrolls this list to the page a refresh from it wrote, once that page has
+   * been rendered.
+   */
+  const revealRefreshedTop = useNonReactiveCallback(
+    (page: {fetchedAt: number} | undefined) => {
+      if (!page) return
+      if (renderedTopPageRef.current === page.fetchedAt) {
+        scrollToTop()
+      } else {
+        scrollToTopOnPageRef.current = page.fetchedAt
+      }
+    },
+  )
+
   const checkForNew = useNonReactiveCallback(async () => {
     if (
       !data?.pages[0] ||
       isFetching ||
       isPostFeedRefreshing(queryClient, RQKEY(feed, feedParams)) ||
+      // Measured against a restored top before what is newer has been added.
+      isPostFeedRestorePending(queryClient, RQKEY(feed, feedParams)) ||
       !onHasNew ||
       !enabled ||
       disablePoll
@@ -411,7 +508,12 @@ let PostFeed = ({
     ) {
       if (isFollowingV2Eligible(ax)) {
         if (enabled) {
-          void refreshPostFeed()
+          void refreshPostFeed().then(page => {
+            // See `refreshFeed`.
+            if (isRestorationEnabled) {
+              revealRefreshedTop(page)
+            }
+          })
         } else {
           /*
            * Nobody is looking at a disabled feed, so it is only invalidated,
@@ -425,7 +527,16 @@ let PostFeed = ({
         void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
       }
     }
-  }, [queryClient, feed, myDid, enabled, ax, refreshPostFeed])
+  }, [
+    queryClient,
+    feed,
+    myDid,
+    enabled,
+    ax,
+    refreshPostFeed,
+    revealRefreshedTop,
+    isRestorationEnabled,
+  ])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -660,8 +771,11 @@ let PostFeed = ({
                   }
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
-                    // Show composer prompt for Following feed
-                    if (hasSession) {
+                    /*
+                     * Show composer prompt for Following feed, except where
+                     * it would sit above the rows a restore anchors on.
+                     */
+                    if (hasSession && !isRestorationEnabled) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
@@ -797,6 +911,7 @@ let PostFeed = ({
 
     return arr
   }, [
+    isRestorationEnabled,
     refreshError,
     isRetryingError,
     description,
@@ -822,6 +937,66 @@ let PostFeed = ({
     trendingIndices,
   ])
 
+  /*
+   * Rows before the first post, which the anchor must skip: an anchor on a
+   * header row makes `maintainVisibleContentPosition` hold that row in place
+   * and let the posts below it move.
+   */
+  let leadingRowCount = feedItems.findIndex(row =>
+    CONTENT_ROW_TYPES.has(row.type),
+  )
+  if (leadingRowCount === -1) {
+    leadingRowCount = feedItems.length
+  }
+
+  /**
+   * Whether the list has reached its resting position, which a restored feed
+   * waits for before adding anything above it - see
+   * {@link RESTORE_POSITION_FALLBACK_MS}.
+   */
+  const [isListPositioned, setIsListPositioned] = useState(false)
+  const positionFallbackRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+  const onListFirstScroll = () => setIsListPositioned(true)
+  const onListLayout = () => {
+    if (positionFallbackRef.current !== undefined) return
+    positionFallbackRef.current = setTimeout(() => {
+      setIsListPositioned(true)
+    }, RESTORE_POSITION_FALLBACK_MS)
+  }
+  useEffect(() => {
+    return () => clearTimeout(positionFallbackRef.current)
+  }, [])
+
+  const hasPages = Boolean(data?.pages.length)
+  const runRestorePrepend = useNonReactiveCallback(async () => {
+    const outcome = await restorePrepend()
+    if (outcome) {
+      ax.metric('feed:following:restorePrepend', outcome)
+    }
+  })
+  useEffect(() => {
+    /*
+     * Once per account session, and only from the list the reader is looking
+     * at: the prepend does nothing unless the restore is still pending.
+     */
+    if (
+      isRestorationEnabled &&
+      enabled &&
+      isPageFocused &&
+      isListPositioned &&
+      hasPages
+    ) {
+      void runRestorePrepend()
+    }
+  }, [
+    isRestorationEnabled,
+    enabled,
+    isPageFocused,
+    isListPositioned,
+    hasPages,
+    runRestorePrepend,
+  ])
+
   // events
   // =
   //
@@ -835,7 +1010,14 @@ let PostFeed = ({
       reason: 'pull-to-refresh',
     })
     if (isFollowingV2Eligible(ax)) {
-      await refreshPostFeed()
+      const page = await refreshPostFeed()
+      /*
+       * A restored feed anchors on the row that was at the top, so the fresh
+       * rows land above the viewport unless the list is taken up to them.
+       */
+      if (isRestorationEnabled) {
+        revealRefreshedTop(page)
+      }
       onHasNew?.(false)
       return
     }
@@ -855,44 +1037,9 @@ let PostFeed = ({
     setIsPTRing(false)
   }
 
-  /**
-   * The `fetchedAt` of the page a `refreshToTop` from this list wrote, until
-   * the render that shows it. Kept on this instance because every `PostFeed`
-   * observing the query sees the write, and only the list that asked for the
-   * refresh should scroll.
-   */
-  const scrollToTopOnPageRef = useRef<number | undefined>(undefined)
-  /**
-   * The `fetchedAt` of the top page the last committed render showed, in case
-   * that render comes before the refresh's promise does.
-   */
-  const renderedTopPageRef = useRef<number | undefined>(undefined)
-  const scrollToTop = () => {
-    scrollElRef?.current?.scrollToOffset({
-      animated: IS_NATIVE,
-      offset: -headerOffset,
-    })
-  }
-  useEffect(() => {
-    renderedTopPageRef.current = lastFetchedAt
-    if (
-      lastFetchedAt !== undefined &&
-      lastFetchedAt === scrollToTopOnPageRef.current
-    ) {
-      scrollToTopOnPageRef.current = undefined
-      scrollToTop()
-    }
-  })
-
   const refreshToTop = async () => {
     if (!enabled) return
-    const page = await refreshPostFeed()
-    if (!page) return
-    if (renderedTopPageRef.current === page.fetchedAt) {
-      scrollToTop()
-    } else {
-      scrollToTopOnPageRef.current = page.fetchedAt
-    }
+    revealRefreshedTop(await refreshPostFeed())
   }
 
   useImperativeHandle(ref, () => ({
@@ -1308,6 +1455,13 @@ let PostFeed = ({
         maxToRenderPerBatch={IS_IOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
+        maintainVisibleContentPosition={
+          isRestorationEnabled
+            ? {minIndexForVisible: leadingRowCount}
+            : undefined
+        }
+        onFirstScroll={isRestorationEnabled ? onListFirstScroll : undefined}
+        onLayout={isRestorationEnabled ? onListLayout : undefined}
       />
     </View>
   )

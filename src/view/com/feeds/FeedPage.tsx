@@ -165,6 +165,7 @@ export function FeedPage({
           <PostFeed
             testID={testID ? `${testID}-feed` : undefined}
             enabled={isPageFocused || shouldPrefetch}
+            isPageFocused={isPageFocused}
             feed={feed}
             feedParams={feedParams}
             pollInterval={POLL_FREQ}

@@ -7,7 +7,10 @@ import {type Platform} from 'react-native'
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
-import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {
+  type FeedDescriptor,
+  type FollowingPrependOutcome,
+} from '#/state/queries/post-feed'
 import {
   type FollowingRestoreReport,
   type FollowingSnapshotRejection,
@@ -240,6 +243,11 @@ export type Events = {
    * Why the Following snapshot could not be written, once per reason per
    * account session.
    */
+  /**
+   * Once per cold start that restored Following, what the fetch of posts
+   * newer than the restored top found, and how many it added.
+   */
+  'feed:following:restorePrepend': FollowingPrependOutcome
   'feed:following:snapshotRejected': {
     reason: FollowingSnapshotRejection
   }
