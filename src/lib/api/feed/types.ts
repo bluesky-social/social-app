@@ -2,6 +2,11 @@ import {type app} from '#/lexicons'
 
 export interface FeedAPIResponse {
   cursor?: string
+  /**
+   * The server's cursor for the newest boundary of this response, from
+   * `getTimeline`. Absent from other feeds, and from appviews that predate it.
+   */
+  startCursor?: string
   feed: app.bsky.feed.defs.FeedViewPost[]
 }
 

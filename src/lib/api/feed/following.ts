@@ -36,6 +36,7 @@ export class FollowingFeedAPI implements FeedAPI {
     })
     return {
       cursor: data.cursor,
+      startCursor: data.startCursor,
       feed: data.feed,
     }
   }

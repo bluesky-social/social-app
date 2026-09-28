@@ -87,11 +87,14 @@ export class HomeFeedAPI implements FeedAPI {
     }
 
     let returnCursor
+    let startCursor
     let posts: app.bsky.feed.defs.FeedViewPost[] = []
 
     if (!this.usingDiscover) {
       const res = await this.following.fetch({cursor, limit})
       returnCursor = res.cursor
+      // The page starts with Following posts, so it starts where they do.
+      startCursor = res.startCursor
       posts = posts.concat(res.feed)
       if (!returnCursor) {
         cursor = ''
@@ -108,6 +111,7 @@ export class HomeFeedAPI implements FeedAPI {
 
     return {
       cursor: returnCursor,
+      startCursor,
       feed: posts,
     }
   }
