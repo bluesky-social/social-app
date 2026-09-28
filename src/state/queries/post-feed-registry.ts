@@ -28,6 +28,11 @@ export type PostFeedQueryEntry = {
    * that writes, so every caller learns of the commit that served it.
    */
   refresh?: PendingRefresh
+  /**
+   * The gap fills in flight, keyed by the page each gap is below, so that
+   * fills of the same gap that overlap share one fetch.
+   */
+  gapFills: Map<object, Promise<GapFillResult<object>>>
 }
 
 type PendingRefresh = {
@@ -68,7 +73,7 @@ export function getPostFeedQueryEntry(
   const entries = getEntries(queryClient)
   let entry = entries.get(queryHash)
   if (!entry) {
-    entry = {feedApis: new WeakMap(), generation: 0}
+    entry = {feedApis: new WeakMap(), generation: 0, gapFills: new Map()}
     // An in-flight fetch must not recreate an entry after query removal.
     if (queryClient.getQueryCache().get(queryHash)) {
       entries.set(queryHash, entry)
@@ -293,6 +298,99 @@ export async function prependPostFeedQuery<Page extends object, Detail>(
     )
   })
   return {status: 'committed', detail}
+}
+
+export type GapFillResult<Page> =
+  {status: 'filled'; page: Page} | {status: 'superseded'}
+
+/**
+ * Fills the gap below `upper`, one of a post-feed query's pages, in a single
+ * write: every page below it is replaced by the page that continues from its
+ * cursor. Or leaves the query untouched.
+ *
+ * `fetchBelow` fetches that page, continuing the chain `upper` belongs to with
+ * the API it is handed (`undefined` for a page without one, as one restored
+ * from disk has). Nothing is written until it has: truncating first would
+ * leave the list shorter than its scroll offset, which iOS clamps, so the
+ * reader would jump. The page's API is promoted with it, so pagination carries
+ * on from it.
+ *
+ * The write only lands if `upper` is still one of the pages, with pages below
+ * it, and nothing has replaced the pages meanwhile: a refresh or a fetch from
+ * the top that started, or is still in flight, supersedes it, and so does the
+ * query's removal. Pages added above meanwhile, as a prepend adds them, stay.
+ * A fetchNextPage in flight is cancelled with the write, since it would put
+ * back what the write replaces.
+ *
+ * Fills of the same gap that overlap share one fetch and its outcome. Rejects
+ * when `fetchBelow` does, having written nothing, so the gap can be filled
+ * again.
+ */
+export function fillPostFeedGap<Page extends {cursor: string | undefined}>(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  upper: Page,
+  fetchBelow: (api: FeedAPI | undefined) => Promise<{page: Page; api: FeedAPI}>,
+): Promise<GapFillResult<Page>> {
+  const entry = getPostFeedQueryEntry(queryClient, queryKey)
+  const inFlight = entry.gapFills.get(upper)
+  if (inFlight) {
+    return inFlight as Promise<GapFillResult<Page>>
+  }
+
+  const readPages = () =>
+    queryClient.getQueryData<InfiniteData<Page, unknown>>(queryKey)?.pages
+  const hasPagesBelow = () => {
+    const pages = readPages()
+    const index = pages?.indexOf(upper) ?? -1
+    return index !== -1 && index < pages!.length - 1
+  }
+  const generation = entry.generation
+  const isCurrent = () =>
+    entry.generation === generation &&
+    entry.refresh === undefined &&
+    peekPostFeedQueryEntry(queryClient, queryKey) === entry &&
+    hasPagesBelow()
+
+  const fill = (async (): Promise<GapFillResult<Page>> => {
+    const cursor = upper.cursor
+    // A refresh in flight is about to replace the pages anyway.
+    if (cursor === undefined || !isCurrent()) {
+      return {status: 'superseded'}
+    }
+    const {page, api} = await fetchBelow(entry.feedApis.get(upper))
+    if (!isCurrent()) {
+      return {status: 'superseded'}
+    }
+    // As `getNextPageParam` would have made it, had the page been fetched next.
+    const pageParam = {cursor}
+    entry.feedApis.set(page, api)
+    entry.feedApis.set(pageParam, api)
+    // As in `refreshPostFeedQuery`: nothing in flight may land after this.
+    notifyManager.batch(() => {
+      void queryClient.cancelQueries({queryKey, exact: true})
+      queryClient.setQueryData<InfiniteData<Page, unknown>>(queryKey, data => {
+        const index = data ? data.pages.indexOf(upper) : -1
+        if (!data || index === -1) {
+          return data
+        }
+        return {
+          pages: [...data.pages.slice(0, index + 1), page],
+          pageParams: [...data.pageParams.slice(0, index + 1), pageParam],
+        }
+      })
+    })
+    return {status: 'filled', page}
+  })()
+
+  entry.gapFills.set(upper, fill)
+  const settle = () => {
+    if (entry.gapFills.get(upper) === fill) {
+      entry.gapFills.delete(upper)
+    }
+  }
+  fill.then(settle, settle)
+  return fill
 }
 
 /**
