@@ -391,6 +391,54 @@ describe('selectFollowingSnapshot', () => {
       expect(snapshot.pages[0].feed).toHaveLength(1)
     })
 
+    it('keeps a gapped since page alone, to continue from its own cursor', () => {
+      // The page below it is the restored top it did not reach.
+      const data = prepended()
+      data.pages[0] = {...data.pages[0], cursor: 'gap'}
+
+      const restored = saveAndRestore([preferences, labelers, following(data)])
+
+      expect(restored.report).toMatchObject({outcome: 'restored', pageCount: 1})
+      // Pagination carries on into the posts that were missing below it.
+      expect(restoredData(restored)).toMatchObject({
+        pages: [{since: 's0', cursor: 'gap'}],
+        pageParams: [undefined],
+      })
+    })
+
+    it('keeps a gapped since page with the pages that filled the gap', () => {
+      const data = {
+        pages: [
+          page(['new0'], {since: 's0', cursor: 'gap', startCursor: 'top'}),
+          page(['fill0'], {cursor: 'fill0-next', startCursor: 'gap-start'}),
+          page(['fill1'], {cursor: 'fill1-next'}),
+          page(['fill2'], {cursor: 'fill2-next'}),
+        ],
+        pageParams: [
+          undefined,
+          {cursor: 'gap'},
+          {cursor: 'fill0-next'},
+          {cursor: 'fill1-next'},
+        ],
+      }
+
+      expect(select(data).pageParams).toEqual([
+        null,
+        {cursor: 'gap'},
+        {cursor: 'fill0-next'},
+      ])
+      const restored = saveAndRestore([preferences, labelers, following(data)])
+      expect(restored.report).toMatchObject({outcome: 'restored', pageCount: 3})
+      expect(restoredData(restored)).toMatchObject({
+        pages: [
+          {since: 's0', cursor: 'gap'},
+          {cursor: 'fill0-next'},
+          {cursor: 'fill1-next'},
+        ],
+        pageParams: [undefined, {cursor: 'gap'}, {cursor: 'fill0-next'}],
+      })
+    })
+
     it('drops an exhausted page whose boundary is not directly below it', () => {
       const data = prepended()
       // The page below the second one does not start where its range ends.
