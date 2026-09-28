@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {useAnimatedRef} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
@@ -26,7 +26,7 @@ import {
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorScreen} from '#/view/com/util/error/ErrorScreen'
 import {FAB} from '#/view/com/util/fab/FAB'
@@ -37,7 +37,9 @@ import {useTheme} from '#/alf'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import * as Layout from '#/components/Layout'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {app} from '#/lexicons'
 import {
   CustomFeedHeader,
@@ -145,15 +147,22 @@ export function CustomFeedScreenInner({
   const queryClient = useQueryClient()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useAnimatedRef() as ListRef
+  const feedRef = useRef<PostFeedRef>(null)
+  const ax = useAnalytics()
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: IS_NATIVE,
       offset: 0, // -headerHeight,
     })
-    void truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+    // With Following v2 the feed scrolls again once the new top has rendered.
+    if (isFollowingV2Eligible(ax)) {
+      void feedRef.current?.refreshToTop()
+    } else {
+      void truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+    }
     setHasNew(false)
-  }, [scrollElRef, queryClient, feed, setHasNew])
+  }, [scrollElRef, ax, queryClient, feed, setHasNew])
 
   useEffect(() => {
     if (!isScreenFocused) {
@@ -200,6 +209,7 @@ export function CustomFeedScreenInner({
           onScrolledDownChange={setIsScrolledDown}
           renderEmptyState={renderPostsEmpty}
           isVideoFeed={isVideoFeed}
+          ref={feedRef}
         />
       </FeedFeedbackProvider>
       {(isScrolledDown || hasNew) && (

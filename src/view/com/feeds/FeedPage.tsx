@@ -27,7 +27,7 @@ import {
 } from '#/state/queries/post-feed'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
@@ -76,6 +76,7 @@ export function FeedPage({
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
+  const feedRef = useRef<PostFeedRef>(null)
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
   const isVideoFeed = useMemo(() => {
@@ -101,13 +102,26 @@ export function FeedPage({
     })
   }, [headerOffset])
 
+  /**
+   * The scroll is immediate feedback. With Following v2 the feed fetches the
+   * new top before replacing anything, and scrolls again once it has rendered
+   * it.
+   */
+  const refreshToTop = useCallback(() => {
+    scrollToTop()
+    if (isFollowingV2Eligible(ax)) {
+      void feedRef.current?.refreshToTop()
+    } else {
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+    }
+  }, [ax, scrollToTop, queryClient, feed])
+
   const onSoftReset = useCallback(() => {
     const isScreenFocused =
       getTabState(getRootNavigation(navigation).getState(), 'Home') ===
       TabState.InsideAtRoot
     if (isScreenFocused && isPageFocused) {
-      scrollToTop()
-      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+      refreshToTop()
       setHasNew(false)
       ax.metric('feed:refresh', {
         feedType: feed.split('|')[0],
@@ -115,7 +129,7 @@ export function FeedPage({
         reason: 'soft-reset',
       })
     }
-  }, [ax, navigation, isPageFocused, scrollToTop, queryClient, feed])
+  }, [ax, navigation, isPageFocused, refreshToTop, feed])
 
   // fires when page within screen is activated/deactivated
   useEffect(() => {
@@ -130,15 +144,14 @@ export function FeedPage({
   }, [openComposer])
 
   const onPressLoadLatest = useCallback(() => {
-    scrollToTop()
-    truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+    refreshToTop()
     setHasNew(false)
     ax.metric('feed:refresh', {
       feedType: feed.split('|')[0],
       feedUrl: feed,
       reason: 'load-latest',
     })
-  }, [ax, scrollToTop, feed, queryClient])
+  }, [ax, refreshToTop, feed])
 
   const shouldPrefetch = IS_NATIVE && isPageAdjacent
   const isDiscoverFeed = feedInfo.uri === DISCOVER_FEED_URI
@@ -164,6 +177,7 @@ export function FeedPage({
             headerOffset={headerOffset}
             savedFeedConfig={savedFeedConfig}
             isVideoFeed={isVideoFeed}
+            ref={feedRef}
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>

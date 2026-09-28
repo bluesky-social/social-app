@@ -1,4 +1,10 @@
-import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -11,7 +17,7 @@ import {
   type FeedDescriptor,
   RQKEY as FEED_RQKEY,
 } from '#/state/queries/post-feed'
-import {PostFeed} from '#/view/com/posts/PostFeed'
+import {PostFeed, type PostFeedRef} from '#/view/com/posts/PostFeed'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {type ListRef} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
@@ -19,7 +25,9 @@ import {atoms as a} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {HashtagWide_Stroke1_Corner0_Rounded as HashtagWideIcon} from '#/components/icons/Hashtag'
 import {PersonPlus_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 
 interface SectionRef {
   scrollToTop: () => void
@@ -49,15 +57,22 @@ export function FeedSection({
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const isScreenFocused = useIsFocused()
   const {_} = useLingui()
+  const ax = useAnalytics()
+  const feedRef = useRef<PostFeedRef>(null)
 
   const onScrollToTop = useCallback(() => {
     scrollElRef.current?.scrollToOffset({
       animated: IS_NATIVE,
       offset: -headerHeight,
     })
-    queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
+    // With Following v2 the feed scrolls again once the new top has rendered.
+    if (isFollowingV2Eligible(ax)) {
+      void feedRef.current?.refreshToTop()
+    } else {
+      queryClient.resetQueries({queryKey: FEED_RQKEY(feed)})
+    }
     setHasNew(false)
-  }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
+  }, [scrollElRef, headerHeight, ax, queryClient, feed, setHasNew])
   useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
   }))
@@ -106,6 +121,7 @@ export function FeedSection({
         onScrolledDownChange={setIsScrolledDown}
         renderEmptyState={renderPostsEmpty}
         headerOffset={headerHeight}
+        ref={feedRef}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn

@@ -1,4 +1,10 @@
-import {useCallback, useEffect, useImperativeHandle, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -6,6 +12,7 @@ import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
+import {mergeRefs} from '#/lib/merge-refs'
 import {
   type FeedDescriptor,
   RQKEY as FEED_RQKEY,
@@ -22,7 +29,9 @@ import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {atoms as a, ios, useTheme} from '#/alf'
 import {EditBig_Stroke1_Corner0_Rounded as EditIcon} from '#/components/icons/EditBig'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {type SectionRef} from './types'
 
 interface FeedSectionProps {
@@ -53,7 +62,9 @@ export function ProfileFeedSection({
   postFeedRef,
 }: FeedSectionProps) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const queryClient = useQueryClient()
+  const feedRef = useRef<PostFeedRef>(null)
   const [hasNew, setHasNew] = useState(false)
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const shouldUseAdjustedNumToRender = feed.endsWith('posts_and_author_threads')
@@ -66,9 +77,14 @@ export function ProfileFeedSection({
       animated: IS_NATIVE,
       offset: -headerHeight,
     })
-    truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+    // With Following v2 the feed scrolls again once the new top has rendered.
+    if (isFollowingV2Eligible(ax)) {
+      void feedRef.current?.refreshToTop()
+    } else {
+      truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+    }
     setHasNew(false)
-  }, [scrollElRef, headerHeight, queryClient, feed, setHasNew])
+  }, [scrollElRef, headerHeight, ax, queryClient, feed, setHasNew])
 
   useImperativeHandle(ref, () => ({
     scrollToTop: onScrollToTop,
@@ -113,7 +129,7 @@ export function ProfileFeedSection({
           shouldUseAdjustedNumToRender ? adjustedInitialNumToRender : undefined
         }
         isVideoFeed={isVideoFeed}
-        ref={postFeedRef}
+        ref={mergeRefs([feedRef, postFeedRef])}
       />
       {(isScrolledDown || hasNew) && (
         <LoadLatestBtn
