@@ -2,6 +2,7 @@ import {useCallback} from 'react'
 import {Linking} from 'react-native'
 import * as WebBrowser from 'expo-web-browser'
 
+import {beginAppInitiatedActivity} from '#/lib/appState'
 import {
   createBskyAppAbsoluteUrl,
   createProxiedUrl,
@@ -57,6 +58,12 @@ export function useOpenLink() {
           }
           return
         } else if (override ?? enabled) {
+          /*
+           * On Android this resolves as soon as the Custom Tab has launched,
+           * before the app has even left, so the scope is left to end with the
+           * trip it covers unless the launch fails.
+           */
+          const endActivity = beginAppInitiatedActivity()
           WebBrowser.openBrowserAsync(url, {
             presentationStyle:
               WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
@@ -64,6 +71,7 @@ export function useOpenLink() {
             controlsColor: t.palette.primary_500,
             createTask: false,
           }).catch(err => {
+            endActivity()
             if (__DEV__)
               logger.error('Could not open web browser', {message: err})
             void Linking.openURL(url)
