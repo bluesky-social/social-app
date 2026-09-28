@@ -9,6 +9,7 @@ import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {
   type FeedDescriptor,
+  type FollowingGapOutcome,
   type FollowingPrependOutcome,
 } from '#/state/queries/post-feed'
 import {
@@ -248,6 +249,12 @@ export type Events = {
    * newer than the restored top found, and how many it added.
    */
   'feed:following:restorePrepend': FollowingPrependOutcome
+  /**
+   * The "Show more posts" row at a gap in restored Following: each press, and
+   * then what came of it.
+   */
+  'feed:following:gap':
+    {action: 'press'} | ({action: 'outcome'} & FollowingGapOutcome)
   'feed:following:snapshotRejected': {
     reason: FollowingSnapshotRejection
   }
