@@ -375,7 +375,8 @@ describe('usePostFeedRefresh', () => {
         const query = usePostFeedQuery(FEED)
         void query.isFetching
         renderedData.push(query.data)
-        return {query, refresh: usePostFeedRefresh(FEED)}
+        const refreshState = usePostFeedRefresh(FEED)
+        return {query, refresh: refreshState.refresh, refreshState}
       },
       {wrapper},
     )
@@ -446,9 +447,10 @@ describe('usePostFeedRefresh', () => {
     nextApiTop(() => Promise.reject(new Error('offline')))
 
     await act(async () => {
-      await expect(hook.result.current.refresh()).rejects.toThrow('offline')
+      expect(await hook.result.current.refresh()).toBeUndefined()
     })
 
+    expect(hook.result.current.refreshState.error?.message).toBe('offline')
     expect(writes).toHaveLength(0)
     expect(cachedData(queryClient)).toBe(data)
     expect(hook.result.current.query.isError).toBe(false)
@@ -511,8 +513,9 @@ describe('usePostFeedRefresh', () => {
       await Promise.allSettled([firstRefresh, secondRefresh])
     })
 
-    await expect(firstRefresh).rejects.toThrow('offline')
-    await expect(secondRefresh).rejects.toThrow('offline')
+    expect(await firstRefresh).toBeUndefined()
+    expect(await secondRefresh).toBeUndefined()
+    expect(hook.result.current.refreshState.error?.message).toBe('offline')
     expect(writes).toHaveLength(0)
     expect(cachedData(queryClient)).toBe(data)
   })

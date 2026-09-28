@@ -26,7 +26,7 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {isNetworkError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
@@ -53,6 +53,7 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
@@ -106,6 +107,11 @@ type FeedRow =
   | {
       type: 'loadMoreError'
       key: string
+    }
+  | {
+      type: 'refreshError'
+      key: string
+      error: Error
     }
   | {
       type: 'feedShutdownMsg'
@@ -317,10 +323,14 @@ let PostFeed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
-  const refreshPostFeed = usePostFeedRefresh(feed, feedParams)
+  const {
+    refresh: refreshPostFeed,
+    error: refreshError,
+    isRefreshing,
+  } = usePostFeedRefresh(feed, feedParams)
   const refetchFromTop = useNonReactiveCallback(() => {
     if (isFollowingV2Eligible(ax)) {
-      void refreshPostFeed().catch(logRefreshError)
+      void refreshPostFeed()
     } else {
       void refetch()
     }
@@ -401,7 +411,7 @@ let PostFeed = ({
     ) {
       if (isFollowingV2Eligible(ax)) {
         if (enabled) {
-          void refreshPostFeed().catch(logRefreshError)
+          void refreshPostFeed()
         } else {
           /*
            * Nobody is looking at a disabled feed, so it is only invalidated,
@@ -474,6 +484,12 @@ let PostFeed = ({
     feed.startsWith('author|') ? undefined : data?.pages,
   )
 
+  /**
+   * A Following v2 refresh leaves the query's own error in place, so the error
+   * row gives way to the loading row while one is retrying it.
+   */
+  const isRetryingError = isRefreshing && isError && isEmpty
+
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
@@ -508,7 +524,7 @@ let PostFeed = ({
         key: 'feedShutdownMsg',
       })
     }
-    if (isFetched) {
+    if (isFetched && !isRetryingError) {
       if (isError && isEmpty) {
         arr.push({
           type: 'error',
@@ -767,8 +783,22 @@ let PostFeed = ({
       })
     }
 
+    /*
+     * A failed Following v2 refresh keeps the content it failed to replace, so
+     * the error goes above it. An empty feed shows it in its error row instead.
+     */
+    if (refreshError && !(isError && isEmpty)) {
+      arr.unshift({
+        type: 'refreshError',
+        key: 'refreshError',
+        error: refreshError,
+      })
+    }
+
     return arr
   }, [
+    refreshError,
+    isRetryingError,
     description,
     isFetched,
     isError,
@@ -805,7 +835,7 @@ let PostFeed = ({
       reason: 'pull-to-refresh',
     })
     if (isFollowingV2Eligible(ax)) {
-      await refreshPostFeed().catch(logRefreshError)
+      await refreshPostFeed()
       onHasNew?.(false)
       return
     }
@@ -856,7 +886,7 @@ let PostFeed = ({
 
   const refreshToTop = async () => {
     if (!enabled) return
-    const page = await refreshPostFeed().catch(logRefreshError)
+    const page = await refreshPostFeed()
     if (!page) return
     if (renderedTopPageRef.current === page.fetchedAt) {
       scrollToTop()
@@ -914,9 +944,16 @@ let PostFeed = ({
         return (
           <PostFeedErrorMessage
             feedDesc={feed}
-            error={error ?? undefined}
+            error={refreshError ?? error ?? undefined}
             onPressTryAgain={onPressTryAgain}
             savedFeedConfig={savedFeedConfig}
+          />
+        )
+      } else if (row.type === 'refreshError') {
+        return (
+          <ErrorMessage
+            message={cleanError(row.error)}
+            onPressTryAgain={onPressTryAgain}
           />
         )
       } else if (row.type === 'loadMoreError') {
@@ -1034,6 +1071,7 @@ let PostFeed = ({
       renderEmptyState,
       feed,
       error,
+      refreshError,
       onPressTryAgain,
       savedFeedConfig,
       l,
@@ -1280,12 +1318,6 @@ export {PostFeed}
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
 })
-
-function logRefreshError(err: unknown): undefined {
-  if (!isNetworkError(err)) {
-    logger.error('Failed to refresh posts feed', {message: err})
-  }
-}
 
 export function isThreadParentAt<T>(arr: Array<T>, i: number) {
   if (arr.length === 1) {

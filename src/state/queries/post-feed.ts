@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, AtUri, type AtUriString} from '@atproto/syntax'
@@ -35,6 +35,7 @@ import {
   type ValidFeedPostNumbering,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
@@ -422,8 +423,12 @@ export function usePostFeedQuery(
 
 /**
  * Refreshes this feed from the top in one write, keeping what it has if the
- * fetch fails - see {@link refreshPostFeedQuery}. Resolves with the page that
- * was written, or `undefined` if nothing was.
+ * fetch fails - see {@link refreshPostFeedQuery}. `refresh` resolves with the
+ * page that was written, or `undefined` if nothing was, and never rejects.
+ *
+ * The state is this view's own: `error` is why its latest refresh failed,
+ * cleared as soon as it starts another, and `isRefreshing` is whether that
+ * latest refresh is still in flight.
  *
  * Only used with Following v2 for now. Otherwise feeds still refresh through
  * TanStack (`truncateAndInvalidate` and the like).
@@ -437,22 +442,46 @@ export function usePostFeedRefresh(
     feedDesc,
     params,
   )
+  const [error, setError] = useState<Error | undefined>(undefined)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  /** Counts this view's refreshes, so that only the latest sets the state. */
+  const latestRefreshRef = useRef(0)
 
-  return async (): Promise<FeedPageUnselected | undefined> => {
+  const refresh = async (): Promise<FeedPageUnselected | undefined> => {
     // Nothing may land before the query itself would be allowed to fetch.
     if (!isReady) {
       return undefined
     }
     logger.debug('usePostFeedRefresh', {feedDesc})
-    return refreshPostFeedQuery(
-      queryClient,
-      RQKEY(feedDesc, params),
-      async () => {
-        const api = createFeedApi()
-        return {api, page: await fetchPage(api, undefined)}
-      },
-    )
+    const refreshId = ++latestRefreshRef.current
+    const isLatest = () => latestRefreshRef.current === refreshId
+    setError(undefined)
+    setIsRefreshing(true)
+    try {
+      return await refreshPostFeedQuery(
+        queryClient,
+        RQKEY(feedDesc, params),
+        async () => {
+          const api = createFeedApi()
+          return {api, page: await fetchPage(api, undefined)}
+        },
+      )
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to refresh posts feed', {message: e})
+      }
+      if (isLatest()) {
+        setError(e instanceof Error ? e : new Error(String(e)))
+      }
+      return undefined
+    } finally {
+      if (isLatest()) {
+        setIsRefreshing(false)
+      }
+    }
   }
+
+  return {refresh, error, isRefreshing}
 }
 
 export async function pollLatest(
