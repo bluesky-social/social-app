@@ -42,7 +42,13 @@ import {
   pollLatest,
   RQKEY,
   usePostFeedQuery,
+  usePostFeedRefresh,
 } from '#/state/queries/post-feed'
+import {
+  isPostFeedRefreshing,
+  peekPostFeedQueryEntry,
+  supersedePostFeedRefreshes,
+} from '#/state/queries/post-feed-registry'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
@@ -67,6 +73,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
   isStatusStillActive,
@@ -195,6 +202,11 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 
 export type PostFeedRef = {
   refreshFeed: () => Promise<void>
+  /**
+   * Following v2 only: refreshes the feed and, once the new top page has been
+   * rendered, scrolls this list to it.
+   */
+  refreshToTop: () => Promise<void>
 }
 
 // DISABLED need to check if this is causing random feed refreshes -prf
@@ -305,6 +317,14 @@ let PostFeed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
+  const refreshPostFeed = usePostFeedRefresh(feed, feedParams)
+  const refetchFromTop = useNonReactiveCallback(() => {
+    if (isFollowingV2Eligible(ax)) {
+      void refreshPostFeed().catch(logRefreshError)
+    } else {
+      void refetch()
+    }
+  })
   const lastFetchedAt = data?.pages[0].fetchedAt
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
@@ -318,7 +338,14 @@ let PostFeed = ({
   }, [lastFetchedAt])
 
   const checkForNew = useNonReactiveCallback(async () => {
-    if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
+    if (
+      !data?.pages[0] ||
+      isFetching ||
+      isPostFeedRefreshing(queryClient, RQKEY(feed, feedParams)) ||
+      !onHasNew ||
+      !enabled ||
+      disablePoll
+    ) {
       return
     }
 
@@ -328,11 +355,22 @@ let PostFeed = ({
     }
 
     try {
-      if (
-        await pollLatest(queryClient, RQKEY(feed, feedParams), data.pages[0])
-      ) {
+      const queryKey = RQKEY(feed, feedParams)
+      const topFetches = peekPostFeedQueryEntry(
+        queryClient,
+        queryKey,
+      )?.generation
+      if (await pollLatest(queryClient, queryKey, data.pages[0])) {
+        // A fetch from the top during the poll has replaced what it checked.
+        if (
+          isFollowingV2Eligible(ax) &&
+          peekPostFeedQueryEntry(queryClient, queryKey)?.generation !==
+            topFetches
+        ) {
+          return
+        }
         if (isEmpty) {
-          void refetch()
+          refetchFromTop()
         } else {
           onHasNew(true)
         }
@@ -361,9 +399,23 @@ let PostFeed = ({
       (feed === 'following' ||
         feed === `author|${myDid}|posts_and_author_threads`)
     ) {
-      void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+      if (isFollowingV2Eligible(ax)) {
+        if (enabled) {
+          void refreshPostFeed().catch(logRefreshError)
+        } else {
+          /*
+           * Nobody is looking at a disabled feed, so it is only invalidated,
+           * and refetches once enabled. A refresh still in flight must not
+           * land over that and clear it.
+           */
+          supersedePostFeedRefreshes(queryClient, {queryKey: RQKEY(feed)})
+          void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+        }
+      } else {
+        void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+      }
     }
-  }, [queryClient, feed, myDid])
+  }, [queryClient, feed, myDid, enabled, ax, refreshPostFeed])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -752,6 +804,11 @@ let PostFeed = ({
       feedUrl: feed,
       reason: 'pull-to-refresh',
     })
+    if (isFollowingV2Eligible(ax)) {
+      await refreshPostFeed().catch(logRefreshError)
+      onHasNew?.(false)
+      return
+    }
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
       if (onHasNew) {
@@ -768,8 +825,49 @@ let PostFeed = ({
     setIsPTRing(false)
   }
 
+  /**
+   * The `fetchedAt` of the page a `refreshToTop` from this list wrote, until
+   * the render that shows it. Kept on this instance because every `PostFeed`
+   * observing the query sees the write, and only the list that asked for the
+   * refresh should scroll.
+   */
+  const scrollToTopOnPageRef = useRef<number | undefined>(undefined)
+  /**
+   * The `fetchedAt` of the top page the last committed render showed, in case
+   * that render comes before the refresh's promise does.
+   */
+  const renderedTopPageRef = useRef<number | undefined>(undefined)
+  const scrollToTop = () => {
+    scrollElRef?.current?.scrollToOffset({
+      animated: IS_NATIVE,
+      offset: -headerOffset,
+    })
+  }
+  useEffect(() => {
+    renderedTopPageRef.current = lastFetchedAt
+    if (
+      lastFetchedAt !== undefined &&
+      lastFetchedAt === scrollToTopOnPageRef.current
+    ) {
+      scrollToTopOnPageRef.current = undefined
+      scrollToTop()
+    }
+  })
+
+  const refreshToTop = async () => {
+    if (!enabled) return
+    const page = await refreshPostFeed().catch(logRefreshError)
+    if (!page) return
+    if (renderedTopPageRef.current === page.fetchedAt) {
+      scrollToTop()
+    } else {
+      scrollToTopOnPageRef.current = page.fetchedAt
+    }
+  }
+
   useImperativeHandle(ref, () => ({
     refreshFeed,
+    refreshToTop,
   }))
 
   const onEndReached = useCallback(async () => {
@@ -797,9 +895,9 @@ let PostFeed = ({
   ])
 
   const onPressTryAgain = useCallback(() => {
-    void refetch()
+    refetchFromTop()
     onHasNew?.(false)
-  }, [refetch, onHasNew])
+  }, [refetchFromTop, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
     void fetchNextPage()
@@ -1182,6 +1280,12 @@ export {PostFeed}
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
 })
+
+function logRefreshError(err: unknown): undefined {
+  if (!isNetworkError(err)) {
+    logger.error('Failed to refresh posts feed', {message: err})
+  }
+}
 
 export function isThreadParentAt<T>(arr: Array<T>, i: number) {
   if (arr.length === 1) {
