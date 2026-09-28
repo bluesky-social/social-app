@@ -35,7 +35,10 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {InlineLinkText, Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
+import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
+import {NotificationsNewPill} from '#/features/followingV2/NotificationsNewPill'
 
 // We don't currently persist this across reloads since
 // you gotta visit All to clear the badge anyway.
@@ -185,6 +188,7 @@ function NotificationsTab({
   setIsLoadingLatest: (v: boolean) => void
 }) {
   const {_} = useLingui()
+  const ax = useAnalytics()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const scrollElRef = useRef<ListMethods>(null)
   const queryClient = useQueryClient()
@@ -265,12 +269,20 @@ function NotificationsTab({
           ) : undefined
         }
       />
-      {(isScrolledDown || hasNew) && (
-        <LoadLatestBtn
+      {isFollowingV2Eligible(ax) ? (
+        <NotificationsNewPill
+          filter={filter}
+          isActive={isFocusedAndActive}
           onPress={onPressLoadLatest}
-          label={_(msg`Load new notifications`)}
-          showIndicator={hasNew}
         />
+      ) : (
+        (isScrolledDown || hasNew) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label={_(msg`Load new notifications`)}
+            showIndicator={hasNew}
+          />
+        )
       )}
     </>
   )
