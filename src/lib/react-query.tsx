@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
 import {
@@ -14,9 +14,18 @@ import {
 
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
 import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
+import {recordPostFeedRestore} from '#/state/queries/post-feed-registry'
+import {
+  FOLLOWING_SNAPSHOT_QUERY_HASH,
+  type FollowingSnapshotRejection,
+  prepareFollowingSnapshotForSave,
+  restoreFollowingSnapshot,
+} from '#/state/queries/post-feed-snapshot'
 import {isQueryPersisted} from '#/state/queries/util'
+import {useAnalytics} from '#/analytics'
 import * as env from '#/env'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 
 declare global {
   interface Window {
@@ -139,7 +148,18 @@ const createQueryClient = () =>
 const dehydrateOptions: DehydrateOptions = {
   shouldDehydrateMutation: (_: any) => false,
   shouldDehydrateQuery: query => {
-    return isQueryPersisted(query.queryKey) && query.state.status === 'success'
+    return (
+      (isQueryPersisted(query.queryKey) ||
+        /*
+         * Home's Following query is always dehydrated, by reference, and the
+         * persister decides when it is written whether it is kept - see
+         * `prepareFollowingSnapshotForSave`. Deciding there rather than here
+         * leaves its key alone and checks eligibility once per write, not
+         * once per cache event.
+         */
+        query.queryHash === FOLLOWING_SNAPSHOT_QUERY_HASH) &&
+      query.state.status === 'success'
+    )
   },
 }
 
@@ -174,14 +194,53 @@ function QueryProviderInner({
       'Something is very wrong. Expected did to be stable due to key above.',
     )
   }
+  const ax = useAnalytics()
+  /** The latest `ax`, for the persister, which outlives any one render. */
+  const axRef = useRef(ax)
+  useEffect(() => {
+    axRef.current = ax
+  })
   // We create the query client here so that it's scoped to a specific DID.
   // Do not move the query client creation outside of this component.
   const [queryClient, _setQueryClient] = useState(() => createQueryClient())
   const [persistOptions, _setPersistOptions] = useState(() => {
     const storage = createPersistedQueryStorage(currentDid ?? 'logged-out')
+    const isEligible = () => isFollowingV2Eligible(axRef.current)
+    const reportedRejections = new Set<FollowingSnapshotRejection>()
     const asyncPersister = createAsyncStoragePersister({
       storage,
       key: 'queryClient-' + (currentDid ?? 'logged-out'),
+      serialize: client =>
+        JSON.stringify(
+          prepareFollowingSnapshotForSave(client, {
+            did: currentDid,
+            isEligible,
+            onRejected: reason => {
+              if (!reportedRejections.has(reason)) {
+                reportedRejections.add(reason)
+                axRef.current.metric('feed:following:snapshotRejected', {
+                  reason,
+                })
+              }
+            },
+          }),
+        ),
+      deserialize: cached => {
+        const {client, report} = restoreFollowingSnapshot(JSON.parse(cached), {
+          did: currentDid,
+          isEligible,
+        })
+        if (report) {
+          axRef.current.metric('feed:following:restore', report)
+          if (report.outcome === 'restored') {
+            recordPostFeedRestore(queryClient, FOLLOWING_SNAPSHOT_QUERY_HASH, {
+              restoredAt: Date.now(),
+              pageCount: report.pageCount,
+            })
+          }
+        }
+        return client
+      },
     })
     return {
       persister: asyncPersister,

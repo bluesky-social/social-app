@@ -8,6 +8,10 @@ import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {
+  type FollowingRestoreReport,
+  type FollowingSnapshotRejection,
+} from '#/state/queries/post-feed-snapshot'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type Events = {
@@ -225,6 +229,19 @@ export type Events = {
     feedUrl: string
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
+  }
+  /**
+   * Once per cold start with Following v2, what became of the Following
+   * snapshot. `disabled` is a valid snapshot dropped because restoring is not
+   * switched on yet.
+   */
+  'feed:following:restore': FollowingRestoreReport
+  /**
+   * Why the Following snapshot could not be written, once per reason per
+   * account session.
+   */
+  'feed:following:snapshotRejected': {
+    reason: FollowingSnapshotRejection
   }
   'feed:save': {feedUrl: string} & (
     | {
