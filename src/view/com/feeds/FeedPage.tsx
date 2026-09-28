@@ -37,6 +37,7 @@ import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {app} from '#/lexicons'
 
 const POLL_FREQ = 60e3 // 60sec
@@ -162,14 +163,13 @@ export function FeedPage({
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
-      {(isScrolledDown || hasNew) &&
-        !ax.features.enabled(ax.features.FollowingV2Enable) && (
-          <LoadLatestBtn
-            onPress={onPressLoadLatest}
-            label={_(msg`Load new posts`)}
-            showIndicator={hasNew}
-          />
-        )}
+      {(isScrolledDown || hasNew) && !isFollowingV2Eligible(ax) && (
+        <LoadLatestBtn
+          onPress={onPressLoadLatest}
+          label={_(msg`Load new posts`)}
+          showIndicator={hasNew}
+        />
+      )}
 
       {hasSession && (
         <FAB
