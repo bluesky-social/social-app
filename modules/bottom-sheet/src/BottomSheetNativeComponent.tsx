@@ -156,7 +156,7 @@ function BottomSheetNativeComponentInner({
              * measured without a height constraint to that canvas once its size
              * reaches the shadow tree.
              */
-            maxHeight: contentFillsCanvas ? undefined : (maxHeight ?? '100%'),
+            maxHeight: maxHeight ?? '100%',
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
             overflow: 'hidden',

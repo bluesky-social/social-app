@@ -207,6 +207,16 @@ appId: xyz.blueskyweb.app
 # The expanded sheet must occupy the screen and retain a reachable footer.
 - assertVisible:
     id: "bottomSheetDynamicExpandedMiddle"
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetDynamicDone"
+    direction: DOWN
+    timeout: 30000
+- scrollUntilVisible:
+    element:
+      id: "bottomSheetDynamicState"
+    direction: UP
+    timeout: 30000
 - runFlow:
     when:
       platform: Android
