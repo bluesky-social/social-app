@@ -8,11 +8,12 @@ jest.mock('#/lib/api/resolve', () => {
 })
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {
   type ComposerV2Plan,
   type ComposerV2PlannerDependencies,
   type ComposerV2PlanResult,
-  type planComposerV2,
+  planComposerV2,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {usePlanRunner} from '#/components/ComposerV2/tester/usePlanRunner'
@@ -21,12 +22,17 @@ import {type TesterSession} from '#/components/ComposerV2/tester/useTesterSessio
 const resolvers = {} as LinkResolvers
 const dependencies: ComposerV2PlannerDependencies = {did: 'did:plc:tester'}
 
-function makeSession(key: string, text = ''): TesterSession {
+function makeSession(
+  key: string,
+  text = '',
+  onError?: ComposerV2OnError,
+): TesterSession {
   return {
     key,
     scenarioId: 'empty',
     store: createThreadStore({
       resolvers,
+      onError,
       initialState: {posts: [{text}]},
     }),
   }
@@ -41,7 +47,8 @@ function setup(planImpl?: typeof planComposerV2) {
   const plan = jest.fn<typeof planComposerV2>(
     planImpl ?? (() => Promise.resolve(failedResult)),
   )
-  const initialSession = makeSession('session-1', 'hello world')
+  const onError = jest.fn<ComposerV2OnError>()
+  const initialSession = makeSession('session-1', 'hello world', onError)
   const hook = renderHook(
     ({session}: {session: TesterSession}) =>
       usePlanRunner({
@@ -52,7 +59,7 @@ function setup(planImpl?: typeof planComposerV2) {
       }),
     {initialProps: {session: initialSession}},
   )
-  return {...hook, plan, initialSession}
+  return {...hook, plan, initialSession, onError}
 }
 
 describe('usePlanRunner', () => {
@@ -189,6 +196,85 @@ describe('usePlanRunner', () => {
     })
     expect(result.current.result).toBeUndefined()
     expect(result.current.isPlanning).toBe(false)
+    initialSession.store.destroy()
+  })
+
+  test.each(['replace', 'clear', 'unmount', 'destroy'] as const)(
+    '%s suppresses an old planner failure at the session boundary',
+    async action => {
+      let finish!: () => void
+      const pending = new Promise<void>(resolve => {
+        finish = resolve
+      })
+      const cause = new Error('private planner diagnostic')
+      const {result, rerender, unmount, initialSession, onError} = setup(
+        async args => {
+          await pending
+          return planComposerV2({
+            ...args,
+            dependencies: {
+              ...args.dependencies,
+              now: () => {
+                throw cause
+              },
+            },
+          })
+        },
+      )
+      let run!: Promise<void>
+      act(() => {
+        run = result.current.runPlan()
+      })
+      const nextSession = makeSession('next')
+      if (action === 'replace') rerender({session: nextSession})
+      if (action === 'clear') act(() => result.current.clearPlan())
+      if (action === 'unmount') unmount()
+      if (action === 'destroy') initialSession.store.destroy()
+      await act(async () => {
+        finish()
+        await run
+      })
+      expect(onError).not.toHaveBeenCalled()
+      initialSession.store.destroy()
+      nextSession.store.destroy()
+    },
+  )
+
+  test('only the current planning attempt reports, without storing its diagnostic in the UI result', async () => {
+    const finish: Array<() => void> = []
+    const cause = new Error('private planner diagnostic')
+    const {result, initialSession, onError} = setup(async args => {
+      await new Promise<void>(resolve => finish.push(resolve))
+      return planComposerV2({
+        ...args,
+        dependencies: {
+          ...args.dependencies,
+          now: () => {
+            throw cause
+          },
+        },
+      })
+    })
+    let first!: Promise<void>
+    let second!: Promise<void>
+    act(() => {
+      first = result.current.runPlan()
+      second = result.current.runPlan()
+    })
+    await act(async () => {
+      finish[0]()
+      await first
+    })
+    expect(onError).not.toHaveBeenCalled()
+    await act(async () => {
+      finish[1]()
+      await second
+    })
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError.mock.calls[0][1]).toBe(cause)
+    expect(JSON.stringify(result.current.result)).not.toContain(
+      'private planner diagnostic',
+    )
     initialSession.store.destroy()
   })
 

@@ -4,7 +4,6 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {resolveGif} from '#/lib/api/resolve'
 import {uploadBlob} from '#/lib/api/upload-blob'
-import {logger} from '#/logger'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
   useAppviewClient,
@@ -70,12 +69,13 @@ export function ComposerV2Tester() {
     publishStartedRef.current = true
     setPublishAttempt({status: 'writing', plan})
     try {
-      const {uris} = await writeComposerV2Plan({plan, pdsClient})
-      setPublishAttempt({status: 'published', plan, uris})
-    } catch (error) {
-      logger.error('ComposerV2 tester: publishing failed', {
-        safeMessage: error,
+      const {uris} = await writeComposerV2Plan({
+        plan,
+        pdsClient,
+        onError: session.store.reportError,
       })
+      setPublishAttempt({status: 'published', plan, uris})
+    } catch {
       setPublishAttempt({status: 'uncertain', plan})
     }
   }

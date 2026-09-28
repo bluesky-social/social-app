@@ -7,7 +7,7 @@ jest.mock('#/lib/api/resolve', () => {
   return {resolveLink: jest.fn(), EmbeddingDisabledError}
 })
 
-/* Scenario failures are logged, not rendered; keep test output clean. */
+/* Reporting must not send raw scenario failures to the existing logger. */
 const mockLoggerError = jest.fn()
 jest.mock('#/logger', () => ({
   logger: {
@@ -16,6 +16,8 @@ jest.mock('#/logger', () => ({
 }))
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {composerOptsToInitialState} from '#/components/ComposerV2/adapters'
+import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type UploadDependencies} from '#/components/ComposerV2/store/uploads'
 import {useTesterSession} from '#/components/ComposerV2/tester/useTesterSession'
@@ -41,7 +43,10 @@ function makeCreateStoreSpy() {
 const resolvers = {} as LinkResolvers
 const media = {} as UploadDependencies
 
-function setup(initialDid = 'did:plc:one') {
+function setup(
+  initialDid = 'did:plc:one',
+  onError = jest.fn<ComposerV2OnError>(),
+) {
   const {spy, destroyed} = makeCreateStoreSpy()
   const hook = renderHook(
     ({did}: {did: string}) =>
@@ -50,10 +55,11 @@ function setup(initialDid = 'did:plc:one') {
         resolvers,
         media,
         __createStore: spy,
+        onError,
       }),
     {initialProps: {did: initialDid}},
   )
-  return {...hook, spy, destroyed}
+  return {...hook, spy, destroyed, onError}
 }
 
 describe('useTesterSession', () => {
@@ -165,7 +171,7 @@ describe('useTesterSession', () => {
   })
 
   test('scenario build failures surface as typed errors without raw exception text', async () => {
-    const {result} = setup()
+    const {result, onError} = setup()
     const keyBefore = result.current.session.key
     await act(async () => {
       await result.current.applyScenario('draft-fixture', () => {
@@ -173,7 +179,7 @@ describe('useTesterSession', () => {
       })
     })
     expect(result.current.session.key).toBe(keyBefore)
-    /* The UI only ever sees the typed shape; the raw message goes to logs. */
+    /* Only the optional callback receives the diagnostic, never UI or logs. */
     expect(result.current.scenarioError).toEqual({
       code: 'scenario-build-failed',
       scenarioId: 'draft-fixture',
@@ -181,8 +187,92 @@ describe('useTesterSession', () => {
     expect(JSON.stringify(result.current.scenarioError)).not.toContain(
       'private adapter diagnostic detail',
     )
-    expect(mockLoggerError).toHaveBeenCalled()
+    expect(mockLoggerError).not.toHaveBeenCalled()
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError.mock.calls[0][0]).toEqual({
+      source: 'initialization',
+      code: 'scenario-build-failed',
+      kind: 'unexpected',
+      recovery: 'none',
+    })
+    expect(onError.mock.calls[0][1]).toBeInstanceOf(Error)
     expect(result.current.isApplyingScenario).toBe(false)
+  })
+
+  test('adapter and constructor rejections are each reported at only one boundary', async () => {
+    const onError = jest.fn<ComposerV2OnError>(() => {
+      throw new Error('listener')
+    })
+    const {result} = setup('did:plc:one', onError)
+    const cause = new Error('private normalization diagnostic')
+    await act(async () => {
+      await result.current.applyScenario('text', () =>
+        composerOptsToInitialState({
+          get text(): string {
+            throw cause
+          },
+        }),
+      )
+    })
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError.mock.calls[0][1]).toBe(cause)
+    expect(result.current.isApplyingScenario).toBe(false)
+    await act(async () => {
+      await result.current.applyScenario('media', () => ({
+        posts: [
+          {
+            attachments: {
+              media: {
+                kind: 'images',
+                items: Array.from({length: 11}, () => ({
+                  uri: 'file:///private',
+                  width: 10,
+                  height: 10,
+                })),
+              },
+            },
+          },
+        ],
+      }))
+    })
+    expect(onError).toHaveBeenCalledTimes(2)
+    expect(onError.mock.calls[1][0]).toMatchObject({
+      code: 'initial-state-failed',
+    })
+    expect(result.current.scenarioError?.code).toBe('scenario-build-failed')
+    expect(result.current.isApplyingScenario).toBe(false)
+  })
+
+  test('replaced sessions suppress retained callbacks and stale scenario failures', async () => {
+    const {result, onError} = setup()
+    const first = result.current.session
+    let reject!: (cause: unknown) => void
+    let pending!: Promise<void>
+    act(() => {
+      pending = result.current.applyScenario(
+        'text',
+        () =>
+          new Promise((_, rej) => {
+            reject = rej
+          }),
+      )
+    })
+    act(() => result.current.resetSession())
+    await act(async () => {
+      reject(new Error('old scenario'))
+      await pending
+    })
+    first.store.reportError(
+      {
+        source: 'writer',
+        code: 'apply-writes-failed',
+        kind: 'operational',
+        recovery: 'reconcile',
+      },
+      new Error('old write'),
+    )
+    expect(onError).not.toHaveBeenCalled()
+    expect(result.current.scenarioError).toBeUndefined()
   })
 
   test('a scenario build resolving after unmount never creates an ownerless store', async () => {
@@ -212,7 +302,7 @@ describe('useTesterSession', () => {
   })
 
   test('a scenario build rejecting after unmount is swallowed without state updates', async () => {
-    const {result, unmount} = setup()
+    const {result, unmount, onError} = setup()
     let rejectBuild!: (error: Error) => void
     const pending = new Promise<{posts: Array<{text: string}>}>(
       (_resolve, reject) => {
@@ -231,7 +321,8 @@ describe('useTesterSession', () => {
       rejectBuild(new Error('late failure'))
       await deferredApply
     })
-    /* Invalidated request: not even logged as a tester scenario failure. */
+    /* Invalidated request: neither reported nor logged. */
     expect(mockLoggerError).not.toHaveBeenCalled()
+    expect(onError).not.toHaveBeenCalled()
   })
 })

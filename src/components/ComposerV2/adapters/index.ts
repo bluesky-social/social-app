@@ -8,6 +8,11 @@ import {type ComposerOpts} from '#/state/shell/composer'
 import {suggestLinkCardUri} from '#/view/com/composer/text-input/text-input-util'
 import {getVideoMetadata as defaultGetVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {
+  type ComposerV2OnError,
+  isComposerV2Cancellation,
+  reportComposerV2Error,
+} from '#/components/ComposerV2/errors'
+import {
   type MediaAttachmentInput,
   type PostMediaImageInput,
   type PostMediaVideoInput,
@@ -38,8 +43,9 @@ export class ComposerAdapterError extends Error {
   constructor(
     readonly code: ComposerAdapterErrorCode,
     message: string,
+    options?: ErrorOptions,
   ) {
-    super(message)
+    super(message, options)
     this.name = 'ComposerAdapterError'
   }
 }
@@ -50,6 +56,8 @@ type VideoMetadata = Pick<
 >
 
 export type AdapterMetadataOptions = {
+  /** Omit when an owning caller reports the initialization rejection instead. */
+  onError?: ComposerV2OnError
   getImageDimensions?: (uri: string) => Promise<{width: number; height: number}>
   getVideoMetadata?: (
     uri: string,
@@ -72,6 +80,18 @@ export type DraftToInitialStateInput = AdapterMetadataOptions & {
  * the existing platform metadata probe supplies it before the store is built.
  */
 export async function composerOptsToInitialState(
+  opts: ComposerOpts,
+  options: AdapterMetadataOptions = {},
+): Promise<ThreadStoreInitialState> {
+  try {
+    return await normalizeComposerOpts(opts, options)
+  } catch (cause) {
+    reportInitializationError(options.onError, cause)
+    throw cause
+  }
+}
+
+async function normalizeComposerOpts(
   opts: ComposerOpts,
   {
     getVideoMetadata = defaultGetVideoMetadata,
@@ -154,7 +174,45 @@ export async function composerOptsToInitialState(
 }
 
 /** Convert a loaded draft without mounting a store or dispatching edits. */
-export async function draftToInitialState({
+export async function draftToInitialState(
+  input: DraftToInitialStateInput,
+): Promise<ThreadStoreInitialState> {
+  try {
+    return await normalizeDraft(input)
+  } catch (cause) {
+    reportInitializationError(input.onError, cause)
+    throw cause
+  }
+}
+
+/** For owning callers that deliberately leave adapter-level reporting off. */
+export function reportInitializationError(
+  onError: ComposerV2OnError | undefined,
+  cause: unknown,
+  fallbackCode:
+    'initial-state-failed' | 'scenario-build-failed' = 'initial-state-failed',
+) {
+  const adapterError = cause instanceof ComposerAdapterError ? cause : undefined
+  const hasCause = adapterError && Object.hasOwn(adapterError, 'cause')
+  const diagnostic = hasCause ? adapterError.cause : cause
+  if (isComposerV2Cancellation(diagnostic)) return
+  reportComposerV2Error(
+    onError,
+    {
+      source: 'initialization',
+      code: adapterError?.code ?? fallbackCode,
+      kind: adapterError
+        ? hasCause
+          ? 'operational'
+          : 'validation'
+        : 'unexpected',
+      recovery: adapterError ? 'edit' : 'none',
+    },
+    diagnostic,
+  )
+}
+
+async function normalizeDraft({
   draftId,
   draft,
   loadedMedia,
@@ -325,10 +383,11 @@ async function restoreImages(
       let dimensions: {width: number; height: number}
       try {
         dimensions = await getImageDimensions(uri)
-      } catch {
+      } catch (cause) {
         throw new ComposerAdapterError(
           'missing-media-metadata',
           'Draft image metadata could not be read',
+          {cause},
         )
       }
       if (!validDimensions(dimensions)) {
@@ -358,10 +417,11 @@ async function restoreVideo(
   let metadata: VideoMetadata
   try {
     metadata = await getVideoMetadata(uri, fallbackMimeType)
-  } catch {
+  } catch (cause) {
     throw new ComposerAdapterError(
       'missing-media-metadata',
       'Draft video metadata could not be read',
+      {cause},
     )
   }
   const mimeType = metadata.mimeType ?? fallbackMimeType
@@ -409,10 +469,11 @@ function intentVideoToMedia(
         },
       }
     },
-    () => {
+    cause => {
       throw new ComposerAdapterError(
         'missing-media-metadata',
         'Composer video metadata could not be read',
+        {cause},
       )
     },
   )

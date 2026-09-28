@@ -37,7 +37,15 @@ export type UploadWorkerOverrides = {
   startVideoUpload?: (opts: VideoOptions) => UploadTask
 }
 
-type SetStatus = (postId: string, mediaId: string, status: UploadStatus) => void
+type SetStatus = (
+  postId: string,
+  mediaId: string,
+  status: UploadStatus,
+  diagnostic?: {
+    kind: 'validation' | 'operational' | 'unexpected'
+    cause: unknown
+  },
+) => void
 
 export type PreparedOutput =
   | {
@@ -154,7 +162,7 @@ async function runImageUpload(opts: ImageOptions, signal: AbortSignal) {
     report(opts, {state: 'uploaded', blob: result.blob})
   } catch (error) {
     if (isAborted(error, signal)) return
-    report(opts, failureStatus(error, deps?.i18n, 'image'))
+    reportFailure(opts, failureStatus(error, deps?.i18n, 'image'), error)
   }
 }
 
@@ -268,7 +276,7 @@ async function runVideoUpload(opts: VideoOptions, signal: AbortSignal) {
       failed.blob = videoBlob
       failed.captionBlobs = captionBlobs
     }
-    report(opts, failed)
+    reportFailure(opts, failed, error)
   }
 }
 
@@ -351,6 +359,27 @@ async function pollVideoJob(
 
 function report(opts: BaseOptions, status: UploadStatus) {
   opts.setUploadStatus(opts.postId, opts.mediaId, status)
+}
+
+/** Diagnostics travel beside worker status, never inside published snapshots. */
+function reportFailure(
+  opts: BaseOptions,
+  status: Extract<UploadStatus, {state: 'failed'}>,
+  cause: unknown,
+) {
+  const kind =
+    cause instanceof ValidationError &&
+    cause.code === 'missing-upload-dependencies'
+      ? 'unexpected'
+      : cause instanceof ValidationError || cause instanceof VideoTooLargeError
+        ? 'validation'
+        : cause instanceof UploadLimitError ||
+            cause instanceof VideoJobError ||
+            isNetworkError(cause) ||
+            shouldRetryError(cause)
+          ? 'operational'
+          : 'unexpected'
+  opts.setUploadStatus(opts.postId, opts.mediaId, status, {kind, cause})
 }
 
 function failureStatus(

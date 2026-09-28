@@ -71,7 +71,11 @@ export function RecordAttachmentView({postId}: {postId: string}) {
       </Text>
       {record.state === 'failed' && (
         <FailureRow
-          error={record.error}
+          error={
+            record.code === 'embedding-disabled'
+              ? l`This post does not allow embedding.`
+              : l`The link could not be resolved. Please try again.`
+          }
           retryable={!!record.retry}
           onRetry={record.retry}
           testID={`composerV2Tester-post-${postId}-record-retry`}
@@ -133,7 +137,11 @@ export function MediaAttachmentView({postId}: {postId: string}) {
       )}
       {media.state === 'failed' && (
         <FailureRow
-          error={media.error}
+          error={
+            media.code === 'embedding-disabled'
+              ? l`This post does not allow embedding.`
+              : l`The link could not be resolved. Please try again.`
+          }
           retryable={!!media.retry}
           onRetry={media.retry}
           testID={`composerV2Tester-post-${postId}-media-retry`}

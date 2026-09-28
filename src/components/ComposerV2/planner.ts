@@ -13,6 +13,11 @@ import {computeCid} from '#/lib/api/computeCid'
 import {type ResolvedLink} from '#/lib/api/resolve'
 import {resolveRichText} from '#/lib/api/rich-text'
 import {createGIFDescription} from '#/lib/gif-alt-text'
+import {
+  type ComposerV2OnError,
+  isComposerV2Cancellation,
+  reportComposerV2Error,
+} from '#/components/ComposerV2/errors'
 import {MAX_IMAGES_PER_POST} from '#/components/ComposerV2/store/const'
 import {
   type MediaAttachment,
@@ -54,6 +59,8 @@ export type ComposerV2PlanError = {
   postId?: string
   mediaId?: string
   collection?: string
+  /** Non-enumerable diagnostic; never render or log without deliberate policy. */
+  readonly cause?: unknown
 }
 
 /**
@@ -124,8 +131,13 @@ export type ComposerV2PlanResult =
   ComposerV2Plan | {ok: false; errors: ComposerV2PlanError[]}
 
 class PlannerFailure extends Error {
-  constructor(readonly detail: ComposerV2PlanError) {
-    super(detail.message)
+  constructor(
+    readonly detail: ComposerV2PlanError,
+    cause?: unknown,
+  ) {
+    super(detail.message, {cause})
+    if (cause !== undefined)
+      Object.defineProperty(detail, 'cause', {value: cause})
   }
 }
 
@@ -154,10 +166,13 @@ export async function planComposerV2({
   snapshot,
   dependencies,
   preflight,
+  onError,
 }: {
   snapshot: ThreadState
   dependencies: ComposerV2PlannerDependencies
   preflight?: ComposerV2PlannerPreflight
+  /** Pass a session/attempt-guarded callback when planning can be superseded. */
+  onError?: ComposerV2OnError
 }): Promise<ComposerV2PlanResult> {
   try {
     if (
@@ -357,12 +372,43 @@ export async function planComposerV2({
     }
     return {ok: true, input, posts: plannedPosts, writes}
   } catch (error) {
-    if (error instanceof PlannerFailure)
-      return {ok: false, errors: [error.detail]}
-    return {
-      ok: false,
-      errors: [{code: 'unexpected-error', message: 'Record planning failed'}],
+    const detail =
+      error instanceof PlannerFailure
+        ? error.detail
+        : new PlannerFailure(
+            {code: 'unexpected-error', message: 'Record planning failed'},
+            error,
+          ).detail
+    const operational =
+      detail.code === 'reply-resolution-failed' ||
+      detail.code === 'rich-text-resolution-failed' ||
+      detail.code === 'media-upload-failed'
+    const unexpected =
+      detail.code === 'unexpected-error' ||
+      detail.code === 'missing-dependency' ||
+      detail.code === 'invalid-snapshot' ||
+      detail.code === 'invalid-record-key' ||
+      detail.code === 'invalid-write-input'
+    /* Preflight, record validation and existing store failures stay local.
+     * Reading a failed upload in a snapshot is not a new failed attempt. */
+    if (
+      (operational || unexpected) &&
+      !isComposerV2Cancellation(detail.cause)
+    ) {
+      reportComposerV2Error(
+        onError,
+        {
+          source: 'planner',
+          code: detail.code,
+          postId: detail.postId,
+          mediaId: detail.mediaId,
+          kind: operational ? 'operational' : 'unexpected',
+          recovery: operational ? 'retry' : 'none',
+        },
+        detail.cause,
+      )
     }
+    return {ok: false, errors: [detail]}
   }
 }
 
@@ -500,12 +546,15 @@ async function normalizeRichText(
   }
   try {
     return await resolveRichText(appviewClient, text)
-  } catch {
+  } catch (cause) {
     throw failure(
       'rich-text-resolution-failed',
       'Rich-text resolution failed',
       postIndex,
       postId,
+      undefined,
+      undefined,
+      cause,
     )
   }
 }
@@ -523,10 +572,15 @@ async function resolveExternalReply(
   if (dependencies.resolveReply) {
     try {
       return await dependencies.resolveReply(replyTo)
-    } catch {
+    } catch (cause) {
       throw failure(
         'reply-resolution-failed',
         'Reply root could not be resolved',
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        cause,
       )
     }
   }
@@ -551,8 +605,16 @@ async function resolveExternalReply(
       rootRef = parentPost.record.reply.root
     }
     return {root: rootRef, parent: parentRef}
-  } catch {
-    throw failure('reply-resolution-failed', 'Reply root could not be resolved')
+  } catch (cause) {
+    throw failure(
+      'reply-resolution-failed',
+      'Reply root could not be resolved',
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      cause,
+    )
   }
 }
 
@@ -652,13 +714,15 @@ async function buildMediaEmbed(
     let resolved: Extract<ResolvedLink, {type: 'external'}>
     try {
       resolved = await resolve(media.item.gif)
-    } catch {
+    } catch (cause) {
       throw failure(
         'media-upload-failed',
         'GIF embed preparation failed',
         context.postIndex,
         context.postId,
         media.item.id,
+        undefined,
+        cause,
       )
     }
     const external = await externalRecord(resolved, context)
@@ -813,12 +877,15 @@ async function externalRecord(
         path: linkThumb.source.path,
         mime: linkThumb.source.mime,
       })
-    } catch {
+    } catch (cause) {
       throw failure(
         'media-upload-failed',
         'External thumbnail upload failed',
         context.postIndex,
         context.postId,
+        undefined,
+        undefined,
+        cause,
       )
     }
   }
@@ -907,15 +974,19 @@ function failure(
   postId?: string,
   mediaId?: string,
   collection?: string,
+  cause?: unknown,
 ): PlannerFailure {
-  return new PlannerFailure({
-    code,
-    message,
-    postIndex,
-    postId,
-    mediaId,
-    collection,
-  })
+  return new PlannerFailure(
+    {
+      code,
+      message,
+      postIndex,
+      postId,
+      mediaId,
+      collection,
+    },
+    cause,
+  )
 }
 
 /** Return only structural data suitable for the debug harness. */

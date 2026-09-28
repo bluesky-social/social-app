@@ -12,6 +12,7 @@ import {type BlobRef, type Client} from '@atproto/lex'
 import {type AtUriString, isValidTid} from '@atproto/syntax'
 import {CID} from 'multiformats/cid'
 
+import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {
   type ComposerV2PlannerDependencies,
   type ComposerV2PlannerPreflight,
@@ -104,6 +105,7 @@ function plan(
   state: ThreadState,
   extra: Partial<ComposerV2PlannerDependencies> = {},
   preflight?: ComposerV2PlannerPreflight,
+  onError?: ComposerV2OnError,
 ) {
   return planComposerV2({
     snapshot: state,
@@ -116,8 +118,172 @@ function plan(
       ...extra,
     },
     preflight,
+    onError,
   })
 }
+
+describe('planner reporting policy', () => {
+  test('unexpected causes survive generic conversion without serialization or UI leakage', async () => {
+    const cause = Object.assign(new Error('private diagnostic'), {
+      privatePath: 'private diagnostic',
+    })
+    const onError = jest.fn<ComposerV2OnError>(() => {
+      throw new Error('listener')
+    })
+    const state = snapshot({posts: [{text: 'hello'}]})
+    const before = JSON.stringify(state)
+    const result = await plan(
+      state,
+      {
+        now: () => {
+          throw cause
+        },
+      },
+      undefined,
+      onError,
+    )
+    expect(result).toEqual({
+      ok: false,
+      errors: [{code: 'unexpected-error', message: 'Record planning failed'}],
+    })
+    if (result.ok) throw new Error('expected failure')
+    expect(result.errors[0].cause).toBe(cause)
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        source: 'planner',
+        code: 'unexpected-error',
+        kind: 'unexpected',
+        recovery: 'none',
+      }),
+      cause,
+    )
+    expect(JSON.stringify(result)).not.toContain('private diagnostic')
+    expect(JSON.stringify(summarizeComposerV2Plan(result))).not.toContain(
+      'private diagnostic',
+    )
+    expect(JSON.stringify(state)).toBe(before)
+  })
+
+  test('operational failures retain original causes and report once per plan attempt', async () => {
+    const cause = new Error('private reply diagnostic')
+    const resolveReply = jest.fn<
+      NonNullable<ComposerV2PlannerDependencies['resolveReply']>
+    >(() => Promise.reject(cause))
+    const onError = jest.fn<ComposerV2OnError>()
+    const state = snapshot({posts: [{text: 'reply'}], replyTo: replyTarget})
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      const result = await plan(state, {resolveReply}, undefined, onError)
+      expect(result.ok).toBe(false)
+      if (result.ok) throw new Error('expected failure')
+      expect(result.errors[0].cause).toBe(cause)
+      expect(onError).toHaveBeenCalledTimes(attempt)
+      expect(onError).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          code: 'reply-resolution-failed',
+          recovery: 'retry',
+          kind: 'operational',
+        }),
+        cause,
+      )
+      expect(JSON.stringify(result)).not.toContain('private reply diagnostic')
+    }
+    expect(resolveReply).toHaveBeenCalledTimes(2)
+  })
+
+  test('thumbnail failures report post identity and preserve the original cause', async () => {
+    const cause = Object.assign(new Error('thumbnail diagnostic'), {
+      privatePath: 'thumbnail diagnostic',
+    })
+    const uploadBlob = jest.fn<
+      NonNullable<ComposerV2PlannerDependencies['uploadBlob']>
+    >(() => Promise.reject(cause))
+    const onError = jest.fn<ComposerV2OnError>()
+    const state = snapshot({
+      posts: [
+        {
+          text: 'card',
+          attachments: {
+            media: {
+              kind: 'external',
+              uri: 'https://example.com',
+              title: '',
+              description: '',
+              thumb: {
+                source: {path: 'file:///private.jpg', mime: 'image/jpeg'},
+              } as never,
+            },
+          },
+        },
+      ],
+    })
+    const result = await plan(state, {uploadBlob}, undefined, onError)
+    expect(uploadBlob).toHaveBeenCalledTimes(1)
+    if (result.ok) throw new Error('expected failure')
+    expect(result.errors[0].cause).toBe(cause)
+    expect(onError).toHaveBeenCalledWith(
+      expect.objectContaining({
+        postId: 'post-1',
+        code: 'media-upload-failed',
+        recovery: 'retry',
+      }),
+      cause,
+    )
+    expect(JSON.stringify(result)).not.toContain('thumbnail diagnostic')
+  })
+
+  test('ordinary preflight, record validation and existing failures never report as new operations', async () => {
+    const onError = jest.fn<ComposerV2OnError>()
+    const empty = snapshot({})
+    const missingAlt = snapshot({
+      posts: [
+        {
+          attachments: {
+            media: {
+              kind: 'images',
+              items: [{uri: 'file:///private', width: 10, height: 10}],
+            },
+          },
+        },
+      ],
+    })
+    readyImages(missingAlt)
+    const alreadyFailed = snapshot({
+      posts: [{attachments: {media: imageInputs(1)}}],
+    })
+    const media = alreadyFailed.posts['post-1'].attachments.media
+    if (media?.state !== 'resolved' || media.kind !== 'images')
+      throw new Error('expected image')
+    media.items[0].upload = {
+      state: 'failed',
+      retryable: false,
+      error: 'Safe error',
+    }
+    for (const state of [
+      empty,
+      missingAlt,
+      alreadyFailed,
+      snapshot({posts: [{text: 'x'.repeat(400)}]}),
+    ]) {
+      const result = await plan(state, {}, {requireAltText: true}, onError)
+      expect(result.ok).toBe(false)
+    }
+    expect(onError).not.toHaveBeenCalled()
+  })
+
+  test('cancelled dependency work keeps its result but does not report', async () => {
+    const cause = Object.assign(new Error('cancelled'), {name: 'AbortError'})
+    const onError = jest.fn<ComposerV2OnError>()
+    const result = await plan(
+      snapshot({posts: [{text: 'reply'}], replyTo: replyTarget}),
+      {resolveReply: () => Promise.reject(cause)},
+      undefined,
+      onError,
+    )
+    expect(result.ok).toBe(false)
+    expect(onError).not.toHaveBeenCalled()
+  })
+})
 
 function imageInputs(count: number): MediaAttachmentInput {
   return {

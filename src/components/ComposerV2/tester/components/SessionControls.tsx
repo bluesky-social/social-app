@@ -177,8 +177,7 @@ export function SessionControls({
           testID="composerV2Tester-scenario-error">
           <Trans>
             Couldn’t start the “{scenarioLabel(scenarioError.scenarioId)}”
-            scenario. Check the input and connection, then try again. Details
-            are in the app logs.
+            scenario. Check the input and connection, then try again.
           </Trans>
         </Text>
       )}

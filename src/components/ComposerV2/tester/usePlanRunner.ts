@@ -58,6 +58,9 @@ export function usePlanRunner({
     requestRef.current += 1
     setResult(undefined)
     setIsPlanning(false)
+    return () => {
+      requestRef.current += 1
+    }
   }, [session.key])
 
   const currentState = useSyncExternalStore(
@@ -76,6 +79,14 @@ export function usePlanRunner({
       const planned = await __plan({
         snapshot,
         dependencies: dependenciesRef.current,
+        onError: (event, cause) => {
+          if (
+            token !== requestRef.current ||
+            sessionKey !== sessionKeyRef.current
+          )
+            return
+          session.store.reportError(event, cause)
+        },
         preflight: {
           requireAltText: requireAltTextRef.current,
           skipEmptyPostsConfirmed,
