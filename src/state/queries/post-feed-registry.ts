@@ -194,3 +194,61 @@ function createPendingRefresh(): PendingRefresh {
   })
   return {promise, resolve, reject}
 }
+
+/**
+ * A post-feed query that was restored from disk this account session, and
+ * whether its restore has been followed up yet (the restore prepend,
+ * APP-3167).
+ *
+ * Unlike the entries above, these are not disposed with their query: the
+ * restore happened once for the session, whatever becomes of the query later.
+ * They go when the account's `QueryClient` does.
+ */
+export type PostFeedRestore = {
+  restoredAt: number
+  pageCount: number
+  isAttempted: boolean
+}
+
+const restores = new WeakMap<QueryClient, Map<string, PostFeedRestore>>()
+
+/**
+ * Records that the query with this hash was hydrated from a snapshot.
+ */
+export function recordPostFeedRestore(
+  queryClient: QueryClient,
+  queryHash: string,
+  restore: Omit<PostFeedRestore, 'isAttempted'>,
+) {
+  let records = restores.get(queryClient)
+  if (!records) {
+    records = new Map()
+    restores.set(queryClient, records)
+  }
+  records.set(queryHash, {...restore, isAttempted: false})
+}
+
+/**
+ * The restore of the post-feed query with this key, if it was restored this
+ * account session.
+ */
+export function getPostFeedRestore(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+): PostFeedRestore | undefined {
+  return restores.get(queryClient)?.get(hashKey(queryKey))
+}
+
+/**
+ * Marks the restore of the post-feed query with this key as followed up, so
+ * that it is attempted once per account session.
+ */
+export function markPostFeedRestoreAttempted(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+) {
+  const restore = getPostFeedRestore(queryClient, queryKey)
+  if (restore) {
+    restore.isAttempted = true
+  }
+}
