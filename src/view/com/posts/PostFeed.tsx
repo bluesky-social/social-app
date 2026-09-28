@@ -328,7 +328,9 @@ let PostFeed = ({
     }
 
     try {
-      if (await pollLatest(data.pages[0])) {
+      if (
+        await pollLatest(queryClient, RQKEY(feed, feedParams), data.pages[0])
+      ) {
         if (isEmpty) {
           void refetch()
         } else {

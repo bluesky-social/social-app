@@ -12,6 +12,7 @@ import {
   type QueryClient,
   type QueryKey,
   useInfiniteQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
 import {AuthorFeedAPI} from '#/lib/api/feed/author'
@@ -23,7 +24,7 @@ import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {ListFeedAPI} from '#/lib/api/feed/list'
 import {MergeFeedAPI} from '#/lib/api/feed/merge'
 import {PostListFeedAPI} from '#/lib/api/feed/posts'
-import {type FeedAPI, type ReasonFeedSource} from '#/lib/api/feed/types'
+import {type ReasonFeedSource} from '#/lib/api/feed/types'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {
   createFeedViewPostsSlices,
@@ -43,6 +44,10 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
+import {
+  getPostFeedQueryEntry,
+  peekPostFeedQueryEntry,
+} from './post-feed-registry'
 import {usePreferencesQuery} from './preferences'
 import {
   didOrHandleUriMatches,
@@ -76,7 +81,7 @@ export interface FeedParams {
   feedCacheKey?: 'discover' | 'explore' | undefined
 }
 
-type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
+type RQPageParam = {cursor: string | undefined} | undefined
 
 export const RQKEY_ROOT = 'post-feed'
 export function RQKEY(feedDesc: FeedDescriptor, params?: FeedParams) {
@@ -112,14 +117,12 @@ export interface FeedPostSlice {
 }
 
 export interface FeedPageUnselected {
-  api: FeedAPI
   cursor: string | undefined
   feed: app.bsky.feed.defs.FeedViewPost[]
   fetchedAt: number
 }
 
 export interface FeedPage {
-  api: FeedAPI
   tuner: FeedTuner
   cursor: string | undefined
   slices: FeedPostSlice[]
@@ -157,6 +160,8 @@ export function usePostFeedQuery(
   const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
   const {hasSession} = useSession()
   const client = useAppviewClient()
+  const queryClient = useQueryClient()
+  const queryKey = RQKEY(feedDesc, params)
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -191,26 +196,39 @@ export function usePostFeedQuery(
   >({
     enabled,
     staleTime: STALE.INFINITY,
-    queryKey: RQKEY(feedDesc, params),
+    /*
+     * Already the app-wide default, but load bearing here: a page's FeedAPI is
+     * found by the page object's identity, so the cache must keep the exact
+     * objects the query function returns.
+     */
+    structuralSharing: false,
+    queryKey,
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-      const {api, cursor} = pageParam
-        ? pageParam
-        : {
-            api: createApi({
-              feedDesc,
-              feedParams: params || {},
-              feedTuners,
-              client,
-              // Not in the query key because they don't change:
-              userInterests,
-              // Not in the query key. Reacting to it switching isn't important:
-              enableFollowingToDiscoverFallback,
-            }),
-            cursor: undefined,
-          }
+      const {feedApis} = getPostFeedQueryEntry(queryClient, queryKey)
+      /*
+       * A fetch from the top starts a fresh API. A later page continues with
+       * the API that fetched the page before it (see getNextPageParam), so a
+       * stateful API keeps its state across one chain of pages and resets on a
+       * refetch. A page whose API is unknown continues with a fresh one.
+       */
+      const api =
+        (pageParam && feedApis.get(pageParam)) ||
+        createApi({
+          feedDesc,
+          feedParams: params || {},
+          feedTuners,
+          client,
+          // Not in the query key because they don't change:
+          userInterests,
+          // Not in the query key. Reacting to it switching isn't important:
+          enableFollowingToDiscoverFallback,
+        })
 
-      const res = await api.fetch({cursor, limit: fetchLimit})
+      const res = await api.fetch({
+        cursor: pageParam?.cursor,
+        limit: fetchLimit,
+      })
 
       /*
        * If this is a public view, we need to check if posts fail moderation.
@@ -226,21 +244,27 @@ export function usePostFeedQuery(
         )
       }
 
-      return {
-        api,
+      const page: FeedPageUnselected = {
         cursor: res.cursor,
         feed: res.feed,
         fetchedAt: Date.now(),
       }
+      feedApis.set(page, api)
+      return page
     },
     initialPageParam: undefined,
-    getNextPageParam: lastPage =>
-      lastPage.cursor
-        ? {
-            api: lastPage.api,
-            cursor: lastPage.cursor,
-          }
-        : undefined,
+    getNextPageParam: lastPage => {
+      if (!lastPage.cursor) {
+        return undefined
+      }
+      const pageParam = {cursor: lastPage.cursor}
+      const feedApis = peekPostFeedQueryEntry(queryClient, queryKey)?.feedApis
+      const api = feedApis?.get(lastPage)
+      if (feedApis && api) {
+        feedApis.set(pageParam, api)
+      }
+      return pageParam
+    },
     select: useCallback(
       (data: InfiniteData<FeedPageUnselected, RQPageParam>) => {
         // If the selection depends on some data, that data should
@@ -288,7 +312,6 @@ export function usePostFeedQuery(
           pages: [
             ...reusedPages,
             ...data.pages.slice(reusedPages.length).map(page => ({
-              api: page.api,
               tuner,
               cursor: page.cursor,
               fetchedAt: page.fetchedAt,
@@ -382,7 +405,11 @@ export function usePostFeedQuery(
   return query
 }
 
-export async function pollLatest(page: FeedPage | undefined) {
+export async function pollLatest(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  page: FeedPage | undefined,
+) {
   if (!page) {
     return false
   }
@@ -390,8 +417,19 @@ export async function pollLatest(page: FeedPage | undefined) {
     return
   }
 
+  // Peek with the API behind the cached pages, which fetched `page`.
+  const firstPage =
+    queryClient.getQueryData<InfiniteData<FeedPageUnselected>>(queryKey)
+      ?.pages[0]
+  const api =
+    firstPage &&
+    peekPostFeedQueryEntry(queryClient, queryKey)?.feedApis.get(firstPage)
+  if (!api) {
+    return false
+  }
+
   logger.debug('usePostFeedQuery: pollLatest')
-  const post = await page.api.peekLatest()
+  const post = await api.peekLatest()
   if (post) {
     const slices = page.tuner.tune([post], {
       dryRun: true,
