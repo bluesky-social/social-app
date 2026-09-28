@@ -280,8 +280,9 @@ export function BottomSheets() {
             <FooterButton
               text={dynamicIsExpanded ? 'Shrink content' : 'Grow content'}
               onPress={() => setDynamicIsExpanded(value => !value)}
-              testID="bottomSheetDynamicToggle"
-            />
+              testID="bottomSheetDynamicToggle">
+              <SnapPointText testID="bottomSheetDynamicSnapPoint" />
+            </FooterButton>
           }>
           <H3>Changing-height sheet</H3>
           <P testID="bottomSheetDynamicState">

@@ -26,6 +26,21 @@ appId: xyz.blueskyweb.app
     id: "bottomSheetSmallClose"
 - assertNotVisible:
     id: "bottomSheetSmall"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "bottomSheetSmallOpen"
+      - assertVisible:
+          id: "bottomSheetSmallContent"
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 87%"
+          end: "50%, 99%"
+          duration: 300
+      - assertNotVisible:
+          id: "bottomSheetSmall"
 
 # Oversized intrinsic content should be clamped to the canvas and scroll.
 - tapOn:
@@ -60,6 +75,21 @@ appId: xyz.blueskyweb.app
     id: "bottomSheetFullHeightDone"
 - assertNotVisible:
     id: "bottomSheetFullHeight"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn:
+          id: "bottomSheetFullHeightOpen"
+      - assertVisible:
+          id: "bottomSheetFullHeightDone"
+      - waitForAnimationToEnd
+      - swipe:
+          start: "50%, 45%"
+          end: "50%, 95%"
+          duration: 300
+      - assertNotVisible:
+          id: "bottomSheetFullHeight"
 
 # An explicit max height should constrain scrolling without hiding the footer.
 - tapOn:
@@ -99,6 +129,13 @@ appId: xyz.blueskyweb.app
 - assertVisible:
     id: "bottomSheetDynamicState"
     text: "Compact content"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - assertVisible:
+          id: "bottomSheetDynamicSnapPoint"
+          text: "Snap point: Partial"
 - tapOn:
     id: "bottomSheetDynamicToggle"
 - assertVisible:
@@ -107,13 +144,39 @@ appId: xyz.blueskyweb.app
 - assertVisible:
     id: "bottomSheetDynamicToggle"
     text: "Shrink content"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "bottomSheetDynamicSnapPoint"
+            text: "Snap point: Full"
+          timeout: 10000
 - tapOn:
     id: "bottomSheetDynamicToggle"
 - assertVisible:
     id: "bottomSheetDynamicState"
     text: "Compact content"
-- tapOn:
-    id: "bottomSheetDynamicDone"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - extendedWaitUntil:
+          visible:
+            id: "bottomSheetDynamicSnapPoint"
+            text: "Snap point: Partial"
+          timeout: 10000
+      - swipe:
+          start: "50%, 73%"
+          end: "50%, 98%"
+          duration: 300
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - tapOn:
+          id: "bottomSheetDynamicDone"
 - assertNotVisible:
     id: "bottomSheetDynamic"
 

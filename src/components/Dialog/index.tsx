@@ -202,7 +202,8 @@ export function Outer({
           style={[
             a.relative,
             {maxHeight: '100%'},
-            snapPoint === BottomSheetSnapPoint.Full && a.flex_1,
+            /* Reaching Full must not pin an intrinsic sheet after its content shrinks. */
+            nativeOptions?.fullHeight && a.flex_1,
           ]}>
           {children}
         </View>
@@ -323,7 +324,6 @@ export function ScrollableInner({
         }
         automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
         {...props}
-        nestedScrollEnabled={IS_ANDROID}
         bounces={isAtMaxSnapPoint}
         scrollEventThrottle={50}
         /*
@@ -437,7 +437,6 @@ export const InnerFlatList = forwardRef<
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
         style={[{flexShrink: 1}, isAtMaxSnapPoint && a.flex_1, style]}
-        nestedScrollEnabled={IS_ANDROID}
         contentContainerStyle={[
           {paddingTop: headerOffset},
           android({
