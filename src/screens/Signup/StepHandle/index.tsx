@@ -200,7 +200,7 @@ export function StepHandle() {
         <LayoutAnimationConfig skipEntering skipExiting>
           {/* Reserve space for one line of text to avoid layout shift. */}
           <View style={[a.gap_xs, {minHeight: 21}]}>
-            {state.error && (
+            {!!state.error && (
               <Requirement>
                 <RequirementText>{state.error}</RequirementText>
               </Requirement>

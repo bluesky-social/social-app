@@ -189,7 +189,7 @@ export function StepInfo({
   return (
     <>
       <View style={[a.gap_md, a.pt_lg]}>
-        {state.error && (
+        {!!state.error && (
           <Admonition.Admonition type="error">
             {state.error}
           </Admonition.Admonition>
