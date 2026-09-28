@@ -1,7 +1,7 @@
 import {useCallback} from 'react'
 import {useLingui} from '@lingui/react/macro'
 
-import {NETWORK_ERRORS} from '#/lib/strings/errors'
+import {isNetworkError} from '#/lib/network-error'
 
 type CleanedError = {
   raw: string | undefined
@@ -82,14 +82,4 @@ export function useCleanError() {
     },
     [l],
   )
-}
-
-export function isNetworkError(e: unknown) {
-  const str = String(e)
-  for (const err of NETWORK_ERRORS) {
-    if (str.includes(err)) {
-      return true
-    }
-  }
-  return false
 }

@@ -7,8 +7,8 @@ import {
   PUBLIC_APPVIEW,
   PUBLIC_APPVIEW_DID,
 } from '#/lib/constants'
-import {isNetworkError} from '#/lib/hooks/useCleanError'
 import {createLexClient} from '#/lib/lexClient'
+import {isNetworkError} from '#/lib/network-error'
 import {usePdsClient} from '#/state/session'
 import {usePatchAgeAssuranceServerState} from '#/ageAssurance'
 import {logger} from '#/ageAssurance/logger'
