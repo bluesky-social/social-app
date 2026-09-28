@@ -123,6 +123,17 @@ export interface FeedPostSlice {
 
 export interface FeedPageUnselected {
   cursor: string | undefined
+  /**
+   * The server's cursor for the newest boundary of the response, where it has
+   * one (`getTimeline`). Only set when present.
+   */
+  startCursor?: string
+  /**
+   * The `since` the page was requested with, so that an exhausted bounded
+   * page (`cursor === since`) can be recognized. Set by the restore prepend
+   * (APP-3167); no request makes one yet.
+   */
+  since?: string
   feed: app.bsky.feed.defs.FeedViewPost[]
   fetchedAt: number
 }
@@ -208,6 +219,7 @@ function usePostFeedFetcher(feedDesc: FeedDescriptor, params?: FeedParams) {
 
       return {
         cursor: res.cursor,
+        ...(res.startCursor !== undefined && {startCursor: res.startCursor}),
         feed: res.feed,
         fetchedAt: Date.now(),
       }
