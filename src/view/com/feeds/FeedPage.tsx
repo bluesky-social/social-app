@@ -32,12 +32,15 @@ import {FAB} from '#/view/com/util/fab/FAB'
 import {type ListMethods} from '#/view/com/util/List'
 import {LoadLatestBtn} from '#/view/com/util/load-latest/LoadLatestBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {useTheme} from '#/alf'
+import {useBreakpoints, useTheme} from '#/alf'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
+import {
+  isFollowingV2Eligible,
+  isFollowingV2HomeDotEnabled,
+} from '#/features/followingV2/eligibility'
 import {app} from '#/lexicons'
 
 const POLL_FREQ = 60e3 // 60sec
@@ -83,6 +86,7 @@ export function FeedPage({
     return IS_NATIVE && _isVideoFeed
   }, [feedInfo])
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
 
   useEffect(() => {
     if (isPageFocused) {
@@ -163,13 +167,20 @@ export function FeedPage({
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
-      {(isScrolledDown || hasNew) && !isFollowingV2Eligible(ax) && (
-        <LoadLatestBtn
-          onPress={onPressLoadLatest}
-          label={_(msg`Load new posts`)}
-          showIndicator={hasNew}
-        />
-      )}
+      {/*
+       * With Following v2, native replaces Load Latest with the new posts pill
+       * and mobile web relies on the Home tab dot. Tablet and desktop web have
+       * no pill, so they keep the button.
+       */}
+      {(isScrolledDown || hasNew) &&
+        !isFollowingV2Eligible(ax) &&
+        !(isFollowingV2HomeDotEnabled(ax) && !gtMobile) && (
+          <LoadLatestBtn
+            onPress={onPressLoadLatest}
+            label={_(msg`Load new posts`)}
+            showIndicator={hasNew}
+          />
+        )}
 
       {hasSession && (
         <FAB

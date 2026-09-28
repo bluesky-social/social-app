@@ -57,7 +57,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
+import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {useActorStatus} from '#/features/liveNow'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {styles} from './BottomBarStyles'
@@ -194,7 +194,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                   />
                 )
               }
-              hasNew={hasHomeBadge && isFollowingV2Eligible(ax)}
+              hasNew={hasHomeBadge && isFollowingV2HomeDotEnabled(ax)}
               onPress={onPressHome}
               accessibilityRole="tab"
               accessibilityLabel={l`Home`}
