@@ -292,6 +292,14 @@ describe('general functionality', () => {
       timestamp,
     )
 
+    sentryTransport(
+      LogLevel.Error,
+      Logger.Context.Default,
+      'Network request timed out',
+      {},
+      timestamp,
+    )
+
     // network error in metadata, message is something else
     sentryTransport(
       LogLevel.Error,
@@ -322,7 +330,7 @@ describe('general functionality', () => {
     jest.runAllTimers()
     expect(Sentry.captureMessage).not.toHaveBeenCalled()
     // suppressing the event must not suppress the breadcrumb
-    expect(Sentry.addBreadcrumb).toHaveBeenCalledTimes(4)
+    expect(Sentry.addBreadcrumb).toHaveBeenCalledTimes(5)
 
     // network Error object
     sentryTransport(

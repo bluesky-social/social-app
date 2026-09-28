@@ -1,14 +1,14 @@
 import {useCallback, useEffect, useMemo, useState} from 'react'
 import {ActivityIndicator, Platform, View} from 'react-native'
 import ReactNativeDeviceAttest from 'react-native-device-attest'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {nanoid} from 'nanoid/non-secure'
 
 import {createFullHandle} from '#/lib/strings/handles'
 import {logger} from '#/logger'
 import {useSignupContext} from '#/screens/Signup/state'
 import {CaptchaWebView} from '#/screens/Signup/StepCaptcha/CaptchaWebView'
+import {type CaptchaError} from '#/screens/Signup/StepCaptcha/CaptchaWebView.shared'
 import {atoms as a, useTheme} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {useAnalytics} from '#/analytics'
@@ -20,6 +20,42 @@ const CAPTCHA_PATH =
     ? '/gate/signup'
     : '/gate/signup/attempt-attest'
 
+/**
+ * How long to block the challenge on attestation before giving up and loading
+ * it unattested. The gate endpoint serves a standard challenge when no token is
+ * present, so proceeding is always better than holding the user on a spinner.
+ */
+const ATTEST_TIMEOUT = 10_000
+
+/** Matches the challenge height so swapping the spinner out doesn't jump. */
+const STEP_MIN_HEIGHT = 510
+
+type Attestation = {
+  token?: string
+  payload?: string
+}
+
+/** Resolves empty when unavailable - the gate serves a standard challenge. */
+async function generateAttestation(): Promise<Attestation> {
+  logger.debug('trying to generate attestation token...')
+  try {
+    if (IS_IOS) {
+      logger.debug('starting to generate devicecheck token...')
+      const token = await ReactNativeDeviceAttest.getDeviceCheckToken()
+      logger.debug(`generated devicecheck token: ${token}`)
+      return {token}
+    }
+
+    const {token, payload} =
+      await ReactNativeDeviceAttest.getIntegrityToken('signup')
+    return {token, payload: base64UrlEncode(payload)}
+  } catch (err) {
+    const e = err as Error
+    logger.error(e)
+    return {}
+  }
+}
+
 export function StepCaptcha() {
   if (IS_WEB) {
     return <StepCaptchaInner />
@@ -29,38 +65,63 @@ export function StepCaptcha() {
 }
 
 export function StepCaptchaNative() {
-  const [token, setToken] = useState<string>()
-  const [payload, setPayload] = useState<string>()
-  const [ready, setReady] = useState(false)
+  const ax = useAnalytics()
+  const {dispatch} = useSignupContext()
+  const [attestation, setAttestation] = useState<Attestation>()
 
   useEffect(() => {
-    void (async () => {
-      logger.debug('trying to generate attestation token...')
-      try {
-        if (IS_IOS) {
-          logger.debug('starting to generate devicecheck token...')
-          const token = await ReactNativeDeviceAttest.getDeviceCheckToken()
-          setToken(token)
-          logger.debug(`generated devicecheck token: ${token}`)
-        } else {
-          const {token, payload} =
-            await ReactNativeDeviceAttest.getIntegrityToken('signup')
-          setToken(token)
-          setPayload(base64UrlEncode(payload))
-        }
-      } catch (err) {
-        const e = err as Error
-        logger.error(e)
-      }
-      setReady(true)
-    })()
-  }, [])
+    let cancelled = false
+    let timer: NodeJS.Timeout | undefined
 
-  if (!ready) {
-    return <View />
+    const timeout = new Promise<'timeout'>(resolve => {
+      timer = setTimeout(() => resolve('timeout'), ATTEST_TIMEOUT)
+    })
+
+    void Promise.race([generateAttestation(), timeout]).then(result => {
+      if (timer) clearTimeout(timer)
+      if (cancelled) return
+
+      if (result === 'timeout') {
+        ax.metric('signup:attestTimeout', {})
+        setAttestation({})
+      } else {
+        setAttestation(result)
+      }
+    })
+
+    return () => {
+      cancelled = true
+      if (timer) clearTimeout(timer)
+    }
+  }, [ax])
+
+  const onBackPress = useCallback(() => {
+    ax.metric('signup:captchaBackPress', {phase: 'attesting'})
+    dispatch({type: 'prev'})
+  }, [ax, dispatch])
+
+  if (!attestation) {
+    return (
+      <>
+        <View style={[a.gap_lg, a.pt_lg]}>
+          <View
+            style={[
+              a.w_full,
+              a.align_center,
+              a.justify_center,
+              {minHeight: STEP_MIN_HEIGHT},
+            ]}>
+            <ActivityIndicator size="large" />
+          </View>
+        </View>
+        <BackNextButtons hideNext onBackPress={onBackPress} />
+      </>
+    )
   }
 
-  return <StepCaptchaInner token={token} payload={payload} />
+  return (
+    <StepCaptchaInner token={attestation.token} payload={attestation.payload} />
+  )
 }
 
 function StepCaptchaInner({
@@ -70,7 +131,7 @@ function StepCaptchaInner({
   token?: string
   payload?: string
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const theme = useTheme()
   const {state, dispatch} = useSignupContext()
@@ -120,21 +181,39 @@ function StepCaptchaInner({
   )
 
   const onError = useCallback(
-    (error?: unknown) => {
+    (error: CaptchaError) => {
       dispatch({
         type: 'setError',
-        value: _(msg`Error receiving captcha response.`),
+        value: l`Error receiving captcha response.`,
       })
-      ax.metric('signup:captchaFailure', {})
+      ax.metric('signup:captchaFailure', {
+        reason: error.reason,
+        host: error.host,
+        statusCode: error.statusCode,
+      })
       logger.error('Signup: captcha response error', {
-        safeMessage: error,
+        safeMessage: error.cause ?? error.reason,
       })
     },
-    [_, ax, dispatch],
+    [l, ax, dispatch],
+  )
+
+  /*
+   * Records latency without showing an error or counting against the failure rate.
+   */
+  const onSlow = useCallback(() => {
+    ax.metric('signup:captchaSlow', {})
+  }, [ax])
+
+  const onBlockedLoad = useCallback(
+    (host: string, isTopFrame: boolean) => {
+      ax.metric('signup:captchaBlockedLoad', {host, isTopFrame})
+    },
+    [ax],
   )
 
   const onBackPress = useCallback(() => {
-    ax.metric('signup:captchaBackPress', {})
+    ax.metric('signup:captchaBackPress', {phase: 'challenge'})
     dispatch({type: 'prev'})
   }, [ax, dispatch])
 
@@ -145,7 +224,7 @@ function StepCaptchaInner({
           style={[
             a.w_full,
             a.overflow_hidden,
-            {minHeight: 510},
+            {minHeight: STEP_MIN_HEIGHT},
             completed && [a.align_center, a.justify_center],
           ]}>
           {!completed ? (
@@ -156,6 +235,8 @@ function StepCaptchaInner({
               onComplete={() => setCompleted(true)}
               onSuccess={onSuccess}
               onError={onError}
+              onSlow={onSlow}
+              onBlockedLoad={onBlockedLoad}
             />
           ) : (
             <ActivityIndicator size="large" />

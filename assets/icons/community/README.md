@@ -2,6 +2,7 @@ The icons in this directory are the marks of third-party services that appear in
 
 | Icon | Rights holder |
 |---|---|
+| `attie-cloud.svg` | [Attie](https://attie.site) |
 | `leaflet.svg` | [Leaflet](https://leaflet.pub) |
 | `offprint.svg` | [Offprint](https://offprint.net) |
 | `pckt.svg`, `pckt-full.svg` | [pckt](https://pckt.blog) |

@@ -114,7 +114,7 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
             style={[
               a.flex_row,
               a.align_center,
-              {gap: 3},
+              a.gap_xs,
               (hovered || focused || pressed) && native({opacity: 0.5}),
               style,
             ]}>
@@ -122,16 +122,16 @@ export function WhoCanReply({post, isThreadAuthor, style}: WhoCanReplyProps) {
               color={
                 isThreadAuthor ? t.palette.primary_500 : t.palette.contrast_400
               }
-              width={12}
+              width={16}
               settings={settings}
             />
             <Text
               style={[
-                a.text_xs,
+                a.text_sm,
                 a.leading_tight,
                 isThreadAuthor
                   ? {color: t.palette.primary_500}
-                  : t.atoms.text_contrast_high,
+                  : t.atoms.text_contrast_medium,
                 (hovered || focused || pressed) && web(a.underline),
               ]}>
               {description}
