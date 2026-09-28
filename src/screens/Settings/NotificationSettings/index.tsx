@@ -4,7 +4,7 @@ import * as Notification from 'expo-notifications'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
-import {useAppState} from '#/lib/appState'
+import {runAppInitiatedActivity, useAppState} from '#/lib/appState'
 import {
   type AllNavigatorParams,
   type NativeStackScreenProps,
@@ -81,19 +81,21 @@ export function NotificationSettingsScreen({}: Props) {
   const onRequestPermissions = async () => {
     if (IS_WEB) return
     if (permissions?.canAskAgain) {
-      const response = await Notification.requestPermissionsAsync({
-        ios: {
-          /*
-           * These default to true only when no argument is passed, so set them
-           * explicitly to preserve behavior alongside
-           * provideAppNotificationSettings.
-           */
-          allowAlert: true,
-          allowBadge: true,
-          allowSound: true,
-          provideAppNotificationSettings: true,
-        },
-      })
+      const response = await runAppInitiatedActivity(() =>
+        Notification.requestPermissionsAsync({
+          ios: {
+            /*
+             * These default to true only when no argument is passed, so set
+             * them explicitly to preserve behavior alongside
+             * provideAppNotificationSettings.
+             */
+            allowAlert: true,
+            allowBadge: true,
+            allowSound: true,
+            provideAppNotificationSettings: true,
+          },
+        }),
+      )
       queryClient.setQueryData(RQKEY, response)
     } else {
       if (IS_ANDROID) {

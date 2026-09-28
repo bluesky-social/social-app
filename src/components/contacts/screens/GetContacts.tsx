@@ -12,6 +12,7 @@ import {Trans} from '@lingui/react/macro'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
@@ -182,7 +183,9 @@ export function GetContacts({
       let permissions = await Contacts.getPermissionsAsync()
 
       if (!permissions.granted && permissions.canAskAgain) {
-        permissions = await Contacts.requestPermissionsAsync()
+        permissions = await runAppInitiatedActivity(() =>
+          Contacts.requestPermissionsAsync(),
+        )
       }
 
       ax.metric('contacts:permission:request', {

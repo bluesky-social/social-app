@@ -3,6 +3,7 @@ import {Platform} from 'react-native'
 import * as Location from 'expo-location'
 import {createPermissionHook} from 'expo-modules-core'
 
+import {runAppInitiatedActivity} from '#/lib/appState'
 import {IS_NATIVE} from '#/env'
 import * as debug from '#/geolocation/debug'
 import {logger} from '#/geolocation/logger'
@@ -32,7 +33,9 @@ const useForegroundPermissions = createPermissionHook({
       }
     }),
   requestMethod: () =>
-    Location.requestForegroundPermissionsAsync().catch(error => {
+    runAppInitiatedActivity(() =>
+      Location.requestForegroundPermissionsAsync(),
+    ).catch(error => {
       logger.debug(
         'useForegroundPermission: error requesting location permissions',
         {safeMessage: error},
@@ -93,7 +96,9 @@ export function useRequestDeviceGeolocation(): () => Promise<
     }
 > {
   return useCallback(async () => {
-    const status = await Location.requestForegroundPermissionsAsync()
+    const status = await runAppInitiatedActivity(() =>
+      Location.requestForegroundPermissionsAsync(),
+    )
     if (status.granted) {
       return {
         granted: true,
