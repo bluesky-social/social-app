@@ -223,6 +223,7 @@ function AltTextInner({
             isPreferredAltText={true}
             params={params}
             hideAlt
+            minMobileAspectRatio={1}
           />
         </View>
       </View>
