@@ -52,6 +52,24 @@ export function buildGetQuotesParams({
   } as app.bsky.feed.getQuotes.$Params
 }
 
+/**
+ * Drops quotes already seen on an earlier page. "Top" pages come from a ranking
+ * that can be rebuilt mid-scroll, which can repeat a quote.
+ */
+export function removeDuplicateQuotes<P extends {posts: {uri: string}[]}>(
+  pages: P[],
+): P[] {
+  const seen = new Set<string>()
+  return pages.map(page => ({
+    ...page,
+    posts: page.posts.filter(post => {
+      if (seen.has(post.uri)) return false
+      seen.add(post.uri)
+      return true
+    }),
+  }))
+}
+
 export function usePostQuotesQuery(
   resolvedUri: string | undefined,
   {sort, enabled = true}: {sort?: QuotesSort; enabled?: boolean} = {},
@@ -84,33 +102,53 @@ export function usePostQuotesQuery(
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
     enabled: !!resolvedUri && enabled,
-    select: data => {
-      return {
-        ...data,
-        pages: data.pages.map(page => {
-          return {
-            ...page,
-            posts: page.posts.filter(post => {
-              if (
-                post.embed &&
-                bsky.isType(app.bsky.embed.record.view, post.embed)
-              ) {
-                if (
-                  bsky.isType(
-                    app.bsky.embed.record.viewDetached,
-                    post.embed.record,
-                  )
-                ) {
-                  return false
-                }
-              }
-              return true
-            }),
-          }
-        }),
-      }
-    },
+    select: selectPostQuotes,
   })
+}
+
+// Module-level so react-query can memoise the selection between renders.
+function selectPostQuotes(
+  data: InfiniteData<app.bsky.feed.getQuotes.$OutputBody>,
+): InfiniteData<app.bsky.feed.getQuotes.$OutputBody> {
+  return {
+    ...data,
+    pages: removeDuplicateQuotes(data.pages).map(page => ({
+      ...page,
+      posts: page.posts.filter(post => {
+        if (
+          post.embed &&
+          bsky.isType(app.bsky.embed.record.view, post.embed) &&
+          bsky.isType(app.bsky.embed.record.viewDetached, post.embed.record)
+        ) {
+          return false
+        }
+        return true
+      }),
+    })),
+  }
+}
+
+const MAX_EMPTY_PAGE_FETCHES = 5
+
+/**
+ * Fetches the next page, and keeps going (up to a limit) while pages come back
+ * empty, e.g. every quote on it was a duplicate. Otherwise the list can stop
+ * loading, because the end of the list never moves.
+ */
+export async function fetchNextNonEmptyPage(
+  fetchNextPage: () => Promise<{
+    data?: {pages: {posts: unknown[]}[]}
+    hasNextPage: boolean
+    isError: boolean
+  }>,
+) {
+  for (let i = 0; i < MAX_EMPTY_PAGE_FETCHES; i++) {
+    const res = await fetchNextPage()
+    const last = res.data?.pages.at(-1)
+    if (!res.hasNextPage || res.isError || !last || last.posts.length > 0) {
+      return
+    }
+  }
 }
 
 export function* findAllProfilesInQueryData(

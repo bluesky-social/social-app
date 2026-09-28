@@ -8,7 +8,11 @@ import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {type QuotesSort, usePostQuotesQuery} from '#/state/queries/post-quotes'
+import {
+  fetchNextNonEmptyPage,
+  type QuotesSort,
+  usePostQuotesQuery,
+} from '#/state/queries/post-quotes'
 import {useResolveUriQuery} from '#/state/queries/resolve-uri'
 import {Post} from '#/view/com/post/Post'
 import {ListFooter, ListMaybePlaceholder} from '#/components/Lists'
@@ -102,7 +106,7 @@ export function PostQuotes({
   const onEndReached = useCallback(async () => {
     if (isFetchingNextPage || !hasNextPage || isError) return
     try {
-      await fetchNextPage()
+      await fetchNextNonEmptyPage(fetchNextPage)
     } catch (err) {
       logger.error('Failed to load more quotes', {message: err})
     }
