@@ -101,7 +101,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`Add a content warning`)}
-      style={[{maxWidth: 500}, a.w_full]}>
+      style={[a.w_full, web({maxWidth: 500})]}>
       <View style={[a.flex_1]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.text_2xl, a.font_semi_bold]}>

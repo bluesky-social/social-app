@@ -8,7 +8,7 @@ import {Trans} from '@lingui/react/macro'
 import {EMBED_SCRIPT} from '#/lib/constants'
 import {niceDate} from '#/lib/strings/time'
 import {toShareUrl} from '#/lib/strings/url-helpers'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as SegmentedControl from '#/components/forms/SegmentedControl'
@@ -103,7 +103,7 @@ function EmbedDialogInner({
   }, [i18n, postUri, postCid, record, timestamp, postAuthor, colorMode])
 
   return (
-    <Dialog.Inner label={_(msg`Embed post`)} style={[{maxWidth: 500}]}>
+    <Dialog.Inner label={_(msg`Embed post`)} style={[web({maxWidth: 500})]}>
       <View style={[a.gap_lg]}>
         <View style={[a.gap_sm]}>
           <Text style={[a.text_2xl, a.font_bold]}>

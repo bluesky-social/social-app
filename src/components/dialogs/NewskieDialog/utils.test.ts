@@ -19,7 +19,7 @@ describe('NewskieDialog getJoinMessage', () => {
     {
       isMe: true,
       joinedViaStarterPack: true,
-      expected: 'You joined Bluesky using a starter pack just now',
+      expected: 'You joined Bluesky using a Starter Pack just now',
     },
     {
       isMe: false,
@@ -29,7 +29,7 @@ describe('NewskieDialog getJoinMessage', () => {
     {
       isMe: false,
       joinedViaStarterPack: true,
-      expected: 'Alice joined Bluesky using a starter pack just now',
+      expected: 'Alice joined Bluesky using a Starter Pack just now',
     },
   ])('$expected', ({isMe, joinedViaStarterPack, expected}) => {
     expect(
@@ -44,17 +44,38 @@ describe('NewskieDialog getJoinMessage', () => {
     ).toBe(expected)
   })
 
-  it('keeps the ago suffix for elapsed time', () => {
+  it.each([
+    {
+      isMe: true,
+      joinedViaStarterPack: false,
+      expected: 'You joined Bluesky 5 seconds ago',
+    },
+    {
+      isMe: true,
+      joinedViaStarterPack: true,
+      expected: 'You joined Bluesky using a Starter Pack 5 seconds ago',
+    },
+    {
+      isMe: false,
+      joinedViaStarterPack: false,
+      expected: 'Alice joined Bluesky 5 seconds ago',
+    },
+    {
+      isMe: false,
+      joinedViaStarterPack: true,
+      expected: 'Alice joined Bluesky using a Starter Pack 5 seconds ago',
+    },
+  ])('$expected', ({isMe, joinedViaStarterPack, expected}) => {
     expect(
       getJoinMessage({
         i18n,
         profileName: 'Alice',
-        isMe: true,
-        joinedViaStarterPack: false,
+        isMe,
+        joinedViaStarterPack,
         createdAt: new Date(now - 5_000).toISOString(),
         now,
       }),
-    ).toBe('You joined Bluesky 5 seconds ago')
+    ).toBe(expected)
   })
 
   it('treats a future timestamp as just now', () => {

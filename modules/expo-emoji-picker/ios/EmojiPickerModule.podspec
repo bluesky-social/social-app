@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.author         = 'alanjhughes'
   s.homepage       = 'https://github.com/bluesky-social/social-app'
   s.platforms      = {
-    :ios => '15.1',
+    :ios => '16.4',
     :tvos => '15.1'
   }
   s.source         = { git: '' }

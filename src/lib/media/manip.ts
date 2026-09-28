@@ -12,12 +12,13 @@ import {
   StorageAccessFramework,
   writeAsStringAsync,
 } from 'expo-file-system/legacy'
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator'
+import {SaveFormat} from 'expo-image-manipulator'
 import * as MediaLibrary from 'expo-media-library/legacy'
 import * as Sharing from 'expo-sharing'
 
 import {logger} from '#/logger'
 import {IS_ANDROID, IS_IOS} from '#/env'
+import {renderImage} from './image-manipulator'
 import {type PickerImage} from './picker.shared'
 import {type Dimensions} from './types'
 import {convertCdnPreset, getResizedDimensions} from './util'
@@ -78,16 +79,25 @@ export async function shareImageModal({uri}: {uri: string}) {
   }
 
   const downloadedPath = await downloadImage(uri, String(uuid.v4()), 15e3)
-  const {uri: jpegUri} = await manipulateAsync(downloadedPath, [], {
-    format: SaveFormat.JPEG,
-    compress: 1.0,
-  })
-  void safeDeleteAsync(downloadedPath)
-  const imagePath = await moveToPermanentPath(jpegUri, '.jpg')
-  await Sharing.shareAsync(imagePath, {
-    mimeType: 'image/jpeg',
-    UTI: 'image/jpeg',
-  })
+  let jpegUri: string | undefined
+  let imagePath: string | undefined
+
+  try {
+    const jpeg = await renderImage(downloadedPath, undefined, {
+      format: SaveFormat.JPEG,
+      compress: 1.0,
+    })
+    jpegUri = jpeg.uri
+    imagePath = await moveToPermanentPath(jpegUri, '.jpg')
+    await Sharing.shareAsync(imagePath, {
+      mimeType: 'image/jpeg',
+      UTI: 'image/jpeg',
+    })
+  } finally {
+    await safeDeleteAsync(downloadedPath)
+    if (jpegUri) await safeDeleteAsync(jpegUri)
+    if (imagePath) await safeDeleteAsync(imagePath)
+  }
 }
 
 const ALBUM_NAME = 'Bluesky'
@@ -199,7 +209,7 @@ async function doResize(
   // Now instead, we have to supply the final dimensions to the manipulation function instead.
   // Performing an "empty" manipulation lets us get the dimensions of the original image. React Native's Image.getSize()
   // does not work for local files...
-  const imageRes = await manipulateAsync(localUri, [], {})
+  const imageRes = await renderImage(localUri)
   const newDimensions = getResizedDimensions(
     {
       width: imageRes.width,
@@ -210,59 +220,64 @@ async function doResize(
 
   let minQualityPercentage = 0
   let maxQualityPercentage = 101 // exclusive
-  let newDataUri
+  let newDataUri: PickerImage | undefined
   const intermediateUris = []
 
-  while (maxQualityPercentage - minQualityPercentage > 1) {
-    const qualityPercentage = Math.round(
-      (maxQualityPercentage + minQualityPercentage) / 2,
-    )
-    const resizeRes = await manipulateAsync(
-      localUri,
-      [{resize: newDimensions}],
-      {
-        format: SaveFormat.JPEG,
-        compress: qualityPercentage / 100,
-      },
-    )
-
-    intermediateUris.push(resizeRes.uri)
-
-    const fileInfo = await getInfoAsync(resizeRes.uri)
-    if (!fileInfo.exists) {
-      throw new Error(
-        'The image manipulation library failed to create a new image.',
+  try {
+    while (maxQualityPercentage - minQualityPercentage > 1) {
+      const qualityPercentage = Math.round(
+        (maxQualityPercentage + minQualityPercentage) / 2,
       )
-    }
+      const resizeRes = await renderImage(
+        localUri,
+        context => context.resize(newDimensions),
+        {
+          format: SaveFormat.JPEG,
+          compress: qualityPercentage / 100,
+        },
+      )
 
-    if (fileInfo.size < opts.maxSize) {
-      minQualityPercentage = qualityPercentage
-      newDataUri = {
-        path: normalizePath(resizeRes.uri),
-        mime: 'image/jpeg',
-        size: fileInfo.size,
-        width: resizeRes.width,
-        height: resizeRes.height,
+      intermediateUris.push(resizeRes.uri)
+
+      const fileInfo = await getInfoAsync(resizeRes.uri)
+      if (!fileInfo.exists) {
+        throw new Error(
+          'The image manipulation library failed to create a new image.',
+        )
       }
-    } else {
-      maxQualityPercentage = qualityPercentage
+
+      if (fileInfo.size < opts.maxSize) {
+        minQualityPercentage = qualityPercentage
+        newDataUri = {
+          path: normalizePath(resizeRes.uri),
+          mime: 'image/jpeg',
+          size: fileInfo.size,
+          width: resizeRes.width,
+          height: resizeRes.height,
+        }
+      } else {
+        maxQualityPercentage = qualityPercentage
+      }
     }
-  }
 
-  for (const intermediateUri of intermediateUris) {
-    if (newDataUri?.path !== normalizePath(intermediateUri)) {
-      safeDeleteAsync(intermediateUri)
+    if (newDataUri) {
+      return newDataUri
     }
-  }
 
-  if (newDataUri) {
-    safeDeleteAsync(imageRes.uri)
-    return newDataUri
+    throw new Error(
+      `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
+    )
+  } catch (err) {
+    newDataUri = undefined
+    throw err
+  } finally {
+    await safeDeleteAsync(imageRes.uri)
+    await Promise.all(
+      intermediateUris
+        .filter(uri => newDataUri?.path !== normalizePath(uri))
+        .map(safeDeleteAsync),
+    )
   }
-
-  throw new Error(
-    `This image is too big! We couldn't compress it down to ${opts.maxSize} bytes`,
-  )
 }
 
 async function moveToPermanentPath(path: string, ext: string): Promise<string> {
@@ -393,27 +408,43 @@ async function downloadImage(uri: string, destName: string, timeout: number) {
   const tempPath = `${cacheDirectory ?? ''}/${destName}.bin`
   const dlResumable = createDownloadResumable(uri, tempPath, {cache: true})
   let timedOut = false
+  let downloadedPath: string | undefined
+  let finalPath: string | undefined
   const to1 = setTimeout(() => {
     timedOut = true
-    void dlResumable.cancelAsync()
+    void dlResumable.cancelAsync().catch(() => undefined)
   }, timeout)
 
-  const dlRes = await dlResumable.downloadAsync()
-  clearTimeout(to1)
-
-  if (!dlRes?.uri) {
-    if (timedOut) {
-      throw new Error('Failed to download image - timed out')
-    } else {
-      throw new Error('Failed to download image - dlRes is undefined')
+  try {
+    let dlRes
+    try {
+      dlRes = await dlResumable.downloadAsync()
+    } finally {
+      clearTimeout(to1)
     }
+
+    if (!dlRes?.uri) {
+      if (timedOut) {
+        throw new Error('Failed to download image - timed out')
+      } else {
+        throw new Error('Failed to download image - dlRes is undefined')
+      }
+    }
+
+    downloadedPath = dlRes.uri
+    const ext = extFromMime(dlRes.mimeType)
+    finalPath = `${cacheDirectory ?? ''}/${destName}.${ext}`
+    await moveAsync({from: downloadedPath, to: finalPath})
+
+    return normalizePath(finalPath)
+  } catch (err) {
+    await Promise.all(
+      [...new Set([tempPath, downloadedPath, finalPath])]
+        .filter(path => path !== undefined)
+        .map(safeDeleteAsync),
+    )
+    throw err
   }
-
-  const ext = extFromMime(dlRes.mimeType)
-  const finalPath = `${cacheDirectory ?? ''}/${destName}.${ext}`
-  await moveAsync({from: dlRes.uri, to: finalPath})
-
-  return normalizePath(finalPath)
 }
 
 const MIME_TO_EXT: Record<string, string> = {

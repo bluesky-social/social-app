@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 import * as Linking from 'expo-linking'
+import {Referrer, SharedPrefs} from '@bsky.app/expo-bluesky-swiss-army'
 
 import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {
@@ -13,7 +14,6 @@ import {
   useSetActiveStarterPack,
 } from '#/state/shell/landing'
 import {IS_ANDROID} from '#/env'
-import {Referrer, SharedPrefs} from '../../../modules/expo-bluesky-swiss-army'
 
 export function useLandingEntry() {
   const [ready, setReady] = useState(false)
@@ -53,7 +53,7 @@ export function useLandingEntry() {
     }, 500)
 
     void (async () => {
-      // Check for starter pack
+      // Check for Starter Pack
       let uri: string | null | undefined
 
       if (IS_ANDROID) {

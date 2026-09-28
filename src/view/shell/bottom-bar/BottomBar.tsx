@@ -18,6 +18,7 @@ import {clamp} from '#/lib/numbers'
 import {getTabState, TabState} from '#/lib/routes/helpers'
 import {type SharedNavTab, TAB_TO_NAV_ITEM} from '#/lib/routes/tab-to-nav-item'
 import {emitSoftReset} from '#/state/events'
+import {useHomeBadge} from '#/state/home-badge'
 import {useUnreadMessageCount} from '#/state/queries/messages/list-conversations'
 import {useUpdateAllRead} from '#/state/queries/messages/update-all-read'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
@@ -71,6 +72,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
     useNavigationTabState()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
+  const hasHomeBadge = useHomeBadge()
   const aa = useAgeAssurance()
   const footerMinimalShellTransform = useMinimalShellFooterTransform()
   const {data: profile} = useProfileQuery({did: currentAccount?.did})
@@ -190,6 +192,10 @@ export function BottomBar({navigation}: BottomTabBarProps) {
                     style={[styles.ctrlIcon, t.atoms.text, styles.homeIcon]}
                   />
                 )
+              }
+              hasNew={
+                hasHomeBadge &&
+                ax.features.enabled(ax.features.FollowingV2Enable)
               }
               onPress={onPressHome}
               accessibilityRole="tab"

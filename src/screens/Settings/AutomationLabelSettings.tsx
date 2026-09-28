@@ -80,6 +80,7 @@ export function AutomationLabelSettingsScreen({}: Props) {
           return existing
         },
         checkCommitted: profile => {
+          if (!profile) return false
           const exists = !!profile.labels?.some(l => l.val === 'bot')
           return exists === wasAdded
         },
