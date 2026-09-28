@@ -14,6 +14,7 @@ import {EventEmitter} from 'eventemitter3'
 
 import {ScrollProvider} from '#/lib/ScrollContext'
 import {useShellLayout} from '#/state/shell/shell-layout'
+import {homeHeaderCollapseTranslateY} from '#/view/com/util/homeHeaderCollapse'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 
 const WEB_HIDE_SHELL_THRESHOLD = 200
@@ -44,16 +45,28 @@ export function useHomeHeaderMode() {
   return headerMode
 }
 
+/**
+ * How much of the Home header stays on screen once it has collapsed: the
+ * status bar strip under liquid glass, where the screen has no top inset, and
+ * nothing elsewhere.
+ */
+export function useHomeHeaderPinnedHeight() {
+  const {top: topInset} = useSafeAreaInsets()
+  return IS_LIQUID_GLASS ? topInset : 0
+}
+
 export function useHomeHeaderTransform() {
   const headerMode = useHomeHeaderMode()
   const {headerHeight} = useShellLayout()
-  const {top: topInset} = useSafeAreaInsets()
-
-  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
+  const headerPinnedHeight = useHomeHeaderPinnedHeight()
 
   return useAnimatedStyle(() => {
     const headerModeValue = headerMode.get()
-    const hHeight = headerHeight.get()
+    const translateY = homeHeaderCollapseTranslateY({
+      mode: headerModeValue,
+      headerHeight: headerHeight.get(),
+      pinnedHeight: headerPinnedHeight,
+    })
 
     if (IS_LIQUID_GLASS) {
       // bit of a hackfix, but: the header can get affected by scrollEdgeEffects
@@ -69,12 +82,7 @@ export function useHomeHeaderTransform() {
         opacity: Math.pow(1 - headerModeValue, 2),
         transform: [
           {
-            translateY:
-              interpolate(
-                headerModeValue,
-                [0, 1],
-                [0, headerPinnedHeight - hHeight],
-              ) - relayoutingOffset,
+            translateY: translateY - relayoutingOffset,
           },
         ],
       }
@@ -83,11 +91,7 @@ export function useHomeHeaderTransform() {
     return {
       pointerEvents: headerModeValue === 0 ? 'auto' : 'none',
       opacity: Math.pow(1 - headerModeValue, 2),
-      transform: [
-        {
-          translateY: interpolate(headerModeValue, [0, 1], [0, -hHeight]),
-        },
-      ],
+      transform: [{translateY}],
     }
   })
 }
@@ -95,8 +99,7 @@ export function useHomeHeaderTransform() {
 export function MainScrollProvider({children}: {children: React.ReactNode}) {
   const {headerHeight} = useShellLayout()
   const headerMode = useHomeHeaderMode()
-  const {top: topInset} = useSafeAreaInsets()
-  const headerPinnedHeight = IS_LIQUID_GLASS ? topInset : 0
+  const headerPinnedHeight = useHomeHeaderPinnedHeight()
   const startDragOffset = useSharedValue<number | null>(null)
   const startMode = useSharedValue<number | null>(null)
   const didJustRestoreScroll = useSharedValue<boolean>(false)
