@@ -58,7 +58,7 @@ export function StepHandle() {
     username: draftValue,
     serviceDid: state.serviceDescription?.did ?? 'UNKNOWN',
     serviceDomain: state.userDomain,
-    birthDate: state.dateOfBirth.toISOString(),
+    birthDate: state.dateOfBirth?.toISOString() ?? '',
     email: state.email,
     enabled: validCheck.overall,
   })
