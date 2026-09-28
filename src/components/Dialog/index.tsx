@@ -174,17 +174,32 @@ export function Outer({
     [open, close],
   )
 
+  const isHeightConstrained =
+    nativeOptions?.maxHeight != null || nativeOptions?.fullHeight === true
+  const contentFillsCanvas =
+    IS_ANDROID &&
+    !nativeOptions?.fullHeight &&
+    snapPoint === BottomSheetSnapPoint.Full
+
   const context = useMemo(
     () => ({
       close,
       isNativeDialog: true,
       nativeSnapPoint: snapPoint,
       nativeFullHeight: nativeOptions?.fullHeight === true,
+      isHeightConstrained,
       disableDrag,
       setDisableDrag,
       isWithinDialog: true,
     }),
-    [close, snapPoint, nativeOptions?.fullHeight, disableDrag, setDisableDrag],
+    [
+      close,
+      snapPoint,
+      nativeOptions?.fullHeight,
+      isHeightConstrained,
+      disableDrag,
+      setDisableDrag,
+    ],
   )
 
   return (
@@ -196,6 +211,7 @@ export function Outer({
       {...nativeOptions}
       onSnapPointChange={onSnapPointChange}
       onStateChange={onStateChange}
+      contentFillsCanvas={contentFillsCanvas}
       disableDrag={disableDrag}>
       <Context.Provider value={context}>
         <View
@@ -203,8 +219,10 @@ export function Outer({
           style={[
             a.relative,
             {maxHeight: '100%'},
-            /* Reaching Full must not pin an intrinsic sheet after its content shrinks. */
-            nativeOptions?.fullHeight && a.flex_1,
+            (IS_IOS
+              ? isHeightConstrained
+              : nativeOptions?.fullHeight ||
+                snapPoint === BottomSheetSnapPoint.Full) && a.flex_1,
           ]}>
           {children}
         </View>
@@ -231,8 +249,13 @@ export function ScrollableInner({
 }: DialogInnerProps & {
   ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
 }) {
-  const {nativeSnapPoint, nativeFullHeight, disableDrag, setDisableDrag} =
-    useDialogContext()
+  const {
+    nativeSnapPoint,
+    nativeFullHeight,
+    isHeightConstrained,
+    disableDrag,
+    setDisableDrag,
+  } = useDialogContext()
   const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
   const insets = useSafeAreaInsets()
   const scrollPhase = useRef<'idle' | 'drag' | 'momentum'>('idle')
@@ -309,7 +332,9 @@ export function ScrollableInner({
       <ScrollView
         style={[
           {flexShrink: 1},
-          (nativeFullHeight || (IS_IOS && isAtMaxSnapPoint)) && a.flex_1,
+          (IS_IOS
+            ? isHeightConstrained
+            : nativeFullHeight || isAtMaxSnapPoint) && a.flex_1,
           style,
         ]}
         contentContainerStyle={[
@@ -444,8 +469,8 @@ export const InnerFlatList = forwardRef<
         showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
         {...props}
         style={[
-          {flexShrink: 1},
-          (nativeFullHeight || (IS_IOS && isAtMaxSnapPoint)) && a.flex_1,
+          IS_IOS ? a.h_full : {flexShrink: 1},
+          IS_ANDROID && (nativeFullHeight || isAtMaxSnapPoint) && a.flex_1,
           style,
         ]}
         contentContainerStyle={[

@@ -8,6 +8,7 @@ import android.view.ViewStructure
 import android.view.Window
 import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
+import android.widget.ScrollView
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.LifecycleEventListener
 import com.facebook.react.bridge.ReactContext
@@ -466,6 +467,16 @@ class BottomSheetView(
       if (shouldPreventExpansion) {
         behavior.maxHeight = (behavior.halfExpandedRatio * screenHeight).toInt()
         it.requestLayout()
+      } else {
+        /*
+         * Material's sheet frame is wrap_content. Moving it to the expanded
+         * offset does not grow that frame when React Native lays out longer
+         * ScrollView content directly, without an Android measure pass.
+         */
+        val frameHeight = if (shouldBeExpanded) canvasHeight.toInt() else targetHeight.toInt()
+        if (it.layoutParams.height != frameHeight) {
+          it.layoutParams = it.layoutParams.apply { height = frameHeight }
+        }
       }
 
       // During settling (programmatic animation from our own state change),
@@ -498,11 +509,11 @@ class BottomSheetView(
     dialog.cancel()
   }
 
-  // Observe each direct child of innerView via OnLayoutChangeListener so that
-  // height updates are detected purely on the native side. We use OnLayoutChangeListener
-  // (not OnGlobalLayoutListener) because React Native calls view.layout() directly
-  // via Yoga, bypassing requestLayout()/performTraversals(). OnLayoutChangeListener
-  // fires from setFrame() which IS called by layout(), so it catches RN updates.
+  /*
+   * React Native calls view.layout() directly via Yoga, bypassing
+   * requestLayout()/performTraversals(), so OnLayoutChangeListener catches
+   * updates that OnGlobalLayoutListener misses.
+   */
   private fun startObservingContentHeight() {
     stopObservingContentHeight()
 
@@ -534,6 +545,23 @@ class BottomSheetView(
       children.add(child)
     }
 
+    /* Fabric may keep any of the JS wrapper Views around the ScrollView. */
+    findScrollView(innerViewGroup)?.let { scrollView ->
+      if (scrollView.childCount > 0) {
+        val scrollContent = scrollView.getChildAt(0)
+        scrollContent.addOnLayoutChangeListener(listener)
+        children.add(scrollContent)
+      }
+
+      (scrollView.parent as? ViewGroup)?.let { parent ->
+        for (i in parent.indexOfChild(scrollView) + 1 until parent.childCount) {
+          val footer = parent.getChildAt(i)
+          footer.addOnLayoutChangeListener(listener)
+          children.add(footer)
+        }
+      }
+    }
+
     this.contentLayoutListener = listener
     this.observedChildren = children
 
@@ -556,14 +584,38 @@ class BottomSheetView(
 
   // Util
 
+  private fun findScrollView(view: View): ScrollView? {
+    if (view is ScrollView) return view
+    if (view is ViewGroup) {
+      for (i in 0 until view.childCount) {
+        findScrollView(view.getChildAt(i))?.let { return it }
+      }
+    }
+    return null
+  }
+
   private fun getContentHeight(): Float {
     val innerView = this.innerView as? ViewGroup ?: return 0f
-    // Use the tallest direct child's height. The handle is absolutely positioned
-    // (overlaps the content), so summing would double-count its height as padding.
+    findScrollView(innerView)?.let { scrollView ->
+      if (scrollView.childCount > 0) {
+        val scrollContentHeight = scrollView.getChildAt(0).height.toFloat()
+        if (scrollContentHeight > 0f) {
+          var footerHeight = 0f
+          (scrollView.parent as? ViewGroup)?.let { parent ->
+            for (i in parent.indexOfChild(scrollView) + 1 until parent.childCount) {
+              footerHeight += parent.getChildAt(i).height.toFloat()
+            }
+          }
+          /* The viewport can stay pinned while its content grows or shrinks. */
+          return scrollContentHeight + footerHeight
+        }
+      }
+    }
+
+    // The handle overlaps content, so use the tallest child rather than summing.
     var maxChildHeight = 0f
     for (i in 0 until innerView.childCount) {
-      val h = innerView.getChildAt(i).height.toFloat()
-      if (h > maxChildHeight) maxChildHeight = h
+      maxChildHeight = maxOf(maxChildHeight, innerView.getChildAt(i).height.toFloat())
     }
     return maxChildHeight
   }

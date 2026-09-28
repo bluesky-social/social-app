@@ -21,6 +21,7 @@ export const Context = createContext<DialogContextProps>({
   isNativeDialog: false,
   nativeSnapPoint: BottomSheetSnapPoint.Hidden,
   nativeFullHeight: false,
+  isHeightConstrained: false,
   disableDrag: false,
   setDisableDrag: () => {},
   isWithinDialog: false,

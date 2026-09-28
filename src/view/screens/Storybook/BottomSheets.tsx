@@ -289,7 +289,13 @@ export function BottomSheets() {
             {dynamicIsExpanded ? 'Expanded content' : 'Compact content'}
           </P>
           {(dynamicIsExpanded ? TALL_ROWS : [1, 2]).map(row => (
-            <RowText key={row}>Dynamic row {row}</RowText>
+            <RowText
+              key={row}
+              testID={
+                row === 12 ? 'bottomSheetDynamicExpandedMiddle' : undefined
+              }>
+              Dynamic row {row}
+            </RowText>
           ))}
           <Button
             color="secondary"

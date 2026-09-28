@@ -28,8 +28,13 @@ const NativeView: React.ComponentType<
 
 const NativeModule = requireNativeModule('BottomSheet')
 
+type BottomSheetProps = BottomSheetViewProps & {
+  /** Stretch the JS content into the native canvas while a dynamic sheet is Full. */
+  contentFillsCanvas?: boolean
+}
+
 export class BottomSheetNativeComponent extends Component<
-  BottomSheetViewProps,
+  BottomSheetProps,
   {
     open: boolean
   }
@@ -38,7 +43,7 @@ export class BottomSheetNativeComponent extends Component<
 
   static contextType = PortalContext
 
-  constructor(props: BottomSheetViewProps) {
+  constructor(props: BottomSheetProps) {
     super(props)
     this.state = {
       open: false,
@@ -93,11 +98,12 @@ export class BottomSheetNativeComponent extends Component<
 function BottomSheetNativeComponentInner({
   children,
   backgroundColor,
+  contentFillsCanvas = false,
   maxHeight,
   onStateChange,
   nativeViewRef,
   ...rest
-}: BottomSheetViewProps & {
+}: BottomSheetProps & {
   onStateChange: (
     event: NativeSyntheticEvent<{state: BottomSheetState}>,
   ) => void
@@ -150,14 +156,23 @@ function BottomSheetNativeComponentInner({
              * measured without a height constraint to that canvas once its size
              * reaches the shadow tree.
              */
-            maxHeight: maxHeight ?? '100%',
+            maxHeight: contentFillsCanvas ? undefined : (maxHeight ?? '100%'),
             borderTopLeftRadius: cornerRadius,
             borderTopRightRadius: cornerRadius,
             overflow: 'hidden',
           },
+          Platform.OS === 'android' &&
+            contentFillsCanvas && {
+              minHeight: screenHeight - insets.top - insets.bottom,
+            },
         ]}>
         <View
-          style={[{flexShrink: 1}, rest.fullHeight === true && {flexGrow: 1}]}>
+          style={[
+            {flexShrink: 1},
+            Platform.OS === 'ios' &&
+              (maxHeight != null || rest.fullHeight === true) && {flex: 1},
+            (rest.fullHeight === true || contentFillsCanvas) && {flexGrow: 1},
+          ]}>
           <BottomSheetPortalProvider>{children}</BottomSheetPortalProvider>
         </View>
       </View>

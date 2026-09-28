@@ -121,6 +121,7 @@ export function Outer({
       isNativeDialog: false,
       nativeSnapPoint: 0,
       nativeFullHeight: false,
+      isHeightConstrained: false,
       disableDrag: false,
       setDisableDrag: () => {},
       isWithinDialog: true,
