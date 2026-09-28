@@ -6,7 +6,10 @@ import {act, fireEvent, render, screen} from '@testing-library/react-native'
 
 jest.unmock('multiformats/cid')
 jest.unmock('multiformats/hashes/hasher')
-jest.mock('#/lib/api/resolve', () => ({resolveLink: jest.fn()}))
+jest.mock('#/lib/api/resolve', () => ({
+  resolveLink: jest.fn(),
+  EmbeddingDisabledError: class extends Error {},
+}))
 jest.mock('#/components/Toast', () => ({show: jest.fn()}))
 jest.mock('#/lib/haptics', () => ({useHaptics: () => jest.fn()}))
 /* Neither inspection view opens a dialog; avoid loading the native sheet. */
@@ -110,6 +113,39 @@ describe('tester record inspection', () => {
 
       fireEvent.press(screen.getByTestId('composerV2Tester-plan-clear'))
       expect(screen.queryByTestId('composerV2Tester-plan-records')).toBeNull()
+    } finally {
+      unmount()
+      store.destroy()
+    }
+  })
+
+  test('URI failure UI uses localized guidance, not raw diagnostics', async () => {
+    const cause = new Error('private resolver path and content')
+    const onError = jest.fn()
+    const store = createThreadStore({
+      resolvers,
+      onError,
+      __createId: () => 'post-1',
+      __resolveLink: () => Promise.reject(cause),
+    })
+    const {unmount} = render(
+      <I18nProvider i18n={i18n}>
+        <ThreadStoreProvider store={store}>
+          <MediaAttachmentView postId="post-1" />
+        </ThreadStoreProvider>
+      </I18nProvider>,
+    )
+    try {
+      await act(async () => {
+        store.actions.addUri('post-1', 'https://example.com')
+        await Promise.resolve()
+      })
+      expect(
+        screen.getByText('The link could not be resolved. Please try again.'),
+      ).toBeTruthy()
+      expect(screen.queryByText(cause.message)).toBeNull()
+      expect(onError).toHaveBeenCalledTimes(1)
+      expect(onError.mock.calls[0][1]).toBe(cause)
     } finally {
       unmount()
       store.destroy()

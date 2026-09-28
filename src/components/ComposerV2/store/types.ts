@@ -135,6 +135,7 @@ export type AttachmentResolution =
   | {
       state: 'failed'
       uri: string
+      /** Safe fallback; UI localizes code instead of rendering exception text. */
       error: string
       code: LinkResolutionFailureCode
       /** Omitted for permanent failures; not serializable. */

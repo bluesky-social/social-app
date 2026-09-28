@@ -36,30 +36,23 @@ Implemented using existing test seams and reproducible seeds, without a new test
 
 ## Error handling: one per-session reporting callback
 
-There is currently no single top-level error event:
+Completed and verified by Astra 6 with explicit operator approval, superseding the previous discussion-only disclaimer. Implementation is uncommitted for parent review. No other follow-up todo or feature was authorized or started.
 
-- Upload failures live on media items with a message and optional code/retryability.
-- URI-resolution failures live on attachment slots with code/message and optional retry.
-- Initial-state adapters throw typed `ComposerAdapterError` instances; construction can also throw.
-- Planning returns structured `{ok: false, errors}` results.
-- The separate writer in task 0010 propagates write failures.
-- `store.subscribe()` reports state changes, not errors.
+- `src/components/ComposerV2/errors.ts` defines optional synchronous `ComposerV2OnError(event, cause?)`. The event contains source, stable code, validation/operational/unexpected kind, relevant local post/media IDs, and retry/edit/reconcile/none recovery. Raw diagnostic causes are separate from structural metadata; no default logging, toast, event bus, or subscription sink is installed.
+- `createThreadStore({onError})` registers the policy before normalization and eager workers start. Its `reportError` callback shares that policy with operation callers and becomes inert on destruction. Accepted upload/URI failures report once; stale/cancelled work and repeated callbacks do not. A new failed retry is a new report. Existing retry classification, stale-attempt guards, resolution lanes, dirty state, and partial video/caption reuse remain intact.
+- Adapters, planner, and writer accept the same optional callback. Report at one owning boundary rather than again when catching a reported rejection. Tester scenario/plan tokens suppress superseded work, including unmounts, and replaced stores are retired immediately. The tester's existing explicit publisher and retained uncertain-write notice remain in place.
+- Source-local failures and operation outcomes remain authoritative. Ordinary planner preflight, record validation, and failures already present in the snapshot stay structured local results, not new operational reports. Adapter errors retain their typed rejection; unexpected initialization causes remain available. Planner errors preserve original causes non-enumerably, outside serialized results and UI summaries. URI failure state no longer contains exception messages; the tester localizes guidance from the stable code.
+- Callback exceptions cannot replace results/errors, interrupt state/cleanup, or recursively report themselves. Writer failures retain the original SDK error. Any failure after dispatch, including a transport abort, conservatively requests reconciliation of the retained plan. Authenticated DID/repo checks, `validate: true`, and exactly one unchanged `applyWrites` call remain; no automatic retry/replan was added.
 
-Discuss a small typed per-composer-session `onError` callback shared by the store and initialization/planning/writing callers. No global event bus or large error framework. Proposed reporting context: source, stable code, relevant post/media IDs, and recovery classification (retry, edit, reconcile uncertain write outcome, or none).
+Verification (fake clients/workers only):
 
-Requirements to settle before implementation:
+- `pnpm test src/components/ComposerV2 --watchman=false --runInBand`: 357 tests passed across 23 suites, including the existing sequence suite and new reporting/lifetime/diagnostic isolation coverage.
+- `pnpm typecheck`: iOS, Android, and Web passed.
+- `pnpm lint`: passed, including the Sentry browser-version check.
+- Scoped `pnpm prettier`: passed for the 20 changed ComposerV2 source/test files, using a temporary allowlist ignore file because the repository script includes `.`. No unscoped formatting write.
+- `git diff --check`: passed. Pnpm checks were captured via Node child processes in `/tmp/composer-v2-{test,typecheck,lint,prettier}.log`, each with exit status 0. Existing tooling warnings (pnpm version mismatch, Prettier config module type, mocked GrowthBook initialization, and Jest force-exit notice) did not fail checks.
 
-- Keep persistent failure state and operation results authoritative; notifications must not replace them.
-- Report once per accepted failed attempt, not on each render or upload-progress update.
-- Do not report intentional cancellation or ignored stale work as errors.
-- Separate ordinary validation/preflight issues from operational failures and programmer bugs; do not send every missing-alt-text warning to crash reporting or a global toast.
-- Separate safe localized UI messages from diagnostic causes. Avoid dumping post text, local paths, caption contents, or complete records into logs.
-- Preserve unexpected diagnostic causes: the planner currently reduces unexpected exceptions to a generic result, while URI-resolution state retains raw exception messages.
-- Register reporting at construction so eager initialization failures are observable.
-- Isolate exceptions thrown by notification listeners so reporting cannot interrupt cleanup/state updates or other listeners.
-- Treat ambiguous write failures specially: do not automatically replan with fresh keys and retry a potentially committed post. Preserve the writer's SDK failure for caller handling.
-
-This discussion does not authorize implementing reporting, publishing controls, or expanding task 0010.
+No live upload, publication, networking-based integration test, or simulator interaction was performed. No task file, staging, commit, production migration, or new UI/error panel was added.
 
 ## 4. Final publish-boundary validation: already covered
 

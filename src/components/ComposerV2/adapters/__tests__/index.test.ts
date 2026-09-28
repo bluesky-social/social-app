@@ -2,9 +2,11 @@ import {afterEach, describe, expect, jest, test} from '@jest/globals'
 
 import {type ComposerOpts} from '#/state/shell/composer'
 import {
+  ComposerAdapterError,
   composerOptsToInitialState,
   draftToInitialState,
 } from '#/components/ComposerV2/adapters'
+import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type app, type com} from '#/lexicons'
 import {simulatedUploadWorkers} from '../../store/__tests__/uploadTestUtils'
@@ -60,6 +62,96 @@ function imageRef(path: string, alt = '') {
 
 afterEach(() => {
   jest.clearAllMocks()
+})
+
+describe('initialization reporting', () => {
+  test('adapter validation remains a typed rejection even if the callback throws', async () => {
+    const onError = jest.fn<ComposerV2OnError>(() => {
+      throw new Error('listener')
+    })
+    await expect(
+      composerOptsToInitialState(
+        {
+          imageUris: Array.from({length: 11}, () => ({
+            uri: 'file:///private',
+            width: 10,
+            height: 10,
+          })),
+        },
+        {onError},
+      ),
+    ).rejects.toMatchObject({code: 'oversized-images'})
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError.mock.calls[0][0]).toEqual({
+      source: 'initialization',
+      code: 'oversized-images',
+      kind: 'validation',
+      recovery: 'edit',
+    })
+  })
+
+  test.each(['intent', 'draft'] as const)(
+    '%s metadata failure preserves its cause outside serializable data',
+    async source => {
+      const cause = Object.assign(new Error('metadata diagnostic'), {
+        privatePath: 'metadata diagnostic',
+      })
+      const onError = jest.fn<ComposerV2OnError>()
+      const result =
+        source === 'intent'
+          ? composerOptsToInitialState(
+              {videoUri: {uri: 'file:///private', width: 10, height: 10}},
+              {onError, getVideoMetadata: () => Promise.reject(cause)},
+            )
+          : draftToInitialState({
+              draftId: 'draft',
+              draft: {
+                posts: [draftPost({embedImages: [imageRef('local-ref')]})],
+              },
+              loadedMedia: new Map([['local-ref', 'file:///private']]),
+              onError,
+              getImageDimensions: () => Promise.reject(cause),
+            })
+      const error: unknown = await result.catch((value: unknown) => value)
+      if (!(error instanceof ComposerAdapterError))
+        throw new Error('expected adapter error')
+      expect(error.code).toBe('missing-media-metadata')
+      expect(error.cause).toBe(cause)
+      expect(JSON.stringify(error)).not.toContain('metadata diagnostic')
+      expect(onError).toHaveBeenCalledTimes(1)
+      expect(onError).toHaveBeenCalledWith(
+        expect.objectContaining({
+          source: 'initialization',
+          kind: 'operational',
+        }),
+        cause,
+      )
+    },
+  )
+
+  test('unexpected initialization rejection remains identical with or without reporting', async () => {
+    const cause = new Error('private diagnostic')
+    const opts = {
+      get text(): string {
+        throw cause
+      },
+    }
+    const onError = jest.fn<ComposerV2OnError>()
+    await expect(composerOptsToInitialState(opts)).rejects.toBe(cause)
+    await expect(composerOptsToInitialState(opts, {onError})).rejects.toBe(
+      cause,
+    )
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(
+      {
+        source: 'initialization',
+        code: 'initial-state-failed',
+        kind: 'unexpected',
+        recovery: 'none',
+      },
+      cause,
+    )
+  })
 })
 
 describe('composerOptsToInitialState', () => {

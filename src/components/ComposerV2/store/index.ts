@@ -6,6 +6,11 @@ import {
   resolveLink as importedResolveLink,
   type resolveLink,
 } from '#/lib/api/resolve'
+import {
+  type ComposerV2OnError,
+  isComposerV2Cancellation,
+  reportComposerV2Error,
+} from '#/components/ComposerV2/errors'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
   type PreparedOutput,
@@ -40,6 +45,8 @@ function isRetryableFailedUpload(item: types.PostMediaItem): boolean {
 export function createThreadStore(options: {
   resolvers: LinkResolvers
   initialState?: types.ThreadStoreInitialState
+  /** Registered before normalization and eager initialization begin. */
+  onError?: ComposerV2OnError
   /** Override id generation; useful for deterministic tests. */
   __createId?: () => string
   /** Override link resolver; useful for deterministic tests. */
@@ -51,9 +58,35 @@ export function createThreadStore(options: {
 }) {
   const id = options.__createId ?? nanoid
   const resolve = options.__resolveLink ?? importedResolveLink
-  let state = buildThreadState(options.initialState ?? {}, id)
-  const listeners = new Set<() => void>()
+  const onError = options.onError
   let destroyed = false
+  let reporting = false
+  const reportError: ComposerV2OnError = (event, cause) => {
+    if (destroyed || reporting) return
+    if (event.source !== 'writer' && isComposerV2Cancellation(cause)) return
+    reporting = true
+    try {
+      reportComposerV2Error(onError, event, cause)
+    } finally {
+      reporting = false
+    }
+  }
+  let state: types.ThreadState
+  try {
+    state = buildThreadState(options.initialState ?? {}, id)
+  } catch (cause) {
+    reportError(
+      {
+        source: 'initialization',
+        code: 'initial-state-failed',
+        kind: 'unexpected',
+        recovery: 'none',
+      },
+      cause,
+    )
+    throw cause
+  }
+  const listeners = new Set<() => void>()
 
   /** Cancellation handles belong to the session, not its published snapshots. */
   const uploadTasks = new Map<string, UploadTask>()
@@ -452,8 +485,9 @@ export function createThreadStore(options: {
   }) {
     if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) return
 
-    const applyFailed = (err: unknown) => {
+    const applyFailed = (err: unknown, unexpected = false) => {
       if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) return
+      if (isComposerV2Cancellation(err)) return
       const {code, isRetryable} = parseResolveLinkError(err)
       const retry = isRetryable
         ? () => {
@@ -486,10 +520,15 @@ export function createThreadStore(options: {
       const failure = {
         state: 'failed' as const,
         uri,
-        error: String((err && (err as Error).message) ?? err),
+        // The UI localizes this stable code; raw diagnostics never enter state.
+        error:
+          code === 'embedding-disabled'
+            ? 'Embedding disabled'
+            : 'Link resolution failed',
         code,
         retry,
       }
+      let accepted = false
       mutateState(s => {
         const post = s.posts[postId]
         if (!post) return null
@@ -497,8 +536,25 @@ export function createThreadStore(options: {
           target === 'record'
             ? setPostRecord(post, failure)
             : setPostMedia(post, failure)
+        accepted = true
         return s
       })
+      if (!accepted) return
+      reportError(
+        {
+          source: 'uri-resolution',
+          code,
+          slot: target,
+          postId,
+          kind: unexpected
+            ? 'unexpected'
+            : isRetryable
+              ? 'operational'
+              : 'validation',
+          recovery: isRetryable ? 'retry' : 'edit',
+        },
+        err,
+      )
     }
 
     const applyResolved = (link: ResolvedLink) => {
@@ -506,7 +562,7 @@ export function createThreadStore(options: {
         return
       }
       if ((link.type === 'record') !== (target === 'record')) {
-        applyFailed(new Error('Unexpected attachment type'))
+        applyFailed(new Error('Unexpected attachment type'), true)
         return
       }
       mutateState(s => {
@@ -537,7 +593,11 @@ export function createThreadStore(options: {
       })
     }
 
-    resolve(options.resolvers, uri).then(applyResolved, applyFailed)
+    try {
+      resolve(options.resolvers, uri).then(applyResolved, applyFailed)
+    } catch (cause) {
+      applyFailed(cause, true)
+    }
   }
 
   /** Direct insertion of a known record replaces only the record slot. */
@@ -588,6 +648,10 @@ export function createThreadStore(options: {
     postId: string,
     mediaId: string,
     input: types.UploadStatus,
+    diagnostic?: {
+      kind: 'validation' | 'operational' | 'unexpected'
+      cause: unknown
+    },
   ) {
     const post = state.posts[postId]
     if (destroyed || !post) return
@@ -619,6 +683,7 @@ export function createThreadStore(options: {
               },
             }
         : input
+    let accepted = false
     mutateState(s => {
       const currentPost = s.posts[postId]
       if (!currentPost) return null
@@ -643,8 +708,33 @@ export function createThreadStore(options: {
       s.posts[postId] = setPostMediaItems(currentPost, [
         ...currentItems.map(item => (item.id === mediaId ? next : item)),
       ])
+      accepted = true
       return s
     })
+    if (
+      accepted &&
+      input.state === 'failed' &&
+      found.upload.state !== 'failed'
+    ) {
+      reportError(
+        {
+          source: 'upload',
+          code: input.code ?? 'upload-failed',
+          postId,
+          mediaId,
+          kind:
+            diagnostic?.kind ??
+            (input.retryable === false ? 'validation' : 'operational'),
+          recovery:
+            input.code === 'missing-upload-dependencies'
+              ? 'none'
+              : input.retryable === false
+                ? 'edit'
+                : 'retry',
+        },
+        diagnostic?.cause,
+      )
+    }
   }
 
   function startMediaUpload(postId: string, mediaId: string) {
@@ -675,8 +765,17 @@ export function createThreadStore(options: {
       postId,
       mediaId: item.id,
       dependencies: options.media,
-      setUploadStatus: (p: string, m: string, status: types.UploadStatus) => {
-        if (uploadTasks.get(m) === registered) setUploadStatus(p, m, status)
+      setUploadStatus: (
+        p: string,
+        m: string,
+        status: types.UploadStatus,
+        diagnostic?: {
+          kind: 'validation' | 'operational' | 'unexpected'
+          cause: unknown
+        },
+      ) => {
+        if (uploadTasks.get(m) === registered)
+          setUploadStatus(p, m, status, diagnostic)
       },
       setPrepared: (p: string, m: string, output: PreparedOutput) => {
         if (uploadTasks.get(m) === registered) setPrepared(p, m, output)
@@ -689,17 +788,35 @@ export function createThreadStore(options: {
         if (uploadTasks.get(m) === registered) setCaptionBlobs(p, m, captions)
       },
     }
-    started =
-      item.kind === 'image'
-        ? (options.__uploadWorkers?.startImageUpload ?? startImageUpload)({
-            ...callbacks,
-            media: item,
-          })
-        : (options.__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
-            ...callbacks,
-            media: item,
-          })
-    if (cancelled) started.cancel()
+    try {
+      started =
+        item.kind === 'image'
+          ? (options.__uploadWorkers?.startImageUpload ?? startImageUpload)({
+              ...callbacks,
+              media: item,
+            })
+          : (options.__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
+              ...callbacks,
+              media: item,
+            })
+      if (cancelled) started.cancel()
+    } catch (cause) {
+      if (!destroyed && uploadTasks.get(mediaId) === registered) {
+        cancelUploadTask(mediaId)
+        reportError(
+          {
+            source: 'upload',
+            code: 'upload-start-failed',
+            postId,
+            mediaId,
+            kind: 'unexpected',
+            recovery: 'none',
+          },
+          cause,
+        )
+      }
+      throw cause
+    }
   }
 
   function cancelUploadTask(mediaId: string) {
@@ -811,26 +928,42 @@ export function createThreadStore(options: {
     return {...post, attachments: {...post.attachments, record}}
   }
 
+  function destroy() {
+    destroyed = true
+    for (const task of uploadTasks.values()) task.cancel()
+    uploadTasks.clear()
+    resolutionRevs.record.clearAll()
+    resolutionRevs.media.clearAll()
+    listeners.clear()
+  }
+
   /* The full initial snapshot is ready before any background work begins. */
-  for (const [postId, post] of Object.entries(state.posts)) {
-    for (const item of getMediaItems(post.attachments.media)) {
-      startMediaUpload(postId, item.id)
-    }
-    for (const slot of ['record', 'media'] as const) {
-      const attachment = post.attachments[slot]
-      if (attachment?.state === 'pending') {
-        const rev = resolutionRevs[slot].incrementFor(postId)
-        resolveAttachmentUri({
-          postId,
-          target: slot,
-          uri: attachment.uri,
-          rev,
-        })
+  try {
+    for (const [postId, post] of Object.entries(state.posts)) {
+      for (const item of getMediaItems(post.attachments.media)) {
+        startMediaUpload(postId, item.id)
+      }
+      for (const slot of ['record', 'media'] as const) {
+        const attachment = post.attachments[slot]
+        if (attachment?.state === 'pending') {
+          const rev = resolutionRevs[slot].incrementFor(postId)
+          resolveAttachmentUri({
+            postId,
+            target: slot,
+            uri: attachment.uri,
+            rev,
+          })
+        }
       }
     }
+  } catch (cause) {
+    destroy()
+    throw cause
   }
 
   return {
+    /** Share the session's policy with callers; inert after destruction. */
+    reportError,
     actions: {
       setPostText,
       setPostLanguages,
@@ -854,14 +987,7 @@ export function createThreadStore(options: {
       removeMediaAttachment,
       setUploadStatus,
     },
-    destroy() {
-      destroyed = true
-      for (const task of uploadTasks.values()) task.cancel()
-      uploadTasks.clear()
-      resolutionRevs.record.clearAll()
-      resolutionRevs.media.clearAll()
-      listeners.clear()
-    },
+    destroy,
     getState() {
       return state
     },

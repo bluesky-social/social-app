@@ -10,10 +10,13 @@ jest.mock('#/lib/api/resolve', () => ({
 import {TID} from '@atproto/common-web'
 import {type Client} from '@atproto/lex'
 
+import {type LinkResolvers} from '#/lib/api/resolve'
+import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {
   type ComposerV2Plan,
   planComposerV2,
 } from '#/components/ComposerV2/planner'
+import {createThreadStore} from '#/components/ComposerV2/store'
 import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {writeComposerV2Plan} from '#/components/ComposerV2/writer'
 import {com} from '#/lexicons'
@@ -197,6 +200,98 @@ describe('ComposerV2 thin writer', () => {
     expect(call).toHaveBeenCalledTimes(1)
     expect(JSON.stringify(plan)).toBe(planBefore)
     expect(JSON.stringify(snapshot)).toBe(snapshotBefore)
+  })
+
+  test('ambiguous write failure reports once, preserves the SDK error and never retries', async () => {
+    const {plan} = await makeFixture()
+    const error = Object.assign(new Error('private SDK diagnostic'), {
+      status: 503,
+    })
+    const {pdsClient, call} = mockPdsClient(DID, () => Promise.reject(error))
+    const onError = jest.fn<ComposerV2OnError>(() => {
+      throw new Error('listener')
+    })
+    const before = JSON.stringify(plan)
+    await expect(writeComposerV2Plan({plan, pdsClient, onError})).rejects.toBe(
+      error,
+    )
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(
+      {
+        source: 'writer',
+        code: 'apply-writes-failed',
+        postIds: plan.posts.map(post => post.postId),
+        kind: 'operational',
+        recovery: 'reconcile',
+      },
+      error,
+    )
+    expect(call).toHaveBeenCalledTimes(1)
+    expect(call.mock.calls[0][1]).toBe(plan.input)
+    expect(plan.input.validate).toBe(true)
+    expect(JSON.stringify(plan)).toBe(before)
+  })
+
+  test.each([false, true])(
+    'transport abort still needs reconciliation unless the session was retired (%s)',
+    async retired => {
+      const {plan} = await makeFixture()
+      const error = Object.assign(
+        new Error('transport aborted after dispatch'),
+        {name: 'AbortError'},
+      )
+      let reject!: (cause: unknown) => void
+      const {pdsClient, call} = mockPdsClient(
+        DID,
+        () =>
+          new Promise((_, rej) => {
+            reject = rej
+          }),
+      )
+      const onError = jest.fn<ComposerV2OnError>()
+      const store = createThreadStore({resolvers: {} as LinkResolvers, onError})
+      const result = writeComposerV2Plan({
+        plan,
+        pdsClient,
+        onError: store.reportError,
+      })
+      if (retired) store.destroy()
+      reject(error)
+      await expect(result).rejects.toBe(error)
+      expect(call).toHaveBeenCalledTimes(1)
+      expect(onError).toHaveBeenCalledTimes(retired ? 0 : 1)
+      if (!retired) expect(onError.mock.calls[0][0].recovery).toBe('reconcile')
+      store.destroy()
+    },
+  )
+
+  test('precondition reporting does not imply a dispatched write or replace the rejection', async () => {
+    const {plan} = await makeFixture()
+    const error = new Error('SDK assertDid failed')
+    const call = jest.fn()
+    const pdsClient = {
+      get assertDid() {
+        throw error
+      },
+      call,
+    } as unknown as Client
+    const onError = jest.fn<ComposerV2OnError>(() => {
+      throw new Error('listener')
+    })
+    await expect(writeComposerV2Plan({plan, pdsClient, onError})).rejects.toBe(
+      error,
+    )
+    expect(onError).toHaveBeenCalledTimes(1)
+    expect(onError).toHaveBeenCalledWith(
+      {
+        source: 'writer',
+        code: 'write-precondition-failed',
+        kind: 'unexpected',
+        recovery: 'none',
+      },
+      error,
+    )
+    expect(call).not.toHaveBeenCalled()
   })
 
   test('does not mutate plan or snapshot on success', async () => {

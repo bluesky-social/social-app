@@ -2,7 +2,8 @@ import {useEffect, useRef, useState} from 'react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
-import {logger} from '#/logger'
+import {reportInitializationError} from '#/components/ComposerV2/adapters'
+import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {type ThreadStore} from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
@@ -24,7 +25,7 @@ export type TesterSession = {
 /**
  * Typed scenario-build failure. The tester renders a static localized
  * message from this shape; raw resolver/adapter exception text never reaches
- * the UI (it goes to the logger instead).
+ * the UI. Diagnostics are available only to the optional session policy.
  */
 export type TesterScenarioError = {
   code: 'scenario-build-failed'
@@ -36,6 +37,8 @@ export type TesterSessionDeps = {
   accountDid: string | undefined
   resolvers: LinkResolvers
   media: UploadDependencies
+  /** Captured per session, including eager construction failures. No default sink. */
+  onError?: ComposerV2OnError
   /** Test seam; production always uses the real store constructor. */
   __createStore?: typeof createThreadStore
 }
@@ -62,6 +65,7 @@ export function useTesterSession(deps: TesterSessionDeps) {
     TesterScenarioError | undefined
   >()
   const lastInitialStateRef = useRef<ThreadStoreInitialState>({})
+  const activeStoreRef = useRef<ThreadStore | undefined>(undefined)
 
   function createSession(
     scenarioId: TesterScenarioId,
@@ -69,16 +73,17 @@ export function useTesterSession(deps: TesterSessionDeps) {
   ): TesterSession {
     const current = depsRef.current
     const create = current.__createStore ?? createThreadStore
+    const store = create({
+      resolvers: current.resolvers,
+      media: current.media,
+      initialState,
+      onError: current.onError,
+    })
+    /* Retire ownership immediately, not after React's next effect cleanup. */
+    activeStoreRef.current?.destroy()
+    activeStoreRef.current = store
     lastInitialStateRef.current = initialState
-    return {
-      key: nanoid(),
-      scenarioId,
-      store: create({
-        resolvers: current.resolvers,
-        media: current.media,
-        initialState,
-      }),
-    }
+    return {key: nanoid(), scenarioId, store}
   }
 
   const [session, setSession] = useState<TesterSession>(() =>
@@ -119,17 +124,33 @@ export function useTesterSession(deps: TesterSessionDeps) {
     const token = ++requestRef.current
     setScenarioError(undefined)
     setIsApplyingScenario(true)
+    const accountDid = depsRef.current.accountDid
+    let constructing = false
     try {
+      /* Builders omit adapter callbacks: this guarded caller owns reporting. */
       const initialState = await build()
-      if (token !== requestRef.current) return
+      if (
+        token !== requestRef.current ||
+        accountDid !== depsRef.current.accountDid
+      )
+        return
+      constructing = true
       setSession(createSession(scenarioId, initialState))
     } catch (error) {
-      if (token !== requestRef.current) return
-      /* Keep the raw exception out of the tester UI. */
-      logger.error('ComposerV2 tester: scenario build failed', {
-        safeMessage: error,
-      })
+      if (
+        token !== requestRef.current ||
+        accountDid !== depsRef.current.accountDid
+      )
+        return
       setScenarioError({code: 'scenario-build-failed', scenarioId})
+      /* Construction reports at its own boundary; do not report it twice. */
+      if (!constructing) {
+        reportInitializationError(
+          session.store.reportError,
+          error,
+          'scenario-build-failed',
+        )
+      }
     } finally {
       if (token === requestRef.current) setIsApplyingScenario(false)
     }
