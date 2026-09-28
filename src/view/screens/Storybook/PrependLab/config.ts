@@ -115,7 +115,7 @@ export const SCENARIOS: Scenario[] = [
     id: 2,
     title: 'Prepend mid-drag or mid-fling',
     recipe:
-      'Tap ↓ 3 screens, arm On release, then flick and let go. Or arm Mid-drag and keep your finger moving.',
+      'Tap ↓ 3 screens, arm Release, then flick and let go. Or arm Drag and keep your finger moving.',
     expected:
       'Often loses the position. VL shifts the window and sets pending to 1, then a scroll event dispatched before the new rows mounted (old offset, old content height) spends it. The window is recomputed from that stale offset and unmounts the anchor, and the offset jumps by hundreds to thousands of pt. Readout: first event “stale”. If it says “VL missed” instead, a cells update was queued: that is scenario 5.',
     deterministic: false,
@@ -125,7 +125,7 @@ export const SCENARIOS: Scenario[] = [
     id: 3,
     title: 'Tall prepend during a top bounce',
     recipe:
-      'Scroll down a little, arm Top, then fling up so the list bounces at the top. Android has no bounce: Top fires on reaching the top.',
+      'Scroll down a little, arm Bounce, then fling up so the list bounces at the top. Android has no bounce: arm At top instead.',
     expected:
       'Native corrects by the full height, then the next window pass maps the corrected offset through estimated heights for the new rows (about a third of their real height here), pushes `first` past the anchor and unmounts it in the same transaction. iOS then applies 0 minus the anchor’s old origin (a teleport); Android skips the correction. Readout: anchor unmounted, verdict lost. The trigger is prepended height beyond (windowSize − 1) / 2 screens, so also try Now at rest at the top.',
     deterministic: false,
@@ -135,7 +135,7 @@ export const SCENARIOS: Scenario[] = [
     id: 4,
     title: 'Prepended rows re-measure shorter',
     recipe:
-      'iOS: tap ↑ Top, arm Top, pull down and let go. Android or at rest: Knobs → ListHeaderComponent on, clipping off, then Now at the top.',
+      'iOS: tap ↑ Top, arm Bounce, pull down and let go. Android or at rest: Knobs → ListHeaderComponent on, clipping off, then Now at the top.',
     expected:
       'The correction lands, but the old first row is left below the viewport’s top edge, so the next transaction anchors on the view above it: the spacer standing in for the new rows. When those rows mount far shorter than their estimate, the spacer’s origin doesn’t move, nothing is corrected, and the content jumps up by the estimate error, about a screen or more.',
     deterministic: false,
@@ -147,7 +147,7 @@ export const SCENARIOS: Scenario[] = [
     recipe:
       'Tap ↓ 3 screens, wait for “idle”, then tap Now. This preset queues a cells update in the same tick, as every scroll frame does.',
     expected:
-      'The queued updater runs first and returns a render mask sized for the new count, so getDerivedStateFromProps sees no change and returns early: no window shift, no pending, a stale firstVisibleItemKey (readout: “VL missed”). With 20 rows the anchor’s new index falls outside the unshifted window and it is unmounted: iOS teleports, Android skips the correction. With 9 or fewer it holds by luck. Unforced, this is any prepend while scroll events are flowing.',
+      'The queued updater runs first and returns a render mask sized for the new count, so getDerivedStateFromProps sees no change and returns early: no window shift, no pending, a stale firstVisibleItemKey (readout: “VL missed”). With 20 rows the anchor’s new index falls outside the unshifted window and it is unmounted: iOS teleports (LOST), Android skips the correction (PUSHED DOWN BY THE PREPEND). With 9 or fewer it holds by luck. Unforced, this is any prepend while scroll events are flowing.',
     deterministic: true,
     preset: {prependCount: 20, queueCellsUpdate: true},
   },
@@ -157,7 +157,7 @@ export const SCENARIOS: Scenario[] = [
     recipe:
       'At the top, tap Now. Then Knobs → minIndexForVisible 1 and repeat: that should hold.',
     expected:
-      'The key at minIndexForVisible is the leading row’s, which a prepend below it doesn’t change, so VL sees no prepend (readout: “key unchanged”). Natively the leading row is the first visible view, so it is the anchor, and it doesn’t move: the first post is pushed down by the whole prepend, drift ≈ +prepended height. Deeper down VL still never shifts its window, so a 40-row prepend can unmount the anchor there.',
+      'The key at minIndexForVisible is the leading row’s, which a prepend below it doesn’t change, so VL sees no prepend (“VL: key unchanged”) and never shifts its window. Natively the leading row is the first visible view, so it is the anchor, and it doesn’t move: no correction runs and the first post is pushed below all the new rows. Verdict PUSHED DOWN BY THE PREPEND, drift ≈ +the prepended height (from the row heights once the anchor falls outside the unshifted window and unmounts). With minIndexForVisible 1 it holds, but stock RN often falls into a feedback loop afterwards, which the status line shows as OSCILLATING.',
     deterministic: true,
     preset: {leadingRows: 1, minIndexForVisible: 0},
   },

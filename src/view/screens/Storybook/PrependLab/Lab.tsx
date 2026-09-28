@@ -18,6 +18,8 @@ import {
   SCENARIOS,
 } from './config'
 import {createInitialRows, prependRows} from './data'
+import {FixedLineText} from './FixedLineText'
+import {InfoOverlay} from './InfoOverlay'
 import {KnobsDialog} from './Knobs'
 import {LabList} from './LabList'
 import {Panel} from './Panel'
@@ -40,8 +42,8 @@ export default function PrependLab() {
   const [scenarioId, setScenarioId] = useState<ScenarioId>(1)
   const [config, setConfig] = useState(() => scenarioConfig(1))
   const [rows, setRows] = useState(() => initialRows(scenarioConfig(1)))
-  const [generation, setGeneration] = useState(0)
-  const [showExpected, setShowExpected] = useState(false)
+  const [generation, setGeneration] = useState(() => probe.currentGeneration())
+  const [showDetails, setShowDetails] = useState(false)
 
   const scenario = SCENARIOS.find(s => s.id === scenarioId) ?? SCENARIOS[0]
   const modified =
@@ -56,9 +58,9 @@ export default function PrependLab() {
       : config.maxToRenderPerBatch
 
   const restart = (next: LabConfig) => {
-    probe.reset()
+    // The new list is keyed on, and reports with, the generation reset hands out.
+    setGeneration(probe.reset())
     setRows(initialRows(next))
-    setGeneration(g => g + 1)
   }
 
   const applyScenario = (id: ScenarioId) => {
@@ -126,6 +128,11 @@ export default function PrependLab() {
     .filter(Boolean)
     .join(' · ')
 
+  /*
+   * Every region around the list is built from fixed-height slots, so the
+   * list's frame is the same for every scenario, knob and readout state, and
+   * "↓ 3 screens" is always the same distance. Long text is in the overlay.
+   */
   return (
     <Animated.View style={[a.flex_1, footerStyle]}>
       <View
@@ -145,41 +152,35 @@ export default function PrependLab() {
               color={s.id === scenarioId ? 'primary' : 'secondary'}
               onPress={() => applyScenario(s.id)}
               style={[a.flex_1]}>
-              <ButtonText>{String(s.id)}</ButtonText>
+              <ButtonText numberOfLines={1}>{String(s.id)}</ButtonText>
             </Button>
           ))}
         </View>
         <Button
-          label="Show or hide the expected result"
-          onPress={() => setShowExpected(v => !v)}
+          label="Show or hide the expected result and run details"
+          onPress={() => setShowDetails(v => !v)}
           style={[a.justify_start]}>
           <View style={[a.flex_1, a.gap_2xs]}>
-            <Text style={[a.text_sm, a.font_bold]}>
+            <FixedLineText style={[a.text_sm, a.font_bold]}>
               {scenario.id}. {scenario.title}
               <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
                 {scenario.deterministic ? '  · deterministic' : '  · recipe'}
                 {modified ? ' · knobs changed' : ''}
               </Text>
-            </Text>
-            <Text style={[a.text_xs]}>{scenario.recipe}</Text>
-            {showExpected ? (
-              <Text style={[a.text_xs, t.atoms.text_contrast_medium]}>
-                Expected on stock RN 0.86.3: {scenario.expected}
-              </Text>
-            ) : (
-              <Text style={[a.text_xs, {color: t.palette.primary_500}]}>
-                Expected on stock RN 0.86.3 ▾
-              </Text>
-            )}
-            <Text style={[a.text_2xs, t.atoms.text_contrast_medium]}>
+            </FixedLineText>
+            <FixedLineText lines={2} style={[a.text_xs]}>
+              {scenario.recipe}
+            </FixedLineText>
+            <FixedLineText style={[a.text_2xs, t.atoms.text_contrast_medium]}>
               {knobSummary}
-            </Text>
-            {IS_WEB && (
-              <Text style={[a.text_2xs, {color: t.palette.negative_500}]}>
-                Web renders this, but maintainVisibleContentPosition isn’t a web
-                target.
-              </Text>
-            )}
+            </FixedLineText>
+            <FixedLineText style={[a.text_xs, {color: t.palette.primary_500}]}>
+              {showDetails
+                ? 'Hide details ▴'
+                : IS_WEB
+                  ? 'Expected result and run details ▾ · mVCP isn’t a web target'
+                  : 'Expected on stock RN 0.86.3, and run details ▾'}
+            </FixedLineText>
           </View>
         </Button>
       </View>
@@ -193,6 +194,7 @@ export default function PrependLab() {
           key={`${listKey(config)}:${generation}`}
           rows={rows}
           probe={probe}
+          generation={generation}
           minIndexForVisible={config.minIndexForVisible}
           listHeader={config.listHeader}
           removeClippedSubviews={config.removeClippedSubviews}
@@ -203,6 +205,14 @@ export default function PrependLab() {
           resizeScope={config.resizeScope}
           resizeDelayMs={config.resizeDelayMs}
         />
+        {showDetails && (
+          <InfoOverlay
+            probe={probe}
+            scenario={scenario}
+            knobSummary={knobSummary}
+            onClose={() => setShowDetails(false)}
+          />
+        )}
       </View>
 
       <Panel
@@ -210,6 +220,7 @@ export default function PrependLab() {
         config={config}
         onReset={() => restart(config)}
         onOpenKnobs={() => knobsControl.open()}
+        onToggleDetails={() => setShowDetails(v => !v)}
       />
 
       <KnobsDialog

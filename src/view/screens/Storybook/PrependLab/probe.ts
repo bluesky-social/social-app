@@ -3,6 +3,15 @@ import {type HostInstance, Platform, type View} from 'react-native'
 import {Logger} from '#/logger'
 import {IS_IOS} from '#/env'
 import {
+  classifyRun,
+  describeOscillation,
+  detectOscillation,
+  type Oscillation,
+  type ScrollSample,
+  type Verdict,
+  VERDICT_LABEL,
+} from './analysis'
+import {
   type AnchorRule,
   type GestureTrigger,
   type ScenarioId,
@@ -47,14 +56,15 @@ const TOP_BOUNCE_PT = 20
 const MID_DRAG_MS = 250
 const MEASURE_TIMEOUT_MS = 200
 const MAX_TRAIL = 24
+/** Native scroll events kept for oscillation detection. */
+const SAMPLE_HISTORY_MS = 5000
 
 type ViewInstance = React.ComponentRef<typeof View>
 type ViewRef = {current: ViewInstance | null}
 
 type Detection = 'shifted' | 'missed' | 'keyUnchanged' | 'unknown'
 
-export type Verdict =
-  'held' | 'drifted' | 'jumped' | 'smooth' | 'lost' | 'unmeasured'
+export type {Verdict} from './analysis'
 
 type Fire = {
   t: number
@@ -108,6 +118,12 @@ type ActiveRun = {
   lastMounted: boolean | null
   /** When the anchor was first unmounted after a commit. */
   lostAt: number | null
+  /** Rows from later batches than this were inserted by the run. */
+  maxBatchAtStart: number
+  /** Lowest raw `pendingScrollUpdateCount` seen, which stock RN can take below 0. */
+  pendingMin: number | null
+  oscillatingAtStart: boolean
+  oscillation: Oscillation | null
   jumps: string[]
   moved: boolean
   finished: boolean
@@ -127,7 +143,7 @@ export type RunRecord = {
   verdict: Verdict
   /** The list was dragged or flung during the run, so screen drift includes your own scrolling. */
   moving: boolean
-  settledBy: 'idle' | 'timeout' | 'interrupted'
+  settledBy: 'idle' | 'timeout' | 'interrupted' | 'oscillation'
   durationMs: number
   drift: {
     /** First sample once the native side has mounted the commit. */
@@ -140,6 +156,14 @@ export type RunRecord = {
     /** The largest step beyond 4x the run's median speed. Over 150pt on a moving run reads as a jump. */
     jumpExcess: number | null
   }
+  /**
+   * `measured`: the anchor's settled position. `data`: the anchor is
+   * unmounted, so the settled drift is the inserted rows' height minus the
+   * offset change, which is exact when no correction ran.
+   */
+  driftSource: 'measured' | 'data' | null
+  /** Total height of the rows the run inserted above the anchor. */
+  insertedAbove: number
   /** The same drift from layout (content y) and native scroll offsets, as a cross-check. */
   driftFromOffsets: number | null
   /** How far the prepend pushed the anchor in content coordinates, i.e. what mVCP must correct. */
@@ -153,6 +177,12 @@ export type RunRecord = {
     firstEvent: string | null
     anchorMountedAtCommit: boolean | null
   }[]
+  /** Lowest raw `pendingScrollUpdateCount` during the run. Stock RN can take it below 0. */
+  pendingMin: number | null
+  /** The post-prepend feedback loop, if the run was caught in it. */
+  oscillation: (Oscillation & {sinceCommitMs: number | null}) | null
+  /** A loop was already running when the prepend fired, so the run says little about the prepend. */
+  oscillatingAtStart: boolean
   vlTrail: string[]
   mountTrail: string[]
   jumps: string[]
@@ -160,8 +190,8 @@ export type RunRecord = {
 }
 
 export type ProbeSnapshot = {
-  idle: boolean
-  dragging: boolean
+  status: 'idle' | 'moving' | 'dragging' | 'oscillating'
+  oscillation: Oscillation | null
   offset: number
   contentHeight: number | null
   viewportHeight: number | null
@@ -305,6 +335,7 @@ export class Probe {
   private prepend: (() => void) | null = null
 
   private mounted = new Map<string, {ref: ViewRef; kind: LabRow['kind']}>()
+  private rows: LabRow[] = []
   private rowsById = new Map<string, LabRow>()
   private indexById = new Map<string, number>()
   private keyAtMinIndex: string | null = null
@@ -318,9 +349,17 @@ export class Probe {
   private dragging = false
   private lastActivity = 0
   private lastScrollEventAt = 0
-  /** Bumped by reset/dispose, so a run that was starting across one is dropped. */
-  private epoch = 0
+  /**
+   * The list instance whose callbacks count. Bumped by reset and part of the
+   * list's key, so each remount gets a new one. Everything the list
+   * reports carries the generation it was created with: a retired list keeps
+   * emitting until it unmounts (and its queued `scheduleOnRN` calls land
+   * after), and none of that may overwrite the new list's state.
+   */
+  private generation = 0
   private visible = 'none'
+  private samples: ScrollSample[] = []
+  private oscillation: {startedAt: number; latest: Oscillation} | null = null
 
   private resized = new Set<string>()
 
@@ -343,29 +382,58 @@ export class Probe {
     this.prepend = prepend
   }
 
-  /** New data, new list: forget the list's state, keep the run history. */
-  reset() {
-    this.epoch++
+  /**
+   * New data, new list: forget the list's state, keep the run history.
+   * Returns the generation the next list instance must be created with.
+   */
+  reset(): number {
+    this.generation++
+    this.stop()
+    this.mounted.clear()
+    this.resized.clear()
+    this.listRef.current = null
+    this.offset = 0
+    this.contentHeight = null
+    this.viewportHeight = null
+    this.prevEventY = null
+    this.lastEventContentHeight = null
+    this.samples = []
+    this.dragging = false
+    this.visible = 'none'
+    this.lastActivity = now()
+    this.setAnchor(null)
+    return this.generation
+  }
+
+  /** The generation the current list instance was created with. */
+  currentGeneration() {
+    return this.generation
+  }
+
+  private isCurrent(generation: number) {
+    return generation === this.generation
+  }
+
+  /**
+   * The screen is going away: stop timers and the sampling loop. It leaves
+   * the generation alone, so an effect that re-runs doesn't orphan the list.
+   */
+  dispose() {
+    this.stop()
+  }
+
+  private stop() {
     this.disarm()
     if (this.run) {
       this.run.finished = true
       for (const timer of this.run.timers) clearTimeout(timer)
       this.run = null
     }
-    this.resized.clear()
-    this.offset = 0
-    this.contentHeight = null
-    this.prevEventY = null
-    this.lastEventContentHeight = null
-    this.dragging = false
-    this.visible = 'none'
-    this.lastActivity = now()
-    this.setAnchor(null)
+    this.endOscillation(now(), 'reset')
   }
 
-  /** The screen is going away: stop timers and the sampling loop. */
-  dispose() {
-    this.reset()
+  setList = (generation: number, instance: unknown) => {
+    if (this.isCurrent(generation)) this.listRef.current = instance
   }
 
   clearRuns() {
@@ -378,25 +446,39 @@ export class Probe {
 
   // --- rows ---
 
-  mountRow = (id: string, kind: LabRow['kind'], ref: ViewRef) => {
+  mountRow = (
+    generation: number,
+    id: string,
+    kind: LabRow['kind'],
+    ref: ViewRef,
+  ) => {
+    if (!this.isCurrent(generation)) return
     this.mounted.set(id, {ref, kind})
     this.lastActivity = now()
   }
 
-  unmountRow = (id: string) => {
+  unmountRow = (generation: number, id: string) => {
+    if (!this.isCurrent(generation)) return
     this.mounted.delete(id)
     this.lastActivity = now()
   }
 
   hasResized = (id: string) => this.resized.has(id)
 
-  markResized = (id: string) => {
+  markResized = (generation: number, id: string) => {
+    if (!this.isCurrent(generation)) return
     this.resized.add(id)
     this.lastActivity = now()
   }
 
   /** Called from the list's layout effect, after VirtualizedList has rendered the new data. */
-  onRowsCommitted = (rows: LabRow[], minIndexForVisible: number) => {
+  onRowsCommitted = (
+    generation: number,
+    rows: LabRow[],
+    minIndexForVisible: number,
+  ) => {
+    if (!this.isCurrent(generation)) return
+    this.rows = rows
     this.rowsById.clear()
     this.indexById.clear()
     rows.forEach((row, index) => {
@@ -419,6 +501,7 @@ export class Probe {
       run.lostAt = run.commitAt
     }
     run.awaitingMountSince = run.commitAt
+    this.notePending(run, fire.vlCommit)
     if (run.fires.length === 1) this.startSampling(run)
   }
 
@@ -433,11 +516,16 @@ export class Probe {
     return 'unknown'
   }
 
-  onViewableItemsChanged = ({
-    viewableItems,
-  }: {
-    viewableItems: Array<{index?: number | null}>
-  }) => {
+  private notePending(run: ActiveRun, vl: VLSnapshot | null) {
+    if (!vl) return
+    run.pendingMin = Math.min(run.pendingMin ?? vl.pending, vl.pending)
+  }
+
+  onViewableItemsChanged = (
+    generation: number,
+    {viewableItems}: {viewableItems: Array<{index?: number | null}>},
+  ) => {
+    if (!this.isCurrent(generation)) return
     const indices = viewableItems
       .map(v => v.index)
       .filter((i): i is number => i != null)
@@ -446,7 +534,12 @@ export class Probe {
       : 'none'
   }
 
-  onContentSizeChange = (_width: number, height: number) => {
+  onContentSizeChange = (
+    generation: number,
+    _width: number,
+    height: number,
+  ) => {
+    if (!this.isCurrent(generation)) return
     this.contentHeight = height
     this.lastActivity = now()
   }
@@ -454,10 +547,12 @@ export class Probe {
   // --- native scroll events (from the UI thread via scheduleOnRN) ---
 
   onNativeScroll = (
+    generation: number,
     y: number,
     contentHeight: number,
     viewportHeight: number,
   ) => {
+    if (!this.isCurrent(generation)) return
     const t = now()
     this.lastActivity = t
     this.lastScrollEventAt = t
@@ -488,6 +583,13 @@ export class Probe {
     this.prevEventY = y
     this.lastEventContentHeight = contentHeight
 
+    this.samples.push({t, y, contentHeight})
+    while (this.samples.length && this.samples[0].t < t - SAMPLE_HISTORY_MS) {
+      this.samples.shift()
+    }
+    const osc = this.dragging ? null : detectOscillation(this.samples, t)
+    if (osc) this.noteOscillation(t, osc)
+
     if (this.armed === 'top') {
       if (y > 50) this.topArmedAway = true
       const hit = IS_IOS ? y < -TOP_BOUNCE_PT : this.topArmedAway && y <= 0.5
@@ -498,7 +600,8 @@ export class Probe {
     }
   }
 
-  onDrag = (begin: boolean) => {
+  onDrag = (generation: number, begin: boolean) => {
+    if (!this.isCurrent(generation)) return
     this.dragging = begin
     this.lastActivity = now()
     if (this.run) this.run.moved = true
@@ -517,8 +620,46 @@ export class Probe {
     }
   }
 
-  onMomentumEnd = () => {
+  onMomentumEnd = (generation: number) => {
+    if (!this.isCurrent(generation)) return
     this.lastActivity = now()
+  }
+
+  // --- the post-prepend feedback loop, tracked as episodes ---
+
+  private noteOscillation(t: number, osc: Oscillation) {
+    if (this.oscillation) {
+      this.oscillation.latest = osc
+      return
+    }
+    this.oscillation = {startedAt: osc.since, latest: osc}
+    logger.debug(
+      `${LOG_PREFIX} oscillation started · ${describeOscillation(osc)}`,
+      {oscillation: osc, platform: Platform.OS, at: Math.round(t)},
+    )
+  }
+
+  private endOscillation(t: number, reason: 'stopped' | 'reset') {
+    const episode = this.oscillation
+    if (!episode) return
+    this.oscillation = null
+    logger.debug(
+      `${LOG_PREFIX} oscillation ended (${reason}) after ${Math.round((t - episode.startedAt) / 1000)}s · ${describeOscillation(episode.latest)}`,
+      {oscillation: episode.latest, platform: Platform.OS},
+    )
+  }
+
+  private currentOscillation(t: number): Oscillation | null {
+    if (this.dragging) return null
+    const osc = detectOscillation(this.samples, t)
+    if (!osc) this.endOscillation(t, 'stopped')
+    return osc
+  }
+
+  /** Housekeeping for the readout's poll: live anchor position, loop end. */
+  async poll() {
+    this.currentOscillation(now())
+    await this.refreshAnchor()
   }
 
   // --- anchor highlight store (rows subscribe to know if they are the anchor) ---
@@ -580,7 +721,7 @@ export class Probe {
     const options = this.options
     if (!options || this.starting) return
     this.starting = true
-    const epoch = this.epoch
+    const generation = this.generation
     try {
       if (this.run) await this.finish(this.run, 'interrupted')
 
@@ -588,8 +729,9 @@ export class Probe {
       const container = getContentContainer(this.listRef.current)
       const anchorRef = anchor ? this.mounted.get(anchor.id)?.ref : undefined
       const contentY = await measureContentY(anchorRef?.current, container)
-      if (epoch !== this.epoch) return
+      if (!this.isCurrent(generation)) return
       this.setAnchor(anchor?.id ?? null)
+      const vlBefore = readVirtualizedList(this.listRef.current)
 
       const run: ActiveRun = {
         n: ++this.runCounter,
@@ -623,6 +765,10 @@ export class Probe {
         mountTrail: [],
         lastMounted: anchor ? true : null,
         lostAt: null,
+        maxBatchAtStart: Math.max(0, ...this.rows.map(r => r.batch)),
+        pendingMin: vlBefore?.pending ?? null,
+        oscillatingAtStart: this.currentOscillation(now()) != null,
+        oscillation: null,
         jumps: [],
         // Dragging, flinging (events in the last 100ms) or a gesture trigger.
         moved:
@@ -717,6 +863,7 @@ export class Probe {
       )
     }
     run.lastVL = vl
+    this.notePending(run, vl)
 
     const entry = run.anchorId ? this.mounted.get(run.anchorId) : undefined
     const mounted = !!entry
@@ -775,6 +922,15 @@ export class Probe {
     const allCommitted =
       run.fires.length === run.expectedFires &&
       run.fires.every(f => f.committed)
+
+    // A loop never goes idle: record it rather than waiting out the timeout.
+    const osc = run.commitAt != null ? this.currentOscillation(t) : null
+    if (osc) {
+      run.oscillation = osc
+      await this.finish(run, 'oscillation')
+      return true
+    }
+
     const idleMs = Math.max(
       IDLE_MS,
       (this.options?.resizeDelayMs ?? 0) + STABLE_MS,
@@ -822,7 +978,13 @@ export class Probe {
       anchorMounted: !!entry,
       firstVisible: visibleNow ? this.label(visibleNow.id) : null,
     }
-    const drift = y != null && run.before.y != null ? y - run.before.y : null
+    const offsetDelta = settled.offset - run.before.offset
+    // Every prepend lands above every content row, so above the anchor too.
+    const insertedAbove = this.rows
+      .filter(r => r.kind === 'content' && r.batch > run.maxBatchAtStart)
+      .reduce((sum, r) => sum + r.height, 0)
+    const measuredDrift =
+      y != null && run.before.y != null ? y - run.before.y : null
     const driftFromOffsets =
       contentY != null && run.before.contentY != null
         ? contentY - settled.offset - (run.before.contentY - run.before.offset)
@@ -850,17 +1012,29 @@ export class Probe {
       run.lostAt != null &&
       run.commitAt != null &&
       run.lostAt - run.commitAt < 1000
-    let verdict: Verdict
-    if (!run.anchorId) {
-      verdict = 'unmeasured'
-    } else if (run.moved) {
-      if (lostEarly) verdict = 'lost'
-      else if (jumpExcess != null && jumpExcess > 150) verdict = 'jumped'
-      else verdict = entry ? 'smooth' : 'unmeasured'
-    } else if (!entry || y == null) {
-      verdict = 'lost'
-    } else {
-      verdict = drift != null && Math.abs(drift) <= 1 ? 'held' : 'drifted'
+    const verdict = classifyRun({
+      hasAnchor: run.anchorId != null,
+      moving: run.moved,
+      oscillating: run.oscillation != null,
+      anchorMeasured: !!entry && y != null,
+      drift: measuredDrift,
+      offsetDelta,
+      insertedAbove,
+      lostEarly,
+      jumpExcess,
+    })
+    /*
+     * An anchor that is no longer mounted can still be placed when no
+     * correction ran: it is exactly the inserted rows lower, less whatever the
+     * offset moved. That is the scenario 6 case, where the anchor falls outside
+     * VirtualizedList's unshifted window and unmounts.
+     */
+    let drift = measuredDrift
+    let driftSource: RunRecord['driftSource'] =
+      measuredDrift != null ? 'measured' : null
+    if (drift == null && verdict === 'pushedDown') {
+      drift = insertedAbove - offsetDelta
+      driftSource = 'data'
     }
 
     const record: RunRecord = {
@@ -888,6 +1062,8 @@ export class Probe {
         medianStep: medianStep != null ? round(medianStep) : null,
         jumpExcess: jumpExcess != null ? round(jumpExcess) : null,
       },
+      driftSource,
+      insertedAbove: round(insertedAbove),
       driftFromOffsets:
         driftFromOffsets != null ? round(driftFromOffsets) : null,
       expectedCorrection:
@@ -906,6 +1082,17 @@ export class Probe {
           : null,
         anchorMountedAtCommit: fire.anchorMountedAtCommit,
       })),
+      pendingMin: run.pendingMin,
+      oscillation: run.oscillation
+        ? {
+            ...run.oscillation,
+            sinceCommitMs:
+              run.commitAt != null
+                ? Math.round(run.oscillation.since - run.commitAt)
+                : null,
+          }
+        : null,
+      oscillatingAtStart: run.oscillatingAtStart,
       vlTrail: run.vlTrail,
       mountTrail: run.mountTrail,
       jumps: run.jumps,
@@ -922,11 +1109,18 @@ export class Probe {
       record.scenario ? `S${record.scenario}` : 'custom',
       record.trigger,
       record.platform,
-      record.verdict.toUpperCase(),
+      VERDICT_LABEL[record.verdict],
     ]
-    if (record.moving) {
+    if (record.oscillation) {
+      parts.push(describeOscillation(record.oscillation))
+      if (record.oscillatingAtStart) parts.push('already oscillating at start')
+    } else if (record.moving) {
       parts.push(
         `max step ${fmt(record.drift.maxStep)} (excess ${fmt(record.drift.jumpExcess)})`,
+      )
+    } else if (record.verdict === 'pushedDown') {
+      parts.push(
+        `drift ${fmt(record.drift.settled, true)} (no correction, ${record.driftSource === 'data' ? 'anchor unmounted, from row heights' : 'measured'})`,
       )
     } else {
       parts.push(
@@ -935,6 +1129,9 @@ export class Probe {
     }
     if (firstFire) parts.push(describeDetection(firstFire))
     if (firstFire?.firstEvent?.stale) parts.push('first event stale')
+    if (record.pendingMin != null && record.pendingMin < 0) {
+      parts.push(`pending reached ${record.pendingMin}`)
+    }
     return parts.join(' · ')
   }
 
@@ -972,15 +1169,15 @@ export class Probe {
     let armed: string | null = null
     if (this.armed === 'delay') {
       const left = (this.options?.delayMs ?? 0) - (t - this.armedAt)
-      armed = `Fires in ${Math.max(0, left / 1000).toFixed(1)}s`
+      armed = `fires in ${Math.max(0, left / 1000).toFixed(1)}s`
     } else if (this.armed === 'drag') {
-      armed = 'Armed: start dragging and keep moving'
+      armed = 'armed: start dragging and keep moving'
     } else if (this.armed === 'release') {
-      armed = 'Armed: flick and let go'
+      armed = 'armed: flick and let go'
     } else if (this.armed === 'top') {
       armed = IS_IOS
-        ? 'Armed: pull or fling into the top bounce'
-        : 'Armed: scroll or fling back to the top'
+        ? 'armed: pull or fling into the top bounce'
+        : 'armed: scroll or fling back to the top'
     }
 
     const active = this.run
@@ -1003,9 +1200,17 @@ export class Probe {
       }
     }
 
+    const oscillation = this.dragging
+      ? null
+      : detectOscillation(this.samples, t)
+    let status: ProbeSnapshot['status'] = 'moving'
+    if (this.dragging) status = 'dragging'
+    else if (oscillation) status = 'oscillating'
+    else if (t - this.lastActivity >= IDLE_MS) status = 'idle'
+
     return {
-      idle: t - this.lastActivity >= IDLE_MS && !this.dragging,
-      dragging: this.dragging,
+      status,
+      oscillation,
       offset: this.offset,
       contentHeight: this.contentHeight,
       viewportHeight: this.viewportHeight,
@@ -1029,8 +1234,10 @@ export class Probe {
     this.scrollToOffset(0)
   }
 
+  /** Scrolls by whole list viewports, measured from the list's own layout. */
   scrollScreens(screens: number) {
-    const screen = this.viewportHeight ?? this.viewportLayoutHeight ?? 600
+    const screen = this.viewportLayoutHeight ?? this.viewportHeight
+    if (!screen) return
     this.scrollToOffset(this.offset + screens * screen)
   }
 
@@ -1048,6 +1255,7 @@ export function describeRecord(record: RunRecord): string[] {
     `anchor ${record.anchor ?? '–'} (${record.anchorRule ?? '–'}) · ${record.fires}× ${record.rowsPerPrepend} rows · settled by ${record.settledBy} in ${record.durationMs}ms`,
     `anchor y  before ${fmt(before.y)} → after ${fmt(drift.after, true)} → settled ${fmt(drift.settled, true)} · max |drift| ${fmt(drift.maxAbs)}`,
     `anchor steps  max ${fmt(drift.maxStep)} · median ${fmt(drift.medianStep)} · excess over 4× median speed ${fmt(drift.jumpExcess)}${record.moving ? ' · moving run: drift includes your scrolling' : ''}`,
+    `drift source  ${record.driftSource ?? '–'} · rows inserted above the anchor ${fmt(record.insertedAbove)}`,
     `cross-check  drift from content y and native offsets ${fmt(record.driftFromOffsets, true)}`,
     `offset  ${fmt(before.offset)} → ${fmt(settled.offset)} (Δ ${fmt(settled.offset - before.offset, true)}) · expected correction ${fmt(record.expectedCorrection, true)}`,
     `content  ${fmt(before.contentHeight)} → ${fmt(settled.contentHeight)}${before.contentHeight != null && settled.contentHeight != null ? ` (Δ ${fmt(settled.contentHeight - before.contentHeight, true)})` : ''}`,
@@ -1058,6 +1266,15 @@ export function describeRecord(record: RunRecord): string[] {
       `fire ${i + 1}  ${fire.detection}${fire.shift != null ? ` (window ${fire.shift >= 0 ? '+' : ''}${fire.shift})` : ''} · pending at commit ${fire.pendingAtCommit ?? '–'} · anchor at commit ${fire.anchorMountedAtCommit == null ? '–' : fire.anchorMountedAtCommit ? 'mounted' : 'unmounted'} · first event ${fire.firstEvent ?? '–'}`,
     )
   })
+  lines.push(
+    `pending  lowest raw pendingScrollUpdateCount ${record.pendingMin ?? '–'}${record.pendingMin != null && record.pendingMin < 0 ? ' (below 0: decremented twice)' : ''}`,
+  )
+  if (record.oscillation) {
+    const osc = record.oscillation
+    lines.push(
+      `oscillation  ${describeOscillation(osc)} · offset − content ${fmt(osc.offsetMinusContent)} · began ${osc.sinceCommitMs != null ? `${osc.sinceCommitMs}ms after the commit` : '–'}${record.oscillatingAtStart ? ' · already running at start' : ''}`,
+    )
+  }
   if (record.jumps.length) lines.push(`jumps  ${record.jumps.join(', ')}`)
   if (record.mountTrail.length) {
     lines.push(`anchor  ${record.mountTrail.join(', ')}`)

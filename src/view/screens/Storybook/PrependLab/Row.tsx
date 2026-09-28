@@ -29,12 +29,14 @@ function placeholderHeight(height: number, mode: ResizeMode) {
 export const Row = memo(function Row({
   row,
   probe,
+  generation,
   resize,
   resizeScope,
   resizeDelayMs,
 }: {
   row: LabRow
   probe: Probe
+  generation: number
   resize: ResizeMode
   resizeScope: ResizeScope
   resizeDelayMs: number
@@ -57,18 +59,18 @@ export const Row = memo(function Row({
   )
 
   useLayoutEffect(() => {
-    probe.mountRow(row.id, row.kind, ref)
-    return () => probe.unmountRow(row.id)
-  }, [probe, row.id, row.kind])
+    probe.mountRow(generation, row.id, row.kind, ref)
+    return () => probe.unmountRow(generation, row.id)
+  }, [probe, generation, row.id, row.kind])
 
   useEffect(() => {
     if (height === row.height) return
     const timer = setTimeout(() => {
-      probe.markResized(row.id)
+      probe.markResized(generation, row.id)
       setHeight(row.height)
     }, resizeDelayMs)
     return () => clearTimeout(timer)
-  }, [probe, row.id, row.height, height, resizeDelayMs])
+  }, [probe, generation, row.id, row.height, height, resizeDelayMs])
 
   if (row.kind === 'leading') {
     return (

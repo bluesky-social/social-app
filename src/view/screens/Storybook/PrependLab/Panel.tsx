@@ -1,30 +1,36 @@
-import {useEffect, useState} from 'react'
 import {View} from 'react-native'
-import {setStringAsync} from 'expo-clipboard'
 
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_IOS} from '#/env'
+import {describeOscillation} from './analysis'
 import {type LabConfig} from './config'
-import {type Probe, type ProbeSnapshot, type Verdict} from './probe'
-
-const POLL_MS = 200
+import {FixedLineText} from './FixedLineText'
+import {type Probe} from './probe'
+import {copyRuns, useProbeSnapshot, verdictColor} from './readout'
 
 function fmt(n: number | null | undefined) {
   return n == null ? '–' : (Math.round(n * 10) / 10).toFixed(1)
 }
 
+/**
+ * One-line, fixed-width button: its label never wraps and the row never
+ * reflows, so the panel's height doesn't depend on labels or armed state.
+ */
 function ActionButton({
+  text,
   label,
   active = false,
   primary = false,
+  disabled = false,
   onPress,
 }: {
+  text: string
   label: string
   active?: boolean
   primary?: boolean
+  disabled?: boolean
   onPress: () => void
 }) {
   return (
@@ -32,81 +38,71 @@ function ActionButton({
       label={label}
       size="tiny"
       color={active ? 'negative_subtle' : primary ? 'primary' : 'secondary'}
+      disabled={disabled}
       onPress={onPress}
-      style={[a.flex_grow]}>
-      <ButtonText>{active ? `Cancel ${label}` : label}</ButtonText>
+      style={[a.flex_1]}>
+      <ButtonText numberOfLines={1}>{text}</ButtonText>
     </Button>
   )
 }
 
+function ButtonRow({children}: {children: React.ReactNode}) {
+  return <View style={[a.flex_row, a.gap_xs]}>{children}</View>
+}
+
 /**
- * Triggers and the readout. Polls the probe on its own timer so that neither
- * re-renders the list.
+ * Triggers and the readout. It polls the probe on its own state, so a refresh
+ * re-renders only the panel, never the list, and every line is a fixed-height
+ * slot, so a refresh can't change the list's frame either. Anything long
+ * lives in the details overlay.
  */
 export function Panel({
   probe,
   config,
   onReset,
   onOpenKnobs,
+  onToggleDetails,
 }: {
   probe: Probe
   config: LabConfig
   onReset: () => void
   onOpenKnobs: () => void
+  onToggleDetails: () => void
 }) {
   const t = useTheme()
-  const [snap, setSnap] = useState<ProbeSnapshot>(() => probe.snapshot())
-  const [expanded, setExpanded] = useState(false)
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      void probe.refreshAnchor()
-      setSnap(probe.snapshot())
-    }, POLL_MS)
-    return () => clearInterval(id)
-  }, [probe])
-
-  const refresh = () => setSnap(probe.snapshot())
+  const [snap, refresh] = useProbeSnapshot(probe, {housekeeping: true})
   const armed = probe.armedTrigger()
-
-  const copy = (all: boolean) => {
-    const runs = all ? probe.runs : probe.runs.slice(-1)
-    void setStringAsync(JSON.stringify(runs, null, 2))
-    Toast.show(
-      all
-        ? `Copied ${runs.length} runs as JSON`
-        : 'Copied the last run as JSON',
-    )
-  }
-
-  const verdictColor = (verdict: Verdict | undefined) => {
-    switch (verdict) {
-      case 'held':
-      case 'smooth':
-        return t.palette.positive_500
-      case 'drifted':
-      case 'jumped':
-      case 'lost':
-        return t.palette.negative_500
-      default:
-        return t.atoms.text.color
-    }
-  }
-  const lastVerdict = probe.runs.at(-1)?.verdict
   const vl = snap.vl
+  const lastVerdict = probe.runs.at(-1)?.verdict
+
+  const arm = (kind: Parameters<Probe['arm']>[0]) => () => {
+    probe.arm(kind)
+    refresh()
+  }
+
+  let status: string = snap.status
+  if (snap.status === 'oscillating' && snap.oscillation) {
+    status = `OSCILLATING · ${describeOscillation(snap.oscillation)}`
+  }
+  const lineStyle = [
+    a.text_xs,
+    t.atoms.text_contrast_high,
+    {fontVariant: ['tabular-nums' as const]},
+  ]
 
   return (
     <View
       style={[
         a.border_t,
         a.px_sm,
-        a.pt_xs,
+        a.py_xs,
         a.gap_xs,
         t.atoms.border_contrast_low,
       ]}>
-      <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
+      <ButtonRow>
         <ActionButton
-          label={`Now (${config.prependCount})`}
+          text={`Now ${config.prependCount}`}
+          label={`Prepend ${config.prependCount} rows now`}
           primary
           onPress={() => {
             probe.prependNow()
@@ -114,151 +110,129 @@ export function Panel({
           }}
         />
         <ActionButton
-          label={`In ${config.delayMs / 1000}s`}
+          text={`In ${config.delayMs / 1000}s`}
+          label={`Prepend after ${config.delayMs / 1000} seconds`}
           active={armed === 'delay'}
-          onPress={() => {
-            probe.arm('delay')
-            refresh()
-          }}
+          onPress={arm('delay')}
         />
         <ActionButton
-          label="Mid-drag"
-          active={armed === 'drag'}
-          onPress={() => {
-            probe.arm('drag')
-            refresh()
-          }}
-        />
-        <ActionButton
-          label="On release"
-          active={armed === 'release'}
-          onPress={() => {
-            probe.arm('release')
-            refresh()
-          }}
-        />
-        <ActionButton
-          label={IS_IOS ? 'Top bounce' : 'At top'}
-          active={armed === 'top'}
-          onPress={() => {
-            probe.arm('top')
-            refresh()
-          }}
-        />
-      </View>
-      <View style={[a.flex_row, a.flex_wrap, a.gap_xs]}>
-        <ActionButton
-          label={`Repeat ${config.repeatCount}×`}
+          text={`Repeat ${config.repeatCount}×`}
+          label={`Prepend ${config.repeatCount} times`}
           onPress={() => {
             probe.prependRepeatedly()
             refresh()
           }}
         />
-        <ActionButton label="↑ Top" onPress={() => probe.scrollToTop()} />
+        <ActionButton text="Reset" label="Reset the list" onPress={onReset} />
+      </ButtonRow>
+      <ButtonRow>
         <ActionButton
-          label="↓ 3 screens"
+          text="Drag"
+          label="Prepend 250ms into the next drag"
+          active={armed === 'drag'}
+          onPress={arm('drag')}
+        />
+        <ActionButton
+          text="Release"
+          label="Prepend when the next drag is released"
+          active={armed === 'release'}
+          onPress={arm('release')}
+        />
+        <ActionButton
+          text={IS_IOS ? 'Bounce' : 'At top'}
+          label={
+            IS_IOS
+              ? 'Prepend in the next top bounce'
+              : 'Prepend on the next arrival at the top'
+          }
+          active={armed === 'top'}
+          onPress={arm('top')}
+        />
+        <ActionButton
+          text="Knobs"
+          label="Open the knobs"
+          onPress={onOpenKnobs}
+        />
+      </ButtonRow>
+      <ButtonRow>
+        <ActionButton
+          text="↑ Top"
+          label="Scroll to the top"
+          onPress={() => probe.scrollToTop()}
+        />
+        <ActionButton
+          text="↓ 3 screens"
+          label="Scroll down three list viewports"
           onPress={() => probe.scrollScreens(3)}
         />
-        <ActionButton label="Reset" onPress={onReset} />
-        <ActionButton label="Knobs" onPress={onOpenKnobs} />
-      </View>
+        <ActionButton
+          text="Details"
+          label="Show or hide the expected result and run details"
+          onPress={onToggleDetails}
+        />
+        <ActionButton
+          text="Copy all"
+          label="Copy every run as JSON"
+          disabled={snap.runCount === 0}
+          onPress={() => copyRuns(probe, 'all')}
+        />
+      </ButtonRow>
 
-      <View style={[a.gap_2xs, a.pb_xs]}>
-        {snap.armed && (
-          <Text
-            style={[a.text_xs, a.font_bold, {color: t.palette.primary_500}]}>
-            {snap.armed}
-          </Text>
-        )}
-        <LineText>
+      <View style={[a.gap_2xs]}>
+        <FixedLineText style={lineStyle}>
           <Text
             style={[
               a.text_xs,
               a.font_bold,
               {
-                color: snap.idle
-                  ? t.palette.positive_500
-                  : t.palette.negative_500,
+                color:
+                  snap.status === 'idle'
+                    ? t.palette.positive_500
+                    : t.palette.negative_500,
               },
             ]}>
-            {snap.dragging ? 'dragging' : snap.idle ? 'idle' : 'moving'}
+            {status}
           </Text>
-          {` · offset ${fmt(snap.offset)} · content ${fmt(snap.contentHeight)} · viewport ${fmt(snap.viewportHeight)}`}
-        </LineText>
-        <LineText>
+          {snap.armed ? ` · ${snap.armed} (tap again to cancel)` : ''}
+        </FixedLineText>
+        <FixedLineText style={lineStyle}>
+          {`offset ${fmt(snap.offset)} · content ${fmt(snap.contentHeight)} · viewport ${fmt(snap.viewportHeight)}`}
+        </FixedLineText>
+        <FixedLineText style={lineStyle}>
           {`mounted ${snap.rendered} · VL visible ${snap.visible}`}
-        </LineText>
-        <LineText>
+        </FixedLineText>
+        <FixedLineText style={lineStyle}>
           {vl
-            ? `VL window ${vl.first}..${vl.last} · pending ${vl.pending} · JS offset ${fmt(vl.jsOffset)} · avg cell ${fmt(vl.avgCell)}`
+            ? `VL window ${vl.first}..${vl.last} · pending ${vl.pending}${vl.pending < 0 ? ' (<0)' : ''} · JS offset ${fmt(vl.jsOffset)} · avg cell ${fmt(vl.avgCell)}`
             : 'VL internals unavailable'}
-        </LineText>
-        <LineText>
+        </FixedLineText>
+        <FixedLineText style={lineStyle}>
           {snap.anchor
             ? `anchor ${snap.anchor.label} · ${snap.anchor.mounted ? 'mounted' : 'UNMOUNTED'} · y ${fmt(snap.anchor.y)}`
             : 'anchor – (picked when a prepend fires)'}
-        </LineText>
-        {snap.run ? (
-          <Button
-            label="Toggle run details"
-            onPress={() => setExpanded(e => !e)}
-            style={[a.justify_start]}>
-            <Text
-              style={[
-                a.text_xs,
-                a.font_bold,
-                a.flex_1,
-                {
-                  color: snap.run.active
-                    ? t.atoms.text.color
-                    : verdictColor(lastVerdict),
-                },
-              ]}>
-              {snap.run.summary}
-              {snap.run.details.length ? (expanded ? '  ▴' : '  ▾') : ''}
-            </Text>
-          </Button>
-        ) : (
-          <LineText>
-            No runs yet. Pick a scenario and follow its recipe.
-          </LineText>
-        )}
-        {expanded &&
-          snap.run?.details.map((line, i) => (
-            <LineText key={i}>{line}</LineText>
-          ))}
-        {snap.runCount > 0 && (
-          <View style={[a.flex_row, a.gap_xs]}>
-            <ActionButton label="Copy last run" onPress={() => copy(false)} />
-            <ActionButton
-              label={`Copy all (${snap.runCount})`}
-              onPress={() => copy(true)}
-            />
-            <ActionButton
-              label="Clear runs"
-              onPress={() => {
-                probe.clearRuns()
-                setExpanded(false)
-                refresh()
-              }}
-            />
-          </View>
-        )}
+        </FixedLineText>
+        <Button
+          label="Show the run details"
+          onPress={onToggleDetails}
+          style={[a.justify_start]}>
+          <FixedLineText
+            lines={2}
+            style={[
+              a.flex_1,
+              a.text_xs,
+              a.font_bold,
+              {
+                color: snap.run?.active
+                  ? t.atoms.text.color
+                  : verdictColor(t, lastVerdict),
+              },
+            ]}>
+            {snap.run
+              ? `${snap.run.summary}  ▸`
+              : 'No runs yet. Pick a scenario and follow its recipe.'}
+          </FixedLineText>
+        </Button>
       </View>
     </View>
-  )
-}
-
-function LineText({children}: {children: React.ReactNode}) {
-  const t = useTheme()
-  return (
-    <Text
-      style={[
-        a.text_xs,
-        t.atoms.text_contrast_high,
-        {fontVariant: ['tabular-nums']},
-      ]}>
-      {children}
-    </Text>
   )
 }

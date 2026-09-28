@@ -20,14 +20,18 @@ function keyExtractor(row: LabRow) {
  * Native scroll events, forwarded from the UI thread as they arrive. These are
  * the offsets the native side actually has, unlike VirtualizedList's
  * `_scrollMetrics`, which lags a native mVCP correction.
+ *
+ * Every callback carries this list instance's generation, captured by value,
+ * so the probe can drop whatever a retired list still delivers.
  */
-function createScrollHandlers(probe: Probe) {
+function createHandlers(probe: Probe, generation: number) {
   const {onNativeScroll, onDrag, onMomentumEnd} = probe
   return {
     onScroll: (e: NativeScrollEvent) => {
       'worklet'
       scheduleOnRN(
         onNativeScroll,
+        generation,
         e.contentOffset.y,
         e.contentSize.height,
         e.layoutMeasurement.height,
@@ -35,15 +39,26 @@ function createScrollHandlers(probe: Probe) {
     },
     onBeginDrag: () => {
       'worklet'
-      scheduleOnRN(onDrag, true)
+      scheduleOnRN(onDrag, generation, true)
     },
     onEndDrag: () => {
       'worklet'
-      scheduleOnRN(onDrag, false)
+      scheduleOnRN(onDrag, generation, false)
     },
     onMomentumEnd: () => {
       'worklet'
-      scheduleOnRN(onMomentumEnd)
+      scheduleOnRN(onMomentumEnd, generation)
+    },
+    setList: (instance: ListMethods | null) => {
+      probe.setList(generation, instance)
+    },
+    onContentSizeChange: (width: number, height: number) => {
+      probe.onContentSizeChange(generation, width, height)
+    },
+    onViewableItemsChanged: (info: {
+      viewableItems: Array<{index?: number | null}>
+    }) => {
+      probe.onViewableItemsChanged(generation, info)
     },
   }
 }
@@ -57,6 +72,7 @@ function createScrollHandlers(probe: Probe) {
 export const LabList = memo(function LabList({
   rows,
   probe,
+  generation,
   minIndexForVisible,
   listHeader,
   removeClippedSubviews,
@@ -69,6 +85,8 @@ export const LabList = memo(function LabList({
 }: {
   rows: LabRow[]
   probe: Probe
+  /** From `probe.reset()`, and part of this list's key. */
+  generation: number
   minIndexForVisible: number
   listHeader: boolean
   removeClippedSubviews: boolean
@@ -79,20 +97,18 @@ export const LabList = memo(function LabList({
   resizeScope: ResizeScope
   resizeDelayMs: number
 }) {
-  const [handlers] = useState(() => createScrollHandlers(probe))
-  const [setListRef] = useState(() => (instance: ListMethods | null) => {
-    probe.listRef.current = instance
-  })
+  const [handlers] = useState(() => createHandlers(probe, generation))
 
   // Runs after VirtualizedList's own componentDidUpdate for this data.
   useLayoutEffect(() => {
-    probe.onRowsCommitted(rows, minIndexForVisible)
-  }, [probe, rows, minIndexForVisible])
+    probe.onRowsCommitted(generation, rows, minIndexForVisible)
+  }, [probe, generation, rows, minIndexForVisible])
 
   const renderItem = ({item}: {item: LabRow}) => (
     <Row
       row={item}
       probe={probe}
+      generation={generation}
       resize={resize}
       resizeScope={resizeScope}
       resizeDelayMs={resizeDelayMs}
@@ -106,7 +122,7 @@ export const LabList = memo(function LabList({
       onEndDrag={handlers.onEndDrag}
       onMomentumEnd={handlers.onMomentumEnd}>
       <List
-        ref={setListRef}
+        ref={handlers.setList}
         data={rows}
         keyExtractor={keyExtractor}
         renderItem={renderItem}
@@ -116,8 +132,8 @@ export const LabList = memo(function LabList({
         initialNumToRender={initialNumToRender}
         maxToRenderPerBatch={maxToRenderPerBatch}
         ListHeaderComponent={listHeader ? ListHeader : undefined}
-        onContentSizeChange={probe.onContentSizeChange}
-        onViewableItemsChanged={probe.onViewableItemsChanged}
+        onContentSizeChange={handlers.onContentSizeChange}
+        onViewableItemsChanged={handlers.onViewableItemsChanged}
         viewabilityConfig={VIEWABILITY_CONFIG}
         disableFullWindowScroll
         style={a.flex_1}
