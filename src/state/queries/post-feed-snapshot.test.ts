@@ -359,7 +359,8 @@ describe('selectFollowingSnapshot', () => {
       ]
       return {
         pages,
-        pageParams: [...sinces.map(since => ({since})), undefined],
+        // Each starts a chain of its own, like the page fetched from the top.
+        pageParams: [...sinces.map(() => undefined), undefined],
       }
     }
 
@@ -370,11 +371,7 @@ describe('selectFollowingSnapshot', () => {
       const snapshot = select(data)
 
       expect(snapshot.pages).toHaveLength(3)
-      expect(snapshot.pageParams).toEqual([
-        {since: 's0'},
-        {since: 's1'},
-        {since: 's2'},
-      ])
+      expect(snapshot.pageParams).toEqual([null, null, null])
       expect(
         snapshot.pages[2].feed.map(i =>
           (i as {post: {uri: string}}).post.uri.split('/').pop(),

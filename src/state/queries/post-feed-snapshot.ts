@@ -95,7 +95,12 @@ export type FollowingSnapshotRejection =
   /** Something threw. */
   | 'error'
 
-type SnapshotPageParam = {cursor: string} | {since: string} | undefined
+/**
+ * A page either continues the cursor of the page above it, or starts a chain
+ * of its own with no param: a fetch from the top, and a page fetched with
+ * `since` above one, which records its bound on itself.
+ */
+type SnapshotPageParam = {cursor: string} | undefined
 
 type SerializedPage = {
   cursor?: string
@@ -200,7 +205,7 @@ export function selectFollowingSnapshot(
   if (first) {
     return {ok: false, reason: first}
   }
-  if (!isHeadParam(pageParams[0], pages[0])) {
+  if (!isHeadParam(pageParams[0])) {
     return {ok: false, reason: 'cursor'}
   }
 
@@ -361,7 +366,7 @@ function validateFollowingSnapshot(
   const params = pageParams.map(param =>
     param === null ? undefined : (param as unknown),
   )
-  if (!isHeadParam(params[0], pages[0])) {
+  if (!isHeadParam(params[0])) {
     return {ok: false, reason: 'cursor'}
   }
   for (let i = 1; i < pages.length; i++) {
@@ -463,22 +468,11 @@ function checkPage(
 }
 
 /**
- * Whether the first page's param is one a page at the top of the feed has:
- * none for a fetch from the top, or the `since` the page was bounded by.
+ * Whether a page's param is the one a page that starts a chain has: none, for
+ * a fetch from the top and for a page fetched with `since` above one alike.
  */
-function isHeadParam(
-  param: unknown,
-  page: {since?: string},
-): param is Exclude<SnapshotPageParam, {cursor: string}> {
-  if (param === undefined) {
-    return page.since === undefined
-  }
-  return (
-    isRecord(param) &&
-    Object.keys(param).length === 1 &&
-    typeof param.since === 'string' &&
-    param.since === page.since
-  )
+function isHeadParam(param: unknown): param is undefined {
+  return param === undefined
 }
 
 /**
@@ -496,7 +490,7 @@ function isLinked(
 ) {
   if (isExhaustedSincePage(asBoundaryPage(upper))) {
     return (
-      isHeadParam(lowerParam, lower) &&
+      isHeadParam(lowerParam) &&
       isContiguousAbove(asBoundaryPage(upper), asBoundaryPage(lower))
     )
   }
