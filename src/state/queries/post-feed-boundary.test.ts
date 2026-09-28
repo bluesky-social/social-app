@@ -3,9 +3,12 @@ import {type app} from '#/lexicons'
 import {
   type BoundaryPage,
   carryBoundary,
+  classifySincePage,
+  feedItemKey,
   feedSortTime,
   isContiguousAbove,
   isExhaustedSincePage,
+  tuneOrder,
 } from './post-feed-boundary'
 
 function item(
@@ -226,5 +229,106 @@ describe('feedSortTime', () => {
     expect(feedSortTime(item('a', T3, T1))).toBe(Date.parse(T1))
     const repost = {...dated('a', T3, T3), reason: item('b', T3, T1).reason}
     expect(feedSortTime(repost)).toBe(Date.parse(T1))
+  })
+})
+
+describe('classifySincePage', () => {
+  /** The restored top page, whose server boundary is `S`. */
+  const top: BoundaryPage = {
+    cursor: 'T-next',
+    startCursor: 'S',
+    feed: [item('t0', T2), item('t1', T3), item('t2', T3)],
+  }
+
+  function since(
+    rkeys: Array<string | app.bsky.feed.defs.FeedViewPost>,
+    cursor: string | undefined,
+  ) {
+    return {
+      since: 'S',
+      cursor,
+      startCursor: 'N',
+      feed: rkeys.map(rkey =>
+        typeof rkey === 'string' ? item(rkey, T1) : rkey,
+      ),
+    }
+  }
+
+  const rkeys = (page?: BoundaryPage) =>
+    page?.feed.map(i => i.post.uri.split('/').pop())
+
+  it('adds nothing for an empty response, however it ends', () => {
+    // Exhausted, a refill loop that dropped the echo, or a non-terminal page.
+    for (const cursor of ['S', undefined, 'more']) {
+      expect(classifySincePage(since([], cursor), top)).toEqual({seam: 'empty'})
+    }
+  })
+
+  it('is contiguous when the server echoes since back', () => {
+    const page = since(['n0', 'n1'], 'S')
+    expect(classifySincePage(page, top)).toEqual({seam: 'contiguous', page})
+  })
+
+  it('leaves a lone duplicate on a contiguous page to the deduplication', () => {
+    // The appview-indexed copy of a post the PDS served in the top page.
+    const page = since(['n0', top.feed[0], 'n1'], 'S')
+    expect(classifySincePage(page, top)).toEqual({seam: 'contiguous', page})
+  })
+
+  it('cuts off the posts the top already holds, from an appview that ignores since', () => {
+    const page = since(['n0', 'n1', top.feed[0], top.feed[1]], 'T1-next')
+
+    const {seam, page: added} = classifySincePage(page, top)
+
+    expect(seam).toBe('overlap')
+    expect(rkeys(added)).toEqual(['n0', 'n1'])
+    // It now ends where the top starts, as a contiguous page does.
+    expect(added?.cursor).toBe('S')
+    expect(added && isExhaustedSincePage(added)).toBe(true)
+    expect(page.feed).toHaveLength(4)
+  })
+
+  it('adds nothing when everything it returned is already on top', () => {
+    const page = since([top.feed[0], top.feed[1]], 'T1-next')
+    expect(classifySincePage(page, top)).toEqual({seam: 'empty'})
+  })
+
+  it('finds a gap when the range was not exhausted and it does not reach the top', () => {
+    const page = since(['n0', 'n1'], 'more')
+    expect(classifySincePage(page, top)).toEqual({seam: 'gap', page})
+  })
+
+  it('does not take a lone duplicate in a gapped page for an overlap', () => {
+    const page = since(['n0', top.feed[0], 'n1'], 'more')
+    expect(classifySincePage(page, top)).toEqual({seam: 'gap', page})
+  })
+
+  it('tells a repost from the post it reposts', () => {
+    const repost = item('t0', T2, T1)
+    expect(feedItemKey(repost)).not.toBe(feedItemKey(top.feed[0]))
+    const page = since(['n0', repost], 'more')
+    expect(classifySincePage(page, top).seam).toBe('gap')
+  })
+
+  it('keeps a page whatever its posts will render as', () => {
+    // Moderation happens later, so a page of posts that will all be hidden
+    // still carries the newest boundary.
+    const page = since(['hidden'], 'S')
+    expect(classifySincePage(page, top).page).toBe(page)
+  })
+})
+
+describe('tuneOrder', () => {
+  it('tunes pages in the order they were fetched', () => {
+    // A page added above the rest was fetched after them.
+    expect(
+      tuneOrder([{fetchedAt: 30}, {fetchedAt: 10}, {fetchedAt: 20}]),
+    ).toEqual([1, 2, 0])
+  })
+
+  it('breaks ties towards the top', () => {
+    expect(
+      tuneOrder([{fetchedAt: 10}, {fetchedAt: 10}, {fetchedAt: 5}]),
+    ).toEqual([2, 0, 1])
   })
 })
