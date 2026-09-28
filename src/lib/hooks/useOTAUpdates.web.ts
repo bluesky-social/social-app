@@ -6,6 +6,7 @@ export function useApplyPullRequestOTAUpdate() {
       _channel: string,
       _declaredAppVersion?: string | null,
     ) => {},
+    checkForUpdates: async () => {},
     restoreDefaultChannel: async () => {},
     isCurrentlyRunningPullRequestDeployment: false,
     isCurrentlyRunningNonStandardChannel: false,

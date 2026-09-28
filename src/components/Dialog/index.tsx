@@ -26,6 +26,12 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
+import {BottomSheet, BottomSheetSnapPoint} from '@bsky.app/bottom-sheet'
+import {
+  type BottomSheetSnapPointChangeEvent,
+  type BottomSheetStateChangeEvent,
+} from '@bsky.app/bottom-sheet/src/BottomSheet.types'
+import {type BottomSheetNativeComponent} from '@bsky.app/bottom-sheet/src/BottomSheetNativeComponent'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -45,12 +51,6 @@ import {
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
-import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
-import {
-  type BottomSheetSnapPointChangeEvent,
-  type BottomSheetStateChangeEvent,
-} from '../../../modules/bottom-sheet/src/BottomSheet.types'
-import {type BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'

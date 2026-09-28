@@ -7,6 +7,7 @@ import {
   type InfiniteData,
   type QueryClient,
   useInfiniteQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
 import {CustomFeedAPI} from '#/lib/api/feed/custom'
@@ -18,6 +19,7 @@ import {
 } from '#/lib/api/feed-manip'
 import {cleanError} from '#/lib/strings/errors'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {STALE} from '#/state/queries'
 import {
   type FeedPostSlice,
   type FeedPostSliceItem,
@@ -34,6 +36,7 @@ import * as bsky from '#/types/bsky'
 
 const RQKEY_ROOT = 'feed-previews'
 const RQKEY = (feeds: string[]) => [RQKEY_ROOT, feeds]
+const FEED_RQKEY = (feed: string) => ['feed-preview', feed]
 
 const LIMIT = 8 // sliced to 6, overfetch to account for moderation
 const PINNED_POST_URIS: Record<string, boolean> = {
@@ -124,6 +127,7 @@ export function useFeedPreviews(
   const uris = feeds.map(feed => feed.uri)
   const {_} = useLingui()
   const client = useAppviewClient()
+  const queryClient = useQueryClient()
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const moderationOpts = useModerationOpts()
@@ -141,23 +145,35 @@ export function useFeedPreviews(
 
   const query = useInfiniteQuery({
     enabled,
+    staleTime: STALE.MINUTES.THREE,
     queryKey: RQKEY(uris),
-    queryFn: async ({pageParam}) => {
+    queryFn: async ({pageParam, signal}) => {
       const feed = feeds[pageParam]
-      const api = new CustomFeedAPI({
-        client,
-        feedParams: {feed: feed.uri},
-        userInterests,
+      return queryClient.fetchQuery({
+        queryKey: FEED_RQKEY(feed.uri),
+        staleTime: STALE.MINUTES.THREE,
+        gcTime: STALE.MINUTES.THREE,
+        queryFn: async () => {
+          const api = new CustomFeedAPI({
+            client,
+            feedParams: {feed: feed.uri},
+            userInterests,
+          })
+          const data = await api.fetch({
+            cursor: undefined,
+            limit: LIMIT,
+            signal,
+          })
+          return {
+            feed,
+            posts: data.feed,
+          }
+        },
       })
-      const data = await api.fetch({cursor: undefined, limit: LIMIT})
-      return {
-        feed,
-        posts: data.feed,
-      }
     },
     initialPageParam: 0,
-    getNextPageParam: (_p, _a, count) =>
-      count < feeds.length ? count + 1 : undefined,
+    getNextPageParam: (_page, _pages, pageParam) =>
+      pageParam + 1 < feeds.length ? pageParam + 1 : undefined,
   })
 
   const {data, isFetched, isError, isPending, error} = query

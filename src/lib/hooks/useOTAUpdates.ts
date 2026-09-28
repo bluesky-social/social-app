@@ -254,6 +254,64 @@ export function useApplyPullRequestOTAUpdate() {
   }
 
   /**
+   * Checks the channel that is currently running for a newer update, and offers
+   * to relaunch into it if one is found. Unlike `tryApplyUpdate` this never
+   * switches channels, so it's safe to run from a non-standard deployment.
+   */
+  const checkForUpdates = async () => {
+    const channel = currentChannel ?? DEFAULT_CHANNEL
+    const deploymentName = getDeploymentName(channel)
+
+    setPending(true)
+    try {
+      if (isCurrentlyRunningNonStandardChannel) {
+        await setExtraParamsPullRequest(channel)
+      } else {
+        await setExtraParams()
+      }
+
+      const res = await checkForUpdateAsync()
+      if (!res.isAvailable) {
+        Alert.alert(
+          'Up to Date',
+          `You're already running the newest available update of ${deploymentName}.`,
+        )
+        return
+      }
+
+      await fetchUpdateAsync()
+      Alert.alert(
+        'Update Available',
+        `A newer update of ${deploymentName} has been downloaded. Relaunch now?`,
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Relaunch',
+            style: 'default',
+            onPress: () => {
+              void reloadAsync({
+                reloadScreenOptions: splash(t.scheme),
+              })
+            },
+          },
+        ],
+      )
+    } catch (e: unknown) {
+      const error = String(e)
+      logger.error('Internal OTA Update Error', {error})
+      Alert.alert(
+        'Update Check Failed',
+        `Could not check the ${deploymentName} deployment: ${error}`,
+      )
+    } finally {
+      setPending(false)
+    }
+  }
+
+  /**
    * Pulls the newest update from the channel this build ships with and relaunches
    * into it, undoing a manually applied deployment.
    */
@@ -284,6 +342,7 @@ export function useApplyPullRequestOTAUpdate() {
 
   return {
     tryApplyUpdate,
+    checkForUpdates,
     restoreDefaultChannel,
     isCurrentlyRunningPullRequestDeployment,
     isCurrentlyRunningNonStandardChannel,

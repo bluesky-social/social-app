@@ -1,4 +1,72 @@
 /**
+ * React Compiler tags generated nodes with loc = Symbol(GeneratedSource),
+ * which breaks the structuredClone Metro performs on the AST when
+ * EXPO_UNSTABLE_TREE_SHAKING is enabled. Strip them after all other
+ * transforms have run.
+ *
+ * @returns {import('@babel/core').PluginObj}
+ */
+const stripSymbolLocs = () => ({
+  post(file) {
+    file.path.traverse({
+      enter(path) {
+        if (typeof path.node.loc === 'symbol') {
+          path.node.loc = undefined
+        }
+      },
+    })
+    if (typeof file.ast.program.loc === 'symbol') {
+      file.ast.program.loc = undefined
+    }
+  },
+})
+
+/**
+ * Inline Sentry's debug flags before Metro tree shaking. Replacing only the
+ * global is insufficient because Metro cannot propagate DEBUG_BUILD's value
+ * across module boundaries to remove the guarded logging code.
+ *
+ * @param {{types: typeof import('@babel/types')}} api
+ * @returns {import('@babel/core').PluginObj}
+ */
+const stripSentryDebug = ({types}) => ({
+  visitor: {
+    ImportDeclaration(path, state) {
+      if (
+        !/[/\\]node_modules[/\\]@sentry[/\\]/.test(state.filename ?? '') ||
+        !/^(?:\.\.?\/)+debug-build(?:\.js)?$/.test(path.node.source.value)
+      ) {
+        return
+      }
+
+      for (const specifier of path.get('specifiers')) {
+        if (
+          !specifier.isImportSpecifier() ||
+          !types.isIdentifier(specifier.node.imported, {name: 'DEBUG_BUILD'})
+        ) {
+          continue
+        }
+        const binding = path.scope.getBinding(specifier.node.local.name)
+        for (const reference of binding?.referencePaths ?? []) {
+          // Preserve re-exports; only replace expressions using this binding.
+          if (!reference.parentPath.isExportSpecifier()) {
+            reference.replaceWith(types.booleanLiteral(false))
+          }
+        }
+      }
+    },
+    ReferencedIdentifier(path) {
+      if (
+        path.node.name === '__SENTRY_DEBUG__' &&
+        !path.scope.hasBinding('__SENTRY_DEBUG__')
+      ) {
+        path.replaceWith(types.booleanLiteral(false))
+      }
+    },
+  },
+})
+
+/**
  * @param {import("@babel/core").ConfigAPI} api
  * @returns {import("@babel/core").InputOptions}
  */
@@ -20,7 +88,6 @@ module.exports = function (api) {
     plugins: [
       '@lingui/babel-plugin-lingui-macro',
       ['babel-plugin-react-compiler', {target: '19'}],
-      'module:react-native-dotenv', // used by web build! can remove when we drop webpack
       [
         'module-resolver',
         {
@@ -43,8 +110,11 @@ module.exports = function (api) {
             '@babel/plugin-transform-dynamic-import',
           ]
         : []),
-      ...(api.env('production') ? ['transform-remove-console'] : []),
+      ...(api.env('production')
+        ? ['transform-remove-console', stripSentryDebug]
+        : []),
 
+      stripSymbolLocs,
       'react-native-worklets/plugin', // NOTE: this plugin MUST be last
     ],
   }

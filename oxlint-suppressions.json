@@ -628,11 +628,6 @@
       "count": 1
     }
   },
-  "src/lib/link-meta/link-meta.ts": {
-    "typescript/no-unsafe-member-access": {
-      "count": 9
-    }
-  },
   "src/lib/media/manip.ts": {
     "typescript/no-explicit-any": {
       "count": 1
@@ -1508,17 +1503,6 @@
     },
     "typescript/no-unsafe-member-access": {
       "count": 3
-    }
-  },
-  "webpack.config.js": {
-    "import/no-nodejs-modules": {
-      "count": 1
-    },
-    "typescript/no-unsafe-call": {
-      "count": 12
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 33
     }
   }
 }

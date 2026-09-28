@@ -1,5 +1,4 @@
-import {type ViewStyle} from 'react-native'
-import {StyleProp} from 'react-native'
+import {type StyleProp, type ViewStyle} from 'react-native'
 import {AtUri} from '@atproto/syntax'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -87,7 +86,8 @@ export function KnownLikers({
       to={likesHref}
       label={rowLabel}
       style={[
-        a.w_full,
+        a.self_start,
+        a.max_w_full,
         a.flex_row,
         a.align_center,
         a.gap_xs,

@@ -1,5 +1,6 @@
 import {createContext, useCallback, useContext, useId, useMemo} from 'react'
 import {type GestureResponderEvent, View} from 'react-native'
+import {type BottomSheetViewProps} from '@bsky.app/bottom-sheet'
 import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, type TextStyleProp, useTheme, web} from '#/alf'
@@ -12,7 +13,6 @@ import {
 import * as Dialog from '#/components/Dialog'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import {Text} from '#/components/Typography'
-import {type BottomSheetViewProps} from '../../modules/bottom-sheet'
 
 export {
   type DialogControlProps as PromptControlProps,
