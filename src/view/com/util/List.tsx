@@ -10,6 +10,7 @@ import {updateActiveVideoViewAsync} from '@bsky.app/video'
 
 import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {isAtTopOffset, type ListScrollPosition} from '#/lib/listMotion'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useTheme} from '#/alf'
@@ -43,16 +44,55 @@ export type ListProps<ItemT = any> = Omit<
   progressViewOffset?: number
   /** Fired once, on the first scroll event the list reports. */
   onFirstScroll?: () => void
+  /**
+   * Native only: a finger started dragging the list. Together with
+   * {@link onScrollGestureEnd} this brackets the list moving under the reader,
+   * the deceleration after the drag included.
+   */
+  onScrollGestureBegin?: () => void
+  /**
+   * Native only: the list came to rest after a drag, where it came to rest -
+   * at the end of a drag released without velocity, or at the end of the
+   * deceleration otherwise, which on iOS also ends an animated scroll the app
+   * started.
+   */
+  onScrollGestureEnd?: (position: ListScrollPosition) => void
+  /**
+   * Native only: every scroll event the list dispatches, whatever caused it,
+   * with where the list is. The only way to tell a list that has stopped from
+   * one whose offset is between corrections. Costs a hop to the JS thread per
+   * event, so only wired when given.
+   */
+  onScrollActivity?: (position: ListScrollPosition) => void
+  /**
+   * Native only: the list arrived within `LIST_AT_TOP_LIMIT` of its top,
+   * possibly still moving. Not fired for the list being there on mount, which
+   * is not arriving anywhere.
+   */
+  onReachedTop?: () => void
 }
 export type ListRef = React.RefObject<FlatList_INTERNAL | null>
 
 const SCROLLED_DOWN_LIMIT = 200
+
+/** Where the list is, read on the UI thread so only plain values cross. */
+function scrollPosition(e: {
+  contentOffset: {y: number}
+  contentSize: {height: number}
+}): ListScrollPosition {
+  'worklet'
+  return {offsetY: e.contentOffset.y, contentHeight: e.contentSize.height}
+}
 
 let List = forwardRef<ListMethods, ListProps>(
   (
     {
       onScrolledDownChange,
       onFirstScroll,
+      onScrollGestureBegin,
+      onScrollGestureEnd,
+      onScrollActivity,
+      onReachedTop,
       refreshing,
       onRefresh,
       onItemSeen,
@@ -66,6 +106,12 @@ let List = forwardRef<ListMethods, ListProps>(
   ): React.ReactElement => {
     const isScrolledDown = useSharedValue(false)
     const hasScrolled = useSharedValue(false)
+    /*
+     * Starts at the top so that only an arrival is reported: on iOS the first
+     * event is the resting offset being applied, which is not the reader going
+     * anywhere.
+     */
+    const isAtTop = useSharedValue(true)
     const t = useTheme()
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
@@ -77,6 +123,22 @@ let List = forwardRef<ListMethods, ListProps>(
     )
     const handleFirstScroll = useNonReactiveCallback(() => {
       onFirstScroll?.()
+    })
+    const handleScrollGestureBegin = useNonReactiveCallback(() => {
+      onScrollGestureBegin?.()
+    })
+    const handleScrollGestureEnd = useNonReactiveCallback(
+      (position: ListScrollPosition) => {
+        onScrollGestureEnd?.(position)
+      },
+    )
+    const handleScrollActivity = useNonReactiveCallback(
+      (position: ListScrollPosition) => {
+        onScrollActivity?.(position)
+      },
+    )
+    const handleReachedTop = useNonReactiveCallback(() => {
+      onReachedTop?.()
     })
 
     // Intentionally destructured outside the main thread closure.
@@ -90,13 +152,40 @@ let List = forwardRef<ListMethods, ListProps>(
     const scrollHandler = useAnimatedScrollHandler({
       onBeginDrag(e, ctx) {
         onBeginDragFromContext?.(e, ctx)
+
+        if (onScrollGestureBegin != null) {
+          scheduleOnRN(handleScrollGestureBegin)
+        }
       },
       onEndDrag(e, ctx) {
         scheduleOnRN(updateActiveVideoViewAsync)
         onEndDragFromContext?.(e, ctx)
+
+        /*
+         * Released with velocity, the list decelerates, and `onMomentumEnd`
+         * reports where it comes to rest. The same rule
+         * `MainScrollProvider.onEndDrag` snaps by.
+         */
+        if (onScrollGestureEnd != null && !e.velocity?.y) {
+          scheduleOnRN(handleScrollGestureEnd, scrollPosition(e))
+        }
       },
       onScroll(e, ctx) {
         onScrollFromContext?.(e, ctx)
+
+        if (onScrollActivity != null) {
+          scheduleOnRN(handleScrollActivity, scrollPosition(e))
+        }
+
+        if (onReachedTop != null) {
+          const didReachTop = isAtTopOffset(e.contentOffset.y)
+          if (isAtTop.get() !== didReachTop) {
+            isAtTop.set(didReachTop)
+            if (didReachTop) {
+              scheduleOnRN(handleReachedTop)
+            }
+          }
+        }
 
         if (onFirstScroll != null && !hasScrolled.get()) {
           hasScrolled.set(true)
@@ -120,6 +209,10 @@ let List = forwardRef<ListMethods, ListProps>(
       onMomentumEnd(e, ctx) {
         scheduleOnRN(updateActiveVideoViewAsync)
         onMomentumEndFromContext?.(e, ctx)
+
+        if (onScrollGestureEnd != null) {
+          scheduleOnRN(handleScrollGestureEnd, scrollPosition(e))
+        }
       },
     })
 

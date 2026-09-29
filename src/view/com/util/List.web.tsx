@@ -20,6 +20,7 @@ import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript
 
 import {batchedUpdates} from '#/lib/batchedUpdates'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {type ListScrollPosition} from '#/lib/listMotion'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
 import {useIsWithinSplitView} from '#/screens/Messages/components/splitView/context'
@@ -53,6 +54,11 @@ export type ListProps<ItemT = any> = Omit<
   onScrolledDownChange?: (isScrolledDown: boolean) => void
   /** Native only: nothing on web needs it yet. */
   onFirstScroll?: () => void
+  /** Native only, as are the three below: see the native list. */
+  onScrollGestureBegin?: () => void
+  onScrollGestureEnd?: (position: ListScrollPosition) => void
+  onScrollActivity?: (position: ListScrollPosition) => void
+  onReachedTop?: () => void
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
@@ -97,6 +103,10 @@ function ListImpl<ItemT>(
     onEndReachedThreshold = 2,
     onRefresh: _unsupportedOnRefresh,
     onFirstScroll: _unsupportedOnFirstScroll,
+    onScrollGestureBegin: _unsupportedOnScrollGestureBegin,
+    onScrollGestureEnd: _unsupportedOnScrollGestureEnd,
+    onScrollActivity: _unsupportedOnScrollActivity,
+    onReachedTop: _unsupportedOnReachedTop,
     onScrolledDownChange,
     onContentSizeChange,
     onItemSeen,
