@@ -240,13 +240,6 @@ function createPendingRefresh(): PendingRefresh {
   return {promise, resolve, reject}
 }
 
-/**
- * Whether TanStack is fetching a post-feed query from the top, or waiting to
- * (a refetch, an invalidation, a reset), as against fetching the next page.
- * What it fetches replaces the cached pages, so an operation that would write
- * around them gives way to it, and must not cancel it: that would swallow the
- * invalidation behind it.
- */
 /** Whether two pages are the same page of the feed, or copies of it. */
 function isSamePage(
   queryClient: QueryClient,
@@ -275,6 +268,13 @@ function indexOfPage(
     : pages.findIndex(candidate => isSamePage(queryClient, candidate, page))
 }
 
+/**
+ * Whether TanStack is fetching a post-feed query from the top, or waiting to
+ * (a refetch, an invalidation, a reset), as against fetching the next page.
+ * What it fetches replaces the cached pages, so an operation that would write
+ * around them gives way to it, and must not cancel it: that would swallow the
+ * invalidation behind it.
+ */
 function isFetchingFromTop(queryClient: QueryClient, queryKey: QueryKey) {
   const state = queryClient.getQueryCache().find({queryKey, exact: true})?.state
   return (
