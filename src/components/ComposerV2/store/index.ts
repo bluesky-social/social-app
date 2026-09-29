@@ -42,6 +42,44 @@ function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
   return item.upload.state === 'failed' && item.upload.retryable === true
 }
 
+function serializableEqual({
+  left,
+  right,
+}: {
+  left: unknown
+  right: unknown
+}): boolean {
+  if (Object.is(left, right)) return true
+  if (Array.isArray(left) || Array.isArray(right)) {
+    if (!Array.isArray(left) || !Array.isArray(right)) return false
+    return (
+      left.length === right.length &&
+      left.every((value, index) =>
+        serializableEqual({left: value, right: right[index]}),
+      )
+    )
+  }
+  if (
+    !left ||
+    !right ||
+    typeof left !== 'object' ||
+    typeof right !== 'object'
+  ) {
+    return false
+  }
+  const leftKeys = Object.keys(left)
+  const rightKeys = Object.keys(right)
+  if (leftKeys.length !== rightKeys.length) return false
+  return leftKeys.every(
+    key =>
+      Object.prototype.hasOwnProperty.call(right, key) &&
+      serializableEqual({
+        left: (left as Record<string, unknown>)[key],
+        right: (right as Record<string, unknown>)[key],
+      }),
+  )
+}
+
 /** One isolated thread composition session, independent of React. */
 export function createThreadStore({
   resolvers,
@@ -303,7 +341,7 @@ export function createThreadStore({
 
     resolutionRevs.media.incrementFor({key: postId})
     mutateState(s => {
-      s.posts[postId] = setPostMediaItems(post, [
+      s.posts[postId] = replacePostMediaItems(post, [
         ...getMediaItems({media: post.attachments.media}),
         ...items,
       ])
@@ -323,7 +361,22 @@ export function createThreadStore({
       const next = items.filter(item => item.id !== mediaId)
       if (next.length === items.length) return null
       cancelUploadTask(mediaId)
-      s.posts[postId] = setPostMediaItems(post, next)
+      s.posts[postId] = replacePostMediaItems(post, next)
+      s.isDirty = true
+      return s
+    })
+  }
+
+  /** Clears a card or all selected media, cancelling its pending work. */
+  function removeMediaAttachment(postId: string) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post || !post.attachments.media) return null
+      resolutionRevs.media.incrementFor({key: postId})
+      for (const item of getMediaItems({media: post.attachments.media})) {
+        cancelUploadTask(item.id)
+      }
+      s.posts[postId] = replacePostMedia(post, undefined)
       s.isDirty = true
       return s
     })
@@ -344,7 +397,7 @@ export function createThreadStore({
         return {...item, altText}
       })
       if (!changed) return null
-      s.posts[postId] = setPostMediaItems(post, items)
+      s.posts[postId] = replacePostMediaItems(post, items)
       s.isDirty = true
       return s
     })
@@ -398,7 +451,7 @@ export function createThreadStore({
       if (!currentPost) return null
       const items = getMediaItems({media: currentPost.attachments.media})
       if (!items.some(m => m.id === mediaId)) return null
-      s.posts[postId] = setPostMediaItems(
+      s.posts[postId] = replacePostMediaItems(
         currentPost,
         items.map(m => (m.id === mediaId ? next : m)),
       )
@@ -406,6 +459,43 @@ export function createThreadStore({
       return s
     })
     if (shouldRestart) startMediaUpload(postId, mediaId)
+  }
+
+  /** Regroup only selected items; record identity is unaffected. */
+  function replacePostMediaItems(
+    post: types.ThreadPost,
+    items: types.PostMediaItem[],
+  ): types.ThreadPost {
+    const first = items[0]
+    if (!first) return replacePostMedia(post, undefined)
+    switch (first.kind) {
+      case 'image':
+        return replacePostMedia(post, {
+          state: 'resolved',
+          kind: 'images',
+          items: items.filter(item => item.kind === 'image'),
+        })
+      case 'video':
+      case 'gif':
+        return replacePostMedia(
+          post,
+          first.kind === 'video'
+            ? {state: 'resolved', kind: 'video', item: first}
+            : {state: 'resolved', kind: 'gif', item: first},
+        )
+    }
+  }
+
+  /** All media replacements recompute selection capacity together. */
+  function replacePostMedia(
+    post: types.ThreadPost,
+    media: types.MediaAttachment | undefined,
+  ): types.ThreadPost {
+    return {
+      ...post,
+      attachments: {...post.attachments, media},
+      ...computePostMediaSelectionsRemaining({media}),
+    }
   }
 
   /** Retries only currently retryable failures, never active or completed work. */
@@ -420,7 +510,7 @@ export function createThreadStore({
     cancelUploadTask(mediaId)
     const pending = {...item, upload: {state: 'pending' as const}}
     mutateState(s => {
-      s.posts[postId] = setPostMediaItems(
+      s.posts[postId] = replacePostMediaItems(
         post,
         items.map(m => (m.id === mediaId ? pending : m)),
       )
@@ -462,224 +552,114 @@ export function createThreadStore({
     return {retriedMediaIds}
   }
 
-  /**
-   * Reserve the record or media slot before resolving a URL. Settled values
-   * block new candidates; pending/failed candidates can be superseded.
-   */
-  function addUri(postId: string, uri: string) {
-    if (destroyed) return
-    const target = classifyUriTarget({uri})
+  function startMediaUpload(postId: string, mediaId: string) {
+    if (destroyed || uploadTasks.has(mediaId)) return
     const post = state.posts[postId]
-    if (!post || post.attachments[target]?.state === 'resolved') return
-    const rev = resolutionRevs[target].incrementFor({key: postId})
-    mutateState(s => {
-      const currentPost = s.posts[postId]
-      if (
-        !currentPost ||
-        currentPost.attachments[target]?.state === 'resolved'
-      ) {
-        return null
-      }
-      if (target === 'record') {
-        s.posts[postId] = replaceRecordAttachment(currentPost, {
-          state: 'pending',
-          uri,
-        })
-      } else {
-        s.posts[postId] = setPostMedia(currentPost, {state: 'pending', uri})
-      }
-      s.isDirty = true
-      return s
-    })
-    resolveAttachmentUri({postId, target, uri, rev})
-  }
+    if (!post) return
+    // Read live state: a subscriber may have edited, removed, or retried this item.
+    const item = getMediaItems({media: post.attachments.media}).find(
+      m => m.id === mediaId,
+    )
+    if (!item || item.kind === 'gif' || item.upload.state !== 'pending') return
 
-  /**
-   * Resolve one reserved destination. Completion and retry handlers close over
-   * this attempt's destination, revision, post, and URI so stale work can
-   * never be redirected into the other attachment slot.
-   */
-  function resolveAttachmentUri({
-    postId,
-    target,
-    uri,
-    rev,
-  }: {
-    postId: string
-    target: AttachmentSlot
-    uri: string
-    rev: number
-  }) {
-    if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
-      return
-
-    const applyFailed = (err: unknown, unexpected = false) => {
-      if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
-        return
-      if (isComposerV2Cancellation({cause: err})) return
-      const {code, isRetryable} = parseResolveLinkError({error: err})
-      const retry = isRetryable
-        ? () => {
-            if (
-              destroyed ||
-              !resolutionRevs[target].isCurrentFor({key: postId, rev})
-            ) {
-              return
-            }
-            const retryRev = resolutionRevs[target].incrementFor({key: postId})
-            mutateState(retryState => {
-              const currentPost = retryState.posts[postId]
-              if (!currentPost) return null
-              if (target === 'record') {
-                retryState.posts[postId] = replaceRecordAttachment(
-                  currentPost,
-                  {
-                    state: 'pending',
-                    uri,
-                  },
-                )
-              } else {
-                retryState.posts[postId] = setPostMedia(currentPost, {
-                  state: 'pending',
-                  uri,
-                })
-              }
-              return retryState
-            })
-            resolveAttachmentUri({postId, target, uri, rev: retryRev})
-          }
-        : undefined
-      const failure = {
-        state: 'failed' as const,
-        uri,
-        // The UI localizes this stable code; raw diagnostics never enter state.
-        error:
-          code === 'embedding-disabled'
-            ? 'Embedding disabled'
-            : 'Link resolution failed',
-        code,
-        retry,
-      }
-      let accepted = false
-      mutateState(s => {
-        const post = s.posts[postId]
-        if (!post) return null
-        s.posts[postId] =
-          target === 'record'
-            ? replaceRecordAttachment(post, failure)
-            : setPostMedia(post, failure)
-        accepted = true
-        return s
-      })
-      if (!accepted) return
-      reportError(
-        {
-          source: 'uri-resolution',
-          code,
-          slot: target,
-          postId,
-          kind: unexpected
-            ? 'unexpected'
-            : isRetryable
-              ? 'operational'
-              : 'validation',
-          recovery: isRetryable ? 'retry' : 'edit',
+    /*
+     * Register ownership before invoking a worker. The real workers report
+     * their first phase ('compressing' or 'validating') synchronously, before
+     * their first await and before returning a handle. That report notifies
+     * subscribers, so callbacks must not close over an uninitialised task, and
+     * cancellation can be requested before `started` is assigned.
+     */
+    let started: UploadTask | undefined
+    let cancelled = false
+    const registered: UploadTask = {
+      cancel() {
+        cancelled = true
+        started?.cancel()
+      },
+    }
+    uploadTasks.set(item.id, registered)
+    const callbacks = {
+      postId,
+      mediaId: item.id,
+      pdsClient,
+      pdsUrl,
+      i18n,
+      __overrides: __uploadOverrides,
+      setUploadStatus: (
+        p: string,
+        m: string,
+        status: types.UploadStatus,
+        diagnostic?: {
+          kind: 'validation' | 'operational' | 'unexpected'
+          cause: unknown
         },
-        err,
-      )
+      ) => {
+        if (uploadTasks.get(m) === registered)
+          applyUploadStatus(p, m, status, diagnostic)
+      },
+      setMediaCompressionResult: (
+        p: string,
+        m: string,
+        output: PreparedOutput,
+      ) => {
+        if (uploadTasks.get(m) === registered)
+          applyMediaCompressionResult(p, m, output)
+      },
+      setCaptionBlobs: (
+        p: string,
+        m: string,
+        captions: types.UploadedCaption[],
+      ) => {
+        if (uploadTasks.get(m) === registered) applyCaptionBlobs(p, m, captions)
+      },
     }
-
-    const applyResolved = (link: ResolvedLink) => {
-      if (
-        destroyed ||
-        !resolutionRevs[target].isCurrentFor({key: postId, rev})
-      ) {
-        return
-      }
-      if ((link.type === 'record') !== (target === 'record')) {
-        applyFailed(new Error('Unexpected attachment type'), true)
-        return
-      }
-      mutateState(s => {
-        const post = s.posts[postId]
-        if (!post) return null
-        if (link.type === 'record') {
-          const {type: _type, ...record} = link
-          s.posts[postId] = replaceRecordAttachment(post, {
-            state: 'resolved',
-            ...record,
-          })
-        } else if (link.type === 'external') {
-          const {type: _type, ...external} = link
-          s.posts[postId] = setPostMedia(post, {
-            state: 'resolved',
-            kind: 'external',
-            ...external,
-          })
-        } else {
-          const {type: _type, ...invite} = link
-          s.posts[postId] = setPostMedia(post, {
-            state: 'resolved',
-            kind: 'chat-invite',
-            ...invite,
-          })
-        }
-        return s
-      })
-    }
-
     try {
-      resolve(resolvers, uri).then(applyResolved, applyFailed)
+      started =
+        item.kind === 'image'
+          ? (__uploadWorkers?.startImageUpload ?? startImageUpload)({
+              ...callbacks,
+              media: item,
+            })
+          : (__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
+              ...callbacks,
+              media: item,
+            })
+      /*
+       * A subscriber notified by that first report may remove the item or
+       * destroy the store, cancelling `registered` while `started` is still
+       * undefined. The ownership guards above already ignore the worker's
+       * later reports, but only its own handle aborts it: without this, an
+       * image would still be uploaded after compression and a video would go
+       * on to compress and upload.
+       */
+      if (cancelled) started.cancel()
     } catch (cause) {
-      applyFailed(cause, true)
+      if (!destroyed && uploadTasks.get(mediaId) === registered) {
+        cancelUploadTask(mediaId)
+        reportError(
+          {
+            source: 'upload',
+            code: 'upload-start-failed',
+            postId,
+            mediaId,
+            kind: 'unexpected',
+            recovery: 'none',
+          },
+          cause,
+        )
+      }
+      throw cause
     }
   }
 
-  /** Direct insertion of a known record replaces only the record slot. */
-  function setRecordAttachment(
-    postId: string,
-    value: types.RecordAttachmentValue,
-  ) {
-    if (destroyed || !state.posts[postId]) return
-    resolutionRevs.record.incrementFor({key: postId})
-    mutateState(s => {
-      s.posts[postId] = replaceRecordAttachment(s.posts[postId], {
-        state: 'resolved',
-        ...value,
-      })
-      s.isDirty = true
-      return s
-    })
-  }
-
-  function removeRecordAttachment(postId: string) {
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post || !post.attachments.record) return null
-      resolutionRevs.record.incrementFor({key: postId})
-      s.posts[postId] = replaceRecordAttachment(post, undefined)
-      s.isDirty = true
-      return s
-    })
-  }
-
-  /** Clears a card or all selected media, cancelling its pending work. */
-  function removeMediaAttachment(postId: string) {
-    mutateState(s => {
-      const post = s.posts[postId]
-      if (!post || !post.attachments.media) return null
-      resolutionRevs.media.incrementFor({key: postId})
-      for (const item of getMediaItems({media: post.attachments.media})) {
-        cancelUploadTask(item.id)
-      }
-      s.posts[postId] = setPostMedia(post, undefined)
-      s.isDirty = true
-      return s
-    })
+  function cancelUploadTask(mediaId: string) {
+    const task = uploadTasks.get(mediaId)
+    uploadTasks.delete(mediaId)
+    task?.cancel()
   }
 
   /** Upload progress does not dirty the draft or affect the record attachment. */
-  function setUploadStatus(
+  function applyUploadStatus(
     postId: string,
     mediaId: string,
     input: types.UploadStatus,
@@ -740,7 +720,7 @@ export function createThreadStore({
               upload: status,
             }
           : {...current, upload: status}
-      s.posts[postId] = setPostMediaItems(currentPost, [
+      s.posts[postId] = replacePostMediaItems(currentPost, [
         ...currentItems.map(item => (item.id === mediaId ? next : item)),
       ])
       accepted = true
@@ -767,119 +747,13 @@ export function createThreadStore({
     }
   }
 
-  function startMediaUpload(postId: string, mediaId: string) {
-    if (destroyed || uploadTasks.has(mediaId)) return
-    const post = state.posts[postId]
-    if (!post) return
-    // Read live state: a subscriber may have edited, removed, or retried this item.
-    const item = getMediaItems({media: post.attachments.media}).find(
-      m => m.id === mediaId,
-    )
-    if (!item || item.kind === 'gif' || item.upload.state !== 'pending') return
-
-    /*
-     * Register ownership before invoking a worker. The real workers report
-     * their first phase ('compressing' or 'validating') synchronously, before
-     * their first await and before returning a handle. That report notifies
-     * subscribers, so callbacks must not close over an uninitialised task, and
-     * cancellation can be requested before `started` is assigned.
-     */
-    let started: UploadTask | undefined
-    let cancelled = false
-    const registered: UploadTask = {
-      cancel() {
-        cancelled = true
-        started?.cancel()
-      },
-    }
-    uploadTasks.set(item.id, registered)
-    const callbacks = {
-      postId,
-      mediaId: item.id,
-      pdsClient,
-      pdsUrl,
-      i18n,
-      __overrides: __uploadOverrides,
-      setUploadStatus: (
-        p: string,
-        m: string,
-        status: types.UploadStatus,
-        diagnostic?: {
-          kind: 'validation' | 'operational' | 'unexpected'
-          cause: unknown
-        },
-      ) => {
-        if (uploadTasks.get(m) === registered)
-          setUploadStatus(p, m, status, diagnostic)
-      },
-      setMediaCompressionResult: (
-        p: string,
-        m: string,
-        output: PreparedOutput,
-      ) => {
-        if (uploadTasks.get(m) === registered)
-          setMediaCompressionResult(p, m, output)
-      },
-      setCaptionBlobs: (
-        p: string,
-        m: string,
-        captions: types.UploadedCaption[],
-      ) => {
-        if (uploadTasks.get(m) === registered) setCaptionBlobs(p, m, captions)
-      },
-    }
-    try {
-      started =
-        item.kind === 'image'
-          ? (__uploadWorkers?.startImageUpload ?? startImageUpload)({
-              ...callbacks,
-              media: item,
-            })
-          : (__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
-              ...callbacks,
-              media: item,
-            })
-      /*
-       * A subscriber notified by that first report may remove the item or
-       * destroy the store, cancelling `registered` while `started` is still
-       * undefined. The ownership guards above already ignore the worker's
-       * later reports, but only its own handle aborts it: without this, an
-       * image would still be uploaded after compression and a video would go
-       * on to compress and upload.
-       */
-      if (cancelled) started.cancel()
-    } catch (cause) {
-      if (!destroyed && uploadTasks.get(mediaId) === registered) {
-        cancelUploadTask(mediaId)
-        reportError(
-          {
-            source: 'upload',
-            code: 'upload-start-failed',
-            postId,
-            mediaId,
-            kind: 'unexpected',
-            recovery: 'none',
-          },
-          cause,
-        )
-      }
-      throw cause
-    }
-  }
-
-  function cancelUploadTask(mediaId: string) {
-    const task = uploadTasks.get(mediaId)
-    uploadTasks.delete(mediaId)
-    task?.cancel()
-  }
-
   /**
    * Store the local compression result as `item.prepared` without replacing
    * the original media source. The planner prefers these dimensions when
    * building the embed. This does not mark the upload complete; the uploaded
    * blob is recorded separately through upload status.
    */
-  function setMediaCompressionResult(
+  function applyMediaCompressionResult(
     postId: string,
     mediaId: string,
     output: PreparedOutput,
@@ -901,7 +775,7 @@ export function createThreadStore({
       const currentItems = getMediaItems({
         media: s.posts[postId].attachments.media,
       })
-      s.posts[postId] = setPostMediaItems(
+      s.posts[postId] = replacePostMediaItems(
         s.posts[postId],
         currentItems.map(item => (item.id === mediaId ? next : item)),
       )
@@ -909,7 +783,7 @@ export function createThreadStore({
     })
   }
 
-  function setCaptionBlobs(
+  function applyCaptionBlobs(
     postId: string,
     mediaId: string,
     captions: types.UploadedCaption[],
@@ -927,7 +801,7 @@ export function createThreadStore({
       const currentItems = getMediaItems({
         media: s.posts[postId].attachments.media,
       })
-      s.posts[postId] = setPostMediaItems(
+      s.posts[postId] = replacePostMediaItems(
         s.posts[postId],
         currentItems.map(item =>
           item.id === mediaId
@@ -942,41 +816,205 @@ export function createThreadStore({
     })
   }
 
-  /** Regroup only selected items; record identity is unaffected. */
-  function setPostMediaItems(
-    post: types.ThreadPost,
-    items: types.PostMediaItem[],
-  ): types.ThreadPost {
-    const first = items[0]
-    if (!first) return setPostMedia(post, undefined)
-    switch (first.kind) {
-      case 'image':
-        return setPostMedia(post, {
-          state: 'resolved',
-          kind: 'images',
-          items: items.filter(item => item.kind === 'image'),
+  /**
+   * Reserve the record or media slot before resolving a URL. Settled values
+   * block new candidates; pending/failed candidates can be superseded.
+   */
+  function addUri(postId: string, uri: string) {
+    if (destroyed) return
+    const target = classifyUriTarget({uri})
+    const post = state.posts[postId]
+    if (!post || post.attachments[target]?.state === 'resolved') return
+    const rev = resolutionRevs[target].incrementFor({key: postId})
+    mutateState(s => {
+      const currentPost = s.posts[postId]
+      if (
+        !currentPost ||
+        currentPost.attachments[target]?.state === 'resolved'
+      ) {
+        return null
+      }
+      if (target === 'record') {
+        s.posts[postId] = replaceRecordAttachment(currentPost, {
+          state: 'pending',
+          uri,
         })
-      case 'video':
-      case 'gif':
-        return setPostMedia(
-          post,
-          first.kind === 'video'
-            ? {state: 'resolved', kind: 'video', item: first}
-            : {state: 'resolved', kind: 'gif', item: first},
-        )
+      } else {
+        s.posts[postId] = replacePostMedia(currentPost, {state: 'pending', uri})
+      }
+      s.isDirty = true
+      return s
+    })
+    resolveAttachmentUri({postId, target, uri, rev})
+  }
+
+  /**
+   * Resolve one reserved destination. Completion and retry handlers close over
+   * this attempt's destination, revision, post, and URI so stale work can
+   * never be redirected into the other attachment slot.
+   */
+  function resolveAttachmentUri({
+    postId,
+    target,
+    uri,
+    rev,
+  }: {
+    postId: string
+    target: AttachmentSlot
+    uri: string
+    rev: number
+  }) {
+    if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
+      return
+
+    const applyFailed = (err: unknown, unexpected = false) => {
+      if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
+        return
+      if (isComposerV2Cancellation({cause: err})) return
+      const {code, isRetryable} = parseResolveLinkError({error: err})
+      const retry = isRetryable
+        ? () => {
+            if (
+              destroyed ||
+              !resolutionRevs[target].isCurrentFor({key: postId, rev})
+            ) {
+              return
+            }
+            const retryRev = resolutionRevs[target].incrementFor({key: postId})
+            mutateState(retryState => {
+              const currentPost = retryState.posts[postId]
+              if (!currentPost) return null
+              if (target === 'record') {
+                retryState.posts[postId] = replaceRecordAttachment(
+                  currentPost,
+                  {
+                    state: 'pending',
+                    uri,
+                  },
+                )
+              } else {
+                retryState.posts[postId] = replacePostMedia(currentPost, {
+                  state: 'pending',
+                  uri,
+                })
+              }
+              return retryState
+            })
+            resolveAttachmentUri({postId, target, uri, rev: retryRev})
+          }
+        : undefined
+      const failure = {
+        state: 'failed' as const,
+        uri,
+        // The UI localizes this stable code; raw diagnostics never enter state.
+        error:
+          code === 'embedding-disabled'
+            ? 'Embedding disabled'
+            : 'Link resolution failed',
+        code,
+        retry,
+      }
+      let accepted = false
+      mutateState(s => {
+        const post = s.posts[postId]
+        if (!post) return null
+        s.posts[postId] =
+          target === 'record'
+            ? replaceRecordAttachment(post, failure)
+            : replacePostMedia(post, failure)
+        accepted = true
+        return s
+      })
+      if (!accepted) return
+      reportError(
+        {
+          source: 'uri-resolution',
+          code,
+          slot: target,
+          postId,
+          kind: unexpected
+            ? 'unexpected'
+            : isRetryable
+              ? 'operational'
+              : 'validation',
+          recovery: isRetryable ? 'retry' : 'edit',
+        },
+        err,
+      )
+    }
+
+    const applyResolved = (link: ResolvedLink) => {
+      if (
+        destroyed ||
+        !resolutionRevs[target].isCurrentFor({key: postId, rev})
+      ) {
+        return
+      }
+      if ((link.type === 'record') !== (target === 'record')) {
+        applyFailed(new Error('Unexpected attachment type'), true)
+        return
+      }
+      mutateState(s => {
+        const post = s.posts[postId]
+        if (!post) return null
+        if (link.type === 'record') {
+          const {type: _type, ...record} = link
+          s.posts[postId] = replaceRecordAttachment(post, {
+            state: 'resolved',
+            ...record,
+          })
+        } else if (link.type === 'external') {
+          const {type: _type, ...external} = link
+          s.posts[postId] = replacePostMedia(post, {
+            state: 'resolved',
+            kind: 'external',
+            ...external,
+          })
+        } else {
+          const {type: _type, ...invite} = link
+          s.posts[postId] = replacePostMedia(post, {
+            state: 'resolved',
+            kind: 'chat-invite',
+            ...invite,
+          })
+        }
+        return s
+      })
+    }
+
+    try {
+      resolve(resolvers, uri).then(applyResolved, applyFailed)
+    } catch (cause) {
+      applyFailed(cause, true)
     }
   }
 
-  /** All media replacements recompute selection capacity together. */
-  function setPostMedia(
-    post: types.ThreadPost,
-    media: types.MediaAttachment | undefined,
-  ): types.ThreadPost {
-    return {
-      ...post,
-      attachments: {...post.attachments, media},
-      ...computePostMediaSelectionsRemaining({media}),
-    }
+  /** Direct insertion of a known record replaces only the record slot. */
+  function setRecordAttachment(
+    postId: string,
+    value: types.RecordAttachmentValue,
+  ) {
+    if (destroyed || !state.posts[postId]) return
+    resolutionRevs.record.incrementFor({key: postId})
+    mutateState(s => {
+      s.posts[postId] = replaceRecordAttachment(s.posts[postId], {
+        state: 'resolved',
+        ...value,
+      })
+      s.isDirty = true
+      return s
+    })
+  }
+
+  function removeRecordAttachment(postId: string) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post || !post.attachments.record) return null
+      resolutionRevs.record.incrementFor({key: postId})
+      s.posts[postId] = replaceRecordAttachment(post, undefined)
+      s.isDirty = true
+      return s
+    })
   }
 
   /**
@@ -1041,6 +1079,7 @@ export function createThreadStore({
       removePost,
       addMedia,
       removeMedia,
+      removeMediaAttachment,
       updateMediaAltText,
       setVideoCaptions,
       retryMediaUpload,
@@ -1048,14 +1087,13 @@ export function createThreadStore({
       addUri,
       setRecordAttachment,
       removeRecordAttachment,
-      removeMediaAttachment,
     },
     /**
      * Internal/test seam for exercising upload state transitions. UI callers
      * must use the upload workers rather than mutating status directly.
      */
     internalActions: {
-      setUploadStatus,
+      setUploadStatus: applyUploadStatus,
     },
     destroy,
     getState() {
@@ -1069,42 +1107,4 @@ export function createThreadStore({
       }
     },
   }
-}
-
-function serializableEqual({
-  left,
-  right,
-}: {
-  left: unknown
-  right: unknown
-}): boolean {
-  if (Object.is(left, right)) return true
-  if (Array.isArray(left) || Array.isArray(right)) {
-    if (!Array.isArray(left) || !Array.isArray(right)) return false
-    return (
-      left.length === right.length &&
-      left.every((value, index) =>
-        serializableEqual({left: value, right: right[index]}),
-      )
-    )
-  }
-  if (
-    !left ||
-    !right ||
-    typeof left !== 'object' ||
-    typeof right !== 'object'
-  ) {
-    return false
-  }
-  const leftKeys = Object.keys(left)
-  const rightKeys = Object.keys(right)
-  if (leftKeys.length !== rightKeys.length) return false
-  return leftKeys.every(
-    key =>
-      Object.prototype.hasOwnProperty.call(right, key) &&
-      serializableEqual({
-        left: (left as Record<string, unknown>)[key],
-        right: (right as Record<string, unknown>)[key],
-      }),
-  )
 }
