@@ -32,11 +32,13 @@ import {findFeedGaps} from './post-feed-boundary'
 import {
   beginPostFeedRestorePrepend,
   getPostFeedRestore,
+  hasPostFeedSettlement,
   isPostFeedRefreshing,
   isPostFeedRestorePending,
   peekPostFeedQueryEntry,
   prependPostFeedQuery,
   recordPostFeedRestore,
+  settlePostFeedQuery,
 } from './post-feed-registry'
 import {FOLLOWING_SNAPSHOT_QUERY_KEY} from './post-feed-snapshot'
 
@@ -123,7 +125,7 @@ function cursorsFetchedBy(api: MockFeedApi) {
   return api.fetch.mock.calls.map(([{cursor}]) => cursor)
 }
 
-function feedItem(rkey: string) {
+function feedItem(rkey: string, indexedAt = '2026-09-28T00:00:00.000Z') {
   return {
     post: {
       $type: 'app.bsky.feed.defs#postView',
@@ -133,9 +135,9 @@ function feedItem(rkey: string) {
       record: {
         $type: 'app.bsky.feed.post',
         text: `Post ${rkey}`,
-        createdAt: '2026-09-28T00:00:00.000Z',
+        createdAt: indexedAt,
       },
-      indexedAt: '2026-09-28T00:00:00.000Z',
+      indexedAt,
       labels: [],
     },
   } as unknown as app.bsky.feed.defs.FeedViewPost
@@ -871,7 +873,7 @@ describe('useFollowingRestorePrepend', () => {
     return Promise.resolve({
       cursor,
       startCursor: 'N',
-      feed: rkeys.map(feedItem),
+      feed: rkeys.map(rkey => feedItem(rkey)),
     })
   }
 
@@ -1850,5 +1852,362 @@ describe('useFollowingGapFill', () => {
     ])
     expect(gapApi.fetch.mock.calls).toHaveLength(calls + 1)
     expect(writes()).toBe(1)
+  })
+})
+
+describe('settlePostFeedQuery', () => {
+  const HOUR = 60 * 60 * 1000
+  /** The sort time of the restored top's first posts, its boundary. */
+  const BOUNDARY = '2026-09-27T12:00:00.000Z'
+  const OLDER = '2026-09-27T11:00:00.000Z'
+
+  const range = (prefix: string, count: number, indexedAt?: string) =>
+    Array.from({length: count}, (_, i) => feedItem(`${prefix}${i}`, indexedAt))
+
+  /**
+   * A restored feed, and the page the restore prepend put above it, whose
+   * range it exhausted: its cursor is the `since` echo, `S`.
+   */
+  async function renderPrependedFeed({
+    restoredTop = [
+      feedItem('r-b0', BOUNDARY),
+      feedItem('r-b1', BOUNDARY),
+      ...range('r-', 28, OLDER),
+    ],
+    newer = range('n-', 30),
+    cursor = 'S',
+  }: {
+    restoredTop?: app.bsky.feed.defs.FeedViewPost[]
+    newer?: app.bsky.feed.defs.FeedViewPost[]
+    cursor?: string
+  } = {}) {
+    const queryClient = createQueryClient()
+    const fetchedAt = Date.now() - HOUR
+    queryClient.setQueryData<InfiniteData<FeedPageUnselected>>(KEY, {
+      pages: [
+        {cursor: 'r:1', startCursor: 'S', feed: restoredTop, fetchedAt},
+        {
+          cursor: 'r:2',
+          feed: range('rr-', 30, OLDER),
+          fetchedAt: fetchedAt + 1,
+        },
+      ],
+      pageParams: [undefined, {cursor: 'r:1'}],
+    })
+    recordPostFeedRestore(queryClient, hashKey(KEY), {
+      restoredAt: Date.now(),
+      pageCount: 2,
+    })
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    const hook = renderHook(
+      () => ({
+        query: usePostFeedQuery(FEED),
+        prepend: useFollowingRestorePrepend(FEED),
+        fill: useFollowingGapFill(FEED),
+        refresh: usePostFeedRefresh(FEED).refresh,
+      }),
+      {wrapper},
+    )
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    jest.mocked(FollowingFeedAPI).mockImplementationOnce(
+      () =>
+        createApi({
+          since: () => Promise.resolve({cursor, startCursor: 'N', feed: newer}),
+        }) as never,
+    )
+    await act(() => hook.result.current.prepend())
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(3),
+    )
+    return {hook, queryClient, prependApi: apis[0]}
+  }
+
+  function watchWrites(queryClient: QueryClient) {
+    let writes = 0
+    queryClient.getQueryCache().subscribe(event => {
+      if (event.type === 'updated' && event.action.type === 'success') {
+        writes++
+      }
+    })
+    return () => writes
+  }
+
+  const settle = (queryClient: QueryClient) => {
+    let result
+    act(() => {
+      result = settlePostFeedQuery(queryClient, KEY, 42)
+    })
+    return result
+  }
+
+  const rkeys = (page: FeedPageUnselected) =>
+    page.feed.map(item => item.post.uri.split('/').pop())
+
+  it('marks what was added above reached, and retires the stale pages below in one write', async () => {
+    const {hook, queryClient} = await renderPrependedFeed()
+    expect(
+      summarizeNewContentAbove(hook.result.current.query.data?.pages)?.count,
+    ).toBe(30)
+    expect(hasPostFeedSettlement(queryClient, KEY)).toBe(true)
+    const writes = watchWrites(queryClient)
+
+    expect(settle(queryClient)).toEqual({
+      status: 'settled',
+      reached: 1,
+      retired: 2,
+    })
+
+    expect(writes()).toBe(1)
+    const {pages, pageParams} = cachedData(queryClient)
+    expect(pageParams).toEqual([undefined])
+    expect(pages[0]).toMatchObject({
+      since: 'S',
+      cursor: 'S',
+      reachedAt: 42,
+      holdsBoundary: true,
+    })
+    // It holds the posts at its boundary, which its cursor skips.
+    expect(rkeys(pages[0]).slice(-2)).toEqual(['r-b0', 'r-b1'])
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(1),
+    )
+    expect(
+      summarizeNewContentAbove(hook.result.current.query.data?.pages),
+    ).toBeUndefined()
+    expect(hook.result.current.query.data!.pages[0].reachedAt).toBe(42)
+  })
+
+  it('does nothing when settled again', async () => {
+    const {hook, queryClient} = await renderPrependedFeed()
+    settle(queryClient)
+    const writes = watchWrites(queryClient)
+
+    expect(settle(queryClient)).toEqual({status: 'nothing'})
+    // Nor after paginating on from the page it kept.
+    await act(() => hook.result.current.query.fetchNextPage())
+    expect(settle(queryClient)).toEqual({status: 'nothing'})
+
+    expect(writes()).toBe(1)
+    expect(hasPostFeedSettlement(queryClient, KEY)).toBe(false)
+  })
+
+  it('paginates on from the settled page with its API', async () => {
+    const {hook, queryClient, prependApi} = await renderPrependedFeed()
+    settle(queryClient)
+
+    await act(() => hook.result.current.query.fetchNextPage())
+
+    // Continued from the echo, which the page's boundary now makes safe.
+    expect(cursorsFetchedBy(prependApi)).toEqual([undefined, 'S'])
+    expect(cachedData(queryClient).pageParams).toEqual([
+      undefined,
+      {cursor: 'S'},
+    ])
+  })
+
+  it('keeps the rows above as they were, whatever it retires', async () => {
+    mockFeedTuners.push(FeedTuner.dedupThreads)
+    try {
+      const {hook, queryClient} = await renderPrependedFeed({
+        restoredTop: [
+          feedItem('r-b0', BOUNDARY),
+          feedItem('own', BOUNDARY),
+          ...range('r-', 28, OLDER),
+        ],
+        /*
+         * The appview's copy of the reader's own post, which the restored top
+         * already showed, at the very top of the new posts: were it tuned
+         * again without the restored top, it would appear above the rows the
+         * reader is at the top of.
+         */
+        newer: [feedItem('own', BOUNDARY), ...range('n-', 29)],
+      })
+      const rows = () =>
+        hook.result.current.query.data!.pages[0].slices.map(
+          slice => slice._reactKey,
+        )
+      const before = rows()
+      expect(before).toHaveLength(29)
+
+      settle(queryClient)
+      await waitFor(() =>
+        expect(hook.result.current.query.data?.pages).toHaveLength(1),
+      )
+
+      // The same rows, and the boundary posts it now holds after them.
+      expect(rows().slice(0, before.length)).toEqual(before)
+      // Where the retired page showed them, the reader's post among them.
+      expect(rows().slice(before.length)).toEqual([
+        expect.stringContaining('/r-b0-'),
+        expect.stringContaining('/own-'),
+      ])
+    } finally {
+      mockFeedTuners.length = 0
+    }
+  })
+
+  it('keeps what a small prepend sits on, and only marks it reached', async () => {
+    const {queryClient} = await renderPrependedFeed({newer: range('n-', 3)})
+
+    expect(settle(queryClient)).toEqual({
+      status: 'settled',
+      reached: 1,
+      retired: 0,
+    })
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      'S',
+      'r:1',
+      'r:2',
+    ])
+  })
+
+  it('retires the old pages through an open gap', async () => {
+    const {queryClient} = await renderPrependedFeed({
+      newer: range('n-', 60),
+      cursor: '0:10',
+    })
+
+    expect(settle(queryClient)).toMatchObject({status: 'settled', retired: 2})
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      '0:10',
+    ])
+  })
+
+  it('lets a gap fill in flight land on the page it marked', async () => {
+    const {hook, queryClient, prependApi} = await renderPrependedFeed({
+      newer: range('n-', 3),
+      cursor: '0:10',
+    })
+    const below = deferred<FeedAPIResponse>()
+    prependApi.fetch.mockImplementationOnce(() => below.promise)
+
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fill({since: 'S', cursor: '0:10'})
+    })
+    // Too few posts to retire anything past the gap, so it only marks it.
+    expect(settle(queryClient)).toMatchObject({retired: 0})
+    await act(async () => {
+      below.resolve({cursor: '0:11', feed: [feedItem('0-11')]})
+      expect(await filling).toEqual({outcome: 'filled', itemCount: 1})
+    })
+
+    const {pages} = cachedData(queryClient)
+    expect(pages.map(page => page.cursor)).toEqual(['0:10', '0:11'])
+    expect(pages[0].reachedAt).toBe(42)
+  })
+
+  it('lets a prepend in flight land above the page it marked', async () => {
+    const {queryClient} = await renderPrependedFeed({newer: range('n-', 3)})
+    const above = deferred<{page: FeedPageUnselected; detail: undefined}>()
+
+    let prepending!: Promise<unknown>
+    act(() => {
+      prepending = prependPostFeedQuery(queryClient, KEY, () => above.promise)
+    })
+    settle(queryClient)
+    await act(async () => {
+      above.resolve({
+        page: {
+          since: 'N',
+          cursor: 'N',
+          startCursor: 'M',
+          feed: [feedItem('m-0')],
+          fetchedAt: Date.now(),
+        },
+        detail: undefined,
+      })
+      expect(await prepending).toMatchObject({status: 'committed'})
+    })
+
+    const {pages} = cachedData(queryClient)
+    expect(pages.map(page => [page.cursor, page.reachedAt])).toEqual([
+      ['N', undefined],
+      ['S', 42],
+      ['r:1', undefined],
+      ['r:2', undefined],
+    ])
+  })
+
+  it('writes nothing while a refresh or a fetch from the top is in flight', async () => {
+    const {hook, queryClient} = await renderPrependedFeed()
+    const data = cachedData(queryClient)
+    const top = deferred<FeedAPIResponse>()
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(
+        () => createApi({top: () => top.promise}) as never,
+      )
+
+    let refreshing!: Promise<unknown>
+    act(() => {
+      refreshing = hook.result.current.refresh()
+    })
+    expect(settle(queryClient)).toEqual({status: 'superseded'})
+    await act(async () => {
+      top.resolve({cursor: 'top:1', feed: [feedItem('top-1')]})
+      await refreshing
+    })
+    expect(cachedData(queryClient)).not.toBe(data)
+
+    const refetch = deferred<FeedAPIResponse>()
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(
+        () => createApi({top: () => refetch.promise}) as never,
+      )
+    act(() => {
+      void queryClient.invalidateQueries({queryKey: KEY})
+    })
+    expect(settle(queryClient)).toEqual({status: 'superseded'})
+    act(() => {
+      refetch.resolve({cursor: 'top:2', feed: [feedItem('top-2')]})
+    })
+  })
+
+  it('writes nothing before the restore has been followed up', () => {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData<InfiniteData<FeedPageUnselected>>(KEY, {
+      pages: [
+        {since: 'S', cursor: 'S', feed: range('n-', 30), fetchedAt: 1},
+        {cursor: 'r:1', startCursor: 'S', feed: range('r-', 30), fetchedAt: 0},
+      ],
+      pageParams: [undefined, undefined],
+    })
+    recordPostFeedRestore(queryClient, hashKey(KEY), {
+      restoredAt: Date.now(),
+      pageCount: 2,
+    })
+
+    expect(settlePostFeedQuery(queryClient, KEY)).toEqual({
+      status: 'superseded',
+    })
+  })
+
+  it('drops a fetchNextPage in flight when it retires the pages it continues', async () => {
+    const {hook, queryClient} = await renderPrependedFeed()
+    const next = deferred<FeedAPIResponse>()
+    jest.mocked(FollowingFeedAPI).mockImplementationOnce(() => {
+      const api = createApi()
+      api.fetch.mockImplementationOnce(() => next.promise)
+      return api as never
+    })
+    let fetchNextPage!: Promise<unknown>
+    act(() => {
+      fetchNextPage = hook.result.current.query.fetchNextPage()
+    })
+    await waitFor(() => expect(apis).toHaveLength(2))
+
+    settle(queryClient)
+    await act(async () => {
+      next.resolve({cursor: 'r:3', feed: [feedItem('r-3')]})
+      await fetchNextPage
+    })
+
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      'S',
+    ])
   })
 })

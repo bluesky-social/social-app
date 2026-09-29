@@ -33,6 +33,7 @@ import {
   type FeedPostNumbering,
   FeedTuner,
   type FeedTunerFn,
+  type FeedViewPostsSlice,
   type ValidFeedPostNumbering,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
@@ -59,6 +60,7 @@ import {
   fillPostFeedGap,
   getPostFeedQueryEntry,
   peekPostFeedQueryEntry,
+  postFeedPageOrigin,
   prependPostFeedQuery,
   refreshPostFeedQuery,
   settlePostFeedRestore,
@@ -163,6 +165,8 @@ export interface FeedPage {
   cursor: string | undefined
   /** See {@link FeedPageUnselected.since}. */
   since?: string
+  /** See {@link FeedPageUnselected.reachedAt}. */
+  reachedAt?: number
   slices: FeedPostSlice[]
   fetchedAt: number
 }
@@ -396,6 +400,71 @@ export function usePostFeedQuery(
           }
         }
 
+        /** The rows of tuned slices that pass moderation. */
+        const toSelectedSlices = (tuned: FeedViewPostsSlice[]) =>
+          tuned
+            .map(slice => {
+              const moderations = slice.items.map(item =>
+                moderatePost(item.post, moderationOpts!),
+              )
+
+              // apply moderation filter
+              for (let i = 0; i < slice.items.length; i++) {
+                const ignoreFilter =
+                  slice.items[i].post.author.did === ignoreFilterFor
+                if (ignoreFilter) {
+                  // remove mutes to avoid confused UIs
+                  moderations[i].causes = moderations[i].causes.filter(
+                    cause => cause.type !== 'muted',
+                  )
+                }
+                if (!ignoreFilter && moderations[i]?.ui('contentList').filter) {
+                  return undefined
+                }
+              }
+
+              if (isDiscover) {
+                userActionHistory.seen(
+                  slice.items.map(item => ({
+                    feedContext: slice.feedContext,
+                    reqId: slice.reqId,
+                    likeCount: item.post.likeCount ?? 0,
+                    repostCount: item.post.repostCount ?? 0,
+                    replyCount: item.post.replyCount ?? 0,
+                    isFollowedBy: Boolean(item.post.author.viewer?.followedBy),
+                    uri: item.post.uri,
+                  })),
+                )
+              }
+
+              const feedPostSlice: FeedPostSlice = {
+                _reactKey: slice._reactKey,
+                _isFeedPostSlice: true,
+                isIncompleteThread: slice.isIncompleteThread,
+                isFallbackMarker: slice.isFallbackMarker,
+                feedContext: slice.feedContext,
+                reqId: slice.reqId,
+                reason: slice.reason,
+                feedPostUri: slice.feedPostUri,
+                items: slice.items.map((item, i) => {
+                  const feedPostSliceItem: FeedPostSliceItem = {
+                    _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+                    uri: item.post.uri,
+                    post: item.post,
+                    record: item.record,
+                    postNumbering: item.postNumbering,
+                    moderation: moderations[i],
+                    parentAuthor: item.parentAuthor,
+                    isParentBlocked: item.isParentBlocked,
+                    isParentNotFound: item.isParentNotFound,
+                  }
+                  return feedPostSliceItem
+                }),
+              }
+              return feedPostSlice
+            })
+            .filter(n => !!n)
+
         for (const index of order.slice(reused)) {
           const page = data.pages[index]
           /*
@@ -404,91 +473,59 @@ export function usePostFeedQuery(
            * reader has seen them, and they must not shift under the reader.
            * What it added to the tuner then is added again, so the pages tuned
            * after it drop what it shows, as they would have.
+           *
+           * So does a copy of such a page, which a settle writes to mark it
+           * reached or to carry a boundary onto its end: only what the copy
+           * appended is tuned, after the rest.
            */
-          const lastIndex = reusable ? reusable.data.pages.indexOf(page) : -1
+          const lastIndex = reusable
+            ? reusable.data.pages.findIndex(
+                lastPage =>
+                  lastPage === page ||
+                  postFeedPageOrigin(queryClient, lastPage) ===
+                    postFeedPageOrigin(queryClient, page),
+              )
+            : -1
+          const lastPage =
+            lastIndex === -1 ? undefined : reusable!.data.pages[lastIndex]
           const kept =
             lastIndex === -1 ? undefined : reusable!.result.pages[lastIndex]
           const keptDelta = kept && tunerDeltas.current.get(kept)
-          if (kept && keptDelta) {
-            selected[index] = kept
+          const appended = lastPage && appendedItems(lastPage.feed, page.feed)
+          if (kept && keptDelta && appended) {
             replayTunerDelta(tuner, keptDelta)
+            if (lastPage === page) {
+              selected[index] = kept
+              continue
+            }
+            const seenBefore = tunerSizes(tuner)
+            const copy: FeedPage = {
+              tuner,
+              cursor: page.cursor,
+              ...(page.since !== undefined && {since: page.since}),
+              ...(page.reachedAt !== undefined && {reachedAt: page.reachedAt}),
+              fetchedAt: page.fetchedAt,
+              slices: [
+                ...kept.slices,
+                ...toSelectedSlices(tuner.tune(appended)),
+              ],
+            }
+            selected[index] = copy
+            tunerDeltas.current.set(
+              copy,
+              mergeTunerDeltas(keptDelta, tunerDelta(tuner, seenBefore)),
+            )
             continue
           }
 
           const seenBefore = tunerSizes(tuner)
-          const tuned = tuner.tune(page.feed)
           const selectedPage: FeedPage = {
             tuner,
             cursor: page.cursor,
             ...(page.since !== undefined && {since: page.since}),
+            ...(page.reachedAt !== undefined && {reachedAt: page.reachedAt}),
             fetchedAt: page.fetchedAt,
-            slices: tuned
-              .map(slice => {
-                const moderations = slice.items.map(item =>
-                  moderatePost(item.post, moderationOpts!),
-                )
-
-                // apply moderation filter
-                for (let i = 0; i < slice.items.length; i++) {
-                  const ignoreFilter =
-                    slice.items[i].post.author.did === ignoreFilterFor
-                  if (ignoreFilter) {
-                    // remove mutes to avoid confused UIs
-                    moderations[i].causes = moderations[i].causes.filter(
-                      cause => cause.type !== 'muted',
-                    )
-                  }
-                  if (
-                    !ignoreFilter &&
-                    moderations[i]?.ui('contentList').filter
-                  ) {
-                    return undefined
-                  }
-                }
-
-                if (isDiscover) {
-                  userActionHistory.seen(
-                    slice.items.map(item => ({
-                      feedContext: slice.feedContext,
-                      reqId: slice.reqId,
-                      likeCount: item.post.likeCount ?? 0,
-                      repostCount: item.post.repostCount ?? 0,
-                      replyCount: item.post.replyCount ?? 0,
-                      isFollowedBy: Boolean(
-                        item.post.author.viewer?.followedBy,
-                      ),
-                      uri: item.post.uri,
-                    })),
-                  )
-                }
-
-                const feedPostSlice: FeedPostSlice = {
-                  _reactKey: slice._reactKey,
-                  _isFeedPostSlice: true,
-                  isIncompleteThread: slice.isIncompleteThread,
-                  isFallbackMarker: slice.isFallbackMarker,
-                  feedContext: slice.feedContext,
-                  reqId: slice.reqId,
-                  reason: slice.reason,
-                  feedPostUri: slice.feedPostUri,
-                  items: slice.items.map((item, i) => {
-                    const feedPostSliceItem: FeedPostSliceItem = {
-                      _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-                      uri: item.post.uri,
-                      post: item.post,
-                      record: item.record,
-                      postNumbering: item.postNumbering,
-                      moderation: moderations[i],
-                      parentAuthor: item.parentAuthor,
-                      isParentBlocked: item.isParentBlocked,
-                      isParentNotFound: item.isParentNotFound,
-                    }
-                    return feedPostSliceItem
-                  }),
-                }
-                return feedPostSlice
-              })
-              .filter(n => !!n),
+            slices: toSelectedSlices(tuner.tune(page.feed)),
           }
           selected[index] = selectedPage
           tunerDeltas.current.set(selectedPage, tunerDelta(tuner, seenBefore))
@@ -549,6 +586,35 @@ function tunerDelta(
  * Replayed onto the record it was tuned against, it leaves the tuner as tuning
  * the page again would.
  */
+function mergeTunerDeltas(a: TunerDelta, b: TunerDelta): TunerDelta {
+  return {
+    keys: [...a.keys, ...b.keys],
+    uris: [...a.uris, ...b.uris],
+    rootUris: [...a.rootUris, ...b.rootUris],
+  }
+}
+
+/**
+ * The items a copy of a page appended to it, or `undefined` if it is not the
+ * same page with items appended: `[]` for the page itself, or a copy that only
+ * marks it.
+ */
+function appendedItems<Item>(
+  feed: readonly Item[],
+  copy: readonly Item[],
+): Item[] | undefined {
+  if (copy === feed) {
+    return []
+  }
+  if (
+    copy.length < feed.length ||
+    feed.some((item, index) => copy[index] !== item)
+  ) {
+    return undefined
+  }
+  return copy.slice(feed.length)
+}
+
 function replayTunerDelta(tuner: FeedTuner, delta: TunerDelta) {
   for (const key of delta.keys) tuner.seenKeys.add(key)
   for (const uri of delta.uris) tuner.seenUris.add(uri)
@@ -771,12 +837,12 @@ export function useFollowingGapFill(
 export const NEW_CONTENT_FACEPILE_LIMIT = 3
 
 /**
- * The eligible, rendered content added above the rest of a feed this session:
- * the posts on the pages at the head that were fetched with `since`, after
- * tuning and moderation, and the first few of their authors.
+ * The eligible, rendered content added above the rest of a feed and not yet
+ * reached: the posts on the pages at the head that were fetched with `since`,
+ * less those the reader has reached the top past (see `settleFeedData`),
+ * after tuning and moderation, and the first few of their authors.
  *
- * For the new-posts pill (D1), which decides what to offer from it. Whether
- * the reader has reached this content yet is not known here.
+ * For the new-posts pill (D1), which decides what to offer from it.
  */
 export function summarizeNewContentAbove(
   pages: FeedPage[] | undefined,
@@ -788,6 +854,9 @@ export function summarizeNewContentAbove(
   for (const page of pages ?? []) {
     if (page.since === undefined) {
       break
+    }
+    if (page.reachedAt !== undefined) {
+      continue
     }
     for (const slice of page.slices) {
       if (slice.isFallbackMarker) {
