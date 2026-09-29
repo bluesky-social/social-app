@@ -56,6 +56,26 @@ function playAndroid(haptic: AndroidHaptic) {
 
 function noop() {}
 
+type Haptic = {ios?: IOSHaptic; android?: AndroidHaptic}
+
+/**
+ * What each intent plays on each platform. Exported for the Storybook; use
+ * `useHaptics` to actually play them.
+ */
+export const HAPTIC_INTENTS = {
+  tap: {ios: 'light', android: 'context-click'},
+  confirm: {ios: 'medium', android: 'confirm'},
+  longPress: {ios: 'heavy', android: 'long-press'},
+  toggleOn: {ios: 'light', android: 'toggle-on'},
+  toggleOff: {ios: 'light', android: 'toggle-off'},
+  selection: {ios: 'light', android: 'segment-tick'},
+  // TODO: use `gesture-threshold-activate` on Android once expo-haptics exposes it
+  threshold: {ios: 'medium', android: 'context-click'},
+  dragStart: {ios: 'medium', android: 'drag-start'},
+  success: {ios: 'success', android: 'confirm'},
+  error: {ios: 'error', android: 'reject'},
+} satisfies Record<string, Required<Haptic>>
+
 /**
  * Haptic feedback, described by what just happened rather than how it should
  * feel. Each method maps to the idiomatic haptic on each platform. Does nothing
@@ -66,7 +86,7 @@ function noop() {}
 export function useHaptics() {
   const disabled = useHapticsDisabled() || IS_WEB
 
-  function play(ios?: IOSHaptic, android?: AndroidHaptic) {
+  function play({ios, android}: Haptic) {
     if (disabled) return
     // Fire and forget - a haptic that fails to play isn't worth surfacing
     if (IS_IOS && ios) {
@@ -80,47 +100,46 @@ export function useHaptics() {
     /**
      * A light acknowledgement of a tap, e.g. like, reply, or opening a card.
      */
-    tap: () => play('light', 'context-click'),
+    tap: () => play(HAPTIC_INTENTS.tap),
     /**
      * The user committed a change, e.g. follow, pin a feed, or send a message.
      */
-    confirm: () => play('medium', 'confirm'),
+    confirm: () => play(HAPTIC_INTENTS.confirm),
     /**
      * A long-press did something, e.g. opened a menu or the share sheet.
      */
-    longPress: () => play('heavy', 'long-press'),
+    longPress: () => play(HAPTIC_INTENTS.longPress),
     /**
      * A switch, checkbox or radio button changed. Pass the new value.
      */
-    toggle: (on: boolean) => play('light', on ? 'toggle-on' : 'toggle-off'),
+    toggle: (on: boolean) =>
+      play(on ? HAPTIC_INTENTS.toggleOn : HAPTIC_INTENTS.toggleOff),
     /**
      * The highlighted option changed, e.g. a segmented control, the menu item
      * under the user's finger, or the slot a dragged item is over.
      */
-    selection: () => play('light', 'segment-tick'),
+    selection: () => play(HAPTIC_INTENTS.selection),
     /**
      * A gesture crossed the point where releasing will trigger its action, e.g.
      * swipe-to-reply.
      */
-    // TODO: use `gesture-threshold-activate` on Android once expo-haptics exposes it
-    threshold: () => play('medium', 'context-click'),
+    threshold: () => play(HAPTIC_INTENTS.threshold),
     /**
      * An item was picked up to be dragged.
      */
-    dragStart: () => play('medium', 'drag-start'),
+    dragStart: () => play(HAPTIC_INTENTS.dragStart),
     /**
      * Something the user was waiting on finished successfully.
      */
-    success: () => play('success', 'confirm'),
+    success: () => play(HAPTIC_INTENTS.success),
     /**
      * Something the user was waiting on failed.
      */
-    error: () => play('error', 'reject'),
+    error: () => play(HAPTIC_INTENTS.error),
     /**
      * Escape hatch for when none of the above fit. Omit a platform to play
      * nothing there. Android constants fall back like the methods above.
      */
-    platform: ({ios, android}: {ios?: IOSHaptic; android?: AndroidHaptic}) =>
-      play(ios, android),
+    platform: (haptic: Haptic) => play(haptic),
   }
 }
