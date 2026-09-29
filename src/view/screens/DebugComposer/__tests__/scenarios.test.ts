@@ -19,13 +19,13 @@ jest.mock('#/lib/media/manip', () => ({
   getImageDim: jest.fn(() => Promise.resolve({width: 100, height: 100})),
 }))
 
-import {draftToInitialState} from '#/components/ComposerV2/adapters'
-import {normalizePostReference} from '#/components/ComposerV2/tester/postUrl'
+import {normalizePostReference} from '#/view/screens/DebugComposer/postUrl'
 import {
   buildScenarioInitialState,
   TESTER_DRAFT_FIXTURE,
   TESTER_DRAFT_FIXTURE_ID,
-} from '#/components/ComposerV2/tester/scenarios'
+} from '#/view/screens/DebugComposer/scenarios'
+import {draftToInitialState} from '#/components/ComposerV2/adapters'
 import {type app} from '#/lexicons'
 
 const realPost = {

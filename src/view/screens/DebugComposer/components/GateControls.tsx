@@ -4,16 +4,16 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {createPostgateRecord} from '#/state/queries/postgate/util'
 import {type ThreadgateAllowUISetting} from '#/state/queries/threadgate'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {useThreadState, useThreadStore} from '#/components/ComposerV2/hooks'
 import {
   mergePostgateEmbeddingRules,
   mergeThreadgateAllowRules,
   splitPostgateEmbeddingRules,
   splitThreadgateAllowRules,
-} from '#/components/ComposerV2/tester/gateRules'
-import {useThreadgateSummary} from '#/components/ComposerV2/tester/messages'
+} from '#/view/screens/DebugComposer/gateRules'
+import {useThreadgateSummary} from '#/view/screens/DebugComposer/messages'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {useThreadState, useThreadStore} from '#/components/ComposerV2/hooks'
 import * as Dialog from '#/components/Dialog'
 import {PostInteractionSettingsControlledDialog} from '#/components/dialogs/PostInteractionSettingsDialog'
 import {Text} from '#/components/Typography'

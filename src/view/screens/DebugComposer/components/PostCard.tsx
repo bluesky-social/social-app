@@ -10,6 +10,12 @@ import {
   SelectMediaButton,
   type SelectMediaButtonProps,
 } from '#/view/com/composer/SelectMediaButton'
+import {
+  MediaAttachmentView,
+  RecordAttachmentView,
+} from '#/view/screens/DebugComposer/components/AttachmentControls'
+import {AttachUrlDialogButton} from '#/view/screens/DebugComposer/components/RecordAttachControls'
+import {parseTagsInput} from '#/view/screens/DebugComposer/parseTagsInput'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {Composer} from '#/components/Composer'
@@ -19,12 +25,6 @@ import {
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
 import {type AddMediaInput} from '#/components/ComposerV2/store/types'
-import {
-  MediaAttachmentView,
-  RecordAttachmentView,
-} from '#/components/ComposerV2/tester/components/AttachmentControls'
-import {AttachUrlDialogButton} from '#/components/ComposerV2/tester/components/RecordAttachControls'
-import {parseTagsInput} from '#/components/ComposerV2/tester/parseTagsInput'
 import * as Dialog from '#/components/Dialog'
 import {LanguageSelectDialog} from '#/components/dialogs/LanguageSelectDialog'
 import * as TextField from '#/components/forms/TextField'

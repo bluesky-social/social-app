@@ -2,13 +2,13 @@ import {useEffect, useRef, useState} from 'react'
 import {nanoid} from 'nanoid/non-secure'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {type TesterScenarioId} from '#/view/screens/DebugComposer/scenarios'
 import {reportInitializationError} from '#/components/ComposerV2/adapters'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {type ThreadStore} from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
 import {type UploadDependencies} from '#/components/ComposerV2/store/uploads'
-import {type TesterScenarioId} from '#/components/ComposerV2/tester/scenarios'
 
 /** One isolated tester session wrapping one store instance. */
 export type TesterSession = {

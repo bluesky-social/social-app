@@ -4,6 +4,7 @@ import {Image} from 'expo-image'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {MAX_ALT_TEXT} from '#/lib/constants'
+import {useUploadPhaseLabel} from '#/view/screens/DebugComposer/messages'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
@@ -18,7 +19,6 @@ import {
   type PostMediaUploadStatus,
   type PostMediaVideo,
 } from '#/components/ComposerV2/store/types'
-import {useUploadPhaseLabel} from '#/components/ComposerV2/tester/messages'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'

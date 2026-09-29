@@ -47,12 +47,12 @@ jest.mock('#/components/Dialog', () => {
 })
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {AttachUrlDialogButton} from '#/view/screens/DebugComposer/components/RecordAttachControls'
 import {
   ThreadStoreProvider,
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {AttachUrlDialogButton} from '#/components/ComposerV2/tester/components/RecordAttachControls'
 import * as Dialog from '#/components/Dialog'
 
 const portal = (Dialog as unknown as {__portal: PortalGroup}).__portal

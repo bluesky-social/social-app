@@ -16,11 +16,11 @@ jest.mock('#/logger', () => ({
 }))
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {useTesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {composerOptsToInitialState} from '#/components/ComposerV2/adapters'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type UploadDependencies} from '#/components/ComposerV2/store/uploads'
-import {useTesterSession} from '#/components/ComposerV2/tester/useTesterSession'
 
 /** Wrap the real constructor so destruction is observable per store. */
 function makeCreateStoreSpy() {
