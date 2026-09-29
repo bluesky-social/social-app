@@ -33,6 +33,7 @@ import {
   type FeedPostNumbering,
   FeedTuner,
   type FeedTunerFn,
+  type FeedViewPostsSlice,
   type ValidFeedPostNumbering,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
@@ -261,6 +262,8 @@ export function usePostFeedQuery(
     args: typeof selectArgs
     result: InfiniteData<FeedPage>
   } | null>(null)
+  /** What tuning each selected page added to its tuner, to replay on reuse. */
+  const tunedSlices = useRef(new WeakMap<FeedPage, TunedSlice[]>())
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   // Make sure this doesn't invalidate unless really needed.
@@ -330,6 +333,12 @@ export function usePostFeedQuery(
         const order = tuneOrder(data.pages)
         const selected: FeedPage[] = new Array(data.pages.length)
         let reused = 0
+        let reusable:
+          | {
+              data: InfiniteData<FeedPageUnselected>
+              result: InfiniteData<FeedPage>
+            }
+          | undefined
         if (lastRun.current) {
           const {
             data: lastData,
@@ -347,6 +356,7 @@ export function usePostFeedQuery(
             }
           }
           if (canReuse) {
+            reusable = {data: lastData, result: lastResult}
             /*
              * Pages are tuned in the order they were fetched (see tuneOrder),
              * so a page added above the others comes last, and everything
@@ -376,13 +386,30 @@ export function usePostFeedQuery(
 
         for (const index of order.slice(reused)) {
           const page = data.pages[index]
-          selected[index] = {
+          /*
+           * A page shown last time keeps its rows even though a page tuned
+           * before it has gone since, as the pages below a filled gap go: the
+           * reader has seen them, and they must not shift under the reader.
+           * What it added to the tuner then is added again, so the pages tuned
+           * after it drop what it shows, as they would have.
+           */
+          const lastIndex = reusable ? reusable.data.pages.indexOf(page) : -1
+          const kept =
+            lastIndex === -1 ? undefined : reusable!.result.pages[lastIndex]
+          const keptSlices = kept && tunedSlices.current.get(kept)
+          if (kept && keptSlices) {
+            selected[index] = kept
+            replayTunedSlices(tuner, keptSlices)
+            continue
+          }
+
+          const tuned = tuner.tune(page.feed)
+          const selectedPage: FeedPage = {
             tuner,
             cursor: page.cursor,
             ...(page.since !== undefined && {since: page.since}),
             fetchedAt: page.fetchedAt,
-            slices: tuner
-              .tune(page.feed)
+            slices: tuned
               .map(slice => {
                 const moderations = slice.items.map(item =>
                   moderatePost(item.post, moderationOpts!),
@@ -450,6 +477,8 @@ export function usePostFeedQuery(
               })
               .filter(n => !!n),
           }
+          selected[index] = selectedPage
+          tunedSlices.current.set(selectedPage, tuned.map(recordTunedSlice))
         }
 
         const result = {
@@ -473,6 +502,41 @@ export function usePostFeedQuery(
   useAutoPagination(query, itemCount, MIN_POSTS)
 
   return query
+}
+
+/**
+ * What tuning a slice added to the tuner's record of what it has seen: see
+ * `FeedTuner.tune` and `FeedTuner.dedupThreads`.
+ */
+type TunedSlice = {
+  key: string
+  rootUri: string
+  /** Not for a reposted reply, whose thread can still be shown later. */
+  uris?: string[]
+}
+
+function recordTunedSlice(slice: FeedViewPostsSlice): TunedSlice {
+  return {
+    key: slice._reactKey,
+    rootUri: slice.rootUri,
+    ...(!(slice.isReply && slice.isRepost) && {
+      uris: slice.items.map(item => item.post.uri),
+    }),
+  }
+}
+
+/**
+ * Adds to a tuner what tuning a page added to one before, so that a page can
+ * keep its selection and the pages tuned after it still drop what it shows.
+ */
+function replayTunedSlices(tuner: FeedTuner, slices: TunedSlice[]) {
+  for (const slice of slices) {
+    tuner.seenKeys.add(slice.key)
+    tuner.seenRootUris.add(slice.rootUri)
+    for (const uri of slice.uris ?? []) {
+      tuner.seenUris.add(uri)
+    }
+  }
 }
 
 /**

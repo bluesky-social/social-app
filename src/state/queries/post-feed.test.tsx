@@ -12,11 +12,13 @@ import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {FollowingFeedAPI} from '#/lib/api/feed/following'
 import {type FeedAPIResponse} from '#/lib/api/feed/types'
+import {FeedTuner, type FeedTunerFn} from '#/lib/api/feed-manip'
 import {logger} from '#/logger'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {type app} from '#/lexicons'
 import {
   type FeedPageUnselected,
+  type FeedPostSlice,
   pollLatest,
   resetPostsFeedQueries,
   RQKEY,
@@ -38,6 +40,8 @@ import {
 } from './post-feed-registry'
 import {FOLLOWING_SNAPSHOT_QUERY_KEY} from './post-feed-snapshot'
 
+// Replies are only threaded when their strong refs validate, CIDs and all.
+jest.unmock('multiformats/cid')
 jest.mock('#/lib/api/feed/following', () => ({
   FollowingFeedAPI: jest.fn(),
 }))
@@ -64,7 +68,8 @@ jest.mock('#/state/queries/util', () => ({
   useAutoPagination: jest.fn(),
 }))
 
-const mockFeedTuners: never[] = []
+/** Following's tuners are left out unless a test puts them in. */
+const mockFeedTuners: FeedTunerFn[] = []
 const mockModerationOpts = {
   userDid: 'did:plc:viewer',
   prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
@@ -1254,7 +1259,13 @@ describe('useFollowingGapFill', () => {
    * A restored feed with a page above it that did not reach its top: the
    * restore prepend's API, the first one created, issued the gap's cursor.
    */
-  async function renderGappedFeed() {
+  async function renderGappedFeed({
+    restoredTop = [feedItem('r-0'), feedItem('r-1')],
+    gapped = [feedItem('n-0'), feedItem('n-1')],
+  }: {
+    restoredTop?: app.bsky.feed.defs.FeedViewPost[]
+    gapped?: app.bsky.feed.defs.FeedViewPost[]
+  } = {}) {
     const queryClient = createQueryClient()
     const fetchedAt = Date.now() - HOUR
     queryClient.setQueryData<InfiniteData<FeedPageUnselected>>(KEY, {
@@ -1262,7 +1273,7 @@ describe('useFollowingGapFill', () => {
         {
           cursor: 'r:1',
           startCursor: 'S',
-          feed: [feedItem('r-0'), feedItem('r-1')],
+          feed: restoredTop,
           fetchedAt,
         },
         {cursor: 'r:2', feed: [feedItem('r-2')], fetchedAt: fetchedAt + 1},
@@ -1293,7 +1304,7 @@ describe('useFollowingGapFill', () => {
             Promise.resolve({
               cursor: GAP.cursor,
               startCursor: 'N',
-              feed: [feedItem('n-0'), feedItem('n-1')],
+              feed: gapped,
             }),
         }) as never,
     )
@@ -1301,7 +1312,7 @@ describe('useFollowingGapFill', () => {
     await act(async () => {
       prepended = await hook.result.current.prepend()
     })
-    expect(prepended).toEqual({outcome: 'gap', itemCount: 2})
+    expect(prepended).toEqual({outcome: 'gap', itemCount: gapped.length})
     return {hook, queryClient, gapApi: apis[0]}
   }
 
@@ -1378,6 +1389,64 @@ describe('useFollowingGapFill', () => {
       expect(hook.result.current.query.data?.pages).toHaveLength(2),
     )
     expect(keys()).toEqual(before)
+  })
+
+  it('keeps the rows above the gap as they were, and drops their duplicates below', async () => {
+    /** A reply to the post `parent`, which is also its thread's root. */
+    function reply(rkey: string, parent: string) {
+      const item = feedItem(rkey)
+      const parentPost = feedItem(parent).post
+      const ref = {uri: parentPost.uri, cid: parentPost.cid}
+      return {
+        ...item,
+        post: {
+          ...item.post,
+          record: {...item.post.record, reply: {root: ref, parent: ref}},
+        },
+        reply: {root: parentPost, parent: parentPost},
+      } as unknown as app.bsky.feed.defs.FeedViewPost
+    }
+    const rows = (page: {slices: FeedPostSlice[]}) =>
+      page.slices.map(slice => [
+        slice._reactKey,
+        ...slice.items.map(item => item._reactKey),
+      ])
+    mockFeedTuners.push(FeedTuner.dedupThreads)
+    try {
+      const {hook, gapApi} = await renderGappedFeed({
+        // The reader's own post, as their PDS served it, and a thread's root.
+        restoredTop: [feedItem('own'), feedItem('x')],
+        // The appview's copy of that post, and a reply in that thread.
+        gapped: [feedItem('n-0'), feedItem('own'), reply('x-1', 'x')],
+      })
+      await waitFor(() =>
+        expect(hook.result.current.query.data?.pages).toHaveLength(3),
+      )
+      const before = rows(hook.result.current.query.data!.pages[0])
+      // Both were already shown below it.
+      expect(before).toHaveLength(1)
+      gapApi.fetch.mockImplementationOnce(() =>
+        Promise.resolve({
+          cursor: '0:11',
+          feed: [feedItem('n-0'), feedItem('m-0'), feedItem('x')],
+        }),
+      )
+
+      await act(() => hook.result.current.fill(GAP))
+
+      await waitFor(() =>
+        expect(hook.result.current.query.data?.pages).toHaveLength(2),
+      )
+      const [above, below] = hook.result.current.query.data!.pages
+      expect(rows(above)).toEqual(before)
+      // Its duplicate of a post shown above is dropped from below it.
+      expect(below.slices.map(slice => slice.feedPostUri)).toEqual([
+        'at://did:plc:author/app.bsky.feed.post/m-0',
+        'at://did:plc:author/app.bsky.feed.post/x',
+      ])
+    } finally {
+      mockFeedTuners.length = 0
+    }
   })
 
   it('paginates on from the page that filled the gap, with its API', async () => {
