@@ -156,12 +156,6 @@ are not safe UI text or automatic logging payloads.
 
 ## Follow-ups, not part of this composer PR
 
-- **Image compression extraction:** handled separately on the main-based
-  `composer-image-compression-extraction` branch. Until integrated, the worker
-  still lazily imports the gallery compressor. After rebasing onto the extraction,
-  switch to the UI-free static import, preserve dependency injection, and rerun
-  worker/import-boundary checks. This README does not claim that integration is
-  complete.
 - **Draft save/restore:** inbound hydration exists; outbound serialization,
   persistence, cleanup, and tester Save/Open controls are deferred to a separately
   authorized follow-up branch. The design is recorded below and in the local
@@ -270,20 +264,23 @@ states, not store corruption; publication preflight handles readiness.
 `pdsClient`, `pdsUrl`, and `i18n` are required store options; a caller without
 an account must not construct a store. `pdsUrl` is the account PDS URL, which
 video uploads use for the service-auth audience; the shared video API still
-names it `dispatchUrl`, so the worker maps it at that call. Tests can inject
-compression, metadata, upload, service-client, and polling/sleep overrides via
-`__uploadOverrides`, and whole workers via `__uploadWorkers`. There is no
-production simulated-upload fallback. Use the current lex clients, not removed
-agent APIs.
+names it `dispatchUrl`, so the worker maps it at that call. Production callers
+pass only those runtime inputs: the store hands the image and video workers the
+production functions they call (`store/uploadDependencies.ts`) as required
+options, and workers never pick a fallback. The one test seam is
+`__uploadWorkers`, which replaces a whole worker; to run a real worker with
+fakes, wrap it (`realUploadWorkers` in `store/__tests__/uploadTestUtils.ts`).
+There is no production simulated-upload fallback. Use the current lex clients,
+not removed agent APIs.
 
 **Images:** retain original source fields; compress with the existing
 `compressImage` and `IMAGE_SIZE_CONFIG_POSTS`; retain prepared path/MIME/dimensions
 separately; upload through the platform PDS blob helper. The compressor has no
 abort signal: cancellation is logical, its late result is ignored, and a
 cancelled compression must not start the following upload. Do not duplicate the
-compression policy. The separate extraction removes the gallery/picker/Toast/
-ALF/bottom-sheet import chain; importing the store must remain usable in tests
-without mounting UI or faking native `Platform.Version` to hide that coupling.
+compression policy. The store imports the UI-free compressor from
+`#/lib/media/image/compress`, not `#/state/gallery`, so importing the store stays
+usable in tests without mounting UI or faking native `Platform.Version`.
 
 **Video:** validate metadata, duration, dimensions, MIME, and account limits;
 reuse the production compressor and `uploadVideo()` wrapper around

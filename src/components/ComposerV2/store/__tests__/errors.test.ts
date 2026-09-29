@@ -14,11 +14,12 @@ import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   manualUploadWorkers,
+  realUploadWorkers,
   testUploadRuntime,
 } from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
 import {
-  type UploadTestOverrides,
+  type ImageUploadDependencies,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
@@ -314,17 +315,15 @@ describe('session error reporting', () => {
         name: cancelled ? 'AbortError' : 'Error',
       })
       const onError = jest.fn<ComposerV2OnError>()
-      const uploadBlob =
-        jest.fn<NonNullable<UploadTestOverrides['uploadBlob']>>()
+      const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>()
       const store = createThreadStore({
         ...testUploadRuntime,
         resolvers,
         onError,
         i18n: {_: () => 'Safe localized failure'} as never,
-        __uploadOverrides: {
-          compressImage: () => Promise.reject(cause),
-          uploadBlob,
-        },
+        __uploadWorkers: realUploadWorkers({
+          image: {compressImage: () => Promise.reject(cause), uploadBlob},
+        }),
       })
       store.actions.addMedia(Object.keys(store.getState().posts)[0], [image])
       await Promise.resolve()
