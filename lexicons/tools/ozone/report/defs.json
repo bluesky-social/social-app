@@ -1,6 +1,81 @@
 {
   "id": "tools.ozone.report.defs",
   "defs": {
+    "liveStats": {
+      "type": "object",
+      "properties": {
+        "actionRate": {
+          "type": "integer",
+          "description": "Percentage of closures actioned (actionedCount / closedCount * 100), rounded to nearest integer."
+        },
+        "closedCount": {
+          "type": "integer",
+          "description": "Number of close transitions."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When these statistics were last computed."
+        },
+        "inboundCount": {
+          "type": "integer",
+          "description": "Reports received."
+        },
+        "pendingCount": {
+          "type": "integer",
+          "description": "Number of reports currently not closed."
+        },
+        "actionedCount": {
+          "type": "integer",
+          "description": "Number of closures whose last report action is label, tag, or takedown."
+        },
+        "ahtDurationSec": {
+          "type": "integer",
+          "description": "Sum of report assignment-to-close seconds."
+        },
+        "ahtSampleCount": {
+          "type": "integer",
+          "description": "Number of assigned closed-report samples in ahtDurationSec."
+        },
+        "escalatedCount": {
+          "type": "integer",
+          "description": "Number of reports escalated."
+        },
+        "tagActionCount": {
+          "type": "integer",
+          "description": "Closures whose last report action is a tag event."
+        },
+        "labelActionCount": {
+          "type": "integer",
+          "description": "Closures whose last report action is a label event."
+        },
+        "acknowledgedCount": {
+          "type": "integer",
+          "description": "Number of closures whose last report action is not label, tag, or takedown."
+        },
+        "avgHandlingTimeSec": {
+          "type": "integer",
+          "description": "Average handling time in seconds from report assignment to close."
+        },
+        "takedownActionCount": {
+          "type": "integer",
+          "description": "Closures whose last report action is a takedown event."
+        },
+        "avgResolutionTimeSec": {
+          "type": "integer",
+          "description": "Average resolution time in seconds from report creation to close."
+        },
+        "resolutionDurationSec": {
+          "type": "integer",
+          "description": "Sum of report creation-to-close seconds."
+        },
+        "resolutionSampleCount": {
+          "type": "integer",
+          "description": "Number of closed-report samples in resolutionDurationSec."
+        }
+      },
+      "description": "Live statistics for reports for the current calendar day, filterable by queue, moderator, or report type."
+    },
     "reasonType": {
       "type": "string",
       "knownValues": [
@@ -46,13 +121,309 @@
         "tools.ozone.report.defs#reasonSelfHarmOther"
       ]
     },
+    "reportView": {
+      "type": "object",
+      "required": [
+        "id",
+        "eventId",
+        "status",
+        "subject",
+        "reportType",
+        "reportedBy",
+        "reporter",
+        "createdAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Report ID"
+        },
+        "queue": {
+          "ref": "tools.ozone.queue.defs#queueView",
+          "type": "ref",
+          "description": "The queue this report is assigned to (if any)"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the report",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "ref": "tools.ozone.moderation.defs#modEventView",
+            "type": "ref"
+          },
+          "description": "Optional: expanded action events"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Comment provided by the reporter"
+        },
+        "eventId": {
+          "type": "integer",
+          "description": "ID of the moderation event that created this report"
+        },
+        "isMuted": {
+          "type": "boolean",
+          "description": "Whether this report is muted. A report is muted if the reporter was muted or the subject was muted at the time the report was created."
+        },
+        "subject": {
+          "ref": "tools.ozone.moderation.defs#subjectView",
+          "type": "ref",
+          "description": "The subject that was reported with full details"
+        },
+        "queuedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the report was assigned to its current queue"
+        },
+        "reporter": {
+          "ref": "tools.ozone.moderation.defs#subjectView",
+          "type": "ref",
+          "description": "Full subject view of the reporter account"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the report was created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the report was last updated"
+        },
+        "actionNote": {
+          "type": "string",
+          "description": "Note sent to reporter when report was actioned"
+        },
+        "assignment": {
+          "ref": "#reportAssignment",
+          "type": "ref",
+          "description": "Information about moderator currently assigned to this report (if any)"
+        },
+        "reportType": {
+          "ref": "com.atproto.moderation.defs#reasonType",
+          "type": "ref",
+          "description": "Type of report"
+        },
+        "reportedBy": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the user who made the report"
+        },
+        "isAutomated": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether this report was emitted by automated tooling."
+        },
+        "subjectStatus": {
+          "ref": "tools.ozone.moderation.defs#subjectStatusView",
+          "type": "ref",
+          "description": "Current status of the reported subject"
+        },
+        "actionEventIds": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "description": "Array of moderation event IDs representing actions taken on this report, in append order (most recently linked event last)"
+        },
+        "relatedReportCount": {
+          "type": "integer",
+          "description": "Number of other pending reports on the same subject"
+        }
+      }
+    },
     "reasonOther": {
       "type": "token",
       "description": "An issue not included in these options"
     },
+    "noteActivity": {
+      "type": "object",
+      "properties": {},
+      "description": "Activity recording a note on a report. Use internalNote for moderator-only notes or publicNote for reporter-visible notes (or both)."
+    },
     "reasonAppeal": {
       "type": "token",
       "description": "Appeal a previously taken moderation action"
+    },
+    "closeActivity": {
+      "type": "object",
+      "properties": {
+        "previousStatus": {
+          "type": "string",
+          "description": "The report's status before this activity. Populated automatically from the report row; not required in input.",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        }
+      },
+      "description": "Activity recording a report being closed."
+    },
+    "queueActivity": {
+      "type": "object",
+      "properties": {
+        "previousStatus": {
+          "type": "string",
+          "description": "The report's status before this activity. Populated automatically from the report row; not required in input.",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        }
+      },
+      "description": "Activity recording a report being routed to a queue."
+    },
+    "assignmentView": {
+      "type": "object",
+      "required": [
+        "id",
+        "did",
+        "reportId",
+        "startAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "endAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "queue": {
+          "ref": "tools.ozone.queue.defs#queueView",
+          "type": "ref"
+        },
+        "startAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "reportId": {
+          "type": "integer"
+        },
+        "moderator": {
+          "ref": "tools.ozone.team.defs#member",
+          "type": "ref",
+          "description": "The moderator assigned to this report"
+        }
+      }
+    },
+    "reopenActivity": {
+      "type": "object",
+      "properties": {
+        "previousStatus": {
+          "type": "string",
+          "description": "The report's status before this activity. Populated automatically from the report row; not required in input.",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        }
+      },
+      "description": "Activity recording a closed report being reopened. Only valid when the report is in 'closed' status."
+    },
+    "historicalStats": {
+      "type": "object",
+      "required": [
+        "date"
+      ],
+      "properties": {
+        "date": {
+          "type": "string",
+          "description": "The calendar date this snapshot covers (YYYY-MM-DD)."
+        },
+        "actionRate": {
+          "type": "integer",
+          "description": "Percentage of closures actioned (actionedCount / closedCount * 100), rounded to nearest integer."
+        },
+        "computedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When this snapshot was last computed."
+        },
+        "closedCount": {
+          "type": "integer",
+          "description": "Number of close transitions during this day."
+        },
+        "inboundCount": {
+          "type": "integer",
+          "description": "Reports received during this day."
+        },
+        "pendingCount": {
+          "type": "integer",
+          "description": "Number of reports not closed at time of computation."
+        },
+        "actionedCount": {
+          "type": "integer",
+          "description": "Number of closures whose last report action is label, tag, or takedown during this day."
+        },
+        "ahtDurationSec": {
+          "type": "integer",
+          "description": "Sum of report assignment-to-close seconds for this day's samples."
+        },
+        "ahtSampleCount": {
+          "type": "integer",
+          "description": "Number of assigned closed-report samples in ahtDurationSec."
+        },
+        "escalatedCount": {
+          "type": "integer",
+          "description": "Number of reports escalated during this day."
+        },
+        "tagActionCount": {
+          "type": "integer",
+          "description": "Closures whose last report action is a tag event during this day."
+        },
+        "labelActionCount": {
+          "type": "integer",
+          "description": "Closures whose last report action is a label event during this day."
+        },
+        "acknowledgedCount": {
+          "type": "integer",
+          "description": "Number of closures whose last report action is not label, tag, or takedown during this day."
+        },
+        "avgHandlingTimeSec": {
+          "type": "integer",
+          "description": "Average handling time in seconds from report assignment to close."
+        },
+        "takedownActionCount": {
+          "type": "integer",
+          "description": "Closures whose last report action is a takedown event during this day."
+        },
+        "avgResolutionTimeSec": {
+          "type": "integer",
+          "description": "Average resolution time in seconds from report creation to close."
+        },
+        "resolutionDurationSec": {
+          "type": "integer",
+          "description": "Sum of report creation-to-close seconds for this day's samples."
+        },
+        "resolutionSampleCount": {
+          "type": "integer",
+          "description": "Number of closed-report samples in resolutionDurationSec."
+        }
+      },
+      "description": "A single daily snapshot of report statistics for a calendar date."
     },
     "reasonRuleOther": {
       "type": "token",
@@ -66,13 +437,143 @@
       "type": "token",
       "description": "Non-consensual intimate imagery"
     },
+    "reportAssignment": {
+      "type": "object",
+      "required": [
+        "did",
+        "assignedAt"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the assigned moderator"
+        },
+        "moderator": {
+          "ref": "tools.ozone.team.defs#member",
+          "type": "ref",
+          "description": "Full member record of the assigned moderator"
+        },
+        "assignedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the report was assigned"
+        }
+      },
+      "description": "Information about the moderator currently assigned to a report."
+    },
     "reasonSexualOther": {
       "type": "token",
       "description": "Other sexual violence content"
     },
+    "assignmentActivity": {
+      "type": "object",
+      "properties": {
+        "previousStatus": {
+          "type": "string",
+          "description": "The report's status before this activity. Populated automatically from the report row; not required in input.",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        }
+      },
+      "description": "Activity recording a moderator being assigned to a report."
+    },
+    "escalationActivity": {
+      "type": "object",
+      "properties": {
+        "previousStatus": {
+          "type": "string",
+          "description": "The report's status before this activity. Populated automatically from the report row; not required in input.",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        }
+      },
+      "description": "Activity recording a report being escalated."
+    },
     "reasonSexualAnimal": {
       "type": "token",
       "description": "Animal sexual abuse"
+    },
+    "reportActivityView": {
+      "type": "object",
+      "required": [
+        "id",
+        "reportId",
+        "activity",
+        "isAutomated",
+        "createdBy",
+        "createdAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Activity ID"
+        },
+        "meta": {
+          "type": "unknown",
+          "description": "Extensible JSON payload for loose activity-specific metadata (e.g. assignmentId)."
+        },
+        "report": {
+          "ref": "#reportView",
+          "type": "ref",
+          "description": "Full view of the report this activity belongs to."
+        },
+        "activity": {
+          "refs": [
+            "#queueActivity",
+            "#assignmentActivity",
+            "#unassignmentActivity",
+            "#escalationActivity",
+            "#closeActivity",
+            "#reopenActivity",
+            "#noteActivity"
+          ],
+          "type": "union",
+          "description": "The typed activity object describing what occurred."
+        },
+        "reportId": {
+          "type": "integer",
+          "description": "ID of the report this activity belongs to"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When this activity was created"
+        },
+        "createdBy": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the actor who created this activity, or the service DID for automated activities."
+        },
+        "moderator": {
+          "ref": "tools.ozone.team.defs#member",
+          "type": "ref",
+          "description": "Full member record of the moderator who created this activity"
+        },
+        "publicNote": {
+          "type": "string",
+          "description": "Optional public note, potentially visible to the reporter."
+        },
+        "isAutomated": {
+          "type": "boolean",
+          "description": "True if this activity was created by an automated process (e.g. queue router) rather than a direct human action."
+        },
+        "internalNote": {
+          "type": "string",
+          "description": "Optional moderator-only note. Not visible to reporters."
+        }
+      },
+      "description": "A single activity entry on a report."
     },
     "reasonMisleadingBot": {
       "type": "token",
@@ -109,6 +610,34 @@
     "reasonViolenceAnimal": {
       "type": "token",
       "description": "Animal welfare violations"
+    },
+    "unassignmentActivity": {
+      "type": "object",
+      "properties": {
+        "nextStatus": {
+          "type": "string",
+          "description": "The report's status immediately after the moderator was unassigned. May equal previousStatus if unassignment did not change the report's status, or be absent on older activities.",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        },
+        "previousStatus": {
+          "type": "string",
+          "description": "The report's status immediately before the moderator was unassigned. May be absent on older activities.",
+          "knownValues": [
+            "open",
+            "closed",
+            "escalated",
+            "queued",
+            "assigned"
+          ]
+        }
+      },
+      "description": "Activity recording a moderator being unassigned from a report."
     },
     "reasonChildSafetyCSAM": {
       "type": "token",
