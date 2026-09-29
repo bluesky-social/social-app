@@ -71,6 +71,21 @@ describe('list motion on mount', () => {
     expect(isListTrulyAtTop(m.state, m.now)).toBe(false)
   })
 
+  it('never takes a commit and its correction for arriving at the top', () => {
+    const m = machine()
+    m.step({type: 'scrollActivity', position: TOP}, 1100)
+    m.step(requestTop, 1200)
+    // A restore prepend that renders nothing leaves the list where it was.
+    m.step({type: 'committed'}, 2000)
+    m.step({type: 'scrollActivity', position: TOP}, 2050)
+    m.step({type: 'timer'}, 2050 + LIST_QUIET_PERIOD_MS)
+    m.step({type: 'timer'}, 2000 + LIST_COMMIT_CORRECTION_TIMEOUT_MS)
+
+    expect(m.ranIds()).toEqual([])
+    expect(isListAtRest(m.state, m.now)).toBe(true)
+    expect(isListTrulyAtTop(m.state, m.now)).toBe(false)
+  })
+
   it('runs work that only needs rest at once', () => {
     const m = machine()
     expect(m.step(requestRest)).toContainEqual({type: 'run', id: 'rest'})
