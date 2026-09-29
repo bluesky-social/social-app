@@ -2,8 +2,10 @@
 
 Composer V2 is a per-session composition store with React as its view layer.
 It handles threads, attachments, eager media uploads, and record planning without
-putting their lifecycles inside UI components. The production composer has not
-been migrated; the working integration is the developer tester.
+putting their lifecycles inside UI components. The store, adapters, planner,
+and writer are intended for the production composer, but wiring them into its
+UI is deferred to a separate PR; the current integration is the developer
+tester.
 
 ## Try it
 
@@ -164,9 +166,10 @@ are not safe UI text or automatic logging payloads.
   persistence, cleanup, and tester Save/Open controls are deferred to a separately
   authorized follow-up branch. The design is recorded below and in the local
   task `AGENTS/tasks/0008-task-composer-v2-draft-round-trips.md`, if present.
-- Production UI migration, a production tag typeahead, and dormant external-card
-  suggestions are not scheduled. The tester's tags are intentionally a plain
-  comma-separated input, not a suggestions service.
+- Production composer UI wiring is deferred to a separate PR. A production tag
+  typeahead and dormant external-card suggestions are not scheduled. The
+  tester's tags are intentionally a plain comma-separated input, not a
+  suggestions service.
 
 ---
 

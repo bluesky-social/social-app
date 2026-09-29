@@ -351,8 +351,8 @@ export function createThreadStore({
   }
 
   /**
-   * Narrow caption setter for the tester/UI: replaces the editable caption
-   * contents of one video without duplicating state in React. Uploaded
+   * Replace the editable caption contents of one video, keeping caption
+   * state in the store rather than duplicating it in React. Uploaded
    * caption blobs are kept only for captions whose language and content are
    * unchanged, so a stale blob can never be attached to edited caption text.
    * When the upload already ran (or is running), the task is cancelled and
