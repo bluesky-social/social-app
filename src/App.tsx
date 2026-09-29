@@ -21,6 +21,7 @@ import {Provider as TranslateOnDeviceProvider} from '#/lib/translation'
 import I18nProvider from '#/locale/i18nProvider'
 import {logger} from '#/logger'
 import {Sentry} from '#/logger/sentry/lib'
+import {identifyDevice} from '#/logger/sentry/user'
 import {Provider as A11yProvider} from '#/state/a11y'
 import {
   prefetchAppConfig,
@@ -78,6 +79,7 @@ import {
   features,
   setupDeviceId,
 } from '#/analytics'
+import {getDeviceId} from '#/analytics/identifiers'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,
@@ -85,6 +87,8 @@ import {
 } from '#/features/liveEvents/context'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
+
+void identifyDevice(getDeviceId(), setupDeviceId)
 
 void SplashScreen.preventAutoHideAsync()
 if (IS_IOS) {
