@@ -11,10 +11,7 @@ export type ComposerV2ErrorEvent = {
 } & (
   | {
       source: 'initialization'
-      code:
-        | ComposerAdapterErrorCode
-        | 'initial-state-failed'
-        | 'scenario-build-failed'
+      code: ComposerAdapterErrorCode | 'initial-state-failed'
     }
   | {source: 'upload'; code: string}
   | {

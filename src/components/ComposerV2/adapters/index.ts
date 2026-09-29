@@ -192,11 +192,9 @@ export async function draftToInitialState({
 export function reportInitializationError({
   onError,
   cause,
-  fallbackCode = 'initial-state-failed',
 }: {
   onError: ComposerV2OnError | undefined
   cause: unknown
-  fallbackCode?: 'initial-state-failed' | 'scenario-build-failed'
 }) {
   const adapterError = cause instanceof ComposerAdapterError ? cause : undefined
   const hasCause = adapterError && Object.hasOwn(adapterError, 'cause')
@@ -206,7 +204,7 @@ export function reportInitializationError({
     onError,
     event: {
       source: 'initialization',
-      code: adapterError?.code ?? fallbackCode,
+      code: adapterError?.code ?? 'initial-state-failed',
       kind: adapterError
         ? hasCause
           ? 'operational'

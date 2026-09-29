@@ -1,15 +1,16 @@
 import {useEffect, useRef, useState, useSyncExternalStore} from 'react'
 
+import {
+  type PlanSummary,
+  summarizeComposerV2Plan,
+} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
 import {type TesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {
   type ComposerV2Plan,
   type ComposerV2PlannerDependencies,
   planComposerV2,
-  summarizeComposerV2Plan,
 } from '#/components/ComposerV2/planner'
 import {type ThreadState} from '#/components/ComposerV2/store/types'
-
-export type PlanSummary = ReturnType<typeof summarizeComposerV2Plan>
 
 /** One completed planning attempt, bound to the session that produced it. */
 export type PlanRunnerResult = {

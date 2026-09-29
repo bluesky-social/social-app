@@ -3,10 +3,8 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {usePlanErrorHint} from '#/view/screens/DebugComposer/messages'
-import {
-  type PlanSummary,
-  type usePlanRunner,
-} from '#/view/screens/DebugComposer/usePlanRunner'
+import {type PlanSummary} from '#/view/screens/DebugComposer/summarizeComposerV2Plan'
+import {type usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
