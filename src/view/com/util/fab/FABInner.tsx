@@ -14,7 +14,7 @@ import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
-import {IS_WEB} from '#/env'
+import {IS_IOS, IS_WEB} from '#/env'
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -26,7 +26,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const insets = useSafeAreaInsets()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const fabMinimalShellTransform = useMinimalShellFabTransform()
 
   const size = gtMobile ? styles.sizeLarge : styles.sizeRegular
@@ -45,14 +45,15 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
       ]}>
       <PressableScale
         testID={testID}
-        onPressIn={ios(() => playHaptic('Light'))}
+        // iOS plays the tap on press-in, so it can lead into the long-press
+        onPressIn={ios(() => haptics.tap())}
         onPress={evt => {
           onPress?.(evt)
-          playHaptic('Light')
+          if (!IS_IOS) haptics.tap()
         }}
         onLongPress={ios((evt: GestureResponderEvent) => {
           onPress?.(evt)
-          playHaptic('Heavy')
+          haptics.longPress()
         })}
         targetScale={0.9}
         style={[
