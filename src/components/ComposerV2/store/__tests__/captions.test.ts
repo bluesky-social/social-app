@@ -9,15 +9,18 @@ jest.mock('#/lib/api/resolve', () => {
 
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
+import {
+  realUploadWorkers,
+  testUploadRuntime,
+} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
   type PostMediaVideo,
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {
   type UploadTask,
-  type UploadTestOverrides,
   type UploadWorkerOverrides,
+  type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 
 const resolvers = {} as LinkResolvers
@@ -138,7 +141,7 @@ test('a real caption retry reuses video and unchanged captions after a partial f
   const editedEnglish = blob('edited-english')
   const editedGerman = blob('edited-german')
   const getVideoMetadata = jest
-    .fn<NonNullable<UploadTestOverrides['getVideoMetadata']>>()
+    .fn<VideoUploadDependencies['getVideoMetadata']>()
     .mockResolvedValue({
       uri: videoInput.item.uri,
       width: 1920,
@@ -147,14 +150,14 @@ test('a real caption retry reuses video and unchanged captions after a partial f
       duration: 1000,
     })
   const compressVideo = jest
-    .fn<NonNullable<UploadTestOverrides['compressVideo']>>()
+    .fn<VideoUploadDependencies['compressVideo']>()
     .mockResolvedValue({
       uri: 'file:///compressed.mp4',
       size: 100,
       mimeType: 'video/mp4',
     })
   const uploadVideo = jest
-    .fn<NonNullable<UploadTestOverrides['uploadVideo']>>()
+    .fn<VideoUploadDependencies['uploadVideo']>()
     .mockResolvedValue({
       state: 'JOB_STATE_COMPLETED',
       jobId: 'job-1',
@@ -162,7 +165,7 @@ test('a real caption retry reuses video and unchanged captions after a partial f
       blob: videoBlob,
     })
   const uploadBlob = jest
-    .fn<NonNullable<UploadTestOverrides['uploadBlob']>>()
+    .fn<VideoUploadDependencies['uploadBlob']>()
     .mockResolvedValueOnce({blob: english})
     .mockResolvedValueOnce({blob: french})
     .mockRejectedValueOnce(new Error('caption upload failed'))
@@ -192,15 +195,10 @@ test('a real caption retry reuses video and unchanged captions after a partial f
       ],
     },
     i18n: {_: () => 'Upload failed'} as never,
-    __uploadOverrides: {
-      getVideoMetadata,
-      compressVideo,
-      uploadVideo,
-      uploadBlob,
-      createVideoServiceClient: () => {
-        throw new Error('Unexpected polling')
-      },
-    },
+    /* Polling is not faked; reaching it fails the upload. */
+    __uploadWorkers: realUploadWorkers({
+      video: {getVideoMetadata, compressVideo, uploadVideo, uploadBlob},
+    }),
   })
   const waitForUpload = async (state: 'failed' | 'uploaded') => {
     if (getVideo(store).item.upload.state === state) return

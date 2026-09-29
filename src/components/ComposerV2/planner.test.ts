@@ -52,7 +52,9 @@ function mockAppview(
   const calls: Array<{nsid: string; args: unknown}> = []
   const client = {
     call: jest.fn((ns: unknown, args: unknown) => {
-      const nsid = (ns as {$nsid?: string})?.$nsid ?? 'unknown'
+      /* Callers pass either a lexicon namespace ($nsid) or its method (nsid). */
+      const method = ns as {$nsid?: string; nsid?: string} | undefined
+      const nsid = method?.$nsid ?? method?.nsid ?? 'unknown'
       calls.push({nsid, args})
       if (nsid === 'app.bsky.feed.getPosts' && handlers.getPosts) {
         return Promise.resolve(handlers.getPosts(args))

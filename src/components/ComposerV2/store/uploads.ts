@@ -3,7 +3,6 @@ import {type BlobRef, type Client} from '@atproto/lex'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
-import {uploadBlob as realUploadBlob} from '#/lib/api/upload-blob'
 import {AbortError} from '#/lib/async/cancelable'
 import {
   IMAGE_SIZE_CONFIG_POSTS,
@@ -11,14 +10,10 @@ import {
   VIDEO_MAX_DURATION_MS,
   VIDEO_MAX_SIZE,
 } from '#/lib/constants'
-import {compressVideo as realCompressVideo} from '#/lib/media/video/compress'
 import {UploadLimitError, VideoTooLargeError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
-import {uploadVideo as realUploadVideo} from '#/lib/media/video/upload'
-import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
-import {getVideoMetadata as realGetVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import {
@@ -78,23 +73,37 @@ export type UploadRuntime = {
   i18n: I18n
 }
 
-/** Test-only replacements for media processing, network calls, and timing. */
-export type UploadTestOverrides = {
-  compressImage?: (typeof import('#/state/gallery'))['compressImage']
-  uploadBlob?: typeof realUploadBlob
-  getVideoMetadata?: typeof realGetVideoMetadata
-  compressVideo?: typeof realCompressVideo
-  uploadVideo?: typeof realUploadVideo
-  createVideoServiceClient?: typeof createTokenlessVideoServiceClient
-  pollIntervalMs?: number
-  sleep?: (args: {ms: number; signal: AbortSignal}) => Promise<void>
+/*
+ * Workers call these implementations directly. createThreadStore supplies the
+ * production versions; tests pass fakes by calling a worker themselves or
+ * through `__uploadWorkers`. A worker never chooses an implementation.
+ */
+type UploadBlob = (typeof import('#/lib/api/upload-blob'))['uploadBlob']
+
+/** Implementations the image worker calls. */
+export type ImageUploadDependencies = {
+  compressImage: (typeof import('#/lib/media/image/compress'))['compressImage']
+  uploadBlob: UploadBlob
 }
+
+/** Implementations the video worker calls, including caption blob uploads. */
+export type VideoUploadDependencies = {
+  getVideoMetadata: (typeof import('#/view/com/composer/videos/metadata'))['getVideoMetadata']
+  compressVideo: (typeof import('#/lib/media/video/compress'))['compressVideo']
+  uploadVideo: (typeof import('#/lib/media/video/upload'))['uploadVideo']
+  /** Caption blobs go to the account PDS. */
+  uploadBlob: UploadBlob
+  createVideoServiceClient: (typeof import('#/lib/media/video/util'))['createTokenlessVideoServiceClient']
+  /** Waits between processing polls; rejects with AbortError on cancellation. */
+  sleep: (args: {ms: number; signal: AbortSignal}) => Promise<void>
+}
+
+/** Delay between video processing status polls. */
+const VIDEO_JOB_POLL_INTERVAL_MS = 1500
 
 type BaseOptions = UploadRuntime & {
   postId: string
   mediaId: string
-  /** Test-only; production always uses the real implementations. */
-  __overrides?: UploadTestOverrides
   setUploadStatus: SetStatus
   /**
    * Called after local compression, before the upload starts. Records the
@@ -113,12 +122,12 @@ type BaseOptions = UploadRuntime & {
   ) => void
 }
 
-type ImageOptions = BaseOptions & {media: PostMediaImage}
-type VideoOptions = BaseOptions & {
-  media: PostMediaVideo
-}
+type ImageOptions = BaseOptions &
+  ImageUploadDependencies & {media: PostMediaImage}
+type VideoOptions = BaseOptions &
+  VideoUploadDependencies & {media: PostMediaVideo}
 
-/** Start the real image compression and PDS upload pipeline. */
+/** Start the image compression and PDS upload pipeline. */
 export function startImageUpload(opts: ImageOptions): UploadTask {
   const controller = new AbortController()
   void runImageUpload({...opts, signal: controller.signal})
@@ -136,7 +145,7 @@ async function runImageUpload({
   signal,
   ...opts
 }: ImageOptions & {signal: AbortSignal}) {
-  const {media, pdsClient, i18n, __overrides: overrides = {}} = opts
+  const {media, pdsClient, i18n, compressImage, uploadBlob} = opts
   try {
     report({...opts, status: {state: 'uploading', phase: 'compressing'}})
 
@@ -154,8 +163,6 @@ async function runImageUpload({
         mime: media.mimeType ?? 'image/jpeg',
       },
     }
-    const compressImage =
-      overrides.compressImage ?? (await import('#/state/gallery')).compressImage
     const compressed = await compressImage({image, ...IMAGE_SIZE_CONFIG_POSTS})
     throwIfAborted({signal})
     const prepared = {
@@ -169,11 +176,7 @@ async function runImageUpload({
     }
     opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, prepared)
     report({...opts, status: {state: 'uploading', phase: 'uploading'}})
-    const result = await (overrides.uploadBlob ?? realUploadBlob)(
-      pdsClient,
-      compressed.path,
-      compressed.mime,
-    )
+    const result = await uploadBlob(pdsClient, compressed.path, compressed.mime)
     throwIfAborted({signal})
     report({...opts, status: {state: 'uploaded', blob: result.blob}})
   } catch (error) {
@@ -190,7 +193,16 @@ async function runVideoUpload({
   signal,
   ...opts
 }: VideoOptions & {signal: AbortSignal}) {
-  const {media, pdsClient, pdsUrl, i18n, __overrides: overrides = {}} = opts
+  const {
+    media,
+    pdsClient,
+    pdsUrl,
+    i18n,
+    getVideoMetadata,
+    compressVideo,
+    uploadVideo,
+    uploadBlob,
+  } = opts
   let videoBlob: BlobRef | undefined = media.videoBlob
   let captionBlobs = [...media.captionBlobs]
   try {
@@ -198,12 +210,12 @@ async function runVideoUpload({
     let compressed: CompressedVideo | undefined
     if (!videoBlob) {
       report({...opts, status: {state: 'uploading', phase: 'validating'}})
-      const asset = await getAsset({media, overrides})
+      const asset = await getAsset({media, getVideoMetadata})
       validateVideo({asset})
       throwIfAborted({signal})
 
       report({...opts, status: {state: 'uploading', phase: 'compressing'}})
-      compressed = await (overrides.compressVideo ?? realCompressVideo)(asset, {
+      compressed = await compressVideo(asset, {
         signal,
         onProgress: progress => {
           if (!signal.aborted) {
@@ -234,7 +246,7 @@ async function runVideoUpload({
         ...opts,
         status: {state: 'uploading', phase: 'uploading', progress: 0},
       })
-      const uploadResult = await (overrides.uploadVideo ?? realUploadVideo)({
+      const uploadResult = await uploadVideo({
         video: compressed,
         client: pdsClient,
         dispatchUrl: pdsUrl,
@@ -294,7 +306,7 @@ async function runVideoUpload({
         continue
       }
       throwIfAborted({signal})
-      const result = await (overrides.uploadBlob ?? realUploadBlob)(
+      const result = await uploadBlob(
         pdsClient,
         new Blob([caption.content], {type: 'text/vtt'}),
         'text/vtt',
@@ -320,12 +332,11 @@ async function runVideoUpload({
 
 async function getAsset({
   media,
-  overrides,
+  getVideoMetadata: metadata,
 }: {
   media: PostMediaVideo
-  overrides: UploadTestOverrides
+  getVideoMetadata: VideoUploadDependencies['getVideoMetadata']
 }): Promise<ImagePickerAsset> {
-  const metadata = overrides.getVideoMetadata ?? realGetVideoMetadata
   if (media.file) return metadata(media.file as File, media.mimeType)
   if (IS_WEB && media.uri.startsWith('blob:')) {
     const blob = await fetch(media.uri).then(response => response.blob())
@@ -358,16 +369,14 @@ function validateVideo({asset}: {asset: ImagePickerAsset}) {
 async function pollVideoJob({
   jobId,
   signal,
-  __overrides: overrides = {},
+  createVideoServiceClient,
+  sleep,
   ...opts
 }: VideoOptions & {
   jobId: string
   signal: AbortSignal
 }): Promise<BlobRef> {
-  const client = (
-    overrides.createVideoServiceClient ?? createTokenlessVideoServiceClient
-  )()
-  const sleep = overrides.sleep ?? defaultSleep
+  const client = createVideoServiceClient()
   let failures = 0
   while (true) {
     throwIfAborted({signal})
@@ -400,7 +409,7 @@ async function pollVideoJob({
       failures += 1
       if (failures >= 5) throw error
     }
-    await sleep({ms: overrides.pollIntervalMs ?? 1500, signal})
+    await sleep({ms: VIDEO_JOB_POLL_INTERVAL_MS, signal})
   }
 }
 
@@ -514,24 +523,6 @@ function isAborted({error, signal}: {error: unknown; signal: AbortSignal}) {
 
 function throwIfAborted({signal}: {signal: AbortSignal}) {
   if (signal.aborted) throw new AbortError()
-}
-
-function defaultSleep({ms, signal}: {ms: number; signal: AbortSignal}) {
-  return new Promise<void>((resolve, reject) => {
-    if (signal.aborted) {
-      reject(new AbortError())
-      return
-    }
-    const timer = setTimeout(resolve, ms)
-    signal.addEventListener(
-      'abort',
-      () => {
-        clearTimeout(timer)
-        reject(new AbortError())
-      },
-      {once: true},
-    )
-  })
 }
 
 class ValidationError extends Error {

@@ -13,12 +13,15 @@ import {
 } from '#/components/ComposerV2/errors'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
+  imageUploadDependencies,
+  videoUploadDependencies,
+} from '#/components/ComposerV2/store/uploadDependencies'
+import {
   type PreparedOutput,
   startImageUpload,
   startVideoUpload,
   type UploadRuntime,
   type UploadTask,
-  type UploadTestOverrides,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostMediaItem'
@@ -91,7 +94,6 @@ export function createThreadStore({
   __createId,
   __resolveLink,
   __uploadWorkers,
-  __uploadOverrides,
 }: UploadRuntime & {
   resolvers: LinkResolvers
   initialState?: types.ThreadStoreInitialState
@@ -101,10 +103,11 @@ export function createThreadStore({
   __createId?: () => string
   /** Override link resolver; useful for deterministic tests. */
   __resolveLink?: typeof resolveLink
-  /** Test-only worker seam; never selected implicitly in production. */
+  /**
+   * Test-only worker seam; never selected implicitly in production. Wrap the
+   * real worker to run it with fake dependencies.
+   */
   __uploadWorkers?: UploadWorkerOverrides
-  /** Test-only processing/network overrides for the real workers. */
-  __uploadOverrides?: UploadTestOverrides
 }) {
   const id = __createId ?? nanoid
   const resolve = __resolveLink ?? importedResolveLink
@@ -584,7 +587,6 @@ export function createThreadStore({
       pdsClient,
       pdsUrl,
       i18n,
-      __overrides: __uploadOverrides,
       setUploadStatus: (
         p: string,
         m: string,
@@ -618,10 +620,12 @@ export function createThreadStore({
         item.kind === 'image'
           ? (__uploadWorkers?.startImageUpload ?? startImageUpload)({
               ...callbacks,
+              ...imageUploadDependencies,
               media: item,
             })
           : (__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
               ...callbacks,
+              ...videoUploadDependencies,
               media: item,
             })
       /*

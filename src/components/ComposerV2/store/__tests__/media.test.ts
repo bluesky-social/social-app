@@ -23,12 +23,13 @@ import {
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {
-  type UploadTestOverrides,
+  type ImageUploadDependencies,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
 import {
   manualUploadWorkers,
+  realUploadWorkers,
   simulatedUploadWorkers,
   testUploadRuntime,
 } from './uploadTestUtils'
@@ -1133,13 +1134,13 @@ describe('attachment lifecycle', () => {
           finishCompression = resolve
         }),
     )
-    const uploadBlob = jest.fn<NonNullable<UploadTestOverrides['uploadBlob']>>()
+    const uploadBlob = jest.fn<ImageUploadDependencies['uploadBlob']>()
     const store = createThreadStore({
       ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __resolveLink: mockResolveLink,
-      __uploadOverrides: {compressImage, uploadBlob},
+      __uploadWorkers: realUploadWorkers({image: {compressImage, uploadBlob}}),
     })
     const root = rootId(store)
     store.subscribe(() => {

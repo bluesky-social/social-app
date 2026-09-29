@@ -2,6 +2,10 @@ import {type BlobRef, type Client} from '@atproto/lex'
 import {describe, expect, jest, test} from '@jest/globals'
 
 import {
+  fakeImageDependencies,
+  fakeVideoDependencies,
+} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
+import {
   type PostMediaImage,
   type PostMediaVideo,
   type UploadStatus,
@@ -80,10 +84,7 @@ describe('ComposerV2 real media workers', () => {
       mediaId: 'image-1',
       media: image(),
       ...runtime,
-      __overrides: {
-        compressImage,
-        uploadBlob,
-      },
+      ...fakeImageDependencies({compressImage, uploadBlob}),
       setMediaCompressionResult: prepared,
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
@@ -134,10 +135,10 @@ describe('ComposerV2 real media workers', () => {
       mediaId: 'image-1',
       media: image(),
       ...runtime,
-      __overrides: {
+      ...fakeImageDependencies({
         compressImage: compressImage as never,
         uploadBlob: uploadBlob as never,
-      },
+      }),
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     task.cancel()
@@ -161,7 +162,7 @@ describe('ComposerV2 real media workers', () => {
       mediaId: 'video-1',
       media: video(),
       ...runtime,
-      __overrides: {
+      ...fakeVideoDependencies({
         getVideoMetadata: () =>
           Promise.resolve({
             uri: 'file:///source.mp4',
@@ -171,7 +172,7 @@ describe('ComposerV2 real media workers', () => {
             duration: 10 * 60 * 1000 + 1,
           }),
         compressVideo: compressVideo as never,
-      },
+      }),
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     await settle()
@@ -201,7 +202,7 @@ describe('ComposerV2 real media workers', () => {
       mediaId: 'video-1',
       media: video(),
       ...runtime,
-      __overrides: {
+      ...fakeVideoDependencies({
         getVideoMetadata: () =>
           Promise.resolve({
             uri: 'file:///source.mp4',
@@ -218,7 +219,7 @@ describe('ComposerV2 real media workers', () => {
           }),
         uploadVideo: uploadVideo as never,
         uploadBlob: captionUpload,
-      },
+      }),
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     await settle()
@@ -264,7 +265,7 @@ describe('ComposerV2 real media workers', () => {
       mediaId: 'video-1',
       media: video(),
       ...runtime,
-      __overrides: {
+      ...fakeVideoDependencies({
         getVideoMetadata: () =>
           Promise.resolve({
             uri: 'file:///source.mp4',
@@ -287,7 +288,7 @@ describe('ComposerV2 real media workers', () => {
         uploadBlob,
         createVideoServiceClient: createVideoServiceClient as never,
         sleep: () => Promise.resolve(),
-      },
+      }),
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     await settle()
