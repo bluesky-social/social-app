@@ -196,22 +196,12 @@ export function usePostFeedQuery(
   >({
     enabled,
     staleTime: STALE.INFINITY,
-    /*
-     * Already the app-wide default, but load bearing here: a page's FeedAPI is
-     * found by the page object's identity, so the cache must keep the exact
-     * objects the query function returns.
-     */
+    // The API registry relies on page object identity.
     structuralSharing: false,
     queryKey,
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
       const {feedApis} = getPostFeedQueryEntry(queryClient, queryKey)
-      /*
-       * A fetch from the top starts a fresh API. A later page continues with
-       * the API that fetched the page before it (see getNextPageParam), so a
-       * stateful API keeps its state across one chain of pages and resets on a
-       * refetch. A page whose API is unknown continues with a fresh one.
-       */
       const api =
         (pageParam && feedApis.get(pageParam)) ||
         createApi({
@@ -417,7 +407,6 @@ export async function pollLatest(
     return
   }
 
-  // Peek with the API behind the cached pages, which fetched `page`.
   const firstPage =
     queryClient.getQueryData<InfiniteData<FeedPageUnselected>>(queryKey)
       ?.pages[0]
