@@ -125,7 +125,7 @@ let loggedOutAppviewClient: Client | undefined
 function getLoggedOutAppviewClient(): Client {
   return (loggedOutAppviewClient ??= createLexClient(
     {service: PUBLIC_APPVIEW},
-    {includeDeviceSessionHeaders: true},
+    {includeDeviceSessionHeaders: false},
   ))
 }
 
