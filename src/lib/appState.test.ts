@@ -193,7 +193,7 @@ describe('onAppReturnedFromBackground', () => {
     expect(cb).not.toHaveBeenCalled()
   })
 
-  it('needs half a minute away on iOS and five minutes elsewhere', () => {
+  it('needs half a minute away on iOS and a minute elsewhere', () => {
     expect(load().RETURN_MIN_TIME_AWAY).toBe(30 * 1000)
 
     jest.resetModules()
@@ -203,7 +203,7 @@ describe('onAppReturnedFromBackground', () => {
       IS_ANDROID: true,
     }))
     const android = load()
-    expect(android.RETURN_MIN_TIME_AWAY).toBe(5 * 60 * 1000)
+    expect(android.RETURN_MIN_TIME_AWAY).toBe(60 * 1000)
 
     // an Android photo picker or share sheet trip
     const cb = jest.fn()

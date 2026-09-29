@@ -57,9 +57,14 @@ export type AppReturn = {
  * share sheets and Safari views stay in-process, so half a minute is enough.
  * Android reports `background` for the app's own flows too (the photo picker,
  * camera, cropper, share sheet, Custom Tabs, fullscreen video and permission
- * dialogs), and those trips are almost always shorter than five minutes.
+ * dialogs), so it waits a full minute, which leaves out most of those trips.
+ *
+ * This only answers whether the user left. Whether a feed is then worth
+ * checking is the post-feed check coordinator's call: it also skips a return
+ * when that feed's data is still fresh, which covers the longer trips that get
+ * past this.
  */
-export const RETURN_MIN_TIME_AWAY = IS_IOS ? 30 * 1000 : 5 * 60 * 1000
+export const RETURN_MIN_TIME_AWAY = IS_IOS ? 30 * 1000 : 60 * 1000
 
 const returnListeners = new Set<(appReturn: AppReturn) => void>()
 let isTrackingReturns = false
@@ -130,9 +135,9 @@ function trackReturns() {
  *   your app or the system)". A runtime permission request may start one
  *   (`Activity#requestPermissions`: "you should be prepared that your activity
  *   may be paused and resumed"), and so do the share sheet, system pickers and
- *   Custom Tabs, and so does fullscreen video. Those trips are almost always
- *   shorter than {@link RETURN_MIN_TIME_AWAY}, which is what keeps them from
- *   counting; one left open for longer does count. The notification shade
+ *   Custom Tabs, and so does fullscreen video. Most of those trips are shorter
+ *   than {@link RETURN_MIN_TIME_AWAY}, which keeps them from counting; one
+ *   left open for longer does count. The notification shade
  *   doesn't report `background` at all: system windows "such as the status bar
  *   notification panel or a system alert ... temporarily take window input
  *   focus without pausing the foreground activity"
