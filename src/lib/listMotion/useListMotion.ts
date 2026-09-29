@@ -41,6 +41,8 @@ export type ListMotion = {
 
 /** One list's {@link ListMotion}, the same object for the life of the list. */
 export function useListMotion(): ListMotion {
+  // Created once and never replaced, so there is no setter to take.
+  // oxlint-disable-next-line react/hook-use-state
   const [controller] = useState(() => createListMotionController())
   useEffect(() => controller.dispose, [controller])
   return controller
