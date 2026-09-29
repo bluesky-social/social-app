@@ -10,7 +10,8 @@ tester.
 ## Try it
 
 Open **Settings > Developer options > Debug Composer V2**, or
-`/sys/debug-composer` (`bluesky://sys/debug-composer` on native).
+`/sys/debug-composer` (`bluesky://sys/debug-composer` on native). It requires a
+signed-in account; signed out, it shows a notice instead of creating a store.
 
 The tester supports initialization scenarios, post editing/reordering, up to ten
 images, video/captions, GIFs, record and URL attachments, languages, labels,
@@ -120,10 +121,11 @@ shortening. Explicit tags are independent of hashtag facets.
 | Concern                                                   | Start here                                                                                                              |
 | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | State, commands, ownership, async coordination            | [store/index.ts](store/index.ts), [store/types.ts](store/types.ts), [store/utils/](store/utils/)                        |
-| Real image/video workers and dependency injection         | [store/uploads.ts](store/uploads.ts)                                                                                    |
+| Real image/video workers and dependency injection         | [store/uploads.ts](store/uploads.ts), [store/uploadDependencies.ts](store/uploadDependencies.ts)                        |
 | Composer intents and inbound drafts                       | [adapters/index.ts](adapters/index.ts)                                                                                  |
 | React subscriptions and text derivation                   | [hooks/](hooks/)                                                                                                        |
 | Preflight, embeds, reply chains, gates, record validation | [planner.ts](planner.ts)                                                                                                |
+| Post text preparation shared with the legacy composer     | [utils/resolveRichText.ts](utils/resolveRichText.ts)                                                                    |
 | Sending an already successful plan                        | [writer.ts](writer.ts)                                                                                                  |
 | Per-session diagnostic contract                           | [errors.ts](errors.ts)                                                                                                  |
 | Developer controls and session/attempt lifetime           | [tester](../../view/screens/DebugComposer/DebugComposer.tsx), [debug route](../../view/screens/DebugComposer/index.tsx) |
@@ -158,8 +160,7 @@ are not safe UI text or automatic logging payloads.
 
 - **Draft save/restore:** inbound hydration exists; outbound serialization,
   persistence, cleanup, and tester Save/Open controls are deferred to a separately
-  authorized follow-up branch. The design is recorded below and in the local
-  task `AGENTS/tasks/0008-task-composer-v2-draft-round-trips.md`, if present.
+  authorized follow-up branch. The design is recorded below.
 - Production composer UI wiring is deferred to a separate PR. A production tag
   typeahead and dormant external-card suggestions are not scheduled. The
   tester's tags are intentionally a plain comma-separated input, not a
@@ -171,9 +172,9 @@ are not safe UI text or automatic logging payloads.
 
 The sections below preserve the architectural decisions and implementation
 context from the former planning documents. They are constraints and reference
-material, not authorization to start deferred work. Completed task files have
-been removed from the local queue; only the deferred drafts task remains.
-`AGENTS/` is normally globally ignored local workspace data. Do not force-add it
+material, not authorization to start deferred work. Task IDs mentioned below
+belong to an earlier local queue; later local task files reuse those numbers for
+unrelated work. `AGENTS/` is normally globally ignored local workspace data. Do not force-add it
 or recreate an execution-order manifest as part of composer changes.
 
 ### State ownership and action contracts
@@ -425,8 +426,8 @@ local post/media IDs where applicable, and recovery (`retry`, `edit`, `reconcile
 
 ### Deferred draft design
 
-Implement on a separately authorized follow-up branch, not this composer PR or
-the compression-extraction branch. Inbound conversion is complete, but that is
+Implement on a separately authorized follow-up branch, not this composer PR.
+Inbound conversion is complete, but that is
 not outbound persistence. Re-audit the schema before implementation.
 
 **Codec:** add a UI-free V2 serializer returning draft data and a local-media
@@ -501,9 +502,12 @@ need `pnpm test src/lib/media/video --watchman=false --runInBand`. Useful suites
 - `adapters/__tests__/`: source fidelity, conversion errors, and initialization.
 - `planner.test.ts` / `writer.test.ts`: preflight, reply/CID/key safety, rich text,
   embeds, gates, lexicon validation, no-write planning, and exact writer calls.
+- `utils/__tests__/resolveRichText.test.ts`: shared post-text preparation
+  (whitespace/ASCII art, mentions, shortened links, grapheme limits).
 - [`DebugComposer/__tests__/`](../../view/screens/DebugComposer/__tests__/):
   session/attempt lifetime, separate-root portals, compiled translations,
-  inline tags, full inspection, and retained plan behavior.
+  inline tags, full inspection, redacted plan summaries, and retained plan
+  behavior.
 
 For scoped formatting, inspect the current `pnpm prettier` script: it includes
 `--check .`. Never append `--write` to an unrestricted root scan. Create a
@@ -564,8 +568,8 @@ was dropped in favor of a utility tester, not a polished replacement composer.
 Legacy milestone numbers were not task IDs: reordering #8 became task 0005,
 record planning #9 (including gallery output #5) became 0006, UI #10 became the
 tester task 0007, and drafts #6 became 0008. Cleanup tasks 0001-0003 and later
-0009-0012 are complete. Compression 0004 moved to its own main-based branch;
-drafts remain deferred. Do not reconstruct the obsolete queue from these IDs.
+0009-0012 are complete. Compression 0004 moved to its own main-based branch and
+has since landed (#11805); drafts remain deferred. Do not reconstruct the obsolete queue from these IDs.
 
 Historical device evidence included iOS tester entry, text/grapheme feedback,
 comma-separated tag parsing into a successful plan, and full external-record
