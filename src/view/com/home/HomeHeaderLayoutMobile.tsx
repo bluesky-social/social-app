@@ -36,7 +36,7 @@ export function HomeHeaderLayoutMobile({
   const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useHomeHeaderTransform()
   const {hasSession} = useSession()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {navigate} = useNavigation<NavigationProp>()
   const logoVariant = useLogoVariant()
 
@@ -69,7 +69,7 @@ export function HomeHeaderLayoutMobile({
               if (IS_DEV) {
                 navigate('Debug')
               } else {
-                playHaptic('Light')
+                haptics.tap()
                 emitSoftReset()
               }
             }}>

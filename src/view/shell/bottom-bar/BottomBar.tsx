@@ -81,7 +81,7 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   const dedupe = useDedupe()
   const accountSwitchControl = useDialogControl()
   const messagesMenuControl = Menu.useMenuControl()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const hideBorder = useHideBottomBarBorder()
   const iconWidth = 28
 
@@ -145,15 +145,15 @@ export function BottomBar({navigation}: BottomTabBarProps) {
   }, [onPressTab])
 
   const onLongPressProfile = useCallback(() => {
-    playHaptic()
+    haptics.longPress()
     accountSwitchControl.open()
-  }, [accountSwitchControl, playHaptic])
+  }, [accountSwitchControl, haptics])
 
   const onLongPressMessages = useCallback(() => {
     if (aa.flags.chatDisabled) return
-    playHaptic()
+    haptics.longPress()
     messagesMenuControl.open()
-  }, [aa.flags.chatDisabled, messagesMenuControl, playHaptic])
+  }, [aa.flags.chatDisabled, messagesMenuControl, haptics])
 
   const [demoMode] = useDemoMode()
   const {isActive: live} = useActorStatus(profile)

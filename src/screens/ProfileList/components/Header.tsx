@@ -43,7 +43,7 @@ export function Header({
   const isModList = list.purpose === app.bsky.graph.defs.modlist.value
   const isBlocking = !!list.viewer?.blocked
   const isMuting = !!list.viewer?.muted
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const {mutateAsync: muteList, isPending: isMutePending} =
     useListMuteMutation()
@@ -62,7 +62,7 @@ export function Header({
   const isPinned = Boolean(savedFeedConfig?.pinned)
 
   const onTogglePinned = async () => {
-    playHaptic()
+    haptics.confirm()
 
     /*
      * Hoisted above the `try`: inside it, `pinned` is `!savedFeedConfig.pinned`,

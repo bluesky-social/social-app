@@ -63,7 +63,7 @@ export function MessageComposer({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {needsEmailVerification} = useEmail()
   const editable = !needsEmailVerification && !loading
   const {getDraft, clearDraft} = useMessageDraft()
@@ -132,7 +132,7 @@ export function MessageComposer({
 
     isSubmittingRef.current = true
     clearDraft()
-    playHaptic()
+    haptics.confirm()
     setEmbed(undefined)
     clearReply()
     composerInternalApiRef.current?.clear()
