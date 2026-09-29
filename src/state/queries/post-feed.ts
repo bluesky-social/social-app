@@ -849,6 +849,26 @@ export function useFollowingGapFill(
   }
 }
 
+/**
+ * When the reader last reached the true top of the feed with pages added
+ * above the rest there (see `settleFeedData`), if they have: the stamp for the
+ * pill and the Home dot to tell content they have been shown from new.
+ */
+export function feedReachedAt(
+  pages: readonly Pick<FeedPage, 'reachedAt'>[] | undefined,
+) {
+  let reachedAt: number | undefined
+  for (const page of pages ?? []) {
+    if (
+      page.reachedAt !== undefined &&
+      (reachedAt === undefined || page.reachedAt > reachedAt)
+    ) {
+      reachedAt = page.reachedAt
+    }
+  }
+  return reachedAt
+}
+
 /** At most this many authors are offered with new content (the facepile). */
 export const NEW_CONTENT_FACEPILE_LIMIT = 3
 

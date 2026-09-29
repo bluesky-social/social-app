@@ -19,6 +19,7 @@ import {type app} from '#/lexicons'
 import {
   type FeedPageUnselected,
   type FeedPostSlice,
+  feedReachedAt,
   pollLatest,
   resetPostsFeedQueries,
   RQKEY,
@@ -1977,6 +1978,7 @@ describe('settlePostFeedQuery', () => {
       summarizeNewContentAbove(hook.result.current.query.data?.pages),
     ).toBeUndefined()
     expect(hook.result.current.query.data!.pages[0].reachedAt).toBe(42)
+    expect(feedReachedAt(hook.result.current.query.data!.pages)).toBe(42)
   })
 
   it('does nothing when settled again', async () => {
