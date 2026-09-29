@@ -4,6 +4,7 @@ import {
   hashKey,
   type InfiniteData,
   notifyManager,
+  onlineManager,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
@@ -30,6 +31,7 @@ import {
   isPostFeedRefreshing,
   isPostFeedRestorePending,
   peekPostFeedQueryEntry,
+  prependPostFeedQuery,
   recordPostFeedRestore,
 } from './post-feed-registry'
 import {FOLLOWING_SNAPSHOT_QUERY_KEY} from './post-feed-snapshot'
@@ -1077,6 +1079,108 @@ describe('useFollowingRestorePrepend', () => {
       expect(await prepending).toEqual({outcome: 'superseded'})
     })
 
+    expect(cachedData(queryClient).pages.every(page => !page.since)).toBe(true)
+  })
+
+  it('gives way to a fetch from the top already in flight, without fetching', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const top = deferred<FeedAPIResponse>()
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(
+        () => createApi({top: () => top.promise}) as never,
+      )
+    act(() => {
+      void queryClient.invalidateQueries({queryKey: KEY})
+    })
+    await waitFor(() => expect(apis).toHaveLength(1))
+    const fetchAbove = jest.fn()
+
+    let result
+    await act(async () => {
+      result = await prependPostFeedQuery(queryClient, KEY, fetchAbove)
+    })
+
+    expect(result).toEqual({status: 'superseded'})
+    expect(fetchAbove).not.toHaveBeenCalled()
+    // Nor is the invalidation cancelled: it lands.
+    act(() => {
+      top.resolve({cursor: '0:1', feed: [feedItem('0-1')]})
+    })
+    await waitFor(() =>
+      expect(cachedData(queryClient).pages[0].cursor).toBe('0:1'),
+    )
+  })
+
+  it('gives way to a fetch from the top that starts before it writes', async () => {
+    const {hook, queryClient} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    const above = deferred<{page: FeedPageUnselected; detail: undefined}>()
+    const top = deferred<FeedAPIResponse>()
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(
+        () => createApi({top: () => top.promise}) as never,
+      )
+
+    let prepending!: Promise<unknown>
+    act(() => {
+      prepending = prependPostFeedQuery(queryClient, KEY, () => above.promise)
+    })
+    act(() => {
+      void queryClient.invalidateQueries({queryKey: KEY})
+    })
+    await act(async () => {
+      above.resolve({
+        page: {cursor: 'S', since: 'S', feed: [feedItem('n-0')], fetchedAt: 0},
+        detail: undefined,
+      })
+      expect(await prepending).toEqual({
+        status: 'superseded',
+        detail: undefined,
+      })
+    })
+
+    act(() => {
+      top.resolve({cursor: '0:1', feed: [feedItem('0-1')]})
+    })
+    await waitFor(() =>
+      expect(cachedData(queryClient).pages[0].cursor).toBe('0:1'),
+    )
+    expect(cachedData(queryClient).pages.every(page => !page.since)).toBe(true)
+  })
+
+  it('gives way to a refetch waiting for the network', async () => {
+    const {hook, queryClient, data} = renderRestoredFeed()
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    onlineManager.setOnline(false)
+    try {
+      act(() => {
+        void queryClient.invalidateQueries({queryKey: KEY})
+      })
+      expect(
+        queryClient.getQueryCache().find({queryKey: KEY})?.state.fetchStatus,
+      ).toBe('paused')
+      // Paused before the query function ran, so the restore is still pending.
+      expect(isPostFeedRestorePending(queryClient, KEY)).toBe(true)
+
+      let outcome
+      await act(async () => {
+        outcome = await hook.result.current.prepend()
+      })
+
+      expect(outcome).toEqual({outcome: 'superseded'})
+      // Nothing was asked for newer posts.
+      expect(apis.every(api => api.fetch.mock.calls.length === 0)).toBe(true)
+      expect(cachedData(queryClient)).toBe(data)
+    } finally {
+      act(() => {
+        onlineManager.setOnline(true)
+      })
+    }
+    // The refetch it was waiting for goes ahead, from the top.
+    await waitFor(() => expect(cachedData(queryClient)).not.toBe(data))
     expect(cachedData(queryClient).pages.every(page => !page.since)).toBe(true)
   })
 

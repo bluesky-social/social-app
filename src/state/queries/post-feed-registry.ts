@@ -201,6 +201,22 @@ function createPendingRefresh(): PendingRefresh {
 }
 
 /**
+ * Whether TanStack is fetching a post-feed query from the top, or waiting to
+ * (a refetch, an invalidation, a reset), as against fetching the next page.
+ * What it fetches replaces the cached pages, so an operation that would write
+ * around them gives way to it, and must not cancel it: that would swallow the
+ * invalidation behind it.
+ */
+function isFetchingFromTop(queryClient: QueryClient, queryKey: QueryKey) {
+  const state = queryClient.getQueryCache().find({queryKey, exact: true})?.state
+  return (
+    state !== undefined &&
+    state.fetchStatus !== 'idle' &&
+    !state.fetchMeta?.fetchMore
+  )
+}
+
+/**
  * Adds a page above a post-feed query's top page in a single write, or leaves
  * the query untouched.
  *
@@ -208,7 +224,9 @@ function createPendingRefresh(): PendingRefresh {
  * decides whether there is anything to add. Nothing is written until it has,
  * and then only if the top page is still the one it was bounded by: a refresh
  * or a fetch from the top that started meanwhile, or one still in flight,
- * replaces the top, and the query's removal ends it. The page starts a chain
+ * replaces the top, and the query's removal ends it. One already in flight
+ * when it starts means it does not fetch at all. The write only cancels a
+ * fetchNextPage, never a fetch from the top. The page starts a chain
  * of its own (its page param is `undefined`), so a TanStack refetch from the
  * first page param is an ordinary fetch from the top, never a replay of the
  * bounded one.
@@ -241,8 +259,12 @@ export async function prependPostFeedQuery<Page extends object, Detail>(
   const isCurrent = () =>
     entry.generation === generation &&
     entry.refresh === undefined &&
+    !isFetchingFromTop(queryClient, queryKey) &&
     peekPostFeedQueryEntry(queryClient, queryKey) === entry &&
     readTop() === top
+  if (!isCurrent()) {
+    return {status: 'superseded'}
+  }
 
   const {page, api, detail} = await fetchAbove(top)
   if (!isCurrent()) {
