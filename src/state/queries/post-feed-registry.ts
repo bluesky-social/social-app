@@ -366,7 +366,7 @@ export function fillPostFeedGap<
 
   const fill = (async (): Promise<GapFillResult<Page>> => {
     const cursor = upper.cursor
-    // A refresh in flight is about to replace the pages anyway.
+    // Nothing to fill, or what is in flight is about to replace the pages.
     if (cursor === undefined || !isCurrent()) {
       return {status: 'superseded'}
     }
@@ -381,7 +381,11 @@ export function fillPostFeedGap<
     const pageParam = {cursor}
     entry.feedApis.set(page, api)
     entry.feedApis.set(pageParam, api)
-    // As in `refreshPostFeedQuery`: nothing in flight may land after this.
+    /*
+     * As in `refreshPostFeedQuery`: nothing in flight may land after this.
+     * That can only be a fetchNextPage, since a fetch from the top would have
+     * superseded the fill.
+     */
     notifyManager.batch(() => {
       void queryClient.cancelQueries({queryKey, exact: true})
       queryClient.setQueryData<InfiniteData<Page, unknown>>(queryKey, data => {
