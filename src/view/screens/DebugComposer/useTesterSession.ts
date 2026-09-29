@@ -8,7 +8,7 @@ import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {type ThreadStore} from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
-import {type UploadDependencies} from '#/components/ComposerV2/store/uploads'
+import {type UploadRuntime} from '#/components/ComposerV2/store/uploads'
 
 /** One isolated tester session wrapping one store instance. */
 export type TesterSession = {
@@ -32,11 +32,10 @@ export type TesterScenarioError = {
   scenarioId: TesterScenarioId
 }
 
-export type TesterSessionDeps = {
+export type TesterSessionDeps = UploadRuntime & {
   /** Sessions are scoped to one account; a change destroys the session. */
   accountDid: string | undefined
   resolvers: LinkResolvers
-  media: UploadDependencies
   /** Captured per session, including eager construction failures. No default sink. */
   onError?: ComposerV2OnError
   /** Test seam; production always uses the real store constructor. */
@@ -75,7 +74,9 @@ export function useTesterSession(deps: TesterSessionDeps) {
     const create = current.__createStore ?? createThreadStore
     const store = create({
       resolvers: current.resolvers,
-      media: current.media,
+      pdsClient: current.pdsClient,
+      pdsUrl: current.pdsUrl,
+      i18n: current.i18n,
       initialState,
       onError: current.onError,
     })

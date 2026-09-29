@@ -9,7 +9,10 @@ import {
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type app, type com} from '#/lexicons'
-import {simulatedUploadWorkers} from '../../store/__tests__/uploadTestUtils'
+import {
+  simulatedUploadWorkers,
+  testUploadRuntime,
+} from '../../store/__tests__/uploadTestUtils'
 
 jest.mock('#/lib/media/manip', () => ({
   getImageDim: jest.fn(),
@@ -340,6 +343,7 @@ describe('composerOptsToInitialState', () => {
     expect(initial.postgateEmbeddingRules).toBe(settings.postgateEmbeddingRules)
 
     const store = createThreadStore({
+      ...testUploadRuntime,
       initialState: initial,
       resolvers: {} as never,
       __createId: () => 'post-id',
@@ -418,6 +422,7 @@ describe('draftToInitialState', () => {
     expect(initial.posts).toHaveLength(2)
 
     const store = createThreadStore({
+      ...testUploadRuntime,
       initialState: initial,
       resolvers: {} as never,
       __createId: () => 'draft-post-id',
@@ -737,6 +742,7 @@ describe('draftToInitialState', () => {
       },
     })
     const store = createThreadStore({
+      ...testUploadRuntime,
       initialState: initial,
       resolvers: {} as never,
       __createId: (() => {
@@ -764,6 +770,7 @@ describe('draftToInitialState', () => {
       getVideoMetadata: videoMetadata,
     })
     const draftStore = createThreadStore({
+      ...testUploadRuntime,
       initialState: draftInitial,
       resolvers: {} as never,
       __createId: () => 'draft-post-id',

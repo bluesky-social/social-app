@@ -7,6 +7,7 @@ jest.mock('#/lib/api/resolve', () => ({
 
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 
 function makeIdGenerator() {
   let i = 0
@@ -22,6 +23,7 @@ function rootId(store: ReturnType<typeof createThreadStore>) {
 describe('subscribe / getState', () => {
   test('listener fires on a real change and getState returns a new reference', () => {
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
     })
@@ -43,6 +45,7 @@ describe('subscribe / getState', () => {
 
   test('listener does not fire on a no-op and state ref is preserved', () => {
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
     })
@@ -58,6 +61,7 @@ describe('subscribe / getState', () => {
 
   test('unsubscribed listeners stop receiving notifications', () => {
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
     })
@@ -73,7 +77,11 @@ describe('subscribe / getState', () => {
   })
 
   test('attachment mutations preserve old snapshots and unrelated post references', () => {
-    const store = createThreadStore({resolvers, __createId: makeIdGenerator()})
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+    })
     const root = rootId(store)
     const other = store.actions.addPost('after', root)!.addedPostId
     const before = store.getState()
@@ -99,6 +107,7 @@ describe('subscribe / getState', () => {
 
   test('language and label setters copy caller arrays and preserve old snapshots', () => {
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
     })
@@ -121,7 +130,7 @@ describe('subscribe / getState', () => {
   })
 
   test('empty slot removals preserve the snapshot', () => {
-    const store = createThreadStore({resolvers})
+    const store = createThreadStore({...testUploadRuntime, resolvers})
     const root = rootId(store)
     const before = store.getState()
     store.actions.removeRecordAttachment(root)
@@ -132,6 +141,7 @@ describe('subscribe / getState', () => {
 
   test('destroy clears subscribers and stops further notifications', () => {
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
     })

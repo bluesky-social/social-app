@@ -31,6 +31,7 @@ import {usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {ThreadStoreProvider} from '#/components/ComposerV2/hooks'
 import {planComposerV2} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type MediaAttachment} from '#/components/ComposerV2/store/types'
 
 const i18n = setupI18n({locale: 'en', messages: {en: {}}})
@@ -43,6 +44,7 @@ const appviewClient = {call: appviewCall} as unknown as Client
 describe('tester record inspection', () => {
   test('shows every generated write, including post contents and gate records', async () => {
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       initialState: {
         posts: [{text: 'Full record contents', tags: ['tester']}],
@@ -123,6 +125,7 @@ describe('tester record inspection', () => {
     const cause = new Error('private resolver path and content')
     const onError = jest.fn()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       onError,
       __createId: () => 'post-1',
@@ -186,6 +189,7 @@ describe('tester record inspection', () => {
       },
     }
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: () => 'post-1',
       initialState: {posts: [{attachments: {media}}]},

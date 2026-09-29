@@ -9,13 +9,14 @@ jest.mock('#/lib/api/resolve', () => {
 
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
   type PostMediaVideo,
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
 import {
-  type UploadDependencies,
   type UploadTask,
+  type UploadTestOverrides,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 
@@ -91,6 +92,7 @@ describe('failed video upload normalization', () => {
   test('retains partial video and caption blobs for an explicit retry', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __uploadWorkers: workers,
@@ -136,7 +138,7 @@ test('a real caption retry reuses video and unchanged captions after a partial f
   const editedEnglish = blob('edited-english')
   const editedGerman = blob('edited-german')
   const getVideoMetadata = jest
-    .fn<NonNullable<UploadDependencies['getVideoMetadata']>>()
+    .fn<NonNullable<UploadTestOverrides['getVideoMetadata']>>()
     .mockResolvedValue({
       uri: videoInput.item.uri,
       width: 1920,
@@ -145,14 +147,14 @@ test('a real caption retry reuses video and unchanged captions after a partial f
       duration: 1000,
     })
   const compressVideo = jest
-    .fn<NonNullable<UploadDependencies['compressVideo']>>()
+    .fn<NonNullable<UploadTestOverrides['compressVideo']>>()
     .mockResolvedValue({
       uri: 'file:///compressed.mp4',
       size: 100,
       mimeType: 'video/mp4',
     })
   const uploadVideo = jest
-    .fn<NonNullable<UploadDependencies['uploadVideo']>>()
+    .fn<NonNullable<UploadTestOverrides['uploadVideo']>>()
     .mockResolvedValue({
       state: 'JOB_STATE_COMPLETED',
       jobId: 'job-1',
@@ -160,13 +162,14 @@ test('a real caption retry reuses video and unchanged captions after a partial f
       blob: videoBlob,
     })
   const uploadBlob = jest
-    .fn<NonNullable<UploadDependencies['uploadBlob']>>()
+    .fn<NonNullable<UploadTestOverrides['uploadBlob']>>()
     .mockResolvedValueOnce({blob: english})
     .mockResolvedValueOnce({blob: french})
     .mockRejectedValueOnce(new Error('caption upload failed'))
     .mockResolvedValueOnce({blob: editedEnglish})
     .mockResolvedValueOnce({blob: editedGerman})
   const store = createThreadStore({
+    ...testUploadRuntime,
     resolvers,
     __createId: makeIdGenerator(),
     initialState: {
@@ -188,10 +191,8 @@ test('a real caption retry reuses video and unchanged captions after a partial f
         },
       ],
     },
-    media: {
-      pdsClient: {} as never,
-      i18n: {_: () => 'Upload failed'} as never,
-      dispatchUrl: 'https://pds.example.test',
+    i18n: {_: () => 'Upload failed'} as never,
+    __uploadOverrides: {
       getVideoMetadata,
       compressVideo,
       uploadVideo,
@@ -270,6 +271,7 @@ describe('setVideoCaptions', () => {
   test('updates captions, marks dirty, and prunes stale caption blobs', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __uploadWorkers: workers,
@@ -310,6 +312,7 @@ describe('setVideoCaptions', () => {
   test('restarts a completed upload and reuses the completed video blob', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __uploadWorkers: workers,
@@ -342,6 +345,7 @@ describe('setVideoCaptions', () => {
   test('cancels in-flight work before restarting with edited captions', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __uploadWorkers: workers,
@@ -365,6 +369,7 @@ describe('setVideoCaptions', () => {
   test('leaves failed uploads alone for an explicit retry', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __uploadWorkers: workers,
@@ -387,6 +392,7 @@ describe('setVideoCaptions', () => {
   test('ignores identical captions, non-videos, and destroyed stores', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __uploadWorkers: workers,

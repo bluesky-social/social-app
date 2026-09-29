@@ -23,7 +23,11 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {type UploadWorkerOverrides} from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
-import {manualUploadWorkers, simulatedUploadWorkers} from './uploadTestUtils'
+import {
+  manualUploadWorkers,
+  simulatedUploadWorkers,
+  testUploadRuntime,
+} from './uploadTestUtils'
 
 function makeIdGenerator() {
   let i = 0
@@ -134,6 +138,7 @@ afterEach(() => {
 
 function makeStore() {
   return createThreadStore({
+    ...testUploadRuntime,
     resolvers,
     __createId: makeIdGenerator(),
     __resolveLink: mockResolveLink,
@@ -161,6 +166,7 @@ describe('stored upload failure normalization', () => {
     const started: string[] = []
     let reportStatus: ((status: UploadStatus) => void) | undefined
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       initialState: {
@@ -593,6 +599,7 @@ describe('retryMediaUpload', () => {
       ] satisfies UploadStatus[]) {
         const {attempts, workers} = manualUploadWorkers()
         const store = createThreadStore({
+          ...testUploadRuntime,
           resolvers,
           __createId: makeIdGenerator(),
           __uploadWorkers: workers,
@@ -621,6 +628,7 @@ describe('retryMediaUpload', () => {
     input => {
       const {attempts, workers} = manualUploadWorkers()
       const store = createThreadStore({
+        ...testUploadRuntime,
         resolvers,
         __createId: makeIdGenerator(),
         __uploadWorkers: workers,
@@ -958,6 +966,7 @@ describe('retryAllFailedUploads', () => {
       },
     }
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       __createId: makeIdGenerator(),
       __uploadWorkers: workers,

@@ -67,11 +67,19 @@ export type PreparedOutput =
       aspectRatio: {width: number; height: number}
     }
 
-export type UploadDependencies = {
+/** Account-scoped inputs every real upload needs. */
+export type UploadRuntime = {
   pdsClient: Client
+  /**
+   * The account's PDS URL. Video uploads derive the service-auth audience for
+   * `com.atproto.repo.uploadBlob` from it; the lex client does not expose it.
+   */
+  pdsUrl: string
   i18n: I18n
-  /** The account PDS/dispatch URL is required by the video service auth flow. */
-  dispatchUrl?: string | URL
+}
+
+/** Test-only replacements for media processing, network calls, and timing. */
+export type UploadTestOverrides = {
   compressImage?: (typeof import('#/state/gallery'))['compressImage']
   uploadBlob?: typeof realUploadBlob
   getVideoMetadata?: typeof realGetVideoMetadata
@@ -82,10 +90,11 @@ export type UploadDependencies = {
   sleep?: (args: {ms: number; signal: AbortSignal}) => Promise<void>
 }
 
-type BaseOptions = {
+type BaseOptions = UploadRuntime & {
   postId: string
   mediaId: string
-  dependencies?: UploadDependencies
+  /** Test-only; production always uses the real implementations. */
+  __overrides?: UploadTestOverrides
   setUploadStatus: SetStatus
   setPrepared?: (
     postId: string,
@@ -122,9 +131,8 @@ async function runImageUpload({
   signal,
   ...opts
 }: ImageOptions & {signal: AbortSignal}) {
-  const {media, dependencies: deps} = opts
+  const {media, pdsClient, i18n, __overrides: overrides = {}} = opts
   try {
-    if (!deps?.pdsClient || !deps.i18n) throw missingDependencies()
     report({...opts, status: {state: 'uploading', phase: 'compressing'}})
 
     /*
@@ -142,7 +150,7 @@ async function runImageUpload({
       },
     }
     const compressImage =
-      deps.compressImage ?? (await import('#/state/gallery')).compressImage
+      overrides.compressImage ?? (await import('#/state/gallery')).compressImage
     const compressed = await compressImage({image, ...IMAGE_SIZE_CONFIG_POSTS})
     throwIfAborted({signal})
     const prepared = {
@@ -156,8 +164,8 @@ async function runImageUpload({
     }
     opts.setPrepared?.(opts.postId, opts.mediaId, prepared)
     report({...opts, status: {state: 'uploading', phase: 'uploading'}})
-    const result = await (deps.uploadBlob ?? realUploadBlob)(
-      deps.pdsClient,
+    const result = await (overrides.uploadBlob ?? realUploadBlob)(
+      pdsClient,
       compressed.path,
       compressed.mime,
     )
@@ -167,7 +175,7 @@ async function runImageUpload({
     if (isAborted({error, signal})) return
     reportFailure({
       ...opts,
-      status: failureStatus({error, i18n: deps?.i18n, kind: 'image'}),
+      status: failureStatus({error, i18n, kind: 'image'}),
       cause: error,
     })
   }
@@ -177,24 +185,20 @@ async function runVideoUpload({
   signal,
   ...opts
 }: VideoOptions & {signal: AbortSignal}) {
-  const {media, dependencies: deps} = opts
+  const {media, pdsClient, pdsUrl, i18n, __overrides: overrides = {}} = opts
   let videoBlob: BlobRef | undefined = media.videoBlob
   let captionBlobs = [...media.captionBlobs]
   try {
-    if (!deps?.pdsClient || !deps.i18n || !deps.dispatchUrl) {
-      throw missingDependencies()
-    }
-
     /* A caption-only retry can safely reuse the completed video result. */
     let compressed: CompressedVideo | undefined
     if (!videoBlob) {
       report({...opts, status: {state: 'uploading', phase: 'validating'}})
-      const asset = await getAsset({media, dependencies: deps})
+      const asset = await getAsset({media, overrides})
       validateVideo({asset})
       throwIfAborted({signal})
 
       report({...opts, status: {state: 'uploading', phase: 'compressing'}})
-      compressed = await (deps.compressVideo ?? realCompressVideo)(asset, {
+      compressed = await (overrides.compressVideo ?? realCompressVideo)(asset, {
         signal,
         onProgress: progress => {
           if (!signal.aborted) {
@@ -225,12 +229,12 @@ async function runVideoUpload({
         ...opts,
         status: {state: 'uploading', phase: 'uploading', progress: 0},
       })
-      const uploadResult = await (deps.uploadVideo ?? realUploadVideo)({
+      const uploadResult = await (overrides.uploadVideo ?? realUploadVideo)({
         video: compressed,
-        client: deps.pdsClient,
-        dispatchUrl: deps.dispatchUrl,
+        client: pdsClient,
+        dispatchUrl: pdsUrl,
         signal,
-        i18n: deps.i18n,
+        i18n,
         setProgress: progress => {
           if (!signal.aborted) {
             report({
@@ -261,7 +265,6 @@ async function runVideoUpload({
         videoBlob = await pollVideoJob({
           jobId: uploadResult.jobId,
           ...opts,
-          dependencies: deps,
           signal,
         })
       }
@@ -286,8 +289,8 @@ async function runVideoUpload({
         continue
       }
       throwIfAborted({signal})
-      const result = await (deps.uploadBlob ?? realUploadBlob)(
-        deps.pdsClient,
+      const result = await (overrides.uploadBlob ?? realUploadBlob)(
+        pdsClient,
         new Blob([caption.content], {type: 'text/vtt'}),
         'text/vtt',
       )
@@ -301,7 +304,7 @@ async function runVideoUpload({
     })
   } catch (error) {
     if (isAborted({error, signal})) return
-    const failed = failureStatus({error, i18n: deps?.i18n, kind: 'video'})
+    const failed = failureStatus({error, i18n, kind: 'video'})
     if (videoBlob) {
       failed.blob = videoBlob
       failed.captionBlobs = captionBlobs
@@ -312,12 +315,12 @@ async function runVideoUpload({
 
 async function getAsset({
   media,
-  dependencies: deps,
+  overrides,
 }: {
   media: PostMediaVideo
-  dependencies: UploadDependencies
+  overrides: UploadTestOverrides
 }): Promise<ImagePickerAsset> {
-  const metadata = deps.getVideoMetadata ?? realGetVideoMetadata
+  const metadata = overrides.getVideoMetadata ?? realGetVideoMetadata
   if (media.file) return metadata(media.file as File, media.mimeType)
   if (IS_WEB && media.uri.startsWith('blob:')) {
     const blob = await fetch(media.uri).then(response => response.blob())
@@ -349,18 +352,17 @@ function validateVideo({asset}: {asset: ImagePickerAsset}) {
 
 async function pollVideoJob({
   jobId,
-  dependencies: deps,
   signal,
+  __overrides: overrides = {},
   ...opts
 }: VideoOptions & {
   jobId: string
-  dependencies: UploadDependencies
   signal: AbortSignal
 }): Promise<BlobRef> {
   const client = (
-    deps.createVideoServiceClient ?? createTokenlessVideoServiceClient
+    overrides.createVideoServiceClient ?? createTokenlessVideoServiceClient
   )()
-  const sleep = deps.sleep ?? defaultSleep
+  const sleep = overrides.sleep ?? defaultSleep
   let failures = 0
   while (true) {
     throwIfAborted({signal})
@@ -393,7 +395,7 @@ async function pollVideoJob({
       failures += 1
       if (failures >= 5) throw error
     }
-    await sleep({ms: deps.pollIntervalMs ?? 1500, signal})
+    await sleep({ms: overrides.pollIntervalMs ?? 1500, signal})
   }
 }
 
@@ -420,17 +422,14 @@ function reportFailure({
   cause: unknown
 }) {
   const kind =
-    cause instanceof ValidationError &&
-    cause.code === 'missing-upload-dependencies'
-      ? 'unexpected'
-      : cause instanceof ValidationError || cause instanceof VideoTooLargeError
-        ? 'validation'
-        : cause instanceof UploadLimitError ||
-            cause instanceof VideoJobError ||
-            isNetworkError(cause) ||
-            shouldRetryError(cause)
-          ? 'operational'
-          : 'unexpected'
+    cause instanceof ValidationError || cause instanceof VideoTooLargeError
+      ? 'validation'
+      : cause instanceof UploadLimitError ||
+          cause instanceof VideoJobError ||
+          isNetworkError(cause) ||
+          shouldRetryError(cause)
+        ? 'operational'
+        : 'unexpected'
   setUploadStatus(postId, mediaId, status, {kind, cause})
 }
 
@@ -440,7 +439,7 @@ function failureStatus({
   kind,
 }: {
   error: unknown
-  i18n: I18n | undefined
+  i18n: I18n
   kind: 'image' | 'video'
 }): Extract<UploadStatus, {state: 'failed'}> {
   const validation = error instanceof ValidationError
@@ -452,31 +451,24 @@ function failureStatus({
   if (validation) {
     message = validationMessage({code: error.code, i18n})
   } else if (error instanceof VideoTooLargeError) {
-    message =
-      i18n?._(
-        msg`The selected video is too large. Please try again with a smaller file.`,
-      ) ?? error.message
+    message = i18n._(
+      msg`The selected video is too large. Please try again with a smaller file.`,
+    )
   } else if (error instanceof UploadLimitError) {
     message = error.message
   } else if (isNetworkError(error) || shouldRetryError(error)) {
-    message =
-      i18n?._(
-        msg`An upload failed. Please check your internet connection and try again.`,
-      ) ?? 'Upload failed'
+    message = i18n._(
+      msg`An upload failed. Please check your internet connection and try again.`,
+    )
   } else if (kind === 'image') {
-    message =
-      i18n?._(msg`The image could not be processed or uploaded.`) ??
-      'Image upload failed'
+    message = i18n._(msg`The image could not be processed or uploaded.`)
   } else if (
     error instanceof VideoJobError &&
     error.failureCode === 'validation_failure'
   ) {
-    message =
-      i18n?._(msg`The selected video could not be processed.`) ?? error.message
+    message = i18n._(msg`The selected video could not be processed.`)
   } else {
-    message =
-      i18n?._(msg`The video could not be processed or uploaded.`) ??
-      'Video upload failed'
+    message = i18n._(msg`The video could not be processed or uploaded.`)
   }
   return {
     state: 'failed' as const,
@@ -494,33 +486,17 @@ function failureStatus({
   }
 }
 
-function validationMessage({code, i18n}: {code: string; i18n?: I18n}) {
+function validationMessage({code, i18n}: {code: string; i18n: I18n}) {
   switch (code) {
     case 'video-too-long':
-      return (
-        i18n?._(msg`The selected video is too long.`) ??
-        'The selected video is too long.'
-      )
+      return i18n._(msg`The selected video is too long.`)
     case 'unsupported-video-format':
-      return (
-        i18n?._(msg`The selected video uses an unsupported format.`) ??
-        'The selected video uses an unsupported format.'
-      )
+      return i18n._(msg`The selected video uses an unsupported format.`)
     case 'invalid-video-dimensions':
-      return (
-        i18n?._(msg`The selected video has invalid dimensions.`) ??
-        'The selected video has invalid dimensions.'
-      )
+      return i18n._(msg`The selected video has invalid dimensions.`)
     default:
-      return (
-        i18n?._(msg`The selected media is not valid.`) ??
-        'The selected media is not valid.'
-      )
+      return i18n._(msg`The selected media is not valid.`)
   }
-}
-
-function missingDependencies() {
-  return new ValidationError('missing-upload-dependencies')
 }
 
 function isAborted({error, signal}: {error: unknown; signal: AbortSignal}) {

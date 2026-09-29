@@ -12,9 +12,15 @@ import {
 } from '#/lib/api/resolve'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {manualUploadWorkers} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
+import {
+  manualUploadWorkers,
+  testUploadRuntime,
+} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
-import {type UploadDependencies} from '#/components/ComposerV2/store/uploads'
+import {
+  type UploadTestOverrides,
+  type UploadWorkerOverrides,
+} from '#/components/ComposerV2/store/uploads'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 
 const image = {
@@ -29,6 +35,24 @@ const failed = {
   code: 'test-failure',
 }
 const resolvers = {} as LinkResolvers
+
+/** Reports a terminal failure before returning, as an eager worker may. */
+const syncFailingImageWorker: UploadWorkerOverrides = {
+  startImageUpload: ({postId, mediaId, setUploadStatus}) => {
+    setUploadStatus(
+      postId,
+      mediaId,
+      {
+        state: 'failed',
+        error: 'Rejected',
+        code: 'upload-rejected',
+        retryable: false,
+      },
+      {kind: 'unexpected', cause: new Error('private cause')},
+    )
+    return {cancel() {}}
+  },
+}
 const recordUri = 'https://bsky.app/profile/example.test/post/abc'
 
 function deferred<T>() {
@@ -45,6 +69,7 @@ function setup(onError = jest.fn<ComposerV2OnError>()) {
   const {attempts, workers} = manualUploadWorkers()
   let id = 0
   const store = createThreadStore({
+    ...testUploadRuntime,
     resolvers,
     onError,
     __createId: () => `id-${++id}`,
@@ -150,18 +175,20 @@ describe('session error reporting', () => {
       throw new Error('listener')
     })
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       onError,
       initialState: {
         posts: [{attachments: {media: {kind: 'images', items: [image]}}}],
       },
+      __uploadWorkers: syncFailingImageWorker,
     })
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError.mock.calls[0][0]).toMatchObject({
       source: 'upload',
-      code: 'missing-upload-dependencies',
+      code: 'upload-rejected',
       kind: 'unexpected',
-      recovery: 'none',
+      recovery: 'edit',
     })
     expect(JSON.stringify(store.getState())).not.toContain('cause')
     expect(Object.values(store.getState().posts)[0]).toMatchObject({
@@ -179,6 +206,7 @@ describe('session error reporting', () => {
     })
     expect(() =>
       createThreadStore({
+        ...testUploadRuntime,
         resolvers,
         onError,
         __createId: () => {
@@ -207,6 +235,7 @@ describe('session error reporting', () => {
     let starts = 0
     expect(() =>
       createThreadStore({
+        ...testUploadRuntime,
         resolvers,
         onError,
         initialState: {
@@ -232,6 +261,7 @@ describe('session error reporting', () => {
     const onError = jest.fn<ComposerV2OnError>()
     expect(() =>
       createThreadStore({
+        ...testUploadRuntime,
         resolvers,
         onError,
         initialState: {
@@ -253,6 +283,7 @@ describe('session error reporting', () => {
     const cause = new Error('private resolver startup')
     const onError = jest.fn<ComposerV2OnError>()
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       onError,
       initialState: {
@@ -284,16 +315,16 @@ describe('session error reporting', () => {
       })
       const onError = jest.fn<ComposerV2OnError>()
       const uploadBlob =
-        jest.fn<NonNullable<UploadDependencies['uploadBlob']>>()
+        jest.fn<NonNullable<UploadTestOverrides['uploadBlob']>>()
       const store = createThreadStore({
+        ...testUploadRuntime,
         resolvers,
         onError,
-        media: {
-          pdsClient: {},
-          i18n: {_: () => 'Safe localized failure'},
+        i18n: {_: () => 'Safe localized failure'} as never,
+        __uploadOverrides: {
           compressImage: () => Promise.reject(cause),
           uploadBlob,
-        } as unknown as UploadDependencies,
+        },
       })
       store.actions.addMedia(Object.keys(store.getState().posts)[0], [image])
       await Promise.resolve()
@@ -314,6 +345,7 @@ describe('session error reporting', () => {
       throw new Error('listener')
     })
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       onError,
       __resolveLink: () => {
@@ -367,6 +399,7 @@ describe('session error reporting', () => {
       const attempt = deferred<ResolvedLink>()
       const onError = jest.fn<ComposerV2OnError>()
       const store = createThreadStore({
+        ...testUploadRuntime,
         resolvers,
         onError,
         __resolveLink: () => attempt.promise,
@@ -398,7 +431,12 @@ describe('session error reporting', () => {
     const initialState: ThreadStoreInitialState = {
       posts: [{attachments: {media: {kind: 'images', items: [image]}}}],
     }
-    const store = createThreadStore({resolvers, initialState})
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      initialState,
+      __uploadWorkers: syncFailingImageWorker,
+    })
     expect(Object.values(store.getState().posts)[0]).toMatchObject({
       attachments: {media: {items: [{upload: {state: 'failed'}}]}},
     })

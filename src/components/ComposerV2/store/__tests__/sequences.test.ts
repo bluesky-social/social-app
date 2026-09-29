@@ -15,7 +15,7 @@ import {
   type ThreadState,
   type ThreadStoreInitialState,
 } from '#/components/ComposerV2/store/types'
-import {manualUploadWorkers} from './uploadTestUtils'
+import {manualUploadWorkers, testUploadRuntime} from './uploadTestUtils'
 
 const image = {
   kind: 'image' as const,
@@ -78,6 +78,7 @@ function makeStore(initialState: ThreadStoreInitialState) {
     ReturnType<typeof deferred<ResolvedLink>> & {uri: string; settled: boolean}
   > = []
   const store = createThreadStore({
+    ...testUploadRuntime,
     resolvers: {} as LinkResolvers,
     initialState,
     __createId: () => `id-${++id}`,
