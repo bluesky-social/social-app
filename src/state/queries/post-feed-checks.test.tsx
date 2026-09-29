@@ -692,11 +692,13 @@ describe('return staleness', () => {
     expect(view.onFound).toHaveBeenCalledTimes(1)
     expect(view.onFound).toHaveBeenCalledWith('new posts', 'focus')
 
-    // Consumed, not left owed.
+    // Consumed, not left owed: coming back is offered the focus's find again.
     view.setProps({isActive: false})
     advance(2 * MINUTE)
     view.setProps({isActive: true})
-    expect(view.triggers()).toEqual(['focus', 'focus'])
+    expect(view.triggers()).toEqual(['focus'])
+    expect(view.onFound).toHaveBeenCalledTimes(2)
+    expect(view.onFound).toHaveBeenLastCalledWith('new posts', 'focus')
   })
 })
 

@@ -22,10 +22,12 @@ import {
  * When a post feed may check for new content above what it has loaded.
  *
  * Checks belong to the exact query, not to the view showing it: every view of
- * a query shares its check clock, its check in flight and the real return it
- * owes, all kept on the query's registry entry, so they belong to the
- * account's QueryClient and go with the query when it is removed. What a view
- * owns is whether it is active and the claim it holds on a return's offer.
+ * a query shares its check clock, its check in flight, the real return it owes
+ * and what its checks found, all kept on the query's registry entry, so they
+ * belong to the account's QueryClient and go with the query when it is
+ * removed. What a view owns is whether it is active, the claim it holds on a
+ * return's offer and whether it has been offered the query's finding since it
+ * last became active.
  *
  * - Check clock: the later of the committed top page's fetch time and the
  *   latest successful check of that page. A check that finds nothing moves it;
@@ -42,6 +44,15 @@ import {
  *   unchanged, and whatever the check found waits for the next active view of
  *   the query. It is consumed when a view is handed the finding, not when a
  *   request starts.
+ * - Findings: what a focus or interval check hands its own trigger is kept on
+ *   the query, with the committed top page it was measured against, and every
+ *   active view of the query is offered it with no request of its own: the
+ *   views active when it lands, and each view that becomes active later, every
+ *   time it does, until that page is replaced or the query is removed. It keeps
+ *   its trigger, so it never becomes a return, and it answers a pending focus,
+ *   which a check would only find again. What goes to a return is the return's
+ *   alone, and a finding does not answer a return, which still checks when it
+ *   is due one.
  * - Coalescing: one check per query at a time, and none while work on its top
  *   is in flight or pending. Triggers that arrive meanwhile wait, and the clock
  *   that work moves decides whether they still need a check.
@@ -123,6 +134,22 @@ export type PostFeedCheckState = {
   pendingCheck?: {isCurrent: () => boolean}
   /** The latest real return the query still owes a check or an offer. */
   returnIntent?: ReturnIntent
+  /**
+   * What the latest positive focus or interval check found, for every active
+   * view of the query to be offered. A newer one replaces it.
+   */
+  finding?: SharedFinding
+}
+
+type SharedFinding = {
+  result: unknown
+  /**
+   * The committed top page it was found above. It goes stale, and is dropped,
+   * once that page is replaced.
+   */
+  top: object
+  /** What asked for the check that found it, which the offer keeps. */
+  trigger: Exclude<PostFeedCheckTrigger, 'return'>
 }
 
 type ReturnIntent = {
@@ -207,6 +234,13 @@ export function usePostFeedCheckTriggers<Result>({
    * and only for the committed top the check measured. Being called is the
    * presentation as far as the coordinator is concerned: a return is consumed
    * here, and whatever the view does next, such as scrolling, is its own.
+   *
+   * What a focus or interval check found is also handed to the query's other
+   * active views, with the trigger that found it, and to each view that
+   * becomes active while the top it was measured against is still committed.
+   * A view is handed it again every time it becomes active, since what it
+   * showed for it may have been reset meanwhile, so being handed the same
+   * finding twice has to be harmless.
    */
   onFound: (result: Result, trigger: PostFeedCheckTrigger) => void
 }) {
@@ -288,6 +322,11 @@ class PostFeedCheckView {
    * another return, or a `requestCheck`.
    */
   private attemptedReturnId: number | undefined
+  /**
+   * The query's finding this view has been offered during its current
+   * activation.
+   */
+  private offeredFinding: SharedFinding | undefined
   private isEvaluating = false
   private shouldReevaluate = false
 
@@ -409,6 +448,23 @@ class PostFeedCheckView {
     const now = Date.now()
     const lastSuccessAt = getLastSuccessAt(state, top)
     const isBusy = this.isBusy(query, entry)
+
+    /*
+     * What the query already knows goes first, so that a return waiting on its
+     * own check does not hold it up. It waits for work on the top like a return
+     * does, since that work can replace the top it was measured against.
+     */
+    const finding = getSharedFinding(state, top)
+    if (finding && finding !== this.offeredFinding && !isBusy) {
+      this.offeredFinding = finding
+      this.isFocusPending = false
+      // onFound can start work of its own, so the rest is looked at anew.
+      this.isIntervalDue ||= isIntervalDue
+      this.shouldReevaluate = true
+      this.present(finding.result, finding.trigger)
+      return
+    }
+
     const intent = getOpenReturnIntent(state, top, lastSuccessAt, now)
 
     // Another active view of the query holding the claim keeps it.
@@ -535,6 +591,14 @@ class PostFeedCheckView {
           foundForTrigger = result !== undefined
         }
         state.checkedAt.set(top, now)
+        if (foundForTrigger && trigger !== 'return') {
+          const finding: SharedFinding = {result, top, trigger}
+          state.finding = finding
+          // Handed over below rather than offered as it notifies the views.
+          if (this.isActive) {
+            this.offeredFinding = finding
+          }
+        }
       }
       notifyViews(queryClient, queryHash)
       if (foundForTrigger && this.isActive) {
@@ -572,6 +636,7 @@ class PostFeedCheckView {
     this.isFocusPending = false
     this.isIntervalDue = false
     this.attemptedReturnId = undefined
+    this.offeredFinding = undefined
     const query = this.getQuery()
     const intent =
       query &&
@@ -622,6 +687,17 @@ function getLastSuccessAt(state: PostFeedCheckState, top: TopPage | undefined) {
   const fetchedAt =
     typeof top.fetchedAt === 'number' ? top.fetchedAt : -Infinity
   return Math.max(fetchedAt, state.checkedAt.get(top) ?? -Infinity)
+}
+
+/**
+ * The query's finding, dropping it once the top it was measured against is no
+ * longer committed.
+ */
+function getSharedFinding(state: PostFeedCheckState, top: TopPage | undefined) {
+  if (state.finding && state.finding.top !== top) {
+    state.finding = undefined
+  }
+  return state.finding
 }
 
 /**

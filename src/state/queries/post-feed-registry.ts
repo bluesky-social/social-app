@@ -30,9 +30,10 @@ export type PostFeedQueryEntry = {
    */
   refresh?: PendingRefresh
   /**
-   * When the query was last checked for new content, the check in flight and
-   * the real return it still owes a check or an offer. Shared by every view of
-   * the query - see `post-feed-checks.ts`, which creates it on first use.
+   * When the query was last checked for new content, the check in flight, the
+   * real return it still owes a check or an offer, and what its latest positive
+   * focus or interval check found. Shared by every view of the query - see
+   * `post-feed-checks.ts`, which creates it on first use.
    */
   checks?: PostFeedCheckState
 }
