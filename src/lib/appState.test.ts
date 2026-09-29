@@ -33,11 +33,23 @@ jest.mock('react-native/Libraries/AppState/AppState', () => ({
   },
 }))
 
-/** Walks the app through `states`, in order, as the OS would report them. */
-function emit(...states: AppStateStatus[]) {
-  for (const state of states) {
-    mockAppState.currentState = state
-    for (const cb of [...mockListeners]) cb(state)
+/** Long enough away for coming back to count as a return. */
+const AWAY = 5 * 60 * 1000
+
+let mockNow = 0
+
+/**
+ * Walks the app through `steps`, in order, as the OS would report them. A
+ * number is time passing, in milliseconds, before the next state.
+ */
+function emit(...steps: (AppStateStatus | number)[]) {
+  for (const step of steps) {
+    if (typeof step === 'number') {
+      mockNow += step
+      continue
+    }
+    mockAppState.currentState = step
+    for (const cb of [...mockListeners]) cb(step)
   }
 }
 
@@ -64,11 +76,14 @@ beforeEach(() => {
   jest.resetModules()
   mockListeners.clear()
   mockAppState.currentState = 'active'
+  mockNow = 0
+  jest.spyOn(Date, 'now').mockImplementation(() => mockNow)
 })
 
 afterEach(() => {
   cleanup?.()
   cleanup = undefined
+  jest.restoreAllMocks()
 })
 
 describe('onAppReturnedFromBackground', () => {
@@ -77,10 +92,33 @@ describe('onAppReturnedFromBackground', () => {
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit('background')
+    emit('background', AWAY)
     expect(cb).not.toHaveBeenCalled()
 
     emit('active')
+    expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('does not fire when the app comes back sooner than five minutes', () => {
+    const {onAppReturnedFromBackground, RETURN_MIN_TIME_AWAY} = load()
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    // e.g. the photo picker, share sheet or fullscreen video on Android
+    emit('background', RETURN_MIN_TIME_AWAY - 1, 'active')
+    expect(cb).not.toHaveBeenCalled()
+
+    emit('background', RETURN_MIN_TIME_AWAY, 'active')
+    expect(cb).toHaveBeenCalledTimes(1)
+    expect(cb).toHaveBeenCalledWith(expect.objectContaining({id: 1}))
+  })
+
+  it('measures time away from the first background of a trip', () => {
+    const {onAppReturnedFromBackground} = load()
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    emit('background', AWAY / 2, 'inactive', AWAY / 2, 'active')
     expect(cb).toHaveBeenCalledTimes(1)
   })
 
@@ -90,7 +128,7 @@ describe('onAppReturnedFromBackground', () => {
     onAppReturnedFromBackground(cb)
 
     // Control Center, Notification Center, a system alert, an app switcher peek
-    emit('inactive', 'active')
+    emit('inactive', AWAY, 'active')
     expect(cb).not.toHaveBeenCalled()
   })
 
@@ -99,7 +137,7 @@ describe('onAppReturnedFromBackground', () => {
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit('inactive', 'background', 'active')
+    emit('inactive', 'background', AWAY, 'active')
     expect(cb).toHaveBeenCalledTimes(1)
   })
 
@@ -108,7 +146,7 @@ describe('onAppReturnedFromBackground', () => {
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit('inactive', 'background', 'inactive', 'active')
+    emit('inactive', 'background', AWAY, 'inactive', 'active')
     expect(cb).toHaveBeenCalledTimes(1)
   })
 
@@ -117,11 +155,11 @@ describe('onAppReturnedFromBackground', () => {
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit('background', 'active')
-    emit('inactive', 'active')
+    emit('background', AWAY, 'active')
+    emit('inactive', AWAY, 'active')
     expect(cb).toHaveBeenCalledTimes(1)
 
-    emit('background', 'active')
+    emit('background', AWAY, 'active')
     expect(cb).toHaveBeenCalledTimes(2)
   })
 
@@ -131,7 +169,7 @@ describe('onAppReturnedFromBackground', () => {
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit('active')
+    emit(AWAY, 'active')
     expect(cb).not.toHaveBeenCalled()
   })
 
@@ -141,8 +179,18 @@ describe('onAppReturnedFromBackground', () => {
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit('active')
+    emit(AWAY, 'active')
     expect(cb).toHaveBeenCalledTimes(1)
+  })
+
+  it('counts time away from when tracking started in the background', () => {
+    mockAppState.currentState = 'background'
+    const {onAppReturnedFromBackground} = load()
+    const cb = jest.fn()
+    onAppReturnedFromBackground(cb)
+
+    emit(AWAY - 1, 'active')
+    expect(cb).not.toHaveBeenCalled()
   })
 
   it('fires for a later listener attached while backgrounded', () => {
@@ -154,7 +202,7 @@ describe('onAppReturnedFromBackground', () => {
     const second = jest.fn()
     onAppReturnedFromBackground(second)
 
-    emit('active')
+    emit(AWAY, 'active')
     expect(first).toHaveBeenCalledTimes(1)
     expect(second).toHaveBeenCalledTimes(1)
   })
@@ -171,7 +219,7 @@ describe('onAppReturnedFromBackground', () => {
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit('active')
+    emit(AWAY, 'active')
     expect(cb).toHaveBeenCalledTimes(1)
   })
 
@@ -183,7 +231,7 @@ describe('onAppReturnedFromBackground', () => {
     onAppReturnedFromBackground(r => second.push(r))
     expect(mockListeners.size).toBe(1)
 
-    emit('background', 'active')
+    emit('background', AWAY, 'active')
     expect(first).toHaveLength(1)
     expect(second).toHaveLength(1)
     expect(second[0]).toBe(first[0])
@@ -193,17 +241,13 @@ describe('onAppReturnedFromBackground', () => {
     const {onAppReturnedFromBackground} = load()
     const returns: AppReturn[] = []
     onAppReturnedFromBackground(r => returns.push(r))
-    const now = jest.spyOn(Date, 'now')
 
-    now.mockReturnValue(1_000)
-    emit('background', 'active')
-    now.mockReturnValue(2_000)
-    emit('background', 'active')
-    now.mockRestore()
+    emit('background', AWAY, 'active')
+    emit(1_000, 'background', AWAY, 'active')
 
     expect(returns).toEqual([
-      {id: 1, timestamp: 1_000},
-      {id: 2, timestamp: 2_000},
+      {id: 1, timestamp: AWAY},
+      {id: 2, timestamp: 2 * AWAY + 1_000},
     ])
   })
 
@@ -211,12 +255,12 @@ describe('onAppReturnedFromBackground', () => {
     const {onAppReturnedFromBackground} = load()
     const first = jest.fn()
     const sub = onAppReturnedFromBackground(first)
-    emit('background', 'active')
+    emit('background', AWAY, 'active')
     sub.remove()
 
     const second = jest.fn()
     onAppReturnedFromBackground(second)
-    emit('background', 'active')
+    emit('background', AWAY, 'active')
 
     expect(first).toHaveBeenCalledWith(expect.objectContaining({id: 1}))
     expect(second).toHaveBeenCalledWith(expect.objectContaining({id: 2}))
@@ -229,7 +273,7 @@ describe('onAppReturnedFromBackground', () => {
     onAppReturnedFromBackground(removed).remove()
     onAppReturnedFromBackground(kept)
 
-    emit('background', 'active')
+    emit('background', AWAY, 'active')
     expect(removed).not.toHaveBeenCalled()
     expect(kept).toHaveBeenCalledTimes(1)
   })
@@ -240,7 +284,7 @@ describe('onAppReturnedFromBackground', () => {
     onAppReturnedFromBackground(() => secondSub.remove())
     const secondSub = onAppReturnedFromBackground(second)
 
-    emit('background', 'active')
+    emit('background', AWAY, 'active')
     expect(second).not.toHaveBeenCalled()
   })
 })
@@ -256,7 +300,7 @@ describe('useOnAppReturnedFromBackground', () => {
       {initialProps: {cb: first}},
     )
 
-    emit('background')
+    emit('background', AWAY)
     rerender({cb: second})
 
     emit('active')
@@ -271,7 +315,7 @@ describe('useOnAppReturnedFromBackground', () => {
     const {unmount} = renderHook(() => useOnAppReturnedFromBackground(cb))
 
     unmount()
-    emit('background', 'active')
+    emit('background', AWAY, 'active')
     expect(cb).not.toHaveBeenCalled()
   })
 })

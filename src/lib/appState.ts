@@ -46,6 +46,15 @@ export type AppReturn = {
   readonly timestamp: number
 }
 
+/**
+ * How long the app has to have been in the background for coming back to count
+ * as a return. Shorter trips away are almost always the app's own flows (on
+ * Android the photo picker, camera, cropper, share sheet, Custom Tabs,
+ * fullscreen video and permission dialogs all report `background`) or a quick
+ * hop to another app, and neither should make feeds look for new content.
+ */
+export const RETURN_MIN_TIME_AWAY = 5 * 60 * 1000
+
 const returnListeners = new Set<(appReturn: AppReturn) => void>()
 let isTrackingReturns = false
 let lastReturnId = 0
@@ -54,20 +63,25 @@ let lastReturnId = 0
  * Starts the single app state listener that all return listeners share, so
  * that each return gets one id however many listeners hear it, and whether a
  * transition is a return doesn't depend on when a listener joined. It is never
- * removed: the latch and the counter describe the app rather than any one
- * listener, so they outlive listeners coming and going.
+ * removed: the time the app went to the background and the counter describe
+ * the app rather than any one listener, so they outlive listeners coming and
+ * going.
  */
 function trackReturns() {
   if (isTrackingReturns) return
   isTrackingReturns = true
 
-  let hasBeenBackgrounded = AppState.currentState === 'background'
+  let backgroundedAt =
+    AppState.currentState === 'background' ? Date.now() : undefined
   onAppStateChange(next => {
     if (next === 'background') {
-      hasBeenBackgrounded = true
-    } else if (next === 'active' && hasBeenBackgrounded) {
-      hasBeenBackgrounded = false
-      const appReturn: AppReturn = {id: ++lastReturnId, timestamp: Date.now()}
+      backgroundedAt ??= Date.now()
+    } else if (next === 'active' && backgroundedAt !== undefined) {
+      const now = Date.now()
+      const timeAway = now - backgroundedAt
+      backgroundedAt = undefined
+      if (timeAway < RETURN_MIN_TIME_AWAY) return
+      const appReturn: AppReturn = {id: ++lastReturnId, timestamp: now}
       for (const listener of [...returnListeners]) {
         // an earlier listener may have removed this one
         if (returnListeners.has(listener)) listener(appReturn)
@@ -77,10 +91,11 @@ function trackReturns() {
 }
 
 /**
- * Calls `cb` each time the app comes back after it was actually backgrounded:
- * the first `active` after a `background`. An `inactive -> active` interruption
- * with no `background` in between is not a return, and neither is the first
- * `active` of a foreground launch.
+ * Calls `cb` each time the app comes back after it was actually backgrounded
+ * for at least {@link RETURN_MIN_TIME_AWAY}: the first `active` after a
+ * `background`, measured from that `background`. A shorter trip away is not a
+ * return, nor is an `inactive -> active` interruption with no `background` in
+ * between, nor the first `active` of a foreground launch.
  *
  * `inactive` is ignored in both directions. The app passes through it on the
  * way out, and sits in it during interruptions that never take it away, so it
@@ -109,8 +124,10 @@ function trackReturns() {
  *   your app or the system)". A runtime permission request may start one
  *   (`Activity#requestPermissions`: "you should be prepared that your activity
  *   may be paused and resumed"), and so do the share sheet, system pickers and
- *   Custom Tabs, so coming back from any of those is a return here. The
- *   notification shade is not: system windows "such as the status bar
+ *   Custom Tabs, and so does fullscreen video. Those trips are almost always
+ *   shorter than {@link RETURN_MIN_TIME_AWAY}, which is what keeps them from
+ *   counting; one left open for longer does count. The notification shade
+ *   doesn't report `background` at all: system windows "such as the status bar
  *   notification panel or a system alert ... temporarily take window input
  *   focus without pausing the foreground activity"
  *   (`Activity#onWindowFocusChanged`), which RN reports as AppState's `blur`
@@ -118,15 +135,19 @@ function trackReturns() {
  * - Web (react-native-web) reports only `active` and `background`, from the
  *   document's visibility, so a return is the tab becoming visible again.
  *
- * All listeners share one latch, armed by `background` and spent by the next
- * `active`, and one id counter. The latch is seeded from
+ * All listeners share one record of when the app went to the background,
+ * cleared by the next `active`, and one id counter. It is seeded from
  * `AppState.currentState` when the first listener subscribes, so a listener
  * attached while the app is backgrounded still hears the return that follows,
  * and it keeps tracking from then on, so later listeners join it rather than
- * seeding their own. A process that starts in the background (an iOS launch to
- * handle a remote notification, or Android when `AppStateModule` is created
- * before the activity has resumed and starts at `background`) therefore counts
- * its first `active` as a return.
+ * seeding their own. When tracking starts in the background, which includes a
+ * process that starts there (an iOS launch to handle a remote notification, or
+ * Android when `AppStateModule` is created before the activity has resumed),
+ * time away is counted from then.
+ *
+ * Time away uses the wall clock, which keeps counting while the device sleeps.
+ * A clock change while away can make a trip look longer or shorter than it
+ * was.
  */
 export function onAppReturnedFromBackground(
   cb: (appReturn: AppReturn) => void,
