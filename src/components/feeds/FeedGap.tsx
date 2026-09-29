@@ -31,8 +31,15 @@ export function FeedGap({
   return (
     <Button
       testID="feedGapBtn"
-      label={hasFailed ? l`Couldn’t load posts. Try again` : l`Show more posts`}
+      label={
+        isLoading
+          ? l`Loading more posts`
+          : hasFailed
+            ? l`Couldn’t load posts. Try again`
+            : l`Show more posts`
+      }
       accessibilityHint={l`Loads the posts missing between here and the posts below`}
+      aria-busy={isLoading}
       disabled={isLoading}
       onPress={onPress}
       style={[
