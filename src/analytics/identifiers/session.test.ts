@@ -134,6 +134,47 @@ describe.each([
     expect(loadSession().getSessionId()).toBe('session-a')
   })
 
+  describe.each(['read', 'active', 'inactive', 'background'])(
+    'recovering through %s',
+    trigger => {
+      it.each(['missing', 'invalid', 'malformed JSON'])(
+        'persists a fresh session after rotation when storage is %s',
+        failure => {
+          const {getSessionId} = loadSession()
+          expect(getSessionId()).toBe('session-a')
+          emitAppState('background')
+          jest.advanceTimersByTime(ttl)
+          mockUuidV4.mockReturnValueOnce('session-b')
+          emitAppState('active')
+          expect(getSessionId()).toBe('session-b')
+
+          if (failure === 'missing') {
+            mockDeviceValues.delete('analyticsSession')
+          } else if (failure === 'invalid') {
+            mockDeviceValues.set('analyticsSession', {id: ''})
+          } else {
+            mockDeviceGet.mockImplementationOnce(() => {
+              throw new SyntaxError('Invalid persisted JSON')
+            })
+          }
+          jest.advanceTimersByTime(1_000)
+          mockUuidV4.mockReturnValueOnce('session-c')
+          mockDeviceSet.mockClear()
+
+          if (trigger !== 'read') emitAppState(trigger)
+          expect(getSessionId()).toBe('session-c')
+          expect(getSessionId()).toBe('session-c')
+          expect(mockUuidV4).toHaveBeenCalledTimes(3)
+          expect(mockDeviceSet).toHaveBeenCalledTimes(1)
+          expect(mockDeviceValues.get('analyticsSession')).toEqual({
+            id: 'session-c',
+            lastEventAt: Date.now(),
+          })
+        },
+      )
+    },
+  )
+
   it('does not rotate before the inactivity threshold', () => {
     setStoredSession('existing-session', NOW.getTime())
     const {getSessionId} = loadSession()

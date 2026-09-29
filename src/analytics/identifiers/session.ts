@@ -34,32 +34,30 @@ function readSessionRecord() {
   }
 }
 
-const initialSessionId = (() => {
-  const existing = readSessionRecord()
-  const id =
-    existing && !isSessionIdExpired(existing.lastEventAt)
-      ? existing.id
-      : String(uuid.v4())
-  device.set(['analyticsSession'], {id, lastEventAt: Date.now()})
-  return id
-})()
+function createSessionRecord(): SessionRecord {
+  const record = {id: String(uuid.v4()), lastEventAt: Date.now()}
+  device.set(['analyticsSession'], record)
+  return record
+}
 
 /** The module-level app-state listener keeps this current without subscribers. */
 export function getSessionId() {
-  return readSessionRecord()?.id ?? initialSessionId
+  // Missing or corrupt storage starts a fresh session, never an old fallback ID.
+  return (readSessionRecord() ?? createSessionRecord()).id
 }
 
 function onAppStateChanged(state: AppStateStatus) {
   const existing = readSessionRecord()
-  const record: SessionRecord = {
-    id:
-      state === 'active' && isSessionIdExpired(existing?.lastEventAt)
-        ? String(uuid.v4())
-        : (existing?.id ?? initialSessionId),
-    lastEventAt: Date.now(),
+  if (
+    !existing ||
+    (state === 'active' && isSessionIdExpired(existing.lastEventAt))
+  ) {
+    createSessionRecord()
+    return
   }
-  device.set(['analyticsSession'], record)
+  device.set(['analyticsSession'], {...existing, lastEventAt: Date.now()})
 }
 
-// Track lifecycle events even before analytics contexts mount.
+// Initialize once, then track lifecycle even before analytics contexts mount.
+onAppStateChanged('active')
 onAppStateChange(onAppStateChanged)
