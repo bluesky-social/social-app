@@ -1,6 +1,9 @@
 const NOW = new Date('2026-09-22T12:00:00.000Z')
 const mockDeviceValues = new Map<string, unknown>()
-const mockDeviceGet = jest.fn((key: string[]) => mockDeviceValues.get(key[0]))
+const mockDeviceGetRaw = jest.fn((key: string[]) => {
+  if (!mockDeviceValues.has(key[0])) return undefined
+  return JSON.stringify({data: mockDeviceValues.get(key[0])})
+})
 const mockDeviceSet = jest.fn((key: string[], value: unknown) => {
   mockDeviceValues.set(key[0], value)
 })
@@ -12,6 +15,7 @@ const mockOnAppStateChange = jest.fn((listener: (state: string) => void) => {
 })
 const mockUuidV4 = jest.fn<unknown, []>()
 let mockIsNative = true
+let sessionValidation: jest.SpyInstance
 
 jest.mock('react-native-uuid', () => ({
   __esModule: true,
@@ -20,7 +24,7 @@ jest.mock('react-native-uuid', () => ({
 jest.mock('#/env', () => ({IS_NATIVE: mockIsNative}))
 jest.mock('#/storage', () => ({
   device: {
-    get: mockDeviceGet,
+    getRaw: mockDeviceGetRaw,
     set: mockDeviceSet,
     addOnValueChangedListener: mockDeviceSubscribe,
   },
@@ -37,7 +41,10 @@ beforeEach(() => {
   mockAppStateListeners.clear()
   mockUuidV4.mockReset().mockReturnValue('session-a')
 })
-afterEach(() => jest.useRealTimers())
+afterEach(() => {
+  jest.restoreAllMocks()
+  jest.useRealTimers()
+})
 
 function setStoredSession(id: string, lastEventAt?: number) {
   mockDeviceValues.set('analyticsSession', {id, lastEventAt})
@@ -50,6 +57,8 @@ function emitAppState(state: string) {
 function loadSession(): typeof import('./session') {
   let session: typeof import('./session') | undefined
   jest.isolateModules(() => {
+    const {z} = require('zod') as typeof import('zod')
+    sessionValidation = jest.spyOn(z.ZodType.prototype, 'safeParse')
     session = require('./session')
   })
   return session!
@@ -73,6 +82,48 @@ describe.each([
       id: 'session-a',
       lastEventAt: NOW.getTime(),
     })
+  })
+
+  it('reads raw storage each time without reparsing or revalidating unchanged data', () => {
+    const {getSessionId} = loadSession()
+    getSessionId()
+    mockDeviceGetRaw.mockClear()
+    sessionValidation.mockClear()
+    const parse = jest.spyOn(JSON, 'parse')
+
+    for (let i = 0; i < 100; i++) getSessionId()
+
+    expect(sessionValidation).not.toHaveBeenCalled()
+    expect(parse).not.toHaveBeenCalled()
+    expect(mockDeviceGetRaw).toHaveBeenCalledTimes(100)
+  })
+
+  it('parses and validates a changed raw value once without a notification', () => {
+    const {getSessionId} = loadSession()
+    getSessionId()
+    mockDeviceGetRaw.mockClear()
+    sessionValidation.mockClear()
+    const parse = jest.spyOn(JSON, 'parse')
+
+    setStoredSession('other-runtime-session', Date.now())
+    expect(getSessionId()).toBe('other-runtime-session')
+    expect(getSessionId()).toBe('other-runtime-session')
+
+    expect(parse).toHaveBeenCalledTimes(1)
+    expect(sessionValidation).toHaveBeenCalledTimes(1)
+    expect(mockDeviceGetRaw).toHaveBeenCalledTimes(2)
+    expect(mockDeviceSubscribe).not.toHaveBeenCalled()
+  })
+
+  it('observes timestamp-only changes before deciding whether to rotate', () => {
+    const {getSessionId} = loadSession()
+    expect(getSessionId()).toBe('session-a')
+    setStoredSession('session-a', Date.now() - ttl)
+    mockUuidV4.mockReturnValueOnce('session-b')
+
+    emitAppState('active')
+
+    expect(getSessionId()).toBe('session-b')
   })
 
   it('reuses an unexpired stored session', () => {
@@ -127,12 +178,13 @@ describe.each([
     },
   )
 
-  it('replaces malformed JSON', () => {
-    mockDeviceGet.mockImplementationOnce(() => {
-      throw new SyntaxError('Invalid persisted JSON')
-    })
-    expect(loadSession().getSessionId()).toBe('session-a')
-  })
+  it.each(['{', 'null', '[]', '42', '"string"', '{}'])(
+    'replaces malformed or invalid serialized storage: %s',
+    raw => {
+      mockDeviceGetRaw.mockReturnValueOnce(raw)
+      expect(loadSession().getSessionId()).toBe('session-a')
+    },
+  )
 
   describe.each(['read', 'active', 'inactive', 'background'])(
     'recovering through %s',
@@ -153,9 +205,7 @@ describe.each([
           } else if (failure === 'invalid') {
             mockDeviceValues.set('analyticsSession', {id: ''})
           } else {
-            mockDeviceGet.mockImplementationOnce(() => {
-              throw new SyntaxError('Invalid persisted JSON')
-            })
+            mockDeviceGetRaw.mockReturnValueOnce('{')
           }
           jest.advanceTimersByTime(1_000)
           mockUuidV4.mockReturnValueOnce('session-c')
