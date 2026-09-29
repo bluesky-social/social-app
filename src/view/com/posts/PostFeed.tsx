@@ -939,6 +939,7 @@ let PostFeed = ({
 
     return arr
   }, [
+    ax,
     isRestorationEnabled,
     refreshError,
     isRetryingError,
@@ -949,6 +950,7 @@ let PostFeed = ({
     lastFetchedAt,
     data,
     feed,
+    feedParams,
     feedType,
     feedUriOrActorDid,
     feedTab,
