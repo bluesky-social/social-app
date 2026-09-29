@@ -9,7 +9,7 @@ const author = {
   $type: 'app.bsky.actor.defs#profileViewBasic',
   did: 'did:plc:alice',
   handle: 'alice.test',
-} as app.bsky.actor.defs.ProfileViewBasic
+} satisfies app.bsky.actor.defs.ProfileViewBasic
 
 function post(id: string) {
   return {
@@ -23,7 +23,7 @@ function post(id: string) {
       createdAt: '2026-08-31T00:00:00.000Z',
     },
     indexedAt: '2026-08-31T00:00:00.000Z',
-  } as app.bsky.feed.defs.PostView
+  } satisfies app.bsky.feed.defs.PostView
 }
 
 describe('createFeedViewPostsSlices', () => {
@@ -36,7 +36,7 @@ describe('createFeedViewPostsSlices', () => {
       reply: {root, parent},
       opThreadPostIndex: 3,
       opThreadPostCount: 4,
-    } as app.bsky.feed.defs.FeedViewPost
+    } satisfies app.bsky.feed.defs.FeedViewPost
 
     const [slice] = createFeedViewPostsSlices([feedPost])
 

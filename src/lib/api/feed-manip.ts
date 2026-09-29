@@ -11,8 +11,6 @@ export type FeedPostNumbering = Pick<
 
 export type ValidFeedPostNumbering = Required<FeedPostNumbering>
 
-type FeedViewPost = app.bsky.feed.defs.FeedViewPost
-
 function getPostNumbering(
   value: FeedPostNumbering,
 ): ValidFeedPostNumbering | undefined {
@@ -35,7 +33,7 @@ function getPostNumbering(
 }
 
 function inferPostNumbering(
-  feedPost: FeedViewPost,
+  feedPost: app.bsky.feed.defs.FeedViewPost,
   position: 'parent' | 'root',
 ): ValidFeedPostNumbering | undefined {
   const postNumbering = getPostNumbering(feedPost)
@@ -76,7 +74,7 @@ type AuthorContext = {
 
 export class FeedViewPostsSlice {
   _reactKey: string
-  _feedPost: FeedViewPost
+  _feedPost: app.bsky.feed.defs.FeedViewPost
   items: FeedSliceItem[]
   isIncompleteThread: boolean
   isFallbackMarker: boolean
@@ -86,7 +84,7 @@ export class FeedViewPostsSlice {
   feedPostUri: string
 
   constructor(
-    feedPost: FeedViewPost,
+    feedPost: app.bsky.feed.defs.FeedViewPost,
     postNumberingByUri: Map<string, ValidFeedPostNumbering>,
   ) {
     const {post, reply, reason} = feedPost
@@ -286,7 +284,7 @@ export class FeedViewPostsSlice {
 }
 
 export function createFeedViewPostsSlices(
-  feed: FeedViewPost[],
+  feed: app.bsky.feed.defs.FeedViewPost[],
 ): FeedViewPostsSlice[] {
   const postNumberingByUri = new Map<string, ValidFeedPostNumbering>()
   for (const item of feed) {
@@ -309,7 +307,7 @@ export class FeedTuner {
   constructor(public tunerFns: FeedTunerFn[]) {}
 
   tune(
-    feed: FeedViewPost[],
+    feed: app.bsky.feed.defs.FeedViewPost[],
     {dryRun}: {dryRun: boolean} = {
       dryRun: false,
     },
