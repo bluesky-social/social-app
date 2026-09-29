@@ -176,7 +176,7 @@ function lateCallbacks(attempt: Attempt) {
     () => attempt.report({state: 'failed', error: 'late failure'}),
     () => attempt.report({state: 'uploaded', blob: blob('late')}),
     () =>
-      attempt.setPrepared?.(postId, mediaId, {
+      attempt.setMediaCompressionResult?.(postId, mediaId, {
         kind: attempt.media.kind,
         uri: 'file:///late',
         size: 1,
