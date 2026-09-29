@@ -90,7 +90,10 @@ export async function post(queryClient: QueryClient, opts: PostOpts) {
     const draft = thread.posts[i]
 
     // Not awaited to avoid waterfalls.
-    const rtPromise = resolveRichText(opts.appviewClient, draft.richtext.text)
+    const rtPromise = resolveRichText({
+      appviewClient: opts.appviewClient,
+      text: draft.richtext.text,
+    })
     const embedPromise = resolveEmbed(
       opts.appviewClient,
       opts.chatClient,
@@ -323,10 +326,10 @@ async function resolveMedia(
     const images: app.bsky.embed.images.Image[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(
+        const {path, width, height, mime} = await compressImage({
           image,
-          IMAGE_SIZE_CONFIG_POSTS,
-        )
+          ...IMAGE_SIZE_CONFIG_POSTS,
+        })
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(pdsClient, path, mime)
         return {
@@ -350,10 +353,10 @@ async function resolveMedia(
     const items: $Typed<app.bsky.embed.gallery.Image>[] = await Promise.all(
       imagesDraft.map(async (image, i) => {
         logger.debug(`Compressing image #${i}`)
-        const {path, width, height, mime} = await compressImage(
+        const {path, width, height, mime} = await compressImage({
           image,
-          IMAGE_SIZE_CONFIG_POSTS,
-        )
+          ...IMAGE_SIZE_CONFIG_POSTS,
+        })
         logger.debug(`Uploading image #${i}`)
         const res = await uploadBlob(pdsClient, path, mime)
         return {

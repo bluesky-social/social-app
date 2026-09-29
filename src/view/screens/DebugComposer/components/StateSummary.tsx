@@ -53,7 +53,7 @@ export function StateSummary() {
             <Text
               style={[a.text_xs, {fontFamily: 'monospace'}]}
               testID="composerV2Tester-summary-dump">
-              {JSON.stringify(summarizeThreadState(state), null, 2)}
+              {JSON.stringify(summarizeThreadState({state}), null, 2)}
             </Text>
           </ScrollView>
         </View>
@@ -63,7 +63,7 @@ export function StateSummary() {
 }
 
 /** Structure and readiness only; safe for screenshots and logs. */
-export function summarizeThreadState(state: ThreadState) {
+export function summarizeThreadState({state}: {state: ThreadState}) {
   return {
     postCount: Object.keys(state.posts).length,
     isDirty: state.isDirty,
@@ -94,7 +94,7 @@ export function summarizeThreadState(state: ThreadState) {
           : post.attachments.media.state !== 'resolved'
             ? post.attachments.media.state
             : post.attachments.media.kind,
-      mediaItems: getMediaItems(post.attachments.media).map(item => ({
+      mediaItems: getMediaItems({media: post.attachments.media}).map(item => ({
         id: item.id,
         kind: item.kind,
         hasAltText: item.altText.length > 0,

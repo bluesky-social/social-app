@@ -14,9 +14,11 @@ import * as bsky from '#/types/bsky'
  * rules are preserved separately so an edit to the known settings never
  * silently drops them.
  */
-export function splitThreadgateAllowRules(
-  rules: readonly ThreadgateAllowRule[] | undefined,
-): {
+export function splitThreadgateAllowRules({
+  rules,
+}: {
+  rules: readonly ThreadgateAllowRule[] | undefined
+}): {
   settings: ThreadgateAllowUISetting[]
   unknownRules: ThreadgateAllowRule[]
 } {
@@ -55,10 +57,13 @@ export function splitThreadgateAllowRules(
  * - "Nobody" is an explicit edit to the narrowest setting and returns an
  *   empty rule set, which never broadens permissions.
  */
-export function mergeThreadgateAllowRules(
-  settings: ThreadgateAllowUISetting[],
-  unknownRules: readonly ThreadgateAllowRule[],
-): ThreadgateAllowRule[] | undefined {
+export function mergeThreadgateAllowRules({
+  settings,
+  unknownRules,
+}: {
+  settings: ThreadgateAllowUISetting[]
+  unknownRules: readonly ThreadgateAllowRule[]
+}): ThreadgateAllowRule[] | undefined {
   if (settings.some(setting => setting.type === 'nobody')) {
     return []
   }
@@ -73,9 +78,11 @@ export function mergeThreadgateAllowRules(
  * Split stored postgate embedding rules into the quote toggle the shared
  * dialog edits and the unknown typed rules it cannot represent.
  */
-export function splitPostgateEmbeddingRules(
-  rules: readonly PostgateEmbeddingRule[],
-): {
+export function splitPostgateEmbeddingRules({
+  rules,
+}: {
+  rules: readonly PostgateEmbeddingRule[]
+}): {
   quotesEnabled: boolean
   unknownRules: PostgateEmbeddingRule[]
 } {
@@ -96,10 +103,13 @@ export function splitPostgateEmbeddingRules(
  * rules are restrictions, so they are always preserved; dropping them would
  * silently broaden what other users may do with the post.
  */
-export function mergePostgateEmbeddingRules(
-  quotesEnabled: boolean,
-  unknownRules: readonly PostgateEmbeddingRule[],
-): PostgateEmbeddingRule[] {
+export function mergePostgateEmbeddingRules({
+  quotesEnabled,
+  unknownRules,
+}: {
+  quotesEnabled: boolean
+  unknownRules: readonly PostgateEmbeddingRule[]
+}): PostgateEmbeddingRule[] {
   return quotesEnabled
     ? [...unknownRules]
     : [embeddingRules.disableRule, ...unknownRules]

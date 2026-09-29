@@ -6,34 +6,41 @@ import {
   type PostMediaVideo,
 } from '#/components/ComposerV2/store/types'
 
-type MediaIds = {id: string; postId: string}
-
-export function buildPostMediaItem(
-  input: Extract<AddMediaInput, {kind: 'image'}>,
-  ids: MediaIds,
-): PostMediaImage
-export function buildPostMediaItem(
-  input: Extract<AddMediaInput, {kind: 'video'}>,
-  ids: MediaIds,
-): PostMediaVideo
-export function buildPostMediaItem(
-  input: Extract<AddMediaInput, {kind: 'gif'}>,
-  ids: MediaIds,
-): PostMediaGif
-export function buildPostMediaItem(
-  input: AddMediaInput,
-  ids: MediaIds,
-): PostMediaItem
+export function buildPostMediaItem(args: {
+  input: Extract<AddMediaInput, {kind: 'image'}>
+  id: string
+  postId: string
+}): PostMediaImage
+export function buildPostMediaItem(args: {
+  input: Extract<AddMediaInput, {kind: 'video'}>
+  id: string
+  postId: string
+}): PostMediaVideo
+export function buildPostMediaItem(args: {
+  input: Extract<AddMediaInput, {kind: 'gif'}>
+  id: string
+  postId: string
+}): PostMediaGif
+export function buildPostMediaItem(args: {
+  input: AddMediaInput
+  id: string
+  postId: string
+}): PostMediaItem
 /** Copy source data into a fresh item with a new upload lifecycle. */
-export function buildPostMediaItem(
-  input: AddMediaInput,
-  ids: MediaIds,
-): PostMediaItem {
+export function buildPostMediaItem({
+  input,
+  id,
+  postId,
+}: {
+  input: AddMediaInput
+  id: string
+  postId: string
+}): PostMediaItem {
   if (input.kind === 'image') {
     return {
       kind: 'image',
-      id: ids.id,
-      postId: ids.postId,
+      id,
+      postId,
       uri: input.uri,
       width: input.width,
       height: input.height,
@@ -46,8 +53,8 @@ export function buildPostMediaItem(
   if (input.kind === 'video') {
     return {
       kind: 'video',
-      id: ids.id,
-      postId: ids.postId,
+      id,
+      postId,
       uri: input.uri,
       width: input.width,
       height: input.height,
@@ -63,8 +70,8 @@ export function buildPostMediaItem(
   }
   return {
     kind: 'gif',
-    id: ids.id,
-    postId: ids.postId,
+    id,
+    postId,
     gif: input.gif,
     altText: input.altText ?? '',
   }

@@ -208,8 +208,10 @@ describe('useTesterSession', () => {
     await act(async () => {
       await result.current.applyScenario('text', () =>
         composerOptsToInitialState({
-          get text(): string {
-            throw cause
+          composerOpts: {
+            get text(): string {
+              throw cause
+            },
           },
         }),
       )

@@ -13,7 +13,7 @@ export type AttachmentSlot = 'record' | 'media'
  * resolveLink. A result for a different slot is rejected rather than moved
  * into a slot that may have acquired another attachment in the meantime.
  */
-export function classifyUriTarget(uri: string): AttachmentSlot {
+export function classifyUriTarget({uri}: {uri: string}): AttachmentSlot {
   if (
     isBskyPostUrl(uri) ||
     isBskyCustomFeedUrl(uri) ||

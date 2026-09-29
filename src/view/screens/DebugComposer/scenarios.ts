@@ -90,13 +90,15 @@ export async function buildScenarioInitialState(
 ): Promise<ThreadStoreInitialState> {
   switch (input.id) {
     case 'empty':
-      return composerOptsToInitialState({})
+      return composerOptsToInitialState({composerOpts: {}})
     case 'text':
       return composerOptsToInitialState({
-        text: 'Testing ComposerV2 with prefilled text and a link card https://bsky.app/about',
+        composerOpts: {
+          text: 'Testing ComposerV2 with prefilled text and a link card https://bsky.app/about',
+        },
       })
     case 'mention':
-      return composerOptsToInitialState({mention: input.handle})
+      return composerOptsToInitialState({composerOpts: {mention: input.handle}})
     case 'thread':
       /*
        * Normalized multi-post data, exercising per-post text, languages,
@@ -129,10 +131,12 @@ export async function buildScenarioInitialState(
       })
     case 'reply':
       return composerOptsToInitialState({
-        replyTo: postViewToReplyRef(input.post),
+        composerOpts: {
+          replyTo: postViewToReplyRef({post: input.post}),
+        },
       })
     case 'quote':
-      return composerOptsToInitialState({quote: input.post})
+      return composerOptsToInitialState({composerOpts: {quote: input.post}})
     case 'media':
       return {posts: [{text: '', attachments: {media: pickedToMedia(input)}}]}
   }
@@ -143,9 +147,11 @@ export async function buildScenarioInitialState(
  * reply scenario flows through the same `composerOptsToInitialState` adapter
  * as production intents.
  */
-function postViewToReplyRef(
-  post: app.bsky.feed.defs.PostView,
-): NonNullable<ComposerOpts['replyTo']> {
+function postViewToReplyRef({
+  post,
+}: {
+  post: app.bsky.feed.defs.PostView
+}): NonNullable<ComposerOpts['replyTo']> {
   const record = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record
     : undefined

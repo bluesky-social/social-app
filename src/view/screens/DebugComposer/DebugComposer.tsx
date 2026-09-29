@@ -193,7 +193,7 @@ function ThreadSection() {
 
   let retryableFailureCount = 0
   for (const post of Object.values(state.posts)) {
-    for (const item of getMediaItems(post.attachments.media)) {
+    for (const item of getMediaItems({media: post.attachments.media})) {
       if (
         item.kind !== 'gif' &&
         item.upload.state === 'failed' &&

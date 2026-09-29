@@ -70,7 +70,7 @@ function mockAppview(
 
 function snapshot(initial: ThreadStoreInitialState): ThreadState {
   let id = 0
-  return buildThreadState(initial, () => `post-${++id}`)
+  return buildThreadState({input: initial, createId: () => `post-${++id}`})
 }
 
 function readyImages(state: ThreadState, count = 1) {
@@ -159,7 +159,7 @@ describe('planner reporting policy', () => {
       cause,
     )
     expect(JSON.stringify(result)).not.toContain('private diagnostic')
-    expect(JSON.stringify(summarizeComposerV2Plan(result))).not.toContain(
+    expect(JSON.stringify(summarizeComposerV2Plan({result}))).not.toContain(
       'private diagnostic',
     )
     expect(JSON.stringify(state)).toBe(before)
@@ -1161,7 +1161,7 @@ describe('ComposerV2 no-write planner', () => {
     expect(result.errors[0].code).toBe('media-failed')
     expect(JSON.stringify(result)).not.toContain('private worker detail')
 
-    const summary = summarizeComposerV2Plan(result)
+    const summary = summarizeComposerV2Plan({result})
     expect(summary.ok).toBe(false)
     expect(JSON.stringify(summary)).not.toContain('private worker detail')
     /* The redacted summary carries codes and locations, not messages. */
@@ -1178,7 +1178,7 @@ describe('ComposerV2 no-write planner', () => {
     const state = snapshot({posts: [{text: 'extremely private words'}]})
     const result = await plan(state)
     expect(result.ok).toBe(true)
-    const summary = summarizeComposerV2Plan(result)
+    const summary = summarizeComposerV2Plan({result})
     expect(summary.ok).toBe(true)
     expect(JSON.stringify(summary)).not.toContain('extremely private words')
     if (summary.ok) {
@@ -1195,7 +1195,7 @@ describe('ComposerV2 no-write planner', () => {
     })
     const result = await plan(state)
     expect(result.ok).toBe(true)
-    const summary = summarizeComposerV2Plan(result)
+    const summary = summarizeComposerV2Plan({result})
     expect(summary.ok).toBe(true)
     if (!summary.ok) return
 

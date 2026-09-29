@@ -12,10 +12,13 @@ import {shortenLinks, stripInvalidMentions} from '#/lib/strings/rich-text-manip'
  * This is intentionally UI-free so every write path (the current composer
  * and the ComposerV2 planner) shares one normalization policy.
  */
-export async function resolveRichText(
-  appviewClient: Client,
-  text: string,
-): Promise<RichText> {
+export async function resolveRichText({
+  appviewClient,
+  text,
+}: {
+  appviewClient: Client
+  text: string
+}): Promise<RichText> {
   const trimmedText = text
     // Trim leading whitespace-only lines (but don't break ASCII art).
     .replace(/^(\s*\n)+/, '')

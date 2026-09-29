@@ -42,16 +42,16 @@ export async function writeComposerV2Plan({
       throw new Error('ComposerV2 plan must enable server-side validation')
     }
   } catch (cause) {
-    reportComposerV2Error(
+    reportComposerV2Error({
       onError,
-      {
+      event: {
         source: 'writer',
         code: 'write-precondition-failed',
         kind: 'unexpected',
         recovery: 'none',
       },
       cause,
-    )
+    })
     throw cause
   }
 
@@ -60,9 +60,9 @@ export async function writeComposerV2Plan({
   } catch (cause) {
     /* Any rejection after dispatch may have committed, including transport
      * aborts. Preserve the SDK error and exact plan for caller reconciliation. */
-    reportComposerV2Error(
+    reportComposerV2Error({
       onError,
-      {
+      event: {
         source: 'writer',
         code: 'apply-writes-failed',
         postIds: plan.posts.map(post => post.postId),
@@ -70,7 +70,7 @@ export async function writeComposerV2Plan({
         recovery: 'reconcile',
       },
       cause,
-    )
+    })
     throw cause
   }
   return {uris: plan.posts.map(post => post.uri)}

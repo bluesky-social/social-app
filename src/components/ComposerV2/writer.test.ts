@@ -25,8 +25,8 @@ const DID = 'did:plc:composer-v2-writer'
 const BLOB_CID = 'bafkreieq5jui4j25lacwomsqgjeswwl3y5zcdrresptwgmfylxo2depppq'
 
 async function makeFixture() {
-  const snapshot = buildThreadState(
-    {
+  const snapshot = buildThreadState({
+    input: {
       threadgateAllowRules: [],
       postgateEmbeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
       posts: [
@@ -47,11 +47,11 @@ async function makeFixture() {
         {text: 'second post', langs: ['fr'], tags: ['explicit-second']},
       ],
     },
-    (() => {
+    createId: (() => {
       let id = 0
       return () => `post-${++id}`
     })(),
-  )
+  })
   const appviewClient = {
     call: jest.fn(),
   } as unknown as Client

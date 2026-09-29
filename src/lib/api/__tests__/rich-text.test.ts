@@ -39,27 +39,42 @@ function links(rt: RichText) {
 
 describe('resolveRichText', () => {
   test('trims leading whitespace-only lines without breaking ASCII art', async () => {
-    const rt = await resolveRichText(mockAppview(), '\n   \n\nhello')
+    const rt = await resolveRichText({
+      appviewClient: mockAppview(),
+      text: '\n   \n\nhello',
+    })
     expect(rt.text).toBe('hello')
 
     /* Indentation on a line with content is ASCII art, not blank padding. */
-    const art = await resolveRichText(mockAppview(), '  /\\_/\\\n ( o.o )')
+    const art = await resolveRichText({
+      appviewClient: mockAppview(),
+      text: '  /\\_/\\\n ( o.o )',
+    })
     expect(art.text).toBe('  /\\_/\\\n ( o.o )')
   })
 
   test('trims trailing whitespace and newlines', async () => {
-    const rt = await resolveRichText(mockAppview(), 'hello  \n\n   ')
+    const rt = await resolveRichText({
+      appviewClient: mockAppview(),
+      text: 'hello  \n\n   ',
+    })
     expect(rt.text).toBe('hello')
   })
 
   test('cleans excessive consecutive newlines', async () => {
-    const rt = await resolveRichText(mockAppview(), 'one\n\n\n\n\ntwo')
+    const rt = await resolveRichText({
+      appviewClient: mockAppview(),
+      text: 'one\n\n\n\n\ntwo',
+    })
     expect(rt.text).toBe('one\n\ntwo')
   })
 
   test('shortens link display text while preserving the full URL facet', async () => {
     const url = 'https://example.com/some/very/long/path/that/keeps/going'
-    const rt = await resolveRichText(mockAppview(), `check ${url}`)
+    const rt = await resolveRichText({
+      appviewClient: mockAppview(),
+      text: `check ${url}`,
+    })
     expect(rt.text).toBe('check example.com/some/very/lo...')
     expect(links(rt)).toEqual([
       expect.objectContaining({
@@ -71,22 +86,34 @@ describe('resolveRichText', () => {
 
   test('keeps resolved mentions and strips unresolvable ones', async () => {
     const client = mockAppview({'alice.test': 'did:plc:alice'})
-    const resolved = await resolveRichText(client, 'hi @alice.test')
+    const resolved = await resolveRichText({
+      appviewClient: client,
+      text: 'hi @alice.test',
+    })
     expect(resolved.text).toBe('hi @alice.test')
     expect(mentions(resolved)).toEqual([
       expect.objectContaining({did: 'did:plc:alice'}),
     ])
 
-    const stripped = await resolveRichText(client, 'hi @missing.test')
+    const stripped = await resolveRichText({
+      appviewClient: client,
+      text: 'hi @missing.test',
+    })
     expect(stripped.text).toBe('hi @missing.test')
     expect(mentions(stripped)).toEqual([])
   })
 
   test('measures the 300-grapheme boundary the validators enforce', async () => {
-    const atLimit = await resolveRichText(mockAppview(), '💙'.repeat(300))
+    const atLimit = await resolveRichText({
+      appviewClient: mockAppview(),
+      text: '💙'.repeat(300),
+    })
     expect(atLimit.graphemeLength).toBe(300)
 
-    const overLimit = await resolveRichText(mockAppview(), '💙'.repeat(301))
+    const overLimit = await resolveRichText({
+      appviewClient: mockAppview(),
+      text: '💙'.repeat(301),
+    })
     expect(overLimit.graphemeLength).toBe(301)
   })
 })

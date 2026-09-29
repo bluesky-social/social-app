@@ -70,16 +70,16 @@ describe('initialization reporting', () => {
       throw new Error('listener')
     })
     await expect(
-      composerOptsToInitialState(
-        {
+      composerOptsToInitialState({
+        composerOpts: {
           imageUris: Array.from({length: 11}, () => ({
             uri: 'file:///private',
             width: 10,
             height: 10,
           })),
         },
-        {onError},
-      ),
+        onError,
+      }),
     ).rejects.toMatchObject({code: 'oversized-images'})
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError.mock.calls[0][0]).toEqual({
@@ -99,10 +99,13 @@ describe('initialization reporting', () => {
       const onError = jest.fn<ComposerV2OnError>()
       const result =
         source === 'intent'
-          ? composerOptsToInitialState(
-              {videoUri: {uri: 'file:///private', width: 10, height: 10}},
-              {onError, getVideoMetadata: () => Promise.reject(cause)},
-            )
+          ? composerOptsToInitialState({
+              composerOpts: {
+                videoUri: {uri: 'file:///private', width: 10, height: 10},
+              },
+              onError,
+              getVideoMetadata: () => Promise.reject(cause),
+            })
           : draftToInitialState({
               draftId: 'draft',
               draft: {
@@ -137,10 +140,12 @@ describe('initialization reporting', () => {
       },
     }
     const onError = jest.fn<ComposerV2OnError>()
-    await expect(composerOptsToInitialState(opts)).rejects.toBe(cause)
-    await expect(composerOptsToInitialState(opts, {onError})).rejects.toBe(
+    await expect(composerOptsToInitialState({composerOpts: opts})).rejects.toBe(
       cause,
     )
+    await expect(
+      composerOptsToInitialState({composerOpts: opts, onError}),
+    ).rejects.toBe(cause)
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError).toHaveBeenCalledWith(
       {
@@ -178,7 +183,7 @@ describe('composerOptsToInitialState', () => {
       },
     } as unknown as ComposerOpts
 
-    const initial = await composerOptsToInitialState(opts)
+    const initial = await composerOptsToInitialState({composerOpts: opts})
     const post = initial.posts?.[0]
 
     expect(post?.text).toBe(opts.text)
@@ -210,7 +215,9 @@ describe('composerOptsToInitialState', () => {
   })
 
   test('uses the existing mention precedence and classifies links by attachment slot', async () => {
-    const mentioned = await composerOptsToInitialState({mention: 'alice.test'})
+    const mentioned = await composerOptsToInitialState({
+      composerOpts: {mention: 'alice.test'},
+    })
     expect(mentioned.posts?.[0].text).toBe('@alice.test ')
 
     const cases = [
@@ -223,7 +230,9 @@ describe('composerOptsToInitialState', () => {
     ] as const
 
     for (const [uri, slot] of cases) {
-      const initial = await composerOptsToInitialState({text: `x ${uri}`})
+      const initial = await composerOptsToInitialState({
+        composerOpts: {text: `x ${uri}`},
+      })
       expect(initial.posts?.[0].attachments?.[slot]).toEqual({
         kind: 'uri',
         uri,
@@ -233,13 +242,15 @@ describe('composerOptsToInitialState', () => {
 
   test('explicit media suppresses a detected external card while quote wins over a detected post', async () => {
     const initial = await composerOptsToInitialState({
-      text: 'https://bsky.app/profile/alice.test/post/detected https://example.com',
-      quote: {
-        ...postRef,
-        author: profile,
-        text: 'quote',
-      } as unknown as app.bsky.feed.defs.PostView,
-      imageUris: [{uri: 'file:///image.jpg', width: 1, height: 1}],
+      composerOpts: {
+        text: 'https://bsky.app/profile/alice.test/post/detected https://example.com',
+        quote: {
+          ...postRef,
+          author: profile,
+          text: 'quote',
+        } as unknown as app.bsky.feed.defs.PostView,
+        imageUris: [{uri: 'file:///image.jpg', width: 1, height: 1}],
+      },
     })
     expect(initial.posts?.[0].attachments).toMatchObject({
       record: {kind: 'post', record: postRef},
@@ -250,19 +261,23 @@ describe('composerOptsToInitialState', () => {
   test('rejects conflicting and oversized explicit media', async () => {
     await expect(
       composerOptsToInitialState({
-        imageUris: [{uri: 'file:///image.jpg', width: 1, height: 1}],
-        videoUri: {uri: 'file:///video.mp4', width: 1, height: 1},
+        composerOpts: {
+          imageUris: [{uri: 'file:///image.jpg', width: 1, height: 1}],
+          videoUri: {uri: 'file:///video.mp4', width: 1, height: 1},
+        },
       }),
     ).rejects.toMatchObject({
       code: 'conflicting-explicit-media',
     })
     await expect(
       composerOptsToInitialState({
-        imageUris: Array.from({length: 11}, (_, i) => ({
-          uri: `file:///image-${i}.jpg`,
-          width: 1,
-          height: 1,
-        })),
+        composerOpts: {
+          imageUris: Array.from({length: 11}, (_, i) => ({
+            uri: `file:///image-${i}.jpg`,
+            width: 1,
+            height: 1,
+          })),
+        },
       }),
     ).rejects.toMatchObject({
       code: 'oversized-images',
@@ -270,10 +285,12 @@ describe('composerOptsToInitialState', () => {
   })
 
   test('gets the video MIME type through the injected metadata probe', async () => {
-    const initial = await composerOptsToInitialState(
-      {videoUri: {uri: 'file:///video.mp4', width: 320, height: 240}},
-      {getVideoMetadata: videoMetadata},
-    )
+    const initial = await composerOptsToInitialState({
+      composerOpts: {
+        videoUri: {uri: 'file:///video.mp4', width: 320, height: 240},
+      },
+      getVideoMetadata: videoMetadata,
+    })
     expect(initial.posts?.[0].attachments?.media).toEqual({
       kind: 'video',
       item: {
@@ -287,7 +304,9 @@ describe('composerOptsToInitialState', () => {
   })
 
   test('normalizes gate values without cloning and leaves ownership to the store', async () => {
-    const defaults = await composerOptsToInitialState({text: 'new'})
+    const defaults = await composerOptsToInitialState({
+      composerOpts: {text: 'new'},
+    })
     expect(defaults.threadgateAllowRules).toBeUndefined()
     expect(defaults.postgateEmbeddingRules).toEqual([])
 
@@ -311,10 +330,10 @@ describe('composerOptsToInitialState', () => {
       ],
     } as unknown as app.bsky.actor.defs.PostInteractionSettingsPref
     const beforeAdapter = JSON.stringify(settings)
-    const initial = await composerOptsToInitialState(
-      {text: 'restricted'},
-      {postInteractionSettings: settings},
-    )
+    const initial = await composerOptsToInitialState({
+      composerOpts: {text: 'restricted'},
+      postInteractionSettings: settings,
+    })
 
     expect(JSON.stringify(settings)).toBe(beforeAdapter)
     expect(initial.threadgateAllowRules).toBe(settings.threadgateAllowRules)
@@ -703,17 +722,19 @@ describe('draftToInitialState', () => {
   test('feeds each normalized adapter result directly into a clean store snapshot', async () => {
     jest.useFakeTimers()
     const initial = await composerOptsToInitialState({
-      quote: {
-        ...postRef,
-        author: profile,
-        text: 'quote',
-      } as unknown as app.bsky.feed.defs.PostView,
-      replyTo: {
-        ...postRef,
-        text: 'parent',
-        author: profile,
+      composerOpts: {
+        quote: {
+          ...postRef,
+          author: profile,
+          text: 'quote',
+        } as unknown as app.bsky.feed.defs.PostView,
+        replyTo: {
+          ...postRef,
+          text: 'parent',
+          author: profile,
+        },
+        imageUris: [{uri: 'file:///image.jpg', width: 1, height: 1}],
       },
-      imageUris: [{uri: 'file:///image.jpg', width: 1, height: 1}],
     })
     const store = createThreadStore({
       initialState: initial,

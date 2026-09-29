@@ -204,7 +204,7 @@ function ReplyQuoteDialogInner({
   const control = Dialog.useDialogContext()
   const getPost = useGetPost()
   const [url, setUrl] = useState('')
-  const postReference = normalizePostReference(url)
+  const postReference = normalizePostReference({reference: url})
 
   const start = (id: 'reply' | 'quote') => {
     if (!postReference) return

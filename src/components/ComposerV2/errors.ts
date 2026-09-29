@@ -46,11 +46,15 @@ export type ComposerV2OnError = (
 ) => void
 
 /** Reporting is best-effort and must never replace an operation's outcome. */
-export function reportComposerV2Error(
-  onError: ComposerV2OnError | undefined,
-  event: ComposerV2ErrorEvent,
-  cause?: unknown,
-) {
+export function reportComposerV2Error({
+  onError,
+  event,
+  cause,
+}: {
+  onError: ComposerV2OnError | undefined
+  event: ComposerV2ErrorEvent
+  cause?: unknown
+}) {
   try {
     onError?.(event, cause)
   } catch {
@@ -59,6 +63,6 @@ export function reportComposerV2Error(
 }
 
 /** Intentional cancellation is not an operational failure. */
-export function isComposerV2Cancellation(cause: unknown) {
+export function isComposerV2Cancellation({cause}: {cause: unknown}) {
   return cause instanceof Error && cause.name === 'AbortError'
 }

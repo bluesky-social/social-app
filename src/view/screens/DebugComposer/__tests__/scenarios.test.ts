@@ -204,21 +204,29 @@ describe('buildScenarioInitialState', () => {
 describe('normalizePostReference', () => {
   test('accepts at-uris and bsky.app post URLs, rejects everything else', () => {
     expect(
-      normalizePostReference('at://did:plc:abc/app.bsky.feed.post/rkey'),
+      normalizePostReference({
+        reference: 'at://did:plc:abc/app.bsky.feed.post/rkey',
+      }),
     ).toBe('at://did:plc:abc/app.bsky.feed.post/rkey')
     expect(
-      normalizePostReference('https://bsky.app/profile/user.test/post/3abc'),
+      normalizePostReference({
+        reference: 'https://bsky.app/profile/user.test/post/3abc',
+      }),
     ).toBe('at://user.test/app.bsky.feed.post/3abc')
     expect(
-      normalizePostReference('https://bsky.app/profile/did:plc:abc/post/3abc'),
+      normalizePostReference({
+        reference: 'https://bsky.app/profile/did:plc:abc/post/3abc',
+      }),
     ).toBe('at://did:plc:abc/app.bsky.feed.post/3abc')
-    expect(normalizePostReference('')).toBeUndefined()
-    expect(normalizePostReference('not a url')).toBeUndefined()
+    expect(normalizePostReference({reference: ''})).toBeUndefined()
+    expect(normalizePostReference({reference: 'not a url'})).toBeUndefined()
     expect(
-      normalizePostReference('https://example.com/profile/x/post/y'),
+      normalizePostReference({
+        reference: 'https://example.com/profile/x/post/y',
+      }),
     ).toBeUndefined()
     expect(
-      normalizePostReference('https://bsky.app/profile/user.test'),
+      normalizePostReference({reference: 'https://bsky.app/profile/user.test'}),
     ).toBeUndefined()
   })
 })

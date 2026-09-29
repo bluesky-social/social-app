@@ -2,9 +2,11 @@ import {MAX_IMAGES_PER_POST} from '#/components/ComposerV2/store/const'
 import {type MediaAttachment} from '#/components/ComposerV2/store/types'
 
 /** Only an empty media slot or an existing image set accepts more items. */
-export function computePostMediaSelectionsRemaining(
-  media: MediaAttachment | undefined,
-): {
+export function computePostMediaSelectionsRemaining({
+  media,
+}: {
+  media: MediaAttachment | undefined
+}): {
   imageSelectionsRemaining: number
   videoSelectionsRemaining: number
   gifSelectionsRemaining: number

@@ -145,11 +145,11 @@ export function useTesterSession(deps: TesterSessionDeps) {
       setScenarioError({code: 'scenario-build-failed', scenarioId})
       /* Construction reports at its own boundary; do not report it twice. */
       if (!constructing) {
-        reportInitializationError(
-          session.store.reportError,
-          error,
-          'scenario-build-failed',
-        )
+        reportInitializationError({
+          onError: session.store.reportError,
+          cause: error,
+          fallbackCode: 'scenario-build-failed',
+        })
       }
     } finally {
       if (token === requestRef.current) setIsApplyingScenario(false)

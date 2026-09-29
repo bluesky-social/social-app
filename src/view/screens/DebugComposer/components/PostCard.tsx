@@ -294,7 +294,7 @@ function TagsInput({postId, index}: {postId: string; index: number}) {
         testID={`composerV2Tester-post-${postId}-tags`}
         defaultValue={initialTags}
         onChangeText={text =>
-          store.actions.setPostTags(postId, parseTagsInput(text))
+          store.actions.setPostTags(postId, parseTagsInput({text}))
         }
         placeholder={l`Tags, comma separated`}
         autoCapitalize="none"

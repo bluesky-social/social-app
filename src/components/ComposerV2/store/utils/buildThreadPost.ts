@@ -9,13 +9,21 @@ import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostM
 import {computePostMediaSelectionsRemaining} from '#/components/ComposerV2/store/utils/computePostMediaSelectionsRemaining'
 
 /** Build the first snapshot directly, without actions or background work. */
-export function buildThreadPost(
-  postId: string,
-  createId: () => string,
-  input: ThreadPostInitialState = {},
-): ThreadPost {
+export function buildThreadPost({
+  postId,
+  createId,
+  input = {},
+}: {
+  postId: string
+  createId: () => string
+  input?: ThreadPostInitialState
+}): ThreadPost {
   const recordInput = input.attachments?.record
-  const media = buildMedia(input.attachments?.media, postId, createId)
+  const media = buildMedia({
+    input: input.attachments?.media,
+    postId,
+    createId,
+  })
   return {
     text: input.text ?? '',
     langs: [...(input.langs ?? [])],
@@ -33,15 +41,19 @@ export function buildThreadPost(
             },
       media,
     },
-    ...computePostMediaSelectionsRemaining(media),
+    ...computePostMediaSelectionsRemaining({media}),
   }
 }
 
-function buildMedia(
-  input: MediaAttachmentInput | undefined,
-  postId: string,
-  createId: () => string,
-): MediaAttachment | undefined {
+function buildMedia({
+  input,
+  postId,
+  createId,
+}: {
+  input: MediaAttachmentInput | undefined
+  postId: string
+  createId: () => string
+}): MediaAttachment | undefined {
   if (!input) return undefined
   switch (input.kind) {
     case 'uri':
@@ -58,29 +70,32 @@ function buildMedia(
         state: 'resolved',
         kind: 'images',
         items: input.items.map(item =>
-          buildPostMediaItem(
-            {...item, kind: 'image'},
-            {postId, id: createId()},
-          ),
+          buildPostMediaItem({
+            input: {...item, kind: 'image'},
+            postId,
+            id: createId(),
+          }),
         ),
       }
     case 'video':
       return {
         state: 'resolved',
         kind: 'video',
-        item: buildPostMediaItem(
-          {...input.item, kind: 'video'},
-          {postId, id: createId()},
-        ),
+        item: buildPostMediaItem({
+          input: {...input.item, kind: 'video'},
+          postId,
+          id: createId(),
+        }),
       }
     case 'gif':
       return {
         state: 'resolved',
         kind: 'gif',
-        item: buildPostMediaItem(
-          {...input.item, kind: 'gif'},
-          {postId, id: createId()},
-        ),
+        item: buildPostMediaItem({
+          input: {...input.item, kind: 'gif'},
+          postId,
+          id: createId(),
+        }),
       }
     case 'external':
       return {

@@ -79,25 +79,27 @@ export type DraftToInitialStateInput = AdapterMetadataOptions & {
  * This is async because a video intent has no MIME type in the shell contract;
  * the existing platform metadata probe supplies it before the store is built.
  */
-export async function composerOptsToInitialState(
-  opts: ComposerOpts,
-  options: AdapterMetadataOptions = {},
-): Promise<ThreadStoreInitialState> {
+export async function composerOptsToInitialState({
+  composerOpts,
+  ...options
+}: AdapterMetadataOptions & {
+  composerOpts: ComposerOpts
+}): Promise<ThreadStoreInitialState> {
   try {
-    return await normalizeComposerOpts(opts, options)
+    return await normalizeComposerOpts({composerOpts, ...options})
   } catch (cause) {
-    reportInitializationError(options.onError, cause)
+    reportInitializationError({onError: options.onError, cause})
     throw cause
   }
 }
 
-async function normalizeComposerOpts(
-  opts: ComposerOpts,
-  {
-    getVideoMetadata = defaultGetVideoMetadata,
-    postInteractionSettings,
-  }: AdapterMetadataOptions = {},
-): Promise<ThreadStoreInitialState> {
+async function normalizeComposerOpts({
+  composerOpts: opts,
+  getVideoMetadata = defaultGetVideoMetadata,
+  postInteractionSettings,
+}: AdapterMetadataOptions & {
+  composerOpts: ComposerOpts
+}): Promise<ThreadStoreInitialState> {
   const imageUris = opts.imageUris?.length ? opts.imageUris : undefined
   if (imageUris && opts.videoUri) {
     throw new ComposerAdapterError(
@@ -133,7 +135,7 @@ async function normalizeComposerOpts(
         })),
       } satisfies MediaAttachmentInput)
     : opts.videoUri
-      ? await intentVideoToMedia(opts.videoUri, getVideoMetadata)
+      ? await intentVideoToMedia({video: opts.videoUri, getVideoMetadata})
       : undefined
 
   const explicitRecord = opts.quote
@@ -144,7 +146,7 @@ async function normalizeComposerOpts(
       } satisfies RecordAttachmentInput)
     : undefined
 
-  const detected = detectInitialLinks(text)
+  const detected = detectInitialLinks({text})
   const record =
     explicitRecord ??
     (detected.recordUri
@@ -157,7 +159,7 @@ async function normalizeComposerOpts(
       : undefined)
 
   return {
-    replyTo: opts.replyTo ? toReplyTarget(opts.replyTo) : undefined,
+    replyTo: opts.replyTo ? toReplyTarget({replyTo: opts.replyTo}) : undefined,
     threadgateAllowRules: postInteractionSettings?.threadgateAllowRules,
     postgateEmbeddingRules:
       postInteractionSettings?.postgateEmbeddingRules ?? [],
@@ -174,31 +176,35 @@ async function normalizeComposerOpts(
 }
 
 /** Convert a loaded draft without mounting a store or dispatching edits. */
-export async function draftToInitialState(
-  input: DraftToInitialStateInput,
-): Promise<ThreadStoreInitialState> {
+export async function draftToInitialState({
+  onError,
+  ...input
+}: DraftToInitialStateInput): Promise<ThreadStoreInitialState> {
   try {
     return await normalizeDraft(input)
   } catch (cause) {
-    reportInitializationError(input.onError, cause)
+    reportInitializationError({onError, cause})
     throw cause
   }
 }
 
 /** For owning callers that deliberately leave adapter-level reporting off. */
-export function reportInitializationError(
-  onError: ComposerV2OnError | undefined,
-  cause: unknown,
-  fallbackCode:
-    'initial-state-failed' | 'scenario-build-failed' = 'initial-state-failed',
-) {
+export function reportInitializationError({
+  onError,
+  cause,
+  fallbackCode = 'initial-state-failed',
+}: {
+  onError: ComposerV2OnError | undefined
+  cause: unknown
+  fallbackCode?: 'initial-state-failed' | 'scenario-build-failed'
+}) {
   const adapterError = cause instanceof ComposerAdapterError ? cause : undefined
   const hasCause = adapterError && Object.hasOwn(adapterError, 'cause')
   const diagnostic = hasCause ? adapterError.cause : cause
-  if (isComposerV2Cancellation(diagnostic)) return
-  reportComposerV2Error(
+  if (isComposerV2Cancellation({cause: diagnostic})) return
+  reportComposerV2Error({
     onError,
-    {
+    event: {
       source: 'initialization',
       code: adapterError?.code ?? fallbackCode,
       kind: adapterError
@@ -208,8 +214,8 @@ export function reportInitializationError(
         : 'unexpected',
       recovery: adapterError ? 'edit' : 'none',
     },
-    diagnostic,
-  )
+    cause: diagnostic,
+  })
 }
 
 async function normalizeDraft({
@@ -221,13 +227,13 @@ async function normalizeDraft({
 }: DraftToInitialStateInput): Promise<ThreadStoreInitialState> {
   const posts = await Promise.all(
     draft.posts.map(async post =>
-      draftPostToInitialState(
+      draftPostToInitialState({
         post,
-        draft.langs ?? [],
+        langs: draft.langs ?? [],
         loadedMedia,
         getImageDimensions,
         getVideoMetadata,
-      ),
+      }),
     ),
   )
 
@@ -240,14 +246,20 @@ async function normalizeDraft({
   }
 }
 
-async function draftPostToInitialState(
-  post: app.bsky.draft.defs.DraftPost,
-  langs: readonly string[],
-  loadedMedia: ReadonlyMap<string, string>,
-  getImageDimensions: NonNullable<AdapterMetadataOptions['getImageDimensions']>,
-  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>,
-) {
-  const images = await restoreImages(post, loadedMedia, getImageDimensions)
+async function draftPostToInitialState({
+  post,
+  langs,
+  loadedMedia,
+  getImageDimensions,
+  getVideoMetadata,
+}: {
+  post: app.bsky.draft.defs.DraftPost
+  langs: readonly string[]
+  loadedMedia: ReadonlyMap<string, string>
+  getImageDimensions: NonNullable<AdapterMetadataOptions['getImageDimensions']>
+  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>
+}) {
+  const images = await restoreImages({post, loadedMedia, getImageDimensions})
   const videos = post.embedVideos ?? []
   if (videos.length > 1) {
     throw new ComposerAdapterError(
@@ -270,12 +282,12 @@ async function draftPostToInitialState(
     )
   }
   const record = recordRefs[0]
-    ? draftRecordToAttachment(recordRefs[0].record)
+    ? draftRecordToAttachment({record: recordRefs[0].record})
     : undefined
 
   const externals = post.embedExternals ?? []
   const externalInputs = externals.map(external =>
-    draftExternalToInput(external.uri),
+    draftExternalToInput({uri: external.uri}),
   )
   const gifs = externalInputs.filter(
     (input): input is Extract<MediaAttachmentInput, {kind: 'gif'}> =>
@@ -286,10 +298,10 @@ async function draftPostToInitialState(
       input.kind === 'uri',
   )
   const externalRecordInputs = uriInputs.filter(
-    input => classifyUriTarget(input.uri) === 'record',
+    input => classifyUriTarget({uri: input.uri}) === 'record',
   )
   const externalMediaInputs = uriInputs.filter(
-    input => classifyUriTarget(input.uri) === 'media',
+    input => classifyUriTarget({uri: input.uri}) === 'media',
   )
 
   if (
@@ -318,7 +330,7 @@ async function draftPostToInitialState(
   const externalRecord = externalRecordInputs[0]
   const normalizedRecord = record ?? externalRecord
   const video = videos[0]
-    ? await restoreVideo(videos[0], loadedMedia, getVideoMetadata)
+    ? await restoreVideo({video: videos[0], loadedMedia, getVideoMetadata})
     : undefined
   if (images.length > 0 && video) {
     throw new ComposerAdapterError(
@@ -354,16 +366,20 @@ async function draftPostToInitialState(
   return {
     text: post.text,
     langs: [...langs],
-    labels: draftLabels(post),
+    labels: draftLabels({post}),
     attachments: {record: normalizedRecord, media},
   }
 }
 
-async function restoreImages(
-  post: app.bsky.draft.defs.DraftPost,
-  loadedMedia: ReadonlyMap<string, string>,
-  getImageDimensions: NonNullable<AdapterMetadataOptions['getImageDimensions']>,
-): Promise<PostMediaImageInput[]> {
+async function restoreImages({
+  post,
+  loadedMedia,
+  getImageDimensions,
+}: {
+  post: app.bsky.draft.defs.DraftPost
+  loadedMedia: ReadonlyMap<string, string>
+  getImageDimensions: NonNullable<AdapterMetadataOptions['getImageDimensions']>
+}): Promise<PostMediaImageInput[]> {
   const entries = [...(post.embedImages ?? [])]
   if (post.embedGallery) {
     for (const item of post.embedGallery.items) {
@@ -379,7 +395,7 @@ async function restoreImages(
 
   return Promise.all(
     entries.map(async image => {
-      const uri = requireLoadedMedia(loadedMedia, image.localRef.path)
+      const uri = requireLoadedMedia({loadedMedia, path: image.localRef.path})
       let dimensions: {width: number; height: number}
       try {
         dimensions = await getImageDimensions(uri)
@@ -407,13 +423,19 @@ async function restoreImages(
   )
 }
 
-async function restoreVideo(
-  video: app.bsky.draft.defs.DraftEmbedVideo,
-  loadedMedia: ReadonlyMap<string, string>,
-  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>,
-): Promise<PostMediaVideoInput> {
-  const uri = requireLoadedMedia(loadedMedia, video.localRef.path)
-  const fallbackMimeType = parseVideoMimeType(video.localRef.path)
+async function restoreVideo({
+  video,
+  loadedMedia,
+  getVideoMetadata,
+}: {
+  video: app.bsky.draft.defs.DraftEmbedVideo
+  loadedMedia: ReadonlyMap<string, string>
+  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>
+}): Promise<PostMediaVideoInput> {
+  const uri = requireLoadedMedia({loadedMedia, path: video.localRef.path})
+  const fallbackMimeType = parseVideoMimeType({
+    localRefPath: video.localRef.path,
+  })
   let metadata: VideoMetadata
   try {
     metadata = await getVideoMetadata(uri, fallbackMimeType)
@@ -446,10 +468,13 @@ async function restoreVideo(
   }
 }
 
-function intentVideoToMedia(
-  video: NonNullable<ComposerOpts['videoUri']>,
-  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>,
-): Promise<MediaAttachmentInput> {
+function intentVideoToMedia({
+  video,
+  getVideoMetadata,
+}: {
+  video: NonNullable<ComposerOpts['videoUri']>
+  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>
+}): Promise<MediaAttachmentInput> {
   return getVideoMetadata(video.uri).then(
     metadata => {
       if (!metadata.mimeType) {
@@ -479,7 +504,7 @@ function intentVideoToMedia(
   )
 }
 
-function detectInitialLinks(text: string) {
+function detectInitialLinks({text}: {text: string}) {
   const recordUris = new Map<
     string,
     {facet: app.bsky.richtext.facet.Main; rt: RichText}
@@ -496,7 +521,7 @@ function detectInitialLinks(text: string) {
     for (const feature of facet.features) {
       if (!bsky.isType(app.bsky.richtext.facet.link, feature)) continue
       const uri = feature.uri
-      const target = classifyUriTarget(uri)
+      const target = classifyUriTarget({uri})
       const match = {facet, rt: richText}
       if (target === 'record') recordUris.set(uri, match)
       else mediaUris.set(uri, match)
@@ -509,23 +534,29 @@ function detectInitialLinks(text: string) {
   return {recordUri, mediaUri}
 }
 
-function toReplyTarget(
-  replyTo: NonNullable<ComposerOpts['replyTo']>,
-): ThreadReplyTarget {
+function toReplyTarget({
+  replyTo,
+}: {
+  replyTo: NonNullable<ComposerOpts['replyTo']>
+}): ThreadReplyTarget {
   const {moderation: _moderation, ...reply} = replyTo
   return {
     uri: reply.uri,
     cid: reply.cid,
     text: reply.text,
     langs: [...(reply.langs ?? [])],
-    author: cloneWithoutModeration(reply.author),
-    embed: reply.embed ? cloneWithoutModeration(reply.embed) : undefined,
+    author: cloneWithoutModeration({value: reply.author}),
+    embed: reply.embed
+      ? cloneWithoutModeration({value: reply.embed})
+      : undefined,
   }
 }
 
-function draftRecordToAttachment(
-  record: app.bsky.draft.defs.DraftEmbedRecord['record'],
-): RecordAttachmentInput {
+function draftRecordToAttachment({
+  record,
+}: {
+  record: app.bsky.draft.defs.DraftEmbedRecord['record']
+}): RecordAttachmentInput {
   let kind: 'post' | 'feed' | 'list' | 'starter-pack'
   try {
     const collection = new AtUri(record.uri).collection
@@ -558,14 +589,14 @@ function isDraftImageEntry(
   )
 }
 
-function draftExternalToInput(uri: string): MediaAttachmentInput {
-  const gif = parseDraftGif(uri)
+function draftExternalToInput({uri}: {uri: string}): MediaAttachmentInput {
+  const gif = parseDraftGif({uri})
   if (gif) return {kind: 'gif', item: {gif, altText: gif.content_description}}
 
   return {kind: 'uri', uri}
 }
 
-function parseDraftGif(uri: string): Gif | undefined {
+function parseDraftGif({uri}: {uri: string}): Gif | undefined {
   let url: URL
   try {
     url = new URL(uri)
@@ -598,9 +629,15 @@ function parseDraftGif(uri: string): Gif | undefined {
     preview: format,
   }
   if (mp4Slug)
-    mediaFormats.mp4 = {...format, url: formatUrl(url, mp4Slug, 'mp4')}
+    mediaFormats.mp4 = {
+      ...format,
+      url: formatUrl({url, slug: mp4Slug, extension: 'mp4'}),
+    }
   if (webmSlug)
-    mediaFormats.webm = {...format, url: formatUrl(url, webmSlug, 'webm')}
+    mediaFormats.webm = {
+      ...format,
+      url: formatUrl({url, slug: webmSlug, extension: 'webm'}),
+    }
 
   return {
     id: '',
@@ -617,7 +654,15 @@ function parseDraftGif(uri: string): Gif | undefined {
   }
 }
 
-function formatUrl(url: URL, slug: string, extension: string) {
+function formatUrl({
+  url,
+  slug,
+  extension,
+}: {
+  url: URL
+  slug: string
+  extension: string
+}) {
   const formatted = new URL(url.href)
   const parts = formatted.pathname.split('/')
   parts[parts.length - 1] = `${slug}.${extension}`
@@ -625,7 +670,7 @@ function formatUrl(url: URL, slug: string, extension: string) {
   return formatted.toString()
 }
 
-function draftLabels(post: app.bsky.draft.defs.DraftPost): string[] {
+function draftLabels({post}: {post: app.bsky.draft.defs.DraftPost}): string[] {
   if (!post.labels) return []
   const values = (post.labels as {values?: unknown}).values
   if (!Array.isArray(values)) {
@@ -649,10 +694,13 @@ function draftLabels(post: app.bsky.draft.defs.DraftPost): string[] {
   })
 }
 
-function requireLoadedMedia(
-  loadedMedia: ReadonlyMap<string, string>,
-  path: string,
-) {
+function requireLoadedMedia({
+  loadedMedia,
+  path,
+}: {
+  loadedMedia: ReadonlyMap<string, string>
+  path: string
+}) {
   const uri = loadedMedia.get(path)
   if (!uri) {
     throw new ComposerAdapterError(
@@ -663,7 +711,7 @@ function requireLoadedMedia(
   return uri
 }
 
-function parseVideoMimeType(localRefPath: string): string {
+function parseVideoMimeType({localRefPath}: {localRefPath: string}): string {
   const parts = localRefPath.split(':')
   if (parts.length >= 3 && parts[1].includes('/')) return parts[1]
   return 'video/mp4'
@@ -683,14 +731,16 @@ function validDimensions(value: {
   )
 }
 
-function cloneWithoutModeration<T>(value: T): T {
+function cloneWithoutModeration<T>({value}: {value: T}): T {
   if (Array.isArray(value)) {
-    return value.map(item => cloneWithoutModeration(item)) as T
+    return value.map(item => cloneWithoutModeration({value: item})) as T
   }
   if (value && typeof value === 'object') {
     return Object.fromEntries(
       Object.entries(value).flatMap(([key, item]) =>
-        key === 'moderation' ? [] : [[key, cloneWithoutModeration(item)]],
+        key === 'moderation'
+          ? []
+          : [[key, cloneWithoutModeration({value: item})]],
       ),
     ) as T
   }

@@ -36,13 +36,21 @@ import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMedia
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
 
-function isRetryableFailedUpload(item: types.PostMediaItem): boolean {
+function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
   if (item.kind !== 'image' && item.kind !== 'video') return false
   return item.upload.state === 'failed' && item.upload.retryable === true
 }
 
 /** One isolated thread composition session, independent of React. */
-export function createThreadStore(options: {
+export function createThreadStore({
+  resolvers,
+  initialState,
+  onError,
+  __createId,
+  __resolveLink,
+  media: mediaDependencies,
+  __uploadWorkers,
+}: {
   resolvers: LinkResolvers
   initialState?: types.ThreadStoreInitialState
   /** Registered before normalization and eager initialization begin. */
@@ -56,24 +64,23 @@ export function createThreadStore(options: {
   /** Test-only worker seam; never selected implicitly in production. */
   __uploadWorkers?: UploadWorkerOverrides
 }) {
-  const id = options.__createId ?? nanoid
-  const resolve = options.__resolveLink ?? importedResolveLink
-  const onError = options.onError
+  const id = __createId ?? nanoid
+  const resolve = __resolveLink ?? importedResolveLink
   let destroyed = false
   let reporting = false
   const reportError: ComposerV2OnError = (event, cause) => {
     if (destroyed || reporting) return
-    if (event.source !== 'writer' && isComposerV2Cancellation(cause)) return
+    if (event.source !== 'writer' && isComposerV2Cancellation({cause})) return
     reporting = true
     try {
-      reportComposerV2Error(onError, event, cause)
+      reportComposerV2Error({onError, event, cause})
     } finally {
       reporting = false
     }
   }
   let state: types.ThreadState
   try {
-    state = buildThreadState(options.initialState ?? {}, id)
+    state = buildThreadState({input: initialState ?? {}, createId: id})
   } catch (cause) {
     reportError(
       {
@@ -144,7 +151,7 @@ export function createThreadStore(options: {
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      if (serializableEqual(post.tags, tags)) return null
+      if (serializableEqual({left: post.tags, right: tags})) return null
       s.posts[postId] = {...post, tags: [...tags]}
       s.isDirty = true
       return s
@@ -156,8 +163,11 @@ export function createThreadStore(options: {
     allow: readonly types.ThreadgateAllowRule[] | undefined,
   ) {
     mutateState(s => {
-      if (serializableEqual(s.threadgateAllowRules, allow)) return null
-      s.threadgateAllowRules = allow?.map(rule => cloneSerializable(rule))
+      if (serializableEqual({left: s.threadgateAllowRules, right: allow}))
+        return null
+      s.threadgateAllowRules = allow?.map(rule =>
+        cloneSerializable({value: rule}),
+      )
       s.isDirty = true
       return s
     })
@@ -168,11 +178,16 @@ export function createThreadStore(options: {
   ) {
     mutateState(s => {
       const embeddingRules = configuration.embeddingRules ?? []
-      if (serializableEqual(s.postgateEmbeddingRules, embeddingRules)) {
+      if (
+        serializableEqual({
+          left: s.postgateEmbeddingRules,
+          right: embeddingRules,
+        })
+      ) {
         return null
       }
       s.postgateEmbeddingRules = embeddingRules.map(rule =>
-        cloneSerializable(rule),
+        cloneSerializable({value: rule}),
       )
       s.isDirty = true
       return s
@@ -197,11 +212,11 @@ export function createThreadStore(options: {
       const next: Record<string, types.ThreadPost> = {}
       for (const [k, v] of Object.entries(s.posts)) {
         if (position === 'before' && k === postId) {
-          next[newId] = buildThreadPost(newId, id)
+          next[newId] = buildThreadPost({postId: newId, createId: id})
         }
         next[k] = v
         if (position === 'after' && k === postId) {
-          next[newId] = buildThreadPost(newId, id)
+          next[newId] = buildThreadPost({postId: newId, createId: id})
         }
       }
       s.posts = next
@@ -249,11 +264,13 @@ export function createThreadStore(options: {
   function removePost(postId: string) {
     mutateState(s => {
       if (Object.keys(s.posts).length <= 1 || !(postId in s.posts)) return null
-      for (const item of getMediaItems(s.posts[postId].attachments.media)) {
+      for (const item of getMediaItems({
+        media: s.posts[postId].attachments.media,
+      })) {
         cancelUploadTask(item.id)
       }
-      resolutionRevs.record.clearFor(postId)
-      resolutionRevs.media.clearFor(postId)
+      resolutionRevs.record.clearFor({key: postId})
+      resolutionRevs.media.clearFor({key: postId})
       delete s.posts[postId]
       s.isDirty = true
       return s
@@ -271,16 +288,19 @@ export function createThreadStore(options: {
   ): {addedMediaIds: string[]} | undefined {
     if (destroyed || !(postId in state.posts)) return undefined
     const post = state.posts[postId]
-    const accepted = filterMediaInputs(post.attachments.media, inputs)
+    const accepted = filterMediaInputs({
+      existing: post.attachments.media,
+      inputs,
+    })
     if (accepted.length === 0) return {addedMediaIds: []}
     const items = accepted.map(input =>
-      buildPostMediaItem(input, {id: id(), postId}),
+      buildPostMediaItem({input, id: id(), postId}),
     )
 
-    resolutionRevs.media.incrementFor(postId)
+    resolutionRevs.media.incrementFor({key: postId})
     mutateState(s => {
       s.posts[postId] = setPostMediaItems(post, [
-        ...getMediaItems(post.attachments.media),
+        ...getMediaItems({media: post.attachments.media}),
         ...items,
       ])
       s.isDirty = true
@@ -295,7 +315,7 @@ export function createThreadStore(options: {
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      const items = getMediaItems(post.attachments.media)
+      const items = getMediaItems({media: post.attachments.media})
       const next = items.filter(item => item.id !== mediaId)
       if (next.length === items.length) return null
       cancelUploadTask(mediaId)
@@ -314,7 +334,7 @@ export function createThreadStore(options: {
       const post = s.posts[postId]
       if (!post) return null
       let changed = false
-      const items = getMediaItems(post.attachments.media).map(item => {
+      const items = getMediaItems({media: post.attachments.media}).map(item => {
         if (item.id !== mediaId || item.altText === altText) return item
         changed = true
         return {...item, altText}
@@ -343,7 +363,7 @@ export function createThreadStore(options: {
     if (destroyed) return
     const post = state.posts[postId]
     if (!post) return
-    const item = getMediaItems(post.attachments.media).find(
+    const item = getMediaItems({media: post.attachments.media}).find(
       m => m.id === mediaId,
     )
     if (!item || item.kind !== 'video') return
@@ -351,7 +371,7 @@ export function createThreadStore(options: {
       lang: caption.lang,
       content: caption.content,
     }))
-    if (serializableEqual(item.captions, nextCaptions)) return
+    if (serializableEqual({left: item.captions, right: nextCaptions})) return
 
     const keptBlobs = item.captionBlobs.filter(blob => {
       const previous = item.captions.find(caption => caption.lang === blob.lang)
@@ -372,7 +392,7 @@ export function createThreadStore(options: {
     mutateState(s => {
       const currentPost = s.posts[postId]
       if (!currentPost) return null
-      const items = getMediaItems(currentPost.attachments.media)
+      const items = getMediaItems({media: currentPost.attachments.media})
       if (!items.some(m => m.id === mediaId)) return null
       s.posts[postId] = setPostMediaItems(
         currentPost,
@@ -389,9 +409,9 @@ export function createThreadStore(options: {
     if (destroyed) return
     const post = state.posts[postId]
     if (!post) return
-    const items = getMediaItems(post.attachments.media)
+    const items = getMediaItems({media: post.attachments.media})
     const item = items.find(m => m.id === mediaId)
-    if (!item || !isRetryableFailedUpload(item)) return
+    if (!item || !isRetryableFailedUpload({item})) return
 
     cancelUploadTask(mediaId)
     const pending = {...item, upload: {state: 'pending' as const}}
@@ -415,8 +435,8 @@ export function createThreadStore(options: {
 
     const candidates: Array<{postId: string; mediaId: string}> = []
     for (const [postId, post] of Object.entries(state.posts)) {
-      for (const item of getMediaItems(post.attachments.media)) {
-        if (isRetryableFailedUpload(item)) {
+      for (const item of getMediaItems({media: post.attachments.media})) {
+        if (isRetryableFailedUpload({item})) {
           candidates.push({postId, mediaId: item.id})
         }
       }
@@ -427,11 +447,11 @@ export function createThreadStore(options: {
       if (destroyed) break
       const post = state.posts[postId]
       const item = post
-        ? getMediaItems(post.attachments.media).find(
+        ? getMediaItems({media: post.attachments.media}).find(
             media => media.id === mediaId,
           )
         : undefined
-      if (!item || !isRetryableFailedUpload(item)) continue
+      if (!item || !isRetryableFailedUpload({item})) continue
       retryMediaUpload(postId, mediaId)
       retriedMediaIds.push(mediaId)
     }
@@ -444,10 +464,10 @@ export function createThreadStore(options: {
    */
   function addUri(postId: string, uri: string) {
     if (destroyed) return
-    const target = classifyUriTarget(uri)
+    const target = classifyUriTarget({uri})
     const post = state.posts[postId]
     if (!post || post.attachments[target]?.state === 'resolved') return
-    const rev = resolutionRevs[target].incrementFor(postId)
+    const rev = resolutionRevs[target].incrementFor({key: postId})
     mutateState(s => {
       const currentPost = s.posts[postId]
       if (
@@ -483,21 +503,23 @@ export function createThreadStore(options: {
     uri: string
     rev: number
   }) {
-    if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) return
+    if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
+      return
 
     const applyFailed = (err: unknown, unexpected = false) => {
-      if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) return
-      if (isComposerV2Cancellation(err)) return
-      const {code, isRetryable} = parseResolveLinkError(err)
+      if (destroyed || !resolutionRevs[target].isCurrentFor({key: postId, rev}))
+        return
+      if (isComposerV2Cancellation({cause: err})) return
+      const {code, isRetryable} = parseResolveLinkError({error: err})
       const retry = isRetryable
         ? () => {
             if (
               destroyed ||
-              !resolutionRevs[target].isCurrentFor(postId, rev)
+              !resolutionRevs[target].isCurrentFor({key: postId, rev})
             ) {
               return
             }
-            const retryRev = resolutionRevs[target].incrementFor(postId)
+            const retryRev = resolutionRevs[target].incrementFor({key: postId})
             mutateState(retryState => {
               const currentPost = retryState.posts[postId]
               if (!currentPost) return null
@@ -558,7 +580,10 @@ export function createThreadStore(options: {
     }
 
     const applyResolved = (link: ResolvedLink) => {
-      if (destroyed || !resolutionRevs[target].isCurrentFor(postId, rev)) {
+      if (
+        destroyed ||
+        !resolutionRevs[target].isCurrentFor({key: postId, rev})
+      ) {
         return
       }
       if ((link.type === 'record') !== (target === 'record')) {
@@ -594,7 +619,7 @@ export function createThreadStore(options: {
     }
 
     try {
-      resolve(options.resolvers, uri).then(applyResolved, applyFailed)
+      resolve(resolvers, uri).then(applyResolved, applyFailed)
     } catch (cause) {
       applyFailed(cause, true)
     }
@@ -606,7 +631,7 @@ export function createThreadStore(options: {
     value: types.RecordAttachmentValue,
   ) {
     if (destroyed || !state.posts[postId]) return
-    resolutionRevs.record.incrementFor(postId)
+    resolutionRevs.record.incrementFor({key: postId})
     mutateState(s => {
       s.posts[postId] = setPostRecord(s.posts[postId], {
         state: 'resolved',
@@ -621,7 +646,7 @@ export function createThreadStore(options: {
     mutateState(s => {
       const post = s.posts[postId]
       if (!post || !post.attachments.record) return null
-      resolutionRevs.record.incrementFor(postId)
+      resolutionRevs.record.incrementFor({key: postId})
       s.posts[postId] = setPostRecord(post, undefined)
       s.isDirty = true
       return s
@@ -633,8 +658,8 @@ export function createThreadStore(options: {
     mutateState(s => {
       const post = s.posts[postId]
       if (!post || !post.attachments.media) return null
-      resolutionRevs.media.incrementFor(postId)
-      for (const item of getMediaItems(post.attachments.media)) {
+      resolutionRevs.media.incrementFor({key: postId})
+      for (const item of getMediaItems({media: post.attachments.media})) {
         cancelUploadTask(item.id)
       }
       s.posts[postId] = setPostMedia(post, undefined)
@@ -655,7 +680,7 @@ export function createThreadStore(options: {
   ) {
     const post = state.posts[postId]
     if (destroyed || !post) return
-    const found = getMediaItems(post.attachments.media).find(
+    const found = getMediaItems({media: post.attachments.media}).find(
       item => item.id === mediaId,
     )
     if (!found || found.kind === 'gif') return
@@ -669,9 +694,9 @@ export function createThreadStore(options: {
               ...input,
               retryable: true,
               retry: () => {
-                const current = getMediaItems(
-                  state.posts[postId]?.attachments.media,
-                ).find(item => item.id === mediaId)
+                const current = getMediaItems({
+                  media: state.posts[postId]?.attachments.media,
+                }).find(item => item.id === mediaId)
                 // A retained retry belongs to this failure, not a later attempt.
                 if (
                   current &&
@@ -687,7 +712,7 @@ export function createThreadStore(options: {
     mutateState(s => {
       const currentPost = s.posts[postId]
       if (!currentPost) return null
-      const currentItems = getMediaItems(currentPost.attachments.media)
+      const currentItems = getMediaItems({media: currentPost.attachments.media})
       const current = currentItems.find(item => item.id === mediaId)
       if (!current || current.kind === 'gif') return null
       const next =
@@ -742,7 +767,7 @@ export function createThreadStore(options: {
     const post = state.posts[postId]
     if (!post) return
     // Read live state: a subscriber may have edited, removed, or retried this item.
-    const item = getMediaItems(post.attachments.media).find(
+    const item = getMediaItems({media: post.attachments.media}).find(
       m => m.id === mediaId,
     )
     if (!item || item.kind === 'gif' || item.upload.state !== 'pending') return
@@ -764,7 +789,7 @@ export function createThreadStore(options: {
     const callbacks = {
       postId,
       mediaId: item.id,
-      dependencies: options.media,
+      dependencies: mediaDependencies,
       setUploadStatus: (
         p: string,
         m: string,
@@ -791,11 +816,11 @@ export function createThreadStore(options: {
     try {
       started =
         item.kind === 'image'
-          ? (options.__uploadWorkers?.startImageUpload ?? startImageUpload)({
+          ? (__uploadWorkers?.startImageUpload ?? startImageUpload)({
               ...callbacks,
               media: item,
             })
-          : (options.__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
+          : (__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
               ...callbacks,
               media: item,
             })
@@ -832,19 +857,21 @@ export function createThreadStore(options: {
   ) {
     const post = state.posts[postId]
     if (!post) return
-    const items = getMediaItems(post.attachments.media)
+    const items = getMediaItems({media: post.attachments.media})
     const found = items.find(item => item.id === mediaId)
     if (!found || found.kind !== output.kind) return
     mutateState(s => {
-      const current = getMediaItems(s.posts[postId]?.attachments.media).find(
-        item => item.id === mediaId,
-      )
+      const current = getMediaItems({
+        media: s.posts[postId]?.attachments.media,
+      }).find(item => item.id === mediaId)
       if (!current || current.kind !== output.kind) return null
       const next = {
         ...current,
         prepared: output,
       } as types.PostMediaItem
-      const currentItems = getMediaItems(s.posts[postId].attachments.media)
+      const currentItems = getMediaItems({
+        media: s.posts[postId].attachments.media,
+      })
       s.posts[postId] = setPostMediaItems(
         s.posts[postId],
         currentItems.map(item => (item.id === mediaId ? next : item)),
@@ -860,15 +887,17 @@ export function createThreadStore(options: {
   ) {
     const post = state.posts[postId]
     if (!post) return
-    const items = getMediaItems(post.attachments.media)
+    const items = getMediaItems({media: post.attachments.media})
     const found = items.find(item => item.id === mediaId)
     if (!found || found.kind !== 'video') return
     mutateState(s => {
-      const current = getMediaItems(s.posts[postId]?.attachments.media).find(
-        item => item.id === mediaId,
-      )
+      const current = getMediaItems({
+        media: s.posts[postId]?.attachments.media,
+      }).find(item => item.id === mediaId)
       if (!current || current.kind !== 'video') return null
-      const currentItems = getMediaItems(s.posts[postId].attachments.media)
+      const currentItems = getMediaItems({
+        media: s.posts[postId].attachments.media,
+      })
       s.posts[postId] = setPostMediaItems(
         s.posts[postId],
         currentItems.map(item =>
@@ -917,7 +946,7 @@ export function createThreadStore(options: {
     return {
       ...post,
       attachments: {...post.attachments, media},
-      ...computePostMediaSelectionsRemaining(media),
+      ...computePostMediaSelectionsRemaining({media}),
     }
   }
 
@@ -940,13 +969,13 @@ export function createThreadStore(options: {
   /* The full initial snapshot is ready before any background work begins. */
   try {
     for (const [postId, post] of Object.entries(state.posts)) {
-      for (const item of getMediaItems(post.attachments.media)) {
+      for (const item of getMediaItems({media: post.attachments.media})) {
         startMediaUpload(postId, item.id)
       }
       for (const slot of ['record', 'media'] as const) {
         const attachment = post.attachments[slot]
         if (attachment?.state === 'pending') {
-          const rev = resolutionRevs[slot].incrementFor(postId)
+          const rev = resolutionRevs[slot].incrementFor({key: postId})
           resolveAttachmentUri({
             postId,
             target: slot,
@@ -1008,13 +1037,21 @@ export function createThreadStore(options: {
   }
 }
 
-function serializableEqual(left: unknown, right: unknown): boolean {
+function serializableEqual({
+  left,
+  right,
+}: {
+  left: unknown
+  right: unknown
+}): boolean {
   if (Object.is(left, right)) return true
   if (Array.isArray(left) || Array.isArray(right)) {
     if (!Array.isArray(left) || !Array.isArray(right)) return false
     return (
       left.length === right.length &&
-      left.every((value, index) => serializableEqual(value, right[index]))
+      left.every((value, index) =>
+        serializableEqual({left: value, right: right[index]}),
+      )
     )
   }
   if (
@@ -1031,9 +1068,9 @@ function serializableEqual(left: unknown, right: unknown): boolean {
   return leftKeys.every(
     key =>
       Object.prototype.hasOwnProperty.call(right, key) &&
-      serializableEqual(
-        (left as Record<string, unknown>)[key],
-        (right as Record<string, unknown>)[key],
-      ),
+      serializableEqual({
+        left: (left as Record<string, unknown>)[key],
+        right: (right as Record<string, unknown>)[key],
+      }),
   )
 }

@@ -14,19 +14,21 @@ const placeholder = {
   size: 0,
 } as unknown as BlobRef
 
-function simulated(
-  opts: {
-    postId: string
-    mediaId: string
-    setUploadStatus: (
-      postId: string,
-      mediaId: string,
-      status: UploadStatus,
-    ) => void
-  },
-  steps: number[],
-  tickMs: number,
-): UploadTask {
+function simulated({
+  steps,
+  tickMs,
+  ...opts
+}: {
+  postId: string
+  mediaId: string
+  setUploadStatus: (
+    postId: string,
+    mediaId: string,
+    status: UploadStatus,
+  ) => void
+  steps: number[]
+  tickMs: number
+}): UploadTask {
   let cancelled = false
   let timer: ReturnType<typeof setTimeout> | undefined
   let index = 0
@@ -83,6 +85,8 @@ export function manualUploadWorkers() {
 }
 
 export const simulatedUploadWorkers: UploadWorkerOverrides = {
-  startImageUpload: opts => simulated(opts, [0.25, 0.5, 0.75], 100),
-  startVideoUpload: opts => simulated(opts, [0.1, 0.3, 0.5, 0.7, 0.9], 200),
+  startImageUpload: opts =>
+    simulated({...opts, steps: [0.25, 0.5, 0.75], tickMs: 100}),
+  startVideoUpload: opts =>
+    simulated({...opts, steps: [0.1, 0.3, 0.5, 0.7, 0.9], tickMs: 200}),
 }

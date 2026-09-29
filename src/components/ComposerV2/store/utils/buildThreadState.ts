@@ -9,14 +9,17 @@ import {buildThreadPost} from '#/components/ComposerV2/store/utils/buildThreadPo
  * Adapters may share source gate values; editable gate data is copied here so
  * later caller mutations cannot affect live state.
  */
-export function buildThreadState(
-  input: ThreadStoreInitialState,
-  createId: () => string,
-): ThreadState {
+export function buildThreadState({
+  input,
+  createId,
+}: {
+  input: ThreadStoreInitialState
+  createId: () => string
+}): ThreadState {
   const posts: ThreadState['posts'] = {}
   for (const postInput of input.posts?.length ? input.posts : [{}]) {
     const postId = createId()
-    posts[postId] = buildThreadPost(postId, createId, postInput)
+    posts[postId] = buildThreadPost({postId, createId, input: postInput})
   }
   return {
     posts,
@@ -24,32 +27,32 @@ export function buildThreadState(
       ? {
           ...input.replyTo,
           langs: [...input.replyTo.langs],
-          author: cloneSerializable(input.replyTo.author),
+          author: cloneSerializable({value: input.replyTo.author}),
           embed: input.replyTo.embed
-            ? cloneSerializable(input.replyTo.embed)
+            ? cloneSerializable({value: input.replyTo.embed})
             : undefined,
         }
       : undefined,
     threadgateAllowRules: input.threadgateAllowRules
-      ? input.threadgateAllowRules.map(rule => cloneSerializable(rule))
+      ? input.threadgateAllowRules.map(rule => cloneSerializable({value: rule}))
       : input.threadgateAllowRules,
     postgateEmbeddingRules: (input.postgateEmbeddingRules ?? []).map(rule =>
-      cloneSerializable(rule),
+      cloneSerializable({value: rule}),
     ),
     draftId: input.draftId,
     isDirty: input.isDirty ?? false,
   }
 }
 
-export function cloneSerializable<T>(value: T): T {
+export function cloneSerializable<T>({value}: {value: T}): T {
   if (Array.isArray(value)) {
-    return value.map(item => cloneSerializable(item)) as T
+    return value.map(item => cloneSerializable({value: item})) as T
   }
   if (value && typeof value === 'object') {
     return Object.fromEntries(
       Object.entries(value).map(([key, item]) => [
         key,
-        cloneSerializable(item),
+        cloneSerializable({value: item}),
       ]),
     ) as T
   }
