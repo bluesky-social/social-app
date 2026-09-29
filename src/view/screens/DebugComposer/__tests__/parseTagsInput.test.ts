@@ -1,6 +1,6 @@
 import {describe, expect, test} from '@jest/globals'
 
-import {parseTagsInput} from '#/components/ComposerV2/tester/parseTagsInput'
+import {parseTagsInput} from '#/view/screens/DebugComposer/parseTagsInput'
 
 describe('parseTagsInput', () => {
   test('splits at commas, trims, strips a leading #, drops empties', () => {

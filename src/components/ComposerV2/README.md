@@ -26,8 +26,8 @@ explicit tags, interaction settings, upload retries, and record inspection.
 - Nothing entered here is saved as a draft. The draft scenario exercises only
   the inbound adapter.
 
-See [tester coverage](tester/COVERAGE.md) for controls, test IDs, and the recorded
-UI verification scope. Unit-test coverage is not proof of live UI behavior.
+See [tester coverage](../../view/screens/DebugComposer/COVERAGE.md) for controls,
+test IDs, and the recorded UI verification scope. Unit-test coverage is not proof of live UI behavior.
 
 ## Mental model
 
@@ -97,7 +97,8 @@ Create the store once per session, not on every render. Provide it with
 `ThreadStoreProvider`; use `useThreadState()` for thread-wide subscriptions,
 `useThreadPost(postId)` for a post, and `useThreadStore()` for commands.
 The provider distributes the store; it does not own its lifecycle.
-[The tester session hook](tester/useTesterSession.ts) is the integration example.
+[The tester session hook](../../view/screens/DebugComposer/useTesterSession.ts)
+is the integration example.
 
 Use `actions` to edit. Treat published snapshots as read-only and keep focus,
 dialog state, callbacks, and publish state outside the store. `internalActions`
@@ -112,16 +113,16 @@ shortening. Explicit tags are independent of hashtag facets.
 
 ## Where to make changes
 
-| Concern                                                   | Start here                                                                                       |
-| --------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| State, commands, ownership, async coordination            | [store/index.ts](store/index.ts), [store/types.ts](store/types.ts), [store/utils/](store/utils/) |
-| Real image/video workers and dependency injection         | [store/uploads.ts](store/uploads.ts)                                                             |
-| Composer intents and inbound drafts                       | [adapters/index.ts](adapters/index.ts)                                                           |
-| React subscriptions and text derivation                   | [hooks/](hooks/)                                                                                 |
-| Preflight, embeds, reply chains, gates, record validation | [planner.ts](planner.ts)                                                                         |
-| Sending an already successful plan                        | [writer.ts](writer.ts)                                                                           |
-| Per-session diagnostic contract                           | [errors.ts](errors.ts)                                                                           |
-| Developer controls and session/attempt lifetime           | [tester/](tester/), [debug route](../../view/screens/DebugComposer/DebugComposer.tsx)            |
+| Concern                                                   | Start here                                                                                                              |
+| --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| State, commands, ownership, async coordination            | [store/index.ts](store/index.ts), [store/types.ts](store/types.ts), [store/utils/](store/utils/)                        |
+| Real image/video workers and dependency injection         | [store/uploads.ts](store/uploads.ts)                                                                                    |
+| Composer intents and inbound drafts                       | [adapters/index.ts](adapters/index.ts)                                                                                  |
+| React subscriptions and text derivation                   | [hooks/](hooks/)                                                                                                        |
+| Preflight, embeds, reply chains, gates, record validation | [planner.ts](planner.ts)                                                                                                |
+| Sending an already successful plan                        | [writer.ts](writer.ts)                                                                                                  |
+| Per-session diagnostic contract                           | [errors.ts](errors.ts)                                                                                                  |
+| Developer controls and session/attempt lifetime           | [tester](../../view/screens/DebugComposer/DebugComposer.tsx), [debug route](../../view/screens/DebugComposer/index.tsx) |
 
 ## Planning, writing, and errors
 
@@ -470,7 +471,7 @@ cleanup, and platform storage with disposable fixtures and fake clients.
 Use repository scripts, not underlying Jest/TypeScript/Oxlint/Prettier commands:
 
 ```sh
-pnpm test src/components/ComposerV2 --watchman=false --runInBand
+pnpm test src/components/ComposerV2 src/view/screens/DebugComposer --watchman=false --runInBand
 pnpm typecheck
 pnpm lint
 git diff --check
@@ -487,8 +488,9 @@ need `pnpm test src/lib/media/video --watchman=false --runInBand`. Useful suites
 - `adapters/__tests__/`: source fidelity, conversion errors, and initialization.
 - `planner.test.ts` / `writer.test.ts`: preflight, reply/CID/key safety, rich text,
   embeds, gates, lexicon validation, no-write planning, and exact writer calls.
-- `tester/__tests__/`: session/attempt lifetime, separate-root portals, compiled
-  translations, inline tags, full inspection, and retained plan behavior.
+- [`DebugComposer/__tests__/`](../../view/screens/DebugComposer/__tests__/):
+  session/attempt lifetime, separate-root portals, compiled translations,
+  inline tags, full inspection, and retained plan behavior.
 
 For scoped formatting, inspect the current `pnpm prettier` script: it includes
 `--check .`. Never append `--write` to an unrestricted root scan. Create a

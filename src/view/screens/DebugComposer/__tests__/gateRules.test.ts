@@ -1,15 +1,15 @@
 import {describe, expect, test} from '@jest/globals'
 
 import {
-  type PostgateEmbeddingRule,
-  type ThreadgateAllowRule,
-} from '#/components/ComposerV2/store/types'
-import {
   mergePostgateEmbeddingRules,
   mergeThreadgateAllowRules,
   splitPostgateEmbeddingRules,
   splitThreadgateAllowRules,
-} from '#/components/ComposerV2/tester/gateRules'
+} from '#/view/screens/DebugComposer/gateRules'
+import {
+  type PostgateEmbeddingRule,
+  type ThreadgateAllowRule,
+} from '#/components/ComposerV2/store/types'
 
 const mentionRule = {
   $type: 'app.bsky.feed.threadgate#mentionRule',

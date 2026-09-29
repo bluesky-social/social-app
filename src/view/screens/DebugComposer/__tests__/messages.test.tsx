@@ -3,13 +3,13 @@ import {setupI18n} from '@lingui/core'
 import {I18nProvider} from '@lingui/react'
 import {renderHook} from '@testing-library/react-native'
 
-import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
 import {
   type UploadPhase,
   usePlanErrorHint,
   useThreadgateSummary,
   useUploadPhaseLabel,
-} from '#/components/ComposerV2/tester/messages'
+} from '#/view/screens/DebugComposer/messages'
+import {type ComposerV2PlanErrorCode} from '#/components/ComposerV2/planner'
 
 /*
  * Regression coverage for the Lingui macro-binding bug: these hooks used to

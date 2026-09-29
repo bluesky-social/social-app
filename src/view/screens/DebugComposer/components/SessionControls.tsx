@@ -8,14 +8,14 @@ import {
   SelectMediaButton,
   type SelectMediaButtonProps,
 } from '#/view/com/composer/SelectMediaButton'
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {normalizePostReference} from '#/components/ComposerV2/tester/postUrl'
+import {normalizePostReference} from '#/view/screens/DebugComposer/postUrl'
 import {
   buildScenarioInitialState,
   type TesterScenarioId,
-} from '#/components/ComposerV2/tester/scenarios'
-import {type useTesterSession} from '#/components/ComposerV2/tester/useTesterSession'
+} from '#/view/screens/DebugComposer/scenarios'
+import {type useTesterSession} from '#/view/screens/DebugComposer/useTesterSession'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {Loader} from '#/components/Loader'

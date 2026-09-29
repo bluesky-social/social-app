@@ -1,5 +1,6 @@
 import {useEffect, useRef, useState, useSyncExternalStore} from 'react'
 
+import {type TesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {
   type ComposerV2Plan,
   type ComposerV2PlannerDependencies,
@@ -7,7 +8,6 @@ import {
   summarizeComposerV2Plan,
 } from '#/components/ComposerV2/planner'
 import {type ThreadState} from '#/components/ComposerV2/store/types'
-import {type TesterSession} from '#/components/ComposerV2/tester/useTesterSession'
 
 export type PlanSummary = ReturnType<typeof summarizeComposerV2Plan>
 

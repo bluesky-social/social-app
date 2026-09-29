@@ -8,6 +8,8 @@ jest.mock('#/lib/api/resolve', () => {
 })
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
+import {type TesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {
   type ComposerV2Plan,
@@ -16,8 +18,6 @@ import {
   planComposerV2,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {usePlanRunner} from '#/components/ComposerV2/tester/usePlanRunner'
-import {type TesterSession} from '#/components/ComposerV2/tester/useTesterSession'
 
 const resolvers = {} as LinkResolvers
 const dependencies: ComposerV2PlannerDependencies = {did: 'did:plc:tester'}

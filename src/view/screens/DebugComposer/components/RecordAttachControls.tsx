@@ -3,13 +3,13 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useGetPost} from '#/state/queries/post'
+import {normalizePostReference} from '#/view/screens/DebugComposer/postUrl'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import {
   ThreadStoreProvider,
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
-import {normalizePostReference} from '#/components/ComposerV2/tester/postUrl'
 import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import * as toast from '#/components/Toast'

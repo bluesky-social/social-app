@@ -2,14 +2,14 @@ import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme} from '#/alf'
-import {Button, ButtonText} from '#/components/Button'
-import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
-import {usePlanErrorHint} from '#/components/ComposerV2/tester/messages'
+import {usePlanErrorHint} from '#/view/screens/DebugComposer/messages'
 import {
   type PlanSummary,
   type usePlanRunner,
-} from '#/components/ComposerV2/tester/usePlanRunner'
+} from '#/view/screens/DebugComposer/usePlanRunner'
+import {atoms as a, useTheme} from '#/alf'
+import {Button, ButtonText} from '#/components/Button'
+import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import * as Toggle from '#/components/forms/Toggle'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'

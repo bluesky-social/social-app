@@ -25,13 +25,13 @@ jest.mock('@bsky.app/react-native-uitextview', () => {
 })
 
 import {type LinkResolvers} from '#/lib/api/resolve'
+import {MediaAttachmentView} from '#/view/screens/DebugComposer/components/AttachmentControls'
+import {PlanSection} from '#/view/screens/DebugComposer/components/PlanSection'
+import {usePlanRunner} from '#/view/screens/DebugComposer/usePlanRunner'
 import {ThreadStoreProvider} from '#/components/ComposerV2/hooks'
 import {planComposerV2} from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type MediaAttachment} from '#/components/ComposerV2/store/types'
-import {MediaAttachmentView} from '#/components/ComposerV2/tester/components/AttachmentControls'
-import {PlanSection} from '#/components/ComposerV2/tester/components/PlanSection'
-import {usePlanRunner} from '#/components/ComposerV2/tester/usePlanRunner'
 
 const i18n = setupI18n({locale: 'en', messages: {en: {}}})
 const resolvers = {} as LinkResolvers
