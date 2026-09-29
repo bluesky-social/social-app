@@ -2,7 +2,7 @@ import {type Client} from '@atproto/lex'
 import {type RichText} from '@bsky/sdk/richtext'
 import {describe, expect, jest, test} from '@jest/globals'
 
-import {resolveRichText} from '#/lib/api/rich-text'
+import {resolveRichText} from '#/components/ComposerV2/utils/resolveRichText'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 

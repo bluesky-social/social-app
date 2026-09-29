@@ -111,7 +111,7 @@ and mirror changes into the store; session replacement remounts them by key.
 
 Rich text is derived, not stored. `useThreadPostRichText()` provides regex-only
 facet detection and a URL-shortened grapheme count for responsive feedback.
-The planner uses the shared [`resolveRichText`](../../lib/api/rich-text.ts) path
+The planner uses the shared [`resolveRichText`](utils/resolveRichText.ts) path
 for authoritative facets, mention resolution, newline normalization, and URL
 shortening. Explicit tags are independent of hashtag facets.
 

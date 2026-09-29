@@ -9,7 +9,6 @@ import {t} from '@lingui/core/macro'
 import {type QueryClient} from '@tanstack/react-query'
 
 import {type LinkResolvers} from '#/lib/api/resolve'
-import {resolveRichText} from '#/lib/api/rich-text'
 import {withCreator} from '#/lib/at-card'
 import {IMAGE_SIZE_CONFIG_POSTS} from '#/lib/constants'
 import {isNetworkError} from '#/lib/strings/errors'
@@ -28,6 +27,7 @@ import {
   type PostDraft,
   type ThreadDraft,
 } from '#/view/com/composer/state/composer'
+import {resolveRichText} from '#/components/ComposerV2/utils/resolveRichText'
 import {app, chat, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {createGIFDescription} from '../gif-alt-text'
