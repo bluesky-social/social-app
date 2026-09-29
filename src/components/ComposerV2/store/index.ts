@@ -1038,7 +1038,13 @@ export function createThreadStore({
     listeners.clear()
   }
 
-  /* The full initial snapshot is ready before any background work begins. */
+  /*
+   * The initial state is now complete, so start its side effects: eager
+   * uploads for initial media and resolution of pending URI attachments.
+   * This waits until the whole snapshot exists because workers may call back
+   * synchronously (the real workers report their first phase before
+   * returning), and those callbacks must find every post and item in place.
+   */
   try {
     for (const [postId, post] of Object.entries(state.posts)) {
       for (const item of getMediaItems({media: post.attachments.media})) {
@@ -1058,6 +1064,20 @@ export function createThreadStore({
       }
     }
   } catch (cause) {
+    /*
+     * Only synchronous exceptions escaping startup land here, in practice a
+     * worker that throws while starting (startMediaUpload has already
+     * reported it). Resolver throws, promise rejections, and ordinary upload
+     * failures are handled as attachment state by the workers and resolvers
+     * and never fail construction.
+     *
+     * A failed constructor returns no store for the caller to destroy, so
+     * tear down here: started upload tasks are cancelled, pending resolutions
+     * are invalidated so late results are ignored, and the store goes inert.
+     * Cancellation is best effort; compression or requests already in flight
+     * may still finish, but their results are discarded. Then rethrow the
+     * original error.
+     */
     destroy()
     throw cause
   }
