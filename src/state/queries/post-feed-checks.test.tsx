@@ -142,7 +142,7 @@ function startTopFetch(queryClient: QueryClient) {
   return {...response, fetch}
 }
 
-type Props = {isActive: boolean; isTopWorkPending?: boolean}
+type Props = {isActive: boolean; isTopWorkPending?: boolean; interval?: number}
 
 /**
  * Mounts a view of the feed. Each call of its check waits for the test to
@@ -997,6 +997,110 @@ describe('requestCheck', () => {
     view.setProps({isActive: false})
     view.requestCheck()
     expect(view.check).toHaveBeenCalledTimes(2)
+  })
+})
+
+describe('interval', () => {
+  it('comes an interval after the last success, not after the last tick', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: true, interval: MINUTE})
+    advance(MINUTE - 1)
+    expect(view.check).not.toHaveBeenCalled()
+    advance(1)
+    expect(view.triggers()).toEqual(['interval'])
+
+    // The check takes a while, and the next one is timed from when it succeeded.
+    advance(5 * SECOND)
+    await view.settle(undefined)
+    advance(MINUTE - 1)
+    expect(view.check).toHaveBeenCalledTimes(1)
+    advance(1)
+    expect(view.triggers()).toEqual(['interval', 'interval'])
+  })
+
+  it('does not check just after a refresh, when a fixed timer would have', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: true, interval: MINUTE})
+
+    advance(50 * SECOND)
+    await act(() =>
+      refreshPostFeedQuery(queryClient, KEY, () =>
+        Promise.resolve({page: page(), api: {} as never}),
+      ),
+    )
+    advance(10 * SECOND)
+    expect(view.check).not.toHaveBeenCalled()
+    advance(50 * SECOND - 1)
+    expect(view.check).not.toHaveBeenCalled()
+    advance(1)
+    expect(view.triggers()).toEqual(['interval'])
+  })
+
+  it('counts a check by another view of the query', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(10 * SECOND)
+    const home = renderView(queryClient, {isActive: true, interval: MINUTE})
+    const screen = renderView(queryClient, {isActive: true})
+
+    advance(40 * SECOND)
+    screen.requestCheck()
+    await screen.settle(undefined)
+    advance(MINUTE - 1)
+    expect(home.check).not.toHaveBeenCalled()
+    advance(1)
+    expect(home.triggers()).toEqual(['interval'])
+  })
+
+  it('waits an interval after a failed check rather than retrying at once', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: true, interval: MINUTE})
+    advance(MINUTE)
+    await view.fail(new TypeError('Network request failed'))
+    expect(view.check).toHaveBeenCalledTimes(1)
+
+    advance(MINUTE - 1)
+    expect(view.check).toHaveBeenCalledTimes(1)
+    advance(1)
+    expect(view.triggers()).toEqual(['interval', 'interval'])
+  })
+
+  it('keeps going once a return has been handed what it found', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(10 * SECOND)
+    const props = {isActive: true, interval: 10 * MINUTE}
+    const view = renderView(queryClient, props)
+    returnFromBackground(RETURN_STALE_AFTER)
+    view.setProps({...props, isTopWorkPending: true})
+    await view.settle('new posts')
+    view.setProps(props)
+    expect(view.onFound).toHaveBeenCalledWith('new posts', 'return')
+
+    advance(10 * MINUTE)
+    expect(view.triggers()).toEqual(['return', 'interval'])
+  })
+
+  it('only runs while the view is active', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: false, interval: MINUTE})
+    advance(10 * MINUTE)
+    expect(view.check).not.toHaveBeenCalled()
+
+    // Overdue on arrival, the focus check comes first and counts for both.
+    view.setProps({isActive: true, interval: MINUTE})
+    expect(view.triggers()).toEqual(['focus'])
+    await view.settle(undefined)
+
+    view.setProps({isActive: false, interval: MINUTE})
+    advance(10 * MINUTE)
+    view.hook.unmount()
+    advance(10 * MINUTE)
+    expect(view.check).toHaveBeenCalledTimes(1)
   })
 })
 
