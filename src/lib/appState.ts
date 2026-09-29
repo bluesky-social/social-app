@@ -1,6 +1,8 @@
 import {useEffect, useEffectEvent, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 
+import {IS_IOS} from '#/env'
+
 export const getCurrentState = () => AppState.currentState
 
 export function onAppStateChange(cb: (state: AppStateStatus) => void) {
@@ -48,12 +50,16 @@ export type AppReturn = {
 
 /**
  * How long the app has to have been in the background for coming back to count
- * as a return. Shorter trips away are almost always the app's own flows (on
- * Android the photo picker, camera, cropper, share sheet, Custom Tabs,
- * fullscreen video and permission dialogs all report `background`) or a quick
- * hop to another app, and neither should make feeds look for new content.
+ * as a return, so that quick hops to another app don't make feeds look for new
+ * content.
+ *
+ * iOS only reports `background` when the app really leaves, since its pickers,
+ * share sheets and Safari views stay in-process, so half a minute is enough.
+ * Android reports `background` for the app's own flows too (the photo picker,
+ * camera, cropper, share sheet, Custom Tabs, fullscreen video and permission
+ * dialogs), and those trips are almost always shorter than five minutes.
  */
-export const RETURN_MIN_TIME_AWAY = 5 * 60 * 1000
+export const RETURN_MIN_TIME_AWAY = IS_IOS ? 30 * 1000 : 5 * 60 * 1000
 
 const returnListeners = new Set<(appReturn: AppReturn) => void>()
 let isTrackingReturns = false

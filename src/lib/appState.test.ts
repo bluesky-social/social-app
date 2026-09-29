@@ -33,7 +33,7 @@ jest.mock('react-native/Libraries/AppState/AppState', () => ({
   },
 }))
 
-/** Long enough away for coming back to count as a return. */
+/** Long enough away for coming back to count as a return on any platform. */
 const AWAY = 5 * 60 * 1000
 
 let mockNow = 0
@@ -185,12 +185,32 @@ describe('onAppReturnedFromBackground', () => {
 
   it('counts time away from when tracking started in the background', () => {
     mockAppState.currentState = 'background'
-    const {onAppReturnedFromBackground} = load()
+    const {onAppReturnedFromBackground, RETURN_MIN_TIME_AWAY} = load()
     const cb = jest.fn()
     onAppReturnedFromBackground(cb)
 
-    emit(AWAY - 1, 'active')
+    emit(RETURN_MIN_TIME_AWAY - 1, 'active')
     expect(cb).not.toHaveBeenCalled()
+  })
+
+  it('needs half a minute away on iOS and five minutes elsewhere', () => {
+    expect(load().RETURN_MIN_TIME_AWAY).toBe(30 * 1000)
+
+    jest.resetModules()
+    jest.doMock('#/env', () => ({
+      ...jest.requireActual('#/env'),
+      IS_IOS: false,
+      IS_ANDROID: true,
+    }))
+    const android = load()
+    expect(android.RETURN_MIN_TIME_AWAY).toBe(5 * 60 * 1000)
+
+    // an Android photo picker or share sheet trip
+    const cb = jest.fn()
+    android.onAppReturnedFromBackground(cb)
+    emit('background', 30 * 1000, 'active')
+    expect(cb).not.toHaveBeenCalled()
+    jest.dontMock('#/env')
   })
 
   it('fires for a later listener attached while backgrounded', () => {
