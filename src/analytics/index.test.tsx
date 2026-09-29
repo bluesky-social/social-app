@@ -11,17 +11,8 @@ import {
   useAnalytics,
   useAnalyticsBase,
 } from '#/analytics'
-import {
-  evaluateFeature,
-  features,
-  isFeatureEnabled,
-  setAttributes,
-} from '#/analytics/features'
-import {
-  getDeviceId,
-  getIdentifiers,
-  getSessionId,
-} from '#/analytics/identifiers'
+import {features, setAttributes} from '#/analytics/features'
+import {getDeviceId, getSessionId} from '#/analytics/identifiers'
 import {
   type MergeableMetadata,
   type Metadata,
@@ -138,7 +129,7 @@ function lastMetricMetadata() {
 }
 
 /** Unique keys avoid the SDK's exposure deduplication between test cases. */
-function installFeature(hashAttribute = 'sessionId') {
+function installFeature(hashAttribute: 'did' | 'deviceId' = 'deviceId') {
   const feature = `test-feature-${++featureNumber}` as Features
   features.setFeatures({
     [feature]: {
@@ -155,7 +146,7 @@ function installFeature(hashAttribute = 'sessionId') {
   return feature
 }
 
-function expectExposures(identifiers = getIdentifiers(), did = 'did:plc:a') {
+function expectExposures(did = 'did:plc:a') {
   const calls = jest.mocked(metrics.track).mock.calls
   expect(calls.map(([event]) => event)).toEqual([
     'experiment:viewed',
@@ -163,13 +154,13 @@ function expectExposures(identifiers = getIdentifiers(), did = 'did:plc:a') {
   ])
   for (const [, , metadata] of calls) {
     expect(metadata).toMatchObject({
-      base: identifiers,
+      base: {deviceId: ax.metadata.base.deviceId, sessionId: getSessionId()},
       session: {did},
     })
   }
 }
 
-it('merges nested metadata without identifier state or rerenders on rotation', () => {
+it('inherits device identity without session state or rerenders on rotation', () => {
   render(
     <Tree
       session={{did: 'did:plc:a', isBskyPds: true}}
@@ -187,7 +178,7 @@ it('merges nested metadata without identifier state or rerenders on rotation', (
   for (const [index, metadata] of contexts.entries()) {
     expect(metadata).toBe(previousMetadata[index])
     expect(metadata.base).not.toHaveProperty('sessionId')
-    expect(metadata.base).not.toHaveProperty('deviceId')
+    expect(metadata.base.deviceId).toBe('device-a')
     expect(metadata.geolocation).toEqual({
       countryCode: 'US',
       regionCode: 'WI',
@@ -202,8 +193,8 @@ it('merges nested metadata without identifier state or rerenders on rotation', (
     session: {did: 'did:plc:a'},
     preferences: {appLanguage: 'en', contentLanguages: ['en']},
   })
-  // Rotation does not evaluate features or update the SDK until the next call.
-  expect(features.getAttributes().sessionId).toBe('session-a')
+  // Analytics session IDs never participate in feature evaluation.
+  expect(features.getAttributes()).not.toHaveProperty('sessionId')
   expect(metrics.track).not.toHaveBeenCalled()
 })
 
@@ -248,7 +239,7 @@ it('updates inherited account, preferences, and geolocation', () => {
   })
   ax.metric('state:foreground', {})
   expect(lastMetricMetadata()).toMatchObject({
-    base: {...ax.metadata.base, ...getIdentifiers()},
+    base: {...ax.metadata.base, sessionId: getSessionId()},
     session: ax.metadata.session,
     preferences: ax.metadata.preferences,
     geolocation: ax.metadata.geolocation,
@@ -256,7 +247,8 @@ it('updates inherited account, preferences, and geolocation', () => {
   childLogger.info('updated logger')
   expect(getEntries()[0].metadata.__metadata__).toMatchObject({
     countryCode: 'CA',
-    ...getIdentifiers(),
+    deviceId: ax.metadata.base.deviceId,
+    sessionId: getSessionId(),
   })
   expect(features.getAttributes()).toMatchObject({
     did: 'did:plc:b',
@@ -267,7 +259,7 @@ it('updates inherited account, preferences, and geolocation', () => {
 })
 
 it.each(['default', 'nested'])(
-  'snapshots identifiers for captured metrics in %s context without mutating caller metadata',
+  'preserves device identity and snapshots the session for captured metrics in %s context',
   context => {
     render(
       context === 'default' ? (
@@ -282,33 +274,39 @@ it.each(['default', 'nested'])(
       __meta: true,
       base: Object.freeze({
         ...baseAx.metadata.base,
-        deviceId: 'obsolete-device',
+        deviceId: 'device-a',
         sessionId: 'obsolete-session',
       }),
     })
     metric('state:foreground', {}, metadata)
     const previousMetric = lastMetricMetadata()
-    expect(previousMetric.base).toMatchObject(getIdentifiers())
+    expect(previousMetric.base).toMatchObject({
+      deviceId: 'device-a',
+      sessionId: getSessionId(),
+    })
     expect(previousMetric).not.toHaveProperty('__meta')
 
     act(() => rotateSession())
     jest.mocked(getDeviceId).mockReturnValue('device-b')
     metric('state:foreground', {}, metadata)
-    expect(lastMetricMetadata().base).toMatchObject(getIdentifiers())
+    expect(lastMetricMetadata().base).toMatchObject({
+      deviceId: 'device-a',
+      sessionId: getSessionId(),
+    })
     expect(previousMetric.base).toMatchObject({
       deviceId: 'device-a',
       sessionId: 'session-a',
     })
     expect(metadata.__meta).toBe(true)
     expect(metadata.base).toMatchObject({
-      deviceId: 'obsolete-device',
+      deviceId: 'device-a',
       sessionId: 'obsolete-session',
     })
   },
 )
 
 it.each(['debug', 'info', 'log', 'warn', 'error'] as const)(
-  'snapshots current identifiers in captured parent and child %s callbacks',
+  'preserves device identity and snapshots the session in captured parent and child %s callbacks',
   level => {
     render(<Tree />)
     const parentLog = ax.logger[level]
@@ -323,7 +321,10 @@ it.each(['debug', 'info', 'log', 'warn', 'error'] as const)(
     childLog('current child')
     const currentLogs = getEntries().slice(0, 2)
     for (const entry of currentLogs) {
-      expect(entry.metadata.__metadata__).toMatchObject(getIdentifiers())
+      expect(entry.metadata.__metadata__).toMatchObject({
+        deviceId: 'device-a',
+        sessionId: getSessionId(),
+      })
     }
     expect(currentLogs[0].context).toBe(ax.logger.Context.Notifications)
     expect(currentLogs[1].context).toBe(ax.logger.Context.Default)
@@ -336,12 +337,11 @@ it.each(['debug', 'info', 'log', 'warn', 'error'] as const)(
   },
 )
 
-it('does not freeze an import-time unknown device ID into the default context', () => {
+it('resolves device identity for events emitted without a provider', () => {
   jest.mocked(getDeviceId).mockReturnValue(undefined)
   render(<CaptureBase index={0} />)
   const metric = baseAx.metric
   const log = baseAx.logger.info
-  expect(baseAx.metadata.base).not.toHaveProperty('deviceId')
   metric('state:foreground', {})
   log('before device initialization')
   const previousMetric = lastMetricMetadata()
@@ -360,7 +360,7 @@ it('does not freeze an import-time unknown device ID into the default context', 
   expect(previousLog.metadata.__metadata__).toMatchObject({deviceId: 'unknown'})
 })
 
-it('flushes queued metrics with emission-time rather than flush-time identifiers', () => {
+it('flushes queued metrics with emission-time sessions and a stable device ID', () => {
   const client = new MetricsClient<Metrics>()
   jest
     .mocked(metrics.track)
@@ -373,11 +373,9 @@ it('flushes queued metrics with emission-time rather than flush-time identifiers
   metric('state:foreground', {})
 
   act(() => rotateSession())
-  jest.mocked(getDeviceId).mockReturnValue('device-b')
-  const secondIdentifiers = getIdentifiers()
+  const secondSessionId = getSessionId()
   metric('state:foreground', {})
   act(() => rotateSession())
-  jest.mocked(getDeviceId).mockReturnValue('device-c')
   expect(fetchMock).not.toHaveBeenCalled()
   client.flush()
 
@@ -386,11 +384,11 @@ it('flushes queued metrics with emission-time rather than flush-time identifiers
   }
   expect(body.events.map(event => event.metadata.base)).toEqual([
     expect.objectContaining({deviceId: 'device-a', sessionId: 'session-a'}),
-    expect.objectContaining(secondIdentifiers),
+    expect.objectContaining({deviceId: 'device-a', sessionId: secondSessionId}),
   ])
 })
 
-describe.each(['sessionId', 'deviceId'] as const)(
+describe.each(['did', 'deviceId'] as const)(
   'features bucketed on %s',
   hashAttribute => {
     it.each([
@@ -399,7 +397,7 @@ describe.each(['sessionId', 'deviceId'] as const)(
       'directEnabled',
       'directEvaluation',
     ] as const)(
-      'syncs both IDs for %s without rerendering and preserves other attributes',
+      'uses context identity for %s without rereading device identity or updating attributes',
       method => {
         render(<Tree session={{did: 'did:plc:a', isBskyPds: true}} />)
         const originalContext = ax
@@ -407,73 +405,97 @@ describe.each(['sessionId', 'deviceId'] as const)(
         const capturedEvaluate = {
           enabled,
           getValue: (feature: Features) => getValue(feature, false),
-          directEnabled: isFeatureEnabled,
+          directEnabled: features.isOn.bind(features),
           directEvaluation: (feature: Features) =>
-            evaluateFeature(feature).value,
+            features.evalFeature(feature).value,
         }[method]
         const feature = installFeature(hashAttribute)
         act(() => rotateSession())
-        jest.mocked(getDeviceId).mockReturnValue('device-b')
+        jest.mocked(getDeviceId).mockClear()
         const updateAttributes = jest.spyOn(features, 'updateAttributes')
 
         expect(capturedEvaluate(feature)).toBe(true)
         expect(ax).toBe(originalContext)
         expect(features.getAttributes()).toMatchObject({
-          ...getIdentifiers(),
+          deviceId: 'device-a',
           did: 'did:plc:a',
           isBetaUser: true,
           countryCode: 'US',
         })
+        expect(features.getAttributes()).not.toHaveProperty('sessionId')
         expectExposures()
         expect(features.getAllResults().get(feature)?.result).toMatchObject({
           hashAttribute,
-          hashValue: getIdentifiers()[hashAttribute],
+          hashValue: hashAttribute === 'did' ? 'did:plc:a' : 'device-a',
         })
-        expect(updateAttributes).toHaveBeenCalledTimes(1)
         expect(capturedEvaluate(feature)).toBe(true)
-        expect(updateAttributes).toHaveBeenCalledTimes(1)
+        expect(updateAttributes).not.toHaveBeenCalled()
+        expect(getDeviceId).not.toHaveBeenCalled()
       },
     )
   },
 )
 
-it('syncs each identifier independently and avoids redundant attribute updates', () => {
-  jest.mocked(getDeviceId).mockReturnValue(undefined)
+it('keeps feature attributes unchanged on rotation while exposures use the reporting session', () => {
   render(<Tree session={{did: 'did:plc:a', isBskyPds: true}} />)
-  const feature = installFeature('deviceId')
+  const feature = installFeature()
+  const attributes = features.getAttributes()
+  expect(attributes).not.toHaveProperty('sessionId')
   const updateAttributes = jest.spyOn(features, 'updateAttributes')
-  jest.mocked(getDeviceId).mockReturnValue('initialized-device')
+  const setFeatureAttributes = jest.spyOn(features, 'setAttributes')
+
+  act(() => rotateSession())
+  expect(getSessionId()).not.toBe('session-a')
   expect(ax.features.enabled(feature)).toBe(true)
   expectExposures()
-  expect(updateAttributes).toHaveBeenLastCalledWith({
-    deviceId: 'initialized-device',
-    sessionId: 'session-a',
-  })
-  act(() => rotateSession())
-  ax.features.enabled(feature)
-  expect(updateAttributes).toHaveBeenLastCalledWith(getIdentifiers())
-  expect(updateAttributes).toHaveBeenCalledTimes(2)
-  ax.features.getValue(feature, false)
-  expect(updateAttributes).toHaveBeenCalledTimes(2)
+  expect(ax.features.getValue(feature, false)).toBe(true)
+  expect(features.isOn(feature)).toBe(true)
+  expect(features.evalFeature(feature).value).toBe(true)
+  expect(features.getAttributes()).toEqual(attributes)
+  expect(updateAttributes).not.toHaveBeenCalled()
+  expect(setFeatureAttributes).not.toHaveBeenCalled()
 })
 
-it('uses current IDs when setting attributes triggers synchronous evaluations', () => {
+it('uses the initialized device ID when contexts mount instead of an import-time unknown', () => {
+  jest.mocked(getDeviceId).mockReturnValue('initialized-device')
+  render(<Tree session={{did: 'did:plc:a', isBskyPds: true}} />)
+  expect(contexts.map(metadata => metadata.base.deviceId)).toEqual([
+    'initialized-device',
+    'initialized-device',
+    'initialized-device',
+  ])
+  ax.metric('state:foreground', {})
+  expect(lastMetricMetadata().base.deviceId).toBe('initialized-device')
+  childLogger.info('initialized device')
+  expect(getEntries()[0].metadata.__metadata__).toMatchObject({
+    deviceId: 'initialized-device',
+  })
+  const feature = installFeature('deviceId')
+  jest.mocked(metrics.track).mockClear()
+  expect(ax.features.enabled(feature)).toBe(true)
+  expect(features.getAttributes().deviceId).toBe('initialized-device')
+  expectExposures()
+})
+
+it('uses context device identity when setting attributes triggers synchronous evaluations', () => {
   render(<Tree session={{did: 'did:plc:a', isBskyPds: true}} />)
   const metadata = ax.metadata
   const feature = installFeature('deviceId')
   act(() => rotateSession())
-  jest.mocked(getDeviceId).mockReturnValue('device-b')
+  jest.mocked(getDeviceId).mockClear()
   features.setRenderer(() => {
     features.evalFeature(feature)
   })
 
   setAttributes(metadata)
 
-  expect(features.getAttributes()).toMatchObject(getIdentifiers())
+  expect(features.getAttributes()).toMatchObject({deviceId: 'device-a'})
+  expect(features.getAttributes()).not.toHaveProperty('sessionId')
   expect(features.getAllResults().get(feature)?.result.hashValue).toBe(
-    'device-b',
+    'device-a',
   )
   expectExposures()
+  expect(getDeviceId).not.toHaveBeenCalled()
 })
 
 it('registers current-account callbacks before provider attribute updates evaluate gates', () => {
@@ -483,14 +505,13 @@ it('registers current-account callbacks before provider attribute updates evalua
   const view = render(<AccountTree did="did:plc:a" />)
   const feature = installFeature('did')
   act(() => rotateSession())
-  jest.mocked(getDeviceId).mockReturnValue('device-b')
   features.setRenderer(() => {
     features.evalFeature(feature)
   })
 
   view.rerender(<AccountTree did="did:plc:b" />)
 
-  expectExposures(getIdentifiers(), 'did:plc:b')
+  expectExposures('did:plc:b')
   expect(lastMetricMetadata().session?.isBskyPds).toBe(false)
   expect(features.getAllResults().get(feature)?.result.hashValue).toBe(
     'did:plc:b',
@@ -507,25 +528,33 @@ it('attributes both exposures to the bucketed did rather than the ambient accoun
 
   expect(ax.features.enabled(feature)).toBe(true)
 
-  expectExposures(getIdentifiers(), 'did:plc:b')
+  expectExposures('did:plc:b')
   expect(ax.metadata.session?.did).toBe('did:plc:a')
 })
 
-it.each(['did', 'deviceId', 'sessionId'])(
-  'preserves did attribution for deferred experiments bucketed on %s',
+it.each(['did', 'deviceId'] as const)(
+  'preserves did attribution and uses the reporting session for deferred experiments bucketed on %s',
   hashAttribute => {
     render(<Tree session={{did: 'did:plc:a', isBskyPds: true}} />)
     const feature = installFeature(hashAttribute)
-    // Replay an actual result after the ambient account has changed.
-    const result = evaluateFeature(feature)
+    // Replay an actual result after the account and analytics session change.
+    const result = features.evalFeature(feature)
+    const originalMetadata = lastMetricMetadata()
     features.setDeferredTrackingCalls([
       {experiment: result.experiment!, result: result.experimentResult!},
     ])
     jest.mocked(metrics.track).mockClear()
+    act(() => rotateSession())
+    expect(getSessionId()).not.toBe(originalMetadata.base.sessionId)
 
     render(<Tree session={{did: 'did:plc:b', isBskyPds: false}} />)
 
     expect(metrics.track).toHaveBeenCalledTimes(1)
+    expect(lastMetricMetadata().base).toMatchObject({
+      deviceId: 'device-a',
+      sessionId: getSessionId(),
+    })
+    expect(originalMetadata.base.sessionId).toBe('session-a')
     expect(lastMetricMetadata().session).toEqual({
       did: hashAttribute === 'did' ? 'did:plc:a' : 'did:plc:b',
       isBskyPds: false,

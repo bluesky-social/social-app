@@ -13,13 +13,15 @@ import {recordFeatureFlagEvaluation} from '#/logger/sentry/featureFlags'
 import {
   Features,
   features as feats,
-  getFeatureValue,
   init,
-  isFeatureEnabled,
   refresh,
   setAttributes,
 } from '#/analytics/features'
-import {getAndMigrateDeviceId, getIdentifiers} from '#/analytics/identifiers'
+import {
+  getAndMigrateDeviceId,
+  getDeviceId,
+  getSessionId,
+} from '#/analytics/identifiers'
 import {
   getMetadataForLogger,
   getNavigationMetadata,
@@ -78,7 +80,11 @@ function createLogger(
   const logger = Logger.create(context, metadata)
   const currentLogger = () => {
     // Replace the snapshot so previously recorded entries stay unchanged.
-    logger.ambientMetadata = {...metadata, ...getIdentifiers()}
+    logger.ambientMetadata = {
+      ...metadata,
+      deviceId: metadata.deviceId ?? getDeviceId() ?? 'unknown',
+      sessionId: getSessionId(),
+    }
     return logger
   }
   return {
@@ -97,10 +103,18 @@ function createLogger(
 
 const Context = createContext<AnalyticsBaseContextType>({
   logger: createLogger(Logger.Context.Default, {}),
+  /**
+   * Session IDs are captured when an event is emitted. Deferred exposure events
+   * use the reporting session, which may differ from the evaluation session.
+   */
   metric: (event, payload, metadata: Partial<Metadata> = {}) => {
     const snapshot: MetricMetadata = {
       ...metadata,
-      base: {...metadata.base, ...getIdentifiers()},
+      base: {
+        ...metadata.base,
+        deviceId: metadata.base?.deviceId ?? getDeviceId() ?? 'unknown',
+        sessionId: getSessionId(),
+      },
       navigation: getNavigationMetadata(),
     }
     if ('__meta' in snapshot) {
@@ -110,6 +124,7 @@ const Context = createContext<AnalyticsBaseContextType>({
   },
   metadata: {
     base: {
+      deviceId: getDeviceId() ?? 'unknown',
       platform: Platform.OS,
       appVersion: env.APP_VERSION,
       bundleIdentifier: env.BUNDLE_IDENTIFIER,
@@ -183,6 +198,8 @@ export function AnalyticsContext({
       )
     }
   }
+  // Device identity is initialized before mount and stays stable across sessions.
+  const deviceId = getDeviceId() ?? 'unknown'
   // only IP based, never GPS
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
@@ -202,6 +219,7 @@ export function AnalyticsContext({
       ...metadata,
       base: {
         ...parentContext.metadata.base,
+        deviceId,
         isBetaUser,
       },
       geolocation,
@@ -221,7 +239,7 @@ export function AnalyticsContext({
       },
     }
     return context
-  }, [parentContext, metadata, isBetaUser, geolocation])
+  }, [parentContext, metadata, deviceId, isBetaUser, geolocation])
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 
@@ -320,8 +338,8 @@ export function AnalyticsFeaturesContext({
     return {
       ...parentContext,
       features: {
-        enabled: isFeatureEnabled,
-        getValue: getFeatureValue,
+        enabled: feats.isOn.bind(feats),
+        getValue: feats.getFeatureValue.bind(feats),
         ...Features,
       },
     }
