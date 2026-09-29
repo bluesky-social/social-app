@@ -64,7 +64,11 @@ import {
  *   the clock is that old, rather than on a fixed timer, so any successful
  *   check or fetch from the top, whichever view made it, pushes its next check
  *   back. It also waits that long after starting a check of its own, so one
- *   that failed is not retried at once.
+ *   that failed is not retried at once. While the query has a finding for its
+ *   committed top, the interval stops, since another check could only find
+ *   the same thing again; once the finding is dropped it resumes, timed from
+ *   the clock as ever. A `requestCheck` still checks meanwhile, and a return
+ *   still checks when it is due one. A focus is answered by the finding.
  * - Coalescing: one check per query at a time, and none while work on its top
  *   is in flight or pending. Triggers that arrive meanwhile wait, and the clock
  *   that work moves decides whether they still need a check.
@@ -242,7 +246,9 @@ export function usePostFeedCheckTriggers<Result>({
    * surface that polls. The next check is due one interval after the later of
    * the query's check clock and this view's latest check, so it moves with
    * every successful check or fetch from the top rather than keeping to a
-   * timer of its own. Unset, the view makes no periodic checks.
+   * timer of its own. It pauses while the query has a finding for its
+   * committed top, and picks up again once a new top is committed or the
+   * query is removed. Unset, the view makes no periodic checks.
    */
   interval?: number
   /**
@@ -547,9 +553,11 @@ class PostFeedCheckView {
       now - lastSuccessAt >= FOCUS_CHECK_AFTER ||
       // Unless something checked or fetched the top since the arrival.
       (lastSuccessAt < this.activatedAt && isEmptyFeed(query))
-    const intervalDueAt = this.interval
-      ? Math.max(lastSuccessAt, this.lastCheckStartedAt) + this.interval
-      : Infinity
+    // A standing finding is all another interval check could find.
+    const intervalDueAt =
+      this.interval && !finding
+        ? Math.max(lastSuccessAt, this.lastCheckStartedAt) + this.interval
+        : Infinity
     if (isFocusPending && isFocusDue) {
       this.run(query, entry, top, 'focus')
     } else if (isIntervalDue || now >= intervalDueAt) {

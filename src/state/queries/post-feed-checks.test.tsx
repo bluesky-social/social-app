@@ -1084,6 +1084,44 @@ describe('interval', () => {
     expect(view.triggers()).toEqual(['return', 'interval'])
   })
 
+  it('stops while the query has a finding, and resumes from the next top fetch', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: true, interval: MINUTE})
+    advance(MINUTE)
+    await view.settle('new posts')
+    expect(view.onFound).toHaveBeenCalledWith('new posts', 'interval')
+
+    advance(5 * MINUTE)
+    expect(view.check).toHaveBeenCalledTimes(1)
+
+    await act(() =>
+      refreshPostFeedQuery(queryClient, KEY, () =>
+        Promise.resolve({page: page(), api: {} as never}),
+      ),
+    )
+    advance(MINUTE - 1)
+    expect(view.check).toHaveBeenCalledTimes(1)
+    advance(1)
+    expect(view.triggers()).toEqual(['interval', 'interval'])
+  })
+
+  it('stops for a finding from another view, but still lets requestCheck check', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(10 * SECOND)
+    const home = renderView(queryClient, {isActive: true, interval: MINUTE})
+    const screen = renderView(queryClient, {isActive: true})
+    screen.requestCheck()
+    await screen.settle('new posts')
+    expect(home.onFound).toHaveBeenCalledWith('new posts', 'interval')
+
+    advance(5 * MINUTE)
+    expect(home.check).not.toHaveBeenCalled()
+    home.requestCheck()
+    expect(home.triggers()).toEqual(['interval'])
+  })
+
   it('only runs while the view is active', async () => {
     const queryClient = createQueryClient()
     seed(queryClient)
