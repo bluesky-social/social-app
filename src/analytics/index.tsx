@@ -21,6 +21,7 @@ import {
   getAndMigrateDeviceId,
   getDeviceId,
   getInitialSessionId,
+  getSessionId,
   useSessionId,
 } from '#/analytics/identifiers'
 import {
@@ -75,15 +76,20 @@ export type AnalyticsBaseContextType = Omit<AnalyticsContextType, 'features'>
 
 function createLogger(
   context: Logger['context'],
-  metadata: Partial<Metadata>,
+  metadata: Record<string, unknown>,
 ): LoggerType {
   const logger = Logger.create(context, metadata)
+  const currentLogger = () => {
+    // Foreground callbacks can run before the context rerenders after rotation.
+    logger.ambientMetadata = {...metadata, sessionId: getSessionId()}
+    return logger
+  }
   return {
-    debug: logger.debug.bind(logger),
-    info: logger.info.bind(logger),
-    log: logger.log.bind(logger),
-    warn: logger.warn.bind(logger),
-    error: logger.error.bind(logger),
+    debug: (...args) => currentLogger().debug(...args),
+    info: (...args) => currentLogger().info(...args),
+    log: (...args) => currentLogger().log(...args),
+    warn: (...args) => currentLogger().warn(...args),
+    error: (...args) => currentLogger().error(...args),
     useChild: (context: Exclude<Logger['context'], undefined>) => {
       // oxlint-disable-next-line react-hooks/exhaustive-deps
       return useMemo(() => createLogger(context, metadata), [context, metadata])
@@ -94,12 +100,13 @@ function createLogger(
 
 const Context = createContext<AnalyticsBaseContextType>({
   logger: createLogger(Logger.Context.Default, {}),
-  metric: (event, payload, metadata) => {
-    if (metadata && '__meta' in metadata) {
+  metric: (event, payload, metadata: Partial<Metadata> = {}) => {
+    if ('__meta' in metadata) {
       delete metadata.__meta
     }
     metrics.track(event, payload, {
       ...metadata,
+      base: {...metadata.base, sessionId: getSessionId()},
       navigation: getNavigationMetadata(),
     })
   },
@@ -318,11 +325,24 @@ export function AnalyticsFeaturesContext({
   setAttributes(parentContext.metadata)
 
   const childContext = useMemo<AnalyticsContextType>(() => {
+    const syncSessionId = () => {
+      const sessionId = getSessionId()
+      if (feats.getAttributes().sessionId !== sessionId) {
+        // Match exposure metadata even when evaluation precedes a rerender.
+        void feats.updateAttributes({sessionId})
+      }
+    }
     return {
       ...parentContext,
       features: {
-        enabled: feats.isOn.bind(feats),
-        getValue: feats.getFeatureValue.bind(feats),
+        enabled: feature => {
+          syncSessionId()
+          return feats.isOn(feature)
+        },
+        getValue: (feature, defaultValue) => {
+          syncSessionId()
+          return feats.getFeatureValue(feature, defaultValue)
+        },
         ...Features,
       },
     }
