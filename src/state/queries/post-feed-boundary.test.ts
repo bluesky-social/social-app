@@ -36,6 +36,15 @@ function item(
   } as unknown as app.bsky.feed.defs.FeedViewPost
 }
 
+/** A post whose record's `createdAt` differs from when it was indexed. */
+function dated(rkey: string, createdAt: unknown, indexedAt: string) {
+  const post = item(rkey, indexedAt)
+  return {
+    ...post,
+    post: {...post.post, record: {...post.post.record, createdAt}},
+  } as app.bsky.feed.defs.FeedViewPost
+}
+
 const T1 = '2026-09-28T12:00:03.000Z'
 const T2 = '2026-09-28T12:00:02.000Z'
 const T3 = '2026-09-28T12:00:01.000Z'
@@ -72,6 +81,55 @@ describe('carryBoundary', () => {
       'c',
     ])
     expect(carried.cursor).toBe('S')
+  })
+
+  it('finds the posts sharing the boundary by createdAt, which sorts before indexing', () => {
+    // Created in the same millisecond, but indexed at different times.
+    const lower = lowerPage([
+      dated('a', T2, '2026-09-28T12:00:03.104Z'),
+      dated('b', T2, '2026-09-28T12:00:02.284Z'),
+      dated('c', T3, '2026-09-28T12:00:02.284Z'),
+    ])
+
+    const carried = carryBoundary(exhausted, lower)
+
+    expect(carried.feed.map(i => i.post.record.text)).toEqual(['new', 'a', 'b'])
+  })
+
+  it('carries a run of reposts indexed in the same millisecond', () => {
+    const lower = lowerPage([
+      item('a', T3, T2),
+      item('b', T1, T2),
+      item('c', T2),
+      item('d', T3, T3),
+    ])
+
+    const carried = carryBoundary(exhausted, lower)
+
+    expect(carried.feed.map(i => i.post.record.text)).toEqual([
+      'new',
+      'a',
+      'b',
+      'c',
+    ])
+  })
+
+  it('compares sort times, not how they are written', () => {
+    const lower = lowerPage([
+      item('a', '2026-09-28T12:00:02.000Z'),
+      item('b', '2026-09-28T12:00:02Z'),
+      item('c', '2026-09-28T14:00:02.000+02:00'),
+      item('d', T3),
+    ])
+
+    const carried = carryBoundary(exhausted, lower)
+
+    expect(carried.feed.map(i => i.post.record.text)).toEqual([
+      'new',
+      'a',
+      'b',
+      'c',
+    ])
   })
 
   it('carries only the first post when the next one sorts earlier', () => {
@@ -144,9 +202,29 @@ describe('boundary helpers', () => {
     ).toBe(false)
     expect(isContiguousAbove(exhausted, {cursor: 'Q', feed: []})).toBe(false)
   })
+})
 
-  it('sorts a repost by when it was reposted', () => {
-    expect(feedSortTime(item('a', T3, T1))).toBe(T1)
-    expect(feedSortTime(item('a', T3))).toBe(T3)
+describe('feedSortTime', () => {
+  it('sorts a post by the earlier of its createdAt and its indexedAt', () => {
+    expect(feedSortTime(dated('a', T2, T1))).toBe(Date.parse(T2))
+    expect(feedSortTime(dated('a', T1, T2))).toBe(Date.parse(T2))
+    expect(feedSortTime(item('a', T3))).toBe(Date.parse(T3))
+  })
+
+  it('sorts a backdated post by when it says it was created', () => {
+    const createdAt = '2019-01-01T00:00:00.000Z'
+    expect(feedSortTime(dated('a', createdAt, T1))).toBe(Date.parse(createdAt))
+  })
+
+  it('sorts a post by its indexedAt when its createdAt is not a date', () => {
+    for (const createdAt of ['not a date', '', 42, undefined]) {
+      expect(feedSortTime(dated('a', createdAt, T1))).toBe(Date.parse(T1))
+    }
+  })
+
+  it('sorts a repost by when it was indexed, whenever the post was made', () => {
+    expect(feedSortTime(item('a', T3, T1))).toBe(Date.parse(T1))
+    const repost = {...dated('a', T3, T3), reason: item('b', T3, T1).reason}
+    expect(feedSortTime(repost)).toBe(Date.parse(T1))
   })
 })

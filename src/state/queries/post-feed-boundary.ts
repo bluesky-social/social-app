@@ -36,14 +36,34 @@ export function isContiguousAbove(
 }
 
 /**
- * Where an item sits in the Following timeline's sort order: the time of the
- * repost for a repost, otherwise the time the post was indexed.
+ * Where an item sits in the Following timeline's sort order, in milliseconds
+ * since the epoch. Compare these rather than the raw strings, which can write
+ * the same time in different formats.
+ *
+ * The appview sorts a record by the earlier of its `createdAt` and when it was
+ * indexed. So a post sorts at the earlier of its record's `createdAt` and its
+ * `indexedAt`: a backdated post sorts at its `createdAt`, and a post dated in
+ * the future at when it was indexed. A `createdAt` that is not a valid date is
+ * ignored, as the production appview ignores it.
+ *
+ * A repost sorts the same way by its own record, but the client only has the
+ * repost's `reason.indexedAt`, not that record's `createdAt`. For a repost
+ * this is therefore an upper bound of the server's sort time, which may be
+ * earlier. That is good enough for {@link carryBoundary}, the only caller that
+ * needs exact times: a wrong time only matters within a run of items sharing
+ * the boundary's sort time to the millisecond, which is rare; the first item
+ * at a boundary is carried whatever its time; and an item carried that did not
+ * need to be is harmless, as the feed's ordinary deduplication removes it.
  */
 export function feedSortTime(item: app.bsky.feed.defs.FeedViewPost) {
   const reason = item.reason as {indexedAt?: unknown} | undefined
-  return typeof reason?.indexedAt === 'string'
-    ? reason.indexedAt
-    : item.post.indexedAt
+  if (typeof reason?.indexedAt === 'string') {
+    return Date.parse(reason.indexedAt)
+  }
+  const indexedAt = Date.parse(item.post.indexedAt)
+  const {createdAt} = item.post.record
+  const created = typeof createdAt === 'string' ? Date.parse(createdAt) : NaN
+  return Number.isNaN(created) ? indexedAt : Math.min(created, indexedAt)
 }
 
 /**
