@@ -617,8 +617,9 @@ export function useFollowingRestorePrepend(
 
 /**
  * How filling a gap in Following went: `filled`, with how many posts the page
- * that fills it holds, or why not. `superseded` is the gap having gone, or
- * the pages having been replaced, before anything was written.
+ * that fills it holds, or why not. `superseded` is the gap having gone, the
+ * pages having been replaced or being about to be, or the view having turned
+ * the write away, before anything was written.
  */
 export type FollowingGapOutcome =
   {outcome: 'filled'; itemCount: number} | {outcome: 'failed' | 'superseded'}
@@ -630,6 +631,10 @@ export type FollowingGapOutcome =
  * replace everything below it with that page in one write - see
  * {@link fillPostFeedGap}. Later pages continue from it. Never rejects: a
  * failed fetch writes nothing and leaves the gap to be filled again.
+ *
+ * `onFetchStart` is called if the press starts a fetch of its own, as against
+ * finding nothing to fill or joining a fill already in flight. `mayCommit` is
+ * as for {@link fillPostFeedGap}.
  */
 export function useFollowingGapFill(
   feedDesc: FeedDescriptor,
@@ -643,6 +648,10 @@ export function useFollowingGapFill(
 
   return async (
     gap: Pick<PageGap, 'since' | 'cursor'>,
+    {
+      mayCommit,
+      onFetchStart,
+    }: {mayCommit?: () => Promise<boolean>; onFetchStart?: () => void} = {},
   ): Promise<FollowingGapOutcome> => {
     const queryKey = RQKEY(feedDesc, params)
     const upper = queryClient
@@ -660,9 +669,11 @@ export function useFollowingGapFill(
         queryKey,
         upper,
         async upperApi => {
+          onFetchStart?.()
           const api = upperApi ?? createFeedApi()
           return {api, page: await fetchPage(api, {cursor: upper.cursor})}
         },
+        {mayCommit},
       )
       return result.status === 'filled'
         ? {outcome: 'filled', itemCount: result.page.feed.length}

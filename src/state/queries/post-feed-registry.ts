@@ -8,6 +8,7 @@ import {
 } from '@tanstack/react-query'
 
 import {type FeedAPI} from '#/lib/api/feed/types'
+import {gapBelow} from './post-feed-boundary'
 
 /** Live feed state, kept outside serializable query data. */
 export type PostFeedQueryEntry = {
@@ -315,22 +316,30 @@ export type GapFillResult<Page> =
  * reader would jump. The page's API is promoted with it, so pagination carries
  * on from it.
  *
- * The write only lands if `upper` is still one of the pages, with pages below
- * it, and nothing has replaced the pages meanwhile: a refresh or a fetch from
+ * The write only lands if `upper` is still one of the pages with an open gap
+ * below it (see {@link gapBelow}), and nothing has replaced the pages meanwhile: a refresh or a fetch from
  * the top that started, or is still in flight, supersedes it, and so does the
- * query's removal. Pages added above meanwhile, as a prepend adds them, stay.
- * A fetchNextPage in flight is cancelled with the write, since it would put
- * back what the write replaces.
+ * query's removal. One in flight when it starts means it does not fetch at
+ * all. Pages added above meanwhile, as a prepend adds them, stay. A
+ * fetchNextPage in flight is cancelled with the write, since it would put back
+ * what the write replaces; a fetch from the top never is.
+ *
+ * `mayCommit` runs between the fetch and the write, and everything is checked
+ * again after it. When it says no, the fill is superseded and nothing is
+ * written: the view uses it to keep what the reader has scrolled on to.
  *
  * Fills of the same gap that overlap share one fetch and its outcome. Rejects
  * when `fetchBelow` does, having written nothing, so the gap can be filled
  * again.
  */
-export function fillPostFeedGap<Page extends {cursor: string | undefined}>(
+export function fillPostFeedGap<
+  Page extends {cursor: string | undefined; since?: string},
+>(
   queryClient: QueryClient,
   queryKey: QueryKey,
   upper: Page,
   fetchBelow: (api: FeedAPI | undefined) => Promise<{page: Page; api: FeedAPI}>,
+  {mayCommit}: {mayCommit?: () => Promise<boolean>} = {},
 ): Promise<GapFillResult<Page>> {
   const entry = getPostFeedQueryEntry(queryClient, queryKey)
   const inFlight = entry.gapFills.get(upper)
@@ -338,19 +347,22 @@ export function fillPostFeedGap<Page extends {cursor: string | undefined}>(
     return inFlight as Promise<GapFillResult<Page>>
   }
 
-  const readPages = () =>
-    queryClient.getQueryData<InfiniteData<Page, unknown>>(queryKey)?.pages
-  const hasPagesBelow = () => {
-    const pages = readPages()
-    const index = pages?.indexOf(upper) ?? -1
-    return index !== -1 && index < pages!.length - 1
+  const hasOpenGapBelow = () => {
+    const data = queryClient.getQueryData<InfiniteData<Page, unknown>>(queryKey)
+    const index = data ? data.pages.indexOf(upper) : -1
+    return (
+      index !== -1 &&
+      index < data!.pages.length - 1 &&
+      gapBelow(upper, data!.pageParams[index + 1]) === 'open'
+    )
   }
   const generation = entry.generation
   const isCurrent = () =>
     entry.generation === generation &&
     entry.refresh === undefined &&
+    !isFetchingFromTop(queryClient, queryKey) &&
     peekPostFeedQueryEntry(queryClient, queryKey) === entry &&
-    hasPagesBelow()
+    hasOpenGapBelow()
 
   const fill = (async (): Promise<GapFillResult<Page>> => {
     const cursor = upper.cursor
@@ -359,6 +371,9 @@ export function fillPostFeedGap<Page extends {cursor: string | undefined}>(
       return {status: 'superseded'}
     }
     const {page, api} = await fetchBelow(entry.feedApis.get(upper))
+    if (!isCurrent() || (mayCommit && !(await mayCommit()))) {
+      return {status: 'superseded'}
+    }
     if (!isCurrent()) {
       return {status: 'superseded'}
     }

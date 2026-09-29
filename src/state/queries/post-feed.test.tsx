@@ -1470,6 +1470,178 @@ describe('useFollowingGapFill', () => {
     expect(refetched.pages.every(page => !page.since)).toBe(true)
   })
 
+  it('gives way to an invalidation in flight when pressed, without fetching', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const top = deferred<FeedAPIResponse>()
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(
+        () => createApi({top: () => top.promise}) as never,
+      )
+    act(() => {
+      void queryClient.invalidateQueries({queryKey: KEY})
+    })
+    const calls = gapApi.fetch.mock.calls.length
+    const onFetchStart = jest.fn()
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.fill(GAP, {onFetchStart})
+    })
+
+    expect(outcome).toEqual({outcome: 'superseded'})
+    expect(gapApi.fetch.mock.calls).toHaveLength(calls)
+    expect(onFetchStart).not.toHaveBeenCalled()
+    // The invalidation is not cancelled, and replaces the feed from the top.
+    act(() => {
+      top.resolve({cursor: 'top:1', feed: [feedItem('top-1')]})
+    })
+    await waitFor(() =>
+      expect(cachedData(queryClient).pages[0].cursor).toBe('top:1'),
+    )
+    expect(cachedData(queryClient).pages.every(page => !page.since)).toBe(true)
+  })
+
+  it('gives way to a refresh in flight when pressed, without fetching', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const top = deferred<FeedAPIResponse>()
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(
+        () => createApi({top: () => top.promise}) as never,
+      )
+    let refreshing!: Promise<unknown>
+    act(() => {
+      refreshing = hook.result.current.refresh()
+    })
+    const calls = gapApi.fetch.mock.calls.length
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.fill(GAP)
+    })
+
+    expect(outcome).toEqual({outcome: 'superseded'})
+    expect(gapApi.fetch.mock.calls).toHaveLength(calls)
+    await act(async () => {
+      top.resolve({cursor: 'top:1', feed: [feedItem('top-1')]})
+      await refreshing
+    })
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      'top:1',
+    ])
+  })
+
+  it('gives way to an invalidation that starts before it writes', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const below = deferred<FeedAPIResponse>()
+    gapApi.fetch.mockImplementationOnce(() => below.promise)
+    const top = deferred<FeedAPIResponse>()
+    jest
+      .mocked(FollowingFeedAPI)
+      .mockImplementationOnce(
+        () => createApi({top: () => top.promise}) as never,
+      )
+
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fill(GAP)
+    })
+    act(() => {
+      void queryClient.invalidateQueries({queryKey: KEY})
+    })
+    await act(async () => {
+      below.resolve({cursor: '0:11', feed: [feedItem('0-11')]})
+      expect(await filling).toEqual({outcome: 'superseded'})
+    })
+
+    act(() => {
+      top.resolve({cursor: 'top:1', feed: [feedItem('top-1')]})
+    })
+    await waitFor(() =>
+      expect(cachedData(queryClient).pages[0].cursor).toBe('top:1'),
+    )
+  })
+
+  it('keeps the old pages and the gap when the view turns the write away', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    const data = cachedData(queryClient)
+    const mayCommit = jest.fn().mockResolvedValue(false)
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.fill(GAP, {mayCommit})
+    })
+
+    expect(outcome).toEqual({outcome: 'superseded'})
+    // Asked once the continuation was in hand.
+    expect(mayCommit).toHaveBeenCalledTimes(1)
+    expect(cursorsFetchedBy(gapApi)).toEqual([undefined, '0:10'])
+    expect(cachedData(queryClient)).toBe(data)
+    expect(gapsIn(queryClient).get(0)?.status).toBe('open')
+    // Pagination carries on below the old pages, as it did.
+    await act(() => hook.result.current.query.fetchNextPage())
+    expect(cursorsFetchedBy(apis[apis.length - 1])).toEqual(['r:2'])
+    expect(cachedData(queryClient).pages).toHaveLength(4)
+  })
+
+  it('writes once the view lets it', async () => {
+    const {hook, queryClient} = await renderGappedFeed()
+    const mayCommit = jest.fn().mockResolvedValue(true)
+
+    let outcome
+    await act(async () => {
+      outcome = await hook.result.current.fill(GAP, {mayCommit})
+    })
+
+    expect(outcome).toEqual({outcome: 'filled', itemCount: 1})
+    expect(mayCommit).toHaveBeenCalledTimes(1)
+    expect(cachedData(queryClient).pages.map(page => page.cursor)).toEqual([
+      '0:10',
+      '0:11',
+    ])
+  })
+
+  it('says when a press starts a fetch of its own', async () => {
+    const {hook} = await renderGappedFeed()
+    const first = jest.fn()
+    const second = jest.fn()
+
+    await act(async () => {
+      await Promise.all([
+        hook.result.current.fill(GAP, {onFetchStart: first}),
+        hook.result.current.fill(GAP, {onFetchStart: second}),
+      ])
+    })
+    const afterwards = jest.fn()
+    await act(async () => {
+      // Filled, so there is nothing to fetch.
+      await hook.result.current.fill(GAP, {onFetchStart: afterwards})
+    })
+
+    expect(first).toHaveBeenCalledTimes(1)
+    expect(second).not.toHaveBeenCalled()
+    expect(afterwards).not.toHaveBeenCalled()
+  })
+
+  it('leaves a filled gap, and the pages paginated below it, alone', async () => {
+    const {hook, queryClient, gapApi} = await renderGappedFeed()
+    await act(() => hook.result.current.fill(GAP))
+    await act(() => hook.result.current.query.fetchNextPage())
+    const data = cachedData(queryClient)
+    const calls = gapApi.fetch.mock.calls.length
+
+    let outcome
+    await act(async () => {
+      // As a view that has not rendered the fill yet would press it.
+      outcome = await hook.result.current.fill(GAP)
+    })
+
+    expect(outcome).toEqual({outcome: 'superseded'})
+    expect(gapApi.fetch.mock.calls).toHaveLength(calls)
+    expect(cachedData(queryClient)).toBe(data)
+  })
+
   it('does not fetch for a gap a refresh has already replaced', async () => {
     const {hook, gapApi} = await renderGappedFeed()
     await act(() => hook.result.current.refresh())
