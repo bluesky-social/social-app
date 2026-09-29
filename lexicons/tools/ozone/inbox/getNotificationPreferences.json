@@ -1,0 +1,26 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.getNotificationPreferences",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "properties": {}
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["preferences"],
+          "properties": {
+            "preferences": {
+              "type": "ref",
+              "ref": "tools.ozone.inbox.defs#notificationPreferences"
+            }
+          }
+        }
+      }
+    }
+  }
+}

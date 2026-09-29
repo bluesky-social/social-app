@@ -1,0 +1,130 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.listReports",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "List moderation reports submitted by the authenticated account to this moderation service.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential."
+          },
+          "filter": {
+            "type": "string",
+            "default": "all",
+            "enum": ["all", "pending", "resolved", "unread"],
+            "description": "Filter report activity. unread includes reports whose updatedAt is after the reports section's seenAt watermark."
+          },
+          "sortField": {
+            "type": "string",
+            "default": "updatedAt",
+            "enum": ["createdAt", "updatedAt"]
+          },
+          "sortDirection": {
+            "type": "string",
+            "default": "desc",
+            "enum": ["asc", "desc"]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string",
+            "description": "An opaque cursor for pagination."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["reports"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "reports": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "#reportView"
+              }
+            }
+          }
+        }
+      }
+    },
+    "reportView": {
+      "type": "object",
+      "required": [
+        "src",
+        "id",
+        "isRead",
+        "reasonType",
+        "subject",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the moderation service that received the report."
+        },
+        "id": {
+          "type": "integer",
+          "description": "Report ID (report table ID), used by getReport and Ozone's report detail page."
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "reasonType": {
+          "type": "string",
+          "description": "The exact fully-qualified reason NSID submitted with and stored on the report."
+        },
+        "reason": {
+          "type": "string",
+          "maxGraphemes": 2000,
+          "maxLength": 20000
+        },
+        "lastActionTaken": {
+          "type": "string",
+          "description": "Public action associated with this report's transition to resolved. See the public action vocabulary table."
+        },
+        "scope": {
+          "type": "string",
+          "knownValues": ["network", "app", "labelOnly"]
+        },
+        "subject": {
+          "type": "union",
+          "refs": [
+            "com.atproto.admin.defs#repoRef",
+            "com.atproto.repo.strongRef",
+            "chat.bsky.convo.defs#messageRef",
+            "chat.bsky.convo.defs#convoRef"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "knownValues": ["pending", "resolved"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.getReport",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get a moderation report submitted by the authenticated account to this moderation service.",
+      "parameters": {
+        "type": "params",
+        "required": ["id"],
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Reporter to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Report ID (report table ID), as returned by listReports."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["report"],
+          "properties": {
+            "report": {
+              "type": "ref",
+              "ref": "#reportView"
+            },
+            "resolution": {
+              "type": "ref",
+              "ref": "#resolutionView",
+              "description": "Present only when the report is resolved."
+            }
+          }
+        }
+      },
+      "errors": [
+        {
+          "name": "NotFound",
+          "description": "No report was found, or the authenticated account did not submit it."
+        }
+      ]
+    },
+    "reportView": {
+      "type": "object",
+      "required": [
+        "src",
+        "id",
+        "reasonType",
+        "subject",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the moderation service that received the report."
+        },
+        "id": {
+          "type": "integer",
+          "description": "Report ID (report table ID), used by Ozone's report detail page."
+        },
+        "reasonType": {
+          "type": "string",
+          "description": "The exact fully-qualified reason NSID submitted with and stored on the report."
+        },
+        "reason": {
+          "type": "string",
+          "maxGraphemes": 2000,
+          "maxLength": 20000
+        },
+        "subject": {
+          "type": "union",
+          "refs": [
+            "com.atproto.admin.defs#repoRef",
+            "com.atproto.repo.strongRef",
+            "chat.bsky.convo.defs#messageRef",
+            "chat.bsky.convo.defs#convoRef"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "knownValues": ["pending", "resolved"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "resolutionView": {
+      "type": "object",
+      "required": ["outcome", "resolvedAt"],
+      "properties": {
+        "outcome": {
+          "type": "string",
+          "knownValues": ["actionTaken", "noAction", "other"]
+        },
+        "actionTaken": {
+          "type": "string",
+          "description": "Public action associated with this report's resolution. See the public action vocabulary table."
+        },
+        "scope": {
+          "type": "string",
+          "knownValues": ["network", "app", "labelOnly"]
+        },
+        "resolvedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    }
+  }
+}

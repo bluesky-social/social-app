@@ -1,0 +1,65 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.listNotifications",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "section": {
+            "type": "string",
+            "knownValues": ["reports", "subjects", "accountStatus"]
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "knownValues": [
+                "reportResolved",
+                "reportReopened",
+                "reportNote",
+                "actionTaken",
+                "actionReversed",
+                "appealResolved",
+                "standingChanged"
+              ]
+            }
+          },
+          "unreadOnly": {
+            "type": "boolean",
+            "default": false
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["notifications"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "notifications": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "tools.ozone.inbox.defs#notification"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
