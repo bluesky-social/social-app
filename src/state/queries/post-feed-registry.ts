@@ -8,7 +8,7 @@ import {
 } from '@tanstack/react-query'
 
 import {type FeedAPI} from '#/lib/api/feed/types'
-import {gapBelow} from './post-feed-boundary'
+import {type BoundaryPage, gapBelow, settleFeedData} from './post-feed-boundary'
 
 /** Live feed state, kept outside serializable query data. */
 export type PostFeedQueryEntry = {
@@ -43,6 +43,40 @@ type PendingRefresh = {
 }
 
 const registries = new WeakMap<QueryClient, Map<string, PostFeedQueryEntry>>()
+
+/**
+ * The page each page was copied from, for a page a write replaced with a copy
+ * of itself: settling stamps pages and carries boundaries onto them. A copy is
+ * the same page to everything that holds on to one - an operation in flight,
+ * the rows selected for it - so each client keeps a record of them. Keyed by
+ * the page objects themselves, so it holds nothing past them.
+ */
+const derivations = new WeakMap<QueryClient, WeakMap<object, object>>()
+
+/**
+ * The page a page was first fetched as, following any copies made of it
+ * since. Two pages with the same origin are the same page of the feed.
+ */
+export function postFeedPageOrigin(
+  queryClient: QueryClient,
+  page: object,
+): object {
+  const derived = derivations.get(queryClient)
+  let origin = page
+  for (let from = derived?.get(origin); from; from = derived?.get(origin)) {
+    origin = from
+  }
+  return origin
+}
+
+function recordPageCopy(queryClient: QueryClient, copy: object, of: object) {
+  let derived = derivations.get(queryClient)
+  if (!derived) {
+    derived = new WeakMap()
+    derivations.set(queryClient, derived)
+  }
+  derived.set(copy, of)
+}
 
 function getEntries(queryClient: QueryClient) {
   let entries = registries.get(queryClient)
@@ -213,6 +247,34 @@ function createPendingRefresh(): PendingRefresh {
  * around them gives way to it, and must not cancel it: that would swallow the
  * invalidation behind it.
  */
+/** Whether two pages are the same page of the feed, or copies of it. */
+function isSamePage(
+  queryClient: QueryClient,
+  a: object | undefined,
+  b: object | undefined,
+) {
+  return (
+    a !== undefined &&
+    b !== undefined &&
+    postFeedPageOrigin(queryClient, a) === postFeedPageOrigin(queryClient, b)
+  )
+}
+
+/** Where `page`, or a copy of it, is among `pages`, or -1. */
+function indexOfPage(
+  queryClient: QueryClient,
+  pages: readonly object[] | undefined,
+  page: object,
+) {
+  if (!pages) {
+    return -1
+  }
+  const index = pages.indexOf(page)
+  return index !== -1
+    ? index
+    : pages.findIndex(candidate => isSamePage(queryClient, candidate, page))
+}
+
 function isFetchingFromTop(queryClient: QueryClient, queryKey: QueryKey) {
   const state = queryClient.getQueryCache().find({queryKey, exact: true})?.state
   return (
@@ -267,7 +329,7 @@ export async function prependPostFeedQuery<Page extends object, Detail>(
     entry.refresh === undefined &&
     !isFetchingFromTop(queryClient, queryKey) &&
     peekPostFeedQueryEntry(queryClient, queryKey) === entry &&
-    readTop() === top
+    isSamePage(queryClient, readTop(), top)
   if (!isCurrent()) {
     return {status: 'superseded'}
   }
@@ -290,7 +352,7 @@ export async function prependPostFeedQuery<Page extends object, Detail>(
   notifyManager.batch(() => {
     void queryClient.cancelQueries({queryKey, exact: true})
     queryClient.setQueryData<InfiniteData<Page, unknown>>(queryKey, data =>
-      data && data.pages[0] === top
+      data && isSamePage(queryClient, data.pages[0], top)
         ? {
             pages: [page, ...data.pages],
             pageParams: [undefined, ...data.pageParams],
@@ -349,7 +411,7 @@ export function fillPostFeedGap<
 
   const hasOpenGapBelow = () => {
     const data = queryClient.getQueryData<InfiniteData<Page, unknown>>(queryKey)
-    const index = data ? data.pages.indexOf(upper) : -1
+    const index = indexOfPage(queryClient, data?.pages, upper)
     return (
       index !== -1 &&
       index < data!.pages.length - 1 &&
@@ -389,7 +451,7 @@ export function fillPostFeedGap<
     notifyManager.batch(() => {
       void queryClient.cancelQueries({queryKey, exact: true})
       queryClient.setQueryData<InfiniteData<Page, unknown>>(queryKey, data => {
-        const index = data ? data.pages.indexOf(upper) : -1
+        const index = indexOfPage(queryClient, data?.pages, upper)
         if (!data || index === -1) {
           return data
         }
@@ -410,6 +472,82 @@ export function fillPostFeedGap<
   }
   fill.then(settle, settle)
   return fill
+}
+
+/**
+ * Whether reaching the true top of a post-feed query would have anything to
+ * settle - see `settleFeedData`.
+ */
+export function hasPostFeedSettlement(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+) {
+  const data =
+    queryClient.getQueryData<
+      InfiniteData<BoundaryPage & {reachedAt?: number}, unknown>
+    >(queryKey)
+  return data !== undefined && settleFeedData(data, 0) !== undefined
+}
+
+export type PostFeedSettleResult =
+  | {status: 'settled'; reached: number; retired: number}
+  | {status: 'nothing' | 'superseded'}
+
+/**
+ * Settles a post-feed query whose reader has reached its true top, in a single
+ * write - see `settleFeedData` for what that marks and retires. For the view
+ * to call once its list says it is at rest there; this cannot tell.
+ *
+ * Nothing is written while something is about to replace the pages: a
+ * refresh or a fetch from the top in flight, or the follow-up of a restore
+ * (which is about to add to the top, and whose own correction of the list is
+ * no arrival). A fetchNextPage in flight is cancelled with the write, as it
+ * would put back pages the write retires, and the marks with them.
+ *
+ * Pages the write replaces with a copy - to mark them, or to carry a boundary
+ * onto them - are recorded as the same pages (see `postFeedPageOrigin`), with
+ * the same API, so that the rows selected for them stay as they were and what
+ * is in flight against them still lands.
+ */
+export function settlePostFeedQuery<
+  Page extends BoundaryPage & {reachedAt?: number},
+>(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  now = Date.now(),
+): PostFeedSettleResult {
+  const data = queryClient.getQueryData<InfiniteData<Page, unknown>>(queryKey)
+  if (
+    !data ||
+    isPostFeedRefreshing(queryClient, queryKey) ||
+    isFetchingFromTop(queryClient, queryKey) ||
+    isPostFeedRestorePending(queryClient, queryKey)
+  ) {
+    return {status: 'superseded'}
+  }
+  const settled = settleFeedData(data, now)
+  if (!settled) {
+    return {status: 'nothing'}
+  }
+  const entry = getPostFeedQueryEntry(queryClient, queryKey)
+  settled.pages.forEach((page, index) => {
+    const original = data.pages[index]
+    if (page !== original) {
+      recordPageCopy(queryClient, page, original)
+      const api = entry.feedApis.get(original)
+      if (api) {
+        entry.feedApis.set(page, api)
+      }
+    }
+  })
+  notifyManager.batch(() => {
+    void queryClient.cancelQueries({queryKey, exact: true})
+    queryClient.setQueryData<InfiniteData<Page, unknown>>(queryKey, {
+      pages: settled.pages,
+      pageParams: settled.pageParams,
+    })
+  })
+  return {status: 'settled', reached: settled.reached, retired: settled.retired}
 }
 
 /**
