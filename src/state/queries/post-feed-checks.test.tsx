@@ -16,6 +16,7 @@ import {
   type PostFeedCheckContext,
   type PostFeedCheckTrigger,
   RETURN_INTENT_LIFETIME,
+  RETURN_STALE_AFTER,
   usePostFeedCheckTriggers,
 } from './post-feed-checks'
 import {refreshPostFeedQuery} from './post-feed-registry'
@@ -58,8 +59,12 @@ type Page = {cursor: string | undefined; feed: never[]; fetchedAt: number}
 
 let lastReturnId = 0
 
-/** Returns to the app from the background, as every listener hears it. */
-function returnFromBackground() {
+/**
+ * Returns to the app from the background after `away` milliseconds there, as
+ * every listener hears it.
+ */
+function returnFromBackground(away = 0) {
+  advance(away)
   const appReturn: AppReturn = {id: ++lastReturnId, timestamp: Date.now()}
   act(() => {
     for (const listener of [...mockReturnListeners]) {
@@ -325,7 +330,7 @@ describe('active views', () => {
     const home = renderView(queryClient, {isActive: true})
     const screen = renderView(queryClient, {isActive: true})
 
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     // One check for the query, by the view that claimed the return.
     expect(home.triggers()).toEqual(['return'])
     expect(screen.check).not.toHaveBeenCalled()
@@ -355,8 +360,7 @@ describe('active views', () => {
     const bobView = renderView(bob, {isActive: false})
     await aliceView.settle(undefined)
 
-    advance(SECOND)
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     expect(aliceView.triggers()).toEqual(['focus', 'return'])
     await aliceView.settle(undefined)
 
@@ -367,14 +371,13 @@ describe('active views', () => {
 })
 
 describe('return intent', () => {
-  it('checks on a real return, past the focus gate', async () => {
+  it('checks on a real return to stale data, with no focus needed', async () => {
     const queryClient = createQueryClient()
     seed(queryClient)
-    advance(10 * SECOND)
     const view = renderView(queryClient, {isActive: true})
     expect(view.check).not.toHaveBeenCalled()
 
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     expect(view.triggers()).toEqual(['return'])
     await view.settle('new posts')
     expect(view.onFound).toHaveBeenCalledWith('new posts', 'return')
@@ -386,7 +389,7 @@ describe('return intent', () => {
     advance(10 * SECOND)
     const view = renderView(queryClient, {isActive: true})
 
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     await view.settle(undefined)
     view.setProps({isActive: false})
     advance(30 * SECOND)
@@ -414,14 +417,14 @@ describe('return intent', () => {
     expect(view.check).toHaveBeenCalledTimes(1)
   })
 
-  it('is answered by a check already in flight when the return happens', async () => {
+  it('is answered by a check in flight, and handed its find if the return was due a check', async () => {
     const queryClient = createQueryClient()
     seed(queryClient)
     advance(2 * MINUTE)
     const view = renderView(queryClient, {isActive: true})
     expect(view.triggers()).toEqual(['focus'])
 
-    returnFromBackground()
+    returnFromBackground(MINUTE)
     advance(SECOND)
     await view.settle('new posts')
 
@@ -445,7 +448,7 @@ describe('return intent', () => {
     expect(view.check).not.toHaveBeenCalled()
   })
 
-  it('stays owed until five minutes after the return', () => {
+  it('stays owed until five minutes after the return, judged stale or not when handled', () => {
     const queryClient = createQueryClient()
     seed(queryClient)
     advance(10 * SECOND)
@@ -453,6 +456,7 @@ describe('return intent', () => {
       isActive: true,
       isTopWorkPending: true,
     })
+    // Fresh when it happens, but stale by the time the restore lets it through.
     returnFromBackground()
 
     advance(RETURN_INTENT_LIFETIME - 1)
@@ -476,8 +480,7 @@ describe('return intent', () => {
     expect(view.triggers()).toEqual(['focus'])
     await view.settle(undefined)
 
-    advance(SECOND)
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     expect(view.triggers()).toEqual(['focus', 'return'])
   })
 
@@ -488,7 +491,7 @@ describe('return intent', () => {
     const home = renderView(queryClient, {isActive: true})
     const screen = renderView(queryClient, {isActive: false})
 
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     expect(home.triggers()).toEqual(['return'])
     // The reader moves on before the check settles.
     home.setProps({isActive: false})
@@ -551,7 +554,7 @@ describe('return intent', () => {
     advance(10 * SECOND)
     const view = renderView(queryClient, {isActive: true})
 
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     await view.fail(new TypeError('Network request failed'))
     // Nothing retries it on its own.
     advance(MINUTE)
@@ -570,7 +573,7 @@ describe('return intent', () => {
     seed(queryClient)
     advance(10 * SECOND)
     const view = renderView(queryClient, {isActive: true})
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     const context = view.check.mock.calls[0][0]
 
     const top = deferred<{page: Page; api: never}>()
@@ -595,7 +598,7 @@ describe('return intent', () => {
     seed(queryClient)
     advance(10 * SECOND)
     const view = renderView(queryClient, {isActive: true})
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
 
     const top = deferred<{page: Page; api: never}>()
     let refresh: Promise<unknown>
@@ -611,6 +614,89 @@ describe('return intent', () => {
       await Promise.resolve()
     })
     expect(view.triggers()).toEqual(['return', 'return'])
+  })
+})
+
+describe('return staleness', () => {
+  it('consumes a return to fresh data without a check', async () => {
+    const queryClient = createQueryClient()
+    // Say a pull to refresh, then 45 seconds away.
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: true})
+    returnFromBackground(45 * SECOND)
+    await flush()
+    expect(view.check).not.toHaveBeenCalled()
+    expect(view.onFound).not.toHaveBeenCalled()
+
+    // A focus within the minute is gated as usual.
+    view.setProps({isActive: false})
+    advance(10 * SECOND)
+    view.setProps({isActive: true})
+    expect(view.check).not.toHaveBeenCalled()
+
+    // The return is gone rather than owed, so it never fires later.
+    view.setProps({isActive: false})
+    advance(2 * MINUTE)
+    view.setProps({isActive: true})
+    expect(view.triggers()).toEqual(['focus'])
+  })
+
+  it('counts the time away towards how stale the data is', () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: true})
+    advance(30 * SECOND)
+
+    returnFromBackground(RETURN_STALE_AFTER - 30 * SECOND - 1)
+    expect(view.check).not.toHaveBeenCalled()
+
+    // Only a moment away, but the data is now old enough.
+    returnFromBackground(1)
+    expect(view.triggers()).toEqual(['return'])
+  })
+
+  it('consumes a return held up by a refresh that succeeds', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    const view = renderView(queryClient, {isActive: true})
+    advance(RETURN_STALE_AFTER)
+
+    const top = deferred<{page: Page; api: never}>()
+    let refresh: Promise<unknown>
+    act(() => {
+      refresh = refreshPostFeedQuery(queryClient, KEY, () => top.promise)
+    })
+    returnFromBackground()
+    expect(view.check).not.toHaveBeenCalled()
+
+    advance(SECOND)
+    await act(async () => {
+      top.resolve({page: page(), api: {} as never})
+      await refresh
+    })
+    view.setProps({isActive: false})
+    advance(30 * SECOND)
+    view.setProps({isActive: true})
+    expect(view.check).not.toHaveBeenCalled()
+  })
+
+  it('is answered but not handed the find of a check in flight if it was not due one', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(70 * SECOND)
+    const view = renderView(queryClient, {isActive: true})
+    expect(view.triggers()).toEqual(['focus'])
+
+    returnFromBackground(10 * SECOND)
+    await view.settle('new posts')
+    expect(view.onFound).toHaveBeenCalledTimes(1)
+    expect(view.onFound).toHaveBeenCalledWith('new posts', 'focus')
+
+    // Consumed, not left owed.
+    view.setProps({isActive: false})
+    advance(2 * MINUTE)
+    view.setProps({isActive: true})
+    expect(view.triggers()).toEqual(['focus', 'focus'])
   })
 })
 
@@ -679,16 +765,17 @@ describe('coalescing', () => {
   it('runs one check per query at a time', async () => {
     const queryClient = createQueryClient()
     seed(queryClient)
-    advance(10 * SECOND)
     const view = renderView(queryClient, {isActive: true})
 
+    // Timers paused while away, so an interval tick fires on resume, first.
+    advance(RETURN_STALE_AFTER)
     view.requestCheck()
     returnFromBackground()
     view.requestCheck()
     expect(view.triggers()).toEqual(['interval'])
 
     await view.settle('new posts')
-    // Settling after the return, the interval check answered it.
+    // The return was due a check, so the one that answered it found for it.
     expect(view.onFound).toHaveBeenCalledWith('new posts', 'return')
     expect(view.check).toHaveBeenCalledTimes(1)
   })
@@ -758,7 +845,7 @@ describe('lifecycle', () => {
     view.onFound.mockImplementation(() => {
       throw new Error('Bad render')
     })
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
     const refetch = startTopFetch(queryClient)
     await view.settle('new posts')
     expect(view.onFound).not.toHaveBeenCalled()
@@ -789,7 +876,7 @@ describe('lifecycle', () => {
     advance(10 * SECOND)
     const home = renderView(queryClient, {isActive: true})
     const screen = renderView(queryClient, {isActive: false})
-    returnFromBackground()
+    returnFromBackground(RETURN_STALE_AFTER)
 
     home.hook.unmount()
     await home.settle('new posts')
