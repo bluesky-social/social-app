@@ -214,11 +214,16 @@ or recreate an execution-order manifest as part of composer changes.
 - User edits dirty content; initialization, worker progress, URI completion, and
   retries do not. Draft-save acknowledgement/content-revision tracking is not yet
   implemented.
-- `internalActions.setUploadStatus` exists for tests only. Worker callbacks named
-  `setUploadStatus` are a different interface: they pass through task-identity
-  guards before reaching the private setter. Prepared-output and caption-blob
-  setters remain private. Keep `getState`, `subscribe`, `destroy`, and
-  `reportError` as lifecycle/read/reporting methods, not UI mutation shortcuts.
+- `internalActions.setUploadStatus` exists for tests only and calls the private
+  `applyUploadStatus` directly. Worker callbacks named `setUploadStatus`,
+  `setMediaCompressionResult`, and `setCaptionBlobs` are a different interface:
+  they pass through task-identity guards before reaching the private
+  `apply*` writes. Keep `getState`, `subscribe`, `destroy`, and `reportError`
+  as lifecycle/read/reporting methods, not UI mutation shortcuts.
+- Naming inside `createThreadStore`: `set*`, `add*`, `remove*`, `update*`, and
+  `retry*` are public actions; `apply*` functions are private state writes
+  reached from guarded worker callbacks; `replace*` functions return an updated
+  post copy without touching the store.
 - There is one store implementation in `store/`. The superseded parallel `lib/`
   implementation was removed; do not revive it.
 
