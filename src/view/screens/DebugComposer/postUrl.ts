@@ -5,8 +5,12 @@
  * endpoint. Anything else returns undefined - the tester never fabricates
  * record references.
  */
-export function normalizePostReference(input: string): string | undefined {
-  const trimmed = input.trim()
+export function normalizePostReference({
+  reference,
+}: {
+  reference: string
+}): string | undefined {
+  const trimmed = reference.trim()
   if (!trimmed) return undefined
   if (trimmed.startsWith('at://')) return trimmed
   try {

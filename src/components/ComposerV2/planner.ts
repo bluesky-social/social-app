@@ -185,27 +185,36 @@ export async function planComposerV2({
       (snapshot.threadgateAllowRules !== undefined &&
         !Array.isArray(snapshot.threadgateAllowRules))
     ) {
-      throw failure('invalid-snapshot', 'Composition snapshot is invalid')
+      throw failure({
+        code: 'invalid-snapshot',
+        message: 'Composition snapshot is invalid',
+      })
     }
     /* Capture the immutable snapshot's branches once, before the first await.
      * Concurrent store edits publish new snapshots and cannot alter these. */
     const {posts, replyTo, threadgateAllowRules, postgateEmbeddingRules} =
       snapshot
-    validateSnapshot(snapshot, dependencies)
+    validateSnapshot({snapshot, dependencies})
     const allEntries = Object.entries(posts)
     if (allEntries.length === 0) {
-      throw failure('invalid-snapshot', 'Composition has no posts')
+      throw failure({
+        code: 'invalid-snapshot',
+        message: 'Composition has no posts',
+      })
     }
 
-    const acceptedEntries = preflightEntries(allEntries, preflight)
+    const acceptedEntries = preflightEntries({allEntries, preflight})
 
     const now = dependencies.now?.() ?? new Date()
     if (!Number.isFinite(now.getTime())) {
-      throw failure('invalid-snapshot', 'Composition time is invalid')
+      throw failure({
+        code: 'invalid-snapshot',
+        message: 'Composition time is invalid',
+      })
     }
 
     const externalReply = replyTo
-      ? await resolveExternalReply(replyTo, dependencies)
+      ? await resolveExternalReply({replyTo, dependencies})
       : undefined
     const prepared = [] as Array<{
       postId: string
@@ -215,21 +224,19 @@ export async function planComposerV2({
 
     for (const [order, entry] of acceptedEntries.entries()) {
       const {postId, postIndex, post} = entry
-      const richText = await normalizeRichText(
-        post.text,
-        dependencies.appviewClient,
+      const richText = await normalizeRichText({
+        text: post.text,
+        appviewClient: dependencies.appviewClient,
         postIndex,
         postId,
-      )
-      const embed = await buildEmbed(
-        post.attachments.media,
-        post.attachments.record,
-        {
-          postIndex,
-          postId,
-          dependencies,
-        },
-      )
+      })
+      const embed = await buildEmbed({
+        media: post.attachments.media,
+        record: post.attachments.record,
+        postIndex,
+        postId,
+        dependencies,
+      })
       const labels = post.labels.length
         ? {
             $type: 'com.atproto.label.defs#selfLabels' as const,
@@ -264,20 +271,20 @@ export async function planComposerV2({
         rkey = tid.toString()
       }
       if (!isValidTid(rkey)) {
-        throw failure(
-          'invalid-record-key',
-          'Post record key is not a valid TID',
-          entry.postIndex,
-          entry.postId,
-        )
+        throw failure({
+          code: 'invalid-record-key',
+          message: 'Post record key is not a valid TID',
+          postIndex: entry.postIndex,
+          postId: entry.postId,
+        })
       }
       if (usedKeys.has(rkey)) {
-        throw failure(
-          'invalid-record-key',
-          'Post record keys must be unique within a plan',
-          entry.postIndex,
-          entry.postId,
-        )
+        throw failure({
+          code: 'invalid-record-key',
+          message: 'Post record keys must be unique within a plan',
+          postIndex: entry.postIndex,
+          postId: entry.postId,
+        })
       }
       usedKeys.add(rkey)
       const uri =
@@ -300,17 +307,17 @@ export async function planComposerV2({
 
     const writes: PlannedComposerV2Write[] = []
     for (const [postIndex, planned] of plannedPosts.entries()) {
-      addValidatedWrite(
+      addValidatedWrite({
         writes,
-        {
+        write: {
           $type: 'com.atproto.repo.applyWrites#create',
           collection: 'app.bsky.feed.post',
           rkey: planned.rkey,
           value: planned.record,
         },
         postIndex,
-        planned.postId,
-      )
+        postId: planned.postId,
+      })
 
       /* Gate records intentionally reuse their post's record key in another
        * collection; only post keys must be unique among themselves. */
@@ -319,19 +326,21 @@ export async function planComposerV2({
           $type: 'app.bsky.feed.threadgate',
           post: planned.uri as AtUriString,
           createdAt: planned.record.createdAt,
-          allow: threadgateAllowRules.map(rule => cloneSerializable(rule)),
+          allow: threadgateAllowRules.map(rule =>
+            cloneSerializable({value: rule}),
+          ),
         }
-        addValidatedWrite(
+        addValidatedWrite({
           writes,
-          {
+          write: {
             $type: 'com.atproto.repo.applyWrites#create',
             collection: 'app.bsky.feed.threadgate',
             rkey: planned.rkey,
             value,
           },
           postIndex,
-          planned.postId,
-        )
+          postId: planned.postId,
+        })
       }
 
       if (postgateEmbeddingRules.length > 0) {
@@ -340,20 +349,20 @@ export async function planComposerV2({
           post: planned.uri as AtUriString,
           createdAt: planned.record.createdAt,
           embeddingRules: postgateEmbeddingRules.map(rule =>
-            cloneSerializable(rule),
+            cloneSerializable({value: rule}),
           ),
         }
-        addValidatedWrite(
+        addValidatedWrite({
           writes,
-          {
+          write: {
             $type: 'com.atproto.repo.applyWrites#create',
             collection: 'app.bsky.feed.postgate',
             rkey: planned.rkey,
             value,
           },
           postIndex,
-          planned.postId,
-        )
+          postId: planned.postId,
+        })
       }
     }
 
@@ -365,10 +374,10 @@ export async function planComposerV2({
     const inputValidation =
       com.atproto.repo.applyWrites.main.input.schema.$safeParse(input)
     if (!inputValidation.success) {
-      throw failure(
-        'invalid-write-input',
-        'Generated write input failed validation',
-      )
+      throw failure({
+        code: 'invalid-write-input',
+        message: 'Generated write input failed validation',
+      })
     }
     return {ok: true, input, posts: plannedPosts, writes}
   } catch (error) {
@@ -393,11 +402,11 @@ export async function planComposerV2({
      * Reading a failed upload in a snapshot is not a new failed attempt. */
     if (
       (operational || unexpected) &&
-      !isComposerV2Cancellation(detail.cause)
+      !isComposerV2Cancellation({cause: detail.cause})
     ) {
-      reportComposerV2Error(
+      reportComposerV2Error({
         onError,
-        {
+        event: {
           source: 'planner',
           code: detail.code,
           postId: detail.postId,
@@ -405,8 +414,8 @@ export async function planComposerV2({
           kind: operational ? 'operational' : 'unexpected',
           recovery: operational ? 'retry' : 'none',
         },
-        detail.cause,
-      )
+        cause: detail.cause,
+      })
     }
     return {ok: false, errors: [detail]}
   }
@@ -419,17 +428,23 @@ export async function planComposerV2({
  * empty; pending/failed attachments keep their posts and fail later
  * readiness checks instead of being dropped.
  */
-function preflightEntries(
-  allEntries: Array<[string, ThreadPost]>,
-  preflight: ComposerV2PlannerPreflight | undefined,
-): Array<{postId: string; postIndex: number; post: ThreadPost}> {
-  const emptyFlags = allEntries.map(([, post]) => isEmptyThreadPost(post))
+function preflightEntries({
+  allEntries,
+  preflight,
+}: {
+  allEntries: Array<[string, ThreadPost]>
+  preflight: ComposerV2PlannerPreflight | undefined
+}): Array<{postId: string; postIndex: number; post: ThreadPost}> {
+  const emptyFlags = allEntries.map(([, post]) => isEmptyThreadPost({post}))
   if (emptyFlags.every(Boolean)) {
-    throw failure('empty-composition', 'Composition has no content to post')
+    throw failure({
+      code: 'empty-composition',
+      message: 'Composition has no content to post',
+    })
   }
 
   if (preflight?.requireAltText) {
-    requireAltText(allEntries)
+    requireAltText({allEntries})
   }
 
   const lastNonEmptyIndex = emptyFlags.lastIndexOf(false)
@@ -437,12 +452,12 @@ function preflightEntries(
     (empty, index) => empty && index < lastNonEmptyIndex,
   )
   if (firstNonTrailingEmpty !== -1 && !preflight?.skipEmptyPostsConfirmed) {
-    throw failure(
-      'empty-post-requires-confirmation',
-      'Skipping an empty post inside the thread requires confirmation',
-      firstNonTrailingEmpty,
-      allEntries[firstNonTrailingEmpty][0],
-    )
+    throw failure({
+      code: 'empty-post-requires-confirmation',
+      message: 'Skipping an empty post inside the thread requires confirmation',
+      postIndex: firstNonTrailingEmpty,
+      postId: allEntries[firstNonTrailingEmpty][0],
+    })
   }
 
   return allEntries
@@ -455,7 +470,7 @@ function preflightEntries(
  * explicit tags: a post carrying only tags has content and must not be
  * silently discarded.
  */
-function isEmptyThreadPost(post: ThreadPost): boolean {
+function isEmptyThreadPost({post}: {post: ThreadPost}): boolean {
   return (
     post.text.trim().length === 0 &&
     !post.attachments.media &&
@@ -469,93 +484,108 @@ function isEmptyThreadPost(post: ThreadPost): boolean {
  * text, and videos need it unless their upload already failed (the failure
  * error takes precedence).
  */
-function requireAltText(allEntries: Array<[string, ThreadPost]>) {
+function requireAltText({
+  allEntries,
+}: {
+  allEntries: Array<[string, ThreadPost]>
+}) {
   for (const [postIndex, [postId, post]] of allEntries.entries()) {
     const media = post.attachments.media
     if (!media || media.state !== 'resolved') continue
     if (media.kind === 'images') {
       const missing = media.items.find(item => !item.altText)
       if (missing) {
-        throw failure(
-          'missing-alt-text',
-          'One or more images is missing alt text',
+        throw failure({
+          code: 'missing-alt-text',
+          message: 'One or more images is missing alt text',
           postIndex,
           postId,
-          missing.id,
-        )
+          mediaId: missing.id,
+        })
       }
     } else if (media.kind === 'gif') {
       if (!media.item.altText) {
-        throw failure(
-          'missing-alt-text',
-          'A GIF is missing alt text',
+        throw failure({
+          code: 'missing-alt-text',
+          message: 'A GIF is missing alt text',
           postIndex,
           postId,
-          media.item.id,
-        )
+          mediaId: media.item.id,
+        })
       }
     } else if (media.kind === 'video') {
       if (media.item.upload.state !== 'failed' && !media.item.altText) {
-        throw failure(
-          'missing-alt-text',
-          'A video is missing alt text',
+        throw failure({
+          code: 'missing-alt-text',
+          message: 'A video is missing alt text',
           postIndex,
           postId,
-          media.item.id,
-        )
+          mediaId: media.item.id,
+        })
       }
     }
   }
 }
 
-function validateSnapshot(
-  snapshot: ThreadState,
-  dependencies: ComposerV2PlannerDependencies,
-) {
+function validateSnapshot({
+  snapshot,
+  dependencies,
+}: {
+  snapshot: ThreadState
+  dependencies: ComposerV2PlannerDependencies
+}) {
   if (!dependencies.did || !dependencies.did.startsWith('did:')) {
-    throw failure('missing-dependency', 'A repository DID is required')
+    throw failure({
+      code: 'missing-dependency',
+      message: 'A repository DID is required',
+    })
   }
   if (!snapshot || typeof snapshot.posts !== 'object') {
-    throw failure('invalid-snapshot', 'Composition snapshot is invalid')
+    throw failure({
+      code: 'invalid-snapshot',
+      message: 'Composition snapshot is invalid',
+    })
   }
   for (const [postId, post] of Object.entries(snapshot.posts)) {
     if (!Array.isArray(post.tags)) {
-      throw failure(
-        'invalid-snapshot',
-        'Post tags are invalid',
-        undefined,
+      throw failure({
+        code: 'invalid-snapshot',
+        message: 'Post tags are invalid',
         postId,
-      )
+      })
     }
   }
 }
 
-async function normalizeRichText(
-  text: string,
-  appviewClient: Client | undefined,
-  postIndex: number,
-  postId: string,
-): Promise<RichText> {
+async function normalizeRichText({
+  text,
+  appviewClient,
+  postIndex,
+  postId,
+}: {
+  text: string
+  appviewClient: Client | undefined
+  postIndex: number
+  postId: string
+}): Promise<RichText> {
   if (!appviewClient) {
-    throw failure(
-      'missing-dependency',
-      'An AppView client is required for rich-text resolution',
+    throw failure({
+      code: 'missing-dependency',
+      message: 'An AppView client is required for rich-text resolution',
       postIndex,
       postId,
-    )
+    })
   }
   try {
-    return await resolveRichText(appviewClient, text)
+    return await resolveRichText({appviewClient, text})
   } catch (cause) {
-    throw failure(
-      'rich-text-resolution-failed',
-      'Rich-text resolution failed',
+    throw failure({
+      code: 'rich-text-resolution-failed',
+      message: 'Rich-text resolution failed',
       postIndex,
       postId,
-      undefined,
-      undefined,
       cause,
-    )
+    })
   }
 }
 
@@ -565,30 +595,29 @@ async function normalizeRichText(
  * root when the parent is itself a reply, and otherwise the parent is the
  * root.
  */
-async function resolveExternalReply(
-  replyTo: ThreadReplyTarget,
-  dependencies: ComposerV2PlannerDependencies,
-): Promise<NonNullable<app.bsky.feed.post.Main['reply']>> {
+async function resolveExternalReply({
+  replyTo,
+  dependencies,
+}: {
+  replyTo: ThreadReplyTarget
+  dependencies: ComposerV2PlannerDependencies
+}): Promise<NonNullable<app.bsky.feed.post.Main['reply']>> {
   if (dependencies.resolveReply) {
     try {
       return await dependencies.resolveReply(replyTo)
     } catch (cause) {
-      throw failure(
-        'reply-resolution-failed',
-        'Reply root could not be resolved',
-        undefined,
-        undefined,
-        undefined,
-        undefined,
+      throw failure({
+        code: 'reply-resolution-failed',
+        message: 'Reply root could not be resolved',
         cause,
-      )
+      })
     }
   }
   if (!dependencies.appviewClient) {
-    throw failure(
-      'missing-dependency',
-      'An AppView client is required to resolve a reply root',
-    )
+    throw failure({
+      code: 'missing-dependency',
+      message: 'An AppView client is required to resolve a reply root',
+    })
   }
   try {
     const data = await dependencies.appviewClient.call(app.bsky.feed.getPosts, {
@@ -606,34 +635,34 @@ async function resolveExternalReply(
     }
     return {root: rootRef, parent: parentRef}
   } catch (cause) {
-    throw failure(
-      'reply-resolution-failed',
-      'Reply root could not be resolved',
-      undefined,
-      undefined,
-      undefined,
-      undefined,
+    throw failure({
+      code: 'reply-resolution-failed',
+      message: 'Reply root could not be resolved',
       cause,
-    )
+    })
   }
 }
 
-async function buildEmbed(
-  media: MediaAttachment | undefined,
-  record: ThreadState['posts'][string]['attachments']['record'],
-  context: {
-    postIndex: number
-    postId: string
-    dependencies: ComposerV2PlannerDependencies
-  },
-): Promise<PlannedEmbed | undefined> {
+async function buildEmbed({
+  media,
+  record,
+  ...context
+}: {
+  media: MediaAttachment | undefined
+  record: ThreadState['posts'][string]['attachments']['record']
+  postIndex: number
+  postId: string
+  dependencies: ComposerV2PlannerDependencies
+}): Promise<PlannedEmbed | undefined> {
   const recordEmbed: $Typed<app.bsky.embed.record.Main> | undefined = record
     ? {
         $type: 'app.bsky.embed.record',
-        record: requireResolvedRecord(record, context),
+        record: requireResolvedRecord({attachment: record, ...context}),
       }
     : undefined
-  const mediaEmbed = media ? await buildMediaEmbed(media, context) : undefined
+  const mediaEmbed = media
+    ? await buildMediaEmbed({media, ...context})
+    : undefined
   if (recordEmbed && mediaEmbed) {
     return {
       $type: 'app.bsky.embed.recordWithMedia',
@@ -644,50 +673,54 @@ async function buildEmbed(
   return recordEmbed ?? mediaEmbed
 }
 
-function requireResolvedRecord(
-  attachment: NonNullable<
-    ThreadState['posts'][string]['attachments']['record']
-  >,
-  context: {postIndex: number; postId: string},
-): com.atproto.repo.strongRef.Main {
+function requireResolvedRecord({
+  attachment,
+  ...context
+}: {
+  attachment: NonNullable<ThreadState['posts'][string]['attachments']['record']>
+  postIndex: number
+  postId: string
+}): com.atproto.repo.strongRef.Main {
   if (attachment.state !== 'resolved') {
-    throw failure(
-      attachment.state === 'failed' ? 'media-failed' : 'attachment-not-ready',
-      'Record attachment is not ready',
-      context.postIndex,
-      context.postId,
-    )
+    throw failure({
+      code:
+        attachment.state === 'failed' ? 'media-failed' : 'attachment-not-ready',
+      message: 'Record attachment is not ready',
+      postIndex: context.postIndex,
+      postId: context.postId,
+    })
   }
   // The output record set owns its refs; copy out of the shared snapshot.
   return {...attachment.record}
 }
 
-async function buildMediaEmbed(
-  media: MediaAttachment,
-  context: {
-    postIndex: number
-    postId: string
-    dependencies: ComposerV2PlannerDependencies
-  },
-): Promise<PlannedMediaEmbed> {
+async function buildMediaEmbed({
+  media,
+  ...context
+}: {
+  media: MediaAttachment
+  postIndex: number
+  postId: string
+  dependencies: ComposerV2PlannerDependencies
+}): Promise<PlannedMediaEmbed> {
   if (media.state !== 'resolved') {
-    throw failure(
-      media.state === 'failed' ? 'media-failed' : 'attachment-not-ready',
-      'Media attachment is not ready',
-      context.postIndex,
-      context.postId,
-    )
+    throw failure({
+      code: media.state === 'failed' ? 'media-failed' : 'attachment-not-ready',
+      message: 'Media attachment is not ready',
+      postIndex: context.postIndex,
+      postId: context.postId,
+    })
   }
   if (media.kind === 'images') {
     if (media.items.length < 1 || media.items.length > MAX_IMAGES_PER_POST) {
-      throw failure(
-        'unsupported-attachment',
-        'Image count is outside the supported range',
-        context.postIndex,
-        context.postId,
-      )
+      throw failure({
+        code: 'unsupported-attachment',
+        message: 'Image count is outside the supported range',
+        postIndex: context.postIndex,
+        postId: context.postId,
+      })
     }
-    const images = media.items.map(item => imageRecord(item, context))
+    const images = media.items.map(item => imageRecord({item, ...context}))
     return images.length <= 4
       ? {$type: 'app.bsky.embed.images', images}
       : {
@@ -699,33 +732,32 @@ async function buildMediaEmbed(
         }
   }
   if (media.kind === 'video') {
-    return videoRecord(media.item, context)
+    return videoRecord({item: media.item, ...context})
   }
   if (media.kind === 'gif') {
     const resolve = context.dependencies.resolveGif
     if (!resolve) {
-      throw failure(
-        'missing-dependency',
-        'A GIF resolver is required for a GIF embed',
-        context.postIndex,
-        context.postId,
-      )
+      throw failure({
+        code: 'missing-dependency',
+        message: 'A GIF resolver is required for a GIF embed',
+        postIndex: context.postIndex,
+        postId: context.postId,
+      })
     }
     let resolved: Extract<ResolvedLink, {type: 'external'}>
     try {
       resolved = await resolve(media.item.gif)
     } catch (cause) {
-      throw failure(
-        'media-upload-failed',
-        'GIF embed preparation failed',
-        context.postIndex,
-        context.postId,
-        media.item.id,
-        undefined,
+      throw failure({
+        code: 'media-upload-failed',
+        message: 'GIF embed preparation failed',
+        postIndex: context.postIndex,
+        postId: context.postId,
+        mediaId: media.item.id,
         cause,
-      )
+      })
     }
-    const external = await externalRecord(resolved, context)
+    const external = await externalRecord({link: resolved, ...context})
     return {
       ...external,
       external: {
@@ -736,7 +768,7 @@ async function buildMediaEmbed(
       },
     }
   }
-  return externalRecord(media, context)
+  return externalRecord({link: media, ...context})
 }
 
 type ImageData = {
@@ -759,23 +791,27 @@ type PlannedEmbed =
   | $Typed<app.bsky.embed.record.Main>
   | $Typed<app.bsky.embed.recordWithMedia.Main>
 
-function imageRecord(
-  item: PostMediaImage,
-  context: {postIndex: number; postId: string},
-): ImageData {
-  const blob = uploadedBlob(item, context)
+function imageRecord({
+  item,
+  ...context
+}: {
+  item: PostMediaImage
+  postIndex: number
+  postId: string
+}): ImageData {
+  const blob = uploadedBlob({item, ...context})
   const dimensions = item.prepared ?? {
     width: item.width,
     height: item.height,
   }
   if (!validDimensions(dimensions)) {
-    throw failure(
-      'invalid-record',
-      'Image dimensions are invalid',
-      context.postIndex,
-      context.postId,
-      item.id,
-    )
+    throw failure({
+      code: 'invalid-record',
+      message: 'Image dimensions are invalid',
+      postIndex: context.postIndex,
+      postId: context.postId,
+      mediaId: item.id,
+    })
   }
   return {
     image: blob,
@@ -784,44 +820,51 @@ function imageRecord(
   }
 }
 
-function videoRecord(
-  item: PostMediaVideo,
-  context: {postIndex: number; postId: string},
-): $Typed<app.bsky.embed.video.Main> {
+function videoRecord({
+  item,
+  ...context
+}: {
+  item: PostMediaVideo
+  postIndex: number
+  postId: string
+}): $Typed<app.bsky.embed.video.Main> {
   if (item.upload.state !== 'uploaded') {
-    throw failure(
-      item.upload.state === 'failed' ? 'media-failed' : 'attachment-not-ready',
-      'Video upload is not ready',
-      context.postIndex,
-      context.postId,
-      item.id,
-    )
+    throw failure({
+      code:
+        item.upload.state === 'failed'
+          ? 'media-failed'
+          : 'attachment-not-ready',
+      message: 'Video upload is not ready',
+      postIndex: context.postIndex,
+      postId: context.postId,
+      mediaId: item.id,
+    })
   }
   const dimensions = item.prepared ?? {
     width: item.width,
     height: item.height,
   }
   if (!validDimensions(dimensions)) {
-    throw failure(
-      'invalid-record',
-      'Video dimensions are invalid',
-      context.postIndex,
-      context.postId,
-      item.id,
-    )
+    throw failure({
+      code: 'invalid-record',
+      message: 'Video dimensions are invalid',
+      postIndex: context.postIndex,
+      postId: context.postId,
+      mediaId: item.id,
+    })
   }
   const captions = item.captions.map(caption => {
     const uploaded = item.captionBlobs.find(
       value => value.lang === caption.lang,
     )
     if (!uploaded) {
-      throw failure(
-        'attachment-not-ready',
-        'Video caption upload is not ready',
-        context.postIndex,
-        context.postId,
-        item.id,
-      )
+      throw failure({
+        code: 'attachment-not-ready',
+        message: 'Video caption upload is not ready',
+        postIndex: context.postIndex,
+        postId: context.postId,
+        mediaId: item.id,
+      })
     }
     return {lang: caption.lang, file: uploaded.blob}
   })
@@ -835,42 +878,48 @@ function videoRecord(
   }
 }
 
-function uploadedBlob(
-  item: PostMediaItem,
-  context: {postIndex: number; postId: string},
-): BlobRef {
+function uploadedBlob({
+  item,
+  ...context
+}: {
+  item: PostMediaItem
+  postIndex: number
+  postId: string
+}): BlobRef {
   if (item.kind === 'gif' || item.upload.state !== 'uploaded') {
-    throw failure(
-      item.kind !== 'gif' && item.upload.state === 'failed'
-        ? 'media-failed'
-        : 'attachment-not-ready',
-      'Media upload is not ready',
-      context.postIndex,
-      context.postId,
-      item.kind === 'gif' ? undefined : item.id,
-    )
+    throw failure({
+      code:
+        item.kind !== 'gif' && item.upload.state === 'failed'
+          ? 'media-failed'
+          : 'attachment-not-ready',
+      message: 'Media upload is not ready',
+      postIndex: context.postIndex,
+      postId: context.postId,
+      mediaId: item.kind === 'gif' ? undefined : item.id,
+    })
   }
   return item.upload.blob
 }
 
-async function externalRecord(
-  link: MediaCardValue | Extract<ResolvedLink, {type: 'external'}>,
-  context: {
-    postIndex: number
-    postId: string
-    dependencies: ComposerV2PlannerDependencies
-  },
-): Promise<$Typed<app.bsky.embed.external.Main>> {
+async function externalRecord({
+  link,
+  ...context
+}: {
+  link: MediaCardValue | Extract<ResolvedLink, {type: 'external'}>
+  postIndex: number
+  postId: string
+  dependencies: ComposerV2PlannerDependencies
+}): Promise<$Typed<app.bsky.embed.external.Main>> {
   let thumb: BlobRef | undefined
   const linkThumb = 'thumb' in link ? link.thumb : undefined
   if (linkThumb) {
     if (!context.dependencies.uploadBlob) {
-      throw failure(
-        'missing-dependency',
-        'A blob uploader is required for an external thumbnail',
-        context.postIndex,
-        context.postId,
-      )
+      throw failure({
+        code: 'missing-dependency',
+        message: 'A blob uploader is required for an external thumbnail',
+        postIndex: context.postIndex,
+        postId: context.postId,
+      })
     }
     try {
       thumb = await context.dependencies.uploadBlob({
@@ -878,15 +927,13 @@ async function externalRecord(
         mime: linkThumb.source.mime,
       })
     } catch (cause) {
-      throw failure(
-        'media-upload-failed',
-        'External thumbnail upload failed',
-        context.postIndex,
-        context.postId,
-        undefined,
-        undefined,
+      throw failure({
+        code: 'media-upload-failed',
+        message: 'External thumbnail upload failed',
+        postIndex: context.postIndex,
+        postId: context.postId,
         cause,
-      )
+      })
     }
   }
 
@@ -895,12 +942,12 @@ async function externalRecord(
       !link.view ||
       !bsky.matches(chat.bsky.group.defs.joinLinkPreviewView, link.view)
     ) {
-      throw failure(
-        'unsupported-attachment',
-        'Chat invite preview is missing',
-        context.postIndex,
-        context.postId,
-      )
+      throw failure({
+        code: 'unsupported-attachment',
+        message: 'Chat invite preview is missing',
+        postIndex: context.postIndex,
+        postId: context.postId,
+      })
     }
     return {
       $type: 'app.bsky.embed.external',
@@ -923,28 +970,30 @@ async function externalRecord(
   }
 }
 
-function validDimensions(value: {width: number; height: number}) {
+function validDimensions({width, height}: {width: number; height: number}) {
   return (
-    Number.isFinite(value.width) &&
-    Number.isFinite(value.height) &&
-    value.width > 0 &&
-    value.height > 0
+    Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0
   )
 }
 
-function addValidatedWrite(
-  writes: PlannedComposerV2Write[],
-  write: PlannedComposerV2Write,
-  postIndex: number,
-  postId: string,
-) {
+function addValidatedWrite({
+  writes,
+  write,
+  postIndex,
+  postId,
+}: {
+  writes: PlannedComposerV2Write[]
+  write: PlannedComposerV2Write
+  postIndex: number
+  postId: string
+}) {
   if (write.$type !== 'com.atproto.repo.applyWrites#create') {
-    throw failure(
-      'invalid-write-input',
-      'Unexpected write operation',
+    throw failure({
+      code: 'invalid-write-input',
+      message: 'Unexpected write operation',
       postIndex,
       postId,
-    )
+    })
   }
   const result =
     write.collection === 'app.bsky.feed.post'
@@ -955,27 +1004,34 @@ function addValidatedWrite(
           ? app.bsky.feed.postgate.$safeParse(write.value)
           : undefined
   if (!result?.success) {
-    throw failure(
-      'invalid-record',
-      'Generated record failed lexicon validation',
+    throw failure({
+      code: 'invalid-record',
+      message: 'Generated record failed lexicon validation',
       postIndex,
       postId,
-      undefined,
-      write.collection,
-    )
+      collection: write.collection,
+    })
   }
   writes.push(write)
 }
 
-function failure(
-  code: ComposerV2PlanErrorCode,
-  message: string,
-  postIndex?: number,
-  postId?: string,
-  mediaId?: string,
-  collection?: string,
-  cause?: unknown,
-): PlannerFailure {
+function failure({
+  code,
+  message,
+  postIndex,
+  postId,
+  mediaId,
+  collection,
+  cause,
+}: {
+  code: ComposerV2PlanErrorCode
+  message: string
+  postIndex?: number
+  postId?: string
+  mediaId?: string
+  collection?: string
+  cause?: unknown
+}): PlannerFailure {
   return new PlannerFailure(
     {
       code,
@@ -990,7 +1046,11 @@ function failure(
 }
 
 /** Return only structural data suitable for the debug harness. */
-export function summarizeComposerV2Plan(result: ComposerV2PlanResult) {
+export function summarizeComposerV2Plan({
+  result,
+}: {
+  result: ComposerV2PlanResult
+}) {
   if (!result.ok) {
     return {
       ok: false as const,

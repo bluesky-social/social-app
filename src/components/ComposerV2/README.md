@@ -296,7 +296,7 @@ Runtime IDs, retry functions, task state, revisions, moderation objects, and
 shell callbacks do not belong in normalized content. Web picker Blob input is a
 runtime source convenience, not a persisted draft representation.
 
-`composerOptsToInitialState(opts, options?)`:
+`composerOptsToInitialState({composerOpts, ...options})`:
 
 - Preserves initial text/Unicode/whitespace; nonempty explicit text takes
   precedence over mention-generated text using the existing mention helper.

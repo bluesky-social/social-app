@@ -9,10 +9,13 @@ import {
  * empty slot the first input chooses the kind; other kinds are discarded.
  * Pending/failed link cards reserve the slot just like resolved cards do.
  */
-export function filterMediaInputs(
-  existing: MediaAttachment | undefined,
-  inputs: AddMediaInput[],
-): AddMediaInput[] {
+export function filterMediaInputs({
+  existing,
+  inputs,
+}: {
+  existing: MediaAttachment | undefined
+  inputs: AddMediaInput[]
+}): AddMediaInput[] {
   if (inputs.length === 0) return []
   if (existing) {
     if (existing.state !== 'resolved' || existing.kind !== 'images') return []

@@ -97,7 +97,7 @@ export function usePlanRunner({
       setResult({
         sessionKey,
         snapshot,
-        summary: summarizeComposerV2Plan(planned),
+        summary: summarizeComposerV2Plan({result: planned}),
         plan: planned.ok ? planned : undefined,
         writes: planned.ok ? planned.writes : undefined,
         skipEmptyPostsConfirmed,

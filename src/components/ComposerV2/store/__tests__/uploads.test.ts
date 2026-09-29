@@ -95,16 +95,17 @@ describe('ComposerV2 real media workers', () => {
     })
     await settle()
 
-    expect(compressImage).toHaveBeenCalledWith(
-      expect.objectContaining({
+    expect(compressImage).toHaveBeenCalledWith({
+      image: expect.objectContaining({
         source: expect.objectContaining({
           path: 'file:///source.jpg',
           width: 1200,
           height: 800,
         }),
       }),
-      {maxDimension: 4000, maxSize: 2000000},
-    )
+      maxDimension: 4000,
+      maxSize: 2000000,
+    })
     expect(uploadBlob).toHaveBeenCalledWith(
       expect.anything(),
       'file:///compressed.jpg',

@@ -71,7 +71,7 @@ function AttachUrlDialogInner({postId}: {postId: string}) {
   const [url, setUrl] = useState('')
 
   const trimmed = url.trim()
-  const postReference = normalizePostReference(trimmed)
+  const postReference = normalizePostReference({reference: trimmed})
 
   const onResolveUri = () => {
     if (!trimmed) return

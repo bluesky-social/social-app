@@ -199,7 +199,7 @@ describe('record and media routing', () => {
 
   test('legacy starter-pack URLs also target the record slot', () => {
     expect(
-      classifyUriTarget('https://bsky.app/start/test.bsky.social/abc'),
+      classifyUriTarget({uri: 'https://bsky.app/start/test.bsky.social/abc'}),
     ).toBe('record')
   })
 

@@ -35,22 +35,20 @@ const unknownEmbeddingRule = {
 
 describe('splitThreadgateAllowRules', () => {
   test('maps undefined to everybody and empty to nobody', () => {
-    expect(splitThreadgateAllowRules(undefined)).toEqual({
+    expect(splitThreadgateAllowRules({rules: undefined})).toEqual({
       settings: [{type: 'everybody'}],
       unknownRules: [],
     })
-    expect(splitThreadgateAllowRules([])).toEqual({
+    expect(splitThreadgateAllowRules({rules: []})).toEqual({
       settings: [{type: 'nobody'}],
       unknownRules: [],
     })
   })
 
   test('separates known settings from unknown rules', () => {
-    const {settings, unknownRules} = splitThreadgateAllowRules([
-      mentionRule,
-      unknownAllowRule,
-      listRule,
-    ])
+    const {settings, unknownRules} = splitThreadgateAllowRules({
+      rules: [mentionRule, unknownAllowRule, listRule],
+    })
     expect(settings).toEqual([
       {type: 'mention'},
       {type: 'list', list: 'at://did:plc:abc/app.bsky.graph.list/xyz'},
@@ -61,43 +59,58 @@ describe('splitThreadgateAllowRules', () => {
 
 describe('mergeThreadgateAllowRules', () => {
   test('keeps unknown rules alongside edited known settings', () => {
-    const merged = mergeThreadgateAllowRules(
-      [{type: 'followers'}],
-      [unknownAllowRule],
-    )
+    const merged = mergeThreadgateAllowRules({
+      settings: [{type: 'followers'}],
+      unknownRules: [unknownAllowRule],
+    })
     expect(merged).toEqual([followerRule, unknownAllowRule])
   })
 
   test('everybody stays everybody only without unknown rules', () => {
-    expect(mergeThreadgateAllowRules([{type: 'everybody'}], [])).toBe(undefined)
+    expect(
+      mergeThreadgateAllowRules({
+        settings: [{type: 'everybody'}],
+        unknownRules: [],
+      }),
+    ).toBe(undefined)
     /* Unknown rules restrict replies; "everybody" must not silently drop
      * them and broaden permissions. */
     expect(
-      mergeThreadgateAllowRules([{type: 'everybody'}], [unknownAllowRule]),
+      mergeThreadgateAllowRules({
+        settings: [{type: 'everybody'}],
+        unknownRules: [unknownAllowRule],
+      }),
     ).toEqual([unknownAllowRule])
   })
 
   test('nobody is an explicit narrowing edit and wins over unknown rules', () => {
     expect(
-      mergeThreadgateAllowRules([{type: 'nobody'}], [unknownAllowRule]),
+      mergeThreadgateAllowRules({
+        settings: [{type: 'nobody'}],
+        unknownRules: [unknownAllowRule],
+      }),
     ).toEqual([])
   })
 
   test('round-trips through split without changing the rule set', () => {
     const original = [mentionRule, listRule, unknownAllowRule]
-    const {settings, unknownRules} = splitThreadgateAllowRules(original)
-    expect(mergeThreadgateAllowRules(settings, unknownRules)).toEqual(original)
+    const {settings, unknownRules} = splitThreadgateAllowRules({
+      rules: original,
+    })
+    expect(mergeThreadgateAllowRules({settings, unknownRules})).toEqual(
+      original,
+    )
   })
 })
 
 describe('postgate embedding rules', () => {
   test('split reports the quote toggle and unknown rules', () => {
-    expect(splitPostgateEmbeddingRules([])).toEqual({
+    expect(splitPostgateEmbeddingRules({rules: []})).toEqual({
       quotesEnabled: true,
       unknownRules: [],
     })
     expect(
-      splitPostgateEmbeddingRules([disableRule, unknownEmbeddingRule]),
+      splitPostgateEmbeddingRules({rules: [disableRule, unknownEmbeddingRule]}),
     ).toEqual({
       quotesEnabled: false,
       unknownRules: [unknownEmbeddingRule],
@@ -105,19 +118,26 @@ describe('postgate embedding rules', () => {
   })
 
   test('merge always preserves unknown restrictions', () => {
-    expect(mergePostgateEmbeddingRules(true, [unknownEmbeddingRule])).toEqual([
-      unknownEmbeddingRule,
-    ])
-    expect(mergePostgateEmbeddingRules(false, [unknownEmbeddingRule])).toEqual([
-      disableRule,
-      unknownEmbeddingRule,
-    ])
+    expect(
+      mergePostgateEmbeddingRules({
+        quotesEnabled: true,
+        unknownRules: [unknownEmbeddingRule],
+      }),
+    ).toEqual([unknownEmbeddingRule])
+    expect(
+      mergePostgateEmbeddingRules({
+        quotesEnabled: false,
+        unknownRules: [unknownEmbeddingRule],
+      }),
+    ).toEqual([disableRule, unknownEmbeddingRule])
   })
 
   test('round-trips through split without changing the rule set', () => {
     const original = [disableRule, unknownEmbeddingRule]
-    const {quotesEnabled, unknownRules} = splitPostgateEmbeddingRules(original)
-    expect(mergePostgateEmbeddingRules(quotesEnabled, unknownRules)).toEqual(
+    const {quotesEnabled, unknownRules} = splitPostgateEmbeddingRules({
+      rules: original,
+    })
+    expect(mergePostgateEmbeddingRules({quotesEnabled, unknownRules})).toEqual(
       original,
     )
   })

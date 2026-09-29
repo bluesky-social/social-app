@@ -33,15 +33,19 @@ export function GateControls() {
   const control = Dialog.useDialogControl()
   const threadgateSummary = useThreadgateSummary()
 
-  const threadgate = splitThreadgateAllowRules(state.threadgateAllowRules)
-  const postgate = splitPostgateEmbeddingRules(state.postgateEmbeddingRules)
+  const threadgate = splitThreadgateAllowRules({
+    rules: state.threadgateAllowRules,
+  })
+  const postgate = splitPostgateEmbeddingRules({
+    rules: state.postgateEmbeddingRules,
+  })
 
   const buildDraftPostgate = () =>
     createPostgateRecord({
       post: '',
       embeddingRules: postgate.quotesEnabled
         ? []
-        : mergePostgateEmbeddingRules(false, []),
+        : mergePostgateEmbeddingRules({quotesEnabled: false, unknownRules: []}),
     })
 
   /* Local draft state for the dialog; committed to the store on save. */
@@ -66,13 +70,19 @@ export function GateControls() {
   const onSave = () => {
     control.close(() => {
       store.actions.setThreadgateAllowRules(
-        mergeThreadgateAllowRules(draftSettings, threadgate.unknownRules),
+        mergeThreadgateAllowRules({
+          settings: draftSettings,
+          unknownRules: threadgate.unknownRules,
+        }),
       )
-      const {quotesEnabled} = splitPostgateEmbeddingRules(
-        draftPostgate.embeddingRules ?? [],
-      )
+      const {quotesEnabled} = splitPostgateEmbeddingRules({
+        rules: draftPostgate.embeddingRules ?? [],
+      })
       store.actions.setPostgateEmbeddingRules(
-        mergePostgateEmbeddingRules(quotesEnabled, postgate.unknownRules),
+        mergePostgateEmbeddingRules({
+          quotesEnabled,
+          unknownRules: postgate.unknownRules,
+        }),
       )
     })
   }
@@ -127,12 +137,18 @@ export function GateControls() {
             onPress={() => {
               if (threadgate.unknownRules.length > 0) {
                 store.actions.setThreadgateAllowRules(
-                  mergeThreadgateAllowRules(threadgate.settings, []),
+                  mergeThreadgateAllowRules({
+                    settings: threadgate.settings,
+                    unknownRules: [],
+                  }),
                 )
               }
               if (postgate.unknownRules.length > 0) {
                 store.actions.setPostgateEmbeddingRules(
-                  mergePostgateEmbeddingRules(postgate.quotesEnabled, []),
+                  mergePostgateEmbeddingRules({
+                    quotesEnabled: postgate.quotesEnabled,
+                    unknownRules: [],
+                  }),
                 )
               }
             }}>

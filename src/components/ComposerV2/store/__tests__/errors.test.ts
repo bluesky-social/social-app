@@ -52,7 +52,7 @@ function setup(onError = jest.fn<ComposerV2OnError>()) {
   })
   const postId = Object.keys(store.getState().posts)[0]
   const items = () =>
-    getMediaItems(store.getState().posts[postId].attachments.media)
+    getMediaItems({media: store.getState().posts[postId].attachments.media})
   return {store, postId, items, attempts, onError}
 }
 

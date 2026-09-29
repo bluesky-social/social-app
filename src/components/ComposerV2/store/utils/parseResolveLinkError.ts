@@ -18,8 +18,12 @@ export type ParsedResolveLinkError = {
  * store doesn't repeat the `code === 'embedding-disabled'` check at every
  * failure call site.
  */
-export function parseResolveLinkError(err: unknown): ParsedResolveLinkError {
-  if (err instanceof EmbeddingDisabledError) {
+export function parseResolveLinkError({
+  error,
+}: {
+  error: unknown
+}): ParsedResolveLinkError {
+  if (error instanceof EmbeddingDisabledError) {
     return {code: 'embedding-disabled', isRetryable: false}
   }
   return {code: 'unknown', isRetryable: true}
