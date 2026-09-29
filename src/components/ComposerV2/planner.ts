@@ -11,7 +11,6 @@ import {type RichText} from '@bsky/sdk/richtext'
 
 import {computeCid} from '#/lib/api/computeCid'
 import {type ResolvedLink} from '#/lib/api/resolve'
-import {resolveRichText} from '#/lib/api/rich-text'
 import {createGIFDescription} from '#/lib/gif-alt-text'
 import {
   type ComposerV2OnError,
@@ -30,6 +29,7 @@ import {
   type ThreadState,
 } from '#/components/ComposerV2/store/types'
 import {cloneSerializable} from '#/components/ComposerV2/store/utils/buildThreadState'
+import {resolveRichText} from '#/components/ComposerV2/utils/resolveRichText'
 import {type Gif} from '#/features/gifPicker/types'
 import {app, chat, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
