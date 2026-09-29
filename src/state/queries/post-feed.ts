@@ -539,7 +539,11 @@ export function usePostFeedQuery(
         lastRun.current = {data, result, args: selectArgs}
         return result
       },
-      [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
+      [
+        selectArgs /* Don't change. Everything needs to go into selectArgs. */,
+        // The account's, which never changes: for the pages' origins.
+        queryClient,
+      ],
     ),
   })
 
@@ -710,6 +714,9 @@ export type FollowingPrependOutcome =
  * Without a `startCursor` on the top page, or when the request fails (an
  * appview that does not support `since` may reject it), the restored content
  * stays as it is and an ordinary refresh still works.
+ *
+ * `beforeCommit` is as for {@link prependPostFeedQuery}: the view uses it to
+ * know the list is about to correct for rows added above it.
  */
 export function useFollowingRestorePrepend(
   feedDesc: FeedDescriptor,
@@ -721,7 +728,11 @@ export function useFollowingRestorePrepend(
     params,
   )
 
-  return async (): Promise<FollowingPrependOutcome | undefined> => {
+  return async ({
+    beforeCommit,
+  }: {beforeCommit?: () => Promise<void>} = {}): Promise<
+    FollowingPrependOutcome | undefined
+  > => {
     const queryKey = RQKEY(feedDesc, params)
     if (!isReady || !beginPostFeedRestorePrepend(queryClient, queryKey)) {
       return undefined
@@ -731,20 +742,25 @@ export function useFollowingRestorePrepend(
       const {status, detail} = await prependPostFeedQuery<
         FeedPageUnselected,
         FollowingPrependOutcome
-      >(queryClient, queryKey, async top => {
-        const since = top.startCursor
-        if (since === undefined) {
-          return {detail: {outcome: 'noStartCursor'}}
-        }
-        const api = createFeedApi()
-        const fetched = await fetchPage(api, {since, limit: PREPEND_LIMIT})
-        const {seam, page} = classifySincePage({...fetched, since}, top)
-        return {
-          page,
-          api,
-          detail: {outcome: seam, itemCount: page?.feed.length ?? 0},
-        }
-      })
+      >(
+        queryClient,
+        queryKey,
+        async top => {
+          const since = top.startCursor
+          if (since === undefined) {
+            return {detail: {outcome: 'noStartCursor'}}
+          }
+          const api = createFeedApi()
+          const fetched = await fetchPage(api, {since, limit: PREPEND_LIMIT})
+          const {seam, page} = classifySincePage({...fetched, since}, top)
+          return {
+            page,
+            api,
+            detail: {outcome: seam, itemCount: page?.feed.length ?? 0},
+          }
+        },
+        {beforeCommit},
+      )
       return status === 'superseded' ? {outcome: 'superseded'} : detail
     } catch (e) {
       if (!isNetworkError(e)) {
