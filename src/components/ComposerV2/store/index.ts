@@ -772,9 +772,11 @@ export function createThreadStore({
     if (!item || item.kind === 'gif' || item.upload.state !== 'pending') return
 
     /*
-     * Register ownership before invoking a worker. A worker may report a
-     * synchronous first phase (especially in tests), so callbacks must not
-     * close over an uninitialised task.
+     * Register ownership before invoking a worker. The real workers report
+     * their first phase ('compressing' or 'validating') synchronously, before
+     * their first await and before returning a handle. That report notifies
+     * subscribers, so callbacks must not close over an uninitialised task, and
+     * cancellation can be requested before `started` is assigned.
      */
     let started: UploadTask | undefined
     let cancelled = false
@@ -826,6 +828,14 @@ export function createThreadStore({
               ...callbacks,
               media: item,
             })
+      /*
+       * A subscriber notified by that first report may remove the item or
+       * destroy the store, cancelling `registered` while `started` is still
+       * undefined. The ownership guards above already ignore the worker's
+       * later reports, but only its own handle aborts it: without this, an
+       * image would still be uploaded after compression and a video would go
+       * on to compress and upload.
+       */
       if (cancelled) started.cancel()
     } catch (cause) {
       if (!destroyed && uploadTasks.get(mediaId) === registered) {
