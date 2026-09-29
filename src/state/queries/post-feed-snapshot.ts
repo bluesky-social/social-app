@@ -106,6 +106,8 @@ type SerializedPage = {
   cursor?: string
   startCursor?: string
   since?: string
+  reachedAt?: number
+  holdsBoundary?: true
   fetchedAt: number
   feed: JsonValue[]
 }
@@ -223,7 +225,12 @@ export function selectFollowingSnapshot(
     const kept = pages.slice(0, count)
     const bottom = kept[count - 1]
     const below = pages[count] as FeedPageUnselected | undefined
-    if (below !== undefined && isExhaustedSincePage(bottom)) {
+    if (
+      below !== undefined &&
+      isExhaustedSincePage(bottom) &&
+      // One that holds its boundary already continues without the page below.
+      !bottom.holdsBoundary
+    ) {
       /*
        * Its range ends where the page below starts, so that page's boundary
        * is carried onto it - and only from a page that could have been kept
@@ -481,14 +488,16 @@ function isHeadParam(param: unknown): param is undefined {
  * An ordinary page continues the cursor of the page above it. Below an
  * exhausted `since` page there is a page fetched from the top instead, which
  * must start exactly where that page's range ended. A cursor continued from
- * an exhausted page's echo would have skipped the posts at its boundary.
+ * an exhausted page's echo would have skipped the posts at its boundary -
+ * unless the page holds them (see `carryBoundary`), when the page continued
+ * from its cursor is an ordinary one.
  */
 function isLinked(
   upper: FeedPageUnselected | SerializedPage,
   lower: FeedPageUnselected | SerializedPage,
   lowerParam: unknown,
 ) {
-  if (isExhaustedSincePage(asBoundaryPage(upper))) {
+  if (isExhaustedSincePage(asBoundaryPage(upper)) && !upper.holdsBoundary) {
     return (
       isHeadParam(lowerParam) &&
       isContiguousAbove(asBoundaryPage(upper), asBoundaryPage(lower))
@@ -526,6 +535,8 @@ function serializePage(page: FeedPageUnselected): SerializedPage {
     ...(page.cursor !== undefined && {cursor: page.cursor}),
     ...(page.startCursor !== undefined && {startCursor: page.startCursor}),
     ...(page.since !== undefined && {since: page.since}),
+    ...(page.reachedAt !== undefined && {reachedAt: page.reachedAt}),
+    ...(page.holdsBoundary && {holdsBoundary: true}),
     fetchedAt: page.fetchedAt,
     /*
      * The client decoded these from lex JSON, so they hold CIDs and bytes that
@@ -540,6 +551,8 @@ function deserializePage(page: SerializedPage): FeedPageUnselected {
     cursor: page.cursor,
     ...(page.startCursor !== undefined && {startCursor: page.startCursor}),
     ...(page.since !== undefined && {since: page.since}),
+    ...(page.reachedAt !== undefined && {reachedAt: page.reachedAt}),
+    ...(page.holdsBoundary && {holdsBoundary: true}),
     // Parsed the way the client parses responses.
     feed: jsonToLex(page.feed, {
       strict: false,
@@ -603,6 +616,10 @@ function isPage(page: unknown): page is FeedPageUnselected {
     isOptionalString(page.cursor) &&
     isOptionalString(page.startCursor) &&
     isOptionalString(page.since) &&
+    (page.reachedAt === undefined ||
+      (typeof page.reachedAt === 'number' &&
+        Number.isFinite(page.reachedAt))) &&
+    (page.holdsBoundary === undefined || page.holdsBoundary === true) &&
     typeof page.fetchedAt === 'number' &&
     Number.isFinite(page.fetchedAt) &&
     Array.isArray(page.feed)

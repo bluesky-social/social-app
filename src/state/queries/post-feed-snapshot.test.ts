@@ -439,6 +439,67 @@ describe('selectFollowingSnapshot', () => {
       })
     })
 
+    /** A page settled at the top, holding its boundary, and paginated on. */
+    function settled() {
+      return {
+        pages: [
+          page(['new0', 'b0'], {
+            since: 's0',
+            cursor: 's0',
+            startCursor: 'top',
+            reachedAt: NOW - HOUR / 2,
+            holdsBoundary: true,
+          }),
+          page(['p0'], {cursor: 'p0-next'}),
+          page(['p1'], {cursor: 'p1-next'}),
+        ],
+        pageParams: [undefined, {cursor: 's0'}, {cursor: 'p0-next'}],
+      }
+    }
+
+    it('keeps a page that holds its boundary with the pages continued from it', () => {
+      const data = settled()
+
+      expect(select(data).pageParams).toEqual([
+        null,
+        {cursor: 's0'},
+        {cursor: 'p0-next'},
+      ])
+      const restored = saveAndRestore([preferences, labelers, following(data)])
+      expect(restored.report).toMatchObject({outcome: 'restored', pageCount: 3})
+      expect(restoredData(restored)!.pages[0]).toMatchObject({
+        since: 's0',
+        cursor: 's0',
+        reachedAt: NOW - HOUR / 2,
+        holdsBoundary: true,
+      })
+    })
+
+    it('keeps a page that holds its boundary alone, with nothing to carry', () => {
+      const data = settled()
+      // Too old to keep, so the page above is kept on its own.
+      data.pages[1] = {
+        ...data.pages[1],
+        fetchedAt: NOW - FOLLOWING_SNAPSHOT_MAX_PAGE_AGE_MS - 1,
+      }
+
+      const snapshot = select(data)
+
+      expect(snapshot.pages).toHaveLength(1)
+      expect(snapshot.pages[0].feed).toHaveLength(2)
+    })
+
+    it('does not take an exhausted page continued from its echo for one', () => {
+      const data = settled()
+      delete (data.pages[0] as {holdsBoundary?: true}).holdsBoundary
+
+      /*
+       * The page below skipped the posts at its boundary, so it is not kept,
+       * and without it there is no boundary to carry.
+       */
+      expect(rejection(data)).toBe('boundary')
+    })
+
     it('drops an exhausted page whose boundary is not directly below it', () => {
       const data = prepended()
       // The page below the second one does not start where its range ends.

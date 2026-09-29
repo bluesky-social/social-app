@@ -146,6 +146,14 @@ export interface FeedPageUnselected {
    * (`cursor === since`) can be told from a gapped one.
    */
   since?: string
+  /**
+   * When the reader reached the top of the feed with this page there, on a
+   * page added above the others: its posts have been read past, and are not
+   * offered as new any more. Kept on disk with the page.
+   */
+  reachedAt?: number
+  /** See `BoundaryPage.holdsBoundary`. */
+  holdsBoundary?: true
   feed: app.bsky.feed.defs.FeedViewPost[]
   fetchedAt: number
 }
