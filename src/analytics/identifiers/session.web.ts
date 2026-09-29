@@ -95,15 +95,6 @@ function persistInactivityStart(now = Date.now()) {
   })
 }
 
-function clearInactivityIfActive(record: SessionRecord | undefined) {
-  if (currentAppState !== 'active' || record?.inactivityAt === undefined) {
-    return false
-  }
-
-  persistSessionRecord({...record, inactivityAt: undefined})
-  return true
-}
-
 function onSessionRecordStorageChanged(event: StorageEvent) {
   if (
     event.key !== SESSION_RECORD_KEY ||
@@ -112,9 +103,7 @@ function onSessionRecordStorageChanged(event: StorageEvent) {
     return
   }
 
-  if (!clearInactivityIfActive(readSessionRecord())) {
-    notifyListeners()
-  }
+  notifyListeners()
 }
 
 function onAppStateChanged(nextAppState: AppStateStatus) {
@@ -145,7 +134,6 @@ function startCoordinator() {
   if (latestAppState && latestAppState !== currentAppState) {
     onAppStateChanged(latestAppState)
   }
-  clearInactivityIfActive(readSessionRecord())
 }
 
 function stopCoordinator() {

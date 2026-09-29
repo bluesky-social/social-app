@@ -519,26 +519,4 @@ describe('web session lifecycle', () => {
     expect(firstTabHook.result.current).toBe('session-a')
     expect(secondTabHook.result.current).toBe('session-a')
   })
-
-  test('does not become inactive while another tab remains active', () => {
-    setStoredSession('tab-a', 'existing-session', NOW.getTime())
-
-    const firstTabSession = loadSession('tab-a')
-    const firstTabHook = renderHook(() => firstTabSession.useSessionId())
-    const secondTabSession = loadSession('tab-b')
-    const secondTabHook = renderHook(() => secondTabSession.useSessionId())
-
-    act(() => emitAppState('tab-b', 'background'))
-    expect(getSessionRecord('tab-a')).toEqual({
-      id: 'existing-session',
-      rotatedAt: NOW.getTime(),
-    })
-
-    jest.advanceTimersByTime(THIRTY_MINUTES)
-    act(() => emitAppState('tab-b', 'active'))
-
-    expect(mockUuidV4).not.toHaveBeenCalled()
-    expect(firstTabHook.result.current).toBe('existing-session')
-    expect(secondTabHook.result.current).toBe('existing-session')
-  })
 })
