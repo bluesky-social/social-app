@@ -3,6 +3,7 @@ import uuid from 'react-native-uuid'
 import {z} from 'zod'
 
 import {onAppStateChange} from '#/lib/appState'
+import {readRawSessionRecord} from '#/analytics/identifiers/sessionStorage'
 import * as env from '#/env'
 import {device} from '#/storage'
 
@@ -31,12 +32,14 @@ function isSessionIdExpired(since: number | undefined) {
 let cachedRaw: string | undefined
 let cachedRecord: SessionRecord | undefined
 
-/**
- * Storage stays authoritative: read it on every call so other tabs' writes are
- * visible without notifications. Only parsing and validation are memoized.
- */
+/** Validate only when the platform-specific reader returns a changed value. */
 function readSessionRecord() {
-  const raw = device.getRaw(['analyticsSession'])
+  const raw = readRawSessionRecord()
+
+  /**
+   * Lightweight memoization to avoid re-parsing and validating if raw value
+   * didn't change
+   */
   if (raw === cachedRaw) return cachedRecord
 
   let record: SessionRecord | undefined
@@ -63,7 +66,7 @@ function createSessionRecord(): SessionRecord {
   return record
 }
 
-/** The module-level app-state listener keeps this current without subscribers. */
+/** The session lifecycle is maintained independently of React consumers. */
 export function getSessionId() {
   // Missing or corrupt storage starts a fresh session, never an old fallback ID.
   return (readSessionRecord() ?? createSessionRecord()).id

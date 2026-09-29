@@ -4,10 +4,15 @@ const mockDeviceGetRaw = jest.fn((key: string[]) => {
   if (!mockDeviceValues.has(key[0])) return undefined
   return JSON.stringify({data: mockDeviceValues.get(key[0])})
 })
+const mockDeviceListeners = new Set<() => void>()
 const mockDeviceSet = jest.fn((key: string[], value: unknown) => {
   mockDeviceValues.set(key[0], value)
+  emitStorageChange()
 })
-const mockDeviceSubscribe = jest.fn()
+const mockDeviceSubscribe = jest.fn((_key: string[], listener: () => void) => {
+  mockDeviceListeners.add(listener)
+  return {remove: () => mockDeviceListeners.delete(listener)}
+})
 const mockAppStateListeners = new Set<(state: string) => void>()
 const mockOnAppStateChange = jest.fn((listener: (state: string) => void) => {
   mockAppStateListeners.add(listener)
@@ -22,6 +27,13 @@ jest.mock('react-native-uuid', () => ({
   default: {v4: mockUuidV4},
 }))
 jest.mock('#/env', () => ({IS_NATIVE: mockIsNative}))
+jest.mock('#/analytics/identifiers/sessionStorage', () =>
+  jest.requireActual<typeof import('./sessionStorage')>(
+    mockIsNative
+      ? '#/analytics/identifiers/sessionStorage/index.ts'
+      : '#/analytics/identifiers/sessionStorage/index.web.ts',
+  ),
+)
 jest.mock('#/storage', () => ({
   device: {
     getRaw: mockDeviceGetRaw,
@@ -38,6 +50,7 @@ beforeEach(() => {
   jest.setSystemTime(NOW)
   jest.clearAllMocks()
   mockDeviceValues.clear()
+  mockDeviceListeners.clear()
   mockAppStateListeners.clear()
   mockUuidV4.mockReset().mockReturnValue('session-a')
 })
@@ -46,8 +59,13 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
+function emitStorageChange() {
+  mockDeviceListeners.forEach(listener => listener())
+}
+
 function setStoredSession(id: string, lastEventAt?: number) {
   mockDeviceValues.set('analyticsSession', {id, lastEventAt})
+  emitStorageChange()
 }
 
 function emitAppState(state: string) {
@@ -84,7 +102,7 @@ describe.each([
     })
   })
 
-  it('reads raw storage each time without reparsing or revalidating unchanged data', () => {
+  it('reuses validated data with native cached reads and web read-through', () => {
     const {getSessionId} = loadSession()
     getSessionId()
     mockDeviceGetRaw.mockClear()
@@ -95,10 +113,10 @@ describe.each([
 
     expect(sessionValidation).not.toHaveBeenCalled()
     expect(parse).not.toHaveBeenCalled()
-    expect(mockDeviceGetRaw).toHaveBeenCalledTimes(100)
+    expect(mockDeviceGetRaw).toHaveBeenCalledTimes(isNative ? 0 : 100)
   })
 
-  it('parses and validates a changed raw value once without a notification', () => {
+  it('parses and validates a changed raw value once', () => {
     const {getSessionId} = loadSession()
     getSessionId()
     mockDeviceGetRaw.mockClear()
@@ -111,8 +129,8 @@ describe.each([
 
     expect(parse).toHaveBeenCalledTimes(1)
     expect(sessionValidation).toHaveBeenCalledTimes(1)
-    expect(mockDeviceGetRaw).toHaveBeenCalledTimes(2)
-    expect(mockDeviceSubscribe).not.toHaveBeenCalled()
+    expect(mockDeviceGetRaw).toHaveBeenCalledTimes(isNative ? 1 : 2)
+    expect(mockDeviceSubscribe).toHaveBeenCalledTimes(isNative ? 1 : 0)
   })
 
   it('observes timestamp-only changes before deciding whether to rotate', () => {
@@ -189,7 +207,7 @@ describe.each([
   describe.each(['read', 'active', 'inactive', 'background'])(
     'recovering through %s',
     trigger => {
-      it.each(['missing', 'invalid', 'malformed JSON'])(
+      it.each(['missing', 'cleared', 'invalid', 'malformed JSON'])(
         'persists a fresh session after rotation when storage is %s',
         failure => {
           const {getSessionId} = loadSession()
@@ -202,11 +220,14 @@ describe.each([
 
           if (failure === 'missing') {
             mockDeviceValues.delete('analyticsSession')
+          } else if (failure === 'cleared') {
+            mockDeviceValues.clear()
           } else if (failure === 'invalid') {
             mockDeviceValues.set('analyticsSession', {id: ''})
           } else {
             mockDeviceGetRaw.mockReturnValueOnce('{')
           }
+          emitStorageChange()
           jest.advanceTimersByTime(1_000)
           mockUuidV4.mockReturnValueOnce('session-c')
           mockDeviceSet.mockClear()
@@ -237,7 +258,7 @@ describe.each([
     expect(mockUuidV4).not.toHaveBeenCalled()
   })
 
-  it('rotates once at the exact boundary without React or storage subscribers', () => {
+  it('rotates once at the exact boundary without React consumers', () => {
     setStoredSession('existing-session', NOW.getTime())
     const {getSessionId} = loadSession()
     expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
@@ -253,7 +274,7 @@ describe.each([
       'session-a',
       'session-a',
     ])
-    expect(mockDeviceSubscribe).not.toHaveBeenCalled()
+    expect(mockDeviceSubscribe).toHaveBeenCalledTimes(isNative ? 1 : 0)
     expect(mockDeviceSet).toHaveBeenCalledTimes(1)
     expect(mockDeviceSet).toHaveBeenCalledWith(['analyticsSession'], {
       id: 'session-a',
@@ -276,7 +297,7 @@ describe.each([
     expect(mockUuidV4).not.toHaveBeenCalled()
   })
 
-  it('reads local storage writes without a subscription', () => {
+  it('observes local storage writes without React consumers', () => {
     const {getSessionId} = loadSession()
 
     mockDeviceSet(['analyticsSession'], {
@@ -285,7 +306,7 @@ describe.each([
     })
 
     expect(getSessionId()).toBe('local-session')
-    expect(mockDeviceSubscribe).not.toHaveBeenCalled()
+    expect(mockDeviceSubscribe).toHaveBeenCalledTimes(isNative ? 1 : 0)
   })
 
   it('keeps tracking repeated lifecycle events when no one reads the ID', () => {
@@ -303,6 +324,6 @@ describe.each([
     expect(getSessionId()).toBe('session-c')
     expect(mockOnAppStateChange).toHaveBeenCalledTimes(1)
     expect(mockAppStateListeners.size).toBe(1)
-    expect(mockDeviceSubscribe).not.toHaveBeenCalled()
+    expect(mockDeviceSubscribe).toHaveBeenCalledTimes(isNative ? 1 : 0)
   })
 })
