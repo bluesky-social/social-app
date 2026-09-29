@@ -481,7 +481,10 @@ export function createThreadStore({
         return null
       }
       if (target === 'record') {
-        s.posts[postId] = setPostRecord(currentPost, {state: 'pending', uri})
+        s.posts[postId] = replaceRecordAttachment(currentPost, {
+          state: 'pending',
+          uri,
+        })
       } else {
         s.posts[postId] = setPostMedia(currentPost, {state: 'pending', uri})
       }
@@ -528,10 +531,13 @@ export function createThreadStore({
               const currentPost = retryState.posts[postId]
               if (!currentPost) return null
               if (target === 'record') {
-                retryState.posts[postId] = setPostRecord(currentPost, {
-                  state: 'pending',
-                  uri,
-                })
+                retryState.posts[postId] = replaceRecordAttachment(
+                  currentPost,
+                  {
+                    state: 'pending',
+                    uri,
+                  },
+                )
               } else {
                 retryState.posts[postId] = setPostMedia(currentPost, {
                   state: 'pending',
@@ -560,7 +566,7 @@ export function createThreadStore({
         if (!post) return null
         s.posts[postId] =
           target === 'record'
-            ? setPostRecord(post, failure)
+            ? replaceRecordAttachment(post, failure)
             : setPostMedia(post, failure)
         accepted = true
         return s
@@ -599,7 +605,7 @@ export function createThreadStore({
         if (!post) return null
         if (link.type === 'record') {
           const {type: _type, ...record} = link
-          s.posts[postId] = setPostRecord(post, {
+          s.posts[postId] = replaceRecordAttachment(post, {
             state: 'resolved',
             ...record,
           })
@@ -637,7 +643,7 @@ export function createThreadStore({
     if (destroyed || !state.posts[postId]) return
     resolutionRevs.record.incrementFor({key: postId})
     mutateState(s => {
-      s.posts[postId] = setPostRecord(s.posts[postId], {
+      s.posts[postId] = replaceRecordAttachment(s.posts[postId], {
         state: 'resolved',
         ...value,
       })
@@ -651,7 +657,7 @@ export function createThreadStore({
       const post = s.posts[postId]
       if (!post || !post.attachments.record) return null
       resolutionRevs.record.incrementFor({key: postId})
-      s.posts[postId] = setPostRecord(post, undefined)
+      s.posts[postId] = replaceRecordAttachment(post, undefined)
       s.isDirty = true
       return s
     })
@@ -806,8 +812,13 @@ export function createThreadStore({
         if (uploadTasks.get(m) === registered)
           setUploadStatus(p, m, status, diagnostic)
       },
-      setPrepared: (p: string, m: string, output: PreparedOutput) => {
-        if (uploadTasks.get(m) === registered) setPrepared(p, m, output)
+      setMediaCompressionResult: (
+        p: string,
+        m: string,
+        output: PreparedOutput,
+      ) => {
+        if (uploadTasks.get(m) === registered)
+          setMediaCompressionResult(p, m, output)
       },
       setCaptionBlobs: (
         p: string,
@@ -862,7 +873,13 @@ export function createThreadStore({
     task?.cancel()
   }
 
-  function setPrepared(
+  /**
+   * Store the local compression result as `item.prepared` without replacing
+   * the original media source. The planner prefers these dimensions when
+   * building the embed. This does not mark the upload complete; the uploaded
+   * blob is recorded separately through upload status.
+   */
+  function setMediaCompressionResult(
     postId: string,
     mediaId: string,
     output: PreparedOutput,
@@ -962,7 +979,12 @@ export function createThreadStore({
     }
   }
 
-  function setPostRecord(
+  /**
+   * Return a copy of the post with its record attachment slot (post, feed,
+   * list, or starter pack, in any resolution state) replaced, or cleared when
+   * `record` is undefined.
+   */
+  function replaceRecordAttachment(
     post: types.ThreadPost,
     record: types.RecordAttachment | undefined,
   ): types.ThreadPost {

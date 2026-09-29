@@ -96,7 +96,12 @@ type BaseOptions = UploadRuntime & {
   /** Test-only; production always uses the real implementations. */
   __overrides?: UploadTestOverrides
   setUploadStatus: SetStatus
-  setPrepared?: (
+  /**
+   * Called after local compression, before the upload starts. Records the
+   * compressed output alongside the original source; it does not mark the
+   * upload complete.
+   */
+  setMediaCompressionResult?: (
     postId: string,
     mediaId: string,
     output: PreparedOutput,
@@ -162,7 +167,7 @@ async function runImageUpload({
       aspectRatio: {width: compressed.width, height: compressed.height},
       size: compressed.size,
     }
-    opts.setPrepared?.(opts.postId, opts.mediaId, prepared)
+    opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, prepared)
     report({...opts, status: {state: 'uploading', phase: 'uploading'}})
     const result = await (overrides.uploadBlob ?? realUploadBlob)(
       pdsClient,
@@ -215,7 +220,7 @@ async function runVideoUpload({
       })
       throwIfAborted({signal})
       if (compressed.size > VIDEO_MAX_SIZE) throw new VideoTooLargeError()
-      opts.setPrepared?.(opts.postId, opts.mediaId, {
+      opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, {
         kind: 'video',
         uri: compressed.uri,
         size: compressed.size,

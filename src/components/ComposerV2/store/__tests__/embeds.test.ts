@@ -159,7 +159,7 @@ function removeSlot(
   else store.actions.removeMediaAttachment(postId)
 }
 
-function setPostRecord(
+function attachPostRecord(
   store: ReturnType<typeof createThreadStore>,
   postId: string,
 ) {
@@ -486,7 +486,7 @@ describe.each(slots)('$slot resolution lifecycle', ({slot, uri, link}) => {
     const store = makeStore()
     const root = rootId(store)
     if (slot === 'record') store.actions.addMedia(root, [uploads[0]])
-    else setPostRecord(store, root)
+    else attachPostRecord(store, root)
     const other = slot === 'record' ? 'media' : 'record'
     const previous = store.getState().posts[root].attachments[other]
     store.actions.addUri(root, uri)
@@ -521,7 +521,7 @@ describe('direct record insertion', () => {
     store.actions.addMedia(root, [uploads[0]])
     const media = store.getState().posts[root].attachments.media
     store.actions.addUri(root, FEED_URL)
-    setPostRecord(store, root)
+    attachPostRecord(store, root)
     const before = store.getState()
     expect(before.isDirty).toBe(true)
     expect(before.posts[root].attachments.record).toMatchObject({

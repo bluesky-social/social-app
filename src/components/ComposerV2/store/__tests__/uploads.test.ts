@@ -84,7 +84,7 @@ describe('ComposerV2 real media workers', () => {
         compressImage,
         uploadBlob,
       },
-      setPrepared: prepared,
+      setMediaCompressionResult: prepared,
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     await settle()
