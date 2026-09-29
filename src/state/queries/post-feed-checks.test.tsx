@@ -702,6 +702,101 @@ describe('return staleness', () => {
   })
 })
 
+describe('shared findings', () => {
+  it('hands a focus find to every active view of the query, with one request', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(2 * MINUTE)
+    const home = renderView(queryClient, {isActive: true})
+    const screen = renderView(queryClient, {isActive: true})
+    expect(home.triggers()).toEqual(['focus'])
+
+    await home.settle('new posts')
+    expect(home.onFound).toHaveBeenCalledTimes(1)
+    expect(home.onFound).toHaveBeenCalledWith('new posts', 'focus')
+    expect(screen.onFound).toHaveBeenCalledTimes(1)
+    expect(screen.onFound).toHaveBeenCalledWith('new posts', 'focus')
+    // The find answered the arrival the second view was holding.
+    expect(screen.check).not.toHaveBeenCalled()
+  })
+
+  it('hands it to a view once it becomes active, never while it is hidden', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(10 * SECOND)
+    const home = renderView(queryClient, {isActive: true})
+    const screen = renderView(queryClient, {isActive: false})
+    home.requestCheck()
+    await home.settle('new posts')
+    expect(home.onFound).toHaveBeenCalledWith('new posts', 'interval')
+    expect(screen.onFound).not.toHaveBeenCalled()
+
+    // Well past the focus gate, the find still answers the arrival.
+    home.setProps({isActive: false})
+    advance(2 * MINUTE)
+    screen.setProps({isActive: true})
+    expect(screen.onFound).toHaveBeenCalledTimes(1)
+    expect(screen.onFound).toHaveBeenCalledWith('new posts', 'interval')
+    expect(screen.check).not.toHaveBeenCalled()
+  })
+
+  it('hands it again each time a view becomes active, until a new top is committed', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(2 * MINUTE)
+    const view = renderView(queryClient, {isActive: true})
+    await view.settle('new posts')
+
+    view.setProps({isActive: false})
+    advance(SECOND)
+    view.setProps({isActive: true})
+    expect(view.onFound).toHaveBeenCalledTimes(2)
+    expect(view.onFound).toHaveBeenLastCalledWith('new posts', 'focus')
+
+    await act(() =>
+      refreshPostFeedQuery(queryClient, KEY, () =>
+        Promise.resolve({page: page(), api: {} as never}),
+      ),
+    )
+    view.setProps({isActive: false})
+    advance(SECOND)
+    view.setProps({isActive: true})
+    expect(view.onFound).toHaveBeenCalledTimes(2)
+    expect(view.check).toHaveBeenCalledTimes(1)
+  })
+
+  it('never turns into a return, which still gets its own check', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient)
+    advance(10 * SECOND)
+    const home = renderView(queryClient, {isActive: true})
+    const screen = renderView(queryClient, {isActive: true})
+    home.requestCheck()
+    await home.settle('new posts')
+    expect(screen.onFound).toHaveBeenCalledWith('new posts', 'interval')
+
+    // A return to fresh data is consumed as usual, and offers nothing.
+    returnFromBackground(45 * SECOND)
+    await flush()
+    expect(home.check).toHaveBeenCalledTimes(1)
+    expect(home.onFound).toHaveBeenCalledTimes(1)
+
+    // One that is due a check makes it, and what it finds is the claimant's.
+    returnFromBackground(RETURN_STALE_AFTER)
+    expect(home.triggers()).toEqual(['interval', 'return'])
+    expect(screen.check).not.toHaveBeenCalled()
+    await home.settle('more posts')
+    expect(home.onFound).toHaveBeenLastCalledWith('more posts', 'return')
+    expect(screen.onFound).toHaveBeenCalledTimes(1)
+
+    // What the other view comes back to is still the interval's find.
+    screen.setProps({isActive: false})
+    screen.setProps({isActive: true})
+    expect(screen.onFound).toHaveBeenCalledTimes(2)
+    expect(screen.onFound).toHaveBeenLastCalledWith('new posts', 'interval')
+  })
+})
+
 describe('coalescing', () => {
   it('holds a mount check for a pending restore, which then answers the return', () => {
     const queryClient = createQueryClient()
@@ -837,6 +932,29 @@ describe('lifecycle', () => {
     await view.settle('new posts')
 
     expect(view.onFound).not.toHaveBeenCalled()
+  })
+
+  it('drops a shared find along with its query', async () => {
+    const queryClient = createQueryClient()
+    const top = seed(queryClient)
+    advance(2 * MINUTE)
+    const home = renderView(queryClient, {isActive: true})
+    const screen = renderView(queryClient, {isActive: false})
+    await home.settle('new posts')
+
+    act(() => {
+      queryClient.removeQueries({queryKey: KEY})
+    })
+    // Even if the very same top page comes back.
+    act(() => {
+      queryClient.setQueryData<InfiniteData<Page>>(KEY, {
+        pages: [top],
+        pageParams: [undefined],
+      })
+    })
+    screen.setProps({isActive: true})
+    expect(screen.onFound).not.toHaveBeenCalled()
+    expect(screen.triggers()).toEqual(['focus'])
   })
 
   it('contains a throw from onFound, even in a query cache listener', async () => {
