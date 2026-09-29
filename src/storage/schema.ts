@@ -13,7 +13,7 @@ export type Device = {
    * device, used with our logging and metrics tracking.
    */
   deviceId?: string
-  /** Analytics session storage for native. */
+  /** Session storage for native only. Web uses `sessionStorage`. */
   nativeSession?: SessionRecord
 
   fontScale: '-2' | '-1' | '0' | '1' | '2'
