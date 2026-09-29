@@ -38,7 +38,7 @@ describe('identifyDevice', () => {
     expect(Sentry.setUser).toHaveBeenCalledWith({id: 'stable-device-id'})
   })
 
-  it('leaves Sentry anonymous if the device ID is unavailable', async () => {
+  it('leaves the Sentry user unchanged if the device ID is unavailable', async () => {
     await identifyDevice(
       undefined,
       Promise.reject(new Error('Storage unavailable')),
