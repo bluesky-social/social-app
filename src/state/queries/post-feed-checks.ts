@@ -60,6 +60,11 @@ import {
  *   which a check would only find again. What goes to a return is the return's
  *   alone, and a finding does not answer a return, which still checks when it
  *   is due one.
+ * - Interval: a view given an `interval` checks while it is active whenever
+ *   the clock is that old, rather than on a fixed timer, so any successful
+ *   check or fetch from the top, whichever view made it, pushes its next check
+ *   back. It also waits that long after starting a check of its own, so one
+ *   that failed is not retried at once.
  * - Coalescing: one check per query at a time, and none while work on its top
  *   is in flight or pending. Triggers that arrive meanwhile wait, and the clock
  *   that work moves decides whether they still need a check.
@@ -103,7 +108,8 @@ export const RETURN_INTENT_LIFETIME = STALE.MINUTES.FIVE
  * - `return`: a real return from the background (see
  *   `onAppReturnedFromBackground`) found the view active
  * - `focus`: the view became active - the reader arrived at it
- * - `interval`: the surface asked, through `requestCheck`
+ * - `interval`: the view's `interval` came round, or the surface asked through
+ *   `requestCheck`
  */
 export type PostFeedCheckTrigger = 'return' | 'focus' | 'interval'
 
@@ -184,9 +190,10 @@ type TopPage = {fetchedAt?: unknown}
  * background, and when the surface asks. The check itself is the surface's.
  *
  * ```tsx
- * const {requestCheck} = usePostFeedCheckTriggers({
+ * usePostFeedCheckTriggers({
  *   queryKey: RQKEY(feed, feedParams),
  *   isActive: isScreenFocused && isPageFocused && !isComposerOpen,
+ *   interval: POLL_INTERVAL,
  *   check: async () =>
  *     (await pollLatest(queryClient, queryKey, page)) || undefined,
  *   onFound: (_found, trigger) => {
@@ -203,6 +210,7 @@ export function usePostFeedCheckTriggers<Result>({
   queryKey,
   isActive,
   isTopWorkPending = false,
+  interval,
   check,
   onFound,
 }: {
@@ -229,6 +237,14 @@ export function usePostFeedCheckTriggers<Result>({
    * report a check it made with {@link markPostFeedQueryChecked}.
    */
   isTopWorkPending?: boolean
+  /**
+   * How often, in milliseconds, this view checks while it is active, for a
+   * surface that polls. The next check is due one interval after the later of
+   * the query's check clock and this view's latest check, so it moves with
+   * every successful check or fetch from the top rather than keeping to a
+   * timer of its own. Unset, the view makes no periodic checks.
+   */
+  interval?: number
   /**
    * Checks for new content above the committed top: resolves with what it
    * found, or `undefined` if there is nothing new, and rejects if it could not
@@ -276,17 +292,17 @@ export function usePostFeedCheckTriggers<Result>({
   }, [view])
 
   useEffect(() => {
-    view.update({isActive, isTopWorkPending})
-  }, [view, isActive, isTopWorkPending])
+    view.update({isActive, isTopWorkPending, interval})
+  }, [view, isActive, isTopWorkPending, interval])
 
   useOnAppReturnedFromBackground(appReturn => view.recordReturn(appReturn))
 
   return {
     /**
      * Checks now if this view is active, nothing else is working on the top,
-     * and the query has a committed top, as for the surface's own interval. It
-     * does not wait and is not gated by the check clock. An owed return goes
-     * first.
+     * and the query has a committed top. It does not wait and is not gated by
+     * the check clock. An owed return goes first. A surface that polls passes
+     * `interval` instead, which is measured from the clock.
      */
     requestCheck: () => view.requestCheck(),
   }
@@ -320,6 +336,11 @@ export function markPostFeedQueryChecked(
 class PostFeedCheckView {
   private isActive = false
   private isTopWorkPending = false
+  private interval: number | undefined
+  /** Waits for the next check that `interval` makes due. */
+  private intervalTimer: ReturnType<typeof setTimeout> | undefined
+  /** When this view last started a check, whatever became of it. */
+  private lastCheckStartedAt = -Infinity
   /** Whether the arrival that made this view active has yet to be looked at. */
   private isFocusPending = false
   /** When this view last became active. */
@@ -372,11 +393,14 @@ class PostFeedCheckView {
   update({
     isActive,
     isTopWorkPending,
+    interval,
   }: {
     isActive: boolean
     isTopWorkPending: boolean
+    interval: number | undefined
   }) {
     this.isTopWorkPending = isTopWorkPending
+    this.interval = interval
     if (isActive && !this.isActive) {
       this.isActive = true
       this.isFocusPending = true
@@ -443,6 +467,8 @@ class PostFeedCheckView {
   }
 
   private step() {
+    // Scheduled again below if nothing else is to happen first.
+    clearTimeout(this.intervalTimer)
     const isIntervalDue = this.isIntervalDue
     this.isIntervalDue = false
     if (!this.isActive) {
@@ -484,6 +510,8 @@ class PostFeedCheckView {
         if (intent.finding) {
           state.returnIntent = undefined
           this.isFocusPending = false
+          // For the interval, and whatever onFound starts.
+          this.shouldReevaluate = true
           this.present(intent.finding.result, 'return')
           return
         }
@@ -503,7 +531,10 @@ class PostFeedCheckView {
       }
     }
 
-    // A pending focus waits for the work in its way; an interval tick doesn't.
+    /*
+     * A pending focus waits for the work in its way; a requested interval tick
+     * doesn't. The next scheduled one is timed once that work has settled.
+     */
     if (isBusy) {
       return
     }
@@ -516,10 +547,18 @@ class PostFeedCheckView {
       now - lastSuccessAt >= FOCUS_CHECK_AFTER ||
       // Unless something checked or fetched the top since the arrival.
       (lastSuccessAt < this.activatedAt && isEmptyFeed(query))
+    const intervalDueAt = this.interval
+      ? Math.max(lastSuccessAt, this.lastCheckStartedAt) + this.interval
+      : Infinity
     if (isFocusPending && isFocusDue) {
       this.run(query, entry, top, 'focus')
-    } else if (isIntervalDue) {
+    } else if (isIntervalDue || now >= intervalDueAt) {
       this.run(query, entry, top, 'interval')
+    } else if (intervalDueAt < Infinity) {
+      this.intervalTimer = setTimeout(
+        () => this.evaluate(),
+        intervalDueAt - now,
+      )
     }
   }
 
@@ -542,6 +581,7 @@ class PostFeedCheckView {
     const pendingCheck = {isCurrent}
     state.pendingCheck = pendingCheck
     this.isFocusPending = false
+    this.lastCheckStartedAt = Date.now()
 
     void (async () => {
       let result: unknown
@@ -649,6 +689,7 @@ class PostFeedCheckView {
     this.isActive = false
     this.isFocusPending = false
     this.isIntervalDue = false
+    clearTimeout(this.intervalTimer)
     this.attemptedReturnId = undefined
     this.offeredFinding = undefined
     const query = this.getQuery()
