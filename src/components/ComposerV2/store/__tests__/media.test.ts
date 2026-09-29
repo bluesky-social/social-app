@@ -14,6 +14,7 @@ jest.mock('#/lib/api/resolve', () => {
 })
 
 import {type LinkResolvers, type resolveLink} from '#/lib/api/resolve'
+import {type PickerImage} from '#/lib/media/picker.shared'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {
   type AddMediaInput,
@@ -21,7 +22,10 @@ import {
   type PostMediaUploadStatus,
   type UploadStatus,
 } from '#/components/ComposerV2/store/types'
-import {type UploadWorkerOverrides} from '#/components/ComposerV2/store/uploads'
+import {
+  type UploadTestOverrides,
+  type UploadWorkerOverrides,
+} from '#/components/ComposerV2/store/uploads'
 import {type Gif} from '#/features/gifPicker/types'
 import {
   manualUploadWorkers,
@@ -1084,6 +1088,79 @@ describe('attachment lifecycle', () => {
       }
     },
   )
+
+  test.each(['remove', 'destroy'])(
+    'subscriber can %s media while its worker is still starting',
+    action => {
+      const cancel = jest.fn()
+      let report: ((status: UploadStatus) => void) | undefined
+      const store = createThreadStore({
+        ...testUploadRuntime,
+        resolvers,
+        __createId: makeIdGenerator(),
+        __resolveLink: mockResolveLink,
+        __uploadWorkers: {
+          startImageUpload: ({postId, mediaId, setUploadStatus}) => {
+            report = status => setUploadStatus(postId, mediaId, status)
+            /* Like the real worker, report a phase before returning. */
+            report({state: 'uploading', phase: 'compressing'})
+            return {cancel}
+          },
+        },
+      })
+      const root = rootId(store)
+      store.subscribe(() => {
+        if (getUploadState(store, root) !== 'uploading') return
+        if (action === 'remove') store.actions.removeMediaAttachment(root)
+        else store.destroy()
+      })
+      store.actions.addMedia(root, [imageInput])
+
+      /* Requested before the handle existed, forwarded once it returned. */
+      expect(cancel).toHaveBeenCalledTimes(1)
+      const after = store.getState()
+      if (action === 'remove') expect(getMedia(store, root)).toEqual([])
+      report!({state: 'uploaded', blob: {} as never})
+      expect(store.getState()).toBe(after)
+    },
+  )
+
+  test('a real image worker cancelled while starting never uploads', async () => {
+    let finishCompression!: (image: PickerImage) => void
+    const compressImage = jest.fn(
+      () =>
+        new Promise<PickerImage>(resolve => {
+          finishCompression = resolve
+        }),
+    )
+    const uploadBlob = jest.fn<NonNullable<UploadTestOverrides['uploadBlob']>>()
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+      __resolveLink: mockResolveLink,
+      __uploadOverrides: {compressImage, uploadBlob},
+    })
+    const root = rootId(store)
+    store.subscribe(() => {
+      if (getUploadState(store, root) === 'uploading')
+        store.actions.removeMediaAttachment(root)
+    })
+    store.actions.addMedia(root, [imageInput])
+    expect(getMedia(store, root)).toEqual([])
+
+    /* Compression has no abort hook, so it still runs to completion. */
+    expect(compressImage).toHaveBeenCalledTimes(1)
+    finishCompression({
+      path: 'file:///compressed.jpg',
+      width: 1,
+      height: 1,
+      mime: 'image/jpeg',
+      size: 1,
+    })
+    for (let i = 0; i < 10; i++) await Promise.resolve()
+    expect(uploadBlob).not.toHaveBeenCalled()
+  })
 
   test('removing the media attachment cancels all uploads and restores capacity', () => {
     const store = makeStore()
