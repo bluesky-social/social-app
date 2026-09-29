@@ -39,7 +39,6 @@ import {
   type FeedParams,
   type FeedPostSlice,
   type FeedPostSliceItem,
-  type FollowingGapOutcome,
   pollLatest,
   RQKEY,
   useFollowingGapFill,
@@ -47,7 +46,7 @@ import {
   usePostFeedQuery,
   usePostFeedRefresh,
 } from '#/state/queries/post-feed'
-import {findFeedGaps, type PageGap} from '#/state/queries/post-feed-boundary'
+import {type PageGap} from '#/state/queries/post-feed-boundary'
 import {
   isPostFeedRefreshing,
   isPostFeedRestorePending,
@@ -69,7 +68,6 @@ import {
   useInternalState as useAgeAssuranceBannerState,
 } from '#/components/ageAssurance/AgeAssuranceDismissibleFeedBanner'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
-import {FeedGap} from '#/components/feeds/FeedGap'
 import {
   PostFeedVideoGridRow,
   PostFeedVideoGridRowPlaceholder,
@@ -80,10 +78,16 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {FollowingGapRow} from '#/features/followingV2/components/FollowingGapRow'
 import {
   isFollowingRestorationEnabled,
   isFollowingV2Eligible,
 } from '#/features/followingV2/eligibility'
+import {
+  type FeedGapRow,
+  feedGapRows,
+  isFeedSliceHidden,
+} from '#/features/followingV2/feedGapRows'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
   isStatusStillActive,
@@ -159,16 +163,12 @@ type FeedRow =
       key: string
       uri: string
     }
-  | {
-      /**
-       * A gap in restored Following, below the posts of the page it follows.
-       * Once filled it stays as an empty row, so that the list keeps the row
-       * it may be anchored on.
-       */
-      type: 'followingGap'
-      key: string
-      gap: PageGap
-    }
+  /**
+   * A gap in restored Following, below the posts of the page it follows. Once
+   * filled it stays as an empty row, so that the list keeps the row it may be
+   * anchored on.
+   */
+  | FeedGapRow
   | {
       type: 'interstitialFollows'
       key: string
@@ -265,7 +265,7 @@ const CONTENT_ROW_TYPES: ReadonlySet<FeedRow['type']> = new Set([
   'fallbackMarker',
   /*
    * A gap row is a place to anchor on, even at the very top: filling it keeps
-   * the row, where the posts it replaces below would all go.
+   * the row and its native view, where the posts it replaces below all go.
    */
   'followingGap',
 ])
@@ -726,18 +726,14 @@ let PostFeed = ({
             })
           }
         } else {
-          const isSliceHidden = (slice: FeedPostSlice) =>
-            !slice.isFallbackMarker &&
-            slice.items.some(item =>
-              blockedOrMutedAuthors.includes(item.post.author.did),
-            )
-          const gaps = isRestorationEnabled
-            ? findFeedGaps(data.pages, data.pageParams, pageIndex =>
-                data.pages[pageIndex].slices.some(
-                  slice => !isSliceHidden(slice),
-                ),
-              )
-            : undefined
+          // Only ever any for restored Following.
+          const gapRows = feedGapRows({
+            ax,
+            queryKey: RQKEY(feed, feedParams),
+            pages: data.pages,
+            pageParams: data.pageParams,
+            blockedOrMutedAuthors,
+          })
           for (const [pageIndex, page] of data.pages.entries()) {
             for (const slice of page.slices) {
               sliceIndex++
@@ -840,7 +836,7 @@ let PostFeed = ({
                   key:
                     'sliceFallbackMarker-' + sliceIndex + '-' + lastFetchedAt,
                 })
-              } else if (isSliceHidden(slice)) {
+              } else if (isFeedSliceHidden(slice, blockedOrMutedAuthors)) {
                 // skip
               } else if (slice.isIncompleteThread && slice.items.length >= 3) {
                 const beforeLast = slice.items.length - 2
@@ -894,14 +890,9 @@ let PostFeed = ({
               }
             }
 
-            const gap = gaps?.get(pageIndex)
-            if (gap) {
-              arr.push({
-                type: 'followingGap',
-                // The same before and after it is filled.
-                key: `followingGap-${gap.since}-${gap.cursor}`,
-                gap,
-              })
+            const gapRow = gapRows.get(pageIndex)
+            if (gapRow) {
+              arr.push(gapRow)
             }
           }
         }
@@ -987,6 +978,17 @@ let PostFeed = ({
   }
 
   /**
+   * The first row that shows anything, which goes without a top border as the
+   * first row of a feed does: filled gaps above it are empty.
+   */
+  const firstShownRowIndex = Math.max(
+    0,
+    feedItems.findIndex(
+      row => !(row.type === 'followingGap' && row.gap.status === 'filled'),
+    ),
+  )
+
+  /**
    * Whether the list has reached its resting position, which a restored feed
    * waits for before adding anything above it - see
    * {@link RESTORE_POSITION_FALLBACK_MS}.
@@ -1004,12 +1006,25 @@ let PostFeed = ({
     return () => clearTimeout(positionFallbackRef.current)
   }, [])
 
-  const onFillGap = useNonReactiveCallback(async (gap: PageGap) => {
-    ax.metric('feed:following:gap', {action: 'press'})
-    const outcome = await fillGap(gap)
-    ax.metric('feed:following:gap', {action: 'outcome', ...outcome})
-    return outcome
-  })
+  /** The view the list fills, for the gap rows to tell where its top is. */
+  const listContainerRef = useRef<React.ComponentRef<typeof View>>(null)
+  const onFillGap = useNonReactiveCallback(
+    async (gap: PageGap, {mayCommit}: {mayCommit: () => Promise<boolean>}) => {
+      // Only a press that fetches is counted, not one that finds nothing to do.
+      let hasFetched = false
+      const outcome = await fillGap(gap, {
+        mayCommit,
+        onFetchStart: () => {
+          hasFetched = true
+          ax.metric('feed:following:gap', {action: 'press'})
+        },
+      })
+      if (hasFetched) {
+        ax.metric('feed:following:gap', {action: 'outcome', ...outcome})
+      }
+      return outcome
+    },
+  )
 
   const hasPages = Boolean(data?.pages.length)
   const runRestorePrepend = useNonReactiveCallback(async () => {
@@ -1215,7 +1230,9 @@ let PostFeed = ({
             }
             isParentBlocked={item.isParentBlocked}
             isParentNotFound={item.isParentNotFound}
-            hideTopBorder={rowIndex === 0 && indexInSlice === 0}
+            hideTopBorder={
+              rowIndex === firstShownRowIndex && indexInSlice === 0
+            }
             rootPost={slice.items[0].post}
             onShowLess={onPressShowLess}
           />
@@ -1223,13 +1240,16 @@ let PostFeed = ({
       } else if (row.type === 'sliceViewFullThread') {
         return <ViewFullThread uri={row.uri} />
       } else if (row.type === 'followingGap') {
-        return row.gap.status === 'open' ? (
+        // The same element open or filled, so that its native view stays.
+        return (
           <FollowingGapRow
             gap={row.gap}
             onFill={onFillGap}
-            hideTopBorder={rowIndex === 0}
+            listRef={listContainerRef}
+            headerOffset={headerOffset}
+            hideTopBorder={rowIndex === firstShownRowIndex}
           />
-        ) : null
+        )
       } else if (row.type === 'videoGridRowPlaceholder') {
         return (
           <View>
@@ -1281,6 +1301,8 @@ let PostFeed = ({
       feedCacheKey,
       onPressShowLess,
       onFillGap,
+      headerOffset,
+      firstShownRowIndex,
       t,
     ],
   )
@@ -1479,7 +1501,7 @@ let PostFeed = ({
   )
 
   return (
-    <View testID={testID} style={style}>
+    <View ref={listContainerRef} testID={testID} style={style}>
       <List
         testID={testID ? `${testID}-flatlist` : undefined}
         ref={scrollElRef}
@@ -1525,39 +1547,6 @@ export {PostFeed}
 const styles = StyleSheet.create({
   feedFooter: {paddingTop: 20},
 })
-
-/**
- * The row at an open gap in restored Following, which keeps the state of its
- * own press: in flight until the fill settles, then ready to try again if it
- * failed. A fill that lands turns the row into an empty one.
- */
-function FollowingGapRow({
-  gap,
-  onFill,
-  hideTopBorder,
-}: {
-  gap: PageGap
-  onFill: (gap: PageGap) => Promise<FollowingGapOutcome>
-  hideTopBorder: boolean
-}) {
-  const [status, setStatus] = useState<'idle' | 'filling' | 'failed'>('idle')
-
-  const onPress = async () => {
-    if (status === 'filling') return
-    setStatus('filling')
-    const {outcome} = await onFill(gap)
-    setStatus(outcome === 'failed' ? 'failed' : 'idle')
-  }
-
-  return (
-    <FeedGap
-      onPress={() => void onPress()}
-      isLoading={status === 'filling'}
-      hasFailed={status === 'failed'}
-      hideTopBorder={hideTopBorder}
-    />
-  )
-}
 
 export function isThreadParentAt<T>(arr: Array<T>, i: number) {
   if (arr.length === 1) {
