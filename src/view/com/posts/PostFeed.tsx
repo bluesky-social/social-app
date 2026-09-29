@@ -26,6 +26,7 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {useListMotion} from '#/lib/listMotion/useListMotion'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -48,9 +49,11 @@ import {
 } from '#/state/queries/post-feed'
 import {type PageGap} from '#/state/queries/post-feed-boundary'
 import {
+  hasPostFeedSettlement,
   isPostFeedRefreshing,
   isPostFeedRestorePending,
   peekPostFeedQueryEntry,
+  settlePostFeedQuery,
   supersedePostFeedRefreshes,
 } from '#/state/queries/post-feed-registry'
 import {truncateAndInvalidate} from '#/state/queries/util'
@@ -429,7 +432,15 @@ let PostFeed = ({
    * that render comes before the refresh's promise does.
    */
   const renderedTopPageRef = useRef<number | undefined>(undefined)
+  /**
+   * How this list is moving, for the work that waits for it to be at rest -
+   * see `useListMotion`. Only fed on restored Following.
+   */
+  const listMotion = useListMotion()
   const scrollToTop = () => {
+    if (isRestorationEnabled && IS_NATIVE) {
+      listMotion.beginProgrammaticScroll()
+    }
     scrollElRef?.current?.scrollToOffset({
       animated: IS_NATIVE,
       offset: -headerOffset,
@@ -1029,10 +1040,55 @@ let PostFeed = ({
   )
 
   const hasPages = Boolean(data?.pages.length)
+  /**
+   * Settles restored Following once the reader has come to rest at its true
+   * top (see `settlePostFeedQuery`): what was added above is marked reached,
+   * and the stale pages below it retired. Asked for whenever there is
+   * something to settle, and only from the list the reader is looking at. Not
+   * while the restore is still being followed up: that is about to add to the
+   * top, and its correction of the list is no arrival there.
+   */
+  const requestSettle = useNonReactiveCallback(() => {
+    const queryKey = RQKEY(feed, feedParams)
+    if (
+      isRestorationEnabled &&
+      IS_NATIVE &&
+      enabled &&
+      isPageFocused &&
+      !isPostFeedRestorePending(queryClient, queryKey) &&
+      hasPostFeedSettlement(queryClient, queryKey)
+    ) {
+      listMotion.whenAtRest('settle', {atTop: true}, () => {
+        const result = settlePostFeedQuery(queryClient, queryKey)
+        if (result.status === 'settled') {
+          // It retires rows and re-selects the ones it keeps.
+          listMotion.committed()
+        }
+      })
+    } else {
+      listMotion.cancel('settle')
+    }
+  })
+  useEffect(() => {
+    requestSettle()
+  }, [requestSettle, data, isRestorationEnabled, enabled, isPageFocused])
+
   const runRestorePrepend = useNonReactiveCallback(async () => {
-    const outcome = await restorePrepend()
+    const outcome = await restorePrepend({
+      /*
+       * Rows are about to be added above the viewport, which the list will
+       * correct for: until it has, where it says it is is not to be trusted.
+       * Said before the write, so nothing can read the list in between.
+       */
+      beforeCommit: () => {
+        listMotion.committed()
+        return Promise.resolve()
+      },
+    })
     if (outcome) {
       ax.metric('feed:following:restorePrepend', outcome)
+      // The restore has been followed up, so settling can go ahead.
+      requestSettle()
     }
   })
   useEffect(() => {
@@ -1539,6 +1595,15 @@ let PostFeed = ({
         }
         onFirstScroll={isRestorationEnabled ? onListFirstScroll : undefined}
         onLayout={isRestorationEnabled ? onListLayout : undefined}
+        onScrollGestureBegin={
+          isRestorationEnabled ? listMotion.onScrollGestureBegin : undefined
+        }
+        onScrollGestureEnd={
+          isRestorationEnabled ? listMotion.onScrollGestureEnd : undefined
+        }
+        onScrollActivity={
+          isRestorationEnabled ? listMotion.onScrollActivity : undefined
+        }
       />
     </View>
   )
