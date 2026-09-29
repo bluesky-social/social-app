@@ -1,4 +1,4 @@
-import {type BlobRef} from '@atproto/lex'
+import {type BlobRef, type Client} from '@atproto/lex'
 import {describe, expect, jest, test} from '@jest/globals'
 
 import {
@@ -9,7 +9,6 @@ import {
 import {
   startImageUpload,
   startVideoUpload,
-  type UploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
 
 const blob = (name: string) =>
@@ -58,14 +57,8 @@ function video(overrides: Partial<PostMediaVideo> = {}): PostMediaVideo {
   }
 }
 
-function baseDeps(overrides: Partial<UploadDependencies> = {}) {
-  return {
-    pdsClient: {} as never,
-    i18n,
-    dispatchUrl: 'https://pds.example',
-    ...overrides,
-  } as UploadDependencies
-}
+const pdsClient = {} as Client
+const runtime = {pdsClient, pdsUrl: 'https://pds.example', i18n}
 
 describe('ComposerV2 real media workers', () => {
   test('compresses an image before uploading the transformed output', async () => {
@@ -86,10 +79,11 @@ describe('ComposerV2 real media workers', () => {
       postId: 'post-1',
       mediaId: 'image-1',
       media: image(),
-      dependencies: baseDeps({
+      ...runtime,
+      __overrides: {
         compressImage,
         uploadBlob,
-      }),
+      },
       setPrepared: prepared,
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
@@ -139,10 +133,11 @@ describe('ComposerV2 real media workers', () => {
       postId: 'post-1',
       mediaId: 'image-1',
       media: image(),
-      dependencies: baseDeps({
+      ...runtime,
+      __overrides: {
         compressImage: compressImage as never,
         uploadBlob: uploadBlob as never,
-      }),
+      },
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     task.cancel()
@@ -165,7 +160,8 @@ describe('ComposerV2 real media workers', () => {
       postId: 'post-1',
       mediaId: 'video-1',
       media: video(),
-      dependencies: baseDeps({
+      ...runtime,
+      __overrides: {
         getVideoMetadata: () =>
           Promise.resolve({
             uri: 'file:///source.mp4',
@@ -175,7 +171,7 @@ describe('ComposerV2 real media workers', () => {
             duration: 10 * 60 * 1000 + 1,
           }),
         compressVideo: compressVideo as never,
-      }),
+      },
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     await settle()
@@ -193,11 +189,19 @@ describe('ComposerV2 real media workers', () => {
     const captionUpload = jest.fn(() =>
       Promise.resolve({blob: blob('caption')}),
     )
+    const uploadVideo = jest.fn(() =>
+      Promise.resolve({
+        state: 'JOB_STATE_COMPLETED',
+        jobId: 'job-1',
+        blob: blob('video'),
+      }),
+    )
     startVideoUpload({
       postId: 'post-1',
       mediaId: 'video-1',
       media: video(),
-      dependencies: baseDeps({
+      ...runtime,
+      __overrides: {
         getVideoMetadata: () =>
           Promise.resolve({
             uri: 'file:///source.mp4',
@@ -212,20 +216,23 @@ describe('ComposerV2 real media workers', () => {
             size: 100,
             mimeType: 'video/mp4',
           }),
-        uploadVideo: (() =>
-          Promise.resolve({
-            state: 'JOB_STATE_COMPLETED',
-            jobId: 'job-1',
-            blob: blob('video'),
-          })) as never,
+        uploadVideo: uploadVideo as never,
         uploadBlob: captionUpload,
-      }),
+      },
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     await settle()
 
+    /* The shared video API still calls the account PDS URL `dispatchUrl`. */
+    expect(uploadVideo).toHaveBeenCalledWith(
+      expect.objectContaining({
+        client: pdsClient,
+        dispatchUrl: 'https://pds.example',
+        i18n,
+      }),
+    )
     expect(captionUpload).toHaveBeenCalledWith(
-      expect.anything(),
+      pdsClient,
       expect.any(Blob),
       'text/vtt',
     )
@@ -256,7 +263,8 @@ describe('ComposerV2 real media workers', () => {
       postId: 'post-1',
       mediaId: 'video-1',
       media: video(),
-      dependencies: baseDeps({
+      ...runtime,
+      __overrides: {
         getVideoMetadata: () =>
           Promise.resolve({
             uri: 'file:///source.mp4',
@@ -279,7 +287,7 @@ describe('ComposerV2 real media workers', () => {
         uploadBlob,
         createVideoServiceClient: createVideoServiceClient as never,
         sleep: () => Promise.resolve(),
-      }),
+      },
       setUploadStatus: (_post, _media, status) => statuses.push(status),
     })
     await settle()

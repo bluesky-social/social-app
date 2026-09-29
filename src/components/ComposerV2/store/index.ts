@@ -16,8 +16,9 @@ import {
   type PreparedOutput,
   startImageUpload,
   startVideoUpload,
-  type UploadDependencies,
+  type UploadRuntime,
   type UploadTask,
+  type UploadTestOverrides,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
 import {buildPostMediaItem} from '#/components/ComposerV2/store/utils/buildPostMediaItem'
@@ -44,13 +45,16 @@ function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
 /** One isolated thread composition session, independent of React. */
 export function createThreadStore({
   resolvers,
+  pdsClient,
+  pdsUrl,
+  i18n,
   initialState,
   onError,
   __createId,
   __resolveLink,
-  media: mediaDependencies,
   __uploadWorkers,
-}: {
+  __uploadOverrides,
+}: UploadRuntime & {
   resolvers: LinkResolvers
   initialState?: types.ThreadStoreInitialState
   /** Registered before normalization and eager initialization begin. */
@@ -59,10 +63,10 @@ export function createThreadStore({
   __createId?: () => string
   /** Override link resolver; useful for deterministic tests. */
   __resolveLink?: typeof resolveLink
-  /** Real PDS/media dependencies. Missing dependencies fail media explicitly. */
-  media?: UploadDependencies
   /** Test-only worker seam; never selected implicitly in production. */
   __uploadWorkers?: UploadWorkerOverrides
+  /** Test-only processing/network overrides for the real workers. */
+  __uploadOverrides?: UploadTestOverrides
 }) {
   const id = __createId ?? nanoid
   const resolve = __resolveLink ?? importedResolveLink
@@ -750,12 +754,7 @@ export function createThreadStore({
           kind:
             diagnostic?.kind ??
             (input.retryable === false ? 'validation' : 'operational'),
-          recovery:
-            input.code === 'missing-upload-dependencies'
-              ? 'none'
-              : input.retryable === false
-                ? 'edit'
-                : 'retry',
+          recovery: input.retryable === false ? 'edit' : 'retry',
         },
         diagnostic?.cause,
       )
@@ -789,7 +788,10 @@ export function createThreadStore({
     const callbacks = {
       postId,
       mediaId: item.id,
-      dependencies: mediaDependencies,
+      pdsClient,
+      pdsUrl,
+      i18n,
+      __overrides: __uploadOverrides,
       setUploadStatus: (
         p: string,
         m: string,

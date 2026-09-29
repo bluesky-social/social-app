@@ -20,6 +20,7 @@ import {
   type resolveLink,
 } from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type AddMediaInput} from '#/components/ComposerV2/store/types'
 import {classifyUriTarget} from '#/components/ComposerV2/store/utils/classifyUriTarget'
 import {type Gif} from '#/features/gifPicker/types'
@@ -128,6 +129,7 @@ afterEach(() => {
 function makeStore() {
   let i = 0
   return createThreadStore({
+    ...testUploadRuntime,
     resolvers,
     __createId: () => `id-${++i}`,
     __resolveLink: mockResolveLink,

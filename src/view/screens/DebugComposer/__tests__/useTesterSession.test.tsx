@@ -20,7 +20,7 @@ import {useTesterSession} from '#/view/screens/DebugComposer/useTesterSession'
 import {composerOptsToInitialState} from '#/components/ComposerV2/adapters'
 import {type ComposerV2OnError} from '#/components/ComposerV2/errors'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {type UploadDependencies} from '#/components/ComposerV2/store/uploads'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 
 /** Wrap the real constructor so destruction is observable per store. */
 function makeCreateStoreSpy() {
@@ -41,7 +41,6 @@ function makeCreateStoreSpy() {
 }
 
 const resolvers = {} as LinkResolvers
-const media = {} as UploadDependencies
 
 function setup(
   initialDid = 'did:plc:one',
@@ -49,11 +48,18 @@ function setup(
 ) {
   const {spy, destroyed} = makeCreateStoreSpy()
   const hook = renderHook(
-    ({did}: {did: string}) =>
+    ({
+      did,
+      pdsUrl = testUploadRuntime.pdsUrl,
+    }: {
+      did: string
+      pdsUrl?: string
+    }) =>
       useTesterSession({
+        ...testUploadRuntime,
         accountDid: did,
+        pdsUrl,
         resolvers,
-        media,
         __createStore: spy,
         onError,
       }),
@@ -70,6 +76,18 @@ describe('useTesterSession', () => {
     const posts = Object.values(result.current.session.store.getState().posts)
     expect(posts).toHaveLength(1)
     expect(posts[0].text).toBe('')
+  })
+
+  test('supplies the account runtime inputs to each store', () => {
+    const {spy} = setup()
+    expect(spy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        resolvers,
+        pdsClient: testUploadRuntime.pdsClient,
+        pdsUrl: testUploadRuntime.pdsUrl,
+        i18n: testUploadRuntime.i18n,
+      }),
+    )
   })
 
   test('applying a scenario replaces the session and destroys the old store', async () => {
@@ -113,7 +131,7 @@ describe('useTesterSession', () => {
   })
 
   test('an account change destroys the session and starts empty', async () => {
-    const {result, rerender, destroyed} = setup()
+    const {result, rerender, destroyed, spy} = setup()
     await act(async () => {
       await result.current.applyScenario('thread', () => ({
         posts: [{text: 'account one content'}],
@@ -121,8 +139,11 @@ describe('useTesterSession', () => {
     })
     const keyBefore = result.current.session.key
 
-    rerender({did: 'did:plc:two'})
+    rerender({did: 'did:plc:two', pdsUrl: 'https://pds-two.example.test'})
     expect(result.current.session.key).not.toBe(keyBefore)
+    expect(spy).toHaveBeenLastCalledWith(
+      expect.objectContaining({pdsUrl: 'https://pds-two.example.test'}),
+    )
     expect(result.current.session.scenarioId).toBe('empty')
     const posts = Object.values(result.current.session.store.getState().posts)
     expect(posts).toHaveLength(1)

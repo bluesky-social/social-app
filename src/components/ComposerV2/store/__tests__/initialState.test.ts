@@ -29,7 +29,7 @@ import {
 } from '#/components/ComposerV2/store/types'
 import {type Gif} from '#/features/gifPicker/types'
 import {type app} from '#/lexicons'
-import {simulatedUploadWorkers} from './uploadTestUtils'
+import {simulatedUploadWorkers, testUploadRuntime} from './uploadTestUtils'
 
 const POST_URL = 'https://bsky.app/profile/test.bsky.social/post/abc'
 const EXTERNAL_URL = 'https://example.com'
@@ -104,6 +104,7 @@ afterEach(() => {
 function makeStore(initialState?: ThreadStoreInitialState) {
   let id = 0
   return createThreadStore({
+    ...testUploadRuntime,
     initialState,
     resolvers: {} as LinkResolvers,
     __resolveLink: mockResolveLink,

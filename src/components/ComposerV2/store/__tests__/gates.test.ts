@@ -6,6 +6,7 @@ jest.mock('#/lib/api/resolve', () => ({
 
 import {type LinkResolvers, type ResolvedLink} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
   type PostgateEmbeddingRule,
   type ThreadgateAllowRule,
@@ -16,6 +17,7 @@ const resolvers = {} as LinkResolvers
 function makeStore(initialState = {}) {
   let id = 0
   return createThreadStore({
+    ...testUploadRuntime,
     resolvers,
     initialState,
     __createId: () => `id-${++id}`,
@@ -243,6 +245,7 @@ describe('threadgate and postgate state', () => {
       resolveLink = resolve
     })
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       initialState: {
         threadgateAllowRules: [],

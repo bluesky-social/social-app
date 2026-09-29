@@ -11,6 +11,7 @@ import {
   type resolveLink,
 } from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
   type ThreadStoreInitialState,
   type UploadStatus,
@@ -36,6 +37,7 @@ function makeIdGenerator() {
 
 function makeStore(initialState?: ThreadStoreInitialState) {
   return createThreadStore({
+    ...testUploadRuntime,
     resolvers,
     initialState: initialState ?? {
       posts: [{}, {}, {}],
@@ -146,6 +148,7 @@ describe('movePost async ownership', () => {
     })
 
     const store = createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       initialState: {
         posts: [

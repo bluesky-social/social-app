@@ -1,11 +1,24 @@
-import {type BlobRef} from '@atproto/lex'
+import {type BlobRef, type Client} from '@atproto/lex'
 import {jest} from '@jest/globals'
+import {type I18n} from '@lingui/core'
 
 import {type UploadStatus} from '#/components/ComposerV2/store/types'
 import {
+  type UploadRuntime,
   type UploadTask,
   type UploadWorkerOverrides,
 } from '#/components/ComposerV2/store/uploads'
+
+/**
+ * Placeholder account inputs for stores under test. Tests that exercise real
+ * workers pass `__uploadOverrides` (or replace these) so nothing reaches the
+ * network.
+ */
+export const testUploadRuntime: UploadRuntime = {
+  pdsClient: {} as Client,
+  pdsUrl: 'https://pds.example.test',
+  i18n: {_: (message: unknown) => String(message)} as unknown as I18n,
+}
 
 const placeholder = {
   $type: 'blob',

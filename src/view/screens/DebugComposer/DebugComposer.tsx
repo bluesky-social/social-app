@@ -6,6 +6,7 @@ import {resolveGif} from '#/lib/api/resolve'
 import {uploadBlob} from '#/lib/api/upload-blob'
 import {useRequireAltTextEnabled} from '#/state/preferences'
 import {
+  type SessionAccount,
   useAppviewClient,
   useChatClient,
   usePdsClient,
@@ -47,18 +48,37 @@ type ComposerV2PublishAttempt =
  * See ./COVERAGE.md for the capability coverage checklist and test IDs.
  */
 export default function DebugComposer() {
+  const {currentAccount} = useSession()
+  /*
+   * Uploads need an account-scoped PDS client and URL. Without an account
+   * there is nothing honest to supply, so no store is constructed.
+   */
+  if (!currentAccount) {
+    return (
+      <View style={[a.p_md]}>
+        <Admonition type="error">
+          <Trans>Sign in to use the ComposerV2 tester.</Trans>
+        </Admonition>
+      </View>
+    )
+  }
+  return <DebugComposerSession account={currentAccount} />
+}
+
+function DebugComposerSession({account}: {account: SessionAccount}) {
   const appviewClient = useAppviewClient()
   const chatClient = useChatClient()
   const pdsClient = usePdsClient()
-  const {currentAccount} = useSession()
   const {i18n} = useLingui()
   const requireAltTextPreference = useRequireAltTextEnabled()
-  const dispatchUrl = currentAccount?.pdsUrl ?? currentAccount?.service
+  const pdsUrl = account.pdsUrl ?? account.service
 
   const sessionApi = useTesterSession({
-    accountDid: currentAccount?.did,
+    accountDid: account.did,
     resolvers: {appviewClient, chatClient},
-    media: {pdsClient, dispatchUrl, i18n},
+    pdsClient,
+    pdsUrl,
+    i18n,
   })
   const {session} = sessionApi
   const [publishAttempt, setPublishAttempt] =
@@ -94,7 +114,7 @@ export default function DebugComposer() {
     session,
     requireAltText,
     dependencies: {
-      did: currentAccount?.did ?? '',
+      did: account.did,
       appviewClient,
       resolveGif,
       uploadBlob: async ({path, mime}) =>
@@ -126,7 +146,7 @@ export default function DebugComposer() {
             plan={plan}
             requireAltText={requireAltText}
             onChangeRequireAltText={setRequireAltText}
-            accountDid={currentAccount?.did}
+            accountDid={account.did}
             publishAttempted={publishAttempt !== undefined}
             isPublishing={publishAttempt?.status === 'writing'}
             onPublishPlan={plan => {

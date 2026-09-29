@@ -71,15 +71,17 @@ rather than silently broadening permissions when editing known rules.
 ## Working with the store
 
 Use the [types](store/types.ts) and [store implementation](store/index.ts) as the
-API reference. A session owner supplies clients, media dependencies, and optional
-normalized initial content:
+API reference. A session owner supplies clients, the account PDS URL,
+localization, and optional normalized initial content:
 
 ```ts
 import {createThreadStore} from '#/components/ComposerV2/store'
 
 const store = createThreadStore({
   resolvers: {appviewClient, chatClient},
-  media: {pdsClient, dispatchUrl, i18n},
+  pdsClient,
+  pdsUrl, // currentAccount.pdsUrl ?? currentAccount.service
+  i18n,
   initialState: {posts: [{text: 'Hello world'}]},
   onError, // Optional per-session reporting policy.
 })
@@ -257,10 +259,13 @@ states, not store corruption; publication preflight handles readiness.
 
 ### Media workers and platform boundaries
 
-`media` provides the PDS lex client, localization, and account dispatch URL.
-Tests can inject compression, metadata, upload, service-client, polling/sleep,
-and whole-worker seams. There is no production simulated-upload fallback;
-missing dependencies fail explicitly. Use the current lex clients, not removed
+`pdsClient`, `pdsUrl`, and `i18n` are required store options; a caller without
+an account must not construct a store. `pdsUrl` is the account PDS URL, which
+video uploads use for the service-auth audience; the shared video API still
+names it `dispatchUrl`, so the worker maps it at that call. Tests can inject
+compression, metadata, upload, service-client, and polling/sleep overrides via
+`__uploadOverrides`, and whole workers via `__uploadWorkers`. There is no
+production simulated-upload fallback. Use the current lex clients, not removed
 agent APIs.
 
 **Images:** retain original source fields; compress with the existing

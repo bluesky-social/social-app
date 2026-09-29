@@ -18,6 +18,7 @@ import {
   planComposerV2,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 
 const resolvers = {} as LinkResolvers
 const dependencies: ComposerV2PlannerDependencies = {did: 'did:plc:tester'}
@@ -31,6 +32,7 @@ function makeSession(
     key,
     scenarioId: 'empty',
     store: createThreadStore({
+      ...testUploadRuntime,
       resolvers,
       onError,
       initialState: {posts: [{text}]},

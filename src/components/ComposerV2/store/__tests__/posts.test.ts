@@ -7,6 +7,7 @@ jest.mock('#/lib/api/resolve', () => ({
 
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 
 function makeIdGenerator() {
   let i = 0
@@ -17,6 +18,7 @@ const resolvers = {} as LinkResolvers
 
 function makeStore() {
   return createThreadStore({
+    ...testUploadRuntime,
     resolvers,
     __createId: makeIdGenerator(),
   })

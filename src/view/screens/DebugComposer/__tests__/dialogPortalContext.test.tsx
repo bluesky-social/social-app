@@ -53,6 +53,7 @@ import {
   useThreadStore,
 } from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import * as Dialog from '#/components/Dialog'
 
 const portal = (Dialog as unknown as {__portal: PortalGroup}).__portal
@@ -67,6 +68,7 @@ const i18n = setupI18n({locale: 'en', messages: {en: {}}})
 
 function makeStore() {
   return createThreadStore({
+    ...testUploadRuntime,
     resolvers: {} as LinkResolvers,
     __createId: () => 'post-1',
     initialState: {posts: [{text: ''}]},

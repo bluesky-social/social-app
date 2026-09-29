@@ -17,6 +17,7 @@ import {
   planComposerV2,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadState'
 import {writeComposerV2Plan} from '#/components/ComposerV2/writer'
 import {com} from '#/lexicons'
@@ -249,7 +250,11 @@ describe('ComposerV2 thin writer', () => {
           }),
       )
       const onError = jest.fn<ComposerV2OnError>()
-      const store = createThreadStore({resolvers: {} as LinkResolvers, onError})
+      const store = createThreadStore({
+        ...testUploadRuntime,
+        resolvers: {} as LinkResolvers,
+        onError,
+      })
       const result = writeComposerV2Plan({
         plan,
         pdsClient,

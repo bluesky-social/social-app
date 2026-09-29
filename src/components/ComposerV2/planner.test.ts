@@ -20,6 +20,7 @@ import {
   summarizeComposerV2Plan,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
+import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {
   type MediaAttachmentInput,
   type ThreadState,
@@ -1282,6 +1283,7 @@ describe('ComposerV2 no-write planner', () => {
     function makeStore(initial?: ThreadStoreInitialState) {
       let i = 0
       return createThreadStore({
+        ...testUploadRuntime,
         resolvers: {} as never,
         initialState: initial,
         __createId: () => `store-post-${++i}`,
