@@ -1,8 +1,7 @@
+import {type getIdentifiers} from '#/analytics/identifiers'
 import {type Geolocation} from '#/geolocation'
 
 export type BaseMetadata = {
-  deviceId: string
-  sessionId: string
   platform: string
   appVersion: string
   bundleIdentifier: string
@@ -39,6 +38,11 @@ export type Metadata = {
   geolocation: GeolocationMetadata
 } & MergeableMetadata
 
+/** Identifiers are only added when a metric is queued, never held in context. */
+export type MetricMetadata = Omit<Partial<Metadata>, 'base'> & {
+  base: Partial<BaseMetadata> & ReturnType<typeof getIdentifiers>
+}
+
 /*
  * Navigation metadata is handle out-of-band from React, since we don't want to
  * slow down screen transitions in any way, and there doesn't seem to be a nice
@@ -69,8 +73,6 @@ export function getMetadataForLogger({
   session,
 }: Metadata): Record<string, unknown> {
   return {
-    deviceId: base.deviceId,
-    sessionId: base.sessionId,
     platform: base.platform,
     appVersion: base.appVersion,
     countryCode: geolocation.countryCode,

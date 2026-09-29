@@ -1,4 +1,3 @@
-import {useSyncExternalStore} from 'react'
 import {type AppStateStatus} from 'react-native'
 import uuid from 'react-native-uuid'
 import {z} from 'zod'
@@ -45,18 +44,10 @@ const initialSessionId = (() => {
   return id
 })()
 
-export function getInitialSessionId() {
-  return getSessionId()
-}
-
 /** The module-level app-state listener keeps this current without subscribers. */
 export function getSessionId() {
   return readSessionRecord()?.id ?? initialSessionId
 }
-
-const listeners = new Set<() => void>()
-let storageSubscription:
-  ReturnType<typeof device.addOnValueChangedListener> | undefined
 
 function onAppStateChanged(state: AppStateStatus) {
   const existing = readSessionRecord()
@@ -72,26 +63,3 @@ function onAppStateChanged(state: AppStateStatus) {
 
 // Track lifecycle events even before analytics contexts mount.
 onAppStateChange(onAppStateChanged)
-
-/** On web, device storage notifies local writes only; this does not coordinate tabs. */
-export function subscribeToSessionId(listener: () => void) {
-  listeners.add(listener)
-  if (listeners.size === 1) {
-    storageSubscription = device.addOnValueChangedListener(
-      ['analyticsSession'],
-      () => listeners.forEach(notify => notify()),
-    )
-  }
-
-  return () => {
-    listeners.delete(listener)
-    if (listeners.size === 0) {
-      storageSubscription?.remove()
-      storageSubscription = undefined
-    }
-  }
-}
-
-export function useSessionId() {
-  return useSyncExternalStore(subscribeToSessionId, getSessionId)
-}

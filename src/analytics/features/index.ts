@@ -7,6 +7,7 @@ import {Logger} from '#/logger'
 import {readFeatureBootstrap} from '#/analytics/features/bootstrap'
 import {createGrowthBook, refreshGrowthBook} from '#/analytics/features/client'
 import {Features} from '#/analytics/features/types'
+import {getIdentifiers} from '#/analytics/identifiers'
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
 
@@ -44,6 +45,13 @@ const sdkOptions = {
   enableDevMode: env.IS_INTERNAL,
 }
 const bootstrap = readFeatureBootstrap(sdkOptions)
+
+/**
+ * Shared SDK instance for configuration and callback registration. Assumes a
+ * single active account context. Evaluate through `isFeatureEnabled`,
+ * `getFeatureValue`, or `evaluateFeature` instead of the raw SDK methods so
+ * current session/device IDs are synchronized before bucketing and exposure.
+ */
 export const features = createGrowthBook(sdkOptions, bootstrap)
 
 /**
@@ -76,6 +84,45 @@ export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
   await (bootstrap
     ? refreshGrowthBook(features, options)
     : features.refreshFeatures(options))
+}
+
+/**
+ * Rotation alone does not rerender React consumers. Each subsequent evaluation
+ * syncs identifiers so bucketing and the synchronous exposure callbacks agree.
+ */
+function syncIdentifiers() {
+  const identifiers = getIdentifiers()
+  const attributes = features.getAttributes()
+  if (
+    attributes.deviceId !== identifiers.deviceId ||
+    attributes.sessionId !== identifiers.sessionId
+  ) {
+    void features.updateAttributes(identifiers)
+  }
+}
+
+/** Checks whether a feature is on using the current session and device IDs. */
+export function isFeatureEnabled(feature: string) {
+  syncIdentifiers()
+  return features.isOn(feature)
+}
+
+/**
+ * Returns a feature value, falling back to `defaultValue`, using the current
+ * session and device IDs.
+ */
+export function getFeatureValue<T>(feature: string, defaultValue: T) {
+  syncIdentifiers()
+  return features.getFeatureValue(feature, defaultValue)
+}
+
+/**
+ * Returns the full GrowthBook evaluation result using the current session and
+ * device IDs.
+ */
+export function evaluateFeature(feature: string) {
+  syncIdentifiers()
+  return features.evalFeature(feature)
 }
 
 export function getFeatures() {
@@ -174,8 +221,7 @@ export function setAttributes({
   preferences,
 }: Metadata) {
   void features.setAttributes({
-    deviceId: base.deviceId,
-    sessionId: base.sessionId,
+    ...getIdentifiers(),
     platform: base.platform,
     appVersion: base.appVersion,
     countryCode: geolocation.countryCode,

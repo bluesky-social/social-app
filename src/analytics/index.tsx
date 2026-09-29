@@ -13,22 +13,19 @@ import {recordFeatureFlagEvaluation} from '#/logger/sentry/featureFlags'
 import {
   Features,
   features as feats,
+  getFeatureValue,
   init,
+  isFeatureEnabled,
   refresh,
   setAttributes,
 } from '#/analytics/features'
-import {
-  getAndMigrateDeviceId,
-  getDeviceId,
-  getInitialSessionId,
-  getSessionId,
-  useSessionId,
-} from '#/analytics/identifiers'
+import {getAndMigrateDeviceId, getIdentifiers} from '#/analytics/identifiers'
 import {
   getMetadataForLogger,
   getNavigationMetadata,
   type MergeableMetadata,
   type Metadata,
+  type MetricMetadata,
 } from '#/analytics/metadata'
 import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
@@ -80,8 +77,8 @@ function createLogger(
 ): LoggerType {
   const logger = Logger.create(context, metadata)
   const currentLogger = () => {
-    // Foreground callbacks can run before the context rerenders after rotation.
-    logger.ambientMetadata = {...metadata, sessionId: getSessionId()}
+    // Replace the snapshot so previously recorded entries stay unchanged.
+    logger.ambientMetadata = {...metadata, ...getIdentifiers()}
     return logger
   }
   return {
@@ -101,19 +98,18 @@ function createLogger(
 const Context = createContext<AnalyticsBaseContextType>({
   logger: createLogger(Logger.Context.Default, {}),
   metric: (event, payload, metadata: Partial<Metadata> = {}) => {
-    if ('__meta' in metadata) {
-      delete metadata.__meta
-    }
-    metrics.track(event, payload, {
+    const snapshot: MetricMetadata = {
       ...metadata,
-      base: {...metadata.base, sessionId: getSessionId()},
+      base: {...metadata.base, ...getIdentifiers()},
       navigation: getNavigationMetadata(),
-    })
+    }
+    if ('__meta' in snapshot) {
+      delete snapshot.__meta
+    }
+    metrics.track(event, payload, snapshot)
   },
   metadata: {
     base: {
-      deviceId: getDeviceId() ?? 'unknown',
-      sessionId: getInitialSessionId(),
       platform: Platform.OS,
       appVersion: env.APP_VERSION,
       bundleIdentifier: env.BUNDLE_IDENTIFIER,
@@ -187,8 +183,6 @@ export function AnalyticsContext({
       )
     }
   }
-  const deviceId = getDeviceId() ?? 'unknown'
-  const sessionId = useSessionId()
   // only IP based, never GPS
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
@@ -208,8 +202,6 @@ export function AnalyticsContext({
       ...metadata,
       base: {
         ...parentContext.metadata.base,
-        deviceId,
-        sessionId,
         isBetaUser,
       },
       geolocation,
@@ -229,7 +221,7 @@ export function AnalyticsContext({
       },
     }
     return context
-  }, [parentContext, metadata, deviceId, sessionId, isBetaUser, geolocation])
+  }, [parentContext, metadata, isBetaUser, geolocation])
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 
@@ -325,24 +317,11 @@ export function AnalyticsFeaturesContext({
   setAttributes(parentContext.metadata)
 
   const childContext = useMemo<AnalyticsContextType>(() => {
-    const syncSessionId = () => {
-      const sessionId = getSessionId()
-      if (feats.getAttributes().sessionId !== sessionId) {
-        // Match exposure metadata even when evaluation precedes a rerender.
-        void feats.updateAttributes({sessionId})
-      }
-    }
     return {
       ...parentContext,
       features: {
-        enabled: feature => {
-          syncSessionId()
-          return feats.isOn(feature)
-        },
-        getValue: (feature, defaultValue) => {
-          syncSessionId()
-          return feats.getFeatureValue(feature, defaultValue)
-        },
+        enabled: isFeatureEnabled,
+        getValue: getFeatureValue,
         ...Features,
       },
     }
