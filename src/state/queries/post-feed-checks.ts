@@ -35,10 +35,13 @@ import {
  * - Return: a real return from the background is recorded on the query of each
  *   active view as soon as it happens, and stays owed for
  *   RETURN_INTENT_LIFETIME until a check or fetch from the top that settles
- *   after it answers it. It skips the focus gate. The active view claims it; a
- *   view that goes inactive first hands the claim back, expiry unchanged, and
- *   whatever the check found waits for the next active view of the query. It
- *   is consumed when a view is handed the finding, not when a request starts.
+ *   after it answers it. When it can be handled, it checks only if the clock
+ *   is at least RETURN_STALE_AFTER old, time away included, and is otherwise
+ *   consumed without one; the focus gate does not apply to it. The active view
+ *   claims it; a view that goes inactive first hands the claim back, expiry
+ *   unchanged, and whatever the check found waits for the next active view of
+ *   the query. It is consumed when a view is handed the finding, not when a
+ *   request starts.
  * - Coalescing: one check per query at a time, and none while work on its top
  *   is in flight or pending. Triggers that arrive meanwhile wait, and the clock
  *   that work moves decides whether they still need a check.
@@ -54,6 +57,21 @@ import {
  * request-rate testing (APP-3159).
  */
 export const FOCUS_CHECK_AFTER = STALE.MINUTES.ONE
+
+/**
+ * How old an exact query's check clock must be for a real return to be worth
+ * a check. The clock runs from the committed top's fetch or last successful
+ * check, so its age includes the time spent away.
+ *
+ * `onAppReturnedFromBackground` decides whether the reader really left; this
+ * decides whether this query is worth checking now that they are back. A pull
+ * to refresh, 45 seconds away and back again needs no check, so a return to
+ * data fresher than this is consumed without one.
+ *
+ * Provisional: to be validated in native use and request-rate testing
+ * (APP-3159).
+ */
+export const RETURN_STALE_AFTER = 2 * STALE.MINUTES.ONE
 
 /**
  * How long a real return stays owed while focus, loading or another operation
@@ -403,8 +421,16 @@ class PostFeedCheckView {
           this.present(intent.finding.result, 'return')
           return
         }
-        if (top && this.attemptedReturnId !== intent.id) {
-          // Skips the focus gate, and answers the pending focus too.
+        if (now - lastSuccessAt < RETURN_STALE_AFTER) {
+          /*
+           * Judged as it is handled, which for a return held up by other work
+           * can be well after it happened: fresh data, whether from before
+           * the reader left or from the work it waited on, needs no check. A
+           * pending focus still gets its own gate below.
+           */
+          state.returnIntent = undefined
+        } else if (top && this.attemptedReturnId !== intent.id) {
+          // Answers the pending focus too.
           this.run(query, entry, top, 'return')
           return
         }
@@ -490,13 +516,20 @@ class PostFeedCheckView {
         if (intent && !intent.finding && now < intent.expiresAt) {
           /*
            * Settling after the return, this check answers it, whatever asked
-           * for it. What it found waits on the return for its claimant, or
-           * for the next active view if the claimant has gone.
+           * for it, so the return never gets a check of its own. What it found
+           * is the return's to offer only if the query was stale enough, this
+           * check aside, for the return to have deserved one: say an interval
+           * tick that fired on resume just ahead of the return. Otherwise it
+           * goes to whatever asked for this check. The return's share waits
+           * for its claimant, or for the next active view if that has gone.
            */
-          if (result === undefined) {
-            state.returnIntent = undefined
-          } else {
+          const isReturnDue =
+            now - getLastSuccessAt(state, top) >= RETURN_STALE_AFTER
+          if (result !== undefined && isReturnDue) {
             intent.finding = {result, top}
+          } else {
+            state.returnIntent = undefined
+            foundForTrigger = result !== undefined
           }
         } else {
           foundForTrigger = result !== undefined
