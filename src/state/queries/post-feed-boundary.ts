@@ -8,6 +8,12 @@ export type BoundaryPage<Item = app.bsky.feed.defs.FeedViewPost> = {
   cursor: string | undefined
   startCursor?: string
   since?: string
+  /**
+   * Set on an exhausted `since` page once it holds the posts at its boundary
+   * (see {@link carryBoundary}), so that its cursor continues correctly with
+   * nothing below it.
+   */
+  holdsBoundary?: true
   feed: Item[]
 }
 
@@ -47,11 +53,7 @@ export function gapBelow(
   ) {
     return undefined
   }
-  const continues =
-    typeof lowerParam === 'object' &&
-    lowerParam !== null &&
-    (lowerParam as {cursor?: unknown}).cursor === upper.cursor
-  return continues ? 'filled' : 'open'
+  return continuesFrom(lowerParam, upper.cursor) ? 'filled' : 'open'
 }
 
 /**
@@ -154,18 +156,25 @@ export function feedSortTime(item: app.bsky.feed.defs.FeedViewPost) {
  * page below. A copy that duplicates a post already rendered is removed by the
  * feed's ordinary deduplication.
  *
+ * The copy is marked as holding its boundary, even when `lower` is empty and
+ * there is nothing to copy, so that a page later continued from its cursor is
+ * known to follow it correctly.
+ *
  * Returns `upper` itself when there is nothing to carry: a gapped `since` page
  * already continues into the range it did not return, and a page that `lower`
  * does not directly follow has no boundary with it. Never mutates either page.
  *
  * Shared by the Following snapshot selection and the settlement at the top of
- * the feed (APP-3170).
+ * the feed (see {@link settleFeedData}).
  */
 export function carryBoundary<
   Page extends BoundaryPage<app.bsky.feed.defs.FeedViewPost>,
 >(upper: Page, lower: BoundaryPage<app.bsky.feed.defs.FeedViewPost>): Page {
-  if (!isContiguousAbove(upper, lower) || lower.feed.length === 0) {
+  if (!isContiguousAbove(upper, lower)) {
     return upper
+  }
+  if (lower.feed.length === 0) {
+    return {...upper, holdsBoundary: true}
   }
   const boundaryTime = feedSortTime(lower.feed[0])
   let end = 1
@@ -175,7 +184,146 @@ export function carryBoundary<
   ) {
     end++
   }
-  return {...upper, feed: [...upper.feed, ...lower.feed.slice(0, end)]}
+  return {
+    ...upper,
+    feed: [...upper.feed, ...lower.feed.slice(0, end)],
+    holdsBoundary: true,
+  }
+}
+
+/**
+ * How many posts settling keeps above what it retires, at least: a page's
+ * worth, so that the rows it retires are well below a reader at the top.
+ * Without it, a small prepend above the restored pages would retire rows that
+ * are on screen, which would vanish and come back as the feed paginates.
+ */
+export const SETTLE_MIN_KEPT_ITEMS = 30
+
+export type SettledFeedData<Page> = {
+  pages: Page[]
+  pageParams: unknown[]
+  /** How many pages were marked reached. */
+  reached: number
+  /** How many pages were retired from below. */
+  retired: number
+}
+
+/**
+ * Settles a feed whose reader has reached its true top: the pages added above
+ * the rest (the `since` pages at the top) are marked reached, so that they are
+ * no longer offered as new, and the stale pages below them are retired, where
+ * what is left continues correctly without them. Returns `undefined` when there
+ * is nothing to do, which makes settling again a no-op. Never mutates `data`.
+ *
+ * What is retired, going down the `since` pages from the top:
+ *
+ * - below a page that the page under it continues from (a filled gap, or
+ *   pagination after an earlier settle), nothing: that is one chain.
+ * - below a page with an open gap, everything: its cursor continues into the
+ *   posts that were missing, so the old pages past the gap go with the gap.
+ * - below an exhausted page that holds its boundary, everything.
+ * - below the last exhausted page, the stale pages it was prepended above,
+ *   once its boundary has been carried onto it (see {@link carryBoundary}), so
+ *   that its cursor continues from a post it holds. If it cannot be carried,
+ *   nothing.
+ *
+ * Nothing is retired unless {@link SETTLE_MIN_KEPT_ITEMS} posts stay above.
+ * Retiring never changes the pages kept, other than the carry, so the rows
+ * above stay as they were.
+ */
+export function settleFeedData<
+  Page extends BoundaryPage<app.bsky.feed.defs.FeedViewPost> & {
+    reachedAt?: number
+  },
+>(
+  data: {pages: readonly Page[]; pageParams: readonly unknown[]},
+  now: number,
+): SettledFeedData<Page> | undefined {
+  const {pages, pageParams} = data
+  let sinceCount = 0
+  while (sinceCount < pages.length && pages[sinceCount].since !== undefined) {
+    sinceCount++
+  }
+  if (sinceCount === 0) {
+    return undefined
+  }
+
+  const kept = [...pages]
+  let keep = retainedPageCount(pages, pageParams, sinceCount)
+  if (keep < pages.length) {
+    const keptItems = pages
+      .slice(0, keep)
+      .reduce((count, page) => count + page.feed.length, 0)
+    const last = pages[keep - 1]
+    if (keptItems < SETTLE_MIN_KEPT_ITEMS) {
+      keep = pages.length
+    } else if (isExhaustedSincePage(last) && !last.holdsBoundary) {
+      const carried = carryBoundary(last, pages[keep])
+      if (carried === last) {
+        keep = pages.length
+      } else {
+        kept[keep - 1] = carried
+      }
+    }
+  }
+  kept.length = keep
+
+  let reached = 0
+  for (let index = 0; index < Math.min(sinceCount, keep); index++) {
+    if (kept[index].reachedAt === undefined) {
+      kept[index] = {...kept[index], reachedAt: now}
+      reached++
+    }
+  }
+  const retired = pages.length - keep
+  if (reached === 0 && retired === 0) {
+    return undefined
+  }
+  return {pages: kept, pageParams: pageParams.slice(0, keep), reached, retired}
+}
+
+/**
+ * How many pages from the top settling keeps - see {@link settleFeedData}.
+ * `sinceCount` is how many `since` pages there are at the top.
+ */
+function retainedPageCount(
+  pages: readonly BoundaryPage<unknown>[],
+  pageParams: readonly unknown[],
+  sinceCount: number,
+) {
+  for (let index = 0; index < sinceCount; index++) {
+    const page = pages[index]
+    const below = index + 1
+    if (below === pages.length) {
+      return pages.length
+    }
+    const gap = gapBelow(page, pageParams[below])
+    if (gap === 'open') {
+      return below
+    }
+    if (gap === 'filled' || continuesFrom(pageParams[below], page.cursor)) {
+      return pages.length
+    }
+    if (!isExhaustedSincePage(page)) {
+      // A `since` page with no cursor to continue from keeps what is below.
+      return pages.length
+    }
+    if (page.holdsBoundary) {
+      return below
+    }
+  }
+  // The stale pages the last exhausted page was prepended above.
+  return sinceCount
+}
+
+/** Whether a page param continues from `cursor`. */
+function continuesFrom(pageParam: unknown, cursor: string | undefined) {
+  return (
+    cursor !== undefined &&
+    typeof pageParam === 'object' &&
+    pageParam !== null &&
+    (pageParam as {cursor?: unknown}).cursor === cursor
+  )
 }
 
 /**

@@ -10,6 +10,8 @@ import {
   gapBelow,
   isContiguousAbove,
   isExhaustedSincePage,
+  SETTLE_MIN_KEPT_ITEMS,
+  settleFeedData,
   tuneOrder,
 } from './post-feed-boundary'
 
@@ -168,8 +170,17 @@ describe('carryBoundary', () => {
     expect(carryBoundary(exhausted, other)).toBe(exhausted)
   })
 
-  it('carries nothing from an empty page', () => {
-    expect(carryBoundary(exhausted, lowerPage([]))).toBe(exhausted)
+  it('carries nothing from an empty page, but holds its boundary', () => {
+    expect(carryBoundary(exhausted, lowerPage([]))).toEqual({
+      ...exhausted,
+      holdsBoundary: true,
+    })
+  })
+
+  it('marks the page it carries onto as holding its boundary', () => {
+    const carried = carryBoundary(exhausted, lowerPage([item('a', T2)]))
+    expect(carried.holdsBoundary).toBe(true)
+    expect(exhausted.holdsBoundary).toBeUndefined()
   })
 
   it('leaves a duplicate of a boundary post to the feed deduplication', () => {
@@ -427,6 +438,214 @@ describe('findFeedGaps', () => {
     expect(findFeedGaps(pages, [undefined, undefined], () => false).size).toBe(
       1,
     )
+  })
+})
+
+describe('settleFeedData', () => {
+  const NOW = 1_000_000
+  type Page = BoundaryPage & {reachedAt?: number}
+
+  function items(prefix: string, count: number, indexedAt = T1) {
+    return Array.from({length: count}, (_, i) =>
+      item(`${prefix}${i}`, indexedAt),
+    )
+  }
+
+  /** The restored top, whose server boundary is `S`, and the page below it. */
+  const restored: Page[] = [
+    {
+      cursor: 'R1-next',
+      startCursor: 'S',
+      // Two posts at the boundary's sort time, then older ones.
+      feed: [item('r0', T2), item('r1', T2), ...items('r-', 28, T3)],
+    },
+    {cursor: 'R2-next', feed: items('rr-', 30, T3)},
+  ]
+  const restoredParams = [undefined, {cursor: 'R1-next'}]
+
+  /** A page fetched with `since` above the restored top. */
+  function sincePage(cursor: string, count: number): Page {
+    return {since: 'S', cursor, startCursor: 'N', feed: items('n-', count)}
+  }
+
+  const rkeys = (page: Page) => page.feed.map(i => i.post.record.text)
+
+  it('has nothing to do without pages added above', () => {
+    expect(
+      settleFeedData({pages: restored, pageParams: restoredParams}, NOW),
+    ).toBeUndefined()
+  })
+
+  it('marks an exhausted page reached and retires the stale pages below it, carrying its boundary', () => {
+    const exhausted = sincePage('S', SETTLE_MIN_KEPT_ITEMS)
+    const data = {
+      pages: [exhausted, ...restored],
+      pageParams: [undefined, ...restoredParams],
+    }
+
+    const settled = settleFeedData(data, NOW)!
+
+    expect(settled).toMatchObject({reached: 1, retired: 2})
+    expect(settled.pageParams).toEqual([undefined])
+    const [top] = settled.pages
+    expect(top).toMatchObject({
+      since: 'S',
+      cursor: 'S',
+      reachedAt: NOW,
+      holdsBoundary: true,
+    })
+    // Its own posts, then the boundary it now holds.
+    expect(rkeys(top)).toEqual([...rkeys(exhausted), 'r0', 'r1'])
+    // Nothing it was handed has changed.
+    expect(data.pages[0]).toBe(exhausted)
+    expect(exhausted.reachedAt).toBeUndefined()
+    expect(data.pages).toHaveLength(3)
+  })
+
+  it('does nothing when settled again', () => {
+    const settled = settleFeedData(
+      {
+        pages: [sincePage('S', SETTLE_MIN_KEPT_ITEMS), ...restored],
+        pageParams: [undefined, ...restoredParams],
+      },
+      NOW,
+    )!
+    expect(settleFeedData(settled, NOW + 1)).toBeUndefined()
+
+    // Nor once the feed has paginated on from the page it kept.
+    const paginated = {
+      pages: [...settled.pages, {cursor: 'P1-next', feed: items('p-', 30)}],
+      pageParams: [...settled.pageParams, {cursor: 'S'}],
+    }
+    expect(settleFeedData(paginated, NOW + 2)).toBeUndefined()
+  })
+
+  it('keeps what a small prepend sits on, and only marks it reached', () => {
+    const small = sincePage('S', 2)
+    const settled = settleFeedData(
+      {pages: [small, ...restored], pageParams: [undefined, ...restoredParams]},
+      NOW,
+    )!
+
+    expect(settled).toMatchObject({reached: 1, retired: 0})
+    expect(settled.pages.slice(1)).toEqual(restored)
+    expect(rkeys(settled.pages[0])).toEqual(rkeys(small))
+    expect(settled.pages[0].holdsBoundary).toBeUndefined()
+  })
+
+  it('retires the old pages through an open gap', () => {
+    const gapped = sincePage('G', 60)
+    const settled = settleFeedData(
+      {
+        pages: [gapped, ...restored],
+        pageParams: [undefined, ...restoredParams],
+      },
+      NOW,
+    )!
+
+    expect(settled).toMatchObject({reached: 1, retired: 2})
+    expect(settled.pages).toEqual([{...gapped, reachedAt: NOW}])
+    expect(settled.pageParams).toEqual([undefined])
+  })
+
+  it('keeps the pages that filled a gap, which continue it', () => {
+    const gapped = sincePage('G', 60)
+    const filled = [
+      gapped,
+      {cursor: 'C1-next', feed: items('c-', 30, T3)},
+      {cursor: 'C2-next', feed: items('cc-', 30, T3)},
+    ]
+    const settled = settleFeedData(
+      {
+        pages: filled,
+        pageParams: [undefined, {cursor: 'G'}, {cursor: 'C1-next'}],
+      },
+      NOW,
+    )!
+
+    expect(settled).toMatchObject({reached: 1, retired: 0})
+    expect(settled.pages.slice(1)).toEqual(filled.slice(1))
+  })
+
+  it('retires nothing when the boundary cannot be carried', () => {
+    const exhausted = sincePage('S', SETTLE_MIN_KEPT_ITEMS)
+    const elsewhere = {...restored[0], startCursor: 'elsewhere'}
+    const settled = settleFeedData(
+      {
+        pages: [exhausted, elsewhere, restored[1]],
+        pageParams: [undefined, ...restoredParams],
+      },
+      NOW,
+    )!
+
+    expect(settled).toMatchObject({reached: 1, retired: 0})
+    expect(settled.pages[0].holdsBoundary).toBeUndefined()
+  })
+
+  it('keeps a stack of exhausted pages, and retires below the last', () => {
+    const newest: Page = {
+      since: 'N',
+      cursor: 'N',
+      startCursor: 'M',
+      feed: items('m-', 10),
+    }
+    const exhausted = sincePage('S', 25)
+    const settled = settleFeedData(
+      {
+        pages: [newest, exhausted, ...restored],
+        pageParams: [undefined, undefined, ...restoredParams],
+      },
+      NOW,
+    )!
+
+    expect(settled).toMatchObject({reached: 2, retired: 2})
+    expect(settled.pages.map(page => page.cursor)).toEqual(['N', 'S'])
+    expect(settled.pages[1].holdsBoundary).toBe(true)
+    expect(settled.pages.every(page => page.reachedAt === NOW)).toBe(true)
+  })
+
+  it('retires everything below a gap higher up', () => {
+    const gapped: Page = {
+      since: 'N',
+      cursor: 'G',
+      startCursor: 'M',
+      feed: items('m-', 60),
+    }
+    const settled = settleFeedData(
+      {
+        pages: [gapped, sincePage('S', 5), ...restored],
+        pageParams: [undefined, undefined, ...restoredParams],
+      },
+      NOW,
+    )!
+
+    expect(settled).toMatchObject({reached: 1, retired: 3})
+    expect(settled.pages.map(page => page.cursor)).toEqual(['G'])
+  })
+
+  it('leaves the stamps of pages reached before', () => {
+    const exhausted = {...sincePage('S', 2), reachedAt: 5}
+    const newer: Page = {
+      since: 'N',
+      cursor: 'N',
+      startCursor: 'M',
+      feed: items('m-', 1),
+    }
+    const settled = settleFeedData(
+      {
+        pages: [newer, exhausted, ...restored],
+        pageParams: [undefined, undefined, ...restoredParams],
+      },
+      NOW,
+    )!
+
+    expect(settled.pages.map(page => page.reachedAt)).toEqual([
+      NOW,
+      5,
+      undefined,
+      undefined,
+    ])
+    expect(settled.pages[1]).toBe(exhausted)
   })
 })
 
