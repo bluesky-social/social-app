@@ -1045,7 +1045,11 @@ function failure({
   )
 }
 
-/** Return only structural data suitable for the debug harness. */
+/**
+ * Summarize a plan result as structural data only (codes, counts, keys, URIs,
+ * and embed types), omitting record text and gate rule payloads so it is safe
+ * to display or inspect.
+ */
 export function summarizeComposerV2Plan({
   result,
 }: {
@@ -1085,8 +1089,8 @@ export function summarizeComposerV2Plan({
       tagCount: post.record.tags?.length ?? 0,
     })),
     /*
-     * Gate record writes with the URI of the post each one governs, so the
-     * harness can show per-post gate associations without the rule payloads.
+     * Gate record writes with the URI of the post each one governs, so
+     * per-post gate associations are visible without the rule payloads.
      */
     gates: result.writes.flatMap(write => {
       if (write.$type !== 'com.atproto.repo.applyWrites#create') return []

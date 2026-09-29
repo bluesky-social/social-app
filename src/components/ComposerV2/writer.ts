@@ -9,8 +9,9 @@ import {com} from '#/lexicons'
 
 /**
  * Publish one successful ComposerV2 plan through its authenticated PDS client.
- * Planning remains no-write; the debug tester calls this only on explicit
- * publish. Production is not migrated. Callers must serialize or disable
+ * Planning remains no-write; call this only from an explicit publish action.
+ * DebugComposer is the current caller; production composer UI wiring is
+ * deferred to a separate PR. Callers must serialize or disable
  * duplicate submissions. If a transport failure leaves the outcome ambiguous,
  * retain this exact plan for reconciliation and do not blindly retry or create
  * a new plan with different record keys. This function never retries writes.
