@@ -4,15 +4,20 @@ import {View} from 'react-native'
 import {type FollowingGapOutcome} from '#/state/queries/post-feed'
 import {type PageGap} from '#/state/queries/post-feed-boundary'
 import {FeedGap} from '#/components/feeds/FeedGap'
-import {isGapRowInView} from '#/features/followingV2/feedGapRows'
+import {
+  type GapRowStatus,
+  gapRowStatusAfterFill,
+  isGapRowInView,
+} from '#/features/followingV2/feedGapRows'
 
 type ViewRef = React.ComponentRef<typeof View>
 type WindowRect = {y: number; height: number}
 
 /**
  * The row at a gap in restored Following, open or filled, which keeps the
- * state of its own press: in flight until the fill settles, then ready to try
- * again if it failed.
+ * state of its own press: loading from the press until the gap is filled and
+ * the row empties, or ready to press again if the fill failed or wrote nothing
+ * (see `gapRowStatusAfterFill`).
  *
  * The fill only lands while the row is in view (see `isGapRowInView`). If the
  * reader has scrolled on into the posts below it by the time the posts that
@@ -37,13 +42,13 @@ export function FollowingGapRow({
   hideTopBorder: boolean
 }) {
   const rowRef = useRef<ViewRef>(null)
-  const [status, setStatus] = useState<'idle' | 'filling' | 'failed'>('idle')
+  const [status, setStatus] = useState<GapRowStatus>('idle')
 
   const onPress = async () => {
     if (status === 'filling') return
     setStatus('filling')
     const pressed = measureInWindow(rowRef.current)
-    const {outcome} = await onFill(gap, {
+    const outcome = await onFill(gap, {
       mayCommit: async () => {
         const [row, list, pressedRow] = await Promise.all([
           measureInWindow(rowRef.current),
@@ -58,7 +63,7 @@ export function FollowingGapRow({
         })
       },
     })
-    setStatus(outcome === 'failed' ? 'failed' : 'idle')
+    setStatus(gapRowStatusAfterFill(outcome))
   }
 
   return (

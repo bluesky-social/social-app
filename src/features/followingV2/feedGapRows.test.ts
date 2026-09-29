@@ -1,7 +1,12 @@
 import {type FeedPostSlice} from '#/state/queries/post-feed'
 import {FOLLOWING_SNAPSHOT_QUERY_KEY} from '#/state/queries/post-feed-snapshot'
 import {type AnalyticsContextType} from '#/analytics'
-import {feedGapRows, isFeedSliceHidden, isGapRowInView} from './feedGapRows'
+import {
+  feedGapRows,
+  gapRowStatusAfterFill,
+  isFeedSliceHidden,
+  isGapRowInView,
+} from './feedGapRows'
 
 const ax = {
   features: {
@@ -192,5 +197,25 @@ describe('isGapRowInView', () => {
         headerOffset,
       }),
     ).toBe(false)
+  })
+})
+
+describe('gapRowStatusAfterFill', () => {
+  it('keeps loading once the gap is filled, until the row empties or goes', () => {
+    expect(gapRowStatusAfterFill({outcome: 'filled', itemCount: 30})).toBe(
+      'filling',
+    )
+    // Even when the page that fills it renders nothing.
+    expect(gapRowStatusAfterFill({outcome: 'filled', itemCount: 0})).toBe(
+      'filling',
+    )
+  })
+
+  it('offers to try again after a failed fill', () => {
+    expect(gapRowStatusAfterFill({outcome: 'failed'})).toBe('failed')
+  })
+
+  it('is ready to be pressed again when the fill wrote nothing', () => {
+    expect(gapRowStatusAfterFill({outcome: 'superseded'})).toBe('idle')
   })
 })

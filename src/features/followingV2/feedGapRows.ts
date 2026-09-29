@@ -1,6 +1,10 @@
 import {type QueryKey} from '@tanstack/react-query'
 
-import {type FeedPage, type FeedPostSlice} from '#/state/queries/post-feed'
+import {
+  type FeedPage,
+  type FeedPostSlice,
+  type FollowingGapOutcome,
+} from '#/state/queries/post-feed'
 import {findFeedGaps, type PageGap} from '#/state/queries/post-feed-boundary'
 import {type AnalyticsContextType} from '#/analytics'
 import {isFollowingRestorationEnabled} from './eligibility'
@@ -100,4 +104,31 @@ export function isGapRowInView({
     Math.min(listTop + headerOffset, pressedTop ?? listTop + headerOffset),
   )
   return row.y + row.height > visibleTop
+}
+
+/** The state of a gap row's own press - see `FollowingGapRow`. */
+export type GapRowStatus = 'idle' | 'filling' | 'failed'
+
+/**
+ * What a gap row shows once the fill it started settles.
+ *
+ * - `filled`: still loading. The gap is filled by now, so the row renders
+ *   nothing, or goes, as soon as the feed's rows catch up with the write.
+ *   Going back to idle first would offer "Show more posts" again meanwhile.
+ * - `failed`: nothing was written, so the row offers to try again.
+ * - `superseded`: nothing was written, as there was nothing to fill, the pages
+ *   were replaced, or the reader had scrolled on past the row. If the row is
+ *   still there, it is ready to be pressed again.
+ */
+export function gapRowStatusAfterFill({
+  outcome,
+}: FollowingGapOutcome): GapRowStatus {
+  switch (outcome) {
+    case 'filled':
+      return 'filling'
+    case 'failed':
+      return 'failed'
+    case 'superseded':
+      return 'idle'
+  }
 }
