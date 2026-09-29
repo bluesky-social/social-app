@@ -211,7 +211,7 @@ async function runVideoUpload({
     if (!videoBlob) {
       report({...opts, status: {state: 'uploading', phase: 'validating'}})
       const asset = await getAsset({media, getVideoMetadata})
-      validateVideo({asset})
+      validateVideoSource({asset})
       throwIfAborted({signal})
 
       report({...opts, status: {state: 'uploading', phase: 'compressing'}})
@@ -231,6 +231,7 @@ async function runVideoUpload({
         },
       })
       throwIfAborted({signal})
+      /* The upload-output size limit applies to what compression produced. */
       if (compressed.size > VIDEO_MAX_SIZE) throw new VideoTooLargeError()
       opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, {
         kind: 'video',
@@ -348,11 +349,26 @@ async function getAsset({
   return metadata(media.uri, media.mimeType)
 }
 
-function validateVideo({asset}: {asset: ImagePickerAsset}) {
-  if (
-    !asset.mimeType ||
-    !SUPPORTED_MIME_TYPES.includes(asset.mimeType as never)
-  ) {
+/**
+ * Checks the source before compression. Upload-output limits (format and
+ * `VIDEO_MAX_SIZE`) only apply here where compression cannot change the
+ * source; otherwise they are enforced on the compressed output.
+ *
+ * - Native transcodes any non-GIF video to an acceptable format and compresses
+ *   large sources, so only the source kind is checked.
+ * - Web may pass the source through unchanged (small files, no WebCodecs, or
+ *   compression failure), so the upload MIME allowlist still applies. The web
+ *   compressor enforces the size limit on its pass-through output itself.
+ * - GIFs are never compressed on either platform, so their source size is
+ *   the output size.
+ */
+function validateVideoSource({asset}: {asset: ImagePickerAsset}) {
+  const {mimeType} = asset
+  const isGif = mimeType === 'image/gif'
+  const isAcceptableFormat =
+    !!mimeType && SUPPORTED_MIME_TYPES.includes(mimeType as never)
+  const isTranscodable = !IS_WEB && !!mimeType?.startsWith('video/')
+  if (!isAcceptableFormat && !isTranscodable) {
     throw new ValidationError('unsupported-video-format')
   }
   if (!asset.width || !asset.height || asset.width <= 0 || asset.height <= 0) {
@@ -361,7 +377,8 @@ function validateVideo({asset}: {asset: ImagePickerAsset}) {
   if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
     throw new ValidationError('video-too-long')
   }
-  if (asset.fileSize != null && asset.fileSize > VIDEO_MAX_SIZE) {
+  const sourceSize = asset.fileSize ?? asset.file?.size
+  if (isGif && sourceSize != null && sourceSize > VIDEO_MAX_SIZE) {
     throw new VideoTooLargeError()
   }
 }

@@ -1,6 +1,18 @@
+import {type ImagePickerAsset} from 'expo-image-picker'
 import {type BlobRef, type Client} from '@atproto/lex'
-import {describe, expect, jest, test} from '@jest/globals'
+import {afterEach, describe, expect, jest, test} from '@jest/globals'
 
+let mockIsWeb = false
+jest.mock('#/env', () =>
+  /* A getter keeps IS_WEB live; object spread would copy its current value. */
+  Object.defineProperty({...jest.requireActual<object>('#/env')}, 'IS_WEB', {
+    get: () => mockIsWeb,
+  }),
+)
+
+import {VIDEO_MAX_SIZE} from '#/lib/constants'
+import {VideoTooLargeError} from '#/lib/media/video/errors'
+import {type CompressedVideo} from '#/lib/media/video/types'
 import {
   fakeImageDependencies,
   fakeVideoDependencies,
@@ -63,6 +75,73 @@ function video(overrides: Partial<PostMediaVideo> = {}): PostMediaVideo {
 
 const pdsClient = {} as Client
 const runtime = {pdsClient, pdsUrl: 'https://pds.example', i18n}
+
+afterEach(() => {
+  mockIsWeb = false
+})
+
+function sourceAsset(
+  overrides: Partial<ImagePickerAsset> = {},
+): ImagePickerAsset {
+  return {
+    uri: 'file:///source.mp4',
+    mimeType: 'video/mp4',
+    width: 1920,
+    height: 1080,
+    duration: 1000,
+    ...overrides,
+  }
+}
+
+/**
+ * Runs the real video worker against a fake source and compressor, returning
+ * the fakes so a test can assert which stages ran.
+ */
+async function runVideo({
+  asset,
+  compressed = {
+    uri: 'file:///compressed.mp4',
+    size: 100,
+    mimeType: 'video/mp4',
+  },
+  compressError,
+}: {
+  asset: ImagePickerAsset
+  compressed?: CompressedVideo
+  compressError?: Error
+}) {
+  const statuses: UploadStatus[] = []
+  const prepared = jest.fn()
+  const compressVideo = jest.fn(() =>
+    compressError ? Promise.reject(compressError) : Promise.resolve(compressed),
+  )
+  const uploadVideo = jest.fn(() =>
+    Promise.resolve({
+      state: 'JOB_STATE_COMPLETED',
+      jobId: 'job-1',
+      blob: blob('video'),
+    }),
+  )
+  startVideoUpload({
+    postId: 'post-1',
+    mediaId: 'video-1',
+    media: video({
+      mimeType: asset.mimeType ?? undefined,
+      captions: [],
+      file: mockIsWeb ? ({size: 1} as File) : undefined,
+    }),
+    ...runtime,
+    ...fakeVideoDependencies({
+      getVideoMetadata: () => Promise.resolve(asset),
+      compressVideo,
+      uploadVideo: uploadVideo as never,
+    }),
+    setMediaCompressionResult: prepared,
+    setUploadStatus: (_post, _media, status) => statuses.push(status),
+  })
+  await settle()
+  return {statuses, prepared, compressVideo, uploadVideo}
+}
 
 describe('ComposerV2 real media workers', () => {
   test('compresses an image before uploading the transformed output', async () => {
@@ -182,6 +261,196 @@ describe('ComposerV2 real media workers', () => {
       state: 'failed',
       code: 'video-too-long',
       retryable: false,
+    })
+  })
+
+  describe('video source versus upload-output validation', () => {
+    test('native: compresses a source above the upload limit and uploads the smaller output', async () => {
+      const asset = sourceAsset({fileSize: VIDEO_MAX_SIZE * 2})
+      const {statuses, prepared, compressVideo, uploadVideo} = await runVideo({
+        asset,
+        compressed: {
+          uri: 'file:///compressed.mp4',
+          size: VIDEO_MAX_SIZE - 1,
+          mimeType: 'video/mp4',
+        },
+      })
+
+      expect(compressVideo).toHaveBeenCalledWith(asset, expect.anything())
+      expect(prepared).toHaveBeenCalledWith(
+        'post-1',
+        'video-1',
+        expect.objectContaining({size: VIDEO_MAX_SIZE - 1}),
+      )
+      expect(uploadVideo).toHaveBeenCalledWith(
+        expect.objectContaining({
+          video: expect.objectContaining({uri: 'file:///compressed.mp4'}),
+        }),
+      )
+      expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
+    })
+
+    test('native: transcodes a source format outside the upload allowlist', async () => {
+      const asset = sourceAsset({
+        uri: 'file:///source.mkv',
+        mimeType: 'video/x-matroska',
+        fileSize: 1000,
+      })
+      const {statuses, compressVideo, uploadVideo} = await runVideo({asset})
+
+      expect(compressVideo).toHaveBeenCalledWith(asset, expect.anything())
+      expect(uploadVideo).toHaveBeenCalledWith(
+        expect.objectContaining({
+          video: expect.objectContaining({mimeType: 'video/mp4'}),
+        }),
+      )
+      expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
+    })
+
+    test.each([
+      ['native', false],
+      ['web', true],
+    ])(
+      '%s: never uploads compressed output above the upload limit',
+      async (_platform, isWeb) => {
+        mockIsWeb = isWeb
+        const {statuses, prepared, compressVideo, uploadVideo} = await runVideo(
+          {
+            asset: sourceAsset({fileSize: VIDEO_MAX_SIZE * 2}),
+            compressed: {
+              uri: 'file:///compressed.mp4',
+              size: VIDEO_MAX_SIZE + 1,
+              mimeType: 'video/mp4',
+            },
+          },
+        )
+
+        expect(compressVideo).toHaveBeenCalled()
+        expect(prepared).not.toHaveBeenCalled()
+        expect(uploadVideo).not.toHaveBeenCalled()
+        expect(statuses.at(-1)).toMatchObject({
+          state: 'failed',
+          retryable: false,
+        })
+      },
+    )
+
+    test('web: surfaces the compressor pass-through size rejection without uploading', async () => {
+      mockIsWeb = true
+      const {statuses, compressVideo, uploadVideo} = await runVideo({
+        asset: sourceAsset(),
+        compressError: new VideoTooLargeError(),
+      })
+
+      expect(compressVideo).toHaveBeenCalled()
+      expect(uploadVideo).not.toHaveBeenCalled()
+      expect(statuses.at(-1)).toMatchObject({
+        state: 'failed',
+        code: undefined,
+        retryable: false,
+      })
+    })
+
+    test.each([
+      ['zero width', {width: 0}, 'invalid-video-dimensions'],
+      ['negative height', {height: -1}, 'invalid-video-dimensions'],
+      ['excessive duration', {duration: 10 * 60 * 1000 + 1}, 'video-too-long'],
+    ])(
+      'native: rejects %s before compressing a transcodable oversized source',
+      async (_case, overrides, code) => {
+        const {statuses, compressVideo} = await runVideo({
+          asset: sourceAsset({
+            mimeType: 'video/x-matroska',
+            fileSize: VIDEO_MAX_SIZE * 2,
+            ...overrides,
+          }),
+        })
+
+        expect(compressVideo).not.toHaveBeenCalled()
+        expect(statuses.at(-1)).toMatchObject({
+          state: 'failed',
+          code,
+          retryable: false,
+        })
+      },
+    )
+
+    test.each([
+      {platform: 'native', isWeb: false, mimeType: 'application/pdf'},
+      {platform: 'native', isWeb: false, mimeType: 'image/png'},
+      {platform: 'native', isWeb: false, mimeType: undefined},
+      {platform: 'web', isWeb: true, mimeType: 'video/x-matroska'},
+    ])(
+      '$platform: rejects a $mimeType source it cannot upload or transcode',
+      async ({isWeb, mimeType}) => {
+        mockIsWeb = isWeb
+        const {statuses, compressVideo} = await runVideo({
+          asset: sourceAsset({mimeType}),
+        })
+
+        expect(compressVideo).not.toHaveBeenCalled()
+        expect(statuses.at(-1)).toMatchObject({
+          state: 'failed',
+          code: 'unsupported-video-format',
+          retryable: false,
+        })
+      },
+    )
+
+    test.each([
+      ['native', false, {fileSize: VIDEO_MAX_SIZE + 1}],
+      ['web', true, {file: {size: VIDEO_MAX_SIZE + 1} as File}],
+    ])(
+      '%s: rejects an oversized GIF before compression since GIFs pass through',
+      async (_platform, isWeb, size) => {
+        mockIsWeb = isWeb
+        const {statuses, compressVideo} = await runVideo({
+          asset: sourceAsset({mimeType: 'image/gif', ...size}),
+        })
+
+        expect(compressVideo).not.toHaveBeenCalled()
+        expect(statuses.at(-1)).toMatchObject({
+          state: 'failed',
+          retryable: false,
+        })
+      },
+    )
+
+    test.each([
+      ['native', false],
+      ['web', true],
+    ])(
+      '%s: passes an acceptable GIF through to upload',
+      async (_platform, isWeb) => {
+        mockIsWeb = isWeb
+        const {statuses, compressVideo, uploadVideo} = await runVideo({
+          asset: sourceAsset({mimeType: 'image/gif', fileSize: 1000}),
+          compressed: {
+            uri: 'file:///source.gif',
+            size: 1000,
+            mimeType: 'image/gif',
+            passthroughReason: 'gif',
+          },
+        })
+
+        expect(compressVideo).toHaveBeenCalled()
+        expect(uploadVideo).toHaveBeenCalled()
+        expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
+      },
+    )
+
+    test('web: lets a large allowlisted source reach the compressor', async () => {
+      mockIsWeb = true
+      const {statuses, compressVideo, uploadVideo} = await runVideo({
+        asset: sourceAsset({
+          file: {size: VIDEO_MAX_SIZE * 2} as File,
+          mimeType: 'video/webm',
+        }),
+      })
+
+      expect(compressVideo).toHaveBeenCalled()
+      expect(uploadVideo).toHaveBeenCalled()
+      expect(statuses.at(-1)).toMatchObject({state: 'uploaded'})
     })
   })
 
