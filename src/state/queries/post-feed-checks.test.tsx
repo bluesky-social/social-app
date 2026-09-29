@@ -304,6 +304,80 @@ describe('check clock', () => {
   })
 })
 
+describe('empty feeds', () => {
+  it('check on every arrival, while a feed with posts waits a minute', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient, {feed: []})
+    advance(10 * SECOND)
+    const view = renderView(queryClient, {isActive: true})
+    expect(view.triggers()).toEqual(['focus'])
+    await view.settle(undefined)
+
+    view.setProps({isActive: false})
+    advance(SECOND)
+    view.setProps({isActive: true})
+    expect(view.triggers()).toEqual(['focus', 'focus'])
+    await view.settle(undefined)
+
+    // Say a refresh brought some posts.
+    act(() => {
+      seed(queryClient)
+    })
+    view.setProps({isActive: false})
+    advance(10 * SECOND)
+    view.setProps({isActive: true})
+    expect(view.check).toHaveBeenCalledTimes(2)
+  })
+
+  it('count the posts of every page, not just the top', () => {
+    const queryClient = createQueryClient()
+    // Say an empty newer page above the posts already loaded.
+    queryClient.setQueryData<InfiniteData<Page>>(KEY, {
+      pages: [page({feed: []}), page()],
+      pageParams: [undefined, 'older'],
+    })
+    advance(10 * SECOND)
+    const view = renderView(queryClient, {isActive: true})
+    expect(view.check).not.toHaveBeenCalled()
+  })
+
+  it('still wait for work on the top, which answers them if it succeeds', async () => {
+    const queryClient = createQueryClient()
+    const coldLoad = startTopFetch(queryClient)
+    const view = renderView(queryClient, {isActive: true})
+
+    // A cold load that comes back empty is not followed by a check.
+    advance(3 * SECOND)
+    await act(async () => {
+      coldLoad.resolve(page({feed: []}))
+      await coldLoad.fetch
+    })
+    expect(view.check).not.toHaveBeenCalled()
+
+    // Pending work holds it, and it checks once that clears without a check.
+    view.setProps({isActive: false})
+    advance(SECOND)
+    view.setProps({isActive: true, isTopWorkPending: true})
+    expect(view.check).not.toHaveBeenCalled()
+    view.setProps({isActive: true, isTopWorkPending: false})
+    expect(view.triggers()).toEqual(['focus'])
+  })
+
+  it('still make one check per query at a time', async () => {
+    const queryClient = createQueryClient()
+    seed(queryClient, {feed: []})
+    advance(10 * SECOND)
+    const home = renderView(queryClient, {isActive: true})
+    const screen = renderView(queryClient, {isActive: true})
+    expect(home.triggers()).toEqual(['focus'])
+    expect(screen.check).not.toHaveBeenCalled()
+
+    // The check the second view waited for answers its arrival.
+    await home.settle(undefined)
+    expect(screen.check).not.toHaveBeenCalled()
+  })
+})
+
 describe('active views', () => {
   it('never checks from a hidden or prefetched view', async () => {
     const queryClient = createQueryClient()
