@@ -33,7 +33,14 @@ import {
  *   latest successful check of that page. A check that finds nothing moves it;
  *   one that fails does not.
  * - Focus: a view becoming active checks only once the clock is at least
- *   FOCUS_CHECK_AFTER old.
+ *   FOCUS_CHECK_AFTER old. An empty feed, one with no items in any of its
+ *   cached pages, skips that gate but not coalescing: its arrival is still
+ *   answered by any check or fetch from the top that succeeds after it, such
+ *   as the work it waited for, so a cold load that comes back empty is not
+ *   followed by a check of its own. A feed whose items the surface filters
+ *   out, such as by moderation, is not empty here and keeps the gate, since
+ *   what counts is the cached response every view of the query shares, not
+ *   what one of them renders.
  * - Return: a real return from the background is recorded on the query of each
  *   active view as soon as it happens, and stays owed for
  *   RETURN_INTENT_LIFETIME until a check or fetch from the top that settles
@@ -62,7 +69,7 @@ import {
 
 /**
  * How old an exact query's check clock must be before a view of it becoming
- * active is worth a check.
+ * active is worth a check. An empty feed does not wait for it.
  *
  * Provisional: the one-minute gate is to be validated in native use and
  * request-rate testing (APP-3159).
@@ -315,6 +322,8 @@ class PostFeedCheckView {
   private isTopWorkPending = false
   /** Whether the arrival that made this view active has yet to be looked at. */
   private isFocusPending = false
+  /** When this view last became active. */
+  private activatedAt = -Infinity
   private isIntervalDue = false
   /**
    * The return whose check failed during this view's current activation, so
@@ -371,6 +380,7 @@ class PostFeedCheckView {
     if (isActive && !this.isActive) {
       this.isActive = true
       this.isFocusPending = true
+      this.activatedAt = Date.now()
       this.attemptedReturnId = undefined
     } else if (!isActive && this.isActive) {
       this.deactivate()
@@ -502,7 +512,11 @@ class PostFeedCheckView {
     if (!top) {
       return
     }
-    if (isFocusPending && now - lastSuccessAt >= FOCUS_CHECK_AFTER) {
+    const isFocusDue =
+      now - lastSuccessAt >= FOCUS_CHECK_AFTER ||
+      // Unless something checked or fetched the top since the arrival.
+      (lastSuccessAt < this.activatedAt && isEmptyFeed(query))
+    if (isFocusPending && isFocusDue) {
       this.run(query, entry, top, 'focus')
     } else if (isIntervalDue) {
       this.run(query, entry, top, 'interval')
@@ -674,6 +688,17 @@ function getCheckState(entry: PostFeedQueryEntry) {
 function getTopPage(query: Query | undefined): TopPage | undefined {
   const data = query?.state.data as {pages?: TopPage[]} | undefined
   return data?.pages?.[0]
+}
+
+/**
+ * Whether none of the query's cached pages holds a feed item, which is when
+ * its surface shows an empty feed. Items the surface filters out still count.
+ */
+function isEmptyFeed(query: Query) {
+  const data = query.state.data as {pages?: {feed?: unknown}[]} | undefined
+  return (data?.pages ?? []).every(
+    page => !Array.isArray(page.feed) || page.feed.length === 0,
+  )
 }
 
 /**

@@ -55,7 +55,10 @@ const T0 = new Date('2026-09-29T12:00:00.000Z').getTime()
 const SECOND = 1e3
 const MINUTE = 60 * SECOND
 
-type Page = {cursor: string | undefined; feed: never[]; fetchedAt: number}
+type Page = {cursor: string | undefined; feed: unknown[]; fetchedAt: number}
+
+/** A post in a page, as far as the coordinator can tell. */
+const ITEM = {post: {uri: 'at://did:plc:bob/app.bsky.feed.post/1'}}
 
 let lastReturnId = 0
 
@@ -108,13 +111,17 @@ function createQueryClient() {
   })
 }
 
-function page(fetchedAt = Date.now()): Page {
-  return {cursor: 'older', feed: [], fetchedAt}
+/** A page of the feed, with a post unless it is given its own `feed`. */
+function page({
+  fetchedAt = Date.now(),
+  feed = [ITEM],
+}: {fetchedAt?: number; feed?: unknown[]} = {}): Page {
+  return {cursor: 'older', feed, fetchedAt}
 }
 
-/** Commits a top page fetched at `fetchedAt`, as a load of the feed would. */
-function seed(queryClient: QueryClient, fetchedAt = Date.now()) {
-  const top = page(fetchedAt)
+/** Commits a top page, as a load of the feed would. */
+function seed(queryClient: QueryClient, options?: Parameters<typeof page>[0]) {
+  const top = page(options)
   queryClient.setQueryData<InfiniteData<Page>>(KEY, {
     pages: [top],
     pageParams: [undefined],
