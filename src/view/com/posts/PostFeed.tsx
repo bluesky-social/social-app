@@ -47,7 +47,7 @@ import {
   usePostFeedQuery,
   usePostFeedRefresh,
 } from '#/state/queries/post-feed'
-import {type FeedGap, findFeedGaps} from '#/state/queries/post-feed-boundary'
+import {findFeedGaps, type PageGap} from '#/state/queries/post-feed-boundary'
 import {
   isPostFeedRefreshing,
   isPostFeedRestorePending,
@@ -69,7 +69,7 @@ import {
   useInternalState as useAgeAssuranceBannerState,
 } from '#/components/ageAssurance/AgeAssuranceDismissibleFeedBanner'
 import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
-import {FeedGap as FeedGapButton} from '#/components/feeds/FeedGap'
+import {FeedGap} from '#/components/feeds/FeedGap'
 import {
   PostFeedVideoGridRow,
   PostFeedVideoGridRowPlaceholder,
@@ -167,7 +167,7 @@ type FeedRow =
        */
       type: 'followingGap'
       key: string
-      gap: FeedGap
+      gap: PageGap
     }
   | {
       type: 'interstitialFollows'
@@ -1004,7 +1004,7 @@ let PostFeed = ({
     return () => clearTimeout(positionFallbackRef.current)
   }, [])
 
-  const onFillGap = useNonReactiveCallback(async (gap: FeedGap) => {
+  const onFillGap = useNonReactiveCallback(async (gap: PageGap) => {
     ax.metric('feed:following:gap', {action: 'press'})
     const outcome = await fillGap(gap)
     ax.metric('feed:following:gap', {action: 'outcome', ...outcome})
@@ -1536,8 +1536,8 @@ function FollowingGapRow({
   onFill,
   hideTopBorder,
 }: {
-  gap: FeedGap
-  onFill: (gap: FeedGap) => Promise<FollowingGapOutcome>
+  gap: PageGap
+  onFill: (gap: PageGap) => Promise<FollowingGapOutcome>
   hideTopBorder: boolean
 }) {
   const [status, setStatus] = useState<'idle' | 'filling' | 'failed'>('idle')
@@ -1550,7 +1550,7 @@ function FollowingGapRow({
   }
 
   return (
-    <FeedGapButton
+    <FeedGap
       onPress={() => void onPress()}
       isLoading={status === 'filling'}
       hasFailed={status === 'failed'}

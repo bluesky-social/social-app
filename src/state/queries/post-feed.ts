@@ -49,7 +49,7 @@ import {useFeedTuners} from '../preferences/feed-tuners'
 import {useModerationOpts} from '../preferences/moderation-opts'
 import {
   classifySincePage,
-  type FeedGap,
+  type PageGap,
   type SinceSeam,
   tuneOrder,
 } from './post-feed-boundary'
@@ -642,7 +642,7 @@ export function useFollowingGapFill(
   )
 
   return async (
-    gap: Pick<FeedGap, 'since' | 'cursor'>,
+    gap: Pick<PageGap, 'since' | 'cursor'>,
   ): Promise<FollowingGapOutcome> => {
     const queryKey = RQKEY(feedDesc, params)
     const upper = queryClient

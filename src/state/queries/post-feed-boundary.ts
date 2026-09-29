@@ -58,7 +58,7 @@ export function gapBelow(
  * A gap below one of a feed's pages, identified by that page's `since` and
  * cursor, which stay the same whatever is added above it.
  */
-export type FeedGap = {
+export type PageGap = {
   since: string
   cursor: string
   status: 'open' | 'filled'
@@ -77,8 +77,8 @@ export function findFeedGaps(
   pages: readonly Pick<BoundaryPage<unknown>, 'cursor' | 'since'>[],
   pageParams: readonly unknown[],
   hasRows: (pageIndex: number) => boolean,
-): Map<number, FeedGap> {
-  const gaps = new Map<number, FeedGap>()
+): Map<number, PageGap> {
+  const gaps = new Map<number, PageGap>()
   /** Whether the last row so far is the row of an open gap. */
   let isBelowOpenGap = false
   for (let index = 0; index < pages.length - 1; index++) {
