@@ -149,7 +149,6 @@ export function useTesterSession(deps: TesterSessionDeps) {
         reportInitializationError({
           onError: session.store.reportError,
           cause: error,
-          fallbackCode: 'scenario-build-failed',
         })
       }
     } finally {

@@ -212,7 +212,7 @@ describe('useTesterSession', () => {
     expect(onError).toHaveBeenCalledTimes(1)
     expect(onError.mock.calls[0][0]).toEqual({
       source: 'initialization',
-      code: 'scenario-build-failed',
+      code: 'initial-state-failed',
       kind: 'unexpected',
       recovery: 'none',
     })

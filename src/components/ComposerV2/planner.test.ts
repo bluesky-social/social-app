@@ -17,7 +17,6 @@ import {
   type ComposerV2PlannerDependencies,
   type ComposerV2PlannerPreflight,
   planComposerV2,
-  summarizeComposerV2Plan,
 } from '#/components/ComposerV2/planner'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
@@ -162,9 +161,6 @@ describe('planner reporting policy', () => {
       cause,
     )
     expect(JSON.stringify(result)).not.toContain('private diagnostic')
-    expect(JSON.stringify(summarizeComposerV2Plan({result}))).not.toContain(
-      'private diagnostic',
-    )
     expect(JSON.stringify(state)).toBe(before)
   })
 
@@ -1163,71 +1159,6 @@ describe('ComposerV2 no-write planner', () => {
     if (result.ok) return
     expect(result.errors[0].code).toBe('media-failed')
     expect(JSON.stringify(result)).not.toContain('private worker detail')
-
-    const summary = summarizeComposerV2Plan({result})
-    expect(summary.ok).toBe(false)
-    expect(JSON.stringify(summary)).not.toContain('private worker detail')
-    /* The redacted summary carries codes and locations, not messages. */
-    if (!summary.ok) {
-      expect(summary.errors[0]).toEqual({
-        code: 'media-failed',
-        postIndex: 0,
-        collection: undefined,
-      })
-    }
-  })
-
-  test('summarizes successful plans without exposing post text', async () => {
-    const state = snapshot({posts: [{text: 'extremely private words'}]})
-    const result = await plan(state)
-    expect(result.ok).toBe(true)
-    const summary = summarizeComposerV2Plan({result})
-    expect(summary.ok).toBe(true)
-    expect(JSON.stringify(summary)).not.toContain('extremely private words')
-    if (summary.ok) {
-      expect(summary.posts[0].textGraphemes).toBe(23)
-      expect(summary.writesByCollection).toEqual({'app.bsky.feed.post': 1})
-    }
-  })
-
-  test('summarizes reply relationships and per-post gate associations by reference', async () => {
-    const state = snapshot({
-      posts: [{text: 'root post'}, {text: 'second post'}],
-      threadgateAllowRules: [{$type: 'app.bsky.feed.threadgate#mentionRule'}],
-      postgateEmbeddingRules: [{$type: 'app.bsky.feed.postgate#disableRule'}],
-    })
-    const result = await plan(state)
-    expect(result.ok).toBe(true)
-    const summary = summarizeComposerV2Plan({result})
-    expect(summary.ok).toBe(true)
-    if (!summary.ok) return
-
-    /* Root post: no reply refs; second post: chained to the root. */
-    expect(summary.posts[0].replyRootUri).toBeUndefined()
-    expect(summary.posts[0].replyParentUri).toBeUndefined()
-    expect(summary.posts[1].replyRootUri).toBe(summary.posts[0].uri)
-    expect(summary.posts[1].replyParentUri).toBe(summary.posts[0].uri)
-
-    /* Threadgate on the root only; postgate per post; refs, not payloads. */
-    expect(summary.gates).toEqual([
-      {
-        collection: 'app.bsky.feed.threadgate',
-        rkey: summary.posts[0].rkey,
-        postUri: summary.posts[0].uri,
-      },
-      {
-        collection: 'app.bsky.feed.postgate',
-        rkey: summary.posts[0].rkey,
-        postUri: summary.posts[0].uri,
-      },
-      {
-        collection: 'app.bsky.feed.postgate',
-        rkey: summary.posts[1].rkey,
-        postUri: summary.posts[1].uri,
-      },
-    ])
-    expect(JSON.stringify(summary)).not.toContain('mentionRule')
-    expect(JSON.stringify(summary)).not.toContain('root post')
   })
 
   test('does not claim draft tags are persisted', () => {

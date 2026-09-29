@@ -375,8 +375,11 @@ invalid, surface the operation's failure rather than silently changing content.
   for every planned post when shared embedding rules are nonempty. Gates reuse
   their post's rkey in a different collection and its final URI/time.
 - Validate each generated record and the whole `applyWrites` input. Return full
-  planned records and refs plus structural summaries; do not automatically log
-  record contents, local paths, captions, credentials, views, or raw exceptions.
+  planned records and refs; do not automatically log record contents, local
+  paths, captions, credentials, views, or raw exceptions. The redacted
+  structural summary used for inspection is a DebugComposer helper
+  ([`summarizeComposerV2Plan.ts`](../../view/screens/DebugComposer/summarizeComposerV2Plan.ts)),
+  not part of the planner.
 - The writer requires a successful plan, matching authenticated DID/repo, and
   `validate: true`. It sends one unchanged request and returns ordered URIs.
   Preserve SDK failures exactly. Any rejection after dispatch, including a
