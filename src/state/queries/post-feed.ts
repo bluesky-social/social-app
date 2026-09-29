@@ -33,7 +33,6 @@ import {
   type FeedPostNumbering,
   FeedTuner,
   type FeedTunerFn,
-  type FeedViewPostsSlice,
   type ValidFeedPostNumbering,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
@@ -263,7 +262,7 @@ export function usePostFeedQuery(
     result: InfiniteData<FeedPage>
   } | null>(null)
   /** What tuning each selected page added to its tuner, to replay on reuse. */
-  const tunedSlices = useRef(new WeakMap<FeedPage, TunedSlice[]>())
+  const tunerDeltas = useRef(new WeakMap<FeedPage, TunerDelta>())
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
   // Make sure this doesn't invalidate unless really needed.
@@ -379,7 +378,12 @@ export function usePostFeedQuery(
               }
               selected[index] = lastResult.pages[lastIndex]
               // Keep the tuner in sync so that the end result is deterministic.
-              tuner.tune(data.pages[index].feed)
+              const delta = tunerDeltas.current.get(selected[index])
+              if (delta) {
+                replayTunerDelta(tuner, delta)
+              } else {
+                tuner.tune(data.pages[index].feed)
+              }
             }
           }
         }
@@ -396,13 +400,14 @@ export function usePostFeedQuery(
           const lastIndex = reusable ? reusable.data.pages.indexOf(page) : -1
           const kept =
             lastIndex === -1 ? undefined : reusable!.result.pages[lastIndex]
-          const keptSlices = kept && tunedSlices.current.get(kept)
-          if (kept && keptSlices) {
+          const keptDelta = kept && tunerDeltas.current.get(kept)
+          if (kept && keptDelta) {
             selected[index] = kept
-            replayTunedSlices(tuner, keptSlices)
+            replayTunerDelta(tuner, keptDelta)
             continue
           }
 
+          const seenBefore = tunerSizes(tuner)
           const tuned = tuner.tune(page.feed)
           const selectedPage: FeedPage = {
             tuner,
@@ -478,7 +483,7 @@ export function usePostFeedQuery(
               .filter(n => !!n),
           }
           selected[index] = selectedPage
-          tunedSlices.current.set(selectedPage, tuned.map(recordTunedSlice))
+          tunerDeltas.current.set(selectedPage, tunerDelta(tuner, seenBefore))
         }
 
         const result = {
@@ -505,38 +510,41 @@ export function usePostFeedQuery(
 }
 
 /**
- * What tuning a slice added to the tuner's record of what it has seen: see
- * `FeedTuner.tune` and `FeedTuner.dedupThreads`.
+ * What tuning a page added to its tuner's record of what it has seen, in the
+ * order it was added. The record only ever grows, and sets keep their
+ * insertion order, so this is what was appended while it was tuned.
  */
-type TunedSlice = {
-  key: string
-  rootUri: string
-  /** Not for a reposted reply, whose thread can still be shown later. */
-  uris?: string[]
+type TunerDelta = {keys: string[]; uris: string[]; rootUris: string[]}
+
+function tunerSizes(tuner: FeedTuner) {
+  return {
+    keys: tuner.seenKeys.size,
+    uris: tuner.seenUris.size,
+    rootUris: tuner.seenRootUris.size,
+  }
 }
 
-function recordTunedSlice(slice: FeedViewPostsSlice): TunedSlice {
+function tunerDelta(
+  tuner: FeedTuner,
+  before: ReturnType<typeof tunerSizes>,
+): TunerDelta {
   return {
-    key: slice._reactKey,
-    rootUri: slice.rootUri,
-    ...(!(slice.isReply && slice.isRepost) && {
-      uris: slice.items.map(item => item.post.uri),
-    }),
+    keys: [...tuner.seenKeys].slice(before.keys),
+    uris: [...tuner.seenUris].slice(before.uris),
+    rootUris: [...tuner.seenRootUris].slice(before.rootUris),
   }
 }
 
 /**
- * Adds to a tuner what tuning a page added to one before, so that a page can
- * keep its selection and the pages tuned after it still drop what it shows.
+ * Adds to a tuner what tuning a page once added, so that the page can keep
+ * its selection and the pages tuned after it still drop what it shows.
+ * Replayed onto the record it was tuned against, it leaves the tuner as tuning
+ * the page again would.
  */
-function replayTunedSlices(tuner: FeedTuner, slices: TunedSlice[]) {
-  for (const slice of slices) {
-    tuner.seenKeys.add(slice.key)
-    tuner.seenRootUris.add(slice.rootUri)
-    for (const uri of slice.uris ?? []) {
-      tuner.seenUris.add(uri)
-    }
-  }
+function replayTunerDelta(tuner: FeedTuner, delta: TunerDelta) {
+  for (const key of delta.keys) tuner.seenKeys.add(key)
+  for (const uri of delta.uris) tuner.seenUris.add(uri)
+  for (const uri of delta.rootUris) tuner.seenRootUris.add(uri)
 }
 
 /**

@@ -1444,6 +1444,25 @@ describe('useFollowingGapFill', () => {
         'at://did:plc:author/app.bsky.feed.post/m-0',
         'at://did:plc:author/app.bsky.feed.post/x',
       ])
+
+      // And so it stays as the feed paginates on below.
+      gapApi.fetch.mockImplementationOnce(() =>
+        Promise.resolve({
+          cursor: '0:12',
+          feed: [feedItem('n-0'), feedItem('own'), feedItem('z')],
+        }),
+      )
+      await act(() => hook.result.current.query.fetchNextPage())
+      await waitFor(() =>
+        expect(hook.result.current.query.data?.pages).toHaveLength(3),
+      )
+      const pages = hook.result.current.query.data!.pages
+      expect(rows(pages[0])).toEqual(before)
+      // What the page above shows is dropped, and what it does not stays.
+      expect(pages[2].slices.map(slice => slice.feedPostUri)).toEqual([
+        'at://did:plc:author/app.bsky.feed.post/own',
+        'at://did:plc:author/app.bsky.feed.post/z',
+      ])
     } finally {
       mockFeedTuners.length = 0
     }
