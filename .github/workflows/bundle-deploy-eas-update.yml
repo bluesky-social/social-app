@@ -194,7 +194,7 @@ jobs:
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
         with:
-          eas-version: '19.0.5'
+          eas-version: '24.8.0'
           packager: 'pnpm --allow-build=dtrace-provider'
           token: ${{ secrets.EXPO_TOKEN }}
 

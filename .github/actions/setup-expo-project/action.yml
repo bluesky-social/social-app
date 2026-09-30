@@ -9,7 +9,7 @@ inputs:
   eas-version:
     description: EAS CLI version to install
     required: false
-    default: '19.0.5'
+    default: '24.8.0'
 
 runs:
   using: composite
