@@ -29,19 +29,17 @@ export const PostQuotesScreen = ({route}: Props) => {
     <Layout.Header.Outer noBottomBorder={isSortEnabled}>
       <Layout.Header.BackButton />
       <Layout.Header.Content>
+        <Layout.Header.TitleText>
+          <Trans>Quotes</Trans>
+        </Layout.Header.TitleText>
         {post && (
-          <>
-            <Layout.Header.TitleText>
-              <Trans>Quotes</Trans>
-            </Layout.Header.TitleText>
-            <Layout.Header.SubtitleText>
-              <Plural
-                value={post.quoteCount ?? 0}
-                one="# quote"
-                other="# quotes"
-              />
-            </Layout.Header.SubtitleText>
-          </>
+          <Layout.Header.SubtitleText>
+            <Plural
+              value={post.quoteCount ?? 0}
+              one="# quote"
+              other="# quotes"
+            />
+          </Layout.Header.SubtitleText>
         )}
       </Layout.Header.Content>
       <Layout.Header.Slot />
