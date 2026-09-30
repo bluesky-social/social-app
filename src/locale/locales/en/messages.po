@@ -2345,7 +2345,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:224
+#: src/components/Post/Embed/index.tsx:261
 msgid "Blocked"
 msgstr ""
 
@@ -4042,7 +4042,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:217
+#: src/components/Post/Embed/index.tsx:254
 msgid "Deleted"
 msgstr ""
 
@@ -10311,11 +10311,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:252
+#: src/components/Post/Embed/index.tsx:289
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:250
+#: src/components/Post/Embed/index.tsx:287
 msgid "Removed by you"
 msgstr ""
 
@@ -12067,8 +12067,8 @@ msgstr ""
 msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
-#: src/App.tsx:138
-#: src/App.web.tsx:117
+#: src/App.tsx:142
+#: src/App.web.tsx:121
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
