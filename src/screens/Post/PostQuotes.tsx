@@ -1,8 +1,6 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
-import {Plural, Trans} from '@lingui/react/macro'
+import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {
   type CommonNavigatorParams,
@@ -73,19 +71,19 @@ function SortedPostQuotes({
   uri: string
   header: React.ReactNode
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const [activeTab, setActiveTab] = useState(0)
 
   const sections = useMemo(
     () => [
       {
-        title: _(msg`Top`),
+        title: l`Top`,
         component: (
           <PostQuotesComponent uri={uri} sort="top" active={activeTab === 0} />
         ),
       },
       {
-        title: _(msg`Latest`),
+        title: l`Latest`,
         component: (
           <PostQuotesComponent
             uri={uri}
@@ -95,7 +93,7 @@ function SortedPostQuotes({
         ),
       },
     ],
-    [_, uri, activeTab],
+    [l, uri, activeTab],
   )
 
   return (
