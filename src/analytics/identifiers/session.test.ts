@@ -82,10 +82,9 @@ function loadSession(): typeof import('./session') {
   return session!
 }
 
-describe.each([
-  {platform: 'native', isNative: true, ttl: 5 * 60 * 1e3},
-  {platform: 'web', isNative: false, ttl: 30 * 60 * 1e3},
-])('$platform analytics sessions', ({isNative, ttl}) => {
+describe('native analytics sessions', () => {
+  const isNative = true
+  const ttl = 5 * 60 * 1e3
   beforeEach(() => {
     mockIsNative = isNative
   })
@@ -102,7 +101,7 @@ describe.each([
     })
   })
 
-  it('reuses validated data with native cached reads and web read-through', () => {
+  it('reuses validated data with native cached raw reads', () => {
     const {getSessionId} = loadSession()
     getSessionId()
     mockDeviceGetRaw.mockClear()

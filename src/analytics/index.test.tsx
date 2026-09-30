@@ -20,6 +20,7 @@ import {
 } from '#/analytics/metadata'
 import {type Metrics, metrics} from '#/analytics/metrics'
 import {MetricsClient} from '#/analytics/metrics/client'
+import {recordSessionActivity} from '#/analytics/useSessionActivity/activity'
 import {useMeta} from '#/analytics/utils'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
 import {account, device} from '#/storage'
@@ -386,6 +387,49 @@ it('flushes queued metrics with emission-time sessions and a stable device ID', 
     expect.objectContaining({deviceId: 'device-a', sessionId: 'session-a'}),
     expect.objectContaining({deviceId: 'device-a', sessionId: secondSessionId}),
   ])
+})
+
+it('keeps passive metrics, logs, evaluations, flushes and retries separate from the web activity clock', async () => {
+  const lastEventAt = Date.now()
+  device.set(['analyticsSession'], {id: 'session-a', lastEventAt})
+  const client = new MetricsClient<Metrics>()
+  jest
+    .mocked(metrics.track)
+    .mockImplementation((...args) => client.track(...args))
+  const fetchMock = jest
+    .spyOn(global, 'fetch')
+    .mockRejectedValueOnce(new TypeError('Failed to fetch'))
+    .mockResolvedValue({ok: true} as Response)
+  render(<Tree />)
+  const feature = installFeature()
+  jest.setSystemTime(lastEventAt + 30 * 60_000)
+  ax.metric('state:foreground', {})
+  ax.logger.info('passive work')
+  const previousLog = getEntries()[0]
+  ax.features.enabled(feature)
+  const previousMetric = lastMetricMetadata()
+  client.flush()
+  await Promise.resolve()
+  // Only the metrics client's lifecycle callback retries the failed batch.
+  const retry = jest.mocked(onAppStateChange).mock.calls.at(-1)![0]
+  retry('active')
+  await Promise.resolve()
+  expect(fetchMock).toHaveBeenCalledTimes(2)
+  expect(device.get(['analyticsSession'])).toEqual({
+    id: 'session-a',
+    lastEventAt,
+  })
+
+  recordSessionActivity('keydown')
+  ax.metric('router:navigate', {})
+  expect(lastMetricMetadata().base.sessionId).not.toBe('session-a')
+  expect(previousMetric.base.sessionId).toBe('session-a')
+  expect(previousLog.metadata.__metadata__).toMatchObject({
+    sessionId: 'session-a',
+  })
+  expect(fetchMock.mock.calls[0][1]!.body).toBe(
+    fetchMock.mock.calls[1][1]!.body,
+  )
 })
 
 describe.each(['did', 'deviceId'] as const)(

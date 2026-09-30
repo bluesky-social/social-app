@@ -8,7 +8,7 @@ import * as env from '#/env'
 import {device} from '#/storage'
 
 const ONE_MIN = 60 * 1e3
-const TTL = (env.IS_NATIVE ? 5 : 30) * ONE_MIN // 5 min on native
+const TTL = 5 * ONE_MIN
 
 const sessionRecordSchema = z.object({
   id: z.string().min(1),
@@ -17,7 +17,7 @@ const sessionRecordSchema = z.object({
 /** Raw device storage includes the `{data: value}` envelope. */
 const storedSessionRecordSchema = z.object({data: sessionRecordSchema})
 
-/** The session ID and its last app-state event are persisted together. */
+/** lastEventAt tracks native lifecycle events or qualifying web activity. */
 export type SessionRecord = z.infer<typeof sessionRecordSchema>
 
 function isSessionIdExpired(since: number | undefined) {
@@ -33,7 +33,7 @@ let cachedRaw: string | undefined
 let cachedRecord: SessionRecord | undefined
 
 /** Validate only when the platform-specific reader returns a changed value. */
-function readSessionRecord() {
+export function readSessionRecord() {
   const raw = readRawSessionRecord()
 
   /**
@@ -61,12 +61,15 @@ function readSessionRecord() {
 }
 
 function createSessionRecord(): SessionRecord {
-  const record = {id: String(uuid.v4()), lastEventAt: Date.now()}
+  const record: SessionRecord = {
+    id: String(uuid.v4()),
+    ...(env.IS_NATIVE ? {lastEventAt: Date.now()} : {}),
+  }
   device.set(['analyticsSession'], record)
   return record
 }
 
-/** The session lifecycle is maintained independently of React consumers. */
+/** Resolve identity without counting passive metrics or logs as activity. */
 export function getSessionId() {
   // Missing or corrupt storage starts a fresh session, never an old fallback ID.
   return (readSessionRecord() ?? createSessionRecord()).id
@@ -84,6 +87,8 @@ function onAppStateChanged(state: AppStateStatus) {
   device.set(['analyticsSession'], {...existing, lastEventAt: Date.now()})
 }
 
-// Initialize once, then track lifecycle even before analytics contexts mount.
-onAppStateChanged('active')
-onAppStateChange(onAppStateChanged)
+// Web activity belongs to the centrally mounted hook, not RN Web AppState.
+if (env.IS_NATIVE) {
+  onAppStateChanged('active')
+  onAppStateChange(onAppStateChanged)
+}
