@@ -132,7 +132,14 @@ it.each([undefined, '{', 'null', '{}', '{"data":{"id":""}}'])(
   },
 )
 
-it.each(['keydown', 'pointerdown', 'scroll'] as const)(
+it.each([
+  'keydown',
+  'pointerdown',
+  'click',
+  'beforeinput',
+  'input',
+  'scroll',
+] as const)(
   'continuous %s activity preserves a session beyond 30 minutes',
   source => {
     store({id: 'a', lastEventAt: NOW})
@@ -203,6 +210,21 @@ it('does not mutate the cached validation result when writing activity', () => {
   expect(previous).toEqual({id: 'a', lastEventAt: NOW})
   expect(readSessionRecord()).toEqual({id: 'a', lastEventAt: NOW + 5_000})
 })
+
+it.each(['click', 'beforeinput', 'input'] as const)(
+  'logs only bounded source/timing diagnostics for %s',
+  source => {
+    store({id: 'old-session', lastEventAt: NOW - TTL})
+    recordSessionActivity(source)
+    expect(console.debug).toHaveBeenCalledWith('12345678 analytics session', {
+      source,
+      action: 'rotated',
+      elapsedMs: TTL,
+    })
+    for (let i = 0; i < 100; i++) recordSessionActivity(source)
+    expect(console.debug).toHaveBeenCalledTimes(1)
+  },
+)
 
 it('prefixes bounded diagnostics with only the last eight ID characters', () => {
   recordSessionActivity('mount')

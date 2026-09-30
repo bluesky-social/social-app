@@ -7,7 +7,15 @@ import {device} from '#/storage'
 const TTL = 30 * 60 * 1e3
 
 type Source =
-  'mount' | 'return' | 'keydown' | 'pointerdown' | 'scroll' | 'popstate'
+  | 'mount'
+  | 'return'
+  | 'keydown'
+  | 'pointerdown'
+  | 'click'
+  | 'beforeinput'
+  | 'input'
+  | 'scroll'
+  | 'popstate'
 
 /** Check expiry before recording activity, and publish the result immediately. */
 export function recordSessionActivity(source: Source) {

@@ -34,13 +34,24 @@ export function observeSessionActivity() {
   function onActivity(event: Event) {
     if (!event.isTrusted || !isEngaged()) return
     recordActivity(
-      event.type as 'keydown' | 'pointerdown' | 'scroll' | 'popstate',
+      event.type as
+        | 'keydown'
+        | 'pointerdown'
+        | 'click'
+        | 'beforeinput'
+        | 'input'
+        | 'scroll'
+        | 'popstate',
     )
   }
 
   const listeners = {
     keydown: onActivity,
     pointerdown: onActivity,
+    click: onActivity,
+    // Run before editor handling, with input as a fallback when beforeinput is absent.
+    beforeinput: onActivity,
+    input: onActivity,
     scroll: onActivity,
     popstate: onActivity,
     focus: onFocus,
