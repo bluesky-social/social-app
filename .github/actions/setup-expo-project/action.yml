@@ -43,5 +43,5 @@ runs:
       uses: expo/expo-github-action@eab7a230208c952974db8c3245cfd78402c7b385 # 9.0.0
       with:
         eas-version: ${{ inputs.eas-version }}
-        packager: 'pnpm --allow-build=dtrace-provider'
+        packager: 'pnpm --dangerously-allow-all-builds'
         token: ${{ inputs.expo-token }}

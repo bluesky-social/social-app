@@ -195,7 +195,7 @@ jobs:
           !steps.version.outputs.version-changed }}
         with:
           eas-version: '24.8.0'
-          packager: 'pnpm --allow-build=dtrace-provider'
+          packager: 'pnpm --dangerously-allow-all-builds'
           token: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🪛 Setup jq
