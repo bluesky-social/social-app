@@ -1,73 +1,94 @@
-import {useSyncExternalStore} from 'react'
 import {type AppStateStatus} from 'react-native'
 import uuid from 'react-native-uuid'
+import {z} from 'zod'
 
 import {onAppStateChange} from '#/lib/appState'
-import {
-  isSessionIdExpired,
-  type SessionRecord,
-} from '#/analytics/identifiers/util'
+import {readRawSessionRecord} from '#/analytics/identifiers/sessionStorage'
+import * as env from '#/env'
 import {device} from '#/storage'
 
-function createSessionRecord(now = Date.now()): SessionRecord {
-  return {
-    id: String(uuid.v4()),
-    lastEventAt: now,
-  }
-}
+const ONE_MIN = 60 * 1e3
+const TTL = 5 * ONE_MIN
 
-let sessionRecord = (() => {
-  const now = Date.now()
-  const existing = device.get(['nativeSession'])
-  const record =
-    existing && !isSessionIdExpired(existing.lastEventAt)
-      ? {...existing, lastEventAt: now}
-      : createSessionRecord(now)
-  device.set(['nativeSession'], record)
-  return record
-})()
+const sessionRecordSchema = z.object({
+  id: z.string().min(1),
+  lastEventAt: z.number().finite().optional().catch(undefined),
+})
+/** Raw device storage includes the `{data: value}` envelope. */
+const storedSessionRecordSchema = z.object({data: sessionRecordSchema})
 
-export function getInitialSessionId() {
-  return getSessionId()
+/** lastEventAt starts at creation, then tracks native lifecycle or web activity. */
+export type SessionRecord = z.infer<typeof sessionRecordSchema>
+
+function isSessionIdExpired(since: number | undefined) {
+  if (since === undefined) return false
+  return Date.now() - since >= TTL
 }
 
 /**
- * Gets the current session ID. The module-level app-state listener keeps this
- * value current between foreground/background transitions.
+ * Keep only the last raw value and its validation result. Comparing the entire
+ * serialized record also detects timestamp-only changes that affect expiry.
  */
-export function getSessionId() {
-  return sessionRecord.id
+let cachedRaw: string | undefined
+let cachedRecord: SessionRecord | undefined
+
+/** Validate only when the platform-specific reader returns a changed value. */
+export function readSessionRecord() {
+  const raw = readRawSessionRecord()
+
+  /**
+   * Lightweight memoization to avoid re-parsing and validating if raw value
+   * didn't change
+   */
+  if (raw === cachedRaw) return cachedRecord
+
+  let record: SessionRecord | undefined
+  if (raw) {
+    try {
+      const result = storedSessionRecordSchema.safeParse(JSON.parse(raw))
+      if (result.success) record = result.data.data
+    } catch (error) {
+      if (!(error instanceof SyntaxError)) throw error
+    }
+  }
+  /*
+   * Missing or invalid data must evict the previous valid result too, allowing
+   * callers to create a fresh session instead of reviving a stale one.
+   */
+  cachedRaw = raw
+  cachedRecord = record
+  return record
 }
 
-const listeners = new Set<() => void>()
+function createSessionRecord(): SessionRecord {
+  const record: SessionRecord = {
+    id: String(uuid.v4()),
+    lastEventAt: Date.now(),
+  }
+  device.set(['analyticsSession'], record)
+  return record
+}
 
-function notifyListeners() {
-  listeners.forEach(listener => listener())
+/** Resolve identity without refreshing an existing record's activity time. */
+export function getSessionId() {
+  // Missing or corrupt storage starts a fresh session, never an old fallback ID.
+  return (readSessionRecord() ?? createSessionRecord()).id
 }
 
 function onAppStateChanged(state: AppStateStatus) {
-  const now = Date.now()
-  const previousId = sessionRecord.id
-  sessionRecord =
-    state === 'active' && isSessionIdExpired(sessionRecord.lastEventAt)
-      ? createSessionRecord(now)
-      : {...sessionRecord, lastEventAt: now}
-  device.set(['nativeSession'], sessionRecord)
-  if (sessionRecord.id !== previousId) {
-    notifyListeners()
+  const existing = readSessionRecord()
+  if (
+    !existing ||
+    (state === 'active' && isSessionIdExpired(existing.lastEventAt))
+  ) {
+    createSessionRecord()
+    return
   }
+  device.set(['analyticsSession'], {...existing, lastEventAt: Date.now()})
 }
 
-onAppStateChange(onAppStateChanged)
-
-export function subscribeToSessionId(listener: () => void) {
-  listeners.add(listener)
-
-  return () => {
-    listeners.delete(listener)
-  }
-}
-
-export function useSessionId() {
-  return useSyncExternalStore(subscribeToSessionId, getSessionId)
+// Web activity belongs to the centrally mounted hook, not RN Web AppState.
+if (env.IS_NATIVE) {
+  onAppStateChanged('active')
+  onAppStateChange(onAppStateChanged)
 }
