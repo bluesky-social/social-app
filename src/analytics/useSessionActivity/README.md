@@ -1,9 +1,9 @@
 # Web analytics session activity
 
 `App.web.tsx` mounts `useSessionActivity()` once, above account remounts and
-nested analytics contexts. The default hook mounted by `App.tsx` is a no-op.
-Native keeps its module-level boot/AppState policy, five-minute TTL, and
-MMKV-invalidated raw-read cache.
+nested analytics contexts. Native does not mount the hook; its default
+implementation remains a DOM-free no-op. Native keeps its module-level
+boot/AppState policy, five-minute TTL, and MMKV-invalidated raw-read cache.
 
 ## Activity and ordering
 
@@ -62,18 +62,19 @@ were added, and no input text/data is inspected or logged.
 Web always reads the shared raw record. Only parsing/validation is cached, keyed
 by the entire raw string. It never holds a per-tab current-ID cache.
 
-Both platforms use the existing `lastEventAt` field: native writes lifecycle
-events, while web writes only qualifying activity. Existing records work without
-a migration or a second timestamp field. Missing/nonfinite timestamps retain
+Both platforms initialize `lastEventAt` when creating a record. After creation,
+native updates it on lifecycle events, while web updates it only on qualifying
+activity. Existing records work without a migration or a second timestamp field. Missing/nonfinite timestamps retain
 the ID and establish a clock on first activity. Finite old timestamps expire
 normally. A future timestamp (clock rollback) is rebased on activity without
 rotating. Old app bundles still running the lifecycle-based writer are not made
 activity-aware by this change.
 
-Passive reads recover missing/corrupt records, but do not rotate valid records
-or give newly recovered web records an activity timestamp. Metrics, logs,
-feature evaluations, uploads, flushes, and retries are not activity sources.
-Already-captured metadata is never rewritten.
+Passive reads recover missing/corrupt records with a creation timestamp, but do
+not rotate or refresh valid records. A recovered web session can therefore expire
+on its first qualifying activity if at least 30 minutes have passed since creation.
+Metrics, logs, feature evaluations, uploads, flushes, and retries otherwise do not
+renew activity. Already-captured metadata is never rewritten.
 
 The hook keeps a separate in-memory timestamp for its last recording. Events
 within five seconds of that time are skipped before any storage access. When

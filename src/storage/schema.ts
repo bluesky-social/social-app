@@ -13,7 +13,7 @@ export type Device = {
    * device, used with our logging and metrics tracking.
    */
   deviceId?: string
-  /** Analytics session ID with native lifecycle or web activity time. */
+  /** Analytics session ID with creation, native lifecycle, or web activity time. */
   analyticsSession?: SessionRecord
 
   fontScale: '-2' | '-1' | '0' | '1' | '2'

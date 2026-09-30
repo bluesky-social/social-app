@@ -44,15 +44,27 @@ afterEach(() => {
   jest.useRealTimers()
 })
 
-it('does not boot or subscribe to web AppState, and passive recovery has no activity time', () => {
+it('initializes recovery time once without booting or subscribing to web AppState', () => {
   expect(onAppStateChange).not.toHaveBeenCalled()
   expect(device.set).not.toHaveBeenCalled()
   expect(getSessionId()).toBe('new-session-12345678')
-  expect(readSessionRecord()).toEqual({id: 'new-session-12345678'})
+  expect(readSessionRecord()).toEqual({
+    id: 'new-session-12345678',
+    lastEventAt: NOW,
+  })
   jest.setSystemTime(NOW + TTL * 2)
   for (let i = 0; i < 100; i++) getSessionId()
   expect(device.set).toHaveBeenCalledTimes(1)
-  expect(readSessionRecord()).toEqual({id: 'new-session-12345678'})
+  expect(readSessionRecord()).toEqual({
+    id: 'new-session-12345678',
+    lastEventAt: NOW,
+  })
+  ;(uuid.v4 as jest.Mock).mockReturnValue('active-session')
+  recordSessionActivity('click')
+  expect(readSessionRecord()).toEqual({
+    id: 'active-session',
+    lastEventAt: NOW + TTL * 2,
+  })
 })
 
 it('reads shared raw storage every time but only parses and validates changed records', () => {

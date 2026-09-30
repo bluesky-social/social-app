@@ -78,7 +78,6 @@ import {
   features,
   setupDeviceId,
 } from '#/analytics'
-import {useSessionActivity} from '#/analytics/useSessionActivity'
 import {IS_ANDROID, IS_IOS} from '#/env'
 import {
   prefetchLiveEvents,
@@ -215,7 +214,6 @@ function InnerApp() {
 }
 
 function App() {
-  useSessionActivity()
   const [isReady, setIsReady] = useState(false)
 
   useEffect(() => {

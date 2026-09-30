@@ -17,7 +17,7 @@ const sessionRecordSchema = z.object({
 /** Raw device storage includes the `{data: value}` envelope. */
 const storedSessionRecordSchema = z.object({data: sessionRecordSchema})
 
-/** lastEventAt tracks native lifecycle events or qualifying web activity. */
+/** lastEventAt starts at creation, then tracks native lifecycle or web activity. */
 export type SessionRecord = z.infer<typeof sessionRecordSchema>
 
 function isSessionIdExpired(since: number | undefined) {
@@ -63,13 +63,13 @@ export function readSessionRecord() {
 function createSessionRecord(): SessionRecord {
   const record: SessionRecord = {
     id: String(uuid.v4()),
-    ...(env.IS_NATIVE ? {lastEventAt: Date.now()} : {}),
+    lastEventAt: Date.now(),
   }
   device.set(['analyticsSession'], record)
   return record
 }
 
-/** Resolve identity without counting passive metrics or logs as activity. */
+/** Resolve identity without refreshing an existing record's activity time. */
 export function getSessionId() {
   // Missing or corrupt storage starts a fresh session, never an old fallback ID.
   return (readSessionRecord() ?? createSessionRecord()).id
