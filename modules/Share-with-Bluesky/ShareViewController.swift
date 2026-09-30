@@ -117,7 +117,7 @@ class ShareViewController: UIViewController {
     let firstItem = items.first
 
     if let dataUrl = try? await firstItem?.loadItem(forTypeIdentifier: "public.movie") as? URL {
-      if let videoUriInfo = saveVideoWithInfo(dataUrl),
+      if let videoUriInfo = await saveVideoWithInfo(dataUrl),
          let url = URL(string: "\(self.appScheme)://intent/compose?videoUri=\(videoUriInfo)") {
         _ = self.openURL(url)
       }
@@ -144,7 +144,7 @@ class ShareViewController: UIViewController {
     return nil
   }
 
-  private func saveVideoWithInfo(_ dataUrl: URL) -> String? {
+  private func saveVideoWithInfo(_ dataUrl: URL) async -> String? {
     let ext = String(dataUrl.lastPathComponent.split(separator: ".").last ?? "mp4")
     guard let tempUrl = getTempUrl(ext: ext) else {
       return nil
@@ -153,12 +153,14 @@ class ShareViewController: UIViewController {
     let data = try? Data(contentsOf: dataUrl)
     try? data?.write(to: tempUrl)
 
-    guard let track = AVURLAsset(url: dataUrl).tracks(withMediaType: AVMediaType.video).first else {
+    guard let track = try? await AVURLAsset(url: dataUrl).loadTracks(withMediaType: .video).first,
+          let naturalSize = try? await track.load(.naturalSize),
+          let preferredTransform = try? await track.load(.preferredTransform) else {
       _ = try? FileManager().removeItem(at: tempUrl)
       return nil
     }
 
-    let size = track.naturalSize.applying(track.preferredTransform)
+    let size = naturalSize.applying(preferredTransform)
     return "\(tempUrl.absoluteString)|\(size.width)|\(size.height)"
   }
 
