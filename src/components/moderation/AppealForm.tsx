@@ -22,7 +22,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
-import {com, tools} from '#/lexicons'
+import {type com, tools} from '#/lexicons'
 
 export function AppealForm({
   label,

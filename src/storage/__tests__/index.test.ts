@@ -1,4 +1,4 @@
-import {beforeEach, expect, jest, test} from '@jest/globals'
+import {afterEach, beforeEach, expect, jest, test} from '@jest/globals'
 
 import {Storage} from '#/storage'
 
@@ -32,6 +32,22 @@ const store = new Storage<['account'], Schema>({id: 'test'})
 
 beforeEach(() => {
   store.removeMany([scope], ['boo', 'str', 'num', 'obj'])
+})
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
+test('reads the raw envelope without parsing and observes changes and removal', () => {
+  expect(store.getRaw([scope, 'obj'])).toBeUndefined()
+  store.set([scope, 'obj'], {foo: true})
+  const parse = jest.spyOn(JSON, 'parse')
+
+  expect(store.getRaw([scope, 'obj'])).toBe('{"data":{"foo":true}}')
+  store.set([scope, 'obj'], {foo: false})
+  expect(store.getRaw([scope, 'obj'])).toBe('{"data":{"foo":false}}')
+  store.remove([scope, 'obj'])
+  expect(store.getRaw([scope, 'obj'])).toBeUndefined()
+  expect(parse).not.toHaveBeenCalled()
 })
 
 test(`stores and retrieves data`, () => {

@@ -44,6 +44,11 @@ const sdkOptions = {
   enableDevMode: env.IS_INTERNAL,
 }
 const bootstrap = readFeatureBootstrap(sdkOptions)
+
+/**
+ * Shared SDK instance. Assumes a single active account context, with attributes
+ * supplied by AnalyticsFeaturesContext before its children evaluate features.
+ */
 export const features = createGrowthBook(sdkOptions, bootstrap)
 
 /**
@@ -166,6 +171,10 @@ export function getTargetedFeatures(i18n: I18n) {
  * attributes are manually configured in the GrowthBook dashboard. So these
  * values need to match exactly. Therefore, let's add them here manually to and
  * not spread them to avoid mistakes.
+ *
+ * Analytics session IDs are event metadata only, not feature targeting or
+ * experiment bucketing inputs. They are intentionally excluded from GrowthBook
+ * attributes, so session rotation does not require feature reevaluation.
  */
 export function setAttributes({
   base,
@@ -175,7 +184,6 @@ export function setAttributes({
 }: Metadata) {
   void features.setAttributes({
     deviceId: base.deviceId,
-    sessionId: base.sessionId,
     platform: base.platform,
     appVersion: base.appVersion,
     countryCode: geolocation.countryCode,
