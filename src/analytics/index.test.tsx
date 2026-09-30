@@ -20,7 +20,7 @@ import {
 } from '#/analytics/metadata'
 import {type Metrics, metrics} from '#/analytics/metrics'
 import {MetricsClient} from '#/analytics/metrics/client'
-import {recordSessionActivity} from '#/analytics/useSessionActivity/activity'
+import {recordSessionActivity} from '#/analytics/useSessionActivity/index.web'
 import {useMeta} from '#/analytics/utils'
 import {useGeolocationServiceResponse} from '#/geolocation/service'
 import {account, device} from '#/storage'

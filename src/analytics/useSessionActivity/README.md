@@ -1,5 +1,7 @@
 # Web analytics session activity
 
+The observer, throttle, and activity recorder live together in `index.web.ts`.
+
 `App.web.tsx` mounts `useSessionActivity()` once, above account remounts and
 nested analytics contexts. Native does not mount the hook; its default
 implementation remains a DOM-free no-op. Native keeps its module-level

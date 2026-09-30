@@ -2,7 +2,7 @@ import uuid from 'react-native-uuid'
 
 import {onAppStateChange} from '#/lib/appState'
 import {getSessionId, readSessionRecord} from '#/analytics/identifiers/session'
-import {recordSessionActivity} from '#/analytics/useSessionActivity/activity'
+import {recordSessionActivity} from '#/analytics/useSessionActivity/index.web'
 import {device} from '#/storage'
 
 let mockRaw: string | undefined
