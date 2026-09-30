@@ -479,6 +479,17 @@ module.exports = function (_config) {
                   {
                     targetName: 'BlueskyClip',
                     bundleIdentifier: 'xyz.blueskyweb.app.AppClip',
+                    parentBundleIdentifier: 'xyz.blueskyweb.app',
+                    entitlements: {
+                      'com.apple.security.application-groups': [
+                        'group.app.bsky',
+                      ],
+                      'com.apple.developer.parent-application-identifiers': [
+                        '$(AppIdentifierPrefix)xyz.blueskyweb.app',
+                      ],
+                      'com.apple.developer.associated-domains':
+                        ASSOCIATED_DOMAINS,
+                    },
                   },
                 ],
               },
