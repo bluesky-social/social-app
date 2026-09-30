@@ -166,9 +166,10 @@ function postViewToReplyRef({
 }
 
 /**
- * Convert validated picker output into initial media inputs. Videos keep the
- * picker File on web so the eager worker can read it; animated GIF files use
- * the video pipeline, matching the production composer.
+ * Convert validated picker output into initial media inputs, keeping the
+ * metadata the picker already has so the worker does not read it again.
+ * Videos keep the picker File on web so the eager worker can read it; animated
+ * GIF files use the video pipeline, matching the production composer.
  */
 function pickedToMedia({picked}: {picked: PickedAssets}): MediaAttachmentInput {
   if (picked.type === 'image') {
@@ -179,6 +180,7 @@ function pickedToMedia({picked}: {picked: PickedAssets}): MediaAttachmentInput {
         width: asset.width,
         height: asset.height,
         mimeType: asset.mimeType,
+        fileSize: asset.fileSize,
       })),
     }
   }
@@ -189,8 +191,9 @@ function pickedToMedia({picked}: {picked: PickedAssets}): MediaAttachmentInput {
       uri: asset.uri,
       width: asset.width,
       height: asset.height,
-      mimeType: asset.mimeType ?? 'video/mp4',
+      mimeType: asset.mimeType ?? undefined,
       duration: asset.duration ?? undefined,
+      fileSize: asset.fileSize,
       file: asset.file ?? undefined,
     },
   }

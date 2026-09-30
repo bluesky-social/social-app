@@ -84,13 +84,15 @@ function readyImages(state: ThreadState, count = 1) {
   }
   const items = media.items.slice(0, count)
   for (const item of items) {
+    const width = item.width ?? 1
+    const height = item.height ?? 1
     item.upload = {state: 'uploaded', blob: blob('image/jpeg')}
     item.prepared = {
       uri: item.uri,
-      width: item.width,
-      height: item.height,
+      width,
+      height,
       mimeType: 'image/jpeg',
-      aspectRatio: {width: item.width, height: item.height},
+      aspectRatio: {width, height},
     }
   }
   state.posts[postId] = {

@@ -1,6 +1,8 @@
 import {uploadBlob} from '#/lib/api/upload-blob'
 import {AbortError} from '#/lib/async/cancelable'
 import {compressImage} from '#/lib/media/image/compress'
+import {getImageDim} from '#/lib/media/manip'
+import {getUriSize} from '#/lib/media/uriSize'
 import {compressVideo} from '#/lib/media/video/compress'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
@@ -16,12 +18,15 @@ import {
  * it directly or through `__uploadWorkers`.
  */
 export const imageUploadDependencies: ImageUploadDependencies = {
+  getImageDimensions: getImageDim,
   compressImage,
   uploadBlob,
 }
 
 export const videoUploadDependencies: VideoUploadDependencies = {
   getVideoMetadata,
+  getImageDimensions: getImageDim,
+  getFileSize: getUriSize,
   compressVideo,
   uploadVideo,
   uploadBlob,

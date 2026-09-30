@@ -1127,7 +1127,7 @@ describe('attachment lifecycle', () => {
   )
 
   test('a real image worker cancelled while starting never uploads', async () => {
-    let finishCompression!: (image: PickerImage) => void
+    let finishCompression: ((image: PickerImage) => void) | undefined
     const compressImage = jest.fn(
       () =>
         new Promise<PickerImage>(resolve => {
@@ -1150,9 +1150,14 @@ describe('attachment lifecycle', () => {
     store.actions.addMedia(root, [imageInput])
     expect(getMedia(store, root)).toEqual([])
 
-    /* Compression has no abort hook, so it still runs to completion. */
-    expect(compressImage).toHaveBeenCalledTimes(1)
-    finishCompression({
+    /*
+     * Source preparation settles before compression, so the abort is seen
+     * first and compression never starts. If it had, it would still run to
+     * completion (it has no abort hook) without starting an upload.
+     */
+    for (let i = 0; i < 10; i++) await Promise.resolve()
+    expect(compressImage).not.toHaveBeenCalled()
+    finishCompression?.({
       path: 'file:///compressed.jpg',
       width: 1,
       height: 1,
