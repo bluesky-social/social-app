@@ -87,6 +87,27 @@ describe('threadgate and postgate state', () => {
     nobody.destroy()
   })
 
+  test('treats switching between undefined and empty allow rules as a change', () => {
+    const store = makeStore({threadgateAllowRules: undefined})
+    const notify = jest.fn()
+    store.subscribe(notify)
+
+    store.actions.setThreadgateAllowRules([])
+    expect(store.getState().threadgateAllowRules).toEqual([])
+    expect(store.getState().isDirty).toBe(true)
+    expect(notify).toHaveBeenCalledTimes(1)
+
+    store.actions.setThreadgateAllowRules(undefined)
+    expect(store.getState().threadgateAllowRules).toBeUndefined()
+    expect(notify).toHaveBeenCalledTimes(2)
+
+    const latest = store.getState()
+    store.actions.setThreadgateAllowRules(undefined)
+    expect(store.getState()).toBe(latest)
+    expect(notify).toHaveBeenCalledTimes(2)
+    store.destroy()
+  })
+
   test('preserves every supported rule, multiple lists, and opaque rules', () => {
     const threadgateAllowRules = [
       mentionRule,

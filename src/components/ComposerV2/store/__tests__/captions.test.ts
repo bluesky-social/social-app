@@ -340,6 +340,37 @@ describe('setVideoCaptions', () => {
     store.destroy()
   })
 
+  test('does not restart a completed upload for separately allocated identical captions', () => {
+    const {started, workers} = makeManualWorkers()
+    const store = createThreadStore({
+      ...testUploadRuntime,
+      resolvers,
+      __createId: makeIdGenerator(),
+      __uploadWorkers: workers,
+      initialState: {posts: [{attachments: {media: {...videoInput}}}]},
+    })
+    const {postId, item} = getVideo(store)
+    started[0].report({
+      state: 'uploaded',
+      blob: blob('video'),
+      captionBlobs: [{lang: 'en', blob: blob('caption-en')}],
+    })
+    const before = store.getState()
+    const notified = jest.fn()
+    store.subscribe(notified)
+
+    store.actions.setVideoCaptions(postId, item.id, [
+      {lang: 'en', content: 'original english'},
+    ])
+
+    expect(started).toHaveLength(1)
+    expect(started[0].cancelled).toBe(false)
+    expect(store.getState()).toBe(before)
+    expect(notified).not.toHaveBeenCalled()
+    expect(getVideo(store).item.upload.state).toBe('uploaded')
+    store.destroy()
+  })
+
   test('cancels in-flight work before restarting with edited captions', () => {
     const {started, workers} = makeManualWorkers()
     const store = createThreadStore({

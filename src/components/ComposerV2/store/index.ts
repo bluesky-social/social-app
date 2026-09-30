@@ -1,3 +1,4 @@
+import deepEqual from 'fast-deep-equal'
 import {nanoid} from 'nanoid/non-secure'
 
 import {
@@ -47,44 +48,6 @@ function hasDimensions(value: {width?: number; height?: number}) {
 function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
   if (item.kind !== 'image' && item.kind !== 'video') return false
   return item.upload.state === 'failed' && item.upload.retryable === true
-}
-
-function serializableEqual({
-  left,
-  right,
-}: {
-  left: unknown
-  right: unknown
-}): boolean {
-  if (Object.is(left, right)) return true
-  if (Array.isArray(left) || Array.isArray(right)) {
-    if (!Array.isArray(left) || !Array.isArray(right)) return false
-    return (
-      left.length === right.length &&
-      left.every((value, index) =>
-        serializableEqual({left: value, right: right[index]}),
-      )
-    )
-  }
-  if (
-    !left ||
-    !right ||
-    typeof left !== 'object' ||
-    typeof right !== 'object'
-  ) {
-    return false
-  }
-  const leftKeys = Object.keys(left)
-  const rightKeys = Object.keys(right)
-  if (leftKeys.length !== rightKeys.length) return false
-  return leftKeys.every(
-    key =>
-      Object.prototype.hasOwnProperty.call(right, key) &&
-      serializableEqual({
-        left: (left as Record<string, unknown>)[key],
-        right: (right as Record<string, unknown>)[key],
-      }),
-  )
 }
 
 /** One isolated thread composition session, independent of React. */
@@ -200,7 +163,7 @@ export function createThreadStore({
     mutateState(s => {
       const post = s.posts[postId]
       if (!post) return null
-      if (serializableEqual({left: post.tags, right: tags})) return null
+      if (deepEqual(post.tags, tags)) return null
       s.posts[postId] = {...post, tags: [...tags]}
       s.isDirty = true
       return s
@@ -212,8 +175,7 @@ export function createThreadStore({
     allow: readonly types.ThreadgateAllowRule[] | undefined,
   ) {
     mutateState(s => {
-      if (serializableEqual({left: s.threadgateAllowRules, right: allow}))
-        return null
+      if (deepEqual(s.threadgateAllowRules, allow)) return null
       s.threadgateAllowRules = allow?.map(rule =>
         cloneSerializable({value: rule}),
       )
@@ -227,14 +189,7 @@ export function createThreadStore({
   ) {
     mutateState(s => {
       const embeddingRules = configuration.embeddingRules ?? []
-      if (
-        serializableEqual({
-          left: s.postgateEmbeddingRules,
-          right: embeddingRules,
-        })
-      ) {
-        return null
-      }
+      if (deepEqual(s.postgateEmbeddingRules, embeddingRules)) return null
       s.postgateEmbeddingRules = embeddingRules.map(rule =>
         cloneSerializable({value: rule}),
       )
@@ -435,7 +390,7 @@ export function createThreadStore({
       lang: caption.lang,
       content: caption.content,
     }))
-    if (serializableEqual({left: item.captions, right: nextCaptions})) return
+    if (deepEqual(item.captions, nextCaptions)) return
 
     const keptBlobs = item.captionBlobs.filter(blob => {
       const previous = item.captions.find(caption => caption.lang === blob.lang)
