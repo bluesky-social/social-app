@@ -9,6 +9,7 @@ init({
   enableAutoSessionTracking: false,
   enableTombstone: true,
   dsn: env.SENTRY_DSN,
+  sendDefaultPii: true,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
