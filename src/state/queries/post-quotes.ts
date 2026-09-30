@@ -23,13 +23,13 @@ export type QuotesSort = 'latest' | 'top'
 const DEFAULT_SORT: QuotesSort = 'latest'
 
 const RQKEY_ROOT = 'post-quotes'
-export const RQKEY = (resolvedUri: string, sort: QuotesSort = DEFAULT_SORT) => [
+const RQKEY = (resolvedUri: string, sort: QuotesSort = DEFAULT_SORT) => [
   RQKEY_ROOT,
   resolvedUri,
   sort,
 ]
 
-export function buildGetQuotesParams({
+function buildGetQuotesParams({
   uri,
   cursor,
   sort,
@@ -56,7 +56,7 @@ export function buildGetQuotesParams({
  * Drops quotes already seen on an earlier page. "Top" pages come from a ranking
  * that can be rebuilt mid-scroll, which can repeat a quote.
  */
-export function removeDuplicateQuotes<P extends {posts: {uri: string}[]}>(
+function removeDuplicateQuotes<P extends {posts: {uri: string}[]}>(
   pages: P[],
 ): P[] {
   const seen = new Set<string>()
