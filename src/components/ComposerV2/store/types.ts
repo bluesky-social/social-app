@@ -73,16 +73,34 @@ export type PreparedVideo = {
   aspectRatio: {width: number; height: number}
 }
 
+/**
+ * Source metadata an upload worker prepared. The store fills only fields the
+ * item did not know and never overwrites a known value, so a retry of the same
+ * item reuses them instead of reading the source again. Durations are in
+ * milliseconds.
+ */
+export type ResolvedSourceMetadata = {
+  width?: number
+  height?: number
+  mimeType?: string
+  duration?: number
+  fileSize?: number
+}
+
 export type PostMediaImage = {
   kind: 'image'
   id: string
   postId: string
+  /** Native file URI, or a web data/object URL. */
   uri: string
-  width: number
-  height: number
+  /** Unknown source dimensions are resolved by the worker before compression. */
+  width?: number
+  height?: number
   altText: string
   /** The source MIME type, before post-image compression. */
   mimeType?: string
+  /** Source byte size, when known. */
+  fileSize?: number
   /** Durable draft path, reused when saving restored media. */
   localRefPath?: string
   /** Output of the post image compressor; the source fields remain unchanged. */
@@ -95,12 +113,16 @@ export type PostMediaVideo = {
   id: string
   postId: string
   uri: string
-  width: number
-  height: number
+  /** Unknown source metadata is resolved by the worker before compression. */
+  width?: number
+  height?: number
   altText: string
-  mimeType: string
-  /** Duration from the media metadata probe, in milliseconds. */
+  /** `image/gif` marks an animated GIF file using the video pipeline. */
+  mimeType?: string
+  /** Source duration in milliseconds. */
   duration?: number
+  /** Source byte size, when known. */
+  fileSize?: number
   /** Durable draft path, reused when saving restored media. */
   localRefPath?: string
   /** Web picker input retained for metadata/compression; never serialized to drafts. */
@@ -224,27 +246,43 @@ export type ThreadPost = {
   gifSelectionsRemaining: number
 }
 
-/** Local image data without runtime identity or upload status. */
+/**
+ * Local image data without runtime identity or upload status. Pass whatever
+ * metadata the source already has; the worker resolves missing dimensions
+ * before compression rather than requiring callers to probe.
+ */
 export type PostMediaImageInput = {
+  /** Native file URI, or a web data/object URL. */
   uri: string
-  width: number
-  height: number
+  width?: number
+  height?: number
   mimeType?: string
+  /** Source byte size, when known. */
+  fileSize?: number
   altText?: string
   localRefPath?: string
 }
 
-/** Local video data and durable caption contents, not uploaded caption blobs. */
+/**
+ * Local video data and durable caption contents, not uploaded caption blobs.
+ * Missing MIME type, dimensions, duration, or size are resolved by the worker,
+ * which probes only when a cheaper source cannot supply them.
+ */
 export type PostMediaVideoInput = {
+  /** Native file URI, or a web data/object URL. */
   uri: string
-  width: number
-  height: number
-  mimeType: string
+  width?: number
+  height?: number
+  /** `image/gif` routes an animated GIF file through the video pipeline. */
+  mimeType?: string
   altText?: string
   localRefPath?: string
-  /** Native callers use uri; web callers may provide the picker File. */
+  /** Native callers use uri; web callers may also provide the picker File. */
   file?: Blob
+  /** Source duration in milliseconds. */
   duration?: number
+  /** Source byte size, when known. */
+  fileSize?: number
   captions?: ReadonlyArray<{lang: string; content: string}>
 }
 

@@ -120,6 +120,7 @@ export function fakeImageDependencies(
   overrides: Partial<ImageUploadDependencies> = {},
 ): ImageUploadDependencies {
   return {
+    getImageDimensions: unexpected('getImageDimensions'),
     compressImage: unexpected('compressImage'),
     uploadBlob: unexpected('uploadBlob'),
     ...overrides,
@@ -132,6 +133,8 @@ export function fakeVideoDependencies(
 ): VideoUploadDependencies {
   return {
     getVideoMetadata: unexpected('getVideoMetadata'),
+    getImageDimensions: unexpected('getImageDimensions'),
+    getFileSize: unexpected('getFileSize'),
     compressVideo: unexpected('compressVideo'),
     uploadVideo: unexpected('uploadVideo'),
     uploadBlob: unexpected('uploadBlob'),

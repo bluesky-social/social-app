@@ -16,9 +16,11 @@ import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
 import {IS_WEB} from '#/env'
 import {app} from '#/lexicons'
+import {prepareImageSource, prepareVideoSource} from './prepareMediaSource'
 import {
   type PostMediaImage,
   type PostMediaVideo,
+  type ResolvedSourceMetadata,
   type UploadedCaption,
   type UploadStatus,
 } from './types'
@@ -79,16 +81,25 @@ export type UploadRuntime = {
  * through `__uploadWorkers`. A worker never chooses an implementation.
  */
 type UploadBlob = (typeof import('#/lib/api/upload-blob'))['uploadBlob']
+/** Reads dimensions from a native file URI or a web data/object URL. */
+type GetImageDimensions = (typeof import('#/lib/media/manip'))['getImageDim']
 
 /** Implementations the image worker calls. */
 export type ImageUploadDependencies = {
+  /** Called only when the item does not already know its dimensions. */
+  getImageDimensions: GetImageDimensions
   compressImage: (typeof import('#/lib/media/image/compress'))['compressImage']
   uploadBlob: UploadBlob
 }
 
 /** Implementations the video worker calls, including caption blob uploads. */
 export type VideoUploadDependencies = {
+  /** Called only for non-GIF sources still missing metadata. */
   getVideoMetadata: (typeof import('#/view/com/composer/videos/metadata'))['getVideoMetadata']
+  /** GIF dimensions; GIFs never reach the video metadata probe. */
+  getImageDimensions: GetImageDimensions
+  /** Native file stat for a source whose size is unknown; unused on web. */
+  getFileSize: (typeof import('#/lib/media/uriSize'))['getUriSize']
   compressVideo: (typeof import('#/lib/media/video/compress'))['compressVideo']
   uploadVideo: (typeof import('#/lib/media/video/upload'))['uploadVideo']
   /** Caption blobs go to the account PDS. */
@@ -114,6 +125,15 @@ type BaseOptions = UploadRuntime & {
     postId: string,
     mediaId: string,
     output: PreparedOutput,
+  ) => void
+  /**
+   * Called with the prepared source metadata. The store keeps what the item
+   * did not know, so a retry of the same item does not read the source again.
+   */
+  setMediaSourceMetadata?: (
+    postId: string,
+    mediaId: string,
+    metadata: ResolvedSourceMetadata,
   ) => void
   setCaptionBlobs?: (
     postId: string,
@@ -145,22 +165,40 @@ async function runImageUpload({
   signal,
   ...opts
 }: ImageOptions & {signal: AbortSignal}) {
-  const {media, pdsClient, i18n, compressImage, uploadBlob} = opts
+  const {
+    media,
+    pdsClient,
+    i18n,
+    getImageDimensions,
+    compressImage,
+    uploadBlob,
+  } = opts
   try {
     report({...opts, status: {state: 'uploading', phase: 'compressing'}})
 
     /*
-     * compressImage has no cancellation hook. Cancellation is therefore
-     * logical here: the result is ignored and no upload starts after abort.
+     * Neither the dimension read nor compressImage has a cancellation hook.
+     * Cancellation is therefore logical here: late results are ignored and no
+     * later step starts after abort.
      */
+    const {source, metadata} = await prepareImageSource({
+      media,
+      getImageDimensions,
+    })
+    throwIfAborted({signal})
+    opts.setMediaSourceMetadata?.(opts.postId, opts.mediaId, metadata)
+    if (!validDimensions(source)) {
+      throw new ValidationError('invalid-image-dimensions')
+    }
     const image: ComposerImage = {
       alt: media.altText,
       source: {
         id: media.id,
-        path: media.uri,
-        width: media.width,
-        height: media.height,
-        mime: media.mimeType ?? 'image/jpeg',
+        path: source.uri,
+        width: source.width,
+        height: source.height,
+        /* compressImage always re-encodes and does not read the source type. */
+        mime: source.mimeType ?? 'image/jpeg',
       },
     }
     const compressed = await compressImage({image, ...IMAGE_SIZE_CONFIG_POSTS})
@@ -199,6 +237,8 @@ async function runVideoUpload({
     pdsUrl,
     i18n,
     getVideoMetadata,
+    getImageDimensions,
+    getFileSize,
     compressVideo,
     uploadVideo,
     uploadBlob,
@@ -210,9 +250,15 @@ async function runVideoUpload({
     let compressed: CompressedVideo | undefined
     if (!videoBlob) {
       report({...opts, status: {state: 'uploading', phase: 'validating'}})
-      const asset = await getAsset({media, getVideoMetadata})
-      validateVideoSource({asset})
+      const {asset, metadata} = await prepareVideoSource({
+        media,
+        getVideoMetadata,
+        getImageDimensions,
+        getFileSize,
+      })
       throwIfAborted({signal})
+      opts.setMediaSourceMetadata?.(opts.postId, opts.mediaId, metadata)
+      validateVideoSource({asset})
 
       report({...opts, status: {state: 'uploading', phase: 'compressing'}})
       compressed = await compressVideo(asset, {
@@ -331,24 +377,6 @@ async function runVideoUpload({
   }
 }
 
-async function getAsset({
-  media,
-  getVideoMetadata: metadata,
-}: {
-  media: PostMediaVideo
-  getVideoMetadata: VideoUploadDependencies['getVideoMetadata']
-}): Promise<ImagePickerAsset> {
-  if (media.file) return metadata(media.file as File, media.mimeType)
-  if (IS_WEB && media.uri.startsWith('blob:')) {
-    const blob = await fetch(media.uri).then(response => response.blob())
-    return metadata(
-      new File([blob], 'video', {type: media.mimeType}),
-      media.mimeType,
-    )
-  }
-  return metadata(media.uri, media.mimeType)
-}
-
 /**
  * Checks the source before compression. Upload-output limits (format and
  * `VIDEO_MAX_SIZE`) only apply here where compression cannot change the
@@ -371,7 +399,7 @@ function validateVideoSource({asset}: {asset: ImagePickerAsset}) {
   if (!isAcceptableFormat && !isTranscodable) {
     throw new ValidationError('unsupported-video-format')
   }
-  if (!asset.width || !asset.height || asset.width <= 0 || asset.height <= 0) {
+  if (!validDimensions(asset)) {
     throw new ValidationError('invalid-video-dimensions')
   }
   if (asset.duration != null && asset.duration > VIDEO_MAX_DURATION_MS) {
@@ -428,6 +456,12 @@ async function pollVideoJob({
     }
     await sleep({ms: VIDEO_JOB_POLL_INTERVAL_MS, signal})
   }
+}
+
+function validDimensions({width, height}: {width: number; height: number}) {
+  return (
+    Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0
+  )
 }
 
 function report({
@@ -525,6 +559,8 @@ function validationMessage({code, i18n}: {code: string; i18n: I18n}) {
       return i18n._(msg`The selected video uses an unsupported format.`)
     case 'invalid-video-dimensions':
       return i18n._(msg`The selected video has invalid dimensions.`)
+    case 'invalid-image-dimensions':
+      return i18n._(msg`The selected image has invalid dimensions.`)
     default:
       return i18n._(msg`The selected media is not valid.`)
   }

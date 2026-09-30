@@ -162,6 +162,7 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
         width: asset.width,
         height: asset.height,
         mimeType: asset.mimeType ?? undefined,
+        fileSize: asset.fileSize,
       }))
     } else {
       /* Animated GIF files use the video pipeline, like production. */
@@ -172,8 +173,9 @@ function PostMetaRow({postId, index}: {postId: string; index: number}) {
           uri: asset.uri,
           width: asset.width,
           height: asset.height,
-          mimeType: asset.mimeType ?? 'video/mp4',
+          mimeType: asset.mimeType ?? undefined,
           duration: asset.duration ?? undefined,
+          fileSize: asset.fileSize,
           file: asset.file ?? undefined,
         },
       ]

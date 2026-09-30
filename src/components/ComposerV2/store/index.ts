@@ -40,6 +40,10 @@ import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMedia
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
 
+function hasDimensions(value: {width?: number; height?: number}) {
+  return Boolean(value.width && value.height)
+}
+
 function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
   if (item.kind !== 'image' && item.kind !== 'video') return false
   return item.upload.state === 'failed' && item.upload.retryable === true
@@ -607,6 +611,14 @@ export function createThreadStore({
         if (uploadTasks.get(m) === registered)
           applyMediaCompressionResult(p, m, output)
       },
+      setMediaSourceMetadata: (
+        p: string,
+        m: string,
+        metadata: types.ResolvedSourceMetadata,
+      ) => {
+        if (uploadTasks.get(m) === registered)
+          applyMediaSourceMetadata(p, m, metadata)
+      },
       setCaptionBlobs: (
         p: string,
         m: string,
@@ -782,6 +794,50 @@ export function createThreadStore({
       s.posts[postId] = replacePostMediaItems(
         s.posts[postId],
         currentItems.map(item => (item.id === mediaId ? next : item)),
+      )
+      return s
+    })
+  }
+
+  /**
+   * Record the source metadata a worker prepared. Items never change source,
+   * so this only fills values the item did not know (a replaced source is a
+   * new item) and publishes nothing when there is nothing new. Background
+   * preparation does not dirty drafts.
+   */
+  function applyMediaSourceMetadata(
+    postId: string,
+    mediaId: string,
+    metadata: types.ResolvedSourceMetadata,
+  ) {
+    mutateState(s => {
+      const post = s.posts[postId]
+      if (!post) return null
+      const items = getMediaItems({media: post.attachments.media})
+      const current = items.find(item => item.id === mediaId)
+      if (!current || current.kind === 'gif') return null
+      const next = {...current}
+      if (!hasDimensions(current) && hasDimensions(metadata)) {
+        next.width = metadata.width
+        next.height = metadata.height
+      }
+      next.mimeType ??= metadata.mimeType
+      next.fileSize ??= metadata.fileSize
+      if (next.kind === 'video') next.duration ??= metadata.duration
+      if (
+        next.width === current.width &&
+        next.height === current.height &&
+        next.mimeType === current.mimeType &&
+        next.fileSize === current.fileSize &&
+        (next.kind !== 'video' ||
+          current.kind !== 'video' ||
+          next.duration === current.duration)
+      ) {
+        return null
+      }
+      s.posts[postId] = replacePostMediaItems(
+        post,
+        items.map(item => (item.id === mediaId ? next : item)),
       )
       return s
     })

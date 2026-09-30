@@ -122,6 +122,7 @@ shortening. Explicit tags are independent of hashtag facets.
 | --------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | State, commands, ownership, async coordination            | [store/index.ts](store/index.ts), [store/types.ts](store/types.ts), [store/utils/](store/utils/)                        |
 | Real image/video workers and dependency injection         | [store/uploads.ts](store/uploads.ts), [store/uploadDependencies.ts](store/uploadDependencies.ts)                        |
+| Media source preparation and paste/drop inputs              | [store/prepareMediaSource.ts](store/prepareMediaSource.ts), [adapters/pastedMedia.ts](adapters/pastedMedia.ts)           |
 | Composer intents and inbound drafts                       | [adapters/index.ts](adapters/index.ts)                                                                                  |
 | React subscriptions and text derivation                   | [hooks/](hooks/)                                                                                                        |
 | Preflight, embeds, reply chains, gates, record validation | [planner.ts](planner.ts)                                                                                                |
@@ -211,8 +212,9 @@ or recreate an execution-order manifest as part of composer changes.
   implemented.
 - `internalActions.setUploadStatus` exists for tests only and calls the private
   `applyUploadStatus` directly. Worker callbacks named `setUploadStatus`,
-  `setMediaCompressionResult`, and `setCaptionBlobs` are a different interface:
-  they pass through task-identity guards before reaching the private
+  `setMediaSourceMetadata`, `setMediaCompressionResult`, and `setCaptionBlobs`
+  are a different interface: they pass through task-identity guards before
+  reaching the private
   `apply*` writes. Keep `getState`, `subscribe`, `destroy`, and `reportError`
   as lifecycle/read/reporting methods, not UI mutation shortcuts.
 - Naming inside `createThreadStore`: `set*`, `add*`, `remove*`, `update*`, and
@@ -274,7 +276,8 @@ fakes, wrap it (`realUploadWorkers` in `store/__tests__/uploadTestUtils.ts`).
 There is no production simulated-upload fallback. Use the current lex clients,
 not removed agent APIs.
 
-**Images:** retain original source fields; compress with the existing
+**Images:** retain original source fields, resolving only missing dimensions
+(see below); compress with the existing
 `compressImage` and `IMAGE_SIZE_CONFIG_POSTS`; retain prepared path/MIME/dimensions
 separately; upload through the platform PDS blob helper. The compressor has no
 abort signal: cancellation is logical, its late result is ignored, and a
@@ -298,11 +301,64 @@ keeps blobs only for unchanged language/content, restarts running/completed work
 when necessary, and allows the worker to reuse the video and unchanged captions.
 Prepared outputs do not retain multipart controllers or transient web buffers.
 
+### Media sources and worker preparation
+
+Callers pass the metadata a source already has and nothing more: V2 media
+inputs accept a URI with optional dimensions, MIME type, duration (video, in
+milliseconds), and `fileSize`. Nobody has to probe before `addMedia` or before
+building initial state, and nobody should fabricate a default MIME type or
+dimensions. Supported sources:
+
+- Picker assets (native file URIs; web data URIs for images and blob URLs plus
+  the picker `File` for videos). Map every useful field, including `fileSize`.
+- Composer intents (`videoUri` with dimensions only). The adapter passes the
+  source through; the worker probes for the MIME type and duration.
+- Pasted and dropped media via `pastedMediaToInput({source})`: native pasted
+  file URIs and the web text input's data URIs (web paste and drop already
+  convert files to data URIs). Pass all pasted items to one `addMedia` call so selection limits apply.
+  Classification matches the existing composer: web GIF files use the video
+  pipeline (distinct from provider GIF cards), native treats a pasted GIF as a
+  still image, and data URI video is rejected on native. No composer text
+  input is wired to it yet, and the tester exposes only the picker; paste/drop
+  support is verified by adapter and store tests, not UI.
+- Every image and video input has a URI. The store never creates or revokes
+  object URLs; the caller that made one owns it.
+
+Workers own preparation (`store/prepareMediaSource.ts`). They use known values
+first, then cheap sources: a web `File`'s type and size, a data URI's type, a
+recognized extension, and a native file stat for missing size. A metadata
+helper runs only for values still missing:
+
+- Images read dimensions with the platform image loader only when unknown. The
+  compressor receives the original URI (native file URI, data URI, or object
+  URL); it always re-encodes to JPEG, so no source type is assumed.
+- Non-GIF video uses the shared video metadata helper only when the MIME type,
+  dimensions, or duration is missing, passing a URI on native and a `File` on
+  web. A web URI-only source is fetched into a `File` only when it must be
+  probed or its type is unknown, and that `File` is then handed to the
+  compressor rather than fetched again.
+- GIF files (known type, `File` type, data URI, or `.gif` extension) never
+  reach the video metadata helper; on iOS it never settles for a file without
+  a video track. Dimensions come from the image loader and, on native, size
+  from a file stat, so the GIF pass-through reports a real byte size. A source
+  with no type information at all is treated as video, as the existing
+  composer does.
+
+The prepared values reach the store through `setMediaSourceMetadata` before
+source validation, whose source-versus-output rules are unchanged. The store
+only fills fields the item did not know, publishes nothing when nothing is
+new, and does not mark the composition dirty. Items never change source, so a retry, caption restart, or
+reorder reuses the metadata; a replacement is a new item with its own
+preparation, and a late result for a removed item or superseded attempt is
+dropped by the task-identity guard. This retains metadata only; compressed
+output is not cached across retries.
+
 ### Adapter fidelity
 
 Both adapters return `ThreadStoreInitialState`; neither constructs a store,
 dispatches corrective edit actions, loads/saves/deletes draft files, resolves
-remote views, or starts uploads. Metadata probes are narrow injectable seams.
+remote views, or starts uploads. The draft adapter's metadata probes are
+narrow injectable seams; the intent adapter does not probe.
 Runtime IDs, retry functions, task state, revisions, moderation objects, and
 shell callbacks do not belong in normalized content. Web picker Blob input is a
 runtime source convenience, not a persisted draft representation.
@@ -315,8 +371,9 @@ runtime source convenience, not a persisted draft representation.
   quote/local media wins over detected candidates; explicit image plus video
   is rejected. A quote can coexist with images, video, or an external card.
 - Preserves supplied quote strong ref/view without refetching. Image order,
-  dimensions and alt text survive; video MIME/metadata comes from the platform
-  probe, not an unreliable extension guess.
+  dimensions and alt text survive. An intent video keeps its URI and
+  dimensions; its MIME type and duration are resolved by the video worker's
+  platform probe, not by the adapter.
 - Keeps `openGallery`, `onPost`, `onPostSuccess`, logging context, close behavior,
   and auth/block checks with the shell caller. No existing shell API migration
   is implied by this adapter.

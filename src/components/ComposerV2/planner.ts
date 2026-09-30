@@ -970,9 +970,19 @@ async function externalRecord({
   }
 }
 
-function validDimensions({width, height}: {width: number; height: number}) {
+/** Source dimensions may still be unknown if preparation has not run. */
+function validDimensions(value: {
+  width?: number
+  height?: number
+}): value is {width: number; height: number} {
+  const {width, height} = value
   return (
-    Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0
+    typeof width === 'number' &&
+    typeof height === 'number' &&
+    Number.isFinite(width) &&
+    Number.isFinite(height) &&
+    width > 0 &&
+    height > 0
   )
 }
 

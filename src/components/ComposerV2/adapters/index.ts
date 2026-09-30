@@ -59,6 +59,7 @@ export type AdapterMetadataOptions = {
   /** Omit when an owning caller reports the initialization rejection instead. */
   onError?: ComposerV2OnError
   getImageDimensions?: (uri: string) => Promise<{width: number; height: number}>
+  /** Used by draft restoration; intent videos are prepared by the worker. */
   getVideoMetadata?: (
     uri: string,
     fallbackMimeType?: string,
@@ -76,30 +77,31 @@ export type DraftToInitialStateInput = AdapterMetadataOptions & {
 /**
  * Convert an open-composer intent into the source-independent V2 input.
  *
- * This is async because a video intent has no MIME type in the shell contract;
- * the existing platform metadata probe supplies it before the store is built.
+ * A video intent has no MIME type or duration in the shell contract. The
+ * adapter passes the source through and the video worker resolves the missing
+ * metadata, so the source is not probed twice. It still returns a promise, and
+ * rejects rather than throws, so callers can treat both adapters alike.
  */
-export async function composerOptsToInitialState({
+export function composerOptsToInitialState({
   composerOpts,
   ...options
 }: AdapterMetadataOptions & {
   composerOpts: ComposerOpts
 }): Promise<ThreadStoreInitialState> {
-  try {
-    return await normalizeComposerOpts({composerOpts, ...options})
-  } catch (cause) {
+  return new Promise<ThreadStoreInitialState>(resolve =>
+    resolve(normalizeComposerOpts({composerOpts, ...options})),
+  ).catch((cause: unknown) => {
     reportInitializationError({onError: options.onError, cause})
     throw cause
-  }
+  })
 }
 
-async function normalizeComposerOpts({
+function normalizeComposerOpts({
   composerOpts: opts,
-  getVideoMetadata = defaultGetVideoMetadata,
   postInteractionSettings,
 }: AdapterMetadataOptions & {
   composerOpts: ComposerOpts
-}): Promise<ThreadStoreInitialState> {
+}): ThreadStoreInitialState {
   const imageUris = opts.imageUris?.length ? opts.imageUris : undefined
   if (imageUris && opts.videoUri) {
     throw new ComposerAdapterError(
@@ -135,7 +137,14 @@ async function normalizeComposerOpts({
         })),
       } satisfies MediaAttachmentInput)
     : opts.videoUri
-      ? await intentVideoToMedia({video: opts.videoUri, getVideoMetadata})
+      ? ({
+          kind: 'video',
+          item: {
+            uri: opts.videoUri.uri,
+            width: opts.videoUri.width,
+            height: opts.videoUri.height,
+          },
+        } satisfies MediaAttachmentInput)
       : undefined
 
   const explicitRecord = opts.quote
@@ -464,42 +473,6 @@ async function restoreVideo({
       content: caption.content,
     })),
   }
-}
-
-function intentVideoToMedia({
-  video,
-  getVideoMetadata,
-}: {
-  video: NonNullable<ComposerOpts['videoUri']>
-  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>
-}): Promise<MediaAttachmentInput> {
-  return getVideoMetadata(video.uri).then(
-    metadata => {
-      if (!metadata.mimeType) {
-        throw new ComposerAdapterError(
-          'missing-media-metadata',
-          'Composer video MIME type could not be determined',
-        )
-      }
-      return {
-        kind: 'video',
-        item: {
-          uri: video.uri,
-          width: video.width,
-          height: video.height,
-          mimeType: metadata.mimeType,
-          duration: metadata.duration ?? undefined,
-        },
-      }
-    },
-    cause => {
-      throw new ComposerAdapterError(
-        'missing-media-metadata',
-        'Composer video metadata could not be read',
-        {cause},
-      )
-    },
-  )
 }
 
 function detectInitialLinks({text}: {text: string}) {

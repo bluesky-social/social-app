@@ -8,6 +8,8 @@ jest.mock('#/lib/api/resolve', () => ({
 import {type LinkResolvers} from '#/lib/api/resolve'
 import {uploadBlob} from '#/lib/api/upload-blob'
 import {compressImage} from '#/lib/media/image/compress'
+import {getImageDim} from '#/lib/media/manip'
+import {getUriSize} from '#/lib/media/uriSize'
 import {compressVideo} from '#/lib/media/video/compress'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
@@ -78,9 +80,15 @@ describe('upload worker dependency wiring', () => {
   test('store callers get the production implementations', () => {
     const {image, video} = captureWorkerOptions()
 
-    expect(image).toMatchObject({compressImage, uploadBlob})
+    expect(image).toMatchObject({
+      getImageDimensions: getImageDim,
+      compressImage,
+      uploadBlob,
+    })
     expect(video).toMatchObject({
       getVideoMetadata,
+      getImageDimensions: getImageDim,
+      getFileSize: getUriSize,
       compressVideo,
       uploadVideo,
       uploadBlob,
