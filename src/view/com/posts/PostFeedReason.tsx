@@ -82,7 +82,6 @@ export function PostFeedReason({
         <RepostIcon
           style={[t.atoms.text_contrast_medium, {marginRight: 3}]}
           width={13}
-          height={13}
         />
         <ProfileHoverCard did={reason.by.did}>
           <Text
@@ -109,7 +108,6 @@ export function PostFeedReason({
         <PinIcon
           style={[t.atoms.text_contrast_medium, {marginRight: 3}]}
           width={13}
-          height={13}
         />
         <Text
           style={[t.atoms.text_contrast_medium, a.font_medium, a.leading_snug]}

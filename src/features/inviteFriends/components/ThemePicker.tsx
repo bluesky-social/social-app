@@ -68,11 +68,7 @@ export function ThemePicker({
                 {l`Color`}
               </Text>
             </View>
-            <ChevronDown
-              width={CHEVRON_SIZE}
-              height={CHEVRON_SIZE}
-              fill={t.palette.contrast_700}
-            />
+            <ChevronDown width={CHEVRON_SIZE} fill={t.palette.contrast_700} />
           </Pressable>
         )}
       </Menu.Trigger>

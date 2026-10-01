@@ -4,6 +4,7 @@ import {atoms as a, useTheme} from '#/alf'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRight} from '#/components/icons/Arrow'
 import {CalendarDays_Stroke2_Corner0_Rounded as CalendarDays} from '#/components/icons/CalendarDays'
 import {Globe_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Globe'
+import {StarterPackMultiPathLarge as StarterPack} from '#/components/icons/StarterPack'
 import {Loader} from '#/components/Loader'
 import {H1} from '#/components/Typography'
 
@@ -46,11 +47,11 @@ export function Icons() {
       </View>
 
       <View style={[a.flex_row, a.gap_xl]}>
-        <Globe size="xs" gradient="sky" />
-        <Globe size="sm" gradient="sky" />
-        <Globe size="md" gradient="sky" />
-        <Globe size="lg" gradient="sky" />
-        <Globe size="xl" gradient="sky" />
+        <StarterPack size="xs" gradient="sky" />
+        <StarterPack size="sm" gradient="sky" />
+        <StarterPack size="md" gradient="sky" />
+        <StarterPack size="lg" gradient="sky" />
+        <StarterPack size="xl" gradient="sky" />
       </View>
     </View>
   )

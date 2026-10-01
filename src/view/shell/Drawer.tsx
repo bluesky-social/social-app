@@ -137,11 +137,7 @@ let DrawerProfileCard = ({
                   opacity: pressed ? 0.7 : 1,
                 },
               ]}>
-              <ArrowShareRight
-                width={16}
-                height={16}
-                fill={t.palette.primary_500}
-              />
+              <ArrowShareRight width={16} fill={t.palette.primary_500} />
             </Pressable>
           )}
         </View>

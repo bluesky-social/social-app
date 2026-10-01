@@ -17,7 +17,17 @@ const NanoIconSet = createNanoIconSet(glyphMap)
 
 export type IconName = keyof (typeof glyphMap)['i']
 
-type NanoIconComponent = (props: Props) => React.ReactNode
+/**
+ * The subset of the shared icon `Props` that glyph icons honour. Kept narrow on
+ * purpose so that passing anything else (e.g. `accessibilityLabel`, `height`,
+ * `gradient`) is a type error instead of being silently dropped.
+ */
+export type NanoIconProps = Pick<
+  Props,
+  'fill' | 'size' | 'style' | 'width' | 'testID'
+>
+
+type NanoIconComponent = (props: NanoIconProps) => React.ReactNode
 
 /**
  * Path data consumed by natively drawn menus, see `@bsky.app/peek-menu`.
@@ -124,7 +134,7 @@ export function createNanoIcon(
     svgPath?: string
   } = {},
 ): NanoIconComponent | (NanoIconComponent & SvgIconMeta) {
-  function Icon({fill, size, style, width, testID}: Props) {
+  function Icon({fill, size, style, width, testID}: NanoIconProps) {
     const t = useTheme()
 
     /*

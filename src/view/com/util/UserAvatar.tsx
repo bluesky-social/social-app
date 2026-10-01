@@ -435,7 +435,7 @@ let EditableUserAvatar = ({
                   a.border,
                   t.atoms.border_contrast_low,
                 ]}>
-                <CameraFilledIcon height={14} width={14} style={t.atoms.text} />
+                <CameraFilledIcon width={14} style={t.atoms.text} />
               </View>
             </Pressable>
           )}

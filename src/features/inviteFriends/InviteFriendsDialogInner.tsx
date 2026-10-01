@@ -237,11 +237,7 @@ export function InviteFriendsDialogInner({
               backgroundColor: t.palette.contrast_50,
             },
           ]}>
-          <ChainLinkIcon
-            width={20}
-            height={20}
-            fill={t.atoms.text_contrast_medium.color}
-          />
+          <ChainLinkIcon width={20} fill={t.atoms.text_contrast_medium.color} />
           <Text
             style={[
               a.flex_1,

@@ -110,7 +110,6 @@ function DialogInner({
             ]}>
             <Newskie
               width={64}
-              height={64}
               fill={t.palette.yellow}
               style={[a.absolute, a.inset_0]}
             />
