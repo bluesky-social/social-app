@@ -6,7 +6,7 @@ index 6d41e7fbc832421f4f8b85eba5ccbf0145555111..a0906d9b43d8a147e267a1d780f4144c
    implementation 'com.google.firebase:firebase-messaging:25.0.1'
  
    implementation 'me.leolin:ShortcutBadger:1.1.22@aar'
-+  implementation project(':expo-background-notification-handler')
++  implementation project(':bsky-app-expo-background-notification-handler')
  
    if (project.findProject(':expo-modules-test-core')) {
      testImplementation project(':expo-modules-test-core')

@@ -142,7 +142,7 @@ interface BottomSheetViewProps {
 ### Basic Example
 
 ```tsx
-import {BottomSheet, BottomSheetProvider, BottomSheetOutlet} from '@modules/bottom-sheet'
+import {BottomSheet, BottomSheetProvider, BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 
 // In your app root:
 function App() {
@@ -204,7 +204,7 @@ The module supports nesting sheets by using `BottomSheetPortalProvider` within s
 ### Dismiss All Sheets
 
 ```tsx
-import {BottomSheetNativeComponent} from '@modules/bottom-sheet'
+import {BottomSheetNativeComponent} from '@bsky.app/bottom-sheet'
 
 BottomSheetNativeComponent.dismissAll()
 ```

@@ -60,9 +60,7 @@ export type Events = {
     notificationType: NotificationType
     authorCount: number
   }
-  'state:background': {
-    secondsActive: number
-  }
+  'state:background': {}
   'state:foreground': {}
   'router:navigate': {
     from?: string

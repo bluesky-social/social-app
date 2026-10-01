@@ -18,7 +18,8 @@
               "format": "datetime"
             },
             "priority": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "Deprecated: this field is no longer populated."
             },
             "notifications": {
               "type": "array",
@@ -45,7 +46,8 @@
           },
           "seenAt": {
             "type": "string",
-            "format": "datetime"
+            "format": "datetime",
+            "description": "Deprecated: this parameter is unsupported and will cause an error."
           },
           "reasons": {
             "type": "array",
@@ -56,7 +58,8 @@
             "description": "Notification reasons to include in response."
           },
           "priority": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Deprecated: this parameter is ignored."
           }
         }
       },

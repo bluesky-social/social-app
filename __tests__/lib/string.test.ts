@@ -343,9 +343,11 @@ describe('parseEmbedPlayerFromUrl', () => {
   const inputs = [
     'https://youtu.be/videoId',
     'https://youtu.be/videoId?t=1s',
+    'https://youtu.be/videoId?t=1h2m3s',
     'https://www.youtube.com/watch?v=videoId',
     'https://www.youtube.com/watch?v=videoId&feature=share',
     'https://www.youtube.com/watch?v=videoId&t=1s',
+    'https://www.youtube.com/watch?v=videoId&t=1m30s',
     'https://youtube.com/watch?v=videoId',
     'https://youtube.com/watch?v=videoId&feature=share',
     'https://youtube.com/shorts/videoId',
@@ -473,6 +475,12 @@ describe('parseEmbedPlayerFromUrl', () => {
     {
       type: 'youtube_video',
       source: 'youtube',
+      playerUri:
+        'https://bsky.app/iframe/youtube.html?videoId=videoId&start=3723',
+    },
+    {
+      type: 'youtube_video',
+      source: 'youtube',
       playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=0',
     },
     {
@@ -484,6 +492,12 @@ describe('parseEmbedPlayerFromUrl', () => {
       type: 'youtube_video',
       source: 'youtube',
       playerUri: 'https://bsky.app/iframe/youtube.html?videoId=videoId&start=1',
+    },
+    {
+      type: 'youtube_video',
+      source: 'youtube',
+      playerUri:
+        'https://bsky.app/iframe/youtube.html?videoId=videoId&start=90',
     },
     {
       type: 'youtube_video',

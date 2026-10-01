@@ -1,0 +1,166 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.defs",
+  "defs": {
+    "subjectView": {
+      "type": "object",
+      "description": "A subject belonging to the viewer that has moderation actions against it.",
+      "required": ["src", "subject", "enforcement", "createdAt", "updatedAt"],
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the moderation service that took the actions."
+        },
+        "subject": {
+          "type": "union",
+          "refs": [
+            "com.atproto.admin.defs#repoRef",
+            "com.atproto.repo.strongRef"
+          ]
+        },
+        "enforcement": {
+          "type": "ref",
+          "ref": "#enforcementView"
+        },
+        "appeal": {
+          "type": "ref",
+          "ref": "#appealView"
+        },
+        "availableActions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "knownValues": ["appeal"]
+          }
+        },
+        "latestAction": {
+          "type": "ref",
+          "ref": "#actionView"
+        },
+        "actionCount": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "enforcementView": {
+      "type": "object",
+      "description": "The current enforcement state of a subject.",
+      "required": ["state"],
+      "properties": {
+        "state": {
+          "type": "string",
+          "knownValues": [
+            "none",
+            "labeled",
+            "removed",
+            "suspended",
+            "takendown"
+          ]
+        },
+        "scope": {
+          "type": "string",
+          "knownValues": ["network", "app", "labelOnly"]
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Active label values on the subject, excluding negated and expired labels."
+        }
+      }
+    },
+    "appealView": {
+      "type": "object",
+      "description": "The state of the viewer's appeal against the actions on a subject.",
+      "required": ["state"],
+      "properties": {
+        "state": {
+          "type": "string",
+          "knownValues": [
+            "none",
+            "pending",
+            "resolved",
+            "superseded",
+            "expired"
+          ]
+        },
+        "appealedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "resolvedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the appeal's report was closed."
+        },
+        "note": {
+          "type": "string",
+          "description": "Moderator explanation, from the publicNote on the closing activity. Absent if none was written."
+        },
+        "appealableUntil": {
+          "type": "string",
+          "format": "datetime"
+        }
+      }
+    },
+    "actionView": {
+      "type": "object",
+      "description": "A single moderation action taken against a subject.",
+      "required": ["id", "type", "createdAt"],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Action ID (moderation event ID)."
+        },
+        "type": {
+          "type": "string",
+          "description": "Public action type."
+        },
+        "scope": {
+          "type": "string",
+          "knownValues": ["network", "app", "labelOnly"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "reversedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Label values, for labelApplied/labelRemoved."
+        },
+        "policies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Policies that were applied in this action."
+        }
+      }
+    }
+  }
+}
