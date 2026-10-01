@@ -23,6 +23,7 @@ export enum Features {
   FollowingV2Enable = 'following_v2:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
+  HidePostEnable = 'hide_post:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',

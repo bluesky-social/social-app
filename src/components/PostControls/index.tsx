@@ -19,6 +19,7 @@ import {
   useProgressGuideControls,
 } from '#/state/shell/progress-guide'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {EyeSlash_Stroke2_Corner0_Rounded as EyeSlash} from '#/components/icons/EyeSlash'
 import {Reply as Bubble} from '#/components/icons/Reply'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import * as Skele from '#/components/Skeleton'
@@ -48,6 +49,7 @@ let PostControls = ({
   logContext,
   threadgateRecord,
   onShowLess,
+  onPressHide,
   viaRepost,
   variant,
   forceGoogleTranslate = false,
@@ -64,6 +66,12 @@ let PostControls = ({
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
+  /**
+   * When set, replaces the bookmark button with a "Hide post" button, moves
+   * bookmarking into the post menu, and adds a matching menu item. The caller
+   * owns dismissing the post and sending feedback.
+   */
+  onPressHide?: () => void
   viaRepost?: {uri: string; cid: string}
   variant?: 'compact' | 'normal' | 'large'
   forceGoogleTranslate?: boolean
@@ -309,14 +317,27 @@ let PostControls = ({
         <View />
       </View>
       <View style={[a.flex_row, a.justify_end, secondaryControlSpacingStyles]}>
-        <BookmarkButton
-          post={post}
-          big={big}
-          logContext={logContext}
-          hitSlop={{
-            right: secondaryControlSpacingStyles.gap / 2,
-          }}
-        />
+        {onPressHide ? (
+          <PostControlButton
+            testID="postHideBtn"
+            big={big}
+            label={l`Hide post`}
+            onPress={onPressHide}
+            hitSlop={{
+              right: secondaryControlSpacingStyles.gap / 2,
+            }}>
+            <PostControlButtonIcon icon={EyeSlash} />
+          </PostControlButton>
+        ) : (
+          <BookmarkButton
+            post={post}
+            big={big}
+            logContext={logContext}
+            hitSlop={{
+              right: secondaryControlSpacingStyles.gap / 2,
+            }}
+          />
+        )}
         <ShareMenuButton
           testID="postShareBtn"
           post={post}
@@ -343,6 +364,7 @@ let PostControls = ({
           timestamp={post.indexedAt}
           threadgateRecord={threadgateRecord}
           onShowLess={onShowLess}
+          onPressHide={onPressHide}
           hitSlop={{
             left: secondaryControlSpacingStyles.gap / 2,
           }}

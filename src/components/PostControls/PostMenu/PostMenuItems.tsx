@@ -13,6 +13,7 @@ import {useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
 import {DISCOVER_DEBUG_DIDS} from '#/lib/constants'
+import {useCleanError} from '#/lib/hooks/useCleanError'
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {getCurrentRoute} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
@@ -33,6 +34,7 @@ import {
   useHiddenPostsApi,
   useLanguagePrefs,
 } from '#/state/preferences'
+import {useBookmarkMutation} from '#/state/queries/bookmarks/useBookmarkMutation'
 import {usePinnedPostMutation} from '#/state/queries/pinned-post'
 import {
   usePostDeleteMutation,
@@ -59,6 +61,7 @@ import {
   usePrefetchPostInteractionSettings,
 } from '#/components/dialogs/PostInteractionSettingsDialog'
 import {Atom_Stroke2_Corner0_Rounded as AtomIcon} from '#/components/icons/Atom'
+import {Bookmark, BookmarkFilled} from '#/components/icons/Bookmark'
 import {BubbleQuestion_Stroke2_Corner0_Rounded as Translate} from '#/components/icons/Bubble'
 import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {
@@ -102,6 +105,7 @@ let PostMenuItems = ({
   richText,
   threadgateRecord,
   onShowLess,
+  onPressHide,
   logContext,
   forceGoogleTranslate,
 }: {
@@ -117,6 +121,11 @@ let PostMenuItems = ({
   timestamp: string
   threadgateRecord?: app.bsky.feed.threadgate.Main
   onShowLess?: (interaction: app.bsky.feed.defs.Interaction) => void
+  /**
+   * When set, replaces the existing hide prompt with an immediate hide action
+   * and moves bookmarking into this menu.
+   */
+  onPressHide?: () => void
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean
 }): React.ReactNode => {
@@ -130,6 +139,8 @@ let PostMenuItems = ({
   const requireSignIn = useRequireAuth()
   const hiddenPosts = useHiddenPosts()
   const {hidePost} = useHiddenPostsApi()
+  const {mutateAsync: bookmark} = useBookmarkMutation()
+  const cleanError = useCleanError()
   const feedFeedback = useFeedFeedbackContext()
   const openLink = useOpenLink()
   const {clearTranslation, translate, translationState} = useTranslate({
@@ -282,6 +293,62 @@ let PostMenuItems = ({
   const onHidePost = () => {
     hidePost({uri: postUri})
     ax.metric('thread:click:hideReplyForMe', {})
+  }
+
+  const isBookmarked = !!post.viewer?.bookmarked
+
+  const onSavePost = async () => {
+    try {
+      await bookmark({action: 'create', post})
+      ax.metric('post:bookmark', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+      Toast.show(l({message: 'Post saved', context: 'toast'}), {
+        type: 'success',
+      })
+    } catch (e) {
+      const {raw, clean} = cleanError(e)
+      Toast.show(clean || raw || String(e), {type: 'error'})
+    }
+  }
+
+  const onUnsavePost = async () => {
+    const undoLabel = l({
+      message: 'Undo',
+      context: 'Button label to undo removing a post from saved posts.',
+    })
+    try {
+      await bookmark({action: 'delete', uri: postUri})
+      ax.metric('post:unbookmark', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        logContext,
+        feedDescriptor: feedFeedback.feedDescriptor,
+      })
+      Toast.show(
+        <Toast.Outer>
+          <Toast.Icon icon={Trash} />
+          <Toast.Text>{l`Removed from saved posts`}</Toast.Text>
+          <Toast.Action label={undoLabel} onPress={() => void onSavePost()}>
+            {undoLabel}
+          </Toast.Action>
+        </Toast.Outer>,
+      )
+    } catch (e) {
+      const {raw, clean} = cleanError(e)
+      Toast.show(clean || raw || String(e), {type: 'error'})
+    }
+  }
+
+  const onToggleSavePost = () => {
+    if (isBookmarked) {
+      void onUnsavePost()
+    } else {
+      void onSavePost()
+    }
   }
 
   const hideInPWI = !!postAuthor.labels?.find(
@@ -532,6 +599,23 @@ let PostMenuItems = ({
         <Menu.Group>
           {!hideInPWI || hasSession ? (
             <>
+              {hasSession && onPressHide && (
+                <Menu.Item
+                  testID="postDropdownSavePostBtn"
+                  label={
+                    isBookmarked ? l`Remove from saved posts` : l`Save post`
+                  }
+                  onPress={onToggleSavePost}>
+                  <Menu.ItemText>
+                    {isBookmarked ? l`Remove from saved posts` : l`Save post`}
+                  </Menu.ItemText>
+                  <Menu.ItemIcon
+                    icon={isBookmarked ? BookmarkFilled : Bookmark}
+                    position="right"
+                  />
+                </Menu.Item>
+              )}
+
               {translationState.status === 'loading' ? (
                 <Menu.Item
                   testID="postDropdownTranslateBtn"
@@ -663,17 +747,28 @@ let PostMenuItems = ({
             <>
               <Menu.Divider />
               <Menu.Group>
-                {canHidePostForMe && (
-                  <Menu.Item
-                    testID="postDropdownHideBtn"
-                    label={isReply ? l`Hide reply for me` : l`Hide post for me`}
-                    onPress={() => hidePromptControl.open()}>
-                    <Menu.ItemText>
-                      {isReply ? l`Hide reply for me` : l`Hide post for me`}
-                    </Menu.ItemText>
-                    <Menu.ItemIcon icon={EyeSlash} position="right" />
-                  </Menu.Item>
-                )}
+                {canHidePostForMe &&
+                  (onPressHide ? (
+                    <Menu.Item
+                      testID="postDropdownHideBtn"
+                      label={l`Hide post`}
+                      onPress={onPressHide}>
+                      <Menu.ItemText>{l`Hide post`}</Menu.ItemText>
+                      <Menu.ItemIcon icon={EyeSlash} position="right" />
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item
+                      testID="postDropdownHideBtn"
+                      label={
+                        isReply ? l`Hide reply for me` : l`Hide post for me`
+                      }
+                      onPress={() => hidePromptControl.open()}>
+                      <Menu.ItemText>
+                        {isReply ? l`Hide reply for me` : l`Hide post for me`}
+                      </Menu.ItemText>
+                      <Menu.ItemIcon icon={EyeSlash} position="right" />
+                    </Menu.Item>
+                  ))}
                 {canHideReplyForEveryone && (
                   <Menu.Item
                     testID="postDropdownHideBtn"
