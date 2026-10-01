@@ -567,7 +567,7 @@ function LightboxImage({
   })
 
   const dismissSwipePan = usePanGesture({
-    enabled: isActive && !isScaled,
+    enabled: isActive && !isScaled && !isScrollViewBeingDragged,
     activeOffsetY: [-10, 10],
     failOffsetX: [-10, 10],
     maxPointers: 1,

@@ -4,7 +4,6 @@ import {
   GestureDetector,
   type PanGesture,
   useExclusiveGestures,
-  useManualGesture,
   usePanGesture,
   usePinchGesture,
   useSimultaneousGestures,
@@ -142,7 +141,17 @@ const ImageItem = ({
     return [dx, dy]
   }
 
+  /*
+   * Gestures are disabled while the parent pager is being dragged. Toggle
+   * `enabled` instead of swapping in a no-op gesture: in RNGH v3, switching
+   * the detector between a worklet and a non-worklet gesture changes its
+   * native component type, which remounts the image and blinks it out for a
+   * frame.
+   */
+  const enabled = !isScrollViewBeingDragged
+
   const pinch = usePinchGesture({
+    enabled,
     onActivate: e => {
       'worklet'
       const screenSize = measureSafeArea()
@@ -209,6 +218,7 @@ const ImageItem = ({
   })
 
   const pan = usePanGesture({
+    enabled,
     averageTouches: true,
     // Unlike enabled: isScaled, this ensures that an initial pinch can turn into a pan midway:
     minPointers: isScaled ? 1 : 2,
@@ -251,6 +261,7 @@ const ImageItem = ({
   })
 
   const singleTap = useTapGesture({
+    enabled,
     onDeactivate: () => {
       'worklet'
       scheduleOnRN(onTap)
@@ -258,6 +269,7 @@ const ImageItem = ({
   })
 
   const doubleTap = useTapGesture({
+    enabled,
     numberOfTaps: 2,
     onDeactivate: e => {
       'worklet'
@@ -307,18 +319,14 @@ const ImageItem = ({
     },
   })
 
-  // If the parent is not at rest, provide a no-op gesture.
-  const noopGesture = useManualGesture()
   const pinchAndPan = useSimultaneousGestures(pinch, pan)
-  const exclusiveGesture = useExclusiveGestures(
+
+  const composedGesture = useExclusiveGestures(
     dismissSwipePan,
     pinchAndPan,
     doubleTap,
     singleTap,
   )
-  const composedGesture = isScrollViewBeingDragged
-    ? noopGesture
-    : exclusiveGesture
 
   const containerStyle = useAnimatedStyle(() => {
     const {scaleAndMoveTransform, isHidden} = transforms.get()
