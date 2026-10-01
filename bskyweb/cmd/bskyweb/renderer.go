@@ -55,6 +55,8 @@ func NewRenderer(prefix string, fs *embed.FS, debug bool) *Renderer {
 }
 
 func (r Renderer) Render(w io.Writer, name string, data any, c echo.Context) error {
+	// A new document load must revalidate both the app bundle and its gate snapshot.
+	c.Response().Header().Set(echo.HeaderCacheControl, "no-cache")
 	var ctx pongo2.Context
 
 	if data != nil {

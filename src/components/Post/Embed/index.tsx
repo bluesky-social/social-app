@@ -2,7 +2,11 @@ import {useCallback, useMemo} from 'react'
 import {View} from 'react-native'
 import {type $Typed} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
-import {moderatePost} from '@bsky/sdk/moderation'
+import {
+  mergeModUIResults,
+  moderatePost,
+  moderateViewExternal,
+} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -104,21 +108,12 @@ function MediaEmbed({
     case 'link': {
       const atProvider = getAtCardProvider(embed.view.external.uri)
       if (atProvider || isStandardSiteEmbed(embed.view.external)) {
-        const Card = atProvider ? AtCard : StandardSiteEmbed
         return (
-          <ContentHider
-            modui={rest.moderation?.ui('contentMedia')}
-            activeStyle={[a.mt_sm]}>
-            <Card
-              view={embed.view.external}
-              authorDid={getEmbedCreator(
-                rest.post?.record,
-                embed.view.external.uri,
-              )}
-              onEmbedInteractionCallback={rest.onOpen}
-              style={[a.mt_sm, rest.style]}
-            />
-          </ContentHider>
+          <ExternalCardEmbed
+            embed={embed}
+            Card={atProvider ? AtCard : StandardSiteEmbed}
+            {...rest}
+          />
         )
       }
       const chatInviteCode = getChatInviteCodeFromUrl(embed.view.external.uri)
@@ -162,6 +157,48 @@ function MediaEmbed({
       return null
     }
   }
+}
+
+/*
+ * Renders rich external cards (AtCard, StandardSiteEmbed), respecting any
+ * moderation labels attached to the `viewExternal` itself. The SDK's
+ * `moderatePost` only covers post-level labels, so the external view's labels
+ * produce their own decision, merged into the card's `ContentHider` alongside
+ * the post-level media moderation.
+ */
+function ExternalCardEmbed({
+  embed,
+  Card,
+  ...rest
+}: CommonProps & {
+  embed: EmbedType<'link'>
+  Card: typeof AtCard | typeof StandardSiteEmbed
+}) {
+  const postModerationDecision = rest.moderation
+  const moderationOpts = useModerationOpts()
+  const external = embed.view.external
+
+  /*
+   * The card is both the "content" and the "media" of the embed, so merge
+   * the two contexts: label defs with `blurs: content` act on `contentView`,
+   * while defs with `blurs: media` act on `contentMedia`.
+   */
+  const moduis = [postModerationDecision?.ui('contentMedia')]
+  if (moderationOpts && external.labels?.length) {
+    const decision = moderateViewExternal(external, moderationOpts)
+    moduis.push(decision.ui('contentView'), decision.ui('contentMedia'))
+  }
+
+  return (
+    <ContentHider modui={mergeModUIResults(...moduis)} activeStyle={[a.mt_sm]}>
+      <Card
+        view={external}
+        authorDid={getEmbedCreator(rest.post?.record, external.uri)}
+        onEmbedInteractionCallback={rest.onOpen}
+        style={[a.mt_sm, rest.style]}
+      />
+    </ContentHider>
+  )
 }
 
 function RecordEmbed({

@@ -29,6 +29,36 @@ appId: xyz.blueskyweb.app
     # hideKeyboard on ios is borked
     # https://docs.maestro.dev/troubleshooting/known-issues#hidekeyboard-command-is-flaky
     text: "Your account"
+- tapOn: "Date of birth"
+- waitForAnimationToEnd
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      # Keep the current month and day; only move the year back to 2007.
+      - repeat:
+          times: 100
+          while:
+            notVisible: "2007"
+          commands:
+            - tapOn:
+                text: "[0-9]{4}"
+                point: "50%,40%"
+      - assertVisible: "2007"
+      - tapOn: "Done"
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - tapOn: "Switch to selecting a year"
+      - scrollUntilVisible:
+          element:
+            text: "2007"
+          direction: UP
+      - tapOn: "2007"
+      # Selecting a year changes the displayed month, not the selected date.
+      - tapOn: "${new Date().getDate()}"
+      - tapOn: "OK"
 - tapOn:
     id: "nextBtn"
 - waitForAnimationToEnd

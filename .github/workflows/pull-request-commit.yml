@@ -323,6 +323,7 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
+          eas-version: '24.8.0'
 
       - name: 🔤 Compile translations
         uses: $/.github/actions/compile-i18n

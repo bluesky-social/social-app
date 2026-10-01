@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native'
 import {type InfiniteData, useQueryClient} from '@tanstack/react-query'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
-import {isNetworkError} from '#/lib/hooks/useCleanError'
+import {isNetworkError} from '#/lib/network-error'
 import {
   type CommonNavigatorParams,
   type NativeStackScreenProps,
