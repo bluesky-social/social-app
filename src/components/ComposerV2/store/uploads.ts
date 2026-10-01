@@ -14,7 +14,7 @@ import {UploadLimitError, VideoTooLargeError} from '#/lib/media/video/errors'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
-import {IS_WEB} from '#/env'
+import {IS_ANDROID, IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import {prepareImageSource, prepareVideoSource} from './prepareMediaSource'
 import {
@@ -100,6 +100,11 @@ export type VideoUploadDependencies = {
   getImageDimensions: GetImageDimensions
   /** Native file stat for a source whose size is unknown; unused on web. */
   getFileSize: (typeof import('#/lib/media/uriSize'))['getUriSize']
+  /**
+   * Android only: a readable copy of a restored draft video, owned by one
+   * worker attempt. See `needsReadableCopy`.
+   */
+  copyVideoToCache: (typeof import('./utils/copyVideoToCache'))['copyVideoToCache']
   compressVideo: (typeof import('#/lib/media/video/compress'))['compressVideo']
   uploadVideo: (typeof import('#/lib/media/video/upload'))['uploadVideo']
   /** Caption blobs go to the account PDS. */
@@ -239,19 +244,35 @@ async function runVideoUpload({
     getVideoMetadata,
     getImageDimensions,
     getFileSize,
+    copyVideoToCache,
     compressVideo,
     uploadVideo,
     uploadBlob,
   } = opts
   let videoBlob: BlobRef | undefined = media.videoBlob
   let captionBlobs = [...media.captionBlobs]
+  let releaseCopy: (() => void) | undefined
   try {
     /* A caption-only retry can safely reuse the completed video result. */
     let compressed: CompressedVideo | undefined
     if (!videoBlob) {
       report({...opts, status: {state: 'uploading', phase: 'validating'}})
+      /*
+       * The item keeps its original URI and durable local ref; only this
+       * attempt reads the copy, and a retry makes its own.
+       */
+      let source = media
+      if (needsReadableCopy({media})) {
+        const copy = await copyVideoToCache({
+          uri: media.uri,
+          mimeType: media.mimeType,
+        })
+        releaseCopy = copy.release
+        throwIfAborted({signal})
+        source = {...media, uri: copy.uri}
+      }
       const {asset, metadata} = await prepareVideoSource({
-        media,
+        media: source,
         getVideoMetadata,
         getImageDimensions,
         getFileSize,
@@ -374,7 +395,26 @@ async function runVideoUpload({
       failed.captionBlobs = captionBlobs
     }
     reportFailure({...opts, status: failed, cause: error})
+  } finally {
+    /*
+     * Runs once the attempt settles, including after cancellation, so the
+     * copy outlives compression and upload (a pass-through returns its URI).
+     */
+    try {
+      releaseCopy?.()
+    } catch {
+      /* A leftover cache file is harmless; it must not fail the upload. */
+    }
   }
+}
+
+/**
+ * Restored Android draft videos are read through a simple-named cache copy,
+ * like the existing composer's draft restore; see `copyVideoToCache`. Only
+ * restored items carry a local ref, and other sources are read directly.
+ */
+function needsReadableCopy({media}: {media: PostMediaVideo}) {
+  return IS_ANDROID && !!media.localRefPath
 }
 
 /**

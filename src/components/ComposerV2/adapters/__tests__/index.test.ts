@@ -1,6 +1,8 @@
 import {afterEach, describe, expect, jest, test} from '@jest/globals'
 
+import {getImageDim} from '#/lib/media/manip'
 import {type ComposerOpts} from '#/state/shell/composer'
+import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {
   ComposerAdapterError,
   composerOptsToInitialState,
@@ -23,17 +25,6 @@ jest.mock('#/view/com/composer/videos/metadata', () => ({
 jest.mock('#/lib/api/resolve', () => ({
   resolveLink: jest.fn(),
 }))
-
-const imageDimensions = jest.fn(() =>
-  Promise.resolve({width: 640, height: 480}),
-)
-const videoMetadata = jest.fn(() =>
-  Promise.resolve({
-    width: 1920,
-    height: 1080,
-    mimeType: 'video/mp4',
-  }),
-)
 
 const postRef = {
   uri: 'at://did:plc:example/app.bsky.feed.post/abc',
@@ -93,34 +84,24 @@ describe('initialization reporting', () => {
     })
   })
 
-  test('draft metadata failure preserves its cause outside serializable data', async () => {
-    const cause = Object.assign(new Error('metadata diagnostic'), {
-      privatePath: 'metadata diagnostic',
-    })
+  test('draft structural failure is a reported validation rejection', async () => {
     const onError = jest.fn<ComposerV2OnError>()
-    const result = draftToInitialState({
+    const error: unknown = await draftToInitialState({
       draftId: 'draft',
-      draft: {
-        posts: [draftPost({embedImages: [imageRef('local-ref')]})],
-      },
-      loadedMedia: new Map([['local-ref', 'file:///private']]),
+      draft: {posts: [draftPost({embedImages: [imageRef('missing-ref')]})]},
+      loadedMedia: new Map(),
       onError,
-      getImageDimensions: () => Promise.reject(cause),
-    })
-    const error: unknown = await result.catch((value: unknown) => value)
+    }).catch((value: unknown) => value)
     if (!(error instanceof ComposerAdapterError))
       throw new Error('expected adapter error')
-    expect(error.code).toBe('missing-media-metadata')
-    expect(error.cause).toBe(cause)
-    expect(JSON.stringify(error)).not.toContain('metadata diagnostic')
+    expect(error.code).toBe('missing-local-media')
     expect(onError).toHaveBeenCalledTimes(1)
-    expect(onError).toHaveBeenCalledWith(
-      expect.objectContaining({
-        source: 'initialization',
-        kind: 'operational',
-      }),
-      cause,
-    )
+    expect(onError.mock.calls[0][0]).toEqual({
+      source: 'initialization',
+      code: 'missing-local-media',
+      kind: 'validation',
+      recovery: 'edit',
+    })
   })
 
   test('unexpected initialization rejection remains identical with or without reporting', async () => {
@@ -280,7 +261,6 @@ describe('composerOptsToInitialState', () => {
       composerOpts: {
         videoUri: {uri: 'file:///video.mp4', width: 320, height: 240},
       },
-      getVideoMetadata: videoMetadata,
     })
     expect(initial.posts?.[0].attachments?.media).toEqual({
       kind: 'video',
@@ -290,7 +270,7 @@ describe('composerOptsToInitialState', () => {
         height: 240,
       },
     })
-    expect(videoMetadata).not.toHaveBeenCalled()
+    expect(getVideoMetadata).not.toHaveBeenCalled()
   })
 
   test('normalizes gate values without cloning and leaves ownership to the store', async () => {
@@ -378,8 +358,6 @@ describe('draftToInitialState', () => {
       draftId: 'draft-defaults',
       draft: {posts: [draftPost(), draftPost({text: 'second'})]},
       loadedMedia: new Map(),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
     expect(absent.threadgateAllowRules).toBeUndefined()
     expect(absent.postgateEmbeddingRules).toEqual([])
@@ -401,8 +379,6 @@ describe('draftToInitialState', () => {
       draftId: 'draft-gates',
       draft,
       loadedMedia: new Map(),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
     expect(initial.threadgateAllowRules).toBe(draft.threadgateAllow)
     expect(initial.postgateEmbeddingRules).toBe(draft.postgateEmbeddingRules)
@@ -477,8 +453,6 @@ describe('draftToInitialState', () => {
           ['image:two', 'file:///two.jpg'],
           ['video:video/mp4:one', 'file:///one.mp4'],
         ]),
-        getImageDimensions: imageDimensions,
-        getVideoMetadata: videoMetadata,
       }),
     ).rejects.toMatchObject({
       code: 'conflicting-attachments',
@@ -492,8 +466,6 @@ describe('draftToInitialState', () => {
         ['image:one', 'file:///one.jpg'],
         ['image:two', 'file:///two.jpg'],
       ]),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
     expect(initial).toMatchObject({draftId: 'draft-1', isDirty: false})
     expect(initial.posts?.map(post => post.text)).toEqual(['first', 'second'])
@@ -518,6 +490,12 @@ describe('draftToInitialState', () => {
         {uri: 'file:///two.jpg', localRefPath: 'image:two', altText: 'two'},
       ],
     })
+    /* Drafts store no dimensions; the image worker reads them. */
+    const media = initial.posts?.[0].attachments?.media
+    expect(media?.kind === 'images' && media.items[0]).not.toHaveProperty(
+      'width',
+    )
+    expect(getImageDim).not.toHaveBeenCalled()
   })
 
   test('preserves combined legacy/gallery order at the 10-image boundary', async () => {
@@ -540,8 +518,6 @@ describe('draftToInitialState', () => {
           `file:///image-${index}.jpg`,
         ]),
       ),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
     expect(initial.posts?.[0].attachments?.media).toMatchObject({
       kind: 'images',
@@ -565,13 +541,11 @@ describe('draftToInitialState', () => {
             `file:///image-${index}.jpg`,
           ]),
         ),
-        getImageDimensions: imageDimensions,
-        getVideoMetadata: videoMetadata,
       }),
     ).rejects.toMatchObject({code: 'oversized-images'})
   })
 
-  test('restores video data and all captions', async () => {
+  test('restores video source, local-ref MIME type, and all captions without probing', async () => {
     const initial = await draftToInitialState({
       draftId: 'draft-video',
       draft: {
@@ -591,16 +565,13 @@ describe('draftToInitialState', () => {
         ],
       },
       loadedMedia: new Map([['video:video/webm:one', 'file:///clip.webm']]),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
+    /* Only the local ref's MIME type is known; the worker reads the rest. */
     expect(initial.posts?.[0].attachments?.media).toEqual({
       kind: 'video',
       item: {
         uri: 'file:///clip.webm',
-        width: 1920,
-        height: 1080,
-        mimeType: 'video/mp4',
+        mimeType: 'video/webm',
         altText: 'clip',
         localRefPath: 'video:video/webm:one',
         captions: [
@@ -609,6 +580,31 @@ describe('draftToInitialState', () => {
         ],
       },
     })
+    expect(getVideoMetadata).not.toHaveBeenCalled()
+  })
+
+  test('keeps the legacy local-ref MIME fallback and marks GIF files by type', async () => {
+    const initial = await draftToInitialState({
+      draftId: 'draft-video-types',
+      draft: {
+        posts: [
+          draftPost({embedVideos: [{localRef: {path: 'video:legacy-id'}}]}),
+          draftPost({
+            embedVideos: [{localRef: {path: 'video:image/gif:one'}}],
+          }),
+        ],
+      },
+      loadedMedia: new Map([
+        ['video:legacy-id', 'file:///legacy'],
+        ['video:image/gif:one', 'file:///animated'],
+      ]),
+    })
+    expect(
+      initial.posts?.map(post => {
+        const media = post.attachments?.media
+        return media?.kind === 'video' ? media.item.mimeType : undefined
+      }),
+    ).toEqual(['video/mp4', 'image/gif'])
   })
 
   test('classifies draft external URLs and reconstructs provider GIFs', async () => {
@@ -624,8 +620,6 @@ describe('draftToInitialState', () => {
         ],
       },
       loadedMedia: new Map(),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
     const media = initial.posts?.[0].attachments?.media
     expect(media?.kind).toBe('gif')
@@ -646,8 +640,6 @@ describe('draftToInitialState', () => {
         ],
       },
       loadedMedia: new Map(),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
     expect(record.posts?.[0].attachments?.record).toEqual({
       kind: 'uri',
@@ -656,14 +648,12 @@ describe('draftToInitialState', () => {
     expect(record.posts?.[0].attachments?.media).toBeUndefined()
   })
 
-  test('surfaces missing media, bad metadata, and unsupported records', async () => {
+  test('surfaces missing media and unsupported content', async () => {
     await expect(
       draftToInitialState({
         draftId: 'missing',
         draft: {posts: [draftPost({embedImages: [imageRef('missing')]})]},
         loadedMedia: new Map(),
-        getImageDimensions: imageDimensions,
-        getVideoMetadata: videoMetadata,
       }),
     ).rejects.toMatchObject({
       code: 'missing-local-media',
@@ -680,8 +670,6 @@ describe('draftToInitialState', () => {
           ],
         },
         loadedMedia: new Map(),
-        getImageDimensions: imageDimensions,
-        getVideoMetadata: videoMetadata,
       }),
     ).rejects.toMatchObject({code: 'unsupported-gallery-entry'})
 
@@ -703,8 +691,6 @@ describe('draftToInitialState', () => {
           ],
         },
         loadedMedia: new Map(),
-        getImageDimensions: imageDimensions,
-        getVideoMetadata: videoMetadata,
       }),
     ).rejects.toMatchObject({
       code: 'unsupported-record',
@@ -753,8 +739,6 @@ describe('draftToInitialState', () => {
       draftId: 'draft-store',
       draft: {posts: [draftPost({text: 'draft text'})]},
       loadedMedia: new Map(),
-      getImageDimensions: imageDimensions,
-      getVideoMetadata: videoMetadata,
     })
     const draftStore = createThreadStore({
       ...testUploadRuntime,

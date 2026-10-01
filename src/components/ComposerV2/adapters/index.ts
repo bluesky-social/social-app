@@ -1,12 +1,9 @@
-import {type ImagePickerAsset} from 'expo-image-picker'
 import {AtUri} from '@atproto/syntax'
 import {RichText} from '@bsky/sdk/richtext'
 
-import {getImageDim} from '#/lib/media/manip'
 import {insertMentionAt} from '#/lib/strings/mention-manip'
 import {type ComposerOpts} from '#/state/shell/composer'
 import {suggestLinkCardUri} from '#/view/com/composer/text-input/text-input-util'
-import {getVideoMetadata as defaultGetVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {
   type ComposerV2OnError,
   isComposerV2Cancellation,
@@ -33,7 +30,6 @@ export type ComposerAdapterErrorCode =
   | 'conflicting-attachments'
   | 'oversized-images'
   | 'missing-local-media'
-  | 'missing-media-metadata'
   | 'unsupported-gallery-entry'
   | 'unsupported-record'
   | 'unsupported-labels'
@@ -50,27 +46,25 @@ export class ComposerAdapterError extends Error {
   }
 }
 
-type VideoMetadata = Pick<
-  ImagePickerAsset,
-  'mimeType' | 'width' | 'height' | 'duration'
->
-
-export type AdapterMetadataOptions = {
+/*
+ * Neither adapter reads media. Sources pass through with the metadata they
+ * already carry, and the upload workers resolve anything missing.
+ */
+export type AdapterOptions = {
   /** Omit when an owning caller reports the initialization rejection instead. */
   onError?: ComposerV2OnError
-  getImageDimensions?: (uri: string) => Promise<{width: number; height: number}>
-  /** Used by draft restoration; intent videos are prepared by the worker. */
-  getVideoMetadata?: (
-    uri: string,
-    fallbackMimeType?: string,
-  ) => Promise<VideoMetadata>
   /** Defaults used for a new composition; drafts use their own saved values. */
   postInteractionSettings?: app.bsky.actor.defs.PostInteractionSettingsPref
 }
 
-export type DraftToInitialStateInput = AdapterMetadataOptions & {
+export type DraftToInitialStateInput = AdapterOptions & {
   draftId: string
   draft: app.bsky.draft.defs.Draft
+  /**
+   * Local ref paths mapped to the URIs draft storage loaded: native file URIs,
+   * or web object URLs. The caller owns them and must keep them readable for
+   * the store's lifetime, because upload retries read the source again.
+   */
   loadedMedia: ReadonlyMap<string, string>
 }
 
@@ -85,7 +79,7 @@ export type DraftToInitialStateInput = AdapterMetadataOptions & {
 export function composerOptsToInitialState({
   composerOpts,
   ...options
-}: AdapterMetadataOptions & {
+}: AdapterOptions & {
   composerOpts: ComposerOpts
 }): Promise<ThreadStoreInitialState> {
   return new Promise<ThreadStoreInitialState>(resolve =>
@@ -99,7 +93,7 @@ export function composerOptsToInitialState({
 function normalizeComposerOpts({
   composerOpts: opts,
   postInteractionSettings,
-}: AdapterMetadataOptions & {
+}: AdapterOptions & {
   composerOpts: ComposerOpts
 }): ThreadStoreInitialState {
   const imageUris = opts.imageUris?.length ? opts.imageUris : undefined
@@ -184,17 +178,26 @@ function normalizeComposerOpts({
   }
 }
 
-/** Convert a loaded draft without mounting a store or dispatching edits. */
-export async function draftToInitialState({
+/**
+ * Convert a loaded draft without mounting a store or dispatching edits.
+ *
+ * Structural problems (missing loaded media, conflicting or unsupported
+ * content) reject here. Media metadata is not read: restored images and videos
+ * pass through with their durable local ref, and the upload workers prepare
+ * them, so a metadata failure surfaces as that item's upload failure rather
+ * than blocking the whole draft. It returns a promise, and rejects rather than
+ * throws, so callers can treat both adapters alike.
+ */
+export function draftToInitialState({
   onError,
   ...input
 }: DraftToInitialStateInput): Promise<ThreadStoreInitialState> {
-  try {
-    return await normalizeDraft(input)
-  } catch (cause) {
+  return new Promise<ThreadStoreInitialState>(resolve =>
+    resolve(normalizeDraft(input)),
+  ).catch((cause: unknown) => {
     reportInitializationError({onError, cause})
     throw cause
-  }
+  })
 }
 
 /** For owning callers that deliberately leave adapter-level reporting off. */
@@ -225,23 +228,17 @@ export function reportInitializationError({
   })
 }
 
-async function normalizeDraft({
+function normalizeDraft({
   draftId,
   draft,
   loadedMedia,
-  getImageDimensions = getImageDim,
-  getVideoMetadata = defaultGetVideoMetadata,
-}: DraftToInitialStateInput): Promise<ThreadStoreInitialState> {
-  const posts = await Promise.all(
-    draft.posts.map(async post =>
-      draftPostToInitialState({
-        post,
-        langs: draft.langs ?? [],
-        loadedMedia,
-        getImageDimensions,
-        getVideoMetadata,
-      }),
-    ),
+}: Omit<DraftToInitialStateInput, 'onError'>): ThreadStoreInitialState {
+  const posts = draft.posts.map(post =>
+    draftPostToInitialState({
+      post,
+      langs: draft.langs ?? [],
+      loadedMedia,
+    }),
   )
 
   return {
@@ -253,20 +250,16 @@ async function normalizeDraft({
   }
 }
 
-async function draftPostToInitialState({
+function draftPostToInitialState({
   post,
   langs,
   loadedMedia,
-  getImageDimensions,
-  getVideoMetadata,
 }: {
   post: app.bsky.draft.defs.DraftPost
   langs: readonly string[]
   loadedMedia: ReadonlyMap<string, string>
-  getImageDimensions: NonNullable<AdapterMetadataOptions['getImageDimensions']>
-  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>
 }) {
-  const images = await restoreImages({post, loadedMedia, getImageDimensions})
+  const images = restoreImages({post, loadedMedia})
   const videos = post.embedVideos ?? []
   if (videos.length > 1) {
     throw new ComposerAdapterError(
@@ -337,7 +330,7 @@ async function draftPostToInitialState({
   const externalRecord = externalRecordInputs[0]
   const normalizedRecord = record ?? externalRecord
   const video = videos[0]
-    ? await restoreVideo({video: videos[0], loadedMedia, getVideoMetadata})
+    ? restoreVideo({video: videos[0], loadedMedia})
     : undefined
   if (images.length > 0 && video) {
     throw new ComposerAdapterError(
@@ -378,15 +371,13 @@ async function draftPostToInitialState({
   }
 }
 
-async function restoreImages({
+function restoreImages({
   post,
   loadedMedia,
-  getImageDimensions,
 }: {
   post: app.bsky.draft.defs.DraftPost
   loadedMedia: ReadonlyMap<string, string>
-  getImageDimensions: NonNullable<AdapterMetadataOptions['getImageDimensions']>
-}): Promise<PostMediaImageInput[]> {
+}): PostMediaImageInput[] {
   const entries = [...(post.embedImages ?? [])]
   if (post.embedGallery) {
     for (const item of post.embedGallery.items) {
@@ -400,72 +391,29 @@ async function restoreImages({
     }
   }
 
-  return Promise.all(
-    entries.map(async image => {
-      const uri = requireLoadedMedia({loadedMedia, path: image.localRef.path})
-      let dimensions: {width: number; height: number}
-      try {
-        dimensions = await getImageDimensions(uri)
-      } catch (cause) {
-        throw new ComposerAdapterError(
-          'missing-media-metadata',
-          'Draft image metadata could not be read',
-          {cause},
-        )
-      }
-      if (!validDimensions(dimensions)) {
-        throw new ComposerAdapterError(
-          'missing-media-metadata',
-          'Draft image metadata is incomplete',
-        )
-      }
-      return {
-        uri,
-        width: dimensions.width,
-        height: dimensions.height,
-        altText: image.alt,
-        localRefPath: image.localRef.path,
-      }
-    }),
-  )
+  /* The image worker reads dimensions; drafts do not store them. */
+  return entries.map(image => ({
+    uri: requireLoadedMedia({loadedMedia, path: image.localRef.path}),
+    altText: image.alt,
+    localRefPath: image.localRef.path,
+  }))
 }
 
-async function restoreVideo({
+/**
+ * The MIME type comes from the local ref (the only type a draft records); the
+ * video worker resolves dimensions, duration, and size. An `image/gif` ref
+ * keeps an animated GIF file on the GIF-safe preparation path.
+ */
+function restoreVideo({
   video,
   loadedMedia,
-  getVideoMetadata,
 }: {
   video: app.bsky.draft.defs.DraftEmbedVideo
   loadedMedia: ReadonlyMap<string, string>
-  getVideoMetadata: NonNullable<AdapterMetadataOptions['getVideoMetadata']>
-}): Promise<PostMediaVideoInput> {
-  const uri = requireLoadedMedia({loadedMedia, path: video.localRef.path})
-  const fallbackMimeType = parseVideoMimeType({
-    localRefPath: video.localRef.path,
-  })
-  let metadata: VideoMetadata
-  try {
-    metadata = await getVideoMetadata(uri, fallbackMimeType)
-  } catch (cause) {
-    throw new ComposerAdapterError(
-      'missing-media-metadata',
-      'Draft video metadata could not be read',
-      {cause},
-    )
-  }
-  const mimeType = metadata.mimeType ?? fallbackMimeType
-  if (!mimeType || !validDimensions(metadata)) {
-    throw new ComposerAdapterError(
-      'missing-media-metadata',
-      'Draft video metadata is incomplete',
-    )
-  }
+}): PostMediaVideoInput {
   return {
-    uri,
-    width: metadata.width,
-    height: metadata.height,
-    mimeType,
-    duration: metadata.duration ?? undefined,
+    uri: requireLoadedMedia({loadedMedia, path: video.localRef.path}),
+    mimeType: parseVideoMimeType({localRefPath: video.localRef.path}),
     altText: video.alt,
     localRefPath: video.localRef.path,
     captions: video.captions?.map(caption => ({

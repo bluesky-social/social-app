@@ -22,6 +22,7 @@ import {
   type UploadWorkerOverrides,
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
+import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
 
 const resolvers = {} as LinkResolvers
 
@@ -89,6 +90,7 @@ describe('upload worker dependency wiring', () => {
       getVideoMetadata,
       getImageDimensions: getImageDim,
       getFileSize: getUriSize,
+      copyVideoToCache,
       compressVideo,
       uploadVideo,
       uploadBlob,
@@ -102,6 +104,7 @@ describe('upload worker dependency wiring', () => {
 
     expect(image).not.toHaveProperty('uploadVideo')
     expect(image).not.toHaveProperty('compressVideo')
+    expect(image).not.toHaveProperty('copyVideoToCache')
   })
 
   test('loading the store does not load the #/state/gallery UI chain', () => {

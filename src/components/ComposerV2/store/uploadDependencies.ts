@@ -7,6 +7,7 @@ import {compressVideo} from '#/lib/media/video/compress'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
+import {copyVideoToCache} from '#/components/ComposerV2/store/utils/copyVideoToCache'
 import {
   type ImageUploadDependencies,
   type VideoUploadDependencies,
@@ -27,6 +28,7 @@ export const videoUploadDependencies: VideoUploadDependencies = {
   getVideoMetadata,
   getImageDimensions: getImageDim,
   getFileSize: getUriSize,
+  copyVideoToCache,
   compressVideo,
   uploadVideo,
   uploadBlob,
