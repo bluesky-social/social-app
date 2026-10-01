@@ -26,14 +26,13 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
-import {isNetworkError} from '#/lib/strings/errors'
+import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
 import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
-import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
@@ -44,6 +43,7 @@ import {PostFeedErrorMessage} from '#/view/com/posts/PostFeedErrorMessage'
 import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {ShowLessFollowup} from '#/view/com/posts/ShowLessFollowup'
 import {ViewFullThread} from '#/view/com/posts/ViewFullThread'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
@@ -83,6 +83,7 @@ import {
   RQKEY,
   usePostFeedFetcher,
   usePostFeedQuery,
+  usePostFeedRefresh,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 
@@ -102,6 +103,11 @@ type FeedRow =
   | {
       type: 'loadMoreError'
       key: string
+    }
+  | {
+      type: 'refreshError'
+      key: string
+      error: Error
     }
   | {
       type: 'feedShutdownMsg'
@@ -198,6 +204,11 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 
 export type PostFeedRef = {
   refreshFeed: () => Promise<void>
+  /**
+   * Refreshes the feed in one write. Unlike `refreshFeed`, it logs no metric,
+   * so callers can log their own reason.
+   */
+  refresh: () => Promise<void>
 }
 
 // DISABLED need to check if this is causing random feed refreshes -prf
@@ -309,6 +320,11 @@ let PostFeed = ({
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
   const {createFeedApi} = usePostFeedFetcher(feed)
+  const {
+    refresh,
+    error: refreshError,
+    isRefreshing,
+  } = usePostFeedRefresh(feed, feedParams)
   const samples = useSavedFeedSamples({
     enabled: enabled !== false && feed === 'following',
     pages: feedData?.pages,
@@ -330,7 +346,14 @@ let PostFeed = ({
   }, [lastFetchedAt])
 
   const checkForNew = useNonReactiveCallback(async () => {
-    if (!data?.pages[0] || isFetching || !onHasNew || !enabled || disablePoll) {
+    if (
+      !data?.pages[0] ||
+      isFetching ||
+      isRefreshing ||
+      !onHasNew ||
+      !enabled ||
+      disablePoll
+    ) {
       return
     }
 
@@ -371,9 +394,14 @@ let PostFeed = ({
       (feed === 'following' ||
         feed === `author|${myDid}|posts_and_author_threads`)
     ) {
-      void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+      // A disabled feed isn't shown, so it can refetch once it's enabled.
+      if (enabled) {
+        void refresh()
+      } else {
+        void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+      }
     }
-  }, [queryClient, feed, myDid])
+  }, [queryClient, feed, myDid, enabled, refresh])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -432,6 +460,12 @@ let PostFeed = ({
     feed.startsWith('author|') ? undefined : data?.pages,
   )
 
+  /**
+   * A refresh leaves the query's own error in place, so while one retries an
+   * errored empty feed, the loading row stands in for the error row.
+   */
+  const isRetryingError = isRefreshing && isError && isEmpty
+
   const feedItems: FeedRow[] = useMemo(() => {
     // wraps a slice item, and replaces it with a showLessFollowup item
     // if the user has pressed show less on it
@@ -466,7 +500,7 @@ let PostFeed = ({
         key: 'feedShutdownMsg',
       })
     }
-    if (isFetched) {
+    if (isFetched && !isRetryingError) {
       if (isError && isEmpty) {
         arr.push({
           type: 'error',
@@ -725,8 +759,22 @@ let PostFeed = ({
       })
     }
 
+    /*
+     * A failed refresh keeps the posts it failed to replace, so its error goes
+     * above them. An errored empty feed shows it in its error row instead.
+     */
+    if (refreshError && !(isError && isEmpty)) {
+      arr.unshift({
+        type: 'refreshError',
+        key: 'refreshError',
+        error: refreshError,
+      })
+    }
+
     return arr
   }, [
+    refreshError,
+    isRetryingError,
     description,
     isFetched,
     isError,
@@ -762,14 +810,8 @@ let PostFeed = ({
       feedUrl: feed,
       reason: 'pull-to-refresh',
     })
-    try {
-      await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
-      if (onHasNew) {
-        onHasNew(false)
-      }
-    } catch (err) {
-      logger.error('Failed to refresh posts feed', {message: err})
-    }
+    await refresh()
+    onHasNew?.(false)
   }
 
   const onRefresh = async () => {
@@ -780,6 +822,7 @@ let PostFeed = ({
 
   useImperativeHandle(ref, () => ({
     refreshFeed,
+    refresh,
   }))
 
   const onEndReached = useCallback(async () => {
@@ -807,9 +850,9 @@ let PostFeed = ({
   ])
 
   const onPressTryAgain = useCallback(() => {
-    void refetch()
+    void refresh()
     onHasNew?.(false)
-  }, [refetch, onHasNew])
+  }, [refresh, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
     void fetchNextPage()
@@ -826,9 +869,16 @@ let PostFeed = ({
         return (
           <PostFeedErrorMessage
             feedDesc={feed}
-            error={error ?? undefined}
+            error={refreshError ?? error ?? undefined}
             onPressTryAgain={onPressTryAgain}
             savedFeedConfig={savedFeedConfig}
+          />
+        )
+      } else if (row.type === 'refreshError') {
+        return (
+          <ErrorMessage
+            message={cleanError(row.error)}
+            onPressTryAgain={onPressTryAgain}
           />
         )
       } else if (row.type === 'loadMoreError') {
@@ -947,6 +997,7 @@ let PostFeed = ({
       renderEmptyState,
       feed,
       error,
+      refreshError,
       onPressTryAgain,
       savedFeedConfig,
       l,
