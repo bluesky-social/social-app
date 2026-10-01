@@ -4,6 +4,7 @@ import {compressImage} from '#/lib/media/image/compress'
 import {getImageDim} from '#/lib/media/manip'
 import {getUriSize} from '#/lib/media/uriSize'
 import {compressVideo} from '#/lib/media/video/compress'
+import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
@@ -29,6 +30,7 @@ export const videoUploadDependencies: VideoUploadDependencies = {
   getImageDimensions: getImageDim,
   getFileSize: getUriSize,
   copyVideoToCache,
+  createVideoTelemetry,
   compressVideo,
   uploadVideo,
   uploadBlob,

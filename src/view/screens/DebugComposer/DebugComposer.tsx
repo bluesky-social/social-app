@@ -32,6 +32,7 @@ import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {writeComposerV2Plan} from '#/components/ComposerV2/writer'
 import {Divider} from '#/components/Divider'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 type ComposerV2PublishAttempt =
   | {status: 'writing' | 'uncertain'; plan: ComposerV2Plan}
@@ -70,6 +71,7 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
   const chatClient = useChatClient()
   const pdsClient = usePdsClient()
   const {i18n} = useLingui()
+  const analytics = useAnalytics()
   const requireAltTextPreference = useRequireAltTextEnabled()
   const pdsUrl = account.pdsUrl ?? account.service
 
@@ -79,6 +81,7 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
     pdsClient,
     pdsUrl,
     i18n,
+    analytics,
   })
   const {session} = sessionApi
   const [publishAttempt, setPublishAttempt] =
@@ -89,16 +92,21 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
     if (publishStartedRef.current) return
     publishStartedRef.current = true
     setPublishAttempt({status: 'writing', plan})
+    let uris: string[]
     try {
-      const {uris} = await writeComposerV2Plan({
+      const result = await writeComposerV2Plan({
         plan,
         pdsClient,
         onError: session.store.reportError,
       })
-      setPublishAttempt({status: 'published', plan, uris})
+      uris = result.uris
     } catch {
       setPublishAttempt({status: 'uncertain', plan})
+      return
     }
+    setPublishAttempt({status: 'published', plan, uris})
+    /* Only a confirmed write publishes; an uncertain one reports nothing. */
+    session.store.reportPublished({plan})
   }
 
   /*

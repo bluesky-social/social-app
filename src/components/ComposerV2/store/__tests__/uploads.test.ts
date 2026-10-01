@@ -93,7 +93,12 @@ function webFile({
 }
 
 const pdsClient = {} as Client
-const runtime = {pdsClient, pdsUrl: 'https://pds.example', i18n}
+const runtime = {
+  pdsClient,
+  pdsUrl: 'https://pds.example',
+  i18n,
+  metric: jest.fn(),
+}
 
 afterEach(() => {
   mockIsWeb = false
