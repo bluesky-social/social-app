@@ -80,6 +80,7 @@ import {
   type FeedPostSliceItem,
   pollLatest,
   RQKEY,
+  usePostFeedFetcher,
   usePostFeedQuery,
 } from './queries/postFeed'
 
@@ -305,6 +306,7 @@ let PostFeed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
+  const {createFeedApi} = usePostFeedFetcher(feed, feedParams)
   const lastFetchedAt = data?.pages[0].fetchedAt
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
@@ -328,7 +330,7 @@ let PostFeed = ({
     }
 
     try {
-      if (await pollLatest(data.pages[0])) {
+      if (await pollLatest(data.pages[0], createFeedApi())) {
         if (isEmpty) {
           void refetch()
         } else {

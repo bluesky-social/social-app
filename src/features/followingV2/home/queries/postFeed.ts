@@ -42,6 +42,7 @@ import {ListFeedAPI} from '#/features/followingV2/home/api/list'
 import {MergeFeedAPI} from '#/features/followingV2/home/api/merge'
 import {
   type FeedAPI,
+  type FeedSource,
   type ReasonFeedSource,
 } from '#/features/followingV2/home/api/types'
 import {type app} from '#/lexicons'
@@ -71,7 +72,12 @@ export interface FeedParams {
   feedCacheKey?: 'discover' | 'explore' | undefined
 }
 
-type RQPageParam = {cursor: string | undefined; api: FeedAPI} | undefined
+/**
+ * Everything needed to fetch the page after the one it follows. Plain data,
+ * bar Merge's API (see {@link FeedPageUnselected.merge}).
+ */
+type RQPageParam =
+  undefined | {cursor: string; source?: FeedSource; merge?: MergeFeedAPI}
 
 /**
  * The fork's key prefixes the descriptor with `v2|`, so it never shares a
@@ -116,16 +122,22 @@ export interface FeedPostSlice {
 }
 
 export interface FeedPageUnselected {
-  api: FeedAPI
   cursor: string | undefined
+  /** See {@link FeedSource}. */
+  source?: FeedSource
   feed: app.bsky.feed.defs.FeedViewPost[]
   fetchedAt: number
+  /**
+   * Merge's API, which holds state between pages, so the next page continues
+   * with it. The merge feed is never persisted, so this needn't be data.
+   */
+  merge?: MergeFeedAPI
 }
 
 export interface FeedPage {
-  api: FeedAPI
   tuner: FeedTuner
   cursor: string | undefined
+  source?: FeedSource
   slices: FeedPostSlice[]
   fetchedAt: number
 }
@@ -153,27 +165,13 @@ export function usePostFeedQuery(
    */
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
-  const userInterests = aggregateUserInterests(preferences)
-  const followingPinnedIndex =
-    preferences?.savedFeeds?.findIndex(
-      f => f.pinned && f.value === 'following',
-    ) ?? -1
-  const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
-  const {hasSession} = useSession()
-  const client = useAppviewClient()
+  const {fetchPage} = usePostFeedFetcher(feedDesc, params)
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
     result: InfiniteData<FeedPage>
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
-
-  /**
-   * The number of posts to fetch in a single request. Because we filter
-   * unwanted content, we may over-fetch here to try and fill pages by
-   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
-   */
-  const fetchLimit = MIN_POSTS
 
   // Make sure this doesn't invalidate unless really needed.
   const selectArgs = useMemo(
@@ -196,53 +194,17 @@ export function usePostFeedQuery(
     enabled,
     staleTime: STALE.INFINITY,
     queryKey: RQKEY(feedDesc, params),
-    async queryFn({pageParam}: {pageParam: RQPageParam}) {
+    queryFn({pageParam}: {pageParam: RQPageParam}) {
       logger.debug('usePostFeedQuery', {feedDesc, cursor: pageParam?.cursor})
-      const {api, cursor} = pageParam
-        ? pageParam
-        : {
-            api: createApi({
-              feedDesc,
-              feedParams: params || {},
-              feedTuners,
-              client,
-              // Not in the query key because they don't change:
-              userInterests,
-              // Not in the query key. Reacting to it switching isn't important:
-              enableFollowingToDiscoverFallback,
-            }),
-            cursor: undefined,
-          }
-
-      const res = await api.fetch({cursor, limit: fetchLimit})
-
-      /*
-       * If this is a public view, we need to check if posts fail moderation.
-       * If all fail, we throw an error. If only some fail, we continue and let
-       * moderations happen later, which results in some posts being shown and
-       * some not.
-       */
-      if (!hasSession) {
-        assertSomePostsPassModeration(
-          res.feed,
-          preferences?.moderationPrefs ||
-            DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
-        )
-      }
-
-      return {
-        api,
-        cursor: res.cursor,
-        feed: res.feed,
-        fetchedAt: Date.now(),
-      }
+      return fetchPage(pageParam)
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage =>
       lastPage.cursor
         ? {
-            api: lastPage.api,
             cursor: lastPage.cursor,
+            source: lastPage.source,
+            merge: lastPage.merge,
           }
         : undefined,
     select: useCallback(
@@ -295,9 +257,9 @@ export function usePostFeedQuery(
           pages: [
             ...reusedPages,
             ...data.pages.slice(reusedPages.length).map(page => ({
-              api: page.api,
               tuner,
               cursor: page.cursor,
+              source: page.source,
               fetchedAt: page.fetchedAt,
               slices: tuner
                 .tune(page.feed)
@@ -389,7 +351,86 @@ export function usePostFeedQuery(
   return query
 }
 
-export async function pollLatest(page: FeedPage | undefined) {
+/**
+ * Fetches pages of this feed, for the query and for the view's own fetches
+ * outside of it. Each fetch gets a fresh feed API, as they hold no state
+ * between pages - except Merge's, which its pages carry.
+ */
+export function usePostFeedFetcher(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const feedTuners = useFeedTuners(feedDesc)
+  const {data: preferences} = usePreferencesQuery()
+  const userInterests = aggregateUserInterests(preferences)
+  const followingPinnedIndex =
+    preferences?.savedFeeds?.findIndex(
+      f => f.pinned && f.value === 'following',
+    ) ?? -1
+  const enableFollowingToDiscoverFallback = followingPinnedIndex === 0
+  const {hasSession} = useSession()
+  const client = useAppviewClient()
+
+  /**
+   * The number of posts to fetch in a single request. Because we filter
+   * unwanted content, we may over-fetch here to try and fill pages by
+   * `MIN_POSTS`. But if you're doing this, ask @why if it's ok first.
+   */
+  const fetchLimit = MIN_POSTS
+
+  const createFeedApi = () =>
+    createApi({
+      feedDesc,
+      feedParams: params || {},
+      feedTuners,
+      client,
+      // Not in the query key because they don't change:
+      userInterests,
+      // Not in the query key. Reacting to it switching isn't important:
+      enableFollowingToDiscoverFallback,
+    })
+
+  const fetchPage = async (
+    pageParam: RQPageParam,
+  ): Promise<FeedPageUnselected> => {
+    const api = pageParam?.merge ?? createFeedApi()
+    const res = await api.fetch({
+      cursor: pageParam?.cursor,
+      source: pageParam?.source,
+      limit: fetchLimit,
+    })
+
+    /*
+     * If this is a public view, we need to check if posts fail moderation.
+     * If all fail, we throw an error. If only some fail, we continue and let
+     * moderations happen later, which results in some posts being shown and
+     * some not.
+     */
+    if (!hasSession) {
+      assertSomePostsPassModeration(
+        res.feed,
+        preferences?.moderationPrefs ||
+          DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
+      )
+    }
+
+    return {
+      cursor: res.cursor,
+      source: res.source,
+      feed: res.feed,
+      fetchedAt: Date.now(),
+      merge: api instanceof MergeFeedAPI ? api : undefined,
+    }
+  }
+
+  return {createFeedApi, fetchPage}
+}
+
+/**
+ * Whether the feed has a newer post than its top `page` has seen. `api` should
+ * be a fresh one from {@link usePostFeedFetcher}.
+ */
+export async function pollLatest(page: FeedPage | undefined, api: FeedAPI) {
   if (!page) {
     return false
   }
@@ -398,7 +439,7 @@ export async function pollLatest(page: FeedPage | undefined) {
   }
 
   logger.debug('usePostFeedQuery: pollLatest')
-  const post = await page.api.peekLatest()
+  const post = await api.peekLatest({source: page.source})
   if (post) {
     const slices = page.tuner.tune([post], {
       dryRun: true,
@@ -425,7 +466,7 @@ function createApi({
   userInterests?: string
   client: Client
   enableFollowingToDiscoverFallback: boolean
-}) {
+}): FeedAPI {
   if (feedDesc === 'following') {
     if (feedParams.mergeFeedEnabled) {
       return new MergeFeedAPI({
