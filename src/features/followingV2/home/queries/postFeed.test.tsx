@@ -17,7 +17,6 @@ import {
 } from '#/state/queries/post-feed'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
-import {MergeFeedAPI} from '#/features/followingV2/home/api/merge'
 import {app} from '#/lexicons'
 import {
   type FeedDescriptor,
@@ -155,7 +154,7 @@ async function renderFeed(
   const hook = renderHook(
     () => ({
       query: usePostFeedQuery(feed, params),
-      fetcher: usePostFeedFetcher(feed, params),
+      fetcher: usePostFeedFetcher(feed),
     }),
     {wrapper},
   )
@@ -311,33 +310,6 @@ describe('Home feed', () => {
 
     expect(requested()).toEqual(['timeline undefined'])
     expect(data().pages[0].source).toBeUndefined()
-  })
-})
-
-describe('merge feed', () => {
-  const params = {mergeFeedEnabled: true, mergeFeedSources: []}
-
-  it('paginates with the API its pages carry', async () => {
-    const {data, fetchNextPage} = await renderFeed('following', {params})
-    await fetchNextPage()
-
-    const [first, second] = data().pages
-    expect(first.merge).toBeInstanceOf(MergeFeedAPI)
-    expect(second.merge).toBe(first.merge)
-    expect(data().pageParams[1]).toMatchObject({merge: first.merge})
-    // Its following source kept its own cursor between the pages.
-    expect(requested()).toEqual(['timeline undefined', 'timeline timeline:1'])
-  })
-
-  it('starts a new API on refetch', async () => {
-    const {hook, data, fetchNextPage} = await renderFeed('following', {params})
-    await fetchNextPage()
-    const before = data().pages[0].merge
-
-    await act(() => hook.result.current.query.refetch())
-
-    expect(data().pages[0].merge).not.toBe(before)
-    expect(data().pages[1].merge).toBe(data().pages[0].merge)
   })
 })
 

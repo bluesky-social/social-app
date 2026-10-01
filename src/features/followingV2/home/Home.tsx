@@ -50,7 +50,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {FeedPage} from './FeedPage'
-import {type FeedDescriptor, type FeedParams} from './queries/postFeed'
+import {type FeedDescriptor} from './queries/postFeed'
 
 type Props = NativeStackScreenProps<HomeTabNavigatorParams, 'Home' | 'Start'>
 export function HomeScreen(props: Props) {
@@ -262,17 +262,6 @@ function HomeScreenReady({
     return <CustomFeedEmptyState />
   }, [])
 
-  const homeFeedParams = useMemo<FeedParams>(() => {
-    return {
-      mergeFeedEnabled: Boolean(preferences.feedViewPrefs.lab_mergeFeedEnabled),
-      mergeFeedSources: preferences.feedViewPrefs.lab_mergeFeedEnabled
-        ? preferences.savedFeeds
-            .filter(f => f.type === 'feed' || f.type === 'list')
-            .map(f => f.value)
-        : [],
-    }
-  }, [preferences])
-
   if (demoMode) {
     return (
       <Pager
@@ -321,7 +310,6 @@ function HomeScreenReady({
                 isPageFocused={maybeSelectedFeed === feed}
                 isPageAdjacent={Math.abs(selectedIndex - index) === 1}
                 feed={feed}
-                feedParams={homeFeedParams}
                 renderEmptyState={renderFollowingEmptyState}
                 renderEndOfFeed={FollowingEndOfFeed}
                 feedInfo={feedInfo}

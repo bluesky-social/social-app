@@ -16,8 +16,7 @@ export interface FeedAPIResponse {
 
 /**
  * Feed APIs hold no state between pages: everything a fetch needs is in its
- * arguments, so a fresh instance can fetch any page. `MergeFeedAPI` is the one
- * exception.
+ * arguments, so a fresh instance can fetch any page.
  */
 export interface FeedAPI {
   /** The feed's newest post, if it has one. */

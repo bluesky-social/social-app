@@ -306,7 +306,7 @@ let PostFeed = ({
     isFetchingNextPage,
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
-  const {createFeedApi} = usePostFeedFetcher(feed, feedParams)
+  const {createFeedApi} = usePostFeedFetcher(feed)
   const lastFetchedAt = data?.pages[0].fetchedAt
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),
