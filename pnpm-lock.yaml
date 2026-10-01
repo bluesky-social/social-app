@@ -11092,7 +11092,7 @@ snapshots:
 
   '@expo/metro@56.0.2(supports-color@8.1.1)':
     dependencies:
-      metro: 0.84.5(patch_hash=eaf51ee74957edff4014b7d5bf1685a33cfbe451db4c6bea92b438827cee1e60)(supports-color@8.1.1)
+      metro: 0.84.5(supports-color@8.1.1)
       metro-babel-transformer: 0.84.5(supports-color@8.1.1)
       metro-cache: 0.84.5(supports-color@8.1.1)
       metro-cache-key: 0.84.5
@@ -11101,7 +11101,7 @@ snapshots:
       metro-file-map: 0.84.5(supports-color@8.1.1)
       metro-minify-terser: 0.84.5
       metro-resolver: 0.84.5
-      metro-runtime: 0.84.5(patch_hash=4a386cd6f62275a31620c3b0cb489d818359125e5c94f6144933de2dea7e4d98)
+      metro-runtime: 0.84.5
       metro-source-map: 0.84.5(supports-color@8.1.1)
       metro-symbolicate: 0.84.5(supports-color@8.1.1)
       metro-transform-plugins: 0.84.5(supports-color@8.1.1)
@@ -12665,7 +12665,7 @@ snapshots:
       '@react-native/dev-middleware': 0.86.3(supports-color@8.1.1)
       debug: 4.4.3(supports-color@8.1.1)
       invariant: 2.2.4
-      metro: 0.84.5(patch_hash=eaf51ee74957edff4014b7d5bf1685a33cfbe451db4c6bea92b438827cee1e60)(supports-color@8.1.1)
+      metro: 0.84.5(supports-color@8.1.1)
       metro-config: 0.84.5(supports-color@8.1.1)
       metro-core: 0.84.5
       semver: 7.8.5
@@ -12735,7 +12735,7 @@ snapshots:
       '@react-native/js-polyfills': 0.86.3
       '@react-native/metro-babel-transformer': 0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1)
       metro-config: 0.84.5(supports-color@8.1.1)
-      metro-runtime: 0.84.5(patch_hash=4a386cd6f62275a31620c3b0cb489d818359125e5c94f6144933de2dea7e4d98)
+      metro-runtime: 0.84.5
     transitivePeerDependencies:
       - '@babel/core'
       - bufferutil
@@ -16812,10 +16812,10 @@ snapshots:
       connect: 3.7.0(supports-color@8.1.1)
       flow-enums-runtime: 0.0.6
       jest-validate: 29.7.0
-      metro: 0.84.5(patch_hash=eaf51ee74957edff4014b7d5bf1685a33cfbe451db4c6bea92b438827cee1e60)(supports-color@8.1.1)
+      metro: 0.84.5(supports-color@8.1.1)
       metro-cache: 0.84.5(supports-color@8.1.1)
       metro-core: 0.84.5
-      metro-runtime: 0.84.5(patch_hash=4a386cd6f62275a31620c3b0cb489d818359125e5c94f6144933de2dea7e4d98)
+      metro-runtime: 0.84.5
       yaml: 2.9.0
     transitivePeerDependencies:
       - bufferutil
@@ -16851,7 +16851,7 @@ snapshots:
     dependencies:
       flow-enums-runtime: 0.0.6
 
-  metro-runtime@0.84.5(patch_hash=4a386cd6f62275a31620c3b0cb489d818359125e5c94f6144933de2dea7e4d98):
+  metro-runtime@0.84.5:
     dependencies:
       '@babel/runtime': 7.29.2
       flow-enums-runtime: 0.0.6
@@ -16899,7 +16899,7 @@ snapshots:
       '@babel/parser': 7.29.3
       '@babel/types': 7.29.0
       flow-enums-runtime: 0.0.6
-      metro: 0.84.5(patch_hash=eaf51ee74957edff4014b7d5bf1685a33cfbe451db4c6bea92b438827cee1e60)(supports-color@8.1.1)
+      metro: 0.84.5(supports-color@8.1.1)
       metro-babel-transformer: 0.84.5(supports-color@8.1.1)
       metro-cache: 0.84.5(supports-color@8.1.1)
       metro-cache-key: 0.84.5
@@ -16912,7 +16912,7 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  metro@0.84.5(patch_hash=eaf51ee74957edff4014b7d5bf1685a33cfbe451db4c6bea92b438827cee1e60)(supports-color@8.1.1):
+  metro@0.84.5(supports-color@8.1.1):
     dependencies:
       '@babel/code-frame': 7.29.0
       '@babel/core': 7.29.0(supports-color@8.1.1)
@@ -16940,7 +16940,7 @@ snapshots:
       metro-core: 0.84.5
       metro-file-map: 0.84.5(supports-color@8.1.1)
       metro-resolver: 0.84.5
-      metro-runtime: 0.84.5(patch_hash=4a386cd6f62275a31620c3b0cb489d818359125e5c94f6144933de2dea7e4d98)
+      metro-runtime: 0.84.5
       metro-source-map: 0.84.5(supports-color@8.1.1)
       metro-symbolicate: 0.84.5(supports-color@8.1.1)
       metro-transform-plugins: 0.84.5(supports-color@8.1.1)
@@ -18045,7 +18045,7 @@ snapshots:
       hermes-compiler: 250829098.0.17
       invariant: 2.2.4
       memoize-one: 5.2.1
-      metro-runtime: 0.84.5(patch_hash=4a386cd6f62275a31620c3b0cb489d818359125e5c94f6144933de2dea7e4d98)
+      metro-runtime: 0.84.5
       metro-source-map: 0.84.5(supports-color@8.1.1)
       nullthrows: 1.1.1
       pretty-format: 29.7.0
