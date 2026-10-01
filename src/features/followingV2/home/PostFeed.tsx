@@ -915,6 +915,7 @@ let PostFeed = ({
             type: 'feedgen',
             uri: row.sourceFeedUri,
             sourceInterstitial: feedCacheKey ?? 'none',
+            followingV2: true,
           }
         }
 
