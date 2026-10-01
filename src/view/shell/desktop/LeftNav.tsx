@@ -86,6 +86,7 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {type Events} from '#/analytics/metrics/types'
+import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {useActorStatus} from '#/features/liveNow'
 import {type app} from '#/lexicons'
 import {router} from '#/routes'
@@ -670,9 +671,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             href="/"
             navItem="home"
             minimal={leftNavMinimal}
-            hasNew={
-              hasHomeBadge && ax.features.enabled(ax.features.FollowingV2Enable)
-            }
+            hasNew={hasHomeBadge && isFollowingV2HomeDotEnabled(ax)}
             icons={{
               inactive: HomeIcon,
               active: HomeFilledIcon,

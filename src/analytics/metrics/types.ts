@@ -500,6 +500,10 @@ export type Events = {
     feedDescriptor?: string
     position?: number
   }
+  'post:quotes:view': {
+    uri: string
+    quoteSort: 'top' | 'latest'
+  }
   'post:view': {
     uri: string
     authorDid: string
@@ -515,6 +519,7 @@ export type Events = {
       | 'Hashtag'
       | 'Topic'
       | 'PostQuotes'
+    quoteSort?: 'top' | 'latest'
     feedDescriptor?: string
     position?: number
   }
