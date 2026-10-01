@@ -1,6 +1,7 @@
 import {getGlobalScope, init} from '@sentry/react-native'
 
 import {featureFlagsIntegration} from '#/logger/sentry/featureFlags'
+import {dropExpectedNetworkErrors} from '#/logger/sentry/network-errors'
 import * as env from '#/env'
 
 init({
@@ -8,10 +9,12 @@ init({
   enableAutoSessionTracking: false,
   enableTombstone: true,
   dsn: env.SENTRY_DSN,
+  sendDefaultPii: true,
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
   release: env.RELEASE_VERSION,
+  beforeSend: dropExpectedNetworkErrors,
   integrations: [featureFlagsIntegration],
   ignoreErrors: [
     /*
@@ -19,10 +22,6 @@ init({
      */
     `t is not defined`,
     `Can't find variable: t`,
-    /*
-     * Un-useful errors
-     */
-    `Network request failed`,
   ],
   /**
    * Does not affect traces of error events or other logs, just disables

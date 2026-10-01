@@ -20,14 +20,14 @@ import {
 import {
   getAndMigrateDeviceId,
   getDeviceId,
-  getInitialSessionId,
-  useSessionId,
+  getSessionId,
 } from '#/analytics/identifiers'
 import {
   getMetadataForLogger,
   getNavigationMetadata,
   type MergeableMetadata,
   type Metadata,
+  type MetricMetadata,
 } from '#/analytics/metadata'
 import {type Metrics, metrics} from '#/analytics/metrics'
 import * as refParams from '#/analytics/misc/refParams'
@@ -75,15 +75,24 @@ export type AnalyticsBaseContextType = Omit<AnalyticsContextType, 'features'>
 
 function createLogger(
   context: Logger['context'],
-  metadata: Partial<Metadata>,
+  metadata: Record<string, unknown>,
 ): LoggerType {
   const logger = Logger.create(context, metadata)
+  const currentLogger = () => {
+    // Replace the snapshot so previously recorded entries stay unchanged.
+    logger.ambientMetadata = {
+      ...metadata,
+      deviceId: metadata.deviceId ?? getDeviceId() ?? 'unknown',
+      sessionId: getSessionId(),
+    }
+    return logger
+  }
   return {
-    debug: logger.debug.bind(logger),
-    info: logger.info.bind(logger),
-    log: logger.log.bind(logger),
-    warn: logger.warn.bind(logger),
-    error: logger.error.bind(logger),
+    debug: (...args) => currentLogger().debug(...args),
+    info: (...args) => currentLogger().info(...args),
+    log: (...args) => currentLogger().log(...args),
+    warn: (...args) => currentLogger().warn(...args),
+    error: (...args) => currentLogger().error(...args),
     useChild: (context: Exclude<Logger['context'], undefined>) => {
       // oxlint-disable-next-line react-hooks/exhaustive-deps
       return useMemo(() => createLogger(context, metadata), [context, metadata])
@@ -94,19 +103,28 @@ function createLogger(
 
 const Context = createContext<AnalyticsBaseContextType>({
   logger: createLogger(Logger.Context.Default, {}),
-  metric: (event, payload, metadata) => {
-    if (metadata && '__meta' in metadata) {
-      delete metadata.__meta
-    }
-    metrics.track(event, payload, {
+  /**
+   * Session IDs are captured when an event is emitted. Deferred exposure events
+   * use the reporting session, which may differ from the evaluation session.
+   */
+  metric: (event, payload, metadata: Partial<Metadata> = {}) => {
+    const snapshot: MetricMetadata = {
       ...metadata,
+      base: {
+        ...metadata.base,
+        deviceId: metadata.base?.deviceId ?? getDeviceId() ?? 'unknown',
+        sessionId: getSessionId(),
+      },
       navigation: getNavigationMetadata(),
-    })
+    }
+    if ('__meta' in snapshot) {
+      delete snapshot.__meta
+    }
+    metrics.track(event, payload, snapshot)
   },
   metadata: {
     base: {
       deviceId: getDeviceId() ?? 'unknown',
-      sessionId: getInitialSessionId(),
       platform: Platform.OS,
       appVersion: env.APP_VERSION,
       bundleIdentifier: env.BUNDLE_IDENTIFIER,
@@ -180,8 +198,8 @@ export function AnalyticsContext({
       )
     }
   }
+  // Device identity is initialized before mount and stays stable across sessions.
   const deviceId = getDeviceId() ?? 'unknown'
-  const sessionId = useSessionId()
   // only IP based, never GPS
   const geolocation = useGeolocationServiceResponse()
   const parentContext = useContext(Context)
@@ -202,7 +220,6 @@ export function AnalyticsContext({
       base: {
         ...parentContext.metadata.base,
         deviceId,
-        sessionId,
         isBetaUser,
       },
       geolocation,
@@ -222,7 +239,7 @@ export function AnalyticsContext({
       },
     }
     return context
-  }, [parentContext, metadata, deviceId, sessionId, isBetaUser, geolocation])
+  }, [parentContext, metadata, deviceId, isBetaUser, geolocation])
   return <Context.Provider value={childContext}>{children}</Context.Provider>
 }
 

@@ -24,6 +24,7 @@ overrides:
   'react-native-screens': '4.26.2'
 allowBuilds:
   '@sentry/cli': true
+  '@swc/core': false
   'core-js': false
   'core-js-pure': false
   'esbuild': false

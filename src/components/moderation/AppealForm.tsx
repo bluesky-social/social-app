@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {XrpcResponseError} from '@atproto/lex'
 import {type AtUriString, type DidString} from '@atproto/syntax'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -11,6 +10,7 @@ import {useLabelSubject} from '#/lib/moderation'
 import {useLabelInfo} from '#/lib/moderation/useLabelInfo'
 import {makeProfileLink} from '#/lib/routes/links'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {useAppviewClient} from '#/state/session'
 import {atoms as a, useBreakpoints} from '#/alf'
@@ -22,7 +22,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {IS_ANDROID} from '#/env'
-import {com, tools} from '#/lexicons'
+import {type com, tools} from '#/lexicons'
 
 export function AppealForm({
   label,
@@ -48,9 +48,12 @@ export function AppealForm({
   const {mutate, isPending} = useMutation({
     mutationFn: async () => {
       await client.call(
-        com.atproto.moderation.createReport,
+        tools.ozone.inbox.appealActionedSubject,
         {
-          reasonType: tools.ozone.report.defs.reasonAppeal.value,
+          action: {
+            $type: 'tools.ozone.inbox.appealActionedSubject#labelRef',
+            val: label.val,
+          },
           /*
            * `useLabelSubject` derives one shape or the other from the label's
            * `cid`: an at-uri plus cid for a record, or the label's `uri` reused
@@ -73,12 +76,10 @@ export function AppealForm({
       )
     },
     onError: err => {
-      /*
-       * `AlreadyAppealed` is real server behavior that createReport's lexicon
-       * does NOT declare, so `matchXrpcError` cannot see it and the raw error
-       * code is checked instead. Worth an upstream PR to declare it.
-       */
-      if (err instanceof XrpcResponseError && err.error === 'AlreadyAppealed') {
+      if (
+        matchXrpcError(err, tools.ozone.inbox.appealActionedSubject) ===
+        'AlreadyAppealed'
+      ) {
         setError(
           _(
             msg`You've already appealed this label and it's being reviewed by our moderation team.`,
