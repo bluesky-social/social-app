@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -44,18 +44,21 @@ function keyExtractor(item: {
 
 export function PostQuotes({
   uri,
-  sort,
-  active = true,
+  quoteSort,
+  active,
 }: {
   uri: string
-  sort?: QuotesSort
+  quoteSort: QuotesSort
   /** When false (an unselected pager tab), the list doesn't fetch yet. */
-  active?: boolean
+  active: boolean
 }) {
   const {_} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const [isPTRing, setIsPTRing] = useState(false)
-  const trackPostView = usePostViewTracking('PostQuotes')
+  const trackPostView = usePostViewTracking('PostQuotes', quoteSort)
+  const pendingPostViews = useRef(
+    new Map<string, app.bsky.feed.defs.PostView>(),
+  )
 
   const {
     data: resolvedUri,
@@ -71,7 +74,10 @@ export function PostQuotes({
     fetchNextPage,
     error,
     refetch,
-  } = usePostQuotesQuery(resolvedUri?.uri, {sort, enabled: active})
+  } = usePostQuotesQuery(resolvedUri?.uri, {
+    quoteSort,
+    enabled: active,
+  })
 
   const moderationOpts = useModerationOpts()
 
@@ -92,6 +98,16 @@ export function PostQuotes({
         }),
       )
       .filter(item => item !== null) ?? []
+
+  useEffect(() => {
+    if (active && pendingPostViews.current.size > 0) {
+      const quoteUris = new Set(quotes.map(item => item.post.uri))
+      for (const post of pendingPostViews.current.values()) {
+        if (quoteUris.has(post.uri)) trackPostView(post)
+      }
+      pendingPostViews.current.clear()
+    }
+  }, [active, quotes, trackPostView])
 
   const onRefresh = useCallback(async () => {
     setIsPTRing(true)
@@ -142,7 +158,13 @@ export function PostQuotes({
       onRefresh={onRefresh}
       onEndReached={onEndReached}
       onEndReachedThreshold={4}
-      onItemSeen={item => trackPostView(item.post)}
+      onItemSeen={(item: (typeof quotes)[number]) => {
+        if (active) {
+          trackPostView(item.post)
+        } else {
+          pendingPostViews.current.set(item.post.uri, item.post)
+        }
+      }}
       ListFooterComponent={
         <ListFooter
           isFetchingNextPage={isFetchingNextPage}

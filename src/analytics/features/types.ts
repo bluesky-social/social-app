@@ -21,7 +21,6 @@ export enum Features {
   CustomLogoJapanEnable = 'custom_logo:japan:enable',
   FollowSortEnable = 'follow_sort:enable',
   FollowingV2Enable = 'following_v2:enable',
-  QuoteSortEnable = 'quote_sort:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
 

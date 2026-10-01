@@ -7,7 +7,6 @@ import {
 } from '@tanstack/react-query'
 
 import {useAppviewClient} from '#/state/session'
-import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {
@@ -20,13 +19,12 @@ const PAGE_SIZE = 30
 type RQPageParam = string | undefined
 
 export type QuotesSort = 'latest' | 'top'
-const DEFAULT_SORT: QuotesSort = 'latest'
 
 const RQKEY_ROOT = 'post-quotes'
-const RQKEY = (resolvedUri: string, sort: QuotesSort = DEFAULT_SORT) => [
+const RQKEY = (resolvedUri: string, quoteSort: QuotesSort) => [
   RQKEY_ROOT,
   resolvedUri,
-  sort,
+  quoteSort,
 ]
 
 /**
@@ -49,13 +47,9 @@ function removeDuplicateQuotes<P extends {posts: {uri: string}[]}>(
 
 export function usePostQuotesQuery(
   resolvedUri: string | undefined,
-  {sort, enabled = true}: {sort?: QuotesSort; enabled?: boolean} = {},
+  {quoteSort, enabled = true}: {quoteSort: QuotesSort; enabled?: boolean},
 ) {
-  const ax = useAnalytics()
-  const isSortEnabled = ax.features.enabled(ax.features.QuoteSortEnable)
   const client = useAppviewClient()
-
-  const sortParam = isSortEnabled ? (sort ?? DEFAULT_SORT) : undefined
 
   return useInfiniteQuery<
     app.bsky.feed.getQuotes.$OutputBody,
@@ -64,14 +58,14 @@ export function usePostQuotesQuery(
     QueryKey,
     RQPageParam
   >({
-    queryKey: RQKEY(resolvedUri || '', sortParam),
+    queryKey: RQKEY(resolvedUri || '', quoteSort),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
       return await client.call(app.bsky.feed.getQuotes, {
         // the enabled flag prevents this from running until resolvedUri is set
         uri: (resolvedUri || '') as AtUriString,
         limit: PAGE_SIZE,
         cursor: pageParam,
-        sort: sortParam,
+        sort: quoteSort,
       })
     },
     initialPageParam: undefined,

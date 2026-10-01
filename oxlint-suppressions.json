@@ -1364,9 +1364,6 @@
   "src/view/com/post-thread/PostQuotes.tsx": {
     "typescript/no-misused-promises": {
       "count": 2
-    },
-    "typescript/no-unsafe-member-access": {
-      "count": 1
     }
   },
   "src/view/com/post-thread/PostRepostedBy.tsx": {
