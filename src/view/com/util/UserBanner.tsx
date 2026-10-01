@@ -79,15 +79,22 @@ export function UserBanner({
 
     try {
       if (IS_NATIVE) {
-        onSelectNewBanner?.(
-          await compressIfNeeded(
-            await openCropper({
-              imageUri: items[0].path,
-              aspectRatio: 3 / 1,
-            }),
-            IMAGE_SIZE_CONFIG_2K_1MB,
-          ),
-        )
+        /*
+         * Nested rather than `?.()`: React Compiler cannot lower an optional
+         * call inside a `try`. Like `?.()`, this leaves the arguments
+         * unevaluated when the callback is absent.
+         */
+        if (onSelectNewBanner) {
+          onSelectNewBanner(
+            await compressIfNeeded(
+              await openCropper({
+                imageUri: items[0].path,
+                aspectRatio: 3 / 1,
+              }),
+              IMAGE_SIZE_CONFIG_2K_1MB,
+            ),
+          )
+        }
       } else {
         setRawImage(await createComposerImage(items[0]))
         editImageDialogControl.open()

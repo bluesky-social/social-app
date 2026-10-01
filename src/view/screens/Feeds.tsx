@@ -13,6 +13,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {getLocalizedFeedName} from '#/lib/strings/feed-names'
 import {s} from '#/lib/styles'
 import {
   type SavedFeedItem,
@@ -606,6 +607,7 @@ function SavedFeed({
   savedFeed: SavedFeedItem & {type: 'feed' | 'list'}
 }) {
   const t = useTheme()
+  const {i18n} = useLingui()
 
   const commonStyle = [
     a.w_full,
@@ -625,7 +627,9 @@ function SavedFeed({
           style={[commonStyle, (hovered || pressed) && t.atoms.bg_contrast_25]}>
           <FeedCard.Header>
             <FeedCard.Avatar src={savedFeed.view.avatar} size={28} />
-            <FeedCard.TitleAndByline title={savedFeed.view.displayName} />
+            <FeedCard.TitleAndByline
+              title={getLocalizedFeedName(savedFeed.view, i18n)}
+            />
 
             <ChevronRight size="sm" fill={t.atoms.text_contrast_low.color} />
           </FeedCard.Header>

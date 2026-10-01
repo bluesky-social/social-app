@@ -6,7 +6,6 @@ import {moderateStatus} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query'
-import {isAfter, parseISO} from 'date-fns'
 
 import {uploadBlob} from '#/lib/api'
 import {imageToThumb} from '#/lib/api/resolve'
@@ -23,7 +22,11 @@ import {useTickEveryMinute} from '#/state/shell'
 import {useDialogContext} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
-import {getLiveNowHost, getLiveServiceNames} from '#/features/liveNow/utils'
+import {
+  getLiveNowHost,
+  getLiveServiceNames,
+  isStatusStillActive,
+} from '#/features/liveNow/utils'
 import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
@@ -149,14 +152,6 @@ export function useActorStatus(actor?: bsky.profile.AnyProfileView) {
       return DEFAULT_STATE
     }
   }, [shadowed, config, tick, moderation])
-}
-
-export function isStatusStillActive(timeStr: string | undefined) {
-  if (!timeStr) return false
-  const now = new Date()
-  const expiry = parseISO(timeStr)
-
-  return isAfter(expiry, now)
 }
 
 /**

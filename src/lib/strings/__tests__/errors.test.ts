@@ -91,6 +91,15 @@ describe('cleanError', () => {
     )
   })
 
+  it('matches Expo fetch network errors', () => {
+    const e = new Error(
+      'Unexpected fetchHandler() error: fetch failed: UnexpectedException: The network connection was lost. (at ExpoModulesCore/Promise.swift:56)',
+    )
+    expect(cleanError(e)).toBe(
+      'Unable to connect. Please check your internet connection and try again.',
+    )
+  })
+
   it('surfaces the authentication-required code of a lex error', () => {
     /*
      * The lex client derives `AuthenticationRequired` from a 401 with no XRPC

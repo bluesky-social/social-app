@@ -1077,15 +1077,22 @@ let PostFeed = ({
 
         onPostSeen(post)
 
-        // Only track the root post of each slice (index 0) to avoid double-counting thread items
-        if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
+        // Track the post selected by the feed once it is actually visible.
+        if (
+          post.uri === slice.feedPostUri &&
+          !seenPostUrisRef.current.has(post.uri)
+        ) {
           seenPostUrisRef.current.add(post.uri)
 
-          const position = getPostPosition('sliceItem', item.key)
+          const position = getPostPosition(
+            'sliceItem',
+            slice.items[0]._reactKey,
+          )
 
           ax.metric('post:view', {
             uri: post.uri,
             authorDid: post.author.did,
+            isReply: !!postItem.record.reply,
             logContext: 'FeedItem',
             feedDescriptor: feedFeedback.feedDescriptor || feed,
             position,
@@ -1121,6 +1128,7 @@ let PostFeed = ({
             ax.metric('post:view', {
               uri: post.uri,
               authorDid: post.author.did,
+              isReply: !!postItem.record.reply,
               logContext: 'FeedItem',
               feedDescriptor: feedFeedback.feedDescriptor || feed,
               position,

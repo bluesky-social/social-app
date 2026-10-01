@@ -39,7 +39,7 @@ function makeFollowNotification(
 }
 
 describe('groupNotifications', () => {
-  it('does not group a starter pack follow with an organic follow', () => {
+  it('does not group a Starter Pack follow with an organic follow', () => {
     const pack = 'at://did:plc:alice/app.bsky.graph.starterpack/a'
 
     const grouped = groupNotifications([
@@ -56,7 +56,7 @@ describe('groupNotifications', () => {
     expect(grouped[1].additional).toBeUndefined()
   })
 
-  it('groups follows by starter pack', () => {
+  it('groups follows by Starter Pack', () => {
     const packA = 'at://did:plc:alice/app.bsky.graph.starterpack/a'
     const packB = 'at://did:plc:bob/app.bsky.graph.starterpack/b'
 

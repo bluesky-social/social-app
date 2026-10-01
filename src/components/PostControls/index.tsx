@@ -107,9 +107,10 @@ let PostControls = ({
       return
     }
 
+    const existingLike = post.viewer?.like
     try {
       setHasLikeIconBeenToggled(true)
-      if (!post.viewer?.like) {
+      if (!existingLike) {
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionLike',
@@ -137,8 +138,9 @@ let PostControls = ({
       return
     }
 
+    const existingRepost = post.viewer?.repost
     try {
-      if (!post.viewer?.repost) {
+      if (!existingRepost) {
         sendInteraction({
           item: post.uri,
           event: 'app.bsky.feed.defs#interactionRepost',

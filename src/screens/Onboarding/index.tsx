@@ -38,7 +38,7 @@ export function Onboarding() {
     return bcp47Match.basicFilter('en', contentLanguages).length > 0
   }, [contentLanguages])
 
-  // starter packs screen is currently geared towards english-speaking accounts
+  // Starter Packs screen is currently geared towards english-speaking accounts
   const showSuggestedStarterpacks = ENV !== 'e2e' && probablySpeaksEnglish
 
   const findContactsEnabled =

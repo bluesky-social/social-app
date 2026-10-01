@@ -21,12 +21,12 @@ export function useGoogleTranslate() {
       if (IS_ANDROID) {
         try {
           // use `getApplicationIconAsync` to determine if the translate app is installed
-          if (
-            !(await IntentLauncher.getApplicationIconAsync(
-              'com.google.android.apps.translate',
-            ))
-          ) {
-            throw new Error('Translate app not installed')
+          const installed = await IntentLauncher.getApplicationIconAsync(
+            'com.google.android.apps.translate',
+          )
+          if (!installed) {
+            openLink(translateUrl)
+            return
           }
 
           // TODO: this should only be called one at a time, use something like

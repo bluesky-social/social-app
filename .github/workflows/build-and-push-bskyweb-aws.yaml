@@ -1,6 +1,12 @@
 name: build-and-push-bskyweb-aws
 on:
   workflow_dispatch:
+    inputs:
+      sourceRef:
+        type: string
+        description: Source ref to build; use a full commit SHA for immutable builds
+        required: false
+        default: ''
   push:
     branches:
       - main
@@ -15,6 +21,8 @@ jobs:
   bskyweb-container-aws:
     if: github.repository == 'bluesky-social/social-app'
     runs-on: ubuntu-latest
+    outputs:
+      source-sha: ${{ steps.source.outputs.sha }}
     permissions:
       contents: read
       packages: write
@@ -23,6 +31,14 @@ jobs:
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.sourceRef || github.sha }}
+
+      - name: Resolve build source
+        id: source
+        run: |
+          echo "Building source: $(git rev-parse HEAD)"
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
       - name: 🔧 Setup Docker buildx
         uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
@@ -41,7 +57,9 @@ jobs:
           images: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=sha,enable=true,priority=100,prefix=,suffix=,format=long
+            type=raw,value=${{ steps.source.outputs.sha }}
+          labels: |
+            org.opencontainers.image.revision=${{ steps.source.outputs.sha }}
 
       - name: 📝 Env
         id: env

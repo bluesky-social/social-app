@@ -153,6 +153,7 @@ let ProfileHeaderStandard = ({
                     value={descriptionRT}
                     enableTags
                     authorHandle={profile.handle}
+                    shouldProxyLinks={true}
                   />
                 </View>
               ) : undefined}
@@ -238,14 +239,17 @@ export function HeaderStandardButtons({
 
   const onPressFollow = () => {
     playHaptic()
+    const displayNameOrHandle = profile.displayName || profile.handle
     requireAuth(async () => {
       try {
         await queueFollow()
-        onFollow?.()
+        if (onFollow) {
+          onFollow()
+        }
         Toast.show(
           _(
             msg`Following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
+              displayNameOrHandle,
               moderation.ui('displayName'),
             )}`,
           ),
@@ -264,14 +268,17 @@ export function HeaderStandardButtons({
 
   const onPressUnfollow = () => {
     playHaptic()
+    const displayNameOrHandle = profile.displayName || profile.handle
     requireAuth(async () => {
       try {
         await queueUnfollow()
-        onUnfollow?.()
+        if (onUnfollow) {
+          onUnfollow()
+        }
         Toast.show(
           _(
             msg`No longer following ${sanitizeDisplayName(
-              profile.displayName || profile.handle,
+              displayNameOrHandle,
               moderation.ui('displayName'),
             )}`,
           ),

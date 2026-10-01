@@ -360,6 +360,11 @@
           },
           "maxLength": 100,
           "description": "A list of tags which describe the account owner's interests gathered during onboarding."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "The timestamp when the account owner last updated their interests."
         }
       }
     },

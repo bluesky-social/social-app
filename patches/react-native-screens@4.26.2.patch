@@ -31,3 +31,112 @@ index 76bb694854b29d7f779f38244cd48113b429ea1f..fd402ac938862e8d39c5467c1b5c86c4
                      startTransitionRecursive(child)
                  }
              }
+diff --git a/ios/RNSScreen.mm b/ios/RNSScreen.mm
+index 9b66012dc8db1e3af0cb5457f8dad86e7f2fe5e3..a7f1f613c291de8421f6f117c06d35ba34a2d908 100644
+--- a/ios/RNSScreen.mm
++++ b/ios/RNSScreen.mm
+@@ -1,4 +1,5 @@
+ #import <UIKit/UIKit.h>
++#import <objc/runtime.h>
+ 
+ #import "RNSModalScreen.h"
+ #import "RNSScreen.h"
+@@ -1180,9 +1181,82 @@ - (BOOL)hasHeaderConfig
+   return _config != nil;
+ }
+ 
++/*
++ * PATCH (secure-snapshot): content protected by an isSecureTextEntry canvas
++ * (per-view capture protection, e.g. expo-privacy-sensitive) is stripped from
++ * the render-server snapshot RNSScreen takes for JS-driven pops, so the user
++ * sees the hidden fallback (the GrowthHack butterfly) during the transition.
++ * The capture-exclusion flag is only consulted for layers INSIDE a captured
++ * subtree, so a snapshot rooted BELOW the flagged canvas still includes the
++ * content.
++ *
++ * By the time setViewToSnapshot runs, the screen's children are already
++ * unmounted (only the pixels survive on the render server), so the secure
++ * subtrees must be captured HERE - before the transaction's mutations apply,
++ * while the subtree is intact. The overlays are stashed on the screen view
++ * and composited over the main snapshot in setViewToSnapshot, each re-wrapped
++ * in a fresh secure canvas so real captures (screenshots/recordings) taken
++ * during the transition still exclude them.
++ */
++static void RNSCollectPrivacySensitiveViews(UIView *view, NSMutableArray<UIView *> *out)
++{
++  // Swift classes are namespaced in the ObjC runtime ("Module.ClassName")
++  if ([NSStringFromClass([view class]) hasSuffix:@"ExpoPrivacySensitiveView"]) {
++    [out addObject:view];
++    return;
++  }
++  for (UIView *subview in view.subviews) {
++    RNSCollectPrivacySensitiveViews(subview, out);
++  }
++}
++
++static UIView *_Nullable RNSMakeSecureCanvas(void)
++{
++  UITextField *field = [UITextField new];
++  field.secureTextEntry = YES;
++  field.userInteractionEnabled = NO;
++  UIView *canvas = (UIView *)field.layer.sublayers.firstObject.delegate;
++  if (![canvas isKindOfClass:[UIView class]]) {
++    return nil;
++  }
++  canvas.clipsToBounds = NO;
++  canvas.backgroundColor = UIColor.clearColor;
++  // retain the field alongside the canvas in case the capture exclusion ever
++  // depends on the owning field staying alive
++  objc_setAssociatedObject(canvas, "RNSSecureCanvasField", field, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
++  return canvas;
++}
++
++static char RNSSecureOverlaysKey;
++
+ - (void)willBeUnmountedInUpcomingTransaction
+ {
+   _markedForUnmountInCurrentTransaction = YES;
++
++  NSMutableArray<UIView *> *sensitiveViews = [NSMutableArray new];
++  RNSCollectPrivacySensitiveViews(self, sensitiveViews);
++  NSMutableArray<UIView *> *overlays = [NSMutableArray new];
++  for (UIView *sensitiveView in sensitiveViews) {
++    UIView *canvas = sensitiveView.subviews.firstObject;
++    for (UIView *content in canvas.subviews) {
++      UIView *pieceSnapshot = [content snapshotViewAfterScreenUpdates:NO];
++      if (pieceSnapshot == nil) {
++        continue;
++      }
++      CGRect frameInScreen = [content convertRect:content.bounds toView:self];
++      UIView *secureWrap = RNSMakeSecureCanvas();
++      if (secureWrap != nil) {
++        secureWrap.frame = frameInScreen;
++        pieceSnapshot.frame = secureWrap.bounds;
++        [secureWrap addSubview:pieceSnapshot];
++        [overlays addObject:secureWrap];
++      } else {
++        pieceSnapshot.frame = frameInScreen;
++        [overlays addObject:pieceSnapshot];
++      }
++    }
++  }
++  objc_setAssociatedObject(self, &RNSSecureOverlaysKey, overlays.count > 0 ? overlays : nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+ }
+ 
+ + (react::ComponentDescriptorProvider)componentDescriptorProvider
+@@ -1999,6 +2073,15 @@ - (void)setViewToSnapshot
+     auto afterUpdates = self.screenView.snapshotAfterUpdates;
+     UIView *snapshot = [self.view snapshotViewAfterScreenUpdates:afterUpdates];
+     snapshot.frame = self.view.frame;
++
++    // PATCH (secure-snapshot): composite the secure-content overlays captured
++    // in willBeUnmountedInUpcomingTransaction (see comment there)
++    NSArray<UIView *> *overlays = objc_getAssociatedObject(self.screenView, &RNSSecureOverlaysKey);
++    for (UIView *overlay in overlays) {
++      [snapshot addSubview:overlay];
++    }
++    objc_setAssociatedObject(self.screenView, &RNSSecureOverlaysKey, nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
++
+     [self.view removeFromSuperview];
+     self.view = snapshot;
+     [superView addSubview:snapshot];

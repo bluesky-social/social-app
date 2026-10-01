@@ -1,10 +1,11 @@
 import {MMKV} from 'react-native-mmkv'
 import {setPolyfills} from '@growthbook/growthbook'
-import {GrowthBook} from '@growthbook/growthbook-react'
 import {type I18n} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
 import {Logger} from '#/logger'
+import {readFeatureBootstrap} from '#/analytics/features/bootstrap'
+import {createGrowthBook, refreshGrowthBook} from '#/analytics/features/client'
 import {Features} from '#/analytics/features/types'
 import {getNavigationMetadata, type Metadata} from '#/analytics/metadata'
 import * as env from '#/env'
@@ -37,38 +38,49 @@ const TIMEOUT_INIT = 2000 // TODO should base on p99 or something
 const TIMEOUT_PREFER_LOW_LATENCY = 250
 const TIMEOUT_PREFER_FRESH_GATES = 1500
 
-export const features = new GrowthBook({
+const sdkOptions = {
   apiHost: env.GROWTHBOOK_API_HOST,
   clientKey: env.GROWTHBOOK_CLIENT_KEY,
   enableDevMode: env.IS_INTERNAL,
-})
+}
+const bootstrap = readFeatureBootstrap(sdkOptions)
+
+/**
+ * Shared SDK instance. Assumes a single active account context, with attributes
+ * supplied by AnalyticsFeaturesContext before its children evaluate features.
+ */
+export const features = createGrowthBook(sdkOptions, bootstrap)
 
 /**
  * Initializer promise that must be awaited before using the GrowthBook
- * instance or rendering the `AnalyticsFeaturesContext`. Note: this may not be
- * fully initialized if it takes longer than `TIMEOUT_INIT` to initialize. In
- * that case, we may see a flash of uncustomized content until the
- * initialization completes.
+ * instance or rendering the `AnalyticsFeaturesContext`. A valid HTML bootstrap
+ * is available synchronously while this revalidates it. Without one, a slow
+ * initialization may cause a flash of uncustomized content.
  */
-export const init = features.init({timeout: TIMEOUT_INIT}).then(res => {
-  if (!res.success) {
-    logger.warn('GrowthBook initialization failed or timed out', {
-      source: res.source,
-      safeMessage: res.error?.toString(),
+export const init = bootstrap
+  ? refreshGrowthBook(features, {timeout: TIMEOUT_INIT})
+  : features.init({timeout: TIMEOUT_INIT}).then(res => {
+      if (!res.success) {
+        logger.warn('GrowthBook initialization failed or timed out', {
+          source: res.source,
+          safeMessage: res.error?.toString(),
+        })
+      }
     })
-  }
-})
 
 /**
  * Refresh feature gates from GrowthBook.
  */
 export async function refresh({strategy}: {strategy: FeatureFetchStrategy}) {
-  await features.refreshFeatures({
+  const options = {
     timeout:
       strategy === 'prefer-low-latency'
         ? TIMEOUT_PREFER_LOW_LATENCY
         : TIMEOUT_PREFER_FRESH_GATES,
-  })
+  }
+  await (bootstrap
+    ? refreshGrowthBook(features, options)
+    : features.refreshFeatures(options))
 }
 
 export function getFeatures() {
@@ -77,21 +89,19 @@ export function getFeatures() {
 
 export function getFeatureDescription(feature: Features, i18n: I18n) {
   switch (feature) {
-    case Features.CanonicalPostNumberingEnable:
+    case Features.PostFeedKnownLikersEnable:
       return {
         key: feature,
         name: i18n._(
           msg({
-            message: 'Thread numbering',
-            comment:
-              'Name for a feature flag (See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.)',
+            message: 'Social proofing on posts',
+            comment: 'Name for a feature flag',
           }),
         ),
         description: i18n._(
           msg({
-            message:
-              'See numbered badges (1/3, 2/3, etc.) on posts in a thread by the same author.',
-            comment: 'Description of a feature flag (Thread numbering)',
+            message: 'Spot posts your friends and follows have liked.',
+            comment: 'Description of a feature flag (Social proofing on posts)',
           }),
         ),
       }
@@ -161,6 +171,10 @@ export function getTargetedFeatures(i18n: I18n) {
  * attributes are manually configured in the GrowthBook dashboard. So these
  * values need to match exactly. Therefore, let's add them here manually to and
  * not spread them to avoid mistakes.
+ *
+ * Analytics session IDs are event metadata only, not feature targeting or
+ * experiment bucketing inputs. They are intentionally excluded from GrowthBook
+ * attributes, so session rotation does not require feature reevaluation.
  */
 export function setAttributes({
   base,
@@ -170,7 +184,6 @@ export function setAttributes({
 }: Metadata) {
   void features.setAttributes({
     deviceId: base.deviceId,
-    sessionId: base.sessionId,
     platform: base.platform,
     appVersion: base.appVersion,
     countryCode: geolocation.countryCode,

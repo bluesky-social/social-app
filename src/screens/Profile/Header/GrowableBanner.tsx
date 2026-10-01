@@ -229,7 +229,6 @@ function useShouldAnimateSpinner({
         scheduleOnRN(setIsOverscrolled, value)
       }
     },
-    [scrollY],
   )
 
   const [isAnimating, setIsAnimating] = useState(isFetching)

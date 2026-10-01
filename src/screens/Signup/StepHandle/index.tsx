@@ -58,7 +58,7 @@ export function StepHandle() {
     username: draftValue,
     serviceDid: state.serviceDescription?.did ?? 'UNKNOWN',
     serviceDomain: state.userDomain,
-    birthDate: state.dateOfBirth.toISOString(),
+    birthDate: state.dateOfBirth?.toISOString() ?? '',
     email: state.email,
     enabled: validCheck.overall,
   })
@@ -76,10 +76,11 @@ export function StepHandle() {
 
     dispatch({type: 'setIsLoading', value: true})
 
+    const serviceDid = state.serviceDescription?.did ?? 'UNKNOWN'
     try {
       const {available: handleAvailable} = await checkHandleAvailability(
         createFullHandle(handle, state.userDomain),
-        state.serviceDescription?.did ?? 'UNKNOWN',
+        serviceDid,
         {},
       )
 
@@ -90,6 +91,7 @@ export function StepHandle() {
           value: _(msg`That username is already taken`),
           field: 'handle',
         })
+        dispatch({type: 'setIsLoading', value: false})
         return
       } else {
         ax.metric('signup:handleAvailable', {typeahead: false})
@@ -99,9 +101,8 @@ export function StepHandle() {
         safeMessage: error,
       })
       // do nothing on error, let them pass
-    } finally {
-      dispatch({type: 'setIsLoading', value: false})
     }
+    dispatch({type: 'setIsLoading', value: false})
 
     ax.metric('signup:nextPressed', {
       activeStep: state.activeStep,
@@ -199,7 +200,7 @@ export function StepHandle() {
         <LayoutAnimationConfig skipEntering skipExiting>
           {/* Reserve space for one line of text to avoid layout shift. */}
           <View style={[a.gap_xs, {minHeight: 21}]}>
-            {state.error && (
+            {!!state.error && (
               <Requirement>
                 <RequirementText>{state.error}</RequirementText>
               </Requirement>

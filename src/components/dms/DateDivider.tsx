@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {subDays} from 'date-fns'
 
+import {formatDateTime} from '#/lib/strings/time'
 import {atoms as a, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
 import {localDateString} from './util'
@@ -12,7 +13,7 @@ let DateDivider = ({date: dateStr}: {date: string}): React.ReactNode => {
   const {t: l, i18n} = useLingui()
 
   let date: string
-  const time = i18n.date(new Date(dateStr), {
+  const time = formatDateTime(i18n, new Date(dateStr), {
     hour: 'numeric',
     minute: 'numeric',
   })

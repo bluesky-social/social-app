@@ -261,7 +261,10 @@ export function useGetJoinLinkPreview() {
           staleTime: STALE.SECONDS.FIFTEEN,
         })
         const found = data.joinLinkPreviews[0]
-        return isKnownJoinLinkPreview(found) ? found : undefined
+        if (isKnownJoinLinkPreview(found)) {
+          return found
+        }
+        return undefined
       } catch (error) {
         logger.error('Failed to fetch join link preview', {safeMessage: error})
         return undefined
