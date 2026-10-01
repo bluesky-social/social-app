@@ -2,6 +2,7 @@ import {type BlobRef, type Client} from '@atproto/lex'
 import {jest} from '@jest/globals'
 import {type I18n} from '@lingui/core'
 
+import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {type UploadStatus} from '#/components/ComposerV2/store/types'
 import {
   type ImageUploadDependencies,
@@ -12,16 +13,48 @@ import {
   type UploadWorkerOverrides,
   type VideoUploadDependencies,
 } from '#/components/ComposerV2/store/uploads'
+import {type AnalyticsContextType} from '#/analytics'
+
+/** Analytics whose metrics a test can inspect; nothing is sent. */
+export function fakeAnalytics() {
+  const metric = jest.fn<AnalyticsContextType['metric']>()
+  return {metric, analytics: {metric} as unknown as AnalyticsContextType}
+}
 
 /**
  * Placeholder account inputs for stores under test. Tests that exercise real
  * workers use `realUploadWorkers` (or call a worker directly with fakes) so
  * nothing reaches the network.
  */
-export const testUploadRuntime: UploadRuntime = {
+export const testUploadRuntime: UploadRuntime & {
+  analytics: AnalyticsContextType
+} = {
   pdsClient: {} as Client,
   pdsUrl: 'https://pds.example.test',
   i18n: {_: (message: unknown) => String(message)} as unknown as I18n,
+  analytics: fakeAnalytics().analytics,
+}
+
+/** Telemetry that records nothing, for worker tests that do not assert it. */
+export function noopVideoTelemetry(): VideoTelemetry {
+  const noop = () => {}
+  return {
+    uploadId: 'test-upload',
+    engine: 'test',
+    picked: noop,
+    compressStarted: noop,
+    probed: noop,
+    compressSkipped: noop,
+    compressCompleted: noop,
+    compressFailed: noop,
+    uploadStarted: noop,
+    uploadCompleted: noop,
+    uploadFailed: noop,
+    processingStarted: noop,
+    processingCompleted: noop,
+    processingFailed: noop,
+    published: noop,
+  }
 }
 
 const placeholder = {
@@ -136,6 +169,7 @@ export function fakeVideoDependencies(
     getImageDimensions: unexpected('getImageDimensions'),
     getFileSize: unexpected('getFileSize'),
     copyVideoToCache: unexpected('copyVideoToCache'),
+    createVideoTelemetry: noopVideoTelemetry,
     compressVideo: unexpected('compressVideo'),
     uploadVideo: unexpected('uploadVideo'),
     uploadBlob: unexpected('uploadBlob'),

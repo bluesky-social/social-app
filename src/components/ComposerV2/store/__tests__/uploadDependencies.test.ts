@@ -11,11 +11,15 @@ import {compressImage} from '#/lib/media/image/compress'
 import {getImageDim} from '#/lib/media/manip'
 import {getUriSize} from '#/lib/media/uriSize'
 import {compressVideo} from '#/lib/media/video/compress'
+import {createVideoTelemetry} from '#/lib/media/video/telemetry'
 import {uploadVideo} from '#/lib/media/video/upload'
 import {createTokenlessVideoServiceClient} from '#/lib/media/video/util'
 import {getVideoMetadata} from '#/view/com/composer/videos/metadata'
 import {createThreadStore} from '#/components/ComposerV2/store'
-import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
+import {
+  fakeAnalytics,
+  testUploadRuntime,
+} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
 import {
   type ImageUploadDependencies,
@@ -53,9 +57,13 @@ const initialState: ThreadStoreInitialState = {
 }
 
 /** Capture what the store hands each worker without running any upload. */
-function captureWorkerOptions() {
+function captureWorkerOptions({
+  analytics = testUploadRuntime.analytics,
+}: {analytics?: typeof testUploadRuntime.analytics} = {}) {
   let image: ImageUploadDependencies | undefined
-  let video: VideoUploadDependencies | undefined
+  let video:
+    | (VideoUploadDependencies & {metric: (typeof analytics)['metric']})
+    | undefined
   const workers: UploadWorkerOverrides = {
     startImageUpload: opts => {
       image = opts
@@ -68,6 +76,7 @@ function captureWorkerOptions() {
   }
   const store = createThreadStore({
     ...testUploadRuntime,
+    analytics,
     resolvers,
     initialState,
     __uploadWorkers: workers,
@@ -91,6 +100,7 @@ describe('upload worker dependency wiring', () => {
       getImageDimensions: getImageDim,
       getFileSize: getUriSize,
       copyVideoToCache,
+      createVideoTelemetry,
       compressVideo,
       uploadVideo,
       uploadBlob,
@@ -99,12 +109,21 @@ describe('upload worker dependency wiring', () => {
     expect(video.sleep).toEqual(expect.any(Function))
   })
 
+  test("video workers report to the session's analytics", () => {
+    const {metric, analytics} = fakeAnalytics()
+    const {video} = captureWorkerOptions({analytics})
+
+    expect(video.metric).toBe(metric)
+  })
+
   test('image workers are not handed video-only dependencies', () => {
     const {image} = captureWorkerOptions()
 
     expect(image).not.toHaveProperty('uploadVideo')
     expect(image).not.toHaveProperty('compressVideo')
     expect(image).not.toHaveProperty('copyVideoToCache')
+    expect(image).not.toHaveProperty('createVideoTelemetry')
+    expect(image).not.toHaveProperty('metric')
   })
 
   test('loading the store does not load the #/state/gallery UI chain', () => {

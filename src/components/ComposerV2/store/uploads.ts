@@ -11,9 +11,11 @@ import {
   VIDEO_MAX_SIZE,
 } from '#/lib/constants'
 import {UploadLimitError, VideoTooLargeError} from '#/lib/media/video/errors'
+import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {type CompressedVideo} from '#/lib/media/video/types'
 import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
+import {type AnalyticsContextType} from '#/analytics'
 import {IS_ANDROID, IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import {prepareImageSource, prepareVideoSource} from './prepareMediaSource'
@@ -26,7 +28,14 @@ import {
 } from './types'
 
 /** Runtime handle owned by the store, never published in ThreadState. */
-export type UploadTask = {cancel(): void}
+export type UploadTask = {
+  /**
+   * `abandoned` marks a user giving up on the media (removing it or its
+   * post), which video telemetry reports. Other cancellations, such as a
+   * caption restart or store teardown, are silent.
+   */
+  cancel(options?: {abandoned?: boolean}): void
+}
 
 /** Test-only worker seam; production uses the real workers below. */
 export type UploadWorkerOverrides = {
@@ -100,6 +109,8 @@ export type VideoUploadDependencies = {
   getImageDimensions: GetImageDimensions
   /** Native file stat for a source whose size is unknown; unused on web. */
   getFileSize: (typeof import('#/lib/media/uriSize'))['getUriSize']
+  /** One instance per compression attempt; see `runVideoUpload`. */
+  createVideoTelemetry: (typeof import('#/lib/media/video/telemetry'))['createVideoTelemetry']
   /**
    * Android only: a readable copy of a restored draft video, owned by one
    * worker attempt. See `needsReadableCopy`.
@@ -150,7 +161,20 @@ type BaseOptions = UploadRuntime & {
 type ImageOptions = BaseOptions &
   ImageUploadDependencies & {media: PostMediaImage}
 type VideoOptions = BaseOptions &
-  VideoUploadDependencies & {media: PostMediaVideo}
+  VideoUploadDependencies & {
+    media: PostMediaVideo
+    /** The session's analytics sink for video upload telemetry. */
+    metric: AnalyticsContextType['metric']
+    /**
+     * Called once the video blob exists, so the store can report publication
+     * through the same telemetry instance.
+     */
+    setVideoTelemetry?: (
+      postId: string,
+      mediaId: string,
+      video: {blob: BlobRef; telemetry: VideoTelemetry},
+    ) => void
+  }
 
 /** Start the image compression and PDS upload pipeline. */
 export function startImageUpload(opts: ImageOptions): UploadTask {
@@ -162,8 +186,19 @@ export function startImageUpload(opts: ImageOptions): UploadTask {
 /** Start compression, multipart upload, processing polling, and caption uploads. */
 export function startVideoUpload(opts: VideoOptions): UploadTask {
   const controller = new AbortController()
-  void runVideoUpload({...opts, signal: controller.signal})
-  return {cancel: () => controller.abort()}
+  const abandonment = new AbortController()
+  void runVideoUpload({
+    ...opts,
+    signal: controller.signal,
+    abandonmentSignal: abandonment.signal,
+  })
+  return {
+    cancel: ({abandoned = false} = {}) => {
+      /* Telemetry records the phase it was in, so abandon first. */
+      if (abandoned) abandonment.abort()
+      controller.abort()
+    },
+  }
 }
 
 async function runImageUpload({
@@ -234,8 +269,9 @@ async function runImageUpload({
 
 async function runVideoUpload({
   signal,
+  abandonmentSignal,
   ...opts
-}: VideoOptions & {signal: AbortSignal}) {
+}: VideoOptions & {signal: AbortSignal; abandonmentSignal: AbortSignal}) {
   const {
     media,
     pdsClient,
@@ -245,13 +281,23 @@ async function runVideoUpload({
     getImageDimensions,
     getFileSize,
     copyVideoToCache,
+    createVideoTelemetry,
     compressVideo,
     uploadVideo,
     uploadBlob,
+    metric,
   } = opts
   let videoBlob: BlobRef | undefined = media.videoBlob
   let captionBlobs = [...media.captionBlobs]
   let releaseCopy: (() => void) | undefined
+  /*
+   * Telemetry matches the existing composer's funnel. It starts once the
+   * source is prepared, since the instance reads source metadata only when
+   * it is created. A caption-only retry reuses the uploaded video and emits
+   * nothing; the stage decides which failure event an error belongs to.
+   */
+  let telemetry: VideoTelemetry | undefined
+  let stage: 'compress' | 'upload' | 'processing' | undefined
   try {
     /* A caption-only retry can safely reuse the completed video result. */
     let compressed: CompressedVideo | undefined
@@ -279,11 +325,22 @@ async function runVideoUpload({
       })
       throwIfAborted({signal})
       opts.setMediaSourceMetadata?.(opts.postId, opts.mediaId, metadata)
+      const attempt = createVideoTelemetry({
+        asset,
+        signal: abandonmentSignal,
+        metric,
+      })
+      telemetry = attempt
+      attempt.picked()
       validateVideoSource({asset})
 
       report({...opts, status: {state: 'uploading', phase: 'compressing'}})
+      stage = 'compress'
+      attempt.compressStarted()
       compressed = await compressVideo(asset, {
         signal,
+        /* The compressor probes the source again only for this event. */
+        onProbe: probed => attempt.probed(probed),
         onProgress: progress => {
           if (!signal.aborted) {
             report({
@@ -298,6 +355,25 @@ async function runVideoUpload({
         },
       })
       throwIfAborted({signal})
+      if (compressed.passthroughReason) {
+        attempt.compressSkipped({
+          size: compressed.size,
+          mimeType: compressed.mimeType,
+          skipReason: compressed.passthroughReason,
+        })
+      } else {
+        attempt.compressCompleted({
+          size: compressed.size,
+          mimeType: compressed.mimeType,
+        })
+      }
+
+      /*
+       * The existing composer has no client-side size check here; an
+       * oversized native output fails at upload, so report it there.
+       */
+      stage = 'upload'
+      attempt.uploadStarted(compressed.size)
       /* The upload-output size limit applies to what compression produced. */
       if (compressed.size > VIDEO_MAX_SIZE) throw new VideoTooLargeError()
       opts.setMediaCompressionResult?.(opts.postId, opts.mediaId, {
@@ -334,6 +410,13 @@ async function runVideoUpload({
         },
       })
       throwIfAborted({signal})
+      /*
+       * Like the existing composer, an upload that returns an already
+       * finished job still records the processing phase.
+       */
+      attempt.uploadCompleted(uploadResult.jobId)
+      stage = 'processing'
+      attempt.processingStarted(uploadResult.jobId)
       if (uploadResult.state === 'JOB_STATE_FAILED') {
         throw new VideoJobError(
           uploadResult.error ?? 'Video failed to process',
@@ -354,6 +437,12 @@ async function runVideoUpload({
         })
       }
       throwIfAborted({signal})
+      attempt.processingCompleted()
+      stage = undefined
+      opts.setVideoTelemetry?.(opts.postId, opts.mediaId, {
+        blob: videoBlob,
+        telemetry: attempt,
+      })
     }
 
     if (!videoBlob)
@@ -389,6 +478,9 @@ async function runVideoUpload({
     })
   } catch (error) {
     if (isAborted({error, signal})) return
+    if (stage === 'compress') telemetry?.compressFailed(error)
+    else if (stage === 'upload') telemetry?.uploadFailed(error)
+    else if (stage === 'processing') telemetry?.processingFailed(error)
     const failed = failureStatus({error, i18n, kind: 'video'})
     if (videoBlob) {
       failed.blob = videoBlob

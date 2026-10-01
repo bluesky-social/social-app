@@ -149,7 +149,9 @@ reconcile its URIs; do not automatically replan with new keys or retry. The
 tester retains the attempted plan in memory, including across scenario changes,
 but has no reconciliation engine or durable plan storage. Leaving the tester
 loses that in-memory record. Future production integration must also own duplicate
-submission protection, publish state, AppView propagation, and video telemetry.
+submission protection, publish state, and AppView propagation. After a write
+resolves, call `store.reportPublished({plan})` so video telemetry records
+publication; never call it for an uncertain outcome.
 
 Failures remain in attachment/upload state, adapter rejections, or planning and
 writing outcomes. Optional `onError(event, cause?)` adds one per-session reporting
@@ -212,11 +214,12 @@ or recreate an execution-order manifest as part of composer changes.
   implemented.
 - `internalActions.setUploadStatus` exists for tests only and calls the private
   `applyUploadStatus` directly. Worker callbacks named `setUploadStatus`,
-  `setMediaSourceMetadata`, `setMediaCompressionResult`, and `setCaptionBlobs`
-  are a different interface: they pass through task-identity guards before
-  reaching the private
-  `apply*` writes. Keep `getState`, `subscribe`, `destroy`, and `reportError`
-  as lifecycle/read/reporting methods, not UI mutation shortcuts.
+  `setMediaSourceMetadata`, `setMediaCompressionResult`, `setCaptionBlobs`, and
+  `setVideoTelemetry` are a different interface: they pass through
+  task-identity guards before reaching the private `apply*` writes or the
+  telemetry registry. Keep `getState`, `subscribe`, `destroy`, `reportError`,
+  and `reportPublished` as lifecycle/read/reporting methods, not UI mutation
+  shortcuts.
 - Naming inside `createThreadStore`: `set*`, `add*`, `remove*`, `update*`, and
   `retry*` are public actions; `apply*` functions are private state writes
   reached from guarded worker callbacks; `replace*` functions return an updated
@@ -264,8 +267,10 @@ states, not store corruption; publication preflight handles readiness.
 
 ### Media workers and platform boundaries
 
-`pdsClient`, `pdsUrl`, and `i18n` are required store options; a caller without
-an account must not construct a store. `pdsUrl` is the account PDS URL, which
+`pdsClient`, `pdsUrl`, `i18n`, and `analytics` (from `useAnalytics()`) are
+required store options; a caller without an account must not construct a store.
+Analytics carries video telemetry and is the seam for feature gates the store
+may need. `pdsUrl` is the account PDS URL, which
 video uploads use for the service-auth audience; the shared video API still
 names it `dispatchUrl`, so the worker maps it at that call. Production callers
 pass only those runtime inputs: the store hands the image and video workers the
@@ -300,6 +305,30 @@ A completed video survives a later caption-upload failure. `setVideoCaptions`
 keeps blobs only for unchanged language/content, restarts running/completed work
 when necessary, and allows the worker to reuse the video and unchanged captions.
 Prepared outputs do not retain multipart controllers or transient web buffers.
+
+**Video telemetry** reuses `createVideoTelemetry` and emits the existing
+composer's `video:upload:*` funnel with the same meanings, so V1 and V2 data
+stay comparable. Each attempt that compresses gets its own telemetry and
+`uploadId`, created after source preparation because it reads source metadata
+only once: `picked`, compression (`compressStarted`, `probed`,
+`compressCompleted` or `compressSkipped`), upload, processing, and their
+`*Failed` events. A job that completes immediately still records
+`uploadCompleted`, `processingStarted`, and `processingCompleted`. The output
+size limit fails as an upload, where the existing composer's native path fails.
+A source that fails validation records only `picked`. Cancelled work records
+no failure.
+
+- `abandoned` comes from `cancel({abandoned: true})`, which the store passes
+  only when the user removes the video, its attachment, or its post. Caption
+  restarts, retries, and `destroy()` cancel silently, since the existing composer
+  also lets uploads run on after closing. A caption restart begins a new
+  attempt with its own `picked`; a caption-only retry reuses the uploaded video
+  and emits nothing.
+- `published` comes from `store.reportPublished({plan})`. The store keeps each
+  uploaded video's telemetry in a `WeakMap` keyed by its blob and matches the
+  blobs the plan's records embed, so later edits cannot misattribute a
+  publication and each video reports once. It still works after `destroy()`,
+  since publication already happened.
 
 ### Media sources and worker preparation
 

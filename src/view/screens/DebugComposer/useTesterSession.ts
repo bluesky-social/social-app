@@ -9,6 +9,7 @@ import {type ThreadStore} from '#/components/ComposerV2/hooks'
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {type ThreadStoreInitialState} from '#/components/ComposerV2/store/types'
 import {type UploadRuntime} from '#/components/ComposerV2/store/uploads'
+import {type AnalyticsContextType} from '#/analytics'
 
 /** One isolated tester session wrapping one store instance. */
 export type TesterSession = {
@@ -33,6 +34,7 @@ export type TesterScenarioError = {
 }
 
 export type TesterSessionDeps = UploadRuntime & {
+  analytics: AnalyticsContextType
   /** Sessions are scoped to one account; a change destroys the session. */
   accountDid: string | undefined
   resolvers: LinkResolvers
@@ -77,6 +79,7 @@ export function useTesterSession(deps: TesterSessionDeps) {
       pdsClient: current.pdsClient,
       pdsUrl: current.pdsUrl,
       i18n: current.i18n,
+      analytics: current.analytics,
       initialState,
       onError: current.onError,
     })

@@ -1,3 +1,4 @@
+import {type BlobRef} from '@atproto/lex'
 import deepEqual from 'fast-deep-equal'
 import {nanoid} from 'nanoid/non-secure'
 
@@ -7,11 +8,13 @@ import {
   resolveLink as importedResolveLink,
   type resolveLink,
 } from '#/lib/api/resolve'
+import {type VideoTelemetry} from '#/lib/media/video/telemetry'
 import {
   type ComposerV2OnError,
   isComposerV2Cancellation,
   reportComposerV2Error,
 } from '#/components/ComposerV2/errors'
+import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import type * as types from '#/components/ComposerV2/store/types'
 import {
   imageUploadDependencies,
@@ -40,9 +43,28 @@ import {createAsyncTaskRev} from '#/components/ComposerV2/store/utils/createAsyn
 import {filterMediaInputs} from '#/components/ComposerV2/store/utils/filterMediaInputs'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
 import {parseResolveLinkError} from '#/components/ComposerV2/store/utils/parseResolveLinkError'
+import {type AnalyticsContextType} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 function hasDimensions(value: {width?: number; height?: number}) {
   return Boolean(value.width && value.height)
+}
+
+/** The uploaded video blob a planned post record embeds, if any. */
+function embeddedVideoBlob({
+  embed,
+}: {
+  embed: ComposerV2Plan['posts'][number]['record']['embed']
+}): BlobRef | undefined {
+  if (bsky.isType(app.bsky.embed.video.main, embed)) return embed.video
+  if (
+    bsky.isType(app.bsky.embed.recordWithMedia.main, embed) &&
+    bsky.isType(app.bsky.embed.video.main, embed.media)
+  ) {
+    return embed.media.video
+  }
+  return undefined
 }
 
 function isRetryableFailedUpload({item}: {item: types.PostMediaItem}): boolean {
@@ -56,6 +78,7 @@ export function createThreadStore({
   pdsClient,
   pdsUrl,
   i18n,
+  analytics,
   initialState,
   onError,
   __createId,
@@ -63,6 +86,8 @@ export function createThreadStore({
   __uploadWorkers,
 }: UploadRuntime & {
   resolvers: LinkResolvers
+  /** The session's analytics: metrics now, and feature gates as needed. */
+  analytics: AnalyticsContextType
   initialState?: types.ThreadStoreInitialState
   /** Registered before normalization and eager initialization begin. */
   onError?: ComposerV2OnError
@@ -109,6 +134,11 @@ export function createThreadStore({
 
   /** Cancellation handles belong to the session, not its published snapshots. */
   const uploadTasks = new Map<string, UploadTask>()
+  /**
+   * Telemetry for uploaded videos, keyed by their blob, until a write
+   * publishes them. Weak keys drop entries whose blob nothing references.
+   */
+  const publishableVideos = new WeakMap<BlobRef, VideoTelemetry>()
   /** Replacing one attachment slot must not invalidate work in the other. */
   const resolutionRevs = {
     record: createAsyncTaskRev(),
@@ -271,7 +301,7 @@ export function createThreadStore({
       for (const item of getMediaItems({
         media: s.posts[postId].attachments.media,
       })) {
-        cancelUploadTask(item.id)
+        cancelUploadTask(item.id, {abandoned: true})
       }
       resolutionRevs.record.clearFor({key: postId})
       resolutionRevs.media.clearFor({key: postId})
@@ -322,7 +352,7 @@ export function createThreadStore({
       const items = getMediaItems({media: post.attachments.media})
       const next = items.filter(item => item.id !== mediaId)
       if (next.length === items.length) return null
-      cancelUploadTask(mediaId)
+      cancelUploadTask(mediaId, {abandoned: true})
       s.posts[postId] = replacePostMediaItems(post, next)
       s.isDirty = true
       return s
@@ -336,7 +366,7 @@ export function createThreadStore({
       if (!post || !post.attachments.media) return null
       resolutionRevs.media.incrementFor({key: postId})
       for (const item of getMediaItems({media: post.attachments.media})) {
-        cancelUploadTask(item.id)
+        cancelUploadTask(item.id, {abandoned: true})
       }
       s.posts[postId] = replacePostMedia(post, undefined)
       s.isDirty = true
@@ -532,11 +562,11 @@ export function createThreadStore({
      * cancellation can be requested before `started` is assigned.
      */
     let started: UploadTask | undefined
-    let cancelled = false
+    let cancelled: {abandoned?: boolean} | undefined
     const registered: UploadTask = {
-      cancel() {
-        cancelled = true
-        started?.cancel()
+      cancel(options = {}) {
+        cancelled = options
+        started?.cancel(options)
       },
     }
     uploadTasks.set(item.id, registered)
@@ -593,6 +623,11 @@ export function createThreadStore({
           : (__uploadWorkers?.startVideoUpload ?? startVideoUpload)({
               ...callbacks,
               ...videoUploadDependencies,
+              metric: analytics.metric,
+              setVideoTelemetry: (p, m, video) => {
+                if (uploadTasks.get(m) === registered)
+                  publishableVideos.set(video.blob, video.telemetry)
+              },
               media: item,
             })
       /*
@@ -603,7 +638,7 @@ export function createThreadStore({
        * image would still be uploaded after compression and a video would go
        * on to compress and upload.
        */
-      if (cancelled) started.cancel()
+      if (cancelled) started.cancel(cancelled)
     } catch (cause) {
       if (!destroyed && uploadTasks.get(mediaId) === registered) {
         cancelUploadTask(mediaId)
@@ -623,10 +658,33 @@ export function createThreadStore({
     }
   }
 
-  function cancelUploadTask(mediaId: string) {
+  function cancelUploadTask(
+    mediaId: string,
+    options?: {
+      /** The user removed the media; see `UploadTask`. */
+      abandoned?: boolean
+    },
+  ) {
     const task = uploadTasks.get(mediaId)
     uploadTasks.delete(mediaId)
-    task?.cancel()
+    task?.cancel(options)
+  }
+
+  /**
+   * Report the videos a successful write published, through the telemetry of
+   * the attempt that uploaded each one. Call only after the writer succeeds,
+   * never for an uncertain outcome. Videos are matched by the uploaded blob the
+   * plan embeds, so later edits cannot misattribute them, and each reports
+   * once. Publication already happened, so this works after `destroy` too.
+   */
+  function reportPublished({plan}: {plan: ComposerV2Plan}) {
+    for (const post of plan.posts) {
+      const blob = embeddedVideoBlob({embed: post.record.embed})
+      const telemetry = blob && publishableVideos.get(blob)
+      if (!blob || !telemetry) continue
+      publishableVideos.delete(blob)
+      telemetry.published()
+    }
   }
 
   /** Upload progress does not dirty the draft or affect the record attachment. */
@@ -1100,6 +1158,7 @@ export function createThreadStore({
   return {
     /** Share the session's policy with callers; inert after destruction. */
     reportError,
+    reportPublished,
     /** User-facing composer commands for editing a thread. */
     actions: {
       setPostText,
