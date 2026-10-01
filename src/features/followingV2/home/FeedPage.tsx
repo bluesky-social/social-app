@@ -36,7 +36,7 @@ import {
   isFollowingV2HomeDotEnabled,
 } from '#/features/followingV2/eligibility'
 import {app} from '#/lexicons'
-import {PostFeed} from './PostFeed'
+import {PostFeed, type PostFeedRef} from './PostFeed'
 import {
   type FeedDescriptor,
   type FeedParams,
@@ -76,6 +76,7 @@ export function FeedPage({
   const headerOffset = useHeaderOffset()
   const feedFeedback = useFeedFeedback(feedInfo, hasSession)
   const scrollElRef = useRef<ListMethods>(null)
+  const feedRef = useRef<PostFeedRef>(null)
   const [hasNew, setHasNew] = useState(false)
   const setHomeBadge = useSetHomeBadge()
   const isVideoFeed = useMemo(() => {
@@ -107,7 +108,7 @@ export function FeedPage({
       TabState.InsideAtRoot
     if (isScreenFocused && isPageFocused) {
       scrollToTop()
-      void truncateAndInvalidate(queryClient, FEED_RQKEY(feed))
+      void feedRef.current?.refresh()
       setHasNew(false)
       ax.metric('feed:refresh', {
         feedType: feed.split('|')[0],
@@ -115,7 +116,7 @@ export function FeedPage({
         reason: 'soft-reset',
       })
     }
-  }, [ax, navigation, isPageFocused, scrollToTop, queryClient, feed])
+  }, [ax, navigation, isPageFocused, scrollToTop, feed])
 
   // fires when page within screen is activated/deactivated
   useEffect(() => {
@@ -164,6 +165,7 @@ export function FeedPage({
             headerOffset={headerOffset}
             savedFeedConfig={savedFeedConfig}
             isVideoFeed={isVideoFeed}
+            ref={feedRef}
           />
         </FeedFeedbackProvider>
       </MainScrollProvider>
