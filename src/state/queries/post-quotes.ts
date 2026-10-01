@@ -29,29 +29,6 @@ const RQKEY = (resolvedUri: string, sort: QuotesSort = DEFAULT_SORT) => [
   sort,
 ]
 
-function buildGetQuotesParams({
-  uri,
-  cursor,
-  sort,
-}: {
-  uri: string
-  cursor?: string
-  sort?: QuotesSort
-}) {
-  /*
-   * The vendored lexicon does not declare `sort`, so it is spread in only
-   * when set and the whole params object is asserted. lex forwards
-   * undeclared params verbatim but rejects an undeclared key whose value
-   * is `undefined`, hence the conditional spread.
-   */
-  return {
-    uri: uri as AtUriString,
-    limit: PAGE_SIZE,
-    cursor,
-    ...(sort ? {sort} : {}),
-  } as app.bsky.feed.getQuotes.$Params
-}
-
 /**
  * Drops quotes already seen on an earlier page. "Top" pages come from a ranking
  * that can be rebuilt mid-scroll, which can repeat a quote.
@@ -89,15 +66,13 @@ export function usePostQuotesQuery(
   >({
     queryKey: RQKEY(resolvedUri || '', sortParam),
     async queryFn({pageParam}: {pageParam: RQPageParam}) {
-      return await client.call(
-        app.bsky.feed.getQuotes,
-        buildGetQuotesParams({
-          // the enabled flag prevents this from running until resolvedUri is set
-          uri: resolvedUri || '',
-          cursor: pageParam,
-          sort: sortParam,
-        }),
-      )
+      return await client.call(app.bsky.feed.getQuotes, {
+        // the enabled flag prevents this from running until resolvedUri is set
+        uri: (resolvedUri || '') as AtUriString,
+        limit: PAGE_SIZE,
+        cursor: pageParam,
+        sort: sortParam,
+      })
     },
     initialPageParam: undefined,
     getNextPageParam: lastPage => lastPage.cursor,
