@@ -1,4 +1,4 @@
-import {type ComponentProps, type JSX} from 'react'
+import {type ComponentProps, type JSX, useRef} from 'react'
 import {
   type GestureResponderEvent,
   type Pressable,
@@ -14,7 +14,13 @@ import {useHaptics} from '#/lib/haptics'
 import {useMinimalShellFabTransform} from '#/lib/hooks/useMinimalShellTransform'
 import {clamp} from '#/lib/numbers'
 import {atoms as a, ios, useBreakpoints, useTheme} from '#/alf'
-import {IS_IOS, IS_WEB} from '#/env'
+import {IS_WEB} from '#/env'
+
+/**
+ * Minimum time between the press-in and release haptics on iOS, so a quick tap
+ * still plays two distinct taps.
+ */
+const MIN_HAPTIC_GAP_MS = 50
 
 export interface FABProps extends ComponentProps<typeof Pressable> {
   testID?: string
@@ -27,6 +33,7 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
   const haptics = useHaptics()
+  const pressInHapticAt = useRef(0)
   const fabMinimalShellTransform = useMinimalShellFabTransform()
 
   const size = gtMobile ? styles.sizeLarge : styles.sizeRegular
@@ -45,11 +52,18 @@ export function FABInner({testID, icon, onPress, style, ...props}: FABProps) {
       ]}>
       <PressableScale
         testID={testID}
-        // iOS plays the tap on press-in, so it can lead into the long-press
-        onPressIn={ios(() => haptics.tap())}
+        onPressIn={ios(() => {
+          pressInHapticAt.current = Date.now()
+          haptics.tap()
+        })}
         onPress={evt => {
           onPress?.(evt)
-          if (!IS_IOS) haptics.tap()
+          const elapsed = Date.now() - pressInHapticAt.current
+          if (elapsed < MIN_HAPTIC_GAP_MS) {
+            setTimeout(haptics.tap, MIN_HAPTIC_GAP_MS - elapsed)
+          } else {
+            haptics.tap()
+          }
         }}
         onLongPress={ios((evt: GestureResponderEvent) => {
           onPress?.(evt)
