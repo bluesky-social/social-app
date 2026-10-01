@@ -495,6 +495,10 @@ msgstr "{count, plural, other {#+ requests to join}}"
 msgid "{date} at {time}"
 msgstr "{date} at {time}"
 
+#: src/screens/ModerationInbox/Notice.tsx:127
+msgid "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
+msgstr "{detailsLength} of {MAX_REPORT_REASON_GRAPHEME_LENGTH} characters used"
+
 #: src/lib/generate-starterpack.ts:100
 msgid "{displayName}'s Starter Pack"
 msgstr ""
@@ -940,7 +944,7 @@ msgstr ""
 msgid "<0>{displayName}</0><1/><2> added you</2>"
 msgstr "<0>{displayName}</0><1/><2> added you</2>"
 
-#: src/screens/ModerationInbox/Subject.tsx:62
+#: src/screens/ModerationInbox/Notice.tsx:74
 msgid "<0>Community Guidelines: Harassment</0>"
 msgstr "<0>Community Guidelines: Harassment</0>"
 
@@ -998,10 +1002,6 @@ msgstr "A label was added to your post"
 #: src/components/dms/getReactionInfo.ts:58
 msgid "a message"
 msgstr ""
-
-#: src/screens/ModerationInbox/Subject.tsx:48
-msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
-msgstr "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
 
 #: src/components/contacts/screens/PhoneInput.tsx:103
 msgid "A network error occurred. Please check your internet connection"
@@ -1414,7 +1414,7 @@ msgstr "Added to Starter Pack"
 msgid "Adding members to list..."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:118
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:117
 msgid "Additional details (limit 1000 characters)"
 msgstr ""
 
@@ -1467,11 +1467,11 @@ msgstr ""
 msgid "Age Assurance"
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:74
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:73
 msgid "Age assurance inquiry failed to send, please try again."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:84
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:83
 msgctxt "toast"
 msgid "Age assurance inquiry was submitted"
 msgstr ""
@@ -1875,54 +1875,46 @@ msgstr ""
 #: src/components/moderation/LabelsOnMeDialog.tsx:169
 #: src/components/moderation/LabelsOnMeDialog.tsx:172
 #: src/components/moderation/ModerationDetailsDialog.tsx:223
+#: src/screens/ModerationInbox/Notice.tsx:166
 msgid "Appeal"
 msgstr ""
 
 #. placeholder {0}: strings.name
-#: src/components/moderation/AppealForm.tsx:104
+#: src/components/moderation/AppealForm.tsx:105
 msgid "Appeal \"{0}\" label"
 msgstr ""
-
-#: src/screens/ModerationInbox/Subject.tsx:86
-msgid "Appeal approved, post restored"
-msgstr "Appeal approved, post restored"
-
-#: src/screens/ModerationInbox/Subject.tsx:47
-msgid "Appeal approved: Your post has been restored"
-msgstr "Appeal approved: Your post has been restored"
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
 msgstr "Appeal label"
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:92
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:91
 msgid "Appeal livestream suspension"
 msgstr ""
 
-#: src/screens/ModerationInbox/Subject.tsx:83
-msgid "Appeal submitted"
-msgstr "Appeal submitted"
-
-#: src/components/moderation/AppealForm.tsx:94
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
-#: src/screens/Messages/components/ChatDisabled.tsx:123
+#: src/components/moderation/AppealForm.tsx:95
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:81
+#: src/screens/Messages/components/ChatDisabled.tsx:122
 msgctxt "toast"
 msgid "Appeal submitted"
 msgstr ""
 
-#: src/screens/Takendown.tsx:112
-#: src/screens/Takendown.tsx:138
+#: src/screens/Takendown.tsx:114
+#: src/screens/Takendown.tsx:140
 msgid "Appeal suspension"
 msgstr ""
 
-#: src/screens/Takendown.tsx:115
+#: src/screens/Takendown.tsx:117
 msgid "Appeal Suspension"
 msgstr ""
 
 #: src/screens/Messages/components/ChatDisabled.tsx:76
 #: src/screens/Messages/components/ChatDisabled.tsx:79
-#: src/screens/Messages/components/ChatDisabled.tsx:131
-#: src/screens/Messages/components/ChatDisabled.tsx:133
+#: src/screens/Messages/components/ChatDisabled.tsx:130
+#: src/screens/Messages/components/ChatDisabled.tsx:132
+#: src/screens/ModerationInbox/Notice.tsx:95
+#: src/screens/ModerationInbox/Notice.tsx:101
+#: src/screens/ModerationInbox/Notice.tsx:161
 msgid "Appeal this decision"
 msgstr ""
 
@@ -2130,8 +2122,8 @@ msgstr "Awaiting review"
 #: src/components/dms/InitiateChatFlow.tsx:645
 #: src/components/dms/InitiateChatFlow.tsx:863
 #: src/components/dms/InitiateChatFlow.tsx:870
-#: src/components/moderation/AppealForm.tsx:156
 #: src/components/moderation/AppealForm.tsx:157
+#: src/components/moderation/AppealForm.tsx:158
 #: src/screens/Login/ChooseAccountForm.tsx:95
 #: src/screens/Login/ChooseAccountForm.tsx:99
 #: src/screens/Login/ForgotPasswordForm.tsx:123
@@ -2140,8 +2132,8 @@ msgstr "Awaiting review"
 #: src/screens/Login/LoginForm.tsx:517
 #: src/screens/Login/SetNewPasswordForm.tsx:162
 #: src/screens/Login/SetNewPasswordForm.tsx:168
-#: src/screens/Messages/components/ChatDisabled.tsx:162
-#: src/screens/Messages/components/ChatDisabled.tsx:164
+#: src/screens/Messages/components/ChatDisabled.tsx:161
+#: src/screens/Messages/components/ChatDisabled.tsx:163
 #: src/screens/Messages/components/InviteLinkDialog.tsx:274
 #: src/screens/Messages/components/InviteLinkDialog.tsx:302
 #: src/screens/Messages/Inbox.tsx:232
@@ -2435,16 +2427,20 @@ msgstr ""
 msgid "Bluesky is more fun with friends. Do you want to invite some of yours? <0/>"
 msgstr ""
 
+#: src/screens/ModerationInbox/Notice.tsx:44
 #: src/screens/ModerationInbox/Report.tsx:38
-#: src/screens/ModerationInbox/Subject.tsx:38
 msgid "Bluesky Moderation Service"
 msgstr "Bluesky Moderation Service"
+
+#: src/screens/ModerationInbox/Notice.tsx:53
+msgid "Bluesky Moderation Service removed a post from Bluesky for violating our <0>Community Guidelines</0>."
+msgstr "Bluesky Moderation Service removed a post from Bluesky for violating our <0>Community Guidelines</0>."
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
 msgstr "Bluesky needs camera access to scan QR codes from other profiles."
 
-#: src/screens/Takendown.tsx:211
+#: src/screens/Takendown.tsx:213
 msgid "Bluesky Social Terms of Service"
 msgstr ""
 
@@ -2612,8 +2608,8 @@ msgid "Camera access needed"
 msgstr "Camera access needed"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:210
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:135
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:141
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:134
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:140
 #: src/components/contacts/screens/GetContacts.tsx:294
 #: src/components/contacts/screens/GetContacts.tsx:299
 #: src/components/dialogs/DeviceLocationRequestDialog.tsx:141
@@ -2645,6 +2641,7 @@ msgstr "Camera access needed"
 #: src/screens/Messages/ConversationSettings/prompts.tsx:132
 #: src/screens/Messages/ConversationSettings/prompts.tsx:156
 #: src/screens/Messages/ConversationSettings/prompts.tsx:180
+#: src/screens/ModerationInbox/Notice.tsx:138
 #: src/screens/Profile/Header/EditProfileDialog.tsx:215
 #: src/screens/Profile/Header/EditProfileDialog.tsx:223
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:202
@@ -2658,8 +2655,8 @@ msgstr "Camera access needed"
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:250
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:256
 #: src/screens/Settings/Settings.tsx:312
-#: src/screens/Takendown.tsx:100
-#: src/screens/Takendown.tsx:103
+#: src/screens/Takendown.tsx:102
+#: src/screens/Takendown.tsx:105
 #: src/view/com/composer/Composer.tsx:1839
 #: src/view/com/composer/Composer.tsx:1849
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
@@ -2667,6 +2664,10 @@ msgstr "Camera access needed"
 #: src/view/shell/desktop/LeftNav.tsx:229
 msgid "Cancel"
 msgstr ""
+
+#: src/screens/ModerationInbox/Notice.tsx:132
+msgid "Cancel appeal"
+msgstr "Cancel appeal"
 
 #: src/components/PostControls/RepostButton.tsx:205
 msgid "Cancel quote post"
@@ -3266,7 +3267,7 @@ msgstr ""
 msgid "Community Guidelines"
 msgstr ""
 
-#: src/screens/ModerationInbox/Subject.tsx:65
+#: src/screens/ModerationInbox/Notice.tsx:77
 msgid "Community Guidelines: Harassment"
 msgstr "Community Guidelines: Harassment"
 
@@ -3365,7 +3366,7 @@ msgstr ""
 msgid "Contact sync is not available on this device, as the app is unable to access your contacts."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:100
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:99
 msgid "Contact us"
 msgstr ""
 
@@ -5269,9 +5270,9 @@ msgstr ""
 msgid "Failed to send report"
 msgstr "Failed to send report"
 
-#: src/components/moderation/AppealForm.tsx:88
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:76
-#: src/screens/Messages/components/ChatDisabled.tsx:117
+#: src/components/moderation/AppealForm.tsx:89
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:75
+#: src/screens/Messages/components/ChatDisabled.tsx:116
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
@@ -5736,6 +5737,10 @@ msgstr ""
 msgid "Food"
 msgstr ""
 
+#: src/screens/ModerationInbox/Notice.tsx:179
+msgid "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
+msgstr "For more information about our appeals and redress process, please see our <0>Terms of Service</0>."
+
 #: src/ageAssurance/components/NoAccessScreen.tsx:109
 msgid "For organizational accounts, use the birthdate of the person who is responsible for the account."
 msgstr ""
@@ -6075,7 +6080,7 @@ msgstr ""
 msgid "Go to user’s profile"
 msgstr "Go to user’s profile"
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:104
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:103
 msgid "Going live is currently disabled for your account"
 msgstr ""
 
@@ -8609,7 +8614,7 @@ msgid "Nothing saved yet"
 msgstr ""
 
 #: src/Navigation.tsx:203
-#: src/screens/ModerationInbox/Subject.tsx:35
+#: src/screens/ModerationInbox/Notice.tsx:41
 msgid "Notice"
 msgstr "Notice"
 
@@ -9536,15 +9541,15 @@ msgid "Please enter your username"
 msgstr ""
 
 #. placeholder {0}: labeler ? sanitizeHandle(labeler.creator.handle, '@') : label.src
-#: src/components/moderation/AppealForm.tsx:131
+#: src/components/moderation/AppealForm.tsx:132
 msgid "Please explain why you think this label was incorrectly applied by {0}"
 msgstr ""
 
-#: src/screens/Messages/components/ChatDisabled.tsx:141
+#: src/screens/Messages/components/ChatDisabled.tsx:140
 msgid "Please explain why you think your chats were incorrectly disabled"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:123
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:122
 msgid "Please explain why you think your Go Live access was incorrectly disabled."
 msgstr ""
 
@@ -9553,7 +9558,7 @@ msgstr ""
 msgid "Please go back, or activate this element to return to the start of the active content."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:104
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:103
 msgid "Please provide any additional details you feel moderators may need in order to properly assess your Age Assurance status."
 msgstr ""
 
@@ -9661,7 +9666,7 @@ msgstr "Post by {account}"
 msgid "Post by @{0}"
 msgstr ""
 
-#: src/screens/ModerationInbox/Subject.tsx:77
+#: src/screens/ModerationInbox/Notice.tsx:109
 msgid "Post created"
 msgstr "Post created"
 
@@ -9724,8 +9729,8 @@ msgctxt "toast"
 msgid "Post pinned"
 msgstr ""
 
+#: src/screens/ModerationInbox/Notice.tsx:109
 #: src/screens/ModerationInbox/Report.tsx:89
-#: src/screens/ModerationInbox/Subject.tsx:80
 msgid "Post removed"
 msgstr "Post removed"
 
@@ -10049,9 +10054,14 @@ msgstr ""
 msgid "Read our blog post"
 msgstr ""
 
+#: src/screens/ModerationInbox/Notice.tsx:58
 #: src/screens/ModerationInbox/Report.tsx:53
 msgid "Read our Community Guidelines"
 msgstr "Read our Community Guidelines"
+
+#: src/screens/ModerationInbox/Notice.tsx:184
+msgid "Read our Terms of Service"
+msgstr "Read our Terms of Service"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Read the Bluesky blog"
@@ -10075,8 +10085,10 @@ msgstr ""
 msgid "Real people."
 msgstr ""
 
-#: src/screens/Takendown.tsx:156
-#: src/screens/Takendown.tsx:164
+#: src/screens/ModerationInbox/Notice.tsx:195
+#: src/screens/ModerationInbox/Notice.tsx:213
+#: src/screens/Takendown.tsx:158
+#: src/screens/Takendown.tsx:166
 msgid "Reason for appeal"
 msgstr ""
 
@@ -10754,10 +10766,6 @@ msgstr "Restore default"
 msgid "Restore the {defaultChannel} deployment"
 msgstr "Restore the {defaultChannel} deployment"
 
-#: src/screens/ModerationInbox/Subject.tsx:54
-msgid "Restored post"
-msgstr "Restored post"
-
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569
 msgid "Resync contacts"
@@ -10831,7 +10839,7 @@ msgstr ""
 msgid "Reveal password"
 msgstr "Reveal password"
 
-#: src/screens/ModerationInbox/Subject.tsx:59
+#: src/screens/ModerationInbox/Notice.tsx:71
 msgid "Rule violated:"
 msgstr "Rule violated:"
 
@@ -11864,14 +11872,14 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:311
 #: src/screens/SignupQueued.tsx:100
 #: src/screens/SignupQueued.tsx:103
-#: src/screens/Takendown.tsx:86
+#: src/screens/Takendown.tsx:88
 #: src/view/shell/desktop/LeftNav.tsx:228
 #: src/view/shell/desktop/LeftNav.tsx:283
 #: src/view/shell/desktop/LeftNav.tsx:286
 msgid "Sign out"
 msgstr ""
 
-#: src/screens/Takendown.tsx:89
+#: src/screens/Takendown.tsx:91
 msgid "Sign Out"
 msgstr ""
 
@@ -11952,7 +11960,7 @@ msgid "Social media you control."
 msgstr ""
 
 #. Name for a feature flag
-#: src/analytics/features/index.ts:91
+#: src/analytics/features/index.ts:96
 msgid "Social proofing on posts"
 msgstr "Social proofing on posts"
 
@@ -12068,7 +12076,7 @@ msgid "Sorry, we're unable to load account suggestions at this time."
 msgstr ""
 
 #: src/App.tsx:142
-#: src/App.web.tsx:121
+#: src/App.web.tsx:122
 msgid "Sorry! Your session expired. Please sign in again."
 msgstr ""
 
@@ -12104,7 +12112,7 @@ msgid "Sports"
 msgstr ""
 
 #. Description of a feature flag (Social proofing on posts)
-#: src/analytics/features/index.ts:97
+#: src/analytics/features/index.ts:102
 msgid "Spot posts your friends and follows have liked."
 msgstr "Spot posts your friends and follows have liked."
 
@@ -12215,25 +12223,27 @@ msgstr ""
 msgid "Streaming on Twitch? Set your live status on Bluesky to add a badge to your avatar. Tapping it takes people straight to your stream."
 msgstr ""
 
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:124
-#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:130
-#: src/components/moderation/AppealForm.tsx:165
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:123
+#: src/components/ageAssurance/AgeAssuranceAppealDialog.tsx:129
 #: src/components/moderation/AppealForm.tsx:166
+#: src/components/moderation/AppealForm.tsx:167
 #: src/components/SendErrorReportDialog.tsx:90
 #: src/components/SendErrorReportDialog.tsx:95
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:137
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:138
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:139
-#: src/screens/Messages/components/ChatDisabled.tsx:173
-#: src/screens/Messages/components/ChatDisabled.tsx:175
+#: src/screens/Messages/components/ChatDisabled.tsx:172
+#: src/screens/Messages/components/ChatDisabled.tsx:174
+#: src/screens/ModerationInbox/Notice.tsx:152
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:133
 msgid "Submit"
 msgstr ""
 
-#: src/screens/Takendown.tsx:74
+#: src/screens/ModerationInbox/Notice.tsx:146
+#: src/screens/Takendown.tsx:76
 msgid "Submit appeal"
 msgstr ""
 
-#: src/screens/Takendown.tsx:78
+#: src/screens/Takendown.tsx:80
 msgid "Submit Appeal"
 msgstr ""
 
@@ -12517,6 +12527,10 @@ msgstr ""
 msgid "Tell us a little more"
 msgstr ""
 
+#: src/screens/ModerationInbox/Notice.tsx:172
+msgid "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content. You can appeal once per moderation decision."
+msgstr "Tell us why you believe this decision was a mistake. We will review your appeal along with the original content. You can appeal once per moderation decision."
+
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:220
 msgid "Temporarily deactivate your account"
 msgstr "Temporarily deactivate your account"
@@ -12542,9 +12556,9 @@ msgstr ""
 msgid "Text & tags"
 msgstr ""
 
-#: src/components/moderation/AppealForm.tsx:129
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:121
-#: src/screens/Messages/components/ChatDisabled.tsx:140
+#: src/components/moderation/AppealForm.tsx:130
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:120
+#: src/screens/Messages/components/ChatDisabled.tsx:139
 msgid "Text input field"
 msgstr ""
 
@@ -12940,12 +12954,12 @@ msgstr "This app is receiving updates from <0>{0}</0>."
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
 msgstr "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
 
-#: src/components/moderation/AppealForm.tsx:107
+#: src/components/moderation/AppealForm.tsx:108
 msgid "This appeal will be sent to <0>{sourceName}</0>."
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:113
-#: src/screens/Messages/components/ChatDisabled.tsx:136
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:112
+#: src/screens/Messages/components/ChatDisabled.tsx:135
 msgid "This appeal will be sent to Bluesky's moderation service."
 msgstr ""
 
@@ -14790,7 +14804,7 @@ msgstr ""
 msgid "Whoops! Trending videos failed to load."
 msgstr ""
 
-#: src/screens/Takendown.tsx:167
+#: src/screens/Takendown.tsx:169
 msgid "Why are you appealing?"
 msgstr ""
 
@@ -14941,7 +14955,7 @@ msgstr "You are blocking this person"
 msgid "You are creating an account on"
 msgstr ""
 
-#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:107
+#: src/features/liveNow/components/GoLiveDisabledDialog.tsx:106
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
 msgstr ""
 
@@ -15007,6 +15021,10 @@ msgstr ""
 #: src/components/contacts/screens/GetContacts.tsx:252
 msgid "You can always opt out and delete your data"
 msgstr ""
+
+#: src/screens/ModerationInbox/Notice.tsx:87
+msgid "You can appeal once per decision. A different moderator will review the appeal."
+msgstr "You can appeal once per decision. A different moderator will review the appeal."
 
 #: src/lib/hooks/useNotificationHandler.ts:134
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
@@ -15411,7 +15429,7 @@ msgstr ""
 msgid "You're signed in with an App Password. Please sign in with your main password to continue deactivating your account."
 msgstr ""
 
-#: src/components/moderation/AppealForm.tsx:84
+#: src/components/moderation/AppealForm.tsx:85
 msgid "You've already appealed this label and it's being reviewed by our moderation team."
 msgstr ""
 
@@ -15477,7 +15495,7 @@ msgstr "Your account cannot submit reports while it is suspended."
 msgid "Your account has been deleted, see ya! ✌️"
 msgstr ""
 
-#: src/screens/Takendown.tsx:140
+#: src/screens/Takendown.tsx:142
 msgid "Your account has been suspended"
 msgstr ""
 
@@ -15514,7 +15532,7 @@ msgstr "Your account notifications"
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
 msgstr ""
 
-#: src/screens/Takendown.tsx:208
+#: src/screens/Takendown.tsx:210
 msgid "Your account was found to be in violation of the <0>Bluesky Social Terms of Service</0>. You have been sent an email outlining the specific violation and suspension period, if applicable. You can appeal this decision if you believe it was made in error."
 msgstr ""
 
@@ -15523,7 +15541,7 @@ msgctxt "moderation-report-action"
 msgid "Your account was suspended"
 msgstr "Your account was suspended"
 
-#: src/screens/Takendown.tsx:148
+#: src/screens/Takendown.tsx:150
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
 msgstr ""
 
@@ -15646,6 +15664,14 @@ msgstr ""
 #: src/screens/Signup/StepInfo/index.tsx:167
 msgid "Your password must be at least 8 characters long."
 msgstr ""
+
+#: src/screens/ModerationInbox/Notice.tsx:66
+msgid "Your post"
+msgstr "Your post"
+
+#: src/screens/ModerationInbox/Notice.tsx:52
+msgid "Your post was removed"
+msgstr "Your post was removed"
 
 #: src/screens/ModerationInbox/index.tsx:194
 msgctxt "moderation-report-action"
