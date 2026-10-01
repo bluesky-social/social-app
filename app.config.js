@@ -259,7 +259,15 @@ module.exports = function (_config) {
         'expo-web-browser',
         [
           'react-native-nano-icons',
-          {iconSets: [{inputDir: './assets/nano-icons/app-icons'}]},
+          {
+            iconSets: [
+              /*
+               * `web` also emits a woff2, which `src/style.css` loads via
+               * @font-face.
+               */
+              {inputDir: './assets/nano-icons/app-icons', web: true},
+            ],
+          },
         ],
         [
           'react-native-edge-to-edge',

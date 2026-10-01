@@ -680,8 +680,8 @@ importers:
         specifier: ^3.3.3
         version: 3.3.3(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       react-native-nano-icons:
-        specifier: ^0.2.1
-        version: 0.2.1(@expo/config@57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@57.0.24)(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)
+        specifier: 1.0.0-beta.1
+        version: 1.0.0-beta.1(@expo/config@57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@57.0.24)(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)
       react-native-pager-view:
         specifier: 6.8.0
         version: 6.8.0(patch_hash=c8316acd33c9aef6531e8c272c2bfab7bd02af1255969eeaab2bad5ab48531cc)(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
@@ -8082,10 +8082,6 @@ packages:
   pure-rand@6.1.0:
     resolution: {integrity: sha512-bVWawvoZoBYpp6yIoQtQXHZjmz35RSVHnUOTefl8Vcjr8snTPY1wnpSPMWekcFwbxI6gtmT7rSYPFvz71ldiOA==}
 
-  pyodide@0.29.4:
-    resolution: {integrity: sha512-tCseTsqU3kSxZIjkue5zXxTMNEwrKZwOIIEQRBA/VzHxFN1hoCxe4w41phfCdHd9it9RcCNQb5K/Re0InqMgvA==}
-    engines: {node: '>=18.0.0'}
-
   qrcode@1.5.4:
     resolution: {integrity: sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==}
     engines: {node: '>=10.13.0'}
@@ -8223,8 +8219,8 @@ packages:
       react: '*'
       react-native: '*'
 
-  react-native-nano-icons@0.2.1:
-    resolution: {integrity: sha512-aQD7MdOLJzP/dBtuzEZbkdsVWrPec47UTfFc1Y/TveS/dXWhumA0ujlT4shFiY5GcL2s35z7NA8ZbxZWibggQQ==}
+  react-native-nano-icons@1.0.0-beta.1:
+    resolution: {integrity: sha512-/qqv+fnn8/8TED6RtFAqFxlgEpn3qmsmgg4VTOJ1qgY81P76FI35Cl9dKsNs9daw8+UrkrZUH5M9zM6u9z63qQ==}
     hasBin: true
     peerDependencies:
       '@expo/config': '>=9.0.0'
@@ -17840,14 +17836,6 @@ snapshots:
 
   pure-rand@6.1.0: {}
 
-  pyodide@0.29.4:
-    dependencies:
-      '@types/emscripten': 1.41.5
-      ws: 8.20.1
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
   qrcode@1.5.4:
     dependencies:
       dijkstrajs: 1.0.3
@@ -18032,16 +18020,16 @@ snapshots:
       react: 19.2.3
       react-native: 0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
-  react-native-nano-icons@0.2.1(@expo/config@57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@57.0.24)(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1):
+  react-native-nano-icons@1.0.0-beta.1(@expo/config@57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@typescript/typescript6@6.0.2)(expo@57.0.24)(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1):
     dependencies:
       '@expo/config-plugins': 57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@xmldom/xmldom': 0.9.10
       chalk: 5.6.2
+      cubic2quad: 1.2.1
       fonteditor-core: 2.6.3
       ora: 9.4.1
       pathkit-wasm: 1.0.0
       plist: 3.1.1
-      pyodide: 0.29.4
       react: 19.2.3
       react-native: 0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
       svg2ttf: 6.1.0
@@ -18050,10 +18038,8 @@ snapshots:
       '@expo/config': 57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       expo: 57.0.24(patch_hash=0856ae2db56b30b378fdaa8dbec8e7cda50b13fc29d89b873e1b12cc0affac33)(c4988a1376a5172d6a99e45a7015a76a)
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
 
   react-native-pager-view@6.8.0(patch_hash=c8316acd33c9aef6531e8c272c2bfab7bd02af1255969eeaab2bad5ab48531cc)(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3):
     dependencies:
