@@ -135,6 +135,7 @@ export function fakeVideoDependencies(
     getVideoMetadata: unexpected('getVideoMetadata'),
     getImageDimensions: unexpected('getImageDimensions'),
     getFileSize: unexpected('getFileSize'),
+    copyVideoToCache: unexpected('copyVideoToCache'),
     compressVideo: unexpected('compressVideo'),
     uploadVideo: unexpected('uploadVideo'),
     uploadBlob: unexpected('uploadBlob'),

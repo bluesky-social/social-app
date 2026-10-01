@@ -321,8 +321,15 @@ dimensions. Supported sources:
   still image, and data URI video is rejected on native. No composer text
   input is wired to it yet, and the tester exposes only the picker; paste/drop
   support is verified by adapter and store tests, not UI.
+- Restored drafts via `draftToInitialState`: the loaded URI (a native draft
+  file URI or a web object URL), the MIME type recorded in a video's local ref
+  (`image/gif` for animated GIF files; legacy refs fall back to `video/mp4`),
+  alt text, captions, and the durable `localRefPath`. Drafts store no
+  dimensions, duration, or size, and the adapter does not read them.
 - Every image and video input has a URI. The store never creates or revokes
-  object URLs; the caller that made one owns it.
+  object URLs; the caller that made one owns it. Draft storage owns restored
+  object URLs, which must stay readable for the store's lifetime because a
+  retry reads the source again.
 
 Workers own preparation (`store/prepareMediaSource.ts`). They use known values
 first, then cheap sources: a web `File`'s type and size, a data URI's type, a
@@ -344,6 +351,17 @@ helper runs only for values still missing:
   with no type information at all is treated as video, as the existing
   composer does.
 
+Restored Android draft videos (items with a `localRefPath`) are read through a
+simple-named cache copy (`store/utils/copyVideoToCache.ts`): draft storage
+names files with an encoded local ref and their URIs encode it again, which the
+native metadata helper and compressor cannot read. The existing composer copies
+restored Android videos for the same reason. Each attempt owns its copy and
+releases it when the attempt settles, including after cancellation, removal, or
+store disposal, and after upload, since a compressor pass-through returns the
+copy's URI. A retry makes a new copy. The item keeps its original URI and local
+ref, so draft data never points at the copy. GIFs take the same copy, then the
+GIF path. Other platforms and sources are read directly.
+
 The prepared values reach the store through `setMediaSourceMetadata` before
 source validation, whose source-versus-output rules are unchanged. The store
 only fills fields the item did not know, publishes nothing when nothing is
@@ -357,8 +375,8 @@ output is not cached across retries.
 
 Both adapters return `ThreadStoreInitialState`; neither constructs a store,
 dispatches corrective edit actions, loads/saves/deletes draft files, resolves
-remote views, or starts uploads. The draft adapter's metadata probes are
-narrow injectable seams; the intent adapter does not probe.
+remote views, or starts uploads. Neither adapter reads media; the upload
+workers prepare every source.
 Runtime IDs, retry functions, task state, revisions, moderation objects, and
 shell callbacks do not belong in normalized content. Web picker Blob input is a
 runtime source convenience, not a persisted draft representation.
@@ -390,17 +408,21 @@ runtime source convenience, not a persisted draft representation.
   protocol defaults; unknown typed gate rules remain intact.
 - Reads legacy `embedImages` before `embedGallery` items, without deduplicating
   refs or copying source files. Looks up `localRef.path` in the caller's media
-  map and probes dimensions. The combined ten-image limit still applies.
-- Restores video source/MIME/dimensions/local ref, alt text, and caption content
-  using existing MIME-in-local-ref conventions and metadata fallback.
+  map; the image worker reads dimensions. The combined ten-image limit still
+  applies.
+- Restores video source, local ref, alt text, and caption content, taking the
+  MIME type from the existing MIME-in-local-ref convention. The video worker
+  resolves dimensions, duration, and size.
 - Recognizes Tenor/Klipy GIF URL conventions, including dimensions and custom
   alt text, without turning arbitrary `.gif` URLs into provider GIFs. Ordinary
   external URLs become record/media candidates by recognized URL kind.
 - Classifies strong refs by AT-URI collection (post/feed/list/starter pack),
   not by assuming every record is a quote; known refs are not fetched again.
-- Throws `ComposerAdapterError` for missing media/metadata, overflow, conflicting
+- Throws `ComposerAdapterError` for missing loaded media, overflow, conflicting
   slots, unsupported records/gallery entries/labels, or other lossy conversion.
   A rich draft must not silently become a successful text-only restoration.
+  Unreadable media is not an adapter error: the item is restored and its
+  upload fails retryably in the worker, keeping its local ref.
 
 Supplied resolved attachment views are trusted for the session. Resolve missing
 data only; do not force-refresh them before publication. If a reference becomes
@@ -484,8 +506,12 @@ local post/media IDs where applicable, and recovery (`retry`, `edit`, `reconcile
 ### Deferred draft design
 
 Implement on a separately authorized follow-up branch, not this composer PR.
-Inbound conversion is complete, but that is
-not outbound persistence. Re-audit the schema before implementation.
+Inbound conversion exists: `draftToInitialState()` turns already-loaded draft
+data into initial state, and the upload workers prepare restored media. Tests
+cover web object URLs, Android draft paths (through the cache copy), iOS file
+URIs, and native GIFs, through the real workers with fake platform helpers. No
+device run, draft storage loading, or production draft UI is verified. That
+is not outbound persistence. Re-audit the schema before implementation.
 
 **Codec:** add a UI-free V2 serializer returning draft data and a local-media
 manifest, then reuse authenticated draft endpoints and native/web storage.

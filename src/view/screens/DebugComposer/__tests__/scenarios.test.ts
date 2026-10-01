@@ -2,8 +2,8 @@ import {type ImagePickerAsset} from 'expo-image-picker'
 import {describe, expect, jest, test} from '@jest/globals'
 
 /*
- * The scenario builders run through the real adapters; only platform metadata
- * probes are mocked so the tests stay off native modules and the network.
+ * The scenario builders run through the real adapters, which never read media;
+ * the platform metadata helpers are mocked so nothing reaches native modules.
  */
 jest.mock('#/view/com/composer/videos/metadata', () => ({
   getVideoMetadata: jest.fn(() =>
