@@ -20,9 +20,10 @@ export interface FeedAPIResponse {
  * exception.
  */
 export interface FeedAPI {
+  /** The feed's newest post, if it has one. */
   peekLatest(opts?: {
     source?: FeedSource
-  }): Promise<app.bsky.feed.defs.FeedViewPost>
+  }): Promise<app.bsky.feed.defs.FeedViewPost | undefined>
   fetch({
     cursor,
     source,
