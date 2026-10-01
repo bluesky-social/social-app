@@ -72,6 +72,7 @@ import {
 } from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {mixSamples} from './mixSamples'
 import {
   type AuthorFilter,
   type FeedDescriptor,
@@ -83,6 +84,7 @@ import {
   usePostFeedFetcher,
   usePostFeedQuery,
 } from './queries/postFeed'
+import {useSavedFeedSamples} from './queries/savedFeedSamples'
 
 type FeedRow =
   | {
@@ -296,7 +298,7 @@ let PostFeed = ({
     [enabled, ignoreFilterFor],
   )
   const {
-    data,
+    data: feedData,
     isFetching,
     isFetched,
     isError,
@@ -307,6 +309,14 @@ let PostFeed = ({
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
   const {createFeedApi} = usePostFeedFetcher(feed)
+  const samples = useSavedFeedSamples({
+    enabled: enabled !== false && feed === 'following',
+    pages: feedData?.pages,
+  })
+  const data =
+    feedData && samples
+      ? {...feedData, pages: mixSamples(feedData.pages, samples)}
+      : feedData
   const lastFetchedAt = data?.pages[0].fetchedAt
   const isEmpty = useMemo(
     () => !isFetching && !data?.pages?.some(page => page.slices.length),

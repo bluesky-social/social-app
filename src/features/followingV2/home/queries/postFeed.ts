@@ -5,6 +5,7 @@ import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
 import {
   moderatePost,
   type ModerationDecision,
+  type ModerationOpts,
   type ModerationPrefs,
 } from '@bsky/sdk/moderation'
 import {
@@ -18,7 +19,11 @@ import {DemoFeedAPI} from '#/lib/api/feed/demo'
 import {LikesFeedAPI} from '#/lib/api/feed/likes'
 import {PostListFeedAPI} from '#/lib/api/feed/posts'
 import {aggregateUserInterests} from '#/lib/api/feed/utils'
-import {type FeedPostNumbering, FeedTuner} from '#/lib/api/feed-manip'
+import {
+  type FeedPostNumbering,
+  FeedTuner,
+  type FeedViewPostsSlice,
+} from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
 import {useFeedTuners} from '#/state/preferences/feed-tuners'
@@ -246,71 +251,13 @@ export function usePostFeedQuery(
               fetchedAt: page.fetchedAt,
               slices: tuner
                 .tune(page.feed)
-                .map(slice => {
-                  const moderations = slice.items.map(item =>
-                    moderatePost(item.post, moderationOpts!),
-                  )
-
-                  // apply moderation filter
-                  for (let i = 0; i < slice.items.length; i++) {
-                    const ignoreFilter =
-                      slice.items[i].post.author.did === ignoreFilterFor
-                    if (ignoreFilter) {
-                      // remove mutes to avoid confused UIs
-                      moderations[i].causes = moderations[i].causes.filter(
-                        cause => cause.type !== 'muted',
-                      )
-                    }
-                    if (
-                      !ignoreFilter &&
-                      moderations[i]?.ui('contentList').filter
-                    ) {
-                      return undefined
-                    }
-                  }
-
-                  if (isDiscover) {
-                    userActionHistory.seen(
-                      slice.items.map(item => ({
-                        feedContext: slice.feedContext,
-                        reqId: slice.reqId,
-                        likeCount: item.post.likeCount ?? 0,
-                        repostCount: item.post.repostCount ?? 0,
-                        replyCount: item.post.replyCount ?? 0,
-                        isFollowedBy: Boolean(
-                          item.post.author.viewer?.followedBy,
-                        ),
-                        uri: item.post.uri,
-                      })),
-                    )
-                  }
-
-                  const feedPostSlice: FeedPostSlice = {
-                    _reactKey: slice._reactKey,
-                    _isFeedPostSlice: true,
-                    isIncompleteThread: slice.isIncompleteThread,
-                    isFallbackMarker: slice.isFallbackMarker,
-                    feedContext: slice.feedContext,
-                    reqId: slice.reqId,
-                    reason: slice.reason,
-                    feedPostUri: slice.feedPostUri,
-                    items: slice.items.map((item, i) => {
-                      const feedPostSliceItem: FeedPostSliceItem = {
-                        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-                        uri: item.post.uri,
-                        post: item.post,
-                        record: item.record,
-                        postNumbering: item.postNumbering,
-                        moderation: moderations[i],
-                        parentAuthor: item.parentAuthor,
-                        isParentBlocked: item.isParentBlocked,
-                        isParentNotFound: item.isParentNotFound,
-                      }
-                      return feedPostSliceItem
-                    }),
-                  }
-                  return feedPostSlice
-                })
+                .map(slice =>
+                  toFeedPostSlice(slice, {
+                    moderationOpts: moderationOpts!,
+                    ignoreFilterFor,
+                    isDiscover,
+                  }),
+                )
                 .filter(n => !!n),
             })),
           ],
@@ -332,6 +279,81 @@ export function usePostFeedQuery(
   useAutoPagination(query, itemCount, MIN_POSTS)
 
   return query
+}
+
+/**
+ * A tuned slice as the feed renders it, moderated, or `undefined` if
+ * moderation filters it out.
+ */
+export function toFeedPostSlice(
+  slice: FeedViewPostsSlice,
+  {
+    moderationOpts,
+    ignoreFilterFor,
+    isDiscover = false,
+  }: {
+    moderationOpts: ModerationOpts
+    ignoreFilterFor?: string
+    isDiscover?: boolean
+  },
+): FeedPostSlice | undefined {
+  const moderations = slice.items.map(item =>
+    moderatePost(item.post, moderationOpts),
+  )
+
+  // apply moderation filter
+  for (let i = 0; i < slice.items.length; i++) {
+    const ignoreFilter = slice.items[i].post.author.did === ignoreFilterFor
+    if (ignoreFilter) {
+      // remove mutes to avoid confused UIs
+      moderations[i].causes = moderations[i].causes.filter(
+        cause => cause.type !== 'muted',
+      )
+    }
+    if (!ignoreFilter && moderations[i]?.ui('contentList').filter) {
+      return undefined
+    }
+  }
+
+  if (isDiscover) {
+    userActionHistory.seen(
+      slice.items.map(item => ({
+        feedContext: slice.feedContext,
+        reqId: slice.reqId,
+        likeCount: item.post.likeCount ?? 0,
+        repostCount: item.post.repostCount ?? 0,
+        replyCount: item.post.replyCount ?? 0,
+        isFollowedBy: Boolean(item.post.author.viewer?.followedBy),
+        uri: item.post.uri,
+      })),
+    )
+  }
+
+  const feedPostSlice: FeedPostSlice = {
+    _reactKey: slice._reactKey,
+    _isFeedPostSlice: true,
+    isIncompleteThread: slice.isIncompleteThread,
+    isFallbackMarker: slice.isFallbackMarker,
+    feedContext: slice.feedContext,
+    reqId: slice.reqId,
+    reason: slice.reason,
+    feedPostUri: slice.feedPostUri,
+    items: slice.items.map((item, i) => {
+      const feedPostSliceItem: FeedPostSliceItem = {
+        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+        uri: item.post.uri,
+        post: item.post,
+        record: item.record,
+        postNumbering: item.postNumbering,
+        moderation: moderations[i],
+        parentAuthor: item.parentAuthor,
+        isParentBlocked: item.isParentBlocked,
+        isParentNotFound: item.isParentNotFound,
+      }
+      return feedPostSliceItem
+    }),
+  }
+  return feedPostSlice
 }
 
 /**
