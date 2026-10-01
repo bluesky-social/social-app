@@ -78,6 +78,12 @@ export const CHAT_PROXY_DID: DidString =
   process.env.EXPO_PUBLIC_CHAT_PROXY_DID || 'did:web:api.bsky.chat'
 
 /**
+ * The DID of the moderation service to proxy requests to.
+ */
+export const MOD_PROXY_DID: DidString | undefined =
+  process.env.EXPO_PUBLIC_MOD_PROXY_DID
+
+/**
  * Metrics API host
  */
 export const METRICS_API_HOST: string =

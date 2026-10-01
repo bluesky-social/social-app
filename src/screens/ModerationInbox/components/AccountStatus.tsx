@@ -3,7 +3,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/Circle'
 import {ExclamationCircle_Stroke2_Corner0_Rounded as ExclamationCircleIcon} from '#/components/icons/ExclamationCircle'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -18,9 +18,7 @@ export function AccountStatus({
 
   const control = Prompt.usePromptControl()
 
-  if (status === 'good') {
-    return null
-  }
+  if (status === 'good') return undefined
 
   const Icon = status === 'atRisk' ? ExclamationCircleIcon : CircleInfoIcon
   const iconColor =
@@ -31,9 +29,19 @@ export function AccountStatus({
       ? l`Your account is at risk of permanent suspension`
       : l`Your account has strikes on record`
   const description =
-    status === 'atRisk'
-      ? l`Your account has repeated violations of our Community Guidelines. Another violation may result in your account being permanently suspended.`
-      : l`Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension.`
+    status === 'atRisk' ? (
+      <Trans>
+        Your account has repeated violations of our Community Guidelines.
+        Another violation may result in your account being permanently
+        suspended.
+      </Trans>
+    ) : (
+      <Trans>
+        We have taken action on your account or content for violating our
+        community guidelines. Further violations will lead to stronger
+        enforcement, including suspension.
+      </Trans>
+    )
 
   return (
     <>
