@@ -62,7 +62,7 @@ let ProfileHeaderLabeler = ({
   const ax = useAnalytics()
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const isSelf = currentAccount?.did === profile.did
 
   const moderation = useMemo(
@@ -80,7 +80,7 @@ let ProfileHeaderLabeler = ({
       return
     }
     try {
-      playHaptic()
+      haptics.tap()
 
       if (likeUri) {
         await unlikeMod({uri: likeUri})
@@ -100,7 +100,7 @@ let ProfileHeaderLabeler = ({
       )
       ax.logger.error(`Failed to toggle labeler like`, {message: e.message})
     }
-  }, [ax, labeler, playHaptic, likeUri, unlikeMod, likeMod, _])
+  }, [ax, labeler, haptics, likeUri, unlikeMod, likeMod, _])
 
   return (
     <ProfileHeaderShell
@@ -240,7 +240,7 @@ export function HeaderLabelerButtons({
   const {_} = useLingui()
   const {currentAccount, hasSession} = useSession()
   const requireAuth = useRequireAuth()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const editProfileControl = useDialogControl()
   const {data: preferences} = usePreferencesQuery()
   const {
@@ -258,7 +258,7 @@ export function HeaderLabelerButtons({
 
   const onPressSubscribe = () =>
     requireAuth(async (): Promise<void> => {
-      playHaptic()
+      haptics.confirm()
       const subscribe = !isSubscribed
       const subscribeMetric = subscribe
         ? 'moderation:subscribedToLabeler'
@@ -294,7 +294,7 @@ export function HeaderLabelerButtons({
             size="small"
             color="secondary"
             onPress={() => {
-              playHaptic('Light')
+              haptics.tap()
               editProfileControl.open()
             }}
             label={_(msg`Edit profile`)}

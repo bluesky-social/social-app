@@ -27,7 +27,7 @@ export function ThreadComposePrompt({
   const {_} = useLingui()
   const {gtMobile} = useBreakpoints()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {
     state: hovered,
     onIn: onHoverIn,
@@ -64,11 +64,11 @@ export function ThreadComposePrompt({
         accessibilityHint={_(msg`Opens composer`)}
         onPress={() => {
           onPressCompose()
-          playHaptic('Light')
+          haptics.tap()
         }}
         onLongPress={ios(() => {
           onPressCompose()
-          playHaptic('Heavy')
+          haptics.longPress()
         })}
         onHoverIn={onHoverIn}
         onHoverOut={onHoverOut}

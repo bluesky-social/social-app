@@ -221,7 +221,6 @@ patchedDependencies:
   '@formatjs/bigdecimal@0.2.5': 53afe18a845c1469b8b9002a460582559dfd52f502bc66a0f4c05662c2619291
   '@sentry/expo-upload-sourcemaps@8.26.0': 81bbee7250f54e9a4b55178d83bf9c2985336991795f702e31987edb1d3ec3d6
   expo-age-range@57.0.2: c325225749993424461eeece1d97a99b19c00da2ebc958a73c12e4eca0c39306
-  expo-haptics@57.0.3: 73221c10bd656ec7f3a9fb36226f1a872e0341f809de7964ee4bec01e92d97ef
   expo-media-library@57.0.5: 375b13e1c0bfbfa31fec569e07f10862154a392d383192c49df7b55e5271bd04
   expo-modules-core@57.0.18: 86e57bb33bc6c3f7021e948e099c2b5378772147b92a82a16e2e90ddcb857ace
   expo-notifications@57.0.20: dd096e8b43ac91716d4ffefc7d65945b491612d5c6fa57035e8af3f875697deb
@@ -510,7 +509,7 @@ importers:
         version: 57.0.3(expo@57.0.24)(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
       expo-haptics:
         specifier: ~57.0.3
-        version: 57.0.3(patch_hash=73221c10bd656ec7f3a9fb36226f1a872e0341f809de7964ee4bec01e92d97ef)(expo@57.0.24)
+        version: 57.0.3(expo@57.0.24)
       expo-image:
         specifier: 57.0.5
         version: 57.0.5(expo@57.0.24)(react-native-web@0.21.2(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(react-native@0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)
@@ -11103,7 +11102,7 @@ snapshots:
       metro-resolver: 0.84.5
       metro-runtime: 0.84.5
       metro-source-map: 0.84.5(supports-color@8.1.1)
-      metro-symbolicate: 0.84.5
+      metro-symbolicate: 0.84.5(supports-color@8.1.1)
       metro-transform-plugins: 0.84.5(supports-color@8.1.1)
       metro-transform-worker: 0.84.5(supports-color@8.1.1)
     transitivePeerDependencies:
@@ -15052,7 +15051,7 @@ snapshots:
       react: 19.2.3
       react-native: 0.86.3(patch_hash=d6c16c8305d443b2ed7969db4b7217555c7e686ac3757a0fb46fcb82ea8c40ac)(@babel/core@7.29.0(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.86.3(@babel/core@7.29.0(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1)
 
-  expo-haptics@57.0.3(patch_hash=73221c10bd656ec7f3a9fb36226f1a872e0341f809de7964ee4bec01e92d97ef)(expo@57.0.24):
+  expo-haptics@57.0.3(expo@57.0.24):
     dependencies:
       expo: 57.0.24(patch_hash=0856ae2db56b30b378fdaa8dbec8e7cda50b13fc29d89b873e1b12cc0affac33)(c4988a1376a5172d6a99e45a7015a76a)
 
@@ -16862,7 +16861,7 @@ snapshots:
       '@babel/types': 7.29.0
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
-      metro-symbolicate: 0.84.5
+      metro-symbolicate: 0.84.5(supports-color@8.1.1)
       nullthrows: 1.1.1
       ob1: 0.84.5
       source-map: 0.5.7
@@ -16870,7 +16869,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  metro-symbolicate@0.84.5:
+  metro-symbolicate@0.84.5(supports-color@8.1.1):
     dependencies:
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
@@ -16878,6 +16877,8 @@ snapshots:
       nullthrows: 1.1.1
       source-map: 0.5.7
       vlq: 1.0.1
+    transitivePeerDependencies:
+      - supports-color
 
   metro-transform-plugins@0.84.5(supports-color@8.1.1):
     dependencies:
@@ -16940,7 +16941,7 @@ snapshots:
       metro-resolver: 0.84.5
       metro-runtime: 0.84.5
       metro-source-map: 0.84.5(supports-color@8.1.1)
-      metro-symbolicate: 0.84.5
+      metro-symbolicate: 0.84.5(supports-color@8.1.1)
       metro-transform-plugins: 0.84.5(supports-color@8.1.1)
       metro-transform-worker: 0.84.5(supports-color@8.1.1)
       mime-types: 3.0.2

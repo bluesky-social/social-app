@@ -42,7 +42,7 @@ export function GestureActionView({
     'leftFirst' | 'leftSecond' | 'rightFirst' | 'rightSecond' | null
   >(null)
 
-  const haptic = useHaptics()
+  const {threshold: playThresholdHaptic} = useHaptics()
   const isReducedMotion = useReducedMotion()
 
   const transX = useSharedValue(0)
@@ -128,7 +128,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -145,7 +145,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&
@@ -162,7 +162,7 @@ export function GestureActionView({
             !hitSecond.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitSecond.set(true)
           } else if (
             hitSecond.get() &&
@@ -179,7 +179,7 @@ export function GestureActionView({
             !hitFirst.get()
           ) {
             runPopAnimation()
-            scheduleOnRN(haptic)
+            scheduleOnRN(playThresholdHaptic)
             hitFirst.set(true)
           } else if (
             hitFirst.get() &&

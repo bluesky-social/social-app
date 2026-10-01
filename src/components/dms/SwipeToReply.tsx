@@ -67,7 +67,7 @@ export function SwipeToReply({
   children: (swipeGesture: GestureType) => React.ReactNode
 }) {
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const {threshold: playThresholdHaptic} = useHaptics()
   const isReducedMotion = useReducedMotion()
 
   const transX = useSharedValue(0)
@@ -111,7 +111,7 @@ export function SwipeToReply({
           if (pastThreshold && !hit.get()) {
             hit.set(true)
             runPop()
-            scheduleOnRN(playHaptic, 'Medium')
+            scheduleOnRN(playThresholdHaptic)
           } else if (!pastThreshold && hit.get()) {
             hit.set(false)
           }
@@ -135,7 +135,7 @@ export function SwipeToReply({
     isFromSelf,
     enabled,
     onReply,
-    playHaptic,
+    playThresholdHaptic,
     isReducedMotion,
     transX,
     hit,
