@@ -9,6 +9,7 @@ import {
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {logger} from '#/logger'
 import {
   findAllPostsInQueryData,
   resetProfilePostsQueries,
@@ -26,6 +27,7 @@ import {
   RQKEY,
   usePostFeedFetcher,
   usePostFeedQuery,
+  usePostFeedRefresh,
 } from './postFeed'
 
 jest.mock('#/state/preferences/languages', () => ({
@@ -59,10 +61,12 @@ const mockModerationOpts = {
   prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
   labelDefs: {},
 }
-let mockPreferences: {
-  savedFeeds: {pinned: boolean; value: string}[]
-  interests: {tags: string[]}
-}
+let mockPreferences:
+  | {
+      savedFeeds: {pinned: boolean; value: string}[]
+      interests: {tags: string[]}
+    }
+  | undefined
 
 const DISCOVER = PROD_DEFAULT_FEED('whats-hot')
 const CUSTOM = 'at://did:plc:author/app.bsky.feed.generator/custom'
@@ -80,7 +84,7 @@ const mockClient = {
     (
       method: unknown,
       params: {feed?: string; cursor?: string; limit: number},
-    ) => {
+    ): unknown => {
       const endpoint = endpointOf(method, params)
       if (params.limit === 1) {
         return {feed: [feedItem(`${endpoint}-latest`)]}
@@ -211,7 +215,10 @@ function setDev(value: boolean) {
 
 /** Pins Following first, which makes the Following feed Home. */
 function pinFollowingFirst() {
-  mockPreferences.savedFeeds = [{pinned: true, value: 'following'}]
+  mockPreferences = {
+    savedFeeds: [{pinned: true, value: 'following'}],
+    interests: {tags: []},
+  }
 }
 
 describe('post-feed query data', () => {
@@ -356,6 +363,360 @@ describe('pollLatest', () => {
     )
 
     expect(requested()).toEqual(['discover latest'])
+  })
+})
+
+describe('usePostFeedRefresh', () => {
+  const KEY = RQKEY('following')
+
+  async function renderRefreshableFeed() {
+    const queryClient = createQueryClient()
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    /** The data of every render, to count the renders a write causes. */
+    const rendered: unknown[] = []
+    const hook = renderHook(
+      () => {
+        const query = usePostFeedQuery('following')
+        // Read as PostFeed does, so that a change to it alone renders too.
+        void query.isFetching
+        rendered.push(query.data)
+        return {query, ...usePostFeedRefresh('following')}
+      },
+      {wrapper},
+    )
+    await waitFor(() => expect(hook.result.current.query.isSuccess).toBe(true))
+    mockClient.call.mockClear()
+    const data = () =>
+      queryClient.getQueryData<InfiniteData<FeedPageUnselected>>(KEY)
+    return {hook, queryClient, rendered, data}
+  }
+
+  /** Every write of the query's data from here on. */
+  function watchWrites(queryClient: QueryClient) {
+    const writes: unknown[] = []
+    queryClient.getQueryCache().subscribe(event => {
+      if (event.type === 'updated' && event.action.type === 'success') {
+        writes.push(event.query.state.data)
+      }
+    })
+    return writes
+  }
+
+  /** Holds the next request until the test answers it. */
+  function holdNextRequest() {
+    let resolve!: (value: unknown) => void
+    let reject!: (error: unknown) => void
+    mockClient.call.mockImplementationOnce(
+      () =>
+        new Promise((res, rej) => {
+          resolve = res
+          reject = rej
+        }),
+    )
+    return {
+      respond: (rkey: string) =>
+        resolve({cursor: 'timeline:1', feed: [feedItem(rkey)]}),
+      fail: (error: Error) => reject(error),
+    }
+  }
+
+  function failNextRequest(error: Error) {
+    mockClient.call.mockImplementationOnce(() => Promise.reject(error))
+  }
+
+  /** Lets TanStack deliver the notifications it has scheduled. */
+  function flushNotifications() {
+    return act(() => new Promise<void>(resolve => setTimeout(resolve, 0)))
+  }
+
+  function topPostUri(data?: InfiniteData<FeedPageUnselected>) {
+    return data?.pages[0]?.feed[0]?.post.uri
+  }
+
+  it('writes the new top page once, in one render, and paginates from it', async () => {
+    const {hook, queryClient, rendered, data} = await renderRefreshableFeed()
+    await act(() => hook.result.current.query.fetchNextPage())
+    const writes = watchWrites(queryClient)
+    const rendersBefore = rendered.length
+    mockClient.call.mockReturnValueOnce({
+      cursor: 'timeline:1',
+      feed: [feedItem('fresh')],
+    })
+
+    await act(() => hook.result.current.refresh())
+    await flushNotifications()
+
+    expect(writes).toHaveLength(1)
+    expect(data()?.pageParams).toEqual([undefined])
+    expect(topPostUri(data())).toBe(feedItem('fresh').post.uri)
+    const dataChanges = rendered
+      .slice(rendersBefore)
+      .filter(
+        (d, i, all) => d !== (i ? all[i - 1] : rendered[rendersBefore - 1]),
+      )
+    expect(dataChanges).toHaveLength(1)
+
+    mockClient.call.mockClear()
+    await act(() => hook.result.current.query.fetchNextPage())
+    expect(requested()).toEqual(['timeline timeline:1'])
+  })
+
+  it('keeps the pages and their pagination when the refresh fails', async () => {
+    const {hook, queryClient, data} = await renderRefreshableFeed()
+    const before = data()
+    const writes = watchWrites(queryClient)
+    failNextRequest(new Error('offline'))
+
+    await act(() => hook.result.current.refresh())
+
+    expect(hook.result.current.error?.message).toBe('offline')
+    expect(writes).toHaveLength(0)
+    expect(data()).toBe(before)
+    expect(hook.result.current.query.isError).toBe(false)
+    await act(() => hook.result.current.query.fetchNextPage())
+    expect(requested()).toEqual(['timeline undefined', 'timeline timeline:1'])
+  })
+
+  it('clears the error while a refresh is pending, and restores it if that fails', async () => {
+    const {hook} = await renderRefreshableFeed()
+    const state = () => hook.result.current
+    failNextRequest(new Error('offline'))
+    await act(() => hook.result.current.refresh())
+
+    const retry = holdNextRequest()
+    let retrying!: Promise<void>
+    act(() => {
+      retrying = hook.result.current.refresh()
+    })
+    expect(state().error).toBeUndefined()
+    expect(state().isRefreshing).toBe(true)
+
+    await act(async () => {
+      retry.fail(new Error('still offline'))
+      await retrying
+    })
+    expect(state().error?.message).toBe('still offline')
+    expect(state().isRefreshing).toBe(false)
+
+    await act(() => hook.result.current.refresh())
+    expect(state().error).toBeUndefined()
+  })
+
+  it('logs unexpected errors but not network ones', async () => {
+    const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
+    try {
+      const {hook} = await renderRefreshableFeed()
+      failNextRequest(new TypeError('Network request failed'))
+      await act(() => hook.result.current.refresh())
+      expect(hook.result.current.error).toBeDefined()
+      expect(logError).not.toHaveBeenCalled()
+
+      failNextRequest(new Error('Unexpected'))
+      await act(() => hook.result.current.refresh())
+      expect(logError).toHaveBeenCalledTimes(1)
+    } finally {
+      logError.mockRestore()
+    }
+  })
+
+  it('joins a refresh already in flight', async () => {
+    const {hook, queryClient} = await renderRefreshableFeed()
+    const writes = watchWrites(queryClient)
+    const top = holdNextRequest()
+
+    let first!: Promise<void>
+    let second!: Promise<void>
+    act(() => {
+      first = hook.result.current.refresh()
+      second = hook.result.current.refresh()
+    })
+    await act(async () => {
+      top.respond('fresh')
+      await Promise.all([first, second])
+    })
+
+    expect(second).toBe(first)
+    expect(requested()).toEqual(['timeline undefined'])
+    expect(writes).toHaveLength(1)
+  })
+
+  it('cancels a fetchNextPage still in flight, and drops its page', async () => {
+    const {hook, queryClient, data} = await renderRefreshableFeed()
+    const next = holdNextRequest()
+    let fetchingNextPage!: Promise<unknown>
+    act(() => {
+      fetchingNextPage = hook.result.current.query.fetchNextPage()
+    })
+    const writes = watchWrites(queryClient)
+    mockClient.call.mockReturnValueOnce({
+      cursor: 'timeline:1',
+      feed: [feedItem('fresh')],
+    })
+
+    await act(() => hook.result.current.refresh())
+    await act(async () => {
+      next.respond('late')
+      await fetchingNextPage
+    })
+
+    expect(writes).toHaveLength(1)
+    expect(data()?.pages).toHaveLength(1)
+    expect(topPostUri(data())).toBe(feedItem('fresh').post.uri)
+    expect(hook.result.current.query.isFetchingNextPage).toBe(false)
+  })
+
+  it('still writes after a page load lands while it is in flight', async () => {
+    const {hook, data} = await renderRefreshableFeed()
+    const top = holdNextRequest()
+    let refreshing!: Promise<void>
+    act(() => {
+      refreshing = hook.result.current.refresh()
+    })
+    await act(() => hook.result.current.query.fetchNextPage())
+    expect(data()?.pages).toHaveLength(2)
+
+    await act(async () => {
+      top.respond('fresh')
+      await refreshing
+    })
+
+    expect(data()?.pages).toHaveLength(1)
+    expect(topPostUri(data())).toBe(feedItem('fresh').post.uri)
+  })
+
+  describe('gives way to TanStack', () => {
+    it('when a refetch has replaced the top page', async () => {
+      const {hook, data} = await renderRefreshableFeed()
+      const top = holdNextRequest()
+      let refreshing!: Promise<void>
+      act(() => {
+        refreshing = hook.result.current.refresh()
+      })
+      await act(() => hook.result.current.query.refetch())
+      const refetched = data()
+
+      await act(async () => {
+        top.respond('fresh')
+        await refreshing
+      })
+
+      expect(data()).toBe(refetched)
+    })
+
+    it('when a refetch from the top is still in flight', async () => {
+      const {hook, queryClient, data} = await renderRefreshableFeed()
+      const top = holdNextRequest()
+      const refetch = holdNextRequest()
+      let refreshing!: Promise<void>
+      act(() => {
+        refreshing = hook.result.current.refresh()
+        void hook.result.current.query.refetch()
+      })
+      const writes = watchWrites(queryClient)
+
+      await act(async () => {
+        top.respond('fresh')
+        await refreshing
+      })
+      expect(writes).toHaveLength(0)
+
+      await act(async () => {
+        refetch.respond('refetched')
+        await waitFor(() => expect(writes).toHaveLength(1))
+      })
+      expect(topPostUri(data())).toBe(feedItem('refetched').post.uri)
+    })
+
+    it('when the feed is reset', async () => {
+      const {hook, queryClient, data} = await renderRefreshableFeed()
+      const top = holdNextRequest()
+      let refreshing!: Promise<void>
+      act(() => {
+        refreshing = hook.result.current.refresh()
+      })
+      await act(() => queryClient.resetQueries({queryKey: KEY}))
+
+      await act(async () => {
+        top.respond('fresh')
+        await refreshing
+      })
+
+      expect(topPostUri(data())).toBe(feedItem('timeline-1').post.uri)
+    })
+
+    it('when the feed is removed', async () => {
+      const {hook, queryClient, data} = await renderRefreshableFeed()
+      const top = holdNextRequest()
+      let refreshing!: Promise<void>
+      act(() => {
+        refreshing = hook.result.current.refresh()
+      })
+      act(() => {
+        queryClient.removeQueries({queryKey: KEY})
+      })
+
+      await act(async () => {
+        top.respond('fresh')
+        await refreshing
+      })
+
+      expect(topPostUri(data())).not.toBe(feedItem('fresh').post.uri)
+    })
+  })
+
+  it('reports nothing when it fails after the feed has moved on', async () => {
+    const {hook} = await renderRefreshableFeed()
+    const top = holdNextRequest()
+    let refreshing!: Promise<void>
+    act(() => {
+      refreshing = hook.result.current.refresh()
+    })
+    await act(() => hook.result.current.query.refetch())
+
+    await act(async () => {
+      top.fail(new Error('offline'))
+      await refreshing
+    })
+
+    expect(hook.result.current.error).toBeUndefined()
+    expect(hook.result.current.isRefreshing).toBe(false)
+  })
+
+  it('is abandoned when the view unmounts', async () => {
+    const {hook, queryClient, data} = await renderRefreshableFeed()
+    const before = data()
+    const writes = watchWrites(queryClient)
+    const top = holdNextRequest()
+    let refreshing!: Promise<void>
+    act(() => {
+      refreshing = hook.result.current.refresh()
+    })
+    hook.unmount()
+
+    await act(async () => {
+      top.respond('fresh')
+      await refreshing
+    })
+
+    expect(writes).toHaveLength(0)
+    expect(data()).toBe(before)
+  })
+
+  it('does nothing before the first load has settled', async () => {
+    mockPreferences = undefined
+    const queryClient = createQueryClient()
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    const hook = renderHook(() => usePostFeedRefresh('following'), {wrapper})
+    renderHook(() => usePostFeedQuery('following'), {wrapper})
+
+    await act(() => hook.result.current.refresh())
+
+    expect(requested()).toEqual([])
+    expect(queryClient.getQueryData(KEY)).toBeUndefined()
   })
 })
 

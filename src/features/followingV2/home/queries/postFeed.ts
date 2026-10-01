@@ -1,4 +1,4 @@
-import {useCallback, useMemo, useRef} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
@@ -10,8 +10,10 @@ import {
 } from '@bsky/sdk/moderation'
 import {
   type InfiniteData,
+  type QueryClient,
   type QueryKey,
   useInfiniteQuery,
+  useQueryClient,
 } from '@tanstack/react-query'
 
 import {AuthorFeedAPI} from '#/lib/api/feed/author'
@@ -25,6 +27,7 @@ import {
   type FeedViewPostsSlice,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useFeedTuners} from '#/state/preferences/feed-tuners'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -422,6 +425,124 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
   }
 
   return {createFeedApi, fetchPage}
+}
+
+type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
+
+/**
+ * Refreshes the feed from the top with one fetch and then one write, so the
+ * new top renders once and a failed refresh leaves the feed as it was. `error`
+ * is why the last refresh failed, cleared when another starts. Refetches from
+ * an invalidation or a reset still go through TanStack.
+ *
+ * The view owns its refreshes: one started while another is in flight joins
+ * it, and one still in flight when the view unmounts is abandoned.
+ */
+export function usePostFeedRefresh(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const {fetchPage} = usePostFeedFetcher(feedDesc)
+  const [error, setError] = useState<Error | undefined>(undefined)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  /** The refresh in flight. Unmounting clears it, abandoning the refresh. */
+  const inFlight = useRef<Promise<void>>(undefined)
+  useEffect(() => {
+    return () => {
+      inFlight.current = undefined
+    }
+  }, [])
+
+  const refreshFromTop = async () => {
+    const queryKey = RQKEY(feedDesc, params)
+    const before = queryClient.getQueryData<PostFeedData>(queryKey)
+    setError(undefined)
+    setIsRefreshing(true)
+    try {
+      const page = await fetchPage(undefined)
+      if (inFlight.current) {
+        await commit(queryClient, queryKey, before, {
+          pages: [page],
+          pageParams: [undefined],
+        })
+      }
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to refresh posts feed', {safeMessage: e})
+      }
+      // Nothing to report once the view has gone or the feed has moved on.
+      if (inFlight.current && !isTopReplaced(queryClient, queryKey, before)) {
+        setError(e instanceof Error ? e : new Error(String(e)))
+      }
+    } finally {
+      if (inFlight.current) {
+        inFlight.current = undefined
+        setIsRefreshing(false)
+      }
+    }
+  }
+
+  const refresh = () => {
+    /*
+     * Until the first load settles there's nothing to refresh, and the query
+     * may still be waiting for the preferences it fetches with.
+     */
+    const status = queryClient.getQueryState(RQKEY(feedDesc, params))?.status
+    if (!status || status === 'pending') {
+      return Promise.resolve()
+    }
+    inFlight.current ??= refreshFromTop()
+    return inFlight.current
+  }
+
+  return {refresh, error, isRefreshing}
+}
+
+/** Whether something else has replaced the feed's top page since `before`. */
+function isTopReplaced(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  before: PostFeedData | undefined,
+) {
+  return (
+    queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0] !==
+    before?.pages[0]
+  )
+}
+
+/**
+ * Writes `data` over the feed's, unless something else has replaced its top
+ * page since `before` was read (a refetch, a reset or a removal) or is
+ * fetching it now.
+ */
+async function commit(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  before: PostFeedData | undefined,
+  data: PostFeedData,
+) {
+  const state = queryClient.getQueryState(queryKey)
+  // A fetch from the top in flight will land after this write, so it wins.
+  const isFetchingTop =
+    state?.fetchStatus !== 'idle' && !state?.fetchMeta?.fetchMore
+  if (isTopReplaced(queryClient, queryKey, before) || isFetchingTop) {
+    return
+  }
+  /*
+   * A fetchNextPage in flight would land after this write and put back the
+   * pages it replaces, so it's cancelled. Cancelling reverts its state at
+   * once, and waiting for it lets one that had already resolved write first.
+   * Anything fetching after that started since, from the data being replaced.
+   */
+  await queryClient.cancelQueries({queryKey, exact: true})
+  if (
+    isTopReplaced(queryClient, queryKey, before) ||
+    queryClient.getQueryState(queryKey)?.fetchStatus !== 'idle'
+  ) {
+    return
+  }
+  queryClient.setQueryData<PostFeedData>(queryKey, data)
 }
 
 /**
