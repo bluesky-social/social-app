@@ -16,7 +16,7 @@ import logo from '../../assets/logo.svg'
 const root = document.getElementById('app')
 if (!root) throw new Error('No root element')
 
-const client = new Client(api.app.urlPublic)
+const client = new Client(api.app.urlPublic, {strictResponseProcessing: false})
 
 const uri = `at://${window.location.pathname.slice('/embed/'.length)}`
 if (!isAtUriString(uri)) {

@@ -27,11 +27,10 @@ export function Post({post}: Props) {
     CONTENT_LABELS.includes(label.val),
   )
 
-  let record = null
-  const validation = app.bsky.feed.post.$safeValidate(post.record)
-  if (validation.success) {
-    record = validation.value
-  }
+  const validation = app.bsky.feed.post.$safeValidate(post.record, {
+    strict: false,
+  })
+  const record = validation.success ? validation.value : null
 
   const verification = getVerificationState({profile: post.author})
   const isBot = post.author.labels?.some(

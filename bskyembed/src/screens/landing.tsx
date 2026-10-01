@@ -33,7 +33,7 @@ if (!root) throw new Error('No root element')
 
 initSystemColorMode({additionalBodyClasses: 'dark:bg-dimmedBgDarken'})
 
-const client = new Client(api.app.urlPublic)
+const client = new Client(api.app.urlPublic, {strictResponseProcessing: false})
 
 render(<LandingPage />, root)
 
@@ -223,7 +223,9 @@ function Snippet({
   }, [copied])
 
   const snippet = useMemo(() => {
-    const validation = app.bsky.feed.post.$safeValidate(post.record)
+    const validation = app.bsky.feed.post.$safeValidate(post.record, {
+      strict: false,
+    })
     if (!validation.success) {
       return ''
     }

@@ -64,11 +64,10 @@ export function Embed({
           )
         }
 
-        let text
-        const validation = app.bsky.feed.post.$safeValidate(record.value)
-        if (validation.success) {
-          text = validation.value.text
-        }
+        const validation = app.bsky.feed.post.$safeValidate(record.value, {
+          strict: false,
+        })
+        const text = validation.success ? validation.value.text : undefined
 
         const isAuthorLabeled = record.author.labels?.some(label =>
           CONTENT_LABELS.includes(label.val),
