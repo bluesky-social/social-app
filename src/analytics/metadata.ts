@@ -23,9 +23,15 @@ export type PreferencesMetadata = {
   contentLanguages: string[]
 }
 
+export type PostQuotesMetadata = {
+  uri: string
+  quoteSort: 'top' | 'latest'
+}
+
 export type MergeableMetadata = {
   session?: SessionMetadata
   preferences?: PreferencesMetadata
+  postQuotes?: PostQuotesMetadata
   /**
    * Navigation metadata is not actually available on this object, instead it's
    * merged in at time-of-log/metric. See `#/analytics/metadata.ts` for details.
