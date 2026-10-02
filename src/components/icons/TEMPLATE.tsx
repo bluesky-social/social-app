@@ -6,6 +6,7 @@ import {
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
+import {withNanoGlyph} from '#/components/icons/nano'
 
 export type IconWithSvgMeta = ForwardRefExoticComponent<
   Props & RefAttributes<Svg>
@@ -84,7 +85,17 @@ export function createSinglePathSVG({
   Icon.svgPaths = [path]
   Icon.svgViewBox = viewBox || '0 0 24 24'
   Icon.svgStrokeWidth = strokeWidth
-  return Icon
+  return withNanoGlyph(Icon, {
+    keySource: () =>
+      [
+        path,
+        viewBox ?? '0 0 24 24',
+        strokeWidth,
+        strokeLinecap,
+        strokeLinejoin,
+      ].join('|'),
+    layered: false,
+  })
 }
 
 /**
@@ -227,5 +238,8 @@ export function createSVG({
   )
   Icon.svgViewBox = viewBox
   Icon.svgStrokeWidth = 0
-  return Icon
+  return withNanoGlyph(Icon, {
+    keySource: () => `${JSON.stringify(elements)}|${viewBox}`,
+    layered: true,
+  })
 }

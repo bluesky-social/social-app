@@ -425,21 +425,96 @@ function loadPathKit() {
   return pathKit
 }
 
+/**
+ * Largest share of the viewBox that may render differently between the
+ * evenodd and nonzero fill rules for an icon to still be drawn as a glyph.
+ * At 24pt it is about half a square point, below antialiasing noise.
+ */
+const FILL_RULE_TOLERANCE = 0.001
+
+/** Flattens a PathKit path into closed polylines, one per contour. */
+function flattenContours(PathKit, path) {
+  const contours = []
+  let contour
+  let current
+  function point(x, y) {
+    current = [x, y]
+    contour.push(current)
+  }
+  for (const [verb, ...args] of path.toCmds()) {
+    if (verb === PathKit.MOVE_VERB) {
+      contour = []
+      contours.push(contour)
+      point(args[0], args[1])
+    } else if (verb === PathKit.LINE_VERB) {
+      point(args[0], args[1])
+    } else if (verb === PathKit.QUAD_VERB || verb === PathKit.CONIC_VERB || verb === PathKit.CUBIC_VERB) {
+      const [x0, y0] = current
+      const weight = verb === PathKit.CONIC_VERB ? args[4] : 1
+      for (let step = 1; step <= 16; step++) {
+        const t = step / 16
+        const u = 1 - t
+        if (verb === PathKit.CUBIC_VERB) {
+          const [x1, y1, x2, y2, x3, y3] = args
+          point(
+            u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
+            u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3,
+          )
+        } else {
+          const [x1, y1, x2, y2] = args
+          const denominator = u * u + 2 * weight * u * t + t * t
+          point(
+            (u * u * x0 + 2 * weight * u * t * x1 + t * t * x2) / denominator,
+            (u * u * y0 + 2 * weight * u * t * y1 + t * t * y2) / denominator,
+          )
+        }
+      }
+    }
+  }
+  return contours.filter(points => points.length > 2)
+}
+
 /*
  * createSinglePathSVG always fills with evenodd, but the font compiles the
- * fill rule written in the SVG, which defaults to nonzero. The two only
- * disagree when the path has overlapping or same-direction nested contours.
+ * fill rule written in the SVG, which defaults to nonzero. They disagree
+ * where the winding number is even but not zero, i.e. where contours overlap
+ * or nest in the same direction. Returns that area as a share of the viewBox.
  */
-async function fillRulesAgree(d) {
+async function fillRuleDifference(d, [, minY, width, height]) {
   const PathKit = await loadPathKit()
   const evenodd = PathKit.FromSVGString(d)
   evenodd.setFillType(PathKit.FillType.EVENODD)
   const nonzero = PathKit.FromSVGString(d)
   nonzero.setFillType(PathKit.FillType.WINDING)
-  const difference = PathKit.MakeFromOp(evenodd, nonzero, PathKit.PathOp.XOR)
-  const empty = difference.toCmds().length === 0
-  for (const item of [evenodd, nonzero, difference]) item.delete()
-  return empty
+  const xor = PathKit.MakeFromOp(evenodd, nonzero, PathKit.PathOp.XOR)
+  const identical = xor.toCmds().length === 0
+  const contours = identical ? [] : flattenContours(PathKit, nonzero)
+  for (const item of [evenodd, nonzero, xor]) item.delete()
+  if (identical) return 0
+
+  // Sum, scanline by scanline, the spans whose winding number is even and nonzero.
+  const rows = 1024
+  let area = 0
+  for (let row = 0; row < rows; row++) {
+    const y = minY + ((row + 0.5) * height) / rows
+    const crossings = []
+    for (const points of contours) {
+      for (let index = 0; index < points.length; index++) {
+        const [x1, y1] = points[index]
+        const [x2, y2] = points[(index + 1) % points.length]
+        if (y1 <= y !== y2 <= y) {
+          crossings.push({x: x1 + ((y - y1) * (x2 - x1)) / (y2 - y1), direction: y2 > y1 ? 1 : -1})
+        }
+      }
+    }
+    crossings.sort((a, b) => a.x - b.x)
+    let winding = 0
+    for (let index = 0; index < crossings.length - 1; index++) {
+      winding += crossings[index].direction
+      if (winding !== 0 && winding % 2 === 0) area += crossings[index + 1].x - crossings[index].x
+    }
+  }
+  return (area * (height / rows)) / (width * height)
 }
 
 /**
@@ -452,7 +527,11 @@ export async function glyphMismatch(data, width, height) {
    * icons letterbox their viewBox into a size x size square.
    */
   if (width !== height) return 'non-square viewBox'
-  if (data.description?.strokeWidth === 0 && data.description.fillRule !== 'evenodd' && !(await fillRulesAgree(data.description.path))) {
+  if (
+    data.description?.strokeWidth === 0 &&
+    data.description.fillRule !== 'evenodd' &&
+    (await fillRuleDifference(data.description.path, data.viewBox.split(' ').map(Number))) > FILL_RULE_TOLERANCE
+  ) {
     return 'renders differently with the nonzero fill rule'
   }
 }
@@ -556,21 +635,63 @@ function renderSingleIcon(icon) {
     if (description.strokeLinecap !== 'butt') properties.push(`strokeLinecap: ${JSON.stringify(description.strokeLinecap)}`)
     if (description.strokeLinejoin !== 'miter') properties.push(`strokeLinejoin: ${JSON.stringify(description.strokeLinejoin)}`)
   }
-  return renderExport(icon, `createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})`)
+  return `export const ${icon.exportName} = createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})\n`
 }
 
 function renderFlexibleIcon(icon) {
-  return renderExport(
-    icon,
-    `createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},\n})`,
-  )
+  return `export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},\n})\n`
 }
 
-function renderExport(icon, svgIcon) {
-  const value = icon.glyph
-    ? `createNanoIcon(${JSON.stringify(icon.lane)}, ${JSON.stringify(icon.exportName)}, ${svgIcon})`
-    : svgIcon
-  return `export const ${icon.exportName} = ${value}\n`
+/**
+ * Hashes the arguments a generated icon passes to its TEMPLATE factory, which
+ * is how the factory finds the icon's glyph at runtime. Must match
+ * `glyphKey` in `src/components/icons/nano.tsx`.
+ */
+export function glyphKey(icon) {
+  const key = glyphKeySource(icon)
+  // 32-bit FNV-1a.
+  let hash = 0x811c9dc5
+  for (let index = 0; index < key.length; index++) {
+    hash = Math.imul(hash ^ key.charCodeAt(index), 0x01000193)
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0')
+}
+
+function glyphKeySource(icon) {
+  return icon.elements
+    ? `${JSON.stringify(icon.elements.map(cleanObject))}|${icon.viewBox}`
+    : [
+        icon.description.path,
+        icon.viewBox,
+        icon.description.strokeWidth,
+        icon.description.strokeLinecap ?? 'butt',
+        icon.description.strokeLinejoin ?? 'miter',
+      ].join('|')
+}
+
+function renderGlyphTable(icons) {
+  const entries = new Map()
+  for (const icon of icons.filter(icon => icon.glyph)) {
+    const key = glyphKey(icon)
+    const existing = entries.get(key)
+    if (existing && glyphKeySource(existing) !== glyphKeySource(icon)) {
+      fail(icon.relativePath, `glyph key collides with ${existing.relativePath}`)
+    }
+    entries.set(key, icon)
+  }
+  const rows = [...entries]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, icon]) => `  ${JSON.stringify(key)}: [${JSON.stringify(icon.lane)}, ${JSON.stringify(icon.exportName)}],`)
+  return `${GENERATED_HEADER}
+/**
+ * Generated icons that render as react-native-nano-icons glyphs, keyed by a
+ * hash of their TEMPLATE factory arguments. Icons missing here render with
+ * react-native-svg, see \`scripts/icons/README.md\`.
+ */
+export const nanoGlyphs: Record<string, [string, string]> = {
+${rows.join('\n')}
+}
+`
 }
 
 function renderModule(modulePath, icons, aliases) {
@@ -587,10 +708,6 @@ function renderModule(modulePath, icons, aliases) {
       code: `import {${[...factoryNames].sort().join(', ')}} from ${JSON.stringify(templatePath)}`,
       source: templatePath,
     })
-  }
-  if (icons.some(icon => icon.glyph)) {
-    const nanoPath = relativeImport(modulePath, 'nano')
-    imports.push({code: `import {createNanoIcon} from ${JSON.stringify(nanoPath)}`, source: nanoPath})
   }
   for (const alias of aliases) {
     if (alias.targetModule === modulePath) continue
@@ -726,6 +843,16 @@ export async function buildIconSet({outputRoot, scanRoot, sourceRoot}) {
       }),
     )
   }
+  tsOutputs.set(
+    'nanoGlyphs.ts',
+    await format(renderGlyphTable(icons), {
+      bracketSpacing: false,
+      parser: 'typescript',
+      semi: false,
+      singleQuote: true,
+      trailingComma: 'all',
+    }),
+  )
   const svgOutputs = new Map(sources.map(source => [source.relativePath, source.optimized]))
   const warnings = sources.flatMap(source => source.warnings)
   return {deprecatedImports, holdouts, icons, svgOutputs, tsOutputs, warnings}

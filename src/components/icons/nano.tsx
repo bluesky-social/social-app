@@ -7,6 +7,7 @@ import type Svg from 'react-native-svg'
 
 import {useTheme} from '#/alf'
 import {type Props, sizes} from '#/components/icons/common'
+import {nanoGlyphs} from '#/components/icons/nanoGlyphs'
 import {type IconWithSvgMeta} from '#/components/icons/TEMPLATE'
 import brandsGlyphMap from '../../../assets/nano-icons/nanoicons/icons-brands.glyphmap.json'
 import communityGlyphMap from '../../../assets/nano-icons/nanoicons/icons-community.glyphmap.json'
@@ -21,51 +22,94 @@ const glyphMaps = {
   ui: uiGlyphMap,
   brands: brandsGlyphMap,
   community: communityGlyphMap,
-}
+} as unknown as Record<string, {i: Record<string, GlyphEntry>}>
 
+/*
+ * Each set is typed by its own glyph names, which `nanoGlyphs` is generated
+ * from, so widen the components to accept any name.
+ */
 const iconSets = {
   ui: createNanoIconSet(uiGlyphMap),
   brands: createNanoIconSet(brandsGlyphMap),
   community: createNanoIconSet(communityGlyphMap),
-}
-
-type GlyphMaps = typeof glyphMaps
-
-export type IconSetName = keyof GlyphMaps
-
-export type IconName<S extends IconSetName> = keyof GlyphMaps[S]['i'] & string
-
-/**
- * Wraps a generated react-native-svg icon so that it renders as a single
- * glyph from the icon font instead of SvgView + Group + Path.
- *
- * The glyph covers the props icons are used with in practice. Anything it
- * cannot reproduce - a `gradient`, a `height` that differs from the width, or
- * any other SVG prop - renders the wrapped SVG icon instead, so the prop
- * contract and the `svgPaths` metadata read by `@bsky.app/peek-menu` stay
- * exactly those of the SVG icon.
- */
-export function createNanoIcon<S extends IconSetName>(
-  iconSet: S,
-  name: IconName<S>,
-  SvgIcon: IconWithSvgMeta,
-): IconWithSvgMeta {
-  /*
-   * Each set is typed by its own glyph names, which `name` already narrows
-   * to, so widen the component to accept any name.
-   */
-  const NanoIconSet = iconSets[iconSet] as React.ComponentType<
-    Omit<React.ComponentProps<(typeof iconSets)['ui']>, 'name'> & {
+} as unknown as Record<
+  string,
+  React.ComponentType<
+    Omit<React.ComponentProps<ReturnType<typeof createNanoIconSet>>, 'name'> & {
       name: string
     }
   >
-  const glyph = (glyphMaps[iconSet].i as unknown as Record<string, GlyphEntry>)[
-    name
-  ]
-  const layerColors = glyph[1].map(([, color]) => color)
+>
+
+/**
+ * A glyphmap entry: the advance width and one `[codepoint, color]` pair per
+ * colour layer.
+ */
+type GlyphEntry = [number, [number, string][]]
+
+/**
+ * Must match `glyphKey` in `scripts/icons/lib.mts`: 32-bit FNV-1a of the
+ * factory arguments.
+ */
+function glyphKey(source: string) {
+  let hash = 0x811c9dc5
+  for (let index = 0; index < source.length; index++) {
+    hash = Math.imul(hash ^ source.charCodeAt(index), 0x01000193)
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0')
+}
+
+/**
+ * Lets a TEMPLATE factory render its icon as a single glyph from the icon
+ * font instead of SvgView + Group + Path, when codegen built a matching glyph
+ * for it (see `nanoGlyphs`).
+ *
+ * The glyph covers the props icons are used with in practice. Anything it
+ * cannot reproduce - a `gradient`, a `height` that differs from the width, or
+ * any other SVG prop - renders the SVG icon instead, so the prop contract and
+ * the `svgPaths` metadata read by `@bsky.app/peek-menu` stay exactly those of
+ * the SVG icon.
+ */
+export function withNanoGlyph(
+  SvgIcon: IconWithSvgMeta,
+  {
+    keySource,
+    layered,
+  }: {
+    /**
+     * The factory arguments `glyphKey` hashes. A function so that it is only
+     * built when the icon first renders, not for every icon at startup.
+     */
+    keySource: () => string
+    /**
+     * Whether the icon keeps the paint roles of its SVG elements, like
+     * `createSVG`, instead of being filled entirely like
+     * `createSinglePathSVG`.
+     */
+    layered: boolean
+  },
+): IconWithSvgMeta {
+  let glyph: {iconSet: string; name: string; layers: string[]} | null = null
+  let resolved = false
+  function resolveGlyph() {
+    if (!resolved) {
+      resolved = true
+      const entry = nanoGlyphs[glyphKey(keySource())]
+      if (entry) {
+        const [iconSet, name] = entry
+        glyph = {
+          iconSet,
+          name,
+          layers: glyphMaps[iconSet].i[name][1].map(([, color]) => color),
+        }
+      }
+    }
+    return glyph
+  }
 
   const Icon = forwardRef<Svg, Props>(function NanoIcon(props, ref) {
     const t = useTheme()
+    const glyph = resolveGlyph()
     const {fill, size, style, width, height, testID, gradient, ...rest} = props
 
     /*
@@ -75,6 +119,7 @@ export function createNanoIcon<S extends IconSetName>(
     const resolvedSize = Number(size ? sizes[size] : width || sizes.md)
 
     if (
+      !glyph ||
       gradient ||
       (height !== undefined && Number(height) !== resolvedSize) ||
       Object.values(rest).some(value => value !== undefined)
@@ -82,6 +127,7 @@ export function createNanoIcon<S extends IconSetName>(
       return <SvgIcon {...props} ref={ref} />
     }
 
+    const NanoIconSet = iconSets[glyph.iconSet]
     const resolvedFill = (fill ||
       StyleSheet.flatten(style)?.color ||
       t.palette.primary_500) as ColorValue
@@ -95,17 +141,17 @@ export function createNanoIcon<S extends IconSetName>(
        */
       // oxlint-disable-next-line react-native-a11y/has-accessibility-hint
       <NanoIconSet
-        name={name}
+        name={glyph.name}
         size={resolvedSize}
         /*
-         * Brand marks keep their paint roles like `createSVG`: layers painted
-         * `currentColor` take the icon fill and the others keep their fixed
-         * colour, e.g. the white tick in `VerifiedCheck`. Other icons are
-         * filled entirely, as `createSinglePathSVG` ignores the source colour.
+         * Layered icons keep their paint roles: layers painted `currentColor`
+         * take the icon fill and the others keep their fixed colour, e.g. the
+         * white tick in `VerifiedCheck`. Other icons are filled entirely, as
+         * `createSinglePathSVG` ignores the source colour.
          */
         color={
-          iconSet === 'brands'
-            ? layerColors.map(color =>
+          layered
+            ? glyph.layers.map(color =>
                 color === 'currentColor' ? resolvedFill : color,
               )
             : resolvedFill
@@ -146,9 +192,3 @@ export function createNanoIcon<S extends IconSetName>(
   Icon.svgStrokeWidth = SvgIcon.svgStrokeWidth
   return Icon
 }
-
-/**
- * A glyphmap entry: the advance width and one `[codepoint, color]` pair per
- * colour layer.
- */
-type GlyphEntry = [number, [number, string][]]

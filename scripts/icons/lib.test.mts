@@ -57,19 +57,23 @@ test('groups families deterministically', () => {
 })
 
 test('draws icons as font glyphs only where they match the SVG icon', async () => {
-  const fill = d => ({description: {path: d, fillRule: 'nonzero', strokeWidth: 0}})
+  const viewBox = '0 0 24 24'
+  const fill = d => ({description: {path: d, fillRule: 'nonzero', strokeWidth: 0}, viewBox})
   const square = 'M0 0h24v24H0Z'
   // An inner contour wound the same way as the outer one is a hole only under evenodd.
   const nested = 'M0 0h24v24H0ZM6 6h12v12H6Z'
+  // Same-direction contours overlapping in a 0.1 x 0.1 sliver, as left by outlined strokes.
+  const sliver = 'M2 2h10.01v10H2ZM12 2h10v10H12Z'
   assert.equal(await glyphMismatch(fill(square), 24, 24), undefined)
+  assert.equal(await glyphMismatch(fill(sliver), 24, 24), undefined)
   assert.equal(await glyphMismatch(fill(nested), 50, 45), 'non-square viewBox')
   assert.match(await glyphMismatch(fill(nested), 24, 24), /nonzero fill rule/)
   assert.equal(
-    await glyphMismatch({description: {path: nested, fillRule: 'evenodd', strokeWidth: 0}}, 24, 24),
+    await glyphMismatch({description: {path: nested, fillRule: 'evenodd', strokeWidth: 0}, viewBox}, 24, 24),
     undefined,
   )
   assert.equal(
-    await glyphMismatch({description: {path: nested, strokeWidth: 2}}, 24, 24),
+    await glyphMismatch({description: {path: nested, strokeWidth: 2}, viewBox}, 24, 24),
     undefined,
   )
 })
