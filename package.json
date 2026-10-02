@@ -263,7 +263,7 @@
     "react-native-pager-view": "6.8.0",
     "react-native-progress": "^5.0.1",
     "react-native-qrcode-styled": "^0.3.3",
-    "react-native-reanimated": "4.7.0",
+    "react-native-reanimated": "4.7.1",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.26.2",
     "react-native-svg": "15.15.4",
