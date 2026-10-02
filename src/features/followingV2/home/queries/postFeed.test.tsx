@@ -1107,6 +1107,7 @@ describe('usePostFeedRestorePrepend', () => {
     expect(writes).toHaveLength(0)
     expect(cached()).toBe(before)
     expect(hook.result.current.restore.isOwed()).toBe(false)
+    expect(hook.result.current.restore.prependedAt).toBeUndefined()
   })
 
   it('puts a contiguous page on top, which the page below continues from', async () => {
@@ -1122,6 +1123,10 @@ describe('usePostFeedRestorePrepend', () => {
       startCursor: 'start:0',
       since: 'start:1',
     })
+    // The view knows which page it put on top, for the pill to offer.
+    expect(hook.result.current.restore.prependedAt).toBe(
+      cached().pages[0].fetchedAt,
+    )
     expect(cached().pageParams).toEqual([
       undefined,
       {cursor: 'start:1'},
@@ -1230,6 +1235,7 @@ describe('usePostFeedRestorePrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
+      expect(hook.result.current.restore.prependedAt).toBeUndefined()
     })
 
     it('while it holds what it found', async () => {
@@ -1251,6 +1257,7 @@ describe('usePostFeedRestorePrepend', () => {
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
       expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.restore.prependedAt).toBeUndefined()
     })
   })
 
