@@ -1,0 +1,264 @@
+---
+name: Run Release
+run-name: Run release ${{ inputs.releaseVersion }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      releaseVersion:
+        description: Release version (x.y.z)
+        required: true
+        type: string
+      sourceRef:
+        description: Full prepared commit SHA created by Create Release
+        required: true
+        type: string
+      sourceSha:
+        description: Full original source SHA reported by Create Release
+        required: true
+        type: string
+      startBuilds:
+        description: Dispatch builds that have not already been reserved
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ inputs.releaseVersion }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: ${{ github.ref == 'refs/heads/main' && github.repository == 'bluesky-social/social-app' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      VERSION: ${{ inputs.releaseVersion }}
+      TOOLING_SHA: ${{ github.sha }}
+      BASE_SHA: ${{ inputs.sourceSha }}
+      PREPARED_SHA: ${{ inputs.sourceRef }}
+      START_BUILDS: ${{ inputs.startBuilds }}
+    steps:
+      - name: Checkout workflow source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: tooling
+          persist-credentials: false
+      - name: Checkout release source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.sourceRef }}
+          path: source
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
+        with:
+          package_json_file: source/package.json
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: source/package.json
+      - name: Install release dependencies
+        working-directory: source
+        run: pnpm install --frozen-lockfile
+      - name: Prepare translations, check release, and start missing builds
+        env:
+          CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          fail() { echo "::error::$*" >&2; exit 1; }
+          summary() { echo "$*" | tee -a "$GITHUB_STEP_SUMMARY"; }
+          api() { local path="$1"; shift; gh api "repos/$GH_REPO/$path" "$@"; }
+
+          [[ "$VERSION" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]] || fail 'Expected strict x.y.z version.'
+          BRANCH="release-$VERSION"
+          FILE="RELEASE-$VERSION.md"
+          WORKFLOWS=(build-submit-ios.yml build-submit-android.yml build-and-push-bskyweb-aws.yaml)
+
+          # Empty results mean absent; authentication and network failures still abort.
+          ref_sha() {
+            api "git/matching-refs/$1" | jq -er --arg ref "refs/$1" '
+              [.[] | select(.ref == $ref)] |
+              if length == 0 then "" elif length == 1 and .[0].object.type == "commit"
+              then .[0].object.sha else error("Unexpected ref type or count") end'
+          }
+
+          releases() {
+            api 'releases?per_page=100' --paginate --slurp |
+              jq -c --arg tag "$VERSION" '[.[][] | select(.tag_name == $tag)]'
+          }
+
+          validate_source() {
+            [[ "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]] || fail 'Expected full source SHA.'
+            git -C source merge-base --is-ancestor "$BASE_SHA" "$TOOLING_SHA" || fail 'Source is not in the trusted main history.'
+            [[ "$(git -C source rev-parse --is-shallow-repository)" == false ]] || fail 'Full source history is required.'
+            [[ -z "$(git -C source status --porcelain)" ]] || fail 'Source checkout is dirty.'
+            [[ "$(jq -r .version source/package.json)" == "$VERSION" ]] || fail 'Package version mismatch.'
+            (cd source && EXPO_PUBLIC_ENV=production pnpm exec expo config --type public --json) > "$RUNNER_TEMP/expo.json"
+            jq -e --arg version "$VERSION" '.version == $version and .runtimeVersion.policy == "appVersion"' \
+              "$RUNNER_TEMP/expo.json" >/dev/null || fail 'Expo version or runtime policy mismatch.'
+            api '' | jq -e '.permissions.push == true' >/dev/null || fail 'Cannot establish visibility of all draft releases.'
+            for workflow in "${WORKFLOWS[@]}"; do
+              cmp "tooling/.github/workflows/$workflow" "source/.github/workflows/$workflow" || fail "Unreviewed build workflow: $workflow"
+              api "actions/workflows/$workflow" | jq -e --arg path ".github/workflows/$workflow" \
+                '.state == "active" and .path == $path' >/dev/null || fail "Build workflow is not active: $workflow"
+            done
+          }
+
+          verify_prepared() {
+            [[ "$(ref_sha "heads/$BRANCH")" == "$PREPARED_SHA" ]] || fail 'Release branch moved.'
+            local tag
+            tag=$(ref_sha "tags/$VERSION")
+            [[ -z "$tag" || "$tag" == "$PREPARED_SHA" ]] || fail 'Release tag points to another commit.'
+            if [[ "${REQUIRE_TAG:-false}" == true ]]; then
+              [[ "$tag" == "$PREPARED_SHA" ]] || fail 'Release tag is missing.'
+            fi
+            RELEASES=$(releases)
+            jq -e --arg sha "$PREPARED_SHA" --arg name "Release $VERSION" '
+              length == 0 or (length == 1 and .[0].draft == true and
+              .[0].prerelease == false and .[0].name == $name and .[0].target_commitish == $sha)
+            ' <<< "$RELEASES" >/dev/null || fail 'Existing release is published or has a different identity.'
+            if [[ "${REQUIRE_DRAFT:-false}" == true ]]; then
+              [[ "$(jq length <<< "$RELEASES")" == 1 ]] || fail 'Draft release is missing.'
+            fi
+          }
+
+          [[ "$PREPARED_SHA" =~ ^[0-9a-f]{40}$ ]] || fail 'Expected full prepared SHA.'
+          [[ "$(git -C source rev-parse HEAD)" == "$PREPARED_SHA" ]] || fail 'Checkout does not match prepared SHA.'
+          [[ "$(git -C source show -s --format=%P HEAD)" == "$BASE_SHA" ]] || fail 'Prepared commit must have exactly the selected source as its parent.'
+          [[ "$(git -C source diff-tree --no-commit-id --name-status -r HEAD)" == $'A\t'"$FILE" ]] || fail 'Prepared commit must only add the release document.'
+          [[ "$(git -C source ls-tree HEAD -- "$FILE" | cut -d ' ' -f 1)" == 100644 ]] || fail 'Release document must be a regular file.'
+          INITIAL_PREPARED_SHA=$PREPARED_SHA
+          PREPARED_SHA=$(ref_sha "heads/$BRANCH")
+          [[ -n "$PREPARED_SHA" ]] || fail 'Release branch is missing.'
+          if [[ "$PREPARED_SHA" != "$INITIAL_PREPARED_SHA" ]]; then
+            git -C source fetch origin "$PREPARED_SHA"
+            [[ "$(git -C source show -s --format=%P "$PREPARED_SHA")" == "$INITIAL_PREPARED_SHA" ]] || fail 'Unexpected release branch history.'
+            [[ "$(git -C source show -s --format=%B "$PREPARED_SHA")" == "Prepare release translations $VERSION" ]] || fail 'Unexpected release branch commit.'
+            git -C source diff-tree --no-commit-id --name-only -r "$PREPARED_SHA" > "$RUNNER_TEMP/changed-paths"
+            while IFS= read -r path; do
+              [[ "$path" =~ ^src/locale/locales/[^/]+/messages\.po$ ]] || fail "Unexpected translation change: $path"
+              [[ "$(git -C source ls-tree "$PREPARED_SHA" -- "$path" | cut -d ' ' -f 1)" == 100644 ]] || fail 'Catalog must be a regular file.'
+            done < "$RUNNER_TEMP/changed-paths"
+            git -C source checkout --detach "$PREPARED_SHA"
+          fi
+          validate_source prepared
+          verify_prepared
+          # Validate all reservations before any write or dispatch.
+          for platform in ios android web; do
+            reservation=$(ref_sha "heads/release-build-$VERSION-$platform")
+            [[ -z "$reservation" || "$reservation" == "$PREPARED_SHA" ]] || fail "Conflicting $platform build reservation."
+          done
+          summary "Validated $BRANCH at $PREPARED_SHA (source $BASE_SHA)."
+          [[ "$(sed -n '2p' "source/$FILE")" == "releaseVersion: $VERSION" ]] || fail 'Release document version mismatch.'
+          [[ "$(grep -c '^<!-- public-changelog:start -->$' "source/$FILE")" == 1 ]] || fail 'Expected one changelog start marker.'
+          [[ "$(grep -c '^<!-- public-changelog:end -->$' "source/$FILE")" == 1 ]] || fail 'Expected one changelog end marker.'
+          awk '/^<!-- public-changelog:start -->$/ {inside=1; next} /^<!-- public-changelog:end -->$/ {exit} inside' \
+            "source/$FILE" > "$RUNNER_TEMP/notes.md"
+          grep -q '[^[:space:]]' "$RUNNER_TEMP/notes.md" || fail 'Empty public changelog.'
+          verify_prepared
+          tag=$(ref_sha "tags/$VERSION")
+          if [[ -n "$tag" && "$PREPARED_SHA" == "$INITIAL_PREPARED_SHA" ]]; then
+            fail 'Existing tag predates translation preparation; refusing to move it.'
+          fi
+          if [[ -z "$tag" && "$PREPARED_SHA" == "$INITIAL_PREPARED_SHA" ]]; then
+            for platform in ios android web; do
+              reservation=$(ref_sha "heads/release-build-$VERSION-$platform")
+              [[ -z "$reservation" ]] || fail 'Builds were reserved before translation preparation.'
+            done
+            [[ -n "$CROWDIN_PERSONAL_TOKEN" ]] || fail 'CROWDIN_PERSONAL_TOKEN is required to refresh translations.'
+            echo '::group::Refresh release translations'
+            (
+              cd source
+              pnpm intl:pull --token "$CROWDIN_PERSONAL_TOKEN"
+              pnpm intl:extract:all
+              git add -- src/locale/locales/*/messages.po
+              git diff --cached --name-only > "$RUNNER_TEMP/changed-paths"
+              while IFS= read -r path; do
+                [[ "$path" =~ ^src/locale/locales/[^/]+/messages\.po$ ]] || fail "Unexpected translation change: $path"
+                [[ "$(git ls-files -s -- "$path" | cut -d ' ' -f 1)" == 100644 ]] || fail 'Catalog must be a regular file.'
+              done < "$RUNNER_TEMP/changed-paths"
+              git diff --exit-code
+              git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                -c core.hooksPath=/dev/null commit --allow-empty -m "Prepare release translations $VERSION"
+            )
+            verify_prepared
+            # A durable checkpoint prevents retries from downloading different translations.
+            git -C source -c credential.helper= -c 'credential.helper=!gh auth git-credential' \
+              push origin "HEAD:refs/heads/$BRANCH"
+            PREPARED_SHA=$(git -C source rev-parse HEAD)
+            verify_prepared
+            summary "Translations prepared at $PREPARED_SHA (initial preparation $INITIAL_PREPARED_SHA)."
+            echo '::endgroup::'
+          fi
+
+          echo '::group::Release checks'
+          (
+            cd source
+            pnpm lexicons:generate
+            pnpm intl:compile 2>&1 | tee "$RUNNER_TEMP/release-i18n.log"
+            if grep -q 'invalid syntax' "$RUNNER_TEMP/release-i18n.log"; then
+              fail 'Translation compilation reported invalid syntax.'
+            fi
+            pnpm lint
+            pnpm prettier
+            pnpm lexicons:verify
+            pnpm typecheck
+            pnpm test --ci --maxWorkers=2
+          )
+          validate_source prepared
+          echo '::endgroup::'
+          verify_prepared
+          if [[ -z "$(ref_sha "tags/$VERSION")" ]]; then
+            api git/refs -X POST -f "ref=refs/tags/$VERSION" -f "sha=$PREPARED_SHA" >/dev/null
+            summary "Created tag $VERSION at $PREPARED_SHA."
+          fi
+          REQUIRE_TAG=true
+          verify_prepared
+          if [[ "$RELEASES" == '[]' ]]; then
+            gh release create "$VERSION" --verify-tag --target "$PREPARED_SHA" --draft \
+              --title "Release $VERSION" --notes-file "$RUNNER_TEMP/notes.md"
+          else
+            gh release edit "$VERSION" --notes-file "$RUNNER_TEMP/notes.md"
+          fi
+          REQUIRE_DRAFT=true
+          verify_prepared
+          summary "Draft notes updated for $VERSION."
+
+          if [[ "$START_BUILDS" != true ]]; then
+            summary 'Build dispatch disabled. Existing builds were not changed.'
+            exit 0
+          fi
+          platforms=(ios android web)
+          for index in 0 1 2; do
+            platform=${platforms[$index]}
+            workflow=${WORKFLOWS[$index]}
+            verify_prepared
+            reservation="heads/release-build-$VERSION-$platform"
+            if [[ -n "$(ref_sha "$reservation")" ]]; then
+              summary "$platform dispatch was previously reserved. No new build started; inspect Actions and rerun failed build jobs if needed."
+              continue
+            fi
+            api "actions/workflows/$workflow" | jq -e '.state == "active"' >/dev/null
+            # Reserve before dispatch: a timeout must never cause an automatic duplicate build.
+            api git/refs -X POST -f "ref=refs/$reservation" -f "sha=$PREPARED_SHA" >/dev/null
+            summary "$platform dispatch reserved for $PREPARED_SHA. If no run link follows, inspect Actions before recovery."
+            verify_prepared
+            case "$platform" in
+              ios) inputs='{"profile":"production","submit":"false","testFlightGroup":"none"}' ;;
+              android) inputs='{"profile":"production","submit":"false"}' ;;
+              web) inputs='{}' ;;
+            esac
+            jq -n --arg ref "$VERSION" --arg sha "$PREPARED_SHA" --argjson inputs "$inputs" \
+              '{ref: $ref, inputs: ($inputs + {sourceRef: $sha}), return_run_details: true}' > "$RUNNER_TEMP/dispatch.json"
+            api "actions/workflows/$workflow/dispatches" -X POST --input "$RUNNER_TEMP/dispatch.json" > "$RUNNER_TEMP/run.json"
+            jq -e '.workflow_run_id > 0 and (.html_url | type == "string")' "$RUNNER_TEMP/run.json" >/dev/null || fail 'Dispatch outcome uncertain; inspect Actions before retrying.'
+            summary "$platform build: $(jq -r .html_url "$RUNNER_TEMP/run.json"). Dispatched does not mean successful."
+          done

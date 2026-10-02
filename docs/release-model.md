@@ -61,11 +61,16 @@ The iOS, Android, and web workflows accept `sourceRef`, defaulting to the event'
 SHA, and expose the checked-out commit as `source-sha`. Native submission jobs
 check out that same commit. Web image tags and revision labels use it too.
 
-Native workflows accept `submit`, defaulting to `true`. The preparation plan sets
-it to `false`. Build and submission recovery is separate work.
+Native workflows accept `submit`, defaulting to `true`. Run Release sets it to
+`false`. Create Release validates the source and creates the prepared branch;
+Run Release creates the tag and draft, refreshes notes, and dispatches builds.
+Native artifacts remain available for 30 days. Build-result collection, document
+finalization, and submission of retained artifacts are separate work.
 
 ## Implementation
 
-- [Preparation workflow and checks](release-preparation/README.md)
-- `scripts/release/model.mjs`: document creation, validation, and changelog parsing.
-- `scripts/release/cli.mjs`: command-line access to the document helpers.
+- [Release workflow usage and recovery](release-preparation/README.md)
+- `.github/workflows/create-release.yml`: validation, document and branch creation,
+  and handoff to Run Release.
+- `.github/workflows/run-release.yml`: repeatable draft notes, tag creation, and
+  guarded build dispatch using the GitHub CLI.
