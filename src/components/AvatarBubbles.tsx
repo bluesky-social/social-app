@@ -183,7 +183,11 @@ function AvatarPlaceholder({size}: {size: number}) {
         t.atoms.bg_contrast_200,
         {width: size, height: size},
       ]}>
-      <PersonIcon width={size * 0.5} fill={t.atoms.text_inverted.color} />
+      <PersonIcon
+        width={size * 0.5}
+        height={size * 0.5}
+        fill={t.atoms.text_inverted.color}
+      />
     </View>
   )
 }

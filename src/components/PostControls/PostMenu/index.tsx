@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {type Shadow} from '#/state/cache/post-shadow'
 import {EventStopper} from '#/view/com/util/EventStopper'
-import {MenuIcon as DotsHorizontal} from '#/components/icons/nano'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontal} from '#/components/icons/DotGrid'
 import * as Menu from '#/components/Menu'
 import {useMenuControl} from '#/components/Menu'
 import {type app} from '#/lexicons'

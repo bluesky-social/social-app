@@ -96,7 +96,7 @@ export function FollowersPromoBanner({
               opacity: pressed ? 0.5 : 1,
             },
           ]}>
-          <TimesIcon width={12} fill={t.palette.contrast_500} />
+          <TimesIcon width={12} height={12} fill={t.palette.contrast_500} />
         </Pressable>
       </View>
     </View>

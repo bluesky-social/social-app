@@ -260,13 +260,17 @@ module.exports = function (_config) {
         [
           'react-native-nano-icons',
           {
-            iconSets: [
-              /*
-               * `web` also emits a woff2, which `src/style.css` loads via
-               * @font-face.
-               */
-              {inputDir: './assets/nano-icons/app-icons', web: true},
-            ],
+            /*
+             * One font per codegen directory under `assets/icons/`, see
+             * `scripts/icons/README.md`. `web` also emits a woff2, which
+             * `src/components/icons/nanoFont.web.ts` registers via @font-face.
+             */
+            iconSets: ['ui', 'brands', 'community'].map(lane => ({
+              inputDir: `./assets/icons/${lane}`,
+              outputDir: './assets/nano-icons/nanoicons',
+              fontFamily: `icons-${lane}`,
+              web: true,
+            })),
           },
         ],
         [

@@ -153,8 +153,8 @@ msgstr "{0, plural, one {# new join request} other {# new join requests}}"
 msgid "{0, plural, one {# person} other {# people}} reacted – {1}"
 msgstr "{0, plural, one {# person} other {# people}} reacted – {1}"
 
-#. placeholder {0}: quoteCount ?? 0
-#: src/screens/Post/PostQuotes.tsx:34
+#. placeholder {0}: post.quoteCount ?? 0
+#: src/screens/Post/PostQuotes.tsx:35
 msgid "{0, plural, one {# quote} other {# quotes}}"
 msgstr ""
 
@@ -170,8 +170,8 @@ msgstr ""
 
 #. placeholder {0}: numUnreadMessages.numUnread ?? 0
 #. placeholder {0}: numUnreadNotifications ?? 0
-#: src/view/shell/bottom-bar/BottomBar.tsx:257
-#: src/view/shell/bottom-bar/BottomBar.tsx:289
+#: src/view/shell/bottom-bar/BottomBar.tsx:255
+#: src/view/shell/bottom-bar/BottomBar.tsx:287
 #: src/view/shell/Drawer.tsx:560
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
@@ -336,7 +336,7 @@ msgstr ""
 
 #. Accessibility hint for the bottom bar chat icon when the number of unread messages exceeds the cap, with the + symbol already included – for example, 99+ unread items
 #. placeholder {0}: numUnreadMessages.numUnread
-#: src/view/shell/bottom-bar/BottomBar.tsx:252
+#: src/view/shell/bottom-bar/BottomBar.tsx:250
 msgid "{0} unread items"
 msgstr "{0} unread items"
 
@@ -482,7 +482,7 @@ msgstr "{count, plural, one {# new join request} other {# new join requests}}"
 msgid "{count, plural, one {# request} other {# requests}}"
 msgstr "{count, plural, one {# request} other {# requests}}"
 
-#: src/view/shell/desktop/LeftNav.tsx:485
+#: src/view/shell/desktop/LeftNav.tsx:486
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -779,7 +779,7 @@ msgstr "{name}'s favorite feeds and people - join me!"
 msgid "{name}’s Starter Pack"
 msgstr "{name}’s Starter Pack"
 
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:344
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:342
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -1253,8 +1253,8 @@ msgstr ""
 
 #: src/screens/Settings/Settings.tsx:596
 #: src/screens/Settings/Settings.tsx:599
-#: src/view/shell/desktop/LeftNav.tsx:277
-#: src/view/shell/desktop/LeftNav.tsx:280
+#: src/view/shell/desktop/LeftNav.tsx:278
+#: src/view/shell/desktop/LeftNav.tsx:281
 msgid "Add another account"
 msgstr ""
 
@@ -2661,7 +2661,7 @@ msgstr "Camera access needed"
 #: src/view/com/composer/Composer.tsx:1849
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:44
 #: src/view/com/composer/photos/EditImageDialog.web.tsx:53
-#: src/view/shell/desktop/LeftNav.tsx:229
+#: src/view/shell/desktop/LeftNav.tsx:230
 msgid "Cancel"
 msgstr ""
 
@@ -2800,8 +2800,8 @@ msgstr "Channel"
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:533
-#: src/view/shell/bottom-bar/BottomBar.tsx:248
-#: src/view/shell/desktop/LeftNav.tsx:703
+#: src/view/shell/bottom-bar/BottomBar.tsx:246
+#: src/view/shell/desktop/LeftNav.tsx:702
 #: src/view/shell/Drawer.tsx:528
 msgid "Chat"
 msgstr ""
@@ -3281,7 +3281,7 @@ msgstr ""
 
 #: src/lib/hotkeys/index.tsx:66
 #: src/view/com/feeds/ComposerPrompt.tsx:161
-#: src/view/shell/desktop/LeftNav.tsx:587
+#: src/view/shell/desktop/LeftNav.tsx:588
 msgid "Compose new post"
 msgstr ""
 
@@ -3772,10 +3772,10 @@ msgstr "Create a Starter Pack for me"
 #: src/screens/Signup/index.tsx:139
 #: src/view/com/auth/SplashScreen.tsx:108
 #: src/view/com/auth/SplashScreen.web.tsx:117
-#: src/view/shell/bottom-bar/BottomBar.tsx:357
-#: src/view/shell/bottom-bar/BottomBar.tsx:361
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:250
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:255
+#: src/view/shell/bottom-bar/BottomBar.tsx:355
+#: src/view/shell/bottom-bar/BottomBar.tsx:359
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:248
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:253
 #: src/view/shell/NavSignupCard.tsx:48
 #: src/view/shell/NavSignupCard.tsx:53
 msgid "Create account"
@@ -4945,7 +4945,7 @@ msgstr ""
 
 #: src/Navigation.tsx:793
 #: src/screens/Search/Shell.tsx:549
-#: src/view/shell/desktop/LeftNav.tsx:682
+#: src/view/shell/desktop/LeftNav.tsx:681
 #: src/view/shell/Drawer.tsx:476
 msgid "Explore"
 msgstr ""
@@ -5170,13 +5170,13 @@ msgid "Failed to lock group chat"
 msgstr "Failed to lock group chat"
 
 #: src/screens/Messages/ChatList.tsx:636
-#: src/view/shell/bottom-bar/BottomBar.tsx:453
+#: src/view/shell/bottom-bar/BottomBar.tsx:451
 msgid "Failed to mark all chats as read"
 msgstr "Failed to mark all chats as read"
 
 #: src/screens/Messages/ChatList.tsx:645
 #: src/screens/Messages/Inbox.tsx:303
-#: src/view/shell/bottom-bar/BottomBar.tsx:462
+#: src/view/shell/bottom-bar/BottomBar.tsx:460
 msgid "Failed to mark all requests as read"
 msgstr ""
 
@@ -5387,7 +5387,7 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:193
 #: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:240
-#: src/view/shell/desktop/LeftNav.tsx:717
+#: src/view/shell/desktop/LeftNav.tsx:716
 #: src/view/shell/Drawer.tsx:592
 msgid "Feeds"
 msgstr ""
@@ -6063,8 +6063,8 @@ msgstr ""
 #: src/components/dms/ConvoMenu.tsx:262
 #: src/screens/Messages/components/MessagesListInfoPanel.tsx:102
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:194
-#: src/view/shell/desktop/LeftNav.tsx:337
-#: src/view/shell/desktop/LeftNav.tsx:343
+#: src/view/shell/desktop/LeftNav.tsx:338
+#: src/view/shell/desktop/LeftNav.tsx:344
 msgid "Go to profile"
 msgstr ""
 
@@ -6464,8 +6464,8 @@ msgstr ""
 
 #: src/Navigation.tsx:788
 #: src/Navigation.tsx:809
-#: src/view/shell/bottom-bar/BottomBar.tsx:202
-#: src/view/shell/desktop/LeftNav.tsx:669
+#: src/view/shell/bottom-bar/BottomBar.tsx:200
+#: src/view/shell/desktop/LeftNav.tsx:670
 #: src/view/shell/Drawer.tsx:502
 msgid "Home"
 msgstr ""
@@ -7056,6 +7056,7 @@ msgid "Last initiated just now"
 msgstr ""
 
 #: src/screens/Hashtag.tsx:99
+#: src/screens/Post/PostQuotes.tsx:88
 #: src/screens/Search/SearchResults.tsx:90
 #: src/screens/Topic.tsx:66
 msgid "Latest"
@@ -7424,7 +7425,7 @@ msgstr ""
 #: src/view/screens/Lists.tsx:60
 #: src/view/screens/Profile.tsx:234
 #: src/view/screens/Profile.tsx:242
-#: src/view/shell/desktop/LeftNav.tsx:727
+#: src/view/shell/desktop/LeftNav.tsx:726
 #: src/view/shell/Drawer.tsx:607
 msgid "Lists"
 msgstr ""
@@ -7488,7 +7489,7 @@ msgstr ""
 #: src/screens/CustomFeed/index.tsx:208
 #: src/screens/Profile/Sections/Feed.tsx:121
 #: src/screens/ProfileList/FeedSection.tsx:113
-#: src/view/com/feeds/FeedPage.tsx:169
+#: src/view/com/feeds/FeedPage.tsx:180
 msgid "Load new posts"
 msgstr ""
 
@@ -7619,8 +7620,8 @@ msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:655
 #: src/screens/Messages/ChatList.tsx:659
-#: src/view/shell/bottom-bar/BottomBar.tsx:471
-#: src/view/shell/bottom-bar/BottomBar.tsx:475
+#: src/view/shell/bottom-bar/BottomBar.tsx:469
+#: src/view/shell/bottom-bar/BottomBar.tsx:473
 msgid "Mark all chats as read"
 msgstr "Mark all chats as read"
 
@@ -7630,8 +7631,8 @@ msgstr "Mark all reports as read"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
-#: src/view/shell/bottom-bar/BottomBar.tsx:479
-#: src/view/shell/bottom-bar/BottomBar.tsx:483
+#: src/view/shell/bottom-bar/BottomBar.tsx:477
+#: src/view/shell/bottom-bar/BottomBar.tsx:481
 msgid "Mark all requests as read"
 msgstr "Mark all requests as read"
 
@@ -7645,12 +7646,12 @@ msgid "Marked all as read"
 msgstr ""
 
 #: src/screens/Messages/ChatList.tsx:633
-#: src/view/shell/bottom-bar/BottomBar.tsx:450
+#: src/view/shell/bottom-bar/BottomBar.tsx:448
 msgid "Marked all chats as read"
 msgstr "Marked all chats as read"
 
 #: src/screens/Messages/ChatList.tsx:642
-#: src/view/shell/bottom-bar/BottomBar.tsx:459
+#: src/view/shell/bottom-bar/BottomBar.tsx:457
 msgid "Marked all requests as read"
 msgstr "Marked all requests as read"
 
@@ -8216,8 +8217,8 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/view/com/feeds/FeedPage.tsx:180
-#: src/view/shell/desktop/LeftNav.tsx:598
+#: src/view/com/feeds/FeedPage.tsx:191
+#: src/view/shell/desktop/LeftNav.tsx:599
 msgctxt "action"
 msgid "New post"
 msgstr ""
@@ -8453,7 +8454,7 @@ msgstr ""
 msgid "No posts yet"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:107
+#: src/view/com/post-thread/PostQuotes.tsx:140
 msgid "No quotes yet"
 msgstr ""
 
@@ -8538,7 +8539,7 @@ msgstr ""
 msgid "Nobody has liked this yet. Maybe you should be the first!"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:109
+#: src/view/com/post-thread/PostQuotes.tsx:142
 msgid "Nobody has quoted this yet. Maybe you should be the first!"
 msgstr ""
 
@@ -8639,8 +8640,8 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:201
 #: src/screens/Settings/Settings.tsx:204
 #: src/view/screens/Notifications.tsx:128
-#: src/view/shell/bottom-bar/BottomBar.tsx:285
-#: src/view/shell/desktop/LeftNav.tsx:692
+#: src/view/shell/bottom-bar/BottomBar.tsx:283
+#: src/view/shell/desktop/LeftNav.tsx:691
 #: src/view/shell/Drawer.tsx:555
 msgid "Notifications"
 msgstr ""
@@ -9868,8 +9869,8 @@ msgstr ""
 msgid "profile"
 msgstr ""
 
-#: src/view/shell/bottom-bar/BottomBar.tsx:328
-#: src/view/shell/desktop/LeftNav.tsx:750
+#: src/view/shell/bottom-bar/BottomBar.tsx:326
+#: src/view/shell/desktop/LeftNav.tsx:749
 #: src/view/shell/Drawer.tsx:92
 #: src/view/shell/Drawer.tsx:658
 msgid "Profile"
@@ -10927,7 +10928,7 @@ msgstr ""
 msgid "Save to my feeds"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:737
+#: src/view/shell/desktop/LeftNav.tsx:736
 #: src/view/shell/Drawer.tsx:633
 msgctxt "link to bookmarks screen"
 msgid "Saved"
@@ -11003,7 +11004,7 @@ msgstr ""
 #: src/screens/Search/Shell.tsx:549
 #: src/screens/Search/Shell.tsx:612
 #: src/screens/Search/Shell.tsx:753
-#: src/view/shell/bottom-bar/BottomBar.tsx:222
+#: src/view/shell/bottom-bar/BottomBar.tsx:220
 msgid "Search"
 msgstr ""
 
@@ -11469,7 +11470,7 @@ msgstr ""
 
 #: src/Navigation.tsx:239
 #: src/screens/Settings/Settings.tsx:102
-#: src/view/shell/desktop/LeftNav.tsx:760
+#: src/view/shell/desktop/LeftNav.tsx:759
 #: src/view/shell/Drawer.tsx:671
 msgid "Settings"
 msgstr ""
@@ -11818,10 +11819,10 @@ msgstr ""
 #: src/view/com/auth/SplashScreen.tsx:125
 #: src/view/com/auth/SplashScreen.web.tsx:123
 #: src/view/com/auth/SplashScreen.web.tsx:131
-#: src/view/shell/bottom-bar/BottomBar.tsx:366
-#: src/view/shell/bottom-bar/BottomBar.tsx:370
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:260
-#: src/view/shell/bottom-bar/BottomBarWeb.tsx:265
+#: src/view/shell/bottom-bar/BottomBar.tsx:364
+#: src/view/shell/bottom-bar/BottomBar.tsx:368
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:258
+#: src/view/shell/bottom-bar/BottomBarWeb.tsx:263
 #: src/view/shell/NavSignupCard.tsx:58
 #: src/view/shell/NavSignupCard.tsx:63
 msgid "Sign in"
@@ -11873,9 +11874,9 @@ msgstr ""
 #: src/screens/SignupQueued.tsx:100
 #: src/screens/SignupQueued.tsx:103
 #: src/screens/Takendown.tsx:88
-#: src/view/shell/desktop/LeftNav.tsx:228
-#: src/view/shell/desktop/LeftNav.tsx:283
-#: src/view/shell/desktop/LeftNav.tsx:286
+#: src/view/shell/desktop/LeftNav.tsx:229
+#: src/view/shell/desktop/LeftNav.tsx:284
+#: src/view/shell/desktop/LeftNav.tsx:287
 msgid "Sign out"
 msgstr ""
 
@@ -11884,7 +11885,7 @@ msgid "Sign Out"
 msgstr ""
 
 #: src/screens/Settings/Settings.tsx:308
-#: src/view/shell/desktop/LeftNav.tsx:225
+#: src/view/shell/desktop/LeftNav.tsx:226
 msgid "Sign out?"
 msgstr ""
 
@@ -12375,11 +12376,11 @@ msgstr "Suspended accounts cannot participate in chat."
 #: src/screens/Settings/Settings.tsx:126
 #: src/screens/Settings/Settings.tsx:138
 #: src/screens/Settings/Settings.tsx:636
-#: src/view/shell/desktop/LeftNav.tsx:263
+#: src/view/shell/desktop/LeftNav.tsx:264
 msgid "Switch account"
 msgstr ""
 
-#: src/view/shell/desktop/LeftNav.tsx:125
+#: src/view/shell/desktop/LeftNav.tsx:126
 msgid "Switch accounts"
 msgstr ""
 
@@ -12394,7 +12395,7 @@ msgid "Switch OTA channel"
 msgstr "Switch OTA channel"
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
-#: src/view/shell/desktop/LeftNav.tsx:365
+#: src/view/shell/desktop/LeftNav.tsx:366
 msgid "Switch to {0}"
 msgstr ""
 
@@ -12596,7 +12597,7 @@ msgstr "That Starter Pack could not be found."
 msgid "That username is already taken"
 msgstr ""
 
-#: src/view/com/post-thread/PostQuotes.tsx:135
+#: src/view/com/post-thread/PostQuotes.tsx:174
 msgid "That's all, folks!"
 msgstr ""
 
@@ -12735,7 +12736,7 @@ msgstr ""
 msgid "The Starter Pack that you are trying to view is invalid. You may delete this Starter Pack instead."
 msgstr "The Starter Pack that you are trying to view is invalid. You may delete this Starter Pack instead."
 
-#: src/components/ContextMenu/index.tsx:507
+#: src/components/ContextMenu/index.tsx:504
 msgid "The subject of the context menu"
 msgstr ""
 
@@ -13390,6 +13391,7 @@ msgid "Too many contacts - you've exceeded the number of contacts you can import
 msgstr ""
 
 #: src/screens/Hashtag.tsx:88
+#: src/screens/Post/PostQuotes.tsx:82
 #: src/screens/Search/SearchResults.tsx:78
 #: src/screens/Topic.tsx:60
 msgid "Top"
@@ -15343,7 +15345,7 @@ msgid "You will be eligible to appear in this Starter Pack again."
 msgstr "You will be eligible to appear in this Starter Pack again."
 
 #: src/screens/Settings/Settings.tsx:309
-#: src/view/shell/desktop/LeftNav.tsx:226
+#: src/view/shell/desktop/LeftNav.tsx:227
 msgid "You will be signed out of all your accounts."
 msgstr ""
 

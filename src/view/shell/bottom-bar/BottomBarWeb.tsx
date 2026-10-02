@@ -46,6 +46,7 @@ import {
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
+import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {styles} from './BottomBarStyles'
 
 type NavItemValue = 'home' | 'search' | 'chat' | 'notifications' | 'profile'
@@ -107,10 +108,7 @@ export function BottomBarWeb() {
               routeName="Home"
               href="/"
               navItem="home"
-              hasNew={
-                hasHomeBadge &&
-                ax.features.enabled(ax.features.FollowingV2Enable)
-              }>
+              hasNew={hasHomeBadge && isFollowingV2HomeDotEnabled(ax)}>
               {({isActive}) => {
                 const Icon = isActive ? HomeFilled : Home
                 return (

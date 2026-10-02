@@ -12,7 +12,6 @@ import {Image} from 'expo-image'
 
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {flatten, useTheme} from '#/alf'
-import {NanoGlyph} from '#/components/icons/nano'
 
 const ratio = 57 / 64
 
@@ -35,40 +34,22 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
 
   const logoVariant = useLogoVariant(allowVariants)
 
-  if (logoVariant !== 'default') {
-    const isJapanLogo = logoVariant === 'japan'
+  if (logoVariant === 'kawaii') {
     return (
       <Image
         source={
-          isJapanLogo
-            ? require('../../../assets/icons/custom_logo_japan.svg')
-            : size > 100
-              ? require('../../../assets/kawaii.png')
-              : require('../../../assets/kawaii_smol.png')
+          size > 100
+            ? require('../../../assets/kawaii.png')
+            : require('../../../assets/kawaii_smol.png')
         }
         accessibilityLabel="Bluesky"
         accessibilityHint=""
         accessibilityIgnoresInvertColors
-        style={[{height: size, aspectRatio: isJapanLogo ? 2 : 1.4}]}
+        style={[{height: size, aspectRatio: 1.4}]}
       />
     )
   }
 
-  if (!gradient) {
-    return (
-      <NanoGlyph
-        name="LogoButterfly"
-        size={size * ratio}
-        color={_fill}
-        style={styles}
-      />
-    )
-  }
-
-  /*
-   * Font glyphs cannot carry a gradient, so the "sky" variant stays on
-   * react-native-svg.
-   */
   return (
     <Svg
       fill="none"
@@ -77,12 +58,14 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
       viewBox="0 0 64 57"
       {...rest}
       style={[{width: size, height: size * ratio}, styles]}>
-      <Defs>
-        <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
-          <Stop offset="0" stopColor="#0A7AFF" stopOpacity="1" />
-          <Stop offset="1" stopColor="#59B9FF" stopOpacity="1" />
-        </LinearGradient>
-      </Defs>
+      {gradient && (
+        <Defs>
+          <LinearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <Stop offset="0" stopColor="#0A7AFF" stopOpacity="1" />
+            <Stop offset="1" stopColor="#59B9FF" stopOpacity="1" />
+          </LinearGradient>
+        </Defs>
+      )}
 
       <Path
         fill={_fill}

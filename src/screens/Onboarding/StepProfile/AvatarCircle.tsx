@@ -53,7 +53,11 @@ export function AvatarCircle({
         />
       ) : (
         <View style={styles.imageContainer}>
-          <StreamingLive width={100} style={{color: t.palette.contrast_200}} />
+          <StreamingLive
+            height={100}
+            width={100}
+            style={{color: t.palette.contrast_200}}
+          />
         </View>
       )}
       <View style={[a.absolute, {bottom: 2, right: 2}]}>

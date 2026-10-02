@@ -66,7 +66,11 @@ export const PlaceholderCanvas = forwardRef<PlaceholderCanvasRef, {}>(
                 {backgroundColor: avatar.backgroundColor},
               ]}
               collapsable={false}>
-              <Icon width={85 * SIZE_MULTIPLIER} style={{color: 'white'}} />
+              <Icon
+                height={85 * SIZE_MULTIPLIER}
+                width={85 * SIZE_MULTIPLIER}
+                style={{color: 'white'}}
+              />
             </View>
           </LazyViewShot>
         </Suspense>

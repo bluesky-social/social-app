@@ -36,7 +36,7 @@ export function AvatarCreatorCircle({
   return (
     <View>
       <View style={styles.imageContainer}>
-        <Icon width={85} style={{color: t.palette.white}} />
+        <Icon height={85} width={85} style={{color: t.palette.white}} />
       </View>
     </View>
   )

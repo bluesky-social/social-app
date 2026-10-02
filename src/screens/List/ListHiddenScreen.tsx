@@ -121,6 +121,7 @@ export function ListHiddenScreen({
       <View style={[a.w_full, a.align_center, a.gap_lg]}>
         <EyeSlash
           style={{color: t.atoms.text_contrast_medium.color}}
+          height={42}
           width={42}
         />
         <View style={[a.gap_sm, a.align_center]}>

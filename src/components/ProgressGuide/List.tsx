@@ -192,6 +192,7 @@ function StackedAvatars({follows}: {follows?: bsky.profile.AnyProfileView[]}) {
                 ]}>
                 <PersonIcon
                   width={iconSize}
+                  height={iconSize}
                   fill={t.atoms.bg_contrast_50.backgroundColor}
                 />
               </View>

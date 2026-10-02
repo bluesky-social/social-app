@@ -7,18 +7,24 @@ import {Asset} from 'expo-asset'
  * and every icon renders as tofu. Resolving through expo-asset gives the
  * served URL in both dev and production builds.
  */
-const uri = Asset.fromModule(
-  require('../../../assets/nano-icons/nanoicons/app-icons.woff2'),
-).uri
+const fonts = {
+  'icons-ui': require('../../../assets/nano-icons/nanoicons/icons-ui.woff2'),
+  'icons-brands': require('../../../assets/nano-icons/nanoicons/icons-brands.woff2'),
+  'icons-community': require('../../../assets/nano-icons/nanoicons/icons-community.woff2'),
+}
 
 const style = document.createElement('style')
-style.textContent = `@font-face {
-  font-family: 'app-icons';
-  src: url('${uri}') format('woff2');
+style.textContent = Object.entries(fonts)
+  .map(
+    ([family, module]) => `@font-face {
+  font-family: '${family}';
+  src: url('${Asset.fromModule(module).uri}') format('woff2');
   font-weight: normal;
   font-style: normal;
   font-display: block;
-}`
+}`,
+  )
+  .join('\n')
 document.head.appendChild(style)
 
 export {}

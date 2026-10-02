@@ -3,7 +3,7 @@ import {
   type ForwardRefExoticComponent,
   type RefAttributes,
 } from 'react'
-import Svg, {Path} from 'react-native-svg'
+import Svg, {Circle, Path, Rect} from 'react-native-svg'
 
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
 
@@ -40,6 +40,56 @@ export const IconTemplate_Stroke2_Corner0_Rounded = forwardRef(
   },
 )
 
+export function createSinglePathSVG({
+  path,
+  viewBox,
+  strokeWidth = 0,
+  strokeLinecap = 'butt',
+  strokeLinejoin = 'miter',
+}: {
+  path: string
+  viewBox?: string
+  strokeWidth?: number
+  strokeLinecap?: 'butt' | 'round' | 'square'
+  strokeLinejoin?: 'miter' | 'round' | 'bevel'
+}) {
+  const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
+    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+
+    const hasStroke = strokeWidth > 0
+
+    return (
+      <Svg
+        fill="none"
+        {...rest}
+        ref={ref}
+        viewBox={viewBox ?? '0 0 24 24'}
+        width={size}
+        height={size}
+        style={[style]}>
+        {gradient}
+        <Path
+          fill={hasStroke ? 'none' : fill}
+          stroke={hasStroke ? fill : 'none'}
+          strokeWidth={strokeWidth}
+          strokeLinecap={strokeLinecap}
+          strokeLinejoin={strokeLinejoin}
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d={path}
+        />
+      </Svg>
+    )
+  }) as IconWithSvgMeta
+  Icon.svgPaths = [path]
+  Icon.svgViewBox = viewBox || '0 0 24 24'
+  Icon.svgStrokeWidth = strokeWidth
+  return Icon
+}
+
+/**
+ * Prefer `createSinglePathSVG` - do a boolean union in Figma prior to exporting, unless you have a specific reason.
+ */
 export function createMultiPathSVG({
   paths,
   viewBox,
@@ -74,6 +124,108 @@ export function createMultiPathSVG({
   }) as IconWithSvgMeta
   Icon.svgPaths = paths
   Icon.svgViewBox = viewBox || '0 0 24 24'
+  Icon.svgStrokeWidth = 0
+  return Icon
+}
+
+type GeneratedSVGElement = {
+  type: 'circle' | 'path' | 'rect'
+  fill?: string
+  stroke?: string
+  strokeWidth?: number
+  strokeLinecap?: 'butt' | 'round' | 'square'
+  strokeLinejoin?: 'bevel' | 'miter' | 'round'
+} & (
+  | {
+      type: 'path'
+      d: string
+      fillRule?: 'evenodd' | 'nonzero'
+      clipRule?: 'evenodd' | 'nonzero'
+    }
+  | {type: 'circle'; cx: number; cy: number; r: number}
+  | {
+      type: 'rect'
+      x: number
+      y: number
+      width: number
+      height: number
+      rx?: number
+      ry?: number
+    }
+)
+
+export function createSVG({
+  elements,
+  viewBox,
+}: {
+  elements: GeneratedSVGElement[]
+  viewBox: string
+}) {
+  const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
+    const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
+    const paint = (value: string | undefined) =>
+      value === 'currentColor' ? fill : value
+
+    return (
+      <Svg
+        fill="none"
+        {...rest}
+        ref={ref}
+        viewBox={viewBox}
+        width={size}
+        height={size}
+        style={[style]}>
+        {gradient}
+        {elements.map((element, i) => {
+          const common = {
+            fill: paint(element.fill),
+            stroke: paint(element.stroke),
+            strokeWidth: element.strokeWidth,
+            strokeLinecap: element.strokeLinecap,
+            strokeLinejoin: element.strokeLinejoin,
+          }
+          if (element.type === 'path') {
+            return (
+              <Path
+                {...common}
+                key={i}
+                d={element.d}
+                fillRule={element.fillRule}
+                clipRule={element.clipRule}
+              />
+            )
+          }
+          if (element.type === 'circle') {
+            return (
+              <Circle
+                {...common}
+                key={i}
+                cx={element.cx}
+                cy={element.cy}
+                r={element.r}
+              />
+            )
+          }
+          return (
+            <Rect
+              {...common}
+              key={i}
+              x={element.x}
+              y={element.y}
+              width={element.width}
+              height={element.height}
+              rx={element.rx}
+              ry={element.ry}
+            />
+          )
+        })}
+      </Svg>
+    )
+  }) as IconWithSvgMeta
+  Icon.svgPaths = elements.flatMap(element =>
+    element.type === 'path' ? [element.d] : [],
+  )
+  Icon.svgViewBox = viewBox
   Icon.svgStrokeWidth = 0
   return Icon
 }

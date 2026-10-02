@@ -9,7 +9,8 @@ import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-disp
 import {makeProfileLink} from '#/lib/routes/links'
 import {useSession} from '#/state/session'
 import {atoms as a, useTheme} from '#/alf'
-import {PinIcon, RepostIcon} from '#/components/icons/nano'
+import {Pin_Stroke2_Corner0_Rounded as PinIcon} from '#/components/icons/Pin'
+import {Repost_Stroke2_Corner3_Rounded as RepostIcon} from '#/components/icons/Repost'
 import {Link} from '#/components/Link'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {Text} from '#/components/Typography'
@@ -82,6 +83,7 @@ export function PostFeedReason({
         <RepostIcon
           style={[t.atoms.text_contrast_medium, {marginRight: 3}]}
           width={13}
+          height={13}
         />
         <ProfileHoverCard did={reason.by.did}>
           <Text
@@ -108,6 +110,7 @@ export function PostFeedReason({
         <PinIcon
           style={[t.atoms.text_contrast_medium, {marginRight: 3}]}
           width={13}
+          height={13}
         />
         <Text
           style={[t.atoms.text_contrast_medium, a.font_medium, a.leading_snug]}
