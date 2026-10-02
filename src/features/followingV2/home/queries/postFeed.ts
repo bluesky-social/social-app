@@ -505,7 +505,7 @@ export function usePostFeedRefresh(
         logger.error('Failed to refresh posts feed', {safeMessage: e})
       }
       // Nothing to report once the feed has moved on.
-      if (!isTopReplaced(queryClient, queryKey, before)) {
+      if (!isReplaced(queryClient, queryKey, before)) {
         setError(e instanceof Error ? e : new Error(String(e)))
       }
     } finally {
@@ -659,16 +659,23 @@ function isRestored(fetchedAt: number | undefined) {
   return fetchedAt !== undefined && fetchedAt < PROCESS_STARTED_AT
 }
 
-/** Whether something else has replaced the feed's top page since `before`. */
-function isTopReplaced(
+/**
+ * Whether something else has replaced any of the feed's first `count` pages
+ * since `before`: by default, its top page.
+ */
+function isReplaced(
   queryClient: QueryClient,
   queryKey: QueryKey,
   before: PostFeedData | undefined,
+  count = 1,
 ) {
-  return (
-    queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0] !==
-    before?.pages[0]
-  )
+  const pages = queryClient.getQueryData<PostFeedData>(queryKey)?.pages
+  for (let i = 0; i < count; i++) {
+    if (pages?.[i] !== before?.pages[i]) {
+      return true
+    }
+  }
+  return false
 }
 
 /**
@@ -676,20 +683,26 @@ function isTopReplaced(
  * replaced its top page since `before` was read (a refetch, a reset or a
  * removal) or is fetching it now. Resolves to whether it wrote.
  *
- * `next` is given the data as it is when it writes, which has the same top
- * page as `before`, and any pages a `fetchNextPage` added below since.
+ * A write that depends on more than the top page, as one below it does, says
+ * how many of `before`'s pages it depends on with `dependsOn`, and gives way
+ * if any of them has been replaced.
+ *
+ * `next` is given the data as it is when it writes, which has the same pages
+ * it depends on as `before`, and any pages a `fetchNextPage` added below
+ * since.
  */
 async function commit(
   queryClient: QueryClient,
   queryKey: QueryKey,
   before: PostFeedData | undefined,
   next: (data: PostFeedData | undefined) => PostFeedData,
+  {dependsOn = 1}: {dependsOn?: number} = {},
 ) {
   const state = queryClient.getQueryState(queryKey)
   // A fetch from the top in flight will land after this write, so it wins.
   const isFetchingTop =
     state?.fetchStatus !== 'idle' && !state?.fetchMeta?.fetchMore
-  if (isTopReplaced(queryClient, queryKey, before) || isFetchingTop) {
+  if (isReplaced(queryClient, queryKey, before, dependsOn) || isFetchingTop) {
     return false
   }
   /*
@@ -700,7 +713,7 @@ async function commit(
    */
   await queryClient.cancelQueries({queryKey, exact: true})
   if (
-    isTopReplaced(queryClient, queryKey, before) ||
+    isReplaced(queryClient, queryKey, before, dependsOn) ||
     queryClient.getQueryState(queryKey)?.fetchStatus !== 'idle'
   ) {
     return false
