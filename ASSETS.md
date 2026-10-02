@@ -62,7 +62,7 @@ See [`assets/icons/README.md`](./assets/icons/README.md).
 
 ## 3. Bluesky trademarks and brand assets
 
-**Rights holder: Bluesky Social PBC.** Our name, logo, butterfly mark, logotype, app icons, and Attie mark are our trademarks. They are not licensed to you under the MIT license or by this document. Use of them is governed by our [Trademark Policy](https://bsky.social/about/support/trademarks) and [Brand Guidelines](https://bsky.social/about/support/branding).
+**Rights holder: Bluesky Social PBC.** Our name, logo, butterfly mark, logotype, and app icons are our trademarks. Use of them is governed by our [Trademark Policy](https://bsky.social/about/support/trademarks) and [Brand Guidelines](https://bsky.social/about/support/branding). Neither they nor any Attie logos or word marks are licensed to you under the MIT license or by this document.
 
 You may refer to Bluesky by name to describe interoperability or origin — for example, "a client for Bluesky," or "based on the Bluesky app." You may not use our marks as the identity of your own product or service, or in any way likely to suggest that Bluesky publishes, endorses, or supports it.
 
