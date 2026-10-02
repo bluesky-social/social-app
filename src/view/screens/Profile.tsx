@@ -41,7 +41,7 @@ import {ProfileHeader, ProfileHeaderLoading} from '#/screens/Profile/Header'
 import {getProfileBannerSafeAreaCoverHeight} from '#/screens/Profile/Header/layout'
 import {ProfileFeedSection} from '#/screens/Profile/Sections/Feed'
 import {ProfileLabelsSection} from '#/screens/Profile/Sections/Labels'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Circle_And_Square_Stroke1_Corner0_Rounded_Filled as CircleAndSquareIcon} from '#/components/icons/CircleAndSquare'
 import {EditBig_Stroke2_Corner2_Rounded as EditBigIcon} from '#/components/icons/EditBig'
 import {Heart2_Stroke1_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
@@ -51,7 +51,6 @@ import {VideoClip_Stroke1_Corner0_Rounded as VideoIcon} from '#/components/icons
 import * as Layout from '#/components/Layout'
 import {ScreenHider} from '#/components/moderation/ScreenHider'
 import {ProfileStarterPacks} from '#/components/StarterPack/ProfileStarterPacks'
-import {IS_IPAD} from '#/env'
 import {type app} from '#/lexicons'
 import {navigate} from '#/Navigation'
 
@@ -62,9 +61,10 @@ interface SectionRef {
 type Props = NativeStackScreenProps<CommonNavigatorParams, 'Profile'>
 export function ProfileScreen(props: Props) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {top: topInset} = useSafeAreaInsets()
   const safeAreaCoverHeight = getProfileBannerSafeAreaCoverHeight({
-    isIPad: IS_IPAD,
+    gtMobile,
     topInset,
   })
 
@@ -194,6 +194,7 @@ function ProfileScreenLoaded({
   isPlaceholderProfile: boolean
 }) {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const {height: windowHeight} = useWindowDimensions()
   const profile = useProfileShadow(profileUnshadowed)
   const {hasSession, currentAccount} = useSession()
@@ -424,7 +425,7 @@ function ProfileScreenLoaded({
         onCurrentPageSelected={onCurrentPageSelected}
         renderHeader={renderHeader}
         allowHeaderOverScroll
-        headerOverflowInset={IS_IPAD ? windowHeight : undefined}>
+        headerOverflowInset={gtMobile ? windowHeight : undefined}>
         {showFiltersTab
           ? ({headerHeight, isFocused, scrollElRef}) => (
               <ProfileLabelsSection
