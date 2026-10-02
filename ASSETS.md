@@ -18,7 +18,7 @@ For the assets Bluesky itself owns, we are not treating anyone's past use as bad
 |---|---|---|---|
 | [`assets/illustrations/`](#1-commissioned-artwork--licensed-to-bluesky-only) | Owen D. Pomery, via Brilliant Artists Ltd | No | Replace |
 | [`assets/icons/ui/`](#2-licensed-icon-system--not-ours-to-pass-on), Central glyphs in `assets/icons/custom/`, and Central icon glyphs in `bskyembed/assets/` except the Starter Pack mark | Iconists (David & Storm GbR) | No | Source your own |
-| [Bluesky marks](#3-bluesky-trademarks-and-brand-assets) — app icons, logos, favicons | Bluesky Social PBC | No | Replace |
+| [Bluesky-owned marks](#3-bluesky-trademarks-and-brand-assets) — app icons, logos, favicons, Attie | Bluesky Social PBC | No | Replace |
 | [`assets/kawaii.png`, `assets/kawaii_smol.png`](#4-community-and-contest-artwork--credited-but-not-ours-to-license) | [@sawaratsuki.bsky.social](https://bsky.app/profile/sawaratsuki.bsky.social) | No | Replace or remove |
 | [`assets/icons/custom/custom_logo_japan.svg`](#4-community-and-contest-artwork--credited-but-not-ours-to-license) | A Bluesky Japan logo contest entrant | No | Replace or remove |
 | [`assets/icons/brands/AppleLogo.svg`](#5-third-party-trademarks) | Apple Inc. | No | Rests on your own basis |
@@ -62,7 +62,7 @@ See [`assets/icons/README.md`](./assets/icons/README.md).
 
 ## 3. Bluesky trademarks and brand assets
 
-**Rights holder: Bluesky Social PBC.** Our name, logo, butterfly mark, logotype, and app icons are our trademarks. They are not licensed to you under the MIT license or by this document. Use of them is governed by our [Trademark Policy](https://bsky.social/about/support/trademarks) and [Brand Guidelines](https://bsky.social/about/support/branding).
+**Rights holder: Bluesky Social PBC.** Our name, logo, butterfly mark, logotype, app icons, and Attie mark are our trademarks. They are not licensed to you under the MIT license or by this document. Use of them is governed by our [Trademark Policy](https://bsky.social/about/support/trademarks) and [Brand Guidelines](https://bsky.social/about/support/branding).
 
 You may refer to Bluesky by name to describe interoperability or origin — for example, "a client for Bluesky," or "based on the Bluesky app." You may not use our marks as the identity of your own product or service, or in any way likely to suggest that Bluesky publishes, endorses, or supports it.
 
@@ -76,6 +76,7 @@ You may refer to Bluesky by name to describe interoperability or origin — for 
 - `assets/splash/splash.png`
 - `assets/splash/splash-dark.png`
 - `assets/splash/android-splash-logo-white.png`
+- `assets/icons/brands/Attie_Filled_Corner0_Rounded.svg` — [Attie](https://attie.ai)
 - `assets/icons/brands/Mark.svg`
 - `assets/icons/brands/Newskie.svg`
 - `assets/icons/brands/VerifiedCheck.svg`

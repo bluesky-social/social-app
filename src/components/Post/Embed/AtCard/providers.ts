@@ -1,4 +1,4 @@
-import {Attie_Filled_Corner0_Rounded as Attie} from '#/components/icons/Attie'
+import {Attie_Filled_Corner0_Rounded as Attie} from '#/components/icons/brands/Attie'
 import {isAttieUrl} from './attie'
 
 /** Provider-specific branding and matching for the shared AT embed card. */
