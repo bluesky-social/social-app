@@ -29,7 +29,10 @@ import {
 } from '#/components/ComposerV2/hooks'
 import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {getMediaItems} from '#/components/ComposerV2/store/utils/getMediaItems'
-import {writeComposerV2Plan} from '#/components/ComposerV2/writer'
+import {
+  ComposerV2WritePreconditionError,
+  writeComposerV2Plan,
+} from '#/components/ComposerV2/writer'
 import {Divider} from '#/components/Divider'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -100,8 +103,12 @@ function DebugComposerSession({account}: {account: SessionAccount}) {
         onError: session.store.reportError,
       })
       uris = result.uris
-    } catch {
+    } catch (cause) {
       setPublishAttempt({status: 'uncertain', plan})
+      /* A refused write sent nothing, so only a dispatched one is uncertain. */
+      if (!(cause instanceof ComposerV2WritePreconditionError)) {
+        session.store.reportPublishUncertain({plan, cause})
+      }
       return
     }
     setPublishAttempt({status: 'published', plan, uris})

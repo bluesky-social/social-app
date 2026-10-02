@@ -151,7 +151,8 @@ but has no reconciliation engine or durable plan storage. Leaving the tester
 loses that in-memory record. Future production integration must also own duplicate
 submission protection, publish state, and AppView propagation. After a write
 resolves, call `store.reportPublished({plan})` so video telemetry records
-publication; never call it for an uncertain outcome.
+publication; for a rejection that is not a `ComposerV2WritePreconditionError`,
+call `store.reportPublishUncertain({plan, cause})` instead.
 
 Failures remain in attachment/upload state, adapter rejections, or planning and
 writing outcomes. Optional `onError(event, cause?)` adds one per-session reporting
@@ -218,8 +219,8 @@ or recreate an execution-order manifest as part of composer changes.
   `setVideoTelemetry` are a different interface: they pass through
   task-identity guards before reaching the private `apply*` writes or the
   telemetry registry. Keep `getState`, `subscribe`, `destroy`, `reportError`,
-  and `reportPublished` as lifecycle/read/reporting methods, not UI mutation
-  shortcuts.
+  `reportPublished`, and `reportPublishUncertain` as lifecycle/read/reporting
+  methods, not UI mutation shortcuts.
 - Naming inside `createThreadStore`: `set*`, `add*`, `remove*`, `update*`, and
   `retry*` are public actions; `apply*` functions are private state writes
   reached from guarded worker callbacks; `replace*` functions return an updated
@@ -315,20 +316,34 @@ only once: `picked`, compression (`compressStarted`, `probed`,
 `*Failed` events. A job that completes immediately still records
 `uploadCompleted`, `processingStarted`, and `processingCompleted`. The output
 size limit fails as an upload, where the existing composer's native path fails.
-A source that fails validation records only `picked`. Cancelled work records
-no failure.
+Cancelled work records no failure. V2 adds events the existing composer lacks:
 
-- `abandoned` comes from `cancel({abandoned: true})`, which the store passes
-  only when the user removes the video, its attachment, or its post. Caption
-  restarts, retries, and `destroy()` cancel silently, since the existing composer
-  also lets uploads run on after closing. A caption restart begins a new
-  attempt with its own `picked`; a caption-only retry reuses the uploaded video
-  and emits nothing.
+- `prepareFailed` (no `uploadId` yet): copying a restored Android video
+  (`step: 'copy'`) or reading source metadata (`'metadata'`) failed, with
+  `restored` and the error class only, since messages can carry local paths.
+- `validationFailed`: the source was rejected after `picked`, with its code.
+- `restarted`: a retry or caption restart began a new attempt, with
+  `previousUploadId` from the store's latest attempt for that video, so its
+  `picked` is not a new selection.
+- `captionsFailed`: the video uploaded but a caption did not. A caption-only
+  retry reuses the uploaded video's telemetry and starts no new funnel.
+- `abandoned` carries `reason`. `cancel({abandoned})` takes `'removed'` when
+  the user removes the video, its attachment, or its post, and `destroy()`
+  passes `'closed'`, as the abort reason on the telemetry signal. Caption
+  restarts, retries, and a failed construction cancel silently. The existing
+  composer aborts only on removal, without a reason, which reads as
+  `'removed'`.
 - `published` comes from `store.reportPublished({plan})`. The store keeps each
   uploaded video's telemetry in a `WeakMap` keyed by its blob and matches the
   blobs the plan's records embed, so later edits cannot misattribute a
   publication and each video reports once. It still works after `destroy()`,
   since publication already happened.
+- `composer:publish:uncertain` comes from
+  `store.reportPublishUncertain({plan, cause})`, for a write rejected after
+  dispatch, with the `uploadId` of each video it carried. Those videos stay
+  publishable for a later reconciliation. A
+  `ComposerV2WritePreconditionError` from the writer sent nothing and is not
+  uncertain.
 
 ### Media sources and worker preparation
 

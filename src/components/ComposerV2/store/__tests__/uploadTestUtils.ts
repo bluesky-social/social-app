@@ -42,6 +42,8 @@ export function noopVideoTelemetry(): VideoTelemetry {
     uploadId: 'test-upload',
     engine: 'test',
     picked: noop,
+    restarted: noop,
+    validationFailed: noop,
     compressStarted: noop,
     probed: noop,
     compressSkipped: noop,
@@ -53,6 +55,7 @@ export function noopVideoTelemetry(): VideoTelemetry {
     processingStarted: noop,
     processingCompleted: noop,
     processingFailed: noop,
+    captionsFailed: noop,
     published: noop,
   }
 }

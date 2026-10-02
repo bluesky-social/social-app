@@ -5,7 +5,12 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
-import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+import {
+  type VideoAbandonReason,
+  type VideoCompressSkipReason,
+  type VideoRestartReason,
+  type VideoValidationFailure,
+} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -395,6 +400,13 @@ export type Events = {
     signupDuration: number
     fieldErrorsTotal: number
     backgroundCount: number
+  }
+  // A Composer V2 write was sent but its outcome is unknown: it may have
+  // committed. videoUploadIds joins the videos it carried to their funnels.
+  'composer:publish:uncertain': {
+    postCount: number
+    videoUploadIds: string[]
+    errorClass: string
   }
   'post:create': {
     imageCount: number
@@ -1522,6 +1534,29 @@ export type Events = {
     sourceWidth?: number
     sourceHeight?: number
   }
+  // The source was rejected after picked, before compression. Ends the funnel.
+  'video:upload:validationFailed': {
+    uploadId: string
+    engine: string
+    code: VideoValidationFailure
+  }
+  // This attempt replaced an earlier one for the same video, so its picked
+  // is not a new selection. previousUploadId is absent when the earlier
+  // attempt failed before its source could be read.
+  'video:upload:restarted': {
+    uploadId: string
+    engine: string
+    reason: VideoRestartReason
+    previousUploadId?: string
+  }
+  // The source could not be read before an uploadId exists: copying it to a
+  // readable location (Android restored drafts) or reading its metadata.
+  'video:upload:prepareFailed': {
+    step: 'copy' | 'metadata'
+    restored: boolean
+    sourceMimeType?: string
+    errorClass: string
+  }
   'video:upload:compressStarted': {
     uploadId: string
     engine: string
@@ -1608,6 +1643,14 @@ export type Events = {
     errorClass: string
     elapsedMs: number
   }
+  // The video is uploaded, but uploading its captions failed. A caption-only
+  // retry reuses this uploadId.
+  'video:upload:captionsFailed': {
+    uploadId: string
+    engine: string
+    jobId: string
+    errorClass: string
+  }
   'video:upload:published': {
     uploadId: string
     engine: string
@@ -1620,6 +1663,7 @@ export type Events = {
     uploadId: string
     engine: string
     phase: 'compress' | 'upload' | 'processing'
+    reason: VideoAbandonReason
     jobId?: string
     elapsedInPhaseMs: number
   }
