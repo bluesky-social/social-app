@@ -258,6 +258,22 @@ module.exports = function (_config) {
         'expo-localization',
         'expo-web-browser',
         [
+          'react-native-nano-icons',
+          {
+            /*
+             * One font per codegen directory under `assets/icons/`, see
+             * `scripts/icons/README.md`. `web` also emits a woff2, which
+             * `src/components/icons/nanoFont.web.ts` registers via @font-face.
+             */
+            iconSets: ['ui', 'brands', 'community'].map(lane => ({
+              inputDir: `./assets/icons/${lane}`,
+              outputDir: './assets/nano-icons/nanoicons',
+              fontFamily: `icons-${lane}`,
+              web: true,
+            })),
+          },
+        ],
+        [
           'react-native-edge-to-edge',
           {android: {enforceNavigationBarContrast: false}},
         ],

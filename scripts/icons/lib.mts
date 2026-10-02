@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises'
+import {createRequire} from 'node:module'
 import path from 'node:path'
 
 import {format} from 'prettier'
@@ -287,7 +288,7 @@ function validateOrdinaryIcon(root, file, lane) {
     if (!['bevel', 'miter', 'round'].includes(strokeLinejoin)) fail(file, `unsupported stroke-linejoin ${strokeLinejoin}`)
     description = {path: attributes.d, strokeLinecap, strokeLinejoin, strokeWidth}
   } else {
-    description = {path: attributes.d, strokeWidth: 0}
+    description = {path: attributes.d, fillRule: attributes['fill-rule'] ?? 'nonzero', strokeWidth: 0}
   }
 
   return {description, viewBox}
@@ -406,6 +407,135 @@ function namespaceForLane(lane) {
   return ''
 }
 
+let pathKit
+
+/*
+ * The PathKit build that react-native-nano-icons compiles its fonts with, so
+ * the geometry checks below agree with the font pipeline.
+ */
+function loadPathKit() {
+  pathKit ??= (async () => {
+    const nanoRequire = createRequire(createRequire(import.meta.url).resolve('react-native-nano-icons/package.json'))
+    const entry = nanoRequire.resolve('pathkit-wasm/bin/pathkit.js')
+    const init = nanoRequire(entry)({
+      wasmBinary: await fs.readFile(path.join(path.dirname(entry), 'pathkit.wasm')),
+    })
+    return typeof init?.ready === 'function' ? init.ready() : init
+  })()
+  return pathKit
+}
+
+/**
+ * Largest share of the viewBox that may render differently between the
+ * evenodd and nonzero fill rules for an icon to still be drawn as a glyph.
+ * At 24pt it is about half a square point, below antialiasing noise.
+ */
+const FILL_RULE_TOLERANCE = 0.001
+
+/** Flattens a PathKit path into closed polylines, one per contour. */
+function flattenContours(PathKit, path) {
+  const contours = []
+  let contour
+  let current
+  function point(x, y) {
+    current = [x, y]
+    contour.push(current)
+  }
+  for (const [verb, ...args] of path.toCmds()) {
+    if (verb === PathKit.MOVE_VERB) {
+      contour = []
+      contours.push(contour)
+      point(args[0], args[1])
+    } else if (verb === PathKit.LINE_VERB) {
+      point(args[0], args[1])
+    } else if (verb === PathKit.QUAD_VERB || verb === PathKit.CONIC_VERB || verb === PathKit.CUBIC_VERB) {
+      const [x0, y0] = current
+      const weight = verb === PathKit.CONIC_VERB ? args[4] : 1
+      for (let step = 1; step <= 16; step++) {
+        const t = step / 16
+        const u = 1 - t
+        if (verb === PathKit.CUBIC_VERB) {
+          const [x1, y1, x2, y2, x3, y3] = args
+          point(
+            u * u * u * x0 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t * t * t * x3,
+            u * u * u * y0 + 3 * u * u * t * y1 + 3 * u * t * t * y2 + t * t * t * y3,
+          )
+        } else {
+          const [x1, y1, x2, y2] = args
+          const denominator = u * u + 2 * weight * u * t + t * t
+          point(
+            (u * u * x0 + 2 * weight * u * t * x1 + t * t * x2) / denominator,
+            (u * u * y0 + 2 * weight * u * t * y1 + t * t * y2) / denominator,
+          )
+        }
+      }
+    }
+  }
+  return contours.filter(points => points.length > 2)
+}
+
+/*
+ * createSinglePathSVG always fills with evenodd, but the font compiles the
+ * fill rule written in the SVG, which defaults to nonzero. They disagree
+ * where the winding number is even but not zero, i.e. where contours overlap
+ * or nest in the same direction. Returns that area as a share of the viewBox.
+ */
+async function fillRuleDifference(d, [, minY, width, height]) {
+  const PathKit = await loadPathKit()
+  const evenodd = PathKit.FromSVGString(d)
+  evenodd.setFillType(PathKit.FillType.EVENODD)
+  const nonzero = PathKit.FromSVGString(d)
+  nonzero.setFillType(PathKit.FillType.WINDING)
+  const xor = PathKit.MakeFromOp(evenodd, nonzero, PathKit.PathOp.XOR)
+  const identical = xor.toCmds().length === 0
+  const contours = identical ? [] : flattenContours(PathKit, nonzero)
+  for (const item of [evenodd, nonzero, xor]) item.delete()
+  if (identical) return 0
+
+  // Sum, scanline by scanline, the spans whose winding number is even and nonzero.
+  const rows = 1024
+  let area = 0
+  for (let row = 0; row < rows; row++) {
+    const y = minY + ((row + 0.5) * height) / rows
+    const crossings = []
+    for (const points of contours) {
+      for (let index = 0; index < points.length; index++) {
+        const [x1, y1] = points[index]
+        const [x2, y2] = points[(index + 1) % points.length]
+        if (y1 <= y !== y2 <= y) {
+          crossings.push({x: x1 + ((y - y1) * (x2 - x1)) / (y2 - y1), direction: y2 > y1 ? 1 : -1})
+        }
+      }
+    }
+    crossings.sort((a, b) => a.x - b.x)
+    let winding = 0
+    for (let index = 0; index < crossings.length - 1; index++) {
+      winding += crossings[index].direction
+      if (winding !== 0 && winding % 2 === 0) area += crossings[index + 1].x - crossings[index].x
+    }
+  }
+  return (area * (height / rows)) / (width * height)
+}
+
+/**
+ * Returns why the react-native-nano-icons font glyph would not render the same
+ * as the SVG icon, or undefined when the icon can be drawn as a glyph.
+ */
+export async function glyphMismatch(data, width, height) {
+  /*
+   * Glyphs are sized by height and widened by the aspect ratio, while the SVG
+   * icons letterbox their viewBox into a size x size square.
+   */
+  if (width !== height) return 'non-square viewBox'
+  if (
+    data.description?.strokeWidth === 0 &&
+    data.description.fillRule !== 'evenodd' &&
+    (await fillRuleDifference(data.description.path, data.viewBox.split(' ').map(Number))) > FILL_RULE_TOLERANCE
+  ) {
+    return 'renders differently with the nonzero fill rule'
+  }
+}
+
 function cleanObject(value) {
   return Object.fromEntries(Object.entries(value).filter(([, item]) => item !== undefined))
 }
@@ -453,6 +583,7 @@ export async function readIconSource(sourceRoot, relativePath) {
   if (lane !== 'brands') validateOrdinarySourceSemantics(original.entries, relativePath, lane)
   const data = lane === 'brands' ? validateFlexibleIcon(optimizedRoot, relativePath, lane) : validateOrdinaryIcon(optimizedRoot, relativePath, lane)
   const [, , width, height] = data.viewBox.split(' ').map(Number)
+  const glyph = (await glyphMismatch(data, width, height)) === undefined
   const warnings =
     (width === 24 && height === 24) || (width === 64 && height === 64)
       ? []
@@ -461,6 +592,7 @@ export async function readIconSource(sourceRoot, relativePath) {
     ...data,
     codegen: true,
     exportName,
+    glyph,
     lane,
     namespace: namespaceForLane(lane),
     optimized: result.data,
@@ -508,6 +640,58 @@ function renderSingleIcon(icon) {
 
 function renderFlexibleIcon(icon) {
   return `export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},\n})\n`
+}
+
+/**
+ * Hashes the arguments a generated icon passes to its TEMPLATE factory, which
+ * is how the factory finds the icon's glyph at runtime. Must match
+ * `glyphKey` in `src/components/icons/nano.tsx`.
+ */
+export function glyphKey(icon) {
+  const key = glyphKeySource(icon)
+  // 32-bit FNV-1a.
+  let hash = 0x811c9dc5
+  for (let index = 0; index < key.length; index++) {
+    hash = Math.imul(hash ^ key.charCodeAt(index), 0x01000193)
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0')
+}
+
+function glyphKeySource(icon) {
+  return icon.elements
+    ? `${JSON.stringify(icon.elements.map(cleanObject))}|${icon.viewBox}`
+    : [
+        icon.description.path,
+        icon.viewBox,
+        icon.description.strokeWidth,
+        icon.description.strokeLinecap ?? 'butt',
+        icon.description.strokeLinejoin ?? 'miter',
+      ].join('|')
+}
+
+function renderGlyphTable(icons) {
+  const entries = new Map()
+  for (const icon of icons.filter(icon => icon.glyph)) {
+    const key = glyphKey(icon)
+    const existing = entries.get(key)
+    if (existing && glyphKeySource(existing) !== glyphKeySource(icon)) {
+      fail(icon.relativePath, `glyph key collides with ${existing.relativePath}`)
+    }
+    entries.set(key, icon)
+  }
+  const rows = [...entries]
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([key, icon]) => `  ${JSON.stringify(key)}: [${JSON.stringify(icon.lane)}, ${JSON.stringify(icon.exportName)}],`)
+  return `${GENERATED_HEADER}
+/**
+ * Generated icons that render as react-native-nano-icons glyphs, keyed by a
+ * hash of their TEMPLATE factory arguments. Icons missing here render with
+ * react-native-svg, see \`scripts/icons/README.md\`.
+ */
+export const nanoGlyphs: Record<string, [string, string]> = {
+${rows.join('\n')}
+}
+`
 }
 
 function renderModule(modulePath, icons, aliases) {
@@ -659,9 +843,56 @@ export async function buildIconSet({outputRoot, scanRoot, sourceRoot}) {
       }),
     )
   }
+  tsOutputs.set(
+    'nanoGlyphs.ts',
+    await format(renderGlyphTable(icons), {
+      bracketSpacing: false,
+      parser: 'typescript',
+      semi: false,
+      singleQuote: true,
+      trailingComma: 'all',
+    }),
+  )
   const svgOutputs = new Map(sources.map(source => [source.relativePath, source.optimized]))
   const warnings = sources.flatMap(source => source.warnings)
   return {deprecatedImports, holdouts, icons, svgOutputs, tsOutputs, warnings}
+}
+
+/**
+ * Builds the react-native-nano-icons fonts configured in the app config, which
+ * glyph icons render from. With `check`, builds into a temporary directory
+ * and returns the committed glyphmaps that differ from a fresh build.
+ */
+export async function applyNanoFonts({check, repoRoot}) {
+  const require = createRequire(path.join(repoRoot, 'package.json'))
+  const {getConfig} = require('expo/config')
+  const {buildAllFonts} = require('react-native-nano-icons/cli')
+  const {exp} = getConfig(repoRoot, {skipSDKVersionRequirement: true})
+  const [, {iconSets}] = exp.plugins.find(plugin => Array.isArray(plugin) && plugin[0] === 'react-native-nano-icons')
+  if (!check) {
+    await buildAllFonts(iconSets, repoRoot)
+    return []
+  }
+
+  const scratch = await fs.mkdtemp(path.join(repoRoot, 'node_modules/.cache-icon-fonts-'))
+  try {
+    const results = await buildAllFonts(
+      iconSets.map(set => ({...set, outputDir: scratch})),
+      repoRoot,
+    )
+    const differences = []
+    for (const [index, set] of iconSets.entries()) {
+      const committed = path.join(repoRoot, set.outputDir, path.basename(results[index].glyphmapPath))
+      let current
+      try { current = await fs.readFile(committed, 'utf8') } catch {}
+      if (current !== (await fs.readFile(results[index].glyphmapPath, 'utf8'))) {
+        differences.push(path.relative(process.cwd(), committed))
+      }
+    }
+    return differences
+  } finally {
+    await fs.rm(scratch, {recursive: true, force: true})
+  }
 }
 
 export async function applyIconSet({check, outputRoot, result, sourceRoot}) {

@@ -17,9 +17,10 @@ SVG files under `assets/icons/` are the source of truth. Generated components un
    - `custom/` — raw assets, including multi-path exceptions, that are optimized but not
      component-generated
    - `flags/` — runtime assets, excluded from codegen and optimization
-3. Run `pnpm icons:generate` and commit both the SVG and generated TypeScript.
+3. Run `pnpm icons:generate` and commit the SVG, the generated TypeScript, and the rebuilt fonts in
+   `assets/nano-icons/nanoicons/`.
 
-`pnpm icons:check` verifies that optimized SVGs and generated TypeScript are current.
+`pnpm icons:check` verifies that optimized SVGs, generated TypeScript, and fonts are current.
 `pnpm icons:test` runs the focused generator tests. Generation warns, but does not fail, when a
 generated icon uses a viewBox other than 24×24 or 64×64.
 
@@ -34,3 +35,18 @@ When an existing application import points at an older module, codegen emits a d
 constant alias at that path. This preserves component identity while making the canonical import
 visible to editors. Run `pnpm icons:generate -- --verbose` to list the remaining deprecated
 imports and their locations.
+
+## Font glyphs
+
+Generated icons render as glyphs from [react-native-nano-icons](https://github.com/software-mansion-labs/react-native-nano-icons)
+fonts, one per directory (`icons-ui`, `icons-brands`, `icons-community`), built from the same SVGs
+by its config plugin in `app.config.js`. The generated modules are unchanged: codegen also writes
+`src/components/icons/nanoGlyphs.ts`, which maps a hash of each icon's `createSinglePathSVG` or
+`createSVG` arguments to its glyph, and those TEMPLATE factories look the glyph up there (see
+`withNanoGlyph` in `src/components/icons/nano.tsx`). An icon falls back to react-native-svg for
+props a glyph cannot honour, such as `gradient`.
+
+An icon stays on react-native-svg when its glyph would not match the SVG icon: a non-square
+viewBox (glyphs are sized by height, SVG icons letterbox into a square), or a fill path that
+`createSinglePathSVG` renders with evenodd but whose SVG file does not declare it, where the two
+fill rules differ by more than 0.1% of the viewBox. Declare `fill-rule="evenodd"` in such SVGs.

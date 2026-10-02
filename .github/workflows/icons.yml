@@ -4,11 +4,15 @@ on:
   pull_request:
     paths:
       - 'assets/icons/**'
+      - 'assets/nano-icons/**'
+      - 'scripts/icons/**'
   push:
     branches:
       - main
     paths:
       - 'assets/icons/**'
+      - 'assets/nano-icons/**'
+      - 'scripts/icons/**'
 
 concurrency:
   group: '${{ github.workflow }}-${{ github.head_ref || github.ref }}'
