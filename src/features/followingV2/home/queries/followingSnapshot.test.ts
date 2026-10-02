@@ -35,14 +35,36 @@ jest.mock('#/state/preferences/languages', () => ({
 }))
 
 const NOW = Date.parse('2026-10-02T12:00:00.000Z')
+const POSTED_AT = '2026-10-02T11:00:00.000Z'
 const IMAGE_CID = 'bafkreibme22gw2h7y2h7tg2fhqotaqjucnbc24deqo72b6mkl2egezxhvy'
 
 /**
  * A feed item as the client decodes it from the lex JSON the appview sends,
  * so its image's blob ref is a CID, and it holds some bytes.
  */
-function item(rkey: string, {text = rkey} = {}) {
+function item(
+  rkey: string,
+  {
+    text = rkey,
+    createdAt = POSTED_AT,
+    indexedAt = POSTED_AT,
+    repostedAt,
+  }: {
+    text?: string
+    createdAt?: string
+    indexedAt?: string
+    /** When it was reposted, for a repost of it. */
+    repostedAt?: string
+  } = {},
+) {
   return jsonToLex({
+    ...(repostedAt && {
+      reason: {
+        $type: 'app.bsky.feed.defs#reasonRepost',
+        by: {did: 'did:plc:reposter', handle: 'reposter.test'},
+        indexedAt: repostedAt,
+      },
+    }),
     post: {
       $type: 'app.bsky.feed.defs#postView',
       uri: `at://did:plc:author/app.bsky.feed.post/${rkey}`,
@@ -51,7 +73,7 @@ function item(rkey: string, {text = rkey} = {}) {
       record: {
         $type: 'app.bsky.feed.post',
         text,
-        createdAt: '2026-10-02T11:00:00.000Z',
+        createdAt,
         embed: {
           $type: 'app.bsky.embed.images',
           images: [
@@ -68,7 +90,7 @@ function item(rkey: string, {text = rkey} = {}) {
         },
         unknownBytes: {$bytes: 'aGVsbG8'},
       },
-      indexedAt: '2026-10-02T11:00:00.000Z',
+      indexedAt,
     },
   }) as unknown as app.bsky.feed.defs.FeedViewPost
 }
@@ -104,6 +126,37 @@ function fallbackPage(): FeedPageUnselected {
 
 function cursors(snapshot: FollowingSnapshot | undefined) {
   return snapshot?.pages.map(page => page.cursor)
+}
+
+/**
+ * A page put above the others with `since`: exhausted, so its cursor echoes
+ * `since`, unless it's given another.
+ */
+function sincePage(
+  name: string,
+  since: string,
+  {
+    cursor = since,
+    feed = [item(name)],
+  }: {cursor?: string; feed?: app.bsky.feed.defs.FeedViewPost[]} = {},
+): FeedPageUnselected {
+  return {cursor, since, startCursor: `start-${name}`, feed, fetchedAt: NOW}
+}
+
+/** `pages` as prepends stack them: each continues from the page above. */
+function stacked(pages: FeedPageUnselected[]): PostFeedData {
+  return {
+    pages,
+    pageParams: pages.map((_, i) =>
+      i === 0 ? undefined : {cursor: pages[i - 1].cursor!},
+    ),
+  }
+}
+
+function rkeys(page: {feed: unknown[]}) {
+  return (page.feed as Array<{post: {uri: string}}>).map(feedItem =>
+    feedItem.post.uri.split('/').pop(),
+  )
 }
 
 /** A valid snapshot as it reads back from disk. */
@@ -177,6 +230,80 @@ describe('selectFollowingSnapshot', () => {
     expect(selectFollowingSnapshot(data)).toBeUndefined()
   })
 
+  it('keeps a gapped since page, but nothing below it', () => {
+    const below = following(2).pages
+    const gapped = sincePage('new', 'start', {cursor: 'gap'})
+
+    expect(
+      cursors(selectFollowingSnapshot(stacked([gapped, ...below]))),
+    ).toEqual(['gap'])
+    expect(
+      cursors(
+        selectFollowingSnapshot(
+          stacked([sincePage('newer', 'start-new'), gapped, ...below]),
+        ),
+      ),
+    ).toEqual(['start-new', 'gap'])
+  })
+
+  it('keeps since pages as they are while the pages below them are kept', () => {
+    const data = stacked([sincePage('new', 'start'), ...following(2).pages])
+
+    const snapshot = selectFollowingSnapshot(data)
+
+    expect(snapshot?.pages.map(rkeys)).toEqual([['new'], ['p0'], ['p1']])
+    expect(snapshot?.pageParams).toEqual([
+      undefined,
+      {cursor: 'start'},
+      {cursor: 'c0'},
+    ])
+  })
+
+  it('carries the boundary of the page dropped below an exhausted since page', () => {
+    const [top] = following(1).pages
+    const boundary = '2026-10-02T10:00:00.000Z'
+    top.feed = [
+      item('first', {createdAt: boundary, indexedAt: boundary}),
+      // Backdated: it sorts by its createdAt, so with the first.
+      item('backdated', {createdAt: boundary}),
+      item('older', {createdAt: '2026-10-02T09:00:00.000Z'}),
+      item('huge', {text: 'x'.repeat(FOLLOWING_SNAPSHOT_MAX_BYTES)}),
+    ]
+    const exhausted = sincePage('new', 'start')
+    const data = stacked([exhausted, top])
+
+    const snapshot = selectFollowingSnapshot(data)
+
+    expect(snapshot?.pages.map(rkeys)).toEqual([['new', 'first', 'backdated']])
+    expect(snapshot?.pages[0].cursor).toBe('start')
+    // Only the copy is changed.
+    expect(rkeys(data.pages[0])).toEqual(['new'])
+  })
+
+  it('carries a run of reposts below a third exhausted since page', () => {
+    const [top] = following(1).pages
+    const repostedAt = '2026-10-02T10:00:00.000Z'
+    top.feed = [
+      item('reposted', {createdAt: '2026-09-01T00:00:00.000Z', repostedAt}),
+      item('also-reposted', {repostedAt}),
+      item('posted', {createdAt: '2026-10-02T09:00:00.000Z'}),
+    ]
+    const data = stacked([
+      sincePage('newest', 'start-newer'),
+      sincePage('newer', 'start-new'),
+      sincePage('new', 'start'),
+      top,
+    ])
+
+    const snapshot = selectFollowingSnapshot(data)
+
+    expect(snapshot?.pages.map(rkeys)).toEqual([
+      ['newest'],
+      ['newer'],
+      ['new', 'reposted', 'also-reposted'],
+    ])
+  })
+
   it('never changes the live data', () => {
     const data = following(4)
     const {pages} = data
@@ -191,6 +318,19 @@ describe('selectFollowingSnapshot', () => {
 })
 
 describe('readFollowingSnapshot', () => {
+  it('reads back since pages', () => {
+    const data = stacked([
+      sincePage('new', 'start'),
+      sincePage('older', 'elsewhere', {cursor: 'gap'}),
+    ])
+
+    expect(
+      readFollowingSnapshot(
+        JSON.parse(JSON.stringify(selectFollowingSnapshot(data))),
+      )?.pages,
+    ).toStrictEqual(data.pages)
+  })
+
   it('round-trips lex values through JSON', () => {
     const data = following(2)
 
@@ -242,6 +382,13 @@ describe('readFollowingSnapshot', () => {
       (s: FollowingSnapshot) => ({
         ...s,
         pages: s.pages.map(({startCursor: _, ...page}) => page),
+      }),
+    ],
+    [
+      'a since that is not a cursor',
+      (s: FollowingSnapshot) => ({
+        ...s,
+        pages: [{...s.pages[0], since: 1}, s.pages[1]],
       }),
     ],
     [
