@@ -433,7 +433,7 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
   return {createFeedApi, fetchPage}
 }
 
-type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
+export type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
 
 /**
  * Refreshes the feed from the top with one fetch and then one write, so the
