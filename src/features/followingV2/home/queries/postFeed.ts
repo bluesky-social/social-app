@@ -164,9 +164,9 @@ export function usePostFeedQuery(
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const {fetchPage} = usePostFeedFetcher(feedDesc)
   const lastRun = useRef<{
-    data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
-    result: InfiniteData<FeedPage>
+    /** The pages it tuned, in the order it tuned them. */
+    tuned: {page: FeedPageUnselected; selected: FeedPage}[]
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
@@ -184,7 +184,7 @@ export function usePostFeedQuery(
   const query = useInfiniteQuery<
     FeedPageUnselected,
     Error,
-    InfiniteData<FeedPage>,
+    InfiniteData<FeedPage> | undefined,
     QueryKey,
     RQPageParam
   >({
@@ -209,19 +209,34 @@ export function usePostFeedQuery(
         // be included in the selectArgs object and read here.
         const {feedTuners, moderationOpts, ignoreFilterFor, isDiscover} =
           selectArgs
+        /*
+         * Data restored from disk is here before the query is enabled, so it
+         * can be here before what moderates it is. Until that's ready there's
+         * nothing to render.
+         */
+        if (!moderationOpts) {
+          return undefined
+        }
 
         const tuner = new FeedTuner(feedTuners)
 
+        /*
+         * Pages are tuned in the order they were fetched, and rendered in data
+         * order. So a page put above the others is tuned after them: the posts
+         * it shares with them drop from it, and their rows stay as they were.
+         * The sort is stable, so pages fetched in the same millisecond keep
+         * their order.
+         */
+        const order = data.pages
+          .map((_, i) => i)
+          .sort((a, b) => data.pages[a].fetchedAt - data.pages[b].fetchedAt)
+
         // Keep track of the last run and whether we can reuse
-        // some already selected pages from there.
-        let reusedPages = []
+        // some already tuned pages from there, in tune order.
+        const lastRunTuned = lastRun.current?.tuned ?? []
+        let canReuse = Boolean(lastRun.current)
         if (lastRun.current) {
-          const {
-            data: lastData,
-            args: lastArgs,
-            result: lastResult,
-          } = lastRun.current
-          let canReuse = true
+          const lastArgs = lastRun.current.args
           for (let key in selectArgs) {
             if (selectArgs.hasOwnProperty(key)) {
               if (
@@ -234,45 +249,44 @@ export function usePostFeedQuery(
               }
             }
           }
-          if (canReuse) {
-            for (let i = 0; i < data.pages.length; i++) {
-              if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-                reusedPages.push(lastResult.pages[i])
-                // Keep the tuner in sync so that the end result is deterministic.
-                tuner.tune(lastData.pages[i].feed)
-                continue
-              }
-              // Stop as soon as pages stop matching up.
-              break
-            }
+        }
+
+        const pages: FeedPage[] = []
+        for (const [k, i] of order.entries()) {
+          const page = data.pages[i]
+          const last = lastRunTuned[k]
+          if (canReuse && last?.page === page) {
+            pages[i] = last.selected
+            // Keep the tuner in sync so that the end result is deterministic.
+            tuner.tune(page.feed)
+            continue
+          }
+          // Stop as soon as pages stop matching up.
+          canReuse = false
+          pages[i] = {
+            tuner,
+            cursor: page.cursor,
+            source: page.source,
+            fetchedAt: page.fetchedAt,
+            slices: tuner
+              .tune(page.feed)
+              .map(slice =>
+                toFeedPostSlice(slice, {
+                  moderationOpts,
+                  ignoreFilterFor,
+                  isDiscover,
+                }),
+              )
+              .filter(n => !!n),
           }
         }
 
-        const result = {
-          pageParams: data.pageParams,
-          pages: [
-            ...reusedPages,
-            ...data.pages.slice(reusedPages.length).map(page => ({
-              tuner,
-              cursor: page.cursor,
-              source: page.source,
-              fetchedAt: page.fetchedAt,
-              slices: tuner
-                .tune(page.feed)
-                .map(slice =>
-                  toFeedPostSlice(slice, {
-                    moderationOpts: moderationOpts!,
-                    ignoreFilterFor,
-                    isDiscover,
-                  }),
-                )
-                .filter(n => !!n),
-            })),
-          ],
-        }
         // Save for memoization.
-        lastRun.current = {data, result, args: selectArgs}
-        return result
+        lastRun.current = {
+          args: selectArgs,
+          tuned: order.map(i => ({page: data.pages[i], selected: pages[i]})),
+        }
+        return {pageParams: data.pageParams, pages}
       },
       [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
     ),
