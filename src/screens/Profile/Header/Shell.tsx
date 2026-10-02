@@ -18,7 +18,7 @@ import {useSession} from '#/state/session'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {UserBanner} from '#/view/com/util/UserBanner'
-import {atoms as a, platform, useTheme} from '#/alf'
+import {atoms as a, platform, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {useDialogControl} from '#/components/Dialog'
 import {ArrowLeft_Stroke2_Corner0_Rounded as ArrowLeftIcon} from '#/components/icons/Arrow'
@@ -26,7 +26,7 @@ import {useLightboxControls} from '#/components/Lightbox/state'
 import {LabelsOnMe} from '#/components/moderation/LabelsOnMe'
 import {ProfileHeaderAlerts} from '#/components/moderation/ProfileHeaderAlerts'
 import {useAnalytics} from '#/analytics'
-import {IS_IOS, IS_IPAD} from '#/env'
+import {IS_IOS} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {EditLiveDialog} from '#/features/liveNow/components/EditLiveDialog'
 import {LiveIndicator} from '#/features/liveNow/components/LiveIndicator'
@@ -52,6 +52,7 @@ let ProfileHeaderShell = ({
   isPlaceholderProfile,
 }: React.PropsWithChildren<Props>): React.ReactNode => {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const {t: l} = useLingui()
@@ -157,7 +158,7 @@ let ProfileHeaderShell = ({
       <View
         pointerEvents={IS_IOS ? 'auto' : 'box-none'}
         style={[a.relative, {height: PROFILE_BANNER_HEIGHT}]}>
-        {!IS_IPAD && <StatusBarShadow />}
+        {!gtMobile && <StatusBarShadow />}
         <GrowableBanner
           testID={profile.banner ? 'userBannerImage' : 'userBannerFallback'}
           label={

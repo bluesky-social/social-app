@@ -4,19 +4,19 @@ import {
 } from './layout'
 
 describe('getProfileBannerSafeAreaCoverHeight', () => {
-  it('covers the image in the iPad safe area', () => {
+  it('covers the image in a wide native safe area', () => {
     expect(
       getProfileBannerSafeAreaCoverHeight({
-        isIPad: true,
+        gtMobile: true,
         topInset: 24,
       }),
     ).toBe(24)
   })
 
-  it('leaves phone banner behavior unchanged', () => {
+  it('leaves compact banner behavior unchanged', () => {
     expect(
       getProfileBannerSafeAreaCoverHeight({
-        isIPad: false,
+        gtMobile: false,
         topInset: 24,
       }),
     ).toBe(0)
@@ -24,20 +24,20 @@ describe('getProfileBannerSafeAreaCoverHeight', () => {
 })
 
 describe('shouldUseProfileLightStatusBar', () => {
-  it('preserves the phone header status bar behavior', () => {
+  it('preserves compact header status bar behavior', () => {
     expect(
       shouldUseProfileLightStatusBar({
-        isIPad: false,
+        gtMobile: false,
         isScreenFocused: true,
         isHeaderHidden: true,
       }),
     ).toBe(true)
   })
 
-  it('does not override the iPad status bar color', () => {
+  it('does not override the wide status bar color', () => {
     expect(
       shouldUseProfileLightStatusBar({
-        isIPad: true,
+        gtMobile: true,
         isScreenFocused: true,
         isHeaderHidden: true,
       }),
