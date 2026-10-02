@@ -74,6 +74,7 @@ import {
 } from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {GapRow} from './GapRow'
 import {mixSamples} from './mixSamples'
 import {
   type AuthorFilter,
@@ -81,9 +82,11 @@ import {
   type FeedParams,
   type FeedPostSlice,
   type FeedPostSliceItem,
+  findGaps,
   pollLatest,
   RQKEY,
   usePostFeedFetcher,
+  usePostFeedGapFill,
   usePostFeedQuery,
   usePostFeedRefresh,
   usePostFeedRestorePrepend,
@@ -182,6 +185,13 @@ type FeedRow =
       type: 'liveEventFeedsAndTrendingBanner'
       key: string
     }
+  | {
+      type: 'gap'
+      key: string
+      /** The cursor of the page above the gap. */
+      cursor: string
+      isOpen: boolean
+    }
 
 export function getItemsForFeedback(feedRow: FeedRow): {
   item: FeedPostSliceItem
@@ -224,6 +234,7 @@ const POST_ROW_TYPES: ReadonlySet<FeedRow['type']> = new Set([
   'showLessFollowup',
   'videoGridRow',
   'fallbackMarker',
+  'gap',
 ])
 
 let PostFeed = ({
@@ -360,6 +371,7 @@ let PostFeed = ({
     enabled: isAnchored && enabled !== false,
     topFetchedAt: lastFetchedAt,
   })
+  const fillGap = usePostFeedGapFill(feed, feedParams)
 
   /**
    * The top page a refresh from this view wrote, to take the reader up to once
@@ -633,7 +645,9 @@ let PostFeed = ({
             })
           }
         } else {
-          for (const page of data?.pages) {
+          // Only anchored Following runs the restore prepend that leaves gaps.
+          const gaps = isAnchored ? findGaps(data.pages) : undefined
+          for (const [pageIndex, page] of data.pages.entries()) {
             for (const slice of page.slices) {
               sliceIndex++
 
@@ -788,6 +802,16 @@ let PostFeed = ({
                   )
                 }
               }
+            }
+            const gap = gaps?.get(pageIndex)
+            if (gap && page.cursor) {
+              // The same key once it's filled, so the row stays.
+              arr.push({
+                type: 'gap',
+                key: 'gap-' + page.cursor,
+                cursor: page.cursor,
+                isOpen: gap === 'open',
+              })
             }
           }
         }
@@ -1044,6 +1068,14 @@ let PostFeed = ({
         )
       } else if (row.type === 'showLessFollowup') {
         return <ShowLessFollowup />
+      } else if (row.type === 'gap') {
+        return (
+          <GapRow
+            isOpen={row.isOpen}
+            onFill={() => fillGap(row.cursor)}
+            hideTopBorder={rowIndex === 0}
+          />
+        )
       } else {
         return null
       }
@@ -1062,6 +1094,7 @@ let PostFeed = ({
       feedTab,
       feedCacheKey,
       onPressShowLess,
+      fillGap,
       t,
     ],
   )
