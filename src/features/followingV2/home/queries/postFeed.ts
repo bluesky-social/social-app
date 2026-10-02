@@ -136,7 +136,7 @@ export interface FeedPageUnselected {
    * The `since` the page was requested with, on a page put above the others
    * (see {@link usePostFeedRestorePrepend}). The server echoes it as the cursor
    * when the range it bounds is exhausted, so the page sits right on the one
-   * below. Any other cursor leaves a gap between them.
+   * below. Any other cursor leaves a gap between them (see {@link gapBelow}).
    */
   since?: string
   /** See {@link FeedSource}. */
@@ -148,6 +148,10 @@ export interface FeedPageUnselected {
 export interface FeedPage {
   tuner: FeedTuner
   cursor: string | undefined
+  /** See {@link FeedPageUnselected}. */
+  startCursor?: string
+  /** See {@link FeedPageUnselected}. */
+  since?: string
   source?: FeedSource
   slices: FeedPostSlice[]
   fetchedAt: number
@@ -280,6 +284,8 @@ export function usePostFeedQuery(
           pages[i] = {
             tuner,
             cursor: page.cursor,
+            startCursor: page.startCursor,
+            since: page.since,
             source: page.source,
             fetchedAt: page.fetchedAt,
             slices: tuner
@@ -562,9 +568,9 @@ const RESTORE_PREPEND_LIMIT = 100
  * `since` it was requested with, and the page that was on top now continues
  * from its cursor. When the server echoes `since` as that cursor, the range
  * was exhausted and the pages are contiguous. Otherwise there's a gap between
- * them, which the feed doesn't show yet (APP-3169). A failure leaves the
- * restored feed as it was. The write gives way to anything that has replaced
- * the top page meanwhile, and keeps any page loaded below it.
+ * them (see {@link gapBelow}). A failure leaves the restored feed as it was.
+ * The write gives way to anything that has replaced the top page meanwhile,
+ * and keeps any page loaded below it.
  */
 export function usePostFeedRestorePrepend(
   feedDesc: FeedDescriptor,
@@ -652,6 +658,125 @@ export function usePostFeedRestorePrepend(
   }, [enabled, isTopRestored])
 
   return {isOwed}
+}
+
+/**
+ * What lies between the feed's page at `index` and the page below it:
+ *
+ * - `open`: the page was put above the others with `since` (see
+ *   {@link usePostFeedRestorePrepend}) and its range wasn't exhausted, so
+ *   some of the posts between its cursor and the page below are missing. The
+ *   page below is still the one its `since` came from: it starts at that
+ *   `startCursor`.
+ * - `filled`: the page below continues from its cursor, as
+ *   {@link usePostFeedGapFill} or a page load put it there.
+ *
+ * `undefined` when there's nothing missing: below any other page, and below
+ * the bottom page, whose cursor ordinary pagination continues from.
+ */
+export function gapBelow(
+  pages: readonly Pick<
+    FeedPageUnselected,
+    'cursor' | 'startCursor' | 'since'
+  >[],
+  index: number,
+): 'open' | 'filled' | undefined {
+  const page = pages[index]
+  const below = pages[index + 1]
+  if (
+    !page ||
+    !below ||
+    page.since === undefined ||
+    page.cursor === undefined ||
+    page.cursor === page.since
+  ) {
+    return undefined
+  }
+  return below.startCursor === page.since ? 'open' : 'filled'
+}
+
+/**
+ * The gaps to mark in a feed, by the index of the page each is below (see
+ * {@link gapBelow}). An open gap with no posts between it and an open gap
+ * above it is left out: the two would read as one, and filling the upper one
+ * replaces everything below it, the lower one included.
+ */
+export function findGaps(
+  pages: readonly Pick<
+    FeedPage,
+    'cursor' | 'startCursor' | 'since' | 'slices'
+  >[],
+) {
+  const gaps = new Map<number, 'open' | 'filled'>()
+  let isBelowOpenGap = false
+  pages.forEach((page, i) => {
+    if (page.slices.length) {
+      isBelowOpenGap = false
+    }
+    const gap = gapBelow(pages, i)
+    if (gap && !(gap === 'open' && isBelowOpenGap)) {
+      gaps.set(i, gap)
+      isBelowOpenGap = gap === 'open'
+    }
+  })
+  return gaps
+}
+
+/**
+ * How a gap fill (see {@link usePostFeedGapFill}) ended: it `filled` the gap,
+ * `failed` to fetch, or was `superseded`, writing nothing, as the gap had
+ * already gone or something else replaced the pages it depends on first.
+ */
+export type GapFillOutcome = 'filled' | 'failed' | 'superseded'
+
+/**
+ * Fills an open gap below a page (see {@link gapBelow}), named by the page's
+ * cursor. It fetches the posts that continue from that cursor first, as an
+ * ordinary page, then puts them in place of every page below the gap in one
+ * write, so the old posts below stay readable until then and a failure leaves
+ * them, and the gap, as they were. Pagination then continues from the new
+ * page.
+ *
+ * The write depends on the pages from the top down to the one above the gap,
+ * and gives way if any of them has been replaced meanwhile, as by a refresh.
+ * It cancels a page load in flight below them.
+ */
+export function usePostFeedGapFill(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const {fetchPage} = usePostFeedFetcher(feedDesc)
+  const queryKey = RQKEY(feedDesc, params)
+
+  return async (cursor: string): Promise<GapFillOutcome> => {
+    const before = queryClient.getQueryData<PostFeedData>(queryKey)
+    const index = before?.pages.findIndex(page => page.cursor === cursor) ?? -1
+    if (!before || gapBelow(before.pages, index) !== 'open') {
+      return 'superseded'
+    }
+    try {
+      const page = await fetchPage({cursor})
+      const wrote = await commit(
+        queryClient,
+        queryKey,
+        before,
+        (data = before) => ({
+          pages: [...data.pages.slice(0, index + 1), page],
+          pageParams: [...data.pageParams.slice(0, index + 1), {cursor}],
+        }),
+        {dependsOn: index + 1},
+      )
+      return wrote ? 'filled' : 'superseded'
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to fetch posts missing from a feed', {
+          safeMessage: e,
+        })
+      }
+      return 'failed'
+    }
+  }
 }
 
 /** Whether a page fetched at `fetchedAt` was restored from disk. */
