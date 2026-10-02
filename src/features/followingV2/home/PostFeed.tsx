@@ -500,7 +500,12 @@ let PostFeed = ({
         key: 'feedShutdownMsg',
       })
     }
-    if (isFetched && !isRetryingError) {
+    /*
+     * Data restored from disk can be in the cache, fetched, before what
+     * moderates it is ready, which the query's `select` waits for. It loads
+     * until then.
+     */
+    if (isFetched && !isRetryingError && (data || isError)) {
       if (isError && isEmpty) {
         arr.push({
           type: 'error',
