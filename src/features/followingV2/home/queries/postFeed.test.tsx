@@ -19,6 +19,7 @@ import {
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
 import {app} from '#/lexicons'
+import {isFollowingSnapshotQuery} from './followingSnapshot'
 import {
   type FeedDescriptor,
   type FeedPageUnselected,
@@ -746,6 +747,21 @@ describe('RQKEY', () => {
 
   afterEach(() => {
     jest.useRealTimers()
+  })
+
+  it('is the key the Following snapshot is persisted under', () => {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(RQKEY('following'), feedData())
+    queryClient.setQueryData(LEGACY_RQKEY('following'), feedData())
+    queryClient.setQueryData(RQKEY(custom), feedData())
+
+    expect(
+      queryClient
+        .getQueryCache()
+        .getAll()
+        .filter(isFollowingSnapshotQuery)
+        .map(query => query.queryKey),
+    ).toEqual([RQKEY('following')])
   })
 
   it('never shares an entry with the legacy key', () => {
