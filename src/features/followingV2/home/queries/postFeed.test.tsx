@@ -25,10 +25,13 @@ import {
   type FeedPageUnselected,
   type FeedParams,
   pollLatest,
+  type PostFeedData,
+  PROCESS_STARTED_AT,
   RQKEY,
   usePostFeedFetcher,
   usePostFeedQuery,
   usePostFeedRefresh,
+  usePostFeedRestorePrepend,
 } from './postFeed'
 
 jest.mock('#/state/preferences/languages', () => ({
@@ -85,7 +88,7 @@ const mockClient = {
   call: jest.fn(
     (
       method: unknown,
-      params: {feed?: string; cursor?: string; limit: number},
+      params: {feed?: string; cursor?: string; since?: string; limit: number},
     ): unknown => {
       const endpoint = endpointOf(method, params)
       if (params.limit === 1) {
@@ -111,12 +114,19 @@ function endpointOf(method: unknown, params: {feed?: string}) {
   throw new Error('Unexpected request')
 }
 
-/** The requests made, as `<endpoint> <cursor>`. */
+/**
+ * The requests made, as `<endpoint> <cursor>`, or `<endpoint> since:<since>`
+ * with its limit for a request bounded by `since`.
+ */
 function requested() {
-  return mockClient.call.mock.calls.map(
-    ([method, params]) =>
-      `${endpointOf(method, params)} ${params.limit === 1 ? 'latest' : params.cursor}`,
-  )
+  return mockClient.call.mock.calls.map(([method, params]) => {
+    const endpoint = endpointOf(method, params)
+    if (params.limit === 1) return `${endpoint} latest`
+    if (params.since !== undefined) {
+      return `${endpoint} since:${params.since} limit:${params.limit}`
+    }
+    return `${endpoint} ${params.cursor}`
+  })
 }
 
 function feedItem(rkey: string) {
@@ -225,6 +235,49 @@ function pinFollowingFirst() {
     savedFeeds: [{pinned: true, value: 'following'}],
     interests: {tags: []},
   }
+}
+
+/** Every write of the query's data from here on. */
+function watchWrites(queryClient: QueryClient) {
+  const writes: unknown[] = []
+  queryClient.getQueryCache().subscribe(event => {
+    if (event.type === 'updated' && event.action.type === 'success') {
+      writes.push(event.query.state.data)
+    }
+  })
+  return writes
+}
+
+/** Holds the next request until the test answers it. */
+function holdNextRequest() {
+  let resolve!: (value: unknown) => void
+  let reject!: (error: unknown) => void
+  mockClient.call.mockImplementationOnce(
+    () =>
+      new Promise((res, rej) => {
+        resolve = res
+        reject = rej
+      }),
+  )
+  return {
+    respond: (rkey: string) =>
+      resolve({cursor: 'timeline:1', feed: [feedItem(rkey)]}),
+    respondWith: (response: unknown) => resolve(response),
+    fail: (error: Error) => reject(error),
+  }
+}
+
+function failNextRequest(error: Error) {
+  mockClient.call.mockImplementationOnce(() => Promise.reject(error))
+}
+
+/** Lets TanStack deliver the notifications it has scheduled. */
+function flushNotifications() {
+  return act(() => new Promise<void>(resolve => setTimeout(resolve, 0)))
+}
+
+function topPostUri(data?: InfiniteData<FeedPageUnselected>) {
+  return data?.pages[0]?.feed[0]?.post.uri
 }
 
 describe('post-feed query data', () => {
@@ -475,48 +528,6 @@ describe('usePostFeedRefresh', () => {
     const data = () =>
       queryClient.getQueryData<InfiniteData<FeedPageUnselected>>(KEY)
     return {hook, queryClient, rendered, data}
-  }
-
-  /** Every write of the query's data from here on. */
-  function watchWrites(queryClient: QueryClient) {
-    const writes: unknown[] = []
-    queryClient.getQueryCache().subscribe(event => {
-      if (event.type === 'updated' && event.action.type === 'success') {
-        writes.push(event.query.state.data)
-      }
-    })
-    return writes
-  }
-
-  /** Holds the next request until the test answers it. */
-  function holdNextRequest() {
-    let resolve!: (value: unknown) => void
-    let reject!: (error: unknown) => void
-    mockClient.call.mockImplementationOnce(
-      () =>
-        new Promise((res, rej) => {
-          resolve = res
-          reject = rej
-        }),
-    )
-    return {
-      respond: (rkey: string) =>
-        resolve({cursor: 'timeline:1', feed: [feedItem(rkey)]}),
-      fail: (error: Error) => reject(error),
-    }
-  }
-
-  function failNextRequest(error: Error) {
-    mockClient.call.mockImplementationOnce(() => Promise.reject(error))
-  }
-
-  /** Lets TanStack deliver the notifications it has scheduled. */
-  function flushNotifications() {
-    return act(() => new Promise<void>(resolve => setTimeout(resolve, 0)))
-  }
-
-  function topPostUri(data?: InfiniteData<FeedPageUnselected>) {
-    return data?.pages[0]?.feed[0]?.post.uri
   }
 
   it('writes the new top page once, in one render, and paginates from it', async () => {
@@ -804,6 +815,358 @@ describe('usePostFeedRefresh', () => {
 
     expect(requested()).toEqual([])
     expect(queryClient.getQueryData(KEY)).toBeUndefined()
+  })
+})
+
+describe('usePostFeedRestorePrepend', () => {
+  const KEY = RQKEY('following')
+  const SINCE_REQUEST = 'timeline since:start:1 limit:60'
+
+  /** Two pages as a restore leaves them: fetched before this process was. */
+  function restoredData(): PostFeedData {
+    const fetchedAt = PROCESS_STARTED_AT - 60e3
+    return {
+      pages: [
+        {
+          cursor: 'timeline:1',
+          startCursor: 'start:1',
+          feed: [feedItem('timeline-1')],
+          fetchedAt,
+        },
+        {cursor: 'timeline:2', feed: [feedItem('timeline-2')], fetchedAt},
+      ],
+      pageParams: [undefined, {cursor: 'timeline:1'}],
+    }
+  }
+
+  /** The feed's view, as PostFeed has it, over `data` already in the cache. */
+  function renderView({
+    data = restoredData(),
+    enabled = true,
+  }: {data?: PostFeedData; enabled?: boolean} = {}) {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(KEY, data)
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    const hook = renderHook(
+      ({enabled}: {enabled: boolean}) => {
+        const query = usePostFeedQuery('following')
+        return {
+          query,
+          refresh: usePostFeedRefresh('following').refresh,
+          restore: usePostFeedRestorePrepend('following', undefined, {
+            enabled,
+            topFetchedAt: query.data?.pages[0]?.fetchedAt,
+          }),
+        }
+      },
+      {wrapper, initialProps: {enabled}},
+    )
+    const cached = () => queryClient.getQueryData<PostFeedData>(KEY)!
+    /** The list's first scroll event, which positions it. */
+    const position = async () => {
+      act(() => hook.result.current.restore.onListFirstScroll())
+      await flushNotifications()
+    }
+    return {hook, queryClient, cached, position}
+  }
+
+  /** Answers the next request with these posts, newer than `since`. */
+  function newer(
+    rkeys: string[],
+    {cursor = 'start:1'}: {cursor?: string} = {},
+  ) {
+    mockClient.call.mockImplementationOnce(() => ({
+      cursor,
+      startCursor: 'start:0',
+      feed: rkeys.map(feedItem),
+    }))
+  }
+
+  function postsOf(data: PostFeedData) {
+    return data.pages.map(page =>
+      page.feed.map(item => item.post.uri.split('/').pop()),
+    )
+  }
+
+  afterEach(() => {
+    jest.useRealTimers()
+  })
+
+  describe('runs', () => {
+    it('only once the view is enabled and its list is positioned', async () => {
+      const {hook, position} = renderView({enabled: false})
+      await flushNotifications()
+      await position()
+      expect(requested()).toEqual([])
+
+      newer([])
+      hook.rerender({enabled: true})
+      await flushNotifications()
+
+      expect(requested()).toEqual([SINCE_REQUEST])
+    })
+
+    it('not before the list is positioned', async () => {
+      const {position} = renderView()
+      await flushNotifications()
+      expect(requested()).toEqual([])
+
+      newer([])
+      await position()
+      expect(requested()).toEqual([SINCE_REQUEST])
+    })
+
+    it('2.5s after the list is first laid out, without a scroll event', () => {
+      jest.useFakeTimers()
+      const {hook} = renderView()
+      newer([])
+      const advance = (ms: number) =>
+        act(() => {
+          jest.advanceTimersByTime(ms)
+        })
+      act(() => hook.result.current.restore.onListLayout())
+      advance(2000)
+      // Only the first layout counts.
+      act(() => hook.result.current.restore.onListLayout())
+      advance(499)
+      expect(requested()).toEqual([])
+
+      advance(1)
+      expect(requested()).toEqual([SINCE_REQUEST])
+    })
+
+    it('only on a top page restored from disk', async () => {
+      const data = restoredData()
+      data.pages[0].fetchedAt = Date.now()
+      const {hook, position} = renderView({data})
+      await position()
+
+      expect(requested()).toEqual([])
+      expect(hook.result.current.restore.isOwed()).toBe(false)
+    })
+
+    it('once, whatever it finds', async () => {
+      const {hook, cached, position} = renderView()
+      const before = cached()
+      expect(hook.result.current.restore.isOwed()).toBe(true)
+      newer([])
+      await position()
+      await flushNotifications()
+
+      hook.rerender({enabled: false})
+      hook.rerender({enabled: true})
+      await flushNotifications()
+
+      expect(requested()).toEqual([SINCE_REQUEST])
+      expect(cached()).toBe(before)
+      expect(hook.result.current.restore.isOwed()).toBe(false)
+    })
+
+    it('not once a refresh has replaced the restored top', async () => {
+      const {hook, position} = renderView()
+      await act(() => hook.result.current.refresh())
+      mockClient.call.mockClear()
+
+      await position()
+
+      expect(requested()).toEqual([])
+      expect(hook.result.current.restore.isOwed()).toBe(false)
+    })
+  })
+
+  it('writes nothing when nothing is newer', async () => {
+    const {queryClient, cached, position} = renderView()
+    const before = cached()
+    const writes = watchWrites(queryClient)
+    newer([])
+
+    await position()
+    await flushNotifications()
+
+    expect(writes).toHaveLength(0)
+    expect(cached()).toBe(before)
+  })
+
+  it('puts a contiguous page on top, which the page below continues from', async () => {
+    const {hook, queryClient, cached, position} = renderView()
+    const writes = watchWrites(queryClient)
+    // The server echoes since: the range was exhausted.
+    newer(['new'], {cursor: 'start:1'})
+
+    await position()
+    await waitFor(() => expect(writes).toHaveLength(1))
+
+    expect(postsOf(cached())).toEqual([['new'], ['timeline-1'], ['timeline-2']])
+    expect(cached().pages[0]).toMatchObject({
+      cursor: 'start:1',
+      startCursor: 'start:0',
+      since: 'start:1',
+    })
+    expect(cached().pageParams).toEqual([
+      undefined,
+      {cursor: 'start:1'},
+      {cursor: 'timeline:1'},
+    ])
+
+    // Load more carries on from the bottom page.
+    mockClient.call.mockClear()
+    await act(() => hook.result.current.query.fetchNextPage())
+    expect(requested()).toEqual(['timeline timeline:2'])
+  })
+
+  it('puts a gapped page on top, which the page below continues from', async () => {
+    const {queryClient, cached, position} = renderView()
+    const writes = watchWrites(queryClient)
+    // More than the limit is newer, so the cursor goes on into the range.
+    newer(['new'], {cursor: 'gap:1'})
+
+    await position()
+    await waitFor(() => expect(writes).toHaveLength(1))
+
+    expect(postsOf(cached())).toEqual([['new'], ['timeline-1'], ['timeline-2']])
+    expect(cached().pages[0]).toMatchObject({
+      cursor: 'gap:1',
+      since: 'start:1',
+    })
+    expect(cached().pageParams).toEqual([
+      undefined,
+      {cursor: 'gap:1'},
+      {cursor: 'timeline:1'},
+    ])
+  })
+
+  it('leaves a refetch to start an ordinary chain from the top', async () => {
+    const {hook, queryClient, cached, position} = renderView()
+    const writes = watchWrites(queryClient)
+    newer(['new'])
+    await position()
+    await waitFor(() => expect(writes).toHaveLength(1))
+    mockClient.call.mockClear()
+
+    await act(() => hook.result.current.query.refetch())
+
+    expect(requested()).toEqual([
+      'timeline undefined',
+      'timeline timeline:1',
+      'timeline timeline:2',
+    ])
+    expect(postsOf(cached())).toEqual([
+      ['timeline-1'],
+      ['timeline-2'],
+      ['timeline-3'],
+    ])
+  })
+
+  it('tunes the new page last, so a post it shares drops from it and the rows below stay as they were', async () => {
+    const {hook, position} = renderView()
+    const [top, next] = hook.result.current.query.data!.pages
+    newer(['new', 'timeline-1'])
+
+    await position()
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(3),
+    )
+
+    const pages = hook.result.current.query.data!.pages
+    expect(pages[1]).toBe(top)
+    expect(pages[2]).toBe(next)
+    expect(pages[0].slices.map(slice => slice.feedPostUri)).toEqual([
+      feedItem('new').post.uri,
+    ])
+  })
+
+  it('keeps the restored feed when it fails, and logs only unexpected errors', async () => {
+    const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
+    try {
+      const offline = renderView()
+      const before = offline.cached()
+      failNextRequest(new TypeError('Network request failed'))
+      await offline.position()
+      await flushNotifications()
+      expect(offline.cached()).toBe(before)
+      expect(offline.hook.result.current.query.isError).toBe(false)
+      expect(logError).not.toHaveBeenCalled()
+
+      const broken = renderView()
+      failNextRequest(new Error('Unexpected'))
+      await broken.position()
+      await flushNotifications()
+      expect(logError).toHaveBeenCalledTimes(1)
+    } finally {
+      logError.mockRestore()
+    }
+  })
+
+  it('gives way to a refresh that replaces the top meanwhile', async () => {
+    const {hook, cached, position} = renderView()
+    const since = holdNextRequest()
+    await position()
+    mockClient.call.mockReturnValueOnce({
+      cursor: 'timeline:1',
+      feed: [feedItem('fresh')],
+    })
+    await act(() => hook.result.current.refresh())
+    const refreshed = cached()
+
+    act(() => {
+      since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+    })
+    await flushNotifications()
+
+    expect(cached()).toBe(refreshed)
+    expect(postsOf(cached())).toEqual([['fresh']])
+  })
+
+  it('keeps a page loaded below meanwhile', async () => {
+    const {hook, queryClient, cached, position} = renderView()
+    const since = holdNextRequest()
+    await position()
+    await act(() => hook.result.current.query.fetchNextPage())
+    const writes = watchWrites(queryClient)
+
+    act(() => {
+      since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+    })
+    await waitFor(() => expect(writes).toHaveLength(1))
+
+    expect(postsOf(cached())).toEqual([
+      ['new'],
+      ['timeline-1'],
+      ['timeline-2'],
+      ['timeline-3'],
+    ])
+    expect(cached().pageParams).toEqual([
+      undefined,
+      {cursor: 'start:1'},
+      {cursor: 'timeline:1'},
+      {cursor: 'timeline:2'},
+    ])
+  })
+
+  it('cancels a page load still in flight, and drops its page', async () => {
+    const {hook, queryClient, cached, position} = renderView()
+    const since = holdNextRequest()
+    await position()
+    const next = holdNextRequest()
+    let loading!: Promise<unknown>
+    act(() => {
+      loading = hook.result.current.query.fetchNextPage()
+    })
+    const writes = watchWrites(queryClient)
+
+    act(() => {
+      since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+    })
+    await waitFor(() => expect(writes).toHaveLength(1))
+    await act(async () => {
+      next.respond('late')
+      await loading
+    })
+
+    expect(postsOf(cached())).toEqual([['new'], ['timeline-1'], ['timeline-2']])
+    expect(hook.result.current.query.isFetchingNextPage).toBe(false)
   })
 })
 

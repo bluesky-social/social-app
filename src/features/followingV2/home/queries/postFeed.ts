@@ -1,4 +1,11 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
@@ -125,6 +132,13 @@ export interface FeedPageUnselected {
    * have one, once the appview supports it.
    */
   startCursor?: string
+  /**
+   * The `since` the page was requested with, on a page put above the others
+   * (see {@link usePostFeedRestorePrepend}). The server echoes it as the cursor
+   * when the range it bounds is exhausted, so the page sits right on the one
+   * below. Any other cursor leaves a gap between them.
+   */
+  since?: string
   /** See {@link FeedSource}. */
   source?: FeedSource
   feed: app.bsky.feed.defs.FeedViewPost[]
@@ -413,12 +427,14 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
 
   const fetchPage = async (
     pageParam: RQPageParam,
+    {since, limit = fetchLimit}: {since?: string; limit?: number} = {},
   ): Promise<FeedPageUnselected> => {
     const api = createFeedApi()
     const res = await api.fetch({
       cursor: pageParam?.cursor,
+      since,
       source: pageParam?.source,
-      limit: fetchLimit,
+      limit,
     })
 
     /*
@@ -438,6 +454,7 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
     return {
       cursor: res.cursor,
       startCursor: res.startCursor,
+      ...(since !== undefined && {since}),
       source: res.source,
       feed: res.feed,
       fetchedAt: Date.now(),
@@ -511,6 +528,150 @@ export function usePostFeedRefresh(
   }
 
   return {refresh, error, isRefreshing}
+}
+
+/**
+ * When this JS process started. A page fetched before it was restored from
+ * disk, which is how a restored top page is told from a fetched one without
+ * marking it.
+ */
+export const PROCESS_STARTED_AT = Date.now()
+
+/**
+ * How many posts a restore prepend asks for: twice an ordinary page, as a range
+ * with more than this in it leaves a gap.
+ */
+const RESTORE_PREPEND_LIMIT = 60
+
+/**
+ * How long after its first layout the list is taken to be positioned if it
+ * hasn't reported a scroll event yet. Provisional, to be measured (APP-3159).
+ *
+ * On a cold start iOS applies the list's resting offset (the safe-area inset) a
+ * beat after mount, and it arrives as the first scroll event. A page put above
+ * before then can leave the reader at the top of the new posts rather than on
+ * the restored top. The prototype saw it about 0.8s after mount on iOS 26. Not
+ * every list reports one, hence the fallback. A later, measured signal (the
+ * offset settling) would be better than either.
+ */
+const RESTORE_PREPEND_FALLBACK_MS = 2500
+
+/**
+ * Puts what is newer than a top page restored from disk above it, with one
+ * fetch and then one write through the same compare-and-swap as a refresh. A
+ * top page fetched before this process started (see
+ * {@link PROCESS_STARTED_AT}) is a restored one, so a refresh, or anything
+ * else that replaces the top page, leaves nothing to do.
+ *
+ * It runs once the view is `enabled` and its list is positioned: the list's
+ * first scroll event, or {@link RESTORE_PREPEND_FALLBACK_MS} after its first
+ * layout. The list reports both through the handlers returned. It runs once
+ * per view, whatever it finds. `isOwed` says whether it has yet to, for checks
+ * for new posts to wait for it.
+ *
+ * It fetches with `since` set to the top page's `startCursor`. Nothing newer
+ * writes nothing. Anything newer goes on top as a page of its own, with the
+ * `since` it was requested with, and the page that was on top now continues
+ * from its cursor. When the server echoes `since` as that cursor, the range
+ * was exhausted and the pages are contiguous. Otherwise there's a gap between
+ * them, which the feed doesn't show yet (APP-3169). A failure leaves the
+ * restored feed as it was. The write gives way to anything that has replaced
+ * the top page meanwhile, and keeps any page loaded below it.
+ */
+export function usePostFeedRestorePrepend(
+  feedDesc: FeedDescriptor,
+  params: FeedParams | undefined,
+  {
+    enabled,
+    topFetchedAt,
+  }: {
+    enabled: boolean
+    /** The `fetchedAt` of the top page as rendered, if there is one. */
+    topFetchedAt: number | undefined
+  },
+) {
+  const queryClient = useQueryClient()
+  const {fetchPage} = usePostFeedFetcher(feedDesc)
+  const queryKey = RQKEY(feedDesc, params)
+  /** Whether this view has had its one go. */
+  const tried = useRef(false)
+  const [position, setPosition] = useState<
+    'unknown' | 'laidOut' | 'positioned'
+  >('unknown')
+  const isTopRestored = isRestored(topFetchedAt)
+
+  const isOwed = () => {
+    const top = queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0]
+    return (
+      !tried.current &&
+      isRestored(top?.fetchedAt) &&
+      top?.startCursor !== undefined
+    )
+  }
+
+  const prepend = async () => {
+    const before = queryClient.getQueryData<PostFeedData>(queryKey)
+    const since = before?.pages[0]?.startCursor
+    if (!before || since === undefined || !isOwed()) {
+      return
+    }
+    tried.current = true
+    try {
+      const page = await fetchPage(undefined, {
+        since,
+        limit: RESTORE_PREPEND_LIMIT,
+      })
+      /*
+       * A bounded range always comes back with a cursor, the echo of `since`
+       * or one into what it didn't return, so a page without one can't go
+       * above the posts below it.
+       */
+      const {cursor} = page
+      if (!page.feed.length || cursor === undefined) {
+        return
+      }
+      await commit(queryClient, queryKey, before, (data = before) => ({
+        pages: [page, ...data.pages],
+        pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
+      }))
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to fetch posts newer than a restored feed', {
+          safeMessage: e,
+        })
+      }
+    }
+  }
+
+  const onReady = useEffectEvent(() => {
+    void prepend()
+  })
+  useEffect(() => {
+    if (!enabled || !isTopRestored) {
+      return
+    }
+    if (position === 'positioned') {
+      onReady()
+    } else if (position === 'laidOut') {
+      const timeout = setTimeout(
+        () => setPosition('positioned'),
+        RESTORE_PREPEND_FALLBACK_MS,
+      )
+      return () => clearTimeout(timeout)
+    }
+  }, [enabled, isTopRestored, position])
+
+  return {
+    isOwed,
+    onListLayout: () =>
+      setPosition(current => (current === 'unknown' ? 'laidOut' : current)),
+    onListFirstScroll: () => setPosition('positioned'),
+  }
+}
+
+/** Whether a page fetched at `fetchedAt` was restored from disk. */
+function isRestored(fetchedAt: number | undefined) {
+  return fetchedAt !== undefined && fetchedAt < PROCESS_STARTED_AT
 }
 
 /** Whether something else has replaced the feed's top page since `before`. */
