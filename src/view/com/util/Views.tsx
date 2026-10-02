@@ -11,7 +11,6 @@ import {
   CENTER_COLUMN_WIDTH,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
-import {IS_IPAD} from '#/env'
 
 const CENTERED_VIEW_OFFSET_CONTEXT = {isWithinOffsetView: true}
 
@@ -46,8 +45,7 @@ export const CenteredView = forwardRef<
   const {isWithinDialog} = useDialogContext()
   const {isWithinSplitView} = useIsWithinSplitView()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
-  const centerOnIPad = shouldCenterNativeTabletContent({
-    isIPad: IS_IPAD,
+  const centerOnTablet = shouldCenterNativeTabletContent({
     gtMobile,
     isWithinDialog,
     isWithinSplitView,
@@ -59,7 +57,7 @@ export const CenteredView = forwardRef<
         ref={ref}
         style={[
           style,
-          centerOnIPad && {
+          centerOnTablet && {
             width: '100%',
             maxWidth: CENTER_COLUMN_WIDTH,
             alignSelf: 'center',
@@ -67,7 +65,7 @@ export const CenteredView = forwardRef<
               {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
             ],
           },
-          centerOnIPad &&
+          centerOnTablet &&
             sideBorders && [
               {
                 borderLeftWidth: StyleSheet.hairlineWidth,
@@ -75,7 +73,7 @@ export const CenteredView = forwardRef<
               },
               t.atoms.border_contrast_low,
             ],
-          centerOnIPad &&
+          centerOnTablet &&
             topBorder && [
               {borderTopWidth: StyleSheet.hairlineWidth},
               t.atoms.border_contrast_low,

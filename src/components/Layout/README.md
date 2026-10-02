@@ -98,7 +98,7 @@ looks roughly like this:
 
 This provides the "Content" functionality for a screen. This component is
 actually an `Animated.ScrollView`, and accepts props for that component. It
-provides a little default styling as well. On web and regular-width iPad windows,
+provides a little default styling as well. On web and wide native windows,
 it _centers the content inside our center content column of 600px_. The scroll
 view itself stays full width so gestures in the surrounding whitespace scroll
 the content too.

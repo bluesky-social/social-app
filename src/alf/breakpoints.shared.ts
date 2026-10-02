@@ -45,14 +45,12 @@ export function getLayoutBreakpoints(width: number) {
 }
 
 export function shouldCenterNativeTabletContent({
-  isIPad,
   gtMobile,
   isWithinDialog,
   isWithinSplitView,
   isWithinOffsetView,
   disabled = false,
 }: {
-  isIPad: boolean
   gtMobile: boolean
   isWithinDialog: boolean
   isWithinSplitView: boolean
@@ -60,7 +58,6 @@ export function shouldCenterNativeTabletContent({
   disabled?: boolean
 }) {
   return (
-    isIPad &&
     gtMobile &&
     !isWithinDialog &&
     !isWithinSplitView &&
