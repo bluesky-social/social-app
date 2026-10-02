@@ -26,6 +26,7 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -92,6 +93,8 @@ import {
   usePostFeedRestorePrepend,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
+import {useSettleAtTop} from './useSettleAtTop'
+import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
 type FeedRow =
   | {
@@ -372,6 +375,12 @@ let PostFeed = ({
     topFetchedAt: lastFetchedAt,
   })
   const fillGap = usePostFeedGapFill(feed, feedParams)
+  const settleAtTop = useSettleAtTop(feed, feedParams, {
+    enabled: isAnchored && enabled !== false,
+  })
+  const scrollHandlers = useSettleScrollHandlers(
+    isAnchored ? settleAtTop : undefined,
+  )
 
   /**
    * The top page a refresh from this view wrote, to take the reader up to once
@@ -1304,40 +1313,42 @@ let PostFeed = ({
 
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={feedItems}
-        keyExtractor={(item: FeedRow) => item.key}
-        renderItem={renderItem}
-        ListFooterComponent={FeedFooter}
-        ListHeaderComponent={ListHeaderComponent}
-        refreshing={isPTRing}
-        onRefresh={() => void onRefresh()}
-        headerOffset={headerOffset}
-        progressViewOffset={progressViewOffset}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}
-        onScrolledDownChange={handleScrolledDownChange}
-        onEndReached={() => void onEndReached()}
-        onEndReachedThreshold={2} // number of posts left to trigger load more
-        removeClippedSubviews={true}
-        extraData={extraData}
-        desktopFixedHeight={
-          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
-        }
-        initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
-        windowSize={9}
-        maxToRenderPerBatch={IS_IOS ? 5 : 1}
-        updateCellsBatchingPeriod={40}
-        onItemSeen={onItemSeen}
-        maintainVisibleContentPosition={
-          isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
-        }
-        onFirstScroll={isAnchored ? restore.onListFirstScroll : undefined}
-        onLayout={isAnchored ? restore.onListLayout : undefined}
-      />
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={feedItems}
+          keyExtractor={(item: FeedRow) => item.key}
+          renderItem={renderItem}
+          ListFooterComponent={FeedFooter}
+          ListHeaderComponent={ListHeaderComponent}
+          refreshing={isPTRing}
+          onRefresh={() => void onRefresh()}
+          headerOffset={headerOffset}
+          progressViewOffset={progressViewOffset}
+          contentContainerStyle={{
+            minHeight: Dimensions.get('window').height * 1.5,
+          }}
+          onScrolledDownChange={handleScrolledDownChange}
+          onEndReached={() => void onEndReached()}
+          onEndReachedThreshold={2} // number of posts left to trigger load more
+          removeClippedSubviews={true}
+          extraData={extraData}
+          desktopFixedHeight={
+            desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+          }
+          initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
+          windowSize={9}
+          maxToRenderPerBatch={IS_IOS ? 5 : 1}
+          updateCellsBatchingPeriod={40}
+          onItemSeen={onItemSeen}
+          maintainVisibleContentPosition={
+            isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
+          }
+          onFirstScroll={isAnchored ? restore.onListFirstScroll : undefined}
+          onLayout={isAnchored ? restore.onListLayout : undefined}
+        />
+      </ScrollProvider>
     </View>
   )
 }

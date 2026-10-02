@@ -794,6 +794,47 @@ export function usePostFeedGapFill(
   }
 }
 
+/**
+ * Settles the feed once the reader has reached its true top: cuts it at its
+ * first open gap (see {@link gapBelow}), keeping the pages down to the one
+ * above the gap and dropping every page below it. That page's cursor goes on
+ * into the gap, so ordinary pagination loads what's missing and nothing is
+ * lost. A feed with no open gap is left as it is, so settling again writes
+ * nothing. Resolves to whether it wrote.
+ *
+ * `before` is the data as it was when the reader came to rest at the top. The
+ * write depends on its pages down to the one below the gap, so it gives way
+ * to anything that has replaced them since, as the commit of a prepend does.
+ * It never replaces the top page, so a refresh in flight still writes after
+ * it.
+ */
+export function usePostFeedSettle(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const queryKey = RQKEY(feedDesc, params)
+
+  return async (before: PostFeedData | undefined) => {
+    const index =
+      before?.pages.findIndex((_, i) => gapBelow(before.pages, i) === 'open') ??
+      -1
+    if (!before || index === -1) {
+      return false
+    }
+    return commit(
+      queryClient,
+      queryKey,
+      before,
+      (data = before) => ({
+        pages: data.pages.slice(0, index + 1),
+        pageParams: data.pageParams.slice(0, index + 1),
+      }),
+      {dependsOn: index + 2},
+    )
+  }
+}
+
 /** Whether a page fetched at `fetchedAt` was restored from disk. */
 function isRestored(fetchedAt: number | undefined) {
   return fetchedAt !== undefined && fetchedAt < PROCESS_STARTED_AT
