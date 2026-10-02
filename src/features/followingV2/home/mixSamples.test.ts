@@ -4,6 +4,9 @@ import {mixSamples} from './mixSamples'
 
 type Page = {fetchedAt: number; source?: FeedSource; slices: FeedPostSlice[]}
 
+/** Seeds like the `fetchedAt` of a first page. */
+const SEEDS = Array.from({length: 100}, (_, i) => 1_760_000_000_000 + i * 1009)
+
 function slice(name: string): FeedPostSlice {
   const uri = `at://did:plc:author/app.bsky.feed.post/${name}`
   return {
@@ -14,7 +17,7 @@ function slice(name: string): FeedPostSlice {
 }
 
 /** A page of `count` posts named `<name>-<i>`. */
-function page(name: string, fetchedAt: number, count = 30): Page {
+function page(name: string, fetchedAt: number, count = 15): Page {
   return {
     fetchedAt,
     slices: Array.from({length: count}, (_, i) => slice(`${name}-${i}`)),
@@ -36,25 +39,80 @@ function sampleRows(p: Page, name: string) {
   return p.slices.flatMap((s, i) => (s._reactKey.startsWith(name) ? [i] : []))
 }
 
-describe('mixSamples', () => {
-  it('keeps the first 15 rows of the first page to Following', () => {
-    const [mixed] = mixSamples([page('a', 1)], [batch('s')])
+/**
+ * All the rows of a Following feed whose first page was fetched at `seed`, with
+ * pages `p<i>` taking samples `s<i>-<j>`.
+ */
+function feed(seed: number, pageCount = 10) {
+  const pages = Array.from({length: pageCount}, (_, i) =>
+    page(`p${i}`, seed + i),
+  )
+  return rows(
+    mixSamples(
+      pages,
+      pages.map((_, i) => batch(`s${i}`)),
+    ),
+  ).flat()
+}
 
-    // Merge's rows, 8 of every 20, from row 15 until Following's posts run out.
-    expect(sampleRows(mixed, 's')).toEqual([
-      15, 16, 20, 24, 25, 28, 30, 32, 35, 36,
-    ])
-    expect(mixed.slices.at(-1)?._reactKey).toBe('a-29')
+/** How many of Following's posts are above each sample, back to the last. */
+function gaps(feedRows: string[]) {
+  const out: number[] = []
+  let run = 0
+  for (const row of feedRows) {
+    if (row.startsWith('s')) {
+      out.push(run)
+      run = 0
+    } else {
+      run++
+    }
+  }
+  return out
+}
+
+describe('mixSamples', () => {
+  it('keeps samples below the 10th post, and samples a typical first page', () => {
+    for (const seed of SEEDS) {
+      const [mixed] = mixSamples([page('a', seed)], [batch('s')])
+      const samples = sampleRows(mixed, 's')
+
+      expect(samples.length).toBeGreaterThan(0)
+      expect(samples[0]).toBeGreaterThanOrEqual(10)
+      expect(samples[0]).toBeLessThanOrEqual(14)
+      expect(mixed.slices.at(-1)?._reactKey).toBe('a-14')
+    }
   })
 
-  it('samples from the top of a later page', () => {
-    const [, mixed] = mixSamples(
-      [page('a', 1), page('b', 2, 10)],
-      [batch('s'), batch('t')],
-    )
+  it('puts 2 to 6 of Following’s posts between samples', () => {
+    const seen = new Set<number>()
+    for (const seed of SEEDS) {
+      const [, ...between] = gaps(feed(seed))
+      for (const gap of between) {
+        expect(gap).toBeGreaterThanOrEqual(2)
+        expect(gap).toBeLessThanOrEqual(6)
+        seen.add(gap)
+      }
+    }
+    expect([...seen].sort((x, y) => x - y)).toEqual([2, 3, 4, 5, 6])
+  })
 
-    expect(sampleRows(mixed, 't')).toEqual([0, 4, 5, 8, 10, 12, 15, 16])
-    expect(mixed.slices.at(-1)?._reactKey).toBe('b-9')
+  it('makes about 1 row in 5 a sample', () => {
+    for (const seed of SEEDS) {
+      // 67 pages of 15 is 1005 of Following's posts.
+      const feedRows = feed(seed, 67)
+      const density = gaps(feedRows).length / feedRows.length
+
+      expect(density).toBeGreaterThan(0.18)
+      expect(density).toBeLessThan(0.22)
+    }
+  })
+
+  it('lays samples out the same for a seed, and afresh for another', () => {
+    expect(feed(SEEDS[0])).toEqual(feed(SEEDS[0]))
+    expect(feed(SEEDS[0])).not.toEqual(feed(SEEDS[1]))
+    expect(new Set(SEEDS.map(seed => feed(seed).join())).size).toBe(
+      SEEDS.length,
+    )
   })
 
   it('gives batches out in the order pages were fetched', () => {
@@ -87,6 +145,18 @@ describe('mixSamples', () => {
     expect(prepended[0].some(row => row.startsWith('v-'))).toBe(true)
   })
 
+  it('never moves the samples in other pages when a batch arrives late', () => {
+    const pages = [page('a', 1), page('b', 2), page('c', 3)]
+    const arrived = mixSamples(pages, [batch('s'), batch('t'), batch('u')])
+    const late = mixSamples(pages, [batch('s'), [], batch('u')])
+    const short = mixSamples(pages, [batch('s', 1), batch('t'), batch('u')])
+
+    expect(late[1]).toBe(pages[1])
+    expect(sampleRows(arrived[1], 't').length).toBeGreaterThan(0)
+    expect(rows([late[0], late[2]])).toEqual(rows([arrived[0], arrived[2]]))
+    expect(rows(short.slice(1))).toEqual(rows(arrived.slice(1)))
+  })
+
   it('drops samples already in this page or an earlier one', () => {
     const [first, second] = mixSamples(
       [page('a', 1), page('b', 2)],
@@ -103,7 +173,8 @@ describe('mixSamples', () => {
     )
 
     expect(rows([first])[0].filter(row => row === 'a-0')).toHaveLength(1)
-    expect(rows([second])[0].slice(0, 2)).toEqual(['later', 'b-0'])
+    expect(rows([first])[0]).toContain('s-0')
+    expect(rows([second])[0].find(row => !row.startsWith('b-'))).toBe('later')
   })
 
   it('keeps a sample whose post only shows up in a page fetched later', () => {
@@ -112,18 +183,19 @@ describe('mixSamples', () => {
       [[slice('b-0')], []],
     )
 
-    expect(rows([first])[0][15]).toBe('b-0')
+    expect(rows([first])[0]).toContain('b-0')
   })
 
-  it('leaves Discover fallback pages out', () => {
+  it('leaves Discover fallback pages out, and doesn’t count their posts', () => {
+    const a = page('a', 1)
+    const b = page('b', 3)
     const discover = {...page('d', 2), source: 'discover' as const}
-    const mixed = mixSamples(
-      [page('a', 1), discover, page('b', 3)],
-      [batch('s'), batch('t')],
-    )
+    const without = mixSamples([a, b], [batch('s'), batch('t')])
+    const mixed = mixSamples([a, discover, b], [batch('s'), batch('t')])
 
     expect(mixed[1]).toBe(discover)
     expect(sampleRows(mixed[2], 't').length).toBeGreaterThan(0)
+    expect(rows([mixed[0], mixed[2]])).toEqual(rows(without))
   })
 
   it('leaves a page alone without samples for it', () => {
