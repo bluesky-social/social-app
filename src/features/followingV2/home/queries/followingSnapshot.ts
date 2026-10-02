@@ -15,11 +15,11 @@ import {type FeedPageUnselected, type PostFeedData} from './postFeed'
  */
 
 /**
- * Whether a valid snapshot is hydrated on a cold start. Off until the restore
- * prepend lands: until then a snapshot is written but dropped when it's read
- * back, so Following cold-loads as it always has.
+ * Whether a valid snapshot is hydrated on a cold start. Turning it off leaves
+ * snapshots written but dropped when they're read back, so Following
+ * cold-loads as it always has.
  */
-const FOLLOWING_SNAPSHOT_RESTORE_ENABLED = false
+const FOLLOWING_SNAPSHOT_RESTORE_ENABLED = true
 
 /**
  * Bumped on any breaking change to the snapshot format. Separate from the
