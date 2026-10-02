@@ -33,6 +33,7 @@ import {listenPostCreated} from '#/state/events'
 import {useFeedFeedbackContext} from '#/state/feed-feedback'
 import {useTrendingSettings} from '#/state/preferences/trending'
 import {STALE} from '#/state/queries'
+import {truncateAndInvalidate} from '#/state/queries/util'
 import {useSession} from '#/state/session'
 import {useProgressGuide} from '#/state/shell/progress-guide'
 import {useSelectedFeed} from '#/state/shell/selected-feed'
@@ -314,7 +315,6 @@ let PostFeed = ({
     isFetched,
     isError,
     error,
-    refetch,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -365,7 +365,7 @@ let PostFeed = ({
     try {
       if (await pollLatest(data.pages[0], createFeedApi())) {
         if (isEmpty) {
-          void refetch()
+          void refresh()
         } else {
           onHasNew(true)
         }
@@ -394,11 +394,15 @@ let PostFeed = ({
       (feed === 'following' ||
         feed === `author|${myDid}|posts_and_author_threads`)
     ) {
-      // A disabled feed isn't shown, so it can refetch once it's enabled.
+      /*
+       * A disabled feed isn't shown, so it can refetch once it's enabled.
+       * Truncating first means that refetch is one page, not every page it
+       * had loaded.
+       */
       if (enabled) {
         void refresh()
       } else {
-        void queryClient.invalidateQueries({queryKey: RQKEY(feed)})
+        void truncateAndInvalidate(queryClient, RQKEY(feed))
       }
     }
   }, [queryClient, feed, myDid, enabled, refresh])
