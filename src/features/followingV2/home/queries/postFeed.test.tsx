@@ -21,13 +21,19 @@ import {
 } from '#/state/queries/post-feed'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
+import {
+  SETTLE_QUIET_MS,
+  useSettleAtTop,
+} from '#/features/followingV2/home/useSettleAtTop'
 import {app} from '#/lexicons'
 import {
   FOLLOWING_SNAPSHOT_VERSION,
   type FollowingSnapshot,
   isFollowingSnapshotQuery,
   loadFollowingSnapshot,
+  readFollowingSnapshot,
   saveFollowingSnapshot,
+  selectFollowingSnapshot,
 } from './followingSnapshot'
 import {
   type FeedDescriptor,
@@ -45,6 +51,7 @@ import {
   usePostFeedQuery,
   usePostFeedRefresh,
   usePostFeedRestorePrepend,
+  usePostFeedSettle,
 } from './postFeed'
 
 // The app-wide mock of `multiformats/cid` can't tell a CID from anything else.
@@ -1281,7 +1288,10 @@ describe('gaps', () => {
   })
 
   /** The feed's view, as PostFeed has it, over `data` already in the cache. */
-  function renderView(data = gappedData()) {
+  function renderView(
+    data = gappedData(),
+    {enabled = true}: {enabled?: boolean} = {},
+  ) {
     const queryClient = createQueryClient()
     queryClient.setQueryData(KEY, data)
     const wrapper = ({children}: PropsWithChildren) => (
@@ -1292,6 +1302,8 @@ describe('gaps', () => {
         query: usePostFeedQuery('following'),
         refresh: usePostFeedRefresh('following').refresh,
         fillGap: usePostFeedGapFill('following'),
+        settle: usePostFeedSettle('following'),
+        settleAtTop: useSettleAtTop('following', undefined, {enabled}),
       }),
       {wrapper},
     )
@@ -1454,6 +1466,322 @@ describe('gaps', () => {
     expect(writes).toHaveLength(1)
     expect(postsOf(cached())).toEqual([['new'], ['gap-1']])
     expect(hook.result.current.query.isFetchingNextPage).toBe(false)
+  })
+
+  describe('settling at the true top', () => {
+    /** An exhausted page on top of `gappedData`, which sits on its gapped page. */
+    function exhaustedAboveGap(): PostFeedData {
+      const data = gappedData()
+      return {
+        pages: [
+          {
+            cursor: 'start:0',
+            startCursor: 'start:newest',
+            since: 'start:0',
+            feed: [feedItem('newest')],
+            fetchedAt: Date.now(),
+          },
+          ...data.pages,
+        ],
+        pageParams: [
+          undefined,
+          {cursor: 'start:0'},
+          ...data.pageParams.slice(1),
+        ],
+      }
+    }
+
+    afterEach(() => {
+      jest.useRealTimers()
+    })
+
+    it('cuts the feed at its first open gap, and pagination goes on into the gap', async () => {
+      const {hook, queryClient, cached} = renderView()
+      const writes = watchWrites(queryClient)
+
+      await act(async () => {
+        await expect(hook.result.current.settle(cached())).resolves.toBe(true)
+      })
+
+      expect(writes).toHaveLength(1)
+      expect(postsOf(cached())).toEqual([['new']])
+      expect(cached().pageParams).toEqual([undefined])
+      await act(() => hook.result.current.query.fetchNextPage())
+      expect(requested()).toEqual(['timeline gap:1'])
+    })
+
+    it('keeps the pages above the gap', async () => {
+      const {hook, cached} = renderView(exhaustedAboveGap())
+
+      await act(() => hook.result.current.settle(cached()))
+
+      expect(postsOf(cached())).toEqual([['newest'], ['new']])
+      expect(cached().pageParams).toEqual([undefined, {cursor: 'start:0'}])
+    })
+
+    it('writes nothing without an open gap, as the second time', async () => {
+      const {hook, queryClient, cached} = renderView()
+      await act(() => hook.result.current.settle(cached()))
+      const writes = watchWrites(queryClient)
+
+      await act(async () => {
+        await expect(hook.result.current.settle(cached())).resolves.toBe(false)
+      })
+
+      expect(writes).toHaveLength(0)
+    })
+
+    it('writes nothing once the gap is filled', async () => {
+      const {hook, queryClient, cached} = renderView()
+      mockClient.call.mockReturnValueOnce(CONTINUATION)
+      await act(() => hook.result.current.fillGap('gap:1'))
+      const writes = watchWrites(queryClient)
+
+      await act(async () => {
+        await expect(hook.result.current.settle(cached())).resolves.toBe(false)
+      })
+
+      expect(writes).toHaveLength(0)
+      expect(postsOf(cached())).toEqual([['new'], ['gap-1']])
+    })
+
+    it('gives way to a refresh that has replaced the top since the reader came to rest', async () => {
+      const {hook, cached} = renderView()
+      const before = cached()
+      mockClient.call.mockReturnValueOnce({
+        cursor: 'timeline:1',
+        feed: [feedItem('fresh')],
+      })
+      await act(() => hook.result.current.refresh())
+      const refreshed = cached()
+
+      await act(async () => {
+        await expect(hook.result.current.settle(before)).resolves.toBe(false)
+      })
+
+      expect(cached()).toBe(refreshed)
+    })
+
+    it('gives way to a fill that has landed since the reader came to rest', async () => {
+      const {hook, cached} = renderView()
+      const before = cached()
+      mockClient.call.mockReturnValueOnce(CONTINUATION)
+      await act(() => hook.result.current.fillGap('gap:1'))
+      const filled = cached()
+
+      await act(async () => {
+        await expect(hook.result.current.settle(before)).resolves.toBe(false)
+      })
+
+      expect(cached()).toBe(filled)
+    })
+
+    it('leaves a refresh in flight to write after it', async () => {
+      const {hook, cached} = renderView()
+      const top = holdNextRequest()
+      let refreshing!: Promise<unknown>
+      act(() => {
+        refreshing = hook.result.current.refresh()
+      })
+
+      await act(() => hook.result.current.settle(cached()))
+      expect(postsOf(cached())).toEqual([['new']])
+
+      await act(async () => {
+        top.respond('fresh')
+        await refreshing
+      })
+      expect(postsOf(cached())).toEqual([['fresh']])
+    })
+
+    it('cancels a page load still in flight, and drops its page', async () => {
+      const {hook, cached} = renderView()
+      const next = holdNextRequest()
+      let loading!: Promise<unknown>
+      act(() => {
+        loading = hook.result.current.query.fetchNextPage()
+      })
+
+      await act(() => hook.result.current.settle(cached()))
+      await act(async () => {
+        next.respond('late')
+        await loading
+      })
+
+      expect(postsOf(cached())).toEqual([['new']])
+      expect(hook.result.current.query.isFetchingNextPage).toBe(false)
+    })
+
+    it('leaves a valid snapshot', async () => {
+      const {hook, cached} = renderView(exhaustedAboveGap())
+      await act(() => hook.result.current.settle(cached()))
+
+      const snapshot = selectFollowingSnapshot(cached())
+
+      expect(snapshot?.pages.map(page => page.cursor)).toEqual([
+        'start:0',
+        'gap:1',
+      ])
+      expect(readFollowingSnapshot(roundTrip(snapshot))).toEqual(cached())
+    })
+
+    it('brings a post the dropped pages held back into the pages kept', async () => {
+      const data = gappedData()
+      data.pages[0].feed.push(feedItem('timeline-1'))
+      const {hook, cached} = renderView(data)
+      const slicesOfTop = () =>
+        hook.result.current.query.data!.pages[0].slices.map(slice =>
+          slice.feedPostUri.split('/').pop(),
+        )
+      await waitFor(() => expect(slicesOfTop()).toEqual(['new']))
+
+      await act(() => hook.result.current.settle(cached()))
+
+      /*
+       * Tuned without the pages below it, the top page keeps its copy of a
+       * post they had: a row can come back above or inside the viewport.
+       */
+      await waitFor(() => expect(slicesOfTop()).toEqual(['new', 'timeline-1']))
+    })
+
+    describe('when the reader comes to rest at the top', () => {
+      async function wait(ms: number) {
+        act(() => {
+          jest.advanceTimersByTime(ms)
+        })
+        // Lets the settle's write go through.
+        await act(() => Promise.resolve())
+      }
+
+      it('settles once the list has stayed there, after a drag that leaves it still', async () => {
+        jest.useFakeTimers()
+        const {hook, cached} = renderView()
+        const {settleAtTop} = hook.result.current
+
+        act(() => {
+          settleAtTop.onBeginDrag()
+          settleAtTop.onEndDrag(0, 0)
+        })
+        await wait(SETTLE_QUIET_MS - 1)
+        expect(postsOf(cached())).toHaveLength(3)
+
+        await wait(1)
+        expect(postsOf(cached())).toEqual([['new']])
+      })
+
+      it('settles at the end of the momentum after a fling', async () => {
+        jest.useFakeTimers()
+        const {hook, cached} = renderView()
+        const {settleAtTop} = hook.result.current
+
+        act(() => {
+          settleAtTop.onBeginDrag()
+          settleAtTop.onEndDrag(600, -3)
+        })
+        await wait(SETTLE_QUIET_MS)
+        expect(postsOf(cached())).toHaveLength(3)
+
+        act(() => settleAtTop.onMomentumEnd(-40))
+        await wait(SETTLE_QUIET_MS)
+        expect(postsOf(cached())).toEqual([['new']])
+      })
+
+      it('never where the list was first put', async () => {
+        jest.useFakeTimers()
+        const {cached} = renderView()
+
+        await wait(SETTLE_QUIET_MS * 4)
+
+        expect(postsOf(cached())).toHaveLength(3)
+      })
+
+      it('not at rest below the top', async () => {
+        jest.useFakeTimers()
+        const {hook, cached} = renderView()
+
+        act(() => hook.result.current.settleAtTop.onEndDrag(400, 0))
+        await wait(SETTLE_QUIET_MS)
+
+        expect(postsOf(cached())).toHaveLength(3)
+      })
+
+      it('not once another drag starts, or the list leaves the top', async () => {
+        jest.useFakeTimers()
+        const {hook, cached} = renderView()
+        const {settleAtTop} = hook.result.current
+
+        act(() => {
+          settleAtTop.onEndDrag(0, 0)
+          settleAtTop.onBeginDrag()
+        })
+        await wait(SETTLE_QUIET_MS)
+        act(() => {
+          settleAtTop.onEndDrag(0, 0)
+          settleAtTop.onLeaveTop()
+        })
+        await wait(SETTLE_QUIET_MS)
+
+        expect(postsOf(cached())).toHaveLength(3)
+      })
+
+      it('not on the correction a prepend makes, before or after it lands', async () => {
+        jest.useFakeTimers()
+        const gapped = gappedData()
+        const restored = {
+          pages: gapped.pages.slice(1),
+          pageParams: [undefined, {cursor: 'timeline:1'}],
+        }
+        const {hook, queryClient, cached} = renderView(restored)
+        const {settleAtTop} = hook.result.current
+        /** Puts the gapped page above the restored top, as the prepend does. */
+        const prepend = () =>
+          act(() => {
+            queryClient.setQueryData<PostFeedData>(KEY, data => ({
+              pages: [gapped.pages[0], ...data!.pages],
+              pageParams: [
+                undefined,
+                {cursor: 'gap:1'},
+                ...data!.pageParams.slice(1),
+              ],
+            }))
+          })
+
+        // At rest at the restored top, then the prepend lands while it waits.
+        act(() => settleAtTop.onEndDrag(0, 0))
+        prepend()
+        await wait(SETTLE_QUIET_MS)
+        expect(postsOf(cached())).toHaveLength(3)
+
+        // A rest reported from before the correction, then the correction.
+        act(() => {
+          settleAtTop.onMomentumEnd(0)
+          settleAtTop.onLeaveTop()
+        })
+        await wait(SETTLE_QUIET_MS)
+        expect(postsOf(cached())).toHaveLength(3)
+      })
+
+      it('not once the view has unmounted', async () => {
+        jest.useFakeTimers()
+        const {hook, cached} = renderView()
+
+        act(() => hook.result.current.settleAtTop.onEndDrag(0, 0))
+        hook.unmount()
+        await wait(SETTLE_QUIET_MS)
+
+        expect(postsOf(cached())).toHaveLength(3)
+      })
+
+      it('not while disabled', async () => {
+        jest.useFakeTimers()
+        const {hook, cached} = renderView(undefined, {enabled: false})
+
+        act(() => hook.result.current.settleAtTop.onEndDrag(0, 0))
+        await wait(SETTLE_QUIET_MS)
+
+        expect(postsOf(cached())).toHaveLength(3)
+      })
+    })
   })
 })
 
