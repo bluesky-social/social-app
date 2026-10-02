@@ -601,6 +601,22 @@ describe('through the persister', () => {
     ).toStrictEqual(data.pages)
   })
 
+  it('drops a snapshot saved while its query was invalidated', async () => {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(FOLLOWING_SNAPSHOT_QUERY_KEY, following(2))
+    await queryClient.invalidateQueries({
+      queryKey: FOLLOWING_SNAPSHOT_QUERY_KEY,
+    })
+    const cached = await save(queryClient, withSnapshots())
+
+    const restored = await restore(cached, withSnapshots({restore: true}))
+
+    expect(
+      restored.getQueryCache().find({queryKey: FOLLOWING_SNAPSHOT_QUERY_KEY}),
+    ).toBeUndefined()
+    expect(restored.getQueryData(PROFILE_KEY)).toEqual({handle: 'viewer.test'})
+  })
+
   it.each([
     ['a rejected', (s: unknown) => ({...(s as FollowingSnapshot), version: 0})],
     ['a corrupt', () => 'corrupt'],
