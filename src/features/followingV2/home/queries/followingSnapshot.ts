@@ -113,6 +113,9 @@ export function selectFollowingSnapshot(
     const bottom = data.pages[kept - 1]
     const below = data.pages[kept]
     const carried = below ? carryBoundary(bottom, below) : bottom
+    if (!carried) {
+      continue
+    }
     const snapshot = {
       version: FOLLOWING_SNAPSHOT_VERSION,
       pages: [
@@ -146,7 +149,8 @@ function isGapped(page: FeedPageUnselected) {
 /**
  * `upper` with the boundary of `lower`, the page below it, copied onto its end,
  * for when `lower` is to be dropped. Returns `upper` itself when there's
- * nothing to carry. Never changes either page.
+ * nothing to carry, and `undefined` when `upper` can't do without `lower`.
+ * Never changes either page.
  *
  * An exhausted `since` page's cursor is the `since` it was requested with,
  * which is where the page below it starts. The server bounds on sort time
@@ -158,14 +162,14 @@ function isGapped(page: FeedPageUnselected) {
 function carryBoundary(
   upper: FeedPageUnselected,
   lower: FeedPageUnselected,
-): FeedPageUnselected {
+): FeedPageUnselected | undefined {
   const isExhausted = upper.since !== undefined && upper.cursor === upper.since
-  if (
-    !isExhausted ||
-    upper.since !== lower.startCursor ||
-    lower.feed.length === 0
-  ) {
+  if (!isExhausted || lower.feed.length === 0) {
     return upper
+  }
+  // Its bound isn't where `lower` starts, so there's no boundary to carry.
+  if (upper.since !== lower.startCursor) {
+    return undefined
   }
   const boundary = feedSortTime(lower.feed[0])
   let end = 1

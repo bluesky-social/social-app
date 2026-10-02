@@ -280,6 +280,23 @@ describe('selectFollowingSnapshot', () => {
     expect(rkeys(data.pages[0])).toEqual(['new'])
   })
 
+  it('keeps no exhausted since page above a page it does not bound', () => {
+    const [top] = following(1).pages
+    top.feed.push(
+      item('huge', {text: 'x'.repeat(FOLLOWING_SNAPSHOT_MAX_BYTES)}),
+    )
+    const data = stacked([
+      sincePage('newer', 'start-new'),
+      sincePage('new', 'elsewhere'),
+      top,
+    ])
+
+    // The page below `new` is too big, and `new` can't do without it.
+    expect(selectFollowingSnapshot(data)?.pages.map(rkeys)).toEqual([
+      ['newer', 'new'],
+    ])
+  })
+
   it('carries a run of reposts below a third exhausted since page', () => {
     const [top] = following(1).pages
     const repostedAt = '2026-10-02T10:00:00.000Z'
