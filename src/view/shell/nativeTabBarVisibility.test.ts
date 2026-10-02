@@ -1,7 +1,6 @@
 import {getNativeTabBarVisibility} from './nativeTabBarVisibility'
 
 const base = {
-  isIPad: true,
   gtMobile: true,
   hasSession: true,
   signupQueued: false,
@@ -37,12 +36,8 @@ describe('getNativeTabBarVisibility', () => {
     })
   })
 
-  it('preserves phone-like navigation on compact iPads and non-iPads', () => {
+  it('preserves phone-like navigation in compact windows', () => {
     expect(getNativeTabBarVisibility({...base, gtMobile: false})).toEqual({
-      showTabletSidebar: false,
-      hideTabBar: false,
-    })
-    expect(getNativeTabBarVisibility({...base, isIPad: false})).toEqual({
       showTabletSidebar: false,
       hideTabBar: false,
     })

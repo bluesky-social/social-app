@@ -160,10 +160,9 @@ describe.each(['List', 'Content'] as const)(
       ).toHaveProperty('transform', [{translateX: Layout.CENTER_COLUMN_OFFSET}])
     })
 
-    it.each(['phone', 'compact', 'dialog', 'split view', 'centered parent'])(
+    it.each(['compact', 'dialog', 'split view', 'centered parent'])(
       'preserves the existing layout inside a %s',
       context => {
-        if (context === 'phone') jest.replaceProperty(env, 'IS_IPAD', false)
         if (context === 'compact') mockGtMobile = false
         if (context === 'dialog') mockIsWithinDialog = true
 
@@ -231,7 +230,7 @@ it('keeps header spacing on the viewport without adding main-screen insets', () 
   expect(list.props.scrollIndicatorInsets).toEqual({bottom: 20})
 })
 
-it('keeps profile header and refresh offsets without shrinking the iPad scrollbar', () => {
+it('keeps profile header and refresh offsets without shrinking the tablet scrollbar', () => {
   const result = render(
     <List
       data={[]}
@@ -253,7 +252,7 @@ it('keeps profile header and refresh offsets without shrinking the iPad scrollba
 })
 
 it.each(['List', 'Content'] as const)(
-  'uses system scroll indicator insets for a large primary iPad %s',
+  'uses system scroll indicator insets for a large primary tablet %s',
   component => {
     const {viewport} = renderScrollable(component)
 
@@ -282,7 +281,7 @@ it.each(['List', 'Content'] as const)(
 )
 
 it.each(['List', 'Content'] as const)(
-  'uses the compact inset behavior for a compact iPad %s',
+  'uses the compact inset behavior for a compact native %s',
   component => {
     mockGtMobile = false
     const {viewport} = renderScrollable(component)
@@ -298,7 +297,7 @@ it.each(['List', 'Content'] as const)(
 )
 
 it.each(['List', 'Content'] as const)(
-  'uses system scroll indicator insets for a compact dialog-contained iPad %s',
+  'uses system scroll indicator insets for a compact dialog-contained native %s',
   component => {
     mockIsWithinDialog = true
     mockGtMobile = false
@@ -344,7 +343,7 @@ it.each([
   ['List', 'centered parent'],
   ['Content', 'centered parent'],
 ] as const)(
-  'retains contained indicator behavior for an iPad %s in a %s',
+  'retains contained indicator behavior for a native %s in a %s',
   (component, context) => {
     const Wrapper = ({children}: React.PropsWithChildren) =>
       context === 'dialog' ? (
@@ -366,7 +365,7 @@ it.each([
   },
 )
 
-it('keeps the full-bleed large iPad list on system indicators', () => {
+it('keeps the full-bleed large tablet list on system indicators', () => {
   const result = render(
     <List data={[]} renderItem={() => null} disableTabletLayout />,
   )
@@ -379,7 +378,7 @@ it('keeps the full-bleed large iPad list on system indicators', () => {
 it.each(['List', 'Content'] as const)(
   'preserves phone scroll indicator configuration for %s',
   component => {
-    jest.replaceProperty(env, 'IS_IPAD', false)
+    mockGtMobile = false
     const {viewport} = renderScrollable(component)
 
     expect(viewport.props.automaticallyAdjustsScrollIndicatorInsets).toBe(false)
@@ -389,6 +388,19 @@ it.each(['List', 'Content'] as const)(
         right: 1,
       })
     }
+  },
+)
+
+it.each(['List', 'Content'] as const)(
+  'centers a wide Android %s without an iPad device flag',
+  component => {
+    jest.replaceProperty(env, 'IS_IPAD', false)
+    jest.replaceProperty(env, 'IS_IOS', false)
+    const {viewport} = renderScrollable(component)
+
+    expect(
+      StyleSheet.flatten(viewport.props.contentContainerStyle),
+    ).toHaveProperty('maxWidth', Layout.CENTER_COLUMN_WIDTH)
   },
 )
 

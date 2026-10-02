@@ -45,7 +45,7 @@ import {DataUnavailableScreen} from '#/ageAssurance/components/DataUnavailableSc
 import {NoAccessScreen} from '#/ageAssurance/components/NoAccessScreen'
 import {RedirectOverlay} from '#/ageAssurance/components/RedirectOverlay'
 import {PassiveAnalytics} from '#/analytics/PassiveAnalytics'
-import {IS_ANDROID, IS_IOS, IS_IPAD, IS_LIQUID_GLASS} from '#/env'
+import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
 import {RoutesContainer, TabsNavigator} from '#/Navigation'
 import {Composer} from './Composer'
 import {DrawerContent} from './Drawer'
@@ -138,7 +138,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const winDim = useWindowDimensions()
   const {gtMobile} = useBreakpoints()
-  const hasTabletSidebar = IS_IPAD && gtMobile
+  const hasTabletSidebar = gtMobile
 
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()

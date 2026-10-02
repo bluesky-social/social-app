@@ -6,20 +6,16 @@ import {
   getBreakpoints,
   getLayoutBreakpoints,
 } from '#/alf/breakpoints.shared'
-import {IS_IPAD} from '#/env'
 
 export {type Breakpoint, BreakpointWidthContext} from '#/alf/breakpoints.shared'
 
 function subscribeToWindowWidth(onChange: () => void) {
-  // Other native devices keep their existing, non-responsive layout.
-  if (!IS_IPAD) return () => {}
-
   const subscription = Dimensions.addEventListener('change', onChange)
   return () => subscription.remove()
 }
 
 function getWindowWidth() {
-  return IS_IPAD ? Dimensions.get('window').width : 0
+  return Dimensions.get('window').width
 }
 
 function useResponsiveWidth() {
@@ -31,8 +27,7 @@ function useResponsiveWidth() {
   )
   const containerWidth = useContext(BreakpointWidthContext)
 
-  // Phones retain their compact layout, including in landscape.
-  return IS_IPAD ? (containerWidth ?? width) : 0
+  return containerWidth ?? width
 }
 
 export function useBreakpoints() {
