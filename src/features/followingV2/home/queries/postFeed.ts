@@ -455,9 +455,10 @@ export type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
  * is why the last refresh failed, cleared when another starts. Refetches from
  * an invalidation or a reset still go through TanStack.
  *
- * One started while another is pending joins it. One that finishes after the
- * view has gone still commits, which is safe, as the commit gives way to
- * anything that has replaced the top page since.
+ * `refresh` resolves to the page it wrote, if it wrote one. One started while
+ * another is pending joins it. One that finishes after the view has gone still
+ * commits, which is safe, as the commit gives way to anything that has
+ * replaced the top page since.
  */
 export function usePostFeedRefresh(
   feedDesc: FeedDescriptor,
@@ -469,7 +470,7 @@ export function usePostFeedRefresh(
   const [error, setError] = useState<Error | undefined>(undefined)
   const [isRefreshing, setIsRefreshing] = useState(false)
   /** The pending refresh, for another to join. */
-  const pending = useRef<Promise<void>>(undefined)
+  const pending = useRef<Promise<FeedPageUnselected | undefined>>(undefined)
 
   const refreshFromTop = async () => {
     const before = queryClient.getQueryData<PostFeedData>(queryKey)
@@ -477,10 +478,11 @@ export function usePostFeedRefresh(
     setIsRefreshing(true)
     try {
       const page = await fetchPage(undefined)
-      await commit(queryClient, queryKey, before, {
+      const wrote = await commit(queryClient, queryKey, before, () => ({
         pages: [page],
         pageParams: [undefined],
-      })
+      }))
+      return wrote ? page : undefined
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to refresh posts feed', {safeMessage: e})
@@ -502,7 +504,7 @@ export function usePostFeedRefresh(
      */
     const status = queryClient.getQueryState(queryKey)?.status
     if (!status || status === 'pending') {
-      return Promise.resolve()
+      return Promise.resolve(undefined)
     }
     pending.current ??= refreshFromTop()
     return pending.current
@@ -524,22 +526,25 @@ function isTopReplaced(
 }
 
 /**
- * Writes `data` over the feed's, unless something else has replaced its top
- * page since `before` was read (a refetch, a reset or a removal) or is
- * fetching it now.
+ * Writes what `next` makes of the feed's data, unless something else has
+ * replaced its top page since `before` was read (a refetch, a reset or a
+ * removal) or is fetching it now. Resolves to whether it wrote.
+ *
+ * `next` is given the data as it is when it writes, which has the same top
+ * page as `before`, and any pages a `fetchNextPage` added below since.
  */
 async function commit(
   queryClient: QueryClient,
   queryKey: QueryKey,
   before: PostFeedData | undefined,
-  data: PostFeedData,
+  next: (data: PostFeedData | undefined) => PostFeedData,
 ) {
   const state = queryClient.getQueryState(queryKey)
   // A fetch from the top in flight will land after this write, so it wins.
   const isFetchingTop =
     state?.fetchStatus !== 'idle' && !state?.fetchMeta?.fetchMore
   if (isTopReplaced(queryClient, queryKey, before) || isFetchingTop) {
-    return
+    return false
   }
   /*
    * A fetchNextPage in flight would land after this write and put back the
@@ -552,9 +557,10 @@ async function commit(
     isTopReplaced(queryClient, queryKey, before) ||
     queryClient.getQueryState(queryKey)?.fetchStatus !== 'idle'
   ) {
-    return
+    return false
   }
-  queryClient.setQueryData<PostFeedData>(queryKey, data)
+  queryClient.setQueryData<PostFeedData>(queryKey, next)
+  return true
 }
 
 /**

@@ -529,10 +529,14 @@ describe('usePostFeedRefresh', () => {
       feed: [feedItem('fresh')],
     })
 
-    await act(() => hook.result.current.refresh())
+    let written: unknown
+    await act(async () => {
+      written = await hook.result.current.refresh()
+    })
     await flushNotifications()
 
     expect(writes).toHaveLength(1)
+    expect(written).toBe(data()?.pages[0])
     expect(data()?.pageParams).toEqual([undefined])
     expect(topPostUri(data())).toBe(feedItem('fresh').post.uri)
     const dataChanges = rendered
@@ -570,7 +574,7 @@ describe('usePostFeedRefresh', () => {
     await act(() => hook.result.current.refresh())
 
     const retry = holdNextRequest()
-    let retrying!: Promise<void>
+    let retrying!: Promise<unknown>
     act(() => {
       retrying = hook.result.current.refresh()
     })
@@ -610,8 +614,8 @@ describe('usePostFeedRefresh', () => {
     const writes = watchWrites(queryClient)
     const top = holdNextRequest()
 
-    let first!: Promise<void>
-    let second!: Promise<void>
+    let first!: Promise<unknown>
+    let second!: Promise<unknown>
     act(() => {
       first = hook.result.current.refresh()
       second = hook.result.current.refresh()
@@ -654,7 +658,7 @@ describe('usePostFeedRefresh', () => {
   it('still writes after a page load lands while it is in flight', async () => {
     const {hook, data} = await renderRefreshableFeed()
     const top = holdNextRequest()
-    let refreshing!: Promise<void>
+    let refreshing!: Promise<unknown>
     act(() => {
       refreshing = hook.result.current.refresh()
     })
@@ -674,7 +678,7 @@ describe('usePostFeedRefresh', () => {
     it('when a refetch has replaced the top page', async () => {
       const {hook, data} = await renderRefreshableFeed()
       const top = holdNextRequest()
-      let refreshing!: Promise<void>
+      let refreshing!: Promise<unknown>
       act(() => {
         refreshing = hook.result.current.refresh()
       })
@@ -683,7 +687,7 @@ describe('usePostFeedRefresh', () => {
 
       await act(async () => {
         top.respond('fresh')
-        await refreshing
+        await expect(refreshing).resolves.toBeUndefined()
       })
 
       expect(data()).toBe(refetched)
@@ -693,7 +697,7 @@ describe('usePostFeedRefresh', () => {
       const {hook, queryClient, data} = await renderRefreshableFeed()
       const top = holdNextRequest()
       const refetch = holdNextRequest()
-      let refreshing!: Promise<void>
+      let refreshing!: Promise<unknown>
       act(() => {
         refreshing = hook.result.current.refresh()
         void hook.result.current.query.refetch()
@@ -716,7 +720,7 @@ describe('usePostFeedRefresh', () => {
     it('when the feed is reset', async () => {
       const {hook, queryClient, data} = await renderRefreshableFeed()
       const top = holdNextRequest()
-      let refreshing!: Promise<void>
+      let refreshing!: Promise<unknown>
       act(() => {
         refreshing = hook.result.current.refresh()
       })
@@ -733,7 +737,7 @@ describe('usePostFeedRefresh', () => {
     it('when the feed is removed', async () => {
       const {hook, queryClient, data} = await renderRefreshableFeed()
       const top = holdNextRequest()
-      let refreshing!: Promise<void>
+      let refreshing!: Promise<unknown>
       act(() => {
         refreshing = hook.result.current.refresh()
       })
@@ -753,7 +757,7 @@ describe('usePostFeedRefresh', () => {
   it('reports nothing when it fails after the feed has moved on', async () => {
     const {hook} = await renderRefreshableFeed()
     const top = holdNextRequest()
-    let refreshing!: Promise<void>
+    let refreshing!: Promise<unknown>
     act(() => {
       refreshing = hook.result.current.refresh()
     })
@@ -772,7 +776,7 @@ describe('usePostFeedRefresh', () => {
     const {hook, queryClient, data} = await renderRefreshableFeed()
     const writes = watchWrites(queryClient)
     const top = holdNextRequest()
-    let refreshing!: Promise<void>
+    let refreshing!: Promise<unknown>
     act(() => {
       refreshing = hook.result.current.refresh()
     })

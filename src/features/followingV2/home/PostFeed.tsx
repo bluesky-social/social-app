@@ -821,7 +821,11 @@ let PostFeed = ({
     setIsPTRing(false)
   }
 
-  useImperativeHandle(ref, () => ({refresh}))
+  useImperativeHandle(ref, () => ({
+    refresh: async () => {
+      await refresh()
+    },
+  }))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
