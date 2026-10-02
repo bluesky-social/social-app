@@ -580,7 +580,7 @@ describe('through the persister', () => {
     queryClient.setQueryData(FOLLOWING_SNAPSHOT_QUERY_KEY, following(2))
     const cached = await save(queryClient, withSnapshots())
 
-    const restored = await restore(cached, withSnapshots())
+    const restored = await restore(cached, withSnapshots({restore: false}))
 
     expect(
       restored.getQueryCache().find({queryKey: FOLLOWING_SNAPSHOT_QUERY_KEY}),
@@ -588,17 +588,21 @@ describe('through the persister', () => {
     expect(restored.getQueryData(PROFILE_KEY)).toEqual({handle: 'viewer.test'})
   })
 
-  it('hydrates a valid snapshot once restoring is on', async () => {
+  it('hydrates a valid snapshot, as restoring is on', async () => {
     const queryClient = createQueryClient()
     const data = following(2)
     queryClient.setQueryData(FOLLOWING_SNAPSHOT_QUERY_KEY, data)
     const cached = await save(queryClient, withSnapshots())
 
-    const restored = await restore(cached, withSnapshots({restore: true}))
+    const restored = await restore(cached, withSnapshots())
 
     expect(
       restored.getQueryData<PostFeedData>(FOLLOWING_SNAPSHOT_QUERY_KEY)?.pages,
     ).toStrictEqual(data.pages)
+    expect(
+      restored.getQueryCache().find({queryKey: FOLLOWING_SNAPSHOT_QUERY_KEY})
+        ?.state,
+    ).toMatchObject({status: 'success', isInvalidated: false})
   })
 
   it('drops a snapshot saved while its query was invalidated', async () => {
@@ -609,7 +613,7 @@ describe('through the persister', () => {
     })
     const cached = await save(queryClient, withSnapshots())
 
-    const restored = await restore(cached, withSnapshots({restore: true}))
+    const restored = await restore(cached, withSnapshots())
 
     expect(
       restored.getQueryCache().find({queryKey: FOLLOWING_SNAPSHOT_QUERY_KEY}),
@@ -631,7 +635,7 @@ describe('through the persister', () => {
         tamper,
       )
 
-      const restored = await restore(cached, withSnapshots({restore: true}))
+      const restored = await restore(cached, withSnapshots())
 
       expect(
         restored.getQueryCache().find({queryKey: FOLLOWING_SNAPSHOT_QUERY_KEY}),
