@@ -19,7 +19,7 @@ For the assets Bluesky itself owns, we are not treating anyone's past use as bad
 | [`assets/illustrations/`](#1-commissioned-artwork--licensed-to-bluesky-only) | Owen D. Pomery, via Brilliant Artists Ltd | No | Replace |
 | [`assets/icons/`](#2-licensed-icon-system--not-ours-to-pass-on) (top level), Central icon glyphs in `bskyembed/assets/` except the Starter Pack mark | Iconists (David & Storm GbR) | No | Source your own |
 | [Bluesky marks](#3-bluesky-trademarks-and-brand-assets) — app icons, logos, favicons | Bluesky Social PBC | No | Replace |
-| [`assets/kawaii.png`, `assets/kawaii_smol.png`](#4-community-and-contest-artwork--credited-but-not-ours-to-license) | [@sawaratsuki.bsky.social](https://bsky.app/profile/sawaratsuki.bsky.social) | No | Replace or remove |
+| [`assets/kawaii.webp`, `assets/kawaii_smol.webp`](#4-community-and-contest-artwork--credited-but-not-ours-to-license) | [@sawaratsuki.bsky.social](https://bsky.app/profile/sawaratsuki.bsky.social) | No | Replace or remove |
 | [`assets/icons/custom_logo_japan.svg`](#4-community-and-contest-artwork--credited-but-not-ours-to-license) | A Bluesky Japan logo contest entrant | No | Replace or remove |
 | [`assets/icons/apple_logo.svg`](#5-third-party-trademarks) | Apple Inc. | No | Rests on your own basis |
 | [`assets/icons/android_logo.svg`](#5-third-party-trademarks) | Google LLC | No | Rests on your own basis |
@@ -40,7 +40,7 @@ Assets are scoped by directory wherever possible, so that adding a file to a car
 
 **`assets/illustrations/`**
 
-The landing-screen illustration, in light and dark variants (`assets/illustrations/illustration-mobile.png` and `assets/illustrations/illustration-mobile-dark.png`), used by `src/view/com/auth/SplashScreen.tsx`.
+The landing-screen illustration, in light and dark variants (`assets/illustrations/illustration-mobile.webp` and `assets/illustrations/illustration-mobile-dark.webp`), used by `src/view/com/auth/SplashScreen.tsx`.
 
 **Rights holder: Owen D. Pomery**, represented by Brilliant Artists Ltd. Bluesky Social PBC commissioned the work and holds a usage license. Copyright remains with the artist. Our license is limited to Bluesky's own products and channels, is exclusive to us, and does not permit us to sublicense the artwork or to distribute modified versions of it.
 
@@ -73,8 +73,8 @@ You may refer to Bluesky by name to describe interoperability or origin — for 
 - `assets/icon-android-foreground.png`
 - `assets/icon-android-monochrome.png`
 - `assets/icon-android-notification.png`
-- `assets/splash/splash.png`
-- `assets/splash/splash-dark.png`
+- `assets/splash/splash.webp`
+- `assets/splash/splash-dark.webp`
 - `assets/splash/android-splash-logo-white.png`
 - `assets/icons/logomark.svg`
 - `assets/icons/newskie.svg`
@@ -104,7 +104,7 @@ These files stay in this repository because the app needs them to build. **If yo
 
 These are third-party artworks that appear in the app with attribution. We hold no license that lets us pass rights to them on to you.
 
-- `assets/kawaii.png` and `assets/kawaii_smol.png` — **rights holder:
+- `assets/kawaii.webp` and `assets/kawaii_smol.webp` — **rights holder:
   [@sawaratsuki.bsky.social](https://bsky.app/profile/sawaratsuki.bsky.social)**. Shown as an opt-in variant and credited in `src/view/shell/Drawer.tsx` and `src/view/shell/desktop/RightNav.tsx`.
 - `assets/icons/custom_logo_japan.svg` — **rights holder: the entrant who won the Bluesky Japan logo contest.**
 

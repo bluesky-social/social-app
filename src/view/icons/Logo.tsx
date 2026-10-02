@@ -42,8 +42,8 @@ export const Logo = forwardRef(function LogoImpl(props: Props, ref) {
           isJapanLogo
             ? require('../../../assets/icons/custom_logo_japan.svg')
             : size > 100
-              ? require('../../../assets/kawaii.png')
-              : require('../../../assets/kawaii_smol.png')
+              ? require('../../../assets/kawaii.webp')
+              : require('../../../assets/kawaii_smol.webp')
         }
         accessibilityLabel="Bluesky"
         accessibilityHint=""
