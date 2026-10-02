@@ -38,11 +38,15 @@ import {
   type FeedDescriptor,
   type FeedPageUnselected,
   type FeedParams,
+  type FeedPostSlice,
+  findGaps,
+  gapBelow,
   pollLatest,
   type PostFeedData,
   PROCESS_STARTED_AT,
   RQKEY,
   usePostFeedFetcher,
+  usePostFeedGapFill,
   usePostFeedQuery,
   usePostFeedRefresh,
   usePostFeedRestorePrepend,
@@ -1288,6 +1292,278 @@ describe('usePostFeedRestorePrepend', () => {
     })
 
     expect(postsOf(cached())).toEqual([['new'], ['timeline-1'], ['timeline-2']])
+    expect(hook.result.current.query.isFetchingNextPage).toBe(false)
+  })
+})
+
+describe('gaps', () => {
+  const KEY = RQKEY('following')
+
+  /**
+   * A gapped page put above two restored pages, as a restore prepend leaves
+   * them: its `since` is the old top's `startCursor`, and its cursor goes on
+   * into the posts it didn't reach.
+   */
+  function gappedData(): PostFeedData {
+    const fetchedAt = PROCESS_STARTED_AT - 60e3
+    return {
+      pages: [
+        {
+          cursor: 'gap:1',
+          startCursor: 'start:0',
+          since: 'start:1',
+          feed: [feedItem('new')],
+          fetchedAt: Date.now(),
+        },
+        {
+          cursor: 'timeline:1',
+          startCursor: 'start:1',
+          feed: [feedItem('timeline-1')],
+          fetchedAt,
+        },
+        {cursor: 'timeline:2', feed: [feedItem('timeline-2')], fetchedAt},
+      ],
+      pageParams: [undefined, {cursor: 'gap:1'}, {cursor: 'timeline:1'}],
+    }
+  }
+
+  /** The posts that continue from the gapped page's cursor. */
+  const CONTINUATION = {
+    cursor: 'gap:2',
+    startCursor: 'start:gap',
+    feed: [feedItem('gap-1')],
+  }
+
+  function postsOf(data: PostFeedData) {
+    return data.pages.map(page =>
+      page.feed.map(item => item.post.uri.split('/').pop()),
+    )
+  }
+
+  describe('gapBelow', () => {
+    it('is open below a gapped page while the page its since came from is below it', () => {
+      const {pages} = gappedData()
+      expect(pages.map((_, i) => gapBelow(pages, i))).toEqual([
+        'open',
+        undefined,
+        undefined,
+      ])
+    })
+
+    it('is filled once the page below continues from its cursor', () => {
+      const {pages} = gappedData()
+      expect(
+        gapBelow([pages[0], {...CONTINUATION, fetchedAt: Date.now()}], 0),
+      ).toBe('filled')
+    })
+
+    it('is nothing below an exhausted page', () => {
+      const {pages} = gappedData()
+      pages[0].cursor = pages[0].since
+      expect(gapBelow(pages, 0)).toBeUndefined()
+    })
+
+    it('is nothing below the bottom page', () => {
+      expect(gapBelow(gappedData().pages.slice(0, 1), 0)).toBeUndefined()
+    })
+  })
+
+  describe('findGaps', () => {
+    /** Gapped pages stacked on each other, with `slices` rows each. */
+    function stackedGaps(slices: number[]) {
+      return slices.map((count, i) => ({
+        cursor: `gap:${i}`,
+        startCursor: `start:${i}`,
+        since: `start:${i + 1}`,
+        slices: Array.from<FeedPostSlice>({length: count}),
+      }))
+    }
+
+    it('collapses an open gap with no posts between it and the open gap above', () => {
+      expect([...findGaps(stackedGaps([1, 0, 1]))]).toEqual([[0, 'open']])
+    })
+
+    it('keeps open gaps with posts between them apart', () => {
+      expect([...findGaps(stackedGaps([1, 1, 1]))]).toEqual([
+        [0, 'open'],
+        [1, 'open'],
+      ])
+    })
+  })
+
+  /** The feed's view, as PostFeed has it, over `data` already in the cache. */
+  function renderView(data = gappedData()) {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(KEY, data)
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    const hook = renderHook(
+      () => ({
+        query: usePostFeedQuery('following'),
+        refresh: usePostFeedRefresh('following').refresh,
+        fillGap: usePostFeedGapFill('following'),
+      }),
+      {wrapper},
+    )
+    const cached = () => queryClient.getQueryData<PostFeedData>(KEY)!
+    return {hook, queryClient, cached}
+  }
+
+  it('fetches the posts in the gap, then puts them in place of the pages below it in one write', async () => {
+    const {hook, queryClient, cached} = renderView()
+    const writes = watchWrites(queryClient)
+    mockClient.call.mockReturnValueOnce(CONTINUATION)
+
+    let outcome: unknown
+    await act(async () => {
+      outcome = await hook.result.current.fillGap('gap:1')
+    })
+
+    expect(outcome).toBe('filled')
+    expect(requested()).toEqual(['timeline gap:1'])
+    expect(writes).toHaveLength(1)
+    expect(postsOf(cached())).toEqual([['new'], ['gap-1']])
+    expect(cached().pageParams).toEqual([undefined, {cursor: 'gap:1'}])
+    expect(gapBelow(cached().pages, 0)).toBe('filled')
+    // The selected pages say so too, as the rows are built from them.
+    await waitFor(() =>
+      expect([...findGaps(hook.result.current.query.data!.pages)]).toEqual([
+        [0, 'filled'],
+      ]),
+    )
+
+    // Load more carries on from the new page.
+    mockClient.call.mockClear()
+    await act(() => hook.result.current.query.fetchNextPage())
+    expect(requested()).toEqual(['timeline gap:2'])
+  })
+
+  it('keeps the pages below and the gap when it fails, and logs only unexpected errors', async () => {
+    const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
+    try {
+      const {hook, cached} = renderView()
+      const before = cached()
+
+      failNextRequest(new TypeError('Network request failed'))
+      await act(async () => {
+        await expect(hook.result.current.fillGap('gap:1')).resolves.toBe(
+          'failed',
+        )
+      })
+      expect(cached()).toBe(before)
+      expect(gapBelow(cached().pages, 0)).toBe('open')
+      expect(logError).not.toHaveBeenCalled()
+
+      failNextRequest(new Error('Unexpected'))
+      await act(() => hook.result.current.fillGap('gap:1'))
+      expect(cached()).toBe(before)
+      expect(logError).toHaveBeenCalledTimes(1)
+    } finally {
+      logError.mockRestore()
+    }
+  })
+
+  it('gives way to a refresh that replaces the top meanwhile', async () => {
+    const {hook, cached} = renderView()
+    const fill = holdNextRequest()
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fillGap('gap:1')
+    })
+    mockClient.call.mockReturnValueOnce({
+      cursor: 'timeline:1',
+      feed: [feedItem('fresh')],
+    })
+    await act(() => hook.result.current.refresh())
+    const refreshed = cached()
+
+    await act(async () => {
+      fill.respondWith(CONTINUATION)
+      await expect(filling).resolves.toBe('superseded')
+    })
+
+    expect(cached()).toBe(refreshed)
+  })
+
+  it('gives way when the page above the gap is replaced meanwhile, below the top', async () => {
+    const data = gappedData()
+    // An exhausted page on top, sitting on the gapped one.
+    data.pages.unshift({
+      cursor: 'start:0',
+      startCursor: 'start:newest',
+      since: 'start:0',
+      feed: [feedItem('newest')],
+      fetchedAt: Date.now(),
+    })
+    data.pageParams = [
+      undefined,
+      {cursor: 'start:0'},
+      ...data.pageParams.slice(1),
+    ]
+    const {hook, queryClient, cached} = renderView(data)
+    const fill = holdNextRequest()
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fillGap('gap:1')
+    })
+    act(() => {
+      queryClient.setQueryData<PostFeedData>(KEY, current => ({
+        ...current!,
+        pages: current!.pages.map((page, i) => (i === 1 ? {...page} : page)),
+      }))
+    })
+    const replaced = cached()
+
+    await act(async () => {
+      fill.respondWith(CONTINUATION)
+      await expect(filling).resolves.toBe('superseded')
+    })
+
+    expect(cached()).toBe(replaced)
+  })
+
+  it('does nothing once the gap has gone', async () => {
+    const {hook, cached} = renderView()
+    await act(() => hook.result.current.refresh())
+    const refreshed = cached()
+    mockClient.call.mockClear()
+
+    await act(async () => {
+      await expect(hook.result.current.fillGap('gap:1')).resolves.toBe(
+        'superseded',
+      )
+    })
+
+    expect(requested()).toEqual([])
+    expect(cached()).toBe(refreshed)
+  })
+
+  it('cancels a page load still in flight below the gap, and drops its page', async () => {
+    const {hook, queryClient, cached} = renderView()
+    const fill = holdNextRequest()
+    let filling!: Promise<unknown>
+    act(() => {
+      filling = hook.result.current.fillGap('gap:1')
+    })
+    const next = holdNextRequest()
+    let loading!: Promise<unknown>
+    act(() => {
+      loading = hook.result.current.query.fetchNextPage()
+    })
+    const writes = watchWrites(queryClient)
+
+    await act(async () => {
+      fill.respondWith(CONTINUATION)
+      await expect(filling).resolves.toBe('filled')
+    })
+    await act(async () => {
+      next.respond('late')
+      await loading
+    })
+
+    expect(writes).toHaveLength(1)
+    expect(postsOf(cached())).toEqual([['new'], ['gap-1']])
     expect(hook.result.current.query.isFetchingNextPage).toBe(false)
   })
 })
