@@ -65,6 +65,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
   isStatusStillActive,
@@ -85,6 +86,7 @@ import {
   usePostFeedFetcher,
   usePostFeedQuery,
   usePostFeedRefresh,
+  usePostFeedRestorePrepend,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 
@@ -212,6 +214,18 @@ export type PostFeedRef = {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
+/**
+ * Rows that show posts. The rows above the first of them are headers, which
+ * `maintainVisibleContentPosition` mustn't anchor on.
+ */
+const POST_ROW_TYPES: ReadonlySet<FeedRow['type']> = new Set([
+  'sliceItem',
+  'sliceViewFullThread',
+  'showLessFollowup',
+  'videoGridRow',
+  'fallbackMarker',
+])
+
 let PostFeed = ({
   feed,
   description,
@@ -335,6 +349,18 @@ let PostFeed = ({
     [isFetching, data],
   )
 
+  /**
+   * Whether the list holds on to the row the reader is on when posts are put
+   * above it, as Following v2 does on Home's Following feed, on native. The
+   * rows that would sit above the posts are left out, as they'd take the
+   * anchor from them.
+   */
+  const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
+  const restore = usePostFeedRestorePrepend(feed, feedParams, {
+    enabled: isAnchored && enabled !== false,
+    topFetchedAt: lastFetchedAt,
+  })
+
   useEffect(() => {
     if (lastFetchedAt) {
       lastFetchRef.current = lastFetchedAt
@@ -346,6 +372,8 @@ let PostFeed = ({
       !data?.pages[0] ||
       isFetching ||
       isRefreshing ||
+      // A restored top is checked by fetching what's newer, still to come.
+      (isAnchored && restore.isOwed()) ||
       !onHasNew ||
       !enabled ||
       disablePoll
@@ -641,8 +669,8 @@ let PostFeed = ({
                   }
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
-                    // Show composer prompt for Following feed
-                    if (hasSession) {
+                    // Show composer prompt for Following feed, unless anchored
+                    if (hasSession && !isAnchored) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
@@ -778,6 +806,7 @@ let PostFeed = ({
 
     return arr
   }, [
+    isAnchored,
     refreshError,
     isRetryingError,
     description,
@@ -1013,6 +1042,16 @@ let PostFeed = ({
     ],
   )
 
+  /*
+   * The rows above the first post, which the anchor must skip: anchored on a
+   * header row, the list holds that row in place and lets the posts below it
+   * move.
+   */
+  let leadingRowCount = feedItems.findIndex(row => POST_ROW_TYPES.has(row.type))
+  if (leadingRowCount === -1) {
+    leadingRowCount = feedItems.length
+  }
+
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
   const bottomBarOffset = useBottomBarOffset()
@@ -1236,6 +1275,11 @@ let PostFeed = ({
         maxToRenderPerBatch={IS_IOS ? 5 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
+        maintainVisibleContentPosition={
+          isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
+        }
+        onFirstScroll={isAnchored ? restore.onListFirstScroll : undefined}
+        onLayout={isAnchored ? restore.onListLayout : undefined}
       />
     </View>
   )
