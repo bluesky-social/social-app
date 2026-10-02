@@ -51,7 +51,7 @@ minimumReleaseAgeExclude:
   - '@atproto-labs/*'
   - '@bsky.app/*'
   - '@bsky/*'
-  - react-native-worklets@0.12.2
+  - react-native-reanimated@4.7.1
   - '@expo/cli@57.0.25'
   - '@expo/router-server@57.0.10'
   - babel-preset-expo@57.0.12
@@ -63,4 +63,3 @@ minimumReleaseAgeExclude:
   - expo-notifications@57.0.20
   - expo-sharing@57.0.21 # TODO
   - '@expo/ui@57.0.20'
-  - react-native-reanimated@4.7.1
