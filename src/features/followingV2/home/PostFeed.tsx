@@ -361,11 +361,39 @@ let PostFeed = ({
     topFetchedAt: lastFetchedAt,
   })
 
+  /**
+   * The top page a refresh from this view wrote, to take the reader up to once
+   * it has rendered: anchored, the list would otherwise hold on to the row
+   * they're on, below the new posts. Not animated, as that can be a long way.
+   */
+  const revealTopRef = useRef<number>(undefined)
+  const revealTop = useNonReactiveCallback(() => {
+    scrollElRef?.current?.scrollToOffset({
+      animated: false,
+      offset: -headerOffset,
+    })
+  })
+  const refreshToTop = async () => {
+    const page = await refresh()
+    if (!page || !isAnchored) {
+      return
+    }
+    if (lastFetchRef.current === page.fetchedAt) {
+      revealTop()
+    } else {
+      revealTopRef.current = page.fetchedAt
+    }
+  }
+
   useEffect(() => {
     if (lastFetchedAt) {
       lastFetchRef.current = lastFetchedAt
+      if (lastFetchedAt === revealTopRef.current) {
+        revealTopRef.current = undefined
+        revealTop()
+      }
     }
-  }, [lastFetchedAt])
+  }, [lastFetchedAt, revealTop])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (
@@ -389,7 +417,7 @@ let PostFeed = ({
     try {
       if (await pollLatest(data.pages[0], createFeedApi())) {
         if (isEmpty) {
-          void refresh()
+          void refreshToTop()
         } else {
           onHasNew(true)
         }
@@ -424,12 +452,12 @@ let PostFeed = ({
        * had loaded.
        */
       if (enabled) {
-        void refresh()
+        void refreshToTop()
       } else {
         void truncateAndInvalidate(queryClient, RQKEY(feed))
       }
     }
-  }, [queryClient, feed, myDid, enabled, refresh])
+  }, [queryClient, feed, myDid, enabled, refreshToTop])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -844,17 +872,13 @@ let PostFeed = ({
         feedUrl: feed,
         reason: 'pull-to-refresh',
       })
-      await refresh()
+      await refreshToTop()
       onHasNew?.(false)
     }
     setIsPTRing(false)
   }
 
-  useImperativeHandle(ref, () => ({
-    refresh: async () => {
-      await refresh()
-    },
-  }))
+  useImperativeHandle(ref, () => ({refresh: refreshToTop}))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -881,9 +905,9 @@ let PostFeed = ({
   ])
 
   const onPressTryAgain = useCallback(() => {
-    void refresh()
+    void refreshToTop()
     onHasNew?.(false)
-  }, [refresh, onHasNew])
+  }, [refreshToTop, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
     void fetchNextPage()
