@@ -1,9 +1,6 @@
 import {useCallback, useEffect, useLayoutEffect, useMemo, useRef} from 'react'
-import {ActivityIndicator, StyleSheet} from 'react-native'
-import {
-  Reanimated3DefaultSpringConfig,
-  withSpring,
-} from 'react-native-reanimated'
+import {ActivityIndicator, AppState, StyleSheet} from 'react-native'
+import {withSpring} from 'react-native-reanimated'
 import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
@@ -12,6 +9,7 @@ import {
   PROD_DEFAULT_FEED,
   TIMELINE_SAVED_FEED,
 } from '#/lib/constants'
+import {SHELL_SPRING_CONFIG} from '#/lib/custom-animations/springs'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useOTAUpdates} from '#/lib/hooks/useOTAUpdates'
 import {useSetTitle} from '#/lib/hooks/useSetTitle'
@@ -31,6 +29,7 @@ import {usePreferencesQuery} from '#/state/queries/preferences'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences/types'
 import {useSession} from '#/state/session'
 import {useLoggedOutViewControls} from '#/state/shell/logged-out'
+import {useMinimalShellScrollMode} from '#/state/shell/minimal-mode'
 import {useSelectedFeed, useSetSelectedFeed} from '#/state/shell/selected-feed'
 import {FeedPage} from '#/view/com/feeds/FeedPage'
 import {HomeHeader} from '#/view/com/home/HomeHeader'
@@ -156,20 +155,30 @@ function HomeScreenReady({
 
   const {hasSession} = useSession()
   const headerMode = useHomeHeaderMode()
-  const showHeader = useCallback(() => {
+  const footerScrollMode = useMinimalShellScrollMode()
+  const showShell = useCallback(() => {
     'worklet'
-    headerMode.set(
-      withSpring(0, {
-        ...Reanimated3DefaultSpringConfig,
-        overshootClamping: true,
-      }),
-    )
-  }, [headerMode])
+    // animation objects are stateful, so each shared value needs its own
+    headerMode.set(withSpring(0, SHELL_SPRING_CONFIG))
+    footerScrollMode.set(withSpring(0, SHELL_SPRING_CONFIG))
+  }, [headerMode, footerScrollMode])
 
   useFocusEffect(
     useCallback(() => {
-      return () => showHeader()
-    }, [showHeader]),
+      return () => showShell()
+    }, [showShell]),
+  )
+
+  useFocusEffect(
+    useCallback(() => {
+      // Reveal the bars on foreground so you don't miss notifications or messages.
+      const listener = AppState.addEventListener('change', nextAppState => {
+        if (nextAppState === 'active') {
+          showShell()
+        }
+      })
+      return () => listener.remove()
+    }, [showShell]),
   )
 
   useFocusEffect(
@@ -187,7 +196,7 @@ function HomeScreenReady({
 
   const onPageSelected = useCallback(
     (index: number) => {
-      showHeader()
+      showShell()
       const maybeFeed = allFeeds[index]
 
       // Mutate the ref before setting state to avoid the imperative syncing effect
@@ -203,7 +212,7 @@ function HomeScreenReady({
         })
       }
     },
-    [ax, setSelectedFeed, showHeader, allFeeds],
+    [ax, setSelectedFeed, showShell, allFeeds],
   )
 
   const onPressSelected = useCallback(() => {
@@ -214,10 +223,10 @@ function HomeScreenReady({
     (state: 'idle' | 'dragging' | 'settling') => {
       'worklet'
       if (state === 'dragging') {
-        showHeader()
+        showShell()
       }
     },
-    [showHeader],
+    [showShell],
   )
 
   const [demoMode] = useDemoMode()
