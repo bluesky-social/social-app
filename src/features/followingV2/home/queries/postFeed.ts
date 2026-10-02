@@ -120,6 +120,11 @@ export interface FeedPostSlice {
 
 export interface FeedPageUnselected {
   cursor: string | undefined
+  /**
+   * The server's cursor for the newest boundary of this page. Following pages
+   * have one, once the appview supports it.
+   */
+  startCursor?: string
   /** See {@link FeedSource}. */
   source?: FeedSource
   feed: app.bsky.feed.defs.FeedViewPost[]
@@ -418,6 +423,7 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
 
     return {
       cursor: res.cursor,
+      startCursor: res.startCursor,
       source: res.source,
       feed: res.feed,
       fetchedAt: Date.now(),
@@ -427,7 +433,7 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
   return {createFeedApi, fetchPage}
 }
 
-type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
+export type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
 
 /**
  * Refreshes the feed from the top with one fetch and then one write, so the
