@@ -87,7 +87,8 @@ export function AutomationLabelSettingsScreen({}: Props) {
       },
       {
         onSuccess() {
-          queryClient.invalidateQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
+          // Resetting refetches a feed's first page, not every loaded page.
+          queryClient.resetQueries({queryKey: [POST_FEED_RQKEY_ROOT]})
           queryClient.invalidateQueries({queryKey: [postThreadQueryKeyRoot]})
         },
       },
