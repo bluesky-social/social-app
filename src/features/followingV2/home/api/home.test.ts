@@ -18,12 +18,16 @@ function post(name: string) {
   return {post: {uri: name}} as unknown as app.bsky.feed.defs.FeedViewPost
 }
 
-function createHomeApi({timelineCursor}: {timelineCursor?: string} = {}) {
+function createHomeApi({
+  timelineCursor,
+  startCursor,
+}: {timelineCursor?: string; startCursor?: string} = {}) {
   const call = jest.fn(
     (method: unknown, params: {cursor?: string; limit: number}) => {
       if (method === app.bsky.feed.getTimeline) {
         return {
           cursor: timelineCursor,
+          startCursor,
           feed: [post(`timeline-${params.cursor}`)],
         }
       }
@@ -84,6 +88,19 @@ describe('HomeFeedAPI', () => {
       feed: [post('timeline-undefined'), FALLBACK_MARKER_POST],
     })
     expect(requested()).toEqual(['timeline undefined'])
+  })
+
+  it('keeps the startCursor getTimeline returns', async () => {
+    const more = createHomeApi({timelineCursor: 'more', startCursor: 'start'})
+    expect(
+      (await more.api.fetch({cursor: undefined, limit: 30})).startCursor,
+    ).toBe('start')
+
+    setDev(false)
+    const last = createHomeApi({startCursor: 'start'})
+    expect(
+      (await last.api.fetch({cursor: undefined, limit: 30})).startCursor,
+    ).toBe('start')
   })
 
   it('continues a Discover page from Discover alone', async () => {
