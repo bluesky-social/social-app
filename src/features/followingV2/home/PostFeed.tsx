@@ -18,6 +18,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {useSharedValue} from 'react-native-reanimated'
 import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -93,8 +94,10 @@ import {
   usePostFeedRestorePrepend,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
+import {RestorePill} from './RestorePill'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
 import {useListRest} from './useListRest'
+import {useRestorePill} from './useRestorePill'
 import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
@@ -249,6 +252,7 @@ let PostFeed = ({
   ignoreFilterFor,
   style,
   enabled,
+  isActive = false,
   pollInterval,
   disablePoll,
   scrollElRef,
@@ -273,6 +277,11 @@ let PostFeed = ({
   ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
   enabled?: boolean
+  /**
+   * Whether this is the feed on screen: the focused page of a focused Home.
+   * Only then does it offer restored posts with the pill.
+   */
+  isActive?: boolean
   pollInterval?: number
   disablePoll?: boolean
   scrollElRef?: ListRef
@@ -390,16 +399,8 @@ let PostFeed = ({
   const settleAtTop = useSettleAtTop(feed, feedParams, {
     enabled: isAnchored && enabled !== false,
   })
-  /**
-   * The list's scroll handlers. Settling judges the offset as the list reports
-   * it, as it has to know whether the list is really at the top. The Home
-   * header sees it with the corrections anchoring makes taken out, so they
-   * can't hide or show it.
-   */
-  const scrollHandlers = useSettleScrollHandlers(
-    listRest.scrollHandlers,
-    isAnchored ? settleAtTop : undefined,
-  )
+  /** The list's scroll offset, which its scroll handlers keep. */
+  const listOffsetY = useSharedValue(0)
 
   /**
    * The top page a refresh from this view wrote, to take the reader up to once
@@ -912,6 +913,40 @@ let PostFeed = ({
     trendingIndices,
   ])
 
+  const restorePill = useRestorePill({
+    enabled: isAnchored,
+    isActive,
+    prependedAt: restore.prependedAt,
+    rows: feedItems,
+    // Without samples, which the pill never offers.
+    pages: feedData?.pages,
+    offsetY: listOffsetY,
+    scrollToTop: animated => {
+      scrollElRef?.current?.scrollToOffset({animated, offset: -headerOffset})
+    },
+  })
+  const onRestorePillItemSeen = useNonReactiveCallback(restorePill.onItemSeen)
+  /**
+   * The list's scroll handlers. Settling and the pill judge the offset as the
+   * list reports it, as they have to know where the list really is. The Home
+   * header sees it with the corrections anchoring makes taken out, so they
+   * can't hide or show it.
+   */
+  const scrollHandlers = useSettleScrollHandlers(
+    listRest.scrollHandlers,
+    isAnchored
+      ? {
+          ...settleAtTop,
+          onBeginDrag: () => {
+            settleAtTop.onBeginDrag()
+            restorePill.onBeginDrag()
+          },
+          onReachTop: restorePill.onReachTop,
+        }
+      : undefined,
+    listOffsetY,
+  )
+
   // events
   // =
   //
@@ -1207,6 +1242,7 @@ let PostFeed = ({
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
+      onRestorePillItemSeen(item)
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
@@ -1327,7 +1363,14 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
+    [
+      feedFeedback,
+      onRestorePillItemSeen,
+      feed,
+      liveNowConfig,
+      getPostPosition,
+      ax,
+    ],
   )
 
   return (
@@ -1367,6 +1410,14 @@ let PostFeed = ({
           onLayout={isAnchored ? listRest.onLayout : undefined}
         />
       </ScrollProvider>
+      {isAnchored && (
+        <RestorePill
+          visible={restorePill.visible}
+          count={restorePill.count}
+          authors={restorePill.authors}
+          onPress={restorePill.onPress}
+        />
+      )}
     </View>
   )
 }
