@@ -89,6 +89,15 @@ export default function Storybook() {
               <ButtonText>Open Shared Prefs Tester</ButtonText>
             </Button>
             <Button
+              color="primary"
+              size="small"
+              onPress={() => navigation.navigate('PrependLab')}
+              label="Open the prepend lab">
+              <ButtonText>
+                Open prepend lab (maintainVisibleContentPosition)
+              </ButtonText>
+            </Button>
+            <Button
               color="primary_subtle"
               size="large"
               onPress={() => {
