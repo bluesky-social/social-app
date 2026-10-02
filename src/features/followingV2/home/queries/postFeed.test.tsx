@@ -1,11 +1,14 @@
 import {type PropsWithChildren} from 'react'
 import {AppState} from 'react-native'
 import {
+  dehydrate,
+  hydrate,
   type InfiniteData,
   notifyManager,
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import {type PersistedClient} from '@tanstack/react-query-persist-client'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
@@ -19,7 +22,13 @@ import {
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
 import {app} from '#/lexicons'
-import {isFollowingSnapshotQuery} from './followingSnapshot'
+import {
+  FOLLOWING_SNAPSHOT_VERSION,
+  type FollowingSnapshot,
+  isFollowingSnapshotQuery,
+  loadFollowingSnapshot,
+  saveFollowingSnapshot,
+} from './followingSnapshot'
 import {
   type FeedDescriptor,
   type FeedPageUnselected,
@@ -34,6 +43,8 @@ import {
   usePostFeedRestorePrepend,
 } from './postFeed'
 
+// The app-wide mock of `multiformats/cid` can't tell a CID from anything else.
+jest.unmock('multiformats/cid')
 jest.mock('#/state/preferences/languages', () => ({
   getAppLanguageAsContentLanguage: () => '',
   getContentLanguages: () => [],
@@ -1167,6 +1178,96 @@ describe('usePostFeedRestorePrepend', () => {
 
     expect(postsOf(cached())).toEqual([['new'], ['timeline-1'], ['timeline-2']])
     expect(hook.result.current.query.isFetchingNextPage).toBe(false)
+  })
+})
+
+describe('a cold start', () => {
+  /**
+   * A new client, hydrated as the persister would from a client holding the
+   * Following query's `data`. `tamper` changes what's on disk.
+   */
+  async function coldStart(
+    data: PostFeedData,
+    {
+      invalidate = false,
+      tamper = snapshot => snapshot,
+    }: {
+      invalidate?: boolean
+      tamper?: (snapshot: FollowingSnapshot) => unknown
+    } = {},
+  ) {
+    const before = createQueryClient()
+    before.setQueryData(RQKEY('following'), data)
+    if (invalidate) {
+      await before.invalidateQueries({queryKey: RQKEY('following')})
+    }
+    const saved: PersistedClient = JSON.parse(
+      JSON.stringify(
+        saveFollowingSnapshot({
+          timestamp: Date.now(),
+          buster: '',
+          clientState: dehydrate(before, {
+            shouldDehydrateQuery: isFollowingSnapshotQuery,
+          }),
+        }),
+      ),
+    )
+    for (const query of saved.clientState.queries) {
+      query.state.data = tamper(query.state.data as FollowingSnapshot)
+    }
+    const queryClient = createQueryClient()
+    hydrate(queryClient, loadFollowingSnapshot(saved).clientState)
+    mockClient.call.mockClear()
+    return queryClient
+  }
+
+  function snapshotData(): PostFeedData {
+    return {
+      pages: [
+        {
+          cursor: 'timeline:1',
+          startCursor: 'start:1',
+          feed: [feedItem('timeline-1')],
+          fetchedAt: PROCESS_STARTED_AT - 60e3,
+        },
+      ],
+      pageParams: [undefined],
+    }
+  }
+
+  it('shows a valid Following snapshot without fetching', async () => {
+    const queryClient = await coldStart(snapshotData())
+
+    const {hook} = await renderFeed('following', {queryClient})
+    await flushNotifications()
+
+    expect(requested()).toEqual([])
+    expect(hook.result.current.query.isFetching).toBe(false)
+    expect(
+      hook.result.current.query.data?.pages[0].slices.map(
+        slice => slice.feedPostUri,
+      ),
+    ).toEqual([feedItem('timeline-1').post.uri])
+  })
+
+  it.each([
+    [
+      'from another version',
+      {
+        tamper: (snapshot: FollowingSnapshot) => ({
+          ...snapshot,
+          version: FOLLOWING_SNAPSHOT_VERSION + 1,
+        }),
+      },
+    ],
+    ['saved while invalidated', {invalidate: true}],
+  ])('loads Following afresh for a snapshot %s', async (_, options) => {
+    const queryClient = await coldStart(snapshotData(), options)
+    expect(queryClient.getQueryData(RQKEY('following'))).toBeUndefined()
+
+    await renderFeed('following', {queryClient})
+
+    expect(requested()).toEqual(['timeline undefined'])
   })
 })
 
