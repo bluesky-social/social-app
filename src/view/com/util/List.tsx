@@ -26,7 +26,7 @@ import {
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
 import {useLightbox} from '#/components/Lightbox/state'
-import {IS_IOS, IS_IPAD} from '#/env'
+import {IS_IOS} from '#/env'
 import {FlatList_INTERNAL} from './Views'
 
 export type ListMethods = FlatList_INTERNAL
@@ -51,7 +51,7 @@ export type ListProps<ItemT = any> = Omit<
   desktopFixedHeight?: number | boolean
   // Web only prop to contain the scroll to the container rather than the window
   disableFullWindowScroll?: boolean
-  /** Disable the centered iPad content column for full-bleed content. */
+  /** Disable the centered native tablet column for full-bleed content. */
   disableTabletLayout?: boolean
   sideBorders?: boolean
   progressViewOffset?: number
@@ -85,8 +85,7 @@ let List = forwardRef<ListMethods, ListProps>(
     const {isWithinDialog} = useDialogContext()
     const {isWithinSplitView} = useIsWithinSplitView()
     const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
-    const centerOnIPad = shouldCenterNativeTabletContent({
-      isIPad: IS_IPAD,
+    const centerOnTablet = shouldCenterNativeTabletContent({
       gtMobile,
       isWithinDialog,
       isWithinSplitView,
@@ -94,9 +93,9 @@ let List = forwardRef<ListMethods, ListProps>(
       disabled: disableTabletLayout,
     })
     const isWithinContainedTabletSurface =
-      IS_IPAD && (isWithinDialog || isWithinSplitView || isWithinOffsetView)
+      isWithinDialog || isWithinSplitView || isWithinOffsetView
     const usesSystemScrollIndicatorInsets =
-      IS_IPAD && gtMobile && !isWithinContainedTabletSurface
+      gtMobile && !isWithinContainedTabletSurface
     const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
@@ -219,10 +218,10 @@ let List = forwardRef<ListMethods, ListProps>(
           onScroll={scrollHandler}
           scrollsToTop={scrollsToTop}
           scrollEventThrottle={1}
-          style={[style, centerOnIPad && {width: '100%'}]}
+          style={[style, centerOnTablet && {width: '100%'}]}
           contentContainerStyle={[
             // Keep the gutters inside the scrollable viewport.
-            centerOnIPad && {
+            centerOnTablet && {
               width: '100%',
               maxWidth: CENTER_COLUMN_WIDTH,
               alignSelf: 'center',
@@ -230,7 +229,7 @@ let List = forwardRef<ListMethods, ListProps>(
                 {translateX: centerColumnOffset ? CENTER_COLUMN_OFFSET : 0},
               ],
             },
-            centerOnIPad &&
+            centerOnTablet &&
               sideBorders && [
                 {
                   borderLeftWidth: StyleSheet.hairlineWidth,

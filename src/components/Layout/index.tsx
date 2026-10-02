@@ -30,7 +30,7 @@ import {
   SCROLLBAR_OFFSET,
 } from '#/components/Layout/const'
 import {ScrollbarOffsetContext} from '#/components/Layout/context'
-import {IS_IPAD, IS_WEB} from '#/env'
+import {IS_WEB} from '#/env'
 
 export * from '#/components/Layout/const'
 export * as Header from '#/components/Layout/Header'
@@ -63,7 +63,7 @@ export const Screen = memo(function Screen({
     <>
       {IS_WEB && !fullBleed && !isWithinSplitView ? (
         <WebCenterBorders />
-      ) : !fullBleed && IS_IPAD && gtMobile && !isWithinSplitView ? (
+      ) : !fullBleed && gtMobile && !isWithinSplitView ? (
         <NativeCenterBorders />
       ) : null}
       <View
@@ -106,17 +106,16 @@ export const Content = memo(function Content({
   const {centerColumnOffset} = useLayoutBreakpoints()
   const {isWithinDialog} = useDialogContext()
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
-  const centerOnIPad = shouldCenterNativeTabletContent({
-    isIPad: IS_IPAD,
+  const centerOnTablet = shouldCenterNativeTabletContent({
     gtMobile,
     isWithinDialog,
     isWithinSplitView,
     isWithinOffsetView,
   })
   const isWithinContainedTabletSurface =
-    IS_IPAD && (isWithinDialog || isWithinSplitView || isWithinOffsetView)
+    isWithinDialog || isWithinSplitView || isWithinOffsetView
   const usesSystemScrollIndicatorInsets =
-    IS_IPAD && gtMobile && !isWithinContainedTabletSurface
+    gtMobile && !isWithinContainedTabletSurface
   const offsetContext = useMemo(() => ({isWithinOffsetView: true}), [])
 
   // note - if we ever make the footer transparent in any way,
@@ -132,7 +131,7 @@ export const Content = memo(function Content({
     <Animated.ScrollView
       ref={ref}
       id="content"
-      centerContent={centerOnIPad ? false : centerContent}
+      centerContent={centerOnTablet ? false : centerContent}
       automaticallyAdjustsScrollIndicatorInsets={
         automaticallyAdjustsScrollIndicatorInsets ??
         (usesSystemScrollIndicatorInsets || isWithinContainedTabletSurface
@@ -153,7 +152,7 @@ export const Content = memo(function Content({
         style,
       ]}
       contentContainerStyle={[
-        centerOnIPad && {
+        centerOnTablet && {
           width: '100%',
           maxWidth: CENTER_COLUMN_WIDTH,
           alignSelf: 'center',
@@ -167,7 +166,7 @@ export const Content = memo(function Content({
           ],
         },
         /* UIKit centering would also add horizontal insets to the column. */
-        centerOnIPad && centerContent && [a.flex_grow, a.justify_center],
+        centerOnTablet && centerContent && [a.flex_grow, a.justify_center],
         contentContainerStyle,
       ]}
       {...props}>

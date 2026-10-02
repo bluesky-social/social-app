@@ -29,7 +29,7 @@ afterEach(() => {
   jest.restoreAllMocks()
 })
 
-describe('iPad responsive layout', () => {
+describe('native responsive layout', () => {
   it('keeps mini portrait compact and updates when its window rotates', () => {
     setWindowWidth(744)
     const {result, rerender} = renderHook(useBreakpoints)
@@ -71,18 +71,17 @@ describe('iPad responsive layout', () => {
     expect(result.current.gtMobile).toBe(false)
   })
 
-  it('preserves compact layouts on other native devices', () => {
+  it('adapts wide non-iPad windows with the window width', () => {
     jest.replaceProperty(env, 'IS_IPAD', false)
     const subscribe = jest.spyOn(Dimensions, 'addEventListener')
-    setWindowWidth(1366)
+    setWindowWidth(744)
     const {result} = renderHook(useBreakpoints)
-    expect(result.current).toEqual({
-      gtPhone: false,
-      gtMobile: false,
-      gtTablet: false,
-      activeBreakpoint: undefined,
-    })
-    expect(subscribe).not.toHaveBeenCalled()
+    expect(result.current.gtMobile).toBe(false)
+    expect(subscribe).toHaveBeenCalled()
+
+    setWindowWidth(1366)
+    expect(result.current.gtMobile).toBe(true)
+    expect(result.current.gtTablet).toBe(true)
   })
 
   it('does not change breakpoints for a height-only resize', () => {
@@ -139,7 +138,6 @@ describe('iPad responsive layout', () => {
   it('does not apply a second native tablet offset to nested centered content', () => {
     expect(
       shouldCenterNativeTabletContent({
-        isIPad: true,
         gtMobile: true,
         isWithinDialog: false,
         isWithinSplitView: false,
@@ -151,7 +149,6 @@ describe('iPad responsive layout', () => {
   it('keeps full-bleed tablet content out of the centered column', () => {
     expect(
       shouldCenterNativeTabletContent({
-        isIPad: true,
         gtMobile: true,
         isWithinDialog: false,
         isWithinSplitView: false,
@@ -159,5 +156,16 @@ describe('iPad responsive layout', () => {
         disabled: true,
       }),
     ).toBe(false)
+  })
+
+  it('centers any wide native window outside contained surfaces', () => {
+    expect(
+      shouldCenterNativeTabletContent({
+        gtMobile: true,
+        isWithinDialog: false,
+        isWithinSplitView: false,
+        isWithinOffsetView: false,
+      }),
+    ).toBe(true)
   })
 })
