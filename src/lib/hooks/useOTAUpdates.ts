@@ -28,8 +28,7 @@ const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 const OTA_RECOVERY_WINDOW = 5 * 60e3
 
 /**
- * The channel this native build is expected to receive updates from. Anything
- * else is only reachable through the dev tooling in settings.
+ * Fallback channel when the native build does not expose its configured channel.
  */
 const DEFAULT_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
 
@@ -69,17 +68,7 @@ function getRunningChannel(
   return currentlyRunning?.channel || undefined
 }
 
-async function setExtraParams() {
-  await setExtraParamAsync(
-    IS_IOS ? 'ios-build-number' : 'android-build-number',
-    // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
-    // This just ensures it gets passed as a string
-    `${nativeBuildVersion}`,
-  )
-  await setExtraParamAsync('channel', DEFAULT_CHANNEL)
-}
-
-async function setExtraParamsPullRequest(channel: string) {
+async function setExtraParams(channel: string) {
   await setExtraParamAsync(
     IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
@@ -89,8 +78,11 @@ async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync('channel', channel)
 }
 
-async function updateTestflight(scheme: 'light' | 'dark') {
-  await setExtraParams()
+async function updateTestflight(
+  scheme: 'light' | 'dark',
+  buildChannel: string,
+) {
+  await setExtraParams(buildChannel)
 
   const res = await checkForUpdateAsync()
   if (res.isAvailable) {
@@ -122,6 +114,7 @@ export function useApplyPullRequestOTAUpdate() {
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = useState(false)
   const currentChannel = getRunningChannel(currentlyRunning)
+  const defaultChannel = currentlyRunning?.channel || DEFAULT_CHANNEL
   const isCurrentlyRunningPullRequestDeployment =
     currentChannel?.startsWith('pull-request')
   /*
@@ -140,7 +133,7 @@ export function useApplyPullRequestOTAUpdate() {
     const deploymentName = getDeploymentName(channel)
 
     const checkForDeployment = async () => {
-      await setExtraParamsPullRequest(channel)
+      await setExtraParams(channel)
       const res = await checkForUpdateAsync()
       if (!res.isAvailable) {
         if (
@@ -264,11 +257,7 @@ export function useApplyPullRequestOTAUpdate() {
 
     setPending(true)
     try {
-      if (isCurrentlyRunningNonStandardChannel) {
-        await setExtraParamsPullRequest(channel)
-      } else {
-        await setExtraParams()
-      }
+      await setExtraParams(channel)
 
       const res = await checkForUpdateAsync()
       if (!res.isAvailable) {
@@ -312,28 +301,23 @@ export function useApplyPullRequestOTAUpdate() {
   }
 
   /**
-   * Pulls the newest update from the channel this build ships with and relaunches
-   * into it, undoing a manually applied deployment.
+   * Fetches from the build's channel and relaunches into its newest update, or
+   * the embedded build if none is available. Fetching also persists the server's
+   * channel filters when there is no update, so reload won't pick the old OTA.
    */
   const restoreDefaultChannel = async () => {
     setPending(true)
     try {
-      await setExtraParams()
-      const res = await checkForUpdateAsync()
-      if (res.isAvailable) {
-        await fetchUpdateAsync()
-        await reloadAsync()
-      } else {
-        Alert.alert(
-          'Nothing to Restore',
-          `No deployment of ${DEFAULT_CHANNEL} is currently available for your native build. Reinstall the app to get back to a standard build.`,
-        )
-      }
+      await setExtraParams(defaultChannel)
+      await fetchUpdateAsync()
+      await reloadAsync({
+        reloadScreenOptions: splash(t.scheme),
+      })
     } catch (e: any) {
       logger.error('Internal OTA Update Error', {error: `${e}`})
       Alert.alert(
         'Restore Failed',
-        `Could not restore the ${DEFAULT_CHANNEL} deployment: ${e}`,
+        `Could not restore the ${defaultChannel} deployment: ${e}`,
       )
     } finally {
       setPending(false)
@@ -347,7 +331,7 @@ export function useApplyPullRequestOTAUpdate() {
     isCurrentlyRunningPullRequestDeployment,
     isCurrentlyRunningNonStandardChannel,
     currentChannel,
-    defaultChannel: DEFAULT_CHANNEL,
+    defaultChannel,
     pending,
   }
 }
@@ -406,11 +390,12 @@ export function useOTAUpdates() {
   const timeout = useRef<NodeJS.Timeout>(undefined)
   const {currentlyRunning, isUpdatePending} = useUpdates()
   const currentChannel = getRunningChannel(currentlyRunning)
+  const defaultChannel = currentlyRunning?.channel || DEFAULT_CHANNEL
 
   const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
       try {
-        await setExtraParams()
+        await setExtraParams(defaultChannel)
 
         logger.debug('Checking for update...')
         const res = await checkForUpdateAsync()
@@ -427,17 +412,17 @@ export function useOTAUpdates() {
         }
       }
     }, 10e3)
-  }, [])
+  }, [defaultChannel])
 
   const onIsTestFlight = useCallback(async () => {
     try {
-      await updateTestflight(t.scheme)
+      await updateTestflight(t.scheme, defaultChannel)
     } catch (err: any) {
       if (!isNetworkError(err)) {
         logger.error('Internal OTA Update Error', {safeMessage: err})
       }
     }
-  }, [t.scheme])
+  }, [defaultChannel, t.scheme])
 
   useEffect(() => {
     // We don't need to check anything if the current update is a PR update
