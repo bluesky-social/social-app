@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
+import {useCallback, useMemo, useRef, useState} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
@@ -435,8 +435,9 @@ type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
  * is why the last refresh failed, cleared when another starts. Refetches from
  * an invalidation or a reset still go through TanStack.
  *
- * The view owns its refreshes: one started while another is in flight joins
- * it, and one still in flight when the view unmounts is abandoned.
+ * One started while another is pending joins it. One that finishes after the
+ * view has gone still commits, which is safe, as the commit gives way to
+ * anything that has replaced the top page since.
  */
 export function usePostFeedRefresh(
   feedDesc: FeedDescriptor,
@@ -444,42 +445,33 @@ export function usePostFeedRefresh(
 ) {
   const queryClient = useQueryClient()
   const {fetchPage} = usePostFeedFetcher(feedDesc)
+  const queryKey = RQKEY(feedDesc, params)
   const [error, setError] = useState<Error | undefined>(undefined)
   const [isRefreshing, setIsRefreshing] = useState(false)
-  /** The refresh in flight. Unmounting clears it, abandoning the refresh. */
-  const inFlight = useRef<Promise<void>>(undefined)
-  useEffect(() => {
-    return () => {
-      inFlight.current = undefined
-    }
-  }, [])
+  /** The pending refresh, for another to join. */
+  const pending = useRef<Promise<void>>(undefined)
 
   const refreshFromTop = async () => {
-    const queryKey = RQKEY(feedDesc, params)
     const before = queryClient.getQueryData<PostFeedData>(queryKey)
     setError(undefined)
     setIsRefreshing(true)
     try {
       const page = await fetchPage(undefined)
-      if (inFlight.current) {
-        await commit(queryClient, queryKey, before, {
-          pages: [page],
-          pageParams: [undefined],
-        })
-      }
+      await commit(queryClient, queryKey, before, {
+        pages: [page],
+        pageParams: [undefined],
+      })
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to refresh posts feed', {safeMessage: e})
       }
-      // Nothing to report once the view has gone or the feed has moved on.
-      if (inFlight.current && !isTopReplaced(queryClient, queryKey, before)) {
+      // Nothing to report once the feed has moved on.
+      if (!isTopReplaced(queryClient, queryKey, before)) {
         setError(e instanceof Error ? e : new Error(String(e)))
       }
     } finally {
-      if (inFlight.current) {
-        inFlight.current = undefined
-        setIsRefreshing(false)
-      }
+      pending.current = undefined
+      setIsRefreshing(false)
     }
   }
 
@@ -488,12 +480,12 @@ export function usePostFeedRefresh(
      * Until the first load settles there's nothing to refresh, and the query
      * may still be waiting for the preferences it fetches with.
      */
-    const status = queryClient.getQueryState(RQKEY(feedDesc, params))?.status
+    const status = queryClient.getQueryState(queryKey)?.status
     if (!status || status === 'pending') {
       return Promise.resolve()
     }
-    inFlight.current ??= refreshFromTop()
-    return inFlight.current
+    pending.current ??= refreshFromTop()
+    return pending.current
   }
 
   return {refresh, error, isRefreshing}

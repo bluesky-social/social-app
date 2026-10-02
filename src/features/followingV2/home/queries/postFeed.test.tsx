@@ -684,9 +684,8 @@ describe('usePostFeedRefresh', () => {
     expect(hook.result.current.isRefreshing).toBe(false)
   })
 
-  it('is abandoned when the view unmounts', async () => {
+  it('still commits when it finishes after the view unmounts', async () => {
     const {hook, queryClient, data} = await renderRefreshableFeed()
-    const before = data()
     const writes = watchWrites(queryClient)
     const top = holdNextRequest()
     let refreshing!: Promise<void>
@@ -700,8 +699,8 @@ describe('usePostFeedRefresh', () => {
       await refreshing
     })
 
-    expect(writes).toHaveLength(0)
-    expect(data()).toBe(before)
+    expect(writes).toHaveLength(1)
+    expect(topPostUri(data())).toBe(feedItem('fresh').post.uri)
   })
 
   it('does nothing before the first load has settled', async () => {
