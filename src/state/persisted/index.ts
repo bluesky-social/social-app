@@ -8,7 +8,7 @@ import {
   tryStringify,
 } from '#/state/persisted/schema'
 import {device} from '#/storage'
-import {type PersistedApi} from './types'
+import {type PersistedApi, type PersistedWriteValue} from './types'
 import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -45,15 +45,21 @@ readLatest satisfies PersistedApi['readLatest']
 
 export async function write<K extends keyof Schema>(
   key: K,
-  value: Schema[K],
+  value: PersistedWriteValue<Schema[K]>,
 ): Promise<void> {
   _state = normalizeData({
     ..._state,
-    [key]: value,
+    [key]: resolveWriteValue(value, _state[key]),
   })
   await writeToStorage(_state)
 }
 write satisfies PersistedApi['write']
+
+function resolveWriteValue<T>(value: PersistedWriteValue<T>, latest: T): T {
+  return typeof value === 'function'
+    ? (value as (current: T) => T)(latest)
+    : value
+}
 
 export function onUpdate<K extends keyof Schema>(
   _key: K,
