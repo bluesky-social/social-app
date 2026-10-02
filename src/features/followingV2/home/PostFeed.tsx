@@ -204,11 +204,7 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 }
 
 export type PostFeedRef = {
-  refreshFeed: () => Promise<void>
-  /**
-   * Refreshes the feed in one write. Unlike `refreshFeed`, it logs no metric,
-   * so callers can log their own reason.
-   */
+  /** Refreshes the feed in one write. Callers log their own metric. */
   refresh: () => Promise<void>
 }
 
@@ -806,28 +802,21 @@ let PostFeed = ({
   // =
   //
 
-  const refreshFeed = async () => {
-    if (!enabled) return
-
-    ax.metric('feed:refresh', {
-      feedType: feedType,
-      feedUrl: feed,
-      reason: 'pull-to-refresh',
-    })
-    await refresh()
-    onHasNew?.(false)
-  }
-
   const onRefresh = async () => {
     setIsPTRing(true)
-    await refreshFeed()
+    if (enabled) {
+      ax.metric('feed:refresh', {
+        feedType: feedType,
+        feedUrl: feed,
+        reason: 'pull-to-refresh',
+      })
+      await refresh()
+      onHasNew?.(false)
+    }
     setIsPTRing(false)
   }
 
-  useImperativeHandle(ref, () => ({
-    refreshFeed,
-    refresh,
-  }))
+  useImperativeHandle(ref, () => ({refresh}))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
