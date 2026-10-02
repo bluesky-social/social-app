@@ -5,6 +5,7 @@ import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
 import {
   moderatePost,
   type ModerationDecision,
+  type ModerationOpts,
   type ModerationPrefs,
 } from '@bsky/sdk/moderation'
 import {
@@ -21,7 +22,7 @@ import {aggregateUserInterests} from '#/lib/api/feed/utils'
 import {
   type FeedPostNumbering,
   FeedTuner,
-  type FeedTunerFn,
+  type FeedViewPostsSlice,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
 import {logger} from '#/logger'
@@ -39,7 +40,6 @@ import {CustomFeedAPI} from '#/features/followingV2/home/api/custom'
 import {FollowingFeedAPI} from '#/features/followingV2/home/api/following'
 import {HomeFeedAPI} from '#/features/followingV2/home/api/home'
 import {ListFeedAPI} from '#/features/followingV2/home/api/list'
-import {MergeFeedAPI} from '#/features/followingV2/home/api/merge'
 import {
   type FeedAPI,
   type FeedSource,
@@ -67,17 +67,11 @@ export type FeedDescriptor =
   | `posts|${PostsUriList}`
   | 'demo'
 export interface FeedParams {
-  mergeFeedEnabled?: boolean
-  mergeFeedSources?: string[]
   feedCacheKey?: 'discover' | 'explore' | undefined
 }
 
-/**
- * Everything needed to fetch the page after the one it follows. Plain data,
- * bar Merge's API (see {@link FeedPageUnselected.merge}).
- */
-type RQPageParam =
-  undefined | {cursor: string; source?: FeedSource; merge?: MergeFeedAPI}
+/** Everything needed to fetch the page after the one it follows. */
+type RQPageParam = undefined | {cursor: string; source?: FeedSource}
 
 /**
  * The fork's key prefixes the descriptor with `v2|`, so it never shares a
@@ -127,11 +121,6 @@ export interface FeedPageUnselected {
   source?: FeedSource
   feed: app.bsky.feed.defs.FeedViewPost[]
   fetchedAt: number
-  /**
-   * Merge's API, which holds state between pages, so the next page continues
-   * with it. The merge feed is never persisted, so this needn't be data.
-   */
-  merge?: MergeFeedAPI
 }
 
 export interface FeedPage {
@@ -165,7 +154,7 @@ export function usePostFeedQuery(
    */
   const enabled =
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
-  const {fetchPage} = usePostFeedFetcher(feedDesc, params)
+  const {fetchPage} = usePostFeedFetcher(feedDesc)
   const lastRun = useRef<{
     data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
@@ -204,7 +193,6 @@ export function usePostFeedQuery(
         ? {
             cursor: lastPage.cursor,
             source: lastPage.source,
-            merge: lastPage.merge,
           }
         : undefined,
     select: useCallback(
@@ -263,71 +251,13 @@ export function usePostFeedQuery(
               fetchedAt: page.fetchedAt,
               slices: tuner
                 .tune(page.feed)
-                .map(slice => {
-                  const moderations = slice.items.map(item =>
-                    moderatePost(item.post, moderationOpts!),
-                  )
-
-                  // apply moderation filter
-                  for (let i = 0; i < slice.items.length; i++) {
-                    const ignoreFilter =
-                      slice.items[i].post.author.did === ignoreFilterFor
-                    if (ignoreFilter) {
-                      // remove mutes to avoid confused UIs
-                      moderations[i].causes = moderations[i].causes.filter(
-                        cause => cause.type !== 'muted',
-                      )
-                    }
-                    if (
-                      !ignoreFilter &&
-                      moderations[i]?.ui('contentList').filter
-                    ) {
-                      return undefined
-                    }
-                  }
-
-                  if (isDiscover) {
-                    userActionHistory.seen(
-                      slice.items.map(item => ({
-                        feedContext: slice.feedContext,
-                        reqId: slice.reqId,
-                        likeCount: item.post.likeCount ?? 0,
-                        repostCount: item.post.repostCount ?? 0,
-                        replyCount: item.post.replyCount ?? 0,
-                        isFollowedBy: Boolean(
-                          item.post.author.viewer?.followedBy,
-                        ),
-                        uri: item.post.uri,
-                      })),
-                    )
-                  }
-
-                  const feedPostSlice: FeedPostSlice = {
-                    _reactKey: slice._reactKey,
-                    _isFeedPostSlice: true,
-                    isIncompleteThread: slice.isIncompleteThread,
-                    isFallbackMarker: slice.isFallbackMarker,
-                    feedContext: slice.feedContext,
-                    reqId: slice.reqId,
-                    reason: slice.reason,
-                    feedPostUri: slice.feedPostUri,
-                    items: slice.items.map((item, i) => {
-                      const feedPostSliceItem: FeedPostSliceItem = {
-                        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
-                        uri: item.post.uri,
-                        post: item.post,
-                        record: item.record,
-                        postNumbering: item.postNumbering,
-                        moderation: moderations[i],
-                        parentAuthor: item.parentAuthor,
-                        isParentBlocked: item.isParentBlocked,
-                        isParentNotFound: item.isParentNotFound,
-                      }
-                      return feedPostSliceItem
-                    }),
-                  }
-                  return feedPostSlice
-                })
+                .map(slice =>
+                  toFeedPostSlice(slice, {
+                    moderationOpts: moderationOpts!,
+                    ignoreFilterFor,
+                    isDiscover,
+                  }),
+                )
                 .filter(n => !!n),
             })),
           ],
@@ -352,15 +282,86 @@ export function usePostFeedQuery(
 }
 
 /**
+ * A tuned slice as the feed renders it, moderated, or `undefined` if
+ * moderation filters it out.
+ */
+export function toFeedPostSlice(
+  slice: FeedViewPostsSlice,
+  {
+    moderationOpts,
+    ignoreFilterFor,
+    isDiscover = false,
+  }: {
+    moderationOpts: ModerationOpts
+    ignoreFilterFor?: string
+    isDiscover?: boolean
+  },
+): FeedPostSlice | undefined {
+  const moderations = slice.items.map(item =>
+    moderatePost(item.post, moderationOpts),
+  )
+
+  // apply moderation filter
+  for (let i = 0; i < slice.items.length; i++) {
+    const ignoreFilter = slice.items[i].post.author.did === ignoreFilterFor
+    if (ignoreFilter) {
+      // remove mutes to avoid confused UIs
+      moderations[i].causes = moderations[i].causes.filter(
+        cause => cause.type !== 'muted',
+      )
+    }
+    if (!ignoreFilter && moderations[i]?.ui('contentList').filter) {
+      return undefined
+    }
+  }
+
+  if (isDiscover) {
+    userActionHistory.seen(
+      slice.items.map(item => ({
+        feedContext: slice.feedContext,
+        reqId: slice.reqId,
+        likeCount: item.post.likeCount ?? 0,
+        repostCount: item.post.repostCount ?? 0,
+        replyCount: item.post.replyCount ?? 0,
+        isFollowedBy: Boolean(item.post.author.viewer?.followedBy),
+        uri: item.post.uri,
+      })),
+    )
+  }
+
+  const feedPostSlice: FeedPostSlice = {
+    _reactKey: slice._reactKey,
+    _isFeedPostSlice: true,
+    isIncompleteThread: slice.isIncompleteThread,
+    isFallbackMarker: slice.isFallbackMarker,
+    feedContext: slice.feedContext,
+    reqId: slice.reqId,
+    reason: slice.reason,
+    feedPostUri: slice.feedPostUri,
+    items: slice.items.map((item, i) => {
+      const feedPostSliceItem: FeedPostSliceItem = {
+        _reactKey: `${slice._reactKey}-${i}-${item.post.uri}`,
+        uri: item.post.uri,
+        post: item.post,
+        record: item.record,
+        postNumbering: item.postNumbering,
+        moderation: moderations[i],
+        parentAuthor: item.parentAuthor,
+        isParentBlocked: item.isParentBlocked,
+        isParentNotFound: item.isParentNotFound,
+      }
+      return feedPostSliceItem
+    }),
+  }
+  return feedPostSlice
+}
+
+/**
  * Fetches pages of this feed, for the query and for the view's own fetches
  * outside of it. Each fetch gets a fresh feed API, as they hold no state
- * between pages - except Merge's, which its pages carry.
+ * between pages.
  */
-export function usePostFeedFetcher(
-  feedDesc: FeedDescriptor,
-  params?: FeedParams,
-) {
-  const feedTuners = useFeedTuners(feedDesc)
+export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
   const {data: preferences} = usePreferencesQuery()
   const userInterests = aggregateUserInterests(preferences)
   const followingPinnedIndex =
@@ -381,8 +382,6 @@ export function usePostFeedFetcher(
   const createFeedApi = () =>
     createApi({
       feedDesc,
-      feedParams: params || {},
-      feedTuners,
       client,
       // Not in the query key because they don't change:
       userInterests,
@@ -393,7 +392,7 @@ export function usePostFeedFetcher(
   const fetchPage = async (
     pageParam: RQPageParam,
   ): Promise<FeedPageUnselected> => {
-    const api = pageParam?.merge ?? createFeedApi()
+    const api = createFeedApi()
     const res = await api.fetch({
       cursor: pageParam?.cursor,
       source: pageParam?.source,
@@ -419,7 +418,6 @@ export function usePostFeedFetcher(
       source: res.source,
       feed: res.feed,
       fetchedAt: Date.now(),
-      merge: api instanceof MergeFeedAPI ? api : undefined,
     }
   }
 
@@ -454,33 +452,20 @@ export async function pollLatest(page: FeedPage | undefined, api: FeedAPI) {
 
 function createApi({
   feedDesc,
-  feedParams,
-  feedTuners,
   userInterests,
   client,
   enableFollowingToDiscoverFallback,
 }: {
   feedDesc: FeedDescriptor
-  feedParams: FeedParams
-  feedTuners: FeedTunerFn[]
   userInterests?: string
   client: Client
   enableFollowingToDiscoverFallback: boolean
 }): FeedAPI {
   if (feedDesc === 'following') {
-    if (feedParams.mergeFeedEnabled) {
-      return new MergeFeedAPI({
-        client,
-        feedParams,
-        feedTuners,
-        userInterests,
-      })
+    if (enableFollowingToDiscoverFallback) {
+      return new HomeFeedAPI({client, userInterests})
     } else {
-      if (enableFollowingToDiscoverFallback) {
-        return new HomeFeedAPI({client, userInterests})
-      } else {
-        return new FollowingFeedAPI({client})
-      }
+      return new FollowingFeedAPI({client})
     }
   } else if (feedDesc.startsWith('author')) {
     const [__, actor, filter] = feedDesc.split('|')
