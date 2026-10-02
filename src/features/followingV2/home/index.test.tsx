@@ -3,6 +3,16 @@ import {render, screen} from '@testing-library/react-native'
 import {HomeScreen} from '.'
 
 const mockEnabled = jest.fn()
+let mockIsNative = true
+
+jest.mock('#/env', () => ({
+  get IS_NATIVE() {
+    return mockIsNative
+  },
+  get IS_WEB() {
+    return !mockIsNative
+  },
+}))
 
 jest.mock('#/analytics', () => ({
   useAnalytics: () => ({
@@ -27,9 +37,13 @@ jest.mock('./Home', () => {
 
 const props = {} as React.ComponentProps<typeof HomeScreen>
 
-describe('HomeScreen', () => {
+describe.each([
+  {platform: 'native', isNative: true},
+  {platform: 'web', isNative: false},
+])('HomeScreen on $platform', ({isNative}) => {
   beforeEach(() => {
     mockEnabled.mockReset()
+    mockIsNative = isNative
   })
 
   it('renders the fork when following v2 is enabled', () => {
