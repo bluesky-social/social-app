@@ -155,7 +155,7 @@ import {
 } from '#/components/dialogs/EmailDialog'
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
-import {IS_IPAD, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
 import {router} from '#/routes'
@@ -723,7 +723,6 @@ function NativeTabBar(props: BottomTabBarProps) {
   const {footerHeight} = useShellLayout()
   const currentRouteName = getCurrentRoute(props.state).name
   const {showTabletSidebar, hideTabBar} = getNativeTabBarVisibility({
-    isIPad: IS_IPAD,
     gtMobile,
     hasSession,
     signupQueued: !!currentAccount?.signupQueued,
@@ -789,9 +788,10 @@ function screenOptions(t: Theme) {
 
 function HomeTabNavigator() {
   const t = useTheme()
+  const {gtMobile} = useBreakpoints()
 
   const BLURRED_SCROLL_EDGE_EFFECT =
-    IS_LIQUID_GLASS && !IS_IPAD
+    IS_LIQUID_GLASS && !gtMobile
       ? ({
           headerShown: true,
           headerTransparent: true,

@@ -1,5 +1,4 @@
 export function getNativeTabBarVisibility({
-  isIPad,
   gtMobile,
   hasSession,
   signupQueued,
@@ -7,7 +6,6 @@ export function getNativeTabBarVisibility({
   onboardingActive,
   isVideoFeed,
 }: {
-  isIPad: boolean
   gtMobile: boolean
   hasSession: boolean
   signupQueued: boolean
@@ -15,12 +13,11 @@ export function getNativeTabBarVisibility({
   onboardingActive: boolean
   isVideoFeed: boolean
 }) {
-  const isWideIPad = isIPad && gtMobile
   const isAuthSurface =
     !hasSession || signupQueued || showLoggedOut || onboardingActive
 
   return {
-    showTabletSidebar: isWideIPad && !isAuthSurface && !isVideoFeed,
-    hideTabBar: isWideIPad && isAuthSurface,
+    showTabletSidebar: gtMobile && !isAuthSurface && !isVideoFeed,
+    hideTabBar: gtMobile && isAuthSurface,
   }
 }
