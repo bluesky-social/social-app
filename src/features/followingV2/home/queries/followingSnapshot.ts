@@ -15,11 +15,11 @@ import {type FeedPageUnselected, type PostFeedData} from './postFeed'
  */
 
 /**
- * Whether a valid snapshot is hydrated on a cold start. Off until the restore
- * prepend lands: until then a snapshot is written but dropped when it's read
- * back, so Following cold-loads as it always has.
+ * Whether a valid snapshot is hydrated on a cold start. Turning it off leaves
+ * snapshots written but dropped when they're read back, so Following
+ * cold-loads as it always has.
  */
-const FOLLOWING_SNAPSHOT_RESTORE_ENABLED = false
+const FOLLOWING_SNAPSHOT_RESTORE_ENABLED = true
 
 /**
  * Bumped on any breaking change to the snapshot format. Separate from the
@@ -61,8 +61,8 @@ export function isFollowingSnapshotQuery(query: {queryHash: string}) {
  * the query is returned as it is.
  */
 export function saveFollowingSnapshot(client: PersistedClient) {
-  return replaceFollowingData(client, data =>
-    selectFollowingSnapshot(data as PostFeedData),
+  return replaceFollowingData(client, state =>
+    selectFollowingSnapshot(state?.data as PostFeedData),
   )
 }
 
@@ -70,13 +70,18 @@ export function saveFollowingSnapshot(client: PersistedClient) {
  * The client read back from disk, with the Following snapshot turned back into
  * the query's data if it's valid and restoring is on. Otherwise the query is
  * left out, so Following cold-loads. Every other query is hydrated as usual.
+ *
+ * A query saved while invalidated is left out too, as it would be refetched,
+ * and so replaced, as soon as it's shown.
  */
 export function loadFollowingSnapshot(
   client: PersistedClient,
   {restore = FOLLOWING_SNAPSHOT_RESTORE_ENABLED}: {restore?: boolean} = {},
 ) {
-  return replaceFollowingData(client, data =>
-    restore ? readFollowingSnapshot(data) : undefined,
+  return replaceFollowingData(client, state =>
+    restore && !state?.isInvalidated
+      ? readFollowingSnapshot(state?.data)
+      : undefined,
   )
 }
 
@@ -84,33 +89,116 @@ export function loadFollowingSnapshot(
  * The newest whole pages of the Following query's data that make a valid
  * snapshot: at most {@link FOLLOWING_SNAPSHOT_MAX_PAGES} of them and
  * {@link FOLLOWING_SNAPSHOT_MAX_BYTES} serialized, stopping before the first
- * Discover page and dropping whole pages from the bottom. `undefined` if not
- * even the top page makes one.
+ * Discover page and after the first gap, and dropping whole pages from the
+ * bottom. `undefined` if not even the top page makes one.
+ *
+ * A gapped `since` page is kept, but not the pages below it: its cursor goes
+ * on into the gap, so once restored, ordinary pagination fills it. When the
+ * page below an exhausted `since` page is dropped, its boundary is carried onto
+ * the copy that's kept (see {@link carryBoundary}).
  */
 export function selectFollowingSnapshot(
   data: PostFeedData,
 ): FollowingSnapshot | undefined {
   // Pages from there down are the Following-to-Discover fallback.
   const discover = data.pages.findIndex(page => page.source === 'discover')
+  const gap = data.pages.findIndex(isGapped)
   const count = Math.min(
     FOLLOWING_SNAPSHOT_MAX_PAGES,
     discover === -1 ? data.pages.length : discover,
+    gap === -1 ? data.pages.length : gap + 1,
   )
-  const pages = data.pages.slice(0, count).map(page => ({
-    ...page,
-    // The feed holds lex values, such as CIDs, that plain JSON would lose.
-    feed: lexToJson(page.feed) as JsonValue[],
-  }))
+  const pages = data.pages.slice(0, count).map(toSnapshotPage)
   for (let kept = count; kept > 0; kept--) {
+    const bottom = data.pages[kept - 1]
+    const below = data.pages[kept]
+    const carried = below ? carryBoundary(bottom, below) : bottom
+    if (!carried) {
+      continue
+    }
     const snapshot = {
       version: FOLLOWING_SNAPSHOT_VERSION,
-      pages: pages.slice(0, kept),
+      pages: [
+        ...pages.slice(0, kept - 1),
+        carried === bottom ? pages[kept - 1] : toSnapshotPage(carried),
+      ],
       pageParams: data.pageParams.slice(0, kept),
     }
     if (isValidFollowingSnapshot(snapshot)) {
       return snapshot
     }
   }
+}
+
+function toSnapshotPage(page: FeedPageUnselected): SnapshotPage {
+  return {
+    ...page,
+    // The feed holds lex values, such as CIDs, that plain JSON would lose.
+    feed: lexToJson(page.feed) as JsonValue[],
+  }
+}
+
+/**
+ * Whether `page` was requested with `since` and came back with a cursor other
+ * than its echo, so there may be posts between it and the page below.
+ */
+function isGapped(page: FeedPageUnselected) {
+  return page.since !== undefined && page.cursor !== page.since
+}
+
+/**
+ * `upper` with the boundary of `lower`, the page below it, copied onto its end,
+ * for when `lower` is to be dropped. Returns `upper` itself when there's
+ * nothing to carry, and `undefined` when `upper` can't do without `lower`.
+ * Never changes either page.
+ *
+ * An exhausted `since` page's cursor is the `since` it was requested with,
+ * which is where the page below it starts. The server bounds on sort time
+ * alone, so carrying on from that cursor skips every post at that time:
+ * `lower`'s first post and any after it with the same sort time. With those
+ * on `upper`, it carries on correctly without `lower`. A copy of a post
+ * already shown is dropped by the feed's ordinary deduplication.
+ */
+function carryBoundary(
+  upper: FeedPageUnselected,
+  lower: FeedPageUnselected,
+): FeedPageUnselected | undefined {
+  const isExhausted = upper.since !== undefined && upper.cursor === upper.since
+  if (!isExhausted || lower.feed.length === 0) {
+    return upper
+  }
+  // Its bound isn't where `lower` starts, so there's no boundary to carry.
+  if (upper.since !== lower.startCursor) {
+    return undefined
+  }
+  const boundary = feedSortTime(lower.feed[0])
+  let end = 1
+  while (
+    end < lower.feed.length &&
+    feedSortTime(lower.feed[end]) === boundary
+  ) {
+    end++
+  }
+  return {...upper, feed: [...upper.feed, ...lower.feed.slice(0, end)]}
+}
+
+/**
+ * Where an item sits in the Following timeline's sort order, in milliseconds.
+ * The appview sorts a post by the earlier of its record's `createdAt` and its
+ * `indexedAt`, ignoring a `createdAt` that isn't a date. A repost sorts the
+ * same way by its own record, but the client only has the repost's
+ * `indexedAt`, which can be later. That's close enough for
+ * {@link carryBoundary}: carrying a post that didn't need it does no harm.
+ */
+function feedSortTime(item: app.bsky.feed.defs.FeedViewPost) {
+  const reason = item.reason as {indexedAt?: unknown} | undefined
+  if (typeof reason?.indexedAt === 'string') {
+    return Date.parse(reason.indexedAt)
+  }
+  const indexedAt = Date.parse(item.post.indexedAt)
+  const {createdAt} = item.post.record
+  const created = typeof createdAt === 'string' ? Date.parse(createdAt) : NaN
+  return Number.isNaN(created) ? indexedAt : Math.min(created, indexedAt)
 }
 
 /**
@@ -142,6 +230,9 @@ export function readFollowingSnapshot(
  * cursor of the page above, a `startCursor` on the top page (which is how we
  * know the server supports `since`), no Discover pages, and at most
  * {@link FOLLOWING_SNAPSHOT_MAX_BYTES} serialized.
+ *
+ * A page put above the others with `since` is fetched from the top too, and
+ * the page below it continues from its cursor, so the same rules hold for it.
  */
 function isValidFollowingSnapshot(
   snapshot: unknown,
@@ -181,6 +272,7 @@ function isFollowingPage(page: unknown): page is SnapshotPage {
     page.source === undefined &&
     (page.cursor === undefined || typeof page.cursor === 'string') &&
     (page.startCursor === undefined || typeof page.startCursor === 'string') &&
+    (page.since === undefined || typeof page.since === 'string') &&
     typeof page.fetchedAt === 'number' &&
     Array.isArray(page.feed)
   )
@@ -192,13 +284,15 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 /**
  * A copy of the client with the Following query's data swapped for what
- * `replace` returns, or without the query when that's `undefined` or it
- * throws. A client without the query, or one that isn't well formed (which is
- * TanStack's to handle), is returned as it is.
+ * `replace` makes of the query's state, or without the query when that's
+ * `undefined` or it throws. A client without the query, or one that isn't well
+ * formed (which is TanStack's to handle), is returned as it is.
  */
 function replaceFollowingData(
   client: PersistedClient,
-  replace: (data: unknown) => unknown,
+  replace: (
+    state: {data?: unknown; isInvalidated?: unknown} | undefined,
+  ) => unknown,
 ): PersistedClient {
   const queries: unknown = client?.clientState?.queries
   if (!Array.isArray(queries)) {
@@ -214,7 +308,7 @@ function replaceFollowingData(
   const query = client.clientState.queries[index]
   let data: unknown
   try {
-    data = replace(query.state?.data)
+    data = replace(query.state)
   } catch {
     data = undefined
   }

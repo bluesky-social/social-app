@@ -51,6 +51,8 @@ export type ListProps<ItemT = any> = Omit<
   | 'contentOffset' // Pass headerOffset instead.
 > & {
   onScrolledDownChange?: (isScrolledDown: boolean) => void
+  /** Native only: nothing on web needs it yet. */
+  onFirstScroll?: () => void
   headerOffset?: number
   refreshing?: boolean
   onRefresh?: () => void
@@ -94,6 +96,7 @@ function ListImpl<ItemT>(
     onEndReached,
     onEndReachedThreshold = 2,
     onRefresh: _unsupportedOnRefresh,
+    onFirstScroll: _unsupportedOnFirstScroll,
     onScrolledDownChange,
     onContentSizeChange,
     onItemSeen,
