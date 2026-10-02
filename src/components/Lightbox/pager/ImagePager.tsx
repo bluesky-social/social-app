@@ -157,7 +157,7 @@ export default function ImageViewRoot({
   useAnimatedReaction(
     () => openProgress.get() === 1,
     (isOpen, wasOpen) => {
-      if (IS_IPAD) return
+      if (!IS_IOS || IS_IPAD) return
       if (isOpen && !wasOpen) {
         scheduleOnRN(ScreenOrientation.unlockAsync)
       } else if (!isOpen && wasOpen) {
