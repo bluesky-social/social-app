@@ -57,11 +57,12 @@ jest.mock('#/state/queries/util', () => ({
 }))
 
 const mockFeedTuners: never[] = []
-const mockModerationOpts = {
+const MODERATION_OPTS = {
   userDid: 'did:plc:viewer',
   prefs: DEFAULT_LOGGED_OUT_PREFERENCES.moderationPrefs,
   labelDefs: {},
 }
+let mockModerationOpts: typeof MODERATION_OPTS | undefined
 let mockPreferences:
   | {
       savedFeeds: {pinned: boolean; value: string}[]
@@ -142,7 +143,10 @@ function postUris(data: InfiniteData<FeedPageUnselected>) {
 
 function createQueryClient() {
   return new QueryClient({
-    defaultOptions: {queries: {gcTime: Infinity, retry: false}},
+    // As the app's client, which shares nothing between results.
+    defaultOptions: {
+      queries: {gcTime: Infinity, retry: false, structuralSharing: false},
+    },
   })
 }
 
@@ -200,6 +204,7 @@ const appState = AppState.currentState
 
 beforeEach(() => {
   jest.clearAllMocks()
+  mockModerationOpts = MODERATION_OPTS
   mockPreferences = {savedFeeds: [], interests: {tags: []}}
   pageCounts = {timeline: 3, discover: 3, custom: 3}
 })
@@ -286,6 +291,74 @@ describe('post-feed query data', () => {
     await restored.fetchNextPage()
 
     expect(requested()).toEqual(['discover discover:2'])
+  })
+})
+
+describe('selection', () => {
+  it('selects nothing until moderation is ready', async () => {
+    const {data} = await renderFeed('following')
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(RQKEY('following'), roundTrip(data()))
+    mockClient.call.mockClear()
+    mockModerationOpts = undefined
+    const wrapper = ({children}: PropsWithChildren) => (
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    )
+    const hook = renderHook(() => usePostFeedQuery('following'), {wrapper})
+
+    expect(hook.result.current.data).toBeUndefined()
+    expect(hook.result.current.isError).toBe(false)
+
+    mockModerationOpts = MODERATION_OPTS
+    hook.rerender({})
+    expect(
+      hook.result.current.data?.pages[0].slices.map(slice => slice.feedPostUri),
+    ).toEqual([feedItem('timeline-1').post.uri])
+    expect(requested()).toEqual([])
+  })
+
+  it('tunes a page put above the others after them, so their rows stay as they were', async () => {
+    const {hook, queryClient, data, fetchNextPage} =
+      await renderFeed('following')
+    await fetchNextPage()
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(2),
+    )
+    const [top, next] = hook.result.current.query.data!.pages
+
+    // The new page has its own copy of a post the old top already shows.
+    act(() => {
+      queryClient.setQueryData(RQKEY('following'), {
+        pages: [
+          {
+            cursor: 'timeline:0',
+            feed: [feedItem('new'), feedItem('timeline-1')],
+            fetchedAt: Math.max(...data().pages.map(p => p.fetchedAt)) + 1,
+          },
+          ...data().pages,
+        ],
+        pageParams: [undefined, ...data().pageParams],
+      })
+    })
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(3),
+    )
+
+    const pages = hook.result.current.query.data!.pages
+    expect(pages[1]).toBe(top)
+    expect(pages[2]).toBe(next)
+    expect(pages[0].slices.map(slice => slice.feedPostUri)).toEqual([
+      feedItem('new').post.uri,
+    ])
+
+    // A page loaded below them is tuned last, and the rest are reused.
+    await fetchNextPage()
+    await waitFor(() =>
+      expect(hook.result.current.query.data?.pages).toHaveLength(4),
+    )
+    hook.result.current.query
+      .data!.pages.slice(0, 3)
+      .forEach((page, i) => expect(page).toBe(pages[i]))
   })
 })
 
