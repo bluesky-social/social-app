@@ -5,7 +5,7 @@ import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {type app} from '#/lexicons'
 import {CustomFeedAPI} from './custom'
 import {FollowingFeedAPI} from './following'
-import {type FeedAPI, type FeedAPIResponse} from './types'
+import {type FeedAPI, type FeedAPIResponse, type FeedSource} from './types'
 
 // HACK
 // the feed API does not include any facilities for passing down
@@ -33,13 +33,14 @@ export const FALLBACK_MARKER_POST = {
   },
 } as unknown as app.bsky.feed.defs.FeedViewPost
 
+/**
+ * Following, falling back to Discover once Following runs out. Which of the two
+ * a page continues from is its `source`, so the fallback lives in the pages
+ * rather than in this instance.
+ */
 export class HomeFeedAPI implements FeedAPI {
-  client: Client
   following: FollowingFeedAPI
   discover: CustomFeedAPI
-  usingDiscover = false
-  itemCursor = 0
-  userInterests?: string
 
   constructor({
     userInterests,
@@ -48,28 +49,18 @@ export class HomeFeedAPI implements FeedAPI {
     userInterests?: string
     client: Client
   }) {
-    this.client = client
     this.following = new FollowingFeedAPI({client})
     this.discover = new CustomFeedAPI({
       client,
       feedParams: {feed: PROD_DEFAULT_FEED('whats-hot') as AtUriString},
+      userInterests,
     })
-    this.userInterests = userInterests
   }
 
-  reset() {
-    this.following = new FollowingFeedAPI({client: this.client})
-    this.discover = new CustomFeedAPI({
-      client: this.client,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot') as AtUriString},
-      userInterests: this.userInterests,
-    })
-    this.usingDiscover = false
-    this.itemCursor = 0
-  }
-
-  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
-    if (this.usingDiscover) {
+  async peekLatest({
+    source,
+  }: {source?: FeedSource} = {}): Promise<app.bsky.feed.defs.FeedViewPost> {
+    if (source === 'discover') {
       return this.discover.peekLatest()
     }
     return this.following.peekLatest()
@@ -77,38 +68,33 @@ export class HomeFeedAPI implements FeedAPI {
 
   async fetch({
     cursor,
+    source,
     limit,
   }: {
     cursor: string | undefined
+    source?: FeedSource
     limit: number
   }): Promise<FeedAPIResponse> {
-    if (!cursor) {
-      this.reset()
-    }
-
-    let returnCursor
-    let posts: app.bsky.feed.defs.FeedViewPost[] = []
-
-    if (!this.usingDiscover) {
-      const res = await this.following.fetch({cursor, limit})
-      returnCursor = res.cursor
-      posts = posts.concat(res.feed)
-      if (!returnCursor) {
-        cursor = ''
-        posts.push(FALLBACK_MARKER_POST)
-        this.usingDiscover = true
-      }
-    }
-
-    if (this.usingDiscover && !__DEV__) {
+    if (source === 'discover') {
       const res = await this.discover.fetch({cursor, limit})
-      returnCursor = res.cursor
-      posts = posts.concat(res.feed)
+      return {...res, source: 'discover'}
     }
 
+    const res = await this.following.fetch({cursor, limit})
+    if (res.cursor) {
+      return res
+    }
+
+    // Following has run out, so this page carries on into Discover.
+    const feed = [...res.feed, FALLBACK_MARKER_POST]
+    if (__DEV__) {
+      return {feed, source: 'discover'}
+    }
+    const discover = await this.discover.fetch({cursor: '', limit})
     return {
-      cursor: returnCursor,
-      feed: posts,
+      cursor: discover.cursor,
+      source: 'discover',
+      feed: feed.concat(discover.feed),
     }
   }
 }

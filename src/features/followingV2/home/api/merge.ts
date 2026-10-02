@@ -30,6 +30,11 @@ type MergeFeedPage = {
   feed: app.bsky.feed.defs.FeedViewPost[]
 } | null
 
+/**
+ * Following with samples of the user's saved feeds mixed in. Unlike the other
+ * feed APIs it holds state between pages - each source's cursor and the posts
+ * it has buffered - so its pages carry the instance on to the next one.
+ */
 export class MergeFeedAPI implements FeedAPI {
   userInterests?: string
   client: Client
