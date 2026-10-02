@@ -68,10 +68,12 @@ export class HomeFeedAPI implements FeedAPI {
 
   async fetch({
     cursor,
+    since,
     source,
     limit,
   }: {
     cursor: string | undefined
+    since?: string
     source?: FeedSource
     limit: number
   }): Promise<FeedAPIResponse> {
@@ -80,8 +82,12 @@ export class HomeFeedAPI implements FeedAPI {
       return {...res, source: 'discover'}
     }
 
-    const res = await this.following.fetch({cursor, limit})
-    if (res.cursor) {
+    const res = await this.following.fetch({cursor, since, limit})
+    /*
+     * A range bounded by `since` sits above posts already loaded, so it never
+     * runs out into Discover.
+     */
+    if (res.cursor || since !== undefined) {
       return res
     }
 
