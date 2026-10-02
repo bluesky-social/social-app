@@ -249,6 +249,16 @@ describe('post-feed query data', () => {
     },
   )
 
+  it('keeps the startCursor of a Following page', async () => {
+    mockClient.call.mockImplementationOnce(() => ({
+      cursor: 'timeline:1',
+      startCursor: 'start',
+      feed: [feedItem('timeline-1')],
+    }))
+    const {data} = await renderFeed('following')
+    expect(data().pages[0].startCursor).toBe('start')
+  })
+
   it('round-trips Home after its Discover fallback and continues in Discover', async () => {
     setDev(false)
     pinFollowingFirst()

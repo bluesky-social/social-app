@@ -85,14 +85,18 @@ export class HomeFeedAPI implements FeedAPI {
       return res
     }
 
-    // Following has run out, so this page carries on into Discover.
+    /*
+     * Following has run out, so this page carries on into Discover. It still
+     * starts with Following's posts, so it starts where they do.
+     */
     const feed = [...res.feed, FALLBACK_MARKER_POST]
     if (__DEV__) {
-      return {feed, source: 'discover'}
+      return {startCursor: res.startCursor, feed, source: 'discover'}
     }
     const discover = await this.discover.fetch({cursor: '', limit})
     return {
       cursor: discover.cursor,
+      startCursor: res.startCursor,
       source: 'discover',
       feed: feed.concat(discover.feed),
     }
