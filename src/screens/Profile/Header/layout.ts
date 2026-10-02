@@ -1,25 +1,25 @@
 export const PROFILE_BANNER_HEIGHT = 150
 
-/** Cover the iPad profile banner within the top safe area, but leave phones alone. */
+/** Cover the wide profile banner within the top safe area, but leave compact windows alone. */
 export function getProfileBannerSafeAreaCoverHeight({
-  isIPad,
+  gtMobile,
   topInset,
 }: {
-  isIPad: boolean
+  gtMobile: boolean
   topInset: number
 }) {
-  return isIPad ? topInset : 0
+  return gtMobile ? topInset : 0
 }
 
-/** Phones use a light status bar over the profile banner; iPad does not. */
+/** Compact windows use a light status bar over the profile banner. */
 export function shouldUseProfileLightStatusBar({
-  isIPad,
+  gtMobile,
   isScreenFocused,
   isHeaderHidden,
 }: {
-  isIPad: boolean
+  gtMobile: boolean
   isScreenFocused: boolean
   isHeaderHidden: boolean
 }) {
-  return !isIPad && isScreenFocused && isHeaderHidden
+  return !gtMobile && isScreenFocused && isHeaderHidden
 }
