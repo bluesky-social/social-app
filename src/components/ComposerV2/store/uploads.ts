@@ -11,8 +11,13 @@ import {
   VIDEO_MAX_SIZE,
 } from '#/lib/constants'
 import {UploadLimitError, VideoTooLargeError} from '#/lib/media/video/errors'
-import {type VideoTelemetry} from '#/lib/media/video/telemetry'
-import {type CompressedVideo} from '#/lib/media/video/types'
+import {errorClass, type VideoTelemetry} from '#/lib/media/video/telemetry'
+import {
+  type CompressedVideo,
+  type VideoAbandonReason,
+  type VideoRestartReason,
+  type VideoValidationFailure,
+} from '#/lib/media/video/types'
 import {isNetworkError, shouldRetryError} from '#/lib/strings/errors'
 import {type ComposerImage} from '#/state/gallery'
 import {type AnalyticsContextType} from '#/analytics'
@@ -30,11 +35,12 @@ import {
 /** Runtime handle owned by the store, never published in ThreadState. */
 export type UploadTask = {
   /**
-   * `abandoned` marks a user giving up on the media (removing it or its
-   * post), which video telemetry reports. Other cancellations, such as a
-   * caption restart or store teardown, are silent.
+   * `abandoned` marks a user giving up on the media, which video telemetry
+   * reports: `'removed'` for removing it or its post, `'closed'` for closing
+   * the composer. Other cancellations, such as a caption restart or retry,
+   * are silent.
    */
-  cancel(options?: {abandoned?: boolean}): void
+  cancel(options?: {abandoned?: VideoAbandonReason}): void
 }
 
 /** Test-only worker seam; production uses the real workers below. */
@@ -165,14 +171,22 @@ type VideoOptions = BaseOptions &
     media: PostMediaVideo
     /** The session's analytics sink for video upload telemetry. */
     metric: AnalyticsContextType['metric']
+    /** Set when this attempt replaces an earlier one for the same video. */
+    restart?: {reason: VideoRestartReason; previousUploadId?: string}
     /**
-     * Called once the video blob exists, so the store can report publication
-     * through the same telemetry instance.
+     * The telemetry of the attempt that uploaded `media.videoBlob`, so a
+     * caption-only retry reports caption failures against that upload.
+     */
+    uploadedVideoTelemetry?: VideoTelemetry
+    /**
+     * Called when the attempt creates its telemetry, and again with the blob
+     * once the video is uploaded, so the store can link restarts and report
+     * publication through the same instance.
      */
     setVideoTelemetry?: (
       postId: string,
       mediaId: string,
-      video: {blob: BlobRef; telemetry: VideoTelemetry},
+      video: {telemetry: VideoTelemetry; blob?: BlobRef},
     ) => void
   }
 
@@ -193,9 +207,9 @@ export function startVideoUpload(opts: VideoOptions): UploadTask {
     abandonmentSignal: abandonment.signal,
   })
   return {
-    cancel: ({abandoned = false} = {}) => {
+    cancel: ({abandoned} = {}) => {
       /* Telemetry records the phase it was in, so abandon first. */
-      if (abandoned) abandonment.abort()
+      if (abandoned) abandonment.abort(abandoned)
       controller.abort()
     },
   }
@@ -293,11 +307,12 @@ async function runVideoUpload({
   /*
    * Telemetry matches the existing composer's funnel. It starts once the
    * source is prepared, since the instance reads source metadata only when
-   * it is created. A caption-only retry reuses the uploaded video and emits
-   * nothing; the stage decides which failure event an error belongs to.
+   * it is created. A caption-only retry reuses the uploaded video and its
+   * telemetry. The stage decides which failure event an error belongs to;
+   * failures before telemetry exists report `prepareFailed` directly.
    */
-  let telemetry: VideoTelemetry | undefined
-  let stage: 'compress' | 'upload' | 'processing' | undefined
+  let telemetry = videoBlob ? opts.uploadedVideoTelemetry : undefined
+  let stage: VideoStage | undefined
   try {
     /* A caption-only retry can safely reuse the completed video result. */
     let compressed: CompressedVideo | undefined
@@ -309,6 +324,7 @@ async function runVideoUpload({
        */
       let source = media
       if (needsReadableCopy({media})) {
+        stage = 'copy'
         const copy = await copyVideoToCache({
           uri: media.uri,
           mimeType: media.mimeType,
@@ -317,6 +333,7 @@ async function runVideoUpload({
         throwIfAborted({signal})
         source = {...media, uri: copy.uri}
       }
+      stage = 'metadata'
       const {asset, metadata} = await prepareVideoSource({
         media: source,
         getVideoMetadata,
@@ -331,7 +348,10 @@ async function runVideoUpload({
         metric,
       })
       telemetry = attempt
+      opts.setVideoTelemetry?.(opts.postId, opts.mediaId, {telemetry: attempt})
       attempt.picked()
+      if (opts.restart) attempt.restarted(opts.restart)
+      stage = 'validate'
       validateVideoSource({asset})
 
       report({...opts, status: {state: 'uploading', phase: 'compressing'}})
@@ -440,8 +460,8 @@ async function runVideoUpload({
       attempt.processingCompleted()
       stage = undefined
       opts.setVideoTelemetry?.(opts.postId, opts.mediaId, {
-        blob: videoBlob,
         telemetry: attempt,
+        blob: videoBlob,
       })
     }
 
@@ -455,6 +475,7 @@ async function runVideoUpload({
         progress: captionBlobs.length === media.captions.length ? 1 : undefined,
       },
     })
+    stage = 'captions'
     for (const caption of media.captions) {
       if (
         !caption.lang ||
@@ -478,9 +499,13 @@ async function runVideoUpload({
     })
   } catch (error) {
     if (isAborted({error, signal})) return
-    if (stage === 'compress') telemetry?.compressFailed(error)
-    else if (stage === 'upload') telemetry?.uploadFailed(error)
-    else if (stage === 'processing') telemetry?.processingFailed(error)
+    reportVideoFailure({
+      stage,
+      error,
+      telemetry,
+      media,
+      metric,
+    })
     const failed = failureStatus({error, i18n, kind: 'video'})
     if (videoBlob) {
       failed.blob = videoBlob
@@ -522,6 +547,72 @@ function needsReadableCopy({media}: {media: PostMediaVideo}) {
  * - GIFs are never compressed on either platform, so their source size is
  *   the output size.
  */
+/** Where a video attempt was when it failed, for its telemetry event. */
+type VideoStage =
+  | 'copy'
+  | 'metadata'
+  | 'validate'
+  | 'compress'
+  | 'upload'
+  | 'processing'
+  | 'captions'
+
+/** Report a failed attempt to the telemetry event for the stage it failed in. */
+function reportVideoFailure({
+  stage,
+  error,
+  telemetry,
+  media,
+  metric,
+}: {
+  stage: VideoStage | undefined
+  error: unknown
+  telemetry: VideoTelemetry | undefined
+  media: PostMediaVideo
+  metric: AnalyticsContextType['metric']
+}) {
+  switch (stage) {
+    case 'copy':
+    case 'metadata':
+      metric('video:upload:prepareFailed', {
+        step: stage,
+        restored: !!media.localRefPath,
+        sourceMimeType: media.mimeType,
+        errorClass: errorClass(error),
+      })
+      return
+    case 'validate': {
+      const code = videoValidationFailure({error})
+      if (code) telemetry?.validationFailed(code)
+      return
+    }
+    case 'compress':
+      return telemetry?.compressFailed(error)
+    case 'upload':
+      return telemetry?.uploadFailed(error)
+    case 'processing':
+      return telemetry?.processingFailed(error)
+    case 'captions':
+      return telemetry?.captionsFailed(error)
+  }
+}
+
+function videoValidationFailure({
+  error,
+}: {
+  error: unknown
+}): VideoValidationFailure | undefined {
+  if (error instanceof VideoTooLargeError) return 'video-too-large'
+  if (!(error instanceof ValidationError)) return undefined
+  switch (error.code) {
+    case 'unsupported-video-format':
+    case 'invalid-video-dimensions':
+    case 'video-too-long':
+      return error.code
+  }
+  return undefined
+}
+
 function validateVideoSource({asset}: {asset: ImagePickerAsset}) {
   const {mimeType} = asset
   const isGif = mimeType === 'image/gif'

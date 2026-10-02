@@ -1,6 +1,15 @@
 import {type BlobRef} from '@atproto/lex'
-import {describe, expect, jest, test} from '@jest/globals'
+import {afterEach, describe, expect, jest, test} from '@jest/globals'
 
+let mockIsAndroid = false
+
+jest.mock('#/env', () =>
+  /* A getter keeps the flag live; object spread would copy its value. */
+  Object.defineProperties(
+    {...jest.requireActual<object>('#/env')},
+    {IS_ANDROID: {get: () => mockIsAndroid}},
+  ),
+)
 /* Avoid loading the UI module chain through the real link resolver. */
 jest.mock('#/lib/api/resolve', () => {
   class EmbeddingDisabledError extends Error {}
@@ -135,6 +144,10 @@ const fullFunnel = [
   'video:upload:processingCompleted',
 ]
 
+afterEach(() => {
+  mockIsAndroid = false
+})
+
 describe('ComposerV2 video telemetry', () => {
   test('records the existing composer funnel, ending in publication', async () => {
     const harness = makeStore({
@@ -267,7 +280,7 @@ describe('ComposerV2 video telemetry', () => {
     expect(failed).toEqual([event])
   })
 
-  test('a source that fails validation is picked but never compressed', async () => {
+  test('a source that fails validation reports its code and is never compressed', async () => {
     const harness = makeStore({
       getVideoMetadata: () =>
         Promise.resolve({...source, duration: Number.MAX_SAFE_INTEGER}),
@@ -276,7 +289,54 @@ describe('ComposerV2 video telemetry', () => {
     await flush()
 
     expect(harness.video(mediaId).upload.state).toBe('failed')
-    expect(harness.events()).toEqual(['video:upload:picked'])
+    expect(harness.events()).toEqual([
+      'video:upload:picked',
+      'video:upload:validationFailed',
+    ])
+    expect(harness.payload('video:upload:validationFailed')).toMatchObject({
+      code: 'video-too-long',
+    })
+  })
+
+  test('an unreadable source reports prepareFailed before any upload id', async () => {
+    const harness = makeStore({
+      getVideoMetadata: () => Promise.reject(new TypeError('unreadable')),
+    })
+    const mediaId = harness.addVideo()
+    await flush()
+
+    expect(harness.video(mediaId).upload.state).toBe('failed')
+    expect(harness.events()).toEqual(['video:upload:prepareFailed'])
+    expect(harness.payload('video:upload:prepareFailed')).toEqual({
+      step: 'metadata',
+      restored: false,
+      sourceMimeType: undefined,
+      errorClass: 'TypeError',
+    })
+  })
+
+  test('a restored Android video that cannot be copied reports the copy step', async () => {
+    mockIsAndroid = true
+    const harness = makeStore({
+      copyVideoToCache: () => Promise.reject(new Error('copy failed')),
+    })
+    harness.store.actions.addMedia(harness.postId, [
+      {
+        kind: 'video',
+        uri: source.uri,
+        mimeType: 'video/mp4',
+        localRefPath: 'draft-video.mp4',
+      },
+    ])
+    await flush()
+
+    expect(harness.events()).toEqual(['video:upload:prepareFailed'])
+    expect(harness.payload('video:upload:prepareFailed')).toEqual({
+      step: 'copy',
+      restored: true,
+      sourceMimeType: 'video/mp4',
+      errorClass: 'Error',
+    })
   })
 
   test.each([
@@ -309,27 +369,80 @@ describe('ComposerV2 video telemetry', () => {
     expect(harness.events().at(-1)).toBe('video:upload:abandoned')
     expect(harness.payload('video:upload:abandoned')).toMatchObject({
       phase: 'upload',
+      reason: 'removed',
     })
   })
 
-  test('cancellations the user did not ask for are not abandonment', async () => {
+  test('closing the composer abandons an in-flight upload as closed', async () => {
+    const upload = deferred<never>()
+    const harness = makeStore({uploadVideo: () => upload.promise})
+    harness.addVideo()
+    await flush()
+
+    harness.store.destroy()
+    await flush()
+
+    expect(harness.events().at(-1)).toBe('video:upload:abandoned')
+    expect(harness.payload('video:upload:abandoned')).toMatchObject({
+      phase: 'upload',
+      reason: 'closed',
+    })
+  })
+
+  test('a caption restart is a linked new attempt, not abandonment', async () => {
     const upload = deferred<never>()
     const harness = makeStore({uploadVideo: () => upload.promise})
     const mediaId = harness.addVideo()
     await flush()
+    const first = harness.payload('video:upload:picked') as {uploadId: string}
 
-    /* Editing captions restarts the upload; teardown discards it. */
     harness.store.actions.setVideoCaptions(harness.postId, mediaId, [
       {lang: 'en', content: 'WEBVTT'},
     ])
     await flush()
-    harness.store.destroy()
-    await flush()
 
     expect(harness.events()).not.toContain('video:upload:abandoned')
-    /* The restart is a new upload attempt with its own funnel. */
     const picks = harness.events().filter(name => name.endsWith(':picked'))
     expect(picks).toHaveLength(2)
+    const restarted = harness.payload('video:upload:restarted') as {
+      uploadId: string
+    }
+    expect(restarted).toMatchObject({
+      reason: 'captions',
+      previousUploadId: first.uploadId,
+    })
+    expect(restarted.uploadId).not.toBe(first.uploadId)
+  })
+
+  test('a retry is a linked new attempt', async () => {
+    const uploadVideo = jest.fn<VideoUploadDependencies['uploadVideo']>()
+    uploadVideo.mockRejectedValueOnce(new Error('upload failed'))
+    uploadVideo.mockResolvedValue({
+      state: 'JOB_STATE_COMPLETED',
+      jobId: 'job-1',
+      blob: videoBlob,
+    } as never)
+    const harness = makeStore({uploadVideo})
+    const mediaId = harness.addVideo()
+    await flush()
+    const first = harness.payload('video:upload:picked') as {uploadId: string}
+
+    harness.store.actions.retryMediaUpload(harness.postId, mediaId)
+    await flush()
+
+    expect(harness.video(mediaId).upload.state).toBe('uploaded')
+    expect(harness.payload('video:upload:restarted')).toMatchObject({
+      reason: 'retry',
+      previousUploadId: first.uploadId,
+    })
+  })
+
+  test('a fresh selection is not a restart', async () => {
+    const harness = makeStore()
+    harness.addVideo()
+    await flush()
+
+    expect(harness.events()).not.toContain('video:upload:restarted')
   })
 
   test('a caption-only retry reuses the uploaded video and its telemetry', async () => {
@@ -340,11 +453,25 @@ describe('ComposerV2 video telemetry', () => {
     const mediaId = harness.addVideo([{lang: 'en', content: 'WEBVTT'}])
     await flush()
     expect(harness.video(mediaId).upload.state).toBe('failed')
+    expect(harness.events()).toEqual([
+      ...fullFunnel,
+      'video:upload:captionsFailed',
+    ])
+    const picked = harness.payload('video:upload:picked') as {uploadId: string}
+    expect(harness.payload('video:upload:captionsFailed')).toMatchObject({
+      uploadId: picked.uploadId,
+      jobId: 'job-1',
+      errorClass: 'Error',
+    })
 
     harness.store.actions.retryMediaUpload(harness.postId, mediaId)
     await flush()
     expect(harness.video(mediaId).upload.state).toBe('uploaded')
-    expect(harness.events()).toEqual(fullFunnel)
+    /* No new funnel: the retry only uploaded the captions. */
+    expect(harness.events()).toEqual([
+      ...fullFunnel,
+      'video:upload:captionsFailed',
+    ])
 
     harness.store.reportPublished({
       plan: planEmbedding({
@@ -383,6 +510,28 @@ describe('ComposerV2 video telemetry', () => {
       .events()
       .filter(name => name === 'video:upload:published')
     expect(published).toHaveLength(1)
+  })
+
+  test('an uncertain write reports its videos and keeps them publishable', async () => {
+    const harness = makeStore()
+    harness.addVideo()
+    await flush()
+    const picked = harness.payload('video:upload:picked') as {uploadId: string}
+    const plan = planEmbedding({
+      postId: harness.postId,
+      embed: {$type: 'app.bsky.embed.video', video: videoBlob},
+    })
+
+    harness.store.reportPublishUncertain({plan, cause: new TypeError('lost')})
+    expect(harness.payload('composer:publish:uncertain')).toEqual({
+      postCount: 1,
+      videoUploadIds: [picked.uploadId],
+      errorClass: 'TypeError',
+    })
+
+    /* Reconciliation may still confirm the write. */
+    harness.store.reportPublished({plan})
+    expect(harness.events().at(-1)).toBe('video:upload:published')
   })
 
   test('publication is reported after the store is destroyed', async () => {

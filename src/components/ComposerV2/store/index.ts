@@ -8,7 +8,11 @@ import {
   resolveLink as importedResolveLink,
   type resolveLink,
 } from '#/lib/api/resolve'
-import {type VideoTelemetry} from '#/lib/media/video/telemetry'
+import {errorClass, type VideoTelemetry} from '#/lib/media/video/telemetry'
+import {
+  type VideoAbandonReason,
+  type VideoRestartReason,
+} from '#/lib/media/video/types'
 import {
   type ComposerV2OnError,
   isComposerV2Cancellation,
@@ -139,6 +143,8 @@ export function createThreadStore({
    * publishes them. Weak keys drop entries whose blob nothing references.
    */
   const publishableVideos = new WeakMap<BlobRef, VideoTelemetry>()
+  /** The latest attempt's uploadId per video, linking restarts to it. */
+  const videoUploadIds = new Map<string, string>()
   /** Replacing one attachment slot must not invalidate work in the other. */
   const resolutionRevs = {
     record: createAsyncTaskRev(),
@@ -301,7 +307,7 @@ export function createThreadStore({
       for (const item of getMediaItems({
         media: s.posts[postId].attachments.media,
       })) {
-        cancelUploadTask(item.id, {abandoned: true})
+        cancelUploadTask(item.id, {abandoned: 'removed'})
       }
       resolutionRevs.record.clearFor({key: postId})
       resolutionRevs.media.clearFor({key: postId})
@@ -352,7 +358,7 @@ export function createThreadStore({
       const items = getMediaItems({media: post.attachments.media})
       const next = items.filter(item => item.id !== mediaId)
       if (next.length === items.length) return null
-      cancelUploadTask(mediaId, {abandoned: true})
+      cancelUploadTask(mediaId, {abandoned: 'removed'})
       s.posts[postId] = replacePostMediaItems(post, next)
       s.isDirty = true
       return s
@@ -366,7 +372,7 @@ export function createThreadStore({
       if (!post || !post.attachments.media) return null
       resolutionRevs.media.incrementFor({key: postId})
       for (const item of getMediaItems({media: post.attachments.media})) {
-        cancelUploadTask(item.id, {abandoned: true})
+        cancelUploadTask(item.id, {abandoned: 'removed'})
       }
       s.posts[postId] = replacePostMedia(post, undefined)
       s.isDirty = true
@@ -450,7 +456,7 @@ export function createThreadStore({
       s.isDirty = true
       return s
     })
-    if (shouldRestart) startMediaUpload(postId, mediaId)
+    if (shouldRestart) startMediaUpload(postId, mediaId, 'captions')
   }
 
   /** Regroup only selected items; record identity is unaffected. */
@@ -508,7 +514,7 @@ export function createThreadStore({
       )
       return s
     })
-    startMediaUpload(postId, mediaId)
+    startMediaUpload(postId, mediaId, 'retry')
   }
 
   /**
@@ -544,7 +550,11 @@ export function createThreadStore({
     return {retriedMediaIds}
   }
 
-  function startMediaUpload(postId: string, mediaId: string) {
+  function startMediaUpload(
+    postId: string,
+    mediaId: string,
+    restartReason?: VideoRestartReason,
+  ) {
     if (destroyed || uploadTasks.has(mediaId)) return
     const post = state.posts[postId]
     if (!post) return
@@ -562,7 +572,7 @@ export function createThreadStore({
      * cancellation can be requested before `started` is assigned.
      */
     let started: UploadTask | undefined
-    let cancelled: {abandoned?: boolean} | undefined
+    let cancelled: {abandoned?: VideoAbandonReason} | undefined
     const registered: UploadTask = {
       cancel(options = {}) {
         cancelled = options
@@ -624,9 +634,16 @@ export function createThreadStore({
               ...callbacks,
               ...videoUploadDependencies,
               metric: analytics.metric,
-              setVideoTelemetry: (p, m, video) => {
-                if (uploadTasks.get(m) === registered)
-                  publishableVideos.set(video.blob, video.telemetry)
+              restart: restartReason && {
+                reason: restartReason,
+                previousUploadId: videoUploadIds.get(item.id),
+              },
+              uploadedVideoTelemetry:
+                item.videoBlob && publishableVideos.get(item.videoBlob),
+              setVideoTelemetry: (p, m, {telemetry, blob}) => {
+                if (uploadTasks.get(m) !== registered) return
+                videoUploadIds.set(m, telemetry.uploadId)
+                if (blob) publishableVideos.set(blob, telemetry)
               },
               media: item,
             })
@@ -661,8 +678,8 @@ export function createThreadStore({
   function cancelUploadTask(
     mediaId: string,
     options?: {
-      /** The user removed the media; see `UploadTask`. */
-      abandoned?: boolean
+      /** The user gave up on the media; see `UploadTask`. */
+      abandoned?: VideoAbandonReason
     },
   ) {
     const task = uploadTasks.get(mediaId)
@@ -685,6 +702,32 @@ export function createThreadStore({
       publishableVideos.delete(blob)
       telemetry.published()
     }
+  }
+
+  /**
+   * Report a write that was sent but may not have committed. Call only when
+   * the writer rejects after dispatch, not for a precondition failure
+   * (`ComposerV2WritePreconditionError`). The videos stay publishable, since
+   * a later reconciliation may find the posts.
+   */
+  function reportPublishUncertain({
+    plan,
+    cause,
+  }: {
+    plan: ComposerV2Plan
+    cause: unknown
+  }) {
+    const videoUploadIds: string[] = []
+    for (const post of plan.posts) {
+      const blob = embeddedVideoBlob({embed: post.record.embed})
+      const telemetry = blob && publishableVideos.get(blob)
+      if (telemetry) videoUploadIds.push(telemetry.uploadId)
+    }
+    analytics.metric('composer:publish:uncertain', {
+      postCount: plan.posts.length,
+      videoUploadIds,
+      errorClass: errorClass(cause),
+    })
   }
 
   /** Upload progress does not dirty the draft or affect the record attachment. */
@@ -1102,9 +1145,14 @@ export function createThreadStore({
     return {...post, attachments: {...post.attachments, record}}
   }
 
+  /** Closing the composer; in-flight video uploads report abandonment. */
   function destroy() {
+    teardown({abandoned: 'closed'})
+  }
+
+  function teardown(options: {abandoned?: VideoAbandonReason}) {
     destroyed = true
-    for (const task of uploadTasks.values()) task.cancel()
+    for (const task of uploadTasks.values()) task.cancel(options)
     uploadTasks.clear()
     resolutionRevs.record.clearAll()
     resolutionRevs.media.clearAll()
@@ -1149,9 +1197,9 @@ export function createThreadStore({
      * are invalidated so late results are ignored, and the store goes inert.
      * Cancellation is best effort; compression or requests already in flight
      * may still finish, but their results are discarded. Then rethrow the
-     * original error.
+     * original error. The user closed nothing, so nothing is abandoned.
      */
-    destroy()
+    teardown({})
     throw cause
   }
 
@@ -1159,6 +1207,7 @@ export function createThreadStore({
     /** Share the session's policy with callers; inert after destruction. */
     reportError,
     reportPublished,
+    reportPublishUncertain,
     /** User-facing composer commands for editing a thread. */
     actions: {
       setPostText,

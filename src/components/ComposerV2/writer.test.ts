@@ -19,7 +19,10 @@ import {
 import {createThreadStore} from '#/components/ComposerV2/store'
 import {testUploadRuntime} from '#/components/ComposerV2/store/__tests__/uploadTestUtils'
 import {buildThreadState} from '#/components/ComposerV2/store/utils/buildThreadState'
-import {writeComposerV2Plan} from '#/components/ComposerV2/writer'
+import {
+  ComposerV2WritePreconditionError,
+  writeComposerV2Plan,
+} from '#/components/ComposerV2/writer'
 import {com} from '#/lexicons'
 
 const DID = 'did:plc:composer-v2-writer'
@@ -179,6 +182,11 @@ describe('ComposerV2 thin writer', () => {
       }),
     ).rejects.toThrow('must enable server-side validation')
     expect(validationClient.call).not.toHaveBeenCalled()
+
+    /* Callers rely on the class to know nothing was sent. */
+    await expect(
+      writeComposerV2Plan({plan, pdsClient: missingClient.pdsClient}),
+    ).rejects.toBeInstanceOf(ComposerV2WritePreconditionError)
   })
 
   test.each([

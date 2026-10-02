@@ -8,6 +8,17 @@ import {type ComposerV2Plan} from '#/components/ComposerV2/planner'
 import {com} from '#/lexicons'
 
 /**
+ * The writer refused the plan before sending anything, so nothing was
+ * written. Any other rejection may have committed.
+ */
+export class ComposerV2WritePreconditionError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ComposerV2WritePreconditionError'
+  }
+}
+
+/**
  * Publish one successful ComposerV2 plan through its authenticated PDS client.
  * Planning remains no-write; call this only from an explicit publish action.
  * DebugComposer is the current caller; production composer UI wiring is
@@ -27,20 +38,26 @@ export async function writeComposerV2Plan({
 }): Promise<{uris: string[]}> {
   try {
     if (plan.ok !== true) {
-      throw new Error('Cannot write an unsuccessful ComposerV2 plan')
+      throw new ComposerV2WritePreconditionError(
+        'Cannot write an unsuccessful ComposerV2 plan',
+      )
     }
 
     const did = pdsClient.assertDid
     if (!did) {
-      throw new Error('An authenticated PDS account is required')
+      throw new ComposerV2WritePreconditionError(
+        'An authenticated PDS account is required',
+      )
     }
     if (did !== plan.input.repo) {
-      throw new Error(
+      throw new ComposerV2WritePreconditionError(
         'ComposerV2 plan repo does not match the authenticated PDS',
       )
     }
     if (plan.input.validate !== true) {
-      throw new Error('ComposerV2 plan must enable server-side validation')
+      throw new ComposerV2WritePreconditionError(
+        'ComposerV2 plan must enable server-side validation',
+      )
     }
   } catch (cause) {
     reportComposerV2Error({
