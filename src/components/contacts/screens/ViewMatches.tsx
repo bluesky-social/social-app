@@ -248,7 +248,9 @@ export function ViewMatches({
       } else {
         logger.error('Dismissing match failed', {safeMessage: err})
         Toast.show(
-          _(msg`An error occurred while hiding suggestion. ${cleanError(err)}`),
+          _(
+            msg`An error occurred while hiding the suggestion. ${cleanError(err)}`,
+          ),
           {type: 'error'},
         )
       }
