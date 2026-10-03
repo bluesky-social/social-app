@@ -3,11 +3,13 @@ import {
   type AccessibilityRole,
   type GestureResponderEvent,
   type PressableProps,
+  type View,
 } from 'react-native'
 
 import {type TextStyleProp, type ViewStyleProp} from '#/alf'
 import type * as Dialog from '#/components/Dialog'
 import {type Props as SVGIconProps} from '#/components/icons/common'
+import {type BottomSheetPopoverMode} from '../../../modules/bottom-sheet'
 
 export type ContextType = {
   control: Dialog.DialogOuterProps['control']
@@ -17,6 +19,18 @@ export type ItemContextType = {
   disabled: boolean
   destructive: boolean
 }
+
+export type OuterProps = React.PropsWithChildren<
+  ViewStyleProp & {
+    showCancel?: boolean
+    /**
+     * iOS presentation policy. Defaults to 'adaptive'; use 'always' to keep a
+     * popover on iPhone, or 'never' to use a sheet. Ignored on Android and web.
+     */
+    popover?: BottomSheetPopoverMode
+    onCloseAutoFocus?: (event: Event) => void
+  }
+>
 
 export type RadixPassThroughTriggerProps = {
   ref: React.RefObject<any>
@@ -61,8 +75,8 @@ export type TriggerChildProps =
        * object is empty.
        */
       props: {
-        ref: null
-        onPress: () => void
+        ref: React.RefObject<React.ComponentRef<typeof View> | null>
+        onPress: (event?: GestureResponderEvent) => void
         onFocus: () => void
         onBlur: () => void
         onPressIn: () => void

@@ -368,28 +368,30 @@ function SwitchMenuItems({
           <Menu.Divider />
         </>
       )}
-      <Menu.Item
-        label={l`Go to profile`}
-        onPress={onProfilePress}
-        // @ts-expect-error href is web-only -prf
-        href={profileLink}>
-        <Menu.ItemIcon icon={UserCircleIcon} />
-        <Menu.ItemText>
-          <Trans>Go to profile</Trans>
-        </Menu.ItemText>
-      </Menu.Item>
-      <Menu.Item label={l`Add another account`} onPress={onAddAnotherAccount}>
-        <Menu.ItemIcon icon={PlusIcon} />
-        <Menu.ItemText>
-          <Trans>Add another account</Trans>
-        </Menu.ItemText>
-      </Menu.Item>
-      <Menu.Item label={l`Sign out`} onPress={signOutPromptControl.open}>
-        <Menu.ItemIcon icon={LeaveIcon} />
-        <Menu.ItemText>
-          <Trans>Sign out</Trans>
-        </Menu.ItemText>
-      </Menu.Item>
+      <Menu.Group>
+        <Menu.Item
+          label={l`Go to profile`}
+          onPress={onProfilePress}
+          // @ts-expect-error href is web-only -prf
+          href={profileLink}>
+          <Menu.ItemIcon icon={UserCircleIcon} />
+          <Menu.ItemText>
+            <Trans>Go to profile</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item label={l`Add another account`} onPress={onAddAnotherAccount}>
+          <Menu.ItemIcon icon={PlusIcon} />
+          <Menu.ItemText>
+            <Trans>Add another account</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+        <Menu.Item label={l`Sign out`} onPress={signOutPromptControl.open}>
+          <Menu.ItemIcon icon={LeaveIcon} />
+          <Menu.ItemText>
+            <Trans>Sign out</Trans>
+          </Menu.ItemText>
+        </Menu.Item>
+      </Menu.Group>
     </Menu.Outer>
   )
 }
