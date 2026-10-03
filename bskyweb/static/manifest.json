@@ -1,0 +1,15 @@
+{
+  "short_name": "Bluesky",
+  "name": "Bluesky",
+  "icons": [
+    {
+      "src": "/static/apple-touch-icon.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0085ff",
+  "background_color": "#ffffff"
+}
