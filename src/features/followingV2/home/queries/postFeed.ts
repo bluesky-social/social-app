@@ -573,7 +573,8 @@ const RESTORE_PREPEND_FALLBACK_MS = 2500
  * first scroll event, or {@link RESTORE_PREPEND_FALLBACK_MS} after its first
  * layout. The list reports both through the handlers returned. It runs once
  * per view, whatever it finds. `isOwed` says whether it has yet to, for checks
- * for new posts to wait for it.
+ * for new posts to wait for it, and `prependedAt` is the `fetchedAt` of the
+ * page it put on top, once it has.
  *
  * It fetches with `since` set to the top page's `startCursor`. Nothing newer
  * writes nothing. Anything newer goes on top as a page of its own, with the
@@ -601,6 +602,7 @@ export function usePostFeedRestorePrepend(
   const queryKey = RQKEY(feedDesc, params)
   /** Whether this view has had its one go. */
   const tried = useRef(false)
+  const [prependedAt, setPrependedAt] = useState<number>()
   const [position, setPosition] = useState<
     'unknown' | 'laidOut' | 'positioned'
   >('unknown')
@@ -636,10 +638,18 @@ export function usePostFeedRestorePrepend(
       if (!page.feed.length || cursor === undefined) {
         return
       }
-      await commit(queryClient, queryKey, before, (data = before) => ({
-        pages: [page, ...data.pages],
-        pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
-      }))
+      const wrote = await commit(
+        queryClient,
+        queryKey,
+        before,
+        (data = before) => ({
+          pages: [page, ...data.pages],
+          pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
+        }),
+      )
+      if (wrote) {
+        setPrependedAt(page.fetchedAt)
+      }
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to fetch posts newer than a restored feed', {
@@ -669,6 +679,7 @@ export function usePostFeedRestorePrepend(
 
   return {
     isOwed,
+    prependedAt,
     onListLayout: () =>
       setPosition(current => (current === 'unknown' ? 'laidOut' : current)),
     onListFirstScroll: () => setPosition('positioned'),

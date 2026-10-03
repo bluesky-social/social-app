@@ -9,7 +9,11 @@ import {
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {type NavigationProp, useNavigation} from '@react-navigation/native'
+import {
+  type NavigationProp,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
 
 import {DISCOVER_FEED_URI, VIDEO_FEED_URIS} from '#/lib/constants'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
@@ -64,6 +68,7 @@ export function FeedPage({
   const {hasSession} = useSession()
   const {_} = useLingui()
   const navigation = useNavigation<NavigationProp<AllNavigatorParams>>()
+  const isScreenFocused = useIsFocused()
   const {openComposer} = useOpenComposer()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const headerOffset = useHeaderOffset()
@@ -146,6 +151,7 @@ export function FeedPage({
           <PostFeed
             testID={testID ? `${testID}-feed` : undefined}
             enabled={isPageFocused || shouldPrefetch}
+            isActive={isPageFocused && isScreenFocused}
             feed={feed}
             feedParams={feedParams}
             pollInterval={POLL_FREQ}
