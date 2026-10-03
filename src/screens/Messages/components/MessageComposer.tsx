@@ -38,6 +38,7 @@ import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
 import {type chat} from '#/lexicons'
+import {getMessageComposerHorizontalPadding} from './messageComposerLayout'
 import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40
@@ -361,17 +362,13 @@ function ComposerContainer({children}: {children: React.ReactNode}) {
   const {bottom: bottomInset} = useSafeAreaInsets()
   const {progress} = useReanimatedKeyboardAnimation()
   const t = useTheme()
+  const horizontalPadding = getMessageComposerHorizontalPadding(bottomInset)
 
   const animatedContainerStyle = useAnimatedStyle(() => ({
-    paddingHorizontal: interpolate(
-      progress.get(),
-      [0, 1],
-      [bottomInset, tokens.space.md],
-      {
-        extrapolateRight: Extrapolation.CLAMP,
-        extrapolateLeft: Extrapolation.CLAMP,
-      },
-    ),
+    paddingHorizontal: interpolate(progress.get(), [0, 1], horizontalPadding, {
+      extrapolateRight: Extrapolation.CLAMP,
+      extrapolateLeft: Extrapolation.CLAMP,
+    }),
   }))
 
   if (IS_LIQUID_GLASS) {
