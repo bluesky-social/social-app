@@ -1,0 +1,38 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.getAccountStatus",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get the authenticated account's current standing with this moderation service.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["src", "standing", "updatedAt"],
+          "properties": {
+            "src": {
+              "type": "string",
+              "format": "did",
+              "description": "DID of the moderation service returning this status."
+            },
+            "standing": {
+              "type": "string",
+              "knownValues": ["good", "warning", "atRisk"]
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "datetime",
+              "description": "Time at which the account's derived standing most recently changed."
+            },
+            "expiresAt": {
+              "type": "string",
+              "format": "datetime",
+              "description": "Time at which the current suspension expires. Present only for a temporary suspension."
+            }
+          }
+        }
+      }
+    }
+  }
+}

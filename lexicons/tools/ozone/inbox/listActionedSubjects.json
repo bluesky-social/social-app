@@ -1,0 +1,59 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.listActionedSubjects",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "List subjects belonging to the authenticated account that have moderation actions from this moderation service.",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential."
+          },
+          "sortField": {
+            "type": "string",
+            "default": "updatedAt",
+            "enum": ["createdAt", "updatedAt"]
+          },
+          "sortDirection": {
+            "type": "string",
+            "default": "desc",
+            "enum": ["asc", "desc"]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 50
+          },
+          "cursor": {
+            "type": "string",
+            "description": "An opaque cursor for pagination."
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["subjects"],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "subjects": {
+              "type": "array",
+              "items": {
+                "type": "ref",
+                "ref": "tools.ozone.inbox.defs#subjectView"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

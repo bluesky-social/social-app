@@ -1,0 +1,54 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.getUnreadCount",
+  "defs": {
+    "main": {
+      "type": "query",
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "section": {
+            "type": "string",
+            "knownValues": ["reports", "subjects", "accountStatus"]
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["unreadCounts"],
+          "properties": {
+            "unreadCounts": {
+              "type": "ref",
+              "ref": "#unreadCounts"
+            }
+          }
+        }
+      }
+    },
+    "unreadCounts": {
+      "type": "object",
+      "required": ["total"],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reports": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "subjects": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accountStatus": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.server.getCapabilities",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "notifications": {
+              "type": "ref",
+              "ref": "#notificationConfig"
+            }
+          }
+        }
+      }
+    },
+    "notificationConfig": {
+      "type": "object",
+      "required": ["channels"],
+      "properties": {
+        "channels": {
+          "type": "array",
+          "minLength": 1,
+          "items": {
+            "type": "string",
+            "knownValues": ["inApp", "push"]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "lexicon": 1,
+  "id": "tools.ozone.inbox.updateSeen",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["sections"],
+          "properties": {
+            "sections": {
+              "type": "array",
+              "minLength": 1,
+              "items": {
+                "type": "string",
+                "knownValues": ["reports", "subjects", "accountStatus"]
+              }
+            },
+            "seenAt": {
+              "type": "string",
+              "format": "datetime"
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["seenAt"],
+          "properties": {
+            "seenAt": {
+              "type": "string",
+              "format": "datetime"
+            }
+          }
+        }
+      }
+    }
+  }
+}
