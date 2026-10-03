@@ -11,6 +11,7 @@ import {
   type FeedNotification,
   useNotificationFeedQuery,
 } from '#/state/queries/notifications/feed'
+import {mergeGroupedNotifications} from '#/state/queries/notifications/util'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListProps, type ListRef} from '#/view/com/util/List'
@@ -82,9 +83,11 @@ export function NotificationFeed({
       if (isEmpty) {
         arr = arr.concat([EMPTY_FEED_ITEM])
       } else if (data) {
-        for (const page of data?.pages) {
-          arr = arr.concat(page.items)
+        let feedNotifications: FeedNotification[] = []
+        for (const page of data.pages) {
+          feedNotifications = feedNotifications.concat(page.items)
         }
+        arr = arr.concat(mergeGroupedNotifications(feedNotifications))
       }
       if (isError && !isEmpty) {
         arr = arr.concat([LOAD_MORE_ERROR_ITEM])
