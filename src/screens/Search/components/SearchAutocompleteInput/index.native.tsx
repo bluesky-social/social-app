@@ -10,6 +10,7 @@ export function SearchAutocompleteInput({
   // web-only props are ignored on native
   fixedParams: _fixedParams,
   onSelectProfile: _onSelectProfile,
+  onSelectSearchOperator: _onSelectSearchOperator,
   onSelectSearch: _onSelectSearch,
   ...rest
 }: SearchAutocompleteInputProps) {
