@@ -21,7 +21,72 @@ import {useIsThreadMuted, useSetThreadMute} from '../cache/thread-mutes'
 import {findProfileQueryData} from './profile'
 
 const RQKEY_ROOT = 'post'
+const PENDING_URI = 'pending'
+type CreatedUri = {
+  promise: Promise<AtUriString>
+  isPending: boolean
+  isDeleting: boolean
+  uri?: AtUriString
+}
+const createdLikeUris = new Map<string, CreatedUri>()
+const createdRepostUris = new Map<string, CreatedUri>()
 export const RQKEY = (postUri: string) => [RQKEY_ROOT, postUri]
+
+function createdUriKey(accountDid: string | undefined, postUri: string) {
+  return `${accountDid ?? ''}\0${postUri}`
+}
+
+function getOrCreateUri(
+  records: Map<string, CreatedUri>,
+  postUri: string,
+  create: () => Promise<AtUriString>,
+) {
+  const existing = records.get(postUri)
+  if (existing && !existing.isDeleting) {
+    return {recordUri: existing.promise, created: false}
+  }
+
+  const recordUri = create()
+  const entry: CreatedUri = {
+    promise: recordUri,
+    isPending: true,
+    isDeleting: false,
+  }
+  records.set(postUri, entry)
+  void recordUri.then(
+    uri => {
+      if (records.get(postUri) === entry) {
+        entry.isPending = false
+        entry.uri = uri
+      }
+    },
+    () => {
+      if (records.get(postUri) === entry) records.delete(postUri)
+    },
+  )
+  return {recordUri, created: true}
+}
+
+function getCreatedUri(records: Map<string, CreatedUri>, postUri: string) {
+  const entry = records.get(postUri)
+  if (!entry) {
+    const err = new Error('The record URI is not available yet')
+    err.name = 'AbortError'
+    throw err
+  }
+  return entry.promise
+}
+
+function removeCreatedUri(
+  records: Map<string, CreatedUri>,
+  postUri: string,
+  entry: CreatedUri | undefined,
+  uri: AtUriString,
+) {
+  if (entry && records.get(postUri) === entry && entry.uri === uri) {
+    records.delete(postUri)
+  }
+}
 
 export function usePostQuery(uri: string | undefined) {
   const client = useAppviewClient()
@@ -122,10 +187,13 @@ export function usePostLikeMutationQueue(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:like']['logContext'],
 ) {
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const postUri = post.uri
+  const uriKey = createdUriKey(currentAccount?.did, postUri)
   const postCid = post.cid
-  const initialLikeUri = post.viewer?.like
+  const initialLikeUri = post.viewer?.like as
+    AtUriString | typeof PENDING_URI | undefined
   const likeMutation = usePostLikeMutation(feedDescriptor, logContext, post)
   const unlikeMutation = usePostUnlikeMutation(feedDescriptor, logContext, post)
 
@@ -133,19 +201,43 @@ export function usePostLikeMutationQueue(
     initialState: initialLikeUri,
     runMutation: async (prevLikeUri, shouldLike) => {
       if (shouldLike) {
-        const {uri: likeUri} = await likeMutation.mutateAsync({
-          uri: postUri,
-          cid: postCid,
-          via: viaRepost,
-        })
-        userActionHistory.like([postUri])
+        const {recordUri, created} = getOrCreateUri(
+          createdLikeUris,
+          uriKey,
+          () =>
+            likeMutation
+              .mutateAsync({
+                uri: postUri,
+                cid: postCid,
+                via: viaRepost,
+              })
+              .then(({uri}) => uri),
+        )
+        const likeUri = await recordUri
+        if (created) {
+          userActionHistory.like([postUri])
+        }
         return likeUri
       } else {
-        if (prevLikeUri) {
-          await unlikeMutation.mutateAsync({
-            postUri: postUri,
-            likeUri: prevLikeUri,
-          })
+        const createdUri = createdLikeUris.get(uriKey)
+        const likeUri =
+          prevLikeUri === PENDING_URI
+            ? await getCreatedUri(createdLikeUris, uriKey)
+            : prevLikeUri
+        if (likeUri) {
+          if (createdUri?.uri === likeUri) createdUri.isDeleting = true
+          try {
+            await unlikeMutation.mutateAsync({
+              postUri: postUri,
+              likeUri,
+            })
+          } catch (err) {
+            if (createdUri && createdLikeUris.get(uriKey) === createdUri) {
+              createdUri.isDeleting = false
+            }
+            throw err
+          }
+          removeCreatedUri(createdLikeUris, uriKey, createdUri, likeUri)
           userActionHistory.unlike([postUri])
         }
         return undefined
@@ -162,7 +254,7 @@ export function usePostLikeMutationQueue(
   const queueLike = useCallback(() => {
     // optimistically update
     updatePostShadow(queryClient, postUri, {
-      likeUri: 'pending',
+      likeUri: PENDING_URI,
     })
     return queueToggle(true)
   }, [queryClient, postUri, queueToggle])
@@ -252,10 +344,13 @@ export function usePostRepostMutationQueue(
   feedDescriptor: string | undefined,
   logContext: Metrics['post:repost']['logContext'],
 ) {
+  const {currentAccount} = useSession()
   const queryClient = useQueryClient()
   const postUri = post.uri
+  const uriKey = createdUriKey(currentAccount?.did, postUri)
   const postCid = post.cid
-  const initialRepostUri = post.viewer?.repost
+  const initialRepostUri = post.viewer?.repost as
+    AtUriString | typeof PENDING_URI | undefined
   const repostMutation = usePostRepostMutation(feedDescriptor, logContext, post)
   const unrepostMutation = usePostUnrepostMutation(
     feedDescriptor,
@@ -267,18 +362,37 @@ export function usePostRepostMutationQueue(
     initialState: initialRepostUri,
     runMutation: async (prevRepostUri, shouldRepost) => {
       if (shouldRepost) {
-        const {uri: repostUri} = await repostMutation.mutateAsync({
-          uri: postUri,
-          cid: postCid,
-          via: viaRepost,
-        })
+        const {recordUri} = getOrCreateUri(createdRepostUris, uriKey, () =>
+          repostMutation
+            .mutateAsync({
+              uri: postUri,
+              cid: postCid,
+              via: viaRepost,
+            })
+            .then(({uri}) => uri),
+        )
+        const repostUri = await recordUri
         return repostUri
       } else {
-        if (prevRepostUri) {
-          await unrepostMutation.mutateAsync({
-            postUri: postUri,
-            repostUri: prevRepostUri,
-          })
+        const createdUri = createdRepostUris.get(uriKey)
+        const repostUri =
+          prevRepostUri === PENDING_URI
+            ? await getCreatedUri(createdRepostUris, uriKey)
+            : prevRepostUri
+        if (repostUri) {
+          if (createdUri?.uri === repostUri) createdUri.isDeleting = true
+          try {
+            await unrepostMutation.mutateAsync({
+              postUri: postUri,
+              repostUri,
+            })
+          } catch (err) {
+            if (createdUri && createdRepostUris.get(uriKey) === createdUri) {
+              createdUri.isDeleting = false
+            }
+            throw err
+          }
+          removeCreatedUri(createdRepostUris, uriKey, createdUri, repostUri)
         }
         return undefined
       }
@@ -294,7 +408,7 @@ export function usePostRepostMutationQueue(
   const queueRepost = useCallback(() => {
     // optimistically update
     updatePostShadow(queryClient, postUri, {
-      repostUri: 'pending',
+      repostUri: PENDING_URI,
     })
     return queueToggle(true)
   }, [queryClient, postUri, queueToggle])
