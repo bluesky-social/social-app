@@ -198,11 +198,12 @@ export function Item({
   )
 }
 
-export function ItemText({children, style}: ItemTextProps) {
+export function ItemText({children, style, emoji}: ItemTextProps) {
   const t = useTheme()
   const {disabled, destructive} = useMenuItemContext()
   return (
     <Text
+      emoji={emoji}
       numberOfLines={1}
       ellipsizeMode="middle"
       style={[

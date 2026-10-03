@@ -301,15 +301,27 @@ export function Item({
   )
 }
 
-export function ItemText({children, style}: ItemTextProps) {
+export function ItemText({children, style, emoji}: ItemTextProps) {
   const t = useTheme()
   const {disabled, destructive} = useMenuItemContext()
   return (
     <Text
+      emoji={emoji}
+      numberOfLines={2}
       style={[
         a.flex_1,
         a.font_semi_bold,
         t.atoms.text_contrast_high,
+        /*
+         * The dropdown is width-capped to the viewport (see
+         * dropdown-menu-constrain-size), so unbreakable tokens of user text
+         * (hashtags, handles, display names) must break mid-token rather
+         * than force a horizontal overflow at the cap.
+         */
+        web({
+          overflowWrap: 'break-word',
+          wordBreak: 'break-word',
+        }),
         style,
         destructive && {color: t.palette.negative_500},
         disabled && t.atoms.text_contrast_low,
