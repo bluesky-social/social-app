@@ -1,46 +1,27 @@
-/**
- * Web IndexedDB storage for draft media.
- * Media is stored by localRefPath key (unique identifier stored in server draft).
- */
+/** Web IndexedDB storage for draft media and account-owned metadata. */
 import {createStore, del, get, keys, set} from 'idb-keyval'
 
 import {logger} from './logger'
+import {
+  type DraftMediaArtifact,
+  type DraftMediaMetadata,
+  type DraftMediaState,
+  isDraftMediaMetadata,
+} from './storageTypes'
 
 const DB_NAME = 'bsky-draft-media'
 const STORE_NAME = 'media'
 
 type MediaRecord = {
   blob: Blob
-  createdAt: string
+  /** Present on records created before lifecycle metadata was introduced. */
+  createdAt?: string
+  metadata?: DraftMediaMetadata
 }
 
 const store = createStore(DB_NAME, STORE_NAME)
 
-/**
- * Convert a path/URL to a Blob
- */
 async function toBlob(sourcePath: string): Promise<Blob> {
-  // Handle data URIs directly
-  if (sourcePath.startsWith('data:')) {
-    const response = await fetch(sourcePath)
-    return response.blob()
-  }
-
-  // Handle blob URLs
-  if (sourcePath.startsWith('blob:')) {
-    try {
-      const response = await fetch(sourcePath)
-      return response.blob()
-    } catch (e) {
-      logger.error('Failed to fetch blob URL - it may have been revoked', {
-        error: e,
-        sourcePath,
-      })
-      throw e
-    }
-  }
-
-  // Handle regular URLs
   const response = await fetch(sourcePath)
   if (!response.ok) {
     throw new Error(`Failed to fetch media: ${response.status}`)
@@ -48,69 +29,106 @@ async function toBlob(sourcePath: string): Promise<Blob> {
   return response.blob()
 }
 
-/**
- * Save a media file to IndexedDB by localRefPath key
- */
+export async function getMediaMetadata(
+  localRefPath: string,
+): Promise<DraftMediaMetadata | undefined> {
+  const record = await get<MediaRecord>(localRefPath, store)
+  return isDraftMediaMetadata(record?.metadata) ? record.metadata : undefined
+}
+
+export async function touchMediaMetadata(
+  localRefPath: string,
+  {
+    accountDid,
+    deviceId,
+    state,
+    now = Date.now(),
+    createdAt,
+  }: {
+    accountDid: string
+    deviceId: string
+    state: DraftMediaState
+    now?: number
+    createdAt?: string
+  },
+): Promise<void> {
+  const record = await get<MediaRecord>(localRefPath, store)
+  if (!record) {
+    throw new Error('Cannot touch metadata for missing draft media')
+  }
+
+  const touchedAt = new Date(now).toISOString()
+  const existing = isDraftMediaMetadata(record.metadata)
+    ? record.metadata
+    : undefined
+  const metadata: DraftMediaMetadata = {
+    localRefPath,
+    accountDid,
+    deviceId,
+    createdAt:
+      existing?.createdAt || createdAt || record.createdAt || touchedAt,
+    lastTouchedAt: touchedAt,
+    state,
+  }
+  await set(localRefPath, {...record, metadata}, store)
+}
+
 export async function saveMediaToLocal(
   localRefPath: string,
   sourcePath: string,
+  {
+    accountDid,
+    deviceId,
+    state,
+    now = Date.now(),
+  }: {
+    accountDid: string
+    deviceId: string
+    state: DraftMediaState
+    now?: number
+  },
 ): Promise<void> {
-  let blob: Blob
   try {
-    blob = await toBlob(sourcePath)
-  } catch (error) {
-    logger.error('Failed to convert source to blob', {
-      error,
-      localRefPath,
-      sourcePath,
-    })
-    throw error
-  }
-
-  try {
+    const blob = await toBlob(sourcePath)
+    const createdAt = new Date(now).toISOString()
     await set(
       localRefPath,
       {
         blob,
-        createdAt: new Date().toISOString(),
-      },
+        createdAt,
+        metadata: {
+          localRefPath,
+          accountDid,
+          deviceId,
+          createdAt,
+          lastTouchedAt: createdAt,
+          state,
+        },
+      } satisfies MediaRecord,
       store,
     )
-    // Update cache
     mediaExistsCache.set(localRefPath, true)
   } catch (error) {
-    logger.error('Failed to save media to IndexedDB', {error, localRefPath})
+    logger.error('Failed to save media to IndexedDB', {safeMessage: error})
     throw error
   }
 }
 
-/**
- * Track blob URLs created by loadMediaFromLocal for cleanup
- */
 const createdBlobUrls = new Set<string>()
 
-/**
- * Load a media file from IndexedDB
- * @returns A blob URL for the saved media
- */
 export async function loadMediaFromLocal(
   localRefPath: string,
 ): Promise<string> {
   const record = await get<MediaRecord>(localRefPath, store)
-
   if (!record) {
     throw new Error(`Media file not found: ${localRefPath}`)
   }
 
   const url = URL.createObjectURL(record.blob)
-  logger.debug('Created blob URL', {url})
   createdBlobUrls.add(url)
   return url
 }
 
-/**
- * Delete a media file from IndexedDB
- */
 export async function deleteMediaFromLocal(
   localRefPath: string,
 ): Promise<void> {
@@ -118,9 +136,23 @@ export async function deleteMediaFromLocal(
   mediaExistsCache.delete(localRefPath)
 }
 
-/**
- * Check if a media file exists in IndexedDB (synchronous check using cache)
- */
+export async function listMediaArtifacts(): Promise<DraftMediaArtifact[]> {
+  const artifacts: DraftMediaArtifact[] = []
+  for (const key of await keys(store)) {
+    if (typeof key !== 'string') continue
+    const record = await get<MediaRecord>(key, store)
+    if (!record) continue
+    artifacts.push({
+      localRefPath: key,
+      metadata: isDraftMediaMetadata(record.metadata)
+        ? record.metadata
+        : undefined,
+      fileCreatedAt: record.createdAt,
+    })
+  }
+  return artifacts
+}
+
 const mediaExistsCache = new Map<string, boolean>()
 let cachePopulated = false
 let populateCachePromise: Promise<void> | null = null
@@ -129,28 +161,23 @@ export function mediaExists(localRefPath: string): boolean {
   if (mediaExistsCache.has(localRefPath)) {
     return mediaExistsCache.get(localRefPath)!
   }
-  // If cache not populated yet, trigger async population
   if (!cachePopulated && !populateCachePromise) {
     populateCachePromise = populateCacheInternal()
   }
-  return false // Conservative: assume doesn't exist if not in cache
+  return false
 }
 
 async function populateCacheInternal(): Promise<void> {
   try {
-    const allKeys = await keys(store)
-    for (const key of allKeys) {
-      mediaExistsCache.set(key as string, true)
+    for (const key of await keys(store)) {
+      if (typeof key === 'string') mediaExistsCache.set(key, true)
     }
     cachePopulated = true
-  } catch (e) {
-    logger.warn('Failed to populate media cache', {error: e})
+  } catch (error) {
+    logger.warn('Failed to populate media cache', {safeMessage: error})
   }
 }
 
-/**
- * Ensure the media cache is populated. Call this before checking mediaExists.
- */
 export async function ensureMediaCachePopulated(): Promise<void> {
   if (cachePopulated) return
   if (!populateCachePromise) {
@@ -159,32 +186,20 @@ export async function ensureMediaCachePopulated(): Promise<void> {
   await populateCachePromise
 }
 
-/**
- * Clear the media exists cache (call when media is added/deleted)
- */
 export function clearMediaCache(): void {
   mediaExistsCache.clear()
   cachePopulated = false
   populateCachePromise = null
 }
 
-/**
- * Revoke a blob URL when done with it (to prevent memory leaks)
- */
 export function revokeMediaUrl(url: string): void {
   if (url.startsWith('blob:')) {
-    logger.debug('Revoking blob URL', {url})
     URL.revokeObjectURL(url)
     createdBlobUrls.delete(url)
   }
 }
 
-/**
- * Revoke all blob URLs created by loadMediaFromLocal.
- * Call this when closing the drafts list dialog to prevent memory leaks.
- */
 export function revokeAllMediaUrls(): void {
-  logger.debug(`Revoking ${createdBlobUrls.size} blob URLs`)
   for (const url of createdBlobUrls) {
     URL.revokeObjectURL(url)
   }
