@@ -210,6 +210,12 @@ export function usePostFeedQuery(
             cursor: undefined,
           }
 
+      /*
+       * The API lives in the query cache across same-account session bundle
+       * replacements. Keep its pagination state, but stop using the disposed
+       * bundle's client for subsequent pages.
+       */
+      api.setClient(client)
       const res = await api.fetch({cursor, limit: fetchLimit})
 
       /*
@@ -382,7 +388,7 @@ export function usePostFeedQuery(
   return query
 }
 
-export async function pollLatest(page: FeedPage | undefined) {
+export async function pollLatest(page: FeedPage | undefined, client: Client) {
   if (!page) {
     return false
   }
@@ -391,6 +397,7 @@ export async function pollLatest(page: FeedPage | undefined) {
   }
 
   logger.debug('usePostFeedQuery: pollLatest')
+  page.api.setClient(client)
   const post = await page.api.peekLatest()
   if (post) {
     const slices = page.tuner.tune([post], {
