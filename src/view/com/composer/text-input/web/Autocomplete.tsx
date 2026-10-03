@@ -11,11 +11,10 @@ import {
 import tippy, {type Instance as TippyInstance} from 'tippy.js'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {type ActorAutocompleteFn} from '#/state/queries/actor-autocomplete'
 import {atoms as a, useTheme} from '#/alf'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
-import {type app} from '#/lexicons'
+import type * as bsky from '#/types/bsky'
 
 interface MentionListRef {
   onKeyDown: (props: SuggestionKeyDownProps) => boolean
@@ -25,11 +24,19 @@ export interface AutocompleteRef {
   maybeClose: () => boolean
 }
 
+/**
+ * Adapter type for the tiptap mention suggestion plugin, which expects a
+ * function returning plain profile views rather than `AutocompleteItem`s.
+ */
+export type MentionAutocompleteFn = (opts: {
+  query: string
+}) => Promise<bsky.profile.AnyProfileView[]>
+
 export function createSuggestion({
   autocomplete,
   autocompleteRef,
 }: {
-  autocomplete: ActorAutocompleteFn
+  autocomplete: MentionAutocompleteFn
   autocompleteRef: React.Ref<AutocompleteRef>
 }): Omit<SuggestionOptions, 'editor'> {
   return {
@@ -205,7 +212,7 @@ function AutocompleteProfileCard({
   onHover,
   moderationOpts,
 }: {
-  profile: app.bsky.actor.defs.ProfileViewBasic
+  profile: bsky.profile.AnyProfileView
   isSelected: boolean
   onPress: () => void
   onHover: () => void
