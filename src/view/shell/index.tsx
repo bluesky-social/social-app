@@ -24,7 +24,7 @@ import {useCloseAnyActiveElement} from '#/state/util'
 import {ErrorBoundary} from '#/view/com/util/ErrorBoundary'
 import {Deactivated} from '#/screens/Deactivated'
 import {Takendown} from '#/screens/Takendown'
-import {atoms as a, select, useTheme} from '#/alf'
+import {atoms as a, select, useBreakpoints, useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
 import {AgeAssuranceRedirectDialog} from '#/components/ageAssurance/AgeAssuranceRedirectDialog'
 import {EmailDialog} from '#/components/dialogs/EmailDialog'
@@ -137,11 +137,20 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
   const setIsDrawerOpen = useSetDrawerOpen()
   const isDrawerSwipeDisabled = useIsDrawerSwipeDisabled()
   const winDim = useWindowDimensions()
+  const {gtMobile} = useBreakpoints()
+  const hasTabletSidebar = gtMobile
 
   const canGoBack = useNavigationState(state => !isStateAtTabRoot(state))
   const {hasSession} = useSession()
 
-  const swipeEnabled = !canGoBack && hasSession && !isDrawerSwipeDisabled
+  const swipeEnabled =
+    !hasTabletSidebar && !canGoBack && hasSession && !isDrawerSwipeDisabled
+
+  useEffect(() => {
+    if (hasTabletSidebar && isDrawerOpen) {
+      setIsDrawerOpen(false)
+    }
+  }, [hasTabletSidebar, isDrawerOpen, setIsDrawerOpen])
 
   const renderDrawerContent = useCallback(() => <DrawerContent />, [])
   const onOpenDrawer = useCallback(
@@ -186,7 +195,7 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
           return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
         }
       }}
-      open={isDrawerOpen}
+      open={isDrawerOpen && !hasTabletSidebar}
       onOpen={onOpenDrawer}
       onClose={onCloseDrawer}
       swipeEdgeWidth={winDim.width}

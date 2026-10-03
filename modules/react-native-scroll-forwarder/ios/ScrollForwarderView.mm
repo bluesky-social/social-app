@@ -293,44 +293,27 @@ static const CGFloat kMinimumVelocity = 5.0;
   }
 }
 
-/*
- * We use this component on profile pages. The screne consists of a header component, a scrollview with buttons to
- * switch between profile tabs, and a pager view (RNCPagerViewComponentView). Both the header and the tab bar are
- * inside the same RCTViewComponentView. The view heirarchy looks something like this:
- * - RCTViewComponentView
- * -- RNCPagerViewComponentView
- * ----- (Many views deep) RCTScrollViewComponentView
- * ------ RCTEnhancedScrollView
- * -- RCTViewComponentView
- * --- RCTViewComponentView
- * ---- ScrollForwarderView
- * --- RCTScrollViewComponentView
- * ---- RCTEnhancedScrollView
- *
- * We want to find that RCTScrollViewComponentView inside of the RNCPagerViewComponentView. To achieve this, we can
- * use self.superview.superview.superview to get to the root RCTViewComponentView, find the RNCPagerViewComponentView,
- * then iterate through that view's subviews until we find a RCTScrollViewComponentView.
- *
- * This isn't great, because if we reorder the React components, we'll need to update this logic. There's probably
- * an easier way to achieve this, similar to how we used to do it in Paper (ie, get the scroll view's tag and find that),
- * but this also comes with some benefits, eg being able to reduce a lot of the logic in the JS code and just find the
- * scrollview when subviews change.
+/**
+ * Find the profile pager next to the header, then its scroll view.
+ * Centering and clipping can introduce extra native header wrappers, so the
+ * common ancestor must not depend on a fixed number of superviews.
  */
 - (void)tryFindScrollView
 {
   [self removeCancelGestureRecognizers];
+  _svcv = nil;
   
-  // The root RCTViewComponentView
-  UIView *rootView = self.superview.superview.superview;
-  UIView *pagerView;
+  UIView *pagerView = nil;
   
   NSString *targetClsName = @"RNCPagerViewComponentView";
   Class targetCls = NSClassFromString(targetClsName);
 
-  for (UIView *subview in rootView.subviews) {
-    if ([subview isKindOfClass:targetCls]) {
-      pagerView = subview;
-      break;
+  for (UIView *ancestor = self.superview; ancestor && !pagerView; ancestor = ancestor.superview) {
+    for (UIView *subview in ancestor.subviews) {
+      if ([subview isKindOfClass:targetCls]) {
+        pagerView = subview;
+        break;
+      }
     }
   }
   

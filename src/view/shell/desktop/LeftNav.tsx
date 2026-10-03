@@ -1,5 +1,11 @@
 import {useCallback, useMemo, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
+import {
+  type GestureResponderEvent,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native'
+import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -7,8 +13,15 @@ import {useNavigation, useNavigationState} from '@react-navigation/native'
 
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
-import {getCurrentRoute, isTab} from '#/lib/routes/helpers'
+import {
+  getCurrentRoute,
+  getTabState,
+  isCurrentProfileRoute,
+  isTab,
+  TabState,
+} from '#/lib/routes/helpers'
 import {makeProfileLink} from '#/lib/routes/links'
+import {type SidebarTab} from '#/lib/routes/tab-to-nav-item'
 import {
   type CommonNavigatorParams,
   type NavigationProp,
@@ -79,20 +92,38 @@ import {
   UserCircle_Filled_Corner0_Rounded as UserCircleFilledIcon,
   UserCircle_Stroke2_Corner0_Rounded as UserCircleIcon,
 } from '#/components/icons/UserCircle'
-import {CENTER_COLUMN_OFFSET, CENTER_COLUMN_WIDTH} from '#/components/Layout'
+import {
+  CENTER_COLUMN_OFFSET,
+  CENTER_COLUMN_WIDTH,
+} from '#/components/Layout/const'
 import * as Menu from '#/components/Menu'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {type Events} from '#/analytics/metrics/types'
+import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
 import {isFollowingV2HomeDotEnabled} from '#/features/followingV2/eligibility'
 import {useActorStatus} from '#/features/liveNow'
 import {type app} from '#/lexicons'
 import {router} from '#/routes'
+import {getComposeButtonLayout} from './composeButtonLayout'
 
 const LARGE_ELEMENT_SIZE = 48
 const NAV_ICON_WIDTH = 28
+const NAV_ITEM_TO_TAB: Partial<
+  Record<Events['nav:click']['item'], SidebarTab>
+> = {
+  home: 'Home',
+  search: 'Search',
+  chat: 'Messages',
+  notifications: 'Notifications',
+  profile: 'MyProfile',
+  feeds: 'Feeds',
+  lists: 'Lists',
+  saved: 'Bookmarks',
+  settings: 'Settings',
+}
 
 export const LEFT_NAV_STANDARD_WIDTH = 240
 export const LEFT_NAV_MINIMAL_WIDTH = 80
@@ -247,6 +278,25 @@ function SwitchMenuItems({
   signOutPromptControl: DialogControlProps
 }) {
   const {t: l} = useLingui()
+  const {currentAccount} = useSession()
+  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
+  const navigation = useNavigation<NavigationProp>()
+  const {control} = Menu.useMenuContext()
+  const currentRouteInfo = useNavigationState(state => {
+    if (!state) {
+      return {name: 'Home'}
+    }
+    return getCurrentRoute(state)
+  })
+  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
+  const isCurrent = isCurrentProfileRoute({
+    routeName: currentRouteInfo.name,
+    profileName:
+      currentRouteInfo.name === 'Profile'
+        ? (currentRouteInfo.params as CommonNavigatorParams['Profile']).name
+        : undefined,
+    currentHandle: currentAccount?.handle,
+  })
   const {setShowLoggedOut} = useLoggedOutViewControls()
   const closeEverything = useCloseAllActiveElements()
 
@@ -255,26 +305,79 @@ function SwitchMenuItems({
     closeEverything()
   }
 
+  const onProfilePress = (e: GestureResponderEvent) => {
+    if (IS_WEB) {
+      const mouseEvent = e as unknown as React.MouseEvent<
+        HTMLAnchorElement,
+        MouseEvent
+      >
+      if (mouseEvent.ctrlKey || mouseEvent.metaKey || mouseEvent.altKey) {
+        return
+      }
+      mouseEvent.preventDefault()
+    }
+
+    const onNavigate = () => {
+      if (isCurrent) {
+        emitSoftReset()
+      } else {
+        const [screen, params] = router.matchPath(profileLink)
+        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
+        navigation.navigate(screen, params, {pop: true})
+      }
+    }
+
+    if (IS_IOS) {
+      onNavigate()
+    } else if (IS_NATIVE) {
+      control.close()
+      onNavigate()
+    } else {
+      control.close(onNavigate)
+    }
+  }
+
   return (
     <Menu.Outer>
       {accounts && accounts.length > 0 && (
         <>
+          <Menu.LabelText>
+            <Trans>Switch account</Trans>
+          </Menu.LabelText>
           <Menu.Group>
-            <Menu.LabelText>
-              <Trans>Switch account</Trans>
-            </Menu.LabelText>
-            {accounts.map(other => (
-              <SwitchMenuItem
-                key={other.account.did}
-                account={other.account}
-                profile={other.profile}
-              />
+            {/* Native groups require Menu.Item as a direct child. */}
+            {accounts.map(({account, profile}) => (
+              <Menu.Item
+                key={account.did}
+                disabled={!!pendingDid}
+                style={[a.gap_sm, {minWidth: 150}]}
+                label={l`Switch to ${sanitizeHandle(
+                  profile?.handle ?? account.handle,
+                  '@',
+                )}`}
+                onPress={() =>
+                  void onPressSwitchAccount(account, 'SwitchAccount')
+                }>
+                <SwitchMenuItemAvatar profile={profile} />
+                <Menu.ItemText>
+                  {sanitizeHandle(profile?.handle ?? account.handle, '@')}
+                </Menu.ItemText>
+              </Menu.Item>
             ))}
           </Menu.Group>
           <Menu.Divider />
         </>
       )}
-      <SwitcherMenuProfileLink />
+      <Menu.Item
+        label={l`Go to profile`}
+        onPress={onProfilePress}
+        // @ts-expect-error href is web-only -prf
+        href={profileLink}>
+        <Menu.ItemIcon icon={UserCircleIcon} />
+        <Menu.ItemText>
+          <Trans>Go to profile</Trans>
+        </Menu.ItemText>
+      </Menu.Item>
       <Menu.Item label={l`Add another account`} onPress={onAddAnotherAccount}>
         <Menu.ItemIcon icon={PlusIcon} />
         <Menu.ItemText>
@@ -291,96 +394,23 @@ function SwitchMenuItems({
   )
 }
 
-function SwitcherMenuProfileLink() {
-  const {t: l} = useLingui()
-  const {currentAccount} = useSession()
-  const navigation = useNavigation()
-  const context = Menu.useMenuContext()
-  const profileLink = currentAccount ? makeProfileLink(currentAccount) : '/'
-  const [pathName] = useMemo(() => router.matchPath(profileLink), [profileLink])
-  const currentRouteInfo = useNavigationState(state => {
-    if (!state) {
-      return {name: 'Home'}
-    }
-    return getCurrentRoute(state)
-  })
-  const isCurrent = useMemo(() => {
-    if (currentRouteInfo.name === 'Profile') {
-      return (
-        isTab(currentRouteInfo.name, pathName) &&
-        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
-      )
-    } else {
-      return isTab(currentRouteInfo.name, pathName)
-    }
-  }, [currentAccount?.handle, currentRouteInfo, pathName])
-
-  const onProfilePress = useCallback(
-    (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-      if (e.ctrlKey || e.metaKey || e.altKey) {
-        return
-      }
-      e.preventDefault()
-      context.control.close()
-      if (isCurrent) {
-        emitSoftReset()
-      } else {
-        const [screen, params] = router.matchPath(profileLink)
-        // @ts-expect-error TODO: type matchPath well enough that it can be plugged into navigation.navigate directly
-        navigation.navigate(screen, params, {pop: true})
-      }
-    },
-    [navigation, profileLink, isCurrent, context],
-  )
-  return (
-    <Menu.Item
-      label={l`Go to profile`}
-      // @ts-expect-error The function signature differs on web -inb
-      onPress={onProfilePress}
-      href={profileLink}>
-      <Menu.ItemIcon icon={UserCircleIcon} />
-      <Menu.ItemText>
-        <Trans>Go to profile</Trans>
-      </Menu.ItemText>
-    </Menu.Item>
-  )
-}
-
-function SwitchMenuItem({
-  account,
+function SwitchMenuItemAvatar({
   profile,
 }: {
-  account: SessionAccount
   profile: app.bsky.actor.defs.ProfileViewDetailed | undefined
 }) {
-  const {t: l} = useLingui()
-  const {onPressSwitchAccount, pendingDid} = useAccountSwitcher()
   const {isActive: live} = useActorStatus(profile)
 
   return (
-    <Menu.Item
-      disabled={!!pendingDid}
-      style={[a.gap_sm, {minWidth: 150}]}
-      key={account.did}
-      label={l`Switch to ${sanitizeHandle(
-        profile?.handle ?? account.handle,
-        '@',
-      )}`}
-      onPress={() => void onPressSwitchAccount(account, 'SwitchAccount')}>
-      <View>
-        <UserAvatar
-          avatar={profile?.avatar}
-          size={20}
-          type={profile?.associated?.labeler ? 'labeler' : 'user'}
-          live={live}
-          hideLiveBadge
-        />
-      </View>
-      <Menu.ItemText>
-        {sanitizeHandle(profile?.handle ?? account.handle, '@')}
-      </Menu.ItemText>
-    </Menu.Item>
+    <View>
+      <UserAvatar
+        avatar={profile?.avatar}
+        size={20}
+        type={profile?.associated?.labeler ? 'labeler' : 'user'}
+        live={live}
+        hideLiveBadge
+      />
+    </View>
   )
 }
 
@@ -395,6 +425,7 @@ interface NavItemProps {
   label: string
   minimal: boolean
   navItem: Events['nav:click']['item']
+  onNavigateTab?: (tab: SidebarTab) => void
 }
 function NavItem({
   count,
@@ -404,6 +435,7 @@ function NavItem({
   label,
   minimal,
   navItem,
+  onNavigateTab,
 }: NavItemProps) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -411,18 +443,25 @@ function NavItem({
   const {currentAccount} = useSession()
 
   const [pathName] = useMemo(() => router.matchPath(href), [href])
-  const currentRouteInfo = useNavigationState(state => {
-    if (!state) {
-      return {name: 'Home'}
-    }
-    return getCurrentRoute(state)
-  })
-  let isCurrent =
-    currentRouteInfo.name === 'Profile'
-      ? isTab(currentRouteInfo.name, pathName) &&
-        (currentRouteInfo.params as CommonNavigatorParams['Profile']).name ===
-          currentAccount?.handle
+  const navigationState = useNavigationState(state => state)
+  const currentRouteInfo = getCurrentRoute(navigationState)
+  const tab = NAV_ITEM_TO_TAB[navItem]
+  const isCurrent =
+    navItem === 'profile'
+      ? isCurrentProfileRoute({
+          routeName: currentRouteInfo.name,
+          profileName:
+            currentRouteInfo.name === 'Profile'
+              ? (currentRouteInfo.params as CommonNavigatorParams['Profile'])
+                  .name
+              : undefined,
+          currentHandle: currentAccount?.handle,
+        })
       : isTab(currentRouteInfo.name, pathName)
+  const isSelected =
+    IS_NATIVE && tab
+      ? getTabState(navigationState, tab) !== TabState.Outside
+      : isCurrent
   const isRelated = currentRouteInfo.name.startsWith(pathName)
   const navigation = useNavigation<NavigationProp>()
   const onPressWrapped = useCallback(
@@ -431,7 +470,11 @@ function NavItem({
       if (e.ctrlKey || e.metaKey || e.altKey) {
         return
       }
-      e.preventDefault()
+      e.preventDefault?.()
+      if (tab && onNavigateTab) {
+        onNavigateTab(tab)
+        return
+      }
       if (isCurrent) {
         emitSoftReset()
       } else {
@@ -440,10 +483,11 @@ function NavItem({
         navigation.navigate(screen, params, {pop: true})
       }
     },
-    [navigation, href, isCurrent, ax, navItem],
+    [navigation, href, isCurrent, ax, navItem, onNavigateTab, tab],
   )
 
-  const Icon = isCurrent || isRelated ? icons.active : icons.inactive
+  const Icon =
+    isSelected || (!IS_NATIVE && isRelated) ? icons.active : icons.inactive
 
   return (
     <PressableWithHover
@@ -463,6 +507,7 @@ function NavItem({
       dataSet={{noUnderline: 1}}
       role="link"
       accessibilityLabel={label}
+      accessibilityState={IS_NATIVE ? {selected: isSelected} : undefined}
       accessibilityHint="">
       <View
         style={[
@@ -530,7 +575,7 @@ function NavItem({
         ) : null}
       </View>
       {!minimal && (
-        <Text style={[a.text_xl, isCurrent ? a.font_bold : a.font_normal]}>
+        <Text style={[a.text_xl, isSelected ? a.font_bold : a.font_normal]}>
           {label}
         </Text>
       )}
@@ -581,18 +626,17 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
   const onPressCompose = async () =>
     openComposer({mention: await getProfileHandle(), logContext: 'Fab'})
 
+  const layout = getComposeButtonLayout({minimal, isNative: IS_NATIVE})
+
   return (
-    <View style={minimal ? [a.px_sm, a.pt_lg] : [a.flex_row, a.pl_md, a.pt_lg]}>
+    <View style={layout.container}>
       <Button
         disabled={isFetchingHandle}
         label={l`Compose new post`}
         onPress={() => void onPressCompose()}
         size="large"
         color="primary"
-        style={[
-          a.rounded_full,
-          minimal && {width: LARGE_ELEMENT_SIZE, height: LARGE_ELEMENT_SIZE},
-        ]}>
+        style={layout.button}>
         <ButtonIcon icon={EditBigIcon} size={minimal ? 'lg' : 'sm'} />
         {!minimal && (
           <ButtonText>
@@ -604,7 +648,13 @@ function ComposeBtn({minimal}: {minimal: boolean}) {
   )
 }
 
-export function DesktopLeftNav({routeName}: {routeName: string}) {
+export function DesktopLeftNav({
+  routeName,
+  onNavigateTab,
+}: {
+  routeName: string
+  onNavigateTab?: (tab: SidebarTab) => void
+}) {
   const {hasSession, currentAccount} = useSession()
   const {t: l} = useLingui()
   const ax = useAnalytics()
@@ -614,12 +664,15 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
   // splitview uses the minimal variant of the leftnav. unfortunately there's no easy
   // way to thread this data through because of the view hierarchy, so just check the route name
   const isMessagesRelatedScreen =
-    routeName.startsWith('Messages') && aa.state.access === aa.Access.Full
+    !IS_NATIVE &&
+    routeName.startsWith('Messages') &&
+    aa.state.access === aa.Access.Full
   const {leftNavMinimal: leftNavMinimalBreakpoint, centerColumnOffset} =
     useLayoutBreakpoints()
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
   const hasHomeBadge = useHomeBadge()
+  const insets = useSafeAreaInsets()
 
   const leftNavMinimal = isMessagesRelatedScreen || leftNavMinimalBreakpoint
 
@@ -627,36 +680,8 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
     return null
   }
 
-  return (
-    <View
-      role="navigation"
-      style={[
-        a.fixed,
-        a.top_0,
-        a.p_lg,
-        styles.leftNav,
-        !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
-        leftNavMinimal && [
-          {width: LEFT_NAV_MINIMAL_WIDTH},
-          a.h_full,
-          a.align_center,
-          web(a.overflow_x_hidden),
-        ],
-        {
-          transform: [
-            {
-              translateX:
-                -(CENTER_COLUMN_WIDTH / 2) +
-                (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
-                (isMessagesRelatedScreen && !leftNavMinimalBreakpoint
-                  ? LEFT_NAV_MINIMAL_WIDTH - LEFT_NAV_STANDARD_WIDTH
-                  : 0),
-            },
-            {translateX: '-100%'},
-            ...a.scrollbar_offset.transform,
-          ],
-        },
-      ]}>
+  const content = (
+    <>
       {hasSession ? (
         <ProfileCard minimal={leftNavMinimal} />
       ) : !leftNavMinimal ? (
@@ -670,6 +695,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             label={l`Home`}
             href="/"
             navItem="home"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
             hasNew={hasHomeBadge && isFollowingV2HomeDotEnabled(ax)}
             icons={{
@@ -681,6 +707,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             label={l`Explore`}
             href="/search"
             navItem="search"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
             icons={{
               inactive: MagnifyingGlassIcon,
@@ -691,83 +718,108 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
             label={l`Notifications`}
             href="/notifications"
             navItem="notifications"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
             count={numUnreadNotifications}
-            icons={{
-              inactive: BellIcon,
-              active: BellFilledIcon,
-            }}
+            icons={{inactive: BellIcon, active: BellFilledIcon}}
           />
           <NavItem
             label={l`Chat`}
             href="/messages"
             navItem="chat"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
             count={
               aa.flags.chatDisabled ? undefined : numUnreadMessages.numUnread
             }
             hasNew={!aa.flags.chatDisabled && numUnreadMessages.hasNew}
-            icons={{
-              inactive: MessageIcon,
-              active: MessageFilledIcon,
-            }}
+            icons={{inactive: MessageIcon, active: MessageFilledIcon}}
           />
           <NavItem
             label={l`Feeds`}
             href="/feeds"
             navItem="feeds"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
-            icons={{
-              inactive: HashtagIcon,
-              active: HashtagFilledIcon,
-            }}
+            icons={{inactive: HashtagIcon, active: HashtagFilledIcon}}
           />
           <NavItem
             label={l`Lists`}
             href="/lists"
             navItem="lists"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
-            icons={{
-              inactive: ListIcon,
-              active: ListFilledIcon,
-            }}
+            icons={{inactive: ListIcon, active: ListFilledIcon}}
           />
           <NavItem
-            label={l({
-              message: 'Saved',
-              context: 'link to bookmarks screen',
-            })}
+            label={l({message: 'Saved', context: 'link to bookmarks screen'})}
             href="/saved"
             navItem="saved"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
-            icons={{
-              inactive: BookmarkIcon,
-              active: BookmarkFilledIcon,
-            }}
+            icons={{inactive: BookmarkIcon, active: BookmarkFilledIcon}}
           />
           <NavItem
             label={l`Profile`}
             href={makeProfileLink(currentAccount!)}
             navItem="profile"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
-            icons={{
-              inactive: UserCircleIcon,
-              active: UserCircleFilledIcon,
-            }}
+            icons={{inactive: UserCircleIcon, active: UserCircleFilledIcon}}
           />
           <NavItem
             label={l`Settings`}
             href="/settings"
             navItem="settings"
+            onNavigateTab={onNavigateTab}
             minimal={leftNavMinimal}
-            icons={{
-              inactive: SettingsIcon,
-              active: SettingsFilledIcon,
-            }}
+            icons={{inactive: SettingsIcon, active: SettingsFilledIcon}}
           />
-
           <ComposeBtn minimal={leftNavMinimal} />
         </>
+      )}
+    </>
+  )
+
+  return (
+    <View
+      role="navigation"
+      pointerEvents={IS_NATIVE ? 'box-none' : undefined}
+      style={[
+        a.fixed,
+        a.top_0,
+        a.p_lg,
+        styles.leftNav,
+        IS_NATIVE && {top: insets.top, bottom: insets.bottom},
+        !hasSession && !leftNavMinimal && {width: LEFT_NAV_PWI_WIDTH},
+        leftNavMinimal && [
+          {width: LEFT_NAV_MINIMAL_WIDTH},
+          !IS_NATIVE && a.h_full,
+          a.align_center,
+          web(a.overflow_x_hidden),
+        ],
+        web({maxHeight: '100vh', overflowY: 'auto', scrollbarWidth: 'thin'}),
+        {
+          transform: [
+            {
+              translateX:
+                -(CENTER_COLUMN_WIDTH / 2) +
+                (centerColumnOffset ? CENTER_COLUMN_OFFSET : 0) +
+                (!IS_NATIVE &&
+                isMessagesRelatedScreen &&
+                !leftNavMinimalBreakpoint
+                  ? LEFT_NAV_MINIMAL_WIDTH - LEFT_NAV_STANDARD_WIDTH
+                  : 0),
+            },
+            {translateX: '-100%'},
+            ...a.scrollbar_offset.transform,
+          ],
+        },
+      ]}>
+      {IS_NATIVE ? (
+        <ScrollView style={[a.flex_1, a.w_full]}>{content}</ScrollView>
+      ) : (
+        content
       )}
     </View>
   )
@@ -777,9 +829,5 @@ const styles = StyleSheet.create({
   leftNav: {
     left: '50%',
     width: LEFT_NAV_STANDARD_WIDTH,
-    maxHeight: '100vh',
-    // @ts-expect-error web only
-    overflowY: 'auto',
-    scrollbarWidth: 'thin',
   },
 })

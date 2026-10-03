@@ -111,6 +111,10 @@ export type BottomTabNavigatorParams = CommonNavigatorParams & {
   NotificationsTab: undefined
   MyProfileTab: undefined
   MessagesTab: undefined
+  FeedsTab: undefined
+  ListsTab: undefined
+  BookmarksTab: undefined
+  SettingsTab: undefined
 }
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
@@ -159,6 +163,10 @@ export type AllNavigatorParams = CommonNavigatorParams & {
   Notifications: undefined
   MyProfileTab: undefined
   MessagesTab: undefined
+  FeedsTab: undefined
+  ListsTab: undefined
+  BookmarksTab: undefined
+  SettingsTab: undefined
   Messages: {
     pushToConversation?: string
     pushToNewGroupChat?: boolean
