@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react'
 import type * as AgeRange from 'expo-age-range'
 import {useLingui} from '@lingui/react/macro'
 
+import {withCleanup} from '#/lib/async/withCleanup'
 import {useSession} from '#/state/session'
 import {type DialogControlProps} from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
@@ -94,11 +95,14 @@ export function useAgeAssuranceVerificationFlow({
       // Show a loading state while the OS age prompt is up.
       setIsVerifying(true)
       let signals: AgeRange.AgeRangeResponse | undefined
-      try {
-        signals = await getDeviceSignals()
-      } finally {
-        setIsVerifying(false)
-      }
+      await withCleanup(
+        async () => {
+          signals = await getDeviceSignals()
+        },
+        () => {
+          setIsVerifying(false)
+        },
+      )
       if (signals) {
         const {assuredAge} = getAgeAssuranceDataFromDeviceSignals(
           region,
