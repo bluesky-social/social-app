@@ -172,7 +172,7 @@ msgstr ""
 #. placeholder {0}: numUnreadNotifications ?? 0
 #: src/view/shell/bottom-bar/BottomBar.tsx:255
 #: src/view/shell/bottom-bar/BottomBar.tsx:287
-#: src/view/shell/Drawer.tsx:560
+#: src/view/shell/Drawer.tsx:563
 msgid "{0, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
@@ -884,13 +884,13 @@ msgstr "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} 
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
-#: src/view/shell/Drawer.tsx:156
+#: src/view/shell/Drawer.tsx:159
 msgid "<0>{0}</0> {1, plural, one {follower} other {followers}}"
 msgstr ""
 
 #. placeholder {0}: formatCount(i18n, profile?.followsCount ?? 0)
 #. placeholder {1}: profile?.followsCount || 0
-#: src/view/shell/Drawer.tsx:167
+#: src/view/shell/Drawer.tsx:170
 msgid "<0>{0}</0> {1, plural, one {following} other {following}}"
 msgstr ""
 
@@ -1280,7 +1280,7 @@ msgstr ""
 msgid "Add App Password"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:170
+#: src/screens/Settings/AutomationLabelSettings.tsx:171
 msgid "Add automation label to account"
 msgstr "Add automation label to account"
 
@@ -1373,7 +1373,7 @@ msgstr ""
 msgid "Add to lists"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:121
+#: src/components/PostControls/BookmarkButton.tsx:124
 msgid "Add to saved posts"
 msgstr ""
 
@@ -2092,7 +2092,7 @@ msgid "Automation label"
 msgstr "Automation label"
 
 #: src/Navigation.tsx:446
-#: src/screens/Settings/AutomationLabelSettings.tsx:103
+#: src/screens/Settings/AutomationLabelSettings.tsx:104
 msgid "Automation Label"
 msgstr "Automation Label"
 
@@ -2370,7 +2370,7 @@ msgstr ""
 msgid "Blocking will not prevent labels from being applied on your account, but it will stop this account from replying in your threads or interacting with you."
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:175
+#: src/view/com/auth/SplashScreen.web.tsx:174
 msgid "Blog"
 msgstr ""
 
@@ -2537,11 +2537,11 @@ msgstr ""
 msgid "Browse topic {displayName}"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:170
+#: src/view/com/auth/SplashScreen.web.tsx:169
 msgid "Business"
 msgstr ""
 
-#: src/screens/Bookmarks.tsx:293
+#: src/screens/Bookmarks.tsx:296
 msgid "Button to go back to the home timeline"
 msgstr ""
 
@@ -2802,7 +2802,7 @@ msgstr "Channel"
 #: src/Navigation.tsx:533
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
 #: src/view/shell/desktop/LeftNav.tsx:702
-#: src/view/shell/Drawer.tsx:528
+#: src/view/shell/Drawer.tsx:531
 msgid "Chat"
 msgstr ""
 
@@ -3771,7 +3771,7 @@ msgstr "Create a Starter Pack for me"
 #: src/screens/Messages/JoinRequest.tsx:318
 #: src/screens/Signup/index.tsx:139
 #: src/view/com/auth/SplashScreen.tsx:108
-#: src/view/com/auth/SplashScreen.web.tsx:117
+#: src/view/com/auth/SplashScreen.web.tsx:116
 #: src/view/shell/bottom-bar/BottomBar.tsx:355
 #: src/view/shell/bottom-bar/BottomBar.tsx:359
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:248
@@ -3825,7 +3825,7 @@ msgstr ""
 
 #: src/screens/Messages/JoinRequest.tsx:312
 #: src/view/com/auth/SplashScreen.tsx:89
-#: src/view/com/auth/SplashScreen.web.tsx:109
+#: src/view/com/auth/SplashScreen.web.tsx:108
 msgid "Create new account"
 msgstr ""
 
@@ -4358,7 +4358,7 @@ msgstr ""
 msgid "Double tap to close the dialog"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1235
+#: src/screens/VideoFeed/index.tsx:1247
 msgid "Double tap to like"
 msgstr ""
 
@@ -4900,7 +4900,7 @@ msgstr ""
 msgid "Expand post text"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1111
+#: src/screens/VideoFeed/index.tsx:1123
 msgid "Expands or collapses post text"
 msgstr ""
 
@@ -4946,7 +4946,7 @@ msgstr ""
 #: src/Navigation.tsx:793
 #: src/screens/Search/Shell.tsx:549
 #: src/view/shell/desktop/LeftNav.tsx:681
-#: src/view/shell/Drawer.tsx:476
+#: src/view/shell/Drawer.tsx:479
 msgid "Explore"
 msgstr ""
 
@@ -5370,7 +5370,7 @@ msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:109
 #: src/view/shell/desktop/RightNav.tsx:110
-#: src/view/shell/Drawer.tsx:430
+#: src/view/shell/Drawer.tsx:433
 msgid "Feedback"
 msgstr ""
 
@@ -5388,7 +5388,7 @@ msgstr ""
 #: src/view/screens/Feeds.tsx:505
 #: src/view/screens/Profile.tsx:240
 #: src/view/shell/desktop/LeftNav.tsx:716
-#: src/view/shell/Drawer.tsx:592
+#: src/view/shell/Drawer.tsx:595
 msgid "Feeds"
 msgstr ""
 
@@ -5565,7 +5565,7 @@ msgstr "Focus the search field"
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:416
-#: src/screens/VideoFeed/index.tsx:994
+#: src/screens/VideoFeed/index.tsx:1006
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
 #: src/view/com/notifications/NotificationFeedItem.tsx:897
 msgid "Follow"
@@ -5581,7 +5581,7 @@ msgstr ""
 msgid "Follow {displayName}"
 msgstr "Follow {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:973
+#: src/screens/VideoFeed/index.tsx:985
 msgid "Follow {handle}"
 msgstr ""
 
@@ -5680,7 +5680,7 @@ msgstr ""
 #: src/components/ProfileHoverCard/index.web.tsx:513
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:412
-#: src/screens/VideoFeed/index.tsx:992
+#: src/screens/VideoFeed/index.tsx:1004
 #: src/view/com/notifications/NotificationFeedItem.tsx:869
 #: src/view/com/notifications/NotificationFeedItem.tsx:885
 msgid "Following"
@@ -5706,7 +5706,7 @@ msgstr ""
 msgid "Following {displayName}"
 msgstr "Following {displayName}"
 
-#: src/screens/VideoFeed/index.tsx:972
+#: src/screens/VideoFeed/index.tsx:984
 msgid "Following {handle}"
 msgstr ""
 
@@ -5855,7 +5855,7 @@ msgstr ""
 msgid "Get early access to experimental features we’re testing."
 msgstr "Get early access to experimental features we’re testing."
 
-#: src/view/shell/Drawer.tsx:434
+#: src/view/shell/Drawer.tsx:437
 msgid "Get help"
 msgstr ""
 
@@ -5978,8 +5978,8 @@ msgstr ""
 #: src/screens/ProfileList/components/ErrorScreen.tsx:35
 #: src/screens/ProfileList/components/ErrorScreen.tsx:41
 #: src/screens/VideoFeed/components/Header.tsx:163
-#: src/screens/VideoFeed/index.tsx:1296
-#: src/screens/VideoFeed/index.tsx:1300
+#: src/screens/VideoFeed/index.tsx:1308
+#: src/screens/VideoFeed/index.tsx:1312
 #: src/view/com/auth/LoggedOut.tsx:127
 #: src/view/com/profile/ProfileFollowers.tsx:225
 #: src/view/com/profile/ProfileFollowers.tsx:226
@@ -6003,7 +6003,7 @@ msgstr ""
 msgid "Go back to previous step"
 msgstr ""
 
-#: src/screens/Bookmarks.tsx:294
+#: src/screens/Bookmarks.tsx:297
 #: src/view/screens/NotFound.tsx:51
 #: src/view/screens/NotFound.tsx:52
 #: src/view/screens/NotFound.tsx:57
@@ -6281,7 +6281,7 @@ msgstr ""
 #: src/screens/Settings/Settings.tsx:263
 #: src/view/shell/desktop/RightNav.tsx:130
 #: src/view/shell/desktop/RightNav.tsx:133
-#: src/view/shell/Drawer.tsx:443
+#: src/view/shell/Drawer.tsx:446
 msgid "Help"
 msgstr ""
 
@@ -6311,7 +6311,7 @@ msgstr ""
 msgid "Hidden"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:774
+#: src/screens/VideoFeed/index.tsx:786
 msgid "Hidden by your moderation settings."
 msgstr ""
 
@@ -6466,7 +6466,7 @@ msgstr ""
 #: src/Navigation.tsx:809
 #: src/view/shell/bottom-bar/BottomBar.tsx:200
 #: src/view/shell/desktop/LeftNav.tsx:670
-#: src/view/shell/Drawer.tsx:502
+#: src/view/shell/Drawer.tsx:505
 msgid "Home"
 msgstr ""
 
@@ -6854,7 +6854,7 @@ msgid "Invite code not accepted. Check that you input it correctly and try again
 msgstr ""
 
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:359
-#: src/view/shell/Drawer.tsx:122
+#: src/view/shell/Drawer.tsx:125
 msgid "Invite friends"
 msgstr "Invite friends"
 
@@ -6943,7 +6943,7 @@ msgid "Job ID: {0}"
 msgstr ""
 
 #. Link to a page with job openings at Bluesky
-#: src/view/com/auth/SplashScreen.web.tsx:180
+#: src/view/com/auth/SplashScreen.web.tsx:179
 msgid "Jobs"
 msgstr ""
 
@@ -7085,7 +7085,7 @@ msgstr "Learn more about <0>how to use advanced search</0>."
 msgid "Learn more about age assurance"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:168
+#: src/view/com/auth/SplashScreen.web.tsx:167
 msgid "Learn more about Bluesky"
 msgstr ""
 
@@ -7426,7 +7426,7 @@ msgstr ""
 #: src/view/screens/Profile.tsx:234
 #: src/view/screens/Profile.tsx:242
 #: src/view/shell/desktop/LeftNav.tsx:726
-#: src/view/shell/Drawer.tsx:607
+#: src/view/shell/Drawer.tsx:610
 msgid "Lists"
 msgstr ""
 
@@ -7486,6 +7486,7 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/components/NewPostsPill/index.tsx:168
+#: src/features/followingV2/home/FeedPage.tsx:175
 #: src/screens/CustomFeed/index.tsx:208
 #: src/screens/Profile/Sections/Feed.tsx:121
 #: src/screens/ProfileList/FeedSection.tsx:113
@@ -7547,7 +7548,7 @@ msgid "Logo by @sawaratsuki.bsky.social"
 msgstr ""
 
 #: src/view/shell/desktop/RightNav.tsx:139
-#: src/view/shell/Drawer.tsx:771
+#: src/view/shell/Drawer.tsx:774
 msgid "Logo by <0>@sawaratsuki.bsky.social</0>"
 msgstr ""
 
@@ -8079,7 +8080,7 @@ msgstr "Navigate to Starter Pack"
 msgid "Navigates to the next screen"
 msgstr ""
 
-#: src/view/shell/Drawer.tsx:93
+#: src/view/shell/Drawer.tsx:96
 msgid "Navigates to your profile"
 msgstr ""
 
@@ -8217,6 +8218,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
+#: src/features/followingV2/home/FeedPage.tsx:186
 #: src/view/com/feeds/FeedPage.tsx:191
 #: src/view/shell/desktop/LeftNav.tsx:599
 msgctxt "action"
@@ -8610,7 +8612,7 @@ msgstr ""
 msgid "Nothing on your account is restricted right now. Strikes from violations come off your record over time."
 msgstr "Nothing on your account is restricted right now. Strikes from violations come off your record over time."
 
-#: src/screens/Bookmarks.tsx:290
+#: src/screens/Bookmarks.tsx:293
 msgid "Nothing saved yet"
 msgstr ""
 
@@ -8642,7 +8644,7 @@ msgstr ""
 #: src/view/screens/Notifications.tsx:128
 #: src/view/shell/bottom-bar/BottomBar.tsx:283
 #: src/view/shell/desktop/LeftNav.tsx:691
-#: src/view/shell/Drawer.tsx:555
+#: src/view/shell/Drawer.tsx:558
 msgid "Notifications"
 msgstr ""
 
@@ -9018,13 +9020,13 @@ msgstr "Opens device gallery to select up to {MAX_GALLERY_IMAGES, plural, other 
 
 #: src/screens/Messages/JoinRequest.tsx:313
 #: src/view/com/auth/SplashScreen.tsx:91
-#: src/view/com/auth/SplashScreen.web.tsx:111
+#: src/view/com/auth/SplashScreen.web.tsx:110
 msgid "Opens flow to create a new Bluesky account"
 msgstr ""
 
 #: src/screens/Messages/JoinRequest.tsx:299
 #: src/view/com/auth/SplashScreen.tsx:120
-#: src/view/com/auth/SplashScreen.web.tsx:125
+#: src/view/com/auth/SplashScreen.web.tsx:124
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
@@ -9066,7 +9068,7 @@ msgstr "Opens the find and invite friends settings"
 msgid "Opens the GIF picker dialog"
 msgstr "Opens the GIF picker dialog"
 
-#: src/view/shell/Drawer.tsx:124
+#: src/view/shell/Drawer.tsx:127
 msgid "Opens the invite friends sheet to share your profile"
 msgstr "Opens the invite friends sheet to share your profile"
 
@@ -9683,7 +9685,7 @@ msgstr ""
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:135
 #: src/screens/PostThread/components/ThreadItemPost.tsx:121
 #: src/screens/PostThread/components/ThreadItemTreePost.tsx:112
-#: src/screens/VideoFeed/index.tsx:565
+#: src/screens/VideoFeed/index.tsx:577
 msgid "Post has been deleted"
 msgstr ""
 
@@ -9844,8 +9846,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:102
 #: src/screens/Settings/AboutSettings.tsx:105
 #: src/view/screens/PrivacyPolicy.tsx:25
-#: src/view/shell/Drawer.tsx:766
-#: src/view/shell/Drawer.tsx:767
+#: src/view/shell/Drawer.tsx:769
+#: src/view/shell/Drawer.tsx:770
 msgid "Privacy Policy"
 msgstr ""
 
@@ -9871,8 +9873,8 @@ msgstr ""
 
 #: src/view/shell/bottom-bar/BottomBar.tsx:326
 #: src/view/shell/desktop/LeftNav.tsx:749
-#: src/view/shell/Drawer.tsx:92
-#: src/view/shell/Drawer.tsx:658
+#: src/view/shell/Drawer.tsx:95
+#: src/view/shell/Drawer.tsx:661
 msgid "Profile"
 msgstr ""
 
@@ -10039,11 +10041,11 @@ msgstr "Read about how to use advanced search filters"
 msgid "Read blog post"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1112
+#: src/screens/VideoFeed/index.tsx:1124
 msgid "Read less"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1112
+#: src/screens/VideoFeed/index.tsx:1124
 msgid "Read more"
 msgstr ""
 
@@ -10064,7 +10066,7 @@ msgstr "Read our Community Guidelines"
 msgid "Read our Terms of Service"
 msgstr "Read our Terms of Service"
 
-#: src/view/com/auth/SplashScreen.web.tsx:173
+#: src/view/com/auth/SplashScreen.web.tsx:172
 msgid "Read the Bluesky blog"
 msgstr ""
 
@@ -10156,7 +10158,7 @@ msgstr ""
 #: src/components/StarterPack/Main/ProfilesList.tsx:207
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:110
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:117
-#: src/screens/Bookmarks.tsx:256
+#: src/screens/Bookmarks.tsx:259
 #: src/screens/Messages/ConversationSettings/Member.tsx:162
 #: src/screens/Messages/ConversationSettings/prompts.tsx:178
 #: src/screens/Moderation/index.tsx:534
@@ -10256,8 +10258,8 @@ msgstr ""
 msgid "Remove from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:120
-#: src/screens/Bookmarks.tsx:250
+#: src/components/PostControls/BookmarkButton.tsx:123
+#: src/screens/Bookmarks.tsx:253
 msgid "Remove from saved posts"
 msgstr ""
 
@@ -10341,8 +10343,8 @@ msgstr ""
 msgid "Removed from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:88
-#: src/screens/Bookmarks.tsx:209
+#: src/components/PostControls/BookmarkButton.tsx:91
+#: src/screens/Bookmarks.tsx:212
 msgid "Removed from saved posts"
 msgstr ""
 
@@ -10827,7 +10829,7 @@ msgstr ""
 
 #: src/screens/ProfileList/components/ErrorScreen.tsx:36
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:577
-#: src/screens/VideoFeed/index.tsx:1297
+#: src/screens/VideoFeed/index.tsx:1309
 #: src/view/screens/NotFound.tsx:54
 msgid "Returns to previous page"
 msgstr ""
@@ -10929,7 +10931,7 @@ msgid "Save to my feeds"
 msgstr ""
 
 #: src/view/shell/desktop/LeftNav.tsx:736
-#: src/view/shell/Drawer.tsx:633
+#: src/view/shell/Drawer.tsx:636
 msgctxt "link to bookmarks screen"
 msgid "Saved"
 msgstr ""
@@ -10941,7 +10943,7 @@ msgstr ""
 
 #: src/components/dialogs/nuxs/BookmarksAnnouncement.tsx:145
 #: src/Navigation.tsx:603
-#: src/screens/Bookmarks.tsx:57
+#: src/screens/Bookmarks.tsx:60
 msgid "Saved Posts"
 msgstr ""
 
@@ -11140,7 +11142,7 @@ msgstr ""
 msgid "See #{tag} posts by user"
 msgstr ""
 
-#: src/view/com/auth/SplashScreen.web.tsx:178
+#: src/view/com/auth/SplashScreen.web.tsx:177
 msgid "See jobs at Bluesky"
 msgstr ""
 
@@ -11379,7 +11381,7 @@ msgstr ""
 msgid "Send error report"
 msgstr "Send error report"
 
-#: src/view/shell/Drawer.tsx:423
+#: src/view/shell/Drawer.tsx:426
 msgid "Send feedback"
 msgstr ""
 
@@ -11471,7 +11473,7 @@ msgstr ""
 #: src/Navigation.tsx:239
 #: src/screens/Settings/Settings.tsx:102
 #: src/view/shell/desktop/LeftNav.tsx:759
-#: src/view/shell/Drawer.tsx:671
+#: src/view/shell/Drawer.tsx:674
 msgid "Settings"
 msgstr ""
 
@@ -11685,13 +11687,13 @@ msgstr ""
 #: src/features/liveNow/components/LiveStatusDialog.tsx:315
 #: src/features/liveNow/components/LiveStatusDialog.tsx:319
 #: src/screens/List/ListHiddenScreen.tsx:193
-#: src/screens/VideoFeed/index.tsx:777
-#: src/screens/VideoFeed/index.tsx:783
+#: src/screens/VideoFeed/index.tsx:789
+#: src/screens/VideoFeed/index.tsx:795
 msgid "Show anyway"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:185
-#: src/screens/Settings/AutomationLabelSettings.tsx:198
+#: src/screens/Settings/AutomationLabelSettings.tsx:186
+#: src/screens/Settings/AutomationLabelSettings.tsx:199
 msgid "Show automation label"
 msgstr "Show automation label"
 
@@ -11817,8 +11819,8 @@ msgstr ""
 #: src/screens/Search/SearchResults.tsx:399
 #: src/view/com/auth/SplashScreen.tsx:118
 #: src/view/com/auth/SplashScreen.tsx:125
-#: src/view/com/auth/SplashScreen.web.tsx:123
-#: src/view/com/auth/SplashScreen.web.tsx:131
+#: src/view/com/auth/SplashScreen.web.tsx:122
+#: src/view/com/auth/SplashScreen.web.tsx:130
 #: src/view/shell/bottom-bar/BottomBar.tsx:364
 #: src/view/shell/bottom-bar/BottomBar.tsx:368
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:258
@@ -12548,8 +12550,8 @@ msgstr ""
 #: src/screens/Settings/AboutSettings.tsx:94
 #: src/screens/Settings/AboutSettings.tsx:97
 #: src/view/screens/TermsOfService.tsx:25
-#: src/view/shell/Drawer.tsx:759
-#: src/view/shell/Drawer.tsx:761
+#: src/view/shell/Drawer.tsx:762
+#: src/view/shell/Drawer.tsx:764
 msgid "Terms of Service"
 msgstr ""
 
@@ -12601,7 +12603,7 @@ msgstr ""
 msgid "That's all, folks!"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1269
+#: src/screens/VideoFeed/index.tsx:1281
 msgid "That's everything!"
 msgstr ""
 
@@ -12807,6 +12809,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
+#: src/features/followingV2/home/PostFeed.tsx:880
 #: src/screens/Search/Explore.tsx:1052
 #: src/view/com/posts/PostFeed.tsx:825
 msgid "There was an issue fetching posts. Tap here to try again."
@@ -13114,7 +13117,7 @@ msgstr "This is just a one-time security check, since we haven't seen this accou
 msgid "This is not a valid link"
 msgstr ""
 
-#: src/screens/Settings/AutomationLabelSettings.tsx:173
+#: src/screens/Settings/AutomationLabelSettings.tsx:174
 msgid "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 msgstr "This label lets the world know that this account is automated. If turned on, this label appears next to the account's name on their profile and posts. It can be turned on or off at any time."
 
@@ -13192,7 +13195,7 @@ msgstr ""
 msgid "This post is only visible to logged-in users."
 msgstr ""
 
-#: src/screens/Bookmarks.tsx:246
+#: src/screens/Bookmarks.tsx:249
 msgid "This post was deleted by its author"
 msgstr ""
 
@@ -13647,7 +13650,7 @@ msgstr "Under review"
 msgid "Undo"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:43
+#: src/components/PostControls/BookmarkButton.tsx:46
 msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr ""
@@ -13691,7 +13694,7 @@ msgstr ""
 msgid "Unfollow account"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:976
+#: src/screens/VideoFeed/index.tsx:988
 msgid "Unfollows the user"
 msgstr ""
 
@@ -14225,7 +14228,7 @@ msgid "Video from {0}: {text}"
 msgstr ""
 
 #. placeholder {0}: sanitizeHandle( post.author.handle, '@', )
-#: src/screens/VideoFeed/index.tsx:1231
+#: src/screens/VideoFeed/index.tsx:1243
 msgid "Video from {0}. Tap to play or pause the video"
 msgstr ""
 
@@ -14234,11 +14237,11 @@ msgstr ""
 msgid "Video Games"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1230
+#: src/screens/VideoFeed/index.tsx:1242
 msgid "Video is paused"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1230
+#: src/screens/VideoFeed/index.tsx:1242
 msgid "Video is playing"
 msgstr ""
 
@@ -14290,7 +14293,7 @@ msgstr ""
 #. placeholder {0}: profile.handle
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:513
 #: src/screens/Search/components/SearchProfileCard.tsx:37
-#: src/screens/VideoFeed/index.tsx:937
+#: src/screens/VideoFeed/index.tsx:949
 #: src/view/com/notifications/NotificationFeedItem.tsx:600
 msgid "View {0}'s profile"
 msgstr ""
@@ -14321,8 +14324,8 @@ msgstr ""
 msgid "View debug entry"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:805
-#: src/screens/VideoFeed/index.tsx:823
+#: src/screens/VideoFeed/index.tsx:817
+#: src/screens/VideoFeed/index.tsx:835
 msgid "View details"
 msgstr ""
 
@@ -14423,8 +14426,8 @@ msgstr ""
 msgid "View your default post interaction settings"
 msgstr ""
 
-#: src/view/com/home/HomeHeaderLayout.web.tsx:67
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:86
+#: src/view/com/home/HomeHeaderLayout.web.tsx:59
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
 msgid "View your feeds and explore more"
 msgstr ""
 
@@ -14768,7 +14771,7 @@ msgstr "What you reported"
 msgid "what’s up"
 msgstr "what’s up"
 
-#: src/view/com/auth/SplashScreen.web.tsx:99
+#: src/view/com/auth/SplashScreen.web.tsx:98
 #: src/view/com/composer/Composer.tsx:1624
 #: src/view/com/feeds/ComposerPrompt.tsx:206
 msgid "What's up?"
@@ -15480,7 +15483,7 @@ msgstr ""
 msgid "You've reached your daily limit for video uploads (too many videos)"
 msgstr ""
 
-#: src/screens/VideoFeed/index.tsx:1278
+#: src/screens/VideoFeed/index.tsx:1290
 msgid "You've run out of videos to watch. Maybe it's a good time to take a break?"
 msgstr ""
 
