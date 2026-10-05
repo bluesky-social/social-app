@@ -41,8 +41,6 @@ export type ListProps<ItemT = any> = Omit<
   disableFullWindowScroll?: boolean
   sideBorders?: boolean
   progressViewOffset?: number
-  /** Fired once, on the first scroll event the list reports. */
-  onFirstScroll?: () => void
 }
 export type ListRef = React.RefObject<FlatList_INTERNAL | null>
 
@@ -52,7 +50,6 @@ let List = forwardRef<ListMethods, ListProps>(
   (
     {
       onScrolledDownChange,
-      onFirstScroll,
       refreshing,
       onRefresh,
       onItemSeen,
@@ -65,7 +62,6 @@ let List = forwardRef<ListMethods, ListProps>(
     ref,
   ): React.ReactElement => {
     const isScrolledDown = useSharedValue(false)
-    const hasScrolled = useSharedValue(false)
     const t = useTheme()
     const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
@@ -75,9 +71,6 @@ let List = forwardRef<ListMethods, ListProps>(
         onScrolledDownChange?.(didScrollDown)
       },
     )
-    const handleFirstScroll = useNonReactiveCallback(() => {
-      onFirstScroll?.()
-    })
 
     // Intentionally destructured outside the main thread closure.
     // See https://github.com/bluesky-social/social-app/pull/4108.
@@ -97,11 +90,6 @@ let List = forwardRef<ListMethods, ListProps>(
       },
       onScroll(e, ctx) {
         onScrollFromContext?.(e, ctx)
-
-        if (onFirstScroll != null && !hasScrolled.get()) {
-          hasScrolled.set(true)
-          scheduleOnRN(handleFirstScroll)
-        }
 
         const didScrollDown = e.contentOffset.y > SCROLLED_DOWN_LIMIT
         if (isScrolledDown.get() !== didScrollDown) {
