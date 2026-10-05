@@ -544,30 +544,18 @@ export const PROCESS_STARTED_AT = Date.now()
 const RESTORE_PREPEND_LIMIT = 60
 
 /**
- * How long after its first layout the list is taken to be positioned if it
- * hasn't reported a scroll event yet. Provisional, to be measured (APP-3159).
- *
- * On a cold start iOS applies the list's resting offset (the safe-area inset) a
- * beat after mount, and it arrives as the first scroll event. A page put above
- * before then can leave the reader at the top of the new posts rather than on
- * the restored top. The prototype saw it about 0.8s after mount on iOS 26. Not
- * every list reports one, hence the fallback. A later, measured signal (the
- * offset settling) would be better than either.
- */
-const RESTORE_PREPEND_FALLBACK_MS = 2500
-
-/**
  * Puts what is newer than a top page restored from disk above it, with one
  * fetch and then one write through the same compare-and-swap as a refresh. A
  * top page fetched before this process started (see
  * {@link PROCESS_STARTED_AT}) is a restored one, so a refresh, or anything
  * else that replaces the top page, leaves nothing to do.
  *
- * It runs once the view is `enabled` and its list is positioned: the list's
- * first scroll event, or {@link RESTORE_PREPEND_FALLBACK_MS} after its first
- * layout. The list reports both through the handlers returned. It runs once
- * per view, whatever it finds. `isOwed` says whether it has yet to, for checks
- * for new posts to wait for it.
+ * It fetches as soon as the view is `enabled` with a restored top, while the
+ * list does its first layout, and holds what it finds until `listAtRest`
+ * resolves, so the list takes it laid out and still, however long the reader
+ * keeps it moving. It runs once per view, whatever it finds. `isOwed` says
+ * whether it has yet to finish, holding a page included, for checks for new
+ * posts to wait for it.
  *
  * It fetches with `since` set to the top page's `startCursor`. Nothing newer
  * writes nothing. Anything newer goes on top as a page of its own, with the
@@ -584,26 +572,29 @@ export function usePostFeedRestorePrepend(
   {
     enabled,
     topFetchedAt,
+    listAtRest,
   }: {
     enabled: boolean
     /** The `fetchedAt` of the top page as rendered, if there is one. */
     topFetchedAt: number | undefined
+    /**
+     * Resolves once the list can take posts above the reader without moving
+     * them: laid out and at rest (see `useListRest`).
+     */
+    listAtRest: () => Promise<void>
   },
 ) {
   const queryClient = useQueryClient()
   const {fetchPage} = usePostFeedFetcher(feedDesc)
   const queryKey = RQKEY(feedDesc, params)
-  /** Whether this view has had its one go. */
-  const tried = useRef(false)
-  const [position, setPosition] = useState<
-    'unknown' | 'laidOut' | 'positioned'
-  >('unknown')
+  /** How far this view has got with its one go. */
+  const stage = useRef<'unstarted' | 'started' | 'finished'>('unstarted')
   const isTopRestored = isRestored(topFetchedAt)
 
   const isOwed = () => {
     const top = queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0]
     return (
-      !tried.current &&
+      stage.current !== 'finished' &&
       isRestored(top?.fetchedAt) &&
       top?.startCursor !== undefined
     )
@@ -612,10 +603,15 @@ export function usePostFeedRestorePrepend(
   const prepend = async () => {
     const before = queryClient.getQueryData<PostFeedData>(queryKey)
     const since = before?.pages[0]?.startCursor
-    if (!before || since === undefined || !isOwed()) {
+    if (
+      !before ||
+      since === undefined ||
+      stage.current !== 'unstarted' ||
+      !isOwed()
+    ) {
       return
     }
-    tried.current = true
+    stage.current = 'started'
     try {
       const page = await fetchPage(undefined, {
         since,
@@ -630,6 +626,7 @@ export function usePostFeedRestorePrepend(
       if (!page.feed.length || cursor === undefined) {
         return
       }
+      await listAtRest()
       await commit(queryClient, queryKey, before, (data = before) => ({
         pages: [page, ...data.pages],
         pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
@@ -640,6 +637,8 @@ export function usePostFeedRestorePrepend(
           safeMessage: e,
         })
       }
+    } finally {
+      stage.current = 'finished'
     }
   }
 
@@ -647,26 +646,12 @@ export function usePostFeedRestorePrepend(
     void prepend()
   })
   useEffect(() => {
-    if (!enabled || !isTopRestored) {
-      return
-    }
-    if (position === 'positioned') {
+    if (enabled && isTopRestored) {
       onReady()
-    } else if (position === 'laidOut') {
-      const timeout = setTimeout(
-        () => setPosition('positioned'),
-        RESTORE_PREPEND_FALLBACK_MS,
-      )
-      return () => clearTimeout(timeout)
     }
-  }, [enabled, isTopRestored, position])
+  }, [enabled, isTopRestored])
 
-  return {
-    isOwed,
-    onListLayout: () =>
-      setPosition(current => (current === 'unknown' ? 'laidOut' : current)),
-    onListFirstScroll: () => setPosition('positioned'),
-  }
+  return {isOwed}
 }
 
 /** Whether a page fetched at `fetchedAt` was restored from disk. */

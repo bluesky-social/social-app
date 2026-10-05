@@ -91,6 +91,7 @@ import {
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
+import {useListRest} from './useListRest'
 
 type FeedRow =
   | {
@@ -358,16 +359,20 @@ let PostFeed = ({
    * anchor from them.
    */
   const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
+  /**
+   * When the list is at rest, for the restore prepend to wait for. Its scroll
+   * handlers take the corrections anchoring makes to the offset out of what
+   * the Home header sees, so they can't hide or show it.
+   */
+  const listRest = useListRest(
+    useAnchorCorrectionScrollHandlers(isAnchored),
+    isAnchored,
+  )
   const restore = usePostFeedRestorePrepend(feed, feedParams, {
     enabled: isAnchored && enabled !== false,
     topFetchedAt: lastFetchedAt,
+    listAtRest: listRest.atRest,
   })
-  /**
-   * The list's scroll handlers, with the corrections anchoring makes to its
-   * offset taken out of what the Home header sees, so they can't hide or show
-   * it.
-   */
-  const scrollHandlers = useAnchorCorrectionScrollHandlers(isAnchored)
 
   /**
    * The top page a refresh from this view wrote, to take the reader up to once
@@ -1279,7 +1284,7 @@ let PostFeed = ({
 
   return (
     <View testID={testID} style={style}>
-      <ScrollProvider {...scrollHandlers}>
+      <ScrollProvider {...listRest.scrollHandlers}>
         <List
           testID={testID ? `${testID}-flatlist` : undefined}
           ref={scrollElRef}
@@ -1312,8 +1317,7 @@ let PostFeed = ({
             isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
           }
           measureInteriorSpacers={isAnchored}
-          onFirstScroll={isAnchored ? restore.onListFirstScroll : undefined}
-          onLayout={isAnchored ? restore.onListLayout : undefined}
+          onLayout={isAnchored ? listRest.onLayout : undefined}
         />
       </ScrollProvider>
     </View>
