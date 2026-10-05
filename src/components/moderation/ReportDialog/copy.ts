@@ -3,11 +3,20 @@ import {useLingui} from '@lingui/react/macro'
 
 import {type ParsedReportSubject} from './types'
 
-export function useCopyForSubject(subject: ParsedReportSubject) {
+export function useCopyForSubject(
+  subject: ParsedReportSubject,
+  {isProfileLink = false}: {isProfileLink?: boolean} = {},
+) {
   const {t: l} = useLingui()
   return useMemo(() => {
     switch (subject.type) {
       case 'account': {
+        if (isProfileLink) {
+          return {
+            title: l`Report this link`,
+            subtitle: l`Why should this link be reviewed?`,
+          }
+        }
         return {
           title: l`Report this user`,
           subtitle: l`Why should this user be reviewed?`,
@@ -66,5 +75,5 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
         }
       }
     }
-  }, [l, subject])
+  }, [l, subject, isProfileLink])
 }

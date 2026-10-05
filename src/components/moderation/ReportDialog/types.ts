@@ -87,4 +87,9 @@ export type ReportDialogProps = {
    * Called after the dialog finishes closing.
    */
   onClose?: () => void
+  /**
+   * The profile link this report started from. Tags the report so link
+   * reports can be counted separately in Ozone.
+   */
+  profileLinkUrl?: string
 }
