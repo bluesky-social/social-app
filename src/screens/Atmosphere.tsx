@@ -4,7 +4,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {NotFoundScreen} from '#/view/screens/NotFound'
-import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
+import {atoms as a, useTheme, web} from '#/alf'
 import {BetaTag} from '#/components/BetaTag'
 import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Earth'
 import * as Layout from '#/components/Layout'
@@ -12,7 +12,6 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 
 export function AtmosphereScreen() {
-  const {gtMobile} = useBreakpoints()
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const isEnabled = ax.features.enabled(ax.features.AtmosphereExploreEnable)
@@ -24,7 +23,7 @@ export function AtmosphereScreen() {
   return (
     <Layout.Screen testID="atmosphereScreen">
       <Layout.Header.Outer noBottomBorder sticky={false}>
-        {gtMobile ? <Layout.Header.Slot /> : <Layout.Header.MenuButton />}
+        <Layout.Header.BackButton />
         <Layout.Header.Content>
           <View style={[a.w_full, a.align_center]}>
             <View style={[a.flex_row, a.align_center, a.gap_sm]}>
