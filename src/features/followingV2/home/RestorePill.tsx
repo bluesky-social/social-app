@@ -1,5 +1,6 @@
 import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
+import {plural} from '@lingui/core/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useShellLayout} from '#/state/shell/shell-layout'
@@ -71,6 +72,11 @@ export function RestorePill({
         visible={visible}
         count={count}
         authors={authors}
+        // Its posts are loaded already, so pressing it shows them.
+        label={plural(count, {
+          one: 'Show # new post',
+          other: 'Show # new posts',
+        })}
         onPress={onPress}
       />
     </Animated.View>
