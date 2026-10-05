@@ -27,12 +27,15 @@ allowBuilds:
   '@swc/core': false
   'core-js': false
   'core-js-pure': false
+  'dtrace-provider': false
   'esbuild': false
+  'protobufjs': false
   'unrs-resolver': true
 patchedDependencies:
   '@expo/cli@57.0.26': patches/@expo__cli@57.0.26.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
+  eas-cli@24.8.0: patches/eas-cli@24.8.0.patch
   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
   'expo-media-library@57.0.5': patches/expo-media-library@57.0.5.patch
   'expo-modules-core@57.0.18': patches/expo-modules-core@57.0.18.patch

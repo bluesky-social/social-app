@@ -311,6 +311,8 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "1.0.0",
     "babel-preset-expo": "~57.0.12",
+    "eas-build-cache-provider": "24.8.0",
+    "eas-cli": "24.8.0",
     "es-check": "9.8.1",
     "eslint-plugin-bsky-internal": "link:lint-rules",
     "eslint-plugin-react-native-a11y": "^3.5.1",
