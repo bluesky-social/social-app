@@ -1,8 +1,10 @@
+import {AtUri} from '@atproto/syntax'
+
 import {
   type ParsedReportSubject,
   type ReportSubject,
 } from '#/components/moderation/ReportDialog/types'
-import {app} from '#/lexicons'
+import {app, com} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 export function parseReportSubject(
@@ -21,6 +23,15 @@ export function parseReportSubject(
       type: 'convo',
       convoId: subject.convoId,
       did: subject.did,
+    }
+  }
+
+  if (bsky.isType(com.atproto.repo.strongRef, subject)) {
+    return {
+      type: 'record',
+      uri: subject.uri,
+      cid: subject.cid,
+      nsid: new AtUri(subject.uri).collection,
     }
   }
 

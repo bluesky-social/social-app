@@ -1,7 +1,7 @@
 import {type $Typed} from '@atproto/lex'
 
 import type * as Dialog from '#/components/Dialog'
-import {type app, type chat} from '#/lexicons'
+import {type app, type chat, type com} from '#/lexicons'
 
 export type ReportSubjectConvoMessage = {
   view: 'convo' | 'message'
@@ -23,10 +23,17 @@ export type ReportSubject =
   | $Typed<app.bsky.feed.defs.GeneratorView>
   | $Typed<app.bsky.graph.defs.StarterPackView>
   | $Typed<app.bsky.feed.defs.PostView>
+  | $Typed<com.atproto.repo.strongRef.Main>
   | ReportSubjectConvoMessage
   | ReportSubjectConvo
 
 export type ParsedReportSubject =
+  | {
+      type: 'record'
+      uri: string
+      cid: string
+      nsid: string
+    }
   | {
       type: 'post'
       uri: string
