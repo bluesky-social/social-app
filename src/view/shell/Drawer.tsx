@@ -363,7 +363,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
         {hasSession ? (
           <>
             <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
-            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <HomeMenuItem
+              isActive={isAtHome && !isAtAtmosphere}
+              onPress={onPressHome}
+            />
             <ChatMenuItem isActive={isAtMessages} onPress={onPressMessages} />
             <NotificationsMenuItem
               isActive={isAtNotifications}
@@ -389,7 +392,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
           </>
         ) : (
           <>
-            <HomeMenuItem isActive={isAtHome} onPress={onPressHome} />
+            <HomeMenuItem
+              isActive={isAtHome && !isAtAtmosphere}
+              onPress={onPressHome}
+            />
             <FeedsMenuItem isActive={isAtFeeds} onPress={onPressMyFeeds} />
             <SearchMenuItem isActive={isAtSearch} onPress={onPressSearch} />
           </>
