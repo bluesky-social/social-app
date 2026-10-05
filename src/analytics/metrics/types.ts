@@ -1387,6 +1387,54 @@ export type Events = {
   'profile:associated:germ:self-disconnect': {}
   'profile:associated:germ:self-reconnect': {}
 
+  'profile:links:click': {
+    domain: string
+    /**
+     * Name of the recognized support provider, if the link is a support link.
+     */
+    supportProvider: string | undefined
+    isOwnProfile: boolean
+  }
+  /**
+   * A profile showing links was viewed. The denominator for tap rate.
+   */
+  'profile:links:impression': {
+    linkCount: number
+    supportLinkCount: number
+    isOwnProfile: boolean
+  }
+  /**
+   * Edit Profile was opened with the Links section available.
+   */
+  'profile:links:editorOpen': {
+    linkCount: number
+  }
+  /**
+   * Logged on save, one event per link actually added or removed.
+   */
+  'profile:links:add': {
+    domain: string
+    supportProvider: string | undefined
+  }
+  'profile:links:remove': {
+    domain: string
+    supportProvider: string | undefined
+  }
+  /**
+   * A visitor continued past the leaving-Bluesky notice.
+   */
+  'profile:links:continue': {
+    domain: string
+    supportProvider: string | undefined
+  }
+  /**
+   * A link couldn't be added, e.g. because its site is blocked.
+   */
+  'profile:links:rejected': {
+    reason: 'blocked'
+    domain: string
+  }
+
   // Post photo embed events
   'post:photoEmbed:impression': {
     layout: 'single' | 'grid' | 'carousel'
