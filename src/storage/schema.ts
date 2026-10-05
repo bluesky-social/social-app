@@ -58,6 +58,12 @@ export type Device = {
   trendingBetaEnabled: boolean
   devMode: boolean
   demoMode: boolean
+  /**
+   * Developer toggle that turns off the VirtualizedList interior spacer patch
+   * on Following v2's anchored Home Following list, to compare with and
+   * without it on device. Unset means the patch is on.
+   */
+  followingV2SpacerPatchDisabled?: boolean
   activitySubscriptionsNudged?: boolean
   threadgateNudged?: boolean
   inviteFriendsFollowersPromoDismissed?: boolean

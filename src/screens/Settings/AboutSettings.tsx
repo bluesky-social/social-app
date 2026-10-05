@@ -24,9 +24,12 @@ import {Loader} from '#/components/Loader'
 import * as Prompt from '#/components/Prompt'
 import {SendErrorReportDialog} from '#/components/SendErrorReportDialog'
 import * as Toast from '#/components/Toast'
+import {useAnalytics} from '#/analytics'
 import {getDeviceId} from '#/analytics/identifiers'
 import * as env from '#/env'
 import {IS_ANDROID, IS_IOS, IS_NATIVE} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
+import {useSpacerPatchDisabled} from '#/features/followingV2/home/useSpacerPatchDisabled'
 import {useDemoMode} from '#/storage/hooks/demo-mode'
 import {useDevMode} from '#/storage/hooks/dev-mode'
 import {OTAInfo} from './components/OTAInfo'
@@ -36,6 +39,8 @@ export function AboutSettingsScreen({}: Props) {
   const {_, i18n} = useLingui()
   const [devModeEnabled, setDevModeEnabled] = useDevMode()
   const [demoModeEnabled, setDemoModeEnabled] = useDemoMode()
+  const [spacerPatchDisabled, setSpacerPatchDisabled] = useSpacerPatchDisabled()
+  const ax = useAnalytics()
   const sendErrorReportControl = Prompt.usePromptControl()
 
   const {mutate: onClearImageCache, isPending: isClearingImageCache} =
@@ -194,6 +199,29 @@ export function AboutSettingsScreen({}: Props) {
                   <SettingsList.ItemIcon icon={AtomIcon} />
                   <SettingsList.ItemText>
                     {demoModeEnabled ? 'Disable demo mode' : 'Enable demo mode'}
+                  </SettingsList.ItemText>
+                </SettingsList.PressableItem>
+              )}
+              {isFollowingV2Eligible(ax) && (
+                <SettingsList.PressableItem
+                  onPress={() => {
+                    const newSpacerPatchDisabled = !spacerPatchDisabled
+                    setSpacerPatchDisabled(newSpacerPatchDisabled)
+                    Toast.show(
+                      'Following v2 spacer patch ' +
+                        (newSpacerPatchDisabled ? 'disabled' : 'enabled'),
+                    )
+                  }}
+                  label={
+                    spacerPatchDisabled
+                      ? 'Enable Following v2 spacer patch'
+                      : 'Disable Following v2 spacer patch'
+                  }>
+                  <SettingsList.ItemIcon icon={AtomIcon} />
+                  <SettingsList.ItemText>
+                    {spacerPatchDisabled
+                      ? 'Enable Following v2 spacer patch'
+                      : 'Disable Following v2 spacer patch'}
                   </SettingsList.ItemText>
                 </SettingsList.PressableItem>
               )}

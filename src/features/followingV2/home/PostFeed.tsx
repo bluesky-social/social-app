@@ -100,6 +100,7 @@ import {useListRest} from './useListRest'
 import {useRestorePill} from './useRestorePill'
 import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
+import {useSpacerPatchDisabled} from './useSpacerPatchDisabled'
 
 type FeedRow =
   | {
@@ -390,6 +391,7 @@ let PostFeed = ({
     useAnchorCorrectionScrollHandlers(isAnchored),
     isAnchored,
   )
+  const [spacerPatchDisabled] = useSpacerPatchDisabled()
   const restore = usePostFeedRestorePrepend(feed, feedParams, {
     enabled: isAnchored && enabled !== false,
     topFetchedAt: lastFetchedAt,
@@ -1410,7 +1412,7 @@ let PostFeed = ({
           maintainVisibleContentPosition={
             isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
           }
-          measureInteriorSpacers={isAnchored}
+          measureInteriorSpacers={isAnchored && !spacerPatchDisabled}
           onLayout={isAnchored ? listRest.onLayout : undefined}
         />
       </ScrollProvider>
