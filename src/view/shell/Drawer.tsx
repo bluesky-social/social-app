@@ -200,8 +200,8 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   } = useNavigationTabState()
   const {hasSession, currentAccount} = useSession()
   const inviteFriendsControl = useDialogControl()
-  const isAtmosphereExploreTabEnabled = ax.features.enabled(
-    ax.features.AtmosphereExploreTabEnable,
+  const isAtmosphereExploreEnabled = ax.features.enabled(
+    ax.features.AtmosphereExploreEnable,
   )
 
   // events
@@ -281,8 +281,10 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
   }, [navigation, setDrawerOpen, ax])
 
   const onPressAtmosphere = useCallback(() => {
-    onPressTab('Atmosphere')
-  }, [onPressTab])
+    ax.metric('nav:click', {item: 'atmosphere', surface: 'drawer'})
+    navigation.navigate('Atmosphere')
+    setDrawerOpen(false)
+  }, [navigation, setDrawerOpen, ax])
 
   const onPressLists = useCallback(() => {
     ax.metric('nav:click', {item: 'lists', surface: 'drawer'})
@@ -367,7 +369,7 @@ let DrawerContent = ({}: React.PropsWithoutRef<{}>): React.ReactNode => {
               isActive={isAtNotifications}
               onPress={onPressNotifications}
             />
-            {isAtmosphereExploreTabEnabled && (
+            {isAtmosphereExploreEnabled && (
               <AtmosphereMenuItem
                 isActive={isAtAtmosphere}
                 onPress={onPressAtmosphere}

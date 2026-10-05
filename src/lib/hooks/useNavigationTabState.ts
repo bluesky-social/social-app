@@ -1,10 +1,10 @@
 import {useNavigationState} from '@react-navigation/native'
 
-import {getTabState, TabState} from '#/lib/routes/helpers'
+import {getCurrentRoute, getTabState, TabState} from '#/lib/routes/helpers'
 
 export function useNavigationTabState() {
   return useNavigationState(state => {
-    const isAtAtmosphere = getTabState(state, 'Atmosphere') !== TabState.Outside
+    const isAtAtmosphere = getCurrentRoute(state).name === 'Atmosphere'
     const res = {
       isAtHome: getTabState(state, 'Home') !== TabState.Outside,
       isAtSearch: getTabState(state, 'Search') !== TabState.Outside,

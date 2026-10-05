@@ -628,8 +628,8 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
   const numUnreadNotifications = useUnreadNotifications()
   const numUnreadMessages = useUnreadMessageCount()
   const hasHomeBadge = useHomeBadge()
-  const isAtmosphereExploreTabEnabled = ax.features.enabled(
-    ax.features.AtmosphereExploreTabEnable,
+  const isAtmosphereExploreEnabled = ax.features.enabled(
+    ax.features.AtmosphereExploreEnable,
   )
 
   const leftNavMinimal = isMessagesRelatedScreen || leftNavMinimalBreakpoint
@@ -709,7 +709,7 @@ export function DesktopLeftNav({routeName}: {routeName: string}) {
               active: BellFilledIcon,
             }}
           />
-          {isAtmosphereExploreTabEnabled && (
+          {isAtmosphereExploreEnabled && (
             <NavItem
               label={l`Atmosphere`}
               href="/atmosphere"
