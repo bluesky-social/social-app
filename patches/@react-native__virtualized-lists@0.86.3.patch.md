@@ -115,9 +115,12 @@ On device (the iOS simulator reproduces it), on Following v2's Home Following:
 
 ### Upstream and removal
 
-Not reported upstream yet. It's worth filing with a minimal repro (a list with
-`initialNumToRender`, mVCP, and a prepend large enough to leave an interior spacer above the
-viewport): the fix is small and the tail clamp shows the failure mode is already understood.
+- Issue: https://github.com/react/react-native/issues/58870
+- Standalone repro (RN 0.87.1, iOS and Android, with a stock/fixed switch and demo videos):
+  https://github.com/mozzius/virtualizedlist-spacer-ring-repro
+
+The code is unchanged on `main` at the time of filing (4d590e6), and `main`'s list sources ring
+the same way in the repro.
 
 **TODO: Remove once upstream sizes interior spacers from measured frames, or fold it into
 milestone B's VirtualizedList patch (APP-3152) if that lands first.** The patch is pinned to
