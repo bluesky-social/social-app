@@ -39,7 +39,7 @@ export const ExternalEmbed = ({
 }) => {
   const {_} = useLingui()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const externalEmbedPrefs = useExternalEmbedsPrefs()
   const niceUrl = toNiceDomain(link.uri)
   const imageUri = link.thumb
@@ -54,14 +54,14 @@ export const ExternalEmbed = ({
   const hasMedia = Boolean(imageUri || embedPlayerParams)
 
   const onPress = () => {
-    playHaptic('Light')
+    haptics.tap()
     onOpen?.()
   }
 
   const onShareExternal = IS_NATIVE
     ? () => {
         if (link.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(link.uri)
         }
       }

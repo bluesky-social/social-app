@@ -1183,7 +1183,7 @@ function PlayPauseTapArea({
 }) {
   const {t: l} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   // TODO: implement viaRepost -sfn
   const [queueLike] = usePostLikeMutationQueue(
     post,
@@ -1223,7 +1223,7 @@ function PlayPauseTapArea({
     if (doubleTapRef.current) {
       clearTimeout(doubleTapRef.current)
       doubleTapRef.current = null
-      playHaptic('Light')
+      haptics.tap()
       void queueLike()
       sendInteraction({
         item: post.uri,
