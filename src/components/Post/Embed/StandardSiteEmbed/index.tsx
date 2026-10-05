@@ -1,28 +1,36 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
+import * as Clipboard from 'expo-clipboard'
 import {Image} from 'expo-image'
 import {AtUri} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
 import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {useSession} from '#/state/session'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme, utils, web} from '#/alf'
-import {ButtonIcon, ButtonText} from '#/components/Button'
+import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import {Divider} from '#/components/Divider'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {ArrowTopRight_Stroke2_Corner0_Rounded as ArrowTopRightIcon} from '#/components/icons/Arrow'
+import {Clipboard_Stroke2_Corner2_Rounded as ClipboardIcon} from '#/components/icons/Clipboard'
 import {Clock_Stroke2_Corner0_Rounded as Clock} from '#/components/icons/Clock'
 import {StandardSite} from '#/components/icons/community/StandardSite'
+import {DotGrid3x1_Stroke2_Corner0_Rounded as DotsHorizontalIcon} from '#/components/icons/DotGrid'
+import {Flag_Stroke2_Corner0_Rounded as Flag} from '#/components/icons/Flag'
 import {Link} from '#/components/Link'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
+import * as Menu from '#/components/Menu'
+import {useGlobalReportDialogControl} from '#/components/moderation/ReportDialog'
 import {matchStandardSitePublisher} from '#/components/Post/Embed/StandardSiteEmbed/publishers'
 import {StandardSiteMetaRow} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteMetaRow'
 import {StandardSiteThemeProvider} from '#/components/Post/Embed/StandardSiteEmbed/StandardSiteThemeProvider'
 import type * as ssTypes from '#/components/Post/Embed/StandardSiteEmbed/types'
 import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
+import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
@@ -45,6 +53,12 @@ export const StandardSiteEmbed = ({
   const {t: l, i18n} = useLingui()
   const t = useTheme()
   const playHaptic = useHaptics()
+  const {hasSession} = useSession()
+  const reportDialogControl = useGlobalReportDialogControl()
+  const article = view.associatedRefs?.find(
+    ref => new AtUri(ref.uri).collection === 'site.standard.document',
+  )
+  const showReportMenu = !!article && hasSession && !preview
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.thumb
   const hasMedia = Boolean(imageUri)
@@ -126,6 +140,7 @@ export const StandardSiteEmbed = ({
     <View
       style={[
         a.flex_col,
+        a.relative,
         a.rounded_lg,
         a.w_full,
         a.border,
@@ -199,6 +214,7 @@ export const StandardSiteEmbed = ({
                   a.px_md,
                   {gap: 3},
                   isStandard && [{gap: 5}, a.pb_sm],
+                  showReportMenu && !hasMedia && {paddingRight: 52},
                 ]}>
                 <Text
                   emoji
@@ -286,6 +302,63 @@ export const StandardSiteEmbed = ({
             interactedOuter={interacted}
             onEmbedInteractionCallback={onEmbedInteractionCallback}
           />
+        </View>
+      )}
+
+      {showReportMenu && (
+        <View style={[a.absolute, {top: 8, right: 8}]}>
+          <Menu.Root>
+            <Menu.Trigger label={l`Article options`}>
+              {({props}) => (
+                <Button
+                  {...props}
+                  testID="standardSiteEmbed:menu"
+                  label={props.accessibilityLabel}
+                  size="small"
+                  color="secondary"
+                  shape="round"
+                  onPress={e => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    props.onPress()
+                  }}>
+                  <ButtonIcon icon={DotsHorizontalIcon} />
+                </Button>
+              )}
+            </Menu.Trigger>
+            <Menu.Outer>
+              <Menu.Item
+                testID="standardSiteEmbed:reportArticle"
+                label={l`Report article`}
+                onPress={e => {
+                  e.stopPropagation()
+                  reportDialogControl.open({
+                    subject: {
+                      ...article,
+                      $type: 'com.atproto.repo.strongRef',
+                    },
+                  })
+                }}>
+                <Menu.ItemText>
+                  <Trans>Report article</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={Flag} />
+              </Menu.Item>
+              <Menu.Item
+                testID="standardSiteEmbed:copyArticleUri"
+                label={l`Copy AT URI`}
+                onPress={e => {
+                  e.stopPropagation()
+                  void Clipboard.setStringAsync(article.uri)
+                  Toast.show(l`Copied to clipboard`, {type: 'success'})
+                }}>
+                <Menu.ItemText>
+                  <Trans>Copy AT URI</Trans>
+                </Menu.ItemText>
+                <Menu.ItemIcon icon={ClipboardIcon} />
+              </Menu.Item>
+            </Menu.Outer>
+          </Menu.Root>
         </View>
       )}
     </View>

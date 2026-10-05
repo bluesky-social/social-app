@@ -7,6 +7,12 @@ export function useCopyForSubject(subject: ParsedReportSubject) {
   const {t: l} = useLingui()
   return useMemo(() => {
     switch (subject.type) {
+      case 'record': {
+        return {
+          title: l`Report this content`,
+          subtitle: l`Why should this content be reviewed?`,
+        }
+      }
       case 'account': {
         return {
           title: l`Report this user`,

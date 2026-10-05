@@ -73,6 +73,7 @@ export function useSubmitReportMutation() {
           }
           break
         }
+        case 'record':
         case 'status':
         case 'post':
         case 'list':
@@ -132,7 +133,8 @@ export function useSubmitReportMutation() {
         }
       }
 
-      if (__DEV__) {
+      // The record-reporting prototype needs real submissions in dev builds.
+      if (__DEV__ && subject.type !== 'record') {
         logger.info('Submitting report (dry run)', {
           labeler: {
             handle: labeler.creator.handle,
