@@ -1,0 +1,101 @@
+diff --git a/Lists/VirtualizedList.js b/Lists/VirtualizedList.js
+index df53cc7ddb7861645ae8997cbd7a9bdaab1c1735..3bbda870aaa04e89f696eff88dc5878ea1dca03e 100644
+--- a/Lists/VirtualizedList.js
++++ b/Lists/VirtualizedList.js
+@@ -873,6 +873,68 @@ class VirtualizedList extends StateSafePureComponent<
+   _getSpacerKey = (isVertical: boolean): string =>
+     isVertical ? 'height' : 'width';
+ 
++  /**
++   * With `measureInteriorSpacers`, the size of a spacer which has rendered
++   * cells on both sides of it, taken from where those cells were laid out.
++   *
++   * Otherwise such a spacer is sized by approximating the cells in it from
++   * `_averageCellLength`, a running mean over every cell measured so far,
++   * which moves whenever one is laid out. The cells retained at the top for
++   * scroll-to-top leave an interior spacer directly above the viewport after a
++   * prepend, so a measurement pass, or a cell mounting at the window's leading
++   * edge, resizes the content above the reader by however far the estimate
++   * moved, and `maintainVisibleContentPosition` moves the offset to match.
++   * That can take the cell back out of the window, which resizes the spacer
++   * again, the other way: the list and the anchor fall into a cycle.
++   *
++   * Once both bracketing cells have been laid out, the gap between them is the
++   * spacer's size exactly, with no estimate in it. It is also self-consistent,
++   * being the size that produced those layouts, so the spacer holds still
++   * until its region changes: the guarantee the tail spacer's clamp to the
++   * highest measured cell gives.
++   *
++   * Returns null, leaving the estimate to the caller, without the prop; for
++   * the leading and tail spacers, which have nothing rendered on one side to
++   * measure from; when either bracketing cell has not been laid out where it
++   * is mounted now; and with `getItemLayout`, whose metrics are exact already.
++   */
++  _measuredInteriorSpacerSize(region: {
++    first: number,
++    last: number,
++    ...
++  }): ?number {
++    if (
++      this.props.measureInteriorSpacers !== true ||
++      this.props.getItemLayout != null ||
++      region.first === 0 ||
++      region.last + 1 >= this.props.getItemCount(this.props.data)
++    ) {
++      return null;
++    }
++    const above = this._listMetrics.getCellMetrics(
++      region.first - 1,
++      this.props,
++    );
++    const below = this._listMetrics.getCellMetrics(
++      region.last + 1,
++      this.props,
++    );
++    // `isMounted` rules out a frame left behind by a cell since unmounted,
++    // which describes a layout the list has moved on from.
++    if (
++      above == null ||
++      below == null ||
++      !above.isMounted ||
++      !below.isMounted
++    ) {
++      return null;
++    }
++    const size = below.offset - (above.offset + above.length);
++    // The region holds at least one cell, so no gap at all means the two
++    // frames were measured either side of a change and can't be compared.
++    return size > 0 ? size : null;
++  }
++
+   static _keyExtractor(
+     item: Item,
+     index: number,
+@@ -1029,6 +1091,7 @@ class VirtualizedList extends StateSafePureComponent<
+             this.props,
+           );
+           const spacerSize =
++            this._measuredInteriorSpacerSize(section) ??
+             lastMetrics.offset + lastMetrics.length - firstMetrics.offset;
+           cells.push(
+             <View
+diff --git a/Lists/VirtualizedListProps.js b/Lists/VirtualizedListProps.js
+index f5675959f85317c501ca7b3e0b815b15d1f1553a..4c6c136b191d50a1e55a9ca9917ab48554209a12 100644
+--- a/Lists/VirtualizedListProps.js
++++ b/Lists/VirtualizedListProps.js
+@@ -186,6 +186,15 @@ type OptionalVirtualizedListProps = {
+    * interfere with responding to button taps or other interactions.
+    */
+   maxToRenderPerBatch?: ?number,
++  /**
++   * Size a spacer that has rendered cells on both sides of it from where those
++   * cells were laid out, rather than from the average cell length. Without it,
++   * an interior spacer above the viewport is re-estimated as cells are
++   * measured, which `maintainVisibleContentPosition` has to chase. No effect
++   * with `getItemLayout`. Added by a Bluesky patch, see
++   * patches/@react-native__virtualized-lists@0.86.3.patch.md.
++   */
++  measureInteriorSpacers?: ?boolean,
+   /**
+    * Called once when the scroll position gets within within `onEndReachedThreshold`
+    * from the logical end of the list.
