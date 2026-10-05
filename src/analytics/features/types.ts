@@ -22,6 +22,7 @@ export enum Features {
   FollowingV2Enable = 'following_v2:enable',
   OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
   ModerationInboxEnable = 'moderation_inbox:enable',
+  AtmosphereExploreTabEnable = 'atmosphere_explore_tab:enable',
 
   // values
   StarterPacksConfig = 'starter_packs:config',

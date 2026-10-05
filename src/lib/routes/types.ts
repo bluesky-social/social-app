@@ -106,6 +106,7 @@ export type CommonNavigatorParams = {
 }
 
 export type BottomTabNavigatorParams = CommonNavigatorParams & {
+  AtmosphereTab: undefined
   HomeTab: undefined
   SearchTab: undefined
   NotificationsTab: undefined
@@ -115,6 +116,10 @@ export type BottomTabNavigatorParams = CommonNavigatorParams & {
 
 export type HomeTabNavigatorParams = CommonNavigatorParams & {
   Home: undefined
+}
+
+export type AtmosphereTabNavigatorParams = CommonNavigatorParams & {
+  Atmosphere: undefined
 }
 
 export type SearchTabNavigatorParams = CommonNavigatorParams & {
@@ -138,6 +143,7 @@ export type MessagesTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
+  Atmosphere: undefined
   Home: undefined
   Search: SearchParams
   Feeds: undefined
@@ -150,6 +156,8 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
+  Atmosphere: undefined
+  AtmosphereTab: undefined
   HomeTab: undefined
   Home: undefined
   SearchTab: undefined

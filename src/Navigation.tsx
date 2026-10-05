@@ -34,6 +34,7 @@ import {useCallOnce} from '#/lib/once'
 import {buildStateObject, getCurrentRoute} from '#/lib/routes/helpers'
 import {
   type AllNavigatorParams,
+  type AtmosphereTabNavigatorParams,
   type BottomTabNavigatorParams,
   type FlatNavigatorParams,
   type HomeTabNavigatorParams,
@@ -72,6 +73,7 @@ import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {AtmosphereScreen} from '#/screens/Atmosphere'
 import {BookmarksScreen} from '#/screens/Bookmarks'
 import {CustomFeedScreen} from '#/screens/CustomFeed'
 import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
@@ -148,6 +150,8 @@ import {router} from '#/routes'
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
 const HomeTab = createNativeStackNavigatorWithAuth<HomeTabNavigatorParams>()
+const AtmosphereTab =
+  createNativeStackNavigatorWithAuth<AtmosphereTabNavigatorParams>()
 const SearchTab = createNativeStackNavigatorWithAuth<SearchTabNavigatorParams>()
 const NotificationsTab =
   createNativeStackNavigatorWithAuth<NotificationsTabNavigatorParams>()
@@ -654,6 +658,10 @@ function TabsNavigator({
         name="MyProfileTab"
         getComponent={() => MyProfileTabNavigator}
       />
+      <Tab.Screen
+        name="AtmosphereTab"
+        getComponent={() => AtmosphereTabNavigator}
+      />
     </Tab.Navigator>
   )
 }
@@ -695,6 +703,23 @@ function HomeTabNavigator() {
       />
       {commonScreens(HomeTab as typeof Flat)}
     </HomeTab.Navigator>
+  )
+}
+
+function AtmosphereTabNavigator() {
+  const t = useTheme()
+
+  return (
+    <AtmosphereTab.Navigator
+      screenOptions={screenOptions(t)}
+      initialRouteName="Atmosphere">
+      <AtmosphereTab.Screen
+        name="Atmosphere"
+        getComponent={() => AtmosphereScreen}
+        options={{title: bskyTitle(i18n._(msg`Atmosphere`))}}
+      />
+      {commonScreens(AtmosphereTab as typeof Flat)}
+    </AtmosphereTab.Navigator>
   )
 }
 
@@ -808,6 +833,11 @@ const FlatNavigator = ({
         getComponent={() => HomeScreen}
         options={{title: title(msg`Home`)}}
       />
+      <Flat.Screen
+        name="Atmosphere"
+        getComponent={() => AtmosphereScreen}
+        options={{title: title(msg`Atmosphere`)}}
+      />
       {commonScreens(Flat, numUnread)}
     </Flat.Navigator>
   )
@@ -828,7 +858,9 @@ const LINKING = {
     const node = getCurrentRoute(state)
 
     // build the path
-    const route = router.matchName(node.name)
+    const route = router.matchName(
+      node.name === 'AtmosphereTab' ? 'Atmosphere' : node.name,
+    )
     if (typeof route === 'undefined') {
       return '/' // default to home
     }
@@ -863,6 +895,9 @@ const LINKING = {
     }
 
     if (IS_NATIVE) {
+      if (name === 'Atmosphere') {
+        return buildStateObject('AtmosphereTab', 'Atmosphere', params)
+      }
       if (name === 'Search') {
         return buildStateObject('SearchTab', 'Search', params)
       }
