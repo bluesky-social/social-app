@@ -85,6 +85,7 @@ import {
   prefetchLiveEvents,
   Provider as LiveEventsProvider,
 } from '#/features/liveEvents/context'
+import {TrendingTopicsWidgetSync} from '#/features/trendingWidget/Sync'
 import * as Geo from '#/geolocation'
 import {Splash} from '#/Splash'
 
@@ -174,6 +175,7 @@ function InnerApp() {
                                               <MutedThreadsProvider>
                                                 <ProgressGuideProvider>
                                                   <ServiceAccountManager>
+                                                    <TrendingTopicsWidgetSync />
                                                     <EmailVerificationProvider>
                                                       <HideBottomBarBorderProvider>
                                                         <GestureHandlerRootView
