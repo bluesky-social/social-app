@@ -160,30 +160,40 @@ function DrawerLayout({children}: {children: React.ReactNode}) {
       configureGestureHandler={handler => {
         if (swipeEnabled) {
           if (isDrawerOpen) {
-            return handler.activeOffsetX([-1, 1])
+            return {...handler, activeOffsetX: [-1, 1]}
           } else {
-            return (
-              handler
-                // Any movement to the left is a pager swipe
-                // so fail the drawer gesture immediately.
-                .failOffsetX(-1)
-                // Don't rush declaring that a movement to the right
-                // is a drawer swipe. It could be a vertical scroll, or a
-                // slow horizontal carousel swipe. On Android a child
-                // `blocksExternalGesture` only holds the drawer off once the
-                // native scroll has activated, which on a slow swipe doesn't
-                // happen until movement crosses the native touch slop
-                // (~8-16px). Activating the drawer below that lets a slow
-                // carousel swipe pop the drawer open (APP-2119), so require
-                // more travel before claiming on Android.
-                .activeOffsetX(IS_ANDROID ? 20 : 5)
-            )
+            return {
+              ...handler,
+              /*
+               * Any movement to the left is a pager swipe, so fail the drawer
+               * gesture immediately.
+               */
+              failOffsetX: -1,
+              /*
+               * Don't rush declaring that a movement to the right is a drawer
+               * swipe. It could be a vertical scroll, or a slow horizontal
+               * carousel swipe. On Android a child's `block` relation only
+               * holds the drawer off once the native scroll has activated,
+               * which on a slow swipe doesn't happen until movement crosses
+               * the native touch slop (~8-16px). Activating the drawer below
+               * that lets a slow carousel swipe pop the drawer open (APP-2119),
+               * so require more travel before claiming on Android.
+               */
+              activeOffsetX: IS_ANDROID ? 20 : 5,
+            }
           }
         } else {
-          // Fail the gesture immediately.
-          // This seems more reliable than the `swipeEnabled` prop.
-          // With `swipeEnabled` alone, the gesture may freeze after toggling off/on.
-          return handler.failOffsetX([0, 0]).failOffsetY([0, 0])
+          /*
+           * Fail the gesture immediately and skip the edge peek on touch-down.
+           * This seems more reliable than the `swipeEnabled` prop alone, which
+           * may freeze after toggling off/on.
+           */
+          return {
+            ...handler,
+            onBegin: undefined,
+            failOffsetX: [0, 0],
+            failOffsetY: [0, 0],
+          }
         }
       }}
       open={isDrawerOpen}
