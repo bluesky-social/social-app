@@ -50,6 +50,8 @@ export type ListProps<ItemT = any> = Omit<
   | 'refreshControl' // Pass refreshing and/or onRefresh instead.
   | 'contentOffset' // Pass headerOffset instead.
 > & {
+  /** Native only: the web list renders every row, so has no spacers. */
+  measureInteriorSpacers?: boolean
   onScrolledDownChange?: (isScrolledDown: boolean) => void
   headerOffset?: number
   refreshing?: boolean
@@ -89,6 +91,7 @@ function ListImpl<ItemT>(
     headerOffset,
     keyExtractor,
     refreshing: _unsupportedRefreshing,
+    measureInteriorSpacers: _unsupportedMeasureInteriorSpacers,
     onStartReached,
     onStartReachedThreshold = 2,
     onEndReached,

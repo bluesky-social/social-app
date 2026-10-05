@@ -31,6 +31,13 @@ export type ListProps<ItemT = any> = Omit<
   | 'contentOffset' // Pass headerOffset instead.
   | 'progressViewOffset' // Can't be an animated value
 > & {
+  /**
+   * Size a spacer between rendered rows from where those rows were laid out,
+   * rather than from the average row height, so it holds still as rows are
+   * measured. For a list with `maintainVisibleContentPosition` that takes
+   * large prepends. See patches/@react-native__virtualized-lists@0.86.3.patch.md.
+   */
+  measureInteriorSpacers?: boolean
   onScrolledDownChange?: (isScrolledDown: boolean) => void
   headerOffset?: number
   refreshing?: boolean
