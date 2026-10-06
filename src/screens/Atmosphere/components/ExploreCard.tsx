@@ -34,9 +34,10 @@ export function ExploreCard({
           style={[a.flex_col, a.flex_1, a.w_full]}>
           <View style={[a.w_full, {height: 96}]}>
             <Image
-              source={article.image.src}
+              source={article.image}
               contentFit="cover"
               style={[a.absolute, a.inset_0, a.w_full, a.h_full]}
+              accessible={false}
             />
           </View>
           <View style={[a.flex_1, a.gap_xs, a.p_md, {paddingTop: 10}]}>
