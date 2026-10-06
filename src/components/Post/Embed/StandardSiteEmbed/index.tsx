@@ -4,6 +4,7 @@ import {AtUri} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
+import {CARD_ASPECT_RATIO} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
 import {niceDate} from '#/lib/strings/time'
@@ -26,6 +27,7 @@ import {isStandardSitePublicationEmbed} from '#/components/Post/Embed/StandardSi
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {useThumbAspectRatio} from '../useThumbAspectRatio'
 
 const PUBLICATION_AVATAR_STYLE = {
   borderRadius: a.rounded_sm.borderRadius,
@@ -47,6 +49,7 @@ export const StandardSiteEmbed = ({
   const haptics = useHaptics()
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.thumb
+  const thumbAspectRatio = useThumbAspectRatio(imageUri, CARD_ASPECT_RATIO)
   const hasMedia = Boolean(imageUri)
   const isStandard = view.associatedRefs?.some(ref =>
     new AtUri(ref.uri).collection.startsWith('site.standard.'),
@@ -174,7 +177,7 @@ export const StandardSiteEmbed = ({
             ]}>
             {imageUri ? (
               <Image
-                style={[a.aspect_card]}
+                style={[{aspectRatio: thumbAspectRatio}]}
                 source={{uri: imageUri}}
                 accessibilityIgnoresInvertColors
                 loading="lazy"
