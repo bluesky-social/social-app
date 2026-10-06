@@ -9,7 +9,7 @@ import {Trans} from '@lingui/react/macro'
 import {useHaptics} from '#/lib/haptics'
 import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 // @ts-expect-error
 import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.png'
@@ -28,6 +28,7 @@ export const SplashScreen = ({
   onPressCreateAccount: () => void
 }) => {
   const t = useTheme()
+  const {gtPhone} = useBreakpoints()
   const {_} = useLingui()
   const isDarkMode = t.name !== 'light'
 
@@ -79,7 +80,12 @@ export const SplashScreen = ({
 
         <View
           testID="signinOrCreateAccount"
-          style={[a.px_5xl, a.gap_md, a.pb_sm]}>
+          style={[
+            a.px_5xl,
+            a.gap_md,
+            a.pb_sm,
+            gtPhone && [a.w_full, a.self_center, {maxWidth: 600}],
+          ]}>
           <Button
             testID="createAccountButton"
             onPress={() => {

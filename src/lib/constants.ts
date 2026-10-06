@@ -234,7 +234,8 @@ export const PUBLIC_APPVIEW = 'https://api.bsky.app'
 export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
-export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
+export const DEV_ENV_APPVIEW =
+  process.env.EXPO_PUBLIC_DEV_ENV_APPVIEW_URL || 'http://localhost:2584'
 
 // temp hack for e2e - esb
 export const BLUESKY_PROXY_HEADER = {

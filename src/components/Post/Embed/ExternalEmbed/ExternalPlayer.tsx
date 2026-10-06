@@ -166,7 +166,7 @@ export function ExternalPlayer({
       width: windowDims.width,
       hasThumb: !!link.thumb,
     })
-  }, [params.type, windowDims.width, link.thumb])
+  }, [params.type, windowDims.width, windowDims.height, link.thumb])
 
   const viewRef = useAnimatedRef()
   const frameCallback = useFrameCallback(() => {

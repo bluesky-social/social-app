@@ -17,11 +17,12 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useSetLightStatusBar} from '#/state/shell/light-status-bar'
 import {usePagerHeaderContext} from '#/view/com/pager/PagerHeaderContext'
 import {LoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Header} from '#/components/Layout'
 import * as ProfileCard from '#/components/ProfileCard'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+import {shouldUseProfileLightStatusBar} from './layout'
 import {
   HeaderLabelerButtons,
   ProfileHeaderLabeler,
@@ -152,7 +153,14 @@ const MinimalHeader = memo(function MinimalHeader({
     },
   )
 
-  useSetLightStatusBar(isScreenFocused && !visible)
+  const {gtMobile} = useBreakpoints()
+  useSetLightStatusBar(
+    shouldUseProfileLightStatusBar({
+      gtMobile,
+      isScreenFocused,
+      isHeaderHidden: !visible,
+    }),
+  )
 
   return (
     <Animated.View
