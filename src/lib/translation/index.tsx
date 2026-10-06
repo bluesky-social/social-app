@@ -1,4 +1,4 @@
-import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
+import {useCallback, useContext, useMemo, useRef, useState} from 'react'
 import {LayoutAnimation, Platform} from 'react-native'
 import {getLocales} from 'expo-localization'
 import {onTranslateTask} from '@bsky.app/expo-translate-text'
@@ -28,16 +28,6 @@ const E_SAME_AS_SOURCE_LANGUAGE =
   'Translation result is the same as the source text.'
 const E_EMPTY_RESULT = 'Translation result is empty.'
 const E_INVALID_SOURCE_LANGUAGE = 'Invalid source language'
-
-/**
- * Returns a copy of `obj` without `key`. A computed property in a destructuring
- * pattern is syntax React Compiler cannot lower, so this stays out of the hook.
- */
-function omitKey<T extends Record<string, unknown>>(obj: T, key: string): T {
-  const next = {...obj}
-  delete next[key]
-  return next
-}
 
 /**
  * Attempts on-device translation via @bsky.app/expo-translate-text.
@@ -171,47 +161,45 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
   const [translationState, setTranslationState] = useState<
     Record<string, TranslationState>
   >({})
-  const [refCounts, setRefCounts] = useState<Record<string, number>>({})
+  /*
+   * Kept in a ref rather than state: every post acquires a key on mount and
+   * releases it on unmount, so state here re-rendered this near-root provider
+   * for every post that scrolled in or out of the feed.
+   */
+  const refCounts = useRef(new Map<string, number>())
   const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
   const {t: l} = useLingui()
   const googleTranslate = useGoogleTranslate()
 
-  useEffect(() => {
-    setTranslationState(prev => {
-      const keysToDelete: string[] = []
-
-      for (const key of Object.keys(prev)) {
-        if ((refCounts[key] ?? 0) <= 0) {
-          keysToDelete.push(key)
-        }
-      }
-
-      if (keysToDelete.length > 0) {
-        const newState = {...prev}
-        keysToDelete.forEach(key => {
-          delete newState[key]
-        })
-        return newState
-      }
-
-      return prev
-    })
-  }, [refCounts])
-
   const acquireTranslation = useCallback((key: string) => {
-    setRefCounts(prev => ({
-      ...prev,
-      [key]: (prev[key] ?? 0) + 1,
-    }))
+    refCounts.current.set(key, (refCounts.current.get(key) ?? 0) + 1)
 
     return () => {
-      setRefCounts(prev => {
-        const newCount = (prev[key] ?? 1) - 1
-        if (newCount <= 0) {
-          return omitKey(prev, key)
+      const newCount = (refCounts.current.get(key) ?? 1) - 1
+      if (newCount > 0) {
+        refCounts.current.set(key, newCount)
+        return
+      }
+      refCounts.current.delete(key)
+
+      /*
+       * Drop translations that no mounted post uses anymore. Returning `prev`
+       * when there is nothing to drop (the common case) lets React skip the
+       * update entirely.
+       */
+      setTranslationState(prev => {
+        const keysToDelete = Object.keys(prev).filter(
+          k => !refCounts.current.has(k),
+        )
+        if (keysToDelete.length === 0) {
+          return prev
         }
-        return {...prev, [key]: newCount}
+        const newState = {...prev}
+        keysToDelete.forEach(k => {
+          delete newState[k]
+        })
+        return newState
       })
     }
   }, [])
