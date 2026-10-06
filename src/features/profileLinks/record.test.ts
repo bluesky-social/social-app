@@ -1,10 +1,21 @@
-import {describe, expect, it} from '@jest/globals'
+// the global mock stubs out CID parsing, which the icon fixture needs
+jest.unmock('multiformats/cid')
+
+import {parseCid} from '@atproto/lex'
+import {describe, expect, it, jest} from '@jest/globals'
 
 import {
   parseProfileRecordLinks,
   truncateTitle,
   withProfileRecordLinks,
 } from './record'
+
+const icon = {
+  $type: 'blob' as const,
+  ref: parseCid('bafkreibq3lmclwphfiidatqr3jkvwrrxpcj3k27kb2zyx4gd4wngevqmta'),
+  mimeType: 'image/png',
+  size: 1024,
+}
 
 describe('parseProfileRecordLinks', () => {
   it('reads links and the Germ position', () => {
@@ -64,6 +75,21 @@ describe('parseProfileRecordLinks', () => {
     expect(links).toHaveLength(10)
   })
 
+  it('reads stored icons, skipping ones that are not images', () => {
+    const {links} = parseProfileRecordLinks({
+      betaLinks: [
+        {uri: 'https://a.example', icon},
+        {uri: 'https://b.example', icon: {...icon, mimeType: 'text/html'}},
+        {uri: 'https://c.example', icon: 'not a blob'},
+      ],
+    })
+    expect(links).toEqual([
+      {url: 'https://a.example', icon},
+      {url: 'https://b.example'},
+      {url: 'https://c.example'},
+    ])
+  })
+
   it('ignores an invalid Germ position', () => {
     expect(parseProfileRecordLinks({betaLinksGermIndex: -1}).germIndex).toBe(0)
     expect(parseProfileRecordLinks({betaLinksGermIndex: 1.5}).germIndex).toBe(0)
@@ -116,6 +142,13 @@ describe('withProfileRecordLinks', () => {
         {links: [], germIndex: 0},
       ),
     ).toEqual({displayName: 'Kat'})
+  })
+
+  it('keeps a stored icon', () => {
+    const data = {links: [{url: 'https://example.com/', icon}], germIndex: 0}
+    expect(parseProfileRecordLinks(withProfileRecordLinks({}, data))).toEqual(
+      data,
+    )
   })
 
   it('round-trips through the parser', () => {

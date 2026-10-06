@@ -444,6 +444,7 @@ function DialogInner({
 
         {linksEnabled && links && (
           <ProfileLinksEditor
+            did={profile.did}
             links={links.links}
             germIndex={links.germIndex}
             germButton={

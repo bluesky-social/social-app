@@ -1,4 +1,5 @@
 import {View} from 'react-native'
+import {getBlobCidString} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenLink} from '#/lib/hooks/useOpenLink'
@@ -17,6 +18,7 @@ import type * as bsky from '#/types/bsky'
 import {useSupportPalette} from '../palette'
 import {getLinkHost, getSupportProvider} from '../providers'
 import {type ProfileLink} from '../types'
+import {LinkFavicon} from './LinkFavicon'
 import {ProviderLogo} from './ProviderLogo'
 
 /**
@@ -109,15 +111,31 @@ function LinkInterstitialInner({
                     }
                   : [t.atoms.bg_contrast_25, t.atoms.border_contrast_low],
               ]}>
-              <ProviderLogo
-                provider={provider}
-                size="lg"
-                style={
-                  provider
-                    ? {color: palette.tintText}
-                    : t.atoms.text_contrast_medium
-                }
-              />
+              {!provider && link.icon ? (
+                <LinkFavicon
+                  key={getBlobCidString(link.icon)}
+                  did={profile.did}
+                  icon={link.icon}
+                  size={24}
+                  fallback={
+                    <ProviderLogo
+                      provider={undefined}
+                      size="lg"
+                      style={t.atoms.text_contrast_medium}
+                    />
+                  }
+                />
+              ) : (
+                <ProviderLogo
+                  provider={provider}
+                  size="lg"
+                  style={
+                    provider
+                      ? {color: palette.tintText}
+                      : t.atoms.text_contrast_medium
+                  }
+                />
+              )}
             </View>
           </View>
 

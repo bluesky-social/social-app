@@ -1,3 +1,4 @@
+import {type BlobRef, getBlobMime, isBlobRef} from '@atproto/lex'
 import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {isBlockedProfileLink, normalizeProfileLinkUrl} from './providers'
@@ -35,7 +36,11 @@ export function parseProfileRecordLinks(record: unknown): ProfileLinksData {
     for (const raw of rawLinks) {
       if (links.length >= MAX_PROFILE_LINKS) break
       if (!raw || typeof raw !== 'object') continue
-      const {uri, title} = raw as {uri?: unknown; title?: unknown}
+      const {uri, title, icon} = raw as {
+        uri?: unknown
+        title?: unknown
+        icon?: unknown
+      }
       if (typeof uri !== 'string') continue
       const normalized = normalizeProfileLinkUrl(uri)
       if (
@@ -50,7 +55,10 @@ export function parseProfileRecordLinks(record: unknown): ProfileLinksData {
       const url = /^https?:\/\//i.test(uri) ? uri : normalized
       const trimmedTitle =
         typeof title === 'string' ? truncateTitle(title.trim()) : ''
-      links.push(trimmedTitle ? {url, title: trimmedTitle} : {url})
+      const link: ProfileLink = {url}
+      if (trimmedTitle) link.title = trimmedTitle
+      if (isIconBlob(icon)) link.icon = icon
+      links.push(link)
     }
   }
 
@@ -75,12 +83,27 @@ export function withProfileRecordLinks<T extends object>(
   delete next[LINKS_FIELD]
   delete next[GERM_INDEX_FIELD]
   if (links.length > 0) {
-    next[LINKS_FIELD] = links.map(link =>
-      link.title ? {uri: link.url, title: link.title} : {uri: link.url},
-    )
+    next[LINKS_FIELD] = links.map(link => {
+      const entry: {uri: string; title?: string; icon?: BlobRef} = {
+        uri: link.url,
+      }
+      if (link.title) entry.title = link.title
+      if (link.icon) entry.icon = link.icon
+      return entry
+    })
     if (germIndex > 0) next[GERM_INDEX_FIELD] = germIndex
   }
   return next as T
+}
+
+/**
+ * Only raster images we'd show; cardyb always serves PNG, but any client can
+ * write these fields.
+ */
+function isIconBlob(value: unknown): value is BlobRef {
+  if (!isBlobRef(value, {strict: false})) return false
+  const mime = getBlobMime(value)
+  return mime === 'image/png' || mime === 'image/jpeg' || mime === 'image/webp'
 }
 
 /** Cuts by characters, so an emoji is never split in half. */

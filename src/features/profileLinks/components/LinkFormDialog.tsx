@@ -19,6 +19,7 @@ import {
   normalizeProfileLinkUrl,
   validateLinkInput,
 } from '../providers'
+import {useUploadLinkIcon} from '../state'
 import {MAX_TITLE_LENGTH, type ProfileLink} from '../types'
 import {ProviderLogo} from './ProviderLogo'
 
@@ -102,6 +103,7 @@ function LinkFormInner({
   const t = useTheme()
   const ax = useAnalytics()
   const palette = useSupportPalette()
+  const uploadLinkIcon = useUploadLinkIcon()
 
   const isEditing = !!link
   const startingInput = link ? formatUrl(link.url) : ''
@@ -110,8 +112,8 @@ function LinkFormInner({
   const [title, setTitle] = useState(link?.title ?? '')
   /*
    * Before saving a new destination we ask the link preview service whether
-   * the page exists. Some sites block scrapers, so a failed check is a
-   * warning: pressing Save again saves anyway.
+   * the page exists, and fetch the site's icon. Some sites block scrapers, so
+   * a failed check is a warning: pressing Save again saves anyway.
    */
   const [reachability, setReachability] = useState<
     'unchecked' | 'checking' | 'reachable' | 'unreachable'
@@ -183,18 +185,28 @@ function LinkFormInner({
       setError('duplicate')
       return
     }
+    const isNewDestination = targetUrl !== link?.url
     // a saved link has proven itself; only check new destinations
-    if (targetUrl !== link?.url && reachability === 'unchecked') {
+    const needsCheck = isNewDestination && reachability === 'unchecked'
+    const keptIcon = isNewDestination ? undefined : link?.icon
+    // support links use bundled logos instead
+    const needsIcon = !provider && !keptIcon
+    let icon = keptIcon
+    if (needsCheck || needsIcon) {
       setReachability('checking')
-      const meta = await getLinkMeta(targetUrl, 8e3)
-      if (meta.error) {
+      const [meta, uploadedIcon] = await Promise.all([
+        needsCheck ? getLinkMeta(targetUrl, 8e3) : undefined,
+        needsIcon ? uploadLinkIcon(targetUrl) : undefined,
+      ])
+      if (meta?.error) {
         setReachability('unreachable')
         return
       }
+      icon = uploadedIcon ?? icon
     }
-    const saved: ProfileLink = nextTitle
-      ? {url: targetUrl, title: nextTitle}
-      : {url: targetUrl}
+    const saved: ProfileLink = {url: targetUrl}
+    if (nextTitle) saved.title = nextTitle
+    if (icon) saved.icon = icon
     control.close(() => onSave(saved))
   }
 
