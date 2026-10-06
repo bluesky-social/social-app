@@ -1,4 +1,4 @@
-import atmosphereData from './data.json'
+import atmosphereData from './data.json' with {type: 'json'}
 
 export type AtmosphereData = typeof atmosphereData
 
@@ -7,9 +7,7 @@ export type AtmosphereArticleCardData = {
   href: string
   title: string
   description?: string
-  image: {
-    src: string
-  }
+  image: string
   publisher: string
   publisherAvatar?: string
 }
@@ -22,9 +20,7 @@ export function getAtmosphereArticles(
     href: article.uri,
     title: article.title.trim(),
     description: article.description || undefined,
-    image: {
-      src: article.image,
-    },
+    image: article.image,
     publisher: article.publisher.title,
     publisherAvatar: article.associatedProfiles[0]?.avatar,
   }))
