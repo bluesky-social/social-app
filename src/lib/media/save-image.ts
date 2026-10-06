@@ -15,6 +15,12 @@ export function useSaveImageToMediaLibrary() {
   const [permissionResponse, requestPermission, getPermission] =
     MediaLibrary.usePermissions({
       granularPermissions: ['photo'],
+      /*
+       * Don't query the permission on mount. Every image embed in the feed
+       * mounts this hook, so the eager query cost a native call and a
+       * re-render per post. The save handler fetches it on demand instead.
+       */
+      get: false,
     })
   return useCallback(
     async (uri: string) => {
