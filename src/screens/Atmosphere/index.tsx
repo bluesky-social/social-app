@@ -1,6 +1,8 @@
 import {View} from 'react-native'
+import Animated, {useAnimatedStyle} from 'react-native-reanimated'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {Pager} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {NotFoundScreen} from '#/view/screens/NotFound'
@@ -44,24 +46,45 @@ export function AtmosphereScreen() {
             <TabBar {...props} items={[l`Activity`, l`Explore`]} />
           </Layout.Center>
         )}>
-        <AtmosphereWelcome />
+        <AtmosphereActivityTab />
         <AtmosphereExploreTab />
       </Pager>
     </Layout.Screen>
   )
 }
 
-function AtmosphereWelcome() {
+function AtmosphereActivityTab() {
   const t = useTheme()
+  const {footerHeight} = useShellLayout()
+  const animatedStyle = useAnimatedStyle(() => ({
+    paddingBottom: footerHeight.get(),
+  }))
 
   return (
-    <Layout.Center style={[a.flex_1, a.align_center, a.justify_center]}>
-      <View style={[a.align_center, a.gap_lg]}>
-        <EarthIcon size="4xl" style={[t.atoms.text_contrast_low]} />
-        <Text style={[a.text_2xl, a.font_semi_bold, a.text_center]}>
-          <Trans>Welcome!</Trans>
-        </Text>
-      </View>
-    </Layout.Center>
+    <Animated.View style={[a.flex_1, animatedStyle]}>
+      <Layout.Center style={[a.flex_1, a.align_center, a.justify_center]}>
+        <View style={[a.align_center, a.gap_lg]}>
+          <EarthIcon size="4xl" style={[t.atoms.text_contrast_low]} />
+          <View style={[a.align_center, a.gap_xs]}>
+            <Text style={[a.text_md, a.font_semi_bold, a.text_center]}>
+              <Trans>Your Atmosphere is quiet</Trans>
+            </Text>
+            <Text
+              style={[
+                a.text_sm,
+                a.text_center,
+                t.atoms.text_contrast_low,
+                {maxWidth: 300},
+              ]}>
+              <Trans>
+                The Atmosphere is the open network Bluesky is built on. When
+                people you follow are active on the Atmosphere, you can see it
+                here.
+              </Trans>
+            </Text>
+          </View>
+        </View>
+      </Layout.Center>
+    </Animated.View>
   )
 }
