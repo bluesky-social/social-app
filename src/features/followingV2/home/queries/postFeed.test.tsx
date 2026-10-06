@@ -858,7 +858,7 @@ describe('usePostFeedRefresh', () => {
 
 describe('usePostFeedRestorePrepend', () => {
   const KEY = RQKEY('following')
-  const SINCE_REQUEST = 'timeline since:start:1 limit:60'
+  const SINCE_REQUEST = 'timeline since:start:1 limit:100'
   /** A scroll event, whose contents the list's rest tracking doesn't read. */
   const EVENT = {} as ScrollEvent
 

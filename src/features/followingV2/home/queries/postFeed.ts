@@ -538,10 +538,10 @@ export function usePostFeedRefresh(
 export const PROCESS_STARTED_AT = Date.now()
 
 /**
- * How many posts a restore prepend asks for: twice an ordinary page, as a range
- * with more than this in it leaves a gap.
+ * How many posts a restore prepend asks for: the most `getTimeline` allows, as
+ * a range with more than this in it leaves a gap.
  */
-const RESTORE_PREPEND_LIMIT = 60
+const RESTORE_PREPEND_LIMIT = 100
 
 /**
  * Puts what is newer than a top page restored from disk above it, with one
