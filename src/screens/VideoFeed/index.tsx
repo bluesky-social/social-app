@@ -149,7 +149,11 @@ export function VideoFeed({}: NativeStackScreenProps<
 
   return (
     <ThemeProvider theme="dark">
-      <Layout.Screen minimalShell noInsetTop style={{backgroundColor: 'black'}}>
+      <Layout.Screen
+        minimalShell
+        fullBleed
+        noInsetTop
+        style={{backgroundColor: 'black'}}>
         <KeepAwake />
         <View
           style={[
@@ -442,6 +446,7 @@ function Feed() {
     <FeedFeedbackProvider value={feedFeedback}>
       <GestureDetector gesture={scrollGesture}>
         <List
+          disableTabletLayout
           data={videos}
           renderItem={renderItem}
           keyExtractor={keyExtractor}

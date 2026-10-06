@@ -51,7 +51,7 @@ import {List, type ListRef} from '#/view/com/util/List'
 import {PostFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {type VideoFeedSourceContext} from '#/screens/VideoFeed/types'
-import {atoms as a, useBreakpoints, useLayoutBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useLayoutBreakpoints, useTheme} from '#/alf'
 import {
   AgeAssuranceDismissibleFeedBanner,
   useInternalState as useAgeAssuranceBannerState,
@@ -60,6 +60,7 @@ import {ProgressGuide, SuggestedFollows} from '#/components/FeedInterstitials'
 import {
   PostFeedVideoGridRow,
   PostFeedVideoGridRowPlaceholder,
+  useVideoGridColumns,
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
@@ -262,7 +263,7 @@ let PostFeed = ({
   // eslint-disable-next-line react-hooks/purity
   const lastFetchRef = useRef<number>(Date.now())
   const [feedType, feedUriOrActorDid, feedTab] = feed.split('|')
-  const {gtMobile} = useBreakpoints()
+  const videoGridColumns = useVideoGridColumns()
   const {rightNavVisible} = useLayoutBreakpoints()
   const areVideoFeedsEnabled = IS_NATIVE
 
@@ -501,13 +502,12 @@ let PostFeed = ({
           for (let i = 0; i < videos.length; i++) {
             const video = videos[i]
             const item = video.item
-            const cols = gtMobile ? 3 : 2
             const rowItem = {
               item,
               feedContext: video.feedContext,
               reqId: video.reqId,
             }
-            if (i % cols === 0) {
+            if (i % videoGridColumns === 0) {
               rows.push([rowItem])
             } else {
               rows[rows.length - 1].push(rowItem)
@@ -728,7 +728,7 @@ let PostFeed = ({
     hasSession,
     showProgressInterstitial,
     trendingVideoDisabled,
-    gtMobile,
+    videoGridColumns,
     isVideoFeed,
     areVideoFeedsEnabled,
     hasPressedShowLessUris,
