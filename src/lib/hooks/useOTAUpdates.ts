@@ -81,11 +81,8 @@ function isApplyOTAIntent(url: string | null) {
 }
 
 /**
- * Whether this session has been asked to apply a specific deployment, e.g. by
- * scanning a PR OTA QR code. The default checks would race it, since they share
- * the `channel` extra param and expo-updates' single updater, so they stand down
- * for the rest of the session. Read at module load, because the intent handler
- * clears the launch URL once it has handled it.
+ * Read at module load, because the intent handler clears the launch URL once it
+ * has handled it.
  */
 let hasRequestedDeployment = isApplyOTAIntent(getLinkingURL())
 
