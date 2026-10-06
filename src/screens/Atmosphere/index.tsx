@@ -10,6 +10,7 @@ import {Earth_Stroke2_Corner0_Rounded as EarthIcon} from '#/components/icons/Ear
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {AtmosphereExploreTab} from './ExploreTab'
 
 export function AtmosphereScreen() {
   const {t: l} = useLingui()
@@ -44,7 +45,7 @@ export function AtmosphereScreen() {
           </Layout.Center>
         )}>
         <AtmosphereWelcome />
-        <AtmosphereWelcome />
+        <AtmosphereExploreTab />
       </Pager>
     </Layout.Screen>
   )
