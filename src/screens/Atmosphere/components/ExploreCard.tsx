@@ -60,7 +60,7 @@ export function ExploreCard({
                   style={[a.rounded_xs, {width: 16, height: 16}]}
                   accessible={false}
                 />
-              ) : null}
+              ) : undefined}
               <Text emoji style={[a.text_xs, a.font_medium]} numberOfLines={1}>
                 {article.publisher}
               </Text>
@@ -79,7 +79,7 @@ export function ExploreCard({
                 numberOfLines={2}>
                 {article.description}
               </Text>
-            ) : null}
+            ) : undefined}
           </View>
         </Link>
       </View>
