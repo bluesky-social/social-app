@@ -4,6 +4,9 @@ import * as env from '#/env'
 import {RepostButton} from './RepostButton'
 
 jest.mock('#/env', () => ({__esModule: true, IS_IPAD: false}))
+jest.mock('#/lib/haptics', () => ({
+  useHaptics: () => ({longPress: jest.fn()}),
+}))
 jest.mock('#/components/PostControls/RepostButtonMenu', () => {
   const {View} = require('react-native')
 
