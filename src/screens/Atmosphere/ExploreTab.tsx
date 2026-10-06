@@ -33,6 +33,7 @@ export function AtmosphereExploreTab() {
               to="/atmosphere"
               label={l`See more articles`}
               onPress={event => {
+                // TODO Just a placeholder. -dsb
                 event.preventDefault()
                 return false
               }}>
@@ -43,11 +44,9 @@ export function AtmosphereExploreTab() {
                     : t.palette.contrast_500
 
                 return (
-                  <>
-                    <Text style={[a.text_sm, a.font_medium, {color}]}>
-                      <Trans>See more</Trans>
-                    </Text>
-                  </>
+                  <Text style={[a.text_sm, a.font_medium, {color}]}>
+                    <Trans>See more</Trans>
+                  </Text>
                 )
               }}
             </Link>
