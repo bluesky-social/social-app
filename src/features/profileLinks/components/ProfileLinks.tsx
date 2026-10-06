@@ -118,7 +118,7 @@ function ProfileLinksRow({
 }) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const playHaptic = useHaptics()
+  const {tap: playTapHaptic} = useHaptics()
   const noticeControl = useDialogControl()
   const reportControl = useReportDialogControl()
   const formControl = useDialogControl()
@@ -161,7 +161,7 @@ function ProfileLinksRow({
           link={link}
           label={l`Edit link`}
           onPress={() => {
-            playHaptic('Light')
+            playTapHaptic()
             setEditingIndex(index)
             formControl.open()
           }}
@@ -171,7 +171,7 @@ function ProfileLinksRow({
           link={link}
           arrow
           onPress={() => {
-            playHaptic('Light')
+            playTapHaptic()
             ax.metric('profile:links:click', {
               domain: getLinkHost(link.url),
               supportProvider: getSupportProvider(link.url)?.name,

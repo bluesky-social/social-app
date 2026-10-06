@@ -73,7 +73,8 @@ export function SortablePills({
   trailing,
 }: SortablePillsProps) {
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const {dragStart: playDragStartHaptic, selection: playSelectionHaptic} =
+    useHaptics()
   const [order, setOrder] = useState<string[]>(() =>
     items.map(item => item.key),
   )
@@ -180,7 +181,7 @@ export function SortablePills({
     setActiveKeyState(key)
     onDragStateChange?.(true)
     settle.setActive(true)
-    playHaptic('Medium')
+    playDragStartHaptic()
   }
 
   /*
@@ -255,7 +256,7 @@ export function SortablePills({
             settling={settling}
             onBegin={beginDrag}
             onLayout={onPillLayout(key)}
-            playHaptic={playHaptic}>
+            playSelectionHaptic={playSelectionHaptic}>
             {item.node}
           </SortablePill>
         )
@@ -352,7 +353,7 @@ function SortablePill({
   settling,
   onBegin,
   onLayout,
-  playHaptic,
+  playSelectionHaptic,
 }: {
   itemKey: string
   /** True while this pill's ghost is being dragged: it becomes the placeholder. */
@@ -371,7 +372,7 @@ function SortablePill({
   settling: SharedValue<boolean>
   onBegin: (key: string) => void
   onLayout: (e: LayoutChangeEvent) => void
-  playHaptic: (strength?: 'Light' | 'Medium' | 'Heavy') => void
+  playSelectionHaptic: () => void
 }) {
   const placement = usePlacement(itemKey, layout)
   const startCenter = useSharedValue<Point>({x: 0, y: 0})
@@ -465,7 +466,7 @@ function SortablePill({
       off[key] = {x: to[key].x - s.x, y: to[key].y - s.y}
     }
     layout.set({frames: fr, off, animate: true, height: rowHeightFor(to)})
-    if (IS_IOS) scheduleOnRN(playHaptic, 'Light')
+    scheduleOnRN(playSelectionHaptic)
   }
 
   const onFinalize = () => {

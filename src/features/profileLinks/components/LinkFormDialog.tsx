@@ -253,7 +253,7 @@ function LinkFormInner({
                 testID="profileLinkUrlInput"
                 label={l`Link`}
                 placeholder="yoursite.com"
-                defaultValue={startingInput}
+                value={input}
                 onChangeText={value => {
                   setInput(value)
                   setTouched(true)
@@ -319,7 +319,6 @@ function LinkFormInner({
                 placeholder={
                   provider ? l`Support on ${provider.name}` : l`e.g. Portfolio`
                 }
-                // controlled so the page's title can be dropped in
                 value={title}
                 onChangeText={setTitle}
                 maxLength={MAX_TITLE_LENGTH}
