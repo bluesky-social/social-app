@@ -66,15 +66,17 @@ interface GalleryProps {
 
 const Context = createContext<{
   bleedRef: React.RefObject<React.ComponentRef<typeof View> | null>
-  bleedWidth: number
 }>({
   bleedRef: {current: null},
-  bleedWidth: 0,
 })
 
+/**
+ * Lets a nested Gallery bleed to the edges of this element. Only provides a
+ * ref: the Gallery measures it itself, so the common case of no Gallery inside
+ * costs no layout events or re-renders.
+ */
 export function GalleryBleed({children}: {children: React.ReactNode}) {
   const ref = useRef<React.ComponentRef<typeof View>>(null)
-  const [bleedWidth, setBleedWidth] = useState(0)
 
   if (!isValidElement(children)) {
     throw new Error('GalleryBleed children must be a single React element')
@@ -83,13 +85,9 @@ export function GalleryBleed({children}: {children: React.ReactNode}) {
   const node = children as React.ReactElement<any>
 
   return (
-    <Context.Provider value={{bleedRef: ref, bleedWidth}}>
+    <Context.Provider value={{bleedRef: ref}}>
       {cloneElement(node, {
         ref: mergeRefs([ref, node?.props?.ref]),
-        onLayout: (e: {nativeEvent: {layout: {width: number}}}) => {
-          setBleedWidth(e.nativeEvent.layout.width)
-          node.props.onLayout?.(e)
-        },
         style: [node.props.style, a.overflow_hidden],
       })}
     </Context.Provider>
@@ -144,20 +142,29 @@ export function Gallery({
    * ancestor. This is a layout-relative measurement that doesn't depend on
    * scroll position, so it works correctly for off-screen FlatList items.
    */
-  const {bleedRef, bleedWidth} = useGalleryBleed()
+  const {bleedRef} = useGalleryBleed()
   const contentRef = useRef<React.ComponentRef<typeof View>>(null)
-  const [contentDims, setContentDims] = useState<{x: number; width: number}>()
+  const [contentDims, setContentDims] = useState<{
+    x: number
+    width: number
+    bleedWidth: number
+  }>()
   const measure = () => {
-    if (contentRef.current && bleedRef.current) {
-      contentRef.current.measureLayout(
-        bleedRef.current,
+    const content = contentRef.current
+    const bleed = bleedRef.current
+    if (content && bleed) {
+      content.measureLayout(
+        bleed,
         (x, _y, w) => {
-          setContentDims({x, width: w})
+          bleed.measure((_bx, _by, bleedWidth) => {
+            setContentDims({x, width: w, bleedWidth})
+          })
         },
         () => {},
       )
     }
   }
+  const bleedWidth = contentDims?.bleedWidth ?? 0
   const width = bleedWidth || Math.min(600, window.width)
   const insetLeft = contentDims?.x ?? 0
   const insetRight =
