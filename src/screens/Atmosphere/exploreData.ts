@@ -1,4 +1,3 @@
-import {rgbToHex} from '#/alf/util/colorGeneration'
 import atmosphereData from './data.json'
 
 export type AtmosphereData = typeof atmosphereData
@@ -14,7 +13,6 @@ export type AtmosphereArticleCardData = {
   }
   publisher: string
   publisherAvatar?: string
-  publisherForegroundColor: string
 }
 
 export function getAtmosphereArticles(
@@ -31,10 +29,5 @@ export function getAtmosphereArticles(
     },
     publisher: article.publisher.title,
     publisherAvatar: article.associatedProfiles[0]?.avatar,
-    publisherForegroundColor: rgbToHex(
-      article.publisher.theme.foregroundRGB.r,
-      article.publisher.theme.foregroundRGB.g,
-      article.publisher.theme.foregroundRGB.b,
-    ),
   }))
 }
