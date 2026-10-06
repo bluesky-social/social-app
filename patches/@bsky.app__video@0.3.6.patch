@@ -1,0 +1,55 @@
+diff --git a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
+index f2aa71ad32f05033b281551e1ec85e89c55493d5..b63a5aa0333bc233ec6145cc76c8aa9744e35a5a 100644
+--- a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
++++ b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
+@@ -163,7 +163,15 @@ class BlueskyVideoView(
+         this.playerScope = playerScope
+     }
+ 
+-    private fun destroy() {
++    /**
++     * `release()` does not wait for the playback thread (see `releaseTimeoutMs` in
++     * `createExoPlayer`), because waiting blocks the main thread for as long as the playback
++     * thread is busy, e.g. creating codecs, which stalled feed scrolling by 40-130 ms per video.
++     *
++     * When the view stays attached, the surface is handed back synchronously first, so a player
++     * created right after this one can attach to the same surface.
++     */
++    private fun destroy(surfaceIsGoingAway: Boolean = false) {
+         val player = this.player ?: return
+ 
+         this.isLoading = false
+@@ -171,6 +179,9 @@ class BlueskyVideoView(
+ 
+         this.pause()
+ 
++        if (!surfaceIsGoingAway) {
++            player.clearVideoSurface()
++        }
+         player.release()
+         this.player = null
+         this.playerView.player = null
+@@ -233,9 +244,12 @@ class BlueskyVideoView(
+     }
+ 
+     override fun onDetachedFromWindow() {
+-        super.onDetachedFromWindow()
++        // Release before super detaches the SurfaceView. Otherwise its surfaceDestroyed callback
++        // makes the still-live player block the main thread until the playback thread lets go
++        // of the surface.
+         ViewManager.removeView(this)
+-        this.destroy()
++        this.destroy(surfaceIsGoingAway = true)
++        super.onDetachedFromWindow()
+     }
+ 
+     // Controls
+@@ -388,6 +402,8 @@ class BlueskyVideoView(
+             .Builder(context)
+             .apply {
+                 setLooper(context.mainLooper)
++                // Make release() asynchronous, see destroy().
++                setReleaseTimeoutMs(0)
+                 setSeekForwardIncrementMs(5000)
+                 setSeekBackIncrementMs(5000)
+             }.build()
