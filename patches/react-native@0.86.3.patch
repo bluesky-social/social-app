@@ -259,7 +259,7 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index c0e56acd2a0f1015f5a4581909e9209a56c46166..06184e0a095decd1559f8888d1d67d62eda00df2 100644
+index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d446715b8 100644
 --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 @@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
@@ -418,6 +418,72 @@ index 1e9ff527f4e6691d716da624031113a397876981..44329c5422c6f24d8a437fa35c6f2bad
  RCT_EXPORT_METHOD(setNativeRefreshing : (nonnull NSNumber *)viewTag toRefreshing : (BOOL)refreshing)
  {
    [self.bridge.uiManager addUIBlock:^(RCTUIManager *uiManager, NSDictionary<NSNumber *, UIView *> *viewRegistry) {
+diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
+index 98b52e028f9f23fb693b9b01e77a7d4c387e6971..ba1117c60e4f20861133d664fdf764bb124004b9 100644
+--- a/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
++++ b/ReactAndroid/src/main/java/com/facebook/react/views/scroll/ReactScrollViewHelper.kt
+@@ -12,6 +12,7 @@ import android.animation.ValueAnimator
+ import android.content.Context
+ import android.graphics.Point
+ import android.os.Build
++import android.os.SystemClock
+ import android.view.View
+ import android.view.ViewGroup
+ import android.widget.OverScroller
+@@ -31,6 +32,7 @@ import com.facebook.react.uimanager.StateWrapper
+ import com.facebook.react.uimanager.UIManagerHelper
+ import com.facebook.react.uimanager.common.UIManagerType
+ import java.lang.ref.WeakReference
++import java.util.WeakHashMap
+ import java.util.concurrent.CopyOnWriteArrayList
+ import kotlin.math.abs
+ import kotlin.math.max
+@@ -46,6 +48,15 @@ public object ReactScrollViewHelper {
+   private const val SCROLL_AWAY_PADDING_BOTTOM = "scrollAwayPaddingBottom"
+ 
+   public const val MOMENTUM_DELAY: Long = 20
++
++  /**
++   * Minimum time between scroll-driven Fabric state updates of one scroll view. Every update is a
++   * full shadow tree commit and layout on the JS thread, so pushing one per frame (~40/s during a
++   * fling) cost more JS thread time than all React commits combined in a feed.
++   */
++  private const val SCROLL_STATE_UPDATE_INTERVAL_MS: Long = 100
++  private val lastScrollStateUpdateTime = WeakHashMap<ViewGroup, Long>()
++  private val pendingScrollStateUpdates = WeakHashMap<ViewGroup, Runnable>()
+   public const val OVER_SCROLL_ALWAYS: String = "always"
+   public const val AUTO: String = "auto"
+   public const val OVER_SCROLL_NEVER: String = "never"
+@@ -435,11 +446,24 @@ public object ReactScrollViewHelper {
+           T : HasScrollState?,
+           T : HasStateWrapper?,
+           T : ViewGroup {
+-    // Race an UpdateState with every onScroll. This makes it more likely that, in Fabric,
+-    // when JS processes the scroll event, the C++ ShadowNode representation will have a
+-    // "more correct" scroll position. It will frequently be /incorrect/ but this decreases
+-    // the error as much as possible.
+-    updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
++    // Throttled to one update per SCROLL_STATE_UPDATE_INTERVAL_MS, with a trailing update so
++    // the state catches up with the final offset. Touch up, scrollTo and the momentum-end
++    // runnable still update the state immediately.
++    val now = SystemClock.uptimeMillis()
++    val elapsed = now - (lastScrollStateUpdateTime[scrollView] ?: 0L)
++    if (elapsed >= SCROLL_STATE_UPDATE_INTERVAL_MS) {
++      pendingScrollStateUpdates.remove(scrollView)?.let { scrollView.removeCallbacks(it) }
++      lastScrollStateUpdateTime[scrollView] = now
++      updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
++    } else if (!pendingScrollStateUpdates.containsKey(scrollView)) {
++      val trailingUpdate = Runnable {
++        pendingScrollStateUpdates.remove(scrollView)
++        lastScrollStateUpdateTime[scrollView] = SystemClock.uptimeMillis()
++        updateFabricScrollState(scrollView, scrollView.scrollX, scrollView.scrollY)
++      }
++      pendingScrollStateUpdates[scrollView] = trailingUpdate
++      scrollView.postDelayed(trailingUpdate, SCROLL_STATE_UPDATE_INTERVAL_MS - elapsed)
++    }
+     emitScrollEvent(scrollView, xVelocity, yVelocity)
+   }
+ 
 diff --git a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt b/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
 index 59775241c80bec99ad3ec080f2425aacc8900c24..426de3aa77cda2032d7b0991e2ca3f8482a438d3 100644
 --- a/ReactAndroid/src/main/java/com/facebook/react/views/view/ReactViewGroup.kt
