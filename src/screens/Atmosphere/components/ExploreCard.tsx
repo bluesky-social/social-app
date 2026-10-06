@@ -61,14 +61,7 @@ export function ExploreCard({
                   accessible={false}
                 />
               ) : null}
-              <Text
-                emoji
-                style={[
-                  a.text_xs,
-                  a.font_medium,
-                  {color: article.publisherForegroundColor},
-                ]}
-                numberOfLines={1}>
+              <Text emoji style={[a.text_xs, a.font_medium]} numberOfLines={1}>
                 {article.publisher}
               </Text>
             </View>
