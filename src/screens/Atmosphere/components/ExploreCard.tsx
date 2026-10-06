@@ -16,10 +16,6 @@ export function ExploreCard({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const label =
-    article.image.alt !== article.title
-      ? l`Open ${article.title}: ${article.image.alt}`
-      : l`Open ${article.title}`
 
   return (
     <View
@@ -34,15 +30,13 @@ export function ExploreCard({
       <View style={[a.flex_1, a.rounded_md, a.overflow_hidden]}>
         <Link
           to={article.href}
-          label={label}
+          label={l`Open ${article.title}`}
           style={[a.flex_col, a.flex_1, a.w_full]}>
           <View style={[a.w_full, {height: 96}]}>
             <Image
               source={article.image.src}
               contentFit="cover"
               style={[a.absolute, a.inset_0, a.w_full, a.h_full]}
-              accessibilityLabel={article.image.alt}
-              accessibilityHint={l`Opens this article`}
             />
           </View>
           <View style={[a.flex_1, a.gap_xs, a.p_md, {paddingTop: 10}]}>

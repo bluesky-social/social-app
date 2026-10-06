@@ -9,7 +9,6 @@ export type AtmosphereArticleCardData = {
   description?: string
   image: {
     src: string
-    alt: string
   }
   publisher: string
   publisherAvatar?: string
@@ -25,7 +24,6 @@ export function getAtmosphereArticles(
     description: article.description || undefined,
     image: {
       src: article.image,
-      alt: article.title.trim(),
     },
     publisher: article.publisher.title,
     publisherAvatar: article.associatedProfiles[0]?.avatar,
