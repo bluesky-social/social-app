@@ -23,3 +23,17 @@ The patch:
   attach to the same surface.
 
 Should be upstreamed to bluesky-social/bluesky-video.
+
+---
+
+Inflates the inline `PlayerView` with a layout that has no `exo_controller_placeholder`
+(`res/layout/bluesky_video_player*.xml`, a copy of media3-ui's `exo_player_view.xml`
+minus the placeholder).
+
+`PlayerView` constructs a full `PlayerControlView` (control bar, settings `RecyclerView`
+and adapters, popup window, time bar) whenever its layout contains that placeholder, even
+with `useController = false`. The feed player never shows it, but building it was most of
+the ~11 ms each video view took to create on the main thread. Without the placeholder
+`PlayerView` leaves the controller null, which media3 supports (`useController()` is false
+then). `player_layout_id` is XML-only, hence the inflated wrapper layout. The fullscreen
+player builds its own `PlayerView` and keeps its controls.
