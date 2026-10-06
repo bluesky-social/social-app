@@ -159,6 +159,7 @@ function ProfileLinksRow({
       node: isOwnProfile ? (
         <ProfileLinkPill
           link={link}
+          did={profile.did}
           label={l`Edit link`}
           onPress={() => {
             playTapHaptic()
@@ -169,6 +170,7 @@ function ProfileLinksRow({
       ) : (
         <ProfileLinkPill
           link={link}
+          did={profile.did}
           arrow
           onPress={() => {
             playTapHaptic()

@@ -1,4 +1,5 @@
 import {type AccessibilityActionEvent} from 'react-native'
+import {getBlobCidString} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useTheme} from '#/alf'
@@ -15,6 +16,7 @@ import {
 import {getLinkHost, getSupportProvider} from '../providers'
 import {type ProfileLink} from '../types'
 import {DragHandle} from './DragHandle'
+import {ButtonFavicon} from './LinkFavicon'
 import {linkIcon} from './ProviderLogo'
 
 export type PillA11yActions = {
@@ -40,8 +42,11 @@ export function ProfileLinkPill({
   handle = false,
   testID = 'profileLinkPill',
   a11yActions,
+  did,
 }: {
   link: ProfileLink
+  /** The profile owner, whose repo holds the link's stored icon. */
+  did?: string
   onPress?: () => void
   /** Accessibility label. Defaults to "Open <title>". */
   label?: string
@@ -85,7 +90,15 @@ export function ProfileLinkPill({
         provider && {backgroundColor: palette.bg},
       ]}
       hoverStyle={provider ? {backgroundColor: palette.bgHover} : undefined}>
-      <ButtonIcon icon={linkIcon(provider)} />
+      {!provider && link.icon && did ? (
+        <ButtonFavicon
+          key={getBlobCidString(link.icon)}
+          did={did}
+          icon={link.icon}
+        />
+      ) : (
+        <ButtonIcon icon={linkIcon(provider)} />
+      )}
       <ButtonText numberOfLines={1} emoji style={{color}}>
         {link.title ? (
           link.title

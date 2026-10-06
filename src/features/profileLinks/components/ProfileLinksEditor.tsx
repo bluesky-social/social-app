@@ -23,12 +23,15 @@ import {type SortableItem, SortablePills} from './SortablePills'
  * form for that link. Changes stay local until the profile is saved.
  */
 export function ProfileLinksEditor({
+  did,
   links,
   germIndex,
   germButton,
   onChange,
   onDragStateChange,
 }: {
+  /** The owner, whose repo holds the links' stored icons. */
+  did: string
   links: ProfileLink[]
   germIndex: number
   /**
@@ -88,6 +91,7 @@ export function ProfileLinksEditor({
       label: linkLabel(item.link),
       node: (
         <ProfileLinkPill
+          did={did}
           link={item.link}
           label={l`Edit ${linkLabel(item.link)}`}
           onPress={() => openForm(index)}
@@ -96,7 +100,7 @@ export function ProfileLinksEditor({
           a11yActions={a11yActionsFor(item.key)}
         />
       ),
-      ghost: <ProfileLinkPill link={item.link} handle />,
+      ghost: <ProfileLinkPill link={item.link} did={did} handle />,
     }
   })
 
