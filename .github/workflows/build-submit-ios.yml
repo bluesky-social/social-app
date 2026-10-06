@@ -99,6 +99,8 @@ jobs:
     if: github.repository == 'bluesky-social/social-app'
     name: Build iOS
     runs-on: ${{ inputs.runner || 'macos-26-xlarge' }}
+    env:
+      XCODE_VERSION: '26.6'
     concurrency:
       group: ios-build
       cancel-in-progress: false
@@ -119,6 +121,18 @@ jobs:
           echo "Building source: $(git rev-parse HEAD)"
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
+      # A workflow_dispatch can check out a different sourceRef from the ref that
+      # triggered the run. Only share caches for the actual main branch tip.
+      - name: Select ccache policy
+        id: ccache-policy
+        env:
+          BUILD_PROFILE: ${{ inputs.profile || 'testflight' }}
+          SOURCE_SHA: ${{ steps.source.outputs.sha }}
+        run: |
+          if [[ "$BUILD_PROFILE" == "testflight" && "$GITHUB_REF" == "refs/heads/main" && "$SOURCE_SHA" == "$GITHUB_SHA" ]]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 🔧 Setup Expo project
         uses: $/.github/actions/setup-expo-project
         with:
@@ -127,7 +141,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@ed7a3b1fda3918c0306d1b724322adc0b8cc0a90 # v1.7.0
         with:
-          xcode-version: "26.4"
+          xcode-version: ${{ env.XCODE_VERSION }}
 
       - name: ☕️ Assert Cocoapods version
         run: |
@@ -139,6 +153,32 @@ jobs:
             echo "If the runner image changed, update EXPECTED here or reinstall the pinned version."
             exit 1
           fi
+
+      - name: 🧰 Install ccache
+        if: steps.ccache-policy.outputs.enabled == 'true'
+        run: |
+          if ! command -v ccache >/dev/null; then
+            brew install ccache
+          fi
+          ccache --version
+
+      # Each commit gets a new immutable cache entry, restored from the newest
+      # main-branch entry. Never omit "main" from a restore prefix.
+      - name: 💾 Cache iOS C/C++ compilation
+        if: steps.ccache-policy.outputs.enabled == 'true'
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ runner.temp }}/ccache-ios
+          key: ios-ccache-main-xcode-${{ env.XCODE_VERSION }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-${{ steps.source.outputs.sha }}
+          restore-keys: |
+            ios-ccache-main-xcode-${{ env.XCODE_VERSION }}-${{ runner.arch }}-${{ hashFiles('pnpm-lock.yaml') }}-
+            ios-ccache-main-xcode-${{ env.XCODE_VERSION }}-${{ runner.arch }}-
+
+      - name: Reset ccache statistics for this build
+        if: steps.ccache-policy.outputs.enabled == 'true'
+        env:
+          CCACHE_DIR: ${{ runner.temp }}/ccache-ios
+        run: ccache --zero-stats
 
       - name: 💾 Cache Pods
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
@@ -165,6 +205,12 @@ jobs:
 
       - name: 🏗️ EAS Build
         uses: $/.github/actions/eas-local-build
+        env:
+          CCACHE_DISABLE: ${{ steps.ccache-policy.outputs.enabled == 'true' && '0' || '1' }}
+          CCACHE_DIR: ${{ runner.temp }}/ccache-ios
+          CCACHE_BASEDIR: ${{ runner.temp }}/eas-local-build-ios
+          CCACHE_MAXSIZE: 3GiB
+          EAS_LOCAL_BUILD_WORKINGDIR: ${{ runner.temp }}/eas-local-build-ios
         with:
           platform: ios
           profile: ${{ inputs.profile || 'testflight' }}
@@ -173,6 +219,12 @@ jobs:
           sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
           sentry-release: ${{ steps.env.outputs.release-version }}
           sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
+
+      - name: 📊 ccache statistics
+        if: ${{ always() && steps.ccache-policy.outputs.enabled == 'true' }}
+        env:
+          CCACHE_DIR: ${{ runner.temp }}/ccache-ios
+        run: ccache --show-stats
 
       - name: 📂 Extract build artifact
         run: |
