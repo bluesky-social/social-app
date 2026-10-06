@@ -9,6 +9,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {atoms as a, platform, useTheme} from '#/alf'
 import {Text} from '#/components/Typography'
+import {IS_ANDROID} from '#/env'
 
 type Props = {
   altText: string | undefined
@@ -74,13 +75,12 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
                * native text view long-press (RN Text on Android, UITextView on
                * iOS). A parent touchable consumes that long-press before the
                * selectable Text can begin a selection - on Android this prevents
-               * selection entirely. Keeping onPress/onLongPress on the Text lets
-               * the same native node own both the tap-to-expand and the
-               * long-press-to-select. The empty onLongPress is intentional: it
-               * reserves the long-press for the OS selection gesture instead of
-               * firing the expand toggle. RN exposes no API to arbitrate tap vs
-               * native selection on a single node, so this is the supported
-               * workaround, and it behaves consistently on both platforms.
+               * selection entirely. Keeping the press handlers on the Text lets
+               * the same native node own both tap-to-expand and selection.
+               * Android needs an empty onLongPress to keep a long hold from
+               * firing the expand toggle. On iOS, UITextView treats even an
+               * empty onLongPress as owning the hold and cancels native text
+               * selection, so leave it unset there.
                */}
               <Text
                 emoji
@@ -95,7 +95,7 @@ export function Footer({altText, isAltExpanded, onToggleAltExpanded}: Props) {
                   })
                   onToggleAltExpanded()
                 }}
-                onLongPress={() => {}}>
+                onLongPress={IS_ANDROID ? () => {} : undefined}>
                 {altText}
               </Text>
             </View>

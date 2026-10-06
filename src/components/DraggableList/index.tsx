@@ -249,7 +249,8 @@ function SortableItem<T>({
   onDragEnd?: () => void
 }) {
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const {dragStart: playDragStartHaptic, selection: playSelectionHaptic} =
+    useHaptics()
 
   const lastHapticSlot = useSharedValue(-1)
 
@@ -267,7 +268,7 @@ function SortableItem<T>({
       if (onDragStart) {
         scheduleOnRN(onDragStart)
       }
-      scheduleOnRN(playHaptic)
+      scheduleOnRN(playDragStartHaptic)
     },
     onUpdate: e => {
       'worklet'
@@ -283,9 +284,9 @@ function SortableItem<T>({
         (startSlot * itemHeight + clampedY) / itemHeight,
       )
       const clampedSlot = Math.max(0, Math.min(currentSlot, itemCount - 1))
-      if (IS_IOS && clampedSlot !== lastHapticSlot.get()) {
+      if (clampedSlot !== lastHapticSlot.get()) {
         lastHapticSlot.set(clampedSlot)
-        scheduleOnRN(playHaptic, 'Light')
+        scheduleOnRN(playSelectionHaptic)
       }
     },
     onDeactivate: () => {

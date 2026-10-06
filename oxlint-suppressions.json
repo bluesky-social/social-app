@@ -539,11 +539,6 @@
       "count": 1
     }
   },
-  "src/lib/haptics.ts": {
-    "typescript/no-floating-promises": {
-      "count": 1
-    }
-  },
   "src/lib/hooks/useAccountSwitcher.ts": {
     "typescript/no-explicit-any": {
       "count": 1
@@ -1470,11 +1465,6 @@
       "count": 1
     },
     "typescript/no-unsafe-member-access": {
-      "count": 2
-    }
-  },
-  "src/view/shell/Drawer.tsx": {
-    "typescript/no-floating-promises": {
       "count": 2
     }
   },
