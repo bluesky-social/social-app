@@ -6,7 +6,7 @@ import {atoms as a, tokens, useTheme} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {ExploreCard} from './components/ExploreCard'
+import {ArticleCard} from './components/ArticleCard'
 import {getAtmosphereArticles} from './exploreData'
 
 const CARD_WIDTH = 216
@@ -68,7 +68,7 @@ export function AtmosphereExploreTab() {
                 },
               ]}>
               {articles.map(article => (
-                <ExploreCard
+                <ArticleCard
                   key={article.id}
                   article={article}
                   width={CARD_WIDTH}
