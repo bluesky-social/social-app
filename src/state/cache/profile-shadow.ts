@@ -144,7 +144,7 @@ export function useMaybeProfileShadow<
  * Note: it doesn't retroactively scan the cache, but only listens to new updates.
  * The use case here is intended for removing a post from a feed after you mute the author
  */
-export function usePostAuthorShadowFilter(data?: FeedPage[]) {
+export function usePostAuthorShadowFilter(data?: Pick<FeedPage, 'slices'>[]) {
   const [trackedDids, setTrackedDids] = useState<string[]>(
     () =>
       data?.flatMap(page =>

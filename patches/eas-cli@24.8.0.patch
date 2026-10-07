@@ -1,0 +1,16 @@
+diff --git a/build/utils/download.js b/build/utils/download.js
+index d8bccd41904391553f8f0663c10fedb74e4a2bf0..1323f3177de0e3b0743c04d2566b02e2a4aad1d4 100644
+--- a/build/utils/download.js
++++ b/build/utils/download.js
+@@ -121,6 +121,11 @@ async function getAppPathAsync(outputDir, applicationExtension) {
+     if (appFilePaths.length === 1) {
+         return path_1.default.join(outputDir, appFilePaths[0]);
+     }
++    // An iOS app archive can contain an App Clip nested inside its parent app.
++    const outerAppPaths = appFilePaths.filter(filePath => !appFilePaths.some(parentPath => filePath !== parentPath && filePath.startsWith(`${parentPath}/`)));
++    if (outerAppPaths.length === 1) {
++        return path_1.default.join(outputDir, outerAppPaths[0]);
++    }
+     log_1.default.newLine();
+     log_1.default.log('Detected multiple apps in the tarball:');
+     log_1.default.newLine();

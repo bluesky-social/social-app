@@ -500,6 +500,7 @@ module.exports = function (_config) {
       },
       experiments: {
         baseUrl: '/static',
+        buildCacheProvider: 'eas',
       },
     },
   }

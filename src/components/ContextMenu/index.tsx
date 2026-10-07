@@ -111,7 +111,7 @@ export function Provider({children}: {children: React.ReactNode}) {
 }
 
 export function Root({children}: {children: React.ReactNode}) {
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const [mode, setMode] = useState<'full' | 'auxiliary-only'>('full')
   const [measurement, setMeasurement] = useState<Measurement | null>(null)
   const returnLocationSV = useSharedValue<{x: number; y: number} | null>(null)
@@ -199,7 +199,7 @@ export function Root({children}: {children: React.ReactNode}) {
         onTouchUpMenuItem: onHoverableTouchUp,
         hoveredMenuItem,
         setHoveredMenuItem: item => {
-          if (item) playHaptic('Light')
+          if (item) haptics.selection()
           setHoveredMenuItem(item)
         },
       }) satisfies ContextType,
@@ -215,7 +215,7 @@ export function Root({children}: {children: React.ReactNode}) {
       onHoverableTouchUp,
       hoveredMenuItem,
       setHoveredMenuItem,
-      playHaptic,
+      haptics,
       mode,
     ],
   )
@@ -243,7 +243,7 @@ export function Trigger({
   swipeGesture,
 }: TriggerProps) {
   const context = useContextMenuContext()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const insets = useSafeAreaInsets()
   const ref = useRef<React.ComponentRef<typeof View>>(null)
   const isFocused = useIsFocused()
@@ -255,7 +255,7 @@ export function Trigger({
 
   const open = useNonReactiveCallback(
     async (mode: 'full' | 'auxiliary-only') => {
-      playHaptic()
+      haptics.longPress()
       const [measurement, capture] = await Promise.all([
         measureView(ref.current, insets),
         captureRef(ref, {result: 'data-uri'}).catch(err => {
@@ -769,7 +769,7 @@ export function Item({
 }: ItemProps) {
   const t = useTheme()
   const context = useContextMenuContext()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
   const {
     state: pressed,
@@ -842,7 +842,7 @@ export function Item({
       onPressIn={e => {
         onPressIn()
         rest.onPressIn?.(e)
-        playHaptic('Light')
+        haptics.selection()
       }}
       onPressOut={e => {
         onPressOut()

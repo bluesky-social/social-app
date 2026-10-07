@@ -50,8 +50,8 @@ const config: UserConfig = {
     assetsDir: 'static',
     rollupOptions: {
       input: {
-        index: resolve(__dirname, 'index.html'),
-        post: resolve(__dirname, 'post.html'),
+        index: resolve(import.meta.dirname, 'index.html'),
+        post: resolve(import.meta.dirname, 'post.html'),
       },
     },
   },

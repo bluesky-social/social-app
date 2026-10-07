@@ -14,7 +14,6 @@ import {useSession} from '#/state/session'
 import {useShellLayout} from '#/state/shell/shell-layout'
 import {useHomeHeaderTransform} from '#/view/com/util/MainScrollProvider'
 import {Logo} from '#/view/icons/Logo'
-import {useLogoVariant} from '#/view/icons/useLogoVariant'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Hashtag_Stroke2_Corner0_Rounded as FeedsIcon} from '#/components/icons/Hashtag'
@@ -36,9 +35,8 @@ export function HomeHeaderLayoutMobile({
   const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useHomeHeaderTransform()
   const {hasSession} = useSession()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {navigate} = useNavigation<NavigationProp>()
-  const logoVariant = useLogoVariant()
 
   return (
     <Animated.View
@@ -69,11 +67,11 @@ export function HomeHeaderLayoutMobile({
               if (IS_DEV) {
                 navigate('Debug')
               } else {
-                playHaptic('Light')
+                haptics.tap()
                 emitSoftReset()
               }
             }}>
-            <Logo width={logoVariant === 'japan' ? 34 : 30} />
+            <Logo width={30} />
           </PressableScale>
         </View>
 

@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.134.0",
+  "version": "1.135.0",
   "private": true,
   "sideEffects": [
     "*.css",
@@ -30,7 +30,6 @@
       "android": {
         "buildFromSource": [
           "expo-notifications",
-          "expo-haptics",
           "expo-media-library",
           "expo-image-picker"
         ]
@@ -109,7 +108,9 @@
     "upload-native-sourcemaps": "pnpm exec sentry-expo-upload-sourcemaps dist",
     "generate-web-stats": "EXPO_ATLAS=1 pnpm build-web",
     "open-analyzer": "npx expo-atlas .expo/atlas.jsonl",
-    "icons:optimize": "svgo -f ./assets/icons",
+    "icons:generate": "node ./scripts/icons/generate.mts",
+    "icons:check": "node ./scripts/icons/generate.mts --check",
+    "icons:test": "node --test ./scripts/icons/lib.test.mts",
     "prettier": "prettier --check ."
   },
   "dependencies": {
@@ -255,7 +256,7 @@
     "react-keyed-flatten-children": "^5.0.0",
     "react-native": "0.86.3",
     "react-native-device-attest": "^0.1.6",
-    "react-native-drawer-layout": "^4.2.3",
+    "react-native-drawer-layout": "5.0.0-alpha.19",
     "react-native-edge-to-edge": "^1.8.1",
     "react-native-gesture-handler": "~3.3.0",
     "react-native-keyboard-controller": "1.21.9",
@@ -263,7 +264,7 @@
     "react-native-pager-view": "6.8.0",
     "react-native-progress": "^5.0.1",
     "react-native-qrcode-styled": "^0.3.3",
-    "react-native-reanimated": "4.7.0",
+    "react-native-reanimated": "4.7.1",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.26.2",
     "react-native-svg": "15.15.4",
@@ -310,6 +311,8 @@
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-react-compiler": "1.0.0",
     "babel-preset-expo": "~57.0.12",
+    "eas-build-cache-provider": "24.8.0",
+    "eas-cli": "24.8.0",
     "es-check": "9.8.1",
     "eslint-plugin-bsky-internal": "link:lint-rules",
     "eslint-plugin-react-native-a11y": "^3.5.1",
@@ -404,7 +407,7 @@
     "*{.js,.jsx,.ts,.tsx,.css}": [
       "prettier --cache --write --ignore-unknown"
     ],
-    "assets/icons/*.svg": [
+    "assets/icons/{ui,brands,community,custom}/*.svg": [
       "svgo"
     ]
   }
