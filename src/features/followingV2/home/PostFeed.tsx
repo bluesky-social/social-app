@@ -1316,7 +1316,6 @@ let PostFeed = ({
           maintainVisibleContentPosition={
             isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
           }
-          measureInteriorSpacers={isAnchored}
           onLayout={isAnchored ? listRest.onLayout : undefined}
         />
       </ScrollProvider>
