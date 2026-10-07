@@ -168,6 +168,41 @@ older messages) and PostThread (parents) use mVCP too.
 Upstream issue: https://github.com/react/react-native/issues/52757
 Repro: https://github.com/mozzius/scrollview-mvcp-anchor-repro (screen B)
 
+## RCTScrollViewComponentView.mm Patch - maintainVisibleContentPosition anchors on a spacer straddling the top edge on iOS New Arch
+
+**TODO: Remove once React Native has an equivalent fix for
+react/react-native#58913.** There is no upstream PR yet.
+
+Symptom: after a large prepend at the top of an mVCP list, the content jumps
+one transaction later and nothing corrects it (-962pt in the repro).
+
+Cause: mVCP anchors on the first subview whose end is past the offset and
+corrects by how far its origin moved. After a prepend that is often a
+VirtualizedList spacer straddling the top edge. When the spacer is re-estimated
+or replaced, its origin stays put while everything after it moves, so the
+correction is 0.
+
+Fix: keep the stock anchor. If it straddles the leading edge,
+`_prepareForMaintainVisibleScrollPosition` also records the next subview,
+provided that starts inside the viewport (0.5pt slack). If the mount resized,
+recycled (tag changed) or removed the straddling anchor,
+`_adjustForMaintainVisibleContentPosition` measures the next view instead. The
+new ivars are reset in `prepareForRecycle`. This is the diff from #58913 minus
+its superview line, which we don't carry (see above).
+
+Why not "first fully visible" (`origin >= offset`): that reverts
+react/react-native#43203. In the repro's control screen (rows inserted below a
+straddling row) it scrolls that row 450pt off the top.
+
+Scope: iOS, every ScrollView and list with mVCP (Following v2, MessagesList,
+PostThread). For FlatList it relies on the VirtualizedList interior spacer
+patch: with this fix alone FlatList still ends at -1828pt, and with both, row 0
+holds at +0.0 with FlatList's default props.
+
+Upstream issue: https://github.com/react/react-native/issues/58913
+Related: react/react-native#43203, react/react-native#55545
+Repro: https://github.com/mozzius/scrollview-mvcp-anchor-repro (screen A)
+
 ## RCTViewComponentView.mm Patch - removeClippedSubviews lost on recycled views on iOS New Arch
 
 **TODO: Remove after bumping React Native to a release with
