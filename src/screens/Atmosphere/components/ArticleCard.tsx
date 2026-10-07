@@ -32,7 +32,7 @@ export function ArticleCard({
           to={article.href}
           label={l`Open ${article.title}`}
           style={[a.flex_col, a.flex_1, a.w_full]}>
-          <View style={[a.w_full, {height: 96}]}>
+          <View style={[a.w_full, t.atoms.bg_contrast_25, {height: 96}]}>
             <Image
               source={article.image}
               contentFit="cover"
