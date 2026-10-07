@@ -1113,6 +1113,7 @@ describe('usePostFeedPrepend', () => {
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
         offered: true,
+        isFull: false,
       })
     })
 
@@ -1139,6 +1140,7 @@ describe('usePostFeedPrepend', () => {
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
         offered: false,
+        isFull: false,
       })
     })
 
@@ -1281,6 +1283,7 @@ describe('usePostFeedPrepend', () => {
     expect(hook.result.current.prepend.staged).toEqual({
       fetchedAt: cached().pages[0].fetchedAt,
       offered: true,
+      isFull: false,
     })
     expect(cached().pageParams).toEqual([
       undefined,
@@ -1541,6 +1544,7 @@ describe('usePostFeedPrepend', () => {
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
         offered: true,
+        isFull: false,
       })
     })
 
@@ -1980,8 +1984,8 @@ describe('staging new posts on Home Following', () => {
       expect(cached()).toBe(staged)
     })
 
-    it('stages at most a page of the newest posts, with a gap below them', async () => {
-      const {cached} = renderHome()
+    it('stages at most a page of the newest posts, with a gap below them, and checks no more until the reader reaches them', async () => {
+      const {cached, list} = renderHome()
 
       newest = 12 + 150
       await anInterval()
@@ -1989,17 +1993,65 @@ describe('staging new posts on Home Following', () => {
       expect(cached().pages[0].feed).toHaveLength(100)
       expect(postsOf(cached())[0][0]).toBe('p162')
       expect(gapBelow(cached().pages, 0)).toBe('open')
+      const staged = cached()
 
       newest += 5
       await anInterval()
+      await anInterval()
 
-      expect(requested().filter(request => request !== PEEK)).toEqual([
-        since(12),
-        since(12),
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(cached()).toBe(staged)
+
+      // Reached, the posts above them go on top.
+      list.beginDrag(400)
+      list.see(100)
+      list.endDrag(300)
+      await anInterval()
+      expect(requested()).toEqual([PEEK, since(12), PEEK, since(162)])
+      expect(postsOf(cached())[0]).toEqual([
+        'p167',
+        'p166',
+        'p165',
+        'p164',
+        'p163',
       ])
-      expect(cached().pages).toHaveLength(3)
-      expect(cached().pages[0].feed).toHaveLength(100)
-      expect(postsOf(cached())[0][0]).toBe('p167')
+    })
+
+    it('keeps what it staged, and checks no more, once a page no longer holds all that is newer', async () => {
+      const {cached, list} = renderHome()
+      newest = 14
+      await anInterval()
+      const staged = cached()
+
+      /*
+       * The newest page above where they were fetched from would leave out the
+       * staged posts, and the list holds the reader's place only for posts
+       * added above the others.
+       */
+      newest = 14 + 150
+      await anInterval()
+      expect(requested()).toEqual([PEEK, since(12), PEEK, since(12)])
+      expect(cached()).toBe(staged)
+
+      newest += 5
+      await anInterval()
+      expect(requested()).toHaveLength(4)
+
+      // Reached, the newest posts go above them, with a gap below.
+      list.beginDrag(400)
+      list.see(13)
+      list.endDrag(300)
+      await anInterval()
+      expect(requested()).toEqual([
+        PEEK,
+        since(12),
+        PEEK,
+        since(12),
+        PEEK,
+        since(14),
+      ])
+      expect(cached().pages).toHaveLength(4)
+      expect(postsOf(cached())[0][0]).toBe('p169')
       expect(gapBelow(cached().pages, 0)).toBe('open')
     })
 
@@ -2164,6 +2216,18 @@ describe('staging new posts on Home Following', () => {
       await warmOpen()
 
       expect(latest.pill).toMatchObject({visible: true, count: 2})
+    })
+
+    it('offers what is staged on a warm open, without checking, while it is full', async () => {
+      const {latest} = renderHome()
+      newest = 12 + 150
+      await anInterval()
+
+      newest += 5
+      await warmOpen()
+
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(latest.pill).toMatchObject({visible: true, count: 100})
     })
 
     it('raises no pill with nothing staged', async () => {

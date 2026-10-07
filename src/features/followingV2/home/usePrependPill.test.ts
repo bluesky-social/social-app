@@ -213,7 +213,7 @@ describe('usePrependPill', () => {
   const old = [slice('old')]
   const restoredPages = [page(RESTORED_AT, old)]
   const prependedPages = [page(PREPENDED_AT, fresh), page(RESTORED_AT, old)]
-  const OFFERED = {fetchedAt: PREPENDED_AT, offered: true}
+  const OFFERED = {fetchedAt: PREPENDED_AT, offered: true, isFull: false}
 
   type Props = {
     enabled?: boolean
@@ -255,7 +255,7 @@ describe('usePrependPill', () => {
       slices: FeedPostSlice[],
       {offered = true, ...props}: Props & {offered?: boolean} = {},
     ) => {
-      const staged = {fetchedAt: LATER_AT, offered}
+      const staged = {fetchedAt: LATER_AT, offered, isFull: false}
       hook.rerender({...props, staged, pages: prependedPages})
       hook.rerender({
         ...props,
@@ -291,13 +291,13 @@ describe('usePrependPill', () => {
 
     it('never for a staged page that is not offered, as a check on an interval stages', () => {
       const {hook, stage} = renderPill()
-      stage({fetchedAt: PREPENDED_AT, offered: false})
+      stage({fetchedAt: PREPENDED_AT, offered: false, isFull: false})
       expect(hook.result.current.visible).toBe(false)
     })
 
     it('when a page staged without an offer is offered later, with the posts as they render then', () => {
       const {hook, stage} = renderPill()
-      const quiet = {fetchedAt: PREPENDED_AT, offered: false}
+      const quiet = {fetchedAt: PREPENDED_AT, offered: false, isFull: false}
       stage(quiet)
       // A post goes, as a mute takes it out, before a return offers the page.
       hook.rerender({
@@ -377,7 +377,7 @@ describe('usePrependPill', () => {
 
     it('raises no pill for a page that was not offered', () => {
       const {hook, stage, replace} = renderPill()
-      stage({fetchedAt: PREPENDED_AT, offered: false})
+      stage({fetchedAt: PREPENDED_AT, offered: false, isFull: false})
 
       replace([slice('e'), ...fresh], {offered: false})
 

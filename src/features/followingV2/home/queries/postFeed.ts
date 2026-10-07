@@ -567,6 +567,12 @@ export type StagedPage = {
   fetchedAt: number
   /** Whether the pill offers its posts. */
   offered: boolean
+  /**
+   * Whether more posts than fit on a page were newer than where it was
+   * fetched from, last time that was checked, so nothing more is fetched
+   * until the reader reaches it.
+   */
+  isFull: boolean
 }
 
 /**
@@ -618,10 +624,18 @@ function isSameFeedItem(
  * (`onBeginDrag`, `onPageSeen`), or reach the top of the list (`markRead`).
  * While a page is staged, the next prepend fetches from the same `since` as it
  * did and replaces it, so however long the reader stays put, what's above them
- * is one page of the newest posts, at most {@link PREPEND_LIMIT} of them and a
- * gap. Once it's read, the next one goes above it. `staged` is the page for
- * the pill, which offers it if a restore or a return to the app put it there,
- * or `check` has offered it since.
+ * is one page of at most {@link PREPEND_LIMIT} posts. Once it's read, the next
+ * one goes above it. `staged` is the page for the pill, which offers it if a
+ * restore or a return to the app put it there, or `check` has offered it
+ * since.
+ *
+ * A page only ever replaces the staged one if it has all of its posts, as
+ * the list holds the reader's place only for posts added above the others:
+ * `VirtualizedList` moves the rows it renders by how far its first row moved,
+ * so taking that row away loses the reader. When more than a page is newer,
+ * which a gap below what comes back shows, the staged page stays as it is,
+ * full (see {@link StagedPage}), and nothing more is fetched until the reader
+ * reaches it. A page put above the others with a gap is full from the start.
  *
  * `run` starts a prepend, or joins the one in progress, so two never fetch the
  * same range. It resolves to the page it put on top, if it put one there, and
@@ -633,9 +647,10 @@ function isSameFeedItem(
  * replaced: the result is dropped.
  *
  * `check` is a check for new posts. It peeks at the newest post first, and
- * runs a prepend only if that's not the one on top already. A check on a
- * return to the app offers what's staged even if it found nothing newer, or
- * couldn't tell. It's `undefined` when there's nothing to fetch above.
+ * runs a prepend only if that's not the one on top already. It makes no
+ * request while the staged page is full. A check on a return to the app
+ * offers what's staged even if it found nothing newer, or couldn't tell. It's
+ * `undefined` when there's nothing to fetch above.
  *
  * A top page fetched before this process started (see
  * {@link PROCESS_STARTED_AT}) is a restored one. The view prepends above it as
@@ -699,15 +714,24 @@ export function usePostFeedPrepend(
 
   const getData = () => queryClient.getQueryData<PostFeedData>(queryKey)
 
+  /** The staged page, if it's still staged and full (see {@link StagedPage}). */
+  const fullStaged = (data: PostFeedData) => {
+    const current = stagedRef.current
+    return current?.isFull && stagedSince(data.pages, current) !== undefined
+      ? current
+      : undefined
+  }
+
   /**
    * Where a prepend fetches from: the staged page's `since`, to replace it, or
-   * else the top page's `startCursor`, to go above it. Neither without one.
+   * else the top page's `startCursor`, to go above it. Neither without one, or
+   * while the staged page is full.
    */
   const targetOf = (data: PostFeedData) => {
     const current = stagedRef.current
     const since = stagedSince(data.pages, current)
     if (current && since !== undefined) {
-      return {since, replacing: current}
+      return current.isFull ? undefined : {since, replacing: current}
     }
     const startCursor = data.pages[0]?.startCursor
     return startCursor === undefined ? undefined : {since: startCursor}
@@ -737,6 +761,15 @@ export function usePostFeedPrepend(
     if (!page.feed.length || cursor === undefined) {
       return undefined
     }
+    const isFull = cursor !== since
+    if (replacing && isFull) {
+      // It would leave out some of the staged posts, so the staged page stays.
+      const current = stagedRef.current
+      if (current?.fetchedAt === replacing.fetchedAt) {
+        setStaged({...current, isFull})
+      }
+      return undefined
+    }
     await listAtRest()
     const wasStaged = stagedRef.current
     if (
@@ -763,6 +796,7 @@ export function usePostFeedPrepend(
       fetchedAt: page.fetchedAt,
       // A page offered by the pill stays offered when it's replaced.
       offered: isOffering.current || (!!replacing && !!wasStaged?.offered),
+      isFull,
     })
     return page
   }
@@ -808,6 +842,12 @@ export function usePostFeedPrepend(
     }
     const before = getData()
     const top = before?.pages[0]
+    if (before && fullStaged(before)) {
+      if (trigger === 'return') {
+        offerStaged()
+      }
+      return Promise.resolve(undefined)
+    }
     if (!before || !top || !targetOf(before)) {
       return undefined
     }
