@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-30 17:04\n"
+"PO-Revision-Date: 2026-10-07 18:46\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1006,7 +1006,7 @@ msgstr "ett meddelande"
 
 #: src/screens/ModerationInbox/Subject.tsx:48
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
-msgstr "En moderator har granskat din omprövningsbegäran och dragit tillbaka det ursprungliga beslutet. Ditt inlägg har återställts och är synligt igen."
+msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:103
 msgid "A network error occurred. Please check your internet connection"
@@ -1890,11 +1890,11 @@ msgstr "Begär omprövning av etiketten ”{0}”"
 
 #: src/screens/ModerationInbox/Subject.tsx:86
 msgid "Appeal approved, post restored"
-msgstr "Inlägget återställdes efter omprövning"
+msgstr ""
 
 #: src/screens/ModerationInbox/Subject.tsx:47
 msgid "Appeal approved: Your post has been restored"
-msgstr "Omprövning klar: Ditt inlägg har återställts"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
@@ -1906,7 +1906,7 @@ msgstr "Begär omprövning av avstängning från livesändning"
 
 #: src/screens/ModerationInbox/Subject.tsx:83
 msgid "Appeal submitted"
-msgstr "Omprövningsbegäran skickades"
+msgstr ""
 
 #: src/components/moderation/AppealForm.tsx:94
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
@@ -10761,7 +10761,7 @@ msgstr "Återställ till {defaultChannel}"
 
 #: src/screens/ModerationInbox/Subject.tsx:54
 msgid "Restored post"
-msgstr "Återställt inlägg"
+msgstr ""
 
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569

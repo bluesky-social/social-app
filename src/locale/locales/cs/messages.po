@@ -8,7 +8,7 @@ msgstr ""
 "Language: cs\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-30 17:04\n"
+"PO-Revision-Date: 2026-10-07 18:46\n"
 "Last-Translator: \n"
 "Language-Team: Czech\n"
 "Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 3;\n"
@@ -213,7 +213,7 @@ msgstr "{0, plural, one {sledovaný} few {sledovaní} many {sledovaných} other 
 #. placeholder {0}: content.count
 #: src/components/NewPostsPill/index.tsx:169
 msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
-msgstr ""
+msgstr "{0, plural, one {1 další příspěvek} few {# další příspěvky} many {# dalších příspěvků} other {# dalších příspěvků}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
@@ -794,7 +794,7 @@ msgstr "{profileName} se připojil/a k Bluesky před {timeAgoString}"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:32
 msgid "{profileName} joined Bluesky just now"
-msgstr ""
+msgstr "{profileName} se právě připojil/a k Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:47
 msgid "{profileName} joined Bluesky using a Starter Pack {timeAgoString} ago"
@@ -802,7 +802,7 @@ msgstr "{profileName} se připojil/a k Bluesky pomocí Startovacího balíčku p
 
 #: src/components/dialogs/NewskieDialog/utils.ts:31
 msgid "{profileName} joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "{profileName} se právě připojil/a k Bluesky pomocí Startovacího balíčku"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
@@ -1006,7 +1006,7 @@ msgstr "zpráva"
 
 #: src/screens/ModerationInbox/Subject.tsx:48
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
-msgstr "Moderátor přezkoumal vaše odvolání a zrušil původní rozhodnutí. Váš příspěvek byl obnoven a je opět viditelný."
+msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:103
 msgid "A network error occurred. Please check your internet connection"
@@ -1890,11 +1890,11 @@ msgstr "Odvolat \"{0}\" štítek"
 
 #: src/screens/ModerationInbox/Subject.tsx:86
 msgid "Appeal approved, post restored"
-msgstr "Odvolání schváleno, příspěvek obnoven"
+msgstr ""
 
 #: src/screens/ModerationInbox/Subject.tsx:47
 msgid "Appeal approved: Your post has been restored"
-msgstr "Odvolání schváleno: Váš příspěvek byl obnoven"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
@@ -1906,7 +1906,7 @@ msgstr "Odvolání pozastavení živých streamů"
 
 #: src/screens/ModerationInbox/Subject.tsx:83
 msgid "Appeal submitted"
-msgstr "Odvolání bylo podáno"
+msgstr ""
 
 #: src/components/moderation/AppealForm.tsx:94
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
@@ -7494,7 +7494,7 @@ msgstr "Načíst nové příspěvky"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:138
 msgid "Load new posts from the people you follow"
-msgstr ""
+msgstr "Načíst nové příspěvky od lidí, které sledujete"
 
 #: src/screens/Messages/components/MessageComposer.tsx:269
 msgctxt "placeholder"
@@ -8224,11 +8224,11 @@ msgstr "Nový příspěvek"
 
 #: src/components/NewPostsPill/index.tsx:236
 msgid "New posts"
-msgstr ""
+msgstr "Nové příspěvky"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:137
 msgid "New posts are ready to load from the people you follow"
-msgstr ""
+msgstr "Nové příspěvky od lidí, které sledujete, jsou připraveny k načtení"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:540
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
@@ -9517,7 +9517,7 @@ msgstr "Zadejte prosím bezpečnostní kód, který jsme zaslali na vaši předc
 #: src/screens/Signup/state.ts:313
 #: src/screens/Signup/StepInfo/index.tsx:174
 msgid "Please enter your date of birth."
-msgstr ""
+msgstr "Zadejte prosím své datum narození."
 
 #: src/screens/Signup/state.ts:279
 #: src/screens/Signup/StepInfo/index.tsx:133
@@ -9881,7 +9881,7 @@ msgstr "Zástupný symbol banneru profilu"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Profile link copied"
-msgstr ""
+msgstr "Odkaz na profil byl zkopírován"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:210
 #: src/lib/strings/errors.ts:78
@@ -10761,7 +10761,7 @@ msgstr "Obnovit nasazení {defaultChannel}"
 
 #: src/screens/ModerationInbox/Subject.tsx:54
 msgid "Restored post"
-msgstr "Obnovený příspěvek"
+msgstr ""
 
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569
@@ -15225,7 +15225,7 @@ msgstr "K Bluesky jsi se připojil/a před {timeAgoString}"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:27
 msgid "You joined Bluesky just now"
-msgstr ""
+msgstr "Právě jste se připojil/a k Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:40
 msgid "You joined Bluesky using a Starter Pack {timeAgoString} ago"
@@ -15233,7 +15233,7 @@ msgstr "K Bluesky jste se připojil/a pomocí startovacího balíčku před {tim
 
 #: src/components/dialogs/NewskieDialog/utils.ts:26
 msgid "You joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "Právě jste se připojil/a k Bluesky pomocí Startovacího balíčku"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."

@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-30 17:04\n"
+"PO-Revision-Date: 2026-10-07 18:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -213,7 +213,7 @@ msgstr "{0, plural, one {正在关注} other {正在关注}}"
 #. placeholder {0}: content.count
 #: src/components/NewPostsPill/index.tsx:169
 msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
-msgstr ""
+msgstr "{0, plural, other {加载 # 则新帖文}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
@@ -794,7 +794,7 @@ msgstr "{profileName}在 {timeAgoString}前加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:32
 msgid "{profileName} joined Bluesky just now"
-msgstr ""
+msgstr "{profileName} 刚刚加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:47
 msgid "{profileName} joined Bluesky using a Starter Pack {timeAgoString} ago"
@@ -802,7 +802,7 @@ msgstr "{profileName} 在 {timeAgoString}前使用新手包加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:31
 msgid "{profileName} joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "{profileName} 刚刚使用新手包加入了 Bluesky"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
@@ -852,7 +852,7 @@ msgstr "{userName} 的认证"
 
 #: src/components/Post/Embed/AtCard/index.tsx:160
 msgid "@{displayedHandle}"
-msgstr ""
+msgstr "@{displayedHandle}"
 
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
@@ -1006,7 +1006,7 @@ msgstr "一条信息"
 
 #: src/screens/ModerationInbox/Subject.tsx:48
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
-msgstr "审核人员已审查你的申诉并撤销了原始决定，你的帖文已恢复并再次可见。"
+msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:103
 msgid "A network error occurred. Please check your internet connection"
@@ -1890,11 +1890,11 @@ msgstr "对“{0}”标记提出申诉"
 
 #: src/screens/ModerationInbox/Subject.tsx:86
 msgid "Appeal approved, post restored"
-msgstr "申诉已通过，帖文已恢复"
+msgstr ""
 
 #: src/screens/ModerationInbox/Subject.tsx:47
 msgid "Appeal approved: Your post has been restored"
-msgstr "申诉已通过：你的帖文已恢复"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
@@ -1906,7 +1906,7 @@ msgstr "申请解除直播限制"
 
 #: src/screens/ModerationInbox/Subject.tsx:83
 msgid "Appeal submitted"
-msgstr "已提交申诉"
+msgstr ""
 
 #: src/components/moderation/AppealForm.tsx:94
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
@@ -1944,7 +1944,7 @@ msgstr "外观"
 
 #: src/components/OTAChannelNotice.tsx:224
 msgid "Apply"
-msgstr ""
+msgstr "应用"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:52
 #: src/screens/Home/NoFeedsPinned.tsx:94
@@ -1958,7 +1958,7 @@ msgstr "应用提交变更"
 
 #: src/components/OTAChannelNotice.tsx:221
 msgid "Apply update from this channel"
-msgstr ""
+msgstr "应用来自此通道的更新"
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
@@ -2800,7 +2800,7 @@ msgstr "列表在创建后将是一个独立副本，任何对新手包的更改
 #: src/components/OTAChannelNotice.tsx:203
 #: src/components/OTAChannelNotice.tsx:207
 msgid "Channel"
-msgstr ""
+msgstr "通道"
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:533
@@ -2920,11 +2920,11 @@ msgstr "请过段时间再来查看！"
 
 #: src/components/OTAChannelNotice.tsx:120
 msgid "Check for OTA updates"
-msgstr ""
+msgstr "检查 OTA 更新"
 
 #: src/components/OTAChannelNotice.tsx:127
 msgid "Check for updates"
-msgstr ""
+msgstr "检查更新"
 
 #: src/screens/SignupQueued.tsx:85
 #: src/screens/SignupQueued.tsx:89
@@ -7494,7 +7494,7 @@ msgstr "加载更多帖文"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:138
 msgid "Load new posts from the people you follow"
-msgstr ""
+msgstr "加载来自你关注的用户的新帖文"
 
 #: src/screens/Messages/components/MessageComposer.tsx:269
 msgctxt "placeholder"
@@ -8224,11 +8224,11 @@ msgstr "新帖文"
 
 #: src/components/NewPostsPill/index.tsx:236
 msgid "New posts"
-msgstr ""
+msgstr "新帖文"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:137
 msgid "New posts are ready to load from the people you follow"
-msgstr ""
+msgstr "有来自你关注之人的新帖文可以加载"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:540
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
@@ -8702,7 +8702,7 @@ msgstr "开"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
 msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
-msgstr "在 Bluesky 上,这意味着您的帖子将只会在探索信息流中向关注您的用户显示。其他应用可以选择在其算法推荐中使用此偏好设置。"
+msgstr "在 Bluesky 上，这代表你的帖文只会在 Discover 动态源中显示给跟随你的用户，第三方应用可以选择在其算法推荐设置中采用此配置。"
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
@@ -9131,7 +9131,7 @@ msgstr "或者使用你的其他账户登录。"
 
 #: src/components/OTAChannelNotice.tsx:84
 msgid "OTA channel"
-msgstr ""
+msgstr "OTA 通道"
 
 #: src/screens/Settings/components/OTAInfo.tsx:60
 msgid "OTA status: ..."
@@ -9517,7 +9517,7 @@ msgstr "请输入我们之前发送到你电子邮箱地址的验证码。"
 #: src/screens/Signup/state.ts:313
 #: src/screens/Signup/StepInfo/index.tsx:174
 msgid "Please enter your date of birth."
-msgstr ""
+msgstr "请输入你的出生日期。"
 
 #: src/screens/Signup/state.ts:279
 #: src/screens/Signup/StepInfo/index.tsx:133
@@ -9881,7 +9881,7 @@ msgstr "个人资料横幅占位符"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Profile link copied"
-msgstr ""
+msgstr "已复制个人资料链接"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:210
 #: src/lib/strings/errors.ts:78
@@ -10761,7 +10761,7 @@ msgstr "恢复 {defaultChannel} 部署"
 
 #: src/screens/ModerationInbox/Subject.tsx:54
 msgid "Restored post"
-msgstr "已恢复的帖文"
+msgstr ""
 
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569
@@ -12380,13 +12380,13 @@ msgstr "切换账户"
 
 #: src/components/OTAChannelNotice.tsx:139
 msgid "Switch channel"
-msgstr ""
+msgstr "切换频道"
 
 #: src/components/OTAChannelNotice.tsx:135
 #: src/components/OTAChannelNotice.tsx:195
 #: src/components/OTAChannelNotice.tsx:199
 msgid "Switch OTA channel"
-msgstr ""
+msgstr "切换 OTA 通道"
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
 #: src/view/shell/desktop/LeftNav.tsx:365
@@ -12678,7 +12678,7 @@ msgstr "该帖文已被恢复"
 
 #: src/screens/ModerationInbox/Report.tsx:47
 msgid "The post you reported has been restored after another review. If you’d rather not see it, you can mute or block the account. Read our <0>Community Guidelines</0>."
-msgstr "经再次审核，你举报的帖子已被恢复。如果你不想看到它，可以隐藏或屏蔽该账户。请阅读我们的<0>社区准则</0>。"
+msgstr "经再次审核，你举报的帖文已被恢复。如果你不想看到它，可以隐藏或屏蔽该账户。请阅读我们的<0>社区准则</0>。"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:403
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12939,7 +12939,7 @@ msgstr "此操作可随时撤销。"
 #. placeholder {0}: currentChannel ?? defaultChannel
 #: src/components/OTAChannelNotice.tsx:87
 msgid "This app is receiving updates from <0>{0}</0>."
-msgstr ""
+msgstr "此应用正在接收来自 <0>{0}</0> 的更新。"
 
 #: src/components/OTAChannelNotice.tsx:71
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
@@ -14458,7 +14458,7 @@ msgstr "暴力或威胁性内容"
 #. placeholder {1}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:61
 msgid "Visit {0} on {1}"
-msgstr ""
+msgstr "访问 {1} 上的 {0}"
 
 #: src/components/dialogs/LinkWarning.tsx:112
 #: src/components/dialogs/LinkWarning.tsx:122
@@ -14469,7 +14469,7 @@ msgstr "访问站点"
 #. placeholder {0}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:62
 msgid "Visit site on {0}"
-msgstr ""
+msgstr "访问 {0} 上的网站"
 
 #: src/view/screens/Notifications.tsx:296
 msgid "Visit your notification settings"
@@ -15225,7 +15225,7 @@ msgstr "你在 {timeAgoString}前加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:27
 msgid "You joined Bluesky just now"
-msgstr ""
+msgstr "您刚刚加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:40
 msgid "You joined Bluesky using a Starter Pack {timeAgoString} ago"
@@ -15233,7 +15233,7 @@ msgstr "你在 {timeAgoString}前使用新手包加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:26
 msgid "You joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "您刚刚使用新手包加入了 Bluesky"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."

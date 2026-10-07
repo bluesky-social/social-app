@@ -8,7 +8,7 @@ msgstr ""
 "Language: da\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-30 17:04\n"
+"PO-Revision-Date: 2026-10-07 18:46\n"
 "Last-Translator: \n"
 "Language-Team: Danish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -213,7 +213,7 @@ msgstr "{0, plural, one {følger} other {følger}}"
 #. placeholder {0}: content.count
 #: src/components/NewPostsPill/index.tsx:169
 msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
-msgstr ""
+msgstr "{0, plural, one {Indlæs # nyt opslag} other {Indlæs # nye opslag}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
@@ -794,7 +794,7 @@ msgstr "{profileName} oprettede sig på Bluesky for {timeAgoString} siden"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:32
 msgid "{profileName} joined Bluesky just now"
-msgstr ""
+msgstr "{profileName} har lige oprettet sig på Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:47
 msgid "{profileName} joined Bluesky using a Starter Pack {timeAgoString} ago"
@@ -802,7 +802,7 @@ msgstr "{profileName} oprettede sig på Bluesky via en startpakke for {timeAgoSt
 
 #: src/components/dialogs/NewskieDialog/utils.ts:31
 msgid "{profileName} joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "{profileName} har lige oprettet sig på Bluesky via en startpakke"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
@@ -852,7 +852,7 @@ msgstr "{userName}s verifikationer"
 
 #: src/components/Post/Embed/AtCard/index.tsx:160
 msgid "@{displayedHandle}"
-msgstr ""
+msgstr "@{displayedHandle}"
 
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
@@ -1006,7 +1006,7 @@ msgstr "en besked"
 
 #: src/screens/ModerationInbox/Subject.tsx:48
 msgid "A moderator reviewed your appeal and reversed the original decision. Your post has been restored and is visible again."
-msgstr "En moderator har gennemgået din klage og omgjort den oprindelige beslutning. Dit opslag er blevet gendannet og er synligt igen."
+msgstr ""
 
 #: src/components/contacts/screens/PhoneInput.tsx:103
 msgid "A network error occurred. Please check your internet connection"
@@ -1890,11 +1890,11 @@ msgstr "Klag over mærkatet \"{0}\""
 
 #: src/screens/ModerationInbox/Subject.tsx:86
 msgid "Appeal approved, post restored"
-msgstr "Klage taget til følge, opslag genskabt"
+msgstr ""
 
 #: src/screens/ModerationInbox/Subject.tsx:47
 msgid "Appeal approved: Your post has been restored"
-msgstr "Klage taget til følge: Dit opslag er blevet genskabt"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
@@ -1906,7 +1906,7 @@ msgstr "Klag over livestreamblokering"
 
 #: src/screens/ModerationInbox/Subject.tsx:83
 msgid "Appeal submitted"
-msgstr "Klage afsendt"
+msgstr ""
 
 #: src/components/moderation/AppealForm.tsx:94
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
@@ -2800,7 +2800,7 @@ msgstr "Ændringer til startpakken vil ikke blive afspejlet i listen efter opret
 #: src/components/OTAChannelNotice.tsx:203
 #: src/components/OTAChannelNotice.tsx:207
 msgid "Channel"
-msgstr ""
+msgstr "Kanal"
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:533
@@ -2920,11 +2920,11 @@ msgstr "Kig forbi senere!"
 
 #: src/components/OTAChannelNotice.tsx:120
 msgid "Check for OTA updates"
-msgstr ""
+msgstr "Søg efter OTA-opdateringer"
 
 #: src/components/OTAChannelNotice.tsx:127
 msgid "Check for updates"
-msgstr ""
+msgstr "Søg efter opdateringer"
 
 #: src/screens/SignupQueued.tsx:85
 #: src/screens/SignupQueued.tsx:89
@@ -4214,7 +4214,7 @@ msgstr "Frakobl Germ DM"
 #: src/lib/strings/feed-names.ts:16
 msgctxt "feed-name"
 msgid "Discover"
-msgstr ""
+msgstr "Opdag"
 
 #: src/screens/Search/Explore.tsx:457
 msgid "Discover feeds"
@@ -4720,7 +4720,7 @@ msgstr "Aktiver populære emner"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:155
 #: src/screens/Settings/ContentAndMediaSettings.tsx:169
 msgid "Enable trending videos in your Discover feed"
-msgstr "Aktiver populære videoer i dit Discover-feed"
+msgstr "Aktiver populære videoer i dit Opdag-feed"
 
 #: src/screens/Moderation/index.tsx:459
 msgid "Enabled"
@@ -5861,7 +5861,7 @@ msgstr "Få hjælp"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for Starter Pack joins, verification, and other activity."
-msgstr ""
+msgstr "Få notifikationer om oprettelser via startpakker, verifikation og øvrig aktivitet."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -5937,7 +5937,7 @@ msgstr "Bliv notificeret, når {name} laver opslag"
 #: src/screens/ModerationInbox/Settings.tsx:75
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
-msgstr ""
+msgstr "Få notifikationer, når en etiket føjes til din konto eller dine indlæg."
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:139
 msgid "Get notified when someone posts"
@@ -7250,7 +7250,7 @@ msgstr "Like 10 opslag"
 #: src/state/shell/progress-guide.tsx:215
 #: src/state/shell/progress-guide.tsx:220
 msgid "Like 10 posts to train the Discover feed"
-msgstr "Like 10 opslag for at træne Discover-feedet"
+msgstr "Like 10 opslag for at træne Opdag-feedet"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:560
 msgid "Like this feed"
@@ -7494,7 +7494,7 @@ msgstr "Indlæs nye opslag"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:138
 msgid "Load new posts from the people you follow"
-msgstr ""
+msgstr "Indlæs nye opslag fra personer, du følger"
 
 #: src/screens/Messages/components/MessageComposer.tsx:269
 msgctxt "placeholder"
@@ -8224,7 +8224,7 @@ msgstr "Nyt opslag"
 
 #: src/components/NewPostsPill/index.tsx:236
 msgid "New posts"
-msgstr ""
+msgstr "Nye opslag"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:137
 msgid "New posts are ready to load from the people you follow"
@@ -8702,7 +8702,7 @@ msgstr "Aktiveret"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
 msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
-msgstr "På Bluesky betyder det, at dine indlæg kun vises i Discover-feedet for folk, der følger dig. Andre apps kan vælge at anvende denne præference i deres egne algoritmiske anbefalinger."
+msgstr "På Bluesky betyder det, at dine indlæg kun vises i Opdag-feedet for folk, der følger dig. Andre apps kan vælge at anvende denne præference i deres egne algoritmiske anbefalinger."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
@@ -9131,7 +9131,7 @@ msgstr "Eller log på en af dine andre konti."
 
 #: src/components/OTAChannelNotice.tsx:84
 msgid "OTA channel"
-msgstr ""
+msgstr "OTA-kanal"
 
 #: src/screens/Settings/components/OTAInfo.tsx:60
 msgid "OTA status: ..."
@@ -9517,7 +9517,7 @@ msgstr "Indtast den sikkerhedskode, vi har sendt til din gamle e-mailadresse."
 #: src/screens/Signup/state.ts:313
 #: src/screens/Signup/StepInfo/index.tsx:174
 msgid "Please enter your date of birth."
-msgstr ""
+msgstr "Angiv din fødselsdato."
 
 #: src/screens/Signup/state.ts:279
 #: src/screens/Signup/StepInfo/index.tsx:133
@@ -9881,7 +9881,7 @@ msgstr "Pladsholder for profilbanner"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Profile link copied"
-msgstr ""
+msgstr "Profillink kopieret"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:210
 #: src/lib/strings/errors.ts:78
@@ -10372,7 +10372,7 @@ msgstr "Forny skjult ord"
 #: src/view/com/posts/FeedShutdownMsg.tsx:134
 #: src/view/com/posts/FeedShutdownMsg.tsx:138
 msgid "Replace with Discover"
-msgstr "Erstat med Discover"
+msgstr "Erstat med Opdag"
 
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
@@ -10761,7 +10761,7 @@ msgstr "Gendan {defaultChannel}-udrulningen"
 
 #: src/screens/ModerationInbox/Subject.tsx:54
 msgid "Restored post"
-msgstr "Genskabt opslag"
+msgstr ""
 
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569
@@ -12380,13 +12380,13 @@ msgstr "Skift konti"
 
 #: src/components/OTAChannelNotice.tsx:139
 msgid "Switch channel"
-msgstr ""
+msgstr "Skift kanal"
 
 #: src/components/OTAChannelNotice.tsx:135
 #: src/components/OTAChannelNotice.tsx:195
 #: src/components/OTAChannelNotice.tsx:199
 msgid "Switch OTA channel"
-msgstr ""
+msgstr "Skift OTA-kanal"
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
 #: src/view/shell/desktop/LeftNav.tsx:365
@@ -12629,11 +12629,11 @@ msgstr "Ophavsretspolitikken er flyttet til <0/>"
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:107
 msgid "The Discover feed"
-msgstr "Discover-feedet"
+msgstr "Opdag-feedet"
 
 #: src/state/shell/progress-guide.tsx:225
 msgid "The Discover feed now knows what you like"
-msgstr "Discover-feedet ved nu, hvad du synes om"
+msgstr "Opdag-feedet ved nu, hvad du synes om"
 
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:324
 msgid "The experience is better in the app. Download Bluesky now and we'll pick back up where you left off."
@@ -12641,7 +12641,7 @@ msgstr "Oplevelsen er bedre i appen. Download Bluesky nu, så fortsætter vi, hv
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:70
 msgid "The feed has been replaced with Discover."
-msgstr "Feedet er erstattet af Discover."
+msgstr "Feedet er erstattet af Opdag."
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:64
 msgid "The following labels were applied to this post."
@@ -12939,7 +12939,7 @@ msgstr "Denne handling kan omgøres når som helst."
 #. placeholder {0}: currentChannel ?? defaultChannel
 #: src/components/OTAChannelNotice.tsx:87
 msgid "This app is receiving updates from <0>{0}</0>."
-msgstr ""
+msgstr "Denne app modtager opdateringer fra <0>{0}</0>."
 
 #: src/components/OTAChannelNotice.tsx:71
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
@@ -13069,7 +13069,7 @@ msgstr "Dette feed er tomt."
 
 #: src/view/com/posts/FeedShutdownMsg.tsx:104
 msgid "This feed is no longer online. We are showing <0>Discover</0> instead."
-msgstr "Dette feed er ikke længere online. Vi viser i stedet <0>Discover</0>."
+msgstr "Dette feed er ikke længere online. Vi viser i stedet <0>Opdag</0>."
 
 #: src/screens/Messages/components/ChatLocked.tsx:76
 msgid "This group is locked by a moderation action on the owner"
@@ -14458,7 +14458,7 @@ msgstr "Voldeligt eller truende indhold"
 #. placeholder {1}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:61
 msgid "Visit {0} on {1}"
-msgstr ""
+msgstr "Besøg {0} på {1}"
 
 #: src/components/dialogs/LinkWarning.tsx:112
 #: src/components/dialogs/LinkWarning.tsx:122
@@ -14469,7 +14469,7 @@ msgstr "Besøg website"
 #. placeholder {0}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:62
 msgid "Visit site on {0}"
-msgstr ""
+msgstr "Besøg site på {0}"
 
 #: src/view/screens/Notifications.tsx:296
 msgid "Visit your notification settings"
@@ -15225,7 +15225,7 @@ msgstr "Du oprettede dig på Bluesky for {timeAgoString} siden"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:27
 msgid "You joined Bluesky just now"
-msgstr ""
+msgstr "Du har lige oprettet dig på Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:40
 msgid "You joined Bluesky using a Starter Pack {timeAgoString} ago"
@@ -15233,7 +15233,7 @@ msgstr "Du oprettede dig på Bluesky via en startpakke for {timeAgoString} siden
 
 #: src/components/dialogs/NewskieDialog/utils.ts:26
 msgid "You joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "Du har lige oprettet dig på Bluesky via en startpakke"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15248,7 +15248,7 @@ msgstr "Du kan klage over disse mærkater, hvis du mener, de er sat ved en fejl.
 #. placeholder {1}: state.profileLimit
 #: src/screens/StarterPack/Wizard/State.tsx:78
 msgid "You may only add up to {0, plural, other {{1} profiles}}"
-msgstr ""
+msgstr "Du kan tilføje højst {0, plural, one {{1} profil} other {{1} profiler}}"
 
 #: src/screens/StarterPack/Wizard/State.tsx:99
 msgid "You may only add up to 3 feeds"

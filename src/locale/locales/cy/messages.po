@@ -8,7 +8,7 @@ msgstr ""
 "Language: cy\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-30 17:04\n"
+"PO-Revision-Date: 2026-10-07 18:46\n"
 "Last-Translator: \n"
 "Language-Team: Welsh\n"
 "Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n == 3) ? 3 : ((n == 6) ? 4 : 5))));\n"
@@ -25,15 +25,15 @@ msgstr "Categori \"{interestsDisplayName}\" (gweithredol)"
 
 #: src/screens/ModerationInbox/index.tsx:208
 msgid "“{label}” – shown behind a warning"
-msgstr ""
+msgstr "“{label}” – yn cael ei ddangos y tu ôl i rybudd"
 
 #: src/screens/ModerationInbox/Report.tsx:78
 msgid "“{note}”"
-msgstr ""
+msgstr "“{note}”"
 
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:32
 msgid "“{post}”"
-msgstr ""
+msgstr "“{post}”"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -213,7 +213,7 @@ msgstr "{0, plural, one {yn dilyn} other {yn dilyn}}"
 #. placeholder {0}: content.count
 #: src/components/NewPostsPill/index.tsx:169
 msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
-msgstr ""
+msgstr "{0, plural, zero {Llwytho # postiad newydd} one {Llwytho # postiad newydd} two {Llwytho # bostiad newydd} few {Llwytho # postiad newydd} many {Llwytho # phostiad newydd} other {Llwytho # postiad newydd}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
@@ -224,7 +224,7 @@ msgstr "{0, plural, one {postiad} other {postiad}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:492
 msgid "{0, plural, other {# people have}} joined Bluesky via this Starter Pack!"
-msgstr ""
+msgstr "{0, plural, zero {Mae # person wedi} one {Mae # person wedi} two {Mae # pherson wedi} few {Mae # pherson wedi} many {Mae # phobl wedi} other {Mae # o bobl wedi}} ymuno â Bluesky drwy'r Pecyn Cychwyn hwn!"
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:351
@@ -441,7 +441,7 @@ msgstr "{0}+ cais"
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
 #: src/screens/Moderation/index.tsx:174
 msgid "{0}+ updates"
-msgstr ""
+msgstr "{0}+ diweddariad"
 
 #. How many days have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -469,7 +469,7 @@ msgstr "{0}e"
 
 #: src/screens/Moderation/index.tsx:179
 msgid "{badge, plural, one {# update} other {# updates}}"
-msgstr ""
+msgstr "{badge, plural, zero {# diweddariad} one {# diweddariad} two {# ddiweddariad} few {# diweddariad} many {# diweddariad} other {# diweddariad}}"
 
 #: src/screens/Messages/JoinRequests.tsx:430
 msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
@@ -506,7 +506,7 @@ msgstr "Pecyn Cychwyn {displayName}"
 
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "{displayName}’s Starter Pack"
-msgstr ""
+msgstr "Pecyn Cychwyn {displayName}"
 
 #: src/screens/SignupQueued.tsx:225
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -550,7 +550,7 @@ msgstr "Mae {firstAuthorLink} a <0>{additionalAuthorsCount, plural, zero {}one {
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your Starter Pack"
-msgstr ""
+msgstr "Mae {firstAuthorLink} a <0>{additionalAuthorsCount, plural, zero {{formattedAuthorsCount} arall} one {{formattedAuthorsCount} arall} two {{formattedAuthorsCount} arall} few {{formattedAuthorsCount} arall} many {{formattedAuthorsCount} arall} other {{formattedAuthorsCount} arall}}</0> wedi ymuno â'ch Pecyn Cychwyn"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -590,7 +590,7 @@ msgstr "Mae {firstAuthorLink} wedi ail bostio eich ail bostiad"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your Starter Pack"
-msgstr ""
+msgstr "Mae {firstAuthorLink} wedi cofrestru gyda'ch Pecyn Cychwyn"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -602,7 +602,7 @@ msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, one {{formatted
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via Starter Pack {starterPackName}"
-msgstr ""
+msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, zero {{formattedAuthorsCount} arall} one {{formattedAuthorsCount} arall} two {{formattedAuthorsCount} arall} few {{formattedAuthorsCount} arall} many {{formattedAuthorsCount} arall} other {{formattedAuthorsCount} arall}} wedi'ch dilyn drwy'r Pecyn Cychwyn {starterPackName}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -630,7 +630,7 @@ msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, zero {}one {{fo
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your Starter Pack"
-msgstr ""
+msgstr "Mae {firstAuthorName} a {additionalAuthorsCount, plural, zero {{formattedAuthorsCount} arall} one {{formattedAuthorsCount} arall} two {{formattedAuthorsCount} arall} few {{formattedAuthorsCount} arall} many {{formattedAuthorsCount} arall} other {{formattedAuthorsCount} arall}} wedi ymuno â'ch Pecyn Cychwyn"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -646,11 +646,11 @@ msgstr "Mae {firstAuthorName} wedi eich dilyn yn ôl"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via Starter Pack {starterPackName}"
-msgstr ""
+msgstr "Dilynodd {firstAuthorName} chi yn ôl drwy'r Pecyn Cychwyn {starterPackName}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via Starter Pack {starterPackName}"
-msgstr ""
+msgstr "Dilynodd {firstAuthorName} chi drwy'r Pecyn Cychwyn {starterPackName}"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -678,7 +678,7 @@ msgstr "Mae {firstAuthorName} wedi ail bostio eich ail bostiad"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your Starter Pack"
-msgstr ""
+msgstr "Mae {firstAuthorName} wedi ymuno â'ch Pecyn Cychwyn"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -778,7 +778,7 @@ msgstr "Hoff ffrydiau a phobl {name} - ymunwch â mi!"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}’s Starter Pack"
-msgstr ""
+msgstr "Pecyn Cychwyn {name}"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:344
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -794,15 +794,15 @@ msgstr "Ymunodd {profileName} â Bluesky {timeAgoString} yn ôl"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:32
 msgid "{profileName} joined Bluesky just now"
-msgstr ""
+msgstr "Ymunodd {profileName} â Bluesky nawr"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:47
 msgid "{profileName} joined Bluesky using a Starter Pack {timeAgoString} ago"
-msgstr ""
+msgstr "Ymunodd {profileName} â Bluesky gan ddefnyddio Pecyn Cychwyn {timeAgoString} yn ôl"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:31
 msgid "{profileName} joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "Ymunodd {profileName} â Bluesky gan ddefnyddio Pecyn Cychwyn nawr"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
@@ -852,7 +852,7 @@ msgstr "Dilysiadau {userName}"
 
 #: src/components/Post/Embed/AtCard/index.tsx:160
 msgid "@{displayedHandle}"
-msgstr ""
+msgstr "@{displayedHandle}"
 
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
@@ -873,7 +873,7 @@ msgstr "+{computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:569
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your Starter Pack"
-msgstr ""
+msgstr "Mae <0>{0}, </0><1>{1}, </1>a {2, plural, zero {# arall} one {# arall} two {# arall} few {# arall} many {# arall} other {# arall}} wedi'u cynnwys yn eich Pecyn Cychwyn"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -881,7 +881,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your Starter Pack"
-msgstr ""
+msgstr "Mae <0>{0}, </0><1>{1}, </1>a {2, plural, zero {# arall} one {# arall} two {# arall} few {# arall} many {# arall} other {# arall}} wedi'u cynnwys yn eich Pecyn Cychwyn"
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -928,12 +928,12 @@ msgstr "<0>{0}</0> {likeCount, plural, zero {}one {hoffi} two {hoffi} few {hoffi
 #: src/screens/StarterPack/Wizard/index.tsx:503
 #: src/screens/StarterPack/Wizard/index.tsx:557
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your Starter Pack"
-msgstr ""
+msgstr "Mae <0>{0}</0> a<1> </1><2>{1} </2>wedi eu cynnwys yn eich Pecyn Cychwyn"
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:550
 msgid "<0>{0}</0> is included in your Starter Pack"
-msgstr ""
+msgstr "Mae <0>{0}</0> wedi'i gynnwys yn eich pecyn cychwyn"
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -947,7 +947,7 @@ msgstr "Mae <0>{displayName}</0><1/><2> wedi'ch ychwanegu</2>"
 
 #: src/screens/ModerationInbox/Subject.tsx:62
 msgid "<0>Community Guidelines: Harassment</0>"
-msgstr ""
+msgstr "<0>Canllawiau Cymunedol: Aflonyddu</0>"
 
 #: src/screens/Hashtag.tsx:232
 #: src/screens/Search/SearchResults.tsx:398
@@ -961,7 +961,7 @@ msgstr "<0>Tapiwch yma i ddiweddaru eich lleoliad gyda GPS.</0>"
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your Starter Pack"
-msgstr ""
+msgstr "Rydych <0>chi</0> a<1> </1><2>{0} </2>wedi'ch cynnwys yn eich Pecyn Cychwyn"
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -997,7 +997,7 @@ msgstr "Casgliad o ffrydiau poblogaidd sydd i'w cael ar Bluesky, gan gynnwys New
 #: src/screens/ModerationInbox/index.tsx:204
 msgctxt "moderation-report-action"
 msgid "A label was added to your post"
-msgstr ""
+msgstr "Ychwanegwyd label at eich postiad"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/components/dms/getReactionInfo.ts:58
@@ -1146,7 +1146,7 @@ msgstr "Mae'r cyfrif wedi'i gau"
 #: src/screens/ModerationInbox/Settings.tsx:71
 msgctxt "moderation-inbox-setting"
 msgid "Account labeling notifications"
-msgstr ""
+msgstr "Hysbysiadau labelu cyfrifon"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:464
 #: src/view/com/profile/ProfileMenu.tsx:147
@@ -1221,7 +1221,7 @@ msgstr "Ychwanegu {0} arall i barhau"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:62
 msgid "Add {displayName} to Starter Pack"
-msgstr ""
+msgstr "Ychwanegu {displayName} at y Pecyn Cychwyn"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1359,7 +1359,7 @@ msgstr "Ychwanegu ffrydiau wedi'u hargymell"
 
 #: src/screens/StarterPack/Wizard/index.tsx:538
 msgid "Add some feeds to your Starter Pack!"
-msgstr ""
+msgstr "Ychwanegwch rai llifau i'ch Pecyn Cychwyn!"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1386,7 +1386,7 @@ msgstr "Ychwanegu i'r postiadau wedi'u cadw"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to Starter Packs"
-msgstr ""
+msgstr "Ychwanegu at Becynnau Cychwyn"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1412,7 +1412,7 @@ msgstr "Ychwanegwyd at y rhestr"
 
 #: src/components/dialogs/StarterPackDialog.tsx:268
 msgid "Added to Starter Pack"
-msgstr ""
+msgstr "Wedi'i ychwanegu at Becyn Cychwyn"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:221
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:226
@@ -1669,7 +1669,7 @@ msgstr "Digwyddodd gwall wrth nôl y ffrwd."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:369
 msgid "An error occurred while generating your Starter Pack. Want to try again?"
-msgstr ""
+msgstr "Digwyddodd gwall wrth gynhyrchu'ch Pecyn Cychwyn. Eisiau ceisio eto?"
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1906,7 +1906,7 @@ msgstr "Apelio gwaharddiad ffrydio byw"
 
 #: src/screens/ModerationInbox/Subject.tsx:83
 msgid "Appeal submitted"
-msgstr "Apêl wedi'i chyflwyno"
+msgstr ""
 
 #: src/components/moderation/AppealForm.tsx:94
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
@@ -1944,7 +1944,7 @@ msgstr "Gwedd"
 
 #: src/components/OTAChannelNotice.tsx:224
 msgid "Apply"
-msgstr ""
+msgstr "Gosod"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:52
 #: src/screens/Home/NoFeedsPinned.tsx:94
@@ -1958,7 +1958,7 @@ msgstr "Gosod Cais Tynnu"
 
 #: src/components/OTAChannelNotice.tsx:221
 msgid "Apply update from this channel"
-msgstr ""
+msgstr "Gosod y diweddariad o'r sianel hon"
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
@@ -2003,7 +2003,7 @@ msgstr "Ydych chi'n siŵr eich bod am ddileu'r neges hon? Bydd y neges yn cael e
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:711
 msgid "Are you sure you want to delete this Starter Pack?"
-msgstr ""
+msgstr "Ydych chi'n siŵr eich bod am ddileu'r Pecyn Cychwyn hwn?"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2127,7 +2127,7 @@ msgstr "Crëwr afatar"
 
 #: src/screens/ModerationInbox/index.tsx:116
 msgid "Awaiting review"
-msgstr ""
+msgstr "Yn aros am adolygiad"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2166,7 +2166,7 @@ msgstr "Nôl i Sgyrsiau"
 
 #: src/screens/ModerationInbox/index.tsx:217
 msgid "Ban evasion – {duration}, now expired"
-msgstr ""
+msgstr "Osgoi gwaharddiad – {duration}, wedi dod i ben bellach"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:218
 msgid "Banned activities or security violations"
@@ -2206,7 +2206,7 @@ msgstr "Cyn creu postiad neu ateb, rhaid i chi ddilysu'ch e-bost yn gyntaf."
 #: src/components/StarterPack/ProfileStarterPacks.tsx:273
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a Starter Pack, you must first verify your email."
-msgstr ""
+msgstr "Cyn creu Pecyn Cychwyn, rhaid i chi wirio'ch e-bost yn gyntaf."
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2409,7 +2409,7 @@ msgstr "Bluesky Classic ™"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:36
 msgid "Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension."
-msgstr ""
+msgstr "Mae Bluesky wedi cymryd camau yn erbyn eich cyfrif neu'ch cynnwys am dorri ein canllawiau cymunedol. Bydd rhagor o droseddau yn arwain at orfodaeth gryfach, gan gynnwys ataliad."
 
 #: src/components/contacts/screens/GetContacts.tsx:237
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
@@ -2443,7 +2443,7 @@ msgstr "Mae Bluesky yn fwy hwyl gyda ffrindiau! Hoffech chi wahodd rhai o'ch rha
 #: src/screens/ModerationInbox/Report.tsx:38
 #: src/screens/ModerationInbox/Subject.tsx:38
 msgid "Bluesky Moderation Service"
-msgstr ""
+msgstr "Gwasanaeth Cymedroli Bluesky"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
@@ -2534,7 +2534,7 @@ msgstr "Porwch bostiadau sydd wedi'u tagio â {displayName}"
 
 #: src/components/TrendingTopics.tsx:169
 msgid "Browse Starter Pack {displayName}"
-msgstr ""
+msgstr "Pori Pecyn Cychwyn {displayName}"
 
 #. placeholder {0}: trend.displayName
 #: src/components/interstitials/FeedTrendingTopics.tsx:211
@@ -2795,12 +2795,12 @@ msgstr "Newidiadau wedi'u cadw"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:162
 msgid "Changes to the Starter Pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr ""
+msgstr "Bydd newidiadau i'r Pecyn Cychwyn ddim yn cael eu hadlewyrchu i'r rhestr ar ôl eu creu. Bydd y rhestr yn gopi annibynnol."
 
 #: src/components/OTAChannelNotice.tsx:203
 #: src/components/OTAChannelNotice.tsx:207
 msgid "Channel"
-msgstr ""
+msgstr "Sianel"
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:533
@@ -2920,11 +2920,11 @@ msgstr "Dewch nôl yn nes ymlaen!"
 
 #: src/components/OTAChannelNotice.tsx:120
 msgid "Check for OTA updates"
-msgstr ""
+msgstr "Gwirio am ddiweddariadau OTA"
 
 #: src/components/OTAChannelNotice.tsx:127
 msgid "Check for updates"
-msgstr ""
+msgstr "Gwirio am ddiweddariadau"
 
 #: src/screens/SignupQueued.tsx:85
 #: src/screens/SignupQueued.tsx:89
@@ -3273,7 +3273,7 @@ msgstr "Canllawiau Cymunedol"
 
 #: src/screens/ModerationInbox/Subject.tsx:65
 msgid "Community Guidelines: Harassment"
-msgstr ""
+msgstr "Canllawiau Cymunedol: Aflonyddu"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:335
 msgid "Complete onboarding and start using your account"
@@ -3597,7 +3597,7 @@ msgstr "Copïo'r ddolen i'r proffil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:649
 msgid "Copy link to Starter Pack"
-msgstr ""
+msgstr "Copïo'r ddolen i'r Pecyn Cychwyn"
 
 #: src/components/dms/MessageContextMenu.tsx:197
 #: src/components/dms/MessageContextMenu.tsx:201
@@ -3752,11 +3752,11 @@ msgstr "Crëwch restr"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Create a list from this Starter Pack"
-msgstr ""
+msgstr "Crëwch restr o'r Pecyn Cychwyn hwn"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a Starter Pack"
-msgstr ""
+msgstr "Creu cod QR ar gyfer Pecyn Cychwyn"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:206
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
@@ -3768,7 +3768,7 @@ msgstr "Crëwch Becyn Cychwyn"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:302
 msgid "Create a Starter Pack for me"
-msgstr ""
+msgstr "Creu Pecyn Cychwyn i mi"
 
 #: src/components/WelcomeModal.tsx:157
 #: src/components/WelcomeModal.tsx:165
@@ -3795,7 +3795,7 @@ msgstr "Creu cyfrif"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this Starter Pack"
-msgstr ""
+msgstr "Crëwch gyfrif heb ddefnyddio'r Pecyn Cychwyn hwn"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3821,7 +3821,7 @@ msgstr "Crëwch restr o'r aelodau"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:146
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:150
 msgid "Create list from Starter Pack"
-msgstr ""
+msgstr "Creu rhestr o'r Pecyn Cychwyn"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3847,7 +3847,7 @@ msgstr "Creu adroddiad ar gyfer {0}"
 #: src/components/dialogs/StarterPackDialog.tsx:102
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "Create Starter Pack"
-msgstr ""
+msgstr "Crëwch Becyn Cychwyn"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -4033,11 +4033,11 @@ msgstr "Dileu postiad"
 #: src/screens/StarterPack/StarterPackScreen.tsx:622
 #: src/screens/StarterPack/StarterPackScreen.tsx:862
 msgid "Delete Starter Pack"
-msgstr ""
+msgstr "Dileu Pecyn Cychwyn"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Delete Starter Pack?"
-msgstr ""
+msgstr "Dileu Pecyn Cychwyn?"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:317
 msgid "Delete this list?"
@@ -4127,7 +4127,7 @@ msgstr "Tywyllu"
 #: src/screens/ModerationInbox/index.tsx:132
 msgctxt "moderation-report-subject"
 msgid "Direct message from {account}"
-msgstr ""
+msgstr "Neges uniongyrchol gan {account}"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:383
 #: src/screens/Messages/components/InviteLinkDialog.tsx:388
@@ -4214,7 +4214,7 @@ msgstr "Datgysylltwch Germ DM"
 #: src/lib/strings/feed-names.ts:16
 msgctxt "feed-name"
 msgid "Discover"
-msgstr ""
+msgstr "Darganfod"
 
 #: src/screens/Search/Explore.tsx:457
 msgid "Discover feeds"
@@ -4573,7 +4573,7 @@ msgstr "Golygu Proffil"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:609
 msgid "Edit Starter Pack"
-msgstr ""
+msgstr "Golygu'r Pecyn Cychwyn"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4590,7 +4590,7 @@ msgstr "Golygu pwy all ateb"
 
 #: src/Navigation.tsx:589
 msgid "Edit your Starter Pack"
-msgstr ""
+msgstr "Golygu eich Pecyn Cychwyn"
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -5023,7 +5023,7 @@ msgstr "Methwyd ag ychwanegu at y rhestr"
 
 #: src/components/dialogs/StarterPackDialog.tsx:274
 msgid "Failed to add to Starter Pack"
-msgstr ""
+msgstr "Wedi methu ychwanegu at Becyn Cychwyn"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -5051,7 +5051,7 @@ msgstr "Wedi methu creu dolen gwahodd"
 #: src/screens/StarterPack/Wizard/index.tsx:243
 #: src/screens/StarterPack/Wizard/index.tsx:253
 msgid "Failed to create Starter Pack"
-msgstr ""
+msgstr "Wedi methu creu Pecyn Cychwyn"
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -5069,7 +5069,7 @@ msgstr "Wedi methu dileu postiad, ceisiwch eto"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:831
 msgid "Failed to delete Starter Pack"
-msgstr ""
+msgstr "Wedi methu dileu'r Pecyn Cychwyn"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:130
 msgid "Failed to disable invite link"
@@ -5222,7 +5222,7 @@ msgstr "Methwyd tynnu o'r rhestr"
 
 #: src/components/dialogs/StarterPackDialog.tsx:287
 msgid "Failed to remove from Starter Pack"
-msgstr ""
+msgstr "Wedi methu tynnu o'r Pecyn Cychwyn"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5321,7 +5321,7 @@ msgstr "Wedi methu diweddaru gosodiadau"
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:89
 #: src/screens/StarterPack/StarterPackScreen.tsx:568
 msgid "Failed to update Starter Pack opt-out"
-msgstr ""
+msgstr "Wedi methu diweddaru'r dewis i optio allan o'r Pecyn Cychwyn"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:169
 msgid "Failed to verify email, please try again."
@@ -5398,7 +5398,7 @@ msgstr "Ffrydiau"
 
 #: src/view/com/home/HomeHeader.tsx:37
 msgid "Feeds ✨"
-msgstr ""
+msgstr "Ffrydiau ✨"
 
 #: src/screens/SavedFeeds.tsx:227
 #: src/screens/SavedFeeds.tsx:398
@@ -5431,7 +5431,7 @@ msgstr "Hidlo o ffrydiau"
 
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:41
 msgid "Filter moderation reports (currently: {currentLabel})"
-msgstr ""
+msgstr "Hidlo adroddiadau cymedroli (ar hyn o bryd: {currentLabel})"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
@@ -5817,7 +5817,7 @@ msgstr "Gan y bobl yma"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
 msgid "Generate a Starter Pack"
-msgstr ""
+msgstr "Creu Pecyn Cychwyn"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:237
 #: src/screens/Messages/components/InviteLinkDialog.tsx:275
@@ -5861,7 +5861,7 @@ msgstr "Cael cymorth"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for Starter Pack joins, verification, and other activity."
-msgstr ""
+msgstr "Cael hysbysiadau ar gyfer ymunwyr â Phecynnau Cychwyn, gwirio a gweithgareddau eraill."
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -5906,7 +5906,7 @@ msgstr "Cael hysbysiadau pan fydd pobl yn anfon negeseuon atoch chi."
 #: src/screens/ModerationInbox/Settings.tsx:62
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about actions taken against you."
-msgstr ""
+msgstr "Cael eich hysbysu am gamau sy'n cael eu cymryd yn eich erbyn."
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:89
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:90
@@ -5920,7 +5920,7 @@ msgstr "Cael gwybod am bostiadau ac atebion o'r cyfrifon rydych chi'u eu dewis."
 #: src/screens/ModerationInbox/Settings.tsx:49
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about your report outcomes."
-msgstr ""
+msgstr "Cael gwybod am ganlyniadau eich adroddiadau."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Get notified of new posts from {name}"
@@ -5937,7 +5937,7 @@ msgstr "Cael gwybod pan fydd {name} yn postio"
 #: src/screens/ModerationInbox/Settings.tsx:75
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
-msgstr ""
+msgstr "Cael hysbysiad pan fydd label yn cael ei ychwanegu at eich cyfrif a'ch postiadau."
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:139
 msgid "Get notified when someone posts"
@@ -6099,7 +6099,7 @@ msgstr "Darparu mynediad"
 #: src/screens/ModerationInbox/index.tsx:157
 msgctxt "moderation-report-label"
 msgid "Graphic media"
-msgstr ""
+msgstr "Cyfryngau graffig"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -6234,7 +6234,7 @@ msgstr "Hapteg"
 #: src/screens/ModerationInbox/index.tsx:153
 msgctxt "moderation-report-guideline"
 msgid "Harassment"
-msgstr ""
+msgstr "Aflonyddu"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Harassment or hate"
@@ -6901,7 +6901,7 @@ msgstr "Dolen gwahodd wedi'i galluogi"
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this Starter Pack!"
-msgstr ""
+msgstr "Gwahoddwch bobl i'r Pecyn Cychwyn hwn!"
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6931,7 +6931,7 @@ msgstr "Mae'n gywir"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just <0>{0} </0>right now! Add more people to your Starter Pack by searching above."
-msgstr ""
+msgstr "Dim ond <0>{0} </0>ar hyn o bryd! Ychwanegwch fwy o bobl at eich pecyn cychwyn trwy chwilio uchod."
 
 #: src/screens/StarterPack/Wizard/index.tsx:478
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7336,7 +7336,7 @@ msgstr "Rhestr"
 #: src/screens/ModerationInbox/index.tsx:122
 msgctxt "moderation-report-subject"
 msgid "List “{list}”"
-msgstr ""
+msgstr "Rhestr “{list}”"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -7494,7 +7494,7 @@ msgstr "Llwytho postiadau newydd"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:138
 msgid "Load new posts from the people you follow"
-msgstr ""
+msgstr "Llwytho postiadau newydd gan y bobl rydych yn eu dilyn"
 
 #: src/screens/Messages/components/MessageComposer.tsx:269
 msgctxt "placeholder"
@@ -7608,7 +7608,7 @@ msgstr "Â llaw"
 
 #: src/screens/ModerationInbox/index.tsx:183
 msgid "Mark all actions as read"
-msgstr ""
+msgstr "Nodi pob gweithred fel wedi'i darllen"
 
 #: src/screens/Messages/Inbox.tsx:311
 #: src/screens/Messages/Inbox.tsx:317
@@ -7626,7 +7626,7 @@ msgstr "Nodi'r holl sgyrsiau fel wedi'u darllen"
 
 #: src/screens/ModerationInbox/index.tsx:102
 msgid "Mark all reports as read"
-msgstr ""
+msgstr "Nodi pob adroddiad fel wedi'i ddarllen"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
@@ -7804,7 +7804,7 @@ msgstr "Cyfryngau coll"
 #: src/Navigation.tsx:193
 #: src/screens/ModerationInbox/Settings.tsx:34
 msgid "Mod inbox settings"
-msgstr ""
+msgstr "Gosodiadau blwch derbyn cymedroli"
 
 #: src/Navigation.tsx:183
 #: src/screens/Moderation/index.tsx:103
@@ -7828,7 +7828,7 @@ msgstr "Blwch derbyn cymedroli"
 
 #: src/screens/ModerationInbox/index.tsx:48
 msgid "Moderation inbox settings"
-msgstr ""
+msgstr "Gosodiadau blwch derbyn cymedroli"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(list.creator.handle, '@')
@@ -8051,7 +8051,7 @@ msgstr "Fy Ffrydiau"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My Starter Pack"
-msgstr ""
+msgstr "Fy Mhecyn Cychwyn"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -8070,7 +8070,7 @@ msgstr "Llywiwch i {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:127
 msgid "Navigate to Starter Pack"
-msgstr ""
+msgstr "Ewch i'r Pecyn Cychwyn"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8224,11 +8224,11 @@ msgstr "Postiad newydd"
 
 #: src/components/NewPostsPill/index.tsx:236
 msgid "New posts"
-msgstr ""
+msgstr "Postiadau newydd"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:137
 msgid "New posts are ready to load from the people you follow"
-msgstr ""
+msgstr "Mae postiadau newydd yn barod i'w llwytho gan y bobl rydych yn eu dilyn"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:540
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
@@ -8240,7 +8240,7 @@ msgstr "Postiadau newydd gan {firstAuthorName} a {additionalAuthorsCount, plural
 
 #: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "New Starter Pack"
-msgstr ""
+msgstr "Pecyn Cychwyn Newydd"
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8298,7 +8298,7 @@ msgstr "Na"
 
 #: src/screens/ModerationInbox/index.tsx:126
 msgid "No action taken"
-msgstr ""
+msgstr "Dim camau wedi'u cymryd"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8607,7 +8607,7 @@ msgstr "Sylw: Dim ond ar gyfer aelodau sydd wedi mewngofnodi mae'r postiad hwn y
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:67
 msgid "Nothing on your account is restricted right now. Strikes from violations come off your record over time."
-msgstr ""
+msgstr "Does dim ar eich cyfrif wedi'i gyfyngu ar hyn o bryd. Mae rhybuddion o droseddau'n diflannu o'ch cofnod dros amser."
 
 #: src/screens/Bookmarks.tsx:290
 msgid "Nothing saved yet"
@@ -8616,7 +8616,7 @@ msgstr "Dim wedi'i gadw eto"
 #: src/Navigation.tsx:203
 #: src/screens/ModerationInbox/Subject.tsx:35
 msgid "Notice"
-msgstr ""
+msgstr "Hysbysiad"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:477
@@ -8702,7 +8702,7 @@ msgstr "Ymlaen"
 
 #: src/screens/Settings/components/AlgoVisibilityOptOut.tsx:43
 msgid "On Bluesky, this means your posts will only appear in the Discover feed to people who follow you. Other apps can choose to use this preference in their own algorithmic recommendations."
-msgstr ""
+msgstr "Ar Bluesky, mae hyn yn golygu y bydd eich postiadau ond yn ymddangos yn ffrwd Darganfod i bobl sy'n eich dilyn. Gall apiau eraill ddewis defnyddio'r dewis hwn yn eu hargymhellion algorithmig eu hunain."
 
 #: src/components/StarterPack/QrCode.tsx:78
 msgid "on<0><1/><2><3/></2></0>"
@@ -8922,7 +8922,7 @@ msgstr "Agor pecyn"
 
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:51
 msgid "Open post"
-msgstr ""
+msgstr "Agor y postiad"
 
 #: src/components/PostControls/PostMenu/index.tsx:63
 msgid "Open post options menu"
@@ -8948,7 +8948,7 @@ msgstr "Agor y ddewislen rhannu"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
 msgid "Open Starter Pack menu"
-msgstr ""
+msgstr "Agor dewislen Pecyn Cychwyn"
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -8964,7 +8964,7 @@ msgstr "Agor y grŵp sgwrsio hwn"
 
 #: src/view/shell/desktop/Feeds.tsx:185
 msgid "Opens {displayName} feed"
-msgstr ""
+msgstr "Yn agor ffrwd {displayName}"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
@@ -9083,7 +9083,7 @@ msgstr "Yn agor y proffil hwn"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:791
 msgid "Opt out"
-msgstr ""
+msgstr "Optio allan"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:251
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:259
@@ -9092,30 +9092,30 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:688
 #: src/screens/StarterPack/StarterPackScreen.tsx:779
 msgid "Opt out of Starter Pack"
-msgstr ""
+msgstr "Optio allan o'r Pecyn Cychwyn"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:329
 #: src/screens/StarterPack/StarterPackScreen.tsx:755
 msgid "Opt out of this Starter Pack?"
-msgstr ""
+msgstr "Optio allan o'r Pecyn Cychwyn hwn?"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:82
 #: src/screens/StarterPack/StarterPackScreen.tsx:561
 msgid "Opt-out undone"
-msgstr ""
+msgstr "Optio allan wedi'i ddadwneud"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 msgid "Opted out"
-msgstr ""
+msgstr "Wedi optio allan"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:81
 #: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Opted out of Starter Pack"
-msgstr ""
+msgstr "Wedi optio allan o'r Pecyn Cychwyn"
 
 #: src/components/StarterPack/Main/ProfilesList.tsx:187
 msgid "Opted out of this Starter Pack"
-msgstr ""
+msgstr "Wedi optio allan o'r Pecyn Cychwyn hwn"
 
 #: src/components/dialogs/MutedWords.tsx:310
 msgid "Options:"
@@ -9131,7 +9131,7 @@ msgstr "Neu, mewngofnodi i un o'ch cyfrifon eraill."
 
 #: src/components/OTAChannelNotice.tsx:84
 msgid "OTA channel"
-msgstr ""
+msgstr "Sianel OTA"
 
 #: src/screens/Settings/components/OTAInfo.tsx:60
 msgid "OTA status: ..."
@@ -9517,7 +9517,7 @@ msgstr "Rhowch y cod diogelwch a anfonwyd gennym at eich cyfeiriad e-bost blaeno
 #: src/screens/Signup/state.ts:313
 #: src/screens/Signup/StepInfo/index.tsx:174
 msgid "Please enter your date of birth."
-msgstr ""
+msgstr "Rhowch eich dyddiad geni."
 
 #: src/screens/Signup/state.ts:279
 #: src/screens/Signup/StepInfo/index.tsx:133
@@ -9656,7 +9656,7 @@ msgstr "Postiad wedi'i rwystro"
 #: src/screens/ModerationInbox/index.tsx:112
 msgctxt "moderation-report-subject"
 msgid "Post by {account}"
-msgstr ""
+msgstr "Postiad gan {account}"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:290
@@ -9668,7 +9668,7 @@ msgstr "Postiad gan @{0}"
 
 #: src/screens/ModerationInbox/Subject.tsx:77
 msgid "Post created"
-msgstr ""
+msgstr "Postiad wedi'i greu"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:196
 msgctxt "toast"
@@ -9732,11 +9732,11 @@ msgstr "Postiad wedi'i binio"
 #: src/screens/ModerationInbox/Report.tsx:89
 #: src/screens/ModerationInbox/Subject.tsx:80
 msgid "Post removed"
-msgstr ""
+msgstr "Postiad wedi'i dynnu"
 
 #: src/screens/ModerationInbox/Report.tsx:92
 msgid "Post restored"
-msgstr ""
+msgstr "Postiad wedi'i adfer"
 
 #. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
@@ -9751,7 +9751,7 @@ msgstr "Postiad wedi ei ddadbinio"
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
-msgstr ""
+msgstr "Postiwyd {0}"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:254
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
@@ -9881,7 +9881,7 @@ msgstr "Deilydd lle baner proffil"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Profile link copied"
-msgstr ""
+msgstr "Dolen y proffil wedi'i chopïo"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:210
 #: src/lib/strings/errors.ts:78
@@ -10056,7 +10056,7 @@ msgstr "Darllenwch ein cofnod blog"
 
 #: src/screens/ModerationInbox/Report.tsx:53
 msgid "Read our Community Guidelines"
-msgstr ""
+msgstr "Darllenwch ein Canllawiau Cymunedol"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Read the Bluesky blog"
@@ -10087,7 +10087,7 @@ msgstr "Rheswm dros apelio"
 
 #: src/screens/ModerationInbox/Report.tsx:66
 msgid "Reason:"
-msgstr ""
+msgstr "Rheswm:"
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:137
 msgid "Receive in-app notifications"
@@ -10163,7 +10163,7 @@ msgstr "Tynnu {displayName} o'r grŵp sgwrsio"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:61
 msgid "Remove {displayName} from Starter Pack"
-msgstr ""
+msgstr "Tynnu {displayName} o'r Pecyn Cychwyn"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10303,7 +10303,7 @@ msgstr "Dileu defnyddiwr o'r rhestr"
 
 #: src/components/StarterPack/Main/ProfilesList.tsx:192
 msgid "Remove user from Starter Pack"
-msgstr ""
+msgstr "Tynnu defnyddiwr o'r Pecyn Cychwyn"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:251
@@ -10341,7 +10341,7 @@ msgstr "Wedi'i dynnu o'r postiadau wedi'u cadw"
 #: src/components/dialogs/StarterPackDialog.tsx:281
 #: src/components/StarterPack/Main/ProfilesList.tsx:170
 msgid "Removed from Starter Pack"
-msgstr ""
+msgstr "Wedi ei dynnu o'r pecyn cychwyn"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:105
@@ -10460,7 +10460,7 @@ msgstr "Didoli atebion"
 
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:29
 msgid "Reply to {handle}"
-msgstr ""
+msgstr "Ateb {handle}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:385
 msgctxt "toast"
@@ -10520,7 +10520,7 @@ msgstr "Anfonwyd yr adroddiad"
 #: src/screens/StarterPack/StarterPackScreen.tsx:668
 #: src/screens/StarterPack/StarterPackScreen.tsx:671
 msgid "Report Starter Pack"
-msgstr ""
+msgstr "Adrodd ar y Pecyn Cychwyn"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10562,7 +10562,7 @@ msgstr "Adrodd ar y postiad hwn"
 
 #: src/components/moderation/ReportDialog/copy.ts:42
 msgid "Report this Starter Pack"
-msgstr ""
+msgstr "Adrodd ar y Pecyn Cychwyn hwn"
 
 #: src/components/moderation/ReportDialog/copy.ts:12
 msgid "Report this user"
@@ -10749,7 +10749,7 @@ msgstr "Ailosodwch eich cyfrinair drwy anfon cod i'ch e-bost"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:27
 msgctxt "moderation-report-filter"
 msgid "Resolved"
-msgstr ""
+msgstr "Wedi'i ddatrys"
 
 #: src/components/OTAChannelNotice.tsx:109
 msgid "Restore default"
@@ -10838,7 +10838,7 @@ msgstr "Datgelu cyfrinair"
 
 #: src/screens/ModerationInbox/Subject.tsx:59
 msgid "Rule violated:"
-msgstr ""
+msgstr "Rheol wedi'i thorri:"
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to sad/crying GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:75
@@ -11623,11 +11623,11 @@ msgstr "Rhannu'r chwilio hwn"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
 msgid "Share this Starter Pack"
-msgstr ""
+msgstr "Rhannu'r Pecyn Cychwyn hwn"
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this Starter Pack and help people join your community on Bluesky."
-msgstr ""
+msgstr "Rhannwch y Pecyn Cychwyn hwn a helpwch bobl i ymuno â'ch cymuned ar Bluesky."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11670,7 +11670,7 @@ msgstr "Dangos"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:42
 msgid "Show account status"
-msgstr ""
+msgstr "Dangos statws y cyfrif"
 
 #: src/components/AltBadgeWithDialog.tsx:48
 msgid "Show alt text"
@@ -11959,7 +11959,7 @@ msgstr "Y cyfrwng cymdeithasol rydych chi'n ei reoli."
 #. Name for a feature flag
 #: src/analytics/features/index.ts:96
 msgid "Social proofing on posts"
-msgstr ""
+msgstr "Prawf cymdeithasol ar bostiadau"
 
 #: src/lib/interests.ts:58
 msgid "Software Dev"
@@ -12111,7 +12111,7 @@ msgstr "Chwaraeon"
 #. Description of a feature flag (Social proofing on posts)
 #: src/analytics/features/index.ts:102
 msgid "Spot posts your friends and follows have liked."
-msgstr ""
+msgstr "Adnabod postiadau mae eich ffrindiau a'r bobl rydych yn eu dilyn wedi'u hoffi."
 
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:231
 msgid "Start a conversation, and it will appear here."
@@ -12154,25 +12154,25 @@ msgstr "Pecyn Cychwyn"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:86
 msgid "Starter Pack by {0}"
-msgstr ""
+msgstr "Pecyn Cychwyn gan {0}"
 
 #. placeholder {0}: creator.handle
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:193
 msgid "Starter Pack by @{0}"
-msgstr ""
+msgstr "Pecyn cychwyn gan @{0}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:168
 msgid "Starter Pack by <0/>"
-msgstr ""
+msgstr "Pecyn Cychwyn gan <0/>"
 
 #: src/components/StarterPack/StarterPackCard.tsx:85
 #: src/view/com/profile/ProfileSubpageHeader.tsx:166
 msgid "Starter Pack by you"
-msgstr ""
+msgstr "Pecyn Cychwyn gennych chi"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:842
 msgid "Starter Pack is invalid"
-msgstr ""
+msgstr "Mae'r Pecyn Cychwyn yn annilys"
 
 #: src/screens/Search/Explore.tsx:663
 #: src/screens/Search/SearchResults.tsx:114
@@ -12182,7 +12182,7 @@ msgstr "Pecynnau Cychwyn"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:294
 msgid "Starter Packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
+msgstr "Mae Pecynnau Cychwyn yn caniatáu i chi rannu'n hawdd gyda'ch ffrindiau eich hoff ffrydiau a phobl."
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:102
 #: src/view/screens/Profile.tsx:568
@@ -12380,13 +12380,13 @@ msgstr "Newid cyfrifon"
 
 #: src/components/OTAChannelNotice.tsx:139
 msgid "Switch channel"
-msgstr ""
+msgstr "Newid sianel"
 
 #: src/components/OTAChannelNotice.tsx:135
 #: src/components/OTAChannelNotice.tsx:195
 #: src/components/OTAChannelNotice.tsx:199
 msgid "Switch OTA channel"
-msgstr ""
+msgstr "Newid sianel OTA"
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
 #: src/view/shell/desktop/LeftNav.tsx:365
@@ -12581,7 +12581,7 @@ msgstr "Mae hynny’n cynnwys y canlynol:"
 #: src/screens/StarterPack/Wizard/index.tsx:109
 #: src/screens/StarterPack/Wizard/index.tsx:119
 msgid "That Starter Pack could not be found."
-msgstr ""
+msgstr "Doedd dim modd dod o hyd i'r Pecyn Cychwyn hwnnw."
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12674,11 +12674,11 @@ msgstr "Dyw'r gwasanaeth cymedroli ddim ar gael dros dro. Ceisiwch eto yn nes ym
 
 #: src/screens/ModerationInbox/Report.tsx:46
 msgid "The post was restored"
-msgstr ""
+msgstr "Mae'r postiad wedi'i adfer"
 
 #: src/screens/ModerationInbox/Report.tsx:47
 msgid "The post you reported has been restored after another review. If you’d rather not see it, you can mute or block the account. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "Mae'r postiad adroddwyd gennych wedi'i adfer ar ôl adolygiad arall. Os byddai'n well gennych beidio â'i weld, gallwch fudo neu rwystro'r cyfrif. Darllenwch ein <0>Canllawiau Cymunedol</0>."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:403
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12724,7 +12724,7 @@ msgstr "Mae'n ymddangos bod y gweinydd yn cael problemau. Ceisiwch eto ymhen ych
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:852
 msgid "The Starter Pack that you are trying to view is invalid. You may delete this Starter Pack instead."
-msgstr ""
+msgstr "Mae'r Pecyn Cychwyn rydych chi'n ceisio ei weld yn annilys. Gallwch ddileu'r Pecyn Cychwyn hwn yn lle hynny."
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -12939,7 +12939,7 @@ msgstr "Mae modd dadwneud y weithred hon unrhyw bryd."
 #. placeholder {0}: currentChannel ?? defaultChannel
 #: src/components/OTAChannelNotice.tsx:87
 msgid "This app is receiving updates from <0>{0}</0>."
-msgstr ""
+msgstr "Mae'r ap hwn yn derbyn diweddariadau gan <0>{0}</0>."
 
 #: src/components/OTAChannelNotice.tsx:71
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
@@ -13278,7 +13278,7 @@ msgstr "Does dim modd cael rhagolwg o'r fideo hwn yn eich porwr. Bydd yn dal i g
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:155
 msgid "This will create a new list with the same name, description, and members as this Starter Pack."
-msgstr ""
+msgstr "Bydd hyn yn creu rhestr newydd gyda'r un enw, disgrifiad ac aelodau â'r Pecyn Cychwyn hwn."
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13332,7 +13332,7 @@ msgstr "Amser yn weddill: {0, plural, one {# eiliad} other {# eiliad}}"
 
 #: src/screens/ModerationInbox/components/Timeline.tsx:12
 msgid "Timeline"
-msgstr ""
+msgstr "Llinell Amser"
 
 #: src/components/SendErrorReportDialog.tsx:68
 msgid "Title"
@@ -13555,7 +13555,7 @@ msgstr "Methu canfod y derbynnydd rwyf wedi ei ddewis."
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:17
 msgid "Unable to load your account"
-msgstr ""
+msgstr "Methu llwytho eich cyfrif"
 
 #: src/lib/strings/errors.ts:81
 msgid "Unable to resolve handle"
@@ -13625,7 +13625,7 @@ msgstr "Rhestr ddadrwystro"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:23
 msgctxt "moderation-report-filter"
 msgid "Under review"
-msgstr ""
+msgstr "Dan adolygiad"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
@@ -13647,17 +13647,17 @@ msgstr "Dadwneud"
 #: src/screens/StarterPack/StarterPackScreen.tsx:778
 #: src/screens/StarterPack/StarterPackScreen.tsx:789
 msgid "Undo opt-out"
-msgstr ""
+msgstr "Dadwneud optio allan"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:250
 #: src/screens/StarterPack/StarterPackScreen.tsx:679
 msgid "Undo opt-out from Starter Pack"
-msgstr ""
+msgstr "Dadwneud optio allan o'r Pecyn Cychwyn"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:327
 #: src/screens/StarterPack/StarterPackScreen.tsx:753
 msgid "Undo opt-out?"
-msgstr ""
+msgstr "Dadwneud optio allan?"
 
 #: src/components/PostControls/RepostButton.web.tsx:67
 #: src/components/PostControls/RepostButton.web.tsx:74
@@ -13815,7 +13815,7 @@ msgstr "Rhestr dadbinio"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:28
 msgctxt "moderation-report-filter"
 msgid "Unread"
-msgstr ""
+msgstr "Heb ddarllen"
 
 #: src/screens/Settings/Settings.tsx:503
 #: src/screens/Settings/Settings.tsx:505
@@ -14193,7 +14193,7 @@ msgstr "Fersiwn {0}"
 #. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via Starter Pack <0/><1>{starterPackName}</1>"
-msgstr ""
+msgstr "drwy'r Pecyn Cychwyn <0/><1>{starterPackName}</1>"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:123
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:189
@@ -14377,7 +14377,7 @@ msgstr "Gweld cyhoeddiad"
 
 #: src/screens/ModerationInbox/components/ReportRow.tsx:30
 msgid "View report details: {subject}"
-msgstr ""
+msgstr "Gweld manylion yr adroddiad: {subject}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:105
 msgid "View the avatar"
@@ -14444,7 +14444,7 @@ msgstr "Yn gweld fideo yn y modd trochi"
 
 #: src/screens/ModerationInbox/index.tsx:198
 msgid "Violates community guideline: {guideline}"
-msgstr ""
+msgstr "Yn torri canllaw cymunedol: {guideline}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
 msgid "Violence"
@@ -14458,7 +14458,7 @@ msgstr "Cynnwys treisiol neu fygythiol"
 #. placeholder {1}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:61
 msgid "Visit {0} on {1}"
-msgstr ""
+msgstr "Ymweld â {0} ar {1}"
 
 #: src/components/dialogs/LinkWarning.tsx:112
 #: src/components/dialogs/LinkWarning.tsx:122
@@ -14469,7 +14469,7 @@ msgstr "Mynd i'r wefan"
 #. placeholder {0}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:62
 msgid "Visit site on {0}"
-msgstr ""
+msgstr "Ymweld â'r wefan ar {0}"
 
 #: src/view/screens/Notifications.tsx:296
 msgid "Visit your notification settings"
@@ -14536,7 +14536,7 @@ msgstr "Wedi methu lwytho gosodiadau'r sgwrs hon"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:18
 msgid "We couldn't load your account settings. Check your internet connection and try again."
-msgstr ""
+msgstr "Nid oeddem yn gallu llwytho gosodiadau eich cyfrif. Gwiriwch eich cysylltiad rhyngrwyd a rhowch gynnig arall arni."
 
 #: src/screens/Login/LoginForm.tsx:483
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
@@ -14746,11 +14746,11 @@ msgstr "Beth yw eich diddordebau?"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your Starter Pack?"
-msgstr ""
+msgstr "Beth ydych chi am ei alw'ch Pecyn Cychwyn?"
 
 #: src/screens/ModerationInbox/Report.tsx:61
 msgid "What you reported"
-msgstr ""
+msgstr "Yr hyn a adroddwyd gennych"
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14826,7 +14826,7 @@ msgstr "Pam dylai'r postiad hon gael ei hadolygu?"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Why should this Starter Pack be reviewed?"
-msgstr ""
+msgstr "Pam dylai'r Pecyn Cychwyn hwn gael ei adolygu?"
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Why should this user be reviewed?"
@@ -14903,7 +14903,7 @@ msgstr "Iawn, dileu fy nghyfrif"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:739
 msgid "Yes, delete this Starter Pack"
-msgstr ""
+msgstr "Iawn, dilëu'r Pecyn Cychwyn hwn"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -15163,7 +15163,7 @@ msgstr "Does gennych ddim rhestrau."
 
 #: src/components/dialogs/StarterPackDialog.tsx:97
 msgid "You have no Starter Packs."
-msgstr ""
+msgstr "Does gennych chi ddim Pecynnau Cychwyn."
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -15195,7 +15195,7 @@ msgstr "Mae gennych chi newidiadau heb eu cadw. Hoffech chi eu cadw cyn edrych a
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
 msgid "You haven't created a Starter Pack yet!"
-msgstr ""
+msgstr "Dydych chi ddim wedi creu Pecyn Cychwyn eto!"
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -15225,15 +15225,15 @@ msgstr "Mi wnaethoch chi ymuno â Bluesky {timeAgoString} yn ôl"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:27
 msgid "You joined Bluesky just now"
-msgstr ""
+msgstr "Rydych newydd ymuno â Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:40
 msgid "You joined Bluesky using a Starter Pack {timeAgoString} ago"
-msgstr ""
+msgstr "Mi wnaethoch chi ymuno â Bluesky gan ddefnyddio Pecyn Cychwyn {timeAgoString} yn ôl"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:26
 msgid "You joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "Rydych wedi ymuno â Bluesky gan ddefnyddio Pecyn Cychwyn nawr"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15248,7 +15248,7 @@ msgstr "Gallwch apelio yn erbyn y labeli hyn os teimlwch iddyn nhw gael eu gosod
 #. placeholder {1}: state.profileLimit
 #: src/screens/StarterPack/Wizard/State.tsx:78
 msgid "You may only add up to {0, plural, other {{1} profiles}}"
-msgstr ""
+msgstr "Dim ond hyd at {0, plural, zero {{1} o broffilau} one {{1} proffil} two {{1} broffil} few {{1} proffil} many {{1} phroffil} other {{1} o broffilau}} cewch chi ychwanegu"
 
 #: src/screens/StarterPack/Wizard/State.tsx:99
 msgid "You may only add up to 3 feeds"
@@ -15264,7 +15264,7 @@ msgstr "Rhaid eich bod yn o leiaf 13 oed i ddefnyddio Bluesky. Darllenwch ein <0
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:362
 msgid "You must be following at least seven other people to generate a Starter Pack."
-msgstr ""
+msgstr "Rhaid i chi fod yn dilyn o leiaf saith o bobl eraill i gynhyrchu Pecyn Cychwyn."
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
@@ -15327,7 +15327,7 @@ msgstr "Rydych wedi gofyn i gael ymuno"
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:334
 #: src/screens/StarterPack/StarterPackScreen.tsx:760
 msgid "You will be eligible to appear in this Starter Pack again."
-msgstr ""
+msgstr "Byddwch yn gymwys i ymddangos yn y Pecyn Cychwyn hwn eto."
 
 #: src/screens/Settings/Settings.tsx:309
 #: src/view/shell/desktop/LeftNav.tsx:226
@@ -15337,7 +15337,7 @@ msgstr "Byddwch yn cael eich allgofnodi o'ch holl gyfrifon."
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:338
 #: src/screens/StarterPack/StarterPackScreen.tsx:764
 msgid "You will no longer appear in this Starter Pack. The creator will be able to see that you've opted out and remove you if they wish."
-msgstr ""
+msgstr "Fyddwch chi ddim yn ymddangos yn y Pecyn Cychwyn hwn mwyach. Bydd y crëwr yn gallu gweld eich bod wedi optio allan a'ch dileu os ydyn nhw'n dymuno."
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:137
@@ -15488,15 +15488,15 @@ msgstr "Mae eich cyfrif wedi'i atal"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:35
 msgid "Your account has repeated violations of our Community Guidelines. Another violation may result in your account being permanently suspended."
-msgstr ""
+msgstr "Mae eich cyfrif wedi torri ein Canllawiau Cymunedol dro ar ôl tro. Gall tramgwydd arall arwain at atal eich cyfrif yn barhaol."
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:32
 msgid "Your account has strikes on record"
-msgstr ""
+msgstr "Mae gan eich cyfrif rybuddion ar gofnod"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:31
 msgid "Your account is at risk of permanent suspension"
-msgstr ""
+msgstr "Mae eich cyfrif mewn perygl o gael ei atal yn barhaol"
 
 #: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -15513,7 +15513,7 @@ msgstr "Rhaid i'ch cyfrif fod o leiaf 7 diwrnod oed i greu sgwrs grŵp newydd."
 #: src/screens/ModerationInbox/Settings.tsx:58
 msgctxt "moderation-inbox-setting"
 msgid "Your account notifications"
-msgstr ""
+msgstr "Hysbysiadau eich cyfrif"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:111
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
@@ -15526,7 +15526,7 @@ msgstr "Cafwyd bod eich cyfrif yn groes i <0>Delerau Gwasanaeth Cymdeithasol Blu
 #: src/screens/ModerationInbox/index.tsx:213
 msgctxt "moderation-report-action"
 msgid "Your account was suspended"
-msgstr ""
+msgstr "Mae eich cyfrif wedi'i atal"
 
 #: src/screens/Takendown.tsx:148
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
@@ -15642,7 +15642,7 @@ msgstr "Bydd eich enw, afatar, enw'r grŵp sgwrsio, a nifer yr aelodau yn weladw
 
 #: src/screens/ModerationInbox/Report.tsx:75
 msgid "Your note:"
-msgstr ""
+msgstr "Eich nodyn:"
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:74
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
@@ -15655,7 +15655,7 @@ msgstr "Rhaid i'ch cyfrinair fod o leiaf 8 nod."
 #: src/screens/ModerationInbox/index.tsx:194
 msgctxt "moderation-report-action"
 msgid "Your post was removed"
-msgstr ""
+msgstr "Mae eich postiad wedi'i dynnu"
 
 #: src/view/com/composer/Composer.tsx:1239
 msgid "Your post was sent"
@@ -15689,7 +15689,7 @@ msgstr "Mae eich ateb wedi'i anfon"
 #: src/Navigation.tsx:198
 #: src/screens/ModerationInbox/Report.tsx:35
 msgid "Your report"
-msgstr ""
+msgstr "Eich adroddiad"
 
 #. placeholder {0}: state.selectedLabeler?.creator.displayName
 #: src/components/moderation/ReportDialog/index.tsx:596
@@ -15698,12 +15698,12 @@ msgstr "Bydd eich adroddiad yn cael ei anfon at <0>{0}</0>."
 
 #: src/screens/ModerationInbox/index.tsx:60
 msgid "Your reports"
-msgstr ""
+msgstr "Eich adroddiadau"
 
 #: src/screens/ModerationInbox/Settings.tsx:45
 msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
-msgstr ""
+msgstr "Hysbysiadau eich adroddiadau"
 
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."

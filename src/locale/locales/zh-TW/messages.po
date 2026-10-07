@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-30 17:04\n"
+"PO-Revision-Date: 2026-10-07 18:46\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -25,15 +25,15 @@ msgstr "「{interestsDisplayName}」類別（已選取）"
 
 #: src/screens/ModerationInbox/index.tsx:208
 msgid "“{label}” – shown behind a warning"
-msgstr ""
+msgstr "「{label}」——顯示於警告後方"
 
 #: src/screens/ModerationInbox/Report.tsx:78
 msgid "“{note}”"
-msgstr ""
+msgstr "「{note}」"
 
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:32
 msgid "“{post}”"
-msgstr ""
+msgstr "「{post}」"
 
 #. A reply summary in chat
 #: src/components/dms/MessageItem.tsx:917
@@ -213,7 +213,7 @@ msgstr "{0, plural, one {個跟隨中} other {個跟隨中}}"
 #. placeholder {0}: content.count
 #: src/components/NewPostsPill/index.tsx:169
 msgid "{0, plural, one {Load # new post} other {Load # new posts}}"
-msgstr ""
+msgstr "{0, plural, other {載入 # 則新貼文}}"
 
 #. placeholder {0}: profile.postsCount || 0
 #: src/screens/Profile/Header/Metrics.tsx:58
@@ -224,7 +224,7 @@ msgstr "{0, plural, one {則貼文} other {則貼文}}"
 #. placeholder {0}: starterPack.joinedAllTimeCount || 0
 #: src/screens/StarterPack/StarterPackScreen.tsx:492
 msgid "{0, plural, other {# people have}} joined Bluesky via this Starter Pack!"
-msgstr ""
+msgstr "{0, plural, other {# 個人}}透過此新手包加入了 Bluesky！"
 
 #. placeholder {0}: starterPack.list.listItemCount - 4
 #: src/components/dialogs/StarterPackDialog.tsx:351
@@ -441,7 +441,7 @@ msgstr "{0}+ 個請求"
 #. placeholder {0}: i18n.number(UNREAD_NOTIFICATION_CAP - 1)
 #: src/screens/Moderation/index.tsx:174
 msgid "{0}+ updates"
-msgstr ""
+msgstr "{0}+ 則更新"
 
 #. How many days have passed, displayed in a narrow form
 #. placeholder {0}: diff.value
@@ -469,7 +469,7 @@ msgstr "{0} 秒前"
 
 #: src/screens/Moderation/index.tsx:179
 msgid "{badge, plural, one {# update} other {# updates}}"
-msgstr ""
+msgstr "{badge, plural, other {# 則更新}}"
 
 #: src/screens/Messages/JoinRequests.tsx:430
 msgid "{count, plural, =0 {No requests to join} one {# request to join} other {# requests to join}}"
@@ -506,7 +506,7 @@ msgstr "「{displayName}」的新手包"
 
 #: src/screens/StarterPack/Wizard/index.tsx:182
 msgid "{displayName}’s Starter Pack"
-msgstr ""
+msgstr "{displayName} 的新手包"
 
 #: src/screens/SignupQueued.tsx:225
 msgid "{estimatedTimeHrs, plural, one {hour} other {hours}}"
@@ -550,7 +550,7 @@ msgstr "{firstAuthorLink} 和<0>{additionalAuthorsCount, plural, other {其他 {
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:413
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> signed up with your Starter Pack"
-msgstr ""
+msgstr "{firstAuthorLink} 和<0>{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}</0>使用了您的新手包註冊"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:440
 msgid "{firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> verified you"
@@ -590,7 +590,7 @@ msgstr "{firstAuthorLink} 轉發了您轉發的貼文"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:425
 msgid "{firstAuthorLink} signed up with your Starter Pack"
-msgstr ""
+msgstr "{firstAuthorLink} 使用了您的新手包註冊"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:452
 msgid "{firstAuthorLink} verified you"
@@ -602,7 +602,7 @@ msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, one {其他 {forma
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:347
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} followed you via Starter Pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}透過新手包 {starterPackName} 跟隨了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:385
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} liked your custom feed"
@@ -630,7 +630,7 @@ msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {for
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:407
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} signed up with your Starter Pack"
-msgstr ""
+msgstr "{firstAuthorName} 和{additionalAuthorsCount, plural, other {其他 {formattedAuthorsCount} 人}}使用了您的新手包註冊"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:434
 msgid "{firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}} verified you"
@@ -646,11 +646,11 @@ msgstr "{firstAuthorName} 回跟了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:341
 msgid "{firstAuthorName} followed you back via Starter Pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} 透過新手包 {starterPackName} 回跟了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:351
 msgid "{firstAuthorName} followed you via Starter Pack {starterPackName}"
-msgstr ""
+msgstr "{firstAuthorName} 透過新手包 {starterPackName} 跟隨了您"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:389
 msgid "{firstAuthorName} liked your custom feed"
@@ -678,7 +678,7 @@ msgstr "{firstAuthorName} 轉發了您轉發的貼文"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:411
 msgid "{firstAuthorName} signed up with your Starter Pack"
-msgstr ""
+msgstr "{firstAuthorName} 使用了您的新手包註冊"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:438
 msgid "{firstAuthorName} verified you"
@@ -778,7 +778,7 @@ msgstr "{name} 最愛的動態源和人物⸺快來加入我的行列吧！"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "{name}’s Starter Pack"
-msgstr ""
+msgstr "{name} 的新手包"
 
 #: src/view/shell/bottom-bar/BottomBarWeb.tsx:344
 msgid "{notificationCount, plural, one {# unread item} other {# unread items}}"
@@ -794,15 +794,15 @@ msgstr "「{profileName}」在 {timeAgoString}前加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:32
 msgid "{profileName} joined Bluesky just now"
-msgstr ""
+msgstr "{profileName} 剛剛加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:47
 msgid "{profileName} joined Bluesky using a Starter Pack {timeAgoString} ago"
-msgstr ""
+msgstr "{profileName} 在 {timeAgoString}前使用新手包加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:31
 msgid "{profileName} joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "{profileName} 剛剛使用新手包加入了 Bluesky"
 
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
 #. The trending topic rank, i.e. "1. March Madness", "2. The Bachelor"
@@ -852,7 +852,7 @@ msgstr "{userName} 的驗證"
 
 #: src/components/Post/Embed/AtCard/index.tsx:160
 msgid "@{displayedHandle}"
-msgstr ""
+msgstr "@{displayedHandle}"
 
 #. Number of images beyond the first 3
 #. placeholder {0}: labels.length
@@ -873,7 +873,7 @@ msgstr "+{computedTotal}"
 #: src/screens/StarterPack/Wizard/index.tsx:569
 msgctxt "feeds"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your Starter Pack"
-msgstr ""
+msgstr "<0>{0}、</0><1>{1}</1> 和{2, plural, other {其他 # 人}}已包含在您的新手包中"
 
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #. placeholder {1}: getName(items[2])
@@ -881,7 +881,7 @@ msgstr ""
 #: src/screens/StarterPack/Wizard/index.tsx:516
 msgctxt "profiles"
 msgid "<0>{0}, </0><1>{1}, </1>and {2, plural, one {# other} other {# others}} are included in your Starter Pack"
-msgstr ""
+msgstr "<0>{0}、</0><1>{1}</1> 和{2, plural, other {其他 # 人}}已包含在您的新手包中"
 
 #. placeholder {0}: formatCount(i18n, profile?.followersCount ?? 0)
 #. placeholder {1}: profile?.followersCount || 0
@@ -928,12 +928,12 @@ msgstr "<0>{0}</0> {likeCount, plural, other {個喜歡}}"
 #: src/screens/StarterPack/Wizard/index.tsx:503
 #: src/screens/StarterPack/Wizard/index.tsx:557
 msgid "<0>{0}</0> and<1> </1><2>{1} </2>are included in your Starter Pack"
-msgstr ""
+msgstr "<0>{0}</0> 和<1> </1><2>{1} </2>已包含在您的新手包中"
 
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:550
 msgid "<0>{0}</0> is included in your Starter Pack"
-msgstr ""
+msgstr "<0>{0}</0> 已在您的新手包中"
 
 #. placeholder {0}: list.name
 #: src/components/WhoCanReply.tsx:335
@@ -947,7 +947,7 @@ msgstr "<0>{displayName}</0><1/><2> 已將您加入</2>"
 
 #: src/screens/ModerationInbox/Subject.tsx:62
 msgid "<0>Community Guidelines: Harassment</0>"
-msgstr ""
+msgstr "<0>社群準則：騷擾</0>"
 
 #: src/screens/Hashtag.tsx:232
 #: src/screens/Search/SearchResults.tsx:398
@@ -961,7 +961,7 @@ msgstr "<0>點一下這裡以使用 GPS 確認您的位置。</0>"
 #. placeholder {0}: getName(items[1] /* [0] is self, skip it */)
 #: src/screens/StarterPack/Wizard/index.tsx:494
 msgid "<0>You</0> and<1> </1><2>{0} </2>are included in your Starter Pack"
-msgstr ""
+msgstr "<0>您</0>和<1> </1><2>{0} </2>已包含在您的新手包中"
 
 #: src/lib/strings/handles.ts:38
 #: src/screens/Profile/Header/Handle.tsx:58
@@ -997,7 +997,7 @@ msgstr "您可以在 Bluesky 上找到一系列熱門動態源，包括 News、B
 #: src/screens/ModerationInbox/index.tsx:204
 msgctxt "moderation-report-action"
 msgid "A label was added to your post"
-msgstr ""
+msgstr "您的貼文被新增了一個標籤"
 
 #. If last message does not contain text, fall back to "{user} reacted to {a message}"
 #: src/components/dms/getReactionInfo.ts:58
@@ -1146,7 +1146,7 @@ msgstr "帳號已停用"
 #: src/screens/ModerationInbox/Settings.tsx:71
 msgctxt "moderation-inbox-setting"
 msgid "Account labeling notifications"
-msgstr ""
+msgstr "帳號標記通知"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:464
 #: src/view/com/profile/ProfileMenu.tsx:147
@@ -1221,7 +1221,7 @@ msgstr "再新增至少 {0} 個以繼續"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:62
 msgid "Add {displayName} to Starter Pack"
-msgstr ""
+msgstr "新增 {displayName} 至新手包"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:103
 #: src/view/com/composer/labels/LabelsBtn.tsx:108
@@ -1359,7 +1359,7 @@ msgstr "加入推薦的動態源"
 
 #: src/screens/StarterPack/Wizard/index.tsx:538
 msgid "Add some feeds to your Starter Pack!"
-msgstr ""
+msgstr "新增一些動態源到您的新手包中吧！"
 
 #: src/screens/Feeds/NoFollowingFeed.tsx:40
 msgid "Add the default feed of only people you follow"
@@ -1386,7 +1386,7 @@ msgstr "新增至貼文收藏"
 #: src/view/com/profile/ProfileMenu.tsx:368
 #: src/view/com/profile/ProfileMenu.tsx:371
 msgid "Add to Starter Packs"
-msgstr ""
+msgstr "新增至新手包"
 
 #: src/components/dialogs/lists/ListAddRemoveUsersDialog.tsx:179
 msgid "Add user to list"
@@ -1412,7 +1412,7 @@ msgstr "成功新增至列表"
 
 #: src/components/dialogs/StarterPackDialog.tsx:268
 msgid "Added to Starter Pack"
-msgstr ""
+msgstr "已新增至新手包"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:221
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:226
@@ -1669,7 +1669,7 @@ msgstr "載入動態源時發生錯誤。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:369
 msgid "An error occurred while generating your Starter Pack. Want to try again?"
-msgstr ""
+msgstr "產生您的新手包時發生錯誤。要再試一次嗎？"
 
 #. placeholder {0}: cleanError(err)
 #: src/components/contacts/screens/ViewMatches.tsx:251
@@ -1906,7 +1906,7 @@ msgstr "申請解除直播停權"
 
 #: src/screens/ModerationInbox/Subject.tsx:83
 msgid "Appeal submitted"
-msgstr "成功提交申訴"
+msgstr ""
 
 #: src/components/moderation/AppealForm.tsx:94
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
@@ -1944,7 +1944,7 @@ msgstr "外觀"
 
 #: src/components/OTAChannelNotice.tsx:224
 msgid "Apply"
-msgstr ""
+msgstr "套用"
 
 #: src/screens/Feeds/NoSavedFeedsOfAnyType.tsx:52
 #: src/screens/Home/NoFeedsPinned.tsx:94
@@ -1958,7 +1958,7 @@ msgstr "套用拉取請求 (Pull Request)"
 
 #: src/components/OTAChannelNotice.tsx:221
 msgid "Apply update from this channel"
-msgstr ""
+msgstr "套用此頻道的更新"
 
 #. placeholder {0}: niceDate(i18n, createdAt, 'medium')
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:627
@@ -2003,7 +2003,7 @@ msgstr "您確定要刪除這則訊息嗎？此訊息只會從您的紀錄中消
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:711
 msgid "Are you sure you want to delete this Starter Pack?"
-msgstr ""
+msgstr "您確定要刪除這個新手包嗎？"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:100
 #: src/screens/Profile/Header/EditProfileDialog.tsx:77
@@ -2127,7 +2127,7 @@ msgstr "大頭貼照建立工具"
 
 #: src/screens/ModerationInbox/index.tsx:116
 msgid "Awaiting review"
-msgstr ""
+msgstr "等待審核中"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2166,7 +2166,7 @@ msgstr "返回對話"
 
 #: src/screens/ModerationInbox/index.tsx:217
 msgid "Ban evasion – {duration}, now expired"
-msgstr ""
+msgstr "規避停權——{duration}，現已到期"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:218
 msgid "Banned activities or security violations"
@@ -2206,7 +2206,7 @@ msgstr "在撰寫貼文或回覆之前，您必須先驗證您的電子信箱。
 #: src/components/StarterPack/ProfileStarterPacks.tsx:273
 #: src/view/screens/Profile.tsx:351
 msgid "Before creating a Starter Pack, you must first verify your email."
-msgstr ""
+msgstr "在建立新手包之前，您必須先驗證您的電子信箱。"
 
 #: src/screens/Messages/components/RequestButtons.tsx:260
 msgid "Before you can accept this chat request, you must first verify your email."
@@ -2409,7 +2409,7 @@ msgstr "Bluesky 經典™"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:36
 msgid "Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension."
-msgstr ""
+msgstr "Bluesky 已針對您違反社群準則的帳號或內容採取行動。若日後再次違規，將會採取更嚴格的處置措施，包括帳號停權。"
 
 #: src/components/contacts/screens/GetContacts.tsx:237
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
@@ -2443,7 +2443,7 @@ msgstr "與朋友一起使用 Bluesky 更有趣。想邀請一些朋友加入嗎
 #: src/screens/ModerationInbox/Report.tsx:38
 #: src/screens/ModerationInbox/Subject.tsx:38
 msgid "Bluesky Moderation Service"
-msgstr ""
+msgstr "Bluesky 內容管理服務"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
@@ -2534,7 +2534,7 @@ msgstr "瀏覽帶有標籤 {displayName} 的貼文"
 
 #: src/components/TrendingTopics.tsx:169
 msgid "Browse Starter Pack {displayName}"
-msgstr ""
+msgstr "瀏覽新手包 {displayName}"
 
 #. placeholder {0}: trend.displayName
 #: src/components/interstitials/FeedTrendingTopics.tsx:211
@@ -2795,12 +2795,12 @@ msgstr "成功儲存變更"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:162
 msgid "Changes to the Starter Pack will not be reflected in the list after creation. The list will be an independent copy."
-msgstr ""
+msgstr "列表在轉存後會是一份完全獨立的副本，任何對新手包的變更都不會影響已轉存的列表。"
 
 #: src/components/OTAChannelNotice.tsx:203
 #: src/components/OTAChannelNotice.tsx:207
 msgid "Channel"
-msgstr ""
+msgstr "頻道"
 
 #: src/lib/hooks/useNotificationHandler.ts:133
 #: src/Navigation.tsx:533
@@ -2920,11 +2920,11 @@ msgstr "請晚點再回來看看！"
 
 #: src/components/OTAChannelNotice.tsx:120
 msgid "Check for OTA updates"
-msgstr ""
+msgstr "檢查 OTA 更新"
 
 #: src/components/OTAChannelNotice.tsx:127
 msgid "Check for updates"
-msgstr ""
+msgstr "檢查更新"
 
 #: src/screens/SignupQueued.tsx:85
 #: src/screens/SignupQueued.tsx:89
@@ -3273,7 +3273,7 @@ msgstr "社群準則"
 
 #: src/screens/ModerationInbox/Subject.tsx:65
 msgid "Community Guidelines: Harassment"
-msgstr ""
+msgstr "社群準則：騷擾"
 
 #: src/screens/Onboarding/StepFinished/index.tsx:335
 msgid "Complete onboarding and start using your account"
@@ -3597,7 +3597,7 @@ msgstr "複製個人檔案連結"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:649
 msgid "Copy link to Starter Pack"
-msgstr ""
+msgstr "複製新手包連結"
 
 #: src/components/dms/MessageContextMenu.tsx:197
 #: src/components/dms/MessageContextMenu.tsx:201
@@ -3752,11 +3752,11 @@ msgstr "建立列表"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:633
 msgid "Create a list from this Starter Pack"
-msgstr ""
+msgstr "轉存此新手包到新的列表"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:167
 msgid "Create a QR code for a Starter Pack"
-msgstr ""
+msgstr "為新手包建立 QR Code"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:206
 #: src/components/StarterPack/ProfileStarterPacks.tsx:315
@@ -3768,7 +3768,7 @@ msgstr "建立新手包"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:302
 msgid "Create a Starter Pack for me"
-msgstr ""
+msgstr "為我產生一個新手包"
 
 #: src/components/WelcomeModal.tsx:157
 #: src/components/WelcomeModal.tsx:165
@@ -3795,7 +3795,7 @@ msgstr "建立帳號"
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:302
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:309
 msgid "Create an account without using this Starter Pack"
-msgstr ""
+msgstr "不使用此新手包建立帳號"
 
 #: src/screens/Onboarding/StepProfile/index.tsx:315
 msgid "Create an avatar instead"
@@ -3821,7 +3821,7 @@ msgstr "轉存成員到新的列表"
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:146
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:150
 msgid "Create list from Starter Pack"
-msgstr ""
+msgstr "轉存新手包到新的列表"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:377
 msgid "Create moderation list"
@@ -3847,7 +3847,7 @@ msgstr "建立 {0} 的檢舉"
 #: src/components/dialogs/StarterPackDialog.tsx:102
 #: src/components/dialogs/StarterPackDialog.tsx:199
 msgid "Create Starter Pack"
-msgstr ""
+msgstr "建立新手包"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:376
 msgid "Create user list"
@@ -4033,11 +4033,11 @@ msgstr "刪除貼文"
 #: src/screens/StarterPack/StarterPackScreen.tsx:622
 #: src/screens/StarterPack/StarterPackScreen.tsx:862
 msgid "Delete Starter Pack"
-msgstr ""
+msgstr "刪除新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:708
 msgid "Delete Starter Pack?"
-msgstr ""
+msgstr "要刪除新手包嗎？"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:317
 msgid "Delete this list?"
@@ -4127,7 +4127,7 @@ msgstr "昏暗"
 #: src/screens/ModerationInbox/index.tsx:132
 msgctxt "moderation-report-subject"
 msgid "Direct message from {account}"
-msgstr ""
+msgstr "來自 {account} 的訊息"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:383
 #: src/screens/Messages/components/InviteLinkDialog.tsx:388
@@ -4214,7 +4214,7 @@ msgstr "中斷連結 Germ DM"
 #: src/lib/strings/feed-names.ts:16
 msgctxt "feed-name"
 msgid "Discover"
-msgstr ""
+msgstr "探索"
 
 #: src/screens/Search/Explore.tsx:457
 msgid "Discover feeds"
@@ -4573,7 +4573,7 @@ msgstr "編輯個人檔案"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:609
 msgid "Edit Starter Pack"
-msgstr ""
+msgstr "編輯新手包"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:486
 #: src/screens/Messages/ConversationSettings/index.tsx:536
@@ -4590,7 +4590,7 @@ msgstr "修改哪些人可以回覆"
 
 #: src/Navigation.tsx:589
 msgid "Edit your Starter Pack"
-msgstr ""
+msgstr "編輯您的新手包"
 
 #: src/lib/interests.ts:59
 msgid "Education"
@@ -5023,7 +5023,7 @@ msgstr "新增至列表時發生問題"
 
 #: src/components/dialogs/StarterPackDialog.tsx:274
 msgid "Failed to add to Starter Pack"
-msgstr ""
+msgstr "新增至新手包時發生問題"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:605
 msgid "Failed to change handle. Please try again."
@@ -5051,7 +5051,7 @@ msgstr "建立邀請連結時發生問題"
 #: src/screens/StarterPack/Wizard/index.tsx:243
 #: src/screens/StarterPack/Wizard/index.tsx:253
 msgid "Failed to create Starter Pack"
-msgstr ""
+msgstr "建立新手包時發生問題"
 
 #: src/screens/Messages/components/RequestButtons.tsx:77
 #: src/screens/Messages/components/RequestButtons.tsx:318
@@ -5069,7 +5069,7 @@ msgstr "刪除貼文時發生問題，請再試一次"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:831
 msgid "Failed to delete Starter Pack"
-msgstr ""
+msgstr "刪除新手包時發生問題"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:130
 msgid "Failed to disable invite link"
@@ -5222,7 +5222,7 @@ msgstr "從列表刪除時發生問題"
 
 #: src/components/dialogs/StarterPackDialog.tsx:287
 msgid "Failed to remove from Starter Pack"
-msgstr ""
+msgstr "從新手包刪除時發生問題"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:56
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:76
@@ -5321,7 +5321,7 @@ msgstr "更新設定時發生問題"
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:89
 #: src/screens/StarterPack/StarterPackScreen.tsx:568
 msgid "Failed to update Starter Pack opt-out"
-msgstr ""
+msgstr "更新新手包退出設定時發生問題"
 
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:169
 msgid "Failed to verify email, please try again."
@@ -5398,7 +5398,7 @@ msgstr "動態源"
 
 #: src/view/com/home/HomeHeader.tsx:37
 msgid "Feeds ✨"
-msgstr ""
+msgstr "動態源 ✨"
 
 #: src/screens/SavedFeeds.tsx:227
 #: src/screens/SavedFeeds.tsx:398
@@ -5431,7 +5431,7 @@ msgstr "從動態中排除內容"
 
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:41
 msgid "Filter moderation reports (currently: {currentLabel})"
-msgstr ""
+msgstr "篩選審核檢舉（目前：{currentLabel}）"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
@@ -5817,7 +5817,7 @@ msgstr "來自這些人"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:335
 msgid "Generate a Starter Pack"
-msgstr ""
+msgstr "產生一個新手包"
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:237
 #: src/screens/Messages/components/InviteLinkDialog.tsx:275
@@ -5861,7 +5861,7 @@ msgstr "取得幫助"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:389
 msgid "Get notifications for Starter Pack joins, verification, and other activity."
-msgstr ""
+msgstr "在有人使用您的新手包加入、授予驗證等活動時收到通知。"
 
 #: src/screens/Settings/NotificationSettings/index.tsx:324
 msgid "Get notifications when people follow you."
@@ -5906,7 +5906,7 @@ msgstr "在有人向您傳送訊息時通知您。"
 #: src/screens/ModerationInbox/Settings.tsx:62
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about actions taken against you."
-msgstr ""
+msgstr "在針對您採取行動時收到通知。"
 
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:89
 #: src/components/activity-notifications/SubscribeProfileButton.tsx:90
@@ -5920,7 +5920,7 @@ msgstr "在您選擇的帳號發布貼文或回覆時收到通知。"
 #: src/screens/ModerationInbox/Settings.tsx:49
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about your report outcomes."
-msgstr ""
+msgstr "在您的檢舉有處理結果時收到通知。"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Get notified of new posts from {name}"
@@ -5937,7 +5937,7 @@ msgstr "在 {name} 發布貼文時收到通知"
 #: src/screens/ModerationInbox/Settings.tsx:75
 msgctxt "moderation-inbox-setting"
 msgid "Get notified when a label is added to your account and posts."
-msgstr ""
+msgstr "在有標籤加入至您的帳號和貼文時收到通知。"
 
 #: src/components/dialogs/nuxs/ActivitySubscriptions.tsx:139
 msgid "Get notified when someone posts"
@@ -6099,7 +6099,7 @@ msgstr "授予權限"
 #: src/screens/ModerationInbox/index.tsx:157
 msgctxt "moderation-report-label"
 msgid "Graphic media"
-msgstr ""
+msgstr "敏感/寫實媒體"
 
 #: src/lib/moderation/useGlobalLabelStrings.ts:46
 #: src/lib/moderation/useGlobalLabelStrings.ts:50
@@ -6234,7 +6234,7 @@ msgstr "觸覺"
 #: src/screens/ModerationInbox/index.tsx:153
 msgctxt "moderation-report-guideline"
 msgid "Harassment"
-msgstr ""
+msgstr "騷擾"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:100
 msgid "Harassment or hate"
@@ -6901,7 +6901,7 @@ msgstr "已啟用邀請連結"
 
 #: src/components/StarterPack/ShareDialog.tsx:84
 msgid "Invite people to this Starter Pack!"
-msgstr ""
+msgstr "使用這個新手包來邀請更多人吧！"
 
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:91
 #: src/components/dialogs/nuxs/InviteFriendsAnnouncement.tsx:144
@@ -6931,7 +6931,7 @@ msgstr "這是正確的電子郵件地址"
 #. placeholder {0}: getName(items[0])
 #: src/screens/StarterPack/Wizard/index.tsx:483
 msgid "It's just <0>{0} </0>right now! Add more people to your Starter Pack by searching above."
-msgstr ""
+msgstr "現在新手包裡只有 <0>{0}</0>！使用上面的搜尋功能，將更多人新增到您的新手包中。"
 
 #: src/screens/StarterPack/Wizard/index.tsx:478
 msgid "It's just you right now! Add more people to your starter pack by searching above."
@@ -7336,7 +7336,7 @@ msgstr "列表"
 #: src/screens/ModerationInbox/index.tsx:122
 msgctxt "moderation-report-subject"
 msgid "List “{list}”"
-msgstr ""
+msgstr "列表「{list}」"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:407
 msgid "List avatar"
@@ -7494,7 +7494,7 @@ msgstr "載入更多貼文"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:138
 msgid "Load new posts from the people you follow"
-msgstr ""
+msgstr "載入來自您跟隨之使用者的貼文"
 
 #: src/screens/Messages/components/MessageComposer.tsx:269
 msgctxt "placeholder"
@@ -7608,7 +7608,7 @@ msgstr "手動"
 
 #: src/screens/ModerationInbox/index.tsx:183
 msgid "Mark all actions as read"
-msgstr ""
+msgstr "將所有動作標示為已讀"
 
 #: src/screens/Messages/Inbox.tsx:311
 #: src/screens/Messages/Inbox.tsx:317
@@ -7626,7 +7626,7 @@ msgstr "將所有對話標示為已讀"
 
 #: src/screens/ModerationInbox/index.tsx:102
 msgid "Mark all reports as read"
-msgstr ""
+msgstr "將所有檢舉標示為已讀"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
@@ -7804,7 +7804,7 @@ msgstr "缺失媒體檔案"
 #: src/Navigation.tsx:193
 #: src/screens/ModerationInbox/Settings.tsx:34
 msgid "Mod inbox settings"
-msgstr ""
+msgstr "審核收件匣設定"
 
 #: src/Navigation.tsx:183
 #: src/screens/Moderation/index.tsx:103
@@ -7828,7 +7828,7 @@ msgstr "內容管理收件匣"
 
 #: src/screens/ModerationInbox/index.tsx:48
 msgid "Moderation inbox settings"
-msgstr ""
+msgstr "內容審核收件匣設定"
 
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #. placeholder {0}: sanitizeHandle(list.creator.handle, '@')
@@ -8051,7 +8051,7 @@ msgstr "我的動態源"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:49
 msgid "My Starter Pack"
-msgstr ""
+msgstr "我的新手包"
 
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:426
 msgid "Name"
@@ -8070,7 +8070,7 @@ msgstr "前往 {0}"
 
 #: src/components/StarterPack/StarterPackCard.tsx:127
 msgid "Navigate to Starter Pack"
-msgstr ""
+msgstr "前往新手包"
 
 #: src/screens/Login/ForgotPasswordForm.tsx:148
 #: src/screens/Login/ForgotPasswordForm.tsx:173
@@ -8224,11 +8224,11 @@ msgstr "新貼文"
 
 #: src/components/NewPostsPill/index.tsx:236
 msgid "New posts"
-msgstr ""
+msgstr "新貼文"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:137
 msgid "New posts are ready to load from the people you follow"
-msgstr ""
+msgstr "來自您跟隨之使用者發布的新貼文已可載入"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:540
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
@@ -8240,7 +8240,7 @@ msgstr "來自 {firstAuthorName} 和{additionalAuthorsCount, plural, other {其�
 
 #: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "New Starter Pack"
-msgstr ""
+msgstr "建立新手包"
 
 #: src/screens/Login/LoginForm.tsx:570
 msgid "New to Bluesky? <0>Sign up</0>"
@@ -8298,7 +8298,7 @@ msgstr "否"
 
 #: src/screens/ModerationInbox/index.tsx:126
 msgid "No action taken"
-msgstr ""
+msgstr "未採取任何動作"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8607,7 +8607,7 @@ msgstr "註：這則貼文僅限已登入的使用者可以檢視。"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:67
 msgid "Nothing on your account is restricted right now. Strikes from violations come off your record over time."
-msgstr ""
+msgstr "您的帳號目前沒有任何限制。違規處分紀錄會隨著時間從您的帳號中移除。"
 
 #: src/screens/Bookmarks.tsx:290
 msgid "Nothing saved yet"
@@ -8616,7 +8616,7 @@ msgstr "還沒有收藏任何內容"
 #: src/Navigation.tsx:203
 #: src/screens/ModerationInbox/Subject.tsx:35
 msgid "Notice"
-msgstr ""
+msgstr "通知"
 
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:477
@@ -8922,7 +8922,7 @@ msgstr "開啟新手包"
 
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:51
 msgid "Open post"
-msgstr ""
+msgstr "開啟貼文"
 
 #: src/components/PostControls/PostMenu/index.tsx:63
 msgid "Open post options menu"
@@ -8948,7 +8948,7 @@ msgstr "開啟分享選單"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:595
 msgid "Open Starter Pack menu"
-msgstr ""
+msgstr "開啟新手包選單"
 
 #: src/screens/Settings/Settings.tsx:475
 msgid "Open storybook page"
@@ -8964,7 +8964,7 @@ msgstr "開啟此群組對話"
 
 #: src/view/shell/desktop/Feeds.tsx:185
 msgid "Opens {displayName} feed"
-msgstr ""
+msgstr "開啟 {displayName} 動態源"
 
 #: src/view/com/composer/labels/LabelsBtn.tsx:63
 msgid "Opens a dialog to add a content warning to your post"
@@ -9083,7 +9083,7 @@ msgstr "開啟這個個人檔案"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:791
 msgid "Opt out"
-msgstr ""
+msgstr "退出"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:251
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:259
@@ -9092,30 +9092,30 @@ msgstr ""
 #: src/screens/StarterPack/StarterPackScreen.tsx:688
 #: src/screens/StarterPack/StarterPackScreen.tsx:779
 msgid "Opt out of Starter Pack"
-msgstr ""
+msgstr "退出新手包"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:329
 #: src/screens/StarterPack/StarterPackScreen.tsx:755
 msgid "Opt out of this Starter Pack?"
-msgstr ""
+msgstr "要退出此新手包嗎？"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:82
 #: src/screens/StarterPack/StarterPackScreen.tsx:561
 msgid "Opt-out undone"
-msgstr ""
+msgstr "已還原退出"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:102
 msgid "Opted out"
-msgstr ""
+msgstr "已選擇退出"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:81
 #: src/screens/StarterPack/StarterPackScreen.tsx:560
 msgid "Opted out of Starter Pack"
-msgstr ""
+msgstr "已退出新手包"
 
 #: src/components/StarterPack/Main/ProfilesList.tsx:187
 msgid "Opted out of this Starter Pack"
-msgstr ""
+msgstr "已選擇退出這個新手包"
 
 #: src/components/dialogs/MutedWords.tsx:310
 msgid "Options:"
@@ -9131,7 +9131,7 @@ msgstr "或登入您的其他帳號。"
 
 #: src/components/OTAChannelNotice.tsx:84
 msgid "OTA channel"
-msgstr ""
+msgstr "OTA 頻道"
 
 #: src/screens/Settings/components/OTAInfo.tsx:60
 msgid "OTA status: ..."
@@ -9517,7 +9517,7 @@ msgstr "請輸入我們先前傳送到您電子郵件地址的驗證碼。"
 #: src/screens/Signup/state.ts:313
 #: src/screens/Signup/StepInfo/index.tsx:174
 msgid "Please enter your date of birth."
-msgstr ""
+msgstr "請輸入您的出生日期。"
 
 #: src/screens/Signup/state.ts:279
 #: src/screens/Signup/StepInfo/index.tsx:133
@@ -9656,7 +9656,7 @@ msgstr "貼文已被封鎖"
 #: src/screens/ModerationInbox/index.tsx:112
 msgctxt "moderation-report-subject"
 msgid "Post by {account}"
-msgstr ""
+msgstr "{account} 的貼文"
 
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:290
@@ -9668,7 +9668,7 @@ msgstr "@{0} 的貼文"
 
 #: src/screens/ModerationInbox/Subject.tsx:77
 msgid "Post created"
-msgstr ""
+msgstr "貼文已建立"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:196
 msgctxt "toast"
@@ -9732,11 +9732,11 @@ msgstr "成功釘選貼文"
 #: src/screens/ModerationInbox/Report.tsx:89
 #: src/screens/ModerationInbox/Subject.tsx:80
 msgid "Post removed"
-msgstr ""
+msgstr "貼文已刪除"
 
 #: src/screens/ModerationInbox/Report.tsx:92
 msgid "Post restored"
-msgstr ""
+msgstr "貼文已還原"
 
 #. Include search results with or without replies
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:392
@@ -9751,7 +9751,7 @@ msgstr "成功取消釘選貼文"
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
-msgstr ""
+msgstr "發布於 {0}"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:254
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:266
@@ -9881,7 +9881,7 @@ msgstr "個人檔案橫幅佔位標記"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Profile link copied"
-msgstr ""
+msgstr "已複製個人檔案連結"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:210
 #: src/lib/strings/errors.ts:78
@@ -10056,7 +10056,7 @@ msgstr "閱讀我們的部落格文章"
 
 #: src/screens/ModerationInbox/Report.tsx:53
 msgid "Read our Community Guidelines"
-msgstr ""
+msgstr "閱讀我們的社群準則"
 
 #: src/view/com/auth/SplashScreen.web.tsx:173
 msgid "Read the Bluesky blog"
@@ -10087,7 +10087,7 @@ msgstr "申訴理由"
 
 #: src/screens/ModerationInbox/Report.tsx:66
 msgid "Reason:"
-msgstr ""
+msgstr "原因："
 
 #: src/screens/Settings/NotificationSettings/components/PreferenceControls.tsx:137
 msgid "Receive in-app notifications"
@@ -10163,7 +10163,7 @@ msgstr "把 {displayName} 從群組移除"
 
 #: src/components/StarterPack/Wizard/WizardListCard.tsx:61
 msgid "Remove {displayName} from Starter Pack"
-msgstr ""
+msgstr "從您的新手包刪除 {displayName}"
 
 #: src/screens/Messages/ConversationSettings/Member.tsx:157
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:234
@@ -10303,7 +10303,7 @@ msgstr "從列表中刪除使用者"
 
 #: src/components/StarterPack/Main/ProfilesList.tsx:192
 msgid "Remove user from Starter Pack"
-msgstr ""
+msgstr "從您的新手包刪除"
 
 #: src/components/verification/VerificationRemovePrompt.tsx:48
 #: src/components/verification/VerificationsDialog.tsx:251
@@ -10341,7 +10341,7 @@ msgstr "成功從貼文收藏中刪除"
 #: src/components/dialogs/StarterPackDialog.tsx:281
 #: src/components/StarterPack/Main/ProfilesList.tsx:170
 msgid "Removed from Starter Pack"
-msgstr ""
+msgstr "已從新手包刪除"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:128
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:105
@@ -10460,7 +10460,7 @@ msgstr "回覆排序"
 
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:29
 msgid "Reply to {handle}"
-msgstr ""
+msgstr "回覆 {handle}"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:385
 msgctxt "toast"
@@ -10520,7 +10520,7 @@ msgstr "已提交檢舉"
 #: src/screens/StarterPack/StarterPackScreen.tsx:668
 #: src/screens/StarterPack/StarterPackScreen.tsx:671
 msgid "Report Starter Pack"
-msgstr ""
+msgstr "檢舉新手包"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10562,7 +10562,7 @@ msgstr "檢舉這則貼文"
 
 #: src/components/moderation/ReportDialog/copy.ts:42
 msgid "Report this Starter Pack"
-msgstr ""
+msgstr "檢舉此新手包"
 
 #: src/components/moderation/ReportDialog/copy.ts:12
 msgid "Report this user"
@@ -10749,7 +10749,7 @@ msgstr "透過傳送驗證碼至您的電子郵件來重設密碼"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:27
 msgctxt "moderation-report-filter"
 msgid "Resolved"
-msgstr ""
+msgstr "已解決"
 
 #: src/components/OTAChannelNotice.tsx:109
 msgid "Restore default"
@@ -10838,7 +10838,7 @@ msgstr "顯示密碼"
 
 #: src/screens/ModerationInbox/Subject.tsx:59
 msgid "Rule violated:"
-msgstr ""
+msgstr "違反的規則："
 
 #. Accessibility label for the icon-only pill that filters the GIF picker to sad/crying GIFs.
 #: src/features/gifPicker/components/GifCategoryPills.tsx:75
@@ -11623,11 +11623,11 @@ msgstr "分享這個搜尋結果"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:428
 msgid "Share this Starter Pack"
-msgstr ""
+msgstr "分享這個新手包"
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this Starter Pack and help people join your community on Bluesky."
-msgstr ""
+msgstr "分享這個新手包，以協助他人融入您在 Bluesky 上的社群。"
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11670,7 +11670,7 @@ msgstr "顯示"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:42
 msgid "Show account status"
-msgstr ""
+msgstr "顯示帳號狀態"
 
 #: src/components/AltBadgeWithDialog.tsx:48
 msgid "Show alt text"
@@ -11959,7 +11959,7 @@ msgstr "由您掌控的社群媒體。"
 #. Name for a feature flag
 #: src/analytics/features/index.ts:96
 msgid "Social proofing on posts"
-msgstr ""
+msgstr "顯示認識的按讚者"
 
 #: src/lib/interests.ts:58
 msgid "Software Dev"
@@ -12111,7 +12111,7 @@ msgstr "運動"
 #. Description of a feature flag (Social proofing on posts)
 #: src/analytics/features/index.ts:102
 msgid "Spot posts your friends and follows have liked."
-msgstr ""
+msgstr "在您的朋友與跟隨中人物喜歡的貼文上顯示其名稱。"
 
 #: src/components/PostControls/ShareMenu/RecentChats.tsx:231
 msgid "Start a conversation, and it will appear here."
@@ -12154,25 +12154,25 @@ msgstr "新手包"
 #. placeholder {0}: sanitizeHandle(creator.handle, '@')
 #: src/components/StarterPack/StarterPackCard.tsx:86
 msgid "Starter Pack by {0}"
-msgstr ""
+msgstr "來自 {0} 的新手包"
 
 #. placeholder {0}: creator.handle
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:193
 msgid "Starter Pack by @{0}"
-msgstr ""
+msgstr "來自 @{0} 的新手包"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:168
 msgid "Starter Pack by <0/>"
-msgstr ""
+msgstr "來自 <0/> 的新手包"
 
 #: src/components/StarterPack/StarterPackCard.tsx:85
 #: src/view/com/profile/ProfileSubpageHeader.tsx:166
 msgid "Starter Pack by you"
-msgstr ""
+msgstr "您的新手包"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:842
 msgid "Starter Pack is invalid"
-msgstr ""
+msgstr "無效的新手包"
 
 #: src/screens/Search/Explore.tsx:663
 #: src/screens/Search/SearchResults.tsx:114
@@ -12182,7 +12182,7 @@ msgstr "新手包"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:294
 msgid "Starter Packs let you easily share your favorite feeds and people with your friends."
-msgstr ""
+msgstr "新手包能讓您輕鬆地與朋友分享喜愛的動態源與人物。"
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:102
 #: src/view/screens/Profile.tsx:568
@@ -12380,13 +12380,13 @@ msgstr "切換帳號"
 
 #: src/components/OTAChannelNotice.tsx:139
 msgid "Switch channel"
-msgstr ""
+msgstr "切換頻道"
 
 #: src/components/OTAChannelNotice.tsx:135
 #: src/components/OTAChannelNotice.tsx:195
 #: src/components/OTAChannelNotice.tsx:199
 msgid "Switch OTA channel"
-msgstr ""
+msgstr "切換 OTA 頻道"
 
 #. placeholder {0}: sanitizeHandle( profile?.handle ?? account.handle, '@', )
 #: src/view/shell/desktop/LeftNav.tsx:365
@@ -12581,7 +12581,7 @@ msgstr "其中包含以下內容："
 #: src/screens/StarterPack/Wizard/index.tsx:109
 #: src/screens/StarterPack/Wizard/index.tsx:119
 msgid "That Starter Pack could not be found."
-msgstr ""
+msgstr "找不到該新手包。"
 
 #: src/screens/Signup/StepHandle/index.tsx:91
 msgid "That username is already taken"
@@ -12674,11 +12674,11 @@ msgstr "內容管理服務暫時無法使用，請稍後再試。"
 
 #: src/screens/ModerationInbox/Report.tsx:46
 msgid "The post was restored"
-msgstr ""
+msgstr "該貼文已被恢復"
 
 #: src/screens/ModerationInbox/Report.tsx:47
 msgid "The post you reported has been restored after another review. If you’d rather not see it, you can mute or block the account. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "您檢舉的貼文在經過重新審查後已恢復。若您不想看到該內容，可以選擇將其帳號靜音或封鎖。閱讀我們的<0>社群準則</0>。"
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:403
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12724,7 +12724,7 @@ msgstr "伺服器似乎遇到問題。請稍後再試。"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:852
 msgid "The Starter Pack that you are trying to view is invalid. You may delete this Starter Pack instead."
-msgstr ""
+msgstr "您要檢視的新手包已失效。可以考慮刪除這個新手包。"
 
 #: src/components/ContextMenu/index.tsx:507
 msgid "The subject of the context menu"
@@ -12939,7 +12939,7 @@ msgstr "此動作可隨時撤回。"
 #. placeholder {0}: currentChannel ?? defaultChannel
 #: src/components/OTAChannelNotice.tsx:87
 msgid "This app is receiving updates from <0>{0}</0>."
-msgstr ""
+msgstr "這個應用程式正在接收來自 <0>{0}</0> 的更新。"
 
 #: src/components/OTAChannelNotice.tsx:71
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
@@ -13278,7 +13278,7 @@ msgstr "此影片無法在您的瀏覽器中預覽，但仍可以上傳。"
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:155
 msgid "This will create a new list with the same name, description, and members as this Starter Pack."
-msgstr ""
+msgstr "這會建立一個與此新手包相同名稱、描述及成員的列表。"
 
 #. placeholder {0}: word.value
 #: src/components/dialogs/MutedWords.tsx:456
@@ -13332,7 +13332,7 @@ msgstr "剩餘時間：{0, plural, one {# 秒} other {# 秒}}"
 
 #: src/screens/ModerationInbox/components/Timeline.tsx:12
 msgid "Timeline"
-msgstr ""
+msgstr "時間軸"
 
 #: src/components/SendErrorReportDialog.tsx:68
 msgid "Title"
@@ -13555,7 +13555,7 @@ msgstr "找不到已選擇的接收者。"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:17
 msgid "Unable to load your account"
-msgstr ""
+msgstr "無法載入您的帳號"
 
 #: src/lib/strings/errors.ts:81
 msgid "Unable to resolve handle"
@@ -13625,7 +13625,7 @@ msgstr "解除封鎖列表"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:23
 msgctxt "moderation-report-filter"
 msgid "Under review"
-msgstr ""
+msgstr "審核中"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
@@ -13647,17 +13647,17 @@ msgstr "取消"
 #: src/screens/StarterPack/StarterPackScreen.tsx:778
 #: src/screens/StarterPack/StarterPackScreen.tsx:789
 msgid "Undo opt-out"
-msgstr ""
+msgstr "取消退出"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:250
 #: src/screens/StarterPack/StarterPackScreen.tsx:679
 msgid "Undo opt-out from Starter Pack"
-msgstr ""
+msgstr "取消退出新手包"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:327
 #: src/screens/StarterPack/StarterPackScreen.tsx:753
 msgid "Undo opt-out?"
-msgstr ""
+msgstr "要取消退出嗎？"
 
 #: src/components/PostControls/RepostButton.web.tsx:67
 #: src/components/PostControls/RepostButton.web.tsx:74
@@ -13815,7 +13815,7 @@ msgstr "成功取消釘選列表"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:28
 msgctxt "moderation-report-filter"
 msgid "Unread"
-msgstr ""
+msgstr "未讀"
 
 #: src/screens/Settings/Settings.tsx:503
 #: src/screens/Settings/Settings.tsx:505
@@ -14193,7 +14193,7 @@ msgstr "版本 {0}"
 #. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via Starter Pack <0/><1>{starterPackName}</1>"
-msgstr ""
+msgstr "透過新手包 <0/><1>{starterPackName}</1>"
 
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:123
 #: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerNative.tsx:189
@@ -14377,7 +14377,7 @@ msgstr "檢視發布資訊"
 
 #: src/screens/ModerationInbox/components/ReportRow.tsx:30
 msgid "View report details: {subject}"
-msgstr ""
+msgstr "檢視檢舉詳細資訊：{subject}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:105
 msgid "View the avatar"
@@ -14444,7 +14444,7 @@ msgstr "進入沉浸模式觀看影片"
 
 #: src/screens/ModerationInbox/index.tsx:198
 msgid "Violates community guideline: {guideline}"
-msgstr ""
+msgstr "違反社群準則：{guideline}"
 
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:127
 msgid "Violence"
@@ -14458,7 +14458,7 @@ msgstr "暴力或威脅性內容"
 #. placeholder {1}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:61
 msgid "Visit {0} on {1}"
-msgstr ""
+msgstr "造訪 {1} 上的 {0}"
 
 #: src/components/dialogs/LinkWarning.tsx:112
 #: src/components/dialogs/LinkWarning.tsx:122
@@ -14469,7 +14469,7 @@ msgstr "造訪網站"
 #. placeholder {0}: provider.name
 #: src/components/Post/Embed/AtCard/index.tsx:62
 msgid "Visit site on {0}"
-msgstr ""
+msgstr "造訪 {0} 的網站"
 
 #: src/view/screens/Notifications.tsx:296
 msgid "Visit your notification settings"
@@ -14536,7 +14536,7 @@ msgstr "無法載入這個對話的設定"
 
 #: src/ageAssurance/components/DataUnavailableScreen.tsx:18
 msgid "We couldn't load your account settings. Check your internet connection and try again."
-msgstr ""
+msgstr "無法載入您的帳號設定。請檢查您的網路連線，然後再試一次。"
 
 #: src/screens/Login/LoginForm.tsx:483
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
@@ -14746,11 +14746,11 @@ msgstr "您對什麼感興趣？"
 
 #: src/screens/StarterPack/Wizard/StepDetails.tsx:44
 msgid "What do you want to call your Starter Pack?"
-msgstr ""
+msgstr "您想怎麼命名這個新手包？"
 
 #: src/screens/ModerationInbox/Report.tsx:61
 msgid "What you reported"
-msgstr ""
+msgstr "您檢舉的內容"
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14826,7 +14826,7 @@ msgstr "請問此貼文有什麼問題嗎？"
 
 #: src/components/moderation/ReportDialog/copy.ts:43
 msgid "Why should this Starter Pack be reviewed?"
-msgstr ""
+msgstr "請問此新手包有什麼問題嗎？"
 
 #: src/components/moderation/ReportDialog/copy.ts:13
 msgid "Why should this user be reviewed?"
@@ -14903,7 +14903,7 @@ msgstr "是，刪除我的帳號"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:739
 msgid "Yes, delete this Starter Pack"
-msgstr ""
+msgstr "是，刪除這個新手包"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
 msgid "Yes, detach"
@@ -15163,7 +15163,7 @@ msgstr "您還沒有建立任何列表。"
 
 #: src/components/dialogs/StarterPackDialog.tsx:97
 msgid "You have no Starter Packs."
-msgstr ""
+msgstr "您目前沒有任何新手包。"
 
 #: src/view/screens/ModerationBlockedAccounts.tsx:155
 msgid "You have not blocked any accounts yet. To block an account, go to their profile and select \"Block account\" from the menu on their account."
@@ -15195,7 +15195,7 @@ msgstr "您有尚未儲存的變更。在檢視其他草稿前，需要先儲存
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:291
 msgid "You haven't created a Starter Pack yet!"
-msgstr ""
+msgstr "您還沒有建立任何新手包！"
 
 #: src/view/com/lists/ProfileLists.tsx:159
 msgid "You haven't created any lists yet."
@@ -15225,15 +15225,15 @@ msgstr "您在 {timeAgoString}前加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:27
 msgid "You joined Bluesky just now"
-msgstr ""
+msgstr "您剛剛加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:40
 msgid "You joined Bluesky using a Starter Pack {timeAgoString} ago"
-msgstr ""
+msgstr "您在 {timeAgoString}前使用新手包加入了 Bluesky"
 
 #: src/components/dialogs/NewskieDialog/utils.ts:26
 msgid "You joined Bluesky using a Starter Pack just now"
-msgstr ""
+msgstr "您剛剛使用新手包加入了 Bluesky"
 
 #: src/components/moderation/LabelsOnMeDialog.tsx:83
 msgid "You may appeal non-self labels if you feel they were placed in error."
@@ -15248,7 +15248,7 @@ msgstr "如果您對任何標記有異議，可以隨時提出申訴。"
 #. placeholder {1}: state.profileLimit
 #: src/screens/StarterPack/Wizard/State.tsx:78
 msgid "You may only add up to {0, plural, other {{1} profiles}}"
-msgstr ""
+msgstr "最多只能加入 {0, plural, other {{1} 個帳號}}"
 
 #: src/screens/StarterPack/Wizard/State.tsx:99
 msgid "You may only add up to 3 feeds"
@@ -15264,7 +15264,7 @@ msgstr "您必須年滿 13 歲才能使用 Bluesky。請閱讀我們的<0>服務
 
 #: src/components/StarterPack/ProfileStarterPacks.tsx:362
 msgid "You must be following at least seven other people to generate a Starter Pack."
-msgstr ""
+msgstr "您必須跟隨至少 7 個人才能產生新手包。"
 
 #: src/components/StarterPack/QrCodeDialog.tsx:72
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:92
@@ -15327,7 +15327,7 @@ msgstr "您已申請加入"
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:334
 #: src/screens/StarterPack/StarterPackScreen.tsx:760
 msgid "You will be eligible to appear in this Starter Pack again."
-msgstr ""
+msgstr "您將再次符合出現在此新手包中的資格。"
 
 #: src/screens/Settings/Settings.tsx:309
 #: src/view/shell/desktop/LeftNav.tsx:226
@@ -15337,7 +15337,7 @@ msgstr "您即將登出所有帳號。"
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:338
 #: src/screens/StarterPack/StarterPackScreen.tsx:764
 msgid "You will no longer appear in this Starter Pack. The creator will be able to see that you've opted out and remove you if they wish."
-msgstr ""
+msgstr "您將不會再出現在此新手包中。建立者可以看到您選擇退出，並可依其意願將您移出。"
 
 #. placeholder {0}: sanitizeHandle(profile.handle, '@')
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:137
@@ -15488,15 +15488,15 @@ msgstr "您的帳號已被停權"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:35
 msgid "Your account has repeated violations of our Community Guidelines. Another violation may result in your account being permanently suspended."
-msgstr ""
+msgstr "您的帳號已屢次違反我們的社群準則，再次違規可能會導致您的帳號被永久停權。"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:32
 msgid "Your account has strikes on record"
-msgstr ""
+msgstr "您的帳號已有違規紀錄"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:31
 msgid "Your account is at risk of permanent suspension"
-msgstr ""
+msgstr "您的帳號正面臨被永久停權的風險"
 
 #: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
@@ -15513,7 +15513,7 @@ msgstr "要建立新的群組對話，您的帳號必須建立至少 7 天以上
 #: src/screens/ModerationInbox/Settings.tsx:58
 msgctxt "moderation-inbox-setting"
 msgid "Your account notifications"
-msgstr ""
+msgstr "您的帳號通知"
 
 #: src/screens/Settings/components/ExportCarDialog.tsx:111
 msgid "Your account repository, containing all public data records, can be downloaded as a \"CAR\" file. This file does not include media embeds, such as images, or your private data, which must be fetched separately."
@@ -15526,7 +15526,7 @@ msgstr "您的帳號被判定違反了 <0>Bluesky Social 服務條款</0>。您�
 #: src/screens/ModerationInbox/index.tsx:213
 msgctxt "moderation-report-action"
 msgid "Your account was suspended"
-msgstr ""
+msgstr "您的帳號已被停權"
 
 #: src/screens/Takendown.tsx:148
 msgid "Your appeal has been submitted. If your appeal succeeds, you will receive an email."
@@ -15642,7 +15642,7 @@ msgstr "您的名稱、大頭貼照，以及群組名稱、成員人數都會公
 
 #: src/screens/ModerationInbox/Report.tsx:75
 msgid "Your note:"
-msgstr ""
+msgstr "您的備註："
 
 #: src/screens/Settings/components/ChangePasswordDialog.tsx:74
 msgid "Your password has been changed successfully! Please use your new password when you sign in to Bluesky from now on."
@@ -15655,7 +15655,7 @@ msgstr "您輸入的密碼必須至少包含 8 個字元。"
 #: src/screens/ModerationInbox/index.tsx:194
 msgctxt "moderation-report-action"
 msgid "Your post was removed"
-msgstr ""
+msgstr "您的貼文已被刪除"
 
 #: src/view/com/composer/Composer.tsx:1239
 msgid "Your post was sent"
@@ -15689,7 +15689,7 @@ msgstr "已發布您的回覆"
 #: src/Navigation.tsx:198
 #: src/screens/ModerationInbox/Report.tsx:35
 msgid "Your report"
-msgstr ""
+msgstr "您的檢舉紀錄"
 
 #. placeholder {0}: state.selectedLabeler?.creator.displayName
 #: src/components/moderation/ReportDialog/index.tsx:596
@@ -15698,12 +15698,12 @@ msgstr "您的檢舉將提交至 <0>{0}</0>。"
 
 #: src/screens/ModerationInbox/index.tsx:60
 msgid "Your reports"
-msgstr ""
+msgstr "您的檢舉紀錄"
 
 #: src/screens/ModerationInbox/Settings.tsx:45
 msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
-msgstr ""
+msgstr "您的檢舉通知"
 
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
