@@ -1,5 +1,5 @@
 import {type PropsWithChildren} from 'react'
-import {AppState} from 'react-native'
+import {AppState, type AppStateStatus} from 'react-native'
 import {type ScrollEvent} from 'react-native-reanimated'
 import {
   dehydrate,
@@ -26,6 +26,10 @@ import {
   LIST_REST_QUIET_MS,
   useListRest,
 } from '#/features/followingV2/home/useListRest'
+import {
+  RETURN_STALE_AFTER,
+  useNewPostsCheck,
+} from '#/features/followingV2/home/useNewPostsCheck'
 import {
   SETTLE_QUIET_MS,
   useSettleAtTop,
@@ -107,6 +111,17 @@ jest.mock('react-native-worklets', () => ({
   scheduleOnRN: (fn: (...args: unknown[]) => void, ...args: unknown[]) =>
     fn(...args),
 }))
+
+/*
+ * What the app subscribes to `AppState` with, for tests to report a change of
+ * state to. It's in place before anything subscribes, so it has the one
+ * subscription `onAppReturnedFromBackground` keeps for good.
+ */
+const appStateListeners = new Set<(state: AppStateStatus) => void>()
+jest.mocked(AppState.addEventListener).mockImplementation((_type, listener) => {
+  appStateListeners.add(listener)
+  return {remove: () => appStateListeners.delete(listener)}
+})
 
 const mockFeedTuners: never[] = []
 const MODERATION_OPTS = {
@@ -892,32 +907,57 @@ describe('usePostFeedPrepend', () => {
 
   /**
    * The feed's view, as PostFeed has it, over `data` already in the cache. Its
-   * list has laid out, unless `laidOut` is false.
+   * list has laid out, unless `laidOut` is false. Only an `isActive` view
+   * checks for new posts, which it hands to `onFound`.
    */
   function renderView({
     data = restoredData(),
     enabled = true,
+    isActive = false,
     laidOut = true,
-  }: {data?: PostFeedData; enabled?: boolean; laidOut?: boolean} = {}) {
+  }: {
+    data?: PostFeedData
+    enabled?: boolean
+    isActive?: boolean
+    laidOut?: boolean
+  } = {}) {
     const queryClient = createQueryClient()
     queryClient.setQueryData(KEY, data)
     const wrapper = ({children}: PropsWithChildren) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )
+    const onFound = jest.fn()
     const hook = renderHook(
       ({enabled}: {enabled: boolean}) => {
         const query = usePostFeedQuery('following')
+        const {createFeedApi} = usePostFeedFetcher('following')
         const listRest = useListRest({}, true)
-        return {
-          query,
-          listRest,
-          refresh: usePostFeedRefresh('following').refresh,
-          prepend: usePostFeedPrepend('following', undefined, {
-            enabled,
-            topFetchedAt: query.data?.pages[0]?.fetchedAt,
-            listAtRest: listRest.atRest,
-          }),
-        }
+        const {refresh, isRefreshing} = usePostFeedRefresh('following')
+        const topFetchedAt = query.data?.pages[0]?.fetchedAt
+        const prepend = usePostFeedPrepend('following', undefined, {
+          enabled,
+          topFetchedAt,
+          listAtRest: listRest.atRest,
+        })
+        useNewPostsCheck({
+          topFetchedAt,
+          isEmpty: false,
+          isActive,
+          isBusy: isRefreshing,
+          check: async trigger => {
+            const prepending =
+              trigger === 'return' || prepend.isOwed()
+                ? prepend.run()
+                : undefined
+            if (prepending) {
+              await prepending
+              return undefined
+            }
+            return pollLatest(query.data?.pages[0], createFeedApi())
+          },
+          onFound,
+        })
+        return {query, listRest, refresh, prepend}
       },
       {wrapper, initialProps: {enabled}},
     )
@@ -934,7 +974,7 @@ describe('usePostFeedPrepend', () => {
     if (laidOut) {
       list.layOut()
     }
-    return {hook, queryClient, cached, list}
+    return {hook, queryClient, cached, list, onFound}
   }
 
   /** Answers the next request with these posts, newer than `since`. */
@@ -1380,6 +1420,162 @@ describe('usePostFeedPrepend', () => {
 
     expect(postsOf(cached())).toEqual([['new'], ['timeline-1'], ['timeline-2']])
     expect(hook.result.current.query.isFetchingNextPage).toBe(false)
+  })
+
+  describe('on a real return to the app', () => {
+    /** Two pages fetched just now, as a feed loaded this session has. */
+    function fetchedData(): PostFeedData {
+      const data = restoredData()
+      for (const page of data.pages) {
+        page.fetchedAt = Date.now()
+      }
+      return data
+    }
+
+    /** Reports the app's state changing to `state`, as `AppState` does. */
+    function setAppState(state: AppStateStatus) {
+      act(() => {
+        AppState.currentState = state
+        for (const listener of [...appStateListeners]) {
+          listener(state)
+        }
+      })
+    }
+
+    /** Leaves the app for `away` in `state`, then comes back to it. */
+    async function leaveFor(
+      away: number,
+      state: AppStateStatus = 'background',
+    ) {
+      setAppState(state)
+      await wait(away)
+      setAppState('active')
+      await wait(0)
+    }
+
+    beforeEach(() => {
+      jest.useFakeTimers()
+      AppState.currentState = 'active'
+    })
+
+    it('fetches what is newer, and puts it on top once the list is at rest', async () => {
+      const since = holdNextRequest()
+      const {hook, cached, list} = renderView({
+        data: fetchedData(),
+        isActive: true,
+      })
+      await wait(0)
+      expect(requested()).toEqual([])
+
+      await leaveFor(RETURN_STALE_AFTER)
+      expect(requested()).toEqual([SINCE_REQUEST])
+
+      // The reader has started scrolling again by the time it lands.
+      list.beginDrag()
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await wait(10e3)
+      expect(postsOf(cached())).toEqual([['timeline-1'], ['timeline-2']])
+
+      list.endDrag()
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      // For the pill to offer.
+      expect(hook.result.current.prepend.prependedAt).toBe(
+        cached().pages[0].fetchedAt,
+      )
+    })
+
+    it('leaves a gap below what it found when there was more', async () => {
+      newer(['new'], {cursor: 'gap:1'})
+      const {cached} = renderView({data: fetchedData(), isActive: true})
+
+      await leaveFor(RETURN_STALE_AFTER)
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      expect(gapBelow(cached().pages, 0)).toBe('open')
+    })
+
+    it('makes no request when the app was only inactive, however long', async () => {
+      newer([])
+      renderView({data: fetchedData(), isActive: true})
+
+      // As the notification shade or Control Center leave it.
+      await leaveFor(10 * RETURN_STALE_AFTER, 'inactive')
+      expect(requested()).toEqual([])
+
+      await leaveFor(RETURN_STALE_AFTER)
+      expect(requested()).toEqual([SINCE_REQUEST])
+    })
+
+    it('joins the restore prepend in progress, rather than fetching its range again', async () => {
+      const since = holdNextRequest()
+      const data = restoredData()
+      // Restored, but not old enough for becoming active to check.
+      data.pages[0].fetchedAt = PROCESS_STARTED_AT - 1
+      const {cached} = renderView({data, isActive: true})
+      await wait(0)
+      expect(requested()).toEqual([SINCE_REQUEST])
+
+      await leaveFor(RETURN_STALE_AFTER)
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(requested()).toEqual([SINCE_REQUEST])
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+    })
+
+    it('gives way to a pull to refresh while it fetches', async () => {
+      const since = holdNextRequest()
+      const {hook, cached} = renderView({
+        data: fetchedData(),
+        isActive: true,
+      })
+      await leaveFor(RETURN_STALE_AFTER)
+      mockClient.call.mockReturnValueOnce({
+        cursor: 'timeline:1',
+        feed: [feedItem('fresh')],
+      })
+      await act(() => hook.result.current.refresh())
+      const refreshed = cached()
+
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(cached()).toBe(refreshed)
+      expect(postsOf(cached())).toEqual([['fresh']])
+      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+    })
+
+    it('peeks for the Home dot when the top page has no boundary to fetch above', async () => {
+      const data = fetchedData()
+      delete data.pages[0].startCursor
+      const {onFound} = renderView({data, isActive: true})
+
+      await leaveFor(RETURN_STALE_AFTER)
+
+      expect(requested()).toEqual(['timeline latest'])
+      expect(onFound).toHaveBeenCalledWith(true, 'return')
+    })
   })
 })
 

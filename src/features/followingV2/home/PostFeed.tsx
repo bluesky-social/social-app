@@ -97,6 +97,7 @@ import {
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
 import {useListRest} from './useListRest'
+import {useNewPostsCheck} from './useNewPostsCheck'
 import {usePrependPill} from './usePrependPill'
 import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
@@ -279,7 +280,8 @@ let PostFeed = ({
   enabled?: boolean
   /**
    * Whether this is the feed on screen: the focused page of a focused Home.
-   * Only then does it offer restored posts with the pill.
+   * Only then does anchored Following check for new posts, and offer the
+   * posts it put on top with the pill.
    */
   isActive?: boolean
   pollInterval?: number
@@ -382,9 +384,9 @@ let PostFeed = ({
    */
   const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
   /**
-   * When the list is at rest, for the restore prepend to wait for. Its scroll
-   * handlers take the corrections anchoring makes to the offset out of what
-   * the Home header sees, so they can't hide or show it.
+   * When the list is at rest, for prepends to wait for. Its scroll handlers
+   * take the corrections anchoring makes to the offset out of what the Home
+   * header sees, so they can't hide or show it.
    */
   const listRest = useListRest(
     useAnchorCorrectionScrollHandlers(isAnchored),
@@ -441,8 +443,8 @@ let PostFeed = ({
       !data?.pages[0] ||
       isFetching ||
       isRefreshing ||
-      // A restored top is checked by fetching what's newer, still to come.
-      (isAnchored && prepend.isOwed()) ||
+      // Anchored Following checks with useNewPostsCheck instead, below.
+      isAnchored ||
       !onHasNew ||
       !enabled ||
       disablePoll
@@ -468,6 +470,37 @@ let PostFeed = ({
         logger.warn('Poll latest failed', {feed, message: String(e)})
       }
     }
+  })
+
+  /*
+   * Anchored Following's checks, made by the view on screen only. A real
+   * return fetches what's newer and puts it on top at rest, for the pill to
+   * offer. A check while the view is prepending, or owes its restored top a
+   * prepend, waits on that rather than racing it. Otherwise, or with no
+   * boundary to fetch above, it peeks for the Home dot, as other feeds do.
+   */
+  useNewPostsCheck({
+    topFetchedAt: lastFetchedAt,
+    isEmpty,
+    isActive: isAnchored && isActive,
+    isBusy: isRefreshing,
+    interval: disablePoll ? undefined : pollInterval,
+    check: async trigger => {
+      const prepending =
+        trigger === 'return' || prepend.isOwed() ? prepend.run() : undefined
+      if (prepending) {
+        await prepending
+        return undefined
+      }
+      return pollLatest(data?.pages[0], createFeedApi())
+    },
+    onFound: () => {
+      if (isEmpty) {
+        void refreshToTop()
+      } else {
+        onHasNew?.(true)
+      }
+    },
   })
 
   const isScrolledDownRef = useRef(false)
