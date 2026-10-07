@@ -205,7 +205,7 @@ export function ExternalPlayer({
         height: measurement.height,
         width: measurement.width,
       },
-      window: {width: winWidth, height: realWinHeight},
+      viewport: {width: winWidth, height: realWinHeight},
       insets,
     })
 

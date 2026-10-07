@@ -13,7 +13,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 183, width: 326},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: INSETS,
       }),
     ).toBe('visible')
@@ -23,7 +23,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 1200, height: 183, width: 326},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: INSETS,
       }),
     ).toBe('hidden')
@@ -33,7 +33,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: -400, height: 183, width: 326},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: {top: 24, bottom: 48},
       }),
     ).toBe('hidden')
@@ -43,7 +43,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 800, height: 183, width: 326},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: INSETS,
       }),
     ).toBe('visible')
@@ -60,7 +60,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 4429, height: 453, width: 806},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: {top: 0, bottom: 0},
       }),
     ).toBe('indeterminate')
@@ -70,7 +70,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 183, width: 411},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: INSETS,
       }),
     ).toBe('visible')
@@ -81,7 +81,23 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 183, width: 411.43},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
+        insets: INSETS,
+      }),
+    ).toBe('visible')
+  })
+
+  /*
+   * Known limitation, the reverse of the case above. Rotating from landscape
+   * to portrait, the tree is already portrait-sized while the viewport still
+   * says landscape. A narrow player looks like any other, so no mismatch is
+   * flagged and the position comparison runs as-is.
+   */
+  it('does not detect a mismatch when rotating from landscape to portrait', () => {
+    expect(
+      getPlayerVisibility({
+        player: {top: 433, height: 453, width: 326},
+        viewport: {width: 891, height: 891},
         insets: INSETS,
       }),
     ).toBe('visible')
@@ -91,7 +107,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 183, width: 412},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: INSETS,
       }),
     ).toBe('visible')
@@ -101,7 +117,7 @@ describe('getPlayerVisibility', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 183, width: 412.01},
-        window: PORTRAIT,
+        viewport: PORTRAIT,
         insets: INSETS,
       }),
     ).toBe('indeterminate')
@@ -114,15 +130,15 @@ describe('getPlayerVisibility', () => {
     ['infinite top', {top: Infinity, height: 183, width: 326}],
   ])('reports indeterminate for a non-finite %s', (_name, player) => {
     expect(
-      getPlayerVisibility({player, window: PORTRAIT, insets: INSETS}),
+      getPlayerVisibility({player, viewport: PORTRAIT, insets: INSETS}),
     ).toBe('indeterminate')
   })
 
-  it('reports indeterminate for a non-finite window', () => {
+  it('reports indeterminate for a non-finite viewport', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 183, width: 326},
-        window: {width: 411, height: NaN},
+        viewport: {width: 411, height: NaN},
         insets: INSETS,
       }),
     ).toBe('indeterminate')
@@ -137,7 +153,7 @@ describe('getPlayerVisibility', () => {
       expect(
         getPlayerVisibility({
           player: {top, height: 183, width: 326},
-          window: PORTRAIT,
+          viewport: PORTRAIT,
           insets: {top: 0, bottom: 48},
         }),
       ).toBe(expected)
@@ -151,7 +167,7 @@ describe('getPlayerVisibility', () => {
       expect(
         getPlayerVisibility({
           player: {top: bottom - 183, height: 183, width: 326},
-          window: PORTRAIT,
+          viewport: PORTRAIT,
           insets: {top: 24, bottom: 48},
         }),
       ).toBe(expected)

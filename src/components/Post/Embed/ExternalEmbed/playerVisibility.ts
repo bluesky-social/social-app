@@ -25,11 +25,11 @@ const WIDTH_OVERFLOW_TOLERANCE = 1
  */
 export function getPlayerVisibility({
   player,
-  window,
+  viewport,
   insets,
 }: {
   player: {top: number; height: number; width: number}
-  window: {width: number; height: number}
+  viewport: {width: number; height: number}
   insets: {top: number; bottom: number}
 }): PlayerVisibility {
   'worklet'
@@ -38,8 +38,8 @@ export function getPlayerVisibility({
     player.top,
     player.height,
     player.width,
-    window.width,
-    window.height,
+    viewport.width,
+    viewport.height,
     insets.top,
     insets.bottom,
   ]
@@ -56,14 +56,14 @@ export function getPlayerVisibility({
    * proof that they disagree - and the position comparison below would be
    * comparing coordinates from two different layouts.
    */
-  if (player.width - window.width > WIDTH_OVERFLOW_TOLERANCE) {
+  if (player.width - viewport.width > WIDTH_OVERFLOW_TOLERANCE) {
     return 'indeterminate'
   }
 
   const top = player.top
   const bottom = player.top + player.height
   const isOnScreen =
-    top <= window.height - insets.bottom && bottom >= insets.top
+    top <= viewport.height - insets.bottom && bottom >= insets.top
 
   return isOnScreen ? 'visible' : 'hidden'
 }
