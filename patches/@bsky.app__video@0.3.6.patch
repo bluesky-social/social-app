@@ -1,0 +1,184 @@
+diff --git a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
+index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b548b3119ec 100644
+--- a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
++++ b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
+@@ -5,6 +5,7 @@ import android.content.Intent
+ import android.graphics.Color
+ import android.graphics.Rect
+ import android.net.Uri
++import android.view.LayoutInflater
+ import android.view.ViewGroup
+ import androidx.media3.common.MediaItem
+ import androidx.media3.common.PlaybackException
+@@ -47,7 +48,9 @@ class BlueskyVideoView(
+     var isFullscreen: Boolean = false
+         private set(value) {
+             field = value
+-            this.playerView.useController = value
++            // The inline PlayerView has no controller (see bluesky_video_player_content.xml), and
++            // setUseController(true) throws without one. Fullscreen playback uses
++            // FullscreenActivity's own PlayerView, which has its controls.
+ 
+             onFullscreenChange(
+                 mapOf(
+@@ -121,7 +124,7 @@ class BlueskyVideoView(
+ 
+     init {
+         val playerView =
+-            PlayerView(context).apply {
++            (LayoutInflater.from(context).inflate(R.layout.bluesky_video_player, this, false) as PlayerView).apply {
+                 setBackgroundColor(Color.BLACK)
+                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+                 useController = false
+@@ -163,7 +166,15 @@ class BlueskyVideoView(
+         this.playerScope = playerScope
+     }
+ 
+-    private fun destroy() {
++    /**
++     * `release()` does not wait for the playback thread (see `releaseTimeoutMs` in
++     * `createExoPlayer`), because waiting blocks the main thread for as long as the playback
++     * thread is busy, e.g. creating codecs, which stalled feed scrolling by 40-130 ms per video.
++     *
++     * When the view stays attached, the surface is handed back synchronously first, so a player
++     * created right after this one can attach to the same surface.
++     */
++    private fun destroy(surfaceIsGoingAway: Boolean = false) {
+         val player = this.player ?: return
+ 
+         this.isLoading = false
+@@ -171,6 +182,9 @@ class BlueskyVideoView(
+ 
+         this.pause()
+ 
++        if (!surfaceIsGoingAway) {
++            player.clearVideoSurface()
++        }
+         player.release()
+         this.player = null
+         this.playerView.player = null
+@@ -233,9 +247,12 @@ class BlueskyVideoView(
+     }
+ 
+     override fun onDetachedFromWindow() {
+-        super.onDetachedFromWindow()
++        // Release before super detaches the SurfaceView. Otherwise its surfaceDestroyed callback
++        // makes the still-live player block the main thread until the playback thread lets go
++        // of the surface.
+         ViewManager.removeView(this)
+-        this.destroy()
++        this.destroy(surfaceIsGoingAway = true)
++        super.onDetachedFromWindow()
+     }
+ 
+     // Controls
+@@ -388,6 +405,8 @@ class BlueskyVideoView(
+             .Builder(context)
+             .apply {
+                 setLooper(context.mainLooper)
++                // Make release() asynchronous, see destroy().
++                setReleaseTimeoutMs(0)
+                 setSeekForwardIncrementMs(5000)
+                 setSeekBackIncrementMs(5000)
+             }.build()
+diff --git a/android/src/main/res/layout/bluesky_video_player.xml b/android/src/main/res/layout/bluesky_video_player.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..b80ee2d4c1cab5e23de321c4b7723c5ee643429a
+--- /dev/null
++++ b/android/src/main/res/layout/bluesky_video_player.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- player_layout_id can only be set from XML, so the inline PlayerView is inflated from here. -->
++<androidx.media3.ui.PlayerView xmlns:android="http://schemas.android.com/apk/res/android"
++  xmlns:app="http://schemas.android.com/apk/res-auto"
++  android:layout_width="match_parent"
++  android:layout_height="match_parent"
++  app:player_layout_id="@layout/bluesky_video_player_content"
++  app:use_controller="false" />
+diff --git a/android/src/main/res/layout/bluesky_video_player_content.xml b/android/src/main/res/layout/bluesky_video_player_content.xml
+new file mode 100644
+index 0000000000000000000000000000000000000000..758969eb73bd10e29635ce8e4636bb7d556f4767
+--- /dev/null
++++ b/android/src/main/res/layout/bluesky_video_player_content.xml
+@@ -0,0 +1,81 @@
++<?xml version="1.0" encoding="utf-8"?>
++<!-- Copyright (C) 2020 The Android Open Source Project
++
++     Licensed under the Apache License, Version 2.0 (the "License");
++     you may not use this file except in compliance with the License.
++     You may obtain a copy of the License at
++
++          http://www.apache.org/licenses/LICENSE-2.0
++
++     Unless required by applicable law or agreed to in writing, software
++     distributed under the License is distributed on an "AS IS" BASIS,
++     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++     See the License for the specific language governing permissions and
++     limitations under the License.
++-->
++<!-- Copy of media3-ui's exo_player_view.xml without exo_controller_placeholder.
++     Without the placeholder PlayerView does not construct a PlayerControlView, which
++     the inline feed player never shows (useController = false) but which cost ~8 ms
++     of view inflation per video. -->
++<merge xmlns:android="http://schemas.android.com/apk/res/android">
++
++  <androidx.media3.ui.AspectRatioFrameLayout android:id="@id/exo_content_frame"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"
++    android:layout_gravity="center">
++
++    <!-- Video surface will be inserted as the first child of the content frame. -->
++
++    <View android:id="@id/exo_shutter"
++      android:layout_width="match_parent"
++      android:layout_height="match_parent"
++      android:background="@android:color/black"/>
++
++    <ImageView android:id="@id/exo_image"
++      android:layout_width="match_parent"
++      android:layout_height="match_parent"
++      android:scaleType="fitXY"
++      android:contentDescription="@null"/>
++
++    <ImageView android:id="@id/exo_artwork"
++      android:layout_width="match_parent"
++      android:layout_height="match_parent"
++      android:scaleType="fitXY"
++      android:contentDescription="@null"/>
++
++    <androidx.media3.ui.SubtitleView android:id="@id/exo_subtitles"
++      android:layout_width="match_parent"
++      android:layout_height="match_parent"/>
++
++    <ProgressBar android:id="@id/exo_buffering"
++      android:layout_width="wrap_content"
++      android:layout_height="wrap_content"
++      android:indeterminate="true"
++      android:layout_gravity="center"/>
++
++    <TextView android:id="@id/exo_error_message"
++      android:layout_width="wrap_content"
++      android:layout_height="@dimen/exo_error_message_height"
++      android:layout_gravity="center"
++      android:layout_marginBottom="@dimen/exo_error_message_margin_bottom"
++      android:gravity="center"
++      android:textColor="@color/exo_white"
++      android:textSize="@dimen/exo_error_message_text_size"
++      android:background="@drawable/exo_rounded_rectangle"
++      android:paddingLeft="@dimen/exo_error_message_text_padding_horizontal"
++      android:paddingRight="@dimen/exo_error_message_text_padding_horizontal"
++      android:paddingTop="@dimen/exo_error_message_text_padding_vertical"
++      android:paddingBottom="@dimen/exo_error_message_text_padding_vertical"/>
++
++  </androidx.media3.ui.AspectRatioFrameLayout>
++
++  <FrameLayout android:id="@id/exo_ad_overlay"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"/>
++
++  <FrameLayout android:id="@id/exo_overlay"
++    android:layout_width="match_parent"
++    android:layout_height="match_parent"/>
++
++</merge>
++

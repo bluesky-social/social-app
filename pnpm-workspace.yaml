@@ -32,6 +32,7 @@ allowBuilds:
   'protobufjs': false
   'unrs-resolver': true
 patchedDependencies:
+  '@bsky.app/video@0.3.6': patches/@bsky.app__video@0.3.6.patch
   '@expo/cli@57.0.26': patches/@expo__cli@57.0.26.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
