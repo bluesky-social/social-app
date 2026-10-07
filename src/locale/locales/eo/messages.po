@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-09-30 17:04\n"
+"PO-Revision-Date: 2026-10-07 18:46\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -1731,7 +1731,7 @@ msgstr "Ilustraĵo de la apo Bluesky kun papera aviadilo, kiu elflugas el ĝi, s
 #: src/components/dialogs/nuxs/InitialVerificationAnnouncement.tsx:87
 #: src/components/verification/VerifierDialog.tsx:89
 msgid "An illustration showing that Bluesky selects trusted verifiers, and trusted verifiers in turn verify individual user accounts."
-msgstr "Ilustraĵo montranta ke Bluesky elektas fidatajn konfirmantojn kaj poste fidataj konfirmantoj konfirmas individuajn kontojn de uzantoj."
+msgstr "Ilustraĵo montranta ke Bluesky elektas fidatajn konfirmantojn kaj poste fidataj konfirmantoj konfirmas individuajn uzantkontojn."
 
 #: src/screens/Messages/components/InviteLinkDialog.tsx:196
 msgid "An invite link lets people join this group chat without being added directly. You control who can join the chat. You can disable the link at any time."
@@ -1890,11 +1890,11 @@ msgstr "Apelacii pri la etikedo \"{0}\""
 
 #: src/screens/ModerationInbox/Subject.tsx:86
 msgid "Appeal approved, post restored"
-msgstr "Apelacio aprobita, afiŝo restarigita"
+msgstr ""
 
 #: src/screens/ModerationInbox/Subject.tsx:47
 msgid "Appeal approved: Your post has been restored"
-msgstr "Apelacio aprobita: Via afiŝo estis restarigita"
+msgstr ""
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:159
 msgid "Appeal label"
@@ -1906,7 +1906,7 @@ msgstr "Apelacii pri la suspendo de tujelsendo"
 
 #: src/screens/ModerationInbox/Subject.tsx:83
 msgid "Appeal submitted"
-msgstr "Apelacio sendita"
+msgstr ""
 
 #: src/components/moderation/AppealForm.tsx:94
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:82
@@ -2127,7 +2127,7 @@ msgstr "Profilbilda kreilo"
 
 #: src/screens/ModerationInbox/index.tsx:116
 msgid "Awaiting review"
-msgstr "Atendanta revizion"
+msgstr ""
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -2322,7 +2322,7 @@ msgstr "Bloki liston"
 
 #: src/screens/Messages/components/ChatStatusInfo.tsx:61
 msgid "Block or report"
-msgstr "Bloki aŭ raporti"
+msgstr "Bloki aŭ denunci"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:114
 msgid "Block these accounts?"
@@ -2409,7 +2409,7 @@ msgstr "Bluesky Classic™"
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:36
 msgid "Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension."
-msgstr ""
+msgstr "Bluesky faris agon kontraŭ via konto aŭ enhavo pro malobservo de niaj komunumaj gvidnormoj. Pliaj malobservoj kondukos al pli forta punado, inkluzive de suspendo."
 
 #: src/components/contacts/screens/GetContacts.tsx:237
 msgid "Bluesky helps friends find each other by creating an encoded digital fingerprint, called a \"hash\", and then looking for matching hashes."
@@ -2443,7 +2443,7 @@ msgstr "Bluesky estas pli feliĉiga kun amikoj! Ĉu vi volas inviti iujn el viaj
 #: src/screens/ModerationInbox/Report.tsx:38
 #: src/screens/ModerationInbox/Subject.tsx:38
 msgid "Bluesky Moderation Service"
-msgstr ""
+msgstr "Kontrol-servo de Bluesky"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:105
 msgid "Bluesky needs camera access to scan QR codes from other profiles."
@@ -2766,11 +2766,11 @@ msgstr "Dialogujo pri pasvorta ŝanĝo"
 
 #: src/components/moderation/ReportDialog/index.tsx:384
 msgid "Change report category"
-msgstr "Ŝanĝi kategorion de raporto"
+msgstr "Ŝanĝi kategorion de denunco"
 
 #: src/components/moderation/ReportDialog/index.tsx:463
 msgid "Change report reason"
-msgstr "Ŝanĝi kialon de raporto"
+msgstr "Ŝanĝi kialon de denunco"
 
 #: src/components/Post/Translated/index.tsx:421
 msgid "Change the source language"
@@ -2787,7 +2787,7 @@ msgstr "Ŝanĝas apan piktogramon"
 #: src/components/forms/HostingProvider.tsx:50
 #: src/components/forms/HostingProvider.tsx:70
 msgid "Changes hosting provider"
-msgstr "Ŝanĝas la provizanton de gastigo"
+msgstr "Ŝanĝas la gastigan provizanton"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:176
 msgid "Changes saved"
@@ -3842,7 +3842,7 @@ msgstr "Krei aŭ modifi invitligilon por ĉi tiu grupa babilejo"
 #: src/components/moderation/ReportDialog/index.tsx:834
 #: src/components/moderation/ReportDialog/index.tsx:879
 msgid "Create report for {0}"
-msgstr "Krei raporton pri {0}"
+msgstr "Krei denuncon pri {0}"
 
 #: src/components/dialogs/StarterPackDialog.tsx:102
 #: src/components/dialogs/StarterPackDialog.tsx:199
@@ -5272,7 +5272,7 @@ msgstr "Malsukcesis sendi retmesaĝon, bonvolu reprovi."
 
 #: src/components/SendErrorReportDialog.tsx:52
 msgid "Failed to send report"
-msgstr "Malsukcesis sendi raporton"
+msgstr "Malsukcesis sendi denuncon"
 
 #: src/components/moderation/AppealForm.tsx:88
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:76
@@ -5431,7 +5431,7 @@ msgstr "Filtri el fluoj"
 
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:41
 msgid "Filter moderation reports (currently: {currentLabel})"
-msgstr "Filtri kontrol-raportojn (nune: {currentLabel})"
+msgstr "Filtri kontrol-denuncojn (nune: {currentLabel})"
 
 #: src/screens/Search/components/SearchLanguageDropdown.tsx:70
 msgid "Filter search by language (currently: {currentLanguageLabel})"
@@ -5920,7 +5920,7 @@ msgstr "Esti sciigota pri novaj afiŝoj kaj respondoj de kontoj kiujn vi elektis
 #: src/screens/ModerationInbox/Settings.tsx:49
 msgctxt "moderation-inbox-setting"
 msgid "Get notified about your report outcomes."
-msgstr "Esti sciigota pri rezultoj de viaj raportoj."
+msgstr "Esti sciigota pri rezultoj de viaj denuncoj."
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:223
 msgid "Get notified of new posts from {name}"
@@ -6826,7 +6826,7 @@ msgstr "Nevalida telefonnumero"
 
 #: src/components/moderation/ReportDialog/index.tsx:140
 msgid "Invalid report subject"
-msgstr "Nevalida temlinio de raporto"
+msgstr "Nevalida temlinio de denunco"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:205
 #: src/screens/Messages/components/OutgoingRequestListItem.tsx:39
@@ -7494,7 +7494,7 @@ msgstr "Ŝargi novajn afiŝojn"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:138
 msgid "Load new posts from the people you follow"
-msgstr ""
+msgstr "Ŝargi novajn afiŝojn de la homoj, kiujn vi sekvas"
 
 #: src/screens/Messages/components/MessageComposer.tsx:269
 msgctxt "placeholder"
@@ -7626,7 +7626,7 @@ msgstr "Marki ĉiujn babilejojn kiel legitajn"
 
 #: src/screens/ModerationInbox/index.tsx:102
 msgid "Mark all reports as read"
-msgstr "Marki ĉiujn raportojn kiel legitajn"
+msgstr "Marki ĉiujn denuncojn kiel legitajn"
 
 #: src/screens/Messages/ChatList.tsx:663
 #: src/screens/Messages/ChatList.tsx:667
@@ -8085,7 +8085,7 @@ msgstr "Iras al via profilo"
 #: src/components/moderation/ReportDialog/index.tsx:414
 #: src/components/moderation/ReportDialog/index.tsx:430
 msgid "Need to report a copyright violation, legal request, or regulatory compliance issue?"
-msgstr "Ĉu vi bezonas raporti kopirajtan malobservon, jurpeton aŭ problemon pri reguliga observo?"
+msgstr "Ĉu vi bezonas denunci kopirajtan malobservon, jurpeton aŭ problemon pri reguliga observo?"
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:585
 msgid "Nevermind, create a handle for me"
@@ -8228,7 +8228,7 @@ msgstr "Novaj afiŝoj"
 
 #: src/view/screens/Storybook/NewPostsPill.tsx:137
 msgid "New posts are ready to load from the people you follow"
-msgstr ""
+msgstr "Novaj afiŝoj estas pretaj por ŝargi de la homoj, kiujn vi sekvas"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:540
 msgid "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}</0> "
@@ -9067,7 +9067,7 @@ msgstr "Malfermas dialogujon de la GIF-elektilo"
 
 #: src/view/shell/Drawer.tsx:124
 msgid "Opens the invite friends sheet to share your profile"
-msgstr ""
+msgstr "Malfermas la folion pri inviti amikojn por kunhavigi vian profilon"
 
 #: src/view/com/feeds/ComposerPrompt.tsx:162
 msgid "Opens the post composer"
@@ -9196,11 +9196,11 @@ msgstr "Nia blogafiŝo"
 #: src/components/dms/AfterReportDialog.tsx:89
 #: src/components/dms/AfterReportDialog.tsx:181
 msgid "Our moderation team has received your report."
-msgstr "Nia kontrolad-teamo ricevis vian raporton."
+msgstr "Nia kontrolad-teamo ricevis vian denuncon."
 
 #: src/screens/Messages/components/ChatDisabled.tsx:54
 msgid "Our moderators have reviewed reports and decided to disable your access to chats on Bluesky."
-msgstr "Niaj kontrolantoj ekzamenis denuncojn kaj decidis malebligi vian aliron al babilejojn ĉe Bluesky."
+msgstr "Niaj kontrolantoj reviziis denuncojn kaj decidis malebligi vian aliron al babilejojn ĉe Bluesky."
 
 #: src/components/dialogs/StarterPackDialog.tsx:372
 msgid "Owner"
@@ -9572,7 +9572,7 @@ msgstr "Bonvolu elekti kontrol-servon"
 
 #: src/components/moderation/ReportDialog/action.ts:35
 msgid "Please select a reason for this report"
-msgstr "Bonvolu elekti kaŭzon de ĉi tiu raporto"
+msgstr "Bonvolu elekti kaŭzon de ĉi tiu denunco"
 
 #. placeholder {0}: account.handle
 #: src/lib/hooks/useAccountSwitcher.ts:45
@@ -9583,7 +9583,7 @@ msgstr "Bonvolu ensaluti kiel @{0}"
 #: src/components/moderation/ReportDialog/index.tsx:961
 msgctxt "english-only-resource"
 msgid "Please submit your report through the Report non-consensual intimate imagery (NCII) form."
-msgstr ""
+msgstr "Bonvolu sendi vian denuncon per la formularo Denunci nekonsentan intiman bildaron (NCII)."
 
 #: src/features/inviteFriends/InviteScannerScreen.web.tsx:40
 msgid "Please use the Bluesky mobile app to scan a QR code."
@@ -9881,7 +9881,7 @@ msgstr "Lokokupilo de profila rubando"
 
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:128
 msgid "Profile link copied"
-msgstr ""
+msgstr "Profila ligilo kopiita"
 
 #: src/features/inviteFriends/InviteScannerScreen.tsx:210
 #: src/lib/strings/errors.ts:78
@@ -10475,52 +10475,52 @@ msgstr "Respondo estis sukcese kaŝita"
 #: src/features/liveNow/components/LiveStatusDialog.tsx:264
 #: src/screens/Messages/ConversationSettings/index.tsx:576
 msgid "Report"
-msgstr "Raporti"
+msgstr "Denunci"
 
 #: src/view/com/profile/ProfileMenu.tsx:516
 #: src/view/com/profile/ProfileMenu.tsx:519
 msgid "Report account"
-msgstr "Raporti konton"
+msgstr "Denunci konton"
 
 #: src/components/dms/ConvoMenu.tsx:295
 #: src/components/dms/ConvoMenu.tsx:299
 #: src/screens/Messages/components/RequestButtons.tsx:161
 #: src/screens/Messages/components/RequestButtons.tsx:164
 msgid "Report conversation"
-msgstr "Raporti konversacion"
+msgstr "Denunci konversacion"
 
 #: src/components/moderation/ReportDialog/index.tsx:138
 #: src/components/moderation/ReportDialog/index.tsx:335
 msgid "Report dialog"
-msgstr "Raporta dialogujo"
+msgstr "Denunca dialogujo"
 
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:604
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:610
 msgid "Report feed"
-msgstr "Raporti fluon"
+msgstr "Denunci fluon"
 
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:235
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:238
 msgid "Report list"
-msgstr "Raporti liston"
+msgstr "Denunci liston"
 
 #: src/components/dms/MessageContextMenu.tsx:216
 msgid "Report message"
-msgstr "Raporti mesaĝon"
+msgstr "Denunci mesaĝon"
 
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:774
 #: src/components/PostControls/PostMenu/PostMenuItems.tsx:776
 msgid "Report post"
-msgstr "Raporti afiŝon"
+msgstr "Denunci afiŝon"
 
 #: src/components/SendErrorReportDialog.tsx:47
 msgid "Report sent"
-msgstr "Raporto sendita"
+msgstr "Denunco sendita"
 
 #: src/screens/StarterPack/StarterPackScreen.tsx:668
 #: src/screens/StarterPack/StarterPackScreen.tsx:671
 msgid "Report Starter Pack"
-msgstr "Raporti startpakon"
+msgstr "Denunci startpakon"
 
 #: src/components/dms/AfterReportConversationDialog.tsx:83
 #: src/components/dms/AfterReportConversationDialog.tsx:210
@@ -10528,24 +10528,24 @@ msgstr "Raporti startpakon"
 #: src/components/dms/AfterReportDialog.tsx:178
 #: src/screens/ModerationInbox/Report.tsx:86
 msgid "Report submitted"
-msgstr "Raporto sendita"
+msgstr "Denunci sendita"
 
 #: src/components/moderation/ReportDialog/copy.ts:50
 #: src/components/moderation/ReportDialog/copy.ts:64
 msgid "Report this conversation"
-msgstr "Raporti ĉi tiun konversacion"
+msgstr "Denunci ĉi tiun konversacion"
 
 #: src/components/moderation/ReportDialog/copy.ts:36
 msgid "Report this feed"
-msgstr "Raporti ĉi tiun fluon"
+msgstr "Denunci ĉi tiun fluon"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:575
 msgid "Report this group chat"
-msgstr "Raporti ĉi tiun grupan babilejon"
+msgstr "Denunci ĉi tiun grupan babilejon"
 
 #: src/components/moderation/ReportDialog/copy.ts:30
 msgid "Report this list"
-msgstr "Raporti ĉi tiun liston"
+msgstr "Denunci ĉi tiun liston"
 
 #: src/components/moderation/ReportDialog/copy.ts:18
 #: src/features/liveNow/components/LiveStatusDialog.tsx:247
@@ -10554,19 +10554,19 @@ msgstr "Denunci ĉi tiun tujelsendon"
 
 #: src/components/moderation/ReportDialog/copy.ts:56
 msgid "Report this message"
-msgstr "Raporti ĉi tiun mesaĝon"
+msgstr "Denunci ĉi tiun mesaĝon"
 
 #: src/components/moderation/ReportDialog/copy.ts:24
 msgid "Report this post"
-msgstr "Raporti ĉi tiun afiŝon"
+msgstr "Denunci ĉi tiun afiŝon"
 
 #: src/components/moderation/ReportDialog/copy.ts:42
 msgid "Report this Starter Pack"
-msgstr "Raporti ĉi tiun startpakon"
+msgstr "Denunci ĉi tiun startpakon"
 
 #: src/components/moderation/ReportDialog/copy.ts:12
 msgid "Report this user"
-msgstr "Raporti ĉi tiun uzanton"
+msgstr "Denunci ĉi tiun uzanton"
 
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:165
@@ -10761,7 +10761,7 @@ msgstr "Restarigi la disponigon de {defaultChannel}"
 
 #: src/screens/ModerationInbox/Subject.tsx:54
 msgid "Restored post"
-msgstr "Restarigis afiŝon"
+msgstr ""
 
 #: src/screens/Settings/FindContactsSettings.tsx:553
 #: src/screens/Settings/FindContactsSettings.tsx:569
@@ -10809,7 +10809,7 @@ msgstr "Reprovi"
 #: src/components/moderation/ReportDialog/index.tsx:366
 #: src/view/screens/Storybook/Admonitions.tsx:61
 msgid "Retry loading report options"
-msgstr "Reprovi ŝargi raportajn opciojn"
+msgstr "Reprovi ŝargi denuncajn opciojn"
 
 #: src/components/Error.tsx:116
 #: src/screens/List/ListHiddenScreen.tsx:222
@@ -11373,7 +11373,7 @@ msgstr "Sendi retmesaĝon"
 #: src/screens/Settings/AboutSettings.tsx:125
 #: src/screens/Settings/AboutSettings.tsx:128
 msgid "Send error report"
-msgstr "Sendi eraran raporton"
+msgstr "Sendi denuncon pri eraro"
 
 #: src/view/shell/Drawer.tsx:423
 msgid "Send feedback"
@@ -11394,7 +11394,7 @@ msgstr "Sendi afiŝon al..."
 
 #: src/components/moderation/ReportDialog/index.tsx:1063
 msgid "Send report to {title}"
-msgstr "Sendi raporton al {title}"
+msgstr "Sendi denuncon al {title}"
 
 #: src/components/contacts/components/InviteInfo.tsx:63
 msgid "Send the message from your phone"
@@ -12029,7 +12029,7 @@ msgstr "Iu estis forigita el la grupo"
 
 #: src/components/moderation/ReportDialog/index.tsx:143
 msgid "Something wasn't quite right with the data you're trying to report. Please contact support."
-msgstr "Io ne estis tute ĝusta pri la datumoj, kiujn vi provas raporti. Bonvolu kontaki subtenejon."
+msgstr "Io ne estis tute ĝusta pri la datumoj, kiujn vi provas denunci. Bonvolu kontaki subtenejon."
 
 #: src/screens/Messages/Conversation.tsx:135
 #: src/screens/Messages/ConversationSettings/index.tsx:134
@@ -12250,12 +12250,12 @@ msgstr "Sendi prikomentadon"
 #: src/components/moderation/ReportDialog/index.tsx:658
 #: src/components/moderation/ReportDialog/index.tsx:665
 msgid "Submit report"
-msgstr "Sendi raporton"
+msgstr "Sendi denuncon"
 
 #: src/components/moderation/ReportDialog/index.tsx:941
 msgctxt "english-only-resource"
 msgid "Submit your report through the Report non-consensual intimate imagery (NCII) form"
-msgstr ""
+msgstr "Sendi vian denuncon per la formularo Denunci nekonsentan intiman bildaron (NCII)"
 
 #: src/screens/ProfileList/components/SubscribeMenu.tsx:75
 msgid "Subscribe"
@@ -12943,7 +12943,7 @@ msgstr "Ĉi tiu apo ricevas ĝisdatigojn el <0>{0}</0>."
 
 #: src/components/OTAChannelNotice.tsx:71
 msgid "This app is running a deployment of <0>{currentChannel}</0>. Restore the {defaultChannel} deployment to get back to a standard build."
-msgstr ""
+msgstr "Ĉi tiu apo funkciigas disponigon de <0>{currentChannel}</0>. Restarigu la disponigon de {defaultChannel} por reveni al norma versio."
 
 #: src/components/moderation/AppealForm.tsx:107
 msgid "This appeal will be sent to <0>{sourceName}</0>."
@@ -13097,7 +13097,7 @@ msgstr "Ĉi tiu invitilo estas nevalida"
 
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:139
 msgid "This is just a one-time security check, since we haven't seen this account on this device before."
-msgstr ""
+msgstr "Ĉi tio estas nur unufoja sekureca kontrolo, ĉar ni ne vidis ĉi tiun konton sur ĉi tiu aparato antaŭe."
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:173
 #: src/features/liveNow/components/GoLiveDialog.tsx:165
@@ -13119,7 +13119,7 @@ msgstr "Ĉi tiu etikedo estis aplikita de vi."
 #: src/components/moderation/LabelsOnMeDialog.tsx:156
 #: src/components/moderation/ModerationDetailsDialog.tsx:231
 msgid "This label was applied to the entire user account and will appear on all posts."
-msgstr ""
+msgstr "Ĉi tiu etikedo estis aplikita al la tuta uzantokonto kaj aperos sur ĉiuj afiŝoj."
 
 #: src/screens/Profile/Sections/Labels.tsx:219
 msgid "This labeler hasn't declared what labels it publishes, and may not be active."
@@ -13158,7 +13158,7 @@ msgstr "Ĉi tiu mesaĝo estas kaŝita ĉar vi blokas ĉi tiun uzanton."
 
 #: src/components/moderation/ReportDialog/index.tsx:313
 msgid "This moderation service does not support that report reason. Please choose a different reason or moderation service."
-msgstr ""
+msgstr "Ĉi tiu kontrol-servo ne subtenas tiun denunc-kialon. Bonvolu elekti alian kialon aŭ kontrol-servon."
 
 #: src/screens/Profile/ErrorState.tsx:41
 msgid "This moderation service is unavailable. See below for more details. If this issue persists, contact us."
@@ -13213,7 +13213,7 @@ msgstr "Ĉi tiu servo ne havigis uzokondiĉojn aŭ regularon pri privateco."
 
 #: src/features/liveNow/index.tsx:199
 msgid "This service is not supported while the Live feature is in beta. Allowed services: {formatted}."
-msgstr ""
+msgstr "Ĉi tiu servo ne estas subtenata se la Tujelsenda-funkcio estas en beta. Permesitaj servoj: {formatted}."
 
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:469
 msgid "This should create a domain record at:"
@@ -13274,7 +13274,7 @@ msgstr "Ĉi tiu videaĵo neludeblas per via aparato. Nepraj videokodekoj (H.264/
 
 #: src/view/com/composer/videos/VideoPreview.web.tsx:65
 msgid "This video can’t be previewed in your browser. It will still be uploaded."
-msgstr ""
+msgstr "Ĉi tiu videaĵo ne povas esti antaŭvidita en via retumilo. Ĝi tamen estos alŝutita."
 
 #: src/components/dialogs/lists/CreateListFromStarterPackDialog.tsx:155
 msgid "This will create a new list with the same name, description, and members as this Starter Pack."
@@ -13287,7 +13287,7 @@ msgstr "Ĉi tio forigos \"{0}\" de viaj silentigitaj vortoj. Vi ĉiam povos real
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:336
 msgid "This will irreversibly delete your Bluesky account <0>{currentHandle}</0> and all associated data. Note that this will affect any other <1>AT Protocol</1> services you use with this account."
-msgstr ""
+msgstr "Tio ĉi nenuligeble forigos vian Bluesky-konton <0>{currentHandle}</0> kaj ĉiuj rilatajn datumojn. Rimarku, ke tio efikos sur ĉiuj aliaj <1>AT Protocol</1>-servoj, kiujn vi uzas kun tiu ĉi konto."
 
 #. placeholder {0}: account.handle
 #: src/screens/Settings/Settings.tsx:690
@@ -13625,7 +13625,7 @@ msgstr "Malbloki liston"
 #: src/screens/ModerationInbox/components/FilterMenu.tsx:23
 msgctxt "moderation-report-filter"
 msgid "Under review"
-msgstr ""
+msgstr "Sub revizio"
 
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:50
 #: src/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner.tsx:56
@@ -13686,7 +13686,7 @@ msgstr "Ĉesas sekvi la uzanton"
 
 #: src/components/moderation/ReportDialog/index.tsx:569
 msgid "Unfortunately, none of your subscribed labelers supports this report type."
-msgstr "Bedaŭrinde, neniu el viaj abonitaj etikediloj subtenas ĉi tiun tipon de raporto."
+msgstr "Bedaŭrinde, neniu el viaj abonitaj etikediloj subtenas ĉi tiun tipon de denunco."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:266
 msgid "Unfortunately, the birthdate you have saved to your profile makes you too young to access Bluesky."
@@ -14377,7 +14377,7 @@ msgstr "Vidi publikigon"
 
 #: src/screens/ModerationInbox/components/ReportRow.tsx:30
 msgid "View report details: {subject}"
-msgstr "Vidi raportajn detalojn: {subject}"
+msgstr "Vidi denuncajn detalojn: {subject}"
 
 #: src/view/com/profile/ProfileSubpageHeader.tsx:105
 msgid "View the avatar"
@@ -14512,7 +14512,7 @@ msgstr "Ni ne eblis trovi ĉi tiun liston. Ĝi verŝajne estis forigita."
 
 #: src/screens/Login/LoginForm.tsx:349
 msgid "We couldn't find an account with that username. Please check that you've typed it correctly, or <0>set your hosting provider manually</0>."
-msgstr "Ni ne povis trovi konton kun tiu uzantnomo. Bonvolu kontroli, ke vi tajpis ĝin ĝuste, aŭ <0>agordu vian gastigan provizanton mane</0>."
+msgstr "Ni ne povis trovi konton kun tiu uzantnomo. Bonvolu kontroli, ke vi tajpis ĝin ĝuste, aŭ <0>agordu vian gastigan provizanton permane</0>."
 
 #: src/screens/Hashtag.tsx:262
 msgid "We couldn't find any results for that tag."
@@ -14540,7 +14540,7 @@ msgstr "Ni ne povis ŝargi agordojn de via konto. Kontrolu vian interretan konek
 
 #: src/screens/Login/LoginForm.tsx:483
 msgid "We couldn’t verify your hosting provider. Check your internet connection, or <0>set your hosting provider manually</0>."
-msgstr ""
+msgstr "Ni ne povis konfirmi vian gastigan provizanton. Kontrolu vian interretkonekton, aŭ <0>agordu vian gastigan provizanton permane</0>."
 
 #: src/components/contacts/screens/GetContacts.tsx:246
 msgid "We delete hashes after matches are made"
@@ -14619,7 +14619,7 @@ msgstr "Ni sciigos vin, kiam ni trovos viajn amikojn."
 
 #: src/screens/Settings/components/BetaFeaturesFeedbackDialog.tsx:101
 msgid "We’d love to hear about your experience testing beta features!"
-msgstr ""
+msgstr "Ni ŝatus aŭdi pri via sperto testi beta-funkciojn!"
 
 #. placeholder {0}: currentAccount!.email
 #: src/components/dialogs/EmailDialog/screens/Verify.tsx:259
@@ -14667,7 +14667,7 @@ msgstr "Ni estas tre ekscitita, ke vi aliĝis al ni!"
 
 #: src/ageAssurance/useVerificationFlow.ts:117
 msgid "We're sorry, but based on the data shared by your device, you are not old enough to access Bluesky."
-msgstr ""
+msgstr "Ni bedaŭras, sed surbaze de la datumoj kunhavigitaj de via aparato, vi ne aĝas sufiĉe por aliri Bluesky."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:230
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:219
@@ -14750,7 +14750,7 @@ msgstr "Kiel vi volas nomi vian startpakon?"
 
 #: src/screens/ModerationInbox/Report.tsx:61
 msgid "What you reported"
-msgstr "Kion vi raportis"
+msgstr "Kion vi denuncis"
 
 #. Advanced search: Example of an “exact phrase” search
 #: src/screens/Search/components/AdvancedSearchDialog/index.tsx:285
@@ -14948,7 +14948,7 @@ msgstr "Vi kreas konton ĉe"
 
 #: src/features/liveNow/components/GoLiveDisabledDialog.tsx:107
 msgid "You are currently blocked from using the Go Live feature. To appeal this moderation decision, please submit the form below."
-msgstr ""
+msgstr "Funkcio Tujelsendi estas nune blokita por vi. Por apelacii pri ĉi tiu decido de konstrolistoj, bonvolu sendi la formularon sube."
 
 #: src/ageAssurance/components/NoAccessScreen.tsx:403
 #: src/components/ageAssurance/AgeAssuranceAccountCard.tsx:125
@@ -15113,7 +15113,7 @@ msgstr "Vi alvenis ĉi tien unue"
 
 #: src/components/intents/GroupChatJoinDialog.tsx:179
 msgid "You have been previously removed from this group and can’t join it using this link."
-msgstr ""
+msgstr "Vi estis antaŭe forpelita el ĉi tiu grupo, kaj vi do ne povas aliĝi per ĉi tiu ligilo."
 
 #: src/components/moderation/ModerationDetailsDialog.tsx:93
 #: src/lib/moderation/useModerationCauseDescription.ts:55
@@ -15476,7 +15476,7 @@ msgstr "Via konto"
 
 #: src/components/moderation/ReportDialog/index.tsx:311
 msgid "Your account cannot submit reports while it is suspended."
-msgstr "Via konto ne povas sendi raportojn dum ĝi estas suspendita."
+msgstr "Via konto ne povas sendi denuncojn dum ĝi estas suspendita."
 
 #: src/screens/Settings/components/DeleteAccountDialog.tsx:133
 msgid "Your account has been deleted, see ya! ✌️"
@@ -15601,15 +15601,15 @@ msgstr "Via tuta identigilo estos <0>@{0}</0>"
 
 #: src/screens/Login/components/HostingProviderDialog.tsx:182
 msgid "Your hosting provider can’t be detected from an email address, so the default Bluesky service will be used. Enter your username instead, or set your provider manually."
-msgstr ""
+msgstr "Via gastiga provizanto ne povas esti detektita el retpoŝtadreso, do la defaŭlta Bluesky-servo estos uzota. Entajpu vian uzanton anstataŭe aŭ agordu vian provizanton permane."
 
 #: src/view/com/composer/state/video.ts:470
 msgid "Your hosting provider does not support videos this large. Please try again with a smaller file."
-msgstr ""
+msgstr "Via gastiga provizanto ne subtenas tiel grandajn videaĵojn. Bonvolu reprovi kun pli malgranda dosiero."
 
 #: src/screens/Login/components/HostingProviderDialog.tsx:188
 msgid "Your hosting provider is detected automatically from the username you enter."
-msgstr ""
+msgstr "Via gastiga provizanto estas detektita aŭtomate el la uzantnomo kiun vi entajpas."
 
 #: src/Navigation.tsx:499
 #: src/screens/Search/modules/ExploreInterestsCard.tsx:62
@@ -15689,21 +15689,21 @@ msgstr "Via respondo estis sendita"
 #: src/Navigation.tsx:198
 #: src/screens/ModerationInbox/Report.tsx:35
 msgid "Your report"
-msgstr "Via raporto"
+msgstr "Via denunco"
 
 #. placeholder {0}: state.selectedLabeler?.creator.displayName
 #: src/components/moderation/ReportDialog/index.tsx:596
 msgid "Your report will be sent to <0>{0}</0>."
-msgstr "Via raporto estos sendota al <0>{0}</0>."
+msgstr "Via denunco estos sendota al <0>{0}</0>."
 
 #: src/screens/ModerationInbox/index.tsx:60
 msgid "Your reports"
-msgstr "Viaj raportoj"
+msgstr "Viaj denuncoj"
 
 #: src/screens/ModerationInbox/Settings.tsx:45
 msgctxt "moderation-inbox-setting"
 msgid "Your reports notifications"
-msgstr "Sciigoj pri viaj raportoj"
+msgstr "Sciigoj pri viaj denuncoj"
 
 #: src/screens/Settings/InterestsSettings.tsx:65
 msgid "Your selected interests help us serve you content you care about."
