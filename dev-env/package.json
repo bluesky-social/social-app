@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "@atproto/api": "^0.20.22",
-    "@atproto/dev-env": "^0.5.3",
+    "@atproto/dev-env": "^0.6.14",
     "typescript": "^6.0.3"
   },
   "devDependencies": {

@@ -1,0 +1,68 @@
+appId: xyz.blueskyweb.app
+---
+# Following v2 restores Home Following across a restart, from the snapshot
+# its query persister wrote, then puts posts made meanwhile above the restored
+# top and offers them with the restore pill. The Following v2 gate is always
+# on in e2e builds.
+- runScript:
+    file: ../setupServer.js
+    env:
+      SERVER_PATH: ?users&follows
+# More than a page of posts: a Following that runs out on its first page
+# carries on into Discover, and Discover pages aren't snapshotted.
+- runScript:
+    file: ../setupServer.js
+    env:
+      SERVER_PATH: ?newposts=40&text=Older%20post
+- runFlow:
+    file: ../setupApp.yml
+- tapOn:
+    id: "e2eSignInAlice"
+
+# Alice pins only Following, so it's the Home feed on screen.
+- extendedWaitUntil:
+    visible:
+      id: "followingFeedPage"
+    timeout: 60000
+- extendedWaitUntil:
+    visible: "Older post 40"
+    timeout: 60000
+
+# The query persister writes at most once a second, and nothing on screen
+# says when it has, so give it a few seconds before the app is stopped. The
+# wait is on an element that never shows, so it always runs out.
+- extendedWaitUntil:
+    visible: "Wait for the query persister"
+    timeout: 5000
+    optional: true
+
+# Restart the app, keeping its storage. Meanwhile, bob posts.
+- stopApp
+- runScript:
+    file: ../setupServer.js
+    env:
+      SERVER_PATH: ?newposts=5&text=Newer%20post
+- launchApp:
+    appId: "xyz.blueskyweb.app"
+
+# The feed comes back as it was, and the posts bob made go above it once the
+# list is at rest, out of view. Only a restore prepend shows the pill.
+- extendedWaitUntil:
+    visible: "Older post 40"
+    timeout: 180000
+- extendedWaitUntil:
+    visible:
+      id: "followingRestorePill"
+    timeout: 60000
+- assertNotVisible: "Newer post 5"
+
+# Pressing the pill scrolls to the top, where the new posts are, and hides it.
+- tapOn:
+    id: "followingRestorePill"
+- extendedWaitUntil:
+    visible: "Newer post 5"
+    timeout: 30000
+- extendedWaitUntil:
+    notVisible:
+      id: "followingRestorePill"
+    timeout: 30000

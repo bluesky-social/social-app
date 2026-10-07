@@ -11,6 +11,36 @@ createHTTPServer(async (req, res) => {
     return res.writeHead(200).end()
   }
   try {
+    /*
+     * The one request that doesn't reset the network: it adds posts by bob,
+     * whom alice follows, so a flow can make new posts mid-test. `newposts` is
+     * how many, and `text` what they say, numbered from 1.
+     */
+    if (url?.query && 'newposts' in url.query) {
+      if (!server) {
+        throw new Error('No network to add posts to')
+      }
+      const count = Number(url.query.newposts) || 1
+      const text =
+        typeof url.query.text === 'string' ? url.query.text : 'New post'
+      console.log(`Adding ${count} posts by bob`)
+      for (let i = 1; i <= count; i++) {
+        await server.mocker.createPost('bob', `${text} ${i}`)
+      }
+      // Index them in the appview before the flow carries on.
+      await server.mocker.testNet.processAll()
+      console.log('Ready')
+      return res
+        .writeHead(200, {
+          'content-type': 'application/json',
+        })
+        .end(
+          JSON.stringify({
+            pdsUrl: server.pdsUrl,
+            appviewDid: server.appviewDid,
+          }),
+        )
+    }
     console.log('Closing old server')
     await server?.close()
     console.log('Starting new server')
@@ -97,8 +127,7 @@ createHTTPServer(async (req, res) => {
         await server.mocker.follow('alice', 'bob')
         await server.mocker.follow('alice', 'carla')
         console.log('Generating mock posts')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let posts: Record<string, any[]> = {
+        let posts: Record<string, {uri: string; cid: string}[]> = {
           alice: [],
           bob: [],
           carla: [],
