@@ -4,6 +4,7 @@ import {Image} from 'expo-image'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
+import {CARD_ASPECT_RATIO} from '#/lib/constants'
 import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {useHaptics} from '#/lib/haptics'
 import {shareUrl} from '#/lib/sharing'
@@ -20,6 +21,7 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+import {useThumbAspectRatio} from '../useThumbAspectRatio'
 import {ExternalGif} from './ExternalGif'
 import {ExternalPlayer} from './ExternalPlayer'
 import {GifEmbed} from './Gif'
@@ -43,6 +45,7 @@ export const ExternalEmbed = ({
   const externalEmbedPrefs = useExternalEmbedsPrefs()
   const niceUrl = toNiceDomain(link.uri)
   const imageUri = link.thumb
+  const thumbAspectRatio = useThumbAspectRatio(imageUri, CARD_ASPECT_RATIO)
   const embedPlayerParams = useMemo(() => {
     const params = parseEmbedPlayerFromUrl(link.uri)
     if (!params) return
@@ -111,7 +114,7 @@ export const ExternalEmbed = ({
           ]}>
           {imageUri && !embedPlayerParams ? (
             <Image
-              style={[a.aspect_card]}
+              style={[{aspectRatio: thumbAspectRatio}]}
               source={{uri: imageUri}}
               accessibilityIgnoresInvertColors
               loading="lazy"

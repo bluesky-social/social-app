@@ -178,7 +178,7 @@ msgstr ""
 
 #. How long it takes to read an article, in minutes. Displayed in a short form, e.g. "5m" for 5 minutes.
 #. placeholder {0}: view.readingTime
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:250
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:253
 msgid "{0, plural, one {#m} other {#m}}"
 msgstr "{0, plural, one {#m} other {#m}}"
 
@@ -8923,8 +8923,8 @@ msgstr "Open group chat settings"
 msgid "Open in Google Translate"
 msgstr "Open in Google Translate"
 
-#: src/components/Post/Embed/ExternalEmbed/index.tsx:90
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:146
+#: src/components/Post/Embed/ExternalEmbed/index.tsx:93
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:149
 msgid "Open link to {niceUrl}"
 msgstr ""
 
@@ -12291,13 +12291,13 @@ msgid "Subscribe"
 msgstr ""
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:446
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:475
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:449
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:478
 msgid "Subscribe on {0}"
 msgstr "Subscribe on {0}"
 
 #. placeholder {0}: highlightedPublisher.name
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:474
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:477
 msgid "Subscribe to {publicationTitle} on {0}"
 msgstr "Subscribe to {publicationTitle} on {0}"
 
@@ -14299,8 +14299,8 @@ msgid "View"
 msgstr ""
 
 #. placeholder {0}: view.source.title
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:339
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:669
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:342
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:672
 msgid "View {0}"
 msgstr "View {0}"
 
@@ -14329,7 +14329,7 @@ msgstr "View {0}’s profile"
 msgid "View {displayName}’s profile"
 msgstr "View {displayName}’s profile"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:477
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:480
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
@@ -14403,10 +14403,10 @@ msgstr ""
 msgid "View profile banner"
 msgstr "View profile banner"
 
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:339
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:447
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:478
-#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:669
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:342
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:450
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:481
+#: src/components/Post/Embed/StandardSiteEmbed/index.tsx:672
 msgid "View publication"
 msgstr "View publication"
 
