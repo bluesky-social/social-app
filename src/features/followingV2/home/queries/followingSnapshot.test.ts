@@ -246,6 +246,27 @@ describe('selectFollowingSnapshot', () => {
     ).toEqual(['start-new', 'gap'])
   })
 
+  it('keeps a gapped since page alone once its gap is filled', () => {
+    const gapped = sincePage('new', 'start', {cursor: 'gap'})
+    const filled = stacked([
+      gapped,
+      {
+        cursor: 'c-gap',
+        startCursor: 'start-gap',
+        feed: [item('gap')],
+        fetchedAt: NOW,
+      },
+    ])
+
+    const snapshot = selectFollowingSnapshot(filled)
+
+    // Its cursor goes on into what filled the gap.
+    expect(cursors(snapshot)).toEqual(['gap'])
+    expect(readFollowingSnapshot(JSON.parse(JSON.stringify(snapshot)))).toEqual(
+      {pages: [gapped], pageParams: [undefined]},
+    )
+  })
+
   it('keeps since pages as they are while the pages below them are kept', () => {
     const data = stacked([sincePage('new', 'start'), ...following(2).pages])
 
