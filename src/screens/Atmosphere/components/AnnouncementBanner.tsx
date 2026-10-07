@@ -63,7 +63,7 @@ export function AnnouncementBanner({
         <Text
           emoji
           style={[a.text_xs, {color: banner.textColor}]}
-          numberOfLines={3}>
+          numberOfLines={4}>
           {banner.description}
         </Text>
       </Link>

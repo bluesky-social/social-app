@@ -3,6 +3,7 @@ import {View} from 'react-native'
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
 import {AnnouncementBanner} from './components/AnnouncementBanner'
+import {AtmosphereNux} from './components/AtmosphereNux'
 import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
@@ -30,8 +31,11 @@ export function AtmosphereExploreTab() {
       testID="atmosphereExploreTab"
       contentContainerStyle={[a.pb_xl]}>
       <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
+        <AtmosphereNux />
         <AnnouncementBanner banner={announcementBanner} />
-        <FeaturedArticles articles={articles} />
+        <View style={a.mt_md}>
+          <FeaturedArticles articles={articles} />
+        </View>
         <FeaturedLivestreams livestreams={livestreams} />
         <FeaturedPhotos photos={photos} />
         <FeaturedApps apps={apps} />
