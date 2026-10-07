@@ -483,7 +483,8 @@ let PostFeed = ({
     topFetchedAt: lastFetchedAt,
     isEmpty,
     isActive: isAnchored && isActive,
-    isBusy: isRefreshing,
+    // A refetch from the top is about to show what a check would find.
+    isBusy: isRefreshing || (isFetching && !isFetchingNextPage),
     interval: disablePoll ? undefined : pollInterval,
     check: async trigger => {
       const prepending =

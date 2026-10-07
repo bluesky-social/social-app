@@ -943,7 +943,8 @@ describe('usePostFeedPrepend', () => {
           topFetchedAt,
           isEmpty: false,
           isActive,
-          isBusy: isRefreshing,
+          isBusy:
+            isRefreshing || (query.isFetching && !query.isFetchingNextPage),
           check: async trigger => {
             const prepending =
               trigger === 'return' || prepend.isOwed()
