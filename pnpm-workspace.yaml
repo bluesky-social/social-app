@@ -42,6 +42,8 @@ patchedDependencies:
   expo-notifications@57.0.20: patches/expo-notifications@57.0.20.patch
   expo-updates@57.0.23: patches/expo-updates@57.0.23.patch
   expo@57.0.24: patches/expo@57.0.24.patch
+  'metro-runtime@0.84.5': patches/metro-runtime@0.84.5.patch
+  'metro@0.84.5': patches/metro@0.84.5.patch
   'react-native-keyboard-controller@1.21.9': patches/react-native-keyboard-controller@1.21.9.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
   'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
