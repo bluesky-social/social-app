@@ -1,17 +1,8 @@
 import {useRef, useState} from 'react'
-import {Dimensions} from 'react-native'
 
 import {type NewPostsPillAuthor} from '#/components/NewPostsPill'
 import {type FeedPostSlice} from './queries/postFeed'
 import {SETTLE_AT_TOP_LIMIT} from './useSettleAtTop'
-
-/**
- * How far below the top, in screen heights, a press of the pill still scrolls
- * up with an animation. From further down it jumps, as animating that far
- * renders every row on the way. Provisional, to be measured on device
- * (APP-3159).
- */
-export const PILL_ANIMATED_REVEAL_SCREENS = 2
 
 /** How many faces the pill shows. */
 const FACE_LIMIT = 3
@@ -159,9 +150,7 @@ export function liveRestoreOffer(
  * - The list reaches its top, by any means, including the scroll a press of
  *   the pill makes. A press alone doesn't hide it.
  *
- * Pressing it scrolls to the top without fetching, with an animation from no
- * further than {@link PILL_ANIMATED_REVEAL_SCREENS} down and without one from
- * further.
+ * Pressing it scrolls up to the top, without fetching.
  */
 export function useRestorePill({
   enabled,
@@ -188,7 +177,7 @@ export function useRestorePill({
   /** The list's scroll offset. */
   offsetY: {get(): number}
   /** Scrolls the list to its true top. */
-  scrollToTop: (animated: boolean) => void
+  scrollToTop: () => void
 }) {
   const [offer, setOffer] = useState<RestoreOffer>()
   const [isDone, setIsDone] = useState(false)
@@ -222,15 +211,11 @@ export function useRestorePill({
     count: offer?.count ?? 0,
     authors: live?.authors ?? [],
     onPress: () => {
-      const offset = offsetY.get()
       // Already at the top, there's no scroll to report reaching it.
-      if (offset <= SETTLE_AT_TOP_LIMIT) {
+      if (offsetY.get() <= SETTLE_AT_TOP_LIMIT) {
         setIsDone(true)
       }
-      scrollToTop(
-        offset <=
-          Dimensions.get('window').height * PILL_ANIMATED_REVEAL_SCREENS,
-      )
+      scrollToTop()
     },
     onBeginDrag: () => {
       if (offer) {
