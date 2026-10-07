@@ -42,6 +42,16 @@ export type AtmosphereAppCardData = {
   href: string
 }
 
+export type AtmosphereAnnouncementBannerData = {
+  id: string
+  title: string
+  description: string
+  image: string
+  overlayColor: string
+  textColor: string
+  href: string
+}
+
 export type AtmospherePhotoCardData = {
   id: string
   href: string
@@ -89,6 +99,15 @@ export function getAtmosphereApps(
     textColor: app.textColor,
     href: app.url,
   }))
+}
+
+export function getAtmosphereAnnouncementBanner(
+  data: AtmosphereData = atmosphereData,
+): AtmosphereAnnouncementBannerData {
+  const {id, title, description, image, overlayColor, textColor, url} =
+    data.announcementBanner
+
+  return {id, title, description, image, overlayColor, textColor, href: url}
 }
 
 export function getAtmosphereLivestreams(
