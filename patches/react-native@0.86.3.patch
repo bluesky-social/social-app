@@ -349,10 +349,21 @@ index c0e56acd2a0f1015f5a4581909e9209a56c46166..06184e0a095decd1559f8888d1d67d62
  {
    [_backedTextInputView removeFromSuperview];
 diff --git a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
-index b033b7c71914d287470b7b86bd6bf39d311294ba..7e10dc929147fa4474ca9f955f5cd85d27aea935 100644
+index b033b7c71914d287470b7b86bd6bf39d311294ba..3fd0959c47ce049d2e794f248003be8b910903a4 100644
 --- a/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/View/RCTViewComponentView.mm
-@@ -827,9 +827,17 @@ static void RCTAddContourEffectToLayer(
+@@ -289,7 +289,9 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+ 
+   // Disable `removeClippedSubviews` when Fabric View Culling is enabled.
+   if (!ReactNativeFeatureFlags::enableViewCulling()) {
+-    if (oldViewProps.removeClippedSubviews != newViewProps.removeClippedSubviews) {
++    // Compare against the current state, not `_props`: `prepareForRecycle` resets
++    // `_removeClippedSubviews` but keeps `_props`.
++    if (_removeClippedSubviews != newViewProps.removeClippedSubviews) {
+       _removeClippedSubviews = newViewProps.removeClippedSubviews;
+       [self _updateRemoveClippedSubviewsState];
+     }
+@@ -827,9 +829,17 @@ static void RCTAddContourEffectToLayer(
    } else {
      CGSize imageSize = image.size;
      UIEdgeInsets imageCapInsets = image.capInsets;
