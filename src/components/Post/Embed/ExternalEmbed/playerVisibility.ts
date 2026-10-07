@@ -18,6 +18,10 @@ const WIDTH_OVERFLOW_TOLERANCE = 1
  * Decide whether the player is on screen, given a measurement of the player
  * and the window box to compare it against. Both must describe the same
  * layout; when they demonstrably do not, the answer is `indeterminate`.
+ *
+ * Only a player wider than the window is detected as a mismatch, which covers
+ * portrait to landscape. The reverse (landscape to portrait) cannot be told
+ * apart from a narrow player, so it is not caught.
  */
 export function getPlayerVisibility({
   player,
@@ -29,6 +33,20 @@ export function getPlayerVisibility({
   insets: {top: number; bottom: number}
 }): PlayerVisibility {
   'worklet'
+
+  const measurements = [
+    player.top,
+    player.height,
+    player.width,
+    window.width,
+    window.height,
+    insets.top,
+    insets.bottom,
+  ]
+  // NaN compares false either way, which would read as `hidden`.
+  if (!measurements.every(Number.isFinite)) {
+    return 'indeterminate'
+  }
 
   /*
    * On rotation the native view tree re-lays out for the new orientation
