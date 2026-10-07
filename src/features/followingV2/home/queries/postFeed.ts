@@ -134,7 +134,7 @@ export interface FeedPageUnselected {
   startCursor?: string
   /**
    * The `since` the page was requested with, on a page put above the others
-   * (see {@link usePostFeedRestorePrepend}). The server echoes it as the cursor
+   * (see {@link usePostFeedPrepend}). The server echoes it as the cursor
    * when the range it bounds is exhausted, so the page sits right on the one
    * below. Any other cursor leaves a gap between them (see {@link gapBelow}).
    */
@@ -547,7 +547,7 @@ export const PROCESS_STARTED_AT = Date.now()
  * How many posts a restore prepend asks for: the most `getTimeline` allows, as
  * a range with more than this in it leaves a gap.
  */
-const RESTORE_PREPEND_LIMIT = 100
+const PREPEND_LIMIT = 100
 
 /**
  * Puts what is newer than a top page restored from disk above it, with one
@@ -573,7 +573,7 @@ const RESTORE_PREPEND_LIMIT = 100
  * The write gives way to anything that has replaced the top page meanwhile,
  * and keeps any page loaded below it.
  */
-export function usePostFeedRestorePrepend(
+export function usePostFeedPrepend(
   feedDesc: FeedDescriptor,
   params: FeedParams | undefined,
   {
@@ -623,7 +623,7 @@ export function usePostFeedRestorePrepend(
     try {
       const page = await fetchPage(undefined, {
         since,
-        limit: RESTORE_PREPEND_LIMIT,
+        limit: PREPEND_LIMIT,
       })
       /*
        * A bounded range always comes back with a cursor, the echo of `since`
@@ -674,7 +674,7 @@ export function usePostFeedRestorePrepend(
  * What lies between the feed's page at `index` and the page below it:
  *
  * - `open`: the page was put above the others with `since` (see
- *   {@link usePostFeedRestorePrepend}) and its range wasn't exhausted, so
+ *   {@link usePostFeedPrepend}) and its range wasn't exhausted, so
  *   some of the posts between its cursor and the page below are missing. The
  *   page below is still the one its `since` came from: it starts at that
  *   `startCursor`.

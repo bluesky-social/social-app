@@ -78,6 +78,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {GapRow} from './GapRow'
 import {mixSamples} from './mixSamples'
+import {PrependPill} from './PrependPill'
 import {
   type AuthorFilter,
   type FeedDescriptor,
@@ -89,15 +90,14 @@ import {
   RQKEY,
   usePostFeedFetcher,
   usePostFeedGapFill,
+  usePostFeedPrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
-  usePostFeedRestorePrepend,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
-import {RestorePill} from './RestorePill'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
 import {useListRest} from './useListRest'
-import {useRestorePill} from './useRestorePill'
+import {usePrependPill} from './usePrependPill'
 import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
@@ -390,7 +390,7 @@ let PostFeed = ({
     useAnchorCorrectionScrollHandlers(isAnchored),
     isAnchored,
   )
-  const restore = usePostFeedRestorePrepend(feed, feedParams, {
+  const prepend = usePostFeedPrepend(feed, feedParams, {
     enabled: isAnchored && enabled !== false,
     topFetchedAt: lastFetchedAt,
     listAtRest: listRest.atRest,
@@ -442,7 +442,7 @@ let PostFeed = ({
       isFetching ||
       isRefreshing ||
       // A restored top is checked by fetching what's newer, still to come.
-      (isAnchored && restore.isOwed()) ||
+      (isAnchored && prepend.isOwed()) ||
       !onHasNew ||
       !enabled ||
       disablePoll
@@ -913,10 +913,10 @@ let PostFeed = ({
     trendingIndices,
   ])
 
-  const restorePill = useRestorePill({
+  const pill = usePrependPill({
     enabled: isAnchored,
     isActive,
-    prependedAt: restore.prependedAt,
+    prependedAt: prepend.prependedAt,
     rows: feedItems,
     // Without samples, which the pill never offers.
     pages: feedData?.pages,
@@ -928,7 +928,7 @@ let PostFeed = ({
       })
     },
   })
-  const onRestorePillItemSeen = useNonReactiveCallback(restorePill.onItemSeen)
+  const onPillItemSeen = useNonReactiveCallback(pill.onItemSeen)
   /**
    * The list's scroll handlers. Settling and the pill judge the offset as the
    * list reports it, as they have to know where the list really is. The Home
@@ -942,9 +942,9 @@ let PostFeed = ({
           ...settleAtTop,
           onBeginDrag: () => {
             settleAtTop.onBeginDrag()
-            restorePill.onBeginDrag()
+            pill.onBeginDrag()
           },
-          onReachTop: restorePill.onReachTop,
+          onReachTop: pill.onReachTop,
         }
       : undefined,
     listOffsetY,
@@ -1245,7 +1245,7 @@ let PostFeed = ({
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
-      onRestorePillItemSeen(item)
+      onPillItemSeen(item)
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
@@ -1366,14 +1366,7 @@ let PostFeed = ({
         }
       }
     },
-    [
-      feedFeedback,
-      onRestorePillItemSeen,
-      feed,
-      liveNowConfig,
-      getPostPosition,
-      ax,
-    ],
+    [feedFeedback, onPillItemSeen, feed, liveNowConfig, getPostPosition, ax],
   )
 
   return (
@@ -1414,11 +1407,11 @@ let PostFeed = ({
         />
       </ScrollProvider>
       {isAnchored && (
-        <RestorePill
-          visible={restorePill.visible}
-          count={restorePill.count}
-          authors={restorePill.authors}
-          onPress={restorePill.onPress}
+        <PrependPill
+          visible={pill.visible}
+          count={pill.count}
+          authors={pill.authors}
+          onPress={pill.onPress}
         />
       )}
     </View>

@@ -24,9 +24,9 @@ type Page = {
  * What the pill offers: the posts a restore prepend put above the restored
  * top, as they first rendered. It's a snapshot, so its count stays as it was
  * however the rows change, while its faces only ever drop out (see
- * {@link liveRestoreOffer}).
+ * {@link livePrependOffer}).
  */
-export type RestoreOffer = {
+export type PrependOffer = {
   /**
    * The `fetchedAt` of the page the prepend put on top. The offer lasts while
    * it's still the top page, so a refresh, or anything else that replaces it,
@@ -71,10 +71,10 @@ function faceOf(slice: FeedPostSlice): NewPostsPillAuthor | undefined {
  * samples, as `page` is the page without them, nor the gap row below it.
  * `undefined` when none of the page's posts render.
  */
-export function getRestoreOffer(
+export function getPrependOffer(
   rows: readonly Row[],
   page: Page,
-): RestoreOffer | undefined {
+): PrependOffer | undefined {
   const slices = new Set(page.slices)
   const counted = new Set<FeedPostSlice>()
   const keys: string[] = []
@@ -109,8 +109,8 @@ export function getRestoreOffer(
  * posts still render with an avatar that's safe to show, as a deletion, a mute
  * or a block can take a post away and a label can make an avatar unsafe.
  */
-export function liveRestoreOffer(
-  offer: RestoreOffer,
+export function livePrependOffer(
+  offer: PrependOffer,
   rows: readonly Row[],
 ): {topKey: string | undefined; authors: NewPostsPillAuthor[]} {
   const keys = new Set(offer.keys)
@@ -134,9 +134,9 @@ export function liveRestoreOffer(
 
 /**
  * The new posts pill for a view's restore prepend (see
- * `usePostFeedRestorePrepend`). Once the posts the prepend put above the
+ * `usePostFeedPrepend`). Once the posts the prepend put above the
  * restored top render, it takes a snapshot of them as its offer (see
- * {@link getRestoreOffer}). There's at most one, as the prepend runs once per
+ * {@link getPrependOffer}). There's at most one, as the prepend runs once per
  * view.
  *
  * The pill shows while the view is active, the offer's page is still on top
@@ -152,7 +152,7 @@ export function liveRestoreOffer(
  *
  * Pressing it scrolls up to the top, without fetching.
  */
-export function useRestorePill({
+export function usePrependPill({
   enabled,
   isActive,
   prependedAt,
@@ -179,7 +179,7 @@ export function useRestorePill({
   /** Scrolls the list to its true top. */
   scrollToTop: () => void
 }) {
-  const [offer, setOffer] = useState<RestoreOffer>()
+  const [offer, setOffer] = useState<PrependOffer>()
   const [isDone, setIsDone] = useState(false)
   /** Whether the reader has dragged the list since the offer was made. */
   const hasDragged = useRef(false)
@@ -193,7 +193,7 @@ export function useRestorePill({
     prependedAt !== undefined &&
     top?.fetchedAt === prependedAt
   ) {
-    const next = getRestoreOffer(rows, top)
+    const next = getPrependOffer(rows, top)
     if (next) {
       setOffer(next)
     } else {
@@ -203,7 +203,7 @@ export function useRestorePill({
 
   const live =
     offer && top?.fetchedAt === offer.topFetchedAt
-      ? liveRestoreOffer(offer, rows)
+      ? livePrependOffer(offer, rows)
       : undefined
 
   return {

@@ -3,10 +3,10 @@ import {act, renderHook} from '@testing-library/react-native'
 import {newPostsPillPresentation} from '#/components/NewPostsPill/presentation'
 import {type FeedPostSlice} from './queries/postFeed'
 import {
-  getRestoreOffer,
-  liveRestoreOffer,
-  useRestorePill,
-} from './useRestorePill'
+  getPrependOffer,
+  livePrependOffer,
+  usePrependPill,
+} from './usePrependPill'
 
 // Only its constant: its hooks need queries this doesn't set up.
 jest.mock('./useSettleAtTop', () => ({SETTLE_AT_TOP_LIMIT: 5}))
@@ -81,11 +81,11 @@ function page(fetchedAt: number, slices: FeedPostSlice[]) {
   return {fetchedAt, slices}
 }
 
-describe('getRestoreOffer', () => {
+describe('getPrependOffer', () => {
   it('offers the posts from the page the prepend put on top', () => {
     const fresh = [slice('a'), slice('b')]
     const restored = [slice('old')]
-    const offer = getRestoreOffer(
+    const offer = getPrependOffer(
       rowsOf([...fresh, ...restored]),
       page(PREPENDED_AT, fresh),
     )
@@ -103,7 +103,7 @@ describe('getRestoreOffer', () => {
 
   it('counts a reply once, with its thread context', () => {
     const reply = slice('reply', {context: 2})
-    const offer = getRestoreOffer(rowsOf([reply]), page(PREPENDED_AT, [reply]))
+    const offer = getPrependOffer(rowsOf([reply]), page(PREPENDED_AT, [reply]))
 
     expect(offer?.count).toBe(1)
     expect(offer?.keys).toEqual([
@@ -124,7 +124,7 @@ describe('getRestoreOffer', () => {
       ...rowsOf([slice('old')]),
     ]
     // The page is the one without samples, as PostFeed has it.
-    const offer = getRestoreOffer(rows, page(PREPENDED_AT, fresh))
+    const offer = getPrependOffer(rows, page(PREPENDED_AT, fresh))
 
     expect(offer?.count).toBe(2)
     expect(offer?.keys).toEqual(['slice-a-0', 'slice-b-0'])
@@ -137,7 +137,7 @@ describe('getRestoreOffer', () => {
   it('offers nothing when none of the page renders', () => {
     const fresh = [slice('muted')]
     expect(
-      getRestoreOffer(rowsOf([slice('old')]), page(PREPENDED_AT, fresh)),
+      getPrependOffer(rowsOf([slice('old')]), page(PREPENDED_AT, fresh)),
     ).toBeUndefined()
   })
 
@@ -152,7 +152,7 @@ describe('getRestoreOffer', () => {
       slice('c'),
       slice('d'),
     ]
-    const offer = getRestoreOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))
+    const offer = getPrependOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))
 
     expect(offer?.count).toBe(8)
     expect(offer?.authors.map(author => author.did)).toEqual([
@@ -164,7 +164,7 @@ describe('getRestoreOffer', () => {
 
   it('makes a facepile from four posts with a face to show', () => {
     const presentation = (slices: FeedPostSlice[]) => {
-      const offer = getRestoreOffer(rowsOf(slices), page(PREPENDED_AT, slices))!
+      const offer = getPrependOffer(rowsOf(slices), page(PREPENDED_AT, slices))!
       return newPostsPillPresentation({
         variant: 'newPosts',
         count: offer.count,
@@ -182,18 +182,18 @@ describe('getRestoreOffer', () => {
   })
 })
 
-describe('liveRestoreOffer', () => {
+describe('livePrependOffer', () => {
   const fresh = [slice('a'), slice('b'), slice('c')]
-  const offer = getRestoreOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))!
+  const offer = getPrependOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))!
 
   it('follows the rows that still render', () => {
-    expect(liveRestoreOffer(offer, rowsOf(fresh))).toEqual({
+    expect(livePrependOffer(offer, rowsOf(fresh))).toEqual({
       topKey: 'slice-a-0',
       authors: offer.authors,
     })
 
     // A or its author muted, and a label on C's avatar.
-    const now = liveRestoreOffer(
+    const now = livePrependOffer(
       offer,
       rowsOf([fresh[1], slice('c', {blur: true})]),
     )
@@ -202,13 +202,13 @@ describe('liveRestoreOffer', () => {
   })
 
   it('has no top once none of them render', () => {
-    expect(liveRestoreOffer(offer, rowsOf([slice('old')])).topKey).toBe(
+    expect(livePrependOffer(offer, rowsOf([slice('old')])).topKey).toBe(
       undefined,
     )
   })
 })
 
-describe('useRestorePill', () => {
+describe('usePrependPill', () => {
   const fresh = [slice('a'), slice('b'), slice('c'), slice('d')]
   const old = [slice('old')]
   const restoredPages = [page(RESTORED_AT, old)]
@@ -231,7 +231,7 @@ describe('useRestorePill', () => {
         prependedAt,
         pages = restoredPages,
       }: Props) =>
-        useRestorePill({
+        usePrependPill({
           enabled,
           isActive,
           prependedAt,

@@ -53,9 +53,9 @@ import {
   RQKEY,
   usePostFeedFetcher,
   usePostFeedGapFill,
+  usePostFeedPrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
-  usePostFeedRestorePrepend,
   usePostFeedSettle,
 } from './postFeed'
 
@@ -867,7 +867,7 @@ describe('usePostFeedRefresh', () => {
   })
 })
 
-describe('usePostFeedRestorePrepend', () => {
+describe('usePostFeedPrepend', () => {
   const KEY = RQKEY('following')
   const SINCE_REQUEST = 'timeline since:start:1 limit:100'
   /** A scroll event, whose contents the list's rest tracking doesn't read. */
@@ -912,7 +912,7 @@ describe('usePostFeedRestorePrepend', () => {
           query,
           listRest,
           refresh: usePostFeedRefresh('following').refresh,
-          restore: usePostFeedRestorePrepend('following', undefined, {
+          prepend: usePostFeedPrepend('following', undefined, {
             enabled,
             topFetchedAt: query.data?.pages[0]?.fetchedAt,
             listAtRest: listRest.atRest,
@@ -984,14 +984,14 @@ describe('usePostFeedRestorePrepend', () => {
       await flushNotifications()
 
       expect(requested()).toEqual([])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
 
     it('once, whatever it finds', async () => {
       newer([])
       const {hook, cached} = renderView({enabled: false})
       const before = cached()
-      expect(hook.result.current.restore.isOwed()).toBe(true)
+      expect(hook.result.current.prepend.isOwed()).toBe(true)
       hook.rerender({enabled: true})
       await flushNotifications()
 
@@ -1001,7 +1001,7 @@ describe('usePostFeedRestorePrepend', () => {
 
       expect(requested()).toEqual([SINCE_REQUEST])
       expect(cached()).toBe(before)
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
 
     it('not once a refresh has replaced the restored top', async () => {
@@ -1013,7 +1013,7 @@ describe('usePostFeedRestorePrepend', () => {
       await flushNotifications()
 
       expect(requested()).toEqual([])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
   })
 
@@ -1026,7 +1026,7 @@ describe('usePostFeedRestorePrepend', () => {
       expect(requested()).toEqual([SINCE_REQUEST])
       expect(writes).toHaveLength(0)
       // Checks for new posts still wait for it.
-      expect(hook.result.current.restore.isOwed()).toBe(true)
+      expect(hook.result.current.prepend.isOwed()).toBe(true)
 
       list.layOut()
       await waitFor(() => expect(writes).toHaveLength(1))
@@ -1036,7 +1036,7 @@ describe('usePostFeedRestorePrepend', () => {
         ['timeline-1'],
         ['timeline-2'],
       ])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
 
     it('until the list has gone without a scroll event for a while', async () => {
@@ -1073,7 +1073,7 @@ describe('usePostFeedRestorePrepend', () => {
       // A finger held still sends no scroll events, but it's still a drag.
       await wait(10e3)
       expect(postsOf(cached())).toEqual([['timeline-1'], ['timeline-2']])
-      expect(hook.result.current.restore.isOwed()).toBe(true)
+      expect(hook.result.current.prepend.isOwed()).toBe(true)
 
       // A fling: the list scrolls on by itself after the finger lifts.
       list.endDrag()
@@ -1092,7 +1092,7 @@ describe('usePostFeedRestorePrepend', () => {
         ['timeline-1'],
         ['timeline-2'],
       ])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
   })
 
@@ -1106,8 +1106,8 @@ describe('usePostFeedRestorePrepend', () => {
 
     expect(writes).toHaveLength(0)
     expect(cached()).toBe(before)
-    expect(hook.result.current.restore.isOwed()).toBe(false)
-    expect(hook.result.current.restore.prependedAt).toBeUndefined()
+    expect(hook.result.current.prepend.isOwed()).toBe(false)
+    expect(hook.result.current.prepend.prependedAt).toBeUndefined()
   })
 
   it('puts a contiguous page on top, which the page below continues from', async () => {
@@ -1124,7 +1124,7 @@ describe('usePostFeedRestorePrepend', () => {
       since: 'start:1',
     })
     // The view knows which page it put on top, for the pill to offer.
-    expect(hook.result.current.restore.prependedAt).toBe(
+    expect(hook.result.current.prepend.prependedAt).toBe(
       cached().pages[0].fetchedAt,
     )
     expect(cached().pageParams).toEqual([
@@ -1205,7 +1205,7 @@ describe('usePostFeedRestorePrepend', () => {
       await flushNotifications()
       expect(offline.cached()).toBe(before)
       expect(offline.hook.result.current.query.isError).toBe(false)
-      expect(offline.hook.result.current.restore.isOwed()).toBe(false)
+      expect(offline.hook.result.current.prepend.isOwed()).toBe(false)
       expect(logError).not.toHaveBeenCalled()
 
       failNextRequest(new Error('Unexpected'))
@@ -1235,7 +1235,7 @@ describe('usePostFeedRestorePrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.restore.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
     })
 
     it('while it holds what it found', async () => {
@@ -1256,8 +1256,8 @@ describe('usePostFeedRestorePrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
-      expect(hook.result.current.restore.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
     })
   })
 
