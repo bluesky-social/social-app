@@ -46,6 +46,7 @@ export type AtmosphereLivestreamCardData = {
   href: string
   title: string
   active: boolean
+  activeCount?: number
   image?: string
   authorProfile: app.bsky.actor.defs.ProfileViewBasic
 }

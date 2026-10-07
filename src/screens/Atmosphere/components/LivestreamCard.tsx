@@ -1,6 +1,7 @@
 import {View} from 'react-native'
 import {Image} from 'expo-image'
 import {moderateProfile} from '@bsky/sdk/moderation'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
@@ -43,8 +44,15 @@ export function LivestreamCard({
           to={livestream.href}
           label={
             livestream.active
-              ? // TODO Placeholder value. -dsb
-                l`Open livestream: ${livestream.title}, live with 5 viewers`
+              ? livestream.activeCount
+                ? l`Open livestream: ${livestream.title}, live with ${plural(
+                    livestream.title,
+                    {
+                      one: '# viewer',
+                      other: '# viewers',
+                    },
+                  )}`
+                : l`Open livestream: ${livestream.title}, live`
               : l`Open livestream: ${livestream.title}`
           }
           accessibilityHint=""
@@ -128,23 +136,26 @@ export function LivestreamCard({
                     <Trans>Live</Trans>
                   </Text>
                 </View>
-                <View
-                  style={[
-                    a.flex_row,
-                    a.align_center,
-                    a.gap_2xs,
-                    a.px_xs,
-                    a.py_2xs,
-                    {
-                      borderRadius: 5,
-                      backgroundColor: 'rgba(0, 0, 0, 0.75)',
-                    },
-                  ]}>
-                  <EyeIcon size="xs" fill="white" />
-                  <Text style={[a.text_xs, a.font_semi_bold, {color: 'white'}]}>
-                    {/* TODO Placeholder value. -dsb */}5
-                  </Text>
-                </View>
+                {livestream.activeCount ? (
+                  <View
+                    style={[
+                      a.flex_row,
+                      a.align_center,
+                      a.gap_2xs,
+                      a.px_xs,
+                      a.py_2xs,
+                      {
+                        borderRadius: 5,
+                        backgroundColor: 'rgba(0, 0, 0, 0.75)',
+                      },
+                    ]}>
+                    <EyeIcon size="xs" fill="white" />
+                    <Text
+                      style={[a.text_xs, a.font_semi_bold, {color: 'white'}]}>
+                      {livestream.activeCount}
+                    </Text>
+                  </View>
+                ) : undefined}
               </View>
             ) : undefined}
           </View>
