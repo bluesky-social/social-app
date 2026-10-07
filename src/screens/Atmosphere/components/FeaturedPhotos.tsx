@@ -33,6 +33,7 @@ export function FeaturedPhotos({photos}: {photos: AtmospherePhotoCardData[]}) {
             {
               paddingLeft: tokens.space.lg,
               paddingRight: tokens.space.lg,
+              paddingBottom: tokens.space.md,
             },
           ]}>
           {photos.map(photo => (
