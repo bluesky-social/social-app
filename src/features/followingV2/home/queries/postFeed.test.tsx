@@ -19,6 +19,7 @@ import {
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
 import {app} from '#/lexicons'
+import {isFollowingSnapshotQuery} from './followingSnapshot'
 import {
   type FeedDescriptor,
   type FeedPageUnselected,
@@ -248,6 +249,16 @@ describe('post-feed query data', () => {
       )
     },
   )
+
+  it('keeps the startCursor of a Following page', async () => {
+    mockClient.call.mockImplementationOnce(() => ({
+      cursor: 'timeline:1',
+      startCursor: 'start',
+      feed: [feedItem('timeline-1')],
+    }))
+    const {data} = await renderFeed('following')
+    expect(data().pages[0].startCursor).toBe('start')
+  })
 
   it('round-trips Home after its Discover fallback and continues in Discover', async () => {
     setDev(false)
@@ -736,6 +747,21 @@ describe('RQKEY', () => {
 
   afterEach(() => {
     jest.useRealTimers()
+  })
+
+  it('is the key the Following snapshot is persisted under', () => {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(RQKEY('following'), feedData())
+    queryClient.setQueryData(LEGACY_RQKEY('following'), feedData())
+    queryClient.setQueryData(RQKEY(custom), feedData())
+
+    expect(
+      queryClient
+        .getQueryCache()
+        .getAll()
+        .filter(isFollowingSnapshotQuery)
+        .map(query => query.queryKey),
+    ).toEqual([RQKEY('following')])
   })
 
   it('never shares an entry with the legacy key', () => {
