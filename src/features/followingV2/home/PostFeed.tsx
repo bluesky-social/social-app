@@ -95,6 +95,8 @@ import {
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
 import {useListRest} from './useListRest'
+import {useSettleAtTop} from './useSettleAtTop'
+import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
 type FeedRow =
   | {
@@ -385,6 +387,19 @@ let PostFeed = ({
     listAtRest: listRest.atRest,
   })
   const fillGap = usePostFeedGapFill(feed, feedParams)
+  const settleAtTop = useSettleAtTop(feed, feedParams, {
+    enabled: isAnchored && enabled !== false,
+  })
+  /**
+   * The list's scroll handlers. Settling judges the offset as the list reports
+   * it, as it has to know whether the list is really at the top. The Home
+   * header sees it with the corrections anchoring makes taken out, so they
+   * can't hide or show it.
+   */
+  const scrollHandlers = useSettleScrollHandlers(
+    listRest.scrollHandlers,
+    isAnchored ? settleAtTop : undefined,
+  )
 
   /**
    * The top page a refresh from this view wrote, to take the reader up to once
@@ -1317,7 +1332,7 @@ let PostFeed = ({
 
   return (
     <View testID={testID} style={style}>
-      <ScrollProvider {...listRest.scrollHandlers}>
+      <ScrollProvider {...scrollHandlers}>
         <List
           testID={testID ? `${testID}-flatlist` : undefined}
           ref={scrollElRef}
