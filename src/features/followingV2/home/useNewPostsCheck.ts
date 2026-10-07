@@ -66,9 +66,12 @@ export function useNewPostsCheck<T>({
   interval?: number
   /**
    * Resolves to what is newer than the top page, or a falsy value if nothing
-   * is. Rejects if it can't tell, which leaves the clock alone.
+   * is. Rejects if it can't tell, which leaves the clock alone. It's told what
+   * prompted it, for a surface that checks differently on a return.
    */
-  check: () => Promise<T | false | null | undefined>
+  check: (
+    trigger: NewPostsCheckTrigger,
+  ) => Promise<T | false | null | undefined>
   /** What a check found, unless a new top page has replaced the one checked. */
   onFound: (result: T, trigger: NewPostsCheckTrigger) => void
 }) {
@@ -111,7 +114,7 @@ export function useNewPostsCheck<T>({
     let result: T | false | null | undefined
     let outcome: LastCheck['outcome'] = 'failed'
     try {
-      result = await check()
+      result = await check(trigger)
       outcome = result ? 'found' : 'nothing'
     } catch (e) {
       if (!isNetworkError(e)) {
