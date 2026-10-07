@@ -123,7 +123,7 @@ function LinkFormInner({
    * is pressed, not on every keystroke.
    */
   const [error, setError] = useState<
-    'invalid' | 'blocked' | 'duplicate' | undefined
+    'invalid' | 'blocked' | 'shortener' | 'duplicate' | undefined
   >()
 
   const validation = validateLinkInput(input)
@@ -139,7 +139,14 @@ function LinkFormInner({
    */
   const autoTitle = useRef('')
   useEffect(() => {
-    if (!targetUrl || provider || validation.isBlocked) return
+    if (
+      !targetUrl ||
+      provider ||
+      validation.isBlocked ||
+      validation.isShortener
+    ) {
+      return
+    }
     let cancelled = false
     void getLinkMeta(targetUrl, 8e3).then(meta => {
       if (cancelled || meta.error) return
@@ -155,7 +162,7 @@ function LinkFormInner({
     return () => {
       cancelled = true
     }
-  }, [targetUrl, provider, validation.isBlocked])
+  }, [targetUrl, provider, validation.isBlocked, validation.isShortener])
 
   const nextTitle = title.trim() || undefined
   const isUnchanged =
@@ -173,6 +180,14 @@ function LinkFormInner({
       setError('blocked')
       ax.metric('profile:links:rejected', {
         reason: 'blocked',
+        domain: getLinkHost(targetUrl),
+      })
+      return
+    }
+    if (validation.isShortener) {
+      setError('shortener')
+      ax.metric('profile:links:rejected', {
+        reason: 'shortener',
         domain: getLinkHost(targetUrl),
       })
       return
@@ -215,11 +230,13 @@ function LinkFormInner({
       ? l`That doesn’t look like a link. Try something like yoursite.com.`
       : error === 'blocked'
         ? l`Links to this site can’t be added right now.`
-        : error === 'duplicate'
-          ? l`You’ve already added this link.`
-          : reachability === 'unreachable'
-            ? l`We couldn’t reach this link. Check it, or save anyway.`
-            : undefined
+        : error === 'shortener'
+          ? l`Short links can’t be added. Use the full link instead.`
+          : error === 'duplicate'
+            ? l`You’ve already added this link.`
+            : reachability === 'unreachable'
+              ? l`We couldn’t reach this link. Check it, or save anyway.`
+              : undefined
 
   // the close button sits as far from the top as the content is from the sides
   const closeInset = IS_LIQUID_GLASS ? tokens.space._2xl : tokens.space.xl
