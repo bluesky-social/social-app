@@ -921,8 +921,11 @@ let PostFeed = ({
     // Without samples, which the pill never offers.
     pages: feedData?.pages,
     offsetY: listOffsetY,
-    scrollToTop: animated => {
-      scrollElRef?.current?.scrollToOffset({animated, offset: -headerOffset})
+    scrollToTop: () => {
+      scrollElRef?.current?.scrollToOffset({
+        animated: true,
+        offset: -headerOffset,
+      })
     },
   })
   const onRestorePillItemSeen = useNonReactiveCallback(restorePill.onItemSeen)

@@ -1,4 +1,3 @@
-import {Dimensions} from 'react-native'
 import {act, renderHook} from '@testing-library/react-native'
 
 import {newPostsPillPresentation} from '#/components/NewPostsPill/presentation'
@@ -6,7 +5,6 @@ import {type FeedPostSlice} from './queries/postFeed'
 import {
   getRestoreOffer,
   liveRestoreOffer,
-  PILL_ANIMATED_REVEAL_SCREENS,
   useRestorePill,
 } from './useRestorePill'
 
@@ -382,30 +380,18 @@ describe('useRestorePill', () => {
   })
 
   describe('pressed', () => {
-    const screen = Dimensions.get('window').height
-
-    it('scrolls up to the top with an animation from near it, which hides it', () => {
+    it('scrolls up to the top, which hides it', () => {
       const {hook, offsetY, scrollToTop, prepend} = renderPill()
       prepend()
-      offsetY.value = screen * PILL_ANIMATED_REVEAL_SCREENS
+      offsetY.value = 10_000
 
       act(() => hook.result.current.onPress())
 
-      expect(scrollToTop).toHaveBeenCalledWith(true)
+      expect(scrollToTop).toHaveBeenCalled()
       // The press alone doesn't, but the scroll reaching the top does.
       expect(hook.result.current.visible).toBe(true)
       act(() => hook.result.current.onReachTop())
       expect(hook.result.current.visible).toBe(false)
-    })
-
-    it('jumps to the top without an animation from far below it', () => {
-      const {hook, offsetY, scrollToTop, prepend} = renderPill()
-      prepend()
-      offsetY.value = screen * PILL_ANIMATED_REVEAL_SCREENS + 1
-
-      act(() => hook.result.current.onPress())
-
-      expect(scrollToTop).toHaveBeenCalledWith(false)
     })
 
     it('hides it already at the top, where no scroll reaches it', () => {
@@ -415,7 +401,7 @@ describe('useRestorePill', () => {
 
       act(() => hook.result.current.onPress())
 
-      expect(scrollToTop).toHaveBeenCalledWith(true)
+      expect(scrollToTop).toHaveBeenCalled()
       expect(hook.result.current.visible).toBe(false)
     })
   })
