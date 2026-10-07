@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt b/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
-index f83033b..bd9fe4c 100644
+index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287c24bf805 100644
 --- a/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
 +++ b/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
 @@ -10,6 +10,7 @@ import android.os.Environment
@@ -25,7 +25,7 @@ index f83033b..bd9fe4c 100644
  import org.json.JSONException
  import org.json.JSONObject
  import java.io.UnsupportedEncodingException
-@@ -138,12 +142,63 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -138,12 +142,71 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
          return RNCWebViewWrapper(context, webView)
      }
  
@@ -33,7 +33,7 @@ index f83033b..bd9fe4c 100644
 +     * Notifies JS that web content entered or left native fullscreen.
 +     *
 +     * While fullscreen the video view is reparented into the activity's root
-+     * view and the WebView itself is hidden, so anything on the JS side that
++     * view and the WebView (or its React root) is hidden, so anything on the JS side that
 +     * reasons about where the WebView sits in the layout is answering a
 +     * question that no longer means anything. This is the only authoritative
 +     * signal for that transition - a `fullscreenchange` listener injected into
@@ -49,9 +49,16 @@ index f83033b..bd9fe4c 100644
 +         * drop the event if there is nothing left to deliver it to.
 +         */
 +        val reactTag = RNCWebViewWrapper.getReactTagFromWebView(webView)
++        if (reactTag == -1) {
++            Log.d(TAG, "Fullscreen: WebView detached, dropping isFullscreen=$isFullscreen")
++            return
++        }
 +        val dispatcher =
 +            UIManagerHelper.getEventDispatcherForReactTag(webView.themedReactContext, reactTag)
-+                ?: return
++                ?: run {
++                    Log.d(TAG, "Fullscreen: no event dispatcher, dropping isFullscreen=$isFullscreen")
++                    return
++                }
 +        val event = Arguments.createMap()
 +        event.putBoolean("isFullscreen", isFullscreen)
 +        dispatcher.dispatchEvent(TopFullscreenChangeEvent(reactTag, event))
@@ -80,18 +87,24 @@ index f83033b..bd9fe4c 100644
          val activity = webView.themedReactContext.currentActivity
          if (mAllowsFullscreenVideo && activity != null) {
              val initialRequestedOrientation = activity.requestedOrientation
-+            /**
-+             * The React root, hidden for the duration of fullscreen. Retained so
-+             * it can be restored even though the view hierarchy may have moved
-+             * on by the time fullscreen ends.
++            /*
++             * The view hidden for the duration of fullscreen. Recorded on entry
++             * and restored as-is on exit: by then the WebView may already be
++             * detached (RNCWebView.destroy() calls onHideCustomView after an
++             * unmount), so the hierarchy cannot be re-derived to find it again.
 +             */
-+            var hiddenReactRoot: View? = null
++            var hiddenView: View? = null
              val webChromeClient: RNCWebChromeClient =
                  object : RNCWebChromeClient(webView) {
                      override fun getDefaultVideoPoster(): Bitmap? {
-@@ -178,10 +233,30 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
-                         if (rootView.rootView !== mWebView.rootView) {
-                             mWebView.rootView.visibility = View.GONE
+@@ -175,13 +238,33 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+                         rootView.addView(mVideoView, FULLSCREEN_LAYOUT_PARAMS)
+ 
+                         // Different root views, we are in a Modal
+-                        if (rootView.rootView !== mWebView.rootView) {
+-                            mWebView.rootView.visibility = View.GONE
++                        hiddenView = if (rootView.rootView !== mWebView.rootView) {
++                            mWebView.rootView
                          } else {
 -                            // Same view hierarchy (no Modal), just hide the WebView then
 -                            mWebView.visibility = View.GONE
@@ -107,54 +120,61 @@ index f83033b..bd9fe4c 100644
 +                             * video covers it. Virtualized lists rewindow against
 +                             * the new viewport and can unmount the row holding this
 +                             * WebView, destroying it mid-playback.
++                             *
++                             * Falls back to hiding only the WebView if the React
++                             * root cannot be found, which is the original behaviour.
 +                             */
-+                            hiddenReactRoot = findReactRootAncestor(mWebView, rootView)
-+                            val reactRoot = hiddenReactRoot
-+                            if (reactRoot != null) {
-+                                reactRoot.visibility = View.GONE
-+                            } else {
-+                                // Unexpected hierarchy - fall back to the original behaviour
-+                                mWebView.visibility = View.GONE
++                            findReactRootAncestor(mWebView, rootView) ?: run {
++                                Log.w(TAG, "Fullscreen: React root not found, hiding WebView only")
++                                mWebView
 +                            }
                          }
++                        hiddenView?.visibility = View.GONE
                          mWebView.themedReactContext.addLifecycleEventListener(this)
 +                        dispatchFullscreenChange(mWebView, true)
                      }
  
                      override fun onHideCustomView() {
-@@ -191,19 +266,31 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -189,21 +272,32 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+                             return
+                         }
  
-                         // Same logic as above
+-                        // Same logic as above
                          val rootView = rootView
 -                        if (rootView.rootView !== mWebView.rootView) {
 -                            mWebView.rootView.visibility = View.VISIBLE
 -                        } else {
 -                            // Same view hierarchy (no Modal)
 -                            mWebView.visibility = View.VISIBLE
--                        }
-                         activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-                         rootView.removeView(mVideoView)
-                         mCustomViewCallback.onCustomViewHidden()
-                         mVideoView = null
-                         mCustomViewCallback = null
-+                        /*
-+                         * Restore the orientation lock before revealing the React
-+                         * root again. Revealing it first would measure it against
-+                         * the still-landscape window - the exact relayout the
-+                         * freeze exists to avoid, now on the way out.
-+                         */
-                         activity.requestedOrientation = initialRequestedOrientation
-+                        if (rootView.rootView !== mWebView.rootView) {
-+                            mWebView.rootView.visibility = View.VISIBLE
-+                        } else {
-+                            val reactRoot = hiddenReactRoot
-+                            if (reactRoot != null) {
-+                                reactRoot.visibility = View.VISIBLE
-+                                hiddenReactRoot = null
-+                            } else {
-+                                mWebView.visibility = View.VISIBLE
-+                            }
-+                        }
++                        try {
++                            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
++                            rootView.removeView(mVideoView)
++                            mCustomViewCallback.onCustomViewHidden()
++                            /*
++                             * Restore the orientation lock before revealing the
++                             * hidden view again. Revealing it first would measure
++                             * the React root against the still-landscape window -
++                             * the exact relayout hiding it exists to avoid, now on
++                             * the way out.
++                             */
++                            activity.requestedOrientation = initialRequestedOrientation
++                        } finally {
++                            /*
++                             * Must run even if the above throws: mVideoView is
++                             * cleared, so this method will not run again, and the
++                             * hidden view would stay GONE for good.
++                             */
++                            mVideoView = null
++                            mCustomViewCallback = null
++                            hiddenView?.visibility = View.VISIBLE
++                            hiddenView = null
+                         }
+-                        activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+-                        rootView.removeView(mVideoView)
+-                        mCustomViewCallback.onCustomViewHidden()
+-                        mVideoView = null
+-                        mCustomViewCallback = null
+-                        activity.requestedOrientation = initialRequestedOrientation
                          mWebView.themedReactContext.removeLifecycleEventListener(this)
 +                        dispatchFullscreenChange(mWebView, false)
                      }
@@ -162,7 +182,7 @@ index f83033b..bd9fe4c 100644
              webChromeClient.setAllowsProtectedMedia(mAllowsProtectedMedia);
 diff --git a/android/src/main/java/com/reactnativecommunity/webview/events/TopFullscreenChangeEvent.kt b/android/src/main/java/com/reactnativecommunity/webview/events/TopFullscreenChangeEvent.kt
 new file mode 100644
-index 0000000..74c35f5
+index 0000000000000000000000000000000000000000..74c35f547fc0cb6d6af9edd84779745a4840be33
 --- /dev/null
 +++ b/android/src/main/java/com/reactnativecommunity/webview/events/TopFullscreenChangeEvent.kt
 @@ -0,0 +1,26 @@
@@ -193,7 +213,7 @@ index 0000000..74c35f5
 +
 +}
 diff --git a/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java b/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
-index fa8efb8..1954b59 100644
+index fa8efb88e2b7c09afbfe473363cdb29af964563c..1954b591362af9f1617312b8e1dbf2290622a297 100644
 --- a/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
 +++ b/android/src/newarch/com/reactnativecommunity/webview/RNCWebViewManager.java
 @@ -14,6 +14,7 @@ import com.facebook.react.uimanager.annotations.ReactProp;
@@ -213,7 +233,7 @@ index fa8efb8..1954b59 100644
      }
  
 diff --git a/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java b/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java
-index 974337f..23d2377 100644
+index 974337f41ce01a5102eeafa6e54fbb3b949c48d7..23d23778dfea3be0d15a5a7b76e476fb10c4312b 100644
 --- a/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java
 +++ b/android/src/oldarch/com/reactnativecommunity/webview/RNCWebViewManager.java
 @@ -10,6 +10,7 @@ import com.facebook.react.uimanager.ThemedReactContext;
@@ -233,7 +253,7 @@ index 974337f..23d2377 100644
      }
  
 diff --git a/lib/RNCWebViewNativeComponent.d.ts b/lib/RNCWebViewNativeComponent.d.ts
-index 6b789f9..8f556f4 100644
+index 6b789f988382b14e4c615d2289fb77a424270430..8f556f47245c4e2fcbc52713ff4ad71e69358f43 100644
 --- a/lib/RNCWebViewNativeComponent.d.ts
 +++ b/lib/RNCWebViewNativeComponent.d.ts
 @@ -25,6 +25,9 @@ export type WebViewMessageEvent = Readonly<{
@@ -255,7 +275,7 @@ index 6b789f9..8f556f4 100644
      onScroll?: DirectEventHandler<ScrollEvent>;
      onShouldStartLoadWithRequest: DirectEventHandler<ShouldStartLoadRequestEvent>;
 diff --git a/lib/RNCWebViewNativeComponent.js b/lib/RNCWebViewNativeComponent.js
-index 8261210..69c650e 100644
+index 826121014cd6831b7088d26d4e6aa330f4076c95..69c650ed509cc366c97355a5f4fbaf64a2674d75 100644
 --- a/lib/RNCWebViewNativeComponent.js
 +++ b/lib/RNCWebViewNativeComponent.js
 @@ -1 +1 @@
@@ -264,7 +284,7 @@ index 8261210..69c650e 100644
 +var _interopRequireDefault=require("@babel/runtime/helpers/interopRequireDefault");Object.defineProperty(exports,"__esModule",{value:true});exports.default=exports.__INTERNAL_VIEW_CONFIG=exports.Commands=void 0;var _codegenNativeComponent=_interopRequireDefault(require("react-native/Libraries/Utilities/codegenNativeComponent"));var _codegenNativeCommands=_interopRequireDefault(require("react-native/Libraries/Utilities/codegenNativeCommands"));var NativeComponentRegistry=require('react-native/Libraries/NativeComponent/NativeComponentRegistry');var _require=require('react-native/Libraries/NativeComponent/ViewConfigIgnore'),ConditionallyIgnoredEventHandlers=_require.ConditionallyIgnoredEventHandlers;var _require2=require("react-native/Libraries/ReactNative/RendererProxy"),dispatchCommand=_require2.dispatchCommand;var nativeComponentName='RNCWebView';var __INTERNAL_VIEW_CONFIG=exports.__INTERNAL_VIEW_CONFIG={uiViewClassName:'RNCWebView',directEventTypes:{topContentSizeChange:{registrationName:'onContentSizeChange'},topRenderProcessGone:{registrationName:'onRenderProcessGone'},topContentProcessDidTerminate:{registrationName:'onContentProcessDidTerminate'},topCustomMenuSelection:{registrationName:'onCustomMenuSelection'},topFileDownload:{registrationName:'onFileDownload'},topLoadingError:{registrationName:'onLoadingError'},topLoadingSubResourceError:{registrationName:'onLoadingSubResourceError'},topLoadingFinish:{registrationName:'onLoadingFinish'},topLoadingProgress:{registrationName:'onLoadingProgress'},topLoadingStart:{registrationName:'onLoadingStart'},topHttpError:{registrationName:'onHttpError'},topMessage:{registrationName:'onMessage'},topOpenWindow:{registrationName:'onOpenWindow'},topFullscreenChange:{registrationName:'onFullscreenChange'},topScroll:{registrationName:'onScroll'},topShouldStartLoadWithRequest:{registrationName:'onShouldStartLoadWithRequest'}},validAttributes:Object.assign({allowFileAccess:true,allowsProtectedMedia:true,allowsFullscreenVideo:true,androidLayerType:true,cacheMode:true,domStorageEnabled:true,downloadingMessage:true,forceDarkOn:true,geolocationEnabled:true,lackPermissionToDownloadMessage:true,messagingModuleName:true,minimumFontSize:true,mixedContentMode:true,nestedScrollEnabled:true,overScrollMode:true,saveFormDataDisabled:true,scalesPageToFit:true,setBuiltInZoomControls:true,setDisplayZoomControls:true,setSupportMultipleWindows:true,textZoom:true,thirdPartyCookiesEnabled:true,hasOnScroll:true,allowingReadAccessToURL:true,allowsBackForwardNavigationGestures:true,allowsInlineMediaPlayback:true,allowsPictureInPictureMediaPlayback:true,allowsAirPlayForMediaPlayback:true,allowsLinkPreview:true,automaticallyAdjustContentInsets:true,autoManageStatusBarEnabled:true,bounces:true,contentInset:true,contentInsetAdjustmentBehavior:true,contentMode:true,dataDetectorTypes:true,decelerationRate:true,directionalLockEnabled:true,enableApplePay:true,hideKeyboardAccessoryView:true,keyboardDisplayRequiresUserAction:true,limitsNavigationsToAppBoundDomains:true,mediaCapturePermissionGrantType:true,pagingEnabled:true,pullToRefreshEnabled:true,refreshControlLightMode:true,removeIosKeyboardObserver:true,scrollEnabled:true,sharedCookiesEnabled:true,textInteractionEnabled:true,useSharedProcessPool:true,menuItems:true,suppressMenuItems:true,hasOnFileDownload:true,fraudulentWebsiteWarningEnabled:true,allowFileAccessFromFileURLs:true,allowUniversalAccessFromFileURLs:true,applicationNameForUserAgent:true,basicAuthCredential:true,cacheEnabled:true,incognito:true,injectedJavaScript:true,injectedJavaScriptBeforeContentLoaded:true,injectedJavaScriptForMainFrameOnly:true,injectedJavaScriptBeforeContentLoadedForMainFrameOnly:true,javaScriptCanOpenWindowsAutomatically:true,javaScriptEnabled:true,webviewDebuggingEnabled:true,mediaPlaybackRequiresUserAction:true,messagingEnabled:true,hasOnOpenWindowEvent:true,showsHorizontalScrollIndicator:true,showsVerticalScrollIndicator:true,indicatorStyle:true,newSource:true,userAgent:true,injectedJavaScriptObject:true,paymentRequestEnabled:true},ConditionallyIgnoredEventHandlers({onContentSizeChange:true,onRenderProcessGone:true,onContentProcessDidTerminate:true,onCustomMenuSelection:true,onFileDownload:true,onLoadingError:true,onLoadingSubResourceError:true,onLoadingFinish:true,onLoadingProgress:true,onLoadingStart:true,onHttpError:true,onMessage:true,onOpenWindow:true,onFullscreenChange:true,onScroll:true,onShouldStartLoadWithRequest:true}))};var _default=exports.default=NativeComponentRegistry.get(nativeComponentName,function(){return __INTERNAL_VIEW_CONFIG;});var Commands=exports.Commands={goBack:function goBack(ref){dispatchCommand(ref,"goBack",[]);},goForward:function goForward(ref){dispatchCommand(ref,"goForward",[]);},reload:function reload(ref){dispatchCommand(ref,"reload",[]);},stopLoading:function stopLoading(ref){dispatchCommand(ref,"stopLoading",[]);},injectJavaScript:function injectJavaScript(ref,javascript){dispatchCommand(ref,"injectJavaScript",[javascript]);},requestFocus:function requestFocus(ref){dispatchCommand(ref,"requestFocus",[]);},postMessage:function postMessage(ref,data){dispatchCommand(ref,"postMessage",[data]);},loadUrl:function loadUrl(ref,url){dispatchCommand(ref,"loadUrl",[url]);},clearFormData:function clearFormData(ref){dispatchCommand(ref,"clearFormData",[]);},clearCache:function clearCache(ref,includeDiskFiles){dispatchCommand(ref,"clearCache",[includeDiskFiles]);},clearHistory:function clearHistory(ref){dispatchCommand(ref,"clearHistory",[]);}};
 \ No newline at end of file
 diff --git a/lib/WebViewTypes.d.ts b/lib/WebViewTypes.d.ts
-index e193b3d..7b237df 100644
+index e193b3d56532655801df507c6f4a3450f1e32a37..7b237df41a07cfb88f25faccc7b740bf9faf8f99 100644
 --- a/lib/WebViewTypes.d.ts
 +++ b/lib/WebViewTypes.d.ts
 @@ -87,6 +87,9 @@ export interface WebViewRenderProcessGoneDetail {
@@ -302,7 +322,7 @@ index e193b3d..7b237df 100644
       * https://developer.android.com/reference/android/webkit/WebSettings.html#setCacheMode(int)
       * Set the cacheMode. Possible values are:
 diff --git a/src/RNCWebViewNativeComponent.ts b/src/RNCWebViewNativeComponent.ts
-index ca3af15..1133bc9 100644
+index ca3af151a378c516266ae965a44898920e831172..1133bc94c07b8c89198f7013568bdb6da4b0c7d7 100644
 --- a/src/RNCWebViewNativeComponent.ts
 +++ b/src/RNCWebViewNativeComponent.ts
 @@ -33,6 +33,9 @@ export type WebViewMessageEvent = Readonly<{
@@ -324,7 +344,7 @@ index ca3af15..1133bc9 100644
    onShouldStartLoadWithRequest: DirectEventHandler<ShouldStartLoadRequestEvent>;
    showsHorizontalScrollIndicator?: WithDefault<boolean, true>;
 diff --git a/src/WebViewTypes.ts b/src/WebViewTypes.ts
-index e1dabcd..9df8c06 100644
+index e1dabcd4f33b9db63ec3523c8abe57d88f09ed99..9df8c064ebcc5dd1328b838fa8376d448fafa487 100644
 --- a/src/WebViewTypes.ts
 +++ b/src/WebViewTypes.ts
 @@ -129,6 +129,10 @@ export interface WebViewOpenWindow {
