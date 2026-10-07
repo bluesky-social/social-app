@@ -561,7 +561,8 @@ const RESTORE_PREPEND_LIMIT = 100
  * resolves, so the list takes it laid out and still, however long the reader
  * keeps it moving. It runs once per view, whatever it finds. `isOwed` says
  * whether it has yet to finish, holding a page included, for checks for new
- * posts to wait for it.
+ * posts to wait for it, and `prependedAt` is the `fetchedAt` of the page it
+ * put on top, once it has.
  *
  * It fetches with `since` set to the top page's `startCursor`. Nothing newer
  * writes nothing. Anything newer goes on top as a page of its own, with the
@@ -595,6 +596,7 @@ export function usePostFeedRestorePrepend(
   const queryKey = RQKEY(feedDesc, params)
   /** How far this view has got with its one go. */
   const stage = useRef<'unstarted' | 'started' | 'finished'>('unstarted')
+  const [prependedAt, setPrependedAt] = useState<number>()
   const isTopRestored = isRestored(topFetchedAt)
 
   const isOwed = () => {
@@ -633,10 +635,18 @@ export function usePostFeedRestorePrepend(
         return
       }
       await listAtRest()
-      await commit(queryClient, queryKey, before, (data = before) => ({
-        pages: [page, ...data.pages],
-        pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
-      }))
+      const wrote = await commit(
+        queryClient,
+        queryKey,
+        before,
+        (data = before) => ({
+          pages: [page, ...data.pages],
+          pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
+        }),
+      )
+      if (wrote) {
+        setPrependedAt(page.fetchedAt)
+      }
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to fetch posts newer than a restored feed', {
@@ -657,7 +667,7 @@ export function usePostFeedRestorePrepend(
     }
   }, [enabled, isTopRestored])
 
-  return {isOwed}
+  return {isOwed, prependedAt}
 }
 
 /**
