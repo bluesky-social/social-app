@@ -1017,6 +1017,79 @@ describe('usePostFeedPrepend', () => {
     })
   })
 
+  describe('run', () => {
+    it('joins the prepend in progress, rather than fetching its range again', async () => {
+      const since = holdNextRequest()
+      const {hook, cached} = renderView()
+      await flushNotifications()
+      expect(requested()).toEqual([SINCE_REQUEST])
+
+      const joined = hook.result.current.prepend.run()
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await act(() => joined!)
+
+      expect(requested()).toEqual([SINCE_REQUEST])
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+    })
+
+    it('fetches above the new top once the last is done', async () => {
+      newer(['new'])
+      const {hook, cached} = renderView()
+      await waitFor(() => expect(cached().pages).toHaveLength(3))
+
+      newer(['newer'], {cursor: 'start:0'})
+      await act(() => hook.result.current.prepend.run()!)
+
+      expect(requested()).toEqual([
+        SINCE_REQUEST,
+        'timeline since:start:0 limit:100',
+      ])
+      expect(postsOf(cached())).toEqual([
+        ['newer'],
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      expect(hook.result.current.prepend.prependedAt).toBe(
+        cached().pages[0].fetchedAt,
+      )
+    })
+
+    it('rejects when the fetch fails, leaving the feed as it was', async () => {
+      const data = restoredData()
+      data.pages[0].fetchedAt = Date.now()
+      const {hook, cached} = renderView({data})
+      const before = cached()
+
+      failNextRequest(new TypeError('Network request failed'))
+      let error: unknown
+      await act(async () => {
+        await hook.result.current.prepend.run()!.catch(e => {
+          error = e
+        })
+      })
+
+      expect(error).toBeInstanceOf(TypeError)
+      expect(cached()).toBe(before)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
+    })
+
+    it('is nothing to run without a boundary to fetch above', () => {
+      const data = restoredData()
+      delete data.pages[0].startCursor
+      const {hook} = renderView({data})
+
+      expect(hook.result.current.prepend.run()).toBeUndefined()
+      expect(requested()).toEqual([])
+    })
+  })
+
   describe('holds what it finds', () => {
     it('until the list has laid out, and is owed until then', async () => {
       newer(['new'])

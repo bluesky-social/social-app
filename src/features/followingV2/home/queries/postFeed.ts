@@ -544,34 +544,40 @@ export function usePostFeedRefresh(
 export const PROCESS_STARTED_AT = Date.now()
 
 /**
- * How many posts a restore prepend asks for: the most `getTimeline` allows, as
- * a range with more than this in it leaves a gap.
+ * How many posts a prepend asks for: the most `getTimeline` allows, as a range
+ * with more than this in it leaves a gap.
  */
 const PREPEND_LIMIT = 100
 
 /**
- * Puts what is newer than a top page restored from disk above it, with one
- * fetch and then one write through the same compare-and-swap as a refresh. A
- * top page fetched before this process started (see
- * {@link PROCESS_STARTED_AT}) is a restored one, so a refresh, or anything
- * else that replaces the top page, leaves nothing to do.
+ * Puts what is newer than the feed's top page above it, with one fetch and
+ * then one write through the same compare-and-swap as a refresh. The view
+ * prepends above a top page restored from disk, and on a real return to the
+ * app (see `PostFeed`).
  *
- * It fetches as soon as the view is `enabled` with a restored top, while the
- * list does its first layout, and holds what it finds until `listAtRest`
- * resolves, so the list takes it laid out and still, however long the reader
- * keeps it moving. It runs once per view, whatever it finds. `isOwed` says
- * whether it has yet to finish, holding a page included, for checks for new
- * posts to wait for it, and `prependedAt` is the `fetchedAt` of the page it
- * put on top, once it has.
+ * `run` starts a prepend, or joins the one in progress, so two never fetch the
+ * same range. It resolves once that's done, whatever it found, and rejects if
+ * the fetch fails, which leaves the feed as it was. It's `undefined` when the
+ * top page has no `startCursor` to fetch above. It holds what it finds until
+ * `listAtRest` resolves, so the list takes it laid out and still, however long
+ * the reader keeps it moving, at any depth. `prependedAt` is the `fetchedAt`
+ * of the last page it put on top.
+ *
+ * A top page fetched before this process started (see
+ * {@link PROCESS_STARTED_AT}) is a restored one. The view prepends above it as
+ * soon as it's `enabled`, while the list does its first layout, unless it has
+ * already, and only once, whatever it finds. A refresh, or anything else that
+ * replaces the top page first, leaves nothing to do. `isOwed` says whether a
+ * prepend is in progress or still owed to a restored top, for checks for new
+ * posts to wait on it rather than race it.
  *
  * It fetches with `since` set to the top page's `startCursor`. Nothing newer
  * writes nothing. Anything newer goes on top as a page of its own, with the
  * `since` it was requested with, and the page that was on top now continues
  * from its cursor. When the server echoes `since` as that cursor, the range
  * was exhausted and the pages are contiguous. Otherwise there's a gap between
- * them (see {@link gapBelow}). A failure leaves the restored feed as it was.
- * The write gives way to anything that has replaced the top page meanwhile,
- * and keeps any page loaded below it.
+ * them (see {@link gapBelow}). The write gives way to anything that has
+ * replaced the top page meanwhile, and keeps any page loaded below it.
  */
 export function usePostFeedPrepend(
   feedDesc: FeedDescriptor,
@@ -594,80 +600,85 @@ export function usePostFeedPrepend(
   const queryClient = useQueryClient()
   const {fetchPage} = usePostFeedFetcher(feedDesc)
   const queryKey = RQKEY(feedDesc, params)
-  /** How far this view has got with its one go. */
-  const stage = useRef<'unstarted' | 'started' | 'finished'>('unstarted')
+  /** The prepend in progress, fetching or holding what it found. */
+  const pending = useRef<Promise<void>>(undefined)
+  /** Whether this view has started a prepend, as a restored top needs once. */
+  const hasStarted = useRef(false)
   const [prependedAt, setPrependedAt] = useState<number>()
   const isTopRestored = isRestored(topFetchedAt)
 
   const isOwed = () => {
     const top = queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0]
     return (
-      stage.current !== 'finished' &&
-      isRestored(top?.fetchedAt) &&
-      top?.startCursor !== undefined
+      pending.current !== undefined ||
+      (!hasStarted.current &&
+        isRestored(top?.fetchedAt) &&
+        top?.startCursor !== undefined)
     )
   }
 
-  const prepend = async () => {
-    const before = queryClient.getQueryData<PostFeedData>(queryKey)
-    const since = before?.pages[0]?.startCursor
-    if (
-      !before ||
-      since === undefined ||
-      stage.current !== 'unstarted' ||
-      !isOwed()
-    ) {
+  const prependAbove = async (before: PostFeedData, since: string) => {
+    const page = await fetchPage(undefined, {since, limit: PREPEND_LIMIT})
+    /*
+     * A bounded range always comes back with a cursor, the echo of `since` or
+     * one into what it didn't return, so a page without one can't go above the
+     * posts below it.
+     */
+    const {cursor} = page
+    if (!page.feed.length || cursor === undefined) {
       return
     }
-    stage.current = 'started'
-    try {
-      const page = await fetchPage(undefined, {
-        since,
-        limit: PREPEND_LIMIT,
-      })
-      /*
-       * A bounded range always comes back with a cursor, the echo of `since`
-       * or one into what it didn't return, so a page without one can't go
-       * above the posts below it.
-       */
-      const {cursor} = page
-      if (!page.feed.length || cursor === undefined) {
-        return
-      }
-      await listAtRest()
-      const wrote = await commit(
-        queryClient,
-        queryKey,
-        before,
-        (data = before) => ({
-          pages: [page, ...data.pages],
-          pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
-        }),
-      )
-      if (wrote) {
-        setPrependedAt(page.fetchedAt)
-      }
-    } catch (e) {
+    await listAtRest()
+    const wrote = await commit(
+      queryClient,
+      queryKey,
+      before,
+      (data = before) => ({
+        pages: [page, ...data.pages],
+        pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
+      }),
+    )
+    if (wrote) {
+      setPrependedAt(page.fetchedAt)
+    }
+  }
+
+  const run = () => {
+    if (pending.current) {
+      return pending.current
+    }
+    const before = queryClient.getQueryData<PostFeedData>(queryKey)
+    const since = before?.pages[0]?.startCursor
+    if (!before || since === undefined) {
+      return undefined
+    }
+    hasStarted.current = true
+    const prepending = prependAbove(before, since).finally(() => {
+      pending.current = undefined
+    })
+    pending.current = prepending
+    return prepending
+  }
+
+  const onRestoredTop = useEffectEvent(() => {
+    if (hasStarted.current || !isOwed()) {
+      return
+    }
+    run()?.catch(e => {
       if (!isNetworkError(e)) {
         logger.error('Failed to fetch posts newer than a restored feed', {
           safeMessage: e,
         })
       }
-    } finally {
-      stage.current = 'finished'
-    }
-  }
-
-  const onReady = useEffectEvent(() => {
-    void prepend()
+    })
   })
   useEffect(() => {
     if (enabled && isTopRestored) {
-      onReady()
+      onRestoredTop()
     }
   }, [enabled, isTopRestored])
 
-  return {isOwed, prependedAt}
+  return {run, isOwed, prependedAt}
 }
 
 /**
