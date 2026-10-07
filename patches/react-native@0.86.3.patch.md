@@ -170,8 +170,8 @@ Repro: https://github.com/mozzius/scrollview-mvcp-anchor-repro (screen B)
 
 ## RCTScrollViewComponentView.mm Patch - maintainVisibleContentPosition anchors on a spacer straddling the top edge on iOS New Arch
 
-**TODO: Remove once React Native has an equivalent fix for
-react/react-native#58913.** There is no upstream PR yet.
+**TODO: Remove after bumping React Native to a release with
+react/react-native#58920.**
 
 Symptom: after a large prepend at the top of an mVCP list, the content jumps
 one transaction later and nothing corrects it (-962pt in the repro).
@@ -200,6 +200,7 @@ patch: with this fix alone FlatList still ends at -1828pt, and with both, row 0
 holds at +0.0 with FlatList's default props.
 
 Upstream issue: https://github.com/react/react-native/issues/58913
+Upstream PR: https://github.com/react/react-native/pull/58920
 Related: react/react-native#43203, react/react-native#55545
 Repro: https://github.com/mozzius/scrollview-mvcp-anchor-repro (screen A)
 
