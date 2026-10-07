@@ -81,7 +81,12 @@ export function PhotoCard({photo}: {photo: AtmospherePhotoCardData}) {
         {photo.title}
       </Text>
       <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-        <UserAvatar type="user" size={20} avatar={photo.authorProfile.avatar} />
+        <UserAvatar
+          type="user"
+          size={20}
+          avatar={photo.authorProfile.avatar}
+          moderation={moderation?.ui('avatar')}
+        />
         <Text emoji style={[a.text_xs, a.font_medium]} numberOfLines={1}>
           {authorName}
         </Text>
