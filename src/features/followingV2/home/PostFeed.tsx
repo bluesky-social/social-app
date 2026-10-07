@@ -26,6 +26,7 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -65,6 +66,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
   isStatusStillActive,
@@ -85,8 +87,11 @@ import {
   usePostFeedFetcher,
   usePostFeedQuery,
   usePostFeedRefresh,
+  usePostFeedRestorePrepend,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
+import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
+import {useListRest} from './useListRest'
 
 type FeedRow =
   | {
@@ -212,6 +217,18 @@ export type PostFeedRef = {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
+/**
+ * Rows that show posts. The rows above the first of them are headers, which
+ * `maintainVisibleContentPosition` mustn't anchor on.
+ */
+const POST_ROW_TYPES: ReadonlySet<FeedRow['type']> = new Set([
+  'sliceItem',
+  'sliceViewFullThread',
+  'showLessFollowup',
+  'videoGridRow',
+  'fallbackMarker',
+])
+
 let PostFeed = ({
   feed,
   description,
@@ -335,17 +352,69 @@ let PostFeed = ({
     [isFetching, data],
   )
 
+  /**
+   * Whether the list holds on to the row the reader is on when posts are put
+   * above it, as Following v2 does on Home's Following feed, on native. The
+   * rows that would sit above the posts are left out, as they'd take the
+   * anchor from them.
+   */
+  const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
+  /**
+   * When the list is at rest, for the restore prepend to wait for. Its scroll
+   * handlers take the corrections anchoring makes to the offset out of what
+   * the Home header sees, so they can't hide or show it.
+   */
+  const listRest = useListRest(
+    useAnchorCorrectionScrollHandlers(isAnchored),
+    isAnchored,
+  )
+  const restore = usePostFeedRestorePrepend(feed, feedParams, {
+    enabled: isAnchored && enabled !== false,
+    topFetchedAt: lastFetchedAt,
+    listAtRest: listRest.atRest,
+  })
+
+  /**
+   * The top page a refresh from this view wrote, to take the reader up to once
+   * it has rendered: anchored, the list would otherwise hold on to the row
+   * they're on, below the new posts. Not animated, as that can be a long way.
+   */
+  const revealTopRef = useRef<number>(undefined)
+  const revealTop = useNonReactiveCallback(() => {
+    scrollElRef?.current?.scrollToOffset({
+      animated: false,
+      offset: -headerOffset,
+    })
+  })
+  const refreshToTop = async () => {
+    const page = await refresh()
+    if (!page || !isAnchored) {
+      return
+    }
+    if (lastFetchRef.current === page.fetchedAt) {
+      revealTop()
+    } else {
+      revealTopRef.current = page.fetchedAt
+    }
+  }
+
   useEffect(() => {
     if (lastFetchedAt) {
       lastFetchRef.current = lastFetchedAt
+      if (lastFetchedAt === revealTopRef.current) {
+        revealTopRef.current = undefined
+        revealTop()
+      }
     }
-  }, [lastFetchedAt])
+  }, [lastFetchedAt, revealTop])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (
       !data?.pages[0] ||
       isFetching ||
       isRefreshing ||
+      // A restored top is checked by fetching what's newer, still to come.
+      (isAnchored && restore.isOwed()) ||
       !onHasNew ||
       !enabled ||
       disablePoll
@@ -361,7 +430,7 @@ let PostFeed = ({
     try {
       if (await pollLatest(data.pages[0], createFeedApi())) {
         if (isEmpty) {
-          void refresh()
+          void refreshToTop()
         } else {
           onHasNew(true)
         }
@@ -396,12 +465,12 @@ let PostFeed = ({
        * had loaded.
        */
       if (enabled) {
-        void refresh()
+        void refreshToTop()
       } else {
         void truncateAndInvalidate(queryClient, RQKEY(feed))
       }
     }
-  }, [queryClient, feed, myDid, enabled, refresh])
+  }, [queryClient, feed, myDid, enabled, refreshToTop])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -500,7 +569,12 @@ let PostFeed = ({
         key: 'feedShutdownMsg',
       })
     }
-    if (isFetched && !isRetryingError) {
+    /*
+     * Data restored from disk can be in the cache, fetched, before what
+     * moderates it is ready, which the query's `select` waits for. It loads
+     * until then.
+     */
+    if (isFetched && !isRetryingError && (data || isError)) {
       if (isError && isEmpty) {
         arr.push({
           type: 'error',
@@ -636,8 +710,8 @@ let PostFeed = ({
                   }
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
-                    // Show composer prompt for Following feed
-                    if (hasSession) {
+                    // Show composer prompt for Following feed, unless anchored
+                    if (hasSession && !isAnchored) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
@@ -773,6 +847,7 @@ let PostFeed = ({
 
     return arr
   }, [
+    isAnchored,
     refreshError,
     isRetryingError,
     description,
@@ -810,13 +885,13 @@ let PostFeed = ({
         feedUrl: feed,
         reason: 'pull-to-refresh',
       })
-      await refresh()
+      await refreshToTop()
       onHasNew?.(false)
     }
     setIsPTRing(false)
   }
 
-  useImperativeHandle(ref, () => ({refresh}))
+  useImperativeHandle(ref, () => ({refresh: refreshToTop}))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -843,9 +918,9 @@ let PostFeed = ({
   ])
 
   const onPressTryAgain = useCallback(() => {
-    void refresh()
+    void refreshToTop()
     onHasNew?.(false)
-  }, [refresh, onHasNew])
+  }, [refreshToTop, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
     void fetchNextPage()
@@ -1003,6 +1078,16 @@ let PostFeed = ({
       t,
     ],
   )
+
+  /*
+   * The rows above the first post, which the anchor must skip: anchored on a
+   * header row, the list holds that row in place and lets the posts below it
+   * move.
+   */
+  let leadingRowCount = feedItems.findIndex(row => POST_ROW_TYPES.has(row.type))
+  if (leadingRowCount === -1) {
+    leadingRowCount = feedItems.length
+  }
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
@@ -1199,35 +1284,41 @@ let PostFeed = ({
 
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={feedItems}
-        keyExtractor={(item: FeedRow) => item.key}
-        renderItem={renderItem}
-        ListFooterComponent={FeedFooter}
-        ListHeaderComponent={ListHeaderComponent}
-        refreshing={isPTRing}
-        onRefresh={() => void onRefresh()}
-        headerOffset={headerOffset}
-        progressViewOffset={progressViewOffset}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}
-        onScrolledDownChange={handleScrolledDownChange}
-        onEndReached={() => void onEndReached()}
-        onEndReachedThreshold={2} // number of posts left to trigger load more
-        removeClippedSubviews={true}
-        extraData={extraData}
-        desktopFixedHeight={
-          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
-        }
-        initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
-        windowSize={9}
-        maxToRenderPerBatch={IS_IOS ? 5 : 1}
-        updateCellsBatchingPeriod={40}
-        onItemSeen={onItemSeen}
-      />
+      <ScrollProvider {...listRest.scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={feedItems}
+          keyExtractor={(item: FeedRow) => item.key}
+          renderItem={renderItem}
+          ListFooterComponent={FeedFooter}
+          ListHeaderComponent={ListHeaderComponent}
+          refreshing={isPTRing}
+          onRefresh={() => void onRefresh()}
+          headerOffset={headerOffset}
+          progressViewOffset={progressViewOffset}
+          contentContainerStyle={{
+            minHeight: Dimensions.get('window').height * 1.5,
+          }}
+          onScrolledDownChange={handleScrolledDownChange}
+          onEndReached={() => void onEndReached()}
+          onEndReachedThreshold={2} // number of posts left to trigger load more
+          removeClippedSubviews={true}
+          extraData={extraData}
+          desktopFixedHeight={
+            desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+          }
+          initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
+          windowSize={9}
+          maxToRenderPerBatch={IS_IOS ? 5 : 1}
+          updateCellsBatchingPeriod={40}
+          onItemSeen={onItemSeen}
+          maintainVisibleContentPosition={
+            isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
+          }
+          onLayout={isAnchored ? listRest.onLayout : undefined}
+        />
+      </ScrollProvider>
     </View>
   )
 }

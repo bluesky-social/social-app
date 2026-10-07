@@ -30,11 +30,17 @@ export interface FeedAPI {
   }): Promise<app.bsky.feed.defs.FeedViewPost | undefined>
   fetch({
     cursor,
+    since,
     source,
     limit,
     signal,
   }: {
     cursor: string | undefined
+    /**
+     * An exclusive lower bound, as a `startCursor` the server returned, for the
+     * posts newer than it. Only Following supports it; other feeds ignore it.
+     */
+    since?: string
     source?: FeedSource
     limit: number
     signal?: AbortSignal
