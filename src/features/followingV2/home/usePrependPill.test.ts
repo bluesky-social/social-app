@@ -13,6 +13,7 @@ jest.mock('./useSettleAtTop', () => ({SETTLE_AT_TOP_LIMIT: 5}))
 
 const RESTORED_AT = 1000
 const PREPENDED_AT = 2000
+const LATER_AT = 3000
 
 /**
  * A feed item by `did`, whose own post is the last of `context` posts before
@@ -91,7 +92,7 @@ describe('getPrependOffer', () => {
     )
 
     expect(offer).toEqual({
-      topFetchedAt: PREPENDED_AT,
+      pages: [PREPENDED_AT],
       keys: ['slice-a-0', 'slice-b-0'],
       count: 2,
       authors: [
@@ -132,6 +133,33 @@ describe('getPrependOffer', () => {
       'did:plc:a',
       'did:plc:b',
     ])
+  })
+
+  it('offers posts on top of an offer the reader has not reached', () => {
+    const fresh = [slice('a'), slice('b')]
+    const unread = getPrependOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))!
+    const later = [slice('c'), slice('a2', {did: 'did:plc:a'})]
+
+    const offer = getPrependOffer(
+      rowsOf([...later, ...fresh]),
+      page(LATER_AT, later),
+      unread,
+    )
+
+    expect(offer).toEqual({
+      pages: [LATER_AT, PREPENDED_AT],
+      keys: ['slice-c-0', 'slice-a2-0', 'slice-a-0', 'slice-b-0'],
+      count: 4,
+      authors: [
+        {did: 'did:plc:c', avatar: 'https://cdn.test/c.jpg'},
+        {did: 'did:plc:a', avatar: 'https://cdn.test/a2.jpg'},
+        {did: 'did:plc:b', avatar: 'https://cdn.test/b.jpg'},
+      ],
+    })
+    // None of a page's posts render: the unread offer is as it was.
+    expect(
+      getPrependOffer(rowsOf(fresh), page(LATER_AT, [slice('muted')]), unread),
+    ).toBe(unread)
   })
 
   it('offers nothing when none of the page renders', () => {
@@ -251,7 +279,13 @@ describe('usePrependPill', () => {
         pages: prependedPages,
       })
     }
-    return {hook, offsetY, scrollToTop, prepend}
+    /** A later prepend of `slices` above the first, as `prepend` makes. */
+    const prependLater = (slices: FeedPostSlice[], props: Props = {}) => {
+      const pages = [page(LATER_AT, slices), ...prependedPages]
+      hook.rerender({...props, prependedAt: LATER_AT, pages: prependedPages})
+      hook.rerender({...props, prependedAt: LATER_AT, pages})
+    }
+    return {hook, offsetY, scrollToTop, prepend, prependLater}
   }
 
   describe('shows', () => {
@@ -333,7 +367,7 @@ describe('usePrependPill', () => {
     })
   })
 
-  describe('hides for good', () => {
+  describe('hides', () => {
     it('once the topmost new post is seen after a drag', () => {
       const {hook, prepend} = renderPill()
       prepend()
@@ -376,6 +410,76 @@ describe('usePrependPill', () => {
       act(() => hook.result.current.onReachTop())
       prepend()
       expect(hook.result.current.visible).toBe(true)
+    })
+  })
+
+  describe('a later prepend', () => {
+    it('adds its posts to an offer the reader has not reached', () => {
+      const {hook, prepend, prependLater} = renderPill()
+      prepend()
+
+      prependLater([slice('e'), slice('f', {did: 'did:plc:a'})])
+
+      expect(hook.result.current).toMatchObject({
+        visible: true,
+        count: 6,
+        authors: [{did: 'did:plc:e'}, {did: 'did:plc:a'}, {did: 'did:plc:b'}],
+      })
+      // It hides once the reader reaches the newest of them.
+      act(() => hook.result.current.onBeginDrag())
+      act(() => hook.result.current.onItemSeen({key: 'slice-a-0'}))
+      expect(hook.result.current.visible).toBe(true)
+      act(() => hook.result.current.onItemSeen({key: 'slice-e-0'}))
+      expect(hook.result.current.visible).toBe(false)
+    })
+
+    it('offers only its own posts once the reader has reached the last', () => {
+      const {hook, prepend, prependLater} = renderPill()
+      prepend()
+      act(() => hook.result.current.onReachTop())
+
+      prependLater([slice('e')])
+
+      expect(hook.result.current).toMatchObject({
+        visible: true,
+        count: 1,
+        authors: [{did: 'did:plc:e'}],
+      })
+    })
+
+    it('keeps the offer as it was when none of its posts render', () => {
+      const {hook, prepend, prependLater} = renderPill()
+      prepend()
+
+      prependLater([])
+
+      expect(hook.result.current.visible).toBe(true)
+      expect(hook.result.current.count).toBe(4)
+    })
+
+    it('offers nothing when none of its posts render, and nothing is unread', () => {
+      const {hook, prepend, prependLater} = renderPill()
+      prepend()
+      act(() => hook.result.current.onReachTop())
+
+      prependLater([])
+
+      expect(hook.result.current.visible).toBe(false)
+    })
+
+    it('needs another drag before the reader seeing its top row hides it', () => {
+      const {hook, prepend, prependLater} = renderPill()
+      prepend()
+      act(() => hook.result.current.onBeginDrag())
+
+      prependLater([slice('e')])
+
+      // Seen without a drag since, the row is behind the header.
+      act(() => hook.result.current.onItemSeen({key: 'slice-e-0'}))
+      expect(hook.result.current.visible).toBe(true)
+      act(() => hook.result.current.onBeginDrag())
+      act(() => hook.result.current.onItemSeen({key: 'slice-e-0'}))
+      expect(hook.result.current.visible).toBe(false)
     })
   })
 

@@ -33,11 +33,11 @@ const strip = [
 ]
 
 /**
- * The new posts pill for restored Following on Home (see `usePrependPill`),
- * beneath the Home header. It follows the header as it collapses, as
- * `useHomeHeaderTransform` moves it, and comes to rest under the part of the
- * header that stays on screen rather than hiding with it. Render it in a Home
- * feed page, after its list.
+ * The new posts pill for the posts anchored Following puts on top on Home (see
+ * `usePrependPill`), beneath the Home header. It follows the header as it
+ * collapses, as `useHomeHeaderTransform` moves it, and comes to rest under the
+ * part of the header that stays on screen rather than hiding with it. Render
+ * it in a Home feed page, after its list.
  *
  * @platform ios, android
  */
