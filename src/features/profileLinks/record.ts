@@ -1,7 +1,11 @@
 import {type BlobRef, getBlobMime, isBlobRef} from '@atproto/lex'
 import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
-import {isBlockedProfileLink, normalizeProfileLinkUrl} from './providers'
+import {
+  isBlockedProfileLink,
+  isShortenerLink,
+  normalizeProfileLinkUrl,
+} from './providers'
 import {MAX_PROFILE_LINKS, MAX_TITLE_LENGTH, type ProfileLink} from './types'
 
 /*
@@ -46,7 +50,8 @@ export function parseProfileRecordLinks(record: unknown): ProfileLinksData {
       if (
         !normalized ||
         seen.has(normalized) ||
-        isBlockedProfileLink(normalized)
+        isBlockedProfileLink(normalized) ||
+        isShortenerLink(normalized)
       ) {
         continue
       }
