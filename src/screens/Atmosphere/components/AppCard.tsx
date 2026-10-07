@@ -3,14 +3,13 @@ import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 import {useLingui} from '@lingui/react/macro'
 
-import {atoms as a, useTheme, utils} from '#/alf'
+import {atoms as a, utils} from '#/alf'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type AtmosphereAppCardData} from '../exploreData'
 
 export function AppCard({app}: {app: AtmosphereAppCardData}) {
   const {t: l} = useLingui()
-  const t = useTheme()
 
   return (
     <View
@@ -19,7 +18,6 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
         a.relative,
         a.rounded_xl,
         a.overflow_hidden,
-        t.atoms.shadow_xs,
         {backgroundColor: app.overlayColor},
       ]}>
       <Image
