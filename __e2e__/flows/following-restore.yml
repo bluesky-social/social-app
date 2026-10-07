@@ -52,17 +52,17 @@ appId: xyz.blueskyweb.app
     timeout: 180000
 - extendedWaitUntil:
     visible:
-      id: "followingRestorePill"
+      id: "followingPrependPill"
     timeout: 60000
 - assertNotVisible: "Newer post 5"
 
 # Pressing the pill scrolls to the top, where the new posts are, and hides it.
 - tapOn:
-    id: "followingRestorePill"
+    id: "followingPrependPill"
 - extendedWaitUntil:
     visible: "Newer post 5"
     timeout: 30000
 - extendedWaitUntil:
     notVisible:
-      id: "followingRestorePill"
+      id: "followingPrependPill"
     timeout: 30000
