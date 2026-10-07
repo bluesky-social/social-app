@@ -46,7 +46,7 @@ export function LivestreamCard({
             livestream.active
               ? livestream.activeCount
                 ? l`Open livestream: ${livestream.title}, live with ${plural(
-                    livestream.title,
+                    livestream.activeCount,
                     {
                       one: '# viewer',
                       other: '# viewers',
