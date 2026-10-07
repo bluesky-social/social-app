@@ -67,14 +67,23 @@ export function getAtmosphereArticles(
 export function getAtmosphereLivestreams(
   data: Pick<AtmosphereData, 'livestreams'> = atmosphereData,
 ): AtmosphereLivestreamCardData[] {
-  return data.livestreams.map(livestream => ({
-    id: livestream.uri,
-    href: livestream.uri,
-    title: livestream.title.trim(),
-    active: livestream.active,
-    image: livestream.image,
-    authorProfile: livestream.associatedProfiles[0],
-  }))
+  return data.livestreams.flatMap(livestream => {
+    const authorProfile = livestream.associatedProfiles[0]
+    if (!bsky.isType(app.bsky.actor.defs.profileViewBasic, authorProfile)) {
+      return []
+    }
+
+    return [
+      {
+        id: livestream.uri,
+        href: livestream.uri,
+        title: livestream.title.trim(),
+        active: livestream.active,
+        image: livestream.image,
+        authorProfile,
+      },
+    ]
+  })
 }
 
 export function getAtmospherePhotos(
