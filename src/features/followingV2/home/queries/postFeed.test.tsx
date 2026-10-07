@@ -51,6 +51,7 @@ import {
   type FeedPostSlice,
   findGaps,
   gapBelow,
+  hasUnseenPosts,
   pollLatest,
   type PostFeedData,
   PROCESS_STARTED_AT,
@@ -908,7 +909,8 @@ describe('usePostFeedPrepend', () => {
   /**
    * The feed's view, as PostFeed has it, over `data` already in the cache. Its
    * list has laid out, unless `laidOut` is false. Only an `isActive` view
-   * checks for new posts, which it hands to `onFound`.
+   * checks for new posts: what it stages lights the Home dot (`onHasNew`), and
+   * what a peek alone finds goes to `onFound`.
    */
   function renderView({
     data = restoredData(),
@@ -927,17 +929,20 @@ describe('usePostFeedPrepend', () => {
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )
     const onFound = jest.fn()
+    const onHasNew = jest.fn()
     const hook = renderHook(
       ({enabled}: {enabled: boolean}) => {
         const query = usePostFeedQuery('following')
         const {createFeedApi} = usePostFeedFetcher('following')
         const listRest = useListRest({}, true)
-        const {refresh, isRefreshing} = usePostFeedRefresh('following')
+        const {refresh, isRefreshing, isPending} =
+          usePostFeedRefresh('following')
         const topFetchedAt = query.data?.pages[0]?.fetchedAt
         const prepend = usePostFeedPrepend('following', undefined, {
           enabled,
           topFetchedAt,
           listAtRest: listRest.atRest,
+          isRefreshing: isPending,
         })
         useNewPostsCheck({
           topFetchedAt,
@@ -946,15 +951,15 @@ describe('usePostFeedPrepend', () => {
           isBusy:
             isRefreshing || (query.isFetching && !query.isFetchingNextPage),
           check: async trigger => {
-            const prepending =
-              trigger === 'return' || prepend.isOwed()
-                ? prepend.run()
-                : undefined
-            if (prepending) {
-              await prepending
-              return undefined
+            const staging = prepend.check(trigger)
+            if (!staging) {
+              return pollLatest(query.data?.pages[0], createFeedApi())
             }
-            return pollLatest(query.data?.pages[0], createFeedApi())
+            const page = await staging
+            if (page && hasUnseenPosts(query.data?.pages[0], page.feed)) {
+              onHasNew(true)
+            }
+            return undefined
           },
           onFound,
         })
@@ -975,7 +980,7 @@ describe('usePostFeedPrepend', () => {
     if (laidOut) {
       list.layOut()
     }
-    return {hook, queryClient, cached, list, onFound}
+    return {hook, queryClient, cached, list, onFound, onHasNew}
   }
 
   /** Answers the next request with these posts, newer than `since`. */
@@ -1065,7 +1070,7 @@ describe('usePostFeedPrepend', () => {
       await flushNotifications()
       expect(requested()).toEqual([SINCE_REQUEST])
 
-      const joined = hook.result.current.prepend.run()
+      const joined = hook.result.current.prepend.run('return')
       act(() => {
         since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
       })
@@ -1079,13 +1084,41 @@ describe('usePostFeedPrepend', () => {
       ])
     })
 
-    it('fetches above the new top once the last is done', async () => {
+    it('fetches from the same place again once the last is done, and replaces what it staged', async () => {
       newer(['new'])
       const {hook, cached} = renderView()
       await waitFor(() => expect(cached().pages).toHaveLength(3))
 
+      newer(['newer', 'new'])
+      await act(() => hook.result.current.prepend.run('interval')!)
+
+      expect(requested()).toEqual([SINCE_REQUEST, SINCE_REQUEST])
+      expect(postsOf(cached())).toEqual([
+        ['newer', 'new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      expect(cached().pageParams).toEqual([
+        undefined,
+        {cursor: 'start:1'},
+        {cursor: 'timeline:1'},
+      ])
+      // Still offered, as the restore's page was.
+      expect(hook.result.current.prepend.staged).toEqual({
+        fetchedAt: cached().pages[0].fetchedAt,
+        offered: true,
+      })
+    })
+
+    it('fetches above the new top once the reader has reached it', async () => {
+      newer(['new'])
+      const {hook, cached} = renderView()
+      await waitFor(() => expect(cached().pages).toHaveLength(3))
+      act(() => hook.result.current.prepend.markRead())
+      expect(hook.result.current.prepend.staged).toBeUndefined()
+
       newer(['newer'], {cursor: 'start:0'})
-      await act(() => hook.result.current.prepend.run()!)
+      await act(() => hook.result.current.prepend.run('interval')!)
 
       expect(requested()).toEqual([
         SINCE_REQUEST,
@@ -1097,9 +1130,10 @@ describe('usePostFeedPrepend', () => {
         ['timeline-1'],
         ['timeline-2'],
       ])
-      expect(hook.result.current.prepend.prependedAt).toBe(
-        cached().pages[0].fetchedAt,
-      )
+      expect(hook.result.current.prepend.staged).toEqual({
+        fetchedAt: cached().pages[0].fetchedAt,
+        offered: false,
+      })
     })
 
     it('rejects when the fetch fails, leaving the feed as it was', async () => {
@@ -1111,7 +1145,7 @@ describe('usePostFeedPrepend', () => {
       failNextRequest(new TypeError('Network request failed'))
       let error: unknown
       await act(async () => {
-        await hook.result.current.prepend.run()!.catch(e => {
+        await hook.result.current.prepend.run('return')!.catch(e => {
           error = e
         })
       })
@@ -1126,7 +1160,7 @@ describe('usePostFeedPrepend', () => {
       delete data.pages[0].startCursor
       const {hook} = renderView({data})
 
-      expect(hook.result.current.prepend.run()).toBeUndefined()
+      expect(hook.result.current.prepend.run('return')).toBeUndefined()
       expect(requested()).toEqual([])
     })
   })
@@ -1221,7 +1255,7 @@ describe('usePostFeedPrepend', () => {
     expect(writes).toHaveLength(0)
     expect(cached()).toBe(before)
     expect(hook.result.current.prepend.isOwed()).toBe(false)
-    expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+    expect(hook.result.current.prepend.staged).toBeUndefined()
   })
 
   it('puts a contiguous page on top, which the page below continues from', async () => {
@@ -1237,10 +1271,11 @@ describe('usePostFeedPrepend', () => {
       startCursor: 'start:0',
       since: 'start:1',
     })
-    // The view knows which page it put on top, for the pill to offer.
-    expect(hook.result.current.prepend.prependedAt).toBe(
-      cached().pages[0].fetchedAt,
-    )
+    // The view knows which page it staged on top, for the pill to offer.
+    expect(hook.result.current.prepend.staged).toEqual({
+      fetchedAt: cached().pages[0].fetchedAt,
+      offered: true,
+    })
     expect(cached().pageParams).toEqual([
       undefined,
       {cursor: 'start:1'},
@@ -1349,7 +1384,7 @@ describe('usePostFeedPrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.staged).toBeUndefined()
     })
 
     it('while it holds what it found', async () => {
@@ -1371,7 +1406,7 @@ describe('usePostFeedPrepend', () => {
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
       expect(hook.result.current.prepend.isOwed()).toBe(false)
-      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.staged).toBeUndefined()
     })
   })
 
@@ -1454,12 +1489,20 @@ describe('usePostFeedPrepend', () => {
       await wait(0)
     }
 
+    /** Answers the next peek with a post newer than the top page's. */
+    function answerPeek() {
+      mockClient.call.mockImplementationOnce(() => ({
+        feed: [feedItem('new')],
+      }))
+    }
+
     beforeEach(() => {
       jest.useFakeTimers()
       AppState.currentState = 'active'
     })
 
     it('fetches what is newer, and puts it on top once the list is at rest', async () => {
+      answerPeek()
       const since = holdNextRequest()
       const {hook, cached, list} = renderView({
         data: fetchedData(),
@@ -1469,7 +1512,8 @@ describe('usePostFeedPrepend', () => {
       expect(requested()).toEqual([])
 
       await leaveFor(RETURN_STALE_AFTER)
-      expect(requested()).toEqual([SINCE_REQUEST])
+      // It peeks first, and the newest post isn't the one on top.
+      expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
 
       // The reader has started scrolling again by the time it lands.
       list.beginDrag()
@@ -1488,12 +1532,14 @@ describe('usePostFeedPrepend', () => {
         ['timeline-2'],
       ])
       // For the pill to offer.
-      expect(hook.result.current.prepend.prependedAt).toBe(
-        cached().pages[0].fetchedAt,
-      )
+      expect(hook.result.current.prepend.staged).toEqual({
+        fetchedAt: cached().pages[0].fetchedAt,
+        offered: true,
+      })
     })
 
     it('leaves a gap below what it found when there was more', async () => {
+      answerPeek()
       newer(['new'], {cursor: 'gap:1'})
       const {cached} = renderView({data: fetchedData(), isActive: true})
 
@@ -1509,15 +1555,16 @@ describe('usePostFeedPrepend', () => {
     })
 
     it('makes no request when the app was only inactive, however long', async () => {
-      newer([])
       renderView({data: fetchedData(), isActive: true})
 
       // As the notification shade or Control Center leave it.
       await leaveFor(10 * RETURN_STALE_AFTER, 'inactive')
       expect(requested()).toEqual([])
 
+      answerPeek()
+      newer([])
       await leaveFor(RETURN_STALE_AFTER)
-      expect(requested()).toEqual([SINCE_REQUEST])
+      expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
     })
 
     it('joins the restore prepend in progress, rather than fetching its range again', async () => {
@@ -1544,6 +1591,7 @@ describe('usePostFeedPrepend', () => {
     })
 
     it('gives way to a pull to refresh while it fetches', async () => {
+      answerPeek()
       const since = holdNextRequest()
       const {hook, cached} = renderView({
         data: fetchedData(),
@@ -1564,7 +1612,7 @@ describe('usePostFeedPrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.staged).toBeUndefined()
     })
 
     it('peeks for the Home dot when the top page has no boundary to fetch above', async () => {
