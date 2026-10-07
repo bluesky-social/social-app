@@ -1,11 +1,4 @@
-import {
-  useCallback,
-  useEffect,
-  useEffectEvent,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
@@ -34,6 +27,7 @@ import {
   type FeedViewPostsSlice,
 } from '#/lib/api/feed-manip'
 import {DISCOVER_FEED_URI} from '#/lib/constants'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useFeedTuners} from '#/state/preferences/feed-tuners'
@@ -660,7 +654,8 @@ export function usePostFeedPrepend(
     return prepending
   }
 
-  const onRestoredTop = useEffectEvent(() => {
+  // Not `useEffectEvent`, which React 19.2 freezes in `memo()` PostFeed.
+  const onRestoredTop = useNonReactiveCallback(() => {
     if (hasStarted.current || !isOwed()) {
       return
     }
@@ -676,7 +671,7 @@ export function usePostFeedPrepend(
     if (enabled && isTopRestored) {
       onRestoredTop()
     }
-  }, [enabled, isTopRestored])
+  }, [enabled, isTopRestored, onRestoredTop])
 
   return {run, isOwed, prependedAt}
 }
