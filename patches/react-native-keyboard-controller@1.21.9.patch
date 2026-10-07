@@ -1,20 +1,70 @@
+diff --git a/src/components/KeyboardChatScrollView/useChatKeyboard/helpers.ts b/src/components/KeyboardChatScrollView/useChatKeyboard/helpers.ts
+index 37eacd10857cd70c51b3468c4b466e4959d0a415..a83103d7b224d9c4a7a4ffee1144a8beb313edff 100644
+--- a/src/components/KeyboardChatScrollView/useChatKeyboard/helpers.ts
++++ b/src/components/KeyboardChatScrollView/useChatKeyboard/helpers.ts
+@@ -1,9 +1,39 @@
+ import { interpolate } from "react-native-reanimated";
+ 
+ import type { KeyboardLiftBehavior } from "./types";
++import type { AnimatedRef } from "react-native-reanimated";
++import type Reanimated from "react-native-reanimated";
+ 
+ const AT_END_THRESHOLD = 20;
+ 
++/**
++ * Check from a UI-runtime worklet whether an animated ref is attached to a
++ * mounted view.
++ *
++ * Since Reanimated 4.7 an animated ref captured by a worklet is serialized to
++ * the UI runtime as a shareable holding the shadow node wrapper in `.value`,
++ * not as a callable function, so `ref()` throws "Object is not a function".
++ * On web the ref is still a plain function.
++ *
++ * @param ref - Animated ref captured by the worklet.
++ * @returns Whether the ref currently points to a view.
++ * @example
++ * ```ts
++ * if (!isAnimatedRefAttached(scrollViewRef)) return;
++ * ```
++ */
++export const isAnimatedRefAttached = (
++  ref: AnimatedRef<Reanimated.ScrollView>,
++): boolean => {
++  "worklet";
++
++  if (typeof ref === "function") {
++    return ref() != null;
++  }
++
++  return (ref as unknown as { value: unknown }).value != null;
++};
++
+ /**
+  * Map the current keyboard height to an effective height that accounts for a
+  * fixed offset (e.g. Bottom safe-area or tab-bar height)..
 diff --git a/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts b/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts
-index 48178d9246ab94d701983ac20473983eb746d1a6..451d38e6e20646c32795db3be28fbea57de1d12f 100644
+index 48178d9246ab94d701983ac20473983eb746d1a6..dce048c843d3cdb8eed9fe77956109c7df5ff536 100644
 --- a/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts
 +++ b/src/components/KeyboardChatScrollView/useChatKeyboard/index.ts
-@@ -172,6 +172,18 @@ function useChatKeyboard(
+@@ -9,6 +9,7 @@ import {
+   getMinimumPaddingAbsorbed,
+   getScrollEffective,
+   getVisibleMinimumPaddingFraction,
++  isAnimatedRefAttached,
+   isScrollAtEnd,
+   shouldShiftContent,
+ } from "./helpers";
+@@ -172,6 +173,16 @@ function useChatKeyboard(
  
          currentHeight.value = e.height;
  
-+        if (scrollViewRef() == null) {
++        if (!isAnimatedRefAttached(scrollViewRef)) {
 +          // The scroll view can be detached or not yet attached while a
 +          // keyboard animation is running (e.g. the chat list re-creating its
 +          // scroll component mid-animation). Every branch below eventually
-+          // calls scrollTo (directly or via clampScrollIfNeeded); on Paper
-+          // reanimated's scrollTo would hand the null ref to the native
-+          // _scrollToPaper HostFunction, which throws "Value is null, expected
-+          // a number" and crashes in release builds. currentHeight is kept up
-+          // to date above so the animated style keeps committing.
++          // calls scrollTo (directly or via clampScrollIfNeeded), which would
++          // warn about an uninitialized ref on every frame. currentHeight is
++          // kept up to date above so the animated style keeps committing.
 +          return;
 +        }
 +
@@ -22,19 +72,25 @@ index 48178d9246ab94d701983ac20473983eb746d1a6..451d38e6e20646c32795db3be28fbea5
            // Skip post-interactive snap-back (duration === -1)
            if (e.duration === -1) {
 diff --git a/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts b/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
-index 0f6d7c67a307885310ab184fdf9e7a5c7b296825..1a01093e7909973cef5268f999158df389e77634 100644
+index 0f6d7c67a307885310ab184fdf9e7a5c7b296825..5bb2ef73ed64b478f612e620b6264bfd72928c17 100644
 --- a/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
 +++ b/src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts
-@@ -1,8 +1,6 @@
+@@ -1,9 +1,11 @@
  import { useCallback } from "react";
 -import { Platform } from "react-native";
  import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
  
 -import { IS_FABRIC } from "../../../architecture";
- import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
+-import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
++import {
++  isAnimatedRefAttached,
++  isScrollAtEnd,
++  shouldShiftContent,
++} from "../useChatKeyboard/helpers";
  
  import type { KeyboardLiftBehavior } from "../useChatKeyboard/types";
-@@ -52,7 +50,6 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
+ import type { AnimatedRef, SharedValue } from "react-native-reanimated";
+@@ -52,7 +54,6 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
      scroll,
      layout,
      size,
@@ -42,7 +98,7 @@ index 0f6d7c67a307885310ab184fdf9e7a5c7b296825..1a01093e7909973cef5268f999158df3
      inverted,
      keyboardLiftBehavior,
      freeze,
-@@ -62,20 +59,23 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
+@@ -62,20 +63,20 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
      (target: number) => {
        "worklet";
  
@@ -62,11 +118,8 @@ index 0f6d7c67a307885310ab184fdf9e7a5c7b296825..1a01093e7909973cef5268f999158df3
 +      requestAnimationFrame(() => {
 +        // The ScrollView can detach between scheduling this frame and now (e.g.
 +        // navigating away from the screen, or the list re-creating its scroll
-+        // component). Once detached, scrollViewRef() resolves to null, and on
-+        // Paper reanimated's scrollTo hands that null to the native
-+        // _scrollToPaper HostFunction, which throws "Value is null, expected a
-+        // number". Re-check the ref now that the frame has arrived.
-+        if (scrollViewRef() == null) {
++        // component). Re-check the ref now that the frame has arrived.
++        if (!isAnimatedRefAttached(scrollViewRef)) {
 +          return;
 +        }
          scrollTo(scrollViewRef, 0, target, false);
