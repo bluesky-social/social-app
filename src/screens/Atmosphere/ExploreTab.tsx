@@ -2,10 +2,12 @@ import {View} from 'react-native'
 
 import {atoms as a} from '#/alf'
 import * as Layout from '#/components/Layout'
+import {FeaturedApps} from './components/FeaturedApps'
 import {FeaturedArticles} from './components/FeaturedArticles'
 import {FeaturedLivestreams} from './components/FeaturedLivestreams'
 import {FeaturedPhotos} from './components/FeaturedPhotos'
 import {
+  getAtmosphereApps,
   getAtmosphereArticles,
   getAtmosphereLivestreams,
   getAtmospherePhotos,
@@ -13,6 +15,7 @@ import {
 import {livestreamPreviewFixture} from './fixtures/livestreamPreview'
 
 const articles = getAtmosphereArticles()
+const apps = getAtmosphereApps()
 const livestreams = getAtmosphereLivestreams({
   livestreams: livestreamPreviewFixture,
 })
@@ -27,6 +30,7 @@ export function AtmosphereExploreTab() {
         <FeaturedArticles articles={articles} />
         <FeaturedLivestreams livestreams={livestreams} />
         <FeaturedPhotos photos={photos} />
+        <FeaturedApps apps={apps} />
       </View>
     </Layout.Content>
   )

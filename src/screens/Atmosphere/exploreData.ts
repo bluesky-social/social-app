@@ -31,6 +31,17 @@ export type AtmosphereArticleCardData = {
   publisherAvatar?: string
 }
 
+export type AtmosphereAppCardData = {
+  id: string
+  title: string
+  description: string
+  logo: string
+  backgroundImage: string
+  overlayColor: string
+  textColor: string
+  href: string
+}
+
 export type AtmospherePhotoCardData = {
   id: string
   href: string
@@ -62,6 +73,21 @@ export function getAtmosphereArticles(
     image: article.image,
     publisher: article.publisher.title,
     publisherAvatar: article.associatedProfiles[0]?.avatar,
+  }))
+}
+
+export function getAtmosphereApps(
+  data: AtmosphereData = atmosphereData,
+): AtmosphereAppCardData[] {
+  return data.apps.map(app => ({
+    id: app.id,
+    title: app.title,
+    description: app.description,
+    logo: app.logo,
+    backgroundImage: app.backgroundImage,
+    overlayColor: app.overlayColor,
+    textColor: app.textColor,
+    href: app.url,
   }))
 }
 
