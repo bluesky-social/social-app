@@ -43,7 +43,8 @@ export function LivestreamCard({
           to={livestream.href}
           label={
             livestream.active
-              ? l`Open livestream: ${livestream.title}, live with 5 viewers`
+              ? // TODO Placeholder value. -dsb
+                l`Open livestream: ${livestream.title}, live with 5 viewers`
               : l`Open livestream: ${livestream.title}`
           }
           accessibilityHint=""
@@ -141,7 +142,7 @@ export function LivestreamCard({
                   ]}>
                   <EyeIcon size="xs" fill="white" />
                   <Text style={[a.text_xs, a.font_semi_bold, {color: 'white'}]}>
-                    5
+                    {/* TODO Placeholder value. -dsb */}5
                   </Text>
                 </View>
               </View>
