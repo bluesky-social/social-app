@@ -7,7 +7,7 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {type AtmosphereArticleCardData} from '../exploreData'
 
-export function ExploreCard({
+export function ArticleCard({
   article,
   width,
 }: {
