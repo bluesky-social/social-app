@@ -3,7 +3,7 @@ import {AtUri} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
-import {makeProfileLink} from '#/lib/routes/links'
+import {makeCustomFeedLink} from '#/lib/routes/links'
 import {atoms as a, useTheme} from '#/alf'
 import {BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon} from '#/components/icons/Bell'
 import {type Props as SVGIconProps} from '#/components/icons/common'
@@ -13,52 +13,9 @@ import {
   Repost_Stroke2_Corner3_Rounded as RepostIcon,
   RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
 } from '#/components/icons/Repost'
-import {type app} from '#/lexicons'
 import * as Item from '../Item'
+import {makeActivityListLink, makePostLink} from '../links'
 import {type NotificationOf} from '../types'
-
-/**
- * `getPosts`, which backs the activity list screen, takes at most 25 URIs.
- */
-const MAX_ACTIVITY_LIST_POSTS = 25
-
-/**
- * Link to a post, optionally to a sub-route like `liked-by`.
- */
-function makePostLink(
-  post: app.bsky.feed.defs.PostView,
-  ...segments: string[]
-) {
-  return makeProfileLink(
-    post.author,
-    'post',
-    new AtUri(post.uri).rkey,
-    ...segments,
-  )
-}
-
-/**
- * Link to a feed generator, optionally to a sub-route like `liked-by`.
- */
-function makeFeedLink(
-  generator: app.bsky.feed.defs.GeneratorView,
-  ...segments: string[]
-) {
-  return makeProfileLink(
-    generator.creator,
-    'feed',
-    new AtUri(generator.uri).rkey,
-    ...segments,
-  )
-}
-
-/**
- * Link to the activity list screen, which shows the given posts as a feed.
- */
-function makeActivityListLink(uris: string[]) {
-  const posts = uris.slice(0, MAX_ACTIVITY_LIST_POSTS).join(',')
-  return `/notifications/activity?posts=${encodeURIComponent(posts)}`
-}
 
 /**
  * Shared anatomy for likes and reposts of one post: the headline actor's
@@ -93,6 +50,7 @@ function PostReactionRow({
 }) {
   const {post, actors} = notification
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
+  const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
     <Item.Root
@@ -115,7 +73,11 @@ function PostReactionRow({
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>
-          <Item.InlineImages embed={post.embed} size={60} />
+          <Item.InlineImages
+            embed={post.embed}
+            size={60}
+            blurred={mediaBlurred}
+          />
         </Item.Trailing>
       )}
     </Item.Root>
@@ -327,6 +289,7 @@ export function MultiPostLikeNotification({
   const name = Item.useDisplayName(actor)
   const href = makeActivityListLink(posts.map(p => p.uri))
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
+  const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
     <Item.Root
@@ -352,7 +315,11 @@ export function MultiPostLikeNotification({
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>
-          <Item.InlineImages embed={post.embed} size={60} />
+          <Item.InlineImages
+            embed={post.embed}
+            size={60}
+            blurred={mediaBlurred}
+          />
         </Item.Trailing>
       )}
     </Item.Root>
@@ -372,10 +339,11 @@ export function GeneratorLikeNotification({
   const actor = actors[0]
   const name = Item.useDisplayName(actor)
   const others = notification.count - 1
+  const feedUri = new AtUri(generator.uri)
 
   return (
     <Item.Root
-      href={makeFeedLink(generator)}
+      href={makeCustomFeedLink(feedUri.host, feedUri.rkey)}
       isRead={notification.isRead}
       label={
         others > 0
@@ -393,7 +361,7 @@ export function GeneratorLikeNotification({
             <Item.AvatarRow
               profiles={actors.slice(1)}
               total={others}
-              href={makeFeedLink(generator, 'liked-by')}
+              href={makeCustomFeedLink(feedUri.host, feedUri.rkey, 'liked-by')}
             />
           )}
           <Item.PrimaryText>
@@ -442,6 +410,7 @@ export function SubscribedPostNotification({
     )
   const others = authors.length - 1
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
+  const mediaBlurred = Item.usePostMediaBlurred(post)
 
   return (
     <Item.Root
@@ -485,7 +454,11 @@ export function SubscribedPostNotification({
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>
-          <Item.InlineImages embed={post.embed} size={60} />
+          <Item.InlineImages
+            embed={post.embed}
+            size={60}
+            blurred={mediaBlurred}
+          />
         </Item.Trailing>
       )}
     </Item.Root>

@@ -1,6 +1,5 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {AtUri} from '@atproto/syntax'
 import {moderatePost} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
@@ -49,6 +48,7 @@ import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {makePostLink} from '../links'
 import {Card, InlineImages} from './media'
 import {Strong, useDisplayName} from './text'
 
@@ -112,6 +112,7 @@ export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
         </WebOnlyInlineLinkText>
         <ProfileBadges profile={profile} size="sm" style={[a.pl_2xs]} />
         <WebOnlyInlineLinkText
+          emoji
           numberOfLines={1}
           to={href}
           label={label}
@@ -132,7 +133,7 @@ export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
 
 /**
  * A single line of context under the author, with a small leading icon, e.g.
- * "replied to: …". Children are text spans, truncated with an ellipsis.
+ * "replied to: ...". Children are text spans, truncated with an ellipsis.
  */
 export function ContextLine({
   icon: Icon,
@@ -166,8 +167,8 @@ export function ReplyContext({
 }: {
   parent: ParentPost
   /**
-   * `reply` for reply notifications ("replied to …"). `inReply` for mentions
-   * and quotes that happen to be replies ("in reply to …"), where the headline
+   * `reply` for reply notifications ("replied to ..."). `inReply` for mentions
+   * and quotes that happen to be replies ("in reply to ..."), where the headline
    * action is something else.
    */
   variant?: 'reply' | 'inReply'
@@ -234,24 +235,34 @@ function ReplyContextPost({
   if (variant === 'reply') {
     return isViewer ? (
       <Trans>
-        replied to: <Text style={previewStyle}>{preview}</Text>
+        replied to:{' '}
+        <Text emoji style={previewStyle}>
+          {preview}
+        </Text>
       </Trans>
     ) : (
       <Trans>
         replied to <Strong>{name}</Strong>:{' '}
-        <Text style={previewStyle}>{preview}</Text>
+        <Text emoji style={previewStyle}>
+          {preview}
+        </Text>
       </Trans>
     )
   }
 
   return isViewer ? (
     <Trans>
-      in reply to: <Text style={previewStyle}>{preview}</Text>
+      in reply to:{' '}
+      <Text emoji style={previewStyle}>
+        {preview}
+      </Text>
     </Trans>
   ) : (
     <Trans>
       in reply to <Strong>{name}</Strong>:{' '}
-      <Text style={previewStyle}>{preview}</Text>
+      <Text emoji style={previewStyle}>
+        {preview}
+      </Text>
     </Trans>
   )
 }
@@ -291,7 +302,12 @@ export function PostBody({post}: {post: PostView}) {
           style={[a.text_sm, a.leading_snug, t.atoms.text]}
         />
       )}
-      {post.embed && <EmbedPreview embed={post.embed} />}
+      {post.embed && (
+        <EmbedPreview
+          embed={post.embed}
+          mediaBlurred={moderation?.ui('contentMedia').blur ?? false}
+        />
+      )}
     </ContentHider>
   )
 }
@@ -300,11 +316,21 @@ export function PostBody({post}: {post: PostView}) {
  * A compact stand-in for the full post embed: thumbnails for media, a card
  * for links and quoted posts, and nothing for feeds, lists and the like.
  */
-function EmbedPreview({embed}: {embed: NonNullable<PostView['embed']>}) {
+function EmbedPreview({
+  embed,
+  mediaBlurred,
+}: {
+  embed: NonNullable<PostView['embed']>
+  /**
+   * Whether the post's own media is behind a moderation warning. Quoted
+   * posts apply their own moderation.
+   */
+  mediaBlurred: boolean
+}) {
   if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
     return (
       <View style={[a.gap_sm]}>
-        <EmbedPreview embed={embed.media} />
+        <EmbedPreview embed={embed.media} mediaBlurred={mediaBlurred} />
         <QuoteCard embed={embed.record} />
       </View>
     )
@@ -319,6 +345,7 @@ function EmbedPreview({embed}: {embed: NonNullable<PostView['embed']>}) {
       return (
         <InlineImages
           size={80}
+          blurred={mediaBlurred}
           embed={{
             $type: 'app.bsky.embed.images#view',
             images: [
@@ -334,7 +361,7 @@ function EmbedPreview({embed}: {embed: NonNullable<PostView['embed']>}) {
     }
     return <LinkCard link={link} />
   }
-  return <InlineImages embed={embed} size={80} />
+  return <InlineImages embed={embed} size={80} blurred={mediaBlurred} />
 }
 
 /**
@@ -374,6 +401,7 @@ export function LinkCard({link}: {link: app.bsky.embed.external.ViewExternal}) {
           <View style={[a.flex_row, a.align_center, a.gap_xs]}>
             <Globe size="xs" fill={t.atoms.text_contrast_low.color} />
             <Text
+              emoji
               numberOfLines={1}
               style={[
                 a.flex_1,
@@ -448,7 +476,7 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
   const moderation = moderationOpts
     ? moderatePost(quote, moderationOpts)
     : undefined
-  const href = makeProfileLink(view.author, 'post', new AtUri(view.uri).rkey)
+  const href = makePostLink(view)
   const text = bsky.isType(app.bsky.feed.post, view.value)
     ? view.value.text.trim()
     : ''
@@ -481,6 +509,7 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 {forceLTR(name)}
               </Text>
               <Text
+                emoji
                 numberOfLines={1}
                 style={[
                   a.text_sm,
@@ -521,7 +550,11 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 {text}
               </Text>
             ) : (
-              <InlineImages embed={quote.embed} size={60} />
+              <InlineImages
+                embed={quote.embed}
+                size={60}
+                blurred={moderation?.ui('contentMedia').blur ?? false}
+              />
             )}
           </Card>
         )}

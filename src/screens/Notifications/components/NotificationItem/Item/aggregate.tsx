@@ -38,8 +38,8 @@ export function AvatarRow({
   href,
 }: {
   /**
-   * The other actors, excluding the headline actor. Usually only a resolved
-   * subset of `total`.
+   * The other actors, excluding the headline actor and without duplicates.
+   * Usually only a resolved subset of `total`.
    */
   profiles: bsky.profile.AnyProfileView[]
   /**
@@ -54,12 +54,7 @@ export function AvatarRow({
   href?: string
 }) {
   const moderationOpts = useModerationOpts()
-  const shown = profiles
-    .filter(
-      (profile, index) =>
-        profiles.findIndex(other => other.did === profile.did) === index,
-    )
-    .slice(0, MAX_PREVIEW_AVATARS)
+  const shown = profiles.slice(0, MAX_PREVIEW_AVATARS)
   const remaining = total - shown.length
 
   return (
@@ -238,6 +233,7 @@ export function FeedCard({
             {generator.displayName}
           </Text>
           <Text
+            emoji
             numberOfLines={1}
             style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_high]}>
             <Trans>Feed by {handle}</Trans>
@@ -249,7 +245,7 @@ export function FeedCard({
 }
 
 /**
- * A "View all →" link, for rows that summarise more than they can show.
+ * A "View all ->" link, for rows that summarise more than they can show.
  */
 export function ViewAllLink({
   href,

@@ -150,9 +150,10 @@ function GroupedFollowNotification({
       /*
        * The header and list stack vertically. Padding moves inside them, so
        * that the whole header toggles the list rather than its padding
-       * following the row's link.
+       * following the row's link. Root pads with the longhands, which win over
+       * the `padding` shorthand, so zero those.
        */
-      style={[a.flex_col, a.align_stretch, a.gap_0, a.p_0]}
+      style={[a.flex_col, a.align_stretch, a.gap_0, a.px_0, a.py_0]}
       testID={`notification-follow-${notification.id}`}>
       <Pressable
         accessible={isExpanded}

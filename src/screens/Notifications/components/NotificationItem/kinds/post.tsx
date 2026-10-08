@@ -1,7 +1,5 @@
 import {View} from 'react-native'
-import {AtUri} from '@atproto/syntax'
 
-import {makeProfileLink} from '#/lib/routes/links'
 import {POST_TOMBSTONE, usePostShadow} from '#/state/cache/post-shadow'
 import {type ParentPost} from '#/state/queries/notifications/grouped/types'
 import {atoms as a} from '#/alf'
@@ -10,6 +8,7 @@ import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
 import {CloseQuote_Filled_Stroke2_Corner0_Rounded as CloseQuote} from '#/components/icons/CloseQuote'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import * as Item from '../Item'
+import {makePostLink} from '../links'
 import {type NotificationOf} from '../types'
 
 /**
@@ -89,7 +88,7 @@ function PostNotification({
 
   return (
     <Item.Root
-      href={makeProfileLink(post.author, 'post', new AtUri(post.uri).rkey)}
+      href={makePostLink(post)}
       isRead={notification.isRead}
       // Actions in the row need to be individually reachable
       accessible={false}
