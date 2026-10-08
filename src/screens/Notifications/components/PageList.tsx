@@ -30,7 +30,7 @@ import {usePager} from '#/screens/Notifications/components/PagerView'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
-import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
+import {EnvelopeNotification_Filled_Corner2_Rounded as EnvelopeNotificationIcon} from '#/components/icons/brands/EnvelopeNotification'
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -368,11 +368,10 @@ function NoNotifications() {
 
   return (
     <View style={[a.align_center, a.gap_md]}>
-      {/*
-       * Stand-in: the designs use an envelope with a notification dot, which
-       * isn't in the icon set yet
-       */}
-      <EnvelopeIcon width={80} fill={t.atoms.border_contrast_low.borderColor} />
+      <EnvelopeNotificationIcon
+        width={80}
+        fill={t.atoms.border_contrast_low.borderColor}
+      />
       <View style={[a.align_center, a.gap_xs]}>
         <Text
           accessibilityRole="header"
