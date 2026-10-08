@@ -199,8 +199,8 @@ export function TabPills({
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToOffsets={
-            tabOffsets.filter(offset => !!offset).length === tabs.length
-              ? tabOffsets.map(offset => offset.x - tokens.space.xl)
+            tabOffsets.length === tabs.length
+              ? tabOffsets.map(layout => layout.x - gutterWidth)
               : undefined
           }
           onScroll={
