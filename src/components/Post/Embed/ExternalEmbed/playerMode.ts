@@ -1,6 +1,7 @@
 /**
  * - `inactive`: no WebView; the placeholder is showing.
- * - `inline`: playing in the feed, so scrolling away should stop it.
+ * - `inline`: mounted in the feed (loading or playing), so scrolling away
+ *   should stop it.
  * - `fullscreen`: the content is in native fullscreen.
  *
  * One state rather than separate active and fullscreen flags, so that
@@ -30,8 +31,9 @@ export function playerModeAfterActivate(mode: PlayerMode): PlayerMode {
 
 /**
  * Whether to check if the player has scrolled out of the viewport. In
- * fullscreen the content is reparented out of the WebView, so the wrapper we
- * would measure is an empty placeholder and the user cannot scroll anyway.
+ * fullscreen on Android the content is reparented to the activity root, so the
+ * wrapper we would measure is an empty placeholder and the user cannot scroll
+ * anyway.
  */
 export function shouldWatchVisibility(mode: PlayerMode): boolean {
   return mode === 'inline'
