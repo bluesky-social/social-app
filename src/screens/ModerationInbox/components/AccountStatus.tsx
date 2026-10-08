@@ -18,7 +18,7 @@ export function AccountStatus({
 
   const control = Prompt.usePromptControl()
 
-  if (status === 'good') return undefined
+  if (status === 'good') return null
 
   const Icon = status === 'atRisk' ? ExclamationCircleIcon : CircleInfoIcon
   const iconColor =
