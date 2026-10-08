@@ -15,11 +15,11 @@ upstreamed.
 Fullscreening a video and rotating the device stopped playback, snapped the app
 back to portrait, and left the feed scrolling erratically over blank space.
 
-Fullscreen unlocks the app's portrait lock (`src/App.tsx`), which allows the
-rotation. The React tree then lays out for landscape, a layout nobody sees
-because the video covers it. `PostFeed` sets a large `windowSize`, so in the
-shorter landscape viewport the list rewindows and unmounts the row holding the
-`WebView`. Destroying the `WebView` calls `onHideCustomView()`, which restores
+`src/App.tsx` locks Android to portrait; entering fullscreen sets the activity
+orientation to `UNSPECIFIED`, which allows rotation. The React tree then lays
+out for landscape, a layout nobody sees because the video covers it. `PostFeed`
+sets a large `windowSize`, so in the shorter landscape viewport the list
+rewindows and unmounts the row holding the `WebView`. Destroying the `WebView` calls `onHideCustomView()`, which restores
 the portrait lock, and the video is gone.
 
 The fix is to stop that layout happening at all. The event alone is not enough:
