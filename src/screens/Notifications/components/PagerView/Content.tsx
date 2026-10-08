@@ -35,11 +35,17 @@ const MemoizedAnimatedPagerView = memo(AnimatedPagerView)
 export function Content({
   children,
   manageDrawerGesture = false,
+  scrollEnabled = true,
   style,
   testID,
 }: {
   children: React.ReactNode
   manageDrawerGesture?: boolean
+  /**
+   * Set to false to stop swiping between pages, e.g. when the tab bar is
+   * hidden.
+   */
+  scrollEnabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
 }) {
@@ -133,6 +139,7 @@ export function Content({
       testID={testID}
       style={[a.flex_1, style]}
       initialPage={initialPage}
+      scrollEnabled={scrollEnabled}
       onPageScroll={handlePageScroll}>
       {Children.map(children, child => (
         <View collapsable={false} style={a.flex_1}>
