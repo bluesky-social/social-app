@@ -373,12 +373,18 @@ function buildRows(
  * The Followers tab is a list of people rather than a feed: a single
  * "Followed you" header, then a row per follower. Any other kind keeps its
  * usual notification row.
+ *
+ * Someone who unfollowed and followed again has several follow
+ * notifications, but only gets one row, at their most recent follow.
  */
 function buildFollowerRows(notifications: NotificationView[]): Row[] {
   const rows: Row[] = [{type: 'followersHeader', key: 'followersHeader'}]
+  const seenDids = new Set<string>()
   for (const notification of notifications) {
     if (isFollowerNotification(notification)) {
       for (const profile of getFollowers(notification)) {
+        if (seenDids.has(profile.did)) continue
+        seenDids.add(profile.did)
         rows.push({
           type: 'follower',
           key: `${notification.id}-${profile.did}`,
