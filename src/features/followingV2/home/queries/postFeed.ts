@@ -1,4 +1,11 @@
-import {useCallback, useMemo, useRef, useState} from 'react'
+import {
+  useCallback,
+  useEffect,
+  useEffectEvent,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {AppState} from 'react-native'
 import {type Client} from '@atproto/lex'
 import {type AtIdentifierString, type AtUriString} from '@atproto/syntax'
@@ -120,6 +127,18 @@ export interface FeedPostSlice {
 
 export interface FeedPageUnselected {
   cursor: string | undefined
+  /**
+   * The server's cursor for the newest boundary of this page. Following pages
+   * have one, once the appview supports it.
+   */
+  startCursor?: string
+  /**
+   * The `since` the page was requested with, on a page put above the others
+   * (see {@link usePostFeedRestorePrepend}). The server echoes it as the cursor
+   * when the range it bounds is exhausted, so the page sits right on the one
+   * below. Any other cursor leaves a gap between them (see {@link gapBelow}).
+   */
+  since?: string
   /** See {@link FeedSource}. */
   source?: FeedSource
   feed: app.bsky.feed.defs.FeedViewPost[]
@@ -129,6 +148,10 @@ export interface FeedPageUnselected {
 export interface FeedPage {
   tuner: FeedTuner
   cursor: string | undefined
+  /** See {@link FeedPageUnselected}. */
+  startCursor?: string
+  /** See {@link FeedPageUnselected}. */
+  since?: string
   source?: FeedSource
   slices: FeedPostSlice[]
   fetchedAt: number
@@ -159,9 +182,9 @@ export function usePostFeedQuery(
     opts?.enabled !== false && Boolean(moderationOpts) && Boolean(preferences)
   const {fetchPage} = usePostFeedFetcher(feedDesc)
   const lastRun = useRef<{
-    data: InfiniteData<FeedPageUnselected>
     args: typeof selectArgs
-    result: InfiniteData<FeedPage>
+    /** The pages it tuned, in the order it tuned them. */
+    tuned: {page: FeedPageUnselected; selected: FeedPage}[]
   } | null>(null)
   const isDiscover = feedDesc.includes(DISCOVER_FEED_URI)
 
@@ -179,7 +202,7 @@ export function usePostFeedQuery(
   const query = useInfiniteQuery<
     FeedPageUnselected,
     Error,
-    InfiniteData<FeedPage>,
+    InfiniteData<FeedPage> | undefined,
     QueryKey,
     RQPageParam
   >({
@@ -204,19 +227,34 @@ export function usePostFeedQuery(
         // be included in the selectArgs object and read here.
         const {feedTuners, moderationOpts, ignoreFilterFor, isDiscover} =
           selectArgs
+        /*
+         * Data restored from disk is here before the query is enabled, so it
+         * can be here before what moderates it is. Until that's ready there's
+         * nothing to render.
+         */
+        if (!moderationOpts) {
+          return undefined
+        }
 
         const tuner = new FeedTuner(feedTuners)
 
+        /*
+         * Pages are tuned in the order they were fetched, and rendered in data
+         * order. So a page put above the others is tuned after them: the posts
+         * it shares with them drop from it, and their rows stay as they were.
+         * The sort is stable, so pages fetched in the same millisecond keep
+         * their order.
+         */
+        const order = data.pages
+          .map((_, i) => i)
+          .sort((a, b) => data.pages[a].fetchedAt - data.pages[b].fetchedAt)
+
         // Keep track of the last run and whether we can reuse
-        // some already selected pages from there.
-        let reusedPages = []
+        // some already tuned pages from there, in tune order.
+        const lastRunTuned = lastRun.current?.tuned ?? []
+        let canReuse = Boolean(lastRun.current)
         if (lastRun.current) {
-          const {
-            data: lastData,
-            args: lastArgs,
-            result: lastResult,
-          } = lastRun.current
-          let canReuse = true
+          const lastArgs = lastRun.current.args
           for (let key in selectArgs) {
             if (selectArgs.hasOwnProperty(key)) {
               if (
@@ -229,45 +267,46 @@ export function usePostFeedQuery(
               }
             }
           }
-          if (canReuse) {
-            for (let i = 0; i < data.pages.length; i++) {
-              if (data.pages[i] && lastData.pages[i] === data.pages[i]) {
-                reusedPages.push(lastResult.pages[i])
-                // Keep the tuner in sync so that the end result is deterministic.
-                tuner.tune(lastData.pages[i].feed)
-                continue
-              }
-              // Stop as soon as pages stop matching up.
-              break
-            }
+        }
+
+        const pages: FeedPage[] = []
+        for (const [k, i] of order.entries()) {
+          const page = data.pages[i]
+          const last = lastRunTuned[k]
+          if (canReuse && last?.page === page) {
+            pages[i] = last.selected
+            // Keep the tuner in sync so that the end result is deterministic.
+            tuner.tune(page.feed)
+            continue
+          }
+          // Stop as soon as pages stop matching up.
+          canReuse = false
+          pages[i] = {
+            tuner,
+            cursor: page.cursor,
+            startCursor: page.startCursor,
+            since: page.since,
+            source: page.source,
+            fetchedAt: page.fetchedAt,
+            slices: tuner
+              .tune(page.feed)
+              .map(slice =>
+                toFeedPostSlice(slice, {
+                  moderationOpts,
+                  ignoreFilterFor,
+                  isDiscover,
+                }),
+              )
+              .filter(n => !!n),
           }
         }
 
-        const result = {
-          pageParams: data.pageParams,
-          pages: [
-            ...reusedPages,
-            ...data.pages.slice(reusedPages.length).map(page => ({
-              tuner,
-              cursor: page.cursor,
-              source: page.source,
-              fetchedAt: page.fetchedAt,
-              slices: tuner
-                .tune(page.feed)
-                .map(slice =>
-                  toFeedPostSlice(slice, {
-                    moderationOpts: moderationOpts!,
-                    ignoreFilterFor,
-                    isDiscover,
-                  }),
-                )
-                .filter(n => !!n),
-            })),
-          ],
-        }
         // Save for memoization.
-        lastRun.current = {data, result, args: selectArgs}
-        return result
+        lastRun.current = {
+          args: selectArgs,
+          tuned: order.map(i => ({page: data.pages[i], selected: pages[i]})),
+        }
+        return {pageParams: data.pageParams, pages}
       },
       [selectArgs /* Don't change. Everything needs to go into selectArgs. */],
     ),
@@ -394,12 +433,14 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
 
   const fetchPage = async (
     pageParam: RQPageParam,
+    {since, limit = fetchLimit}: {since?: string; limit?: number} = {},
   ): Promise<FeedPageUnselected> => {
     const api = createFeedApi()
     const res = await api.fetch({
       cursor: pageParam?.cursor,
+      since,
       source: pageParam?.source,
-      limit: fetchLimit,
+      limit,
     })
 
     /*
@@ -418,6 +459,8 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
 
     return {
       cursor: res.cursor,
+      startCursor: res.startCursor,
+      ...(since !== undefined && {since}),
       source: res.source,
       feed: res.feed,
       fetchedAt: Date.now(),
@@ -427,7 +470,7 @@ export function usePostFeedFetcher(feedDesc: FeedDescriptor) {
   return {createFeedApi, fetchPage}
 }
 
-type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
+export type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
 
 /**
  * Refreshes the feed from the top with one fetch and then one write, so the
@@ -435,9 +478,10 @@ type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
  * is why the last refresh failed, cleared when another starts. Refetches from
  * an invalidation or a reset still go through TanStack.
  *
- * One started while another is pending joins it. One that finishes after the
- * view has gone still commits, which is safe, as the commit gives way to
- * anything that has replaced the top page since.
+ * `refresh` resolves to the page it wrote, if it wrote one. One started while
+ * another is pending joins it. One that finishes after the view has gone still
+ * commits, which is safe, as the commit gives way to anything that has
+ * replaced the top page since.
  */
 export function usePostFeedRefresh(
   feedDesc: FeedDescriptor,
@@ -449,7 +493,7 @@ export function usePostFeedRefresh(
   const [error, setError] = useState<Error | undefined>(undefined)
   const [isRefreshing, setIsRefreshing] = useState(false)
   /** The pending refresh, for another to join. */
-  const pending = useRef<Promise<void>>(undefined)
+  const pending = useRef<Promise<FeedPageUnselected | undefined>>(undefined)
 
   const refreshFromTop = async () => {
     const before = queryClient.getQueryData<PostFeedData>(queryKey)
@@ -457,16 +501,17 @@ export function usePostFeedRefresh(
     setIsRefreshing(true)
     try {
       const page = await fetchPage(undefined)
-      await commit(queryClient, queryKey, before, {
+      const wrote = await commit(queryClient, queryKey, before, () => ({
         pages: [page],
         pageParams: [undefined],
-      })
+      }))
+      return wrote ? page : undefined
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to refresh posts feed', {safeMessage: e})
       }
       // Nothing to report once the feed has moved on.
-      if (!isTopReplaced(queryClient, queryKey, before)) {
+      if (!isReplaced(queryClient, queryKey, before)) {
         setError(e instanceof Error ? e : new Error(String(e)))
       }
     } finally {
@@ -482,7 +527,7 @@ export function usePostFeedRefresh(
      */
     const status = queryClient.getQueryState(queryKey)?.status
     if (!status || status === 'pending') {
-      return Promise.resolve()
+      return Promise.resolve(undefined)
     }
     pending.current ??= refreshFromTop()
     return pending.current
@@ -491,35 +536,350 @@ export function usePostFeedRefresh(
   return {refresh, error, isRefreshing}
 }
 
-/** Whether something else has replaced the feed's top page since `before`. */
-function isTopReplaced(
-  queryClient: QueryClient,
-  queryKey: QueryKey,
-  before: PostFeedData | undefined,
+/**
+ * When this JS process started. A page fetched before it was restored from
+ * disk, which is how a restored top page is told from a fetched one without
+ * marking it.
+ */
+export const PROCESS_STARTED_AT = Date.now()
+
+/**
+ * How many posts a restore prepend asks for: the most `getTimeline` allows, as
+ * a range with more than this in it leaves a gap.
+ */
+const RESTORE_PREPEND_LIMIT = 100
+
+/**
+ * Puts what is newer than a top page restored from disk above it, with one
+ * fetch and then one write through the same compare-and-swap as a refresh. A
+ * top page fetched before this process started (see
+ * {@link PROCESS_STARTED_AT}) is a restored one, so a refresh, or anything
+ * else that replaces the top page, leaves nothing to do.
+ *
+ * It fetches as soon as the view is `enabled` with a restored top, while the
+ * list does its first layout, and holds what it finds until `listAtRest`
+ * resolves, so the list takes it laid out and still, however long the reader
+ * keeps it moving. It runs once per view, whatever it finds. `isOwed` says
+ * whether it has yet to finish, holding a page included, for checks for new
+ * posts to wait for it, and `prependedAt` is the `fetchedAt` of the page it
+ * put on top, once it has.
+ *
+ * It fetches with `since` set to the top page's `startCursor`. Nothing newer
+ * writes nothing. Anything newer goes on top as a page of its own, with the
+ * `since` it was requested with, and the page that was on top now continues
+ * from its cursor. When the server echoes `since` as that cursor, the range
+ * was exhausted and the pages are contiguous. Otherwise there's a gap between
+ * them (see {@link gapBelow}). A failure leaves the restored feed as it was.
+ * The write gives way to anything that has replaced the top page meanwhile,
+ * and keeps any page loaded below it.
+ */
+export function usePostFeedRestorePrepend(
+  feedDesc: FeedDescriptor,
+  params: FeedParams | undefined,
+  {
+    enabled,
+    topFetchedAt,
+    listAtRest,
+  }: {
+    enabled: boolean
+    /** The `fetchedAt` of the top page as rendered, if there is one. */
+    topFetchedAt: number | undefined
+    /**
+     * Resolves once the list can take posts above the reader without moving
+     * them: laid out and at rest (see `useListRest`).
+     */
+    listAtRest: () => Promise<void>
+  },
 ) {
-  return (
-    queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0] !==
-    before?.pages[0]
-  )
+  const queryClient = useQueryClient()
+  const {fetchPage} = usePostFeedFetcher(feedDesc)
+  const queryKey = RQKEY(feedDesc, params)
+  /** How far this view has got with its one go. */
+  const stage = useRef<'unstarted' | 'started' | 'finished'>('unstarted')
+  const [prependedAt, setPrependedAt] = useState<number>()
+  const isTopRestored = isRestored(topFetchedAt)
+
+  const isOwed = () => {
+    const top = queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0]
+    return (
+      stage.current !== 'finished' &&
+      isRestored(top?.fetchedAt) &&
+      top?.startCursor !== undefined
+    )
+  }
+
+  const prepend = async () => {
+    const before = queryClient.getQueryData<PostFeedData>(queryKey)
+    const since = before?.pages[0]?.startCursor
+    if (
+      !before ||
+      since === undefined ||
+      stage.current !== 'unstarted' ||
+      !isOwed()
+    ) {
+      return
+    }
+    stage.current = 'started'
+    try {
+      const page = await fetchPage(undefined, {
+        since,
+        limit: RESTORE_PREPEND_LIMIT,
+      })
+      /*
+       * A bounded range always comes back with a cursor, the echo of `since`
+       * or one into what it didn't return, so a page without one can't go
+       * above the posts below it.
+       */
+      const {cursor} = page
+      if (!page.feed.length || cursor === undefined) {
+        return
+      }
+      await listAtRest()
+      const wrote = await commit(
+        queryClient,
+        queryKey,
+        before,
+        (data = before) => ({
+          pages: [page, ...data.pages],
+          pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
+        }),
+      )
+      if (wrote) {
+        setPrependedAt(page.fetchedAt)
+      }
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to fetch posts newer than a restored feed', {
+          safeMessage: e,
+        })
+      }
+    } finally {
+      stage.current = 'finished'
+    }
+  }
+
+  const onReady = useEffectEvent(() => {
+    void prepend()
+  })
+  useEffect(() => {
+    if (enabled && isTopRestored) {
+      onReady()
+    }
+  }, [enabled, isTopRestored])
+
+  return {isOwed, prependedAt}
 }
 
 /**
- * Writes `data` over the feed's, unless something else has replaced its top
- * page since `before` was read (a refetch, a reset or a removal) or is
- * fetching it now.
+ * What lies between the feed's page at `index` and the page below it:
+ *
+ * - `open`: the page was put above the others with `since` (see
+ *   {@link usePostFeedRestorePrepend}) and its range wasn't exhausted, so
+ *   some of the posts between its cursor and the page below are missing. The
+ *   page below is still the one its `since` came from: it starts at that
+ *   `startCursor`.
+ * - `filled`: the page below continues from its cursor, as
+ *   {@link usePostFeedGapFill} or a page load put it there.
+ *
+ * `undefined` when there's nothing missing: below any other page, and below
+ * the bottom page, whose cursor ordinary pagination continues from.
+ */
+export function gapBelow(
+  pages: readonly Pick<
+    FeedPageUnselected,
+    'cursor' | 'startCursor' | 'since'
+  >[],
+  index: number,
+): 'open' | 'filled' | undefined {
+  const page = pages[index]
+  const below = pages[index + 1]
+  if (
+    !page ||
+    !below ||
+    page.since === undefined ||
+    page.cursor === undefined ||
+    page.cursor === page.since
+  ) {
+    return undefined
+  }
+  return below.startCursor === page.since ? 'open' : 'filled'
+}
+
+/**
+ * The gaps to mark in a feed, by the index of the page each is below (see
+ * {@link gapBelow}). An open gap with no posts between it and an open gap
+ * above it is left out: the two would read as one, and filling the upper one
+ * replaces everything below it, the lower one included.
+ */
+export function findGaps(
+  pages: readonly Pick<
+    FeedPage,
+    'cursor' | 'startCursor' | 'since' | 'slices'
+  >[],
+) {
+  const gaps = new Map<number, 'open' | 'filled'>()
+  let isBelowOpenGap = false
+  pages.forEach((page, i) => {
+    if (page.slices.length) {
+      isBelowOpenGap = false
+    }
+    const gap = gapBelow(pages, i)
+    if (gap && !(gap === 'open' && isBelowOpenGap)) {
+      gaps.set(i, gap)
+      isBelowOpenGap = gap === 'open'
+    }
+  })
+  return gaps
+}
+
+/**
+ * How a gap fill (see {@link usePostFeedGapFill}) ended: it `filled` the gap,
+ * `failed` to fetch, or was `superseded`, writing nothing, as the gap had
+ * already gone or something else replaced the pages it depends on first.
+ */
+export type GapFillOutcome = 'filled' | 'failed' | 'superseded'
+
+/**
+ * Fills an open gap below a page (see {@link gapBelow}), named by the page's
+ * cursor. It fetches the posts that continue from that cursor first, as an
+ * ordinary page, then puts them in place of every page below the gap in one
+ * write, so the old posts below stay readable until then and a failure leaves
+ * them, and the gap, as they were. Pagination then continues from the new
+ * page.
+ *
+ * The write depends on the pages from the top down to the one above the gap,
+ * and gives way if any of them has been replaced meanwhile, as by a refresh.
+ * It cancels a page load in flight below them.
+ */
+export function usePostFeedGapFill(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const {fetchPage} = usePostFeedFetcher(feedDesc)
+  const queryKey = RQKEY(feedDesc, params)
+
+  return async (cursor: string): Promise<GapFillOutcome> => {
+    const before = queryClient.getQueryData<PostFeedData>(queryKey)
+    const index = before?.pages.findIndex(page => page.cursor === cursor) ?? -1
+    if (!before || gapBelow(before.pages, index) !== 'open') {
+      return 'superseded'
+    }
+    try {
+      const page = await fetchPage({cursor})
+      const wrote = await commit(
+        queryClient,
+        queryKey,
+        before,
+        (data = before) => ({
+          pages: [...data.pages.slice(0, index + 1), page],
+          pageParams: [...data.pageParams.slice(0, index + 1), {cursor}],
+        }),
+        {dependsOn: index + 1},
+      )
+      return wrote ? 'filled' : 'superseded'
+    } catch (e) {
+      if (!isNetworkError(e)) {
+        logger.error('Failed to fetch posts missing from a feed', {
+          safeMessage: e,
+        })
+      }
+      return 'failed'
+    }
+  }
+}
+
+/**
+ * Settles the feed once the reader has reached its true top: cuts it at its
+ * first open gap (see {@link gapBelow}), keeping the pages down to the one
+ * above the gap and dropping every page below it. That page's cursor goes on
+ * into the gap, so ordinary pagination loads what's missing and nothing is
+ * lost. A feed with no open gap is left as it is, so settling again writes
+ * nothing. Resolves to whether it wrote.
+ *
+ * `before` is the data as it was when the reader came to rest at the top. The
+ * write depends on its pages down to the one below the gap, so it gives way
+ * to anything that has replaced them since, as the commit of a prepend does.
+ * It never replaces the top page, so a refresh in flight still writes after
+ * it.
+ */
+export function usePostFeedSettle(
+  feedDesc: FeedDescriptor,
+  params?: FeedParams,
+) {
+  const queryClient = useQueryClient()
+  const queryKey = RQKEY(feedDesc, params)
+
+  return async (before: PostFeedData | undefined) => {
+    const index =
+      before?.pages.findIndex((_, i) => gapBelow(before.pages, i) === 'open') ??
+      -1
+    if (!before || index === -1) {
+      return false
+    }
+    return commit(
+      queryClient,
+      queryKey,
+      before,
+      (data = before) => ({
+        pages: data.pages.slice(0, index + 1),
+        pageParams: data.pageParams.slice(0, index + 1),
+      }),
+      {dependsOn: index + 2},
+    )
+  }
+}
+
+/** Whether a page fetched at `fetchedAt` was restored from disk. */
+function isRestored(fetchedAt: number | undefined) {
+  return fetchedAt !== undefined && fetchedAt < PROCESS_STARTED_AT
+}
+
+/**
+ * Whether something else has replaced any of the feed's first `count` pages
+ * since `before`: by default, its top page.
+ */
+function isReplaced(
+  queryClient: QueryClient,
+  queryKey: QueryKey,
+  before: PostFeedData | undefined,
+  count = 1,
+) {
+  const pages = queryClient.getQueryData<PostFeedData>(queryKey)?.pages
+  for (let i = 0; i < count; i++) {
+    if (pages?.[i] !== before?.pages[i]) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Writes what `next` makes of the feed's data, unless something else has
+ * replaced its top page since `before` was read (a refetch, a reset or a
+ * removal) or is fetching it now. Resolves to whether it wrote.
+ *
+ * A write that depends on more than the top page, as one below it does, says
+ * how many of `before`'s pages it depends on with `dependsOn`, and gives way
+ * if any of them has been replaced.
+ *
+ * `next` is given the data as it is when it writes, which has the same pages
+ * it depends on as `before`, and any pages a `fetchNextPage` added below
+ * since.
  */
 async function commit(
   queryClient: QueryClient,
   queryKey: QueryKey,
   before: PostFeedData | undefined,
-  data: PostFeedData,
+  next: (data: PostFeedData | undefined) => PostFeedData,
+  {dependsOn = 1}: {dependsOn?: number} = {},
 ) {
   const state = queryClient.getQueryState(queryKey)
   // A fetch from the top in flight will land after this write, so it wins.
   const isFetchingTop =
     state?.fetchStatus !== 'idle' && !state?.fetchMeta?.fetchMore
-  if (isTopReplaced(queryClient, queryKey, before) || isFetchingTop) {
-    return
+  if (isReplaced(queryClient, queryKey, before, dependsOn) || isFetchingTop) {
+    return false
   }
   /*
    * A fetchNextPage in flight would land after this write and put back the
@@ -529,12 +889,13 @@ async function commit(
    */
   await queryClient.cancelQueries({queryKey, exact: true})
   if (
-    isTopReplaced(queryClient, queryKey, before) ||
+    isReplaced(queryClient, queryKey, before, dependsOn) ||
     queryClient.getQueryState(queryKey)?.fetchStatus !== 'idle'
   ) {
-    return
+    return false
   }
-  queryClient.setQueryData<PostFeedData>(queryKey, data)
+  queryClient.setQueryData<PostFeedData>(queryKey, next)
+  return true
 }
 
 /**

@@ -288,8 +288,11 @@ existing usages across the app for a canonical example.
 ### TextField
 
 Compound component at `#/components/forms/TextField` (`TextField.LabelText`,
-`TextField.Root`, `TextField.Icon`, `TextField.Input`). Prefer `defaultValue` over
-`value` (see Footguns).
+`TextField.Root`, `TextField.Icon`, `TextField.Input`). Controlled inputs
+(`value` + `onChangeText`) are fine and are usually what you want - the old
+advice to reach for `defaultValue` was a New Architecture migration concern and
+no longer applies. Reach for `defaultValue` only when nothing outside the input
+needs to read the text.
 
 ### Typography
 
@@ -297,6 +300,29 @@ Compound component at `#/components/forms/TextField` (`TextField.LabelText`,
 is `[a.text_sm, a.leading_snug, t.atoms.text]`. Pass the `emoji` prop to any `Text`
 that may contain emoji - user-generated text (display names etc.) almost always
 does, so only omit it for static, emoji-free strings: `<Text emoji>Hello!</Text>`.
+
+### Haptics
+
+`const haptics = useHaptics()` from `#/lib/haptics`. Call the method that
+describes what happened, not how strong it should feel. Each method maps to the
+matching haptic on each platform: iOS feedback generators, and Android
+`performHapticFeedback` constants with fallbacks for older API levels. Haptics
+do nothing on web or when the user has disabled them.
+
+- `tap()` - light acknowledgement of a tap (like, reply, opening a card)
+- `confirm()` - the user committed a change (follow, pin, send a message)
+- `longPress()` - a long-press did something (opened a menu or share sheet)
+- `toggle(on)` - a switch, checkbox or radio changed; pass the new value
+- `selection()` - the highlighted option changed (segmented control, drag slot)
+- `threshold()` - a gesture crossed its activation point (swipe-to-reply)
+- `dragStart()` - an item was picked up to be dragged
+- `success()` / `error()` - something the user was waiting on finished
+
+Only reach for `haptics.platform({ios, android})` when no intent fits, and never
+import `expo-haptics` directly. In worklets, destructure the method you need
+(`const {threshold} = useHaptics()`) and pass it to `scheduleOnRN`; don't
+capture the whole object. The emulator/simulator can't play haptics, so test on
+a physical device via the haptics section of the Storybook.
 
 ## Internationalization (i18n)
 
@@ -506,24 +532,6 @@ This applies to:
 - Callbacks passed from parent components
 
 The Menu component on iOS specifically uses this pattern – see `src/components/Menu/index.tsx:151`.
-
-### Controlled vs Uncontrolled Inputs
-
-Prefer `defaultValue` over `value` for TextInput on the old architecture:
-
-```tsx
-// Preferred - uncontrolled
-<TextField.Input
-  defaultValue={initialEmail}
-  onChangeText={setEmail}
-/>
-
-// Avoid when possible - controlled (can cause performance issues)
-<TextField.Input
-  value={email}
-  onChangeText={setEmail}
-/>
-```
 
 ### Platform-Specific Behavior
 

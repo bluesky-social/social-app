@@ -340,7 +340,7 @@ export function PostInteractionSettingsForm({
 }: PostInteractionSettingsFormProps) {
   const t = useTheme()
   const {_} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const [showLists, setShowLists] = useState(false)
   const {
     data: lists,
@@ -538,7 +538,7 @@ export function PostInteractionSettingsForm({
                 accessibilityRole="togglebutton"
                 hitSlop={0}
                 onPress={() => {
-                  playHaptic('Light')
+                  haptics.tap()
                   if (IS_IOS && !showLists) {
                     LayoutAnimation.configureNext({
                       ...LayoutAnimation.Presets.linear,

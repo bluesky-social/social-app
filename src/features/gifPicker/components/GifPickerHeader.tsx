@@ -10,16 +10,16 @@ import {TimesLarge_Stroke2_Corner0_Rounded as X} from '#/components/icons/Times'
 
 export function GifPickerHeader({
   inputRef,
+  value,
   onChangeText,
   onClear,
   onEscape,
-  canClear,
 }: {
   inputRef: Ref<React.ComponentRef<typeof TextInput>>
+  value: string
   onChangeText: (text: string) => void
   onClear: () => void
   onEscape: () => void
-  canClear: boolean
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
@@ -47,6 +47,7 @@ export function GifPickerHeader({
             comment:
               'Placeholder text inside the GIF search input. KLIPY is the third-party GIF provider; keep the brand name as-is.',
           })}
+          value={value}
           onChangeText={onChangeText}
           returnKeyType="search"
           inputRef={inputRef}
@@ -57,7 +58,7 @@ export function GifPickerHeader({
             }
           }}
         />
-        {canClear && (
+        {value.length > 0 && (
           <Button
             size="tiny"
             color="secondary"
