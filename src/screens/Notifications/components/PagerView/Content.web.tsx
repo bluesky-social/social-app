@@ -8,11 +8,16 @@ import {usePagerContext} from './context'
 export function Content({
   children,
   manageDrawerGesture: _manageDrawerGesture,
+  scrollEnabled: _scrollEnabled,
   style,
   testID,
 }: {
   children: React.ReactNode
   manageDrawerGesture?: boolean
+  /**
+   * Native only; there's no swiping on web.
+   */
+  scrollEnabled?: boolean
   style?: StyleProp<ViewStyle>
   testID?: string
 }) {
