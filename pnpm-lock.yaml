@@ -19758,7 +19758,7 @@ snapshots:
       xcode: 3.0.1
     optionalDependencies:
       '@expo/config': 57.0.9(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
-      expo: 57.0.24(patch_hash=0856ae2db56b30b378fdaa8dbec8e7cda50b13fc29d89b873e1b12cc0affac33)(c4988a1376a5172d6a99e45a7015a76a)
+      expo: 57.0.24(patch_hash=0856ae2db56b30b378fdaa8dbec8e7cda50b13fc29d89b873e1b12cc0affac33)(511dbfd81e3f70f4983b85daee87addf)
     transitivePeerDependencies:
       - supports-color
       - typescript
