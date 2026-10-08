@@ -25,8 +25,11 @@ import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
+import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
+import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
+import {Link} from '#/components/Link'
 import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
@@ -133,6 +136,7 @@ function NotificationsHeader({
   onHeightChange: (height: number) => void
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
   const headerMode = useHomeHeaderMode()
   const {headerHeight} = useShellLayout()
   const {gtMobile} = useBreakpoints()
@@ -209,7 +213,18 @@ function NotificationsHeader({
               <Trans>Notifications</Trans>
             </Layout.Header.TitleText>
           </Layout.Header.Content>
-          <Layout.Header.Slot />
+          <Layout.Header.Slot>
+            <Link
+              to={{screen: 'NotificationSettings'}}
+              label={l`Notification settings`}
+              size="small"
+              variant="ghost"
+              color="secondary"
+              shape="round"
+              style={[a.justify_center]}>
+              <ButtonIcon icon={SettingsIcon} size="lg" />
+            </Link>
+          </Layout.Header.Slot>
         </Layout.Header.Outer>
       </Animated.View>
       <Animated.View style={pillsStyle}>
