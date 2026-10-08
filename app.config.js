@@ -32,7 +32,13 @@ module.exports = function (_config) {
     ...(IS_DEV || IS_TESTFLIGHT ? [] : []),
   ]
 
-  const UPDATES_ENABLED = IS_TESTFLIGHT || IS_PRODUCTION
+  /*
+   * EXPO_PUBLIC_ENV is also an EAS environment secret, which wins over a build
+   * profile's env, so profiles opt out of OTA updates with their own flag. A
+   * dev client with updates on rejects unsigned manifests from a local Metro.
+   */
+  const UPDATES_ENABLED =
+    (IS_TESTFLIGHT || IS_PRODUCTION) && !process.env.DISABLE_UPDATES
 
   const USE_SENTRY = Boolean(process.env.SENTRY_AUTH_TOKEN)
 
