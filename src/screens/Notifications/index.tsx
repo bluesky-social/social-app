@@ -15,6 +15,7 @@ import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
+import {emitSoftReset} from '#/state/events'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
@@ -79,6 +80,11 @@ function NewNotificationsScreenInner() {
     {key: 'activity', label: l`Activity`},
   ]
   const {seenAt, onLoad, requestSnapshot} = useSessionSeenAt()
+  /*
+   * With no notifications at all, every tab is empty, so the screen drops
+   * the tabs and just shows the "All" tab's empty state.
+   */
+  const [hasNoNotifications, setHasNoNotifications] = useState(false)
 
   const showHeader = useCallback(() => {
     'worklet'
@@ -106,21 +112,33 @@ function NewNotificationsScreenInner() {
         }
       }}>
       <NotificationsHeader onHeightChange={setHeaderOffset}>
-        <Pager.TabBar>
-          {({selectedPage, selectPage, dragProgress}) => (
-            <TabPills
-              tabs={tabs}
-              selectedTab={tabs[selectedPage].key}
-              dragProgress={dragProgress}
-              onSelectTab={tab =>
-                selectPage(tabs.findIndex(candidate => candidate.key === tab))
-              }
-              contentContainerStyle={a.py_sm}
-            />
-          )}
-        </Pager.TabBar>
+        {!hasNoNotifications && (
+          <Pager.TabBar>
+            {({selectedPage, selectPage, dragProgress}) => (
+              <TabPills
+                tabs={tabs}
+                selectedTab={tabs[selectedPage].key}
+                dragProgress={dragProgress}
+                onSelectTab={tab => {
+                  const page = tabs.findIndex(
+                    candidate => candidate.key === tab,
+                  )
+                  // Re-pressing the current tab scrolls it to the top
+                  if (page === selectedPage) {
+                    emitSoftReset()
+                  }
+                  selectPage(page)
+                }}
+                contentContainerStyle={a.py_sm}
+              />
+            )}
+          </Pager.TabBar>
+        )}
       </NotificationsHeader>
-      <Pager.Content manageDrawerGesture testID="notificationsPagerView">
+      <Pager.Content
+        manageDrawerGesture
+        scrollEnabled={!hasNoNotifications}
+        testID="notificationsPagerView">
         {tabs.map((tab, pageIndex) => (
           <PageList
             key={tab.key}
@@ -130,6 +148,9 @@ function NewNotificationsScreenInner() {
             seenAt={seenAt}
             onLoad={onLoad}
             requestSnapshot={requestSnapshot}
+            onEmptyChange={
+              tab.key === 'all' ? setHasNoNotifications : undefined
+            }
           />
         ))}
       </Pager.Content>
