@@ -215,12 +215,8 @@ export function ExternalPlayer({
   useEffect(() => {
     if (mode === 'inactive') return
 
-    /*
-     * Scrolling away is caught by the frame callback below, but twitch embeds
-     * keep playing if we navigate away from the screen, so also watch for the
-     * blur event. Unlike the frame callback this stays subscribed in
-     * fullscreen.
-     */
+    // Twitch embeds keep playing after navigating away, so stop on blur. Unlike
+    // the frame callback this stays subscribed in fullscreen.
     const unsubscribe = navigation.addListener('blur', () => {
       setMode('inactive')
     })
