@@ -1,5 +1,7 @@
 import {
   type GroupedNotificationsPage,
+  isNonEmpty,
+  type NonEmptyArray,
   type NotificationView,
   type ParentPost,
 } from '#/state/queries/notifications/grouped/types'
@@ -12,7 +14,6 @@ type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
 type PostView = app.bsky.feed.defs.PostView
 type GeneratorView = app.bsky.feed.defs.GeneratorView
 type StarterPackView = app.bsky.graph.defs.StarterPackView
-type NonEmptyArray<T> = [T, ...T[]]
 
 const defs = app.bsky.notification.getGroupedNotifications
 
@@ -308,5 +309,5 @@ function resolveParent(uri: string, ctx: Context): ParentPost {
 }
 
 function nonEmpty<T>(items: T[]): NonEmptyArray<T> | undefined {
-  return items.length > 0 ? (items as NonEmptyArray<T>) : undefined
+  return isNonEmpty(items) ? items : undefined
 }

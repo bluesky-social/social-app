@@ -18,6 +18,7 @@ import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
 import {
   type GroupedNotificationsFeed,
   type GroupedNotificationsPage,
+  isNonEmpty,
   type NotificationView,
 } from '#/state/queries/notifications/grouped/types'
 import {
@@ -25,6 +26,7 @@ import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
+  truncateAndInvalidate,
   useAutoPagination,
 } from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
@@ -42,7 +44,6 @@ export type {
 
 type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
 type PostView = app.bsky.feed.defs.PostView
-type NonEmptyArray<T> = [T, ...T[]]
 
 const PAGE_SIZE = 30
 
@@ -51,6 +52,22 @@ const groupedNotificationsQueryKeyRoot = 'grouped-notifications'
 export const createGroupedNotificationsQueryKey = (args: {
   feed: GroupedNotificationsFeed
 }) => createQueryKey(groupedNotificationsQueryKeyRoot, args)
+
+/**
+ * Drops all but the first page and refetches, so a refresh is a single
+ * request. Refreshes every feed when `feed` is omitted.
+ */
+export function refreshGroupedNotifications(
+  queryClient: QueryClient,
+  feed?: GroupedNotificationsFeed,
+) {
+  return truncateAndInvalidate(
+    queryClient,
+    feed
+      ? createGroupedNotificationsQueryKey({feed})
+      : [groupedNotificationsQueryKeyRoot],
+  )
+}
 
 /**
  * Pages of `app.bsky.notification.getGroupedNotifications`, hydrated against
@@ -84,7 +101,8 @@ export function useGroupedNotificationsQuery({
   const seenAtMs = seenAt?.getTime()
 
   const query = useInfiniteQuery({
-    enabled,
+    // Wait for moderation, so unmoderated rows never flash up
+    enabled: enabled && !!moderationOpts,
     staleTime: STALE.INFINITY,
     queryKey: createGroupedNotificationsQueryKey({feed}),
     async queryFn({pageParam}) {
@@ -220,7 +238,8 @@ function moderateNotification(
       const items = notification.items.filter(
         item =>
           !isActorHidden(item.actor, moderationOpts) &&
-          !hasMutedWordInPost(item.post, moderationOpts),
+          !hasMutedWordInPost(item.post, moderationOpts) &&
+          !isSubscribedPostHidden(item.post, moderationOpts),
       )
       if (items.length === notification.items.length) return notification
       if (!isNonEmpty(items)) return undefined
@@ -260,6 +279,18 @@ function isActorHidden(
   return moderateProfile(actor, moderationOpts).ui('contentList').filter
 }
 
+/**
+ * Subscribed posts are someone else's new content, so their own labels apply
+ * too. As with actors, posts by people the viewer follows are kept.
+ */
+function isSubscribedPostHidden(
+  post: PostView,
+  moderationOpts: ModerationOpts | undefined,
+): boolean {
+  if (!moderationOpts || post.author.viewer?.following) return false
+  return moderatePost(post, moderationOpts).ui('contentList').filter
+}
+
 function hasMutedWordInPost(
   post: PostView,
   moderationOpts: ModerationOpts | undefined,
@@ -275,10 +306,6 @@ function hasMutedWordInPost(
     languages: post.record.langs,
     actor: post.author,
   })
-}
-
-function isNonEmpty<T>(items: T[]): items is NonEmptyArray<T> {
-  return items.length > 0
 }
 
 /**

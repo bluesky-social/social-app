@@ -14,7 +14,11 @@ type StarterPackView = app.bsky.graph.defs.StarterPackView
 /**
  * Guarantees a primary actor, so rows never have to handle an empty list.
  */
-type NonEmptyArray<T> = [T, ...T[]]
+export type NonEmptyArray<T> = [T, ...T[]]
+
+export function isNonEmpty<T>(items: T[]): items is NonEmptyArray<T> {
+  return items.length > 0
+}
 
 /**
  * A parent post that may no longer be viewable. Kept explicit so the row can
