@@ -36,13 +36,8 @@ import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
-import {
-  type PlayerMode,
-  playerModeAfterActivate,
-  playerModeAfterFullscreenChange,
-  shouldWatchVisibility,
-} from './playerMode'
-import {getPlayerVisibility, shouldStopPlayback} from './playerVisibility'
+import {type PlayerMode, playerModeAfterFullscreenChange} from './playerMode'
+import {getPlayerVisibility} from './playerVisibility'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -168,7 +163,7 @@ export function ExternalPlayer({
         mediaType: getEmbedPlayerMediaType(params.type),
       })
     }
-    setMode(playerModeAfterActivate)
+    setMode(m => (m === 'inactive' ? 'inline' : m))
   }, [
     ax,
     isPlayerActive,
@@ -202,7 +197,8 @@ export function ExternalPlayer({
       insets,
     })
 
-    if (shouldStopPlayback(visibility)) {
+    // `indeterminate` (e.g. mid-rotation) must not stop playback
+    if (visibility === 'hidden') {
       scheduleOnRN(setMode, 'inactive')
     }
   }, false) // False here disables autostarting the callback
@@ -219,12 +215,16 @@ export function ExternalPlayer({
     })
   }, [navigation, isPlayerActive])
 
-  const watchVisibility = shouldWatchVisibility(mode)
+  /*
+   * Not in fullscreen: the content is reparented to the activity root, so the
+   * wrapper we would measure is an empty placeholder.
+   */
+  const isInline = mode === 'inline'
   useEffect(() => {
     // Watch for leaving the viewport due to scrolling
-    frameCallback.setActive(watchVisibility)
+    frameCallback.setActive(isInline)
     return () => frameCallback.setActive(false)
-  }, [frameCallback, watchVisibility])
+  }, [frameCallback, isInline])
 
   const onLoad = useCallback(() => {
     setIsLoading(false)

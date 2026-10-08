@@ -1,9 +1,4 @@
-import {
-  type PlayerMode,
-  playerModeAfterActivate,
-  playerModeAfterFullscreenChange,
-  shouldWatchVisibility,
-} from './playerMode'
+import {type PlayerMode, playerModeAfterFullscreenChange} from './playerMode'
 
 describe('playerModeAfterFullscreenChange', () => {
   it.each<[PlayerMode, boolean, PlayerMode]>([
@@ -23,24 +18,4 @@ describe('playerModeAfterFullscreenChange', () => {
       )
     },
   )
-})
-
-describe('playerModeAfterActivate', () => {
-  it.each<[PlayerMode, PlayerMode]>([
-    ['inactive', 'inline'],
-    ['inline', 'inline'],
-    ['fullscreen', 'fullscreen'],
-  ])('%s -> %s', (mode, expected) => {
-    expect(playerModeAfterActivate(mode)).toBe(expected)
-  })
-})
-
-describe('shouldWatchVisibility', () => {
-  it.each<[PlayerMode, boolean]>([
-    ['inactive', false],
-    ['inline', true],
-    ['fullscreen', false],
-  ])('%s -> %s', (mode, expected) => {
-    expect(shouldWatchVisibility(mode)).toBe(expected)
-  })
 })
