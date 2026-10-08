@@ -1,7 +1,10 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
+import {moderatePost} from '@bsky/sdk/moderation'
 
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {atoms as a, tokens, useTheme} from '#/alf'
+import {IS_WEB} from '#/env'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {useItemContext} from './Root'
@@ -9,6 +12,24 @@ import {useItemContext} from './Root'
 type Thumbnail = {
   uri: string
   alt: string
+}
+
+/**
+ * Blur for thumbnails whose media is behind a moderation warning. On web
+ * this is a CSS blur in pixels, so a native-sized radius would wash out the
+ * small tiles entirely.
+ */
+const BLUR_RADIUS = IS_WEB ? 10 : 100
+
+/**
+ * Whether a post's media should be blurred, per its labels and the viewer's
+ * moderation settings (e.g. adult content or graphic media).
+ */
+export function usePostMediaBlurred(post: app.bsky.feed.defs.PostView) {
+  const moderationOpts = useModerationOpts()
+  return moderationOpts
+    ? moderatePost(post, moderationOpts).ui('contentMedia').blur
+    : false
 }
 
 /**
@@ -46,6 +67,7 @@ export function getPostThumbnails(
 export function InlineImages({
   embed,
   size,
+  blurred = false,
   style,
 }: {
   embed: app.bsky.feed.defs.PostView['embed']
@@ -53,6 +75,12 @@ export function InlineImages({
    * 60 for a trailing preview, 80 when the images stand in for post text.
    */
   size: 60 | 80
+  /**
+   * Heavily blurs the thumbnails, for media behind a moderation warning. Get
+   * this from `usePostMediaBlurred`, or from the post's `contentMedia`
+   * moderation UI.
+   */
+  blurred?: boolean
   style?: StyleProp<ViewStyle>
 }) {
   const t = useTheme()
@@ -91,8 +119,10 @@ export function InlineImages({
               key={thumbnail.uri}
               source={{uri: thumbnail.uri}}
               accessibilityIgnoresInvertColors
-              accessibilityLabel={thumbnail.alt}
+              // Alt text could describe what the blur is hiding
+              accessibilityLabel={blurred ? undefined : thumbnail.alt}
               accessibilityHint=""
+              blurRadius={blurred ? BLUR_RADIUS : 0}
               style={[
                 a.flex_1,
                 t.atoms.bg_contrast_25,
