@@ -1,0 +1,758 @@
+import {useState} from 'react'
+import {View} from 'react-native'
+import {AtUri} from '@atproto/syntax'
+import {moderatePost} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
+import {Trans, useLingui} from '@lingui/react/macro'
+
+import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
+import {useHaptics} from '#/lib/haptics'
+import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
+import {makeProfileLink} from '#/lib/routes/links'
+import {forceLTR} from '#/lib/strings/bidi'
+import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
+import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
+import {sanitizeHandle} from '#/lib/strings/handles'
+import {toNiceDomain} from '#/lib/strings/url-helpers'
+import {
+  POST_TOMBSTONE,
+  type Shadow,
+  usePostShadow,
+} from '#/state/cache/post-shadow'
+import {useModerationOpts} from '#/state/preferences/moderation-opts'
+import {type ParentPost} from '#/state/queries/notifications/grouped/types'
+import {usePostLikeMutationQueue} from '#/state/queries/post'
+import {useRequireAuth, useSession} from '#/state/session'
+import {TimeElapsed} from '#/view/com/util/TimeElapsed'
+import {UserAvatar} from '#/view/com/util/UserAvatar'
+import {atoms as a, select, useTheme, utils, web} from '#/alf'
+import {Button} from '#/components/Button'
+import {Divider} from '#/components/Divider'
+import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRight} from '#/components/icons/Arrow'
+import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
+import {type Props as SVGIconProps} from '#/components/icons/common'
+import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Earth'
+import {
+  Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
+  Heart2_Stroke2_Corner0_Rounded as Heart,
+} from '#/components/icons/Heart2'
+import {Reply_Stroke2_Corner0_Rounded as Bubble} from '#/components/icons/Reply'
+import {Link, WebOnlyInlineLinkText} from '#/components/Link'
+import {ContentHider} from '#/components/moderation/ContentHider'
+import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {PostMenuButton} from '#/components/PostControls/PostMenu'
+import {ProfileBadges} from '#/components/ProfileBadges'
+import {ProfileHoverCard} from '#/components/ProfileHoverCard'
+import {RichText} from '#/components/RichText'
+import * as Toast from '#/components/Toast'
+import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
+import {Card, InlineImages} from './media'
+import {Strong, useDisplayName} from './text'
+
+type PostView = app.bsky.feed.defs.PostView
+
+/**
+ * Light pink behind the "Liked" pill. There's no pink tint in the palette, so
+ * the dark themes use a translucent pink instead.
+ */
+function useLikedBackground() {
+  const t = useTheme()
+  return select(t.name, {
+    light: '#FFF3F9',
+    dim: utils.alpha(t.palette.pink, 0.15),
+    dark: utils.alpha(t.palette.pink, 0.15),
+  })
+}
+
+/**
+ * Keeps 24px pills comfortable to tap without overlapping their neighbours.
+ */
+const PILL_HITSLOP = {top: 10, bottom: 10, left: 2, right: 2}
+
+/**
+ * Collapses a post's text onto one line for single-line previews, so that
+ * native ellipsis isn't cut short by a newline.
+ */
+function toOneLine(text: string) {
+  return text.replace(/\s+/g, ' ').trim()
+}
+
+/**
+ * The author of a post-based notification on a single line, e.g. "**rafael**
+ * @rafael.my". The name shrinks before the handle disappears entirely.
+ */
+export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const name = useDisplayName(profile)
+  const href = makeProfileLink(profile)
+  const label = l`Go to ${name}’s profile`
+
+  return (
+    <ProfileHoverCard did={profile.did}>
+      <View style={[a.flex_row, a.align_center, a.self_start, a.max_w_full]}>
+        <WebOnlyInlineLinkText
+          emoji
+          numberOfLines={1}
+          to={href}
+          label={label}
+          disableMismatchWarning
+          style={[
+            a.flex_shrink,
+            a.text_sm,
+            a.leading_snug,
+            a.font_semi_bold,
+            t.atoms.text,
+            web({direction: 'ltr', unicodeBidi: 'isolate'}),
+          ]}>
+          {forceLTR(name)}
+        </WebOnlyInlineLinkText>
+        <ProfileBadges profile={profile} size="sm" style={[a.pl_2xs]} />
+        <WebOnlyInlineLinkText
+          numberOfLines={1}
+          to={href}
+          label={label}
+          disableMismatchWarning
+          disableUnderline
+          style={[
+            a.text_sm,
+            a.leading_snug,
+            t.atoms.text_contrast_medium,
+            {flexShrink: 10},
+          ]}>
+          {NON_BREAKING_SPACE + sanitizeHandle(profile.handle, '@')}
+        </WebOnlyInlineLinkText>
+      </View>
+    </ProfileHoverCard>
+  )
+}
+
+/**
+ * A single line of context under the author, with a small leading icon, e.g.
+ * "replied to: …". Children are text spans, truncated with an ellipsis.
+ */
+export function ContextLine({
+  icon: Icon,
+  children,
+}: {
+  icon: React.ComponentType<SVGIconProps>
+  children: React.ReactNode
+}) {
+  const t = useTheme()
+
+  return (
+    <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+      <Icon size="xs" fill={t.atoms.text.color} style={[a.flex_shrink_0]} />
+      <Text
+        emoji
+        numberOfLines={1}
+        style={[a.flex_1, a.text_sm, a.leading_snug, t.atoms.text]}>
+        {children}
+      </Text>
+    </View>
+  )
+}
+
+/**
+ * Which post a notification's post is responding to, e.g. "replied to: <your
+ * post>" or "replied to **bob**: <bob's post>".
+ */
+export function ReplyContext({
+  parent,
+  variant = 'reply',
+}: {
+  parent: ParentPost
+  /**
+   * `reply` for reply notifications ("replied to …"). `inReply` for mentions
+   * and quotes that happen to be replies ("in reply to …"), where the headline
+   * action is something else.
+   */
+  variant?: 'reply' | 'inReply'
+}) {
+  return (
+    <ContextLine icon={ArrowCornerDownRight}>
+      {parent.type === 'post' ? (
+        <ReplyContextPost post={parent.post} variant={variant} />
+      ) : (
+        <Text>
+          {parent.type === 'blocked' ? (
+            variant === 'reply' ? (
+              <Trans>replied to a blocked post</Trans>
+            ) : (
+              <Trans>in reply to a blocked post</Trans>
+            )
+          ) : variant === 'reply' ? (
+            <Trans>replied to a deleted post</Trans>
+          ) : (
+            <Trans>in reply to a deleted post</Trans>
+          )}
+        </Text>
+      )}
+    </ContextLine>
+  )
+}
+
+function ReplyContextPost({
+  post,
+  variant,
+}: {
+  post: PostView
+  variant: 'reply' | 'inReply'
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const {currentAccount} = useSession()
+  const moderationOpts = useModerationOpts()
+  const name = forceLTR(useDisplayName(post.author))
+  const isViewer = post.author.did === currentAccount?.did
+
+  const isHidden = moderationOpts
+    ? moderatePost(post, moderationOpts).ui('contentList').blur
+    : false
+
+  let preview = bsky.isType(app.bsky.feed.post, post.record)
+    ? toOneLine(post.record.text)
+    : ''
+  if (isHidden) {
+    preview = l({
+      message: 'Hidden post',
+      comment:
+        'Shown in place of the text of a post that is hidden by the viewer’s moderation settings',
+    })
+  } else if (!preview && post.embed) {
+    preview = l({
+      message: 'Post with media',
+      comment:
+        'Shown in place of the text of a post that has no text, only images, video, a link or a quoted post',
+    })
+  }
+  const previewStyle = t.atoms.text_contrast_medium
+
+  if (variant === 'reply') {
+    return isViewer ? (
+      <Trans>
+        replied to: <Text style={previewStyle}>{preview}</Text>
+      </Trans>
+    ) : (
+      <Trans>
+        replied to <Strong>{name}</Strong>:{' '}
+        <Text style={previewStyle}>{preview}</Text>
+      </Trans>
+    )
+  }
+
+  return isViewer ? (
+    <Trans>
+      in reply to: <Text style={previewStyle}>{preview}</Text>
+    </Trans>
+  ) : (
+    <Trans>
+      in reply to <Strong>{name}</Strong>:{' '}
+      <Text style={previewStyle}>{preview}</Text>
+    </Trans>
+  )
+}
+
+/**
+ * A post's text and a compact preview of its embed, behind the usual
+ * moderation hider. Images stand in for the text when there isn't any.
+ */
+export function PostBody({post}: {post: PostView}) {
+  const t = useTheme()
+  const moderationOpts = useModerationOpts()
+  const record = bsky.isType(app.bsky.feed.post, post.record)
+    ? post.record
+    : undefined
+  const richText =
+    record && record.text.trim()
+      ? new RichTextAPI({text: record.text, facets: record.facets})
+      : undefined
+  const moderation = moderationOpts
+    ? moderatePost(post, moderationOpts)
+    : undefined
+
+  return (
+    <ContentHider
+      modui={moderation?.ui('contentView')}
+      style={[a.gap_sm]}
+      childContainerStyle={[a.gap_sm]}>
+      {moderation && (
+        <PostAlerts post={post} modui={moderation.ui('contentView')} />
+      )}
+      {richText && (
+        <RichText
+          enableTags
+          value={richText}
+          authorHandle={post.author.handle}
+          shouldProxyLinks
+          style={[a.text_sm, a.leading_snug, t.atoms.text]}
+        />
+      )}
+      {post.embed && <EmbedPreview embed={post.embed} />}
+    </ContentHider>
+  )
+}
+
+/**
+ * A compact stand-in for the full post embed: thumbnails for media, a card
+ * for links and quoted posts, and nothing for feeds, lists and the like.
+ */
+function EmbedPreview({embed}: {embed: NonNullable<PostView['embed']>}) {
+  if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
+    return (
+      <View style={[a.gap_sm]}>
+        <EmbedPreview embed={embed.media} />
+        <QuoteCard embed={embed.record} />
+      </View>
+    )
+  }
+  if (bsky.isType(app.bsky.embed.record.view, embed)) {
+    return <QuoteCard embed={embed} />
+  }
+  if (bsky.isType(app.bsky.embed.external.view, embed)) {
+    const link = embed.external
+    // GIFs are links under the hood, but read as images
+    if (link.thumb && parseEmbedPlayerFromUrl(link.uri)?.isGif) {
+      return (
+        <InlineImages
+          size={80}
+          embed={{
+            $type: 'app.bsky.embed.images#view',
+            images: [
+              {
+                thumb: link.thumb,
+                fullsize: link.thumb,
+                alt: parseAltFromGIFDescription(link.description).alt,
+              },
+            ],
+          }}
+        />
+      )
+    }
+    return <LinkCard link={link} />
+  }
+  return <InlineImages embed={embed} size={80} />
+}
+
+/**
+ * Compact preview of an external link: title, description and domain.
+ * Pressing it opens the link.
+ */
+export function LinkCard({link}: {link: app.bsky.embed.external.ViewExternal}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const haptics = useHaptics()
+  const domain = toNiceDomain(link.uri)
+
+  return (
+    <Link
+      to={link.uri}
+      label={link.title || l`Open link to ${domain}`}
+      shouldProxy
+      onPress={() => haptics.tap()}
+      style={[a.flex_col, a.align_stretch, a.rounded_md]}>
+      {({hovered}) => (
+        <Card style={[a.gap_sm, hovered && t.atoms.bg_contrast_25]}>
+          <Text
+            emoji
+            numberOfLines={2}
+            style={[a.text_sm, a.leading_snug, a.font_semi_bold, t.atoms.text]}>
+            {link.title || link.uri}
+          </Text>
+          {link.description ? (
+            <Text
+              emoji
+              numberOfLines={2}
+              style={[a.text_xs, a.leading_snug, t.atoms.text]}>
+              {link.description}
+            </Text>
+          ) : null}
+          <Divider />
+          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
+            <Globe size="xs" fill={t.atoms.text_contrast_low.color} />
+            <Text
+              numberOfLines={1}
+              style={[
+                a.flex_1,
+                a.text_xs,
+                a.leading_snug,
+                t.atoms.text_contrast_medium,
+              ]}>
+              {domain}
+            </Text>
+          </View>
+        </Card>
+      )}
+    </Link>
+  )
+}
+
+/**
+ * Compact preview of a quoted post: author, time and two lines of text.
+ * Pressing it opens the quoted post. Blocked, deleted and detached quotes
+ * collapse to a short muted line, and other record embeds render nothing.
+ */
+export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
+  const t = useTheme()
+  const {currentAccount} = useSession()
+  const parsed = bsky.post.parseEmbedRecordView(embed)
+
+  let placeholder: React.ReactNode = null
+  switch (parsed.type) {
+    case 'post':
+      return <QuoteCardPost view={parsed.view} />
+    case 'post_blocked':
+      placeholder = <Trans>Blocked post</Trans>
+      break
+    case 'post_not_found':
+      placeholder = <Trans>Deleted post</Trans>
+      break
+    case 'post_detached': {
+      const isViewerOwner = currentAccount?.did
+        ? parsed.view.uri.includes(currentAccount.did)
+        : false
+      placeholder = isViewerOwner ? (
+        <Trans>Removed by you</Trans>
+      ) : (
+        <Trans>Removed by author</Trans>
+      )
+      break
+    }
+    default:
+      return null
+  }
+
+  return (
+    <Card>
+      <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+        {placeholder}
+      </Text>
+    </Card>
+  )
+}
+
+function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const moderationOpts = useModerationOpts()
+  const name = useDisplayName(view.author)
+  const quote: PostView = {
+    ...view,
+    $type: 'app.bsky.feed.defs#postView',
+    record: view.value,
+    embed: view.embeds?.[0],
+  }
+  const moderation = moderationOpts
+    ? moderatePost(quote, moderationOpts)
+    : undefined
+  const href = makeProfileLink(view.author, 'post', new AtUri(view.uri).rkey)
+  const text = bsky.isType(app.bsky.feed.post, view.value)
+    ? view.value.text.trim()
+    : ''
+
+  return (
+    <ContentHider modui={moderation?.ui('contentList')}>
+      <Link
+        to={href}
+        label={l`Post by ${name}`}
+        style={[a.flex_col, a.align_stretch, a.rounded_md]}>
+        {({hovered}) => (
+          <Card style={[a.gap_xs, hovered && t.atoms.bg_contrast_25]}>
+            <View style={[a.flex_row, a.align_center, a.gap_xs, {height: 20}]}>
+              <UserAvatar
+                size={20}
+                avatar={view.author.avatar}
+                moderation={moderation?.ui('avatar')}
+                type={view.author.associated?.labeler ? 'labeler' : 'user'}
+              />
+              <Text
+                emoji
+                numberOfLines={1}
+                style={[
+                  a.flex_shrink,
+                  a.text_sm,
+                  a.leading_snug,
+                  a.font_semi_bold,
+                  t.atoms.text,
+                ]}>
+                {forceLTR(name)}
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                  {flexShrink: 10},
+                ]}>
+                {sanitizeHandle(view.author.handle, '@')}
+              </Text>
+              <Text
+                accessible={false}
+                style={[
+                  a.text_sm,
+                  a.leading_snug,
+                  t.atoms.text_contrast_medium,
+                ]}>
+                &middot;
+              </Text>
+              <TimeElapsed timestamp={view.indexedAt}>
+                {({timeElapsed}) => (
+                  <Text
+                    style={[
+                      a.flex_shrink_0,
+                      a.text_sm,
+                      a.leading_snug,
+                      t.atoms.text_contrast_medium,
+                    ]}>
+                    {timeElapsed}
+                  </Text>
+                )}
+              </TimeElapsed>
+            </View>
+            {text ? (
+              <Text
+                emoji
+                numberOfLines={2}
+                style={[a.text_sm, a.leading_snug, t.atoms.text]}>
+                {text}
+              </Text>
+            ) : (
+              <InlineImages embed={quote.embed} size={60} />
+            )}
+          </Card>
+        )}
+      </Link>
+    </ContentHider>
+  )
+}
+
+/**
+ * Like, reply and the post menu for the notification's post. Renders nothing
+ * once the post has been deleted.
+ */
+export function PostActions({post}: {post: PostView}) {
+  const shadow = usePostShadow(post)
+
+  if (shadow === POST_TOMBSTONE) return null
+  if (!bsky.isType(app.bsky.feed.post, shadow.record)) return null
+
+  return <PostActionsInner post={shadow} record={shadow.record} />
+}
+
+function PostActionsInner({
+  post,
+  record,
+}: {
+  post: Shadow<PostView>
+  record: app.bsky.feed.post.Main
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
+  const haptics = useHaptics()
+  const requireAuth = useRequireAuth()
+  const {openComposer} = useOpenComposer()
+  const moderationOpts = useModerationOpts()
+  const likedBackground = useLikedBackground()
+  const [queueLike, queueUnlike] = usePostLikeMutationQueue(
+    post,
+    undefined,
+    undefined,
+    'Post',
+  )
+  /*
+   * There's no viewer state for "has replied", so this only reflects replies
+   * sent from this row while it's mounted.
+   */
+  const [hasReplied, setHasReplied] = useState(false)
+
+  const isLiked = Boolean(post.viewer?.like)
+  const isBlocked = Boolean(
+    post.author.viewer?.blocking ||
+    post.author.viewer?.blockedBy ||
+    post.author.viewer?.blockingByList,
+  )
+  const replyDisabled = Boolean(post.viewer?.replyDisabled)
+  const richText = new RichTextAPI({text: record.text, facets: record.facets})
+
+  const showBlockedToast = () => {
+    Toast.show(l`Cannot interact with a blocked user`, {type: 'warning'})
+  }
+
+  const onToggleLike = async () => {
+    if (isBlocked) {
+      showBlockedToast()
+      return
+    }
+    try {
+      if (isLiked) {
+        await queueUnlike()
+      } else {
+        await queueLike()
+      }
+    } catch (err) {
+      const e = err as Error
+      if (e?.name !== 'AbortError') {
+        throw e
+      }
+    }
+  }
+
+  const onPressReply = () => {
+    if (isBlocked) {
+      showBlockedToast()
+      return
+    }
+    if (replyDisabled) return
+    haptics.tap()
+    requireAuth(() => {
+      ax.metric('post:clickReply', {
+        uri: post.uri,
+        authorDid: post.author.did,
+        logContext: 'Post',
+      })
+      openComposer({
+        replyTo: {
+          uri: post.uri,
+          cid: post.cid,
+          text: record.text,
+          author: post.author,
+          embed: post.embed,
+          moderation: moderationOpts
+            ? moderatePost(post, moderationOpts)
+            : undefined,
+          langs: record.langs,
+        },
+        onPost: () => setHasReplied(true),
+        logContext: 'PostReply',
+      })
+    })
+  }
+
+  return (
+    <View style={[a.flex_row, a.justify_between, a.align_center]}>
+      <View style={[a.flex_row, a.gap_xs]}>
+        <ActionPill
+          testID="likeBtn"
+          label={
+            isLiked
+              ? l({message: 'Unlike', comment: 'Verb, to remove a like'})
+              : l({message: 'Like', comment: 'Verb, to like a post'})
+          }
+          icon={isLiked ? HeartFilled : Heart}
+          color={isLiked ? t.palette.pink : undefined}
+          backgroundColor={isLiked ? likedBackground : undefined}
+          text={
+            isLiked
+              ? l({
+                  message: 'Liked',
+                  comment: 'Shown on the like button once the post is liked',
+                })
+              : l({message: 'Like', context: 'verb'})
+          }
+          onPress={() => {
+            haptics.tap()
+            requireAuth(() => onToggleLike())
+          }}
+        />
+        <ActionPill
+          testID="replyBtn"
+          label={l({message: 'Reply', context: 'verb'})}
+          icon={hasReplied ? Check : Bubble}
+          dimmed={replyDisabled}
+          text={
+            hasReplied
+              ? l({
+                  message: 'Replied',
+                  comment:
+                    'Shown on the reply button after replying to the post',
+                })
+              : l({message: 'Reply', context: 'verb'})
+          }
+          onPress={onPressReply}
+        />
+      </View>
+      {/*
+       * The shared menu button is a 28px tall control with 5px of padding,
+       * so pull it in to sit flush with the end of the row without making
+       * the row taller than the pills.
+       */}
+      <View style={{marginVertical: -2, marginEnd: -5}}>
+        <PostMenuButton
+          testID="postDropdownBtn"
+          post={post}
+          postFeedContext={undefined}
+          postReqId={undefined}
+          record={record}
+          richText={richText}
+          timestamp={post.indexedAt}
+          logContext="Post"
+          forceGoogleTranslate={false}
+        />
+      </View>
+    </View>
+  )
+}
+
+/**
+ * A small rounded action, e.g. "Like". Defaults to grey; pass `color` and
+ * `backgroundColor` for an active state.
+ */
+function ActionPill({
+  testID,
+  label,
+  icon: Icon,
+  color,
+  backgroundColor,
+  text,
+  dimmed = false,
+  onPress,
+}: {
+  testID?: string
+  /**
+   * Accessibility label, which may differ from the visible text, e.g. "Unlike"
+   * vs "Liked".
+   */
+  label: string
+  icon: React.ComponentType<SVGIconProps>
+  color?: string
+  backgroundColor?: string
+  text: string
+  dimmed?: boolean
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const contentColor = color ?? t.atoms.text_contrast_high.color
+
+  return (
+    <Button
+      testID={testID}
+      label={label}
+      onPress={onPress}
+      hitSlop={PILL_HITSLOP}
+      style={[
+        a.gap_xs,
+        a.rounded_full,
+        backgroundColor ? {backgroundColor} : t.atoms.bg_contrast_50,
+        {height: 24, paddingLeft: 9, paddingRight: 10},
+        dimmed && {opacity: 0.6},
+      ]}
+      hoverStyle={backgroundColor ? undefined : t.atoms.bg_contrast_100}>
+      <Icon size="xs" fill={contentColor} />
+      <Text
+        style={[
+          a.text_xs,
+          a.leading_tight,
+          a.font_medium,
+          a.user_select_none,
+          {color: contentColor},
+        ]}>
+        {text}
+      </Text>
+    </Button>
+  )
+}
