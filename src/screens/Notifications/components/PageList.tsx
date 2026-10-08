@@ -61,6 +61,20 @@ export type PageLoad = {
 }
 
 /**
+ * How a requested load updates the screen's `seenAt` snapshot:
+ *
+ * - `server`: from the server's `seenAt`, so anything new since the last
+ *   visit is tinted.
+ * - `cleared`: from when the load arrived, so everything shown counts as
+ *   seen. This is what pull-to-refresh does.
+ * - `kept`: unchanged, so rows that were already tinted stay tinted, and
+ *   anything new is tinted alongside them.
+ *
+ * In every mode, the load also marks what it showed as seen on the server.
+ */
+export type SeenAtMode = 'server' | 'cleared' | 'kept'
+
+/**
  * One tab of the notifications pager: the grouped notifications for `feed`,
  * split into "Today" and "Earlier".
  */
@@ -83,10 +97,10 @@ export function PageList({
   seenAt?: Date
   onLoad?: (load: PageLoad) => void
   /**
-   * Asks the screen to take a new `seenAt` snapshot from this feed's next
+   * Asks the screen to update its `seenAt` snapshot from this feed's next
    * load, before refreshing it.
    */
-  requestSnapshot?: (feed: GroupedNotificationsFeed) => void
+  requestSnapshot?: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
   /**
    * Called with whether this feed has loaded completely and has nothing in
    * it, e.g. so the screen can drop its tabs when there are no
@@ -139,34 +153,21 @@ export function PageList({
     }
   }, [feed, serverSeenAt, dataUpdatedAt, onLoad])
 
-  const refresh = async () => {
-    requestSnapshot?.(feed)
+  const refresh = async (mode: SeenAtMode) => {
+    requestSnapshot?.(feed, mode)
     await refreshGroupedNotifications(queryClient, feed)
   }
 
-  // Coming back to the screen with new notifications loads them
-  const onReturnToScreen = useEffectEvent(() => {
-    if (isActive && hasBeenActive && numUnread !== '') {
-      void refresh()
-    }
-  })
-  const wasScreenFocused = useRef(isScreenFocused)
-  useEffect(() => {
-    if (isScreenFocused && !wasScreenFocused.current) {
-      onReturnToScreen()
-    }
-    wasScreenFocused.current = isScreenFocused
-  }, [isScreenFocused])
-
   /*
    * Pressing the Notifications tab button, or the selected pill, scrolls the
-   * visible tab back to the top and loads anything new.
+   * visible tab back to the top and loads anything new, keeping the unread
+   * tint.
    */
   const listRef = useRef<ListMethods>(null)
   const onSoftReset = useEffectEvent(() => {
     listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
     if (numUnread !== '') {
-      void refresh()
+      void refresh('kept')
     }
   })
   useEffect(() => {
@@ -191,7 +192,7 @@ export function PageList({
   const onRefresh = async () => {
     setIsPTRing(true)
     try {
-      await refresh()
+      await refresh('cleared')
     } catch (err) {
       logger.error('Failed to refresh grouped notifications', {
         safeMessage: err,

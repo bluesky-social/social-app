@@ -1,4 +1,4 @@
-import {useCallback, useRef, useState} from 'react'
+import {useCallback, useEffect, useEffectEvent, useRef, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
   interpolate,
@@ -9,15 +9,24 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {useFocusEffect} from '@react-navigation/native'
+import {
+  useFocusEffect,
+  useIsFocused,
+  useNavigation,
+} from '@react-navigation/native'
+import {useQueryClient} from '@tanstack/react-query'
 
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
+import {refreshGroupedNotifications} from '#/state/queries/notifications/grouped'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
-import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
+import {
+  useUnreadNotifications,
+  useUnreadNotificationsApi,
+} from '#/state/queries/notifications/unread'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
@@ -27,6 +36,7 @@ import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/N
 import {
   PageList,
   type PageLoad,
+  type SeenAtMode,
 } from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
@@ -79,7 +89,13 @@ function NewNotificationsScreenInner() {
     {key: 'conversations', label: l`Replies`},
     {key: 'activity', label: l`Activity`},
   ]
-  const {seenAt, onLoad, requestSnapshot} = useSessionSeenAt()
+  const {seenAt, onLoad, requestSnapshot, clearSeen} = useSessionSeenAt()
+  const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
+  useReturnToScreen({
+    activeFeed,
+    requestSnapshot,
+    clearSeen,
+  })
   /*
    * With no notifications at all, every tab is empty, so the screen drops
    * the tabs and just shows the "All" tab's empty state.
@@ -104,6 +120,9 @@ function NewNotificationsScreenInner() {
 
   return (
     <Pager.Root
+      onPageSelected={page => {
+        activeFeed.current = tabs[page].key
+      }}
       onTabPressed={showHeader}
       onPageScrollStateChanged={state => {
         'worklet'
@@ -162,32 +181,110 @@ function NewNotificationsScreenInner() {
  * Snapshot of when notifications were last seen, shared by every tab so the
  * unread tint stays put while the screen is open.
  *
- * The first tab to load takes the snapshot and marks everything it showed as
- * seen on the server. Refreshing a tab asks for a new snapshot from that
- * tab's next load.
+ * The first tab to load takes the snapshot from the server, so anything new
+ * since the last visit is tinted, and marks what it showed as seen. Later
+ * loads update it according to the `SeenAtMode` they were requested with.
  */
 function useSessionSeenAt() {
   const unreadApi = useUnreadNotificationsApi()
   const [seenAt, setSeenAt] = useState<Date>()
   /**
-   * Which feed's next load should take the snapshot: `'any'` for whichever
-   * loads first, or `null` when no snapshot is wanted.
+   * Which feed's next load should update the snapshot, and how. `'any'`
+   * means whichever loads first; `null` means no update is wanted.
    */
-  const snapshotFrom = useRef<GroupedNotificationsFeed | 'any' | null>('any')
+  const pending = useRef<{
+    feed: GroupedNotificationsFeed | 'any'
+    mode: SeenAtMode
+  } | null>({feed: 'any', mode: 'server'})
 
   const onLoad = ({feed, serverSeenAt, fetchedAt}: PageLoad) => {
-    const from = snapshotFrom.current
-    if (from === null || (from !== 'any' && from !== feed)) return
-    snapshotFrom.current = null
-    setSeenAt(serverSeenAt ? new Date(serverSeenAt) : new Date(0))
+    const request = pending.current
+    if (!request || (request.feed !== 'any' && request.feed !== feed)) return
+    pending.current = null
+    if (request.mode === 'server') {
+      setSeenAt(serverSeenAt ? new Date(serverSeenAt) : new Date(0))
+    } else if (request.mode === 'cleared') {
+      setSeenAt(new Date(fetchedAt))
+    }
     void unreadApi.markAllRead({seenAt: new Date(fetchedAt)})
   }
 
-  const requestSnapshot = (feed: GroupedNotificationsFeed) => {
-    snapshotFrom.current = feed
+  const requestSnapshot = (
+    feed: GroupedNotificationsFeed,
+    mode: SeenAtMode,
+  ) => {
+    pending.current = {feed, mode}
   }
 
-  return {seenAt, onLoad, requestSnapshot}
+  /**
+   * Treats everything currently shown as seen.
+   */
+  const clearSeen = () => {
+    setSeenAt(new Date())
+  }
+
+  return {seenAt, onLoad, requestSnapshot, clearSeen}
+}
+
+/**
+ * Coming back to the screen after leaving it.
+ *
+ * - From a screen pushed within the Notifications tab (e.g. a post), the
+ *   unread tint is kept as it was, and anything new is loaded and tinted too.
+ * - After switching to another tab, what was already seen is no longer
+ *   tinted, and anything that arrived meanwhile is loaded and tinted.
+ */
+function useReturnToScreen({
+  activeFeed,
+  requestSnapshot,
+  clearSeen,
+}: {
+  activeFeed: React.RefObject<GroupedNotificationsFeed>
+  requestSnapshot: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
+  clearSeen: () => void
+}) {
+  const navigation = useNavigation()
+  const queryClient = useQueryClient()
+  const numUnread = useUnreadNotifications()
+  const isFocused = useIsFocused()
+
+  /*
+   * The tab navigator's own blur means the user switched tabs, rather than
+   * pushing a screen within this tab's stack. Web's flat navigator has no tab
+   * level, so it always behaves as within the stack.
+   */
+  const hasLeftTab = useRef(false)
+  useEffect(() => {
+    return navigation.getParent()?.addListener('blur', () => {
+      hasLeftTab.current = true
+    })
+  }, [navigation])
+
+  const onReturn = useEffectEvent(() => {
+    const hasNew = numUnread !== ''
+    const feed = activeFeed.current
+    if (hasLeftTab.current) {
+      hasLeftTab.current = false
+      if (hasNew) {
+        requestSnapshot(feed, 'server')
+      } else {
+        clearSeen()
+      }
+    } else if (hasNew) {
+      requestSnapshot(feed, 'kept')
+    }
+    if (hasNew) {
+      void refreshGroupedNotifications(queryClient, feed)
+    }
+  })
+
+  const wasFocused = useRef(isFocused)
+  useEffect(() => {
+    if (isFocused && !wasFocused.current) {
+      onReturn()
+    }
+    wasFocused.current = isFocused
+  }, [isFocused])
 }
 
 function NotificationsHeader({
