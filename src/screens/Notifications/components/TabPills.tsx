@@ -1,7 +1,6 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {
   Pressable,
-  type ReactNativeElement,
   type ScrollView,
   type StyleProp,
   useWindowDimensions,
@@ -50,13 +49,13 @@ export function TabPills({
   const t = useTheme()
   const {t: l} = useLingui()
   const {width: windowWidth} = useWindowDimensions()
-  const listRef = useRef<ScrollView & ReactNativeElement>(null)
+  const listRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const [totalWidth, setTotalWidth] = useState(0)
   const [scrollX, setScrollX] = useState(0)
   const [contentWidth, setContentWidth] = useState(0)
   const [tabOffsets, setTabOffsets] = useState<PillLayout[]>([])
-  const contentRef = useRef<View>(null)
-  const tabRefs = useRef<Array<View | null>>([])
+  const contentRef = useRef<React.ComponentRef<typeof View>>(null)
+  const tabRefs = useRef<Array<React.ComponentRef<typeof View> | null>>([])
   const didMeasure = useRef(false)
   const tabLayoutKey = tabs.map(tab => `${tab.key}:${tab.label}`).join('|')
   const tabCount = tabs.length
@@ -376,7 +375,7 @@ function TabPill({
   index,
   onSelectTab,
 }: {
-  elementRef: React.Ref<View>
+  elementRef: React.Ref<React.ComponentRef<typeof View>>
   tab: TabPillItem
   active: boolean
   index: number
