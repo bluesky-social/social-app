@@ -102,39 +102,56 @@ export function InlineImages({
   return (
     <View
       accessible={false}
-      style={[
-        a.flex_row,
-        a.overflow_hidden,
-        a.rounded_md,
-        a.curve_continuous,
-        a.border,
-        t.atoms.border_contrast_low,
-        {width: size, height: size, gap: 1},
-        style,
-      ]}>
+      style={[a.flex_row, {width: size, height: size, gap: 1}, style]}>
       {columns.map((column, columnIndex) => (
         <View key={columnIndex} style={[a.flex_1, {gap: 1}]}>
-          {column.map(thumbnail => (
-            <Image
-              key={thumbnail.uri}
-              source={{uri: thumbnail.uri}}
-              accessibilityIgnoresInvertColors
-              // Alt text could describe what the blur is hiding
-              accessibilityLabel={blurred ? undefined : thumbnail.alt}
-              accessibilityHint=""
-              blurRadius={blurred ? BLUR_RADIUS : 0}
-              style={[
-                a.flex_1,
-                t.atoms.bg_contrast_25,
-                {borderRadius: tokens.borderRadius._2xs},
-              ]}
-              contentFit="cover"
-            />
-          ))}
+          {column.map((thumbnail, rowIndex) => {
+            const isLeft = columnIndex === 0
+            const isRight = columnIndex === columns.length - 1
+            const isTop = rowIndex === 0
+            const isBottom = rowIndex === column.length - 1
+            return (
+              <View
+                key={thumbnail.uri}
+                style={[
+                  a.flex_1,
+                  a.overflow_hidden,
+                  a.curve_continuous,
+                  a.border,
+                  t.atoms.border_contrast_low,
+                  // Rounded on the outside of the grid, tight between tiles
+                  {
+                    borderTopLeftRadius: cornerRadius(isTop && isLeft),
+                    borderTopRightRadius: cornerRadius(isTop && isRight),
+                    borderBottomLeftRadius: cornerRadius(isBottom && isLeft),
+                    borderBottomRightRadius: cornerRadius(isBottom && isRight),
+                  },
+                ]}>
+                <Image
+                  source={{uri: thumbnail.uri}}
+                  accessibilityIgnoresInvertColors
+                  // Alt text could describe what the blur is hiding
+                  accessibilityLabel={blurred ? undefined : thumbnail.alt}
+                  accessibilityHint=""
+                  blurRadius={blurred ? BLUR_RADIUS : 0}
+                  style={[a.flex_1, t.atoms.bg_contrast_25]}
+                  contentFit="cover"
+                />
+              </View>
+            )
+          })}
         </View>
       ))}
     </View>
   )
+}
+
+/**
+ * Corner radius of an `InlineImages` tile: rounded where the corner is on the
+ * outside of the grid, tight where it meets another tile.
+ */
+function cornerRadius(isOuter: boolean) {
+  return isOuter ? tokens.borderRadius.md : tokens.borderRadius._2xs
 }
 
 /**

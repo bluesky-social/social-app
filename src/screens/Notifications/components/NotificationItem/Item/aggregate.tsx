@@ -218,7 +218,7 @@ export function FeedCard({
 
   return (
     <Card>
-      <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+      <View style={[a.flex_row, a.align_start, a.gap_sm]}>
         <UserAvatar
           type="algo"
           size={32}

@@ -304,8 +304,7 @@ export function MultiPostLikeNotification({
       <Item.Content>
         <Item.PrimaryText>
           <Trans>
-            <Item.Name profile={actor} /> liked{' '}
-            <Item.Strong>{count}</Item.Strong> of your{' '}
+            <Item.Name profile={actor} /> liked {count} of your{' '}
             <Plural value={count} one="post" other="posts" />
           </Trans>
         </Item.PrimaryText>

@@ -52,7 +52,12 @@ export function Avatar({
   }[tone]
 
   return (
-    <View style={{width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 4}}>
+    <View
+      style={[
+        {width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 4},
+        // Without a badge, the avatar sits vertically centred in its slot
+        !Icon && a.justify_center,
+      ]}>
       <PreviewableUserAvatar
         size={AVATAR_SIZE}
         profile={profile}

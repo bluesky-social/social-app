@@ -326,15 +326,16 @@ export function ViaStarterPack({
 
   if (!name) return null
 
-  const textStyle = [a.text_xs, a.font_medium, a.leading_snug, t.atoms.text]
-
   return (
-    <Text emoji numberOfLines={1} style={textStyle}>
+    <Text
+      emoji
+      numberOfLines={1}
+      style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
       <Trans comment="When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”">
         via starter pack{' '}
         <StarterPackIcon
           size="xs"
-          fill={t.atoms.text.color}
+          gradient="sky"
           style={{transform: [{translateY: 2}]}}
         />{' '}
         <InlineLinkText
@@ -344,7 +345,7 @@ export function ViaStarterPack({
           onMouseEnter={link.precache}
           disableUnderline
           emoji
-          style={textStyle}>
+          style={[a.text_xs, a.font_medium, a.leading_snug, t.atoms.text]}>
           {name}
         </InlineLinkText>
       </Trans>
@@ -372,7 +373,7 @@ export function StarterPackCard({
   return (
     <Link to={link.to} label={link.label} onPress={link.precache}>
       {({hovered}) => (
-        <Card style={[a.flex_1, a.gap_2xs, hovered && t.atoms.bg_contrast_25]}>
+        <Card style={[a.flex_1, hovered && t.atoms.bg_contrast_25]}>
           <Text
             emoji
             numberOfLines={2}
