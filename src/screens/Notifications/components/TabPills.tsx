@@ -238,9 +238,13 @@ export function TabPills({
                   a.absolute,
                   a.rounded_full,
                   a.curve_continuous,
-                  t.atoms.bg,
                   t.atoms.border_contrast_low,
                   {
+                    // A touch see-through, so content scrolling under the header shows faintly
+                    backgroundColor: utils.alpha(
+                      t.atoms.bg.backgroundColor,
+                      0.9,
+                    ),
                     zIndex: 1,
                     borderWidth: 1,
                     left: layout.x,
