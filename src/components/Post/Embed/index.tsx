@@ -19,6 +19,7 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
+import {ThreadItemPostNumber} from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {GalleryBleed} from '#/components/images/Gallery'
@@ -363,6 +364,7 @@ export function QuoteEmbed({
         timestamp={quote.indexedAt}
         linkDisabled
       />
+      <ThreadItemPostNumber inline={false} value={embed.view} />
       {moderation ? (
         <PostAlerts
           post={quote}
