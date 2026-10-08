@@ -2,8 +2,9 @@ import {getPlayerVisibility} from './playerVisibility'
 
 /*
  * Geometry in these tests is taken from a real device capture (411x891dp
- * portrait), so the expected results describe a device rather than a
- * re-derivation of the formula under test.
+ * portrait) or, for the rotation cases, reconstructed from logs, so the
+ * expected results describe a device rather than a re-derivation of the
+ * formula under test.
  */
 const INSETS = {top: 0, bottom: 48}
 const PORTRAIT = {width: 411, height: 891}
@@ -15,6 +16,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 433, height: 183, width: 326},
         viewport: PORTRAIT,
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('visible')
   })
@@ -25,6 +27,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 1200, height: 183, width: 326},
         viewport: PORTRAIT,
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('hidden')
   })
@@ -35,6 +38,7 @@ describe('getPlayerVisibility', () => {
         player: {top: -400, height: 183, width: 326},
         viewport: PORTRAIT,
         insets: {top: 24, bottom: 48},
+        isNative: true,
       }),
     ).toBe('hidden')
   })
@@ -45,6 +49,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 800, height: 183, width: 326},
         viewport: PORTRAIT,
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('visible')
   })
@@ -62,6 +67,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 4429, height: 453, width: 806},
         viewport: PORTRAIT,
         insets: {top: 0, bottom: 0},
+        isNative: true,
       }),
     ).toBe('indeterminate')
   })
@@ -72,6 +78,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 433, height: 183, width: 411},
         viewport: PORTRAIT,
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('visible')
   })
@@ -83,6 +90,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 433, height: 183, width: 411.43},
         viewport: PORTRAIT,
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('visible')
   })
@@ -90,17 +98,28 @@ describe('getPlayerVisibility', () => {
   /*
    * Known limitation, the reverse of the case above. Rotating from landscape
    * to portrait, the tree is already portrait-sized while the viewport still
-   * says landscape. A narrow player looks like any other, so no mismatch is
+   * says landscape (891x411). A narrow player looks like any other, so no mismatch is
    * flagged and the position comparison runs as-is.
    */
-  it('does not detect a mismatch when rotating from landscape to portrait', () => {
+  it('known limitation: does not detect landscape to portrait rotation', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 453, width: 326},
-        viewport: {width: 891, height: 891},
+        viewport: {width: 891, height: 411},
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('visible')
+  })
+
+  it('judges the bottom edge by the longer window side on native only', () => {
+    const args = {
+      player: {top: 600, height: 100, width: 326},
+      viewport: {width: 891, height: 411},
+      insets: INSETS,
+    }
+    expect(getPlayerVisibility({...args, isNative: true})).toBe('visible')
+    expect(getPlayerVisibility({...args, isNative: false})).toBe('hidden')
   })
 
   it('accepts a width overflow of exactly the tolerance', () => {
@@ -109,6 +128,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 433, height: 183, width: 412},
         viewport: PORTRAIT,
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('visible')
   })
@@ -119,6 +139,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 433, height: 183, width: 412.01},
         viewport: PORTRAIT,
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('indeterminate')
   })
@@ -130,7 +151,12 @@ describe('getPlayerVisibility', () => {
     ['infinite top', {top: Infinity, height: 183, width: 326}],
   ])('reports indeterminate for a non-finite %s', (_name, player) => {
     expect(
-      getPlayerVisibility({player, viewport: PORTRAIT, insets: INSETS}),
+      getPlayerVisibility({
+        player,
+        viewport: PORTRAIT,
+        insets: INSETS,
+        isNative: true,
+      }),
     ).toBe('indeterminate')
   })
 
@@ -140,6 +166,7 @@ describe('getPlayerVisibility', () => {
         player: {top: 433, height: 183, width: 326},
         viewport: {width: 411, height: NaN},
         insets: INSETS,
+        isNative: true,
       }),
     ).toBe('indeterminate')
   })
@@ -155,6 +182,7 @@ describe('getPlayerVisibility', () => {
           player: {top, height: 183, width: 326},
           viewport: PORTRAIT,
           insets: {top: 0, bottom: 48},
+          isNative: true,
         }),
       ).toBe(expected)
     })
@@ -169,6 +197,7 @@ describe('getPlayerVisibility', () => {
           player: {top: bottom - 183, height: 183, width: 326},
           viewport: PORTRAIT,
           insets: {top: 24, bottom: 48},
+          isNative: true,
         }),
       ).toBe(expected)
     })

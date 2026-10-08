@@ -16,8 +16,8 @@ const WIDTH_OVERFLOW_TOLERANCE = 1
 
 /**
  * Decide whether the player is on screen, given a measurement of the player
- * and the window box to compare it against. Both must describe the same
- * layout; when they demonstrably do not, the answer is `indeterminate`.
+ * and the window to compare it against. Both must describe the same layout;
+ * when they demonstrably do not, the answer is `indeterminate`.
  *
  * Only a player wider than the window is detected as a mismatch, which covers
  * portrait to landscape. The reverse (landscape to portrait) cannot be told
@@ -26,10 +26,19 @@ const WIDTH_OVERFLOW_TOLERANCE = 1
 export function getPlayerVisibility({
   player,
   viewport,
+  isNative,
   insets,
 }: {
   player: {top: number; height: number; width: number}
+  /** The window dimensions, as reported by `useWindowDimensions()`. */
   viewport: {width: number; height: number}
+  /**
+   * On native, the window can still report the old orientation for several
+   * frames after a rotation, so the bottom edge is the longer side: a player
+   * measured in the new layout is not wrongly judged below the fold. On web
+   * the window height is exact.
+   */
+  isNative: boolean
   insets: {top: number; bottom: number}
 }): PlayerVisibility {
   'worklet'
@@ -60,10 +69,13 @@ export function getPlayerVisibility({
     return 'indeterminate'
   }
 
+  const viewportBottom = isNative
+    ? Math.max(viewport.width, viewport.height)
+    : viewport.height
   const top = player.top
   const bottom = player.top + player.height
   const isOnScreen =
-    top <= viewport.height - insets.bottom && bottom >= insets.top
+    top <= viewportBottom - insets.bottom && bottom >= insets.top
 
   return isOnScreen ? 'visible' : 'hidden'
 }

@@ -190,22 +190,14 @@ export function ExternalPlayer({
     const measurement = measure(viewRef)
     if (!measurement) return
 
-    const {height: winHeight, width: winWidth} = windowDims
-
-    // Get the proper screen height depending on what is going on
-    const realWinHeight = IS_NATIVE // If it is native, we always want the larger number
-      ? winHeight > winWidth
-        ? winHeight
-        : winWidth
-      : winHeight // On web, we always want the actual screen height
-
     const visibility = getPlayerVisibility({
       player: {
         top: measurement.pageY,
         height: measurement.height,
         width: measurement.width,
       },
-      viewport: {width: winWidth, height: realWinHeight},
+      viewport: windowDims,
+      isNative: IS_NATIVE,
       insets,
     })
 
