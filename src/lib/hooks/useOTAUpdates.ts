@@ -6,6 +6,7 @@ import {
   Image as RNImage,
 } from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
+import {getLinkingURL} from 'expo-linking'
 import {
   checkForUpdateAsync,
   type CurrentlyRunningInfo,
@@ -18,6 +19,7 @@ import {
   useUpdates,
 } from 'expo-updates'
 
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useTheme} from '#/alf'
@@ -67,6 +69,22 @@ function getRunningChannel(
   // The build constant is an empty string rather than null when unconfigured.
   return currentlyRunning?.channel || undefined
 }
+
+function isApplyOTAIntent(url: string | null) {
+  if (!url) return false
+  try {
+    const [, intent, intentType] = parseLinkingUrl(url).pathname.split('/')
+    return intent === 'intent' && intentType === 'apply-ota'
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Read at module load, because the intent handler clears the launch URL once it
+ * has handled it.
+ */
+let hasRequestedDeployment = isApplyOTAIntent(getLinkingURL())
 
 async function setExtraParams(channel: string) {
   await setExtraParamAsync(
@@ -130,6 +148,7 @@ export function useApplyPullRequestOTAUpdate() {
     channel: string,
     declaredAppVersion?: string | null,
   ) => {
+    hasRequestedDeployment = true
     const deploymentName = getDeploymentName(channel)
 
     const checkForDeployment = async () => {
@@ -394,6 +413,7 @@ export function useOTAUpdates() {
 
   const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
+      if (hasRequestedDeployment) return
       try {
         await setExtraParams(defaultChannel)
 
@@ -426,7 +446,7 @@ export function useOTAUpdates() {
 
   useEffect(() => {
     // We don't need to check anything if the current update is a PR update
-    if (currentChannel?.startsWith('pull-request')) {
+    if (currentChannel?.startsWith('pull-request') || hasRequestedDeployment) {
       return
     }
 
@@ -462,7 +482,10 @@ export function useOTAUpdates() {
         ) {
           // If it's been 15 minutes since the last "minimize", we should feel comfortable updating the client since
           // chances are that there isn't anything important going on in the current session.
-          if (lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME) {
+          if (
+            !hasRequestedDeployment &&
+            lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME
+          ) {
             if (isUpdatePending) {
               await reloadAsync({
                 reloadScreenOptions: splash(t.scheme),

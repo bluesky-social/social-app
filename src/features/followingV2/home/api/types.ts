@@ -9,6 +9,11 @@ export type FeedSource = 'discover'
 
 export interface FeedAPIResponse {
   cursor?: string
+  /**
+   * The server's cursor for the newest boundary of this response, from
+   * `getTimeline`. Absent from other feeds, and from appviews that predate it.
+   */
+  startCursor?: string
   /** The source the next page continues from. */
   source?: FeedSource
   feed: app.bsky.feed.defs.FeedViewPost[]
@@ -25,11 +30,17 @@ export interface FeedAPI {
   }): Promise<app.bsky.feed.defs.FeedViewPost | undefined>
   fetch({
     cursor,
+    since,
     source,
     limit,
     signal,
   }: {
     cursor: string | undefined
+    /**
+     * An exclusive lower bound, as a `startCursor` the server returned, for the
+     * posts newer than it. Only Following supports it; other feeds ignore it.
+     */
+    since?: string
     source?: FeedSource
     limit: number
     signal?: AbortSignal
