@@ -28,9 +28,9 @@ import {useAnalytics} from '#/analytics'
 import {type tools} from '#/lexicons'
 import {AccountStatus} from './components/AccountStatus'
 import {FilterMenu} from './components/FilterMenu'
+import {type ActionedSubject} from './components/hooks/useActionedSubjectLabels'
 import {YourAccountRow} from './components/YourAccountRow'
 import {YourReportRow} from './components/YourReportRow'
-import {type ActionedSubject} from './hooks/useActionedSubjectLabels'
 
 type ReportFilter = 'all' | 'pending' | 'resolved' | 'unread'
 type InboxReport = tools.ozone.inbox.listReports.$OutputBody['reports'][number]

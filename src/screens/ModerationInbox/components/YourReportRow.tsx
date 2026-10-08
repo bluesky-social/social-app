@@ -2,9 +2,9 @@ import {useLingui} from '@lingui/react/macro'
 
 import * as Layout from '#/components/Layout'
 import {type tools} from '#/lexicons'
-import {useReportSubjectLabel} from '../hooks/useReportSubjectLabel'
-import {getReportActionLabel} from '../util/reportActionLabel'
+import {useReportSubjectLabel} from './hooks/useReportSubjectLabel'
 import {ReportRow} from './ReportRow'
+import {getReportActionLabel} from './util/reportActionLabel'
 
 type InboxReport = tools.ozone.inbox.listReports.$OutputBody['reports'][number]
 
