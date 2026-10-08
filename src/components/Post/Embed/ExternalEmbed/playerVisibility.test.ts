@@ -96,12 +96,11 @@ describe('getPlayerVisibility', () => {
   })
 
   /*
-   * Known limitation, the reverse of the case above. Rotating from landscape
-   * to portrait, the tree is already portrait-sized while the viewport still
-   * says landscape (891x411). A narrow player looks like any other, so no mismatch is
-   * flagged and the position comparison runs as-is.
+   * Reverse of the case above (e.g. exiting fullscreen from landscape): not
+   * detectable, so the position comparison runs as-is. The longer-side rule
+   * keeps it visible.
    */
-  it('known limitation: does not detect landscape to portrait rotation', () => {
+  it('stays visible while the window still reports landscape', () => {
     expect(
       getPlayerVisibility({
         player: {top: 433, height: 453, width: 326},

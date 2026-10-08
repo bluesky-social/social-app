@@ -1,17 +1,11 @@
 /**
- * Whether the player is on screen, or whether that cannot currently be known.
- *
- * `indeterminate` is not a failure to measure - it means the measurement and
- * the window dimensions describe different layouts, so no comparison between
- * them is meaningful. Callers must not treat it as `hidden`.
+ * `indeterminate` means the measurement and the window describe different
+ * layouts, so no comparison is meaningful. Callers must not treat it as
+ * `hidden`.
  */
 export type PlayerVisibility = 'visible' | 'hidden' | 'indeterminate'
 
-/**
- * Slack in dp allowed on the width comparison below. Layout rounding can leave
- * a full-bleed view a fraction wider than the window it sits in without the
- * two being out of sync.
- */
+/** Layout rounding can leave a full-bleed view a fraction wider than the window. */
 const WIDTH_OVERFLOW_TOLERANCE = 1
 
 /**
@@ -19,9 +13,8 @@ const WIDTH_OVERFLOW_TOLERANCE = 1
  * and the window to compare it against. Both must describe the same layout;
  * when they demonstrably do not, the answer is `indeterminate`.
  *
- * Only a player wider than the window is detected as a mismatch, which covers
- * portrait to landscape. The reverse (landscape to portrait) cannot be told
- * apart from a narrow player, so it is not caught.
+ * Only a player wider than the window is detected as a mismatch (portrait to
+ * landscape). The reverse cannot be told apart from a narrow player.
  */
 export function getPlayerVisibility({
   player,
@@ -33,10 +26,9 @@ export function getPlayerVisibility({
   /** The window dimensions, as reported by `useWindowDimensions()`. */
   viewport: {width: number; height: number}
   /**
-   * On native, the window can still report the old orientation for several
-   * frames after a rotation, so the bottom edge is the longer side: a player
-   * measured in the new layout is not wrongly judged below the fold. On web
-   * the window height is exact.
+   * On native the window can report the old orientation for several frames
+   * after a rotation, so the longer side bounds the bottom edge. On web the
+   * window height is exact.
    */
   isNative: boolean
   insets: {top: number; bottom: number}
