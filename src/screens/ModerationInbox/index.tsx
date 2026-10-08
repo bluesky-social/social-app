@@ -1,7 +1,12 @@
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
+import {type RouteProp, useNavigation, useRoute} from '@react-navigation/native'
 
+import {
+  type CommonNavigatorParams,
+  type NavigationProp,
+} from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {
@@ -11,7 +16,7 @@ import {
   useModerationInboxUnreadCountQuery,
   useUpdateModerationInboxSeenMutation,
 } from '#/state/queries/moderation-inbox'
-import {Pager} from '#/view/com/pager/Pager'
+import {Pager, type PagerRef} from '#/view/com/pager/Pager'
 import {TabBar} from '#/view/com/pager/TabBar'
 import {EmptyState} from '#/view/com/util/EmptyState'
 import {List} from '#/view/com/util/List'
@@ -38,6 +43,25 @@ type InboxReport = tools.ozone.inbox.listReports.$OutputBody['reports'][number]
 export function ModerationInboxScreen() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
+  const navigation = useNavigation<NavigationProp>()
+  const route = useRoute<RouteProp<CommonNavigatorParams, 'ModerationInbox'>>()
+  const routeTab = route.params?.tab ?? 'reports'
+  const initialPage = routeTab === 'account' ? 1 : 0
+  const pagerRef = useRef<PagerRef>(null)
+  const currentPage = useRef(initialPage)
+
+  useEffect(() => {
+    const page = routeTab === 'account' ? 1 : 0
+    if (currentPage.current !== page) {
+      currentPage.current = page
+      pagerRef.current?.setPage(page)
+    }
+  }, [routeTab])
+
+  const onPageSelected = (index: number) => {
+    currentPage.current = index
+    navigation.setParams({tab: index === 1 ? 'account' : 'reports'})
+  }
 
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
 
@@ -48,7 +72,10 @@ export function ModerationInboxScreen() {
   return (
     <Layout.Screen testID="moderationInboxScreen">
       <Pager
+        ref={pagerRef}
         testID="moderationInboxPager"
+        initialPage={initialPage}
+        onPageSelected={onPageSelected}
         renderTabBar={props => (
           <Layout.Center>
             <Layout.Header.Outer noBottomBorder>
