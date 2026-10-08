@@ -31,8 +31,8 @@
         "properties": {
           "aud": {
             "type": "string",
-            "format": "did",
-            "description": "The DID of the service that the token will be used to authenticate with"
+            "maxLength": 2048,
+            "description": "The DID or `did#serviceId` reference of the service that the token will be used to authenticate with."
           },
           "exp": {
             "type": "integer",

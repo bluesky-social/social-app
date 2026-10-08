@@ -1,92 +1,91 @@
 {
-  "lexicon": 1,
   "id": "tools.ozone.inbox.defs",
   "defs": {
-    "subjectView": {
+    "reportRef": {
       "type": "object",
-      "description": "A subject belonging to the viewer that has moderation actions against it.",
-      "required": ["src", "subject", "enforcement", "createdAt", "updatedAt"],
+      "required": [
+        "reportId"
+      ],
       "properties": {
-        "src": {
+        "status": {
           "type": "string",
-          "format": "did",
-          "description": "DID of the moderation service that took the actions."
+          "knownValues": [
+            "pending",
+            "resolved"
+          ]
         },
         "subject": {
-          "type": "union",
           "refs": [
             "com.atproto.admin.defs#repoRef",
             "com.atproto.repo.strongRef"
-          ]
+          ],
+          "type": "union"
         },
-        "enforcement": {
-          "type": "ref",
-          "ref": "#enforcementView"
-        },
-        "appeal": {
-          "type": "ref",
-          "ref": "#appealView"
-        },
-        "availableActions": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "knownValues": ["appeal"]
-          }
-        },
-        "latestAction": {
-          "type": "ref",
-          "ref": "#actionView"
-        },
-        "actionCount": {
+        "reportId": {
           "type": "integer"
-        },
-        "createdAt": {
-          "type": "string",
-          "format": "datetime"
-        },
-        "updatedAt": {
-          "type": "string",
-          "format": "datetime"
         }
-      }
+      },
+      "description": "Reference to a report by its report table ID, as used by getReport and Ozone's report detail page."
     },
-    "enforcementView": {
+    "actionView": {
       "type": "object",
-      "description": "The current enforcement state of a subject.",
-      "required": ["state"],
+      "required": [
+        "id",
+        "type",
+        "createdAt"
+      ],
       "properties": {
-        "state": {
+        "id": {
+          "type": "integer",
+          "description": "Action ID (moderation event ID)."
+        },
+        "type": {
           "type": "string",
-          "knownValues": [
-            "none",
-            "labeled",
-            "removed",
-            "suspended",
-            "takendown"
-          ]
+          "description": "Public action type."
         },
         "scope": {
           "type": "string",
-          "knownValues": ["network", "app", "labelOnly"]
-        },
-        "expiresAt": {
-          "type": "string",
-          "format": "datetime"
+          "knownValues": [
+            "network",
+            "app",
+            "labelOnly"
+          ]
         },
         "labels": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Active label values on the subject, excluding negated and expired labels."
+          "description": "Label values, for labelApplied/labelRemoved."
+        },
+        "policies": {
+          "type": "array",
+          "items": {
+            "ref": "#policyView",
+            "type": "ref"
+          },
+          "description": "Policies applied by a takedown action."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "expiresAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "reversedAt": {
+          "type": "string",
+          "format": "datetime"
         }
-      }
+      },
+      "description": "A single moderation action taken against a subject."
     },
     "appealView": {
       "type": "object",
-      "description": "The state of the viewer's appeal against the actions on a subject.",
-      "required": ["state"],
+      "required": [
+        "state"
+      ],
       "properties": {
         "state": {
           "type": "string",
@@ -107,60 +106,334 @@
           "format": "datetime",
           "description": "When the appeal's report was closed."
         },
-        "note": {
-          "type": "string",
-          "description": "Moderator explanation, from the publicNote on the closing activity. Absent if none was written."
-        },
         "appealableUntil": {
           "type": "string",
           "format": "datetime"
         }
+      },
+      "description": "The state of the viewer's appeal against the actions on a subject."
+    },
+    "policyView": {
+      "type": "object",
+      "required": [
+        "key",
+        "displayName",
+        "link"
+      ],
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string",
+          "format": "uri"
+        },
+        "displayName": {
+          "type": "string"
+        }
       }
     },
-    "actionView": {
+    "subjectRef": {
       "type": "object",
-      "description": "A single moderation action taken against a subject.",
-      "required": ["id", "type", "createdAt"],
+      "required": [
+        "subject"
+      ],
       "properties": {
-        "id": {
-          "type": "integer",
-          "description": "Action ID (moderation event ID)."
+        "subject": {
+          "refs": [
+            "com.atproto.admin.defs#repoRef",
+            "com.atproto.repo.strongRef"
+          ],
+          "type": "union"
         },
-        "type": {
-          "type": "string",
-          "description": "Public action type."
+        "actionId": {
+          "type": "integer"
         },
-        "scope": {
+        "actionType": {
+          "type": "string"
+        }
+      }
+    },
+    "standingRef": {
+      "type": "object",
+      "required": [
+        "standing"
+      ],
+      "properties": {
+        "standing": {
           "type": "string",
-          "knownValues": ["network", "app", "labelOnly"]
+          "knownValues": [
+            "good",
+            "warning",
+            "atRisk"
+          ]
+        },
+        "previousStanding": {
+          "type": "string",
+          "knownValues": [
+            "good",
+            "warning",
+            "atRisk"
+          ]
+        }
+      }
+    },
+    "subjectView": {
+      "type": "object",
+      "required": [
+        "src",
+        "subject",
+        "enforcement",
+        "isRead",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of the moderation service that took the actions."
+        },
+        "appeal": {
+          "ref": "#appealView",
+          "type": "ref"
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "subject": {
+          "refs": [
+            "com.atproto.admin.defs#repoRef",
+            "com.atproto.repo.strongRef"
+          ],
+          "type": "union"
         },
         "createdAt": {
           "type": "string",
           "format": "datetime"
         },
-        "reversedAt": {
+        "updatedAt": {
           "type": "string",
           "format": "datetime"
         },
-        "expiresAt": {
+        "actionCount": {
+          "type": "integer"
+        },
+        "enforcement": {
+          "ref": "#enforcementView",
+          "type": "ref"
+        },
+        "latestAction": {
+          "ref": "#actionView",
+          "type": "ref"
+        },
+        "availableActions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "knownValues": [
+              "appeal"
+            ]
+          }
+        }
+      },
+      "description": "A subject belonging to the viewer that has moderation actions against it."
+    },
+    "notification": {
+      "type": "object",
+      "required": [
+        "id",
+        "reason",
+        "target",
+        "isRead",
+        "createdAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "knownValues": [
+            "reportResolved",
+            "reportReopened",
+            "actionTaken",
+            "actionReversed",
+            "appealResolved",
+            "standingChanged"
+          ]
+        },
+        "target": {
+          "refs": [
+            "#reportRef",
+            "#subjectRef",
+            "#standingRef"
+          ],
+          "type": "union"
+        },
+        "createdAt": {
           "type": "string",
           "format": "datetime"
+        }
+      }
+    },
+    "reportsSummary": {
+      "type": "object",
+      "required": [
+        "reasonTypes",
+        "firstReportedOn",
+        "lastReportedOn"
+      ],
+      "properties": {
+        "reasonTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Distinct reason types reported, deduplicated and unordered. Excludes reasonAppeal."
+        },
+        "lastReportedOn": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Day of the most recent report, truncated to midnight UTC. Render as a date; the time component is not meaningful."
+        },
+        "firstReportedOn": {
+          "type": "string",
+          "format": "datetime",
+          "description": "Day of the earliest report, truncated to midnight UTC. Render as a date; the time component is not meaningful."
+        }
+      },
+      "description": "Aggregate view of reports filed against this subject. Deliberately carries no report IDs, no count, and no reporter identities."
+    },
+    "enforcementView": {
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "knownValues": [
+            "network",
+            "app",
+            "labelOnly"
+          ]
+        },
+        "state": {
+          "type": "string",
+          "knownValues": [
+            "none",
+            "labeled",
+            "removed",
+            "suspended",
+            "takendown"
+          ]
         },
         "labels": {
           "type": "array",
           "items": {
             "type": "string"
           },
-          "description": "Label values, for labelApplied/labelRemoved."
+          "description": "Active label values on the subject, excluding negated and expired labels."
         },
-        "policies": {
+        "expiresAt": {
+          "type": "string",
+          "format": "datetime"
+        }
+      },
+      "description": "The current enforcement state of a subject."
+    },
+    "subjectViewDetail": {
+      "type": "object",
+      "required": [
+        "src",
+        "subject",
+        "enforcement",
+        "isRead",
+        "actions",
+        "createdAt",
+        "updatedAt"
+      ],
+      "properties": {
+        "src": {
+          "type": "string",
+          "format": "did"
+        },
+        "appeal": {
+          "ref": "#appealView",
+          "type": "ref"
+        },
+        "cursor": {
+          "type": "string",
+          "description": "Cursor for the next page of action history. Omitted when no older actions remain."
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "record": {
+          "type": "unknown",
+          "description": "Raw record JSON for the subject, when the subject is a record and the record is available."
+        },
+        "actions": {
           "type": "array",
           "items": {
-            "type": "string"
+            "ref": "#actionView",
+            "type": "ref"
           },
-          "description": "Policies that were applied in this action."
+          "maxLength": 100,
+          "description": "A page of action history, most recent first. Reversal timestamps include changes outside this page."
+        },
+        "reports": {
+          "ref": "#reportsSummary",
+          "type": "ref",
+          "description": "Omitted when the subject has never been reported, e.g. proactive enforcement."
+        },
+        "subject": {
+          "refs": [
+            "com.atproto.admin.defs#repoRef",
+            "com.atproto.repo.strongRef"
+          ],
+          "type": "union"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "enforcement": {
+          "ref": "#enforcementView",
+          "type": "ref"
+        },
+        "availableActions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "knownValues": [
+              "appeal"
+            ]
+          }
+        }
+      },
+      "description": "A subject with a page of its action history and an aggregate report summary. Follow cursor to retrieve older actions; enforcement and appeal describe the current subject state on every page."
+    },
+    "notificationPreferences": {
+      "type": "object",
+      "required": [
+        "push"
+      ],
+      "properties": {
+        "push": {
+          "type": "boolean"
         }
       }
     }
-  }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
 }
