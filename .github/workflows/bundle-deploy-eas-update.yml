@@ -194,7 +194,7 @@ jobs:
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
         with:
-          eas-version: '24.8.0'
+          eas-version: '24.12.0'
           packager: 'pnpm --dangerously-allow-all-builds'
           token: ${{ secrets.EXPO_TOKEN }}
 
