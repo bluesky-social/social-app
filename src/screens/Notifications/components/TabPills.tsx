@@ -403,7 +403,8 @@ function TabPill({
             a.rounded_full,
             a.curve_continuous,
             a.px_lg,
-            a.py_sm,
+            // 6px gives the designed 32px pill height
+            {paddingVertical: 6},
             a.bg_transparent,
             {borderWidth: 1, borderColor: 'transparent'},
           ]}>

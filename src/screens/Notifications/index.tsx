@@ -110,7 +110,7 @@ function NewNotificationsScreenInner() {
               onSelectTab={tab =>
                 selectPage(tabs.findIndex(candidate => candidate.key === tab))
               }
-              contentContainerStyle={a.pb_xs}
+              contentContainerStyle={a.py_sm}
             />
           )}
         </Pager.TabBar>
