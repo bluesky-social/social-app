@@ -42,7 +42,7 @@ import {
   playerModeAfterFullscreenChange,
   shouldWatchVisibility,
 } from './playerMode'
-import {getPlayerVisibility} from './playerVisibility'
+import {getPlayerVisibility, shouldStopPlayback} from './playerVisibility'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -151,8 +151,8 @@ export function ExternalPlayer({
 
   /**
    * `fullscreen` is Android only - the event that drives it has no iOS
-   * counterpart. On iOS the mode stays `inline` throughout and keeps the
-   * visibility check.
+   * counterpart. On iOS the mode never enters `fullscreen`, so the visibility
+   * check keeps running.
    */
   const [mode, setMode] = useState<PlayerMode>('inactive')
   const isPlayerActive = mode !== 'inactive'
@@ -202,35 +202,29 @@ export function ExternalPlayer({
       insets,
     })
 
-    /*
-     * Only `hidden` stops playback. `indeterminate` means we cannot tell yet -
-     * e.g. mid-rotation, where treating it as `hidden` would kill the
-     * player the moment the device is turned.
-     */
-    if (visibility === 'hidden') {
+    if (shouldStopPlayback(visibility)) {
       scheduleOnRN(setMode, 'inactive')
     }
   }, false) // False here disables autostarting the callback
 
   useEffect(() => {
-    if (mode === 'inactive') return
+    if (!isPlayerActive) return
 
-    // Twitch embeds keep playing after navigating away, so stop on blur. Unlike
-    // the frame callback this stays subscribed in fullscreen.
-    const unsubscribe = navigation.addListener('blur', () => {
+    /*
+     * Twitch embeds keep playing after navigating away, so stop on blur. Unlike
+     * the frame callback this stays subscribed in fullscreen.
+     */
+    return navigation.addListener('blur', () => {
       setMode('inactive')
     })
+  }, [navigation, isPlayerActive])
 
+  const watchVisibility = shouldWatchVisibility(mode)
+  useEffect(() => {
     // Watch for leaving the viewport due to scrolling
-    if (shouldWatchVisibility(mode)) {
-      frameCallback.setActive(true)
-    }
-
-    return () => {
-      unsubscribe()
-      frameCallback.setActive(false)
-    }
-  }, [navigation, mode, frameCallback])
+    frameCallback.setActive(watchVisibility)
+    return () => frameCallback.setActive(false)
+  }, [frameCallback, watchVisibility])
 
   const onLoad = useCallback(() => {
     setIsLoading(false)

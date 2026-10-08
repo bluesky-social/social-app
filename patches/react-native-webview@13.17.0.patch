@@ -1,5 +1,5 @@
 diff --git a/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt b/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
-index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287c24bf805 100644
+index f83033b3597a425da159555233bacce250ccfce0..718504aa2d2b80f49e51c75201de113eb5d5e280 100644
 --- a/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
 +++ b/android/src/main/java/com/reactnativecommunity/webview/RNCWebViewManagerImpl.kt
 @@ -10,6 +10,7 @@ import android.os.Environment
@@ -25,7 +25,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
  import org.json.JSONException
  import org.json.JSONObject
  import java.io.UnsupportedEncodingException
-@@ -138,12 +142,62 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -138,12 +142,75 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
          return RNCWebViewWrapper(context, webView)
      }
  
@@ -37,9 +37,10 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 +    private fun dispatchFullscreenChange(webView: RNCWebView, isFullscreen: Boolean) {
 +        /*
 +         * Not RNCWebView.dispatchEvent: onHideCustomView is also reached from
-+         * destroy(), when the dispatcher may be gone. Drop the event then.
++         * destroy(), when the dispatcher may be gone. Drop the event then. A
++         * dropped `true` leaves JS thinking the player is inline while native
++         * is fullscreen, hence the louder log.
 +         */
-+        // A dropped `true` leaves JS thinking the player is inline while native is fullscreen.
 +        val dropPriority = if (isFullscreen) Log.WARN else Log.DEBUG
 +        val reactTag = RNCWebViewWrapper.getReactTagFromWebView(webView)
 +        if (reactTag == -1) {
@@ -55,6 +56,18 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 +        val event = Arguments.createMap()
 +        event.putBoolean("isFullscreen", isFullscreen)
 +        dispatcher.dispatchEvent(TopFullscreenChangeEvent(reactTag, event))
++    }
++
++    /**
++     * Runs one step of fullscreen entry/exit so that a failure is logged and
++     * does not prevent the steps after it.
++     */
++    private inline fun bestEffort(step: String, block: () -> Unit) {
++        try {
++            block()
++        } catch (e: RuntimeException) {
++            Log.e(TAG, "Fullscreen: $step failed", e)
++        }
 +    }
 +
 +    /**
@@ -88,7 +101,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
              val webChromeClient: RNCWebChromeClient =
                  object : RNCWebChromeClient(webView) {
                      override fun getDefaultVideoPoster(): Bitmap? {
-@@ -175,13 +229,25 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -175,13 +242,27 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
                          rootView.addView(mVideoView, FULLSCREEN_LAYOUT_PARAMS)
  
                          // Different root views, we are in a Modal
@@ -114,11 +127,13 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
                          }
 +                        hiddenView?.visibility = View.GONE
                          mWebView.themedReactContext.addLifecycleEventListener(this)
-+                        dispatchFullscreenChange(mWebView, true)
++                        bestEffort("dispatch enter") {
++                            dispatchFullscreenChange(mWebView, true)
++                        }
                      }
  
                      override fun onHideCustomView() {
-@@ -189,21 +255,24 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -189,21 +270,30 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
                              return
                          }
  
@@ -130,21 +145,27 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 -                            // Same view hierarchy (no Modal)
 -                            mWebView.visibility = View.VISIBLE
 +                        try {
-+                            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-+                            rootView.removeView(mVideoView)
-+                            mCustomViewCallback.onCustomViewHidden()
++                            bestEffort("remove video view") {
++                                activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
++                                rootView.removeView(mVideoView)
++                                mCustomViewCallback.onCustomViewHidden()
++                            }
 +                            // Before revealing: else the root measures against the landscape window.
-+                            activity.requestedOrientation = initialRequestedOrientation
-+                        } catch (e: RuntimeException) {
-+                            Log.e(TAG, "Fullscreen: exit did not complete cleanly", e)
++                            bestEffort("restore orientation") {
++                                activity.requestedOrientation = initialRequestedOrientation
++                            }
 +                        } finally {
 +                            // Must run even if the above throws, or the root stays GONE and JS stays in `fullscreen`.
 +                            mVideoView = null
 +                            mCustomViewCallback = null
 +                            hiddenView?.visibility = View.VISIBLE
 +                            hiddenView = null
-+                            mWebView.themedReactContext.removeLifecycleEventListener(this)
-+                            dispatchFullscreenChange(mWebView, false)
++                            bestEffort("remove lifecycle listener") {
++                                mWebView.themedReactContext.removeLifecycleEventListener(this)
++                            }
++                            bestEffort("dispatch exit") {
++                                dispatchFullscreenChange(mWebView, false)
++                            }
                          }
 -                        activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 -                        rootView.removeView(mVideoView)

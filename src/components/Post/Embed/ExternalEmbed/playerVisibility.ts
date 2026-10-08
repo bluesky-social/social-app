@@ -49,6 +49,11 @@ export function getPlayerVisibility({
     return 'indeterminate'
   }
 
+  // Not laid out yet (or collapsed): the position says nothing about the screen.
+  if (player.height <= 0 || viewport.width <= 0 || viewport.height <= 0) {
+    return 'indeterminate'
+  }
+
   /*
    * On rotation the native view tree re-lays out for the new orientation
    * several frames before useWindowDimensions() reports the change, so for
@@ -70,4 +75,15 @@ export function getPlayerVisibility({
     top <= viewportBottom - insets.bottom && bottom >= insets.top
 
   return isOnScreen ? 'visible' : 'hidden'
+}
+
+/**
+ * Only `hidden` stops playback. `indeterminate` means we cannot tell yet -
+ * e.g. mid-rotation, where treating it as `hidden` would kill the player the
+ * moment the device is turned.
+ */
+export function shouldStopPlayback(visibility: PlayerVisibility): boolean {
+  'worklet'
+
+  return visibility === 'hidden'
 }

@@ -1,10 +1,9 @@
-import {getPlayerVisibility} from './playerVisibility'
+import {getPlayerVisibility, shouldStopPlayback} from './playerVisibility'
 
 /*
- * Geometry in these tests is taken from a real device capture (411x891dp
- * portrait) or, for the rotation cases, reconstructed from logs, so the
- * expected results describe a device rather than a re-derivation of the
- * formula under test.
+ * Baseline geometry is from a 411x891dp device and the rotation cases are
+ * reconstructed from logs. Scroll offsets, tolerance and boundary cases are
+ * synthetic.
  */
 const INSETS = {top: 0, bottom: 48}
 const PORTRAIT = {width: 411, height: 891}
@@ -200,5 +199,35 @@ describe('getPlayerVisibility', () => {
         }),
       ).toBe(expected)
     })
+  })
+})
+
+describe('getPlayerVisibility before layout', () => {
+  it.each([
+    ['zero player height', {top: 0, height: 0, width: 326}, PORTRAIT],
+    [
+      'zero viewport width',
+      {top: 433, height: 183, width: 326},
+      {width: 0, height: 891},
+    ],
+    [
+      'zero viewport height',
+      {top: 433, height: 183, width: 326},
+      {width: 411, height: 0},
+    ],
+  ])('reports %s as indeterminate', (_name, player, viewport) => {
+    expect(
+      getPlayerVisibility({player, viewport, insets: INSETS, isNative: false}),
+    ).toBe('indeterminate')
+  })
+})
+
+describe('shouldStopPlayback', () => {
+  it.each([
+    ['visible', false],
+    ['indeterminate', false],
+    ['hidden', true],
+  ] as const)('%s -> %s', (visibility, expected) => {
+    expect(shouldStopPlayback(visibility)).toBe(expected)
   })
 })
