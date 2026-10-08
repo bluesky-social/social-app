@@ -1,4 +1,4 @@
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {useLingui} from '@lingui/react/macro'
 import {isToday} from 'date-fns'
@@ -39,6 +39,8 @@ export function PageList({
   feed,
   headerOffset,
   seenAt,
+  onFirstPageLoaded,
+  onRefresh: onRefreshProp,
 }: {
   feed: GroupedNotificationsFeed
   headerOffset: number
@@ -47,6 +49,14 @@ export function PageList({
    * the unread tint doesn't change while the screen is open.
    */
   seenAt?: Date
+  /**
+   * Called with the server's `seenAt` once this tab's first page has loaded.
+   */
+  onFirstPageLoaded?: (seenAt: string | undefined) => void
+  /**
+   * Called when the user pulls to refresh, before refetching.
+   */
+  onRefresh?: () => void
 }) {
   const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
@@ -66,6 +76,13 @@ export function PageList({
 
   const notifications = data?.pages.flatMap(page => page.notifications) ?? []
 
+  const firstPage = data?.pages[0]
+  useEffect(() => {
+    if (firstPage) {
+      onFirstPageLoaded?.(firstPage.seenAt)
+    }
+  }, [firstPage, onFirstPageLoaded])
+
   let rows: Row[]
   if (!isFetched) {
     rows = [{type: 'loading', key: 'loading'}]
@@ -79,6 +96,7 @@ export function PageList({
   }
 
   const onRefresh = async () => {
+    onRefreshProp?.()
     setIsPTRing(true)
     try {
       await refetch()
