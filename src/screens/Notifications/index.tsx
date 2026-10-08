@@ -15,6 +15,7 @@ import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
@@ -66,8 +67,7 @@ function NewNotificationsScreenInner() {
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
-  // keys are the `feed` values accepted by getGroupedNotifications
-  const tabs = [
+  const tabs: {key: GroupedNotificationsFeed; label: string}[] = [
     {key: 'all', label: l`All`},
     {key: 'people-i-follow', label: l`People you follow`},
     {key: 'followers', label: l`Followers`},
@@ -116,12 +116,8 @@ function NewNotificationsScreenInner() {
         </Pager.TabBar>
       </NotificationsHeader>
       <Pager.Content manageDrawerGesture testID="notificationsPagerView">
-        {tabs.map((tab, pageIndex) => (
-          <PageList
-            key={tab.key}
-            pageIndex={pageIndex}
-            headerOffset={headerOffset}
-          />
+        {tabs.map(tab => (
+          <PageList key={tab.key} feed={tab.key} headerOffset={headerOffset} />
         ))}
       </Pager.Content>
     </Pager.Root>
