@@ -151,7 +151,8 @@ export function ExternalPlayer({
 
   /**
    * `fullscreen` is Android only - the event that drives it has no iOS
-   * counterpart.
+   * counterpart. On iOS the mode stays `inline` throughout and keeps the
+   * visibility check.
    */
   const [mode, setMode] = useState<PlayerMode>('inactive')
   const isPlayerActive = mode !== 'inactive'
@@ -203,7 +204,7 @@ export function ExternalPlayer({
 
     /*
      * Only `hidden` stops playback. `indeterminate` means we cannot tell yet -
-     * most often mid-rotation, where treating it as `hidden` would kill the
+     * e.g. mid-rotation, where treating it as `hidden` would kill the
      * player the moment the device is turned.
      */
     if (visibility === 'hidden') {
@@ -212,11 +213,14 @@ export function ExternalPlayer({
   }, false) // False here disables autostarting the callback
 
   useEffect(() => {
-    // We don't want to do anything if the player isn't active
     if (mode === 'inactive') return
 
-    // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
-    // continue playing. We need to watch for the blur event
+    /*
+     * Scrolling away is caught by the frame callback below, but twitch embeds
+     * keep playing if we navigate away from the screen, so also watch for the
+     * blur event. Unlike the frame callback this stays subscribed in
+     * fullscreen.
+     */
     const unsubscribe = navigation.addListener('blur', () => {
       setMode('inactive')
     })

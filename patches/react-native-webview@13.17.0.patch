@@ -99,7 +99,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
              val webChromeClient: RNCWebChromeClient =
                  object : RNCWebChromeClient(webView) {
                      override fun getDefaultVideoPoster(): Bitmap? {
-@@ -175,13 +238,33 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -175,13 +240,34 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
                          rootView.addView(mVideoView, FULLSCREEN_LAYOUT_PARAMS)
  
                          // Different root views, we are in a Modal
@@ -124,7 +124,8 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 +                             * WebView, destroying it mid-playback.
 +                             *
 +                             * Falls back to hiding only the WebView if the React
-+                             * root cannot be found, which is the original behaviour.
++                             * root cannot be found, which is the original behaviour
++                             * and does not prevent the relayout above.
 +                             */
 +                            findReactRootAncestor(mWebView, rootView) ?: run {
 +                                Log.w(TAG, "Fullscreen: React root not found, hiding WebView only")
@@ -137,7 +138,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
                      }
  
                      override fun onHideCustomView() {
-@@ -189,21 +274,36 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -189,21 +275,36 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
                              return
                          }
  

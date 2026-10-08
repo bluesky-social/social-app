@@ -9,7 +9,8 @@ Two related Android fullscreen changes:
 
 Not yet proposed upstream - the intent is to verify it in this app first, then
 open a PR against `react-native-webview`. Until that lands this has to be a
-patch, because there is no way to observe the transition from JS.
+patch, because there is no way to observe the transition from JS. Delete this
+file's history/debugging narrative along with the patch once upstreamed.
 
 ## Why
 
@@ -17,7 +18,7 @@ Fullscreening a video and rotating the device stopped playback, snapped the app
 back to portrait, and left the feed scrolling erratically over blank space.
 
 Fullscreen drops the activity from the app's portrait lock (applied at runtime
-by `expo-screen-orientation`, see `app.config.js`) to
+by `expo-screen-orientation`, see `src/App.tsx`) to
 `SCREEN_ORIENTATION_UNSPECIFIED`. That is what allows the rotation. The React
 tree then lays out for landscape - a layout a portrait-only app never otherwise
 produces, and which nobody ever sees, because the fullscreen video covers it.
