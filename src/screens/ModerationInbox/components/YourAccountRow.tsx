@@ -1,7 +1,7 @@
 import {
   type ActionedSubject,
   useActionedSubjectLabels,
-} from '../hooks/useActionedSubjectLabels'
+} from './hooks/useActionedSubjectLabels'
 import {ReportRow} from './ReportRow'
 
 export function YourAccountRow({
