@@ -1,1164 +1,1129 @@
 {
-    "announcementBanner": {
-        "id": "bd4b135a8995",
-        "title": "Atmosphere Tab Launch Party 2026",
-        "description": "Boop",
-        "url": "https://bsky.app",
-        "image": "https://app-cms-production.bsky.workers.dev/images/image-0a7748426cbd27b63c04a608d930120d2beb9727-3000x2000-jpg/large",
-        "overlayColor": "#000",
-        "textColor": "#fff"
+  "announcementBanner": {
+    "id": "bd4b135a8995",
+    "title": "Atmosphere Tab Launch Party 2026",
+    "description": "Boop",
+    "url": "https://bsky.app",
+    "image": "https://app-cms-production.bsky.workers.dev/images/image-0a7748426cbd27b63c04a608d930120d2beb9727-3000x2000-jpg/large",
+    "overlayColor": "#000",
+    "textColor": "#fff"
+  },
+  "articles": [
+    {
+      "featured": true,
+      "view": {
+        "uri": "https://blog.aster.place/3mwqgs7dp2s2a",
+        "title": "Announcing Aster - a home for researchers on the open web ",
+        "description": "",
+        "createdAt": "2026-09-30T13:22:17.189Z",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:ifn645rwvsuolxg7o3w7ouo4/site.standard.document/3mwqgs7dp2s2a",
+            "cid": "bafyreihcxcofz3zyrmgismvprjradsr7srdmaqy2y6ze7nt5slasfr3bsm"
+          },
+          {
+            "uri": "at://did:plc:ifn645rwvsuolxg7o3w7ouo4/site.standard.publication/3mvimt7nmrs2m",
+            "cid": "bafyreic6arm47nzk5symkeafndsqjbtwbbb3pmne6qpgycpfwaowcrunnq"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:ifn645rwvsuolxg7o3w7ouo4",
+            "handle": "aster.id",
+            "displayName": "Aster ID",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreicid7hoyx5d2if24eryyhb3lg4ioy2mdrmiriga3k2cay6k5io4ta",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "all"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "createdAt": "2026-08-31T07:23:03.601Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "image": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreidvntdnpe3nzj7wkdxjuhutbf5g7lozznoe7gosqgw3xc2mx3i3om@webp",
+        "publisher": {
+          "uri": "https://blog.aster.place/",
+          "title": "Aster Blog",
+          "description": "",
+          "theme": {
+            "background": "#fdfcfa",
+            "foreground": "#000000",
+            "accent": "#3b2a7e",
+            "accentForeground": "#ffffff"
+          },
+          "$type": "app.bsky.embed.external#viewArticlePublication",
+          "logo": "https://cdn.bsky.app/img/avatar/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreia2oxf6i34p25yfny2joydlaqpgkzn2x7pipstjayrx7oziw7ue4i@webp"
+        },
+        "$type": "app.bsky.embed.external#viewArticle",
+        "likeCount": 11,
+        "likers": [
+          {
+            "did": "did:plc:6ayddqghxhciedbaofoxkcbs",
+            "handle": "tynanpurdy.com",
+            "displayName": "Tynan is afk til 10/19 ⁂",
+            "pronouns": "he/him",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:6ayddqghxhciedbaofoxkcbs/bafkreie56qtqmtp5iu56zqqjkvwhvzqcudtsbetgs2joaowvuljbcluvze",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "status": {
+              "uri": "at://did:plc:6ayddqghxhciedbaofoxkcbs/app.bsky.actor.status/self",
+              "cid": "bafyreiebofv7ogm4wgpdvvwfwe77iknlmjkkb7gqi4wh4cqele3fl2nq4m",
+              "record": {
+                "$type": "app.bsky.actor.status",
+                "createdAt": "2026-07-16T22:09:01.824Z",
+                "durationMinutes": 60,
+                "embed": {
+                  "$type": "app.bsky.embed.external",
+                  "external": {
+                    "$type": "app.bsky.embed.external#external",
+                    "description": "⚽ Chaos Soccer",
+                    "thumb": {
+                      "$type": "blob",
+                      "ref": {
+                        "$link": "bafkreid7prkbja7e4q6vr3qrfn53iwabgculro7e4o5m3ova2qmjqd6iii"
+                      },
+                      "mimeType": "image/jpeg",
+                      "size": 151506
+                    },
+                    "title": "@chris.pardy.family's livestream on Streamplace",
+                    "uri": "https://stream.place/chris.pardy.family"
+                  }
+                },
+                "status": "app.bsky.actor.status#live"
+              },
+              "status": "app.bsky.actor.status#live",
+              "expiresAt": "2026-07-16T23:09:01.824Z",
+              "isActive": false
+            },
+            "createdAt": "2023-08-19T00:16:42.718Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:6cbrxnrfmwpb7rhjkihqezzh",
+            "handle": "caesar.dev",
+            "displayName": "Caesar",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:6cbrxnrfmwpb7rhjkihqezzh/bafkreicbqmzkwpbxk3umbwst3eu2kiywwniy3w2v25l4af66znjmsrduaq",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "createdAt": "2023-08-03T16:29:03.780Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:6i6n57nrkq6xavqbdo6bvkqr",
+            "handle": "byarielm.fyi",
+            "displayName": "Ariel M. (she/her)",
+            "pronouns": "she/her",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:6i6n57nrkq6xavqbdo6bvkqr/bafkreihkmv2mi53xdicse4x6k2bulqbkrf6er3fjlooezviyeujgltfiky",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "all"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "createdAt": "2024-11-11T05:53:23.011Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ]
+      }
     },
-    "articles": [
-        {
-            "uri": "https://blog.aster.place/3mwqgs7dp2s2a",
-            "title": "Announcing Aster - a home for researchers on the open web ",
-            "description": "",
-            "createdAt": "2026-09-30T13:22:17.189Z",
-            "associatedRefs": [
-                {
-                    "uri": "at://did:plc:ifn645rwvsuolxg7o3w7ouo4/site.standard.document/3mwqgs7dp2s2a",
-                    "cid": "bafyreihcxcofz3zyrmgismvprjradsr7srdmaqy2y6ze7nt5slasfr3bsm"
-                },
-                {
-                    "uri": "at://did:plc:ifn645rwvsuolxg7o3w7ouo4/site.standard.publication/3mvimt7nmrs2m",
-                    "cid": "bafyreic6arm47nzk5symkeafndsqjbtwbbb3pmne6qpgycpfwaowcrunnq"
-                }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:ifn645rwvsuolxg7o3w7ouo4",
-                    "handle": "aster.id",
-                    "displayName": "Aster ID",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreicid7hoyx5d2if24eryyhb3lg4ioy2mdrmiriga3k2cay6k5io4ta",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "all"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "createdAt": "2026-08-31T07:23:03.601Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "image": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreidvntdnpe3nzj7wkdxjuhutbf5g7lozznoe7gosqgw3xc2mx3i3om@webp",
-            "publisher": {
-                "uri": "https://blog.aster.place/",
-                "title": "Aster Blog",
-                "description": "",
-                "icon": "https://cdn.bsky.app/img/avatar/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreia2oxf6i34p25yfny2joydlaqpgkzn2x7pipstjayrx7oziw7ue4i@webp",
-                "theme": {
-                    "backgroundRGB": {
-                        "r": 253,
-                        "g": 252,
-                        "b": 250
-                    },
-                    "foregroundRGB": {
-                        "r": 0,
-                        "g": 0,
-                        "b": 0
-                    },
-                    "accentRGB": {
-                        "r": 59,
-                        "g": 42,
-                        "b": 126
-                    },
-                    "accentForegroundRGB": {
-                        "r": 255,
-                        "g": 255,
-                        "b": 255
-                    }
-                }
+    {
+      "featured": false,
+      "view": {
+        "uri": "https://brookie.blog/a-is-for-aliens-a-is-for-alison-z8k0dj6",
+        "title": "A Is for Aliens. A Is for Alison.",
+        "description": "Rewatching the X-Files and Pretty Little Liars again. They both have such good pilot episodes. So much drama, so much suspense, so much mystery.",
+        "createdAt": "2026-08-15T20:19:36.000Z",
+        "updatedAt": "2026-08-18T08:27:49.000Z",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:v46ojbiop5ebs5h7gaomixcc/site.standard.document/3msuh4gy7qqvy",
+            "cid": "bafyreifdxvgzjlsgxh6kjrfslno5n2j4gefr6ty7gmnfghx674qq7h2dky"
+          },
+          {
+            "uri": "at://did:plc:v46ojbiop5ebs5h7gaomixcc/site.standard.publication/3m57zfsq3a2fo",
+            "cid": "bafyreiajcn545whs2zpwcj635ajeh54mfal3yrnqugmdf6vkjpicdrlvf4"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:v46ojbiop5ebs5h7gaomixcc",
+            "handle": "brookie.blog",
+            "displayName": "Brookie",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreidl5i4jrfexlzzmbutkeeilu6p6bpmrbrwutybghrfzykhifuiwva",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "all"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
             },
-            "recommendCount": 11,
-            "recommenders": [
+            "verification": {
+              "verifications": [
                 {
-                    "did": "did:plc:6ayddqghxhciedbaofoxkcbs",
-                    "handle": "tynanpurdy.com",
-                    "displayName": "Tynan is afk til 10/19 ⁂",
-                    "pronouns": "he/him",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:6ayddqghxhciedbaofoxkcbs/bafkreie56qtqmtp5iu56zqqjkvwhvzqcudtsbetgs2joaowvuljbcluvze",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "status": {
-                        "uri": "at://did:plc:6ayddqghxhciedbaofoxkcbs/app.bsky.actor.status/self",
-                        "cid": "bafyreiebofv7ogm4wgpdvvwfwe77iknlmjkkb7gqi4wh4cqele3fl2nq4m",
-                        "record": {
-                            "$type": "app.bsky.actor.status",
-                            "createdAt": "2026-07-16T22:09:01.824Z",
-                            "durationMinutes": 60,
-                            "embed": {
-                                "$type": "app.bsky.embed.external",
-                                "external": {
-                                    "$type": "app.bsky.embed.external#external",
-                                    "description": "⚽ Chaos Soccer",
-                                    "thumb": {
-                                        "$type": "blob",
-                                        "ref": {
-                                            "$link": "bafkreid7prkbja7e4q6vr3qrfn53iwabgculro7e4o5m3ova2qmjqd6iii"
-                                        },
-                                        "mimeType": "image/jpeg",
-                                        "size": 151506
-                                    },
-                                    "title": "@chris.pardy.family's livestream on Streamplace",
-                                    "uri": "https://stream.place/chris.pardy.family"
-                                }
-                            },
-                            "status": "app.bsky.actor.status#live"
-                        },
-                        "status": "app.bsky.actor.status#live",
-                        "expiresAt": "2026-07-16T23:09:01.824Z",
-                        "isActive": false
-                    },
-                    "createdAt": "2023-08-19T00:16:42.718Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:6cbrxnrfmwpb7rhjkihqezzh",
-                    "handle": "caesar.dev",
-                    "displayName": "Caesar",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:6cbrxnrfmwpb7rhjkihqezzh/bafkreicbqmzkwpbxk3umbwst3eu2kiywwniy3w2v25l4af66znjmsrduaq",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "createdAt": "2023-08-03T16:29:03.780Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:6i6n57nrkq6xavqbdo6bvkqr",
-                    "handle": "byarielm.fyi",
-                    "displayName": "Ariel M. (she/her)",
-                    "pronouns": "she/her",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:6i6n57nrkq6xavqbdo6bvkqr/bafkreihkmv2mi53xdicse4x6k2bulqbkrf6er3fjlooezviyeujgltfiky",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "all"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "createdAt": "2024-11-11T05:53:23.011Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
+                  "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
+                  "issuerDisplayName": "Bluesky",
+                  "issuerHandle": "bsky.app",
+                  "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3mgpx7yucrl2v",
+                  "isValid": true,
+                  "createdAt": "2026-03-10T18:00:36.756Z"
                 }
-            ],
-            "$type": "eric.bsky.atmosphere.defs#articleView",
-            "featured": true
-        },
-        {
-            "uri": "https://brookie.blog/a-is-for-aliens-a-is-for-alison-z8k0dj6",
-            "title": "A Is for Aliens. A Is for Alison.",
-            "description": "Rewatching the X-Files and Pretty Little Liars again. They both have such good pilot episodes. So much drama, so much suspense, so much mystery.",
-            "createdAt": "2026-08-15T20:19:36.000Z",
-            "updatedAt": "2026-08-18T08:27:49.000Z",
-            "associatedRefs": [
-                {
-                    "uri": "at://did:plc:v46ojbiop5ebs5h7gaomixcc/site.standard.document/3msuh4gy7qqvy",
-                    "cid": "bafyreifdxvgzjlsgxh6kjrfslno5n2j4gefr6ty7gmnfghx674qq7h2dky"
-                },
-                {
-                    "uri": "at://did:plc:v46ojbiop5ebs5h7gaomixcc/site.standard.publication/3m57zfsq3a2fo",
-                    "cid": "bafyreiajcn545whs2zpwcj635ajeh54mfal3yrnqugmdf6vkjpicdrlvf4"
-                }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:v46ojbiop5ebs5h7gaomixcc",
-                    "handle": "brookie.blog",
-                    "displayName": "Brookie",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreidl5i4jrfexlzzmbutkeeilu6p6bpmrbrwutybghrfzykhifuiwva",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "all"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "verification": {
-                        "verifications": [
-                            {
-                                "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
-                                "issuerDisplayName": "Bluesky",
-                                "issuerHandle": "bsky.app",
-                                "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3mgpx7yucrl2v",
-                                "isValid": true,
-                                "createdAt": "2026-03-10T18:00:36.756Z"
-                            }
-                        ],
-                        "verifiedStatus": "valid",
-                        "trustedVerifierStatus": "none"
-                    },
-                    "createdAt": "2023-06-23T17:27:42.450Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "image": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreiaqvoj5onk5t6v6al2jvqkgydicwfpbbjdawwcfdljvgv7n7peyim@png",
-            "publisher": {
-                "uri": "https://brookie.blog/",
-                "title": "Brookie’s Blog",
-                "description": "hi i'm brookie and this is my blog :)",
-                "icon": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreif2zmdettmdbcyiborvikvzr645szqwt5b3dgo4xvsuem6oskqziy@jpeg",
-                "theme": {
-                    "backgroundRGB": {
-                        "r": 255,
-                        "g": 255,
-                        "b": 255
-                    },
-                    "foregroundRGB": {
-                        "r": 0,
-                        "g": 0,
-                        "b": 0
-                    },
-                    "accentRGB": {
-                        "r": 0,
-                        "g": 0,
-                        "b": 0
-                    },
-                    "accentForegroundRGB": {
-                        "r": 239,
-                        "g": 239,
-                        "b": 239
-                    }
-                }
+              ],
+              "verifiedStatus": "valid",
+              "trustedVerifierStatus": "none"
             },
-            "readingTime": 6,
-            "recommendCount": 3,
-            "recommenders": [
-                {
-                    "did": "did:plc:rcjhtxh5v4mwvrbezap3hixf",
-                    "handle": "katherine.app",
-                    "displayName": "kat",
-                    "pronouns": "she/her",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rcjhtxh5v4mwvrbezap3hixf/bafkreicprasjbo3etpf57tcxmnirz4vvm7qw6ab5oybk3k45j7zdgg5gyu",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "all"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "createdAt": "2025-01-05T06:13:19.712Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:stznz7qsokto2345qtdzogjb",
-                    "handle": "psingletary.com",
-                    "displayName": "Patrick Singletary",
-                    "pronouns": "patrick/he/him",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:stznz7qsokto2345qtdzogjb/bafkreiabzh4azd4qaorz5kfzlwy33qwl243apiw74b7ysucebarac5wxtm",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "none",
-                            "allowGroupInvites": "none"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "none"
-                        }
-                    },
-                    "createdAt": "2023-07-22T13:49:05.090Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:v46ojbiop5ebs5h7gaomixcc",
-                    "handle": "brookie.blog",
-                    "displayName": "Brookie",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreidl5i4jrfexlzzmbutkeeilu6p6bpmrbrwutybghrfzykhifuiwva",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "all"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "verification": {
-                        "verifications": [
-                            {
-                                "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
-                                "issuerDisplayName": "Bluesky",
-                                "issuerHandle": "bsky.app",
-                                "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3mgpx7yucrl2v",
-                                "isValid": true,
-                                "createdAt": "2026-03-10T18:00:36.756Z"
-                            }
-                        ],
-                        "verifiedStatus": "valid",
-                        "trustedVerifierStatus": "none"
-                    },
-                    "createdAt": "2023-06-23T17:27:42.450Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "$type": "eric.bsky.atmosphere.defs#articleView",
-            "featured": false
-        }
-    ],
-    "publications": [
-        {
-            "uri": "https://brookie.blog/",
-            "title": "Brookie’s Blog",
-            "description": "hi i'm brookie and this is my blog :)",
-            "associatedRefs": [
-                {
-                    "uri": "at://did:plc:v46ojbiop5ebs5h7gaomixcc/site.standard.publication/3m57zfsq3a2fo",
-                    "cid": "bafyreiajcn545whs2zpwcj635ajeh54mfal3yrnqugmdf6vkjpicdrlvf4"
-                }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:v46ojbiop5ebs5h7gaomixcc",
-                    "handle": "brookie.blog",
-                    "displayName": "Brookie",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreidl5i4jrfexlzzmbutkeeilu6p6bpmrbrwutybghrfzykhifuiwva",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "all"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "verification": {
-                        "verifications": [
-                            {
-                                "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
-                                "issuerDisplayName": "Bluesky",
-                                "issuerHandle": "bsky.app",
-                                "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3mgpx7yucrl2v",
-                                "isValid": true,
-                                "createdAt": "2026-03-10T18:00:36.756Z"
-                            }
-                        ],
-                        "verifiedStatus": "valid",
-                        "trustedVerifierStatus": "none"
-                    },
-                    "createdAt": "2023-06-23T17:27:42.450Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "publisher": {
-                "uri": "https://brookie.blog/",
-                "title": "Brookie’s Blog",
-                "description": "hi i'm brookie and this is my blog :)",
-                "icon": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreif2zmdettmdbcyiborvikvzr645szqwt5b3dgo4xvsuem6oskqziy@jpeg",
-                "theme": {
-                    "backgroundRGB": {
-                        "r": 255,
-                        "g": 255,
-                        "b": 255
-                    },
-                    "foregroundRGB": {
-                        "r": 0,
-                        "g": 0,
-                        "b": 0
-                    },
-                    "accentRGB": {
-                        "r": 0,
-                        "g": 0,
-                        "b": 0
-                    },
-                    "accentForegroundRGB": {
-                        "r": 239,
-                        "g": 239,
-                        "b": 239
-                    }
-                }
+            "createdAt": "2023-06-23T17:27:42.450Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "image": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreiaqvoj5onk5t6v6al2jvqkgydicwfpbbjdawwcfdljvgv7n7peyim@png",
+        "publisher": {
+          "uri": "https://brookie.blog/",
+          "title": "Brookie’s Blog",
+          "description": "hi i'm brookie and this is my blog :)",
+          "theme": {
+            "background": "#ffffff",
+            "foreground": "#000000",
+            "accent": "#000000",
+            "accentForeground": "#efefef"
+          },
+          "$type": "app.bsky.embed.external#viewArticlePublication",
+          "logo": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreif2zmdettmdbcyiborvikvzr645szqwt5b3dgo4xvsuem6oskqziy@jpeg"
+        },
+        "readingTime": 6,
+        "$type": "app.bsky.embed.external#viewArticle",
+        "likeCount": 3,
+        "likers": [
+          {
+            "did": "did:plc:rcjhtxh5v4mwvrbezap3hixf",
+            "handle": "katherine.app",
+            "displayName": "kat",
+            "pronouns": "she/her",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:rcjhtxh5v4mwvrbezap3hixf/bafkreicprasjbo3etpf57tcxmnirz4vvm7qw6ab5oybk3k45j7zdgg5gyu",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "all"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
             },
-            "subscriberCount": 121,
-            "subscribers": [
-                {
-                    "did": "did:plc:277i5xeld636ibven2p7hgux",
-                    "handle": "tyggero.cz",
-                    "displayName": "tyggero",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:277i5xeld636ibven2p7hgux/bafkreic4mosvpijjummple66gsagtp2eaqsibmlymz4guk4yiiyudgthsi",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "none",
-                            "allowGroupInvites": "none"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "createdAt": "2024-01-08T01:20:50.767Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:2dt25xaeudlxtflpkoaah3ni",
-                    "handle": "jhaley.com",
-                    "displayName": "James Haley",
-                    "pronouns": "he/him",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2dt25xaeudlxtflpkoaah3ni/bafkreidxd3hmu66p6h5ia4gtc5o5yjxwiai2kqbbdmoozeyiv2rz4xa4s4",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "following",
-                            "allowGroupInvites": "all"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "createdAt": "2023-12-04T11:42:42.203Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:2oz2napc3hw46gatg3ahiei3",
-                    "handle": "tressiemoore.pckt.cafe",
-                    "displayName": "tressiemoore",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2oz2napc3hw46gatg3ahiei3/bafkreifhu7ntz6c7j6tpla7e5aepehmq7xpaqxiebgi2ah6iktveihzfja",
-                    "labels": [],
-                    "associated": {
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "createdAt": "2026-09-21T16:57:15.879Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "$type": "eric.bsky.atmosphere.defs#publicationView",
-            "featured": false
-        },
-        {
-            "uri": "https://atproto.com/blog",
-            "title": "AT Protocol",
-            "description": "Documentation, guides, and updates for the AT Protocol - the decentralized foundation for social networking.",
-            "associatedRefs": [
-                {
-                    "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/site.standard.publication/3memeaezix223",
-                    "cid": "bafyreifovmxsz426z7hcg2zwspz2evlzazkey4rbwiyrf5vn63gidt4i7e"
-                }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:ewvi7nxzyoun6zhxrhs64oiz",
-                    "handle": "atproto.com",
-                    "displayName": "AT Protocol Developers",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ewvi7nxzyoun6zhxrhs64oiz/bafkreiaihtwfr2d6mjfb6drzaze2gubqtst4ymiwxowqfxpsqxpnz2t33u",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "none"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "verification": {
-                        "verifications": [
-                            {
-                                "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
-                                "issuerDisplayName": "Bluesky",
-                                "issuerHandle": "bsky.app",
-                                "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3lndpv6ijlo2l",
-                                "isValid": true,
-                                "createdAt": "2025-04-21T10:47:29.941Z"
-                            }
-                        ],
-                        "verifiedStatus": "valid",
-                        "trustedVerifierStatus": "none"
-                    },
-                    "createdAt": "2023-04-26T06:19:25.508Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "publisher": {
-                "uri": "https://atproto.com/blog",
-                "title": "AT Protocol",
-                "description": "Documentation, guides, and updates for the AT Protocol - the decentralized foundation for social networking.",
-                "theme": {
-                    "backgroundRGB": {
-                        "r": 255,
-                        "g": 255,
-                        "b": 255
-                    },
-                    "foregroundRGB": {
-                        "r": 24,
-                        "g": 24,
-                        "b": 27
-                    },
-                    "accentRGB": {
-                        "r": 234,
-                        "g": 179,
-                        "b": 8
-                    },
-                    "accentForegroundRGB": {
-                        "r": 24,
-                        "g": 24,
-                        "b": 27
-                    }
-                }
+            "createdAt": "2025-01-05T06:13:19.712Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:stznz7qsokto2345qtdzogjb",
+            "handle": "psingletary.com",
+            "displayName": "Patrick Singletary",
+            "pronouns": "patrick/he/him",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:stznz7qsokto2345qtdzogjb/bafkreiabzh4azd4qaorz5kfzlwy33qwl243apiw74b7ysucebarac5wxtm",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "none",
+                "allowGroupInvites": "none"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "none"
+              }
             },
-            "subscriberCount": 70,
-            "subscribers": [
+            "createdAt": "2023-07-22T13:49:05.090Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:v46ojbiop5ebs5h7gaomixcc",
+            "handle": "brookie.blog",
+            "displayName": "Brookie",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreidl5i4jrfexlzzmbutkeeilu6p6bpmrbrwutybghrfzykhifuiwva",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "all"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "verification": {
+              "verifications": [
                 {
-                    "did": "did:plc:22cha2ngghljptk2pfal4jrh",
-                    "handle": "withhiddennoise.net",
-                    "displayName": "Dan Visel",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:22cha2ngghljptk2pfal4jrh/bafkreihqpxl5f6o7ow4lalllwbmbrkotn2gimexyoajezyul6rexn6nule",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "createdAt": "2023-07-13T16:24:33.079Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:257wekqxg4hyapkq6k47igmp",
-                    "handle": "flo-bit.dev",
-                    "displayName": "flo-bit",
-                    "pronouns": "he/him",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:257wekqxg4hyapkq6k47igmp/bafkreieibvt35irfxdrgmu7pl5vcnptjxunn6cli332qh3jwuz67jzio4q",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "createdAt": "2024-11-08T02:10:04.411Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                },
-                {
-                    "did": "did:plc:2atpw7zrdrdptzqo7jw63rzv",
-                    "handle": "feliciarondo.com",
-                    "displayName": "Felicia",
-                    "pronouns": "she/her",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2atpw7zrdrdptzqo7jw63rzv/bafkreic3c5bcep7jgpeb23ywnvngg3xoskzdifxihrvtsksr2bjf3lmw2u",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "all",
-                            "allowGroupInvites": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "createdAt": "2023-09-13T22:48:59.589Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
+                  "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
+                  "issuerDisplayName": "Bluesky",
+                  "issuerHandle": "bsky.app",
+                  "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3mgpx7yucrl2v",
+                  "isValid": true,
+                  "createdAt": "2026-03-10T18:00:36.756Z"
                 }
-            ],
-            "$type": "eric.bsky.atmosphere.defs#publicationView",
-            "featured": false
+              ],
+              "verifiedStatus": "valid",
+              "trustedVerifierStatus": "none"
+            },
+            "createdAt": "2023-06-23T17:27:42.450Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ]
+      }
+    }
+  ],
+  "publications": [
+    {
+      "featured": false,
+      "view": {
+        "uri": "https://brookie.blog/",
+        "title": "Brookie’s Blog",
+        "description": "hi i'm brookie and this is my blog :)",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:v46ojbiop5ebs5h7gaomixcc/site.standard.publication/3m57zfsq3a2fo",
+            "cid": "bafyreiajcn545whs2zpwcj635ajeh54mfal3yrnqugmdf6vkjpicdrlvf4"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:v46ojbiop5ebs5h7gaomixcc",
+            "handle": "brookie.blog",
+            "displayName": "Brookie",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreidl5i4jrfexlzzmbutkeeilu6p6bpmrbrwutybghrfzykhifuiwva",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "all"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "verification": {
+              "verifications": [
+                {
+                  "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
+                  "issuerDisplayName": "Bluesky",
+                  "issuerHandle": "bsky.app",
+                  "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3mgpx7yucrl2v",
+                  "isValid": true,
+                  "createdAt": "2026-03-10T18:00:36.756Z"
+                }
+              ],
+              "verifiedStatus": "valid",
+              "trustedVerifierStatus": "none"
+            },
+            "createdAt": "2023-06-23T17:27:42.450Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "subscribers": [
+          {
+            "did": "did:plc:277i5xeld636ibven2p7hgux",
+            "handle": "tyggero.cz",
+            "displayName": "tyggero",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:277i5xeld636ibven2p7hgux/bafkreic4mosvpijjummple66gsagtp2eaqsibmlymz4guk4yiiyudgthsi",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "none",
+                "allowGroupInvites": "none"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "createdAt": "2024-01-08T01:20:50.767Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:2dt25xaeudlxtflpkoaah3ni",
+            "handle": "jhaley.com",
+            "displayName": "James Haley",
+            "pronouns": "he/him",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2dt25xaeudlxtflpkoaah3ni/bafkreidxd3hmu66p6h5ia4gtc5o5yjxwiai2kqbbdmoozeyiv2rz4xa4s4",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "following",
+                "allowGroupInvites": "all"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "createdAt": "2023-12-04T11:42:42.203Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:2oz2napc3hw46gatg3ahiei3",
+            "handle": "tressiemoore.pckt.cafe",
+            "displayName": "tressiemoore",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2oz2napc3hw46gatg3ahiei3/bafkreifhu7ntz6c7j6tpla7e5aepehmq7xpaqxiebgi2ah6iktveihzfja",
+            "labels": [],
+            "associated": {
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "createdAt": "2026-09-21T16:57:15.879Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "$type": "app.bsky.embed.external#viewArticlePublication",
+        "subscriptionCount": 121,
+        "logo": "https://cdn.bsky.app/img/avatar/plain/did:plc:v46ojbiop5ebs5h7gaomixcc/bafkreif2zmdettmdbcyiborvikvzr645szqwt5b3dgo4xvsuem6oskqziy@jpeg",
+        "theme": {
+          "background": "#ffffff",
+          "foreground": "#000000",
+          "accent": "#000000",
+          "accentForeground": "#efefef"
         }
-    ],
-    "photos": [
-        {
-            "uri": "https://grain.social/profile/did:plc:bcgltzqazw5tb6k2g3ttenbj/gallery/3mwurhuhb742g",
-            "title": "evening ride",
-            "description": "testing the xpan cam some more. these are mostly set to the ektar 100 film simulation i made calibrated with the open source rawtherapee luts and ektar xpan samples from flickr. figured out a way to get raw image data out of the arducam 5mp and updated the processing algo to try to get the sharpest image. looks pretty good honestly. basically film scan quality for a camera that weighs nothing and the battery lasts seemingly forever",
-            "createdAt": "2026-10-02T06:44:03.183Z",
-            "associatedRefs": [
+      }
+    },
+    {
+      "featured": false,
+      "view": {
+        "uri": "https://atproto.com/blog",
+        "title": "AT Protocol",
+        "description": "Documentation, guides, and updates for the AT Protocol - the decentralized foundation for social networking.",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:ewvi7nxzyoun6zhxrhs64oiz/site.standard.publication/3memeaezix223",
+            "cid": "bafyreifovmxsz426z7hcg2zwspz2evlzazkey4rbwiyrf5vn63gidt4i7e"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:ewvi7nxzyoun6zhxrhs64oiz",
+            "handle": "atproto.com",
+            "displayName": "AT Protocol Developers",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:ewvi7nxzyoun6zhxrhs64oiz/bafkreiaihtwfr2d6mjfb6drzaze2gubqtst4ymiwxowqfxpsqxpnz2t33u",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "none"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "verification": {
+              "verifications": [
                 {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery/3mwurhuhb742g",
-                    "cid": "bafyreieprdgdoc4uqh4ued7jlung2swy5bu3exxlyryrgjlv3hpj63zxla"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhszlc62g",
-                    "cid": "bafyreiafpzdmotnz7aclxghkuegp5md2pelz5gb22jmj6bgnuq6orkmuyq"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhszlbn2g",
-                    "cid": "bafyreihax6ia5yql4a4tm5rfrctyd3uhso6xnzeowgkealhjhzszvftr6u"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurht7aan2g",
-                    "cid": "bafyreiem5qwgqso4nmpmko6yg3nmyyhz5dudqxsxfpgiukax2bzrart4ma"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurht7aaj2g",
-                    "cid": "bafyreifw7v4tfyykif2i5rlthfr3zroook4uuoaskxh4tqtakfxkay27di"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhteh2d2g",
-                    "cid": "bafyreif5g55h5rslhqtsp5lpuf4lbami25fyilrcybqf2r3rknade5cvte"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhteh272g",
-                    "cid": "bafyreiamtwsk3tosubjmurqlhgcedxbg6wd64zso2lhgq6rcqr4kjwfrsi"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtjcbu2g",
-                    "cid": "bafyreicyfcpoyccsnhqxlcyhu44sjzijtsac5oe4hxvqqijvaklu6j7pbu"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtjcbq2g",
-                    "cid": "bafyreifzjb67dskh5wcjwkf4qhebev47rwrz3tb6mpff2yidcu7zmexd4a"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtoe4t2g",
-                    "cid": "bafyreiegqkyuyogj5zaau4iys46k7z2hhgua7mo5aeqh4emnp24adkbnzi"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtoe4q2g",
-                    "cid": "bafyreifxke3zsmtbpbyvolelxqsbjvzyktjzkxlak5zfrhsvojz742uzl4"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtt3go2g",
-                    "cid": "bafyreidn276rlfgrdfx6hxt4zwqqfjluhesgy4tbrpkx2l7wlyezolffym"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtt3gk2g",
-                    "cid": "bafyreigdu53cgg2vmzfuyjc5kzv4i42wuxfsiz36ti7sos2kohepjtj26q"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtyadb2g",
-                    "cid": "bafyreicbo6igpmbuyfrcr6l7zuymkkg5kfahyhk3wxwzvpuoukcnx3edpy"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtyad52g",
-                    "cid": "bafyreiadfgznsb2fuohjih23owu6vxlvgx5if7uwxwluku33scuwjnoyy4"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhu5f7g2g",
-                    "cid": "bafyreiejbsln7mla6vaaeui6doqgjoq66nnkffoe6csq2y4kpn64k3xrgm"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhu5f7c2g",
-                    "cid": "bafyreif7fvvxtxarrzzawjtsfulmh4obb2tgyyxxm64si5mi6q7ge7rmqy"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhuc3hz2g",
-                    "cid": "bafyreic5f7kto4dctqfv4kxhn43zrkxy37rjbo76xwmkvwa3qpivqfewce"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhuc3hw2g",
-                    "cid": "bafyreial2hlt7qkapfk2tasjzfrycr7bvj2g74popol75fv5hwg7afhrm4"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhuhaza2g",
-                    "cid": "bafyreieahbpusk6bzsjkfza2ende7bc4uuck4i4myelub4vr3tsi4gnhse"
-                },
-                {
-                    "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhuhaz42g",
-                    "cid": "bafyreid7ccosj7qrefcr5ts72qe5cy6qujtwbnxcupjhsxqqvs5nr2awti"
+                  "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
+                  "issuerDisplayName": "Bluesky",
+                  "issuerHandle": "bsky.app",
+                  "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3lndpv6ijlo2l",
+                  "isValid": true,
+                  "createdAt": "2025-04-21T10:47:29.941Z"
                 }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:bcgltzqazw5tb6k2g3ttenbj",
-                    "handle": "chadtmiller.com",
-                    "displayName": "Chad",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreig5bcb7dl7aphw6eg4e7kjkvpdshfexdvk7jldg53ypre6ecdhesu",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "following",
-                            "allowGroupInvites": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        },
-                        "germ": {
-                            "messageMeUrl": "https://landing.ger.mx/newUser",
-                            "showButtonTo": "usersIFollow"
-                        }
-                    },
-                    "createdAt": "2024-11-15T06:28:50.777Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "images": [
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicdzasac4qdo6ls5pixbirmojx6oxdnxcsgbvzskvtxgbk4zhxhdi@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicdzasac4qdo6ls5pixbirmojx6oxdnxcsgbvzskvtxgbk4zhxhdi@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreihaiqeqq2ye5kuibnh6nvvaw7r6koxjin3khateftc4zntm2ce7ie@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreihaiqeqq2ye5kuibnh6nvvaw7r6koxjin3khateftc4zntm2ce7ie@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreifnx5u2cmt63prdrytyt2qofqmn6whiaoutucudqkb4265tdz7fga@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreifnx5u2cmt63prdrytyt2qofqmn6whiaoutucudqkb4265tdz7fga@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiag65qhmo3lgupq54b6s3xqw4g6fveaint52upgv5m6cplmbhvvky@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiag65qhmo3lgupq54b6s3xqw4g6fveaint52upgv5m6cplmbhvvky@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreif4d2mixanvz4of4pwc4ncvvybvigfhg2qu5qas4wvnmnzkg3tzpq@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreif4d2mixanvz4of4pwc4ncvvybvigfhg2qu5qas4wvnmnzkg3tzpq@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreidg446hdxqrj32vungei2tl7n76ifr3empsotkwgvckvjdwpy2awy@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreidg446hdxqrj32vungei2tl7n76ifr3empsotkwgvckvjdwpy2awy@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicbaqpkenlpumh2nsy3w56fseq4o4x4m6pxzgjayr5ta2ezg3t4d4@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicbaqpkenlpumh2nsy3w56fseq4o4x4m6pxzgjayr5ta2ezg3t4d4@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiaurpdeakco5vknbt364frixtkaqo6vpsazxcqmwhyz57hi33w6wq@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiaurpdeakco5vknbt364frixtkaqo6vpsazxcqmwhyz57hi33w6wq@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreich6dx325bgltdvdle3d534osrbug5oljfw6oqjfbevmwntntb2ku@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreich6dx325bgltdvdle3d534osrbug5oljfw6oqjfbevmwntntb2ku@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreigj74jpxhbtyn6daqiquaweznvdxxmqqu6kjb53dxnfgesadzkfqi@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreigj74jpxhbtyn6daqiquaweznvdxxmqqu6kjb53dxnfgesadzkfqi@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 738
-                    }
-                }
-            ],
-            "likeCount": 2,
-            "$type": "eric.bsky.atmosphere.defs#galleryView",
-            "featured": true
-        },
-        {
-            "uri": "https://grain.social/profile/did:plc:7rkdalcyovirwkpzgzk74cje/gallery/3mwvtii4k5ddt",
-            "title": "Chandelier 2",
-            "description": "Taken along Ventura Boulevard, 2026",
-            "createdAt": "2026-10-02T16:52:47.420Z",
-            "associatedRefs": [
-                {
-                    "uri": "at://did:plc:7rkdalcyovirwkpzgzk74cje/social.grain.gallery/3mwvtii4k5ddt",
-                    "cid": "bafyreiemxr6jgnye6x3gubcw6vhmflbfnp3ylex52dcitkyx53btk4wwsu"
-                },
-                {
-                    "uri": "at://did:plc:7rkdalcyovirwkpzgzk74cje/social.grain.gallery.item/3mwvtii4k5fdt",
-                    "cid": "bafyreidntrs57bgw3pohq3kpzmbwiwo27oselznzwn3s23ikkyu3fd2fgu"
-                },
-                {
-                    "uri": "at://did:plc:7rkdalcyovirwkpzgzk74cje/social.grain.photo/3mwvtii4k5cdt",
-                    "cid": "bafyreifhewrl2a2ukypzxs5hvau5kmxdopbfj474xxwcevhmeq6uzrzs4q"
-                }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:7rkdalcyovirwkpzgzk74cje",
-                    "handle": "highway62.bsky.social",
-                    "displayName": "Here, the ghost is me.",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:7rkdalcyovirwkpzgzk74cje/bafkreifss64eqpqv5dz4masfpdi74omfhflkuxtqsvoozyi3am6uoiw5sq",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "createdAt": "2023-06-24T14:27:12.998Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "images": [
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:7rkdalcyovirwkpzgzk74cje/bafkreiazp2jgzn36qiirzvgnahy3rans2hvxgfnj7jkym7jn44jnu6gmtm@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:7rkdalcyovirwkpzgzk74cje/bafkreiazp2jgzn36qiirzvgnahy3rans2hvxgfnj7jkym7jn44jnu6gmtm@jpeg",
-                    "alt": "Lit chandeliers in a dark shop window, high contrast black and white. An unlit OPEN sign hangs in front of one of them",
-                    "aspectRatio": {
-                        "width": 1800,
-                        "height": 1013
-                    }
-                }
-            ],
-            "likeCount": 2,
-            "$type": "eric.bsky.atmosphere.defs#galleryView",
-            "featured": false
-        },
-        {
-            "uri": "https://grain.social/profile/did:plc:44ybard66vv44zksje25o7dz/gallery/3mt5sd2nn7s2j",
-            "title": "Mt Rinjani Summit Climb",
-            "description": "",
-            "createdAt": "2026-08-15T23:12:19.167Z",
-            "associatedRefs": [
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery/3mt5sd2nn7s2j",
-                    "cid": "bafyreihfsbhoe2hm3numg2a56qzay7yz7aw6dzsdyylalbtr3ubplafxnu"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd2thqk2j",
-                    "cid": "bafyreiaznkrhhmn7l52iwsxjhyocitz2riy2jl3ajnrrc56pho2m6seciq"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5sctv2kk2j",
-                    "cid": "bafyreignvkznosvez6ucgnea56henyhaojmgadvpm72wucxwhutpadstd4"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd2zpws2j",
-                    "cid": "bafyreiefag56ryvrmmzup5d74nmzxqkjfp6lifcb6kou3bvq5puv3comgu"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scuu5oc2j",
-                    "cid": "bafyreic3zaahnayuraf2anl72yqhrpltj4mgzdxuu7sxko36saunxuiqp4"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd374s22j",
-                    "cid": "bafyreiedcn5ubod7dmgmwpp2dvgzsazrlykiu7pgso637igjcvfn4onahe"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scvngbc2j",
-                    "cid": "bafyreiepnkeuc5snhnwlkc6ofu7h3t3fdpr7nonv3v64bw3kehbazbu7fu"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3erhc2j",
-                    "cid": "bafyreibkv7s5caivx7hte564klnlyvjl5jhgouj32klnlrf3irwenit7be"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scwhn522j",
-                    "cid": "bafyreigwgoelq67xoejifcv3xbfcksyscwm46yb5eegt2celelppp2mvkq"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3kg4k2j",
-                    "cid": "bafyreidyjyoozlvqayjbd4irkbixdwgkmx3bcywtmc2ytxhowzek6wxq2e"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scx7mpk2j",
-                    "cid": "bafyreig6ltl3veevvaa3ujovl3mnqwet4m6vmfks6do5a4d26tzrdbpinu"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3psxs2j",
-                    "cid": "bafyreicm4wvhfk4wrjirbuvrcogd7nxzoofv7iclc22jldckjyyen5gjlm"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scxxfhc2j",
-                    "cid": "bafyreiaba4ictunb5y52vmm23ngeyhyevu3wc2ttsf5mswens7kramensy"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3vcqs2j",
-                    "cid": "bafyreifhrmjwemdolsduvnuucaabgyjrloid4lv4lpmm65rxt4jjap2fku"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scyp6722j",
-                    "cid": "bafyreibqywm4d7tmcjvgthpjydbu3wd7rfw4iuhp6wckjpvpzlabbkfawe"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd42tj22j",
-                    "cid": "bafyreihyh642kwtsogoqmlfoplcbrwkhuw3rs4xf24s6pmzqcsp6ckzpx4"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5sczgwws2j",
-                    "cid": "bafyreidvvmo244v3wnxjbjegreoqlv5p5crg3ar7rxuep7wyybhswyodrm"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd47zjk2j",
-                    "cid": "bafyreie6sqrexr5gubqghzgxqfb3h2md2l2ir3heuolg7xatd3odlda2ny"
-                },
-                {
-                    "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5sd2b4tc2j",
-                    "cid": "bafyreifndwrvboathkgbg35td6bttmzap5aosoeg5m767x646ga4fjety4"
-                }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:44ybard66vv44zksje25o7dz",
-                    "handle": "bnewbold.net",
-                    "displayName": "bryan newbold",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiglnysron3h2je7nf6cmvtimuaxi7xe2c7rkxitmks3mzmajnc2ou",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "following",
-                            "allowGroupInvites": "none"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "createdAt": "2022-12-18T06:56:26.676Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "images": [
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreihrneqgqccvaegxfy6h5ftew6ilorg4y5xll5z4haso477d3rxvwy@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreihrneqgqccvaegxfy6h5ftew6ilorg4y5xll5z4haso477d3rxvwy@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 1500,
-                        "height": 2000
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreig54evqi7o3ekz5ayk3pk47p3gim7gvg2crkpm2lhzqretnbn4f2m@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreig54evqi7o3ekz5ayk3pk47p3gim7gvg2crkpm2lhzqretnbn4f2m@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 1500
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreia2bq2mwhz32bykbcxco3tw52x2tz5jnmed4c5yojo7y6xv6x7umm@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreia2bq2mwhz32bykbcxco3tw52x2tz5jnmed4c5yojo7y6xv6x7umm@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 1500
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiey7z27rskpawczaeqhjtotrv7ngfacn4dkrq2kvtu32vjewpa4wa@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiey7z27rskpawczaeqhjtotrv7ngfacn4dkrq2kvtu32vjewpa4wa@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 1500
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiaab5u5o24fhwli5r7ngiyzumbfqt6asiviofddkr5ofgdsdu6f4i@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiaab5u5o24fhwli5r7ngiyzumbfqt6asiviofddkr5ofgdsdu6f4i@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 1500
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiacu26ioboh2jwk2uqv2flisxf7kamxt3erufzw34trha74sphoqq@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiacu26ioboh2jwk2uqv2flisxf7kamxt3erufzw34trha74sphoqq@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 1500
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreieu7hpvpds6zlv2u6kz2ytwhisyzldyuiu6zbgpezm4icduxfxyoe@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreieu7hpvpds6zlv2u6kz2ytwhisyzldyuiu6zbgpezm4icduxfxyoe@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 1500,
-                        "height": 2000
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibuq2ilkgu2umi3dzadnh5g6xlfm24bsxqnuc7yewuien6u7hgvvq@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibuq2ilkgu2umi3dzadnh5g6xlfm24bsxqnuc7yewuien6u7hgvvq@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 1500,
-                        "height": 2000
-                    }
-                },
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibc2acsxpcccdvtskbn7dowkdqyklmhmuxoevunwzatrw2wy5suse@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibc2acsxpcccdvtskbn7dowkdqyklmhmuxoevunwzatrw2wy5suse@jpeg",
-                    "alt": "",
-                    "aspectRatio": {
-                        "width": 2000,
-                        "height": 1500
-                    }
-                }
-            ],
-            "likeCount": 17,
-            "$type": "eric.bsky.atmosphere.defs#galleryView",
-            "featured": false
-        },
-        {
-            "uri": "https://grain.social/profile/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/gallery/3mx3sn672gljc",
-            "title": "Cookin' with Alf",
-            "description": "",
-            "createdAt": "2026-10-05T01:53:28.321Z",
-            "associatedRefs": [
-                {
-                    "uri": "at://did:plc:3jpt2mvvsumj2r7eqk4gzzjz/social.grain.gallery/3mx3sn672gljc",
-                    "cid": "bafyreiaylfdpqufspz2w56e7mtj6zhyv5edczyavqxcbhz4nctapr4lmzi"
-                },
-                {
-                    "uri": "at://did:plc:3jpt2mvvsumj2r7eqk4gzzjz/social.grain.gallery.item/3mx3sn673ftjc",
-                    "cid": "bafyreigvujtjgq3vrh3oqojdfg7ngacijpqctibvrh4dcarrwz5cffzu2u"
-                },
-                {
-                    "uri": "at://did:plc:3jpt2mvvsumj2r7eqk4gzzjz/social.grain.photo/3mx3sn672gkjc",
-                    "cid": "bafyreies7kzybyc57sps3gn2b27jun427uhl56e2nnwtp5yu6xmcptvrxm"
-                }
-            ],
-            "associatedProfiles": [
-                {
-                    "did": "did:plc:3jpt2mvvsumj2r7eqk4gzzjz",
-                    "handle": "esb.lol",
-                    "displayName": "Eric",
-                    "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/bafkreicmpkhaggfoagqj53jmzfmremae2qcw7oc3ugh5qvq6quncxp6wqq",
-                    "labels": [],
-                    "associated": {
-                        "chat": {
-                            "allowIncoming": "following",
-                            "allowGroupInvites": "following"
-                        },
-                        "activitySubscription": {
-                            "allowSubscriptions": "followers"
-                        }
-                    },
-                    "verification": {
-                        "verifications": [
-                            {
-                                "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
-                                "issuerDisplayName": "Bluesky",
-                                "issuerHandle": "bsky.app",
-                                "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3ltmvuidftv2f",
-                                "isValid": true,
-                                "createdAt": "2025-07-10T17:59:36.528Z"
-                            }
-                        ],
-                        "verifiedStatus": "valid",
-                        "trustedVerifierStatus": "none"
-                    },
-                    "createdAt": "2023-05-02T03:39:27.863Z",
-                    "$type": "app.bsky.actor.defs#profileViewBasic"
-                }
-            ],
-            "images": [
-                {
-                    "thumb": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/bafkreifp2unqdtnmvvbuzvbkr7sissvsroltfcjeiqt4rqepbbrhr7tsva@jpeg",
-                    "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/bafkreifp2unqdtnmvvbuzvbkr7sissvsroltfcjeiqt4rqepbbrhr7tsva@jpeg",
-                    "alt": "Plush Alf puppet with apron, text on apron says \"Cookin' with Alf\"",
-                    "aspectRatio": {
-                        "width": 1500,
-                        "height": 2000
-                    }
-                }
-            ],
-            "likeCount": 1,
-            "$type": "eric.bsky.atmosphere.defs#galleryView",
-            "featured": false
+              ],
+              "verifiedStatus": "valid",
+              "trustedVerifierStatus": "none"
+            },
+            "createdAt": "2023-04-26T06:19:25.508Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "subscribers": [
+          {
+            "did": "did:plc:22cha2ngghljptk2pfal4jrh",
+            "handle": "withhiddennoise.net",
+            "displayName": "Dan Visel",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:22cha2ngghljptk2pfal4jrh/bafkreihqpxl5f6o7ow4lalllwbmbrkotn2gimexyoajezyul6rexn6nule",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "createdAt": "2023-07-13T16:24:33.079Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:257wekqxg4hyapkq6k47igmp",
+            "handle": "flo-bit.dev",
+            "displayName": "flo-bit",
+            "pronouns": "he/him",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:257wekqxg4hyapkq6k47igmp/bafkreieibvt35irfxdrgmu7pl5vcnptjxunn6cli332qh3jwuz67jzio4q",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "createdAt": "2024-11-08T02:10:04.411Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          },
+          {
+            "did": "did:plc:2atpw7zrdrdptzqo7jw63rzv",
+            "handle": "feliciarondo.com",
+            "displayName": "Felicia",
+            "pronouns": "she/her",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:2atpw7zrdrdptzqo7jw63rzv/bafkreic3c5bcep7jgpeb23ywnvngg3xoskzdifxihrvtsksr2bjf3lmw2u",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "all",
+                "allowGroupInvites": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "createdAt": "2023-09-13T22:48:59.589Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "$type": "app.bsky.embed.external#viewArticlePublication",
+        "subscriptionCount": 70,
+        "theme": {
+          "background": "#ffffff",
+          "foreground": "#18181b",
+          "accent": "#eab308",
+          "accentForeground": "#18181b"
         }
-    ],
-    "livestreams": [],
-    "apps": [
-        {
-            "id": "d7ea9a5058e7",
-            "title": "Leaflet",
-            "description": "Delightful publishing to connect with your community",
-            "logo": "https://app-cms-production.bsky.workers.dev/images/image-f3d78d0ed8e296e01d0fde7f6166ce6373c6c1b0-88x88-png/small",
-            "backgroundImage": "https://app-cms-production.bsky.workers.dev/images/image-abdae35a8f9dab80eff8051453c8e35de07b6ae6-418x418-png/large",
-            "overlayColor": "#57822b",
-            "textColor": "#FFF",
-            "url": "https://leaflet.pub",
-            "category": "writing"
-        }
-    ]
+      }
+    }
+  ],
+  "photos": [
+    {
+      "featured": true,
+      "view": {
+        "uri": "https://grain.social/profile/did:plc:bcgltzqazw5tb6k2g3ttenbj/gallery/3mwurhuhb742g",
+        "title": "evening ride",
+        "description": "testing the xpan cam some more. these are mostly set to the ektar 100 film simulation i made calibrated with the open source rawtherapee luts and ektar xpan samples from flickr. figured out a way to get raw image data out of the arducam 5mp and updated the processing algo to try to get the sharpest image. looks pretty good honestly. basically film scan quality for a camera that weighs nothing and the battery lasts seemingly forever",
+        "createdAt": "2026-10-02T06:44:03.183Z",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery/3mwurhuhb742g",
+            "cid": "bafyreieprdgdoc4uqh4ued7jlung2swy5bu3exxlyryrgjlv3hpj63zxla"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhszlc62g",
+            "cid": "bafyreiafpzdmotnz7aclxghkuegp5md2pelz5gb22jmj6bgnuq6orkmuyq"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhszlbn2g",
+            "cid": "bafyreihax6ia5yql4a4tm5rfrctyd3uhso6xnzeowgkealhjhzszvftr6u"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurht7aan2g",
+            "cid": "bafyreiem5qwgqso4nmpmko6yg3nmyyhz5dudqxsxfpgiukax2bzrart4ma"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurht7aaj2g",
+            "cid": "bafyreifw7v4tfyykif2i5rlthfr3zroook4uuoaskxh4tqtakfxkay27di"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhteh2d2g",
+            "cid": "bafyreif5g55h5rslhqtsp5lpuf4lbami25fyilrcybqf2r3rknade5cvte"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhteh272g",
+            "cid": "bafyreiamtwsk3tosubjmurqlhgcedxbg6wd64zso2lhgq6rcqr4kjwfrsi"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtjcbu2g",
+            "cid": "bafyreicyfcpoyccsnhqxlcyhu44sjzijtsac5oe4hxvqqijvaklu6j7pbu"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtjcbq2g",
+            "cid": "bafyreifzjb67dskh5wcjwkf4qhebev47rwrz3tb6mpff2yidcu7zmexd4a"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtoe4t2g",
+            "cid": "bafyreiegqkyuyogj5zaau4iys46k7z2hhgua7mo5aeqh4emnp24adkbnzi"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtoe4q2g",
+            "cid": "bafyreifxke3zsmtbpbyvolelxqsbjvzyktjzkxlak5zfrhsvojz742uzl4"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtt3go2g",
+            "cid": "bafyreidn276rlfgrdfx6hxt4zwqqfjluhesgy4tbrpkx2l7wlyezolffym"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtt3gk2g",
+            "cid": "bafyreigdu53cgg2vmzfuyjc5kzv4i42wuxfsiz36ti7sos2kohepjtj26q"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhtyadb2g",
+            "cid": "bafyreicbo6igpmbuyfrcr6l7zuymkkg5kfahyhk3wxwzvpuoukcnx3edpy"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhtyad52g",
+            "cid": "bafyreiadfgznsb2fuohjih23owu6vxlvgx5if7uwxwluku33scuwjnoyy4"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhu5f7g2g",
+            "cid": "bafyreiejbsln7mla6vaaeui6doqgjoq66nnkffoe6csq2y4kpn64k3xrgm"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhu5f7c2g",
+            "cid": "bafyreif7fvvxtxarrzzawjtsfulmh4obb2tgyyxxm64si5mi6q7ge7rmqy"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhuc3hz2g",
+            "cid": "bafyreic5f7kto4dctqfv4kxhn43zrkxy37rjbo76xwmkvwa3qpivqfewce"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhuc3hw2g",
+            "cid": "bafyreial2hlt7qkapfk2tasjzfrycr7bvj2g74popol75fv5hwg7afhrm4"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.gallery.item/3mwurhuhaza2g",
+            "cid": "bafyreieahbpusk6bzsjkfza2ende7bc4uuck4i4myelub4vr3tsi4gnhse"
+          },
+          {
+            "uri": "at://did:plc:bcgltzqazw5tb6k2g3ttenbj/social.grain.photo/3mwurhuhaz42g",
+            "cid": "bafyreid7ccosj7qrefcr5ts72qe5cy6qujtwbnxcupjhsxqqvs5nr2awti"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:bcgltzqazw5tb6k2g3ttenbj",
+            "handle": "chadtmiller.com",
+            "displayName": "Chad",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreig5bcb7dl7aphw6eg4e7kjkvpdshfexdvk7jldg53ypre6ecdhesu",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "following",
+                "allowGroupInvites": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              },
+              "germ": {
+                "messageMeUrl": "https://landing.ger.mx/newUser",
+                "showButtonTo": "usersIFollow"
+              }
+            },
+            "createdAt": "2024-11-15T06:28:50.777Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "likeCount": 2,
+        "$type": "app.bsky.embed.external#viewGallery",
+        "items": [
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicdzasac4qdo6ls5pixbirmojx6oxdnxcsgbvzskvtxgbk4zhxhdi@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicdzasac4qdo6ls5pixbirmojx6oxdnxcsgbvzskvtxgbk4zhxhdi@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreihaiqeqq2ye5kuibnh6nvvaw7r6koxjin3khateftc4zntm2ce7ie@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreihaiqeqq2ye5kuibnh6nvvaw7r6koxjin3khateftc4zntm2ce7ie@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreifnx5u2cmt63prdrytyt2qofqmn6whiaoutucudqkb4265tdz7fga@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreifnx5u2cmt63prdrytyt2qofqmn6whiaoutucudqkb4265tdz7fga@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiag65qhmo3lgupq54b6s3xqw4g6fveaint52upgv5m6cplmbhvvky@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiag65qhmo3lgupq54b6s3xqw4g6fveaint52upgv5m6cplmbhvvky@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreif4d2mixanvz4of4pwc4ncvvybvigfhg2qu5qas4wvnmnzkg3tzpq@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreif4d2mixanvz4of4pwc4ncvvybvigfhg2qu5qas4wvnmnzkg3tzpq@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreidg446hdxqrj32vungei2tl7n76ifr3empsotkwgvckvjdwpy2awy@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreidg446hdxqrj32vungei2tl7n76ifr3empsotkwgvckvjdwpy2awy@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicbaqpkenlpumh2nsy3w56fseq4o4x4m6pxzgjayr5ta2ezg3t4d4@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreicbaqpkenlpumh2nsy3w56fseq4o4x4m6pxzgjayr5ta2ezg3t4d4@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiaurpdeakco5vknbt364frixtkaqo6vpsazxcqmwhyz57hi33w6wq@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreiaurpdeakco5vknbt364frixtkaqo6vpsazxcqmwhyz57hi33w6wq@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreich6dx325bgltdvdle3d534osrbug5oljfw6oqjfbevmwntntb2ku@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreich6dx325bgltdvdle3d534osrbug5oljfw6oqjfbevmwntntb2ku@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreigj74jpxhbtyn6daqiquaweznvdxxmqqu6kjb53dxnfgesadzkfqi@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:bcgltzqazw5tb6k2g3ttenbj/bafkreigj74jpxhbtyn6daqiquaweznvdxxmqqu6kjb53dxnfgesadzkfqi@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 738
+            }
+          }
+        ]
+      }
+    },
+    {
+      "featured": false,
+      "view": {
+        "uri": "https://grain.social/profile/did:plc:7rkdalcyovirwkpzgzk74cje/gallery/3mwvtii4k5ddt",
+        "title": "Chandelier 2",
+        "description": "Taken along Ventura Boulevard, 2026",
+        "createdAt": "2026-10-02T16:52:47.420Z",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:7rkdalcyovirwkpzgzk74cje/social.grain.gallery/3mwvtii4k5ddt",
+            "cid": "bafyreiemxr6jgnye6x3gubcw6vhmflbfnp3ylex52dcitkyx53btk4wwsu"
+          },
+          {
+            "uri": "at://did:plc:7rkdalcyovirwkpzgzk74cje/social.grain.gallery.item/3mwvtii4k5fdt",
+            "cid": "bafyreidntrs57bgw3pohq3kpzmbwiwo27oselznzwn3s23ikkyu3fd2fgu"
+          },
+          {
+            "uri": "at://did:plc:7rkdalcyovirwkpzgzk74cje/social.grain.photo/3mwvtii4k5cdt",
+            "cid": "bafyreifhewrl2a2ukypzxs5hvau5kmxdopbfj474xxwcevhmeq6uzrzs4q"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:7rkdalcyovirwkpzgzk74cje",
+            "handle": "highway62.bsky.social",
+            "displayName": "Here, the ghost is me.",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:7rkdalcyovirwkpzgzk74cje/bafkreifss64eqpqv5dz4masfpdi74omfhflkuxtqsvoozyi3am6uoiw5sq",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "createdAt": "2023-06-24T14:27:12.998Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "likeCount": 2,
+        "$type": "app.bsky.embed.external#viewGallery",
+        "items": [
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:7rkdalcyovirwkpzgzk74cje/bafkreiazp2jgzn36qiirzvgnahy3rans2hvxgfnj7jkym7jn44jnu6gmtm@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:7rkdalcyovirwkpzgzk74cje/bafkreiazp2jgzn36qiirzvgnahy3rans2hvxgfnj7jkym7jn44jnu6gmtm@jpeg",
+            "alt": "Lit chandeliers in a dark shop window, high contrast black and white. An unlit OPEN sign hangs in front of one of them",
+            "aspectRatio": {
+              "width": 1800,
+              "height": 1013
+            }
+          }
+        ]
+      }
+    },
+    {
+      "featured": false,
+      "view": {
+        "uri": "https://grain.social/profile/did:plc:44ybard66vv44zksje25o7dz/gallery/3mt5sd2nn7s2j",
+        "title": "Mt Rinjani Summit Climb",
+        "description": "",
+        "createdAt": "2026-08-15T23:12:19.167Z",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery/3mt5sd2nn7s2j",
+            "cid": "bafyreihfsbhoe2hm3numg2a56qzay7yz7aw6dzsdyylalbtr3ubplafxnu"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd2thqk2j",
+            "cid": "bafyreiaznkrhhmn7l52iwsxjhyocitz2riy2jl3ajnrrc56pho2m6seciq"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5sctv2kk2j",
+            "cid": "bafyreignvkznosvez6ucgnea56henyhaojmgadvpm72wucxwhutpadstd4"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd2zpws2j",
+            "cid": "bafyreiefag56ryvrmmzup5d74nmzxqkjfp6lifcb6kou3bvq5puv3comgu"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scuu5oc2j",
+            "cid": "bafyreic3zaahnayuraf2anl72yqhrpltj4mgzdxuu7sxko36saunxuiqp4"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd374s22j",
+            "cid": "bafyreiedcn5ubod7dmgmwpp2dvgzsazrlykiu7pgso637igjcvfn4onahe"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scvngbc2j",
+            "cid": "bafyreiepnkeuc5snhnwlkc6ofu7h3t3fdpr7nonv3v64bw3kehbazbu7fu"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3erhc2j",
+            "cid": "bafyreibkv7s5caivx7hte564klnlyvjl5jhgouj32klnlrf3irwenit7be"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scwhn522j",
+            "cid": "bafyreigwgoelq67xoejifcv3xbfcksyscwm46yb5eegt2celelppp2mvkq"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3kg4k2j",
+            "cid": "bafyreidyjyoozlvqayjbd4irkbixdwgkmx3bcywtmc2ytxhowzek6wxq2e"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scx7mpk2j",
+            "cid": "bafyreig6ltl3veevvaa3ujovl3mnqwet4m6vmfks6do5a4d26tzrdbpinu"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3psxs2j",
+            "cid": "bafyreicm4wvhfk4wrjirbuvrcogd7nxzoofv7iclc22jldckjyyen5gjlm"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scxxfhc2j",
+            "cid": "bafyreiaba4ictunb5y52vmm23ngeyhyevu3wc2ttsf5mswens7kramensy"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd3vcqs2j",
+            "cid": "bafyreifhrmjwemdolsduvnuucaabgyjrloid4lv4lpmm65rxt4jjap2fku"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5scyp6722j",
+            "cid": "bafyreibqywm4d7tmcjvgthpjydbu3wd7rfw4iuhp6wckjpvpzlabbkfawe"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd42tj22j",
+            "cid": "bafyreihyh642kwtsogoqmlfoplcbrwkhuw3rs4xf24s6pmzqcsp6ckzpx4"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5sczgwws2j",
+            "cid": "bafyreidvvmo244v3wnxjbjegreoqlv5p5crg3ar7rxuep7wyybhswyodrm"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.gallery.item/3mt5sd47zjk2j",
+            "cid": "bafyreie6sqrexr5gubqghzgxqfb3h2md2l2ir3heuolg7xatd3odlda2ny"
+          },
+          {
+            "uri": "at://did:plc:44ybard66vv44zksje25o7dz/social.grain.photo/3mt5sd2b4tc2j",
+            "cid": "bafyreifndwrvboathkgbg35td6bttmzap5aosoeg5m767x646ga4fjety4"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:44ybard66vv44zksje25o7dz",
+            "handle": "bnewbold.net",
+            "displayName": "bryan newbold",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiglnysron3h2je7nf6cmvtimuaxi7xe2c7rkxitmks3mzmajnc2ou",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "following",
+                "allowGroupInvites": "none"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "createdAt": "2022-12-18T06:56:26.676Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "likeCount": 17,
+        "$type": "app.bsky.embed.external#viewGallery",
+        "items": [
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreihrneqgqccvaegxfy6h5ftew6ilorg4y5xll5z4haso477d3rxvwy@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreihrneqgqccvaegxfy6h5ftew6ilorg4y5xll5z4haso477d3rxvwy@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 1500,
+              "height": 2000
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreig54evqi7o3ekz5ayk3pk47p3gim7gvg2crkpm2lhzqretnbn4f2m@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreig54evqi7o3ekz5ayk3pk47p3gim7gvg2crkpm2lhzqretnbn4f2m@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 1500
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreia2bq2mwhz32bykbcxco3tw52x2tz5jnmed4c5yojo7y6xv6x7umm@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreia2bq2mwhz32bykbcxco3tw52x2tz5jnmed4c5yojo7y6xv6x7umm@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 1500
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiey7z27rskpawczaeqhjtotrv7ngfacn4dkrq2kvtu32vjewpa4wa@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiey7z27rskpawczaeqhjtotrv7ngfacn4dkrq2kvtu32vjewpa4wa@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 1500
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiaab5u5o24fhwli5r7ngiyzumbfqt6asiviofddkr5ofgdsdu6f4i@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiaab5u5o24fhwli5r7ngiyzumbfqt6asiviofddkr5ofgdsdu6f4i@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 1500
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiacu26ioboh2jwk2uqv2flisxf7kamxt3erufzw34trha74sphoqq@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreiacu26ioboh2jwk2uqv2flisxf7kamxt3erufzw34trha74sphoqq@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 1500
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreieu7hpvpds6zlv2u6kz2ytwhisyzldyuiu6zbgpezm4icduxfxyoe@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreieu7hpvpds6zlv2u6kz2ytwhisyzldyuiu6zbgpezm4icduxfxyoe@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 1500,
+              "height": 2000
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibuq2ilkgu2umi3dzadnh5g6xlfm24bsxqnuc7yewuien6u7hgvvq@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibuq2ilkgu2umi3dzadnh5g6xlfm24bsxqnuc7yewuien6u7hgvvq@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 1500,
+              "height": 2000
+            }
+          },
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibc2acsxpcccdvtskbn7dowkdqyklmhmuxoevunwzatrw2wy5suse@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:44ybard66vv44zksje25o7dz/bafkreibc2acsxpcccdvtskbn7dowkdqyklmhmuxoevunwzatrw2wy5suse@jpeg",
+            "alt": "",
+            "aspectRatio": {
+              "width": 2000,
+              "height": 1500
+            }
+          }
+        ]
+      }
+    },
+    {
+      "featured": false,
+      "view": {
+        "uri": "https://grain.social/profile/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/gallery/3mx3sn672gljc",
+        "title": "Cookin' with Alf",
+        "description": "",
+        "createdAt": "2026-10-05T01:53:28.321Z",
+        "associatedRefs": [
+          {
+            "uri": "at://did:plc:3jpt2mvvsumj2r7eqk4gzzjz/social.grain.gallery/3mx3sn672gljc",
+            "cid": "bafyreiaylfdpqufspz2w56e7mtj6zhyv5edczyavqxcbhz4nctapr4lmzi"
+          },
+          {
+            "uri": "at://did:plc:3jpt2mvvsumj2r7eqk4gzzjz/social.grain.gallery.item/3mx3sn673ftjc",
+            "cid": "bafyreigvujtjgq3vrh3oqojdfg7ngacijpqctibvrh4dcarrwz5cffzu2u"
+          },
+          {
+            "uri": "at://did:plc:3jpt2mvvsumj2r7eqk4gzzjz/social.grain.photo/3mx3sn672gkjc",
+            "cid": "bafyreies7kzybyc57sps3gn2b27jun427uhl56e2nnwtp5yu6xmcptvrxm"
+          }
+        ],
+        "associatedProfiles": [
+          {
+            "did": "did:plc:3jpt2mvvsumj2r7eqk4gzzjz",
+            "handle": "esb.lol",
+            "displayName": "Eric",
+            "avatar": "https://cdn.bsky.app/img/avatar/plain/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/bafkreicmpkhaggfoagqj53jmzfmremae2qcw7oc3ugh5qvq6quncxp6wqq",
+            "labels": [],
+            "associated": {
+              "chat": {
+                "allowIncoming": "following",
+                "allowGroupInvites": "following"
+              },
+              "activitySubscription": {
+                "allowSubscriptions": "followers"
+              }
+            },
+            "verification": {
+              "verifications": [
+                {
+                  "issuer": "did:plc:z72i7hdynmk6r22z27h6tvur",
+                  "issuerDisplayName": "Bluesky",
+                  "issuerHandle": "bsky.app",
+                  "uri": "at://did:plc:z72i7hdynmk6r22z27h6tvur/app.bsky.graph.verification/3ltmvuidftv2f",
+                  "isValid": true,
+                  "createdAt": "2025-07-10T17:59:36.528Z"
+                }
+              ],
+              "verifiedStatus": "valid",
+              "trustedVerifierStatus": "none"
+            },
+            "createdAt": "2023-05-02T03:39:27.863Z",
+            "$type": "app.bsky.actor.defs#profileViewBasic"
+          }
+        ],
+        "likeCount": 1,
+        "$type": "app.bsky.embed.external#viewGallery",
+        "items": [
+          {
+            "$type": "app.bsky.embed.external#viewGalleryImage",
+            "thumbnail": "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/bafkreifp2unqdtnmvvbuzvbkr7sissvsroltfcjeiqt4rqepbbrhr7tsva@jpeg",
+            "fullsize": "https://cdn.bsky.app/img/feed_fullsize/plain/did:plc:3jpt2mvvsumj2r7eqk4gzzjz/bafkreifp2unqdtnmvvbuzvbkr7sissvsroltfcjeiqt4rqepbbrhr7tsva@jpeg",
+            "alt": "Plush Alf puppet with apron, text on apron says \"Cookin' with Alf\"",
+            "aspectRatio": {
+              "width": 1500,
+              "height": 2000
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "livestreams": [],
+  "apps": [
+    {
+      "id": "d7ea9a5058e7",
+      "title": "Leaflet",
+      "description": "Delightful publishing to connect with your community",
+      "logo": "https://app-cms-production.bsky.workers.dev/images/image-f3d78d0ed8e296e01d0fde7f6166ce6373c6c1b0-88x88-png/small",
+      "backgroundImage": "https://app-cms-production.bsky.workers.dev/images/image-abdae35a8f9dab80eff8051453c8e35de07b6ae6-418x418-png/large",
+      "overlayColor": "#57822b",
+      "textColor": "#FFF",
+      "url": "https://leaflet.pub",
+      "category": "writing"
+    }
+  ]
 }

@@ -33,33 +33,42 @@ export function ArticleCard({
           label={l`Open ${article.title}`}
           style={[a.flex_col, a.flex_1, a.w_full]}>
           <View style={[a.w_full, t.atoms.bg_contrast_25, {height: 96}]}>
-            <Image
-              source={article.image}
-              contentFit="cover"
-              style={[a.absolute, a.inset_0, a.w_full, a.h_full]}
-              accessible={false}
-            />
+            {article.image ? (
+              <Image
+                source={article.image}
+                contentFit="cover"
+                style={[a.absolute, a.inset_0, a.w_full, a.h_full]}
+                accessible={false}
+              />
+            ) : undefined}
           </View>
           <View style={[a.flex_1, a.gap_xs, a.p_md, {paddingTop: 10}]}>
-            <View
-              style={[
-                a.flex_row,
-                a.align_center,
-                a.gap_xs,
-                {alignSelf: 'flex-start'},
-              ]}>
-              {article.publisherAvatar ? (
-                <Image
-                  source={article.publisherAvatar}
-                  contentFit="cover"
-                  style={[a.rounded_xs, {width: 16, height: 16}]}
-                  accessible={false}
-                />
-              ) : undefined}
-              <Text emoji style={[a.text_xs, a.font_medium]} numberOfLines={1}>
-                {article.publisher}
-              </Text>
-            </View>
+            {article.publisher || article.publisherAvatar ? (
+              <View
+                style={[
+                  a.flex_row,
+                  a.align_center,
+                  a.gap_xs,
+                  {alignSelf: 'flex-start'},
+                ]}>
+                {article.publisherAvatar ? (
+                  <Image
+                    source={article.publisherAvatar}
+                    contentFit="cover"
+                    style={[a.rounded_xs, {width: 16, height: 16}]}
+                    accessible={false}
+                  />
+                ) : undefined}
+                {article.publisher ? (
+                  <Text
+                    emoji
+                    style={[a.text_xs, a.font_medium]}
+                    numberOfLines={1}>
+                    {article.publisher}
+                  </Text>
+                ) : undefined}
+              </View>
+            ) : undefined}
             <Text emoji style={[a.text_sm, a.font_semi_bold]} numberOfLines={2}>
               {article.title}
             </Text>
