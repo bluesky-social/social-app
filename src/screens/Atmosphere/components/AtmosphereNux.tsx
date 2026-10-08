@@ -30,62 +30,64 @@ export function AtmosphereNux() {
   }
 
   return (
-    <View
-      style={[
-        a.w_full,
-        a.relative,
-        a.rounded_md,
-        a.overflow_hidden,
-        {aspectRatio: 724 / 418},
-      ]}>
-      <Image
-        source={discoverAtmosphereNux}
-        contentFit="cover"
-        style={[a.absolute, a.inset_0]}
-        accessible={false}
-      />
-      <View style={[a.absolute, a.inset_0, a.justify_end, a.p_lg]}>
-        <View style={{width: '56%'}}>
-          <Text
-            emoji
-            style={[a.text_lg, a.font_bold, {color: 'white'}]}
-            numberOfLines={2}>
-            <Trans>Discover the Atmosphere</Trans>
-          </Text>
-          <Text
-            emoji
-            style={[a.text_sm, a.leading_snug, {color: 'white'}]}
-            numberOfLines={4}>
-            <Trans>
-              Bluesky is part of a growing network of hundreds of social apps.
-              Your account unlocks them all.
-            </Trans>
-          </Text>
-        </View>
-      </View>
-      <Button
-        label={l`Dismiss Discover the Atmosphere banner`}
-        accessibilityHint={l`Hides this banner from the Explore tab`}
-        hitSlop={HITSLOP_10}
-        testID="atmosphereNuxDismiss"
-        onPress={dismiss}
+    <View style={a.pb_md}>
+      <View
         style={[
-          a.absolute,
-          a.align_center,
-          a.justify_center,
-          {top: 0, right: 7, width: 44, height: 44},
-        ]}
-        hoverStyle={[a.bg_transparent, {opacity: 0.5}]}>
-        <View
+          a.w_full,
+          a.relative,
+          a.rounded_md,
+          a.overflow_hidden,
+          {aspectRatio: 724 / 418},
+        ]}>
+        <Image
+          source={discoverAtmosphereNux}
+          contentFit="cover"
+          style={[a.absolute, a.inset_0]}
+          accessible={false}
+        />
+        <View style={[a.absolute, a.inset_0, a.justify_end, a.p_lg]}>
+          <View style={{width: '56%'}}>
+            <Text
+              emoji
+              style={[a.text_lg, a.font_bold, {color: 'white'}]}
+              numberOfLines={2}>
+              <Trans>Discover the Atmosphere</Trans>
+            </Text>
+            <Text
+              emoji
+              style={[a.text_sm, a.leading_snug, {color: 'white'}]}
+              numberOfLines={4}>
+              <Trans>
+                Bluesky is part of a growing network of hundreds of social apps.
+                Your account unlocks them all.
+              </Trans>
+            </Text>
+          </View>
+        </View>
+        <Button
+          label={l`Dismiss Discover the Atmosphere banner`}
+          accessibilityHint={l`Hides this banner from the Explore tab`}
+          hitSlop={HITSLOP_10}
+          testID="atmosphereNuxDismiss"
+          onPress={dismiss}
           style={[
+            a.absolute,
             a.align_center,
             a.justify_center,
-            a.rounded_full,
-            {width: 20, height: 20, backgroundColor: 'rgba(0, 0, 0, 0.25)'},
-          ]}>
-          <XIcon size="xs" style={{color: 'white'}} />
-        </View>
-      </Button>
+            {top: 0, right: 7, width: 44, height: 44},
+          ]}
+          hoverStyle={[a.bg_transparent, {opacity: 0.5}]}>
+          <View
+            style={[
+              a.align_center,
+              a.justify_center,
+              a.rounded_full,
+              {width: 20, height: 20, backgroundColor: 'rgba(0, 0, 0, 0.25)'},
+            ]}>
+            <XIcon size="xs" style={{color: 'white'}} />
+          </View>
+        </Button>
+      </View>
     </View>
   )
 }

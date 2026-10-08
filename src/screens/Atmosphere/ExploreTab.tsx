@@ -33,9 +33,7 @@ export function AtmosphereExploreTab() {
       <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
         <AtmosphereNux />
         <AnnouncementBanner banner={announcementBanner} />
-        <View style={a.mt_md}>
-          <FeaturedArticles articles={articles} />
-        </View>
+        <FeaturedArticles articles={articles} />
         <FeaturedLivestreams livestreams={livestreams} />
         <FeaturedPhotos photos={photos} />
         <FeaturedApps apps={apps} />
