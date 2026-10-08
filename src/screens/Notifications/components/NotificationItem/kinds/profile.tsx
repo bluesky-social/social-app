@@ -10,10 +10,7 @@ import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {StarterPack_Stroke2_Corner0_Rounded as StarterPackIcon} from '#/components/icons/brands/StarterPack'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {
-  PersonCheck_Stroke2_Corner0_Rounded as PersonCheckIcon,
-  PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon,
-} from '#/components/icons/Person'
+import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 import * as Item from '../Item'
@@ -66,17 +63,19 @@ function SingleFollowNotification({
       onBeforePress={cacheProfile}
       testID={`notification-follow-${notification.id}`}>
       <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
-      <Item.Content style={a.gap_2xs}>
-        <Item.PrimaryText>
-          <Trans>
-            <Item.Name profile={actor} /> followed you
-          </Trans>
-        </Item.PrimaryText>
-        {starterPack && Item.getStarterPackName(starterPack) ? (
-          <Item.ViaStarterPack starterPack={starterPack} />
-        ) : (
-          <Item.SocialProof profile={actor} variant="long" />
-        )}
+      <Item.Content>
+        <View style={[a.gap_2xs]}>
+          <Item.PrimaryText>
+            <Trans>
+              <Item.Name profile={actor} /> followed you
+            </Trans>
+          </Item.PrimaryText>
+          {starterPack && Item.getStarterPackName(starterPack) ? (
+            <Item.ViaStarterPack starterPack={starterPack} />
+          ) : (
+            <Item.SocialProof profile={actor} variant="long" />
+          )}
+        </View>
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
       <Item.Trailing>
@@ -162,20 +161,23 @@ function GroupedFollowNotification({
         accessibilityHint={l`Collapses list of users`}
         accessibilityState={{expanded: isExpanded}}
         onPress={onToggleExpanded}
-        style={[a.flex_row, a.align_center, a.gap_md, a.px_lg, a.py_md]}>
-        <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
-        <Item.Content style={a.gap_2xs}>
-          <Item.PrimaryText>
-            <Trans>
-              <Item.Name profile={actor} /> and{' '}
-              <Item.Strong>
-                <Plural value={others} one="# other" other="# others" />
-              </Item.Strong>{' '}
-              followed you
-            </Trans>
-          </Item.PrimaryText>
-          <Item.Timestamp date={notification.indexedAt} />
-        </Item.Content>
+        style={[a.flex_row, a.align_start, a.gap_md, a.px_lg, a.py_md]}>
+        {/* The chevron sits at the top, while the text centres on the avatar */}
+        <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_md]}>
+          <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
+          <Item.Content>
+            <Item.PrimaryText>
+              <Trans>
+                <Item.Name profile={actor} /> and{' '}
+                <Item.Strong>
+                  <Plural value={others} one="# other" other="# others" />
+                </Item.Strong>{' '}
+                followed you
+              </Trans>
+            </Item.PrimaryText>
+            <Item.Timestamp date={notification.indexedAt} />
+          </Item.Content>
+        </View>
         <Item.Trailing>
           <Item.ExpandChevron expanded={isExpanded} />
         </Item.Trailing>
@@ -221,7 +223,7 @@ export function FollowBackNotification({
       onBeforePress={cacheProfile}
       style={a.align_center}
       testID={`notification-followBack-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={PersonCheckIcon} tone="follow" />
+      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content style={a.gap_2xs}>
         <Item.PrimaryText>
           <Trans>
@@ -255,6 +257,7 @@ export function VerifiedNotification({
       isRead={notification.isRead}
       label={l`${name} verified you`}
       onBeforePress={cacheProfile}
+      style={a.align_center}
       testID={`notification-verified-${notification.id}`}>
       <Item.Avatar profile={actor} icon={CheckIcon} tone="follow" />
       <Item.Content>
@@ -289,6 +292,7 @@ export function UnverifiedNotification({
       isRead={notification.isRead}
       label={l`${name} removed their verification from your account`}
       onBeforePress={cacheProfile}
+      style={a.align_center}
       testID={`notification-unverified-${notification.id}`}>
       <Item.Avatar profile={actor} icon={CheckIcon} tone="neutral" />
       <Item.Content>
@@ -369,7 +373,6 @@ export function ContactMatchNotification({
             Your contact <Item.Name profile={actor} /> is on Bluesky
           </Trans>
         </Item.PrimaryText>
-        <Item.SocialProof profile={actor} variant="long" />
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
       <Item.Trailing>

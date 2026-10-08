@@ -1,18 +1,15 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {moderatePost} from '@bsky/sdk/moderation'
+import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {parseAltFromGIFDescription} from '#/lib/gif-alt-text'
 import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
-import {parseEmbedPlayerFromUrl} from '#/lib/strings/embed-player'
 import {sanitizeHandle} from '#/lib/strings/handles'
-import {toNiceDomain} from '#/lib/strings/url-helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -26,11 +23,9 @@ import {TimeElapsed} from '#/view/com/util/TimeElapsed'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, select, useTheme, utils, web} from '#/alf'
 import {Button} from '#/components/Button'
-import {Divider} from '#/components/Divider'
 import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRight} from '#/components/icons/Arrow'
 import {Check_Stroke2_Corner0_Rounded as Check} from '#/components/icons/Check'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Earth_Stroke2_Corner0_Rounded as Globe} from '#/components/icons/Earth'
 import {
   Heart2_Filled_Stroke2_Corner0_Rounded as HeartFilled,
   Heart2_Stroke2_Corner0_Rounded as Heart,
@@ -39,6 +34,7 @@ import {Reply_Stroke2_Corner0_Rounded as Bubble} from '#/components/icons/Reply'
 import {Link, WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
+import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {PostMenuButton} from '#/components/PostControls/PostMenu'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -49,7 +45,7 @@ import {useAnalytics} from '#/analytics'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {makePostLink} from '../links'
-import {Card, InlineImages} from './media'
+import {Card, getPostThumbnails, InlineImages} from './media'
 import {Strong, useDisplayName} from './text'
 
 type PostView = app.bsky.feed.defs.PostView
@@ -284,6 +280,7 @@ export function PostBody({post}: {post: PostView}) {
   const moderation = moderationOpts
     ? moderatePost(post, moderationOpts)
     : undefined
+  const embedPreview = post.embed ? getEmbedPreviewKind(post.embed) : undefined
 
   return (
     <ContentHider
@@ -302,35 +299,83 @@ export function PostBody({post}: {post: PostView}) {
           style={[a.text_sm, a.leading_snug, t.atoms.text]}
         />
       )}
-      {post.embed && (
-        <EmbedPreview
-          embed={post.embed}
-          mediaBlurred={moderation?.ui('contentMedia').blur ?? false}
-        />
+      {post.embed && embedPreview && (
+        /*
+         * The row stacks its lines 4px apart, but an embed gets 8px from
+         * the header when there's no text, and media and links get 8px
+         * before the timestamp too.
+         */
+        <View
+          style={[!richText && a.mt_xs, embedPreview === 'media' && a.mb_xs]}>
+          <EmbedPreview
+            embed={post.embed}
+            post={post}
+            moderation={moderation}
+          />
+        </View>
       )}
     </ContentHider>
   )
 }
 
 /**
- * A compact stand-in for the full post embed: thumbnails for media, a card
- * for links and quoted posts, and nothing for feeds, lists and the like.
+ * What `EmbedPreview` shows for an embed, by what it ends with: `media` for
+ * thumbnails and links, `quote` for a quoted post (with or without media
+ * above it), or undefined when it shows nothing.
+ */
+function getEmbedPreviewKind(
+  embed: NonNullable<PostView['embed']>,
+): 'media' | 'quote' | undefined {
+  if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
+    return hasQuoteCard(embed.record)
+      ? 'quote'
+      : getEmbedPreviewKind(embed.media)
+  }
+  if (bsky.isType(app.bsky.embed.record.view, embed)) {
+    return hasQuoteCard(embed) ? 'quote' : undefined
+  }
+  if (bsky.isType(app.bsky.embed.external.view, embed)) {
+    return 'media'
+  }
+  return getPostThumbnails(embed).length > 0 ? 'media' : undefined
+}
+
+/**
+ * Whether `QuoteCard` renders anything for a record embed.
+ */
+function hasQuoteCard(embed: app.bsky.embed.record.View) {
+  switch (bsky.post.parseEmbedRecordView(embed).type) {
+    case 'post':
+    case 'post_blocked':
+    case 'post_not_found':
+    case 'post_detached':
+      return true
+    default:
+      return false
+  }
+}
+
+/**
+ * A compact stand-in for the full post embed: thumbnails for media, the
+ * usual external embed for links, a card for quoted posts, and nothing for
+ * feeds, lists and the like.
  */
 function EmbedPreview({
   embed,
-  mediaBlurred,
+  post,
+  moderation,
 }: {
   embed: NonNullable<PostView['embed']>
+  post: PostView
   /**
-   * Whether the post's own media is behind a moderation warning. Quoted
-   * posts apply their own moderation.
+   * The post's own moderation, for its media. Quoted posts apply their own.
    */
-  mediaBlurred: boolean
+  moderation: ModerationDecision | undefined
 }) {
   if (bsky.isType(app.bsky.embed.recordWithMedia.view, embed)) {
     return (
       <View style={[a.gap_sm]}>
-        <EmbedPreview embed={embed.media} mediaBlurred={mediaBlurred} />
+        <EmbedPreview embed={embed.media} post={post} moderation={moderation} />
         <QuoteCard embed={embed.record} />
       </View>
     )
@@ -339,82 +384,18 @@ function EmbedPreview({
     return <QuoteCard embed={embed} />
   }
   if (bsky.isType(app.bsky.embed.external.view, embed)) {
-    const link = embed.external
-    // GIFs are links under the hood, but read as images
-    if (link.thumb && parseEmbedPlayerFromUrl(link.uri)?.isGif) {
-      return (
-        <InlineImages
-          size={80}
-          blurred={mediaBlurred}
-          embed={{
-            $type: 'app.bsky.embed.images#view',
-            images: [
-              {
-                thumb: link.thumb,
-                fullsize: link.thumb,
-                alt: parseAltFromGIFDescription(link.description).alt,
-              },
-            ],
-          }}
-        />
-      )
-    }
-    return <LinkCard link={link} />
+    return (
+      <ContentHider modui={moderation?.ui('contentMedia')}>
+        <ExternalEmbed link={embed.external} post={post} />
+      </ContentHider>
+    )
   }
-  return <InlineImages embed={embed} size={80} blurred={mediaBlurred} />
-}
-
-/**
- * Compact preview of an external link: title, description and domain.
- * Pressing it opens the link.
- */
-export function LinkCard({link}: {link: app.bsky.embed.external.ViewExternal}) {
-  const t = useTheme()
-  const {t: l} = useLingui()
-  const haptics = useHaptics()
-  const domain = toNiceDomain(link.uri)
-
   return (
-    <Link
-      to={link.uri}
-      label={link.title || l`Open link to ${domain}`}
-      shouldProxy
-      onPress={() => haptics.tap()}
-      style={[a.flex_col, a.align_stretch, a.rounded_md]}>
-      {({hovered}) => (
-        <Card style={[a.gap_sm, hovered && t.atoms.bg_contrast_25]}>
-          <Text
-            emoji
-            numberOfLines={2}
-            style={[a.text_sm, a.leading_snug, a.font_semi_bold, t.atoms.text]}>
-            {link.title || link.uri}
-          </Text>
-          {link.description ? (
-            <Text
-              emoji
-              numberOfLines={2}
-              style={[a.text_xs, a.leading_snug, t.atoms.text]}>
-              {link.description}
-            </Text>
-          ) : null}
-          <Divider />
-          <View style={[a.flex_row, a.align_center, a.gap_xs]}>
-            <Globe size="xs" fill={t.atoms.text_contrast_low.color} />
-            <Text
-              emoji
-              numberOfLines={1}
-              style={[
-                a.flex_1,
-                a.text_xs,
-                a.leading_snug,
-                t.atoms.text_contrast_medium,
-              ]}>
-              {domain}
-            </Text>
-          </View>
-        </Card>
-      )}
-    </Link>
+    <InlineImages
+      embed={embed}
+      size={80}
+      blurred={moderation?.ui('contentMedia').blur ?? false}
+    />
   )
 }
 
@@ -522,7 +503,7 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
               <Text
                 accessible={false}
                 style={[
-                  a.text_sm,
+                  a.text_md,
                   a.leading_snug,
                   t.atoms.text_contrast_medium,
                 ]}>
@@ -779,7 +760,6 @@ function ActionPill({
       <Text
         style={[
           a.text_xs,
-          a.leading_tight,
           a.font_medium,
           a.user_select_none,
           {color: contentColor},
