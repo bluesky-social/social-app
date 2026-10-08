@@ -25,28 +25,19 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
  import org.json.JSONException
  import org.json.JSONObject
  import java.io.UnsupportedEncodingException
-@@ -138,12 +142,73 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -138,12 +142,62 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
          return RNCWebViewWrapper(context, webView)
      }
  
 +    /**
-+     * Notifies JS that web content entered or left native fullscreen.
-+     *
-+     * While fullscreen the video view is reparented into the activity's root
-+     * view and the WebView (or its React root) is hidden, so anything on the JS side that
-+     * reasons about where the WebView sits in the layout is answering a
-+     * question that no longer means anything. This is the only authoritative
-+     * signal for that transition - a `fullscreenchange` listener injected into
-+     * the page is not equivalent, because the document does not reliably fire
-+     * one when fullscreen is torn down from the native side.
++     * Notifies JS that web content entered or left native fullscreen. While
++     * fullscreen the WebView is hidden, so JS-side layout checks on it are
++     * meaningless.
 +     */
 +    private fun dispatchFullscreenChange(webView: RNCWebView, isFullscreen: Boolean) {
 +        /*
-+         * Not routed through RNCWebView.dispatchEvent, which assumes a live
-+         * event dispatcher. onHideCustomView is also reached from
-+         * RNCWebView.destroy(), by which point the view may already be
-+         * unmounted and the dispatcher gone - so resolve it defensively and
-+         * drop the event if there is nothing left to deliver it to.
++         * Not RNCWebView.dispatchEvent: onHideCustomView is also reached from
++         * destroy(), when the dispatcher may be gone. Drop the event then.
 +         */
 +        // A dropped `true` leaves JS thinking the player is inline while native is fullscreen.
 +        val dropPriority = if (isFullscreen) Log.WARN else Log.DEBUG
@@ -90,16 +81,14 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
          if (mAllowsFullscreenVideo && activity != null) {
              val initialRequestedOrientation = activity.requestedOrientation
 +            /*
-+             * The view hidden for the duration of fullscreen. Recorded on entry
-+             * and restored as-is on exit: by then the WebView may already be
-+             * detached (RNCWebView.destroy() calls onHideCustomView after an
-+             * unmount), so the hierarchy cannot be re-derived to find it again.
++             * Recorded on entry: on exit the WebView may already be detached
++             * (destroy() calls onHideCustomView), so it cannot be re-derived.
 +             */
 +            var hiddenView: View? = null
              val webChromeClient: RNCWebChromeClient =
                  object : RNCWebChromeClient(webView) {
                      override fun getDefaultVideoPoster(): Bitmap? {
-@@ -175,13 +240,34 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -175,13 +229,25 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
                          rootView.addView(mVideoView, FULLSCREEN_LAYOUT_PARAMS)
  
                          // Different root views, we are in a Modal
@@ -112,20 +101,11 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 -                            mWebView.visibility = View.GONE
 +                            /*
 +                             * Hide the whole React root, not just the WebView.
-+                             *
-+                             * A GONE view is skipped by its parent's measure and
-+                             * layout pass, so the React root keeps the size it had
-+                             * on entry. Fullscreen unlocks the activity's
-+                             * orientation, and without this the app relayouts for
-+                             * landscape - a layout a portrait-locked app never
-+                             * otherwise produces, and which nobody sees because the
-+                             * video covers it. Virtualized lists rewindow against
-+                             * the new viewport and can unmount the row holding this
-+                             * WebView, destroying it mid-playback.
-+                             *
-+                             * Falls back to hiding only the WebView if the React
-+                             * root cannot be found, which is the original behaviour
-+                             * and does not prevent the relayout above.
++                             * Fullscreen unlocks orientation, and a GONE root is
++                             * skipped by layout, so the app does not relayout for
++                             * landscape (which can unmount this WebView's row).
++                             * Falls back to the WebView alone, which does not
++                             * prevent the relayout.
 +                             */
 +                            findReactRootAncestor(mWebView, rootView) ?: run {
 +                                Log.w(TAG, "Fullscreen: React root not found, hiding WebView only")
@@ -138,7 +118,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
                      }
  
                      override fun onHideCustomView() {
-@@ -189,21 +275,36 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -189,21 +255,24 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
                              return
                          }
  
@@ -153,24 +133,12 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 +                            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 +                            rootView.removeView(mVideoView)
 +                            mCustomViewCallback.onCustomViewHidden()
-+                            /*
-+                             * Restore the orientation lock before revealing the
-+                             * hidden view again. Revealing it first would measure
-+                             * the React root against the still-landscape window -
-+                             * the exact relayout hiding it exists to avoid, now on
-+                             * the way out.
-+                             */
++                            // Before revealing: else the root measures against the landscape window.
 +                            activity.requestedOrientation = initialRequestedOrientation
 +                        } catch (e: RuntimeException) {
 +                            Log.e(TAG, "Fullscreen: exit did not complete cleanly", e)
 +                        } finally {
-+                            /*
-+                             * Must run even if the above throws: mVideoView is
-+                             * cleared, so this method will not run again, and the
-+                             * hidden view would stay GONE for good. The listener
-+                             * removal and event belong here too, or JS stays in
-+                             * `fullscreen` and the lifecycle listener leaks.
-+                             */
++                            // Must run even if the above throws, or the root stays GONE and JS stays in `fullscreen`.
 +                            mVideoView = null
 +                            mCustomViewCallback = null
 +                            hiddenView?.visibility = View.VISIBLE
