@@ -486,6 +486,10 @@ msgstr "{count, plural, one {# request} other {# requests}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
+#: src/features/followingV2/home/RestorePill.tsx:76
+msgid "{count, plural, one {Show # new post} other {Show # new posts}}"
+msgstr "{count, plural, one {Show # new post} other {Show # new posts}}"
+
 #. Displayed when there are more requests to join a group chat than have been loaded
 #: src/screens/Messages/JoinRequests.tsx:424
 msgid "{count, plural, other {#+ requests to join}}"
@@ -3742,6 +3746,11 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:51
 msgid "Couldn’t load GIFs"
 msgstr "Couldn’t load GIFs"
+
+#: src/features/followingV2/home/GapRow.tsx:58
+#: src/features/followingV2/home/GapRow.tsx:83
+msgid "Couldn’t load more posts. Try again"
+msgstr "Couldn’t load more posts. Try again"
 
 #: src/components/InternationalPhoneCodeSelect.tsx:80
 msgid "Country code"
@@ -7507,7 +7516,7 @@ msgid "Load new notifications"
 msgstr ""
 
 #: src/components/NewPostsPill/index.tsx:168
-#: src/features/followingV2/home/FeedPage.tsx:175
+#: src/features/followingV2/home/FeedPage.tsx:181
 #: src/screens/CustomFeed/index.tsx:208
 #: src/screens/Profile/Sections/Feed.tsx:121
 #: src/screens/ProfileList/FeedSection.tsx:113
@@ -7528,6 +7537,10 @@ msgstr "Loading chat…"
 msgid "Loading lists..."
 msgstr ""
 
+#: src/features/followingV2/home/GapRow.tsx:56
+msgid "Loading more posts"
+msgstr "Loading more posts"
+
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:275
 msgid "Loading post interaction settings..."
 msgstr ""
@@ -7535,6 +7548,10 @@ msgstr ""
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:60
 msgid "Loading..."
 msgstr ""
+
+#: src/features/followingV2/home/GapRow.tsx:61
+msgid "Loads the posts missing between here and the posts below"
+msgstr "Loads the posts missing between here and the posts below"
 
 #: src/screens/Messages/ConversationSettings/index.tsx:562
 msgid "Lock"
@@ -8239,7 +8256,7 @@ msgstr ""
 msgid "New post"
 msgstr ""
 
-#: src/features/followingV2/home/FeedPage.tsx:186
+#: src/features/followingV2/home/FeedPage.tsx:192
 #: src/view/com/feeds/FeedPage.tsx:191
 #: src/view/shell/desktop/LeftNav.tsx:607
 msgctxt "action"
@@ -11757,6 +11774,11 @@ msgstr "Show more"
 msgid "Show more like this"
 msgstr ""
 
+#: src/features/followingV2/home/GapRow.tsx:59
+#: src/features/followingV2/home/GapRow.tsx:85
+msgid "Show more posts"
+msgstr "Show more posts"
+
 #: src/screens/PostThread/components/ThreadItemShowOtherReplies.tsx:15
 msgid "Show more replies"
 msgstr ""
@@ -12830,7 +12852,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/features/followingV2/home/PostFeed.tsx:880
+#: src/features/followingV2/home/PostFeed.tsx:1032
 #: src/screens/Search/Explore.tsx:1052
 #: src/view/com/posts/PostFeed.tsx:825
 msgid "There was an issue fetching posts. Tap here to try again."
