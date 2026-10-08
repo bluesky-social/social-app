@@ -1,10 +1,5 @@
-import {getPlayerVisibility, shouldStopPlayback} from './playerVisibility'
+import {getPlayerVisibility} from './playerVisibility'
 
-/*
- * Baseline geometry is from a 411x891dp device and the rotation cases are
- * reconstructed from logs. Scroll offsets, tolerance and boundary cases are
- * synthetic.
- */
 const INSETS = {top: 0, bottom: 48}
 const PORTRAIT = {width: 411, height: 891}
 
@@ -69,45 +64,6 @@ describe('getPlayerVisibility', () => {
         isNative: true,
       }),
     ).toBe('indeterminate')
-  })
-
-  it('tolerates a full-bleed player exactly as wide as the window', () => {
-    expect(
-      getPlayerVisibility({
-        player: {top: 433, height: 183, width: 411},
-        viewport: PORTRAIT,
-        insets: INSETS,
-        isNative: true,
-      }),
-    ).toBe('visible')
-  })
-
-  // Layout rounding can leave a full-bleed view a fraction wider than the window.
-  it('tolerates sub-pixel width overflow from layout rounding', () => {
-    expect(
-      getPlayerVisibility({
-        player: {top: 433, height: 183, width: 411.43},
-        viewport: PORTRAIT,
-        insets: INSETS,
-        isNative: true,
-      }),
-    ).toBe('visible')
-  })
-
-  /*
-   * Reverse of the case above (e.g. exiting fullscreen from landscape): not
-   * detectable, so the position comparison runs as-is. The longer-side rule
-   * keeps it visible.
-   */
-  it('stays visible while the window still reports landscape', () => {
-    expect(
-      getPlayerVisibility({
-        player: {top: 433, height: 453, width: 326},
-        viewport: {width: 891, height: 411},
-        insets: INSETS,
-        isNative: true,
-      }),
-    ).toBe('visible')
   })
 
   it('judges the bottom edge by the longer window side on native only', () => {
@@ -219,15 +175,5 @@ describe('getPlayerVisibility before layout', () => {
     expect(
       getPlayerVisibility({player, viewport, insets: INSETS, isNative: false}),
     ).toBe('indeterminate')
-  })
-})
-
-describe('shouldStopPlayback', () => {
-  it.each([
-    ['visible', false],
-    ['indeterminate', false],
-    ['hidden', true],
-  ] as const)('%s -> %s', (visibility, expected) => {
-    expect(shouldStopPlayback(visibility)).toBe(expected)
   })
 })

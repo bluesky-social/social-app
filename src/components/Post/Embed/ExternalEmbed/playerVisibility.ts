@@ -76,14 +76,3 @@ export function getPlayerVisibility({
 
   return isOnScreen ? 'visible' : 'hidden'
 }
-
-/**
- * Only `hidden` stops playback. `indeterminate` means we cannot tell yet -
- * e.g. mid-rotation, where treating it as `hidden` would kill the player the
- * moment the device is turned.
- */
-export function shouldStopPlayback(visibility: PlayerVisibility): boolean {
-  'worklet'
-
-  return visibility === 'hidden'
-}
