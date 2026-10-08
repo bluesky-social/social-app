@@ -25,24 +25,28 @@ export function AnnouncementBanner({
           a.overflow_hidden,
           {aspectRatio: 2.62},
         ]}>
-        <Image
-          source={banner.image}
-          contentFit="cover"
-          style={[a.absolute, a.inset_0]}
-          accessible={false}
-        />
-        <LinearGradient
-          colors={[
-            utils.alpha(banner.overlayColor, 0),
-            utils.alpha(banner.overlayColor, 0.2),
-            utils.alpha(banner.overlayColor, 0.8),
-          ]}
-          locations={[0, 0.5, 1]}
-          start={{x: 0, y: 0}}
-          end={{x: 0, y: 1}}
-          style={[a.absolute, a.inset_0]}
-          pointerEvents="none"
-        />
+        {banner.image ? (
+          <Image
+            source={banner.image}
+            contentFit="cover"
+            style={[a.absolute, a.inset_0]}
+            accessible={false}
+          />
+        ) : undefined}
+        {banner.overlayColor ? (
+          <LinearGradient
+            colors={[
+              utils.alpha(banner.overlayColor, 0),
+              utils.alpha(banner.overlayColor, 0.2),
+              utils.alpha(banner.overlayColor, 0.8),
+            ]}
+            locations={[0, 0.5, 1]}
+            start={{x: 0, y: 0}}
+            end={{x: 0, y: 1}}
+            style={[a.absolute, a.inset_0]}
+            pointerEvents="none"
+          />
+        ) : undefined}
         <Link
           to={banner.href}
           label={l`Open announcement: ${banner.title}`}
@@ -61,12 +65,14 @@ export function AnnouncementBanner({
             numberOfLines={2}>
             {banner.title}
           </Text>
-          <Text
-            emoji
-            style={[a.text_xs, {color: banner.textColor}]}
-            numberOfLines={4}>
-            {banner.description}
-          </Text>
+          {banner.description ? (
+            <Text
+              emoji
+              style={[a.text_xs, {color: banner.textColor}]}
+              numberOfLines={4}>
+              {banner.description}
+            </Text>
+          ) : undefined}
         </Link>
       </View>
     </View>

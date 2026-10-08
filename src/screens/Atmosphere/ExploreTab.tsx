@@ -32,7 +32,9 @@ export function AtmosphereExploreTab() {
       contentContainerStyle={[a.pb_xl]}>
       <View style={[a.gap_lg, a.px_lg, a.py_lg]}>
         <AtmosphereNux />
-        <AnnouncementBanner banner={announcementBanner} />
+        {announcementBanner ? (
+          <AnnouncementBanner banner={announcementBanner} />
+        ) : undefined}
         <FeaturedArticles articles={articles} />
         <FeaturedLivestreams livestreams={livestreams} />
         <FeaturedPhotos photos={photos} />

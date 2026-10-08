@@ -20,22 +20,26 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
         a.overflow_hidden,
         {backgroundColor: app.overlayColor},
       ]}>
-      <Image
-        source={app.backgroundImage}
-        contentFit="cover"
-        style={[a.absolute, {top: 0, right: 0, bottom: 0, width: 96}]}
-        accessible={false}
-      />
-      <LinearGradient
-        colors={[
-          utils.alpha(app.overlayColor, 1),
-          utils.alpha(app.overlayColor, 0),
-        ]}
-        start={{x: 0, y: 0.5}}
-        end={{x: 1, y: 0.5}}
-        style={[a.absolute, {top: 0, right: 0, bottom: 0, width: 96}]}
-        pointerEvents="none"
-      />
+      {app.backgroundImage ? (
+        <Image
+          source={app.backgroundImage}
+          contentFit="cover"
+          style={[a.absolute, {top: 0, right: 0, bottom: 0, width: 96}]}
+          accessible={false}
+        />
+      ) : undefined}
+      {app.overlayColor ? (
+        <LinearGradient
+          colors={[
+            utils.alpha(app.overlayColor, 1),
+            utils.alpha(app.overlayColor, 0),
+          ]}
+          start={{x: 0, y: 0.5}}
+          end={{x: 1, y: 0.5}}
+          style={[a.absolute, {top: 0, right: 0, bottom: 0, width: 96}]}
+          pointerEvents="none"
+        />
+      ) : undefined}
       <Link
         to={app.href}
         label={l`Open ${app.title}`}
@@ -50,12 +54,14 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
             a.py_md,
             {paddingLeft: 24, paddingRight: 96},
           ]}>
-          <Image
-            source={app.logo}
-            contentFit="cover"
-            style={[a.rounded_md, {width: 44, height: 44}]}
-            accessible={false}
-          />
+          {app.logo ? (
+            <Image
+              source={app.logo}
+              contentFit="cover"
+              style={[a.rounded_md, {width: 44, height: 44}]}
+              accessible={false}
+            />
+          ) : undefined}
           <View style={[a.flex_1, a.gap_2xs]}>
             <Text
               emoji
@@ -63,12 +69,14 @@ export function AppCard({app}: {app: AtmosphereAppCardData}) {
               numberOfLines={1}>
               {app.title}
             </Text>
-            <Text
-              emoji
-              style={[a.text_sm, a.leading_snug, {color: app.textColor}]}
-              numberOfLines={2}>
-              {app.description}
-            </Text>
+            {app.description ? (
+              <Text
+                emoji
+                style={[a.text_sm, a.leading_snug, {color: app.textColor}]}
+                numberOfLines={2}>
+                {app.description}
+              </Text>
+            ) : undefined}
           </View>
         </View>
       </Link>
