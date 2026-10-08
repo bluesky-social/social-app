@@ -16,6 +16,9 @@ const QUERY_KEY_ROOT = 'moderation-inbox'
 type ReportsFilter = NonNullable<
   tools.ozone.inbox.listReports.$Params['filter']
 >
+type ActionedSubjectsFilter = NonNullable<
+  tools.ozone.inbox.listActionedSubjects.$Params['filter']
+>
 type SeenSection = tools.ozone.inbox.updateSeen.$InputBody['sections'][number]
 
 export function useModerationInboxReportsQuery(filter: ReportsFilter) {
@@ -42,7 +45,9 @@ export function useModerationInboxReportsQuery(filter: ReportsFilter) {
   })
 }
 
-export function useModerationInboxActionedSubjectsQuery() {
+export function useModerationInboxActionedSubjectsQuery(
+  filter: ActionedSubjectsFilter,
+) {
   const client = useAppviewClient()
   const {currentAccount, hasSession} = useSession()
   const did = currentAccount?.did
@@ -51,11 +56,12 @@ export function useModerationInboxActionedSubjectsQuery() {
     queryKey: createQueryKey(QUERY_KEY_ROOT, {
       did,
       endpoint: 'actionedSubjects',
+      filter,
     }),
     queryFn: async ({pageParam}) =>
       await client.call(
         tools.ozone.inbox.listActionedSubjects,
-        {limit: 30, cursor: pageParam},
+        {filter, limit: 30, cursor: pageParam},
         {service: MOD_PROXY_SERVICE},
       ),
     initialPageParam: undefined as string | undefined,

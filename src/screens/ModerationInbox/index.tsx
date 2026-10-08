@@ -210,7 +210,7 @@ function YourAccount() {
 
   const [isPTRing, setIsPTRing] = useState(false)
   const [filter, setFilter] = useState<ReportFilter>('all')
-  const actionedSubjectsQuery = useModerationInboxActionedSubjectsQuery()
+  const actionedSubjectsQuery = useModerationInboxActionedSubjectsQuery(filter)
   const accountStatusQuery = useModerationInboxAccountStatusQuery()
   const unreadCountQuery = useModerationInboxUnreadCountQuery()
   const markSeen = useUpdateModerationInboxSeenMutation()
