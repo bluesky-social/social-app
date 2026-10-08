@@ -25,7 +25,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
  import org.json.JSONException
  import org.json.JSONObject
  import java.io.UnsupportedEncodingException
-@@ -138,12 +142,71 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -138,12 +142,73 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
          return RNCWebViewWrapper(context, webView)
      }
  
@@ -48,15 +48,17 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 +         * unmounted and the dispatcher gone - so resolve it defensively and
 +         * drop the event if there is nothing left to deliver it to.
 +         */
++        // A dropped `true` leaves JS thinking the player is inline while native is fullscreen.
++        val dropPriority = if (isFullscreen) Log.WARN else Log.DEBUG
 +        val reactTag = RNCWebViewWrapper.getReactTagFromWebView(webView)
 +        if (reactTag == -1) {
-+            Log.d(TAG, "Fullscreen: WebView detached, dropping isFullscreen=$isFullscreen")
++            Log.println(dropPriority, TAG, "Fullscreen: WebView detached, dropping isFullscreen=$isFullscreen")
 +            return
 +        }
 +        val dispatcher =
 +            UIManagerHelper.getEventDispatcherForReactTag(webView.themedReactContext, reactTag)
 +                ?: run {
-+                    Log.d(TAG, "Fullscreen: no event dispatcher, dropping isFullscreen=$isFullscreen")
++                    Log.println(dropPriority, TAG, "Fullscreen: no event dispatcher, dropping isFullscreen=$isFullscreen")
 +                    return
 +                }
 +        val event = Arguments.createMap()
@@ -135,7 +137,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
                      }
  
                      override fun onHideCustomView() {
-@@ -189,21 +272,32 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
+@@ -189,21 +274,36 @@ class RNCWebViewManagerImpl(private val newArch: Boolean = false) {
                              return
                          }
  
@@ -158,16 +160,22 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 +                             * the way out.
 +                             */
 +                            activity.requestedOrientation = initialRequestedOrientation
++                        } catch (e: RuntimeException) {
++                            Log.e(TAG, "Fullscreen: exit did not complete cleanly", e)
 +                        } finally {
 +                            /*
 +                             * Must run even if the above throws: mVideoView is
 +                             * cleared, so this method will not run again, and the
-+                             * hidden view would stay GONE for good.
++                             * hidden view would stay GONE for good. The listener
++                             * removal and event belong here too, or JS stays in
++                             * `fullscreen` and the lifecycle listener leaks.
 +                             */
 +                            mVideoView = null
 +                            mCustomViewCallback = null
 +                            hiddenView?.visibility = View.VISIBLE
 +                            hiddenView = null
++                            mWebView.themedReactContext.removeLifecycleEventListener(this)
++                            dispatchFullscreenChange(mWebView, false)
                          }
 -                        activity.window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
 -                        rootView.removeView(mVideoView)
@@ -175,8 +183,7 @@ index f83033b3597a425da159555233bacce250ccfce0..fd6a1ac12af3e90843e33ad8e9e51287
 -                        mVideoView = null
 -                        mCustomViewCallback = null
 -                        activity.requestedOrientation = initialRequestedOrientation
-                         mWebView.themedReactContext.removeLifecycleEventListener(this)
-+                        dispatchFullscreenChange(mWebView, false)
+-                        mWebView.themedReactContext.removeLifecycleEventListener(this)
                      }
                  }
              webChromeClient.setAllowsProtectedMedia(mAllowsProtectedMedia);
