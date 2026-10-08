@@ -1,5 +1,6 @@
 import {type StyleProp, StyleSheet, type TextStyle, View} from 'react-native'
 import {moderateProfile} from '@bsky/sdk/moderation'
+import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {sanitizeHandle} from '#/lib/strings/handles'
@@ -10,6 +11,7 @@ import {PreviewableUserAvatar, UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, tokens, useTheme} from '#/alf'
 import {ArrowRight_Stroke2_Corner0_Rounded as ArrowRightIcon} from '#/components/icons/Arrow'
 import {Link} from '#/components/Link'
+import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -122,7 +124,7 @@ function OverflowChip({count, href}: {count: number; href?: string}) {
 }
 
 /**
- * A short preview of a post's text, muted and ellipsized.
+ * A short preview of a post's rich text, muted and ellipsized.
  *
  * Posts without text render nothing if they have images or video, since rows
  * show those as a trailing `Item.InlineImages`. Otherwise this says what the
@@ -143,15 +145,18 @@ export function PostPreview({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const text = bsky.isType(app.bsky.feed.post, post.record)
-    ? post.record.text.trim()
-    : ''
+  const record = bsky.isType(app.bsky.feed.post, post.record)
+    ? post.record
+    : undefined
 
-  if (text) {
+  if (record?.text.trim()) {
     return (
-      <SecondaryText numberOfLines={numberOfLines} style={style}>
-        {text}
-      </SecondaryText>
+      <RichText
+        value={new RichTextAPI({text: record.text, facets: record.facets})}
+        authorHandle={post.author.handle}
+        numberOfLines={numberOfLines}
+        style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium, style]}
+      />
     )
   }
 

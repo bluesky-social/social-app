@@ -77,6 +77,14 @@ function toOneLine(text: string) {
 }
 
 /**
+ * Puts text on one line without changing its length, so rich text facets,
+ * which are byte offsets, still line up.
+ */
+function flattenLines(text: string) {
+  return text.replace(/[\r\n\t]/g, ' ')
+}
+
+/**
  * The author of a post-based notification on a single line, e.g. "**rafael**
  * @rafael.my". The name shrinks before the handle disappears entirely.
  */
@@ -210,9 +218,10 @@ function ReplyContextPost({
     ? moderatePost(post, moderationOpts).ui('contentList').blur
     : false
 
-  let preview = bsky.isType(app.bsky.feed.post, post.record)
-    ? toOneLine(post.record.text)
-    : ''
+  const record = bsky.isType(app.bsky.feed.post, post.record)
+    ? post.record
+    : undefined
+  let preview = record ? toOneLine(record.text) : ''
   if (isHidden) {
     preview = l({
       message: 'Hidden post',
@@ -226,39 +235,41 @@ function ReplyContextPost({
         'Shown in place of the text of a post that has no text, only images, video, a link or a quoted post',
     })
   }
-  const previewStyle = t.atoms.text_contrast_medium
+  const previewStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
+  const previewNode =
+    record && preview && !isHidden ? (
+      <RichText
+        value={
+          new RichTextAPI({
+            text: flattenLines(record.text),
+            facets: record.facets,
+          })
+        }
+        authorHandle={post.author.handle}
+        disableLinks
+        style={previewStyle}
+      />
+    ) : (
+      <Text emoji style={previewStyle}>
+        {preview}
+      </Text>
+    )
 
   if (variant === 'reply') {
     return isViewer ? (
-      <Trans>
-        replied to:{' '}
-        <Text emoji style={previewStyle}>
-          {preview}
-        </Text>
-      </Trans>
+      <Trans>replied to: {previewNode}</Trans>
     ) : (
       <Trans>
-        replied to <Strong>{name}</Strong>:{' '}
-        <Text emoji style={previewStyle}>
-          {preview}
-        </Text>
+        replied to <Strong>{name}</Strong>: {previewNode}
       </Trans>
     )
   }
 
   return isViewer ? (
-    <Trans>
-      in reply to:{' '}
-      <Text emoji style={previewStyle}>
-        {preview}
-      </Text>
-    </Trans>
+    <Trans>in reply to: {previewNode}</Trans>
   ) : (
     <Trans>
-      in reply to <Strong>{name}</Strong>:{' '}
-      <Text emoji style={previewStyle}>
-        {preview}
-      </Text>
+      in reply to <Strong>{name}</Strong>: {previewNode}
     </Trans>
   )
 }
@@ -458,9 +469,9 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
     ? moderatePost(quote, moderationOpts)
     : undefined
   const href = makePostLink(view)
-  const text = bsky.isType(app.bsky.feed.post, view.value)
-    ? view.value.text.trim()
-    : ''
+  const quotedRecord = bsky.isType(app.bsky.feed.post, view.value)
+    ? view.value
+    : undefined
 
   return (
     <ContentHider modui={moderation?.ui('contentList')}>
@@ -523,13 +534,20 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 )}
               </TimeElapsed>
             </View>
-            {text ? (
-              <Text
-                emoji
+            {quotedRecord?.text.trim() ? (
+              <RichText
+                value={
+                  new RichTextAPI({
+                    text: quotedRecord.text,
+                    facets: quotedRecord.facets,
+                  })
+                }
+                authorHandle={view.author.handle}
+                // The whole card is already a link
+                disableLinks
                 numberOfLines={2}
-                style={[a.text_sm, a.leading_snug, t.atoms.text]}>
-                {text}
-              </Text>
+                style={[a.text_sm, a.leading_snug, t.atoms.text]}
+              />
             ) : (
               <InlineImages
                 embed={quote.embed}
