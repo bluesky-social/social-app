@@ -1,4 +1,4 @@
-import {useCallback, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {View} from 'react-native'
 import Animated, {
   interpolate,
@@ -16,6 +16,7 @@ import {
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
+import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
@@ -74,6 +75,7 @@ function NewNotificationsScreenInner() {
     {key: 'conversations', label: l`Replies`},
     {key: 'activity', label: l`Activity`},
   ]
+  const {seenAt, onFirstPageLoaded, resetSeenAt} = useSessionSeenAt()
 
   const showHeader = useCallback(() => {
     'worklet'
@@ -117,11 +119,52 @@ function NewNotificationsScreenInner() {
       </NotificationsHeader>
       <Pager.Content manageDrawerGesture testID="notificationsPagerView">
         {tabs.map(tab => (
-          <PageList key={tab.key} feed={tab.key} headerOffset={headerOffset} />
+          <PageList
+            key={tab.key}
+            feed={tab.key}
+            headerOffset={headerOffset}
+            seenAt={seenAt}
+            onFirstPageLoaded={onFirstPageLoaded}
+            onRefresh={resetSeenAt}
+          />
         ))}
       </Pager.Content>
     </Pager.Root>
   )
+}
+
+/**
+ * Snapshot of when notifications were last seen, taken from whichever tab
+ * loads first and shared by every tab, so the unread tint stays put while the
+ * screen is open. Taking the snapshot marks everything as seen on the server.
+ * Refreshing takes a new snapshot.
+ */
+function useSessionSeenAt() {
+  const unreadApi = useUnreadNotificationsApi()
+  const [seenAt, setSeenAt] = useState<Date>()
+  const hasMarkedRead = useRef(false)
+
+  const onFirstPageLoaded = (serverSeenAt: string | undefined) => {
+    /*
+     * Tabs load concurrently, and a tab that loads after the mark-read below
+     * would report a newer seenAt, so only the first snapshot counts.
+     */
+    setSeenAt(
+      current =>
+        current ?? (serverSeenAt ? new Date(serverSeenAt) : new Date(0)),
+    )
+    if (!hasMarkedRead.current) {
+      hasMarkedRead.current = true
+      void unreadApi.markAllRead()
+    }
+  }
+
+  const resetSeenAt = () => {
+    hasMarkedRead.current = false
+    setSeenAt(undefined)
+  }
+
+  return {seenAt, onFirstPageLoaded, resetSeenAt}
 }
 
 function NotificationsHeader({
