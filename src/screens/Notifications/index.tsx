@@ -23,7 +23,10 @@ import {
   useHomeHeaderMode,
 } from '#/view/com/util/MainScrollProvider'
 import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/Notifications'
-import {PageList} from '#/screens/Notifications/components/PageList'
+import {
+  PageList,
+  type PageLoad,
+} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
@@ -75,7 +78,7 @@ function NewNotificationsScreenInner() {
     {key: 'conversations', label: l`Replies`},
     {key: 'activity', label: l`Activity`},
   ]
-  const {seenAt, onFirstPageLoaded, resetSeenAt} = useSessionSeenAt()
+  const {seenAt, onLoad, requestSnapshot} = useSessionSeenAt()
 
   const showHeader = useCallback(() => {
     'worklet'
@@ -118,14 +121,15 @@ function NewNotificationsScreenInner() {
         </Pager.TabBar>
       </NotificationsHeader>
       <Pager.Content manageDrawerGesture testID="notificationsPagerView">
-        {tabs.map(tab => (
+        {tabs.map((tab, pageIndex) => (
           <PageList
             key={tab.key}
             feed={tab.key}
+            pageIndex={pageIndex}
             headerOffset={headerOffset}
             seenAt={seenAt}
-            onFirstPageLoaded={onFirstPageLoaded}
-            onRefresh={resetSeenAt}
+            onLoad={onLoad}
+            requestSnapshot={requestSnapshot}
           />
         ))}
       </Pager.Content>
@@ -134,37 +138,35 @@ function NewNotificationsScreenInner() {
 }
 
 /**
- * Snapshot of when notifications were last seen, taken from whichever tab
- * loads first and shared by every tab, so the unread tint stays put while the
- * screen is open. Taking the snapshot marks everything as seen on the server.
- * Refreshing takes a new snapshot.
+ * Snapshot of when notifications were last seen, shared by every tab so the
+ * unread tint stays put while the screen is open.
+ *
+ * The first tab to load takes the snapshot and marks everything it showed as
+ * seen on the server. Refreshing a tab asks for a new snapshot from that
+ * tab's next load.
  */
 function useSessionSeenAt() {
   const unreadApi = useUnreadNotificationsApi()
   const [seenAt, setSeenAt] = useState<Date>()
-  const hasMarkedRead = useRef(false)
+  /**
+   * Which feed's next load should take the snapshot: `'any'` for whichever
+   * loads first, or `null` when no snapshot is wanted.
+   */
+  const snapshotFrom = useRef<GroupedNotificationsFeed | 'any' | null>('any')
 
-  const onFirstPageLoaded = (serverSeenAt: string | undefined) => {
-    /*
-     * Tabs load concurrently, and a tab that loads after the mark-read below
-     * would report a newer seenAt, so only the first snapshot counts.
-     */
-    setSeenAt(
-      current =>
-        current ?? (serverSeenAt ? new Date(serverSeenAt) : new Date(0)),
-    )
-    if (!hasMarkedRead.current) {
-      hasMarkedRead.current = true
-      void unreadApi.markAllRead()
-    }
+  const onLoad = ({feed, serverSeenAt, fetchedAt}: PageLoad) => {
+    const from = snapshotFrom.current
+    if (from === null || (from !== 'any' && from !== feed)) return
+    snapshotFrom.current = null
+    setSeenAt(serverSeenAt ? new Date(serverSeenAt) : new Date(0))
+    void unreadApi.markAllRead({seenAt: new Date(fetchedAt)})
   }
 
-  const resetSeenAt = () => {
-    hasMarkedRead.current = false
-    setSeenAt(undefined)
+  const requestSnapshot = (feed: GroupedNotificationsFeed) => {
+    snapshotFrom.current = feed
   }
 
-  return {seenAt, onFirstPageLoaded, resetSeenAt}
+  return {seenAt, onLoad, requestSnapshot}
 }
 
 function NotificationsHeader({

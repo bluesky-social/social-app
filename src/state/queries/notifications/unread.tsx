@@ -34,7 +34,11 @@ const emitter = new EventEmitter()
 type StateContext = string
 
 interface ApiContext {
-  markAllRead: () => Promise<void>
+  /**
+   * Marks notifications as seen on the server, up to `seenAt` if given,
+   * otherwise up to the last unread check.
+   */
+  markAllRead: (opts?: {seenAt?: Date}) => Promise<void>
   checkUnread: (opts?: {
     invalidate?: boolean
     isPoll?: boolean
@@ -120,11 +124,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   // create API
   const api = useMemo<ApiContext>(() => {
     return {
-      async markAllRead() {
+      async markAllRead({seenAt = cacheRef.current.syncedAt} = {}) {
         // update server
         await client.call(app.bsky.notification.updateSeen, {
           // toISOString always emits the Z-suffixed form the format requires
-          seenAt: cacheRef.current.syncedAt.toISOString() as ISODatetimeString,
+          seenAt: seenAt.toISOString() as ISODatetimeString,
         })
 
         // update & broadcast
