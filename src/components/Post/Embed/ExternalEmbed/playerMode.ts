@@ -21,6 +21,14 @@ export function playerModeAfterFullscreenChange(
 }
 
 /**
+ * Apply a press on the placeholder. Only promotes from `inactive`: pressing
+ * while the content is loading or already fullscreen must not demote it.
+ */
+export function playerModeAfterActivate(mode: PlayerMode): PlayerMode {
+  return mode === 'inactive' ? 'inline' : mode
+}
+
+/**
  * Whether to check if the player has scrolled out of the viewport. In
  * fullscreen the content is reparented out of the WebView, so the wrapper we
  * would measure is an empty placeholder and the user cannot scroll anyway.

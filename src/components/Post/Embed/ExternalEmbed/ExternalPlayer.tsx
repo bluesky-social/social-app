@@ -38,6 +38,7 @@ import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {
   type PlayerMode,
+  playerModeAfterActivate,
   playerModeAfterFullscreenChange,
   shouldWatchVisibility,
 } from './playerMode'
@@ -166,8 +167,7 @@ export function ExternalPlayer({
         mediaType: getEmbedPlayerMediaType(params.type),
       })
     }
-    // Not `inline` unconditionally: pressing during load must not leave fullscreen.
-    setMode(m => (m === 'inactive' ? 'inline' : m))
+    setMode(playerModeAfterActivate)
   }, [
     ax,
     isPlayerActive,
