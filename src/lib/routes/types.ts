@@ -19,11 +19,13 @@ export type SearchParams = {
   tab?: 'user' | 'profile' | 'feed' | 'latest'
 } & SearchFilterParams
 
+export type ModerationInboxTab = 'reports' | 'account'
+
 export type CommonNavigatorParams = {
   NotFound: undefined
   Lists: undefined
   Moderation: undefined
-  ModerationInbox: undefined
+  ModerationInbox: {tab?: ModerationInboxTab}
   ModerationInboxSettings: undefined
   ModerationInboxReportDetails: undefined
   ModerationInboxNoticeDetails: undefined
