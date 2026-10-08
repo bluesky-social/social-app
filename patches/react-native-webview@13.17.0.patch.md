@@ -62,7 +62,8 @@ Injection is also unavailable in practice for cross-origin player frames.
   hierarchy no longer says which view was hidden; re-deriving it there left the
   React root `GONE` and the app blank. The restore also runs in a `finally`, so
   an exception while tearing down the video or restoring the orientation cannot
-  strand a hidden root.
+  strand a hidden root. The same `finally` removes the lifecycle listener and
+  dispatches `isFullscreen=false`, so JS cannot get stuck in `fullscreen`.
 
   The view hidden is the direct child of `android.R.id.content` containing the
   `WebView`, found by walking up the parent chain. Deliberately not
