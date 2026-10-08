@@ -53,6 +53,7 @@ import {ScreenHider} from '#/components/moderation/ScreenHider'
 import * as ProfileCard from '#/components/ProfileCard'
 import {H1, H3, P, Text} from '#/components/Typography'
 import {type app, type com} from '#/lexicons'
+import {GroupedNotifications, type LabelTarget} from './GroupedNotifications'
 import {mock} from './mock'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
@@ -178,18 +179,7 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                 : undefined,
             author: profile,
           })
-        : {
-            $type: 'app.bsky.embed.images#view',
-            images: [
-              {
-                thumb:
-                  'https://bsky.social/about/images/social-card-default-gradient.png',
-                fullsize:
-                  'https://bsky.social/about/images/social-card-default-gradient.png',
-                alt: '',
-              },
-            ],
-          }) as app.bsky.feed.defs.PostView['embed'],
+        : mock.imagesView()) as app.bsky.feed.defs.PostView['embed'],
     })
   }, [scenario, label, target, profile, isSelfLabel, did])
 
@@ -557,6 +547,20 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                     <MockNotifItem
                       notif={followNotif}
                       moderationOpts={modOpts}
+                    />
+                    <View style={{height: 20}} />
+                    <Heading title="Notifications v2" subtitle="every kind" />
+                    <GroupedNotifications
+                      profile={profile}
+                      post={post}
+                      moderationOpts={modOpts}
+                      labelTarget={
+                        scenario[0] === 'label'
+                          ? (target[0] as LabelTarget)
+                          : undefined
+                      }
+                      label={label[0]}
+                      isSelfLabel={isSelfLabel}
                     />
                   </>
                 )}
