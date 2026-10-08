@@ -1,14 +1,16 @@
 import {useEffect, useEffectEvent, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
-import {useLingui} from '@lingui/react/macro'
+import {Trans, useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 import {isToday} from 'date-fns'
 
+import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {usePostViewTracking} from '#/lib/hooks/usePostViewTracking'
 import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {listenSoftReset} from '#/state/events'
 import {
   refreshGroupedNotifications,
   useGroupedNotificationsQuery,
@@ -18,18 +20,21 @@ import {
   type NotificationView,
 } from '#/state/queries/notifications/grouped/types'
 import {useUnreadNotifications} from '#/state/queries/notifications/unread'
-import {EmptyState} from '#/view/com/util/EmptyState'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
-import {List} from '#/view/com/util/List'
+import {List, type ListMethods} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {NotificationItem} from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {atoms as a, useTheme} from '#/alf'
-import {Bell_Stroke2_Corner0_Rounded as BellIcon} from '#/components/icons/Bell'
+import {ButtonText} from '#/components/Button'
+import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
+import {Envelope_Filled_Stroke2_Corner0_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
-import {IS_WEB} from '#/env'
+import {useAnalytics} from '#/analytics'
+import {IS_NATIVE, IS_WEB} from '#/env'
 
 type Row =
   | {type: 'section'; key: string; section: 'today' | 'earlier'}
@@ -66,6 +71,7 @@ export function PageList({
   seenAt,
   onLoad,
   requestSnapshot,
+  onEmptyChange,
 }: {
   feed: GroupedNotificationsFeed
   pageIndex: number
@@ -81,6 +87,12 @@ export function PageList({
    * load, before refreshing it.
    */
   requestSnapshot?: (feed: GroupedNotificationsFeed) => void
+  /**
+   * Called with whether this feed has loaded completely and has nothing in
+   * it, e.g. so the screen can drop its tabs when there are no
+   * notifications at all.
+   */
+  onEmptyChange?: (isEmpty: boolean) => void
 }) {
   const {t: l} = useLingui()
   const queryClient = useQueryClient()
@@ -89,7 +101,9 @@ export function PageList({
   const numUnread = useUnreadNotifications()
   const isScreenFocused = useIsFocused()
   const isActive = usePager().selectedPage === pageIndex
+  const bottomBarOffset = useBottomBarOffset()
   const [isPTRing, setIsPTRing] = useState(false)
+  const [listHeight, setListHeight] = useState(0)
 
   // Don't fetch tabs until they've been opened
   const [hasBeenActive, setHasBeenActive] = useState(isActive)
@@ -111,6 +125,12 @@ export function PageList({
   } = useGroupedNotificationsQuery({feed, seenAt, enabled: hasBeenActive})
 
   const notifications = data?.pages.flatMap(page => page.notifications) ?? []
+
+  const isEmpty =
+    isFetched && !isError && notifications.length === 0 && !hasNextPage
+  useEffect(() => {
+    onEmptyChange?.(isEmpty)
+  }, [isEmpty, onEmptyChange])
 
   const serverSeenAt = data?.pages[0]?.seenAt
   useEffect(() => {
@@ -137,6 +157,22 @@ export function PageList({
     }
     wasScreenFocused.current = isScreenFocused
   }, [isScreenFocused])
+
+  /*
+   * Pressing the Notifications tab button, or the selected pill, scrolls the
+   * visible tab back to the top and loads anything new.
+   */
+  const listRef = useRef<ListMethods>(null)
+  const onSoftReset = useEffectEvent(() => {
+    listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
+    if (numUnread !== '') {
+      void refresh()
+    }
+  })
+  useEffect(() => {
+    if (!isScreenFocused || !isActive) return
+    return listenSoftReset(() => onSoftReset())
+  }, [isScreenFocused, isActive])
 
   let rows: Row[]
   if (!isFetched) {
@@ -178,8 +214,10 @@ export function PageList({
   return (
     <MainScrollProvider>
       <List
+        ref={listRef}
         testID={`notificationsList-${feed}`}
         style={a.flex_1}
+        onLayout={event => setListHeight(event.nativeEvent.layout.height)}
         headerOffset={headerOffset}
         {...(IS_WEB ? {disableFullWindowScroll: true} : {})}
         data={rows}
@@ -194,11 +232,24 @@ export function PageList({
               return <NotificationFeedLoadingPlaceholder />
             case 'empty':
               return (
-                <EmptyState
-                  icon={BellIcon}
-                  message={getEmptyMessage(feed, l)}
-                  style={[a.py_5xl]}
-                />
+                // Centred in the space between the header and the bottom bar
+                <View
+                  style={[
+                    a.justify_center,
+                    a.px_lg,
+                    {
+                      minHeight: Math.max(
+                        listHeight - headerOffset - bottomBarOffset,
+                        0,
+                      ),
+                    },
+                  ]}>
+                  {feed === 'all' ? (
+                    <NoNotifications />
+                  ) : (
+                    <EmptyMessage message={getEmptyMessage(feed, l)} />
+                  )}
+                </View>
               )
             case 'error':
               return (
@@ -295,6 +346,87 @@ function SectionHeader({section}: {section: 'today' | 'earlier'}) {
           : l({message: 'Earlier', context: 'Notifications section header'})}
       </Text>
     </View>
+  )
+}
+
+/**
+ * Shown on the "All" tab when there are no notifications at all, with a way
+ * to find people to follow where contact import is available.
+ */
+function NoNotifications() {
+  const t = useTheme()
+  const {t: l} = useLingui()
+  const ax = useAnalytics()
+  const isFindContactsEnabled =
+    useIsFindContactsFeatureEnabledBasedOnGeolocation()
+  // Mirrors the gates on the settings entry for the same screen
+  const canFindContacts =
+    IS_NATIVE &&
+    isFindContactsEnabled &&
+    !ax.features.enabled(ax.features.ImportContactsSettingsDisable)
+
+  return (
+    <View style={[a.align_center, a.gap_md]}>
+      {/*
+       * Stand-in: the designs use an envelope with a notification dot, which
+       * isn't in the icon set yet
+       */}
+      <EnvelopeIcon width={80} fill={t.atoms.border_contrast_low.borderColor} />
+      <View style={[a.align_center, a.gap_xs]}>
+        <Text
+          accessibilityRole="header"
+          style={[
+            a.text_md,
+            a.font_semi_bold,
+            a.leading_snug,
+            a.text_center,
+            t.atoms.text,
+          ]}>
+          <Trans>No notifications yet</Trans>
+        </Text>
+        <Text
+          style={[
+            a.text_sm,
+            a.leading_snug,
+            a.text_center,
+            t.atoms.text_contrast_high,
+            // Wraps the copy onto two balanced lines, per the designs
+            {maxWidth: 201},
+          ]}>
+          <Trans>Find some friends to start getting notifications!</Trans>
+        </Text>
+      </View>
+      {canFindContacts && (
+        <Link
+          to={{screen: 'FindContactsSettings'}}
+          label={l`Find friends`}
+          size="tiny"
+          color="primary_subtle"
+          style={[{height: 24, paddingVertical: 0}]}>
+          <ButtonText style={[a.font_medium]}>
+            <Trans>Find friends</Trans>
+          </ButtonText>
+        </Link>
+      )}
+    </View>
+  )
+}
+
+/**
+ * Shown on a tab with nothing in it, e.g. "No replies to show yet".
+ */
+function EmptyMessage({message}: {message: string}) {
+  const t = useTheme()
+  return (
+    <Text
+      style={[
+        a.text_md,
+        a.leading_snug,
+        a.text_center,
+        t.atoms.text_contrast_medium,
+      ]}>
+      {message}
+    </Text>
   )
 }
 
