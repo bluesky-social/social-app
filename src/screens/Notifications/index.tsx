@@ -63,13 +63,13 @@ function NewNotificationsScreenInner() {
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
+  // keys are the `feed` values accepted by getGroupedNotifications
   const tabs = [
     {key: 'all', label: l`All`},
-    {key: 'people-i-follow', label: l`People I follow`},
-    {key: 'follows', label: l`Follows`},
-    {key: 'replies', label: l`Replies`},
+    {key: 'people-i-follow', label: l`People you follow`},
+    {key: 'followers', label: l`Followers`},
+    {key: 'conversations', label: l`Replies`},
     {key: 'activity', label: l`Activity`},
-    {key: 'atmosphere', label: l`Atmosphere`},
   ]
 
   const showHeader = useCallback(() => {
