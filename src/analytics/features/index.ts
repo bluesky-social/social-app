@@ -105,6 +105,23 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.ProfileLinksEnable:
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Profile links',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'Add links to your profile that show as buttons under your bio.',
+            comment: 'Description of a feature flag (Profile links)',
+          }),
+        ),
+      }
     default:
       return null
   }
