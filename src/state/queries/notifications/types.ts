@@ -23,7 +23,8 @@ export interface FeedPage {
 }
 
 /**
- * What the last unread check found, for the Notifications v2 "Refresh" pill.
+ * What the last unread check found, for the Notifications v2 "Refresh" pill
+ * and tab pills.
  */
 export interface UnreadCheck {
   /**
@@ -36,6 +37,11 @@ export interface UnreadCheck {
    * if it found none.
    */
   newestUnreadAt: Record<GroupedNotificationsFeed, number | undefined>
+  /**
+   * Like `newestUnreadAt`, but counting notifications that are already read,
+   * so marking notifications as seen leaves it as it is.
+   */
+  newestAt: Record<GroupedNotificationsFeed, number | undefined>
 }
 
 export interface CachedFeedPage {

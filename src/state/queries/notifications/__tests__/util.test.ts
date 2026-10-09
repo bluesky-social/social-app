@@ -130,7 +130,7 @@ function makePage(...groups: Notification[][]): FeedPage {
 const REQUESTED_AT = Date.parse('2026-10-09T12:00:00.000Z')
 
 describe('summarizeUnreadCheck', () => {
-  it('finds the newest unread notification for each grouped feed', () => {
+  it('finds the newest notification, and the newest unread one, for each grouped feed', () => {
     const check = summarizeUnreadCheck(
       makePage(
         [makeNotification({reason: 'like', indexedAt: '2026-10-09T11:50:00Z'})],
@@ -167,6 +167,13 @@ describe('summarizeUnreadCheck', () => {
         conversations: Date.parse('2026-10-09T11:40:00Z'),
         activity: undefined,
       },
+      newestAt: {
+        all: Date.parse('2026-10-09T11:50:00Z'),
+        'people-i-follow': Date.parse('2026-10-09T11:40:00Z'),
+        followers: Date.parse('2026-10-09T11:20:00Z'),
+        conversations: Date.parse('2026-10-09T11:40:00Z'),
+        activity: undefined,
+      },
     } satisfies UnreadCheck)
   })
 
@@ -186,9 +193,10 @@ describe('summarizeUnreadCheck', () => {
     expect(check.newestUnreadAt.followers).toBe(
       Date.parse('2026-10-09T11:10:00Z'),
     )
+    expect(check.newestAt.followers).toBe(Date.parse('2026-10-09T11:10:00Z'))
   })
 
-  it('finds nothing when everything is read', () => {
+  it('finds nothing unread when everything is read', () => {
     const check = summarizeUnreadCheck(
       makePage([
         makeNotification({
@@ -207,6 +215,7 @@ describe('summarizeUnreadCheck', () => {
       undefined,
       undefined,
     ])
+    expect(check.newestAt.all).toBe(Date.parse('2026-10-09T11:00:00Z'))
   })
 })
 
@@ -220,9 +229,16 @@ describe('markUnreadCheckSeen', () => {
       conversations: Date.parse('2026-10-09T11:30:00Z'),
       activity: undefined,
     },
+    newestAt: {
+      all: Date.parse('2026-10-09T11:50:00Z'),
+      'people-i-follow': Date.parse('2026-10-09T10:00:00Z'),
+      followers: Date.parse('2026-10-09T11:00:00Z'),
+      conversations: Date.parse('2026-10-09T11:30:00Z'),
+      activity: undefined,
+    },
   }
 
-  it('drops what was indexed up to seenAt', () => {
+  it('drops unread notifications indexed up to seenAt, but keeps the newest ones', () => {
     expect(
       markUnreadCheckSeen(check, Date.parse('2026-10-09T11:30:00Z')),
     ).toEqual({
@@ -234,6 +250,7 @@ describe('markUnreadCheckSeen', () => {
         conversations: undefined,
         activity: undefined,
       },
+      newestAt: check.newestAt,
     })
   })
 

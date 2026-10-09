@@ -11,6 +11,13 @@ import {
 const REQUESTED_AT = Date.parse('2026-10-09T12:00:00.000Z')
 const SERVER_SEEN_AT = '2026-10-09T09:00:00.000Z'
 const SNAPSHOT = new Date('2026-10-09T10:00:00.000Z')
+const NO_FEEDS: UnreadCheck['newestAt'] = {
+  all: undefined,
+  'people-i-follow': undefined,
+  followers: undefined,
+  conversations: undefined,
+  activity: undefined,
+}
 
 function load(overrides: Partial<FeedLoad> = {}): FeedLoad {
   return {
@@ -109,17 +116,8 @@ describe('isRefreshPillVisible', () => {
     newestUnreadAt: Partial<UnreadCheck['newestUnreadAt']>,
     requestedAt = TOP_REQUESTED_AT + 30_000,
   ): UnreadCheck {
-    return {
-      requestedAt,
-      newestUnreadAt: {
-        all: undefined,
-        'people-i-follow': undefined,
-        followers: undefined,
-        conversations: undefined,
-        activity: undefined,
-        ...newestUnreadAt,
-      },
-    }
+    const byFeed = {...NO_FEEDS, ...newestUnreadAt}
+    return {requestedAt, newestUnreadAt: byFeed, newestAt: byFeed}
   }
 
   function visible(

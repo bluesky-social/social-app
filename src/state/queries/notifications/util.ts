@@ -125,22 +125,23 @@ export function summarizeUnreadCheck(
     conversations: undefined,
     activity: undefined,
   }
+  const newestAt: UnreadCheck['newestAt'] = {...newestUnreadAt}
   const feeds = Object.keys(newestUnreadAt) as GroupedNotificationsFeed[]
   for (const item of page.items) {
     for (const notif of [item.notification, ...(item.additional ?? [])]) {
-      if (notif.isRead) continue
       const indexedAt = Date.parse(notif.indexedAt)
       for (const feed of feeds) {
-        if (
-          indexedAt > (newestUnreadAt[feed] ?? -Infinity) &&
-          isInGroupedFeed(feed, notif)
-        ) {
+        if (!isInGroupedFeed(feed, notif)) continue
+        if (indexedAt > (newestAt[feed] ?? -Infinity)) {
+          newestAt[feed] = indexedAt
+        }
+        if (!notif.isRead && indexedAt > (newestUnreadAt[feed] ?? -Infinity)) {
           newestUnreadAt[feed] = indexedAt
         }
       }
     }
   }
-  return {requestedAt, newestUnreadAt}
+  return {requestedAt, newestUnreadAt, newestAt}
 }
 
 /**
