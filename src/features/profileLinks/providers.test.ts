@@ -36,6 +36,21 @@ describe('getSupportProvider', () => {
     expect(getSupportProvider('https://paypal.com/paypalme/')).toBe(undefined)
   })
 
+  it('only counts campaign and gallery pages for path-based providers', () => {
+    expect(
+      getSupportProvider('https://chuffed.org/project/save-the-reef')?.name,
+    ).toBe('Chuffed')
+    expect(getSupportProvider('https://chuffed.org/campaign/kat')?.name).toBe(
+      'Chuffed',
+    )
+    expect(getSupportProvider('https://chuffed.org/about')).toBe(undefined)
+    expect(
+      getSupportProvider('https://www.inprnt.com/gallery/kat/')?.name,
+    ).toBe('INPRNT')
+    expect(getSupportProvider('https://www.inprnt.com/browse/')).toBe(undefined)
+    expect(getSupportProvider('https://throne.com/kat')?.name).toBe('Throne')
+  })
+
   it('recognizes Substack publications and profiles', () => {
     expect(getSupportProvider('https://kat.substack.com')?.name).toBe(
       'Substack',
