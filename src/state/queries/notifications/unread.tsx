@@ -120,6 +120,11 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   }, [setNumUnread])
 
   const isFetchingRef = useRef(false)
+  /**
+   * When notifications were last marked as seen, in ms since the epoch. A
+   * check asked before then may count notifications that have been seen since.
+   */
+  const lastMarkedReadAt = useRef(0)
 
   // create API
   const api = useMemo<ApiContext>(() => {
@@ -130,6 +135,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // toISOString always emits the Z-suffixed form the format requires
           seenAt: seenAt.toISOString() as ISODatetimeString,
         })
+        lastMarkedReadAt.current = Date.now()
 
         /*
          * Nothing is unread any more, so polling goes back to its usual rate,
@@ -172,6 +178,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           isFetchingRef.current = true
 
           // count
+          const requestedAt = Date.now()
           const {page, indexedAt: lastIndexed} = await fetchPage({
             client,
             cursor: undefined,
@@ -184,6 +191,14 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
             // in the notifications query, otherwise skip it
             fetchAdditionalData: !!invalidate,
           })
+          /*
+           * Marked read while this was in flight, so the count may be stale.
+           * The next check will catch up. A check that loads into the feed
+           * goes ahead, since that feed marks what it shows as read anyway.
+           */
+          if (!invalidate && requestedAt < lastMarkedReadAt.current) {
+            return
+          }
           const unreadCount = countUnread(page)
           const unreadCountStr =
             unreadCount >= 30
