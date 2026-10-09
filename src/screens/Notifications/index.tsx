@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useEffectEvent, useRef, useState} from 'react'
-import {AppState, View} from 'react-native'
+import {AppState, type LayoutChangeEvent, View} from 'react-native'
 import Animated, {
   interpolate,
   Reanimated3DefaultSpringConfig,
+  type SharedValue,
   useAnimatedStyle,
   withSpring,
 } from 'react-native-reanimated'
@@ -85,6 +86,11 @@ function NewNotificationsScreenInner() {
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
+  /*
+   * The title's own height, rather than the shell's, which is shared with
+   * Home's taller header and can still hold its height.
+   */
+  const {height: titleHeight, onLayout: onTitleLayout} = useShellHeaderLayout()
   const tabs: {key: GroupedNotificationsFeed; label: string}[] = [
     {key: 'all', label: l`All`},
     {key: 'people-i-follow', label: l`People you follow`},
@@ -134,7 +140,10 @@ function NewNotificationsScreenInner() {
           showHeader()
         }
       }}>
-      <NotificationsHeader onHeightChange={setHeaderOffset}>
+      <NotificationsHeader
+        titleHeight={titleHeight}
+        onTitleLayout={onTitleLayout}
+        onHeightChange={setHeaderOffset}>
         {!hasNoNotifications && (
           <Pager.TabBar>
             {({selectedPage, selectPage, dragProgress}) => (
@@ -168,6 +177,7 @@ function NewNotificationsScreenInner() {
             feed={tab.key}
             pageIndex={pageIndex}
             headerOffset={headerOffset}
+            titleHeight={titleHeight}
             seenAt={seenAt}
             onFirstLoad={onFirstLoad}
             refresh={refresh}
@@ -350,19 +360,22 @@ function useReturnToScreen({
 
 function NotificationsHeader({
   children,
+  titleHeight,
+  onTitleLayout,
   onHeightChange,
 }: {
   children: React.ReactNode
+  /**
+   * The height of the title, which hides on scroll, as the pills move up by
+   * it. See `useShellHeaderLayout`.
+   */
+  titleHeight: SharedValue<number>
+  onTitleLayout: (event: LayoutChangeEvent) => void
   onHeightChange: (height: number) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const headerMode = useHomeHeaderMode()
-  /*
-   * The pills move by the title's own height rather than the shell's, which
-   * is shared with Home's taller header and can still hold its height.
-   */
-  const {height: titleHeight, onLayout: onTitleLayout} = useShellHeaderLayout()
   const {gtMobile} = useBreakpoints()
   const insets = useSafeAreaInsets()
   const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
