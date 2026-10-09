@@ -11,6 +11,7 @@ import {useLingui} from '@lingui/react/macro'
 import {useFocusEffect} from '@react-navigation/native'
 
 import {useHaptics} from '#/lib/haptics'
+import {useOpenLink} from '#/lib/hooks/useOpenLink'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useSession} from '#/state/session'
@@ -23,6 +24,7 @@ import {
 } from '#/components/moderation/ReportDialog'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
+import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
 import {logProfileLinkChanges} from '../metrics'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
@@ -36,8 +38,9 @@ import {
 } from '../state'
 import {type ProfileLink} from '../types'
 import {LinkFormDialog} from './LinkFormDialog'
-import {LinkInterstitial} from './LinkInterstitial'
+import {LinkHoverPreview} from './LinkHoverPreview'
 import {ProfileLinkPill} from './LinkPill'
+import {LinkPreviewSheet} from './LinkPreviewSheet'
 
 /** The row shows at most this many lines before folding into "+N". */
 const MAX_ROWS = 2
@@ -118,8 +121,9 @@ function ProfileLinksRow({
 }) {
   const {t: l} = useLingui()
   const ax = useAnalytics()
-  const {tap: playTapHaptic} = useHaptics()
-  const noticeControl = useDialogControl()
+  const {tap: playTapHaptic, longPress: playLongPressHaptic} = useHaptics()
+  const openLink = useOpenLink()
+  const previewControl = useDialogControl()
   const reportControl = useReportDialogControl()
   const formControl = useDialogControl()
   const {save} = useSaveProfileLinksMutation()
@@ -133,6 +137,25 @@ function ProfileLinksRow({
       return () => setExpanded(false)
     }, []),
   )
+
+  const open = (link: ProfileLink) => {
+    ax.metric('profile:links:click', {
+      domain: getLinkHost(link.url),
+      supportProvider: getSupportProvider(link.url)?.name,
+      isOwnProfile,
+    })
+    // through the redirect service, so Safelink rules apply
+    openLink(link.url, undefined, true)
+  }
+
+  const showPreview = (link: ProfileLink) => {
+    ax.metric('profile:links:preview', {
+      domain: getLinkHost(link.url),
+      supportProvider: getSupportProvider(link.url)?.name,
+    })
+    setActiveLink(link)
+    previewControl.open()
+  }
 
   const saveLinks = async (next: ProfileLinksData) => {
     try {
@@ -168,21 +191,36 @@ function ProfileLinksRow({
           }}
         />
       ) : (
-        <ProfileLinkPill
-          link={link}
-          did={profile.did}
-          arrow
-          onPress={() => {
-            playTapHaptic()
-            ax.metric('profile:links:click', {
-              domain: getLinkHost(link.url),
-              supportProvider: getSupportProvider(link.url)?.name,
-              isOwnProfile,
-            })
-            setActiveLink(link)
-            noticeControl.open()
-          }}
-        />
+        <LinkHoverPreview url={link.url}>
+          <ProfileLinkPill
+            link={link}
+            did={profile.did}
+            arrow
+            hint={l`Opens ${getLinkHost(link.url)} outside Bluesky`}
+            onPress={() => {
+              playTapHaptic()
+              open(link)
+            }}
+            onLongPress={
+              IS_NATIVE
+                ? () => {
+                    playLongPressHaptic()
+                    showPreview(link)
+                  }
+                : undefined
+            }
+            a11yActions={{
+              accessibilityActions: [
+                {name: 'showDetails', label: l`Show link details`},
+              ],
+              onAccessibilityAction: event => {
+                if (event.nativeEvent.actionName === 'showDetails') {
+                  showPreview(link)
+                }
+              },
+            }}
+          />
+        </LinkHoverPreview>
       ),
     }
   })
@@ -217,10 +255,10 @@ function ProfileLinksRow({
         />
       ) : (
         <>
-          <LinkInterstitial
-            control={noticeControl}
+          <LinkPreviewSheet
+            control={previewControl}
             link={activeLink}
-            profile={profile}
+            onOpen={open}
             onReport={() => reportControl.open()}
           />
           <ReportDialog

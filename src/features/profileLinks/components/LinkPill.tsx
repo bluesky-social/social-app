@@ -37,7 +37,9 @@ export function linkLabel(link: ProfileLink): string {
 export function ProfileLinkPill({
   link,
   onPress,
+  onLongPress,
   label,
+  hint,
   arrow = false,
   handle = false,
   testID = 'profileLinkPill',
@@ -48,8 +50,11 @@ export function ProfileLinkPill({
   /** The profile owner, whose repo holds the link's stored icon. */
   did?: string
   onPress?: () => void
+  onLongPress?: () => void
   /** Accessibility label. Defaults to "Open <title>". */
   label?: string
+  /** Accessibility hint, e.g. where the link goes. */
+  hint?: string
   /** Trailing outbound arrow, for pills that open the link. */
   arrow?: boolean
   /** Show the editor's drag grip in place of the arrow. */
@@ -76,6 +81,8 @@ export function ProfileLinkPill({
       size="small"
       color={provider ? 'primary' : 'secondary'}
       onPress={onPress}
+      onLongPress={onLongPress}
+      accessibilityHint={hint}
       {...a11yActions}
       style={[
         {

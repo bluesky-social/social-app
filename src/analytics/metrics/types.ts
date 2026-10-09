@@ -1421,9 +1421,9 @@ export type Events = {
     supportProvider: string | undefined
   }
   /**
-   * A visitor continued past the leaving-Bluesky notice.
+   * A visitor opened a link's details, e.g. by long-pressing it.
    */
-  'profile:links:continue': {
+  'profile:links:preview': {
     domain: string
     supportProvider: string | undefined
   }
