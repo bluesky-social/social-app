@@ -1,8 +1,10 @@
 import {describe, expect, it} from '@jest/globals'
 
+import {type UnreadCheck} from '#/state/queries/notifications/types'
 import {
   type FeedLoad,
   getMarkReadAt,
+  isRefreshPillVisible,
   nextSeenAt,
 } from '#/screens/Notifications/unread'
 
@@ -96,5 +98,85 @@ describe('getMarkReadAt', () => {
     ] as const) {
       expect(getMarkReadAt(load({feed}))).toBeUndefined()
     }
+  })
+})
+
+describe('isRefreshPillVisible', () => {
+  const TOP_REQUESTED_AT = Date.parse('2026-10-09T12:00:00.000Z')
+  const TOP_NEWEST_AT = Date.parse('2026-10-09T11:00:00.000Z')
+
+  function check(
+    newestUnreadAt: Partial<UnreadCheck['newestUnreadAt']>,
+    requestedAt = TOP_REQUESTED_AT + 30_000,
+  ): UnreadCheck {
+    return {
+      requestedAt,
+      newestUnreadAt: {
+        all: undefined,
+        'people-i-follow': undefined,
+        followers: undefined,
+        conversations: undefined,
+        activity: undefined,
+        ...newestUnreadAt,
+      },
+    }
+  }
+
+  function visible(
+    overrides: Partial<Parameters<typeof isRefreshPillVisible>[0]> = {},
+  ) {
+    return isRefreshPillVisible({
+      feed: 'all',
+      isActive: true,
+      check: check({all: TOP_NEWEST_AT + 60_000}),
+      top: {requestedAt: TOP_REQUESTED_AT, newestAt: TOP_NEWEST_AT},
+      isFetchingTop: false,
+      ...overrides,
+    })
+  }
+
+  it('shows for an unread notification newer than the loaded top', () => {
+    expect(visible()).toBe(true)
+  })
+
+  it('only shows on the tab in view', () => {
+    expect(visible({isActive: false})).toBe(false)
+  })
+
+  it('hides while the top is fetching', () => {
+    expect(visible({isFetchingTop: true})).toBe(false)
+  })
+
+  it('hides before the tab has loaded, or before any check', () => {
+    expect(visible({top: undefined})).toBe(false)
+    expect(visible({check: undefined})).toBe(false)
+  })
+
+  it('ignores a check asked before the top was requested', () => {
+    expect(
+      visible({
+        check: check({all: TOP_NEWEST_AT + 60_000}, TOP_REQUESTED_AT - 1),
+      }),
+    ).toBe(false)
+    expect(
+      visible({check: check({all: TOP_NEWEST_AT + 60_000}, TOP_REQUESTED_AT)}),
+    ).toBe(false)
+  })
+
+  it('ignores unread notifications that are already loaded', () => {
+    expect(visible({check: check({all: TOP_NEWEST_AT})})).toBe(false)
+    expect(visible({check: check({all: TOP_NEWEST_AT - 1})})).toBe(false)
+  })
+
+  it('only counts notifications for the tab in view', () => {
+    const replyOnly = check({conversations: TOP_NEWEST_AT + 60_000})
+    expect(visible({feed: 'conversations', check: replyOnly})).toBe(true)
+    expect(visible({feed: 'followers', check: replyOnly})).toBe(false)
+  })
+
+  it('shows on an empty tab for anything unread', () => {
+    expect(
+      visible({top: {requestedAt: TOP_REQUESTED_AT, newestAt: undefined}}),
+    ).toBe(true)
   })
 })

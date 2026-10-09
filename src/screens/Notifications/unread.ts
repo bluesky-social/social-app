@@ -2,6 +2,7 @@ import {
   type GroupedNotificationsFeed,
   type LoadedGroupedNotificationsPage,
 } from '#/state/queries/notifications/grouped'
+import {type UnreadCheck} from '#/state/queries/notifications/types'
 
 /**
  * How a load updates the screen's `seenAt` snapshot:
@@ -65,6 +66,48 @@ export function getMarkReadAt(load: FeedLoad): Date | undefined {
   return new Date(
     Math.max(getShownUpTo(load), parseTime(load.seenAt) ?? -Infinity),
   )
+}
+
+/**
+ * Whether a tab offers its "Refresh" pill: it's the tab in view, and the last
+ * unread check found unread notifications for its feed that it hasn't
+ * loaded.
+ *
+ * "Not loaded" means newer than the newest notification in the tab's first
+ * page, so unread rows already on screen don't count. A check asked before
+ * that page was requested has nothing to add to it, so the pill goes as soon
+ * as the tab starts fetching its top, and stays gone once that has loaded,
+ * until a later check finds more. A failed fetch loads nothing, so the pill
+ * comes back for a retry.
+ */
+export function isRefreshPillVisible({
+  feed,
+  isActive,
+  check,
+  top,
+  isFetchingTop,
+}: {
+  feed: GroupedNotificationsFeed
+  /**
+   * Whether this is the tab in view, on the focused screen.
+   */
+  isActive: boolean
+  check: UnreadCheck | undefined
+  /**
+   * The tab's first page, once loaded.
+   */
+  top:
+    Pick<LoadedGroupedNotificationsPage, 'requestedAt' | 'newestAt'> | undefined
+  /**
+   * Whether the tab is fetching its first page, rather than a later one.
+   */
+  isFetchingTop: boolean
+}): boolean {
+  if (!isActive || !check || !top || isFetchingTop) return false
+  if (check.requestedAt <= top.requestedAt) return false
+  const newestUnreadAt = check.newestUnreadAt[feed]
+  if (newestUnreadAt === undefined) return false
+  return top.newestAt === undefined || newestUnreadAt > top.newestAt
 }
 
 /**

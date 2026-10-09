@@ -1,5 +1,6 @@
 import {useEffect, useEffectEvent, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
+import {type SharedValue} from 'react-native-reanimated'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
 import {isToday} from 'date-fns'
@@ -16,6 +17,7 @@ import {
   type NotificationView,
   useGroupedNotificationsQuery,
 } from '#/state/queries/notifications/grouped'
+import {useLastUnreadCheck} from '#/state/queries/notifications/unread'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -23,7 +25,11 @@ import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {NotificationItem} from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
-import {type SeenAtMode} from '#/screens/Notifications/unread'
+import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
+import {
+  isRefreshPillVisible,
+  type SeenAtMode,
+} from '#/screens/Notifications/unread'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
@@ -49,6 +55,7 @@ export function PageList({
   feed,
   pageIndex,
   headerOffset,
+  titleHeight,
   seenAt,
   onFirstLoad,
   refresh,
@@ -57,7 +64,14 @@ export function PageList({
 }: {
   feed: GroupedNotificationsFeed
   pageIndex: number
+  /**
+   * The height of the screen's header, which the list starts beneath.
+   */
   headerOffset: number
+  /**
+   * The height of the part of the header that hides on scroll.
+   */
+  titleHeight: SharedValue<number>
   /**
    * Snapshot of when notifications were last seen, shared by every tab so
    * the unread tint doesn't change while the screen is open.
@@ -127,20 +141,31 @@ export function PageList({
   }, [feed, top, onFirstLoad])
 
   /*
-   * Pressing the Notifications tab button, or the selected pill, scrolls the
-   * visible tab back to the top and loads anything new, keeping the unread
-   * tint. It always asks the server, as the unread count only updates on a
-   * poll and may not know about new notifications yet.
+   * Pressing the Notifications tab button, the selected tab pill, or the
+   * "Refresh" pill scrolls the visible tab back to the top and loads anything
+   * new, keeping the unread tint. It always asks the server, as the unread
+   * count only updates on a poll and may not know about new notifications
+   * yet.
    */
   const listRef = useRef<ListMethods>(null)
-  const onSoftReset = useEffectEvent(() => {
+  const loadLatest = () => {
     listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
     void refresh(feed, 'kept')
-  })
+  }
+  const onSoftReset = useEffectEvent(loadLatest)
   useEffect(() => {
     if (!isScreenFocused || !isActive) return
     return listenSoftReset(() => onSoftReset())
   }, [isScreenFocused, isActive])
+
+  const lastUnreadCheck = useLastUnreadCheck()
+  const showRefreshPill = isRefreshPillVisible({
+    feed,
+    isActive: isScreenFocused && isActive,
+    check: lastUnreadCheck,
+    top,
+    isFetchingTop: isFetching && !isFetchingNextPage,
+  })
 
   let rows: Row[]
   if (!isFetched) {
@@ -180,90 +205,98 @@ export function PageList({
   }
 
   return (
-    <MainScrollProvider>
-      <List
-        ref={listRef}
-        testID={`notificationsList-${feed}`}
-        style={a.flex_1}
-        onLayout={event => setListHeight(event.nativeEvent.layout.height)}
-        onScrolledDownChange={onScrolledDownChange}
-        headerOffset={headerOffset}
-        {...(IS_WEB ? {disableFullWindowScroll: true} : {})}
-        data={rows}
-        keyExtractor={(row: Row) => row.key}
-        renderItem={({item: row}: {item: Row}) => {
-          switch (row.type) {
-            case 'section':
-              return <SectionHeader section={row.section} />
-            case 'notification':
-              return <NotificationItem notification={row.notification} />
-            case 'loading':
-              return <NotificationFeedLoadingPlaceholder />
-            case 'empty':
-              return (
-                // Centred in the space between the header and the bottom bar
-                <View
-                  style={[
-                    a.justify_center,
-                    a.px_lg,
-                    {
-                      minHeight: Math.max(
-                        listHeight - headerOffset - bottomBarOffset,
-                        0,
-                      ),
-                    },
-                  ]}>
-                  {feed === 'all' ? (
-                    <NoNotifications />
-                  ) : (
-                    <EmptyMessage message={getEmptyMessage(feed, l)} />
-                  )}
-                </View>
-              )
-            case 'error':
-              return (
-                <ErrorMessage
-                  message={cleanError(error)}
-                  onPressTryAgain={() => void refetch()}
-                />
-              )
-            case 'loadMoreError':
-              return (
-                <LoadMoreRetryBtn
-                  label={l`There was an issue fetching notifications. Tap here to try again.`}
-                  onPress={() => void fetchNextPage()}
-                />
-              )
+    <>
+      <MainScrollProvider>
+        <List
+          ref={listRef}
+          testID={`notificationsList-${feed}`}
+          style={a.flex_1}
+          onLayout={event => setListHeight(event.nativeEvent.layout.height)}
+          onScrolledDownChange={onScrolledDownChange}
+          headerOffset={headerOffset}
+          {...(IS_WEB ? {disableFullWindowScroll: true} : {})}
+          data={rows}
+          keyExtractor={(row: Row) => row.key}
+          renderItem={({item: row}: {item: Row}) => {
+            switch (row.type) {
+              case 'section':
+                return <SectionHeader section={row.section} />
+              case 'notification':
+                return <NotificationItem notification={row.notification} />
+              case 'loading':
+                return <NotificationFeedLoadingPlaceholder />
+              case 'empty':
+                return (
+                  // Centred in the space between the header and the bottom bar
+                  <View
+                    style={[
+                      a.justify_center,
+                      a.px_lg,
+                      {
+                        minHeight: Math.max(
+                          listHeight - headerOffset - bottomBarOffset,
+                          0,
+                        ),
+                      },
+                    ]}>
+                    {feed === 'all' ? (
+                      <NoNotifications />
+                    ) : (
+                      <EmptyMessage message={getEmptyMessage(feed, l)} />
+                    )}
+                  </View>
+                )
+              case 'error':
+                return (
+                  <ErrorMessage
+                    message={cleanError(error)}
+                    onPressTryAgain={() => void refetch()}
+                  />
+                )
+              case 'loadMoreError':
+                return (
+                  <LoadMoreRetryBtn
+                    label={l`There was an issue fetching notifications. Tap here to try again.`}
+                    onPress={() => void fetchNextPage()}
+                  />
+                )
+            }
+          }}
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <View style={[a.pt_xl]}>
+                <ActivityIndicator />
+              </View>
+            ) : undefined
           }
-        }}
-        ListFooterComponent={
-          isFetchingNextPage ? (
-            <View style={[a.pt_xl]}>
-              <ActivityIndicator />
-            </View>
-          ) : undefined
-        }
-        refreshing={isPTRing}
-        onRefresh={() => void onRefresh()}
-        onEndReached={() => void onEndReached()}
-        onEndReachedThreshold={2}
-        onItemSeen={(row: Row) => {
-          if (
-            row.type === 'notification' &&
-            (row.notification.type === 'reply' ||
-              row.notification.type === 'mention' ||
-              row.notification.type === 'quote')
-          ) {
-            trackPostView(row.notification.post)
-          }
-        }}
-        contentContainerStyle={{paddingBottom: 200}}
-        initialNumToRender={initialNumToRender}
-        windowSize={11}
-        sideBorders={false}
-        removeClippedSubviews
+          refreshing={isPTRing}
+          onRefresh={() => void onRefresh()}
+          onEndReached={() => void onEndReached()}
+          onEndReachedThreshold={2}
+          onItemSeen={(row: Row) => {
+            if (
+              row.type === 'notification' &&
+              (row.notification.type === 'reply' ||
+                row.notification.type === 'mention' ||
+                row.notification.type === 'quote')
+            ) {
+              trackPostView(row.notification.post)
+            }
+          }}
+          contentContainerStyle={{paddingBottom: 200}}
+          initialNumToRender={initialNumToRender}
+          windowSize={11}
+          sideBorders={false}
+          removeClippedSubviews
+        />
+      </MainScrollProvider>
+      <RefreshPill
+        visible={showRefreshPill}
+        headerHeight={headerOffset}
+        titleHeight={titleHeight}
+        onPress={loadLatest}
       />
-    </MainScrollProvider>
+    </>
   )
 }
 
