@@ -163,7 +163,9 @@ function GroupedFollowNotification({
         accessible={isExpanded}
         accessibilityRole="button"
         accessibilityLabel={label}
-        accessibilityHint={l`Collapses list of users`}
+        accessibilityHint={
+          isExpanded ? l`Collapses list of users` : l`Expands list of users`
+        }
         accessibilityState={{expanded: isExpanded}}
         onPress={onToggleExpanded}
         style={[a.flex_row, a.align_start, a.gap_md, a.px_lg, a.py_md]}>
