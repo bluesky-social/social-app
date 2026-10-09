@@ -156,6 +156,8 @@ export function PostPreview({
         authorHandle={post.author.handle}
         numberOfLines={numberOfLines}
         style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium, style]}
+        // Links and mentions would otherwise take the muted colour too
+        interactiveStyle={t.atoms.text_link}
       />
     )
   }

@@ -279,7 +279,6 @@ function ReplyContextPost({
  * moderation hider. Images stand in for the text when there isn't any.
  */
 export function PostBody({post}: {post: PostView}) {
-  const t = useTheme()
   const moderationOpts = useModerationOpts()
   const record = bsky.isType(app.bsky.feed.post, post.record)
     ? post.record
@@ -307,7 +306,8 @@ export function PostBody({post}: {post: PostView}) {
           value={richText}
           authorHandle={post.author.handle}
           shouldProxyLinks
-          style={[a.text_sm, a.leading_snug, t.atoms.text]}
+          // No colour here: it would override the links' and mentions'
+          style={[a.text_sm, a.leading_snug]}
         />
       )}
       {post.embed && embedPreview && (
