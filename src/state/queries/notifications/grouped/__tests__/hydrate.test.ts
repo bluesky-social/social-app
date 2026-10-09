@@ -5,7 +5,7 @@ import {describe, expect, it} from '@jest/globals'
 import {
   createGroupedNotificationsFixture,
   VIEWER_DID,
-} from '#/state/queries/notifications/grouped/fixtures'
+} from '#/state/queries/notifications/grouped/__fixtures__'
 import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
 import {
   type GroupedNotificationsPage,
