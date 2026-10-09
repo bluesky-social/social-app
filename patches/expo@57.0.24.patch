@@ -7,6 +7,55 @@ index 85c4227e4e37003dd3769a590e73a69874de5fac..e389ca8edd2310df9ce29684991465c2
 -import '../../types';
  //# sourceMappingURL=runtime.native.d.ts.map
 \ No newline at end of file
+diff --git a/package.json b/package.json
+index d79d86fe1a028d31b255626467c32302a211f1fe..4e5be6cea703574e31a534a677f106797d4313d1 100644
+--- a/package.json
++++ b/package.json
+@@ -9,7 +9,8 @@
+     "*.fx.tsx",
+     "*.fx.web.tsx",
+     "./src/winter/*.ts",
+-    "./src/async-require/*.ts"
++    "./src/async-require/*.ts",
++    "./src/utils/getBundleUrl*.ts"
+   ],
+   "bin": {
+     "expo": "bin/cli",
+diff --git a/src/async-require/buildUrlForBundle.ts b/src/async-require/buildUrlForBundle.ts
+index 9c59910b0fd0c49396865a67fb968b0e0047c748..4b4f3c0109ea67fe9f748d67edfc9d827a2e7d0a 100644
+--- a/src/async-require/buildUrlForBundle.ts
++++ b/src/async-require/buildUrlForBundle.ts
+@@ -5,6 +5,7 @@
+  * LICENSE file in the root directory of this source tree.
+  */
+ 
++import { getBundleUrl } from '../utils/getBundleUrl';
+ import getDevServer from './getDevServer';
+ 
+ /**
+@@ -17,6 +18,21 @@ export function buildUrlForBundle(bundlePath: string): string {
+   if (/^https?:\/\//.test(bundlePath)) {
+     return bundlePath;
+   }
+-  const { url: baseURL } = getDevServer();
++  const baseURL = getBaseUrl();
+   return baseURL ? new URL(bundlePath, baseURL).toString() : `//${bundlePath.replace(/^\/+/, '')}`;
+ }
++
++/**
++ * Async chunks are emitted next to the entry bundle, so resolve them against the URL the bundle was
++ * served from rather than the page URL. The two differ when the HTML is served from the app origin
++ * while the exported bundle is served from a CDN; resolving against the page would request chunks
++ * from the origin that does not host them. Falls back to the page URL when the bundle was not loaded
++ * from a script tag, such as in server rendering or tests.
++ */
++function getBaseUrl(): string {
++  const bundleUrl = getBundleUrl();
++  if (bundleUrl && /^https?:\/\//.test(bundleUrl)) {
++    return bundleUrl;
++  }
++  return getDevServer().url;
++}
 diff --git a/src/winter/fetch/RequestUtils.ts b/src/winter/fetch/RequestUtils.ts
 index a93473fd2beaf2ab0f3880951d292e58e7288d10..c27911bd5cb56ba6051fb8ebf4194cced43bc0fd 100644
 --- a/src/winter/fetch/RequestUtils.ts
@@ -95,3 +144,15 @@ index cbe32225b933462d71b20ee339a6a90c1144cf0a..c421b1f215ff944e70be8ca8510b31ad
  
    const nativeRequestInit: NativeRequestInit = {
      credentials: credentials ?? 'include',
+diff --git a/src/winter/runtime.ts b/src/winter/runtime.ts
+index 6979c81e253bf0dcd740f8da06cb7e19b6415735..4c9f4d04ed692bdde72a0a0c499ab03e98b3d4a2 100644
+--- a/src/winter/runtime.ts
++++ b/src/winter/runtime.ts
+@@ -1,4 +1,7 @@
+ import '../async-require/setup';
++// Keeps the bundle URL capture in the synchronous script phase, where `transform.inlineRequires`
++// would otherwise defer it. See `initialScriptURL` in `../utils/getBundleUrl.web.ts`.
++import '../utils/getBundleUrl';
+ 
+ Object.defineProperty(globalThis, '__ExpoImportMetaRegistry', {
+   value: require('./ImportMetaRegistry').ImportMetaRegistry,
