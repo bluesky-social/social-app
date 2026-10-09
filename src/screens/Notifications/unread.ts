@@ -109,6 +109,102 @@ export function isRefreshPillVisible({
 }
 
 /**
+ * A time per feed, in ms since the epoch, for the feeds it's known for.
+ */
+export type FeedTimes = Partial<Record<GroupedNotificationsFeed, number>>
+
+/**
+ * Which tabs' pills show that the tab has unread notifications the user
+ * hasn't seen in it, so they know to switch to it. Also returns how far each
+ * tab has been seen in, to keep for next time.
+ *
+ * A tab's newest notification is the newest of:
+ *
+ * - what its latest fresh load found, if it has loaded, and
+ * - what the last unread check found for its feed, read or not. This covers
+ *   tabs that have never loaded, and anything since a tab last loaded.
+ *
+ * A tab other than the one in view has unread notifications when its newest
+ * one is newer than both:
+ *
+ * - The screen's `seenAt` snapshot, so the pill agrees with the unread tint:
+ *   switching to the tab shows that notification tinted. The Followers tab
+ *   has no tint, but counts new followers the same way. Pull-to-refresh moves
+ *   the snapshot on, so older notifications stop counting as they stop being
+ *   tinted. Until there's a snapshot nothing counts.
+ * - The newest notification the tab knew of while it was in view. Switching
+ *   to a tab clears it, along with anything its "Refresh" pill offered while
+ *   it was in view, and it only comes back for notifications that arrive
+ *   after.
+ */
+export function getUnreadTabs({
+  feeds,
+  activeFeed,
+  check,
+  loadedNewestAt,
+  seenAt,
+  seenUpTo,
+}: {
+  feeds: GroupedNotificationsFeed[]
+  /**
+   * The feed of the tab in view.
+   */
+  activeFeed: GroupedNotificationsFeed
+  check: UnreadCheck | undefined
+  /**
+   * The newest notification each feed's latest fresh load found, if it has
+   * loaded.
+   */
+  loadedNewestAt: FeedTimes
+  seenAt: Date | undefined
+  /**
+   * The newest notification each tab knew of while it was in view, as
+   * returned last time.
+   */
+  seenUpTo: FeedTimes
+}): {
+  unreadTabs: Set<GroupedNotificationsFeed>
+  /**
+   * The same object as was passed in when nothing has changed, so it can be
+   * kept in state.
+   */
+  seenUpTo: FeedTimes
+} {
+  const getNewestAt = (feed: GroupedNotificationsFeed) => {
+    const loaded = loadedNewestAt[feed]
+    const checked = check?.newestAt[feed]
+    if (loaded === undefined) return checked
+    if (checked === undefined) return loaded
+    return Math.max(loaded, checked)
+  }
+
+  let nextSeenUpTo = seenUpTo
+  const activeNewestAt = getNewestAt(activeFeed)
+  if (
+    activeNewestAt !== undefined &&
+    activeNewestAt > (seenUpTo[activeFeed] ?? -Infinity)
+  ) {
+    nextSeenUpTo = {...seenUpTo, [activeFeed]: activeNewestAt}
+  }
+
+  const unreadTabs = new Set<GroupedNotificationsFeed>()
+  if (seenAt) {
+    for (const feed of feeds) {
+      if (feed === activeFeed) continue
+      const newestAt = getNewestAt(feed)
+      const readUpTo = Math.max(
+        seenAt.getTime(),
+        nextSeenUpTo[feed] ?? -Infinity,
+      )
+      if (newestAt !== undefined && newestAt > readUpTo) {
+        unreadTabs.add(feed)
+      }
+    }
+  }
+  return {unreadTabs, seenUpTo: nextSeenUpTo}
+}
+
+/**
  * Up to when a load showed everything, in ms since the epoch. The request
  * time covers everything the page could hold, unless the server's clock is
  * ahead of ours, in which case its newest notification does.

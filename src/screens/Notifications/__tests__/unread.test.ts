@@ -3,7 +3,9 @@ import {describe, expect, it} from '@jest/globals'
 import {type UnreadCheck} from '#/state/queries/notifications/types'
 import {
   type FeedLoad,
+  type FeedTimes,
   getMarkReadAt,
+  getUnreadTabs,
   isRefreshPillVisible,
   nextSeenAt,
 } from '#/screens/Notifications/unread'
@@ -176,5 +178,172 @@ describe('isRefreshPillVisible', () => {
     expect(
       visible({top: {requestedAt: TOP_REQUESTED_AT, newestAt: undefined}}),
     ).toBe(true)
+  })
+})
+
+describe('getUnreadTabs', () => {
+  const FEEDS = Object.keys(NO_FEEDS) as (keyof typeof NO_FEEDS)[]
+  const BEFORE = SNAPSHOT.getTime() - 60_000
+  const AFTER = SNAPSHOT.getTime() + 60_000
+  const LATER = SNAPSHOT.getTime() + 120_000
+
+  function check(newestAt: Partial<UnreadCheck['newestAt']>): UnreadCheck {
+    return {
+      requestedAt: REQUESTED_AT,
+      // As after "All" has marked everything as seen
+      newestUnreadAt: NO_FEEDS,
+      newestAt: {...NO_FEEDS, ...newestAt},
+    }
+  }
+
+  function unread(
+    overrides: Partial<Parameters<typeof getUnreadTabs>[0]> = {},
+  ) {
+    return getUnreadTabs({
+      feeds: FEEDS,
+      activeFeed: 'all',
+      check: undefined,
+      loadedNewestAt: {},
+      seenAt: SNAPSHOT,
+      seenUpTo: {},
+      ...overrides,
+    })
+  }
+
+  it('marks a tab that has never loaded, from the unread check', () => {
+    const {unreadTabs} = unread({check: check({conversations: AFTER})})
+    expect([...unreadTabs]).toEqual(['conversations'])
+  })
+
+  it('counts notifications that are already marked as seen, as they are still tinted', () => {
+    const {unreadTabs} = unread({
+      check: check({all: AFTER, conversations: AFTER, followers: BEFORE}),
+    })
+    expect([...unreadTabs]).toEqual(['conversations'])
+  })
+
+  it('marks a loaded tab with notifications newer than the snapshot', () => {
+    const {unreadTabs} = unread({
+      activeFeed: 'conversations',
+      loadedNewestAt: {all: AFTER, conversations: AFTER},
+    })
+    expect([...unreadTabs]).toEqual(['all'])
+  })
+
+  it('takes the newer of the loaded tab and the unread check', () => {
+    expect(
+      unread({
+        loadedNewestAt: {activity: BEFORE},
+        check: check({activity: AFTER}),
+      }).unreadTabs.has('activity'),
+    ).toBe(true)
+    expect(
+      unread({
+        loadedNewestAt: {activity: AFTER},
+        check: check({activity: BEFORE}),
+      }).unreadTabs.has('activity'),
+    ).toBe(true)
+  })
+
+  it('ignores notifications up to the snapshot', () => {
+    const {unreadTabs} = unread({
+      check: check({conversations: SNAPSHOT.getTime()}),
+      loadedNewestAt: {followers: BEFORE},
+    })
+    expect(unreadTabs.size).toBe(0)
+  })
+
+  it('marks nothing before there is a snapshot', () => {
+    const {unreadTabs} = unread({
+      seenAt: undefined,
+      check: check({conversations: AFTER}),
+    })
+    expect(unreadTabs.size).toBe(0)
+  })
+
+  it('never marks the tab in view', () => {
+    const {unreadTabs} = unread({
+      activeFeed: 'conversations',
+      check: check({conversations: AFTER}),
+    })
+    expect(unreadTabs.size).toBe(0)
+  })
+
+  it('counts new followers, even though their rows are not tinted', () => {
+    const {unreadTabs} = unread({check: check({followers: AFTER})})
+    expect([...unreadTabs]).toEqual(['followers'])
+  })
+
+  it('clears a tab once it has been in view, until something newer arrives', () => {
+    // Unread on "All"
+    let state = unread({check: check({conversations: AFTER})})
+    expect(state.unreadTabs.has('conversations')).toBe(true)
+
+    // Switching to it
+    state = unread({
+      activeFeed: 'conversations',
+      check: check({conversations: AFTER}),
+      loadedNewestAt: {conversations: AFTER},
+      seenUpTo: state.seenUpTo,
+    })
+    expect(state.seenUpTo.conversations).toBe(AFTER)
+
+    // Switching back
+    state = unread({
+      check: check({conversations: AFTER}),
+      loadedNewestAt: {conversations: AFTER},
+      seenUpTo: state.seenUpTo,
+    })
+    expect(state.unreadTabs.has('conversations')).toBe(false)
+
+    // A newer reply
+    state = unread({
+      check: check({conversations: LATER}),
+      loadedNewestAt: {conversations: AFTER},
+      seenUpTo: state.seenUpTo,
+    })
+    expect(state.unreadTabs.has('conversations')).toBe(true)
+  })
+
+  it('counts what arrives while a tab is in view as seen there', () => {
+    let state = unread({
+      activeFeed: 'conversations',
+      loadedNewestAt: {conversations: AFTER},
+    })
+    // Offered by the "Refresh" pill, but not loaded
+    state = unread({
+      activeFeed: 'conversations',
+      check: check({conversations: LATER}),
+      loadedNewestAt: {conversations: AFTER},
+      seenUpTo: state.seenUpTo,
+    })
+    state = unread({
+      check: check({conversations: LATER}),
+      loadedNewestAt: {conversations: AFTER},
+      seenUpTo: state.seenUpTo,
+    })
+    expect(state.unreadTabs.has('conversations')).toBe(false)
+  })
+
+  it('stops marking a tab once pull-to-refresh moves the snapshot past it', () => {
+    const args = {
+      activeFeed: 'conversations',
+      check: check({all: AFTER}),
+    } as const
+    expect(unread(args).unreadTabs.has('all')).toBe(true)
+    expect(
+      unread({...args, seenAt: new Date(AFTER)}).unreadTabs.has('all'),
+    ).toBe(false)
+  })
+
+  it('keeps how far each tab has been seen when nothing new has arrived', () => {
+    const seenUpTo: FeedTimes = {all: AFTER}
+    expect(unread({loadedNewestAt: {all: AFTER}, seenUpTo}).seenUpTo).toBe(
+      seenUpTo,
+    )
+    // Nor goes backwards, e.g. after the newest notification is deleted
+    expect(unread({loadedNewestAt: {all: BEFORE}, seenUpTo}).seenUpTo).toBe(
+      seenUpTo,
+    )
   })
 })
