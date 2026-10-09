@@ -416,7 +416,7 @@ function ListImpl<ItemT>(
           styles.parentTreeVisibilityDetector
         }
       />
-      <Layout.Center ignoreScrollbarOffset={disableFullWindowScroll}>
+      <Layout.Center>
         <View
           ref={containerRef}
           style={[
