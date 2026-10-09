@@ -44,7 +44,7 @@ import {EnvelopeNotification_Filled_Corner2_Rounded as EnvelopeNotificationIcon}
 import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE, IS_WEB} from '#/env'
+import {IS_NATIVE} from '#/env'
 import type * as bsky from '#/types/bsky'
 
 type Row =
@@ -232,11 +232,10 @@ export function PageList({
         <List
           ref={listRef}
           testID={`notificationsList-${feed}`}
-          style={a.flex_1}
+          style={[a.flex_1]}
           onLayout={event => setListHeight(event.nativeEvent.layout.height)}
           onScrolledDownChange={onScrolledDownChange}
           headerOffset={headerOffset}
-          {...(IS_WEB ? {disableFullWindowScroll: true} : {})}
           data={rows}
           keyExtractor={(row: Row) => row.key}
           renderItem={({item: row}: {item: Row}) => {
