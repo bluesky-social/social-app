@@ -14,6 +14,17 @@ export function listenSoftReset(fn: () => void): UnlistenFn {
   return () => emitter.off('soft-reset', fn)
 }
 
+/**
+ * The user opened the app from a notification push, other than a chat one.
+ */
+export function emitPushNotificationOpened() {
+  emitter.emit('push-notification-opened')
+}
+export function listenPushNotificationOpened(fn: () => void): UnlistenFn {
+  emitter.on('push-notification-opened', fn)
+  return () => emitter.off('push-notification-opened', fn)
+}
+
 export function emitSessionDropped() {
   emitter.emit('session-dropped')
 }
