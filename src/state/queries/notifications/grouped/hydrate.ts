@@ -1,3 +1,5 @@
+import {type DidString} from '@atproto/syntax'
+
 import {
   type GroupedNotificationsPage,
   isNonEmpty,
@@ -301,8 +303,11 @@ function resolveActors(
 /**
  * Each item's actor DID, resolved or not, without duplicates or the viewer.
  */
-function uniqueActorDids(items: {actor: string}[], ctx: Context): string[] {
-  const dids = new Set<string>()
+function uniqueActorDids(
+  items: {actor: DidString}[],
+  ctx: Context,
+): DidString[] {
+  const dids = new Set<DidString>()
   for (const {actor: did} of items) {
     if (did !== ctx.viewerDid) {
       dids.add(did)
