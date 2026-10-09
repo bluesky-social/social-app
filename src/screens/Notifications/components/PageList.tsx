@@ -2,7 +2,6 @@ import {useEffect, useEffectEvent, useRef, useState} from 'react'
 import {ActivityIndicator, View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
-import {useQueryClient} from '@tanstack/react-query'
 import {isToday} from 'date-fns'
 
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
@@ -12,13 +11,11 @@ import {cleanError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
 import {
-  refreshGroupedNotifications,
+  type GroupedNotificationsFeed,
+  type LoadedGroupedNotificationsPage,
+  type NotificationView,
   useGroupedNotificationsQuery,
 } from '#/state/queries/notifications/grouped'
-import {
-  type GroupedNotificationsFeed,
-  type NotificationView,
-} from '#/state/queries/notifications/grouped/types'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -26,6 +23,7 @@ import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {NotificationItem} from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
+import {type SeenAtMode} from '#/screens/Notifications/unread'
 import {atoms as a, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
@@ -44,36 +42,6 @@ type Row =
   | {type: 'loadMoreError'; key: string}
 
 /**
- * A load of a tab's notifications, reported so the screen can snapshot
- * `seenAt` and mark notifications as seen.
- */
-export type PageLoad = {
-  feed: GroupedNotificationsFeed
-  /**
-   * The server's `seenAt` at the time of the request.
-   */
-  serverSeenAt: string | undefined
-  /**
-   * When the response arrived; everything up to here has been shown.
-   */
-  fetchedAt: number
-}
-
-/**
- * How a requested load updates the screen's `seenAt` snapshot:
- *
- * - `server`: from the server's `seenAt`, so anything new since the last
- *   visit is tinted.
- * - `cleared`: from when the load arrived, so everything shown counts as
- *   seen. This is what pull-to-refresh does.
- * - `kept`: unchanged, so rows that were already tinted stay tinted, and
- *   anything new is tinted alongside them.
- *
- * In every mode, the load also marks what it showed as seen on the server.
- */
-export type SeenAtMode = 'server' | 'cleared' | 'kept'
-
-/**
  * One tab of the notifications pager: the grouped notifications for `feed`,
  * split into "Today" and "Earlier".
  */
@@ -82,8 +50,8 @@ export function PageList({
   pageIndex,
   headerOffset,
   seenAt,
-  onLoad,
-  requestSnapshot,
+  onFirstLoad,
+  refresh,
   onEmptyChange,
 }: {
   feed: GroupedNotificationsFeed
@@ -94,12 +62,19 @@ export function PageList({
    * the unread tint doesn't change while the screen is open.
    */
   seenAt?: Date
-  onLoad?: (load: PageLoad) => void
   /**
-   * Asks the screen to update its `seenAt` snapshot from this feed's next
-   * load, before refreshing it.
+   * Called with the feed's first page whenever it changes, so the screen can
+   * take its `seenAt` snapshot from the feed's first load.
    */
-  requestSnapshot?: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
+  onFirstLoad: (
+    feed: GroupedNotificationsFeed,
+    page: LoadedGroupedNotificationsPage,
+  ) => void
+  /**
+   * Refetches the feed's first page, then updates the screen's `seenAt`
+   * snapshot from it.
+   */
+  refresh: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => Promise<void>
   /**
    * Called with whether this feed has loaded completely and has nothing in
    * it, e.g. so the screen can drop its tabs when there are no
@@ -108,7 +83,6 @@ export function PageList({
   onEmptyChange?: (isEmpty: boolean) => void
 }) {
   const {t: l} = useLingui()
-  const queryClient = useQueryClient()
   const initialNumToRender = useInitialNumToRender()
   const trackPostView = usePostViewTracking('Notifications')
   const isScreenFocused = useIsFocused()
@@ -125,7 +99,6 @@ export function PageList({
 
   const {
     data,
-    dataUpdatedAt,
     isFetched,
     isFetching,
     isError,
@@ -144,17 +117,12 @@ export function PageList({
     onEmptyChange?.(isEmpty)
   }, [isEmpty, onEmptyChange])
 
-  const serverSeenAt = data?.pages[0]?.seenAt
+  const top = data?.pages[0]
   useEffect(() => {
-    if (dataUpdatedAt > 0) {
-      onLoad?.({feed, serverSeenAt, fetchedAt: dataUpdatedAt})
+    if (top) {
+      onFirstLoad(feed, top)
     }
-  }, [feed, serverSeenAt, dataUpdatedAt, onLoad])
-
-  const refresh = async (mode: SeenAtMode) => {
-    requestSnapshot?.(feed, mode)
-    await refreshGroupedNotifications(queryClient, feed)
-  }
+  }, [feed, top, onFirstLoad])
 
   /*
    * Pressing the Notifications tab button, or the selected pill, scrolls the
@@ -165,7 +133,7 @@ export function PageList({
   const listRef = useRef<ListMethods>(null)
   const onSoftReset = useEffectEvent(() => {
     listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
-    void refresh('kept')
+    void refresh(feed, 'kept')
   })
   useEffect(() => {
     if (!isScreenFocused || !isActive) return
@@ -189,7 +157,7 @@ export function PageList({
   const onRefresh = async () => {
     setIsPTRing(true)
     try {
-      await refresh('cleared')
+      await refresh(feed, 'cleared')
     } catch (err) {
       logger.error('Failed to refresh grouped notifications', {
         safeMessage: err,
