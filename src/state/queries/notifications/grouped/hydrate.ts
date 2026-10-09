@@ -1,3 +1,5 @@
+import {type DidString} from '@atproto/syntax'
+
 import {
   type GroupedNotificationsPage,
   isNonEmpty,
@@ -162,6 +164,7 @@ function hydrateGroup(
   if (bsky.isType(defs.followGroup, kind)) {
     const actors = resolveActors(kind.items, ctx)
     if (!actors) return
+    const actorDids = uniqueActorDids(kind.items, ctx)
     /*
      * Only attribute the group to a starter pack when every follow came via
      * the same one, otherwise "via <pack>" would be wrong for some actors.
@@ -172,8 +175,8 @@ function hydrateGroup(
         ? ctx.starterPacks.get(packUri)
         : undefined
     return starterPack
-      ? {...base, type: 'follow', actors, starterPack}
-      : {...base, type: 'follow', actors}
+      ? {...base, type: 'follow', actors, actorDids, starterPack}
+      : {...base, type: 'follow', actors, actorDids}
   }
 
   if (bsky.isType(defs.subscribedPostGroup, kind)) {
@@ -295,6 +298,22 @@ function resolveActors(
     }
   }
   return nonEmpty(actors)
+}
+
+/**
+ * Each item's actor DID, resolved or not, without duplicates or the viewer.
+ */
+function uniqueActorDids(
+  items: {actor: DidString}[],
+  ctx: Context,
+): DidString[] {
+  const dids = new Set<DidString>()
+  for (const {actor: did} of items) {
+    if (did !== ctx.viewerDid) {
+      dids.add(did)
+    }
+  }
+  return [...dids]
 }
 
 /**

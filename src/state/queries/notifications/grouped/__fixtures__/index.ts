@@ -35,6 +35,16 @@ const DAY = 24 * HOUR
 const $group = 'app.bsky.notification.getGroupedNotifications' as const
 
 /**
+ * Followers in the `follow-many` group whose profiles aren't in
+ * `relatedViews`.
+ */
+export const UNRESOLVED_FOLLOWER_DIDS: DidString[] = [
+  'did:plc:follower6',
+  'did:plc:follower7',
+  'did:plc:follower8',
+]
+
+/**
  * A realistic `getGroupedNotifications` response covering every kind and
  * variant, plus three groups that hydration must drop: an unknown kind, a
  * like on a blocked post, and a like whose actors are all unresolvable.
@@ -484,10 +494,17 @@ export function createGroupedNotificationsFixture(
       id: 'follow-many',
       isRead: true,
       indexedAt: ago(1 * HOUR),
-      count: 5,
+      count: 8,
       kind: {
         $type: `${$group}#followGroup`,
-        items: [hana, theo, ines, omar, wren].map(p => ({actor: p.did})),
+        /*
+         * The last three have no profile in `relatedViews`, as when a group
+         * outgrows the views the API hydrates, so "Show more" loads them.
+         */
+        items: [
+          ...[hana, theo, ines, omar, wren].map(p => ({actor: p.did})),
+          ...UNRESOLVED_FOLLOWER_DIDS.map(did => ({actor: did})),
+        ],
       },
     },
     {

@@ -124,6 +124,20 @@ describe('moderateNotification', () => {
       expect(result?.type === 'follow' && result.actors[0]).toBe(second)
     })
 
+    it('removes hidden followers from the DIDs left to load', () => {
+      const follow = get('follow-many', 'follow')
+      const [first, ...rest] = follow.actors
+      const result = moderateNotification(
+        {...follow, actors: [blocked(first), ...rest]},
+        ARGS,
+      )
+      expect(result).toEqual({
+        ...follow,
+        actors: rest,
+        actorDids: follow.actorDids.filter(did => did !== first.did),
+      })
+    })
+
     it('drops the group when every actor is hidden', () => {
       const follow = get('follow-single', 'follow')
       expect(
