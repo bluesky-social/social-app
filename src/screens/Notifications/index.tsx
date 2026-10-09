@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useEffectEvent, useRef, useState} from 'react'
-import {View} from 'react-native'
+import {AppState, View} from 'react-native'
 import Animated, {
   interpolate,
   Reanimated3DefaultSpringConfig,
@@ -27,10 +27,7 @@ import {
   type LoadedGroupedNotificationsPage,
   refreshGroupedNotifications,
 } from '#/state/queries/notifications/grouped'
-import {
-  useUnreadNotifications,
-  useUnreadNotificationsApi,
-} from '#/state/queries/notifications/unread'
+import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
@@ -95,12 +92,13 @@ function NewNotificationsScreenInner() {
     {key: 'conversations', label: l`Replies`},
     {key: 'activity', label: l`Activity`},
   ]
-  const {seenAt, onFirstLoad, refresh, clearSeen} = useSessionSeenAt()
+  const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
+  const scrolledDownFeeds = useRef(new Set<GroupedNotificationsFeed>())
   useReturnToScreen({
     activeFeed,
+    scrolledDownFeeds,
     refresh,
-    clearSeen,
   })
   /*
    * With no notifications at all, every tab is empty, so the screen drops
@@ -173,6 +171,13 @@ function NewNotificationsScreenInner() {
             seenAt={seenAt}
             onFirstLoad={onFirstLoad}
             refresh={refresh}
+            onScrolledDownChange={isScrolledDown => {
+              if (isScrolledDown) {
+                scrolledDownFeeds.current.add(tab.key)
+              } else {
+                scrolledDownFeeds.current.delete(tab.key)
+              }
+            }}
             onEmptyChange={
               tab.key === 'all' ? setHasNoNotifications : undefined
             }
@@ -248,71 +253,87 @@ function useSessionSeenAt() {
     }
   }
 
-  /**
-   * Treats everything currently shown as seen.
-   */
-  const clearSeen = () => {
-    setSeenAt(new Date())
-  }
-
-  return {seenAt, onFirstLoad, refresh, clearSeen}
+  return {seenAt, onFirstLoad, refresh}
 }
 
 /**
- * Coming back to the screen after leaving it.
+ * Coming back to the screen: focusing it again, mounting it (web remounts
+ * the screen on every visit), or bringing the app back to the foreground
+ * while it's open. Each one asks the server for anything new and refreshes
+ * the tab in view, unless the user is partway down it, in which case only
+ * the unread check runs, so the list doesn't move under them.
  *
  * - From a screen pushed within the Notifications tab (e.g. a post), the
- *   unread tint is kept as it was, and anything new is loaded and tinted too.
- * - After switching to another tab, what was already seen is no longer
- *   tinted, and anything that arrived meanwhile is loaded and tinted.
+ *   unread tint is kept as it was, and anything new is tinted too.
+ * - After switching to another tab or leaving the app, the tint is taken
+ *   from the server again, so only what arrived meanwhile is tinted.
  */
 function useReturnToScreen({
   activeFeed,
+  scrolledDownFeeds,
   refresh,
-  clearSeen,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
+  /**
+   * Feeds whose list is scrolled down past the top.
+   */
+  scrolledDownFeeds: React.RefObject<Set<GroupedNotificationsFeed>>
   refresh: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => Promise<void>
-  clearSeen: () => void
 }) {
   const navigation = useNavigation()
-  const numUnread = useUnreadNotifications()
+  const queryClient = useQueryClient()
+  const unreadApi = useUnreadNotificationsApi()
   const isFocused = useIsFocused()
 
   /*
    * The tab navigator's own blur means the user switched tabs, rather than
    * pushing a screen within this tab's stack. Web's flat navigator has no tab
-   * level, so it always behaves as within the stack.
+   * level, so there only leaving the app counts.
    */
-  const hasLeftTab = useRef(false)
+  const hasLeft = useRef(false)
   useEffect(() => {
     return navigation.getParent()?.addListener('blur', () => {
-      hasLeftTab.current = true
+      hasLeft.current = true
     })
   }, [navigation])
 
   const onReturn = useEffectEvent(() => {
-    const hasNew = numUnread !== ''
     const feed = activeFeed.current
-    if (hasLeftTab.current) {
-      hasLeftTab.current = false
-      if (hasNew) {
-        void refresh(feed, 'server')
-      } else {
-        clearSeen()
-      }
-    } else if (hasNew) {
-      void refresh(feed, 'kept')
+    const mode = hasLeft.current ? 'server' : 'kept'
+    hasLeft.current = false
+    // Not loaded yet, so its first load is on the way
+    if (!getGroupedNotificationsTop(queryClient, feed)) return
+    if (scrolledDownFeeds.current.has(feed)) {
+      void unreadApi.checkUnread()
+    } else {
+      void refresh(feed, mode)
     }
   })
 
-  const wasFocused = useRef(isFocused)
+  // Mounting counts, as the cache can outlive the screen
+  const wasFocused = useRef(false)
   useEffect(() => {
     if (isFocused && !wasFocused.current) {
       onReturn()
     }
     wasFocused.current = isFocused
   }, [isFocused])
+
+  const onForeground = useEffectEvent(() => {
+    if (isFocused) {
+      onReturn()
+    }
+  })
+  useEffect(() => {
+    const subscription = AppState.addEventListener('change', state => {
+      if (state === 'background') {
+        hasLeft.current = true
+      } else if (state === 'active' && hasLeft.current) {
+        onForeground()
+      }
+    })
+    return () => subscription.remove()
+  }, [])
 }
 
 function NotificationsHeader({
