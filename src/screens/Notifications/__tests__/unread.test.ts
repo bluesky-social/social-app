@@ -29,17 +29,17 @@ describe('nextSeenAt', () => {
     ).toEqual(new Date(SERVER_SEEN_AT))
   })
 
-  it('clears up to the request in cleared mode', () => {
-    expect(
-      nextSeenAt({load: load(), mode: 'cleared', snapshot: SNAPSHOT}),
-    ).toEqual(new Date(REQUESTED_AT))
-  })
-
-  it('clears up to the newest notification when the server clock is ahead', () => {
-    const newestAt = REQUESTED_AT + 5000
-    expect(
-      nextSeenAt({load: load({newestAt}), mode: 'cleared', snapshot: SNAPSHOT}),
-    ).toEqual(new Date(newestAt))
+  it('moves an existing snapshot to the server seenAt in server mode, so only what arrived since the last load is tinted', () => {
+    // The previous load marked everything up to SERVER_SEEN_AT as seen
+    const olderSnapshot = new Date(Date.parse(SERVER_SEEN_AT) - 60_000)
+    const next = nextSeenAt({
+      load: load(),
+      mode: 'server',
+      snapshot: olderSnapshot,
+    })
+    expect(next).toEqual(new Date(SERVER_SEEN_AT))
+    // A notification from after the previous load stays unread
+    expect(next!.getTime()).toBeLessThan(REQUESTED_AT)
   })
 
   it('keeps the snapshot in kept mode, or without a mode', () => {
@@ -52,7 +52,7 @@ describe('nextSeenAt', () => {
   })
 
   it('takes the server seenAt when there is no snapshot yet, whatever the mode', () => {
-    for (const mode of ['server', 'cleared', 'kept', undefined] as const) {
+    for (const mode of ['server', 'kept', undefined] as const) {
       expect(nextSeenAt({load: load(), mode, snapshot: undefined})).toEqual(
         new Date(SERVER_SEEN_AT),
       )

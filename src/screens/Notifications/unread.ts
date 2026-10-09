@@ -7,16 +7,16 @@ import {type UnreadCheck} from '#/state/queries/notifications/types'
 /**
  * How a load updates the screen's `seenAt` snapshot:
  *
- * - `server`: from the server's `seenAt`, so anything new since the last
- *   visit is tinted.
- * - `cleared`: up to what the load showed, so everything shown counts as
- *   seen. This is what pull-to-refresh does.
+ * - `server`: from the server's `seenAt` as of the request, which is when the
+ *   previous load marked everything it showed as seen. So anything new since
+ *   then is tinted, and anything older isn't. This is what pull-to-refresh
+ *   does, as in v1.
  * - `kept`: unchanged, so rows that were already tinted stay tinted, and
  *   anything new is tinted alongside them.
  *
  * Until there's a snapshot, every load takes it from the server.
  */
-export type SeenAtMode = 'server' | 'cleared' | 'kept'
+export type SeenAtMode = 'server' | 'kept'
 
 /**
  * A fresh load of the first page of a feed. Its `seenAt` is the server's, as
@@ -47,8 +47,6 @@ export function nextSeenAt({
     case 'server':
       // Without a `seenAt`, everything counts as seen, as in v1
       return new Date(parseTime(load.seenAt) ?? getShownUpTo(load))
-    case 'cleared':
-      return new Date(getShownUpTo(load))
     default:
       return snapshot
   }
