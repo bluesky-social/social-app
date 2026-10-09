@@ -563,8 +563,9 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
 }
 
 /**
- * Like, reply and the post menu for the notification's post. Renders nothing
- * once the post has been deleted.
+ * Like, reply and the post menu for the notification's post. The menu carries
+ * the rest of the usual post controls: repost, quote, share and save. Renders
+ * nothing once the post has been deleted.
  */
 export function PostActions({post}: {post: PostView}) {
   const shadow = usePostShadow(post)
@@ -724,6 +725,7 @@ function PostActionsInner({
           timestamp={post.indexedAt}
           logContext="Post"
           forceGoogleTranslate={false}
+          includeControls
         />
       </View>
     </View>
