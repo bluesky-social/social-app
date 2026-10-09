@@ -116,4 +116,10 @@ export type GroupedNotificationsPage = {
   cursor?: string
   seenAt?: string
   notifications: NotificationView[]
+  /**
+   * When the newest group in the response was indexed, in ms since the
+   * epoch, counting groups that were dropped while hydrating. Undefined when
+   * the response had none.
+   */
+  newestAt: number | undefined
 }
