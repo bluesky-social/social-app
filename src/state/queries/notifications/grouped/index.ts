@@ -1,24 +1,20 @@
 import {AtUri} from '@atproto/syntax'
 import {
-  hasMutedWord,
-  moderatePost,
-  moderateProfile,
-  type ModerationOpts,
-} from '@bsky/sdk/moderation'
-import {
   type InfiniteData,
   type QueryClient,
   useInfiniteQuery,
 } from '@tanstack/react-query'
 
-import {labelIsHideableOffense} from '#/lib/moderation'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
 import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
 import {
+  moderateNotification,
+  type NotificationModerationArgs,
+} from '#/state/queries/notifications/grouped/moderate'
+import {
   type GroupedNotificationsFeed,
   type GroupedNotificationsPage,
-  isNonEmpty,
   type NotificationView,
 } from '#/state/queries/notifications/grouped/types'
 import {
@@ -168,9 +164,7 @@ export function useGroupedNotificationsQuery({
   return query
 }
 
-type SelectArgs = {
-  moderationOpts: ModerationOpts | undefined
-  hiddenReplyUris: Set<string>
+type SelectArgs = NotificationModerationArgs & {
   seenAtMs: number | undefined
 }
 
@@ -234,109 +228,6 @@ function selectNotification(
   if (!moderated || args.seenAtMs === undefined) return moderated
   const isRead = new Date(moderated.indexedAt).getTime() <= args.seenAtMs
   return isRead === moderated.isRead ? moderated : {...moderated, isRead}
-}
-
-function moderateNotification(
-  notification: NotificationView,
-  {moderationOpts, hiddenReplyUris}: SelectArgs,
-): NotificationView | undefined {
-  switch (notification.type) {
-    case 'like':
-    case 'repost':
-    case 'likeViaRepost':
-    case 'repostViaRepost':
-    case 'follow':
-    case 'generatorLike': {
-      const actors = notification.actors.filter(
-        actor => !isActorHidden(actor, moderationOpts),
-      )
-      if (actors.length === notification.actors.length) return notification
-      if (!isNonEmpty(actors)) return undefined
-      // `count` stays as the server's total, hidden actors included.
-      return {...notification, actors}
-    }
-    case 'multiPostLike':
-    case 'followBack':
-    case 'verified':
-    case 'unverified':
-    case 'starterPackJoined':
-    case 'contactMatch': {
-      return isActorHidden(notification.actor, moderationOpts)
-        ? undefined
-        : notification
-    }
-    case 'subscribedPost': {
-      const items = notification.items.filter(
-        item =>
-          !isActorHidden(item.actor, moderationOpts) &&
-          !hasMutedWordInPost(item.post, moderationOpts) &&
-          !isSubscribedPostHidden(item.post, moderationOpts),
-      )
-      if (items.length === notification.items.length) return notification
-      if (!isNonEmpty(items)) return undefined
-      return {...notification, items}
-    }
-    case 'reply':
-    case 'quote':
-    case 'mention': {
-      if (
-        notification.type === 'reply' &&
-        hiddenReplyUris.has(notification.post.uri)
-      ) {
-        return undefined
-      }
-      if (
-        moderationOpts &&
-        moderatePost(notification.post, moderationOpts).ui('contentList').filter
-      ) {
-        return undefined
-      }
-      return notification
-    }
-  }
-}
-
-/**
- * Mirrors the actor rules of the legacy `shouldFilterNotif`: hideable
- * offenses are always hidden, otherwise anyone the viewer follows is kept.
- */
-function isActorHidden(
-  actor: ProfileView,
-  moderationOpts: ModerationOpts | undefined,
-): boolean {
-  if (actor.labels?.some(labelIsHideableOffense)) return true
-  if (!moderationOpts) return false
-  if (actor.viewer?.following) return false
-  return moderateProfile(actor, moderationOpts).ui('contentList').filter
-}
-
-/**
- * Subscribed posts are someone else's new content, so their own labels apply
- * too. As with actors, posts by people the viewer follows are kept.
- */
-function isSubscribedPostHidden(
-  post: PostView,
-  moderationOpts: ModerationOpts | undefined,
-): boolean {
-  if (!moderationOpts || post.author.viewer?.following) return false
-  return moderatePost(post, moderationOpts).ui('contentList').filter
-}
-
-function hasMutedWordInPost(
-  post: PostView,
-  moderationOpts: ModerationOpts | undefined,
-): boolean {
-  if (!moderationOpts || !bsky.isType(app.bsky.feed.post, post.record)) {
-    return false
-  }
-  return hasMutedWord({
-    mutedWords: moderationOpts.prefs.mutedWords,
-    text: post.record.text,
-    facets: post.record.facets,
-    outlineTags: post.record.tags,
-    languages: post.record.langs,
-    actor: post.author,
-  })
 }
 
 /**
