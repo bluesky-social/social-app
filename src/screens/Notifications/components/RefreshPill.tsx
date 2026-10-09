@@ -79,7 +79,6 @@ export function RefreshPill({
         testID="notificationsRefreshPill"
         visible={visible}
         variant="new"
-        showArrow
         text={l({
           message: 'Refresh',
           comment:
