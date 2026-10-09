@@ -8,7 +8,6 @@ import {useQueryClient} from '@tanstack/react-query'
 import {useAccountSwitcher} from '#/lib/hooks/useAccountSwitcher'
 import {logger as notyLogger} from '#/lib/notifications/util'
 import {type NavigationProp} from '#/lib/routes/types'
-import {emitPushNotificationOpened} from '#/state/events'
 import {useCurrentConvoId} from '#/state/messages/current-convo-id'
 import {RQKEY as RQKEY_NOTIFS} from '#/state/queries/notifications/feed'
 import {invalidateCachedUnreadPage} from '#/state/queries/notifications/unread'
@@ -370,11 +369,6 @@ export function useNotificationsHandler() {
             payload.reason === 'reply'
           ) {
             void truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
-          }
-
-          // Notifications v2 refreshes itself, as it decides what's seen
-          if (!isChatNotificationPayload(payload)) {
-            emitPushNotificationOpened()
           }
 
           logger.debug('Notifications: handleNotification', {

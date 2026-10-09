@@ -9,8 +9,6 @@ import {type QueryClient} from '@tanstack/react-query'
 import chunk from 'lodash.chunk'
 
 import {labelIsHideableOffense} from '#/lib/moderation'
-import {isInGroupedFeed} from '#/state/queries/notifications/grouped/membership'
-import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {precacheProfile} from '../profile'
@@ -19,7 +17,6 @@ import {
   type FeedPage,
   type Notification,
   type NotificationType,
-  type UnreadCheck,
 } from './types'
 
 const GROUPABLE_REASONS = [
@@ -108,59 +105,6 @@ export async function fetchPage({
     },
     indexedAt,
   }
-}
-
-/**
- * Summarizes an unread check's page for the grouped notifications feeds; see
- * `UnreadCheck`.
- */
-export function summarizeUnreadCheck(
-  page: FeedPage,
-  requestedAt: number,
-): UnreadCheck {
-  const newestUnreadAt: UnreadCheck['newestUnreadAt'] = {
-    all: undefined,
-    'people-i-follow': undefined,
-    followers: undefined,
-    conversations: undefined,
-    activity: undefined,
-  }
-  const feeds = Object.keys(newestUnreadAt) as GroupedNotificationsFeed[]
-  for (const item of page.items) {
-    for (const notif of [item.notification, ...(item.additional ?? [])]) {
-      if (notif.isRead) continue
-      const indexedAt = Date.parse(notif.indexedAt)
-      for (const feed of feeds) {
-        if (
-          indexedAt > (newestUnreadAt[feed] ?? -Infinity) &&
-          isInGroupedFeed(feed, notif)
-        ) {
-          newestUnreadAt[feed] = indexedAt
-        }
-      }
-    }
-  }
-  return {requestedAt, newestUnreadAt}
-}
-
-/**
- * An unread check once everything indexed up to `seenAt` has been marked
- * read, as the next check would find it.
- */
-export function markUnreadCheckSeen(
-  check: UnreadCheck | undefined,
-  seenAt: number,
-): UnreadCheck | undefined {
-  if (!check) return check
-  const newestUnreadAt = {...check.newestUnreadAt}
-  for (const feed of Object.keys(
-    newestUnreadAt,
-  ) as GroupedNotificationsFeed[]) {
-    if ((newestUnreadAt[feed] ?? -Infinity) <= seenAt) {
-      newestUnreadAt[feed] = undefined
-    }
-  }
-  return {...check, newestUnreadAt}
 }
 
 // internal methods

@@ -125,23 +125,6 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
-    case Features.NotificationsV2Enable:
-      return {
-        key: feature,
-        name: i18n._(
-          msg({
-            message: 'Redesigned notifications',
-            comment: 'Name for a feature flag',
-          }),
-        ),
-        description: i18n._(
-          msg({
-            message:
-              'Notifications sorted into tabs – people you follow, followers, replies and activity.',
-            comment: 'Description of a feature flag (Redesigned notifications)',
-          }),
-        ),
-      }
     default:
       return null
   }

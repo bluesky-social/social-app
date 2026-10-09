@@ -23,7 +23,6 @@ import {Icons} from './Icons'
 import {Links} from './Links'
 import {Menus} from './Menus'
 import {NewPostsPill} from './NewPostsPill'
-import {Notifications} from './Notifications'
 import {Settings} from './Settings'
 import {Shadows} from './Shadows'
 import {Spacing} from './Spacing'
@@ -127,7 +126,6 @@ export default function Storybook() {
             <Toasts />
             <Buttons />
             <NewPostsPill />
-            <Notifications />
             <Forms />
             <Typography />
             <Spacing />

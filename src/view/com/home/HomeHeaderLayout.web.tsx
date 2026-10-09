@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useSession} from '#/state/session'
-import {useShellHeaderLayout} from '#/state/shell/shell-layout'
+import {useShellLayout} from '#/state/shell/shell-layout'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {Logo} from '#/view/icons/Logo'
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
@@ -36,7 +36,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const t = useTheme()
-  const {onLayout} = useShellHeaderLayout()
+  const {headerHeight} = useShellLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -73,7 +73,9 @@ function HomeHeaderLayoutDesktopAndTablet({
       {tabBarAnchor}
       <Layout.Center
         style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}
-        onLayout={onLayout}>
+        onLayout={e => {
+          headerHeight.set(e.nativeEvent.layout.height)
+        }}>
         {children}
       </Layout.Center>
     </>

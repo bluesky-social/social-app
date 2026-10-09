@@ -12,28 +12,18 @@ export const moderationOptsContext = createContext<ModerationOpts | undefined>(
 )
 moderationOptsContext.displayName = 'ModerationOptsContext'
 
-/**
- * Replaces the viewer's moderation settings for everything below it. Used by
- * the moderation playground (`DebugMod`) to render content under made-up
- * settings.
- */
+// used in the moderation state devtool
 export const moderationOptsOverrideContext = createContext<
   ModerationOpts | undefined
 >(undefined)
 moderationOptsOverrideContext.displayName = 'ModerationOptsOverrideContext'
 
-/**
- * The viewer's moderation settings, or the nearest override. The override is
- * read here rather than in `Provider`, because `Provider` sits at the root,
- * above any override.
- */
 export function useModerationOpts() {
-  const override = useContext(moderationOptsOverrideContext)
-  const moderationOpts = useContext(moderationOptsContext)
-  return override ?? moderationOpts
+  return useContext(moderationOptsContext)
 }
 
 export function Provider({children}: React.PropsWithChildren<{}>) {
+  const override = useContext(moderationOptsOverrideContext)
   const {currentAccount} = useSession()
   const prefs = usePreferencesQuery()
   const {labelDefs} = useLabelDefinitions()
@@ -42,6 +32,9 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const userDid = currentAccount?.did
   const moderationPrefs = prefs.data?.moderationPrefs
   const value = useMemo<ModerationOpts | undefined>(() => {
+    if (override) {
+      return override
+    }
     if (!moderationPrefs) {
       return undefined
     }
@@ -64,7 +57,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       },
       labelDefs,
     }
-  }, [userDid, labelDefs, moderationPrefs, hiddenPosts])
+  }, [override, userDid, labelDefs, moderationPrefs, hiddenPosts])
 
   return (
     <moderationOptsContext.Provider value={value}>

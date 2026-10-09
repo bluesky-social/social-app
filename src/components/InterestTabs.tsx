@@ -213,7 +213,7 @@ export function InterestTabs({
           decelerationRate="fast"
           snapToOffsets={
             tabOffsets.filter(o => !!o).length === interests.length
-              ? tabOffsets.map(o => o.x - gutterWidth)
+              ? tabOffsets.map(o => o.x - tokens.space.xl)
               : undefined
           }
           onLayout={evt => setTotalWidth(evt.nativeEvent.layout.width)}
