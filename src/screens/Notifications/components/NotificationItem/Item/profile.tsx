@@ -1,9 +1,11 @@
+import {useState} from 'react'
 import {
   type GestureResponderEvent,
   Pressable,
   StyleSheet,
   View,
 } from 'react-native'
+import Animated, {FadeIn, useReducedMotion} from 'react-native-reanimated'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -33,6 +35,7 @@ import {
 } from '#/components/icons/Chevron'
 import {shouldShowKnownFollowers} from '#/components/KnownFollowers'
 import {InlineLinkText, Link, useLink} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {useStarterPackLink} from '#/components/StarterPack/StarterPackCard'
 import * as Toast from '#/components/Toast'
@@ -417,30 +420,119 @@ export function ExpandChevron({expanded}: {expanded: boolean}) {
 }
 
 /**
+ * How long each row of an `ActorList` takes to fade in, in ms.
+ */
+const ROW_FADE_DURATION = 150
+/**
+ * How long each row waits after the one above starts fading in, in ms.
+ */
+const ROW_STAGGER = 25
+/**
+ * Rows past this many fade in together, so a long list doesn't drag on.
+ */
+const MAX_STAGGERED_ROWS = 8
+
+/**
  * The expanded list of everyone in a grouped notification, each linking to
  * their profile with a follow button.
+ *
+ * Rows fade in one after another as they mount. Rows appended later, e.g. by
+ * "Show more", start a stagger of their own rather than waiting on the rows
+ * above.
  */
 export function ActorList({
   actors,
   starterPack,
+  children,
 }: {
   actors: bsky.profile.AnyProfileView[]
   /**
    * Shown as each actor's second line if they have no mutual followers.
    */
   starterPack?: bsky.starterPack.AnyStarterPackView
+  /**
+   * Rendered after the actors, e.g. `ShowMoreActorsButton`.
+   */
+  children?: React.ReactNode
 }) {
+  const reducedMotion = useReducedMotion()
+  const [prevLength, setPrevLength] = useState(actors.length)
+  // The index of the first row in the latest batch to mount
+  const [batchStart, setBatchStart] = useState(0)
+  if (actors.length !== prevLength) {
+    setPrevLength(actors.length)
+    setBatchStart(prevLength)
+  }
+
   return (
     <View>
-      {actors.map((actor, index) => (
-        <ActorListItem
-          key={actor.did}
-          profile={actor}
-          starterPack={starterPack}
-          isLast={index === actors.length - 1}
-        />
-      ))}
+      {actors.map((actor, index) => {
+        const step = Math.min(
+          Math.max(index - batchStart, 0),
+          MAX_STAGGERED_ROWS,
+        )
+        return (
+          <Animated.View
+            key={actor.did}
+            entering={
+              reducedMotion
+                ? undefined
+                : FadeIn.duration(ROW_FADE_DURATION).delay(step * ROW_STAGGER)
+            }>
+            <ActorListItem
+              profile={actor}
+              starterPack={starterPack}
+              isLast={index === actors.length - 1 && !children}
+            />
+          </Animated.View>
+        )
+      })}
+      {children}
     </View>
+  )
+}
+
+/**
+ * Ends an `ActorList` that has more actors to load, showing a spinner while
+ * they do.
+ */
+export function ShowMoreActorsButton({
+  isLoading,
+  onPress,
+}: {
+  isLoading: boolean
+  onPress: () => void
+}) {
+  const t = useTheme()
+  const {t: l} = useLingui()
+
+  return (
+    <Button
+      label={l`Show more`}
+      accessibilityHint={l`Loads more people into this list`}
+      aria-busy={isLoading}
+      disabled={isLoading}
+      hitSlop={HITSLOP_10}
+      onPress={onPress}
+      style={[a.self_start, a.gap_xs, a.px_lg, a.pt_xs]}>
+      {({hovered, pressed}) => (
+        <>
+          {isLoading && (
+            <Loader size="xs" style={[t.atoms.text_contrast_medium]} />
+          )}
+          <Text
+            style={[
+              a.text_sm,
+              a.font_semi_bold,
+              a.leading_snug,
+              isLoading ? t.atoms.text_contrast_medium : t.atoms.text_link,
+              (hovered || pressed) && !isLoading && a.underline,
+            ]}>
+            <Trans>Show more</Trans>
+          </Text>
+        </>
+      )}
+    </Button>
   )
 }
 

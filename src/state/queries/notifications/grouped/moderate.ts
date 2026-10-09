@@ -50,7 +50,6 @@ export function moderateNotification(
     case 'repost':
     case 'likeViaRepost':
     case 'repostViaRepost':
-    case 'follow':
     case 'generatorLike': {
       const actors = notification.actors.filter(
         actor => !isActorHidden(actor, moderationOpts),
@@ -59,6 +58,27 @@ export function moderateNotification(
       if (!isNonEmpty(actors)) return undefined
       // `count` stays as the server's total, hidden actors included.
       return {...notification, actors}
+    }
+    case 'follow': {
+      const hiddenDids = new Set(
+        notification.actors
+          .filter(actor => isActorHidden(actor, moderationOpts))
+          .map(actor => actor.did),
+      )
+      if (hiddenDids.size === 0) return notification
+      const actors = notification.actors.filter(
+        actor => !hiddenDids.has(actor.did),
+      )
+      if (!isNonEmpty(actors)) return undefined
+      return {
+        ...notification,
+        actors,
+        /*
+         * Hidden actors leave `actorDids` too, or "Show more" would load them
+         * only to hide them again.
+         */
+        actorDids: notification.actorDids.filter(did => !hiddenDids.has(did)),
+      }
     }
     case 'multiPostLike':
     case 'followBack':
@@ -102,10 +122,11 @@ export function moderateNotification(
 }
 
 /**
- * Mirrors the actor rules of the legacy `shouldFilterNotif`: hideable
- * offenses are always hidden, otherwise anyone the viewer follows is kept.
+ * Whether an actor is left out of notification lists. Mirrors the actor rules
+ * of the legacy `shouldFilterNotif`: hideable offenses are always hidden,
+ * otherwise anyone the viewer follows is kept.
  */
-function isActorHidden(
+export function isActorHidden(
   actor: ProfileView,
   moderationOpts: ModerationOpts | undefined,
 ): boolean {
