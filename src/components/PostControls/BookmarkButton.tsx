@@ -85,11 +85,13 @@ export function usePostBookmark({
         logContext,
         feedDescriptor,
       })
+      return true
     } catch (e: any) {
       const {raw, clean} = cleanError(e)
       toast.show(clean || raw || e, {
         type: 'error',
       })
+      return false
     }
   }
 
@@ -126,11 +128,15 @@ export function usePostBookmark({
     }
   }
 
-  const toggleBookmark = async () => {
+  /**
+   * Resolves with `'saved'` once a save succeeds, for callers that confirm it
+   * themselves. Removing confirms with its own toast.
+   */
+  const toggleBookmark = async (): Promise<'saved' | undefined> => {
     if (isBookmarked) {
       await remove()
-    } else {
-      await save()
+    } else if (await save()) {
+      return 'saved'
     }
   }
 

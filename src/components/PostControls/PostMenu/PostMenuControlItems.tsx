@@ -72,9 +72,19 @@ export function PostMenuControlItems({
       showBlockedToast()
       return
     }
+    /*
+     * Unlike the repost button, the menu has closed by the time this lands,
+     * so a toast confirms it.
+     */
     try {
       if (isReposted) {
         await queueUnrepost()
+        Toast.show(
+          l({
+            message: 'Repost removed',
+            context: 'Toast after undoing a repost',
+          }),
+        )
       } else {
         haptics.confirm()
         sendInteraction({
@@ -84,6 +94,9 @@ export function PostMenuControlItems({
           reqId: postReqId,
         })
         await queueRepost()
+        Toast.show(l({message: 'Reposted', context: 'Toast after reposting'}), {
+          type: 'success',
+        })
       }
     } catch (err) {
       const e = err as Error
@@ -141,6 +154,12 @@ export function PostMenuControlItems({
     })
   }
 
+  const onBookmark = async () => {
+    if ((await toggleBookmark()) === 'saved') {
+      Toast.show(l`Added to saved posts`, {type: 'success'})
+    }
+  }
+
   const repostLabel = isReposted
     ? l`Undo repost`
     : l({message: 'Repost', context: 'action'})
@@ -181,7 +200,7 @@ export function PostMenuControlItems({
         <Menu.Item
           testID="postDropdownBookmarkBtn"
           label={bookmarkLabel}
-          onPress={() => requireAuth(toggleBookmark)}>
+          onPress={() => requireAuth(() => void onBookmark())}>
           <Menu.ItemText>{bookmarkLabel}</Menu.ItemText>
           <Menu.ItemIcon
             icon={isBookmarked ? BookmarkFilledIcon : BookmarkIcon}
