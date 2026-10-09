@@ -19,7 +19,6 @@ import {
   type GroupedNotificationsFeed,
   type NotificationView,
 } from '#/state/queries/notifications/grouped/types'
-import {useUnreadNotifications} from '#/state/queries/notifications/unread'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
@@ -112,7 +111,6 @@ export function PageList({
   const queryClient = useQueryClient()
   const initialNumToRender = useInitialNumToRender()
   const trackPostView = usePostViewTracking('Notifications')
-  const numUnread = useUnreadNotifications()
   const isScreenFocused = useIsFocused()
   const isActive = usePager().selectedPage === pageIndex
   const bottomBarOffset = useBottomBarOffset()
@@ -161,14 +159,13 @@ export function PageList({
   /*
    * Pressing the Notifications tab button, or the selected pill, scrolls the
    * visible tab back to the top and loads anything new, keeping the unread
-   * tint.
+   * tint. It always asks the server, as the unread count only updates on a
+   * poll and may not know about new notifications yet.
    */
   const listRef = useRef<ListMethods>(null)
   const onSoftReset = useEffectEvent(() => {
     listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
-    if (numUnread !== '') {
-      void refresh('kept')
-    }
+    void refresh('kept')
   })
   useEffect(() => {
     if (!isScreenFocused || !isActive) return
