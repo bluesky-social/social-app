@@ -27,7 +27,10 @@ import {AvatarStack} from '#/components/AvatarStack'
 import {Button} from '#/components/Button'
 import {canBeMessaged} from '#/components/dms/util'
 import {StarterPack_Stroke2_Corner0_Rounded as StarterPackIcon} from '#/components/icons/brands/StarterPack'
-import {ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon} from '#/components/icons/Chevron'
+import {
+  ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
+  ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
+} from '#/components/icons/Chevron'
 import {shouldShowKnownFollowers} from '#/components/KnownFollowers'
 import {InlineLinkText, Link, useLink} from '#/components/Link'
 import {ProfileBadges} from '#/components/ProfileBadges'
@@ -395,19 +398,14 @@ export function StarterPackCard({
 /**
  * The trailing chevron of an expandable row. Points down when collapsed and
  * up when expanded. Decorative: the row itself handles the press.
+ *
+ * Swaps icons rather than rotating one, since react-native-svg applies a
+ * transform on the icon to its contents too, rotating the path out of view.
  */
 export function ExpandChevron({expanded}: {expanded: boolean}) {
   const t = useTheme()
-  return (
-    <ChevronDownIcon
-      size="md"
-      style={[
-        a.transition_transform,
-        t.atoms.text_contrast_high,
-        {transform: [{rotate: expanded ? '180deg' : '0deg'}]},
-      ]}
-    />
-  )
+  const Icon = expanded ? ChevronUpIcon : ChevronDownIcon
+  return <Icon size="md" style={[t.atoms.text_contrast_high]} />
 }
 
 /**
