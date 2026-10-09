@@ -1,5 +1,5 @@
 import {useCallback, useEffect, useEffectEvent, useRef, useState} from 'react'
-import {AppState, type LayoutChangeEvent, View} from 'react-native'
+import {type LayoutChangeEvent, View} from 'react-native'
 import Animated, {
   interpolate,
   Reanimated3DefaultSpringConfig,
@@ -17,6 +17,7 @@ import {
 } from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
+import {onAppReturnedFromBackground} from '#/lib/appState'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -305,9 +306,9 @@ function useSessionSeenAt() {
 
 /**
  * Coming back to the screen: focusing it again, mounting it (web remounts
- * the screen on every visit), or, while it's open, bringing the app back to
- * the foreground or opening a push. Each one checks the tab in view for
- * anything new, with `checkLatest`.
+ * the screen on every visit), or, while it's open, coming back to the app
+ * after a while in the background or opening a push. Each one checks the tab
+ * in view for anything new, with `checkLatest`.
  *
  * - From a screen pushed within the Notifications tab (e.g. a post), the
  *   unread tint is kept as it was, and anything new is tinted too.
@@ -351,29 +352,22 @@ function useReturnToScreen({
     wasFocused.current = isFocused
   }, [isFocused])
 
-  const onForeground = useEffectEvent(() => {
+  const onLeftApp = useEffectEvent(() => {
+    hasLeft.current = true
     if (isFocused) {
       onReturn()
     }
   })
   useEffect(() => {
-    const subscription = AppState.addEventListener('change', state => {
-      if (state === 'background') {
-        hasLeft.current = true
-      } else if (state === 'active' && hasLeft.current) {
-        onForeground()
-      }
-    })
+    // Short trips away, e.g. to a share sheet or photo picker, don't count
+    const appReturn = onAppReturnedFromBackground(() => onLeftApp())
     /*
      * Opening a push leaves the app too, even when it never went to the
      * background, e.g. from Notification Center on iOS.
      */
-    const unlistenPush = listenPushNotificationOpened(() => {
-      hasLeft.current = true
-      onForeground()
-    })
+    const unlistenPush = listenPushNotificationOpened(() => onLeftApp())
     return () => {
-      subscription.remove()
+      appReturn.remove()
       unlistenPush()
     }
   }, [])
