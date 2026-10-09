@@ -63,8 +63,9 @@ export function FollowedYouHeader() {
 /**
  * One person in the Followers tab: a compact profile row with how they found
  * you (a starter pack), who you have in common, or their handle, and a
- * follow button. There's no timestamp or unread tint, since the tab is a list
- * of people rather than a feed. Someone you already follow, e.g. from a
+ * follow button. There's no timestamp, since the tab is a list of people
+ * rather than a feed, but new followers are tinted as unread, the same as
+ * their follows on the other tabs. Someone you already follow, e.g. from a
  * follow-back, still shows up, with the button reading "Following". Pressing
  * the row opens their profile.
  */
@@ -114,7 +115,7 @@ export function FollowerNotification({
   return (
     <Item.Root
       href={makeProfileLink(profile)}
-      isRead
+      isRead={notification.isRead}
       // Lets screen readers reach the follow button
       accessible={false}
       onBeforePress={() => unstableCacheProfileView(queryClient, profile)}
