@@ -191,14 +191,16 @@ export function LikeViaRepostNotification({
   const others = notification.count - 1
 
   /*
-   * No `othersHref`: the post's liked-by list also has likes that didn't
-   * come via the viewer's repost, so it isn't a list of these people.
+   * The post's liked-by list also has likes that didn't come via the
+   * viewer's repost, but it's the closest list there is, and a "+N" that goes
+   * nowhere looks broken.
    */
   return (
     <PostReactionRow
       notification={notification}
       icon={LikeRepostIcon}
       tone="like"
+      othersHref={makePostLink(notification.post, 'liked-by')}
       label={
         others > 0
           ? l`${name} and ${plural(others, {
@@ -240,12 +242,13 @@ export function RepostViaRepostNotification({
   const name = Item.useDisplayName(actor)
   const others = notification.count - 1
 
-  // No `othersHref`, for the same reason as `LikeViaRepostNotification`
+  // A superset of these people, as in `LikeViaRepostNotification`
   return (
     <PostReactionRow
       notification={notification}
       icon={RepostRepostIcon}
       tone="repost"
+      othersHref={makePostLink(notification.post, 'reposted-by')}
       label={
         others > 0
           ? l`${name} and ${plural(others, {
