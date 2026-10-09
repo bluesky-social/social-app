@@ -19,7 +19,11 @@ import {unstableCacheProfileView} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
 import {Link} from '#/view/com/util/Link'
 import {PostMeta} from '#/view/com/util/PostMeta'
-import {ThreadItemPostNumber} from '#/screens/PostThread/components/ThreadItemPostNumber'
+import {
+  POST_NUMBER_INLINE_OFFSET,
+  ThreadItemPostNumber,
+  useHasThreadItemPostNumber,
+} from '#/screens/PostThread/components/ThreadItemPostNumber'
 import {atoms as a, useTheme} from '#/alf'
 import {useInteractionState} from '#/components/hooks/useInteractionState'
 import {GalleryBleed} from '#/components/images/Gallery'
@@ -329,6 +333,8 @@ export function QuoteEmbed({
   const itemUrip = new AtUri(quote.uri)
   const itemHref = makeProfileLink(quote.author, 'post', itemUrip.rkey)
   const itemTitle = `Post by ${quote.author.handle}`
+  const postNumbering = embed.view
+  const showPostNumber = useHasThreadItemPostNumber(embed.view)
 
   const richText = useMemo(() => {
     if (!bsky.isType(app.bsky.feed.post, quote.record)) return undefined
@@ -364,7 +370,6 @@ export function QuoteEmbed({
         timestamp={quote.indexedAt}
         linkDisabled
       />
-      <ThreadItemPostNumber inline={false} value={embed.view} />
       {moderation ? (
         <PostAlerts
           post={quote}
@@ -372,14 +377,22 @@ export function QuoteEmbed({
           style={[a.py_xs]}
         />
       ) : null}
-      {richText ? (
+      {richText?.text ? (
         <RichText
           value={richText}
           style={a.text_md}
           numberOfLines={20}
           disableLinks
+          suffixOffset={POST_NUMBER_INLINE_OFFSET}
+          suffix={
+            showPostNumber ? (
+              <ThreadItemPostNumber value={postNumbering} />
+            ) : undefined
+          }
         />
-      ) : null}
+      ) : (
+        <ThreadItemPostNumber inline={false} value={postNumbering} />
+      )}
       {quote.embed && (
         <Embed
           embed={quote.embed}
