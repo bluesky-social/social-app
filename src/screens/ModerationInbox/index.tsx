@@ -217,6 +217,7 @@ function YourReports() {
       contentContainerStyle={isEmpty || isLoading ? a.flex_grow : undefined}
       ListFooterComponent={
         <ListFooter
+          style={a.border_t_0}
           isFetchingNextPage={reportsQuery.isFetchingNextPage}
           hasNextPage={reportsQuery.hasNextPage}
           error={cleanError(reportsQuery.error)}
@@ -345,6 +346,7 @@ function YourAccount() {
       contentContainerStyle={isEmpty ? a.flex_grow : undefined}
       ListFooterComponent={
         <ListFooter
+          style={a.border_t_0}
           isFetchingNextPage={actionedSubjectsQuery.isFetchingNextPage}
           hasNextPage={actionedSubjectsQuery.hasNextPage}
           error={cleanError(actionedSubjectsQuery.error)}
