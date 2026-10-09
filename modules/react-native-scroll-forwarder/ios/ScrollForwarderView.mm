@@ -98,7 +98,7 @@ static const CGFloat kMinimumVelocity = 5.0;
   const auto &newViewProps = *std::static_pointer_cast<ScrollForwarderViewProps const>(props);
 
   if (oldViewProps.scrollViewTag != newViewProps.scrollViewTag) {
-    [self tryFindScrollView];
+    [self findScrollViewWithTag:newViewProps.scrollViewTag];
   }
   
   if (oldViewProps.refreshing != newViewProps.refreshing) {
@@ -185,6 +185,12 @@ static const CGFloat kMinimumVelocity = 5.0;
 }
 
 - (void)handlePan:(UIPanGestureRecognizer *)gesture {
+  // The lookup in updateProps can miss if the list wasn't attached to the window yet, so retry when a pan starts
+  if (gesture.state == UIGestureRecognizerStateBegan && !_svcv) {
+    const auto &props = *std::static_pointer_cast<ScrollForwarderViewProps const>(_props);
+    [self findScrollViewWithTag:props.scrollViewTag];
+  }
+
   if (!_svcv) return;
   
   UIScrollView *sv = _svcv.scrollView;
@@ -294,49 +300,19 @@ static const CGFloat kMinimumVelocity = 5.0;
 }
 
 /*
- * We use this component on profile pages. The screne consists of a header component, a scrollview with buttons to
- * switch between profile tabs, and a pager view (RNCPagerViewComponentView). Both the header and the tab bar are
- * inside the same RCTViewComponentView. The view heirarchy looks something like this:
- * - RCTViewComponentView
- * -- RNCPagerViewComponentView
- * ----- (Many views deep) RCTScrollViewComponentView
- * ------ RCTEnhancedScrollView
- * -- RCTViewComponentView
- * --- RCTViewComponentView
- * ---- ScrollForwarderView
- * --- RCTScrollViewComponentView
- * ---- RCTEnhancedScrollView
- *
- * We want to find that RCTScrollViewComponentView inside of the RNCPagerViewComponentView. To achieve this, we can
- * use self.superview.superview.superview to get to the root RCTViewComponentView, find the RNCPagerViewComponentView,
- * then iterate through that view's subviews until we find a RCTScrollViewComponentView.
- *
- * This isn't great, because if we reorder the React components, we'll need to update this logic. There's probably
- * an easier way to achieve this, similar to how we used to do it in Paper (ie, get the scroll view's tag and find that),
- * but this also comes with some benefits, eg being able to reduce a lot of the logic in the JS code and just find the
- * scrollview when subviews change.
+ * The JS side passes the native tag of the focused tab's list as scrollViewTag. Fabric sets each component view's
+ * UIView tag to its React tag, so we can search the window for it rather than walking a hardcoded path through the
+ * profile screen's view hierarchy. That path broke whenever a wrapper view was added around the pager (most recently
+ * RNGH's RNGestureHandlerDetector).
  */
-- (void)tryFindScrollView
+- (void)findScrollViewWithTag:(NSInteger)tag
 {
   [self removeCancelGestureRecognizers];
+  _svcv = nil;
   
-  // The root RCTViewComponentView
-  UIView *rootView = self.superview.superview.superview;
-  UIView *pagerView;
+  if (tag <= 0 || !self.window) return;
   
-  NSString *targetClsName = @"RNCPagerViewComponentView";
-  Class targetCls = NSClassFromString(targetClsName);
-
-  for (UIView *subview in rootView.subviews) {
-    if ([subview isKindOfClass:targetCls]) {
-      pagerView = subview;
-      break;
-    }
-  }
-  
-  if (!pagerView) return;
-  
-  RCTScrollViewComponentView *svcv = [self findRTCScrollViewComponentViewInView:pagerView];
+  RCTScrollViewComponentView *svcv = [self findScrollViewComponentViewWithTag:tag inView:self.window];
   
   if (!svcv) return;
   
@@ -344,15 +320,15 @@ static const CGFloat kMinimumVelocity = 5.0;
   [self addCancelGestureRecognizers];
 }
 
-- (RCTScrollViewComponentView *)findRTCScrollViewComponentViewInView:(UIView *)view
+// Matches on class as well as tag, since non-React views can have tags that collide with React tags
+- (RCTScrollViewComponentView *)findScrollViewComponentViewWithTag:(NSInteger)tag inView:(UIView *)view
 {
   for (UIView *subview in view.subviews) {
-    if ([subview isKindOfClass:[RCTScrollViewComponentView class]]) {
-      RCTScrollViewComponentView *svcv = (RCTScrollViewComponentView *) subview;
-      return svcv;
+    if (subview.tag == tag && [subview isKindOfClass:[RCTScrollViewComponentView class]]) {
+      return (RCTScrollViewComponentView *)subview;
     }
     
-    RCTScrollViewComponentView *svcv = [self findRTCScrollViewComponentViewInView:subview];
+    RCTScrollViewComponentView *svcv = [self findScrollViewComponentViewWithTag:tag inView:subview];
     if (svcv) return svcv;
   }
   return nil;
