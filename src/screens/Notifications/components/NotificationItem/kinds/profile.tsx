@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {type GestureResponderEvent, Pressable, View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -120,7 +120,10 @@ function GroupedFollowNotification({
     other: '# others',
   })} followed you`
 
-  const onToggleExpanded = () => {
+  const onToggleExpanded = (event: GestureResponderEvent) => {
+    // Keep the press from reaching the row, which on web would follow its link
+    event.preventDefault()
+    event.stopPropagation()
     if (!isExpanded) {
       ax.metric('notifications:bundleExpand', {
         notificationType: 'follow',
