@@ -22,8 +22,8 @@ import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
 import {RQKEY as RQKEY_NOTIFS} from './feed'
-import {type CachedFeedPage, type FeedPage} from './types'
-import {fetchPage} from './util'
+import {type CachedFeedPage, type FeedPage, type UnreadCheck} from './types'
+import {fetchPage, markUnreadCheckSeen, summarizeUnreadCheck} from './util'
 
 const UPDATE_INTERVAL = 30 * 1e3 // 30sec
 
@@ -49,6 +49,9 @@ interface ApiContext {
 const stateContext = createContext<StateContext>('')
 stateContext.displayName = 'NotificationsUnreadStateContext'
 
+const lastCheckContext = createContext<UnreadCheck | undefined>(undefined)
+lastCheckContext.displayName = 'NotificationsUnreadLastCheckContext'
+
 const apiContext = createContext<ApiContext>({
   async markAllRead() {},
   async checkUnread() {},
@@ -63,6 +66,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
   const moderationOpts = useModerationOpts()
 
   const [numUnread, setNumUnread] = useState('')
+  const [lastCheck, setLastCheck] = useState<UnreadCheck>()
 
   const checkUnreadRef = useRef<ApiContext['checkUnread'] | null>(null)
   const cacheRef = useRef<CachedFeedPage>({
@@ -149,6 +153,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
         // update & broadcast
         setNumUnread('')
+        setLastCheck(check => markUnreadCheckSeen(check, seenAt.getTime()))
         broadcast.postMessage({event: ''})
         resetBadgeCount()
       },
@@ -222,6 +227,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
           // update & broadcast
           setNumUnread(unreadCountStr)
+          setLastCheck(summarizeUnreadCheck(page, requestedAt))
           if (invalidate) {
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('all'))
             truncateAndInvalidate(queryClient, RQKEY_NOTIFS('mentions'))
@@ -244,13 +250,23 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
 
   return (
     <stateContext.Provider value={numUnread}>
-      <apiContext.Provider value={api}>{children}</apiContext.Provider>
+      <lastCheckContext.Provider value={lastCheck}>
+        <apiContext.Provider value={api}>{children}</apiContext.Provider>
+      </lastCheckContext.Provider>
     </stateContext.Provider>
   )
 }
 
 export function useUnreadNotifications() {
   return useContext(stateContext)
+}
+
+/**
+ * What the last unread check found, or undefined before the first one.
+ * Updated on every check, and whenever notifications are marked read.
+ */
+export function useLastUnreadCheck() {
+  return useContext(lastCheckContext)
 }
 
 export function useUnreadNotificationsApi() {
