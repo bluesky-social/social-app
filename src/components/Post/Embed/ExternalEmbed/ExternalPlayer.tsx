@@ -36,6 +36,8 @@ import {PlayButtonIcon} from '#/components/video/PlayButtonIcon'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
 import {type app} from '#/lexicons'
+import {type PlayerMode, playerModeAfterFullscreenChange} from './playerMode'
+import {getPlayerVisibility} from './playerVisibility'
 
 interface ShouldStartLoadRequest {
   url: string
@@ -79,10 +81,12 @@ function Player({
   params,
   onLoad,
   isPlayerActive,
+  onFullscreenChange,
 }: {
   isPlayerActive: boolean
   params: EmbedPlayerParams
   onLoad: () => void
+  onFullscreenChange: (isFullscreen: boolean) => void
 }) {
   // ensures we only load what's requested
   // when it's a youtube video, we need to allow both bsky.app and youtube.com
@@ -110,6 +114,9 @@ function Player({
           nestedScrollEnabled
           source={{uri: params.playerUri}}
           onLoad={onLoad}
+          onFullscreenChange={event =>
+            onFullscreenChange(event.nativeEvent.isFullscreen === true)
+          }
           style={a.bg_transparent}
           setSupportMultipleWindows={false} // Prevent any redirects from opening a new window (ads)
         />
@@ -137,7 +144,13 @@ export function ExternalPlayer({
   const consentDialogControl = useDialogControl()
   const ax = useAnalytics()
 
-  const [isPlayerActive, setIsPlayerActive] = useState(false)
+  /**
+   * `fullscreen` is Android only - the event that drives it has no iOS
+   * counterpart. On iOS the mode never enters `fullscreen`, so the visibility
+   * check keeps running.
+   */
+  const [mode, setMode] = useState<PlayerMode>('inactive')
+  const isPlayerActive = mode !== 'inactive'
   const [isLoading, setIsLoading] = useState(true)
 
   const activatePlayer = useCallback(() => {
@@ -150,7 +163,7 @@ export function ExternalPlayer({
         mediaType: getEmbedPlayerMediaType(params.type),
       })
     }
-    setIsPlayerActive(true)
+    setMode(m => (m === 'inactive' ? 'inline' : m))
   }, [
     ax,
     isPlayerActive,
@@ -173,45 +186,45 @@ export function ExternalPlayer({
     const measurement = measure(viewRef)
     if (!measurement) return
 
-    const {height: winHeight, width: winWidth} = windowDims
+    const visibility = getPlayerVisibility({
+      player: {
+        top: measurement.pageY,
+        height: measurement.height,
+        width: measurement.width,
+      },
+      viewport: windowDims,
+      isNative: IS_NATIVE,
+      insets,
+    })
 
-    // Get the proper screen height depending on what is going on
-    const realWinHeight = IS_NATIVE // If it is native, we always want the larger number
-      ? winHeight > winWidth
-        ? winHeight
-        : winWidth
-      : winHeight // On web, we always want the actual screen height
-
-    const top = measurement.pageY
-    const bot = measurement.pageY + measurement.height
-
-    // We can use the same logic on all platforms against the screenHeight that we get above
-    const isVisible = top <= realWinHeight - insets.bottom && bot >= insets.top
-
-    if (!isVisible) {
-      scheduleOnRN(setIsPlayerActive, false)
+    // `indeterminate` (e.g. mid-rotation) must not stop playback
+    if (visibility === 'hidden') {
+      scheduleOnRN(setMode, 'inactive')
     }
   }, false) // False here disables autostarting the callback
 
-  // watch for leaving the viewport due to scrolling
   useEffect(() => {
-    // We don't want to do anything if the player isn't active
     if (!isPlayerActive) return
 
-    // Interval for scrolling works in most cases, However, for twitch embeds, if we navigate away from the screen the webview will
-    // continue playing. We need to watch for the blur event
-    const unsubscribe = navigation.addListener('blur', () => {
-      setIsPlayerActive(false)
+    /*
+     * Twitch embeds keep playing after navigating away, so stop on blur. Unlike
+     * the frame callback this stays subscribed in fullscreen.
+     */
+    return navigation.addListener('blur', () => {
+      setMode('inactive')
     })
+  }, [navigation, isPlayerActive])
 
-    // Start watching for changes
-    frameCallback.setActive(true)
-
-    return () => {
-      unsubscribe()
-      frameCallback.setActive(false)
-    }
-  }, [navigation, isPlayerActive, frameCallback])
+  /*
+   * Not in fullscreen: the content is reparented to the activity root, so the
+   * wrapper we would measure is an empty placeholder.
+   */
+  const isInline = mode === 'inline'
+  useEffect(() => {
+    // Watch for leaving the viewport due to scrolling
+    frameCallback.setActive(isInline)
+    return () => frameCallback.setActive(false)
+  }, [frameCallback, isInline])
 
   const onLoad = useCallback(() => {
     setIsLoading(false)
@@ -283,6 +296,9 @@ export function ExternalPlayer({
           isPlayerActive={isPlayerActive}
           params={params}
           onLoad={onLoad}
+          onFullscreenChange={isFullscreen =>
+            setMode(m => playerModeAfterFullscreenChange(m, isFullscreen))
+          }
         />
       </Animated.View>
     </>
