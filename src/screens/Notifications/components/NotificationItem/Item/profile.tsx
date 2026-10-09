@@ -253,6 +253,18 @@ function SayHelloButtonInner({
 }
 
 /**
+ * Whether `SocialProof` has anything to show for `profile`.
+ */
+export function hasSocialProof(profile: bsky.profile.AnyProfileView) {
+  const knownFollowers = profile.viewer?.knownFollowers
+  return Boolean(
+    knownFollowers &&
+    knownFollowers.count > 0 &&
+    shouldShowKnownFollowers(knownFollowers),
+  )
+}
+
+/**
  * Up to three avatars of the people you follow who also follow `profile`,
  * then e.g. "23 mutual followers", or "23 mutuals" when `short`. Renders
  * nothing if there aren't any.
@@ -267,11 +279,7 @@ export function SocialProof({
   const t = useTheme()
   const knownFollowers = profile.viewer?.knownFollowers
 
-  if (
-    !knownFollowers ||
-    knownFollowers.count === 0 ||
-    !shouldShowKnownFollowers(knownFollowers)
-  ) {
+  if (!knownFollowers || !hasSocialProof(profile)) {
     return null
   }
 
@@ -463,15 +471,8 @@ export function ActorListItem({
   const name = useDisplayName(profile)
   const {onPress} = useLink({to: makeProfileLink(profile), displayText: ''})
 
-  const knownFollowers = profile.viewer?.knownFollowers
-  const hasSocialProof = Boolean(
-    knownFollowers &&
-    knownFollowers.count > 0 &&
-    shouldShowKnownFollowers(knownFollowers),
-  )
-
   let secondLine: React.ReactNode
-  if (hasSocialProof) {
+  if (hasSocialProof(profile)) {
     secondLine = <SocialProof profile={profile} variant="short" />
   } else if (starterPack && getStarterPackName(starterPack)) {
     secondLine = <ViaStarterPack starterPack={starterPack} />

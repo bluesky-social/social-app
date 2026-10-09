@@ -23,7 +23,14 @@ import {List, type ListMethods} from '#/view/com/util/List'
 import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
-import {NotificationItem} from '#/screens/Notifications/components/NotificationItem'
+import {
+  FollowedYouHeader,
+  FollowerNotification,
+  type FollowerNotificationView,
+  getFollowers,
+  isFollowerNotification,
+  NotificationItem,
+} from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
 import {
@@ -38,10 +45,18 @@ import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import type * as bsky from '#/types/bsky'
 
 type Row =
   | {type: 'section'; key: string; section: 'today' | 'earlier'}
   | {type: 'notification'; key: string; notification: NotificationView}
+  | {type: 'followersHeader'; key: string}
+  | {
+      type: 'follower'
+      key: string
+      notification: FollowerNotificationView
+      profile: bsky.profile.AnyProfileView
+    }
   | {type: 'loading'; key: string}
   | {type: 'empty'; key: string}
   | {type: 'error'; key: string}
@@ -49,7 +64,7 @@ type Row =
 
 /**
  * One tab of the notifications pager: the grouped notifications for `feed`,
- * split into "Today" and "Earlier".
+ * split into "Today" and "Earlier", or as a list of people for "followers".
  */
 export function PageList({
   feed,
@@ -182,7 +197,7 @@ export function PageList({
       ? [{type: 'error', key: 'error'}]
       : [{type: 'empty', key: 'empty'}]
   } else {
-    rows = buildRows(notifications)
+    rows = buildRows(notifications, feed)
     if (isError) {
       rows.push({type: 'loadMoreError', key: 'loadMoreError'})
     }
@@ -230,6 +245,15 @@ export function PageList({
                 return <SectionHeader section={row.section} />
               case 'notification':
                 return <NotificationItem notification={row.notification} />
+              case 'followersHeader':
+                return <FollowedYouHeader />
+              case 'follower':
+                return (
+                  <FollowerNotification
+                    notification={row.notification}
+                    profile={row.profile}
+                  />
+                )
               case 'loading':
                 return <NotificationFeedLoadingPlaceholder />
               case 'empty':
@@ -309,9 +333,17 @@ export function PageList({
 
 /**
  * Splits notifications into "Today" and "Earlier". When nothing happened
- * today the headers are left out entirely, per the designs.
+ * today the headers are left out entirely, per the designs. The Followers tab
+ * is laid out differently, see `buildFollowerRows`.
  */
-function buildRows(notifications: NotificationView[]): Row[] {
+function buildRows(
+  notifications: NotificationView[],
+  feed: GroupedNotificationsFeed,
+): Row[] {
+  if (feed === 'followers') {
+    return buildFollowerRows(notifications)
+  }
+
   const rows: Row[] = []
   const hasToday = isToday(new Date(notifications[0].indexedAt))
   let addedEarlier = false
@@ -333,6 +365,40 @@ function buildRows(notifications: NotificationView[]): Row[] {
       key: notification.id,
       notification,
     })
+  }
+  return rows
+}
+
+/**
+ * The Followers tab is a list of people rather than a feed: a single
+ * "Followed you" header, then a row per follower. Any other kind keeps its
+ * usual notification row.
+ *
+ * Someone who unfollowed and followed again has several follow
+ * notifications, but only gets one row, at their most recent follow.
+ */
+function buildFollowerRows(notifications: NotificationView[]): Row[] {
+  const rows: Row[] = [{type: 'followersHeader', key: 'followersHeader'}]
+  const seenDids = new Set<string>()
+  for (const notification of notifications) {
+    if (isFollowerNotification(notification)) {
+      for (const profile of getFollowers(notification)) {
+        if (seenDids.has(profile.did)) continue
+        seenDids.add(profile.did)
+        rows.push({
+          type: 'follower',
+          key: `${notification.id}-${profile.did}`,
+          notification,
+          profile,
+        })
+      }
+    } else {
+      rows.push({
+        type: 'notification',
+        key: notification.id,
+        notification,
+      })
+    }
   }
   return rows
 }
