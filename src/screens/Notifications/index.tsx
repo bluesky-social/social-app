@@ -50,6 +50,7 @@ import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
+import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
@@ -111,6 +112,13 @@ function NewNotificationsScreenInner() {
    * the tabs and just shows the "All" tab's empty state.
    */
   const [hasNoNotifications, setHasNoNotifications] = useState(false)
+  /**
+   * Pages loading what's new after the tab button or a pill was pressed, so
+   * the header can show it for the page in view, as v1 did.
+   */
+  const [loadingLatestPages, setLoadingLatestPages] = useState<
+    ReadonlySet<number>
+  >(() => new Set())
 
   const showHeader = useCallback(() => {
     'worklet'
@@ -143,7 +151,8 @@ function NewNotificationsScreenInner() {
       <NotificationsHeader
         titleHeight={titleHeight}
         onTitleLayout={onTitleLayout}
-        onHeightChange={setHeaderOffset}>
+        onHeightChange={setHeaderOffset}
+        loadingLatestPages={loadingLatestPages}>
         {!hasNoNotifications && (
           <Pager.TabBar>
             {({selectedPage, selectPage, dragProgress}) => (
@@ -181,6 +190,17 @@ function NewNotificationsScreenInner() {
             seenAt={seenAt}
             onFirstLoad={onFirstLoad}
             refresh={refresh}
+            onLoadingLatestChange={isLoading => {
+              setLoadingLatestPages(pages => {
+                const next = new Set(pages)
+                if (isLoading) {
+                  next.add(pageIndex)
+                } else {
+                  next.delete(pageIndex)
+                }
+                return next
+              })
+            }}
             onScrolledDownChange={isScrolledDown => {
               if (isScrolledDown) {
                 scrolledDownFeeds.current.add(tab.key)
@@ -363,6 +383,7 @@ function NotificationsHeader({
   titleHeight,
   onTitleLayout,
   onHeightChange,
+  loadingLatestPages,
 }: {
   children: React.ReactNode
   /**
@@ -372,10 +393,16 @@ function NotificationsHeader({
   titleHeight: SharedValue<number>
   onTitleLayout: (event: LayoutChangeEvent) => void
   onHeightChange: (height: number) => void
+  /**
+   * Pages loading what's new, shown in place of the settings icon while the
+   * page in view is one of them.
+   */
+  loadingLatestPages: ReadonlySet<number>
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
   const headerMode = useHomeHeaderMode()
+  const {selectedPage} = Pager.usePager()
   const {gtMobile} = useBreakpoints()
   const insets = useSafeAreaInsets()
   const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
@@ -457,7 +484,12 @@ function NotificationsHeader({
               color="secondary"
               shape="round"
               style={[a.justify_center]}>
-              <ButtonIcon icon={SettingsIcon} size="lg" />
+              <ButtonIcon
+                icon={
+                  loadingLatestPages.has(selectedPage) ? Loader : SettingsIcon
+                }
+                size="lg"
+              />
             </Link>
           </Layout.Header.Slot>
         </Layout.Header.Outer>
