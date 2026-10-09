@@ -32,9 +32,12 @@ export type TabPillItem = {
   label: string
 }
 
+const NO_TABS: ReadonlySet<string> = new Set()
+
 export function TabPills({
   tabs,
   selectedTab,
+  unreadTabs = NO_TABS,
   dragProgress,
   onSelectTab,
   contentContainerStyle,
@@ -42,6 +45,11 @@ export function TabPills({
 }: {
   tabs: TabPillItem[]
   selectedTab: string
+  /**
+   * Tabs with unread notifications, whose pills get a dot. The selected
+   * pill never does.
+   */
+  unreadTabs?: ReadonlySet<string>
   dragProgress: SharedValue<number>
   onSelectTab: (tab: string) => void
   contentContainerStyle?: StyleProp<ViewStyle>
@@ -100,6 +108,8 @@ export function TabPills({
     }
     didMeasure.current = true
   }, [selectedTab, tabLayoutKey, tabCount, tabs, windowWidth])
+
+  const isUnread = (tab: string) => tab !== selectedTab && unreadTabs.has(tab)
 
   function handleSelectTab(index: number) {
     const tab = tabs[index]
@@ -227,6 +237,7 @@ export function TabPills({
                 tab={tab}
                 index={index}
                 active={tab.key === selectedTab}
+                hasUnread={isUnread(tab.key)}
                 onSelectTab={handleSelectTab}
               />
             ))}
@@ -292,6 +303,22 @@ export function TabPills({
                   ]}>
                   {tabs[index].label}
                 </Text>
+                {isUnread(tabs[index].key) && (
+                  <View
+                    style={[
+                      a.absolute,
+                      a.rounded_full,
+                      {
+                        // Just inside the pill's top right corner, as designed
+                        top: 1,
+                        right: 1,
+                        width: 8,
+                        height: 8,
+                        backgroundColor: t.palette.primary_500,
+                      },
+                    ]}
+                  />
+                )}
               </View>
             ))}
           </View>
@@ -377,23 +404,30 @@ function TabPill({
   elementRef,
   tab,
   active,
+  hasUnread,
   index,
   onSelectTab,
 }: {
   elementRef: React.Ref<React.ComponentRef<typeof View>>
   tab: TabPillItem
   active: boolean
+  hasUnread: boolean
   index: number
   onSelectTab: (index: number) => void
 }) {
   const {t: l} = useLingui()
 
+  let accessibilityLabel = l`Select ${tab.label} tab`
+  if (active) {
+    accessibilityLabel = l`${tab.label} tab, selected`
+  } else if (hasUnread) {
+    accessibilityLabel = l`Select ${tab.label} tab, has unread notifications`
+  }
+
   return (
     <View ref={elementRef}>
       <Pressable
-        accessibilityLabel={
-          active ? l`${tab.label} tab, selected` : l`Select ${tab.label} tab`
-        }
+        accessibilityLabel={accessibilityLabel}
         accessibilityHint={l`Shows ${tab.label} notifications`}
         accessibilityRole="tab"
         accessibilityState={{selected: active}}
