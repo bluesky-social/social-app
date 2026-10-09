@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-07 18:46\n"
+"PO-Revision-Date: 2026-10-09 21:51\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -4653,7 +4653,7 @@ msgstr "Bädda in inlägg"
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "Bädda in det här inlägget på din hemsida. Det är bara att kopiera följande text och klistra in den i HTML-koden på din hemsida."
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:77
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:78
 msgid "Embedded video player"
 msgstr "Inbäddad videospelare"
 
@@ -13097,7 +13097,7 @@ msgstr "Den här inbjudningslänken är ogiltig"
 
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:139
 msgid "This is just a one-time security check, since we haven't seen this account on this device before."
-msgstr "Vi gör den här säkerhetskontrollen eftersom vi inte har sett det här kontot på den här enheten tidigare. Den behöver bara göras en gång."
+msgstr "Vi gör den här säkerhetskontrollen eftersom vi inte har sett kontot på den här enheten tidigare. Kontrollen behöver bara göras en gång."
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:173
 #: src/features/liveNow/components/GoLiveDialog.tsx:165

@@ -8,7 +8,7 @@ msgstr ""
 "Language: km\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-07 18:46\n"
+"PO-Revision-Date: 2026-10-09 21:51\n"
 "Last-Translator: \n"
 "Language-Team: Khmer\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -4653,7 +4653,7 @@ msgstr ""
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "បង្កប់ការបង្ហោះនេះនៅក្នុងគេហទំព័ររបស់អ្នក។ គ្រាន់តែចម្លងផ្នែកខាងក្រោម ហើយបិទភ្ជាប់វាទៅក្នុងកូដ HTML នៃគេហទំព័ររបស់អ្នក"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:77
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:78
 msgid "Embedded video player"
 msgstr "កម្មវិធីចាក់វីដេអូដែលបានបង្កប់"
 

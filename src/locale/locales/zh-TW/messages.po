@@ -8,7 +8,7 @@ msgstr ""
 "Language: zh\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-07 18:46\n"
+"PO-Revision-Date: 2026-10-09 21:51\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Traditional\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
@@ -4653,7 +4653,7 @@ msgstr "嵌入貼文"
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "將這則貼文嵌入到您的網站。只需複製以下程式碼片段，並將其貼上到您網站的 HTML 程式碼中即可。"
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:77
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:78
 msgid "Embedded video player"
 msgstr "嵌入式影片播放器"
 

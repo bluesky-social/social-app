@@ -8,7 +8,7 @@ msgstr ""
 "Language: ro\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-07 18:46\n"
+"PO-Revision-Date: 2026-10-09 21:51\n"
 "Last-Translator: \n"
 "Language-Team: Romanian\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100>0 && n%100<20)) ? 1 : 2);\n"
@@ -4653,7 +4653,7 @@ msgstr "Încorporare postare"
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr "Încorporați această postare în website-ul dvs. Pur și simplu copiați următorul fragment și lipiți-l în codul HTML al website-ului dvs."
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:77
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:78
 msgid "Embedded video player"
 msgstr "Cititor video încorporat"
 
@@ -15496,7 +15496,7 @@ msgstr "Contul dvs. figurează cu avertismente."
 
 #: src/screens/ModerationInbox/components/AccountStatus.tsx:31
 msgid "Your account is at risk of permanent suspension"
-msgstr "Contul tău este în pericol de suspendare permanentă"
+msgstr "Contul dvs. este în pericol de suspendare permanentă"
 
 #: src/view/com/composer/state/video.ts:533
 msgid "Your account is not yet old enough to upload videos. Please try again later."
