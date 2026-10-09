@@ -112,16 +112,16 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
         key: feature,
         name: i18n._(
           msg({
-            message: 'Following keeps your place',
+            message: 'Keep your place in the Following feed',
             comment: 'Name for a feature flag',
           }),
         ),
         description: i18n._(
           msg({
             message:
-              'Pick up where you left off in Following. New posts wait above you instead of moving you back to the top.',
+              'Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them.',
             comment:
-              'Description of a feature flag (Following keeps your place)',
+              'Description of a feature flag (Keep your place in the Following feed)',
           }),
         ),
       }
