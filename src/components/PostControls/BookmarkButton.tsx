@@ -1,6 +1,8 @@
 import {memo} from 'react'
 import {type Insets} from 'react-native'
-import {Trans, useLingui} from '@lingui/react/macro'
+import {msg} from '@lingui/core/macro'
+import {useLingui} from '@lingui/react'
+import {Trans} from '@lingui/react/macro'
 
 import {useCleanError} from '#/lib/hooks/useCleanError'
 import {type Shadow} from '#/state/cache/post-shadow'
@@ -30,47 +32,22 @@ export const BookmarkButton = memo(function BookmarkButton({
   hitSlop?: Insets
 }): React.ReactNode {
   const t = useTheme()
-  const {t: l} = useLingui()
-  const requireAuth = useRequireAuth()
-  const {isBookmarked, toggleBookmark} = usePostBookmark({post, logContext})
-
-  return (
-    <PostControlButton
-      testID="postBookmarkBtn"
-      big={big}
-      active={isBookmarked}
-      activeColor={t.palette.primary_500}
-      label={isBookmarked ? l`Remove from saved posts` : l`Add to saved posts`}
-      onPress={() => requireAuth(toggleBookmark)}
-      hitSlop={hitSlop}>
-      <PostControlButtonIcon icon={isBookmarked ? BookmarkFilled : Bookmark} />
-    </PostControlButton>
-  )
-})
-
-/**
- * Saves a post to the viewer's saved posts, or removes it, with the bookmark
- * button's metrics and toasts. Removing offers an undo.
- */
-export function usePostBookmark({
-  post,
-  logContext,
-}: {
-  post: Shadow<app.bsky.feed.defs.PostView>
-  logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
-}) {
   const ax = useAnalytics()
-  const {t: l} = useLingui()
+  const {_} = useLingui()
   const {mutateAsync: bookmark} = useBookmarkMutation()
   const cleanError = useCleanError()
+  const requireAuth = useRequireAuth()
   const {feedDescriptor} = useFeedFeedbackContext()
 
-  const isBookmarked = !!post.viewer?.bookmarked
+  const {viewer} = post
+  const isBookmarked = !!viewer?.bookmarked
 
-  const undoLabel = l({
-    message: `Undo`,
-    context: `Button label to undo saving/removing a post from saved posts.`,
-  })
+  const undoLabel = _(
+    msg({
+      message: `Undo`,
+      context: `Button label to undo saving/removing a post from saved posts.`,
+    }),
+  )
 
   const save = async () => {
     try {
@@ -85,13 +62,11 @@ export function usePostBookmark({
         logContext,
         feedDescriptor,
       })
-      return true
     } catch (e: any) {
       const {raw, clean} = cleanError(e)
       toast.show(clean || raw || e, {
         type: 'error',
       })
-      return false
     }
   }
 
@@ -128,17 +103,29 @@ export function usePostBookmark({
     }
   }
 
-  /**
-   * Resolves with `'saved'` once a save succeeds, for callers that confirm it
-   * themselves. Removing confirms with its own toast.
-   */
-  const toggleBookmark = async (): Promise<'saved' | undefined> => {
-    if (isBookmarked) {
-      await remove()
-    } else if (await save()) {
-      return 'saved'
-    }
-  }
+  const onHandlePress = () =>
+    requireAuth(async () => {
+      if (isBookmarked) {
+        await remove()
+      } else {
+        await save()
+      }
+    })
 
-  return {isBookmarked, toggleBookmark}
-}
+  return (
+    <PostControlButton
+      testID="postBookmarkBtn"
+      big={big}
+      active={isBookmarked}
+      activeColor={t.palette.primary_500}
+      label={
+        isBookmarked
+          ? _(msg`Remove from saved posts`)
+          : _(msg`Add to saved posts`)
+      }
+      onPress={onHandlePress}
+      hitSlop={hitSlop}>
+      <PostControlButtonIcon icon={isBookmarked ? BookmarkFilled : Bookmark} />
+    </PostControlButton>
+  )
+})

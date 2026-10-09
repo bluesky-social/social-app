@@ -1,7 +1,0 @@
-export * from './aggregate'
-export * from './Avatar'
-export * from './media'
-export * from './post'
-export * from './profile'
-export * from './Root'
-export * from './text'
