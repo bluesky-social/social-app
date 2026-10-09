@@ -3,6 +3,7 @@ import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
 import {
   isBlockedProfileLink,
+  isInsecureLink,
   isShortenerLink,
   normalizeProfileLinkUrl,
 } from './providers'
@@ -51,7 +52,8 @@ export function parseProfileRecordLinks(record: unknown): ProfileLinksData {
         !normalized ||
         seen.has(normalized) ||
         isBlockedProfileLink(normalized) ||
-        isShortenerLink(normalized)
+        isShortenerLink(normalized) ||
+        isInsecureLink(normalized)
       ) {
         continue
       }

@@ -1431,7 +1431,7 @@ export type Events = {
    * A link couldn't be added, e.g. because its site is blocked.
    */
   'profile:links:rejected': {
-    reason: 'blocked' | 'shortener'
+    reason: 'blocked' | 'shortener' | 'insecure'
     domain: string
   }
 

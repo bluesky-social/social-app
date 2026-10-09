@@ -213,6 +213,11 @@ export function isBlockedProfileLink(url: string): boolean {
   return BLOCKED_DOMAINS.some(domain => hostMatchesDomain(host, domain))
 }
 
+/** Plain http links can be tampered with on the way, so only https is allowed. */
+export function isInsecureLink(url: string): boolean {
+  return parseWebUrl(url)?.protocol === 'http:'
+}
+
 export function isShortenerLink(url: string): boolean {
   const parsed = parseWebUrl(url)
   if (!parsed) return false
@@ -235,6 +240,7 @@ export type LinkInputValidation = {
   isEmpty: boolean
   isBlocked: boolean
   isShortener: boolean
+  isInsecure: boolean
 }
 
 /** Checks what a person typed into the link field. */
@@ -247,5 +253,6 @@ export function validateLinkInput(input: string): LinkInputValidation {
     isEmpty: trimmed.length === 0,
     isBlocked: !!url && isBlockedProfileLink(url),
     isShortener: !!url && isShortenerLink(url),
+    isInsecure: !!url && isInsecureLink(url),
   }
 }
