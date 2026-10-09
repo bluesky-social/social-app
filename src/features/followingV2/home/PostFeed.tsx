@@ -78,6 +78,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {GapRow} from './GapRow'
 import {mixSamples} from './mixSamples'
+import {PrependPill} from './PrependPill'
 import {
   type AuthorFilter,
   type FeedDescriptor,
@@ -89,15 +90,15 @@ import {
   RQKEY,
   usePostFeedFetcher,
   usePostFeedGapFill,
+  usePostFeedPrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
-  usePostFeedRestorePrepend,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
-import {RestorePill} from './RestorePill'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
 import {useListRest} from './useListRest'
-import {useRestorePill} from './useRestorePill'
+import {useNewPostsCheck} from './useNewPostsCheck'
+import {usePrependPill} from './usePrependPill'
 import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
@@ -279,7 +280,8 @@ let PostFeed = ({
   enabled?: boolean
   /**
    * Whether this is the feed on screen: the focused page of a focused Home.
-   * Only then does it offer restored posts with the pill.
+   * Only then does anchored Following check for new posts, and offer the
+   * posts it put on top with the pill.
    */
   isActive?: boolean
   pollInterval?: number
@@ -382,15 +384,15 @@ let PostFeed = ({
    */
   const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
   /**
-   * When the list is at rest, for the restore prepend to wait for. Its scroll
-   * handlers take the corrections anchoring makes to the offset out of what
-   * the Home header sees, so they can't hide or show it.
+   * When the list is at rest, for prepends to wait for. Its scroll handlers
+   * take the corrections anchoring makes to the offset out of what the Home
+   * header sees, so they can't hide or show it.
    */
   const listRest = useListRest(
     useAnchorCorrectionScrollHandlers(isAnchored),
     isAnchored,
   )
-  const restore = usePostFeedRestorePrepend(feed, feedParams, {
+  const prepend = usePostFeedPrepend(feed, feedParams, {
     enabled: isAnchored && enabled !== false,
     topFetchedAt: lastFetchedAt,
     listAtRest: listRest.atRest,
@@ -441,8 +443,8 @@ let PostFeed = ({
       !data?.pages[0] ||
       isFetching ||
       isRefreshing ||
-      // A restored top is checked by fetching what's newer, still to come.
-      (isAnchored && restore.isOwed()) ||
+      // Anchored Following checks with useNewPostsCheck instead, below.
+      isAnchored ||
       !onHasNew ||
       !enabled ||
       disablePoll
@@ -468,6 +470,38 @@ let PostFeed = ({
         logger.warn('Poll latest failed', {feed, message: String(e)})
       }
     }
+  })
+
+  /*
+   * Anchored Following's checks, made by the view on screen only. A real
+   * return fetches what's newer and puts it on top at rest, for the pill to
+   * offer. A check while the view is prepending, or owes its restored top a
+   * prepend, waits on that rather than racing it. Otherwise, or with no
+   * boundary to fetch above, it peeks for the Home dot, as other feeds do.
+   */
+  useNewPostsCheck({
+    topFetchedAt: lastFetchedAt,
+    isEmpty,
+    isActive: isAnchored && isActive,
+    // A refetch from the top is about to show what a check would find.
+    isBusy: isRefreshing || (isFetching && !isFetchingNextPage),
+    interval: disablePoll ? undefined : pollInterval,
+    check: async trigger => {
+      const prepending =
+        trigger === 'return' || prepend.isOwed() ? prepend.run() : undefined
+      if (prepending) {
+        await prepending
+        return undefined
+      }
+      return pollLatest(data?.pages[0], createFeedApi())
+    },
+    onFound: () => {
+      if (isEmpty) {
+        void refreshToTop()
+      } else {
+        onHasNew?.(true)
+      }
+    },
   })
 
   const isScrolledDownRef = useRef(false)
@@ -913,10 +947,10 @@ let PostFeed = ({
     trendingIndices,
   ])
 
-  const restorePill = useRestorePill({
+  const pill = usePrependPill({
     enabled: isAnchored,
     isActive,
-    prependedAt: restore.prependedAt,
+    prependedAt: prepend.prependedAt,
     rows: feedItems,
     // Without samples, which the pill never offers.
     pages: feedData?.pages,
@@ -928,7 +962,7 @@ let PostFeed = ({
       })
     },
   })
-  const onRestorePillItemSeen = useNonReactiveCallback(restorePill.onItemSeen)
+  const onPillItemSeen = useNonReactiveCallback(pill.onItemSeen)
   /**
    * The list's scroll handlers. Settling and the pill judge the offset as the
    * list reports it, as they have to know where the list really is. The Home
@@ -942,9 +976,9 @@ let PostFeed = ({
           ...settleAtTop,
           onBeginDrag: () => {
             settleAtTop.onBeginDrag()
-            restorePill.onBeginDrag()
+            pill.onBeginDrag()
           },
-          onReachTop: restorePill.onReachTop,
+          onReachTop: pill.onReachTop,
         }
       : undefined,
     listOffsetY,
@@ -1245,7 +1279,7 @@ let PostFeed = ({
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
-      onRestorePillItemSeen(item)
+      onPillItemSeen(item)
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
@@ -1366,14 +1400,7 @@ let PostFeed = ({
         }
       }
     },
-    [
-      feedFeedback,
-      onRestorePillItemSeen,
-      feed,
-      liveNowConfig,
-      getPostPosition,
-      ax,
-    ],
+    [feedFeedback, onPillItemSeen, feed, liveNowConfig, getPostPosition, ax],
   )
 
   return (
@@ -1414,11 +1441,11 @@ let PostFeed = ({
         />
       </ScrollProvider>
       {isAnchored && (
-        <RestorePill
-          visible={restorePill.visible}
-          count={restorePill.count}
-          authors={restorePill.authors}
-          onPress={restorePill.onPress}
+        <PrependPill
+          visible={pill.visible}
+          count={pill.count}
+          authors={pill.authors}
+          onPress={pill.onPress}
         />
       )}
     </View>

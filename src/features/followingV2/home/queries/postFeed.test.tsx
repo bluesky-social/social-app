@@ -1,5 +1,5 @@
 import {type PropsWithChildren} from 'react'
-import {AppState} from 'react-native'
+import {AppState, type AppStateStatus} from 'react-native'
 import {type ScrollEvent} from 'react-native-reanimated'
 import {
   dehydrate,
@@ -27,6 +27,10 @@ import {
   useListRest,
 } from '#/features/followingV2/home/useListRest'
 import {
+  RETURN_STALE_AFTER,
+  useNewPostsCheck,
+} from '#/features/followingV2/home/useNewPostsCheck'
+import {
   SETTLE_QUIET_MS,
   useSettleAtTop,
 } from '#/features/followingV2/home/useSettleAtTop'
@@ -53,9 +57,9 @@ import {
   RQKEY,
   usePostFeedFetcher,
   usePostFeedGapFill,
+  usePostFeedPrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
-  usePostFeedRestorePrepend,
   usePostFeedSettle,
 } from './postFeed'
 
@@ -107,6 +111,17 @@ jest.mock('react-native-worklets', () => ({
   scheduleOnRN: (fn: (...args: unknown[]) => void, ...args: unknown[]) =>
     fn(...args),
 }))
+
+/*
+ * What the app subscribes to `AppState` with, for tests to report a change of
+ * state to. It's in place before anything subscribes, so it has the one
+ * subscription `onAppReturnedFromBackground` keeps for good.
+ */
+const appStateListeners = new Set<(state: AppStateStatus) => void>()
+jest.mocked(AppState.addEventListener).mockImplementation((_type, listener) => {
+  appStateListeners.add(listener)
+  return {remove: () => appStateListeners.delete(listener)}
+})
 
 const mockFeedTuners: never[] = []
 const MODERATION_OPTS = {
@@ -867,7 +882,7 @@ describe('usePostFeedRefresh', () => {
   })
 })
 
-describe('usePostFeedRestorePrepend', () => {
+describe('usePostFeedPrepend', () => {
   const KEY = RQKEY('following')
   const SINCE_REQUEST = 'timeline since:start:1 limit:100'
   /** A scroll event, whose contents the list's rest tracking doesn't read. */
@@ -892,32 +907,58 @@ describe('usePostFeedRestorePrepend', () => {
 
   /**
    * The feed's view, as PostFeed has it, over `data` already in the cache. Its
-   * list has laid out, unless `laidOut` is false.
+   * list has laid out, unless `laidOut` is false. Only an `isActive` view
+   * checks for new posts, which it hands to `onFound`.
    */
   function renderView({
     data = restoredData(),
     enabled = true,
+    isActive = false,
     laidOut = true,
-  }: {data?: PostFeedData; enabled?: boolean; laidOut?: boolean} = {}) {
+  }: {
+    data?: PostFeedData
+    enabled?: boolean
+    isActive?: boolean
+    laidOut?: boolean
+  } = {}) {
     const queryClient = createQueryClient()
     queryClient.setQueryData(KEY, data)
     const wrapper = ({children}: PropsWithChildren) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )
+    const onFound = jest.fn()
     const hook = renderHook(
       ({enabled}: {enabled: boolean}) => {
         const query = usePostFeedQuery('following')
+        const {createFeedApi} = usePostFeedFetcher('following')
         const listRest = useListRest({}, true)
-        return {
-          query,
-          listRest,
-          refresh: usePostFeedRefresh('following').refresh,
-          restore: usePostFeedRestorePrepend('following', undefined, {
-            enabled,
-            topFetchedAt: query.data?.pages[0]?.fetchedAt,
-            listAtRest: listRest.atRest,
-          }),
-        }
+        const {refresh, isRefreshing} = usePostFeedRefresh('following')
+        const topFetchedAt = query.data?.pages[0]?.fetchedAt
+        const prepend = usePostFeedPrepend('following', undefined, {
+          enabled,
+          topFetchedAt,
+          listAtRest: listRest.atRest,
+        })
+        useNewPostsCheck({
+          topFetchedAt,
+          isEmpty: false,
+          isActive,
+          isBusy:
+            isRefreshing || (query.isFetching && !query.isFetchingNextPage),
+          check: async trigger => {
+            const prepending =
+              trigger === 'return' || prepend.isOwed()
+                ? prepend.run()
+                : undefined
+            if (prepending) {
+              await prepending
+              return undefined
+            }
+            return pollLatest(query.data?.pages[0], createFeedApi())
+          },
+          onFound,
+        })
+        return {query, listRest, refresh, prepend}
       },
       {wrapper, initialProps: {enabled}},
     )
@@ -934,7 +975,7 @@ describe('usePostFeedRestorePrepend', () => {
     if (laidOut) {
       list.layOut()
     }
-    return {hook, queryClient, cached, list}
+    return {hook, queryClient, cached, list, onFound}
   }
 
   /** Answers the next request with these posts, newer than `since`. */
@@ -984,14 +1025,14 @@ describe('usePostFeedRestorePrepend', () => {
       await flushNotifications()
 
       expect(requested()).toEqual([])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
 
     it('once, whatever it finds', async () => {
       newer([])
       const {hook, cached} = renderView({enabled: false})
       const before = cached()
-      expect(hook.result.current.restore.isOwed()).toBe(true)
+      expect(hook.result.current.prepend.isOwed()).toBe(true)
       hook.rerender({enabled: true})
       await flushNotifications()
 
@@ -1001,7 +1042,7 @@ describe('usePostFeedRestorePrepend', () => {
 
       expect(requested()).toEqual([SINCE_REQUEST])
       expect(cached()).toBe(before)
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
 
     it('not once a refresh has replaced the restored top', async () => {
@@ -1013,7 +1054,80 @@ describe('usePostFeedRestorePrepend', () => {
       await flushNotifications()
 
       expect(requested()).toEqual([])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
+    })
+  })
+
+  describe('run', () => {
+    it('joins the prepend in progress, rather than fetching its range again', async () => {
+      const since = holdNextRequest()
+      const {hook, cached} = renderView()
+      await flushNotifications()
+      expect(requested()).toEqual([SINCE_REQUEST])
+
+      const joined = hook.result.current.prepend.run()
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await act(() => joined!)
+
+      expect(requested()).toEqual([SINCE_REQUEST])
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+    })
+
+    it('fetches above the new top once the last is done', async () => {
+      newer(['new'])
+      const {hook, cached} = renderView()
+      await waitFor(() => expect(cached().pages).toHaveLength(3))
+
+      newer(['newer'], {cursor: 'start:0'})
+      await act(() => hook.result.current.prepend.run()!)
+
+      expect(requested()).toEqual([
+        SINCE_REQUEST,
+        'timeline since:start:0 limit:100',
+      ])
+      expect(postsOf(cached())).toEqual([
+        ['newer'],
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      expect(hook.result.current.prepend.prependedAt).toBe(
+        cached().pages[0].fetchedAt,
+      )
+    })
+
+    it('rejects when the fetch fails, leaving the feed as it was', async () => {
+      const data = restoredData()
+      data.pages[0].fetchedAt = Date.now()
+      const {hook, cached} = renderView({data})
+      const before = cached()
+
+      failNextRequest(new TypeError('Network request failed'))
+      let error: unknown
+      await act(async () => {
+        await hook.result.current.prepend.run()!.catch(e => {
+          error = e
+        })
+      })
+
+      expect(error).toBeInstanceOf(TypeError)
+      expect(cached()).toBe(before)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
+    })
+
+    it('is nothing to run without a boundary to fetch above', () => {
+      const data = restoredData()
+      delete data.pages[0].startCursor
+      const {hook} = renderView({data})
+
+      expect(hook.result.current.prepend.run()).toBeUndefined()
+      expect(requested()).toEqual([])
     })
   })
 
@@ -1026,7 +1140,7 @@ describe('usePostFeedRestorePrepend', () => {
       expect(requested()).toEqual([SINCE_REQUEST])
       expect(writes).toHaveLength(0)
       // Checks for new posts still wait for it.
-      expect(hook.result.current.restore.isOwed()).toBe(true)
+      expect(hook.result.current.prepend.isOwed()).toBe(true)
 
       list.layOut()
       await waitFor(() => expect(writes).toHaveLength(1))
@@ -1036,7 +1150,7 @@ describe('usePostFeedRestorePrepend', () => {
         ['timeline-1'],
         ['timeline-2'],
       ])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
 
     it('until the list has gone without a scroll event for a while', async () => {
@@ -1073,7 +1187,7 @@ describe('usePostFeedRestorePrepend', () => {
       // A finger held still sends no scroll events, but it's still a drag.
       await wait(10e3)
       expect(postsOf(cached())).toEqual([['timeline-1'], ['timeline-2']])
-      expect(hook.result.current.restore.isOwed()).toBe(true)
+      expect(hook.result.current.prepend.isOwed()).toBe(true)
 
       // A fling: the list scrolls on by itself after the finger lifts.
       list.endDrag()
@@ -1092,7 +1206,7 @@ describe('usePostFeedRestorePrepend', () => {
         ['timeline-1'],
         ['timeline-2'],
       ])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
     })
   })
 
@@ -1106,8 +1220,8 @@ describe('usePostFeedRestorePrepend', () => {
 
     expect(writes).toHaveLength(0)
     expect(cached()).toBe(before)
-    expect(hook.result.current.restore.isOwed()).toBe(false)
-    expect(hook.result.current.restore.prependedAt).toBeUndefined()
+    expect(hook.result.current.prepend.isOwed()).toBe(false)
+    expect(hook.result.current.prepend.prependedAt).toBeUndefined()
   })
 
   it('puts a contiguous page on top, which the page below continues from', async () => {
@@ -1124,7 +1238,7 @@ describe('usePostFeedRestorePrepend', () => {
       since: 'start:1',
     })
     // The view knows which page it put on top, for the pill to offer.
-    expect(hook.result.current.restore.prependedAt).toBe(
+    expect(hook.result.current.prepend.prependedAt).toBe(
       cached().pages[0].fetchedAt,
     )
     expect(cached().pageParams).toEqual([
@@ -1205,7 +1319,7 @@ describe('usePostFeedRestorePrepend', () => {
       await flushNotifications()
       expect(offline.cached()).toBe(before)
       expect(offline.hook.result.current.query.isError).toBe(false)
-      expect(offline.hook.result.current.restore.isOwed()).toBe(false)
+      expect(offline.hook.result.current.prepend.isOwed()).toBe(false)
       expect(logError).not.toHaveBeenCalled()
 
       failNextRequest(new Error('Unexpected'))
@@ -1235,7 +1349,7 @@ describe('usePostFeedRestorePrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.restore.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
     })
 
     it('while it holds what it found', async () => {
@@ -1256,8 +1370,8 @@ describe('usePostFeedRestorePrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.restore.isOwed()).toBe(false)
-      expect(hook.result.current.restore.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.isOwed()).toBe(false)
+      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
     })
   })
 
@@ -1307,6 +1421,162 @@ describe('usePostFeedRestorePrepend', () => {
 
     expect(postsOf(cached())).toEqual([['new'], ['timeline-1'], ['timeline-2']])
     expect(hook.result.current.query.isFetchingNextPage).toBe(false)
+  })
+
+  describe('on a real return to the app', () => {
+    /** Two pages fetched just now, as a feed loaded this session has. */
+    function fetchedData(): PostFeedData {
+      const data = restoredData()
+      for (const page of data.pages) {
+        page.fetchedAt = Date.now()
+      }
+      return data
+    }
+
+    /** Reports the app's state changing to `state`, as `AppState` does. */
+    function setAppState(state: AppStateStatus) {
+      act(() => {
+        AppState.currentState = state
+        for (const listener of [...appStateListeners]) {
+          listener(state)
+        }
+      })
+    }
+
+    /** Leaves the app for `away` in `state`, then comes back to it. */
+    async function leaveFor(
+      away: number,
+      state: AppStateStatus = 'background',
+    ) {
+      setAppState(state)
+      await wait(away)
+      setAppState('active')
+      await wait(0)
+    }
+
+    beforeEach(() => {
+      jest.useFakeTimers()
+      AppState.currentState = 'active'
+    })
+
+    it('fetches what is newer, and puts it on top once the list is at rest', async () => {
+      const since = holdNextRequest()
+      const {hook, cached, list} = renderView({
+        data: fetchedData(),
+        isActive: true,
+      })
+      await wait(0)
+      expect(requested()).toEqual([])
+
+      await leaveFor(RETURN_STALE_AFTER)
+      expect(requested()).toEqual([SINCE_REQUEST])
+
+      // The reader has started scrolling again by the time it lands.
+      list.beginDrag()
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await wait(10e3)
+      expect(postsOf(cached())).toEqual([['timeline-1'], ['timeline-2']])
+
+      list.endDrag()
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      // For the pill to offer.
+      expect(hook.result.current.prepend.prependedAt).toBe(
+        cached().pages[0].fetchedAt,
+      )
+    })
+
+    it('leaves a gap below what it found when there was more', async () => {
+      newer(['new'], {cursor: 'gap:1'})
+      const {cached} = renderView({data: fetchedData(), isActive: true})
+
+      await leaveFor(RETURN_STALE_AFTER)
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      expect(gapBelow(cached().pages, 0)).toBe('open')
+    })
+
+    it('makes no request when the app was only inactive, however long', async () => {
+      newer([])
+      renderView({data: fetchedData(), isActive: true})
+
+      // As the notification shade or Control Center leave it.
+      await leaveFor(10 * RETURN_STALE_AFTER, 'inactive')
+      expect(requested()).toEqual([])
+
+      await leaveFor(RETURN_STALE_AFTER)
+      expect(requested()).toEqual([SINCE_REQUEST])
+    })
+
+    it('joins the restore prepend in progress, rather than fetching its range again', async () => {
+      const since = holdNextRequest()
+      const data = restoredData()
+      // Restored, but not old enough for becoming active to check.
+      data.pages[0].fetchedAt = PROCESS_STARTED_AT - 1
+      const {cached} = renderView({data, isActive: true})
+      await wait(0)
+      expect(requested()).toEqual([SINCE_REQUEST])
+
+      await leaveFor(RETURN_STALE_AFTER)
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(requested()).toEqual([SINCE_REQUEST])
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+    })
+
+    it('gives way to a pull to refresh while it fetches', async () => {
+      const since = holdNextRequest()
+      const {hook, cached} = renderView({
+        data: fetchedData(),
+        isActive: true,
+      })
+      await leaveFor(RETURN_STALE_AFTER)
+      mockClient.call.mockReturnValueOnce({
+        cursor: 'timeline:1',
+        feed: [feedItem('fresh')],
+      })
+      await act(() => hook.result.current.refresh())
+      const refreshed = cached()
+
+      act(() => {
+        since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
+      })
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(cached()).toBe(refreshed)
+      expect(postsOf(cached())).toEqual([['fresh']])
+      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+    })
+
+    it('peeks for the Home dot when the top page has no boundary to fetch above', async () => {
+      const data = fetchedData()
+      delete data.pages[0].startCursor
+      const {onFound} = renderView({data, isActive: true})
+
+      await leaveFor(RETURN_STALE_AFTER)
+
+      expect(requested()).toEqual(['timeline latest'])
+      expect(onFound).toHaveBeenCalledWith(true, 'return')
+    })
   })
 })
 

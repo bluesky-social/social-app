@@ -1,6 +1,7 @@
-import {useEffect, useEffectEvent, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {IS_IOS} from '#/env'
 
 export const getCurrentState = () => AppState.currentState
@@ -90,13 +91,17 @@ export function onAppReturnedFromBackground(
   }
 }
 
-/** Hook form of {@link onAppReturnedFromBackground}, using the latest `cb`. */
+/**
+ * Hook form of {@link onAppReturnedFromBackground}, using the latest `cb`. Not
+ * with `useEffectEvent`, which React 19.2 never updates in `memo()` and
+ * `forwardRef()` components (react/react#35187).
+ */
 export function useOnAppReturnedFromBackground(
   cb: (appReturn: AppReturn) => void,
 ) {
-  const onReturn = useEffectEvent(cb)
+  const onReturn = useNonReactiveCallback(cb)
   useEffect(() => {
     const sub = onAppReturnedFromBackground(appReturn => onReturn(appReturn))
     return () => sub.remove()
-  }, [])
+  }, [onReturn])
 }
