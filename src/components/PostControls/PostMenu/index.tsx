@@ -26,6 +26,7 @@ let PostMenuButton = ({
   hitSlop,
   logContext,
   forceGoogleTranslate,
+  includeControls,
 }: {
   testID: string
   post: Shadow<app.bsky.feed.defs.PostView>
@@ -40,6 +41,11 @@ let PostMenuButton = ({
   hitSlop?: Insets
   logContext: 'FeedItem' | 'PostThreadItem' | 'Post' | 'ImmersiveVideo'
   forceGoogleTranslate: boolean
+  /**
+   * Adds repost, quote, share and save to the top of the menu, for surfaces
+   * that don't render the full `PostControls`, e.g. notification rows.
+   */
+  includeControls?: boolean
 }): React.ReactNode => {
   const {t: l} = useLingui()
 
@@ -88,6 +94,7 @@ let PostMenuButton = ({
             onShowLess={onShowLess}
             logContext={logContext}
             forceGoogleTranslate={forceGoogleTranslate}
+            includeControls={includeControls}
           />
         )}
       </Menu.Root>

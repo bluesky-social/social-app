@@ -1,3 +1,4 @@
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type app} from '#/lexicons'
 
 export type Notification = app.bsky.notification.listNotifications.Notification
@@ -19,6 +20,22 @@ export interface FeedPage {
   cursor: string | undefined
   seenAt: Date
   items: FeedNotification[]
+}
+
+/**
+ * What the last unread check found, for the Notifications v2 "Refresh" pill.
+ */
+export interface UnreadCheck {
+  /**
+   * When the check asked the server, in ms since the epoch.
+   */
+  requestedAt: number
+  /**
+   * For each grouped notifications feed, when the newest unread notification
+   * the check found for it was indexed, in ms since the epoch, or undefined
+   * if it found none.
+   */
+  newestUnreadAt: Record<GroupedNotificationsFeed, number | undefined>
 }
 
 export interface CachedFeedPage {
