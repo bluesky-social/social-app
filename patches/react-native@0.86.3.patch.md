@@ -168,6 +168,30 @@ older messages) and PostThread (parents) use mVCP too.
 Upstream issue: https://github.com/react/react-native/issues/52757
 Repro: https://github.com/mozzius/scrollview-mvcp-anchor-repro (screen B)
 
+## RCTViewComponentView.mm Patch - removeClippedSubviews lost on recycled views on iOS New Arch
+
+**TODO: Remove after bumping React Native to a release with
+react/react-native#58915.**
+
+Symptom: a recycled view whose props have `removeClippedSubviews` never clips
+again, so every child stays attached (100/100 rows in the repro instead of
+7/100).
+
+Cause: `prepareForRecycle` resets `_removeClippedSubviews` to `NO` but keeps
+`_props`. On insert Fabric passes `oldProps: nullptr`, so `updateProps:` diffs
+against those stale `_props`. If they already had `removeClippedSubviews`, the
+prop looks unchanged and clipping is never turned back on.
+
+Fix: backport of react/react-native#58915: compare the new prop against
+`_removeClippedSubviews` rather than the old props.
+
+Scope: iOS, global. Any recycled view with `removeClippedSubviews`, e.g.
+`ScrollView` content views and the FlatLists that use it.
+
+Upstream issue: https://github.com/react/react-native/issues/58914
+PR: https://github.com/react/react-native/pull/58915
+Repro: https://github.com/mozzius/view-remove-clipped-subviews-recycle-repro
+
 ## ReactViewGroup.kt Patch - Fatal "Required value was null" during subview clipping on Android
 
 Fixes Sentry issue APP-T20Q: `IllegalStateException: Required value was null` thrown by
