@@ -102,11 +102,23 @@ function NewNotificationsScreenInner() {
   const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
   const scrolledDownFeeds = useRef(new Set<GroupedNotificationsFeed>())
-  useReturnToScreen({
-    activeFeed,
-    scrolledDownFeeds,
-    refresh,
-  })
+  const queryClient = useQueryClient()
+  const unreadApi = useUnreadNotificationsApi()
+  /**
+   * Asks the server for anything new in a feed that's already loaded. It
+   * refreshes the feed, unless the user is partway down it, in which case
+   * only the unread check runs, so the list doesn't move under them.
+   */
+  const checkLatest = (feed: GroupedNotificationsFeed, mode: SeenAtMode) => {
+    // Not loaded yet, so its first load is on the way
+    if (!getGroupedNotificationsTop(queryClient, feed)) return
+    if (scrolledDownFeeds.current.has(feed)) {
+      void unreadApi.checkUnread()
+    } else {
+      void refresh(feed, mode)
+    }
+  }
+  useReturnToScreen({activeFeed, checkLatest})
   /*
    * With no notifications at all, every tab is empty, so the screen drops
    * the tabs and just shows the "All" tab's empty state.
@@ -139,7 +151,12 @@ function NewNotificationsScreenInner() {
   return (
     <Pager.Root
       onPageSelected={page => {
-        activeFeed.current = tabs[page].key
+        const feed = tabs[page].key
+        // Web reports the page it starts on, too
+        if (feed === activeFeed.current) return
+        activeFeed.current = feed
+        // As in v1, switching to a tab checks it for anything new
+        checkLatest(feed, 'kept')
       }}
       onTabPressed={showHeader}
       onPageScrollStateChanged={state => {
@@ -289,10 +306,8 @@ function useSessionSeenAt() {
 /**
  * Coming back to the screen: focusing it again, mounting it (web remounts
  * the screen on every visit), or, while it's open, bringing the app back to
- * the foreground or opening a push. Each one asks the server for anything
- * new and refreshes the tab in view, unless the user is partway down it, in
- * which case only the unread check runs, so the list doesn't move under
- * them.
+ * the foreground or opening a push. Each one checks the tab in view for
+ * anything new, with `checkLatest`.
  *
  * - From a screen pushed within the Notifications tab (e.g. a post), the
  *   unread tint is kept as it was, and anything new is tinted too.
@@ -301,19 +316,12 @@ function useSessionSeenAt() {
  */
 function useReturnToScreen({
   activeFeed,
-  scrolledDownFeeds,
-  refresh,
+  checkLatest,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
-  /**
-   * Feeds whose list is scrolled down past the top.
-   */
-  scrolledDownFeeds: React.RefObject<Set<GroupedNotificationsFeed>>
-  refresh: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => Promise<void>
+  checkLatest: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
 }) {
   const navigation = useNavigation()
-  const queryClient = useQueryClient()
-  const unreadApi = useUnreadNotificationsApi()
   const isFocused = useIsFocused()
 
   /*
@@ -329,16 +337,9 @@ function useReturnToScreen({
   }, [navigation])
 
   const onReturn = useEffectEvent(() => {
-    const feed = activeFeed.current
     const mode = hasLeft.current ? 'server' : 'kept'
     hasLeft.current = false
-    // Not loaded yet, so its first load is on the way
-    if (!getGroupedNotificationsTop(queryClient, feed)) return
-    if (scrolledDownFeeds.current.has(feed)) {
-      void unreadApi.checkUnread()
-    } else {
-      void refresh(feed, mode)
-    }
+    checkLatest(activeFeed.current, mode)
   })
 
   // Mounting counts, as the cache can outlive the screen
