@@ -20,7 +20,7 @@ import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
-import {emitSoftReset} from '#/state/events'
+import {emitSoftReset, listenPushNotificationOpened} from '#/state/events'
 import {
   getGroupedNotificationsTop,
   type GroupedNotificationsFeed,
@@ -258,10 +258,11 @@ function useSessionSeenAt() {
 
 /**
  * Coming back to the screen: focusing it again, mounting it (web remounts
- * the screen on every visit), or bringing the app back to the foreground
- * while it's open. Each one asks the server for anything new and refreshes
- * the tab in view, unless the user is partway down it, in which case only
- * the unread check runs, so the list doesn't move under them.
+ * the screen on every visit), or, while it's open, bringing the app back to
+ * the foreground or opening a push. Each one asks the server for anything
+ * new and refreshes the tab in view, unless the user is partway down it, in
+ * which case only the unread check runs, so the list doesn't move under
+ * them.
  *
  * - From a screen pushed within the Notifications tab (e.g. a post), the
  *   unread tint is kept as it was, and anything new is tinted too.
@@ -332,7 +333,18 @@ function useReturnToScreen({
         onForeground()
       }
     })
-    return () => subscription.remove()
+    /*
+     * Opening a push leaves the app too, even when it never went to the
+     * background, e.g. from Notification Center on iOS.
+     */
+    const unlistenPush = listenPushNotificationOpened(() => {
+      hasLeft.current = true
+      onForeground()
+    })
+    return () => {
+      subscription.remove()
+      unlistenPush()
+    }
   }, [])
 }
 
