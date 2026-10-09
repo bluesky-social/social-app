@@ -9,10 +9,16 @@ export type SupportProviderLogoName =
   | 'Boosty'
   | 'BuyMeACoffee'
   | 'CashApp'
+  | 'Chuffed'
+  | 'Crowdfundr'
+  | 'Donorbox'
   | 'Etsy'
+  | 'Fourthwall'
+  | 'Givebutter'
   | 'GoFundMe'
   | 'Gumroad'
   | 'Indiegogo'
+  | 'Inprint'
   | 'ItchIo'
   | 'JustGiving'
   | 'Kickstarter'
@@ -24,8 +30,10 @@ export type SupportProviderLogoName =
   | 'Redbubble'
   | 'Stripe'
   | 'Substack'
+  | 'Throne'
   | 'Venmo'
   | 'Vgen'
+  | 'Zeffy'
 
 export type SupportProvider = {
   name: string
@@ -51,10 +59,32 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
   {name: 'Boosty', logo: 'Boosty', domain: 'boosty.to'},
   {name: 'Buy Me a Coffee', logo: 'BuyMeACoffee', domain: 'buymeacoffee.com'},
   {name: 'Cash App', logo: 'CashApp', domain: 'cash.app'},
+  {
+    name: 'Chuffed',
+    logo: 'Chuffed',
+    domain: 'chuffed.org',
+    pathPrefix: '/campaign/',
+  },
+  {
+    name: 'Chuffed',
+    logo: 'Chuffed',
+    domain: 'chuffed.org',
+    pathPrefix: '/project/',
+  },
+  {name: 'Crowdfundr', logo: 'Crowdfundr', domain: 'crowdfundr.com'},
+  {name: 'Donorbox', logo: 'Donorbox', domain: 'donorbox.org'},
   {name: 'Etsy', logo: 'Etsy', domain: 'etsy.com'},
+  {name: 'Fourthwall', logo: 'Fourthwall', domain: 'fourthwall.com'},
+  {name: 'Givebutter', logo: 'Givebutter', domain: 'givebutter.com'},
   {name: 'GoFundMe', logo: 'GoFundMe', domain: 'gofundme.com'},
   {name: 'Gumroad', logo: 'Gumroad', domain: 'gumroad.com'},
   {name: 'Indiegogo', logo: 'Indiegogo', domain: 'indiegogo.com'},
+  {
+    name: 'INPRNT',
+    logo: 'Inprint',
+    domain: 'inprnt.com',
+    pathPrefix: '/gallery/',
+  },
   {name: 'itch.io', logo: 'ItchIo', domain: 'itch.io'},
   {name: 'JustGiving', logo: 'JustGiving', domain: 'justgiving.com'},
   {name: 'Kickstarter', logo: 'Kickstarter', domain: 'kickstarter.com'},
@@ -66,19 +96,21 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
     domain: 'opencollective.com',
   },
   {name: 'Patreon', logo: 'Patreon', domain: 'patreon.com'},
-  {name: 'PayPal', logo: 'PayPal', domain: 'paypal.me'},
   {
     name: 'PayPal',
     logo: 'PayPal',
     domain: 'paypal.com',
     pathPrefix: '/paypalme/',
   },
+  {name: 'PayPal', logo: 'PayPal', domain: 'paypal.me'},
   {name: 'Redbubble', logo: 'Redbubble', domain: 'redbubble.com'},
   {name: 'Stripe', logo: 'Stripe', domain: 'buy.stripe.com'},
   {name: 'Stripe', logo: 'Stripe', domain: 'donate.stripe.com'},
   {name: 'Substack', logo: 'Substack', domain: 'substack.com'},
+  {name: 'Throne', logo: 'Throne', domain: 'throne.com'},
   {name: 'Venmo', logo: 'Venmo', domain: 'venmo.com'},
   {name: 'VGen', logo: 'Vgen', domain: 'vgen.co'},
+  {name: 'Zeffy', logo: 'Zeffy', domain: 'zeffy.com'},
 ]
 
 /**
