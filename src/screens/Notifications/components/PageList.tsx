@@ -59,6 +59,7 @@ export function PageList({
   seenAt,
   onFirstLoad,
   refresh,
+  onLoadingLatestChange,
   onScrolledDownChange,
   onEmptyChange,
 }: {
@@ -90,6 +91,11 @@ export function PageList({
    * snapshot from it.
    */
   refresh: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => Promise<void>
+  /**
+   * Called when loading what's new after the tab button or a pill was
+   * pressed starts, and again when it settles, successfully or not.
+   */
+  onLoadingLatestChange?: (isLoading: boolean) => void
   onScrolledDownChange?: (isScrolledDown: boolean) => void
   /**
    * Called with whether this feed has loaded completely and has nothing in
@@ -150,7 +156,8 @@ export function PageList({
   const listRef = useRef<ListMethods>(null)
   const loadLatest = () => {
     listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
-    void refresh(feed, 'kept')
+    onLoadingLatestChange?.(true)
+    void refresh(feed, 'kept').finally(() => onLoadingLatestChange?.(false))
   }
   const onSoftReset = useEffectEvent(loadLatest)
   useEffect(() => {
