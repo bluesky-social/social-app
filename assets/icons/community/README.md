@@ -36,6 +36,7 @@ The icons in this directory are the marks of third-party services that appear in
 | `Redbubble.svg` | [Redbubble](https://www.redbubble.com) |
 | `Skeb.svg` | [Skeb](https://skeb.jp) |
 | `Stripe.svg` | [Stripe](https://stripe.com) |
+| `Substack.svg` | [Substack](https://substack.com) |
 | `SubscribeStar.svg` | [SubscribeStar](https://www.subscribestar.com) |
 | `Throne.svg` | [Throne](https://throne.com) |
 | `Venmo.svg` | [Venmo](https://venmo.com) |
