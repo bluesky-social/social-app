@@ -124,6 +124,16 @@ export function LINK_META_PROXY(_serviceUrl: string) {
   return PROD_LINK_META_PROXY
 }
 
+export const STAGING_LINK_FAVICON_PROXY =
+  'https://cardyb.staging.bsky.dev/v1/favicon?url='
+
+export const PROD_LINK_FAVICON_PROXY = 'https://cardyb.bsky.app/v1/favicon?url='
+
+/** Serves a page's favicon as a PNG, at most 64px. */
+export function LINK_FAVICON_PROXY() {
+  return IS_DEV ? STAGING_LINK_FAVICON_PROXY : PROD_LINK_FAVICON_PROXY
+}
+
 export const STATUS_PAGE_URL = 'https://status.bsky.app/'
 
 // Hitslop constants

@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useCallback, useEffect, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -24,7 +24,19 @@ import * as Prompt from '#/components/Prompt'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
+import {useAnalytics} from '#/analytics'
+import {
+  DragHandle,
+  logProfileLinkChanges,
+  type ProfileLinksData,
+  ProfileLinksEditor,
+  useProfileLinksEnabled,
+  useProfileLinksQuery,
+  useSetProfileLinksCache,
+  withProfileRecordLinks,
+} from '#/features/profileLinks'
 import {type app} from '#/lexicons'
+import {GermButton, isGermButtonShown} from '../components/GermButton'
 
 export function EditProfileDialog({
   profile,
@@ -96,6 +108,7 @@ function DialogInner({
 }) {
   const {_} = useLingui()
   const t = useTheme()
+  const ax = useAnalytics()
   const control = Dialog.useDialogContext()
   const verification = useSimpleVerificationState({
     profile,
@@ -124,11 +137,41 @@ function DialogInner({
     ImageMeta | undefined | null
   >()
 
-  const dirty =
+  const linksEnabled = useProfileLinksEnabled()
+  const {data: storedLinks} = useProfileLinksQuery(profile.did, {
+    enabled: linksEnabled,
+  })
+  const setProfileLinksCache = useSetProfileLinksCache()
+  /*
+   * Unset until the owner edits their links, so edits always start from the
+   * loaded record and a save can't overwrite links that hadn't loaded yet.
+   */
+  const [editedLinks, setEditedLinks] = useState<ProfileLinksData>()
+  const links = editedLinks ?? storedLinks
+  const linksLoaded = !!storedLinks
+
+  useEffect(() => {
+    if (!linksEnabled || !storedLinks) return
+    ax.metric('profile:links:editorOpen', {
+      linkCount: storedLinks.links.length,
+    })
+    // Once, when the links first load.
+    // oxlint-disable-next-line react-hooks/exhaustive-deps
+  }, [linksEnabled, linksLoaded])
+  const [isDraggingLinks, setIsDraggingLinks] = useState(false)
+  // on Android the sheet turns its own drag off while scrolled, so put that back after
+  const sheetDragWasDisabled = useRef(false)
+
+  const profileDirty =
     displayName !== initialDisplayName ||
     description !== initialDescription ||
     userAvatar !== profile.avatar ||
     userBanner !== profile.banner
+  const linksDirty =
+    !!editedLinks &&
+    !!storedLinks &&
+    JSON.stringify(editedLinks) !== JSON.stringify(storedLinks)
+  const dirty = profileDirty || linksDirty
 
   useEffect(() => {
     setDirty(dirty)
@@ -173,6 +216,7 @@ function DialogInner({
   const onPressSave = useCallback(async () => {
     setImageError('')
     try {
+      const nextLinks = linksDirty ? editedLinks : undefined
       await updateProfileMutation({
         profile,
         updates: {
@@ -181,7 +225,14 @@ function DialogInner({
         },
         newUserAvatar,
         newUserBanner,
+        updateRecord: nextLinks
+          ? record => withProfileRecordLinks(record, nextLinks)
+          : undefined,
       })
+      if (nextLinks) {
+        logProfileLinkChanges(ax, storedLinks?.links ?? [], nextLinks.links)
+        setProfileLinksCache(profile.did, nextLinks)
+      }
       control.close(() => onUpdate?.())
       Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
     } catch (e: any) {
@@ -198,6 +249,11 @@ function DialogInner({
     newUserBanner,
     setImageError,
     _,
+    editedLinks,
+    linksDirty,
+    storedLinks,
+    ax,
+    setProfileLinksCache,
   ])
 
   const displayNameTooLong = isOverMaxGraphemeCount({
@@ -263,6 +319,7 @@ function DialogInner({
   return (
     <Dialog.ScrollableInner
       label={_(msg`Edit profile`)}
+      scrollEnabled={!isDraggingLinks}
       style={[a.overflow_hidden]}
       contentContainerStyle={[a.px_0, a.pt_0]}
       header={
@@ -384,6 +441,37 @@ function DialogInner({
             </Text>
           )}
         </View>
+
+        {linksEnabled && links && (
+          <ProfileLinksEditor
+            did={profile.did}
+            links={links.links}
+            germIndex={links.germIndex}
+            germButton={
+              isGermButtonShown(
+                profile.associated?.germ,
+                profile,
+                profile.did,
+              ) ? (
+                <GermButton
+                  germ={profile.associated.germ}
+                  profile={profile}
+                  trailing={<DragHandle />}
+                />
+              ) : undefined
+            }
+            onChange={setEditedLinks}
+            onDragStateChange={dragging => {
+              setIsDraggingLinks(dragging)
+              if (dragging) {
+                sheetDragWasDisabled.current = control.disableDrag
+                control.setDisableDrag(true)
+              } else {
+                control.setDisableDrag(sheetDragWasDisabled.current)
+              }
+            }}
+          />
+        )}
       </View>
     </Dialog.ScrollableInner>
   )
