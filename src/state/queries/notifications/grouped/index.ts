@@ -26,7 +26,6 @@ import {
   didOrHandleUriMatches,
   embedViewRecordToPostView,
   getEmbeddedPost,
-  truncateAndInvalidate,
   useAutoPagination,
 } from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
@@ -54,19 +53,50 @@ export const createGroupedNotificationsQueryKey = (args: {
 }) => createQueryKey(groupedNotificationsQueryKeyRoot, args)
 
 /**
- * Drops all but the first page and refetches, so a refresh is a single
- * request. Refreshes every feed when `feed` is omitted.
+ * A page as the query caches it.
  */
-export function refreshGroupedNotifications(
+export type LoadedGroupedNotificationsPage = GroupedNotificationsPage & {
+  /**
+   * When the page was requested, in ms since the epoch.
+   */
+  requestedAt: number
+}
+
+/**
+ * Drops all but the first page of a feed and refetches it, so a refresh is a
+ * single request. Resolves once the refetch settles, successfully or not.
+ *
+ * A feed that's loaded but not on screen is refetched too, e.g. a tab that
+ * web keeps hidden, but one that was never opened is left alone.
+ */
+export async function refreshGroupedNotifications(
   queryClient: QueryClient,
-  feed?: GroupedNotificationsFeed,
+  feed: GroupedNotificationsFeed,
 ) {
-  return truncateAndInvalidate(
-    queryClient,
-    feed
-      ? createGroupedNotificationsQueryKey({feed})
-      : [groupedNotificationsQueryKeyRoot],
+  const queryKey = createGroupedNotificationsQueryKey({feed})
+  queryClient.setQueryData<
+    InfiniteData<LoadedGroupedNotificationsPage, string | undefined>
+  >(queryKey, data =>
+    data
+      ? {
+          pageParams: data.pageParams.slice(0, 1),
+          pages: data.pages.slice(0, 1),
+        }
+      : data,
   )
+  await queryClient.invalidateQueries({queryKey, refetchType: 'all'})
+}
+
+/**
+ * The first page of a feed as loaded, read straight from the cache.
+ */
+export function getGroupedNotificationsTop(
+  queryClient: QueryClient,
+  feed: GroupedNotificationsFeed,
+): LoadedGroupedNotificationsPage | undefined {
+  return queryClient.getQueryData<
+    InfiniteData<LoadedGroupedNotificationsPage, string | undefined>
+  >(createGroupedNotificationsQueryKey({feed}))?.pages[0]
 }
 
 /**
@@ -105,7 +135,8 @@ export function useGroupedNotificationsQuery({
     enabled: enabled && !!moderationOpts,
     staleTime: STALE.INFINITY,
     queryKey: createGroupedNotificationsQueryKey({feed}),
-    async queryFn({pageParam}) {
+    async queryFn({pageParam}): Promise<LoadedGroupedNotificationsPage> {
+      const requestedAt = Date.now()
       const res = await client.call(
         app.bsky.notification.getGroupedNotifications,
         {
@@ -114,7 +145,7 @@ export function useGroupedNotificationsQuery({
           cursor: pageParam,
         },
       )
-      return hydratePage(res, {viewerDid})
+      return {...hydratePage(res, {viewerDid}), requestedAt}
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: lastPage => lastPage.cursor,
@@ -154,9 +185,9 @@ const selectCache = new WeakMap<
 >()
 
 function selectNotifications(
-  data: InfiniteData<GroupedNotificationsPage, string | undefined>,
+  data: InfiniteData<LoadedGroupedNotificationsPage, string | undefined>,
   args: SelectArgs,
-): InfiniteData<GroupedNotificationsPage, string | undefined> {
+): InfiniteData<LoadedGroupedNotificationsPage, string | undefined> {
   const seenIds = new Set<string>()
   return {
     ...data,

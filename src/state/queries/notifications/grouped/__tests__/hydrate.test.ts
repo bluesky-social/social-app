@@ -146,6 +146,14 @@ describe('hydratePage', () => {
       expect(page.seenAt).toBe(res.seenAt)
     })
 
+    it('records when the newest group was indexed', () => {
+      const {res, page} = setup()
+      const newest = Math.max(
+        ...res.groups.map(group => Date.parse(group.indexedAt)),
+      )
+      expect(page.newestAt).toBe(newest)
+    })
+
     it('keeps every renderable group, in order, and drops the rest', () => {
       const {res, page} = setup()
       const dropped = [
@@ -372,6 +380,48 @@ describe('hydratePage', () => {
       expect(new TextDecoder().decode(bytes.slice(byteStart, byteEnd))).toBe(
         '@tim.bsky.team',
       )
+    })
+  })
+
+  describe('newestAt', () => {
+    it('counts groups that were dropped while hydrating', () => {
+      const page = hydratePage(
+        {
+          ...BASE,
+          groups: [
+            {
+              id: 'dropped',
+              isRead: false,
+              indexedAt: '2026-10-08T11:30:00.000Z',
+              count: 1,
+              kind: {
+                $type: `${NS}#likeGroup`,
+                post: MISSING_POST,
+                items: [{actor: DANIELLE}],
+              },
+            },
+            {
+              id: 'kept',
+              isRead: false,
+              indexedAt: '2026-10-08T11:00:00.000Z',
+              count: 1,
+              kind: {
+                $type: `${NS}#likeGroup`,
+                post: FUNGUS_POST,
+                items: [{actor: DANIELLE}],
+              },
+            },
+          ],
+        },
+        {viewerDid: VIEWER_DID},
+      )
+      expect(page.notifications.map(n => n.id)).toEqual(['kept'])
+      expect(page.newestAt).toBe(Date.parse('2026-10-08T11:30:00.000Z'))
+    })
+
+    it('is undefined for an empty response', () => {
+      const page = hydratePage({...BASE, groups: []}, {viewerDid: VIEWER_DID})
+      expect(page.newestAt).toBeUndefined()
     })
   })
 

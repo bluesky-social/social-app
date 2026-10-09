@@ -47,7 +47,12 @@ export function hydratePage(
 ): GroupedNotificationsPage {
   const ctx = createContext(res.relatedViews, viewerDid)
   const notifications: NotificationView[] = []
+  let newestAt: number | undefined
   for (const group of res.groups) {
+    const indexedAt = Date.parse(group.indexedAt)
+    if (indexedAt > (newestAt ?? -Infinity)) {
+      newestAt = indexedAt
+    }
     const notification = hydrateGroup(group, ctx)
     if (notification) {
       notifications.push(notification)
@@ -57,6 +62,7 @@ export function hydratePage(
     cursor: res.cursor,
     seenAt: res.seenAt,
     notifications,
+    newestAt,
   }
 }
 
