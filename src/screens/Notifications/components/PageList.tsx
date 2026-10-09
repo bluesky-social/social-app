@@ -191,7 +191,7 @@ export function PageList({
   const onRefresh = async () => {
     setIsPTRing(true)
     try {
-      await refresh(feed, 'cleared')
+      await refresh(feed, 'server')
     } catch (err) {
       logger.error('Failed to refresh grouped notifications', {
         safeMessage: err,
