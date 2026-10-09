@@ -31,9 +31,6 @@ import {
 } from '#/state/queries/notifications/util'
 import {threadPost} from '#/state/queries/usePostThread/views'
 import {useSession} from '#/state/session'
-import {NotificationFeedItem} from '#/view/com/notifications/NotificationFeedItem'
-import {PagerHeaderProvider} from '#/view/com/pager/PagerHeaderContext'
-import {PostFeedItem} from '#/view/com/posts/PostFeedItem'
 import {CenteredView, ScrollView} from '#/view/com/util/Views'
 import {ThreadItemAnchor} from '#/screens/PostThread/components/ThreadItemAnchor'
 import {ThreadItemPost} from '#/screens/PostThread/components/ThreadItemPost'
@@ -49,16 +46,222 @@ import {
   ChevronTop_Stroke2_Corner0_Rounded as ChevronTop,
 } from '#/components/icons/Chevron'
 import * as Layout from '#/components/Layout'
-import {ScreenHider} from '#/components/moderation/ScreenHider'
 import * as ProfileCard from '#/components/ProfileCard'
 import {H1, H3, P, Text} from '#/components/Typography'
 import {type app, type com} from '#/lexicons'
-import {GroupedNotifications, type LabelTarget} from './GroupedNotifications'
-import {mock} from './mock'
+import {ScreenHider} from '../../components/moderation/ScreenHider'
+import {NotificationFeedItem} from '../com/notifications/NotificationFeedItem'
+import {PagerHeaderProvider} from '../com/pager/PagerHeaderContext'
+import {PostFeedItem} from '../com/posts/PostFeedItem'
 
 const LABEL_VALUES: (keyof typeof LABELS)[] = Object.keys(
   LABELS,
 ) as (keyof typeof LABELS)[]
+
+const FAKE_CID = 'bafyreiclp443lavogvhj3d2ob2cxbfuscni2k5jk7bebjzg7khl3esabwq'
+
+/*
+ * Local test-data builders for this dev-only moderation debug screen. These
+ * replace the `mock` object the old api package used to export (the SDK does
+ * not ship one). Each builder returns a plain `#/lexicons` object literal with
+ * the same field values the old `mock` builders produced. Branded string slots
+ * (`did`/`at-uri`/`cid`/`lang`) are cast, since this is trusted mock data.
+ */
+const mock = {
+  post({
+    text,
+    facets,
+    reply,
+    embed,
+  }: {
+    text: string
+    facets?: app.bsky.feed.post.Main['facets']
+    reply?: app.bsky.feed.post.Main['reply']
+    embed?: app.bsky.feed.post.Main['embed']
+  }): app.bsky.feed.post.Main {
+    return {
+      $type: 'app.bsky.feed.post',
+      text,
+      facets,
+      reply,
+      embed,
+      langs: ['en'],
+      createdAt:
+        new Date().toISOString() as app.bsky.feed.post.Main['createdAt'],
+    }
+  },
+  postView({
+    record,
+    author,
+    embed,
+    replyCount,
+    repostCount,
+    likeCount,
+    viewer,
+    labels,
+  }: {
+    record: app.bsky.feed.post.Main
+    author: app.bsky.actor.defs.ProfileViewBasic
+    embed?: app.bsky.feed.defs.PostView['embed']
+    replyCount?: number
+    repostCount?: number
+    likeCount?: number
+    viewer?: app.bsky.feed.defs.ViewerState
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.feed.defs.PostView {
+    return {
+      $type: 'app.bsky.feed.defs#postView',
+      uri: `at://${author.did}/app.bsky.feed.post/fake`,
+      cid: FAKE_CID,
+      author,
+      record,
+      embed,
+      replyCount,
+      repostCount,
+      likeCount,
+      indexedAt:
+        new Date().toISOString() as app.bsky.feed.defs.PostView['indexedAt'],
+      viewer,
+      labels,
+    }
+  },
+  embedRecordView({
+    record,
+    author,
+    labels,
+  }: {
+    record: app.bsky.feed.post.Main
+    author: app.bsky.actor.defs.ProfileViewBasic
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.embed.record.View {
+    return {
+      $type: 'app.bsky.embed.record#view',
+      record: {
+        $type: 'app.bsky.embed.record#viewRecord',
+        uri: `at://${author.did}/app.bsky.feed.post/fake`,
+        cid: FAKE_CID,
+        author,
+        value: record,
+        labels,
+        indexedAt:
+          new Date().toISOString() as app.bsky.embed.record.ViewRecord['indexedAt'],
+      },
+    }
+  },
+  profileViewBasic({
+    handle,
+    displayName,
+    description,
+    viewer,
+    labels,
+  }: {
+    handle: string
+    displayName?: string
+    description?: string
+    viewer?: app.bsky.actor.defs.ViewerState
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.actor.defs.ProfileViewBasic & {description?: string} {
+    return {
+      did: `did:web:${handle}`,
+      handle: handle as app.bsky.actor.defs.ProfileViewBasic['handle'],
+      displayName,
+      description,
+      viewer,
+      labels,
+    }
+  },
+  actorViewerState({
+    muted,
+    mutedByList,
+    blockedBy,
+    blocking,
+    blockingByList,
+    following,
+    followedBy,
+  }: {
+    muted?: boolean
+    mutedByList?: app.bsky.graph.defs.ListViewBasic
+    blockedBy?: boolean
+    blocking?: string
+    blockingByList?: app.bsky.graph.defs.ListViewBasic
+    following?: string
+    followedBy?: string
+  }): app.bsky.actor.defs.ViewerState {
+    return {
+      muted,
+      mutedByList,
+      blockedBy,
+      blocking: blocking as app.bsky.actor.defs.ViewerState['blocking'],
+      blockingByList,
+      following: following as app.bsky.actor.defs.ViewerState['following'],
+      followedBy: followedBy as app.bsky.actor.defs.ViewerState['followedBy'],
+    }
+  },
+  replyNotification({
+    author,
+    record,
+    labels,
+  }: {
+    record: app.bsky.feed.post.Main
+    author: app.bsky.actor.defs.ProfileViewBasic
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.notification.listNotifications.Notification {
+    return {
+      uri: `at://${author.did}/app.bsky.feed.post/fake`,
+      cid: FAKE_CID,
+      author: author as app.bsky.actor.defs.ProfileView,
+      reason: 'reply',
+      reasonSubject: `at://${author.did}/app.bsky.feed.post/fake-parent`,
+      record,
+      isRead: false,
+      indexedAt:
+        new Date().toISOString() as app.bsky.notification.listNotifications.Notification['indexedAt'],
+      labels,
+    }
+  },
+  followNotification({
+    author,
+    subjectDid,
+    labels,
+  }: {
+    author: app.bsky.actor.defs.ProfileViewBasic
+    subjectDid: string
+    labels?: com.atproto.label.defs.Label[]
+  }): app.bsky.notification.listNotifications.Notification {
+    return {
+      uri: `at://${author.did}/app.bsky.graph.follow/fake`,
+      cid: FAKE_CID,
+      author: author as app.bsky.actor.defs.ProfileView,
+      reason: 'follow',
+      record: {
+        $type: 'app.bsky.graph.follow',
+        createdAt: new Date().toISOString(),
+        subject: subjectDid,
+      },
+      isRead: false,
+      indexedAt:
+        new Date().toISOString() as app.bsky.notification.listNotifications.Notification['indexedAt'],
+      labels,
+    }
+  },
+  label({
+    val,
+    uri,
+    src,
+  }: {
+    val: string
+    uri: string
+    src?: string
+  }): com.atproto.label.defs.Label {
+    return {
+      src: (src ||
+        'did:plc:fake-labeler') as com.atproto.label.defs.Label['src'],
+      uri: uri as com.atproto.label.defs.Label['uri'],
+      val,
+      cts: new Date().toISOString() as com.atproto.label.defs.Label['cts'],
+    }
+  },
+}
 
 export const DebugModScreen = ({}: NativeStackScreenProps<
   CommonNavigatorParams,
@@ -179,7 +382,18 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                 : undefined,
             author: profile,
           })
-        : mock.imagesView()) as app.bsky.feed.defs.PostView['embed'],
+        : {
+            $type: 'app.bsky.embed.images#view',
+            images: [
+              {
+                thumb:
+                  'https://bsky.social/about/images/social-card-default-gradient.png',
+                fullsize:
+                  'https://bsky.social/about/images/social-card-default-gradient.png',
+                alt: '',
+              },
+            ],
+          }) as app.bsky.feed.defs.PostView['embed'],
     })
   }, [scenario, label, target, profile, isSelfLabel, did])
 
@@ -547,20 +761,6 @@ export const DebugModScreen = ({}: NativeStackScreenProps<
                     <MockNotifItem
                       notif={followNotif}
                       moderationOpts={modOpts}
-                    />
-                    <View style={{height: 20}} />
-                    <Heading title="Notifications v2" subtitle="every kind" />
-                    <GroupedNotifications
-                      profile={profile}
-                      post={post}
-                      moderationOpts={modOpts}
-                      labelTarget={
-                        scenario[0] === 'label'
-                          ? (target[0] as LabelTarget)
-                          : undefined
-                      }
-                      label={label[0]}
-                      isSelfLabel={isSelfLabel}
                     />
                   </>
                 )}
