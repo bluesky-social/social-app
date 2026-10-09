@@ -6,22 +6,16 @@ import {
   VIEWER_DID,
 } from '#/state/queries/notifications/grouped/__fixtures__'
 import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
-import {
-  FollowedYouHeader,
-  FollowerNotification,
-  getFollowers,
-  isFollowerNotification,
-  NotificationItem,
-} from '#/screens/Notifications/components/NotificationItem'
+import {NotificationItem} from '#/screens/Notifications/components/NotificationItem'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-import {H1, H3} from '#/components/Typography'
+import {H1} from '#/components/Typography'
 
 type ReadState = 'fixture' | 'unread' | 'read'
 
 /**
  * Every Notifications v2 row kind, rendered from the grouped notifications
- * fixtures, then the follow fixtures as the Followers tab shows them.
+ * fixtures.
  */
 export function Notifications() {
   const t = useTheme()
@@ -62,27 +56,6 @@ export function Notifications() {
             }
           />
         ))}
-      </View>
-      <H3>Followers tab</H3>
-      <View
-        style={[
-          a.border,
-          a.rounded_md,
-          a.overflow_hidden,
-          t.atoms.border_contrast_low,
-        ]}>
-        <FollowedYouHeader />
-        {notifications
-          .filter(isFollowerNotification)
-          .flatMap(notification =>
-            getFollowers(notification).map(profile => (
-              <FollowerNotification
-                key={`${notification.id}-${profile.did}`}
-                notification={notification}
-                profile={profile}
-              />
-            )),
-          )}
       </View>
     </View>
   )

@@ -22,14 +22,6 @@ import {
   VerifiedNotification,
 } from './kinds/profile'
 
-export {
-  FollowedYouHeader,
-  FollowerNotification,
-  type FollowerNotificationView,
-  getFollowers,
-  isFollowerNotification,
-} from './kinds/follower'
-
 /**
  * Renders one grouped notification, picking the row for its kind. Each kind
  * composes its row from the `Item.*` parts in `./Item`.
