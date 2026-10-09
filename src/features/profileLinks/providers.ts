@@ -127,6 +127,36 @@ export function normalizeProfileLinkUrl(input: string): string | null {
  */
 export const BLOCKED_DOMAINS = ['onlyfans.com', 'fansly.com']
 
+/**
+ * General-purpose URL shorteners, which hide where a link goes. Per T&S, most
+ * taps on adult links from profiles went through one. A brand's own short
+ * links (youtu.be, amzn.to) only lead to that brand, so they aren't listed.
+ */
+export const SHORTENER_DOMAINS = [
+  'adf.ly',
+  'bit.ly',
+  'bitly.com',
+  'bl.ink',
+  'buff.ly',
+  'clck.ru',
+  'cutt.ly',
+  'goo.gl',
+  'is.gd',
+  'lnkd.in',
+  'ow.ly',
+  'rb.gy',
+  'rebrand.ly',
+  's.id',
+  'short.gy',
+  'shorturl.at',
+  't.co',
+  't.ly',
+  'tiny.cc',
+  'tinyurl.com',
+  'v.gd',
+  'x.gd',
+]
+
 function parseWebUrl(url: string): URL | undefined {
   try {
     const parsed = new URL(url)
@@ -183,6 +213,18 @@ export function isBlockedProfileLink(url: string): boolean {
   return BLOCKED_DOMAINS.some(domain => hostMatchesDomain(host, domain))
 }
 
+/** Plain http links can be tampered with on the way, so only https is allowed. */
+export function isInsecureLink(url: string): boolean {
+  return parseWebUrl(url)?.protocol === 'http:'
+}
+
+export function isShortenerLink(url: string): boolean {
+  const parsed = parseWebUrl(url)
+  if (!parsed) return false
+  const host = parsed.hostname.toLowerCase()
+  return SHORTENER_DOMAINS.some(domain => hostMatchesDomain(host, domain))
+}
+
 export function getLinkHost(url: string): string {
   try {
     return new URL(url).hostname.replace(/^www\./, '')
@@ -197,6 +239,8 @@ export type LinkInputValidation = {
   provider: SupportProvider | undefined
   isEmpty: boolean
   isBlocked: boolean
+  isShortener: boolean
+  isInsecure: boolean
 }
 
 /** Checks what a person typed into the link field. */
@@ -208,5 +252,7 @@ export function validateLinkInput(input: string): LinkInputValidation {
     provider: url ? getSupportProvider(url) : undefined,
     isEmpty: trimmed.length === 0,
     isBlocked: !!url && isBlockedProfileLink(url),
+    isShortener: !!url && isShortenerLink(url),
+    isInsecure: !!url && isInsecureLink(url),
   }
 }

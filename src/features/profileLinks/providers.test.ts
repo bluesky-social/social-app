@@ -4,6 +4,8 @@ import {
   getLinkHost,
   getSupportProvider,
   isBlockedProfileLink,
+  isInsecureLink,
+  isShortenerLink,
   normalizeProfileLinkUrl,
   validateLinkInput,
 } from './providers'
@@ -112,6 +114,27 @@ describe('isBlockedProfileLink', () => {
   })
 })
 
+describe('isShortenerLink', () => {
+  it('flags general-purpose shorteners and their subdomains', () => {
+    expect(isShortenerLink('https://bit.ly/abc')).toBe(true)
+    expect(isShortenerLink('https://www.tinyurl.com/abc')).toBe(true)
+    expect(isShortenerLink('https://x.gd/abc')).toBe(true)
+  })
+
+  it('allows brand short links and lookalikes', () => {
+    expect(isShortenerLink('https://youtu.be/abc')).toBe(false)
+    expect(isShortenerLink('https://amzn.to/abc')).toBe(false)
+    expect(isShortenerLink('https://notbit.ly/abc')).toBe(false)
+  })
+})
+
+describe('isInsecureLink', () => {
+  it('flags plain http links', () => {
+    expect(isInsecureLink('http://example.com')).toBe(true)
+    expect(isInsecureLink('https://example.com')).toBe(false)
+  })
+})
+
 describe('validateLinkInput', () => {
   it('normalizes a typed link and recognizes support providers', () => {
     const result = validateLinkInput(' ko-fi.com/kat ')
@@ -123,6 +146,10 @@ describe('validateLinkInput', () => {
 
   it('flags blocked sites and empty input', () => {
     expect(validateLinkInput('onlyfans.com/kat').isBlocked).toBe(true)
+    expect(validateLinkInput('bit.ly/kat').isShortener).toBe(true)
+    expect(validateLinkInput('http://example.com').isInsecure).toBe(true)
+    expect(validateLinkInput('example.com').isInsecure).toBe(false)
+    expect(validateLinkInput('ko-fi.com/kat').isShortener).toBe(false)
     expect(validateLinkInput('   ').isEmpty).toBe(true)
     expect(validateLinkInput('hello').url).toBe(null)
   })
