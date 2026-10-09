@@ -140,3 +140,55 @@ Repro on iOS: stock lost the reader's row in 26/40 runs, fixed 0/40.
 
 **TODO: Remove once #58922 ships in a React Native release we're on.**
 
+
+## VirtualizeUtils.js - the window search lands on estimates that overlap the rows on screen
+
+Applies to every virtualized list without `getItemLayout`. It only changes the window when the
+search over estimated cell offsets disagrees with a mounted cell's measured frame.
+
+Linear: APP-3152.
+
+### Symptom
+
+A large prepend at the top of the list (100 rows on Home Following's cold restore) loses the
+row the reader was on, on a busy device. In the Android verification app with the three fixes
+above, 100 rows prepended at the top lost the row this way in 12 of 32 runs (10 of 16 with the
+emulator's CPUs loaded).
+
+### Cause
+
+After a prepend at the top, the rows in `[0, initialNumToRender)` render above a spacer for the
+rest of the prepended rows, sized at `_averageCellLength` per row. Those head rows are then
+measured, which changes the average. `computeWindowedRenderLimits` binary-searches the scroll
+offset over `getCellMetricsApprox`, which places an unmeasured row at `average × index` with the
+new average. But the spacer on screen still has the size it was rendered with. With 100 rows in
+the spacer, a change of 40pt in the average moves those estimates 4000pt, past the rows the window
+holds. The corrected offset then maps into the spacer (`100..117 -> 84..87` in the traces), and
+the reader's row is unmounted. #58922's hold doesn't help: no layout arrives between the
+correction and the recompute.
+
+### Fix
+
+Before trusting the search, find the mounted cell in the current window whose measured frame
+contains the start of the viewport. If the search landed somewhere else (other than the cell just
+before it, at a shared boundary), use the mounted cells that cover the viewport for the visible
+range. The overscan is still computed from estimates as before, so the window can't grow beyond
+what it already would. When the estimates agree with the measured frames, nothing changes.
+
+Results (verification app, Android emulator, the three fixes above in both columns, 32 runs each):
+the window skipped above the reader in 12 runs without this fix and 0 with it, and the row held in
+15 and 29. The other 3 with it are unrelated: one correction handled before its layouts (the
+window jumps *below* the reader), one probe timeout, and the native stuck mount. Flings and drags
+are unchanged.
+
+It needs the #58922 section above: on its own, it keeps the row at the correction, but the spacer
+re-render that follows loses it to the stale-offset bug.
+
+### Upstream and removal
+
+- Issue: https://github.com/react/react-native/issues/58939
+- PR: https://github.com/react/react-native/pull/58940, with a regression test
+- Standalone repro (RN 0.87.1, with the deterministic test and the run logs):
+  https://github.com/mozzius/virtualizedlist-average-mismatch-repro
+
+**TODO: Remove once #58940 ships in a React Native release we're on.**
