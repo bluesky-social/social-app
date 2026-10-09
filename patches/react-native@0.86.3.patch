@@ -217,7 +217,7 @@ index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90
  }
  
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6c4aea0bd 100644
+index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..d7ccf9836fa05f50c55f3f862b2da657f8da8eab 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 @@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
@@ -246,7 +246,34 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  }
  
  /*
-@@ -1133,6 +1141,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+@@ -1083,11 +1091,21 @@ - (void)_adjustForMaintainVisibleContentPosition
+     return;
+   }
+ 
+-  if (ReactNativeFeatureFlags::enableViewCulling()) {
+-    // Abort if the first visible view has changed (different tag)
+-    if (_firstVisibleView && _firstVisibleView.tag != _firstVisibleViewTag) {
+-      return;
+-    }
++  // Abort if no first visible view (e.g., list was empty during mount)
++  if (!_firstVisibleView) {
++    return;
++  }
++
++  // Abort if the first visible view has been recycled for a different item.
++  // The tag was captured in _prepareForMaintainVisibleScrollPosition (before
++  // mounting), and RCTComponentViewRegistry assigns new tags during dequeue
++  // (mounting) and resets them to 0 during enqueue (unmounting). When items
++  // are removed and re-added, recycled views get new tags based on their
++  // position, so the view at position 0 may have a different tag than before.
++  // If the tag changed, we bail out to avoid applying the MVCP delta to the
++  // wrong view, which would produce incorrect scroll offsets.
++  if (_firstVisibleView.tag != _firstVisibleViewTag) {
++    return;
+   }
+ 
+   std::optional<int> autoscrollThreshold = props.maintainVisibleContentPosition.value().autoscrollToTopThreshold;
+@@ -1133,6 +1151,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
    return _virtualViewContainerState;
  }
  

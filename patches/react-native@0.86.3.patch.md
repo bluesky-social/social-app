@@ -134,6 +134,40 @@ content-less area are attributed to the `UIScrollView`.
 Issue: https://github.com/facebook/react-native/issues/54123
 PR: https://github.com/react/react-native/pull/56747
 
+## RCTScrollViewComponentView.mm Patch - maintainVisibleContentPosition corrects against an unmounted anchor on iOS New Arch
+
+**TODO: Remove after bumping React Native to a release with both
+react/react-native#57294 and react/react-native#58912.**
+
+Symptom: a `maintainVisibleContentPosition` (mVCP) list teleports when the
+update that prepends rows also unmounts the anchor row (+1713pt in the repro).
+
+Cause: `_prepareForMaintainVisibleScrollPosition` records the first visible
+subview before the mount, and `_adjustForMaintainVisibleContentPosition`
+corrects by how far it moved. `_firstVisibleView` is `__weak`, and pooled
+`RCTViewComponentView`s are recycled, so an unmounted anchor comes back nil, in
+the pool with tag 0, or handed out again as another row with that row's frame.
+The delta is then meaningless. 0.86 has a tag check, but only behind
+`enableViewCulling()`, which is off.
+
+Fix: backport of the iOS guards from react/react-native#57294 (commit
+3b90423076, first shipped in 0.88): skip the correction if the anchor is nil or
+its tag differs from the one captured in prepare. The ivar, the capture and the
+`prepareForRecycle` reset already exist in 0.86.
+
+#57294 also skips the correction when `_firstVisibleView.superview !=
+_contentView`. We leave that check out: with `removeClippedSubviews`, a prepend
+taller than about a screen detaches the anchor just before the check, so the
+content jumps by the whole prepend. That 0.88 regression is
+react/react-native#58910, and react/react-native#58912 fixes it by deleting the
+check.
+
+Scope: iOS only. Needed for the Following v2 prepends. MessagesList (loading
+older messages) and PostThread (parents) use mVCP too.
+
+Upstream issue: https://github.com/react/react-native/issues/52757
+Repro: https://github.com/mozzius/scrollview-mvcp-anchor-repro (screen B)
+
 ## ReactViewGroup.kt Patch - Fatal "Required value was null" during subview clipping on Android
 
 Fixes Sentry issue APP-T20Q: `IllegalStateException: Required value was null` thrown by
