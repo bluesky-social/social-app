@@ -15,7 +15,7 @@ import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
-import {useShellLayout} from '#/state/shell/shell-layout'
+import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
   useHomeHeaderMode,
@@ -138,7 +138,11 @@ function NotificationsHeader({
   const t = useTheme()
   const {t: l} = useLingui()
   const headerMode = useHomeHeaderMode()
-  const {headerHeight} = useShellLayout()
+  /*
+   * The pills move by the title's own height rather than the shell's, which
+   * is shared with Home's taller header and can still hold its height.
+   */
+  const {height: titleHeight, onLayout: onTitleLayout} = useShellHeaderLayout()
   const {gtMobile} = useBreakpoints()
   const insets = useSafeAreaInsets()
   const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
@@ -158,7 +162,7 @@ function NotificationsHeader({
           translateY: interpolate(
             headerMode.get(),
             [0, 1],
-            [0, headerPinnedHeight - headerHeight.get()],
+            [0, headerPinnedHeight - titleHeight.get()],
           ),
         },
       ],
@@ -203,9 +207,7 @@ function NotificationsHeader({
       )}
       <Animated.View
         style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
-        onLayout={event => {
-          headerHeight.set(event.nativeEvent.layout.height)
-        }}>
+        onLayout={onTitleLayout}>
         <Layout.Header.Outer noBottomBorder sticky={false}>
           <Layout.Header.MenuButton />
           <Layout.Header.Content>
