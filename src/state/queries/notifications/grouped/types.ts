@@ -1,3 +1,5 @@
+import {type DidString} from '@atproto/syntax'
+
 import {type app} from '#/lexicons'
 
 /**
@@ -82,7 +84,7 @@ export type NotificationView =
        * rest can be loaded on demand. List-time moderation removes hidden
        * actors from both. May still be fewer than `count`.
        */
-      actorDids: string[]
+      actorDids: DidString[]
       /**
        * Only set when every follow in the group came via the same pack.
        */
