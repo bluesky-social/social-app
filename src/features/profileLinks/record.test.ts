@@ -56,6 +56,7 @@ describe('parseProfileRecordLinks', () => {
         {uri: 'javascript:alert(1)'},
         {uri: 'https://onlyfans.com/kat'},
         {uri: 'https://bit.ly/kat'},
+        {uri: 'http://insecure.example'},
         {uri: 'https://example.com'},
         {uri: 'https://example.com/'},
         {uri: 'ok.example'},

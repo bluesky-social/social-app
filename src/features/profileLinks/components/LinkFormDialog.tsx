@@ -123,7 +123,7 @@ function LinkFormInner({
    * is pressed, not on every keystroke.
    */
   const [error, setError] = useState<
-    'invalid' | 'blocked' | 'shortener' | 'duplicate' | undefined
+    'invalid' | 'blocked' | 'shortener' | 'insecure' | 'duplicate' | undefined
   >()
 
   const validation = validateLinkInput(input)
@@ -143,7 +143,8 @@ function LinkFormInner({
       !targetUrl ||
       provider ||
       validation.isBlocked ||
-      validation.isShortener
+      validation.isShortener ||
+      validation.isInsecure
     ) {
       return
     }
@@ -162,7 +163,13 @@ function LinkFormInner({
     return () => {
       cancelled = true
     }
-  }, [targetUrl, provider, validation.isBlocked, validation.isShortener])
+  }, [
+    targetUrl,
+    provider,
+    validation.isBlocked,
+    validation.isShortener,
+    validation.isInsecure,
+  ])
 
   const nextTitle = title.trim() || undefined
   const isUnchanged =
@@ -188,6 +195,14 @@ function LinkFormInner({
       setError('shortener')
       ax.metric('profile:links:rejected', {
         reason: 'shortener',
+        domain: getLinkHost(targetUrl),
+      })
+      return
+    }
+    if (validation.isInsecure) {
+      setError('insecure')
+      ax.metric('profile:links:rejected', {
+        reason: 'insecure',
         domain: getLinkHost(targetUrl),
       })
       return
@@ -232,11 +247,13 @@ function LinkFormInner({
         ? l`Links to this site can’t be added right now.`
         : error === 'shortener'
           ? l`Short links can’t be added. Use the full link instead.`
-          : error === 'duplicate'
-            ? l`You’ve already added this link.`
-            : reachability === 'unreachable'
-              ? l`We couldn’t reach this link. Check it, or save anyway.`
-              : undefined
+          : error === 'insecure'
+            ? l`Only secure links can be added. Use a link that starts with https://.`
+            : error === 'duplicate'
+              ? l`You’ve already added this link.`
+              : reachability === 'unreachable'
+                ? l`We couldn’t reach this link. Check it, or save anyway.`
+                : undefined
 
   // the close button sits as far from the top as the content is from the sides
   const closeInset = IS_LIQUID_GLASS ? tokens.space._2xl : tokens.space.xl
