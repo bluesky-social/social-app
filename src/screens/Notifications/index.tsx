@@ -21,8 +21,12 @@ import {
   type NotificationsTabNavigatorParams,
 } from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
-import {refreshGroupedNotifications} from '#/state/queries/notifications/grouped'
-import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
+import {
+  getGroupedNotificationsTop,
+  type GroupedNotificationsFeed,
+  type LoadedGroupedNotificationsPage,
+  refreshGroupedNotifications,
+} from '#/state/queries/notifications/grouped'
 import {
   useUnreadNotifications,
   useUnreadNotificationsApi,
@@ -33,13 +37,15 @@ import {
   useHomeHeaderMode,
 } from '#/view/com/util/MainScrollProvider'
 import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/Notifications'
-import {
-  PageList,
-  type PageLoad,
-  type SeenAtMode,
-} from '#/screens/Notifications/components/PageList'
+import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
+import {
+  type FeedLoad,
+  getMarkReadAt,
+  nextSeenAt,
+  type SeenAtMode,
+} from '#/screens/Notifications/unread'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
@@ -89,11 +95,11 @@ function NewNotificationsScreenInner() {
     {key: 'conversations', label: l`Replies`},
     {key: 'activity', label: l`Activity`},
   ]
-  const {seenAt, onLoad, requestSnapshot, clearSeen} = useSessionSeenAt()
+  const {seenAt, onFirstLoad, refresh, clearSeen} = useSessionSeenAt()
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
   useReturnToScreen({
     activeFeed,
-    requestSnapshot,
+    refresh,
     clearSeen,
   })
   /*
@@ -165,8 +171,8 @@ function NewNotificationsScreenInner() {
             pageIndex={pageIndex}
             headerOffset={headerOffset}
             seenAt={seenAt}
-            onLoad={onLoad}
-            requestSnapshot={requestSnapshot}
+            onFirstLoad={onFirstLoad}
+            refresh={refresh}
             onEmptyChange={
               tab.key === 'all' ? setHasNoNotifications : undefined
             }
@@ -179,41 +185,67 @@ function NewNotificationsScreenInner() {
 
 /**
  * Snapshot of when notifications were last seen, shared by every tab so the
- * unread tint stays put while the screen is open.
+ * unread tint stays put while the screen is open, and the refreshes that
+ * update it.
  *
- * The first tab to load takes the snapshot from the server, so anything new
- * since the last visit is tinted, and marks what it showed as seen. Later
- * loads update it according to the `SeenAtMode` they were requested with.
+ * Each feed's first load takes the snapshot from the server if there isn't
+ * one yet. From then on, the feed's loads come from `refresh`, which updates
+ * the snapshot according to its `SeenAtMode`. Only fresh loads count: a page
+ * cached from before the screen mounted, or a refresh that failed, never
+ * moves the snapshot or marks anything as seen.
  */
 function useSessionSeenAt() {
+  const queryClient = useQueryClient()
   const unreadApi = useUnreadNotificationsApi()
   const [seenAt, setSeenAt] = useState<Date>()
+  const [mountedAt] = useState(() => Date.now())
   /**
-   * Which feed's next load should update the snapshot, and how. `'any'`
-   * means whichever loads first; `null` means no update is wanted.
+   * Feeds whose first load has been applied, or whose loads `refresh` has
+   * taken over.
    */
-  const pending = useRef<{
-    feed: GroupedNotificationsFeed | 'any'
-    mode: SeenAtMode
-  } | null>({feed: 'any', mode: 'server'})
+  const handledFeeds = useRef(new Set<GroupedNotificationsFeed>())
+  /**
+   * The latest refresh of each feed, so that one overtaken by another leaves
+   * the load to it.
+   */
+  const latestRefreshes = useRef(new Map<GroupedNotificationsFeed, object>())
 
-  const onLoad = ({feed, serverSeenAt, fetchedAt}: PageLoad) => {
-    const request = pending.current
-    if (!request || (request.feed !== 'any' && request.feed !== feed)) return
-    pending.current = null
-    if (request.mode === 'server') {
-      setSeenAt(serverSeenAt ? new Date(serverSeenAt) : new Date(0))
-    } else if (request.mode === 'cleared') {
-      setSeenAt(new Date(fetchedAt))
+  const applyLoad = (load: FeedLoad, mode: SeenAtMode | undefined) => {
+    setSeenAt(snapshot => nextSeenAt({load, mode, snapshot}))
+    const markReadAt = getMarkReadAt(load)
+    if (markReadAt) {
+      void unreadApi.markAllRead({seenAt: markReadAt})
     }
-    void unreadApi.markAllRead({seenAt: new Date(fetchedAt)})
   }
 
-  const requestSnapshot = (
+  const onFirstLoad = (
     feed: GroupedNotificationsFeed,
-    mode: SeenAtMode,
+    page: LoadedGroupedNotificationsPage,
   ) => {
-    pending.current = {feed, mode}
+    if (handledFeeds.current.has(feed) || page.requestedAt < mountedAt) return
+    handledFeeds.current.add(feed)
+    applyLoad({feed, ...page}, undefined)
+  }
+
+  /**
+   * Refetches the first page of a feed, then updates the snapshot from it.
+   * Refreshing any other feed refreshes "All" behind it, so what's new is
+   * marked as seen.
+   */
+  const refresh = async (feed: GroupedNotificationsFeed, mode?: SeenAtMode) => {
+    handledFeeds.current.add(feed)
+    const request = {}
+    latestRefreshes.current.set(feed, request)
+    const startedAt = Date.now()
+    await refreshGroupedNotifications(queryClient, feed)
+    if (latestRefreshes.current.get(feed) !== request) return
+    const page = getGroupedNotificationsTop(queryClient, feed)
+    // A failed refetch leaves the old page in place
+    if (!page || page.requestedAt < startedAt) return
+    applyLoad({feed, ...page}, mode)
+    if (feed !== 'all') {
+      void refresh('all')
+    }
   }
 
   /**
@@ -223,7 +255,7 @@ function useSessionSeenAt() {
     setSeenAt(new Date())
   }
 
-  return {seenAt, onLoad, requestSnapshot, clearSeen}
+  return {seenAt, onFirstLoad, refresh, clearSeen}
 }
 
 /**
@@ -236,15 +268,14 @@ function useSessionSeenAt() {
  */
 function useReturnToScreen({
   activeFeed,
-  requestSnapshot,
+  refresh,
   clearSeen,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
-  requestSnapshot: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
+  refresh: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => Promise<void>
   clearSeen: () => void
 }) {
   const navigation = useNavigation()
-  const queryClient = useQueryClient()
   const numUnread = useUnreadNotifications()
   const isFocused = useIsFocused()
 
@@ -266,15 +297,12 @@ function useReturnToScreen({
     if (hasLeftTab.current) {
       hasLeftTab.current = false
       if (hasNew) {
-        requestSnapshot(feed, 'server')
+        void refresh(feed, 'server')
       } else {
         clearSeen()
       }
     } else if (hasNew) {
-      requestSnapshot(feed, 'kept')
-    }
-    if (hasNew) {
-      void refreshGroupedNotifications(queryClient, feed)
+      void refresh(feed, 'kept')
     }
   })
 
