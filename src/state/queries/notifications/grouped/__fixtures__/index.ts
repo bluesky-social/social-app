@@ -1,3 +1,8 @@
+/*
+ * Fixture data for getGroupedNotifications, for unit tests and the
+ * Notifications section of the Storybook. Not for use in app code.
+ */
+
 import {type $Typed, type Unknown$Type} from '@atproto/lex'
 import {
   type AtUriString,

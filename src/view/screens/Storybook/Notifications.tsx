@@ -4,7 +4,7 @@ import {View} from 'react-native'
 import {
   createGroupedNotificationsFixture,
   VIEWER_DID,
-} from '#/state/queries/notifications/grouped/fixtures'
+} from '#/state/queries/notifications/grouped/__fixtures__'
 import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
 import {NotificationItem} from '#/screens/Notifications/components/NotificationItem'
 import {atoms as a, useTheme} from '#/alf'
