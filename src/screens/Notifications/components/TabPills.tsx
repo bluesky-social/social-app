@@ -1,5 +1,6 @@
 import {useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {
+  PixelRatio,
   Pressable,
   type ScrollView,
   type StyleProp,
@@ -450,6 +451,22 @@ function PillIndicator({
 }) {
   const height = layouts[0].height
   const radius = height / 2
+  /**
+   * Base width of the middle piece, which is stretched with scaleX. Layout
+   * snaps it to whole physical pixels, so at fractional densities (e.g. 2.625x
+   * on Android) a tiny base is resized by a large fraction, and once scaled
+   * the middle falls short of the right cap or overshoots it. Scaling down from
+   * the widest middle keeps that error under a pixel.
+   */
+  const middleWidth = Math.max(
+    1,
+    ...layouts.map(layout => layout.width - height),
+  )
+  /**
+   * Snapped to whole pixels up front, so that translating the right cap by
+   * `width - capWidth` lines its edge up exactly with the pill's.
+   */
+  const capWidth = PixelRatio.roundToNearestPixel(radius + 1)
   const inputRange = layouts.map((_, index) => index)
   const xOutputRange = layouts.map(layout => layout.x)
   const widthOutputRange = layouts.map(layout => layout.width)
@@ -466,10 +483,12 @@ function PillIndicator({
     transform: [{translateX: geometry.get().x}],
   }))
   const middleStyle = useAnimatedStyle(() => ({
-    transform: [{scaleX: Math.max(0.01, geometry.get().width - height)}],
+    transform: [
+      {scaleX: Math.max(0.01, geometry.get().width - height) / middleWidth},
+    ],
   }))
   const rightCapStyle = useAnimatedStyle(() => ({
-    transform: [{translateX: geometry.get().width - radius - 1}],
+    transform: [{translateX: geometry.get().width - capWidth}],
   }))
 
   return (
@@ -483,7 +502,7 @@ function PillIndicator({
           zIndex: 1,
           top: layouts[0].y,
           left: 0,
-          width: radius + 1,
+          width: capWidth,
           height,
         },
         containerStyle,
@@ -495,7 +514,7 @@ function PillIndicator({
           a.top_0,
           a.left_0,
           {
-            width: radius + 1,
+            width: capWidth,
             height,
             backgroundColor,
             borderColor,
@@ -514,7 +533,7 @@ function PillIndicator({
           a.top_0,
           {
             left: radius,
-            width: 1,
+            width: middleWidth,
             height,
             transformOrigin: 'left center',
             backgroundColor,
@@ -532,7 +551,7 @@ function PillIndicator({
           a.top_0,
           a.left_0,
           {
-            width: radius + 1,
+            width: capWidth,
             height,
             backgroundColor,
             borderColor,
