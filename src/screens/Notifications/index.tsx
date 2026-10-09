@@ -29,7 +29,10 @@ import {
   type LoadedGroupedNotificationsPage,
   refreshGroupedNotifications,
 } from '#/state/queries/notifications/grouped'
-import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
+import {
+  useLastUnreadCheck,
+  useUnreadNotificationsApi,
+} from '#/state/queries/notifications/unread'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
@@ -41,7 +44,9 @@ import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
 import {
   type FeedLoad,
+  type FeedTimes,
   getMarkReadAt,
+  getUnreadTabs,
   nextSeenAt,
   type SeenAtMode,
 } from '#/screens/Notifications/unread'
@@ -100,7 +105,7 @@ function NewNotificationsScreenInner() {
     {key: 'conversations', label: l`Replies`},
     {key: 'activity', label: l`Activity`},
   ]
-  const {seenAt, onFirstLoad, refresh} = useSessionSeenAt()
+  const {seenAt, loadedNewestAt, onFirstLoad, refresh} = useSessionSeenAt()
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
   const scrolledDownFeeds = useRef(new Set<GroupedNotificationsFeed>())
   const queryClient = useQueryClient()
@@ -172,26 +177,11 @@ function NewNotificationsScreenInner() {
         onHeightChange={setHeaderOffset}
         loadingLatestPages={loadingLatestPages}>
         {!hasNoNotifications && (
-          <Pager.TabBar>
-            {({selectedPage, selectPage, dragProgress}) => (
-              <TabPills
-                tabs={tabs}
-                selectedTab={tabs[selectedPage].key}
-                dragProgress={dragProgress}
-                onSelectTab={tab => {
-                  const page = tabs.findIndex(
-                    candidate => candidate.key === tab,
-                  )
-                  // Re-pressing the current tab scrolls it to the top
-                  if (page === selectedPage) {
-                    emitSoftReset()
-                  }
-                  selectPage(page)
-                }}
-                contentContainerStyle={a.py_sm}
-              />
-            )}
-          </Pager.TabBar>
+          <NotificationsTabBar
+            tabs={tabs}
+            seenAt={seenAt}
+            loadedNewestAt={loadedNewestAt}
+          />
         )}
       </NotificationsHeader>
       <Pager.Content
@@ -246,11 +236,15 @@ function NewNotificationsScreenInner() {
  * the snapshot according to its `SeenAtMode`. Only fresh loads count: a page
  * cached from before the screen mounted, or a refresh that failed, never
  * moves the snapshot or marks anything as seen.
+ *
+ * Also keeps the newest notification each feed's latest fresh load found, in
+ * `loadedNewestAt`, for the tab pills.
  */
 function useSessionSeenAt() {
   const queryClient = useQueryClient()
   const unreadApi = useUnreadNotificationsApi()
   const [seenAt, setSeenAt] = useState<Date>()
+  const [loadedNewestAt, setLoadedNewestAt] = useState<FeedTimes>({})
   const [mountedAt] = useState(() => Date.now())
   /**
    * Feeds whose first load has been applied, or whose loads `refresh` has
@@ -265,6 +259,11 @@ function useSessionSeenAt() {
 
   const applyLoad = (load: FeedLoad, mode: SeenAtMode | undefined) => {
     setSeenAt(snapshot => nextSeenAt({load, mode, snapshot}))
+    setLoadedNewestAt(current =>
+      current[load.feed] === load.newestAt
+        ? current
+        : {...current, [load.feed]: load.newestAt},
+    )
     const markReadAt = getMarkReadAt(load)
     if (markReadAt) {
       void unreadApi.markAllRead({seenAt: markReadAt})
@@ -301,7 +300,7 @@ function useSessionSeenAt() {
     }
   }
 
-  return {seenAt, onFirstLoad, refresh}
+  return {seenAt, loadedNewestAt, onFirstLoad, refresh}
 }
 
 /**
@@ -371,6 +370,60 @@ function useReturnToScreen({
       unlistenPush()
     }
   }, [])
+}
+
+/**
+ * The tab pills, with a dot on the tabs that have unread notifications the
+ * user hasn't seen in them. See `getUnreadTabs`.
+ */
+function NotificationsTabBar({
+  tabs,
+  seenAt,
+  loadedNewestAt,
+}: {
+  tabs: {key: GroupedNotificationsFeed; label: string}[]
+  seenAt: Date | undefined
+  /**
+   * The newest notification each feed's latest fresh load found.
+   */
+  loadedNewestAt: FeedTimes
+}) {
+  const {selectedPage, selectPage, dragProgress} = Pager.usePager()
+  const check = useLastUnreadCheck()
+  const activeFeed = tabs[selectedPage].key
+  /**
+   * How far each tab has been seen in, which only grows while it's in view.
+   */
+  const [seenUpTo, setSeenUpTo] = useState<FeedTimes>({})
+  const unread = getUnreadTabs({
+    feeds: tabs.map(tab => tab.key),
+    activeFeed,
+    check,
+    loadedNewestAt,
+    seenAt,
+    seenUpTo,
+  })
+  if (unread.seenUpTo !== seenUpTo) {
+    setSeenUpTo(unread.seenUpTo)
+  }
+
+  return (
+    <TabPills
+      tabs={tabs}
+      selectedTab={activeFeed}
+      unreadTabs={unread.unreadTabs}
+      dragProgress={dragProgress}
+      onSelectTab={tab => {
+        const page = tabs.findIndex(candidate => candidate.key === tab)
+        // Re-pressing the current tab scrolls it to the top
+        if (page === selectedPage) {
+          emitSoftReset()
+        }
+        selectPage(page)
+      }}
+      contentContainerStyle={a.py_sm}
+    />
+  )
 }
 
 function NotificationsHeader({
