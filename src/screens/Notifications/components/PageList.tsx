@@ -249,7 +249,7 @@ export function PageList({
                     {feed === 'all' ? (
                       <NoNotifications />
                     ) : (
-                      <EmptyMessage message={getEmptyMessage(feed, l)} />
+                      <EmptyMessage feed={feed} />
                     )}
                   </View>
                 )
@@ -423,8 +423,30 @@ function NoNotifications() {
 /**
  * Shown on a tab with nothing in it, e.g. "No replies to show yet".
  */
-function EmptyMessage({message}: {message: string}) {
+function EmptyMessage({feed}: {feed: GroupedNotificationsFeed}) {
   const t = useTheme()
+  // The macro only compiles `l` from this component's own `useLingui`
+  const {t: l} = useLingui()
+
+  let message: string
+  switch (feed) {
+    case 'all':
+      message = l`No notifications yet`
+      break
+    case 'people-i-follow':
+      message = l`No notifications from people you follow yet`
+      break
+    case 'followers':
+      message = l`No followers to show yet`
+      break
+    case 'conversations':
+      message = l`No replies to show yet`
+      break
+    case 'activity':
+      message = l`No activity to show yet`
+      break
+  }
+
   return (
     <Text
       style={[
@@ -436,22 +458,4 @@ function EmptyMessage({message}: {message: string}) {
       {message}
     </Text>
   )
-}
-
-function getEmptyMessage(
-  feed: GroupedNotificationsFeed,
-  l: ReturnType<typeof useLingui>['t'],
-) {
-  switch (feed) {
-    case 'all':
-      return l`No notifications yet`
-    case 'people-i-follow':
-      return l`No notifications from people you follow yet`
-    case 'followers':
-      return l`No followers to show yet`
-    case 'conversations':
-      return l`No replies to show yet`
-    case 'activity':
-      return l`No activity to show yet`
-  }
 }
