@@ -3,7 +3,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 
 import {atoms as a, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
-import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/CircleInfo'
+import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components/icons/Circle'
 import {ExclamationCircle_Stroke2_Corner0_Rounded as ExclamationCircleIcon} from '#/components/icons/ExclamationCircle'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
@@ -18,9 +18,7 @@ export function AccountStatus({
 
   const control = Prompt.usePromptControl()
 
-  if (status === 'good') {
-    return null
-  }
+  if (status === 'good') return null
 
   const Icon = status === 'atRisk' ? ExclamationCircleIcon : CircleInfoIcon
   const iconColor =
@@ -29,11 +27,33 @@ export function AccountStatus({
   const title =
     status === 'atRisk'
       ? l`Your account is at risk of permanent suspension`
-      : l`Your account has strikes on record`
+      : l`Your account has strikes against it`
   const description =
-    status === 'atRisk'
-      ? l`Your account has repeated violations of our Community Guidelines. Another violation may result in your account being permanently suspended.`
-      : l`Bluesky has taken action on your account or content for violating our community guidelines. Further violations will lead to stronger enforcement, including suspension.`
+    status === 'atRisk' ? (
+      <Trans>
+        We’ve taken action on your account for violating our Community
+        Guidelines. Your record now carries enough strikes that another
+        violation could lead to permanent suspension.
+      </Trans>
+    ) : (
+      <Trans>
+        We’ve taken action on your account for violating our Community
+        Guidelines, and strikes have been added to your record. More violations
+        will lead to stronger enforcement, including suspension.
+      </Trans>
+    )
+  const disclaimer =
+    status === 'atRisk' ? (
+      <Trans>
+        Your standing may restrict certain features on your account. Strikes
+        come off your record over time.
+      </Trans>
+    ) : (
+      <Trans>
+        Your standing doesn’t restrict your account right now, and strikes come
+        off your record over time.
+      </Trans>
+    )
 
   return (
     <>
@@ -64,10 +84,7 @@ export function AccountStatus({
           <Prompt.TitleText>{title}</Prompt.TitleText>
           <Prompt.DescriptionText>{description}</Prompt.DescriptionText>
           <Prompt.DescriptionText>
-            <Trans>
-              Nothing on your account is restricted right now. Strikes from
-              violations come off your record over time.
-            </Trans>
+            <Trans>{disclaimer}</Trans>
           </Prompt.DescriptionText>
         </Prompt.Content>
         <Prompt.Actions>
