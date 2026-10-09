@@ -131,6 +131,16 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           seenAt: seenAt.toISOString() as ISODatetimeString,
         })
 
+        /*
+         * Nothing is unread any more, so polling goes back to its usual rate,
+         * and the page from the last check is out of date.
+         */
+        cacheRef.current = {
+          ...cacheRef.current,
+          unreadCount: 0,
+          usableInFeed: false,
+        }
+
         // update & broadcast
         setNumUnread('')
         broadcast.postMessage({event: ''})
