@@ -39,6 +39,7 @@ import {PostMenuButton} from '#/components/PostControls/PostMenu'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import {RichText} from '#/components/RichText'
+import {SubtleHover} from '#/components/SubtleHover'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -479,8 +480,13 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
         to={href}
         label={l`Post by ${name}`}
         style={[a.flex_col, a.align_stretch, a.rounded_md]}>
-        {({hovered}) => (
-          <Card style={[a.gap_xs, hovered && t.atoms.bg_contrast_25]}>
+        {({hovered, pressed}) => (
+          <Card style={[a.gap_xs]}>
+            <SubtleHover
+              hover={hovered || pressed}
+              native
+              style={[a.rounded_md, a.curve_continuous]}
+            />
             <View style={[a.flex_row, a.align_center, a.gap_xs, {height: 20}]}>
               <UserAvatar
                 size={20}
