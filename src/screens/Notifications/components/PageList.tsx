@@ -52,6 +52,7 @@ export function PageList({
   seenAt,
   onFirstLoad,
   refresh,
+  onScrolledDownChange,
   onEmptyChange,
 }: {
   feed: GroupedNotificationsFeed
@@ -75,6 +76,7 @@ export function PageList({
    * snapshot from it.
    */
   refresh: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => Promise<void>
+  onScrolledDownChange?: (isScrolledDown: boolean) => void
   /**
    * Called with whether this feed has loaded completely and has nothing in
    * it, e.g. so the screen can drop its tabs when there are no
@@ -184,6 +186,7 @@ export function PageList({
         testID={`notificationsList-${feed}`}
         style={a.flex_1}
         onLayout={event => setListHeight(event.nativeEvent.layout.height)}
+        onScrolledDownChange={onScrolledDownChange}
         headerOffset={headerOffset}
         {...(IS_WEB ? {disableFullWindowScroll: true} : {})}
         data={rows}
