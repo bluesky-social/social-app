@@ -414,6 +414,7 @@ function SectionHeader({section}: {section: 'today' | 'earlier'}) {
         section === 'today'
           ? a.py_sm
           : [a.border_t, a.pt_md, a.pb_sm, t.atoms.border_contrast_low],
+        t.atoms.bg,
       ]}>
       <Text accessibilityRole="header" style={[a.text_md, a.font_bold]}>
         {section === 'today'

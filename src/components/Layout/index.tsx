@@ -140,8 +140,15 @@ export const Center = memo(function LayoutCenter({
   children,
   style,
   ignoreTabletLayoutOffset,
+  ignoreScrollbarOffset = false,
   ...props
-}: ViewProps & {ignoreTabletLayoutOffset?: boolean}) {
+}: ViewProps & {
+  ignoreTabletLayoutOffset?: boolean
+  /**
+   * Contained scroll views already reserve space for their own scrollbar.
+   */
+  ignoreScrollbarOffset?: boolean
+}) {
   const {isWithinOffsetView} = useContext(ScrollbarOffsetContext)
   const {gtMobile} = useBreakpoints()
   const {centerColumnOffset} = useLayoutBreakpoints()
@@ -167,7 +174,11 @@ export const Center = memo(function LayoutCenter({
                     ? CENTER_COLUMN_OFFSET
                     : 0,
               },
-              {translateX: web(SCROLLBAR_OFFSET) ?? 0},
+              {
+                translateX: ignoreScrollbarOffset
+                  ? 0
+                  : (web(SCROLLBAR_OFFSET) ?? 0),
+              },
             ],
           },
         style,
