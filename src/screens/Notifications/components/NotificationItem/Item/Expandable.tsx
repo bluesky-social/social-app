@@ -80,8 +80,13 @@ function AnimatedHeight({
 
   return (
     <Animated.View style={[a.overflow_hidden, style]}>
-      {/* Lays out at its full height however tall the clip is, to measure */}
+      {/*
+       * Out of flow, so it lays out at its full height however tall the clip
+       * is, to measure. In flow, Yoga would size it to fit the clip's height,
+       * which starts at 0.
+       */}
       <View
+        style={[a.absolute, a.top_0, a.left_0, a.right_0]}
         onLayout={event => contentHeight.set(event.nativeEvent.layout.height)}>
         {children}
       </View>
