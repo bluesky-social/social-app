@@ -19,6 +19,7 @@ import {Patreon} from '#/components/icons/community/Patreon'
 import {PayPal} from '#/components/icons/community/PayPal'
 import {Redbubble} from '#/components/icons/community/Redbubble'
 import {Stripe} from '#/components/icons/community/Stripe'
+import {Substack} from '#/components/icons/community/Substack'
 import {Venmo} from '#/components/icons/community/Venmo'
 import {Vgen} from '#/components/icons/community/Vgen'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
@@ -43,6 +44,7 @@ const SUPPORT_PROVIDER_LOGOS: Record<SupportProviderLogoName, typeof KoFi> = {
   PayPal,
   Redbubble,
   Stripe,
+  Substack,
   Venmo,
   Vgen,
 }

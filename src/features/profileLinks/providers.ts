@@ -23,6 +23,7 @@ export type SupportProviderLogoName =
   | 'PayPal'
   | 'Redbubble'
   | 'Stripe'
+  | 'Substack'
   | 'Venmo'
   | 'Vgen'
 
@@ -75,6 +76,7 @@ export const SUPPORT_PROVIDERS: SupportProvider[] = [
   {name: 'Redbubble', logo: 'Redbubble', domain: 'redbubble.com'},
   {name: 'Stripe', logo: 'Stripe', domain: 'buy.stripe.com'},
   {name: 'Stripe', logo: 'Stripe', domain: 'donate.stripe.com'},
+  {name: 'Substack', logo: 'Substack', domain: 'substack.com'},
   {name: 'Venmo', logo: 'Venmo', domain: 'venmo.com'},
   {name: 'VGen', logo: 'Vgen', domain: 'vgen.co'},
 ]

@@ -36,6 +36,16 @@ describe('getSupportProvider', () => {
     expect(getSupportProvider('https://paypal.com/paypalme/')).toBe(undefined)
   })
 
+  it('recognizes Substack publications and profiles', () => {
+    expect(getSupportProvider('https://kat.substack.com')?.name).toBe(
+      'Substack',
+    )
+    expect(getSupportProvider('https://substack.com/@kat')?.name).toBe(
+      'Substack',
+    )
+    expect(getSupportProvider('https://substack.com')).toBe(undefined)
+  })
+
   it('recognizes accounts on a subdomain', () => {
     expect(getSupportProvider('https://kat.itch.io')?.name).toBe('itch.io')
     expect(getSupportProvider('https://kat.gumroad.com/')?.name).toBe('Gumroad')
