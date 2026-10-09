@@ -1,7 +1,7 @@
-import {useRef, useState} from 'react'
+import {useState} from 'react'
 
 import {type NewPostsPillAuthor} from '#/components/NewPostsPill'
-import {type FeedPostSlice} from './queries/postFeed'
+import {type FeedPostSlice, type StagedPage} from './queries/postFeed'
 import {SETTLE_AT_TOP_LIMIT} from './useSettleAtTop'
 
 /** How many faces the pill shows. */
@@ -21,18 +21,13 @@ type Page = {
 }
 
 /**
- * What the pill offers: the posts the view's prepends put above where the
- * reader was, as they first rendered, which the reader hasn't reached yet. It's
- * a snapshot, so its count stays as it was however the rows change, while its
+ * What the pill offers: the posts on a page the view staged above where the
+ * reader was (see `usePostFeedPrepend`), as they rendered when it was first
+ * offered. It's a
+ * snapshot, so its count stays as it was however the rows change, while its
  * faces only ever drop out (see {@link livePrependOffer}).
  */
 export type PrependOffer = {
-  /**
-   * The `fetchedAt` of each page it offers posts from, newest first. The offer
-   * lasts while any of them is still in the feed, so a refresh, or anything
-   * else that replaces them all, ends it.
-   */
-  pages: number[]
   /** The keys of the offered rows. */
   keys: string[]
   /**
@@ -64,32 +59,16 @@ function faceOf(slice: FeedPostSlice): NewPostsPillAuthor | undefined {
   return {did, avatar}
 }
 
-/** Adds `face` to `authors`, if it's new and there's room for it. */
-function addFace(authors: NewPostsPillAuthor[], face?: NewPostsPillAuthor) {
-  if (
-    face &&
-    authors.length < FACE_LIMIT &&
-    !authors.some(author => author.did === face.did)
-  ) {
-    authors.push(face)
-  }
-}
-
 /**
- * What a prepend's `page` offers, as the list renders it: the post rows from
- * that page, which are the rows above where the reader was. Rows the list
- * leaves out, such as muted authors', aren't offered. Neither are saved-feed
- * samples, as `page` is the page without them, nor the gap row below it.
- *
- * With `unread`, the offer of the view's earlier prepends that the reader
- * hasn't reached, the page's posts are offered on top of it, as one offer.
- * When none of the page's posts render, that's `unread` as it is, which is
- * `undefined` without one.
+ * What a staged `page` offers, as the list renders it: the post rows from that
+ * page, which are the rows above where the reader was. Rows the list leaves
+ * out, such as muted authors', aren't offered. Neither are saved-feed samples,
+ * as `page` is the page without them, nor the gap row below it. `undefined`
+ * when none of its posts render.
  */
 export function getPrependOffer(
   rows: readonly Row[],
   page: Page,
-  unread?: PrependOffer,
 ): PrependOffer | undefined {
   const slices = new Set(page.slices)
   const counted = new Set<FeedPostSlice>()
@@ -102,21 +81,20 @@ export function getPrependOffer(
     keys.push(row.key)
     if (!counted.has(row.slice)) {
       counted.add(row.slice)
-      addFace(authors, faceOf(row.slice))
+      const face = faceOf(row.slice)
+      if (
+        face &&
+        authors.length < FACE_LIMIT &&
+        !authors.some(author => author.did === face.did)
+      ) {
+        authors.push(face)
+      }
     }
   }
   if (!counted.size) {
-    return unread
+    return undefined
   }
-  for (const author of unread?.authors ?? []) {
-    addFace(authors, author)
-  }
-  return {
-    pages: [page.fetchedAt, ...(unread?.pages ?? [])],
-    keys: [...keys, ...(unread?.keys ?? [])],
-    count: counted.size + (unread?.count ?? 0),
-    authors,
-  }
+  return {keys, count: counted.size, authors}
 }
 
 /**
@@ -149,39 +127,35 @@ export function livePrependOffer(
 }
 
 /**
- * The new posts pill for a view's prepends (see `usePostFeedPrepend`). Once
- * the posts a prepend put on top render, it takes a snapshot of them as its
- * offer (see {@link getPrependOffer}), on top of any posts an earlier one put
- * there that the reader hasn't reached yet.
+ * The new posts pill for the page a view's prepends staged above the reader
+ * (see `usePostFeedPrepend`). Once that page is offered and its rows render,
+ * it takes a snapshot of them as its offer (see {@link getPrependOffer}).
  *
- * The pill shows while the view is active, some of the offer's pages are still
- * in the feed and some of its rows still render, which includes a view that
- * prepended in the background becoming active. It hides once the reader
- * reaches the posts, until a later prepend offers more:
+ * The pill shows while the view is active, the page is staged and offered,
+ * and some of its rows still render, which includes a view that prepended in
+ * the background becoming active. A page another replaces keeps the offer, so
+ * the pill stays, with the new page's posts. It hides once the reader reaches
+ * the posts, which reads the page.
  *
- * - The topmost offered row is seen, if the reader has dragged the list since
- *   the offer. Until they have, the only rows the list reports as seen are
- *   the ones behind the header, just above the row the anchor kept on screen.
- * - The list reaches its top, by any means, including the scroll a press of
- *   the pill makes. A press alone doesn't hide it.
- *
- * Pressing it scrolls up to the top, without fetching.
+ * Pressing it scrolls up to the top, without fetching. Already at the top,
+ * where there's no scroll to report reaching it, `onRead` reads the page.
  */
 export function usePrependPill({
   enabled,
   isActive,
-  prependedAt,
+  staged,
   rows,
   pages,
   offsetY,
   scrollToTop,
+  onRead,
 }: {
   /** Whether the view offers prepended posts at all. */
   enabled: boolean
   /** Whether the view is the one on screen. */
   isActive: boolean
-  /** The `fetchedAt` of the last page the view's prepends put on top. */
-  prependedAt: number | undefined
+  /** The page the view's prepends staged on top, if any. */
+  staged: StagedPage | undefined
   /** The rows the list renders. */
   rows: readonly Row[]
   /** The feed's pages as they render, without saved-feed samples. */
@@ -190,59 +164,41 @@ export function usePrependPill({
   offsetY: {get(): number}
   /** Scrolls the list to its true top. */
   scrollToTop: () => void
+  /** Reads the staged page. */
+  onRead: () => void
 }) {
-  const [offer, setOffer] = useState<PrependOffer>()
-  /** Whether the reader has reached the posts the offer is of. */
-  const [isRead, setIsRead] = useState(false)
-  /** The prepend whose page the pill last took a snapshot of. */
-  const [takenAt, setTakenAt] = useState<number>()
-  /** The offer the reader has dragged the list since, if any. */
-  const draggedOffer = useRef<PrependOffer>(undefined)
-
-  const live =
-    offer && pages?.some(page => offer.pages.includes(page.fetchedAt))
-      ? livePrependOffer(offer, rows)
-      : undefined
-  const unread = !isRead && live?.topKey !== undefined ? offer : undefined
+  /** The offer of the last staged page offered, by its `fetchedAt`. */
+  const [snapshot, setSnapshot] = useState<{
+    fetchedAt: number
+    offer: PrependOffer | undefined
+  }>()
 
   const top = pages?.[0]
-  // The rows from a prepend's page render after it commits.
+  const page = staged && top?.fetchedAt === staged.fetchedAt ? top : undefined
+  // A page's rows render after it commits, which may be after it's offered.
   if (
     enabled &&
-    prependedAt !== undefined &&
-    prependedAt !== takenAt &&
-    top?.fetchedAt === prependedAt
+    page &&
+    staged?.offered &&
+    snapshot?.fetchedAt !== page.fetchedAt
   ) {
-    setTakenAt(prependedAt)
-    const next = getPrependOffer(rows, top, unread)
-    if (next && next !== unread) {
-      setOffer(next)
-      setIsRead(false)
-    }
+    setSnapshot({fetchedAt: page.fetchedAt, offer: getPrependOffer(rows, page)})
   }
+  const offer =
+    page && snapshot?.fetchedAt === page.fetchedAt ? snapshot.offer : undefined
+  const live = offer && livePrependOffer(offer, rows)
 
   return {
-    visible: enabled && isActive && unread !== undefined,
-    // The last offer's, so the pill keeps them as it hides.
-    count: offer?.count ?? 0,
+    visible:
+      enabled && isActive && !!staged?.offered && live?.topKey !== undefined,
+    // The last offer's, so the pill keeps it as it hides.
+    count: snapshot?.offer?.count ?? 0,
     authors: live?.authors ?? [],
     onPress: () => {
-      // Already at the top, there's no scroll to report reaching it.
       if (offsetY.get() <= SETTLE_AT_TOP_LIMIT) {
-        setIsRead(true)
+        onRead()
       }
       scrollToTop()
-    },
-    onBeginDrag: () => {
-      draggedOffer.current = offer
-    },
-    onItemSeen: (row: {key: string}) => {
-      if (draggedOffer.current === offer && row.key === live?.topKey) {
-        setIsRead(true)
-      }
-    },
-    onReachTop: () => {
-      setIsRead(true)
     },
   }
 }

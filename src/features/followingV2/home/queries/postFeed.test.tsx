@@ -1,6 +1,7 @@
-import {type PropsWithChildren} from 'react'
+import {memo, type PropsWithChildren} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
-import {type ScrollEvent} from 'react-native-reanimated'
+import {type ScrollEvent, useSharedValue} from 'react-native-reanimated'
+import {type ReanimatedScrollEvent} from 'react-native-reanimated/lib/typescript/hook/commonTypes'
 import {
   dehydrate,
   hydrate,
@@ -10,9 +11,10 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query'
 import {type PersistedClient} from '@tanstack/react-query-persist-client'
-import {act, renderHook, waitFor} from '@testing-library/react-native'
+import {act, render, renderHook, waitFor} from '@testing-library/react-native'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
 import {
   findAllPostsInQueryData,
@@ -30,10 +32,12 @@ import {
   RETURN_STALE_AFTER,
   useNewPostsCheck,
 } from '#/features/followingV2/home/useNewPostsCheck'
+import {usePrependPill} from '#/features/followingV2/home/usePrependPill'
 import {
   SETTLE_QUIET_MS,
   useSettleAtTop,
 } from '#/features/followingV2/home/useSettleAtTop'
+import {useSettleScrollHandlers} from '#/features/followingV2/home/useSettleScrollHandlers'
 import {app} from '#/lexicons'
 import {
   FOLLOWING_SNAPSHOT_VERSION,
@@ -46,15 +50,18 @@ import {
 } from './followingSnapshot'
 import {
   type FeedDescriptor,
+  type FeedPage,
   type FeedPageUnselected,
   type FeedParams,
   type FeedPostSlice,
   findGaps,
   gapBelow,
+  hasUnseenPosts,
   pollLatest,
   type PostFeedData,
   PROCESS_STARTED_AT,
   RQKEY,
+  type StagedPage,
   usePostFeedFetcher,
   usePostFeedGapFill,
   usePostFeedPrepend,
@@ -908,7 +915,8 @@ describe('usePostFeedPrepend', () => {
   /**
    * The feed's view, as PostFeed has it, over `data` already in the cache. Its
    * list has laid out, unless `laidOut` is false. Only an `isActive` view
-   * checks for new posts, which it hands to `onFound`.
+   * checks for new posts: what it stages lights the Home dot (`onHasNew`), and
+   * what a peek alone finds goes to `onFound`.
    */
   function renderView({
     data = restoredData(),
@@ -927,17 +935,20 @@ describe('usePostFeedPrepend', () => {
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )
     const onFound = jest.fn()
+    const onHasNew = jest.fn()
     const hook = renderHook(
       ({enabled}: {enabled: boolean}) => {
         const query = usePostFeedQuery('following')
         const {createFeedApi} = usePostFeedFetcher('following')
         const listRest = useListRest({}, true)
-        const {refresh, isRefreshing} = usePostFeedRefresh('following')
+        const {refresh, isRefreshing, isPending} =
+          usePostFeedRefresh('following')
         const topFetchedAt = query.data?.pages[0]?.fetchedAt
         const prepend = usePostFeedPrepend('following', undefined, {
           enabled,
           topFetchedAt,
           listAtRest: listRest.atRest,
+          isRefreshing: isPending,
         })
         useNewPostsCheck({
           topFetchedAt,
@@ -946,15 +957,15 @@ describe('usePostFeedPrepend', () => {
           isBusy:
             isRefreshing || (query.isFetching && !query.isFetchingNextPage),
           check: async trigger => {
-            const prepending =
-              trigger === 'return' || prepend.isOwed()
-                ? prepend.run()
-                : undefined
-            if (prepending) {
-              await prepending
-              return undefined
+            const staging = prepend.check(trigger)
+            if (!staging) {
+              return pollLatest(query.data?.pages[0], createFeedApi())
             }
-            return pollLatest(query.data?.pages[0], createFeedApi())
+            const page = await staging
+            if (page && hasUnseenPosts(query.data?.pages[0], page.feed)) {
+              onHasNew(true)
+            }
+            return undefined
           },
           onFound,
         })
@@ -975,7 +986,7 @@ describe('usePostFeedPrepend', () => {
     if (laidOut) {
       list.layOut()
     }
-    return {hook, queryClient, cached, list, onFound}
+    return {hook, queryClient, cached, list, onFound, onHasNew}
   }
 
   /** Answers the next request with these posts, newer than `since`. */
@@ -1065,7 +1076,7 @@ describe('usePostFeedPrepend', () => {
       await flushNotifications()
       expect(requested()).toEqual([SINCE_REQUEST])
 
-      const joined = hook.result.current.prepend.run()
+      const joined = hook.result.current.prepend.run('return')
       act(() => {
         since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
       })
@@ -1079,13 +1090,42 @@ describe('usePostFeedPrepend', () => {
       ])
     })
 
-    it('fetches above the new top once the last is done', async () => {
+    it('fetches from the same place again once the last is done, and replaces what it staged', async () => {
       newer(['new'])
       const {hook, cached} = renderView()
       await waitFor(() => expect(cached().pages).toHaveLength(3))
 
+      newer(['newer', 'new'])
+      await act(() => hook.result.current.prepend.run('interval')!)
+
+      expect(requested()).toEqual([SINCE_REQUEST, SINCE_REQUEST])
+      expect(postsOf(cached())).toEqual([
+        ['newer', 'new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      expect(cached().pageParams).toEqual([
+        undefined,
+        {cursor: 'start:1'},
+        {cursor: 'timeline:1'},
+      ])
+      // Still offered, as the restore's page was.
+      expect(hook.result.current.prepend.staged).toEqual({
+        fetchedAt: cached().pages[0].fetchedAt,
+        offered: true,
+        isFull: false,
+      })
+    })
+
+    it('fetches above the new top once the reader has reached it', async () => {
+      newer(['new'])
+      const {hook, cached} = renderView()
+      await waitFor(() => expect(cached().pages).toHaveLength(3))
+      act(() => hook.result.current.prepend.markRead())
+      expect(hook.result.current.prepend.staged).toBeUndefined()
+
       newer(['newer'], {cursor: 'start:0'})
-      await act(() => hook.result.current.prepend.run()!)
+      await act(() => hook.result.current.prepend.run('interval')!)
 
       expect(requested()).toEqual([
         SINCE_REQUEST,
@@ -1097,9 +1137,11 @@ describe('usePostFeedPrepend', () => {
         ['timeline-1'],
         ['timeline-2'],
       ])
-      expect(hook.result.current.prepend.prependedAt).toBe(
-        cached().pages[0].fetchedAt,
-      )
+      expect(hook.result.current.prepend.staged).toEqual({
+        fetchedAt: cached().pages[0].fetchedAt,
+        offered: false,
+        isFull: false,
+      })
     })
 
     it('rejects when the fetch fails, leaving the feed as it was', async () => {
@@ -1111,7 +1153,7 @@ describe('usePostFeedPrepend', () => {
       failNextRequest(new TypeError('Network request failed'))
       let error: unknown
       await act(async () => {
-        await hook.result.current.prepend.run()!.catch(e => {
+        await hook.result.current.prepend.run('return')!.catch(e => {
           error = e
         })
       })
@@ -1126,7 +1168,7 @@ describe('usePostFeedPrepend', () => {
       delete data.pages[0].startCursor
       const {hook} = renderView({data})
 
-      expect(hook.result.current.prepend.run()).toBeUndefined()
+      expect(hook.result.current.prepend.run('return')).toBeUndefined()
       expect(requested()).toEqual([])
     })
   })
@@ -1221,7 +1263,7 @@ describe('usePostFeedPrepend', () => {
     expect(writes).toHaveLength(0)
     expect(cached()).toBe(before)
     expect(hook.result.current.prepend.isOwed()).toBe(false)
-    expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+    expect(hook.result.current.prepend.staged).toBeUndefined()
   })
 
   it('puts a contiguous page on top, which the page below continues from', async () => {
@@ -1237,10 +1279,12 @@ describe('usePostFeedPrepend', () => {
       startCursor: 'start:0',
       since: 'start:1',
     })
-    // The view knows which page it put on top, for the pill to offer.
-    expect(hook.result.current.prepend.prependedAt).toBe(
-      cached().pages[0].fetchedAt,
-    )
+    // The view knows which page it staged on top, for the pill to offer.
+    expect(hook.result.current.prepend.staged).toEqual({
+      fetchedAt: cached().pages[0].fetchedAt,
+      offered: true,
+      isFull: false,
+    })
     expect(cached().pageParams).toEqual([
       undefined,
       {cursor: 'start:1'},
@@ -1349,7 +1393,7 @@ describe('usePostFeedPrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.staged).toBeUndefined()
     })
 
     it('while it holds what it found', async () => {
@@ -1371,7 +1415,7 @@ describe('usePostFeedPrepend', () => {
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
       expect(hook.result.current.prepend.isOwed()).toBe(false)
-      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.staged).toBeUndefined()
     })
   })
 
@@ -1454,12 +1498,20 @@ describe('usePostFeedPrepend', () => {
       await wait(0)
     }
 
+    /** Answers the next peek with a post newer than the top page's. */
+    function answerPeek() {
+      mockClient.call.mockImplementationOnce(() => ({
+        feed: [feedItem('new')],
+      }))
+    }
+
     beforeEach(() => {
       jest.useFakeTimers()
       AppState.currentState = 'active'
     })
 
     it('fetches what is newer, and puts it on top once the list is at rest', async () => {
+      answerPeek()
       const since = holdNextRequest()
       const {hook, cached, list} = renderView({
         data: fetchedData(),
@@ -1469,7 +1521,8 @@ describe('usePostFeedPrepend', () => {
       expect(requested()).toEqual([])
 
       await leaveFor(RETURN_STALE_AFTER)
-      expect(requested()).toEqual([SINCE_REQUEST])
+      // It peeks first, and the newest post isn't the one on top.
+      expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
 
       // The reader has started scrolling again by the time it lands.
       list.beginDrag()
@@ -1488,12 +1541,15 @@ describe('usePostFeedPrepend', () => {
         ['timeline-2'],
       ])
       // For the pill to offer.
-      expect(hook.result.current.prepend.prependedAt).toBe(
-        cached().pages[0].fetchedAt,
-      )
+      expect(hook.result.current.prepend.staged).toEqual({
+        fetchedAt: cached().pages[0].fetchedAt,
+        offered: true,
+        isFull: false,
+      })
     })
 
     it('leaves a gap below what it found when there was more', async () => {
+      answerPeek()
       newer(['new'], {cursor: 'gap:1'})
       const {cached} = renderView({data: fetchedData(), isActive: true})
 
@@ -1509,15 +1565,16 @@ describe('usePostFeedPrepend', () => {
     })
 
     it('makes no request when the app was only inactive, however long', async () => {
-      newer([])
       renderView({data: fetchedData(), isActive: true})
 
       // As the notification shade or Control Center leave it.
       await leaveFor(10 * RETURN_STALE_AFTER, 'inactive')
       expect(requested()).toEqual([])
 
+      answerPeek()
+      newer([])
       await leaveFor(RETURN_STALE_AFTER)
-      expect(requested()).toEqual([SINCE_REQUEST])
+      expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
     })
 
     it('joins the restore prepend in progress, rather than fetching its range again', async () => {
@@ -1544,6 +1601,7 @@ describe('usePostFeedPrepend', () => {
     })
 
     it('gives way to a pull to refresh while it fetches', async () => {
+      answerPeek()
       const since = holdNextRequest()
       const {hook, cached} = renderView({
         data: fetchedData(),
@@ -1564,7 +1622,7 @@ describe('usePostFeedPrepend', () => {
 
       expect(cached()).toBe(refreshed)
       expect(postsOf(cached())).toEqual([['fresh']])
-      expect(hook.result.current.prepend.prependedAt).toBeUndefined()
+      expect(hook.result.current.prepend.staged).toBeUndefined()
     })
 
     it('peeks for the Home dot when the top page has no boundary to fetch above', async () => {
@@ -1577,6 +1635,659 @@ describe('usePostFeedPrepend', () => {
       expect(requested()).toEqual(['timeline latest'])
       expect(onFound).toHaveBeenCalledWith(true, 'return')
     })
+  })
+})
+
+describe('staging new posts on Home Following', () => {
+  const KEY = RQKEY('following')
+  const SECOND = 1e3
+  const MINUTE = 60 * SECOND
+  /** How long the fake timeline takes to answer. */
+  const LATENCY = 100
+  const serveDefault = mockClient.call.getMockImplementation()!
+
+  /** The newest of bob's posts on the fake timeline, `p1` to `p<newest>`. */
+  let newest = 12
+
+  function post(n: number) {
+    return feedItem(`p${n}`)
+  }
+
+  /**
+   * The fake timeline, which answers after {@link LATENCY}: a peek is the
+   * newest post, a `since` request the newest posts above it, up to the limit,
+   * and a fetch from the top the newest 30. Cursors are `t:<post>`.
+   */
+  function serve(
+    method: unknown,
+    params: {cursor?: string; since?: string; limit: number},
+  ) {
+    const response = answer(method, params)
+    return new Promise(resolve => setTimeout(() => resolve(response), LATENCY))
+  }
+
+  function answer(
+    method: unknown,
+    params: {cursor?: string; since?: string; limit: number},
+  ) {
+    if (method !== app.bsky.feed.getTimeline) {
+      throw new Error('Unexpected request')
+    }
+    if (params.limit === 1) {
+      return {feed: [post(newest)]}
+    }
+    const since = params.since ? Number(params.since.split(':')[1]) : 0
+    const bottom = Math.max(since + 1, newest - params.limit + 1)
+    const feed = []
+    for (let n = newest; n >= bottom; n--) {
+      feed.push(post(n))
+    }
+    let cursor: string | undefined = `t:${bottom}`
+    if (bottom === since + 1) {
+      // The range is exhausted, which a `since` request echoes.
+      cursor = params.since
+    }
+    return {cursor, startCursor: feed.length ? `t:${newest}` : undefined, feed}
+  }
+
+  /** Following as loaded this session: p12 and p11, then p10. */
+  function homeData(): PostFeedData {
+    const fetchedAt = Date.now()
+    return {
+      pages: [
+        {
+          cursor: 't:11',
+          startCursor: 't:12',
+          feed: [post(12), post(11)],
+          fetchedAt,
+        },
+        {startCursor: 't:10', cursor: undefined, feed: [post(10)], fetchedAt},
+      ],
+      pageParams: [undefined, {cursor: 't:11'}],
+    }
+  }
+
+  function postsOf(data: PostFeedData) {
+    return data.pages.map(page =>
+      page.feed.map(item => item.post.uri.split('/').pop()),
+    )
+  }
+
+  /** A since request from `t:<n>`, as `requested` has it. */
+  function since(n: number) {
+    return `timeline since:t:${n} limit:100`
+  }
+
+  const PEEK = 'timeline latest'
+
+  type Row =
+    | {type: 'sliceItem'; key: string; slice: FeedPostSlice}
+    | {type: 'gap'; key: string; cursor: string}
+
+  /** The rows PostFeed renders for `pages`, gap rows included. */
+  function rowsOf(pages: FeedPage[] = []) {
+    const gaps = findGaps(pages)
+    return pages.flatMap((page, i): Row[] => {
+      const rows: Row[] = page.slices.map(slice => ({
+        type: 'sliceItem',
+        key: slice.items[0]._reactKey,
+        slice,
+      }))
+      if (gaps.has(i) && page.cursor) {
+        rows.push({type: 'gap', key: `gap-${page.since}`, cursor: page.cursor})
+      }
+      return rows
+    })
+  }
+
+  /** A scroll event at `y`, moving at `velocity`. */
+  function scrollEvent(y: number, velocity = 0) {
+    return {
+      contentOffset: {x: 0, y},
+      velocity: {x: 0, y: velocity},
+    } as unknown as ReanimatedScrollEvent
+  }
+
+  /**
+   * Home's Following view, wired as PostFeed wires it, in a `memo()`
+   * component, as PostFeed is. The list's reports go to the handlers its
+   * first render made, as a list keeps them, so they must act on the latest
+   * state. `onHasNew` is the Home dot.
+   */
+  function renderHome({isActive = true}: {isActive?: boolean} = {}) {
+    const queryClient = createQueryClient()
+    queryClient.setQueryData(KEY, homeData())
+    const onHasNew = jest.fn()
+    const scrollToTop = jest.fn()
+    const latest = {} as {
+      rows: Row[]
+      pill: ReturnType<typeof usePrependPill>
+      staged: StagedPage | undefined
+      refresh: () => Promise<unknown>
+    }
+    let first:
+      | {
+          scrollHandlers: ReturnType<typeof useSettleScrollHandlers>
+          onItemSeen: (row: Row) => void
+          onLayout: () => void
+        }
+      | undefined
+
+    const View = memo(function View({isActive}: {isActive: boolean}) {
+      const query = usePostFeedQuery('following')
+      const {createFeedApi} = usePostFeedFetcher('following')
+      const listRest = useListRest({}, true)
+      const {refresh, isRefreshing, isPending} = usePostFeedRefresh('following')
+      const pages = query.data?.pages
+      const topFetchedAt = pages?.[0]?.fetchedAt
+      const prepend = usePostFeedPrepend('following', undefined, {
+        enabled: true,
+        topFetchedAt,
+        listAtRest: listRest.atRest,
+        isRefreshing: isPending,
+      })
+      const settleAtTop = useSettleAtTop('following', undefined, {
+        enabled: true,
+        onRestAtTop: () => onHasNew(false),
+      })
+      useNewPostsCheck({
+        topFetchedAt,
+        isEmpty: false,
+        isActive,
+        isBusy: isRefreshing || (query.isFetching && !query.isFetchingNextPage),
+        interval: MINUTE,
+        check: async trigger => {
+          const staging = prepend.check(trigger)
+          if (!staging) {
+            return pollLatest(pages?.[0], createFeedApi())
+          }
+          const page = await staging
+          if (page && hasUnseenPosts(pages?.[0], page.feed)) {
+            onHasNew(true)
+          }
+          return undefined
+        },
+        onFound: () => onHasNew(true),
+      })
+      const offsetY = useSharedValue(400)
+      const rows = rowsOf(pages)
+      const pill = usePrependPill({
+        enabled: true,
+        isActive,
+        staged: prepend.staged,
+        rows,
+        pages,
+        offsetY,
+        scrollToTop,
+        onRead: prepend.markRead,
+      })
+      const onItemSeen = useNonReactiveCallback((row: Row) => {
+        const top = pages?.[0]
+        if (
+          prepend.staged &&
+          top &&
+          ((row.type === 'sliceItem' && top.slices.includes(row.slice)) ||
+            (row.type === 'gap' && row.cursor === top.cursor))
+        ) {
+          prepend.onPageSeen(top.fetchedAt)
+        }
+      })
+      const scrollHandlers = useSettleScrollHandlers(
+        listRest.scrollHandlers,
+        {
+          ...settleAtTop,
+          onBeginDrag: () => {
+            settleAtTop.onBeginDrag()
+            prepend.onBeginDrag()
+          },
+          onReachTop: prepend.markRead,
+        },
+        offsetY,
+      )
+      Object.assign(latest, {rows, pill, staged: prepend.staged, refresh})
+      first ??= {scrollHandlers, onItemSeen, onLayout: listRest.onLayout}
+      return null
+    })
+
+    const view = render(
+      <QueryClientProvider client={queryClient}>
+        <View isActive={isActive} />
+      </QueryClientProvider>,
+    )
+    const handlers = () => first!.scrollHandlers
+    /** What the list reports, as `List` does, at offsets in points. */
+    const list = {
+      beginDrag: (y: number) =>
+        act(() => handlers().onBeginDrag?.(scrollEvent(y), {})),
+      scroll: (y: number) =>
+        act(() => handlers().onScroll?.(scrollEvent(y), {})),
+      endDrag: (y: number, velocity = 0) =>
+        act(() => handlers().onEndDrag?.(scrollEvent(y, velocity), {})),
+      /** The list reports the row with post `p<n>` as seen. */
+      see: (n: number) => {
+        const row = latest.rows.find(
+          row =>
+            row.type === 'sliceItem' &&
+            row.slice.feedPostUri === post(n).post.uri,
+        )!
+        act(() => first!.onItemSeen(row))
+      },
+      seeGap: () => {
+        const row = latest.rows.find(row => row.type === 'gap')!
+        act(() => first!.onItemSeen(row))
+      },
+    }
+    act(() => first!.onLayout())
+    const cached = () => queryClient.getQueryData<PostFeedData>(KEY)!
+    const setActive = (isActive: boolean) =>
+      view.rerender(
+        <QueryClientProvider client={queryClient}>
+          <View isActive={isActive} />
+        </QueryClientProvider>,
+      )
+    return {latest, cached, list, onHasNew, setActive}
+  }
+
+  /** Advances fake time by `ms`, letting what that sets off run. */
+  async function wait(ms: number) {
+    await act(() => jest.advanceTimersByTimeAsync(ms))
+  }
+
+  /** Lets an interval pass, and the check it makes finish. */
+  async function anInterval() {
+    await wait(MINUTE + SECOND)
+  }
+
+  /** Reports the app's state changing to `state`, as `AppState` does. */
+  function setAppState(state: AppStateStatus) {
+    act(() => {
+      AppState.currentState = state
+      for (const listener of [...appStateListeners]) {
+        listener(state)
+      }
+    })
+  }
+
+  /**
+   * Leaves the app in the background for two minutes, then opens it again,
+   * and lets the check that makes finish.
+   */
+  async function warmOpen() {
+    setAppState('background')
+    await wait(RETURN_STALE_AFTER)
+    setAppState('active')
+    await wait(SECOND)
+  }
+
+  beforeEach(() => {
+    jest.useFakeTimers()
+    AppState.currentState = 'active'
+    newest = 12
+    mockClient.call.mockImplementation(serve)
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
+    mockClient.call.mockImplementation(serveDefault)
+  })
+
+  describe('on an interval', () => {
+    it('stages what is newer above the reader and lights the Home dot, with no pill', async () => {
+      const {latest, cached, onHasNew} = renderHome()
+
+      newest = 14
+      await anInterval()
+
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(postsOf(cached())).toEqual([
+        ['p14', 'p13'],
+        ['p12', 'p11'],
+        ['p10'],
+      ])
+      expect(onHasNew).toHaveBeenLastCalledWith(true)
+      expect(latest.pill.visible).toBe(false)
+    })
+
+    it('replaces what it staged with what is newest, fetching from the same place, however often it checks', async () => {
+      const {cached, onHasNew} = renderHome()
+      newest = 14
+      await anInterval()
+
+      for (newest = 15; newest <= 20; newest++) {
+        await anInterval()
+      }
+
+      expect(requested().filter(request => request !== PEEK)).toEqual(
+        Array.from({length: 7}, () => since(12)),
+      )
+      expect(postsOf(cached())).toEqual([
+        ['p20', 'p19', 'p18', 'p17', 'p16', 'p15', 'p14', 'p13'],
+        ['p12', 'p11'],
+        ['p10'],
+      ])
+      // It kept checking, with the dot lit.
+      expect(onHasNew).toHaveBeenCalledTimes(7)
+      expect(onHasNew).not.toHaveBeenCalledWith(false)
+    })
+
+    it('only peeks while the newest post is the one on top', async () => {
+      const {cached} = renderHome()
+      await anInterval()
+      expect(requested()).toEqual([PEEK])
+
+      newest = 14
+      await anInterval()
+      const staged = cached()
+      await anInterval()
+
+      expect(requested()).toEqual([PEEK, PEEK, since(12), PEEK])
+      expect(cached()).toBe(staged)
+    })
+
+    it('stages at most a page of the newest posts, with a gap below them, and checks no more until the reader reaches them', async () => {
+      const {cached, list} = renderHome()
+
+      newest = 12 + 150
+      await anInterval()
+      expect(cached().pages).toHaveLength(3)
+      expect(cached().pages[0].feed).toHaveLength(100)
+      expect(postsOf(cached())[0][0]).toBe('p162')
+      expect(gapBelow(cached().pages, 0)).toBe('open')
+      const staged = cached()
+
+      newest += 5
+      await anInterval()
+      await anInterval()
+
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(cached()).toBe(staged)
+
+      // Reached, the posts above them go on top.
+      list.beginDrag(400)
+      list.see(100)
+      list.endDrag(300)
+      await anInterval()
+      expect(requested()).toEqual([PEEK, since(12), PEEK, since(162)])
+      expect(postsOf(cached())[0]).toEqual([
+        'p167',
+        'p166',
+        'p165',
+        'p164',
+        'p163',
+      ])
+    })
+
+    it('keeps what it staged, and checks no more, once a page no longer holds all that is newer', async () => {
+      const {cached, list} = renderHome()
+      newest = 14
+      await anInterval()
+      const staged = cached()
+
+      /*
+       * The newest page above where they were fetched from would leave out the
+       * staged posts, and the list holds the reader's place only for posts
+       * added above the others.
+       */
+      newest = 14 + 150
+      await anInterval()
+      expect(requested()).toEqual([PEEK, since(12), PEEK, since(12)])
+      expect(cached()).toBe(staged)
+
+      newest += 5
+      await anInterval()
+      expect(requested()).toHaveLength(4)
+
+      // Reached, the newest posts go above them, with a gap below.
+      list.beginDrag(400)
+      list.see(13)
+      list.endDrag(300)
+      await anInterval()
+      expect(requested()).toEqual([
+        PEEK,
+        since(12),
+        PEEK,
+        since(12),
+        PEEK,
+        since(14),
+      ])
+      expect(cached().pages).toHaveLength(4)
+      expect(postsOf(cached())[0][0]).toBe('p169')
+      expect(gapBelow(cached().pages, 0)).toBe('open')
+    })
+
+    it('makes no checks from a view that is not on screen, and leaves the Home dot alone', async () => {
+      const {setActive, onHasNew} = renderHome({isActive: false})
+      newest = 14
+      await wait(10 * MINUTE)
+      expect(requested()).toEqual([])
+
+      // On screen, it checks at once, as its posts are a while old.
+      setActive(true)
+      await wait(SECOND)
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(onHasNew).toHaveBeenLastCalledWith(true)
+
+      setActive(false)
+      newest = 16
+      await wait(10 * MINUTE)
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(onHasNew).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('once the reader reaches what is staged', () => {
+    it('fetches above it, when they see a staged post after a drag', async () => {
+      const {cached, list} = renderHome()
+      newest = 14
+      await anInterval()
+
+      list.beginDrag(400)
+      list.see(13)
+      list.endDrag(300)
+      newest = 16
+      await anInterval()
+
+      expect(requested().filter(request => request !== PEEK)).toEqual([
+        since(12),
+        since(14),
+      ])
+      expect(postsOf(cached())).toEqual([
+        ['p16', 'p15'],
+        ['p14', 'p13'],
+        ['p12', 'p11'],
+        ['p10'],
+      ])
+    })
+
+    it('fetches above it, when they see its gap row after a drag', async () => {
+      const {cached, list} = renderHome()
+      newest = 12 + 150
+      await anInterval()
+
+      list.beginDrag(400)
+      list.seeGap()
+      list.endDrag(300)
+      newest += 2
+      await anInterval()
+
+      expect(requested().filter(request => request !== PEEK)).toEqual([
+        since(12),
+        since(162),
+      ])
+      expect(cached().pages).toHaveLength(4)
+    })
+
+    it('but not when they see it without a drag since, as behind the header', async () => {
+      const {cached, list} = renderHome()
+      newest = 14
+      await anInterval()
+      // A drag before the posts were staged doesn't count either.
+      list.beginDrag(400)
+      list.endDrag(400)
+      newest = 15
+      await anInterval()
+
+      list.see(13)
+      newest = 16
+      await anInterval()
+
+      expect(requested().filter(request => request !== PEEK)).toEqual([
+        since(12),
+        since(12),
+        since(12),
+      ])
+      expect(cached().pages).toHaveLength(3)
+    })
+
+    it('drops a fetch it was holding to replace them', async () => {
+      const {cached, list} = renderHome()
+      newest = 14
+      await anInterval()
+      const staged = cached()
+
+      // The reader is dragging as the next check finds more.
+      list.beginDrag(400)
+      newest = 16
+      await anInterval()
+      list.see(13)
+      list.endDrag(300)
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(cached()).toBe(staged)
+      // The next check fetches above what they reached.
+      await anInterval()
+      expect(postsOf(cached())[0]).toEqual(['p16', 'p15'])
+    })
+
+    it('clears the Home dot once they come to rest at the true top', async () => {
+      const {cached, list, onHasNew} = renderHome()
+      newest = 14
+      await anInterval()
+      expect(onHasNew).toHaveBeenLastCalledWith(true)
+
+      // Where the anchor kept the reader as the posts went above them.
+      list.scroll(400)
+      list.beginDrag(400)
+      list.scroll(0)
+      list.endDrag(0)
+      await wait(SETTLE_QUIET_MS)
+
+      expect(onHasNew).toHaveBeenLastCalledWith(false)
+      // Reaching the top read the staged posts.
+      newest = 16
+      await anInterval()
+      expect(postsOf(cached())[0]).toEqual(['p16', 'p15'])
+    })
+  })
+
+  describe('on a warm open', () => {
+    it('offers what is staged with the pill, counting exactly the posts above the reader', async () => {
+      const {latest, cached, onHasNew} = renderHome()
+      newest = 14
+      await anInterval()
+      expect(latest.pill.visible).toBe(false)
+
+      newest = 17
+      await warmOpen()
+
+      expect(requested()).toEqual([PEEK, since(12), PEEK, since(12)])
+      expect(postsOf(cached())[0]).toEqual(['p17', 'p16', 'p15', 'p14', 'p13'])
+      expect(latest.pill).toMatchObject({visible: true, count: 5})
+      expect(onHasNew).toHaveBeenLastCalledWith(true)
+    })
+
+    it('offers what is staged without fetching it again, when nothing is newer', async () => {
+      const {latest} = renderHome()
+      newest = 14
+      await anInterval()
+
+      await warmOpen()
+
+      expect(requested()).toEqual([PEEK, since(12), PEEK])
+      expect(latest.pill).toMatchObject({visible: true, count: 2})
+    })
+
+    it('offers what is staged when it cannot check', async () => {
+      const {latest} = renderHome()
+      newest = 14
+      await anInterval()
+
+      failNextRequest(new TypeError('Network request failed'))
+      await warmOpen()
+
+      expect(latest.pill).toMatchObject({visible: true, count: 2})
+    })
+
+    it('offers what is staged on a warm open, without checking, while it is full', async () => {
+      const {latest} = renderHome()
+      newest = 12 + 150
+      await anInterval()
+
+      newest += 5
+      await warmOpen()
+
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(latest.pill).toMatchObject({visible: true, count: 100})
+    })
+
+    it('raises no pill with nothing staged', async () => {
+      const {latest} = renderHome()
+
+      await warmOpen()
+
+      expect(requested()).toEqual([PEEK])
+      expect(latest.pill.visible).toBe(false)
+    })
+
+    it('keeps the pill as later checks replace what it offers, with their posts', async () => {
+      const {latest} = renderHome()
+      newest = 14
+      await warmOpen()
+      expect(latest.pill).toMatchObject({visible: true, count: 2})
+
+      newest = 15
+      await anInterval()
+
+      expect(latest.pill).toMatchObject({visible: true, count: 3})
+    })
+
+    it('hides the pill once the reader sees a staged post after a drag', async () => {
+      const {latest, list} = renderHome()
+      newest = 14
+      await warmOpen()
+
+      list.beginDrag(400)
+      list.see(13)
+      list.endDrag(300)
+
+      expect(latest.pill.visible).toBe(false)
+      expect(latest.staged).toBeUndefined()
+    })
+  })
+
+  it('gives way to a pull to refresh in flight when it would commit', async () => {
+    const {latest, cached, list} = renderHome()
+    // The reader is dragging as a check finds more, so it holds what it found.
+    list.beginDrag(400)
+    newest = 14
+    await anInterval()
+    expect(requested()).toEqual([PEEK, since(12)])
+
+    const top = holdNextRequest()
+    let refreshing!: Promise<unknown>
+    act(() => {
+      refreshing = latest.refresh()
+    })
+    list.endDrag(400)
+    await wait(LIST_REST_QUIET_MS)
+    expect(postsOf(cached())).toEqual([['p12', 'p11'], ['p10']])
+
+    await act(async () => {
+      top.respondWith({cursor: 't:13', startCursor: 't:14', feed: [post(14)]})
+      await refreshing
+    })
+    expect(postsOf(cached())).toEqual([['p14']])
+    expect(latest.staged).toBeUndefined()
   })
 })
 

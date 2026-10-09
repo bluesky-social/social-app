@@ -86,6 +86,7 @@ import {
   type FeedPostSlice,
   type FeedPostSliceItem,
   findGaps,
+  hasUnseenPosts,
   pollLatest,
   RQKEY,
   usePostFeedFetcher,
@@ -361,6 +362,7 @@ let PostFeed = ({
     refresh,
     error: refreshError,
     isRefreshing,
+    isPending: isRefreshPending,
   } = usePostFeedRefresh(feed, feedParams)
   const samples = useSavedFeedSamples({
     enabled: enabled !== false && feed === 'following',
@@ -396,10 +398,23 @@ let PostFeed = ({
     enabled: isAnchored && enabled !== false,
     topFetchedAt: lastFetchedAt,
     listAtRest: listRest.atRest,
+    isRefreshing: isRefreshPending,
   })
   const fillGap = usePostFeedGapFill(feed, feedParams)
+  /*
+   * Pressing "Show more posts" below the posts staged on top, the reader has
+   * reached them.
+   */
+  const onFillGap = useNonReactiveCallback((cursor: string) => {
+    if (cursor === feedData?.pages[0]?.cursor) {
+      prepend.markRead()
+    }
+    return fillGap(cursor)
+  })
   const settleAtTop = useSettleAtTop(feed, feedParams, {
     enabled: isAnchored && enabled !== false,
+    // At the newest post, nothing is new to the reader any more.
+    onRestAtTop: () => onHasNew?.(false),
   })
   /** The list's scroll offset, which its scroll handlers keep. */
   const listOffsetY = useSharedValue(0)
@@ -473,11 +488,11 @@ let PostFeed = ({
   })
 
   /*
-   * Anchored Following's checks, made by the view on screen only. A real
-   * return fetches what's newer and puts it on top at rest, for the pill to
-   * offer. A check while the view is prepending, or owes its restored top a
-   * prepend, waits on that rather than racing it. Otherwise, or with no
-   * boundary to fetch above, it peeks for the Home dot, as other feeds do.
+   * Anchored Following's checks, made by the view on screen only. Each one
+   * that finds newer posts stages them above the reader at rest (see
+   * `usePostFeedPrepend`) and lights the Home dot. Only a return to the app
+   * offers them with the pill. With no boundary to fetch above, as for an
+   * empty feed, it peeks for the Home dot instead, as other feeds do.
    */
   useNewPostsCheck({
     topFetchedAt: lastFetchedAt,
@@ -485,15 +500,21 @@ let PostFeed = ({
     isActive: isAnchored && isActive,
     // A refetch from the top is about to show what a check would find.
     isBusy: isRefreshing || (isFetching && !isFetchingNextPage),
-    interval: disablePoll ? undefined : pollInterval,
+    /*
+     * Not paused while the Home dot is lit, as `disablePoll` is, since each
+     * check replaces what's staged with the newest posts.
+     */
+    interval: pollInterval,
     check: async trigger => {
-      const prepending =
-        trigger === 'return' || prepend.isOwed() ? prepend.run() : undefined
-      if (prepending) {
-        await prepending
-        return undefined
+      const staging = prepend.check(trigger)
+      if (!staging) {
+        return pollLatest(feedData?.pages[0], createFeedApi())
       }
-      return pollLatest(data?.pages[0], createFeedApi())
+      const page = await staging
+      if (page && hasUnseenPosts(feedData?.pages[0], page.feed)) {
+        onHasNew?.(true)
+      }
+      return undefined
     },
     onFound: () => {
       if (isEmpty) {
@@ -950,7 +971,7 @@ let PostFeed = ({
   const pill = usePrependPill({
     enabled: isAnchored,
     isActive,
-    prependedAt: prepend.prependedAt,
+    staged: prepend.staged,
     rows: feedItems,
     // Without samples, which the pill never offers.
     pages: feedData?.pages,
@@ -961,11 +982,24 @@ let PostFeed = ({
         offset: -headerOffset,
       })
     },
+    onRead: prepend.markRead,
   })
-  const onPillItemSeen = useNonReactiveCallback(pill.onItemSeen)
+  /** Tells the prepend the reader saw a row, if it's from the top page. */
+  const onTopRowSeen = useNonReactiveCallback((row: FeedRow) => {
+    const top = data?.pages[0]
+    if (
+      prepend.staged &&
+      top &&
+      ((row.type === 'sliceItem' && top.slices.includes(row.slice)) ||
+        (row.type === 'gap' && row.cursor === top.cursor))
+    ) {
+      prepend.onPageSeen(top.fetchedAt)
+    }
+  })
   /**
-   * The list's scroll handlers. Settling and the pill judge the offset as the
-   * list reports it, as they have to know where the list really is. The Home
+   * The list's scroll handlers. Settling, staging and the pill judge the
+   * offset as the list reports it, as they have to know where the list really
+   * is. The Home
    * header sees it with the corrections anchoring makes taken out, so they
    * can't hide or show it.
    */
@@ -976,9 +1010,10 @@ let PostFeed = ({
           ...settleAtTop,
           onBeginDrag: () => {
             settleAtTop.onBeginDrag()
-            pill.onBeginDrag()
+            prepend.onBeginDrag()
           },
-          onReachTop: pill.onReachTop,
+          // At the top, the reader has passed everything staged above them.
+          onReachTop: prepend.markRead,
         }
       : undefined,
     listOffsetY,
@@ -1172,7 +1207,7 @@ let PostFeed = ({
         return (
           <GapRow
             isOpen={row.isOpen}
-            onFill={() => fillGap(row.cursor)}
+            onFill={() => onFillGap(row.cursor)}
             hideTopBorder={rowIndex === 0}
           />
         )
@@ -1194,7 +1229,7 @@ let PostFeed = ({
       feedTab,
       feedCacheKey,
       onPressShowLess,
-      fillGap,
+      onFillGap,
       t,
     ],
   )
@@ -1279,7 +1314,7 @@ let PostFeed = ({
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
-      onPillItemSeen(item)
+      onTopRowSeen(item)
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
@@ -1400,7 +1435,7 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, onPillItemSeen, feed, liveNowConfig, getPostPosition, ax],
+    [feedFeedback, onTopRowSeen, feed, liveNowConfig, getPostPosition, ax],
   )
 
   return (

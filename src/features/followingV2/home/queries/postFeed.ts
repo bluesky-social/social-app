@@ -49,6 +49,7 @@ import {
   type FeedSource,
   type ReasonFeedSource,
 } from '#/features/followingV2/home/api/types'
+import {type NewPostsCheckTrigger} from '#/features/followingV2/home/useNewPostsCheck'
 import {type app} from '#/lexicons'
 
 type ActorDid = string
@@ -527,7 +528,13 @@ export function usePostFeedRefresh(
     return pending.current
   }
 
-  return {refresh, error, isRefreshing}
+  return {
+    refresh,
+    error,
+    isRefreshing,
+    /** Whether a refresh is in flight, as `isRefreshing` is once rendered. */
+    isPending: () => pending.current !== undefined,
+  }
 }
 
 /**
@@ -544,34 +551,122 @@ export const PROCESS_STARTED_AT = Date.now()
 const PREPEND_LIMIT = 100
 
 /**
- * Puts what is newer than the feed's top page above it, with one fetch and
- * then one write through the same compare-and-swap as a refresh. The view
- * prepends above a top page restored from disk, and on a real return to the
- * app (see `PostFeed`).
+ * What prompted a prepend: a top page restored from disk, or a check for new
+ * posts. Only a restore and a return to the app offer what they find with the
+ * pill.
+ */
+export type PrependTrigger = 'restore' | NewPostsCheckTrigger
+
+/**
+ * The page a view's prepends put above where the reader was, which they
+ * haven't reached yet. Until they do, the next prepend fetches from the same
+ * place again and replaces it, rather than stacking another page on top.
+ */
+export type StagedPage = {
+  /** The page's `fetchedAt`. */
+  fetchedAt: number
+  /** Whether the pill offers its posts. */
+  offered: boolean
+  /**
+   * Whether more posts than fit on a page were newer than where it was
+   * fetched from, last time that was checked, so nothing more is fetched
+   * until the reader reaches it.
+   */
+  isFull: boolean
+}
+
+/**
+ * The `since` the `staged` page was fetched with, if it's still the feed's top
+ * page and sits right on the page it was fetched above, whose `startCursor`
+ * that is.
+ */
+function stagedSince(
+  pages: readonly Pick<
+    FeedPageUnselected,
+    'fetchedAt' | 'since' | 'startCursor'
+  >[],
+  staged: StagedPage | undefined,
+) {
+  const [top, below] = pages
+  return staged &&
+    top?.fetchedAt === staged.fetchedAt &&
+    below?.startCursor === top.since
+    ? top.since
+    : undefined
+}
+
+/**
+ * Whether two feed items are the same entry in a feed: the same post, there
+ * for the same reason, as a repost of a post is an entry of its own. As
+ * `FeedViewPostsSlice` keys them.
+ */
+function isSameFeedItem(
+  a: app.bsky.feed.defs.FeedViewPost,
+  b: app.bsky.feed.defs.FeedViewPost | undefined,
+) {
+  const reasonTime = (item: app.bsky.feed.defs.FeedViewPost) =>
+    item.reason && 'indexedAt' in item.reason ? item.reason.indexedAt : null
+  return (
+    b !== undefined &&
+    a.post.uri === b.post.uri &&
+    reasonTime(a) === reasonTime(b)
+  )
+}
+
+/**
+ * Puts what is newer than the reader's place in the feed above it, with one
+ * fetch and then one write through the same compare-and-swap as a refresh.
+ * The view prepends above a top page restored from disk, and when a check for
+ * new posts finds some (see `PostFeed`).
+ *
+ * What a prepend puts on top is staged (see {@link StagedPage}) until the
+ * reader reaches it: they see one of its rows after dragging the list
+ * (`onBeginDrag`, `onPageSeen`), or reach the top of the list (`markRead`).
+ * While a page is staged, the next prepend fetches from the same `since` as it
+ * did and replaces it, so however long the reader stays put, what's above them
+ * is one page of at most {@link PREPEND_LIMIT} posts. Once it's read, the next
+ * one goes above it. `staged` is the page for the pill, which offers it if a
+ * restore or a return to the app put it there, or `check` has offered it
+ * since.
+ *
+ * A page only ever replaces the staged one if it has all of its posts, as
+ * the list holds the reader's place only for posts added above the others:
+ * `VirtualizedList` moves the rows it renders by how far its first row moved,
+ * so taking that row away loses the reader. When more than a page is newer,
+ * which a gap below what comes back shows, the staged page stays as it is,
+ * full (see {@link StagedPage}), and nothing more is fetched until the reader
+ * reaches it. A page put above the others with a gap is full from the start.
  *
  * `run` starts a prepend, or joins the one in progress, so two never fetch the
- * same range. It resolves once that's done, whatever it found, and rejects if
- * the fetch fails, which leaves the feed as it was. It's `undefined` when the
- * top page has no `startCursor` to fetch above. It holds what it finds until
- * `listAtRest` resolves, so the list takes it laid out and still, however long
- * the reader keeps it moving, at any depth. `prependedAt` is the `fetchedAt`
- * of the last page it put on top.
+ * same range. It resolves to the page it put on top, if it put one there, and
+ * rejects if the fetch fails, which leaves the feed as it was. It's
+ * `undefined` when the top page has no `startCursor` to fetch above. It holds
+ * what it finds until `listAtRest` resolves, so the list takes it laid out and
+ * still, however long the reader keeps it moving, at any depth. A refresh in
+ * flight by then wins, and so does the reader reaching a page it would have
+ * replaced: the result is dropped.
+ *
+ * `check` is a check for new posts. It peeks at the newest post first, and
+ * runs a prepend only if that's not the one on top already. It makes no
+ * request while the staged page is full. A check on a return to the app
+ * offers what's staged even if it found nothing newer, or couldn't tell. It's
+ * `undefined` when there's nothing to fetch above.
  *
  * A top page fetched before this process started (see
  * {@link PROCESS_STARTED_AT}) is a restored one. The view prepends above it as
  * soon as it's `enabled`, while the list does its first layout, unless it has
  * already, and only once, whatever it finds. A refresh, or anything else that
  * replaces the top page first, leaves nothing to do. `isOwed` says whether a
- * prepend is in progress or still owed to a restored top, for checks for new
- * posts to wait on it rather than race it.
+ * prepend is in progress or still owed to a restored top, for a check to join
+ * it rather than race it.
  *
- * It fetches with `since` set to the top page's `startCursor`. Nothing newer
- * writes nothing. Anything newer goes on top as a page of its own, with the
- * `since` it was requested with, and the page that was on top now continues
- * from its cursor. When the server echoes `since` as that cursor, the range
- * was exhausted and the pages are contiguous. Otherwise there's a gap between
- * them (see {@link gapBelow}). The write gives way to anything that has
- * replaced the top page meanwhile, and keeps any page loaded below it.
+ * Anything newer goes on top as a page of its own, with the `since` it was
+ * requested with, and the page below it continues from its cursor. When the
+ * server echoes `since` as that cursor, the range was exhausted and the pages
+ * are contiguous. Otherwise there's a gap between them (see {@link gapBelow}).
+ * Nothing newer writes nothing. The write gives way to anything that has
+ * replaced the pages it depends on meanwhile, and keeps any page loaded below
+ * them.
  */
 export function usePostFeedPrepend(
   feedDesc: FeedDescriptor,
@@ -580,6 +675,7 @@ export function usePostFeedPrepend(
     enabled,
     topFetchedAt,
     listAtRest,
+    isRefreshing,
   }: {
     enabled: boolean
     /** The `fetchedAt` of the top page as rendered, if there is one. */
@@ -589,20 +685,60 @@ export function usePostFeedPrepend(
      * them: laid out and at rest (see `useListRest`).
      */
     listAtRest: () => Promise<void>
+    /** Whether the view's refresh is in flight, which a prepend gives way to. */
+    isRefreshing: () => boolean
   },
 ) {
   const queryClient = useQueryClient()
-  const {fetchPage} = usePostFeedFetcher(feedDesc)
+  const {createFeedApi, fetchPage} = usePostFeedFetcher(feedDesc)
   const queryKey = RQKEY(feedDesc, params)
   /** The prepend in progress, fetching or holding what it found. */
-  const pending = useRef<Promise<void>>(undefined)
+  const pending = useRef<Promise<FeedPageUnselected | undefined>>(undefined)
+  /** Whether the prepend in progress offers what it finds with the pill. */
+  const isOffering = useRef(false)
   /** Whether this view has started a prepend, as a restored top needs once. */
   const hasStarted = useRef(false)
-  const [prependedAt, setPrependedAt] = useState<number>()
+  /*
+   * The staged page, as a ref for a prepend to read when it writes, which may
+   * be before this view renders again, and as state for the pill.
+   */
+  const stagedRef = useRef<StagedPage>(undefined)
+  const [staged, setStagedState] = useState<StagedPage>()
+  const setStaged = (next: StagedPage | undefined) => {
+    stagedRef.current = next
+    setStagedState(next)
+  }
+  /** The staged page the reader has dragged the list since, if any. */
+  const draggedStaged = useRef<number>(undefined)
   const isTopRestored = isRestored(topFetchedAt)
 
+  const getData = () => queryClient.getQueryData<PostFeedData>(queryKey)
+
+  /** The staged page, if it's still staged and full (see {@link StagedPage}). */
+  const fullStaged = (data: PostFeedData) => {
+    const current = stagedRef.current
+    return current?.isFull && stagedSince(data.pages, current) !== undefined
+      ? current
+      : undefined
+  }
+
+  /**
+   * Where a prepend fetches from: the staged page's `since`, to replace it, or
+   * else the top page's `startCursor`, to go above it. Neither without one, or
+   * while the staged page is full.
+   */
+  const targetOf = (data: PostFeedData) => {
+    const current = stagedRef.current
+    const since = stagedSince(data.pages, current)
+    if (current && since !== undefined) {
+      return current.isFull ? undefined : {since, replacing: current}
+    }
+    const startCursor = data.pages[0]?.startCursor
+    return startCursor === undefined ? undefined : {since: startCursor}
+  }
+
   const isOwed = () => {
-    const top = queryClient.getQueryData<PostFeedData>(queryKey)?.pages[0]
+    const top = getData()?.pages[0]
     return (
       pending.current !== undefined ||
       (!hasStarted.current &&
@@ -611,7 +747,10 @@ export function usePostFeedPrepend(
     )
   }
 
-  const prependAbove = async (before: PostFeedData, since: string) => {
+  const prepend = async (
+    before: PostFeedData,
+    {since, replacing}: {since: string; replacing?: {fetchedAt: number}},
+  ) => {
     const page = await fetchPage(undefined, {since, limit: PREPEND_LIMIT})
     /*
      * A bounded range always comes back with a cursor, the echo of `since` or
@@ -620,38 +759,118 @@ export function usePostFeedPrepend(
      */
     const {cursor} = page
     if (!page.feed.length || cursor === undefined) {
-      return
+      return undefined
+    }
+    const isFull = cursor !== since
+    if (replacing && isFull) {
+      // It would leave out some of the staged posts, so the staged page stays.
+      const current = stagedRef.current
+      if (current?.fetchedAt === replacing.fetchedAt) {
+        setStaged({...current, isFull})
+      }
+      return undefined
     }
     await listAtRest()
+    const wasStaged = stagedRef.current
+    if (
+      isRefreshing() ||
+      (replacing && wasStaged?.fetchedAt !== replacing.fetchedAt)
+    ) {
+      return undefined
+    }
+    const count = replacing ? 1 : 0
     const wrote = await commit(
       queryClient,
       queryKey,
       before,
       (data = before) => ({
-        pages: [page, ...data.pages],
-        pageParams: [undefined, {cursor}, ...data.pageParams.slice(1)],
+        pages: [page, ...data.pages.slice(count)],
+        pageParams: [undefined, {cursor}, ...data.pageParams.slice(count + 1)],
       }),
+      {dependsOn: count + 1},
     )
-    if (wrote) {
-      setPrependedAt(page.fetchedAt)
+    if (!wrote) {
+      return undefined
     }
+    setStaged({
+      fetchedAt: page.fetchedAt,
+      // A page offered by the pill stays offered when it's replaced.
+      offered: isOffering.current || (!!replacing && !!wasStaged?.offered),
+      isFull,
+    })
+    return page
   }
 
-  const run = () => {
+  const run = (trigger: PrependTrigger) => {
+    const isOffered = trigger === 'restore' || trigger === 'return'
     if (pending.current) {
+      isOffering.current ||= isOffered
       return pending.current
     }
-    const before = queryClient.getQueryData<PostFeedData>(queryKey)
-    const since = before?.pages[0]?.startCursor
-    if (!before || since === undefined) {
+    const before = getData()
+    const target = before && targetOf(before)
+    if (!before || !target) {
       return undefined
     }
     hasStarted.current = true
-    const prepending = prependAbove(before, since).finally(() => {
+    isOffering.current = isOffered
+    const prepending = prepend(before, target).finally(() => {
       pending.current = undefined
     })
     pending.current = prepending
     return prepending
+  }
+
+  /** Offers the staged page with the pill, if there is one. */
+  const offerStaged = () => {
+    const current = stagedRef.current
+    const data = getData()
+    if (
+      current &&
+      !current.offered &&
+      data &&
+      stagedSince(data.pages, current) !== undefined
+    ) {
+      setStaged({...current, offered: true})
+    }
+  }
+
+  const check = (trigger: NewPostsCheckTrigger) => {
+    if (isOwed()) {
+      // The restore's prepend answers it, without a peek or a second fetch.
+      return run(pending.current ? trigger : 'restore')?.then(() => undefined)
+    }
+    const before = getData()
+    const top = before?.pages[0]
+    if (before && fullStaged(before)) {
+      if (trigger === 'return') {
+        offerStaged()
+      }
+      return Promise.resolve(undefined)
+    }
+    if (!before || !top || !targetOf(before)) {
+      return undefined
+    }
+    return (async () => {
+      let page: FeedPageUnselected | undefined
+      try {
+        const latest = await createFeedApi().peekLatest({source: top.source})
+        if (latest && !isSameFeedItem(latest, top.feed[0])) {
+          page = await run(trigger)
+        }
+      } finally {
+        if (trigger === 'return' && !page) {
+          offerStaged()
+        }
+      }
+      return page
+    })()
+  }
+
+  const markRead = () => {
+    if (stagedRef.current) {
+      setStaged(undefined)
+    }
   }
 
   // Not `useEffectEvent`, which React 19.2 freezes in `memo()` PostFeed.
@@ -659,7 +878,7 @@ export function usePostFeedPrepend(
     if (hasStarted.current || !isOwed()) {
       return
     }
-    run()?.catch(e => {
+    run('restore')?.catch(e => {
       if (!isNetworkError(e)) {
         logger.error('Failed to fetch posts newer than a restored feed', {
           safeMessage: e,
@@ -673,7 +892,30 @@ export function usePostFeedPrepend(
     }
   }, [enabled, isTopRestored, onRestoredTop])
 
-  return {run, isOwed, prependedAt}
+  return {
+    run,
+    check,
+    isOwed,
+    staged,
+    markRead,
+    /** A finger started dragging the list. */
+    onBeginDrag: () => {
+      draggedStaged.current = stagedRef.current?.fetchedAt
+    },
+    /**
+     * The list reports a row from the page fetched at `fetchedAt` as seen. A
+     * staged page's last rows sit behind the header once it's put on top, and
+     * are seen there, so only a row seen after a drag since then reads it.
+     */
+    onPageSeen: (fetchedAt: number) => {
+      if (
+        stagedRef.current?.fetchedAt === fetchedAt &&
+        draggedStaged.current === fetchedAt
+      ) {
+        markRead()
+      }
+    },
+  }
 }
 
 /**
@@ -918,16 +1160,18 @@ export async function pollLatest(page: FeedPage | undefined, api: FeedAPI) {
 
   logger.debug('usePostFeedQuery: pollLatest')
   const post = await api.peekLatest({source: page.source})
-  if (post) {
-    const slices = page.tuner.tune([post], {
-      dryRun: true,
-    })
-    if (slices[0]) {
-      return true
-    }
-  }
+  return post ? hasUnseenPosts(page, [post]) : false
+}
 
-  return false
+/**
+ * Whether any of `feed` would show in the feed whose top page, as rendered, is
+ * `page`: tuning neither drops it as already there nor filters it out.
+ */
+export function hasUnseenPosts(
+  page: FeedPage | undefined,
+  feed: app.bsky.feed.defs.FeedViewPost[],
+) {
+  return !!page && page.tuner.tune(feed, {dryRun: true}).length > 0
 }
 
 function createApi({
