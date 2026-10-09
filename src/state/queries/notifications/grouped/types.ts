@@ -77,6 +77,13 @@ export type NotificationView =
       type: 'follow'
       actors: NonEmptyArray<ProfileView>
       /**
+       * Every follower in the group, newest first, including those without a
+       * profile in `relatedViews`. A superset of the DIDs in `actors`, so the
+       * rest can be loaded on demand. List-time moderation removes hidden
+       * actors from both. May still be fewer than `count`.
+       */
+      actorDids: string[]
+      /**
        * Only set when every follow in the group came via the same pack.
        */
       starterPack?: StarterPackView
