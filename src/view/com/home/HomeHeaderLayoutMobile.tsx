@@ -11,7 +11,7 @@ import {useHaptics} from '#/lib/haptics'
 import {type NavigationProp} from '#/lib/routes/types'
 import {emitSoftReset} from '#/state/events'
 import {useSession} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
+import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {useHomeHeaderTransform} from '#/view/com/util/MainScrollProvider'
 import {Logo} from '#/view/icons/Logo'
 import {atoms as a, useTheme} from '#/alf'
@@ -31,7 +31,7 @@ export function HomeHeaderLayoutMobile({
   const t = useTheme()
   const {_} = useLingui()
   const ax = useAnalytics()
-  const {headerHeight} = useShellLayout()
+  const {onLayout} = useShellHeaderLayout()
   const insets = useSafeAreaInsets()
   const headerMinimalShellTransform = useHomeHeaderTransform()
   const {hasSession} = useSession()
@@ -52,9 +52,7 @@ export function HomeHeaderLayoutMobile({
         IS_LIQUID_GLASS && {paddingTop: insets.top},
         headerMinimalShellTransform,
       ]}
-      onLayout={e => {
-        headerHeight.set(e.nativeEvent.layout.height)
-      }}>
+      onLayout={onLayout}>
       <Layout.Header.Outer noBottomBorder>
         <Layout.Header.Slot>
           <Layout.Header.MenuButton />
