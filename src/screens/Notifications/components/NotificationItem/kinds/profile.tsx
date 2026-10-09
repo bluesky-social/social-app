@@ -5,16 +5,12 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
-import {isNetworkError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {useFollowActorsQuery} from '#/state/queries/notifications/grouped'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
 import {StarterPack_Stroke2_Corner0_Rounded as StarterPackIcon} from '#/components/icons/brands/StarterPack'
 import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
 import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
-import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 import * as Item from '../Item'
@@ -90,10 +86,9 @@ function SingleFollowNotification({
 }
 
 /**
- * Several follows. Pressing the header expands a list of the followers, each
- * with their own follow button. The list starts with those the API resolved,
- * and "Show more" loads the rest, though the group may still hold fewer than
- * `count`.
+ * Several follows. Pressing the header expands a list of the followers (only
+ * those the API resolved, which may be fewer than `count`), each with their
+ * own follow button.
  *
  * The row's own link goes to the viewer's followers list, since that shows
  * everyone. It's reached by the screen reader's default action, and by
@@ -187,53 +182,15 @@ function GroupedFollowNotification({
           <Item.ExpandChevron expanded={isExpanded} />
         </Item.Trailing>
       </Pressable>
-      <Item.Expandable expanded={isExpanded}>
-        <ExpandedFollowers notification={notification} />
-      </Item.Expandable>
-    </Item.Root>
-  )
-}
-
-/**
- * The expanded list of a grouped follow: the followers it resolved, then any
- * loaded since with "Show more", which shows while there are more to load.
- * Loaded followers stay in the query cache, so they're still there if the
- * list is collapsed and expanded again.
- */
-function ExpandedFollowers({
-  notification,
-}: {
-  notification: NotificationOf<'follow'>
-}) {
-  const {t: l} = useLingui()
-  const {actors, hasMore, isFetching, fetchNextPage} = useFollowActorsQuery({
-    notification,
-  })
-
-  const onShowMore = async () => {
-    const {error} = await fetchNextPage()
-    if (!error) return
-    if (!isNetworkError(error)) {
-      logger.error('Failed to load more followers', {safeMessage: error})
-    }
-    Toast.show(l`Couldn’t load more followers, please try again`, {
-      type: 'error',
-    })
-  }
-
-  return (
-    <View style={[a.px_lg, a.pb_md]}>
-      <Item.ActorList
-        actors={[...notification.actors, ...actors]}
-        starterPack={notification.starterPack}>
-        {hasMore && (
-          <Item.ShowMoreActorsButton
-            isLoading={isFetching}
-            onPress={() => void onShowMore()}
+      {isExpanded && (
+        <View style={[a.px_lg, a.pb_md]}>
+          <Item.ActorList
+            actors={notification.actors}
+            starterPack={notification.starterPack}
           />
-        )}
-      </Item.ActorList>
-    </View>
+        </View>
+      )}
+    </Item.Root>
   )
 }
 

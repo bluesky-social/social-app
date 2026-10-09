@@ -499,12 +499,7 @@ function createMockNotifications({
     {
       title: 'Follow',
       subtitle: 'single actor',
-      notification: {
-        ...base('follow'),
-        type: 'follow',
-        actors: [target],
-        actorDids: [target.did],
-      },
+      notification: {...base('follow'), type: 'follow', actors: [target]},
     },
     {
       title: 'Follow',
@@ -513,7 +508,6 @@ function createMockNotifications({
         ...base('follow-group', group.length),
         type: 'follow',
         actors: group,
-        actorDids: group.map(actor => actor.did),
       },
     },
     {

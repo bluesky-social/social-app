@@ -4,7 +4,6 @@ import {describe, expect, it} from '@jest/globals'
 
 import {
   createGroupedNotificationsFixture,
-  UNRESOLVED_FOLLOWER_DIDS,
   VIEWER_DID,
 } from '#/state/queries/notifications/grouped/__fixtures__'
 import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
@@ -247,20 +246,14 @@ describe('hydratePage', () => {
       const {res, page} = setup()
       const many = get(page, 'follow-many', 'follow')
       expect(many.actors).toHaveLength(5)
-      expect(many.actorDids).toEqual([
-        ...many.actors.map(actor => actor.did),
-        ...UNRESOLVED_FOLLOWER_DIDS,
-      ])
       expect(many.starterPack).toBeUndefined()
 
       const viaPack = get(page, 'follow-starter-pack', 'follow')
       expect(viaPack.actors).toEqual([related(res, 'did:plc:sofia')])
-      expect(viaPack.actorDids).toEqual(['did:plc:sofia'])
       expect(viaPack.starterPack).toBe(related(res, SCICOMM_PACK))
 
       const single = get(page, 'follow-single', 'follow')
       expect(single.actors).toHaveLength(1)
-      expect(single.actorDids).toEqual([single.actors[0].did])
       expect(single.starterPack).toBeUndefined()
     })
 
@@ -776,30 +769,6 @@ describe('hydratePage', () => {
         })
       },
     )
-  })
-
-  describe('follow actor DIDs', () => {
-    function follow(actors: DidString[]) {
-      return narrow(
-        hydrateKind({
-          $type: `${NS}#followGroup`,
-          items: actors.map(actor => ({actor})),
-        }),
-        'follow',
-      )
-    }
-
-    it('keeps unresolved DIDs, in order, alongside the resolved actors', () => {
-      const {actors, actorDids} = follow([GHOST, DANIELLE, MICHAEL])
-      expect(actors.map(actor => actor.did)).toEqual([DANIELLE, MICHAEL])
-      expect(actorDids).toEqual([GHOST, DANIELLE, MICHAEL])
-    })
-
-    it('drops duplicates and the viewer', () => {
-      expect(
-        follow([DANIELLE, VIEWER_DID, GHOST, DANIELLE, GHOST]).actorDids,
-      ).toEqual([DANIELLE, GHOST])
-    })
   })
 
   describe('follow starter packs', () => {

@@ -7,13 +7,6 @@ import {
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
-import {
-  createFollowActorsPage,
-  type FollowActorsPage,
-  getNextActorDids,
-  getUnresolvedActorDids,
-  selectLoadedActors,
-} from '#/state/queries/notifications/grouped/follow-actors'
 import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
 import {
   moderateNotification,
@@ -34,7 +27,7 @@ import {
 import {useAppviewClient, useSession} from '#/state/session'
 import {useThreadgateHiddenReplyUris} from '#/state/threadgate-hidden-replies'
 import {app} from '#/lexicons'
-import type * as bsky from '#/types/bsky'
+import * as bsky from '#/types/bsky'
 
 export type {
   GroupedNotificationsFeed,
@@ -237,56 +230,6 @@ function selectNotification(
   return isRead === moderated.isRead ? moderated : {...moderated, isRead}
 }
 
-const followActorsQueryKeyRoot = 'follow-actors'
-
-export const createFollowActorsQueryKey = (args: {notificationId: string}) =>
-  createQueryKey(followActorsQueryKeyRoot, args)
-
-/**
- * The followers in a grouped follow notification beyond the profiles it
- * resolved, loaded a page at a time with `app.bsky.actor.getProfiles` for
- * "Show more". Nothing loads until `fetchNextPage` is called, and loaded
- * pages are kept rather than refetched.
- *
- * Returns the loaded `actors` to show, moderated as the notification's own
- * actors are, and whether any followers are left to request (`hasMore`).
- */
-export function useFollowActorsQuery({
-  notification,
-}: {
-  notification: Extract<NotificationView, {type: 'follow'}>
-}) {
-  const client = useAppviewClient()
-  const moderationOpts = useModerationOpts()
-  const unresolvedDids = getUnresolvedActorDids(notification)
-
-  const {data, isFetching, fetchNextPage} = useInfiniteQuery({
-    // Even the first page waits for `fetchNextPage`
-    enabled: false,
-    staleTime: STALE.INFINITY,
-    queryKey: createFollowActorsQueryKey({notificationId: notification.id}),
-    async queryFn({pageParam}): Promise<FollowActorsPage> {
-      const res = await client.call(app.bsky.actor.getProfiles, {
-        actors: pageParam,
-      })
-      return createFollowActorsPage(pageParam, res.profiles)
-    },
-    initialPageParam: getNextActorDids(unresolvedDids, []),
-    getNextPageParam(_lastPage, pages) {
-      const dids = getNextActorDids(unresolvedDids, pages)
-      return dids.length > 0 ? dids : undefined
-    },
-  })
-
-  const pages = data?.pages ?? []
-  return {
-    actors: selectLoadedActors(pages, unresolvedDids, moderationOpts),
-    hasMore: getNextActorDids(unresolvedDids, pages).length > 0,
-    isFetching,
-    fetchNextPage,
-  }
-}
-
 /**
  * Every post a notification holds, for the shadow and thread caches.
  */
@@ -398,19 +341,6 @@ export function* findAllProfilesInQueryData(
       const quotedPost = getEmbeddedPost(post.embed)
       if (quotedPost?.author.did === did) {
         yield quotedPost.author
-      }
-    }
-  }
-  // Followers loaded by "Show more", so their follow buttons update too
-  const followActorsDatas = queryClient.getQueriesData<
-    InfiniteData<FollowActorsPage>
-  >({queryKey: [followActorsQueryKeyRoot]})
-  for (const [_queryKey, queryData] of followActorsDatas) {
-    for (const page of queryData?.pages ?? []) {
-      for (const profile of page.profiles) {
-        if (profile.did === did) {
-          yield profile
-        }
       }
     }
   }
