@@ -10,7 +10,8 @@ import {
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {type SharedValue, useSharedValue} from 'react-native-reanimated'
 
-import {atoms as a} from '#/alf'
+import {atoms as a, native, web} from '#/alf'
+import {useScrollRestoration} from './useScrollRestoration'
 
 export type PagerScrollState = 'idle' | 'dragging' | 'settling'
 
@@ -62,7 +63,7 @@ export function Root({
     [onPageSelected],
   )
 
-  const selectPage = useCallback(
+  const handleTabPressed = useCallback(
     (page: number) => {
       onTabPressed?.(page)
       if (page !== selectedPageRef.current) {
@@ -72,6 +73,7 @@ export function Root({
     },
     [onTabPressed],
   )
+  const selectPage = useScrollRestoration(handleTabPressed, selectedPage)
 
   const value = useMemo(
     () => ({
@@ -97,7 +99,9 @@ export function Root({
 
   return (
     <PagerContext.Provider value={value}>
-      <View testID={testID} style={[a.flex_1, style]}>
+      <View
+        testID={testID}
+        style={[native(a.flex_1), web({minHeight: '100%'}), style]}>
         {children}
       </View>
     </PagerContext.Provider>

@@ -1,5 +1,5 @@
 import {useEffect, useEffectEvent, useRef, useState} from 'react'
-import {ActivityIndicator, View} from 'react-native'
+import {ActivityIndicator, useWindowDimensions, View} from 'react-native'
 import {type SharedValue} from 'react-native-reanimated'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useIsFocused} from '@react-navigation/native'
@@ -37,7 +37,7 @@ import {
   isRefreshPillVisible,
   type SeenAtMode,
 } from '#/screens/Notifications/unread'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {EnvelopeNotification_Filled_Corner2_Rounded as EnvelopeNotificationIcon} from '#/components/icons/brands/EnvelopeNotification'
@@ -125,8 +125,10 @@ export function PageList({
   const isScreenFocused = useIsFocused()
   const isActive = usePager().selectedPage === pageIndex
   const bottomBarOffset = useBottomBarOffset()
+  const {height: windowHeight} = useWindowDimensions()
   const [isPTRing, setIsPTRing] = useState(false)
   const [listHeight, setListHeight] = useState(0)
+  const viewportHeight = IS_WEB ? windowHeight : listHeight
 
   // Don't fetch tabs until they've been opened
   const [hasBeenActive, setHasBeenActive] = useState(isActive)
@@ -232,11 +234,14 @@ export function PageList({
         <List
           ref={listRef}
           testID={`notificationsList-${feed}`}
-          style={a.flex_1}
-          onLayout={event => setListHeight(event.nativeEvent.layout.height)}
+          style={native(a.flex_1)}
+          onLayout={
+            IS_NATIVE
+              ? event => setListHeight(event.nativeEvent.layout.height)
+              : undefined
+          }
           onScrolledDownChange={onScrolledDownChange}
           headerOffset={headerOffset}
-          {...(IS_WEB ? {disableFullWindowScroll: true} : {})}
           data={rows}
           keyExtractor={(row: Row) => row.key}
           renderItem={({item: row}: {item: Row}) => {
@@ -265,7 +270,7 @@ export function PageList({
                       a.px_lg,
                       {
                         minHeight: Math.max(
-                          listHeight - headerOffset - bottomBarOffset,
+                          viewportHeight - headerOffset - bottomBarOffset,
                           0,
                         ),
                       },
@@ -314,7 +319,9 @@ export function PageList({
               trackPostView(row.notification.post)
             }
           }}
-          contentContainerStyle={{paddingBottom: 200}}
+          contentContainerStyle={{
+            paddingBottom: IS_WEB && isEmpty ? bottomBarOffset : 200,
+          }}
           initialNumToRender={initialNumToRender}
           windowSize={11}
           sideBorders={false}

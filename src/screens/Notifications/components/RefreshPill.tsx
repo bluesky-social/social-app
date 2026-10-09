@@ -7,7 +7,7 @@ import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_20} from '#/lib/constants'
 import {useHomeHeaderMode} from '#/view/com/util/MainScrollProvider'
-import {atoms as a} from '#/alf'
+import {atoms as a, web} from '#/alf'
 import {NewPostsPill} from '#/components/NewPostsPill'
 import {IS_LIQUID_GLASS} from '#/env'
 
@@ -74,7 +74,9 @@ export function RefreshPill({
   }))
 
   return (
-    <Animated.View pointerEvents="box-none" style={[strip, follow]}>
+    <Animated.View
+      pointerEvents="box-none"
+      style={[strip, web(a.fixed), follow]}>
       <NewPostsPill
         testID="notificationsRefreshPill"
         visible={visible}

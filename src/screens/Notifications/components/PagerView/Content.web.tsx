@@ -2,7 +2,6 @@ import {Activity, Children, useEffect, useId, useRef, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {ReduceMotion, withTiming} from 'react-native-reanimated'
 
-import {atoms as a} from '#/alf'
 import {usePagerContext} from './context'
 
 export function Content({
@@ -54,7 +53,7 @@ export function Content({
   }, [selectedPage, dragProgress, dragState, onPageSelected])
 
   return (
-    <View testID={testID} style={[a.flex_1, style]}>
+    <View testID={testID} style={[{minHeight: '100%'}, style]}>
       {pages.map((page, pageIndex) => {
         if (!visitedPages.has(pageIndex) && selectedPage !== pageIndex) {
           return null

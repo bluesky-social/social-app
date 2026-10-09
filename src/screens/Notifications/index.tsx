@@ -45,14 +45,13 @@ import {
   nextSeenAt,
   type SeenAtMode,
 } from '#/screens/Notifications/unread'
-import {atoms as a, useBreakpoints, useTheme, utils, web} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {useHeaderOffset} from '#/components/hooks/useHeaderOffset'
 import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/components/icons/SettingsGear2'
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {LockScroll} from '#/components/LockScroll'
 import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
@@ -75,14 +74,8 @@ export function NotificationsScreen(props: Props) {
 }
 
 export function NewNotificationsScreen({}: Props) {
-  const isFocused = useIsFocused()
-
   return (
-    <Layout.Screen
-      testID="newNotificationsScreen"
-      noInsetTop={IS_LIQUID_GLASS}
-      style={web({height: '100dvh', minHeight: 0})}>
-      {isFocused && <LockScroll />}
+    <Layout.Screen testID="newNotificationsScreen" noInsetTop={IS_LIQUID_GLASS}>
       <HomeHeaderModeProvider>
         <NewNotificationsScreenInner />
       </HomeHeaderModeProvider>
@@ -456,15 +449,10 @@ function NotificationsHeader({
             a.absolute,
             a.inset_0,
             !(IS_WEB && gtMobile) && t.atoms.bg,
-            // Leave the contained list's scrollbar visible beneath the header.
-            web({right: 'var(--removed-body-scroll-bar-size, 0px)'}),
             IS_WEB && pillsStyle,
           ]}>
           {IS_WEB && gtMobile && (
-            <Layout.Center
-              ignoreScrollbarOffset
-              style={[a.flex_1, t.atoms.bg]}
-            />
+            <Layout.Center style={[a.flex_1, t.atoms.bg]} />
           )}
         </Animated.View>
       )}
