@@ -6,7 +6,7 @@ import {
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
-import {withNanoGlyph} from '#/components/icons/nano'
+import {type NanoGlyphName, withNanoGlyph} from '#/components/icons/nano'
 
 export type IconWithSvgMeta = ForwardRefExoticComponent<
   Props & RefAttributes<Svg>
@@ -47,12 +47,18 @@ export function createSinglePathSVG({
   strokeWidth = 0,
   strokeLinecap = 'butt',
   strokeLinejoin = 'miter',
+  glyph,
 }: {
   path: string
   viewBox?: string
   strokeWidth?: number
   strokeLinecap?: 'butt' | 'round' | 'square'
   strokeLinejoin?: 'miter' | 'round' | 'bevel'
+  /**
+   * The icon's glyph in the icon fonts, set by codegen when the glyph renders
+   * the same as this SVG. See `withNanoGlyph`.
+   */
+  glyph?: NanoGlyphName
 }) {
   const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
@@ -85,17 +91,7 @@ export function createSinglePathSVG({
   Icon.svgPaths = [path]
   Icon.svgViewBox = viewBox || '0 0 24 24'
   Icon.svgStrokeWidth = strokeWidth
-  return withNanoGlyph(Icon, {
-    keySource: () =>
-      [
-        path,
-        viewBox ?? '0 0 24 24',
-        strokeWidth,
-        strokeLinecap,
-        strokeLinejoin,
-      ].join('|'),
-    layered: false,
-  })
+  return withNanoGlyph(Icon, {glyph, layered: false})
 }
 
 /**
@@ -168,9 +164,12 @@ type GeneratedSVGElement = {
 export function createSVG({
   elements,
   viewBox,
+  glyph,
 }: {
   elements: GeneratedSVGElement[]
   viewBox: string
+  /** See `createSinglePathSVG`. */
+  glyph?: NanoGlyphName
 }) {
   const Icon = forwardRef<Svg, Props>(function LogoImpl(props, ref) {
     const {fill, size, style, gradient, ...rest} = useCommonSVGProps(props)
@@ -238,8 +237,5 @@ export function createSVG({
   )
   Icon.svgViewBox = viewBox
   Icon.svgStrokeWidth = 0
-  return withNanoGlyph(Icon, {
-    keySource: () => `${JSON.stringify(elements)}|${viewBox}`,
-    layered: true,
-  })
+  return withNanoGlyph(Icon, {glyph, layered: true})
 }

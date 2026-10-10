@@ -635,63 +635,13 @@ function renderSingleIcon(icon) {
     if (description.strokeLinecap !== 'butt') properties.push(`strokeLinecap: ${JSON.stringify(description.strokeLinecap)}`)
     if (description.strokeLinejoin !== 'miter') properties.push(`strokeLinejoin: ${JSON.stringify(description.strokeLinejoin)}`)
   }
+  if (icon.glyph) properties.push(`glyph: ${JSON.stringify(icon.exportName)}`)
   return `export const ${icon.exportName} = createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})\n`
 }
 
 function renderFlexibleIcon(icon) {
-  return `export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},\n})\n`
-}
-
-/**
- * Hashes the arguments a generated icon passes to its TEMPLATE factory, which
- * is how the factory finds the icon's glyph at runtime. Must match
- * `glyphKey` in `src/components/icons/nano.tsx`.
- */
-export function glyphKey(icon) {
-  const key = glyphKeySource(icon)
-  // 32-bit FNV-1a.
-  let hash = 0x811c9dc5
-  for (let index = 0; index < key.length; index++) {
-    hash = Math.imul(hash ^ key.charCodeAt(index), 0x01000193)
-  }
-  return (hash >>> 0).toString(16).padStart(8, '0')
-}
-
-function glyphKeySource(icon) {
-  return icon.elements
-    ? `${JSON.stringify(icon.elements.map(cleanObject))}|${icon.viewBox}`
-    : [
-        icon.description.path,
-        icon.viewBox,
-        icon.description.strokeWidth,
-        icon.description.strokeLinecap ?? 'butt',
-        icon.description.strokeLinejoin ?? 'miter',
-      ].join('|')
-}
-
-function renderGlyphTable(icons) {
-  const entries = new Map()
-  for (const icon of icons.filter(icon => icon.glyph)) {
-    const key = glyphKey(icon)
-    const existing = entries.get(key)
-    if (existing && glyphKeySource(existing) !== glyphKeySource(icon)) {
-      fail(icon.relativePath, `glyph key collides with ${existing.relativePath}`)
-    }
-    entries.set(key, icon)
-  }
-  const rows = [...entries]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([key, icon]) => `  ${JSON.stringify(key)}: [${JSON.stringify(icon.lane)}, ${JSON.stringify(icon.exportName)}],`)
-  return `${GENERATED_HEADER}
-/**
- * Generated icons that render as react-native-nano-icons glyphs, keyed by a
- * hash of their TEMPLATE factory arguments. Icons missing here render with
- * react-native-svg, see \`scripts/icons/README.md\`.
- */
-export const nanoGlyphs: Record<string, [string, string]> = {
-${rows.join('\n')}
-}
-`
+  const glyph = icon.glyph ? `\n  glyph: ${JSON.stringify(icon.exportName)},` : ''
+  return `export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},${glyph}\n})\n`
 }
 
 function renderModule(modulePath, icons, aliases) {
@@ -843,16 +793,6 @@ export async function buildIconSet({outputRoot, scanRoot, sourceRoot}) {
       }),
     )
   }
-  tsOutputs.set(
-    'nanoGlyphs.ts',
-    await format(renderGlyphTable(icons), {
-      bracketSpacing: false,
-      parser: 'typescript',
-      semi: false,
-      singleQuote: true,
-      trailingComma: 'all',
-    }),
-  )
   const svgOutputs = new Map(sources.map(source => [source.relativePath, source.optimized]))
   const warnings = sources.flatMap(source => source.warnings)
   return {deprecatedImports, holdouts, icons, svgOutputs, tsOutputs, warnings}

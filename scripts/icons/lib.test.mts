@@ -78,6 +78,28 @@ test('draws icons as font glyphs only where they match the SVG icon', async () =
   )
 })
 
+test('passes the glyph name only to icons drawn as glyphs', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'icon-codegen-'))
+  t.after(() => fs.rm(root, {recursive: true, force: true}))
+  const sourceRoot = path.join(root, 'assets/icons')
+  const scanRoot = path.join(root, 'src')
+  const outputRoot = path.join(scanRoot, 'components/icons')
+  await fs.mkdir(path.join(sourceRoot, 'ui'), {recursive: true})
+  await fs.mkdir(outputRoot, {recursive: true})
+  await fs.writeFile(
+    path.join(sourceRoot, 'ui/Square_Stroke2_Corner0_Rounded.svg'),
+    '<svg viewBox="0 0 24 24"><path d="M0 0h2v2Z"/></svg>',
+  )
+  await fs.writeFile(
+    path.join(sourceRoot, 'ui/Wide_Stroke2_Corner0_Rounded.svg'),
+    '<svg viewBox="0 0 30 24"><path d="M0 0h2v2Z"/></svg>',
+  )
+
+  const {tsOutputs} = await buildIconSet({outputRoot, scanRoot, sourceRoot})
+  assert.match(tsOutputs.get('Square.tsx'), /glyph: 'Square_Stroke2_Corner0_Rounded'/)
+  assert.doesNotMatch(tsOutputs.get('Wide.tsx'), /glyph:/)
+})
+
 test('accepts fill and supported stroke icons', async t => {
   const fill = await fixture(
     t,

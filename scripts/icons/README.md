@@ -40,9 +40,8 @@ imports and their locations.
 
 Generated icons render as glyphs from [react-native-nano-icons](https://github.com/software-mansion-labs/react-native-nano-icons)
 fonts, one per directory (`icons-ui`, `icons-brands`, `icons-community`), built from the same SVGs
-by its config plugin in `app.config.js`. The generated modules are unchanged: codegen also writes
-`src/components/icons/nanoGlyphs.ts`, which maps a hash of each icon's `createSinglePathSVG` or
-`createSVG` arguments to its glyph, and those TEMPLATE factories look the glyph up there (see
+by its config plugin in `app.config.js`. Codegen passes each icon's glyph name to
+`createSinglePathSVG` or `createSVG` as `glyph`, typed against the committed glyphmaps (see
 `withNanoGlyph` in `src/components/icons/nano.tsx`). An icon falls back to react-native-svg for
 props a glyph cannot honour, such as `gradient`.
 

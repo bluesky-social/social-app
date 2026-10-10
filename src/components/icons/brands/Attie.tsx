@@ -14,4 +14,5 @@ export const Attie_Filled_Corner0_Rounded = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'Attie_Filled_Corner0_Rounded',
 })

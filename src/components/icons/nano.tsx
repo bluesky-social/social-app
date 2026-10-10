@@ -13,7 +13,6 @@ import type Svg from 'react-native-svg'
 
 import {useTheme} from '#/alf'
 import {type Props, sizes} from '#/components/icons/common'
-import {nanoGlyphs} from '#/components/icons/nanoGlyphs'
 import {type IconWithSvgMeta} from '#/components/icons/TEMPLATE'
 import {IS_WEB} from '#/env'
 import brandsGlyphMap from '../../../assets/nano-icons/nanoicons/icons-brands.glyphmap.json'
@@ -29,19 +28,29 @@ const glyphMaps = {
   ui: uiGlyphMap,
   brands: brandsGlyphMap,
   community: communityGlyphMap,
-} as unknown as Record<string, {i: Record<string, GlyphEntry>}>
+}
+
+type IconSet = keyof typeof glyphMaps
+
+/**
+ * The name of a glyph in one of the icon fonts. Codegen passes it to the
+ * TEMPLATE factories of icons that render as glyphs.
+ */
+export type NanoGlyphName = {
+  [S in IconSet]: keyof (typeof glyphMaps)[S]['i']
+}[IconSet]
 
 /*
- * Each set is typed by its own glyph names, which `nanoGlyphs` is generated
- * from, so widen the components to accept any name. The native renderers put
- * `style` in an array, so a style array is fine too.
+ * Each set is typed by its own glyph names, so widen the components to accept
+ * any name. The native renderers put `style` in an array, so a style array is
+ * fine too.
  */
 const iconSets = {
   ui: createNanoIconSet(uiGlyphMap),
   brands: createNanoIconSet(brandsGlyphMap),
   community: createNanoIconSet(communityGlyphMap),
 } as unknown as Record<
-  string,
+  IconSet,
   React.ComponentType<
     Omit<
       React.ComponentProps<ReturnType<typeof createNanoIconSet>>,
@@ -60,21 +69,10 @@ const iconSets = {
 type GlyphEntry = [number, [number, string][]]
 
 /**
- * Must match `glyphKey` in `scripts/icons/lib.mts`: 32-bit FNV-1a of the
- * factory arguments.
- */
-function glyphKey(source: string) {
-  let hash = 0x811c9dc5
-  for (let index = 0; index < source.length; index++) {
-    hash = Math.imul(hash ^ source.charCodeAt(index), 0x01000193)
-  }
-  return (hash >>> 0).toString(16).padStart(8, '0')
-}
-
-/**
  * Lets a TEMPLATE factory render its icon as a single glyph from the icon
- * font instead of SvgView + Group + Path, when codegen built a matching glyph
- * for it (see `nanoGlyphs`).
+ * font instead of SvgView + Group + Path. Codegen passes the glyph for icons
+ * whose glyph matches the SVG icon; without one, the SVG icon is returned
+ * unchanged.
  *
  * The glyph covers the props icons are used with in practice. Anything it
  * cannot reproduce - a `gradient`, a `height` that differs from the width, or
@@ -85,14 +83,10 @@ function glyphKey(source: string) {
 export function withNanoGlyph(
   SvgIcon: IconWithSvgMeta,
   {
-    keySource,
+    glyph: name,
     layered,
   }: {
-    /**
-     * The factory arguments `glyphKey` hashes. A function so that it is only
-     * built when the icon first renders, not for every icon at startup.
-     */
-    keySource: () => string
+    glyph: NanoGlyphName | undefined
     /**
      * Whether the icon keeps the paint roles of its SVG elements, like
      * `createSVG`, instead of being filled entirely like
@@ -101,27 +95,17 @@ export function withNanoGlyph(
     layered: boolean
   },
 ): IconWithSvgMeta {
-  let glyph: {iconSet: string; name: string; layers: string[]} | null = null
-  let resolved = false
-  function resolveGlyph() {
-    if (!resolved) {
-      resolved = true
-      const entry = nanoGlyphs[glyphKey(keySource())]
-      if (entry) {
-        const [iconSet, name] = entry
-        glyph = {
-          iconSet,
-          name,
-          layers: glyphMaps[iconSet].i[name][1].map(([, color]) => color),
-        }
-      }
-    }
-    return glyph
-  }
+  if (!name) return SvgIcon
+
+  const iconSet = (Object.keys(glyphMaps) as IconSet[]).find(
+    set => name in glyphMaps[set].i,
+  )!
+  const NanoIconSet = iconSets[iconSet]
+  const glyphMap = glyphMaps[iconSet].i as unknown as Record<string, GlyphEntry>
+  const layers = glyphMap[name][1].map(([, color]) => color)
 
   const Icon = forwardRef<Svg, Props>(function NanoIcon(props, ref) {
     const t = useTheme()
-    const glyph = resolveGlyph()
     const {fill, size, style, width, height, testID, gradient, ...rest} = props
 
     /*
@@ -131,7 +115,6 @@ export function withNanoGlyph(
     const resolvedSize = Number(size ? sizes[size] : width || sizes.md)
 
     if (
-      !glyph ||
       gradient ||
       (height !== undefined && Number(height) !== resolvedSize) ||
       Object.values(rest).some(value => value !== undefined)
@@ -139,7 +122,6 @@ export function withNanoGlyph(
       return <SvgIcon {...props} ref={ref} />
     }
 
-    const NanoIconSet = iconSets[glyph.iconSet]
     const resolvedFill = (fill ||
       StyleSheet.flatten(style)?.color ||
       t.palette.primary_500) as ColorValue
@@ -160,7 +142,7 @@ export function withNanoGlyph(
          */
         // oxlint-disable-next-line react-native-a11y/has-accessibility-hint
         <NanoIconSet
-          name={glyph.name}
+          name={name}
           size={resolvedSize}
           /*
            * Layered icons keep their paint roles: layers painted `currentColor`
@@ -170,7 +152,7 @@ export function withNanoGlyph(
            */
           color={
             layered
-              ? glyph.layers.map(color =>
+              ? layers.map(color =>
                   color === 'currentColor' ? resolvedFill : color,
                 )
               : resolvedFill
