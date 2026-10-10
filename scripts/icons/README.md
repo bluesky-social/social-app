@@ -44,7 +44,9 @@ fonts, one per directory (`icons-ui`, `icons-brands`, `icons-community`), built 
 by its config plugin in `app.config.js`. Codegen passes each icon's glyph name to
 `createSinglePathSVG` or `createSVG` as `glyph`, typed against the committed glyphmaps (see
 `withNanoGlyph` in `src/components/icons/nano.tsx`). An icon falls back to react-native-svg for
-props a glyph cannot honour, such as `gradient`. Web always renders the SVG icons.
+props a glyph cannot honour, such as `gradient` or a `ref`, and in development warns once when it
+does so for a prop that could be avoided. It also falls back when the app binary is missing its
+font, e.g. after an OTA built from stale glyphmaps. Web always renders the SVG icons.
 
 An icon stays on react-native-svg when its glyph would not match the SVG icon: a non-square
 viewBox (glyphs are sized by height, SVG icons letterbox into a square), or a fill path that
