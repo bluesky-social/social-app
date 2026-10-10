@@ -1,5 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
 
+import {withCleanup} from '#/lib/async/withCleanup'
+
 type Task<TServerState> = {
   isOn: boolean
   resolve: (serverState: TServerState) => void
@@ -45,31 +47,34 @@ export function useToggleMutationQueue<TServerState>({
     // To avoid relying on the rendered state, capture it once at the start.
     // From that point on, and until the queue is drained, we'll use the real server state.
     let confirmedState: TServerState = initialState
-    try {
-      while (queue.queuedTask) {
-        const prevTask = queue.activeTask
-        const nextTask = queue.queuedTask
-        queue.activeTask = nextTask
+    await withCleanup(
+      async () => {
+        while (queue.queuedTask) {
+          const prevTask = queue.activeTask
+          const nextTask = queue.queuedTask
+          queue.activeTask = nextTask
+          queue.queuedTask = null
+          if (prevTask?.isOn === nextTask.isOn) {
+            // Skip multiple requests to update to the same value in a row.
+            prevTask.reject(new (AbortError as any)())
+            continue
+          }
+          try {
+            // The state received from the server feeds into the next task.
+            // This lets us queue deletions of not-yet-created resources.
+            confirmedState = await runMutation(confirmedState, nextTask.isOn)
+            nextTask.resolve(confirmedState)
+          } catch (e) {
+            nextTask.reject(e)
+          }
+        }
+      },
+      () => {
+        onSuccess(confirmedState)
+        queue.activeTask = null
         queue.queuedTask = null
-        if (prevTask?.isOn === nextTask.isOn) {
-          // Skip multiple requests to update to the same value in a row.
-          prevTask.reject(new (AbortError as any)())
-          continue
-        }
-        try {
-          // The state received from the server feeds into the next task.
-          // This lets us queue deletions of not-yet-created resources.
-          confirmedState = await runMutation(confirmedState, nextTask.isOn)
-          nextTask.resolve(confirmedState)
-        } catch (e) {
-          nextTask.reject(e)
-        }
-      }
-    } finally {
-      onSuccess(confirmedState)
-      queue.activeTask = null
-      queue.queuedTask = null
-    }
+      },
+    )
   }
 
   function queueToggle(isOn: boolean): Promise<TServerState> {
