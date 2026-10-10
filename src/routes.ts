@@ -44,6 +44,7 @@ export const router = new Router<AllNavigatableRoutes>({
   // debug
   Debug: '/sys/debug',
   DebugMod: '/sys/debug-mod',
+  DebugComposer: '/sys/debug-composer',
   Log: '/sys/log',
   // invite friends
   InviteScanner: '/invite/scan',

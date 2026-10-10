@@ -56,6 +56,7 @@ import {
 import {useCloseAllActiveElements} from '#/state/util'
 import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
+import {DebugComposerScreen} from '#/view/screens/DebugComposer'
 import {DebugModScreen} from '#/view/screens/DebugMod'
 import {FeedsScreen} from '#/view/screens/Feeds'
 import {ListsScreen} from '#/view/screens/Lists'
@@ -346,6 +347,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="InviteScanner"
         getComponent={() => InviteScannerScreen}
         options={{title: title(msg`Scan QR code`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="DebugComposer"
+        getComponent={() => DebugComposerScreen}
+        options={{title: title(msg`Composer V2`), requireAuth: true}}
       />
       <Stack.Screen
         name="SharedPreferencesTester"

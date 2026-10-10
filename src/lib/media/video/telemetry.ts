@@ -5,6 +5,8 @@ import {nanoid} from 'nanoid/non-secure'
 import {
   type ProbedMetadata,
   type VideoCompressSkipReason,
+  type VideoRestartReason,
+  type VideoValidationFailure,
 } from '#/lib/media/video/types'
 import {Sentry} from '#/logger/sentry/lib'
 import {type Metrics} from '#/analytics/metrics'
@@ -21,7 +23,8 @@ const COMPRESS_ENGINE =
 
 type Phase = 'compress' | 'upload' | 'processing'
 
-function errorClass(e: unknown): string {
+/** The error's name only; messages can carry local file paths. */
+export function errorClass(e: unknown): string {
   if (e instanceof Error) return e.name || 'Error'
   return 'Unknown'
 }
@@ -35,6 +38,11 @@ export type VideoTelemetry = {
   readonly uploadId: string
   readonly engine: string
   picked: () => void
+  restarted: (restart: {
+    reason: VideoRestartReason
+    previousUploadId?: string
+  }) => void
+  validationFailed: (code: VideoValidationFailure) => void
   compressStarted: () => void
   probed: (metadata: ProbedMetadata) => void
   compressSkipped: (video: {
@@ -50,6 +58,7 @@ export type VideoTelemetry = {
   processingStarted: (jobId: string) => void
   processingCompleted: () => void
   processingFailed: (e: unknown) => void
+  captionsFailed: (e: unknown) => void
   published: () => void
 }
 
@@ -130,6 +139,7 @@ export function createVideoTelemetry({
         uploadId,
         engine,
         phase,
+        reason: signal.reason === 'closed' ? 'closed' : 'removed',
         jobId,
         elapsedInPhaseMs: Date.now() - phaseStartedAt,
       })
@@ -153,6 +163,21 @@ export function createVideoTelemetry({
         sourceWidth: asset.width,
         sourceHeight: asset.height,
       })
+    },
+
+    restarted({reason, previousUploadId}) {
+      metric('video:upload:restarted', {
+        uploadId,
+        engine,
+        reason,
+        previousUploadId,
+      })
+    },
+
+    validationFailed(code) {
+      metric('video:upload:validationFailed', {uploadId, engine, code})
+      endTxn('error')
+      detachAbort()
     },
 
     compressStarted() {
@@ -285,6 +310,15 @@ export function createVideoTelemetry({
       })
       endTxn('error')
       detachAbort()
+    },
+
+    captionsFailed(e) {
+      metric('video:upload:captionsFailed', {
+        uploadId,
+        engine,
+        jobId: jobId ?? '',
+        errorClass: errorClass(e),
+      })
     },
 
     published() {
