@@ -45,7 +45,7 @@ import {fetchPage} from './util'
 
 export type {FeedNotification, FeedPage, NotificationType} from './types'
 
-const PAGE_SIZE = 30
+export const PAGE_SIZE = 30
 
 type RQPageParam = string | undefined
 

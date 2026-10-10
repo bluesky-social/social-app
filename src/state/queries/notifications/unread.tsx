@@ -21,7 +21,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {truncateAndInvalidate} from '#/state/queries/util'
 import {useAppviewClient, useSession} from '#/state/session'
 import {app} from '#/lexicons'
-import {RQKEY as RQKEY_NOTIFS} from './feed'
+import {PAGE_SIZE, RQKEY as RQKEY_NOTIFS} from './feed'
 import {type CachedFeedPage, type FeedPage} from './types'
 import {fetchPage} from './util'
 
@@ -146,7 +146,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           // reduce polling if unread count is set
           if (isPoll && cacheRef.current?.unreadCount !== 0) {
             // if hit 30+ then don't poll, otherwise reduce polling by 50%
-            if (cacheRef.current?.unreadCount >= 30 || Math.random() >= 0.5) {
+            if (
+              cacheRef.current?.unreadCount >= PAGE_SIZE ||
+              Math.random() >= 0.5
+            ) {
               return
             }
           }
@@ -161,7 +164,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           const {page, indexedAt: lastIndexed} = await fetchPage({
             client,
             cursor: undefined,
-            limit: 40,
+            limit: PAGE_SIZE,
             queryClient,
             moderationOpts,
             reasons: [],
@@ -172,8 +175,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
           })
           const unreadCount = countUnread(page)
           const unreadCountStr =
-            unreadCount >= 30
-              ? '30+'
+            unreadCount >= PAGE_SIZE
+              ? `${PAGE_SIZE}+`
               : unreadCount === 0
                 ? ''
                 : String(unreadCount)
