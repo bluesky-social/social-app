@@ -67,10 +67,10 @@ function warnFallback(name: string, prop: string) {
  * unchanged.
  *
  * The glyph covers the props icons are used with in practice. Anything it
- * cannot reproduce - a `gradient`, a `height` that differs from the width, or
- * any other SVG prop - renders the SVG icon instead, so the prop contract and
- * the `svgPaths` metadata read by `@bsky.app/peek-menu` stay exactly those of
- * the SVG icon.
+ * cannot reproduce - a `gradient`, a `ref` (which must point at the `Svg`), a
+ * `height` that differs from the width, or any other SVG prop - renders the
+ * SVG icon instead, so the prop contract and the `svgPaths` metadata read by
+ * `@bsky.app/peek-menu` stay exactly those of the SVG icon.
  */
 export function withNanoGlyph(
   SvgIcon: IconWithSvgMeta,
@@ -110,11 +110,13 @@ export function withNanoGlyph(
       return <SvgIcon {...props} ref={ref} />
     }
     const unsupported =
-      height !== undefined && Number(height) !== resolvedSize
-        ? 'height'
-        : Object.keys(rest).find(
-            key => rest[key as keyof typeof rest] !== undefined,
-          )
+      ref != null
+        ? 'ref'
+        : height !== undefined && Number(height) !== resolvedSize
+          ? 'height'
+          : Object.keys(rest).find(
+              key => rest[key as keyof typeof rest] !== undefined,
+            )
     if (unsupported) {
       if (__DEV__) warnFallback(name, unsupported)
       return <SvgIcon {...props} ref={ref} />
