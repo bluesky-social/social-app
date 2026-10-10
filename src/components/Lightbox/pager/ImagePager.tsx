@@ -302,6 +302,20 @@ function ImageView({
   const dismissSwipeTranslateX = useSharedValue(0)
   const dismissSwipeTranslateY = useSharedValue(0)
   const isDismissing = useSharedValue(false)
+  const [isDismissSwiping, setIsDismissSwiping] = useState(false)
+
+  /*
+   * iOS's Live Text button sits on the image itself, so it would otherwise
+   * ride along as the image shrinks and flies back to its thumbnail.
+   */
+  useAnimatedReaction(
+    () => dismissSwipeTranslateY.get() !== 0,
+    (isSwiping, wasSwiping) => {
+      if (isSwiping !== (wasSwiping ?? false)) {
+        scheduleOnRN(setIsDismissSwiping, isSwiping)
+      }
+    },
+  )
 
   const containerStyle = useAnimatedStyle(() => {
     if (openProgress.get() < 1) {
@@ -491,7 +505,7 @@ function ImageView({
               imageSrc={imageSrc}
               onRequestClose={handleRequestClose}
               isScrollViewBeingDragged={isDragging}
-              showControls={showControls}
+              showControls={showControls && !isDismissSwiping}
               safeAreaRef={safeAreaRef}
               isScaled={isScaled}
               isDismissing={isDismissing}
