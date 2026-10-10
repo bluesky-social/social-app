@@ -101,7 +101,7 @@ const DISMISS_MIN_SCALE = 0.75
  * How closely the image follows the finger at the start of a dismiss swipe,
  * as a fraction of finger travel. It then tapers off with distance.
  */
-const DISMISS_FOLLOW_X = 0.5
+const DISMISS_FOLLOW_X = 0.8
 const DISMISS_FOLLOW_Y = 0.8
 const DISMISS_CANCEL_SPRING: WithSpringConfig = {
   stiffness: 700,
