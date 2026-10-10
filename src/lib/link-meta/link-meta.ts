@@ -1,4 +1,5 @@
 import {LINK_META_PROXY} from '#/lib/constants'
+import {isBotChallengeTitle} from '#/lib/link-meta/botChallenge'
 import {getGiphyMetaUri} from '#/lib/strings/embed-player'
 import {parseStarterPackUri} from '#/lib/strings/starter-pack'
 import {type app} from '#/lexicons'
@@ -96,6 +97,15 @@ export async function getLinkMeta(
 
     if (body.error !== '') {
       throw new Error(body.error)
+    }
+
+    /*
+     * cardyb scraped a bot-challenge interstitial (e.g. Anubis) instead of
+     * the page. A card titled "Making sure you're not a bot!" is worse than
+     * none, so fall back to a bare link.
+     */
+    if (isBotChallengeTitle(body.title)) {
+      return meta
     }
 
     meta.description = body.description
