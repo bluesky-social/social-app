@@ -1,10 +1,9 @@
 import {createContext, useContext, useEffect, useMemo, useState} from 'react'
-import {measure, type MeasuredDimensions} from 'react-native-reanimated'
-import {scheduleOnRN, scheduleOnUI} from 'react-native-worklets'
 import {nanoid} from 'nanoid/non-secure'
 
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useHotkeysContext} from '#/lib/hotkeys'
+import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type ImageSource} from '#/components/Lightbox/types'
 
 export type LightboxMetricsContext = {
@@ -21,6 +20,12 @@ export type Lightbox = {
   // Set for post photo embeds so the lightbox can emit post:photoEmbed:lightboxSwipe.
   // Left unset for non-post contexts (e.g. profile avatar/banner lightbox).
   metricsContext?: LightboxMetricsContext
+  /**
+   * Called as the user pages through the images, so the source can keep the
+   * matching thumbnail in view (e.g. by scrolling a carousel) for the close
+   * animation to land on. Native only.
+   */
+  onIndexChange?: (index: number) => void
 }
 
 const LightboxContext = createContext<{
@@ -51,42 +56,28 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
     }
   }, [activeLightbox, disableScope, enableScope])
 
-  const doOpen = useNonReactiveCallback((lightbox: Omit<Lightbox, 'id'>) => {
-    setActiveLightbox(prevLightbox => {
-      if (prevLightbox) {
-        // Ignore duplicate open requests. If it's already open,
-        // the user has to explicitly close the previous one first.
-        return prevLightbox
-      } else {
-        return {...lightbox, id: nanoid()}
-      }
-    })
-  })
-
   const openLightbox = useNonReactiveCallback(
     (lightbox: Omit<Lightbox, 'id'>) => {
       const thumbRef = lightbox.images[lightbox.index]?.thumbRef
       if (thumbRef) {
-        // Measure the tapped image on the UI thread, then open with
-        // the rect baked in so it's available from the first render.
-        // Only the rect (plain data) goes through scheduleOnRN — AnimatedRef
-        // objects can't survive serialization across threads.
-        const openWithRect = (rect: MeasuredDimensions | null) => {
-          doOpen({
-            ...lightbox,
-            images: lightbox.images.map((img, i) =>
-              i === lightbox.index ? {...img, thumbRect: rect} : img,
-            ),
-          })
+        // Bake the tapped image's rect in so it's there from the first render.
+        const thumbRect = measureThumb(thumbRef)
+        lightbox = {
+          ...lightbox,
+          images: lightbox.images.map((img, i) =>
+            i === lightbox.index ? {...img, thumbRect} : img,
+          ),
         }
-        scheduleOnUI(() => {
-          'worklet'
-          const rect = measure(thumbRef)
-          scheduleOnRN(openWithRect, rect)
-        })
-      } else {
-        doOpen(lightbox)
       }
+      setActiveLightbox(prevLightbox => {
+        if (prevLightbox) {
+          // Ignore duplicate open requests. If it's already open,
+          // the user has to explicitly close the previous one first.
+          return prevLightbox
+        } else {
+          return {...lightbox, id: nanoid()}
+        }
+      })
     },
   )
 
