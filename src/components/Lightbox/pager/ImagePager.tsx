@@ -52,11 +52,25 @@ import {
 import ImageItem from './ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
-type ScaleAndMove = {translateX: number; translateY: number; scale: number}
+/**
+ * Where the image sits while open, relative to its resting position. The
+ * border radius is in screen points, regardless of scale.
+ */
+type ImagePlacement = {
+  translateX: number
+  translateY: number
+  scale: number
+  borderRadius: number
+}
 
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
-const AT_REST: ScaleAndMove = {translateX: 0, translateY: 0, scale: 1}
+const AT_REST: ImagePlacement = {
+  translateX: 0,
+  translateY: 0,
+  scale: 1,
+  borderRadius: 0,
+}
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
@@ -592,6 +606,7 @@ function LightboxImage({
           dismissSwipeTranslateX.get(),
           dismissSwipeTranslateY.get(),
           safeArea,
+          thumbBorderRadius,
         )
       : AT_REST
 
@@ -617,7 +632,7 @@ function LightboxImage({
       isHidden: false,
       isResting:
         dismissTransform.translateX === 0 && dismissTransform.translateY === 0,
-      borderRadius: 0,
+      borderRadius: dismissTransform.borderRadius / dismissTransform.scale,
       scaleAndMoveTransform: [
         {translateX: dismissTransform.translateX},
         {translateY: dismissTransform.translateY},
@@ -740,7 +755,7 @@ function interpolateTransform(
    * Where the image sits at progress=1. Usually at rest, but when closing
    * from a dismiss swipe it's wherever the swipe left it.
    */
-  openTransform: ScaleAndMove,
+  openTransform: ImagePlacement,
   thumbBorderRadius?: number,
 ): {
   scaleAndMoveTransform: Transform
@@ -810,15 +825,16 @@ function interpolateTransform(
     [0, 1],
     [croppedFinalHeight / finalHeight, 1],
   )
-  // The border radius in the source thumbnail needs to be scaled to account
-  // for the crop frame and overall scale so it visually matches at progress=0.
-  const sourceBorderRadius = thumbBorderRadius ?? 0
-  const initialCropScaleX = croppedFinalWidth / finalWidth
-  const borderRadius = interpolate(
+  /*
+   * Interpolate the radius as it appears on screen, then undo the overall and
+   * crop frame scales so it visually matches the thumbnail at progress=0.
+   */
+  const visualBorderRadius = interpolate(
     progress,
     [0, 1],
-    [sourceBorderRadius / (initialScale * initialCropScaleX), 0],
+    [thumbBorderRadius ?? 0, openTransform.borderRadius],
   )
+  const borderRadius = visualBorderRadius / (scale * cropScaleX)
 
   return {
     isHidden: false,
@@ -842,19 +858,24 @@ function getDismissSwipeProgress(translateY: number, screenHeight: number) {
 /**
  * Where the image sits for a given dismiss swipe finger translation. Like the
  * iOS Photos app, it shrinks a little and follows the finger with some
- * resistance - more so horizontally.
+ * resistance - more so horizontally. Its corners round off to match the
+ * thumbnail by the time letting go would close it, so the return animation
+ * only has to move it.
  */
 function getDismissSwipeTransform(
   translateX: number,
   translateY: number,
   screenSize: {width: number; height: number},
-): ScaleAndMove {
+  thumbBorderRadius = 0,
+): ImagePlacement {
   'worklet'
   const progress = getDismissSwipeProgress(translateY, screenSize.height)
+  const roundingProgress = Math.min(Math.abs(translateY) / DISMISS_DISTANCE, 1)
   return {
     translateX: rubberBand(translateX, screenSize.width / 2, DISMISS_FOLLOW_X),
     translateY: rubberBand(translateY, screenSize.height, DISMISS_FOLLOW_Y),
     scale: 1 - (1 - DISMISS_MIN_SCALE) * progress,
+    borderRadius: thumbBorderRadius * roundingProgress,
   }
 }
 
