@@ -299,7 +299,7 @@ module.exports = function (_config) {
             ios: {
               deploymentTarget: '16.4',
               buildReactNativeFromSource: true,
-              ccacheEnabled: IS_DEV,
+              ccacheEnabled: IS_DEV || IS_TESTFLIGHT,
               cxxLanguageStandard: 'c++23',
               extraPods: [
                 {
