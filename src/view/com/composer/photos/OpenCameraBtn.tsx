@@ -1,8 +1,8 @@
-import * as MediaLibrary from 'expo-media-library/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
 import {useCameraPermission} from '#/lib/hooks/usePermissions'
+import {Asset, usePermissions} from '#/lib/media/media-library'
 import {openCamera} from '#/lib/media/picker'
 import {logger} from '#/logger'
 import {createComposerImage} from '#/state/gallery'
@@ -15,8 +15,9 @@ import {type OpenCameraBtnProps} from './OpenCameraBtn.shared'
 export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
   const {_} = useLingui()
   const {requestCameraAccessIfNeeded} = useCameraPermission()
-  const [mediaPermissionRes, requestMediaPermission] =
-    MediaLibrary.usePermissions({granularPermissions: ['photo']})
+  const [mediaPermissionRes, requestMediaPermission] = usePermissions({
+    granularPermissions: ['photo'],
+  })
   const t = useTheme()
 
   const mediaGranted = mediaPermissionRes?.granted
@@ -32,9 +33,11 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
       if (!(await requestCameraAccessIfNeeded())) {
         return
       }
+      let canSaveToMediaLibrary = mediaGranted === true
       if (!mediaGranted) {
         if (mediaCanAskAgain) {
-          await requestMediaPermission()
+          const permission = await requestMediaPermission()
+          canSaveToMediaLibrary = permission.granted
         }
       }
 
@@ -45,10 +48,14 @@ export function OpenCameraBtn({disabled, onAdd}: OpenCameraBtnProps) {
         return
       }
 
-      // If we don't have permissions it's fine, we just wont save it. The post itself will still have access to
-      // the image even without these permissions
-      if (mediaPermissionRes) {
-        await MediaLibrary.createAssetAsync(img.path)
+      if (canSaveToMediaLibrary) {
+        try {
+          await Asset.create(img.path)
+        } catch (err) {
+          logger.warn('Failed to save camera image to media library', {
+            safeMessage: err,
+          })
+        }
       }
 
       const res = await createComposerImage(img)
