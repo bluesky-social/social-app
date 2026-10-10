@@ -8,6 +8,7 @@ import {
   applyIconSet,
   assignFamilies,
   buildIconSet,
+  glyphMismatch,
   normalizeExportName,
   readIconSource,
   validatePathData,
@@ -53,6 +54,50 @@ test('groups families deterministically', () => {
     'MagnifyingGlass',
     'MagnifyingGlass',
   ])
+})
+
+test('draws icons as font glyphs only where they match the SVG icon', async () => {
+  const viewBox = '0 0 24 24'
+  const fill = d => ({description: {path: d, fillRule: 'nonzero', strokeWidth: 0}, viewBox})
+  const square = 'M0 0h24v24H0Z'
+  // An inner contour wound the same way as the outer one is a hole only under evenodd.
+  const nested = 'M0 0h24v24H0ZM6 6h12v12H6Z'
+  // Same-direction contours overlapping in a 0.1 x 0.1 sliver, as left by outlined strokes.
+  const sliver = 'M2 2h10.01v10H2ZM12 2h10v10H12Z'
+  assert.equal(await glyphMismatch(fill(square), 24, 24), undefined)
+  assert.equal(await glyphMismatch(fill(sliver), 24, 24), undefined)
+  assert.equal(await glyphMismatch(fill(nested), 50, 45), 'non-square viewBox')
+  assert.match(await glyphMismatch(fill(nested), 24, 24), /nonzero fill rule/)
+  assert.equal(
+    await glyphMismatch({description: {path: nested, fillRule: 'evenodd', strokeWidth: 0}, viewBox}, 24, 24),
+    undefined,
+  )
+  assert.equal(
+    await glyphMismatch({description: {path: nested, strokeWidth: 2}, viewBox}, 24, 24),
+    undefined,
+  )
+})
+
+test('passes the glyph name only to icons drawn as glyphs', async t => {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'icon-codegen-'))
+  t.after(() => fs.rm(root, {recursive: true, force: true}))
+  const sourceRoot = path.join(root, 'assets/icons')
+  const scanRoot = path.join(root, 'src')
+  const outputRoot = path.join(scanRoot, 'components/icons')
+  await fs.mkdir(path.join(sourceRoot, 'ui'), {recursive: true})
+  await fs.mkdir(outputRoot, {recursive: true})
+  await fs.writeFile(
+    path.join(sourceRoot, 'ui/Square_Stroke2_Corner0_Rounded.svg'),
+    '<svg viewBox="0 0 24 24"><path d="M0 0h2v2Z"/></svg>',
+  )
+  await fs.writeFile(
+    path.join(sourceRoot, 'ui/Wide_Stroke2_Corner0_Rounded.svg'),
+    '<svg viewBox="0 0 30 24"><path d="M0 0h2v2Z"/></svg>',
+  )
+
+  const {tsOutputs} = await buildIconSet({outputRoot, scanRoot, sourceRoot})
+  assert.match(tsOutputs.get('Square.tsx'), /glyph: 'Square_Stroke2_Corner0_Rounded'/)
+  assert.doesNotMatch(tsOutputs.get('Wide.tsx'), /glyph:/)
 })
 
 test('accepts fill and supported stroke icons', async t => {
