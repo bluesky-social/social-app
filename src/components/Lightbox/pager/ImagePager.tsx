@@ -22,6 +22,7 @@ import Animated, {
   measure,
   type MeasuredDimensions,
   ReduceMotion,
+  setNativeProps,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
@@ -190,6 +191,26 @@ export default function ImageViewRoot({
       if (isGone && !wasGone) {
         scheduleOnRN(onFullyClosed)
       }
+    },
+  )
+
+  /*
+   * Hide the thumbnail of whichever image is showing for as long as the
+   * lightbox image is visible, so it lifts out of its spot and lands back in
+   * it, and the spot is empty while dragging to dismiss.
+   */
+  const thumbRefs = activeLightbox?.images.map(img => img.thumbRef) ?? []
+  const hiddenThumbIndex = useSharedValue(-1)
+  useAnimatedReaction(
+    () => (openProgress.get() > 0 ? imageIndex : -1),
+    nextIndex => {
+      const prevIndex = hiddenThumbIndex.get()
+      if (nextIndex === prevIndex) {
+        return
+      }
+      setThumbHidden(thumbRefs[prevIndex], false)
+      setThumbHidden(thumbRefs[nextIndex], true)
+      hiddenThumbIndex.set(nextIndex)
     },
   )
 
@@ -889,6 +910,26 @@ function rubberBand(distance: number, limit: number, coefficient: number) {
   const magnitude = Math.abs(distance)
   const damped = (1 - 1 / ((magnitude * coefficient) / limit + 1)) * limit
   return Math.sign(distance) * damped
+}
+
+/**
+ * Hides or shows a source thumbnail. Uses setNativeProps rather than a style
+ * in the source so the change lands in the same frame as the lightbox image
+ * appearing or disappearing, without a blink.
+ */
+function setThumbHidden(
+  thumbRef: AnimatedRef | null | undefined,
+  hidden: boolean,
+) {
+  'worklet'
+  /*
+   * On the UI thread an AnimatedRef holds its view's shadow node, which is
+   * null if it never mounted - and setNativeProps crashes without one.
+   */
+  if (!thumbRef || !(thumbRef as unknown as {value: unknown}).value) {
+    return
+  }
+  setNativeProps(thumbRef, {opacity: hidden ? 0 : 1})
 }
 
 function withClampedSpring<T extends AnimatableValue>(
