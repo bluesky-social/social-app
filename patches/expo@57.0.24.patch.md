@@ -54,3 +54,33 @@ caller did not set. This matches browser behavior.
 Upstream: expo/expo#33405 introduced the override; the SDK 58 Request rewrite
 (expo/expo#46630) is expected to make this spec-compliant, so re-evaluate on
 the next SDK bump. Worth filing an issue against expo/expo referencing this.
+
+## Resolve web async chunks against the entry bundle URL
+
+Touches `src/async-require/buildUrlForBundle.ts`, `src/winter/runtime.ts` and
+`package.json` (`sideEffects`).
+
+On web, Expo's chunk loader resolved Metro's root-relative async chunk paths
+(`/static/_expo/static/js/web/<name>-<hash>.js`) against the page URL
+(`getDevServer().url` is `location.origin + location.pathname`, in production
+too). bskyweb serves the HTML from `bsky.app` but the exported bundle from
+`STATIC_CDN_HOST` (`web-cdn.bsky.app`), so every `import()` requested its
+chunk from `bsky.app` instead of the CDN the entry scripts came from. Webpack
+handled this with `publicPath: 'auto'`; the Metro migration lost it.
+
+- `buildUrlForBundle.ts` resolves chunk paths against `getBundleUrl()` (Expo's
+  existing `document.currentScript` capture of the entry script URL) when it
+  is an http(s) URL, and falls back to the page URL otherwise (server
+  rendering, tests). Absolute chunk URLs still pass through untouched. An
+  empty `STATIC_CDN_HOST` keeps same-origin loading since the entry scripts
+  are then served from the page origin.
+- `winter/runtime.ts` imports `../utils/getBundleUrl` eagerly so the capture
+  runs while the entry script is executing. With `inlineRequires` the module
+  would otherwise first evaluate inside an async import, when
+  `document.currentScript` is already `null`. Upstream main has this import.
+- `package.json` lists `./src/utils/getBundleUrl*.ts` in `sideEffects` so
+  `EXPO_UNSTABLE_TREE_SHAKING` does not drop that bare import. Upstream main
+  is missing this too.
+
+Upstream: proposed against `packages/expo`; drop this section once an SDK
+ships it.

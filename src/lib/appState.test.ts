@@ -1,3 +1,4 @@
+import {type createElement, type memo} from 'react'
 import {type AppStateStatus} from 'react-native'
 import type * as TestingLibrary from '@testing-library/react-native/pure'
 
@@ -47,6 +48,11 @@ function load() {
   cleanup = rtl.cleanup
   return {
     ...(require('#/lib/appState') as typeof AppStateModule),
+    React: require('react') as {
+      createElement: typeof createElement
+      memo: typeof memo
+    },
+    render: rtl.render,
     renderHook: rtl.renderHook,
   }
 }
@@ -206,6 +212,28 @@ describe('useOnAppReturnedFromBackground', () => {
 
     unmount()
     emit('background', AWAY, 'active')
+    expect(second).toHaveBeenCalledTimes(1)
+  })
+
+  it('uses the latest callback in a memo() component', () => {
+    // React 19.2 never updates a useEffectEvent there (react/react#35187).
+    const {React, render, useOnAppReturnedFromBackground} = load()
+    const Listener = React.memo(function Listener({
+      cb,
+    }: {
+      cb: (appReturn: AppReturn) => void
+    }) {
+      useOnAppReturnedFromBackground(cb)
+      return null
+    })
+    const first = jest.fn()
+    const second = jest.fn()
+    const {rerender} = render(React.createElement(Listener, {cb: first}))
+
+    rerender(React.createElement(Listener, {cb: second}))
+    emit('background', AWAY, 'active')
+
+    expect(first).not.toHaveBeenCalled()
     expect(second).toHaveBeenCalledTimes(1)
   })
 })

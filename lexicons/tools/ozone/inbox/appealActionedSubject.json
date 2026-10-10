@@ -1,49 +1,46 @@
 {
-  "lexicon": 1,
   "id": "tools.ozone.inbox.appealActionedSubject",
   "defs": {
     "main": {
       "type": "procedure",
-      "description": "Appeal a moderation action affecting the user's account or content.",
       "input": {
-        "encoding": "application/json",
         "schema": {
           "type": "object",
-          "required": ["subject"],
+          "required": [
+            "subject"
+          ],
           "properties": {
             "action": {
+              "refs": [
+                "#actionRef",
+                "#labelRef",
+                "#takedownRef"
+              ],
               "type": "union",
-              "refs": ["#actionRef", "#labelRef", "#takedownRef"],
               "closed": true,
               "description": "Moderation action being appealed."
             },
+            "reason": {
+              "type": "string",
+              "maxLength": 20000,
+              "description": "Optional explanation supplied by the user.",
+              "maxGraphemes": 2000
+            },
+            "modTool": {
+              "ref": "com.atproto.moderation.createReport#modTool",
+              "type": "ref"
+            },
             "subject": {
-              "type": "union",
               "refs": [
                 "com.atproto.admin.defs#repoRef",
                 "com.atproto.repo.strongRef"
               ],
+              "type": "union",
               "description": "Subject being appealed."
-            },
-            "reason": {
-              "type": "string",
-              "maxGraphemes": 2000,
-              "maxLength": 20000,
-              "description": "Optional explanation supplied by the user."
-            },
-            "modTool": {
-              "type": "ref",
-              "ref": "com.atproto.moderation.createReport#modTool"
             }
           }
-        }
-      },
-      "output": {
-        "encoding": "application/json",
-        "schema": {
-          "type": "ref",
-          "ref": "tools.ozone.inbox.defs#subjectView"
-        }
+        },
+        "encoding": "application/json"
       },
       "errors": [
         {
@@ -62,22 +59,21 @@
           "name": "AppealWindowExpired",
           "description": "The appeal window for this action has closed."
         }
-      ]
-    },
-    "actionRef": {
-      "type": "object",
-      "required": ["id"],
-      "properties": {
-        "id": {
-          "type": "integer",
-          "minimum": 1,
-          "description": "ID of the moderation action being appealed, available via actions in mod inbox."
-        }
-      }
+      ],
+      "output": {
+        "schema": {
+          "ref": "tools.ozone.inbox.defs#subjectView",
+          "type": "ref"
+        },
+        "encoding": "application/json"
+      },
+      "description": "Appeal a moderation action affecting the user's account or content."
     },
     "labelRef": {
       "type": "object",
-      "required": ["val"],
+      "required": [
+        "val"
+      ],
       "properties": {
         "val": {
           "type": "string",
@@ -86,9 +82,24 @@
         }
       }
     },
+    "actionRef": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "ID of the moderation action being appealed, available via actions in mod inbox."
+        }
+      }
+    },
     "takedownRef": {
       "type": "object",
       "properties": {}
     }
-  }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
 }

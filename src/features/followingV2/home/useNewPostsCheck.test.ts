@@ -1,5 +1,6 @@
+import {createElement, memo} from 'react'
 import {type AppStateStatus} from 'react-native'
-import {act, renderHook} from '@testing-library/react-native'
+import {act, render, renderHook} from '@testing-library/react-native'
 
 import {type AppReturn} from '#/lib/appState'
 import {
@@ -73,7 +74,9 @@ afterEach(() => {
  * fetched just now. Its check finds nothing unless told otherwise.
  */
 async function setup(initial: Partial<Props> = {}) {
-  const check = jest.fn<Promise<boolean>, []>(() => Promise.resolve(false))
+  const check = jest.fn<Promise<boolean>, [NewPostsCheckTrigger]>(() =>
+    Promise.resolve(false),
+  )
   const onFound = jest.fn<void, [boolean, NewPostsCheckTrigger]>()
   let props: Props = {
     topFetchedAt: Date.now(),
@@ -216,6 +219,50 @@ describe('focus', () => {
     view.check.mockResolvedValueOnce(true)
     await view.refocus(FOCUS_CHECK_AFTER)
     expect(view.onFound).toHaveBeenCalledWith(true, 'focus')
+  })
+})
+
+describe('check', () => {
+  it('is told what prompted it', async () => {
+    const view = await setup({interval: 10 * MINUTE})
+    await view.refocus(FOCUS_CHECK_AFTER)
+    await returnToApp(RETURN_STALE_AFTER)
+    await advance(10 * MINUTE)
+    expect(view.check.mock.calls).toEqual([['focus'], ['return'], ['interval']])
+  })
+})
+
+describe('in a memo() component', () => {
+  /*
+   * React 19.2 never updates a useEffectEvent there (react/react#35187), and
+   * PostFeed is one.
+   */
+  const Checker = memo(function Checker(props: Props) {
+    useNewPostsCheck(props)
+    return null
+  })
+
+  it('checks a return against the latest props', async () => {
+    const check = jest.fn<Promise<boolean>, [NewPostsCheckTrigger]>(() =>
+      Promise.resolve(false),
+    )
+    const props: Props = {
+      topFetchedAt: undefined,
+      isEmpty: false,
+      isActive: true,
+      isBusy: false,
+      check,
+      onFound: jest.fn(),
+    }
+    const {rerender} = render(createElement(Checker, props))
+    await flush()
+
+    // The feed loads after the view mounts.
+    rerender(createElement(Checker, {...props, topFetchedAt: Date.now()}))
+    await flush()
+    await returnToApp(RETURN_STALE_AFTER)
+
+    expect(check.mock.calls).toEqual([['return']])
   })
 })
 

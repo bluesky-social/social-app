@@ -1,6 +1,0 @@
-{
-    "scripts": {
-        "setup": "pnpm install --frozen-lockfile",
-        "run": "pnpm web --port $CONDUCTOR_PORT"
-    }
-}

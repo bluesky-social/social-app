@@ -1,0 +1,79 @@
+{
+  "id": "tools.ozone.inbox.listActionedSubjects",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "subjects"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "subjects": {
+              "type": "array",
+              "items": {
+                "ref": "tools.ozone.inbox.defs#subjectView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "did": {
+            "type": "string",
+            "format": "did",
+            "description": "Account to preview. Defaults to the authenticated account; another account requires an active moderator, triage, or admin credential."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string",
+            "description": "An opaque cursor for pagination."
+          },
+          "filter": {
+            "enum": [
+              "all",
+              "pending",
+              "resolved",
+              "unread"
+            ],
+            "type": "string",
+            "default": "all",
+            "description": "Filter subject activity. pending includes subjects whose latest appeal report is not closed; resolved includes subjects whose latest appeal report is closed. unread includes subjects whose public updatedAt is after the subjects section's seenAt watermark."
+          },
+          "sortField": {
+            "enum": [
+              "createdAt",
+              "updatedAt"
+            ],
+            "type": "string",
+            "default": "updatedAt"
+          },
+          "sortDirection": {
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "type": "string",
+            "default": "desc"
+          }
+        }
+      },
+      "description": "List subjects belonging to the authenticated account that have moderation actions from this moderation service."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

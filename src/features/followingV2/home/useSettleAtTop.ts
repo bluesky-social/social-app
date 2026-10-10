@@ -49,11 +49,19 @@ export type SettleAtTopHandlers = {
  * data as it was when the list came to rest, and gives way to anything that
  * has replaced the pages it would keep since, as a prepend's commit does. It's
  * called off by another drag, by the list leaving the top, and by unmounting.
+ * `onRestAtTop` is told when it settles, whether or not that writes anything.
  */
 export function useSettleAtTop(
   feedDesc: FeedDescriptor,
   params: FeedParams | undefined,
-  {enabled}: {enabled: boolean},
+  {
+    enabled,
+    onRestAtTop,
+  }: {
+    enabled: boolean
+    /** The reader has come to rest at the true top. */
+    onRestAtTop?: () => void
+  },
 ): SettleAtTopHandlers {
   const queryClient = useQueryClient()
   const settle = usePostFeedSettle(feedDesc, params)
@@ -75,6 +83,7 @@ export function useSettleAtTop(
     const before = queryClient.getQueryData<PostFeedData>(queryKey)
     timeout.current = setTimeout(() => {
       timeout.current = undefined
+      onRestAtTop?.()
       void settle(before)
     }, SETTLE_QUIET_MS)
   }

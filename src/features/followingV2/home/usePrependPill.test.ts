@@ -1,18 +1,19 @@
 import {act, renderHook} from '@testing-library/react-native'
 
 import {newPostsPillPresentation} from '#/components/NewPostsPill/presentation'
-import {type FeedPostSlice} from './queries/postFeed'
+import {type FeedPostSlice, type StagedPage} from './queries/postFeed'
 import {
-  getRestoreOffer,
-  liveRestoreOffer,
-  useRestorePill,
-} from './useRestorePill'
+  getPrependOffer,
+  livePrependOffer,
+  usePrependPill,
+} from './usePrependPill'
 
 // Only its constant: its hooks need queries this doesn't set up.
 jest.mock('./useSettleAtTop', () => ({SETTLE_AT_TOP_LIMIT: 5}))
 
 const RESTORED_AT = 1000
 const PREPENDED_AT = 2000
+const LATER_AT = 3000
 
 /**
  * A feed item by `did`, whose own post is the last of `context` posts before
@@ -81,17 +82,16 @@ function page(fetchedAt: number, slices: FeedPostSlice[]) {
   return {fetchedAt, slices}
 }
 
-describe('getRestoreOffer', () => {
-  it('offers the posts from the page the prepend put on top', () => {
+describe('getPrependOffer', () => {
+  it('offers the posts from the page a prepend staged on top', () => {
     const fresh = [slice('a'), slice('b')]
     const restored = [slice('old')]
-    const offer = getRestoreOffer(
+    const offer = getPrependOffer(
       rowsOf([...fresh, ...restored]),
       page(PREPENDED_AT, fresh),
     )
 
     expect(offer).toEqual({
-      topFetchedAt: PREPENDED_AT,
       keys: ['slice-a-0', 'slice-b-0'],
       count: 2,
       authors: [
@@ -103,7 +103,7 @@ describe('getRestoreOffer', () => {
 
   it('counts a reply once, with its thread context', () => {
     const reply = slice('reply', {context: 2})
-    const offer = getRestoreOffer(rowsOf([reply]), page(PREPENDED_AT, [reply]))
+    const offer = getPrependOffer(rowsOf([reply]), page(PREPENDED_AT, [reply]))
 
     expect(offer?.count).toBe(1)
     expect(offer?.keys).toEqual([
@@ -124,7 +124,7 @@ describe('getRestoreOffer', () => {
       ...rowsOf([slice('old')]),
     ]
     // The page is the one without samples, as PostFeed has it.
-    const offer = getRestoreOffer(rows, page(PREPENDED_AT, fresh))
+    const offer = getPrependOffer(rows, page(PREPENDED_AT, fresh))
 
     expect(offer?.count).toBe(2)
     expect(offer?.keys).toEqual(['slice-a-0', 'slice-b-0'])
@@ -137,7 +137,7 @@ describe('getRestoreOffer', () => {
   it('offers nothing when none of the page renders', () => {
     const fresh = [slice('muted')]
     expect(
-      getRestoreOffer(rowsOf([slice('old')]), page(PREPENDED_AT, fresh)),
+      getPrependOffer(rowsOf([slice('old')]), page(PREPENDED_AT, fresh)),
     ).toBeUndefined()
   })
 
@@ -152,7 +152,7 @@ describe('getRestoreOffer', () => {
       slice('c'),
       slice('d'),
     ]
-    const offer = getRestoreOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))
+    const offer = getPrependOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))
 
     expect(offer?.count).toBe(8)
     expect(offer?.authors.map(author => author.did)).toEqual([
@@ -164,7 +164,7 @@ describe('getRestoreOffer', () => {
 
   it('makes a facepile from four posts with a face to show', () => {
     const presentation = (slices: FeedPostSlice[]) => {
-      const offer = getRestoreOffer(rowsOf(slices), page(PREPENDED_AT, slices))!
+      const offer = getPrependOffer(rowsOf(slices), page(PREPENDED_AT, slices))!
       return newPostsPillPresentation({
         variant: 'newPosts',
         count: offer.count,
@@ -182,18 +182,18 @@ describe('getRestoreOffer', () => {
   })
 })
 
-describe('liveRestoreOffer', () => {
+describe('livePrependOffer', () => {
   const fresh = [slice('a'), slice('b'), slice('c')]
-  const offer = getRestoreOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))!
+  const offer = getPrependOffer(rowsOf(fresh), page(PREPENDED_AT, fresh))!
 
   it('follows the rows that still render', () => {
-    expect(liveRestoreOffer(offer, rowsOf(fresh))).toEqual({
+    expect(livePrependOffer(offer, rowsOf(fresh))).toEqual({
       topKey: 'slice-a-0',
       authors: offer.authors,
     })
 
     // A or its author muted, and a label on C's avatar.
-    const now = liveRestoreOffer(
+    const now = livePrependOffer(
       offer,
       rowsOf([fresh[1], slice('c', {blur: true})]),
     )
@@ -202,68 +202,80 @@ describe('liveRestoreOffer', () => {
   })
 
   it('has no top once none of them render', () => {
-    expect(liveRestoreOffer(offer, rowsOf([slice('old')])).topKey).toBe(
+    expect(livePrependOffer(offer, rowsOf([slice('old')])).topKey).toBe(
       undefined,
     )
   })
 })
 
-describe('useRestorePill', () => {
+describe('usePrependPill', () => {
   const fresh = [slice('a'), slice('b'), slice('c'), slice('d')]
   const old = [slice('old')]
   const restoredPages = [page(RESTORED_AT, old)]
   const prependedPages = [page(PREPENDED_AT, fresh), page(RESTORED_AT, old)]
+  const OFFERED = {fetchedAt: PREPENDED_AT, offered: true, isFull: false}
 
   type Props = {
     enabled?: boolean
     isActive?: boolean
-    prependedAt?: number
+    staged?: StagedPage
     pages?: ReturnType<typeof page>[]
   }
 
   function renderPill(initialProps: Props = {}) {
     const offsetY = {value: 400, get: () => offsetY.value}
     const scrollToTop = jest.fn()
+    const onRead = jest.fn()
     const hook = renderHook(
       ({
         enabled = true,
         isActive = true,
-        prependedAt,
+        staged,
         pages = restoredPages,
       }: Props) =>
-        useRestorePill({
+        usePrependPill({
           enabled,
           isActive,
-          prependedAt,
+          staged,
           pages,
           rows: rowsOf(pages.flatMap(page => page.slices)),
           offsetY,
           scrollToTop,
+          onRead,
         }),
       {initialProps},
     )
-    /** The prepend's commit, then the render that has its page. */
-    const prepend = (props: Props = {}) => {
-      hook.rerender({...props, prependedAt: PREPENDED_AT})
+    /** A prepend's commit of `staged`, then the render that has its page. */
+    const stage = (staged: StagedPage = OFFERED, props: Props = {}) => {
+      hook.rerender({...props, staged})
+      hook.rerender({...props, staged, pages: prependedPages})
+    }
+    /** A later prepend that replaces the staged page with `slices`. */
+    const replace = (
+      slices: FeedPostSlice[],
+      {offered = true, ...props}: Props & {offered?: boolean} = {},
+    ) => {
+      const staged = {fetchedAt: LATER_AT, offered, isFull: false}
+      hook.rerender({...props, staged, pages: prependedPages})
       hook.rerender({
         ...props,
-        prependedAt: PREPENDED_AT,
-        pages: prependedPages,
+        staged,
+        pages: [page(LATER_AT, slices), page(RESTORED_AT, old)],
       })
     }
-    return {hook, offsetY, scrollToTop, prepend}
+    return {hook, offsetY, scrollToTop, onRead, stage, replace}
   }
 
   describe('shows', () => {
-    it('once the posts a prepend put above the restored top render', () => {
+    it('once the offered posts a prepend staged above the restored top render', () => {
       const {hook} = renderPill()
       expect(hook.result.current.visible).toBe(false)
 
       // Committed, but not yet rendered.
-      hook.rerender({prependedAt: PREPENDED_AT})
+      hook.rerender({staged: OFFERED})
       expect(hook.result.current.visible).toBe(false)
 
-      hook.rerender({prependedAt: PREPENDED_AT, pages: prependedPages})
+      hook.rerender({staged: OFFERED, pages: prependedPages})
       expect(hook.result.current).toMatchObject({
         visible: true,
         count: 4,
@@ -271,17 +283,41 @@ describe('useRestorePill', () => {
       })
     })
 
-    it('never without a prepend', () => {
+    it('never without a staged page', () => {
       const {hook} = renderPill()
       hook.rerender({pages: prependedPages})
       expect(hook.result.current.visible).toBe(false)
     })
 
-    it('never for a prepend none of whose posts render', () => {
-      const {hook} = renderPill()
-      hook.rerender({prependedAt: PREPENDED_AT})
+    it('never for a staged page that is not offered, as a check on an interval stages', () => {
+      const {hook, stage} = renderPill()
+      stage({fetchedAt: PREPENDED_AT, offered: false, isFull: false})
+      expect(hook.result.current.visible).toBe(false)
+    })
+
+    it('when a page staged without an offer is offered later, with the posts as they render then', () => {
+      const {hook, stage} = renderPill()
+      const quiet = {fetchedAt: PREPENDED_AT, offered: false, isFull: false}
+      stage(quiet)
+      // A post goes, as a mute takes it out, before a return offers the page.
       hook.rerender({
-        prependedAt: PREPENDED_AT,
+        staged: quiet,
+        pages: [page(PREPENDED_AT, fresh.slice(1)), page(RESTORED_AT, old)],
+      })
+
+      hook.rerender({
+        staged: OFFERED,
+        pages: [page(PREPENDED_AT, fresh.slice(1)), page(RESTORED_AT, old)],
+      })
+
+      expect(hook.result.current).toMatchObject({visible: true, count: 3})
+    })
+
+    it('never for a staged page none of whose posts render', () => {
+      const {hook} = renderPill()
+      hook.rerender({staged: OFFERED})
+      hook.rerender({
+        staged: OFFERED,
         // Rows built from these pages leave out the duplicate's page.
         pages: [page(PREPENDED_AT, []), page(RESTORED_AT, old)],
       })
@@ -289,33 +325,25 @@ describe('useRestorePill', () => {
     })
 
     it('only while the view is active, including after a prepend in the background', () => {
-      const {hook, prepend} = renderPill({isActive: false})
-      prepend({isActive: false})
+      const {hook, stage} = renderPill({isActive: false})
+      stage(OFFERED, {isActive: false})
       expect(hook.result.current.visible).toBe(false)
 
-      hook.rerender({
-        isActive: true,
-        prependedAt: PREPENDED_AT,
-        pages: prependedPages,
-      })
+      hook.rerender({isActive: true, staged: OFFERED, pages: prependedPages})
       expect(hook.result.current.visible).toBe(true)
 
-      hook.rerender({
-        isActive: false,
-        prependedAt: PREPENDED_AT,
-        pages: prependedPages,
-      })
+      hook.rerender({isActive: false, staged: OFFERED, pages: prependedPages})
       expect(hook.result.current.visible).toBe(false)
     })
 
     it('with what it first offered, not a live count', () => {
-      const {hook, prepend} = renderPill()
-      prepend()
+      const {hook, stage} = renderPill()
+      stage()
       expect(hook.result.current.count).toBe(4)
 
       // Some of the posts go, as a mute takes them out.
       hook.rerender({
-        prependedAt: PREPENDED_AT,
+        staged: OFFERED,
         pages: [page(PREPENDED_AT, fresh.slice(2)), page(RESTORED_AT, old)],
       })
       expect(hook.result.current.visible).toBe(true)
@@ -327,82 +355,83 @@ describe('useRestorePill', () => {
     })
 
     it('not with following v2 off, or on web', () => {
-      const {hook, prepend} = renderPill({enabled: false})
-      prepend({enabled: false})
+      const {hook, stage} = renderPill({enabled: false})
+      stage(OFFERED, {enabled: false})
       expect(hook.result.current.visible).toBe(false)
     })
   })
 
-  describe('hides for good', () => {
-    it('once the topmost new post is seen after a drag', () => {
-      const {hook, prepend} = renderPill()
-      prepend()
+  describe('a page that replaces the staged one', () => {
+    it('keeps the pill, with exactly the posts it has', () => {
+      const {hook, stage, replace} = renderPill()
+      stage()
 
-      // Seen without a drag, the row is behind the header.
-      act(() => hook.result.current.onItemSeen({key: 'slice-a-0'}))
-      expect(hook.result.current.visible).toBe(true)
+      replace([slice('e'), ...fresh])
 
-      act(() => hook.result.current.onBeginDrag())
-      act(() => hook.result.current.onItemSeen({key: 'slice-d-0'}))
-      expect(hook.result.current.visible).toBe(true)
-
-      act(() => hook.result.current.onItemSeen({key: 'slice-a-0'}))
-      expect(hook.result.current.visible).toBe(false)
+      expect(hook.result.current).toMatchObject({
+        visible: true,
+        count: 5,
+        authors: [{did: 'did:plc:e'}, {did: 'did:plc:a'}, {did: 'did:plc:b'}],
+      })
     })
 
-    it('once the list reaches its top', () => {
-      const {hook, prepend} = renderPill()
-      prepend()
+    it('raises no pill for a page that was not offered', () => {
+      const {hook, stage, replace} = renderPill()
+      stage({fetchedAt: PREPENDED_AT, offered: false, isFull: false})
 
-      act(() => hook.result.current.onReachTop())
+      replace([slice('e'), ...fresh], {offered: false})
 
       expect(hook.result.current.visible).toBe(false)
+    })
+  })
+
+  describe('hides', () => {
+    it('once the staged page is read', () => {
+      const {hook, stage} = renderPill()
+      stage()
+
+      hook.rerender({staged: undefined, pages: prependedPages})
+
+      expect(hook.result.current.visible).toBe(false)
+      // The pill keeps its count as it goes.
+      expect(hook.result.current.count).toBe(4)
     })
 
     it('once a refresh replaces the top page', () => {
-      const {hook, prepend} = renderPill()
-      prepend()
+      const {hook, stage} = renderPill()
+      stage()
 
       hook.rerender({
-        prependedAt: PREPENDED_AT,
+        staged: OFFERED,
         pages: [page(PREPENDED_AT + 1, [slice('fresh')])],
       })
 
       expect(hook.result.current.visible).toBe(false)
     })
-
-    it('but not when the reader reaches the top before the prepend', () => {
-      const {hook, prepend} = renderPill()
-      act(() => hook.result.current.onReachTop())
-      prepend()
-      expect(hook.result.current.visible).toBe(true)
-    })
   })
 
   describe('pressed', () => {
-    it('scrolls up to the top, which hides it', () => {
-      const {hook, offsetY, scrollToTop, prepend} = renderPill()
-      prepend()
+    it('scrolls up to the top, without reading the page itself', () => {
+      const {hook, offsetY, scrollToTop, onRead, stage} = renderPill()
+      stage()
       offsetY.value = 10_000
 
       act(() => hook.result.current.onPress())
 
       expect(scrollToTop).toHaveBeenCalled()
-      // The press alone doesn't, but the scroll reaching the top does.
-      expect(hook.result.current.visible).toBe(true)
-      act(() => hook.result.current.onReachTop())
-      expect(hook.result.current.visible).toBe(false)
+      // The scroll reaching the top reads it.
+      expect(onRead).not.toHaveBeenCalled()
     })
 
-    it('hides it already at the top, where no scroll reaches it', () => {
-      const {hook, offsetY, scrollToTop, prepend} = renderPill()
-      prepend()
+    it('reads the page already at the top, where no scroll reaches it', () => {
+      const {hook, offsetY, scrollToTop, onRead, stage} = renderPill()
+      stage()
       offsetY.value = 0
 
       act(() => hook.result.current.onPress())
 
       expect(scrollToTop).toHaveBeenCalled()
-      expect(hook.result.current.visible).toBe(false)
+      expect(onRead).toHaveBeenCalled()
     })
   })
 })

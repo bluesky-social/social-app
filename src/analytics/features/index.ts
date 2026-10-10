@@ -105,6 +105,26 @@ export function getFeatureDescription(feature: Features, i18n: I18n) {
           }),
         ),
       }
+    case Features.FollowingV2Enable:
+      // Following v2 behaviour is native-only, see `isFollowingV2Eligible`
+      if (env.IS_WEB) return null
+      return {
+        key: feature,
+        name: i18n._(
+          msg({
+            message: 'Keep your place in the Following feed',
+            comment: 'Name for a feature flag',
+          }),
+        ),
+        description: i18n._(
+          msg({
+            message:
+              'Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them.',
+            comment:
+              'Description of a feature flag (Keep your place in the Following feed)',
+          }),
+        ),
+      }
     default:
       return null
   }
