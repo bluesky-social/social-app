@@ -20,7 +20,8 @@ SVG files under `assets/icons/` are the source of truth. Generated components un
 3. Run `pnpm icons:generate` and commit the SVG, the generated TypeScript, and the rebuilt fonts in
    `assets/nano-icons/nanoicons/`.
 
-`pnpm icons:check` verifies that optimized SVGs, generated TypeScript, and fonts are current.
+`pnpm icons:check` verifies that optimized SVGs and generated TypeScript are current, that the
+font glyphmaps match a fresh build, and that the font files exist.
 `pnpm icons:test` runs the focused generator tests. Generation warns, but does not fail, when a
 generated icon uses a viewBox other than 24×24 or 64×64.
 

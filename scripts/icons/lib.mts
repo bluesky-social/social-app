@@ -801,7 +801,12 @@ export async function buildIconSet({outputRoot, scanRoot, sourceRoot}) {
 /**
  * Builds the react-native-nano-icons fonts configured in the app config, which
  * glyph icons render from. With `check`, builds into a temporary directory
- * and returns the committed glyphmaps that differ from a fresh build.
+ * and returns the committed glyphmaps that differ from a fresh build, and the
+ * font binaries that are missing.
+ *
+ * The binaries are only checked for existence: the glyphmap pins every input
+ * of the build and is always written together with them, and a byte
+ * comparison could flap if the font toolchain embeds timestamps.
  */
 export async function applyNanoFonts({check, repoRoot}) {
   const require = createRequire(path.join(repoRoot, 'package.json'))
@@ -827,6 +832,10 @@ export async function applyNanoFonts({check, repoRoot}) {
       try { current = await fs.readFile(committed, 'utf8') } catch {}
       if (current !== (await fs.readFile(results[index].glyphmapPath, 'utf8'))) {
         differences.push(path.relative(process.cwd(), committed))
+      }
+      for (const built of [results[index].ttfPath, results[index].woff2Path].filter(Boolean)) {
+        const binary = path.join(repoRoot, set.outputDir, path.basename(built))
+        try { await fs.access(binary) } catch { differences.push(path.relative(process.cwd(), binary)) }
       }
     }
     return differences
