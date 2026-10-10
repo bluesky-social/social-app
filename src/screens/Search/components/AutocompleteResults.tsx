@@ -1,9 +1,14 @@
 import {memo} from 'react'
 import {TouchableOpacity, View, type ViewStyle} from 'react-native'
+import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {SearchProfileCard} from '#/screens/Search/components/SearchProfileCard'
+import {
+  countActiveFilters,
+  type SearchFilters,
+} from '#/screens/Search/searchParams'
 import {atoms as a, native, useTheme} from '#/alf'
 import {type AutocompleteItem} from '#/components/Autocomplete'
 import * as Layout from '#/components/Layout'
@@ -21,6 +26,7 @@ let AutocompleteResults = ({
   onSubmit,
   onResultPress,
   onProfileClick,
+  onSelectSearch,
 }: {
   items: AutocompleteItem[]
   isFetching: boolean
@@ -28,6 +34,7 @@ let AutocompleteResults = ({
   onSubmit: () => void
   onResultPress: () => void
   onProfileClick: (profile: bsky.profile.AnyProfileView) => void
+  onSelectSearch: (value: string, filters?: SearchFilters) => void
 }): React.ReactNode => {
   const ax = useAnalytics()
   const {t: l} = useLingui()
@@ -56,6 +63,26 @@ let AutocompleteResults = ({
             style={a.border_b}
           />
           {items.map((item, index) => {
+            if (item.type === 'search') {
+              if (
+                !countActiveFilters(item.filters ?? {}) &&
+                item.value.trim().toLowerCase() ===
+                  searchText.trim().toLowerCase()
+              )
+                return null
+              const filterCount = countActiveFilters(item.filters ?? {})
+              const label = filterCount
+                ? l`Search for “${item.value}” (${plural(filterCount, {one: '# filter', other: '# filters'})})`
+                : l`Search for “${item.value}”`
+              return (
+                <SearchLinkCard
+                  key={item.key}
+                  label={label}
+                  onPress={() => onSelectSearch(item.value, item.filters)}
+                  style={a.border_b}
+                />
+              )
+            }
             if (item.type !== 'profile') return null
             return (
               <SearchProfileCard
