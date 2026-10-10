@@ -68,6 +68,22 @@ const iconSets = {
  */
 type GlyphEntry = [number, [number, string][]]
 
+const reportedFallbacks = new Set<string>()
+
+/**
+ * Falling back to SVG for a prop the glyph does not support is correct, but
+ * silently gives up the glyph's performance. Say so once per icon and prop.
+ */
+function warnFallback(name: string, prop: string) {
+  const key = `${name}:${prop}`
+  if (reportedFallbacks.has(key)) return
+  reportedFallbacks.add(key)
+  console.warn(
+    `${name} renders with react-native-svg instead of its font glyph because of the \`${prop}\` prop. ` +
+      'Avoid this prop on icons, or extend `withNanoGlyph` to support it.',
+  )
+}
+
 /**
  * Lets a TEMPLATE factory render its icon as a single glyph from the icon
  * font instead of SvgView + Group + Path. Codegen passes the glyph for icons
@@ -114,11 +130,17 @@ export function withNanoGlyph(
      */
     const resolvedSize = Number(size ? sizes[size] : width || sizes.md)
 
-    if (
-      gradient ||
-      (height !== undefined && Number(height) !== resolvedSize) ||
-      Object.values(rest).some(value => value !== undefined)
-    ) {
+    if (gradient) {
+      return <SvgIcon {...props} ref={ref} />
+    }
+    const unsupported =
+      height !== undefined && Number(height) !== resolvedSize
+        ? 'height'
+        : Object.keys(rest).find(
+            key => rest[key as keyof typeof rest] !== undefined,
+          )
+    if (unsupported) {
+      if (__DEV__) warnFallback(name, unsupported)
       return <SvgIcon {...props} ref={ref} />
     }
 
