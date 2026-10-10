@@ -1,10 +1,12 @@
 import {useState} from 'react'
-import {Pressable, View} from 'react-native'
+import {type GestureResponderEvent, Pressable, View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
+import {useNavigation} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
+import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {useFollowActorsQuery} from '#/state/queries/notifications/grouped'
@@ -96,8 +98,8 @@ function SingleFollowNotification({
  * `count`.
  *
  * The row's own link goes to the viewer's followers list, since that shows
- * everyone. It's reached by the screen reader's default action, and by
- * presses beside the expanded list.
+ * everyone. It's reached by presses beside the expanded list, and by a screen
+ * reader action on the header.
  */
 function GroupedFollowNotification({
   notification,
@@ -107,6 +109,7 @@ function GroupedFollowNotification({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
+  const navigation = useNavigation<NavigationProp>()
   const [isExpanded, setIsExpanded] = useState(false)
   const [actor] = notification.actors
   const name = Item.useDisplayName(actor)
@@ -117,7 +120,10 @@ function GroupedFollowNotification({
     other: '# others',
   })} followed you`
 
-  const onToggleExpanded = () => {
+  const onToggleExpanded = (event: GestureResponderEvent) => {
+    // Keep the press from reaching the row, which on web would follow its link
+    event.preventDefault()
+    event.stopPropagation()
     if (!isExpanded) {
       ax.metric('notifications:bundleExpand', {
         notificationType: 'follow',
@@ -135,22 +141,11 @@ function GroupedFollowNotification({
           : makeProfileLink(actor)
       }
       isRead={notification.isRead}
-      label={label}
-      // Once expanded, screen readers need to reach each follower
-      accessible={!isExpanded}
-      accessibilityActions={[
-        {
-          name: 'toggleExpanded',
-          label: isExpanded
-            ? l`Collapse list of users`
-            : l`Expand list of users`,
-        },
-      ]}
-      onAccessibilityAction={event => {
-        if (event.nativeEvent.actionName === 'toggleExpanded') {
-          onToggleExpanded()
-        }
-      }}
+      /*
+       * Screen readers reach the header as a button whether or not it's
+       * expanded, as on web, so focus stays on it as it toggles
+       */
+      accessible={false}
       /*
        * The header and list stack vertically. Padding moves inside them, so
        * that the whole header toggles the list rather than its padding
@@ -160,11 +155,25 @@ function GroupedFollowNotification({
       style={[a.flex_col, a.align_stretch, a.gap_0, a.px_0, a.py_0]}
       testID={`notification-follow-${notification.id}`}>
       <Pressable
-        accessible={isExpanded}
         accessibilityRole="button"
         accessibilityLabel={label}
-        accessibilityHint={l`Collapses list of users`}
-        accessibilityState={{expanded: isExpanded}}
+        accessibilityHint={
+          isExpanded ? l`Collapses list of users` : l`Expands list of users`
+        }
+        aria-expanded={isExpanded}
+        accessibilityActions={
+          currentAccount
+            ? [{name: 'viewFollowers', label: l`View all followers`}]
+            : undefined
+        }
+        onAccessibilityAction={event => {
+          if (
+            event.nativeEvent.actionName === 'viewFollowers' &&
+            currentAccount
+          ) {
+            navigation.push('ProfileFollowers', {name: currentAccount.did})
+          }
+        }}
         onPress={onToggleExpanded}
         style={[a.flex_row, a.align_start, a.gap_md, a.px_lg, a.py_md]}>
         {/* The chevron sits at the top, while the text centres on the avatar */}

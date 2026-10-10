@@ -593,6 +593,8 @@ export function ActorListItem({
         accessibilityLabel={l`Go to ${name}’s profile`}
         accessibilityHint=""
         onPress={event => {
+          // Keep the press from also following the row's link on web
+          event.stopPropagation()
           unstableCacheProfileView(queryClient, profile)
           onPress(event)
         }}
