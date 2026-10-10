@@ -38,12 +38,12 @@ imports and their locations.
 
 ## Font glyphs
 
-Generated icons render as glyphs from [react-native-nano-icons](https://github.com/software-mansion-labs/react-native-nano-icons)
+On iOS and Android, generated icons render as glyphs from [react-native-nano-icons](https://github.com/software-mansion-labs/react-native-nano-icons)
 fonts, one per directory (`icons-ui`, `icons-brands`, `icons-community`), built from the same SVGs
 by its config plugin in `app.config.js`. Codegen passes each icon's glyph name to
 `createSinglePathSVG` or `createSVG` as `glyph`, typed against the committed glyphmaps (see
 `withNanoGlyph` in `src/components/icons/nano.tsx`). An icon falls back to react-native-svg for
-props a glyph cannot honour, such as `gradient`.
+props a glyph cannot honour, such as `gradient`. Web always renders the SVG icons.
 
 An icon stays on react-native-svg when its glyph would not match the SVG icon: a non-square
 viewBox (glyphs are sized by height, SVG icons letterbox into a square), or a fill path that

@@ -6,7 +6,8 @@ import {
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 
 import {type Props, useCommonSVGProps} from '#/components/icons/common'
-import {type NanoGlyphName, withNanoGlyph} from '#/components/icons/nano'
+import {type NanoGlyphName} from '#/components/icons/glyphMaps'
+import {withNanoGlyph} from '#/components/icons/nano'
 
 export type IconWithSvgMeta = ForwardRefExoticComponent<
   Props & RefAttributes<Svg>
