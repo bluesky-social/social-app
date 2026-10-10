@@ -39,6 +39,9 @@ export function VideoEmbedInnerWeb({
   onScreen,
   lastKnownTime,
   onPlaybackStart,
+  onPlaybackProgress,
+  onPlaybackStateChange,
+  onPlaybackEnd,
 }: VideoEmbedInnerWebProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -90,6 +93,7 @@ export function VideoEmbedInnerWeb({
             onTimeUpdate={e => {
               const currentTime = e.currentTarget.currentTime
               lastKnownTime.current = currentTime
+              onPlaybackProgress(currentTime)
               if (
                 !playbackStartTrackedRef.current &&
                 hasPlaybackStarted(currentTime)
@@ -106,6 +110,15 @@ export function VideoEmbedInnerWeb({
                 reportDialogMetadata.current.videoTimestampSeconds = currentTime
               }
             }}
+            onPlaying={() => onPlaybackStateChange('playing')}
+            onPause={() => onPlaybackStateChange('paused')}
+            onWaiting={() => onPlaybackStateChange('buffering')}
+            onCanPlay={() => {
+              if (!videoRef.current?.paused) {
+                onPlaybackStateChange('playing')
+              }
+            }}
+            onEnded={onPlaybackEnd}
             loop={loop}
           />
           {embed.alt && (
