@@ -21,6 +21,12 @@ export type Lightbox = {
   // Set for post photo embeds so the lightbox can emit post:photoEmbed:lightboxSwipe.
   // Left unset for non-post contexts (e.g. profile avatar/banner lightbox).
   metricsContext?: LightboxMetricsContext
+  /**
+   * Called as the user pages through the images, so the source can keep the
+   * matching thumbnail in view (e.g. by scrolling a carousel) for the close
+   * animation to land on. Native only.
+   */
+  onIndexChange?: (index: number) => void
 }
 
 const LightboxContext = createContext<{
