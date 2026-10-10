@@ -18,6 +18,7 @@ import {utils} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {type Dimensions} from '#/lib/media/types'
 import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
@@ -33,7 +34,11 @@ import {
 } from '#/components/images/Gallery/const'
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
-import {getAspectRatio} from '#/components/images/Gallery/utils'
+import {
+  getAspectRatio,
+  getIndexForOffset,
+  getOffsetForIndex,
+} from '#/components/images/Gallery/utils'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
@@ -51,6 +56,7 @@ interface GalleryProps {
     index: number,
     containerRefs: AnimatedRef<any>[],
     fetchedDims: (Dimensions | null)[],
+    onIndexChange?: (index: number) => void,
   ) => void
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
@@ -174,6 +180,7 @@ export function Gallery({
   const containerRefsRef = useRef<Map<number, AnimatedRef<any>>>(new Map())
   const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
+  const scrollOffsetRef = useRef(0)
 
   const emitSwipeMetric = useMemo(
     () =>
@@ -202,6 +209,25 @@ export function Gallery({
   const scrollTo = (offset: number) => {
     flatListRef.current?.scrollToOffset({offset, animated: false})
   }
+
+  /*
+   * Keeps the image the lightbox is showing in view, so closing it animates
+   * back to the right thumbnail. The carousel is hidden behind the lightbox,
+   * so it can jump there without animating. Non-reactive because the lightbox
+   * holds onto it, and the layout can change underneath (e.g. on rotation).
+   */
+  const scrollIntoView = useNonReactiveCallback((index: number) => {
+    const itemWidths = itemWidthsRef.current
+    const start = getOffsetForIndex(itemWidths, index)
+    const end =
+      start + (itemWidths.get(index) ?? 0) - (width - insetLeft - insetRight)
+    const current = scrollOffsetRef.current
+    const next = current > start ? start : current < end ? end : current
+    if (next === current) return
+    // Sync the index up front so the jump isn't counted as a swipe.
+    currentIndexRef.current = getIndexForOffset(itemWidths, next, images.length)
+    flatListRef.current?.scrollToOffset({offset: next, animated: false})
+  })
 
   const onSettle = (index: number) => {
     setCurrentIndex(index)
@@ -298,7 +324,7 @@ export function Gallery({
                     refs.push(containerRefsRef.current.get(i)!)
                     dims.push(thumbDimsRef.current.get(i) ?? null)
                   }
-                  onPress(index, refs, dims)
+                  onPress(index, refs, dims, scrollIntoView)
                 }
               : undefined
             return (
@@ -334,18 +360,10 @@ export function Gallery({
             // web handles via onSettle in the web hooks
             if (IS_WEB) return
             const offsetX = e.nativeEvent.contentOffset.x
-            let accumulated = 0
-            for (let i = 0; i < images.length; i++) {
-              const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
-              if (offsetX < accumulated + w / 2) {
-                setCurrentIndex(i)
-                break
-              }
-              accumulated += w
-              if (i === images.length - 1) {
-                setCurrentIndex(i)
-              }
-            }
+            scrollOffsetRef.current = offsetX
+            setCurrentIndex(
+              getIndexForOffset(itemWidthsRef.current, offsetX, images.length),
+            )
           }}
           style={[
             {
