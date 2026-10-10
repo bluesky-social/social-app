@@ -100,7 +100,12 @@ export function SortableList<T>({
   // on the UI thread, and a redundant JS-side set() would be wasteful.
   const skipNextSync = useRef(false)
   const currentKeys = data.map(item => keyExtractor(item)).join(',')
+  const lastKeys = useRef(currentKeys)
   useLayoutEffect(() => {
+    // Drag-start rerenders can replace data/keyExtractor without changing the
+    // items. Resetting slots then would clear the active gesture mid-drag.
+    if (lastKeys.current === currentKeys) return
+    lastKeys.current = currentKeys
     if (skipNextSync.current) {
       skipNextSync.current = false
       return

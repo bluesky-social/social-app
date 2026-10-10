@@ -54,7 +54,7 @@ appId: xyz.blueskyweb.app
       - scrollUntilVisible:
           element:
             text: "2007"
-          direction: UP
+          direction: DOWN
       - tapOn: "2007"
       # Selecting a year changes the displayed month, not the selected date.
       - tapOn: "${new Date().getDate()}"
