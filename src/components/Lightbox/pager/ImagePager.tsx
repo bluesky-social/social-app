@@ -40,6 +40,7 @@ import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
+import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
@@ -373,38 +374,35 @@ function ImageView({
   const activeThumbRef = images[imageIndex]?.thumbRef
 
   /**
-   * Re-measures the active image's thumbnail so the close animation lands on
-   * it, which may not be the one the lightbox was opened from.
+   * Stores where the active image's thumbnail is now, for the close animation
+   * to land on. It may not be the one the lightbox was opened from.
    */
-  const measureActiveThumb = useCallback(() => {
-    'worklet'
-    if (!activeThumbRef) {
-      return
-    }
-    const rect = measure(activeThumbRef)
-    thumbRects.modify(rects => {
+  const setActiveThumbRect = useCallback(
+    (rect: MeasuredDimensions | null) => {
       'worklet'
-      rects[imageIndex] = rect
-      return rects
-    })
-  }, [activeThumbRef, imageIndex, thumbRects])
+      thumbRects.modify(rects => {
+        'worklet'
+        rects[imageIndex] = rect
+        return rects
+      })
+    },
+    [imageIndex, thumbRects],
+  )
 
   const handleRequestClose = useCallback(() => {
     if (isAnimated && activeThumbRef) {
-      scheduleOnUI(() => {
-        'worklet'
-        measureActiveThumb()
-        scheduleOnRN(onRequestClose)
-      })
-    } else {
-      onRequestClose()
+      setActiveThumbRect(measureThumb(activeThumbRef))
     }
-  }, [isAnimated, activeThumbRef, measureActiveThumb, onRequestClose])
+    onRequestClose()
+  }, [isAnimated, activeThumbRef, setActiveThumbRect, onRequestClose])
 
   const onDismissSwipe = useCallback(() => {
     'worklet'
     if (isAnimated) {
-      measureActiveThumb()
+      // Already on the UI thread here, so measure with Reanimated.
+      if (activeThumbRef) {
+        setActiveThumbRect(measure(activeThumbRef))
+      }
       /*
        * Start closing right away on the UI thread so the image doesn't stall
        * where it was let go. The close effect in ImageViewRoot then sets the
@@ -415,7 +413,13 @@ function ImageView({
       openProgress.set(0)
     }
     scheduleOnRN(onRequestClose)
-  }, [isAnimated, measureActiveThumb, openProgress, onRequestClose])
+  }, [
+    isAnimated,
+    activeThumbRef,
+    setActiveThumbRect,
+    openProgress,
+    onRequestClose,
+  ])
 
   const onTap = useCallback(() => {
     setShowControls(show => !show)
