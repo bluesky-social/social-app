@@ -45,7 +45,7 @@ jobs:
           fetch-depth: 1
 
       - name: 🤖 Claude review
-        uses: anthropics/claude-code-action@51db78a4b844e144f8d02425cb280435c04a3474 # v1.0.224
+        uses: anthropics/claude-code-action@cfc3eb22bfed5c26ef66e3223c982af27e4524de # v1.0.231
         env:
           ANTHROPIC_BASE_URL: https://agentgateway.k1.prod.bsky.dev
         with:
