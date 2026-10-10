@@ -486,7 +486,7 @@ msgstr "{count, plural, one {# request} other {# requests}}"
 msgid "{count, plural, one {# unread item} other {# unread items}}"
 msgstr ""
 
-#: src/features/followingV2/home/RestorePill.tsx:76
+#: src/features/followingV2/home/PrependPill.tsx:76
 msgid "{count, plural, one {Show # new post} other {Show # new posts}}"
 msgstr "{count, plural, one {Show # new post} other {Show # new posts}}"
 
@@ -2361,7 +2361,7 @@ msgstr ""
 msgid "Block user and/or leave this conversation"
 msgstr "Block user and/or leave this conversation"
 
-#: src/components/Post/Embed/index.tsx:261
+#: src/components/Post/Embed/index.tsx:266
 msgid "Blocked"
 msgstr ""
 
@@ -4072,7 +4072,7 @@ msgstr ""
 msgid "Delete this post?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:254
+#: src/components/Post/Embed/index.tsx:259
 msgid "Deleted"
 msgstr ""
 
@@ -4678,7 +4678,7 @@ msgstr ""
 msgid "Embed this post in your website. Simply copy the following snippet and paste it into the HTML code of your website."
 msgstr ""
 
-#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:77
+#: src/components/Post/Embed/VideoEmbed/VideoEmbedInner/VideoEmbedInnerWeb.tsx:78
 msgid "Embedded video player"
 msgstr ""
 
@@ -7017,6 +7017,11 @@ msgstr ""
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:227
 msgid "Keep me posted"
 msgstr ""
+
+#. Name for a feature flag
+#: src/analytics/features/index.ts:114
+msgid "Keep your place in the Following feed"
+msgstr "Keep your place in the Following feed"
 
 #: src/components/ageAssurance/AgeAssuranceInitDialog.tsx:209
 msgid "KWS website"
@@ -10364,11 +10369,11 @@ msgstr ""
 msgid "Remove your verification for this account?"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:289
+#: src/components/Post/Embed/index.tsx:294
 msgid "Removed by author"
 msgstr ""
 
-#: src/components/Post/Embed/index.tsx:287
+#: src/components/Post/Embed/index.tsx:292
 msgid "Removed by you"
 msgstr ""
 
@@ -10967,6 +10972,11 @@ msgstr ""
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:374
 msgid "Save to my feeds"
 msgstr ""
+
+#. Description of a feature flag (Keep your place in the Following feed)
+#: src/analytics/features/index.ts:120
+msgid "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
+msgstr "Save your position in the Following feed between sessions. New posts wait above you until you’re ready to view them."
 
 #: src/view/shell/desktop/LeftNav.tsx:760
 #: src/view/shell/Drawer.tsx:670
@@ -12852,7 +12862,7 @@ msgstr ""
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
 
-#: src/features/followingV2/home/PostFeed.tsx:1032
+#: src/features/followingV2/home/PostFeed.tsx:1101
 #: src/screens/Search/Explore.tsx:1052
 #: src/view/com/posts/PostFeed.tsx:825
 msgid "There was an issue fetching posts. Tap here to try again."
