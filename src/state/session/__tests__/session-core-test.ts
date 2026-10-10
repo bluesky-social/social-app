@@ -97,10 +97,12 @@ import {
   disposeBundle,
   finishPreparation,
   makeSessionHooks,
+  type OnSessionChange,
   registerBundleKillSwitch,
   sessionAccountToSessionData,
   type SessionBundle,
   sessionDataToSessionAccount,
+  takeSessionChangeError,
 } from '../session-core'
 import {
   asFetch,
@@ -367,7 +369,7 @@ describe('createSessionBundleFromStoredAccount', () => {
   it('builds three clients over one session', async () => {
     const result = createSessionBundleFromStoredAccount(
       makeAccount(),
-      jest.fn(),
+      jest.fn<OnSessionChange>(),
     )!
 
     /* every client reads its identity straight through the shared session */
@@ -384,7 +386,7 @@ describe('createSessionBundleFromStoredAccount', () => {
   })
 
   it('disposes a bundle rejected by the activation guard', async () => {
-    const onSessionChange = jest.fn()
+    const onSessionChange = jest.fn<OnSessionChange>()
     let rejectedBundle: SessionBundle | undefined
     const result = createSessionBundleFromStoredAccount(
       makeAccount(),
@@ -607,7 +609,7 @@ describe('session-hook payload threading (pre-commit ordering)', () => {
 describe('disposeBundle kill-switch', () => {
   it('the injected fetch throws after disposeBundle', () => {
     const hooks = makeSessionHooks({
-      onSessionChange: jest.fn(),
+      onSessionChange: jest.fn<OnSessionChange>(),
       getBundle: () => ({}) as SessionBundle,
       getDid: () => DID,
     })
@@ -850,7 +852,7 @@ describe('factory account snapshot after preparation', () => {
     await withFreshFactory(asFetch(fetchMock), async core => {
       const {account, bundle} = await core.createSessionBundleAndResume(
         makeAccount({accessJwt: 'valid-access-jwt'}),
-        jest.fn(),
+        jest.fn<OnSessionChange>(),
       )
       /* the moderation prep step ran the refresh */
       expect(mockConfigureModerationForAccount).toHaveBeenCalledTimes(1)
@@ -873,7 +875,7 @@ describe('factory account snapshot after preparation', () => {
     await withFreshFactory(asFetch(fetchMock), async core => {
       const {account} = await core.createSessionBundleAndResume(
         makeAccount({accessJwt: 'valid-access-jwt'}),
-        jest.fn(),
+        jest.fn<OnSessionChange>(),
       )
       expect(account.accessJwt).toBe('valid-access-jwt')
       expect(account.refreshJwt).toBe('refresh-jwt')
@@ -921,7 +923,7 @@ describe('a session destroyed or rejected during preparation', () => {
       await expect(
         core.createSessionBundleAndResume(
           makeAccount({accessJwt: 'valid-access-jwt'}),
-          jest.fn(),
+          jest.fn<OnSessionChange>(),
         ),
       ).rejects.toThrow('Session was revoked while it was being prepared')
 
@@ -946,7 +948,7 @@ describe('a session destroyed or rejected during preparation', () => {
       await expect(
         core.createSessionBundleAndResume(
           makeAccount({accessJwt: 'valid-access-jwt'}),
-          jest.fn(),
+          jest.fn<OnSessionChange>(),
         ),
       ).rejects.toThrow('prefetch blew up')
 
@@ -959,7 +961,7 @@ describe('a session destroyed or rejected during preparation', () => {
 
   it('finishPreparation disposes and rethrows without running the snapshot', async () => {
     const hooks = makeSessionHooks({
-      onSessionChange: jest.fn(),
+      onSessionChange: jest.fn<OnSessionChange>(),
       getBundle: () => bundle,
       getDid: () => DID,
     })
@@ -1024,6 +1026,9 @@ describe('a throwing onSessionChange does not brick the session', () => {
     expect(mockLoggerError.mock.calls[0][1]).toEqual({
       message: "session: onSessionChange threw for a 'update' event",
     })
+    expect(takeSessionChangeError({bundle})).toEqual(
+      new Error('reducer side effect exploded'),
+    )
 
     /* the session still committed the rotation, and can still refresh again */
     expect(session.session.accessJwt).toBe('access-jwt-2')

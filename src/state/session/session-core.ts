@@ -68,6 +68,7 @@ export type SessionBundle = {
  * state private and tied to bundle identity.
  */
 const bundleKillSwitches = new WeakMap<SessionBundle, () => void>()
+const bundleSessionChangeErrors = new WeakMap<SessionBundle, unknown>()
 
 /**
  * Register the lifecycle closure used by {@link disposeBundle}.
@@ -81,6 +82,17 @@ export function registerBundleKillSwitch(
   kill: () => void,
 ) {
   bundleKillSwitches.set(bundle, kill)
+}
+
+/** Return and clear the latest persistence/session-change hook failure. */
+export function takeSessionChangeError({
+  bundle,
+}: {
+  bundle: SessionBundle
+}): unknown {
+  const error = bundleSessionChangeErrors.get(bundle)
+  bundleSessionChangeErrors.delete(bundle)
+  return error
 }
 
 /**
@@ -126,7 +138,7 @@ export type OnSessionChange = (
   did: string,
   event: AtpSessionEvent,
   sessionData?: SessionData,
-) => void
+) => void | Promise<void>
 
 /**
  * Hooks stay inert during initial session preparation. `kill()` disarms them
@@ -146,25 +158,32 @@ export function makeSessionHooks({
 }) {
   let armed = false
   let killed = false
-  const dispatch = (event: AtpSessionEvent, sessionData?: SessionData) => {
+  const dispatch = async (
+    event: AtpSessionEvent,
+    sessionData?: SessionData,
+  ) => {
     if (!armed) {
       return
     }
     /*
-     * A hook must never throw. PasswordSession awaits its hooks inside the
-     * assignment to its internal session promise, so a synchronous throw here
-     * leaves that promise permanently rejected: every later request fails, and
-     * because the session is never marked destroyed, disposeBundle cannot even
-     * see that the bundle is dead. The dispatch path reaches reducer side
-     * effects and event emitters, so treat it as capable of throwing.
+     * A hook must never reject. PasswordSession awaits its hooks inside the
+     * assignment to its internal session promise, so a thrown or asynchronously
+     * rejected error here leaves that promise permanently rejected: every later
+     * request fails, and because the session is never marked destroyed,
+     * disposeBundle cannot even see that the bundle is dead. The dispatch path
+     * reaches persistence, reducer side effects, and event emitters, so isolate
+     * all of their failures from PasswordSession.
      */
     try {
+      const bundle = getBundle()
+      bundleSessionChangeErrors.delete(bundle)
       const did = getDid()
-      onSessionChange(getBundle(), did, event, sessionData)
+      await onSessionChange(bundle, did, event, sessionData)
       if (event !== 'update') {
         addSessionErrorLog(did, event)
       }
     } catch (e) {
+      bundleSessionChangeErrors.set(getBundle(), e)
       logger.error(e instanceof Error ? e : String(e), {
         message: `session: onSessionChange threw for a '${event}' event`,
       })
@@ -178,13 +197,13 @@ export function makeSessionHooks({
       return networkAwareFetch(input, init)
     },
     onUpdated(data) {
-      dispatch('update', data)
+      return dispatch('update', data)
     },
     onDeleted(data) {
-      dispatch('expired', data)
+      return dispatch('expired', data)
     },
     onUpdateFailure() {
-      dispatch('network-error')
+      return dispatch('network-error')
     },
   }
   return Object.assign(hooks, {
