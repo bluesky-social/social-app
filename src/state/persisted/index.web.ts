@@ -8,7 +8,7 @@ import {
   tryParse,
   tryStringify,
 } from '#/state/persisted/schema'
-import {type PersistedApi} from './types'
+import {type PersistedApi, type PersistedWriteValue} from './types'
 import {normalizeData} from './util'
 
 export type {PersistedAccount, Schema} from '#/state/persisted/schema'
@@ -65,7 +65,7 @@ readLatest satisfies PersistedApi['readLatest']
 // eslint-disable-next-line @typescript-eslint/require-await
 export async function write<K extends keyof Schema>(
   key: K,
-  value: Schema[K],
+  value: PersistedWriteValue<Schema[K]>,
 ): Promise<void> {
   const next = readFromStorage()
   if (next) {
@@ -75,8 +75,9 @@ export async function write<K extends keyof Schema>(
     // Don't fire the update listeners yet to avoid a loop.
     // If there was a change, we'll receive the broadcast event soon enough which will do that.
   }
+  const nextValue = resolveWriteValue(value, _state[key])
   try {
-    if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: value})) {
+    if (JSON.stringify({v: _state[key]}) === JSON.stringify({v: nextValue})) {
       // Fast path for updates that are guaranteed to be noops.
       // This is good mostly because it avoids useless broadcasts to other tabs.
       return
@@ -86,13 +87,19 @@ export async function write<K extends keyof Schema>(
   }
   _state = normalizeData({
     ..._state,
-    [key]: value,
+    [key]: nextValue,
   })
   writeToStorage(_state)
   broadcast.postMessage({event: {type: UPDATE_EVENT, key}})
   broadcast.postMessage({event: UPDATE_EVENT}) // Backcompat while upgrading
 }
 write satisfies PersistedApi['write']
+
+function resolveWriteValue<T>(value: PersistedWriteValue<T>, latest: T): T {
+  return typeof value === 'function'
+    ? (value as (current: T) => T)(latest)
+    : value
+}
 
 export function onUpdate<K extends keyof Schema>(
   key: K,

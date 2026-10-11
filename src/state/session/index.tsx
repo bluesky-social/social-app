@@ -22,7 +22,13 @@ import {emitSessionDropped} from '../events'
 import {getPublicAppviewClient} from './clients'
 import {createSessionBundleAndCreateAccount} from './create-account'
 import {pickExpiryRescueCandidate} from './expiry-rescue'
-import {type Action, getInitialState, reducer, type State} from './reducer'
+import {
+  type Action,
+  getInitialState,
+  rebasePersistedSession,
+  reducer,
+  type State,
+} from './reducer'
 import {
   type AtpSessionEvent,
   createSessionBundleAndLogin,
@@ -108,17 +114,29 @@ class SessionStore {
     // Persist synchronously without waiting for the React render cycle.
     if (nextState.needsPersist) {
       nextState.needsPersist = false
-      const persistedData = {
+      const desiredPersistedData = {
         accounts: nextState.accounts,
         currentAccount: nextState.accounts.find(
           a => a.did === nextState.currentBundleState.did,
         ),
       }
-      addSessionDebugLog({
-        type: 'persisted:broadcast',
-        data: redactPersistedSession(persistedData),
+      /*
+       * A background tab can have missed a token-rotation broadcast. Derive the
+       * outgoing value inside `write`, after its final web storage re-read, so an
+       * unrelated metadata update cannot restore an older token generation.
+       */
+      void persisted.write('session', latest => {
+        const persistedData = rebasePersistedSession(
+          latest,
+          desiredPersistedData,
+          action,
+        )
+        addSessionDebugLog({
+          type: 'persisted:broadcast',
+          data: redactPersistedSession(persistedData),
+        })
+        return persistedData
       })
-      void persisted.write('session', persistedData)
     }
     this.listeners.forEach(listener => listener())
   }
@@ -257,6 +275,8 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         refreshedAccount,
         accountDid,
         sessionEvent,
+        expiredRefreshJwt:
+          sessionEvent === 'expired' ? sessionData?.refreshJwt : undefined,
       })
     },
     [store],
@@ -290,6 +310,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         type: 'switched-to-account',
         newBundle: bundle,
         newAccount: account,
+        tokenUpdate: 'login',
       })
       ax.metric('account:create:success', metrics, {
         session: utils.accountToSessionMetadata(account),
@@ -321,6 +342,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         type: 'switched-to-account',
         newBundle: bundle,
         newAccount: account,
+        tokenUpdate: 'login',
       })
       ax.metric(
         'account:loggedIn',
@@ -345,6 +367,7 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
       const prevState = store.getState()
       store.dispatch({
         type: 'logged-out-current-account',
+        accountDid: prevState.currentBundleState.did,
       })
       ax.metric(
         'account:loggedOut',
@@ -435,6 +458,10 @@ export function Provider({children}: React.PropsWithChildren<{}>) {
         type: 'switched-to-account',
         newBundle: bundle,
         newAccount: account,
+        tokenUpdate:
+          account.refreshJwt !== storedAccount.refreshJwt
+            ? 'refresh'
+            : undefined,
       })
       addSessionDebugLog({
         type: 'method:end',
