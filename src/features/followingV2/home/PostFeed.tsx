@@ -97,6 +97,7 @@ import {
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
+import {useHomePress} from './useHomePress'
 import {useListRest} from './useListRest'
 import {useNewPostsCheck} from './useNewPostsCheck'
 import {usePrependPill} from './usePrependPill'
@@ -229,6 +230,12 @@ export function getItemsForFeedback(feedRow: FeedRow): {
 export type PostFeedRef = {
   /** Refreshes the feed in one write. Callers log their own metric. */
   refresh: () => Promise<void>
+  /**
+   * Takes a press of Home, if this feed handles it itself, as one that
+   * stages new posts above the reader does (see `useHomePress`). Returns
+   * whether it did. If not, the page scrolls up and refreshes.
+   */
+  pressHome: () => boolean
 }
 
 // DISABLED need to check if this is causing random feed refreshes -prf
@@ -1028,7 +1035,23 @@ let PostFeed = ({
     setIsPTRing(false)
   }
 
-  useImperativeHandle(ref, () => ({refresh: refreshToTop}))
+  const pressHome = useHomePress({
+    enabled: isAnchored,
+    offsetY: listOffsetY,
+    prepend,
+    revealTop,
+    refresh: refreshToTop,
+    onHasNew,
+    onFetch: () => {
+      ax.metric('feed:refresh', {
+        feedType: feedType,
+        feedUrl: feed,
+        reason: 'soft-reset',
+      })
+    },
+  })
+
+  useImperativeHandle(ref, () => ({refresh: refreshToTop, pressHome}))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
