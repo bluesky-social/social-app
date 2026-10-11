@@ -78,6 +78,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {checkFollowing, useFollowingListReports} from './anchoredFollowing'
 import {GapRow} from './GapRow'
+import {isStagedFull, useFollowingV2Metrics} from './metrics'
 import {mixSamples} from './mixSamples'
 import {PrependPill} from './PrependPill'
 import {
@@ -357,12 +358,25 @@ let PostFeed = ({
     fetchNextPage,
   } = usePostFeedQuery(feed, feedParams, opts)
   const {createFeedApi} = usePostFeedFetcher(feed)
+  /**
+   * Whether the list holds on to the row the reader is on when posts are put
+   * above it, as Following v2 does on Home's Following feed, on native. The
+   * rows that would sit above the posts are left out, as they'd take the
+   * anchor from them.
+   */
+  const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
+  const metrics = useFollowingV2Metrics({
+    enabled: isAnchored,
+    metric: ax.metric,
+    topFetchedAt: feedData?.pages[0]?.fetchedAt,
+    isError,
+  })
   const {
     refresh,
     error: refreshError,
     isRefreshing,
     isPending: isRefreshPending,
-  } = usePostFeedRefresh(feed, feedParams)
+  } = usePostFeedRefresh(feed, feedParams, {onOutcome: metrics.onRefresh})
   const samples = useSavedFeedSamples({
     enabled: enabled !== false && feed === 'following',
     pages: feedData?.pages,
@@ -378,13 +392,6 @@ let PostFeed = ({
   )
 
   /**
-   * Whether the list holds on to the row the reader is on when posts are put
-   * above it, as Following v2 does on Home's Following feed, on native. The
-   * rows that would sit above the posts are left out, as they'd take the
-   * anchor from them.
-   */
-  const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
-  /**
    * When the list is at rest, for prepends to wait for. Its scroll handlers
    * take the corrections anchoring makes to the offset out of what the Home
    * header sees, so they can't hide or show it.
@@ -398,6 +405,7 @@ let PostFeed = ({
     topFetchedAt: lastFetchedAt,
     listAtRest: listRest.atRest,
     isRefreshing: isRefreshPending,
+    onOutcome: metrics.onPrepend,
   })
   const fillGap = usePostFeedGapFill(feed, feedParams)
   /*
@@ -408,7 +416,7 @@ let PostFeed = ({
     if (cursor === feedData?.pages[0]?.cursor) {
       prepend.markRead()
     }
-    return fillGap(cursor)
+    return fillGap(cursor).then(metrics.onGapFill)
   })
   /** The list's scroll offset, which its scroll handlers keep. */
   const listOffsetY = useSharedValue(0)
@@ -481,6 +489,10 @@ let PostFeed = ({
     }
   })
 
+  const reportCheck = metrics.checkReporter({
+    isOwed: prepend.isOwed,
+    isStagedFull: () => isStagedFull(prepend.staged, feedData?.pages),
+  })
   /*
    * Anchored Following's checks, made by the view on screen only. Each one
    * that finds newer posts stages them above the reader at rest (see
@@ -500,13 +512,14 @@ let PostFeed = ({
      * check replaces what's staged with the newest posts.
      */
     interval: pollInterval,
-    check: trigger =>
+    check: reportCheck(trigger =>
       checkFollowing(trigger, {
         prepend,
         top: feedData?.pages[0],
         createFeedApi,
         onHasNew,
       }),
+    ),
     onFound: () => {
       if (isEmpty) {
         void refreshToTop()
@@ -982,6 +995,7 @@ let PostFeed = ({
       top: data?.pages[0],
       pill,
       onHasNew,
+      onSettled: metrics.onSettled,
     })
   /**
    * The list's scroll handlers. Settling, staging and the pill judge the
