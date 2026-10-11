@@ -211,22 +211,33 @@ export function Gallery({
   }
 
   /*
-   * Keeps the image the lightbox is showing in view, so closing it animates
-   * back to the right thumbnail. The carousel is hidden behind the lightbox,
-   * so it can jump there without animating. Non-reactive because the lightbox
-   * holds onto it, and the layout can change underneath (e.g. on rotation).
+   * Keeps the image the lightbox is showing in view, so closing it lands on
+   * the right thumbnail. The carousel is hidden behind the lightbox, so it can
+   * jump there without animating. Non-reactive because the lightbox holds
+   * onto it, and the layout can change underneath (e.g. on rotation).
    */
   const scrollIntoView = useNonReactiveCallback((index: number) => {
     const itemWidths = itemWidthsRef.current
     const start = getOffsetForIndex(itemWidths, index)
     const end =
       start + (itemWidths.get(index) ?? 0) - (width - insetLeft - insetRight)
-    const current = scrollOffsetRef.current
+    // Web scrolls outside of onScroll (see the web hooks), so read it live.
+    const current = IS_WEB
+      ? ((flatListRef.current?.getScrollableNode() as HTMLElement | null)
+          ?.scrollLeft ?? 0)
+      : scrollOffsetRef.current
     const next = current > start ? start : current < end ? end : current
     if (next === current) return
-    // Sync the index up front so the jump isn't counted as a swipe.
-    currentIndexRef.current = getIndexForOffset(itemWidths, next, images.length)
-    flatListRef.current?.scrollToOffset({offset: next, animated: false})
+    if (!IS_WEB) {
+      // Sync the index up front so the jump isn't counted as a swipe. Web's
+      // index tracks keyboard focus instead, which stays put.
+      currentIndexRef.current = getIndexForOffset(
+        itemWidths,
+        next,
+        images.length,
+      )
+    }
+    scrollTo(next)
   })
 
   const onSettle = (index: number) => {
