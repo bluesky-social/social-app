@@ -545,10 +545,10 @@ export function usePostFeedRefresh(
 export const PROCESS_STARTED_AT = Date.now()
 
 /**
- * How many posts a prepend asks for: the most `getTimeline` allows, as a range
- * with more than this in it leaves a gap.
+ * How many posts a prepend asks for, so a range with more than this in it
+ * leaves a gap. Conservative to start, as `getTimeline` allows 100. APP-3159.
  */
-const PREPEND_LIMIT = 100
+export const PREPEND_LIMIT = 40
 
 /**
  * What prompted a prepend: a top page restored from disk, or a check for new
