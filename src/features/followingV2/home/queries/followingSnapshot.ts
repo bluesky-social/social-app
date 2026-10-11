@@ -73,16 +73,133 @@ export function saveFollowingSnapshot(client: PersistedClient) {
  *
  * A query saved while invalidated is left out too, as it would be refetched,
  * and so replaced, as soon as it's shown.
+ *
+ * What it found is kept for the Following view to report (see
+ * {@link takeFollowingSnapshotLoad}). `buster` and `maxAge` are the
+ * persister's. They only let that report tell when TanStack drops the whole
+ * client after this, and never change what's read back.
  */
 export function loadFollowingSnapshot(
   client: PersistedClient,
-  {restore = FOLLOWING_SNAPSHOT_RESTORE_ENABLED}: {restore?: boolean} = {},
+  {
+    restore = FOLLOWING_SNAPSHOT_RESTORE_ENABLED,
+    buster,
+    maxAge,
+  }: {restore?: boolean; buster?: string; maxAge?: number} = {},
 ) {
-  return replaceFollowingData(client, state =>
-    restore && !state?.isInvalidated
-      ? readFollowingSnapshot(state?.data)
-      : undefined,
-  )
+  let load: FollowingSnapshotLoad = {snapshot: 'missing'}
+  const loaded = replaceFollowingData(client, state => {
+    const {rejection, bytes} = inspectFollowingSnapshot(state?.data)
+    let rejectionReason: FollowingSnapshotRejection | undefined = rejection
+    if (!restore) {
+      rejectionReason = 'disabled'
+    } else if (state?.isInvalidated) {
+      rejectionReason = 'invalidated'
+    }
+    let data: PostFeedData | undefined
+    if (!rejectionReason) {
+      try {
+        data = toFollowingData(state?.data as FollowingSnapshot)
+      } catch {
+        rejectionReason = 'unreadable'
+      }
+    }
+    rejectionReason =
+      droppedClientReason(client, {buster, maxAge}) ?? rejectionReason
+    load = {
+      snapshot: rejectionReason ? 'rejected' : 'valid',
+      ...(rejectionReason && {rejectionReason}),
+      ...snapshotFacts(state?.data, bytes),
+    }
+    return data
+  })
+  lastLoad = load
+  return loaded
+}
+
+/**
+ * Why a Following snapshot read back from disk wasn't restored:
+ *
+ * - `expired` and `appVersion`: TanStack drops the whole persisted client,
+ *   saved longer than its `maxAge` ago or by another app version (its
+ *   `buster`), so not even a valid snapshot is restored.
+ * - `disabled`: restoring is off.
+ * - `invalidated`: its query was invalidated when it was saved.
+ * - `unreadable`: it passed the checks but couldn't be read back.
+ * - Any other: the rule it breaks (see {@link inspectFollowingSnapshot}).
+ */
+export type FollowingSnapshotRejection =
+  | 'expired'
+  | 'appVersion'
+  | 'disabled'
+  | 'invalidated'
+  | 'unreadable'
+  | FollowingSnapshotRule
+
+/**
+ * What a read of the persisted client found of the Following snapshot, for
+ * the `followingV2:restore` metric. No feed content or cursors.
+ */
+export type FollowingSnapshotLoad = {
+  /** Whether there was one, and whether it's restored. */
+  snapshot: 'valid' | 'missing' | 'rejected'
+  rejectionReason?: FollowingSnapshotRejection
+  /** How long before it was read back its top page was fetched. */
+  ageMs?: number
+  /** Its size serialized, if the checks got that far. */
+  bytes?: number
+  pageCount?: number
+}
+
+/**
+ * The last read of a persisted client, until a Following view takes it. Not
+ * feed state: only what the read found, for one report per read.
+ */
+let lastLoad: FollowingSnapshotLoad | undefined
+
+/**
+ * What the last read of the persisted client found of the Following snapshot,
+ * once: `undefined` if it has been taken since, or there has been no read, as
+ * when the account has nothing persisted yet.
+ */
+export function takeFollowingSnapshotLoad() {
+  const load = lastLoad
+  lastLoad = undefined
+  return load
+}
+
+/**
+ * Why TanStack drops the whole persisted `client` once it's read back, if it
+ * does, as `persistQueryClientRestore` decides it: it was saved longer than
+ * `maxAge` ago, or with another `buster`. Without them, it can't tell.
+ */
+function droppedClientReason(
+  client: PersistedClient,
+  {buster, maxAge}: {buster?: string; maxAge?: number},
+): FollowingSnapshotRejection | undefined {
+  if (
+    maxAge !== undefined &&
+    (!client.timestamp || Date.now() - client.timestamp > maxAge)
+  ) {
+    return 'expired'
+  }
+  if (buster !== undefined && client.buster !== buster) {
+    return 'appVersion'
+  }
+}
+
+/** The age and size of what may be a snapshot, as far as they can be read. */
+function snapshotFacts(snapshot: unknown, bytes: number | undefined) {
+  const pages = isRecord(snapshot) ? snapshot.pages : undefined
+  const top: unknown = Array.isArray(pages) ? pages[0] : undefined
+  const fetchedAt = isRecord(top) ? top.fetchedAt : undefined
+  return {
+    ...(typeof fetchedAt === 'number' && {
+      ageMs: Math.max(0, Date.now() - fetchedAt),
+    }),
+    ...(bytes !== undefined && {bytes}),
+    ...(Array.isArray(pages) && {pageCount: pages.length}),
+  }
 }
 
 /**
@@ -211,6 +328,11 @@ export function readFollowingSnapshot(
   if (!isValidFollowingSnapshot(snapshot)) {
     return
   }
+  return toFollowingData(snapshot)
+}
+
+/** The query data a valid snapshot holds. */
+function toFollowingData(snapshot: FollowingSnapshot): PostFeedData {
   return {
     pages: snapshot.pages.map(page => ({
       ...page,
@@ -237,20 +359,52 @@ export function readFollowingSnapshot(
 function isValidFollowingSnapshot(
   snapshot: unknown,
 ): snapshot is FollowingSnapshot {
-  if (!isRecord(snapshot) || snapshot.version !== FOLLOWING_SNAPSHOT_VERSION) {
-    return false
+  return inspectFollowingSnapshot(snapshot).rejection === undefined
+}
+
+/** A rule of {@link isValidFollowingSnapshot} that a snapshot breaks. */
+export type FollowingSnapshotRule =
+  | 'version'
+  | 'malformed'
+  | 'pageCount'
+  | 'discover'
+  | 'noStartCursor'
+  | 'misaligned'
+  | 'tooLarge'
+
+/**
+ * The first rule of {@link isValidFollowingSnapshot} that `snapshot` breaks,
+ * if any, and its size serialized, if the checks got as far as measuring it.
+ */
+export function inspectFollowingSnapshot(snapshot: unknown): {
+  rejection?: FollowingSnapshotRule
+  bytes?: number
+} {
+  if (!isRecord(snapshot)) {
+    return {rejection: 'malformed'}
+  }
+  if (snapshot.version !== FOLLOWING_SNAPSHOT_VERSION) {
+    return {rejection: 'version'}
   }
   const {pages, pageParams} = snapshot
   if (
     !Array.isArray(pages) ||
     !Array.isArray(pageParams) ||
-    pages.length === 0 ||
-    pages.length > FOLLOWING_SNAPSHOT_MAX_PAGES ||
-    pages.length !== pageParams.length ||
-    !pages.every(isFollowingPage) ||
-    !pages[0].startCursor
+    pages.length !== pageParams.length
   ) {
-    return false
+    return {rejection: 'malformed'}
+  }
+  if (pages.length === 0 || pages.length > FOLLOWING_SNAPSHOT_MAX_PAGES) {
+    return {rejection: 'pageCount'}
+  }
+  if (pages.some(page => isRecord(page) && page.source !== undefined)) {
+    return {rejection: 'discover'}
+  }
+  if (!pages.every(isFollowingPage)) {
+    return {rejection: 'malformed'}
+  }
+  if (!pages[0].startCursor) {
+    return {rejection: 'noStartCursor'}
   }
   const isAligned = pageParams.every((param, i) =>
     i === 0
@@ -260,10 +414,13 @@ function isValidFollowingSnapshot(
         typeof param.cursor === 'string' &&
         param.cursor === pages[i - 1].cursor,
   )
-  return (
-    isAligned &&
-    utf8Len(JSON.stringify(snapshot)) <= FOLLOWING_SNAPSHOT_MAX_BYTES
-  )
+  if (!isAligned) {
+    return {rejection: 'misaligned'}
+  }
+  const bytes = utf8Len(JSON.stringify(snapshot))
+  return bytes > FOLLOWING_SNAPSHOT_MAX_BYTES
+    ? {rejection: 'tooLarge', bytes}
+    : {bytes}
 }
 
 function isFollowingPage(page: unknown): page is SnapshotPage {
