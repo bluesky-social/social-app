@@ -8,6 +8,18 @@ import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
+import {
+  type FollowingV2CheckOutcome,
+  type FollowingV2Surface,
+} from '#/features/followingV2/home/metrics'
+import {type FollowingSnapshotRejection} from '#/features/followingV2/home/queries/followingSnapshot'
+import {
+  type GapFillOutcome,
+  type PrependOutcome,
+  type PrependTrigger,
+  type RefreshOutcome,
+} from '#/features/followingV2/home/queries/postFeed'
+import {type NewPostsCheckTrigger} from '#/features/followingV2/home/useNewPostsCheck'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type Events = {
@@ -325,6 +337,101 @@ export type Events = {
 
   'feed:discover:emptyError': {
     userDid: string
+  }
+
+  /*
+   * Following v2, on native Home Following with `following_v2:enable` on.
+   * Counts, ages, sizes, enums and booleans only: no feed content, cursors or
+   * account data. Events that can recur every minute or more often (an
+   * `interval` or a `hop`) are sampled per process, and carry a `sampleRate`
+   * to weigh them by.
+   */
+
+  /**
+   * What a read of the persisted query cache found of Home Following's
+   * snapshot, and whether Following then showed it. Once per read (a cold
+   * start, or an account switch, with anything persisted), when Following
+   * first has posts or fails to load.
+   */
+  'followingV2:restore': {
+    /**
+     * `restored`: Following showed the snapshot. `fetched`: it loaded from the
+     * network instead, which with a `valid` snapshot means the restored query
+     * was dropped before Following showed it. `failed`: it couldn't load.
+     */
+    outcome: 'restored' | 'fetched' | 'failed'
+    /** Whether there was a snapshot, and whether it was restored. */
+    snapshot: 'valid' | 'missing' | 'rejected'
+    rejectionReason?: FollowingSnapshotRejection
+    /** How long before it was read its top page was fetched. */
+    ageMs?: number
+    /** Its size serialized, if the checks got as far as measuring it. */
+    bytes?: number
+    pageCount?: number
+  }
+  /**
+   * A check for posts newer than the top of a feed, by the view on screen.
+   * Sampled unless the trigger is a focus or a significant return.
+   */
+  'followingV2:check': {
+    surface: FollowingV2Surface
+    trigger: NewPostsCheckTrigger
+    outcome: FollowingV2CheckOutcome
+    /**
+     * How long since the view last knew the feed was up to date: its top
+     * page's fetch, or its last successful check of that page, whichever was
+     * later.
+     */
+    lastSuccessAgeMs: number
+    /** For a failure, whether it was the network's. */
+    isNetworkError?: boolean
+    /** The share of processes that report it. */
+    sampleRate: number
+  }
+  /**
+   * A fetch of the posts newer than the reader's place in Home Following, to
+   * put above them: after a restore, or a check that found newer posts.
+   * Sampled unless the trigger is a restore, a focus or a significant return.
+   */
+  'followingV2:prepend': {
+    trigger: PrependTrigger
+    outcome: PrependOutcome['outcome']
+    /** How many feed items it fetched, before tuning and moderation. */
+    postCount: number
+    /** Whether it was to replace the posts already waiting above the reader. */
+    isReplacing: boolean
+    /**
+     * Whether more was newer than it fetched, which puts a gap row below a
+     * page put above the others.
+     */
+    isFull: boolean
+    /** For a failure, whether it was the network's. */
+    isNetworkError?: boolean
+    /** The share of processes that report it. */
+    sampleRate: number
+  }
+  /**
+   * How a refresh of Home Following ended, whatever started it. `feed:refresh`
+   * counts the ones the reader asks for, as they start.
+   */
+  'followingV2:refresh': {
+    outcome: RefreshOutcome['outcome']
+    /** For a failure, whether it was the network's. */
+    isNetworkError?: boolean
+  }
+  /** The reader pressed "Show more posts" at a gap in Home Following. */
+  'followingV2:gapFill': {
+    outcome: GapFillOutcome
+  }
+  /**
+   * Home Following settled at the true top, cutting the feed at its first open
+   * gap. Only when there was a gap to cut it at.
+   */
+  'followingV2:settle': {
+    /** `superseded`: something replaced the pages first, so it wrote nothing. */
+    outcome: 'settled' | 'superseded'
+    /** How many pages below the gap it dropped. */
+    droppedPageCount: number
   }
 
   'composer:gif:open': {}

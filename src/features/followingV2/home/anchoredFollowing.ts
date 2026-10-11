@@ -14,6 +14,7 @@ import {useSettleAtTop} from './useSettleAtTop'
 import {type ListScrollReports} from './useSettleScrollHandlers'
 
 type Prepend = ReturnType<typeof usePostFeedPrepend>
+type SettleAtTopOptions = Parameters<typeof useSettleAtTop>[2]
 
 /** The parts of a feed row that tell whether it's from the top page. */
 type Row = {type: string; slice?: FeedPostSlice; cursor?: string}
@@ -63,6 +64,7 @@ export function useFollowingListReports(
     top,
     pill,
     onHasNew,
+    onSettled,
   }: {
     /** Whether the feed settles at the top (see `useSettleAtTop`). */
     enabled: boolean
@@ -73,6 +75,7 @@ export function useFollowingListReports(
     pill: {dismiss: () => void}
     /** Puts the Home dot out. */
     onHasNew?: (hasNew: boolean) => void
+    onSettled?: SettleAtTopOptions['onSettled']
   },
 ): {reports: ListScrollReports; onRowSeen: (row: Row) => void} {
   const settleAtTop = useSettleAtTop(feed, params, {
@@ -82,6 +85,7 @@ export function useFollowingListReports(
       onHasNew?.(false)
       pill.dismiss()
     },
+    onSettled,
   })
   const onRowSeen = useNonReactiveCallback((row: Row) => {
     if (
