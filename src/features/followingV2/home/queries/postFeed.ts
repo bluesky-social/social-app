@@ -481,6 +481,12 @@ export type PostFeedData = InfiniteData<FeedPageUnselected, RQPageParam>
 export function usePostFeedRefresh(
   feedDesc: FeedDescriptor,
   params?: FeedParams,
+  {
+    onOutcome,
+  }: {
+    /** How each refresh ended, for metrics. */
+    onOutcome?: (outcome: RefreshOutcome) => void
+  } = {},
 ) {
   const queryClient = useQueryClient()
   const {fetchPage} = usePostFeedFetcher(feedDesc)
@@ -500,8 +506,10 @@ export function usePostFeedRefresh(
         pages: [page],
         pageParams: [undefined],
       }))
+      onOutcome?.({outcome: wrote ? 'refreshed' : 'superseded'})
       return wrote ? page : undefined
     } catch (e) {
+      onOutcome?.({outcome: 'failed', isNetworkError: isNetworkError(e)})
       if (!isNetworkError(e)) {
         logger.error('Failed to refresh posts feed', {safeMessage: e})
       }
@@ -538,6 +546,17 @@ export function usePostFeedRefresh(
 }
 
 /**
+ * How a refresh (see {@link usePostFeedRefresh}) ended: it `refreshed` the
+ * feed, `failed` to fetch, or was `superseded`, writing nothing, as something
+ * else had replaced the top page or was fetching it.
+ */
+export type RefreshOutcome = {
+  outcome: 'refreshed' | 'superseded' | 'failed'
+  /** For a failure, whether it was the network's. */
+  isNetworkError?: boolean
+}
+
+/**
  * When this JS process started. A page fetched before it was restored from
  * disk, which is how a restored top page is told from a fetched one without
  * marking it.
@@ -556,6 +575,39 @@ export const PREPEND_LIMIT = 40
  * a `hop`) offer what they find with the pill.
  */
 export type PrependTrigger = 'restore' | NewPostsCheckTrigger
+
+/**
+ * How a prepend's fetch (see {@link usePostFeedPrepend}) ended, for metrics.
+ * `outcome` is one of:
+ *
+ * - `staged`: it put the page above the reader.
+ * - `empty`: nothing newer came back, so there was nothing to write.
+ * - `keptFull`: it was to replace the staged page, but more was newer than a
+ *   page holds, so the staged page stays as it was, now full.
+ * - `refreshWon`: a refresh was in flight once the list was at rest, so it
+ *   dropped what it found.
+ * - `superseded`: the reader reached the staged page it was to replace, or
+ *   something else replaced the pages it depends on, so it dropped what it
+ *   found.
+ * - `failed`: the fetch failed.
+ */
+export type PrependOutcome = {
+  /** What started it. A trigger that joined it isn't counted. */
+  trigger: PrependTrigger
+  outcome:
+    'staged' | 'empty' | 'keptFull' | 'refreshWon' | 'superseded' | 'failed'
+  /** How many feed items the fetch returned, before tuning and moderation. */
+  postCount: number
+  /** Whether it was fetched to replace the staged page, not go above it. */
+  isReplacing: boolean
+  /**
+   * Whether more was newer than came back, so a page put above the others
+   * leaves a gap below it.
+   */
+  isFull: boolean
+  /** For a failure, whether it was the network's. */
+  isNetworkError?: boolean
+}
 
 /**
  * The page a view's prepends put above where the reader was, which they
@@ -679,6 +731,7 @@ export function usePostFeedPrepend(
     topFetchedAt,
     listAtRest,
     isRefreshing,
+    onOutcome,
   }: {
     enabled: boolean
     /** The `fetchedAt` of the top page as rendered, if there is one. */
@@ -690,6 +743,8 @@ export function usePostFeedPrepend(
     listAtRest: () => Promise<void>
     /** Whether the view's refresh is in flight, which a prepend gives way to. */
     isRefreshing: () => boolean
+    /** How each prepend's fetch ended, for metrics. */
+    onOutcome?: (outcome: PrependOutcome) => void
   },
 ) {
   const queryClient = useQueryClient()
@@ -753,8 +808,28 @@ export function usePostFeedPrepend(
   const prepend = async (
     before: PostFeedData,
     {since, replacing}: {since: string; replacing?: {fetchedAt: number}},
+    trigger: PrependTrigger,
   ) => {
-    const page = await fetchPage(undefined, {since, limit: PREPEND_LIMIT})
+    const report = (
+      outcome: PrependOutcome['outcome'],
+      page?: FeedPageUnselected,
+      error?: unknown,
+    ) =>
+      onOutcome?.({
+        trigger,
+        outcome,
+        postCount: page?.feed.length ?? 0,
+        isReplacing: !!replacing,
+        isFull: !!page?.feed.length && page.cursor !== since,
+        ...(error !== undefined && {isNetworkError: isNetworkError(error)}),
+      })
+    const page = await fetchPage(undefined, {
+      since,
+      limit: PREPEND_LIMIT,
+    }).catch((e: unknown) => {
+      report('failed', undefined, e)
+      throw e
+    })
     /*
      * A bounded range always comes back with a cursor, the echo of `since` or
      * one into what it didn't return, so a page without one can't go above the
@@ -762,6 +837,7 @@ export function usePostFeedPrepend(
      */
     const {cursor} = page
     if (!page.feed.length || cursor === undefined) {
+      report('empty', page)
       return undefined
     }
     const isFull = cursor !== since
@@ -771,6 +847,7 @@ export function usePostFeedPrepend(
       if (current?.fetchedAt === replacing.fetchedAt) {
         setStaged({...current, isFull})
       }
+      report('keptFull', page)
       return undefined
     }
     await listAtRest()
@@ -778,6 +855,7 @@ export function usePostFeedPrepend(
       isRefreshing() ||
       (replacing && stagedRef.current?.fetchedAt !== replacing.fetchedAt)
     ) {
+      report(isRefreshing() ? 'refreshWon' : 'superseded', page)
       return undefined
     }
     const count = replacing ? 1 : 0
@@ -792,6 +870,7 @@ export function usePostFeedPrepend(
       {dependsOn: count + 1},
     )
     if (!wrote) {
+      report('superseded', page)
       return undefined
     }
     setStaged({
@@ -800,6 +879,7 @@ export function usePostFeedPrepend(
       offered: isOffering.current,
       isFull,
     })
+    report('staged', page)
     return page
   }
 
@@ -816,7 +896,7 @@ export function usePostFeedPrepend(
     }
     hasStarted.current = true
     isOffering.current = isOffered
-    const prepending = prepend(before, target).finally(() => {
+    const prepending = prepend(before, target, trigger).finally(() => {
       pending.current = undefined
     })
     pending.current = prepending

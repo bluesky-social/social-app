@@ -57,10 +57,16 @@ export function useSettleAtTop(
   {
     enabled,
     onRestAtTop,
+    onSettled,
   }: {
     enabled: boolean
     /** The reader has come to rest at the true top. */
     onRestAtTop?: () => void
+    /**
+     * The settle is done: it settled the data the list came to rest with,
+     * `before`, if it `wrote`. For metrics.
+     */
+    onSettled?: (before: PostFeedData | undefined, wrote: boolean) => void
   },
 ): SettleAtTopHandlers {
   const queryClient = useQueryClient()
@@ -84,7 +90,7 @@ export function useSettleAtTop(
     timeout.current = setTimeout(() => {
       timeout.current = undefined
       onRestAtTop?.()
-      void settle(before)
+      void settle(before).then(wrote => onSettled?.(before, wrote))
     }, SETTLE_QUIET_MS)
   }
 
