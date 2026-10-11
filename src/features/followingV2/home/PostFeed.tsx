@@ -980,6 +980,7 @@ let PostFeed = ({
       enabled: isAnchored && enabled !== false,
       prepend,
       top: data?.pages[0],
+      pill,
       onHasNew,
     })
   /**
