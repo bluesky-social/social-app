@@ -13,6 +13,7 @@ import {
 import {type PersistedClient} from '@tanstack/react-query-persist-client'
 import {act, render, renderHook, waitFor} from '@testing-library/react-native'
 
+import {RETURN_MIN_TIME_AWAY} from '#/lib/appState'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
@@ -28,10 +29,7 @@ import {
   LIST_REST_QUIET_MS,
   useListRest,
 } from '#/features/followingV2/home/useListRest'
-import {
-  RETURN_STALE_AFTER,
-  useNewPostsCheck,
-} from '#/features/followingV2/home/useNewPostsCheck'
+import {useNewPostsCheck} from '#/features/followingV2/home/useNewPostsCheck'
 import {usePrependPill} from '#/features/followingV2/home/usePrependPill'
 import {
   SETTLE_QUIET_MS,
@@ -1521,7 +1519,7 @@ describe('usePostFeedPrepend', () => {
       await wait(0)
       expect(requested()).toEqual([])
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       // It peeks first, and the newest post isn't the one on top.
       expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
 
@@ -1554,7 +1552,7 @@ describe('usePostFeedPrepend', () => {
       newer(['new'], {cursor: 'gap:1'})
       const {cached} = renderView({data: fetchedData(), isActive: true})
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       await wait(LIST_REST_QUIET_MS)
 
       expect(postsOf(cached())).toEqual([
@@ -1569,12 +1567,12 @@ describe('usePostFeedPrepend', () => {
       renderView({data: fetchedData(), isActive: true})
 
       // As the notification shade or Control Center leave it.
-      await leaveFor(10 * RETURN_STALE_AFTER, 'inactive')
+      await leaveFor(10 * RETURN_MIN_TIME_AWAY, 'inactive')
       expect(requested()).toEqual([])
 
       answerPeek()
       newer([])
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
     })
 
@@ -1587,7 +1585,7 @@ describe('usePostFeedPrepend', () => {
       await wait(0)
       expect(requested()).toEqual([SINCE_REQUEST])
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       act(() => {
         since.respondWith({cursor: 'start:1', feed: [feedItem('new')]})
       })
@@ -1608,7 +1606,7 @@ describe('usePostFeedPrepend', () => {
         data: fetchedData(),
         isActive: true,
       })
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
       mockClient.call.mockReturnValueOnce({
         cursor: 'timeline:1',
         feed: [feedItem('fresh')],
@@ -1631,10 +1629,31 @@ describe('usePostFeedPrepend', () => {
       delete data.pages[0].startCursor
       const {onFound} = renderView({data, isActive: true})
 
-      await leaveFor(RETURN_STALE_AFTER)
+      await leaveFor(RETURN_MIN_TIME_AWAY)
 
       expect(requested()).toEqual(['timeline latest'])
       expect(onFound).toHaveBeenCalledWith(true, 'return')
+    })
+
+    it('fetches what is newer on a quicker hop too, without offering it', async () => {
+      answerPeek()
+      newer(['new'])
+      const {hook, cached} = renderView({data: fetchedData(), isActive: true})
+
+      await leaveFor(RETURN_MIN_TIME_AWAY - 1)
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(requested()).toEqual(['timeline latest', SINCE_REQUEST])
+      expect(postsOf(cached())).toEqual([
+        ['new'],
+        ['timeline-1'],
+        ['timeline-2'],
+      ])
+      expect(hook.result.current.prepend.staged).toEqual({
+        fetchedAt: cached().pages[0].fetchedAt,
+        offered: false,
+        isFull: false,
+      })
     })
   })
 })
@@ -1910,12 +1929,23 @@ describe('staging new posts on Home Following', () => {
   }
 
   /**
-   * Leaves the app in the background for two minutes, then opens it again,
-   * and lets the check that makes finish.
+   * Leaves the app in the background for long enough to make a real return,
+   * then opens it again, and lets the check that makes finish.
    */
   async function warmOpen() {
     setAppState('background')
-    await wait(RETURN_STALE_AFTER)
+    await wait(RETURN_MIN_TIME_AWAY)
+    setAppState('active')
+    await wait(SECOND)
+  }
+
+  /**
+   * Leaves the app in the background for a moment, as for a share sheet, then
+   * comes back, and lets the check that makes finish.
+   */
+  async function quickHop() {
+    setAppState('background')
+    await wait(SECOND)
     setAppState('active')
     await wait(SECOND)
   }
@@ -2243,6 +2273,17 @@ describe('staging new posts on Home Following', () => {
       expect(latest.pill.visible).toBe(false)
     })
 
+    it('checks on every warm open, however soon after the last check', async () => {
+      const {latest} = renderHome()
+      await warmOpen()
+
+      newest = 14
+      await warmOpen()
+
+      expect(requested()).toEqual([PEEK, PEEK, since(12)])
+      expect(latest.pill).toMatchObject({visible: true, count: 2})
+    })
+
     it('keeps the pill as later checks replace what it offers, with their posts', async () => {
       const {latest} = renderHome()
       newest = 14
@@ -2266,6 +2307,50 @@ describe('staging new posts on Home Following', () => {
 
       expect(latest.pill.visible).toBe(false)
       expect(latest.staged).toBeUndefined()
+    })
+  })
+
+  describe('on a quick hop away and back', () => {
+    it('stages what is newer above the reader and lights the Home dot, with no pill', async () => {
+      const {latest, cached, onHasNew} = renderHome()
+
+      newest = 14
+      await quickHop()
+
+      expect(requested()).toEqual([PEEK, since(12)])
+      expect(postsOf(cached())).toEqual([
+        ['p14', 'p13'],
+        ['p12', 'p11'],
+        ['p10'],
+      ])
+      expect(onHasNew).toHaveBeenLastCalledWith(true)
+      expect(latest.pill.visible).toBe(false)
+    })
+
+    it('leaves what is staged without the pill, for a real return to offer', async () => {
+      const {latest} = renderHome()
+      newest = 14
+      await anInterval()
+
+      await quickHop()
+      expect(requested()).toEqual([PEEK, since(12), PEEK])
+      expect(latest.pill.visible).toBe(false)
+
+      await warmOpen()
+      expect(latest.pill).toMatchObject({visible: true, count: 2})
+    })
+
+    it('makes no request when the app was only inactive', async () => {
+      renderHome()
+      newest = 14
+
+      // As the notification shade or Control Center leave it.
+      setAppState('inactive')
+      await wait(SECOND)
+      setAppState('active')
+      await wait(SECOND)
+
+      expect(requested()).toEqual([])
     })
   })
 
