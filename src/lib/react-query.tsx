@@ -141,6 +141,13 @@ const createQueryClient = () =>
     },
   })
 
+/**
+ * How old a persisted client can be and still be restored: TanStack's default,
+ * spelled out so the Following snapshot's restore report can tell when a
+ * client is dropped for it.
+ */
+const PERSISTED_CLIENT_MAX_AGE = 1000 * 60 * 60 * 24
+
 const dehydrateOptions: DehydrateOptions = {
   shouldDehydrateMutation: (_: any) => false,
   shouldDehydrateQuery: query => {
@@ -192,12 +199,17 @@ function QueryProviderInner({
       key: 'queryClient-' + (currentDid ?? 'logged-out'),
       // JSON, as by default, but with Following v2's Home Following snapshot.
       serialize: client => JSON.stringify(saveFollowingSnapshot(client)),
-      deserialize: cached => loadFollowingSnapshot(JSON.parse(cached)),
+      deserialize: cached =>
+        loadFollowingSnapshot(JSON.parse(cached), {
+          buster: env.APP_VERSION,
+          maxAge: PERSISTED_CLIENT_MAX_AGE,
+        }),
     })
     return {
       persister: asyncPersister,
       dehydrateOptions,
       buster: env.APP_VERSION,
+      maxAge: PERSISTED_CLIENT_MAX_AGE,
     } satisfies Omit<PersistQueryClientOptions, 'queryClient'>
   })
   useEffect(() => {
