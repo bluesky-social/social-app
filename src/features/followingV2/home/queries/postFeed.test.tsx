@@ -29,6 +29,11 @@ import {
 } from '#/features/followingV2/home/anchoredFollowing'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
 import {
+  isStagedFull,
+  RECURRING_SAMPLE_RATE,
+  useFollowingV2Metrics,
+} from '#/features/followingV2/home/metrics'
+import {
   LIST_REST_QUIET_MS,
   useListRest,
 } from '#/features/followingV2/home/useListRest'
@@ -48,6 +53,7 @@ import {
   readFollowingSnapshot,
   saveFollowingSnapshot,
   selectFollowingSnapshot,
+  takeFollowingSnapshotLoad,
 } from './followingSnapshot'
 import {
   type FeedDescriptor,
@@ -585,13 +591,17 @@ describe('usePostFeedRefresh', () => {
     )
     /** The data of every render, to count the renders a write causes. */
     const rendered: unknown[] = []
+    const onOutcome = jest.fn()
     const hook = renderHook(
       () => {
         const query = usePostFeedQuery('following')
         // Read as PostFeed does, so that a change to it alone renders too.
         void query.isFetching
         rendered.push(query.data)
-        return {query, ...usePostFeedRefresh('following')}
+        return {
+          query,
+          ...usePostFeedRefresh('following', undefined, {onOutcome}),
+        }
       },
       {wrapper},
     )
@@ -599,8 +609,33 @@ describe('usePostFeedRefresh', () => {
     mockClient.call.mockClear()
     const data = () =>
       queryClient.getQueryData<InfiniteData<FeedPageUnselected>>(KEY)
-    return {hook, queryClient, rendered, data}
+    return {hook, queryClient, rendered, data, onOutcome}
   }
+
+  it('reports how each refresh ended', async () => {
+    const {hook, queryClient, onOutcome} = await renderRefreshableFeed()
+    await act(() => hook.result.current.refresh())
+
+    failNextRequest(new TypeError('Network request failed'))
+    await act(() => hook.result.current.refresh())
+
+    const top = holdNextRequest()
+    let refreshing!: Promise<unknown>
+    act(() => {
+      refreshing = hook.result.current.refresh()
+    })
+    await act(() => queryClient.refetchQueries({queryKey: KEY}))
+    await act(async () => {
+      top.respond('late')
+      await refreshing
+    })
+
+    expect(onOutcome.mock.calls).toEqual([
+      [{outcome: 'refreshed'}],
+      [{outcome: 'failed', isNetworkError: true}],
+      [{outcome: 'superseded'}],
+    ])
+  })
 
   it('writes the new top page once, in one render, and paginates from it', async () => {
     const {hook, queryClient, rendered, data} = await renderRefreshableFeed()
@@ -937,6 +972,7 @@ describe('usePostFeedPrepend', () => {
     )
     const onFound = jest.fn()
     const onHasNew = jest.fn()
+    const onOutcome = jest.fn()
     const hook = renderHook(
       ({enabled}: {enabled: boolean}) => {
         const query = usePostFeedQuery('following')
@@ -950,6 +986,7 @@ describe('usePostFeedPrepend', () => {
           topFetchedAt,
           listAtRest: listRest.atRest,
           isRefreshing: isPending,
+          onOutcome,
         })
         useNewPostsCheck({
           topFetchedAt,
@@ -983,7 +1020,7 @@ describe('usePostFeedPrepend', () => {
     if (laidOut) {
       list.layOut()
     }
-    return {hook, queryClient, cached, list, onFound, onHasNew}
+    return {hook, queryClient, cached, list, onFound, onHasNew, onOutcome}
   }
 
   /** Answers the next request with these posts, newer than `since`. */
@@ -1158,6 +1195,52 @@ describe('usePostFeedPrepend', () => {
       expect(error).toBeInstanceOf(TypeError)
       expect(cached()).toBe(before)
       expect(hook.result.current.prepend.isOwed()).toBe(false)
+    })
+
+    it('reports how it ended, with what started it', async () => {
+      newer(['new', 'newer'], {cursor: 'gap'})
+      const {hook, onOutcome} = renderView()
+      await waitFor(() => expect(onOutcome).toHaveBeenCalledTimes(1))
+      act(() => hook.result.current.prepend.markRead())
+
+      newer([])
+      await act(() => hook.result.current.prepend.run('focus')!)
+
+      failNextRequest(new TypeError('Network request failed'))
+      await act(async () => {
+        await hook.result.current.prepend.run('return')!.catch(() => {})
+      })
+
+      expect(onOutcome.mock.calls).toEqual([
+        [
+          {
+            trigger: 'restore',
+            outcome: 'staged',
+            postCount: 2,
+            isReplacing: false,
+            isFull: true,
+          },
+        ],
+        [
+          {
+            trigger: 'focus',
+            outcome: 'empty',
+            postCount: 0,
+            isReplacing: false,
+            isFull: false,
+          },
+        ],
+        [
+          {
+            trigger: 'return',
+            outcome: 'failed',
+            postCount: 0,
+            isReplacing: false,
+            isFull: false,
+            isNetworkError: true,
+          },
+        ],
+      ])
     })
 
     it('is nothing to run without a boundary to fetch above', () => {
@@ -1756,6 +1839,7 @@ describe('staging new posts on Home Following', () => {
     queryClient.setQueryData(KEY, homeData())
     const onHasNew = jest.fn()
     const scrollToTop = jest.fn()
+    const metric = jest.fn()
     const latest = {} as {
       rows: Row[]
       pill: ReturnType<typeof usePrependPill>
@@ -1774,14 +1858,29 @@ describe('staging new posts on Home Following', () => {
       const query = usePostFeedQuery('following')
       const {createFeedApi} = usePostFeedFetcher('following')
       const listRest = useListRest({}, true)
-      const {refresh, isRefreshing, isPending} = usePostFeedRefresh('following')
       const pages = query.data?.pages
       const topFetchedAt = pages?.[0]?.fetchedAt
+      const metrics = useFollowingV2Metrics({
+        enabled: true,
+        metric,
+        topFetchedAt,
+        isError: query.isError,
+      })
+      const {refresh, isRefreshing, isPending} = usePostFeedRefresh(
+        'following',
+        undefined,
+        {onOutcome: metrics.onRefresh},
+      )
       const prepend = usePostFeedPrepend('following', undefined, {
         enabled: true,
         topFetchedAt,
         listAtRest: listRest.atRest,
         isRefreshing: isPending,
+        onOutcome: metrics.onPrepend,
+      })
+      const reportCheck = metrics.checkReporter({
+        isOwed: prepend.isOwed,
+        isStagedFull: () => isStagedFull(prepend.staged, pages),
       })
       useNewPostsCheck({
         topFetchedAt,
@@ -1789,13 +1888,14 @@ describe('staging new posts on Home Following', () => {
         isActive,
         isBusy: isRefreshing || (query.isFetching && !query.isFetchingNextPage),
         interval: MINUTE,
-        check: trigger =>
+        check: reportCheck(trigger =>
           checkFollowing(trigger, {
             prepend,
             top: pages?.[0],
             createFeedApi,
             onHasNew,
           }),
+        ),
         onFound: () => onHasNew(true),
       })
       const offsetY = useSharedValue(400)
@@ -1813,7 +1913,14 @@ describe('staging new posts on Home Following', () => {
       const {reports, onRowSeen: onItemSeen} = useFollowingListReports(
         'following',
         undefined,
-        {enabled: true, prepend, top: pages?.[0], pill, onHasNew},
+        {
+          enabled: true,
+          prepend,
+          top: pages?.[0],
+          pill,
+          onHasNew,
+          onSettled: metrics.onSettled,
+        },
       )
       const scrollHandlers = useSettleScrollHandlers(
         listRest.scrollHandlers,
@@ -1861,7 +1968,12 @@ describe('staging new posts on Home Following', () => {
           <View isActive={isActive} />
         </QueryClientProvider>,
       )
-    return {latest, cached, list, onHasNew, setActive}
+    /** The payloads of the metric `name` reported so far, in order. */
+    const reported = (name: string) =>
+      metric.mock.calls
+        .filter(([event]) => event === name)
+        .map(([, payload]) => payload as Record<string, unknown>)
+    return {latest, cached, list, onHasNew, setActive, reported}
   }
 
   /** Advances fake time by `ms`, letting what that sets off run. */
@@ -1905,6 +2017,8 @@ describe('staging new posts on Home Following', () => {
     AppState.currentState = 'active'
     newest = 12
     mockClient.call.mockImplementation(serve)
+    // What another test's persister read left for a Following view to report.
+    takeFollowingSnapshotLoad()
   })
 
   afterEach(() => {
@@ -2328,6 +2442,184 @@ describe('staging new posts on Home Following', () => {
     })
   })
 
+  describe('reports', () => {
+    const STAGED = {
+      outcome: 'staged',
+      isReplacing: false,
+      isFull: false,
+      sampleRate: 1,
+    }
+
+    it('a check that stages newer posts, and its prepend', async () => {
+      const {reported} = renderHome()
+      newest = 14
+      await anInterval()
+
+      expect(reported('followingV2:check')).toEqual([
+        {
+          surface: 'homeFollowing',
+          trigger: 'interval',
+          outcome: 'staged',
+          lastSuccessAgeMs: MINUTE,
+          sampleRate: 1,
+        },
+      ])
+      expect(reported('followingV2:prepend')).toEqual([
+        {...STAGED, trigger: 'interval', postCount: 2},
+      ])
+    })
+
+    it('a check that only peeks, with no prepend', async () => {
+      const {reported} = renderHome()
+      await anInterval()
+
+      expect(reported('followingV2:check')).toMatchObject([
+        {trigger: 'interval', outcome: 'nothing'},
+      ])
+      expect(reported('followingV2:prepend')).toEqual([])
+    })
+
+    it('how long since the last successful check, for each check', async () => {
+      const {reported} = renderHome()
+      await anInterval()
+      await anInterval()
+
+      expect(
+        reported('followingV2:check').map(event => event.lastSuccessAgeMs),
+      ).toEqual([MINUTE, MINUTE])
+    })
+
+    it('a full page staged with a gap, then checks it skips', async () => {
+      const {reported} = renderHome()
+      newest = 12 + 150
+      await anInterval()
+      newest += 5
+      await anInterval()
+
+      expect(reported('followingV2:prepend')).toEqual([
+        {
+          ...STAGED,
+          trigger: 'interval',
+          postCount: PREPEND_LIMIT,
+          isFull: true,
+        },
+      ])
+      expect(reported('followingV2:check').map(event => event.outcome)).toEqual(
+        ['staged', 'skipped'],
+      )
+    })
+
+    it('a prepend that keeps the full staged page, as a check that stages nothing', async () => {
+      const {reported} = renderHome()
+      newest = 14
+      await anInterval()
+      newest = 14 + 150
+      await anInterval()
+
+      expect(reported('followingV2:prepend')[1]).toEqual({
+        trigger: 'interval',
+        outcome: 'keptFull',
+        postCount: PREPEND_LIMIT,
+        isReplacing: true,
+        isFull: true,
+        sampleRate: 1,
+      })
+      expect(reported('followingV2:check').map(event => event.outcome)).toEqual(
+        ['staged', 'notStaged'],
+      )
+    })
+
+    it('a check on a warm open', async () => {
+      const {reported} = renderHome()
+      newest = 14
+      await warmOpen()
+
+      expect(reported('followingV2:check')).toMatchObject([
+        {trigger: 'return', outcome: 'staged'},
+      ])
+      expect(reported('followingV2:prepend')).toMatchObject([
+        {trigger: 'return', outcome: 'staged', postCount: 2},
+      ])
+    })
+
+    it('a check on a quick hop, sampled as an interval is', async () => {
+      const {reported} = renderHome()
+      newest = 14
+      await quickHop()
+
+      expect(reported('followingV2:check')).toMatchObject([
+        {
+          trigger: 'hop',
+          outcome: 'staged',
+          sampleRate: RECURRING_SAMPLE_RATE,
+        },
+      ])
+      expect(reported('followingV2:prepend')).toMatchObject([
+        {trigger: 'hop', outcome: 'staged', sampleRate: RECURRING_SAMPLE_RATE},
+      ])
+    })
+
+    it('a check that fails', async () => {
+      const {reported} = renderHome()
+      failNextRequest(new TypeError('Network request failed'))
+      await anInterval()
+
+      expect(reported('followingV2:check')).toMatchObject([
+        {trigger: 'interval', outcome: 'failed', isNetworkError: true},
+      ])
+    })
+
+    it('a prepend dropped as the reader reached what it would replace', async () => {
+      const {list, reported} = renderHome()
+      newest = 14
+      await anInterval()
+      list.beginDrag(400)
+      newest = 16
+      await anInterval()
+      list.see(13)
+      list.endDrag(300)
+      await wait(LIST_REST_QUIET_MS)
+
+      expect(reported('followingV2:prepend')[1]).toMatchObject({
+        outcome: 'superseded',
+        isReplacing: true,
+      })
+      expect(reported('followingV2:check')[1]).toMatchObject({
+        outcome: 'notStaged',
+      })
+    })
+
+    it('a prepend that gives way to a refresh, and the refresh', async () => {
+      const {latest, list, reported} = renderHome()
+      list.beginDrag(400)
+      newest = 14
+      await anInterval()
+      const top = holdNextRequest()
+      let refreshing!: Promise<unknown>
+      act(() => {
+        refreshing = latest.refresh()
+      })
+      list.endDrag(400)
+      await wait(LIST_REST_QUIET_MS)
+      await act(async () => {
+        top.respondWith({cursor: 't:13', startCursor: 't:14', feed: [post(14)]})
+        await refreshing
+      })
+
+      expect(reported('followingV2:prepend')).toMatchObject([
+        {outcome: 'refreshWon'},
+      ])
+      expect(reported('followingV2:refresh')).toEqual([{outcome: 'refreshed'}])
+    })
+
+    it('nothing for a restore without a read of the persisted client', async () => {
+      const {reported} = renderHome()
+      await wait(SECOND)
+
+      expect(reported('followingV2:restore')).toEqual([])
+    })
+  })
+
   it('gives way to a pull to refresh in flight when it would commit', async () => {
     const {latest, cached, list} = renderHome()
     // The reader is dragging as a check finds more, so it holds what it found.
@@ -2459,18 +2751,22 @@ describe('gaps', () => {
     const wrapper = ({children}: PropsWithChildren) => (
       <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
     )
+    const onSettled = jest.fn()
     const hook = renderHook(
       () => ({
         query: usePostFeedQuery('following'),
         refresh: usePostFeedRefresh('following').refresh,
         fillGap: usePostFeedGapFill('following'),
         settle: usePostFeedSettle('following'),
-        settleAtTop: useSettleAtTop('following', undefined, {enabled}),
+        settleAtTop: useSettleAtTop('following', undefined, {
+          enabled,
+          onSettled,
+        }),
       }),
       {wrapper},
     )
     const cached = () => queryClient.getQueryData<PostFeedData>(KEY)!
-    return {hook, queryClient, cached}
+    return {hook, queryClient, cached, onSettled}
   }
 
   it('fetches the posts in the gap, then puts them in place of the pages below it in one write', async () => {
@@ -2817,8 +3113,9 @@ describe('gaps', () => {
 
       it('settles once the list has stayed there, after a drag that leaves it still', async () => {
         jest.useFakeTimers()
-        const {hook, cached} = renderView()
+        const {hook, cached, onSettled} = renderView()
         const {settleAtTop} = hook.result.current
+        const atRest = cached()
 
         act(() => {
           settleAtTop.onBeginDrag()
@@ -2826,9 +3123,12 @@ describe('gaps', () => {
         })
         await wait(SETTLE_QUIET_MS - 1)
         expect(postsOf(cached())).toHaveLength(3)
+        expect(onSettled).not.toHaveBeenCalled()
 
         await wait(1)
         expect(postsOf(cached())).toEqual([['new']])
+        // What it settled, for metrics.
+        expect(onSettled.mock.calls).toEqual([[atRest, true]])
       })
 
       it('settles at the end of the momentum after a fling', async () => {
