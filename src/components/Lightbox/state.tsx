@@ -22,8 +22,8 @@ export type Lightbox = {
   metricsContext?: LightboxMetricsContext
   /**
    * Called as the user pages through the images, so the source can keep the
-   * matching thumbnail in view (e.g. by scrolling a carousel) for the close
-   * animation to land on. Native only.
+   * matching thumbnail in view (e.g. by scrolling a carousel) for when the
+   * lightbox closes.
    */
   onIndexChange?: (index: number) => void
 }
