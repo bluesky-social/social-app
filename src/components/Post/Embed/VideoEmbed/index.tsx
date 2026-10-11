@@ -83,6 +83,15 @@ function InnerWrapper({embed, post}: Props) {
   const showSpinner = useThrottledValue(isActive && isLoading, 100)
 
   /*
+   * Latest loading state for native-event callbacks; activation may find
+   * the player already prepared by the native preload window.
+   */
+  const isLoadingRef = useRef(false)
+  useEffect(() => {
+    isLoadingRef.current = isLoading
+  }, [isLoading])
+
+  /*
    * Created lazily on first activation so videos that are never scrolled into
    * the active position cost nothing.
    */
@@ -95,15 +104,13 @@ function InnerWrapper({embed, post}: Props) {
     }
   }, [])
 
-  const showOverlay =
-    !isActive ||
-    isLoading ||
-    (status === 'paused' && !isActive) ||
-    status === 'pending'
+  const showOverlay = !isActive || isLoading || status === 'pending'
 
-  if (!isActive && status !== 'pending') {
-    setStatus('pending')
-  }
+  useEffect(() => {
+    if (!isActive && status !== 'pending') {
+      setStatus('pending')
+    }
+  }, [isActive, status])
 
   return (
     <>
@@ -139,7 +146,11 @@ function InnerWrapper({embed, post}: Props) {
                 presentation: embed.presentation === 'gif' ? 'gif' : 'video',
               })
             }
-            telemetryRef.current.activated()
+            // the native preload window keeps a prepared, paused player
+            // for near-viewport views, so activation may find it ready
+            telemetryRef.current.activated({
+              preloaded: !isLoadingRef.current,
+            })
           } else {
             telemetryRef.current?.deactivated()
           }
