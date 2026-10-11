@@ -1106,10 +1106,10 @@ describe('usePostFeedPrepend', () => {
         {cursor: 'start:1'},
         {cursor: 'timeline:1'},
       ])
-      // Still offered, as the restore's page was.
+      // Not offered itself: the pill keeps a page that replaces one it has.
       expect(hook.result.current.prepend.staged).toEqual({
         fetchedAt: cached().pages[0].fetchedAt,
-        offered: true,
+        offered: false,
         isFull: false,
       })
     })
@@ -1813,7 +1813,7 @@ describe('staging new posts on Home Following', () => {
       const {reports, onRowSeen: onItemSeen} = useFollowingListReports(
         'following',
         undefined,
-        {enabled: true, prepend, top: pages?.[0], onHasNew},
+        {enabled: true, prepend, top: pages?.[0], pill, onHasNew},
       )
       const scrollHandlers = useSettleScrollHandlers(
         listRest.scrollHandlers,
@@ -2235,7 +2235,7 @@ describe('staging new posts on Home Following', () => {
       expect(latest.pill).toMatchObject({visible: true, count: 3})
     })
 
-    it('hides the pill once the reader sees a staged post after a drag', async () => {
+    it('keeps the pill up once the reader sees a staged post, until they reach the true top', async () => {
       const {latest, list} = renderHome()
       newest = 14
       await warmOpen()
@@ -2243,9 +2243,86 @@ describe('staging new posts on Home Following', () => {
       list.beginDrag(400)
       list.see(13)
       list.endDrag(300)
+      // Seeing it read what was staged, but the pill stays.
+      expect(latest.staged).toBeUndefined()
+      expect(latest.pill).toMatchObject({visible: true, count: 2})
+
+      list.beginDrag(300)
+      list.scroll(0)
+      expect(latest.pill.visible).toBe(false)
+    })
+
+    it('takes what later checks stage above into the pill, while it is up', async () => {
+      const {latest, cached, list} = renderHome()
+      newest = 14
+      await warmOpen()
+      list.beginDrag(400)
+      list.see(13)
+      list.endDrag(300)
+
+      newest = 16
+      await anInterval()
+      expect(postsOf(cached())[0]).toEqual(['p16', 'p15'])
+      expect(latest.pill).toMatchObject({visible: true, count: 4})
+
+      newest = 17
+      await quickHop()
+      expect(postsOf(cached())[0]).toEqual(['p17', 'p16', 'p15'])
+      expect(latest.pill).toMatchObject({visible: true, count: 5})
+    })
+
+    it('hides the pill once the reader comes to rest at the true top', async () => {
+      const {latest, list} = renderHome()
+      newest = 14
+      await warmOpen()
+
+      // The list never reported leaving the top, so only the rest says so.
+      list.beginDrag(0)
+      list.endDrag(0)
+      await wait(SETTLE_QUIET_MS)
 
       expect(latest.pill.visible).toBe(false)
+    })
+
+    it('hides the pill once pressed, and keeps it down as more is staged', async () => {
+      const {latest, list} = renderHome()
+      newest = 14
+      await warmOpen()
+
+      act(() => latest.pill.onPress())
+      expect(latest.pill.visible).toBe(false)
+      // The scroll up to the top reads what was staged.
+      list.scroll(400)
+      list.scroll(0)
       expect(latest.staged).toBeUndefined()
+
+      newest = 16
+      await anInterval()
+      expect(latest.staged).toBeDefined()
+      expect(latest.pill.visible).toBe(false)
+    })
+
+    it('hides the pill once a refresh replaces the feed, posts it offered and all', async () => {
+      const {latest, cached} = renderHome()
+      newest = 14
+      await warmOpen()
+
+      const top = holdNextRequest()
+      let refreshing!: Promise<unknown>
+      act(() => {
+        refreshing = latest.refresh()
+      })
+      await act(async () => {
+        top.respondWith({
+          cursor: 't:12',
+          startCursor: 't:14',
+          feed: [post(14), post(13)],
+        })
+        await refreshing
+      })
+
+      expect(postsOf(cached())).toEqual([['p14', 'p13']])
+      expect(latest.pill.visible).toBe(false)
     })
   })
 

@@ -565,7 +565,10 @@ export type PrependTrigger = 'restore' | NewPostsCheckTrigger
 export type StagedPage = {
   /** The page's `fetchedAt`. */
   fetchedAt: number
-  /** Whether the pill offers its posts. */
+  /**
+   * Whether a restore or a real return to the app offered it, which puts the
+   * pill up (see `usePrependPill`).
+   */
   offered: boolean
   /**
    * Whether more posts than fit on a page were newer than where it was
@@ -625,9 +628,9 @@ function isSameFeedItem(
  * While a page is staged, the next prepend fetches from the same `since` as it
  * did and replaces it, so however long the reader stays put, what's above them
  * is one page of at most {@link PREPEND_LIMIT} posts. Once it's read, the next
- * one goes above it. `staged` is the page for the pill, which offers it if a
+ * one goes above it. `staged` is the page for the pill, which goes up if a
  * restore or a significant return to the app put it there, or `check` has
- * offered it since.
+ * offered it since, and takes in every page staged while it's up.
  *
  * A page only ever replaces the staged one if it has all of its posts, as
  * the list holds the reader's place only for posts added above the others:
@@ -771,10 +774,9 @@ export function usePostFeedPrepend(
       return undefined
     }
     await listAtRest()
-    const wasStaged = stagedRef.current
     if (
       isRefreshing() ||
-      (replacing && wasStaged?.fetchedAt !== replacing.fetchedAt)
+      (replacing && stagedRef.current?.fetchedAt !== replacing.fetchedAt)
     ) {
       return undefined
     }
@@ -794,8 +796,11 @@ export function usePostFeedPrepend(
     }
     setStaged({
       fetchedAt: page.fetchedAt,
-      // A page offered by the pill stays offered when it's replaced.
-      offered: isOffering.current || (!!replacing && !!wasStaged?.offered),
+      /*
+       * Only if this prepend offers it: the pill keeps a page that replaces
+       * one it has, while it's up.
+       */
+      offered: isOffering.current,
       isFull,
     })
     return page
