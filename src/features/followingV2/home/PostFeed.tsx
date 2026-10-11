@@ -97,7 +97,7 @@ import {
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
 import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
-import {useHomePress} from './useHomePress'
+import {isAtTop, useHomePress} from './useHomePress'
 import {useListRest} from './useListRest'
 import {useNewPostsCheck} from './useNewPostsCheck'
 import {usePrependPill} from './usePrependPill'
@@ -535,6 +535,18 @@ let PostFeed = ({
 
   const myDid = currentAccount?.did || ''
   const onPostCreated = useCallback(() => {
+    /*
+     * Anchored, only the view on screen takes the new post, with the reader
+     * already at its top. A hidden or prefetched page is left alone, even at
+     * its top, as its feed isn't replaced while the reader isn't looking at
+     * it. Its own checks bring the post in once it's on screen.
+     */
+    if (isAnchored) {
+      if (isActive && isAtTop(listOffsetY.get())) {
+        void refreshToTop()
+      }
+      return
+    }
     // NOTE
     // only invalidate if at the top of the feed
     // changing content when scrolled can trigger some UI freakouts on iOS and android
@@ -555,7 +567,16 @@ let PostFeed = ({
         void truncateAndInvalidate(queryClient, RQKEY(feed))
       }
     }
-  }, [queryClient, feed, myDid, enabled, refreshToTop])
+  }, [
+    isAnchored,
+    isActive,
+    listOffsetY,
+    queryClient,
+    feed,
+    myDid,
+    enabled,
+    refreshToTop,
+  ])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
