@@ -17,7 +17,7 @@ import {
 } from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
-import {onAppReturnedFromBackground} from '#/lib/appState'
+import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -119,7 +119,11 @@ function NewNotificationsScreenInner() {
       void refresh(feed, mode)
     }
   }
-  useReturnToScreen({activeFeed, checkLatest})
+  useReturnToScreen({
+    activeFeed,
+    checkLatest,
+    peekLatest: () => void unreadApi.checkUnread(),
+  })
   /*
    * With no notifications at all, every tab is empty, so the screen drops
    * the tabs and just shows the "All" tab's empty state.
@@ -308,7 +312,9 @@ function useSessionSeenAt() {
  * Coming back to the screen: focusing it again, mounting it (web remounts
  * the screen on every visit), or, while it's open, coming back to the app
  * after a while in the background or opening a push. Each one checks the tab
- * in view for anything new, with `checkLatest`.
+ * in view for anything new, with `checkLatest`. A quick hop out of the app
+ * and back, e.g. to a share sheet, only peeks with `peekLatest`, so the list
+ * stays as it is and the "Refresh" pill offers anything new.
  *
  * - From a screen pushed within the Notifications tab (e.g. a post), the
  *   unread tint is kept as it was, and anything new is tinted too.
@@ -318,9 +324,15 @@ function useSessionSeenAt() {
 function useReturnToScreen({
   activeFeed,
   checkLatest,
+  peekLatest,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
   checkLatest: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
+  /**
+   * Asks the server for anything new without loading it, which offers the
+   * "Refresh" pill if there is.
+   */
+  peekLatest: () => void
 }) {
   const navigation = useNavigation()
   const isFocused = useIsFocused()
@@ -358,16 +370,22 @@ function useReturnToScreen({
       onReturn()
     }
   })
+  const onAppReturn = useEffectEvent((appReturn: AnyAppReturn) => {
+    if (appReturn.isReal) {
+      onLeftApp()
+    } else if (isFocused) {
+      peekLatest()
+    }
+  })
   useEffect(() => {
-    // Short trips away, e.g. to a share sheet or photo picker, don't count
-    const appReturn = onAppReturnedFromBackground(() => onLeftApp())
+    const returns = onAnyAppReturn(appReturn => onAppReturn(appReturn))
     /*
      * Opening a push leaves the app too, even when it never went to the
      * background, e.g. from Notification Center on iOS.
      */
     const unlistenPush = listenPushNotificationOpened(() => onLeftApp())
     return () => {
-      appReturn.remove()
+      returns.remove()
       unlistenPush()
     }
   }, [])
