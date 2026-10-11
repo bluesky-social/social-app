@@ -84,23 +84,24 @@ export function getPrependOffer(
 
 /**
  * The new posts pill for the posts a view's prepends staged above the reader
- * (see `usePostFeedPrepend`). It stays up apart from staging: reading a staged
- * page unstages it, but leaves the pill up.
+ * (see `usePostFeedPrepend`). It keeps its own time, apart from staging:
+ * reading a staged page unstages it, so the next prepend goes above it, but
+ * the pill stays up until the reader reaches the true top.
  *
- * It goes up on an offer, once the page offered renders: a page a restore or a
- * real return staged, or offered since. While it's up, every page staged
- * above later joins it, whatever staged it. Each page is known by the `since`
- * it was fetched from, so a page that replaces one, fetched from the same
- * place, stays in it with however many posts it has. The pill counts the
+ * It goes up on an offer (see `StagedPage`), once the offered page renders.
+ * While it's up, every page staged later joins it, whatever staged it. It
+ * knows its pages by the `since` each was fetched from, so a page that
+ * replaces one, fetched from the same place, takes its place. It counts the
  * posts on its pages that still render (see {@link getPrependOffer}). Its
- * faces are the first {@link FACE_LIMIT} whenever a page joins, and after that
- * only drop out, as a deletion, a mute or a block can take a post away and a
+ * faces are the first {@link FACE_LIMIT} as each page joins, and only drop out
+ * after that, as a deletion, a mute or a block can take a post away and a
  * label can make an avatar unsafe.
  *
  * It comes down when the reader reaches the true top (`dismiss`), when they
  * press it, and once none of its posts render, as when a refresh replaces the
- * feed. Each offer puts it up once. It shows only while the view is active,
- * which includes a view that prepended in the background becoming active.
+ * feed. It goes up at most once for each staged page, however often that's
+ * offered. It shows only while the view is active, which includes a view that
+ * prepended in the background becoming active.
  *
  * Pressing it scrolls up to the top, without fetching. Already at the top,
  * where there's no scroll to report reaching it, `onRead` reads the page.
@@ -145,6 +146,7 @@ export function usePrependPill({
   const top = pages?.[0]
   // A page's rows render after it commits, which may be after it's staged.
   const page = staged && top?.fetchedAt === staged.fetchedAt ? top : undefined
+  // An offered page puts it up, and while it's up, any staged page joins it.
   const takesIn =
     enabled &&
     page !== undefined &&
@@ -167,6 +169,7 @@ export function usePrependPill({
         : undefined,
     })
   } else if (offer && !live.count) {
+    // None of its posts render any more, as once a refresh replaces them.
     setPill({takenAt})
   }
 
