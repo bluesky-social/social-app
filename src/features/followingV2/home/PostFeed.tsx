@@ -100,6 +100,7 @@ import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHand
 import {useListRest} from './useListRest'
 import {useNewPostsCheck} from './useNewPostsCheck'
 import {usePrependPill} from './usePrependPill'
+import {useRevealTop} from './useRevealTop'
 import {useSettleAtTop} from './useSettleAtTop'
 import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
@@ -420,38 +421,32 @@ let PostFeed = ({
   const listOffsetY = useSharedValue(0)
 
   /**
-   * The top page a refresh from this view wrote, to take the reader up to once
-   * it has rendered: anchored, the list would otherwise hold on to the row
-   * they're on, below the new posts. Not animated, as that can be a long way.
+   * Takes the reader up to the top (see `useRevealTop`): from where they are,
+   * when they ask, and once the top page a refresh or a prepend from this view
+   * wrote has rendered, as anchored, the list would otherwise hold on to the
+   * row they're on, below the new posts.
    */
-  const revealTopRef = useRef<number>(undefined)
-  const revealTop = useNonReactiveCallback(() => {
-    scrollElRef?.current?.scrollToOffset({
-      animated: false,
-      offset: -headerOffset,
-    })
+  const revealTop = useRevealTop({
+    topFetchedAt: lastFetchedAt,
+    offsetY: listOffsetY,
+    scrollToTop: animated => {
+      scrollElRef?.current?.scrollToOffset({animated, offset: -headerOffset})
+    },
+    // At the newest post, nothing is new to the reader any more.
+    onJump: () => onHasNew?.(false),
   })
   const refreshToTop = async () => {
     const page = await refresh()
-    if (!page || !isAnchored) {
-      return
-    }
-    if (lastFetchRef.current === page.fetchedAt) {
-      revealTop()
-    } else {
-      revealTopRef.current = page.fetchedAt
+    if (page && isAnchored) {
+      revealTop.onceRendered(page.fetchedAt)
     }
   }
 
   useEffect(() => {
     if (lastFetchedAt) {
       lastFetchRef.current = lastFetchedAt
-      if (lastFetchedAt === revealTopRef.current) {
-        revealTopRef.current = undefined
-        revealTop()
-      }
     }
-  }, [lastFetchedAt, revealTop])
+  }, [lastFetchedAt])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (
@@ -976,12 +971,8 @@ let PostFeed = ({
     // Without samples, which the pill never offers.
     pages: feedData?.pages,
     offsetY: listOffsetY,
-    scrollToTop: () => {
-      scrollElRef?.current?.scrollToOffset({
-        animated: true,
-        offset: -headerOffset,
-      })
-    },
+    // Animated from nearby, and with a jump from deep in the feed.
+    scrollToTop: revealTop.reveal,
     onRead: prepend.markRead,
   })
   /** Tells the prepend the reader saw a row, if it's from the top page. */
