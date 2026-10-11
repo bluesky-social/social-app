@@ -18,7 +18,7 @@ import {
 } from './queries/postFeed'
 import {type NewPostsCheckTrigger} from './useNewPostsCheck'
 
-/** Where a check happened. Only Home Following, for now. */
+/** Where the event happened. Only Home Following, for now. */
 export type FollowingV2Surface = 'homeFollowing'
 
 /**
