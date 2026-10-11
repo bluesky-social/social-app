@@ -62,6 +62,14 @@ export class MergeFeedAPI implements FeedAPI {
     })
   }
 
+  setClient(client: Client) {
+    this.client = client
+    this.following.setClient(client)
+    for (const feed of this.customFeeds) {
+      feed.setClient(client)
+    }
+  }
+
   reset() {
     this.following = new MergeFeedSource_Following({
       client: this.client,
@@ -194,6 +202,8 @@ class MergeFeedSource {
   seenCursors = new Set<string>()
   queue: app.bsky.feed.defs.FeedViewPost[] = []
   hasMore = true
+  protected clientGeneration = 0
+  private failed = false
 
   constructor({
     client,
@@ -204,6 +214,18 @@ class MergeFeedSource {
   }) {
     this.client = client
     this.feedTuners = feedTuners
+  }
+
+  setClient(client: Client) {
+    if (this.client === client) return
+    this.client = client
+    this.clientGeneration++
+    this._fetchNextInner = this.createBundledFetchNext()
+    // A custom source that failed on the old session may now recover.
+    if (this.failed) {
+      this.failed = false
+      this.hasMore = true
+    }
   }
 
   get numReady() {
@@ -222,24 +244,33 @@ class MergeFeedSource {
     await Promise.race([this._fetchNextInner(n), timeout(REQUEST_WAIT_MS)])
   }
 
-  _fetchNextInner = bundleAsync(async (n: number) => {
-    const page = await this._getFeed(this.cursor, n)
-    if (page) {
-      this.cursor = page.cursor
-      const cursor = this.cursor
-      if (cursor) {
-        this.hasMore = !this.seenCursors.has(cursor)
-        this.seenCursors.add(cursor)
+  private createBundledFetchNext() {
+    return bundleAsync(async (n: number) => {
+      const generation = this.clientGeneration
+      const page = await this._getFeed(this.cursor, n)
+      // A request started on a disposed client must not exhaust a new source.
+      if (generation !== this.clientGeneration) return
+      if (page) {
+        this.failed = false
+        this.cursor = page.cursor
+        const cursor = this.cursor
+        if (cursor) {
+          this.hasMore = !this.seenCursors.has(cursor)
+          this.seenCursors.add(cursor)
+        } else {
+          this.hasMore = false
+        }
+        if (page.feed.length) {
+          this.queue = this.queue.concat(page.feed)
+        }
       } else {
+        this.failed = true
         this.hasMore = false
       }
-      if (page.feed.length) {
-        this.queue = this.queue.concat(page.feed)
-      }
-    } else {
-      this.hasMore = false
-    }
-  })
+    })
+  }
+
+  _fetchNextInner = this.createBundledFetchNext()
 
   protected _getFeed(
     _cursor: string | undefined,
@@ -264,10 +295,12 @@ class MergeFeedSource_Following extends MergeFeedSource {
     cursor: string | undefined,
     limit: number,
   ): Promise<MergeFeedPage> {
+    const generation = this.clientGeneration
     const data = await this.client.call(app.bsky.feed.getTimeline, {
       cursor,
       limit,
     })
+    if (generation !== this.clientGeneration) return null
     // run the tuner pre-emptively to ensure better mixing
     const slices = this.tuner.tune(data.feed, {
       dryRun: false,
