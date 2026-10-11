@@ -59,6 +59,7 @@ import {
   hasUnseenPosts,
   pollLatest,
   type PostFeedData,
+  PREPEND_LIMIT,
   PROCESS_STARTED_AT,
   RQKEY,
   type StagedPage,
@@ -891,7 +892,7 @@ describe('usePostFeedRefresh', () => {
 
 describe('usePostFeedPrepend', () => {
   const KEY = RQKEY('following')
-  const SINCE_REQUEST = 'timeline since:start:1 limit:100'
+  const SINCE_REQUEST = `timeline since:start:1 limit:${PREPEND_LIMIT}`
   /** A scroll event, whose contents the list's rest tracking doesn't read. */
   const EVENT = {} as ScrollEvent
 
@@ -1129,7 +1130,7 @@ describe('usePostFeedPrepend', () => {
 
       expect(requested()).toEqual([
         SINCE_REQUEST,
-        'timeline since:start:0 limit:100',
+        `timeline since:start:0 limit:${PREPEND_LIMIT}`,
       ])
       expect(postsOf(cached())).toEqual([
         ['newer'],
@@ -1715,7 +1716,7 @@ describe('staging new posts on Home Following', () => {
 
   /** A since request from `t:<n>`, as `requested` has it. */
   function since(n: number) {
-    return `timeline since:t:${n} limit:100`
+    return `timeline since:t:${n} limit:${PREPEND_LIMIT}`
   }
 
   const PEEK = 'timeline latest'
@@ -1990,7 +1991,7 @@ describe('staging new posts on Home Following', () => {
       newest = 12 + 150
       await anInterval()
       expect(cached().pages).toHaveLength(3)
-      expect(cached().pages[0].feed).toHaveLength(100)
+      expect(cached().pages[0].feed).toHaveLength(PREPEND_LIMIT)
       expect(postsOf(cached())[0][0]).toBe('p162')
       expect(gapBelow(cached().pages, 0)).toBe('open')
       const staged = cached()
@@ -2004,7 +2005,7 @@ describe('staging new posts on Home Following', () => {
 
       // Reached, the posts above them go on top.
       list.beginDrag(400)
-      list.see(100)
+      list.see(150)
       list.endDrag(300)
       await anInterval()
       expect(requested()).toEqual([PEEK, since(12), PEEK, since(162)])
@@ -2227,7 +2228,10 @@ describe('staging new posts on Home Following', () => {
       await warmOpen()
 
       expect(requested()).toEqual([PEEK, since(12)])
-      expect(latest.pill).toMatchObject({visible: true, count: 100})
+      expect(latest.pill).toMatchObject({
+        visible: true,
+        count: PREPEND_LIMIT,
+      })
     })
 
     it('raises no pill with nothing staged', async () => {
