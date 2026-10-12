@@ -110,7 +110,11 @@ describe('moderateNotification', () => {
         {...like, actors: [danielle, blocked(michael), ...rest]},
         ARGS,
       )
-      expect(result).toEqual({...like, actors: [danielle, ...rest]})
+      expect(result).toEqual({
+        ...like,
+        actors: [danielle, ...rest],
+        actorDids: like.actorDids.filter(did => did !== michael.did),
+      })
       expect(result?.count).toBe(like.count)
     })
 
@@ -124,7 +128,7 @@ describe('moderateNotification', () => {
       expect(result?.type === 'follow' && result.actors[0]).toBe(second)
     })
 
-    it('removes hidden followers from the DIDs left to load', () => {
+    it('removes hidden actors from the DIDs left to load', () => {
       const follow = get('follow-many', 'follow')
       const [first, ...rest] = follow.actors
       const result = moderateNotification(
@@ -163,7 +167,11 @@ describe('moderateNotification', () => {
         {...like, actors: [hideableOffense(danielle), ...rest]},
         {...ARGS, moderationOpts: undefined},
       )
-      expect(result).toEqual({...like, actors: rest})
+      expect(result).toEqual({
+        ...like,
+        actors: rest,
+        actorDids: like.actorDids.filter(did => did !== danielle.did),
+      })
     })
   })
 

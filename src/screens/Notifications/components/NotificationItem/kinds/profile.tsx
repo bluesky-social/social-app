@@ -9,7 +9,7 @@ import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
-import {useFollowActorsQuery} from '#/state/queries/notifications/grouped'
+import {useGroupActorsQuery} from '#/state/queries/notifications/grouped'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
@@ -217,8 +217,9 @@ function ExpandedFollowers({
   notification: NotificationOf<'follow'>
 }) {
   const {t: l} = useLingui()
-  const {actors, hasMore, isFetching, fetchNextPage} = useFollowActorsQuery({
-    notification,
+  const {actors, hasMore, isFetching, fetchNextPage} = useGroupActorsQuery({
+    notificationId: notification.id,
+    group: notification,
   })
 
   const onShowMore = async () => {
