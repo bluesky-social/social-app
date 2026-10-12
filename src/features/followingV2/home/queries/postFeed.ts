@@ -566,8 +566,8 @@ export type StagedPage = {
   /** The page's `fetchedAt`. */
   fetchedAt: number
   /**
-   * Whether a restore or a real return to the app offered it, which puts the
-   * pill up (see `usePrependPill`).
+   * Whether a restore or a significant return to the app offered it, which
+   * puts the pill up (see `usePrependPill`).
    */
   offered: boolean
   /**
