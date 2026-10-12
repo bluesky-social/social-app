@@ -83,9 +83,7 @@ export function AccountStatus({
           </View>
           <Prompt.TitleText>{title}</Prompt.TitleText>
           <Prompt.DescriptionText>{description}</Prompt.DescriptionText>
-          <Prompt.DescriptionText>
-            <Trans>{disclaimer}</Trans>
-          </Prompt.DescriptionText>
+          <Prompt.DescriptionText>{disclaimer}</Prompt.DescriptionText>
         </Prompt.Content>
         <Prompt.Actions>
           <Prompt.Action cta={l`Done`} onPress={() => control.close()} />
