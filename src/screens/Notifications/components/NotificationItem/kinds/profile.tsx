@@ -13,9 +13,11 @@ import {useFollowActorsQuery} from '#/state/queries/notifications/grouped'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
-import {StarterPack_Stroke2_Corner0_Rounded as StarterPackIcon} from '#/components/icons/brands/StarterPack'
-import {CheckThick_Stroke2_Corner0_Rounded as CheckIcon} from '#/components/icons/Check'
-import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {
+  NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon,
+  NotificationStarterPackSmall_Filled_Corner0_Rounded as StarterPackIcon,
+  NotificationVerifiedSmall_Filled_Corner0_Rounded as CheckIcon,
+} from '#/components/icons/Notification'
 import * as Toast from '#/components/Toast'
 import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
@@ -70,7 +72,7 @@ function SingleFollowNotification({
       testID={`notification-follow-${notification.id}`}>
       <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
       <Item.Content>
-        <View style={[a.gap_2xs]}>
+        <View style={[a.gap_xs]}>
           <Item.PrimaryText>
             <Trans>
               <Item.Name profile={actor} /> followed you

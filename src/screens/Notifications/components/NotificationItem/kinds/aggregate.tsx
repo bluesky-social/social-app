@@ -5,14 +5,14 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {atoms as a, useTheme} from '#/alf'
-import {BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon} from '#/components/icons/Bell'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
 import {
-  Repost_Stroke2_Corner3_Rounded as RepostIcon,
-  RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
-} from '#/components/icons/Repost'
+  NotificationActivitySmall_Filled_Corner0_Rounded as ActivityIcon,
+  NotificationLikeSmall_Filled_Corner0_Rounded as HeartIcon,
+  NotificationRepostSmall_Filled_Corner0_Rounded as RepostIcon,
+} from '#/components/icons/Notification'
+import {RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon} from '#/components/icons/Repost'
 import * as Item from '../Item'
 import {makeActivityListLink, makePostLink} from '../links'
 import {type NotificationOf} from '../types'
@@ -431,7 +431,7 @@ export function SubscribedPostNotification({
           : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={BellPlusIcon} tone="activity" />
+      <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
       <Item.Content>
         {others > 0 && (
           <Item.AvatarRow profiles={authors.slice(1)} total={others} />
