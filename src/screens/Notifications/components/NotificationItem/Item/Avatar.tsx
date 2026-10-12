@@ -39,6 +39,12 @@ const SLOT_SIZE = {
 }
 
 /**
+ * How wide `Item.Avatar` is, for lining things up with the content column
+ * beside it.
+ */
+export const AVATAR_SLOT_WIDTH = SLOT_SIZE.width
+
+/**
  * The primary actor's avatar, with an icon badge overlapping its bottom-end
  * corner that says what kind of notification this is. Omit `icon` for an
  * unbadged avatar.

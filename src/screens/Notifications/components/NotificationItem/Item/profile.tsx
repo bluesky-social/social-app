@@ -416,8 +416,14 @@ const ROW_STAGGER = 25
 const MAX_STAGGERED_ROWS = 8
 
 /**
+ * The size of each avatar in an `ActorList`.
+ */
+export const ACTOR_AVATAR_SIZE = 32
+
+/**
  * The expanded list of everyone in a grouped notification, each linking to
- * their profile with a follow button.
+ * their profile with a follow button. It has no horizontal padding of its
+ * own, so the row can line it up with its other content.
  *
  * Rows fade in one after another as they mount. Rows appended later, e.g. by
  * "Show more", start a stagger of their own rather than waiting on the rows
@@ -497,7 +503,7 @@ export function ShowMoreActorsButton({
       disabled={isLoading}
       hitSlop={HITSLOP_10}
       onPress={onPress}
-      style={[a.self_start, a.gap_xs, a.px_lg, a.pt_xs]}>
+      style={[a.self_start, a.gap_xs, a.pt_xs]}>
       {({hovered, pressed}) => (
         <>
           {isLoading && (
@@ -568,7 +574,6 @@ export function ActorListItem({
         a.flex_row,
         a.align_center,
         a.gap_sm,
-        a.px_lg,
         isLast ? a.pt_sm : a.py_sm,
       ]}>
       <Pressable
@@ -583,7 +588,7 @@ export function ActorListItem({
         }}
         style={[a.flex_1, a.flex_row, a.align_center, a.gap_sm]}>
         <PreviewableUserAvatar
-          size={32}
+          size={ACTOR_AVATAR_SIZE}
           profile={profile}
           moderation={moderation?.ui('avatar')}
           type={profile.associated?.labeler ? 'labeler' : 'user'}

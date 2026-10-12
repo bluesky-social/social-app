@@ -23,7 +23,7 @@ import {
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -34,8 +34,9 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
+import {AVATAR_SLOT_WIDTH} from './Avatar'
 import {Expandable} from './Expandable'
-import {ActorList, ShowMoreActorsButton} from './profile'
+import {ACTOR_AVATAR_SIZE, ActorList, ShowMoreActorsButton} from './profile'
 import {Root} from './Root'
 import {useDisplayName} from './text'
 
@@ -70,6 +71,19 @@ const MAX_PREVIEW_AVATARS = 4
 const MAX_PREVIEW_AVATARS_WIDE = 8
 
 const PREVIEW_AVATAR_SIZE = 32
+
+/**
+ * How far the expanded list is inset, so that its names line up with the
+ * row's text above. `Item.Root` puts the text a padding, the avatar slot and
+ * a gap in from its edge, and each person in the list puts their name an
+ * avatar and a gap in from theirs.
+ */
+const ACTOR_LIST_INSET =
+  tokens.space.lg +
+  AVATAR_SLOT_WIDTH +
+  tokens.space.lg -
+  ACTOR_AVATAR_SIZE -
+  tokens.space.sm
 
 /**
  * The names a group notification's sentence needs.
@@ -369,7 +383,7 @@ function GroupActorList({
   }
 
   return (
-    <View style={[a.px_lg, a.pb_md]}>
+    <View style={[a.pr_lg, a.pb_md, {paddingLeft: ACTOR_LIST_INSET}]}>
       <ActorList
         actors={[...group.actors, ...actors]}
         starterPack={
