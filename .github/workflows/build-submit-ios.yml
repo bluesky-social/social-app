@@ -304,6 +304,7 @@ jobs:
 
       - name: 🔢 Record main testflight build number
         if: ${{ github.ref == 'refs/heads/main' &&
+          needs.build.outputs.source-sha == github.sha &&
           (inputs.profile || 'testflight') == 'testflight' }}
         env:
           BUILD_NUMBER: ${{ needs.build.outputs.build-number }}
@@ -314,6 +315,7 @@ jobs:
 
       - name: 🚀 Upload main testflight build number
         if: ${{ github.ref == 'refs/heads/main' &&
+          needs.build.outputs.source-sha == github.sha &&
           (inputs.profile || 'testflight') == 'testflight' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
