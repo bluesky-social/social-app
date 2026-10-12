@@ -192,7 +192,7 @@ function NewNotificationsScreenInner() {
                   }
                   selectPage(page)
                 }}
-                contentContainerStyle={a.py_sm}
+                contentContainerStyle={IS_WEB ? a.pb_sm : a.py_sm}
               />
             )}
           </Pager.TabBar>

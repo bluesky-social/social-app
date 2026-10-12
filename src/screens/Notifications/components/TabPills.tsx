@@ -108,7 +108,8 @@ export function TabPills({
 
   const canScrollLeft = scrollX > 0
   const canScrollRight = Math.ceil(scrollX) < contentWidth - totalWidth
-  // The scroll buttons match the pills, which are all the same height
+  // The scroll buttons line up with the pills, which are all the same height
+  const pillTop = tabOffsets[0]?.y ?? 0
   const pillHeight = tabOffsets[0]?.height ?? 0
   const edgeMask = getEdgeMask({
     left: canScrollLeft,
@@ -310,10 +311,8 @@ export function TabPills({
         <View
           style={[
             a.absolute,
-            a.top_0,
             a.left_0,
-            a.bottom_0,
-            a.justify_center,
+            {top: pillTop},
             {paddingLeft: gutterWidth},
             a.pr_md,
             a.z_10,
@@ -342,10 +341,8 @@ export function TabPills({
         <View
           style={[
             a.absolute,
-            a.top_0,
             a.right_0,
-            a.bottom_0,
-            a.justify_center,
+            {top: pillTop},
             {paddingRight: gutterWidth},
             a.pl_md,
             a.z_10,
