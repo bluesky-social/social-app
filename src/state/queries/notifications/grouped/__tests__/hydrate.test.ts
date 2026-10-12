@@ -45,6 +45,10 @@ const MICHAEL: DidString = 'did:plc:michaelblack'
  * Things that don't.
  */
 const MISSING_POST: AtUriString = 'at://did:plc:nobody/app.bsky.feed.post/gone'
+/**
+ * A repost by the viewer. Nothing resolves it, so it needn't exist.
+ */
+const VIA_REPOST: AtUriString = `at://${VIEWER_DID}/app.bsky.feed.repost/x`
 const MISSING_PACK: AtUriString =
   'at://did:plc:nobody/app.bsky.graph.starterpack/gone'
 const GHOST: DidString = 'did:plc:ghost'
@@ -52,6 +56,9 @@ const GHOST: DidString = 'did:plc:ghost'
 const ALL_TYPES: NotificationViewType[] = [
   'like',
   'multiPostLike',
+  'multiPostRepost',
+  'multiPostLikeViaRepost',
+  'multiPostRepostViaRepost',
   'repost',
   'likeViaRepost',
   'repostViaRepost',
@@ -240,6 +247,30 @@ describe('hydratePage', () => {
       expect(multi.posts).toHaveLength(3)
       for (const post of multi.posts) {
         expect(post).toBe(related(res, post.uri))
+      }
+    })
+
+    it('maps multi-post reposts and likes and reposts via reposts', () => {
+      const {res, page} = setup()
+      const reposts = get(page, 'multi-post-repost-aiko', 'multiPostRepost')
+      expect(reposts.actor).toBe(related(res, 'did:plc:aiko'))
+      expect(reposts.posts).toHaveLength(2)
+      const likesVia = get(
+        page,
+        'multi-post-like-via-repost-noah',
+        'multiPostLikeViaRepost',
+      )
+      expect(likesVia.actor).toBe(related(res, 'did:plc:noah'))
+      const repostsVia = get(
+        page,
+        'multi-post-repost-via-repost-lena',
+        'multiPostRepostViaRepost',
+      )
+      expect(repostsVia.actor).toBe(related(res, 'did:plc:lena'))
+      for (const multi of [reposts, likesVia, repostsVia]) {
+        for (const post of multi.posts) {
+          expect(post).toBe(related(res, post.uri))
+        }
       }
     })
 
@@ -618,6 +649,36 @@ describe('hydratePage', () => {
           $type: `${NS}#multiPostLikeGroup`,
           actor,
           items: [{post: FUNGUS_POST}, {post: PLANTS_POST}],
+        }),
+      ],
+      [
+        'multiPostRepost',
+        actor => ({
+          $type: `${NS}#multiPostRepostGroup`,
+          actor,
+          items: [{post: FUNGUS_POST}, {post: PLANTS_POST}],
+        }),
+      ],
+      [
+        'multiPostLikeViaRepost',
+        actor => ({
+          $type: `${NS}#multiPostLikeViaRepostGroup`,
+          actor,
+          items: [
+            {post: FUNGUS_POST, viaRepost: VIA_REPOST},
+            {post: PLANTS_POST, viaRepost: VIA_REPOST},
+          ],
+        }),
+      ],
+      [
+        'multiPostRepostViaRepost',
+        actor => ({
+          $type: `${NS}#multiPostRepostViaRepostGroup`,
+          actor,
+          items: [
+            {post: FUNGUS_POST, viaRepost: VIA_REPOST},
+            {post: PLANTS_POST, viaRepost: VIA_REPOST},
+          ],
         }),
       ],
     ]

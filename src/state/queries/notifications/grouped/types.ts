@@ -59,6 +59,29 @@ export type NotificationView =
       posts: NonEmptyArray<PostView>
     })
   | (Base & {
+      type: 'multiPostRepost'
+      actor: ProfileView
+      posts: NonEmptyArray<PostView>
+    })
+  | (Base & {
+      /**
+       * Likes of several posts via the viewer's reposts of them. `posts` are
+       * the original posts.
+       */
+      type: 'multiPostLikeViaRepost'
+      actor: ProfileView
+      posts: NonEmptyArray<PostView>
+    })
+  | (Base & {
+      /**
+       * Reposts of several posts via the viewer's reposts of them. `posts`
+       * are the original posts.
+       */
+      type: 'multiPostRepostViaRepost'
+      actor: ProfileView
+      posts: NonEmptyArray<PostView>
+    })
+  | (Base & {
       type: 'repost'
       post: PostView
       actors: NonEmptyArray<ProfileView>

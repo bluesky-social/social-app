@@ -253,6 +253,7 @@ export function createGroupedNotificationsFixture(
    */
 
   const viaRepost: AtUriString = `at://${VIEWER_DID}/app.bsky.feed.repost/bronco`
+  const priyaViaRepost: AtUriString = `at://${VIEWER_DID}/app.bsky.feed.repost/priya`
   const broncoPost = post({
     author: darrin,
     rkey: 'bronco',
@@ -571,6 +572,45 @@ export function createGroupedNotificationsFixture(
           {post: animalsPost.uri},
           {post: photosPost.uri},
           {post: plantsPost.uri},
+        ],
+      },
+    },
+    {
+      id: 'multi-post-repost-aiko',
+      isRead: true,
+      indexedAt: ago(10 * HOUR),
+      count: 2,
+      kind: {
+        $type: `${$group}#multiPostRepostGroup`,
+        actor: aiko.did,
+        items: [{post: animalsPost.uri}, {post: fungusPost.uri}],
+      },
+    },
+    {
+      id: 'multi-post-like-via-repost-noah',
+      isRead: true,
+      indexedAt: ago(11 * HOUR),
+      count: 2,
+      kind: {
+        $type: `${$group}#multiPostLikeViaRepostGroup`,
+        actor: noah.did,
+        items: [
+          {post: broncoPost.uri, viaRepost},
+          {post: priyaPost.uri, viaRepost: priyaViaRepost},
+        ],
+      },
+    },
+    {
+      id: 'multi-post-repost-via-repost-lena',
+      isRead: true,
+      indexedAt: ago(12 * HOUR),
+      count: 2,
+      kind: {
+        $type: `${$group}#multiPostRepostViaRepostGroup`,
+        actor: lena.did,
+        items: [
+          {post: broncoPost.uri, viaRepost},
+          {post: priyaPost.uri, viaRepost: priyaViaRepost},
         ],
       },
     },

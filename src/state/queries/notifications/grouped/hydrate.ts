@@ -150,15 +150,23 @@ function hydrateGroup(
   }
 
   if (bsky.isType(defs.multiPostLikeGroup, kind)) {
-    const actor = resolveActor(kind.actor, ctx)
-    const posts = nonEmpty(
-      kind.items.flatMap(item => {
-        const post = resolvePost(item.post, ctx)
-        return post ? [post] : []
-      }),
-    )
-    if (!actor || !posts) return
-    return {...base, type: 'multiPostLike', actor, posts}
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostLike', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostRepost', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostLikeViaRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostLikeViaRepost', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostRepostViaRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostRepostViaRepost', ...multi}
   }
 
   if (bsky.isType(defs.followGroup, kind)) {
@@ -277,6 +285,25 @@ function hydrateGroup(
 function resolveActor(did: string, ctx: Context): ProfileView | undefined {
   if (did === ctx.viewerDid) return undefined
   return ctx.profiles.get(did)
+}
+
+/**
+ * Resolves a group of one actor's likes or reposts of several posts, skipping
+ * posts that don't resolve. Undefined if the actor or every post is missing.
+ */
+function resolveMultiPost(
+  kind: {actor: string; items: {post: string}[]},
+  ctx: Context,
+): {actor: ProfileView; posts: NonEmptyArray<PostView>} | undefined {
+  const actor = resolveActor(kind.actor, ctx)
+  const posts = nonEmpty(
+    kind.items.flatMap(item => {
+      const post = resolvePost(item.post, ctx)
+      return post ? [post] : []
+    }),
+  )
+  if (!actor || !posts) return
+  return {actor, posts}
 }
 
 /**

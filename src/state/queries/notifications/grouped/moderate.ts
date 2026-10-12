@@ -86,6 +86,9 @@ export function moderateNotification(
       }
     }
     case 'multiPostLike':
+    case 'multiPostRepost':
+    case 'multiPostLikeViaRepost':
+    case 'multiPostRepostViaRepost':
     case 'followBack':
     case 'verified':
     case 'unverified':

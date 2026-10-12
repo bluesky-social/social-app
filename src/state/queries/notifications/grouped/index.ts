@@ -309,6 +309,9 @@ function* postsInNotification(
       }
       break
     case 'multiPostLike':
+    case 'multiPostRepost':
+    case 'multiPostLikeViaRepost':
+    case 'multiPostRepostViaRepost':
       yield* notification.posts
       break
     case 'subscribedPost':
@@ -335,6 +338,9 @@ function* actorsInNotification(
       yield* notification.actors
       break
     case 'multiPostLike':
+    case 'multiPostRepost':
+    case 'multiPostLikeViaRepost':
+    case 'multiPostRepostViaRepost':
     case 'followBack':
     case 'verified':
     case 'unverified':

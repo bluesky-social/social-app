@@ -427,6 +427,36 @@ function createMockNotifications({
       },
     },
     {
+      title: 'Multi-post repost',
+      subtitle: 'one actor, two posts',
+      notification: {
+        ...base('multi-post-repost', 2),
+        type: 'multiPostRepost',
+        actor: target,
+        posts: [likedPost, otherLikedPost],
+      },
+    },
+    {
+      title: 'Multi-post like via repost',
+      subtitle: 'one actor, two posts',
+      notification: {
+        ...base('multi-post-like-via-repost', 2),
+        type: 'multiPostLikeViaRepost',
+        actor: target,
+        posts: [repostedPost, otherLikedPost],
+      },
+    },
+    {
+      title: 'Multi-post repost via repost',
+      subtitle: 'one actor, two posts',
+      notification: {
+        ...base('multi-post-repost-via-repost', 2),
+        type: 'multiPostRepostViaRepost',
+        actor: target,
+        posts: [repostedPost, otherLikedPost],
+      },
+    },
+    {
       title: 'Feed like',
       subtitle: 'multiple actors',
       notification: {
