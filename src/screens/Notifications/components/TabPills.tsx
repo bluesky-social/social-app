@@ -108,6 +108,14 @@ export function TabPills({
 
   const canScrollLeft = scrollX > 0
   const canScrollRight = Math.ceil(scrollX) < contentWidth - totalWidth
+  // The scroll buttons line up with the pills, which are all the same height
+  const pillTop = tabOffsets[0]?.y ?? 0
+  const pillHeight = tabOffsets[0]?.height ?? 0
+  const edgeMask = getEdgeMask({
+    left: canScrollLeft,
+    right: canScrollRight,
+    width: gutterWidth + pillHeight + tokens.space.md,
+  })
   const cleanupRef = useRef<(() => void) | null>(null)
   const isContinuouslyScrollingRef = useRef(false)
 
@@ -197,6 +205,7 @@ export function TabPills({
       <BlockDrawerGesture>
         <DraggableScrollView
           ref={listRef}
+          style={web({maskImage: edgeMask})}
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToOffsets={
@@ -302,16 +311,11 @@ export function TabPills({
         <View
           style={[
             a.absolute,
-            a.top_0,
             a.left_0,
-            a.bottom_0,
-            a.justify_center,
+            {top: pillTop},
             {paddingLeft: gutterWidth},
             a.pr_md,
             a.z_10,
-            web({
-              background: `linear-gradient(to right, ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${utils.alpha(t.atoms.bg.backgroundColor, 0)} 100%)`,
-            }),
           ]}>
           <Button
             label={l`Scroll left`}
@@ -324,10 +328,9 @@ export function TabPills({
               a.border,
               t.atoms.border_contrast_low,
               t.atoms.bg,
-              a.h_full,
-              a.aspect_square,
               a.rounded_full,
               a.curve_continuous,
+              {height: pillHeight, width: pillHeight},
             ]}>
             <ButtonIcon icon={ArrowLeft} />
           </Button>
@@ -338,16 +341,11 @@ export function TabPills({
         <View
           style={[
             a.absolute,
-            a.top_0,
             a.right_0,
-            a.bottom_0,
-            a.justify_center,
+            {top: pillTop},
             {paddingRight: gutterWidth},
             a.pl_md,
             a.z_10,
-            web({
-              background: `linear-gradient(to left, ${t.atoms.bg.backgroundColor} 0%, ${t.atoms.bg.backgroundColor} 70%, ${utils.alpha(t.atoms.bg.backgroundColor, 0)} 100%)`,
-            }),
           ]}>
           <Button
             label={l`Scroll right`}
@@ -360,10 +358,9 @@ export function TabPills({
               a.border,
               t.atoms.border_contrast_low,
               t.atoms.bg,
-              a.h_full,
-              a.aspect_square,
               a.rounded_full,
               a.curve_continuous,
+              {height: pillHeight, width: pillHeight},
             ]}>
             <ButtonIcon icon={ArrowRight} />
           </Button>
@@ -436,6 +433,31 @@ function areLayoutsEqual(a: PillLayout[], b: PillLayout[]) {
         layout.height === b[index].height,
     )
   )
+}
+
+/**
+ * A CSS mask that fades the pills out under the scroll buttons on web, over
+ * `width` from each side that can scroll. A mask rather than a background
+ * over them, so it works over the header's see-through gradient.
+ */
+function getEdgeMask({
+  left,
+  right,
+  width,
+}: {
+  left: boolean
+  right: boolean
+  width: number
+}) {
+  if (!left && !right) return undefined
+  const solid = width * 0.7
+  const start = left
+    ? `transparent 0px, transparent ${solid}px, black ${width}px`
+    : 'black 0px'
+  const end = right
+    ? `black calc(100% - ${width}px), transparent calc(100% - ${solid}px), transparent 100%`
+    : 'black 100%'
+  return `linear-gradient(to right, ${start}, ${end})`
 }
 
 function PillIndicator({

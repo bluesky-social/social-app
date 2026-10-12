@@ -713,7 +713,10 @@ let Row = function RowImpl<ItemT>({
   }
 
   return (
-    <View ref={rowRef}>
+    <View
+      ref={rowRef}
+      // @ts-expect-error web only, for the tooltip rule in style.css
+      dataSet={{listRow: ''}}>
       {renderItem({
         item,
         index,
