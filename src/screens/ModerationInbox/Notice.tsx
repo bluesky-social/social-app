@@ -1,8 +1,9 @@
-import {useRef, useState} from 'react'
+import {useCallback, useRef, useState} from 'react'
 import {View} from 'react-native'
 import {AtUri, isAtUriString, isValidDid} from '@atproto/syntax'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
+import {useFocusEffect} from '@react-navigation/native'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
 
 import {MAX_REPORT_REASON_GRAPHEME_LENGTH, webLinks} from '#/lib/constants'
@@ -89,6 +90,20 @@ export function ModerationInboxNoticeDetailsScreen({
   const notFound =
     matchXrpcError(subjectQuery.error, tools.ozone.inbox.getActionedSubject) ===
     'NotFound'
+
+  useFocusEffect(
+    useCallback(() => {
+      if (
+        isEnabled &&
+        hasSession &&
+        moderationService &&
+        subject &&
+        !notFound
+      ) {
+        ax.metric('moderation:inbox:viewNotice', {})
+      }
+    }, [ax, isEnabled, hasSession, moderationService, subject, notFound]),
+  )
 
   if (!isEnabled || !hasSession || !moderationService || !subject || notFound) {
     return <NotFoundScreen />

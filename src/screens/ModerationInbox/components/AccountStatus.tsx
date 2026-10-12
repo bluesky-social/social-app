@@ -7,6 +7,7 @@ import {CircleInfo_Stroke2_Corner0_Rounded as CircleInfoIcon} from '#/components
 import {ExclamationCircle_Stroke2_Corner0_Rounded as ExclamationCircleIcon} from '#/components/icons/ExclamationCircle'
 import * as Prompt from '#/components/Prompt'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 export function AccountStatus({
   status,
@@ -15,6 +16,7 @@ export function AccountStatus({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
 
   const control = Prompt.usePromptControl()
 
@@ -61,7 +63,10 @@ export function AccountStatus({
         accessibilityRole="button"
         accessibilityLabel={l`Show account status`}
         accessibilityHint=""
-        onPress={control.open}
+        onPress={() => {
+          ax.metric('moderation:inbox:viewAccountStatus', {status})
+          control.open()
+        }}
         style={[
           a.p_lg,
           a.flex_row,
