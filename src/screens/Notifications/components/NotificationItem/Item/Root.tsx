@@ -136,6 +136,11 @@ export function Root({
             a.flex_row,
             a.align_start,
             a.gap_lg,
+            /*
+             * As a button it's a `<button>` on web, which a block parent
+             * shrinks to fit its content rather than stretching
+             */
+            a.w_full,
             a.px_lg,
             a.py_md,
             {backgroundColor},
