@@ -81,7 +81,7 @@ function SingleFollowNotification({
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
       <Item.Trailing>
-        <Item.FollowButton profile={actor} />
+        <Item.FollowButton profile={actor} logContext="NotificationFollowRow" />
       </Item.Trailing>
     </Item.Root>
   )
@@ -345,7 +345,10 @@ export function ContactMatchNotification({
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
       <Item.Trailing>
-        <Item.FollowButton profile={actor} />
+        <Item.FollowButton
+          profile={actor}
+          logContext="NotificationContactMatchRow"
+        />
       </Item.Trailing>
     </Item.Root>
   )

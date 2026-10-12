@@ -119,10 +119,14 @@ function PillButton({
  */
 export function FollowButton({
   profile,
-  logContext = 'ProfileCard',
+  logContext,
 }: {
   profile: bsky.profile.AnyProfileView
-  logContext?: FollowLogContext
+  /**
+   * Which row the button is in, for the follow and unfollow metrics, e.g.
+   * `NotificationFollowRow`.
+   */
+  logContext: FollowLogContext
 }) {
   const {currentAccount, hasSession} = useSession()
   if (!hasSession || profile.did === currentAccount?.did) return null
