@@ -15,5 +15,12 @@ android {
 }
 
 dependencies {
-  implementation 'com.google.firebase:firebase-messaging-ktx:24.0.0'
+  /*
+   * expo-notifications ships a prebuilt AAR, and only becomes a Gradle project
+   * when it's listed in `expo.autolinking.android.buildFromSource` in the app's
+   * package.json. Keep it there, or this dependency won't resolve.
+   */
+  implementation project(':expo-notifications')
+  // Keep in step with expo-notifications' own firebase-messaging version
+  implementation 'com.google.firebase:firebase-messaging:25.0.1'
 }

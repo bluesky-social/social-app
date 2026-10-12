@@ -26,13 +26,13 @@ Uses iOS App Groups (`group.app.bsky`) to share UserDefaults between the main ap
 
 ### Android Implementation
 
-Uses SharedPreferences with Firebase Cloud Messaging (FCM) to handle background notifications. The module tracks app foreground/background state and conditionally processes notifications based on whether the app is foregrounded.
+Uses SharedPreferences for preferences, and replaces expo-notifications' Firebase Cloud Messaging (FCM) service so incoming pushes can be adjusted before expo handles them. See "Android Notification Handling" below.
 
 **Key Files:**
 - `android/src/main/java/expo/modules/backgroundnotificationhandler/ExpoBackgroundNotificationHandlerModule.kt` - Expo module definition
 - `android/src/main/java/expo/modules/backgroundnotificationhandler/NotificationPrefs.kt` - SharedPreferences wrapper
-- `android/src/main/java/expo/modules/backgroundnotificationhandler/BackgroundNotificationHandler.kt` - Notification processing logic
-- `android/src/main/java/expo/modules/backgroundnotificationhandler/BackgroundNotificationHandlerInterface.kt` - Interface for showing notifications
+- `android/src/main/java/expo/modules/backgroundnotificationhandler/BlueskyFirebaseMessagingService.kt` - FCM service, registered in `android/src/main/AndroidManifest.xml`
+- `android/src/main/java/expo/modules/backgroundnotificationhandler/BlueskyFirebaseMessagingDelegate.kt` - Adjusts incoming pushes, then hands them to expo-notifications
 - `android/build.gradle` - Build configuration
 
 ### TypeScript/React API
@@ -124,17 +124,15 @@ function SettingsScreen() {
 
 ## Android Notification Handling
 
-The Android implementation includes logic for processing notifications while the app is backgrounded:
+expo-notifications registers its FCM service (`ExpoFirebaseMessagingService`) at intent-filter priority -1 so that apps can replace it. `BlueskyFirebaseMessagingService` extends it at the default priority, so FCM delivers to ours instead, and swaps in `BlueskyFirebaseMessagingDelegate`. The delegate:
 
-- **Chat messages**: Applies custom notification channels based on `playSoundChat` preference
-  - Sound enabled: Uses `chat-messages` channel (or `dm.mp3` sound on older Android)
-  - Sound disabled: Uses `chat-messages-muted` channel
+- **Chat pushes** (`chat-*` reasons): assigns them to the `chat` notification channel, which is created in JS by `src/lib/notifications/channels.ts`. Chat pushes are data-only, so the channel can't be set server-side. If the channel doesn't exist yet, expo falls back to its default channel.
+- **Mark-read pushes** (`mark-read-*` reasons): drops them. They have no content and nothing handles them yet.
+- **Everything else**: passes through to expo-notifications unchanged.
 
-- **Other notification types**: On Android Oreo+ (API 26+), assigns notifications to channels based on reason:
-  - Supported reasons: `like`, `repost`, `follow`, `mention`, `reply`, `quote`, `like-via-repost`, `repost-via-repost`, `subscribed-post`
-  - Each reason maps to its corresponding notification channel
+Social notifications (likes, replies, etc.) are FCM *notification* messages, so FCM displays them itself while the app is in the background, without calling this service. Their channel has to be set server-side.
 
-When the app is foregrounded, the module defers to `expo-notifications` for notification handling.
+Note that `RemoteMessage.data` can't be mutated to change how expo presents a message - expo parcels the message to its receiver, which rebuilds it from the message's backing bundle. Build a new `RemoteMessage` from an edited copy of the bundle instead.
 
 ## Configuration
 
@@ -146,7 +144,8 @@ Requires App Group entitlement configured in Xcode:
 ### Android
 
 Requires Firebase Cloud Messaging (FCM) integration:
-- Dependency: `com.google.firebase:firebase-messaging-ktx:24.0.0`
+- Dependencies: `expo-notifications` and `com.google.firebase:firebase-messaging` (keep in step with expo-notifications' version)
+- `expo-notifications` must stay in `expo.autolinking.android.buildFromSource` in the app's `package.json`. It ships a prebuilt AAR, and otherwise there's no `:expo-notifications` Gradle project for this module to depend on.
 - SharedPreferences name: `xyz.blueskyweb.app`
 
 ## Usage in the App
@@ -154,8 +153,8 @@ Requires Firebase Cloud Messaging (FCM) integration:
 The module is used to:
 
 1. Store notification preferences that need to be accessed by notification service extensions
-2. Track app foreground/background state on Android
-3. Process and mutate notification payloads based on user preferences before display
+2. Assign incoming chat pushes to their notification channel on Android
+3. Process and mutate notification payloads based on user preferences before display (iOS)
 4. Manage notification badge counts on iOS
 5. Handle thread muting and other notification filtering logic
 
