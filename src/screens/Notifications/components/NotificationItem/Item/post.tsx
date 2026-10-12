@@ -1,15 +1,17 @@
 import {useState} from 'react'
-import {View} from 'react-native'
+import {type GestureResponderEvent, View} from 'react-native'
 import {moderatePost, type ModerationDecision} from '@bsky/sdk/moderation'
 import {RichText as RichTextAPI} from '@bsky/sdk/richtext'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {MAX_POST_LINES} from '#/lib/constants'
 import {useHaptics} from '#/lib/haptics'
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {makeProfileLink} from '#/lib/routes/links'
 import {forceLTR} from '#/lib/strings/bidi'
 import {NON_BREAKING_SPACE} from '#/lib/strings/constants'
 import {sanitizeHandle} from '#/lib/strings/handles'
+import {countLines} from '#/lib/strings/helpers'
 import {
   POST_TOMBSTONE,
   type Shadow,
@@ -35,6 +37,7 @@ import {Link, WebOnlyInlineLinkText} from '#/components/Link'
 import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
+import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {PostMenuButton} from '#/components/PostControls/PostMenu'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
@@ -277,7 +280,8 @@ function ReplyContextPost({
 
 /**
  * A post's text and a compact preview of its embed, behind the usual
- * moderation hider. Images stand in for the text when there isn't any.
+ * moderation hider. Images stand in for the text when there isn't any. Long
+ * text is cut short with a "Show more" button, as in feeds.
  */
 export function PostBody({post}: {post: PostView}) {
   const moderationOpts = useModerationOpts()
@@ -288,10 +292,25 @@ export function PostBody({post}: {post: PostView}) {
     record && record.text.trim()
       ? new RichTextAPI({text: record.text, facets: record.facets})
       : undefined
+  /*
+   * The same rule as posts in feeds: text with `MAX_POST_LINES` or more line
+   * breaks stops at that many lines until the viewer asks for the rest. Only
+   * line breaks count, not wrapping.
+   */
+  const [limitLines, setLimitLines] = useState(
+    () => countLines(richText?.text) >= MAX_POST_LINES,
+  )
   const moderation = moderationOpts
     ? moderatePost(post, moderationOpts)
     : undefined
   const embedPreview = post.embed ? getEmbedPreviewKind(post.embed) : undefined
+
+  const onPressShowMore = (event: GestureResponderEvent) => {
+    // Keep the press from reaching the row, which on web would follow its link
+    event.preventDefault()
+    event.stopPropagation()
+    setLimitLines(false)
+  }
 
   return (
     <ContentHider
@@ -302,14 +321,21 @@ export function PostBody({post}: {post: PostView}) {
         <PostAlerts post={post} modui={moderation.ui('contentView')} />
       )}
       {richText && (
-        <RichText
-          enableTags
-          value={richText}
-          authorHandle={post.author.handle}
-          shouldProxyLinks
-          // No colour here: it would override the links' and mentions'
-          style={[a.text_md, a.leading_snug]}
-        />
+        // Keeps "Show more" right under the text, without the hider's gap
+        <View>
+          <RichText
+            enableTags
+            value={richText}
+            authorHandle={post.author.handle}
+            shouldProxyLinks
+            numberOfLines={limitLines ? MAX_POST_LINES : undefined}
+            // No colour here: it would override the links' and mentions'
+            style={[a.text_md, a.leading_snug]}
+          />
+          {limitLines && (
+            <ShowMoreTextButton style={[a.text_md]} onPress={onPressShowMore} />
+          )}
+        </View>
       )}
       {post.embed && embedPreview && (
         /*
