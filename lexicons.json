@@ -105,6 +105,7 @@
     "app.bsky.labeler.service",
     "app.bsky.notification.declaration",
     "app.bsky.notification.defs",
+    "app.bsky.notification.getGroupedNotifications",
     "app.bsky.notification.getPreferences",
     "app.bsky.notification.getUnreadCount",
     "app.bsky.notification.listActivitySubscriptions",
@@ -697,6 +698,10 @@
     "app.bsky.notification.defs": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.notification.defs",
       "cid": "bafyreifzktxnol5rafjoznauk5j7ub2gsxxm7qjskg3vqmcgn6krrsz55u"
+    },
+    "app.bsky.notification.getGroupedNotifications": {
+      "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.notification.getGroupedNotifications",
+      "cid": "bafyreihyv25gx7iysovm7k7nohyb4i5yiutkvtbyk6hzwhm5cnu3apim3m"
     },
     "app.bsky.notification.getPreferences": {
       "uri": "at://did:plc:4v4y5r3lwsbtmsxhile2ljac/com.atproto.lexicon.schema/app.bsky.notification.getPreferences",
