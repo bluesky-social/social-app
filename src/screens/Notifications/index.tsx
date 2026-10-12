@@ -449,40 +449,26 @@ function NotificationsHeader({
       pointerEvents="box-none"
       style={[a.fixed, a.z_10, a.top_0, a.left_0, a.right_0]}
       onLayout={event => onHeightChange(event.nativeEvent.layout.height)}>
+      {/* On web, the title and the pills each have their own background */}
       {IS_LIQUID_GLASS ? (
-        <LinearGradient
-          key={t.name}
-          pointerEvents="none"
-          style={[a.absolute, a.inset_0]}
-          start={[0.5, 0]}
-          end={[0.5, 1]}
-          colors={[
-            t.atoms.bg.backgroundColor,
-            utils.alpha(t.atoms.bg.backgroundColor, 0.8),
-            utils.alpha(t.atoms.bg.backgroundColor, 0),
-          ]}
-        />
+        <HeaderFade />
       ) : (
-        <View
-          pointerEvents="none"
-          style={[a.absolute, a.inset_0, t.atoms.bg]}
-        />
-      )}
-      {IS_WEB && gtMobile && (
-        <Layout.Center
-          pointerEvents="none"
-          style={[
-            a.absolute,
-            a.inset_0,
-            a.border_x,
-            t.atoms.border_contrast_low,
-            {maxWidth: Layout.CENTER_COLUMN_WIDTH + 2},
-          ]}
-        />
+        !IS_WEB && (
+          <View
+            pointerEvents="none"
+            style={[a.absolute, a.inset_0, t.atoms.bg]}
+          />
+        )
       )}
       <Animated.View
         style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
         onLayout={onTitleLayout}>
+        {IS_WEB && (
+          <View
+            pointerEvents="none"
+            style={[a.absolute, a.inset_0, t.atoms.bg]}
+          />
+        )}
         <Layout.Header.Outer noBottomBorder sticky={false}>
           <Layout.Header.MenuButton />
           <Layout.Header.Content>
@@ -510,8 +496,44 @@ function NotificationsHeader({
         </Layout.Header.Outer>
       </Animated.View>
       <Animated.View style={pillsStyle}>
+        {IS_WEB && <HeaderFade />}
         <Layout.Center>{children}</Layout.Center>
       </Animated.View>
+      {/* Last, so the backgrounds above don't cover it */}
+      {IS_WEB && gtMobile && (
+        <Layout.Center
+          pointerEvents="none"
+          style={[
+            a.absolute,
+            a.inset_0,
+            a.border_x,
+            t.atoms.border_contrast_low,
+            {maxWidth: Layout.CENTER_COLUMN_WIDTH + 2},
+          ]}
+        />
+      )}
     </View>
+  )
+}
+
+/**
+ * The header's background fading out to the bottom, so content scrolling
+ * under it shows through.
+ */
+function HeaderFade() {
+  const t = useTheme()
+  return (
+    <LinearGradient
+      key={t.name}
+      pointerEvents="none"
+      style={[a.absolute, a.inset_0]}
+      start={[0.5, 0]}
+      end={[0.5, 1]}
+      colors={[
+        t.atoms.bg.backgroundColor,
+        utils.alpha(t.atoms.bg.backgroundColor, 0.8),
+        utils.alpha(t.atoms.bg.backgroundColor, 0),
+      ]}
+    />
   )
 }
