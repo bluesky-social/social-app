@@ -1,6 +1,7 @@
 export * from './aggregate'
 export * from './Avatar'
 export * from './Expandable'
+export * from './group'
 export * from './media'
 export * from './post'
 export * from './profile'
