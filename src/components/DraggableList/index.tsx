@@ -288,10 +288,11 @@ function SortableItem<T>({
       const activeKey = state.get().activeKey
       if (activeKey !== itemKey) {
         /*
-         * On iOS, RNGH v3 can cancel the pan right after it activates (raising
-         * the item's zIndex remounts it), which resets the drag in onFinalize,
-         * and then keep delivering updates for it without activating again.
-         * Pick the drag back up, unless another item owns it.
+         * RNGH v3 can deliver updates for a pan whose drag we already reset
+         * in onFinalize, without activating it again. Seen with Maestro's
+         * synthetic swipes on the iOS simulator, possibly because raising the
+         * item's zIndex cancels the pan right after it activates. Pick the
+         * drag back up, unless another item owns it.
          */
         if (activeKey !== '' || !startDrag()) {
           return
