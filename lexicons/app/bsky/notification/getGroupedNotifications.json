@@ -30,12 +30,12 @@
               "type": "array",
               "items": {
                 "refs": [
-                  "app.bsky.actor.defs#profileViewDetailed",
+                  "app.bsky.actor.defs#profileViewBasic",
                   "app.bsky.feed.defs#blockedPost",
                   "app.bsky.feed.defs#generatorView",
                   "app.bsky.feed.defs#notFoundPost",
                   "app.bsky.feed.defs#postView",
-                  "app.bsky.graph.defs#starterPackView"
+                  "app.bsky.graph.defs#starterPackViewBasic"
                 ],
                 "type": "union"
               },
@@ -94,6 +94,9 @@
           "refs": [
             "#likeGroup",
             "#multiPostLikeGroup",
+            "#multiPostRepostGroup",
+            "#multiPostLikeViaRepostGroup",
+            "#multiPostRepostViaRepostGroup",
             "#repostGroup",
             "#likeViaRepostGroup",
             "#repostViaRepostGroup",
@@ -409,6 +412,19 @@
       },
       "description": "A post mentioning the requesting account."
     },
+    "multiPostRepostItem": {
+      "type": "object",
+      "required": [
+        "post"
+      ],
+      "properties": {
+        "post": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      },
+      "description": "One post which was reposted by the group's actor."
+    },
     "repostViaRepostItem": {
       "type": "object",
       "required": [
@@ -438,6 +454,28 @@
         }
       },
       "description": "Group of new posts by actors the requesting account subscribes to."
+    },
+    "multiPostRepostGroup": {
+      "type": "object",
+      "required": [
+        "actor",
+        "items"
+      ],
+      "properties": {
+        "actor": {
+          "type": "string",
+          "format": "did"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "ref": "#multiPostRepostItem",
+            "type": "ref"
+          },
+          "minLength": 2
+        }
+      },
+      "description": "Group of reposts by the same actor of different posts."
     },
     "repostViaRepostGroup": {
       "type": "object",
@@ -521,6 +559,86 @@
         }
       },
       "description": "A contact of the requesting account joined Bluesky."
+    },
+    "multiPostLikeViaRepostItem": {
+      "type": "object",
+      "required": [
+        "post",
+        "viaRepost"
+      ],
+      "properties": {
+        "post": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "viaRepost": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      },
+      "description": "One post which was liked by the group's actor via the requesting account's repost."
+    },
+    "multiPostLikeViaRepostGroup": {
+      "type": "object",
+      "required": [
+        "actor",
+        "items"
+      ],
+      "properties": {
+        "actor": {
+          "type": "string",
+          "format": "did"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "ref": "#multiPostLikeViaRepostItem",
+            "type": "ref"
+          },
+          "minLength": 2
+        }
+      },
+      "description": "Group of likes by the same actor on different posts via the requesting account's reposts."
+    },
+    "multiPostRepostViaRepostItem": {
+      "type": "object",
+      "required": [
+        "post",
+        "viaRepost"
+      ],
+      "properties": {
+        "post": {
+          "type": "string",
+          "format": "at-uri"
+        },
+        "viaRepost": {
+          "type": "string",
+          "format": "at-uri"
+        }
+      },
+      "description": "One post which was reposted by the group's actor via the requesting account's repost."
+    },
+    "multiPostRepostViaRepostGroup": {
+      "type": "object",
+      "required": [
+        "actor",
+        "items"
+      ],
+      "properties": {
+        "actor": {
+          "type": "string",
+          "format": "did"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "ref": "#multiPostRepostViaRepostItem",
+            "type": "ref"
+          },
+          "minLength": 2
+        }
+      },
+      "description": "Group of reposts by the same actor of different posts via the requesting account's reposts."
     },
     "starterPackJoinedNotification": {
       "type": "object",

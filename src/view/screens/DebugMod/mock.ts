@@ -231,16 +231,16 @@ export const mock = {
         new Date().toISOString() as app.bsky.feed.defs.GeneratorView['indexedAt'],
     }
   },
-  starterPackView({
+  starterPackViewBasic({
     creator,
     name,
   }: {
     creator: app.bsky.actor.defs.ProfileViewBasic
     name: string
-  }): app.bsky.graph.defs.StarterPackView {
+  }): app.bsky.graph.defs.StarterPackViewBasic {
     const createdAt = new Date().toISOString()
     return {
-      $type: 'app.bsky.graph.defs#starterPackView',
+      $type: 'app.bsky.graph.defs#starterPackViewBasic',
       uri: `at://${creator.did}/app.bsky.graph.starterpack/fake`,
       cid: FAKE_CID,
       creator,
@@ -250,7 +250,8 @@ export const mock = {
         list: `at://${creator.did}/app.bsky.graph.list/fake`,
         createdAt,
       },
-      indexedAt: createdAt as app.bsky.graph.defs.StarterPackView['indexedAt'],
+      indexedAt:
+        createdAt as app.bsky.graph.defs.StarterPackViewBasic['indexedAt'],
     }
   },
   label({

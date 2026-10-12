@@ -44,7 +44,7 @@ export type {
   ParentPost,
 } from '#/state/queries/notifications/grouped/types'
 
-type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
+type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 type PostView = app.bsky.feed.defs.PostView
 
 const PAGE_SIZE = 30

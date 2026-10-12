@@ -12,10 +12,10 @@ import * as bsky from '#/types/bsky'
 
 type OutputBody = app.bsky.notification.getGroupedNotifications.$OutputBody
 type Group = app.bsky.notification.getGroupedNotifications.Group
-type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
+type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 type PostView = app.bsky.feed.defs.PostView
 type GeneratorView = app.bsky.feed.defs.GeneratorView
-type StarterPackView = app.bsky.graph.defs.StarterPackView
+type StarterPackView = app.bsky.graph.defs.StarterPackViewBasic
 
 const defs = app.bsky.notification.getGroupedNotifications
 
@@ -80,7 +80,7 @@ function createContext(
     starterPacks: new Map(),
   }
   for (const view of relatedViews ?? []) {
-    if (bsky.isType(app.bsky.actor.defs.profileViewDetailed, view)) {
+    if (bsky.isType(app.bsky.actor.defs.profileViewBasic, view)) {
       ctx.profiles.set(view.did, view)
     } else if (bsky.isType(app.bsky.feed.defs.postView, view)) {
       ctx.posts.set(view.uri, {type: 'post', post: view})
@@ -90,7 +90,7 @@ function createContext(
       ctx.posts.set(view.uri, {type: 'notFound'})
     } else if (bsky.isType(app.bsky.feed.defs.generatorView, view)) {
       ctx.generators.set(view.uri, view)
-    } else if (bsky.isType(app.bsky.graph.defs.starterPackView, view)) {
+    } else if (bsky.isType(app.bsky.graph.defs.starterPackViewBasic, view)) {
       ctx.starterPacks.set(view.uri, view)
     }
   }

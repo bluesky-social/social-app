@@ -16,10 +16,10 @@ import {type app} from '#/lexicons'
 
 type OutputBody = app.bsky.notification.getGroupedNotifications.$OutputBody
 type Group = app.bsky.notification.getGroupedNotifications.Group
-type ProfileViewDetailed = app.bsky.actor.defs.ProfileViewDetailed
+type ProfileViewBasic = app.bsky.actor.defs.ProfileViewBasic
 type PostView = app.bsky.feed.defs.PostView
 type GeneratorView = app.bsky.feed.defs.GeneratorView
-type StarterPackView = app.bsky.graph.defs.StarterPackView
+type StarterPackViewBasic = app.bsky.graph.defs.StarterPackViewBasic
 type BlockedPost = app.bsky.feed.defs.BlockedPost
 type NotFoundPost = app.bsky.feed.defs.NotFoundPost
 
@@ -71,7 +71,6 @@ export function createGroupedNotificationsFixture(
     did: 'did:plc:danielleyuhan',
     handle: 'danielleyuhan.bsky.social',
     displayName: 'danielleyuhan',
-    description: 'Designer. Hiker. Collector of interesting rocks.',
     viewer: {
       following: followUri(VIEWER_DID, 'danielle'),
       followedBy: followUri('did:plc:danielleyuhan', 'tim'),
@@ -81,7 +80,6 @@ export function createGroupedNotificationsFixture(
     did: 'did:plc:michaelblack',
     handle: 'michaelblack.bsky.social',
     displayName: 'Michael Black',
-    description: 'Amateur mycologist and professional coffee drinker',
   })
   const darrin = profile({
     did: 'did:plc:darrin',
@@ -116,7 +114,6 @@ export function createGroupedNotificationsFixture(
     did: 'did:plc:marcus',
     handle: 'marcuswebb.com',
     displayName: 'Marcus Webb',
-    description: 'Writing about science, nature, and the spaces in between.',
   })
   const priya = profile({
     did: 'did:plc:priya',
@@ -138,7 +135,6 @@ export function createGroupedNotificationsFixture(
     did: 'did:plc:sofia',
     handle: 'sofia.bsky.social',
     displayName: 'Sofia Alvarez',
-    description: 'Science communicator 🔬 she/her',
     viewer: {followedBy: followUri('did:plc:sofia', 'tim'), knownFollowers},
   })
   const jonas = profile({
@@ -835,37 +831,30 @@ function profile({
   did,
   handle,
   displayName,
-  description,
   viewer = {},
 }: {
   did: DidString
   handle: HandleString
   displayName: string
-  description?: string
-  viewer?: ProfileViewDetailed['viewer']
-}): $Typed<ProfileViewDetailed> {
+  viewer?: ProfileViewBasic['viewer']
+}): $Typed<ProfileViewBasic> {
   return {
-    $type: 'app.bsky.actor.defs#profileViewDetailed',
+    $type: 'app.bsky.actor.defs#profileViewBasic',
     did,
     handle,
     displayName,
-    description,
     avatar: undefined,
     labels: [],
     viewer,
-    followersCount: 412,
-    followsCount: 287,
-    postsCount: 1093,
     createdAt: '2023-05-02T17:24:11.000Z',
-    indexedAt: '2023-05-02T17:24:11.000Z',
   }
 }
 
 /**
- * The basic view embedded in posts and packs. Left untyped so it also
- * satisfies `ProfileView`, which a generator's `creator` requires.
+ * A profile without its `$type`, as embedded in posts and packs. Left untyped
+ * so it also satisfies `ProfileView`, which a generator's `creator` requires.
  */
-function basic(profile: ProfileViewDetailed) {
+function basic(profile: ProfileViewBasic) {
   return {
     did: profile.did,
     handle: profile.handle,
@@ -891,7 +880,7 @@ function post({
   replyCount = 0,
   quoteCount = 0,
 }: {
-  author: ProfileViewDetailed
+  author: ProfileViewBasic
   rkey: string
   text: string
   indexedAt: DatetimeString
@@ -1005,16 +994,16 @@ function starterPack({
   joinedWeekCount,
   joinedAllTimeCount,
 }: {
-  creator: ProfileViewDetailed
+  creator: ProfileViewBasic
   rkey: string
   name: string
   description: string
   indexedAt: DatetimeString
   joinedWeekCount: number
   joinedAllTimeCount: number
-}): $Typed<StarterPackView> {
+}): $Typed<StarterPackViewBasic> {
   return {
-    $type: 'app.bsky.graph.defs#starterPackView',
+    $type: 'app.bsky.graph.defs#starterPackViewBasic',
     uri: `at://${creator.did}/app.bsky.graph.starterpack/${rkey}`,
     cid: cid(`pack-${rkey}`),
     creator: basic(creator),

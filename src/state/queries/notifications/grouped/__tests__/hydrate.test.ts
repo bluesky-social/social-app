@@ -109,7 +109,7 @@ function hydrateKind(kind: Kind): NotificationView | undefined {
 function related(res: OutputBody, key: string): unknown {
   const view = res.relatedViews?.find(v => {
     const candidate = v as {$type: string; did?: string; uri?: string}
-    return candidate.$type === 'app.bsky.actor.defs#profileViewDetailed'
+    return candidate.$type === 'app.bsky.actor.defs#profileViewBasic'
       ? candidate.did === key
       : candidate.uri === key
   })
@@ -546,7 +546,7 @@ describe('hydratePage', () => {
     it('removes the viewer even when their profile is in relatedViews', () => {
       const res = createGroupedNotificationsFixture(NOW)
       const viewer = {
-        $type: 'app.bsky.actor.defs#profileViewDetailed' as const,
+        $type: 'app.bsky.actor.defs#profileViewBasic' as const,
         did: VIEWER_DID,
         handle: 'tim.bsky.team' as const,
       }

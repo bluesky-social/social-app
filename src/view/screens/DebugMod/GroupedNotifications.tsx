@@ -15,7 +15,7 @@ import {P, Text} from '#/components/Typography'
 import {type app, type com} from '#/lexicons'
 import {mock} from './mock'
 
-type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
+type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 type PostView = app.bsky.feed.defs.PostView
 type Label = com.atproto.label.defs.Label
 
@@ -99,7 +99,7 @@ export function GroupedNotifications({
   }
 
   const notifications = createMockNotifications({
-    target: toProfileViewDetailed(profile),
+    target: profile,
     targetPost: post,
     viewer,
     groupPosition: groupPosition[0] as GroupPosition,
@@ -254,8 +254,8 @@ function createMockNotifications({
   ) => Label[] | undefined
 }): MockNotification[] {
   const indexedAt = new Date().toISOString()
-  const carolActor = toProfileViewDetailed(carol)
-  const daveActor = toProfileViewDetailed(dave)
+  const carolActor = carol
+  const daveActor = dave
   const group: NonEmptyArray<ProfileView> =
     groupPosition === 'first'
       ? [target, carolActor, daveActor]
@@ -348,7 +348,7 @@ function createMockNotifications({
     creator: viewer,
     displayName: 'Your custom feed',
   })
-  const starterPack = mock.starterPackView({
+  const starterPack = mock.starterPackViewBasic({
     creator: viewer,
     name: 'Your starter pack',
   })
@@ -548,12 +548,6 @@ function createMockNotifications({
       },
     },
   ]
-}
-
-function toProfileViewDetailed(
-  profile: app.bsky.actor.defs.ProfileViewBasic,
-): ProfileView {
-  return {...profile, $type: 'app.bsky.actor.defs#profileViewDetailed'}
 }
 
 function bystander(handle: string, displayName: string) {

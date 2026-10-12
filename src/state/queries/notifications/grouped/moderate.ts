@@ -13,7 +13,12 @@ import {
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
-type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
+/**
+ * Notification actors are basic views, but followers loaded with "Show more"
+ * come from `getProfiles`, which returns detailed ones.
+ */
+type ProfileView =
+  app.bsky.actor.defs.ProfileViewBasic | app.bsky.actor.defs.ProfileViewDetailed
 type PostView = app.bsky.feed.defs.PostView
 
 /**
