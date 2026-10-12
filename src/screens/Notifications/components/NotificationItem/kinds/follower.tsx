@@ -147,7 +147,10 @@ export function FollowerNotification({
         {secondLine}
       </Item.Content>
       <Item.Trailing>
-        <Item.FollowButton profile={profile} />
+        <Item.FollowButton
+          profile={profile}
+          logContext="NotificationFollowersTabRow"
+        />
       </Item.Trailing>
     </Item.Root>
   )
