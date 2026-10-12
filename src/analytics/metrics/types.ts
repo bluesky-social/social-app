@@ -6,6 +6,7 @@ import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
 import {type VideoCompressSkipReason} from '#/lib/media/video/types'
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -59,6 +60,25 @@ export type Events = {
   'notifications:bundleExpand': {
     notificationType: NotificationType
     authorCount: number
+  }
+  /**
+   * A tab of the Notifications screen came into view: the tab it's on when
+   * the screen gains focus, which includes mounting, and each tab the user
+   * switches to. A switch is logged once, as the pager settles on the new
+   * tab.
+   */
+  'notifications:tabDisplayed': {
+    tab: GroupedNotificationsFeed
+    /** The tab's position in the tab pills, from 0. */
+    index: number
+    /**
+     * - `focus`: the screen gained focus, or mounted, on the tab. Web mounts
+     *   the screen on every visit.
+     * - `tap`: the user pressed the tab's pill.
+     * - `swipe`: the user swiped the pager to the tab, which only native
+     *   does.
+     */
+    reason: 'focus' | 'tap' | 'swipe'
   }
   'state:background': {}
   'state:foreground': {}

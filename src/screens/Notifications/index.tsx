@@ -14,6 +14,7 @@ import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {
   type NativeStackScreenProps,
   type NotificationsTabNavigatorParams,
@@ -47,7 +48,7 @@ import {SettingsGear2_Stroke2_Corner0_Rounded as SettingsIcon} from '#/component
 import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
-import {useAnalytics} from '#/analytics'
+import {type Metrics, useAnalytics} from '#/analytics'
 import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
@@ -80,6 +81,7 @@ export function NewNotificationsScreen({}: Props) {
 
 function NewNotificationsScreenInner() {
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const headerMode = useHomeHeaderMode()
   const initialHeaderOffset = useHeaderOffset()
   const [headerOffset, setHeaderOffset] = useState(initialHeaderOffset)
@@ -148,13 +150,41 @@ function NewNotificationsScreenInner() {
     }, [showHeader]),
   )
 
+  const logTabDisplayed = (
+    page: number,
+    reason: Metrics['notifications:tabDisplayed']['reason'],
+  ) => {
+    ax.metric('notifications:tabDisplayed', {
+      tab: tabs[page].key,
+      index: page,
+      reason,
+    })
+  }
+  useFocusEffect(
+    useNonReactiveCallback(() => {
+      logTabDisplayed(
+        tabs.findIndex(tab => tab.key === activeFeed.current),
+        'focus',
+      )
+    }),
+  )
+  /**
+   * Pages a tab pill has asked the pager for, which it hasn't reported
+   * selecting yet. A tap and a swipe both end in `onPageSelected`, a tap once
+   * the pager has moved, which on iOS is after it animates, so this tells
+   * them apart. Pills pressed in quick succession can have several on the way.
+   */
+  const tappedPages = useRef(new Set<number>())
+
   return (
     <Pager.Root
       onPageSelected={page => {
         const feed = tabs[page].key
+        const isTap = tappedPages.current.delete(page)
         // Web reports the page it starts on, too
         if (feed === activeFeed.current) return
         activeFeed.current = feed
+        logTabDisplayed(page, isTap ? 'tap' : 'swipe')
         /*
          * Switching tabs only checks for anything new, which the "Refresh"
          * pill offers, so flicking between tabs neither reloads them nor
@@ -188,6 +218,8 @@ function NewNotificationsScreenInner() {
                   // Re-pressing the current tab scrolls it to the top
                   if (page === selectedPage) {
                     emitSoftReset()
+                  } else {
+                    tappedPages.current.add(page)
                   }
                   selectPage(page)
                 }}
