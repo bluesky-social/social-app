@@ -6,9 +6,7 @@ import {
   useSharedValue,
 } from 'react-native-reanimated'
 import {scheduleOnRN} from 'react-native-worklets'
-import {updateActiveVideoViewAsync} from '@bsky.app/video'
 
-import {useDedupe} from '#/lib/hooks/useDedupe'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {useScrollHandlers} from '#/lib/ScrollContext'
 import {addStyle} from '#/lib/styles'
@@ -63,7 +61,6 @@ let List = forwardRef<ListMethods, ListProps>(
   ): React.ReactElement => {
     const isScrolledDown = useSharedValue(false)
     const t = useTheme()
-    const dedupe = useDedupe(400)
     const scrollsToTop = useAllowScrollToTop()
 
     const handleScrolledDownChange = useNonReactiveCallback(
@@ -85,7 +82,6 @@ let List = forwardRef<ListMethods, ListProps>(
         onBeginDragFromContext?.(e, ctx)
       },
       onEndDrag(e, ctx) {
-        scheduleOnRN(updateActiveVideoViewAsync)
         onEndDragFromContext?.(e, ctx)
       },
       onScroll(e, ctx) {
@@ -98,15 +94,10 @@ let List = forwardRef<ListMethods, ListProps>(
             scheduleOnRN(handleScrolledDownChange, didScrollDown)
           }
         }
-
-        if (IS_IOS) {
-          scheduleOnRN(dedupe, updateActiveVideoViewAsync)
-        }
       },
       // Note: adding onMomentumBegin here makes simulator scroll
       // lag on Android. So either don't add it, or figure out why.
       onMomentumEnd(e, ctx) {
-        scheduleOnRN(updateActiveVideoViewAsync)
         onMomentumEndFromContext?.(e, ctx)
       },
     })

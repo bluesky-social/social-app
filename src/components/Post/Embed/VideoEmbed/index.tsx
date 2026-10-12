@@ -83,6 +83,30 @@ function InnerWrapper({embed, post}: Props) {
   const showSpinner = useThrottledValue(isActive && isLoading, 100)
 
   /*
+   * The native preload window keeps a prepared, paused player for
+   * near-viewport views, which fires loading and status events while
+   * the embed is still off-screen. Track those in refs and only commit
+   * to state while active, so preloading never re-renders this embed;
+   * activation reconciles to the latest values.
+   */
+  const statusRef = useRef<'playing' | 'paused' | 'pending'>('pending')
+  const isLoadingRef = useRef(false)
+  const isActiveRef = useRef(false)
+
+  const commitStatus = (s: 'playing' | 'paused' | 'pending') => {
+    statusRef.current = s
+    if (isActiveRef.current) {
+      setStatus(s)
+    }
+  }
+  const commitIsLoading = (loading: boolean) => {
+    isLoadingRef.current = loading
+    if (isActiveRef.current) {
+      setIsLoading(loading)
+    }
+  }
+
+  /*
    * Created lazily on first activation so videos that are never scrolled into
    * the active position cost nothing.
    */
@@ -95,34 +119,27 @@ function InnerWrapper({embed, post}: Props) {
     }
   }, [])
 
-  const showOverlay =
-    !isActive ||
-    isLoading ||
-    (status === 'paused' && !isActive) ||
-    status === 'pending'
-
-  if (!isActive && status !== 'pending') {
-    setStatus('pending')
-  }
+  const showOverlay = !isActive || isLoading || status === 'pending'
 
   return (
     <>
       <VideoEmbedInnerNative
         embed={embed}
         setStatus={s => {
-          setStatus(s)
+          commitStatus(s)
           if (s === 'playing') {
             telemetryRef.current?.playing()
           }
         }}
         setIsLoading={loading => {
-          setIsLoading(loading)
+          commitIsLoading(loading)
           if (!loading) {
             telemetryRef.current?.ready()
           }
         }}
         setIsActive={active => {
           setIsActive(active)
+          isActiveRef.current = active
           if (active) {
             if (!impressionTrackedRef.current) {
               impressionTrackedRef.current = true
@@ -139,9 +156,21 @@ function InnerWrapper({embed, post}: Props) {
                 presentation: embed.presentation === 'gif' ? 'gif' : 'video',
               })
             }
-            telemetryRef.current.activated()
+            // the native preload window keeps a prepared, paused player
+            // for near-viewport views, so activation may find it ready
+            telemetryRef.current.activated({
+              preloaded: !isLoadingRef.current,
+            })
+            // reconcile committed state with what happened while inactive
+            setStatus(statusRef.current)
+            setIsLoading(isLoadingRef.current)
           } else {
             telemetryRef.current?.deactivated()
+            // the native player pauses on deactivation; keep the committed
+            // status in sync so a re-activation renders from 'pending'
+            statusRef.current = 'pending'
+            setStatus('pending')
+            commitIsLoading(false)
           }
         }}
         onPlaybackStart={autoplay => {
@@ -183,7 +212,14 @@ function InnerWrapper({embed, post}: Props) {
           }),
         ]}
         cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
-      >
+        /*
+         * Video thumbnails are larger than the embed (e.g. 1826x1078), and
+         * expo-image downscales oversized images on the main thread when they
+         * load, which costs up to ~15ms per thumbnail and drops scroll frames.
+         * The decoded full-size image is usually in the memory cache anyway,
+         * so letting the GPU scale it costs little extra memory.
+         */
+        allowDownscaling={false}>
         {showOverlay &&
           (embed.presentation === 'gif' ? (
             <GifPresentationControls

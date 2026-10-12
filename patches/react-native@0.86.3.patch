@@ -217,10 +217,44 @@ index 60160efb163d91813fa2ca7ca758b51afcf261e1..fb646fe945ffe4aa4a386f80a1e42a90
  }
  
 diff --git a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6c4aea0bd 100644
+index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..2e089ec10142e8f93bf7841c832b0fa48f1d1eca 100644
 --- a/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/ScrollView/RCTScrollViewComponentView.mm
-@@ -396,7 +396,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
+@@ -107,6 +107,10 @@ @implementation RCTScrollViewComponentView {
+ 
+   CGPoint _contentOffsetWhenClipped;
+ 
++  // [Bluesky] Last time `scrollViewDidScroll:` pushed the content offset into
++  // Fabric state, used to throttle those commits during user scrolling.
++  NSTimeInterval _lastContentOffsetStateUpdateTime;
++
+   __weak UIView *_contentView;
+ 
+   CGRect _prevFirstVisibleFrame;
+@@ -292,7 +296,21 @@ - (void)mountingTransactionWillMount:(const facebook::react::MountingTransaction
+ - (void)mountingTransactionDidMount:(const MountingTransaction &)transaction
+                withSurfaceTelemetry:(const facebook::react::SurfaceTelemetry &)surfaceTelemetry
+ {
+-  [self _remountChildren];
++  // [Bluesky] `_remountChildren` walks every mounted descendant. Transactions
++  // that only update this scroll view (its content offset state, committed
++  // while scrolling) cannot change which children intersect the clip rect,
++  // and offset-driven clipping is already handled by `scrollViewDidScroll:`.
++  BOOL onlyUpdatesSelf = YES;
++  for (const auto &mutation : transaction.getMutations()) {
++    if (mutation.type != ShadowViewMutation::Update || mutation.newChildShadowView.tag != self.tag ||
++        mutation.oldChildShadowView.layoutMetrics != mutation.newChildShadowView.layoutMetrics) {
++      onlyUpdatesSelf = NO;
++      break;
++    }
++  }
++  if (!onlyUpdatesSelf) {
++    [self _remountChildren];
++  }
+   [self _adjustForMaintainVisibleContentPosition];
+ }
+ 
+@@ -396,7 +414,15 @@ - (void)updateProps:(const Props::Shared &)props oldProps:(const Props::Shared &
  
    MAP_SCROLL_VIEW_PROP(zoomScale);
  
@@ -237,7 +271,7 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
      _scrollView.contentInset = RCTUIEdgeInsetsFromEdgeInsets(newScrollViewProps.contentInset);
    }
  
-@@ -523,7 +531,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
+@@ -523,7 +549,7 @@ - (UIView *)betterHitTest:(CGPoint)point withEvent:(UIEvent *)event
      }
    }
  
@@ -246,7 +280,47 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  }
  
  /*
-@@ -1133,6 +1141,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
+@@ -738,9 +764,22 @@ - (void)scrollViewDidScroll:(UIScrollView *)scrollView
+ {
+   auto scrollMetrics = [self _scrollViewMetrics];
+ 
+-  [self _updateStateWithContentOffset];
+-
+   NSTimeInterval now = CACurrentMediaTime();
++
++  // [Bluesky] Every content offset state update is a full commit on the JS
++  // thread (including a Yoga layout pass) followed by a mount transaction on
++  // the main thread. Doing that on every frame of a user scroll costs both
++  // threads for no visible benefit, so throttle it while the user drives the
++  // scroll. Dragging always ends in `scrollViewDidEndDragging:` and momentum
++  // in `scrollViewDidEndDecelerating:`, both of which push the final offset,
++  // so the state still ends up exact. Programmatic scrolls are unchanged.
++  static const NSTimeInterval kUserScrollStateUpdateInterval = 0.1;
++  BOOL isUserScrolling = scrollView.isTracking || scrollView.isDragging || scrollView.isDecelerating;
++  if (!isUserScrolling || now - _lastContentOffsetStateUpdateTime >= kUserScrollStateUpdateInterval) {
++    _lastContentOffsetStateUpdateTime = now;
++    [self _updateStateWithContentOffset];
++  }
++
+   if ((_lastScrollEventDispatchTime == 0) || (now - _lastScrollEventDispatchTime > _scrollEventThrottle)) {
+     _lastScrollEventDispatchTime = now;
+     if (_eventEmitter) {
+@@ -994,6 +1033,14 @@ - (void)_remountChildren
+     return;
+   }
+ 
++  // [Bluesky] The clipping walk visits every mounted descendant to find views
++  // with `removeClippedSubviews`. Without pruning by an opted-in content
++  // container it is pure overhead, so only walk when this scroll view (and
++  // hence its content container) opted in.
++  if (!static_cast<const ScrollViewProps &>(*_props).removeClippedSubviews) {
++    return;
++  }
++
+   [_scrollView updateClippedSubviewsWithClipRect:CGRectInset(_scrollView.bounds, -kClippingLeeway, -kClippingLeeway)
+                                   relativeToView:_scrollView];
+ }
+@@ -1133,6 +1180,11 @@ - (RCTVirtualViewContainerState *)virtualViewContainerState
    return _virtualViewContainerState;
  }
  
@@ -259,7 +333,7 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index c0e56acd2a0f1015f5a4581909e9209a56c46166..06184e0a095decd1559f8888d1d67d62eda00df2 100644
+index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d446715b8 100644
 --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 @@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
