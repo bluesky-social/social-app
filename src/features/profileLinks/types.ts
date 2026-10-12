@@ -9,6 +9,11 @@ export type ProfileLink = {
    * Support links don't need one; they use bundled logos.
    */
   icon?: BlobRef
+  /** The icon's image URL, as returned in profile views. */
+  iconUrl?: string
+  /** The `app.bsky.actor.link` record, once the link has been saved. */
+  uri?: string
+  cid?: string
 }
 
 export const MAX_PROFILE_LINKS = 10

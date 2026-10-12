@@ -29,11 +29,11 @@ import {type app} from '#/lexicons'
 import {logProfileLinkChanges} from '../metrics'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
 import {getLinkHost, getSupportProvider} from '../providers'
-import {type ProfileLinksData} from '../record'
-import {buildProfileRow, GERM_KEY, removeLinkAt} from '../row'
+import {linksFromProfileView, profileLinkViews} from '../record'
+import {buildProfileRow, GERM_KEY} from '../row'
 import {
+  useOwnProfileLinksQuery,
   useProfileLinksEnabled,
-  useProfileLinksQuery,
   useSaveProfileLinksMutation,
 } from '../state'
 import {type ProfileLink} from '../types'
@@ -50,12 +50,11 @@ const MORE_PILL_GUESS = 48
 const EASE_OUT = Easing.out(Easing.cubic)
 
 /**
- * The row of link pills under the bio, with the Germ DM button slotted in at
- * the owner's chosen position. Only shown to users in the beta, and hidden
+ * The row of link pills under the bio, followed by the Germ DM button. Hidden
  * whenever moderation hides the bio.
  *
- * Visitors get the leaving-Bluesky notice before a link opens. The owner taps
- * a link to edit it.
+ * Visitors open a link with a tap and see where it goes on hover or long
+ * press. The owner taps a link to edit it.
  */
 export function ProfileHeaderLinks({
   profile,
@@ -70,12 +69,20 @@ export function ProfileHeaderLinks({
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const enabled = useProfileLinksEnabled()
-  const {data} = useProfileLinksQuery(profile.did, {
-    enabled: enabled && !hidden,
-  })
-  const links = enabled && !hidden ? (data?.links ?? []) : []
-  const germIndex = data?.germIndex ?? 0
   const isOwnProfile = currentAccount?.did === profile.did
+  /*
+   * The owner's row comes from their repo: it reflects a save before the
+   * AppView catches up, and editing needs the stored icon blobs.
+   */
+  const {data: ownLinks} = useOwnProfileLinksQuery(profile.did, {
+    enabled: enabled && !hidden && isOwnProfile,
+  })
+  const links =
+    !enabled || hidden
+      ? []
+      : isOwnProfile
+        ? (ownLinks ?? [])
+        : linksFromProfileView(profileLinkViews(profile))
   const supportLinkCount = links.filter(link =>
     getSupportProvider(link.url),
   ).length
@@ -99,7 +106,6 @@ export function ProfileHeaderLinks({
     <ProfileLinksRow
       profile={profile}
       links={links}
-      germIndex={germIndex}
       germButton={germButton}
       isOwnProfile={isOwnProfile}
     />
@@ -109,13 +115,11 @@ export function ProfileHeaderLinks({
 function ProfileLinksRow({
   profile,
   links,
-  germIndex,
   germButton,
   isOwnProfile,
 }: {
   profile: app.bsky.actor.defs.ProfileViewDetailed
   links: ProfileLink[]
-  germIndex: number
   germButton?: React.ReactElement
   isOwnProfile: boolean
 }) {
@@ -157,10 +161,10 @@ function ProfileLinksRow({
     previewControl.open()
   }
 
-  const saveLinks = async (next: ProfileLinksData) => {
+  const saveLinks = async (next: ProfileLink[]) => {
     try {
-      await save(profile, next)
-      logProfileLinkChanges(ax, links, next.links)
+      await save(profile, next, links)
+      logProfileLinkChanges(ax, links, next)
     } catch (e) {
       if (!isNetworkError(e)) {
         logger.error('Failed to save profile links', {safeMessage: e})
@@ -171,7 +175,7 @@ function ProfileLinksRow({
     }
   }
 
-  const items = buildProfileRow(links, !!germButton, germIndex).map(item => {
+  const items = buildProfileRow(links, !!germButton).map(item => {
     if (item.type === 'germ') {
       return {key: GERM_KEY, node: germButton}
     }
@@ -241,16 +245,13 @@ function ProfileLinksRow({
             .map(link => link.url)}
           onSave={saved => {
             if (editingIndex === null) return
-            void saveLinks({
-              links: links.map((link, i) =>
-                i === editingIndex ? saved : link,
-              ),
-              germIndex,
-            })
+            void saveLinks(
+              links.map((link, i) => (i === editingIndex ? saved : link)),
+            )
           }}
           onRemove={() => {
             if (editingIndex === null) return
-            void saveLinks(removeLinkAt(links, germIndex, editingIndex))
+            void saveLinks(links.filter((_, i) => i !== editingIndex))
           }}
         />
       ) : (

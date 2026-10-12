@@ -1,5 +1,4 @@
 import {type AccessibilityActionEvent} from 'react-native'
-import {getBlobCidString} from '@atproto/lex'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {useTheme} from '#/alf'
@@ -16,7 +15,7 @@ import {
 import {getLinkHost, getSupportProvider} from '../providers'
 import {type ProfileLink} from '../types'
 import {DragHandle} from './DragHandle'
-import {ButtonFavicon} from './LinkFavicon'
+import {ButtonFavicon, linkFaviconUrl} from './LinkFavicon'
 import {linkIcon} from './ProviderLogo'
 
 export type PillA11yActions = {
@@ -47,7 +46,7 @@ export function ProfileLinkPill({
   did,
 }: {
   link: ProfileLink
-  /** The profile owner, whose repo holds the link's stored icon. */
+  /** The profile owner, whose repo holds the link's stored icon. Needed for links without an `iconUrl`. */
   did?: string
   onPress?: () => void
   onLongPress?: () => void
@@ -67,6 +66,7 @@ export function ProfileLinkPill({
   const palette = useSupportPalette()
   const provider = getSupportProvider(link.url)
   const color = provider ? palette.fg : t.atoms.text.color
+  const faviconUrl = provider ? undefined : linkFaviconUrl(link, did)
 
   const trailing = handle ? (
     <DragHandle onGreen={!!provider} />
@@ -97,12 +97,8 @@ export function ProfileLinkPill({
         provider && {backgroundColor: palette.bg},
       ]}
       hoverStyle={provider ? {backgroundColor: palette.bgHover} : undefined}>
-      {!provider && link.icon && did ? (
-        <ButtonFavicon
-          key={getBlobCidString(link.icon)}
-          did={did}
-          icon={link.icon}
-        />
+      {faviconUrl ? (
+        <ButtonFavicon key={faviconUrl} uri={faviconUrl} />
       ) : (
         <ButtonIcon icon={linkIcon(provider)} />
       )}

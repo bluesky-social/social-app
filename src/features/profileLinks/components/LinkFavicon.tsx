@@ -1,18 +1,25 @@
 import {useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {type BlobRef, getBlobCidString} from '@atproto/lex'
+import {getBlobCidString} from '@atproto/lex'
 
 import {atoms as a} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
 import {Globe_Stroke2_Corner0_Rounded as GlobeIcon} from '#/components/icons/Globe'
+import {type ProfileLink} from '../types'
 
 /**
- * The image CDN serves any blob in the owner's repo, so a stored icon loads
- * like an avatar. PNG keeps the transparency most favicons rely on.
+ * Where a link's favicon loads from. Profile views give the URL; links read
+ * from the owner's repo only have the blob, which the image CDN serves like an
+ * avatar. PNG keeps the transparency most favicons rely on.
  */
-export function linkFaviconUrl(did: string, icon: BlobRef) {
-  return `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${getBlobCidString(icon)}@png`
+export function linkFaviconUrl(
+  link: ProfileLink,
+  did: string | undefined,
+): string | undefined {
+  if (link.iconUrl) return link.iconUrl
+  if (!link.icon || !did) return undefined
+  return `https://cdn.bsky.app/img/avatar_thumbnail/plain/${did}/${getBlobCidString(link.icon)}@png`
 }
 
 /**
@@ -20,14 +27,12 @@ export function linkFaviconUrl(did: string, icon: BlobRef) {
  * example after the blob is taken down.
  */
 export function LinkFavicon({
-  did,
-  icon,
+  uri,
   size,
   fallback,
   style,
 }: {
-  did: string
-  icon: BlobRef
+  uri: string
   size: number
   fallback: React.ReactNode
   style?: StyleProp<ViewStyle>
@@ -37,7 +42,7 @@ export function LinkFavicon({
   return (
     <View style={[a.align_center, a.justify_center, style]}>
       <Image
-        source={{uri: linkFaviconUrl(did, icon)}}
+        source={{uri}}
         style={{width: size, height: size, borderRadius: size / 6}}
         accessibilityIgnoresInvertColors
         onError={() => setFailed(true)}
@@ -47,11 +52,10 @@ export function LinkFavicon({
 }
 
 /** Fills the slot a `ButtonIcon` would, so favicon and logo pills line up. */
-export function ButtonFavicon({did, icon}: {did: string; icon: BlobRef}) {
+export function ButtonFavicon({uri}: {uri: string}) {
   return (
     <LinkFavicon
-      did={did}
-      icon={icon}
+      uri={uri}
       size={16}
       fallback={<ButtonIcon icon={GlobeIcon} />}
       // ButtonIcon's slot for small buttons

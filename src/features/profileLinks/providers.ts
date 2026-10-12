@@ -123,7 +123,7 @@ export function normalizeProfileLinkUrl(input: string): string | null {
 
 /**
  * Sites that can't be added as profile links. Adult-content platforms are
- * excluded from the beta; T&S owns the full list.
+ * excluded for now; T&S owns the full list.
  */
 export const BLOCKED_DOMAINS = ['onlyfans.com', 'fansly.com']
 

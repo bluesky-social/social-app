@@ -1,5 +1,10 @@
-import {type BlobRef} from '@atproto/lex'
-import {type DidString} from '@atproto/syntax'
+import {type BlobRef, getBlobCidString, type l} from '@atproto/lex'
+import {
+  AtUri,
+  type DidString,
+  toDatetimeString,
+  type UriString,
+} from '@atproto/syntax'
 import {useQuery, useQueryClient} from '@tanstack/react-query'
 
 import {uploadBlob} from '#/lib/api'
@@ -10,85 +15,190 @@ import {logger} from '#/logger'
 import {STALE} from '#/state/queries'
 import {useProfileUpdateMutation} from '#/state/queries/profile'
 import {createQueryKey} from '#/state/queries/util'
-import {useAppviewClient, usePdsClient} from '#/state/session'
+import {usePdsClient} from '#/state/session'
 import {useAnalytics} from '#/analytics'
-import {type app, com} from '#/lexicons'
-import {
-  parseProfileRecordLinks,
-  type ProfileLinksData,
-  withProfileRecordLinks,
-} from './record'
+import {app} from '#/lexicons'
+import {linksFromRecords, profileLinkViews} from './record'
+import {type ProfileLink} from './types'
 
 /**
- * Profile links are in the beta program, behind a GrowthBook flag targeted at
- * beta users. Always on in local development.
+ * Profile links roll out behind a GrowthBook flag. Always on in local
+ * development.
  */
 export function useProfileLinksEnabled() {
   const ax = useAnalytics()
   return __DEV__ || ax.features.enabled(ax.features.ProfileLinksEnable)
 }
 
-const profileLinksQueryKeyRoot = 'profileLinks'
-export const profileLinksQueryKey = (did: string) =>
-  createQueryKey(profileLinksQueryKeyRoot, {did})
+type StrongRef = {uri: l.AtUriString; cid: l.CidString}
+
+const ownProfileLinksQueryKeyRoot = 'ownProfileLinks'
+const ownProfileLinksQueryKey = (did: string) =>
+  createQueryKey(ownProfileLinksQueryKeyRoot, {did})
 
 /**
- * Reads links from the raw profile record. During the beta they are
- * unofficial `betaLinks` fields, so the AppView's profile views don't include them
- * and we fetch the record itself.
+ * The owner's links read from their own repo, for editing. Profile views only
+ * carry icon URLs, and saving a link back needs its icon blob.
  */
-export function useProfileLinksQuery(did: DidString, {enabled = true} = {}) {
-  const client = useAppviewClient()
+export function useOwnProfileLinksQuery(did: DidString, {enabled = true} = {}) {
+  const pdsClient = usePdsClient()
   return useQuery({
-    queryKey: profileLinksQueryKey(did),
+    queryKey: ownProfileLinksQueryKey(did),
     enabled,
     staleTime: STALE.MINUTES.ONE,
-    queryFn: async (): Promise<ProfileLinksData> => {
+    queryFn: async (): Promise<ProfileLink[]> => {
+      let refs: StrongRef[] | undefined
       try {
-        const res = await client.call(com.atproto.repo.getRecord, {
-          repo: did,
-          collection: 'app.bsky.actor.profile',
-          rkey: 'self',
-        })
-        return parseProfileRecordLinks(res.value)
+        const res = await pdsClient.get(app.bsky.actor.profile, {repo: did})
+        refs = res.value.links
       } catch (e) {
-        if (isRecordNotFoundError(e)) {
-          return {links: [], germIndex: 0}
-        }
+        if (isRecordNotFoundError(e)) return []
         throw e
       }
+      const records = await Promise.all(
+        (refs ?? []).map(async ref => {
+          try {
+            const res = await pdsClient.get(app.bsky.actor.link, {
+              repo: did,
+              rkey: new AtUri(ref.uri).rkey,
+            })
+            return {uri: res.uri, cid: res.cid as string, value: res.value}
+          } catch (e) {
+            // the profile can point at a record that was since deleted
+            if (isRecordNotFoundError(e)) return undefined
+            throw e
+          }
+        }),
+      )
+      return linksFromRecords(
+        refs,
+        records.filter(record => record !== undefined),
+      )
     },
   })
 }
 
+function sameIcon(a: BlobRef | undefined, b: BlobRef | undefined) {
+  return (a && getBlobCidString(a)) === (b && getBlobCidString(b))
+}
+
 /**
- * Updates cached links after a save, since the AppView can take a moment to
- * serve the new record.
+ * Writes link records so they match `links`: unchanged links keep their
+ * record, edited ones are rewritten in place, and new ones are created.
+ * Resolves to refs for the profile's `links` field, plus a cleanup that
+ * deletes the records of removed links. Run the cleanup after the profile
+ * stops pointing at them.
  */
-export function useSetProfileLinksCache() {
-  const queryClient = useQueryClient()
-  return (did: string, data: ProfileLinksData) => {
-    queryClient.setQueryData(profileLinksQueryKey(did), data)
+export function useWriteProfileLinks() {
+  const pdsClient = usePdsClient()
+  return async (
+    did: DidString,
+    links: ProfileLink[],
+    existing: ProfileLink[],
+  ): Promise<{refs: StrongRef[]; deleteRemoved: () => Promise<void>}> => {
+    const existingByUri = new Map(
+      existing.flatMap(link => (link.uri ? [[link.uri, link]] : [])),
+    )
+    const refs = await Promise.all(
+      links.map(async (link): Promise<StrongRef> => {
+        const before = link.uri ? existingByUri.get(link.uri) : undefined
+        if (
+          before?.uri &&
+          before.cid &&
+          before.url === link.url &&
+          before.title === link.title &&
+          sameIcon(before.icon, link.icon)
+        ) {
+          return {
+            uri: before.uri as l.AtUriString,
+            cid: before.cid,
+          }
+        }
+        const record = {
+          url: link.url as UriString,
+          title: link.title,
+          icon: link.icon,
+          createdAt: toDatetimeString(new Date()),
+        }
+        const res = before?.uri
+          ? await pdsClient.put(app.bsky.actor.link, record, {
+              repo: did,
+              rkey: new AtUri(before.uri).rkey,
+            })
+          : await pdsClient.create(app.bsky.actor.link, record, {repo: did})
+        return {uri: res.uri, cid: res.cid}
+      }),
+    )
+    const kept = new Set(refs.map(ref => ref.uri as string))
+    const removed = existing.filter(link => link.uri && !kept.has(link.uri))
+    /*
+     * A record left behind isn't shown, since the profile no longer points at
+     * it, so a failed delete doesn't fail the save.
+     */
+    const deleteRemoved = async () => {
+      try {
+        await Promise.all(
+          removed.map(link =>
+            pdsClient.delete(app.bsky.actor.link, {
+              repo: did,
+              rkey: new AtUri(link.uri!).rkey,
+            }),
+          ),
+        )
+      } catch (e) {
+        if (!isNetworkError(e)) {
+          logger.error('Failed to delete profile link records', {
+            safeMessage: e,
+          })
+        }
+      }
+    }
+    return {refs, deleteRemoved}
   }
 }
 
 /**
- * Saves the owner's links straight to their profile record, for edits made
- * outside Edit Profile (tapping a link on your own profile).
+ * Keeps the owner's editor in step after a save, so reopening it doesn't show
+ * the old links while the query refetches.
+ */
+export function useSetOwnProfileLinksCache() {
+  const queryClient = useQueryClient()
+  return (did: string, links: ProfileLink[], refs: StrongRef[]) => {
+    queryClient.setQueryData<ProfileLink[]>(
+      ownProfileLinksQueryKey(did),
+      links.map((link, i) => ({...link, uri: refs[i].uri, cid: refs[i].cid})),
+    )
+  }
+}
+
+/**
+ * Saves the owner's links, for edits made outside Edit Profile (tapping a link
+ * on your own profile).
  */
 export function useSaveProfileLinksMutation() {
   const {mutateAsync: updateProfile, isPending} = useProfileUpdateMutation()
-  const setProfileLinksCache = useSetProfileLinksCache()
+  const writeProfileLinks = useWriteProfileLinks()
+  const setOwnProfileLinksCache = useSetOwnProfileLinksCache()
   const save = async (
     profile: app.bsky.actor.defs.ProfileViewDetailed,
-    data: ProfileLinksData,
+    links: ProfileLink[],
+    existing: ProfileLink[],
   ) => {
+    const {refs, deleteRemoved} = await writeProfileLinks(
+      profile.did,
+      links,
+      existing,
+    )
     await updateProfile({
       profile,
-      updates: existing => existing,
-      updateRecord: record => withProfileRecordLinks(record, data),
+      updates: record => ({...record, links: refs.length ? refs : undefined}),
+      checkCommitted: fresh =>
+        (fresh ? (profileLinkViews(fresh) ?? []) : [])
+          .map(link => link.cid)
+          .join() === refs.map(ref => ref.cid).join(),
     })
-    setProfileLinksCache(profile.did, data)
+    setOwnProfileLinksCache(profile.did, links, refs)
+    await deleteRemoved()
   }
   return {save, isPending}
 }

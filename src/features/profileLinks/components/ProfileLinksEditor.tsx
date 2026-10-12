@@ -8,11 +8,8 @@ import {useDialogControl} from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {PlusSmall_Stroke2_Corner0_Rounded as PlusIcon} from '#/components/icons/Plus'
 import {PILL_LEFT, PILL_RIGHT_TEXT, PILL_VERTICAL} from '../pillSize'
-import {type ProfileLinksData} from '../record'
-import {applyRowOrder, buildProfileRow, GERM_KEY, removeLinkAt} from '../row'
+import {buildProfileRow, reorderLinks} from '../row'
 import {MAX_PROFILE_LINKS, type ProfileLink} from '../types'
-import {DragHandle} from './DragHandle'
-import {GermPill} from './GermPill'
 import {LinkFormDialog} from './LinkFormDialog'
 import {linkLabel, type PillA11yActions, ProfileLinkPill} from './LinkPill'
 import {type SortableItem, SortablePills} from './SortablePills'
@@ -25,21 +22,13 @@ import {type SortableItem, SortablePills} from './SortablePills'
 export function ProfileLinksEditor({
   did,
   links,
-  germIndex,
-  germButton,
   onChange,
   onDragStateChange,
 }: {
   /** The owner, whose repo holds the links' stored icons. */
   did: string
   links: ProfileLink[]
-  germIndex: number
-  /**
-   * The owner's Germ DM button with a drag grip, when the account has one. It
-   * sits in the row and reorders with the links.
-   */
-  germButton?: React.ReactElement
-  onChange: (data: ProfileLinksData) => void
+  onChange: (links: ProfileLink[]) => void
   onDragStateChange?: (dragging: boolean) => void
 }) {
   const {t: l} = useLingui()
@@ -47,7 +36,7 @@ export function ProfileLinksEditor({
   const [editingIndex, setEditingIndex] = useState<number | null>(null)
   const editing = editingIndex === null ? null : links[editingIndex]
 
-  const row = buildProfileRow(links, !!germButton, germIndex)
+  const row = buildProfileRow(links, false)
   const rowKeys = row.map(item => item.key)
 
   const openForm = (index: number | null) => {
@@ -62,7 +51,7 @@ export function ProfileLinksEditor({
     const next = [...rowKeys]
     next.splice(from, 1)
     next.splice(to, 0, key)
-    onChange(applyRowOrder(next, links, germIndex))
+    onChange(reorderLinks(next, links))
   }
 
   const a11yActionsFor = (key: string): PillA11yActions => ({
@@ -76,15 +65,8 @@ export function ProfileLinksEditor({
     },
   })
 
-  const items: SortableItem[] = row.map(item => {
-    if (item.type === 'germ') {
-      return {
-        key: GERM_KEY,
-        label: l`Germ DM`,
-        node: germButton,
-        ghost: <GermPill trailing={<DragHandle />} />,
-      }
-    }
+  const items: SortableItem[] = row.flatMap(item => {
+    if (item.type !== 'link') return []
     const index = links.indexOf(item.link)
     return {
       key: item.key,
@@ -111,7 +93,7 @@ export function ProfileLinksEditor({
       </TextField.LabelText>
       <SortablePills
         items={items}
-        onReorder={keys => onChange(applyRowOrder(keys, links, germIndex))}
+        onReorder={keys => onChange(reorderLinks(keys, links))}
         onDragStateChange={onDragStateChange}
         trailing={
           links.length < MAX_PROFILE_LINKS ? (
@@ -126,18 +108,16 @@ export function ProfileLinksEditor({
           .filter((_, i) => i !== editingIndex)
           .map(link => link.url)}
         onSave={saved =>
-          onChange({
-            links:
-              editingIndex === null
-                ? [...links, saved]
-                : links.map((link, i) => (i === editingIndex ? saved : link)),
-            germIndex,
-          })
+          onChange(
+            editingIndex === null
+              ? [...links, saved]
+              : links.map((link, i) => (i === editingIndex ? saved : link)),
+          )
         }
         onRemove={
           editingIndex === null
             ? undefined
-            : () => onChange(removeLinkAt(links, germIndex, editingIndex))
+            : () => onChange(links.filter((_, i) => i !== editingIndex))
         }
       />
     </View>

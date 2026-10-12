@@ -4,10 +4,12 @@ jest.unmock('multiformats/cid')
 import {parseCid} from '@atproto/lex'
 import {describe, expect, it, jest} from '@jest/globals'
 
+import {type app} from '#/lexicons'
 import {
-  parseProfileRecordLinks,
+  linksFromProfileView,
+  linksFromRecords,
+  sameProfileLinks,
   truncateTitle,
-  withProfileRecordLinks,
 } from './record'
 
 const icon = {
@@ -17,84 +19,142 @@ const icon = {
   size: 1024,
 }
 
-describe('parseProfileRecordLinks', () => {
-  it('reads links and the Germ position', () => {
+const DID = 'did:plc:kat'
+const uri = (rkey: string) => `at://${DID}/app.bsky.actor.link/${rkey}`
+
+function view(
+  rkey: string,
+  url: string,
+  extra: Partial<app.bsky.actor.defs.ProfileLinkView> = {},
+) {
+  return {
+    uri: uri(rkey),
+    cid: `cid-${rkey}`,
+    url,
+    ...extra,
+  } as app.bsky.actor.defs.ProfileLinkView
+}
+
+describe('linksFromProfileView', () => {
+  it('reads links in order, with titles and icon URLs', () => {
     expect(
-      parseProfileRecordLinks({
-        displayName: 'Kat',
-        betaLinks: [
-          {uri: 'https://ko-fi.com/kat', title: 'Tip jar'},
-          {uri: 'https://example.com'},
-        ],
-        betaLinksGermIndex: 1,
-      }),
-    ).toEqual({
-      links: [
-        {url: 'https://ko-fi.com/kat', title: 'Tip jar'},
-        {url: 'https://example.com'},
-      ],
-      germIndex: 1,
-    })
-  })
-
-  it('returns nothing for records without links', () => {
-    expect(parseProfileRecordLinks({displayName: 'Kat'})).toEqual({
-      links: [],
-      germIndex: 0,
-    })
-    expect(parseProfileRecordLinks(undefined)).toEqual({
-      links: [],
-      germIndex: 0,
-    })
-  })
-
-  it('skips entries that are not usable links', () => {
-    const {links} = parseProfileRecordLinks({
-      betaLinks: [
-        'not an object',
-        {uri: 42},
-        {uri: 'javascript:alert(1)'},
-        {uri: 'https://onlyfans.com/kat'},
-        {uri: 'https://bit.ly/kat'},
-        {uri: 'http://insecure.example'},
-        {uri: 'https://example.com'},
-        {uri: 'https://example.com/'},
-        {uri: 'ok.example'},
-      ],
-    })
-    expect(links).toEqual([
-      {url: 'https://example.com'},
-      {url: 'https://ok.example/'},
+      linksFromProfileView([
+        view('a', 'https://ko-fi.com/kat', {title: 'Tip jar'}),
+        view('b', 'https://example.com', {
+          icon: 'https://cdn.example/icon.png',
+        }),
+      ]),
+    ).toEqual([
+      {
+        url: 'https://ko-fi.com/kat',
+        title: 'Tip jar',
+        uri: uri('a'),
+        cid: 'cid-a',
+      },
+      {
+        url: 'https://example.com',
+        iconUrl: 'https://cdn.example/icon.png',
+        uri: uri('b'),
+        cid: 'cid-b',
+      },
     ])
+  })
+
+  it('returns nothing for profiles without links', () => {
+    expect(linksFromProfileView(undefined)).toEqual([])
+  })
+
+  it('skips links the app does not allow', () => {
+    const links = linksFromProfileView([
+      view('a', 'javascript:alert(1)'),
+      view('b', 'https://onlyfans.com/kat'),
+      view('c', 'https://bit.ly/kat'),
+      view('d', 'http://insecure.example'),
+      view('e', 'https://example.com'),
+      view('f', 'https://example.com/'),
+    ])
+    expect(links.map(link => link.url)).toEqual(['https://example.com'])
   })
 
   it('caps the number of links', () => {
-    const {links} = parseProfileRecordLinks({
-      betaLinks: Array.from({length: 15}, (_, i) => ({
-        uri: `https://example.com/${i}`,
-      })),
-    })
-    expect(links).toHaveLength(10)
+    const views = Array.from({length: 15}, (_, i) =>
+      view(String(i), `https://example.com/${i}`),
+    )
+    expect(linksFromProfileView(views)).toHaveLength(10)
   })
 
-  it('reads stored icons, skipping ones that are not images', () => {
-    const {links} = parseProfileRecordLinks({
-      betaLinks: [
-        {uri: 'https://a.example', icon},
-        {uri: 'https://b.example', icon: {...icon, mimeType: 'text/html'}},
-        {uri: 'https://c.example', icon: 'not a blob'},
-      ],
-    })
-    expect(links).toEqual([
-      {url: 'https://a.example', icon},
-      {url: 'https://b.example'},
-      {url: 'https://c.example'},
+  it('truncates long titles and drops blank ones', () => {
+    const [long, blank] = linksFromProfileView([
+      view('a', 'https://a.example', {title: 'x'.repeat(40)}),
+      view('b', 'https://b.example', {title: '   '}),
+    ])
+    expect(long.title).toBe('x'.repeat(30))
+    expect(blank.title).toBeUndefined()
+  })
+})
+
+describe('linksFromRecords', () => {
+  const record = (
+    rkey: string,
+    url: string,
+    extra: Partial<app.bsky.actor.link.Main> = {},
+  ) => ({
+    uri: uri(rkey),
+    cid: `cid-${rkey}`,
+    value: {
+      $type: 'app.bsky.actor.link',
+      url,
+      createdAt: '2026-10-12T00:00:00.000Z',
+      ...extra,
+    } as app.bsky.actor.link.Main,
+  })
+  const ref = (rkey: string) => ({uri: uri(rkey), cid: `cid-${rkey}`})
+
+  it('follows the order of the profile refs, keeping icons', () => {
+    expect(
+      linksFromRecords(
+        [ref('b'), ref('a')],
+        [
+          record('a', 'https://a.example'),
+          record('b', 'https://b.example', {title: 'B', icon}),
+        ],
+      ),
+    ).toEqual([
+      {url: 'https://b.example', title: 'B', icon, uri: uri('b'), cid: 'cid-b'},
+      {url: 'https://a.example', uri: uri('a'), cid: 'cid-a'},
     ])
   })
 
-  it('ignores an invalid Germ position', () => {
-    expect(parseProfileRecordLinks({betaLinksGermIndex: -1}).germIndex).toBe(0)
-    expect(parseProfileRecordLinks({betaLinksGermIndex: 1.5}).germIndex).toBe(0)
+  it('skips refs whose record is missing', () => {
+    expect(
+      linksFromRecords(
+        [ref('gone'), ref('a')],
+        [record('a', 'https://a.example')],
+      ).map(link => link.uri),
+    ).toEqual([uri('a')])
+  })
+
+  it('returns nothing without refs', () => {
+    expect(
+      linksFromRecords(undefined, [record('a', 'https://a.example')]),
+    ).toEqual([])
+  })
+})
+
+describe('sameProfileLinks', () => {
+  const link = {url: 'https://a.example', uri: uri('a'), cid: 'cid-a', icon}
+
+  it('ignores the record CID', () => {
+    const {cid: _cid, ...edited} = link
+    expect(sameProfileLinks([edited], [link])).toBe(true)
+  })
+
+  it('notices edits, reorders and removals', () => {
+    const other = {url: 'https://b.example', uri: uri('b')}
+    expect(sameProfileLinks([{...link, title: 'A'}], [link])).toBe(false)
+    expect(sameProfileLinks([{...link, icon: undefined}], [link])).toBe(false)
+    expect(sameProfileLinks([other, link], [link, other])).toBe(false)
+    expect(sameProfileLinks([link], [link, other])).toBe(false)
   })
 })
 
@@ -106,60 +166,5 @@ describe('truncateTitle', () => {
   it('never splits an emoji', () => {
     const title = 'x'.repeat(29) + '🛍️🛍️'
     expect(truncateTitle(title)).toBe('x'.repeat(29) + '🛍️')
-  })
-})
-
-describe('withProfileRecordLinks', () => {
-  it('writes links while keeping the rest of the record', () => {
-    expect(
-      withProfileRecordLinks(
-        {displayName: 'Kat', description: 'Hi'},
-        {
-          links: [
-            {url: 'https://ko-fi.com/kat', title: 'Tip jar'},
-            {url: 'https://example.com/'},
-          ],
-          germIndex: 1,
-        },
-      ),
-    ).toEqual({
-      displayName: 'Kat',
-      description: 'Hi',
-      betaLinks: [
-        {uri: 'https://ko-fi.com/kat', title: 'Tip jar'},
-        {uri: 'https://example.com/'},
-      ],
-      betaLinksGermIndex: 1,
-    })
-  })
-
-  it('removes the fields when there are no links', () => {
-    expect(
-      withProfileRecordLinks(
-        {
-          displayName: 'Kat',
-          betaLinks: [{uri: 'https://example.com/'}],
-          betaLinksGermIndex: 1,
-        },
-        {links: [], germIndex: 0},
-      ),
-    ).toEqual({displayName: 'Kat'})
-  })
-
-  it('keeps a stored icon', () => {
-    const data = {links: [{url: 'https://example.com/', icon}], germIndex: 0}
-    expect(parseProfileRecordLinks(withProfileRecordLinks({}, data))).toEqual(
-      data,
-    )
-  })
-
-  it('round-trips through the parser', () => {
-    const data = {
-      links: [{url: 'https://ko-fi.com/kat', title: 'Tip jar'}],
-      germIndex: 0,
-    }
-    expect(parseProfileRecordLinks(withProfileRecordLinks({}, data))).toEqual(
-      data,
-    )
   })
 })

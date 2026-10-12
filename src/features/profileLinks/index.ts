@@ -1,11 +1,11 @@
-export {DragHandle} from './components/DragHandle'
 export {ProfileHeaderLinks} from './components/ProfileLinks'
 export {ProfileLinksEditor} from './components/ProfileLinksEditor'
 export {logProfileLinkChanges} from './metrics'
-export {type ProfileLinksData, withProfileRecordLinks} from './record'
+export {sameProfileLinks} from './record'
 export {
+  useOwnProfileLinksQuery,
   useProfileLinksEnabled,
-  useProfileLinksQuery,
-  useSetProfileLinksCache,
+  useSetOwnProfileLinksCache,
+  useWriteProfileLinks,
 } from './state'
 export {type ProfileLink} from './types'

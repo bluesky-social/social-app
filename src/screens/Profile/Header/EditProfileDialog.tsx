@@ -26,17 +26,16 @@ import {Text} from '#/components/Typography'
 import {useSimpleVerificationState} from '#/components/verification'
 import {useAnalytics} from '#/analytics'
 import {
-  DragHandle,
   logProfileLinkChanges,
-  type ProfileLinksData,
+  type ProfileLink,
   ProfileLinksEditor,
+  sameProfileLinks,
+  useOwnProfileLinksQuery,
   useProfileLinksEnabled,
-  useProfileLinksQuery,
-  useSetProfileLinksCache,
-  withProfileRecordLinks,
+  useSetOwnProfileLinksCache,
+  useWriteProfileLinks,
 } from '#/features/profileLinks'
 import {type app} from '#/lexicons'
-import {GermButton, isGermButtonShown} from '../components/GermButton'
 
 export function EditProfileDialog({
   profile,
@@ -138,22 +137,23 @@ function DialogInner({
   >()
 
   const linksEnabled = useProfileLinksEnabled()
-  const {data: storedLinks} = useProfileLinksQuery(profile.did, {
+  const {data: storedLinks} = useOwnProfileLinksQuery(profile.did, {
     enabled: linksEnabled,
   })
-  const setProfileLinksCache = useSetProfileLinksCache()
+  const writeProfileLinks = useWriteProfileLinks()
+  const setOwnProfileLinksCache = useSetOwnProfileLinksCache()
   /*
    * Unset until the owner edits their links, so edits always start from the
-   * loaded record and a save can't overwrite links that hadn't loaded yet.
+   * loaded records and a save can't overwrite links that hadn't loaded yet.
    */
-  const [editedLinks, setEditedLinks] = useState<ProfileLinksData>()
+  const [editedLinks, setEditedLinks] = useState<ProfileLink[]>()
   const links = editedLinks ?? storedLinks
   const linksLoaded = !!storedLinks
 
   useEffect(() => {
     if (!linksEnabled || !storedLinks) return
     ax.metric('profile:links:editorOpen', {
-      linkCount: storedLinks.links.length,
+      linkCount: storedLinks.length,
     })
     // Once, when the links first load.
     // oxlint-disable-next-line react-hooks/exhaustive-deps
@@ -170,7 +170,7 @@ function DialogInner({
   const linksDirty =
     !!editedLinks &&
     !!storedLinks &&
-    JSON.stringify(editedLinks) !== JSON.stringify(storedLinks)
+    !sameProfileLinks(editedLinks, storedLinks)
   const dirty = profileDirty || linksDirty
 
   useEffect(() => {
@@ -217,21 +217,26 @@ function DialogInner({
     setImageError('')
     try {
       const nextLinks = linksDirty ? editedLinks : undefined
+      // the profile can only point at link records that already exist
+      const written = nextLinks
+        ? await writeProfileLinks(profile.did, nextLinks, storedLinks ?? [])
+        : undefined
       await updateProfileMutation({
         profile,
         updates: {
           displayName: displayName.trimEnd(),
           description: description.trimEnd(),
+          ...(written && {
+            links: written.refs.length ? written.refs : undefined,
+          }),
         },
         newUserAvatar,
         newUserBanner,
-        updateRecord: nextLinks
-          ? record => withProfileRecordLinks(record, nextLinks)
-          : undefined,
       })
-      if (nextLinks) {
-        logProfileLinkChanges(ax, storedLinks?.links ?? [], nextLinks.links)
-        setProfileLinksCache(profile.did, nextLinks)
+      if (nextLinks && written) {
+        logProfileLinkChanges(ax, storedLinks ?? [], nextLinks)
+        setOwnProfileLinksCache(profile.did, nextLinks, written.refs)
+        await written.deleteRemoved()
       }
       control.close(() => onUpdate?.())
       Toast.show(_(msg({message: 'Profile updated', context: 'toast'})))
@@ -253,7 +258,8 @@ function DialogInner({
     linksDirty,
     storedLinks,
     ax,
-    setProfileLinksCache,
+    writeProfileLinks,
+    setOwnProfileLinksCache,
   ])
 
   const displayNameTooLong = isOverMaxGraphemeCount({
@@ -445,21 +451,7 @@ function DialogInner({
         {linksEnabled && links && (
           <ProfileLinksEditor
             did={profile.did}
-            links={links.links}
-            germIndex={links.germIndex}
-            germButton={
-              isGermButtonShown(
-                profile.associated?.germ,
-                profile,
-                profile.did,
-              ) ? (
-                <GermButton
-                  germ={profile.associated.germ}
-                  profile={profile}
-                  trailing={<DragHandle />}
-                />
-              ) : undefined
-            }
+            links={links}
             onChange={setEditedLinks}
             onDragStateChange={dragging => {
               setIsDraggingLinks(dragging)

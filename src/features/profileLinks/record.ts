@@ -1,6 +1,7 @@
-import {type BlobRef, getBlobMime, isBlobRef} from '@atproto/lex'
+import {getBlobCidString} from '@atproto/lex'
 import {splitGraphemes} from 'unicode-segmenter/grapheme'
 
+import {type app} from '#/lexicons'
 import {
   isBlockedProfileLink,
   isInsecureLink,
@@ -9,108 +10,83 @@ import {
 } from './providers'
 import {MAX_PROFILE_LINKS, MAX_TITLE_LENGTH, type ProfileLink} from './types'
 
-/*
- * Beta storage: links live in unofficial fields on the profile record, with
- * local types and no lexicon. The names must not be reused by the GA profile
- * field, or profiles that still carry beta data would fail validation.
+/**
+ * Whether a link can be shown. The AppView applies the same rules, but any
+ * client can write link records, so the app checks again.
  */
-const LINKS_FIELD = 'betaLinks'
-const GERM_INDEX_FIELD = 'betaLinksGermIndex'
-
-export type ProfileLinksData = {
-  links: ProfileLink[]
-  /** Position of the Germ DM button among the links. */
-  germIndex: number
+function isShowable(url: string, seen: Set<string>): boolean {
+  const normalized = normalizeProfileLinkUrl(url)
+  if (
+    !normalized ||
+    seen.has(normalized) ||
+    isBlockedProfileLink(normalized) ||
+    isShortenerLink(normalized) ||
+    isInsecureLink(normalized)
+  ) {
+    return false
+  }
+  seen.add(normalized)
+  return true
 }
 
 /**
- * Reads the beta links off a profile record. Any client can write these
- * fields, so entries that aren't usable web links are skipped.
+ * The AppView returns links on detailed profile views, but the published
+ * `app.bsky.actor.defs` lexicon puts them on `profileView`, so the generated
+ * types miss them. Validation keeps unknown fields, so they're there at
+ * runtime. Drop this once the lexicon is republished.
  */
-export function parseProfileRecordLinks(record: unknown): ProfileLinksData {
-  if (!record || typeof record !== 'object') {
-    return {links: [], germIndex: 0}
-  }
-  const fields = record as Record<string, unknown>
-  const rawLinks = fields[LINKS_FIELD]
-  const rawGermIndex = fields[GERM_INDEX_FIELD]
+export function profileLinkViews(
+  profile: app.bsky.actor.defs.ProfileViewDetailed,
+): app.bsky.actor.defs.ProfileLinkView[] | undefined {
+  return (profile as {links?: app.bsky.actor.defs.ProfileLinkView[]}).links
+}
 
+/** The links in a profile view, in display order. */
+export function linksFromProfileView(
+  views: app.bsky.actor.defs.ProfileLinkView[] | undefined,
+): ProfileLink[] {
   const links: ProfileLink[] = []
   const seen = new Set<string>()
-  if (Array.isArray(rawLinks)) {
-    for (const raw of rawLinks) {
-      if (links.length >= MAX_PROFILE_LINKS) break
-      if (!raw || typeof raw !== 'object') continue
-      const {uri, title, icon} = raw as {
-        uri?: unknown
-        title?: unknown
-        icon?: unknown
-      }
-      if (typeof uri !== 'string') continue
-      const normalized = normalizeProfileLinkUrl(uri)
-      if (
-        !normalized ||
-        seen.has(normalized) ||
-        isBlockedProfileLink(normalized) ||
-        isShortenerLink(normalized) ||
-        isInsecureLink(normalized)
-      ) {
-        continue
-      }
-      seen.add(normalized)
-      // keep the stored value as written, unless it can't be opened as is
-      const url = /^https?:\/\//i.test(uri) ? uri : normalized
-      const trimmedTitle =
-        typeof title === 'string' ? truncateTitle(title.trim()) : ''
-      const link: ProfileLink = {url}
-      if (trimmedTitle) link.title = trimmedTitle
-      if (isIconBlob(icon)) link.icon = icon
-      links.push(link)
+  for (const view of views ?? []) {
+    if (links.length >= MAX_PROFILE_LINKS) break
+    if (!isShowable(view.url, seen)) continue
+    const link: ProfileLink = {url: view.url, uri: view.uri, cid: view.cid}
+    const title = view.title ? truncateTitle(view.title.trim()) : ''
+    if (title) link.title = title
+    if (view.icon) link.iconUrl = view.icon
+    links.push(link)
+  }
+  return links
+}
+
+/**
+ * The owner's links straight from their repo, in the order the profile lists
+ * them. Used by the editor, which needs the stored icons to save them back.
+ */
+export function linksFromRecords(
+  refs: {uri: string; cid: string}[] | undefined,
+  records: {uri: string; cid: string; value: app.bsky.actor.link.Main}[],
+): ProfileLink[] {
+  const byUri = new Map(records.map(record => [record.uri, record]))
+  const links: ProfileLink[] = []
+  const seen = new Set<string>()
+  for (const ref of refs ?? []) {
+    if (links.length >= MAX_PROFILE_LINKS) break
+    const record = byUri.get(ref.uri)
+    if (!record || !isShowable(record.value.url, seen)) continue
+    const link: ProfileLink = {
+      url: record.value.url,
+      uri: record.uri,
+      cid: record.cid,
     }
+    const title = record.value.title
+      ? truncateTitle(record.value.title.trim())
+      : ''
+    if (title) link.title = title
+    if (record.value.icon) link.icon = record.value.icon
+    links.push(link)
   }
-
-  const germIndex =
-    typeof rawGermIndex === 'number' &&
-    Number.isInteger(rawGermIndex) &&
-    rawGermIndex >= 0
-      ? rawGermIndex
-      : 0
-  return {links, germIndex}
-}
-
-/**
- * Returns the profile record with its beta links replaced. Removes the fields
- * when there are no links, so profiles without links stay unchanged.
- */
-export function withProfileRecordLinks<T extends object>(
-  record: T,
-  {links, germIndex}: ProfileLinksData,
-): T {
-  const next = {...record} as Record<string, unknown>
-  delete next[LINKS_FIELD]
-  delete next[GERM_INDEX_FIELD]
-  if (links.length > 0) {
-    next[LINKS_FIELD] = links.map(link => {
-      const entry: {uri: string; title?: string; icon?: BlobRef} = {
-        uri: link.url,
-      }
-      if (link.title) entry.title = link.title
-      if (link.icon) entry.icon = link.icon
-      return entry
-    })
-    if (germIndex > 0) next[GERM_INDEX_FIELD] = germIndex
-  }
-  return next as T
-}
-
-/**
- * Only raster images we'd show; cardyb always serves PNG, but any client can
- * write these fields.
- */
-function isIconBlob(value: unknown): value is BlobRef {
-  if (!isBlobRef(value, {strict: false})) return false
-  const mime = getBlobMime(value)
-  return mime === 'image/png' || mime === 'image/jpeg' || mime === 'image/webp'
+  return links
 }
 
 /** Cuts by characters, so an emoji is never split in half. */
@@ -118,4 +94,19 @@ export function truncateTitle(title: string): string {
   const graphemes = Array.from(splitGraphemes(title))
   if (graphemes.length <= MAX_TITLE_LENGTH) return title
   return graphemes.slice(0, MAX_TITLE_LENGTH).join('').trim()
+}
+
+/** Whether saving `a` over `b` would change anything. */
+export function sameProfileLinks(a: ProfileLink[], b: ProfileLink[]): boolean {
+  return (
+    a.length === b.length &&
+    a.every(
+      (link, i) =>
+        link.url === b[i].url &&
+        link.title === b[i].title &&
+        link.uri === b[i].uri &&
+        (link.icon && getBlobCidString(link.icon)) ===
+          (b[i].icon && getBlobCidString(b[i].icon)),
+    )
+  )
 }

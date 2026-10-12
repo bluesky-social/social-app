@@ -237,6 +237,8 @@ function LinkFormInner({
     const saved: ProfileLink = {url: targetUrl}
     if (nextTitle) saved.title = nextTitle
     if (icon) saved.icon = icon
+    // an edit rewrites the same record, so a report on it still points here
+    if (link?.uri) saved.uri = link.uri
     control.close(() => onSave(saved))
   }
 
