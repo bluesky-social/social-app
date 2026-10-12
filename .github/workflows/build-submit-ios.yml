@@ -302,6 +302,26 @@ jobs:
           payload: |
             {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.build-number }}```"}
 
+      - name: 🔢 Record main testflight build number
+        if: ${{ github.ref == 'refs/heads/main' &&
+          (inputs.profile || 'testflight') == 'testflight' }}
+        env:
+          BUILD_NUMBER: ${{ needs.build.outputs.build-number }}
+        run: |
+          [[ "$BUILD_NUMBER" =~ ^[0-9]+$ ]] ||
+            (echo "::error::Refusing to record the non-numeric build number '$BUILD_NUMBER'" && exit 1)
+          echo "$BUILD_NUMBER" > ios-build-number
+
+      - name: 🚀 Upload main testflight build number
+        if: ${{ github.ref == 'refs/heads/main' &&
+          (inputs.profile || 'testflight') == 'testflight' }}
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: testflight-ios-build-number
+          path: ios-build-number
+          retention-days: 90
+          if-no-files-found: error
+
   distribute:
     name: Assign build to TestFlight group
     # fastlane and jq ship preinstalled on the macOS runner image, and this step mostly idles

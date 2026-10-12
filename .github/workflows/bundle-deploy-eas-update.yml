@@ -242,6 +242,38 @@ jobs:
           app-id: ${{ vars.SYNC_INTERNAL_APP_ID }}
           private-key: ${{ secrets.SYNC_INTERNAL_PK }}
 
+      - name: ⬇️ Load main testflight build numbers
+        id: build-numbers
+        if: ${{ !steps.fingerprint.outputs.includes-changes &&
+          !steps.version.outputs.version-changed &&
+          (inputs.channel || 'testflight') == 'testflight' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY_ID: ${{ github.repository_id }}
+        run: |
+          for platform in ios android; do
+            url=$(gh api \
+              "repos/${GITHUB_REPOSITORY}/actions/artifacts?name=testflight-$platform-build-number&per_page=100" \
+              --jq "[.artifacts[] | select(
+                .expired == false and
+                .workflow_run.head_branch == \"main\" and
+                .workflow_run.head_repository_id == (\$ENV.REPOSITORY_ID | tonumber)
+              )] | max_by(.created_at) | .archive_download_url" \
+              2>/dev/null || true)
+
+            number=""
+            if [ -n "$url" ] && [ "$url" != "null" ]; then
+              curl -sSL -H "Authorization: Bearer $GH_TOKEN" -o "$platform.zip" "$url" \
+                && number=$(unzip -p "$platform.zip" "$platform-build-number" 2>/dev/null) || true
+            fi
+            if [[ "$number" =~ ^[0-9]+$ ]]; then
+              echo "$platform build number: $number"
+              echo "$platform=$number" >> "$GITHUB_OUTPUT"
+            else
+              echo "::warning::No $platform build number recorded from main; stamping with the global EAS counter."
+            fi
+          done
+
       - name: 🚀 Publish OTA to denis (S3)
         if: ${{ !steps.fingerprint.outputs.includes-changes &&
           !steps.version.outputs.version-changed }}
@@ -249,10 +281,8 @@ jobs:
         env:
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
-          # When set (required for production), these take precedence over the
-          # global EAS counters inside the use-build-number wrapper
-          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber }}
-          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode }}
+          BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber || steps.build-numbers.outputs.ios }}
+          BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode || steps.build-numbers.outputs.android }}
 
   buildIfNecessaryIOS:
     name: Build and Submit iOS
