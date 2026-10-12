@@ -1,136 +1,20 @@
-import {app, type com} from '#/lexicons'
+import {type l} from '@atproto/lex'
+
+import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
-import atmosphereData from './data.json' with {type: 'json'}
+import {type AtmosphereData, viewGalleryImage} from './exploreApi'
 
-/**
- * Temporary local contracts for the external views in the Explore response.
- * Replace these with generated lexicon types when the app's schema includes
- * the definitions introduced by atproto PR #5617.
- */
-/** Profile previews are narrowed with the generated actor schema before use. */
-type AtmosphereProfileView = {
-  $type?: string
-  did: string
-  handle: string
-  displayName?: string
-  avatar?: string
-  labels?: com.atproto.label.defs.Label[]
-}
-type AtmosphereStrongRef = Omit<com.atproto.repo.strongRef.Main, 'uri'> & {
-  uri: string
-}
+export type {AtmosphereData}
 
-type AtmosphereExternalViewFields = {
-  labels?: com.atproto.label.defs.Label[]
-  associatedRefs?: AtmosphereStrongRef[]
-  associatedProfiles?: AtmosphereProfileView[]
-  createdAt?: string
-  updatedAt?: string
-}
-
-type AtmospherePublicationTheme = {
-  background?: string
-  foreground?: string
-  accent?: string
-  accentForeground?: string
-}
-
-type AtmosphereViewArticlePublication = AtmosphereExternalViewFields & {
-  $type?: string
-  uri: string
-  title: string
-  description: string
-  logo?: string
-  image?: string
-  theme?: AtmospherePublicationTheme
-  subscriptionCount?: number
-  /** Available profile previews, limited to three by the endpoint. */
-  subscribers?: AtmosphereProfileView[]
-}
-
-type AtmosphereViewArticle = AtmosphereExternalViewFields & {
-  $type?: string
-  uri: string
-  title: string
-  description: string
-  image?: string
-  publisher?: AtmosphereViewArticlePublication
-  readingTime?: number
-  likeCount?: number
-  /** Available profile previews, limited to three by the endpoint. */
-  likers?: AtmosphereProfileView[]
-}
-
-type AtmosphereViewGalleryImage = {
-  $type?: string
-  thumbnail: string
-  fullsize: string
-  alt?: string
-  aspectRatio?: {width: number; height: number}
-}
-
-type AtmosphereUnsupportedGalleryItem = {
-  $type?: string
-  [key: string]: unknown
-}
-
-type AtmosphereViewGallery = AtmosphereExternalViewFields & {
-  $type?: string
-  uri: string
-  title: string
-  description: string
-  items: (AtmosphereViewGalleryImage | AtmosphereUnsupportedGalleryItem)[]
-  likeCount?: number
-  /** Available profile previews, limited to three by the endpoint. */
-  likers?: AtmosphereProfileView[]
-}
-
-export type AtmosphereLivestreamView = AtmosphereExternalViewFields & {
-  $type?: string
-  uri: string
-  title: string
-  description: string
-  active: boolean
-  image?: string
-  startedAt?: string
-  endedAt?: string
-}
-
-type AtmosphereAnnouncementBanner = {
-  id?: string
-  title?: string
-  description?: string
-  url?: string
-  image?: string
-  overlayColor?: string
-  textColor?: string
-}
-
-type AtmosphereApp = {
-  id?: string
-  title?: string
-  description?: string
-  logo?: string
-  backgroundImage?: string
-  overlayColor?: string
-  textColor?: string
-  url?: string
-  category?: string
-}
-
-type FeaturedView<T> = {
-  featured: boolean
-  view: T
-}
-
-export type AtmosphereData = {
-  announcementBanner?: AtmosphereAnnouncementBanner
-  articles: FeaturedView<AtmosphereViewArticle>[]
-  publications: FeaturedView<AtmosphereViewArticlePublication>[]
-  photos: FeaturedView<AtmosphereViewGallery>[]
-  livestreams: FeaturedView<AtmosphereLivestreamView>[]
-  apps: AtmosphereApp[]
-}
+type AtmosphereProfileView = l.InferOutput<
+  typeof app.bsky.actor.defs.profileViewBasic
+>
+type AtmosphereViewGalleryItem =
+  AtmosphereData['photos'][number]['view']['items'][number]
+type AtmosphereViewGalleryImage = Extract<
+  AtmosphereViewGalleryItem,
+  {$type: 'app.bsky.embed.external#viewGalleryImage'}
+>
 
 export type AtmosphereArticleCardData = {
   id: string
@@ -187,24 +71,24 @@ function getProfile(
   profiles?: AtmosphereProfileView[],
 ): app.bsky.actor.defs.ProfileViewBasic | undefined {
   const profile = profiles?.[0]
-  return bsky.isType(app.bsky.actor.defs.profileViewBasic, profile)
+  /*
+   * Associated profiles from the appview omit `$type`, so a `$type` check
+   * would reject valid profiles. Fully validate instead, which permits an
+   * implicit `$type`.
+   */
+  return bsky.matches(app.bsky.actor.defs.profileViewBasic, profile)
     ? profile
     : undefined
 }
 
 function isGalleryImage(item: unknown): item is AtmosphereViewGalleryImage {
-  if (!item || typeof item !== 'object') return false
-  const image = item as Record<string, unknown>
   return (
-    image.$type === 'app.bsky.embed.external#viewGalleryImage' &&
-    typeof image.thumbnail === 'string' &&
-    typeof image.fullsize === 'string' &&
-    (image.alt === undefined || typeof image.alt === 'string')
+    bsky.isType(viewGalleryImage, item) && bsky.matches(viewGalleryImage, item)
   )
 }
 
 export function getAtmosphereArticles(
-  data: AtmosphereData = atmosphereData,
+  data: AtmosphereData,
 ): AtmosphereArticleCardData[] {
   return data.articles.map(({view: article}) => ({
     id: article.uri,
@@ -218,7 +102,7 @@ export function getAtmosphereArticles(
 }
 
 export function getAtmosphereApps(
-  data: AtmosphereData = atmosphereData,
+  data: AtmosphereData,
 ): AtmosphereAppCardData[] {
   return data.apps.flatMap(app => {
     if (!app.id || !app.title || !app.url) return []
@@ -239,7 +123,7 @@ export function getAtmosphereApps(
 }
 
 export function getAtmosphereAnnouncementBanner(
-  data: AtmosphereData = atmosphereData,
+  data: AtmosphereData,
 ): AtmosphereAnnouncementBannerData | undefined {
   const banner = data.announcementBanner
   if (!banner?.title || !banner.url) return undefined
@@ -256,7 +140,7 @@ export function getAtmosphereAnnouncementBanner(
 }
 
 export function getAtmosphereLivestreams(
-  data: Pick<AtmosphereData, 'livestreams'> = atmosphereData,
+  data: Pick<AtmosphereData, 'livestreams'>,
 ): AtmosphereLivestreamCardData[] {
   return data.livestreams.flatMap(({view: livestream}) => {
     const authorProfile = getProfile(livestream.associatedProfiles)
@@ -276,7 +160,7 @@ export function getAtmosphereLivestreams(
 }
 
 export function getAtmospherePhotos(
-  data: AtmosphereData = atmosphereData,
+  data: AtmosphereData,
 ): AtmospherePhotoCardData[] {
   return data.photos.flatMap(({view: photo}) => {
     const image = photo.items.find(isGalleryImage)

@@ -1,4 +1,8 @@
+/* Full schema validation exercises CID parsing, so use the real parser. */
+jest.unmock('multiformats/cid')
+
 import atmosphereData from './data.json' with {type: 'json'}
+import {atmosphereDataSchema} from './exploreApi'
 import {
   type AtmosphereData,
   getAtmosphereAnnouncementBanner,
@@ -8,6 +12,12 @@ import {
   getAtmospherePhotos,
 } from './exploreData'
 import {livestreamPreviewFixture} from './fixtures/livestreamPreview'
+
+function parseData(data: unknown): AtmosphereData {
+  return atmosphereDataSchema.parse(data)
+}
+
+const fixtureData = parseData(atmosphereData)
 
 const emptyData: AtmosphereData = {
   articles: [],
@@ -31,7 +41,7 @@ const image = {
 
 describe('Atmosphere Explore response fixtures', () => {
   it('uses the endpoint envelope and canonical view discriminators', () => {
-    const data: AtmosphereData = atmosphereData
+    const data = fixtureData
 
     expect(
       data.articles.every(item => typeof item.featured === 'boolean'),
@@ -106,7 +116,7 @@ describe('Atmosphere Explore response fixtures', () => {
   })
 
   it('preserves the populated card presentation and ordering', () => {
-    const articles = getAtmosphereArticles()
+    const articles = getAtmosphereArticles(fixtureData)
     expect(
       articles.map(({title, publisher, description}) => ({
         title,
@@ -134,7 +144,7 @@ describe('Atmosphere Explore response fixtures', () => {
         'https://cdn.bsky.app/img/avatar/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreicid7hoyx5d2if24eryyhb3lg4ioy2mdrmiriga3k2cay6k5io4ta',
     })
 
-    const photos = getAtmospherePhotos()
+    const photos = getAtmospherePhotos(fixtureData)
     expect(photos.map(({title}) => title)).toEqual([
       'evening ride',
       'Chandelier 2',
@@ -150,7 +160,7 @@ describe('Atmosphere Explore response fixtures', () => {
       authorProfile: {handle: 'chadtmiller.com'},
     })
 
-    expect(getAtmosphereApps()).toEqual([
+    expect(getAtmosphereApps(fixtureData)).toEqual([
       {
         id: 'd7ea9a5058e7',
         title: 'Leaflet',
@@ -166,7 +176,7 @@ describe('Atmosphere Explore response fixtures', () => {
         href: 'https://leaflet.pub',
       },
     ])
-    expect(getAtmosphereAnnouncementBanner()).toEqual({
+    expect(getAtmosphereAnnouncementBanner(fixtureData)).toEqual({
       id: 'bd4b135a8995',
       title: 'Atmosphere Tab Launch Party 2026',
       description: 'Boop',
@@ -179,9 +189,11 @@ describe('Atmosphere Explore response fixtures', () => {
   })
 
   it('adapts the active and ended local livestream previews', () => {
-    const livestreams = getAtmosphereLivestreams({
+    const previewData = parseData({
+      ...emptyData,
       livestreams: livestreamPreviewFixture,
     })
+    const livestreams = getAtmosphereLivestreams(previewData)
 
     expect(
       livestreams.map(({title, active, href}) => ({
@@ -240,7 +252,7 @@ describe('Atmosphere Explore response fixtures', () => {
     expect(getAtmosphereLivestreams(emptyData)).toEqual([])
     expect(getAtmospherePhotos(emptyData)).toEqual([])
 
-    const sparseData: AtmosphereData = {
+    const sparseData = parseData({
       ...emptyData,
       announcementBanner: {
         title: 'Title only',
@@ -301,7 +313,7 @@ describe('Atmosphere Explore response fixtures', () => {
       apps: [
         {id: 'sparse-app', title: 'Sparse app', url: 'https://example.com'},
       ],
-    }
+    })
 
     expect(getAtmosphereArticles(sparseData)[0]).toMatchObject({
       title: 'Sparse article',
@@ -333,5 +345,70 @@ describe('Atmosphere Explore response fixtures', () => {
         href: 'https://example.com',
       },
     ])
+  })
+
+  it('keeps associated profiles that omit $type and drops invalid ones', () => {
+    const {$type: _, ...implicitProfile} = testProfile
+    const data = parseData({
+      ...emptyData,
+      articles: [
+        {
+          featured: true,
+          view: {
+            uri: 'https://example.com/article',
+            title: 'Article',
+            description: '',
+            associatedProfiles: [{...implicitProfile, avatar: image.thumbnail}],
+          },
+        },
+      ],
+      photos: [
+        {
+          featured: true,
+          view: {
+            uri: 'https://example.com/gallery',
+            title: 'Gallery',
+            description: '',
+            items: [image],
+            associatedProfiles: [implicitProfile],
+          },
+        },
+      ],
+      livestreams: [
+        {
+          featured: true,
+          view: {
+            uri: 'https://example.com/livestream',
+            title: 'Livestream',
+            description: '',
+            active: true,
+            associatedProfiles: [implicitProfile],
+          },
+        },
+      ],
+    })
+
+    expect(getAtmosphereArticles(data)[0].publisherAvatar).toBe(image.thumbnail)
+    expect(getAtmospherePhotos(data)).toHaveLength(1)
+    expect(getAtmosphereLivestreams(data)).toHaveLength(1)
+
+    const invalidProfile = {
+      ...data.photos[0].view,
+      associatedProfiles: [{did: 'nope'}],
+    }
+    expect(
+      getAtmospherePhotos({
+        ...data,
+        photos: [{featured: true, view: invalidProfile as never}],
+      }),
+    ).toEqual([])
+    expect(getAtmosphereLivestreams({livestreams: []})).toEqual([])
+  })
+
+  it('validates the live response contract', () => {
+    expect(() =>
+      parseData({...emptyData, apps: [{url: 'not a uri'}]}),
+    ).toThrow()
+    expect(() => parseData({...emptyData, articles: [{view: {}}]})).toThrow()
   })
 })
