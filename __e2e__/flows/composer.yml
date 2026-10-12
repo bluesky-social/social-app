@@ -42,19 +42,14 @@ appId: xyz.blueskyweb.app
     id: "composeFAB"
 - tapOn:
     id: "e2eRefreshHome"
-# Following v2 (always on in e2e builds) keeps the reader where they were and
-# stages the refreshed posts above them, offered with the pill. Without this,
-# the first replyBtn on Android is the one scrolled up under the header.
-- extendedWaitUntil:
-    visible:
-      id: "followingPrependPill"
-    timeout: 30000
-- tapOn:
-    id: "followingPrependPill"
-- extendedWaitUntil:
-    notVisible:
-      id: "followingPrependPill"
-    timeout: 30000
+# Following v2 (always on in e2e builds) can keep the reader where they were
+# and put the refreshed posts above them, out of view - it does on Android.
+# Scroll up to the newest post, or the first replyBtn is one scrolled up under
+# the header.
+- scrollUntilVisible:
+    element:
+      text: "Post with a .*link card"
+    direction: UP
 - tapOn:
     id: "replyBtn"
 # Wait for the composer to fully open before typing. Tapping replyBtn right
