@@ -1,7 +1,11 @@
-import {useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
+import {
+  useModerationInboxNotificationPreferencesQuery,
+  useUpdateModerationInboxNotificationPreferencesMutation,
+} from '#/state/queries/moderation-inbox'
+import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {NotFoundScreen} from '#/view/screens/NotFound'
 import * as SettingsList from '#/screens/Settings/components/SettingsList'
 import {atoms as a, useTheme} from '#/alf'
@@ -14,12 +18,19 @@ export function ModerationInboxSettingsScreen() {
   const {t: l} = useLingui()
   const ax = useAnalytics()
 
-  // TODO Local state is a placeholder. -dsb
-  const [reportNotifications, setReportNotifications] = useState(false)
-  const [accountNotifications, setAccountNotifications] = useState(false)
-  const [labelingNotifications, setLabelingNotifications] = useState(false)
-
   const isEnabled = ax.features.enabled(ax.features.ModerationInboxEnable)
+  const preferencesQuery =
+    useModerationInboxNotificationPreferencesQuery(isEnabled)
+  const updatePreferences =
+    useUpdateModerationInboxNotificationPreferencesMutation()
+  const preferences = preferencesQuery.data?.preferences
+  const isDisabled =
+    !preferences || preferencesQuery.isError || updatePreferences.isPending
+
+  const onChangePush = (push: boolean) => {
+    if (isDisabled) return
+    updatePreferences.mutate({push})
+  }
 
   if (!isEnabled) {
     return <NotFoundScreen />
@@ -40,46 +51,22 @@ export function ModerationInboxSettingsScreen() {
       </Layout.Header.Outer>
       <Layout.Content>
         <SettingsList.Container>
+          {preferencesQuery.isError ? (
+            <ErrorMessage
+              message={l`Failed to load notification settings.`}
+              onPressTryAgain={() => void preferencesQuery.refetch()}
+            />
+          ) : null}
           <NotificationToggle
-            name="report-notifications"
-            label={l({
-              context: 'moderation-inbox-setting',
-              message: 'Your reports notifications',
-            })}
-            description={l({
-              context: 'moderation-inbox-setting',
-              message: 'Get notified about your report outcomes.',
-            })}
-            value={reportNotifications}
-            onChange={setReportNotifications}
-          />
-          <NotificationToggle
-            name="account-notifications"
-            label={l({
-              context: 'moderation-inbox-setting',
-              message: 'Your account notifications',
-            })}
-            description={l({
-              context: 'moderation-inbox-setting',
-              message: 'Get notified about actions taken against you.',
-            })}
-            value={accountNotifications}
-            onChange={setAccountNotifications}
-          />
-          <NotificationToggle
-            name="labeling-notifications"
-            label={l({
-              context: 'moderation-inbox-setting',
-              message: 'Account labeling notifications',
-            })}
-            description={l({
-              context: 'moderation-inbox-setting',
-              message:
-                'Get notified when a label is added to your account and posts.',
-            })}
-            disabled
-            value={labelingNotifications}
-            onChange={setLabelingNotifications}
+            name="push-notifications"
+            label={l`Push notifications`}
+            disabled={isDisabled}
+            value={
+              updatePreferences.isPending
+                ? updatePreferences.variables.push
+                : (preferences?.push ?? false)
+            }
+            onChange={onChangePush}
           />
         </SettingsList.Container>
       </Layout.Content>
@@ -97,7 +84,7 @@ function NotificationToggle({
 }: {
   name: string
   label: string
-  description: React.ReactNode
+  description?: string
   disabled?: boolean
   value: boolean
   onChange: (value: boolean) => void
@@ -106,6 +93,7 @@ function NotificationToggle({
 
   return (
     <Toggle.Item
+      testID={name}
       type="checkbox"
       name={name}
       label={label}
@@ -122,16 +110,18 @@ function NotificationToggle({
             ]}>
             {label}
           </Text>
-          <Text
-            style={[
-              a.text_sm,
-              a.leading_snug,
-              disabled
-                ? t.atoms.text_contrast_low
-                : t.atoms.text_contrast_medium,
-            ]}>
-            {description}
-          </Text>
+          {description ? (
+            <Text
+              style={[
+                a.text_sm,
+                a.leading_snug,
+                disabled
+                  ? t.atoms.text_contrast_low
+                  : t.atoms.text_contrast_medium,
+              ]}>
+              {description}
+            </Text>
+          ) : undefined}
         </View>
         <Toggle.Platform />
       </SettingsList.Item>
