@@ -107,7 +107,7 @@ export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
           disableMismatchWarning
           style={[
             a.flex_shrink,
-            a.text_sm,
+            a.text_md,
             a.leading_snug,
             a.font_semi_bold,
             t.atoms.text,
@@ -124,7 +124,7 @@ export function Author({profile}: {profile: bsky.profile.AnyProfileView}) {
           disableMismatchWarning
           disableUnderline
           style={[
-            a.text_sm,
+            a.text_md,
             a.leading_snug,
             t.atoms.text_contrast_medium,
             {flexShrink: 10},
@@ -155,7 +155,7 @@ export function ContextLine({
       <Text
         emoji
         numberOfLines={1}
-        style={[a.flex_1, a.text_sm, a.leading_snug, t.atoms.text]}>
+        style={[a.flex_1, a.text_md, a.leading_snug, t.atoms.text]}>
         {children}
       </Text>
     </View>
@@ -236,7 +236,7 @@ function ReplyContextPost({
         'Shown in place of the text of a post that has no text, only images, video, a link or a quoted post',
     })
   }
-  const previewStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
+  const previewStyle = [a.text_md, a.leading_snug, t.atoms.text_contrast_medium]
   const previewNode =
     record && preview && !isHidden ? (
       <RichText
@@ -308,7 +308,7 @@ export function PostBody({post}: {post: PostView}) {
           authorHandle={post.author.handle}
           shouldProxyLinks
           // No colour here: it would override the links' and mentions'
-          style={[a.text_sm, a.leading_snug]}
+          style={[a.text_md, a.leading_snug]}
         />
       )}
       {post.embed && embedPreview && (
@@ -448,7 +448,7 @@ export function QuoteCard({embed}: {embed: app.bsky.embed.record.View}) {
 
   return (
     <Card>
-      <Text style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
+      <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium]}>
         {placeholder}
       </Text>
     </Card>
@@ -499,7 +499,7 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 numberOfLines={1}
                 style={[
                   a.flex_shrink,
-                  a.text_sm,
+                  a.text_md,
                   a.leading_snug,
                   a.font_semi_bold,
                   t.atoms.text,
@@ -510,7 +510,7 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 emoji
                 numberOfLines={1}
                 style={[
-                  a.text_sm,
+                  a.text_md,
                   a.leading_snug,
                   t.atoms.text_contrast_medium,
                   {flexShrink: 10},
@@ -531,7 +531,7 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                   <Text
                     style={[
                       a.flex_shrink_0,
-                      a.text_sm,
+                      a.text_md,
                       a.leading_snug,
                       t.atoms.text_contrast_medium,
                     ]}>
@@ -552,7 +552,7 @@ function QuoteCardPost({view}: {view: app.bsky.embed.record.ViewRecord}) {
                 // The whole card is already a link
                 disableLinks
                 numberOfLines={2}
-                style={[a.text_sm, a.leading_snug, t.atoms.text]}
+                style={[a.text_md, a.leading_snug, t.atoms.text]}
               />
             ) : (
               <InlineImages
