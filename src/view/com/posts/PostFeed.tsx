@@ -1160,14 +1160,25 @@ let PostFeed = ({
         onScrolledDownChange={handleScrolledDownChange}
         onEndReached={() => void onEndReached()}
         onEndReachedThreshold={2} // number of posts left to trigger load more
-        removeClippedSubviews={true}
+        /*
+         * On iOS, subview clipping detaches and reattaches whole post cells
+         * as they cross the screen edge, which is expensive mid-scroll and
+         * tears down video players that the native preload window keeps
+         * ready. The list is already virtualized, so it saves little there.
+         */
+        removeClippedSubviews={!IS_IOS}
         extraData={extraData}
         desktopFixedHeight={
           desktopFixedHeightOffset ? desktopFixedHeightOffset : true
         }
         initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
         windowSize={9}
-        maxToRenderPerBatch={IS_IOS ? 5 : 1}
+        /*
+         * Each batch is mounted on the main thread in a single frame, so
+         * large batches drop frames mid-scroll. windowSize keeps several
+         * screens rendered ahead, so smaller batches still keep up.
+         */
+        maxToRenderPerBatch={IS_IOS ? 2 : 1}
         updateCellsBatchingPeriod={40}
         onItemSeen={onItemSeen}
       />

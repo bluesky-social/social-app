@@ -1459,14 +1459,16 @@ let PostFeed = ({
           onScrolledDownChange={handleScrolledDownChange}
           onEndReached={() => void onEndReached()}
           onEndReachedThreshold={2} // number of posts left to trigger load more
-          removeClippedSubviews={true}
+          // see the same prop in src/view/com/posts/PostFeed.tsx
+          removeClippedSubviews={!IS_IOS}
           extraData={extraData}
           desktopFixedHeight={
             desktopFixedHeightOffset ? desktopFixedHeightOffset : true
           }
           initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
           windowSize={9}
-          maxToRenderPerBatch={IS_IOS ? 5 : 1}
+          // see the same prop in src/view/com/posts/PostFeed.tsx
+          maxToRenderPerBatch={IS_IOS ? 2 : 1}
           updateCellsBatchingPeriod={40}
           onItemSeen={onItemSeen}
           maintainVisibleContentPosition={

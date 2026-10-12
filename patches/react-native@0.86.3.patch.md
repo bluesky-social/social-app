@@ -205,3 +205,38 @@ there is no child.
 
 **TODO: Remove after upgrading to a React Native release containing this fix.**
 The upstream PR is still open as of September 9, 2026.
+
+## RCTScrollViewComponentView.mm Patch - per-frame commits and subview walks while scrolling
+
+Fixes scroll stutter in the feeds on iOS. On every `scrollViewDidScroll:` the
+scroll view pushes its content offset into Fabric state. Each push is a full
+commit on the JS thread, including a Yoga layout pass, and comes back as a mount
+transaction on the main thread. After every mount transaction,
+`mountingTransactionDidMount:` calls `_remountChildren`, which walks every
+mounted descendant of the scroll view to apply `removeClippedSubviews`
+clipping. Feed cells are deep, so at 120Hz this was about 28% of the JS
+thread's busy time and 10-19% of the main thread during a fling (profiled with
+Instruments on an iPhone 16 Pro Max).
+
+- While the user drives the scroll (tracking, dragging or decelerating), the
+  content offset state is updated at most every 100ms. Drags always finish in
+  `scrollViewDidEndDragging:` and momentum in `scrollViewDidEndDecelerating:`,
+  both of which still push the final offset, so the state ends up exact.
+  Programmatic scrolls behave as before.
+- `mountingTransactionDidMount:` skips the clipping walk when the transaction
+  only updates the scroll view itself without a layout change. Such a
+  transaction cannot change which children intersect the clip rect, and
+  offset-driven clipping already happens in `scrollViewDidScroll:`.
+
+- `_remountChildren` returns early unless the scroll view itself has
+  `removeClippedSubviews` (which ScrollView.js passes to both the native scroll
+  view and its content container). Stock React Native runs the walk for every
+  scroll view, and without an opted-in content container to prune detached
+  cells it visits every mounted descendant. A plain `View` with
+  `removeClippedSubviews` nested inside a scroll view that did not opt in no
+  longer gets clipping updates; the app does not do this.
+
+Trade-off: during a fling, `measure()` on a scroll view's descendants can be up
+to 100ms of scrolling out of date.
+
+**TODO: Re-evaluate on React Native upgrades.** Not an upstream backport.

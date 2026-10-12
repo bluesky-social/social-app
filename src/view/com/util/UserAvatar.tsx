@@ -333,6 +333,14 @@ let UserAvatar = ({
           blurRadius={moderation?.blur ? BLUR_AMOUNT : 0}
           onLoad={onLoad}
           useAppleWebpCodec
+          /*
+           * Thumbnail avatars are 128px. Near that display size (e.g. 42pt at
+           * 3x is 126px) expo-image would redraw every one on the main thread
+           * to shave off a few pixels. Smaller avatars still downscale, since
+           * letting the GPU shrink them 2-3x makes edges shimmer while
+           * scrolling.
+           */
+          allowDownscaling={size < 32 || size >= 90}
         />
       )}
       {!noBorder && <MediaInsetBorder style={borderStyle} />}
