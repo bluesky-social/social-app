@@ -32,6 +32,7 @@ export {
   getFollowers,
   isFollowerNotification,
 } from './kinds/follower'
+export {LoadingSkeleton} from './LoadingSkeleton'
 
 /**
  * Renders one grouped notification, picking the row for its kind. Each kind
