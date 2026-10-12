@@ -56,6 +56,8 @@ type Props = NativeStackScreenProps<
   'Notifications'
 >
 
+type RefreshReason = Metrics['notifications:refresh']['reason']
+
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
   // Dev and TestFlight builds always get it, so it's dogfooded before rollout
@@ -107,12 +109,16 @@ function NewNotificationsScreenInner() {
    * refreshes the feed, unless the user is partway down it, in which case
    * only the unread check runs, so the list doesn't move under them.
    */
-  const checkLatest = (feed: GroupedNotificationsFeed) => {
+  const checkLatest = (
+    feed: GroupedNotificationsFeed,
+    reason: RefreshReason,
+  ) => {
     // Not loaded yet, so its first load is on the way
     if (!getGroupedNotificationsTop(queryClient, feed)) return
     if (scrolledDownFeeds.current.has(feed)) {
       void unreadApi.checkUnread()
     } else {
+      ax.metric('notifications:refresh', {tab: feed, reason})
       void refresh(feed)
     }
   }
@@ -361,7 +367,7 @@ function useReturnToScreen({
   peekLatest,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
-  checkLatest: (feed: GroupedNotificationsFeed) => void
+  checkLatest: (feed: GroupedNotificationsFeed, reason: RefreshReason) => void
   /**
    * Asks the server for anything new without loading it, which offers the
    * "Refresh" pill if there is.
@@ -370,27 +376,29 @@ function useReturnToScreen({
 }) {
   const isFocused = useIsFocused()
 
-  const onReturn = useEffectEvent(() => {
-    checkLatest(activeFeed.current)
+  const onReturn = useEffectEvent((reason: RefreshReason) => {
+    checkLatest(activeFeed.current, reason)
   })
 
   // Mounting counts, as the cache can outlive the screen
   const wasFocused = useRef(false)
   useEffect(() => {
     if (isFocused && !wasFocused.current) {
-      onReturn()
+      onReturn('focus')
     }
     wasFocused.current = isFocused
   }, [isFocused])
 
-  const onLeftApp = useEffectEvent(() => {
-    if (isFocused) {
-      onReturn()
-    }
-  })
+  const onLeftApp = useEffectEvent(
+    (reason: 'significantReturn' | 'pushOpened') => {
+      if (isFocused) {
+        onReturn(reason)
+      }
+    },
+  )
   const onAppReturn = useEffectEvent((appReturn: AnyAppReturn) => {
     if (appReturn.isSignificant) {
-      onLeftApp()
+      onLeftApp('significantReturn')
     } else if (isFocused) {
       peekLatest()
     }
@@ -401,7 +409,9 @@ function useReturnToScreen({
      * Opening a push leaves the app too, even when it never went to the
      * background, e.g. from Notification Center on iOS.
      */
-    const unlistenPush = listenPushNotificationOpened(() => onLeftApp())
+    const unlistenPush = listenPushNotificationOpened(() =>
+      onLeftApp('pushOpened'),
+    )
     return () => {
       returns.remove()
       unlistenPush()
