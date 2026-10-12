@@ -259,7 +259,7 @@ index 9ab1db4e21e922f69c1ce17976eb1001f01b571a..a0a15bef87537f715298d7c88a52c8f6
  
  Class<RCTComponentViewProtocol> RCTScrollViewCls(void)
 diff --git a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
-index c0e56acd2a0f1015f5a4581909e9209a56c46166..06184e0a095decd1559f8888d1d67d62eda00df2 100644
+index 917dc6d88e2840351f6ca1a3c697ffc467dec933..38c14f9020fb66097811d5222d4eca9d446715b8 100644
 --- a/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 +++ b/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
 @@ -372,6 +372,10 @@ - (void)updateLayoutMetrics:(const LayoutMetrics &)layoutMetrics
@@ -462,11 +462,298 @@ index fdabd7bab1f03966dc04ba9a462465daeccf8ae3..ef70011ee5c270fb2cac52f3a7408d1e
    bool useTurboModules() override
    {
      return true;
+diff --git a/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp b/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
+index 17b14c439f16534365c1fb41b3f10a4e12f59001..9c46cd9906ad31621534009a6151e0042972d134 100644
+--- a/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
++++ b/ReactCommon/react/renderer/components/text/ParagraphShadowNode.cpp
+@@ -315,6 +315,12 @@ void ParagraphShadowNode::layout(LayoutContext layoutContext) {
+ 
+   auto measuredLayout = findUsableLayout();
+ 
++#ifdef __APPLE__
++  // [Bluesky] The text view redraws when its attributed string changes.
++  const bool attributedStringChanged =
++      !(getStateData().attributedString == content.attributedString);
++#endif
++
+   if constexpr (
+       TextLayoutManagerExtended::supportsPreparedTextLayout() &&
+       std::is_constructible_v<
+@@ -342,6 +348,18 @@ void ParagraphShadowNode::layout(LayoutContext layoutContext) {
+     updateStateIfNeeded(content);
+   }
+ 
++#ifdef __APPLE__
++  // [Bluesky] Lay the text out now, off the main thread, for the content frame
++  // the text view will draw into. Otherwise its first draw does it on the main
++  // thread.
++  if (attributedStringChanged && !content.attributedString.isEmpty()) {
++    textLayoutManager_->prepareForDrawing(
++        content.attributedString,
++        content.paragraphAttributes,
++        layoutMetrics.getContentFrame().size);
++  }
++#endif
++
+   TextLayoutContext textLayoutContext{
+       .pointScaleFactor = layoutContext.pointScaleFactor,
+       .surfaceId = getSurfaceId(),
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
+index a4b9be72c453574998499d3b41bb013e05a3ba3b..a6e2fe7ed1906370ac0af26eda02a1df0319c4ff 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.h
+@@ -37,6 +37,15 @@ using RCTTextLayoutFragmentEnumerationBlock =
+                                                 layoutContext:(facebook::react::TextLayoutContext)layoutContext
+                                             layoutConstraints:(facebook::react::LayoutConstraints)layoutConstraints;
+ 
++/**
++ * [Bluesky] Lays out `attributedString` for a text view with a content frame
++ * of `size`, so that drawAttributedString: at that size doesn't lay it out
++ * again on the main thread. Can be called from any thread.
++ */
++- (void)prepareAttributedStringForDrawing:(facebook::react::AttributedString)attributedString
++                      paragraphAttributes:(facebook::react::ParagraphAttributes)paragraphAttributes
++                                     size:(CGSize)size;
++
+ - (void)drawAttributedString:(facebook::react::AttributedString)attributedString
+          paragraphAttributes:(facebook::react::ParagraphAttributes)paragraphAttributes
+                        frame:(CGRect)frame
 diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce9c63137b 100644
+index ac553045a9c0ce77e288277912538d9e131ebc01..30e2fc89a7710bc17a9e4dcc482e4d9f2d33c2df 100644
 --- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
 +++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/RCTTextLayoutManager.mm
-@@ -389,8 +389,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
+@@ -14,11 +14,133 @@
+ #import <react/featureflags/ReactNativeFeatureFlags.h>
+ #import <react/utils/ManagedObjectWrapper.h>
+ #import <react/utils/SimpleThreadSafeCache.h>
++#import <react/utils/hash_combine.h>
++
++#include <deque>
++#include <functional>
++#include <mutex>
++#include <unordered_map>
++#include <vector>
+ 
+ using namespace facebook::react;
+ 
++/*
++ * [Bluesky] Text layouts made off the main thread, so that a text view's first
++ * draw doesn't lay its text out again on the main thread.
++ *
++ * - Measuring keeps its laid-out text storage ("measured layouts").
++ * - After layout, ParagraphShadowNode asks for the text of every text view
++ *   whose content changed to be prepared at its final content frame size
++ *   ("prepared layouts"). That reuses a measured layout when it lays out the
++ *   same way, or lays the text out at exactly the frame size, as the draw
++ *   would.
++ * - The draw takes the prepared layout for its exact size and otherwise lays
++ *   the text out itself, as React Native does by default.
++ */
++namespace {
++
++struct RCTTextLayoutKey {
++  AttributedString attributedString;
++  ParagraphAttributes paragraphAttributes;
++
++  bool operator==(const RCTTextLayoutKey &rhs) const
++  {
++    return attributedString == rhs.attributedString && paragraphAttributes == rhs.paragraphAttributes;
++  }
++};
++
++struct RCTTextLayoutKeyHash {
++  size_t operator()(const RCTTextLayoutKey &key) const
++  {
++    return hash_combine(key.attributedString, key.paragraphAttributes);
++  }
++};
++
++struct RCTTextLayout {
++  NSTextStorage *textStorage;
++  // Size of the frame the text was laid out for. For measured layouts, the
++  // width of the text container and the measured height.
++  CGSize size;
++};
++
++/*
++ * Text layouts waiting to be taken, a few per key. Each layout is handed out
++ * once, so only one thread uses a text storage at a time. Keys that are never
++ * taken (text that is never drawn, or drawn at another size) are evicted
++ * oldest-first.
++ */
++template <size_t maxKeys_, size_t maxPerKey_>
++class RCTTextLayoutPool {
++ public:
++  void add(const RCTTextLayoutKey &key, RCTTextLayout layout)
++  {
++    std::lock_guard<std::mutex> lock(mutex_);
++    auto &layouts = layouts_[key];
++    if (layouts.empty()) {
++      order_.push_back(key);
++    }
++    if (layouts.size() >= maxPerKey_) {
++      layouts.erase(layouts.begin());
++    }
++    layouts.push_back(std::move(layout));
++
++    while (order_.size() > maxKeys_) {
++      // A taken key stays in order_, so this can drop a newer layout for the
++      // same text. That text then just takes the default path.
++      layouts_.erase(order_.front());
++      order_.pop_front();
++    }
++  }
++
++  /*
++   * Removes and returns the newest layout for `key` that satisfies `matches`.
++   */
++  NSTextStorage *_Nullable take(const RCTTextLayoutKey &key, const std::function<bool(CGSize)> &matches)
++  {
++    std::lock_guard<std::mutex> lock(mutex_);
++    auto it = layouts_.find(key);
++    if (it == layouts_.end()) {
++      return nil;
++    }
++
++    auto &layouts = it->second;
++    for (auto layout = layouts.rbegin(); layout != layouts.rend(); ++layout) {
++      if (matches(layout->size)) {
++        NSTextStorage *textStorage = layout->textStorage;
++        layouts.erase(std::next(layout).base());
++        if (layouts.empty()) {
++          layouts_.erase(it);
++        }
++        return textStorage;
++      }
++    }
++
++    return nil;
++  }
++
++ private:
++  std::mutex mutex_;
++  std::unordered_map<RCTTextLayoutKey, std::vector<RCTTextLayout>, RCTTextLayoutKeyHash> layouts_;
++  std::deque<RCTTextLayoutKey> order_;
++};
++
++// Yoga rounds frames to the pixel grid, so a frame can differ from the
++// measured size by a fraction of a point.
++constexpr CGFloat kRCTMeasuredTextLayoutTolerance = 0.5;
++// Prepared layouts are made for the same frame size the draw uses.
++constexpr CGFloat kRCTPreparedTextLayoutTolerance = 0.01;
++
++} // namespace
++
+ @implementation RCTTextLayoutManager {
+   SimpleThreadSafeCache<AttributedString, std::shared_ptr<void>, 256> _cache;
++  /*
++   * [Bluesky] See RCTTextLayoutPool. Yoga measures every text in a commit
++   * before any of them is prepared, and a screen can have a few hundred. Texts
++   * are often measured more than once while Yoga resolves flex sizes.
++   */
++  RCTTextLayoutPool<512, 3> _measuredLayouts;
++  RCTTextLayoutPool<512, 2> _preparedLayouts;
+ }
+ 
+ static NSLineBreakMode RCTNSLineBreakModeFromEllipsizeMode(EllipsizeMode ellipsizeMode)
+@@ -60,10 +182,67 @@ - (TextMeasurement)measureAttributedString:(AttributedString)attributedString
+                              layoutContext:(TextLayoutContext)layoutContext
+                          layoutConstraints:(LayoutConstraints)layoutConstraints
+ {
+-  return [self measureNSAttributedString:[self _nsAttributedStringFromAttributedString:attributedString]
+-                     paragraphAttributes:paragraphAttributes
+-                           layoutContext:layoutContext
+-                       layoutConstraints:layoutConstraints];
++  NSAttributedString *nsAttributedString = [self _nsAttributedStringFromAttributedString:attributedString];
++  if (nsAttributedString.length == 0) {
++    // See measureNSAttributedString:.
++    return {};
++  }
++
++  CGSize maximumSize = CGSize{layoutConstraints.maximumSize.width, CGFLOAT_MAX};
++  NSTextStorage *textStorage = [self _textStorageAndLayoutManagerWithAttributesString:nsAttributedString
++                                                                  paragraphAttributes:paragraphAttributes
++                                                                                 size:maximumSize];
++  TextMeasurement measurement = [self _measureTextStorage:textStorage
++                                      paragraphAttributes:paragraphAttributes
++                                            layoutContext:layoutContext];
++
++  // [Bluesky] Font scaling depends on the final frame size, so those layouts
++  // can't be reused.
++  if (!paragraphAttributes.adjustsFontSizeToFit && isfinite(maximumSize.width)) {
++    _measuredLayouts.add(
++        RCTTextLayoutKey{.attributedString = attributedString, .paragraphAttributes = paragraphAttributes},
++        RCTTextLayout{.textStorage = textStorage, .size = CGSize{maximumSize.width, measurement.size.height}});
++  }
++
++  return measurement;
++}
++
++- (void)prepareAttributedStringForDrawing:(AttributedString)attributedString
++                      paragraphAttributes:(ParagraphAttributes)paragraphAttributes
++                                     size:(CGSize)size
++{
++  if (size.width <= 0 || size.height <= 0) {
++    return;
++  }
++
++  RCTTextLayoutKey key{.attributedString = attributedString, .paragraphAttributes = paragraphAttributes};
++
++  /*
++   * Measuring lays text out at the full available width with unlimited
++   * height. That gives the same result as a layout at `size` when the width
++   * is the same and the frame is tall enough for every measured line.
++   */
++  NSTextStorage *textStorage = paragraphAttributes.adjustsFontSizeToFit
++      ? nil
++      : _measuredLayouts.take(key, [&](CGSize measured) {
++          return fabs(measured.width - size.width) <= kRCTMeasuredTextLayoutTolerance &&
++              size.height >= measured.height - kRCTMeasuredTextLayoutTolerance;
++        });
++
++  if (textStorage == nil) {
++    NSAttributedString *nsAttributedString = [self _nsAttributedStringFromAttributedString:attributedString];
++    if (nsAttributedString.length == 0) {
++      return;
++    }
++    // Exactly what drawAttributedString: would make for this size.
++    textStorage = [self _textStorageAndLayoutManagerWithAttributesString:nsAttributedString
++                                                     paragraphAttributes:paragraphAttributes
++                                                                    size:size];
++    NSLayoutManager *layoutManager = textStorage.layoutManagers.firstObject;
++    [layoutManager ensureLayoutForTextContainer:layoutManager.textContainers.firstObject];
++  }
++
++  _preparedLayouts.add(key, RCTTextLayout{.textStorage = textStorage, .size = size});
+ }
+ 
+ - (void)drawAttributedString:(AttributedString)attributedString
+@@ -71,10 +250,20 @@ - (void)drawAttributedString:(AttributedString)attributedString
+                        frame:(CGRect)frame
+            drawHighlightPath:(void (^_Nullable)(UIBezierPath *highlightPath))block
+ {
+-  NSTextStorage *textStorage = [self
+-      _textStorageAndLayoutManagerWithAttributesString:[self _nsAttributedStringFromAttributedString:attributedString]
+-                                   paragraphAttributes:paragraphAttributes
+-                                                  size:frame.size];
++  // [Bluesky] Use the layout prepared off the main thread for this size, if
++  // any. Otherwise lay the text out here, as React Native does by default.
++  NSTextStorage *textStorage = _preparedLayouts.take(
++      RCTTextLayoutKey{.attributedString = attributedString, .paragraphAttributes = paragraphAttributes},
++      [&](CGSize prepared) {
++        return fabs(prepared.width - frame.size.width) <= kRCTPreparedTextLayoutTolerance &&
++            fabs(prepared.height - frame.size.height) <= kRCTPreparedTextLayoutTolerance;
++      });
++  if (textStorage == nil) {
++    textStorage = [self
++        _textStorageAndLayoutManagerWithAttributesString:[self _nsAttributedStringFromAttributedString:attributedString]
++                                     paragraphAttributes:paragraphAttributes
++                                                    size:frame.size];
++  }
+   NSLayoutManager *layoutManager = textStorage.layoutManagers.firstObject;
+   NSTextContainer *textContainer = layoutManager.textContainers.firstObject;
+ 
+@@ -389,8 +578,9 @@ - (TextMeasurement)_measureTextStorage:(NSTextStorage *)textStorage
      size.height = enumeratedLinesHeight;
    }
  
@@ -478,6 +765,49 @@ index ac553045a9c0ce77e288277912538d9e131ebc01..d99c8f4db5a07f1e4ffe7e03ff23adce
  
    NSRange visibleGlyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
  
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
+index ce564b01254f423782412453c1b51a7d18cb8026..c842534e75307046cefbefc0be367a629a01a5f6 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.h
+@@ -61,6 +61,16 @@ class TextLayoutManager {
+    */
+   std::shared_ptr<void> getNativeTextLayoutManager() const;
+ 
++  /*
++   * [Bluesky] Lays out `attributedString` ahead of time for a text view whose
++   * content frame has `size`, so its first draw on the main thread can reuse
++   * it.
++   */
++  void prepareForDrawing(
++      const AttributedString &attributedString,
++      const ParagraphAttributes &paragraphAttributes,
++      const Size &size) const;
++
+  protected:
+   std::shared_ptr<const ContextContainer> contextContainer_;
+   std::shared_ptr<void> nativeTextLayoutManager_;
+diff --git a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
+index cddafb5a6ef2b8e176f15ff250a05a40f5c1eb84..c31e530dbf048bcc05fe1a6a7c7e5fceb105609d 100644
+--- a/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
++++ b/ReactCommon/react/renderer/textlayoutmanager/platform/ios/react/renderer/textlayoutmanager/TextLayoutManager.mm
+@@ -99,6 +99,17 @@
+   return measurement;
+ }
+ 
++void TextLayoutManager::prepareForDrawing(
++    const AttributedString &attributedString,
++    const ParagraphAttributes &paragraphAttributes,
++    const Size &size) const
++{
++  RCTTextLayoutManager *textLayoutManager = (RCTTextLayoutManager *)unwrapManagedObject(nativeTextLayoutManager_);
++  [textLayoutManager prepareAttributedStringForDrawing:attributedString
++                                   paragraphAttributes:paragraphAttributes
++                                                  size:CGSizeMake(size.width, size.height)];
++}
++
+ LinesMeasurements TextLayoutManager::measureLines(
+     const AttributedStringBox &attributedStringBox,
+     const ParagraphAttributes &paragraphAttributes,
 diff --git a/ReactCommon/react/renderer/uimanager/UIManager.cpp b/ReactCommon/react/renderer/uimanager/UIManager.cpp
 index 4d640400dc129724b1a46e429fc90da2fb1919cc..ecbd4bdbdbbebfd1bb8c893b44f90bc66103711e 100644
 --- a/ReactCommon/react/renderer/uimanager/UIManager.cpp
