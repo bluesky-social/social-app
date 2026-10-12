@@ -113,6 +113,9 @@ jobs:
           xcrun simctl shutdown all || true
           xcrun simctl boot "$udid"
           xcrun simctl bootstatus "$udid" -b
+          # Turn off password AutoFill so iOS doesn't offer a strong password on
+          # the signup form: its panel swallows the text Maestro types.
+          xcrun simctl spawn "$udid" defaults write com.apple.WebUI AutoFillPasswords -int 0
           echo "Using $device_name on $runtime_name ($udid)"
 
       - name: 🏷️ Mark iOS development client build phase

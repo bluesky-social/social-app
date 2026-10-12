@@ -51,13 +51,22 @@ appId: xyz.blueskyweb.app
       platform: Android
     commands:
       - tapOn: "Switch to selecting a year"
-      - scrollUntilVisible:
-          element:
-            text: "2007"
-          direction: UP
-      - tapOn: "2007"
+      # The Material 3 picker labels year cells "Navigate to year 2007" and day
+      # cells with the full date (e.g. "Friday, October 12, 2007"), and Maestro
+      # matches the whole label. The year grid opens at the current year, so
+      # drag back a couple of rows at a time, slowly, so 2007 can't be skipped.
+      - repeat:
+          times: 20
+          while:
+            notVisible: "Navigate to year 2007"
+          commands:
+            - swipe:
+                start: 50%, 45%
+                end: 50%, 55%
+                duration: 1000
+      - tapOn: "Navigate to year 2007"
       # Selecting a year changes the displayed month, not the selected date.
-      - tapOn: "${new Date().getDate()}"
+      - tapOn: ".* ${new Date().getDate()}, 2007"
       - tapOn: "OK"
 - tapOn:
     id: "nextBtn"
