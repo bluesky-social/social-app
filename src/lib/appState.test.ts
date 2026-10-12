@@ -195,7 +195,7 @@ describe('onAppReturnedFromBackground', () => {
 })
 
 describe('onAnyAppReturn', () => {
-  it('fires on every return from background, saying whether it was real', () => {
+  it('fires on every return from background, saying whether it was significant', () => {
     const {onAnyAppReturn, RETURN_MIN_TIME_AWAY} = load()
     const cb = jest.fn()
     onAnyAppReturn(cb)
@@ -208,7 +208,7 @@ describe('onAnyAppReturn', () => {
           id: 1,
           timestamp: RETURN_MIN_TIME_AWAY - 1,
           timeAway: RETURN_MIN_TIME_AWAY - 1,
-          isReal: false,
+          isSignificant: false,
         },
       ],
       [
@@ -216,7 +216,7 @@ describe('onAnyAppReturn', () => {
           id: 2,
           timestamp: 2 * RETURN_MIN_TIME_AWAY - 1,
           timeAway: RETURN_MIN_TIME_AWAY,
-          isReal: true,
+          isSignificant: true,
         },
       ],
     ])
@@ -242,27 +242,27 @@ describe('onAnyAppReturn', () => {
       id: 1,
       timestamp: 2_000,
       timeAway: 2_000,
-      isReal: false,
+      isSignificant: false,
     })
   })
 
-  it('leaves the numbering of real returns as it was', () => {
+  it('leaves the numbering of significant returns as it was', () => {
     const {onAnyAppReturn, onAppReturnedFromBackground} = load()
     const any: AnyAppReturn[] = []
-    const real: AppReturn[] = []
+    const significant: AppReturn[] = []
     onAnyAppReturn(r => any.push(r))
-    onAppReturnedFromBackground(r => real.push(r))
+    onAppReturnedFromBackground(r => significant.push(r))
     expect(mockListeners.size).toBe(1)
 
     emit('background', AWAY, 'active')
     emit('background', 1_000, 'active')
     emit('background', AWAY, 'active')
-    expect(any.map(r => [r.id, r.isReal])).toEqual([
+    expect(any.map(r => [r.id, r.isSignificant])).toEqual([
       [1, true],
       [2, false],
       [3, true],
     ])
-    expect(real.map(r => r.id)).toEqual([1, 2])
+    expect(significant.map(r => r.id)).toEqual([1, 2])
   })
 
   it('skips a listener removed during the same return', () => {

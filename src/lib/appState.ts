@@ -36,7 +36,9 @@ export type AppReturn = {
   readonly timestamp: number
 }
 
-/** Any return from `background`, real or not, shared by every listener. */
+/**
+ * Any return from `background`, significant or not, shared by every listener.
+ */
 export type AnyAppReturn = {
   /** Increases for each return from `background` during this JS runtime. */
   readonly id: number
@@ -46,9 +48,9 @@ export type AnyAppReturn = {
   readonly timeAway: number
   /**
    * Whether it was away at least {@link RETURN_MIN_TIME_AWAY}, which makes it
-   * a real return (see {@link onAppReturnedFromBackground}).
+   * a significant return (see {@link onAppReturnedFromBackground}).
    */
-  readonly isReal: boolean
+  readonly isSignificant: boolean
 }
 
 /**
@@ -80,18 +82,18 @@ function trackReturns() {
       const now = Date.now()
       const timeAway = now - backgroundedAt
       backgroundedAt = undefined
-      const isReal = timeAway >= RETURN_MIN_TIME_AWAY
+      const isSignificant = timeAway >= RETURN_MIN_TIME_AWAY
       const anyReturn: AnyAppReturn = {
         id: ++lastAnyReturnId,
         timestamp: now,
         timeAway,
-        isReal,
+        isSignificant,
       }
       for (const listener of [...anyReturnListeners]) {
         // an earlier listener may have removed this one
         if (anyReturnListeners.has(listener)) listener(anyReturn)
       }
-      if (!isReal) return
+      if (!isSignificant) return
       const appReturn: AppReturn = {id: ++lastReturnId, timestamp: now}
       for (const listener of [...returnListeners]) {
         // an earlier listener may have removed this one
@@ -102,8 +104,9 @@ function trackReturns() {
 }
 
 /**
- * Calls `cb` on the first `active` after at least {@link RETURN_MIN_TIME_AWAY}
- * in `background`. An `inactive` interruption alone does not count.
+ * Calls `cb` on a significant return: the first `active` after at least
+ * {@link RETURN_MIN_TIME_AWAY} in `background`. An `inactive` interruption
+ * alone does not count.
  */
 export function onAppReturnedFromBackground(
   cb: (appReturn: AppReturn) => void,
@@ -136,7 +139,7 @@ export function useOnAppReturnedFromBackground(
 
 /**
  * Calls `cb` on every `active` after `background`, however long the app was
- * away, saying whether it was a real return (see
+ * away, saying whether it was a significant return (see
  * {@link onAppReturnedFromBackground}). An `inactive` interruption alone does
  * not count.
  */
