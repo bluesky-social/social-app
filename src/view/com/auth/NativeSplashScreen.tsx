@@ -170,22 +170,24 @@ export function NativeSplashScreen({
               msg`Opens flow to sign in to your existing Bluesky account`,
             )}
             size="large"
-            style={!isPhoneShaped && a.overflow_hidden}
+            /*
+             * Only the phone art has flat ground under this button, so
+             * elsewhere it gets the same dark glass as the lightbox chrome to
+             * stay legible over the busy part of the illustration. The fill
+             * goes on the button because the web BlurView overrides its own.
+             */
+            style={
+              !isPhoneShaped && [
+                a.overflow_hidden,
+                {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
+              ]
+            }
             hoverStyle={{opacity: 0.5}}>
             {!isPhoneShaped && (
-              /*
-               * Only the phone art has flat ground under this button, so
-               * elsewhere it gets the same dark glass as the lightbox chrome
-               * to stay legible over the busy part of the illustration.
-               */
               <BlurView
                 intensity={20}
                 tint="dark"
-                style={[
-                  a.absolute,
-                  a.inset_0,
-                  {backgroundColor: 'rgba(0, 0, 0, 0.5)'},
-                ]}
+                style={[a.absolute, a.inset_0]}
               />
             )}
             <ButtonText style={{color: 'white'}}>
