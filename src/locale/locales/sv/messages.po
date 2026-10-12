@@ -8,7 +8,7 @@ msgstr ""
 "Language: sv\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-07 18:46\n"
+"PO-Revision-Date: 2026-10-12 18:38\n"
 "Last-Translator: \n"
 "Language-Team: Swedish\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -13097,7 +13097,7 @@ msgstr "Den här inbjudningslänken är ogiltig"
 
 #: src/screens/Login/components/ConfirmHostingProviderDialog.tsx:139
 msgid "This is just a one-time security check, since we haven't seen this account on this device before."
-msgstr "Vi gör den här säkerhetskontrollen eftersom vi inte har sett det här kontot på den här enheten tidigare. Den behöver bara göras en gång."
+msgstr "Vi gör den här säkerhetskontrollen eftersom vi inte har sett kontot på den här enheten tidigare. Kontrollen behöver bara göras en gång."
 
 #: src/features/liveNow/components/EditLiveDialog.tsx:173
 #: src/features/liveNow/components/GoLiveDialog.tsx:165
