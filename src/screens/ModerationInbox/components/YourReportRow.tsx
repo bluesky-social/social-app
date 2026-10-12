@@ -22,7 +22,10 @@ export function YourReportRow({report}: {report: InboxReport}) {
         subject={subjectLabel}
         action={actionLabel ? i18n._(actionLabel) : undefined}
         date={new Date(report.updatedAt)}
-        to="/moderation/inbox/report/details"
+        to={{
+          screen: 'ModerationInboxReportDetails',
+          params: {moderationService: report.src, id: report.id.toString()},
+        }}
         unread={!report.isRead}
       />
     </Layout.Center>

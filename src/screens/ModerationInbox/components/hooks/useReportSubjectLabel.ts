@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/syntax'
+import {AtUri, isAtUriString} from '@atproto/syntax'
 import {moderateProfile} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
@@ -24,7 +24,9 @@ export function useReportSubjectLabel(
   const {i18n} = useLingui()
   const moderationOpts = useModerationOpts()
   const uri =
-    'uri' in subject && typeof subject.uri === 'string'
+    'uri' in subject &&
+    typeof subject.uri === 'string' &&
+    isAtUriString(subject.uri, {strict: false})
       ? new AtUri(subject.uri)
       : undefined
   const subjectDid =
