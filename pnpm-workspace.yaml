@@ -35,7 +35,6 @@ patchedDependencies:
   '@expo/cli@57.0.26': patches/@expo__cli@57.0.26.patch
   '@formatjs/bigdecimal@0.2.5': patches/@formatjs__bigdecimal@0.2.5.patch
   '@sentry/expo-upload-sourcemaps@8.26.0': patches/@sentry__expo-upload-sourcemaps@8.26.0.patch
-  eas-cli@24.8.0: patches/eas-cli@24.8.0.patch
   'expo-age-range@57.0.2': patches/expo-age-range@57.0.2.patch
   'expo-media-library@57.0.5': patches/expo-media-library@57.0.5.patch
   'expo-modules-core@57.0.18': patches/expo-modules-core@57.0.18.patch
@@ -44,7 +43,6 @@ patchedDependencies:
   expo@57.0.24: patches/expo@57.0.24.patch
   'metro-runtime@0.84.5': patches/metro-runtime@0.84.5.patch
   'metro@0.84.5': patches/metro@0.84.5.patch
-  'react-native-keyboard-controller@1.21.9': patches/react-native-keyboard-controller@1.21.9.patch
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
   'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
@@ -67,3 +65,4 @@ minimumReleaseAgeExclude:
   - expo-sharing@57.0.21 # TODO
   - '@expo/ui@57.0.20'
   - react-native-nano-icons@1.0.0-beta.2
+  - react-native-keyboard-controller@1.22.7
