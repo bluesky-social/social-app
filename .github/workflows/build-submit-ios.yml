@@ -285,23 +285,6 @@ jobs:
       - name: 🚀 Deploy
         run: pnpm eas submit -p ios --non-interactive --path ios-build/Bluesky.ipa
 
-      - name: 🪲 Upload dSYM to Sentry
-        env:
-          SENTRY_ORG: blueskyweb
-          SENTRY_PROJECT: app
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        run: pnpm sentry-cli debug-files upload ios-build/Bluesky.app.dSYM.zip --include-sources
-
-      - name: 🔔 Notify Slack of Production Build
-        if: ${{ inputs.profile == 'production' }}
-        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
-        with:
-          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
-          webhook-type: incoming-webhook
-          payload-templated: true
-          payload: |
-            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.build-number }}```"}
-
       - name: 🔢 Record main testflight build number
         if: ${{ github.ref == 'refs/heads/main' &&
           needs.build.outputs.source-sha == github.sha &&
@@ -323,6 +306,23 @@ jobs:
           path: ios-build-number
           retention-days: 90
           if-no-files-found: error
+
+      - name: 🪲 Upload dSYM to Sentry
+        env:
+          SENTRY_ORG: blueskyweb
+          SENTRY_PROJECT: app
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        run: pnpm sentry-cli debug-files upload ios-build/Bluesky.app.dSYM.zip --include-sources
+
+      - name: 🔔 Notify Slack of Production Build
+        if: ${{ inputs.profile == 'production' }}
+        uses: slackapi/slack-github-action@dcb1066f776dd043e64d0e8ba94ca15cc7e1875d # v4.0.0
+        with:
+          webhook: ${{ secrets.SLACK_CLIENT_ALERT_WEBHOOK }}
+          webhook-type: incoming-webhook
+          payload-templated: true
+          payload: |
+            {"text": "iOS production build for App Store submission is ready!\n```Artifact: Check TestFlight to know when it is available\nVersion Number: ${{ needs.build.outputs.package-version }}\nBuild Number: ${{ needs.build.outputs.build-number }}```"}
 
   distribute:
     name: Assign build to TestFlight group
