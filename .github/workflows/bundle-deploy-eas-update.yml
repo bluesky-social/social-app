@@ -281,6 +281,8 @@ jobs:
         env:
           RUNTIME_VERSION: ${{ inputs.runtimeVersion }}
           CHANNEL_NAME: ${{ inputs.channel || 'testflight' }}
+          # When set (required for production), these take precedence over the
+          # global EAS counters inside the use-build-number wrapper
           BSKY_IOS_BUILD_NUMBER: ${{ inputs.iosBuildNumber || steps.build-numbers.outputs.ios }}
           BSKY_ANDROID_VERSION_CODE: ${{ inputs.androidVersionCode || steps.build-numbers.outputs.android }}
 
