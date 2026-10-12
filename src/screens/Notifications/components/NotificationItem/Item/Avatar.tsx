@@ -5,6 +5,7 @@ import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
+import * as Skele from '#/components/Skeleton'
 import type * as bsky from '#/types/bsky'
 import {useItemBackgroundColor} from './Root'
 
@@ -27,6 +28,15 @@ const BADGE_SIZE = 20
  * which sets it apart from the avatar.
  */
 const BADGE_RING = 2
+
+/**
+ * The space the avatar sits in, with room for the badge to overlap its
+ * bottom-end corner.
+ */
+const SLOT_SIZE = {
+  width: AVATAR_SIZE + 6 + BADGE_RING,
+  height: AVATAR_SIZE + 4 + BADGE_RING,
+}
 
 /**
  * The primary actor's avatar, with an icon badge overlapping its bottom-end
@@ -61,10 +71,7 @@ export function Avatar({
   return (
     <View
       style={[
-        {
-          width: AVATAR_SIZE + 6 + BADGE_RING,
-          height: AVATAR_SIZE + 4 + BADGE_RING,
-        },
+        SLOT_SIZE,
         // Without a badge, the avatar sits vertically centred in its slot
         !Icon && a.justify_center,
       ]}>
@@ -94,6 +101,33 @@ export function Avatar({
           <Icon size="xs" fill={t.palette.white} />
         </View>
       )}
+    </View>
+  )
+}
+
+/**
+ * Stands in for a badged `Avatar` while the row loads, in the same slot, with
+ * a faint circle where the badge goes.
+ */
+export function AvatarSkeleton() {
+  const ringColor = useItemBackgroundColor()
+
+  return (
+    <View style={SLOT_SIZE}>
+      <Skele.Circle size={AVATAR_SIZE} />
+      <View
+        style={[
+          a.absolute,
+          a.rounded_full,
+          {
+            end: 0,
+            bottom: 0,
+            padding: BADGE_RING,
+            backgroundColor: ringColor,
+          },
+        ]}>
+        <Skele.Circle blend size={BADGE_SIZE} />
+      </View>
     </View>
   )
 }

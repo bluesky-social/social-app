@@ -20,7 +20,6 @@ import {
 import {useLastUnreadCheck} from '#/state/queries/notifications/unread'
 import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListMethods} from '#/view/com/util/List'
-import {NotificationFeedLoadingPlaceholder} from '#/view/com/util/LoadingPlaceholder'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
 import {
@@ -29,6 +28,7 @@ import {
   type FollowerNotificationView,
   getFollowers,
   isFollowerNotification,
+  LoadingSkeleton,
   NotificationItem,
 } from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
@@ -254,7 +254,7 @@ export function PageList({
                   />
                 )
               case 'loading':
-                return <NotificationFeedLoadingPlaceholder />
+                return <LoadingSkeleton feed={feed} />
               case 'empty':
                 return (
                   // Centred in the space between the header and the bottom bar
