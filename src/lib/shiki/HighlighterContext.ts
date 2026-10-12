@@ -11,12 +11,12 @@ export interface HighlighterContextType {
   isReady: boolean
 }
 
-export const HighlighterContext =
-  createContext<HighlighterContextType | null>(null)
+export const HighlighterContext = createContext<HighlighterContextType | null>(
+  null,
+)
 
 export function useHighlighter(): HighlighterContextType {
   const ctx = useContext(HighlighterContext)
-  if (!ctx)
-    throw new Error('HighlighterProvider missing in component tree')
+  if (!ctx) throw new Error('HighlighterProvider missing in component tree')
   return ctx
 }

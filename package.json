@@ -346,11 +346,12 @@
       "tsx",
       "js",
       "jsx",
+      "mjs",
       "json",
       "node"
     ],
     "transform": {
-      "\\.[jt]sx?$": "babel-jest"
+      "\\.(?:[jt]sx?|mjs)$": "babel-jest"
     },
     "moduleNameMapper": {
       "^multiformats$": "<rootDir>/node_modules/multiformats/dist/src/index.js",
@@ -367,7 +368,7 @@
       "^cborg$": "<rootDir>/node_modules/cborg/cborg.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|@bsky/sdk|tlds|multiformats|uint8arrays|@ipld/.*|cborg|await-lock)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|@bsky/sdk|tlds|multiformats|uint8arrays|@ipld/.*|cborg|await-lock|@shikijs/.*|hast-util-to-html|hast-util-whitespace|html-void-elements|property-information|ccount|comma-separated-tokens|space-separated-tokens|stringify-entities|character-entities-html4|character-entities-legacy|zwitch)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

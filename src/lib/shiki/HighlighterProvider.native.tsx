@@ -12,6 +12,7 @@ import {
 } from '#/lib/shiki/HighlighterContext'
 import {shikiLangs} from '#/lib/shiki/langs'
 import {shikiThemes} from '#/lib/shiki/themes'
+import {tokenizeCode} from '#/lib/shiki/tokenize'
 
 let highlighterInstance: HighlighterCore | null = null
 let initializationPromise: Promise<void> | null = null
@@ -41,7 +42,7 @@ export default function HighlighterProvider({children}: {children: ReactNode}) {
           throw new Error(
             'Highlighter not initialized. Call initialize() first.',
           )
-        return highlighterInstance.codeToTokensBase(code, options)
+        return tokenizeCode(highlighterInstance, code, options)
       },
       dispose: () => {
         highlighterInstance?.dispose()
