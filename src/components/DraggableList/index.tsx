@@ -254,24 +254,49 @@ function SortableItem<T>({
 
   const lastHapticSlot = useSharedValue(-1)
 
+  /**
+   * Makes this item the one being dragged. Returns false if the item has no
+   * slot yet.
+   */
+  const startDrag = () => {
+    'worklet'
+    const s = state.get()
+    const mySlot = s.slots[itemKey]
+    if (mySlot === undefined) {
+      return false
+    }
+    state.set({...s, activeKey: itemKey, dragStartSlot: mySlot})
+    dragY.set(0)
+    scrollCompensation.set(0)
+    isGestureActive.set(true)
+    measureDone.set(false)
+    lastHapticSlot.set(mySlot)
+    if (onDragStart) {
+      scheduleOnRN(onDragStart)
+    }
+    scheduleOnRN(playDragStartHaptic)
+    return true
+  }
+
   const gesture = usePanGesture({
     onActivate: () => {
       'worklet'
-      const s = state.get()
-      const mySlot = s.slots[itemKey]
-      state.set({...s, activeKey: itemKey, dragStartSlot: mySlot})
-      dragY.set(0)
-      scrollCompensation.set(0)
-      isGestureActive.set(true)
-      measureDone.set(false)
-      lastHapticSlot.set(mySlot)
-      if (onDragStart) {
-        scheduleOnRN(onDragStart)
-      }
-      scheduleOnRN(playDragStartHaptic)
+      startDrag()
     },
     onUpdate: e => {
       'worklet'
+      const activeKey = state.get().activeKey
+      if (activeKey !== itemKey) {
+        /*
+         * On iOS, RNGH v3 can cancel the pan right after it activates (raising
+         * the item's zIndex remounts it), which resets the drag in onFinalize,
+         * and then keep delivering updates for it without activating again.
+         * Pick the drag back up, unless another item owns it.
+         */
+        if (activeKey !== '' || !startDrag()) {
+          return
+        }
+      }
       const startSlot = state.get().dragStartSlot
       const minY = -startSlot * itemHeight
       const maxY = (itemCount - 1 - startSlot) * itemHeight
@@ -293,6 +318,14 @@ function SortableItem<T>({
       'worklet'
       // Stop auto-scroll BEFORE the snap animation.
       isGestureActive.set(false)
+      /*
+       * Only the item being dragged may commit. Committing while idle
+       * (dragStartSlot -1) would move sorted[-1], an undefined key, into the
+       * new order.
+       */
+      if (state.get().activeKey !== itemKey) {
+        return
+      }
       const startSlot = state.get().dragStartSlot
       const rawNewSlot = Math.round(
         (startSlot * itemHeight + dragY.get()) / itemHeight,
