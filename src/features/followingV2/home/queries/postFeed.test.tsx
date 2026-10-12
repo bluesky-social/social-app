@@ -1466,7 +1466,7 @@ describe('usePostFeedPrepend', () => {
     expect(hook.result.current.query.isFetchingNextPage).toBe(false)
   })
 
-  describe('on a real return to the app', () => {
+  describe('on a significant return to the app', () => {
     /** Two pages fetched just now, as a feed loaded this session has. */
     function fetchedData(): PostFeedData {
       const data = restoredData()
@@ -1929,8 +1929,8 @@ describe('staging new posts on Home Following', () => {
   }
 
   /**
-   * Leaves the app in the background for long enough to make a real return,
-   * then opens it again, and lets the check that makes finish.
+   * Leaves the app in the background for long enough to make a significant
+   * return, then opens it again, and lets the check that makes finish.
    */
   async function warmOpen() {
     setAppState('background')
@@ -2327,7 +2327,7 @@ describe('staging new posts on Home Following', () => {
       expect(latest.pill.visible).toBe(false)
     })
 
-    it('leaves what is staged without the pill, for a real return to offer', async () => {
+    it('leaves what is staged without the pill, for a significant return to offer', async () => {
       const {latest} = renderHome()
       newest = 14
       await anInterval()

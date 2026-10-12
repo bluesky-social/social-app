@@ -552,8 +552,8 @@ export const PREPEND_LIMIT = 40
 
 /**
  * What prompted a prepend: a top page restored from disk, or a check for new
- * posts. Only a restore and a real return to the app (a `return`, not a `hop`)
- * offer what they find with the pill.
+ * posts. Only a restore and a significant return to the app (a `return`, not
+ * a `hop`) offer what they find with the pill.
  */
 export type PrependTrigger = 'restore' | NewPostsCheckTrigger
 
@@ -626,8 +626,8 @@ function isSameFeedItem(
  * did and replaces it, so however long the reader stays put, what's above them
  * is one page of at most {@link PREPEND_LIMIT} posts. Once it's read, the next
  * one goes above it. `staged` is the page for the pill, which offers it if a
- * restore or a real return to the app put it there, or `check` has offered it
- * since.
+ * restore or a significant return to the app put it there, or `check` has
+ * offered it since.
  *
  * A page only ever replaces the staged one if it has all of its posts, as
  * the list holds the reader's place only for posts added above the others:
@@ -648,9 +648,9 @@ function isSameFeedItem(
  *
  * `check` is a check for new posts. It peeks at the newest post first, and
  * runs a prepend only if that's not the one on top already. It makes no
- * request while the staged page is full. A check on a real return to the app
- * offers what's staged even if it found nothing newer, or couldn't tell. It's
- * `undefined` when there's nothing to fetch above.
+ * request while the staged page is full. A check on a significant return to
+ * the app offers what's staged even if it found nothing newer, or couldn't
+ * tell. It's `undefined` when there's nothing to fetch above.
  *
  * A top page fetched before this process started (see
  * {@link PROCESS_STARTED_AT}) is a restored one. The view prepends above it as

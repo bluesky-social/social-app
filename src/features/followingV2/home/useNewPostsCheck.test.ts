@@ -11,8 +11,8 @@ import {
 
 /*
  * Returns and app state are driven directly rather than through a mocked
- * `AppState`: what counts as a real return is `onAnyAppReturn`'s business, and
- * only the hooks it exports are relied on here.
+ * `AppState`: what counts as a significant return is `onAnyAppReturn`'s
+ * business, and only the hooks it exports are relied on here.
  */
 const mockReturnListeners = new Set<(appReturn: AnyAppReturn) => void>()
 const mockAppStateListeners = new Set<(state: AppStateStatus) => void>()
@@ -127,17 +127,23 @@ async function advance(ms: number) {
   await flush()
 }
 
-/** Comes back to the app for real, from the background after `away` there. */
+/**
+ * Makes a significant return to the app, from the background after `away`
+ * there.
+ */
 function returnToApp(away = 0) {
   return comeBack(away, true)
 }
 
-/** Comes back to the app too soon for a real return, as a quick hop away. */
+/**
+ * Comes back to the app too soon for a significant return, as a quick hop
+ * away.
+ */
 function hopToApp(away = 0) {
   return comeBack(away, false)
 }
 
-async function comeBack(away: number, isReal: boolean) {
+async function comeBack(away: number, isSignificant: boolean) {
   await setAppState('background')
   await advance(away)
   mockAppState = 'active'
@@ -145,7 +151,7 @@ async function comeBack(away: number, isReal: boolean) {
     id: ++lastReturnId,
     timestamp: Date.now(),
     timeAway: away,
-    isReal,
+    isSignificant,
   }
   act(() => {
     for (const listener of [...mockReturnListeners]) listener(appReturn)
@@ -286,7 +292,7 @@ describe('in a memo() component', () => {
 })
 
 describe('return', () => {
-  it('checks on a real return, however fresh the data', async () => {
+  it('checks on a significant return, however fresh the data', async () => {
     const view = await setup()
     view.check.mockResolvedValueOnce(true)
     await returnToApp(SECOND)
@@ -335,7 +341,7 @@ describe('return', () => {
     expect(view.check.mock.calls).toEqual([['return']])
   })
 
-  it('is real if any of the returns that came while it waited was', async () => {
+  it('is significant if any of the returns that came while it waited was', async () => {
     const view = await setup({isBusy: true})
     await hopToApp()
     await returnToApp(5 * MINUTE)
@@ -348,7 +354,7 @@ describe('return', () => {
     expect(view.check.mock.calls).toEqual([['return'], ['hop']])
   })
 
-  it('is a hop if none of the returns that came while it waited was real', async () => {
+  it('is a hop if none of the returns that came while it waited was significant', async () => {
     const view = await setup({isBusy: true})
     await hopToApp()
     await hopToApp()
@@ -382,7 +388,7 @@ describe('return', () => {
     await view.update({isBusy: false})
     expect(view.check).not.toHaveBeenCalled()
 
-    // Nor does it make a later hop real.
+    // Nor does it make a later hop significant.
     await view.update({isActive: true})
     await hopToApp()
     expect(view.check.mock.calls).toEqual([['focus'], ['hop']])
