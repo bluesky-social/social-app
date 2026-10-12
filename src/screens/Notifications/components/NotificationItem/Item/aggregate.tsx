@@ -21,17 +21,20 @@ import {SecondaryText} from './text'
  * Posts without text render nothing if they have images or video, since rows
  * show those as a trailing `Item.InlineImages`. Otherwise this says what the
  * post contains instead, e.g. "Link to nytimes.com".
+ *
+ * Defaults to up to four lines at `a.text_sm`; `SubscribedPostNotification`
+ * passes `numberOfLines={2}` and `a.text_md` to keep its own, larger preview.
  */
 export function PostPreview({
   post,
-  numberOfLines = 2,
+  numberOfLines = 4,
   style,
 }: {
   post: app.bsky.feed.defs.PostView
   numberOfLines?: number
   /**
-   * Overrides the post text's style, e.g. its colour. The textless fallback
-   * stays muted regardless.
+   * Overrides the post text's style, e.g. its colour or size. The textless
+   * fallback's colour stays muted regardless.
    */
   style?: StyleProp<TextStyle>
 }) {
@@ -47,7 +50,7 @@ export function PostPreview({
         value={new RichTextAPI({text: record.text, facets: record.facets})}
         authorHandle={post.author.handle}
         numberOfLines={numberOfLines}
-        style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium, style]}
+        style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium, style]}
         // Links and mentions would otherwise take the muted colour too
         interactiveStyle={t.atoms.text_link}
       />
@@ -75,7 +78,7 @@ export function PostPreview({
   return (
     <SecondaryText
       numberOfLines={1}
-      style={[style, t.atoms.text_contrast_medium]}>
+      style={[a.text_sm, style, t.atoms.text_contrast_medium]}>
       {description}
     </SecondaryText>
   )

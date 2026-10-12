@@ -602,7 +602,11 @@ export function SubscribedPostNotification({
             </Trans>
           )}
         </Item.PrimaryText>
-        <Item.PostPreview post={post} style={t.atoms.text} />
+        <Item.PostPreview
+          post={post}
+          numberOfLines={2}
+          style={[a.text_md, t.atoms.text]}
+        />
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
       {hasThumbnails && (
