@@ -78,8 +78,14 @@ class ShareViewController: UIViewController {
   }
 
   private func openComposer(text: String) {
-    if let encoded = text.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed),
-       let url = URL(string: "\(self.appScheme)://intent/compose?text=\(encoded)") {
+    var components = URLComponents()
+    components.scheme = self.appScheme
+    components.host = "intent"
+    components.path = "/compose"
+    components.queryItems = [URLQueryItem(name: "text", value: text)]
+    // URLSearchParams decodes an unescaped plus sign as a space.
+    components.percentEncodedQuery = components.percentEncodedQuery?.replacingOccurrences(of: "+", with: "%2B")
+    if let url = components.url {
       _ = self.openURL(url)
     }
   }
