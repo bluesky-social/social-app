@@ -135,7 +135,7 @@ export function Content({
 }
 
 /**
- * Right-hand slot for a button or chevron, aligned to the top of the row.
+ * Right-hand slot for a button or images, aligned to the top of the row.
  */
 export function Trailing({
   style,
