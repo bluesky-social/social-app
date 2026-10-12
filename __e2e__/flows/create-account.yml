@@ -51,10 +51,18 @@ appId: xyz.blueskyweb.app
       platform: Android
     commands:
       - tapOn: "Switch to selecting a year"
-      - scrollUntilVisible:
-          element:
-            text: "2007"
-          direction: UP
+      # The year grid opens at the current year. scrollUntilVisible flings it
+      # straight past 2007 to 1900 whichever way it scrolls, so drag back a
+      # couple of rows at a time, slowly enough that the grid doesn't fling.
+      - repeat:
+          times: 20
+          while:
+            notVisible: "2007"
+          commands:
+            - swipe:
+                start: 50%, 45%
+                end: 50%, 55%
+                duration: 1000
       - tapOn: "2007"
       # Selecting a year changes the displayed month, not the selected date.
       - tapOn: "${new Date().getDate()}"
