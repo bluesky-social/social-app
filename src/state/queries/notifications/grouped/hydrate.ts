@@ -12,10 +12,10 @@ import * as bsky from '#/types/bsky'
 
 type OutputBody = app.bsky.notification.getGroupedNotifications.$OutputBody
 type Group = app.bsky.notification.getGroupedNotifications.Group
-type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
+type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 type PostView = app.bsky.feed.defs.PostView
 type GeneratorView = app.bsky.feed.defs.GeneratorView
-type StarterPackView = app.bsky.graph.defs.StarterPackView
+type StarterPackView = app.bsky.graph.defs.StarterPackViewBasic
 
 const defs = app.bsky.notification.getGroupedNotifications
 
@@ -80,7 +80,7 @@ function createContext(
     starterPacks: new Map(),
   }
   for (const view of relatedViews ?? []) {
-    if (bsky.isType(app.bsky.actor.defs.profileViewDetailed, view)) {
+    if (bsky.isType(app.bsky.actor.defs.profileViewBasic, view)) {
       ctx.profiles.set(view.did, view)
     } else if (bsky.isType(app.bsky.feed.defs.postView, view)) {
       ctx.posts.set(view.uri, {type: 'post', post: view})
@@ -90,7 +90,7 @@ function createContext(
       ctx.posts.set(view.uri, {type: 'notFound'})
     } else if (bsky.isType(app.bsky.feed.defs.generatorView, view)) {
       ctx.generators.set(view.uri, view)
-    } else if (bsky.isType(app.bsky.graph.defs.starterPackView, view)) {
+    } else if (bsky.isType(app.bsky.graph.defs.starterPackViewBasic, view)) {
       ctx.starterPacks.set(view.uri, view)
     }
   }
@@ -150,15 +150,23 @@ function hydrateGroup(
   }
 
   if (bsky.isType(defs.multiPostLikeGroup, kind)) {
-    const actor = resolveActor(kind.actor, ctx)
-    const posts = nonEmpty(
-      kind.items.flatMap(item => {
-        const post = resolvePost(item.post, ctx)
-        return post ? [post] : []
-      }),
-    )
-    if (!actor || !posts) return
-    return {...base, type: 'multiPostLike', actor, posts}
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostLike', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostRepost', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostLikeViaRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostLikeViaRepost', ...multi}
+  }
+
+  if (bsky.isType(defs.multiPostRepostViaRepostGroup, kind)) {
+    const multi = resolveMultiPost(kind, ctx)
+    return multi && {...base, type: 'multiPostRepostViaRepost', ...multi}
   }
 
   if (bsky.isType(defs.followGroup, kind)) {
@@ -277,6 +285,25 @@ function hydrateGroup(
 function resolveActor(did: string, ctx: Context): ProfileView | undefined {
   if (did === ctx.viewerDid) return undefined
   return ctx.profiles.get(did)
+}
+
+/**
+ * Resolves a group of one actor's likes or reposts of several posts, skipping
+ * posts that don't resolve. Undefined if the actor or every post is missing.
+ */
+function resolveMultiPost(
+  kind: {actor: string; items: {post: string}[]},
+  ctx: Context,
+): {actor: ProfileView; posts: NonEmptyArray<PostView>} | undefined {
+  const actor = resolveActor(kind.actor, ctx)
+  const posts = nonEmpty(
+    kind.items.flatMap(item => {
+      const post = resolvePost(item.post, ctx)
+      return post ? [post] : []
+    }),
+  )
+  if (!actor || !posts) return
+  return {actor, posts}
 }
 
 /**

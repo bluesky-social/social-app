@@ -33,7 +33,7 @@ export function PrimaryText({
 }) {
   const t = useTheme()
   return (
-    <Text emoji style={[a.text_sm, a.leading_snug, t.atoms.text, style]}>
+    <Text emoji style={[a.text_md, a.leading_snug, t.atoms.text, style]}>
       {children}
     </Text>
   )
@@ -56,7 +56,7 @@ export function SecondaryText({
     <Text
       emoji
       numberOfLines={numberOfLines}
-      style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium, style]}>
+      style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium, style]}>
       {children}
     </Text>
   )
@@ -67,7 +67,7 @@ export function SecondaryText({
  */
 export function Strong({children}: {children: React.ReactNode}) {
   return (
-    <Text emoji style={[a.text_sm, a.leading_snug, a.font_semi_bold]}>
+    <Text emoji style={[a.text_md, a.leading_snug, a.font_semi_bold]}>
       {children}
     </Text>
   )
@@ -108,7 +108,7 @@ export function Name({profile}: {profile: bsky.profile.AnyProfileView}) {
         disableUnderline
         emoji
         style={[
-          a.text_sm,
+          a.text_md,
           a.leading_snug,
           a.font_semi_bold,
           t.atoms.text,
@@ -138,7 +138,7 @@ export function Timestamp({date}: {date: string}) {
       {({timeElapsed}) => (
         <Text
           title={niceDate(i18n, date)}
-          style={[a.self_start, a.text_xs, t.atoms.text_contrast_low]}>
+          style={[a.self_start, a.text_sm, t.atoms.text_contrast_low]}>
           {timeElapsed}
         </Text>
       )}

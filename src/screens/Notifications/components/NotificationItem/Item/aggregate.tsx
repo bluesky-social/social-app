@@ -24,7 +24,7 @@ import {SecondaryText} from './text'
  */
 const MAX_PREVIEW_AVATARS = 4
 
-const PREVIEW_AVATAR_SIZE = 24
+const PREVIEW_AVATAR_SIZE = 32
 
 /**
  * Small avatars of the other actors in a grouped row, i.e. the "24 others" in
@@ -104,7 +104,7 @@ function OverflowChip({count, href}: {count: number; href?: string}) {
       <Text
         allowFontScaling={false}
         numberOfLines={1}
-        style={[a.font_medium, t.atoms.text_contrast_medium, {fontSize: 8}]}>
+        style={[a.text_xs, t.atoms.text_contrast_medium]}>
         {`+${formatCount(i18n, count)}`}
       </Text>
     </View>
@@ -155,7 +155,7 @@ export function PostPreview({
         value={new RichTextAPI({text: record.text, facets: record.facets})}
         authorHandle={post.author.handle}
         numberOfLines={numberOfLines}
-        style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium, style]}
+        style={[a.text_md, a.leading_snug, t.atoms.text_contrast_medium, style]}
         // Links and mentions would otherwise take the muted colour too
         interactiveStyle={t.atoms.text_link}
       />
@@ -236,13 +236,13 @@ export function FeedCard({
           <Text
             emoji
             numberOfLines={1}
-            style={[a.text_sm, a.leading_snug, a.font_semi_bold]}>
+            style={[a.text_md, a.leading_snug, a.font_semi_bold]}>
             {generator.displayName}
           </Text>
           <Text
             emoji
             numberOfLines={1}
-            style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_high]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
             <Trans>Feed by {handle}</Trans>
           </Text>
         </View>
@@ -273,7 +273,7 @@ export function ViewAllLink({
         <>
           <Text
             style={[
-              a.text_sm,
+              a.text_md,
               a.leading_snug,
               a.font_medium,
               {color: t.palette.primary_500},

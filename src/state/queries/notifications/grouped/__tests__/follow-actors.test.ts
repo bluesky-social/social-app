@@ -72,7 +72,13 @@ function page(requested: DidString[], returned = requested): FollowActorsPage {
   )
 }
 
-function hideableOffense(actor: ProfileView): ProfileView {
+/**
+ * Works on notification actors and on followers loaded with "Show more",
+ * which are basic and detailed views respectively.
+ */
+function hideableOffense<
+  T extends Pick<app.bsky.actor.defs.ProfileViewBasic, 'did' | 'labels'>,
+>(actor: T): T {
   const label: com.atproto.label.defs.Label = {
     src: LABELER,
     uri: actor.did,

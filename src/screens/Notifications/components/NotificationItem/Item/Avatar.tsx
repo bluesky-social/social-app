@@ -6,6 +6,7 @@ import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
 import type * as bsky from '#/types/bsky'
+import {useItemBackgroundColor} from './Root'
 
 /**
  * The colour family of a notification's icon badge.
@@ -19,8 +20,13 @@ export type BadgeTone =
  */
 const ACTIVITY_ORANGE = '#F26022'
 
-const AVATAR_SIZE = 36
+const AVATAR_SIZE = 40
 const BADGE_SIZE = 20
+/**
+ * The width of the ring around the badge, in the row's background colour,
+ * which sets it apart from the avatar.
+ */
+const BADGE_RING = 2
 
 /**
  * The primary actor's avatar, with an icon badge overlapping its bottom-end
@@ -37,6 +43,7 @@ export function Avatar({
   tone?: BadgeTone
 }) {
   const t = useTheme()
+  const ringColor = useItemBackgroundColor()
   const moderationOpts = useModerationOpts()
   const moderation = moderationOpts
     ? moderateProfile(profile, moderationOpts)
@@ -54,7 +61,10 @@ export function Avatar({
   return (
     <View
       style={[
-        {width: AVATAR_SIZE + 6, height: AVATAR_SIZE + 4},
+        {
+          width: AVATAR_SIZE + 6 + BADGE_RING,
+          height: AVATAR_SIZE + 4 + BADGE_RING,
+        },
         // Without a badge, the avatar sits vertically centred in its slot
         !Icon && a.justify_center,
       ]}>
@@ -74,8 +84,10 @@ export function Avatar({
             {
               end: 0,
               bottom: 0,
-              width: BADGE_SIZE,
-              height: BADGE_SIZE,
+              width: BADGE_SIZE + BADGE_RING * 2,
+              height: BADGE_SIZE + BADGE_RING * 2,
+              borderWidth: BADGE_RING,
+              borderColor: ringColor,
               backgroundColor: badgeColor,
             },
           ]}>

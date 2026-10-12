@@ -292,7 +292,7 @@ export function SocialProof({
     <View style={[a.flex_row, a.align_center, a.gap_xs]}>
       <AvatarStack
         profiles={knownFollowers.followers.slice(0, 3)}
-        size={variant === 'long' ? 16 : 14}
+        size={variant === 'long' ? 18 : 16}
         overlap={4}
         borderWidth={StyleSheet.hairlineWidth}
         backgroundColor={t.palette.contrast_25}
@@ -301,7 +301,7 @@ export function SocialProof({
         numberOfLines={1}
         style={[
           a.flex_shrink,
-          a.text_xs,
+          a.text_sm,
           a.leading_snug,
           t.atoms.text_contrast_medium,
         ]}>
@@ -344,7 +344,7 @@ export function ViaStarterPack({
     <Text
       emoji
       numberOfLines={1}
-      style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+      style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
       <Trans comment="When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”">
         via starter pack{' '}
         <StarterPackIcon
@@ -359,7 +359,7 @@ export function ViaStarterPack({
           onMouseEnter={link.precache}
           disableUnderline
           emoji
-          style={[a.text_xs, a.font_medium, a.leading_snug, t.atoms.text]}>
+          style={[a.text_sm, a.font_medium, a.leading_snug, t.atoms.text]}>
           {name}
         </InlineLinkText>
       </Trans>
@@ -391,13 +391,13 @@ export function StarterPackCard({
           <Text
             emoji
             numberOfLines={2}
-            style={[a.text_sm, a.font_semi_bold, a.leading_snug, t.atoms.text]}>
+            style={[a.text_md, a.font_semi_bold, a.leading_snug, t.atoms.text]}>
             {name}
           </Text>
           <Text
             emoji
             numberOfLines={1}
-            style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_high]}>
+            style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_high]}>
             <Trans>Starter pack by {handle}</Trans>
           </Text>
         </Card>
@@ -522,7 +522,7 @@ export function ShowMoreActorsButton({
           )}
           <Text
             style={[
-              a.text_sm,
+              a.text_md,
               a.font_semi_bold,
               a.leading_snug,
               isLoading ? t.atoms.text_contrast_medium : t.atoms.text_link,
@@ -573,7 +573,7 @@ export function ActorListItem({
       <Text
         emoji
         numberOfLines={1}
-        style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+        style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}
       </Text>
     )
@@ -613,7 +613,7 @@ export function ActorListItem({
               numberOfLines={1}
               style={[
                 a.flex_shrink,
-                a.text_sm,
+                a.text_md,
                 a.font_semi_bold,
                 a.leading_snug,
                 t.atoms.text,

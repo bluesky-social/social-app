@@ -5,14 +5,14 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {atoms as a, useTheme} from '#/alf'
-import {BellPlus_Stroke2_Corner0_Rounded as BellPlusIcon} from '#/components/icons/Bell'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {Heart2_Filled_Stroke2_Corner0_Rounded as HeartIcon} from '#/components/icons/Heart2'
 import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
 import {
-  Repost_Stroke2_Corner3_Rounded as RepostIcon,
-  RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon,
-} from '#/components/icons/Repost'
+  NotificationActivitySmall_Filled_Corner0_Rounded as ActivityIcon,
+  NotificationLikeSmall_Filled_Corner0_Rounded as HeartIcon,
+  NotificationRepostSmall_Filled_Corner0_Rounded as RepostIcon,
+} from '#/components/icons/Notification'
+import {RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon} from '#/components/icons/Repost'
 import * as Item from '../Item'
 import {makeActivityListLink, makePostLink} from '../links'
 import {type NotificationOf} from '../types'
@@ -277,19 +277,42 @@ export function RepostViaRepostNotification({
 }
 
 /**
- * One person liked several of the viewer's posts. The row and "View all" open
- * the activity list with every liked post.
+ * Shared anatomy for one person liking or reposting several posts: their
+ * avatar, the primary sentence, a preview of the newest post, and a "View
+ * all" link. The row and the link open the activity list with every post.
  */
-export function MultiPostLikeNotification({
+function MultiPostRow({
   notification,
+  icon,
+  tone,
+  label,
+  viewAllLabel,
+  children,
 }: {
-  notification: NotificationOf<'multiPostLike'>
+  notification: NotificationOf<
+    | 'multiPostLike'
+    | 'multiPostRepost'
+    | 'multiPostLikeViaRepost'
+    | 'multiPostRepostViaRepost'
+  >
+  icon: React.ComponentType<SVGIconProps>
+  tone: Item.BadgeTone
+  /**
+   * Plain-text version of the primary sentence, for screen readers.
+   */
+  label: string
+  /**
+   * Accessibility label for "View all", saying what "all" is.
+   */
+  viewAllLabel: string
+  /**
+   * The primary sentence, as an `Item.PrimaryText`.
+   */
+  children: React.ReactNode
 }) {
   const t = useTheme()
-  const {t: l} = useLingui()
-  const {actor, posts, count} = notification
+  const {actor, posts} = notification
   const [post] = posts
-  const name = Item.useDisplayName(actor)
   const href = makeActivityListLink(posts.map(p => p.uri))
   const hasThumbnails = Item.getPostThumbnails(post.embed).length > 0
   const mediaBlurred = Item.usePostMediaBlurred(post)
@@ -298,22 +321,14 @@ export function MultiPostLikeNotification({
     <Item.Root
       href={href}
       isRead={notification.isRead}
-      label={l`${name} liked ${count} of your ${plural(count, {
-        one: 'post',
-        other: 'posts',
-      })}`}
+      label={label}
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={HeartIcon} tone="like" />
+      <Item.Avatar profile={actor} icon={icon} tone={tone} />
       <Item.Content>
-        <Item.PrimaryText>
-          <Trans>
-            <Item.Name profile={actor} /> liked {count} of your{' '}
-            <Plural value={count} one="post" other="posts" />
-          </Trans>
-        </Item.PrimaryText>
+        {children}
         <Item.PostPreview post={post} style={t.atoms.text_contrast_high} />
         <Item.Timestamp date={notification.indexedAt} />
-        <Item.ViewAllLink href={href} label={l`View all posts ${name} liked`} />
+        <Item.ViewAllLink href={href} label={viewAllLabel} />
       </Item.Content>
       {hasThumbnails && (
         <Item.Trailing>
@@ -325,6 +340,136 @@ export function MultiPostLikeNotification({
         </Item.Trailing>
       )}
     </Item.Root>
+  )
+}
+
+/**
+ * One person liked several of the viewer's posts.
+ */
+export function MultiPostLikeNotification({
+  notification,
+}: {
+  notification: NotificationOf<'multiPostLike'>
+}) {
+  const {t: l} = useLingui()
+  const {actor, count} = notification
+  const name = Item.useDisplayName(actor)
+
+  return (
+    <MultiPostRow
+      notification={notification}
+      icon={HeartIcon}
+      tone="like"
+      label={l`${name} liked ${count} of your ${plural(count, {
+        one: 'post',
+        other: 'posts',
+      })}`}
+      viewAllLabel={l`View all posts ${name} liked`}>
+      <Item.PrimaryText>
+        <Trans>
+          <Item.Name profile={actor} /> liked {count} of your{' '}
+          <Plural value={count} one="post" other="posts" />
+        </Trans>
+      </Item.PrimaryText>
+    </MultiPostRow>
+  )
+}
+
+/**
+ * One person reposted several of the viewer's posts.
+ */
+export function MultiPostRepostNotification({
+  notification,
+}: {
+  notification: NotificationOf<'multiPostRepost'>
+}) {
+  const {t: l} = useLingui()
+  const {actor, count} = notification
+  const name = Item.useDisplayName(actor)
+
+  return (
+    <MultiPostRow
+      notification={notification}
+      icon={RepostIcon}
+      tone="repost"
+      label={l`${name} reposted ${count} of your ${plural(count, {
+        one: 'post',
+        other: 'posts',
+      })}`}
+      viewAllLabel={l`View all posts ${name} reposted`}>
+      <Item.PrimaryText>
+        <Trans>
+          <Item.Name profile={actor} /> reposted {count} of your{' '}
+          <Plural value={count} one="post" other="posts" />
+        </Trans>
+      </Item.PrimaryText>
+    </MultiPostRow>
+  )
+}
+
+/**
+ * One person liked several posts via the viewer's reposts of them. The row
+ * previews and lists the original posts.
+ */
+export function MultiPostLikeViaRepostNotification({
+  notification,
+}: {
+  notification: NotificationOf<'multiPostLikeViaRepost'>
+}) {
+  const {t: l} = useLingui()
+  const {actor, count} = notification
+  const name = Item.useDisplayName(actor)
+
+  return (
+    <MultiPostRow
+      notification={notification}
+      icon={LikeRepostIcon}
+      tone="like"
+      label={l`${name} liked ${count} of your ${plural(count, {
+        one: 'repost',
+        other: 'reposts',
+      })}`}
+      viewAllLabel={l`View all reposts ${name} liked`}>
+      <Item.PrimaryText>
+        <Trans>
+          <Item.Name profile={actor} /> liked {count} of your{' '}
+          <Plural value={count} one="repost" other="reposts" />
+        </Trans>
+      </Item.PrimaryText>
+    </MultiPostRow>
+  )
+}
+
+/**
+ * One person reposted several posts via the viewer's reposts of them. The
+ * row previews and lists the original posts.
+ */
+export function MultiPostRepostViaRepostNotification({
+  notification,
+}: {
+  notification: NotificationOf<'multiPostRepostViaRepost'>
+}) {
+  const {t: l} = useLingui()
+  const {actor, count} = notification
+  const name = Item.useDisplayName(actor)
+
+  return (
+    <MultiPostRow
+      notification={notification}
+      icon={RepostRepostIcon}
+      tone="repost"
+      label={l`${name} reposted ${count} of your ${plural(count, {
+        one: 'repost',
+        other: 'reposts',
+      })}`}
+      viewAllLabel={l`View all reposts ${name} reposted`}>
+      <Item.PrimaryText>
+        <Trans>
+          <Item.Name profile={actor} /> reposted {count} of your{' '}
+          <Plural value={count} one="repost" other="reposts" />
+        </Trans>
+      </Item.PrimaryText>
+    </MultiPostRow>
   )
 }
 
@@ -431,7 +576,7 @@ export function SubscribedPostNotification({
           : l`New ${plural(count, {one: 'post', other: 'posts'})} from ${name}`
       }
       testID={`notification-${notification.type}-${notification.id}`}>
-      <Item.Avatar profile={actor} icon={BellPlusIcon} tone="activity" />
+      <Item.Avatar profile={actor} icon={ActivityIcon} tone="activity" />
       <Item.Content>
         {others > 0 && (
           <Item.AvatarRow profiles={authors.slice(1)} total={others} />

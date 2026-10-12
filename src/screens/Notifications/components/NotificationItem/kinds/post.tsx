@@ -3,10 +3,12 @@ import {View} from 'react-native'
 import {POST_TOMBSTONE, usePostShadow} from '#/state/cache/post-shadow'
 import {type ParentPost} from '#/state/queries/notifications/grouped/types'
 import {atoms as a} from '#/alf'
-import {ArrowCornerDownRight_Stroke2_Corner2_Rounded as ArrowCornerDownRight} from '#/components/icons/Arrow'
-import {At_Stroke2_Corner0_Rounded as At} from '#/components/icons/At'
-import {CloseQuote_Filled_Stroke2_Corner0_Rounded as CloseQuote} from '#/components/icons/CloseQuote'
 import {type Props as SVGIconProps} from '#/components/icons/common'
+import {
+  NotificationMentionSmall_Filled_Corner0_Rounded as MentionIcon,
+  NotificationQuoteSmall_Filled_Corner0_Rounded as QuoteIcon,
+  NotificationReplySmall_Filled_Corner0_Rounded as ReplyIcon,
+} from '#/components/icons/Notification'
 import * as Item from '../Item'
 import {makePostLink} from '../links'
 import {type NotificationOf} from '../types'
@@ -22,7 +24,7 @@ export function ReplyNotification({
   return (
     <PostNotification
       notification={notification}
-      icon={ArrowCornerDownRight}
+      icon={ReplyIcon}
       parent={notification.parent}
       replyVariant="reply"
     />
@@ -41,7 +43,7 @@ export function QuoteNotification({
   return (
     <PostNotification
       notification={notification}
-      icon={CloseQuote}
+      icon={QuoteIcon}
       parent={notification.parent}
       replyVariant="inReply"
     />
@@ -59,7 +61,7 @@ export function MentionNotification({
   return (
     <PostNotification
       notification={notification}
-      icon={At}
+      icon={MentionIcon}
       parent={notification.parent}
       replyVariant="inReply"
     />

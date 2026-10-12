@@ -44,7 +44,7 @@ export type {
   ParentPost,
 } from '#/state/queries/notifications/grouped/types'
 
-type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
+type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 type PostView = app.bsky.feed.defs.PostView
 
 const PAGE_SIZE = 30
@@ -309,6 +309,9 @@ function* postsInNotification(
       }
       break
     case 'multiPostLike':
+    case 'multiPostRepost':
+    case 'multiPostLikeViaRepost':
+    case 'multiPostRepostViaRepost':
       yield* notification.posts
       break
     case 'subscribedPost':
@@ -335,6 +338,9 @@ function* actorsInNotification(
       yield* notification.actors
       break
     case 'multiPostLike':
+    case 'multiPostRepost':
+    case 'multiPostLikeViaRepost':
+    case 'multiPostRepostViaRepost':
     case 'followBack':
     case 'verified':
     case 'unverified':

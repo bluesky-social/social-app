@@ -4,6 +4,9 @@ import {
   LikeNotification,
   LikeViaRepostNotification,
   MultiPostLikeNotification,
+  MultiPostLikeViaRepostNotification,
+  MultiPostRepostNotification,
+  MultiPostRepostViaRepostNotification,
   RepostNotification,
   RepostViaRepostNotification,
   SubscribedPostNotification,
@@ -44,6 +47,14 @@ export function NotificationItem({
       return <LikeNotification notification={notification} />
     case 'multiPostLike':
       return <MultiPostLikeNotification notification={notification} />
+    case 'multiPostRepost':
+      return <MultiPostRepostNotification notification={notification} />
+    case 'multiPostLikeViaRepost':
+      return <MultiPostLikeViaRepostNotification notification={notification} />
+    case 'multiPostRepostViaRepost':
+      return (
+        <MultiPostRepostViaRepostNotification notification={notification} />
+      )
     case 'repost':
       return <RepostNotification notification={notification} />
     case 'likeViaRepost':

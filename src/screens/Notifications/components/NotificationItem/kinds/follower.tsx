@@ -10,7 +10,7 @@ import {type NotificationView} from '#/state/queries/notifications/grouped/types
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
-import {PersonPlus_Filled_Stroke2_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Person'
+import {NotificationFollowSmall_Filled_Corner0_Rounded as PersonPlusIcon} from '#/components/icons/Notification'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
 import type * as bsky from '#/types/bsky'
@@ -106,7 +106,7 @@ export function FollowerNotification({
       <Text
         emoji
         numberOfLines={1}
-        style={[a.text_xs, a.leading_snug, t.atoms.text_contrast_medium]}>
+        style={[a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]}>
         {sanitizeHandle(profile.handle, '@')}
       </Text>
     )
@@ -135,7 +135,7 @@ export function FollowerNotification({
             numberOfLines={1}
             style={[
               a.flex_shrink,
-              a.text_sm,
+              a.text_md,
               a.font_semi_bold,
               a.leading_snug,
               t.atoms.text,
@@ -165,7 +165,8 @@ function PlainAvatar({profile}: {profile: bsky.profile.AnyProfileView}) {
 
   return (
     <PreviewableUserAvatar
-      size={36}
+      // Matches `Item.Avatar`
+      size={40}
       profile={profile}
       moderation={moderation?.ui('avatar')}
       type={profile.associated?.labeler ? 'labeler' : 'user'}

@@ -8,10 +8,10 @@ import {type app} from '#/lexicons'
 export type GroupedNotificationsFeed =
   'all' | 'people-i-follow' | 'conversations' | 'followers' | 'activity'
 
-type ProfileView = app.bsky.actor.defs.ProfileViewDetailed
+type ProfileView = app.bsky.actor.defs.ProfileViewBasic
 type PostView = app.bsky.feed.defs.PostView
 type GeneratorView = app.bsky.feed.defs.GeneratorView
-type StarterPackView = app.bsky.graph.defs.StarterPackView
+type StarterPackView = app.bsky.graph.defs.StarterPackViewBasic
 
 /**
  * Guarantees a primary actor, so rows never have to handle an empty list.
@@ -55,6 +55,29 @@ export type NotificationView =
   | (Base & {type: 'like'; post: PostView; actors: NonEmptyArray<ProfileView>})
   | (Base & {
       type: 'multiPostLike'
+      actor: ProfileView
+      posts: NonEmptyArray<PostView>
+    })
+  | (Base & {
+      type: 'multiPostRepost'
+      actor: ProfileView
+      posts: NonEmptyArray<PostView>
+    })
+  | (Base & {
+      /**
+       * Likes of several posts via the viewer's reposts of them. `posts` are
+       * the original posts.
+       */
+      type: 'multiPostLikeViaRepost'
+      actor: ProfileView
+      posts: NonEmptyArray<PostView>
+    })
+  | (Base & {
+      /**
+       * Reposts of several posts via the viewer's reposts of them. `posts`
+       * are the original posts.
+       */
+      type: 'multiPostRepostViaRepost'
       actor: ProfileView
       posts: NonEmptyArray<PostView>
     })
