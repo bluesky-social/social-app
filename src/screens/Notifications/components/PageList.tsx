@@ -33,6 +33,7 @@ import {
 } from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
+import {useRefreshPillMetrics} from '#/screens/Notifications/refreshPillMetrics'
 import {
   isRefreshPillVisible,
   type SeenAtMode,
@@ -120,6 +121,7 @@ export function PageList({
   onEmptyChange?: (isEmpty: boolean) => void
 }) {
   const {t: l} = useLingui()
+  const ax = useAnalytics()
   const initialNumToRender = useInitialNumToRender()
   const trackPostView = usePostViewTracking('Notifications')
   const isScreenFocused = useIsFocused()
@@ -169,24 +171,36 @@ export function PageList({
    * yet.
    */
   const listRef = useRef<ListMethods>(null)
-  const loadLatest = () => {
+  const loadLatest = (reason: 'softReset' | 'pill') => {
+    ax.metric('notifications:refresh', {tab: feed, reason})
     listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
     onLoadingLatestChange?.(true)
     void refresh(feed, 'kept').finally(() => onLoadingLatestChange?.(false))
   }
-  const onSoftReset = useEffectEvent(loadLatest)
+  const onSoftReset = useEffectEvent(() => loadLatest('softReset'))
   useEffect(() => {
     if (!isScreenFocused || !isActive) return
     return listenSoftReset(() => onSoftReset())
   }, [isScreenFocused, isActive])
 
+  const isInView = isScreenFocused && isActive
+  const isFetchingTop = isFetching && !isFetchingNextPage
   const lastUnreadCheck = useLastUnreadCheck()
   const showRefreshPill = isRefreshPillVisible({
     feed,
-    isActive: isScreenFocused && isActive,
+    isActive: isInView,
     check: lastUnreadCheck,
     top,
-    isFetchingTop: isFetching && !isFetchingNextPage,
+    isFetchingTop,
+  })
+  const onPressRefreshPill = useRefreshPillMetrics({
+    metric: ax.metric,
+    tab: feed,
+    isInView,
+    visible: showRefreshPill,
+    top,
+    isFetchingTop,
+    onPress: () => loadLatest('pill'),
   })
 
   let rows: Row[]
@@ -204,6 +218,7 @@ export function PageList({
   }
 
   const onRefresh = async () => {
+    ax.metric('notifications:refresh', {tab: feed, reason: 'pullToRefresh'})
     setIsPTRing(true)
     try {
       await refresh(feed, 'server')
@@ -324,7 +339,7 @@ export function PageList({
         visible={showRefreshPill}
         headerHeight={headerOffset}
         titleHeight={titleHeight}
-        onPress={loadLatest}
+        onPress={onPressRefreshPill}
       />
     </>
   )
