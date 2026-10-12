@@ -11,6 +11,7 @@ import {Text} from '#/components/Typography'
 export function PreviewContent({
   testID,
   title,
+  leading,
   children,
   metadataText = [],
   loading = false,
@@ -21,6 +22,7 @@ export function PreviewContent({
 }: {
   testID: string
   title: string
+  leading?: React.ReactNode
   children?: React.ReactNode
   metadataText?: string[]
   loading?: boolean
@@ -33,35 +35,38 @@ export function PreviewContent({
 
   return (
     <ContentHider testID={testID} modui={moderation}>
-      <View style={[a.gap_sm]}>
-        <Text emoji style={[a.text_md, a.font_semi_bold]}>
-          {title}
-        </Text>
-        {loading ? <Loader size="md" /> : children}
-        {!loading && metadataText.length ? (
-          <View style={[a.gap_2xs]}>
-            {metadataText.map((text, index) => (
-              <Text
-                key={index}
-                emoji
-                style={[a.text_sm, t.atoms.text_contrast_medium]}>
-                {text}
-              </Text>
-            ))}
-          </View>
-        ) : null}
-        {!loading && to && openLabel ? (
-          <View style={[a.align_start]}>
-            <Link
-              testID={openTestID}
-              to={to}
-              label={openLabel}
-              size="tiny"
-              color="secondary">
-              <ButtonText>{openLabel}</ButtonText>
-            </Link>
-          </View>
-        ) : null}
+      <View style={[a.flex_row, a.gap_sm]}>
+        {leading}
+        <View style={[a.flex_1, a.gap_sm]}>
+          <Text emoji style={[a.text_md, a.font_semi_bold]}>
+            {title}
+          </Text>
+          {loading ? <Loader size="md" /> : children}
+          {!loading && metadataText.length ? (
+            <View style={[a.gap_2xs]}>
+              {metadataText.map((text, index) => (
+                <Text
+                  key={index}
+                  emoji
+                  style={[a.text_sm, t.atoms.text_contrast_medium]}>
+                  {text}
+                </Text>
+              ))}
+            </View>
+          ) : null}
+          {!loading && to && openLabel ? (
+            <View style={[a.align_start]}>
+              <Link
+                testID={openTestID}
+                to={to}
+                label={openLabel}
+                size="tiny"
+                color="secondary">
+                <ButtonText>{openLabel}</ButtonText>
+              </Link>
+            </View>
+          ) : null}
+        </View>
       </View>
     </ContentHider>
   )

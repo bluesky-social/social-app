@@ -13,8 +13,14 @@ export function YourAccountRow({
 }) {
   const labels = useActionedSubjectLabels(item)
   const action = item.latestAction
+  const subject =
+    'did' in item.subject && typeof item.subject.did === 'string'
+      ? item.subject.did
+      : 'uri' in item.subject && typeof item.subject.uri === 'string'
+        ? item.subject.uri
+        : undefined
 
-  if (!action || !labels) return null
+  if (!action || !labels || !subject) return null
 
   const dateEnd = action.reversedAt ?? action.expiresAt
 
@@ -24,7 +30,13 @@ export function YourAccountRow({
       action={labels.summary}
       date={new Date(action.createdAt)}
       dateEnd={dateEnd ? new Date(dateEnd) : undefined}
-      to="/moderation/inbox/notice/details"
+      to={{
+        screen: 'ModerationInboxNoticeDetails',
+        params: {
+          moderationService: item.src,
+          subject,
+        },
+      }}
       unread={unread}
     />
   )
