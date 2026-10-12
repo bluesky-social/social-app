@@ -146,13 +146,6 @@ interface ProfileUpdateParams {
       ) => Un$Typed<app.bsky.actor.profile.Main>)
   newUserAvatar?: ImageMeta | undefined | null
   newUserBanner?: ImageMeta | undefined | null
-  /**
-   * Applied after `updates`, for fields outside the usual profile form, e.g.
-   * profile links. Doesn't change how the save waits for the AppView.
-   */
-  updateRecord?: (
-    record: Un$Typed<app.bsky.actor.profile.Main>,
-  ) => Un$Typed<app.bsky.actor.profile.Main>
   checkCommitted?: (
     profile: app.bsky.actor.getProfile.$OutputBody | undefined,
     err: unknown,
@@ -169,7 +162,6 @@ export function useProfileUpdateMutation() {
       updates,
       newUserAvatar,
       newUserBanner,
-      updateRecord,
       checkCommitted,
     }) => {
       let newUserAvatarPromise: ReturnType<typeof uploadBlob> | undefined
@@ -198,9 +190,9 @@ export function useProfileUpdateMutation() {
           if ('pinnedPost' in updates) {
             next.pinnedPost = updates.pinnedPost
           }
-        }
-        if (updateRecord) {
-          next = updateRecord(next)
+          if ('links' in updates) {
+            next.links = updates.links
+          }
         }
         if (newUserAvatarPromise) {
           const res = await newUserAvatarPromise
