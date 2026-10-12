@@ -67,7 +67,11 @@ const MAX_PREVIEW_AVATARS = 4
  */
 const MAX_PREVIEW_AVATARS_WIDE = 8
 
-const PREVIEW_AVATAR_SIZE = 32
+/**
+ * The size of the avatars in an `AvatarRow`. Smaller than `Item.Avatar` by
+ * enough that the two don't read as the same kind of thing.
+ */
+export const PREVIEW_AVATAR_SIZE = 28
 
 /**
  * The names a group notification's sentence needs.

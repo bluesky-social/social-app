@@ -351,7 +351,7 @@ function TimestampSkeleton() {
 }
 
 /**
- * Stands in for `Item.AvatarRow` and its 32px avatars. With `overflow`, a
+ * Stands in for `Item.AvatarRow` and its avatars. With `overflow`, a
  * fainter circle at the end stands in for its "+N" chip.
  */
 function AvatarRowSkeleton({
@@ -364,9 +364,9 @@ function AvatarRowSkeleton({
   return (
     <View style={[a.flex_row, a.align_center, a.gap_sm]}>
       {Array.from({length: count}, (_, index) => (
-        <Skele.Circle key={index} size={32} />
+        <Skele.Circle key={index} size={Item.PREVIEW_AVATAR_SIZE} />
       ))}
-      {overflow && <Skele.Circle blend size={32} />}
+      {overflow && <Skele.Circle blend size={Item.PREVIEW_AVATAR_SIZE} />}
     </View>
   )
 }
