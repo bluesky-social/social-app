@@ -310,11 +310,11 @@ function useSessionSeenAt() {
 
 /**
  * Coming back to the screen: focusing it again, mounting it (web remounts
- * the screen on every visit), or, while it's open, coming back to the app
- * after a while in the background or opening a push. Each one checks the tab
- * in view for anything new, with `checkLatest`. A quick hop out of the app
- * and back, e.g. to a share sheet, only peeks with `peekLatest`, so the list
- * stays as it is and the "Refresh" pill offers anything new.
+ * the screen on every visit), or, while it's open, a significant return to
+ * the app or opening a push. Each one checks the tab in view for anything
+ * new, with `checkLatest`. A quick hop out of the app and back, e.g. to a
+ * share sheet, only peeks with `peekLatest`, so the list stays as it is and
+ * the "Refresh" pill offers anything new.
  *
  * - From a screen pushed within the Notifications tab (e.g. a post), the
  *   unread tint is kept as it was, and anything new is tinted too.
@@ -371,7 +371,7 @@ function useReturnToScreen({
     }
   })
   const onAppReturn = useEffectEvent((appReturn: AnyAppReturn) => {
-    if (appReturn.isReal) {
+    if (appReturn.isSignificant) {
       onLeftApp()
     } else if (isFocused) {
       peekLatest()
