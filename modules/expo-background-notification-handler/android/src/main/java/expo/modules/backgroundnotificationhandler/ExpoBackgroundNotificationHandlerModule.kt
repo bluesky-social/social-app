@@ -4,24 +4,12 @@ import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 
 class ExpoBackgroundNotificationHandlerModule : Module() {
-  companion object {
-    var isForegrounded = false
-  }
-
   override fun definition() =
     ModuleDefinition {
       Name("ExpoBackgroundNotificationHandler")
 
       OnCreate {
         NotificationPrefs(appContext.reactContext).initialize()
-      }
-
-      OnActivityEntersForeground {
-        isForegrounded = true
-      }
-
-      OnActivityEntersBackground {
-        isForegrounded = false
       }
 
       AsyncFunction("getAllPrefsAsync") {

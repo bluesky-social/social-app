@@ -15,5 +15,7 @@ android {
 }
 
 dependencies {
-  implementation 'com.google.firebase:firebase-messaging-ktx:24.0.0'
+  implementation project(':expo-notifications')
+  // Keep in step with expo-notifications' own firebase-messaging version
+  implementation 'com.google.firebase:firebase-messaging:25.0.1'
 }

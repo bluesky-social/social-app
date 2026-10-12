@@ -1,2 +1,15 @@
-<manifest>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+  <application>
+    <!--
+      Takes over from expo-notifications' ExpoFirebaseMessagingService, which
+      is registered at priority -1. See BlueskyFirebaseMessagingService.kt.
+    -->
+    <service
+      android:name="expo.modules.backgroundnotificationhandler.BlueskyFirebaseMessagingService"
+      android:exported="false">
+      <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+      </intent-filter>
+    </service>
+  </application>
 </manifest>
