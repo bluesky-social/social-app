@@ -1,0 +1,202 @@
+import {fireEvent, render, screen} from '@testing-library/react-native'
+
+import {type AtmosphereData} from './exploreApi'
+import {AtmosphereExploreTab} from './ExploreTab'
+import {livestreamPreviewFixture} from './fixtures/livestreamPreview'
+import {useAtmosphereExploreQuery} from './useAtmosphereExploreQuery'
+
+jest.mock('@lingui/react', () => ({
+  useLingui: () => ({
+    _: (message: {message?: string} | string) =>
+      typeof message === 'string' ? message : (message.message ?? ''),
+  }),
+}))
+
+jest.mock('./useAtmosphereExploreQuery', () => ({
+  useAtmosphereExploreQuery: jest.fn(),
+}))
+
+jest.mock('#/components/Layout', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {Content: View}
+})
+
+jest.mock('#/components/Loader', () => {
+  const {View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {Loader: () => <View testID="loader" />}
+})
+
+jest.mock('#/view/com/util/error/ErrorMessage', () => {
+  const {Pressable, Text, View} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    ErrorMessage: ({
+      message,
+      onPressTryAgain,
+    }: {
+      message: string
+      onPressTryAgain: () => void
+    }) => (
+      <View>
+        <Text>{message}</Text>
+        <Pressable
+          testID="retry"
+          accessibilityRole="button"
+          onPress={onPressTryAgain}
+        />
+      </View>
+    ),
+  }
+})
+
+jest.mock('./components/AtmosphereNux', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {AtmosphereNux: () => <Text>nux</Text>}
+})
+
+jest.mock('./components/AnnouncementBanner', () => {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return {
+    AnnouncementBanner: ({banner}: {banner: {title: string}}) => (
+      <Text>{`banner:${banner.title}`}</Text>
+    ),
+  }
+})
+
+function mockSection(name: string, prop: string) {
+  const {Text} =
+    jest.requireActual<typeof import('react-native')>('react-native')
+  return ({[prop]: items}: Record<string, {title: string}[]>) =>
+    items.length ? (
+      <Text>{`${name}:${items.map(item => item.title).join(',')}`}</Text>
+    ) : null
+}
+
+jest.mock('./components/FeaturedArticles', () => ({
+  FeaturedArticles: mockSection('articles', 'articles'),
+}))
+jest.mock('./components/FeaturedApps', () => ({
+  FeaturedApps: mockSection('apps', 'apps'),
+}))
+jest.mock('./components/FeaturedLivestreams', () => ({
+  FeaturedLivestreams: mockSection('livestreams', 'livestreams'),
+}))
+jest.mock('./components/FeaturedPhotos', () => ({
+  FeaturedPhotos: mockSection('photos', 'photos'),
+}))
+
+const mockQuery = jest.mocked(useAtmosphereExploreQuery)
+const refetch = jest.fn()
+
+function setQuery(
+  result: Partial<ReturnType<typeof useAtmosphereExploreQuery>>,
+) {
+  mockQuery.mockReturnValue({
+    data: undefined,
+    isError: false,
+    isPending: false,
+    refetch,
+    ...result,
+  } as never)
+}
+
+const data: AtmosphereData = {
+  announcementBanner: {title: 'Launch', url: 'https://example.com/launch'},
+  articles: [
+    {
+      featured: true,
+      view: {
+        uri: 'https://example.com/article',
+        title: 'Live article',
+        description: '',
+      },
+    },
+  ],
+  publications: [],
+  photos: [],
+  livestreams: [],
+  apps: [{id: 'app', title: 'Live app', url: 'https://example.com/app'}],
+}
+
+beforeEach(() => {
+  jest.clearAllMocks()
+})
+
+describe('AtmosphereExploreTab', () => {
+  it('shows an accessible loader while the first request is pending', () => {
+    setQuery({isPending: true})
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.getByTestId('atmosphereExploreTab')).toBeTruthy()
+    expect(screen.getByTestId('loader')).toBeTruthy()
+    expect(screen.getByLabelText('Loading Atmosphere content')).toBeTruthy()
+    expect(screen.queryByText('nux')).toBeNull()
+  })
+
+  it('shows a retryable error without raw error details on first load failure', () => {
+    setQuery({isError: true, error: new Error('socket hang up')})
+    render(<AtmosphereExploreTab />)
+
+    expect(
+      screen.getByText('Could not load Atmosphere content. Please try again.'),
+    ).toBeTruthy()
+    expect(screen.queryByText(/socket hang up/)).toBeNull()
+    expect(screen.queryByTestId('loader')).toBeNull()
+
+    fireEvent.press(screen.getByTestId('retry'))
+    expect(refetch).toHaveBeenCalledTimes(1)
+  })
+
+  it('renders live content and hides empty sections without preview fallbacks', () => {
+    setQuery({data})
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.getByText('nux')).toBeTruthy()
+    expect(screen.getByText('banner:Launch')).toBeTruthy()
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
+    expect(screen.getByText('apps:Live app')).toBeTruthy()
+    expect(screen.queryByText(/^livestreams:/)).toBeNull()
+    expect(screen.queryByText(/^photos:/)).toBeNull()
+    expect(
+      screen.queryByText(livestreamPreviewFixture[0].view.title, {
+        exact: false,
+      }),
+    ).toBeNull()
+    expect(screen.queryByTestId('retry')).toBeNull()
+  })
+
+  it('renders the NUX only for an empty response without a banner', () => {
+    setQuery({
+      data: {
+        articles: [],
+        publications: [],
+        photos: [],
+        livestreams: [],
+        apps: [],
+      },
+    })
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.getByText('nux')).toBeTruthy()
+    expect(screen.queryByText(/^banner:/)).toBeNull()
+    expect(
+      screen.queryByText(/^(articles|apps|photos|livestreams):/),
+    ).toBeNull()
+  })
+
+  it('keeps cached content and offers retry when a background refetch fails', () => {
+    setQuery({data, isError: true})
+    render(<AtmosphereExploreTab />)
+
+    expect(screen.getByText('articles:Live article')).toBeTruthy()
+    expect(
+      screen.getByText('Could not load Atmosphere content. Please try again.'),
+    ).toBeTruthy()
+    fireEvent.press(screen.getByTestId('retry'))
+    expect(refetch).toHaveBeenCalledTimes(1)
+  })
+})

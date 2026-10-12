@@ -1,8 +1,8 @@
-import {
-  type AtmosphereData,
-  type AtmosphereLivestreamView,
-} from '../exploreData'
-
+/**
+ * Raw livestream preview data for tests. The live endpoint can return
+ * livestreams, so this is not used by the app. Parse with
+ * `atmosphereDataSchema` before passing it to the adapters.
+ */
 const previewAuthorProfile = {
   $type: 'app.bsky.actor.defs#profileViewBasic',
   did: 'did:plc:ifn645rwvsuolxg7o3w7ouo4',
@@ -10,7 +10,7 @@ const previewAuthorProfile = {
   displayName: 'Aster',
   avatar:
     'https://cdn.bsky.app/img/avatar/plain/did:plc:ifn645rwvsuolxg7o3w7ouo4/bafkreicid7hoyx5d2if24eryyhb3lg4ioy2mdrmiriga3k2cay6k5io4ta',
-} satisfies NonNullable<AtmosphereLivestreamView['associatedProfiles']>[number]
+}
 
 export const livestreamPreviewFixture = [
   {
@@ -58,4 +58,4 @@ export const livestreamPreviewFixture = [
       associatedProfiles: [previewAuthorProfile],
     },
   },
-] satisfies AtmosphereData['livestreams']
+]
