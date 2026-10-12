@@ -84,23 +84,43 @@ type GroupNames = {
    */
   name: string
   /**
+   * The other actor, when the group is exactly two people and both resolved,
+   * so the sentence can name them both. Otherwise it counts `others`.
+   */
+  second: ProfileView | undefined
+  /**
+   * The second actor's display name, when there is one.
+   */
+  secondName: string | undefined
+  /**
    * How many people there are besides the primary actor.
    */
   others: number
 }
 
 /**
- * Who to name in a group notification's sentence, e.g. "**alice** and **24
- * others**".
+ * Who to name in a group notification's sentence: "**alice** and **bob**"
+ * when the group is just the two of them, or "**alice** and **24 others**".
+ * If the second person's profile didn't resolve, two people read as
+ * "**alice** and **1 other**".
  */
 export function useGroupNames(notification: GroupNotificationView): GroupNames {
   const {
-    actors: [actor],
+    actors: [actor, second],
     count,
   } = getNotificationGroup(notification)
   const name = useDisplayName(actor)
+  // Hooks can't be conditional, so without a second actor this is unused
+  const secondName = useDisplayName(second ?? actor)
+  const isPair = count === 2 && second !== undefined
 
-  return {actor, name, others: count - 1}
+  return {
+    actor,
+    name,
+    second: isPair ? second : undefined,
+    secondName: isPair ? secondName : undefined,
+    others: count - 1,
+  }
 }
 
 type GroupContextValue = NotificationGroup & {

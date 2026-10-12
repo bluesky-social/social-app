@@ -105,7 +105,8 @@ function GroupedFollowNotification({
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
-  const {actor, name, others} = Item.useGroupNames(notification)
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
 
   return (
     <Item.GroupRoot
@@ -115,10 +116,14 @@ function GroupedFollowNotification({
           ? makeProfileLink(currentAccount, 'followers')
           : makeProfileLink(actor)
       }
-      label={l`${name} and ${plural(others, {
-        one: '# other',
-        other: '# others',
-      })} followed you`}
+      label={
+        second
+          ? l`${name} and ${secondName} followed you`
+          : l`${name} and ${plural(others, {
+              one: '# other',
+              other: '# others',
+            })} followed you`
+      }
       toggleOnPress
       accessibilityActions={
         currentAccount
@@ -138,13 +143,20 @@ function GroupedFollowNotification({
       <Item.Content>
         <Item.AvatarRow />
         <Item.PrimaryText>
-          <Trans>
-            <Item.Name profile={actor} /> and{' '}
-            <Item.Strong>
-              <Plural value={others} one="# other" other="# others" />
-            </Item.Strong>{' '}
-            followed you
-          </Trans>
+          {second ? (
+            <Trans>
+              <Item.Name profile={actor} /> and <Item.Name profile={second} />{' '}
+              followed you
+            </Trans>
+          ) : (
+            <Trans>
+              <Item.Name profile={actor} /> and{' '}
+              <Item.Strong>
+                <Plural value={others} one="# other" other="# others" />
+              </Item.Strong>{' '}
+              followed you
+            </Trans>
+          )}
         </Item.PrimaryText>
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
