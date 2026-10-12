@@ -28,6 +28,16 @@ export function useItemContext() {
 }
 
 /**
+ * The background colour of the enclosing `Item.Root`, tinted while unread,
+ * for parts that have to blend into it.
+ */
+export function useItemBackgroundColor() {
+  const t = useTheme()
+  const {isRead} = useItemContext()
+  return isRead ? t.atoms.bg.backgroundColor : t.palette.primary_25
+}
+
+/**
  * A notification row: the avatar column, `Item.Content`, and an optional
  * `Item.Trailing`, laid out horizontally. Pressing anywhere outside a nested
  * control navigates to `href`.
@@ -96,7 +106,7 @@ export function Root({
           style={[
             a.flex_row,
             a.align_start,
-            a.gap_md,
+            a.gap_lg,
             a.px_lg,
             a.py_md,
             isRead ? t.atoms.bg : {backgroundColor: t.palette.primary_25},
