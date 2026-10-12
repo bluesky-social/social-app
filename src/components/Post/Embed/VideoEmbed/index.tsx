@@ -183,7 +183,14 @@ function InnerWrapper({embed, post}: Props) {
           }),
         ]}
         cachePolicy="memory-disk" // Preferring memory cache helps to avoid flicker when re-displaying on android
-      >
+        /*
+         * Video thumbnails are larger than the embed (e.g. 1826x1078), and
+         * expo-image downscales oversized images on the main thread when they
+         * load, which costs up to ~15ms per thumbnail and drops scroll frames.
+         * The decoded full-size image is usually in the memory cache anyway,
+         * so letting the GPU scale it costs little extra memory.
+         */
+        allowDownscaling={false}>
         {showOverlay &&
           (embed.presentation === 'gif' ? (
             <GifPresentationControls
