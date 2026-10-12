@@ -9,6 +9,7 @@ import * as Dialog from '#/components/Dialog'
 import * as TextField from '#/components/forms/TextField'
 import {ChainLink_Stroke2_Corner0_Rounded as ChainLinkIcon} from '#/components/icons/ChainLink'
 import {TimesLarge_Stroke2_Corner0_Rounded as XIcon} from '#/components/icons/TimesLarge'
+import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
@@ -22,6 +23,7 @@ import {
 import {useUploadLinkIcon} from '../state'
 import {MAX_TITLE_LENGTH, type ProfileLink} from '../types'
 import {ProviderLogo} from './ProviderLogo'
+import {SupportedSitesDialog} from './SupportedSitesDialog'
 
 /** The counter stays out of the way until the title is getting long. */
 const SHOW_COUNTER_FROM = 20
@@ -104,6 +106,7 @@ function LinkFormInner({
   const ax = useAnalytics()
   const palette = useSupportPalette()
   const uploadLinkIcon = useUploadLinkIcon()
+  const supportedSitesControl = Dialog.useDialogControl()
 
   const isEditing = !!link
   const startingInput = link ? formatUrl(link.url) : ''
@@ -286,7 +289,16 @@ function LinkFormInner({
             {isEditing ? <Trans>Edit link</Trans> : <Trans>Add a link</Trans>}
           </Text>
           <Text style={[a.text_md, a.leading_snug, t.atoms.text_contrast_high]}>
-            <Trans>Links show as buttons under your bio.</Trans>
+            <Trans>
+              Links show as buttons under your bio. Links to support sites like
+              Ko-fi or Patreon show as a green Support button.{' '}
+              <InlineLinkText
+                label={l`See all supported sites`}
+                style={[a.text_md, a.leading_snug]}
+                {...createStaticClick(() => supportedSitesControl.open())}>
+                See all sites
+              </InlineLinkText>
+            </Trans>
           </Text>
         </View>
 
@@ -435,6 +447,7 @@ function LinkFormInner({
           ) : null}
         </View>
       </View>
+      <SupportedSitesDialog control={supportedSitesControl} />
     </Dialog.ScrollableInner>
   )
 }
