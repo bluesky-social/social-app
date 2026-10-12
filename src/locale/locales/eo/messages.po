@@ -8,7 +8,7 @@ msgstr ""
 "Language: eo\n"
 "Project-Id-Version: 49a8cb746fbc2ae5707392ee41ddec4c\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-10-09 21:51\n"
+"PO-Revision-Date: 2026-10-12 18:38\n"
 "Last-Translator: \n"
 "Language-Team: Esperanto\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
@@ -2127,7 +2127,7 @@ msgstr "Profilbilda kreilo"
 
 #: src/screens/ModerationInbox/index.tsx:116
 msgid "Awaiting review"
-msgstr ""
+msgstr "Atendanta revizion"
 
 #: src/components/dms/AddMembersFlow.tsx:359
 #: src/components/dms/AddMembersFlow.tsx:527
@@ -5717,12 +5717,12 @@ msgstr "Sekvas {handle}"
 #: src/screens/Settings/ContentAndMediaSettings.tsx:78
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
 msgid "Following feed preferences"
-msgstr "Preferoj de la fluo pri sekvatoj"
+msgstr "Preferoj de la fluo de sekvatoj"
 
 #: src/Navigation.tsx:393
 #: src/screens/Settings/FollowingFeedPreferences.tsx:57
 msgid "Following Feed Preferences"
-msgstr "Preferoj de la fluo pri sekvatoj"
+msgstr "Preferoj de la fluo de sekvatoj"
 
 #: src/components/Pills.tsx:215
 #: src/screens/Profile/Header/Handle.tsx:33
@@ -11627,7 +11627,7 @@ msgstr "Konigi ĉi tiun startpakon"
 
 #: src/components/StarterPack/ShareDialog.tsx:87
 msgid "Share this Starter Pack and help people join your community on Bluesky."
-msgstr ""
+msgstr "Kunigu ĉi tiun startpakon kaj helpu homojn aliĝi al via komunumo ĉe Bluesky."
 
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:130
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:133
@@ -11770,7 +11770,7 @@ msgstr "Montri reafiŝojn en fluoj"
 #: src/screens/Settings/FollowingFeedPreferences.tsx:133
 #: src/screens/Settings/FollowingFeedPreferences.tsx:143
 msgid "Show samples of your saved feeds in your Following feed"
-msgstr "Montri ekzemplojn de viaj konservitaj fluoj en via Following-fluo"
+msgstr "Montri ekzemplojn de viaj konservitaj fluoj en via fluo de sekvatoj"
 
 #: src/lib/moderation/useLabelBehaviorDescription.ts:61
 msgid "Show warning"
@@ -12678,7 +12678,7 @@ msgstr "La afiŝo estis restarigita"
 
 #: src/screens/ModerationInbox/Report.tsx:47
 msgid "The post you reported has been restored after another review. If you’d rather not see it, you can mute or block the account. Read our <0>Community Guidelines</0>."
-msgstr ""
+msgstr "La afiŝo kiun vi denuncis estis restarigita post plia revizio. Se vi preferas ne vidi ĝin, vi povas silentigi aŭ bloki la konton. Legu niajn <0>komunumajn gvidnormojn</0>."
 
 #: src/view/com/composer/select-language/SuggestedLanguage.tsx:403
 msgid "The post you’re replying to was marked as being written in {suggestedLanguageName} by its author. Would you like to reply in <0>{suggestedLanguageName}</0>?"
@@ -12893,7 +12893,7 @@ msgstr "Ĉi tiuj kradvortoj"
 
 #: src/screens/Settings/FollowingFeedPreferences.tsx:66
 msgid "These settings only apply to the Following feed."
-msgstr "Ĉi tiuj agordoj nur aplikas al la Following-fluo."
+msgstr "Ĉi tiuj agordoj nur aplikas al la fluo de sekvatoj."
 
 #. Advanced search filter
 #: src/screens/Search/components/AdvancedSearchDialog/hooks.tsx:58
