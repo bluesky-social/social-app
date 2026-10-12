@@ -23,7 +23,7 @@ import {
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -61,9 +61,13 @@ const METRIC_NOTIFICATION_TYPES: Record<
 
 /**
  * How many of the other actors' avatars `AvatarRow` shows before collapsing
- * the rest into a "+N" chip.
+ * the rest into a "+N" chip, on phones.
  */
 const MAX_PREVIEW_AVATARS = 4
+/**
+ * `MAX_PREVIEW_AVATARS` on tablets and wider.
+ */
+const MAX_PREVIEW_AVATARS_WIDE = 8
 
 const PREVIEW_AVATAR_SIZE = 32
 
@@ -368,20 +372,22 @@ function GroupActorList({
  * sentence and leaves out the primary actor, who already has `Item.Avatar`.
  * Renders nothing in a row about one person.
  *
- * Shows up to four avatars, each linking to its profile. Then a "+N" chip
- * for everyone else, and a chevron saying
+ * Shows up to four avatars, or eight on tablets and wider, each linking to
+ * its profile. Then a "+N" chip for everyone else, and a chevron saying
  * whether the group is expanded. The group may have resolved fewer profiles
  * than it has people, in which case the avatars run out early and the chip
  * counts the rest.
  */
 export function AvatarRow() {
+  const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const group = useContext(GroupContext)
 
   if (!group) return null
 
+  const maxAvatars = gtMobile ? MAX_PREVIEW_AVATARS_WIDE : MAX_PREVIEW_AVATARS
   // The primary actor comes first, and has their own avatar
-  const shown = group.actors.slice(1, MAX_PREVIEW_AVATARS + 1)
+  const shown = group.actors.slice(1, maxAvatars + 1)
   const remaining = Math.max(group.count - 1 - shown.length, 0)
 
   return (
