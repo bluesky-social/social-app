@@ -2,9 +2,14 @@ import {type PropsWithChildren} from 'react'
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query'
 import {renderHook, waitFor} from '@testing-library/react-native'
 
+import {useLanguagePrefs} from '#/state/preferences/languages'
 import {useAppviewClient} from '#/state/session'
 import {getAtmosphereExploreTab} from './exploreApi'
 import {useAtmosphereExploreQuery} from './useAtmosphereExploreQuery'
+
+jest.mock('#/state/preferences/languages', () => ({
+  useLanguagePrefs: jest.fn(),
+}))
 
 jest.mock('#/state/session', () => ({
   useAppviewClient: jest.fn(),
@@ -18,12 +23,19 @@ const data = {
   apps: [],
 }
 
+function setLanguages(contentLanguages: string[]) {
+  jest
+    .mocked(useLanguagePrefs)
+    .mockReturnValue({contentLanguages} as ReturnType<typeof useLanguagePrefs>)
+}
+
 function setup(did: string | undefined = 'did:plc:viewer') {
   const queryClient = new QueryClient({
     defaultOptions: {queries: {gcTime: Infinity, retry: false}},
   })
   const client = {did, call: jest.fn()}
   jest.mocked(useAppviewClient).mockReturnValue(client as never)
+  setLanguages(['en'])
 
   const wrapper = ({children}: PropsWithChildren) => (
     <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
@@ -49,8 +61,61 @@ describe('useAtmosphereExploreQuery', () => {
     expect(client.call).toHaveBeenCalledWith(
       getAtmosphereExploreTab,
       {},
-      {signal: expect.any(AbortSignal)},
+      {
+        signal: expect.any(AbortSignal),
+        headers: {'Accept-Language': 'en'},
+      },
     )
+  })
+
+  it.each([
+    {languages: ['en', 'fr'], header: 'en,fr'},
+    {languages: ['pt-BR'], header: 'pt-BR'},
+    {languages: [], header: ''},
+  ])(
+    'sends content languages $languages as Accept-Language "$header"',
+    async ({languages, header}) => {
+      const {client, wrapper} = setup()
+      setLanguages(languages)
+      client.call.mockResolvedValue(data)
+
+      const {result} = renderHook(() => useAtmosphereExploreQuery(), {wrapper})
+
+      await waitFor(() => expect(result.current.isSuccess).toBe(true))
+      expect(client.call).toHaveBeenCalledWith(
+        getAtmosphereExploreTab,
+        {},
+        {
+          signal: expect.any(AbortSignal),
+          headers: {'Accept-Language': header},
+        },
+      )
+    },
+  )
+
+  it('refetches with a language-specific key when preferences change', async () => {
+    const {client, queryClient, wrapper} = setup()
+    client.call.mockResolvedValue(data)
+
+    const {result, rerender} = renderHook(() => useAtmosphereExploreQuery(), {
+      wrapper,
+    })
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+
+    setLanguages(['fr', 'en'])
+    rerender({})
+
+    await waitFor(() => expect(client.call).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(result.current.isSuccess).toBe(true))
+    expect(client.call).toHaveBeenLastCalledWith(
+      getAtmosphereExploreTab,
+      {},
+      {
+        signal: expect.any(AbortSignal),
+        headers: {'Accept-Language': 'fr,en'},
+      },
+    )
+    expect(queryClient.getQueryCache().getAll()).toHaveLength(2)
   })
 
   it('reuses cached data before the stale time elapses', async () => {
