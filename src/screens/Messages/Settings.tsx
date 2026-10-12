@@ -4,6 +4,10 @@ import {useBackgroundNotificationPreferences} from '@bsky.app/expo-background-no
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
+import {
+  CHAT_CHANNEL_ID,
+  openNotificationChannelSettings,
+} from '#/lib/notifications/channels'
 import {type CommonNavigatorParams} from '#/lib/routes/types'
 import {useUpdateActorDeclaration} from '#/state/queries/messages/actor-declaration'
 import {
@@ -27,13 +31,14 @@ import {Car_Stroke2_Corner2_Rounded as CarIcon} from '#/components/icons/Car'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
 import {Envelope_Stroke2_Corner2_Rounded as EnvelopeIcon} from '#/components/icons/Envelope'
 import {Message_Stroke2_Corner0_Rounded as MessageIcon} from '#/components/icons/Message'
+import {SquareArrowTopRight_Stroke2_Corner0_Rounded as ExternalIcon} from '#/components/icons/SquareArrowTopRight'
 import * as Layout from '#/components/Layout'
 import * as Skele from '#/components/Skeleton'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_ANDROID, IS_IOS} from '#/env'
 
 type AllowIncoming = 'all' | 'none' | 'following'
 
@@ -298,7 +303,7 @@ export function MessagesSettingsScreenInner({}: Props) {
             </Pressable>
           </View>
           <Divider style={{marginVertical: 10}} />
-          {IS_NATIVE && (
+          {IS_IOS && (
             <>
               <View style={[a.px_xl]}>
                 <Toggle.Item
@@ -319,6 +324,38 @@ export function MessagesSettingsScreenInner({}: Props) {
                   </Text>
                   <Toggle.Switch />
                 </Toggle.Item>
+              </View>
+              <Divider style={{marginVertical: 10}} />
+            </>
+          )}
+          {IS_ANDROID && (
+            <>
+              <View style={[a.px_xl]}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={l`Notification sounds`}
+                  accessibilityHint={l`Opens your device's settings for chat notifications`}
+                  style={[
+                    a.flex_row,
+                    a.align_center,
+                    a.justify_between,
+                    a.gap_sm,
+                  ]}
+                  onPress={() => {
+                    void openNotificationChannelSettings(CHAT_CHANNEL_ID)
+                  }}>
+                  <BellIcon style={[a.mr_2xs, t.atoms.text]} size="lg" />
+                  <Text
+                    style={[
+                      a.flex_1,
+                      a.text_md,
+                      a.font_semi_bold,
+                      t.atoms.text,
+                    ]}>
+                    <Trans>Notification sounds</Trans>
+                  </Text>
+                  <ExternalIcon style={[a.ml_2xs, t.atoms.text]} size="lg" />
+                </Pressable>
               </View>
               <Divider style={{marginVertical: 10}} />
             </>
