@@ -64,5 +64,5 @@ minimumReleaseAgeExclude:
   - expo-notifications@57.0.20
   - expo-sharing@57.0.21 # TODO
   - '@expo/ui@57.0.20'
-  - react-native-nano-icons@1.0.0-beta.2
   - react-native-keyboard-controller@1.22.7
+  - react-native-nano-icons@1.0.0
