@@ -94,8 +94,7 @@ function SingleFollowNotification({
  * `count`.
  *
  * The row's own link goes to the viewer's followers list, since that shows
- * everyone. It's reached by presses beside the expanded list, and by a screen
- * reader action on the row.
+ * everyone. It's reached by a screen reader action on the row.
  */
 function GroupedFollowNotification({
   notification,

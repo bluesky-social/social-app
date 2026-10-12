@@ -3,7 +3,6 @@ import {
   type AccessibilityActionEvent,
   type AccessibilityProps,
   type GestureResponderEvent,
-  Pressable,
   StyleSheet,
   View,
 } from 'react-native'
@@ -23,21 +22,19 @@ import {
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, tokens, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
   ChevronTop_Stroke2_Corner0_Rounded as ChevronUpIcon,
 } from '#/components/icons/Chevron'
-import {useLink} from '#/components/Link'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
-import {AVATAR_SLOT_WIDTH} from './Avatar'
 import {Expandable} from './Expandable'
-import {ACTOR_AVATAR_SIZE, ActorList, ShowMoreActorsButton} from './profile'
-import {Root} from './Root'
+import {ActorList, ShowMoreActorsButton} from './profile'
+import {Root, useRowBackgroundColor} from './Root'
 import {useDisplayName} from './text'
 
 type ProfileView = app.bsky.actor.defs.ProfileViewBasic
@@ -71,19 +68,6 @@ const MAX_PREVIEW_AVATARS = 4
 const MAX_PREVIEW_AVATARS_WIDE = 8
 
 const PREVIEW_AVATAR_SIZE = 32
-
-/**
- * How far the expanded list is inset, so that its names line up with the
- * row's text above. `Item.Root` puts the text a padding, the avatar slot and
- * a gap in from its edge, and each person in the list puts their name an
- * avatar and a gap in from theirs.
- */
-const ACTOR_LIST_INSET =
-  tokens.space.lg +
-  AVATAR_SLOT_WIDTH +
-  tokens.space.lg -
-  ACTOR_AVATAR_SIZE -
-  tokens.space.sm
 
 /**
  * The names a group notification's sentence needs.
@@ -160,10 +144,12 @@ const GroupContext = createContext<GroupContextValue | undefined>(undefined)
  *
  * Pressing the row follows `href`, and the avatar row's "+N" and chevron
  * toggle the list. With `toggleOnPress`, pressing anywhere on the row toggles
- * it instead, and `href` is only reached by presses beside the expanded list.
+ * it instead.
  *
- * Screen readers reach the row's header as one element, labelled `label`,
- * and the list after it. It says whether it's expanded, and expanding and
+ * The list sits below the row rather than inside it, so each person in it is
+ * a control of their own, with their own hover, rather than part of the row.
+ * Screen readers reach the row as one element, labelled `label`, then the
+ * list after it. The row says whether it's expanded, and expanding and
  * collapsing are accessibility actions on it.
  */
 export function GroupRoot({
@@ -259,7 +245,7 @@ function ExpandableGroupRoot({
   const {t: l} = useLingui()
   const ax = useAnalytics()
   const [isExpanded, setIsExpanded] = useState(false)
-  const {onPress: followLink} = useLink({to: href, displayText: ''})
+  const backgroundColor = useRowBackgroundColor(notification.isRead)
 
   const onToggle = (event?: GestureResponderEvent) => {
     // Keep the press from reaching the row, which on web would follow its link
@@ -285,49 +271,24 @@ function ExpandableGroupRoot({
     ...(accessibilityActions ?? []),
   ]
 
-  const onPressHeader = (event: GestureResponderEvent) => {
-    if (toggleOnPress) {
-      onToggle(event)
-      return
-    }
-    // The header takes presses from the row, so it follows the link itself
-    event.stopPropagation()
-    onBeforePress?.()
-    followLink(event)
-  }
-
   return (
     <GroupContext.Provider
       value={{...group, isExpanded, toggleOnPress, onToggle}}>
-      <Root
-        href={href}
-        isRead={notification.isRead}
-        /*
-         * The header is the row's accessibility element instead, so that
-         * screen readers reach the list after it, and focus stays on the
-         * header as it toggles
-         */
-        accessible={false}
-        onBeforePress={onBeforePress}
-        /*
-         * The header and list stack vertically. Padding moves inside them,
-         * so that the whole header handles its own presses rather than its
-         * padding following the row's link. Root pads with the longhands,
-         * which win over the `padding` shorthand, so zero those.
-         */
-        style={[a.flex_col, a.align_stretch, a.gap_0, a.px_0, a.py_0]}
-        testID={testID}>
-        <Pressable
-          accessibilityRole={toggleOnPress ? 'button' : 'link'}
-          accessibilityLabel={label}
-          accessibilityHint={
+      {/* Carries the row's unread tint down behind the list */}
+      <View style={{backgroundColor}}>
+        <Root
+          href={href}
+          isRead={notification.isRead}
+          label={label}
+          hint={
             toggleOnPress
               ? isExpanded
                 ? l`Collapses list of users`
                 : l`Expands list of users`
               : undefined
           }
-          aria-expanded={isExpanded}
+          accessibilityRole={toggleOnPress ? 'button' : 'link'}
+          expanded={isExpanded}
           accessibilityActions={headerActions}
           onAccessibilityAction={event => {
             const {actionName} = event.nativeEvent
@@ -337,15 +298,15 @@ function ExpandableGroupRoot({
               onAccessibilityAction?.(event)
             }
           }}
-          onPress={onPressHeader}
-          // Laid out as `Item.Root` lays out a row
-          style={[a.flex_row, a.align_start, a.gap_lg, a.px_lg, a.py_md]}>
+          onBeforePress={onBeforePress}
+          onPress={toggleOnPress ? onToggle : undefined}
+          testID={testID}>
           {children}
-        </Pressable>
+        </Root>
         <Expandable expanded={isExpanded}>
           <GroupActorList notification={notification} group={group} />
         </Expandable>
-      </Root>
+      </View>
     </GroupContext.Provider>
   )
 }
@@ -383,7 +344,7 @@ function GroupActorList({
   }
 
   return (
-    <View style={[a.pr_lg, a.pb_md, {paddingLeft: ACTOR_LIST_INSET}]}>
+    <View style={[a.pb_xs]}>
       <ActorList
         actors={[...group.actors, ...actors]}
         starterPack={
