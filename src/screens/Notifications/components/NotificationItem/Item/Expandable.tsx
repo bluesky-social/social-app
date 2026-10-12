@@ -17,9 +17,8 @@ const TIMING = {duration: 200, easing: Easing.out(Easing.cubic)}
  * Content revealed beneath a row's header, e.g. an expanded list of actors.
  * It grows from nothing to the height of `children` when `expanded`, and
  * shrinks away again when not, unmounting once it's closed. Rows below it in
- * the list move with it, and if `children` change height while open, e.g.
- * after "Show more", that animates too. With reduced motion it just shows or
- * hides.
+ * the list move with it, and if `children` change height, e.g. after "Show
+ * more", that animates too. With reduced motion it just shows or hides.
  *
  * Screen readers can't reach the content while it's opening or closing.
  */
@@ -67,7 +66,13 @@ export function Expandable({
  *    effect renders and commits before the frame is drawn, on the New
  *    Architecture as on web, so the first commit is never painted. The second
  *    pins the height at 0 and attaches the animated style, which grows it
- *    from there on the UI thread.
+ *    from there on the UI thread. It also takes the content out of flow, at
+ *    the same place and size.
+ *
+ * Out of flow, the content always lays out at its natural height, however
+ * tall the clip is. In flow, Yoga lays out the children of a clip that isn't
+ * a scroll view against its height, so while the clip is short, text and
+ * anything else that can shrink is squeezed to fit.
  *
  * The animated style can't close the clip itself. On the view's first render
  * Reanimated puts its initial value in React's props, which would close the
@@ -77,12 +82,10 @@ export function Expandable({
  * Once open it keeps a fixed height and follows the content, rather than
  * going back to auto. Reanimated syncs a settled animation's values back into
  * React state, applied after the view's own style, so React couldn't take the
- * height back to pin it again. Fully open, the clip is as tall as the
- * content, so the content lays out at its natural height and `onLayout`
- * reports when that changes, e.g. after "Show more". The clip animates to
- * match, and until then new rows are clipped rather than pushing the rows
- * below down for a frame. While opening or closing, the clip is shorter than
- * the content and Yoga squeezes it to fit, so `onLayout` is ignored then.
+ * height back to pin it again. `onLayout` reports when the content's height
+ * changes, e.g. after "Show more", and the clip animates to match. Until
+ * then new rows are clipped, rather than pushing the rows below down for a
+ * frame.
  */
 function AnimatedHeight({
   expanded,
@@ -139,9 +142,12 @@ function AnimatedHeight({
       style={[a.overflow_hidden, isMeasured && [{height: 0}, style]]}>
       <View
         ref={contentRef}
+        style={isMeasured && [a.absolute, a.top_0, a.left_0, a.right_0]}
         onLayout={event => {
-          if (isOpen) {
-            contentHeight.set(event.nativeEvent.layout.height)
+          const {height} = event.nativeEvent.layout
+          // Setting it restarts the animation, so only when it's changed
+          if (height !== contentHeight.get()) {
+            contentHeight.set(height)
           }
         }}>
         {children}
