@@ -220,17 +220,9 @@ function NotificationsTab({
   ])
 
   const onFocusCheckLatest = useNonReactiveCallback(() => {
-    // on focus, check for latest, but only invalidate if the user
-    // isnt scrolled down to avoid moving content underneath them
-    let currentIsScrolledDown
-    if (IS_NATIVE) {
-      currentIsScrolledDown = isScrolledDown
-    } else {
-      // On the web, this isn't always updated in time so
-      // we're just going to look it up synchronously.
-      currentIsScrolledDown = window.scrollY > 200
-    }
-    checkUnread({invalidate: !currentIsScrolledDown})
+    // On focus, check for latest unread in the background so we don't
+    // truncate pages or shift content underneath the user (e.g. when navigating back)
+    checkUnread({invalidate: false})
   })
 
   // on-visible setup
