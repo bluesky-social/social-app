@@ -127,6 +127,7 @@ function SettingsScreen() {
 expo-notifications registers its FCM service (`ExpoFirebaseMessagingService`) at intent-filter priority -1 so that apps can replace it. `BlueskyFirebaseMessagingService` extends it at the default priority, so FCM delivers to ours instead, and swaps in `BlueskyFirebaseMessagingDelegate`. The delegate:
 
 - **Chat pushes** (`chat-*` reasons): assigns them to the `chat` notification channel, which is created in JS by `src/lib/notifications/channels.ts`. Chat pushes are data-only, so the channel can't be set server-side. If the channel doesn't exist yet, expo falls back to its default channel.
+  It also marks them as having an (empty) notification part. expo doesn't pass data-only messages to the JS notification handler while the app is in the foreground, so without this, DMs that arrive while the app is open would never be shown. `useNotificationsHandler` decides whether to show them, the same as on iOS.
 - **Mark-read pushes** (`mark-read-*` reasons): drops them. They have no content and nothing handles them yet.
 - **Everything else**: passes through to expo-notifications unchanged.
 
