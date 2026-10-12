@@ -403,6 +403,7 @@ function NotificationsHeader({
   const headerPinnedHeight = IS_LIQUID_GLASS ? insets.top : 0
 
   const titleStyle = useAnimatedStyle(() => {
+    if (IS_WEB) return {}
     const mode = headerMode.get()
     return {
       opacity: Math.pow(1 - mode, 2),
@@ -411,6 +412,7 @@ function NotificationsHeader({
   })
 
   const pillsStyle = useAnimatedStyle(() => {
+    if (IS_WEB) return {}
     return {
       transform: [
         {
