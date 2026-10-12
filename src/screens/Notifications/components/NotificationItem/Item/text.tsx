@@ -138,7 +138,7 @@ export function Timestamp({date}: {date: string}) {
       {({timeElapsed}) => (
         <Text
           title={niceDate(i18n, date)}
-          style={[a.text_xs, t.atoms.text_contrast_low]}>
+          style={[a.self_start, a.text_xs, t.atoms.text_contrast_low]}>
           {timeElapsed}
         </Text>
       )}
