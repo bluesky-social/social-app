@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl, simpleShareText} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {useSession} from '#/state/session'
@@ -73,11 +73,11 @@ let ShareMenuItems = ({
   const canEmbed = IS_WEB && gtMobile && !hideInPWI
 
   const onShareATURI = () => {
-    void shareText(postUri)
+    void simpleShareText(postUri)
   }
 
   const onShareAuthorDID = () => {
-    void shareText(postAuthor.did)
+    void simpleShareText(postAuthor.did)
   }
 
   const copyLinkItem = (

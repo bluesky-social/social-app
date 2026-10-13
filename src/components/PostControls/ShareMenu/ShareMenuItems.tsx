@@ -7,7 +7,7 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {shareText, shareUrl} from '#/lib/sharing'
+import {shareUrl, simpleShareText} from '#/lib/sharing'
 import {toShareUrl} from '#/lib/strings/url-helpers'
 import {useProfileShadow} from '#/state/cache/profile-shadow'
 import {precachePost} from '#/state/queries/post'
@@ -59,7 +59,15 @@ let ShareMenuItems = ({
   const onSharePost = () => {
     ax.metric('share:press:nativeShare', {})
     const url = toShareUrl(href)
-    void shareUrl(url)
+    void shareUrl(url).then(result => {
+      if (!result) return
+      ax.metric('share:nativeShare:result', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        entryPoint: 'ShareMenu',
+        ...result,
+      })
+    })
     onShareProp()
   }
 
@@ -91,11 +99,11 @@ let ShareMenuItems = ({
   }
 
   const onShareATURI = () => {
-    void shareText(postUri)
+    void simpleShareText(postUri)
   }
 
   const onShareAuthorDID = () => {
-    void shareText(postAuthor.did)
+    void simpleShareText(postAuthor.did)
   }
 
   return (
