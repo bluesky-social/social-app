@@ -28,11 +28,11 @@ import {ContentHider} from '#/components/moderation/ContentHider'
 import {PostAlerts} from '#/components/moderation/PostAlerts'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {PostBody} from '#/components/Post/PostBody'
 import {PostRepliedTo} from '#/components/Post/PostRepliedTo'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls} from '#/components/PostControls'
-import {RichText} from '#/components/RichText'
 import {SubtleHover} from '#/components/SubtleHover'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
@@ -222,7 +222,7 @@ function PostInner({
               />
               {richText.text ? (
                 <View style={[a.mb_2xs]}>
-                  <RichText
+                  <PostBody
                     enableTags
                     testID="postText"
                     value={richText}

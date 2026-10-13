@@ -1,62 +1,39 @@
-import {type ReactNode, useMemo, useState} from 'react'
+import {useSyncExternalStore} from 'react'
 import {
   createNativeEngine,
   isNativeEngineAvailable,
 } from 'react-native-shiki-engine'
-import {type HighlighterCore} from '@shikijs/core'
 import {createHighlighterCore} from '@shikijs/core'
 
 import {
+  createHighlighterStore,
   HighlighterContext,
-  type HighlighterContextType,
 } from '#/lib/shiki/HighlighterContext'
 import {shikiLangs} from '#/lib/shiki/langs'
 import {shikiThemes} from '#/lib/shiki/themes'
-import {tokenizeCode} from '#/lib/shiki/tokenize'
+const highlighter = createHighlighterStore(async () => {
+  if (!isNativeEngineAvailable())
+    throw new Error('Native engine not available.')
+  return createHighlighterCore({
+    langs: shikiLangs,
+    themes: shikiThemes,
+    engine: createNativeEngine(),
+  })
+})
 
-let highlighterInstance: HighlighterCore | null = null
-let initializationPromise: Promise<void> | null = null
-
-export default function HighlighterProvider({children}: {children: ReactNode}) {
-  const [isReady, setIsReady] = useState(false)
-
-  const value = useMemo<HighlighterContextType>(
-    () => ({
-      initialize: async () => {
-        if (!initializationPromise) {
-          initializationPromise = (async () => {
-            if (!isNativeEngineAvailable())
-              throw new Error('Native engine not available.')
-            highlighterInstance = await createHighlighterCore({
-              langs: shikiLangs,
-              themes: shikiThemes,
-              engine: createNativeEngine(),
-            })
-            setIsReady(true)
-          })()
-        }
-        await initializationPromise
-      },
-      tokenize: (code, options) => {
-        if (!highlighterInstance)
-          throw new Error(
-            'Highlighter not initialized. Call initialize() first.',
-          )
-        return tokenizeCode(highlighterInstance, code, options)
-      },
-      dispose: () => {
-        highlighterInstance?.dispose()
-        highlighterInstance = null
-        initializationPromise = null
-        setIsReady(false)
-      },
-      isReady,
-    }),
-    [isReady],
+export default function HighlighterProvider({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  const isReady = useSyncExternalStore(
+    highlighter.subscribe,
+    highlighter.getIsReady,
+    highlighter.getIsReady,
   )
 
   return (
-    <HighlighterContext.Provider value={value}>
+    <HighlighterContext.Provider value={{...highlighter, isReady}}>
       {children}
     </HighlighterContext.Provider>
   )

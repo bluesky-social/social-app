@@ -34,7 +34,7 @@ import {AtCard} from '#/components/Post/Embed/AtCard'
 import {getAtCardProvider} from '#/components/Post/Embed/AtCard/providers'
 import {StandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
-import {RichText} from '#/components/RichText'
+import {PostBody} from '#/components/Post/PostBody'
 import {Embed as StarterPackCard} from '#/components/StarterPack/StarterPackCard'
 import {SubtleHover} from '#/components/SubtleHover'
 import {app} from '#/lexicons'
@@ -378,10 +378,10 @@ export function QuoteEmbed({
         />
       ) : null}
       {richText?.text ? (
-        <RichText
+        <PostBody
           value={richText}
           style={a.text_md}
-          numberOfLines={20}
+          previewNumberOfLines={20}
           disableLinks
           suffixOffset={POST_NUMBER_INLINE_OFFSET}
           suffix={

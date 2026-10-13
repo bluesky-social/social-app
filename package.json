@@ -164,7 +164,6 @@
     "@shikijs/core": "^4.4.3",
     "@shikijs/engine-oniguruma": "^4.4.3",
     "@shikijs/langs": "^4.4.3",
-    "@shikijs/themes": "^4.4.3",
     "@tanstack/query-async-storage-persister": "^5.96.2",
     "@tanstack/react-query": "^5.96.2",
     "@tanstack/react-query-persist-client": "^5.96.2",
@@ -245,6 +244,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.shuffle": "^4.2.0",
     "lodash.throttle": "^4.1.1",
+    "mdast-util-from-markdown": "2.1.0",
     "mediabunny": "^1.25.3",
     "multiformats": "^13.4.2",
     "nanoid": "^5.0.5",
@@ -368,7 +368,7 @@
       "^cborg$": "<rootDir>/node_modules/cborg/cborg.js"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|@bsky/sdk|tlds|multiformats|uint8arrays|@ipld/.*|cborg|await-lock|@shikijs/.*|hast-util-to-html|hast-util-whitespace|html-void-elements|property-information|ccount|comma-separated-tokens|space-separated-tokens|stringify-entities|character-entities-html4|character-entities-legacy|zwitch)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|nanoid|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|normalize-url|react-native-svg|@sentry/.*|sentry-expo|bcp-47-match|@atproto/.*|@bsky/sdk|tlds|multiformats|uint8arrays|@ipld/.*|cborg|await-lock|@shikijs/.*|hast-util-to-html|hast-util-whitespace|html-void-elements|property-information|ccount|comma-separated-tokens|space-separated-tokens|stringify-entities|character-entities-html4|character-entities-legacy|zwitch|mdast-util-from-markdown|mdast-util-to-string|micromark|devlop|decode-named-character-reference|character-entities|unist-util-stringify-position)"
     ],
     "modulePathIgnorePatterns": [
       "__tests__/.*/__mocks__",

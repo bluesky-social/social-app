@@ -1,4 +1,5 @@
 import bash from '@shikijs/langs/bash'
+import html from '@shikijs/langs/html'
 import javascript from '@shikijs/langs/javascript'
 import json from '@shikijs/langs/json'
 import jsx from '@shikijs/langs/jsx'
@@ -14,4 +15,5 @@ export const shikiLangs = [
   json,
   bash,
   markdown,
+  html,
 ]

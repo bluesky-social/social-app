@@ -39,10 +39,10 @@ import {PostHider} from '#/components/moderation/PostHider'
 import * as ReportDialogMetadataContext from '#/components/moderation/ReportDialog/ReportDialogMetadataContext'
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
+import {PostBody} from '#/components/Post/PostBody'
 import {ShowMoreTextButton} from '#/components/Post/ShowMoreTextButton'
 import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
-import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {SubtleHover} from '#/components/SubtleHover'
 import {Text} from '#/components/Typography'
@@ -359,7 +359,7 @@ const ThreadItemTreePostInner = memo(function ThreadItemTreePostInner({
                   />
                   {richText?.text ? (
                     <View style={[a.mb_2xs]}>
-                      <RichText
+                      <PostBody
                         enableTags
                         value={richText}
                         style={[a.flex_1, a.text_md]}

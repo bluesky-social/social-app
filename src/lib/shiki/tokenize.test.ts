@@ -13,6 +13,8 @@ const bundledExamples: Record<string, string> = {
   json: '{"greeting": "hello", "count": 42}',
   shellscript: 'echo "$HOME" # a comment',
   markdown: '# Heading\n\n**bold** and `code`',
+  html: '<p class="greeting">Hello</p>',
+  css: 'p { color: red; }',
 }
 
 const bundledLanguageCases = shikiLangs.flat().flatMap(language =>
@@ -40,7 +42,6 @@ describe('tokenizeCode', () => {
   })
 
   it.each([
-    {lang: 'html', code: '<div class="greeting">Hello</div>'},
     {lang: 'python', code: 'def greet():\n    print("hello")'},
     {lang: 'not-a-language', code: 'arbitrary source text'},
   ])('renders unbundled $lang as plain text', ({lang, code}) => {

@@ -7,6 +7,13 @@ export type MutableTextStyle = {-readonly [K in keyof TextStyle]: TextStyle[K]}
 
 const WEB_FONT_FAMILIES = `system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"`
 
+/** Keep code in a platform monospace font regardless of the user's text font. */
+export const MONOSPACE_FONT_FAMILY = IS_WEB
+  ? 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace'
+  : IS_ANDROID
+    ? 'monospace'
+    : 'Menlo'
+
 const factor = 0.0625 // 1 - (15/16)
 const fontScaleMultipliers: Record<Device['fontScale'], number> = {
   '-2': 1 - factor * 1, // unused
@@ -43,6 +50,8 @@ export function applyFonts(
   style: MutableTextStyle,
   fontFamily: 'system' | 'theme',
 ) {
+  if (style.fontFamily === MONOSPACE_FONT_FAMILY) return
+
   if (fontFamily === 'theme') {
     if (IS_ANDROID) {
       style.fontFamily =
