@@ -470,7 +470,8 @@ function NotificationsHeader({
               variant="ghost"
               color="secondary"
               shape="round"
-              style={[a.justify_center]}>
+              // Ghost buttons fill with the screen colour, which shows on the see-through header
+              style={[a.justify_center, a.bg_transparent]}>
               <ButtonIcon
                 icon={
                   loadingLatestPages.has(selectedPage) ? Loader : SettingsIcon
