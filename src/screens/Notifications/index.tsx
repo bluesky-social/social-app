@@ -137,10 +137,19 @@ function NewNotificationsScreenInner() {
     }
   }
   /**
-   * Refreshes the other loaded tabs in the background, after the tab in view
-   * (`feed`) has refreshed or been peeked. Refreshing "All" brings every other
-   * tab along, and refreshing any other tab brings "All" along. `everyTab`
-   * brings them all along, whichever tab is in view. Tabs the user is partway
+   * Tabs brought along while out of view, which refresh in the background
+   * when they're next opened, rather than straight away, since many won't be.
+   */
+  const staleFeeds = useRef(new Set<GroupedNotificationsFeed>())
+  /**
+   * Brings the other loaded tabs along, after the tab in view (`feed`) has
+   * refreshed or been peeked. Refreshing "All" brings every other tab along,
+   * and refreshing any other tab brings "All" along. `everyTab` brings them
+   * all along, whichever tab is in view.
+   *
+   * They're marked stale, to refresh when next opened, except that with
+   * `markRead`, "All" refreshes straight away, to mark what it loads as seen,
+   * so a refresh on any tab clears the unread badge. Tabs the user is partway
    * down are left as they are, and get the pill when they're next in view.
    */
   const bringAlong = (
@@ -151,12 +160,16 @@ function NewNotificationsScreenInner() {
       if (
         other === feed ||
         !isLoaded(other) ||
-        scrolledDownFeeds.current.has(other)
+        scrolledDownFeeds.current.has(other) ||
+        (!everyTab && feed !== 'all' && other !== 'all')
       ) {
         continue
       }
-      if (everyTab || feed === 'all' || other === 'all') {
-        void refresh(other, {isBehind: true, markRead})
+      if (other === 'all' && markRead) {
+        staleFeeds.current.delete(other)
+        void refresh(other, {isBehind: true})
+      } else {
+        staleFeeds.current.add(other)
       }
     }
   }
@@ -175,6 +188,7 @@ function NewNotificationsScreenInner() {
      * `feed` would take its snapshot from after that, clearing the tint from
      * what "All" just loaded before anyone saw it
      */
+    staleFeeds.current.delete(feed)
     await refresh(feed)
     bringAlong(feed, {everyTab, markRead: true})
   }
@@ -266,11 +280,16 @@ function NewNotificationsScreenInner() {
         activeFeed.current = feed
         logTabDisplayed(page, isTap ? 'tap' : 'swipe')
         /*
-         * Switching tabs only peeks for anything new, which the "Refresh"
-         * pill offers, so flicking between tabs neither reloads them nor
-         * clears what's tinted
+         * Switching tabs never clears what's tinted. A tab brought along by
+         * a refresh elsewhere catches up in the background, once. Otherwise
+         * it only peeks for anything new, which the "Refresh" pill offers,
+         * so flicking between tabs doesn't reload them
          */
-        void peekLatest(feed)
+        if (staleFeeds.current.delete(feed)) {
+          void refresh(feed, {isBehind: true})
+        } else {
+          void peekLatest(feed)
+        }
       }}
       onTabPressed={showHeader}
       onPageScrollStateChanged={state => {
@@ -380,12 +399,9 @@ function useSessionSeenAt() {
    */
   const latestRefreshes = useRef(new Map<GroupedNotificationsFeed, object>())
 
-  const applyLoad = (
-    load: FeedLoad,
-    {isRefresh, markRead}: {isRefresh: boolean; markRead: boolean},
-  ) => {
+  const applyLoad = (load: FeedLoad, isRefresh: boolean) => {
     setSeenAt(snapshot => nextSeenAt({load, isRefresh, snapshot}))
-    const markReadAt = markRead ? getMarkReadAt(load) : undefined
+    const markReadAt = getMarkReadAt(load)
     if (markReadAt) {
       void unreadApi.markAllRead({seenAt: markReadAt})
     }
@@ -397,22 +413,19 @@ function useSessionSeenAt() {
   ) => {
     if (handledFeeds.current.has(feed) || page.requestedAt < mountedAt) return
     handledFeeds.current.add(feed)
-    applyLoad({feed, ...page}, {isRefresh: false, markRead: true})
+    applyLoad({feed, ...page}, false)
   }
 
   /**
    * Refetches the first page of a feed. A refresh the user asked for takes
    * the snapshot from it, clearing what was tinted before. One in the
    * background (`isBehind`) leaves the snapshot alone, so what it loads is
-   * tinted like the rest. A load of "All" marks what it shows as seen,
-   * unless `markRead` is false.
+   * tinted like the rest. Either way, a load of "All" marks what it shows as
+   * seen.
    */
   const refresh = async (
     feed: GroupedNotificationsFeed,
-    {
-      isBehind = false,
-      markRead = true,
-    }: {isBehind?: boolean; markRead?: boolean} = {},
+    {isBehind = false}: {isBehind?: boolean} = {},
   ) => {
     /*
      * One already on its way loads the feed anyway. Overtaking it would
@@ -430,7 +443,7 @@ function useSessionSeenAt() {
     const page = getGroupedNotificationsTop(queryClient, feed)
     // A failed refetch leaves the old page in place
     if (!page || page.requestedAt < startedAt) return
-    applyLoad({feed, ...page}, {isRefresh: !isBehind, markRead})
+    applyLoad({feed, ...page}, !isBehind)
   }
 
   return {seenAt, onFirstLoad, refresh}
