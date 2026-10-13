@@ -15,7 +15,6 @@ import {act, render, renderHook, waitFor} from '@testing-library/react-native'
 
 import {RETURN_MIN_TIME_AWAY} from '#/lib/appState'
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
-import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {logger} from '#/logger'
 import {
   findAllPostsInQueryData,
@@ -24,6 +23,10 @@ import {
   RQKEY_ROOT,
 } from '#/state/queries/post-feed'
 import {DEFAULT_LOGGED_OUT_PREFERENCES} from '#/state/queries/preferences/const'
+import {
+  checkFollowing,
+  useFollowingListReports,
+} from '#/features/followingV2/home/anchoredFollowing'
 import {FALLBACK_MARKER_POST} from '#/features/followingV2/home/api/home'
 import {
   LIST_REST_QUIET_MS,
@@ -54,7 +57,6 @@ import {
   type FeedPostSlice,
   findGaps,
   gapBelow,
-  hasUnseenPosts,
   pollLatest,
   type PostFeedData,
   PREPEND_LIMIT,
@@ -955,17 +957,13 @@ describe('usePostFeedPrepend', () => {
           isActive,
           isBusy:
             isRefreshing || (query.isFetching && !query.isFetchingNextPage),
-          check: async trigger => {
-            const staging = prepend.check(trigger)
-            if (!staging) {
-              return pollLatest(query.data?.pages[0], createFeedApi())
-            }
-            const page = await staging
-            if (page && hasUnseenPosts(query.data?.pages[0], page.feed)) {
-              onHasNew(true)
-            }
-            return undefined
-          },
+          check: trigger =>
+            checkFollowing(trigger, {
+              prepend,
+              top: query.data?.pages[0],
+              createFeedApi,
+              onHasNew,
+            }),
           onFound,
         })
         return {query, listRest, refresh, prepend}
@@ -1806,27 +1804,19 @@ describe('staging new posts on Home Following', () => {
         listAtRest: listRest.atRest,
         isRefreshing: isPending,
       })
-      const settleAtTop = useSettleAtTop('following', undefined, {
-        enabled: true,
-        onRestAtTop: () => onHasNew(false),
-      })
       useNewPostsCheck({
         topFetchedAt,
         isEmpty: false,
         isActive,
         isBusy: isRefreshing || (query.isFetching && !query.isFetchingNextPage),
         interval: MINUTE,
-        check: async trigger => {
-          const staging = prepend.check(trigger)
-          if (!staging) {
-            return pollLatest(pages?.[0], createFeedApi())
-          }
-          const page = await staging
-          if (page && hasUnseenPosts(pages?.[0], page.feed)) {
-            onHasNew(true)
-          }
-          return undefined
-        },
+        check: trigger =>
+          checkFollowing(trigger, {
+            prepend,
+            top: pages?.[0],
+            createFeedApi,
+            onHasNew,
+          }),
         onFound: () => onHasNew(true),
       })
       const offsetY = useSharedValue(400)
@@ -1841,27 +1831,14 @@ describe('staging new posts on Home Following', () => {
         scrollToTop,
         onRead: prepend.markRead,
       })
-      const onItemSeen = useNonReactiveCallback((row: Row) => {
-        const top = pages?.[0]
-        if (
-          prepend.staged &&
-          top &&
-          ((row.type === 'sliceItem' && top.slices.includes(row.slice)) ||
-            (row.type === 'gap' && row.cursor === top.cursor))
-        ) {
-          prepend.onPageSeen(top.fetchedAt)
-        }
-      })
+      const {reports, onRowSeen: onItemSeen} = useFollowingListReports(
+        'following',
+        undefined,
+        {enabled: true, prepend, top: pages?.[0], onHasNew},
+      )
       const scrollHandlers = useSettleScrollHandlers(
         listRest.scrollHandlers,
-        {
-          ...settleAtTop,
-          onBeginDrag: () => {
-            settleAtTop.onBeginDrag()
-            prepend.onBeginDrag()
-          },
-          onReachTop: prepend.markRead,
-        },
+        reports,
         offsetY,
       )
       Object.assign(latest, {rows, pill, staged: prepend.staged, refresh})
