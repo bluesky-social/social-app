@@ -16,6 +16,7 @@ import {useAnalytics} from '#/analytics'
 import {IS_LIQUID_GLASS} from '#/env'
 import {useSupportPalette} from '../palette'
 import {
+  formatLinkUrl,
   getLinkHost,
   normalizeProfileLinkUrl,
   validateLinkInput,
@@ -41,11 +42,6 @@ function suggestTitle(pageTitle: string | undefined): string {
   const cut = trimmed.slice(0, MAX_TITLE_LENGTH)
   const lastSpace = cut.lastIndexOf(' ')
   return (lastSpace > 0 ? cut.slice(0, lastSpace) : cut).trim()
-}
-
-/** Shows the saved link the way people type it, without the scheme. */
-function formatUrl(url: string): string {
-  return url.replace(/^https?:\/\/(www\.)?/i, '').replace(/\/$/, '')
 }
 
 /**
@@ -109,7 +105,7 @@ function LinkFormInner({
   const supportedSitesControl = Dialog.useDialogControl()
 
   const isEditing = !!link
-  const startingInput = link ? formatUrl(link.url) : ''
+  const startingInput = link ? formatLinkUrl(link.url) : ''
   const [input, setInput] = useState(startingInput)
   const [touched, setTouched] = useState(false)
   const [title, setTitle] = useState(link?.title ?? '')
