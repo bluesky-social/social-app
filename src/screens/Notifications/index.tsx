@@ -36,6 +36,7 @@ import {NotificationsScreen as LegacyNotificationsScreen} from '#/view/screens/N
 import {PageList} from '#/screens/Notifications/components/PageList'
 import * as Pager from '#/screens/Notifications/components/PagerView'
 import {TabPills} from '#/screens/Notifications/components/TabPills'
+import {createTabTaps} from '#/screens/Notifications/tabTaps'
 import {
   type FeedLoad,
   getMarkReadAt,
@@ -174,19 +175,13 @@ function NewNotificationsScreenInner() {
       )
     }),
   )
-  /**
-   * Pages a tab pill has asked the pager for, which it hasn't reported
-   * selecting yet. A tap and a swipe both end in `onPageSelected`, a tap once
-   * the pager has moved, which on iOS is after it animates, so this tells
-   * them apart. Pills pressed in quick succession can have several on the way.
-   */
-  const tappedPages = useRef(new Set<number>())
+  const [tabTaps] = useState(createTabTaps)
 
   return (
     <Pager.Root
       onPageSelected={page => {
         const feed = tabs[page].key
-        const isTap = tappedPages.current.delete(page)
+        const isTap = tabTaps.take(page)
         // Web reports the page it starts on, too
         if (feed === activeFeed.current) return
         activeFeed.current = feed
@@ -225,7 +220,7 @@ function NewNotificationsScreenInner() {
                   if (page === selectedPage) {
                     emitSoftReset()
                   } else {
-                    tappedPages.current.add(page)
+                    tabTaps.tap(page)
                   }
                   selectPage(page)
                 }}
