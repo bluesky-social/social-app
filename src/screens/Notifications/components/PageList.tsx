@@ -49,7 +49,15 @@ import type * as bsky from '#/types/bsky'
 
 type Row =
   | {type: 'section'; key: string; section: 'today' | 'earlier'}
-  | {type: 'notification'; key: string; notification: NotificationView}
+  | {
+      type: 'notification'
+      key: string
+      notification: NotificationView
+      /**
+       * Whether a divider separates it from the notification above.
+       */
+      hasDivider: boolean
+    }
   | {type: 'followersHeader'; key: string}
   | {
       type: 'follower'
@@ -119,6 +127,7 @@ export function PageList({
    */
   onEmptyChange?: (isEmpty: boolean) => void
 }) {
+  const t = useTheme()
   const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const trackPostView = usePostViewTracking('Notifications')
@@ -250,7 +259,17 @@ export function PageList({
               case 'section':
                 return <SectionHeader section={row.section} />
               case 'notification':
-                return <NotificationItem notification={row.notification} />
+                return (
+                  <View
+                    style={[
+                      row.hasDivider && [
+                        a.border_t,
+                        t.atoms.border_contrast_low,
+                      ],
+                    ]}>
+                    <NotificationItem notification={row.notification} />
+                  </View>
+                )
               case 'followersHeader':
                 return <FollowedYouHeader />
               case 'follower':
@@ -367,7 +386,7 @@ export function getPlaceholderRow({
  * today the headers are left out entirely, per the designs. The Followers tab
  * is laid out differently, see `buildFollowerRows`.
  */
-function buildRows(
+export function buildRows(
   notifications: NotificationView[],
   feed: GroupedNotificationsFeed,
 ): Row[] {
@@ -395,6 +414,8 @@ function buildRows(
       type: 'notification',
       key: notification.id,
       notification,
+      // Not under a section header, which sets itself apart
+      hasDivider: rows.at(-1)?.type === 'notification',
     })
   }
   return rows
@@ -428,6 +449,8 @@ function buildFollowerRows(notifications: NotificationView[]): Row[] {
         type: 'notification',
         key: notification.id,
         notification,
+        // People are listed without dividers, so only between notifications
+        hasDivider: rows.at(-1)?.type === 'notification',
       })
     }
   }
