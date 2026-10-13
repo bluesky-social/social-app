@@ -1,16 +1,37 @@
+diff --git a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt
+index ae7260f8f8ea63beadf69cfb03842028b0d6db03..d10e57d7ed8c003f257ea958a3ed56401ca13236 100644
+--- a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt
++++ b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt
+@@ -25,11 +25,13 @@ class BlueskyVideoModule : Module() {
+             }
+ 
+             OnActivityEntersForeground {
++                ViewManager.isAppBackgrounded = false
+                 ViewManager.getActiveView()?.onAppForegrounded(wasPlaying)
+                 wasPlaying = false
+             }
+ 
+             OnActivityEntersBackground {
++                ViewManager.isAppBackgrounded = true
+                 wasPlaying = ViewManager.getActiveView()?.onAppBackgrounded() ?: false
+             }
+ 
 diff --git a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
-index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b548b3119ec 100644
+index f2aa71ad32f05033b281551e1ec85e89c55493d5..1c976130140d18835f2846703713bcb1ad485365 100644
 --- a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
 +++ b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
-@@ -5,6 +5,7 @@ import android.content.Intent
+@@ -5,6 +5,10 @@ import android.content.Intent
  import android.graphics.Color
  import android.graphics.Rect
  import android.net.Uri
 +import android.view.LayoutInflater
++import android.view.SurfaceHolder
++import android.view.SurfaceView
++import android.view.View
  import android.view.ViewGroup
  import androidx.media3.common.MediaItem
  import androidx.media3.common.PlaybackException
-@@ -47,7 +48,9 @@ class BlueskyVideoView(
+@@ -47,7 +51,9 @@ class BlueskyVideoView(
      var isFullscreen: Boolean = false
          private set(value) {
              field = value
@@ -21,7 +42,7 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b54
  
              onFullscreenChange(
                  mapOf(
-@@ -121,7 +124,7 @@ class BlueskyVideoView(
+@@ -121,7 +127,7 @@ class BlueskyVideoView(
  
      init {
          val playerView =
@@ -30,7 +51,41 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b54
                  setBackgroundColor(Color.BLACK)
                  resizeMode = AspectRatioFrameLayout.RESIZE_MODE_ZOOM
                  useController = false
-@@ -163,7 +166,15 @@ class BlueskyVideoView(
+@@ -137,6 +143,33 @@ class BlueskyVideoView(
+             ),
+         )
+         this.playerView = playerView
++
++        // Child views are detached before their parents, so the SurfaceView is torn down before
++        // onDetachedFromWindow runs here, and its surfaceDestroyed callback makes a still-live
++        // player block the main thread until the playback thread lets go of the surface. This
++        // callback is registered before any player's own (they are called in order), so the
++        // player is already released by the time its callback runs.
++        (playerView.videoSurfaceView as? SurfaceView)?.holder?.addCallback(
++            object : SurfaceHolder.Callback {
++                override fun surfaceCreated(holder: SurfaceHolder) {}
++
++                override fun surfaceChanged(
++                    holder: SurfaceHolder,
++                    format: Int,
++                    width: Int,
++                    height: Int,
++                ) {}
++
++                override fun surfaceDestroyed(holder: SurfaceHolder) {
++                    // Still visible in a foreground app means the surface is going away because
++                    // the view is being detached, not because it or the window got hidden. A
++                    // hidden view keeps its player, e.g. to resume when the app returns.
++                    if (!ViewManager.isAppBackgrounded && isShown && windowVisibility == View.VISIBLE) {
++                        destroy(surfaceIsGoingAway = true)
++                    }
++                }
++            },
++        )
+     }
+ 
+     // Lifecycle
+@@ -163,7 +196,15 @@ class BlueskyVideoView(
          this.playerScope = playerScope
      }
  
@@ -47,7 +102,7 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b54
          val player = this.player ?: return
  
          this.isLoading = false
-@@ -171,6 +182,9 @@ class BlueskyVideoView(
+@@ -171,6 +212,9 @@ class BlueskyVideoView(
  
          this.pause()
  
@@ -57,14 +112,12 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b54
          player.release()
          this.player = null
          this.playerView.player = null
-@@ -233,9 +247,12 @@ class BlueskyVideoView(
+@@ -233,9 +277,10 @@ class BlueskyVideoView(
      }
  
      override fun onDetachedFromWindow() {
 -        super.onDetachedFromWindow()
-+        // Release before super detaches the SurfaceView. Otherwise its surfaceDestroyed callback
-+        // makes the still-live player block the main thread until the playback thread lets go
-+        // of the surface.
++        // The player is normally released already, by the surfaceDestroyed callback set up in init.
          ViewManager.removeView(this)
 -        this.destroy()
 +        this.destroy(surfaceIsGoingAway = true)
@@ -72,7 +125,7 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b54
      }
  
      // Controls
-@@ -388,6 +405,8 @@ class BlueskyVideoView(
+@@ -388,6 +433,8 @@ class BlueskyVideoView(
              .Builder(context)
              .apply {
                  setLooper(context.mainLooper)
@@ -82,7 +135,7 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b54
                  setSeekBackIncrementMs(5000)
              }.build()
 diff --git a/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt b/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
-index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3cd674a4a 100644
+index 19baa087bdb3ad9955c456aab84ece25e95ae15e..ba7ff2e3568daa65f9f488daa66487d1bc4a31c7 100644
 --- a/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
 +++ b/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
 @@ -1,7 +1,10 @@
@@ -96,10 +149,12 @@ index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3
  
  @UnstableApi
  class ViewManager {
-@@ -10,6 +13,17 @@ class ViewManager {
+@@ -10,6 +13,19 @@ class ViewManager {
          private var currentlyActiveView: BlueskyVideoView? = null
          private var prevCount = 0
  
++        var isAppBackgrounded = false
++
 +        // A view only becomes active once it has moved less than SETTLE_MAX_TRAVEL_DP
 +        // between two checks SETTLE_CHECK_INTERVAL_MS apart (500 dp/s), so that videos
 +        // scrolling past during a fling do not each create and release a player.
@@ -114,7 +169,7 @@ index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3
          fun addView(view: BlueskyVideoView) {
              views.add(view)
              if (prevCount == 0) {
-@@ -20,6 +34,9 @@ class ViewManager {
+@@ -20,6 +36,9 @@ class ViewManager {
  
          fun removeView(view: BlueskyVideoView) {
              views.remove(view)
@@ -124,7 +179,7 @@ index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3
              prevCount = views.count()
          }
  
-@@ -60,21 +77,62 @@ class ViewManager {
+@@ -60,13 +79,53 @@ class ViewManager {
              }
  
              if (activeView == currentlyActiveView) {
@@ -138,9 +193,9 @@ index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3
 +                this.activateWhenSettled(activeView)
 +            } else {
 +                this.cancelPendingView()
-             }
-         }
- 
++            }
++        }
++
 +        private fun activateWhenSettled(view: BlueskyVideoView) {
 +            if (pendingView == view) {
 +                return
@@ -158,7 +213,7 @@ index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3
 +            if (position == null) {
 +                this.cancelPendingView()
 +                return
-+            }
+             }
 +
 +            val maxTravel = SETTLE_MAX_TRAVEL_DP * view.resources.displayMetrics.density
 +            if (prevPosition == null ||
@@ -176,11 +231,10 @@ index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3
 +            handler.removeCallbacks(checkPendingView)
 +            pendingView = null
 +            pendingViewPosition = null
-+        }
-+
+         }
+ 
          private fun clearActiveView() {
-             currentlyActiveView?.setIsCurrentlyActive(false)
-             currentlyActiveView = null
+@@ -75,6 +134,7 @@ class ViewManager {
          }
  
          fun setActiveView(view: BlueskyVideoView) {

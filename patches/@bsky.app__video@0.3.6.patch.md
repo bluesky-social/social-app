@@ -15,9 +15,14 @@ The patch:
 - Builds the player with `setReleaseTimeoutMs(0)`, so `release()` posts the release to the
   playback thread and returns immediately. The playback thread still frees the codecs and
   quits; only the wait is gone.
-- Releases the player before `super.onDetachedFromWindow()` detaches the `SurfaceView`.
-  Otherwise `surfaceDestroyed` makes the still-live player block until the playback thread
-  lets go of the surface.
+- Releases the player from a `SurfaceHolder.Callback` when the surface is destroyed
+  because the view is being detached. Child views are detached before their parents, so
+  the `SurfaceView` is torn down before `BlueskyVideoView.onDetachedFromWindow()` runs, and
+  the player's own `surfaceDestroyed` callback then blocks the main thread until the
+  playback thread lets go of the surface (~150 ms while it is still creating codecs). Our
+  callback is registered first, so the player is already released when its callback runs.
+  A surface destroyed because the view or window got hidden (e.g. the app went to the
+  background) keeps its player, which is how playback resumes afterwards.
 - Keeps the surface handoff synchronous (`clearVideoSurface()`) when a player is released
   while the view stays attached (`setIsCurrentlyActive(false)`), so the next player can
   attach to the same surface.
@@ -52,3 +57,6 @@ With the patch `ViewManager` checks the picked view every 100 ms and activates i
 has moved less than 50 dp since the previous check (500 dp/s). A fling that slow has about
 100 dp left to travel, so the video is still on screen when it stops. Deactivating, and
 activating on a tap (`setActiveView`), are still immediate.
+
+This makes players younger when they are released (a short pause between two flings is
+enough to create one), which is what exposed the surface wait described above.
