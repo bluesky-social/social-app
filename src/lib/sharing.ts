@@ -56,13 +56,17 @@ function toShareResult(
 }
 
 /**
- * This function shares a text using the native Share API if available, or copies it to the clipboard
- * and displays a toast message if not (mostly on web)
+ * This function shares a text using the native Share API if available, or
+ * copies it to the clipboard and displays a toast message if not (mostly on
+ * web).
  *
- * @param {string} text - A string representing the text that needs to be shared or copied to the
- * clipboard.
+ * If you want the "full" sharing experience, use the other `shareUrl`
+ * function, which returns a result of the share action for metrics.
+ *
+ * @param {string} text - A string representing the text that needs to be
+ * shared or copied to the clipboard.
  */
-export async function shareText(text: string) {
+export async function simpleShareText(text: string) {
   if (IS_ANDROID || IS_IOS) {
     await Share.share({message: text})
   } else {
