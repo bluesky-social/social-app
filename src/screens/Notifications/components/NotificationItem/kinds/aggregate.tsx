@@ -550,7 +550,6 @@ export function SubscribedPostNotification({
 }: {
   notification: NotificationOf<'subscribedPost'>
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
   const {items, count} = notification
   // Items are newest first, so this is the post to preview
@@ -602,11 +601,7 @@ export function SubscribedPostNotification({
             </Trans>
           )}
         </Item.PrimaryText>
-        <Item.PostPreview
-          post={post}
-          numberOfLines={2}
-          style={[a.text_md, t.atoms.text]}
-        />
+        <Item.PostPreview post={post} />
         <Item.Timestamp date={notification.indexedAt} />
       </Item.Content>
       {hasThumbnails && (

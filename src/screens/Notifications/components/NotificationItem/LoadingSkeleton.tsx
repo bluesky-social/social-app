@@ -14,11 +14,10 @@ import * as Item from './Item'
 /**
  * A kind of skeleton row, after the notifications it stands in for: `group`
  * for a like or repost from several people, `reaction` for one from a single
- * person, `follow`, `reply` (with its "replied to" line), `mention` for
- * mentions and quotes, and `subscribedPost` for the Activity tab.
+ * person or a new post on the Activity tab, `follow`, `reply` (with its
+ * "replied to" line), and `mention` for mentions and quotes.
  */
-type SkeletonKind =
-  'group' | 'reaction' | 'follow' | 'reply' | 'mention' | 'subscribedPost'
+type SkeletonKind = 'group' | 'reaction' | 'follow' | 'reply' | 'mention'
 
 /**
  * A believable stretch of a feed with every kind of notification in it,
@@ -46,7 +45,7 @@ const TAB_KINDS: Record<
   all: MIXED_KINDS,
   'people-i-follow': MIXED_KINDS,
   conversations: ['reply', 'reply', 'mention'],
-  activity: ['subscribedPost'],
+  activity: ['reaction'],
 }
 
 /**
@@ -103,8 +102,6 @@ function RowSkeleton({kind, index}: {kind: SkeletonKind; index: number}) {
       return <PostSkeleton index={index} isReply />
     case 'mention':
       return <PostSkeleton index={index} isReply={false} />
-    case 'subscribedPost':
-      return <SubscribedPostSkeleton index={index} />
   }
 }
 
@@ -133,8 +130,8 @@ function GroupSkeleton({index}: {index: number}) {
 }
 
 /**
- * Stands in for a like or repost from one person, sometimes of a post with
- * images.
+ * Stands in for a like or repost from one person, or a new post on the
+ * Activity tab, sometimes of a post with images.
  */
 function ReactionSkeleton({index}: {index: number}) {
   const even = index % 2 === 0
@@ -213,34 +210,6 @@ function PostSkeleton({index, isReply}: {index: number; isReply: boolean}) {
         </View>
         <PostActionsSkeleton />
       </Item.Content>
-    </Row>
-  )
-}
-
-/**
- * Stands in for a new post from an account the viewer subscribes to, whose
- * preview is larger than a reaction's.
- */
-function SubscribedPostSkeleton({index}: {index: number}) {
-  const even = index % 2 === 0
-
-  return (
-    <Row>
-      <Item.AvatarSkeleton />
-      <Item.Content>
-        <Lines style={a.text_md} widths={[even ? '55%' : '65%']} />
-        <Lines
-          blend
-          style={a.text_md}
-          widths={even ? ['100%', '70%'] : ['85%']}
-        />
-        <TimestampSkeleton />
-      </Item.Content>
-      {!even && (
-        <Item.Trailing>
-          <ThumbnailSkeleton />
-        </Item.Trailing>
-      )}
     </Row>
   )
 }
