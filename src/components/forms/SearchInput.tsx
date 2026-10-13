@@ -32,7 +32,7 @@ export function SearchInput({
 }: Props) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const showClear = value && value.length > 0
+  const showClear = !!value && value.length > 0
   const internalRef = useRef<React.ComponentRef<typeof TextInput>>(null)
 
   useEffect(() => {

@@ -18,7 +18,8 @@ export const CHAT_SERVICE = 'https://api.bsky.chat'
 export const EMBED_SERVICE = 'https://embed.bsky.app'
 export const EMBED_SCRIPT = `${EMBED_SERVICE}/static/embed.js`
 export const BSKY_DOWNLOAD_URL = 'https://bsky.app/download'
-export const STARTER_PACK_MAX_SIZE = 150
+export const STARTER_PACK_DEFAULT_SIZE = 150
+export const STARTER_PACK_MAX_SIZE = 500
 export const CARD_ASPECT_RATIO = 1200 / 630
 
 // HACK
@@ -234,7 +235,6 @@ export const PUBLIC_APPVIEW_DID = 'did:web:api.bsky.app'
 export const PUBLIC_STAGING_APPVIEW_DID = 'did:web:api.staging.bsky.dev'
 
 export const DEV_ENV_APPVIEW = `http://localhost:2584` // always the same
-export const DEV_ENV_APPVIEW_DID = `did:plc:dw4kbjf5mn7nhenabiqpkyh3` // always the same
 
 // temp hack for e2e - esb
 export const BLUESKY_PROXY_HEADER = {

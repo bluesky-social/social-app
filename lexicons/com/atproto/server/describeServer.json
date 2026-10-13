@@ -25,6 +25,10 @@
               "type": "ref",
               "description": "Contact information"
             },
+            "blobUploadLimit": {
+              "type": "integer",
+              "description": "Maximum size of a blob that can be uploaded via com.atproto.repo.uploadBlob, in bytes."
+            },
             "inviteCodeRequired": {
               "type": "boolean",
               "description": "If true, an invite code must be supplied to create an account on this instance."

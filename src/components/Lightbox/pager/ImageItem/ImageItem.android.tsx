@@ -1,9 +1,13 @@
 import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
-  Gesture,
   GestureDetector,
   type PanGesture,
+  useExclusiveGestures,
+  usePanGesture,
+  usePinchGesture,
+  useSimultaneousGestures,
+  useTapGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   type AnimatableValue,
@@ -137,16 +141,26 @@ const ImageItem = ({
     return [dx, dy]
   }
 
-  const pinch = Gesture.Pinch()
-    .onStart(e => {
+  /*
+   * Gestures are disabled while the parent pager is being dragged. Toggle
+   * `enabled` instead of swapping in a no-op gesture: in RNGH v3, switching
+   * the detector between a worklet and a non-worklet gesture changes its
+   * native component type, which remounts the image and blinks it out for a
+   * frame.
+   */
+  const enabled = !isScrollViewBeingDragged
+
+  const pinch = usePinchGesture({
+    enabled,
+    onActivate: e => {
       'worklet'
       const screenSize = measureSafeArea()
       pinchOrigin.set({
         x: e.focalX - screenSize.width / 2,
         y: e.focalY - screenSize.height / 2,
       })
-    })
-    .onChange(e => {
+    },
+    onUpdate: e => {
       'worklet'
       const screenSize = measureSafeArea()
       if (!imageDimensions) {
@@ -181,8 +195,8 @@ const ImageItem = ({
           y: pt.y + dy,
         })
       }
-    })
-    .onEnd(() => {
+    },
+    onDeactivate: () => {
       'worklet'
       // Commit just the pinch.
       let t = createTransform()
@@ -200,13 +214,15 @@ const ImageItem = ({
       pinchScale.set(1)
       pinchOrigin.set({x: 0, y: 0})
       pinchTranslation.set({x: 0, y: 0})
-    })
+    },
+  })
 
-  const pan = Gesture.Pan()
-    .averageTouches(true)
-    // Unlike .enabled(isScaled), this ensures that an initial pinch can turn into a pan midway:
-    .minPointers(isScaled ? 1 : 2)
-    .onChange(e => {
+  const pan = usePanGesture({
+    enabled,
+    averageTouches: true,
+    // Unlike enabled: isScaled, this ensures that an initial pinch can turn into a pan midway:
+    minPointers: isScaled ? 1 : 2,
+    onUpdate: e => {
       'worklet'
       const screenSize = measureSafeArea()
       if (!imageDimensions) {
@@ -229,8 +245,8 @@ const ImageItem = ({
       nextPanTranslation.x += dx
       nextPanTranslation.y += dy
       panTranslation.set(nextPanTranslation)
-    })
-    .onEnd(() => {
+    },
+    onDeactivate: () => {
       'worklet'
       // Commit just the pan.
       let t = createTransform()
@@ -241,16 +257,21 @@ const ImageItem = ({
 
       // Reset just the pan.
       panTranslation.set({x: 0, y: 0})
-    })
-
-  const singleTap = Gesture.Tap().onEnd(() => {
-    'worklet'
-    scheduleOnRN(onTap)
+    },
   })
 
-  const doubleTap = Gesture.Tap()
-    .numberOfTaps(2)
-    .onEnd(e => {
+  const singleTap = useTapGesture({
+    enabled,
+    onDeactivate: () => {
+      'worklet'
+      scheduleOnRN(onTap)
+    },
+  })
+
+  const doubleTap = useTapGesture({
+    enabled,
+    numberOfTaps: 2,
+    onDeactivate: e => {
       'worklet'
       const screenSize = measureSafeArea()
       if (!imageDimensions || !imageAspect) {
@@ -295,17 +316,17 @@ const ImageItem = ({
       const finalTransform = createTransform()
       prependPinch(finalTransform, scale, origin, {x: dx, y: dy})
       committedTransform.set(withClampedSpring(finalTransform))
-    })
+    },
+  })
 
-  const composedGesture = isScrollViewBeingDragged
-    ? // If the parent is not at rest, provide a no-op gesture.
-      Gesture.Manual()
-    : Gesture.Exclusive(
-        dismissSwipePan,
-        Gesture.Simultaneous(pinch, pan),
-        doubleTap,
-        singleTap,
-      )
+  const pinchAndPan = useSimultaneousGestures(pinch, pan)
+
+  const composedGesture = useExclusiveGestures(
+    dismissSwipePan,
+    pinchAndPan,
+    doubleTap,
+    singleTap,
+  )
 
   const containerStyle = useAnimatedStyle(() => {
     const {scaleAndMoveTransform, isHidden} = transforms.get()

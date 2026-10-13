@@ -365,10 +365,10 @@ let ProfileMenu = ({
                 )}
                 <Menu.Item
                   testID="profileHeaderDropdownStarterPackAddRemoveBtn"
-                  label={l`Add to starter packs`}
+                  label={l`Add to Starter Packs`}
                   onPress={onPressAddToStarterPacks}>
                   <Menu.ItemText>
-                    <Trans>Add to starter packs</Trans>
+                    <Trans>Add to Starter Packs</Trans>
                   </Menu.ItemText>
                   <Menu.ItemIcon icon={StarterPackIcon} />
                 </Menu.Item>

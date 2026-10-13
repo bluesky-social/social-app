@@ -30,7 +30,7 @@ export function useOnboardingSuggestedStarterPacksQuery({
     staleTime: STALE.MINUTES.THREE,
     queryKey: createOnboardingSuggestedStarterPacksQueryKey(overrideInterests),
     queryFn: async () => {
-      return await client.call(
+      const data = await client.call(
         app.bsky.unspecced.getOnboardingSuggestedStarterPacks,
         {limit: 6},
         {
@@ -44,6 +44,8 @@ export function useOnboardingSuggestedStarterPacksQuery({
           },
         },
       )
+
+      return {...data, recId: data.recIdStr}
     },
   })
 }

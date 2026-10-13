@@ -1,6 +1,5 @@
 import {AtUri} from '@atproto/syntax'
-import {msg} from '@lingui/core/macro'
-import {useLingui} from '@lingui/react'
+import {useLingui} from '@lingui/react/macro'
 import {Trans} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -46,7 +45,7 @@ export function MoreOptionsMenu({
   list: app.bsky.graph.defs.ListView
   savedFeedConfig?: app.bsky.actor.defs.SavedFeed
 }) {
-  const {_} = useLingui()
+  const {t: l} = useLingui()
   const ax = useAnalytics()
   const {currentAccount} = useSession()
   const editListDialogControl = useDialogControl()
@@ -79,15 +78,15 @@ export function MoreOptionsMenu({
         })
         Toast.show(
           action === 'optOut'
-            ? _(msg`Opted out of starter pack`)
-            : _(msg`Opt-out undone`),
+            ? l`Opted out of Starter Pack`
+            : l`Opt-out undone`,
         )
       },
       onError: error => {
-        logger.error('Failed to update starter pack opt-out', {
+        logger.error('Failed to update Starter Pack opt-out', {
           safeMessage: error,
         })
-        Toast.show(_(msg`Failed to update starter pack opt-out`), {
+        Toast.show(l`Failed to update Starter Pack opt-out`, {
           type: 'error',
         })
       },
@@ -96,16 +95,16 @@ export function MoreOptionsMenu({
   const onPressShare = () => {
     const {rkey} = new AtUri(list.uri)
     const url = toShareUrl(`/profile/${list.creator.did}/lists/${rkey}`)
-    shareUrl(url)
+    void shareUrl(url)
   }
 
   const onRemoveFromSavedFeeds = async () => {
     if (!savedFeedConfig) return
     try {
       await removeSavedFeed(savedFeedConfig)
-      Toast.show(_(msg`Removed from your feeds`))
+      Toast.show(l`Removed from your feeds`)
     } catch (e) {
-      Toast.show(_(msg`There was an issue contacting the server`), {
+      Toast.show(l`There was an issue contacting the server`, {
         type: 'error',
       })
       logger.error('Failed to remove pinned list', {message: e})
@@ -119,7 +118,7 @@ export function MoreOptionsMenu({
       await removeSavedFeed(savedFeedConfig)
     }
 
-    Toast.show(_(msg({message: 'List deleted', context: 'toast'})))
+    Toast.show(l({message: 'List deleted', context: 'toast'}))
     if (navigation.canGoBack()) {
       navigation.goBack()
     } else {
@@ -131,9 +130,9 @@ export function MoreOptionsMenu({
     try {
       if (!savedFeedConfig) return
       await removeSavedFeed(savedFeedConfig)
-      Toast.show(_(msg`Unpinned list`))
+      Toast.show(l`Unpinned list`)
     } catch {
-      Toast.show(_(msg`Failed to unpin list`), {
+      Toast.show(l`Failed to unpin list`, {
         type: 'error',
       })
     }
@@ -142,13 +141,11 @@ export function MoreOptionsMenu({
   const onUnsubscribeMute = async () => {
     try {
       await muteList({uri: list.uri, mute: false})
-      Toast.show(_(msg({message: 'List unmuted', context: 'toast'})))
+      Toast.show(l({message: 'List unmuted', context: 'toast'}))
       ax.metric('moderation:unsubscribedFromList', {listType: 'mute'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
       )
     }
   }
@@ -156,13 +153,11 @@ export function MoreOptionsMenu({
   const onUnsubscribeBlock = async () => {
     try {
       await blockList({uri: list.uri, block: false})
-      Toast.show(_(msg({message: 'List unblocked', context: 'toast'})))
+      Toast.show(l({message: 'List unblocked', context: 'toast'}))
       ax.metric('moderation:unsubscribedFromList', {listType: 'block'})
     } catch {
       Toast.show(
-        _(
-          msg`There was an issue. Please check your internet connection and try again.`,
-        ),
+        l`There was an issue. Please check your internet connection and try again.`,
       )
     }
   }
@@ -170,7 +165,7 @@ export function MoreOptionsMenu({
   return (
     <>
       <Menu.Root>
-        <Menu.Trigger label={_(msg`More options`)}>
+        <Menu.Trigger label={l`More options`}>
           {({props}) => (
             <Button
               label={props.accessibilityLabel}
@@ -186,7 +181,7 @@ export function MoreOptionsMenu({
         <Menu.Outer showCancel>
           <Menu.Group>
             <Menu.Item
-              label={IS_WEB ? _(msg`Copy link to list`) : _(msg`Share via...`)}
+              label={IS_WEB ? l`Copy link to list` : l`Share via...`}
               onPress={onPressShare}>
               <Menu.ItemText>
                 {IS_WEB ? (
@@ -202,8 +197,8 @@ export function MoreOptionsMenu({
             </Menu.Item>
             {savedFeedConfig && (
               <Menu.Item
-                label={_(msg`Remove from my feeds`)}
-                onPress={onRemoveFromSavedFeeds}>
+                label={l`Remove from my feeds`}
+                onPress={() => void onRemoveFromSavedFeeds()}>
                 <Menu.ItemText>
                   <Trans>Remove from my feeds</Trans>
                 </Menu.ItemText>
@@ -217,7 +212,7 @@ export function MoreOptionsMenu({
           {isOwner ? (
             <Menu.Group>
               <Menu.Item
-                label={_(msg`Edit list details`)}
+                label={l`Edit list details`}
                 onPress={editListDialogControl.open}>
                 <Menu.ItemText>
                   <Trans>Edit list details</Trans>
@@ -225,7 +220,7 @@ export function MoreOptionsMenu({
                 <Menu.ItemIcon position="right" icon={PencilLineIcon} />
               </Menu.Item>
               <Menu.Item
-                label={_(msg`Delete list`)}
+                label={l`Delete list`}
                 onPress={deleteListPromptControl.open}>
                 <Menu.ItemText>
                   <Trans>Delete list</Trans>
@@ -237,7 +232,7 @@ export function MoreOptionsMenu({
             <>
               <Menu.Group>
                 <Menu.Item
-                  label={_(msg`Report list`)}
+                  label={l`Report list`}
                   onPress={reportDialogControl.open}>
                   <Menu.ItemText>
                     <Trans>Report list</Trans>
@@ -252,8 +247,8 @@ export function MoreOptionsMenu({
                     <Menu.Item
                       label={
                         referenceListOptOut
-                          ? _(msg`Undo opt-out from starter pack`)
-                          : _(msg`Opt out of starter pack`)
+                          ? l`Undo opt-out from Starter Pack`
+                          : l`Opt out of Starter Pack`
                       }
                       disabled={isOptOutPending}
                       onPress={optOutDialogControl.open}>
@@ -261,7 +256,7 @@ export function MoreOptionsMenu({
                         {referenceListOptOut ? (
                           <Trans>Undo opt-out</Trans>
                         ) : (
-                          <Trans>Opt out of starter pack</Trans>
+                          <Trans>Opt out of Starter Pack</Trans>
                         )}
                       </Menu.ItemText>
                     </Menu.Item>
@@ -276,8 +271,8 @@ export function MoreOptionsMenu({
               <Menu.Divider />
               <Menu.Group>
                 <Menu.Item
-                  label={_(msg`Unpin moderation list`)}
-                  onPress={onUnpinModList}>
+                  label={l`Unpin moderation list`}
+                  onPress={() => void onUnpinModList()}>
                   <Menu.ItemText>
                     <Trans>Unpin moderation list</Trans>
                   </Menu.ItemText>
@@ -293,8 +288,8 @@ export function MoreOptionsMenu({
               <Menu.Group>
                 {isBlocking && (
                   <Menu.Item
-                    label={_(msg`Unblock list`)}
-                    onPress={onUnsubscribeBlock}>
+                    label={l`Unblock list`}
+                    onPress={() => void onUnsubscribeBlock()}>
                     <Menu.ItemText>
                       <Trans>Unblock list</Trans>
                     </Menu.ItemText>
@@ -303,8 +298,8 @@ export function MoreOptionsMenu({
                 )}
                 {isMuting && (
                   <Menu.Item
-                    label={_(msg`Unmute list`)}
-                    onPress={onUnsubscribeMute}>
+                    label={l`Unmute list`}
+                    onPress={() => void onUnsubscribeMute()}>
                     <Menu.ItemText>
                       <Trans>Unmute list</Trans>
                     </Menu.ItemText>
@@ -316,37 +311,32 @@ export function MoreOptionsMenu({
           )}
         </Menu.Outer>
       </Menu.Root>
-
       <CreateOrEditListDialog control={editListDialogControl} list={list} />
-
       <Prompt.Basic
         control={deleteListPromptControl}
-        title={_(msg`Delete this list?`)}
-        description={_(
-          msg`If you delete this list, you won't be able to recover it.`,
-        )}
-        onConfirm={onPressDelete}
-        confirmButtonCta={_(msg`Delete`)}
+        title={l`Delete this list?`}
+        description={l`If you delete this list, you won't be able to recover it.`}
+        onConfirm={() => void onPressDelete()}
+        confirmButtonCta={l`Delete`}
         confirmButtonColor="negative"
       />
-
       {isReferenceList ? (
         <Prompt.Outer control={optOutDialogControl}>
           <Prompt.TitleText>
             {referenceListOptOut ? (
               <Trans>Undo opt-out?</Trans>
             ) : (
-              <Trans>Opt out of this starter pack?</Trans>
+              <Trans>Opt out of this Starter Pack?</Trans>
             )}
           </Prompt.TitleText>
           <Prompt.DescriptionText>
             {referenceListOptOut ? (
               <Trans>
-                You will be eligible to appear in this starter pack again.
+                You will be eligible to appear in this Starter Pack again.
               </Trans>
             ) : (
               <Trans>
-                You will no longer appear in this starter pack. The creator will
+                You will no longer appear in this Starter Pack. The creator will
                 be able to see that you've opted out and remove you if they
                 wish.
               </Trans>
@@ -356,8 +346,8 @@ export function MoreOptionsMenu({
             <Prompt.Action
               cta={
                 referenceListOptOut
-                  ? _(msg`Undo opt-out`)
-                  : _(msg`Opt out of starter pack`)
+                  ? l`Undo opt-out`
+                  : l`Opt out of Starter Pack`
               }
               color={referenceListOptOut ? 'primary' : 'negative'}
               disabled={isOptOutPending}
@@ -369,7 +359,6 @@ export function MoreOptionsMenu({
           </Prompt.Actions>
         </Prompt.Outer>
       ) : null}
-
       <ReportDialog
         control={reportDialogControl}
         subject={{

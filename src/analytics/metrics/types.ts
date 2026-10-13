@@ -60,9 +60,7 @@ export type Events = {
     notificationType: NotificationType
     authorCount: number
   }
-  'state:background': {
-    secondsActive: number
-  }
+  'state:background': {}
   'state:foreground': {}
   'router:navigate': {
     from?: string
@@ -91,6 +89,7 @@ export type Events = {
     item:
       | 'home'
       | 'search'
+      | 'atmosphere'
       | 'chat'
       | 'notifications'
       | 'profile'
@@ -123,8 +122,20 @@ export type Events = {
     activeStep: number
   }
   'signup:captchaSuccess': {}
-  'signup:captchaFailure': {}
-  'signup:captchaBackPress': {}
+  'signup:captchaFailure': {
+    reason: 'state-mismatch' | 'webview-error' | 'http-error'
+    host?: string
+    statusCode?: number
+  }
+  'signup:captchaSlow': {}
+  'signup:captchaBlockedLoad': {
+    host: string
+    isTopFrame: boolean
+  }
+  'signup:captchaBackPress': {
+    phase?: 'attesting' | 'challenge'
+  }
+  'signup:attestTimeout': {}
   'signup:createAccountFailure': {
     reason: string
   }
@@ -216,18 +227,54 @@ export type Events = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
-  'feed:save': {
-    feedUrl: string
-  }
-  'feed:unsave': {
-    feedUrl: string
-  }
-  'feed:pin': {
-    feedUrl: string
-  }
-  'feed:unpin': {
-    feedUrl: string
-  }
+  'feed:save': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:unsave': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:pin': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:unpin': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
   'feed:like': {
     feedUrl: string
   }
@@ -239,9 +286,15 @@ export type Events = {
   }
   'feed:suggestion:seen': {
     feedUrl: string
+    logContext: 'Explore'
+    recId?: string
+    position: number
   }
   'feed:suggestion:press': {
     feedUrl: string
+    logContext: 'Explore'
+    recId?: string
+    position: number
   }
   'post:showMore': {
     uri: string
@@ -448,6 +501,10 @@ export type Events = {
     feedDescriptor?: string
     position?: number
   }
+  'post:quotes:view': {
+    uri: string
+    quoteSort: 'top' | 'latest'
+  }
   'post:view': {
     uri: string
     authorDid: string
@@ -463,6 +520,7 @@ export type Events = {
       | 'Hashtag'
       | 'Topic'
       | 'PostQuotes'
+    quoteSort?: 'top' | 'latest'
     feedDescriptor?: string
     position?: number
   }
@@ -716,6 +774,20 @@ export type Events = {
     logContext: 'StarterPackProfilesList' | 'Onboarding'
     starterPack: string
     count: number
+    recId?: string
+    position?: number
+  }
+  'starterPack:suggestion:seen': {
+    logContext: 'Explore' | 'Onboarding'
+    starterPack: string
+    recId: string
+    position: number
+  }
+  'starterPack:suggestion:press': {
+    logContext: 'Explore'
+    starterPack: string
+    recId: string
+    position: number
   }
   'starterPack:delete': {}
   'starterPack:optOut': {
@@ -774,12 +846,14 @@ export type Events = {
   }
   'trendingTopic:seen': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
   }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number

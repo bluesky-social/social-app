@@ -1,5 +1,6 @@
 import {useCallback} from 'react'
 import {Pressable, View} from 'react-native'
+import {useBackgroundNotificationPreferences} from '@bsky.app/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -33,7 +34,6 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
-import {useBackgroundNotificationPreferences} from '../../../modules/expo-background-notification-handler/src/BackgroundNotificationHandlerProvider'
 
 type AllowIncoming = 'all' | 'none' | 'following'
 

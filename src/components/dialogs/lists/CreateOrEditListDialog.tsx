@@ -187,7 +187,7 @@ function DialogInner({
     ImageMeta | undefined | null
   >()
 
-  // When creating with pre-filled values (from starter pack), consider dirty
+  // When creating with pre-filled values (from Starter Pack), consider dirty
   // immediately so the Save button is enabled
   const hasInitialValuesForCreate = !list && initialValues != null
   const dirty =
@@ -421,7 +421,7 @@ function DialogInner({
           </TextField.LabelText>
           <TextField.Root isInvalid={displayNameTooLong || displayNameTooShort}>
             <Dialog.Input
-              defaultValue={displayName}
+              value={displayName}
               onChangeText={onChangeDisplayName}
               label={_(msg`Name`)}
               placeholder={displayNamePlaceholder}
@@ -457,7 +457,7 @@ function DialogInner({
           </TextField.LabelText>
           <TextField.Root isInvalid={descriptionTooLong}>
             <Dialog.Input
-              defaultValue={descriptionRt.text}
+              value={descriptionRt.text}
               onChangeText={onChangeDescription}
               multiline
               label={_(msg`Description`)}

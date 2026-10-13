@@ -1,4 +1,4 @@
-import {useEffect, useMemo, useRef, useState} from 'react'
+import {useEffect, useEffectEvent, useMemo, useRef, useState} from 'react'
 import {Platform, Text as RNText, View} from 'react-native'
 import {parseLanguageString} from '@atproto/syntax'
 import {
@@ -332,15 +332,18 @@ function GuessedLanguage({
     onDeclineOuter()
   }
 
-  const metaRef = useNonReactiveObject(metadata)
-  useEffect(() => {
+  const logSuggestion = useEffectEvent(() => {
     ax.metric('composer:language:suggestLanguage', {
       os: Platform.OS,
       suggestedLanguage: language,
-      currentTargetLanguages: metaRef.current.currentTargetLanguages,
+      currentTargetLanguages: metadata.currentTargetLanguages,
       textLength: sanitizeTextForDetection(metadata.rawText).length,
     })
-  }, [ax, language])
+  })
+
+  useEffect(() => {
+    logSuggestion()
+  }, [language])
 
   return (
     <LanguageSuggestionButton

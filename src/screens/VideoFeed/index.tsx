@@ -7,9 +7,9 @@ import {
   View,
 } from 'react-native'
 import {
-  Gesture,
   GestureDetector,
   type NativeGesture,
+  useNativeGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   useAnimatedStyle,
@@ -105,6 +105,7 @@ import {RichText} from '#/components/RichText'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID} from '#/env'
+import {usePostFeedQuery as useFollowingV2PostFeedQuery} from '#/features/followingV2/home/queries/postFeed'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 import {Scrubber, VIDEO_PLAYER_BOTTOM_INSET} from './components/Scrubber'
@@ -204,13 +205,24 @@ function Feed() {
   const feedUri = params.type === 'feedgen' ? params.uri : undefined
   const {data: feedInfo} = useFeedInfo(feedUri)
   const feedFeedback = useFeedFeedback(feedInfo ?? undefined, hasSession)
+  const feedParams =
+    params.type === 'feedgen' && params.sourceInterstitial !== 'none'
+      ? {feedCacheKey: params.sourceInterstitial}
+      : undefined
+  /*
+   * Opened from the Following v2 fork of Home, the grid's pages are under the
+   * fork's query key, so read them from there to keep the starting post and
+   * the pages already loaded.
+   */
+  const isFollowingV2 = params.type === 'feedgen' && params.followingV2 === true
+  const legacyQuery = usePostFeedQuery(feedDesc, feedParams, {
+    enabled: !isFollowingV2,
+  })
+  const followingV2Query = useFollowingV2PostFeedQuery(feedDesc, feedParams, {
+    enabled: isFollowingV2,
+  })
   const {data, error, hasNextPage, isFetchingNextPage, fetchNextPage} =
-    usePostFeedQuery(
-      feedDesc,
-      params.type === 'feedgen' && params.sourceInterstitial !== 'none'
-        ? {feedCacheKey: params.sourceInterstitial}
-        : undefined,
-    )
+    isFollowingV2 ? followingV2Query : legacyQuery
 
   const videos = useMemo(() => {
     let vids =
@@ -262,7 +274,7 @@ function Feed() {
 
   const [currentIndex, setCurrentIndex] = useState(0)
 
-  const scrollGesture = useMemo(() => Gesture.Native(), [])
+  const scrollGesture = useNativeGesture()
 
   const renderItem: ListRenderItem<VideoItem> = useCallback(
     ({item, index}) => {
@@ -1211,7 +1223,7 @@ function PlayPauseTapArea({
 }) {
   const {t: l} = useLingui()
   const doubleTapRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   // TODO: implement viaRepost -sfn
   const [queueLike] = usePostLikeMutationQueue(
     post,
@@ -1251,7 +1263,7 @@ function PlayPauseTapArea({
     if (doubleTapRef.current) {
       clearTimeout(doubleTapRef.current)
       doubleTapRef.current = null
-      playHaptic('Light')
+      haptics.tap()
       void queueLike()
       sendInteraction({
         item: post.uri,

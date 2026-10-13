@@ -17,7 +17,7 @@ Key features:
 
 ## Platform Support
 
-- **iOS**: Uses `UISheetPresentationController` (iOS 15+)
+- **iOS**: Uses `UISheetPresentationController` (iOS 16.4+)
 - **Android**: Uses Material Design `BottomSheetDialog` with `BottomSheetBehavior`
 - **Web**: Not supported (throws error)
 
@@ -142,7 +142,7 @@ interface BottomSheetViewProps {
 ### Basic Example
 
 ```tsx
-import {BottomSheet, BottomSheetProvider, BottomSheetOutlet} from '@modules/bottom-sheet'
+import {BottomSheet, BottomSheetProvider, BottomSheetOutlet} from '@bsky.app/bottom-sheet'
 
 // In your app root:
 function App() {
@@ -204,7 +204,7 @@ The module supports nesting sheets by using `BottomSheetPortalProvider` within s
 ### Dismiss All Sheets
 
 ```tsx
-import {BottomSheetNativeComponent} from '@modules/bottom-sheet'
+import {BottomSheetNativeComponent} from '@bsky.app/bottom-sheet'
 
 BottomSheetNativeComponent.dismissAll()
 ```
@@ -213,11 +213,9 @@ BottomSheetNativeComponent.dismissAll()
 
 ### iOS Specific
 
-1. **iOS 15 Compatibility**: On iOS 15, custom detents are not available, so the module uses `.medium()` detent and applies extra styling to prevent visual issues.
+1. **iOS 26+ Zoom Transitions**: When `sourceViewTag` is provided on iOS 26+, the sheet zooms from the specified view.
 
-2. **iOS 26+ Zoom Transitions**: When `sourceViewTag` is provided on iOS 26+, the sheet zooms from the specified view.
-
-3. **Detent Selection**: The module automatically chooses between custom detents, `.medium()`, and `.large()` based on content height and screen size.
+2. **Detent Selection**: The module automatically chooses between custom detents and `.large()` based on content height and screen size.
 
 ### Android Specific
 

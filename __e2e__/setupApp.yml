@@ -1,24 +1,30 @@
 appId: xyz.blueskyweb.app
 ---
-- launchApp:
-    appId: "xyz.blueskyweb.app"
-    clearState: true
-- extendedWaitUntil:
-    visible:
-      id: e2eProxyHeaderInput
-    timeout: 180000
+# On Android, name the permissions to grant rather than taking launchApp's
+# default (all: allow). To grant "all", Maestro pulls the whole debug APK over
+# adb on every launch to read its manifest, and that transfer has no timeout,
+# so it occasionally hangs a flow for 25-45 minutes.
+- runFlow:
+    when:
+      platform: Android
+    commands:
+      - launchApp:
+          appId: "xyz.blueskyweb.app"
+          clearState: true
+          permissions:
+            notifications: allow
+            camera: allow
+            microphone: allow
+            medialibrary: allow
+            contacts: allow
+- runFlow:
+    when:
+      platform: iOS
+    commands:
+      - launchApp:
+          appId: "xyz.blueskyweb.app"
+          clearState: true
 - extendedWaitUntil:
     visible: "Sign in"
     timeout: 180000
-- retry:
-    maxRetries: 3
-    commands:
-      - tapOn:
-          id: e2eProxyHeaderInput
-      - eraseText
-      - inputText: ${output.result}
-      - pressKey: Enter
-      - extendedWaitUntil:
-          visible:
-            id: e2eSignInAlice
-          timeout: 10000
+- waitForAnimationToEnd

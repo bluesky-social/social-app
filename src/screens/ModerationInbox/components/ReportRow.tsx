@@ -4,26 +4,36 @@ import {isBefore, subYears} from 'date-fns'
 
 import {atoms as a, useTheme} from '#/alf'
 import {ChevronRight_Stroke2_Corner0_Rounded as ChevronRightIcon} from '#/components/icons/Chevron'
+import {Link} from '#/components/Link'
 import {Text} from '#/components/Typography'
 
 export function ReportRow({
   subject,
   action,
   date,
+  to,
   unread,
 }: {
   subject: string
   action: string
   date: Date
+  to: React.ComponentProps<typeof Link>['to']
   unread?: boolean
 }) {
   const t = useTheme()
-  const {i18n} = useLingui()
+  const {i18n, t: l} = useLingui()
 
   const shouldShowYear = isBefore(date, subYears(new Date(), 1))
 
   return (
-    <View
+    <Link
+      label={l`View report details: ${subject}`}
+      to={to}
+      hoverStyle={
+        unread
+          ? {backgroundColor: t.palette.primary_50}
+          : t.atoms.bg_contrast_25
+      }
       style={[
         a.flex_row,
         a.w_full,
@@ -68,6 +78,6 @@ export function ReportRow({
         ) : undefined}
         <ChevronRightIcon size="md" style={[t.atoms.text_contrast_medium]} />
       </View>
-    </View>
+    </Link>
   )
 }

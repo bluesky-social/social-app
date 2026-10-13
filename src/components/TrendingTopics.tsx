@@ -5,7 +5,7 @@ import {Trans, useLingui} from '@lingui/react/macro'
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
 import {useCallOnce} from '#/lib/once'
 // import {makeProfileLink} from '#/lib/routes/links'
-// import {feedUriToHref} from '#/lib/strings/url-helpers'
+import {makeRecordUri} from '#/lib/strings/url-helpers'
 import {atoms as a, native, useTheme} from '#/alf'
 import {Link as InternalLink, type LinkProps} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
@@ -72,7 +72,8 @@ export function TrendingTopicLink({
   recId?: string
 } & Omit<LinkProps, 'to' | 'label'>) {
   const topic = useTopic(raw)
-  useTrendingTopicSeen(metricContext, rank, recId)
+  const feedUri = getTrendingTopicFeedUri(raw)
+  useTrendingTopicSeen(metricContext, feedUri, rank, recId)
 
   return (
     <InternalLink
@@ -87,6 +88,7 @@ export function TrendingTopicLink({
 
 export function useTrendingTopicSeen(
   context: Metrics['trendingTopic:seen']['context'],
+  feedUri: string | undefined,
   rank: number,
   recId?: string,
   feedSliceIndex?: number,
@@ -95,6 +97,7 @@ export function useTrendingTopicSeen(
   const trackSeen = useCallOnce(() => {
     ax.metric('trendingTopic:seen', {
       context,
+      feedUri,
       rank,
       feedSliceIndex,
       recId,
@@ -104,6 +107,20 @@ export function useTrendingTopicSeen(
   useEffect(() => {
     trackSeen()
   }, [trackSeen])
+}
+
+export function getTrendingTopicFeedUri(
+  topic: app.bsky.unspecced.defs.TrendView,
+): string | undefined {
+  const match = topic.link.match(/^\/profile\/([^/]+)\/feed\/([^/?#]+)/)
+
+  if (!match) return undefined
+
+  return makeRecordUri(
+    decodeURIComponent(match[1]),
+    'app.bsky.feed.generator',
+    decodeURIComponent(match[2]),
+  )
 }
 
 type ParsedTrendingTopic =
@@ -149,7 +166,7 @@ export function useTopic(
     } else if (link.startsWith('/starter-pack')) {
       return {
         type: 'starter-pack',
-        label: l`Browse starter pack ${displayName}`,
+        label: l`Browse Starter Pack ${displayName}`,
         displayName,
         uri: undefined,
         url: link,

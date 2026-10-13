@@ -19,7 +19,9 @@ import {
 } from 'react-native'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
-import {DismissableLayer, FocusGuards, FocusScope} from 'radix-ui/internal'
+import * as DismissableLayer from '@radix-ui/react-dismissable-layer'
+import * as FocusGuards from '@radix-ui/react-focus-guards'
+import * as FocusScope from '@radix-ui/react-focus-scope'
 import {RemoveScrollBar} from 'react-remove-scroll-bar'
 
 import {logger} from '#/logger'

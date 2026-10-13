@@ -78,14 +78,7 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
   }
 
   func isStarterPackUrl(_ url: URL) -> Bool {
-    var host: String?
-    if #available(iOS 16.0, *) {
-      host = url.host()
-    } else {
-      host = url.host
-    }
-
-    switch host {
+    switch url.host() {
     case "bsky.app":
       if url.pathComponents.count == 4,
          url.pathComponents[1] == "start" || url.pathComponents[1] == "starter-pack" {
@@ -125,27 +118,17 @@ class ViewController: UIViewController, WKScriptMessageHandler, WKNavigationDele
   }
 
   func getHost(_ url: URL?) -> String? {
-    if #available(iOS 16.0, *) {
-      return url?.host()
-    } else {
-      return url?.host
-    }
+    return url?.host()
   }
 
   func getQuery(_ url: URL?) -> String? {
-    if #available(iOS 16.0, *) {
-      return url?.query()
-    } else {
-      return url?.query
-    }
+    return url?.query()
   }
 
   func urlMatchesPrevious(_ url: URL?) -> Bool {
-    if #available(iOS 16.0, *) {
-      return url?.query() == prevUrl?.query() && url?.host() == prevUrl?.host() && url?.query() == prevUrl?.query()
-    } else {
-      return url?.query == prevUrl?.query && url?.host == prevUrl?.host && url?.query == prevUrl?.query
-    }
+    return url?.query() == prevUrl?.query()
+      && url?.host() == prevUrl?.host()
+      && url?.query() == prevUrl?.query()
   }
 }
 

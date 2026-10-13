@@ -49,6 +49,14 @@
             "format": "at-uri",
             "description": "Reference (AT-URI) of post record"
           },
+          "sort": {
+            "type": "string",
+            "description": "Ordering of results. 'latest' (default when unset) is newest first; 'top' orders quotes by their like count.",
+            "knownValues": [
+              "latest",
+              "top"
+            ]
+          },
           "limit": {
             "type": "integer",
             "default": 50,

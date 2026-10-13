@@ -1,11 +1,13 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
+import {getBundleModeMetroConfig} from 'react-native-worklets/bundleMode/index.js'
 import {type CustomResolver} from '@expo/metro/metro-resolver'
 import {getDefaultConfig} from '@expo/metro-config'
 import {getSentryExpoConfig} from '@sentry/react-native/metro.js'
 
-const config = getSentryExpoConfig(import.meta.dirname, {
+let config = getSentryExpoConfig(import.meta.dirname, {
   // TODO: confirm this doesn't break anything when we switch to metro web
   includeWebReplay: false,
+  includeWebFeedback: false,
   annotateReactComponents: {
     textComponentNames: ['Text', 'ButtonText'],
   },
@@ -26,21 +28,44 @@ const config = getSentryExpoConfig(import.meta.dirname, {
     if (process.env.BSKY_PROFILE) {
       // @ts-expect-error readonly property
       config.cacheVersion += ':PROFILE'
-
-      const resolver: CustomResolver = (context, moduleName, platform) => {
-        if (moduleName.endsWith('ReactNativeRenderer-prod')) {
-          return context.resolveRequest(
-            context,
-            moduleName.replace('-prod', '-profiling'),
-            platform,
-          )
-        }
-        return context.resolveRequest(context, moduleName, platform)
-      }
-
-      // @ts-expect-error readonly property
-      config.resolver.resolveRequest = resolver
     }
+
+    const resolver: CustomResolver = (context, moduleName, platform) => {
+      if (
+        platform === 'web' &&
+        /^react-native-gesture-handler(\/|$)/.test(moduleName)
+      ) {
+        throw new Error(
+          `react-native-gesture-handler must not be imported on web (requested from ${context.originModulePath})`,
+        )
+      }
+      /*
+       * react-native-webview has no web implementation (its fallback renders
+       * "does not support this platform"), so swap in react-native-web-webview
+       * to keep external media embeds working. Mirrors the old webpack alias.
+       */
+      if (platform === 'web' && moduleName === 'react-native-webview') {
+        return context.resolveRequest(
+          context,
+          'react-native-web-webview',
+          platform,
+        )
+      }
+      if (
+        process.env.BSKY_PROFILE &&
+        moduleName.endsWith('ReactNativeRenderer-prod')
+      ) {
+        return context.resolveRequest(
+          context,
+          moduleName.replace('-prod', '-profiling'),
+          platform,
+        )
+      }
+      return context.resolveRequest(context, moduleName, platform)
+    }
+
+    // @ts-expect-error readonly property
+    config.resolver.resolveRequest = resolver
 
     config.transformer.getTransformOptions = () =>
       Promise.resolve({
@@ -53,5 +78,7 @@ const config = getSentryExpoConfig(import.meta.dirname, {
     return config as unknown as Record<string, unknown>
   },
 })
+
+config = getBundleModeMetroConfig(config)
 
 export default config

@@ -55,6 +55,30 @@ index 06829bd00dbded262e1871aaf6db3ae0cfa9d1b1..1b158185a6d7e907aa18ddc806902fcc
      invalidate();
    }
  
+diff --git a/lib/commonjs/web/utils/prepare.js b/lib/commonjs/web/utils/prepare.js
+index d57e7c86ad2bc0f72f74673214f57e3f5a55c209..658b4482b541f41ab6dac6e023f1482a7adc72c3 100644
+--- a/lib/commonjs/web/utils/prepare.js
++++ b/lib/commonjs/web/utils/prepare.js
+@@ -32,6 +32,7 @@ const prepare = (self, props = self.props) => {
+     gradientTransform,
+     patternTransform,
+     onPress,
++    collapsable,
+     ...rest
+   } = props;
+   const clean = {
+diff --git a/lib/module/web/utils/prepare.js b/lib/module/web/utils/prepare.js
+index 113eb2b45c518fb2f1dd4fdcca1a87b29572cfe7..c46f3f020d81b6eb37bcdf1cdf81799d874aef5c 100644
+--- a/lib/module/web/utils/prepare.js
++++ b/lib/module/web/utils/prepare.js
+@@ -26,6 +26,7 @@ export const prepare = (self, props = self.props) => {
+     gradientTransform,
+     patternTransform,
+     onPress,
++    collapsable,
+     ...rest
+   } = props;
+   const clean = {
 diff --git a/lib/typescript/ReactNativeSVG.web.d.ts b/lib/typescript/ReactNativeSVG.web.d.ts
 deleted file mode 100644
 index e2001975fa97398fb159d2f85f45d067200f575b..0000000000000000000000000000000000000000
@@ -66,4 +90,16 @@ deleted file mode 100644
 index cf4083fbf749b2b002fb649d80b33ac74763847b..0000000000000000000000000000000000000000
 diff --git a/lib/typescript/elements.web.d.ts.map b/lib/typescript/elements.web.d.ts.map
 deleted file mode 100644
-index 29602aa47ad903bc7aaa111462a61dd862c4476d..0000000000000000000000000000000000000000
+index ca8dea363364ab3f80b42d3887b49288b6c34673..0000000000000000000000000000000000000000
+diff --git a/src/web/utils/prepare.ts b/src/web/utils/prepare.ts
+index 410678441eead55689ada71bd755186bee25a39b..f576dad37b6c09401708111957ae86b0aebad664 100644
+--- a/src/web/utils/prepare.ts
++++ b/src/web/utils/prepare.ts
+@@ -36,6 +36,7 @@ export const prepare = <T extends BaseProps>(
+     gradientTransform,
+     patternTransform,
+     onPress,
++    collapsable,
+     ...rest
+   } = props;
+ 

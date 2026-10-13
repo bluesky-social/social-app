@@ -75,7 +75,7 @@ export function StepFinished() {
         })
         starterPack = spRes.starterPack
       } catch (e) {
-        logger.error('Failed to fetch starter pack', {safeMessage: e})
+        logger.error('Failed to fetch Starter Pack', {safeMessage: e})
         // don't tell the user, just get them through onboarding.
       }
       const starterPackList = starterPack?.list
@@ -87,7 +87,7 @@ export function StepFinished() {
           )
         }
       } catch (e) {
-        logger.error('Failed to fetch starter pack list items', {
+        logger.error('Failed to fetch Starter Pack list items', {
           safeMessage: e,
         })
         // don't tell the user, just get them through onboarding.
@@ -132,7 +132,7 @@ export function StepFinished() {
             },
           ]
 
-          // Any starter pack feeds will be pinned _after_ the defaults
+          // Any Starter Pack feeds will be pinned _after_ the defaults
           if (starterPack && starterPack.feeds?.length) {
             feedsToSave.push(
               ...starterPack.feeds.map(f => ({

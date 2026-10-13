@@ -40,10 +40,17 @@ type Props = {
   onPress?: () => void
 }
 
-export function Default(props: Props) {
-  const {view} = props
+export type SavedFeedAction = 'save' | 'unsave' | 'pin' | 'unpin'
+
+export function Default({
+  view,
+  onSavedFeedChange,
+  ...props
+}: Props & {
+  onSavedFeedChange?: (action: SavedFeedAction) => void
+}) {
   return (
-    <Link {...props}>
+    <Link view={view} {...props}>
       <Outer>
         <Header>
           <Avatar src={view.avatar} />
@@ -52,7 +59,7 @@ export function Default(props: Props) {
             creator={view.creator}
             uri={view.uri}
           />
-          <SaveButton view={view} pin />
+          <SaveButton view={view} pin onSavedFeedChange={onSavedFeedChange} />
         </Header>
         <Description description={view.description} />
         <Likes count={view.likeCount || 0} />
@@ -253,26 +260,37 @@ export function Likes({count}: {count: number}) {
 export function SaveButton({
   view,
   pin,
+  onSavedFeedChange,
   ...props
 }: {
   view: app.bsky.feed.defs.GeneratorView | app.bsky.graph.defs.ListView
   pin?: boolean
   text?: boolean
+  onSavedFeedChange?: (action: SavedFeedAction) => void
 } & Partial<ButtonProps>) {
   const {hasSession} = useSession()
   if (!hasSession) return null
-  return <SaveButtonInner view={view} pin={pin} {...props} />
+  return (
+    <SaveButtonInner
+      view={view}
+      pin={pin}
+      onSavedFeedChange={onSavedFeedChange}
+      {...props}
+    />
+  )
 }
 
 function SaveButtonInner({
   view,
   pin,
   text = true,
+  onSavedFeedChange,
   ...buttonProps
 }: {
   view: app.bsky.feed.defs.GeneratorView | app.bsky.graph.defs.ListView
   pin?: boolean
   text?: boolean
+  onSavedFeedChange?: (action: SavedFeedAction) => void
 } & Partial<ButtonProps>) {
   const {t: l} = useLingui()
   const {data: preferences} = usePreferencesQuery()
@@ -300,6 +318,7 @@ function SaveButtonInner({
       try {
         if (savedFeedConfig) {
           await removeFeed(savedFeedConfig)
+          onSavedFeedChange?.(pin ? 'unpin' : 'unsave')
         } else {
           await saveFeeds([
             {
@@ -308,6 +327,7 @@ function SaveButtonInner({
               pinned,
             },
           ])
+          onSavedFeedChange?.(pin ? 'pin' : 'save')
         }
         Toast.show(l({message: 'Feeds updated!', context: 'toast'}))
       } catch (err: any) {
@@ -317,7 +337,16 @@ function SaveButtonInner({
         })
       }
     },
-    [l, pin, saveFeeds, removeFeed, uri, savedFeedConfig, type],
+    [
+      l,
+      pin,
+      saveFeeds,
+      removeFeed,
+      uri,
+      savedFeedConfig,
+      type,
+      onSavedFeedChange,
+    ],
   )
 
   const onPromptRemoveFeed = useCallback(

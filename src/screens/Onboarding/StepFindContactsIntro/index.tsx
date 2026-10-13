@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import * as Contacts from 'expo-contacts'
+import * as Contacts from 'expo-contacts/legacy'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'

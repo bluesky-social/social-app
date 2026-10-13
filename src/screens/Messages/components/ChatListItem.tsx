@@ -278,7 +278,7 @@ function BaseChatItem({
   const {gtMobile} = useBreakpoints()
   const {isWithinLeftPanel} = useIsWithinSplitView()
 
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const queryClient = useQueryClient()
   const hasUnread =
     !selected &&
@@ -433,9 +433,9 @@ function BaseChatItem({
   )
 
   const onLongPress = useCallback(() => {
-    playHaptic()
+    haptics.longPress()
     menuControl.open()
-  }, [playHaptic, menuControl])
+  }, [haptics, menuControl])
 
   const markReadAction = {
     threshold: 120,

@@ -13,6 +13,29 @@ jest.mock('./utils', () => ({
 }))
 
 describe('CustomFeedAPI', () => {
+  it('passes the abort signal to authenticated requests', async () => {
+    const call = jest.fn().mockResolvedValue({feed: []})
+    const client = {
+      did: 'did:plc:test',
+      call,
+    } as unknown as Client
+    const api = new CustomFeedAPI({
+      client,
+      feedParams: {
+        feed: 'at://did:example:feed/app.bsky.feed.generator/test',
+      },
+    })
+    const signal = new AbortController().signal
+
+    await api.fetch({cursor: undefined, limit: 10, signal})
+
+    expect(call).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.anything(),
+      expect.objectContaining({signal}),
+    )
+  })
+
   it('preserves the cursor from an empty logged-out fallback page', async () => {
     const originalFetch = global.fetch
     const fetchMock: jest.MockedFunction<typeof fetch> = jest
