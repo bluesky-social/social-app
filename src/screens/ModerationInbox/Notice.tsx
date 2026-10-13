@@ -261,7 +261,7 @@ function NoticeDetails({
                   For more information about our appeals and redress process,
                   please see our{' '}
                   <InlineLinkText
-                    to="https://bsky.social/about/support/tos"
+                    to={webLinks.tos}
                     label={l`Read our Terms of Service`}
                     style={[a.text_sm]}>
                     Terms of Service
