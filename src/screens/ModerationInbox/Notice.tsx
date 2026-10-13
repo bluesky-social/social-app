@@ -404,7 +404,8 @@ function AppealDialog({
       testID="moderationInboxAppealCancelBtn"
       label={l`Cancel appeal`}
       size="small"
-      color="primary"
+      color="secondary"
+      variant="ghost"
       disabled={appeal.isPending}
       onPress={() => control.close()}>
       <ButtonText style={[a.text_md]}>
