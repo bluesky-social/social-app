@@ -201,7 +201,7 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/moderation"
-            label={l`Moderation and content filters`}
+            label={l`Moderation tools`}
             accessibilityHint={
               unreadCount > 0
                 ? plural(unreadCount, {
@@ -212,7 +212,7 @@ export function SettingsScreen({}: Props) {
             }>
             <SettingsList.ItemIcon icon={HandIcon} />
             <SettingsList.ItemText>
-              <Trans>Moderation and content filters</Trans>
+              <Trans>Moderation tools</Trans>
             </SettingsList.ItemText>
             <SettingsList.BadgeCount count={unreadCount} />
           </SettingsList.LinkItem>
