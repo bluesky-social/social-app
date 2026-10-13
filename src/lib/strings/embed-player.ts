@@ -566,17 +566,17 @@ export function parseEmbedPlayerFromUrl(
   if (freemixHosts.includes(urlp.hostname)) {
     const segments = urlp.pathname.split('/').filter(Boolean)
     /*
-     * /track/{rkey} is the canonical track URL. Other paths, such as
-     * /track/{rkey}/tree (remix-tree view), fall through to a link card.
+     * /track/{actor}/{rkey} is the canonical track URL. Other paths, such as
+     * /track/{actor}/{rkey}/tree (remix-tree view), fall through to a link card.
      */
-    if (segments[0] === 'track' && segments.length === 2) {
-      const rkey = segments[1]
+    if (segments[0] === 'track' && segments.length === 3) {
+      const [, actor, rkey] = segments
       if (freemixRkeyRegex.test(rkey)) {
         return {
           type: 'freemix_track',
           source: 'freemix',
           // the player lives on the same host as the track URL
-          playerUri: `https://${urlp.hostname}/embed/${rkey}`,
+          playerUri: `https://${urlp.hostname}/embed/${actor}/${rkey}`,
         }
       }
     }

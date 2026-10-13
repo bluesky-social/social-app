@@ -18,6 +18,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {useSharedValue} from 'react-native-reanimated'
 import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
@@ -26,6 +27,7 @@ import {DISCOVER_FEED_URI, KNOWN_SHUTDOWN_FEEDS} from '#/lib/constants'
 import {useBottomBarOffset} from '#/lib/hooks/useBottomBarOffset'
 import {useInitialNumToRender} from '#/lib/hooks/useInitialNumToRender'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
+import {ScrollProvider} from '#/lib/ScrollContext'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 import {usePostAuthorShadowFilter} from '#/state/cache/profile-shadow'
@@ -65,6 +67,7 @@ import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/uti
 import {RichText} from '#/components/RichText'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS, IS_NATIVE, IS_WEB} from '#/env'
+import {isFollowingV2Eligible} from '#/features/followingV2/eligibility'
 import {DiscoverFeedLiveEventFeedsAndTrendingBanner} from '#/features/liveEvents/components/DiscoverFeedLiveEventFeedsAndTrendingBanner'
 import {
   isStatusStillActive,
@@ -73,20 +76,32 @@ import {
 } from '#/features/liveNow'
 import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
+import {GapRow} from './GapRow'
 import {mixSamples} from './mixSamples'
+import {PrependPill} from './PrependPill'
 import {
   type AuthorFilter,
   type FeedDescriptor,
   type FeedParams,
   type FeedPostSlice,
   type FeedPostSliceItem,
+  findGaps,
+  hasUnseenPosts,
   pollLatest,
   RQKEY,
   usePostFeedFetcher,
+  usePostFeedGapFill,
+  usePostFeedPrepend,
   usePostFeedQuery,
   usePostFeedRefresh,
 } from './queries/postFeed'
 import {useSavedFeedSamples} from './queries/savedFeedSamples'
+import {useAnchorCorrectionScrollHandlers} from './useAnchorCorrectionScrollHandlers'
+import {useListRest} from './useListRest'
+import {useNewPostsCheck} from './useNewPostsCheck'
+import {usePrependPill} from './usePrependPill'
+import {useSettleAtTop} from './useSettleAtTop'
+import {useSettleScrollHandlers} from './useSettleScrollHandlers'
 
 type FeedRow =
   | {
@@ -180,6 +195,13 @@ type FeedRow =
       type: 'liveEventFeedsAndTrendingBanner'
       key: string
     }
+  | {
+      type: 'gap'
+      key: string
+      /** The cursor of the page above the gap. */
+      cursor: string
+      isOpen: boolean
+    }
 
 export function getItemsForFeedback(feedRow: FeedRow): {
   item: FeedPostSliceItem
@@ -212,6 +234,19 @@ export type PostFeedRef = {
 // const REFRESH_AFTER = STALE.HOURS.ONE
 const CHECK_LATEST_AFTER = STALE.SECONDS.THIRTY
 
+/**
+ * Rows that show posts. The rows above the first of them are headers, which
+ * `maintainVisibleContentPosition` mustn't anchor on.
+ */
+const POST_ROW_TYPES: ReadonlySet<FeedRow['type']> = new Set([
+  'sliceItem',
+  'sliceViewFullThread',
+  'showLessFollowup',
+  'videoGridRow',
+  'fallbackMarker',
+  'gap',
+])
+
 let PostFeed = ({
   feed,
   description,
@@ -219,6 +254,7 @@ let PostFeed = ({
   ignoreFilterFor,
   style,
   enabled,
+  isActive = false,
   pollInterval,
   disablePoll,
   scrollElRef,
@@ -243,6 +279,12 @@ let PostFeed = ({
   ignoreFilterFor?: string
   style?: StyleProp<ViewStyle>
   enabled?: boolean
+  /**
+   * Whether this is the feed on screen: the focused page of a focused Home.
+   * Only then does anchored Following check for new posts, and offer the
+   * posts it put on top with the pill.
+   */
+  isActive?: boolean
   pollInterval?: number
   disablePoll?: boolean
   scrollElRef?: ListRef
@@ -320,6 +362,7 @@ let PostFeed = ({
     refresh,
     error: refreshError,
     isRefreshing,
+    isPending: isRefreshPending,
   } = usePostFeedRefresh(feed, feedParams)
   const samples = useSavedFeedSamples({
     enabled: enabled !== false && feed === 'following',
@@ -335,17 +378,88 @@ let PostFeed = ({
     [isFetching, data],
   )
 
+  /**
+   * Whether the list holds on to the row the reader is on when posts are put
+   * above it, as Following v2 does on Home's Following feed, on native. The
+   * rows that would sit above the posts are left out, as they'd take the
+   * anchor from them.
+   */
+  const isAnchored = feed === 'following' && isFollowingV2Eligible(ax)
+  /**
+   * When the list is at rest, for prepends to wait for. Its scroll handlers
+   * take the corrections anchoring makes to the offset out of what the Home
+   * header sees, so they can't hide or show it.
+   */
+  const listRest = useListRest(
+    useAnchorCorrectionScrollHandlers(isAnchored),
+    isAnchored,
+  )
+  const prepend = usePostFeedPrepend(feed, feedParams, {
+    enabled: isAnchored && enabled !== false,
+    topFetchedAt: lastFetchedAt,
+    listAtRest: listRest.atRest,
+    isRefreshing: isRefreshPending,
+  })
+  const fillGap = usePostFeedGapFill(feed, feedParams)
+  /*
+   * Pressing "Show more posts" below the posts staged on top, the reader has
+   * reached them.
+   */
+  const onFillGap = useNonReactiveCallback((cursor: string) => {
+    if (cursor === feedData?.pages[0]?.cursor) {
+      prepend.markRead()
+    }
+    return fillGap(cursor)
+  })
+  const settleAtTop = useSettleAtTop(feed, feedParams, {
+    enabled: isAnchored && enabled !== false,
+    // At the newest post, nothing is new to the reader any more.
+    onRestAtTop: () => onHasNew?.(false),
+  })
+  /** The list's scroll offset, which its scroll handlers keep. */
+  const listOffsetY = useSharedValue(0)
+
+  /**
+   * The top page a refresh from this view wrote, to take the reader up to once
+   * it has rendered: anchored, the list would otherwise hold on to the row
+   * they're on, below the new posts. Not animated, as that can be a long way.
+   */
+  const revealTopRef = useRef<number>(undefined)
+  const revealTop = useNonReactiveCallback(() => {
+    scrollElRef?.current?.scrollToOffset({
+      animated: false,
+      offset: -headerOffset,
+    })
+  })
+  const refreshToTop = async () => {
+    const page = await refresh()
+    if (!page || !isAnchored) {
+      return
+    }
+    if (lastFetchRef.current === page.fetchedAt) {
+      revealTop()
+    } else {
+      revealTopRef.current = page.fetchedAt
+    }
+  }
+
   useEffect(() => {
     if (lastFetchedAt) {
       lastFetchRef.current = lastFetchedAt
+      if (lastFetchedAt === revealTopRef.current) {
+        revealTopRef.current = undefined
+        revealTop()
+      }
     }
-  }, [lastFetchedAt])
+  }, [lastFetchedAt, revealTop])
 
   const checkForNew = useNonReactiveCallback(async () => {
     if (
       !data?.pages[0] ||
       isFetching ||
       isRefreshing ||
+      // Anchored Following checks with useNewPostsCheck instead, below.
+      isAnchored ||
       !onHasNew ||
       !enabled ||
       disablePoll
@@ -361,7 +475,7 @@ let PostFeed = ({
     try {
       if (await pollLatest(data.pages[0], createFeedApi())) {
         if (isEmpty) {
-          void refresh()
+          void refreshToTop()
         } else {
           onHasNew(true)
         }
@@ -371,6 +485,44 @@ let PostFeed = ({
         logger.warn('Poll latest failed', {feed, message: String(e)})
       }
     }
+  })
+
+  /*
+   * Anchored Following's checks, made by the view on screen only. Each one
+   * that finds newer posts stages them above the reader at rest (see
+   * `usePostFeedPrepend`) and lights the Home dot. Only a return to the app
+   * offers them with the pill. With no boundary to fetch above, as for an
+   * empty feed, it peeks for the Home dot instead, as other feeds do.
+   */
+  useNewPostsCheck({
+    topFetchedAt: lastFetchedAt,
+    isEmpty,
+    isActive: isAnchored && isActive,
+    // A refetch from the top is about to show what a check would find.
+    isBusy: isRefreshing || (isFetching && !isFetchingNextPage),
+    /*
+     * Not paused while the Home dot is lit, as `disablePoll` is, since each
+     * check replaces what's staged with the newest posts.
+     */
+    interval: pollInterval,
+    check: async trigger => {
+      const staging = prepend.check(trigger)
+      if (!staging) {
+        return pollLatest(feedData?.pages[0], createFeedApi())
+      }
+      const page = await staging
+      if (page && hasUnseenPosts(feedData?.pages[0], page.feed)) {
+        onHasNew?.(true)
+      }
+      return undefined
+    },
+    onFound: () => {
+      if (isEmpty) {
+        void refreshToTop()
+      } else {
+        onHasNew?.(true)
+      }
+    },
   })
 
   const isScrolledDownRef = useRef(false)
@@ -396,12 +548,12 @@ let PostFeed = ({
        * had loaded.
        */
       if (enabled) {
-        void refresh()
+        void refreshToTop()
       } else {
         void truncateAndInvalidate(queryClient, RQKEY(feed))
       }
     }
-  }, [queryClient, feed, myDid, enabled, refresh])
+  }, [queryClient, feed, myDid, enabled, refreshToTop])
   useEffect(() => {
     return listenPostCreated(onPostCreated)
   }, [onPostCreated])
@@ -500,7 +652,12 @@ let PostFeed = ({
         key: 'feedShutdownMsg',
       })
     }
-    if (isFetched && !isRetryingError) {
+    /*
+     * Data restored from disk can be in the cache, fetched, before what
+     * moderates it is ready, which the query's `select` waits for. It loads
+     * until then.
+     */
+    if (isFetched && !isRetryingError && (data || isError)) {
       if (isError && isEmpty) {
         arr.push({
           type: 'error',
@@ -572,7 +729,9 @@ let PostFeed = ({
             })
           }
         } else {
-          for (const page of data?.pages) {
+          // Only anchored Following runs the restore prepend that leaves gaps.
+          const gaps = isAnchored ? findGaps(data.pages) : undefined
+          for (const [pageIndex, page] of data.pages.entries()) {
             for (const slice of page.slices) {
               sliceIndex++
 
@@ -636,8 +795,8 @@ let PostFeed = ({
                   }
                 } else if (feedKind === 'following') {
                   if (sliceIndex === 0) {
-                    // Show composer prompt for Following feed
-                    if (hasSession) {
+                    // Show composer prompt for Following feed, unless anchored
+                    if (hasSession && !isAnchored) {
                       arr.push({
                         type: 'composerPrompt',
                         key: 'composerPrompt-' + sliceIndex,
@@ -728,6 +887,16 @@ let PostFeed = ({
                 }
               }
             }
+            const gap = gaps?.get(pageIndex)
+            if (gap && page.cursor) {
+              // The same key once it's filled, so the row stays.
+              arr.push({
+                type: 'gap',
+                key: 'gap-' + page.cursor,
+                cursor: page.cursor,
+                isOpen: gap === 'open',
+              })
+            }
           }
         }
       }
@@ -773,6 +942,7 @@ let PostFeed = ({
 
     return arr
   }, [
+    isAnchored,
     refreshError,
     isRetryingError,
     description,
@@ -798,6 +968,57 @@ let PostFeed = ({
     trendingIndices,
   ])
 
+  const pill = usePrependPill({
+    enabled: isAnchored,
+    isActive,
+    staged: prepend.staged,
+    rows: feedItems,
+    // Without samples, which the pill never offers.
+    pages: feedData?.pages,
+    offsetY: listOffsetY,
+    scrollToTop: () => {
+      scrollElRef?.current?.scrollToOffset({
+        animated: true,
+        offset: -headerOffset,
+      })
+    },
+    onRead: prepend.markRead,
+  })
+  /** Tells the prepend the reader saw a row, if it's from the top page. */
+  const onTopRowSeen = useNonReactiveCallback((row: FeedRow) => {
+    const top = data?.pages[0]
+    if (
+      prepend.staged &&
+      top &&
+      ((row.type === 'sliceItem' && top.slices.includes(row.slice)) ||
+        (row.type === 'gap' && row.cursor === top.cursor))
+    ) {
+      prepend.onPageSeen(top.fetchedAt)
+    }
+  })
+  /**
+   * The list's scroll handlers. Settling, staging and the pill judge the
+   * offset as the list reports it, as they have to know where the list really
+   * is. The Home
+   * header sees it with the corrections anchoring makes taken out, so they
+   * can't hide or show it.
+   */
+  const scrollHandlers = useSettleScrollHandlers(
+    listRest.scrollHandlers,
+    isAnchored
+      ? {
+          ...settleAtTop,
+          onBeginDrag: () => {
+            settleAtTop.onBeginDrag()
+            prepend.onBeginDrag()
+          },
+          // At the top, the reader has passed everything staged above them.
+          onReachTop: prepend.markRead,
+        }
+      : undefined,
+    listOffsetY,
+  )
+
   // events
   // =
   //
@@ -810,13 +1031,13 @@ let PostFeed = ({
         feedUrl: feed,
         reason: 'pull-to-refresh',
       })
-      await refresh()
+      await refreshToTop()
       onHasNew?.(false)
     }
     setIsPTRing(false)
   }
 
-  useImperativeHandle(ref, () => ({refresh}))
+  useImperativeHandle(ref, () => ({refresh: refreshToTop}))
 
   const onEndReached = useCallback(async () => {
     if (isFetching || !hasNextPage || isError) return
@@ -843,9 +1064,9 @@ let PostFeed = ({
   ])
 
   const onPressTryAgain = useCallback(() => {
-    void refresh()
+    void refreshToTop()
     onHasNew?.(false)
-  }, [refresh, onHasNew])
+  }, [refreshToTop, onHasNew])
 
   const onPressRetryLoadMore = useCallback(() => {
     void fetchNextPage()
@@ -982,6 +1203,14 @@ let PostFeed = ({
         )
       } else if (row.type === 'showLessFollowup') {
         return <ShowLessFollowup />
+      } else if (row.type === 'gap') {
+        return (
+          <GapRow
+            isOpen={row.isOpen}
+            onFill={() => onFillGap(row.cursor)}
+            hideTopBorder={rowIndex === 0}
+          />
+        )
       } else {
         return null
       }
@@ -1000,9 +1229,20 @@ let PostFeed = ({
       feedTab,
       feedCacheKey,
       onPressShowLess,
+      onFillGap,
       t,
     ],
   )
+
+  /*
+   * The rows above the first post, which the anchor must skip: anchored on a
+   * header row, the list holds that row in place and lets the posts below it
+   * move.
+   */
+  let leadingRowCount = feedItems.findIndex(row => POST_ROW_TYPES.has(row.type))
+  if (leadingRowCount === -1) {
+    leadingRowCount = feedItems.length
+  }
 
   const shouldRenderEndOfFeed =
     !hasNextPage && !isEmpty && !isFetching && !isError && !!renderEndOfFeed
@@ -1074,6 +1314,7 @@ let PostFeed = ({
   const onItemSeen = useCallback(
     (item: FeedRow) => {
       feedFeedback.onItemSeen(item)
+      onTopRowSeen(item)
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
@@ -1194,40 +1435,54 @@ let PostFeed = ({
         }
       }
     },
-    [feedFeedback, feed, liveNowConfig, getPostPosition, ax],
+    [feedFeedback, onTopRowSeen, feed, liveNowConfig, getPostPosition, ax],
   )
 
   return (
     <View testID={testID} style={style}>
-      <List
-        testID={testID ? `${testID}-flatlist` : undefined}
-        ref={scrollElRef}
-        data={feedItems}
-        keyExtractor={(item: FeedRow) => item.key}
-        renderItem={renderItem}
-        ListFooterComponent={FeedFooter}
-        ListHeaderComponent={ListHeaderComponent}
-        refreshing={isPTRing}
-        onRefresh={() => void onRefresh()}
-        headerOffset={headerOffset}
-        progressViewOffset={progressViewOffset}
-        contentContainerStyle={{
-          minHeight: Dimensions.get('window').height * 1.5,
-        }}
-        onScrolledDownChange={handleScrolledDownChange}
-        onEndReached={() => void onEndReached()}
-        onEndReachedThreshold={2} // number of posts left to trigger load more
-        removeClippedSubviews={true}
-        extraData={extraData}
-        desktopFixedHeight={
-          desktopFixedHeightOffset ? desktopFixedHeightOffset : true
-        }
-        initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
-        windowSize={9}
-        maxToRenderPerBatch={IS_IOS ? 5 : 1}
-        updateCellsBatchingPeriod={40}
-        onItemSeen={onItemSeen}
-      />
+      <ScrollProvider {...scrollHandlers}>
+        <List
+          testID={testID ? `${testID}-flatlist` : undefined}
+          ref={scrollElRef}
+          data={feedItems}
+          keyExtractor={(item: FeedRow) => item.key}
+          renderItem={renderItem}
+          ListFooterComponent={FeedFooter}
+          ListHeaderComponent={ListHeaderComponent}
+          refreshing={isPTRing}
+          onRefresh={() => void onRefresh()}
+          headerOffset={headerOffset}
+          progressViewOffset={progressViewOffset}
+          contentContainerStyle={{
+            minHeight: Dimensions.get('window').height * 1.5,
+          }}
+          onScrolledDownChange={handleScrolledDownChange}
+          onEndReached={() => void onEndReached()}
+          onEndReachedThreshold={2} // number of posts left to trigger load more
+          removeClippedSubviews={true}
+          extraData={extraData}
+          desktopFixedHeight={
+            desktopFixedHeightOffset ? desktopFixedHeightOffset : true
+          }
+          initialNumToRender={initialNumToRenderOverride ?? initialNumToRender}
+          windowSize={9}
+          maxToRenderPerBatch={IS_IOS ? 5 : 1}
+          updateCellsBatchingPeriod={40}
+          onItemSeen={onItemSeen}
+          maintainVisibleContentPosition={
+            isAnchored ? {minIndexForVisible: leadingRowCount} : undefined
+          }
+          onLayout={isAnchored ? listRest.onLayout : undefined}
+        />
+      </ScrollProvider>
+      {isAnchored && (
+        <PrependPill
+          visible={pill.visible}
+          count={pill.count}
+          authors={pill.authors}
+          onPress={pill.onPress}
+        />
+      )}
     </View>
   )
 }

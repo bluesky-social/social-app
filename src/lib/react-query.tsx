@@ -17,6 +17,11 @@ import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 import {isQueryPersisted} from '#/state/queries/util'
 import * as env from '#/env'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {
+  isFollowingSnapshotQuery,
+  loadFollowingSnapshot,
+  saveFollowingSnapshot,
+} from '#/features/followingV2/home/queries/followingSnapshot'
 
 declare global {
   interface Window {
@@ -139,7 +144,10 @@ const createQueryClient = () =>
 const dehydrateOptions: DehydrateOptions = {
   shouldDehydrateMutation: (_: any) => false,
   shouldDehydrateQuery: query => {
-    return isQueryPersisted(query.queryKey) && query.state.status === 'success'
+    return (
+      (isQueryPersisted(query.queryKey) || isFollowingSnapshotQuery(query)) &&
+      query.state.status === 'success'
+    )
   },
 }
 
@@ -182,6 +190,9 @@ function QueryProviderInner({
     const asyncPersister = createAsyncStoragePersister({
       storage,
       key: 'queryClient-' + (currentDid ?? 'logged-out'),
+      // JSON, as by default, but with Following v2's Home Following snapshot.
+      serialize: client => JSON.stringify(saveFollowingSnapshot(client)),
+      deserialize: cached => loadFollowingSnapshot(JSON.parse(cached)),
     })
     return {
       persister: asyncPersister,

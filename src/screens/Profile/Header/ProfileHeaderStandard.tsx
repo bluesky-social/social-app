@@ -164,6 +164,8 @@ let ProfileHeaderStandard = ({
 
               {!isMe &&
                 !isBlockedUser &&
+                // Social proof is only useful when deciding whether to follow
+                !profile.viewer?.following &&
                 shouldShowKnownFollowers(profile.viewer?.knownFollowers) && (
                   <View style={[a.flex_row, a.align_center, a.gap_sm]}>
                     <KnownFollowers

@@ -1,0 +1,169 @@
+{
+  "id": "tools.ozone.queue.defs",
+  "defs": {
+    "queueView": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "createdBy",
+        "createdAt",
+        "updatedAt",
+        "enabled",
+        "stats"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer",
+          "description": "Queue ID"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the queue"
+        },
+        "stats": {
+          "ref": "#queueStats",
+          "type": "ref",
+          "description": "Statistics about this queue"
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this queue is currently active"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "createdBy": {
+          "type": "string",
+          "format": "did",
+          "description": "DID of moderator who created this queue"
+        },
+        "deletedAt": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When the queue was deleted, if applicable"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "collection": {
+          "type": "string",
+          "format": "nsid",
+          "description": "Collection name for record subjects (e.g., 'app.bsky.feed.post')"
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional description of the queue"
+        },
+        "reportTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Report reason types this queue accepts (fully qualified NSIDs)"
+        },
+        "subjectTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "knownValues": [
+              "account",
+              "record",
+              "message",
+              "conversation"
+            ]
+          },
+          "description": "Subject types this queue accepts."
+        },
+        "recommendedLabels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Labels recommended for this queue and used as a fallback when routing label appeals"
+        },
+        "recommendedPolicies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Policy keys recommended when actioning reports in this queue"
+        }
+      }
+    },
+    "queueStats": {
+      "type": "object",
+      "required": [],
+      "properties": {
+        "actionRate": {
+          "type": "integer",
+          "description": "Percentage of reports actioned (actionedCount / inboundCount * 100), rounded to nearest integer. Absent when inboundCount is 0."
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "datetime",
+          "description": "When these statistics were last computed"
+        },
+        "inboundCount": {
+          "type": "integer",
+          "description": "Reports received in this queue in the last 24 hours."
+        },
+        "pendingCount": {
+          "type": "integer",
+          "description": "Number of reports in 'open' status"
+        },
+        "actionedCount": {
+          "type": "integer",
+          "description": "Number of reports in 'closed' status"
+        },
+        "escalatedCount": {
+          "type": "integer",
+          "description": "Number of reports in 'escalated' status"
+        },
+        "avgHandlingTimeSec": {
+          "type": "integer",
+          "description": "Average time in seconds from report creation to close, for reports closed in this period."
+        }
+      }
+    },
+    "assignmentView": {
+      "type": "object",
+      "required": [
+        "id",
+        "did",
+        "queue",
+        "startAt"
+      ],
+      "properties": {
+        "id": {
+          "type": "integer"
+        },
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "endAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "queue": {
+          "ref": "#queueView",
+          "type": "ref"
+        },
+        "startAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "moderator": {
+          "ref": "tools.ozone.team.defs#member",
+          "type": "ref",
+          "description": "The moderator assigned to this queue"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

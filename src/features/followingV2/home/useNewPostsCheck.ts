@@ -1,10 +1,11 @@
-import {useEffect, useEffectEvent, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 
 import {
   getCurrentState,
   useAppState,
   useOnAppReturnedFromBackground,
 } from '#/lib/appState'
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
 
@@ -66,9 +67,12 @@ export function useNewPostsCheck<T>({
   interval?: number
   /**
    * Resolves to what is newer than the top page, or a falsy value if nothing
-   * is. Rejects if it can't tell, which leaves the clock alone.
+   * is. Rejects if it can't tell, which leaves the clock alone. It's told what
+   * prompted it, for a surface that checks differently on a return.
    */
-  check: () => Promise<T | false | null | undefined>
+  check: (
+    trigger: NewPostsCheckTrigger,
+  ) => Promise<T | false | null | undefined>
   /** What a check found, unless a new top page has replaced the one checked. */
   onFound: (result: T, trigger: NewPostsCheckTrigger) => void
 }) {
@@ -95,7 +99,11 @@ export function useNewPostsCheck<T>({
       ? Math.max(clock, last?.at ?? 0) + interval
       : undefined
 
-  const run = useEffectEvent(async (trigger: NewPostsCheckTrigger) => {
+  /*
+   * Not `useEffectEvent`, which React 19.2 never updates in `memo()` and
+   * `forwardRef()` components (react/react#35187), as feed views are.
+   */
+  const run = useNonReactiveCallback(async (trigger: NewPostsCheckTrigger) => {
     const top = topFetchedAt
     if (
       !isActive ||
@@ -111,7 +119,7 @@ export function useNewPostsCheck<T>({
     let result: T | false | null | undefined
     let outcome: LastCheck['outcome'] = 'failed'
     try {
-      result = await check()
+      result = await check(trigger)
       outcome = result ? 'found' : 'nothing'
     } catch (e) {
       if (!isNetworkError(e)) {
@@ -122,7 +130,7 @@ export function useNewPostsCheck<T>({
     settle({at, top, outcome}, result ? {result, trigger} : undefined)
   })
 
-  const settle = useEffectEvent(
+  const settle = useNonReactiveCallback(
     (
       lastCheck: LastCheck,
       found?: {result: T; trigger: NewPostsCheckTrigger},
@@ -134,17 +142,17 @@ export function useNewPostsCheck<T>({
     },
   )
 
-  const onBecomeActive = useEffectEvent(() => {
+  const onBecomeActive = useNonReactiveCallback(() => {
     if (isEmpty || Date.now() - clock >= FOCUS_CHECK_AFTER) void run('focus')
   })
   useEffect(() => {
     if (isActive) onBecomeActive()
-  }, [isActive])
+  }, [isActive, onBecomeActive])
 
   useOnAppReturnedFromBackground(appReturn => {
     if (isActive) setReturnId(appReturn.id)
   })
-  const judgeReturn = useEffectEvent(() => {
+  const judgeReturn = useNonReactiveCallback(() => {
     const isChecking =
       topFetchedAt !== undefined && checking.current === topFetchedAt
     if (returnId === judgedReturnId.current || isBusy || isChecking) return
@@ -154,7 +162,7 @@ export function useNewPostsCheck<T>({
   // Judges a return at once, or once the view's work or a check is done.
   useEffect(() => {
     judgeReturn()
-  }, [returnId, isBusy, last])
+  }, [returnId, isBusy, last, judgeReturn])
 
   useEffect(() => {
     if (intervalDueAt === undefined) return
@@ -163,5 +171,5 @@ export function useNewPostsCheck<T>({
       Math.max(0, intervalDueAt - Date.now()),
     )
     return () => clearTimeout(timeout)
-  }, [intervalDueAt])
+  }, [intervalDueAt, run])
 }

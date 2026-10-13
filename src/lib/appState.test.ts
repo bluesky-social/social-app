@@ -1,9 +1,11 @@
+import {type createElement, type memo} from 'react'
 import {type AppStateStatus} from 'react-native'
 import type * as TestingLibrary from '@testing-library/react-native/pure'
 
 import type * as AppStateModule from '#/lib/appState'
 
 type AppReturn = AppStateModule.AppReturn
+type AnyAppReturn = AppStateModule.AnyAppReturn
 type AppStateListener = (state: AppStateStatus) => void
 
 const mockListeners = new Set<AppStateListener>()
@@ -47,6 +49,11 @@ function load() {
   cleanup = rtl.cleanup
   return {
     ...(require('#/lib/appState') as typeof AppStateModule),
+    React: require('react') as {
+      createElement: typeof createElement
+      memo: typeof memo
+    },
+    render: rtl.render,
     renderHook: rtl.renderHook,
   }
 }
@@ -187,6 +194,88 @@ describe('onAppReturnedFromBackground', () => {
   })
 })
 
+describe('onAnyAppReturn', () => {
+  it('fires on every return from background, saying whether it was significant', () => {
+    const {onAnyAppReturn, RETURN_MIN_TIME_AWAY} = load()
+    const cb = jest.fn()
+    onAnyAppReturn(cb)
+
+    emit('background', RETURN_MIN_TIME_AWAY - 1, 'active')
+    emit('background', RETURN_MIN_TIME_AWAY, 'active')
+    expect(cb.mock.calls).toEqual([
+      [
+        {
+          id: 1,
+          timestamp: RETURN_MIN_TIME_AWAY - 1,
+          timeAway: RETURN_MIN_TIME_AWAY - 1,
+          isSignificant: false,
+        },
+      ],
+      [
+        {
+          id: 2,
+          timestamp: 2 * RETURN_MIN_TIME_AWAY - 1,
+          timeAway: RETURN_MIN_TIME_AWAY,
+          isSignificant: true,
+        },
+      ],
+    ])
+  })
+
+  it('ignores a foreground launch and inactive-only interruptions', () => {
+    mockAppState.currentState = 'inactive'
+    const {onAnyAppReturn} = load()
+    const cb = jest.fn()
+    onAnyAppReturn(cb)
+
+    emit(AWAY, 'active', 'inactive', AWAY, 'active')
+    expect(cb).not.toHaveBeenCalled()
+  })
+
+  it('measures from background even when inactive follows', () => {
+    const {onAnyAppReturn} = load()
+    const cb = jest.fn()
+    onAnyAppReturn(cb)
+
+    emit('inactive', 'background', 1_000, 'inactive', 1_000, 'active')
+    expect(cb).toHaveBeenCalledWith({
+      id: 1,
+      timestamp: 2_000,
+      timeAway: 2_000,
+      isSignificant: false,
+    })
+  })
+
+  it('leaves the numbering of significant returns as it was', () => {
+    const {onAnyAppReturn, onAppReturnedFromBackground} = load()
+    const any: AnyAppReturn[] = []
+    const significant: AppReturn[] = []
+    onAnyAppReturn(r => any.push(r))
+    onAppReturnedFromBackground(r => significant.push(r))
+    expect(mockListeners.size).toBe(1)
+
+    emit('background', AWAY, 'active')
+    emit('background', 1_000, 'active')
+    emit('background', AWAY, 'active')
+    expect(any.map(r => [r.id, r.isSignificant])).toEqual([
+      [1, true],
+      [2, false],
+      [3, true],
+    ])
+    expect(significant.map(r => r.id)).toEqual([1, 2])
+  })
+
+  it('skips a listener removed during the same return', () => {
+    const {onAnyAppReturn} = load()
+    const second = jest.fn()
+    onAnyAppReturn(() => secondSub.remove())
+    const secondSub = onAnyAppReturn(second)
+
+    emit('background', 'active')
+    expect(second).not.toHaveBeenCalled()
+  })
+})
+
 describe('useOnAppReturnedFromBackground', () => {
   it('uses the latest callback and stops on unmount', () => {
     const {renderHook, useOnAppReturnedFromBackground} = load()
@@ -206,6 +295,58 @@ describe('useOnAppReturnedFromBackground', () => {
 
     unmount()
     emit('background', AWAY, 'active')
+    expect(second).toHaveBeenCalledTimes(1)
+  })
+
+  it('uses the latest callback in a memo() component', () => {
+    // React 19.2 never updates a useEffectEvent there (react/react#35187).
+    const {React, render, useOnAppReturnedFromBackground} = load()
+    const Listener = React.memo(function Listener({
+      cb,
+    }: {
+      cb: (appReturn: AppReturn) => void
+    }) {
+      useOnAppReturnedFromBackground(cb)
+      return null
+    })
+    const first = jest.fn()
+    const second = jest.fn()
+    const {rerender} = render(React.createElement(Listener, {cb: first}))
+
+    rerender(React.createElement(Listener, {cb: second}))
+    emit('background', AWAY, 'active')
+
+    expect(first).not.toHaveBeenCalled()
+    expect(second).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('useOnAnyAppReturn', () => {
+  it('uses the latest callback in a memo() component, and stops on unmount', () => {
+    // React 19.2 never updates a useEffectEvent there (react/react#35187).
+    const {React, render, useOnAnyAppReturn} = load()
+    const Listener = React.memo(function Listener({
+      cb,
+    }: {
+      cb: (appReturn: AnyAppReturn) => void
+    }) {
+      useOnAnyAppReturn(cb)
+      return null
+    })
+    const first = jest.fn()
+    const second = jest.fn()
+    const {rerender, unmount} = render(
+      React.createElement(Listener, {cb: first}),
+    )
+
+    rerender(React.createElement(Listener, {cb: second}))
+    emit('background', 1_000, 'active')
+
+    expect(first).not.toHaveBeenCalled()
+    expect(second).toHaveBeenCalledTimes(1)
+
+    unmount()
+    emit('background', 1_000, 'active')
     expect(second).toHaveBeenCalledTimes(1)
   })
 })

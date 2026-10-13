@@ -36,6 +36,52 @@ describe.each([
   )
 })
 
+describe.each(['staging.freemix.fm', 'app.freemix.fm'])(
+  'FreeMix tracks on %s',
+  host => {
+    const actor = 'remixer.pds.staging.freemix.fm'
+    const rkey = '3mx5yed3u7m2u'
+
+    it.each(['', '/', '?ref=share#player'])(
+      'embeds an actor-qualified track with suffix %s',
+      suffix => {
+        expect(
+          parseEmbedPlayerFromUrl(
+            `https://${host}/track/${actor}/${rkey}${suffix}`,
+          ),
+        ).toEqual({
+          type: 'freemix_track',
+          source: 'freemix',
+          playerUri: `https://${host}/embed/${actor}/${rkey}`,
+        })
+      },
+    )
+
+    it.each([
+      `/track/${actor}/${rkey}/tree`,
+      `/track/${actor}/invalid`,
+      `/track/${actor}/3mx5yed3u7m21`,
+      `/track/${actor}`,
+      `/track/${rkey}`,
+      `/track//${rkey}`,
+      `/profile/${actor}/${rkey}`,
+    ])('does not embed unsupported path %s', path => {
+      expect(parseEmbedPlayerFromUrl(`https://${host}${path}`)).toBeUndefined()
+    })
+  },
+)
+
+it.each(['freemix.fm', 'www.freemix.fm', 'staging.freemix.fm.example.com'])(
+  'does not embed FreeMix tracks on unsupported host %s',
+  host => {
+    expect(
+      parseEmbedPlayerFromUrl(
+        `https://${host}/track/remixer.pds.staging.freemix.fm/3mx5yed3u7m2u`,
+      ),
+    ).toBeUndefined()
+  },
+)
+
 describe('getEmbedPlayerMediaType', () => {
   it.each<
     readonly [EmbedPlayerType, ReturnType<typeof getEmbedPlayerMediaType>]
