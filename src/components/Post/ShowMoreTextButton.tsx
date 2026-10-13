@@ -15,10 +15,6 @@ export function ShowMoreTextButton({
   onPress: onPressProp,
   style,
 }: TextStyleProp & {
-  /**
-   * Gets the press event, so that a button nested in another pressable can
-   * keep the press from reaching it.
-   */
   onPress: (event: GestureResponderEvent) => void
 }) {
   const t = useTheme()
