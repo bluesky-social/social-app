@@ -93,7 +93,25 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
     )
   }
 
-  return <>{rows}</>
+  return (
+    <>
+      <TodayHeaderSkeleton />
+      {rows}
+    </>
+  )
+}
+
+/**
+ * Stands in for the "Today" section header, as most feeds open with one. It
+ * matches the real header's padding and text size, so the rows below don't
+ * move when it arrives.
+ */
+function TodayHeaderSkeleton() {
+  return (
+    <View style={[a.px_lg, a.py_sm]}>
+      <Skele.Text style={[a.text_md, a.font_bold, {width: 48}]} />
+    </View>
+  )
 }
 
 /**
