@@ -5,7 +5,7 @@ import {
   type GroupedNotificationsFeed,
   type LoadedGroupedNotificationsPage,
 } from '#/state/queries/notifications/grouped'
-import {type AnalyticsContextType} from '#/analytics'
+import {type AnalyticsContextType, type Metrics} from '#/analytics'
 
 /*
  * Metrics for the "Refresh" pill on a Notifications tab (see `RefreshPill`):
@@ -15,18 +15,10 @@ import {type AnalyticsContextType} from '#/analytics'
  */
 
 /**
- * Why the pill went, after it showed:
- *
- * - `pressed`: the user pressed it.
- * - `left`: the tab went out of view: the user switched tab, opened another
- *   screen, or left the app, or the screen closed, as web's does on every
- *   navigation away.
- * - `refreshed`: the tab started loading its newest notifications some other
- *   way, e.g. a pull-to-refresh.
- * - `gone`: a later unread check found nothing new for the tab to load, e.g.
- *   once the notifications were seen somewhere else.
+ * Why the pill went, after it showed.
  */
-export type RefreshPillHideReason = 'pressed' | 'left' | 'refreshed' | 'gone'
+export type RefreshPillHideReason =
+  Metrics['notifications:refreshPill:hide']['reason']
 
 /**
  * Why the pill went without the user pressing it: `left` if the tab is out of

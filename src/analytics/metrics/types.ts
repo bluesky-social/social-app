@@ -9,7 +9,6 @@ import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
-import {type RefreshPillHideReason} from '#/screens/Notifications/refreshPillMetrics'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
 
 export type Events = {
@@ -132,7 +131,17 @@ export type Events = {
   /** The pill went, after it came into view. */
   'notifications:refreshPill:hide': {
     tab: GroupedNotificationsFeed
-    reason: RefreshPillHideReason
+    /**
+     * - `pressed`: the user pressed it.
+     * - `left`: the tab went out of view: the user switched tab, opened
+     *   another screen, or left the app, or the screen closed, as web's does
+     *   on every navigation away.
+     * - `refreshed`: the tab started loading its newest notifications some
+     *   other way, e.g. a pull-to-refresh.
+     * - `gone`: a later unread check found nothing new for the tab to load,
+     *   e.g. once the notifications were seen somewhere else.
+     */
+    reason: 'pressed' | 'left' | 'refreshed' | 'gone'
     /** How long it was in view. */
     shownMs: number
   }
