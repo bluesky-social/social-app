@@ -23,10 +23,13 @@ import {emitSoftReset, listenPushNotificationOpened} from '#/state/events'
 import {
   getGroupedNotificationsTop,
   type GroupedNotificationsFeed,
+  type GroupedNotificationsPeek,
   type LoadedGroupedNotificationsPage,
+  peekGroupedNotifications,
   refreshGroupedNotifications,
 } from '#/state/queries/notifications/grouped'
 import {useUnreadNotificationsApi} from '#/state/queries/notifications/unread'
+import {useAppviewClient} from '#/state/session'
 import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {
   HomeHeaderModeProvider,
@@ -104,29 +107,106 @@ function NewNotificationsScreenInner() {
   const activeFeed = useRef<GroupedNotificationsFeed>(tabs[0].key)
   const scrolledDownFeeds = useRef(new Set<GroupedNotificationsFeed>())
   const queryClient = useQueryClient()
-  const unreadApi = useUnreadNotificationsApi()
+  const client = useAppviewClient()
+  /*
+   * Tabs that were never opened have nothing loaded, and are left to load
+   * fresh when they first are.
+   */
+  const isLoaded = (feed: GroupedNotificationsFeed) =>
+    !!getGroupedNotificationsTop(queryClient, feed)
+  const [peeks, setPeeks] = useState<
+    Partial<Record<GroupedNotificationsFeed, GroupedNotificationsPeek>>
+  >({})
   /**
-   * Asks the server for anything new in a feed that's already loaded. It
-   * refreshes the feed, unless the user is partway down it, in which case
-   * only the unread check runs, so the list doesn't move under them.
+   * Asks the server whether a loaded feed has anything newer than its first
+   * page, which offers the "Refresh" pill if so. It never moves anything, so
+   * it's how a tab the user has switched to, or is partway down, catches up.
+   */
+  const peekLatest = async (feed: GroupedNotificationsFeed) => {
+    if (!isLoaded(feed)) return
+    try {
+      const peek = await peekGroupedNotifications(client, feed)
+      setPeeks(current => {
+        // An older peek that's slower to come back can't undo a newer one
+        if ((current[feed]?.requestedAt ?? -Infinity) > peek.requestedAt) {
+          return current
+        }
+        return {...current, [feed]: peek}
+      })
+    } catch {
+      // It only offers the pill, so a failed peek is left to the next one
+    }
+  }
+  /**
+   * Refreshes the other loaded tabs in the background, after the tab in view
+   * (`feed`) has refreshed or been peeked. Refreshing "All" brings every other
+   * tab along, and refreshing any other tab brings "All" along. `everyTab`
+   * brings them all along, whichever tab is in view. Tabs the user is partway
+   * down are left as they are, and get the pill when they're next in view.
+   */
+  const bringAlong = (
+    feed: GroupedNotificationsFeed,
+    {everyTab, markRead}: {everyTab: boolean; markRead: boolean},
+  ) => {
+    for (const {key: other} of tabs) {
+      if (
+        other === feed ||
+        !isLoaded(other) ||
+        scrolledDownFeeds.current.has(other)
+      ) {
+        continue
+      }
+      if (everyTab || feed === 'all' || other === 'all') {
+        void refresh(other, {isBehind: true, markRead})
+      }
+    }
+  }
+  /**
+   * Refreshes the tab in view, as the user asked for or came back to, and
+   * brings the others along. "All" marks what it loads as seen, so a refresh
+   * on any tab clears the unread badge, while the snapshot keeps what's new
+   * in "All" tinted until the next refresh.
+   */
+  const refreshTab = async (
+    feed: GroupedNotificationsFeed,
+    {everyTab = false}: {everyTab?: boolean} = {},
+  ) => {
+    /*
+     * One after the other: if "All" marked what it loads as seen first,
+     * `feed` would take its snapshot from after that, clearing the tint from
+     * what "All" just loaded before anyone saw it
+     */
+    await refresh(feed)
+    bringAlong(feed, {everyTab, markRead: true})
+  }
+  /**
+   * Brings the tab in view up to date as the user comes back to it, see
+   * `useReturnToScreen`. It refreshes, unless the user is partway down it,
+   * in which case it's only peeked, so the list doesn't move under them. A
+   * significant return to the app, or opening a push, brings every tab along.
    */
   const checkLatest = (
     feed: GroupedNotificationsFeed,
     reason: RefreshReason,
   ) => {
     // Not loaded yet, so its first load is on the way
-    if (!getGroupedNotificationsTop(queryClient, feed)) return
-    if (scrolledDownFeeds.current.has(feed)) {
-      void unreadApi.checkUnread()
-    } else {
+    if (!isLoaded(feed)) return
+    const everyTab = reason === 'significantReturn' || reason === 'pushOpened'
+    if (!scrolledDownFeeds.current.has(feed)) {
       ax.metric('notifications:refresh', {tab: feed, reason})
-      void refresh(feed)
+      void refreshTab(feed, {everyTab})
+      return
+    }
+    void peekLatest(feed)
+    if (everyTab) {
+      // Nothing new has been seen on the tab in view, so nothing is marked
+      bringAlong(feed, {everyTab, markRead: false})
     }
   }
   useReturnToScreen({
     activeFeed,
     checkLatest,
-    peekLatest: () => void unreadApi.checkUnread(),
+    peekLatest: feed => void peekLatest(feed),
   })
   /*
    * With no notifications at all, every tab is empty, so the screen drops
@@ -187,11 +267,11 @@ function NewNotificationsScreenInner() {
         activeFeed.current = feed
         logTabDisplayed(page, isTap ? 'tap' : 'swipe')
         /*
-         * Switching tabs only checks for anything new, which the "Refresh"
+         * Switching tabs only peeks for anything new, which the "Refresh"
          * pill offers, so flicking between tabs neither reloads them nor
          * clears what's tinted
          */
-        void unreadApi.checkUnread()
+        void peekLatest(feed)
       }}
       onTabPressed={showHeader}
       onPageScrollStateChanged={state => {
@@ -243,7 +323,8 @@ function NewNotificationsScreenInner() {
             titleHeight={titleHeight}
             seenAt={seenAt}
             onFirstLoad={onFirstLoad}
-            refresh={refresh}
+            refresh={feed => refreshTab(feed)}
+            peek={peeks[tab.key]}
             onLoadingLatestChange={isLoading => {
               setLoadingLatestPages(pages => {
                 const next = new Set(pages)
@@ -279,9 +360,10 @@ function NewNotificationsScreenInner() {
  *
  * Each feed's first load takes the snapshot from the server if there isn't
  * one yet. From then on, the feed's loads come from `refresh`, which takes
- * the snapshot from the server, clearing what was tinted before. Only fresh
- * loads count: a page cached from before the screen mounted, or a refresh
- * that failed, never moves the snapshot or marks anything as seen.
+ * the snapshot from the server when the user asked for it, clearing what was
+ * tinted before. Only fresh loads count: a page cached from before the
+ * screen mounted, or a refresh that failed, never moves the snapshot or marks
+ * anything as seen.
  */
 function useSessionSeenAt() {
   const queryClient = useQueryClient()
@@ -299,9 +381,12 @@ function useSessionSeenAt() {
    */
   const latestRefreshes = useRef(new Map<GroupedNotificationsFeed, object>())
 
-  const applyLoad = (load: FeedLoad, isRefresh: boolean) => {
+  const applyLoad = (
+    load: FeedLoad,
+    {isRefresh, markRead}: {isRefresh: boolean; markRead: boolean},
+  ) => {
     setSeenAt(snapshot => nextSeenAt({load, isRefresh, snapshot}))
-    const markReadAt = getMarkReadAt(load)
+    const markReadAt = markRead ? getMarkReadAt(load) : undefined
     if (markReadAt) {
       void unreadApi.markAllRead({seenAt: markReadAt})
     }
@@ -313,18 +398,22 @@ function useSessionSeenAt() {
   ) => {
     if (handledFeeds.current.has(feed) || page.requestedAt < mountedAt) return
     handledFeeds.current.add(feed)
-    applyLoad({feed, ...page}, false)
+    applyLoad({feed, ...page}, {isRefresh: false, markRead: true})
   }
 
   /**
-   * Refetches the first page of a feed, then takes the snapshot from it.
-   * Refreshing any other feed refreshes "All" behind it, which leaves the
-   * snapshot alone but marks what's new as seen, so a refresh on any tab
-   * clears the unread state.
+   * Refetches the first page of a feed. A refresh the user asked for takes
+   * the snapshot from it, clearing what was tinted before. One in the
+   * background (`isBehind`) leaves the snapshot alone, so what it loads is
+   * tinted like the rest. A load of "All" marks what it shows as seen,
+   * unless `markRead` is false.
    */
   const refresh = async (
     feed: GroupedNotificationsFeed,
-    {isBehind = false}: {isBehind?: boolean} = {},
+    {
+      isBehind = false,
+      markRead = true,
+    }: {isBehind?: boolean; markRead?: boolean} = {},
   ) => {
     handledFeeds.current.add(feed)
     const request = {}
@@ -335,10 +424,7 @@ function useSessionSeenAt() {
     const page = getGroupedNotificationsTop(queryClient, feed)
     // A failed refetch leaves the old page in place
     if (!page || page.requestedAt < startedAt) return
-    applyLoad({feed, ...page}, !isBehind)
-    if (feed !== 'all') {
-      void refresh('all', {isBehind: true})
-    }
+    applyLoad({feed, ...page}, {isRefresh: !isBehind, markRead})
   }
 
   return {seenAt, onFirstLoad, refresh}
@@ -364,10 +450,10 @@ function useReturnToScreen({
   activeFeed: React.RefObject<GroupedNotificationsFeed>
   checkLatest: (feed: GroupedNotificationsFeed, reason: RefreshReason) => void
   /**
-   * Asks the server for anything new without loading it, which offers the
-   * "Refresh" pill if there is.
+   * Asks the server for anything new in a feed without loading it, which
+   * offers the "Refresh" pill if there is.
    */
-  peekLatest: () => void
+  peekLatest: (feed: GroupedNotificationsFeed) => void
 }) {
   const isFocused = useIsFocused()
 
@@ -395,7 +481,7 @@ function useReturnToScreen({
     if (appReturn.isSignificant) {
       onLeftApp('significantReturn')
     } else if (isFocused) {
-      peekLatest()
+      peekLatest(activeFeed.current)
     }
   })
   useEffect(() => {
