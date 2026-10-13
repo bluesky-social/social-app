@@ -210,12 +210,8 @@ export function PageList({
   })
 
   let rows: Row[]
-  if (!isFetched) {
-    rows = [{type: 'loading', key: 'loading'}]
-  } else if (notifications.length === 0) {
-    rows = isError
-      ? [{type: 'error', key: 'error'}]
-      : [{type: 'empty', key: 'empty'}]
+  if (notifications.length === 0) {
+    rows = [getPlaceholderRow({isError, isEmpty})]
   } else {
     rows = buildRows(notifications, feed)
     if (isError) {
@@ -359,6 +355,26 @@ export function PageList({
       />
     </>
   )
+}
+
+/**
+ * The single row shown while there's nothing to list: the skeleton until
+ * the feed has settled, since a page can have more on the way without
+ * anything to show yet, then the error or the empty message.
+ */
+export function getPlaceholderRow({
+  isError,
+  isEmpty,
+}: {
+  isError: boolean
+  /**
+   * Loaded completely with nothing in it, see `PageList`.
+   */
+  isEmpty: boolean
+}): Row {
+  if (isError) return {type: 'error', key: 'error'}
+  if (isEmpty) return {type: 'empty', key: 'empty'}
+  return {type: 'loading', key: 'loading'}
 }
 
 /**
