@@ -67,6 +67,7 @@ export function VideoEmbed({
   const active = isGif || activeFromContext
   const [durationTracker] = useState(() => {
     const tracker = createPlaybackDurationTracker({
+      enabled: !isGif,
       onSegment: segment => {
         ax.metric('video:playback:duration', {
           ...segment,

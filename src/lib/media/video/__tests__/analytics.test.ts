@@ -134,4 +134,39 @@ describe('createPlaybackDurationTracker', () => {
       },
     ])
   })
+
+  it('emits no segments when disabled', () => {
+    const tracker = createPlaybackDurationTracker({
+      enabled: false,
+      now: () => time,
+      playbackSessionId: 'session',
+      onSegment: segment => segments.push(segment),
+    })
+    tracker.setActive(true)
+    tracker.setPlaying(true)
+    tracker.observeProgress(0)
+    // Looping position resets, spanning more than two checkpoint intervals.
+    for (let second = 1; second <= 75; second++) {
+      time = second * 1_000
+      tracker.observeProgress(second % 5)
+    }
+
+    tracker.setPlaying(false)
+    tracker.setPlaying(true)
+    tracker.setActive(false)
+    tracker.setActive(true)
+    tracker.setForeground(false)
+    tracker.setForeground(true)
+    tracker.setBuffering(true)
+    tracker.setBuffering(false)
+    time += 1_000
+    tracker.observeProgress(1)
+    time += 1_000
+    tracker.observeProgress(2)
+    tracker.flush('ended')
+    tracker.flush('error')
+    tracker.flush('unmounted')
+
+    expect(segments).toEqual([])
+  })
 })

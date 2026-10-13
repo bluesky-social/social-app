@@ -47,10 +47,13 @@ export function createPlaybackDurationTracker({
   onSegment,
   now = () => performance.now(),
   playbackSessionId = nanoid(),
+  enabled = true,
 }: {
   onSegment: (segment: PlaybackDurationSegment) => void
   now?: () => number
   playbackSessionId?: string
+  /** When false, no watch time is accumulated and no segments are emitted. */
+  enabled?: boolean
 }) {
   let active = false
   let playing = false
@@ -61,7 +64,8 @@ export function createPlaybackDurationTracker({
   let accumulatedMs = 0
   let segmentIndex = 0
 
-  const eligible = () => active && playing && foreground && !buffering
+  const eligible = () =>
+    enabled && active && playing && foreground && !buffering
 
   const resetObservation = () => {
     lastPosition = undefined

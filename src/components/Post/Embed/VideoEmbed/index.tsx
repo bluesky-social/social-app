@@ -93,6 +93,7 @@ function InnerWrapper({embed, post}: Props) {
   const playbackStartTrackedRef = useRef(false)
   const [durationTracker] = useState(() => {
     const tracker = createPlaybackDurationTracker({
+      enabled: embed.presentation !== 'gif',
       onSegment: segment => {
         ax.metric('video:playback:duration', {
           ...segment,
