@@ -123,10 +123,11 @@ function LinkFormInner({
   >('unchecked')
   /*
    * "ko-fi" is invalid until the ".com" lands, so errors only show once Save
-   * is pressed, not on every keystroke.
+   * is pressed, not on every keystroke. An http link is the exception: it
+   * shows right away, since typing more can't fix it.
    */
   const [error, setError] = useState<
-    'invalid' | 'blocked' | 'shortener' | 'insecure' | 'duplicate' | undefined
+    'invalid' | 'blocked' | 'shortener' | 'duplicate' | undefined
   >()
 
   const validation = validateLinkInput(input)
@@ -178,7 +179,10 @@ function LinkFormInner({
   const isUnchanged =
     isEditing && targetUrl === link.url && nextTitle === link.title
   const canSave =
-    !validation.isEmpty && !isUnchanged && reachability !== 'checking'
+    !validation.isEmpty &&
+    !validation.isInsecure &&
+    !isUnchanged &&
+    reachability !== 'checking'
 
   const save = async () => {
     if (!canSave) return
@@ -198,14 +202,6 @@ function LinkFormInner({
       setError('shortener')
       ax.metric('profile:links:rejected', {
         reason: 'shortener',
-        domain: getLinkHost(targetUrl),
-      })
-      return
-    }
-    if (validation.isInsecure) {
-      setError('insecure')
-      ax.metric('profile:links:rejected', {
-        reason: 'insecure',
         domain: getLinkHost(targetUrl),
       })
       return
@@ -245,16 +241,17 @@ function LinkFormInner({
     control.close(() => onSave(saved))
   }
 
+  const shownError = validation.isInsecure ? 'insecure' : error
   const errorText =
-    error === 'invalid'
+    shownError === 'invalid'
       ? l`That doesn’t look like a link. Try something like yoursite.com.`
-      : error === 'blocked'
+      : shownError === 'blocked'
         ? l`Links to this site can’t be added right now.`
-        : error === 'shortener'
+        : shownError === 'shortener'
           ? l`Short links can’t be added. Use the full link instead.`
-          : error === 'insecure'
+          : shownError === 'insecure'
             ? l`Only secure links can be added. Use a link that starts with https://.`
-            : error === 'duplicate'
+            : shownError === 'duplicate'
               ? l`You’ve already added this link.`
               : reachability === 'unreachable'
                 ? l`We couldn’t reach this link. Check it, or save anyway.`
