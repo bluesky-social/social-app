@@ -48,7 +48,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -57,9 +57,9 @@ type Props = NativeStackScreenProps<
 
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
-  const isNewNotificationsEnabled = ax.features.enabled(
-    ax.features.NotificationsV2Enable,
-  )
+  // Dev and TestFlight builds always get it, so it's dogfooded before rollout
+  const isNewNotificationsEnabled =
+    IS_INTERNAL || ax.features.enabled(ax.features.NotificationsV2Enable)
 
   if (isNewNotificationsEnabled) {
     return <NewNotificationsScreen {...props} />
