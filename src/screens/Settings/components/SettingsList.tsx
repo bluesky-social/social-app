@@ -5,6 +5,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
+import {useLingui} from '@lingui/react/macro'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {atoms as a, useTheme, type ViewStyleProp} from '#/alf'
@@ -292,6 +293,40 @@ export function BadgeText({
       numberOfLines={1}>
       {children}
     </Text>
+  )
+}
+
+export function BadgeCount({count}: {count: number}) {
+  const t = useTheme()
+  const {i18n} = useLingui()
+
+  if (count < 1) return
+
+  return (
+    <View
+      style={[
+        a.align_center,
+        a.justify_center,
+        a.rounded_full,
+        a.px_xs,
+        a.py_2xs,
+        {
+          minWidth: 20,
+          minHeight: 20,
+          backgroundColor: t.palette.primary_500,
+        },
+      ]}>
+      <Text
+        style={[
+          a.text_xs,
+          a.leading_tight,
+          a.font_semi_bold,
+          {color: t.palette.white, fontVariant: ['tabular-nums']},
+        ]}
+        numberOfLines={1}>
+        {i18n.number(count)}
+      </Text>
+    </View>
   )
 }
 

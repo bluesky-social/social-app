@@ -3,6 +3,7 @@ import {Alert, LayoutAnimation, Linking, Pressable, View} from 'react-native'
 import {useReducedMotion} from 'react-native-reanimated'
 import {removeNuxs} from '@bsky/sdk'
 import {moderateProfile} from '@bsky/sdk/moderation'
+import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -21,6 +22,7 @@ import * as persisted from '#/state/persisted'
 import {clearStorage} from '#/state/persisted'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useDeleteActorDeclaration} from '#/state/queries/messages/actor-declaration'
+import {useModerationInboxUnreadCountQuery} from '#/state/queries/moderation-inbox'
 import {useProfileQuery, useProfilesQuery} from '#/state/queries/profile'
 import {usePdsClient} from '#/state/session'
 import {type SessionAccount, useSession, useSessionApi} from '#/state/session'
@@ -76,6 +78,15 @@ type Props = NativeStackScreenProps<CommonNavigatorParams, 'Settings'>
 export function SettingsScreen({}: Props) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
+  const isModerationInboxEnabled = ax.features.enabled(
+    ax.features.ModerationInboxEnable,
+  )
+  const unreadCountQuery = useModerationInboxUnreadCountQuery(
+    isModerationInboxEnabled,
+  )
+  const unreadCount = isModerationInboxEnabled
+    ? (unreadCountQuery.data?.unreadCounts.total ?? 0)
+    : 0
   const reducedMotion = useReducedMotion()
   const {logoutEveryAccount} = useSessionApi()
   const {accounts, currentAccount} = useSession()
@@ -190,11 +201,20 @@ export function SettingsScreen({}: Props) {
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/moderation"
-            label={l`Moderation and content filters`}>
+            label={l`Moderation and content filters`}
+            accessibilityHint={
+              unreadCount > 0
+                ? plural(unreadCount, {
+                    one: '# unread update',
+                    other: '# unread updates',
+                  })
+                : undefined
+            }>
             <SettingsList.ItemIcon icon={HandIcon} />
             <SettingsList.ItemText>
               <Trans>Moderation and content filters</Trans>
             </SettingsList.ItemText>
+            <SettingsList.BadgeCount count={unreadCount} />
           </SettingsList.LinkItem>
           <SettingsList.LinkItem
             to="/settings/notifications"
