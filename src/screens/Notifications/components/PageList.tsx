@@ -33,10 +33,7 @@ import {
 } from '#/screens/Notifications/components/NotificationItem'
 import {usePager} from '#/screens/Notifications/components/PagerView'
 import {RefreshPill} from '#/screens/Notifications/components/RefreshPill'
-import {
-  isRefreshPillVisible,
-  type SeenAtMode,
-} from '#/screens/Notifications/unread'
+import {isRefreshPillVisible} from '#/screens/Notifications/unread'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
@@ -98,7 +95,7 @@ export function PageList({
   titleHeight: SharedValue<number>
   /**
    * Snapshot of when notifications were last seen, shared by every tab so
-   * the unread tint doesn't change while the screen is open.
+   * they all tint the same, until any of them refreshes.
    */
   seenAt?: Date
   /**
@@ -113,7 +110,7 @@ export function PageList({
    * Refetches the feed's first page, then updates the screen's `seenAt`
    * snapshot from it.
    */
-  refresh: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => Promise<void>
+  refresh: (feed: GroupedNotificationsFeed) => Promise<void>
   /**
    * Called when loading what's new after the tab button or a pill was
    * pressed starts, and again when it settles, successfully or not.
@@ -179,7 +176,7 @@ export function PageList({
   /*
    * Pressing the Notifications tab button, the selected tab pill, or the
    * "Refresh" pill scrolls the visible tab back to the top and loads anything
-   * new, keeping the unread tint. It always asks the server, as the unread
+   * new, clearing the unread state as pull-to-refresh does. It always asks the server, as the unread
    * count only updates on a poll and may not know about new notifications
    * yet.
    */
@@ -187,7 +184,7 @@ export function PageList({
   const loadLatest = () => {
     listRef.current?.scrollToOffset({animated: IS_NATIVE, offset: 0})
     onLoadingLatestChange?.(true)
-    void refresh(feed, 'kept').finally(() => onLoadingLatestChange?.(false))
+    void refresh(feed).finally(() => onLoadingLatestChange?.(false))
   }
   const onSoftReset = useEffectEvent(loadLatest)
   useEffect(() => {
@@ -217,7 +214,7 @@ export function PageList({
   const onRefresh = async () => {
     setIsPTRing(true)
     try {
-      await refresh(feed, 'server')
+      await refresh(feed)
     } catch (err) {
       logger.error('Failed to refresh grouped notifications', {
         safeMessage: err,
