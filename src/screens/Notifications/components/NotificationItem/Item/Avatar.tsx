@@ -88,23 +88,35 @@ export function Avatar({
         type={profile.associated?.labeler ? 'labeler' : 'user'}
       />
       {Icon && (
+        /*
+         * The ring is a padded circle behind the badge rather than a border
+         * on it. A view's background is drawn under its border too, so it
+         * would show through the anti-aliased edge of the ring.
+         */
         <View
           style={[
             a.absolute,
             a.rounded_full,
-            a.align_center,
-            a.justify_center,
             {
               end: 0,
               bottom: 0,
-              width: BADGE_SIZE + BADGE_RING * 2,
-              height: BADGE_SIZE + BADGE_RING * 2,
-              borderWidth: BADGE_RING,
-              borderColor: ringColor,
-              backgroundColor: badgeColor,
+              padding: BADGE_RING,
+              backgroundColor: ringColor,
             },
           ]}>
-          <Icon size="xs" fill={t.palette.white} />
+          <View
+            style={[
+              a.rounded_full,
+              a.align_center,
+              a.justify_center,
+              {
+                width: BADGE_SIZE,
+                height: BADGE_SIZE,
+                backgroundColor: badgeColor,
+              },
+            ]}>
+            <Icon size="xs" fill={t.palette.white} />
+          </View>
         </View>
       )}
     </View>
