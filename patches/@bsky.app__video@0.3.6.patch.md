@@ -7,27 +7,37 @@ released it, up to `releaseTimeoutMs` (500 ms by default). The player's applicat
 is the main thread, and the playback thread is often busy at that moment creating or
 releasing codecs, so every video row that scrolled out of the feed's clip rect froze the
 main thread for 40-130 ms (`removeClippedSubviews` detaches it, and `onDetachedFromWindow`
-released the player). On a Galaxy A16 that was ~7 stalls per 20-fling run and 25-36% of
-all frames missed while scrolling.
+released the player). On a Galaxy A16 that was ~7 stalls per 20-fling run, which accounted
+for 25-36% of the frames missed while flinging.
 
 The patch:
 
 - Builds the player with `setReleaseTimeoutMs(0)`, so `release()` posts the release to the
   playback thread and returns immediately. The playback thread still frees the codecs and
-  quits; only the wait is gone.
+  quits; only the wait is gone. media3 treats a release it did not wait for as timed out,
+  so every release now reports an `ExoTimeoutException` (`TIMEOUT_OPERATION_RELEASE`)
+  through `Player.Listener.onPlayerError`. Nothing in the module acts on it today, but a
+  listener that forwards player errors to JS has to skip this one.
 - Releases the player from a `SurfaceHolder.Callback` when the surface is destroyed
   because the view is being detached. Child views are detached before their parents, so
   the `SurfaceView` is torn down before `BlueskyVideoView.onDetachedFromWindow()` runs, and
   the player's own `surfaceDestroyed` callback then blocks the main thread until the
   playback thread lets go of the surface (~150 ms while it is still creating codecs). Our
-  callback is registered first, so the player is already released when its callback runs.
+  callback is registered first, so the player is already released when its callback runs
+  (`SurfaceView` still calls it, from a snapshot of the callback list), and a released
+  player returns from it without waiting.
   A surface destroyed because the view or window got hidden (e.g. the app went to the
   background) keeps its player, which is how playback resumes afterwards.
 - Keeps the surface handoff synchronous (`clearVideoSurface()`) when a player is released
   while the view stays attached (`setIsCurrentlyActive(false)`), so the next player can
   attach to the same surface.
 
-Should be upstreamed to bluesky-social/bluesky-video.
+This relies on media3 1.9.0, which is what the app resolves (through `expo-video`). The
+package itself declares 1.4.0, where a player only counts as released once its playback
+thread has finished, so its `surfaceDestroyed` callback would still block, for up to
+`detachSurfaceTimeoutMs` (2 s).
+
+Should be upstreamed to bluesky-social/bluesky-video, together with a media3 bump there.
 
 ---
 
