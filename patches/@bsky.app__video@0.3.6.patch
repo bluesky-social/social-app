@@ -1,8 +1,70 @@
+diff --git a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt
+index ae7260f8f8ea63beadf69cfb03842028b0d6db03..d10e57d7ed8c003f257ea958a3ed56401ca13236 100644
+--- a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt
++++ b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoModule.kt
+@@ -25,11 +25,13 @@ class BlueskyVideoModule : Module() {
+             }
+ 
+             OnActivityEntersForeground {
++                ViewManager.isAppBackgrounded = false
+                 ViewManager.getActiveView()?.onAppForegrounded(wasPlaying)
+                 wasPlaying = false
+             }
+ 
+             OnActivityEntersBackground {
++                ViewManager.isAppBackgrounded = true
+                 wasPlaying = ViewManager.getActiveView()?.onAppBackgrounded() ?: false
+             }
+ 
 diff --git a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
-index f2aa71ad32f05033b281551e1ec85e89c55493d5..b63a5aa0333bc233ec6145cc76c8aa9744e35a5a 100644
+index f2aa71ad32f05033b281551e1ec85e89c55493d5..16572e734b4408ddef4398f4229976c8ea128fd5 100644
 --- a/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
 +++ b/android/src/main/java/expo/modules/blueskyvideo/BlueskyVideoView.kt
-@@ -163,7 +163,15 @@ class BlueskyVideoView(
+@@ -5,6 +5,9 @@ import android.content.Intent
+ import android.graphics.Color
+ import android.graphics.Rect
+ import android.net.Uri
++import android.view.SurfaceHolder
++import android.view.SurfaceView
++import android.view.View
+ import android.view.ViewGroup
+ import androidx.media3.common.MediaItem
+ import androidx.media3.common.PlaybackException
+@@ -137,6 +140,33 @@ class BlueskyVideoView(
+             ),
+         )
+         this.playerView = playerView
++
++        // Child views are detached before their parents, so the SurfaceView is torn down before
++        // onDetachedFromWindow runs here, and its surfaceDestroyed callback makes a still-live
++        // player block the main thread until the playback thread lets go of the surface. This
++        // callback is registered before any player's own (they are called in order), so the
++        // player is already released by the time its callback runs.
++        (playerView.videoSurfaceView as? SurfaceView)?.holder?.addCallback(
++            object : SurfaceHolder.Callback {
++                override fun surfaceCreated(holder: SurfaceHolder) {}
++
++                override fun surfaceChanged(
++                    holder: SurfaceHolder,
++                    format: Int,
++                    width: Int,
++                    height: Int,
++                ) {}
++
++                override fun surfaceDestroyed(holder: SurfaceHolder) {
++                    // Still visible in a foreground app means the surface is going away because
++                    // the view is being detached, not because it or the window got hidden. A
++                    // hidden view keeps its player, e.g. to resume when the app returns.
++                    if (!ViewManager.isAppBackgrounded && isShown && windowVisibility == View.VISIBLE) {
++                        destroy(surfaceIsGoingAway = true)
++                    }
++                }
++            },
++        )
+     }
+ 
+     // Lifecycle
+@@ -163,7 +193,15 @@ class BlueskyVideoView(
          this.playerScope = playerScope
      }
  
@@ -19,7 +81,7 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..b63a5aa0333bc233ec6145cc76c8aa97
          val player = this.player ?: return
  
          this.isLoading = false
-@@ -171,6 +179,9 @@ class BlueskyVideoView(
+@@ -171,6 +209,9 @@ class BlueskyVideoView(
  
          this.pause()
  
@@ -29,14 +91,12 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..b63a5aa0333bc233ec6145cc76c8aa97
          player.release()
          this.player = null
          this.playerView.player = null
-@@ -233,9 +244,12 @@ class BlueskyVideoView(
+@@ -233,9 +274,10 @@ class BlueskyVideoView(
      }
  
      override fun onDetachedFromWindow() {
 -        super.onDetachedFromWindow()
-+        // Release before super detaches the SurfaceView. Otherwise its surfaceDestroyed callback
-+        // makes the still-live player block the main thread until the playback thread lets go
-+        // of the surface.
++        // The player is normally released already, by the surfaceDestroyed callback set up in init.
          ViewManager.removeView(this)
 -        this.destroy()
 +        this.destroy(surfaceIsGoingAway = true)
@@ -44,7 +104,7 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..b63a5aa0333bc233ec6145cc76c8aa97
      }
  
      // Controls
-@@ -388,6 +402,8 @@ class BlueskyVideoView(
+@@ -388,6 +430,8 @@ class BlueskyVideoView(
              .Builder(context)
              .apply {
                  setLooper(context.mainLooper)
@@ -53,3 +113,16 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..b63a5aa0333bc233ec6145cc76c8aa97
                  setSeekForwardIncrementMs(5000)
                  setSeekBackIncrementMs(5000)
              }.build()
+diff --git a/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt b/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
+index 19baa087bdb3ad9955c456aab84ece25e95ae15e..f69653678f80690f11c1f21f403392ed52b7b3da 100644
+--- a/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
++++ b/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
+@@ -10,6 +10,8 @@ class ViewManager {
+         private var currentlyActiveView: BlueskyVideoView? = null
+         private var prevCount = 0
+ 
++        var isAppBackgrounded = false
++
+         fun addView(view: BlueskyVideoView) {
+             views.add(view)
+             if (prevCount == 0) {
