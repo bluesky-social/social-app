@@ -117,24 +117,23 @@ function NewNotificationsScreenInner() {
   const [peeks, setPeeks] = useState<
     Partial<Record<GroupedNotificationsFeed, GroupedNotificationsPeek>>
   >({})
+  const peekingFeeds = useRef(new Set<GroupedNotificationsFeed>())
   /**
    * Asks the server whether a loaded feed has anything newer than its first
    * page, which offers the "Refresh" pill if so. It never moves anything, so
    * it's how a tab the user has switched to, or is partway down, catches up.
    */
   const peekLatest = async (feed: GroupedNotificationsFeed) => {
-    if (!isLoaded(feed)) return
+    // One on its way answers for this one too, e.g. flicking between tabs
+    if (!isLoaded(feed) || peekingFeeds.current.has(feed)) return
+    peekingFeeds.current.add(feed)
     try {
       const peek = await peekGroupedNotifications(client, feed)
-      setPeeks(current => {
-        // An older peek that's slower to come back can't undo a newer one
-        if ((current[feed]?.requestedAt ?? -Infinity) > peek.requestedAt) {
-          return current
-        }
-        return {...current, [feed]: peek}
-      })
+      setPeeks(current => ({...current, [feed]: peek}))
     } catch {
       // It only offers the pill, so a failed peek is left to the next one
+    } finally {
+      peekingFeeds.current.delete(feed)
     }
   }
   /**
@@ -376,8 +375,8 @@ function useSessionSeenAt() {
    */
   const handledFeeds = useRef(new Set<GroupedNotificationsFeed>())
   /**
-   * The latest refresh of each feed, so that one overtaken by another leaves
-   * the load to it.
+   * The refresh of each feed that's on its way, so that one overtaken by
+   * another leaves the load to it.
    */
   const latestRefreshes = useRef(new Map<GroupedNotificationsFeed, object>())
 
@@ -415,12 +414,19 @@ function useSessionSeenAt() {
       markRead = true,
     }: {isBehind?: boolean; markRead?: boolean} = {},
   ) => {
+    /*
+     * One already on its way loads the feed anyway. Overtaking it would
+     * cancel its refetch, and if the user asked for it, keep it from taking
+     * the snapshot
+     */
+    if (isBehind && latestRefreshes.current.has(feed)) return
     handledFeeds.current.add(feed)
     const request = {}
     latestRefreshes.current.set(feed, request)
     const startedAt = Date.now()
     await refreshGroupedNotifications(queryClient, feed)
     if (latestRefreshes.current.get(feed) !== request) return
+    latestRefreshes.current.delete(feed)
     const page = getGroupedNotificationsTop(queryClient, feed)
     // A failed refetch leaves the old page in place
     if (!page || page.requestedAt < startedAt) return
