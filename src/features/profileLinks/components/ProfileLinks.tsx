@@ -257,16 +257,24 @@ function ProfileLinksRow({
             control={previewControl}
             link={activeLink}
             onOpen={open}
-            onReport={() => reportControl.open()}
+            onReport={
+              activeLink?.uri && activeLink.cid
+                ? () => reportControl.open()
+                : undefined
+            }
           />
-          <ReportDialog
-            control={reportControl}
-            subject={{
-              ...profile,
-              $type: 'app.bsky.actor.defs#profileViewDetailed',
-            }}
-            profileLinkUrl={activeLink?.url}
-          />
+          {activeLink?.uri && activeLink.cid ? (
+            <ReportDialog
+              control={reportControl}
+              // the link was read off a profile view, so these are well-formed
+              subject={{
+                $type: 'app.bsky.actor.defs#profileLinkView',
+                uri: activeLink.uri as app.bsky.actor.defs.ProfileLinkView['uri'],
+                cid: activeLink.cid,
+                url: activeLink.url as app.bsky.actor.defs.ProfileLinkView['url'],
+              }}
+            />
+          ) : null}
         </>
       )}
     </>

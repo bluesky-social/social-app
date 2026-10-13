@@ -167,9 +167,7 @@ function Inner(
     refetch: refetchLabelers,
   } = useMyLabelersQuery({excludeNonConfigurableLabelers: true})
   const isLoading = useDelayedLoading(500, isLabelerLoading)
-  const copy = useCopyForSubject(props.subject, {
-    isProfileLink: !!props.profileLinkUrl,
-  })
+  const copy = useCopyForSubject(props.subject)
   const {categories, getCategory} = useReportOptions()
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -271,7 +269,6 @@ function Inner(
           subject: props.subject,
           state,
           videoTimestampSeconds,
-          profileLinkUrl: props.profileLinkUrl,
         }),
       )
       setIsSuccess(true)

@@ -25,8 +25,8 @@ export function LinkPreviewSheet({
   control: Dialog.DialogControlProps
   link: ProfileLink | null
   onOpen: (link: ProfileLink) => void
-  /** Runs after the sheet closes. */
-  onReport: () => void
+  /** Runs after the sheet closes. Leave unset to hide reporting. */
+  onReport?: () => void
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -49,7 +49,7 @@ function LinkPreviewSheetInner({
 }: {
   link: ProfileLink
   onOpen: (link: ProfileLink) => void
-  onReport: () => void
+  onReport?: () => void
 }) {
   const control = Dialog.useDialogContext()
   const {t: l} = useLingui()
@@ -102,17 +102,19 @@ function LinkPreviewSheetInner({
               <Trans>Copy link</Trans>
             </ButtonText>
           </Button>
-          <Button
-            testID="profileLinkPreviewReportBtn"
-            label={l`Report link`}
-            onPress={() => control.close(onReport)}
-            size="large"
-            color="negative_subtle">
-            <ButtonIcon icon={WarningIcon} />
-            <ButtonText>
-              <Trans>Report link</Trans>
-            </ButtonText>
-          </Button>
+          {onReport ? (
+            <Button
+              testID="profileLinkPreviewReportBtn"
+              label={l`Report link`}
+              onPress={() => control.close(onReport)}
+              size="large"
+              color="negative_subtle">
+              <ButtonIcon icon={WarningIcon} />
+              <ButtonText>
+                <Trans>Report link</Trans>
+              </ButtonText>
+            </Button>
+          ) : null}
         </View>
       </View>
       <Dialog.Close />

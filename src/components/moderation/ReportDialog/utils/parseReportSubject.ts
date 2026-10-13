@@ -63,6 +63,13 @@ export function parseReportSubject(
       cid: subject.cid,
       nsid: 'app.bsky.graph.starterPack',
     }
+  } else if (bsky.isType(app.bsky.actor.defs.profileLinkView, subject)) {
+    return {
+      type: 'profileLink',
+      uri: subject.uri,
+      cid: subject.cid,
+      nsid: 'app.bsky.actor.link',
+    }
   } else if (bsky.isType(app.bsky.feed.defs.postView, subject)) {
     const record = subject.record
     const embed = bsky.post.parseEmbed(subject.embed)
