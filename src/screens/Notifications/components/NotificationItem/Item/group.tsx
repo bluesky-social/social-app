@@ -1,4 +1,10 @@
-import {createContext, useContext, useState} from 'react'
+import {
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import {
   type AccessibilityActionEvent,
   type AccessibilityProps,
@@ -22,7 +28,7 @@ import {
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {formatCount} from '#/view/com/util/numeric/format'
 import {PreviewableUserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useTheme} from '#/alf'
 import {Button} from '#/components/Button'
 import {
   ChevronBottom_Stroke2_Corner0_Rounded as ChevronDownIcon,
@@ -32,6 +38,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {type app} from '#/lexicons'
+import {fitAvatarCount, PREVIEW_AVATAR_SIZE, TOGGLE_PADDING} from './avatarRow'
 import {Expandable} from './Expandable'
 import {ActorList, ShowMoreActorsButton} from './profile'
 import {Root, useRowBackgroundColor} from './Root'
@@ -56,22 +63,6 @@ const METRIC_NOTIFICATION_TYPES: Record<
   follow: 'follow',
   subscribedPost: 'subscribed-post',
 }
-
-/**
- * How many of the other actors' avatars `AvatarRow` shows before collapsing
- * the rest into a "+N" chip, on phones.
- */
-const MAX_PREVIEW_AVATARS = 4
-/**
- * `MAX_PREVIEW_AVATARS` on tablets and wider.
- */
-const MAX_PREVIEW_AVATARS_WIDE = 8
-
-/**
- * The size of the avatars in an `AvatarRow`. Smaller than `Item.Avatar` by
- * enough that the two don't read as the same kind of thing.
- */
-export const PREVIEW_AVATAR_SIZE = 28
 
 /**
  * The names a group notification's sentence needs.
@@ -388,26 +379,50 @@ function GroupActorList({
  * sentence and leaves out the primary actor, who already has `Item.Avatar`.
  * Renders nothing in a row about one person.
  *
- * Shows up to four avatars, or eight on tablets and wider, each linking to
- * its profile. Then, if the group expands, a "+N" chip for everyone else and
- * a chevron saying whether it's expanded. The group may have resolved fewer profiles
+ * Shows as many avatars as fit the row's width, each linking to its profile.
+ * Then, if the group expands, a "+N" chip for everyone else and a chevron
+ * saying whether it's expanded. The group may have resolved fewer profiles
  * than it has people, in which case the avatars run out early and the chip
  * counts the rest.
  */
 export function AvatarRow() {
-  const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
   const group = useContext(GroupContext)
+  const rowRef = useRef<React.ComponentRef<typeof View>>(null)
+  const [width, setWidth] = useState<number>()
+
+  /*
+   * Measured in a layout effect, whose update renders again before the first
+   * frame is drawn, so the row never shows a count that doesn't fit. The
+   * row's width is the column's, whatever it holds. `onLayout` keeps up with
+   * later changes, e.g. rotating or resizing the window.
+   */
+  useLayoutEffect(() => {
+    const rect = rowRef.current?.getBoundingClientRect()
+    if (rect) setWidth(rect.width)
+  }, [])
 
   if (!group || group.count < 2) return null
 
-  const maxAvatars = gtMobile ? MAX_PREVIEW_AVATARS_WIDE : MAX_PREVIEW_AVATARS
   // The primary actor comes first, and has their own avatar
-  const shown = group.actors.slice(1, maxAvatars + 1)
+  const others = group.actors.slice(1)
+  const count =
+    width === undefined
+      ? 0
+      : fitAvatarCount({
+          width,
+          resolved: others.length,
+          total: group.count - 1,
+          hasToggle: !!group.expansion,
+        })
+  const shown = others.slice(0, count)
   const remaining = Math.max(group.count - 1 - shown.length, 0)
 
   return (
-    <View style={[a.flex_row, a.align_center, a.gap_sm]}>
+    <View
+      ref={rowRef}
+      onLayout={event => setWidth(event.nativeEvent.layout.width)}
+      style={[a.flex_row, a.align_center, a.gap_sm]}>
       {shown.map(profile => (
         <PreviewableUserAvatar
           key={profile.did}
@@ -450,9 +465,9 @@ function GroupToggle({
     a.align_center,
     a.gap_xs,
     a.rounded_full,
-    {height: PREVIEW_AVATAR_SIZE, paddingRight: 8},
+    {height: PREVIEW_AVATAR_SIZE, paddingRight: TOGGLE_PADDING},
     // A chevron on its own is padded to a circle
-    remaining === 0 && {paddingLeft: 8},
+    remaining === 0 && {paddingLeft: TOGGLE_PADDING},
   ]
   const contents = (
     <>
@@ -519,5 +534,6 @@ function OverflowChip({count}: {count: number}) {
 function ExpandChevron({expanded}: {expanded: boolean}) {
   const t = useTheme()
   const Icon = expanded ? ChevronUpIcon : ChevronDownIcon
+  // `sm`, which `fitAvatarCount` allows for as `CHEVRON_SIZE`
   return <Icon size="sm" style={[t.atoms.text_contrast_high]} />
 }

@@ -1,5 +1,6 @@
 export * from './aggregate'
 export * from './Avatar'
+export * from './avatarRow'
 export * from './Expandable'
 export * from './group'
 export * from './media'
