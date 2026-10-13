@@ -101,31 +101,37 @@ type GroupNames = {
 }
 
 /**
+ * Whether a group is exactly two people and both resolved, so its sentence
+ * names them both rather than counting "1 other".
+ */
+function isNamedPair(group: NotificationGroup) {
+  return group.count === 2 && group.actors[1] !== undefined
+}
+
+/**
  * Who to name in a group notification's sentence: "**alice** and **bob**"
  * when the group is just the two of them, or "**alice** and **24 others**".
  * If the second person's profile didn't resolve, two people read as
  * "**alice** and **1 other**".
  */
 export function useGroupNames(notification: GroupNotificationView): GroupNames {
-  const {
-    actors: [actor, second],
-    count,
-  } = getNotificationGroup(notification)
+  const group = getNotificationGroup(notification)
+  const [actor, second] = group.actors
   const name = useDisplayName(actor)
   // Hooks can't be conditional, so without a second actor this is unused
   const secondName = useDisplayName(second ?? actor)
-  const isPair = count === 2 && second !== undefined
+  const isPair = isNamedPair(group)
 
   return {
     actor,
     name,
     second: isPair ? second : undefined,
     secondName: isPair ? secondName : undefined,
-    others: count - 1,
+    others: group.count - 1,
   }
 }
 
-type GroupContextValue = NotificationGroup & {
+type GroupExpansion = {
   isExpanded: boolean
   /**
    * Whether pressing the row toggles the group. If not, the avatar row's
@@ -135,16 +141,25 @@ type GroupContextValue = NotificationGroup & {
   onToggle: (event?: GestureResponderEvent) => void
 }
 
+type GroupContextValue = NotificationGroup & {
+  /**
+   * How the group expands, if it does.
+   */
+  expansion?: GroupExpansion
+}
+
 /**
- * Set by a `GroupRoot` of two or more people, for `AvatarRow`.
+ * Set by a `GroupRoot`, for `AvatarRow`.
  */
 const GroupContext = createContext<GroupContextValue | undefined>(undefined)
 
 /**
  * The root of a row about a group of people, e.g. everyone who liked a post.
  * With two or more, the row's `Item.AvatarRow` shows some of them and a
- * chevron, and the row expands to list them all beneath it. With one, this
- * is a plain `Item.Root`.
+ * chevron, and the row expands to list them all beneath it. A pair whose
+ * sentence names them both doesn't expand, since the list would only repeat
+ * them, so it shows the other person's avatar without a chevron. With one,
+ * this is a plain `Item.Root`.
  *
  * Pressing the row follows `href`, and the avatar row's "+N" and chevron
  * toggle the list. With `toggleOnPress`, pressing anywhere on the row toggles
@@ -192,18 +207,20 @@ export function GroupRoot({
 }) {
   const group = getNotificationGroup(notification)
 
-  if (group.count < 2) {
+  if (group.count < 2 || isNamedPair(group)) {
     return (
-      <Root
-        href={href}
-        isRead={notification.isRead}
-        label={label}
-        accessibilityActions={accessibilityActions}
-        onAccessibilityAction={onAccessibilityAction}
-        onBeforePress={onBeforePress}
-        testID={testID}>
-        {children}
-      </Root>
+      <GroupContext.Provider value={group}>
+        <Root
+          href={href}
+          isRead={notification.isRead}
+          label={label}
+          accessibilityActions={accessibilityActions}
+          onAccessibilityAction={onAccessibilityAction}
+          onBeforePress={onBeforePress}
+          testID={testID}>
+          {children}
+        </Root>
+      </GroupContext.Provider>
     )
   }
 
@@ -277,7 +294,7 @@ function ExpandableGroupRoot({
 
   return (
     <GroupContext.Provider
-      value={{...group, isExpanded, toggleOnPress, onToggle}}>
+      value={{...group, expansion: {isExpanded, toggleOnPress, onToggle}}}>
       {/* Carries the row's unread tint down behind the list */}
       <View style={{backgroundColor}}>
         <Root
@@ -372,8 +389,8 @@ function GroupActorList({
  * Renders nothing in a row about one person.
  *
  * Shows up to four avatars, or eight on tablets and wider, each linking to
- * its profile. Then a "+N" chip for everyone else, and a chevron saying
- * whether the group is expanded. The group may have resolved fewer profiles
+ * its profile. Then, if the group expands, a "+N" chip for everyone else and
+ * a chevron saying whether it's expanded. The group may have resolved fewer profiles
  * than it has people, in which case the avatars run out early and the chip
  * counts the rest.
  */
@@ -382,7 +399,7 @@ export function AvatarRow() {
   const moderationOpts = useModerationOpts()
   const group = useContext(GroupContext)
 
-  if (!group) return null
+  if (!group || group.count < 2) return null
 
   const maxAvatars = gtMobile ? MAX_PREVIEW_AVATARS_WIDE : MAX_PREVIEW_AVATARS
   // The primary actor comes first, and has their own avatar
@@ -404,7 +421,9 @@ export function AvatarRow() {
           type={profile.associated?.labeler ? 'labeler' : 'user'}
         />
       ))}
-      <GroupToggle group={group} remaining={remaining} />
+      {group.expansion && (
+        <GroupToggle expansion={group.expansion} remaining={remaining} />
+      )}
     </View>
   )
 }
@@ -416,15 +435,15 @@ export function AvatarRow() {
  * don't reach it inside the row's header, which they can expand instead.
  */
 function GroupToggle({
-  group,
+  expansion,
   remaining,
 }: {
-  group: GroupContextValue
+  expansion: GroupExpansion
   remaining: number
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const {isExpanded, toggleOnPress, onToggle} = group
+  const {isExpanded, toggleOnPress, onToggle} = expansion
 
   const style = [
     a.flex_row,
