@@ -1,0 +1,37 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.getConfig",
+  "defs": {
+    "main": {
+      "type": "query",
+      "description": "Get miscellaneous runtime configuration.",
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "checkEmailConfirmed": { "type": "boolean" },
+            "liveNow": {
+              "type": "array",
+              "items": { "type": "ref", "ref": "#liveNowConfig" }
+            }
+          }
+        }
+      }
+    },
+    "liveNowConfig": {
+      "type": "object",
+      "required": ["did", "domains"],
+      "properties": {
+        "did": { "type": "string", "format": "did" },
+        "domains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

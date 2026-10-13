@@ -1,0 +1,60 @@
+{
+  "id": "chat.bsky.group.listJoinRequests",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "InsufficientRole"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "requests"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "requests": {
+              "type": "array",
+              "items": {
+                "ref": "chat.bsky.group.defs#joinRequestView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "convoId"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "convoId": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Lists a page of request to join a group (via join link) the user owns. Shows the data from the owner's point of view."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

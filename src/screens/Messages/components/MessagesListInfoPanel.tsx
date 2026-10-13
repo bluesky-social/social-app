@@ -1,5 +1,5 @@
 import {View} from 'react-native'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 
@@ -47,7 +47,11 @@ export function MessagesListInfoPanel({
 
   return (
     <View style={[a.align_center, a.justify_center]}>
-      <UserAvatar type="user" size={88} avatar={profile?.avatar} />
+      <UserAvatar
+        type={profile.associated?.labeler ? 'labeler' : 'user'}
+        size={88}
+        avatar={profile?.avatar}
+      />
       <View
         style={[
           a.flex_row,

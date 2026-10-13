@@ -24,6 +24,6 @@ export function isJwtExpired(token: string) {
 
 export function isAppPassword(token: string) {
   const payload = jwtDecode(token)
-  // @ts-ignore
+  // @ts-expect-error
   return payload.scope === 'com.atproto.appPass'
 }

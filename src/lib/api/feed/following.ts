@@ -1,19 +1,20 @@
-import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
 
+import {app} from '#/lexicons'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
 export class FollowingFeedAPI implements FeedAPI {
-  agent: AtpAgent
+  client: Client
 
-  constructor({agent}: {agent: AtpAgent}) {
-    this.agent = agent
+  constructor({client}: {client: Client}) {
+    this.client = client
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.getTimeline({
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+    const data = await this.client.call(app.bsky.feed.getTimeline, {
       limit: 1,
     })
-    return res.data.feed[0]
+    return data.feed[0]
   }
 
   async fetch({
@@ -23,18 +24,19 @@ export class FollowingFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.agent.getTimeline({
+    /*
+     * A failed request rejects rather than resolving, so the error propagates
+     * to the query and drives the feed error UI. The agent behaved the same
+     * way - its `success` flag was only ever true - so the empty-page branch
+     * this replaces was unreachable.
+     */
+    const data = await this.client.call(app.bsky.feed.getTimeline, {
       cursor,
       limit,
     })
-    if (res.success) {
-      return {
-        cursor: res.data.cursor,
-        feed: res.data.feed,
-      }
-    }
     return {
-      feed: [],
+      cursor: data.cursor,
+      feed: data.feed,
     }
   }
 }

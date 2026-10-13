@@ -1,0 +1,58 @@
+{
+  "id": "app.bsky.feed.getFeed",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "UnknownFeed"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "feed"
+          ],
+          "properties": {
+            "feed": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.feed.defs#feedViewPost",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "feed"
+        ],
+        "properties": {
+          "feed": {
+            "type": "string",
+            "format": "at-uri"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get a hydrated feed from an actor's selected feed generator. Implemented by App View."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

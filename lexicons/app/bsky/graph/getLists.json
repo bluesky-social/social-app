@@ -1,0 +1,65 @@
+{
+  "id": "app.bsky.graph.getLists",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "lists"
+          ],
+          "properties": {
+            "lists": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.graph.defs#listView",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "actor"
+        ],
+        "properties": {
+          "actor": {
+            "type": "string",
+            "format": "at-identifier",
+            "description": "The account (actor) to enumerate lists from."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "purposes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "knownValues": [
+                "modlist",
+                "curatelist"
+              ]
+            },
+            "description": "Optional filter by list purpose. If not specified, all supported types are returned."
+          }
+        }
+      },
+      "description": "Enumerates the lists created by a specified account (actor)."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

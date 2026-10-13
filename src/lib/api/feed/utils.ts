@@ -1,4 +1,4 @@
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 
 import {BSKY_FEED_OWNER_DIDS} from '#/lib/constants'
 import {type UsePreferencesQueryResponse} from '#/state/queries/preferences'
@@ -12,14 +12,18 @@ if (IS_WEB && typeof window !== 'undefined') {
 
 export function createBskyTopicsHeader(userInterests?: string) {
   return {
-    'X-Bsky-Topics': debugTopics || userInterests || '',
+    'x-atproto-bsky-topics': debugTopics || userInterests || '',
   }
 }
 
 export function aggregateUserInterests(
   preferences?: UsePreferencesQueryResponse,
 ) {
-  return preferences?.interests?.tags?.join(',') || ''
+  const tags = preferences?.interests.tags ?? []
+  const updatedAt = preferences?.interests.updatedAt
+
+  const interests = tags.join(',')
+  return updatedAt ? `${interests};${updatedAt}` : interests
 }
 
 export function isBlueskyOwnedFeed(feedUri: string) {

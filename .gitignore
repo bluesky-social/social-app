@@ -101,6 +101,7 @@ stats.json
 # environment variables
 .env
 .env.*
+!/.env.e2e
 
 # Firebase (Android) Google services
 google-services.json
@@ -116,6 +117,9 @@ src/locale/locales/_build/
 src/locale/locales/**/messages.js
 src/locale/locales/**/messages.mjs
 src/locale/locales/**/messages.ts
+
+# generated lexicon schemas (pnpm lexicons:generate)
+src/lexicons/
 
 # local builds
 *.apk

@@ -11,7 +11,7 @@ import {
 } from 'react-native'
 import Svg, {Circle, Path, Rect} from 'react-native-svg'
 import {Image as ExpoImage} from 'expo-image'
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -90,6 +90,7 @@ interface PreviewableUserAvatarProps extends BaseUserAvatarProps {
   profile: bsky.profile.AnyProfileView
   disableHoverCard?: boolean
   disableNavigation?: boolean
+  disableLink?: boolean
   onBeforePress?: () => void
 }
 
@@ -307,7 +308,7 @@ let UserAvatar = ({
   }, [size, style])
 
   return avatar &&
-    !((moderation?.blur && IS_ANDROID) /* android crashes with blur */) ? (
+    !(moderation?.blur && IS_ANDROID /* android crashes with blur */) ? (
     <View style={containerStyle}>
       {usePlainRNImage ? (
         <RNImage
@@ -391,14 +392,14 @@ let EditableUserAvatar = ({
       return
     }
 
-    onSelectNewAvatar(
-      await compressIfNeeded(
-        await openCamera({
-          aspect: [1, 1],
-        }),
-        IMAGE_SIZE_CONFIG_2K_1MB,
-      ),
-    )
+    const image = await openCamera({
+      aspect: [1, 1],
+    })
+    if (!image) {
+      return
+    }
+
+    onSelectNewAvatar(await compressIfNeeded(image, IMAGE_SIZE_CONFIG_2K_1MB))
   }, [onSelectNewAvatar, requestCameraAccessIfNeeded])
 
   const onOpenLibrary = useCallback(async () => {
@@ -551,6 +552,7 @@ let PreviewableUserAvatar = ({
   profile,
   disableHoverCard,
   disableNavigation,
+  disableLink,
   onBeforePress,
   live,
   ...props
@@ -560,18 +562,18 @@ let PreviewableUserAvatar = ({
   const queryClient = useQueryClient()
   const status = useActorStatus(profile)
   const liveControl = useDialogControl()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const onPress = useCallback(() => {
     onBeforePress?.()
     unstableCacheProfileView(queryClient, profile)
   }, [profile, queryClient, onBeforePress])
 
-  const onOpenLiveStatus = useCallback(() => {
-    playHaptic('Light')
+  const onOpenLiveStatus = () => {
+    haptics.tap()
     ax.metric('live:card:open', {subject: profile.did, from: 'post'})
     liveControl.open()
-  }, [liveControl, playHaptic, profile.did])
+  }
 
   const avatarEl = (
     <UserAvatar
@@ -611,6 +613,8 @@ let PreviewableUserAvatar = ({
             embed={status.embed}
           />
         </>
+      ) : disableLink ? (
+        avatarEl
       ) : (
         <Link
           label={_(

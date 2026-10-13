@@ -11,14 +11,14 @@ import {Logo} from '#/view/icons/Logo'
 import {Logotype} from '#/view/icons/Logotype'
 import {atoms as a, useTheme} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
-// @ts-ignore
-import splashImagePointer from '../../../../assets/splash/illustration-mobile.png'
-// @ts-ignore
-import darkSplashImagePointer from '../../../../assets/splash/illustration-mobile-dark.png'
-const splashImageUri = RNImage.resolveAssetSource(splashImagePointer).uri
+// @ts-expect-error
+import splashImagePointer from '../../../../assets/illustrations/illustration-mobile.png'
+// @ts-expect-error
+import darkSplashImagePointer from '../../../../assets/illustrations/illustration-mobile-dark.png'
+const splashImageUri = RNImage.resolveAssetSource(splashImagePointer)!.uri
 const darkSplashImageUri = RNImage.resolveAssetSource(
   darkSplashImagePointer,
-).uri
+)!.uri
 
 export const SplashScreen = ({
   onPressSignin,
@@ -31,7 +31,7 @@ export const SplashScreen = ({
   const {_} = useLingui()
   const isDarkMode = t.name !== 'light'
 
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const styles = useMemo(() => {
     const logoFill = isDarkMode ? 'white' : t.palette.primary_500
@@ -84,7 +84,7 @@ export const SplashScreen = ({
             testID="createAccountButton"
             onPress={() => {
               onPressCreateAccount()
-              playHaptic('Light')
+              haptics.tap()
             }}
             label={_(msg`Create new account`)}
             accessibilityHint={_(
@@ -113,7 +113,7 @@ export const SplashScreen = ({
             testID="signInButton"
             onPress={() => {
               onPressSignin()
-              playHaptic('Light')
+              haptics.tap()
             }}
             label={_(msg`Sign in`)}
             accessibilityHint={_(

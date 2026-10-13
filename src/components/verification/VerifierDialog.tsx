@@ -7,7 +7,7 @@ import {Trans} from '@lingui/react/macro'
 import {urls} from '#/lib/constants'
 import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {VerifierCheck} from '#/components/icons/VerifierCheck'
@@ -65,7 +65,8 @@ function Inner({
     <Dialog.ScrollableInner
       label={label}
       style={[
-        gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+        a.w_full,
+        gtMobile && web({width: 'auto', maxWidth: 400, minWidth: 200}),
       ]}>
       <View style={[a.gap_lg]}>
         <View

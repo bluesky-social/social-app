@@ -60,7 +60,7 @@ function GifPickerBody({
   control: Dialog.DialogControlProps
   onSelectGif: (gif: Gif) => void
 }) {
-  const textInputRef = useRef<TextInput>(null)
+  const textInputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const listRef = useRef<ListMethods>(null)
   const [rawSearch, setRawSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState<string>('trending')
@@ -115,7 +115,6 @@ function GifPickerBody({
   }, [effectiveSearch, isRecentsActive])
 
   const onClearSearch = () => {
-    textInputRef.current?.clear()
     setRawSearch('')
     setActiveCategory('trending')
     textInputRef.current?.focus()
@@ -148,9 +147,9 @@ function GifPickerBody({
     <>
       <GifPickerHeader
         inputRef={textInputRef}
+        value={rawSearch}
         onChangeText={onChangeSearch}
         onClear={onClearSearch}
-        canClear={rawSearch.length > 0}
         onEscape={() => control.close()}
       />
       {showPills && (

@@ -16,14 +16,17 @@ export enum Features {
   GroupChatsDisable = 'group_chats:disable',
   ComposerLanguageDetectionEnable = 'composer:language_detection:enable',
   PostGalleryEmbedEnable = 'post_gallery_embed:enable',
+  PostFeedKnownLikersEnable = 'post_feed:known_likers:enable',
   PostThreadKnownLikersEnable = 'post_thread:known_likers:enable',
-  PostThreadKnownLikersFetchEnable = 'post_thread:known_likers:fetch:enable',
-  CustomLogoJapanEnable = 'custom_logo:japan:enable',
-  VideoMultipartUploadEnable = 'video:multipart_upload:enable',
-  SearchStarterPacksV2Enable = 'search_starter_packs_v2:enable',
   FollowSortEnable = 'follow_sort:enable',
+  FollowingV2Enable = 'following_v2:enable',
+  OnboardingInterestsRequiredEnable = 'onboarding:interests:required:enable',
+  ModerationInboxEnable = 'moderation_inbox:enable',
+  AtmosphereExploreEnable = 'atmosphere_explore:enable',
+  NotificationsV2Enable = 'notifications_v2:enable',
 
   // values
+  StarterPacksConfig = 'starter_packs:config',
   TrendingDiscoverValues = 'trending_discover:values',
   TrendingExploreTopicsCountValue = 'trending_explore_topics_count:value',
 

@@ -33,6 +33,24 @@ func run(args []string) {
 			Usage:  "run the server",
 			Action: serve,
 			Flags: []cli.Flag{
+				&cli.BoolFlag{
+					Name:    "feature-gate-bootstrap",
+					Usage:   "Embed a cached feature-gate fallback in app HTML",
+					Value:   true,
+					EnvVars: []string{"FEATURE_GATE_BOOTSTRAP"},
+				},
+				&cli.StringFlag{
+					Name:    "growthbook-api-host",
+					Usage:   "GrowthBook API host, matching the web bundle",
+					Value:   "https://events.bsky.app/gb",
+					EnvVars: []string{"GROWTHBOOK_API_HOST", "EXPO_PUBLIC_GROWTHBOOK_API_HOST"},
+				},
+				&cli.StringFlag{
+					Name:    "growthbook-client-key",
+					Usage:   "Public GrowthBook SDK key, matching the web bundle",
+					Value:   "sdk-7gkUkGy9wguUjyFe",
+					EnvVars: []string{"GROWTHBOOK_CLIENT_KEY", "EXPO_PUBLIC_GROWTHBOOK_CLIENT_KEY"},
+				},
 				&cli.StringFlag{
 					Name:  "appview-host",
 					Usage: "scheme, hostname, and port of PDS instance",

@@ -14,7 +14,6 @@
 
 import {forwardRef} from 'react'
 import {
-  type FlatList,
   type FlatListProps,
   type ScrollViewProps,
   StyleSheet,
@@ -45,7 +44,7 @@ export const CenteredView = forwardRef(function CenteredView(
   }: React.PropsWithChildren<
     ViewProps & {sideBorders?: boolean; topBorder?: boolean}
   >,
-  ref: React.Ref<View>,
+  ref: React.Ref<React.ComponentRef<typeof View>>,
 ) {
   const pal = usePalette('default')
   const {isMobile} = useWebMediaQueries()
@@ -76,7 +75,7 @@ export const FlatList_INTERNAL = forwardRef(function FlatListImpl<ItemT>(
   }: React.PropsWithChildren<
     Omit<FlatListProps<ItemT>, 'CellRendererComponent'> & AddedProps
   >,
-  ref: React.Ref<FlatList<ItemT>>,
+  ref: React.Ref<React.ComponentRef<typeof Animated.FlatList>>,
 ) {
   const {isMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
@@ -105,7 +104,6 @@ export const FlatList_INTERNAL = forwardRef(function FlatListImpl<ItemT>(
   }
   if (desktopFixedHeight) {
     if (typeof desktopFixedHeight === 'number') {
-      // @ts-expect-error Web only -prf
       style = addStyle(style, {
         height: `calc(100vh - ${desktopFixedHeight}px)`,
       })
@@ -143,7 +141,7 @@ export const FlatList_INTERNAL = forwardRef(function FlatListImpl<ItemT>(
  */
 export const ScrollView = forwardRef(function ScrollViewImpl(
   {contentContainerStyle, ...props}: React.PropsWithChildren<ScrollViewProps>,
-  ref: React.Ref<Animated.ScrollView>,
+  ref: React.Ref<React.ComponentRef<typeof Animated.ScrollView>>,
 ) {
   const {isMobile} = useWebMediaQueries()
   const {centerColumnOffset} = useLayoutBreakpoints()
@@ -170,7 +168,6 @@ export const ScrollView = forwardRef(function ScrollViewImpl(
 
 const styles = StyleSheet.create({
   contentContainer: {
-    // @ts-expect-error web only
     minHeight: '100vh',
   },
   container: {
@@ -189,7 +186,6 @@ const styles = StyleSheet.create({
     marginRight: 'auto',
   },
   fixedHeight: {
-    // @ts-expect-error web only
     height: '100vh',
   },
 })

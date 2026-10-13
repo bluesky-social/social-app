@@ -1,0 +1,56 @@
+{
+  "id": "com.atproto.admin.sendEmail",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "recipientDid",
+            "content",
+            "senderDid"
+          ],
+          "properties": {
+            "comment": {
+              "type": "string",
+              "description": "Additional comment by the sender that won't be used in the email itself but helpful to provide more context for moderators/reviewers"
+            },
+            "content": {
+              "type": "string"
+            },
+            "subject": {
+              "type": "string"
+            },
+            "senderDid": {
+              "type": "string",
+              "format": "did"
+            },
+            "recipientDid": {
+              "type": "string",
+              "format": "did"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "sent"
+          ],
+          "properties": {
+            "sent": {
+              "type": "boolean"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Send email to a user's account email address."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

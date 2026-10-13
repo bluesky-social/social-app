@@ -1,4 +1,4 @@
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AtUriString} from '@atproto/syntax'
 import {useMutation, useQueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
@@ -8,10 +8,11 @@ import {
   optimisticallyDeleteBookmark,
   optimisticallySaveBookmark,
 } from '#/state/queries/bookmarks/useBookmarksQuery'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 type MutationArgs =
-  | {action: 'create'; post: AppBskyFeedDefs.PostView}
+  | {action: 'create'; post: app.bsky.feed.defs.PostView}
   | {
       action: 'delete'
       /**
@@ -23,20 +24,20 @@ type MutationArgs =
 
 export function useBookmarkMutation() {
   const qc = useQueryClient()
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   return useMutation({
     async mutationFn(args: MutationArgs) {
       if (args.action === 'create') {
         updatePostShadow(qc, args.post.uri, {bookmarked: true})
-        await agent.app.bsky.bookmark.createBookmark({
+        await client.call(app.bsky.bookmark.createBookmark, {
           uri: args.post.uri,
           cid: args.post.cid,
         })
       } else if (args.action === 'delete') {
         updatePostShadow(qc, args.uri, {bookmarked: false})
-        await agent.app.bsky.bookmark.deleteBookmark({
-          uri: args.uri,
+        await client.call(app.bsky.bookmark.deleteBookmark, {
+          uri: args.uri as AtUriString,
         })
       }
     },

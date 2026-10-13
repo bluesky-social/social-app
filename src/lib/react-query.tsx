@@ -1,11 +1,15 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useState} from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
 import {createAsyncStoragePersister} from '@tanstack/query-async-storage-persister'
-import {focusManager, onlineManager, QueryClient} from '@tanstack/react-query'
+import {
+  type DehydrateOptions,
+  focusManager,
+  onlineManager,
+  QueryClient,
+} from '@tanstack/react-query'
 import {
   type PersistQueryClientOptions,
   PersistQueryClientProvider,
-  type PersistQueryClientProviderProps,
 } from '@tanstack/react-query-persist-client'
 
 import {createPersistedQueryStorage} from '#/lib/persisted-query-storage'
@@ -13,11 +17,15 @@ import {listenNetworkConfirmed, listenNetworkLost} from '#/state/events'
 import {isQueryPersisted} from '#/state/queries/util'
 import * as env from '#/env'
 import {IS_NATIVE, IS_WEB} from '#/env'
+import {
+  isFollowingSnapshotQuery,
+  loadFollowingSnapshot,
+  saveFollowingSnapshot,
+} from '#/features/followingV2/home/queries/followingSnapshot'
 
 declare global {
   interface Window {
-    // eslint-disable-next-line  @typescript-eslint/consistent-type-imports
-    __TANSTACK_QUERY_CLIENT__: import('@tanstack/query-core').QueryClient
+    __TANSTACK_QUERY_CLIENT__: QueryClient
   }
 }
 
@@ -133,13 +141,15 @@ const createQueryClient = () =>
     },
   })
 
-const dehydrateOptions: PersistQueryClientProviderProps['persistOptions']['dehydrateOptions'] =
-  {
-    shouldDehydrateMutation: (_: any) => false,
-    shouldDehydrateQuery: query => {
-      return isQueryPersisted(query.queryKey)
-    },
-  }
+const dehydrateOptions: DehydrateOptions = {
+  shouldDehydrateMutation: (_: any) => false,
+  shouldDehydrateQuery: query => {
+    return (
+      (isQueryPersisted(query.queryKey) || isFollowingSnapshotQuery(query)) &&
+      query.state.status === 'success'
+    )
+  },
+}
 
 export function QueryProvider({
   children,
@@ -166,8 +176,8 @@ function QueryProviderInner({
   children: React.ReactNode
   currentDid: string | undefined
 }) {
-  const initialDid = useRef(currentDid)
-  if (currentDid !== initialDid.current) {
+  const [initialDid] = useState(currentDid)
+  if (currentDid !== initialDid) {
     throw Error(
       'Something is very wrong. Expected did to be stable due to key above.',
     )
@@ -180,6 +190,9 @@ function QueryProviderInner({
     const asyncPersister = createAsyncStoragePersister({
       storage,
       key: 'queryClient-' + (currentDid ?? 'logged-out'),
+      // JSON, as by default, but with Following v2's Home Following snapshot.
+      serialize: client => JSON.stringify(saveFollowingSnapshot(client)),
+      deserialize: cached => loadFollowingSnapshot(JSON.parse(cached)),
     })
     return {
       persister: asyncPersister,

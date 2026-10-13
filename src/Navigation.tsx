@@ -1,6 +1,7 @@
 import {type JSX, useCallback, useRef} from 'react'
 import * as Linking from 'expo-linking'
 import * as Notifications from 'expo-notifications'
+import {Referrer} from '@bsky.app/expo-bluesky-swiss-army'
 import {i18n, type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 import {
@@ -57,28 +58,29 @@ import {CommunityGuidelinesScreen} from '#/view/screens/CommunityGuidelines'
 import {CopyrightPolicyScreen} from '#/view/screens/CopyrightPolicy'
 import {DebugModScreen} from '#/view/screens/DebugMod'
 import {FeedsScreen} from '#/view/screens/Feeds'
-import {HomeScreen} from '#/view/screens/Home'
 import {ListsScreen} from '#/view/screens/Lists'
 import {ModerationBlockedAccounts} from '#/view/screens/ModerationBlockedAccounts'
 import {ModerationModlistsScreen} from '#/view/screens/ModerationModlists'
 import {ModerationMutedAccounts} from '#/view/screens/ModerationMutedAccounts'
 import {NotFoundScreen} from '#/view/screens/NotFound'
-import {NotificationsScreen} from '#/view/screens/Notifications'
 import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
-import {ProfileFeedLikedByScreen} from '#/view/screens/ProfileFeedLikedBy'
 import {StorybookScreen} from '#/view/screens/Storybook'
 import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {AtmosphereScreen} from '#/screens/Atmosphere'
 import {BookmarksScreen} from '#/screens/Bookmarks'
+import {CustomFeedScreen} from '#/screens/CustomFeed'
+import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
 import {SharedPreferencesTesterScreen} from '#/screens/E2E/SharedPreferencesTesterScreen'
 import {FindContactsFlowScreen} from '#/screens/FindContactsFlowScreen'
 import HashtagScreen from '#/screens/Hashtag'
 import {LogScreen} from '#/screens/Log'
 import {MessagesScreen} from '#/screens/Messages/ChatList'
+import {renderMessagesSplitViewLayout} from '#/screens/Messages/components/splitView/MessagesSplitViewLayout'
 import {MessagesConversationScreen} from '#/screens/Messages/Conversation'
 import {MessagesConversationSettingsScreen} from '#/screens/Messages/ConversationSettings'
 import {MessagesInboxScreen} from '#/screens/Messages/Inbox'
@@ -86,13 +88,17 @@ import {MessagesJoinRequestsScreen} from '#/screens/Messages/JoinRequests'
 import {MessagesSettingsScreen} from '#/screens/Messages/Settings'
 import {ModerationScreen} from '#/screens/Moderation'
 import {Screen as ModerationVerificationSettings} from '#/screens/Moderation/VerificationSettings'
+import {ModerationInboxScreen} from '#/screens/ModerationInbox'
+import {ModerationInboxNoticeDetailsScreen} from '#/screens/ModerationInbox/Notice'
+import {ModerationInboxReportDetailsScreen} from '#/screens/ModerationInbox/Report'
+import {ModerationInboxSettingsScreen} from '#/screens/ModerationInbox/Settings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
+import {NotificationsScreen} from '#/screens/Notifications'
 import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
 import {PostRepostedByScreen} from '#/screens/Post/PostRepostedBy'
 import {ProfileKnownFollowersScreen} from '#/screens/Profile/KnownFollowers'
-import {ProfileFeedScreen} from '#/screens/Profile/ProfileFeed'
 import {ProfileFollowersScreen} from '#/screens/Profile/ProfileFollowers'
 import {ProfileFollowsScreen} from '#/screens/Profile/ProfileFollows'
 import {ProfileLabelerLikedByScreen} from '#/screens/Profile/ProfileLabelerLikedBy'
@@ -136,10 +142,9 @@ import {
 import {useAnalytics} from '#/analytics'
 import {setNavigationMetadata} from '#/analytics/metadata'
 import {IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {HomeScreen} from '#/features/followingV2/home'
 import {InviteScannerScreen} from '#/features/inviteFriends'
 import {router} from '#/routes'
-import {Referrer} from '../modules/expo-bluesky-swiss-army'
-import {renderMessagesSplitViewLayout} from './screens/Messages/components/splitView/MessagesSplitViewLayout'
 
 const navigationRef = createNavigationContainerRef<AllNavigatorParams>()
 
@@ -169,6 +174,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         options={{title: title(msg`Not Found`)}}
       />
       <Stack.Screen
+        name="Atmosphere"
+        getComponent={() => AtmosphereScreen}
+        options={{title: title(msg`Atmosphere`)}}
+      />
+      <Stack.Screen
         name="Lists"
         component={ListsScreen}
         options={{title: title(msg`Lists`), requireAuth: true}}
@@ -177,6 +187,26 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="Moderation"
         getComponent={() => ModerationScreen}
         options={{title: title(msg`Moderation`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ModerationInbox"
+        getComponent={() => ModerationInboxScreen}
+        options={{title: title(msg`Moderation inbox`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ModerationInboxSettings"
+        getComponent={() => ModerationInboxSettingsScreen}
+        options={{title: title(msg`Mod inbox settings`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ModerationInboxReportDetails"
+        getComponent={() => ModerationInboxReportDetailsScreen}
+        options={{title: title(msg`Your report`), requireAuth: true}}
+      />
+      <Stack.Screen
+        name="ModerationInboxNoticeDetails"
+        getComponent={() => ModerationInboxNoticeDetailsScreen}
+        options={{title: title(msg`Notice`), requireAuth: true}}
       />
       <Stack.Screen
         name="ModerationModlists"
@@ -288,13 +318,13 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         })}
       />
       <Stack.Screen
-        name="ProfileFeed"
-        getComponent={() => ProfileFeedScreen}
+        name="CustomFeed"
+        getComponent={() => CustomFeedScreen}
         options={{title: title(msg`Feed`)}}
       />
       <Stack.Screen
-        name="ProfileFeedLikedBy"
-        getComponent={() => ProfileFeedLikedByScreen}
+        name="CustomFeedLikedBy"
+        getComponent={() => CustomFeedLikedByScreen}
         options={{title: title(msg`Liked by`)}}
       />
       <Stack.Screen
@@ -557,12 +587,12 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
       <Stack.Screen
         name="StarterPackWizard"
         getComponent={() => Wizard}
-        options={{title: title(msg`Create a starter pack`), requireAuth: true}}
+        options={{title: title(msg`Create a Starter Pack`), requireAuth: true}}
       />
       <Stack.Screen
         name="StarterPackEdit"
         getComponent={() => Wizard}
-        options={{title: title(msg`Edit your starter pack`), requireAuth: true}}
+        options={{title: title(msg`Edit your Starter Pack`), requireAuth: true}}
       />
       <Stack.Screen
         name="VideoFeed"
@@ -919,7 +949,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
         // chat-removed-from-group, chat-join-request-rejected: the convo is
         // no longer accessible to the recipient, so just open the list.
         // @ts-expect-error nested navigators aren't typed -sfn
-        navigate('MessagesTab', {screen: 'Messages'})
+        void navigate('MessagesTab', {screen: 'Messages'})
       }
     },
   )
@@ -1006,7 +1036,7 @@ function RoutesContainer({children}: React.PropsWithChildren<{}>) {
 
     ax.metric('init', {
       initMs: Math.round(
-        // @ts-ignore Emitted by Metro in the bundle prelude
+        // @ts-expect-error Emitted by Metro in the bundle prelude
         performance.now() - global.__BUNDLE_START_TIME__,
       ),
     })
@@ -1081,7 +1111,7 @@ function navigate<K extends keyof AllNavigatorParams>(
         }
         navigationRef.addListener('state', handler)
 
-        // @ts-ignore I don't know what would make typescript happy but I have a life -prf
+        // @ts-expect-error I don't know what would make typescript happy but I have a life -prf
         navigationRef.navigate(name, params)
       }),
       timeout(1e3),

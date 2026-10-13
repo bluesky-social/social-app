@@ -1,18 +1,28 @@
 import {useCallback, useEffect, useRef, useState} from 'react'
-import {Alert, AppState, type AppStateStatus} from 'react-native'
+import {
+  Alert,
+  AppState,
+  type AppStateStatus,
+  Image as RNImage,
+} from 'react-native'
 import {nativeBuildVersion} from 'expo-application'
+import {getLinkingURL} from 'expo-linking'
 import {
   checkForUpdateAsync,
+  type CurrentlyRunningInfo,
   fetchUpdateAsync,
   isEnabled,
   reloadAsync,
+  type ReloadScreenOptions,
   setExtraParamAsync,
   UpdateCheckResultNotAvailableReason,
   useUpdates,
 } from 'expo-updates'
 
+import {parseLinkingUrl} from '#/lib/parseLinkingUrl'
 import {isNetworkError} from '#/lib/strings/errors'
 import {logger} from '#/logger'
+import {useTheme} from '#/alf'
 import {APP_VERSION, IS_IOS, IS_TESTFLIGHT} from '#/env'
 import {device} from '#/storage'
 
@@ -20,8 +30,7 @@ const MINIMUM_MINIMIZE_TIME = 15 * 60e3
 const OTA_RECOVERY_WINDOW = 5 * 60e3
 
 /**
- * The channel this native build is expected to receive updates from. Anything
- * else is only reachable through the dev tooling in settings.
+ * Fallback channel when the native build does not expose its configured channel.
  */
 const DEFAULT_CHANNEL = IS_TESTFLIGHT ? 'testflight' : 'production'
 
@@ -36,17 +45,48 @@ function getDeploymentName(channel: string) {
   return pullRequestNumber ? `PR #${pullRequestNumber}` : channel
 }
 
-async function setExtraParams() {
-  await setExtraParamAsync(
-    IS_IOS ? 'ios-build-number' : 'android-build-number',
-    // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
-    // This just ensures it gets passed as a string
-    `${nativeBuildVersion}`,
-  )
-  await setExtraParamAsync('channel', DEFAULT_CHANNEL)
+/**
+ * The channel of the update bundle that is actually running. The
+ * `currentlyRunning.channel` constant only reflects the channel baked into the
+ * native build config, so a manually applied deployment (e.g. a pull request
+ * channel) must be detected from the manifest metadata our update server stamps
+ * into every published update. Embedded launches have no server manifest and
+ * fall back to the build constant.
+ */
+function getRunningChannel(
+  currentlyRunning: CurrentlyRunningInfo | undefined,
+): string | undefined {
+  /*
+   * `metadata` is typed as a bare `object` by expo-manifests, and is absent
+   * entirely from embedded manifests, so narrow it ourselves.
+   */
+  const manifest = currentlyRunning?.manifest as
+    {metadata?: {channel?: unknown}} | undefined
+  const channel = manifest?.metadata?.channel
+  if (typeof channel === 'string' && channel) {
+    return channel
+  }
+  // The build constant is an empty string rather than null when unconfigured.
+  return currentlyRunning?.channel || undefined
 }
 
-async function setExtraParamsPullRequest(channel: string) {
+function isApplyOTAIntent(url: string | null) {
+  if (!url) return false
+  try {
+    const [, intent, intentType] = parseLinkingUrl(url).pathname.split('/')
+    return intent === 'intent' && intentType === 'apply-ota'
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Read at module load, because the intent handler clears the launch URL once it
+ * has handled it.
+ */
+let hasRequestedDeployment = isApplyOTAIntent(getLinkingURL())
+
+async function setExtraParams(channel: string) {
   await setExtraParamAsync(
     IS_IOS ? 'ios-build-number' : 'android-build-number',
     // Hilariously, `buildVersion` is not actually a string on Android even though the TS type says it is.
@@ -56,8 +96,11 @@ async function setExtraParamsPullRequest(channel: string) {
   await setExtraParamAsync('channel', channel)
 }
 
-async function updateTestflight() {
-  await setExtraParams()
+async function updateTestflight(
+  scheme: 'light' | 'dark',
+  buildChannel: string,
+) {
+  await setExtraParams(buildChannel)
 
   const res = await checkForUpdateAsync()
   if (res.isAvailable) {
@@ -74,7 +117,9 @@ async function updateTestflight() {
           text: 'Relaunch',
           style: 'default',
           onPress: async () => {
-            await reloadAsync()
+            await reloadAsync({
+              reloadScreenOptions: splash(scheme),
+            })
           },
         },
       ],
@@ -83,14 +128,16 @@ async function updateTestflight() {
 }
 
 export function useApplyPullRequestOTAUpdate() {
+  const t = useTheme()
   const {currentlyRunning} = useUpdates()
   const [pending, setPending] = useState(false)
-  const currentChannel = currentlyRunning?.channel
+  const currentChannel = getRunningChannel(currentlyRunning)
+  const defaultChannel = currentlyRunning?.channel || DEFAULT_CHANNEL
   const isCurrentlyRunningPullRequestDeployment =
     currentChannel?.startsWith('pull-request')
   /*
    * Covers pull request deployments as well as any other channel we manually
-   * applied an update from. Note that `channel` is null when updates are
+   * applied an update from. Note that the channel is undefined when updates are
    * disabled (e.g. in dev), in which case there's nothing to restore.
    */
   const isCurrentlyRunningNonStandardChannel = Boolean(
@@ -101,10 +148,11 @@ export function useApplyPullRequestOTAUpdate() {
     channel: string,
     declaredAppVersion?: string | null,
   ) => {
+    hasRequestedDeployment = true
     const deploymentName = getDeploymentName(channel)
 
     const checkForDeployment = async () => {
-      await setExtraParamsPullRequest(channel)
+      await setExtraParams(channel)
       const res = await checkForUpdateAsync()
       if (!res.isAvailable) {
         if (
@@ -141,7 +189,9 @@ export function useApplyPullRequestOTAUpdate() {
             updateId: fetchedUpdate.manifest.id,
           })
           try {
-            await reloadAsync()
+            await reloadAsync({
+              reloadScreenOptions: splash(t.scheme),
+            })
           } catch (e) {
             device.remove(['pendingOTAUpdate'])
             throw e
@@ -159,28 +209,34 @@ export function useApplyPullRequestOTAUpdate() {
       })()
     }
 
-    if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
-      Alert.alert(
-        'App Version Mismatch',
-        `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
-        [
-          {
-            text: 'Cancel',
-            style: 'cancel',
-          },
-          {
-            text: 'Apply Anyway',
-            style: 'destructive',
-            onPress: applyUpdate,
-          },
-        ],
-      )
-      return
-    }
-
+    /*
+     * Check before prompting about anything, so that re-running this while
+     * already on the newest update of `channel` stays silent. Reloading into an
+     * update re-delivers the deep link that triggered it, and the same link may
+     * also just be tapped again.
+     */
     setPending(true)
     try {
       if (!(await checkForDeployment())) return
+
+      if (declaredAppVersion && declaredAppVersion !== APP_VERSION) {
+        Alert.alert(
+          'App Version Mismatch',
+          `This OTA update was built for a different version of the app.\n\nCurrent app version: ${APP_VERSION}\nOTA app version: ${declaredAppVersion}\n\nApplying it anyway may cause the app to stop working and require a reinstall.`,
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Apply Anyway',
+              style: 'destructive',
+              onPress: applyUpdate,
+            },
+          ],
+        )
+        return
+      }
 
       Alert.alert(
         `Apply update from ${deploymentName}?`,
@@ -210,28 +266,77 @@ export function useApplyPullRequestOTAUpdate() {
   }
 
   /**
-   * Pulls the newest update from the channel this build ships with and relaunches
-   * into it, undoing a manually applied deployment.
+   * Checks the channel that is currently running for a newer update, and offers
+   * to relaunch into it if one is found. Unlike `tryApplyUpdate` this never
+   * switches channels, so it's safe to run from a non-standard deployment.
+   */
+  const checkForUpdates = async () => {
+    const channel = currentChannel ?? DEFAULT_CHANNEL
+    const deploymentName = getDeploymentName(channel)
+
+    setPending(true)
+    try {
+      await setExtraParams(channel)
+
+      const res = await checkForUpdateAsync()
+      if (!res.isAvailable) {
+        Alert.alert(
+          'Up to Date',
+          `You're already running the newest available update of ${deploymentName}.`,
+        )
+        return
+      }
+
+      await fetchUpdateAsync()
+      Alert.alert(
+        'Update Available',
+        `A newer update of ${deploymentName} has been downloaded. Relaunch now?`,
+        [
+          {
+            text: 'No',
+            style: 'cancel',
+          },
+          {
+            text: 'Relaunch',
+            style: 'default',
+            onPress: () => {
+              void reloadAsync({
+                reloadScreenOptions: splash(t.scheme),
+              })
+            },
+          },
+        ],
+      )
+    } catch (e: unknown) {
+      const error = String(e)
+      logger.error('Internal OTA Update Error', {error})
+      Alert.alert(
+        'Update Check Failed',
+        `Could not check the ${deploymentName} deployment: ${error}`,
+      )
+    } finally {
+      setPending(false)
+    }
+  }
+
+  /**
+   * Fetches from the build's channel and relaunches into its newest update, or
+   * the embedded build if none is available. Fetching also persists the server's
+   * channel filters when there is no update, so reload won't pick the old OTA.
    */
   const restoreDefaultChannel = async () => {
     setPending(true)
     try {
-      await setExtraParams()
-      const res = await checkForUpdateAsync()
-      if (res.isAvailable) {
-        await fetchUpdateAsync()
-        await reloadAsync()
-      } else {
-        Alert.alert(
-          'Nothing to Restore',
-          `No deployment of ${DEFAULT_CHANNEL} is currently available for your native build. Reinstall the app to get back to a standard build.`,
-        )
-      }
+      await setExtraParams(defaultChannel)
+      await fetchUpdateAsync()
+      await reloadAsync({
+        reloadScreenOptions: splash(t.scheme),
+      })
     } catch (e: any) {
       logger.error('Internal OTA Update Error', {error: `${e}`})
       Alert.alert(
         'Restore Failed',
-        `Could not restore the ${DEFAULT_CHANNEL} deployment: ${e}`,
+        `Could not restore the ${defaultChannel} deployment: ${e}`,
       )
     } finally {
       setPending(false)
@@ -240,11 +345,12 @@ export function useApplyPullRequestOTAUpdate() {
 
   return {
     tryApplyUpdate,
+    checkForUpdates,
     restoreDefaultChannel,
     isCurrentlyRunningPullRequestDeployment,
     isCurrentlyRunningNonStandardChannel,
     currentChannel,
-    defaultChannel: DEFAULT_CHANNEL,
+    defaultChannel,
     pending,
   }
 }
@@ -296,17 +402,20 @@ export function useOTAUpdateRecovery() {
 export function useOTAUpdates() {
   const shouldReceiveUpdates = isEnabled && !__DEV__
 
+  const t = useTheme()
   const appState = useRef<AppStateStatus>('active')
   const lastMinimize = useRef(0)
   const ranInitialCheck = useRef(false)
   const timeout = useRef<NodeJS.Timeout>(undefined)
   const {currentlyRunning, isUpdatePending} = useUpdates()
-  const currentChannel = currentlyRunning?.channel
+  const currentChannel = getRunningChannel(currentlyRunning)
+  const defaultChannel = currentlyRunning?.channel || DEFAULT_CHANNEL
 
   const setCheckTimeout = useCallback(() => {
     timeout.current = setTimeout(async () => {
+      if (hasRequestedDeployment) return
       try {
-        await setExtraParams()
+        await setExtraParams(defaultChannel)
 
         logger.debug('Checking for update...')
         const res = await checkForUpdateAsync()
@@ -323,21 +432,21 @@ export function useOTAUpdates() {
         }
       }
     }, 10e3)
-  }, [])
+  }, [defaultChannel])
 
   const onIsTestFlight = useCallback(async () => {
     try {
-      await updateTestflight()
+      await updateTestflight(t.scheme, defaultChannel)
     } catch (err: any) {
       if (!isNetworkError(err)) {
         logger.error('Internal OTA Update Error', {safeMessage: err})
       }
     }
-  }, [])
+  }, [defaultChannel, t.scheme])
 
   useEffect(() => {
     // We don't need to check anything if the current update is a PR update
-    if (currentChannel?.startsWith('pull-request')) {
+    if (currentChannel?.startsWith('pull-request') || hasRequestedDeployment) {
       return
     }
 
@@ -373,9 +482,14 @@ export function useOTAUpdates() {
         ) {
           // If it's been 15 minutes since the last "minimize", we should feel comfortable updating the client since
           // chances are that there isn't anything important going on in the current session.
-          if (lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME) {
+          if (
+            !hasRequestedDeployment &&
+            lastMinimize.current <= Date.now() - MINIMUM_MINIMIZE_TIME
+          ) {
             if (isUpdatePending) {
-              await reloadAsync()
+              await reloadAsync({
+                reloadScreenOptions: splash(t.scheme),
+              })
             } else {
               setCheckTimeout()
             }
@@ -392,5 +506,27 @@ export function useOTAUpdates() {
       clearTimeout(timeout.current)
       subscription.remove()
     }
-  }, [isUpdatePending, currentChannel, setCheckTimeout])
+  }, [isUpdatePending, currentChannel, setCheckTimeout, t.scheme])
+}
+
+/**
+ * Splash screen for while the app is updating
+ */
+export const splash = (scheme: 'light' | 'dark') => {
+  const source =
+    scheme === 'light'
+      ? require('../../../assets/splash/splash.png')
+      : require('../../../assets/splash/splash-dark.png')
+
+  return {
+    image: RNImage.resolveAssetSource(source)!.uri,
+    imageFullScreen: true,
+    imageResizeMode: 'cover',
+    backgroundColor: scheme === 'light' ? '#006AFF' : '#002861',
+    spinner: {
+      enabled: true,
+      color: '#ffffff',
+      size: 'large',
+    },
+  } satisfies ReloadScreenOptions
 }

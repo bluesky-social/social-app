@@ -8,7 +8,7 @@ import {useSession} from '#/state/session'
 import {useWizardState} from '#/screens/StarterPack/Wizard/State'
 import {atoms as a, useTheme} from '#/alf'
 import * as TextField from '#/components/forms/TextField'
-import {StarterPack} from '#/components/icons/StarterPack'
+import {StarterPackMultiPathLarge as StarterPackIcon} from '#/components/icons/StarterPack'
 import {ScreenTransition} from '#/components/ScreenTransition'
 import {Text} from '#/components/Typography'
 
@@ -29,7 +29,7 @@ export function StepDetails() {
     <ScreenTransition direction={state.transitionDirection} enabledWeb>
       <View style={[a.px_xl, a.gap_xl, a.mt_4xl]}>
         <View style={[a.gap_md, a.align_center, a.px_md, a.mb_md]}>
-          <StarterPack width={90} gradient="sky" />
+          <StarterPackIcon width={90} gradient="sky" />
           <Text style={[a.font_semi_bold, a.text_3xl]}>
             <Trans>Invites, but personal</Trans>
           </Text>
@@ -41,12 +41,12 @@ export function StepDetails() {
         </View>
         <View>
           <TextField.LabelText>
-            <Trans>What do you want to call your starter pack?</Trans>
+            <Trans>What do you want to call your Starter Pack?</Trans>
           </TextField.LabelText>
           <TextField.Root>
             <TextField.Input
               label={
-                name ? _(msg`${name}'s starter pack`) : _(msg`My starter pack`)
+                name ? _(msg`${name}’s Starter Pack`) : _(msg`My Starter Pack`)
               }
               value={state.name}
               onChangeText={text => dispatch({type: 'SetName', name: text})}

@@ -1,0 +1,84 @@
+{
+  "id": "com.atproto.sync.listRepos",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "repos"
+          ],
+          "properties": {
+            "repos": {
+              "type": "array",
+              "items": {
+                "ref": "#repo",
+                "type": "ref"
+              }
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 500,
+            "maximum": 1000,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Enumerates all the DID, rev, and commit CID for all repos hosted by this service. Does not require auth; implemented by PDS and Relay."
+    },
+    "repo": {
+      "type": "object",
+      "required": [
+        "did",
+        "head",
+        "rev"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "rev": {
+          "type": "string",
+          "format": "tid"
+        },
+        "head": {
+          "type": "string",
+          "format": "cid",
+          "description": "Current repo commit CID"
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "description": "If active=false, this optional field indicates a possible reason for why the account is not active. If active=false and no status is supplied, then the host makes no claim for why the repository is no longer being hosted.",
+          "knownValues": [
+            "takendown",
+            "suspended",
+            "deleted",
+            "deactivated",
+            "desynchronized",
+            "throttled"
+          ]
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

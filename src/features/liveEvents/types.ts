@@ -21,7 +21,4 @@ export type LiveEventsWorkerResponse = {
 }
 
 export type LiveEventFeedMetricContext =
-  | 'explore'
-  | 'discover'
-  | 'sidebar'
-  | 'settings'
+  'explore' | 'discover' | 'sidebar' | 'settings'

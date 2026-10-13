@@ -1,13 +1,15 @@
 version: 2
 # Dependabot auto-update config.
 #
-# Cooldown (7 days) is the point of this config: it delays version-update
-# PRs until a newly-published version has aged. Supply-chain attacks like
+# npm and GitHub Actions use a 7-day cooldown so newly published versions age
+# before a PR opens. Supply-chain attacks like
 # the tanstack Shai-Hulud compromise (2026-05-11) live minutes-to-hours
 # before the registry yanks them; a 7-day cooldown keeps poisoned
 # versions out of our lockfiles.
 #
-# Security updates bypass cooldown and continue to flow immediately. See:
+# Security updates bypass cooldown and continue to flow immediately. Docker
+# uses a shorter 3-day operational-freshness policy and does not support
+# Dependabot security updates. See:
 # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/dependabot-options-reference#cooldown
 #
 # Auto-merge is deliberately NOT enabled. Every dependabot PR gets human
@@ -42,3 +44,24 @@ updates:
       actions:
         patterns: ["*"]
         update-types: [minor, patch]
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/Los_Angeles
+    cooldown:
+      default-days: 3
+    open-pull-requests-limit: 5
+    groups:
+      docker-base-images:
+        group-by: dependency-name
+        patterns: ["*"]
+    ignore:
+      # Node 24 remains the active LTS line. Revisit Node 26 after it enters
+      # LTS in October 2026: https://github.com/bluesky-social/social-app/issues/11480
+      - dependency-name: node
+        update-types:
+          - version-update:semver-major

@@ -1,11 +1,14 @@
 import {memo, useCallback, useEffect, useMemo, useReducer, useRef} from 'react'
 import {View} from 'react-native'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {
-  type AppBskyActorDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
-import {flip, offset, shift, size, useFloating} from '@floating-ui/react-dom'
+  autoUpdate,
+  flip,
+  offset,
+  shift,
+  size,
+  useFloating,
+} from '@floating-ui/react-dom'
 import {msg, plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {useNavigation} from '@react-navigation/native'
@@ -42,6 +45,7 @@ import {Text} from '#/components/Typography'
 import {IS_WEB_TOUCH_DEVICE} from '#/env'
 import {useActorStatus} from '#/features/liveNow'
 import {LiveStatus} from '#/features/liveNow/components/LiveStatusDialog'
+import {type app} from '#/lexicons'
 import {type ProfileHoverCardProps} from './types'
 
 const floatingMiddlewares = [
@@ -111,10 +115,6 @@ const HIDE_DURATION = 200
 
 export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
   const navigation = useNavigation<NavigationProp>()
-
-  const {refs, floatingStyles} = useFloating({
-    middleware: floatingMiddlewares,
-  })
 
   const [currentState, dispatch] = useReducer(
     // Tip: console.log(state, action) when debugging.
@@ -312,6 +312,12 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
     currentState.stage === 'might-hide' ||
     currentState.stage === 'hiding'
 
+  const {refs, floatingStyles, isPositioned} = useFloating({
+    open: isVisible,
+    middleware: floatingMiddlewares,
+    whileElementsMounted: autoUpdate,
+  })
+
   const animationStyle = {
     animation:
       currentState.stage === 'hiding'
@@ -321,11 +327,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
 
   return (
     <View
-      // @ts-ignore View is being used as div
       ref={refs.setReference}
       onPointerMove={onPointerMoveTarget}
       onPointerLeave={onPointerLeaveTarget}
-      // @ts-ignore web only prop
+      // @ts-expect-error web only prop
       onMouseUp={onPress}
       style={[a.flex_shrink, props.inline && a.inline]}>
       {props.children}
@@ -333,7 +338,10 @@ export function ProfileHoverCardInner(props: ProfileHoverCardProps) {
         <Portal>
           <div
             ref={refs.setFloating}
-            style={floatingStyles}
+            style={{
+              ...floatingStyles,
+              visibility: isPositioned ? 'visible' : 'hidden',
+            }}
             onPointerEnter={onPointerEnterCard}
             onPointerLeave={onPointerLeaveCard}>
             <div style={{willChange: 'transform', ...animationStyle}}>
@@ -418,7 +426,7 @@ function Inner({
   moderationOpts,
   hide,
 }: {
-  profile: AppBskyActorDefs.ProfileViewDetailed
+  profile: app.bsky.actor.defs.ProfileViewDetailed
   moderationOpts: ModerationOpts
   hide: () => void
 }) {

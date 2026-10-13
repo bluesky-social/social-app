@@ -1,7 +1,3 @@
-import {
-  type AppBskyActorDefs,
-  type AppBskyUnspeccedGetSuggestedOnboardingUsers,
-} from '@atproto/api'
 import {type QueryClient, useQuery} from '@tanstack/react-query'
 
 import {createBskyTopicsHeader} from '#/lib/api/feed/utils'
@@ -9,7 +5,8 @@ import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export type QueryProps = {
   category?: string | null
@@ -30,7 +27,7 @@ export const createGetSuggestedOnboardingUsersQueryKey = (
 ]
 
 export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
 
   return useQuery({
@@ -42,7 +39,8 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
 
       const overrideInterests = props.overrideInterests.join(',')
 
-      const {data} = await agent.app.bsky.unspecced.getSuggestedOnboardingUsers(
+      const data = await client.call(
+        app.bsky.unspecced.getSuggestedOnboardingUsers,
         {
           category: props.category ?? undefined,
           limit: props.limit || 10,
@@ -66,9 +64,9 @@ export function useGetSuggestedOnboardingUsersQuery(props: QueryProps) {
 export function* findAllProfilesInQueryData(
   queryClient: QueryClient,
   did: string,
-): Generator<AppBskyActorDefs.ProfileView, void> {
+): Generator<app.bsky.actor.defs.ProfileView, void> {
   const responses =
-    queryClient.getQueriesData<AppBskyUnspeccedGetSuggestedOnboardingUsers.OutputSchema>(
+    queryClient.getQueriesData<app.bsky.unspecced.getSuggestedOnboardingUsers.$OutputBody>(
       {
         queryKey: [getSuggestedOnboardingUsersQueryKeyRoot],
       },

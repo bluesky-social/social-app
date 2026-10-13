@@ -2,7 +2,7 @@ import {lazy} from 'react'
 import {View} from 'react-native'
 // @ts-expect-error missing types
 import QRCode from 'react-native-qrcode-styled'
-import type ViewShot from 'react-native-view-shot'
+import {type ViewShotRef} from 'react-native-view-shot'
 import {Image} from 'expo-image'
 import {LinearGradient} from 'expo-linear-gradient'
 
@@ -12,10 +12,7 @@ import {hexToRgb, rgbToHex} from '#/alf/util/colorGeneration'
 import {Text} from '#/components/Typography'
 import {type InviteThemeVariant} from '../themes'
 
-const LazyViewShot = lazy(
-  // @ts-expect-error dynamic import
-  () => import('react-native-view-shot/src/index'),
-)
+const LazyViewShot = lazy(() => import('react-native-view-shot'))
 
 const CARD_WIDTH = 278
 const CARD_GRADIENT_PADDING = 12
@@ -37,7 +34,7 @@ export function ThemedQrCard({
   shareUrl: string
   handle: string
   avatarUri?: string
-  captureRef: React.Ref<ViewShot>
+  captureRef: React.Ref<ViewShotRef>
 }) {
   const t = useTheme()
   return (

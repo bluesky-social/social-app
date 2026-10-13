@@ -1,10 +1,10 @@
 import {type StyleProp, type ViewStyle} from 'react-native'
-import {type AppBskyEmbedExternal} from '@atproto/api'
 
 import {atoms as a} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
 import {ExternalEmbed} from '#/components/Post/Embed/ExternalEmbed'
 import {JoinRequestEmbedBody} from '#/components/Post/Embed/JoinRequestEmbed'
+import {type app} from '#/lexicons'
 
 /**
  * Renders a chat invite link found in an `app.bsky.embed.external` embed (e.g.
@@ -18,7 +18,7 @@ export function ChatInviteEmbed({
   style,
 }: {
   code: string
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {
@@ -34,7 +34,7 @@ function ChatInviteEmbedBody({
   onOpen,
   style,
 }: {
-  link: AppBskyEmbedExternal.ViewExternal
+  link: app.bsky.embed.external.ViewExternal
   onOpen?: () => void
   style?: StyleProp<ViewStyle>
 }) {

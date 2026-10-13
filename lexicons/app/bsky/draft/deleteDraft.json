@@ -1,0 +1,26 @@
+{
+  "id": "app.bsky.draft.deleteDraft",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "id"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "format": "tid"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Deletes a draft by ID. Requires authentication."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

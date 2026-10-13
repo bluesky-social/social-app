@@ -115,7 +115,7 @@ export function SearchScreenShell({
   const {gtMobile} = useBreakpoints()
   const navigation = useNavigation<NavigationProp>()
   const route = useRoute()
-  const textInput = useRef<TextInput>(null)
+  const textInput = useRef<React.ComponentRef<typeof TextInput>>(null)
   const {t: l} = useLingui()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
@@ -575,7 +575,7 @@ export function SearchScreenShell({
           )}
           <View style={[a.px_lg, a.pt_sm, a.pb_sm, a.overflow_hidden]}>
             <View style={[a.gap_sm]}>
-              {query && !showAutocomplete && (
+              {!!query && !showAutocomplete && (
                 <DetectedLanguagesAdmonition
                   query={query}
                   filters={filters}

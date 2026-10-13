@@ -6,11 +6,13 @@ import {useMutation} from '@tanstack/react-query'
 
 import {logger} from '#/logger'
 import {Sentry} from '#/logger/sentry/lib'
+import {useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {useAnalytics} from '#/analytics'
 
 const MAX_FEEDBACK_LENGTH = 300
 
@@ -41,6 +43,8 @@ function BetaFeaturesFeedbackDialogInner({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
+  const ax = useAnalytics()
+  const {currentAccount} = useSession()
   const control = Dialog.useDialogContext()
 
   const [feedback, setFeedback] = useState('')
@@ -58,20 +62,16 @@ function BetaFeaturesFeedbackDialogInner({
         throw new Error('Sentry is disabled; feedback was not sent')
       }
       Sentry.captureFeedback(
-        {
-          message: feedback.trim(),
-        },
-        {
-          captureContext: {
-            contexts: {
-              betaFeatures: {keys: betaFeatureKeys},
-            },
-          },
-        },
+        {name: currentAccount?.handle, message: feedback.trim()},
+        {captureContext: {contexts: {betaFeatures: {keys: betaFeatureKeys}}}},
       )
       return Promise.resolve()
     },
     onSuccess: () => {
+      ax.metric('betaFeatures:feedback:submit', {
+        betaFeatureKeys,
+        feedbackLength: feedback.trim().length,
+      })
       control.close(() => {
         setFeedback('')
         Toast.show(l`Thanks for your feedback!`)

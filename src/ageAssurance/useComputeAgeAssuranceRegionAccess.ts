@@ -1,5 +1,5 @@
 import {useCallback} from 'react'
-import {computeAgeAssuranceRegionAccess} from '@atproto/api'
+import {computeAgeAssuranceRegionAccess} from '@bsky/sdk/utils'
 
 import {useAgeAssuranceServerDataContext} from '#/ageAssurance/data'
 import {logger} from '#/ageAssurance/logger'

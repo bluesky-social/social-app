@@ -1,6 +1,8 @@
-import {type AppBskyFeedDefs, type AtpAgent} from '@atproto/api'
+import {type Client} from '@atproto/lex'
+import {type AtUriString} from '@atproto/syntax'
 
 import {PROD_DEFAULT_FEED} from '#/lib/constants'
+import {type app} from '#/lexicons'
 import {CustomFeedAPI} from './custom'
 import {FollowingFeedAPI} from './following'
 import {type FeedAPI, type FeedAPIResponse} from './types'
@@ -13,7 +15,12 @@ import {type FeedAPI, type FeedAPIResponse} from './types'
 // we use this fallback marker post to drive this instead. see Feed.tsx
 // for the usage.
 // -prf
-export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
+/*
+ * A synthetic marker, not a real view: its `uri`/`did`/`indexedAt` are
+ * deliberately not well-formed, so the literal is asserted rather than branded.
+ * Only `post.uri` is ever read (see Feed.tsx).
+ */
+export const FALLBACK_MARKER_POST = {
   post: {
     uri: 'fallback-marker-post',
     cid: 'fake',
@@ -24,10 +31,10 @@ export const FALLBACK_MARKER_POST: AppBskyFeedDefs.FeedViewPost = {
     },
     indexedAt: new Date().toISOString(),
   },
-}
+} as unknown as app.bsky.feed.defs.FeedViewPost
 
 export class HomeFeedAPI implements FeedAPI {
-  agent: AtpAgent
+  client: Client
   following: FollowingFeedAPI
   discover: CustomFeedAPI
   usingDiscover = false
@@ -36,32 +43,32 @@ export class HomeFeedAPI implements FeedAPI {
 
   constructor({
     userInterests,
-    agent,
+    client,
   }: {
     userInterests?: string
-    agent: AtpAgent
+    client: Client
   }) {
-    this.agent = agent
-    this.following = new FollowingFeedAPI({agent})
+    this.client = client
+    this.following = new FollowingFeedAPI({client})
     this.discover = new CustomFeedAPI({
-      agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      client,
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot') as AtUriString},
     })
     this.userInterests = userInterests
   }
 
   reset() {
-    this.following = new FollowingFeedAPI({agent: this.agent})
+    this.following = new FollowingFeedAPI({client: this.client})
     this.discover = new CustomFeedAPI({
-      agent: this.agent,
-      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot')},
+      client: this.client,
+      feedParams: {feed: PROD_DEFAULT_FEED('whats-hot') as AtUriString},
       userInterests: this.userInterests,
     })
     this.usingDiscover = false
     this.itemCursor = 0
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
     if (this.usingDiscover) {
       return this.discover.peekLatest()
     }
@@ -80,7 +87,7 @@ export class HomeFeedAPI implements FeedAPI {
     }
 
     let returnCursor
-    let posts: AppBskyFeedDefs.FeedViewPost[] = []
+    let posts: app.bsky.feed.defs.FeedViewPost[] = []
 
     if (!this.usingDiscover) {
       const res = await this.following.fetch({cursor, limit})

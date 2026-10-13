@@ -13,7 +13,7 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
 import {GlassContainer} from 'expo-glass-effect'
 import {LinearGradient} from 'expo-linear-gradient'
-import {type $Typed, type ChatBskyConvoDefs} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 import {ScrollEdgeEffect} from '@bsky.app/expo-scroll-edge-effect'
 import {useLingui} from '@lingui/react/macro'
 import {countGraphemes} from 'unicode-segmenter/grapheme'
@@ -37,6 +37,7 @@ import {PaperPlaneVertical_Filled_Stroke2_Corner1_Rounded as PaperPlaneIcon} fro
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS, IS_NATIVE, IS_WEB} from '#/env'
+import {type chat} from '#/lexicons'
 import {type MessageEmbedState} from './MessageInputEmbed'
 
 const MIN_HEIGHT = 40
@@ -53,7 +54,7 @@ export function MessageComposer({
   onSendMessage: (
     message: string,
     embed?: MessageEmbedState,
-    replyTo?: $Typed<ChatBskyConvoDefs.MessageView>,
+    replyTo?: $Typed<chat.bsky.convo.defs.MessageView>,
   ) => void
   messageEmbed: MessageEmbedState | undefined
   setEmbed: (embedUrl: string | undefined) => void
@@ -62,7 +63,7 @@ export function MessageComposer({
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const {needsEmailVerification} = useEmail()
   const editable = !needsEmailVerification && !loading
   const {getDraft, clearDraft} = useMessageDraft()
@@ -103,13 +104,23 @@ export function MessageComposer({
   const submitDisabled =
     !editable || (!messageEmbed && text.trim().length === 0)
 
+  /*
+   * Guards against a second `onSubmit` firing (a fast double-tap, or a
+   * native double-dispatch of onPress) before React has re-rendered with
+   * the cleared input. `submitDisabled`/`text` are state, so they lag a
+   * frame behind the synchronous `.clear()` call below - a ref is needed
+   * to block re-entry within that window.
+   */
+  const isSubmittingRef = useRef(false)
+
   const onSubmit = (
     message: string,
     embed: MessageEmbedState | undefined,
-    replyTo: ChatBskyConvoDefs.MessageView | null,
+    replyTo: chat.bsky.convo.defs.MessageView | null,
   ) => {
     if (!editable) return
     if (!embed && message.trim() === '') return
+    if (isSubmittingRef.current) return
     const graphemeCount = countGraphemes(message)
     if (graphemeCount > MAX_DM_GRAPHEME_LENGTH) {
       Toast.show(
@@ -119,8 +130,9 @@ export function MessageComposer({
       return
     }
 
+    isSubmittingRef.current = true
     clearDraft()
-    playHaptic()
+    haptics.confirm()
     setEmbed(undefined)
     clearReply()
     composerInternalApiRef.current?.clear()
@@ -131,6 +143,7 @@ export function MessageComposer({
 
     // defer send by a frame so that the textinput resizes before we send the message
     requestAnimationFrame(() => {
+      isSubmittingRef.current = false
       onSendMessage(
         message,
         embed,
@@ -188,7 +201,7 @@ export function MessageComposer({
       <View
         collapsable={false}
         ref={native(
-          (node: View) =>
+          (node: React.ComponentRef<typeof View>) =>
             void composerInternalApiRef.current?.setAutocompleteAnchor(node),
         )}>
         <GlassContainer
@@ -208,7 +221,9 @@ export function MessageComposer({
                     composerInternalApiRef.current?.insert(emoji.native)
                   }
                   nextFocusRef={() =>
-                    composerInternalApiRef.current?.input?.element
+                    composerInternalApiRef.current?.input
+                      ?.element as unknown as
+                      {focus: () => void} | null | undefined
                   }>
                   <EmojiPicker.Trigger label={l`Open emoji picker`}>
                     {({props, state, control}) => (

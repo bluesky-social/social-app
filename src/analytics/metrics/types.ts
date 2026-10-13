@@ -5,10 +5,7 @@
 import {type Platform} from 'react-native'
 
 import {type NotificationReason} from '#/lib/hooks/useNotificationHandler'
-import {
-  type VideoCompressSkipReason,
-  type VideoUploadTransport,
-} from '#/lib/media/video/types'
+import {type VideoCompressSkipReason} from '#/lib/media/video/types'
 import {type NotificationType} from '#/state/queries/notifications/types'
 import {type FeedDescriptor} from '#/state/queries/post-feed'
 import {type LiveEventFeedMetricContext} from '#/features/liveEvents/types'
@@ -47,6 +44,7 @@ export type Events = {
       | 'SignupQueued'
       | 'Deactivated'
       | 'Takendown'
+      | 'AgeAssuranceDataUnavailableScreen'
       | 'AgeAssuranceNoAccessScreen'
     scope: 'current' | 'every'
   }
@@ -62,17 +60,36 @@ export type Events = {
     notificationType: NotificationType
     authorCount: number
   }
-  'state:background': {
-    secondsActive: number
-  }
+  'state:background': {}
   'state:foreground': {}
   'router:navigate': {
     from?: string
+  }
+  'web:list:size': {
+    itemCount: number
+    renderedRowCount: number
+    contentHeight: number
+    sessionAgeMs: number
+    milestone: 100 | 250 | 500 | 1000
+    heapUsedBytes?: number
+    heapLimitBytes?: number
+  }
+  'web:list:longTasks': {
+    itemCount: number
+    renderedRowCount: number
+    taskCount: number
+    totalDurationMs: number
+    maxDurationMs: number
+    intervalMs: number
+    sessionAgeMs: number
+    heapUsedBytes?: number
+    heapLimitBytes?: number
   }
   'nav:click': {
     item:
       | 'home'
       | 'search'
+      | 'atmosphere'
       | 'chat'
       | 'notifications'
       | 'profile'
@@ -105,8 +122,20 @@ export type Events = {
     activeStep: number
   }
   'signup:captchaSuccess': {}
-  'signup:captchaFailure': {}
-  'signup:captchaBackPress': {}
+  'signup:captchaFailure': {
+    reason: 'state-mismatch' | 'webview-error' | 'http-error'
+    host?: string
+    statusCode?: number
+  }
+  'signup:captchaSlow': {}
+  'signup:captchaBlockedLoad': {
+    host: string
+    isTopFrame: boolean
+  }
+  'signup:captchaBackPress': {
+    phase?: 'attesting' | 'challenge'
+  }
+  'signup:attestTimeout': {}
   'signup:createAccountFailure': {
     reason: string
   }
@@ -143,6 +172,7 @@ export type Events = {
     selectedInterests: string[]
     selectedInterestsLength: number
   }
+  'onboarding:interests:disabledNextPressed': {}
   'onboarding:suggestedAccounts:tabPressed': {
     tab: string
   }
@@ -197,18 +227,54 @@ export type Events = {
     feedType: string
     reason: 'pull-to-refresh' | 'soft-reset' | 'load-latest'
   }
-  'feed:save': {
-    feedUrl: string
-  }
-  'feed:unsave': {
-    feedUrl: string
-  }
-  'feed:pin': {
-    feedUrl: string
-  }
-  'feed:unpin': {
-    feedUrl: string
-  }
+  'feed:save': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:unsave': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:pin': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
+  'feed:unpin': {feedUrl: string} & (
+    | {
+        logContext?: never
+        recId?: never
+        position?: never
+      }
+    | {
+        logContext: 'Explore'
+        recId: string
+        position: number
+      }
+  )
   'feed:like': {
     feedUrl: string
   }
@@ -220,9 +286,15 @@ export type Events = {
   }
   'feed:suggestion:seen': {
     feedUrl: string
+    logContext: 'Explore'
+    recId?: string
+    position: number
   }
   'feed:suggestion:press': {
     feedUrl: string
+    logContext: 'Explore'
+    recId?: string
+    position: number
   }
   'post:showMore': {
     uri: string
@@ -275,12 +347,7 @@ export type Events = {
   }
   'composer:open': {
     logContext:
-      | 'Fab'
-      | 'PostReply'
-      | 'QuotePost'
-      | 'ProfileFeed'
-      | 'Deeplink'
-      | 'Other'
+      'Fab' | 'PostReply' | 'QuotePost' | 'ProfileFeed' | 'Deeplink' | 'Other'
     isReply: boolean
     hasQuote: boolean
     hasDraft: boolean
@@ -434,9 +501,14 @@ export type Events = {
     feedDescriptor?: string
     position?: number
   }
+  'post:quotes:view': {
+    uri: string
+    quoteSort: 'top' | 'latest'
+  }
   'post:view': {
     uri: string
     authorDid: string
+    isReply: boolean
     logContext:
       | 'FeedItem'
       | 'PostThreadItem'
@@ -448,6 +520,7 @@ export type Events = {
       | 'Hashtag'
       | 'Topic'
       | 'PostQuotes'
+    quoteSort?: 'top' | 'latest'
     feedDescriptor?: string
     position?: number
   }
@@ -509,6 +582,8 @@ export type Events = {
   }
   'profile:mute': {}
   'profile:unmute': {}
+  'profile:muteReposts': {}
+  'profile:unmuteReposts': {}
   'profile:block': {}
   'profile:unblock': {}
   'suggestedUser:follow': {
@@ -593,10 +668,7 @@ export type Events = {
   }
   'chat:create': {
     logContext:
-      | 'ProfileHeader'
-      | 'NewChatDialog'
-      | 'SendViaChatDialog'
-      | 'ConvoSettings'
+      'ProfileHeader' | 'NewChatDialog' | 'SendViaChatDialog' | 'ConvoSettings'
   }
   'chat:open': {
     logContext:
@@ -691,6 +763,7 @@ export type Events = {
   }
   'starterPack:removeUser': {
     starterPack?: string
+    context?: 'opt-out'
   }
   'starterPack:share': {
     starterPack: string
@@ -701,8 +774,26 @@ export type Events = {
     logContext: 'StarterPackProfilesList' | 'Onboarding'
     starterPack: string
     count: number
+    recId?: string
+    position?: number
+  }
+  'starterPack:suggestion:seen': {
+    logContext: 'Explore' | 'Onboarding'
+    starterPack: string
+    recId: string
+    position: number
+  }
+  'starterPack:suggestion:press': {
+    logContext: 'Explore'
+    starterPack: string
+    recId: string
+    position: number
   }
   'starterPack:delete': {}
+  'starterPack:optOut': {
+    starterPack: string
+    action: 'optOut' | 'undo'
+  }
   'starterPack:create': {
     setName: boolean
     setDescription: boolean
@@ -755,12 +846,14 @@ export type Events = {
   }
   'trendingTopic:seen': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
   }
   'trendingTopic:click': {
     context: 'sidebar' | 'interstitial' | 'explore'
+    feedUri?: string
     recId?: string
     rank: number
     feedSliceIndex?: number
@@ -854,6 +947,7 @@ export type Events = {
     reason: string
     labeler: string
     details: boolean
+    videoTimestamp: boolean
   }
   'reportDialog:failure': {}
 
@@ -1078,6 +1172,8 @@ export type Events = {
 
   'bot:label:toggle': {state: 'add' | 'remove'}
   'bot:badge:click': {}
+
+  'contentVisibility:algorithmicRecommendations:change': {hide: boolean}
 
   'live:create': {duration: number}
   'live:edit': {}
@@ -1336,10 +1432,7 @@ export type Events = {
   // invite friends dialog opened, with the surface that triggered it
   'invite:dialog:open': {
     logContext:
-      | 'ProfileHeader'
-      | 'Drawer'
-      | 'FindContactsSettings'
-      | 'NuxAnnouncement'
+      'ProfileHeader' | 'Drawer' | 'FindContactsSettings' | 'NuxAnnouncement'
   }
   // user copied the invite link to clipboard
   'invite:action:copy': {}
@@ -1384,10 +1477,45 @@ export type Events = {
     playlist: string
   }
 
+  /**
+   * The playable video was meaningfully visible. This is an exposure event,
+   * not proof that playback started. Fires once per mounted video item.
+   */
+  'video:impression': {
+    postUri?: string
+    postAuthorDid?: string
+    context: 'embed' | 'immersiveFeed'
+    presentation: 'video' | 'gif'
+  }
+  /**
+   * Playback advanced far enough to render the first frame. Preloading and
+   * merely becoming active do not count. Fires once per mounted video item;
+   * automatic loops do not produce another event.
+   */
+  'video:playback:start': {
+    postUri?: string
+    postAuthorDid?: string
+    context: 'embed' | 'immersiveFeed'
+    presentation: 'video' | 'gif'
+    autoplay: boolean
+  }
+  /**
+   * The user activated a third-party media player. Cross-origin players do
+   * not expose confirmed playback consistently, so this must not be treated
+   * as equivalent to video:playback:start without an explicit methodology.
+   */
+  'externalEmbed:playerActivated': {
+    postUri?: string
+    postAuthorDid?: string
+    source: string
+    playerType: string
+    mediaType: 'video' | 'audio' | 'gif' | 'other'
+  }
+
   // === Video upload funnel (Frontend Spec section D) ===
   // Every event carries uploadId (client-generated UUID, ties one upload
   // session end-to-end) + engine (compression engine id, e.g.
-  // native:react-native-compressor@1.13.0). jobId is added once the server
+  // native:@bsky.app/video-compressor@0.2.0). jobId is added once the server
   // returns it. Sizes / codecs / dimensions / timings only - never content.
   'video:upload:picked': {
     uploadId: string
@@ -1406,7 +1534,7 @@ export type Events = {
   // Native-only. Raw container metadata returned by the new module's probe()
   // (bitrate, codec, HDR, frame rate, rotation, etc.). Fires once per upload
   // between compressStarted and the compressSkipped/compressCompleted decision.
-  // The web (mediabunny) and legacy rn-compressor engines do not surface this.
+  // The web mediabunny engine also emits this from its own probe.
   'video:upload:probed': {
     uploadId: string
     engine: string
@@ -1458,7 +1586,6 @@ export type Events = {
     bytes: number
     elapsedMs: number
     throughputBytesPerSec: number
-    transport: VideoUploadTransport
   }
   'video:upload:uploadFailed': {
     uploadId: string
@@ -1466,7 +1593,6 @@ export type Events = {
     bytes: number
     errorClass: string
     elapsedMs: number
-    transport: VideoUploadTransport
   }
   'video:upload:processingStarted': {
     uploadId: string
@@ -1503,4 +1629,25 @@ export type Events = {
   }
 
   'post:likedBy:click': {}
+
+  /*
+   * Beta features settings screen
+   */
+
+  // user toggled "Enable beta features"; fired only after the preference
+  // write succeeds
+  'betaFeatures:toggle': {
+    enabled: boolean
+    /** Gate keys of beta features active for this user at toggle time */
+    betaFeatureKeys: string[]
+  }
+  // user pressed the "Share feedback" button, opening the dialog
+  'betaFeatures:feedback:open': {
+    betaFeatureKeys: string[]
+  }
+  // user submitted feedback and it was sent successfully
+  'betaFeatures:feedback:submit': {
+    betaFeatureKeys: string[]
+    feedbackLength: number
+  }
 }

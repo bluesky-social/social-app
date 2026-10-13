@@ -10,6 +10,7 @@ import {
   type EmbedPlayerParams,
   parseEmbedPlayerFromUrl,
 } from '#/lib/strings/embed-player'
+import {enforceLen} from '#/lib/strings/helpers'
 import {useResolveGifQuery} from '#/state/queries/resolve-link'
 import {AltTextCounterWrapper} from '#/view/com/composer/AltTextCounterWrapper'
 import {atoms as a, useTheme} from '#/alf'
@@ -111,7 +112,7 @@ export function GifAltTextDialogLoaded({
       <Dialog.Outer
         control={control}
         onClose={() => {
-          onSubmit(altTextDraft)
+          onSubmit(enforceLen(altTextDraft, MAX_ALT_TEXT, true))
         }}
         nativeOptions={{fullHeight: true}}>
         <Dialog.Handle />
@@ -160,9 +161,10 @@ function AltTextInner({
                   label={_(msg`Alt text`)}
                   placeholder={vendorAltText}
                   onChangeText={onChange}
-                  defaultValue={altText}
+                  value={altText}
                   multiline
                   autoFocus
+                  scrollEnabled={false}
                   onKeyPress={({nativeEvent}) => {
                     if (nativeEvent.key === 'Escape') {
                       control.close()
@@ -221,6 +223,7 @@ function AltTextInner({
             isPreferredAltText={true}
             params={params}
             hideAlt
+            minMobileAspectRatio={1}
           />
         </View>
       </View>

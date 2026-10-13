@@ -18,15 +18,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {
-  type AppBskyActorDefs,
-  AppBskyEmbedExternal,
-  AppBskyEmbedGallery,
-  AppBskyEmbedImages,
-  AppBskyEmbedVideo,
-  type AppBskyFeedDefs,
-  type RichText as RichTextType,
-} from '@atproto/api'
+import {type RichText as RichTextType} from '@bsky/sdk/richtext'
 import {useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
@@ -70,7 +62,6 @@ import {
   PostFeedVideoGridRowPlaceholder,
 } from '#/components/feeds/PostFeedVideoGridRow'
 import {FeedTrendingTopicsInterstitial} from '#/components/interstitials/FeedTrendingTopics'
-import {TrendingInterstitial} from '#/components/interstitials/Trending'
 import {TrendingVideos as TrendingVideosInterstitial} from '#/components/interstitials/TrendingVideos'
 import {isStandardSiteEmbed} from '#/components/Post/Embed/StandardSiteEmbed/utils'
 import {RichText} from '#/components/RichText'
@@ -82,6 +73,8 @@ import {
   isStatusValidForViewers,
   useLiveNowConfig,
 } from '#/features/liveNow'
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {ComposerPrompt} from '../feeds/ComposerPrompt'
 import {DiscoverFallbackHeader} from './DiscoverFallbackHeader'
 import {FeedShutdownMsg} from './FeedShutdownMsg'
@@ -150,10 +143,6 @@ type FeedRow =
     }
   | {
       type: 'interstitialProgressGuide'
-      key: string
-    }
-  | {
-      type: 'interstitialTrending'
       key: string
     }
   | {
@@ -256,7 +245,7 @@ let PostFeed = ({
   desktopFixedHeightOffset?: number
   ListHeaderComponent?: () => React.ReactElement
   extraData?: Record<string, unknown>
-  savedFeedConfig?: AppBskyActorDefs.SavedFeed
+  savedFeedConfig?: app.bsky.actor.defs.SavedFeed
   initialNumToRender?: number
   isVideoFeed?: boolean
   lastFetchDate?: () => number
@@ -290,7 +279,7 @@ let PostFeed = ({
     () => new Set<string>(),
   )
   const onPressShowLess = useCallback(
-    (interaction: AppBskyFeedDefs.Interaction) => {
+    (interaction: app.bsky.feed.defs.Interaction) => {
       if (interaction.item) {
         const uri = interaction.item
         setHasPressedShowLessUris(prev => new Set([...prev, uri]))
@@ -492,7 +481,7 @@ let PostFeed = ({
               )
               if (
                 item &&
-                AppBskyEmbedVideo.isView(item.post.embed) &&
+                bsky.isType(app.bsky.embed.video.view, item.post.embed) &&
                 !blockedOrMutedAuthors.includes(item.post.author.did)
               ) {
                 videos.push({
@@ -763,7 +752,9 @@ let PostFeed = ({
     })
     try {
       await truncateAndInvalidate(queryClient, RQKEY(feed, feedParams))
-      onHasNew?.(false)
+      if (onHasNew) {
+        onHasNew(false)
+      }
     } catch (err) {
       logger.error('Failed to refresh posts feed', {message: err})
     }
@@ -857,8 +848,6 @@ let PostFeed = ({
         return <ProgressGuide />
       } else if (row.type === 'ageAssuranceBanner') {
         return <AgeAssuranceDismissibleFeedBanner />
-      } else if (row.type === 'interstitialTrending') {
-        return <TrendingInterstitial />
       } else if (row.type === 'interstitialFeedTrendingTopics') {
         return (
           <FeedTrendingTopicsInterstitial feedSliceIndex={row.feedSliceIndex} />
@@ -883,6 +872,7 @@ let PostFeed = ({
           <PostFeedItem
             post={item.post}
             record={item.record}
+            postNumbering={item.postNumbering}
             reason={indexInSlice === 0 ? slice.reason : undefined}
             feedContext={slice.feedContext}
             reqId={slice.reqId}
@@ -1030,13 +1020,13 @@ let PostFeed = ({
 
       // Events that should fire exactly once for every new post, regardless of
       // its position within a slice or video grid row.
-      const onPostSeen = (post: AppBskyFeedDefs.PostView) => {
+      const onPostSeen = (post: app.bsky.feed.defs.PostView) => {
         if (seenPerPostUrisRef.current.has(post.uri)) return
         seenPerPostUrisRef.current.add(post.uri)
 
         // Standard site embed view tracking
         if (
-          AppBskyEmbedExternal.isView(post.embed) &&
+          bsky.isType(app.bsky.embed.external.view, post.embed) &&
           isStandardSiteEmbed(post.embed.external)
         ) {
           ax.metric('embed:standardSite:view', {url: post.embed.external.uri})
@@ -1044,13 +1034,21 @@ let PostFeed = ({
 
         // Photo embed impression tracking
         if (
-          AppBskyEmbedImages.isView(post.embed) ||
-          AppBskyEmbedGallery.isView(post.embed)
+          bsky.isType(app.bsky.embed.images.view, post.embed) ||
+          bsky.isType(app.bsky.embed.gallery.view, post.embed)
         ) {
-          const totalImages = AppBskyEmbedGallery.isView(post.embed)
-            ? post.embed.items.filter(AppBskyEmbedGallery.isViewImage).length
+          const totalImages = bsky.isType(
+            app.bsky.embed.gallery.view,
+            post.embed,
+          )
+            ? post.embed.items.filter(item =>
+                bsky.isType(app.bsky.embed.gallery.viewImage, item),
+              ).length
             : post.embed.images.length
-          const useExpandedLayout = AppBskyEmbedGallery.isView(post.embed)
+          const useExpandedLayout = bsky.isType(
+            app.bsky.embed.gallery.view,
+            post.embed,
+          )
             ? totalImages > 4
             : ax.features.enabled(ax.features.PostGalleryEmbedEnable)
           const layout =
@@ -1079,15 +1077,22 @@ let PostFeed = ({
 
         onPostSeen(post)
 
-        // Only track the root post of each slice (index 0) to avoid double-counting thread items
-        if (indexInSlice === 0 && !seenPostUrisRef.current.has(post.uri)) {
+        // Track the post selected by the feed once it is actually visible.
+        if (
+          post.uri === slice.feedPostUri &&
+          !seenPostUrisRef.current.has(post.uri)
+        ) {
           seenPostUrisRef.current.add(post.uri)
 
-          const position = getPostPosition('sliceItem', item.key)
+          const position = getPostPosition(
+            'sliceItem',
+            slice.items[0]._reactKey,
+          )
 
           ax.metric('post:view', {
             uri: post.uri,
             authorDid: post.author.did,
+            isReply: !!postItem.record.reply,
             logContext: 'FeedItem',
             feedDescriptor: feedFeedback.feedDescriptor || feed,
             position,
@@ -1123,6 +1128,7 @@ let PostFeed = ({
             ax.metric('post:view', {
               uri: post.uri,
               authorDid: post.author.did,
+              isReply: !!postItem.record.reply,
               logContext: 'FeedItem',
               feedDescriptor: feedFeedback.feedDescriptor || feed,
               position,

@@ -1,0 +1,39 @@
+{
+  "id": "app.bsky.graph.getStarterPack",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "starterPack"
+          ],
+          "properties": {
+            "starterPack": {
+              "ref": "app.bsky.graph.defs#starterPackView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "starterPack"
+        ],
+        "properties": {
+          "starterPack": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference (AT-URI) of the starter pack record."
+          }
+        }
+      },
+      "description": "Gets a view of a starter pack."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

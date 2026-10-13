@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useMemo, useRef, useState} from 'react'
 import {View} from 'react-native'
-import {type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,7 +14,7 @@ import {logger} from '#/logger'
 import {updateProfileShadow} from '#/state/cache/profile-shadow'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useAgent, useSession} from '#/state/session'
+import {useAppviewClient, usePdsClient, useSession} from '#/state/session'
 import {
   OnboardingControls,
   OnboardingPosition,
@@ -42,7 +42,8 @@ export function StepSuggestedAccounts() {
   const t = useTheme()
   const {gtMobile} = useBreakpoints()
   const moderationOpts = useModerationOpts()
-  const agent = useAgent()
+  const appviewClient = useAppviewClient()
+  const pdsClient = usePdsClient()
   const {currentAccount} = useSession()
   const queryClient = useQueryClient()
 
@@ -119,7 +120,10 @@ export function StepSuggestedAccounts() {
           followingUri: 'pending',
         })
       }
-      const uris = await wait(1e3, bulkWriteFollows(agent, followableDids))
+      const uris = await wait(
+        1e3,
+        bulkWriteFollows(pdsClient, appviewClient, followableDids),
+      )
       for (const did of followableDids) {
         const uri = uris.get(did)
         updateProfileShadow(queryClient, did, {
@@ -374,7 +378,7 @@ function SuggestedProfileCard({
 }) {
   const t = useTheme()
   const ax = useAnalytics()
-  const cardRef = useRef<View>(null)
+  const cardRef = useRef<React.ComponentRef<typeof View>>(null)
   const hasTrackedRef = useRef(false)
 
   useEffect(() => {
@@ -392,7 +396,7 @@ function SuggestedProfileCard({
         },
         {threshold: 0.5},
       )
-      // @ts-ignore - web only
+      // @ts-expect-error - web only
       observer.observe(node)
       return () => observer.disconnect()
     } else {

@@ -1,0 +1,57 @@
+{
+  "id": "chat.bsky.convo.getConvoMembers",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "members"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "ref": "chat.bsky.actor.defs#profileViewBasic",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "convoId"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "convoId": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Returns a paginated list of members from a conversation."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

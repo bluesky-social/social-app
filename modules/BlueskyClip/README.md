@@ -85,7 +85,7 @@ The App Clip target is automatically configured via Expo config plugins located 
 
 ### Build Settings
 
-- Deployment target: iOS 15.1+
+- Deployment target: iOS 16.4+
 - Bundle ID: `[main-app-bundle-id].AppClip`
 - Product type: `com.apple.product-type.application.on-demand-install-capable`
 - Development team: `B3LX46C5HS`

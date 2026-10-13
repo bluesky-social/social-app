@@ -7,7 +7,13 @@ import {
 import {UITextView} from '@bsky.app/react-native-uitextview'
 import createEmojiRegex from 'emoji-regex'
 
-import {type Alf, applyFonts, atoms, flatten} from '#/alf'
+import {
+  type Alf,
+  applyFonts,
+  atoms,
+  flatten,
+  type MutableTextStyle,
+} from '#/alf'
 import {IS_IOS, IS_NATIVE} from '#/env'
 
 /**
@@ -27,7 +33,7 @@ export function normalizeTextStyles(
     fontFamily: Alf['fonts']['family']
   } & Pick<Alf, 'flags'>,
 ) {
-  const s = flatten(styles) ?? {}
+  const s: MutableTextStyle = {...flatten(styles)}
 
   // should always be defined on these components
   s.fontSize = (s.fontSize || atoms.text_md.fontSize) * fontScale

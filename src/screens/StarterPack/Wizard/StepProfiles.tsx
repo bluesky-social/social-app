@@ -1,7 +1,7 @@
 import {useState} from 'react'
 import {type ListRenderItemInfo, View} from 'react-native'
 import {KeyboardAwareScrollView} from 'react-native-keyboard-controller'
-import {type ModerationOpts} from '@atproto/api'
+import {type ModerationOpts} from '@bsky/sdk/moderation'
 import {Trans} from '@lingui/react/macro'
 
 import {useA11y} from '#/state/a11y'
@@ -24,8 +24,10 @@ function keyExtractor(item: bsky.profile.AnyProfileView) {
 
 export function StepProfiles({
   moderationOpts,
+  optedOutDids,
 }: {
   moderationOpts: ModerationOpts
+  optedOutDids: Set<string>
 }) {
   const t = useTheme()
   const [state, dispatch] = useWizardState()
@@ -59,6 +61,7 @@ export function StepProfiles({
         state={state}
         dispatch={dispatch}
         moderationOpts={moderationOpts}
+        subjectOptedOut={optedOutDids.has(item.did)}
       />
     )
   }

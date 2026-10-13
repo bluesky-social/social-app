@@ -1,28 +1,41 @@
-import {
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type AppBskyNotificationListNotifications,
-} from '@atproto/api'
+import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
+import {type app} from '#/lexicons'
+
+export type Notification = app.bsky.notification.listNotifications.Notification
 
 export type NotificationType =
-  | StarterPackNotificationType
-  | OtherNotificationType
+  StarterPackNotificationType | OtherNotificationType
 
 export type FeedNotification =
   | (FeedNotificationBase & {
       type: StarterPackNotificationType
-      subject?: AppBskyGraphDefs.StarterPackViewBasic
+      subject?: app.bsky.graph.defs.StarterPackViewBasic
     })
   | (FeedNotificationBase & {
       type: OtherNotificationType
-      subject?: AppBskyFeedDefs.PostView
+      subject?: app.bsky.feed.defs.PostView
     })
 
 export interface FeedPage {
   cursor: string | undefined
   seenAt: Date
   items: FeedNotification[]
-  priority: boolean
+}
+
+/**
+ * What the last unread check found, for the Notifications v2 "Refresh" pill.
+ */
+export interface UnreadCheck {
+  /**
+   * When the check asked the server, in ms since the epoch.
+   */
+  requestedAt: number
+  /**
+   * For each grouped notifications feed, when the newest unread notification
+   * the check found for it was indexed, in ms since the epoch, or undefined
+   * if it found none.
+   */
+  newestUnreadAt: Record<GroupedNotificationsFeed, number | undefined>
 }
 
 export interface CachedFeedPage {
@@ -54,8 +67,9 @@ type OtherNotificationType =
 
 type FeedNotificationBase = {
   _reactKey: string
-  notification: AppBskyNotificationListNotifications.Notification
-  additional?: AppBskyNotificationListNotifications.Notification[]
+  notification: Notification
+  additional?: Notification[]
   subjectUri?: string
-  subject?: AppBskyFeedDefs.PostView | AppBskyGraphDefs.StarterPackViewBasic
+  subject?:
+    app.bsky.feed.defs.PostView | app.bsky.graph.defs.StarterPackViewBasic
 }

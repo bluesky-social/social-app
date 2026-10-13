@@ -35,7 +35,7 @@ export function GrowableBanner({
   backButton?: React.ReactNode
   children: React.ReactNode
   onPress?: () => void
-  bannerRef?: AnimatedRef<Animated.View>
+  bannerRef?: AnimatedRef
   testID?: string
   label?: string
 }) {
@@ -87,7 +87,7 @@ function GrowableBannerInner({
   backButton?: React.ReactNode
   children: React.ReactNode
   onPress?: () => void
-  bannerRef?: AnimatedRef<Animated.View>
+  bannerRef?: AnimatedRef
   testID?: string
   label?: string
 }) {
@@ -229,7 +229,6 @@ function useShouldAnimateSpinner({
         scheduleOnRN(setIsOverscrolled, value)
       }
     },
-    [scrollY],
   )
 
   const [isAnimating, setIsAnimating] = useState(isFetching)

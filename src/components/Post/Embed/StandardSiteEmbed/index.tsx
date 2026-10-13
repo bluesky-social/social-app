@@ -1,6 +1,6 @@
 import {type StyleProp, View, type ViewStyle} from 'react-native'
 import {Image} from 'expo-image'
-import {AtUri} from '@atproto/api'
+import {AtUri} from '@atproto/syntax'
 import {plural} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react/macro'
 
@@ -44,7 +44,7 @@ export const StandardSiteEmbed = ({
   const ax = useAnalytics()
   const {t: l, i18n} = useLingui()
   const t = useTheme()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
   const niceUrl = toNiceDomain(view.uri)
   const imageUri = view.thumb
   const hasMedia = Boolean(imageUri)
@@ -76,21 +76,21 @@ export const StandardSiteEmbed = ({
     onOut: onInteractOut,
   } = useInteractionState()
   const onPress = () => {
-    playHaptic('Light')
+    haptics.tap()
     onEmbedInteractionCallback?.()
     ax.metric('embed:standardSite:article:press', {url: view.uri})
   }
   const onLongPress = IS_NATIVE
     ? () => {
         if (view.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(view.uri)
           ax.metric('embed:standardSite:article:longPress', {url: view.uri})
         }
       }
     : undefined
   const onPressPublication = () => {
-    playHaptic('Light')
+    haptics.tap()
     onEmbedInteractionCallback?.()
     ax.metric('embed:standardSite:publication:press', {
       url: view.source?.uri || '',
@@ -99,7 +99,7 @@ export const StandardSiteEmbed = ({
   const onLongPressPublication = IS_NATIVE
     ? () => {
         if (view.source?.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(view.source.uri)
           ax.metric('embed:standardSite:publication:longPress', {
             url: view.source.uri,
@@ -129,7 +129,6 @@ export const StandardSiteEmbed = ({
         a.rounded_lg,
         a.w_full,
         a.border,
-        t.atoms.bg,
         interacted ? t.atoms.border_contrast_high : t.atoms.border_contrast_low,
         preview && a.pointer_events_none,
         style,
@@ -154,7 +153,7 @@ export const StandardSiteEmbed = ({
         })}
         onFocus={onInteract}
         onBlur={onInteractOut}>
-        {() => (
+        {({pressed}) => (
           <View
             style={[
               a.w_full,
@@ -171,7 +170,7 @@ export const StandardSiteEmbed = ({
                 borderBottomLeftRadius: a.rounded_lg.borderRadius,
                 borderBottomRightRadius: a.rounded_lg.borderRadius,
               },
-              interacted ? t.atoms.bg_contrast_25 : t.atoms.bg,
+              interacted ? t.atoms.bg_contrast_25 : pressed && t.atoms.bg,
             ]}>
             {imageUri ? (
               <Image
@@ -440,7 +439,7 @@ export function SubscribeButton({
   }) {
   const ax = useAnalytics()
   const {t: l} = useLingui()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const highlightedPublisher = matchStandardSitePublisher(view)
   const cta = highlightedPublisher
@@ -479,7 +478,7 @@ export function SubscribeButton({
       : l`View publication`
 
   const onPress = () => {
-    playHaptic('Light')
+    haptics.tap()
     onEmbedInteractionCallback?.()
     if (highlightedPublisher) {
       ax.metric('embed:standardSite:subscribe:press', {
@@ -495,7 +494,7 @@ export function SubscribeButton({
   const onLongPress = IS_NATIVE
     ? () => {
         if (view.source?.uri) {
-          playHaptic('Heavy')
+          haptics.longPress()
           void shareUrl(view.source.uri)
           if (highlightedPublisher) {
             ax.metric('embed:standardSite:subscribe:longPress', {

@@ -1,9 +1,10 @@
+import {isDidString} from '@atproto/lex'
+import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {z} from 'zod'
 
 import {deviceLanguageCodes, deviceLocales} from '#/locale/deviceLocales'
 import {findSupportedAppLanguage} from '#/locale/helpers'
 import {logger} from '#/logger'
-import {PlatformInfo} from '../../../modules/expo-bluesky-swiss-army'
 
 const externalEmbedOptions = ['show', 'hide'] as const
 
@@ -13,7 +14,17 @@ const externalEmbedOptions = ['show', 'hide'] as const
  */
 const accountSchema = z.object({
   service: z.string(),
-  did: z.string(),
+  /**
+   * Genuinely validated, not just branded: the refinement rejects malformed
+   * values at runtime and narrows the inferred type to `DidString`.
+   *
+   * Weigh any further tightening of this field carefully. One failing field
+   * fails the whole root schema, and {@link tryParse} then discards the ENTIRE
+   * persisted state - every account and every preference - so the app boots
+   * logged out with defaults. Persisted dids come from com.atproto.server
+   * responses and are always canonical, so this particular check is safe.
+   */
+  did: z.string().refine(isDidString),
   handle: z.string(),
   email: z.string().optional(),
   emailConfirmed: z.boolean().optional(),
@@ -108,6 +119,7 @@ const schema = z.object({
       soundcloud: z.enum(externalEmbedOptions).optional(),
       flickr: z.enum(externalEmbedOptions).optional(),
       bandcamp: z.enum(externalEmbedOptions).optional(),
+      freemix: z.enum(externalEmbedOptions).optional(),
     })
     .optional(),
   invites: z.object({
@@ -198,7 +210,7 @@ export function tryParse(rawData: string): Schema | undefined {
     const errors =
       parsed.error?.errors?.map(e => ({
         code: e.code,
-        // @ts-ignore exists on some types
+        // @ts-expect-error exists on some types
         expected: e?.expected,
         path: e.path?.join('.'),
       })) || []

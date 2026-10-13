@@ -1,13 +1,9 @@
-import {
-  type AppBskyLabelerDefs,
-  ToolsOzoneReportDefs as OzoneReportDefs,
-} from '@atproto/api'
-
 import {OTHER_REPORT_REASONS} from '#/components/moderation/ReportDialog/const'
 import {
   type ReportCategoryConfig,
   type ReportOption,
 } from '#/components/moderation/ReportDialog/utils/useReportOptions'
+import {type app, tools} from '#/lexicons'
 
 export type NciiQualification = {
   isDepicted?: boolean
@@ -16,11 +12,16 @@ export type NciiQualification = {
 export type ReportState = {
   selectedCategory?: ReportCategoryConfig
   selectedOption?: ReportOption
-  selectedLabeler?: AppBskyLabelerDefs.LabelerViewDetailed
+  selectedLabeler?: app.bsky.labeler.defs.LabelerViewDetailed
   details?: string
   detailsOpen: boolean
   activeStepIndex1: number
   error?: string
+  /**
+   * Whether to attach how far the viewer had watched to the report. Only
+   * offered for posts with a video.
+   */
+  includeVideoTimestamp: boolean
   /**
    * Present while the selected reason is NCII. Tracks the answer to the
    * qualifying question that determines whether the report should go through
@@ -66,7 +67,7 @@ export type ReportAction =
     }
   | {
       type: 'selectLabeler'
-      labeler: AppBskyLabelerDefs.LabelerViewDetailed
+      labeler: app.bsky.labeler.defs.LabelerViewDetailed
     }
   | {
       type: 'clearLabeler'
@@ -85,6 +86,10 @@ export type ReportAction =
   | {
       type: 'showDetails'
     }
+  | {
+      type: 'setIncludeVideoTimestamp'
+      include: boolean
+    }
 
 export const initialState: ReportState = {
   selectedCategory: undefined,
@@ -93,6 +98,7 @@ export const initialState: ReportState = {
   details: undefined,
   detailsOpen: false,
   activeStepIndex1: 1,
+  includeVideoTimestamp: false,
 }
 
 export function reducer(state: ReportState, action: ReportAction): ReportState {
@@ -114,9 +120,11 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         activeStepIndex1: 1,
         detailsOpen: false,
         ncii: undefined,
+        includeVideoTimestamp: false,
       }
     case 'selectOption': {
-      const isNcii = action.option.reason === OzoneReportDefs.REASONSEXUALNCII
+      const isNcii =
+        action.option.reason === tools.ozone.report.defs.reasonSexualNCII.value
       return {
         ...state,
         selectedOption: action.option,
@@ -134,6 +142,7 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         activeStepIndex1: 2,
         detailsOpen: false,
         ncii: undefined,
+        includeVideoTimestamp: false,
       }
     case 'answerNciiQuestion': {
       const ncii = {...state.ncii, [action.question]: action.answer}
@@ -163,12 +172,18 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
         detailsOpen: state.selectedOption
           ? OTHER_REPORT_REASONS.has(state.selectedOption?.reason)
           : false,
+        /*
+         * Picking a service is a fresh consent decision - the opt-in is scoped
+         * to Bluesky, so it must not survive a switch to another labeler.
+         */
+        includeVideoTimestamp: false,
       }
     case 'clearLabeler':
       return {
         ...state,
         selectedLabeler: undefined,
         activeStepIndex1: 3,
+        includeVideoTimestamp: false,
       }
     case 'setDetails':
       return {
@@ -189,6 +204,11 @@ export function reducer(state: ReportState, action: ReportAction): ReportState {
       return {
         ...state,
         detailsOpen: true,
+      }
+    case 'setIncludeVideoTimestamp':
+      return {
+        ...state,
+        includeVideoTimestamp: action.include,
       }
   }
 }

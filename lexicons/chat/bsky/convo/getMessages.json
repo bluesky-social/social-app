@@ -1,0 +1,69 @@
+{
+  "id": "chat.bsky.convo.getMessages",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "messages"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "messages": {
+              "type": "array",
+              "items": {
+                "refs": [
+                  "chat.bsky.convo.defs#messageView",
+                  "chat.bsky.convo.defs#deletedMessageView",
+                  "chat.bsky.convo.defs#systemMessageView"
+                ],
+                "type": "union"
+              }
+            },
+            "relatedProfiles": {
+              "type": "array",
+              "items": {
+                "ref": "chat.bsky.actor.defs#profileViewBasic",
+                "type": "ref"
+              },
+              "description": "Set of all members who authored or reacted to the returned messages. Members referred to by system messages are also included."
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "convoId"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "convoId": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Returns a page of messages from a conversation."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,4 +1,4 @@
-import EXNotifications
+import ExpoNotifications
 import ExpoModulesCore
 import UIKit
 import UserNotifications

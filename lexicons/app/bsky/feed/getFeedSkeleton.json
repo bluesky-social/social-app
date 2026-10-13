@@ -1,0 +1,64 @@
+{
+  "id": "app.bsky.feed.getFeedSkeleton",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "UnknownFeed"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "feed"
+          ],
+          "properties": {
+            "feed": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.feed.defs#skeletonFeedPost",
+                "type": "ref"
+              }
+            },
+            "reqId": {
+              "type": "string",
+              "maxLength": 100,
+              "description": "Unique identifier per request that may be passed back alongside interactions."
+            },
+            "cursor": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "feed"
+        ],
+        "properties": {
+          "feed": {
+            "type": "string",
+            "format": "at-uri",
+            "description": "Reference to feed generator record describing the specific feed being requested."
+          },
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Get a skeleton of a feed provided by a feed generator. Auth is optional, depending on provider requirements, and provides the DID of the requester. Implemented by Feed Generator Service."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

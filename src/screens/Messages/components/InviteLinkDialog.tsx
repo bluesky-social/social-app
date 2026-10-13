@@ -1,16 +1,13 @@
 import {useState} from 'react'
 import {View} from 'react-native'
 import {Image} from 'expo-image'
-import {
-  type ChatBskyGroupDefs,
-  moderateProfile,
-  type ModerationOpts,
-} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useOpenComposer} from '#/lib/hooks/useOpenComposer'
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {shareUrl} from '#/lib/sharing'
+import {formatDateTime} from '#/lib/strings/time'
 import {useCreateJoinLink} from '#/state/queries/messages/create-join-link'
 import {useDisableJoinLink} from '#/state/queries/messages/disable-join-link'
 import {useEditJoinLink} from '#/state/queries/messages/edit-join-link'
@@ -37,6 +34,7 @@ import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_WEB} from '#/env'
+import {type chat} from '#/lexicons'
 import {CopyTextButton} from './CopyTextButton'
 import {EditTextButton} from './EditTextButton'
 
@@ -354,7 +352,7 @@ export function InviteLinkDialog({
               <Text style={[a.mt_xs, a.text_xs, t.atoms.text_contrast_medium]}>
                 <Trans>
                   Created{' '}
-                  {i18n.date(createdAt, {
+                  {formatDateTime(i18n, createdAt, {
                     dateStyle: 'long',
                     timeStyle: 'short',
                   })}
@@ -562,13 +560,13 @@ export function InviteLinkDialog({
   )
 }
 
-function joinLinkToKey(joinLink: ChatBskyGroupDefs.JoinLinkView): string {
+function joinLinkToKey(joinLink: chat.bsky.group.defs.JoinLinkView): string {
   return `${joinLink.joinRule}${joinLink.requireApproval ? ':requireApproval' : ''}`
 }
 
 function keyToJoinLink(
   key: string,
-): Pick<ChatBskyGroupDefs.JoinLinkView, 'joinRule' | 'requireApproval'> {
+): Pick<chat.bsky.group.defs.JoinLinkView, 'joinRule' | 'requireApproval'> {
   const [joinRule, requireApproval] = key.split(':')
   return {
     joinRule,

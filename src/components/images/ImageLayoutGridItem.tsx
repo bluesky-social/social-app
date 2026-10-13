@@ -1,7 +1,6 @@
 import {Pressable, type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AnimatedRef} from 'react-native-reanimated'
+import Animated, {type AnimatedRef} from 'react-native-reanimated'
 import {Image, type ImageStyle} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -14,11 +13,12 @@ import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {type PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 type EventFunction = (index: number) => void
 
 interface Props {
-  images: AppBskyEmbedImages.ViewImage[]
+  images: app.bsky.embed.images.ViewImage[]
   index: number
   onPress?: (
     index: number,
@@ -65,7 +65,10 @@ export function GalleryItem({
     : undefined
 
   return (
-    <View style={a.flex_1} ref={containerRefs[index]} collapsable={false}>
+    <Animated.View
+      style={a.flex_1}
+      ref={containerRefs[index]}
+      collapsable={false}>
       <ImageContextMenu
         fullsizeUri={image.fullsize}
         thumbUri={image.thumb}
@@ -136,6 +139,6 @@ export function GalleryItem({
           </Text>
         </View>
       ) : null}
-    </View>
+    </Animated.View>
   )
 }

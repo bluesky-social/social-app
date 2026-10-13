@@ -5,10 +5,10 @@ import {
   type StyleProp,
   type ViewStyle,
 } from 'react-native'
+import {type BottomSheetViewProps} from '@bsky.app/bottom-sheet'
+import {type BottomSheetSnapPoint} from '@bsky.app/bottom-sheet/src/BottomSheet.types'
 
 import {type ViewStyleProp} from '#/alf'
-import {type BottomSheetViewProps} from '../../../modules/bottom-sheet'
-import {type BottomSheetSnapPoint} from '../../../modules/bottom-sheet/src/BottomSheet.types'
 
 type A11yProps = Required<AccessibilityProps>
 
@@ -60,6 +60,7 @@ export type DialogControlOpenOptions = {
 
 export type DialogOuterProps = {
   control: DialogControlProps
+  onOpen?: () => void
   onClose?: () => void
   nativeOptions?: Omit<BottomSheetViewProps, 'children'>
   webOptions?: {

@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {View} from 'react-native'
-import {moderateProfile, type ModerationOpts} from '@atproto/api'
+import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {useLingui} from '@lingui/react/macro'
 
 import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
@@ -116,6 +116,7 @@ function ProfileHeaderReady({
             profile={profile}
             moderation={moderation.ui('avatar')}
             disableHoverCard={moderation.blocked}
+            disableLink
           />
           <View style={[a.flex_1]}>
             <View style={[a.flex_row, a.align_center, a.flex_1, web(a.mb_2xs)]}>

@@ -1,5 +1,5 @@
 import {useCallback, useMemo} from 'react'
-import {type AppBskyUnspeccedGetTrends, hasMutedWord} from '@atproto/api'
+import {hasMutedWord} from '@bsky/sdk/moderation'
 import {useQuery} from '@tanstack/react-query'
 
 import {
@@ -10,11 +10,14 @@ import {logger} from '#/logger'
 import {getContentLanguages} from '#/state/preferences/languages'
 import {STALE} from '#/state/queries'
 import {usePreferencesQuery} from '#/state/queries/preferences'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const DEFAULT_LIMIT = 5
+export const DEFAULT_FETCH_LIMIT = 20
 
 type QueryProps = {
+  fetchLimit?: number
   limit?: number
   refetchOnWindowFocus?: boolean
 }
@@ -28,12 +31,13 @@ function dedupe<T extends {link: string}>(trends: T[]): T[] {
   })
 }
 
-export const createGetTrendsQueryKey = (limit?: number) =>
-  limit === undefined ? ['trends'] : ['trends', {limit}]
+export const createGetTrendsQueryKey = (fetchLimit?: number) =>
+  fetchLimit === undefined ? ['trends'] : ['trends', {limit: fetchLimit}]
 
 export function useGetTrendsQuery(props: QueryProps = {}) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   const {data: preferences} = usePreferencesQuery()
+  const fetchLimit = props.fetchLimit ?? DEFAULT_FETCH_LIMIT
   const limit = props.limit ?? DEFAULT_LIMIT
   const mutedWords = useMemo(() => {
     return preferences?.moderationPrefs?.mutedWords || []
@@ -43,12 +47,13 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
     enabled: !!preferences,
     refetchOnWindowFocus: props.refetchOnWindowFocus,
     staleTime: STALE.MINUTES.THREE,
-    queryKey: createGetTrendsQueryKey(limit),
+    queryKey: createGetTrendsQueryKey(fetchLimit),
     queryFn: async () => {
       const contentLangs = getContentLanguages().join(',')
-      const {data} = await agent.app.bsky.unspecced.getTrends(
+      const data = await client.call(
+        app.bsky.unspecced.getTrends,
         {
-          limit,
+          limit: fetchLimit,
         },
         {
           headers: {
@@ -63,7 +68,7 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
       return data
     },
     select: useCallback(
-      (data: AppBskyUnspeccedGetTrends.OutputSchema) => {
+      (data: app.bsky.unspecced.getTrends.$OutputBody) => {
         return {
           recId: data.recIdStr,
           trends: dedupe(
@@ -73,10 +78,10 @@ export function useGetTrendsQuery(props: QueryProps = {}) {
                 text: `${t.topic} ${t.displayName} ${t.category}`,
               })
             }),
-          ),
+          ).slice(0, limit),
         }
       },
-      [mutedWords],
+      [limit, mutedWords],
     ),
   })
 }

@@ -31,10 +31,7 @@ export type AutocompleteSearch = {
 }
 
 export type AutocompleteItem =
-  | AutocompleteProfile
-  | AutocompleteTag
-  | AutocompleteEmoji
-  | AutocompleteSearch
+  AutocompleteProfile | AutocompleteTag | AutocompleteEmoji | AutocompleteSearch
 
 export type AutocompleteItemType = AutocompleteItem['type']
 

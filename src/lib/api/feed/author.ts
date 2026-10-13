@@ -1,23 +1,25 @@
-import {
-  AppBskyFeedDefs,
-  type AppBskyFeedGetAuthorFeed as GetAuthorFeed,
-  type AtpAgent,
-} from '@atproto/api'
+import {type Client, type XrpcRequestParams} from '@atproto/lex'
 
+import {app} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 import {type FeedAPI, type FeedAPIResponse} from './types'
 
+type GetAuthorFeedParams = XrpcRequestParams<
+  typeof app.bsky.feed.getAuthorFeed.main
+>
+
 export class AuthorFeedAPI implements FeedAPI {
-  agent: AtpAgent
-  _params: GetAuthorFeed.QueryParams
+  client: Client
+  _params: GetAuthorFeedParams
 
   constructor({
-    agent,
+    client,
     feedParams,
   }: {
-    agent: AtpAgent
-    feedParams: GetAuthorFeed.QueryParams
+    client: Client
+    feedParams: GetAuthorFeedParams
   }) {
-    this.agent = agent
+    this.client = client
     this._params = feedParams
   }
 
@@ -27,12 +29,12 @@ export class AuthorFeedAPI implements FeedAPI {
     return params
   }
 
-  async peekLatest(): Promise<AppBskyFeedDefs.FeedViewPost> {
-    const res = await this.agent.getAuthorFeed({
+  async peekLatest(): Promise<app.bsky.feed.defs.FeedViewPost> {
+    const data = await this.client.call(app.bsky.feed.getAuthorFeed, {
       ...this.params,
       limit: 1,
     })
-    return res.data.feed[0]
+    return data.feed[0]
   }
 
   async fetch({
@@ -42,28 +44,32 @@ export class AuthorFeedAPI implements FeedAPI {
     cursor: string | undefined
     limit: number
   }): Promise<FeedAPIResponse> {
-    const res = await this.agent.getAuthorFeed({
+    /*
+     * A failed request rejects rather than resolving, so the error propagates
+     * to the query and drives the feed error UI (blocked actor, rate limit).
+     * The agent behaved the same way - its `success` flag was only ever true -
+     * so the empty-page branch this replaces was unreachable.
+     */
+    const data = await this.client.call(app.bsky.feed.getAuthorFeed, {
       ...this.params,
       cursor,
       limit,
     })
-    if (res.success) {
-      return {
-        cursor: res.data.cursor,
-        feed: this._filter(res.data.feed),
-      }
-    }
     return {
-      feed: [],
+      cursor: data.cursor,
+      feed: this._filter(data.feed),
     }
   }
 
-  _filter(feed: AppBskyFeedDefs.FeedViewPost[]) {
+  _filter(feed: app.bsky.feed.defs.FeedViewPost[]) {
     if (this.params.filter === 'posts_and_author_threads') {
       return feed.filter(post => {
         const isReply = post.reply
-        const isRepost = AppBskyFeedDefs.isReasonRepost(post.reason)
-        const isPin = AppBskyFeedDefs.isReasonPin(post.reason)
+        const isRepost = bsky.isType(
+          app.bsky.feed.defs.reasonRepost,
+          post.reason,
+        )
+        const isPin = bsky.isType(app.bsky.feed.defs.reasonPin, post.reason)
         if (!isReply) return true
         if (isRepost || isPin) return true
         return isReply && isAuthorReplyChain(this.params.actor, post, feed)
@@ -76,15 +82,15 @@ export class AuthorFeedAPI implements FeedAPI {
 
 function isAuthorReplyChain(
   actor: string,
-  post: AppBskyFeedDefs.FeedViewPost,
-  posts: AppBskyFeedDefs.FeedViewPost[],
+  post: app.bsky.feed.defs.FeedViewPost,
+  posts: app.bsky.feed.defs.FeedViewPost[],
 ): boolean {
   // current post is by a different user (shouldn't happen)
   if (post.post.author.did !== actor) return false
 
   const replyParent = post.reply?.parent
 
-  if (AppBskyFeedDefs.isPostView(replyParent)) {
+  if (bsky.isType(app.bsky.feed.defs.postView, replyParent)) {
     // reply parent is by a different user
     if (replyParent.author.did !== actor) return false
 

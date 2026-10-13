@@ -1,17 +1,12 @@
-import {
-  type $Typed,
-  type AppBskyActorDefs,
-  type AppBskyFeedDefs,
-  type AppBskyGraphDefs,
-  type ChatBskyConvoDefs,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 
 import type * as Dialog from '#/components/Dialog'
+import {type app, type chat} from '#/lexicons'
 
 export type ReportSubjectConvoMessage = {
   view: 'convo' | 'message'
   convoId: string
-  message: ChatBskyConvoDefs.MessageView
+  message: chat.bsky.convo.defs.MessageView
 }
 
 export type ReportSubjectConvo = {
@@ -20,14 +15,14 @@ export type ReportSubjectConvo = {
 }
 
 export type ReportSubject =
-  | $Typed<AppBskyActorDefs.ProfileViewBasic>
-  | $Typed<AppBskyActorDefs.ProfileView>
-  | $Typed<AppBskyActorDefs.ProfileViewDetailed>
-  | $Typed<AppBskyActorDefs.StatusView>
-  | $Typed<AppBskyGraphDefs.ListView>
-  | $Typed<AppBskyFeedDefs.GeneratorView>
-  | $Typed<AppBskyGraphDefs.StarterPackView>
-  | $Typed<AppBskyFeedDefs.PostView>
+  | $Typed<app.bsky.actor.defs.ProfileViewBasic>
+  | $Typed<app.bsky.actor.defs.ProfileView>
+  | $Typed<app.bsky.actor.defs.ProfileViewDetailed>
+  | $Typed<app.bsky.actor.defs.StatusView>
+  | $Typed<app.bsky.graph.defs.ListView>
+  | $Typed<app.bsky.feed.defs.GeneratorView>
+  | $Typed<app.bsky.graph.defs.StarterPackView>
+  | $Typed<app.bsky.feed.defs.PostView>
   | ReportSubjectConvoMessage
   | ReportSubjectConvo
 

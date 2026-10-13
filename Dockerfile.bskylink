@@ -1,4 +1,4 @@
-FROM node:24.18.0-alpine3.23 AS build
+FROM node:24.19.0-alpine3.23 AS build
 
 # Move files into the image and install
 WORKDIR /app
@@ -14,7 +14,7 @@ RUN yarn build
 RUN yarn install --production --ignore-scripts --prefer-offline
 
 # Uses assets from build stage to reduce build size
-FROM node:24.18.0-alpine3.23
+FROM node:24.19.0-alpine3.23
 
 RUN apk add --update dumb-init
 
@@ -26,8 +26,9 @@ COPY --from=build /app /app
 RUN mkdir /app/data && chown node /app/data
 
 VOLUME /app/data
-EXPOSE 3000
+EXPOSE 3000 9090
 ENV LINK_PORT=3000
+ENV LINK_METRICS_PORT=9090
 ENV NODE_ENV=production
 
 # https://github.com/nodejs/docker-node/blob/master/docs/BestPractices.md#non-root-user

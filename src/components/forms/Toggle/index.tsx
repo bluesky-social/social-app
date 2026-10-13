@@ -82,6 +82,7 @@ export type ItemProps = ViewStyleProp & {
   children: ((props: ItemState) => React.ReactNode) | React.ReactNode
   hitSlop?: PressableProps['hitSlop']
   highlightRow?: boolean
+  testID?: string
 }
 
 export function useItemContext() {
@@ -184,7 +185,7 @@ export function Item({
     onOut: onPressOut,
   } = useInteractionState()
   const {state: focused, onIn: onFocus, onOut: onBlur} = useInteractionState()
-  const playHaptic = useHaptics()
+  const haptics = useHaptics()
 
   const role = groupType === 'radio' ? 'radio' : type
   const selected = selectedValues.includes(name) || !!value
@@ -192,11 +193,11 @@ export function Item({
     groupDisabled || itemDisabled || (!selected && maxSelectionsReached)
 
   const onPress = useCallback(() => {
-    playHaptic('Light')
     const next = !selected
+    haptics.toggle(groupType === 'radio' || next)
     setFieldValue({name, value: next})
     onChange?.(next)
-  }, [playHaptic, name, selected, onChange, setFieldValue])
+  }, [haptics, groupType, name, selected, onChange, setFieldValue])
 
   const state = useMemo(
     () => ({

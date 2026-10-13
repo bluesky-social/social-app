@@ -1,0 +1,48 @@
+{
+  "id": "chat.bsky.convo.updateRead",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convoId"
+          ],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            },
+            "messageId": {
+              "type": "string"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "InvalidConvo"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convo"
+          ],
+          "properties": {
+            "convo": {
+              "ref": "chat.bsky.convo.defs#convoView",
+              "type": "ref"
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Updates the read state of a conversation from, optionally specifying the last read message."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

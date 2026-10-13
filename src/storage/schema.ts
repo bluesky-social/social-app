@@ -1,4 +1,5 @@
 import {type ID as PolicyUpdate202508} from '#/components/PolicyUpdateOverlay/updates/202508/config'
+import {type SessionRecord} from '#/analytics/identifiers/session'
 import {type Gif} from '#/features/gifPicker/types'
 import {type InviteThemeKey} from '#/features/inviteFriends/themes'
 import {type Geolocation} from '#/geolocation/types'
@@ -12,11 +13,8 @@ export type Device = {
    * device, used with our logging and metrics tracking.
    */
   deviceId?: string
-  /**
-   * Session ID storage for _native only_. On web, use we `sessionStorage`
-   */
-  nativeSessionId?: string
-  nativeSessionIdLastEventAt?: number
+  /** Analytics session ID with creation, native lifecycle, or web activity time. */
+  analyticsSession?: SessionRecord
 
   fontScale: '-2' | '-1' | '0' | '1' | '2'
   fontFamily: 'system' | 'theme'
@@ -108,4 +106,15 @@ export type Account = {
    * account after a switch, until that account's preferences loaded.
    */
   isBetaUser?: boolean
+
+  /**
+   * The account's subscribed labeler DIDs, cached from preferences so the
+   * `atproto-accept-labelers` header can be configured synchronously at
+   * session start, before preferences load. Eventually consistent: rewritten
+   * on every preferences fetch (see `saveLabelers` in
+   * `#/state/session/moderation`). Until the first fetch lands there is
+   * simply no cache entry and initial requests go out without per-account
+   * labeler headers.
+   */
+  labelers?: string[]
 }

@@ -1,0 +1,64 @@
+{
+  "id": "com.atproto.server.defs",
+  "defs": {
+    "inviteCode": {
+      "type": "object",
+      "required": [
+        "code",
+        "available",
+        "disabled",
+        "forAccount",
+        "createdBy",
+        "createdAt",
+        "uses"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "uses": {
+          "type": "array",
+          "items": {
+            "ref": "#inviteCodeUse",
+            "type": "ref"
+          }
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "available": {
+          "type": "integer"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "createdBy": {
+          "type": "string"
+        },
+        "forAccount": {
+          "type": "string"
+        }
+      }
+    },
+    "inviteCodeUse": {
+      "type": "object",
+      "required": [
+        "usedBy",
+        "usedAt"
+      ],
+      "properties": {
+        "usedAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "usedBy": {
+          "type": "string",
+          "format": "did"
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

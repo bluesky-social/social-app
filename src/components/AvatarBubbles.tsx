@@ -8,7 +8,7 @@ import Animated, {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import {moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky/sdk/moderation'
 
 import {useMaybeProfileShadow} from '#/state/cache/profile-shadow'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -72,7 +72,7 @@ export function AvatarBubbles({
     if (!animate) return
     const animateBubble = (p: SharedValue<number>, i: number) => {
       p.set(0)
-      p.set(() =>
+      p.set(
         withDelay(
           500 + i * 100,
           withTiming(1, {

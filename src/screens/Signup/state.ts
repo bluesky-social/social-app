@@ -1,9 +1,5 @@
 import {createContext, useCallback, useContext} from 'react'
 import {LayoutAnimation} from 'react-native'
-import {
-  ComAtprotoServerCreateAccount,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
 import {useLingui} from '@lingui/react/macro'
 import * as EmailValidator from 'email-validator'
 
@@ -11,15 +7,13 @@ import {DEFAULT_SERVICE} from '#/lib/constants'
 import {cleanError, isNetworkError} from '#/lib/strings/errors'
 import {createFullHandle} from '#/lib/strings/handles'
 import {getAge} from '#/lib/strings/time'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {useSessionApi} from '#/state/session'
 import {useOnboardingDispatch} from '#/state/shell'
 import {type AnalyticsContextType, useAnalytics} from '#/analytics'
+import {com} from '#/lexicons'
 
-export type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
-
-const date = new Date()
-date.setFullYear(date.getFullYear() - 20) // default to 20 years ago
-const DEFAULT_DATE = date
+export type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
 export enum SignupStep {
   INFO,
@@ -33,11 +27,7 @@ type SubmitTask = {
 }
 
 type ErrorField =
-  | 'invite-code'
-  | 'email'
-  | 'handle'
-  | 'password'
-  | 'date-of-birth'
+  'invite-code' | 'email' | 'handle' | 'password' | 'date-of-birth'
 
 export type SignupState = {
   analytics?: AnalyticsContextType
@@ -49,7 +39,7 @@ export type SignupState = {
   serviceUrl: string
   serviceDescription?: ServiceDescription
   userDomain: string
-  dateOfBirth: Date
+  dateOfBirth: Date | undefined
   email: string
   password: string
   inviteCode: string
@@ -77,7 +67,7 @@ export type SignupAction =
   | {type: 'setServiceDescription'; value: ServiceDescription | undefined}
   | {type: 'setEmail'; value: string}
   | {type: 'setPassword'; value: string}
-  | {type: 'setDateOfBirth'; value: Date}
+  | {type: 'setDateOfBirth'; value: Date | undefined}
   | {type: 'setInviteCode'; value: string}
   | {type: 'setHandle'; value: string}
   | {type: 'setError'; value: string; field?: ErrorField}
@@ -96,7 +86,7 @@ export const initialState: SignupState = {
   serviceUrl: DEFAULT_SERVICE,
   serviceDescription: undefined,
   userDomain: '',
-  dateOfBirth: DEFAULT_DATE,
+  dateOfBirth: undefined,
   email: '',
   password: '',
   handle: '',
@@ -260,14 +250,14 @@ export const useSignupContext = () => useContext(SignupContext)
  * failure is unexpected and should be reported to Sentry.
  */
 function classifyExpectedSignupError(e: unknown): string | undefined {
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidHandleError)
-    return 'InvalidHandle'
-  if (e instanceof ComAtprotoServerCreateAccount.HandleNotAvailableError)
-    return 'HandleNotAvailable'
-  if (e instanceof ComAtprotoServerCreateAccount.InvalidPasswordError)
-    return 'InvalidPassword'
-  if (e instanceof ComAtprotoServerCreateAccount.UnsupportedDomainError)
-    return 'UnsupportedDomain'
+  const code = matchXrpcError(e, com.atproto.server.createAccount)
+  switch (code) {
+    case 'InvalidHandle':
+    case 'HandleNotAvailable':
+    case 'InvalidPassword':
+    case 'UnsupportedDomain':
+      return code
+  }
   /* the server sends no typed error for this case */
   if (String(e).includes('Email already taken')) return 'EmailTaken'
   if (isNetworkError(e)) return 'NetworkError'
@@ -314,6 +304,16 @@ export function useSubmitSignup() {
           field: 'handle',
         })
       }
+      const dateOfBirth = state.dateOfBirth
+      // This should never happen: StepInfo requires a birth date before advancing.
+      if (!dateOfBirth) {
+        dispatch({type: 'setStep', value: SignupStep.INFO})
+        return dispatch({
+          type: 'setError',
+          value: l`Please enter your date of birth.`,
+          field: 'date-of-birth',
+        })
+      }
       if (
         state.serviceDescription?.phoneVerificationRequired &&
         !state.pendingSubmit?.verificationCode
@@ -328,6 +328,7 @@ export function useSubmitSignup() {
       dispatch({type: 'setError', value: ''})
       dispatch({type: 'setIsLoading', value: true})
 
+      const verificationCode = state.pendingSubmit?.verificationCode
       try {
         await createAccount(
           {
@@ -335,9 +336,9 @@ export function useSubmitSignup() {
             email: state.email,
             handle: createFullHandle(state.handle, state.userDomain),
             password: state.password,
-            birthDate: state.dateOfBirth,
+            birthDate: dateOfBirth,
             inviteCode: state.inviteCode.trim(),
-            verificationCode: state.pendingSubmit?.verificationCode,
+            verificationCode,
           },
           {
             signupDuration: Date.now() - state.signupStartTime,
@@ -356,18 +357,23 @@ export function useSubmitSignup() {
         onboardingDispatch({type: 'start'})
       } catch (err) {
         const e = err as Error
-        let errMsg = e.toString()
-        if (e instanceof ComAtprotoServerCreateAccount.InvalidInviteCodeError) {
+        if (
+          matchXrpcError(e, com.atproto.server.createAccount) ===
+          'InvalidInviteCode'
+        ) {
           dispatch({
             type: 'setError',
             value: l`Invite code not accepted. Check that you input it correctly and try again.`,
             field: 'invite-code',
           })
           dispatch({type: 'setStep', value: SignupStep.INFO})
+          dispatch({type: 'setIsLoading', value: false})
           return
         }
 
-        const error = cleanError(errMsg)
+        /* the error object, not its stringification: cleanError only extracts
+         * the clean server message from a live LexError */
+        const error = cleanError(e)
         const isHandleError = error.toLowerCase().includes('handle')
 
         dispatch({type: 'setIsLoading', value: false})
@@ -386,9 +392,8 @@ export function useSubmitSignup() {
             safeMessage: e,
           })
         }
-      } finally {
-        dispatch({type: 'setIsLoading', value: false})
       }
+      dispatch({type: 'setIsLoading', value: false})
     },
     [l, ax, createAccount, onboardingDispatch],
   )

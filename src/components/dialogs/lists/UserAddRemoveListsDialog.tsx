@@ -182,9 +182,9 @@ function ListsContent({
           <View style={[a.align_center, a.py_lg]}>
             <Loader size="lg" />
           </View>
-        ) : null
+        ) : undefined
       }
-      ListEmptyComponent={!isLoading && data ? <Empty /> : null}
+      ListEmptyComponent={!isLoading && data ? <Empty /> : undefined}
       webInnerContentContainerStyle={[a.py_0]}
       style={platform({
         web: [a.px_2xl, a.pb_md],

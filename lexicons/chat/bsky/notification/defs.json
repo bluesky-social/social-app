@@ -1,0 +1,43 @@
+{
+  "id": "chat.bsky.notification.defs",
+  "defs": {
+    "preferences": {
+      "type": "object",
+      "required": [
+        "chat",
+        "chatRequest"
+      ],
+      "properties": {
+        "chat": {
+          "ref": "#chatPreference",
+          "type": "ref"
+        },
+        "chatRequest": {
+          "ref": "#chatPreference",
+          "type": "ref"
+        }
+      }
+    },
+    "chatPreference": {
+      "type": "object",
+      "required": [
+        "include",
+        "push"
+      ],
+      "properties": {
+        "push": {
+          "type": "boolean"
+        },
+        "include": {
+          "type": "string",
+          "knownValues": [
+            "all",
+            "follows"
+          ]
+        }
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

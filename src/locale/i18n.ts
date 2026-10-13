@@ -69,7 +69,9 @@ export async function dynamicActivate(locale: AppLanguage) {
         import('date-fns/locale/es').then(m => m.es),
         import('@formatjs/intl-pluralrules/locale-data/an.js'),
         import('@formatjs/intl-numberformat/locale-data/an.js'),
-        import('@formatjs/intl-displaynames/locale-data/an.js'),
+        // Aragonese locale data is missing
+        // see: https://github.com/bluesky-social/social-app/pull/11327
+        import('@formatjs/intl-displaynames/locale-data/es.js'),
       ])
       return dateLocale
     }

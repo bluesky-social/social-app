@@ -1,4 +1,4 @@
-import {beforeEach, expect, jest, test} from '@jest/globals'
+import {afterEach, beforeEach, expect, jest, test} from '@jest/globals'
 
 import {Storage} from '#/storage'
 
@@ -33,6 +33,22 @@ const store = new Storage<['account'], Schema>({id: 'test'})
 beforeEach(() => {
   store.removeMany([scope], ['boo', 'str', 'num', 'obj'])
 })
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
+test('reads the raw envelope without parsing and observes changes and removal', () => {
+  expect(store.getRaw([scope, 'obj'])).toBeUndefined()
+  store.set([scope, 'obj'], {foo: true})
+  const parse = jest.spyOn(JSON, 'parse')
+
+  expect(store.getRaw([scope, 'obj'])).toBe('{"data":{"foo":true}}')
+  store.set([scope, 'obj'], {foo: false})
+  expect(store.getRaw([scope, 'obj'])).toBe('{"data":{"foo":false}}')
+  store.remove([scope, 'obj'])
+  expect(store.getRaw([scope, 'obj'])).toBeUndefined()
+  expect(parse).not.toHaveBeenCalled()
+})
 
 test(`stores and retrieves data`, () => {
   store.set([scope, 'boo'], true)
@@ -63,7 +79,7 @@ test(`removes multiple keys at once`, () => {
 test(`concatenates keys`, () => {
   store.remove([scope, 'str'])
   store.set([scope, 'str'], 'concat')
-  // @ts-ignore accessing these properties for testing purposes only
+  // @ts-expect-error accessing these properties for testing purposes only
   expect(store.store.getString(`${scope}${store.sep}str`)).toBeTruthy()
 })
 

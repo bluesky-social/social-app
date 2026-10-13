@@ -115,6 +115,37 @@ describe('uploadParts', () => {
     expect(attempts).toBe(2)
   })
 
+  it('retries service-unavailable parts', async () => {
+    let attempts = 0
+    const uploadPart: UploadPartFn = ({part}) => {
+      attempts++
+      if (attempts === 1) {
+        return Promise.reject(
+          new MultipartUploadError(
+            'failed to upload multipart part',
+            'ServiceUnavailable',
+            503,
+          ),
+        )
+      }
+      return Promise.resolve({
+        partNumber: part.partNumber,
+        sizeBytes: part.size,
+      })
+    }
+
+    await uploadParts({
+      parts: parts.slice(0, 1),
+      reader: fakeReader(),
+      uploadPart,
+      totalBytes: 10,
+      setProgress: () => {},
+      signal: new AbortController().signal,
+    })
+
+    expect(attempts).toBe(2)
+  })
+
   it('does not retry a non-retryable response', async () => {
     const uploadPart = jest.fn<
       ReturnType<UploadPartFn>,

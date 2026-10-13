@@ -1,5 +1,3 @@
-import {useMemo} from 'react'
-
 import {type Breakpoint, useBreakpoints} from '#/alf/breakpoints'
 import * as tokens from '#/alf/tokens'
 
@@ -44,23 +42,26 @@ export function useGutters([top, right, bottom, left]: [
   Gutter,
   Gutter,
 ]): Gutters
-export function useGutters([top, right, bottom, left]: Gutter[]) {
+export function useGutters(gutter: Gutter[]) {
   const {activeBreakpoint} = useBreakpoints()
+  /*
+   * Destructured in the body rather than the parameter list: these are
+   * reassigned below to fill in the CSS-shorthand forms, and React Compiler
+   * cannot lower a reassigned destructured parameter.
+   */
+  let [top, right, bottom, left] = gutter
   if (right === undefined) {
     right = bottom = left = top
   } else if (bottom === undefined) {
     bottom = top
     left = right
   }
-  return useMemo(() => {
-    return {
-      paddingTop: top === 0 ? 0 : gutters[top][activeBreakpoint || 'default'],
-      paddingRight:
-        right === 0 ? 0 : gutters[right][activeBreakpoint || 'default'],
-      paddingBottom:
-        bottom === 0 ? 0 : gutters[bottom][activeBreakpoint || 'default'],
-      paddingLeft:
-        left === 0 ? 0 : gutters[left][activeBreakpoint || 'default'],
-    }
-  }, [activeBreakpoint, top, right, bottom, left])
+  return {
+    paddingTop: top === 0 ? 0 : gutters[top][activeBreakpoint || 'default'],
+    paddingRight:
+      right === 0 ? 0 : gutters[right][activeBreakpoint || 'default'],
+    paddingBottom:
+      bottom === 0 ? 0 : gutters[bottom][activeBreakpoint || 'default'],
+    paddingLeft: left === 0 ? 0 : gutters[left][activeBreakpoint || 'default'],
+  }
 }

@@ -7,7 +7,7 @@ import {
   type PartUploadResult,
   type UploadPartFn,
 } from './types'
-import {delay, isRetryableMultipartError} from './utils'
+import {delay, isRetryableMultipartError, retryDelayMs} from './utils'
 
 /**
  * Uploads every part with a concurrency cap and per-part retry, aggregating
@@ -121,7 +121,10 @@ async function uploadPartWithRetry({
       lastError = err
       if (!isRetryableMultipartError(err)) throw err
       if (attempt < maxAttempts) {
-        await delay(500 * 2 ** (attempt - 1), signal)
+        // XHR progress starts over on a retry, so remove bytes reported by the
+        // failed attempt from the aggregate while backing off.
+        onProgress(0)
+        await delay(retryDelayMs(attempt), signal)
       }
     }
   }

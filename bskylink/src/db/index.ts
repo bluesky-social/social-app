@@ -1,4 +1,5 @@
 import assert from 'assert'
+import {performance} from 'node:perf_hooks'
 import {
   Kysely,
   type KyselyPlugin,
@@ -16,6 +17,8 @@ import {dbLogger as log} from '../logger.js'
 import {default as migrations} from './migrations/index.js'
 import {DbMigrationProvider} from './migrations/provider.js'
 import {type DbSchema} from './schema.js'
+
+const SLOW_QUERY_THRESHOLD_MS = 1000
 
 export class Database {
   migrator: Migrator
@@ -99,6 +102,51 @@ export class Database {
 
   get isTransaction() {
     return this.db.isTransaction
+  }
+
+  async observeQuery<T>(
+    operation: string,
+    query: () => Promise<T>,
+  ): Promise<T> {
+    const poolIdleConnectionsAtStart = this.cfg.pool.idleCount
+    const poolTotalConnectionsAtStart = this.cfg.pool.totalCount
+    const poolWaitingRequestsAtStart = this.cfg.pool.waitingCount
+    const startedAt = performance.now()
+    let poolIdleConnectionsAtThreshold: number | undefined
+    let poolTotalConnectionsAtThreshold: number | undefined
+    let poolWaitingRequestsAtThreshold: number | undefined
+    const slowQueryTimer = setTimeout(() => {
+      poolIdleConnectionsAtThreshold = this.cfg.pool.idleCount
+      poolTotalConnectionsAtThreshold = this.cfg.pool.totalCount
+      poolWaitingRequestsAtThreshold = this.cfg.pool.waitingCount
+    }, SLOW_QUERY_THRESHOLD_MS)
+    slowQueryTimer.unref()
+    try {
+      return await query()
+    } finally {
+      clearTimeout(slowQueryTimer)
+      const durationMs = Math.round(performance.now() - startedAt)
+      if (durationMs >= SLOW_QUERY_THRESHOLD_MS) {
+        log.warn(
+          {
+            durationMs,
+            operation,
+            poolIdleConnectionsAtEnd: this.cfg.pool.idleCount,
+            poolIdleConnectionsAtStart,
+            poolIdleConnectionsAtThreshold,
+            poolStateAtThresholdCaptured:
+              poolWaitingRequestsAtThreshold !== undefined,
+            poolTotalConnectionsAtEnd: this.cfg.pool.totalCount,
+            poolTotalConnectionsAtStart,
+            poolTotalConnectionsAtThreshold,
+            poolWaitingRequestsAtEnd: this.cfg.pool.waitingCount,
+            poolWaitingRequestsAtStart,
+            poolWaitingRequestsAtThreshold,
+          },
+          'slow database query',
+        )
+      }
+    }
   }
 
   assertTransaction() {

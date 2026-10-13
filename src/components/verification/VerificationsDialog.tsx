@@ -1,5 +1,4 @@
 import {View} from 'react-native'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -9,7 +8,7 @@ import {getUserDisplayName} from '#/lib/getUserDisplayName'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useProfileQuery} from '#/state/queries/profile'
 import {useSession} from '#/state/session'
-import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {atoms as a, useBreakpoints, useTheme, web} from '#/alf'
 import {Admonition} from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -21,6 +20,7 @@ import {Text} from '#/components/Typography'
 import {type FullVerificationState} from '#/components/verification'
 import {VerificationRemovePrompt} from '#/components/verification/VerificationRemovePrompt'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 import type * as bsky from '#/types/bsky'
 
 export {useDialogControl} from '#/components/Dialog'
@@ -78,7 +78,8 @@ function Inner({
     <Dialog.ScrollableInner
       label={label}
       style={[
-        gtMobile ? {width: 'auto', maxWidth: 400, minWidth: 200} : a.w_full,
+        a.w_full,
+        gtMobile && web({width: 'auto', maxWidth: 400, minWidth: 200}),
       ]}>
       <View style={[a.gap_sm, a.pb_lg]}>
         <Text style={[a.text_2xl, a.font_semi_bold, a.pr_4xl, a.leading_tight]}>
@@ -180,7 +181,7 @@ function VerifierCard({
   subject,
   outerDialogControl,
 }: {
-  verification: AppBskyActorDefs.VerificationView
+  verification: app.bsky.actor.defs.VerificationView
   subject: bsky.profile.AnyProfileView
   outerDialogControl: Dialog.DialogControlProps
 }) {

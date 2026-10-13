@@ -1,0 +1,13 @@
+{
+  "id": "chat.bsky.actor.exportAccountData",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "encoding": "application/jsonl"
+      }
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

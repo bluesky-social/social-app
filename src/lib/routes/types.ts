@@ -23,6 +23,10 @@ export type CommonNavigatorParams = {
   NotFound: undefined
   Lists: undefined
   Moderation: undefined
+  ModerationInbox: undefined
+  ModerationInboxSettings: undefined
+  ModerationInboxReportDetails: undefined
+  ModerationInboxNoticeDetails: undefined
   ModerationModlists: undefined
   ModerationMutedAccounts: undefined
   ModerationBlockedAccounts: undefined
@@ -39,12 +43,12 @@ export type CommonNavigatorParams = {
   PostLikedBy: {name: string; rkey: string}
   PostRepostedBy: {name: string; rkey: string}
   PostQuotes: {name: string; rkey: string}
-  ProfileFeed: {
+  CustomFeed: {
     name: string
     rkey: string
     feedCacheKey?: 'discover' | 'explore' | undefined
   }
-  ProfileFeedLikedBy: {name: string; rkey: string}
+  CustomFeedLikedBy: {name: string; rkey: string}
   ProfileLabelerLikedBy: {name: string}
   Debug: undefined
   DebugMod: undefined
@@ -134,6 +138,7 @@ export type MessagesTabNavigatorParams = CommonNavigatorParams & {
 }
 
 export type FlatNavigatorParams = CommonNavigatorParams & {
+  Atmosphere: undefined
   Home: undefined
   Search: SearchParams
   Feeds: undefined
@@ -146,6 +151,7 @@ export type FlatNavigatorParams = CommonNavigatorParams & {
 }
 
 export type AllNavigatorParams = CommonNavigatorParams & {
+  Atmosphere: undefined
   HomeTab: undefined
   Home: undefined
   SearchTab: undefined
@@ -169,8 +175,7 @@ export type AllNavigatorParams = CommonNavigatorParams & {
 export type NavigationProp = NativeStackNavigationProp<AllNavigatorParams>
 
 export type State =
-  | NavigationState
-  | Omit<PartialState<NavigationState>, 'stale'>
+  NavigationState | Omit<PartialState<NavigationState>, 'stale'>
 
 export type RouteParams = Record<string, string>
 export type MatchResult = {params: RouteParams}

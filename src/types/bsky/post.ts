@@ -1,64 +1,56 @@
-import {
-  type $Typed,
-  AppBskyEmbedExternal,
-  AppBskyEmbedGallery,
-  AppBskyEmbedImages,
-  AppBskyEmbedRecord,
-  AppBskyEmbedRecordWithMedia,
-  AppBskyEmbedVideo,
-  AppBskyFeedDefs,
-  AppBskyGraphDefs,
-  AppBskyLabelerDefs,
-} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
+
+import {app} from '#/lexicons'
+import {isType} from '#/types/bsky'
 
 export type Embed =
   | {
       type: 'post'
-      view: $Typed<AppBskyEmbedRecord.ViewRecord>
+      view: $Typed<app.bsky.embed.record.ViewRecord>
     }
   | {
       type: 'post_not_found'
-      view: $Typed<AppBskyEmbedRecord.ViewNotFound>
+      view: $Typed<app.bsky.embed.record.ViewNotFound>
     }
   | {
       type: 'post_blocked'
-      view: $Typed<AppBskyEmbedRecord.ViewBlocked>
+      view: $Typed<app.bsky.embed.record.ViewBlocked>
     }
   | {
       type: 'post_detached'
-      view: $Typed<AppBskyEmbedRecord.ViewDetached>
+      view: $Typed<app.bsky.embed.record.ViewDetached>
     }
   | {
       type: 'feed'
-      view: $Typed<AppBskyFeedDefs.GeneratorView>
+      view: $Typed<app.bsky.feed.defs.GeneratorView>
     }
   | {
       type: 'list'
-      view: $Typed<AppBskyGraphDefs.ListView>
+      view: $Typed<app.bsky.graph.defs.ListView>
     }
   | {
       type: 'labeler'
-      view: $Typed<AppBskyLabelerDefs.LabelerView>
+      view: $Typed<app.bsky.labeler.defs.LabelerView>
     }
   | {
       type: 'starter_pack'
-      view: $Typed<AppBskyGraphDefs.StarterPackViewBasic>
+      view: $Typed<app.bsky.graph.defs.StarterPackViewBasic>
     }
   | {
       type: 'images'
-      view: $Typed<AppBskyEmbedImages.View>
+      view: $Typed<app.bsky.embed.images.View>
     }
   | {
       type: 'gallery'
-      view: $Typed<AppBskyEmbedGallery.View>
+      view: $Typed<app.bsky.embed.gallery.View>
     }
   | {
       type: 'link'
-      view: $Typed<AppBskyEmbedExternal.View>
+      view: $Typed<app.bsky.embed.external.View>
     }
   | {
       type: 'video'
-      view: $Typed<AppBskyEmbedVideo.View>
+      view: $Typed<app.bsky.embed.video.View>
     }
   | {
       type: 'post_with_media'
@@ -72,43 +64,45 @@ export type Embed =
 
 export type EmbedType<T extends Embed['type']> = Extract<Embed, {type: T}>
 
-export function parseEmbedRecordView({record}: AppBskyEmbedRecord.View): Embed {
-  if (AppBskyEmbedRecord.isViewRecord(record)) {
+export function parseEmbedRecordView({
+  record,
+}: app.bsky.embed.record.View): Embed {
+  if (isType(app.bsky.embed.record.viewRecord, record)) {
     return {
       type: 'post',
       view: record,
     }
-  } else if (AppBskyEmbedRecord.isViewNotFound(record)) {
+  } else if (isType(app.bsky.embed.record.viewNotFound, record)) {
     return {
       type: 'post_not_found',
       view: record,
     }
-  } else if (AppBskyEmbedRecord.isViewBlocked(record)) {
+  } else if (isType(app.bsky.embed.record.viewBlocked, record)) {
     return {
       type: 'post_blocked',
       view: record,
     }
-  } else if (AppBskyEmbedRecord.isViewDetached(record)) {
+  } else if (isType(app.bsky.embed.record.viewDetached, record)) {
     return {
       type: 'post_detached',
       view: record,
     }
-  } else if (AppBskyFeedDefs.isGeneratorView(record)) {
+  } else if (isType(app.bsky.feed.defs.generatorView, record)) {
     return {
       type: 'feed',
       view: record,
     }
-  } else if (AppBskyGraphDefs.isListView(record)) {
+  } else if (isType(app.bsky.graph.defs.listView, record)) {
     return {
       type: 'list',
       view: record,
     }
-  } else if (AppBskyLabelerDefs.isLabelerView(record)) {
+  } else if (isType(app.bsky.labeler.defs.labelerView, record)) {
     return {
       type: 'labeler',
       view: record,
     }
-  } else if (AppBskyGraphDefs.isStarterPackViewBasic(record)) {
+  } else if (isType(app.bsky.graph.defs.starterPackViewBasic, record)) {
     return {
       type: 'starter_pack',
       view: record,
@@ -121,30 +115,30 @@ export function parseEmbedRecordView({record}: AppBskyEmbedRecord.View): Embed {
   }
 }
 
-export function parseEmbed(embed: AppBskyFeedDefs.PostView['embed']): Embed {
-  if (AppBskyEmbedImages.isView(embed)) {
+export function parseEmbed(embed: app.bsky.feed.defs.PostView['embed']): Embed {
+  if (isType(app.bsky.embed.images.view, embed)) {
     return {
       type: 'images',
       view: embed,
     }
-  } else if (AppBskyEmbedGallery.isView(embed)) {
+  } else if (isType(app.bsky.embed.gallery.view, embed)) {
     return {
       type: 'gallery',
       view: embed,
     }
-  } else if (AppBskyEmbedExternal.isView(embed)) {
+  } else if (isType(app.bsky.embed.external.view, embed)) {
     return {
       type: 'link',
       view: embed,
     }
-  } else if (AppBskyEmbedVideo.isView(embed)) {
+  } else if (isType(app.bsky.embed.video.view, embed)) {
     return {
       type: 'video',
       view: embed,
     }
-  } else if (AppBskyEmbedRecord.isView(embed)) {
+  } else if (isType(app.bsky.embed.record.view, embed)) {
     return parseEmbedRecordView(embed)
-  } else if (AppBskyEmbedRecordWithMedia.isView(embed)) {
+  } else if (isType(app.bsky.embed.recordWithMedia.view, embed)) {
     return {
       type: 'post_with_media',
       view: parseEmbedRecordView(embed.record),

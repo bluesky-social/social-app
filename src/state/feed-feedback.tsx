@@ -7,27 +7,24 @@ import {
   useRef,
 } from 'react'
 import {AppState, type AppStateStatus} from 'react-native'
-import {type AppBskyFeedDefs} from '@atproto/api'
+import {type AtUriString, type DidString} from '@atproto/syntax'
 import throttle from 'lodash.throttle'
 
-import {PROD_FEEDS, STAGING_FEEDS} from '#/lib/constants'
-import {
-  type FeedSourceFeedInfo,
-  type FeedSourceInfo,
-  isFeedSourceFeedInfo,
-} from '#/state/queries/feed'
+import {PROD_FEEDS, STAGING_FEEDS, TRENDING_DID} from '#/lib/constants'
+import {type FeedSourceInfo, isFeedSourceFeedInfo} from '#/state/queries/feed'
 import {
   type FeedDescriptor,
   type FeedPostSliceItem,
 } from '#/state/queries/post-feed'
 import {getItemsForFeedback} from '#/view/com/posts/PostFeed'
 import {useAnalytics} from '#/analytics'
-import {useAgent} from './session'
+import {app} from '#/lexicons'
+import {useAppviewClient} from './session'
 
 export const FEEDBACK_FEEDS = [...PROD_FEEDS, ...STAGING_FEEDS]
 
 export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
-  AppBskyFeedDefs.Interaction['event']
+  app.bsky.feed.defs.Interaction['event']
 >([
   // These are explicit actions and are therefore fine to send.
   'app.bsky.feed.defs#requestLess',
@@ -45,7 +42,7 @@ export const THIRD_PARTY_ALLOWED_INTERACTIONS = new Set<
 export type StateContext = {
   enabled: boolean
   onItemSeen: (item: any) => void
-  sendInteraction: (interaction: AppBskyFeedDefs.Interaction) => void
+  sendInteraction: (interaction: app.bsky.feed.defs.Interaction) => void
   feedDescriptor: FeedDescriptor | undefined
   feedSourceInfo: FeedSourceInfo | undefined
 }
@@ -53,7 +50,7 @@ export type StateContext = {
 const stateContext = createContext<StateContext>({
   enabled: false,
   onItemSeen: (_item: any) => {},
-  sendInteraction: (_interaction: AppBskyFeedDefs.Interaction) => {},
+  sendInteraction: (_interaction: app.bsky.feed.defs.Interaction) => {},
   feedDescriptor: undefined,
   feedSourceInfo: undefined,
 })
@@ -65,7 +62,7 @@ export function useFeedFeedback(
 ) {
   const ax = useAnalytics()
   const logger = ax.logger.useChild(ax.logger.Context.FeedFeedback)
-  const agent = useAgent()
+  const client = useAppviewClient()
 
   const feed =
     !!feedSourceInfo && isFeedSourceFeedInfo(feedSourceInfo)
@@ -82,7 +79,7 @@ export function useFeedFeedback(
   const history = useRef<
     // Use a WeakSet so that we don't need to clear it.
     // This assumes that referential identity of slice items maps 1:1 to feed (re)fetches.
-    WeakSet<FeedPostSliceItem | AppBskyFeedDefs.Interaction>
+    WeakSet<FeedPostSliceItem | app.bsky.feed.defs.Interaction>
   >(new WeakSet())
 
   const flushEvents = useCallback(
@@ -143,23 +140,26 @@ export function useFeedFeedback(
     const interactionsToSend = interactions.filter(
       interaction =>
         interaction.event &&
-        isInteractionAllowed(enabled, feed, interaction.event),
+        isInteractionAllowed(enabled, feed?.feedDescriptor, interaction.event),
     )
 
     if (interactionsToSend.length === 0) {
       return
     }
 
-    // Send to the feed
-    agent.app.bsky.feed
-      .sendInteractions(
-        {interactions: interactionsToSend, feed: feed?.uri},
+    /*
+     * Send to the feed. Interactions go to the feed generator rather than the
+     * appview, which the agent did by setting `atproto-proxy` by hand; the
+     * client's per-call `service` option writes that same header.
+     */
+    client
+      .call(
+        app.bsky.feed.sendInteractions,
         {
-          encoding: 'application/json',
-          headers: {
-            'atproto-proxy': `${proxyDid}#bsky_fg`,
-          },
+          interactions: interactionsToSend,
+          feed: feed?.uri as AtUriString | undefined,
         },
+        {service: `${proxyDid as DidString}#bsky_fg`},
       )
       .catch(() => {}) // ignore upstream errors
 
@@ -172,7 +172,7 @@ export function useFeedFeedback(
     )
     throttledFlushAggregatedStats()
     logger.debug('flushed')
-  }, [agent, throttledFlushAggregatedStats, proxyDid, enabled, feed])
+  }, [client, throttledFlushAggregatedStats, proxyDid, enabled, feed])
 
   const sendToFeed = useMemo(
     () =>
@@ -220,7 +220,7 @@ export function useFeedFeedback(
   )
 
   const sendInteraction = useCallback(
-    (interaction: AppBskyFeedDefs.Interaction) => {
+    (interaction: app.bsky.feed.defs.Interaction) => {
       if (!enabled) {
         return
       }
@@ -259,33 +259,43 @@ export function useFeedFeedbackContext() {
 // TODO
 // We will introduce a permissions framework for 3p feeds to
 // take advantage of the feed feedback API. Until that's in
-// place, we're hardcoding it to the discover feed.
+// place, we're hardcoding it to the discover and trending feeds.
 // -prf
 export function isDiscoverFeed(feed?: FeedDescriptor) {
   return !!feed && FEEDBACK_FEEDS.includes(feed)
 }
 
+export function isTrendingFeed(feed?: FeedDescriptor) {
+  return !!feed && feed.startsWith(`feedgen|at://${TRENDING_DID}/`)
+}
+
 function isInteractionAllowed(
   enabled: boolean,
-  feed: FeedSourceFeedInfo | undefined,
-  interaction: AppBskyFeedDefs.Interaction['event'],
+  feed: FeedDescriptor | undefined,
+  interaction: app.bsky.feed.defs.Interaction['event'],
 ) {
   if (!enabled || !feed) {
     return false
   }
-  const isDiscover = isDiscoverFeed(feed.feedDescriptor)
-  return isDiscover ? true : THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
+  if (isDiscoverFeed(feed) || isTrendingFeed(feed)) {
+    return true
+  }
+  return THIRD_PARTY_ALLOWED_INTERACTIONS.has(interaction)
 }
 
-function toString(interaction: AppBskyFeedDefs.Interaction): string {
+function toString(interaction: app.bsky.feed.defs.Interaction): string {
   return `${interaction.item}|${interaction.event}|${
     interaction.feedContext || ''
   }|${interaction.reqId || ''}`
 }
 
-function toInteraction(str: string): AppBskyFeedDefs.Interaction {
+function toInteraction(str: string): app.bsky.feed.defs.Interaction {
   const [item, event, feedContext, reqId] = str.split('|')
-  return {item, event, feedContext, reqId}
+  /*
+   * The fields come from splitting an internally-built key, so neither the
+   * at-uri nor the event token is narrowed by the compiler here.
+   */
+  return {item, event, feedContext, reqId} as app.bsky.feed.defs.Interaction
 }
 
 type AggregatedStats = {
@@ -304,7 +314,7 @@ function createAggregatedStats(): AggregatedStats {
 
 function sendOrAggregateInteractionsForStats(
   stats: AggregatedStats,
-  interactions: AppBskyFeedDefs.Interaction[],
+  interactions: app.bsky.feed.defs.Interaction[],
 ) {
   for (let interaction of interactions) {
     switch (interaction.event) {

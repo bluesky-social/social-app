@@ -2,10 +2,9 @@ import {useCallback, useState} from 'react'
 import {View} from 'react-native'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {saveBytesToDisk} from '#/lib/media/manip'
 import {logger} from '#/logger'
-import {useAgent} from '#/state/session'
+import {useChatClient, usePdsClient, useSession} from '#/state/session'
 import {atoms as a, useTheme, web} from '#/alf'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
@@ -14,6 +13,7 @@ import {InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {chat, com} from '#/lexicons'
 
 export function ExportCarDialog({
   control,
@@ -22,21 +22,29 @@ export function ExportCarDialog({
 }) {
   const {t: l} = useLingui()
   const t = useTheme()
-  const agent = useAgent()
+  const {currentAccount} = useSession()
+  const pdsClient = usePdsClient()
+  const chatClient = useChatClient()
   const [loading, setLoading] = useState<'repo' | 'chat' | false>(false)
 
   const download = useCallback(async () => {
-    if (!agent.session) {
+    if (!currentAccount) {
       return // shouldn't ever happen
     }
     try {
       setLoading('repo')
-      const did = agent.session.did
-      const downloadRes = await agent.com.atproto.sync.getRepo({did})
+      const did = currentAccount.did
+      const data = await pdsClient.call(com.atproto.sync.getRepo, {did})
+      /*
+       * getRepo declares `application/vnd.ipld.car`, so lex-client hands back
+       * the raw bytes unparsed and does not surface the response content-type.
+       * The old code already fell back to this same constant when the header was
+       * absent, and the endpoint always returns CAR.
+       */
       const saveRes = await saveBytesToDisk(
         'repo.car',
-        downloadRes.data,
-        downloadRes.headers['content-type'] || 'application/vnd.ipld.car',
+        data,
+        'application/vnd.ipld.car',
       )
 
       if (saveRes) {
@@ -45,31 +53,28 @@ export function ExportCarDialog({
     } catch (e) {
       logger.error('Error occurred while downloading CAR file', {message: e})
       Toast.show(l`Error occurred while saving file`, {type: 'error'})
-    } finally {
-      setLoading(false)
     }
-  }, [l, agent])
+    setLoading(false)
+  }, [l, currentAccount, pdsClient])
 
   const downloadChatData = useCallback(async () => {
-    if (!agent.session) {
+    if (!currentAccount) {
       return
     }
     try {
       setLoading('chat')
-      // Using raw fetch because the XRPC client incorrectly tries to JSON-parse
-      // application/jsonl responses (substring match on application/json).
-      const res = await agent.sessionManager.fetchHandler(
-        '/xrpc/chat.bsky.actor.exportAccountData',
-        {headers: DM_SERVICE_HEADERS},
-      )
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`)
-      }
-      const data = new Uint8Array(await res.arrayBuffer())
+      /*
+       * lex-client only JSON-parses a response when the declared output encoding
+       * is `application/json`; this endpoint declares `application/jsonl`, so it
+       * returns the raw bytes. That removes the reason for the old low-level
+       * fetchHandler workaround, and the chat client emits the proxy header
+       * itself, so the per-call DM headers go away too.
+       */
+      const data = await chatClient.call(chat.bsky.actor.exportAccountData)
       const saveRes = await saveBytesToDisk(
         'chat.jsonl',
         data,
-        res.headers.get('content-type') || 'application/jsonl',
+        'application/jsonl',
       )
 
       if (saveRes) {
@@ -78,10 +83,9 @@ export function ExportCarDialog({
     } catch (e) {
       logger.error('Error occurred while downloading chat data', {message: e})
       Toast.show(l`Error occurred while saving file`, {type: 'error'})
-    } finally {
-      setLoading(false)
     }
-  }, [l, agent])
+    setLoading(false)
+  }, [l, currentAccount, chatClient])
 
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>

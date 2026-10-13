@@ -1,6 +1,5 @@
 import {View} from 'react-native'
 import Animated, {FadeInDown, FadeOut} from 'react-native-reanimated'
-import {type AppBskyActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 
 import {PressableScale} from '#/lib/custom-animations/PressableScale'
@@ -11,6 +10,7 @@ import {UserAvatar} from '#/view/com/util/UserAvatar'
 import {atoms as a, platform, useTheme} from '#/alf'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 export function Autocomplete({
   prefix,
@@ -70,7 +70,7 @@ function AutocompleteProfileCard({
   totalItems,
   onPress,
 }: {
-  profile: AppBskyActorDefs.ProfileViewBasic
+  profile: app.bsky.actor.defs.ProfileViewBasic
   itemIndex: number
   totalItems: number
   onPress: () => void

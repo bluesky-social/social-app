@@ -1,0 +1,105 @@
+{
+  "id": "chat.bsky.actor.defs",
+  "defs": {
+    "memberRole": {
+      "type": "string",
+      "knownValues": [
+        "owner",
+        "standard"
+      ]
+    },
+    "groupConvoMember": {
+      "type": "object",
+      "required": [
+        "role"
+      ],
+      "properties": {
+        "role": {
+          "ref": "#memberRole",
+          "type": "ref",
+          "description": "The member's role within this conversation. Only present in group conversation member lists."
+        },
+        "addedBy": {
+          "ref": "#profileViewBasic",
+          "type": "ref",
+          "description": "Who added this member. Only present if the member was added (instead of joining via link)."
+        }
+      },
+      "description": "A current group convo member."
+    },
+    "profileViewBasic": {
+      "type": "object",
+      "required": [
+        "did",
+        "handle"
+      ],
+      "properties": {
+        "did": {
+          "type": "string",
+          "format": "did"
+        },
+        "kind": {
+          "refs": [
+            "#directConvoMember",
+            "#groupConvoMember",
+            "#pastGroupConvoMember"
+          ],
+          "type": "union",
+          "description": "Union field that has data specific to different kinds of convos."
+        },
+        "avatar": {
+          "type": "string",
+          "format": "uri"
+        },
+        "handle": {
+          "type": "string",
+          "format": "handle"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "ref": "com.atproto.label.defs#label",
+            "type": "ref"
+          }
+        },
+        "viewer": {
+          "ref": "app.bsky.actor.defs#viewerState",
+          "type": "ref"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "datetime"
+        },
+        "associated": {
+          "ref": "app.bsky.actor.defs#profileAssociated",
+          "type": "ref"
+        },
+        "displayName": {
+          "type": "string",
+          "maxLength": 640,
+          "maxGraphemes": 64
+        },
+        "chatDisabled": {
+          "type": "boolean",
+          "description": "Set to true when the actor cannot actively participate in conversations"
+        },
+        "verification": {
+          "ref": "app.bsky.actor.defs#verificationState",
+          "type": "ref"
+        }
+      }
+    },
+    "directConvoMember": {
+      "type": "object",
+      "properties": {}
+    },
+    "pastGroupConvoMember": {
+      "type": "object",
+      "required": [],
+      "properties": {},
+      "description": "A past group convo member."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

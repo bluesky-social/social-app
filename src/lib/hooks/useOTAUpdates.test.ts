@@ -4,11 +4,13 @@ import {
   fetchUpdateAsync,
   reloadAsync,
   setExtraParamAsync,
+  UpdateCheckResultNotAvailableReason,
   useUpdates,
 } from 'expo-updates'
 import {act, renderHook, waitFor} from '@testing-library/react-native'
 
 import {logger} from '#/logger'
+import {APP_VERSION} from '#/env'
 import {device} from '#/storage'
 import {
   useApplyPullRequestOTAUpdate,
@@ -22,9 +24,14 @@ jest.mock('expo-updates', () => ({
   reloadAsync: jest.fn(),
   setExtraParamAsync: jest.fn(),
   UpdateCheckResultNotAvailableReason: {
+    NO_UPDATE_AVAILABLE_ON_SERVER: 'noUpdateAvailableOnServer',
     UPDATE_PREVIOUSLY_FAILED: 'updatePreviouslyFailed',
   },
   useUpdates: jest.fn(),
+}))
+
+jest.mock('expo-linking', () => ({
+  getLinkingURL: jest.fn(() => null),
 }))
 
 jest.mock('#/logger', () => ({
@@ -42,25 +49,162 @@ jest.mock('#/storage', () => ({
   },
 }))
 
-const currentUpdate = {
-  channel: 'testflight',
-  emergencyLaunchReason: null,
-  isEmbeddedLaunch: false,
-  isEmergencyLaunch: false,
-  updateId: 'current-update',
+jest.mock('#/alf', () => ({
+  useTheme: jest.fn().mockImplementation(() => ({
+    scheme: 'light',
+  })),
+}))
+
+/**
+ * `channel` here is the build-time constant baked into the native build, not the
+ * channel of the running bundle. `channel` is passed as the manifest metadata
+ * channel our update server stamps into every published update - omit it to
+ * simulate an embedded launch, which has no server manifest.
+ */
+function mockCurrentlyRunning({
+  buildChannel = 'testflight',
+  channel,
+  updateId = 'current-update',
+}: {
+  buildChannel?: string
+  channel?: string
+  updateId?: string
+} = {}) {
+  const currentlyRunning = {
+    channel: buildChannel,
+    emergencyLaunchReason: null,
+    isEmbeddedLaunch: !channel,
+    isEmergencyLaunch: false,
+    updateId,
+    manifest: channel ? {id: updateId, metadata: {channel}} : undefined,
+  }
+  jest.mocked(useUpdates).mockReturnValue({
+    currentlyRunning,
+  } as ReturnType<typeof useUpdates>)
+  return currentlyRunning
 }
+
+const currentUpdate = {updateId: 'current-update'}
 
 beforeEach(() => {
   jest.clearAllMocks()
-  jest.mocked(useUpdates).mockReturnValue({
-    currentlyRunning: currentUpdate,
-  } as ReturnType<typeof useUpdates>)
+  mockCurrentlyRunning()
   jest.mocked(setExtraParamAsync).mockResolvedValue(undefined)
   jest.mocked(reloadAsync).mockResolvedValue(undefined)
   jest.spyOn(Alert, 'alert').mockImplementation(() => {})
 })
 
 describe('useApplyPullRequestOTAUpdate', () => {
+  it('detects a running PR deployment from the manifest metadata', () => {
+    mockCurrentlyRunning({
+      buildChannel: 'testflight',
+      channel: 'pull-request-123',
+    })
+
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    expect(result.current.currentChannel).toBe('pull-request-123')
+    expect(result.current.isCurrentlyRunningPullRequestDeployment).toBe(true)
+    expect(result.current.isCurrentlyRunningNonStandardChannel).toBe(true)
+  })
+
+  it('treats a standard downloaded update as a standard channel', () => {
+    mockCurrentlyRunning({buildChannel: 'testflight', channel: 'testflight'})
+
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    expect(result.current.currentChannel).toBe('testflight')
+    expect(result.current.isCurrentlyRunningPullRequestDeployment).toBe(false)
+    expect(result.current.isCurrentlyRunningNonStandardChannel).toBe(false)
+  })
+
+  it('falls back to the build channel for an embedded launch', () => {
+    mockCurrentlyRunning({buildChannel: 'testflight'})
+
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    expect(result.current.currentChannel).toBe('testflight')
+    expect(result.current.isCurrentlyRunningNonStandardChannel).toBe(false)
+  })
+
+  it('reports no channel when updates are disabled', () => {
+    mockCurrentlyRunning({buildChannel: ''})
+
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    expect(result.current.currentChannel).toBeUndefined()
+    expect(result.current.isCurrentlyRunningNonStandardChannel).toBe(false)
+  })
+
+  it('stays quiet when already running the latest of the requested channel', async () => {
+    mockCurrentlyRunning({
+      buildChannel: 'testflight',
+      channel: 'pull-request-123',
+    })
+    jest.mocked(checkForUpdateAsync).mockResolvedValue({
+      isAvailable: false,
+      reason: UpdateCheckResultNotAvailableReason.NO_UPDATE_AVAILABLE_ON_SERVER,
+    } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    await act(() => result.current.tryApplyUpdate('pull-request-123'))
+
+    expect(Alert.alert).not.toHaveBeenCalled()
+  })
+
+  it('warns when no deployment is available for a different channel', async () => {
+    mockCurrentlyRunning({
+      buildChannel: 'testflight',
+      channel: 'pull-request-123',
+    })
+    jest.mocked(checkForUpdateAsync).mockResolvedValue({
+      isAvailable: false,
+      reason: UpdateCheckResultNotAvailableReason.NO_UPDATE_AVAILABLE_ON_SERVER,
+    } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    await act(() => result.current.tryApplyUpdate('pull-request-456'))
+
+    expect(Alert.alert).toHaveBeenCalledWith(
+      'No Deployment Available',
+      expect.stringContaining('pull-request-456'),
+    )
+  })
+
+  it('stays silent on a re-fired intent even when the app version differs', async () => {
+    mockCurrentlyRunning({
+      buildChannel: 'testflight',
+      channel: 'pull-request-123',
+    })
+    jest.mocked(checkForUpdateAsync).mockResolvedValue({
+      isAvailable: false,
+      reason: UpdateCheckResultNotAvailableReason.NO_UPDATE_AVAILABLE_ON_SERVER,
+    } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    await act(() => result.current.tryApplyUpdate('pull-request-123', '0.0.0'))
+
+    expect(Alert.alert).not.toHaveBeenCalled()
+    expect(fetchUpdateAsync).not.toHaveBeenCalled()
+  })
+
+  it('prompts to apply an available update when the app version matches', async () => {
+    jest.mocked(checkForUpdateAsync).mockResolvedValue({
+      isAvailable: true,
+    } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+    const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+    await act(() =>
+      result.current.tryApplyUpdate('pull-request-123', APP_VERSION),
+    )
+
+    expect(Alert.alert).toHaveBeenCalledWith(
+      'Apply update from PR #123?',
+      expect.stringContaining('relaunch'),
+      expect.arrayContaining([expect.objectContaining({text: 'Apply'})]),
+    )
+  })
+
   it('warns before applying an OTA built for a different app version', async () => {
     jest.mocked(checkForUpdateAsync).mockResolvedValue({
       isAvailable: true,
@@ -74,7 +218,6 @@ describe('useApplyPullRequestOTAUpdate', () => {
 
     await act(() => result.current.tryApplyUpdate('pull-request-123', '0.0.0'))
 
-    expect(checkForUpdateAsync).not.toHaveBeenCalled()
     expect(Alert.alert).toHaveBeenCalledWith(
       'App Version Mismatch',
       expect.stringContaining('Applying it anyway may cause'),
@@ -82,7 +225,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
     )
 
     const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
-    act(() => buttons?.[1].onPress?.())
+    void act(() => buttons?.[1].onPress?.())
 
     await waitFor(() => expect(reloadAsync).toHaveBeenCalled())
     expect(device.set).toHaveBeenCalledWith(['pendingOTAUpdate'], {
@@ -117,7 +260,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
     await act(() => result.current.tryApplyUpdate('pull-request-123'))
     const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
 
-    act(() => buttons?.[1].onPress?.())
+    void act(() => buttons?.[1].onPress?.())
 
     await waitFor(() =>
       expect(Alert.alert).toHaveBeenLastCalledWith(
@@ -144,7 +287,7 @@ describe('useApplyPullRequestOTAUpdate', () => {
     await act(() => result.current.tryApplyUpdate('pull-request-123'))
     const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
 
-    act(() => buttons?.[1].onPress?.())
+    void act(() => buttons?.[1].onPress?.())
 
     await waitFor(() =>
       expect(Alert.alert).toHaveBeenLastCalledWith(
@@ -159,6 +302,74 @@ describe('useApplyPullRequestOTAUpdate', () => {
     })
     expect(device.remove).toHaveBeenCalledWith(['pendingOTAUpdate'])
     expect(result.current.pending).toBe(false)
+  })
+
+  describe('checkForUpdates', () => {
+    it('offers to relaunch into a newer update of the running channel', async () => {
+      mockCurrentlyRunning({
+        buildChannel: 'testflight',
+        channel: 'pull-request-123',
+      })
+      jest.mocked(checkForUpdateAsync).mockResolvedValue({
+        isAvailable: true,
+      } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+      jest.mocked(fetchUpdateAsync).mockResolvedValue({
+        isNew: true,
+        isRollBackToEmbedded: false,
+        manifest: {id: 'new-update'},
+      } as Awaited<ReturnType<typeof fetchUpdateAsync>>)
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+
+      // The running channel is checked, not the build's default channel.
+      expect(setExtraParamAsync).toHaveBeenCalledWith(
+        'channel',
+        'pull-request-123',
+      )
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Update Available',
+        expect.stringContaining('PR #123'),
+        expect.arrayContaining([expect.objectContaining({text: 'Relaunch'})]),
+      )
+
+      const buttons = jest.mocked(Alert.alert).mock.calls[0][2]
+      void act(() => buttons?.[1].onPress?.())
+
+      await waitFor(() => expect(reloadAsync).toHaveBeenCalled())
+      expect(result.current.pending).toBe(false)
+    })
+
+    it('reports being up to date on a standard channel', async () => {
+      mockCurrentlyRunning({buildChannel: 'testflight', channel: 'testflight'})
+      jest.mocked(checkForUpdateAsync).mockResolvedValue({
+        isAvailable: false,
+        reason:
+          UpdateCheckResultNotAvailableReason.NO_UPDATE_AVAILABLE_ON_SERVER,
+      } as Awaited<ReturnType<typeof checkForUpdateAsync>>)
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Up to Date',
+        expect.stringContaining('testflight'),
+      )
+      expect(fetchUpdateAsync).not.toHaveBeenCalled()
+    })
+
+    it('informs the user when the check fails', async () => {
+      jest.mocked(checkForUpdateAsync).mockRejectedValue(new Error('offline'))
+      const {result} = renderHook(() => useApplyPullRequestOTAUpdate())
+
+      await act(() => result.current.checkForUpdates())
+
+      expect(Alert.alert).toHaveBeenCalledWith(
+        'Update Check Failed',
+        expect.stringContaining('Error: offline'),
+      )
+      expect(result.current.pending).toBe(false)
+    })
   })
 })
 

@@ -4,6 +4,7 @@ import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
 
+import {formatTime} from '#/lib/media/video/formatTime'
 import {clamp} from '#/lib/numbers'
 import {
   useAutoplayDisabled,
@@ -31,7 +32,7 @@ import {GifPresentationControls} from '../../GifPresentationControls'
 import {TimeIndicator} from '../TimeIndicator'
 import {ControlButton} from './ControlButton'
 import {Scrubber} from './Scrubber'
-import {formatTime, useVideoElement} from './utils'
+import {useVideoElement} from './utils'
 import {type ControlsProps} from './VideoControls.shared'
 import {VolumeControl} from './VolumeControl'
 

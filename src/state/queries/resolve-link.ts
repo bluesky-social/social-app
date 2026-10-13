@@ -1,9 +1,13 @@
-import {type AtpAgent} from '@atproto/api'
 import {type QueryClient, queryOptions, useQuery} from '@tanstack/react-query'
 
-import {type ResolvedLink, resolveGif, resolveLink} from '#/lib/api/resolve'
+import {
+  type LinkResolvers,
+  type ResolvedLink,
+  resolveGif,
+  resolveLink,
+} from '#/lib/api/resolve'
 import {STALE} from '#/state/queries/index'
-import {useAgent} from '#/state/session'
+import {useAppviewClient, useChatClient} from '#/state/session'
 import {type Gif} from '#/features/gifPicker/types'
 
 export const RQKEY_LINK_ROOT = 'resolve-link'
@@ -12,24 +16,25 @@ export const RQKEY_LINK = (url: string) => [RQKEY_LINK_ROOT, url]
 export const RQKEY_GIF_ROOT = 'resolve-gif'
 export const RQKEY_GIF = (url: string) => [RQKEY_GIF_ROOT, url]
 
-export function resolveLinkQueryOptions(agent: AtpAgent, url: string) {
+export function resolveLinkQueryOptions(clients: LinkResolvers, url: string) {
   return queryOptions({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_LINK(url),
-    queryFn: () => resolveLink(agent, url),
+    queryFn: () => resolveLink(clients, url),
   })
 }
 
 export function useResolveLinkQuery(url: string) {
-  const agent = useAgent()
-  return useQuery(resolveLinkQueryOptions(agent, url))
+  const appviewClient = useAppviewClient()
+  const chatClient = useChatClient()
+  return useQuery(resolveLinkQueryOptions({appviewClient, chatClient}, url))
 }
 export function fetchResolveLinkQuery(
   queryClient: QueryClient,
-  agent: AtpAgent,
+  clients: LinkResolvers,
   url: string,
 ) {
-  return queryClient.fetchQuery(resolveLinkQueryOptions(agent, url))
+  return queryClient.fetchQuery(resolveLinkQueryOptions(clients, url))
 }
 export function precacheResolveLinkQuery(
   queryClient: QueryClient,
@@ -39,26 +44,25 @@ export function precacheResolveLinkQuery(
   queryClient.setQueryData(RQKEY_LINK(url), resolvedLink)
 }
 
+/*
+ * GIF resolution is pure metadata work on a URL the picker already returned -
+ * it makes no atproto request - so it takes no client.
+ */
 export function useResolveGifQuery(gif: Gif) {
-  const agent = useAgent()
   return useQuery({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_GIF(gif.url),
     queryFn: async () => {
-      return await resolveGif(agent, gif)
+      return await resolveGif(gif)
     },
   })
 }
-export function fetchResolveGifQuery(
-  queryClient: QueryClient,
-  agent: AtpAgent,
-  gif: Gif,
-) {
+export function fetchResolveGifQuery(queryClient: QueryClient, gif: Gif) {
   return queryClient.fetchQuery({
     staleTime: STALE.HOURS.ONE,
     queryKey: RQKEY_GIF(gif.url),
     queryFn: async () => {
-      return await resolveGif(agent, gif)
+      return await resolveGif(gif)
     },
   })
 }

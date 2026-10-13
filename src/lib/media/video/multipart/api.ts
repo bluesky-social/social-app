@@ -111,10 +111,15 @@ export function getUploadStatus(
   })
 }
 
-export function abortUpload(jobId: string, token: string) {
+export function abortUpload(
+  jobId: string,
+  token: string,
+  signal?: AbortSignal,
+) {
   return request<AbortUploadResponse>({
     route: '/xrpc/app.bsky.video.abortUpload',
     token,
+    signal,
     body: {jobId},
   })
 }

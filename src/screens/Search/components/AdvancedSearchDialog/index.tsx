@@ -137,8 +137,8 @@ function DialogInner({
   const [dateUntilActive, setDateUntilActive] = useState(!!parsed.until)
 
   const [filters, setFilters] = useState<AdvancedFilter[]>(parsed.filters)
-  const scrollRef = useRef<ScrollView>(null)
-  const filtersSectionRef = useRef<View>(null)
+  const scrollRef = useRef<React.ComponentRef<typeof ScrollView>>(null)
+  const filtersSectionRef = useRef<React.ComponentRef<typeof View>>(null)
 
   function addFilter() {
     if (filters.length >= MAX_FILTERS) return
@@ -246,7 +246,7 @@ function DialogInner({
           </TextField.LabelText>
           <ClearableInput
             label={l`Search query`}
-            defaultValue={query}
+            value={query}
             placeholder={l({
               message: 'cats dogs',
               comment:
@@ -264,7 +264,7 @@ function DialogInner({
             </TextField.LabelText>
             <ClearableInput
               label={l`None of these words`}
-              defaultValue={negatedWords}
+              value={negatedWords}
               placeholder={l({
                 message: 'cows pigs',
                 comment:
@@ -281,7 +281,7 @@ function DialogInner({
             </TextField.LabelText>
             <ClearableInput
               label={l`This exact phrase`}
-              defaultValue={exactPhrase}
+              value={exactPhrase}
               placeholder={l({
                 message: 'what’s up',
                 comment: 'Advanced search: Example of an “exact phrase” search',

@@ -1,6 +1,7 @@
 import {AbortError} from '#/lib/async/cancelable'
 import {createVideoEndpointUrl} from '#/lib/media/video/util'
 import {MultipartUploadError} from './api'
+import {MULTIPART_PART_TIMEOUT_MS} from './constants'
 import {type UploadPartFn} from './types'
 
 export function createUploadPart(
@@ -34,23 +35,40 @@ function sendPart(
       return
     }
     const xhr = new XMLHttpRequest()
+    xhr.timeout = MULTIPART_PART_TIMEOUT_MS
     const abort = () => xhr.abort()
     signal.addEventListener('abort', abort, {once: true})
-    const cleanup = () => signal.removeEventListener('abort', abort)
+    let settled = false
+    const cleanup = () => {
+      signal.removeEventListener('abort', abort)
+      xhr.onreadystatechange = null
+    }
+    const rejectOnce = (err: Error) => {
+      if (settled) return
+      settled = true
+      cleanup()
+      reject(err)
+    }
+    const resolveOnce = (result: Awaited<ReturnType<UploadPartFn>>) => {
+      if (settled) return
+      settled = true
+      cleanup()
+      resolve(result)
+    }
 
     xhr.upload.addEventListener('progress', event => {
       onProgress(event.loaded)
     })
     xhr.onerror = () => {
-      cleanup()
-      reject(new TypeError('Network request failed'))
+      rejectOnce(new TypeError('Network request failed'))
+    }
+    xhr.ontimeout = () => {
+      rejectOnce(new TypeError('Multipart part upload timed out'))
     }
     xhr.onabort = () => {
-      cleanup()
-      reject(new AbortError())
+      rejectOnce(new AbortError())
     }
     xhr.onload = () => {
-      cleanup()
       let data: {
         partNumber?: number
         sizeBytes?: number
@@ -63,7 +81,7 @@ function sendPart(
         data = {}
       }
       if (xhr.status < 200 || xhr.status >= 300) {
-        reject(
+        rejectOnce(
           new MultipartUploadError(
             data.message ||
               data.error ||
@@ -74,10 +92,29 @@ function sendPart(
         )
       } else {
         onProgress(part.size)
-        resolve({
+        resolveOnce({
           partNumber: data.partNumber ?? part.partNumber,
           sizeBytes: data.sizeBytes ?? part.size,
         })
+      }
+    }
+    xhr.onreadystatechange = () => {
+      if (
+        xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED &&
+        xhr.status >= 400
+      ) {
+        // React Native does not dispatch `load` until the response body has
+        // completed. Reject from the headers so a stalled 5xx response body
+        // cannot prevent the retry loop (or eventual abortUpload) from running.
+        const status = xhr.status
+        rejectOnce(
+          new MultipartUploadError(
+            `Video service returned ${status}`,
+            undefined,
+            status,
+          ),
+        )
+        xhr.abort()
       }
     }
     xhr.open(

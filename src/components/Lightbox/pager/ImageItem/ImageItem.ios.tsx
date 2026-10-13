@@ -9,9 +9,10 @@
 import {memo, useState} from 'react'
 import {ActivityIndicator, StyleSheet} from 'react-native'
 import {
-  Gesture,
   GestureDetector,
   type PanGesture,
+  useExclusiveGestures,
+  useTapGesture,
 } from 'react-native-gesture-handler'
 import Animated, {
   type SharedValue,
@@ -82,7 +83,7 @@ const ImageItem = ({
   const scrollHandler = useAnimatedScrollHandler({
     onScroll(e) {
       'worklet'
-      const nextIsScaled = e.zoomScale > 1
+      const nextIsScaled = (e.zoomScale ?? 1) > 1
       if (scaled !== nextIsScaled) {
         scheduleOnRN(handleZoom, nextIsScaled)
       }
@@ -109,21 +110,22 @@ const ImageItem = ({
     height: number
   }) {
     const scrollResponderRef = scrollViewRef?.current?.getScrollResponder()
-    // @ts-ignore
     scrollResponderRef?.scrollResponderZoomTo({
       ...nextZoomRect, // This rect is in screen coordinates
       animated: true,
     })
   }
 
-  const singleTap = Gesture.Tap().onEnd(() => {
-    'worklet'
-    scheduleOnRN(onTap)
+  const singleTap = useTapGesture({
+    onDeactivate: () => {
+      'worklet'
+      scheduleOnRN(onTap)
+    },
   })
 
-  const doubleTap = Gesture.Tap()
-    .numberOfTaps(2)
-    .onEnd(e => {
+  const doubleTap = useTapGesture({
+    numberOfTaps: 2,
+    onDeactivate: e => {
       'worklet'
       const screenSize = measureSafeArea()
       const {absoluteX, absoluteY} = e
@@ -143,9 +145,10 @@ const ImageItem = ({
         )
       }
       scheduleOnRN(zoomTo, nextZoomRect)
-    })
+    },
+  })
 
-  const composedGesture = Gesture.Exclusive(
+  const composedGesture = useExclusiveGestures(
     dismissSwipePan,
     doubleTap,
     singleTap,
@@ -218,7 +221,6 @@ const ImageItem = ({
   return (
     <GestureDetector gesture={composedGesture}>
       <Animated.ScrollView
-        // @ts-ignore Something's up with the types here
         ref={scrollViewRef}
         pinchGestureEnabled
         showsHorizontalScrollIndicator={false}

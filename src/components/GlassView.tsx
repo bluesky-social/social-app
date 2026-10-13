@@ -20,7 +20,7 @@ export const IS_GLASS_AVAILABLE =
  */
 export const GlassView = IS_GLASS_AVAILABLE ? InnerGlassView : FallbackView
 
-export type GlassViewProps = ExpoGlassViewProps & {
+export type GlassViewProps = Omit<ExpoGlassViewProps, 'ref'> & {
   fallbackStyle?: StyleProp<ViewStyle>
 }
 

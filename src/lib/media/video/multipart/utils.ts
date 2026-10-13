@@ -25,3 +25,9 @@ export function delay(ms: number, signal: AbortSignal) {
     signal.addEventListener('abort', onAbort, {once: true})
   })
 }
+
+/** Exponential backoff with 50-100% jitter to avoid synchronized retries. */
+export function retryDelayMs(attempt: number) {
+  const ceiling = Math.min(500 * 2 ** (attempt - 1), 8_000)
+  return ceiling * (0.5 + Math.random() * 0.5)
+}

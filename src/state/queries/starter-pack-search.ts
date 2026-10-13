@@ -1,4 +1,3 @@
-import {type AppBskyGraphSearchStarterPacksV2} from '@atproto/api'
 import {
   type InfiniteData,
   keepPreviousData,
@@ -7,7 +6,8 @@ import {
 } from '@tanstack/react-query'
 
 import {STALE} from '#/state/queries'
-import {useAgent} from '#/state/session'
+import {useAppviewClient} from '#/state/session'
+import {app} from '#/lexicons'
 
 export const RQKEY_ROOT = 'starter-pack-search'
 export const RQKEY = (query: string, limit?: number) => [
@@ -27,23 +27,22 @@ export function useStarterPackSearch({
   maintainData?: boolean
   limit?: number
 }) {
-  const agent = useAgent()
+  const client = useAppviewClient()
   return useInfiniteQuery<
-    AppBskyGraphSearchStarterPacksV2.OutputSchema,
+    app.bsky.graph.searchStarterPacksV2.$OutputBody,
     Error,
-    InfiniteData<AppBskyGraphSearchStarterPacksV2.OutputSchema>,
+    InfiniteData<app.bsky.graph.searchStarterPacksV2.$OutputBody>,
     QueryKey,
     string | undefined
   >({
     staleTime: STALE.MINUTES.FIVE,
     queryKey: RQKEY(query, limit),
     queryFn: async ({pageParam}) => {
-      const res = await agent.app.bsky.graph.searchStarterPacksV2({
+      return await client.call(app.bsky.graph.searchStarterPacksV2, {
         q: query,
         limit,
         cursor: pageParam,
       })
-      return res.data
     },
     enabled: enabled && !!query,
     initialPageParam: undefined,
@@ -54,7 +53,7 @@ export function useStarterPackSearch({
 }
 
 function select(
-  data: InfiniteData<AppBskyGraphSearchStarterPacksV2.OutputSchema>,
+  data: InfiniteData<app.bsky.graph.searchStarterPacksV2.$OutputBody>,
 ) {
   // enforce uniqueness
   const uris = new Set()

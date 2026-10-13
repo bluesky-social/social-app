@@ -1,6 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {XRPCError} from '@atproto/api'
+import {XrpcResponseError} from '@atproto/lex'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -14,6 +14,7 @@ import {
 import {useGetTimeAgo} from '#/lib/hooks/useTimeAgo'
 import {useTLDs} from '#/lib/hooks/useTLDs'
 import {isEmailMaybeInvalid} from '#/lib/strings/email'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {type AppLanguage} from '#/locale/languages'
 import {useLanguagePrefs} from '#/state/preferences'
 import {useSession} from '#/state/session'
@@ -33,6 +34,7 @@ import {Text} from '#/components/Typography'
 import {useAgeAssurance} from '#/ageAssurance'
 import {useBeginAgeAssurance} from '#/ageAssurance/useBeginAgeAssurance'
 import {useAnalytics} from '#/analytics'
+import {app} from '#/lexicons'
 
 export {useDialogControl} from '#/components/Dialog/context'
 
@@ -139,30 +141,37 @@ function Inner() {
         msg`Something went wrong, please try again`,
       )
 
-      if (e instanceof XRPCError) {
-        if (e.error === 'InvalidEmail') {
-          error = _(
-            msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
-          )
-          ax.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
-        } else if (e.error === 'DidTooLong') {
-          error = (
-            <>
-              <Trans>
-                We're having issues initializing the age assurance process for
-                your account. Please{' '}
-                <SimpleInlineLinkText
-                  to={createSupportLink({code: SupportCode.AA_DID, email})}
-                  label={_(msg`Contact support`)}>
-                  contact support
-                </SimpleInlineLinkText>{' '}
-                for assistance.
-              </Trans>
-            </>
-          )
-          ax.metric('ageAssurance:initDialogError', {code: 'DidTooLong'})
-        } else {
-          ax.metric('ageAssurance:initDialogError', {code: 'other'})
+      if (e instanceof XrpcResponseError) {
+        switch (matchXrpcError(e, app.bsky.ageassurance.begin)) {
+          case 'InvalidEmail':
+            error = _(
+              msg`Please enter a valid, non-temporary email address. You may need to access this email in the future.`,
+            )
+            ax.metric('ageAssurance:initDialogError', {code: 'InvalidEmail'})
+            break
+          case 'DidTooLong':
+            error = (
+              <>
+                <Trans>
+                  We're having issues initializing the age assurance process for
+                  your account. Please{' '}
+                  <SimpleInlineLinkText
+                    to={createSupportLink({code: SupportCode.AA_DID, email})}
+                    label={_(msg`Contact support`)}>
+                    contact support
+                  </SimpleInlineLinkText>{' '}
+                  for assistance.
+                </Trans>
+              </>
+            )
+            ax.metric('ageAssurance:initDialogError', {code: 'DidTooLong'})
+            break
+          default:
+            /*
+             * An undeclared code keeps the generic message rather than surfacing
+             * the server's text, as the old `e.error` fallthrough did.
+             */
+            ax.metric('ageAssurance:initDialogError', {code: 'other'})
         }
       } else {
         const {clean, raw} = cleanError(e)

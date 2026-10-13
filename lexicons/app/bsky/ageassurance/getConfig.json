@@ -1,0 +1,18 @@
+{
+  "id": "app.bsky.ageassurance.getConfig",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "ref": "app.bsky.ageassurance.defs#config",
+          "type": "ref"
+        },
+        "encoding": "application/json"
+      },
+      "description": "Returns Age Assurance configuration for use on the client."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -8,7 +8,7 @@ import {
 } from 'react'
 import {
   Keyboard,
-  type KeyboardEventListener,
+  type KeyboardEvent,
   type LayoutChangeEvent,
   type NativeScrollEvent,
   type NativeSyntheticEvent,
@@ -26,6 +26,12 @@ import Animated, {
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {scheduleOnRN} from 'react-native-worklets'
+import {BottomSheet, BottomSheetSnapPoint} from '@bsky.app/bottom-sheet'
+import {
+  type BottomSheetSnapPointChangeEvent,
+  type BottomSheetStateChangeEvent,
+} from '@bsky.app/bottom-sheet/src/BottomSheet.types'
+import {type BottomSheetNativeComponent} from '@bsky.app/bottom-sheet/src/BottomSheetNativeComponent'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 
@@ -45,12 +51,6 @@ import {
 import {createInput} from '#/components/forms/TextField'
 import {useOnKeyboard} from '#/components/hooks/useOnKeyboard'
 import {IS_ANDROID, IS_IOS, IS_LIQUID_GLASS} from '#/env'
-import {BottomSheet, BottomSheetSnapPoint} from '../../../modules/bottom-sheet'
-import {
-  type BottomSheetSnapPointChangeEvent,
-  type BottomSheetStateChangeEvent,
-} from '../../../modules/bottom-sheet/src/BottomSheet.types'
-import {type BottomSheetNativeComponent} from '../../../modules/bottom-sheet/src/BottomSheetNativeComponent'
 
 export {useDialogContext, useDialogControl} from '#/components/Dialog/context'
 export * from '#/components/Dialog/shared'
@@ -62,6 +62,7 @@ export const Input = createInput(TextInput)
 export function Outer({
   children,
   control,
+  onOpen,
   onClose,
   nativeOptions,
   testID,
@@ -97,9 +98,10 @@ export function Outer({
   const open = useCallback<DialogControlProps['open']>(() => {
     // Run any leftover callbacks that might have been queued up before calling `.open()`
     callQueuedCallbacks()
+    onOpen?.()
     setDialogIsOpen(control.id, true)
     ref.current?.present()
-  }, [setDialogIsOpen, control.id, callQueuedCallbacks])
+  }, [setDialogIsOpen, control.id, callQueuedCallbacks, onOpen])
 
   // This is the function that we call when we want to dismiss the dialog.
   const close = useCallback<DialogControlProps['close']>(cb => {
@@ -201,80 +203,85 @@ export function Inner(props: DialogInnerProps) {
   return <ScrollableInner {...props} />
 }
 
-export const ScrollableInner = forwardRef<ScrollView, DialogInnerProps>(
-  function ScrollableInner(
-    {children, contentContainerStyle, header, footer, style, ...props},
-    ref,
-  ) {
-    const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
-      useDialogContext()
-    const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
-    const insets = useSafeAreaInsets()
-    const [keyboardHeight, setKeyboardHeight] = useState(() =>
-      IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
-    )
+export function ScrollableInner({
+  ref,
+  children,
+  contentContainerStyle,
+  header,
+  footer,
+  style,
+  ...props
+}: DialogInnerProps & {
+  ref?: React.Ref<React.ComponentRef<typeof ScrollView>>
+}) {
+  const {nativeSnapPoint, disableDrag, setDisableDrag, isHeightConstrained} =
+    useDialogContext()
+  const isAtMaxSnapPoint = nativeSnapPoint === BottomSheetSnapPoint.Full
+  const insets = useSafeAreaInsets()
+  const [keyboardHeight, setKeyboardHeight] = useState(() =>
+    IS_ANDROID ? (Keyboard.metrics()?.height ?? 0) : 0,
+  )
 
-    const keyboardEventHandler = useCallback<KeyboardEventListener>(e => {
-      setKeyboardHeight(e.endCoordinates.height)
-    }, [])
-    useOnKeyboard('keyboardDidShow', keyboardEventHandler)
-    useOnKeyboard('keyboardDidHide', keyboardEventHandler)
+  const keyboardEventHandler = useCallback((e: KeyboardEvent) => {
+    setKeyboardHeight(e.endCoordinates.height)
+  }, [])
+  useOnKeyboard('keyboardDidShow', keyboardEventHandler)
+  useOnKeyboard('keyboardDidHide', keyboardEventHandler)
 
-    const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
-      if (!IS_ANDROID) {
-        return
-      }
-      const {contentOffset} = e.nativeEvent
-      if (contentOffset.y > 0 && !disableDrag) {
-        setDisableDrag(true)
-      } else if (contentOffset.y <= 1 && disableDrag) {
-        setDisableDrag(false)
-      }
+  const onScroll = (e: NativeSyntheticEvent<NativeScrollEvent>) => {
+    if (!IS_ANDROID) {
+      return
     }
+    const {contentOffset} = e.nativeEvent
+    if (contentOffset.y > 0 && !disableDrag) {
+      setDisableDrag(true)
+    } else if (contentOffset.y <= 1 && disableDrag) {
+      setDisableDrag(false)
+    }
+  }
 
-    return (
-      <>
-        <ScrollView
-          style={[isHeightConstrained && a.flex_1, style]}
-          contentContainerStyle={[
-            a.pt_2xl,
-            IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
-            platform({
-              ios: a.pb_2xl,
-              android: {
-                paddingBottom: keyboardHeight + insets.bottom + tokens.space.xl,
-              },
-            }),
-            contentContainerStyle,
-          ]}
-          ref={ref}
-          showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
-          contentInsetAdjustmentBehavior={
-            isAtMaxSnapPoint ? 'automatic' : 'never'
-          }
-          automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
-          {...props}
-          bounces={isAtMaxSnapPoint}
-          scrollEventThrottle={50}
-          // set drag state based on scroll on android.
-          // we want to detect if it's at the top or not, so watch
-          // scrollEndDrag and momentumScrollEnd as well
-          onScroll={android(onScroll)}
-          onScrollEndDrag={android(onScroll)}
-          onMomentumScrollEnd={android(onScroll)}
-          keyboardShouldPersistTaps="handled"
-          // TODO: figure out why this positions the header absolutely (rather than stickily)
-          // on Android. fine to disable for now, because we don't have any
-          // dialogs that use this that actually scroll -sfn
-          stickyHeaderIndices={ios(header ? [0] : undefined)}>
-          {header}
-          {children}
-        </ScrollView>
-        {footer}
-      </>
-    )
-  },
-)
+  return (
+    <>
+      <ScrollView
+        style={[isHeightConstrained && a.flex_1, style]}
+        contentContainerStyle={[
+          a.pt_2xl,
+          IS_LIQUID_GLASS ? a.px_2xl : a.px_xl,
+          platform({
+            ios: a.pb_2xl,
+            android: {
+              paddingBottom: keyboardHeight + insets.bottom + tokens.space.xl,
+            },
+          }),
+          contentContainerStyle,
+        ]}
+        ref={ref}
+        showsVerticalScrollIndicator={IS_ANDROID ? false : undefined}
+        contentInsetAdjustmentBehavior={
+          isAtMaxSnapPoint ? 'automatic' : 'never'
+        }
+        automaticallyAdjustKeyboardInsets={isAtMaxSnapPoint}
+        {...props}
+        bounces={isAtMaxSnapPoint}
+        scrollEventThrottle={50}
+        // set drag state based on scroll on android.
+        // we want to detect if it's at the top or not, so watch
+        // scrollEndDrag and momentumScrollEnd as well
+        onScroll={android(onScroll)}
+        onScrollEndDrag={android(onScroll)}
+        onMomentumScrollEnd={android(onScroll)}
+        keyboardShouldPersistTaps="handled"
+        // TODO: figure out why this positions the header absolutely (rather than stickily)
+        // on Android. fine to disable for now, because we don't have any
+        // dialogs that use this that actually scroll -sfn
+        stickyHeaderIndices={ios(header ? [0] : undefined)}>
+        {header}
+        {children}
+      </ScrollView>
+      {footer}
+    </>
+  )
+}
 
 export const InnerFlatList = forwardRef<
   ListMethods,

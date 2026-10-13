@@ -1,31 +1,47 @@
-import {getAgeAssuranceRegionConfig} from '@atproto/api'
-
 import {getAgeAssuranceRegionConfigForGeolocation} from '#/ageAssurance/util'
+import {type app} from '#/lexicons'
 
 jest.mock('#/ageAssurance/data')
-jest.mock('@atproto/api', () => ({
-  ...jest.requireActual('@atproto/api'),
-  getAgeAssuranceRegionConfig: jest.fn(),
-}))
 
 /*
- * Platform-based region filtering itself is implemented and tested in
- * `@atproto/api` (see `getAgeAssuranceRegionConfig`). What we own - and test
- * here - is that region resolution passes the current platform through. The
- * jest preset is `jest-expo/ios`, so `AGE_ASSURANCE_PLATFORM` resolves to
- * `ios` in these tests.
+ * Platform scoping is applied locally in `util.ts` (the SDK region matcher
+ * takes no platform filter). The jest preset is `jest-expo/ios`, so
+ * `AGE_ASSURANCE_PLATFORM` resolves to `ios` in these tests.
  */
 describe('getAgeAssuranceRegionConfigForGeolocation', () => {
-  it('passes the current platform to the SDK region matcher', () => {
-    const config = {regions: []}
-    getAgeAssuranceRegionConfigForGeolocation(config, {
-      countryCode: 'US',
-      regionCode: 'TX',
-    })
-    expect(getAgeAssuranceRegionConfig).toHaveBeenCalledWith(config, {
-      countryCode: 'US',
-      regionCode: 'TX',
-      platform: 'ios',
-    })
+  const region = (
+    countryCode: string,
+    regionCode?: string,
+    platforms?: app.bsky.ageassurance.defs.ConfigRegion['platforms'],
+  ): app.bsky.ageassurance.defs.ConfigRegion => ({
+    countryCode,
+    regionCode,
+    platforms,
+    minAccessAge: 13,
+    rules: [],
+  })
+
+  it('skips regions for other platforms and continues matching', () => {
+    const web = region('US', undefined, ['web'])
+    const ios = region('US', undefined, ['ios'])
+
+    expect(
+      getAgeAssuranceRegionConfigForGeolocation(
+        {regions: [web, ios]},
+        {countryCode: 'US', regionCode: undefined},
+      ),
+    ).toBe(ios)
+  })
+
+  it('matches a region-specific config before a later country config', () => {
+    const texas = region('US', 'TX')
+    const us = region('US')
+
+    expect(
+      getAgeAssuranceRegionConfigForGeolocation(
+        {regions: [texas, us]},
+        {countryCode: 'US', regionCode: 'TX'},
+      ),
+    ).toBe(texas)
   })
 })

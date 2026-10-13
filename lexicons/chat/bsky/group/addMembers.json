@@ -1,0 +1,88 @@
+{
+  "id": "chat.bsky.group.addMembers",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "input": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convoId",
+            "members"
+          ],
+          "properties": {
+            "convoId": {
+              "type": "string"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "did"
+              },
+              "minLength": 1
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "errors": [
+        {
+          "name": "AccountSuspended"
+        },
+        {
+          "name": "BlockedActor"
+        },
+        {
+          "name": "BlockedSubject"
+        },
+        {
+          "name": "ConvoLocked"
+        },
+        {
+          "name": "InsufficientRole"
+        },
+        {
+          "name": "InvalidConvo"
+        },
+        {
+          "name": "MemberLimitReached"
+        },
+        {
+          "name": "NotFollowedBySender"
+        },
+        {
+          "name": "RecipientNotFound"
+        },
+        {
+          "name": "UserForbidsGroups"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "convo"
+          ],
+          "properties": {
+            "convo": {
+              "ref": "chat.bsky.convo.defs#convoView",
+              "type": "ref"
+            },
+            "addedMembers": {
+              "type": "array",
+              "items": {
+                "ref": "chat.bsky.actor.defs#profileViewBasic",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "description": "Adds members to a group. The members are added in 'request' status, so they have to accept it. This creates convo memberships."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

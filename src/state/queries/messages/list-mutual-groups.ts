@@ -1,8 +1,9 @@
+import {type DidString} from '@atproto/syntax'
 import {useInfiniteQuery} from '@tanstack/react-query'
 
-import {DM_SERVICE_HEADERS} from '#/lib/constants'
 import {createQueryKey} from '#/state/queries/util'
-import {useAgent} from '#/state/session'
+import {useChatClient} from '#/state/session'
+import {chat} from '#/lexicons'
 
 const listMutualGroupsQueryKeyRoot = 'list-mutual-groups'
 
@@ -18,7 +19,7 @@ export function useListMutualGroupsQuery({
   enabled?: boolean
   limit?: number
 }) {
-  const agent = useAgent()
+  const client = useChatClient()
   const isEnabled = enabled !== false && !!subject
 
   return useInfiniteQuery({
@@ -27,11 +28,12 @@ export function useListMutualGroupsQuery({
     enabled: isEnabled,
     queryKey: createListMutualGroupsQueryKey({subject: subject ?? ''}),
     queryFn: async ({pageParam}) => {
-      const {data} = await agent.chat.bsky.group.listMutualGroups(
-        {subject: subject!, cursor: pageParam, limit},
-        {headers: DM_SERVICE_HEADERS},
-      )
-      return data
+      return await client.call(chat.bsky.group.listMutualGroups, {
+        // guarded by `enabled`, and callers pass a resolved actor did
+        subject: subject as DidString,
+        cursor: pageParam,
+        limit,
+      })
     },
     initialPageParam: undefined as string | undefined,
     getNextPageParam: page => page.cursor,

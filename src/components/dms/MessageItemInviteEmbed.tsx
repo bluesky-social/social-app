@@ -5,12 +5,13 @@ import Animated, {
   type SharedValue,
   useAnimatedStyle,
 } from 'react-native-reanimated'
-import {type $Typed, type ChatBskyEmbedJoinLink} from '@atproto/api'
+import {type $Typed} from '@atproto/lex'
 
 import {useConvoActive} from '#/state/messages/convo'
 import {isKnownJoinLinkPreview} from '#/state/queries/join-links'
 import {atoms as a, native, useTheme, web} from '#/alf'
 import * as ChatInvite from '#/components/dms/ChatInvite'
+import {type chat} from '#/lexicons'
 import {MessageContextProvider} from './MessageContext'
 
 const BORDER_RADIUS = 20
@@ -24,7 +25,7 @@ let MessageItemInviteEmbed = ({
   squaredBottomCorner,
   highlightSV,
 }: {
-  embed: $Typed<ChatBskyEmbedJoinLink.View>
+  embed: $Typed<chat.bsky.embed.joinLink.View>
   isFromSelf: boolean
   isGroupChat: boolean
   squaredTopCorner: boolean

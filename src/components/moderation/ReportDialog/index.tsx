@@ -7,21 +7,23 @@ import {
   useState,
 } from 'react'
 import {Pressable, type ScrollView, View} from 'react-native'
-import {type AppBskyLabelerDefs, BSKY_LABELER_DID} from '@atproto/api'
+import {api} from '@bsky/sdk'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {wait} from '#/lib/async/wait'
+import {formatTime} from '#/lib/media/video/formatTime'
 import {getLabelingServiceTitle} from '#/lib/moderation'
 import {useCallOnce} from '#/lib/once'
 import {sanitizeHandle} from '#/lib/strings/handles'
 import {useMyLabelersQuery} from '#/state/queries/preferences'
 import {CharProgress} from '#/view/com/composer/char-progress/CharProgress'
 import {UserAvatar} from '#/view/com/util/UserAvatar'
-import {atoms as a, useGutters, useTheme} from '#/alf'
+import {atoms as a, useGutters, useTheme, web} from '#/alf'
 import * as Admonition from '#/components/Admonition'
 import {Button, ButtonIcon, ButtonText} from '#/components/Button'
 import * as Dialog from '#/components/Dialog'
 import {useGlobalDialogsControlContext} from '#/components/dialogs/Context'
+import * as Toggle from '#/components/forms/Toggle'
 import {useDelayedLoading} from '#/components/hooks/useDelayedLoading'
 import {ArrowRotateCounterClockwise_Stroke2_Corner0_Rounded as Retry} from '#/components/icons/ArrowRotate'
 import {
@@ -36,6 +38,7 @@ import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_NATIVE} from '#/env'
+import {type app} from '#/lexicons'
 import {useSubmitReportMutation} from './action'
 import {
   BSKY_LABELER_ONLY_REPORT_REASONS,
@@ -45,6 +48,8 @@ import {
   SUPPORT_PAGE,
 } from './const'
 import {useCopyForSubject} from './copy'
+import {classifyReportError} from './errors'
+import {useReportDialogMetadataContext} from './ReportDialogMetadataContext'
 import {
   getNciiQualificationOutcome,
   initialState,
@@ -78,19 +83,47 @@ export function ReportDialog(
   },
 ) {
   const ax = useAnalytics()
+  const reportDialogMetadata = useReportDialogMetadataContext()
   const subject = useMemo(
     () => (props.subject ? parseReportSubject(props.subject) : undefined),
     [props.subject],
   )
+  const [presentation, setPresentation] = useState<{
+    openCount: number
+    videoTimestampSeconds?: number
+  }>({openCount: 0})
+  const onOpen = () => {
+    const seconds =
+      subject?.type === 'post' && subject.attributes.video
+        ? reportDialogMetadata?.current.videoTimestampSeconds
+        : undefined
+
+    setPresentation(current => ({
+      openCount: current.openCount + 1,
+      // Values below one second indicate that the video was never meaningfully
+      // played, so avoid offering to attach a noisy "0:00" timestamp.
+      videoTimestampSeconds:
+        seconds !== undefined && seconds >= 1 ? Math.floor(seconds) : undefined,
+    }))
+  }
   const propsOnClose = props.onClose
   const onClose = useCallback(() => {
     ax.metric('reportDialog:close', {})
     propsOnClose?.()
   }, [ax, propsOnClose])
   return (
-    <Dialog.Outer control={props.control} onClose={onClose}>
+    <Dialog.Outer control={props.control} onOpen={onOpen} onClose={onClose}>
       <Dialog.Handle />
-      {subject ? <Inner {...props} subject={subject} /> : <Invalid />}
+      {subject ? (
+        <Inner
+          key={presentation.openCount}
+          {...props}
+          subject={subject}
+          videoTimestampSeconds={presentation.videoTimestampSeconds}
+        />
+      ) : (
+        <Invalid />
+      )}
     </Dialog.Outer>
   )
 }
@@ -117,12 +150,16 @@ function Invalid() {
   )
 }
 
-function Inner(props: ReportDialogProps) {
+function Inner(
+  props: ReportDialogProps & {
+    videoTimestampSeconds?: number
+  },
+) {
   const ax = useAnalytics()
   const logger = ax.logger.useChild(ax.logger.Context.ReportDialog)
   const t = useTheme()
   const {t: l} = useLingui()
-  const ref = useRef<ScrollView>(null)
+  const ref = useRef<React.ComponentRef<typeof ScrollView>>(null)
   const {
     data: allLabelers,
     isLoading: isLabelerLoading,
@@ -140,6 +177,8 @@ function Inner(props: ReportDialogProps) {
   const {mutateAsync: submitReport} = useSubmitReportMutation()
   const [isPending, setIsPending] = useState(false)
   const [isSuccess, setIsSuccess] = useState(false)
+
+  const {videoTimestampSeconds} = props
 
   // some reasons ONLY go to Bluesky
   const isBskyOnlyReason = state?.selectedOption?.reason
@@ -184,7 +223,7 @@ function Inner(props: ReportDialogProps) {
       .filter(l => {
         if (!state.selectedOption) return false
         if (isBskyOnlyReason || isBskyOnlySubject) {
-          return l.creator.did === BSKY_LABELER_DID
+          return l.creator.did === api.moderation.did
         }
         const supportedReasonTypes: string[] | undefined = l.reasonTypes
         if (supportedReasonTypes === undefined) return true
@@ -229,6 +268,7 @@ function Inner(props: ReportDialogProps) {
         submitReport({
           subject: props.subject,
           state,
+          videoTimestampSeconds,
         }),
       )
       setIsSuccess(true)
@@ -236,6 +276,7 @@ function Inner(props: ReportDialogProps) {
         reason: state.selectedOption?.reason ?? '',
         labeler: state.selectedLabeler?.creator.handle ?? '',
         details: !!state.details,
+        videoTimestamp: state.includeVideoTimestamp,
       })
       // give time for user feedback
       setTimeout(() => {
@@ -244,19 +285,43 @@ function Inner(props: ReportDialogProps) {
         })
       }, 1e3)
     } catch (err) {
-      const e = err as Error
+      const e = err instanceof Error ? err : new Error(String(err))
+      const classification = classifyReportError(e)
+      const tags = {
+        ...classification.tags,
+        report_subject_type: props.subject.type,
+        report_labeler: state.selectedLabeler?.creator.did,
+        report_reason: state.selectedOption?.reason,
+      }
+
       ax.metric('reportDialog:failure', {})
-      logger.error(e, {
-        source: 'ReportDialog',
-      })
+
+      if (classification.shouldReport) {
+        logger.error(e, {
+          source: 'ReportDialog',
+          fingerprint: classification.fingerprint,
+          tags,
+        })
+      } else {
+        logger.warn('Report rejected for taken down account', {tags})
+      }
+
+      let error = l`Something went wrong. Please try again.`
+      if (classification.kind === 'account-takedown') {
+        error = l`Your account cannot submit reports while it is suspended.`
+      } else if (classification.kind === 'invalid-reason-type') {
+        error = l`This moderation service does not support that report reason. Please choose a different reason or moderation service.`
+      } else if (classification.kind === 'service-unavailable') {
+        error = l`The moderation service is temporarily unavailable. Please try again later.`
+      }
+
       dispatch({
         type: 'setError',
-        error: l`Something went wrong. Please try again.`,
+        error,
       })
-    } finally {
-      setIsPending(false)
     }
-  }, [logger, submitReport, props, state, ax, l])
+    setIsPending(false)
+  }, [logger, submitReport, props, state, ax, l, videoTimestampSeconds])
 
   useCallOnce(() => {
     ax.metric('reportDialog:open', {
@@ -269,7 +334,7 @@ function Inner(props: ReportDialogProps) {
       testID="report:dialog"
       label={l`Report dialog`}
       ref={ref}
-      style={[a.w_full, {maxWidth: 500}]}>
+      style={[a.w_full, web({maxWidth: 500})]}>
       <View style={[a.gap_2xl, IS_NATIVE && a.pt_md]}>
         <StepOuter>
           <StepTitle
@@ -576,6 +641,18 @@ function Inner(props: ReportDialogProps) {
                   </View>
                 )}
               </View>
+
+              {videoTimestampSeconds !== undefined &&
+                state.selectedLabeler?.creator.did === api.moderation.did && (
+                  <IncludeVideoTimestampToggle
+                    seconds={videoTimestampSeconds}
+                    selected={state.includeVideoTimestamp}
+                    onChange={include => {
+                      dispatch({type: 'setIncludeVideoTimestamp', include})
+                    }}
+                  />
+                )}
+
               <Button
                 testID="report:submit"
                 label={l`Submit report`}
@@ -603,6 +680,42 @@ function Inner(props: ReportDialogProps) {
       </View>
       <Dialog.Close />
     </Dialog.ScrollableInner>
+  )
+}
+
+/**
+ * Opt-in for attaching how far the viewer had watched to a video report. Only
+ * rendered once we have a position and the report is going to Bluesky.
+ */
+function IncludeVideoTimestampToggle({
+  seconds,
+  selected,
+  onChange,
+}: {
+  seconds: number
+  selected: boolean
+  onChange: (selected: boolean) => void
+}) {
+  const {t: l} = useLingui()
+  const videoTimestamp = formatTime(seconds)
+  const label = l({
+    message: `Include video timestamp (${videoTimestamp})`,
+    comment:
+      'Checkbox shown when reporting a video. The value is the current playback position, formatted as minutes:seconds.',
+  })
+  return (
+    <Toggle.Item
+      testID="report:includeVideoTimestamp"
+      name="includeVideoTimestamp"
+      type="checkbox"
+      label={label}
+      value={selected}
+      onChange={onChange}>
+      <Toggle.Checkbox />
+      <Toggle.LabelText style={[a.flex_1, a.font_normal, a.leading_snug]}>
+        {label}
+      </Toggle.LabelText>
+    </Toggle.Item>
   )
 }
 
@@ -932,8 +1045,8 @@ function LabelerCard({
   labeler,
   onSelect,
 }: {
-  labeler: AppBskyLabelerDefs.LabelerViewDetailed
-  onSelect?: (option: AppBskyLabelerDefs.LabelerViewDetailed) => void
+  labeler: app.bsky.labeler.defs.LabelerViewDetailed
+  onSelect?: (option: app.bsky.labeler.defs.LabelerViewDetailed) => void
 }) {
   const t = useTheme()
   const {t: l} = useLingui()

@@ -1,0 +1,64 @@
+{
+  "id": "com.atproto.label.queryLabels",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "labels"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "labels": {
+              "type": "array",
+              "items": {
+                "ref": "com.atproto.label.defs#label",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "required": [
+          "uriPatterns"
+        ],
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 250,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "did"
+            },
+            "description": "Optional list of label sources (DIDs) to filter on."
+          },
+          "uriPatterns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of AT URI patterns to match (boolean 'OR'). Each may be a prefix (ending with '*'; will match inclusive of the string leading to '*'), or a full URI."
+          }
+        }
+      },
+      "description": "Find labels relevant to the provided AT-URI patterns. Public endpoint for moderation services, though may return different or additional results with auth."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

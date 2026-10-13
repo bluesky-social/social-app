@@ -1,0 +1,43 @@
+{
+  "lexicon": 1,
+  "id": "app.bsky.unspecced.initAgeAssurance",
+  "defs": {
+    "main": {
+      "type": "procedure",
+      "description": "Initiate age assurance for an account. This is a one-time action that will start the process of verifying the user's age.",
+      "input": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "object",
+          "required": ["email", "language", "countryCode"],
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "The user's email address to receive assurance instructions."
+            },
+            "language": {
+              "type": "string",
+              "description": "The user's preferred language for communication during the assurance process."
+            },
+            "countryCode": {
+              "type": "string",
+              "description": "An ISO 3166-1 alpha-2 code of the user's location."
+            }
+          }
+        }
+      },
+      "output": {
+        "encoding": "application/json",
+        "schema": {
+          "type": "ref",
+          "ref": "app.bsky.unspecced.defs#ageAssuranceState"
+        }
+      },
+      "errors": [
+        { "name": "InvalidEmail" },
+        { "name": "DidTooLong" },
+        { "name": "InvalidInitiation" }
+      ]
+    }
+  }
+}

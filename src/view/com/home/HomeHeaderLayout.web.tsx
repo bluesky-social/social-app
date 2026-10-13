@@ -5,7 +5,7 @@ import {useLingui} from '@lingui/react'
 
 import {HITSLOP_10} from '#/lib/constants'
 import {useSession} from '#/state/session'
-import {useShellLayout} from '#/state/shell/shell-layout'
+import {useShellHeaderLayout} from '#/state/shell/shell-layout'
 import {HomeHeaderLayoutMobile} from '#/view/com/home/HomeHeaderLayoutMobile'
 import {Logo} from '#/view/icons/Logo'
 import {useLogoVariant} from '#/view/icons/useLogoVariant'
@@ -36,7 +36,7 @@ function HomeHeaderLayoutDesktopAndTablet({
   tabBarAnchor: JSX.Element | null | undefined
 }) {
   const t = useTheme()
-  const {headerHeight} = useShellLayout()
+  const {onLayout} = useShellHeaderLayout()
   const {hasSession} = useSession()
   const {_} = useLingui()
   const ax = useAnalytics()
@@ -51,15 +51,7 @@ function HomeHeaderLayoutDesktopAndTablet({
             style={[a.flex_row, a.align_center, gutters, a.pt_md, t.atoms.bg]}>
             <View style={{width: 34}} />
             <View style={[a.flex_1, a.align_center, a.justify_center]}>
-              <Logo
-                width={
-                  logoVariant === 'kawaii'
-                    ? 60
-                    : logoVariant === 'japan'
-                      ? 34
-                      : 28
-                }
-              />
+              <Logo width={logoVariant === 'kawaii' ? 60 : 28} />
             </View>
             <Link
               to="/feeds"
@@ -81,9 +73,7 @@ function HomeHeaderLayoutDesktopAndTablet({
       {tabBarAnchor}
       <Layout.Center
         style={[a.sticky, a.z_10, a.align_center, t.atoms.bg, {top: 0}]}
-        onLayout={e => {
-          headerHeight.set(e.nativeEvent.layout.height)
-        }}>
+        onLayout={onLayout}>
         {children}
       </Layout.Center>
     </>

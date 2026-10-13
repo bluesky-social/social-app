@@ -1,9 +1,6 @@
 import {useRef, useState} from 'react'
 import {Keyboard, type TextInput, View} from 'react-native'
-import {
-  ComAtprotoServerCreateSession,
-  type ComAtprotoServerDescribeServer,
-} from '@atproto/api'
+import {LexAuthFactorError} from '@atproto/lex-password-session'
 import {Trans, useLingui} from '@lingui/react/macro'
 
 import {DEFAULT_SERVICE, HITSLOP_10, HITSLOP_20} from '#/lib/constants'
@@ -35,11 +32,12 @@ import {createStaticClick, InlineLinkText} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {Text} from '#/components/Typography'
 import {IS_IOS, IS_NATIVE} from '#/env'
+import {type com} from '#/lexicons'
 import {ConfirmHostingProviderDialog} from './components/ConfirmHostingProviderDialog'
 import {HostingProviderDialog} from './components/HostingProviderDialog'
 import {FormContainer} from './FormContainer'
 
-type ServiceDescription = ComAtprotoServerDescribeServer.OutputSchema
+type ServiceDescription = com.atproto.server.describeServer.$OutputBody
 
 export const LoginForm = ({
   error,
@@ -75,15 +73,13 @@ export const LoginForm = ({
   >('none')
   const [isAuthFactorTokenNeeded, setIsAuthFactorTokenNeeded] = useState(false)
   const [showResolveError, setShowResolveError] = useState(false)
-  const identifierValueRef = useRef(initialHandle || '')
-  const passwordValueRef = useRef('')
   const [identifier, setIdentifier] = useState(initialHandle || '')
+  const [password, setPassword] = useState('')
   const [identifierFocused, setIdentifierFocused] = useState(false)
   const [authFactorToken, setAuthFactorToken] = useState('')
-  const identifierRef = useRef<TextInput>(null)
-  const passwordRef = useRef<TextInput>(null)
+  const identifierRef = useRef<React.ComponentRef<typeof TextInput>>(null)
+  const passwordRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const hasFocusedOnce = useRef(false)
-  const [hasPassword, setHasPassword] = useState(false)
   const [revealPassword, setRevealPassword] = useState(false)
   const {t: l} = useLingui()
   const {login} = useSessionApi()
@@ -121,7 +117,6 @@ export const LoginForm = ({
    * transitions away) and clears it on any failure.
    */
   const attemptLogin = async (service: string, fullIdent: string) => {
-    const password = passwordValueRef.current
     setIsProcessing(true)
 
     try {
@@ -142,10 +137,11 @@ export const LoginForm = ({
     } catch (err) {
       const errMsg = String(err)
       setIsProcessing(false)
-      if (
-        err instanceof
-        ComAtprotoServerCreateSession.AuthFactorTokenRequiredError
-      ) {
+      /*
+       * `LexAuthFactorError` is what `PasswordSession.login` throws when the
+       * server demands an email 2FA token.
+       */
+      if (err instanceof LexAuthFactorError) {
         setIsAuthFactorTokenNeeded(true)
       } else {
         onAttemptFailed()
@@ -170,7 +166,9 @@ export const LoginForm = ({
           )
         } else {
           logger.warn('Failed to login', {error: errMsg})
-          setError(cleanError(errMsg))
+          /* the error object, not its stringification: cleanError only
+           * extracts the clean server message from a live LexError */
+          setError(cleanError(err))
         }
       }
     }
@@ -183,10 +181,9 @@ export const LoginForm = ({
     setErrorField('none')
     setShowResolveError(false)
 
-    const identifier = identifierValueRef.current.toLowerCase().trim()
-    const password = passwordValueRef.current
+    const normalizedIdentifier = identifier.toLowerCase().trim()
 
-    if (!identifier) {
+    if (!normalizedIdentifier) {
       setError(l`Please enter your username`)
       setErrorField('identifier')
       return
@@ -201,11 +198,11 @@ export const LoginForm = ({
     setIsProcessing(true)
 
     // try to guess the handle if the user just gave their own username
-    let fullIdent = identifier
+    let fullIdent = normalizedIdentifier
     if (
-      !identifier.includes('@') && // not an email
-      !identifier.includes('.') && // not a domain
-      !identifier.startsWith('did:') && // not a DID
+      !normalizedIdentifier.includes('@') && // not an email
+      !normalizedIdentifier.includes('.') && // not a domain
+      !normalizedIdentifier.startsWith('did:') && // not a DID
       serviceDescription &&
       serviceDescription.availableUserDomains.length > 0
     ) {
@@ -217,7 +214,7 @@ export const LoginForm = ({
       }
       if (!matched) {
         fullIdent = createFullHandle(
-          identifier,
+          normalizedIdentifier,
           serviceDescription.availableUserDomains[0],
         )
       }
@@ -234,7 +231,8 @@ export const LoginForm = ({
     let service: string
     let did: string | null
     try {
-      ;({service, did} = await hostingProvider.resolveService(identifier))
+      ;({service, did} =
+        await hostingProvider.resolveService(normalizedIdentifier))
     } catch (err) {
       logger.debug('Failed to resolve hosting provider', {error: String(err)})
       setIsProcessing(false)
@@ -320,9 +318,8 @@ export const LoginForm = ({
             autoComplete="username"
             returnKeyType="next"
             textContentType="username"
-            defaultValue={initialHandle || ''}
+            value={identifier}
             onChangeText={v => {
-              identifierValueRef.current = v
               setIdentifier(v)
               if (errorField) setErrorField('none')
               if (showResolveError) setShowResolveError(false)
@@ -378,10 +375,10 @@ export const LoginForm = ({
             returnKeyType="done"
             enablesReturnKeyAutomatically={true}
             secureTextEntry={!revealPassword}
+            value={password}
             onChangeText={v => {
-              passwordValueRef.current = v
+              setPassword(v)
               if (errorField) setErrorField('none')
-              setHasPassword(!!v)
             }}
             onSubmitEditing={() => void onPressNext()}
             blurOnSubmit={false} // HACK: https://github.com/facebook/react-native/issues/21911#issuecomment-558343069 Keyboard blur behavior is now handled in onSubmitEditing
@@ -411,7 +408,7 @@ export const LoginForm = ({
           />
           <RevealPasswordButton
             active={revealPassword}
-            hasPassword={hasPassword}
+            hasPassword={!!password}
             onPress={() => setRevealPassword(r => !r)}
           />
         </TextField.Root>
@@ -446,7 +443,7 @@ export const LoginForm = ({
               autoComplete="one-time-code"
               returnKeyType="done"
               blurOnSubmit={false} // prevents flickering due to onSubmitEditing going to next field
-              value={authFactorToken} // controlled input due to uncontrolled input not receiving pasted values properly
+              value={authFactorToken}
               onChangeText={text => {
                 setAuthFactorToken(text)
                 if (errorField) setErrorField('none')
@@ -601,7 +598,12 @@ function RevealPasswordButton({
   const {t: l} = useLingui()
   const context = TextField.useTextFieldContext()
 
-  const Icon = !active ? EyeSlashIcon : EyeIcon
+  /*
+   * The icon shows the action the button performs, not the current state: an
+   * open eye when the password is hidden (tap to reveal), a crossed-out eye
+   * when it is visible (tap to hide).
+   */
+  const Icon = active ? EyeSlashIcon : EyeIcon
 
   if (!hasPassword && !context.focused) return null
 

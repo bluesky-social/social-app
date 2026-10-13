@@ -1,6 +1,5 @@
 import {useCallback, useMemo, useState} from 'react'
 import {type StyleProp, View, type ViewStyle} from 'react-native'
-import {type AppBskyActorDefs as ActorDefs} from '@atproto/api'
 import {Trans} from '@lingui/react/macro'
 import {type NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -16,6 +15,7 @@ import * as Layout from '#/components/Layout'
 import {ListFooter} from '#/components/Lists'
 import * as ProfileCard from '#/components/ProfileCard'
 import {Text} from '#/components/Typography'
+import {type app} from '#/lexicons'
 
 type Props = NativeStackScreenProps<
   CommonNavigatorParams,
@@ -36,7 +36,7 @@ export function ModerationMutedAccounts({}: Props) {
     fetchNextPage,
     isFetchingNextPage,
   } = useMyMutedAccountsQuery()
-  const isEmpty = !isFetching && !data?.pages[0]?.mutes.length
+  const isEmpty = !isFetching && !data?.pages.some(page => page.mutes.length)
   const profiles = useMemo(() => {
     if (data?.pages) {
       return data.pages.flatMap(page => page.mutes)
@@ -68,7 +68,7 @@ export function ModerationMutedAccounts({}: Props) {
     item,
     index,
   }: {
-    item: ActorDefs.ProfileView
+    item: app.bsky.actor.defs.ProfileView
     index: number
   }) => {
     if (!moderationOpts) return null

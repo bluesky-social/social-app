@@ -48,7 +48,6 @@ export const SplashScreen = ({
 
   const logoVariant = useLogoVariant()
   const kawaii = logoVariant === 'kawaii'
-  const japanLogo = logoVariant === 'japan'
 
   return (
     <>
@@ -73,7 +72,6 @@ export const SplashScreen = ({
           style={[
             a.h_full,
             a.justify_center,
-            // @ts-expect-error web only
             {paddingBottom: '20vh'},
             IS_WEB_MOBILE && a.pb_5xl,
             t.atoms.border_contrast_medium,
@@ -83,7 +81,7 @@ export const SplashScreen = ({
           ]}>
           <ErrorBoundary>
             <View style={[a.justify_center, a.align_center]}>
-              <Logo width={kawaii ? 300 : japanLogo ? 120 : 92} fill="sky" />
+              <Logo width={kawaii ? 300 : 92} fill="sky" />
 
               {!kawaii && (
                 <View style={[a.pb_sm, a.pt_5xl]}>

@@ -104,6 +104,7 @@ export function PostThread({uri}: {uri: string}) {
       ax.metric('post:view', {
         uri: post.uri,
         authorDid: post.author.did,
+        isReply: !!post.record.reply,
         logContext: 'Post',
         feedDescriptor: feedFeedback.feedDescriptor,
       })
@@ -160,8 +161,8 @@ export function PostThread({uri}: {uri: string}) {
   const totalParentCount = useRef(0) // recomputed below
   const totalChildrenCount = useRef(thread.data.items.length) // recomputed below
   const listRef = useRef<ListMethods>(null)
-  const anchorRef = useRef<View | null>(null)
-  const headerRef = useRef<View | null>(null)
+  const anchorRef = useRef<React.ComponentRef<typeof View> | null>(null)
+  const headerRef = useRef<React.ComponentRef<typeof View> | null>(null)
 
   /*
    * On a cold load, parents are not prepended until the anchor post has

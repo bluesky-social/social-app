@@ -16,7 +16,9 @@ import {TabBar} from './TabBar'
 export interface PagerWithHeaderChildParams {
   headerHeight: number
   isFocused: boolean
-  scrollElRef: React.MutableRefObject<ListMethods | ScrollView | null>
+  scrollElRef: React.MutableRefObject<
+    ListMethods | React.ComponentRef<typeof ScrollView> | null
+  >
 }
 
 export interface PagerWithHeaderProps {
@@ -180,7 +182,7 @@ function PagerItem({
     headerHeight: 0,
     isFocused,
     scrollElRef: scrollElRef as React.MutableRefObject<
-      ListMethods | ScrollView | null
+      ListMethods | React.ComponentRef<typeof ScrollView> | null
     >,
   })
 }

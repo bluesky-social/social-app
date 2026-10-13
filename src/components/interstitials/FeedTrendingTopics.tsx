@@ -1,6 +1,6 @@
 import {useMemo} from 'react'
 import {Pressable, View} from 'react-native'
-import {type AppBskyUnspeccedDefs, moderateProfile} from '@atproto/api'
+import {moderateProfile} from '@bsky/sdk/moderation'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
@@ -26,9 +26,14 @@ import {Trending3_Stroke2_Corner1_Rounded as TrendingIcon} from '#/components/ic
 import {Link} from '#/components/Link'
 import * as Prompt from '#/components/Prompt'
 import {SubtleHover} from '#/components/SubtleHover'
-import {useTrendingTopicSeen} from '#/components/TrendingTopics'
+import {
+  getTrendingTopicFeedUri,
+  TrendingTopicsPrompt,
+  useTrendingTopicSeen,
+} from '#/components/TrendingTopics'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type app} from '#/lexicons'
 
 const TOPIC_COUNT = 3
 
@@ -150,6 +155,7 @@ function Inner({feedSliceIndex}: {feedSliceIndex: number}) {
                       onPress={() => {
                         ax.metric('trendingTopic:click', {
                           context: 'interstitial',
+                          feedUri: getTrendingTopicFeedUri(trend),
                           rank,
                           feedSliceIndex,
                           recId: trending.recId,
@@ -161,11 +167,8 @@ function Inner({feedSliceIndex}: {feedSliceIndex: number}) {
           </View>
         </View>
       </View>
-      <Prompt.Basic
+      <TrendingTopicsPrompt
         control={trendingPrompt}
-        title={l`Hide trending topics?`}
-        description={l`You can update this later from your settings.`}
-        confirmButtonCta={l`Hide`}
         onConfirm={() => {
           ax.metric('trendingTopics:hide', {context: 'interstitial'})
           setTrendingDisabled(true)
@@ -182,7 +185,7 @@ function TrendRow({
   recId,
   onPress,
 }: ViewStyleProp & {
-  trend: AppBskyUnspeccedDefs.TrendView
+  trend: app.bsky.unspecced.defs.TrendView
   rank: number
   feedSliceIndex: number
   recId?: string
@@ -194,7 +197,13 @@ function TrendRow({
 
   const actors = useModerateTrendingActors(trend.actors)
   const formattedPostCount = formatCount(i18n, trend.postCount)
-  useTrendingTopicSeen('interstitial', rank, recId, feedSliceIndex)
+  useTrendingTopicSeen(
+    'interstitial',
+    getTrendingTopicFeedUri(trend),
+    rank,
+    recId,
+    feedSliceIndex,
+  )
 
   return (
     <Link
@@ -290,7 +299,7 @@ function TrendingTopicRowSkeleton({rank}: {rank: number}) {
 }
 
 function useModerateTrendingActors(
-  actors: AppBskyUnspeccedDefs.TrendView['actors'],
+  actors: app.bsky.unspecced.defs.TrendView['actors'],
 ) {
   const moderationOpts = useModerationOpts()
 

@@ -14,11 +14,11 @@ import Animated, {
   useAnimatedRef,
 } from 'react-native-reanimated'
 import {Image} from 'expo-image'
-import {type AppBskyEmbedImages} from '@atproto/api'
 import {utils} from '@bsky.app/alf'
 import {Trans, useLingui} from '@lingui/react/macro'
 import debounce from 'lodash.debounce'
 
+import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 import {type Dimensions} from '#/lib/media/types'
 import {mergeRefs} from '#/lib/merge-refs'
 import {useA11y} from '#/state/a11y'
@@ -34,23 +34,29 @@ import {
 } from '#/components/images/Gallery/const'
 import {useKeyboardHandlers} from '#/components/images/Gallery/useKeyboardHandlers'
 import {usePointerHandlers} from '#/components/images/Gallery/usePointerHandlers'
-import {getAspectRatio} from '#/components/images/Gallery/utils'
+import {
+  getAspectRatio,
+  getIndexForOffset,
+  getOffsetForIndex,
+} from '#/components/images/Gallery/utils'
 import {MediaInsetBorder} from '#/components/MediaInsetBorder'
 import {ImageContextMenu} from '#/components/Post/Embed/ImageContextMenu'
 import {PostEmbedViewContext} from '#/components/Post/Embed/types'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
 import {IS_ANDROID, IS_WEB} from '#/env'
+import {type app} from '#/lexicons'
 
 export * from './const'
 export * from './maybeApplyGalleryOffsetStyles'
 
 interface GalleryProps {
-  images: AppBskyEmbedImages.ViewImage[]
+  images: app.bsky.embed.images.ViewImage[]
   onPress?: (
     index: number,
     containerRefs: AnimatedRef<any>[],
     fetchedDims: (Dimensions | null)[],
+    onIndexChange?: (index: number) => void,
   ) => void
   onPressIn?: (index: number) => void
   viewContext?: PostEmbedViewContext
@@ -65,7 +71,7 @@ interface GalleryProps {
 }
 
 const Context = createContext<{
-  bleedRef: React.RefObject<View | null>
+  bleedRef: React.RefObject<React.ComponentRef<typeof View> | null>
   bleedWidth: number
 }>({
   bleedRef: {current: null},
@@ -73,7 +79,7 @@ const Context = createContext<{
 })
 
 export function GalleryBleed({children}: {children: React.ReactNode}) {
-  const ref = useRef<View>(null)
+  const ref = useRef<React.ComponentRef<typeof View>>(null)
   const [bleedWidth, setBleedWidth] = useState(0)
 
   if (!isValidElement(children)) {
@@ -145,7 +151,7 @@ export function Gallery({
    * scroll position, so it works correctly for off-screen FlatList items.
    */
   const {bleedRef, bleedWidth} = useGalleryBleed()
-  const contentRef = useRef<View>(null)
+  const contentRef = useRef<React.ComponentRef<typeof View>>(null)
   const [contentDims, setContentDims] = useState<{x: number; width: number}>()
   const measure = () => {
     if (contentRef.current && bleedRef.current) {
@@ -168,10 +174,13 @@ export function Gallery({
 
   const flatListRef = useRef<FlatList>(null)
   const itemWidthsRef = useRef<Map<number, number>>(new Map())
-  const itemRefsRef = useRef<Map<number, View>>(new Map())
+  const itemRefsRef = useRef<Map<number, React.ComponentRef<typeof View>>>(
+    new Map(),
+  )
   const containerRefsRef = useRef<Map<number, AnimatedRef<any>>>(new Map())
   const thumbDimsRef = useRef<Map<number, Dimensions>>(new Map())
   const currentIndexRef = useRef(0)
+  const scrollOffsetRef = useRef(0)
 
   const emitSwipeMetric = useMemo(
     () =>
@@ -200,6 +209,36 @@ export function Gallery({
   const scrollTo = (offset: number) => {
     flatListRef.current?.scrollToOffset({offset, animated: false})
   }
+
+  /*
+   * Keeps the image the lightbox is showing in view, so closing it lands on
+   * the right thumbnail. The carousel is hidden behind the lightbox, so it can
+   * jump there without animating. Non-reactive because the lightbox holds
+   * onto it, and the layout can change underneath (e.g. on rotation).
+   */
+  const scrollIntoView = useNonReactiveCallback((index: number) => {
+    const itemWidths = itemWidthsRef.current
+    const start = getOffsetForIndex(itemWidths, index)
+    const end =
+      start + (itemWidths.get(index) ?? 0) - (width - insetLeft - insetRight)
+    // Web scrolls outside of onScroll (see the web hooks), so read it live.
+    const current = IS_WEB
+      ? ((flatListRef.current?.getScrollableNode() as HTMLElement | null)
+          ?.scrollLeft ?? 0)
+      : scrollOffsetRef.current
+    const next = current > start ? start : current < end ? end : current
+    if (next === current) return
+    if (!IS_WEB) {
+      // Sync the index up front so the jump isn't counted as a swipe. Web's
+      // index tracks keyboard focus instead, which stays put.
+      currentIndexRef.current = getIndexForOffset(
+        itemWidths,
+        next,
+        images.length,
+      )
+    }
+    scrollTo(next)
+  })
 
   const onSettle = (index: number) => {
     setCurrentIndex(index)
@@ -296,7 +335,7 @@ export function Gallery({
                     refs.push(containerRefsRef.current.get(i)!)
                     dims.push(thumbDimsRef.current.get(i) ?? null)
                   }
-                  onPress(index, refs, dims)
+                  onPress(index, refs, dims, scrollIntoView)
                 }
               : undefined
             return (
@@ -332,18 +371,10 @@ export function Gallery({
             // web handles via onSettle in the web hooks
             if (IS_WEB) return
             const offsetX = e.nativeEvent.contentOffset.x
-            let accumulated = 0
-            for (let i = 0; i < images.length; i++) {
-              const w = (itemWidthsRef.current.get(i) ?? 0) + ITEM_GAP
-              if (offsetX < accumulated + w / 2) {
-                setCurrentIndex(i)
-                break
-              }
-              accumulated += w
-              if (i === images.length - 1) {
-                setCurrentIndex(i)
-              }
-            }
+            scrollOffsetRef.current = offsetX
+            setCurrentIndex(
+              getIndexForOffset(itemWidthsRef.current, offsetX, images.length),
+            )
           }}
           style={[
             {
@@ -404,11 +435,11 @@ function GalleryImage({
   onPreviewPress,
 }: {
   contentHeight: number
-  image: AppBskyEmbedImages.ViewImage
+  image: app.bsky.embed.images.ViewImage
   index: number
   imageCount: number
   onWidthChange: (index: number, width: number) => void
-  itemRef: (node: View | null) => void
+  itemRef: (node: React.ComponentRef<typeof View> | null) => void
   largeAltBadge?: boolean
   onContainerRef: (index: number, ref: AnimatedRef<any>) => void
   onThumbDims: (index: number, dims: Dimensions) => void

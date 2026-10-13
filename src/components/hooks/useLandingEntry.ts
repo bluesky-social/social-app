@@ -11,7 +11,7 @@ export function useLandingEntry() {
     const href = window.location.href
     const url = new URL(href)
 
-    // Check for starter pack
+    // Check for Starter Pack
     const atUri = httpStarterPackUriToAtUri(href)
     if (atUri) {
       // Determines if an App Clip is loading this landing page

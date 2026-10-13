@@ -5,7 +5,7 @@ import {
   View,
   type ViewStyle,
 } from 'react-native'
-import {type ModerationUI} from '@atproto/api'
+import {type ModerationUI} from '@bsky/sdk/moderation'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
 

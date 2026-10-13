@@ -1,0 +1,46 @@
+{
+  "id": "app.bsky.draft.getDrafts",
+  "defs": {
+    "main": {
+      "type": "query",
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "drafts"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "drafts": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.draft.defs#draftView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Gets views of user drafts. Requires authentication."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

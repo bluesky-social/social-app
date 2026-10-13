@@ -22,7 +22,7 @@ import {BubbleInfo_Stroke2_Corner2_Rounded as BubbleInfoIcon} from '#/components
 import * as Layout from '#/components/Layout'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
-import {features} from '#/analytics'
+import {features, useAnalytics} from '#/analytics'
 import {getTargetedFeatures} from '#/analytics/features'
 import {IS_WEB} from '#/env'
 import {account} from '#/storage'
@@ -34,6 +34,7 @@ type Props = NativeStackScreenProps<
 
 export function BetaFeaturesSettingsScreen({}: Props) {
   const t = useTheme()
+  const ax = useAnalytics()
   const {t: l, i18n} = useLingui()
   const {data: preferences} = usePreferencesQuery()
   const {currentAccount} = useSession()
@@ -75,13 +76,17 @@ export function BetaFeaturesSettingsScreen({}: Props) {
       if (currentAccount) {
         account.set([currentAccount.did, 'isBetaUser'], next)
       }
+      ax.metric('betaFeatures:toggle', {
+        enabled: next,
+        betaFeatureKeys: betaFeatures.map(feature => feature.key),
+      })
     } catch (e) {
       logger.error('Failed to toggle beta features', {safeMessage: e})
       Toast.show(l`Something went wrong, please try again.`, {type: 'error'})
-      return
-    } finally {
       setIsPending(false)
+      return
     }
+    setIsPending(false)
     /*
      * The toggle already succeeded; re-evaluate feature gates against the new
      * attribute in-session as a best-effort follow-up. A failure here should
@@ -94,6 +99,9 @@ export function BetaFeaturesSettingsScreen({}: Props) {
   }
 
   const onPressShareFeedback = () => {
+    ax.metric('betaFeatures:feedback:open', {
+      betaFeatureKeys: betaFeatures.map(feature => feature.key),
+    })
     feedbackControl.open()
   }
 

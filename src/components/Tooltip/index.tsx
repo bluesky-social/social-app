@@ -27,8 +27,9 @@ import {
 import {Text} from '#/components/Typography'
 
 const TooltipPortal = createPortalGroup()
-const TooltipProviderContext =
-  createContext<React.RefObject<View | null> | null>(null)
+const TooltipProviderContext = createContext<React.RefObject<React.ComponentRef<
+  typeof View
+> | null> | null>(null)
 
 /**
  * Provider for Tooltip component. Only needed when you need to position the tooltip relative to a container,
@@ -37,7 +38,7 @@ const TooltipProviderContext =
  * Only really necessary on iOS but can work on Android.
  */
 export function SheetCompatProvider({children}: {children: React.ReactNode}) {
-  const ref = useRef<View | null>(null)
+  const ref = useRef<React.ComponentRef<typeof View> | null>(null)
   return (
     <GlobalGestureEventsProvider style={[a.flex_1]}>
       <TooltipPortal.Provider>
@@ -154,7 +155,7 @@ export function Outer({
 export function Target({children}: {children: React.ReactNode}) {
   const {shouldMeasure, setTargetMeasurements} = useContext(TargetContext)
   const [hasLaidOut, setHasLaidOut] = useState(false)
-  const targetRef = useRef<View>(null)
+  const targetRef = useRef<React.ComponentRef<typeof View>>(null)
   const containerRef = useContext(TooltipProviderContext)
   const keyboardIsOpen = useIsKeyboardVisible()
 

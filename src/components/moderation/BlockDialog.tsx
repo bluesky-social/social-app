@@ -1,14 +1,10 @@
 import {useState} from 'react'
 import {View} from 'react-native'
-import {
-  type ChatBskyConvoDefs,
-  ChatBskyConvoLeaveConvo,
-  ChatBskyGroupRemoveMembers,
-} from '@atproto/api'
 import {Trans, useLingui} from '@lingui/react/macro'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {isNetworkError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {logger} from '#/logger'
 import {type Shadow} from '#/state/cache/types'
 import {useLeaveConvo} from '#/state/queries/messages/leave-conversation'
@@ -27,9 +23,10 @@ import {parseConvoView} from '#/components/dms/util'
 import {Loader} from '#/components/Loader'
 import * as Toast from '#/components/Toast'
 import {Text} from '#/components/Typography'
+import {chat} from '#/lexicons'
 import {type AnyProfileView} from '#/types/bsky/profile'
 
-type Item = ChatBskyConvoDefs.ConvoView
+type Item = chat.bsky.convo.defs.ConvoView
 
 type BlockDialogProps = {
   control: DialogControlProps
@@ -229,7 +226,7 @@ function BlockDialogInner({
           <View style={[a.py_lg, a.align_center, a.justify_center]}>
             <Loader size="lg" />
           </View>
-        ) : null
+        ) : undefined
       }
       footer={
         <Dialog.FlatListFooter
@@ -254,7 +251,7 @@ function MutualGroupChat({
   onOptimisticallyRemoveConvo,
   onRestoreConvo,
 }: {
-  view: ChatBskyConvoDefs.ConvoView
+  view: chat.bsky.convo.defs.ConvoView
   profileDid: string
   currentConvoId?: string
   onOptimisticallyRemoveConvo: (convoId: string) => void
@@ -282,12 +279,15 @@ function MutualGroupChat({
         let errorMessage = l`Could not leave chat.`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (error instanceof ChatBskyConvoLeaveConvo.InvalidConvoError) {
-          errorMessage = l`Chat not found.`
-        } else if (
-          error instanceof ChatBskyConvoLeaveConvo.OwnerCannotLeaveError
-        ) {
-          errorMessage = l`Chat owners cannot leave a group chat.`
+        } else {
+          switch (matchXrpcError(error, chat.bsky.convo.leaveConvo)) {
+            case 'InvalidConvo':
+              errorMessage = l`Chat not found.`
+              break
+            case 'OwnerCannotLeave':
+              errorMessage = l`Chat owners cannot leave a group chat.`
+              break
+          }
         }
         Toast.show(errorMessage, {type: 'error'})
       },
@@ -308,14 +308,15 @@ function MutualGroupChat({
         let errorMessage = l`Could not remove member.`
         if (isNetworkError(error)) {
           errorMessage = l`A network error occurred. Please check your internet connection.`
-        } else if (
-          error instanceof ChatBskyGroupRemoveMembers.InvalidConvoError
-        ) {
-          errorMessage = l`Chat not found.`
-        } else if (
-          error instanceof ChatBskyGroupRemoveMembers.InsufficientRoleError
-        ) {
-          errorMessage = l`You must be a chat owner to remove a member.`
+        } else {
+          switch (matchXrpcError(error, chat.bsky.group.removeMembers)) {
+            case 'InvalidConvo':
+              errorMessage = l`Chat not found.`
+              break
+            case 'InsufficientRole':
+              errorMessage = l`You must be a chat owner to remove a member.`
+              break
+          }
         }
         Toast.show(errorMessage, {type: 'error'})
       },

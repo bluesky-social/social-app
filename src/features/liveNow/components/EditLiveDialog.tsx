@@ -1,6 +1,5 @@
 import {useMemo, useState} from 'react'
 import {View} from 'react-native'
-import {type AppBskyActorDefs, type AppBskyEmbedExternal} from '@atproto/api'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
 import {Trans} from '@lingui/react/macro'
@@ -8,6 +7,7 @@ import {differenceInMinutes} from 'date-fns'
 
 import {useDebouncedValue} from '#/lib/hooks/useDebouncedValue'
 import {cleanError} from '#/lib/strings/errors'
+import {formatDateTime} from '#/lib/strings/time'
 import {definitelyUrl} from '#/lib/strings/url-helpers'
 import {useTickEveryMinute} from '#/state/shell'
 import {atoms as a, platform, useTheme, web} from '#/alf'
@@ -26,6 +26,7 @@ import {
   useUpsertLiveStatusMutation,
 } from '#/features/liveNow'
 import {LinkPreview} from '#/features/liveNow/components/LinkPreview'
+import {type app} from '#/lexicons'
 
 export function EditLiveDialog({
   control,
@@ -33,8 +34,8 @@ export function EditLiveDialog({
   embed,
 }: {
   control: Dialog.DialogControlProps
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  status: app.bsky.actor.defs.StatusView
+  embed: app.bsky.embed.external.View
 }) {
   return (
     <Dialog.Outer control={control} nativeOptions={{preventExpansion: true}}>
@@ -48,14 +49,16 @@ function DialogInner({
   status,
   embed,
 }: {
-  status: AppBskyActorDefs.StatusView
-  embed: AppBskyEmbedExternal.View
+  status: app.bsky.actor.defs.StatusView
+  embed: app.bsky.embed.external.View
 }) {
   const control = Dialog.useDialogContext()
   const {_, i18n} = useLingui()
   const t = useTheme()
 
-  const [liveLink, setLiveLink] = useState(embed.external.uri)
+  /* Holds the user-editable link text, so it is a plain string rather than
+   * the branded `uri` the view it was seeded from carries. */
+  const [liveLink, setLiveLink] = useState<string>(embed.external.uri)
   const [liveLinkError, setLiveLinkError] = useState('')
   const tick = useTickEveryMinute()
 
@@ -124,10 +127,9 @@ function DialogInner({
               {typeof record?.durationMinutes === 'number' ? (
                 <Trans>
                   Expires in {displayDuration(i18n, minutesUntilExpiry)} at{' '}
-                  {i18n.date(expiryDateTime, {
+                  {formatDateTime(i18n, expiryDateTime, {
                     hour: 'numeric',
                     minute: '2-digit',
-                    hour12: true,
                   })}
                 </Trans>
               ) : (

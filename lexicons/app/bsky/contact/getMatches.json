@@ -1,0 +1,60 @@
+{
+  "id": "app.bsky.contact.getMatches",
+  "defs": {
+    "main": {
+      "type": "query",
+      "errors": [
+        {
+          "name": "InvalidDid"
+        },
+        {
+          "name": "InvalidLimit"
+        },
+        {
+          "name": "InvalidCursor"
+        },
+        {
+          "name": "InternalError"
+        }
+      ],
+      "output": {
+        "schema": {
+          "type": "object",
+          "required": [
+            "matches"
+          ],
+          "properties": {
+            "cursor": {
+              "type": "string"
+            },
+            "matches": {
+              "type": "array",
+              "items": {
+                "ref": "app.bsky.actor.defs#profileView",
+                "type": "ref"
+              }
+            }
+          }
+        },
+        "encoding": "application/json"
+      },
+      "parameters": {
+        "type": "params",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "default": 50,
+            "maximum": 100,
+            "minimum": 1
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Returns the matched contacts (contacts that were mutually imported). Excludes dismissed matches. Requires authentication."
+    }
+  },
+  "$type": "com.atproto.lexicon.schema",
+  "lexicon": 1
+}

@@ -1,4 +1,3 @@
-import {type ChatBskyActorDefs, ChatBskyConvoDefs} from '@atproto/api'
 import {type MessageDescriptor} from '@lingui/core'
 import {msg} from '@lingui/core/macro'
 
@@ -15,11 +14,13 @@ import {
   Unlock_Stroke2_Corner2_Rounded as UnlockIcon,
 } from '#/components/icons/Lock'
 import {PencilLine_Stroke2_Corner0_Rounded as PencilIcon} from '#/components/icons/Pencil'
+import {chat} from '#/lexicons'
+import * as bsky from '#/types/bsky'
 
 export type SystemMessageAction =
   | {
       kind: 'profile'
-      profile: ChatBskyActorDefs.ProfileViewBasic
+      profile: chat.bsky.actor.defs.ProfileViewBasic
       displayName: string
     }
   | {kind: 'inviteLink'}
@@ -31,8 +32,8 @@ export type SystemMessageInfo = {
 }
 
 function getProfileAction(
-  user: ChatBskyConvoDefs.SystemMessageReferredUser,
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
+  user: chat.bsky.convo.defs.SystemMessageReferredUser,
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>,
 ): Extract<SystemMessageAction, {kind: 'profile'}> | null {
   const profile = relatedProfiles.get(user.did)
   if (!profile) return null
@@ -44,11 +45,11 @@ function getProfileAction(
 }
 
 export function getSystemMessageInfo(
-  data: ChatBskyConvoDefs.SystemMessageView['data'],
-  relatedProfiles: Map<string, ChatBskyActorDefs.ProfileViewBasic>,
+  data: chat.bsky.convo.defs.SystemMessageView['data'],
+  relatedProfiles: Map<string, chat.bsky.actor.defs.ProfileViewBasic>,
   opts = {short: false},
 ): SystemMessageInfo | null {
-  if (ChatBskyConvoDefs.isSystemMessageDataAddMember(data)) {
+  if (bsky.isType(chat.bsky.convo.defs.systemMessageDataAddMember, data)) {
     const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
@@ -61,7 +62,9 @@ export function getSystemMessageInfo(
           : msg`Someone was added to the group`,
       action: action ?? undefined,
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataRemoveMember(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataRemoveMember, data)
+  ) {
     const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
@@ -74,7 +77,9 @@ export function getSystemMessageInfo(
           : msg`Someone was removed from the group`,
       action: action ?? undefined,
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataMemberJoin(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataMemberJoin, data)
+  ) {
     const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: JoinIcon,
@@ -87,7 +92,9 @@ export function getSystemMessageInfo(
           : msg`Someone joined the group`,
       action: action ?? undefined,
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataMemberLeave(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataMemberLeave, data)
+  ) {
     const action = getProfileAction(data.member, relatedProfiles)
     return {
       Icon: LeaveIcon,
@@ -100,13 +107,24 @@ export function getSystemMessageInfo(
           : msg`Someone left the group`,
       action: action ?? undefined,
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvo(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataLockConvo, data)
+  ) {
     return {Icon: LockIcon, message: msg`Chat locked`}
-  } else if (ChatBskyConvoDefs.isSystemMessageDataUnlockConvo(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataUnlockConvo, data)
+  ) {
     return {Icon: UnlockIcon, message: msg`Chat unlocked`}
-  } else if (ChatBskyConvoDefs.isSystemMessageDataLockConvoPermanently(data)) {
+  } else if (
+    bsky.isType(
+      chat.bsky.convo.defs.systemMessageDataLockConvoPermanently,
+      data,
+    )
+  ) {
     return {Icon: LockIcon, message: msg`Chat ended`}
-  } else if (ChatBskyConvoDefs.isSystemMessageDataEditGroup(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataEditGroup, data)
+  ) {
     return {
       Icon: PencilIcon,
       message:
@@ -114,25 +132,33 @@ export function getSystemMessageInfo(
           ? msg`Chat title changed to ${data.newName}`
           : msg`Chat title changed`,
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataCreateJoinLink(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataCreateJoinLink, data)
+  ) {
     return {
       Icon: ChainLinkIcon,
       message: msg`Invite link created`,
       action: {kind: 'inviteLink'},
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataEditJoinLink(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataEditJoinLink, data)
+  ) {
     return {
       Icon: ChainLinkIcon,
       message: msg`Invite link edited`,
       action: {kind: 'inviteLink'},
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataEnableJoinLink(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataEnableJoinLink, data)
+  ) {
     return {
       Icon: ChainLinkIcon,
       message: msg`Invite link enabled`,
       action: {kind: 'inviteLink'},
     }
-  } else if (ChatBskyConvoDefs.isSystemMessageDataDisableJoinLink(data)) {
+  } else if (
+    bsky.isType(chat.bsky.convo.defs.systemMessageDataDisableJoinLink, data)
+  ) {
     return {
       Icon: ChainLinkBrokenIcon,
       message: msg`Invite link disabled`,
