@@ -221,8 +221,9 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
     }
     setTranslationState(prev => {
-      delete prev[key]
-      return {...prev}
+      const next = {...prev}
+      delete next[key]
+      return next
     })
   }, [])
 
