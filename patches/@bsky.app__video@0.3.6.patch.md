@@ -37,3 +37,18 @@ the ~11 ms each video view took to create on the main thread. Without the placeh
 `PlayerView` leaves the controller null, which media3 supports (`useController()` is false
 then). `player_layout_id` is XML-only, hence the inflated wrapper layout. The fullscreen
 player builds its own `PlayerView` and keeps its controls.
+
+---
+
+Waits for a video to stop moving before making it the active one.
+
+`ViewManager` picks the active view when the first video view attaches and whenever JS
+calls `updateActiveVideoViewAsync` (on Android: when a drag ends and when momentum ends),
+and creates and prepares an `ExoPlayer` for it right away. A view counts as viewable as
+soon as it is attached, so during a fling every video that scrolled into the feed's clip
+rect got a player, started loading, and was released a moment later when it scrolled out.
+
+With the patch `ViewManager` checks the picked view every 100 ms and activates it once it
+has moved less than 50 dp since the previous check (500 dp/s). A fling that slow has about
+100 dp left to travel, so the video is still on screen when it stops. Deactivating, and
+activating on a tap (`setActiveView`), are still immediate.

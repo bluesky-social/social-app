@@ -81,6 +81,113 @@ index f2aa71ad32f05033b281551e1ec85e89c55493d5..2869337324e04ec288bdaa9981805b54
                  setSeekForwardIncrementMs(5000)
                  setSeekBackIncrementMs(5000)
              }.build()
+diff --git a/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt b/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
+index 19baa087bdb3ad9955c456aab84ece25e95ae15e..0111e322d2730f7160012a53a377f6c3cd674a4a 100644
+--- a/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
++++ b/android/src/main/java/expo/modules/blueskyvideo/ViewManager.kt
+@@ -1,7 +1,10 @@
+ package expo.modules.blueskyvideo
+ 
+ import android.graphics.Rect
++import android.os.Handler
++import android.os.Looper
+ import androidx.media3.common.util.UnstableApi
++import kotlin.math.abs
+ 
+ @UnstableApi
+ class ViewManager {
+@@ -10,6 +13,17 @@ class ViewManager {
+         private var currentlyActiveView: BlueskyVideoView? = null
+         private var prevCount = 0
+ 
++        // A view only becomes active once it has moved less than SETTLE_MAX_TRAVEL_DP
++        // between two checks SETTLE_CHECK_INTERVAL_MS apart (500 dp/s), so that videos
++        // scrolling past during a fling do not each create and release a player.
++        private const val SETTLE_CHECK_INTERVAL_MS = 100L
++        private const val SETTLE_MAX_TRAVEL_DP = 50
++
++        private val handler = Handler(Looper.getMainLooper())
++        private var pendingView: BlueskyVideoView? = null
++        private var pendingViewPosition: Rect? = null
++        private val checkPendingView = Runnable { this.activatePendingViewIfSettled() }
++
+         fun addView(view: BlueskyVideoView) {
+             views.add(view)
+             if (prevCount == 0) {
+@@ -20,6 +34,9 @@ class ViewManager {
+ 
+         fun removeView(view: BlueskyVideoView) {
+             views.remove(view)
++            if (pendingView == view) {
++                this.cancelPendingView()
++            }
+             prevCount = views.count()
+         }
+ 
+@@ -60,21 +77,62 @@ class ViewManager {
+             }
+ 
+             if (activeView == currentlyActiveView) {
++                this.cancelPendingView()
+                 return
+             }
+ 
+             this.clearActiveView()
+             if (activeView != null) {
+-                this.setActiveView(activeView)
++                this.activateWhenSettled(activeView)
++            } else {
++                this.cancelPendingView()
+             }
+         }
+ 
++        private fun activateWhenSettled(view: BlueskyVideoView) {
++            if (pendingView == view) {
++                return
++            }
++            handler.removeCallbacks(checkPendingView)
++            pendingView = view
++            pendingViewPosition = view.getPositionOnScreen()
++            handler.postDelayed(checkPendingView, SETTLE_CHECK_INTERVAL_MS)
++        }
++
++        private fun activatePendingViewIfSettled() {
++            val view = pendingView ?: return
++            val position = view.getPositionOnScreen()
++            val prevPosition = pendingViewPosition
++            if (position == null) {
++                this.cancelPendingView()
++                return
++            }
++
++            val maxTravel = SETTLE_MAX_TRAVEL_DP * view.resources.displayMetrics.density
++            if (prevPosition == null ||
++                abs(position.left - prevPosition.left) + abs(position.top - prevPosition.top) > maxTravel
++            ) {
++                pendingViewPosition = position
++                handler.postDelayed(checkPendingView, SETTLE_CHECK_INTERVAL_MS)
++                return
++            }
++
++            this.setActiveView(view)
++        }
++
++        private fun cancelPendingView() {
++            handler.removeCallbacks(checkPendingView)
++            pendingView = null
++            pendingViewPosition = null
++        }
++
+         private fun clearActiveView() {
+             currentlyActiveView?.setIsCurrentlyActive(false)
+             currentlyActiveView = null
+         }
+ 
+         fun setActiveView(view: BlueskyVideoView) {
++            this.cancelPendingView()
+             if (this.currentlyActiveView != null) {
+                 this.clearActiveView()
+             }
 diff --git a/android/src/main/res/layout/bluesky_video_player.xml b/android/src/main/res/layout/bluesky_video_player.xml
 new file mode 100644
 index 0000000000000000000000000000000000000000..b80ee2d4c1cab5e23de321c4b7723c5ee643429a
