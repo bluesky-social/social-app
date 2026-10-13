@@ -167,6 +167,7 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
    * for every post that scrolled in or out of the feed.
    */
   const refCounts = useRef(new Map<string, number>())
+  const isPruneScheduled = useRef(false)
   const ax = useAnalytics()
   const langPrefs = useLanguagePrefs()
   const {t: l} = useLingui()
@@ -184,22 +185,33 @@ export function Provider({children}: React.PropsWithChildren<unknown>) {
       refCounts.current.delete(key)
 
       /*
-       * Drop translations that no mounted post uses anymore. Returning `prev`
-       * when there is nothing to drop (the common case) lets React skip the
-       * update entirely.
+       * Wait for the current flush of effects to finish before pruning. A
+       * release is often followed by an acquire of the same key in the same
+       * flush - going back from a thread to the feed blurs one screen and
+       * focuses the other - and the translation has to survive that.
        */
-      setTranslationState(prev => {
-        const keysToDelete = Object.keys(prev).filter(
-          k => !refCounts.current.has(k),
-        )
-        if (keysToDelete.length === 0) {
-          return prev
-        }
-        const newState = {...prev}
-        keysToDelete.forEach(k => {
-          delete newState[k]
+      if (isPruneScheduled.current) return
+      isPruneScheduled.current = true
+      queueMicrotask(() => {
+        isPruneScheduled.current = false
+        /*
+         * Drop translations that no mounted post uses anymore. Returning
+         * `prev` when there is nothing to drop (the common case) lets React
+         * skip the update entirely.
+         */
+        setTranslationState(prev => {
+          const keysToDelete = Object.keys(prev).filter(
+            k => !refCounts.current.has(k),
+          )
+          if (keysToDelete.length === 0) {
+            return prev
+          }
+          const newState = {...prev}
+          keysToDelete.forEach(k => {
+            delete newState[k]
+          })
+          return newState
         })
-        return newState
       })
     }
   }, [])
