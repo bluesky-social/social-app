@@ -59,7 +59,15 @@ let ShareMenuItems = ({
   const onSharePost = () => {
     ax.metric('share:press:nativeShare', {})
     const url = toShareUrl(href)
-    void shareUrl(url)
+    void shareUrl(url).then(result => {
+      if (!result) return
+      ax.metric('share:nativeShare:result', {
+        uri: postUri,
+        authorDid: postAuthor.did,
+        entryPoint: 'ShareMenu',
+        ...result,
+      })
+    })
     onShareProp()
   }
 

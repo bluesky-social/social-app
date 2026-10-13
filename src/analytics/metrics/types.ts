@@ -1194,6 +1194,22 @@ export type Events = {
   }
   'share:press:copyLink': {}
   'share:press:nativeShare': {}
+  /**
+   * Fires when the system share sheet closes after sharing a post. Not
+   * logged on web, or on Android builds without the native share module.
+   */
+  'share:nativeShare:result': {
+    uri: string
+    authorDid: string
+    entryPoint: 'ShareMenu' | 'LongPress'
+    status: 'shared' | 'dismissed'
+    /**
+     * The app the user picked: the `activityType` on iOS, the package name on
+     * Android. Android reports the chooser's own actions (e.g. Copy) as
+     * `dismissed` with no target.
+     */
+    target?: string
+  }
   'share:press:openDmSearch': {}
   'share:press:dmSelected': {}
   'share:press:recentDm': {}
