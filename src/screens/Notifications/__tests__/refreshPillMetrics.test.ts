@@ -2,6 +2,7 @@ import {afterEach, beforeEach, describe, expect, it, jest} from '@jest/globals'
 import {act, renderHook} from '@testing-library/react-native'
 
 import {
+  IMPRESSION_DELAY_MS,
   refreshPillHideReason,
   useRefreshPillMetrics,
 } from '#/screens/Notifications/refreshPillMetrics'
@@ -149,13 +150,45 @@ describe('useRefreshPillMetrics', () => {
     const {update, reported} = setup()
 
     update(SHOWN)
+    jest.advanceTimersByTime(1000)
     update(HIDDEN)
 
     expect(reported()).toEqual([
       ['notifications:refreshPill:impression', {tab: 'all'}],
       [
         'notifications:refreshPill:hide',
-        {tab: 'all', reason: 'gone', shownMs: 0},
+        {tab: 'all', reason: 'gone', shownMs: 1000},
+      ],
+    ])
+  })
+
+  it("doesn't count one that goes straight away, e.g. as the app comes back and refreshes", () => {
+    const {update, reported} = setup()
+
+    update(SHOWN)
+    jest.advanceTimersByTime(IMPRESSION_DELAY_MS - 1)
+    update({...HIDDEN, isFetchingTop: true})
+    jest.advanceTimersByTime(1000)
+
+    expect(reported()).toEqual([])
+  })
+
+  it('counts one pressed before it would have counted', () => {
+    const {onPress, update, press, reported} = setup()
+
+    update(SHOWN)
+    jest.advanceTimersByTime(100)
+    press()
+    update({...HIDDEN, isFetchingTop: true})
+    jest.advanceTimersByTime(1000)
+
+    expect(onPress).toHaveBeenCalledTimes(1)
+    expect(reported()).toEqual([
+      ['notifications:refreshPill:impression', {tab: 'all'}],
+      ['notifications:refreshPill:press', {tab: 'all', shownMs: 100}],
+      [
+        'notifications:refreshPill:hide',
+        {tab: 'all', reason: 'pressed', shownMs: 100},
       ],
     ])
   })
@@ -168,6 +201,7 @@ describe('useRefreshPillMetrics', () => {
     update({isInView: false, visible: false})
     jest.advanceTimersByTime(5000)
     update(SHOWN)
+    jest.advanceTimersByTime(IMPRESSION_DELAY_MS)
 
     expect(reported()).toEqual([
       ['notifications:refreshPill:impression', {tab: 'all'}],
