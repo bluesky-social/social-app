@@ -156,9 +156,17 @@ export function Gallery({
       content.measureLayout(
         bleed,
         (x, _y, w) => {
-          bleed.measure((_bx, _by, bleedWidth) => {
-            setContentDims({x, width: w, bleedWidth})
-          })
+          /*
+           * Measured against itself rather than with measure(), which on
+           * native applies ancestor transforms and would return a scaled width.
+           */
+          bleed.measureLayout(
+            bleed,
+            (_bx, _by, bleedWidth) => {
+              setContentDims({x, width: w, bleedWidth})
+            },
+            () => {},
+          )
         },
         () => {},
       )
