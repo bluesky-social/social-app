@@ -183,6 +183,7 @@ function NoticeDetails({
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
+  const ax = useAnalytics()
   const appealDialogControl = Dialog.useDialogControl()
   const labels = getNoticeLabels(data)
   const actionLabels = useActionedSubjectLabels({
@@ -194,6 +195,16 @@ function NoticeDetails({
   const policies = data.actions[0]?.policies ?? []
   const canAppeal = data.availableActions?.includes('appeal') ?? false
   const isAccount = 'did' in data.subject
+  const appealedAction = actions.find(
+    action =>
+      !action.reversedAt &&
+      [
+        'contentRemoved',
+        'accountSuspended',
+        'accountTakedown',
+        'labelApplied',
+      ].includes(action.type),
+  )
 
   return (
     <>
@@ -286,7 +297,12 @@ function NoticeDetails({
                   size="tiny"
                   variant="outline"
                   color="secondary"
-                  onPress={appealDialogControl.open}>
+                  onPress={() => {
+                    ax.metric('moderation:inbox:startAppeal', {
+                      type: appealedAction?.type,
+                    })
+                    appealDialogControl.open()
+                  }}>
                   <ButtonText>
                     <Trans>Appeal this decision</Trans>
                   </ButtonText>
@@ -300,7 +316,11 @@ function NoticeDetails({
           ) : null}
         </ContentBlock>
       </View>
-      <AppealDialog control={appealDialogControl} data={{...data, actions}} />
+      <AppealDialog
+        control={appealDialogControl}
+        data={{...data, actions}}
+        appealedAction={appealedAction}
+      />
     </>
   )
 }
@@ -308,26 +328,19 @@ function NoticeDetails({
 function AppealDialog({
   control,
   data,
+  appealedAction,
 }: {
   control: Dialog.DialogControlProps
   data: tools.ozone.inbox.getActionedSubject.$OutputBody
+  appealedAction: tools.ozone.inbox.defs.ActionView | undefined
 }) {
   const t = useTheme()
   const {i18n, t: l} = useLingui()
+  const ax = useAnalytics()
   const [details, setDetails] = useState('')
   const submitting = useRef(false)
   const appeal = useAppealModerationInboxSubjectMutation(data.src)
   const invalidateInbox = useModerationInboxCacheMutation()
-  const appealedAction = data.actions.find(
-    action =>
-      !action.reversedAt &&
-      [
-        'contentRemoved',
-        'accountSuspended',
-        'accountTakedown',
-        'labelApplied',
-      ].includes(action.type),
-  )
   const errorCode = matchXrpcError(
     appeal.error,
     tools.ozone.inbox.appealActionedSubject,
@@ -373,6 +386,9 @@ function AppealDialog({
               id: appealedAction.id,
             }
           : undefined,
+      })
+      ax.metric('moderation:inbox:submitAppeal', {
+        type: appealedAction?.type,
       })
       control.close(() => {
         void invalidateInbox(updatedSubject)

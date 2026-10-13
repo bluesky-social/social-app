@@ -1046,6 +1046,12 @@ export type Events = {
   }
   'moderation:inbox:viewReport': {}
   'moderation:inbox:viewNotice': {}
+  'moderation:inbox:startAppeal': {
+    type?: string
+  }
+  'moderation:inbox:submitAppeal': {
+    type?: string
+  }
 
   'reportDialog:open': {
     subjectType: string
