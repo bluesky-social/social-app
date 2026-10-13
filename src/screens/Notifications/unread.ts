@@ -1,5 +1,6 @@
 import {
   type GroupedNotificationsFeed,
+  type GroupedNotificationsPeek,
   type LoadedGroupedNotificationsPage,
 } from '#/state/queries/notifications/grouped'
 import {type UnreadCheck} from '#/state/queries/notifications/types'
@@ -53,20 +54,25 @@ export function getMarkReadAt(load: FeedLoad): Date | undefined {
 
 /**
  * Whether a tab offers its "Refresh" pill: it's the tab in view, and the last
- * unread check found unread notifications for its feed that it hasn't
+ * unread check or the last peek at its feed found a notification it hasn't
  * loaded.
  *
+ * The unread check only counts notifications that haven't been seen, for
+ * every feed at once, while a peek looks at one feed, seen or not. So a peek
+ * still finds what came in before a refresh on another tab marked it as seen.
+ *
  * "Not loaded" means newer than the newest notification in the tab's first
- * page, so unread rows already on screen don't count. A check asked before
+ * page, so rows already on screen don't count. A check or peek asked before
  * that page was requested has nothing to add to it, so the pill goes as soon
  * as the tab starts fetching its top, and stays gone once that has loaded,
- * until a later check finds more. A failed fetch loads nothing, so the pill
- * comes back for a retry.
+ * until a later check or peek finds more. A failed fetch loads nothing, so
+ * the pill comes back for a retry.
  */
 export function isRefreshPillVisible({
   feed,
   isActive,
   check,
+  peek,
   top,
   isFetchingTop,
 }: {
@@ -77,6 +83,10 @@ export function isRefreshPillVisible({
   isActive: boolean
   check: UnreadCheck | undefined
   /**
+   * The last peek at the tab's feed, see `peekGroupedNotifications`.
+   */
+  peek?: GroupedNotificationsPeek
+  /**
    * The tab's first page, once loaded.
    */
   top:
@@ -86,11 +96,29 @@ export function isRefreshPillVisible({
    */
   isFetchingTop: boolean
 }): boolean {
-  if (!isActive || !check || !top || isFetchingTop) return false
-  if (check.requestedAt <= top.requestedAt) return false
-  const newestUnreadAt = check.newestUnreadAt[feed]
-  if (newestUnreadAt === undefined) return false
-  return top.newestAt === undefined || newestUnreadAt > top.newestAt
+  if (!isActive || !top || isFetchingTop) return false
+  return (
+    hasNewerThan(
+      check && {
+        requestedAt: check.requestedAt,
+        newestAt: check.newestUnreadAt[feed],
+      },
+      top,
+    ) || hasNewerThan(peek, top)
+  )
+}
+
+/**
+ * Whether something asked after `top` was requested found a notification
+ * newer than any in it.
+ */
+function hasNewerThan(
+  found: GroupedNotificationsPeek | undefined,
+  top: Pick<LoadedGroupedNotificationsPage, 'requestedAt' | 'newestAt'>,
+) {
+  if (!found || found.requestedAt <= top.requestedAt) return false
+  if (found.newestAt === undefined) return false
+  return top.newestAt === undefined || found.newestAt > top.newestAt
 }
 
 /**
