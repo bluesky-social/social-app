@@ -334,6 +334,11 @@ msgstr ""
 msgid "{0} reacted {1}"
 msgstr ""
 
+#. placeholder {0}: tab.label
+#: src/screens/Notifications/components/TabPills.tsx:392
+msgid "{0} tab, selected"
+msgstr "{0} tab, selected"
+
 #. Accessibility hint for the bottom bar chat icon when the number of unread messages exceeds the cap, with the + symbol already included – for example, 99+ unread items
 #. placeholder {0}: numUnreadMessages.numUnread
 #: src/view/shell/bottom-bar/BottomBar.tsx:250
@@ -415,7 +420,7 @@ msgstr "{0}/{1} {2, plural, one {member} other {members}}"
 
 #. Badge showing the current image position out of the total number of images in a gallery.
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:534
+#: src/components/images/Gallery/index.tsx:563
 msgctxt "gallery-badge-image-position-numbers"
 msgid "{0}/{imageCount}"
 msgstr "{0}/{imageCount}"
@@ -473,6 +478,16 @@ msgstr "{count, plural, =0 {No requests to join} one {# request to join} other {
 #: src/components/dms/SystemMessageGroup.tsx:38
 msgid "{count, plural, one {# chat update} other {# chat updates}}"
 msgstr "{count, plural, one {# chat update} other {# chat updates}}"
+
+#. Number of people you follow who also follow this account
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:309
+msgid "{count, plural, one {# mutual follower} other {# mutual followers}}"
+msgstr "{count, plural, one {# mutual follower} other {# mutual followers}}"
+
+#. Short form of “mutual followers”: the number of people you follow who also follow this account
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:316
+msgid "{count, plural, one {# mutual} other {# mutuals}}"
+msgstr "{count, plural, one {# mutual} other {# mutuals}}"
 
 #: src/screens/Messages/components/RequestStatus.tsx:74
 msgid "{count, plural, one {# new join request} other {# new join requests}}"
@@ -691,6 +706,11 @@ msgstr ""
 msgid "{following} following"
 msgstr ""
 
+#. How long ago a notification happened, e.g. "7m ago". The time is already abbreviated and translated.
+#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:159
+msgid "{formatted} ago"
+msgstr "{formatted} ago"
+
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #. '{postCount} {posts}', e.g., '1.2K posts'
 #: src/components/interstitials/FeedTrendingTopics.tsx:254
@@ -757,7 +777,7 @@ msgstr "{MAX_DESCRIPTION, plural, other {Description is too long. The maximum nu
 msgid "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 msgstr "{MAX_DISPLAY_NAME, plural, other {Display name is too long. The maximum number of characters is #.}}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:391
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:398
 msgid "{MAX_HIDDEN_REPLIES, plural, other {You can hide a maximum of # replies.}}"
 msgstr ""
 
@@ -770,10 +790,86 @@ msgstr "{memberCount}/{memberLimit}"
 msgid "{minutes, plural, one {# minute} other {# minutes}}"
 msgstr ""
 
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:120
+msgid "{name} and {others, plural, one {# other} other {# others}} followed you"
+msgstr "{name} and {others, plural, one {# other} other {# others}} followed you"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:497
+msgid "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
+msgstr "{name} and {others, plural, one {# other} other {# others}} liked your custom feed"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:108
+msgid "{name} and {others, plural, one {# other} other {# others}} liked your post"
+msgstr "{name} and {others, plural, one {# other} other {# others}} liked your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:206
+msgid "{name} and {others, plural, one {# other} other {# others}} liked your repost"
+msgstr "{name} and {others, plural, one {# other} other {# others}} liked your repost"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:154
+msgid "{name} and {others, plural, one {# other} other {# others}} reposted your post"
+msgstr "{name} and {others, plural, one {# other} other {# others}} reposted your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:254
+msgid "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
+msgstr "{name} and {others, plural, one {# other} other {# others}} reposted your repost"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:275
+msgid "{name} followed you back"
+msgstr "{name} followed you back"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:274
+msgid "{name} followed you back via starter pack {starterPackName}"
+msgstr "{name} followed you back via starter pack {starterPackName}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:363
+msgid "{name} liked {count} of your {count, plural, one {post} other {posts}}"
+msgstr "{name} liked {count} of your {count, plural, one {post} other {posts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:428
+msgid "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
+msgstr "{name} liked {count} of your {count, plural, one {repost} other {reposts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:501
+msgid "{name} liked your custom feed"
+msgstr "{name} liked your custom feed"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:112
+msgid "{name} liked your post"
+msgstr "{name} liked your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:210
+msgid "{name} liked your repost"
+msgstr "{name} liked your repost"
+
 #. placeholder {0}: reaction.value
 #: src/components/dms/getReactionInfo.ts:70
 msgid "{name} reacted {0} to {target}"
 msgstr "{name} reacted {0} to {target}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:347
+msgid "{name} removed their verification from your account"
+msgstr "{name} removed their verification from your account"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:395
+msgid "{name} reposted {count} of your {count, plural, one {post} other {posts}}"
+msgstr "{name} reposted {count} of your {count, plural, one {post} other {posts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:461
+msgid "{name} reposted {count} of your {count, plural, one {repost} other {reposts}}"
+msgstr "{name} reposted {count} of your {count, plural, one {repost} other {reposts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:158
+msgid "{name} reposted your post"
+msgstr "{name} reposted your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:258
+msgid "{name} reposted your repost"
+msgstr "{name} reposted your repost"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:312
+msgid "{name} verified you"
+msgstr "{name} verified you"
 
 #. When the last message in a group chat came from someone other than you.
 #: src/components/dms/getMessageInfo.ts:84
@@ -874,6 +970,86 @@ msgstr "+{0}"
 #: src/screens/Search/components/StarterPackCard.tsx:260
 msgid "+{computedTotal}"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:186
+msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
+msgstr "<0/> and <1>{others, plural, one {# other} other {# others}}</1> followed you"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:516
+msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your custom feed"
+msgstr "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your custom feed"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:116
+msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your post"
+msgstr "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:214
+msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your repost"
+msgstr "<0/> and <1>{others, plural, one {# other} other {# others}}</1> liked your repost"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:162
+msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your post"
+msgstr "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:262
+msgid "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
+msgstr "<0/> and <1>{others, plural, one {# other} other {# others}}</1> reposted your repost"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:77
+msgid "<0/> followed you"
+msgstr "<0/> followed you"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:283
+msgid "<0/> followed you back! 🎉"
+msgstr "<0/> followed you back! 🎉"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:369
+msgid "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
+msgstr "<0/> liked {count} of your {count, plural, one {post} other {posts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:434
+msgid "<0/> liked {count} of your {count, plural, one {repost} other {reposts}}"
+msgstr "<0/> liked {count} of your {count, plural, one {repost} other {reposts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:524
+msgid "<0/> liked your custom feed"
+msgstr "<0/> liked your custom feed"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:124
+msgid "<0/> liked your post"
+msgstr "<0/> liked your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:222
+msgid "<0/> liked your repost"
+msgstr "<0/> liked your repost"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:354
+msgid "<0/> removed their verification from your account"
+msgstr "<0/> removed their verification from your account"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:401
+msgid "<0/> reposted {count} of your {count, plural, one {post} other {posts}}"
+msgstr "<0/> reposted {count} of your {count, plural, one {post} other {posts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:467
+msgid "<0/> reposted {count} of your {count, plural, one {repost} other {reposts}}"
+msgstr "<0/> reposted {count} of your {count, plural, one {repost} other {reposts}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:170
+msgid "<0/> reposted your post"
+msgstr "<0/> reposted your post"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:270
+msgid "<0/> reposted your repost"
+msgstr "<0/> reposted your repost"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:389
+msgid "<0/> signed up with your starter pack"
+msgstr "<0/> signed up with your starter pack"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:319
+msgid "<0/> verified you"
+msgstr "<0/> verified you"
 
 #. placeholder {0}: getName(items[0])
 #. placeholder {1}: getName(items[1])
@@ -1126,7 +1302,7 @@ msgstr ""
 msgid "Account"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:423
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:430
 #: src/screens/Messages/components/RequestButtons.tsx:104
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:122
 #: src/view/com/profile/ProfileMenu.tsx:211
@@ -1152,7 +1328,7 @@ msgctxt "moderation-inbox-setting"
 msgid "Account labeling notifications"
 msgstr "Account labeling notifications"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:464
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:471
 #: src/view/com/profile/ProfileMenu.tsx:147
 msgctxt "toast"
 msgid "Account muted"
@@ -1188,7 +1364,7 @@ msgctxt "toast"
 msgid "Account unfollowed"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:445
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:452
 #: src/view/com/profile/ProfileMenu.tsx:134
 msgctxt "toast"
 msgid "Account unmuted"
@@ -1199,10 +1375,11 @@ msgid "Accounts with a scalloped blue check mark <0><1/></0> can verify others. 
 msgstr ""
 
 #: src/screens/Atmosphere.tsx:43
+#: src/screens/Notifications/index.tsx:101
 msgid "Activity"
 msgstr "Activity"
 
-#: src/lib/hooks/useNotificationHandler.ts:214
+#: src/lib/hooks/useNotificationHandler.ts:215
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:105
 #: src/screens/Settings/NotificationSettings/index.tsx:225
 msgid "Activity from others"
@@ -1386,7 +1563,8 @@ msgstr ""
 msgid "Add to lists"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:124
+#: src/components/PostControls/BookmarkButton.tsx:43
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:170
 msgid "Add to saved posts"
 msgstr ""
 
@@ -1417,6 +1595,10 @@ msgstr "Added by invite link"
 #: src/components/dialogs/lists/UserAddRemoveListsDialog.tsx:221
 msgid "Added to list"
 msgstr ""
+
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:159
+msgid "Added to saved posts"
+msgstr "Added to saved posts"
 
 #: src/components/dialogs/StarterPackDialog.tsx:268
 msgid "Added to Starter Pack"
@@ -1503,6 +1685,7 @@ msgstr ""
 
 #. the default tab in the interests tab bar
 #: src/components/dms/ReactionsDialog.tsx:292
+#: src/screens/Notifications/index.tsx:97
 #: src/screens/Onboarding/StepSuggestedAccounts/index.tsx:205
 #: src/view/screens/Notifications.tsx:86
 msgid "All"
@@ -1614,9 +1797,9 @@ msgid "Already signed in as @{0}"
 msgstr ""
 
 #: src/components/AltBadgeWithDialog.tsx:76
-#: src/components/images/AutoSizedImage.tsx:205
-#: src/components/images/Gallery/index.tsx:598
-#: src/components/images/ImageLayoutGridItem.tsx:135
+#: src/components/images/AutoSizedImage.tsx:218
+#: src/components/images/Gallery/index.tsx:627
+#: src/components/images/ImageLayoutGridItem.tsx:138
 #: src/view/com/composer/GifAltText.tsx:101
 #: src/view/com/composer/photos/Gallery.tsx:211
 msgid "ALT"
@@ -1763,6 +1946,7 @@ msgstr "An issue occurred starting the group chat, please try again."
 #: src/components/hooks/useFollowMethods.ts:52
 #: src/components/ProfileCard.tsx:515
 #: src/components/ProfileCard.tsx:540
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:174
 #: src/view/com/notifications/NotificationFeedItem.tsx:827
 #: src/view/com/notifications/NotificationFeedItem.tsx:848
 msgid "An issue occurred, please try again."
@@ -2066,8 +2250,8 @@ msgstr "Ask apps and sites not to show my account to logged-out users"
 msgid "Ask apps to hide my posts from algorithmic recommendations"
 msgstr "Ask apps to hide my posts from algorithmic recommendations"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:616
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:618
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:632
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:634
 msgid "Assign topic for algo"
 msgstr ""
 
@@ -2231,6 +2415,7 @@ msgstr ""
 #: src/screens/Messages/ChatList.tsx:543
 #: src/screens/Messages/Conversation.tsx:206
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:99
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:242
 msgid "Before you can message another user, you must first verify your email."
 msgstr ""
 
@@ -2299,8 +2484,8 @@ msgstr "Block {displayName}"
 
 #: src/components/dms/ConvoMenu.tsx:284
 #: src/components/dms/ConvoMenu.tsx:288
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:765
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:767
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:781
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:783
 #: src/screens/Messages/components/RequestButtons.tsx:154
 #: src/screens/Messages/components/RequestButtons.tsx:156
 #: src/view/com/profile/ProfileMenu.tsx:495
@@ -2381,6 +2566,10 @@ msgstr ""
 #: src/view/screens/ModerationBlockedAccounts.tsx:181
 msgid "Blocked accounts cannot reply in your threads, mention you, or otherwise interact with you. You will not see their content and they will be prevented from seeing yours."
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:429
+msgid "Blocked post"
+msgstr "Blocked post"
 
 #: src/screens/Profile/Sections/Labels.tsx:204
 msgid "Blocking does not prevent this labeler from placing labels on your account."
@@ -2716,6 +2905,8 @@ msgstr "Cancels signing in so you can check your username"
 #: src/components/PostControls/index.tsx:104
 #: src/components/PostControls/index.tsx:135
 #: src/components/PostControls/index.tsx:164
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:67
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:622
 #: src/state/shell/composer/index.tsx:96
 msgid "Cannot interact with a blocked user"
 msgstr ""
@@ -2729,7 +2920,7 @@ msgstr ""
 msgid "Captions & alt text"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:275
+#: src/components/images/Gallery/index.tsx:312
 msgid "carousel"
 msgstr "carousel"
 
@@ -2822,7 +3013,7 @@ msgstr "Changes to the Starter Pack will not be reflected in the list after crea
 msgid "Channel"
 msgstr "Channel"
 
-#: src/lib/hooks/useNotificationHandler.ts:133
+#: src/lib/hooks/useNotificationHandler.ts:134
 #: src/Navigation.tsx:539
 #: src/view/shell/bottom-bar/BottomBar.tsx:246
 #: src/view/shell/desktop/LeftNav.tsx:726
@@ -2850,11 +3041,11 @@ msgstr "Chat invite link no longer available"
 msgid "Chat locked"
 msgstr "Chat locked"
 
-#: src/lib/hooks/useNotificationHandler.ts:146
+#: src/lib/hooks/useNotificationHandler.ts:147
 msgid "Chat messages - silent"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:137
+#: src/lib/hooks/useNotificationHandler.ts:138
 msgid "Chat messages - sound"
 msgstr ""
 
@@ -3216,8 +3407,8 @@ msgstr ""
 msgid "Close image"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:74
-#: src/components/Lightbox/Lightbox.web.tsx:335
+#: src/components/Lightbox/Lightbox.web.tsx:75
+#: src/components/Lightbox/Lightbox.web.tsx:340
 msgid "Close image viewer"
 msgstr ""
 
@@ -3259,6 +3450,10 @@ msgstr ""
 #: src/view/com/notifications/NotificationFeedItem.tsx:593
 msgid "Collapse list of users"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:163
+msgid "Collapses list of users"
+msgstr "Collapses list of users"
 
 #: src/view/com/notifications/NotificationFeedItem.tsx:973
 msgid "Collapses list of users for a given notification"
@@ -3529,7 +3724,7 @@ msgstr "Copied link to clipboard"
 #: src/components/dms/ChatInvite/Root.tsx:100
 #: src/components/dms/MessageContextMenu.tsx:96
 #: src/components/PostControls/DiscoverDebug.tsx:36
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:269
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:276
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:75
 #: src/lib/sharing.ts:24
 #: src/lib/sharing.ts:42
@@ -3603,6 +3798,7 @@ msgstr ""
 msgid "Copy link to list"
 msgstr ""
 
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:167
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:140
 #: src/components/PostControls/ShareMenu/ShareMenuItems.tsx:143
 #: src/components/PostControls/ShareMenu/ShareMenuItems.web.tsx:86
@@ -3629,8 +3825,8 @@ msgstr ""
 msgid "Copy post at:// URI"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:571
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:573
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:587
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:589
 msgid "Copy post text"
 msgstr ""
 
@@ -3746,6 +3942,10 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:51
 msgid "Couldn’t load GIFs"
 msgstr "Couldn’t load GIFs"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:230
+msgid "Couldn’t load more followers, please try again"
+msgstr "Couldn’t load more followers, please try again"
 
 #: src/features/followingV2/home/GapRow.tsx:58
 #: src/features/followingV2/home/GapRow.tsx:83
@@ -3979,7 +4179,7 @@ msgid "Default icons"
 msgstr ""
 
 #: src/components/dms/MessageOverlays.tsx:184
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:821
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:837
 #: src/screens/ProfileList/components/MoreOptionsMenu.tsx:320
 #: src/screens/Settings/AppPasswords.tsx:214
 #: src/screens/StarterPack/StarterPackScreen.tsx:629
@@ -4049,8 +4249,8 @@ msgstr ""
 msgid "Delete my account"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:805
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:807
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:821
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:823
 #: src/view/com/composer/Composer.tsx:1735
 msgid "Delete post"
 msgstr ""
@@ -4068,7 +4268,7 @@ msgstr "Delete Starter Pack?"
 msgid "Delete this list?"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:818
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:834
 msgid "Delete this post?"
 msgstr ""
 
@@ -4093,6 +4293,10 @@ msgstr ""
 msgid "Deleted list"
 msgstr ""
 
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:432
+msgid "Deleted post"
+msgstr "Deleted post"
+
 #: src/components/dialogs/lists/CreateOrEditListDialog.tsx:463
 #: src/components/SendErrorReportDialog.tsx:78
 #: src/screens/Profile/Header/EditProfileDialog.tsx:360
@@ -4109,12 +4313,12 @@ msgstr "Description (1000 characters max)"
 msgid "Descriptive alt text"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:719
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:725
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:735
 msgid "Detach quote"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:854
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:870
 msgid "Detach quote post?"
 msgstr ""
 
@@ -4408,8 +4612,8 @@ msgctxt "button"
 msgid "Download chat data"
 msgstr "Download chat data"
 
-#: src/components/Lightbox/Lightbox.web.tsx:313
-#: src/components/Lightbox/Lightbox.web.tsx:325
+#: src/components/Lightbox/Lightbox.web.tsx:318
+#: src/components/Lightbox/Lightbox.web.tsx:330
 msgid "Download image"
 msgstr "Download image"
 
@@ -4485,6 +4689,11 @@ msgstr ""
 msgid "e.g. Users that repeatedly reply with ads."
 msgstr ""
 
+#: src/screens/Notifications/components/PageList.tsx:452
+msgctxt "Notifications section header"
+msgid "Earlier"
+msgstr "Earlier"
+
 #: src/components/moderation/ReportDialog/utils/useReportOptions.ts:198
 msgid "Eating disorders"
 msgstr ""
@@ -4524,8 +4733,8 @@ msgstr "Edit group name"
 msgid "Edit image"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:786
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:799
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:802
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:815
 msgid "Edit interaction settings"
 msgstr ""
 
@@ -4913,7 +5122,7 @@ msgid "Exit fullscreen"
 msgstr ""
 
 #: src/components/Lightbox/chrome/Footer.tsx:70
-#: src/components/Lightbox/Lightbox.web.tsx:246
+#: src/components/Lightbox/Lightbox.web.tsx:251
 msgid "Expand alt text"
 msgstr ""
 
@@ -4928,6 +5137,10 @@ msgstr ""
 #: src/components/Post/ShowMoreTextButton.tsx:31
 msgid "Expand post text"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:163
+msgid "Expands list of users"
+msgstr "Expands list of users"
 
 #: src/screens/VideoFeed/index.tsx:1123
 msgid "Expands or collapses post text"
@@ -5055,7 +5268,7 @@ msgstr "Failed to add to Starter Pack"
 msgid "Failed to change handle. Please try again."
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:303
+#: src/components/Lightbox/Lightbox.web.tsx:308
 #: src/features/inviteFriends/InviteFriendsDialogInner.tsx:131
 #: src/screens/Search/Shell.tsx:513
 msgid "Failed to copy link"
@@ -5067,6 +5280,7 @@ msgstr ""
 
 #: src/components/dms/MessageProfileButton.tsx:38
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:66
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:232
 msgid "Failed to create conversation"
 msgstr ""
 
@@ -5089,7 +5303,7 @@ msgstr ""
 msgid "Failed to delete message"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:216
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:223
 msgid "Failed to delete post, please try again"
 msgstr ""
 
@@ -5272,7 +5486,7 @@ msgstr ""
 msgid "Failed to save draft"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:320
+#: src/components/Lightbox/Lightbox.web.tsx:325
 msgid "Failed to save image"
 msgstr "Failed to save image"
 
@@ -5306,7 +5520,7 @@ msgstr "Failed to send report"
 msgid "Failed to submit appeal, please try again."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:248
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:255
 msgid "Failed to toggle thread mute, please try again"
 msgstr ""
 
@@ -5378,6 +5592,10 @@ msgstr ""
 msgid "Feed by {0}"
 msgstr ""
 
+#: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:246
+msgid "Feed by {handle}"
+msgstr "Feed by {handle}"
+
 #: src/view/com/feeds/MissingFeed.tsx:153
 msgid "Feed creator"
 msgstr ""
@@ -5404,8 +5622,8 @@ msgstr ""
 msgid "Feedback"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:304
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:327
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:311
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:334
 msgctxt "toast"
 msgid "Feedback sent to feed operator"
 msgstr ""
@@ -5523,6 +5741,11 @@ msgstr "Find and invite friends"
 msgid "Find Contacts"
 msgstr ""
 
+#: src/screens/Notifications/components/PageList.tsx:507
+#: src/screens/Notifications/components/PageList.tsx:512
+msgid "Find friends"
+msgstr "Find friends"
+
 #: src/components/contacts/screens/GetContacts.tsx:275
 #: src/components/contacts/screens/GetContacts.tsx:289
 msgid "Find my friends"
@@ -5543,6 +5766,10 @@ msgstr "Find people you know"
 #: src/screens/Search/Shell.tsx:765
 msgid "Find posts, users, and feeds on Bluesky"
 msgstr ""
+
+#: src/screens/Notifications/components/PageList.tsx:501
+msgid "Find some friends to start getting notifications!"
+msgstr "Find some friends to start getting notifications!"
 
 #: src/components/dialogs/nuxs/FindContactsAnnouncement.tsx:98
 msgid "Find your friends"
@@ -5589,10 +5816,12 @@ msgid "Focus the search field"
 msgstr "Focus the search field"
 
 #. User is not following this account, click to follow
+#. User is not following this account, click to follow
 #: src/components/ProfileCard.tsx:556
 #: src/components/ProfileHoverCard/index.web.tsx:503
 #: src/components/ProfileHoverCard/index.web.tsx:514
 #: src/screens/Messages/ConversationSettings/Member.tsx:170
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:189
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:157
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:418
 #: src/screens/VideoFeed/index.tsx:1006
@@ -5649,7 +5878,9 @@ msgid "Follow all accounts"
 msgstr ""
 
 #. User is not following this account, click to follow back
+#. User is not following this account, click to follow back
 #: src/components/ProfileCard.tsx:552
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:185
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:155
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:416
 #: src/view/com/notifications/NotificationFeedItem.tsx:890
@@ -5689,6 +5920,16 @@ msgstr ""
 msgid "Followed by <0>{0}</0>, <1>{1}</1>, and {2, plural, one {# other} other {# others}}"
 msgstr ""
 
+#. Heading of the Followers tab of notifications, above the list of people who followed you
+#: src/screens/Notifications/components/NotificationItem/kinds/follower.tsx:52
+msgctxt "Notifications section header"
+msgid "Followed you"
+msgstr "Followed you"
+
+#: src/screens/Notifications/index.tsx:99
+msgid "Followers"
+msgstr "Followers"
+
 #: src/components/intents/GroupChatJoinDialog.tsx:360
 msgid "Followers can join"
 msgstr "Followers can join"
@@ -5705,9 +5946,11 @@ msgstr ""
 
 #. User is following this account, click to unfollow
 #. User is following this account, click to unfollow
+#. User is following this account, click to unfollow
 #: src/components/ProfileCard.tsx:547
 #: src/components/ProfileHoverCard/index.web.tsx:502
 #: src/components/ProfileHoverCard/index.web.tsx:513
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:180
 #: src/screens/PostThread/components/ThreadItemAnchorFollowButton.tsx:160
 #: src/screens/Profile/Header/ProfileHeaderStandard.tsx:414
 #: src/screens/VideoFeed/index.tsx:1004
@@ -5739,6 +5982,10 @@ msgstr "Following {displayName}"
 #: src/screens/VideoFeed/index.tsx:984
 msgid "Following {handle}"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:170
+msgid "Following {name}"
+msgstr "Following {name}"
 
 #: src/screens/Settings/ContentAndMediaSettings.tsx:78
 #: src/screens/Settings/ContentAndMediaSettings.tsx:81
@@ -6070,6 +6317,12 @@ msgstr "Go to {0}'s profile"
 msgid "Go to {firstAuthorName}'s profile"
 msgstr ""
 
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:97
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:593
+#: src/screens/Notifications/components/NotificationItem/Item/text.tsx:106
+msgid "Go to {name}’s profile"
+msgstr "Go to {name}’s profile"
+
 #: src/components/ageAssurance/AgeAssuranceAdmonition.tsx:93
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:73
 #: src/components/ageAssurance/AgeRestrictedScreen.tsx:82
@@ -6349,11 +6602,16 @@ msgstr ""
 msgid "Hidden list"
 msgstr ""
 
+#. Shown in place of the text of a post that is hidden by the viewer’s moderation settings
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:227
+msgid "Hidden post"
+msgstr "Hidden post"
+
 #: src/components/interstitials/TrendingVideos.tsx:140
 #: src/components/moderation/ContentHider.tsx:208
 #: src/components/moderation/LabelPreference.tsx:141
 #: src/components/moderation/PostHider.tsx:137
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:829
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:845
 #: src/lib/moderation/useLabelBehaviorDescription.ts:18
 #: src/lib/moderation/useLabelBehaviorDescription.ts:23
 #: src/lib/moderation/useLabelBehaviorDescription.ts:28
@@ -6382,18 +6640,18 @@ msgstr ""
 msgid "Hide password"
 msgstr "Hide password"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:669
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:672
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:685
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:688
 msgid "Hide post for me"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:683
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:693
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:699
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:709
 msgid "Hide reply for everyone"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:669
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:672
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:685
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:688
 msgid "Hide reply for me"
 msgstr ""
 
@@ -6406,19 +6664,19 @@ msgstr "Hide reposts in feeds"
 msgid "Hide this card"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:826
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:842
 msgid "Hide this post?"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:826
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:861
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:842
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:877
 msgid "Hide this reply?"
 msgstr ""
 
 #: src/components/Post/Translated/index.tsx:213
 #: src/components/Post/Translated/index.tsx:347
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:546
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:548
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:562
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:564
 msgid "Hide translation"
 msgstr "Hide translation"
 
@@ -6560,7 +6818,7 @@ msgstr ""
 msgid "I'm on Bluesky as {0} - come find me! https://bsky.app/download"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:247
+#: src/components/Lightbox/Lightbox.web.tsx:252
 msgid "If alt text is long, toggles alt text expanded state"
 msgstr ""
 
@@ -6592,7 +6850,7 @@ msgstr ""
 msgid "If you need to update your email, <0>click here</0>."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:819
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:835
 msgid "If you remove this post, you won't be able to recover it."
 msgstr ""
 
@@ -6617,23 +6875,23 @@ msgstr ""
 msgid "If you're trying to change your handle or email, do so before you deactivate."
 msgstr ""
 
-#: src/components/images/ImageLayoutGridItem.tsx:91
+#: src/components/images/ImageLayoutGridItem.tsx:94
 msgid "Image"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:459
+#: src/components/images/Gallery/index.tsx:488
 msgid "Image {0}"
 msgstr "Image {0}"
 
 #. placeholder {0}: index + 1
 #. placeholder {1}: imgs.length
-#: src/components/Lightbox/Lightbox.web.tsx:262
+#: src/components/Lightbox/Lightbox.web.tsx:267
 msgid "Image {0} of {1}"
 msgstr ""
 
 #. placeholder {0}: index + 1
-#: src/components/images/Gallery/index.tsx:444
+#: src/components/images/Gallery/index.tsx:473
 msgid "Image {0} of {imageCount}"
 msgstr "Image {0} of {imageCount}"
 
@@ -6648,7 +6906,7 @@ msgid "Image cache cleared, freed {0}"
 msgstr ""
 
 #. placeholder {0}: images.length
-#: src/components/images/Gallery/index.tsx:276
+#: src/components/images/Gallery/index.tsx:313
 msgid "Image gallery, {0} images"
 msgstr "Image gallery, {0} images"
 
@@ -6663,18 +6921,18 @@ msgid "Image is unavailable."
 msgstr "Image is unavailable."
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:72
-#: src/components/Lightbox/Lightbox.web.tsx:266
-#: src/components/Lightbox/Lightbox.web.tsx:274
+#: src/components/Lightbox/Lightbox.web.tsx:271
+#: src/components/Lightbox/Lightbox.web.tsx:279
 msgid "Image options"
 msgstr "Image options"
 
-#: src/components/Lightbox/Lightbox.web.tsx:317
+#: src/components/Lightbox/Lightbox.web.tsx:322
 #: src/lib/media/save-image.ios.ts:25
 #: src/lib/media/save-image.ts:29
 msgid "Image saved"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:83
+#: src/components/Lightbox/Lightbox.web.tsx:84
 msgid "Image viewer"
 msgstr ""
 
@@ -6715,6 +6973,22 @@ msgstr ""
 #: src/ageAssurance/components/NoAccessScreen.tsx:282
 msgid "In order to provide an age-appropriate experience, we need to know your birthdate. This is a one-time thing, and your data will be kept private."
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:272
+msgid "in reply to <0>{name}</0>: {previewNode}"
+msgstr "in reply to <0>{name}</0>: {previewNode}"
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:191
+msgid "in reply to a blocked post"
+msgstr "in reply to a blocked post"
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:196
+msgid "in reply to a deleted post"
+msgstr "in reply to a deleted post"
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:270
+msgid "in reply to: {previewNode}"
+msgstr "in reply to: {previewNode}"
 
 #: src/screens/Settings/NotificationSettings/components/SettingPreview.tsx:30
 msgid "In-app"
@@ -6844,7 +7118,7 @@ msgstr "Invalid group chat code."
 msgid "Invalid handle. Please try a different one."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:397
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:404
 msgctxt "toast"
 msgid "Invalid interaction settings."
 msgstr ""
@@ -7027,8 +7301,8 @@ msgstr "Keep your place in the Following feed"
 msgid "KWS website"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:624
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:626
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:640
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
 msgid "Label reply for algo"
 msgstr "Label reply for algo"
 
@@ -7269,9 +7543,16 @@ msgctxt "Name of app icon variant"
 msgid "Light"
 msgstr ""
 
+#. Verb, to like a post
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:572
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:683
 msgid "Like"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:694
+msgctxt "verb"
+msgid "Like"
+msgstr "Like"
 
 #. Accessibility label for the like button when the post has not been liked, verb form followed by number of likes and noun form
 #. placeholder {0}: post.likeCount || 0
@@ -7295,6 +7576,11 @@ msgstr ""
 #: src/screens/Profile/Header/ProfileHeaderLabeler.tsx:146
 msgid "Like this labeler"
 msgstr ""
+
+#. Shown on the like button once the post is liked
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:690
+msgid "Liked"
+msgstr "Liked"
 
 #: src/Navigation.tsx:328
 #: src/Navigation.tsx:333
@@ -7339,14 +7625,14 @@ msgstr "Liked by {0} and {1}"
 msgid "Liked by {likeCount, plural, one {# user} other {# users}}"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:158
+#: src/lib/hooks/useNotificationHandler.ts:159
 #: src/screens/Settings/NotificationSettings/index.tsx:159
 #: src/screens/Settings/NotificationSettings/index.tsx:314
 #: src/view/screens/Profile.tsx:239
 msgid "Likes"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:200
+#: src/lib/hooks/useNotificationHandler.ts:201
 #: src/screens/Settings/NotificationSettings/index.tsx:238
 #: src/screens/Settings/NotificationSettings/index.tsx:364
 msgid "Likes of your reposts"
@@ -7361,9 +7647,13 @@ msgstr ""
 msgid "Linear"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:301
+#: src/components/Lightbox/Lightbox.web.tsx:306
 msgid "Link copied to clipboard"
 msgstr "Link copied to clipboard"
+
+#: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:173
+msgid "Link to {domain}"
+msgstr "Link to {domain}"
 
 #: src/Navigation.tsx:283
 msgid "List"
@@ -7516,6 +7806,7 @@ msgstr ""
 
 #. Accessible action on the notification list pill.
 #: src/components/NewPostsPill/index.tsx:163
+#: src/screens/Notifications/components/RefreshPill.tsx:87
 #: src/view/screens/Notifications.tsx:271
 msgid "Load new notifications"
 msgstr ""
@@ -7529,7 +7820,7 @@ msgstr ""
 msgid "Load new posts"
 msgstr ""
 
-#: src/view/screens/Storybook/NewPostsPill.tsx:138
+#: src/view/screens/Storybook/NewPostsPill.tsx:137
 msgid "Load new posts from the people you follow"
 msgstr "Load new posts from the people you follow"
 
@@ -7553,6 +7844,10 @@ msgstr ""
 #: src/view/com/composer/text-input/mobile/Autocomplete.tsx:60
 msgid "Loading..."
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:512
+msgid "Loads more people into this list"
+msgstr "Loads more people into this list"
 
 #: src/features/followingV2/home/GapRow.tsx:61
 msgid "Loads the posts missing between here and the posts below"
@@ -7744,7 +8039,7 @@ msgstr "Members can still read chat history but can’t send new messages."
 msgid "mentioned users"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:179
+#: src/lib/hooks/useNotificationHandler.ts:180
 #: src/screens/Settings/NotificationSettings/index.tsx:192
 #: src/screens/Settings/NotificationSettings/index.tsx:339
 #: src/view/screens/Notifications.tsx:99
@@ -7976,8 +8271,8 @@ msgstr ""
 msgid "Mute {0}"
 msgstr "Mute {0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:748
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:754
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:764
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:770
 #: src/view/com/profile/ProfileMenu.tsx:471
 #: src/view/com/profile/ProfileMenu.tsx:478
 msgid "Mute account"
@@ -8033,13 +8328,13 @@ msgstr ""
 msgid "Mute this word until you unmute it"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:639
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:655
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:658
 msgid "Mute thread"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:652
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:654
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:668
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:670
 msgid "Mute words & tags"
 msgstr ""
 
@@ -8153,6 +8448,14 @@ msgctxt "nux-description"
 msgid "New"
 msgstr "New"
 
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:576
+msgid "New {count, plural, one {post} other {posts}} from {name}"
+msgstr "New {count, plural, one {post} other {posts}} from {name}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:593
+msgid "New {count, plural, one {post} other {posts}} from <0/>"
+msgstr "New {count, plural, one {post} other {posts}} from <0/>"
+
 #: src/view/com/notifications/NotificationFeedItem.tsx:551
 msgid "New {postsCount, plural, one {post} other {posts}} from {firstAuthorLink}"
 msgstr ""
@@ -8200,7 +8503,7 @@ msgstr ""
 msgid "New Feature"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:193
+#: src/lib/hooks/useNotificationHandler.ts:194
 #: src/screens/Settings/NotificationSettings/index.tsx:170
 #: src/screens/Settings/NotificationSettings/index.tsx:323
 msgid "New followers"
@@ -8272,7 +8575,7 @@ msgstr ""
 msgid "New posts"
 msgstr "New posts"
 
-#: src/view/screens/Storybook/NewPostsPill.tsx:137
+#: src/view/screens/Storybook/NewPostsPill.tsx:136
 msgid "New posts are ready to load from the people you follow"
 msgstr "New posts are ready to load from the people you follow"
 
@@ -8283,6 +8586,14 @@ msgstr "New posts from {firstAuthorLink} and <0>{additionalAuthorsCount, plural,
 #: src/view/com/notifications/NotificationFeedItem.tsx:528
 msgid "New posts from {firstAuthorName} and {additionalAuthorsCount, plural, one {{formattedAuthorsCount} other} other {{formattedAuthorsCount} others}}"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:572
+msgid "New posts from {name} and {others, plural, one {# other} other {# others}}"
+msgstr "New posts from {name} and {others, plural, one {# other} other {# others}}"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:586
+msgid "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
+msgstr "New posts from <0/> and <1>{others, plural, one {# other} other {# others}}</1>"
 
 #: src/components/dialogs/StarterPackDialog.tsx:196
 msgid "New Starter Pack"
@@ -8328,7 +8639,7 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:219
+#: src/components/Lightbox/Lightbox.web.tsx:224
 msgid "Next image"
 msgstr ""
 
@@ -8345,6 +8656,10 @@ msgstr "No"
 #: src/screens/ModerationInbox/index.tsx:126
 msgid "No action taken"
 msgstr "No action taken"
+
+#: src/screens/Notifications/components/PageList.tsx:543
+msgid "No activity to show yet"
+msgstr "No activity to show yet"
 
 #: src/screens/Onboarding/StepFinished/ValuePropositionPager.shared.tsx:42
 msgid "No ads, no invasive tracking, no engagement traps. Bluesky respects your time and attention."
@@ -8392,6 +8707,10 @@ msgstr ""
 msgid "No feeds found. Try searching for something else."
 msgstr ""
 
+#: src/screens/Notifications/components/PageList.tsx:537
+msgid "No followers to show yet"
+msgstr "No followers to show yet"
+
 #: src/view/com/profile/ProfileFollowers.tsx:216
 msgid "No followers yet"
 msgstr ""
@@ -8435,6 +8754,10 @@ msgstr ""
 msgid "No longer following {0}"
 msgstr ""
 
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:167
+msgid "No longer following {name}"
+msgstr "No longer following {name}"
+
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:22
 #: src/screens/Search/components/AdvancedSearchDialog/MediaDropdown.tsx:27
 msgid "No media filter"
@@ -8455,6 +8778,15 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:571
 msgid "No name"
 msgstr ""
+
+#: src/screens/Notifications/components/PageList.tsx:534
+msgid "No notifications from people you follow yet"
+msgstr "No notifications from people you follow yet"
+
+#: src/screens/Notifications/components/PageList.tsx:490
+#: src/screens/Notifications/components/PageList.tsx:531
+msgid "No notifications yet"
+msgstr "No notifications yet"
 
 #: src/view/com/notifications/NotificationFeed.tsx:130
 msgid "No notifications yet!"
@@ -8507,6 +8839,10 @@ msgstr ""
 #: src/features/gifPicker/components/GifPickerPlaceholder.tsx:31
 msgid "No recent GIFs yet. Pick one to see it here."
 msgstr "No recent GIFs yet. Pick one to see it here."
+
+#: src/screens/Notifications/components/PageList.tsx:540
+msgid "No replies to show yet"
+msgstr "No replies to show yet"
 
 #: src/view/screens/Profile.tsx:469
 msgid "No replies yet"
@@ -8667,6 +9003,7 @@ msgstr "Notice"
 #: src/components/dialogs/NotificationSettingsDialog.tsx:72
 #: src/Navigation.tsx:483
 #: src/Navigation.tsx:570
+#: src/screens/Notifications/index.tsx:482
 #: src/view/screens/Notifications.tsx:134
 msgid "Notification settings"
 msgstr ""
@@ -8680,6 +9017,7 @@ msgstr ""
 #: src/Navigation.tsx:804
 #: src/screens/Messages/Settings.tsx:255
 #: src/screens/Notifications/ActivityList.tsx:31
+#: src/screens/Notifications/index.tsx:476
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:93
 #: src/screens/Settings/NotificationSettings/index.tsx:125
 #: src/screens/Settings/Settings.tsx:201
@@ -8690,6 +9028,11 @@ msgstr ""
 #: src/view/shell/Drawer.tsx:594
 msgid "Notifications"
 msgstr ""
+
+#. Description of a feature flag (Redesigned notifications)
+#: src/analytics/features/index.ts:138
+msgid "Notifications sorted into tabs – people you follow, followers, replies and activity."
+msgstr "Notifications sorted into tabs – people you follow, followers, replies and activity."
 
 #: src/lib/hooks/useTimeAgo.ts:135
 msgid "now"
@@ -8940,8 +9283,8 @@ msgstr "Open group chat"
 msgid "Open group chat settings"
 msgstr "Open group chat settings"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:562
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:572
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:578
 msgid "Open in Google Translate"
 msgstr "Open in Google Translate"
 
@@ -8970,7 +9313,7 @@ msgstr ""
 msgid "Open post"
 msgstr "Open post"
 
-#: src/components/PostControls/PostMenu/index.tsx:63
+#: src/components/PostControls/PostMenu/index.tsx:69
 msgid "Open post options menu"
 msgstr ""
 
@@ -9073,7 +9416,7 @@ msgstr ""
 msgid "Opens flow to sign in to your existing Bluesky account"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:460
+#: src/components/images/Gallery/index.tsx:489
 msgid "Opens full image"
 msgstr "Opens full image"
 
@@ -9105,6 +9448,10 @@ msgstr "Opens profile"
 #: src/features/inviteFriends/components/FollowersPromoBanner.tsx:53
 msgid "Opens the find and invite friends settings"
 msgstr "Opens the find and invite friends settings"
+
+#: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:119
+msgid "Opens the full list of accounts"
+msgstr "Opens the full list of accounts"
 
 #. Accessibility hint announced after the GIF picker button label, describing what activating it will do.
 #: src/view/com/composer/photos/SelectGifBtn.tsx:45
@@ -9359,6 +9706,7 @@ msgid "People I follow can request to join"
 msgstr "People I follow can request to join"
 
 #: src/components/dialogs/PostInteractionSettingsDialog.tsx:512
+#: src/screens/Notifications/index.tsx:98
 msgid "People you follow"
 msgstr ""
 
@@ -9419,8 +9767,8 @@ msgstr ""
 msgid "Pin to Home"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:515
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:520
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:536
 msgid "Pin to your profile"
 msgstr ""
 
@@ -9704,6 +10052,10 @@ msgctxt "moderation-report-subject"
 msgid "Post by {account}"
 msgstr "Post by {account}"
 
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:481
+msgid "Post by {name}"
+msgstr "Post by {name}"
+
 #. placeholder {0}: route.params.name
 #: src/Navigation.tsx:296
 #: src/Navigation.tsx:303
@@ -9716,7 +10068,7 @@ msgstr ""
 msgid "Post created"
 msgstr "Post created"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:196
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:203
 msgctxt "toast"
 msgid "Post deleted"
 msgstr ""
@@ -9794,6 +10146,11 @@ msgctxt "toast"
 msgid "Post unpinned"
 msgstr ""
 
+#. Shown in place of the text of a post that has no text, only images, video, a link or a quoted post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:233
+msgid "Post with media"
+msgstr "Post with media"
+
 #. placeholder {0}: i18n.date(POSTED_AT, { month: 'short', day: 'numeric', year: 'numeric', })
 #: src/screens/ModerationInbox/components/SubjectPreview.tsx:35
 msgid "Posted {0}"
@@ -9852,7 +10209,7 @@ msgstr ""
 msgid "Preview"
 msgstr ""
 
-#: src/components/Lightbox/Lightbox.web.tsx:198
+#: src/components/Lightbox/Lightbox.web.tsx:203
 msgid "Previous image"
 msgstr ""
 
@@ -9910,7 +10267,7 @@ msgstr ""
 msgid "Processing..."
 msgstr ""
 
-#: src/view/screens/DebugMod.tsx:1160
+#: src/view/screens/DebugMod/index.tsx:960
 msgid "profile"
 msgstr ""
 
@@ -10001,6 +10358,7 @@ msgstr ""
 msgid "QR code saved to your camera roll!"
 msgstr ""
 
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:166
 #: src/components/PostControls/RepostButton.tsx:176
 #: src/components/PostControls/RepostButton.tsx:199
 #: src/components/PostControls/RepostButton.web.tsx:84
@@ -10009,14 +10367,21 @@ msgstr ""
 msgid "Quote post"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:347
+#. Shown instead of the text of a post that only quotes another post
+#: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:175
+msgctxt "noun"
+msgid "Quote post"
+msgstr "Quote post"
+
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:354
 msgid "Quote post was re-attached"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:346
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:353
 msgid "Quote post was successfully detached"
 msgstr ""
 
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:166
 #: src/components/PostControls/RepostButton.tsx:175
 #: src/components/PostControls/RepostButton.tsx:197
 #: src/components/PostControls/RepostButton.web.tsx:83
@@ -10024,7 +10389,7 @@ msgstr ""
 msgid "Quote posts disabled"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:186
+#: src/lib/hooks/useNotificationHandler.ts:187
 #: src/screens/Post/PostQuotes.tsx:31
 #: src/screens/Settings/NotificationSettings/index.tsx:203
 #: src/screens/Settings/NotificationSettings/index.tsx:346
@@ -10043,8 +10408,8 @@ msgstr ""
 msgid "Rate limit exceeded. Please try again later."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:708
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:718
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:724
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:734
 msgid "Re-attach quote"
 msgstr ""
 
@@ -10166,6 +10531,16 @@ msgstr ""
 #: src/screens/Messages/components/MessageListError.tsx:19
 msgid "Reconnect"
 msgstr ""
+
+#. Name for a feature flag
+#: src/analytics/features/index.ts:132
+msgid "Redesigned notifications"
+msgstr "Redesigned notifications"
+
+#. Pill on the notifications list, shown when there are new notifications to load.
+#: src/screens/Notifications/components/RefreshPill.tsx:82
+msgid "Refresh"
+msgstr "Refresh"
 
 #. Reject a chat request, this opens a menu with options
 #: src/screens/Messages/components/RequestButtons.tsx:136
@@ -10301,7 +10676,8 @@ msgstr ""
 msgid "Remove from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:123
+#: src/components/PostControls/BookmarkButton.tsx:43
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:169
 #: src/screens/Bookmarks.tsx:253
 msgid "Remove from saved posts"
 msgstr ""
@@ -10370,10 +10746,12 @@ msgid "Remove your verification for this account?"
 msgstr ""
 
 #: src/components/Post/Embed/index.tsx:294
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:441
 msgid "Removed by author"
 msgstr ""
 
 #: src/components/Post/Embed/index.tsx:292
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:439
 msgid "Removed by you"
 msgstr ""
 
@@ -10386,7 +10764,7 @@ msgstr ""
 msgid "Removed from saved feeds"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:91
+#: src/components/PostControls/BookmarkButton.tsx:116
 #: src/screens/Bookmarks.tsx:212
 msgid "Removed from saved posts"
 msgstr ""
@@ -10427,15 +10805,32 @@ msgstr ""
 msgid "Replace with Discover"
 msgstr ""
 
+#. Shown on the reply button after replying to the post
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:708
+msgid "Replied"
+msgstr "Replied"
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:263
+msgid "replied to <0>{name}</0>: {previewNode}"
+msgstr "replied to <0>{name}</0>: {previewNode}"
+
 #: src/components/Post/PostRepliedTo.tsx:39
 msgctxt "description"
 msgid "Replied to <0><1/></0>"
 msgstr ""
 
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:189
+msgid "replied to a blocked post"
+msgstr "replied to a blocked post"
+
 #: src/components/Post/PostRepliedTo.tsx:28
 msgctxt "description"
 msgid "Replied to a blocked post"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:194
+msgid "replied to a deleted post"
+msgstr "replied to a deleted post"
 
 #: src/components/Post/PostRepliedTo.tsx:30
 msgctxt "description"
@@ -10446,6 +10841,10 @@ msgstr ""
 msgctxt "description"
 msgid "Replied to you"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:261
+msgid "replied to: {previewNode}"
+msgstr "replied to: {previewNode}"
 
 #: src/components/dms/MessageItem.tsx:943
 msgid "Replied-to message from {senderName}, tap to scroll to it"
@@ -10461,7 +10860,8 @@ msgstr "Replied-to message, tap to scroll to it"
 
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:271
 #: src/components/activity-notifications/SubscribeProfileDialog.tsx:283
-#: src/lib/hooks/useNotificationHandler.ts:172
+#: src/lib/hooks/useNotificationHandler.ts:173
+#: src/screens/Notifications/index.tsx:100
 #: src/screens/Settings/NotificationSettings/ActivityNotificationSettings.tsx:218
 #: src/screens/Settings/NotificationSettings/index.tsx:181
 #: src/screens/Settings/NotificationSettings/index.tsx:330
@@ -10486,6 +10886,12 @@ msgstr "Reply"
 msgctxt "action"
 msgid "Reply"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:703
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:713
+msgctxt "verb"
+msgid "Reply"
+msgstr "Reply"
 
 #. Accessibility label for the reply button, verb form followed by number of replies and noun form
 #. placeholder {0}: post.replyCount || 0
@@ -10515,12 +10921,12 @@ msgstr ""
 msgid "Reply to {handle}"
 msgstr "Reply to {handle}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:385
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:392
 msgctxt "toast"
 msgid "Reply visibility updated"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:384
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:391
 msgid "Reply was successfully hidden"
 msgstr ""
 
@@ -10561,8 +10967,8 @@ msgstr ""
 msgid "Report message"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:774
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:776
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:790
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:792
 msgid "Report post"
 msgstr ""
 
@@ -10621,6 +11027,7 @@ msgstr "Report this Starter Pack"
 msgid "Report this user"
 msgstr ""
 
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:165
 #: src/components/PostControls/RepostButton.tsx:154
 #: src/components/PostControls/RepostButton.tsx:165
 #: src/components/PostControls/RepostButton.web.tsx:68
@@ -10642,6 +11049,16 @@ msgstr ""
 msgid "Repost or quote post"
 msgstr ""
 
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:83
+msgctxt "Toast after undoing a repost"
+msgid "Repost removed"
+msgstr "Repost removed"
+
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:97
+msgctxt "Toast after reposting"
+msgid "Reposted"
+msgstr "Reposted"
+
 #: src/screens/Post/PostRepostedBy.tsx:31
 msgid "Reposted By"
 msgstr ""
@@ -10656,7 +11073,7 @@ msgstr ""
 msgid "Reposted by you"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:165
+#: src/lib/hooks/useNotificationHandler.ts:166
 #: src/screens/Settings/NotificationSettings/index.tsx:214
 #: src/screens/Settings/NotificationSettings/index.tsx:355
 msgid "Reposts"
@@ -10670,7 +11087,7 @@ msgstr "Reposts Hidden"
 msgid "Reposts of this post"
 msgstr ""
 
-#: src/lib/hooks/useNotificationHandler.ts:207
+#: src/lib/hooks/useNotificationHandler.ts:208
 #: src/screens/Settings/NotificationSettings/index.tsx:251
 #: src/screens/Settings/NotificationSettings/index.tsx:373
 msgid "Reposts of your reposts"
@@ -11001,6 +11418,7 @@ msgid "Saved to your feeds"
 msgstr ""
 
 #: src/components/dialogs/NewskieDialog/index.tsx:119
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:251
 #: src/view/com/notifications/NotificationFeedItem.tsx:937
 #: src/view/com/notifications/NotificationFeedItem.tsx:945
 msgid "Say hello!"
@@ -11030,10 +11448,12 @@ msgid "Science"
 msgstr ""
 
 #: src/components/InterestTabs.tsx:258
+#: src/screens/Notifications/components/TabPills.tsx:321
 msgid "Scroll left"
 msgstr ""
 
 #: src/components/InterestTabs.tsx:292
+#: src/screens/Notifications/components/TabPills.tsx:351
 msgid "Scroll right"
 msgstr ""
 
@@ -11237,6 +11657,11 @@ msgstr ""
 #: src/screens/Signup/StepHandle/HandleSuggestions/index.tsx:72
 msgid "Select {0}"
 msgstr ""
+
+#. placeholder {0}: tab.label
+#: src/screens/Notifications/components/TabPills.tsx:392
+msgid "Select {0} tab"
+msgstr "Select {0} tab"
 
 #: src/view/com/composer/select-language/PostLanguageSelect.tsx:110
 msgid "Select {langName}"
@@ -11595,6 +12020,7 @@ msgstr ""
 #: src/components/Link.tsx:428
 #: src/components/MediaPreview.tsx:243
 #: src/components/Post/Embed/ImageContextMenu.tsx:74
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:167
 #: src/components/StarterPack/QrCodeDialog.tsx:196
 #: src/screens/Hashtag.tsx:132
 #: src/screens/Messages/components/InviteLinkDialog.tsx:413
@@ -11625,8 +12051,8 @@ msgid "Share feedback"
 msgstr "Share feedback"
 
 #: src/components/Lightbox/chrome/ImageMenu.tsx:94
-#: src/components/Lightbox/Lightbox.web.tsx:282
-#: src/components/Lightbox/Lightbox.web.tsx:308
+#: src/components/Lightbox/Lightbox.web.tsx:287
+#: src/components/Lightbox/Lightbox.web.tsx:313
 msgid "Share image"
 msgstr "Share image"
 
@@ -11762,8 +12188,8 @@ msgstr ""
 msgid "Show group chat updates"
 msgstr "Show group chat updates"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:602
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:604
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:618
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:620
 msgid "Show less like this"
 msgstr ""
 
@@ -11776,11 +12202,13 @@ msgid "Show lists of users to select from"
 msgstr ""
 
 #: src/components/Post/ShowMoreTextButton.tsx:50
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:511
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:531
 msgid "Show more"
 msgstr "Show more"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:594
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:610
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:612
 msgid "Show more like this"
 msgstr ""
 
@@ -11811,8 +12239,8 @@ msgstr ""
 msgid "Show replies as"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:682
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:692
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:698
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:708
 msgid "Show reply for everyone"
 msgstr ""
 
@@ -11843,6 +12271,11 @@ msgstr ""
 #: src/components/dialogs/nuxs/LiveNowBetaDialog.tsx:171
 msgid "Show when you’re live"
 msgstr ""
+
+#. placeholder {0}: tab.label
+#: src/screens/Notifications/components/TabPills.tsx:394
+msgid "Shows {0} notifications"
+msgstr "Shows {0} notifications"
 
 #: src/screens/PostThread/components/ThreadItemAnchor.tsx:599
 msgid "Shows information about when this post was created"
@@ -11917,8 +12350,8 @@ msgstr ""
 msgid "Sign in to request access to this group chat."
 msgstr "Sign in to request access to this group chat."
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:580
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:582
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:596
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:598
 msgid "Sign in to view post"
 msgstr ""
 
@@ -11995,7 +12428,7 @@ msgstr ""
 msgid "Skip to next step"
 msgstr ""
 
-#: src/components/images/Gallery/index.tsx:443
+#: src/components/images/Gallery/index.tsx:472
 msgid "slide"
 msgstr "slide"
 
@@ -12214,6 +12647,10 @@ msgstr ""
 #: src/components/StarterPack/StarterPackCard.tsx:86
 msgid "Starter Pack by {0}"
 msgstr "Starter Pack by {0}"
+
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:401
+msgid "Starter pack by {handle}"
+msgstr "Starter pack by {handle}"
 
 #. placeholder {0}: creator.handle
 #: src/screens/StarterPack/StarterPackLandingScreen.tsx:193
@@ -12858,6 +13295,7 @@ msgstr ""
 msgid "There was an issue contacting the server, please check your internet connection and try again."
 msgstr ""
 
+#: src/screens/Notifications/components/PageList.tsx:301
 #: src/view/com/notifications/NotificationFeed.tsx:137
 msgid "There was an issue fetching notifications. Tap here to try again."
 msgstr ""
@@ -12896,9 +13334,9 @@ msgid "There was an issue updating your feeds, please check your internet connec
 msgstr ""
 
 #. placeholder {0}: e.toString()
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:428
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:450
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:469
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:435
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:457
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:476
 #: src/screens/Messages/ConversationSettings/Member.tsx:71
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:114
 #: src/screens/Messages/ConversationSettings/MemberMenu.tsx:127
@@ -13252,7 +13690,7 @@ msgstr ""
 msgid "This post was deleted by its author"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:827
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:843
 msgid "This post will be hidden from feeds and threads. This cannot be undone."
 msgstr ""
 
@@ -13264,7 +13702,7 @@ msgstr ""
 msgid "This profile is only visible to logged-in users. It won't be visible to people who aren't signed in."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:862
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:878
 msgid "This reply will be sorted into a hidden section at the bottom of your thread and will mute notifications for subsequent replies - both for yourself and others."
 msgstr ""
 
@@ -13360,7 +13798,7 @@ msgstr ""
 msgid "This will remove @{0} from the quick access list."
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:855
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:871
 msgid "This will remove your post from this quote post for all users, and replace it with a placeholder."
 msgstr ""
 
@@ -13426,6 +13864,11 @@ msgstr "To log out, <0>click here</0>. Or if you’d prefer, you can <1>delete y
 msgid "Today"
 msgstr ""
 
+#: src/screens/Notifications/components/PageList.tsx:451
+msgctxt "Notifications section header"
+msgid "Today"
+msgstr "Today"
+
 #: src/screens/Moderation/index.tsx:449
 msgid "Toggle to enable or disable adult content"
 msgstr ""
@@ -13468,8 +13911,8 @@ msgstr ""
 #: src/components/dms/MessageContextMenu.tsx:193
 #: src/components/Post/Translated/index.tsx:147
 #: src/components/Post/Translated/index.tsx:154
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:557
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:563
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:573
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:579
 msgid "Translate"
 msgstr ""
 
@@ -13481,8 +13924,8 @@ msgstr "Translated"
 msgid "Translating"
 msgstr "Translating"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:538
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:540
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:554
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:556
 msgid "Translating…"
 msgstr "Translating…"
 
@@ -13703,7 +14146,7 @@ msgstr "Under review"
 msgid "Undo"
 msgstr ""
 
-#: src/components/PostControls/BookmarkButton.tsx:46
+#: src/components/PostControls/BookmarkButton.tsx:70
 msgctxt "Button label to undo saving/removing a post from saved posts."
 msgid "Undo"
 msgstr ""
@@ -13726,6 +14169,7 @@ msgstr "Undo opt-out from Starter Pack"
 msgid "Undo opt-out?"
 msgstr "Undo opt-out?"
 
+#: src/components/PostControls/PostMenu/PostMenuControlItems.tsx:164
 #: src/components/PostControls/RepostButton.web.tsx:67
 #: src/components/PostControls/RepostButton.web.tsx:74
 msgid "Undo repost"
@@ -13775,7 +14219,9 @@ msgstr ""
 msgid "Unlabeled, abusive, or non-consensual adult content"
 msgstr ""
 
+#. Verb, to remove a like
 #: src/screens/CustomFeed/components/CustomFeedHeader.tsx:572
+#: src/screens/Notifications/components/NotificationItem/Item/post.tsx:682
 msgid "Unlike"
 msgstr ""
 
@@ -13810,8 +14256,8 @@ msgstr ""
 msgid "Unmute {0}"
 msgstr "Unmute {0}"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:747
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:753
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:763
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:769
 #: src/view/com/profile/ProfileMenu.tsx:470
 #: src/view/com/profile/ProfileMenu.tsx:476
 msgid "Unmute account"
@@ -13830,8 +14276,8 @@ msgstr ""
 msgid "Unmute this group chat"
 msgstr "Unmute this group chat"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:639
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:642
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:655
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:658
 msgid "Unmute thread"
 msgstr ""
 
@@ -13856,8 +14302,8 @@ msgstr ""
 msgid "Unpin from home"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:515
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:520
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:531
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:536
 msgid "Unpin from profile"
 msgstr ""
 
@@ -13966,12 +14412,12 @@ msgstr ""
 msgid "Update your location"
 msgstr "Update your location"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:352
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:359
 msgctxt "toast"
 msgid "Updating quote attachment failed"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:401
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:408
 msgctxt "toast"
 msgid "Updating reply visibility failed"
 msgstr ""
@@ -14257,6 +14703,11 @@ msgstr ""
 msgid "Version {0}"
 msgstr ""
 
+#. When someone followed you through a starter pack, e.g. “via starter pack [icon] Science Pack”
+#: src/screens/Notifications/components/NotificationItem/Item/profile.tsx:348
+msgid "via starter pack <0/> <1>{name}</1>"
+msgstr "via starter pack <0/> <1>{name}</1>"
+
 #. When the source of a follow is a Starter Pack, i.e., 'via Starter Pack {starterPackName}'.
 #: src/view/com/notifications/NotificationFeedItem.tsx:738
 msgid "via Starter Pack <0/><1>{starterPackName}</1>"
@@ -14365,6 +14816,30 @@ msgstr "View {displayName}’s profile"
 msgid "View {publicationTitle}"
 msgstr "View {publicationTitle}"
 
+#: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:282
+msgid "View all"
+msgstr "View all"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:168
+msgid "View all followers"
+msgstr "View all followers"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:367
+msgid "View all posts {name} liked"
+msgstr "View all posts {name} liked"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:399
+msgid "View all posts {name} reposted"
+msgstr "View all posts {name} reposted"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:432
+msgid "View all reposts {name} liked"
+msgstr "View all reposts {name} liked"
+
+#: src/screens/Notifications/components/NotificationItem/kinds/aggregate.tsx:465
+msgid "View all reposts {name} reposted"
+msgstr "View all reposts {name} reposted"
+
 #: src/components/ProfileHoverCard/index.web.tsx:487
 msgid "View blocked user's profile"
 msgstr ""
@@ -14381,6 +14856,10 @@ msgstr ""
 #: src/screens/VideoFeed/index.tsx:835
 msgid "View details"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/Item/aggregate.tsx:118
+msgid "View everyone"
+msgstr "View everyone"
 
 #: src/view/com/posts/ViewFullThread.tsx:31
 #: src/view/com/posts/ViewFullThread.tsx:65
@@ -14480,7 +14959,7 @@ msgid "View your default post interaction settings"
 msgstr ""
 
 #: src/view/com/home/HomeHeaderLayout.web.tsx:59
-#: src/view/com/home/HomeHeaderLayoutMobile.tsx:84
+#: src/view/com/home/HomeHeaderLayoutMobile.tsx:82
 msgid "View your feeds and explore more"
 msgstr ""
 
@@ -14500,8 +14979,8 @@ msgstr ""
 msgid "View your verifications"
 msgstr ""
 
-#: src/components/images/AutoSizedImage.tsx:222
-#: src/components/images/AutoSizedImage.tsx:254
+#: src/components/images/AutoSizedImage.tsx:235
+#: src/components/images/AutoSizedImage.tsx:267
 msgid "Views full image"
 msgstr ""
 
@@ -14976,11 +15455,11 @@ msgstr ""
 msgid "Yes, delete this Starter Pack"
 msgstr "Yes, delete this Starter Pack"
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:857
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:873
 msgid "Yes, detach"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:864
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:880
 msgid "Yes, hide"
 msgstr ""
 
@@ -15088,7 +15567,7 @@ msgstr ""
 msgid "You can appeal once per decision. A different moderator will review the appeal."
 msgstr "You can appeal once per decision. A different moderator will review the appeal."
 
-#: src/lib/hooks/useNotificationHandler.ts:134
+#: src/lib/hooks/useNotificationHandler.ts:135
 msgid "You can choose whether chat notifications have sound in the chat settings within the app"
 msgstr ""
 
@@ -15419,11 +15898,11 @@ msgstr "You will no longer appear in this Starter Pack. The creator will be able
 msgid "You will no longer receive notifications for {0}"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:242
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:249
 msgid "You will no longer receive notifications for this thread"
 msgstr ""
 
-#: src/components/PostControls/PostMenu/PostMenuItems.tsx:233
+#: src/components/PostControls/PostMenu/PostMenuItems.tsx:240
 msgid "You will now receive notifications for this thread"
 msgstr ""
 
@@ -15630,6 +16109,10 @@ msgstr ""
 #: src/components/contacts/screens/ViewMatches.tsx:462
 msgid "Your contact {name}"
 msgstr ""
+
+#: src/screens/Notifications/components/NotificationItem/kinds/profile.tsx:426
+msgid "Your contact <0/> is on Bluesky"
+msgstr "Your contact <0/> is on Bluesky"
 
 #. placeholder {0}: sanitizeHandle(currentAccount?.handle || '', '@')
 #: src/screens/Settings/components/ChangeHandleDialog.tsx:531
