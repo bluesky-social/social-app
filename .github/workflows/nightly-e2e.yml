@@ -51,7 +51,7 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          eas-version: '24.8.0'
+          eas-version: '24.12.0'
 
       - name: ☕️ Set up Java 17
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
@@ -113,6 +113,9 @@ jobs:
           xcrun simctl shutdown all || true
           xcrun simctl boot "$udid"
           xcrun simctl bootstatus "$udid" -b
+          # Turn off password AutoFill so iOS doesn't offer a strong password on
+          # the signup form: its panel swallows the text Maestro types.
+          xcrun simctl spawn "$udid" defaults write com.apple.WebUI AutoFillPasswords -int 0
           echo "Using $device_name on $runtime_name ($udid)"
 
       - name: 🏷️ Mark iOS development client build phase
@@ -179,7 +182,7 @@ jobs:
         uses: $/.github/actions/setup-expo-project
         with:
           expo-token: ${{ secrets.EXPO_TOKEN }}
-          eas-version: '24.8.0'
+          eas-version: '24.12.0'
 
       - name: ☕️ Set up Java 17
         uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1

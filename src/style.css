@@ -136,6 +136,11 @@ input:focus {
 [data-tooltip]:hover::before {
   display: block;
 }
+/* Every react-native-web View is a stacking context (z-index: 0), so a
+   tooltip can't rise above the list rows after its own. Lift the row instead. */
+[data-list-row]:has([data-tooltip]:hover) {
+  z-index: 1;
+}
 
 /* NativeDropdown component */
 .radix-dropdown-item:focus,

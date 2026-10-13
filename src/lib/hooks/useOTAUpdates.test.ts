@@ -30,6 +30,10 @@ jest.mock('expo-updates', () => ({
   useUpdates: jest.fn(),
 }))
 
+jest.mock('expo-linking', () => ({
+  getLinkingURL: jest.fn(() => null),
+}))
+
 jest.mock('#/logger', () => ({
   logger: {
     debug: jest.fn(),

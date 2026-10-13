@@ -63,7 +63,6 @@ import {ModerationBlockedAccounts} from '#/view/screens/ModerationBlockedAccount
 import {ModerationModlistsScreen} from '#/view/screens/ModerationModlists'
 import {ModerationMutedAccounts} from '#/view/screens/ModerationMutedAccounts'
 import {NotFoundScreen} from '#/view/screens/NotFound'
-import {NotificationsScreen} from '#/view/screens/Notifications'
 import {PostThreadScreen} from '#/view/screens/PostThread'
 import {PrivacyPolicyScreen} from '#/view/screens/PrivacyPolicy'
 import {ProfileScreen} from '#/view/screens/Profile'
@@ -72,6 +71,7 @@ import {SupportScreen} from '#/view/screens/Support'
 import {TermsOfServiceScreen} from '#/view/screens/TermsOfService'
 import {BottomBar} from '#/view/shell/bottom-bar/BottomBar'
 import {createNativeStackNavigatorWithAuth} from '#/view/shell/createNativeStackNavigatorWithAuth'
+import {AtmosphereScreen} from '#/screens/Atmosphere'
 import {BookmarksScreen} from '#/screens/Bookmarks'
 import {CustomFeedScreen} from '#/screens/CustomFeed'
 import {CustomFeedLikedByScreen} from '#/screens/CustomFeed/CustomFeedLikedBy'
@@ -93,6 +93,7 @@ import {ModerationInboxNoticeDetailsScreen} from '#/screens/ModerationInbox/Noti
 import {ModerationInboxReportDetailsScreen} from '#/screens/ModerationInbox/Report'
 import {ModerationInboxSettingsScreen} from '#/screens/ModerationInbox/Settings'
 import {Screen as ModerationInteractionSettings} from '#/screens/ModerationInteractionSettings'
+import {NotificationsScreen} from '#/screens/Notifications'
 import {NotificationsActivityListScreen} from '#/screens/Notifications/ActivityList'
 import {PostLikedByScreen} from '#/screens/Post/PostLikedBy'
 import {PostQuotesScreen} from '#/screens/Post/PostQuotes'
@@ -171,6 +172,11 @@ function commonScreens(Stack: typeof Flat, unreadCountLabel?: string) {
         name="NotFound"
         getComponent={() => NotFoundScreen}
         options={{title: title(msg`Not Found`)}}
+      />
+      <Stack.Screen
+        name="Atmosphere"
+        getComponent={() => AtmosphereScreen}
+        options={{title: title(msg`Atmosphere`)}}
       />
       <Stack.Screen
         name="Lists"

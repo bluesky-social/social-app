@@ -52,6 +52,7 @@ export function Lightbox() {
           key={activeLightbox.id}
           imgs={imgs}
           initialIndex={initialIndex}
+          onIndexChange={activeLightbox.onIndexChange}
           onClose={closeLightbox}
         />
       </LightboxContainer>
@@ -92,10 +93,12 @@ function LightboxContainer({
 function LightboxGallery({
   imgs,
   initialIndex = 0,
+  onIndexChange,
   onClose,
 }: {
   imgs: ImageSource[]
   initialIndex: number
+  onIndexChange?: (index: number) => void
   onClose: () => void
 }) {
   const t = useTheme()
@@ -112,13 +115,15 @@ function LightboxGallery({
   const onPressLeft = useCallback(() => {
     if (canGoLeft) {
       setIndex(index - 1)
+      onIndexChange?.(index - 1)
     }
-  }, [index, canGoLeft])
+  }, [index, canGoLeft, onIndexChange])
   const onPressRight = useCallback(() => {
     if (canGoRight) {
       setIndex(index + 1)
+      onIndexChange?.(index + 1)
     }
-  }, [index, canGoRight])
+  }, [index, canGoRight, onIndexChange])
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {

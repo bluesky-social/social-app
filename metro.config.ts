@@ -1,9 +1,10 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
+import {getBundleModeMetroConfig} from 'react-native-worklets/bundleMode/index.js'
 import {type CustomResolver} from '@expo/metro/metro-resolver'
 import {getDefaultConfig} from '@expo/metro-config'
 import {getSentryExpoConfig} from '@sentry/react-native/metro.js'
 
-const config = getSentryExpoConfig(import.meta.dirname, {
+let config = getSentryExpoConfig(import.meta.dirname, {
   // TODO: confirm this doesn't break anything when we switch to metro web
   includeWebReplay: false,
   includeWebFeedback: false,
@@ -77,5 +78,7 @@ const config = getSentryExpoConfig(import.meta.dirname, {
     return config as unknown as Record<string, unknown>
   },
 })
+
+config = getBundleModeMetroConfig(config)
 
 export default config

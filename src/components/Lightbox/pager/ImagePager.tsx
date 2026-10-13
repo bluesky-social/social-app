@@ -18,18 +18,17 @@ import PagerView, {
 import Animated, {
   type AnimatableValue,
   type AnimatedRef,
-  cancelAnimation,
   interpolate,
   measure,
   type MeasuredDimensions,
   ReduceMotion,
+  setNativeProps,
   type SharedValue,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withDecay,
   withSpring,
   type WithSpringConfig,
 } from 'react-native-reanimated'
@@ -41,6 +40,7 @@ import {PlatformInfo} from '@bsky.app/expo-bluesky-swiss-army'
 import {type Dimensions} from '#/lib/media/types'
 import {useTheme} from '#/alf'
 import {setSystemUITheme} from '#/alf/util/systemUI'
+import {measureThumb} from '#/components/Lightbox/measureThumb'
 import {type Lightbox} from '#/components/Lightbox/state'
 import {useAnalytics} from '#/analytics'
 import {IS_IOS} from '#/env'
@@ -54,9 +54,25 @@ import {
 import ImageItem from './ImageItem/ImageItem'
 
 type Rect = {x: number; y: number; width: number; height: number}
+/**
+ * Where the image sits while open, relative to its resting position. The
+ * border radius is in screen points, regardless of scale.
+ */
+type ImagePlacement = {
+  translateX: number
+  translateY: number
+  scale: number
+  borderRadius: number
+}
 
 const PORTRAIT_UP = ScreenOrientation.OrientationLock.PORTRAIT_UP
 const PIXEL_RATIO = PixelRatio.get()
+const AT_REST: ImagePlacement = {
+  translateX: 0,
+  translateY: 0,
+  scale: 1,
+  borderRadius: 0,
+}
 
 const SLOW_SPRING: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
@@ -67,6 +83,33 @@ const FAST_SPRING: WithSpringConfig = {
   mass: IS_IOS ? 1.25 : 0.75,
   damping: 150,
   stiffness: 900,
+}
+
+/**
+ * How far (in finger travel) a slow dismiss swipe has to go before letting go
+ * closes the lightbox rather than putting the image back.
+ */
+const DISMISS_DISTANCE = 100
+/**
+ * Releases faster than this (px/s) are decided by direction instead of
+ * distance, so a flick closes and a flick back towards the middle cancels.
+ */
+const DISMISS_VELOCITY = 200
+/**
+ * How small the image gets while dragging, reached half a screen away.
+ */
+const DISMISS_MIN_SCALE = 0.75
+/**
+ * How closely the image follows the finger at the start of a dismiss swipe,
+ * as a fraction of finger travel. It then tapers off with distance.
+ */
+const DISMISS_FOLLOW_X = 0.8
+const DISMISS_FOLLOW_Y = 0.8
+const DISMISS_CANCEL_SPRING: WithSpringConfig = {
+  stiffness: 700,
+  damping: 50,
+  mass: 1,
+  reduceMotion: ReduceMotion.Never,
 }
 
 function canAnimate(lightbox: Lightbox): boolean {
@@ -152,6 +195,26 @@ export default function ImageViewRoot({
     },
   )
 
+  /*
+   * Hide the thumbnail of whichever image is showing for as long as the
+   * lightbox image is visible, so it lifts out of its spot and lands back in
+   * it, and the spot is empty while dragging to dismiss.
+   */
+  const thumbRefs = activeLightbox?.images.map(img => img.thumbRef) ?? []
+  const hiddenThumbIndex = useSharedValue(-1)
+  useAnimatedReaction(
+    () => (openProgress.get() > 0 ? imageIndex : -1),
+    nextIndex => {
+      const prevIndex = hiddenThumbIndex.get()
+      if (nextIndex === prevIndex) {
+        return
+      }
+      setThumbHidden(thumbRefs[prevIndex], false)
+      setThumbHidden(thumbRefs[nextIndex], true)
+      hiddenThumbIndex.set(nextIndex)
+    },
+  )
+
   // Delay the unlock until after we've finished the scale up animation.
   // It's complicated to do the same for locking it back so we don't attempt that.
   useAnimatedReaction(
@@ -165,12 +228,6 @@ export default function ImageViewRoot({
       }
     },
   )
-
-  const onFlyAway = useCallback(() => {
-    'worklet'
-    openProgress.set(0)
-    scheduleOnRN(onRequestClose)
-  }, [onRequestClose, openProgress])
 
   return (
     // Keep it always mounted to avoid flicker on the first frame.
@@ -199,7 +256,6 @@ export default function ImageViewRoot({
             onRequestClose={onRequestClose}
             onPressSave={onPressSave}
             onPressShare={onPressShare}
-            onFlyAway={onFlyAway}
             safeAreaRef={ref}
             openProgress={openProgress}
             thumbRects={thumbRects}
@@ -218,7 +274,6 @@ function ImageView({
   onRequestClose,
   onPressSave,
   onPressShare,
-  onFlyAway,
   safeAreaRef,
   openProgress,
   thumbRects,
@@ -230,12 +285,11 @@ function ImageView({
   onRequestClose: () => void
   onPressSave: (uri: string) => void
   onPressShare: (uri: string) => void
-  onFlyAway: () => void
   safeAreaRef: AnimatedRef<View>
   openProgress: SharedValue<number>
   thumbRects: SharedValue<Record<number, MeasuredDimensions | null>>
 }) {
-  const {images, metricsContext} = lightbox
+  const {images, metricsContext, onIndexChange} = lightbox
   // Capture at mount: after a rotation remount this is the preserved
   // current index, so the pager re-opens on the same image.
   const [initialImageIndex] = useState(imageIndex)
@@ -245,8 +299,23 @@ function ImageView({
   const [isDragging, setIsDragging] = useState(false)
   const [showControls, setShowControls] = useState(true)
   const [isAltExpanded, setIsAltExpanded] = useState(false)
+  const dismissSwipeTranslateX = useSharedValue(0)
   const dismissSwipeTranslateY = useSharedValue(0)
-  const isFlyingAway = useSharedValue(false)
+  const isDismissing = useSharedValue(false)
+  const [isDismissSwiping, setIsDismissSwiping] = useState(false)
+
+  /*
+   * iOS's Live Text button sits on the image itself, so it would otherwise
+   * ride along as the image shrinks and flies back to its thumbnail.
+   */
+  useAnimatedReaction(
+    () => dismissSwipeTranslateY.get() !== 0,
+    (isSwiping, wasSwiping) => {
+      if (isSwiping !== (wasSwiping ?? false)) {
+        scheduleOnRN(setIsDismissSwiping, isSwiping)
+      }
+    },
+  )
 
   const containerStyle = useAnimatedStyle(() => {
     if (openProgress.get() < 1) {
@@ -255,7 +324,7 @@ function ImageView({
         opacity: isAnimated ? 1 : 0,
       }
     }
-    if (isFlyingAway.get()) {
+    if (isDismissing.get()) {
       return {
         pointerEvents: 'none',
         opacity: 1,
@@ -267,15 +336,16 @@ function ImageView({
   const backdropStyle = useAnimatedStyle(() => {
     const screenSize = measure(safeAreaRef)
     let opacity = 1
+    if (screenSize && orientation === 'portrait') {
+      opacity -= getDismissSwipeProgress(
+        dismissSwipeTranslateY.get(),
+        screenSize.height,
+      )
+    }
     const openProgressValue = openProgress.get()
     if (openProgressValue < 1) {
-      opacity = Math.sqrt(openProgressValue)
-    } else if (screenSize && orientation === 'portrait') {
-      const dragProgress = Math.min(
-        Math.abs(dismissSwipeTranslateY.get()) / (screenSize.height / 2),
-        1,
-      )
-      opacity -= dragProgress
+      // Closing after a dismiss swipe fades out from wherever the swipe left it.
+      opacity *= Math.sqrt(openProgressValue)
     }
     const factor = IS_IOS ? 100 : 50
     return {
@@ -315,23 +385,55 @@ function ImageView({
     }
   })
 
-  const handleRequestClose = useCallback(() => {
-    const activeRef = images[imageIndex]?.thumbRef
-    if (isAnimated && activeRef) {
-      scheduleOnUI(() => {
+  const activeThumbRef = images[imageIndex]?.thumbRef
+
+  /**
+   * Stores where the active image's thumbnail is now, for the close animation
+   * to land on. It may not be the one the lightbox was opened from.
+   */
+  const setActiveThumbRect = useCallback(
+    (rect: MeasuredDimensions | null) => {
+      'worklet'
+      thumbRects.modify(rects => {
         'worklet'
-        const rect = measure(activeRef)
-        thumbRects.modify(rects => {
-          'worklet'
-          rects[imageIndex] = rect
-          return rects
-        })
-        scheduleOnRN(onRequestClose)
+        rects[imageIndex] = rect
+        return rects
       })
-    } else {
-      onRequestClose()
+    },
+    [imageIndex, thumbRects],
+  )
+
+  const handleRequestClose = useCallback(() => {
+    if (isAnimated && activeThumbRef) {
+      setActiveThumbRect(measureThumb(activeThumbRef))
     }
-  }, [isAnimated, images, imageIndex, thumbRects, onRequestClose])
+    onRequestClose()
+  }, [isAnimated, activeThumbRef, setActiveThumbRect, onRequestClose])
+
+  const onDismissSwipe = useCallback(() => {
+    'worklet'
+    if (isAnimated) {
+      // Already on the UI thread here, so measure with Reanimated.
+      if (activeThumbRef) {
+        setActiveThumbRect(measure(activeThumbRef))
+      }
+      /*
+       * Start closing right away on the UI thread so the image doesn't stall
+       * where it was let go. The close effect in ImageViewRoot then sets the
+       * same spring, which Reanimated continues rather than restarting.
+       */
+      openProgress.set(withClampedSpring(0, SLOW_SPRING))
+    } else {
+      openProgress.set(0)
+    }
+    scheduleOnRN(onRequestClose)
+  }, [
+    isAnimated,
+    activeThumbRef,
+    setActiveThumbRect,
+    openProgress,
+    onRequestClose,
+  ])
 
   const onTap = useCallback(() => {
     setShowControls(show => !show)
@@ -343,23 +445,6 @@ function ImageView({
       setShowControls(false)
     }
   }, [])
-
-  useAnimatedReaction(
-    () => {
-      const screenSize = measure(safeAreaRef)
-      return (
-        !screenSize ||
-        Math.abs(dismissSwipeTranslateY.get()) > screenSize.height
-      )
-    },
-    (isOut, wasOut) => {
-      if (isOut && !wasOut) {
-        // Stop the animation from blocking the screen forever.
-        cancelAnimation(dismissSwipeTranslateY)
-        onFlyAway()
-      }
-    },
-  )
 
   // style system ui on android
   const t = useTheme()
@@ -388,6 +473,9 @@ function ImageView({
         initialPage={initialImageIndex}
         onPageSelected={(e: PagerViewOnPageSelectedEvent) => {
           const next = e.nativeEvent.position
+          if (next !== imageIndex) {
+            onIndexChange?.(next)
+          }
           setImageIndex(prev => {
             if (metricsContext && prev !== next) {
               ax.metric('post:photoEmbed:lightboxSwipe', {
@@ -417,12 +505,14 @@ function ImageView({
               imageSrc={imageSrc}
               onRequestClose={handleRequestClose}
               isScrollViewBeingDragged={isDragging}
-              showControls={showControls}
+              showControls={showControls && !isDismissSwiping}
               safeAreaRef={safeAreaRef}
               isScaled={isScaled}
-              isFlyingAway={isFlyingAway}
+              isDismissing={isDismissing}
               isActive={i === imageIndex}
+              dismissSwipeTranslateX={dismissSwipeTranslateX}
               dismissSwipeTranslateY={dismissSwipeTranslateY}
+              onDismissSwipe={onDismissSwipe}
               openProgress={openProgress}
               thumbRects={thumbRects}
               imageIndex={i}
@@ -465,12 +555,14 @@ function LightboxImage({
   onRequestClose,
   isScrollViewBeingDragged,
   isScaled,
-  isFlyingAway,
+  isDismissing,
   isActive,
   showControls,
   safeAreaRef,
   openProgress,
+  dismissSwipeTranslateX,
   dismissSwipeTranslateY,
+  onDismissSwipe,
   thumbRects,
   imageIndex,
 }: {
@@ -481,11 +573,17 @@ function LightboxImage({
   isScrollViewBeingDragged: boolean
   isScaled: boolean
   isActive: boolean
-  isFlyingAway: SharedValue<boolean>
+  isDismissing: SharedValue<boolean>
   showControls: boolean
   safeAreaRef: AnimatedRef<View>
   openProgress: SharedValue<number>
+  dismissSwipeTranslateX: SharedValue<number>
   dismissSwipeTranslateY: SharedValue<number>
+  /**
+   * Worklet, called on the UI thread when a dismiss swipe is let go far or
+   * fast enough to close.
+   */
+  onDismissSwipe: () => void
   thumbRects: SharedValue<Record<number, MeasuredDimensions | null>>
   imageIndex: number
 }) {
@@ -525,8 +623,6 @@ function LightboxImage({
     'worklet'
     const safeArea = measureSafeArea()
     const openProgressValue = openProgress.get()
-    const dismissTranslateY =
-      isActive && openProgressValue === 1 ? dismissSwipeTranslateY.get() : 0
 
     if (openProgressValue === 0) {
       return {
@@ -538,6 +634,20 @@ function LightboxImage({
         cropContentTransform: [],
       }
     }
+
+    /*
+     * The active image follows the dismiss swipe. When the swipe closes the
+     * lightbox the translation is left as-is, so the close animation starts
+     * from wherever the image was let go.
+     */
+    const dismissTransform = isActive
+      ? getDismissSwipeTransform(
+          dismissSwipeTranslateX.get(),
+          dismissSwipeTranslateY.get(),
+          safeArea,
+          thumbBorderRadius,
+        )
+      : AT_REST
 
     if (isActive && imageAspect && openProgressValue < 1) {
       let thumbRect
@@ -552,15 +662,21 @@ function LightboxImage({
           thumbRect,
           safeArea,
           imageAspect,
+          dismissTransform,
           thumbBorderRadius,
         )
       }
     }
     return {
       isHidden: false,
-      isResting: dismissTranslateY === 0,
-      borderRadius: 0,
-      scaleAndMoveTransform: [{translateY: dismissTranslateY}],
+      isResting:
+        dismissTransform.translateX === 0 && dismissTransform.translateY === 0,
+      borderRadius: dismissTransform.borderRadius / dismissTransform.scale,
+      scaleAndMoveTransform: [
+        {translateX: dismissTransform.translateX},
+        {translateY: dismissTransform.translateY},
+        {scale: dismissTransform.scale},
+      ],
       cropFrameTransform: [],
       cropContentTransform: [],
     }
@@ -573,40 +689,27 @@ function LightboxImage({
     maxPointers: 1,
     onUpdate: e => {
       'worklet'
-      if (openProgress.get() !== 1 || isFlyingAway.get()) {
+      if (openProgress.get() !== 1 || isDismissing.get()) {
         return
       }
+      dismissSwipeTranslateX.set(e.translationX)
       dismissSwipeTranslateY.set(e.translationY)
     },
     onDeactivate: e => {
       'worklet'
-      if (openProgress.get() !== 1 || isFlyingAway.get()) {
+      if (openProgress.get() !== 1 || isDismissing.get()) {
         return
       }
-      if (Math.abs(e.velocityY) > 200) {
-        isFlyingAway.set(true)
-        if (dismissSwipeTranslateY.get() === 0) {
-          // HACK: If the initial value is 0, withDecay() animation doesn't start.
-          // This is a bug in Reanimated, but for now we'll work around it like this.
-          dismissSwipeTranslateY.set(1)
-        }
-        dismissSwipeTranslateY.set(
-          withDecay({
-            velocity: e.velocityY,
-            velocityFactor: Math.max(3500 / Math.abs(e.velocityY), 1), // Speed up if it's too slow.
-            deceleration: 1, // Danger! This relies on the reaction below stopping it.
-            reduceMotion: ReduceMotion.Never, // If this animation doesn't run, the image gets stuck - therefore override Reduce Motion
-          }),
-        )
+      const shouldDismiss =
+        Math.abs(e.velocityY) > DISMISS_VELOCITY
+          ? e.velocityY * e.translationY >= 0
+          : Math.abs(e.translationY) > DISMISS_DISTANCE
+      if (shouldDismiss) {
+        isDismissing.set(true)
+        onDismissSwipe()
       } else {
-        dismissSwipeTranslateY.set(
-          withSpring(0, {
-            stiffness: 700,
-            damping: 50,
-            mass: 1,
-            reduceMotion: ReduceMotion.Never,
-          }),
-        )
+        dismissSwipeTranslateX.set(withSpring(0, DISMISS_CANCEL_SPRING))
+        dismissSwipeTranslateY.set(withSpring(0, DISMISS_CANCEL_SPRING))
       }
     },
   })
@@ -687,6 +790,11 @@ function interpolateTransform(
   },
   safeArea: {width: number; height: number; x: number; y: number},
   imageAspect: number,
+  /**
+   * Where the image sits at progress=1. Usually at rest, but when closing
+   * from a dismiss swipe it's wherever the swipe left it.
+   */
+  openTransform: ImagePlacement,
   thumbBorderRadius?: number,
 ): {
   scaleAndMoveTransform: Transform
@@ -731,9 +839,21 @@ function interpolateTransform(
   const thumbnailCenterY = thumbnailSafeAreaY + thumbnailDims.height / 2
   const initialTranslateX = thumbnailCenterX - screenCenterX
   const initialTranslateY = thumbnailCenterY - screenCenterY
-  const scale = interpolate(progress, [0, 1], [initialScale, 1])
-  const translateX = interpolatePx(progress, [0, 1], [initialTranslateX, 0])
-  const translateY = interpolatePx(progress, [0, 1], [initialTranslateY, 0])
+  const scale = interpolate(
+    progress,
+    [0, 1],
+    [initialScale, openTransform.scale],
+  )
+  const translateX = interpolatePx(
+    progress,
+    [0, 1],
+    [initialTranslateX, openTransform.translateX],
+  )
+  const translateY = interpolatePx(
+    progress,
+    [0, 1],
+    [initialTranslateY, openTransform.translateY],
+  )
   const cropScaleX = interpolate(
     progress,
     [0, 1],
@@ -744,15 +864,16 @@ function interpolateTransform(
     [0, 1],
     [croppedFinalHeight / finalHeight, 1],
   )
-  // The border radius in the source thumbnail needs to be scaled to account
-  // for the crop frame and overall scale so it visually matches at progress=0.
-  const sourceBorderRadius = thumbBorderRadius ?? 0
-  const initialCropScaleX = croppedFinalWidth / finalWidth
-  const borderRadius = interpolate(
+  /*
+   * Interpolate the radius as it appears on screen, then undo the overall and
+   * crop frame scales so it visually matches the thumbnail at progress=0.
+   */
+  const visualBorderRadius = interpolate(
     progress,
     [0, 1],
-    [sourceBorderRadius / (initialScale * initialCropScaleX), 0],
+    [thumbBorderRadius ?? 0, openTransform.borderRadius],
   )
+  const borderRadius = visualBorderRadius / (scale * cropScaleX)
 
   return {
     isHidden: false,
@@ -762,6 +883,71 @@ function interpolateTransform(
     cropContentTransform: [{scaleX: 1 / cropScaleX}, {scaleY: 1 / cropScaleY}],
     borderRadius,
   }
+}
+
+/**
+ * How far through a dismiss swipe the finger is, from 0 at rest to 1 at half
+ * a screen away. Drives the backdrop fade and how much the image shrinks.
+ */
+function getDismissSwipeProgress(translateY: number, screenHeight: number) {
+  'worklet'
+  return Math.min(Math.abs(translateY) / (screenHeight / 2), 1)
+}
+
+/**
+ * Where the image sits for a given dismiss swipe finger translation. Like the
+ * iOS Photos app, it shrinks a little and follows the finger with some
+ * resistance - more so horizontally. Its corners round off to match the
+ * thumbnail by the time letting go would close it, so the return animation
+ * only has to move it.
+ */
+function getDismissSwipeTransform(
+  translateX: number,
+  translateY: number,
+  screenSize: {width: number; height: number},
+  thumbBorderRadius = 0,
+): ImagePlacement {
+  'worklet'
+  const progress = getDismissSwipeProgress(translateY, screenSize.height)
+  const roundingProgress = Math.min(Math.abs(translateY) / DISMISS_DISTANCE, 1)
+  return {
+    translateX: rubberBand(translateX, screenSize.width / 2, DISMISS_FOLLOW_X),
+    translateY: rubberBand(translateY, screenSize.height, DISMISS_FOLLOW_Y),
+    scale: 1 - (1 - DISMISS_MIN_SCALE) * progress,
+    borderRadius: thumbBorderRadius * roundingProgress,
+  }
+}
+
+/**
+ * Damps a drag distance so it starts out moving at `coefficient` times the
+ * finger and tapers off, never quite reaching `limit`. Same curve as
+ * UIScrollView's overscroll.
+ */
+function rubberBand(distance: number, limit: number, coefficient: number) {
+  'worklet'
+  const magnitude = Math.abs(distance)
+  const damped = (1 - 1 / ((magnitude * coefficient) / limit + 1)) * limit
+  return Math.sign(distance) * damped
+}
+
+/**
+ * Hides or shows a source thumbnail. Uses setNativeProps rather than a style
+ * in the source so the change lands in the same frame as the lightbox image
+ * appearing or disappearing, without a blink.
+ */
+function setThumbHidden(
+  thumbRef: AnimatedRef | null | undefined,
+  hidden: boolean,
+) {
+  'worklet'
+  /*
+   * On the UI thread an AnimatedRef holds its view's shadow node, which is
+   * null if it never mounted - and setNativeProps crashes without one.
+   */
+  if (!thumbRef || !(thumbRef as unknown as {value: unknown}).value) {
+    return
+  }
+  setNativeProps(thumbRef, {opacity: hidden ? 0 : 1})
 }
 
 function withClampedSpring<T extends AnimatableValue>(

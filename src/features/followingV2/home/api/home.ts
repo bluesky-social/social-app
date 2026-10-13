@@ -68,10 +68,12 @@ export class HomeFeedAPI implements FeedAPI {
 
   async fetch({
     cursor,
+    since,
     source,
     limit,
   }: {
     cursor: string | undefined
+    since?: string
     source?: FeedSource
     limit: number
   }): Promise<FeedAPIResponse> {
@@ -80,19 +82,27 @@ export class HomeFeedAPI implements FeedAPI {
       return {...res, source: 'discover'}
     }
 
-    const res = await this.following.fetch({cursor, limit})
-    if (res.cursor) {
+    const res = await this.following.fetch({cursor, since, limit})
+    /*
+     * A range bounded by `since` sits above posts already loaded, so it never
+     * runs out into Discover.
+     */
+    if (res.cursor || since !== undefined) {
       return res
     }
 
-    // Following has run out, so this page carries on into Discover.
+    /*
+     * Following has run out, so this page carries on into Discover. It still
+     * starts with Following's posts, so it starts where they do.
+     */
     const feed = [...res.feed, FALLBACK_MARKER_POST]
     if (__DEV__) {
-      return {feed, source: 'discover'}
+      return {startCursor: res.startCursor, feed, source: 'discover'}
     }
     const discover = await this.discover.fetch({cursor: '', limit})
     return {
       cursor: discover.cursor,
+      startCursor: res.startCursor,
       source: 'discover',
       feed: feed.concat(discover.feed),
     }

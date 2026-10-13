@@ -1468,11 +1468,6 @@
       "count": 2
     }
   },
-  "src/view/shell/Drawer.tsx": {
-    "typescript/no-floating-promises": {
-      "count": 2
-    }
-  },
   "src/view/shell/createNativeStackNavigatorWithAuth.tsx": {
     "typescript/no-explicit-any": {
       "count": 1

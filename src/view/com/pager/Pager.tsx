@@ -4,13 +4,12 @@ import {
   useCallback,
   useContext,
   useImperativeHandle,
-  useMemo,
   useRef,
   useState,
 } from 'react'
 import {View} from 'react-native'
 import {DrawerGestureContext} from 'react-native-drawer-layout'
-import {Gesture, GestureDetector} from 'react-native-gesture-handler'
+import {GestureDetector, useNativeGesture} from 'react-native-gesture-handler'
 import PagerView, {
   type PagerViewOnPageScrollEventData,
   type PagerViewOnPageSelectedEvent,
@@ -163,14 +162,7 @@ export function Pager({
 
 function DrawerGestureRequireFail({children}: {children: React.ReactNode}) {
   const drawerGesture = useContext(DrawerGestureContext)
-
-  const nativeGesture = useMemo(() => {
-    const gesture = Gesture.Native()
-    if (drawerGesture) {
-      gesture.requireExternalGestureToFail(drawerGesture)
-    }
-    return gesture
-  }, [drawerGesture])
+  const nativeGesture = useNativeGesture({requireToFail: drawerGesture})
 
   return <GestureDetector gesture={nativeGesture}>{children}</GestureDetector>
 }

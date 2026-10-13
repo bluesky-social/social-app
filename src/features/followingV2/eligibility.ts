@@ -1,5 +1,5 @@
 import {type AnalyticsContextType} from '#/analytics'
-import {IS_NATIVE} from '#/env'
+import {IS_E2E, IS_NATIVE} from '#/env'
 
 /**
  * Whether Following v2 behaviour applies. Every Following v2 call site gates
@@ -21,7 +21,7 @@ import {IS_NATIVE} from '#/env'
 export function isFollowingV2Eligible(
   ax: Pick<AnalyticsContextType, 'features'>,
 ) {
-  return IS_NATIVE && ax.features.enabled(ax.features.FollowingV2Enable)
+  return IS_NATIVE && isFollowingV2Enabled(ax)
 }
 
 /**
@@ -31,7 +31,7 @@ export function isFollowingV2Eligible(
 export function isFollowingV2HomeDotEnabled(
   ax: Pick<AnalyticsContextType, 'features'>,
 ) {
-  return ax.features.enabled(ax.features.FollowingV2Enable)
+  return isFollowingV2Enabled(ax)
 }
 
 /**
@@ -48,5 +48,14 @@ export function isFollowingV2HomeDotEnabled(
 export function isFollowingV2HomeForkEnabled(
   ax: Pick<AnalyticsContextType, 'features'>,
 ) {
-  return ax.features.enabled(ax.features.FollowingV2Enable)
+  return isFollowingV2Enabled(ax)
+}
+
+/**
+ * Whether `following_v2:enable` is on. It's always on in e2e builds, where
+ * GrowthBook can't target the test accounts, so the e2e suite runs Following
+ * v2. The e2e check runs first, so e2e never logs an exposure for the flag.
+ */
+function isFollowingV2Enabled(ax: Pick<AnalyticsContextType, 'features'>) {
+  return IS_E2E || ax.features.enabled(ax.features.FollowingV2Enable)
 }

@@ -1,6 +1,6 @@
 {
   "cli": {
-    "version": "24.8.0",
+    "version": "24.12.0",
     "promptToConfigurePushNotifications": false,
     "appVersionSource": "remote"
   },
@@ -19,6 +19,12 @@
       },
       "env": {
         "EXPO_PUBLIC_ENV": "production"
+      }
+    },
+    "development-simulator": {
+      "extends": "development",
+      "env": {
+        "DISABLE_UPDATES": "1"
       }
     },
     "e2e": {

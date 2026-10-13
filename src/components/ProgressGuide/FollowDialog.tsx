@@ -139,7 +139,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const [searchText, setSearchText] = useState(lastSearchText)
   const moderationOpts = useModerationOpts()
   const listRef = useRef<ListMethods>(null)
-  const inputRef = useRef<React.ComponentRef<typeof TextInput>>(null)
   const [headerHeight, setHeaderHeight] = useState(0)
   const {currentAccount} = useSession()
 
@@ -305,7 +304,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const onSelectTab = useCallback(
     (interest: string) => {
       setSelectedInterest(interest)
-      inputRef.current?.clear()
       setSearchText('')
       listRef.current?.scrollToOffset({
         offset: 0,
@@ -318,7 +316,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
   const listHeader = (
     <Header
       guide={guide}
-      inputRef={inputRef}
       listRef={listRef}
       searchText={searchText}
       onSelectTab={onSelectTab}
@@ -357,7 +354,6 @@ function DialogInner({guide}: {guide?: Follow10ProgressGuide}) {
 
 let Header = ({
   guide,
-  inputRef,
   listRef,
   searchText,
   onSelectTab,
@@ -368,7 +364,6 @@ let Header = ({
   interestsDisplayNames,
 }: {
   guide?: Follow10ProgressGuide
-  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
   listRef: React.RefObject<ListMethods | null>
   onSelectTab: (v: string) => void
   searchText: string
@@ -396,8 +391,7 @@ let Header = ({
 
       <View style={[web(a.pt_xs), a.pb_xs]}>
         <SearchInput
-          inputRef={inputRef}
-          defaultValue={searchText}
+          value={searchText}
           onChangeText={text => {
             setSearchText(text)
             listRef.current?.scrollToOffset({offset: 0, animated: false})
@@ -668,13 +662,11 @@ function CardOuter({
 function SearchInput({
   onChangeText,
   onEscape,
-  inputRef,
-  defaultValue,
+  value,
 }: {
   onChangeText: (text: string) => void
   onEscape: () => void
-  inputRef: React.RefObject<React.ComponentRef<typeof TextInput> | null>
-  defaultValue: string
+  value: string
 }) {
   const t = useTheme()
   const {t: l} = useLingui()
@@ -698,9 +690,8 @@ function SearchInput({
         fill={interacted ? t.palette.primary_500 : t.palette.contrast_300}
       />
       <TextInput
-        ref={inputRef}
         placeholder={l`Search by name or interest`}
-        defaultValue={defaultValue}
+        value={value}
         onChangeText={onChangeText}
         onFocus={onFocus}
         onBlur={onBlur}

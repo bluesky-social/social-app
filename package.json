@@ -1,6 +1,6 @@
 {
   "name": "bsky.app",
-  "version": "1.134.0",
+  "version": "1.135.0",
   "private": true,
   "sideEffects": [
     "*.css",
@@ -16,7 +16,7 @@
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
-      "version": "11.23.0",
+      "version": "11.28.5",
       "onFail": "warn"
     },
     "runtime": {
@@ -104,7 +104,7 @@
     "intl:release": "pnpm intl:pull && pnpm intl:extract:all",
     "nuke": "rm -rf ./node_modules && rm -rf ./ios && rm -rf ./android",
     "update-extensions": "bash scripts/updateExtensions.sh",
-    "export": "expo export --dump-sourcemap && pnpm upload-native-sourcemaps",
+    "export": "expo export --platform ios --platform android --dump-sourcemap && pnpm upload-native-sourcemaps",
     "upload-native-sourcemaps": "pnpm exec sentry-expo-upload-sourcemaps dist",
     "generate-web-stats": "EXPO_ATLAS=1 pnpm build-web",
     "open-analyzer": "npx expo-atlas .expo/atlas.jsonl",
@@ -256,15 +256,15 @@
     "react-keyed-flatten-children": "^5.0.0",
     "react-native": "0.86.3",
     "react-native-device-attest": "^0.1.6",
-    "react-native-drawer-layout": "^4.2.3",
+    "react-native-drawer-layout": "5.0.0-alpha.19",
     "react-native-edge-to-edge": "^1.8.1",
     "react-native-gesture-handler": "~3.3.0",
-    "react-native-keyboard-controller": "1.21.9",
+    "react-native-keyboard-controller": "1.22.7",
     "react-native-mmkv": "^3.3.3",
     "react-native-pager-view": "6.8.0",
     "react-native-progress": "^5.0.1",
     "react-native-qrcode-styled": "^0.3.3",
-    "react-native-reanimated": "~4.6.0",
+    "react-native-reanimated": "4.7.1",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "4.26.2",
     "react-native-svg": "15.15.4",
@@ -273,7 +273,7 @@
     "react-native-web": "^0.21.0",
     "react-native-web-webview": "^1.0.2",
     "react-native-webview": "^13.16.1",
-    "react-native-worklets": "0.12.2",
+    "react-native-worklets": "0.13.0",
     "react-remove-scroll-bar": "^2.3.8",
     "react-responsive": "^10.0.1",
     "react-textarea-autosize": "^8.5.3",
@@ -312,7 +312,6 @@
     "babel-plugin-react-compiler": "1.0.0",
     "babel-preset-expo": "~57.0.12",
     "eas-build-cache-provider": "24.8.0",
-    "eas-cli": "24.8.0",
     "es-check": "9.8.1",
     "eslint-plugin-bsky-internal": "link:lint-rules",
     "eslint-plugin-react-native-a11y": "^3.5.1",
