@@ -37,7 +37,7 @@ import {
   isRefreshPillVisible,
   type SeenAtMode,
 } from '#/screens/Notifications/unread'
-import {atoms as a, useTheme} from '#/alf'
+import {atoms as a, native, useTheme, web} from '#/alf'
 import {ButtonText} from '#/components/Button'
 import {useIsFindContactsFeatureEnabledBasedOnGeolocation} from '#/components/contacts/country-allowlist'
 import {EnvelopeNotification_Filled_Corner2_Rounded as EnvelopeNotificationIcon} from '#/components/icons/brands/EnvelopeNotification'
@@ -126,7 +126,13 @@ export function PageList({
   const isActive = usePager().selectedPage === pageIndex
   const bottomBarOffset = useBottomBarOffset()
   const [isPTRing, setIsPTRing] = useState(false)
-  const [listHeight, setListHeight] = useState(0)
+  /**
+   * The height reported from List onLayout is the frame of the scrollview on
+   * native. On web, it's the height of the entire list, including content.
+   * Updating this value on web in response to onLayout would cause a layout
+   * loop, so we only use it on native. On web, we just set a minHeight.
+   */
+  const [nativeListContainerHeight, setNativeListContainerHeight] = useState(0)
 
   // Don't fetch tabs until they've been opened
   const [hasBeenActive, setHasBeenActive] = useState(isActive)
@@ -190,12 +196,8 @@ export function PageList({
   })
 
   let rows: Row[]
-  if (!isFetched) {
-    rows = [{type: 'loading', key: 'loading'}]
-  } else if (notifications.length === 0) {
-    rows = isError
-      ? [{type: 'error', key: 'error'}]
-      : [{type: 'empty', key: 'empty'}]
+  if (notifications.length === 0) {
+    rows = [getPlaceholderRow({isError, isEmpty})]
   } else {
     rows = buildRows(notifications, feed)
     if (isError) {
@@ -233,7 +235,12 @@ export function PageList({
           ref={listRef}
           testID={`notificationsList-${feed}`}
           style={[a.flex_1]}
-          onLayout={event => setListHeight(event.nativeEvent.layout.height)}
+          onLayout={
+            IS_NATIVE
+              ? event =>
+                  setNativeListContainerHeight(event.nativeEvent.layout.height)
+              : undefined
+          }
           onScrolledDownChange={onScrolledDownChange}
           headerOffset={headerOffset}
           data={rows}
@@ -262,12 +269,17 @@ export function PageList({
                     style={[
                       a.justify_center,
                       a.px_lg,
-                      {
+                      native({
                         minHeight: Math.max(
-                          listHeight - headerOffset - bottomBarOffset,
+                          nativeListContainerHeight -
+                            headerOffset -
+                            bottomBarOffset,
                           0,
                         ),
-                      },
+                      }),
+                      web({
+                        minHeight: `calc(100vh - ${headerOffset}px - ${bottomBarOffset}px)`,
+                      }),
                     ]}>
                     {feed === 'all' ? (
                       <NoNotifications />
@@ -328,6 +340,26 @@ export function PageList({
       />
     </>
   )
+}
+
+/**
+ * The single row shown while there's nothing to list: the skeleton until
+ * the feed has settled, since a page can have more on the way without
+ * anything to show yet, then the error or the empty message.
+ */
+export function getPlaceholderRow({
+  isError,
+  isEmpty,
+}: {
+  isError: boolean
+  /**
+   * Loaded completely with nothing in it, see `PageList`.
+   */
+  isEmpty: boolean
+}): Row {
+  if (isError) return {type: 'error', key: 'error'}
+  if (isEmpty) return {type: 'empty', key: 'empty'}
+  return {type: 'loading', key: 'loading'}
 }
 
 /**
