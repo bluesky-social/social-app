@@ -31,6 +31,81 @@ index 76bb694854b29d7f779f38244cd48113b429ea1f..fd402ac938862e8d39c5467c1b5c86c4
                      startTransitionRecursive(child)
                  }
              }
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
+index 2389f94a28fe4543c2737c1b8de379dcfaa8947f..8549734403e77799d08d933d08e4cfedaf07df39 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
+@@ -38,8 +38,6 @@ class RNSScreenComponentDescriptor final
+ 
+     react_native_assert(
+         dynamic_cast<YogaLayoutableShadowNode *>(&screenShadowNode));
+-    auto &layoutableShadowNode =
+-        static_cast<YogaLayoutableShadowNode &>(screenShadowNode);
+ 
+     auto state =
+         std::static_pointer_cast<const RNSScreenShadowNode::ConcreteState>(
+@@ -99,7 +97,7 @@ class RNSScreenComponentDescriptor final
+           FrameCorrectionModes::Mode::FrameHeightCorrection);
+       screenShadowNode.getFrameCorrectionModes().unset(
+           FrameCorrectionModes::Mode::FrameOriginCorrection);
+-      layoutableShadowNode.setSize(
++      screenShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     } else if (
+         stateData.frameSize.width == 0 && stateData.frameSize.height == 0) {
+@@ -107,11 +105,11 @@ class RNSScreenComponentDescriptor final
+       // when native orientation changes and react has not been notified yet.
+       // The if condition holds true on first render and when it is reset inside
+       // RNSScreenShadowNodeCommitHook.
+-      layoutableShadowNode.setSize({YGUndefined, YGUndefined});
++      screenShadowNode.setSize({YGUndefined, YGUndefined});
+     }
+ #else
+     if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {
+-      layoutableShadowNode.setSize(
++      screenShadowNode.setSizeIfChanged(
+           Size{stateData.frameSize.width, stateData.frameSize.height});
+     }
+ #endif // ANDROID
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.cpp b/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.cpp
+index 5ff5328c15749bb83583a77d23a8c89166fb4fcc..708958e08d7c6f6c8d11d6e560fa93b1a4cbea59 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.cpp
++++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.cpp
+@@ -129,6 +129,17 @@ void RNSScreenShadowNode::layout(facebook::react::LayoutContext layoutContext) {
+ #endif // ANDROID
+ }
+ 
++void RNSScreenShadowNode::setSizeIfChanged(Size size) const {
++  const auto &style = yogaNode_.style();
++  if (style.dimension(yoga::Dimension::Width) ==
++          yoga::StyleSizeLength::points(size.width) &&
++      style.dimension(yoga::Dimension::Height) ==
++          yoga::StyleSizeLength::points(size.height)) {
++    return;
++  }
++  setSize(size);
++}
++
+ #ifdef ANDROID
+ void RNSScreenShadowNode::applyFrameCorrections() {
+   ensureUnsealed();
+diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h b/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
+index 93c9f4ba6c6199d3194be6ecd1e69dcbcd372b2b..9e1998ad57cd155434c33e85c8de9dc6829dbc0d 100644
+--- a/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
++++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenShadowNode.h
+@@ -38,6 +38,12 @@ class JSI_EXPORT RNSScreenShadowNode final : public ConcreteViewShadowNode<
+ 
+   FrameCorrectionModes &getFrameCorrectionModes();
+ 
++  // `setSize` always marks the Yoga node dirty, and the component descriptor
++  // calls it from `adopt`, which runs on every clone. A dirty screen makes the
++  // root re-run layout and pixel-grid rounding over the whole tree, so only
++  // touch the size when it differs from the one already on the Yoga node.
++  void setSizeIfChanged(Size size) const;
++
+ #ifdef ANDROID
+   void resetFrameSizeState();
+ 
 diff --git a/ios/RNSScreen.mm b/ios/RNSScreen.mm
 index 9b66012dc8db1e3af0cb5457f8dad86e7f2fe5e3..a7f1f613c291de8421f6f117c06d35ba34a2d908 100644
 --- a/ios/RNSScreen.mm

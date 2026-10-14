@@ -45,3 +45,37 @@ fallback either way. Plain views (the Follow button) capture reliably.
 Verified in a minimal repro (Expo 57 / RN 0.86 / RNS 4.26 / New Arch) at
 ~/work/rns-secure-pop-repro: zero fallback frames across recorded JS pops
 with the patch, ~700ms of visible fallback without it.
+
+## iOS + Android: do not dirty the Screen's Yoga node on every clone
+
+`RNSScreenComponentDescriptor::adopt()` runs on every clone of a `Screen`
+shadow node, and once native has reported the screen's frame it calls
+`YogaLayoutableShadowNode::setSize(frameSize)`. Unlike `setPadding()`,
+`setSize()` marks the Yoga node dirty even when the size is unchanged.
+
+Every commit clones the path from the changed node up to the root, and all
+our content sits under `Screen`s (tab + stack). So every commit dirtied the
+root, and `RootShadowNode::layoutIfNeeded` ran `layoutTree` plus Yoga's
+`roundLayoutResultsToPixelGrid`, which walks the whole tree. That includes
+commits that change nothing layout-related: Reanimated's per-frame commits
+(the profile header's transforms while scrolling) and ScrollView
+`contentOffset` state updates on the JS thread while scrolling any feed.
+
+The patch adds `RNSScreenShadowNode::setSizeIfChanged()`, which compares the
+size with the one already in the node's Yoga style and only calls `setSize`
+when it differs. `adopt()` uses it for the steady-state size on both
+platforms (the Android `#ifdef` branch and the iOS `#else` branch). A clone
+with new props still resets the style from props, so the size is re-applied
+and the node dirtied as before.
+
+The Android branch that resets the size to undefined while the frame is
+still unknown (first render, orientation-change reset) is left alone.
+
+Measured on an iOS simulator (Debug dev client, 15s scroll of a profile's
+Media tab) before the patch: 2.06s of 5.8s main-thread time was
+`layoutIfNeeded` under Reanimated commits (1.73s of it rounding, 0.21s of
+actual layout), plus 0.88s on the JS thread under state updates.
+
+Upstream: https://github.com/software-mansion/react-native-screens/issues/4777
+(reported for Android only; repro at
+https://github.com/TantiE100/rns-setsize-layout-repro). Linear: APP-3435.
