@@ -232,9 +232,8 @@ export type PostFeedRef = {
   /** Refreshes the feed in one write. Callers log their own metric. */
   refresh: () => Promise<unknown>
   /**
-   * Takes a press of Home, if this feed handles it itself, as one that
-   * stages new posts above the reader does (see `useHomePress`). Returns
-   * whether it did. If not, the page scrolls up and refreshes.
+   * Handles a Home press if this feed does (anchored Following). Returns false
+   * to let the page scroll up and refresh.
    */
   pressHome: () => boolean
 }
@@ -428,12 +427,6 @@ let PostFeed = ({
   /** The list's scroll offset, which its scroll handlers keep. */
   const listOffsetY = useSharedValue(0)
 
-  /**
-   * Takes the reader up to the top (see `useRevealTop`): from where they are,
-   * when they ask, and once the top page a refresh or a prepend from this view
-   * wrote has rendered, as anchored, the list would otherwise hold on to the
-   * row they're on, below the new posts.
-   */
   const revealTop = useRevealTop({
     topFetchedAt: lastFetchedAt,
     offsetY: listOffsetY,
@@ -538,10 +531,9 @@ let PostFeed = ({
   const myDid = currentAccount?.did || ''
   const onPostCreated = useCallback(() => {
     /*
-     * Anchored, only the view on screen takes the new post, with the reader
-     * already at its top. A hidden or prefetched page is left alone, even at
-     * its top, as its feed isn't replaced while the reader isn't looking at
-     * it. Its own checks bring the post in once it's on screen.
+     * Anchored, refresh only the on-screen view, and only with the reader at
+     * the top. A hidden or prefetched view picks the post up from a later
+     * new-posts check.
      */
     if (isAnchored) {
       if (isActive && isAtTop(listOffsetY.get())) {
@@ -1001,7 +993,6 @@ let PostFeed = ({
     // Without samples, which the pill never offers.
     pages: feedData?.pages,
     offsetY: listOffsetY,
-    // Animated from nearby, and with a jump from deep in the feed.
     scrollToTop: revealTop.reveal,
     onRead: prepend.markRead,
   })
