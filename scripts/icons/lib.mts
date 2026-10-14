@@ -36,6 +36,36 @@ export const SOURCE_LANES = new Set([
 
 const CODEGEN_LANES = new Set(['brands', 'community', 'ui'])
 
+/**
+ * Root directory of temporary SVG-only icons: `tmp/<ui|brands|community>/`.
+ * It is a sibling of the font input directories, so the fonts never see it.
+ */
+export const TEMPORARY_ROOT = 'tmp'
+
+/**
+ * Splits a source path into its logical lane, which decides validation and the
+ * output namespace, and its file name. Temporary sources reuse the lane of the
+ * directory under `tmp/` so that a move into the normal lane changes nothing
+ * about the generated export or import path.
+ */
+function classifySource(relativePath) {
+  const [root, ...rest] = relativePath.split(path.sep)
+  if (root === TEMPORARY_ROOT) {
+    const [lane, ...deeper] = rest
+    if (deeper.length === 0) {
+      fail(relativePath, `temporary icons must be in ${TEMPORARY_ROOT}/ui/, ${TEMPORARY_ROOT}/brands/, or ${TEMPORARY_ROOT}/community/`)
+    }
+    if (!CODEGEN_LANES.has(lane)) {
+      fail(relativePath, `unsupported temporary source directory ${TEMPORARY_ROOT}/${lane}; use ui, brands, or community`)
+    }
+    if (deeper.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
+    return {filename: deeper[0], lane, temporary: true}
+  }
+  if (!SOURCE_LANES.has(root)) fail(relativePath, `unclassified source directory ${root}`)
+  if (rest.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
+  return {filename: rest[0], lane: root, temporary: false}
+}
+
 function fail(file, message) {
   throw new Error(`${file}: ${message}`)
 }
@@ -541,10 +571,7 @@ function cleanObject(value) {
 }
 
 export async function readIconSource(sourceRoot, relativePath) {
-  const [lane, ...rest] = relativePath.split(path.sep)
-  if (!SOURCE_LANES.has(lane)) fail(relativePath, `unclassified source directory ${lane}`)
-  if (rest.length !== 1) fail(relativePath, 'nested icon source directories are not supported')
-  const filename = rest[0]
+  const {filename, lane, temporary} = classifySource(relativePath)
   const source = await fs.readFile(path.join(sourceRoot, relativePath), 'utf8')
   let originalRoot
   let optimizedRoot
@@ -583,7 +610,7 @@ export async function readIconSource(sourceRoot, relativePath) {
   if (lane !== 'brands') validateOrdinarySourceSemantics(original.entries, relativePath, lane)
   const data = lane === 'brands' ? validateFlexibleIcon(optimizedRoot, relativePath, lane) : validateOrdinaryIcon(optimizedRoot, relativePath, lane)
   const [, , width, height] = data.viewBox.split(' ').map(Number)
-  const glyph = (await glyphMismatch(data, width, height)) === undefined
+  const glyph = !temporary && (await glyphMismatch(data, width, height)) === undefined
   const warnings =
     (width === 24 && height === 24) || (width === 64 && height === 64)
       ? []
@@ -597,6 +624,7 @@ export async function readIconSource(sourceRoot, relativePath) {
     namespace: namespaceForLane(lane),
     optimized: result.data,
     relativePath,
+    temporary,
     warnings,
   }
 }
@@ -616,7 +644,10 @@ async function listFiles(root) {
 
 export async function discoverIconSources(sourceRoot) {
   const files = await listFiles(sourceRoot)
-  const unclassified = files.filter(file => file.endsWith('.svg') && !SOURCE_LANES.has(file.split(path.sep)[0]))
+  const unclassified = files.filter(file => {
+    const root = file.split(path.sep)[0]
+    return file.endsWith('.svg') && !SOURCE_LANES.has(root) && root !== TEMPORARY_ROOT
+  })
   if (unclassified.length > 0) throw new Error(`unclassified SVG sources:\n${unclassified.join('\n')}`)
   return files.filter(file => file.endsWith('.svg') && file.split(path.sep)[0] !== 'flags')
 }
@@ -625,6 +656,15 @@ function relativeImport(fromModule, targetModule) {
   let result = path.posix.relative(path.posix.dirname(fromModule), targetModule)
   if (!result.startsWith('.')) result = `./${result}`
   return result
+}
+
+/**
+ * Cleanup marker for a temporary icon, attached to its export so it survives in
+ * modules that also hold ordinary icons.
+ */
+function temporaryDocblock(icon) {
+  if (!icon.temporary) return ''
+  return `/** Temporary SVG-only icon. Move its source to assets/icons/${icon.lane}/ before a native release. */\n`
 }
 
 function renderSingleIcon(icon) {
@@ -636,12 +676,12 @@ function renderSingleIcon(icon) {
     if (description.strokeLinejoin !== 'miter') properties.push(`strokeLinejoin: ${JSON.stringify(description.strokeLinejoin)}`)
   }
   if (icon.glyph) properties.push(`glyph: ${JSON.stringify(icon.exportName)}`)
-  return `export const ${icon.exportName} = createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})\n`
+  return `${temporaryDocblock(icon)}export const ${icon.exportName} = createSinglePathSVG({\n  ${properties.join(',\n  ')},\n})\n`
 }
 
 function renderFlexibleIcon(icon) {
   const glyph = icon.glyph ? `\n  glyph: ${JSON.stringify(icon.exportName)},` : ''
-  return `export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},${glyph}\n})\n`
+  return `${temporaryDocblock(icon)}export const ${icon.exportName} = createSVG({\n  elements: ${JSON.stringify(icon.elements.map(cleanObject), null, 2).replaceAll('\n', '\n  ')},\n  viewBox: ${JSON.stringify(icon.viewBox)},${glyph}\n})\n`
 }
 
 function renderModule(modulePath, icons, aliases) {
@@ -795,7 +835,8 @@ export async function buildIconSet({outputRoot, scanRoot, sourceRoot}) {
   }
   const svgOutputs = new Map(sources.map(source => [source.relativePath, source.optimized]))
   const warnings = sources.flatMap(source => source.warnings)
-  return {deprecatedImports, holdouts, icons, svgOutputs, tsOutputs, warnings}
+  const temporaryIcons = icons.filter(icon => icon.temporary).map(icon => icon.relativePath).sort()
+  return {deprecatedImports, holdouts, icons, svgOutputs, temporaryIcons, tsOutputs, warnings}
 }
 
 /**
