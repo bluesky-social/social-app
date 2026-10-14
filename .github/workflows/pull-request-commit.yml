@@ -342,7 +342,7 @@ jobs:
       - name: 🏗️ Create Bundle
         run: >
           SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE=${{ steps.env.outputs.release-version }}
+          SENTRY_RELEASE=xyz.blueskyweb.app@${{ steps.env.outputs.release-version }}
           SENTRY_DIST=${{ steps.env.outputs.bundle-identifier }}
           pnpm export
 
