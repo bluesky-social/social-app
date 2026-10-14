@@ -18,7 +18,7 @@ init({
   debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   environment: env.ENV,
   dist: env.BUNDLE_IDENTIFIER,
-  release: env.RELEASE_VERSION,
+  release: env.SENTRY_RELEASE,
   beforeSend: dropExpectedNetworkErrors,
   ignoreErrors: [
     /*

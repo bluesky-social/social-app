@@ -171,7 +171,7 @@ jobs:
           output: build.tar.gz
           bump-build-number: "true"
           sentry-auth-token: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          sentry-release: ${{ steps.env.outputs.release-version }}
+          sentry-release: xyz.blueskyweb.app@${{ steps.env.outputs.release-version }}
           sentry-dist: ${{ steps.env.outputs.bundle-identifier }}
 
       - name: 📂 Extract build artifact
