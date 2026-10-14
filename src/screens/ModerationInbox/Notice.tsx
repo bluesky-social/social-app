@@ -39,9 +39,7 @@ import {ActionSummaryText} from './components/ActionSummaryText'
 import {ContentBlock} from './components/ContentBlock'
 import {useActionedSubjectLabels} from './components/hooks/useActionedSubjectLabels'
 import {ReportSubjectPreview} from './components/ReportSubjectPreview'
-import {Timeline} from './components/Timeline'
 import {getNoticeLabels} from './components/util/noticeLabels'
-import {getReportActionLabel} from './components/util/reportActionLabel'
 
 export function ModerationInboxNoticeDetailsScreen({
   route,
@@ -286,29 +284,6 @@ function NoticeDetails({
             </Text>
           ) : null}
         </ContentBlock>
-        {actions.length > 1 ? (
-          <Timeline
-            items={actions.flatMap(action => {
-              const label = getReportActionLabel({
-                status: 'resolved',
-                lastActionTaken: action.type,
-              })
-              const item = {
-                title: label ? i18n._(label) : l`Moderation action`,
-                date: new Date(action.createdAt),
-              }
-              return action.reversedAt
-                ? [
-                    item,
-                    {
-                      title: l`Action reversed`,
-                      date: new Date(action.reversedAt),
-                    },
-                  ]
-                : [item]
-            })}
-          />
-        ) : null}
       </View>
       <AppealDialog control={appealDialogControl} data={{...data, actions}} />
     </>
@@ -328,13 +303,15 @@ function AppealDialog({
   const submitting = useRef(false)
   const appeal = useAppealModerationInboxSubjectMutation(data.src)
   const invalidateInbox = useModerationInboxCacheMutation()
-  const appealedAction = data.actions.find(action =>
-    [
-      'contentRemoved',
-      'accountSuspended',
-      'accountTakedown',
-      'labelApplied',
-    ].includes(action.type),
+  const appealedAction = data.actions.find(
+    action =>
+      !action.reversedAt &&
+      [
+        'contentRemoved',
+        'accountSuspended',
+        'accountTakedown',
+        'labelApplied',
+      ].includes(action.type),
   )
   const errorCode = matchXrpcError(
     appeal.error,
@@ -385,9 +362,6 @@ function AppealDialog({
       control.close(() => {
         void invalidateInbox(updatedSubject)
         Toast.show(l`Appeal submitted`)
-        setDetails('')
-        appeal.reset()
-        submitting.current = false
       })
     } catch {
       // The mutation reports unexpected errors; the dialog keeps the reason.
@@ -429,6 +403,11 @@ function AppealDialog({
   return (
     <Dialog.Outer
       control={control}
+      onClose={() => {
+        appeal.reset()
+        setDetails('')
+        submitting.current = false
+      }}
       nativeOptions={{preventDismiss: appeal.isPending}}
       webOptions={{
         onBackgroundPress: () => {
