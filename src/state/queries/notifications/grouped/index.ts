@@ -7,6 +7,7 @@ import {
 
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {STALE} from '#/state/queries'
+import {getNextCursor} from '#/state/queries/notifications/grouped/cursor'
 import {
   createGroupActorsPage,
   getNextActorDids,
@@ -153,7 +154,7 @@ export function useGroupedNotificationsQuery({
       return {...hydratePage(res, {viewerDid}), requestedAt}
     },
     initialPageParam: undefined as string | undefined,
-    getNextPageParam: lastPage => lastPage.cursor,
+    getNextPageParam: (_lastPage, pages) => getNextCursor(pages),
     select(data) {
       return selectNotifications(data, {
         moderationOpts,
