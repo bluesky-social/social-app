@@ -23,6 +23,7 @@ import {ErrorMessage} from '#/view/com/util/error/ErrorMessage'
 import {List, type ListMethods} from '#/view/com/util/List'
 import {LoadMoreRetryBtn} from '#/view/com/util/LoadMoreRetryBtn'
 import {MainScrollProvider} from '#/view/com/util/MainScrollProvider'
+import {ActivityEmptyMessage} from '#/screens/Notifications/components/ActivityEmptyMessage'
 import {
   FollowedYouHeader,
   FollowerNotification,
@@ -304,6 +305,8 @@ export function PageList({
                     ]}>
                     {feed === 'all' ? (
                       <NoNotifications />
+                    ) : feed === 'activity' ? (
+                      <ActivityEmptyMessage />
                     ) : (
                       <EmptyMessage feed={feed} />
                     )}
@@ -539,7 +542,11 @@ function NoNotifications() {
 /**
  * Shown on a tab with nothing in it, e.g. "No replies to show yet".
  */
-function EmptyMessage({feed}: {feed: GroupedNotificationsFeed}) {
+function EmptyMessage({
+  feed,
+}: {
+  feed: Exclude<GroupedNotificationsFeed, 'activity'>
+}) {
   const t = useTheme()
   // The macro only compiles `l` from this component's own `useLingui`
   const {t: l} = useLingui()
@@ -557,9 +564,6 @@ function EmptyMessage({feed}: {feed: GroupedNotificationsFeed}) {
       break
     case 'conversations':
       message = l`No replies to show yet`
-      break
-    case 'activity':
-      message = l`No activity to show yet`
       break
   }
 
