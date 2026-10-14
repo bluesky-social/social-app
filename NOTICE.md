@@ -57,6 +57,66 @@ The OG card build downloads Noto Sans Arabic, Hebrew, HK, JP, KR, SC, TC, and Th
 Copyright (c) 2020 @catamphetamine <purecatamphetamine@gmail.com>
 ```
 
+## Shiki syntax highlighting
+
+**Packages:** `@shikijs/core`, `@shikijs/engine-oniguruma`, `@shikijs/langs`, `@shikijs/primitive`, and `@shikijs/types`
+**License:** MIT - full texts at [`licenses/MIT-SHIKI.txt`](./licenses/MIT-SHIKI.txt)
+**Project:** [Shiki](https://github.com/shikijs/shiki)
+
+```
+Copyright (c) 2021 Pine Wu
+Copyright (c) 2023 Anthony Fu <https://github.com/antfu>
+```
+
+## VS Code TextMate and Oniguruma bindings
+
+**Components:** `@shikijs/vscode-textmate` and the Oniguruma bindings bundled by `@shikijs/engine-oniguruma`
+**License:** MIT - full texts at [`licenses/MIT-SHIKI.txt`](./licenses/MIT-SHIKI.txt)
+**Projects:** [Shiki TextMate](https://github.com/shikijs/vscode-textmate) and [VS Code Oniguruma bindings](https://github.com/shikijs/shiki/tree/v4.5.0/packages/engine-oniguruma/src/oniguruma)
+
+```
+Copyright (c) Microsoft Corporation
+Copyright (c) Microsoft Corporation.
+```
+
+## React Native Shiki engine
+
+**Package:** `react-native-shiki-engine`
+**License:** MIT - full text at [`licenses/MIT-SHIKI.txt`](./licenses/MIT-SHIKI.txt)
+**Project:** [React Native Shiki engine](https://github.com/skiniks/react-native-shiki-engine)
+
+```
+Copyright (c) 2024-present Ryan Skinner
+```
+
+## Oniguruma regular expression engine
+
+**Components:** Native Oniguruma libraries bundled by `react-native-shiki-engine` and WebAssembly used by `@shikijs/engine-oniguruma`
+**License:** BSD 2-Clause - full text at [`licenses/ONIGURUMA.txt`](./licenses/ONIGURUMA.txt)
+**Project:** [Oniguruma](https://github.com/kkos/oniguruma)
+
+```
+Copyright (c) 2002-2021  K.Kosako  <kkosako0@gmail.com>
+All rights reserved.
+```
+
+## Markdown parser and highlighting utilities
+
+**Packages:** `ccount`, `character-entities`, `character-entities-html4`, `character-entities-legacy`, `comma-separated-tokens`, `decode-named-character-reference`, `devlop`, `hast-util-to-html`, `hast-util-whitespace`, `html-void-elements`, `mdast-util-from-markdown`, `mdast-util-to-hast`, `mdast-util-to-string`, `micromark`, `micromark-core-commonmark`, `micromark-factory-destination`, `micromark-factory-label`, `micromark-factory-space`, `micromark-factory-title`, `micromark-factory-whitespace`, `micromark-util-character`, `micromark-util-chunked`, `micromark-util-classify-character`, `micromark-util-combine-extensions`, `micromark-util-decode-numeric-character-reference`, `micromark-util-decode-string`, `micromark-util-edit-map`, `micromark-util-encode`, `micromark-util-html-tag-name`, `micromark-util-normalize-identifier`, `micromark-util-resolve-all`, `micromark-util-sanitize-uri`, `micromark-util-subtokenize`, `micromark-util-symbol`, `micromark-util-types`, `property-information`, `space-separated-tokens`, `stringify-entities`, `trim-lines`, `unist-util-is`, `unist-util-position`, `unist-util-stringify-position`, `unist-util-visit`, `unist-util-visit-parents`, `vfile`, `vfile-message`, `zwitch`
+**License:** MIT - full texts at [`licenses/MIT-MARKDOWN.txt`](./licenses/MIT-MARKDOWN.txt)
+**Projects:** [mdast](https://github.com/syntax-tree), [micromark](https://github.com/micromark/micromark), [wooorm utilities](https://github.com/wooorm), and [vfile](https://github.com/vfile)
+
+```
+Copyright (c) 2015 Titus Wormer <tituswormer@gmail.com>
+Copyright (c) 2016 Titus Wormer <tituswormer@gmail.com>
+Copyright (c) Titus Wormer <tituswormer@gmail.com>
+Copyright (c) 2023 Titus Wormer <tituswormer@gmail.com>
+Copyright (c) Titus Wormer <mailto:tituswormer@gmail.com>
+Copyright (c) 2015 Titus Wormer <mailto:tituswormer@gmail.com>
+```
+
+*The full license file groups packages carrying identical notices and preserves each distinct notice verbatim.*
+
 ---
 
 For the licensing position of assets that are **not** covered by our MIT license — commissioned artwork, the licensed icon system, Bluesky trademarks, third-party marks, and the product imagery in `assets/images/` — see [`ASSETS.md`](./ASSETS.md), which names known rights holders and identifies the product imagery whose provenance is still being documented.

@@ -48,13 +48,13 @@ import * as ReportDialogMetadataContext from '#/components/moderation/ReportDial
 import {type AppModerationCause} from '#/components/Pills'
 import {Embed, PostEmbedViewContext} from '#/components/Post/Embed'
 import {KnownLikers} from '#/components/Post/KnownLikers'
+import {PostBody} from '#/components/Post/PostBody'
 import {TranslatedPost} from '#/components/Post/Translated'
 import {PostControls, PostControlsSkeleton} from '#/components/PostControls'
 import {useFormatPostStatCount} from '#/components/PostControls/util'
 import {ProfileBadges} from '#/components/ProfileBadges'
 import {ProfileHoverCard} from '#/components/ProfileHoverCard'
 import * as Prompt from '#/components/Prompt'
-import {RichText} from '#/components/RichText'
 import * as Skele from '#/components/Skeleton'
 import {Text} from '#/components/Typography'
 import {WhoCanReply} from '#/components/WhoCanReply'
@@ -402,7 +402,7 @@ const ThreadItemAnchorInner = memo(function ThreadItemAnchorInner({
                 additionalCauses={additionalPostAlerts}
               />
               {richText?.text ? (
-                <RichText
+                <PostBody
                   enableTags
                   selectable
                   value={richText}

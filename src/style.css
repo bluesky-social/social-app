@@ -365,3 +365,33 @@ input[type='range'][orient='vertical']::-moz-range-thumb {
     opacity: 0;
   }
 }
+
+/* #/components/CodeBlock.tsx */
+[data-code-copy]:focus-visible {
+  outline: 2px solid var(--text);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  [data-code-block] [data-code-copy],
+  [data-code-inline] [data-code-copy] {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  [data-code-block]:hover [data-code-copy],
+  [data-code-block]:focus-within [data-code-copy],
+  [data-code-inline]:hover [data-code-copy],
+  [data-code-inline]:focus-within [data-code-copy] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+@media (any-pointer: coarse) {
+  [data-code-block] [data-code-copy],
+  [data-code-inline] [data-code-copy] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}

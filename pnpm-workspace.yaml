@@ -46,6 +46,7 @@ patchedDependencies:
   'react-native-pager-view@6.8.0': patches/react-native-pager-view@6.8.0.patch
   react-native-reanimated@4.7.1: patches/react-native-reanimated@4.7.1.patch
   'react-native-screens@4.26.2': patches/react-native-screens@4.26.2.patch
+  react-native-shiki-engine@0.3.12: patches/react-native-shiki-engine@0.3.12.patch
   'react-native-svg@15.15.4': patches/react-native-svg@15.15.4.patch
   'react-native@0.86.3': patches/react-native@0.86.3.patch
 minimumReleaseAgeExclude:
