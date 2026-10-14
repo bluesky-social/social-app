@@ -51,7 +51,11 @@ export function AccountSubjectPreview({did}: {did: string}) {
       loading={query.isPending || (!!profile && !moderation)}
       moderation={moderation?.ui('contentView')}
       metadataText={metadataText}
-      to={{screen: 'Profile', params: {name: did}}}
+      to={
+        profile && moderation
+          ? {screen: 'Profile', params: {name: did}}
+          : undefined
+      }
       openLabel={l`Open account`}>
       {content}
     </PreviewContent>
