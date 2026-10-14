@@ -8,6 +8,7 @@ import {
 
 import {type GroupedNotificationsFeed} from '#/state/queries/notifications/grouped/types'
 import {atoms as a, useBreakpoints, useTheme} from '#/alf'
+import {PostControlsSkeleton} from '#/components/PostControls'
 import * as Skele from '#/components/Skeleton'
 import * as Item from './Item'
 
@@ -226,7 +227,7 @@ function PostSkeleton({index, isReply}: {index: number; isReply: boolean}) {
           />
           <TimestampSkeleton />
         </View>
-        <PostActionsSkeleton />
+        <PostControlsSkeleton />
       </Item.Content>
     </Row>
   )
@@ -376,19 +377,4 @@ function ThumbnailSkeleton() {
  */
 function FollowButtonSkeleton() {
   return <Skele.Pill blend size={24} style={{width: 80}} />
-}
-
-/**
- * Stands in for `Item.PostActions`: the like and reply pills, and the menu.
- */
-function PostActionsSkeleton() {
-  return (
-    <View style={[a.flex_row, a.justify_between, a.align_center]}>
-      <View style={[a.flex_row, a.gap_xs]}>
-        <Skele.Pill blend size={24} style={{width: 56}} />
-        <Skele.Pill blend size={24} style={{width: 64}} />
-      </View>
-      <Skele.Circle blend size={18} />
-    </View>
-  )
 }
