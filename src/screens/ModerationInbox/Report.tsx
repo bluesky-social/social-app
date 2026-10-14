@@ -10,6 +10,7 @@ import {
   type NativeStackScreenProps,
 } from '#/lib/routes/types'
 import {cleanError} from '#/lib/strings/errors'
+import {matchXrpcError} from '#/lib/xrpc-error'
 import {useModerationOpts} from '#/state/preferences/moderation-opts'
 import {useLabelerInfoQuery} from '#/state/queries/labeler'
 import {useModerationInboxReportQuery} from '#/state/queries/moderation-inbox'
@@ -64,7 +65,13 @@ export function ModerationInboxReportDetailsScreen({
         : moderationService
   const isLoading = !reportQuery.isError && !reportQuery.data
 
-  if (!isEnabled || !moderationService || id === undefined) {
+  if (
+    !isEnabled ||
+    !moderationService ||
+    id === undefined ||
+    matchXrpcError(reportQuery.error, tools.ozone.inbox.getReport) ===
+      'NotFound'
+  ) {
     return <NotFoundScreen />
   }
 
