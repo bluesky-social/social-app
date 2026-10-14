@@ -46,15 +46,7 @@ import type * as bsky from '#/types/bsky'
 
 type Row =
   | {type: 'section'; key: string; section: 'today' | 'earlier'}
-  | {
-      type: 'notification'
-      key: string
-      notification: NotificationView
-      /**
-       * Whether a divider separates it from the notification above.
-       */
-      hasDivider: boolean
-    }
+  | {type: 'notification'; key: string; notification: NotificationView}
   | {type: 'followersHeader'; key: string}
   | {
       type: 'follower'
@@ -124,7 +116,6 @@ export function PageList({
    */
   onEmptyChange?: (isEmpty: boolean) => void
 }) {
-  const t = useTheme()
   const {t: l} = useLingui()
   const initialNumToRender = useInitialNumToRender()
   const trackPostView = usePostViewTracking('Notifications')
@@ -256,17 +247,7 @@ export function PageList({
               case 'section':
                 return <SectionHeader section={row.section} />
               case 'notification':
-                return (
-                  <View
-                    style={[
-                      row.hasDivider && [
-                        a.border_t,
-                        t.atoms.border_contrast_low,
-                      ],
-                    ]}>
-                    <NotificationItem notification={row.notification} />
-                  </View>
-                )
+                return <NotificationItem notification={row.notification} />
               case 'followersHeader':
                 return <FollowedYouHeader />
               case 'follower':
@@ -407,13 +388,7 @@ export function buildRows(
       rows.push({type: 'section', key: 'section-earlier', section: 'earlier'})
       addedEarlier = true
     }
-    rows.push({
-      type: 'notification',
-      key: notification.id,
-      notification,
-      // Not under a section header, which sets itself apart
-      hasDivider: rows.at(-1)?.type === 'notification',
-    })
+    rows.push({type: 'notification', key: notification.id, notification})
   }
   return rows
 }
@@ -442,13 +417,7 @@ function buildFollowerRows(notifications: NotificationView[]): Row[] {
         })
       }
     } else {
-      rows.push({
-        type: 'notification',
-        key: notification.id,
-        notification,
-        // People are listed without dividers, so only between notifications
-        hasDivider: rows.at(-1)?.type === 'notification',
-      })
+      rows.push({type: 'notification', key: notification.id, notification})
     }
   }
   return rows

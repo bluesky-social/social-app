@@ -55,26 +55,25 @@ describe('buildRows', () => {
     return {id, type: 'like', indexedAt} as unknown as NotificationView
   }
 
-  function dividers(notifications: NotificationView[]) {
+  function layout(notifications: NotificationView[]) {
     return buildRows(notifications, 'all').map(row =>
-      row.type === 'notification' ? row.hasDivider : row.type,
+      row.type === 'section' ? row.section : row.key,
     )
   }
 
-  it('divides notifications from the one above, but not from a header', () => {
+  it('splits notifications into today and earlier', () => {
     expect(
-      dividers([
+      layout([
         notification('a', today),
         notification('b', today),
         notification('c', lastYear),
-        notification('d', lastYear),
       ]),
-    ).toEqual(['section', false, true, 'section', false, true])
+    ).toEqual(['today', 'a', 'b', 'earlier', 'c'])
   })
 
-  it('divides every notification but the first without headers', () => {
+  it('leaves the headers out when nothing happened today', () => {
     expect(
-      dividers([notification('a', lastYear), notification('b', lastYear)]),
-    ).toEqual([false, true])
+      layout([notification('a', lastYear), notification('b', lastYear)]),
+    ).toEqual(['a', 'b'])
   })
 })

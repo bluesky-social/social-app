@@ -66,8 +66,6 @@ const FOLLOWER_ROW_COUNT = 20
  * when they replace them.
  */
 export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
-  const t = useTheme()
-
   if (feed === 'followers') {
     return <FollowersSkeleton />
   }
@@ -83,14 +81,7 @@ export function LoadingSkeleton({feed}: {feed: GroupedNotificationsFeed}) {
     const kind = kinds[i % kinds.length]
     const index = counts.get(kind) ?? 0
     counts.set(kind, index + 1)
-    rows.push(
-      // Divided like the rows they stand in for
-      <View
-        key={i}
-        style={[i > 0 && [a.border_t, t.atoms.border_contrast_low]]}>
-        <RowSkeleton kind={kind} index={index} />
-      </View>,
-    )
+    rows.push(<RowSkeleton key={i} kind={kind} index={index} />)
   }
 
   return (
@@ -283,7 +274,7 @@ function FollowerSkeleton({
         <Item.AvatarSkeleton />
       ) : (
         // The same size as `Item.Avatar`, without its slot
-        <Skele.Circle size={40} />
+        <Skele.Circle size={Item.AVATAR_SIZE} />
       )}
       <Item.Content style={[a.gap_0]}>
         <Lines style={a.text_md} widths={[even ? '40%' : '55%']} />
