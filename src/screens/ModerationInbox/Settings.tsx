@@ -13,6 +13,7 @@ import * as Toggle from '#/components/forms/Toggle'
 import * as Layout from '#/components/Layout'
 import {Text} from '#/components/Typography'
 import {useAnalytics} from '#/analytics'
+import {type tools} from '#/lexicons'
 
 export function ModerationInboxSettingsScreen() {
   const {t: l} = useLingui()
@@ -26,10 +27,16 @@ export function ModerationInboxSettingsScreen() {
   const preferences = preferencesQuery.data?.preferences
   const isDisabled =
     !preferences || preferencesQuery.isError || updatePreferences.isPending
+  const displayedPreferences = updatePreferences.isPending
+    ? {...preferences, ...updatePreferences.variables}
+    : preferences
 
-  const onChangePush = (push: boolean) => {
+  const onChangePreference = (
+    key: keyof tools.ozone.inbox.putNotificationPreferences.$InputBody,
+    value: boolean,
+  ) => {
     if (isDisabled) return
-    updatePreferences.mutate({push})
+    updatePreferences.mutate({[key]: value})
   }
 
   if (!isEnabled) {
@@ -42,9 +49,7 @@ export function ModerationInboxSettingsScreen() {
         <Layout.Header.BackButton />
         <Layout.Header.Content align="left">
           <Layout.Header.TitleText>
-            <Trans comment="Moderation inbox settings">
-              Mod inbox settings
-            </Trans>
+            <Trans>Moderation inbox settings</Trans>
           </Layout.Header.TitleText>
         </Layout.Header.Content>
         <Layout.Header.Slot />
@@ -58,15 +63,47 @@ export function ModerationInboxSettingsScreen() {
             />
           ) : null}
           <NotificationToggle
-            name="push-notifications"
-            label={l`Push notifications`}
+            name="reports-notifications"
+            label={l({
+              context: 'moderation-inbox-setting',
+              message: 'Your reports notifications',
+            })}
+            description={l({
+              context: 'moderation-inbox-setting',
+              message: 'Get notified about your report outcomes.',
+            })}
             disabled={isDisabled}
-            value={
-              updatePreferences.isPending
-                ? updatePreferences.variables.push
-                : (preferences?.push ?? false)
-            }
-            onChange={onChangePush}
+            value={displayedPreferences?.reports ?? false}
+            onChange={value => onChangePreference('reports', value)}
+          />
+          <NotificationToggle
+            name="account-notifications"
+            label={l({
+              context: 'moderation-inbox-setting',
+              message: 'Your account notifications',
+            })}
+            description={l({
+              context: 'moderation-inbox-setting',
+              message: 'Get notified about actions taken against you.',
+            })}
+            disabled={isDisabled}
+            value={displayedPreferences?.account ?? false}
+            onChange={value => onChangePreference('account', value)}
+          />
+          <NotificationToggle
+            name="labels-notifications"
+            label={l({
+              context: 'moderation-inbox-setting',
+              message: 'Account labeling notifications',
+            })}
+            description={l({
+              context: 'moderation-inbox-setting',
+              message:
+                'Get notified when a label is added to your account and posts.',
+            })}
+            disabled={isDisabled}
+            value={displayedPreferences?.labels ?? false}
+            onChange={value => onChangePreference('labels', value)}
           />
         </SettingsList.Container>
       </Layout.Content>
@@ -90,13 +127,14 @@ function NotificationToggle({
   onChange: (value: boolean) => void
 }) {
   const t = useTheme()
+  const {t: l} = useLingui()
 
   return (
     <Toggle.Item
       testID={name}
       type="checkbox"
       name={name}
-      label={label}
+      label={description ? l`${label}. ${description}` : label}
       value={value}
       disabled={disabled}
       onChange={onChange}>
