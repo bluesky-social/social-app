@@ -53,10 +53,11 @@ export function useHomePress({
   onFetch?: () => void
 }) {
   return useNonReactiveCallback((): boolean => {
+    const atTop = () => isAtTop(offsetY.get())
     if (!enabled) {
       return false
     }
-    if (!isAtTop(offsetY.get())) {
+    if (!atTop()) {
       revealTop.reveal()
       return true
     }
@@ -79,11 +80,12 @@ export function useHomePress({
     }
     void prepending.then(
       page => {
-        if (!isAtTop(offsetY.get())) {
+        if (!atTop()) {
           return
         }
         if (page) {
-          revealTop.onceRendered(page.fetchedAt)
+          // The jump waits for the page to render, so checks the top again.
+          revealTop.onceRendered(page.fetchedAt, atTop)
         } else {
           onHasNew?.(false)
         }

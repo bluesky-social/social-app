@@ -46,18 +46,24 @@ export function useRevealTop({
   /** The top page as of the last render that committed. */
   const rendered = useRef(topFetchedAt)
   /** The top page to jump to once it renders. */
-  const pending = useRef<number>(undefined)
+  const pending = useRef<{fetchedAt: number; shouldJump?: () => boolean}>(
+    undefined,
+  )
 
-  const jump = useNonReactiveCallback(() => {
+  const jump = useNonReactiveCallback((shouldJump?: () => boolean) => {
+    if (shouldJump && !shouldJump()) {
+      return
+    }
     scrollToTop(false)
     onJump?.()
   })
 
   useEffect(() => {
     rendered.current = topFetchedAt
-    if (topFetchedAt !== undefined && topFetchedAt === pending.current) {
+    const waiting = pending.current
+    if (topFetchedAt !== undefined && topFetchedAt === waiting?.fetchedAt) {
       pending.current = undefined
-      jump()
+      jump(waiting.shouldJump)
     }
   }, [topFetchedAt, jump])
 
@@ -69,12 +75,14 @@ export function useRevealTop({
         scrollToTop(true)
       }
     }),
-    onceRendered: useNonReactiveCallback((fetchedAt: number) => {
-      if (rendered.current === fetchedAt) {
-        jump()
-      } else {
-        pending.current = fetchedAt
-      }
-    }),
+    onceRendered: useNonReactiveCallback(
+      (fetchedAt: number, shouldJump?: () => boolean) => {
+        if (rendered.current === fetchedAt) {
+          jump(shouldJump)
+        } else {
+          pending.current = {fetchedAt, shouldJump}
+        }
+      },
+    ),
   }
 }

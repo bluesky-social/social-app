@@ -218,6 +218,18 @@ describe('useHomePress', () => {
       expect(home.onHasNew).not.toHaveBeenCalled()
     })
 
+    it("doesn't jump a reader who left the top before the new posts rendered", async () => {
+      const home = renderHome({offset: 0})
+      home.press()
+      home.scrollToTop.mockClear()
+      await home.prependWrote(page(PREPENDED_AT))
+      home.scrollTo(SCROLLED_DOWN)
+      home.renderTop(PREPENDED_AT)
+
+      expect(home.scrollToTop).not.toHaveBeenCalled()
+      expect(home.onHasNew).not.toHaveBeenCalled()
+    })
+
     it('joins a prepend in progress, leaving what is staged to it', () => {
       const home = renderHome({offset: 0})
       home.prepend.isOwed.mockReturnValue(true)
