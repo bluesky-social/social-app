@@ -239,7 +239,8 @@ function ReplyContextPost({
         'Shown in place of the text of a post that has no text, only images, video, a link or a quoted post',
     })
   }
-  const previewStyle = [a.text_md, a.leading_snug, t.atoms.text_contrast_medium]
+  // Nested text keeps its own size, so each part matches `ContextLine`'s
+  const previewStyle = [a.text_sm, a.leading_snug, t.atoms.text_contrast_medium]
   const previewNode =
     record && preview && !isHidden ? (
       <RichText
@@ -264,7 +265,7 @@ function ReplyContextPost({
       <Trans>replied to: {previewNode}</Trans>
     ) : (
       <Trans>
-        replied to <Strong>{name}</Strong>: {previewNode}
+        replied to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
       </Trans>
     )
   }
@@ -273,7 +274,7 @@ function ReplyContextPost({
     <Trans>in reply to: {previewNode}</Trans>
   ) : (
     <Trans>
-      in reply to <Strong>{name}</Strong>: {previewNode}
+      in reply to <Strong style={a.text_sm}>{name}</Strong>: {previewNode}
     </Trans>
   )
 }

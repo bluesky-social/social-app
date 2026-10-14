@@ -64,10 +64,17 @@ export function SecondaryText({
 
 /**
  * Emphasised inline text within `Item.PrimaryText`, e.g. "**3 others**".
+ * Pass `style` to match smaller text around it, e.g. its size.
  */
-export function Strong({children}: {children: React.ReactNode}) {
+export function Strong({
+  children,
+  style,
+}: {
+  children: React.ReactNode
+  style?: StyleProp<TextStyle>
+}) {
   return (
-    <Text emoji style={[a.text_md, a.leading_snug, a.font_semi_bold]}>
+    <Text emoji style={[a.text_md, a.leading_snug, a.font_semi_bold, style]}>
       {children}
     </Text>
   )
