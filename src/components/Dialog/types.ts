@@ -73,6 +73,11 @@ export type DialogOuterProps = {
 type DialogInnerPropsBase<T> = React.PropsWithChildren<ViewStyleProp> &
   T & {
     testID?: string
+    /**
+     * Native only. Lets content like drag-to-reorder lists pause scrolling
+     * while a gesture is active.
+     */
+    scrollEnabled?: ScrollViewProps['scrollEnabled']
   }
 export type DialogInnerProps =
   | DialogInnerPropsBase<{

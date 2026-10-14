@@ -22,6 +22,7 @@ export function useSubmitReportMutation() {
       subject,
       state,
       videoTimestampSeconds,
+      profileLinkUrl,
     }: {
       subject: ParsedReportSubject
       state: ReportState
@@ -30,6 +31,10 @@ export function useSubmitReportMutation() {
        * post with a video.
        */
       videoTimestampSeconds?: number
+      /**
+       * The profile link the report started from, if any.
+       */
+      profileLinkUrl?: string
     }) {
       if (!state.selectedOption) {
         throw new Error(_(msg`Please select a reason for this report`))
@@ -117,15 +122,25 @@ export function useSubmitReportMutation() {
         }
       }
 
+      const isBskyModService = labeler.creator.did === api.moderation.did
       const modToolMeta =
         state.includeVideoTimestamp &&
         videoTimestampSeconds != null &&
         subject.type === 'post' &&
-        labeler.creator.did === api.moderation.did
+        isBskyModService
           ? {videoTimestampSeconds}
           : undefined
 
-      if (modToolMeta) {
+      if (profileLinkUrl && subject.type === 'account' && isBskyModService) {
+        /*
+         * Ozone can filter reports by tool name but not by metadata, so link
+         * reports get their own name to make them countable.
+         */
+        report.modTool = {
+          name: `${REPORT_MOD_TOOL_NAME}/profile-link`,
+          meta: {profileLinkUrl},
+        }
+      } else if (modToolMeta) {
         report.modTool = {
           name: REPORT_MOD_TOOL_NAME,
           meta: modToolMeta,
