@@ -1,0 +1,55 @@
+# @react-native/virtualized-lists patch
+
+## VirtualizedList.js - a prepend that renders together with a cells update is ignored
+
+Applies to every list with `maintainVisibleContentPosition` (mVCP). A list without it behaves
+exactly as stock.
+
+Linear: APP-3152.
+
+### Symptom
+
+A prepend to an mVCP list sometimes loses the reader's place. On iOS the list teleports into
+the new rows, and on Android they push the content down. It happens when the prepend lands
+in the same render as one of VirtualizedList's own cells updates. That's most likely when the
+data is updated from a scroll event while the list is moving: in the repro, 2-3 of 40
+prepends issued from `onScroll` during a scroll were missed.
+
+### Cause
+
+`getDerivedStateFromProps` decides whether `data` changed by comparing the new item count
+with `prevState.renderMask.numCells()`, and returns early when they match. But React runs
+queued `setState` updaters before `getDerivedStateFromProps`, and `_updateCellsToRender`
+rebuilds `renderMask` from the new props. When it runs in the same render as the data change,
+the mask already has the new count. The early return then skips everything the prepend needs:
+
+- the render window isn't shifted;
+- `pendingScrollUpdateCount` isn't set;
+- `firstVisibleItemKey` stays stale.
+
+If the prepend is bigger than what the window holds below the anchor, the anchor is unmounted
+in the same commit, and native mVCP has nothing to correct against.
+
+### Fix
+
+Read the key at `minIndexForVisible` before the early return. On mVCP lists, return early only
+when both the count and the key are unchanged. This is the change in the upstream PR below,
+applied to 0.86.3.
+
+### Scope
+
+Global for mVCP lists: Following v2's Home Following, `MessagesList` (loading older messages)
+and `PostThread` (parents loading above). For those lists, an equal-count change to the first
+item now runs the existing derived-state pass instead of being skipped. That pass finds no
+anchor to adjust for, and refreshes the stale `firstVisibleItemKey`.
+
+### Upstream and removal
+
+- Issue: https://github.com/react/react-native/issues/58909
+- PR: https://github.com/react/react-native/pull/58911, with a regression test
+- Standalone repro (RN 0.87.1, iOS and Android, with a stock/fixed switch and demo videos):
+  https://github.com/mozzius/virtualizedlist-batched-prepend-repro
+
+**TODO: Remove once #58911 ships in a React Native release we're on.** The patch is pinned to
+0.86.3, so a React Native bump makes pnpm stop on the unused patch. Drop it then if the new
+version has the fix, otherwise re-apply it.
