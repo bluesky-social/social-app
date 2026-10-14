@@ -1,5 +1,5 @@
 import {jsonToLex, type JsonValue, lexToJson, utf8Len} from '@atproto/lex'
-import {hashKey} from '@tanstack/react-query'
+import {hashKey, type QueryClient} from '@tanstack/react-query'
 import {type PersistedClient} from '@tanstack/react-query-persist-client'
 
 import {IS_NATIVE} from '#/env'
@@ -74,46 +74,50 @@ export function saveFollowingSnapshot(client: PersistedClient) {
  * A query saved while invalidated is left out too, as it would be refetched,
  * and so replaced, as soon as it's shown.
  *
- * What it found is kept for the Following view to report (see
- * {@link takeFollowingSnapshotLoad}). `buster` and `maxAge` are the
- * persister's. They only let that report tell when TanStack drops the whole
- * client after this, and never change what's read back.
+ * Records what it found for {@link takeFollowingSnapshotLoad}. `buster` and
+ * `maxAge` mirror the persister's options; they only label the report
+ * (`expired`, `appVersion`) and never change what's returned.
  */
 export function loadFollowingSnapshot(
   client: PersistedClient,
   {
     restore = FOLLOWING_SNAPSHOT_RESTORE_ENABLED,
+    queryClient,
     buster,
     maxAge,
-  }: {restore?: boolean; buster?: string; maxAge?: number} = {},
+  }: {
+    restore?: boolean
+    /** The client it's read into, which what it found is recorded for. */
+    queryClient?: QueryClient
+    buster?: string
+    maxAge?: number
+  } = {},
 ) {
   let load: FollowingSnapshotLoad = {snapshot: 'missing'}
   const loaded = replaceFollowingData(client, state => {
     const {rejection, bytes} = inspectFollowingSnapshot(state?.data)
-    let rejectionReason: FollowingSnapshotRejection | undefined = rejection
-    if (!restore) {
-      rejectionReason = 'disabled'
-    } else if (state?.isInvalidated) {
-      rejectionReason = 'invalidated'
-    }
-    let data: PostFeedData | undefined
-    if (!rejectionReason) {
-      try {
-        data = toFollowingData(state?.data as FollowingSnapshot)
-      } catch {
-        rejectionReason = 'unreadable'
-      }
-    }
-    rejectionReason =
-      droppedClientReason(client, {buster, maxAge}) ?? rejectionReason
+    const unrestored = !restore
+      ? 'disabled'
+      : state?.isInvalidated
+        ? 'invalidated'
+        : rejection
+    const rejectionReason =
+      droppedClientReason(client, {buster, maxAge}) ?? unrestored
     load = {
       snapshot: rejectionReason ? 'rejected' : 'valid',
-      ...(rejectionReason && {rejectionReason}),
+      rejectionReason,
       ...snapshotFacts(state?.data, bytes),
     }
+    if (unrestored) {
+      return undefined
+    }
+    const data = toFollowingData(state?.data as FollowingSnapshot)
+    load.topFetchedAt = data.pages[0]?.fetchedAt
     return data
   })
-  lastLoad = load
+  if (queryClient) {
+    loads.set(queryClient, load)
+  }
   return loaded
 }
 
@@ -125,53 +129,42 @@ export function loadFollowingSnapshot(
  *   `buster`), so not even a valid snapshot is restored.
  * - `disabled`: restoring is off.
  * - `invalidated`: its query was invalidated when it was saved.
- * - `unreadable`: it passed the checks but couldn't be read back.
  * - Any other: the rule it breaks (see {@link inspectFollowingSnapshot}).
  */
 export type FollowingSnapshotRejection =
-  | 'expired'
-  | 'appVersion'
-  | 'disabled'
-  | 'invalidated'
-  | 'unreadable'
-  | FollowingSnapshotRule
+  'expired' | 'appVersion' | 'disabled' | 'invalidated' | FollowingSnapshotRule
 
 /**
- * What a read of the persisted client found of the Following snapshot, for
- * the `followingV2:restore` metric. No feed content or cursors.
+ * What `loadFollowingSnapshot` found, for `followingV2:restore`, whose fields
+ * these are, and the `fetchedAt` of the top page it restored, if it did.
  */
 export type FollowingSnapshotLoad = {
-  /** Whether there was one, and whether it's restored. */
   snapshot: 'valid' | 'missing' | 'rejected'
   rejectionReason?: FollowingSnapshotRejection
-  /** How long before it was read back its top page was fetched. */
   ageMs?: number
-  /** Its size serialized, if the checks got that far. */
   bytes?: number
   pageCount?: number
+  /** Tells whether Following showed the restored page. Not reported. */
+  topFetchedAt?: number
 }
 
-/**
- * The last read of a persisted client, until a Following view takes it. Not
- * feed state: only what the read found, for one report per read.
- */
-let lastLoad: FollowingSnapshotLoad | undefined
+/** What each client's read found, until a Following view takes it. */
+const loads = new WeakMap<QueryClient, FollowingSnapshotLoad>()
 
 /**
- * What the last read of the persisted client found of the Following snapshot,
- * once: `undefined` if it has been taken since, or there has been no read, as
- * when the account has nothing persisted yet.
+ * What the read of the persisted client into `queryClient` found of the
+ * Following snapshot, once: `undefined` if it has been taken since, or there
+ * was no read, as when the account has nothing persisted yet.
  */
-export function takeFollowingSnapshotLoad() {
-  const load = lastLoad
-  lastLoad = undefined
+export function takeFollowingSnapshotLoad(queryClient: QueryClient) {
+  const load = loads.get(queryClient)
+  loads.delete(queryClient)
   return load
 }
 
 /**
- * Why TanStack drops the whole persisted `client` once it's read back, if it
- * does, as `persistQueryClientRestore` decides it: it was saved longer than
- * `maxAge` ago, or with another `buster`. Without them, it can't tell.
+ * Mirrors `persistQueryClientRestore`'s discard rules: `expired` past
+ * `maxAge`, `appVersion` on a `buster` mismatch. Unknown without them.
  */
 function droppedClientReason(
   client: PersistedClient,
@@ -345,24 +338,14 @@ function toFollowingData(snapshot: FollowingSnapshot): PostFeedData {
   }
 }
 
-/**
- * The rules for a snapshot, checked on saving and on loading: the current
- * version, one to {@link FOLLOWING_SNAPSHOT_MAX_PAGES} pages with a page param
- * each, the top one fetched from the top and every other continuing the
- * cursor of the page above, a `startCursor` on the top page (which is how we
- * know the server supports `since`), no Discover pages, and at most
- * {@link FOLLOWING_SNAPSHOT_MAX_BYTES} serialized.
- *
- * A page put above the others with `since` is fetched from the top too, and
- * the page below it continues from its cursor, so the same rules hold for it.
- */
+/** Whether `snapshot` keeps every rule (see {@link inspectFollowingSnapshot}). */
 function isValidFollowingSnapshot(
   snapshot: unknown,
 ): snapshot is FollowingSnapshot {
   return inspectFollowingSnapshot(snapshot).rejection === undefined
 }
 
-/** A rule of {@link isValidFollowingSnapshot} that a snapshot breaks. */
+/** A rule of {@link inspectFollowingSnapshot} that a snapshot breaks. */
 export type FollowingSnapshotRule =
   | 'version'
   | 'malformed'
@@ -373,8 +356,18 @@ export type FollowingSnapshotRule =
   | 'tooLarge'
 
 /**
- * The first rule of {@link isValidFollowingSnapshot} that `snapshot` breaks,
- * if any, and its size serialized, if the checks got as far as measuring it.
+ * The first rule that `snapshot` breaks, if any, and its size serialized, if
+ * the checks got as far as measuring it.
+ *
+ * The rules for a snapshot, checked on saving and on loading: the current
+ * version, one to {@link FOLLOWING_SNAPSHOT_MAX_PAGES} pages with a page param
+ * each, the top one fetched from the top and every other continuing the
+ * cursor of the page above, a `startCursor` on the top page (which is how we
+ * know the server supports `since`), no Discover pages, and at most
+ * {@link FOLLOWING_SNAPSHOT_MAX_BYTES} serialized.
+ *
+ * A page put above the others with `since` is fetched from the top too, and
+ * the page below it continues from its cursor, so the same rules hold for it.
  */
 export function inspectFollowingSnapshot(snapshot: unknown): {
   rejection?: FollowingSnapshotRule

@@ -201,6 +201,7 @@ function QueryProviderInner({
       serialize: client => JSON.stringify(saveFollowingSnapshot(client)),
       deserialize: cached =>
         loadFollowingSnapshot(JSON.parse(cached), {
+          queryClient,
           buster: env.APP_VERSION,
           maxAge: PERSISTED_CLIENT_MAX_AGE,
         }),
