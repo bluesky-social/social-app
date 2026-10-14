@@ -6,13 +6,11 @@ import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {makeCustomFeedLink} from '#/lib/routes/links'
 import {atoms as a, useTheme} from '#/alf'
 import {type Props as SVGIconProps} from '#/components/icons/common'
-import {LikeRepost_Stroke2_Corner2_Rounded as LikeRepostIcon} from '#/components/icons/LikeRepost'
 import {
   NotificationActivitySmall_Filled_Corner0_Rounded as ActivityIcon,
   NotificationLikeSmall_Filled_Corner0_Rounded as HeartIcon,
   NotificationRepostSmall_Filled_Corner0_Rounded as RepostIcon,
 } from '#/components/icons/Notification'
-import {RepostRepost_Stroke2_Corner2_Rounded as RepostRepostIcon} from '#/components/icons/Repost'
 import * as Item from '../Item'
 import {makeActivityListLink, makePostLink} from '../links'
 import {type NotificationOf} from '../types'
@@ -192,7 +190,7 @@ export function LikeViaRepostNotification({
   return (
     <PostReactionRow
       notification={notification}
-      icon={LikeRepostIcon}
+      icon={HeartIcon}
       tone="like"
       label={
         second
@@ -244,7 +242,7 @@ export function RepostViaRepostNotification({
   return (
     <PostReactionRow
       notification={notification}
-      icon={RepostRepostIcon}
+      icon={RepostIcon}
       tone="repost"
       label={
         second
@@ -427,7 +425,7 @@ export function MultiPostLikeViaRepostNotification({
   return (
     <MultiPostRow
       notification={notification}
-      icon={LikeRepostIcon}
+      icon={HeartIcon}
       tone="like"
       label={l`${name} liked ${count} of your ${plural(count, {
         one: 'repost',
@@ -460,7 +458,7 @@ export function MultiPostRepostViaRepostNotification({
   return (
     <MultiPostRow
       notification={notification}
-      icon={RepostRepostIcon}
+      icon={RepostIcon}
       tone="repost"
       label={l`${name} reposted ${count} of your ${plural(count, {
         one: 'repost',
