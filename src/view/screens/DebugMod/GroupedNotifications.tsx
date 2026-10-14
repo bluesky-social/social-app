@@ -1,5 +1,6 @@
 import {useState} from 'react'
 import {View} from 'react-native'
+import {type DidString} from '@atproto/syntax'
 import {type ModerationOpts} from '@bsky/sdk/moderation'
 
 import {moderateNotification} from '#/state/queries/notifications/grouped/moderate'
@@ -127,8 +128,9 @@ export function GroupedNotifications({
           target wrote the post. Embed labels go on the quoted post.
         </P>
         <P style={[a.text_sm, t.atoms.text_contrast_medium]}>
-          Groups add Carol and Dave, who are never moderated, so hiding the
-          target trims the group rather than dropping it.
+          Groups add Carol, and Dave in groups of three or more, who are never
+          moderated, so hiding the target trims the group rather than dropping
+          it.
         </P>
         {profile.did === currentAccount?.did && (
           <P style={[a.text_sm, t.atoms.text_contrast_medium]}>
@@ -260,11 +262,27 @@ function createMockNotifications({
     groupPosition === 'first'
       ? [target, carolActor, daveActor]
       : [carolActor, target, daveActor]
+  const pair: NonEmptyArray<ProfileView> =
+    groupPosition === 'first' ? [target, carolActor] : [carolActor, target]
   const base = (id: string, count = 1) => ({
     id,
     isRead: false,
     indexedAt,
     count,
+  })
+  /**
+   * The actors of a group, every one of them resolved unless `unresolved`
+   * adds more without a profile, as when the API only hydrates some.
+   */
+  const actorGroup = (actors: NonEmptyArray<ProfileView>, unresolved = 0) => ({
+    actors,
+    actorDids: [
+      ...actors.map(actor => actor.did),
+      ...Array.from(
+        {length: unresolved},
+        (_, i): DidString => `did:plc:unresolved${i + 1}`,
+      ),
+    ],
   })
   const postLabels = (on: LabelTarget, author: {did: string}, rkey: string) =>
     labelsFor(on, {
@@ -361,7 +379,17 @@ function createMockNotifications({
         ...base('like'),
         type: 'like',
         post: likedPost,
-        actors: [target],
+        ...actorGroup([target]),
+      },
+    },
+    {
+      title: 'Like',
+      subtitle: 'two people, named',
+      notification: {
+        ...base('like-pair', pair.length),
+        type: 'like',
+        post: likedPost,
+        ...actorGroup(pair),
       },
     },
     {
@@ -371,7 +399,17 @@ function createMockNotifications({
         ...base('like-group', group.length),
         type: 'like',
         post: likedPost,
-        actors: group,
+        ...actorGroup(group),
+      },
+    },
+    {
+      title: 'Like',
+      subtitle: 'large group, few profiles resolved',
+      notification: {
+        ...base('like-sparse', 20),
+        type: 'like',
+        post: likedPost,
+        ...actorGroup(group, 17),
       },
     },
     {
@@ -381,7 +419,7 @@ function createMockNotifications({
         ...base('repost'),
         type: 'repost',
         post: likedPost,
-        actors: [target],
+        ...actorGroup([target]),
       },
     },
     {
@@ -391,7 +429,7 @@ function createMockNotifications({
         ...base('repost-group', group.length),
         type: 'repost',
         post: likedPost,
-        actors: group,
+        ...actorGroup(group),
       },
     },
     {
@@ -402,7 +440,7 @@ function createMockNotifications({
         type: 'likeViaRepost',
         post: repostedPost,
         viaRepost,
-        actors: group,
+        ...actorGroup(group),
       },
     },
     {
@@ -413,7 +451,7 @@ function createMockNotifications({
         type: 'repostViaRepost',
         post: repostedPost,
         viaRepost,
-        actors: group,
+        ...actorGroup(group),
       },
     },
     {
@@ -463,7 +501,7 @@ function createMockNotifications({
         ...base('generator-like', group.length),
         type: 'generatorLike',
         generator,
-        actors: group,
+        ...actorGroup(group),
       },
     },
     {
@@ -532,18 +570,25 @@ function createMockNotifications({
       notification: {
         ...base('follow'),
         type: 'follow',
-        actors: [target],
-        actorDids: [target.did],
+        ...actorGroup([target]),
       },
     },
     {
       title: 'Follow',
-      subtitle: 'grouped, expandable',
+      subtitle: 'two people, named',
+      notification: {
+        ...base('follow-pair', pair.length),
+        type: 'follow',
+        ...actorGroup(pair),
+      },
+    },
+    {
+      title: 'Follow',
+      subtitle: 'multiple actors',
       notification: {
         ...base('follow-group', group.length),
         type: 'follow',
-        actors: group,
-        actorDids: group.map(actor => actor.did),
+        ...actorGroup(group),
       },
     },
     {

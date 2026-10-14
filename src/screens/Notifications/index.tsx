@@ -10,11 +10,7 @@ import Animated, {
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
 import {LinearGradient} from 'expo-linear-gradient'
 import {Trans, useLingui} from '@lingui/react/macro'
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native'
+import {useFocusEffect, useIsFocused} from '@react-navigation/native'
 import {useQueryClient} from '@tanstack/react-query'
 
 import {type AnyAppReturn, onAnyAppReturn} from '#/lib/appState'
@@ -43,7 +39,6 @@ import {
   type FeedLoad,
   getMarkReadAt,
   nextSeenAt,
-  type SeenAtMode,
 } from '#/screens/Notifications/unread'
 import {atoms as a, useBreakpoints, useTheme, utils} from '#/alf'
 import {ButtonIcon} from '#/components/Button'
@@ -53,7 +48,7 @@ import * as Layout from '#/components/Layout'
 import {Link} from '#/components/Link'
 import {Loader} from '#/components/Loader'
 import {useAnalytics} from '#/analytics'
-import {IS_LIQUID_GLASS, IS_WEB} from '#/env'
+import {IS_INTERNAL, IS_LIQUID_GLASS, IS_WEB} from '#/env'
 
 type Props = NativeStackScreenProps<
   NotificationsTabNavigatorParams,
@@ -62,9 +57,9 @@ type Props = NativeStackScreenProps<
 
 export function NotificationsScreen(props: Props) {
   const ax = useAnalytics()
-  const isNewNotificationsEnabled = ax.features.enabled(
-    ax.features.NotificationsV2Enable,
-  )
+  // Dev and TestFlight builds always get it, so it's dogfooded before rollout
+  const isNewNotificationsEnabled =
+    IS_INTERNAL || ax.features.enabled(ax.features.NotificationsV2Enable)
 
   if (isNewNotificationsEnabled) {
     return <NewNotificationsScreen {...props} />
@@ -110,13 +105,13 @@ function NewNotificationsScreenInner() {
    * refreshes the feed, unless the user is partway down it, in which case
    * only the unread check runs, so the list doesn't move under them.
    */
-  const checkLatest = (feed: GroupedNotificationsFeed, mode: SeenAtMode) => {
+  const checkLatest = (feed: GroupedNotificationsFeed) => {
     // Not loaded yet, so its first load is on the way
     if (!getGroupedNotificationsTop(queryClient, feed)) return
     if (scrolledDownFeeds.current.has(feed)) {
       void unreadApi.checkUnread()
     } else {
-      void refresh(feed, mode)
+      void refresh(feed)
     }
   }
   useReturnToScreen({
@@ -160,8 +155,12 @@ function NewNotificationsScreenInner() {
         // Web reports the page it starts on, too
         if (feed === activeFeed.current) return
         activeFeed.current = feed
-        // As in v1, switching to a tab checks it for anything new
-        checkLatest(feed, 'kept')
+        /*
+         * Switching tabs only checks for anything new, which the "Refresh"
+         * pill offers, so flicking between tabs neither reloads them nor
+         * clears what's tinted
+         */
+        void unreadApi.checkUnread()
       }}
       onTabPressed={showHeader}
       onPageScrollStateChanged={state => {
@@ -246,10 +245,10 @@ function NewNotificationsScreenInner() {
  * update it.
  *
  * Each feed's first load takes the snapshot from the server if there isn't
- * one yet. From then on, the feed's loads come from `refresh`, which updates
- * the snapshot according to its `SeenAtMode`. Only fresh loads count: a page
- * cached from before the screen mounted, or a refresh that failed, never
- * moves the snapshot or marks anything as seen.
+ * one yet. From then on, the feed's loads come from `refresh`, which takes
+ * the snapshot from the server, clearing what was tinted before. Only fresh
+ * loads count: a page cached from before the screen mounted, or a refresh
+ * that failed, never moves the snapshot or marks anything as seen.
  */
 function useSessionSeenAt() {
   const queryClient = useQueryClient()
@@ -267,8 +266,8 @@ function useSessionSeenAt() {
    */
   const latestRefreshes = useRef(new Map<GroupedNotificationsFeed, object>())
 
-  const applyLoad = (load: FeedLoad, mode: SeenAtMode | undefined) => {
-    setSeenAt(snapshot => nextSeenAt({load, mode, snapshot}))
+  const applyLoad = (load: FeedLoad, isRefresh: boolean) => {
+    setSeenAt(snapshot => nextSeenAt({load, isRefresh, snapshot}))
     const markReadAt = getMarkReadAt(load)
     if (markReadAt) {
       void unreadApi.markAllRead({seenAt: markReadAt})
@@ -281,15 +280,19 @@ function useSessionSeenAt() {
   ) => {
     if (handledFeeds.current.has(feed) || page.requestedAt < mountedAt) return
     handledFeeds.current.add(feed)
-    applyLoad({feed, ...page}, undefined)
+    applyLoad({feed, ...page}, false)
   }
 
   /**
-   * Refetches the first page of a feed, then updates the snapshot from it.
-   * Refreshing any other feed refreshes "All" behind it, so what's new is
-   * marked as seen.
+   * Refetches the first page of a feed, then takes the snapshot from it.
+   * Refreshing any other feed refreshes "All" behind it, which leaves the
+   * snapshot alone but marks what's new as seen, so a refresh on any tab
+   * clears the unread state.
    */
-  const refresh = async (feed: GroupedNotificationsFeed, mode?: SeenAtMode) => {
+  const refresh = async (
+    feed: GroupedNotificationsFeed,
+    {isBehind = false}: {isBehind?: boolean} = {},
+  ) => {
     handledFeeds.current.add(feed)
     const request = {}
     latestRefreshes.current.set(feed, request)
@@ -299,9 +302,9 @@ function useSessionSeenAt() {
     const page = getGroupedNotificationsTop(queryClient, feed)
     // A failed refetch leaves the old page in place
     if (!page || page.requestedAt < startedAt) return
-    applyLoad({feed, ...page}, mode)
+    applyLoad({feed, ...page}, !isBehind)
     if (feed !== 'all') {
-      void refresh('all')
+      void refresh('all', {isBehind: true})
     }
   }
 
@@ -316,10 +319,9 @@ function useSessionSeenAt() {
  * share sheet, only peeks with `peekLatest`, so the list stays as it is and
  * the "Refresh" pill offers anything new.
  *
- * - From a screen pushed within the Notifications tab (e.g. a post), the
- *   unread tint is kept as it was, and anything new is tinted too.
- * - After switching to another tab or leaving the app, the tint is taken
- *   from the server again, so only what arrived meanwhile is tinted.
+ * As in v1, coming back from a screen pushed within the Notifications tab
+ * (e.g. a post) refreshes too, unless the user is partway down the list. So
+ * what was tinted before is cleared, having been seen.
  */
 function useReturnToScreen({
   activeFeed,
@@ -327,32 +329,17 @@ function useReturnToScreen({
   peekLatest,
 }: {
   activeFeed: React.RefObject<GroupedNotificationsFeed>
-  checkLatest: (feed: GroupedNotificationsFeed, mode: SeenAtMode) => void
+  checkLatest: (feed: GroupedNotificationsFeed) => void
   /**
    * Asks the server for anything new without loading it, which offers the
    * "Refresh" pill if there is.
    */
   peekLatest: () => void
 }) {
-  const navigation = useNavigation()
   const isFocused = useIsFocused()
 
-  /*
-   * The tab navigator's own blur means the user switched tabs, rather than
-   * pushing a screen within this tab's stack. Web's flat navigator has no tab
-   * level, so there only leaving the app counts.
-   */
-  const hasLeft = useRef(false)
-  useEffect(() => {
-    return navigation.getParent()?.addListener('blur', () => {
-      hasLeft.current = true
-    })
-  }, [navigation])
-
   const onReturn = useEffectEvent(() => {
-    const mode = hasLeft.current ? 'server' : 'kept'
-    hasLeft.current = false
-    checkLatest(activeFeed.current, mode)
+    checkLatest(activeFeed.current)
   })
 
   // Mounting counts, as the cache can outlive the screen
@@ -365,7 +352,6 @@ function useReturnToScreen({
   }, [isFocused])
 
   const onLeftApp = useEffectEvent(() => {
-    hasLeft.current = true
     if (isFocused) {
       onReturn()
     }
@@ -484,7 +470,8 @@ function NotificationsHeader({
               variant="ghost"
               color="secondary"
               shape="round"
-              style={[a.justify_center]}>
+              // Ghost buttons fill with the screen colour, which shows on the see-through header
+              style={[a.justify_center, a.bg_transparent]}>
               <ButtonIcon
                 icon={
                   loadingLatestPages.has(selectedPage) ? Loader : SettingsIcon

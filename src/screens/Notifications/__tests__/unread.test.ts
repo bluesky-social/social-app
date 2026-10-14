@@ -23,18 +23,18 @@ function load(overrides: Partial<FeedLoad> = {}): FeedLoad {
 }
 
 describe('nextSeenAt', () => {
-  it('takes the server seenAt in server mode', () => {
+  it('takes the server seenAt on a refresh', () => {
     expect(
-      nextSeenAt({load: load(), mode: 'server', snapshot: SNAPSHOT}),
+      nextSeenAt({load: load(), isRefresh: true, snapshot: SNAPSHOT}),
     ).toEqual(new Date(SERVER_SEEN_AT))
   })
 
-  it('moves an existing snapshot to the server seenAt in server mode, so only what arrived since the last load is tinted', () => {
+  it('moves an existing snapshot to the server seenAt on a refresh, so only what arrived since the last load is tinted', () => {
     // The previous load marked everything up to SERVER_SEEN_AT as seen
     const olderSnapshot = new Date(Date.parse(SERVER_SEEN_AT) - 60_000)
     const next = nextSeenAt({
       load: load(),
-      mode: 'server',
+      isRefresh: true,
       snapshot: olderSnapshot,
     })
     expect(next).toEqual(new Date(SERVER_SEEN_AT))
@@ -42,27 +42,28 @@ describe('nextSeenAt', () => {
     expect(next!.getTime()).toBeLessThan(REQUESTED_AT)
   })
 
-  it('keeps the snapshot in kept mode, or without a mode', () => {
-    expect(nextSeenAt({load: load(), mode: 'kept', snapshot: SNAPSHOT})).toBe(
-      SNAPSHOT,
-    )
+  it("keeps the snapshot for a load that isn't a refresh, e.g. a tab's first", () => {
     expect(
-      nextSeenAt({load: load(), mode: undefined, snapshot: SNAPSHOT}),
+      nextSeenAt({load: load(), isRefresh: false, snapshot: SNAPSHOT}),
     ).toBe(SNAPSHOT)
   })
 
-  it('takes the server seenAt when there is no snapshot yet, whatever the mode', () => {
-    for (const mode of ['server', 'kept', undefined] as const) {
-      expect(nextSeenAt({load: load(), mode, snapshot: undefined})).toEqual(
-        new Date(SERVER_SEEN_AT),
-      )
+  it('takes the server seenAt when there is no snapshot yet, refresh or not', () => {
+    for (const isRefresh of [true, false]) {
+      expect(
+        nextSeenAt({load: load(), isRefresh, snapshot: undefined}),
+      ).toEqual(new Date(SERVER_SEEN_AT))
     }
   })
 
   it('treats a missing or invalid server seenAt as everything seen', () => {
     for (const seenAt of [undefined, '', 'not a date']) {
       expect(
-        nextSeenAt({load: load({seenAt}), mode: 'server', snapshot: undefined}),
+        nextSeenAt({
+          load: load({seenAt}),
+          isRefresh: true,
+          snapshot: undefined,
+        }),
       ).toEqual(new Date(REQUESTED_AT))
     }
   })

@@ -5,20 +5,6 @@ import {
 import {type UnreadCheck} from '#/state/queries/notifications/types'
 
 /**
- * How a load updates the screen's `seenAt` snapshot:
- *
- * - `server`: from the server's `seenAt` as of the request, which is when the
- *   previous load marked everything it showed as seen. So anything new since
- *   then is tinted, and anything older isn't. This is what pull-to-refresh
- *   does, as in v1.
- * - `kept`: unchanged, so rows that were already tinted stay tinted, and
- *   anything new is tinted alongside them.
- *
- * Until there's a snapshot, every load takes it from the server.
- */
-export type SeenAtMode = 'server' | 'kept'
-
-/**
  * A fresh load of the first page of a feed. Its `seenAt` is the server's, as
  * of the request.
  */
@@ -29,27 +15,26 @@ export type FeedLoad = Pick<
 
 /**
  * The screen's `seenAt` snapshot after a fresh load.
+ *
+ * A refresh takes it from the server's `seenAt` as of the request, which is
+ * when the previous load marked everything it showed as seen. So what was
+ * tinted before is cleared, and only what's new since is tinted, as every
+ * refresh does in v1. Any other load, e.g. a tab's first, leaves it as it is,
+ * so that tab tints the same as the others. Until there's a snapshot, every
+ * load takes it from the server.
  */
 export function nextSeenAt({
   load,
-  mode,
+  isRefresh,
   snapshot,
 }: {
   load: FeedLoad
-  /**
-   * How the load was asked to update the snapshot. Undefined leaves it as it
-   * is, like `kept`.
-   */
-  mode: SeenAtMode | undefined
+  isRefresh: boolean
   snapshot: Date | undefined
 }): Date | undefined {
-  switch (snapshot === undefined ? 'server' : mode) {
-    case 'server':
-      // Without a `seenAt`, everything counts as seen, as in v1
-      return new Date(parseTime(load.seenAt) ?? getShownUpTo(load))
-    default:
-      return snapshot
-  }
+  if (snapshot && !isRefresh) return snapshot
+  // Without a `seenAt`, everything counts as seen, as in v1
+  return new Date(parseTime(load.seenAt) ?? getShownUpTo(load))
 }
 
 /**

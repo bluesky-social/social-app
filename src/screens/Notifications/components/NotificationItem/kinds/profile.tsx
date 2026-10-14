@@ -1,5 +1,4 @@
-import {useState} from 'react'
-import {type GestureResponderEvent, Pressable, View} from 'react-native'
+import {View} from 'react-native'
 import {plural} from '@lingui/core/macro'
 import {Plural, Trans, useLingui} from '@lingui/react/macro'
 import {useNavigation} from '@react-navigation/native'
@@ -7,9 +6,6 @@ import {useQueryClient} from '@tanstack/react-query'
 
 import {makeProfileLink} from '#/lib/routes/links'
 import {type NavigationProp} from '#/lib/routes/types'
-import {isNetworkError} from '#/lib/strings/errors'
-import {logger} from '#/logger'
-import {useFollowActorsQuery} from '#/state/queries/notifications/grouped'
 import {unstableCacheProfileView} from '#/state/queries/unstable-profile-cache'
 import {useSession} from '#/state/session'
 import {atoms as a} from '#/alf'
@@ -18,8 +14,6 @@ import {
   NotificationStarterPackSmall_Filled_Corner0_Rounded as StarterPackIcon,
   NotificationVerifiedSmall_Filled_Corner0_Rounded as CheckIcon,
 } from '#/components/icons/Notification'
-import * as Toast from '#/components/Toast'
-import {useAnalytics} from '#/analytics'
 import type * as bsky from '#/types/bsky'
 import * as Item from '../Item'
 import {type NotificationOf} from '../types'
@@ -94,14 +88,13 @@ function SingleFollowNotification({
 }
 
 /**
- * Several follows. Pressing the header expands a list of the followers, each
+ * Several follows. Pressing the row expands a list of the followers, each
  * with their own follow button. The list starts with those the API resolved,
  * and "Show more" loads the rest, though the group may still hold fewer than
  * `count`.
  *
  * The row's own link goes to the viewer's followers list, since that shows
- * everyone. It's reached by presses beside the expanded list, and by a screen
- * reader action on the header.
+ * everyone. It's reached by a screen reader action on the row.
  */
 function GroupedFollowNotification({
   notification,
@@ -109,142 +102,64 @@ function GroupedFollowNotification({
   notification: NotificationOf<'follow'>
 }) {
   const {t: l} = useLingui()
-  const ax = useAnalytics()
   const {currentAccount} = useSession()
   const navigation = useNavigation<NavigationProp>()
-  const [isExpanded, setIsExpanded] = useState(false)
-  const [actor] = notification.actors
-  const name = Item.useDisplayName(actor)
-  const others = notification.count - 1
-
-  const label = l`${name} and ${plural(others, {
-    one: '# other',
-    other: '# others',
-  })} followed you`
-
-  const onToggleExpanded = (event: GestureResponderEvent) => {
-    // Keep the press from reaching the row, which on web would follow its link
-    event.preventDefault()
-    event.stopPropagation()
-    if (!isExpanded) {
-      ax.metric('notifications:bundleExpand', {
-        notificationType: 'follow',
-        authorCount: notification.actors.length,
-      })
-    }
-    setIsExpanded(!isExpanded)
-  }
+  const {actor, name, second, secondName, others} =
+    Item.useGroupNames(notification)
 
   return (
-    <Item.Root
+    <Item.GroupRoot
+      notification={notification}
       href={
         currentAccount
           ? makeProfileLink(currentAccount, 'followers')
           : makeProfileLink(actor)
       }
-      isRead={notification.isRead}
-      /*
-       * Screen readers reach the header as a button whether or not it's
-       * expanded, as on web, so focus stays on it as it toggles
-       */
-      accessible={false}
-      /*
-       * The header and list stack vertically. Padding moves inside them, so
-       * that the whole header toggles the list rather than its padding
-       * following the row's link. Root pads with the longhands, which win over
-       * the `padding` shorthand, so zero those.
-       */
-      style={[a.flex_col, a.align_stretch, a.gap_0, a.px_0, a.py_0]}
-      testID={`notification-follow-${notification.id}`}>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={label}
-        accessibilityHint={
-          isExpanded ? l`Collapses list of users` : l`Expands list of users`
-        }
-        aria-expanded={isExpanded}
-        accessibilityActions={
+      label={
+        second
+          ? l`${name} and ${secondName} followed you`
+          : l`${name} and ${plural(others, {
+              one: '# other',
+              other: '# others',
+            })} followed you`
+      }
+      toggleOnPress
+      accessibilityActions={
+        currentAccount
+          ? [{name: 'viewFollowers', label: l`View all followers`}]
+          : undefined
+      }
+      onAccessibilityAction={event => {
+        if (
+          event.nativeEvent.actionName === 'viewFollowers' &&
           currentAccount
-            ? [{name: 'viewFollowers', label: l`View all followers`}]
-            : undefined
+        ) {
+          navigation.push('ProfileFollowers', {name: currentAccount.did})
         }
-        onAccessibilityAction={event => {
-          if (
-            event.nativeEvent.actionName === 'viewFollowers' &&
-            currentAccount
-          ) {
-            navigation.push('ProfileFollowers', {name: currentAccount.did})
-          }
-        }}
-        onPress={onToggleExpanded}
-        style={[a.flex_row, a.align_start, a.gap_md, a.px_lg, a.py_md]}>
-        {/* The chevron sits at the top, while the text centres on the avatar */}
-        <View style={[a.flex_1, a.flex_row, a.align_center, a.gap_md]}>
-          <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
-          <Item.Content>
-            <Item.PrimaryText>
-              <Trans>
-                <Item.Name profile={actor} /> and{' '}
-                <Item.Strong>
-                  <Plural value={others} one="# other" other="# others" />
-                </Item.Strong>{' '}
-                followed you
-              </Trans>
-            </Item.PrimaryText>
-            <Item.Timestamp date={notification.indexedAt} />
-          </Item.Content>
-        </View>
-        <Item.Trailing>
-          <Item.ExpandChevron expanded={isExpanded} />
-        </Item.Trailing>
-      </Pressable>
-      <Item.Expandable expanded={isExpanded}>
-        <ExpandedFollowers notification={notification} />
-      </Item.Expandable>
-    </Item.Root>
-  )
-}
-
-/**
- * The expanded list of a grouped follow: the followers it resolved, then any
- * loaded since with "Show more", which shows while there are more to load.
- * Loaded followers stay in the query cache, so they're still there if the
- * list is collapsed and expanded again.
- */
-function ExpandedFollowers({
-  notification,
-}: {
-  notification: NotificationOf<'follow'>
-}) {
-  const {t: l} = useLingui()
-  const {actors, hasMore, isFetching, fetchNextPage} = useFollowActorsQuery({
-    notification,
-  })
-
-  const onShowMore = async () => {
-    const {error} = await fetchNextPage()
-    if (!error) return
-    if (!isNetworkError(error)) {
-      logger.error('Failed to load more followers', {safeMessage: error})
-    }
-    Toast.show(l`Couldn’t load more followers, please try again`, {
-      type: 'error',
-    })
-  }
-
-  return (
-    <View style={[a.px_lg, a.pb_md]}>
-      <Item.ActorList
-        actors={[...notification.actors, ...actors]}
-        starterPack={notification.starterPack}>
-        {hasMore && (
-          <Item.ShowMoreActorsButton
-            isLoading={isFetching}
-            onPress={() => void onShowMore()}
-          />
-        )}
-      </Item.ActorList>
-    </View>
+      }}
+      testID={`notification-follow-${notification.id}`}>
+      <Item.Avatar profile={actor} icon={PersonPlusIcon} tone="follow" />
+      <Item.Content>
+        <Item.AvatarRow />
+        <Item.PrimaryText>
+          {second ? (
+            <Trans>
+              <Item.Name profile={actor} /> and <Item.Name profile={second} />{' '}
+              followed you
+            </Trans>
+          ) : (
+            <Trans>
+              <Item.Name profile={actor} /> and{' '}
+              <Item.Strong>
+                <Plural value={others} one="# other" other="# others" />
+              </Item.Strong>{' '}
+              followed you
+            </Trans>
+          )}
+        </Item.PrimaryText>
+        <Item.Timestamp date={notification.indexedAt} />
+      </Item.Content>
+    </Item.GroupRoot>
   )
 }
 

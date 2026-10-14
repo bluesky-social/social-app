@@ -14,7 +14,7 @@ import {app} from '#/lexicons'
 import * as bsky from '#/types/bsky'
 
 /**
- * Notification actors are basic views, but followers loaded with "Show more"
+ * Notification actors are basic views, but actors loaded with "Show more"
  * come from `getProfiles`, which returns detailed ones.
  */
 type ProfileView =
@@ -55,15 +55,7 @@ export function moderateNotification(
     case 'repost':
     case 'likeViaRepost':
     case 'repostViaRepost':
-    case 'generatorLike': {
-      const actors = notification.actors.filter(
-        actor => !isActorHidden(actor, moderationOpts),
-      )
-      if (actors.length === notification.actors.length) return notification
-      if (!isNonEmpty(actors)) return undefined
-      // `count` stays as the server's total, hidden actors included.
-      return {...notification, actors}
-    }
+    case 'generatorLike':
     case 'follow': {
       const hiddenDids = new Set(
         notification.actors
@@ -75,6 +67,7 @@ export function moderateNotification(
         actor => !hiddenDids.has(actor.did),
       )
       if (!isNonEmpty(actors)) return undefined
+      // `count` stays as the server's total, hidden actors included.
       return {
         ...notification,
         actors,

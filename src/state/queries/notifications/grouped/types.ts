@@ -45,6 +45,25 @@ type Base = {
 }
 
 /**
+ * The people in a group of notifications from different actors, e.g.
+ * everyone who liked a post.
+ */
+export type ActorGroup = {
+  /**
+   * The actors with a profile in `relatedViews`, newest first. The first is
+   * the group's primary actor.
+   */
+  actors: NonEmptyArray<ProfileView>
+  /**
+   * Every actor in the group, newest first, including those without a
+   * profile in `relatedViews`. A superset of the DIDs in `actors`, so the
+   * rest can be loaded on demand. List-time moderation removes hidden
+   * actors from both. May still be fewer than `count`.
+   */
+  actorDids: DidString[]
+}
+
+/**
  * A notification group from `getGroupedNotifications`, with every DID and
  * at-uri resolved against the page's `relatedViews`.
  *
@@ -52,7 +71,7 @@ type Base = {
  * post and profile shadows are keyed by object identity.
  */
 export type NotificationView =
-  | (Base & {type: 'like'; post: PostView; actors: NonEmptyArray<ProfileView>})
+  | (Base & ActorGroup & {type: 'like'; post: PostView})
   | (Base & {
       type: 'multiPostLike'
       actor: ProfileView
@@ -81,47 +100,32 @@ export type NotificationView =
       actor: ProfileView
       posts: NonEmptyArray<PostView>
     })
-  | (Base & {
-      type: 'repost'
-      post: PostView
-      actors: NonEmptyArray<ProfileView>
-    })
-  | (Base & {
-      type: 'likeViaRepost'
-      post: PostView
-      viaRepost: string
-      actors: NonEmptyArray<ProfileView>
-    })
-  | (Base & {
-      type: 'repostViaRepost'
-      post: PostView
-      viaRepost: string
-      actors: NonEmptyArray<ProfileView>
-    })
-  | (Base & {
-      type: 'follow'
-      actors: NonEmptyArray<ProfileView>
-      /**
-       * Every follower in the group, newest first, including those without a
-       * profile in `relatedViews`. A superset of the DIDs in `actors`, so the
-       * rest can be loaded on demand. List-time moderation removes hidden
-       * actors from both. May still be fewer than `count`.
-       */
-      actorDids: DidString[]
-      /**
-       * Only set when every follow in the group came via the same pack.
-       */
-      starterPack?: StarterPackView
-    })
+  | (Base & ActorGroup & {type: 'repost'; post: PostView})
+  | (Base &
+      ActorGroup & {
+        type: 'likeViaRepost'
+        post: PostView
+        viaRepost: string
+      })
+  | (Base &
+      ActorGroup & {
+        type: 'repostViaRepost'
+        post: PostView
+        viaRepost: string
+      })
+  | (Base &
+      ActorGroup & {
+        type: 'follow'
+        /**
+         * Only set when every follow in the group came via the same pack.
+         */
+        starterPack?: StarterPackView
+      })
   | (Base & {
       type: 'subscribedPost'
       items: NonEmptyArray<{actor: ProfileView; post: PostView}>
     })
-  | (Base & {
-      type: 'generatorLike'
-      generator: GeneratorView
-      actors: NonEmptyArray<ProfileView>
-    })
+  | (Base & ActorGroup & {type: 'generatorLike'; generator: GeneratorView})
   | (Base & {type: 'reply'; post: PostView; parent: ParentPost})
   | (Base & {type: 'quote'; post: PostView; parent?: ParentPost})
   | (Base & {type: 'mention'; post: PostView; parent?: ParentPost})
