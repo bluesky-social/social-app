@@ -1,10 +1,11 @@
 import {createSVG} from '#/components/icons/TEMPLATE'
 
 /**
- * Hand-maintained from `assets/icons/custom/VerifierCheck.svg`. This icon is custom
- * because its fixed white tick is a second paint role that a
- * single glyph path cannot carry. It is neither generated from the
- * SVG nor drawn from an icon font.
+ * Hand-maintained from `assets/icons/custom/VerifierCheck.svg`. This icon is
+ * custom because its fixed white tick is a second paint role, which generated
+ * single-path icons cannot carry. That makes it an exception to component
+ * codegen only: its SVG is still an input to the `icons-custom` font and it
+ * renders as that glyph on native.
  */
 export const VerifierCheck = createSVG({
   elements: [
@@ -26,4 +27,5 @@ export const VerifierCheck = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'VerifierCheck',
 })

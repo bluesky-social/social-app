@@ -281,7 +281,7 @@ test('requires UI filenames to follow the icon style scheme', async t => {
   await assert.rejects(readIconSource(missingLarge.root, missingLarge.relative), /viewBox is 64x64/)
 })
 
-test('keeps the three custom exceptions raw and glyphless', async t => {
+test('keeps the three custom exceptions raw and out of component codegen', async t => {
   const sourceRoot = path.resolve(import.meta.dirname, '../../assets/icons')
   for (const name of ['StarterPackMultiPathLarge', 'VerifiedCheck', 'VerifierCheck']) {
     const source = await readIconSource(sourceRoot, path.join('custom', `${name}.svg`))
@@ -411,7 +411,7 @@ const require = createRequire(import.meta.url)
 const nanoDir = path.dirname(require.resolve('react-native-nano-icons/package.json'))
 const {buildAllFonts} = require('react-native-nano-icons/cli')
 
-const LANES = ['ui', 'external']
+const LANES = ['ui', 'external', 'custom']
 const SQUARE = 'M4 4h16v16H4Z'
 const TRIANGLE = 'M2 2h20L2 22Z'
 const DIAMOND = 'M12 2l10 10-10 10L2 12Z'
@@ -419,6 +419,8 @@ const svgOf = d => `<svg viewBox="0 0 24 24"><path d="${d}"/></svg>\n`
 const NORMAL = {
   'ui/Base_Filled_Corner0_Rounded.svg': svgOf(SQUARE),
   'external/Service.svg': svgOf(TRIANGLE),
+  'custom/Badge.svg':
+    '<svg fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><path fill="#fff" d="M8 8h8v8H8Z"/></svg>\n',
 }
 const DOCBLOCK = lane =>
   `/** Temporary SVG-only icon. Move its source to assets/icons/${lane}/ before a native release. */`
@@ -705,11 +707,15 @@ async function fontProject(t, files) {
 test('temporary icons never change the unmodified library fonts', async t => {
   const project = await fontProject(t, NORMAL)
   const baseline = await project.fonts()
-  assert.deepEqual(LANES.map(lane => glyphNames(baseline[lane]).length), [1, 1])
+  assert.deepEqual(LANES.map(lane => glyphNames(baseline[lane]).length), [1, 1, 1])
+  // The custom badge keeps both paint roles as separate glyph layers.
+  assert.deepEqual(baseline.custom.map.i.Badge[1].map(([, color]) => color), ['currentColor', '#fff'])
 
   // Adding.
   await project.write('tmp/ui/Ota_Filled_Corner0_Rounded.svg', svgOf(DIAMOND))
   await project.write('tmp/external/OtaService.svg', svgOf(DIAMOND))
+  // There is no tmp/custom lane, but even a stray source there is outside every font input.
+  await project.write('tmp/custom/OtaBadge.svg', svgOf(DIAMOND))
   const added = await project.fonts()
   assertSameFonts(added, baseline)
   for (const lane of LANES) assert.equal(added[lane].map.m.h, baseline[lane].map.m.h, `${lane} hash`)
@@ -724,7 +730,7 @@ test('temporary icons never change the unmodified library fonts', async t => {
   assertSameFonts(await project.fonts(), baseline)
 
   // Removing.
-  for (const file of ['tmp/ui/Renamed_Filled_Corner0_Rounded.svg', 'tmp/external/OtaService.svg']) {
+  for (const file of ['tmp/ui/Renamed_Filled_Corner0_Rounded.svg', 'tmp/external/OtaService.svg', 'tmp/custom/OtaBadge.svg']) {
     await project.remove(file)
   }
   assertSameFonts(await project.fonts(), baseline)
@@ -737,7 +743,7 @@ test('moving a temporary source into a lane changes only that lane font', async 
 
   await project.move('tmp/external/OtaService.svg', 'external/OtaService.svg')
   const moved = await project.fonts()
-  assertSameFonts(moved, baseline, ['ui'])
+  assertSameFonts(moved, baseline, ['ui', 'custom'])
   assert.deepEqual(glyphNames(moved.external), ['OtaService', 'Service'])
   assert.notEqual(moved.external.map.m.h, baseline.external.map.m.h)
   assert.ok(!moved.external.ttf.equals(baseline.external.ttf))
@@ -752,7 +758,7 @@ const EXPO_BUILD = `
 const fs = require('fs')
 const [pluginPath, root, outputDir, resultPath] = process.argv.slice(2)
 require(pluginPath)
-  .getOrBuildFonts(root, ['ui', 'external'].map(lane => ({
+  .getOrBuildFonts(root, ['ui', 'external', 'custom'].map(lane => ({
     fontFamily: 'icons-' + lane,
     inputDir: './assets/icons/' + lane,
     outputDir,
@@ -836,4 +842,58 @@ test('font checks ignore temporary icons but still catch stale ordinary glyphmap
   const glyphmap = path.relative(process.cwd(), path.join(root, 'assets/nano-icons/nanoicons/icons-ui.glyphmap.json'))
   await write('ui/Base_Filled_Corner0_Rounded.svg', svgOf(TRIANGLE))
   assert.deepEqual(await applyNanoFonts({check: true, repoRoot: root}), [glyphmap])
+})
+
+test('the app configures, fingerprints, and imports exactly the ui, external, and custom fonts', async () => {
+  const repoRoot = path.resolve(import.meta.dirname, '../..')
+  const repoRequire = createRequire(path.join(repoRoot, 'package.json'))
+  const {exp} = repoRequire('expo/config').getConfig(repoRoot, {skipSDKVersionRequirement: true})
+  const [, {iconSets}] = exp.plugins.find(plugin => Array.isArray(plugin) && plugin[0] === 'react-native-nano-icons')
+  const sets = ['ui', 'external', 'custom']
+  assert.deepEqual(
+    iconSets,
+    sets.map(set => ({
+      fontFamily: `icons-${set}`,
+      inputDir: `./assets/icons/${set}`,
+      outputDir: './assets/nano-icons/nanoicons',
+    })),
+  )
+
+  const fingerprint = repoRequire('./fingerprint.config.js')
+  assert.deepEqual(
+    fingerprint.extraSources.map(source => source.filePath),
+    sets.map(set => `assets/nano-icons/nanoicons/icons-${set}.ttf`),
+  )
+
+  const glyphMaps = await fs.readFile(path.join(repoRoot, 'src/components/icons/glyphMaps.ts'), 'utf8')
+  const nano = await fs.readFile(path.join(repoRoot, 'src/components/icons/nano.tsx'), 'utf8')
+  for (const set of sets) {
+    assert.match(glyphMaps, new RegExp(`icons-${set}\\.glyphmap\\.json`))
+    assert.match(glyphMaps, new RegExp(`\\b${set}: ${set}GlyphMap`))
+    assert.match(nano, new RegExp(`\\b${set}: createNanoIconSet\\(glyphMaps\\.${set}\\)`))
+  }
+
+  // Committed font membership: the three exceptions are only in custom, which has nothing else.
+  const names = ['StarterPackMultiPathLarge', 'VerifiedCheck', 'VerifierCheck']
+  const map = async set =>
+    JSON.parse(await fs.readFile(path.join(repoRoot, `assets/nano-icons/nanoicons/icons-${set}.glyphmap.json`), 'utf8'))
+  assert.deepEqual(Object.keys((await map('custom')).i).sort(), names)
+  for (const set of ['ui', 'external']) {
+    const glyphs = (await map(set)).i
+    for (const name of names) assert.ok(!(name in glyphs), `${name} in ${set}`)
+  }
+  for (const name of ['VerifiedCheck', 'VerifierCheck']) {
+    assert.deepEqual((await map('custom')).i[name][1].map(([, color]) => color), ['currentColor', '#fff'], name)
+  }
+
+  // Each handwritten component names its glyph, and the SVGs are the font inputs.
+  const files = {StarterPack: 'StarterPackMultiPathLarge', VerifiedCheck: 'VerifiedCheck', VerifierCheck: 'VerifierCheck'}
+  for (const [file, name] of Object.entries(files)) {
+    const source = await fs.readFile(path.join(repoRoot, `src/components/icons/custom/${file}.tsx`), 'utf8')
+    assert.match(source, new RegExp(`export const ${name} = createSVG\\(`))
+    assert.match(source, new RegExp(`glyph: '${name}',`))
+    assert.doesNotMatch(source, /neither generated|never.*font/i)
+    await fs.access(path.join(repoRoot, `assets/icons/custom/${name}.svg`))
+  }
+  assert.deepEqual((await fs.readdir(path.join(repoRoot, 'assets/icons/custom'))).filter(f => f.endsWith('.svg')).sort(), names.map(n => `${n}.svg`))
 })

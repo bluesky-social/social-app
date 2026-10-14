@@ -24,6 +24,7 @@ import {type IconWithSvgMeta} from '#/components/icons/TEMPLATE'
 const iconSets = {
   ui: createNanoIconSet(glyphMaps.ui),
   external: createNanoIconSet(glyphMaps.external),
+  custom: createNanoIconSet(glyphMaps.custom),
 } as unknown as Record<
   IconSet,
   React.ComponentType<
@@ -62,8 +63,8 @@ function warnFallback(name: string, prop: string) {
 /**
  * Lets a TEMPLATE factory render its icon as a single glyph from the icon
  * font instead of SvgView + Group + Path. Codegen passes the glyph for icons
- * whose glyph matches the SVG icon; without one, the SVG icon is returned
- * unchanged.
+ * whose glyph matches the SVG icon, and the handwritten `custom` components
+ * name theirs; without one, the SVG icon is returned unchanged.
  *
  * The glyph covers the props icons are used with in practice. Anything it
  * cannot reproduce - a `gradient`, a `ref` (which must point at the `Svg`), a

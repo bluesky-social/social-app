@@ -1,9 +1,11 @@
 import {createSVG} from '#/components/icons/TEMPLATE'
 
 /**
- * Hand-maintained from `assets/icons/custom/StarterPackMultiPathLarge.svg`. This icon is custom
- * because its two paths must stay separate. It is neither generated from the
- * SVG nor drawn from an icon font.
+ * Hand-maintained from `assets/icons/custom/StarterPackMultiPathLarge.svg`.
+ * This icon is custom because its two paths must stay separate, which generated
+ * single-path icons cannot carry. That makes it an exception to component
+ * codegen only: its SVG is still an input to the `icons-custom` font and it
+ * renders as that glyph on native.
  */
 export const StarterPackMultiPathLarge = createSVG({
   elements: [
@@ -25,4 +27,5 @@ export const StarterPackMultiPathLarge = createSVG({
     },
   ],
   viewBox: '0 0 24 24',
+  glyph: 'StarterPackMultiPathLarge',
 })

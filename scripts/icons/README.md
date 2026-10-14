@@ -14,11 +14,14 @@ SVG files under `assets/icons/` are the source of truth. Generated components un
    - `ui/` — strict monochrome icons; exactly one optimized path
    - `external/` — brand, partner, and third-party marks (single optimized path, like `ui/`, but
      without the UI naming rules)
-   - `custom/` — raw assets, including multi-path exceptions, that are optimized but neither
-     component-generated nor in a font. They are permanent exceptions, not cleanup candidates:
+   - `custom/` — raw assets, including multi-path exceptions, that are optimized but not
+     component-generated. They are permanent exceptions to codegen, not cleanup candidates:
      `StarterPackMultiPathLarge`, `VerifiedCheck`, and `VerifierCheck` (the badges keep a fixed
-     white tick). Each has a handwritten `createSVG` component in `src/components/icons/custom/`,
-     with deprecated reexports at its historical import paths.
+     white tick). Each has a handwritten `createSVG` component in `src/components/icons/custom/`
+     that names its glyph, with deprecated reexports at its historical import paths. They are
+     still font inputs (`icons-custom`), so a custom SVG must compile with the unmodified
+     react-native-nano-icons font builder. That is verified for these three; arbitrary raw assets
+     such as gradients are not guaranteed to work.
    - `flags/` — runtime assets, excluded from codegen and optimization
 3. Run `pnpm icons:generate` and commit the SVG, the generated TypeScript, and the rebuilt fonts in
    `assets/nano-icons/nanoicons/`.
@@ -50,9 +53,11 @@ reexport `StarterPack_Stroke2_Corner0_Rounded` from `external/StarterPack`, so k
 ## Font glyphs
 
 On iOS and Android, generated icons render as glyphs from [react-native-nano-icons](https://github.com/software-mansion-labs/react-native-nano-icons)
-fonts, one per directory (`icons-ui` and `icons-external`), built from the same SVGs
-by its config plugin in `app.config.js`. Codegen passes each icon's glyph name to
-`createSinglePathSVG` as `glyph`, typed against the committed glyphmaps (see
+fonts, one per directory (`icons-ui`, `icons-external`, and `icons-custom`), built from the same
+SVGs by its config plugin in `app.config.js`. Codegen passes each generated icon's glyph name to
+`createSinglePathSVG` as `glyph`; the handwritten `custom/` components pass theirs to `createSVG`,
+which keeps each layer's paint role (`currentColor` layers take the fill, while the white tick
+stays white). Glyph names are typed against the committed glyphmaps (see
 `withNanoGlyph` in `src/components/icons/nano.tsx`). An icon falls back to react-native-svg for
 props a glyph cannot honour, such as `gradient` or a `ref`, and in development warns once when it
 does so for a prop that could be avoided. Web always renders the SVG icons.
@@ -80,7 +85,7 @@ namespaces are the same as for a normal source. `tmp/custom/`, `tmp/flags/`, the
 - is generated as an ordinary export in its normal module and namespace (a `tmp/external/` source ends
   up in `src/components/icons/external/`), so imports do not change when it is later moved;
 - has no `glyph`, so every platform renders it with react-native-svg;
-- is not in any font input: `app.config.js` only lists `assets/icons/{ui,external}`, so the
+- is not in any font input: `app.config.js` only lists `assets/icons/{ui,external,custom}`, so the
   unmodified react-native-nano-icons CLI, `pnpm icons:generate`, and the Expo config plugin during
   prebuild never read `tmp/`. Adding, editing, renaming, or removing one changes no font, glyphmap,
   or font hash;

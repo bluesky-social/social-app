@@ -38,7 +38,7 @@ const RETIRED_LANES = new Set(['brands', 'community'])
 
 /**
  * Root directory of temporary SVG-only icons: `tmp/<ui|external>/`.
- * It is a sibling of the font input directories, so the fonts never see it.
+ * It is a sibling of the ui/external/custom font input directories, so the fonts never see it.
  */
 export const TEMPORARY_ROOT = 'tmp'
 
