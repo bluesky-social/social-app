@@ -13,6 +13,7 @@ import {logger} from '#/logger'
 import {listenSoftReset} from '#/state/events'
 import {
   type GroupedNotificationsFeed,
+  type GroupedNotificationsPeek,
   type LoadedGroupedNotificationsPage,
   type NotificationView,
   useGroupedNotificationsQuery,
@@ -72,6 +73,7 @@ export function PageList({
   seenAt,
   onFirstLoad,
   refresh,
+  peek,
   onLoadingLatestChange,
   onScrolledDownChange,
   onEmptyChange,
@@ -101,9 +103,15 @@ export function PageList({
   ) => void
   /**
    * Refetches the feed's first page, then updates the screen's `seenAt`
-   * snapshot from it.
+   * snapshot from it, and brings other tabs along. Resolves once the feed's
+   * own refetch settles.
    */
   refresh: (feed: GroupedNotificationsFeed) => Promise<void>
+  /**
+   * The screen's last peek at the feed, which offers the "Refresh" pill if
+   * it found anything newer than the feed has loaded.
+   */
+  peek?: GroupedNotificationsPeek
   /**
    * Called when loading what's new after the tab button or a pill was
    * pressed starts, and again when it settles, successfully or not.
@@ -193,6 +201,7 @@ export function PageList({
     feed,
     isActive: isInView,
     check: lastUnreadCheck,
+    peek,
     top,
     isFetchingTop,
   })

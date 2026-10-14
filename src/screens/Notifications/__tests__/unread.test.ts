@@ -180,4 +180,66 @@ describe('isRefreshPillVisible', () => {
       visible({top: {requestedAt: TOP_REQUESTED_AT, newestAt: undefined}}),
     ).toBe(true)
   })
+
+  describe('with a peek', () => {
+    const nothingUnread = check({})
+
+    it('shows for anything newer than the loaded top, read or not', () => {
+      expect(
+        visible({
+          check: nothingUnread,
+          peek: {
+            requestedAt: TOP_REQUESTED_AT + 30_000,
+            newestAt: TOP_NEWEST_AT + 60_000,
+          },
+        }),
+      ).toBe(true)
+    })
+
+    it('shows without any unread check', () => {
+      expect(
+        visible({
+          check: undefined,
+          peek: {
+            requestedAt: TOP_REQUESTED_AT + 30_000,
+            newestAt: TOP_NEWEST_AT + 60_000,
+          },
+        }),
+      ).toBe(true)
+    })
+
+    it('ignores a peek asked before the top was requested', () => {
+      expect(
+        visible({
+          check: nothingUnread,
+          peek: {
+            requestedAt: TOP_REQUESTED_AT,
+            newestAt: TOP_NEWEST_AT + 60_000,
+          },
+        }),
+      ).toBe(false)
+    })
+
+    it('ignores a peek that found nothing newer, or nothing at all', () => {
+      for (const newestAt of [TOP_NEWEST_AT, TOP_NEWEST_AT - 1, undefined]) {
+        expect(
+          visible({
+            check: nothingUnread,
+            peek: {requestedAt: TOP_REQUESTED_AT + 30_000, newestAt},
+          }),
+        ).toBe(false)
+      }
+    })
+
+    it('still hides off the tab in view, or while the top is fetching', () => {
+      const peek = {
+        requestedAt: TOP_REQUESTED_AT + 30_000,
+        newestAt: TOP_NEWEST_AT + 60_000,
+      }
+      expect(visible({check: nothingUnread, peek, isActive: false})).toBe(false)
+      expect(visible({check: nothingUnread, peek, isFetchingTop: true})).toBe(
+        false,
+      )
+    })
+  })
 })

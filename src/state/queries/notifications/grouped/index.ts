@@ -1,3 +1,4 @@
+import {type Client} from '@atproto/lex'
 import {AtUri} from '@atproto/syntax'
 import {
   type InfiniteData,
@@ -15,7 +16,10 @@ import {
   type GroupActorsPage,
   selectLoadedActors,
 } from '#/state/queries/notifications/grouped/group-actors'
-import {hydratePage} from '#/state/queries/notifications/grouped/hydrate'
+import {
+  getNewestAt,
+  hydratePage,
+} from '#/state/queries/notifications/grouped/hydrate'
 import {
   moderateNotification,
   type NotificationModerationArgs,
@@ -103,6 +107,32 @@ export function getGroupedNotificationsTop(
   return queryClient.getQueryData<
     InfiniteData<LoadedGroupedNotificationsPage, string | undefined>
   >(createGroupedNotificationsQueryKey({feed}))?.pages[0]
+}
+
+/**
+ * How far a feed has got on the server, from a peek. See
+ * `peekGroupedNotifications`.
+ */
+export type GroupedNotificationsPeek = Pick<
+  LoadedGroupedNotificationsPage,
+  'requestedAt' | 'newestAt'
+>
+
+/**
+ * Asks the server for just the newest group in a feed, to tell whether the
+ * feed has anything newer than it's loaded without loading it. Read or not,
+ * since the unread check only counts what hasn't been seen.
+ */
+export async function peekGroupedNotifications(
+  client: Client,
+  feed: GroupedNotificationsFeed,
+): Promise<GroupedNotificationsPeek> {
+  const requestedAt = Date.now()
+  const res = await client.call(app.bsky.notification.getGroupedNotifications, {
+    feed,
+    limit: 1,
+  })
+  return {requestedAt, newestAt: getNewestAt(res.groups)}
 }
 
 /**

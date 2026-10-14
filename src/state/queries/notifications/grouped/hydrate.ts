@@ -50,12 +50,7 @@ export function hydratePage(
 ): GroupedNotificationsPage {
   const ctx = createContext(res.relatedViews, viewerDid)
   const notifications: NotificationView[] = []
-  let newestAt: number | undefined
   for (const group of res.groups) {
-    const indexedAt = Date.parse(group.indexedAt)
-    if (indexedAt > (newestAt ?? -Infinity)) {
-      newestAt = indexedAt
-    }
     const notification = hydrateGroup(group, ctx)
     if (notification) {
       notifications.push(notification)
@@ -65,8 +60,23 @@ export function hydratePage(
     cursor: res.cursor,
     seenAt: res.seenAt,
     notifications,
-    newestAt,
+    newestAt: getNewestAt(res.groups),
   }
+}
+
+/**
+ * When the newest of a response's groups was indexed, in ms since the epoch,
+ * or undefined if it has none. See `GroupedNotificationsPage['newestAt']`.
+ */
+export function getNewestAt(groups: OutputBody['groups']): number | undefined {
+  let newestAt: number | undefined
+  for (const group of groups) {
+    const indexedAt = Date.parse(group.indexedAt)
+    if (indexedAt > (newestAt ?? -Infinity)) {
+      newestAt = indexedAt
+    }
+  }
+  return newestAt
 }
 
 function createContext(

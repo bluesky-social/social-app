@@ -113,9 +113,10 @@ export type Events = {
   }
   /**
    * The "Refresh" pill came into view on a Notifications tab, offering what an
-   * unread check found that the tab hasn't loaded. Only while the tab is the
-   * one in view, on the focused screen, with the app in the foreground, and
-   * again each time it comes back into view still up. One hide follows each.
+   * unread check, or a peek at the tab, found that it hasn't loaded. Only
+   * while the tab is the one in view, on the focused screen, with the app in
+   * the foreground, and again each time it comes back into view still up. One
+   * hide follows each.
    */
   'notifications:refreshPill:impression': {
     tab: GroupedNotificationsFeed
