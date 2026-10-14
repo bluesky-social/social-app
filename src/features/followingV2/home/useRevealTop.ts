@@ -3,30 +3,15 @@ import {useEffect, useRef} from 'react'
 import {useNonReactiveCallback} from '#/lib/hooks/useNonReactiveCallback'
 
 /**
- * How far below the true top of the list, in points, revealing the top still
- * animates there. From further down it jumps instead: an animation that long
- * has the list lay out the rows it passes, which can stall it, and the
- * prototype crashed scrolling 96k points up. A little under four phone
- * screens, which is about as much as the list keeps rendered above the one on
- * screen. Provisional, to be measured on device (APP-3159).
+ * Furthest from the top, in points, that a reveal animates; further down it
+ * jumps, since animating past unrendered rows makes the list lay them all out.
+ * About what windowSize keeps rendered above. Provisional (APP-3159).
  */
 export const ANIMATED_REVEAL_LIMIT = 3000
 
 /**
- * Takes the reader up to the true top of a list that holds on to the row
- * they're on when posts go above it, as anchored Following's does (see
- * `PostFeed`).
- *
- * `reveal` takes them up through what's loaded, from where the list is:
- * animated from up to {@link ANIMATED_REVEAL_LIMIT} below the top, and with a
- * jump from further down. `onceRendered` jumps there once the top page fetched
- * at `fetchedAt` has rendered, as after a write from this view that put it on
- * top, which the list would otherwise keep above the reader. That jump isn't
- * animated, as the new page can be long, and the offset the list last
- * reported doesn't include it yet.
- *
- * A jump arrives at once, which `onJump` is told. An animated scroll reports
- * its arrival as the list does, at the end of it.
+ * Scrolls an anchored list to its true top, which anchoring won't do by itself
+ * after posts are written above the reader.
  */
 export function useRevealTop({
   topFetchedAt,
@@ -36,11 +21,10 @@ export function useRevealTop({
 }: {
   /** The `fetchedAt` of the top page as rendered, if there is one. */
   topFetchedAt: number | undefined
-  /** The list's scroll offset. */
   offsetY: {get(): number}
   /** Scrolls the list to its true top. */
   scrollToTop: (animated: boolean) => void
-  /** The list has jumped to its true top. */
+  /** Called after a jump; an animated scroll doesn't call it. */
   onJump?: () => void
 }) {
   /** The top page as of the last render that committed. */
@@ -68,6 +52,7 @@ export function useRevealTop({
   }, [topFetchedAt, jump])
 
   return {
+    /** Animated within {@link ANIMATED_REVEAL_LIMIT} of the top, else a jump. */
     reveal: useNonReactiveCallback(() => {
       if (offsetY.get() > ANIMATED_REVEAL_LIMIT) {
         jump()
@@ -75,6 +60,11 @@ export function useRevealTop({
         scrollToTop(true)
       }
     }),
+    /**
+     * Jumps once the page fetched at `fetchedAt` is the rendered top, at once
+     * if it already is, unless `shouldJump` says no by then. Never animated:
+     * the offset doesn't include the new page yet.
+     */
     onceRendered: useNonReactiveCallback(
       (fetchedAt: number, shouldJump?: () => boolean) => {
         if (rendered.current === fetchedAt) {
