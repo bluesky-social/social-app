@@ -619,13 +619,14 @@ function NotificationsHeader({
           style={[a.absolute, a.inset_0, {transformOrigin: 'top'}, fadeStyle]}>
           <HeaderFade
             /*
-             * Solid behind the status bar, so that with the title hidden the
-             * pills get the whole fade, as they do without one
+             * With the title hidden, the strong part reaches the middle of
+             * the pills, below the status bar if there is one
              */
-            solidUntil={
+            midpoint={
               pillsHeight > 0
-                ? headerPinnedHeight / (headerPinnedHeight + pillsHeight)
-                : 0
+                ? (headerPinnedHeight + pillsHeight / 2) /
+                  (headerPinnedHeight + pillsHeight)
+                : undefined
             }
           />
         </Animated.View>
@@ -694,13 +695,13 @@ function NotificationsHeader({
  * under it shows through.
  */
 function HeaderFade({
-  solidUntil = 0,
+  midpoint = 0.5,
 }: {
   /**
-   * How far down it stays solid before it starts to fade, as a fraction of
-   * its height.
+   * How far down the fade is still strong, at 0.9 opacity, as a fraction of
+   * its height. It fades out completely below that.
    */
-  solidUntil?: number
+  midpoint?: number
 }) {
   const t = useTheme()
   return (
@@ -712,11 +713,10 @@ function HeaderFade({
       end={[0.5, 1]}
       colors={[
         t.atoms.bg.backgroundColor,
-        t.atoms.bg.backgroundColor,
         utils.alpha(t.atoms.bg.backgroundColor, 0.9),
         utils.alpha(t.atoms.bg.backgroundColor, 0),
       ]}
-      locations={[0, solidUntil, (1 + solidUntil) / 2, 1]}
+      locations={[0, midpoint, 1]}
     />
   )
 }
