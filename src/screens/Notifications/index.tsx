@@ -5,6 +5,7 @@ import Animated, {
   Reanimated3DefaultSpringConfig,
   type SharedValue,
   useAnimatedStyle,
+  useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -584,21 +585,51 @@ function NotificationsHeader({
     }
   })
 
+  const height = useSharedValue(0)
+  const [pillsHeight, setPillsHeight] = useState(0)
+  /*
+   * Shrinks the fade from the top as the pills move up, so that it always
+   * ends where they do. Scaling, rather than moving it, keeps its opaque top
+   * behind the status bar and the pills
+   */
+  const fadeStyle = useAnimatedStyle(() => {
+    const fullHeight = height.get()
+    if (fullHeight === 0) return {}
+    const shownHeight =
+      fullHeight - headerMode.get() * (titleHeight.get() - headerPinnedHeight)
+    return {transform: [{scaleY: shownHeight / fullHeight}]}
+  })
+
   return (
     <View
       pointerEvents="box-none"
       style={[a.fixed, a.z_10, a.top_0, a.left_0, a.right_0]}
-      onLayout={event => onHeightChange(event.nativeEvent.layout.height)}>
-      {/* On web, the title and the pills each have their own background */}
-      {IS_LIQUID_GLASS ? (
-        <HeaderFade />
-      ) : (
-        !IS_WEB && (
-          <View
-            pointerEvents="none"
-            style={[a.absolute, a.inset_0, t.atoms.bg]}
+      onLayout={event => {
+        height.set(event.nativeEvent.layout.height)
+        onHeightChange(event.nativeEvent.layout.height)
+      }}>
+      {/*
+       * On native, the background fades out under the header, down to the
+       * bottom of the pills as they move up. On web, the title and the pills
+       * each have their own background
+       */}
+      {!IS_WEB && (
+        <Animated.View
+          pointerEvents="none"
+          style={[a.absolute, a.inset_0, {transformOrigin: 'top'}, fadeStyle]}>
+          <HeaderFade
+            /*
+             * With the title hidden, the strong part reaches the middle of
+             * the pills, below the status bar if there is one
+             */
+            midpoint={
+              pillsHeight > 0
+                ? (headerPinnedHeight + pillsHeight / 2) /
+                  (headerPinnedHeight + pillsHeight)
+                : undefined
+            }
           />
-        )
+        </Animated.View>
       )}
       <Animated.View
         style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
@@ -636,7 +667,9 @@ function NotificationsHeader({
           </Layout.Header.Slot>
         </Layout.Header.Outer>
       </Animated.View>
-      <Animated.View style={pillsStyle}>
+      <Animated.View
+        style={pillsStyle}
+        onLayout={event => setPillsHeight(event.nativeEvent.layout.height)}>
         {IS_WEB && <HeaderFade />}
         <Layout.Center>{children}</Layout.Center>
       </Animated.View>
@@ -661,7 +694,15 @@ function NotificationsHeader({
  * The header's background fading out to the bottom, so content scrolling
  * under it shows through.
  */
-function HeaderFade() {
+function HeaderFade({
+  midpoint = 0.5,
+}: {
+  /**
+   * How far down the fade is still strong, at 0.9 opacity, as a fraction of
+   * its height. It fades out completely below that.
+   */
+  midpoint?: number
+}) {
   const t = useTheme()
   return (
     <LinearGradient
@@ -672,9 +713,10 @@ function HeaderFade() {
       end={[0.5, 1]}
       colors={[
         t.atoms.bg.backgroundColor,
-        utils.alpha(t.atoms.bg.backgroundColor, 0.8),
+        utils.alpha(t.atoms.bg.backgroundColor, 0.9),
         utils.alpha(t.atoms.bg.backgroundColor, 0),
       ]}
+      locations={[0, midpoint, 1]}
     />
   )
 }
