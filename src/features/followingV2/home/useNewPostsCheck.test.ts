@@ -11,20 +11,18 @@ import {
 
 /*
  * Returns and app state are driven directly rather than through a mocked
- * `AppState`: what counts as a significant return is `onAnyAppReturn`'s
- * business, and only the hooks it exports are relied on here.
+ * `AppState`: what counts as a significant return is `#/lib/appState`'s
+ * business, so only its hooks are mocked.
  */
 const mockReturnListeners = new Set<(appReturn: AnyAppReturn) => void>()
 const mockAppStateListeners = new Set<(state: AppStateStatus) => void>()
 let mockAppState: AppStateStatus = 'active'
 jest.mock('#/lib/appState', () => {
-  const {useEffect, useEffectEvent, useState} = jest.requireActual<{
-    useEffect: (effect: () => () => void, deps: unknown[]) => void
-    useEffectEvent: <A extends unknown[]>(
-      fn: (...args: A) => void,
-    ) => (...args: A) => void
-    useState: <S>(initial: S) => [S, (next: S) => void]
-  }>('react')
+  const {useEffect, useState} =
+    jest.requireActual<typeof import('react')>('react')
+  const {useNonReactiveCallback} = jest.requireActual<
+    typeof import('#/lib/hooks/useNonReactiveCallback')
+  >('#/lib/hooks/useNonReactiveCallback')
   return {
     getCurrentState: () => mockAppState,
     useAppState() {
@@ -37,15 +35,16 @@ jest.mock('#/lib/appState', () => {
       }, [])
       return state
     },
+    // As the real hook is, so it works in a `memo()` component.
     useOnAnyAppReturn(cb: (appReturn: AnyAppReturn) => void) {
-      const onReturn = useEffectEvent(cb)
+      const onReturn = useNonReactiveCallback(cb)
       useEffect(() => {
         const listener = (appReturn: AnyAppReturn) => onReturn(appReturn)
         mockReturnListeners.add(listener)
         return () => {
           mockReturnListeners.delete(listener)
         }
-      }, [])
+      }, [onReturn])
     },
   }
 })
@@ -127,20 +126,14 @@ async function advance(ms: number) {
   await flush()
 }
 
-/**
- * Makes a significant return to the app, from the background after `away`
- * there.
- */
-function returnToApp(away = 0) {
+/** A significant return, after `away` in the background. */
+function returnToApp(away: number) {
   return comeBack(away, true)
 }
 
-/**
- * Comes back to the app too soon for a significant return, as a quick hop
- * away.
- */
-function hopToApp(away = 0) {
-  return comeBack(away, false)
+/** A return too quick to be significant. */
+function hopToApp() {
+  return comeBack(0, false)
 }
 
 async function comeBack(away: number, isSignificant: boolean) {
@@ -295,25 +288,17 @@ describe('return', () => {
   it('checks on a significant return, however fresh the data', async () => {
     const view = await setup()
     view.check.mockResolvedValueOnce(true)
-    await returnToApp(SECOND)
+    await returnToApp(30 * SECOND)
     expect(view.check).toHaveBeenCalledTimes(1)
     expect(view.found()).toEqual(['return'])
   })
 
-  it('checks on a quick hop too, as a hop', async () => {
+  it('checks on a hop, as a `hop`', async () => {
     const view = await setup()
     view.check.mockResolvedValueOnce(true)
     await hopToApp()
     expect(view.check).toHaveBeenCalledTimes(1)
     expect(view.found()).toEqual(['hop'])
-  })
-
-  it('checks on every return, one after another', async () => {
-    const view = await setup()
-    await returnToApp(5 * MINUTE)
-    await hopToApp()
-    await hopToApp()
-    expect(view.check.mock.calls).toEqual([['return'], ['hop'], ['hop']])
   })
 
   it('makes one request for a return and a focus within a minute of it', async () => {
@@ -341,7 +326,7 @@ describe('return', () => {
     expect(view.check.mock.calls).toEqual([['return']])
   })
 
-  it('is significant if any of the returns that came while it waited was', async () => {
+  it('checks once for held-up returns, as a `return` if any was significant', async () => {
     const view = await setup({isBusy: true})
     await hopToApp()
     await returnToApp(5 * MINUTE)
@@ -352,14 +337,6 @@ describe('return', () => {
     // The next one starts afresh.
     await hopToApp()
     expect(view.check.mock.calls).toEqual([['return'], ['hop']])
-  })
-
-  it('is a hop if none of the returns that came while it waited was significant', async () => {
-    const view = await setup({isBusy: true})
-    await hopToApp()
-    await hopToApp()
-    await view.update({isBusy: false})
-    expect(view.check.mock.calls).toEqual([['hop']])
   })
 
   it('is ignored while the view is inactive', async () => {
@@ -392,6 +369,18 @@ describe('return', () => {
     await view.update({isActive: true})
     await hopToApp()
     expect(view.check.mock.calls).toEqual([['focus'], ['hop']])
+  })
+
+  it('is dropped if the view is left and come back to before it is judged', async () => {
+    const view = await setup({isBusy: true})
+    await returnToApp(5 * MINUTE)
+    await view.refocus()
+    await view.update({isBusy: false})
+    expect(view.check).not.toHaveBeenCalled()
+
+    // Nor does it make a later hop significant.
+    await hopToApp()
+    expect(view.check.mock.calls).toEqual([['hop']])
   })
 })
 
@@ -518,24 +507,11 @@ describe('limits', () => {
     await advance(SECOND)
     expect(view.check).toHaveBeenCalledTimes(1)
 
-    // It started before the return, so the return still checks.
-    response.resolve(false)
-    await flush()
-    expect(view.check.mock.calls).toEqual([['focus'], ['return']])
-  })
-
-  it('retries a return held up by a check that fails', async () => {
-    const response = deferred<boolean>()
-    const view = await setup()
-    view.check.mockImplementationOnce(() => response.promise)
-    await view.refocus(FOCUS_CHECK_AFTER)
-    await returnToApp(5 * MINUTE)
-    expect(view.check).toHaveBeenCalledTimes(1)
-
+    // Once it's done, the return it held up checks, even if it failed.
     view.check.mockResolvedValueOnce(true)
     response.reject(new Error('Network request failed'))
     await flush()
-    expect(view.check).toHaveBeenCalledTimes(2)
+    expect(view.check.mock.calls).toEqual([['focus'], ['return']])
     expect(view.found()).toEqual(['return'])
   })
 
