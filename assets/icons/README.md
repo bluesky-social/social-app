@@ -7,12 +7,13 @@ The user-interface glyphs in [`ui/`](./ui/) come from their [Central icon system
 This notice covers the SVG files in `ui/`, plus any Central glyphs deliberately kept as raw
 multi-path artwork in `custom/`. It does not cover:
 
-| Not covered here | Rights holder | See |
-|---|---|---|
-| `flags/` | @catamphetamine, MIT licensed | [`flags/README.md`](./flags/README.md) |
-| Third-party service marks in `external/` | The respective service, Apple Inc., or Google LLC | [`external/README.md`](./external/README.md) and [`ASSETS.md`](../../ASSETS.md#5-third-party-trademarks) |
-| Bluesky marks in `external/` (`Attie`, `Mark`, `Newskie`, `StarterPack`) and `custom/` (`VerifiedCheck`, `VerifierCheck`, `StarterPackMultiPathLarge`) | Bluesky Social PBC | [`ASSETS.md`](../../ASSETS.md#3-bluesky-trademarks-and-brand-assets) |
-| Non-Central artwork in `custom/` | Its respective rights holder | [`ASSETS.md`](../../ASSETS.md) |
+| Path | Notes | Rights holder | See |
+|---|---|---|---|
+| `flags/` | MIT licensed | @catamphetamine | [`flags/README.md`](./flags/README.md) |
+| `external/` | Third-party service marks | The respective service, Apple Inc., or Google LLC | [`external/README.md`](./external/README.md) and [`ASSETS.md`](../../ASSETS.md#5-third-party-trademarks) |
+| `external/` | Bluesky marks (`Attie`, `Mark`, `Newskie`, `StarterPack`) | Bluesky Social PBC | [`ASSETS.md`](../../ASSETS.md#3-bluesky-trademarks-and-brand-assets) |
+| `custom/` | Bluesky marks (`VerifiedCheck`, `VerifierCheck`, `StarterPackMultiPathLarge`) | Bluesky Social PBC | [`ASSETS.md`](../../ASSETS.md#3-bluesky-trademarks-and-brand-assets) |
+| `custom/` | Non-Central artwork | Its respective rights holder | [`ASSETS.md`](../../ASSETS.md) |
 
 `external/` is a single-path generated lane, not an ownership category: a file's rights holder is
 named in the documents above, never inferred from its directory.
