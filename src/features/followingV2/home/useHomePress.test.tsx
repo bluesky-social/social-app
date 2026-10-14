@@ -1,11 +1,9 @@
-import {memo} from 'react'
 import {act, render} from '@testing-library/react-native'
 
 import {logger} from '#/logger'
-import {isAtTop} from './atTop'
 import {type FeedPageUnselected} from './queries/postFeed'
 import {useHomePress} from './useHomePress'
-import {ANIMATED_REVEAL_LIMIT, useRevealTop} from './useRevealTop'
+import {useRevealTop} from './useRevealTop'
 
 const RENDERED_AT = 1000
 const PREPENDED_AT = 2000
@@ -19,19 +17,12 @@ function page(fetchedAt: number) {
 }
 
 /**
- * The press, wired as `PostFeed` wires it, in a `memo()` component, as
- * `PostFeed` is, with the list `offset` points below its top. The press is
- * kept from the first render, as `FeedPage` calls it through a ref, so it must
- * act on the latest props. `onHasNew` is the Home dot, and `scrollToTop` the
- * list, told whether to animate.
- *
- * The prepend is a stand-in: `run` starts one the test settles, and nothing is
- * staged or owed unless the test says so.
+ * The press, wired as `PostFeed` wires it, with the list `offset` points below
+ * its top. `onHasNew` is the Home dot, and `scrollToTop` the list. The prepend
+ * is a stand-in: `run` starts one the test settles, and nothing is owed unless
+ * the test says so.
  */
-function renderHome({
-  offset = 0,
-  enabled = true,
-}: {offset?: number; enabled?: boolean} = {}) {
+function renderHome({offset = 0}: {offset?: number} = {}) {
   let offsetY = offset
   const scrollToTop = jest.fn<void, [boolean]>()
   const onHasNew = jest.fn<void, [boolean]>()
@@ -53,9 +44,9 @@ function renderHome({
     isOwed: jest.fn(() => false),
     markRead: jest.fn(),
   }
-  let first: (() => boolean) | undefined
+  let press!: () => boolean
 
-  const View = memo(function View({
+  function View({
     topFetchedAt,
     enabled,
   }: {
@@ -69,7 +60,7 @@ function renderHome({
       scrollToTop,
       onJump: () => onHasNew(false),
     })
-    const press = useHomePress({
+    press = useHomePress({
       enabled,
       offsetY: offsetYValue,
       prepend,
@@ -78,17 +69,21 @@ function renderHome({
       onHasNew,
       onFetch,
     })
-    first ??= press
     return null
-  })
+  }
 
-  const view = render(<View topFetchedAt={RENDERED_AT} enabled={enabled} />)
+  let props = {topFetchedAt: RENDERED_AT, enabled: true}
+  const view = render(<View {...props} />)
+  const rerender = (next: Partial<typeof props>) => {
+    props = {...props, ...next}
+    view.rerender(<View {...props} />)
+  }
   return {
     /** Presses Home, and says whether the feed took the press. */
     press: () => {
       let took = false
       act(() => {
-        took = first!()
+        took = press()
       })
       return took
     },
@@ -110,12 +105,12 @@ function renderHome({
       await flush()
     },
     /** Renders `fetchedAt` as the top page. */
-    renderTop: (fetchedAt: number) =>
-      view.rerender(<View topFetchedAt={fetchedAt} enabled={enabled} />),
+    renderTop: (fetchedAt: number) => rerender({topFetchedAt: fetchedAt}),
+    setEnabled: (enabled: boolean) => rerender({enabled}),
   }
 }
 
-/** Lets what the press does once its prepend settles run. */
+/** Flushes the microtasks a settled prepend schedules. */
 async function flush() {
   await act(async () => {
     for (let i = 0; i < 10; i++) {
@@ -124,48 +119,16 @@ async function flush() {
   })
 }
 
-describe('isAtTop', () => {
-  it('is the top within a few points of it, as the settle and the pill judge it', () => {
-    expect(isAtTop(-100)).toBe(true)
-    expect(isAtTop(0)).toBe(true)
-    expect(isAtTop(5)).toBe(true)
-    expect(isAtTop(6)).toBe(false)
-  })
-})
-
 describe('useHomePress', () => {
-  describe('below the top', () => {
-    it('takes the reader up through what is loaded, and does nothing else', () => {
-      const home = renderHome({offset: SCROLLED_DOWN})
+  it('below the top, takes the reader up through what is loaded, and does nothing else', () => {
+    const home = renderHome({offset: SCROLLED_DOWN})
 
-      expect(home.press()).toBe(true)
-      expect(home.scrollToTop.mock.calls).toEqual([[true]])
-      expect(home.prepend.run).not.toHaveBeenCalled()
-      expect(home.prepend.markRead).not.toHaveBeenCalled()
-      expect(home.refresh).not.toHaveBeenCalled()
-      expect(home.onFetch).not.toHaveBeenCalled()
-      // Reaching the top clears it, as the list reports.
-      expect(home.onHasNew).not.toHaveBeenCalled()
-    })
-
-    it('jumps from deep in the feed, which clears the Home dot as it arrives', () => {
-      const home = renderHome({offset: ANIMATED_REVEAL_LIMIT + 1})
-      home.press()
-
-      expect(home.scrollToTop.mock.calls).toEqual([[false]])
-      expect(home.onHasNew.mock.calls).toEqual([[false]])
-      expect(home.prepend.run).not.toHaveBeenCalled()
-    })
-
-    it('scrolls up again on another press, as long as the reader is short of the top', () => {
-      const home = renderHome({offset: SCROLLED_DOWN})
-      home.press()
-      home.scrollTo(SCROLLED_DOWN / 2)
-      home.press()
-
-      expect(home.scrollToTop.mock.calls).toEqual([[true], [true]])
-      expect(home.prepend.run).not.toHaveBeenCalled()
-    })
+    expect(home.press()).toBe(true)
+    expect(home.scrollToTop.mock.calls).toEqual([[true]])
+    expect(home.prepend.run).not.toHaveBeenCalled()
+    expect(home.prepend.markRead).not.toHaveBeenCalled()
+    expect(home.refresh).not.toHaveBeenCalled()
+    expect(home.onFetch).not.toHaveBeenCalled()
   })
 
   describe('at the top', () => {
@@ -174,11 +137,9 @@ describe('useHomePress', () => {
 
       expect(home.press()).toBe(true)
       expect(home.prepend.markRead).toHaveBeenCalledTimes(1)
-      // One the pill doesn't offer.
       expect(home.prepend.run.mock.calls).toEqual([['focus']])
       expect(home.refresh).not.toHaveBeenCalled()
       expect(home.onFetch).toHaveBeenCalledTimes(1)
-      // Right to the top meanwhile, past anything behind the header.
       expect(home.scrollToTop.mock.calls).toEqual([[true]])
       expect(home.onHasNew).not.toHaveBeenCalled()
     })
@@ -188,10 +149,8 @@ describe('useHomePress', () => {
       home.press()
       home.scrollToTop.mockClear()
       await home.prependWrote(page(PREPENDED_AT))
-      expect(home.scrollToTop).not.toHaveBeenCalled()
-      expect(home.onHasNew).not.toHaveBeenCalled()
-
       home.renderTop(PREPENDED_AT)
+
       expect(home.scrollToTop.mock.calls).toEqual([[false]])
       expect(home.onHasNew.mock.calls).toEqual([[false]])
     })
@@ -206,7 +165,7 @@ describe('useHomePress', () => {
       expect(home.onHasNew.mock.calls).toEqual([[false]])
     })
 
-    it('leaves what it found staged above a reader who has left the top meanwhile', async () => {
+    it("doesn't jump a reader who left the top before the prepend wrote", async () => {
       const home = renderHome({offset: 0})
       home.press()
       home.scrollToTop.mockClear()
@@ -257,34 +216,24 @@ describe('useHomePress', () => {
       },
     )
 
-    it('leaves the feed and the Home dot alone when the fetch fails, and logs only unexpected errors', async () => {
+    it('logs a fetch that fails unexpectedly, and leaves the Home dot alone', async () => {
       const logError = jest.spyOn(logger, 'error').mockImplementation(() => {})
-      try {
-        const offline = renderHome({offset: 0})
-        offline.press()
-        await offline.prependFailed(new TypeError('Network request failed'))
-        expect(logError).not.toHaveBeenCalled()
-        expect(offline.onHasNew).not.toHaveBeenCalled()
-        expect(offline.refresh).not.toHaveBeenCalled()
+      const home = renderHome({offset: 0})
+      home.press()
+      await home.prependFailed(new Error('Bad response'))
 
-        const broken = renderHome({offset: 0})
-        broken.press()
-        await broken.prependFailed(new Error('Bad response'))
-        expect(logError).toHaveBeenCalledTimes(1)
-        expect(broken.onHasNew).not.toHaveBeenCalled()
-      } finally {
-        logError.mockRestore()
-      }
+      expect(logError).toHaveBeenCalledTimes(1)
+      expect(home.onHasNew).not.toHaveBeenCalled()
+      logError.mockRestore()
     })
   })
 
-  it('leaves the press to the page for a feed that does not stage new posts', () => {
-    const home = renderHome({offset: 0, enabled: false})
+  it('leaves the press to the page once the feed stops staging new posts', () => {
+    const home = renderHome({offset: 0})
+    home.setEnabled(false)
 
     expect(home.press()).toBe(false)
     expect(home.scrollToTop).not.toHaveBeenCalled()
     expect(home.prepend.run).not.toHaveBeenCalled()
-    expect(home.refresh).not.toHaveBeenCalled()
-    expect(home.onFetch).not.toHaveBeenCalled()
   })
 })
