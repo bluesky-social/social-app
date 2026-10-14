@@ -44,6 +44,13 @@ import {Strong, useDisplayName} from './text'
 type PostView = app.bsky.feed.defs.PostView
 
 /**
+ * Post controls pad their top, and each button pads its hit area, which put
+ * the icons well below the timestamp. Cancelling both leaves the icons the
+ * row's usual gap below it. 5 is `PostControlButton`'s padding.
+ */
+const CONTROLS_STYLE = {paddingTop: 0, marginTop: -5}
+
+/**
  * Collapses a post's text onto one line for single-line previews, so that
  * native ellipsis isn't cut short by a newline.
  */
@@ -646,6 +653,7 @@ function PostActionsInner({
       richText={richText}
       onPressReply={onPressReply}
       logContext="Post"
+      style={CONTROLS_STYLE}
     />
   )
 }
