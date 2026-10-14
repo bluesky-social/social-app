@@ -5,6 +5,7 @@ import Animated, {
   Reanimated3DefaultSpringConfig,
   type SharedValue,
   useAnimatedStyle,
+  useSharedValue,
   withSpring,
 } from 'react-native-reanimated'
 import {useSafeAreaInsets} from 'react-native-safe-area-context'
@@ -584,17 +585,40 @@ function NotificationsHeader({
     }
   })
 
+  const height = useSharedValue(0)
+  /*
+   * Shrinks the fade from the top as the pills move up, so that it always
+   * ends where they do. Scaling, rather than moving it, keeps its opaque top
+   * behind the status bar and the pills
+   */
+  const fadeStyle = useAnimatedStyle(() => {
+    const fullHeight = height.get()
+    if (fullHeight === 0) return {}
+    const shownHeight =
+      fullHeight - headerMode.get() * (titleHeight.get() - headerPinnedHeight)
+    return {transform: [{scaleY: shownHeight / fullHeight}]}
+  })
+
   return (
     <View
       pointerEvents="box-none"
       style={[a.fixed, a.z_10, a.top_0, a.left_0, a.right_0]}
-      onLayout={event => onHeightChange(event.nativeEvent.layout.height)}>
+      onLayout={event => {
+        height.set(event.nativeEvent.layout.height)
+        onHeightChange(event.nativeEvent.layout.height)
+      }}>
       {/*
-       * On native, the background fades out under the whole header, so the
-       * list shows through below the pills as they move up. On web, the title
-       * and the pills each have their own background
+       * On native, the background fades out under the header, down to the
+       * bottom of the pills as they move up. On web, the title and the pills
+       * each have their own background
        */}
-      {!IS_WEB && <HeaderFade />}
+      {!IS_WEB && (
+        <Animated.View
+          pointerEvents="none"
+          style={[a.absolute, a.inset_0, {transformOrigin: 'top'}, fadeStyle]}>
+          <HeaderFade />
+        </Animated.View>
+      )}
       <Animated.View
         style={[IS_LIQUID_GLASS && {paddingTop: insets.top}, titleStyle]}
         onLayout={onTitleLayout}>
@@ -667,7 +691,7 @@ function HeaderFade() {
       end={[0.5, 1]}
       colors={[
         t.atoms.bg.backgroundColor,
-        utils.alpha(t.atoms.bg.backgroundColor, 0.8),
+        utils.alpha(t.atoms.bg.backgroundColor, 0.9),
         utils.alpha(t.atoms.bg.backgroundColor, 0),
       ]}
     />
