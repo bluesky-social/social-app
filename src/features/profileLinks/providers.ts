@@ -253,6 +253,7 @@ export function validateLinkInput(input: string): LinkInputValidation {
     isEmpty: trimmed.length === 0,
     isBlocked: !!url && isBlockedProfileLink(url),
     isShortener: !!url && isShortenerLink(url),
-    isInsecure: !!url && isInsecureLink(url),
+    // typing more can't fix an http scheme, so flag it before the host is done
+    isInsecure: /^http:/i.test(trimmed) || (!!url && isInsecureLink(url)),
   }
 }

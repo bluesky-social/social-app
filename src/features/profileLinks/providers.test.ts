@@ -149,6 +149,14 @@ describe('validateLinkInput', () => {
     expect(validateLinkInput('bit.ly/kat').isShortener).toBe(true)
     expect(validateLinkInput('http://example.com').isInsecure).toBe(true)
     expect(validateLinkInput('example.com').isInsecure).toBe(false)
+  })
+
+  it('flags an http link as soon as the scheme is typed', () => {
+    expect(validateLinkInput('http:').isInsecure).toBe(true)
+    expect(validateLinkInput('HTTP://').isInsecure).toBe(true)
+    expect(validateLinkInput('http://exa').isInsecure).toBe(true)
+    expect(validateLinkInput('http').isInsecure).toBe(false)
+    expect(validateLinkInput('https:').isInsecure).toBe(false)
     expect(validateLinkInput('ko-fi.com/kat').isShortener).toBe(false)
     expect(validateLinkInput('   ').isEmpty).toBe(true)
     expect(validateLinkInput('hello').url).toBe(null)
