@@ -140,7 +140,7 @@ export function PostMenuControlItems({
       postContext: 'feed',
     })
     if (IS_WEB) {
-      ax.metric('share:press:copyLink', {})
+      ax.metric('share:press:copyLink', {uri: post.uri, platform: 'web'})
     } else {
       ax.metric('share:press:nativeShare', {})
     }

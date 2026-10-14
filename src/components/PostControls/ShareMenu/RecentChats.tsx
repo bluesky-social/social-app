@@ -1,4 +1,4 @@
-import {ScrollView, View} from 'react-native'
+import {Platform, ScrollView, View} from 'react-native'
 import {moderateProfile, type ModerationOpts} from '@bsky/sdk/moderation'
 import {msg} from '@lingui/core/macro'
 import {useLingui} from '@lingui/react'
@@ -44,7 +44,7 @@ export function RecentChats({
   const onSelectChat = (convoId: string) => {
     onBeforePress?.()
     control.close(() => {
-      ax.metric('share:press:recentDm', {})
+      ax.metric('share:press:recentDm', {uri: postUri, platform: Platform.OS})
       navigation.navigate('MessagesConversation', {
         conversation: convoId,
         embed: postUri,
