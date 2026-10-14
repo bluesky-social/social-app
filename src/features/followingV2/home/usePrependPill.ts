@@ -9,6 +9,21 @@ const FACE_LIMIT = 3
 
 const NO_OFFER: PrependOffer = {count: 0, authors: []}
 
+/** What put the pill up: a restore, or a significant return to the app. */
+export type PrependPillSource = NonNullable<StagedPage['offeredBy']>
+
+/**
+ * Why the pill came down:
+ *
+ * - `reachedTop`: the reader reached the true top (`dismiss`).
+ * - `pressed`: the reader pressed it.
+ * - `replaced`: its pages left the feed, as when a refresh replaces it.
+ * - `gone`: its pages are there, but none of their posts render, as after a
+ *   deletion, a mute or a block.
+ */
+export type PrependPillHideReason =
+  'reachedTop' | 'pressed' | 'replaced' | 'gone'
+
 /** The parts of a feed row that the pill reads. */
 type Row = {
   type: string
@@ -127,68 +142,92 @@ export function usePrependPill({
   /** Reads the staged page. */
   onRead: () => void
 }) {
-  const [{takenAt, offer}, setPill] = useState<{
+  const [{takenAt, offer, down}, setPill] = useState<{
     /**
      * The last staged page the pill took in, by `fetchedAt`. Once dismissed, an
      * offer of the same page doesn't put it back up: at most once per page.
      */
     takenAt?: number
-    /** Set while it's up: the `since` of each of its pages, and its faces. */
-    offer?: {sinces: string[]; authors: NewPostsPillAuthor[]}
+    /**
+     * Set while it's up: the `since` of each of its pages, its faces, and what
+     * put it up.
+     */
+    offer?: {
+      sinces: string[]
+      authors: NewPostsPillAuthor[]
+      source: PrependPillSource
+    }
+    /** What put the last offer up, and why it came down. */
+    down?: {source: PrependPillSource; reason: PrependPillHideReason}
   }>({})
 
   const top = pages?.[0]
   // A page's rows render after it commits, which may be after it's staged.
   const page = staged && top?.fetchedAt === staged.fetchedAt ? top : undefined
+  // An offered page puts it up, and while it's up, any staged page joins it.
+  const source = offer?.source ?? staged?.offeredBy
   const takesIn =
     enabled &&
     page !== undefined &&
     page.fetchedAt !== takenAt &&
-    (!!staged?.offered || offer !== undefined)
+    source !== undefined
   const sinces =
     takesIn && page.since !== undefined && !offer?.sinces.includes(page.since)
       ? [...(offer?.sinces ?? []), page.since]
       : (offer?.sinces ?? [])
+  const ownPages =
+    pages?.filter(({since}) => since !== undefined && sinces.includes(since)) ??
+    []
   // Down with nothing to take in, as on other feeds, it skips the rows.
-  const live =
-    takesIn || offer
-      ? getPrependOffer(
-          rows,
-          pages?.filter(
-            ({since}) => since !== undefined && sinces.includes(since),
-          ) ?? [],
-        )
-      : NO_OFFER
+  const live = takesIn || offer ? getPrependOffer(rows, ownPages) : NO_OFFER
+  // Why it comes down once none of its posts render.
+  const goneDown = offer && {
+    source: offer.source,
+    reason: ownPages.length ? ('gone' as const) : ('replaced' as const),
+  }
   if (takesIn) {
-    setPill({
-      takenAt: page.fetchedAt,
-      offer: live.count
-        ? {sinces, authors: live.authors.slice(0, FACE_LIMIT)}
-        : undefined,
-    })
+    setPill(
+      live.count
+        ? {
+            takenAt: page.fetchedAt,
+            offer: {sinces, authors: live.authors.slice(0, FACE_LIMIT), source},
+          }
+        : {takenAt: page.fetchedAt, down: goneDown ?? down},
+    )
   } else if (offer && !live.count) {
-    // None of its posts render any more, as after a refresh.
-    setPill({takenAt})
+    setPill({takenAt, down: goneDown})
   }
 
-  const dismiss = () => {
-    setPill(pill => (pill.offer ? {takenAt: pill.takenAt} : pill))
+  const hide = (reason: PrependPillHideReason) => {
+    setPill(pill =>
+      pill.offer
+        ? {takenAt: pill.takenAt, down: {source: pill.offer.source, reason}}
+        : pill,
+    )
   }
 
+  const isUp = enabled && offer !== undefined && live.count > 0
   return {
-    /** Whether it's up, shown or not, as it only shows while active. */
-    isUp: enabled && offer !== undefined && live.count > 0,
-    visible: enabled && isActive && offer !== undefined && live.count > 0,
+    /**
+     * Whether an offer is up, even while the view is inactive and it isn't
+     * `visible`.
+     */
+    isUp,
+    visible: isUp && isActive,
     // Hits 0 as it hides, which NewPostsPill covers by keeping what it showed.
     count: live.count,
     authors:
       offer?.authors.filter(author =>
         live.authors.some(face => face.did === author.did),
       ) ?? [],
+    /** What put the offer up, or the last one while none is. For metrics. */
+    source: offer?.source ?? down?.source,
+    /** Why the last offer came down, while none is up. For metrics. */
+    hideReason: offer ? undefined : down?.reason,
     /** Takes the pill down, as when the reader reaches the true top. */
-    dismiss,
+    dismiss: () => hide('reachedTop'),
     onPress: () => {
-      dismiss()
+      hide('pressed')
       if (offsetY.get() <= SETTLE_AT_TOP_LIMIT) {
         onRead()
       }

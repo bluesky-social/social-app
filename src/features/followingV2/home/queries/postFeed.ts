@@ -630,10 +630,10 @@ export type StagedPage = {
   /** The page's `fetchedAt`. */
   fetchedAt: number
   /**
-   * Whether a restore or a significant return to the app offered it, which
-   * puts the pill up (see `usePrependPill`).
+   * What offered it, if anything: a restore or a significant return to the
+   * app. An offer puts the pill up (see `usePrependPill`).
    */
-  offered: boolean
+  offeredBy?: 'restore' | 'return'
   /**
    * Whether more posts than fit on a page were newer than where it was
    * fetched from, last time that was checked, so nothing more is fetched
@@ -765,8 +765,8 @@ export function usePostFeedPrepend(
   const queryKey = RQKEY(feedDesc, params)
   /** The prepend in progress, fetching or holding what it found. */
   const pending = useRef<Promise<Prepended>>(undefined)
-  /** Whether the prepend in progress offers what it finds with the pill. */
-  const isOffering = useRef(false)
+  /** What offers what the prepend in progress finds with the pill, if any. */
+  const offeredBy = useRef<StagedPage['offeredBy']>(undefined)
   /** Whether this view has started a prepend, as a restored top needs once. */
   const hasStarted = useRef(false)
   /*
@@ -889,16 +889,17 @@ export function usePostFeedPrepend(
     setStaged({
       fetchedAt: page.fetchedAt,
       // A replacement isn't offered. The pill takes it in itself if it's up.
-      offered: isOffering.current,
+      offeredBy: offeredBy.current,
       isFull,
     })
     return end('staged', page)
   }
 
   const start = (trigger: PrependTrigger) => {
-    const isOffered = trigger === 'restore' || trigger === 'return'
+    const offering =
+      trigger === 'restore' || trigger === 'return' ? trigger : undefined
     if (pending.current) {
-      isOffering.current ||= isOffered
+      offeredBy.current ??= offering
       return pending.current
     }
     const before = getData()
@@ -907,7 +908,7 @@ export function usePostFeedPrepend(
       return undefined
     }
     hasStarted.current = true
-    isOffering.current = isOffered
+    offeredBy.current = offering
     const prepending = prepend(before, target, trigger).finally(() => {
       pending.current = undefined
     })
@@ -918,17 +919,17 @@ export function usePostFeedPrepend(
   const run = (trigger: PrependTrigger) =>
     start(trigger)?.then(({page}) => page)
 
-  /** Offers the staged page with the pill, if there is one. */
+  /** Offers the staged page with the pill, as a significant return does. */
   const offerStaged = () => {
     const current = stagedRef.current
     const data = getData()
     if (
       current &&
-      !current.offered &&
+      !current.offeredBy &&
       data &&
       stagedSince(data.pages, current) !== undefined
     ) {
-      setStaged({...current, offered: true})
+      setStaged({...current, offeredBy: 'return'})
     }
   }
 
