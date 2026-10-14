@@ -1,13 +1,11 @@
 import {type AtUri} from '@atproto/syntax'
-import {moderateProfile, ModerationDecision} from '@bsky/sdk/moderation'
+import {ModerationDecision} from '@bsky/sdk/moderation'
 import {plural} from '@lingui/core/macro'
 import {Trans, useLingui} from '@lingui/react/macro'
 
-import {createSanitizedDisplayName} from '#/lib/moderation/create-sanitized-display-name'
 import {sanitizeDisplayName} from '#/lib/strings/display-names'
-import {useModerationOpts} from '#/state/preferences/moderation-opts'
-import {useProfileQuery} from '#/state/queries/profile'
 import {useStarterPackQuery} from '#/state/queries/starter-packs'
+import {useSubjectPreviewProfile} from '#/screens/ModerationInbox/components/hooks/useSubjectPreviewProfile'
 import {atoms as a} from '#/alf'
 import {Text} from '#/components/Typography'
 import {app, type tools} from '#/lexicons'
@@ -22,8 +20,13 @@ export function StarterPackSubjectPreview({
   uri: AtUri
 }) {
   const {i18n, t: l} = useLingui()
-  const moderationOpts = useModerationOpts()
   const query = useStarterPackQuery({uri: uri.toString()})
+  const {
+    opts: moderationOpts,
+    name: authorName,
+    moderation: creatorModeration,
+    query: creatorQuery,
+  } = useSubjectPreviewProfile(uri.host)
   // Keep the preview tied to the reported record, not a later revision.
   const starterPack =
     query.data &&
@@ -36,20 +39,6 @@ export function StarterPackSubjectPreview({
     : starterPack &&
         bsky.matches(app.bsky.graph.starterpack, starterPack.record)
       ? starterPack.record
-      : undefined
-  const {data: profile} = useProfileQuery({did: uri.host})
-  const creator = starterPack?.creator ?? profile
-  const creatorModeration =
-    creator && moderationOpts
-      ? moderateProfile(creator, moderationOpts)
-      : undefined
-  const authorName =
-    creator && creatorModeration
-      ? createSanitizedDisplayName(
-          creator,
-          false,
-          creatorModeration.ui('displayName'),
-        )
       : undefined
   const contentModeration = new ModerationDecision()
   contentModeration.setDid(uri.host)
@@ -68,7 +57,10 @@ export function StarterPackSubjectPreview({
   const title = name ? l`Starter Pack “${name}”` : l`Starter Pack`
   const accountCount = starterPack?.list?.listItemCount ?? 0
   const feedCount = record?.feeds?.length ?? 0
-  const isLoading = query.isPending || (!!starterPack && !moderationOpts)
+  const isLoading =
+    query.isPending ||
+    creatorQuery.isPending ||
+    (!!starterPack && !moderationOpts)
   const metadataText: string[] = []
   if (record) {
     if (accountCount > 0 && feedCount > 0) {
