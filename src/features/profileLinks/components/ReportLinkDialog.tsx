@@ -15,7 +15,7 @@ import {Text} from '#/components/Typography'
 import {type app} from '#/lexicons'
 import {useSupportPalette} from '../palette'
 import {formatLinkUrl, getLinkHost, getSupportProvider} from '../providers'
-import {linksFromProfileView, profileLinkViews} from '../record'
+import {linksFromProfileView} from '../record'
 import {useProfileLinksEnabled} from '../state'
 import {type ProfileLink} from '../types'
 import {LinkFavicon, linkFaviconUrl} from './LinkFavicon'
@@ -32,7 +32,7 @@ export function useReportableProfileLinks(
 ): ProfileLink[] {
   const enabled = useProfileLinksEnabled()
   if (!enabled) return []
-  return linksFromProfileView(profileLinkViews(profile)).filter(
+  return linksFromProfileView(profile.links).filter(
     link => link.uri && link.cid,
   )
 }
