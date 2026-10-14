@@ -325,7 +325,7 @@ export class SafelinkClient {
   }
 
   private async getCursor() {
-    if (this.cursor === '') {
+    if (this.cursor === undefined) {
       const res = await this.db.db
         .selectFrom('safelink_cursor')
         .selectAll()
