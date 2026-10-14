@@ -5,6 +5,23 @@
 export type VideoCompressSkipReason =
   'gif' | 'below-byte-threshold' | 'no-webcodecs' | 'compress-error-fallback'
 
+/**
+ * Why the user gave up on an upload: they removed the video (or its post), or
+ * closed the composer. Abort a telemetry signal with `'closed'` for the
+ * latter; any other abort reason, including none, reads as `'removed'`.
+ */
+export type VideoAbandonReason = 'removed' | 'closed'
+
+/** Why a new upload attempt replaced an earlier one for the same video. */
+export type VideoRestartReason = 'retry' | 'captions'
+
+/** A source rejected before compression, as `video:upload:validationFailed`. */
+export type VideoValidationFailure =
+  | 'unsupported-video-format'
+  | 'invalid-video-dimensions'
+  | 'video-too-long'
+  | 'video-too-large'
+
 export type CompressedVideo = {
   uri: string
   mimeType: string
