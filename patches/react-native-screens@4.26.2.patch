@@ -130,7 +130,7 @@ index af1a193cdeb4c48579cef17c3462dadeef0349f1..1cceb4d9394d4c225cb4625897b7cf25
    static ShadowNodeTraits BaseTraits() {
      auto traits = ConcreteViewShadowNode::BaseTraits();
 diff --git a/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h b/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
-index 2389f94a28fe4543c2737c1b8de379dcfaa8947f..8549734403e77799d08d933d08e4cfedaf07df39 100644
+index 2389f94a28fe4543c2737c1b8de379dcfaa8947f..f806f8d1fe6a0128a0ac36f9600ba403312fbb5f 100644
 --- a/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
 +++ b/common/cpp/react/renderer/components/rnscreens/RNSScreenComponentDescriptor.h
 @@ -38,8 +38,6 @@ class RNSScreenComponentDescriptor final
@@ -142,7 +142,7 @@ index 2389f94a28fe4543c2737c1b8de379dcfaa8947f..8549734403e77799d08d933d08e4cfed
  
      auto state =
          std::static_pointer_cast<const RNSScreenShadowNode::ConcreteState>(
-@@ -99,7 +97,7 @@ class RNSScreenComponentDescriptor final
+@@ -99,19 +97,21 @@ class RNSScreenComponentDescriptor final
            FrameCorrectionModes::Mode::FrameHeightCorrection);
        screenShadowNode.getFrameCorrectionModes().unset(
            FrameCorrectionModes::Mode::FrameOriginCorrection);
@@ -151,12 +151,15 @@ index 2389f94a28fe4543c2737c1b8de379dcfaa8947f..8549734403e77799d08d933d08e4cfed
            Size{stateData.frameSize.width, stateData.frameSize.height});
      } else if (
          stateData.frameSize.width == 0 && stateData.frameSize.height == 0) {
-@@ -107,11 +105,11 @@ class RNSScreenComponentDescriptor final
+       // Reset YogaNode so it recalculates its layout. Useful for the case
        // when native orientation changes and react has not been notified yet.
        // The if condition holds true on first render and when it is reset inside
-       // RNSScreenShadowNodeCommitHook.
+-      // RNSScreenShadowNodeCommitHook.
 -      layoutableShadowNode.setSize({YGUndefined, YGUndefined});
-+      screenShadowNode.setSize({YGUndefined, YGUndefined});
++      // RNSScreenShadowNodeCommitHook. It also holds for as long as native
++      // never reports a frame, which is the case for screens outside a native
++      // stack (e.g. tabs), so the reset must not dirty the node on every clone.
++      screenShadowNode.setSizeIfChanged({YGUndefined, YGUndefined});
      }
  #else
      if (stateData.frameSize.width != 0 && stateData.frameSize.height != 0) {

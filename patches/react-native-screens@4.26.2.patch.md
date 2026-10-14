@@ -75,8 +75,15 @@ both platforms:
   (Android only), `SplitScreen`, `FormSheetHost`, `TabsBottomAccessory`,
   `StackHeaderConfig`
 
-The Android `Screen` branch that resets the size to undefined while the frame
-is still unknown (first render, orientation-change reset) is left alone.
+On Android, `Screen`'s `adopt()` also has a branch that resets the size to
+undefined while native hasn't reported a frame. Android only reports a frame
+for screens in a native stack (`Screen.onLayout` checks
+`container is ScreenStack`), so screens in a `ScreenContainer`, like our bottom
+tabs, stay in that branch forever and were dirtied on every clone too. That
+reset now goes through `setSizeIfChanged()` as well. `StyleSizeLength::points()`
+maps NaN to undefined and undefined values compare equal, so once the size is
+unset, later clones leave the node clean. `RNSScreenShadowNodeCommitHook`'s own
+orientation-change reset calls `setSize` directly and still dirties as before.
 
 Measured on an iOS simulator (Debug dev client, 15s scroll of a profile's
 Media tab) before the patch: 2.06s of 5.8s main-thread time was
